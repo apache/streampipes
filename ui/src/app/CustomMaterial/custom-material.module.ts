@@ -42,6 +42,7 @@ import {MatTableModule} from '@angular/material/table';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import { MatChipsModule } from "@angular/material/chips";
 
 
 @NgModule({
@@ -71,7 +72,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
         MatDividerModule,
         MatTooltipModule,
         MatProgressBarModule,
-        MatButtonToggleModule
+        MatButtonToggleModule,
+        MatChipsModule
     ],
     exports: [
         MatButtonModule,
@@ -97,7 +99,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
         MatDividerModule,
         MatTooltipModule,
         MatProgressBarModule,
-        MatButtonToggleModule
+        MatButtonToggleModule,
+        MatChipsModule
     ]
 })
 export class CustomMaterialModule {

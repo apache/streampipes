@@ -17,14 +17,12 @@
  */
 
 import { AfterViewInit, Component, HostListener, OnInit, ViewChild } from "@angular/core";
-import { CocoFormat } from "../../core-model/coco/Coco.format";
-import { InteractionMode } from "./interactionMode";
-import { ReactLabelingHelper } from "./helper/reactLabeling.helper";
-import { ImageTranslationHelper } from "./helper/imageTranslation.helper";
+import { ImageTranslationUtil } from "./util/imageTranslation.util";
 import { DatalakeRestService } from "../../core-services/datalake/datalake-rest.service";
-import { AnnotationMode } from "./annotation/annotationMode";
 import { ColorUtil } from "./util/color.util";
 import { ImageAnnotation } from "./annotation/imageAnnotation";
+import { InteractionMode } from "./interactionMode";
+import { ImageClassification } from "./classification/imageClassification";
 
 @Component({
   selector: 'sp-image-labeler',
@@ -43,7 +41,7 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
   //canvas properties
   private canvasWidth;
   private canvasHeight;
-  private isHoverCanvas;
+  private isHoverComponent;
 
   //image
   private image;
@@ -55,13 +53,12 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
   public labelCategory;
   private selectedLabel;
 
-  //actual interaction mode
-  private interactionMode: AnnotationMode = AnnotationMode.ReactLabeling;
+  public interactionMode: InteractionMode = InteractionMode.imageViewing;
 
   //scale
   private scale: number = 1;
 
-  constructor(private restService: DatalakeRestService, private imageAnnotation: ImageAnnotation) {
+  constructor(private restService: DatalakeRestService, public imageAnnotation: ImageAnnotation, public imageClassification: ImageClassification) {
 
   }
 
@@ -75,7 +72,7 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
     this.labelCategory = this.labelCategories[1];
     this.selectedLabel = this.labels[this.labelCategory][0];
 
-    this.isHoverCanvas = false;
+    this.isHoverComponent = false;
   }
 
   ngAfterViewInit() {
@@ -89,25 +86,34 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
     this.canvas.addEventListener('mousewheel',event => this.scroll(event),false);
     this.canvas.addEventListener('keydown',event => console.log(event),false);
 
+    this.changeImage('https://cdn.pixabay.com/photo/2017/10/29/21/05/bridge-2900839_1280.jpg');
+    this.context.lineWidth = 2;
+  }
+
+  changeImage(url) {
     this.image = new Image();
 
     this.image.onload = () => {
       this.imageAnnotation.newImage("Test.png", this.image.width, this.image.height);
+      this.imageClassification.newImage();
       console.log('Image width: ' + this.image.width);
       console.log('Image height: ' + this.image.height);
       this.scale = Math.min(1, this.canvasWidth / this.image.width, this.canvasHeight / this.image.height);
       console.log('Set Scale to: ' + this.scale);
       this.draw();
     };
-    this.image.src = 'https://cdn.pixabay.com/photo/2017/10/29/21/05/bridge-2900839_1280.jpg';
-    this.context.lineWidth = 2;
+    this.image.src = url;
   }
 
   imageMouseDown(e) {
     if (e.which == 1) {
       //left click
       this.isLeftMouseDown = true;
-      this.imageAnnotation.mouseDown(this.getImageCords(e.clientX, e.clientY), this.scale);
+
+      switch (this.interactionMode) {
+        case InteractionMode.imageAnnotate: this.imageAnnotation.mouseDown(this.getImageCords(e.clientX, e.clientY), this.scale);
+          break;
+      }
 
     } else if (e.which == 2) {
       //middle click
@@ -120,13 +126,19 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
 
   imageMouseMove(e) {
     if (this.isLeftMouseDown) {
-      this.startDraw();
-      let imageXShift = (this.canvasWidth - this.image.width) / 2;
-      let imageYShift =(this.canvasHeight - this.image.height) / 2;
-      this.imageAnnotation.annotationDraw(imageXShift, imageYShift, this.scale, this.context);
-      this.imageAnnotation.mouseMover(this.getImageCords(e.clientX, e.clientY), imageXShift, imageYShift,
-        this.context, this.selectedLabel);
-      this.endDraw();
+
+      switch (this.interactionMode) {
+        case InteractionMode.imageAnnotate: {
+            this.startDraw();
+            let imageXShift = (this.canvasWidth - this.image.width) / 2;
+            let imageYShift =(this.canvasHeight - this.image.height) / 2;
+            this.imageAnnotation.annotationDraw(imageXShift, imageYShift, this.scale, this.context);
+            this.imageAnnotation.mouseMover(this.getImageCords(e.clientX, e.clientY), imageXShift, imageYShift,
+              this.context, this.selectedLabel);
+            this.endDraw();
+          }
+          break;
+      }
 
     } else if (this.isRightMouseDown) {
       let translation = ImageTranslationUtil.mouseMove(this.getCanvasCords(e.clientX, e.clientY));
@@ -143,9 +155,13 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
   imageMouseUp(e) {
     if (this.isLeftMouseDown) {
       this.isLeftMouseDown = false;
-
-      this.imageAnnotation.mouseUp(this.getImageCords(e.clientX, e.clientY), this.selectedLabel, this.labelCategory);
-      this.draw()
+      switch (this.interactionMode) {
+        case InteractionMode.imageAnnotate: {
+            this.imageAnnotation.mouseUp(this.getImageCords(e.clientX, e.clientY), this.selectedLabel, this.labelCategory);
+            this.draw()
+        }
+          break;
+      }
     }
     if (this.isRightMouseDown) {
       this.isRightMouseDown = false;
@@ -193,12 +209,12 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
   @HostListener('document:keydown', ['$event'])
   handleShortCuts(event: KeyboardEvent) {
     console.log(event.key);
-    if (this.isHoverCanvas) {
+    if (this.isHoverComponent) {
       if (event.code.toLowerCase().includes('digit')) {
         // Number
         let value = Number(event.key);
         if (value != 0 && value <= this.labels[this.labelCategory].length) {
-          this.selectedLabel = this.labels[this.labelCategory][value - 1]
+          this.selectLabel(this.labels[this.labelCategory][value - 1]);
         }
       } else {
         let key = event.key;
@@ -260,9 +276,51 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
 
   selectLabel(label) {
     this.selectedLabel = label;
-    this.interactionMode = AnnotationMode.ReactLabeling;
+    switch (this.interactionMode) {
+      case InteractionMode.imageClassify: this.imageClassification.addClass(label);
+        break;
+    }
   }
 
+  enterCanvas() {
+    this.isHoverComponent = true;
+  }
+
+  leaveCanvas() {
+    this.isHoverComponent = false;
+  }
+
+  getLabelById(id) {
+    return this.imageAnnotation.getLabelById(id);
+  }
+
+  setImageViewInteractionMode() {
+    this.interactionMode = InteractionMode.imageViewing;
+  }
+
+  setImageAnnotateInteractionMode() {
+    this.interactionMode = InteractionMode.imageAnnotate;
+  }
+
+  setImageClassifyInteractionMode() {
+    this.interactionMode = InteractionMode.imageClassify;
+  }
+
+  isImageViewingMode() {
+    return this.interactionMode == InteractionMode.imageViewing;
+  }
+
+  isImageAnnotateMode() {
+    return this.interactionMode == InteractionMode.imageAnnotate;
+
+  }
+
+  isImageClassifyMode() {
+    return this.interactionMode == InteractionMode.imageClassify;
+  }
+  
+  //annotations ui callbacks
+  
   enterAnnotation(annotation) {
     annotation.isHovered = true;
     this.draw()
@@ -272,15 +330,7 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
     annotation.isHovered = false;
     this.draw()
   }
-
-  enterCanvas() {
-    this.isHoverCanvas = true;
-  }
-
-  leaveCanvas() {
-    this.isHoverCanvas = false;
-  }
-
+  
   deleteAnnotation(annotation) {
    this.imageAnnotation.deleteAnnotation(annotation);
    this.draw();
@@ -291,14 +341,12 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
     this.draw();
   }
 
-  getAnnotations() {
-    return this.imageAnnotation.getAnnotations();
+  //classification ui callbacks
+  
+  removeClass(clazz) {
+    this.imageClassification.removeClass(clazz);
   }
-
-  getLabelById(id) {
-    return this.imageAnnotation.getLabelById(id);
-  }
-
+  
 
 
 

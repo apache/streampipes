@@ -16,10 +16,15 @@
   ~
   -->
 
+<div>
+    <button mat-stroked-button [style.background-color]="isImageViewingMode() ? 'lightgrey' : 'white'" (click)="setImageViewInteractionMode()">Viewing</button>
+    <button mat-stroked-button [style.background-color]="isImageAnnotateMode() ? 'lightgrey' : 'white'" (click)="setImageAnnotateInteractionMode()">Annotate</button>
+    <button mat-stroked-button [style.background-color]="isImageClassifyMode() ? 'lightgrey' : 'white'" (click)="setImageClassifyInteractionMode()">Classify</button>
+</div>
 
-<div fxLayout="column" fxLayoutAlign="space-between ">
+<div fxLayout="column" fxLayoutAlign="space-between " (mouseover)="enterCanvas()" (mouseout)="leaveCanvas()">
     <div  fxLayout="row" fxLayoutAlign="space-around start">
-        <div fxLayout="column" fxLayoutAlign="space-around center">
+        <div fxLayout="column" fxLayoutAlign="space-around center" *ngIf="isImageAnnotateMode() || isImageClassifyMode()">
             <h2>Labels</h2>
             <div  class="labelCategorySelectContainer"
                  style="padding-left: 5px; padding-right: 5px; border-radius: 50px; font-size: 20px;">
@@ -31,11 +36,6 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-
-            <div>
-
-            </div>
-
             <mat-list>
                 <mat-list-item *ngFor="let label of labels[labelCategory]; index as i"
                                [style.background-color]="selectedLabel == label ? 'lightgrey' : 'white'"
@@ -45,15 +45,25 @@
                     <h4 style="margin-top: -3px;"> {{label}} <label *ngIf="i < 10"> #{{i+1}}</label> </h4>
                 </mat-list-item>
             </mat-list>
-
-
         </div>
 
         <div fxLayout="column" fxLayoutAlign="space-around center">
+
+            <div *ngIf="isImageClassifyMode()" style="height: 40px">
+                <mat-chip-list>
+                    <mat-chip *ngFor="let clazz of imageClassification.getClasses()" (removed)="removeClass(clazz)"
+                              [removable]="true" [style.background-color]="getColor(clazz)">
+                        {{clazz}}
+                        <mat-icon matChipRemove>cancel</mat-icon>
+                    </mat-chip>
+                </mat-chip-list>
+            </div>
+
+            <!--
             <mat-hint>Tip: Move the image with the right mouse button and zoom with the mouse wheel, Use number shortcut to select label</mat-hint>
             <mat-hint>Tip: Use number 'E' and 'Q' to get previous/next image, Move image with WASD, Delete selected Annotatoin with 'Delete' button</mat-hint>
+            -->
             <canvas (mousedown)="imageMouseDown($event)" (mousemove)="imageMouseMove($event)" (mouseup)="imageMouseUp($event)"
-                    (mouseover)="enterCanvas()" (mouseout)="leaveCanvas()"
                     #canvas width="800" height="500" >
                 Your browser does not support the canvas element.
             </canvas>
@@ -62,11 +72,11 @@
                 <button mat-button (click)="zoomout()"> <mat-icon>zoom_out</mat-icon></button>
             </div>
         </div>
-        <div fxLayout="column" fxLayoutAlign="space-between center">
-            <h2>Annotations</h2>
 
+        <div fxLayout="column" fxLayoutAlign="space-between center" *ngIf="isImageAnnotateMode()">
+            <h2>Annotations</h2>
             <mat-list>
-                <mat-list-item *ngFor="let annotation of getAnnotations()" (mouseover)="enterAnnotation(annotation)" (mouseout)="leaveAnnotation(annotation)"
+                <mat-list-item *ngFor="let annotation of imageAnnotation.getAnnotations()" (mouseover)="enterAnnotation(annotation)" (mouseout)="leaveAnnotation(annotation)"
                                style="height: 30px; padding-top: 5px; padding-buttom: 5px; border-radius: 50px; margin-bottom: 5px"
                                [style.background-color]="annotation.isHovered || annotation.isSelected ? 'lightgrey' : 'white'">
                     <mat-icon matListIcon [style.color]="getColor(getLabelById(annotation.category_id))" style="margin-top: -8px;">color_lens</mat-icon>
@@ -82,8 +92,9 @@
                     <button mat-icon-button (click)="deleteAnnotation(annotation)" style="margin-top: -10px; margin-left: 10px"> <mat-icon>delete_forever</mat-icon></button>
                 </mat-list-item>
             </mat-list>
-
         </div>
+
+
     </div>
 
     <br />
