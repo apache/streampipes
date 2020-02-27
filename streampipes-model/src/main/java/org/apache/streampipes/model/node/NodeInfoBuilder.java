@@ -51,6 +51,7 @@ public class NodeInfoBuilder {
 //    }
 
     public NodeInfoBuilder withNodeNameAndPort(String nodeName, int nodePort) {
+        this.nodeMetadata.setNodeName(nodeName);
         this.nodeMetadata.setNodePort(nodePort);
         return this;
     }

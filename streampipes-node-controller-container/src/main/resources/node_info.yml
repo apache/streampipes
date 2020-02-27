@@ -4,7 +4,7 @@ nodeInfo:
       host: "ipe-girlitz.fzi.de"
       port: 61616
     nodeMetadata:
-      nodeName: "ipe-biber.fzi.de"
+      nodeName: "host.docker.internal"
       nodePort: 7077
       nodeDescription: "agent"
       nodeLocation: "edge"
