@@ -14,6 +14,6 @@
 # limitations under the License.
 
 # Those parameters are used by IntelliJ to set the default consul parameters for development
-SP_BACKEND_HOST=localhost
+SP_BACKEND_HOST=host.docker.internal
 CONSUL_LOCATION=host.docker.internal
 NODE_INFO_YAML_FILE=node_info.yml

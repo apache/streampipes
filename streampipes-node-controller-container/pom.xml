@@ -51,17 +51,26 @@
         </dependency>
 
         <!--external dependencies-->
-<!--        <dependency>-->
-<!--            <groupId>com.github.oshi</groupId>-->
-<!--            <artifactId>oshi-core</artifactId>-->
-<!--            <version>4.1.1</version>-->
-<!--        </dependency>-->
+        <!-- parse yaml config -->
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
             <version>1.21</version>
         </dependency>
-
+        <!-- docker client for java -->
+        <dependency>
+            <groupId>com.spotify</groupId>
+            <artifactId>docker-client</artifactId>
+            <classifier>shaded</classifier>
+            <version>8.16.0</version>
+        </dependency>
+<!--        </dependency>-->
+        <!-- used for gathering system information-->
+<!--        <dependency>-->
+<!--            <groupId>com.github.oshi</groupId>-->
+<!--            <artifactId>oshi-core</artifactId>-->
+<!--            <version>4.1.1</version>-->
+<!--        </dependency>-->
     </dependencies>
 
     <build>
