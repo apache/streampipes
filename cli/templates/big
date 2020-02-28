@@ -23,7 +23,6 @@ sinks-brokers-jvm
 sinks-databases-flink
 sinks-databases-jvm
 sinks-internal-jvm
-sources-random-data-generator
 sources-vehicle-simulator
 sources-watertank-simulator
 taskmanager
