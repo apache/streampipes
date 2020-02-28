@@ -6,37 +6,28 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
-export class ImageTranslationHelper {
 
-  private static lastImageTranslationX = 0;
-  private static lastImageTranslationY = 0;
-  private static lastMouseX = 0;
-  private static lastMouseY = 0;
+export class ColorUtil {
 
-  static mouseDown(mousePos, imageTranslationX, imageTranslationY) {
-    this.lastMouseX = mousePos[0];
-    this.lastMouseY = mousePos[1];
-    this.lastImageTranslationX = imageTranslationX;
-    this.lastImageTranslationY = imageTranslationY;
+  static getColor(label) {
+    var hash = 0;
+    for (var i = 0; i < label.length; i++) {
+      hash = label.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    var colour = '#';
+    for (var i = 0; i < 3; i++) {
+      var value = (hash >> (i * 8)) & 0xFF;
+      colour += ('00' + value.toString(16)).substr(-2);
+    }
+    return colour;
   }
-
-  static mouseMove(mousePos): [number, number] {
-    let mouseX = mousePos[0];
-    let mouseY = mousePos[1];
-    return [
-      this.lastImageTranslationX + (mouseX - this.lastMouseX)  ,
-      this.lastImageTranslationY + (mouseY- this.lastMouseY  )
-    ]
-  }
-
 
 }

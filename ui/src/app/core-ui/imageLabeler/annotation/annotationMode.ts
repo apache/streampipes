@@ -15,8 +15,9 @@
  * limitations under the License.
  */
 
-export enum InteractionMode {
-  imageViewing,
-  imageAnnotate,
-  imageClassify
+export enum AnnotationMode {
+  ReactLabeling,
+  ReactResize,
+  PolygonLabeling,
+  PolygonTransform,
 }

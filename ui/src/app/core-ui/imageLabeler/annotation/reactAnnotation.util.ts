@@ -6,17 +6,18 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
-export class ReactLabelingHelper {
+import { ColorUtil } from "../util/color.util";
+
+export class ReactAnnotationUtil {
 
   private static backgroundHoverAlpha = 0.6;
   private static backgroundAlpha = 0.2;
@@ -59,13 +60,13 @@ export class ReactLabelingHelper {
     this.offSetY = annotation.bbox[1] - imageCord[1];
   }
 
-  static mouseMoveCreate(imageCord, imageXShift, imageYShift, context, label, color) {
+  static mouseMoveCreate(imageCord, imageXShift, imageYShift, context, label) {
       if(this.isMouseDown) {
         this.reactWidth = imageCord[0] - this.lastImageCordX;
         this.reactHeight = imageCord[1] - this.lastImageCordY;
 
-        context.strokeStyle = color;
-        context.fillStyle = color;
+        context.strokeStyle = ColorUtil.getColor(label);
+        context.fillStyle = context.strokeStyle;
         context.beginPath();
         context.globalAlpha = this.backgroundHoverAlpha;
         context.fillRect(this.lastImageCordX + imageXShift, this.lastImageCordY + imageYShift,
@@ -112,11 +113,11 @@ export class ReactLabelingHelper {
 
   }
 
-  static mouseUpCreate(mousePosTransformed, coco, labelId) {
+  static mouseUpCreate(imageCords, coco, labelId) {
     this.isMouseDown = false;
 
-    let reactWidth = mousePosTransformed[0] - this.lastImageCordX;
-    let reactHeight = mousePosTransformed[1] - this.lastImageCordY;
+    let reactWidth = imageCords[0] - this.lastImageCordX;
+    let reactHeight = imageCords[1] - this.lastImageCordY;
 
     if (reactWidth > 0 && reactHeight > 0) {
       coco.addReactAnnotation(this.lastImageCordX, this.lastImageCordY , reactWidth, reactHeight, labelId);
@@ -124,7 +125,7 @@ export class ReactLabelingHelper {
     }
    }
 
-  static draw(annotation, label, context, color, imageXShift, imageYShift, scale) {
+  static draw(annotation, label, context, imageXShift, imageYShift, scale) {
     let bbox = annotation.bbox;
    // this.drawBox(bbox[0] + imageXShift, bbox[1] + imageYShift, bbox[2], bbox[3], label, color, context, annotation.isHovered);
 
@@ -135,8 +136,8 @@ export class ReactLabelingHelper {
     } else {
       context.globalAlpha = this.backgroundAlpha;
     }
-    context.strokeStyle = color;
-    context.fillStyle = color;
+    context.strokeStyle = ColorUtil.getColor(label);
+    context.fillStyle = context.strokeStyle;
     context.beginPath();
     context.fillRect(bbox[0] + imageXShift, bbox[1] + imageYShift, bbox[2], bbox[3]);
     context.globalAlpha = 1;

@@ -33,6 +33,8 @@ import {LineChartComponent} from './linechart/lineChart.component';
 //import * as PlotlyJS from 'plotly.js/dist/plotly.js';
 import { PlotlyViaWindowModule } from 'angular-plotly.js';
 import { ImageLabelerComponent } from "./imageLabeler/imageLabeler.component";
+import { ImageAnnotation } from "./imageLabeler/annotation/imageAnnotation";
+import { ImageClassification } from "./imageLabeler/classification/imageClassification";
 //PlotlyViaCDNModule.plotlyjs = PlotlyJS;
 
 @NgModule({
@@ -55,7 +57,9 @@ import { ImageLabelerComponent } from "./imageLabeler/imageLabeler.component";
         ImageLabelerComponent,
     ],
     providers: [
-        MatDatepickerModule
+        MatDatepickerModule,
+        ImageAnnotation,
+        ImageClassification
     ],
     entryComponents: [
     ],

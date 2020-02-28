@@ -14,9 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+export class ImageTranslationUtil {
 
-export enum InteractionMode {
-  imageViewing,
-  imageAnnotate,
-  imageClassify
+  private static lastImageTranslationX = 0;
+  private static lastImageTranslationY = 0;
+  private static lastMouseX = 0;
+  private static lastMouseY = 0;
+
+  static mouseDown(mousePos, imageTranslationX, imageTranslationY) {
+    this.lastMouseX = mousePos[0];
+    this.lastMouseY = mousePos[1];
+    this.lastImageTranslationX = imageTranslationX;
+    this.lastImageTranslationY = imageTranslationY;
+  }
+
+  static mouseMove(mousePos): [number, number] {
+    let mouseX = mousePos[0];
+    let mouseY = mousePos[1];
+    return [
+      this.lastImageTranslationX + (mouseX - this.lastMouseX)  ,
+      this.lastImageTranslationY + (mouseY- this.lastMouseY  )
+    ]
+  }
+
+
 }
