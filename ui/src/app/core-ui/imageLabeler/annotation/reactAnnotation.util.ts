@@ -50,7 +50,6 @@ export class ReactLabelingHelper {
   }
 
   static mouseDownTransform(imageCord, annotation, scale) {
-    //check if pressing movement button
     this.lastImageCordX = imageCord[0];
     this.lastImageCordY = imageCord[1];
 
@@ -217,6 +216,16 @@ export class ReactLabelingHelper {
       annotation.bbox[1] + annotation.bbox[3] - size <= this.lastImageCordY && this.lastImageCordY <= annotation.bbox[1] + annotation.bbox[3]) {
       this.pressedButtom = true;
       console.log('pressedButtom')
+    }
+  }
+
+  public static checkIfClicked(imageCords, annotation) {
+    if (annotation.isBox()) {
+      if (annotation.bbox[0] <= imageCords[0] && imageCords[0] <= annotation.bbox[0] + annotation.bbox[2] &&
+        annotation.bbox[1] <= imageCords[1] && imageCords[1] <= annotation.bbox[1] + annotation.bbox[3]
+      ) {
+        return true;
+      }
     }
   }
 

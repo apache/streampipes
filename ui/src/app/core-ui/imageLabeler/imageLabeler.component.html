@@ -63,11 +63,16 @@
             <mat-hint>Tip: Move the image with the right mouse button and zoom with the mouse wheel, Use number shortcut to select label</mat-hint>
             <mat-hint>Tip: Use number 'E' and 'Q' to get previous/next image, Move image with WASD, Delete selected Annotatoin with 'Delete' button</mat-hint>
             -->
+            <div *ngIf="isImageAnnotateMode()">
+                <button mat-button (click)="imageAnnotation.setReactMode()" [style.background-color]="imageAnnotation.isReactMode() ? 'lightgrey' : 'white'"> <mat-icon>crop_3_2</mat-icon></button>
+                <button mat-button (click)="imageAnnotation.setPolygonMode()" [style.background-color]="imageAnnotation.isPolygonMode() ? 'lightgrey' : 'white'"> <mat-icon>details</mat-icon></button>
+            </div>
+
             <canvas (mousedown)="imageMouseDown($event)" (mousemove)="imageMouseMove($event)" (mouseup)="imageMouseUp($event)"
-                    #canvas width="800" height="500" >
+                    #canvas width="800" height="500" (dblclick)="dblclick($event)">
                 Your browser does not support the canvas element.
             </canvas>
-            <div class="zoomButton">
+            <div class="controlButtons">
                 <button mat-button (click)="zoomin()"> <mat-icon>zoom_in</mat-icon></button>
                 <button mat-button (click)="zoomout()"> <mat-icon>zoom_out</mat-icon></button>
             </div>

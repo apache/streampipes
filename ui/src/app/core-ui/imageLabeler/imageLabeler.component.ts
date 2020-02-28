@@ -53,7 +53,7 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
   public labelCategory;
   private selectedLabel;
 
-  public interactionMode: InteractionMode = InteractionMode.imageViewing;
+  public interactionMode: InteractionMode = InteractionMode.imageAnnotate;
 
   //scale
   private scale: number = 1;
@@ -84,7 +84,6 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
     this.canvas.addEventListener('contextmenu', event => event.preventDefault());
     this.canvas.addEventListener('DOMMouseScroll',event => this.scroll(event),false);
     this.canvas.addEventListener('mousewheel',event => this.scroll(event),false);
-    this.canvas.addEventListener('keydown',event => console.log(event),false);
 
     this.changeImage('https://cdn.pixabay.com/photo/2017/10/29/21/05/bridge-2900839_1280.jpg');
     this.context.lineWidth = 2;
@@ -125,7 +124,17 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
   }
 
   imageMouseMove(e) {
-    if (this.isLeftMouseDown) {
+    //TODO solve duplicated code
+    if (this.imageAnnotation.isPolygonLabeling()) {
+      this.startDraw();
+      let imageXShift = (this.canvasWidth - this.image.width) / 2;
+      let imageYShift =(this.canvasHeight - this.image.height) / 2;
+
+      this.imageAnnotation.annotationDraw(imageXShift, imageYShift, this.scale, this.context);
+      this.imageAnnotation.mouseMover(this.getImageCords(e.clientX, e.clientY), imageXShift, imageYShift,
+        this.context, this.selectedLabel);
+      this.endDraw();
+    } else if (this.isLeftMouseDown) {
 
       switch (this.interactionMode) {
         case InteractionMode.imageAnnotate: {
@@ -146,7 +155,7 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
       this.imageTranslationY = translation[1];
       this.draw();
     } else {
-      this.imageAnnotation.annotationHovering(this.getImageCords(e.clientX, e.clientY));
+      this.imageAnnotation.annotationHovering(this.getImageCords(e.clientX, e.clientY), this.scale);
       this.draw();
     }
 
@@ -158,13 +167,21 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
       switch (this.interactionMode) {
         case InteractionMode.imageAnnotate: {
             this.imageAnnotation.mouseUp(this.getImageCords(e.clientX, e.clientY), this.selectedLabel, this.labelCategory);
-            this.draw()
+            if (!this.imageAnnotation.isPolygonLabeling()) {
+              this.draw()
+            }
         }
           break;
       }
     }
     if (this.isRightMouseDown) {
       this.isRightMouseDown = false;
+    }
+  }
+
+  dblclick (e) {
+    if (this.interactionMode = InteractionMode.imageAnnotate) {
+      this.imageAnnotation.dblclick(this.getImageCords(e.clientX, e.clientY), this.selectedLabel, this.labelCategory);
     }
   }
 
@@ -208,7 +225,6 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
 
   @HostListener('document:keydown', ['$event'])
   handleShortCuts(event: KeyboardEvent) {
-    console.log(event.key);
     if (this.isHoverComponent) {
       if (event.code.toLowerCase().includes('digit')) {
         // Number
@@ -346,8 +362,5 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
   removeClass(clazz) {
     this.imageClassification.removeClass(clazz);
   }
-  
-
-
 
 }

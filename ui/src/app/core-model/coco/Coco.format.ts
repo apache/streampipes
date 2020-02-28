@@ -49,6 +49,16 @@ export class CocoFormat {
     this.annotations.push(annnotation)
   }
 
+  addPolygonAnnotation(points, categoryId) {
+    let annnotation = new Annotation();
+    annnotation.id = this.annotations.length + 1;
+    annnotation.iscrowd = 0;
+    annnotation.image_id = 1;
+    annnotation.segmentation = [points];
+    annnotation.category_id = categoryId;
+    this.annotations.push(annnotation)
+  }
+
   removeAnnotation(id) {
     this.annotations = this.annotations.filter(anno => anno.id !== id);
   }
