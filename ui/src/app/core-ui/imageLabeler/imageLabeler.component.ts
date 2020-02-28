@@ -250,6 +250,14 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
           case 'delete': this.imageAnnotation.deleteSelectedAnnotation();
             this.draw();
         }
+        if (this.interactionMode == InteractionMode.imageAnnotate) {
+          switch (key.toLowerCase()) {
+            case 'r': this.imageAnnotation.setReactMode();
+              break;
+            case 'f': this.imageAnnotation.setPolygonMode();
+              this.draw();
+          }
+        }
       }
     }
   }
