@@ -19,7 +19,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GridsterItem, GridsterItemComponent } from 'angular-gridster2';
-import { DashboardWidget } from '../../../core-model/dashboard/DashboardWidget';
+import { DataExplorerWidgetModel } from '../../../core-model/datalake/DataExplorerWidgetModel';
 import { DataExplorerAddVisualizationDialogComponent } from '../../dialogs/add-widget/data-explorer-add-visualization-dialog.component';
 import { IDataViewDashboardItem } from '../../models/dataview-dashboard.model';
 import { DataViewDataExplorerService } from '../../services/data-view-data-explorer.service';
@@ -37,10 +37,10 @@ export class DataExplorerDashboardWidgetComponent implements OnInit {
     @Input() gridsterItemComponent: GridsterItemComponent;
 
     @Output() deleteCallback: EventEmitter<IDataViewDashboardItem> = new EventEmitter<IDataViewDashboardItem>();
-    @Output() updateCallback: EventEmitter<DashboardWidget> = new EventEmitter<DashboardWidget>();
+    @Output() updateCallback: EventEmitter<DataExplorerWidgetModel> = new EventEmitter<DataExplorerWidgetModel>();
 
     widgetLoaded = false;
-    configuredWidget: DashboardWidget;
+    configuredWidget: DataExplorerWidgetModel;
 
     constructor(private dashboardService: DataViewDataExplorerService,
                 private dialog: MatDialog) {

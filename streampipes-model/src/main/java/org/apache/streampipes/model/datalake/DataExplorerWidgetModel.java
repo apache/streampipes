@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.model.datalake;
 
-import org.apache.streampipes.model.schema.EventSchema;
+import org.apache.streampipes.model.dashboard.DashboardEntity;
 import org.apache.streampipes.vocabulary.StreamPipes;
 import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
@@ -28,40 +28,46 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToOne;
 
-@RdfsClass(StreamPipes.DATA_LAKE_MEASURE)
+@RdfsClass(StreamPipes.DATA_EXPLORER_WIDGET_MODEL)
 @Entity
-public class DataLakeMeasure {
+public class DataExplorerWidgetModel extends DashboardEntity {
 
-    @RdfProperty(StreamPipes.HAS_MEASUREMENT_NAME)
-    private String measureName;
+  @RdfProperty(StreamPipes.HAS_DASHBOARD_WIDGET_ID)
+  private String widgetId;
 
-    @OneToOne(fetch = FetchType.EAGER,
+  @RdfProperty(StreamPipes.HAS_MEASUREMENT_NAME)
+  private String measureName;
+
+  @OneToOne(fetch = FetchType.EAGER,
           cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @RdfProperty(StreamPipes.HAS_EVENT_SCHEMA)
-    private EventSchema eventSchema;
+  @RdfProperty(StreamPipes.HAS_DATA_LAKE_MEASURE)
+  private DataLakeMeasure dataLakeMeasure;
 
-    public DataLakeMeasure() {
+  public DataExplorerWidgetModel() {
+    super();
+  }
 
-    }
+  public String getWidgetId() {
+    return widgetId;
+  }
 
-    public DataLakeMeasure(String measureName, EventSchema eventSchema) {
-        this.measureName = measureName;
-        this.eventSchema = eventSchema;
-    }
+  public void setWidgetId(String widgetId) {
+    this.widgetId = widgetId;
+  }
 
-    public String getMeasureName() {
-        return measureName;
-    }
+  public DataLakeMeasure getDataLakeMeasure() {
+    return dataLakeMeasure;
+  }
 
-    public void setMeasureName(String measureName) {
-        this.measureName = measureName;
-    }
+  public void setDataLakeMeasure(DataLakeMeasure dataLakeMeasure) {
+    this.dataLakeMeasure = dataLakeMeasure;
+  }
 
-    public EventSchema getEventSchema() {
-        return eventSchema;
-    }
+  public String getMeasureName() {
+    return measureName;
+  }
 
-    public void setEventSchema(EventSchema eventSchema) {
-        this.eventSchema = eventSchema;
-    }
+  public void setMeasureName(String measureName) {
+    this.measureName = measureName;
+  }
 }

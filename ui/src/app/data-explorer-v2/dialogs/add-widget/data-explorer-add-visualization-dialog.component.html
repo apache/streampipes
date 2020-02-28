@@ -53,10 +53,10 @@
                             [gutterSize]="100">
 
                         <mat-grid-tile class="gray" *ngFor="let widget of availableWidgets">
-                            <div [ngClass]="getSelectedPipelineCss(widget.widgetLabel)"
+                            <div [ngClass]="getSelectedPipelineCss(widget)"
                                  (click)="selectWidget(widget)">
-                                {{iconText(widget.widgetLabel)}}
-                                <h5>{{widget.widgetLabel}}</h5>
+                                {{iconText(widget)}}
+                                <h5>{{widget}}</h5>
                             </div>
                         </mat-grid-tile>
                     </mat-grid-list>

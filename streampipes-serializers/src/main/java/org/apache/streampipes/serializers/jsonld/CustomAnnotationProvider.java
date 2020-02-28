@@ -52,6 +52,7 @@ import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescrip
 import org.apache.streampipes.model.connect.worker.ConnectWorkerContainer;
 import org.apache.streampipes.model.dashboard.DashboardWidgetModel;
 import org.apache.streampipes.model.dashboard.VisualizablePipeline;
+import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkDescription;
@@ -246,6 +247,7 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             SecretStaticProperty.class,
             DashboardWidgetModel.class,
             VisualizablePipeline.class,
+            DataExplorerWidgetModel.class,
             StreamPipesJsonLdContainer.class
 
     );

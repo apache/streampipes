@@ -33,7 +33,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-public abstract class AbstractDashboard extends AbstractRestInterface implements IDashboard {
+public abstract class AbstractDashboardResource extends AbstractRestInterface implements IDashboard {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)

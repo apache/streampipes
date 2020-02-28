@@ -16,12 +16,21 @@
  *
  */
 
-import { EventSchema } from '../../connect/schema-editor/model/EventSchema';
+package org.apache.streampipes.rest.api.dataexplorer;
 
-export class InfoResult {
-    public measureName: string;
-    public eventSchema: EventSchema;
+import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 
-    constructor () {
-    }
+import javax.ws.rs.core.Response;
+
+public interface IDataExplorerWidget {
+
+  Response getAllDataExplorerWidgets();
+
+  Response getDataExplorerWidget(String widgetId);
+
+  Response modifyDataExplorerWidget(DataExplorerWidgetModel dataExplorerWidgetModel);
+
+  Response deleteDataExplorerWidget(String widgetId);
+
+  Response createDataExplorerWidget(DataExplorerWidgetModel dataExplorerWidgetModel);
 }

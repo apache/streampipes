@@ -26,7 +26,7 @@ import {
     ViewChildren
 } from '@angular/core';
 import { GridsterItemComponent, GridType } from 'angular-gridster2';
-import { DashboardWidget } from '../../../core-model/dashboard/DashboardWidget';
+import { DataExplorerWidgetModel } from '../../../core-model/datalake/DataExplorerWidgetModel';
 import { GridsterInfo } from '../../../dashboard-v2/models/gridster-info.model';
 import { IDataViewDashboard, IDataViewDashboardConfig, IDataViewDashboardItem } from '../../models/dataview-dashboard.model';
 import { DataViewDataExplorerService } from '../../services/data-view-data-explorer.service';
@@ -44,7 +44,7 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
     @Input() dashboard: IDataViewDashboard;
 
     @Output() deleteCallback: EventEmitter<IDataViewDashboardItem> = new EventEmitter<IDataViewDashboardItem>();
-    @Output() updateCallback: EventEmitter<DashboardWidget> = new EventEmitter<DashboardWidget>();
+    @Output() updateCallback: EventEmitter<DataExplorerWidgetModel> = new EventEmitter<DataExplorerWidgetModel>();
 
     options: IDataViewDashboardConfig;
     loaded = false;
@@ -90,7 +90,7 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
         this.deleteCallback.emit(widget);
     }
 
-    propagateItemUpdate(dashboardWidget: DashboardWidget) {
+    propagateItemUpdate(dashboardWidget: DataExplorerWidgetModel) {
         this.updateCallback.emit(dashboardWidget);
     }
 

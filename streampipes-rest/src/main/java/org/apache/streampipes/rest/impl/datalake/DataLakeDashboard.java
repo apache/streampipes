@@ -17,13 +17,13 @@ limitations under the License.
 package org.apache.streampipes.rest.impl.datalake;
 
 
-import org.apache.streampipes.rest.impl.dashboard.AbstractDashboard;
+import org.apache.streampipes.rest.impl.dashboard.AbstractDashboardResource;
 import org.apache.streampipes.storage.api.IDashboardStorage;
 
 import javax.ws.rs.Path;
 
 @Path("/v3/users/{username}/datalake/dashboard")
-public class DataLakeDashboard extends AbstractDashboard {
+public class DataLakeDashboard extends AbstractDashboardResource {
 
     protected IDashboardStorage getDashboardStorage() {
         return getNoSqlStorage().getDataExplorerDashboardStorage();

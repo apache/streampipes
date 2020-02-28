@@ -376,4 +376,10 @@ public class StreamPipes {
   public static final String DASHBOARD_WIDGET_DATA_CONFIG = NS + "DashboardWidgetDataConfig" ;
   public static final String COLOR_PICKER_STATIC_PROPERTY = NS + "ColorPickerStaticProperty";
   public static final String SELECTED_COLOR = NS + "hasSelectedColor";
+
+  public static final String DATA_EXPLORER_WIDGET_MODEL = NS + "DataExplorerWidgetModel";
+  public static final String DATA_LAKE_MEASURE = NS + "DataLakeMeasure";
+  public static final String HAS_DATA_LAKE_MEASURE = NS + "hasDataLakeMeasure";
+  public static final String HAS_MEASUREMENT_NAME = NS + "hasMeasurementName";
+  public static final String HAS_EVENT_SCHEMA = NS + "hasEventSchema";
 }

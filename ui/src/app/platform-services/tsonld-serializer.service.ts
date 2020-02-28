@@ -98,6 +98,7 @@ import {DashboardWidgetDataConfig} from "../core-model/dashboard/DashboardWidget
 import {DashboardWidgetSettings} from "../core-model/dashboard/DashboardWidgetSettings";
 import {ColorPickerStaticProperty} from "../connect/model/ColorPickerStaticProperty";
 import {MappingPropertyNary} from "../connect/model/MappingPropertyNary";
+import { DataExplorerWidgetModel } from "../core-model/datalake/DataExplorerWidgetModel";
 
 
 @Injectable()
@@ -192,6 +193,9 @@ export class TsonLdSerializerService {
 
         tsonld.addClassMapping(VisualizablePipeline);
         tsonld.addClassMapping(ColorPickerStaticProperty);
+
+        tsonld.addClassMapping(DataExplorerWidgetModel);
+
 
         tsonld.addContext('sp', 'https://streampipes.org/vocabulary/v1/');
         tsonld.addContext('spi', 'urn:streampipes.org:spi:');

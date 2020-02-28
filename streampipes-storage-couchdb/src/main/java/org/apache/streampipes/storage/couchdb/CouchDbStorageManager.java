@@ -95,6 +95,11 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   }
 
   @Override
+  public IDataExplorerWidgetStorage getDataExplorerWidgetStorage() {
+    return new DataExplorerWidgetStorageImpl();
+  }
+
+  @Override
   public IVisualizablePipelineStorage getVisualizablePipelineStorage() {
     return new VisualizablePipelineStorageImpl();
   }

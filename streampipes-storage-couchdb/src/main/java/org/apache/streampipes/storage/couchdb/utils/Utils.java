@@ -95,6 +95,13 @@ public class Utils {
   }
 
 
+  public static CouchDbClient getCouchDbDataExplorerWidgetClient() {
+    CouchDbClient dbClient = new CouchDbClient(props("dataexplorerwidget"));
+    dbClient.setGsonBuilder(GsonSerializer.getGsonBuilder());
+    return dbClient;
+  }
+
+
   public static CouchDbClient getCouchDbDashboardClient() {
     CouchDbClient dbClient = new CouchDbClient(props("dashboard"));
     dbClient.setGsonBuilder(GsonSerializer.getGsonBuilder());

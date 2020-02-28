@@ -16,12 +16,21 @@
  *
  */
 
-import { EventSchema } from '../../connect/schema-editor/model/EventSchema';
+package org.apache.streampipes.storage.api;
 
-export class InfoResult {
-    public measureName: string;
-    public eventSchema: EventSchema;
+import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 
-    constructor () {
-    }
+import java.util.List;
+
+public interface IDataExplorerWidgetStorage {
+
+  List<DataExplorerWidgetModel> getAllDataExplorerWidgets();
+
+  String storeDataExplorerWidget(DataExplorerWidgetModel dataExplorerWidgetModel);
+
+  void updateDataExplorerWidget(DataExplorerWidgetModel dataExplorerWidgetModel);
+
+  DataExplorerWidgetModel getDataExplorerWidget(String dataExplorerWidgetId);
+
+  void deleteDataExplorerWidget(String dataExplorerWidgetId);
 }

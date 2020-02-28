@@ -16,19 +16,30 @@
  *
  */
 
-import { DashboardWidgetSettings } from '../../core-model/dashboard/DashboardWidgetSettings';
-import { WidgetConfig } from '../components/widgets/base/base-config';
-import { TableConfig } from '../components/widgets/table/table-config';
+import { UnnamedStreamPipesEntity } from '../../connect/model/UnnamedStreamPipesEntity';
+import { EventSchema } from '../../connect/schema-editor/model/EventSchema';
+import { RdfsClass } from '../../platform-services/tsonld/RdfsClass';
+import { RdfProperty } from '../../platform-services/tsonld/RdfsProperty';
 
-export class WidgetRegistry {
+@RdfsClass('sp:DataExplorerWidgetModel')
+export class DataExplorerWidgetModel extends UnnamedStreamPipesEntity {
 
-    private static availableWidgets: WidgetConfig[] = [
-        new TableConfig(),
-    ];
+    @RdfProperty('sp:couchDbId')
+    _id: string;
 
-    static getAvailableWidgetTemplates(): DashboardWidgetSettings[] {
-        const widgetTemplates = new Array<DashboardWidgetSettings>();
-        this.availableWidgets.forEach(widget => widgetTemplates.push(widget.getConfig()));
-        return widgetTemplates;
+    @RdfProperty('sp:couchDbRev')
+    _ref: string;
+
+    @RdfProperty('sp:hasDashboardWidgetId')
+    widgetId: string;
+
+    @RdfProperty('sp:hasMeasurementName')
+    measureName: string;
+
+    @RdfProperty('sp:hasSchema')
+    eventSchema: EventSchema;
+
+    constructor() {
+        super();
     }
 }

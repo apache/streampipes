@@ -18,8 +18,8 @@
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { forkJoin, Observable, Subscription } from 'rxjs';
-import { DashboardWidget } from '../../../core-model/dashboard/DashboardWidget';
+import { Observable, Subscription } from 'rxjs';
+import { DataExplorerWidgetModel } from '../../../core-model/datalake/DataExplorerWidgetModel';
 import { DataExplorerAddVisualizationDialogComponent } from '../../dialogs/add-widget/data-explorer-add-visualization-dialog.component';
 import { IDataViewDashboard, IDataViewDashboardItem } from '../../models/dataview-dashboard.model';
 import { DataViewDataExplorerService } from '../../services/data-view-data-explorer.service';
@@ -41,7 +41,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
   protected subscription: Subscription;
 
   widgetIdsToRemove: string[] = [];
-  widgetsToUpdate: Map<string, DashboardWidget> = new Map<string, DashboardWidget>();
+  widgetsToUpdate: Map<string, DataExplorerWidgetModel> = new Map<string, DataExplorerWidgetModel>();
 
   constructor(private dashboardService: DataViewDataExplorerService,
               public dialog: MatDialog,
@@ -66,12 +66,11 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
     });
   }
 
-  addWidgetToDashboard(widget: DashboardWidget) {
+  addWidgetToDashboard(widget: DataExplorerWidgetModel) {
     const dashboardItem = {} as IDataViewDashboardItem;
     dashboardItem.widgetId = widget._id;
     dashboardItem.id = widget._id;
     // TODO there should be a widget type DashboardWidget
-    dashboardItem.widgetType = widget.dashboardWidgetSettings.widgetName;
     dashboardItem.cols = 2;
     dashboardItem.rows = 2;
     dashboardItem.x = 0;
@@ -121,8 +120,8 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
     this.widgetIdsToRemove.push(widget.id);
   }
 
-  updateAndQueueItemForDeletion(dashboardWidget: DashboardWidget) {
-    this.widgetsToUpdate.set(dashboardWidget._id, dashboardWidget);
+  updateAndQueueItemForDeletion(dataExlporerWidget: DataExplorerWidgetModel) {
+    this.widgetsToUpdate.set(dataExlporerWidget._id, dataExlporerWidget);
   }
 
   deleteWidgets() {
