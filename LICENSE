@@ -211,3 +211,10 @@ MaterialIcons-Regular.ttf (https://github.com/google/material-design-icons/tree/
 MaterialIcons-Regular.woff (https://github.com/google/material-design-icons/tree/master/iconfont)
 MaterialIcons-Regular.woff2 (https://github.com/google/material-design-icons/tree/master/iconfont)
 Roboto-Regular.ttf (https://github.com/google/roboto/)
+
+===============================================================
+
+This project includes some sources that are not licensed under the Apache
+License Version 2.0:
+
+All files in streampipes-measurement-units/src/main/java/com.github.jqudt (https://github.com/egonw/jqudt), License: BSD-3-Clause
