@@ -40,7 +40,7 @@
         <div fxFlex="30" fxLayout="row" fxLayoutAlign="end end" *ngIf="isRunningAdapter" class="delete">
             <button id="{{ 'create-template-' + adapter.label.split(' ').join('_') }}" matTooltip="Create Adapter Template" color="secondary" class="edit" mat-fab (click)="createTemplate(adapter)">
                 <i class="material-icons">
-                   file_copy
+                    content_copy
                 </i>
             </button>
             <button id="{{ 'delete-' + adapterLabel }}" matTooltip="Delete Adapter" color="primary" mat-fab (click)="deleteAdapter(adapter)" [disabled]="deleteInProgress(adapter.couchDbId)">
