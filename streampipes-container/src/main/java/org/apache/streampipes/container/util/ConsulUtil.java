@@ -28,6 +28,7 @@ import com.orbitz.consul.model.health.HealthCheck;
 import com.orbitz.consul.model.health.Service;
 import com.orbitz.consul.model.health.ServiceHealth;
 import com.orbitz.consul.model.kv.Value;
+import com.orbitz.consul.option.DeleteOptions;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.StringEntity;
 import org.apache.streampipes.container.model.consul.ConsulServiceRegistrationBody;
@@ -209,8 +210,16 @@ public class ConsulUtil {
   public static void deregisterService(String serviceId) {
     Consul consul = consulInstance();
 
+    LOG.info("Deregister Service: " + serviceId);
     consul.agentClient().deregister(serviceId);
-    LOG.info("Deregistered Service: " + serviceId);
+  }
+
+  public static void deleteKeys(String serviceId) {
+    Consul consul = consulInstance();
+
+    LOG.info("Delete keys: {}", serviceId);
+    // TODO: namespace should not be hardcoded
+    consul.keyValueClient().deleteKeys("/sp/v1/" + serviceId);
   }
 
   private static int registerServiceHttpClient(String body) throws IOException {
