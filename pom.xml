@@ -1049,6 +1049,7 @@
 
                         <!-- External vocabularies -->
                         <exclude>streampipes-measurement-units/src/main/resources/onto/**</exclude>
+                        <exclude>streampipes-measurement-units/src/main/java/com/github/jqudt/**</exclude>
 
                         <!-- Exclude some UI files which we need to check in more detail -->
                         <exclude>ui/src/assets/**</exclude>
