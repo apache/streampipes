@@ -538,6 +538,9 @@
                         <!-- Language Files -->
                         <exclude>**/*.en</exclude>
 
+                        <!-- External files -->
+                        <exclude>streampipes-processors-transformation-flink/src/main/java/com/kohlschutter/boilerpipe/**</exclude>
+
                     </excludes>
                 </configuration>
             </plugin>
