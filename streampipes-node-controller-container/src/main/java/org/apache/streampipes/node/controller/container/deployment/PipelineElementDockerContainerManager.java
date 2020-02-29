@@ -25,6 +25,7 @@ import com.spotify.docker.client.exceptions.DockerCertificateException;
 import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.*;
 import org.apache.commons.lang.StringUtils;
+import org.apache.streampipes.container.util.ConsulUtil;
 import org.apache.streampipes.model.node.PipelineElementDockerContainer;
 import org.apache.streampipes.node.controller.container.deployment.utils.DockerUtils;
 import org.slf4j.Logger;
@@ -71,7 +72,7 @@ public class PipelineElementDockerContainerManager {
             ContainerCreation creation = dockerClient
                     .createContainer(containerConfig, SP_CONTAINER_PREFIX + container.getContainerName());
 
-            LOG.info("Deploy container: {}", container.getContainerName());
+            LOG.info("Deploy pipeline element container: {}", container.getContainerName());
             dockerClient.startContainer(creation.id());
 
             return "{\n" +
@@ -81,61 +82,74 @@ public class PipelineElementDockerContainerManager {
                     "}";
         }
 
-        LOG.info("Deployment request declined");
+        LOG.info("Deployment request declined: {}", container.getContainerName());
         return "{\n" +
                 "  \"message\": \"deployment request for " + container.getContainerName() + " declined\",\n" +
                 "  \"status\": \"running\"\n" +
                 "}";
     }
 
-    public static String stopAndRemove(String containerName) {
+    public static String stopAndRemove(PipelineElementDockerContainer container) {
 
-        if(containerDeployed(containerName)) {
+        if(containerDeployed(container.getContainerName())) {
+
+            LOG.info("Stop and remove pipeline element container: {}", container.getContainerName());
+
+            String cId = containerId(container.getContainerName());
+            // stop and remove docker container
             try {
-
-                // TODO: fix
-                String cId = containerId("pipeline-element-all-jvm");
                 dockerClient.stopContainer(cId, 0);
                 dockerClient.removeContainer(cId);
 
-                return "succes";
+                // deregister and delete kv pair in service in consul
+                ConsulUtil.deregisterService(container.getServiceId());
+                ConsulUtil.deleteKeys(container.getServiceId());
 
             } catch (DockerException | InterruptedException e) {
                 e.printStackTrace();
             }
-        }
-        return "container not running";
 
+            return "{\n" +
+                    "  \"message\": \"stop and remove request for " + container.getContainerName() + " executed\",\n" +
+                    "  \"status\": \"container removed\"\n" +
+                    "}";
+
+        }
+        LOG.info("Deployment request declined: {}", container.getContainerName());
+        return "{\n" +
+                "  \"message\": \"stop and remove request for " + container.getContainerName() + " declined\",\n" +
+                "  \"status\": \"no such container running\"\n" +
+                "}";
     }
 
     private static boolean containerDeployed(String containerName) {
+        boolean deployed = false;
         try {
             List<Container> runningContainers = dockerClient.listContainers();
             for (Container c: runningContainers) {
-                if (StringUtils.contains(c.names().toString(), containerName)) {
-                    return true;
+                if ( StringUtils.contains(c.names().get(0), containerName) ) {
+                    deployed = true;
+                    break;
                 }
-                return false;
+                deployed = false;
             }
         } catch (DockerException | InterruptedException e) {
             e.printStackTrace();
         }
-        return false;
+        return deployed;
     }
 
     private static String containerId(String containerName){
         try {
             List<Container> containers = dockerClient.listContainers();
             for (Container c: containers) {
-                if(c.names().contains(containerName)) {
+                if(c.names().get(0).contains(containerName)) {
                     return c.id();
                 }
-                break;
             }
         } catch (DockerException | InterruptedException e) {
             e.printStackTrace();
         }
-
         return "";
     }
 
@@ -153,6 +167,7 @@ public class PipelineElementDockerContainerManager {
                         Map<String, String> inner = new HashMap<String, String>() {
                             {
                                 put("pipeline-element", StringUtils.remove(c.names().get(0), "/" + SP_CONTAINER_PREFIX));
+                                put("containerId", c.id());
                                 put("state", c.state());
                                 put("status", c.status());
                             }

@@ -54,25 +54,21 @@ public class NodeDeploymentResource {
     }
 
     @POST
-    @Path("/container/remove/{containerName}")
+    @Path("/container/remove")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response stopPipelineElementContainer(@PathParam("containerName") String containerName) {
+    public Response stopPipelineElementContainer(PipelineElementDockerContainer container) {
 
-        // TODO: stop PE on node
-        // stop docker container
-        // deregister in Consul as service
-        // delete k/v in Consul
         return Response
-                .ok(PipelineElementDockerContainerManager.stopAndRemove(containerName))
+                .ok(PipelineElementDockerContainerManager.stopAndRemove(container))
                 .build();
     }
 
     @POST
-    @Path("/start")
+    @Path("/container/processor/invoke")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response startPipelineElement(String appId) {
+    public Response invokePipelineElement(String appId) {
         // TODO implement
         return Response
                 .ok()
@@ -80,10 +76,21 @@ public class NodeDeploymentResource {
     }
 
     @POST
-    @Path("/stop")
+    @Path("/container/processor/stop")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response stopPipelineElement(String appId) {
+        // TODO implement
+        return Response
+                .ok()
+                .build();
+    }
+
+    @POST
+    @Path("/container/register")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response registerPipelineElementInConsul(String serviceId) {
         // TODO implement
         return Response
                 .ok()
