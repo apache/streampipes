@@ -17,6 +17,7 @@ ARG BASE_IMAGE=arm32v7/openjdk:11-jre-slim
 FROM $BASE_IMAGE
 
 ENV CONSUL_LOCATION consul
+ENV NODE_INFO_YAML_FILE node_info.yml
 
 EXPOSE 7077
 
