@@ -50,6 +50,7 @@
         <elasticsearch.version>6.6.2</elasticsearch.version>
         <empire-rdf4j.version>1.9.13</empire-rdf4j.version>
         <flink.version>1.9.1</flink.version>
+        <fogsy-qudt.version>1.0</fogsy-qudt.version>
         <fst.version>2.56</fst.version>
         <geojson-jackson.version>1.8</geojson-jackson.version>
         <guava.version>27.1-jre</guava.version>
@@ -687,6 +688,11 @@
                 <groupId>io.fogsy</groupId>
                 <artifactId>empire-pinto</artifactId>
                 <version>${empire-rdf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.fogsy</groupId>
+                <artifactId>qudt</artifactId>
+                <version>${fogsy-qudt.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.xerial.snappy</groupId>
