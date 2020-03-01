@@ -3,5 +3,4 @@ kafka
 consul
 zookeeper
 couchdb
-kafka-rest
 influxdb

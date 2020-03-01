@@ -7,7 +7,6 @@ couchdb
 elasticsearch
 jobmanager
 kafka
-kafka-rest
 kibana
 nginx
 processors-aggregation-flink
