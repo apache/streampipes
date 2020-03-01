@@ -99,6 +99,7 @@ export class HelpDialogController {
     };
 
     cancel() {
+        this.pollingActive = false;
         this.$mdDialog.cancel();
     };
 
