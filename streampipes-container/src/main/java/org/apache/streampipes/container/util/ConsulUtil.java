@@ -28,7 +28,6 @@ import com.orbitz.consul.model.health.HealthCheck;
 import com.orbitz.consul.model.health.Service;
 import com.orbitz.consul.model.health.ServiceHealth;
 import com.orbitz.consul.model.kv.Value;
-import com.orbitz.consul.option.DeleteOptions;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.StringEntity;
 import org.apache.streampipes.container.model.consul.ConsulServiceRegistrationBody;
