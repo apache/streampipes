@@ -37,7 +37,7 @@ export abstract class BaseNgxLineConfig extends WidgetConfig {
                 .requiredPropertyWithUnaryMapping(BaseNgxLineConfig.NUMBER_MAPPING_KEY, "Number field", "", EpRequirements.numberReq())
                 .build())
             .requiredIntegerParameter(BaseNgxLineConfig.MIN_Y_AXIS_KEY, "Y-axis range (min)", "")
-            .requiredIntegerParameter(BaseNgxLineConfig.MAX_Y_AXIS_KEY, "Y-axis range (min)", "")
+            .requiredIntegerParameter(BaseNgxLineConfig.MAX_Y_AXIS_KEY, "Y-axis range (max)", "")
             .build();
     }
 
