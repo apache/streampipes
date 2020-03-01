@@ -377,4 +377,9 @@ public class StreamPipes {
   public static final String COLOR_PICKER_STATIC_PROPERTY = NS + "ColorPickerStaticProperty";
   public static final String SELECTED_COLOR = NS + "hasSelectedColor";
   public static final String DEPLOYMENT_TARGET_NODE_ID = NS + "hasDeploymentTargetNodeId";
+  public static final String DEPLOYMENT_TARGET_NODE_HOSTNAME = NS + "hasDeploymentTargetNodeHostname";
+  public static final String DEPLOYMENT_TARGET_NODE_PORT = NS + "hasDeploymentTargetNodePort";
+  public static final String ELEMENT_ENDPOINT_HOSTNAME = NS + "hasElementEndpointHostname";
+  public static final String ELEMENT_ENDPOINT_PORT = NS + "hasElementEndpointPort" ;
+    public static final String DEPLOYMENT_RUNNING_INSTANCE_ID = NS + "hasDeploymentRunningInstanceId" ;
 }

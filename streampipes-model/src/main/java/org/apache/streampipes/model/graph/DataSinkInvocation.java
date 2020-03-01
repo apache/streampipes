@@ -49,19 +49,8 @@ public class DataSinkInvocation extends InvocableStreamPipesEntity {
   }
 
   public DataSinkInvocation(DataSinkDescription sec) {
-    super();
-    this.setName(sec.getName());
-    this.setDescription(sec.getDescription());
-    this.setIconUrl(sec.getIconUrl());
-    this.setInputStreams(sec.getSpDataStreams());
-    this.setSupportedGrounding(sec.getSupportedGrounding());
-    this.setStaticProperties(sec.getStaticProperties());
-    this.setBelongsTo(sec.getElementId());
+    super(sec);
     this.category = sec.getCategory();
-    this.setStreamRequirements(sec.getSpDataStreams());
-    this.setAppId(sec.getAppId());
-    this.setIncludesAssets(sec.isIncludesAssets());
-    //this.setUri(belongsTo +"/" +getElementId());
   }
 
   public DataSinkInvocation(DataSinkDescription sec, String domId) {

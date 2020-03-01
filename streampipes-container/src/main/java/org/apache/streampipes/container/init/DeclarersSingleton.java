@@ -223,6 +223,14 @@ public class DeclarersSingleton {
     return Http + hostName + Colon + port + route;
   }
 
+  public int getPort() {
+    return port;
+  }
+
+  public String getHostname() {
+    return hostName;
+  }
+
   private void checkAndStartExecutableStreams(SemanticEventProducerDeclarer sourceDeclarer) {
     sourceDeclarer.getEventStreams()
             .stream()

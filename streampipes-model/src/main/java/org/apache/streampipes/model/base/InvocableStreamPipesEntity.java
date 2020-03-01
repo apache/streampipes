@@ -62,8 +62,23 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
   @RdfProperty(StreamPipes.CORRESPONDING_PIPELINE)
   private String correspondingPipeline;
 
+  @RdfProperty(StreamPipes.ELEMENT_ENDPOINT_HOSTNAME)
+  private String elementEndpointHostname;
+
+  @RdfProperty(StreamPipes.ELEMENT_ENDPOINT_PORT)
+  private Integer elementEndpointPort;
+
   @RdfProperty(StreamPipes.DEPLOYMENT_TARGET_NODE_ID)
   private String deploymentTargetNodeId;
+
+  @RdfProperty(StreamPipes.DEPLOYMENT_TARGET_NODE_HOSTNAME)
+  private String deploymentTargetNodeHostname;
+
+  @RdfProperty(StreamPipes.DEPLOYMENT_TARGET_NODE_PORT)
+  private Integer deploymentTargetNodePort;
+
+  @RdfProperty(StreamPipes.DEPLOYMENT_RUNNING_INSTANCE_ID)
+  private String deploymentRunningInstanceId;
 
   private List<SpDataStream> streamRequirements;
 
@@ -79,6 +94,12 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
     this.correspondingPipeline = other.getCorrespondingPipeline();
     this.inputStreams = new Cloner().streams(other.getInputStreams());
     this.configured = other.isConfigured();
+    this.elementEndpointHostname = other.getElementEndpointHostname();
+    this.elementEndpointPort = other.getElementEndpointPort();
+    this.deploymentTargetNodeHostname = other.getDeploymentTargetNodeHostname();
+    this.deploymentTargetNodeId = other.getDeploymentTargetNodeId();
+    this.deploymentTargetNodePort = other.getDeploymentTargetNodePort();
+    this.deploymentRunningInstanceId = other.getDeploymentRunningInstanceId();
     if (other.getStreamRequirements() != null) {
       this.streamRequirements = new Cloner().streams(other.getStreamRequirements());
     }
@@ -89,6 +110,23 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
     if (other.getSupportedGrounding() != null) {
       this.supportedGrounding = new EventGrounding(other.getSupportedGrounding());
     }
+  }
+
+  public InvocableStreamPipesEntity(ConsumableStreamPipesEntity entityDescription) {
+    super();
+    this.setName(entityDescription.getName());
+    this.setDescription(entityDescription.getDescription());
+    this.setIconUrl(entityDescription.getIconUrl());
+    this.setInputStreams(entityDescription.getSpDataStreams());
+    this.setSupportedGrounding(entityDescription.getSupportedGrounding());
+    this.setStaticProperties(entityDescription.getStaticProperties());
+    this.setBelongsTo(entityDescription.getElementId());
+    this.setStreamRequirements(entityDescription.getSpDataStreams());
+    this.setAppId(entityDescription.getAppId());
+    this.setIncludesAssets(entityDescription.isIncludesAssets());
+
+    this.setElementEndpointHostname(entityDescription.getElementEndpointHostname());
+    this.setElementEndpointPort(entityDescription.getElementEndpointPort());
   }
 
   public InvocableStreamPipesEntity(String uri, String name, String description, String iconUrl) {
@@ -170,6 +208,46 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
 
   public void setDeploymentTargetNodeId(String deploymentTargetNodeId) {
     this.deploymentTargetNodeId = deploymentTargetNodeId;
+  }
+
+  public String getDeploymentTargetNodeHostname() {
+    return deploymentTargetNodeHostname;
+  }
+
+  public void setDeploymentTargetNodeHostname(String deploymentTargetNodeHostname) {
+    this.deploymentTargetNodeHostname = deploymentTargetNodeHostname;
+  }
+
+  public Integer getDeploymentTargetNodePort() {
+    return deploymentTargetNodePort;
+  }
+
+  public void setDeploymentTargetNodePort(Integer deploymentTargetNodePort) {
+    this.deploymentTargetNodePort = deploymentTargetNodePort;
+  }
+
+  public String getDeploymentRunningInstanceId() {
+    return deploymentRunningInstanceId;
+  }
+
+  public void setDeploymentRunningInstanceId(String deploymentRunningInstanceId) {
+    this.deploymentRunningInstanceId = deploymentRunningInstanceId;
+  }
+
+  public String getElementEndpointHostname() {
+    return elementEndpointHostname;
+  }
+
+  public void setElementEndpointHostname(String elementEndpointHostname) {
+    this.elementEndpointHostname = elementEndpointHostname;
+  }
+
+  public Integer getElementEndpointPort() {
+    return elementEndpointPort;
+  }
+
+  public void setElementEndpointPort(Integer elementEndpointPort) {
+    this.elementEndpointPort = elementEndpointPort;
   }
 
   //public Logger getLogger(Class clazz, PeConfig peConfig) {

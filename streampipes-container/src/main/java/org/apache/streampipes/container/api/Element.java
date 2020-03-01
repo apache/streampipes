@@ -144,7 +144,7 @@ public abstract class Element<D extends Declarer> {
   }
 
   protected NamedStreamPipesEntity rewrite(NamedStreamPipesEntity desc, String appendix) {
-
+    DeclarersSingleton declarersSingleton = DeclarersSingleton.getInstance();
     //TODO remove this and find a better solution
     if (desc != null) {
       String type = "";
@@ -160,7 +160,7 @@ public abstract class Element<D extends Declarer> {
       }
 
       String originalId = desc.getUri();
-      String uri = DeclarersSingleton.getInstance().getBaseUri() + type + desc.getUri();
+      String uri = declarersSingleton.getBaseUri() + type + desc.getUri();
       desc.setUri(uri);
       desc.setRdfId(new SupportsRdfId.URIKey(URI.create(uri)));
 
@@ -175,7 +175,7 @@ public abstract class Element<D extends Declarer> {
 
       if (desc instanceof DataSourceDescription) {
         for (SpDataStream stream : ((DataSourceDescription) desc).getSpDataStreams()) {
-          String baseUri = DeclarersSingleton.getInstance().getBaseUri()
+          String baseUri = declarersSingleton.getBaseUri()
                   + type
                   + originalId
                   + "/"
@@ -195,9 +195,12 @@ public abstract class Element<D extends Declarer> {
         }
       } else if (desc instanceof ConsumableStreamPipesEntity) {
         Collection<TransportProtocol> supportedProtocols =
-                DeclarersSingleton.getInstance().getSupportedProtocols();
+                declarersSingleton.getSupportedProtocols();
         Collection<TransportFormat> supportedFormats =
-                DeclarersSingleton.getInstance().getSupportedFormats();
+                declarersSingleton.getSupportedFormats();
+
+        ((ConsumableStreamPipesEntity) desc).setElementEndpointHostname(declarersSingleton.getHostname());
+        ((ConsumableStreamPipesEntity) desc).setElementEndpointPort(declarersSingleton.getPort());
 
         if (supportedProtocols.size() > 0 && supportedFormats.size() > 0) {
           // Overwrite existing grounding from default provided by declarers singleton
