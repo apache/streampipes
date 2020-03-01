@@ -65,6 +65,19 @@ export class TsonLd {
     return from(promise);
   }
 
+  public jsonLdToFlattenJsonLd(object: any) {
+     const context = object['@context'];
+    delete object['@context'];
+
+    let promise = new Promise(function(resolve, reject) {
+      (jsonld as any).flatten(object, context, function (err, data) {
+        resolve(data);
+      });
+    });
+
+    return from(promise);
+  }
+
   /**
    *
    * @param object the object to serialize

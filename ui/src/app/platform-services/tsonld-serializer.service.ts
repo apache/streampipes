@@ -210,9 +210,12 @@ export class TsonLdSerializerService {
         return this.getTsonLd().fromJsonLdType(o, type);
     }
 
-    public fromJsonLdContainer(o: any, type:string): any {
-        console.log(o);
+    public fromJsonLdContainer(o: any, type: string): any {
         return this.getTsonLd().fromJsonLdContainer(o, type);
+    }
+
+    public jsonLdToFlattenJsonLd(object: any): any {
+        return this.getTsonLd().jsonLdToFlattenJsonLd(object);
     }
 
 }

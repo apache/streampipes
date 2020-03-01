@@ -42,12 +42,12 @@ export class DataExplorerDashboardWidgetComponent implements OnInit {
     widgetLoaded = false;
     configuredWidget: DataExplorerWidgetModel;
 
-    constructor(private dashboardService: DataViewDataExplorerService,
+    constructor(private dataViewDataExplorerService: DataViewDataExplorerService,
                 private dialog: MatDialog) {
     }
 
     ngOnInit(): void {
-        this.dashboardService.getWidget(this.widget.id).subscribe(response => {
+        this.dataViewDataExplorerService.getWidget(this.widget.id).subscribe(response => {
             this.configuredWidget = response;
             this.widgetLoaded = true;
         });

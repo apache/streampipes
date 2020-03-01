@@ -24,6 +24,7 @@ import { DataExplorerAddVisualizationDialogComponent } from '../../dialogs/add-w
 import { IDataViewDashboard, IDataViewDashboardItem } from '../../models/dataview-dashboard.model';
 import { DataViewDataExplorerService } from '../../services/data-view-data-explorer.service';
 import { RefreshDashboardService } from '../../services/refresh-dashboard.service';
+import forkJoin = module
 
 @Component({
   selector: 'sp-data-explorer-dashboard-panel',
@@ -43,7 +44,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
   widgetIdsToRemove: string[] = [];
   widgetsToUpdate: Map<string, DataExplorerWidgetModel> = new Map<string, DataExplorerWidgetModel>();
 
-  constructor(private dashboardService: DataViewDataExplorerService,
+  constructor(private dataViewDataExplorerService: DataViewDataExplorerService,
               public dialog: MatDialog,
               private refreshDashboardService: RefreshDashboardService) {
   }
@@ -79,16 +80,16 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
   }
 
   updateDashboardAndCloseEditMode() {
-    // this.dashboardService.updateDashboard(this.dashboard).subscribe(result => {
-    //     if (this.widgetsToUpdate.size > 0) {
-    //         forkJoin(this.prepareWidgetUpdates()).subscribe(result => {
-    //             this.closeEditModeAndReloadDashboard();
-    //         });
-    //     } else {
-    //         this.deleteWidgets();
-    //         this.closeEditModeAndReloadDashboard();
-    //     }
-    // });
+    this.dataViewDataExplorerService.updateDashboard(this.dashboard).subscribe(result => {
+        if (this.widgetsToUpdate.size > 0) {
+            forkJoin(this.prepareWidgetUpdates()).subscribe(result => {
+                this.closeEditModeAndReloadDashboard();
+            });
+        } else {
+            this.deleteWidgets();
+            this.closeEditModeAndReloadDashboard();
+        }
+    });
 
     this.editModeChange.emit(!(this.editMode));
     this.refreshDashboardService.notify(this.dashboard._id);

@@ -33,102 +33,95 @@ import { IDataViewDashboard } from '../models/dataview-dashboard.model';
 @Injectable()
 export class DataViewDataExplorerService {
 
-    localDashboards: IDataViewDashboard[] = [];
+  localDashboards: IDataViewDashboard[] = [];
 
-    constructor(private http: HttpClient,
-                private authStatusService: AuthStatusService,
-                private tsonLdSerializerService: TsonLdSerializerService,
-                private dataLakeRestService: DatalakeRestService,
-                private sharedDatalakeRestService: SharedDatalakeRestService) {
-    }
+  constructor(private http: HttpClient,
+              private authStatusService: AuthStatusService,
+              private tsonLdSerializerService: TsonLdSerializerService,
+              private dataLakeRestService: DatalakeRestService,
+              private sharedDatalakeRestService: SharedDatalakeRestService) {
+  }
 
-    getVisualizableData(): Observable<InfoResult[]> {
-        return this.dataLakeRestService.getAllInfos();
-    }
+  getVisualizableData(): Observable<InfoResult[]> {
+    return this.dataLakeRestService.getAllInfos();
+  }
 
-    getDataViews(): Observable<IDataViewDashboard[]> {
-      return this.sharedDatalakeRestService.getDashboards(this.getDashboardUrl());
-    }
+  getDataViews(): Observable<IDataViewDashboard[]> {
+    return this.sharedDatalakeRestService.getDashboards(this.getDashboardUrl());
+  }
 
-    updateDashboard(dashboard: IDataViewDashboard): Observable<IDataViewDashboard> {
-      return this.sharedDatalakeRestService.updateDashboard(this.getDashboardUrl(), dashboard);
-    }
+  updateDashboard(dashboard: IDataViewDashboard): Observable<IDataViewDashboard> {
+    return this.sharedDatalakeRestService.updateDashboard(this.getDashboardUrl(), dashboard);
+  }
 
-    deleteDashboard(dashboard: IDataViewDashboard): Observable<any> {
-      return this.sharedDatalakeRestService.deleteDashboard(this.getDashboardUrl(), dashboard);
-    }
+  deleteDashboard(dashboard: IDataViewDashboard): Observable<any> {
+    return this.sharedDatalakeRestService.deleteDashboard(this.getDashboardUrl(), dashboard);
+  }
 
-    saveDataView(dataViewDashboard: IDataViewDashboard): Observable<any> {
-      return this.sharedDatalakeRestService.saveDashboard(this.getDashboardUrl(), dataViewDashboard);
-    }
+  saveDataView(dataViewDashboard: IDataViewDashboard): Observable<any> {
+    return this.sharedDatalakeRestService.saveDashboard(this.getDashboardUrl(), dataViewDashboard);
+  }
 
-    private getbaseUrl() {
-        return '/streampipes-backend';
-    }
+  private getbaseUrl() {
+    return '/streampipes-backend';
+  }
 
-    private getDashboardUrl() {
-        return this.getbaseUrl() + '/api/v3/users/' + this.authStatusService.email + '/datalake/dashboard';
-    }
+  private getDashboardUrl() {
+    return this.getbaseUrl() + '/api/v3/users/' + this.authStatusService.email + '/datalake/dashboard';
+  }
 
-    private getDashboardWidgetUrl() {
-        return this.getbaseUrl() + '/api/v3/users/' + this.authStatusService.email + '/datalake/dashboard/widgets';
-    }
+  private getDashboardWidgetUrl() {
+    return this.getbaseUrl() + '/api/v3/users/' + this.authStatusService.email + '/datalake/dashboard/widgets';
+  }
 
-    getWidget(widgetId: string): Observable<DataExplorerWidgetModel> {
-        const promise = new Promise<DataExplorerWidgetModel>((resolve, reject) => {
-            this.http.get(this.getDashboardWidgetUrl() + '/' + widgetId).subscribe(response => {
-                const dashboardWidget: DataExplorerWidgetModel =
-                  this.tsonLdSerializerService.fromJsonLd(response, 'sp:DataLakeWidgetModel');
-                resolve(dashboardWidget);
-            });
+  getWidget(widgetId: string): Observable<DataExplorerWidgetModel> {
+    const promise = new Promise<DataExplorerWidgetModel>((resolve, reject) => {
+      this.http.get(this.getDashboardWidgetUrl() + '/' + widgetId).subscribe(response => {
+        this.tsonLdSerializerService.jsonLdToFlattenJsonLd(response).subscribe(res => {
+          const dashboardWidget: DataExplorerWidgetModel =
+            this.tsonLdSerializerService.fromJsonLd(res, 'sp:DataExplorerWidgetModel');
+          resolve(dashboardWidget);
         });
-        return from(promise);
-    }
+      });
+    });
+    return from(promise);
+  }
 
-    saveWidget(widget: DataExplorerWidgetModel): Observable<DataExplorerWidgetModel> {
-        const promise = new Promise<DataExplorerWidgetModel>((resolve, reject) => {
-            this.tsonLdSerializerService.toJsonLd(widget).subscribe(serialized => {
-                  this.http.post(this.getDashboardWidgetUrl(), serialized, this.jsonLdHeaders()).pipe(map(response => {
-                    resolve(this.tsonLdSerializerService.fromJsonLd(response, 'sp:DataLakeWidgetModel'));
-                })).subscribe();
-            });
+  saveWidget(widget: DataExplorerWidgetModel): Observable<DataExplorerWidgetModel> {
+    const promise = new Promise<DataExplorerWidgetModel>((resolve, reject) => {
+      this.tsonLdSerializerService.toJsonLd(widget).subscribe(serialized => {
+        this.http.post(this.getDashboardWidgetUrl(), serialized, this.jsonLdHeaders()).pipe(map(response => {
+
+          this.tsonLdSerializerService.jsonLdToFlattenJsonLd(response).subscribe(res => {
+            resolve(this.tsonLdSerializerService.fromJsonLd(res, 'sp:DataExplorerWidgetModel'));
+          });
+
+        })).subscribe();
+      });
+    });
+    return from(promise);
+  }
+
+  deleteWidget(widgetId: string): Observable<any> {
+    return this.http.delete(this.getDashboardWidgetUrl() + '/' + widgetId);
+  }
+
+  updateWidget(widget: DataExplorerWidgetModel): Observable<any> {
+    const promise = new Promise<DataExplorerWidgetModel>((resolve, reject) => {
+      this.tsonLdSerializerService.toJsonLd(widget).subscribe(serialized => {
+        this.http.put(this.getDashboardWidgetUrl() + '/' + widget._id, serialized, this.jsonLdHeaders()).subscribe(result => {
+          resolve();
         });
-        return from(promise);
-    }
+      });
+    });
+    return from(promise);
+  }
 
-    deleteWidget(widgetId: string): Observable<any> {
-        return this.http.delete(this.getDashboardWidgetUrl() + '/' + widgetId);
-    }
-
-    updateWidget(widget: DataExplorerWidgetModel): Observable<any> {
-        const promise = new Promise<DataExplorerWidgetModel>((resolve, reject) => {
-            this.tsonLdSerializerService.toJsonLd(widget).subscribe(serialized => {
-                this.http.put(this.getDashboardWidgetUrl() + '/' + widget._id, serialized, this.jsonLdHeaders()).subscribe(result => {
-                    resolve();
-                });
-            });
-        });
-        return from(promise);
-    }
-
-    serializeAndPost(url: string, object: any): Observable<DataExplorerWidgetModel> {
-        const promise = new Promise<DataExplorerWidgetModel>((resolve, reject) => {
-            this.tsonLdSerializerService.toJsonLd(object).subscribe(serialized => {
-              console.log(serialized);
-                // this.http.post(url, serialized, this.jsonLdHeaders()).pipe(map(response => {
-                //     resolve(this.tsonLdSerializerService.fromJsonLd(response, 'sp:DataLakeWidgetModel'));
-                // })).subscribe();
-            });
-        });
-        return from(promise);
-    }
-
-    jsonLdHeaders(): any {
-        console.log('asdfad')
-        return {
-            headers: new HttpHeaders({
-                'Content-Type': 'application/ld+json',
-            }),
-        };
-    }
+  jsonLdHeaders(): any {
+    return {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/ld+json',
+      }),
+    };
+  }
 }
