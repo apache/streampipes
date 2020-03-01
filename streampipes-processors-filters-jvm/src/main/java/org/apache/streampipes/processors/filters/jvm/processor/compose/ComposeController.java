@@ -41,7 +41,6 @@ public class ComposeController extends StandaloneEventProcessingDeclarer<Compose
             .category(DataProcessorType.TRANSFORM)
             .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .withLocales(Locales.EN)
-            .iconUrl(FiltersJvmConfig.getIconUrl("projection"))
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredProperty(EpRequirements.anyProperty())
