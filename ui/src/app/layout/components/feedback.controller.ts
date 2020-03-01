@@ -16,6 +16,8 @@
  *
  */
 
+import {AppCtrl} from "../app.controller";
+
 export class FeedbackController {
 
     $http: any;
@@ -31,7 +33,7 @@ export class FeedbackController {
     feedbackUrl = "";
     debugFeedbackUrl = "";
 
-    targetEmail = "dev@streampipes.apache.org";
+    targetEmail = "users@streampipes.apache.org";
 
     constructor($http, $window) {
         this.$http = $http;
@@ -70,3 +72,5 @@ export class FeedbackController {
     };
 
 }
+
+FeedbackController.$inject = ['$http', '$window'];
