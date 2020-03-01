@@ -61,20 +61,9 @@ public class DataProcessorInvocation extends InvocableStreamPipesEntity implemen
   private List<String> category;
 
   public DataProcessorInvocation(DataProcessorDescription sepa) {
-    super();
-    this.setName(sepa.getName());
-    this.setDescription(sepa.getDescription());
-    this.setIconUrl(sepa.getIconUrl());
-    this.setInputStreams(sepa.getSpDataStreams());
-    this.setSupportedGrounding(sepa.getSupportedGrounding());
-    this.setStaticProperties(sepa.getStaticProperties());
+    super(sepa);
     this.setOutputStrategies(sepa.getOutputStrategies());
-    this.setBelongsTo(sepa.getElementId());
     this.category = sepa.getCategory();
-    this.setStreamRequirements(sepa.getSpDataStreams());
-    this.setAppId(sepa.getAppId());
-    this.setIncludesAssets(sepa.isIncludesAssets());
-    //this.setUri(belongsTo +"/" +getElementId());
   }
 
   public DataProcessorInvocation(DataProcessorInvocation other) {

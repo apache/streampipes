@@ -119,6 +119,7 @@ public class InvocationGraphBuilder {
               .getTransportProtocol().getTopicDefinition().getActualTopicName(), t.getName());
 
       t.setElementId(t.getBelongsTo() + "/" + elementIdentifier);
+      t.setDeploymentRunningInstanceId(elementIdentifier);
       t.setCorrespondingPipeline(pipelineId);
       t.setStatusInfoSettings(makeStatusInfoSettings(elementIdentifier));
 
