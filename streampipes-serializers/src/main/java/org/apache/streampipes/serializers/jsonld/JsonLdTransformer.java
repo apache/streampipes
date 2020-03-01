@@ -18,7 +18,12 @@
 
 package org.apache.streampipes.serializers.jsonld;
 
-import org.eclipse.rdf4j.model.Graph;
+import io.fogsy.empire.core.empire.annotation.InvalidRdfException;
+import io.fogsy.empire.pinto.MappingOptions;
+import io.fogsy.empire.pinto.RDFMapper;
+import io.fogsy.empire.pinto.UriSerializationStrategy;
+import org.apache.streampipes.model.base.Namespaces;
+import org.apache.streampipes.vocabulary.StreamPipes;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
@@ -29,12 +34,6 @@ import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFParseException;
 import org.eclipse.rdf4j.rio.Rio;
 import org.eclipse.rdf4j.rio.UnsupportedRDFormatException;
-import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
-import org.streampipes.empire.pinto.MappingOptions;
-import org.streampipes.empire.pinto.RDFMapper;
-import org.streampipes.empire.pinto.UriSerializationStrategy;
-import org.apache.streampipes.model.base.Namespaces;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -85,7 +84,8 @@ public class JsonLdTransformer implements RdfTransformer {
   }
 
   @Override
-  public <T> Graph toJsonLd(T element) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, SecurityException, ClassNotFoundException, InvalidRdfException {
+  public <T> Model toJsonLd(T element) throws IllegalAccessException, IllegalArgumentException,
+          InvocationTargetException, SecurityException, ClassNotFoundException, InvalidRdfException {
     return makeRdfMapper()
             .writeValue(element);
   }

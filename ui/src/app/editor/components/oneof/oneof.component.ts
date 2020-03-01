@@ -17,6 +17,7 @@
  */
 
 import {OneOfController} from "./oneof.controller";
+
 declare const require: any;
 
 export let OneOfComponent = {

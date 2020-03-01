@@ -17,7 +17,7 @@
  */
 
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import { AnyStaticProperty } from '../../model/AnyStaticProperty';
+import {AnyStaticProperty} from '../../model/AnyStaticProperty';
 
 @Component({
   selector: 'app-static-any-input',

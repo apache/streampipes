@@ -16,10 +16,10 @@
  *
  */
 
-import { RdfId } from '../../platform-services/tsonld/RdfId';
-import { RdfProperty } from '../../platform-services/tsonld/RdfsProperty';
-import { RdfsClass } from '../../platform-services/tsonld/RdfsClass';
-import { DataSetDescription } from './DataSetDescription';
+import {RdfId} from '../../platform-services/tsonld/RdfId';
+import {RdfProperty} from '../../platform-services/tsonld/RdfsProperty';
+import {RdfsClass} from '../../platform-services/tsonld/RdfsClass';
+import {DataSetDescription} from './DataSetDescription';
 
 @RdfsClass('sp:DataStreamContainer')
 export class DataStreamContainer {

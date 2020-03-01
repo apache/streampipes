@@ -22,12 +22,7 @@ import {map} from "rxjs/operators";
 import {from, Observable} from "rxjs";
 import {AuthStatusService} from "../../services/auth-status.service";
 import {Dashboard} from "../models/dashboard.model";
-import {EventSchema} from "../../connect/schema-editor/model/EventSchema";
-import {EventProperty} from "../../connect/schema-editor/model/EventProperty";
-import {EventPropertyPrimitive} from "../../connect/schema-editor/model/EventPropertyPrimitive";
 import {TsonLdSerializerService} from "../../platform-services/tsonld-serializer.service";
-import {StatusMessage} from "../../connect/model/message/StatusMessage";
-import {RuntimeOptionsResponse} from "../../connect/model/connect/runtime/RuntimeOptionsResponse";
 import {DashboardWidget} from "../../core-model/dashboard/DashboardWidget";
 import {VisualizablePipeline} from "../../core-model/dashboard/VisualizablePipeline";
 
@@ -45,6 +40,22 @@ export class DashboardService {
             .get(this.visualizablePipelineUrl)
             .map(data => {
                 return this.tsonLdSerializerService.fromJsonLdContainer(data, 'sp:VisualizablePipeline')
+            });
+    }
+
+    getVisualizablePipelineById(id: string): Observable<VisualizablePipeline> {
+        return this.http
+            .get(this.visualizablePipelineUrl + "/" + id)
+            .map(data => {
+                return this.tsonLdSerializerService.fromJsonLd(data, 'sp:VisualizablePipeline')
+            });
+    }
+
+    getVisualizablePipelineByTopic(topic: string): Observable<VisualizablePipeline> {
+        return this.http
+            .get(this.visualizablePipelineUrl + "/topic/" + topic)
+            .map(data => {
+                return this.tsonLdSerializerService.fromJsonLd(data, 'sp:VisualizablePipeline')
             });
     }
 

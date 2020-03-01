@@ -17,6 +17,7 @@
  */
 
 import {AdvancedSettingsController} from "./advanced-settings.controller";
+
 declare const require: any;
 
 export let AdvancedSettingsComponent = {

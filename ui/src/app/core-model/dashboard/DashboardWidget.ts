@@ -19,7 +19,6 @@
 import {RdfsClass} from "../../platform-services/tsonld/RdfsClass";
 import {RdfProperty} from "../../platform-services/tsonld/RdfsProperty";
 import {DashboardWidgetSettings} from "./DashboardWidgetSettings";
-import {VisualizablePipeline} from "./VisualizablePipeline";
 import {UnnamedStreamPipesEntity} from "../../connect/model/UnnamedStreamPipesEntity";
 
 @RdfsClass('sp:DashboardWidgetModel')
@@ -28,8 +27,11 @@ export class DashboardWidget extends UnnamedStreamPipesEntity {
     @RdfProperty('sp:hasDashboardWidgetSettings')
     dashboardWidgetSettings: DashboardWidgetSettings;
 
-    @RdfProperty('sp:hasDashboardWidgetDataConfig')
-    dashboardWidgetDataConfig: VisualizablePipeline;
+    @RdfProperty('sp:hasPipelineId')
+    visualizablePipelineId: string;
+
+    @RdfProperty('sp:hasTopic')
+    visualizablePipelineTopic: string;
 
     @RdfProperty('sp:couchDbId')
     _id: string;

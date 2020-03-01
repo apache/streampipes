@@ -16,11 +16,11 @@
  *
  */
 
-import { Injectable } from '@angular/core';
-import { Observable ,  of } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {Observable, of} from 'rxjs';
 
-import { StreampipesPeContainer } from './streampipes-pe-container.model';
-import { StreampipesPeContainerConifgs } from './streampipes-pe-container-configs';
+import {StreampipesPeContainer} from './streampipes-pe-container.model';
+import {StreampipesPeContainerConifgs} from './streampipes-pe-container-configs';
 
 @Injectable()
 export class ConfigurationMockService {

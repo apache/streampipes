@@ -17,8 +17,8 @@
  */
 
 import {Component, Inject, ViewChild} from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { MatStepper } from '@angular/material/stepper';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {MatStepper} from '@angular/material/stepper';
 import {HttpEventType} from '@angular/common/http';
 import {DatalakeRestService} from '../../../core-services/datalake/datalake-rest.service';
 

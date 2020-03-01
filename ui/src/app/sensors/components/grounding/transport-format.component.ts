@@ -17,6 +17,7 @@
  */
 
 import {TransportFormatController} from "./transport-format.controller";
+
 declare const require: any;
 
 export let TransportFormatComponent = {

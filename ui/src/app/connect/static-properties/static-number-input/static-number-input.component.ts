@@ -16,15 +16,10 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FreeTextStaticProperty } from '../../model/FreeTextStaticProperty';
-import { StaticProperty } from '../../model/StaticProperty';
-import { MappingPropertyUnary } from '../../model/MappingPropertyUnary';
-import { DataSetDescription } from '../../model/DataSetDescription';
-import { FormControl, Validators, FormGroup } from '@angular/forms';
-import { Logger } from '../../../shared/logger/default-log.service';
-import { ifError } from 'assert';
-import { ValidateNumber } from '../../select-protocol-component/input.validator';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {StaticProperty} from '../../model/StaticProperty';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {ValidateNumber} from '../../select-protocol-component/input.validator';
 import {StaticPropertyUtilService} from '../static-property-util.service';
 import {ConfigurationInfo} from "../../model/message/ConfigurationInfo";
 

@@ -16,8 +16,7 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormControl, Validators, FormGroup } from '@angular/forms';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {StaticPropertyUtilService} from '../static-property-util.service';
 import {MappingPropertyNary} from "../../model/MappingPropertyNary";
 import {StaticMappingComponent} from "../static-mapping/static-mapping";

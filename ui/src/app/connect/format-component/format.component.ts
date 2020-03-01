@@ -16,8 +16,8 @@
  *
  */
 
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { FormatDescription } from '../model/connect/grounding/FormatDescription';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {FormatDescription} from '../model/connect/grounding/FormatDescription';
 import {ShepherdService} from '../../services/tour/shepherd.service';
 
 @Component({

@@ -18,9 +18,8 @@
 
 import 'reflect-metadata';
 
-import { Injectable } from '@angular/core';
-import { Person } from './Person';
-import { NgModule } from '@angular/core';
+import {Injectable} from '@angular/core';
+import {Person} from './Person';
 
 @Injectable()
 export class RdfmapperService {

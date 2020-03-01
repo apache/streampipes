@@ -17,6 +17,7 @@
  */
 
 import {RequiredPropertyValuesController} from "./required-property-values.controller";
+
 declare const require: any;
 
 export let RequiredPropertyValuesComponent = {

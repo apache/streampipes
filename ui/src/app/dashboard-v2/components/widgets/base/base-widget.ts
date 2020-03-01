@@ -16,7 +16,7 @@
  *
  */
 
-import {Input, OnChanges, OnInit, SimpleChanges} from "@angular/core";
+import {Input, OnChanges, SimpleChanges} from "@angular/core";
 import {DashboardItem} from "../../../models/dashboard.model";
 import {DashboardWidget} from "../../../../core-model/dashboard/DashboardWidget";
 import {StaticPropertyExtractor} from "../../../sdk/extractor/static-property-extractor";
@@ -25,11 +25,13 @@ import {Message} from "@stomp/stompjs";
 import {Subscription} from "rxjs";
 import {GridsterItem, GridsterItemComponent} from "angular-gridster2";
 import {WidgetConfigBuilder} from "../../../registry/widget-config-builder";
+import {VisualizablePipeline} from "../../../../core-model/dashboard/VisualizablePipeline";
 
 export abstract class BaseStreamPipesWidget implements OnChanges {
 
     @Input() widget: DashboardItem;
     @Input() widgetConfig: DashboardWidget;
+    @Input() widgetDataConfig: VisualizablePipeline;
     @Input() gridsterItem: GridsterItem;
     @Input() gridsterItemComponent: GridsterItemComponent;
     @Input() editMode: boolean;
@@ -56,13 +58,13 @@ export abstract class BaseStreamPipesWidget implements OnChanges {
 
     ngOnInit(): void {
         this.prepareConfigExtraction();
-        this.subscription = this.rxStompService.watch("/topic/" +this.widgetConfig.dashboardWidgetDataConfig.topic).subscribe((message: Message) => {
+        this.subscription = this.rxStompService.watch("/topic/" +this.widgetDataConfig.topic).subscribe((message: Message) => {
             this.onEvent(JSON.parse(message.body));
         });
     }
 
     prepareConfigExtraction() {
-        let extractor: StaticPropertyExtractor = new StaticPropertyExtractor(this.widgetConfig.dashboardWidgetDataConfig.schema, this.widgetConfig.dashboardWidgetSettings.config);
+        let extractor: StaticPropertyExtractor = new StaticPropertyExtractor(this.widgetDataConfig.schema, this.widgetConfig.dashboardWidgetSettings.config);
         if (extractor.hasStaticProperty(WidgetConfigBuilder.BACKGROUND_COLOR_KEY)) {
             this.hasSelectableColorSettings = true;
             this.selectedBackgroundColor = extractor.selectedColor(WidgetConfigBuilder.BACKGROUND_COLOR_KEY);

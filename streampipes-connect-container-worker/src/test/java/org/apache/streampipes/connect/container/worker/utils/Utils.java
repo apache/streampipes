@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.connect.container.worker.utils;
 
-import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
+import io.fogsy.empire.core.empire.annotation.InvalidRdfException;
 import org.apache.streampipes.model.connect.adapter.*;
 import org.apache.streampipes.serializers.jsonld.JsonLdTransformer;
 import org.apache.streampipes.vocabulary.StreamPipes;

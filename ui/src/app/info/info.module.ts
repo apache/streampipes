@@ -16,25 +16,25 @@
  *
  */
 
-import { NgModule } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import {NgModule} from '@angular/core';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatDividerModule} from '@angular/material/divider';
+import {MatGridListModule} from '@angular/material/grid-list';
+import {MatIconModule} from '@angular/material/icon';
+import {MatInputModule} from '@angular/material/input';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {FlexLayoutModule} from '@angular/flex-layout';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
 
-import { InfoComponent } from './info.component';
-import { CustomMaterialModule } from "../CustomMaterial/custom-material.module";
-import { LicenseComponent } from "./license/license.component";
-import { AboutComponent } from "./about/about.component";
-import { VersionsComponent } from "./versions/versions.component";
-import { VersionInfoService } from "./versions/service/version-info.service";
+import {InfoComponent} from './info.component';
+import {CustomMaterialModule} from "../CustomMaterial/custom-material.module";
+import {LicenseComponent} from "./license/license.component";
+import {AboutComponent} from "./about/about.component";
+import {VersionsComponent} from "./versions/versions.component";
+import {VersionInfoService} from "./versions/service/version-info.service";
 
 @NgModule({
     imports: [

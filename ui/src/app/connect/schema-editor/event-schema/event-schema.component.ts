@@ -16,22 +16,18 @@
  *
  */
 
-import { Component, Input, EventEmitter, Output, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
-import { RestService } from '../../rest.service';
-import { EventSchema } from '../model/EventSchema';
-import { AdapterDescription } from '../../model/connect/AdapterDescription';
-import { GuessSchema } from '../model/GuessSchema';
-import { NotificationLd } from '../../model/message/NotificationLd';
-import { EventProperty } from '../model/EventProperty';
-import { EventPropertyNested } from '../model/EventPropertyNested';
-import { EventPropertyPrimitive } from '../model/EventPropertyPrimitive';
-import { EventPropertyList } from '../model/EventPropertyList';
-import { ITreeOptions, TreeComponent } from 'angular-tree-component';
-import { DomainPropertyProbabilityList } from '../model/DomainPropertyProbabilityList';
-import { UUID } from 'angular2-uuid';
-import { DataTypesService } from '../data-type.service';
-import { MatDialog } from '@angular/material/dialog';
-import { EventPropertyComponent } from '../event-property/event-property.component';
+import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild} from '@angular/core';
+import {RestService} from '../../rest.service';
+import {EventSchema} from '../model/EventSchema';
+import {AdapterDescription} from '../../model/connect/AdapterDescription';
+import {GuessSchema} from '../model/GuessSchema';
+import {NotificationLd} from '../../model/message/NotificationLd';
+import {EventProperty} from '../model/EventProperty';
+import {EventPropertyNested} from '../model/EventPropertyNested';
+import {EventPropertyPrimitive} from '../model/EventPropertyPrimitive';
+import {ITreeOptions, TreeComponent} from 'angular-tree-component';
+import {UUID} from 'angular2-uuid';
+import {DataTypesService} from '../data-type.service';
 
 @Component({
   selector: 'app-event-schema',

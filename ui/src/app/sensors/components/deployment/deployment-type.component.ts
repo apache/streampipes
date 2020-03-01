@@ -17,6 +17,7 @@
  */
 
 import {DeploymentTypeController} from "./deployment-type.controller";
+
 declare const require: any;
 
 export let DeploymentTypeComponent = {

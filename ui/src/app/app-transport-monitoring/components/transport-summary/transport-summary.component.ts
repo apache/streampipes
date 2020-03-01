@@ -16,7 +16,7 @@
  *
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {TransportProcessEventModel} from "../../model/transport-process-event.model";
 import {TimestampConverterService} from "../../services/timestamp-converter.service";
 import {DetectedBoxModel} from "../../model/detected-box.model";

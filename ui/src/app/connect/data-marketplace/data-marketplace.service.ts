@@ -16,53 +16,25 @@
  *
  */
 
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-
-
-import { TsonLd } from '../../platform-services/tsonld';
-import { AuthStatusService } from '../../services/auth-status.service';
-import { AdapterDescriptionList } from '../model/connect/AdapterDescriptionList';
-import { AdapterDescription } from '../model/connect/AdapterDescription';
-import { AdapterSetDescription } from '../model/connect/AdapterSetDescription';
-import { GenericAdapterSetDescription } from '../model/connect/GenericAdapterSetDescription';
-import { SpecificAdapterSetDescription } from '../model/connect/SpecificAdapterSetDescription';
-import { AdapterStreamDescription } from '../model/connect/AdapterStreamDescription';
-import { GenericAdapterStreamDescription } from '../model/connect/GenericAdapterStreamDescription';
-import { SpecificAdapterStreamDescription } from '../model/connect/SpecificAdapterStreamDescription';
-import { FreeTextStaticProperty } from '../model/FreeTextStaticProperty';
-import { ProtocolDescription } from '../model/connect/grounding/ProtocolDescription';
-import { ProtocolDescriptionList } from '../model/connect/grounding/ProtocolDescriptionList';
-import { FormatDescription } from '../model/connect/grounding/FormatDescription';
-import { DataStreamDescription } from '../model/DataStreamDescription';
-import { EventSchema } from '../schema-editor/model/EventSchema';
-import { EventPropertyPrimitive } from '../schema-editor/model/EventPropertyPrimitive';
-import { ConnectService } from '../connect.service';
-import { AnyStaticProperty } from '../model/AnyStaticProperty';
-import { Option } from '../model/Option';
-import { RenameRuleDescription} from '../model/connect/rules/RenameRuleDescription';
-import { DeleteRuleDescription} from '../model/connect/rules/DeleteRuleDescription';
-import { AddNestedRuleDescription} from '../model/connect/rules/AddNestedRuleDescription';
-import { MoveRuleDescription} from '../model/connect/rules/MoveRuleDesctiption';
-import { EventPropertyNested} from '../schema-editor/model/EventPropertyNested';
-import {EventPropertyList} from '../schema-editor/model/EventPropertyList';
-import {UUID} from 'angular2-uuid';
-import {DataSetDescription} from '../model/DataSetDescription';
-import {OneOfStaticProperty} from '../model/OneOfStaticProperty';
-import {UnitTransformRuleDescription} from '../model/connect/rules/UnitTransformRuleDescription';
-import {RemoveDuplicatesRuleDescription} from '../model/connect/rules/RemoveDuplicatesRuleDescription';
-import {AddTimestampRuleDescription} from '../model/connect/rules/AddTimestampRuleDescription';
-import {AddValueTransformationRuleDescription} from '../model/connect/rules/AddValueTransformationRuleDescription';
-import {FileStaticProperty} from '../model/FileStaticProperty';
-import {TimestampTransformationRuleDescription} from '../model/connect/rules/TimestampTransformationRuleDescription';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
+import {AuthStatusService} from '../../services/auth-status.service';
+import {AdapterDescriptionList} from '../model/connect/AdapterDescriptionList';
+import {AdapterDescription} from '../model/connect/AdapterDescription';
+import {GenericAdapterSetDescription} from '../model/connect/GenericAdapterSetDescription';
+import {SpecificAdapterSetDescription} from '../model/connect/SpecificAdapterSetDescription';
+import {GenericAdapterStreamDescription} from '../model/connect/GenericAdapterStreamDescription';
+import {SpecificAdapterStreamDescription} from '../model/connect/SpecificAdapterStreamDescription';
+import {ProtocolDescription} from '../model/connect/grounding/ProtocolDescription';
+import {ConnectService} from '../connect.service';
 import {RestApi} from "../../services/rest-api.service";
 import {TsonLdSerializerService} from "../../platform-services/tsonld-serializer.service";
 import {AlternativesStaticProperty} from "../model/AlternativesStaticProperty";
 import {GroupStaticProperty} from "../model/GroupStaticProperty";
 import {StaticProperty} from "../model/StaticProperty";
-import { CollectionStaticProperty } from "../model/CollectionStaticProperty";
+import {CollectionStaticProperty} from "../model/CollectionStaticProperty";
 
 @Injectable()
 export class DataMarketplaceService {

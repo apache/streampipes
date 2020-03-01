@@ -18,7 +18,6 @@
 
 import {AuthService} from "../../services/auth.service";
 import {AuthStatusService} from "../../services/auth-status.service";
-import {LoginCtrl} from "../login.controller";
 
 export class StartupCtrl {
 

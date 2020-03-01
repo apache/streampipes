@@ -19,7 +19,7 @@
 import {HttpClient} from "@angular/common/http";
 import {Injectable} from "@angular/core";
 import {map} from "rxjs/operators";
-import {Observable, of} from "rxjs";
+import {Observable} from "rxjs";
 import {AuthStatusService} from "../../services/auth-status.service";
 import {ActivityDetectionModel} from "../model/activity-detection.model";
 import {ParcelInfoModel} from "../model/parcel-info.model";

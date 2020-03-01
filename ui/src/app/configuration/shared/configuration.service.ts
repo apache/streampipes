@@ -16,13 +16,13 @@
  *
  */
 
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 
-import { StreampipesPeContainer } from './streampipes-pe-container.model';
-import { MessagingSettings } from './messaging-settings.model';
+import {StreampipesPeContainer} from './streampipes-pe-container.model';
+import {MessagingSettings} from './messaging-settings.model';
 
 @Injectable()
 export class ConfigurationService {

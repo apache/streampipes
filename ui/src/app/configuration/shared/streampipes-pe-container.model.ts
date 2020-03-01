@@ -16,7 +16,8 @@
  *
  */
 
-import { StreampipesPeContainerConifgs } from "./streampipes-pe-container-configs";
+import {StreampipesPeContainerConifgs} from "./streampipes-pe-container-configs";
+
 //ConsulService = StreampipesPeContainer ERLEDIGT
 export interface StreampipesPeContainer {
     name: string;

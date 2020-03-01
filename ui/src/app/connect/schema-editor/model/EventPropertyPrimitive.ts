@@ -19,7 +19,6 @@
 import {EventProperty} from './EventProperty';
 import {RdfsClass} from '../../../platform-services/tsonld/RdfsClass';
 import {RdfProperty} from '../../../platform-services/tsonld/RdfsProperty';
-import {createElementCssSelector} from '@angular/compiler';
 
 
 @RdfsClass('sp:EventPropertyPrimitive')

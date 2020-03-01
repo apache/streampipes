@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.connect.adapter.preprocessing.transform.stream;
 
-import org.streampipes.empire.annotations.RdfProperty;
+import io.fogsy.empire.annotations.RdfProperty;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
 import java.util.LinkedList;

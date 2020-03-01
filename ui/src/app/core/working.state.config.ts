@@ -16,12 +16,10 @@
  *
  */
 
-import { HomeComponent } from '../home/home.component';
-import { ConfigurationComponent } from '../configuration/configuration.component';
-import { AppContainerModule } from '../app-container/app-container.module';
-import { AppContainerComponent } from '../app-container/app-container.component';
-import { NewAdapterComponent } from '../connect/new-adapter/new-adapter.component';
-import { ConnectComponent } from '../connect/connect.component';
+import {HomeComponent} from '../home/home.component';
+import {ConfigurationComponent} from '../configuration/configuration.component';
+import {AppContainerComponent} from '../app-container/app-container.component';
+import {ConnectComponent} from '../connect/connect.component';
 
 export default function stateConfig($stateProvider, $urlRouterProvider) {
   //	    $urlRouterProvider.otherwise( function($injector, $location) {

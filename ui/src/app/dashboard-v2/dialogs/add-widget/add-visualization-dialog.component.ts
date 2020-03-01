@@ -140,7 +140,8 @@ export class AddVisualizationDialogComponent {
         } else {
             const configuredWidget: DashboardWidget = new DashboardWidget();
             configuredWidget.dashboardWidgetSettings = this.selectedWidget;
-            configuredWidget.dashboardWidgetDataConfig = this.selectedPipeline;
+            configuredWidget.visualizablePipelineId = this.selectedPipeline._id;
+            configuredWidget.visualizablePipelineTopic = this.selectedPipeline.topic;
             if (!this.data) {
                 this.dashboardService.saveWidget(configuredWidget).subscribe(response => {
                     this.dialogRef.close(response);

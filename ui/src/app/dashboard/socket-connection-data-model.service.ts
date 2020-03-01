@@ -16,7 +16,7 @@
  *
  */
 
-import { WidgetDataModel} from "./widget-data-model.service";
+import {WidgetDataModel} from "./widget-data-model.service";
 import * as _ from 'lodash';
 
 declare const Stomp: any;

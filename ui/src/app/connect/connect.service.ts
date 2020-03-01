@@ -16,8 +16,8 @@
  *
  */
 
-import { Injectable } from '@angular/core';
-import { AdapterDescription } from './model/connect/AdapterDescription';
+import {Injectable} from '@angular/core';
+import {AdapterDescription} from './model/connect/AdapterDescription';
 import {GenericAdapterSetDescription} from './model/connect/GenericAdapterSetDescription';
 import {GenericAdapterStreamDescription} from './model/connect/GenericAdapterStreamDescription';
 import {SpecificAdapterStreamDescription} from './model/connect/SpecificAdapterStreamDescription';

@@ -16,7 +16,7 @@
  *
  */
 
-import { SocketConnectionDataModel } from '../../socket-connection-data-model.service'
+import {SocketConnectionDataModel} from '../../socket-connection-data-model.service'
 
 export class LineDataModel extends SocketConnectionDataModel {
 

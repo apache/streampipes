@@ -17,6 +17,7 @@
  */
 
 import {CustomOutputController} from "./customoutput.controller";
+
 declare const require: any;
 
 export let CustomOutputComponent = {

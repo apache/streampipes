@@ -17,6 +17,7 @@
  */
 
 import {CustomizeDialogController} from "./customize-dialog.controller";
+
 declare const require: any;
 
 export let CustomizeDialogComponent = {

@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.model.client.messages;
 
-import org.streampipes.empire.annotations.Namespaces;
-import org.streampipes.empire.annotations.RdfsClass;
+import io.fogsy.empire.annotations.Namespaces;
+import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
 import java.util.List;

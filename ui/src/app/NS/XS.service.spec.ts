@@ -16,8 +16,8 @@
  *
  */
 
-import { TestBed, getTestBed } from "@angular/core/testing";
-import { xsService } from "./XS.service";
+import {getTestBed, TestBed} from "@angular/core/testing";
+import {xsService} from "./XS.service";
 
 describe('XSService', () =>{
 

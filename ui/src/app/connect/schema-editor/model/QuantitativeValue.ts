@@ -16,10 +16,10 @@
  *
  */
 
-import { RdfsClass } from '../../../platform-services/tsonld/RdfsClass';
-import { RdfProperty } from '../../../platform-services/tsonld/RdfsProperty';
-import { RdfId } from '../../../platform-services/tsonld/RdfId';
-import { Float } from '../../../platform-services/tsonld/Float';
+import {RdfsClass} from '../../../platform-services/tsonld/RdfsClass';
+import {RdfProperty} from '../../../platform-services/tsonld/RdfsProperty';
+import {RdfId} from '../../../platform-services/tsonld/RdfId';
+import {Float} from '../../../platform-services/tsonld/Float';
 
 @RdfsClass('http://schema.org/QuantitativeValue')
 export class QuantitativeValue {

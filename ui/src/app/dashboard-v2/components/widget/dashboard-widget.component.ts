@@ -16,17 +16,14 @@
  *
  */
 
-import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output} from "@angular/core";
-import {Dashboard, DashboardItem} from "../../models/dashboard.model";
+import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
+import {DashboardItem} from "../../models/dashboard.model";
 import {DashboardService} from "../../services/dashboard.service";
-import {DashboardImageComponent} from "../../../app-transport-monitoring/components/dashboard-image/dashboard-image.component";
 import {DashboardWidget} from "../../../core-model/dashboard/DashboardWidget";
-import {Subject} from "rxjs";
 import {GridsterItem, GridsterItemComponent} from "angular-gridster2";
-import {GridsterInfo} from "../../models/gridster-info.model";
-import {ResizeService} from "../../services/resize.service";
 import {AddVisualizationDialogComponent} from "../../dialogs/add-widget/add-visualization-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
+import {VisualizablePipeline} from "../../../core-model/dashboard/VisualizablePipeline";
 
 @Component({
     selector: 'dashboard-widget',
@@ -45,6 +42,7 @@ export class DashboardWidgetComponent implements OnInit {
 
     widgetLoaded: boolean = false;
     configuredWidget: DashboardWidget;
+    widgetDataConfig: VisualizablePipeline;
 
     constructor(private dashboardService: DashboardService,
                 private dialog: MatDialog) {
@@ -53,7 +51,10 @@ export class DashboardWidgetComponent implements OnInit {
     ngOnInit(): void {
         this.dashboardService.getWidget(this.widget.id).subscribe(response => {
             this.configuredWidget = response;
-            this.widgetLoaded = true;
+            this.dashboardService.getVisualizablePipelineByTopic(this.configuredWidget.visualizablePipelineTopic).subscribe(pipeline => {
+                this.widgetDataConfig = pipeline;
+                this.widgetLoaded = true;
+            });
         });
     }
 

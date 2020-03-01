@@ -17,6 +17,7 @@
  */
 
 import {GeneratedElementDescriptionController} from "./generated-element-description.controller";
+
 declare const require: any;
 
 export let GeneratedElementDescriptionComponent = {

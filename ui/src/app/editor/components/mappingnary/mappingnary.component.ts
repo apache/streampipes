@@ -17,6 +17,7 @@
  */
 
 import {MappingNaryController} from "./mappingnary.controller";
+
 declare const require: any;
 
 export let MappingNaryComponent = {

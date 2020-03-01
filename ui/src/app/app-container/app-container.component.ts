@@ -16,10 +16,10 @@
  *
  */
 
-import { Component, ChangeDetectorRef } from '@angular/core';
+import {ChangeDetectorRef, Component} from '@angular/core';
 
-import { AppContainerService } from './shared/app-container.service';
-import { InstalledApp } from './shared/installed-app.model';
+import {AppContainerService} from './shared/app-container.service';
+import {InstalledApp} from './shared/installed-app.model';
 
 
 @Component({

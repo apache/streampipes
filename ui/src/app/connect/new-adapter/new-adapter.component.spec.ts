@@ -16,25 +16,18 @@
  *
  */
 
-import {
-  TestBed,
-  async,
-  ComponentFixture,
-  getTestBed,
-} from '@angular/core/testing';
-import { CommonModule } from '@angular/common';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { NewAdapterComponent } from './new-adapter.component';
-import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RestService } from '../rest.service';
-import { FormBuilder } from '@angular/forms';
-import { MatDialog, MatGridListModule } from '@angular/material';
-import { CustomMaterialModule } from '../../CustomMaterial/custom-material.module';
-import { DragulaModule } from 'ng2-dragula';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {async, ComponentFixture, TestBed,} from '@angular/core/testing';
+import {CommonModule} from '@angular/common';
+import {NO_ERRORS_SCHEMA} from '@angular/core';
+import {NewAdapterComponent} from './new-adapter.component';
+import {BrowserModule} from '@angular/platform-browser';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MatGridListModule} from '@angular/material';
+import {CustomMaterialModule} from '../../CustomMaterial/custom-material.module';
+import {DragulaModule} from 'ng2-dragula';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {FlexLayoutModule} from '@angular/flex-layout';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 describe('NewComponent', () => {
   let fixture: ComponentFixture<NewAdapterComponent>;

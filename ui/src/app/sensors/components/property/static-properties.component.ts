@@ -17,6 +17,7 @@
  */
 
 import {StaticPropertiesController} from "./static-properties.controller";
+
 declare const require: any;
 
 export let StaticPropertiesComponent = {

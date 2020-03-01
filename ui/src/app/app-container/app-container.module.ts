@@ -16,17 +16,17 @@
  *
  */
 
-import { NgModule, COMPILER_OPTIONS, CompilerFactory, Compiler } from '@angular/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { CommonModule } from '@angular/common';
+import {Compiler, COMPILER_OPTIONS, CompilerFactory, NgModule} from '@angular/core';
+import {FlexLayoutModule} from '@angular/flex-layout';
+import {CommonModule} from '@angular/common';
 
-import { AppContainerComponent } from './app-container.component';
-import { AppContainerService } from './shared/app-container.service';
-import { ViewComponent } from './view/view.component';
+import {AppContainerComponent} from './app-container.component';
+import {AppContainerService} from './shared/app-container.service';
+import {ViewComponent} from './view/view.component';
 
-import { JitCompilerFactory } from '@angular/platform-browser-dynamic';
-import { MatDialogModule } from '@angular/material/dialog';
-import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
+import {JitCompilerFactory} from '@angular/platform-browser-dynamic';
+import {MatDialogModule} from '@angular/material/dialog';
+import {CustomMaterialModule} from '../CustomMaterial/custom-material.module';
 
 @NgModule({
     imports: [

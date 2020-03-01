@@ -16,7 +16,7 @@
  *
  */
 
-import {Component, Input} from '@angular/core';
+import {Component} from '@angular/core';
 import {VersionInfoService} from "./service/version-info.service";
 import {VersionInfo} from "./service/version-info.model";
 import {SystemInfo} from "./service/system-info.model";

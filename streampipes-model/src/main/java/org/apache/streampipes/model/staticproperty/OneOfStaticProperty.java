@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.model.staticproperty;
 
-import org.streampipes.empire.annotations.RdfsClass;
+import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
 import javax.persistence.Entity;

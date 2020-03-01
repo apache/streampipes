@@ -41,8 +41,8 @@
 
         <!-- External dependencies -->
         <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-empire-pinto</artifactId>
+            <groupId>io.fogsy</groupId>
+            <artifactId>empire-pinto</artifactId>
         </dependency>
     </dependencies>
 

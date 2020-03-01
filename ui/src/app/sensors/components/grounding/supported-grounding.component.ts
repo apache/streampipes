@@ -17,6 +17,7 @@
  */
 
 import {SupportedGroundingController} from "./supported-grounding.controller";
+
 declare const require: any;
 
 export let SupportedGroundingComponent = {

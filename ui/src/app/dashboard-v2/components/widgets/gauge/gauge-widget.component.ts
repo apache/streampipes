@@ -16,7 +16,7 @@
  *
  */
 
-import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit} from "@angular/core";
+import {Component, ElementRef, OnDestroy, OnInit} from "@angular/core";
 import {BaseNgxChartsStreamPipesWidget} from "../base/base-ngx-charts-widget";
 import {RxStompService} from "@stomp/ng2-stompjs";
 import {ResizeService} from "../../../services/resize.service";

@@ -17,8 +17,8 @@
  */
 package org.apache.streampipes.model.template;
 
-import org.streampipes.empire.annotations.RdfProperty;
-import org.streampipes.empire.annotations.RdfsClass;
+import io.fogsy.empire.annotations.RdfProperty;
+import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.util.Cloner;

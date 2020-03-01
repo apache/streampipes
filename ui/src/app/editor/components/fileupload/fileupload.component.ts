@@ -17,6 +17,7 @@
  */
 
 import {FileUploadController} from "./fileupload.controller";
+
 declare const require: any;
 
 export let FileUploadComponent = {

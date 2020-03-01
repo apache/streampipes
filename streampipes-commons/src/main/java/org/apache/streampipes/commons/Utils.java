@@ -19,7 +19,7 @@
 package org.apache.streampipes.commons;
 
 import org.apache.commons.lang.RandomStringUtils;
-import org.eclipse.rdf4j.model.Graph;
+import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFHandlerException;
 import org.eclipse.rdf4j.rio.RDFWriter;
@@ -56,12 +56,12 @@ public class Utils {
     return RandomStringUtils.randomAlphabetic(10);
   }
 
-  public static String asString(Graph graph) throws RDFHandlerException {
+  public static String asString(Model model) throws RDFHandlerException {
     OutputStream stream = new ByteArrayOutputStream();
 
     RDFWriter writer = Utils.getRioWriter(stream);
 
-    Rio.write(graph, writer);
+    Rio.write(model, writer);
     return stream.toString();
   }
 

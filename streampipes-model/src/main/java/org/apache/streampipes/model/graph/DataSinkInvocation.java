@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.model.graph;
 
-import org.streampipes.empire.annotations.RdfProperty;
-import org.streampipes.empire.annotations.RdfsClass;
+import io.fogsy.empire.annotations.RdfProperty;
+import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.vocabulary.StreamPipes;

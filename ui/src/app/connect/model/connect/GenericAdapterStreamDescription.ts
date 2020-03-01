@@ -16,7 +16,7 @@
  *
  */
 
-import { AdapterStreamDescription } from "./AdapterStreamDescription";
+import {AdapterStreamDescription} from "./AdapterStreamDescription";
 import {RdfsClass} from '../../../platform-services/tsonld/RdfsClass';
 import {RdfProperty} from '../../../platform-services/tsonld/RdfsProperty';
 import {ProtocolDescription} from './grounding/ProtocolDescription';

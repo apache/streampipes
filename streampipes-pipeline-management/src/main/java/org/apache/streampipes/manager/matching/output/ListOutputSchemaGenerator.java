@@ -19,7 +19,7 @@
 package org.apache.streampipes.manager.matching.output;
 
 import org.apache.streampipes.commons.Utils;
-import org.streampipes.empire.core.empire.SupportsRdfId;
+import io.fogsy.empire.core.empire.SupportsRdfId;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.output.ListOutputStrategy;
 import org.apache.streampipes.model.output.OutputStrategy;

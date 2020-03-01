@@ -18,14 +18,13 @@
 
 import * as angular from 'angular';
 import * as FileSaver from 'file-saver';
-
-declare const jsPlumb: any;
-declare const require: any;
-
 import {StartAllPipelinesController} from './dialog/start-all-pipelines-dialog.controller';
 import {PipelineCategoriesDialogController} from './dialog/pipeline-categories-dialog.controller';
 import {ElementIconText} from "../services/get-element-icon-text.service";
 import {ImportPipelineDialogController} from "./dialog/import-pipeline-dialog.controller";
+
+declare const jsPlumb: any;
+declare const require: any;
 
 export class PipelineCtrl {
 

@@ -17,6 +17,7 @@
  */
 
 import {PipelineElementOptionsController} from "./pipeline-element-options.controller";
+
 declare const require: any;
 
 export let PipelineElementOptionsComponent = {

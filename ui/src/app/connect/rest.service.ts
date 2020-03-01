@@ -16,26 +16,25 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 
-import { Observable, Subscribable, from } from 'rxjs';
-import { map } from 'rxjs/operators';
+import {from, Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 
 
-
-import { ProtocolDescriptionList } from './model/connect/grounding/ProtocolDescriptionList';
-import { AdapterDescription } from './model/connect/AdapterDescription';
-import { FormatDescriptionList } from './model/connect/grounding/FormatDescriptionList';
-import { EventProperty } from './schema-editor/model/EventProperty';
-import { EventPropertyNested } from './schema-editor/model/EventPropertyNested';
-import { GuessSchema } from './schema-editor/model/GuessSchema';
-import { AuthStatusService } from '../services/auth-status.service';
-import { StatusMessage } from "./model/message/StatusMessage";
-import { UnitDescription } from './model/UnitDescription';
-import { TsonLdSerializerService } from '../platform-services/tsonld-serializer.service';
-import { RuntimeOptionsResponse } from "./model/connect/runtime/RuntimeOptionsResponse";
+import {ProtocolDescriptionList} from './model/connect/grounding/ProtocolDescriptionList';
+import {AdapterDescription} from './model/connect/AdapterDescription';
+import {FormatDescriptionList} from './model/connect/grounding/FormatDescriptionList';
+import {EventProperty} from './schema-editor/model/EventProperty';
+import {EventPropertyNested} from './schema-editor/model/EventPropertyNested';
+import {GuessSchema} from './schema-editor/model/GuessSchema';
+import {AuthStatusService} from '../services/auth-status.service';
+import {StatusMessage} from "./model/message/StatusMessage";
+import {UnitDescription} from './model/UnitDescription';
+import {TsonLdSerializerService} from '../platform-services/tsonld-serializer.service';
+import {RuntimeOptionsResponse} from "./model/connect/runtime/RuntimeOptionsResponse";
 
 @Injectable()
 export class RestService {

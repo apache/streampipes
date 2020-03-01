@@ -16,23 +16,23 @@
  *
  */
 
-import { Injectable } from '@angular/core';
-import { StaticProperty } from '../model/StaticProperty';
-import { FreeTextStaticProperty } from '../model/FreeTextStaticProperty';
+import {Injectable} from '@angular/core';
+import {StaticProperty} from '../model/StaticProperty';
+import {FreeTextStaticProperty} from '../model/FreeTextStaticProperty';
 import {SecretStaticProperty} from "../model/SecretStaticProperty";
 import {CollectionStaticProperty} from '../model/CollectionStaticProperty';
-import { FileStaticProperty } from "../model/FileStaticProperty";
-import { AnyStaticProperty } from "../model/AnyStaticProperty";
-import { MappingPropertyUnary } from "../model/MappingPropertyUnary";
-import { OneOfStaticProperty } from "../model/OneOfStaticProperty";
-import { MappingPropertyNary } from "../model/MappingPropertyNary";
-import { RuntimeResolvableOneOfStaticProperty } from "../model/RuntimeResolvableOneOfStaticProperty";
-import { RuntimeResolvableAnyStaticProperty } from "../model/RuntimeResolvableAnyStaticProperty";
-import { GroupStaticProperty } from "../model/GroupStaticProperty";
-import { AlternativesStaticProperty } from "../model/AlternativesStaticProperty";
-import { AlternativeStaticProperty } from "../model/AlternativeStaticProperty";
-import { Option } from "../model/Option";
-import { URI } from "../model/URI";
+import {FileStaticProperty} from "../model/FileStaticProperty";
+import {AnyStaticProperty} from "../model/AnyStaticProperty";
+import {MappingPropertyUnary} from "../model/MappingPropertyUnary";
+import {OneOfStaticProperty} from "../model/OneOfStaticProperty";
+import {MappingPropertyNary} from "../model/MappingPropertyNary";
+import {RuntimeResolvableOneOfStaticProperty} from "../model/RuntimeResolvableOneOfStaticProperty";
+import {RuntimeResolvableAnyStaticProperty} from "../model/RuntimeResolvableAnyStaticProperty";
+import {GroupStaticProperty} from "../model/GroupStaticProperty";
+import {AlternativesStaticProperty} from "../model/AlternativesStaticProperty";
+import {AlternativeStaticProperty} from "../model/AlternativeStaticProperty";
+import {Option} from "../model/Option";
+import {URI} from "../model/URI";
 import {ColorPickerStaticProperty} from "../model/ColorPickerStaticProperty";
 
 

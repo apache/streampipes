@@ -35,4 +35,9 @@ public class VisualizablePipelineStorageImpl extends AbstractDao<VisualizablePip
   public List<VisualizablePipeline> getAllVisualizablePipelines() {
     return findAll();
   }
+
+  @Override
+  public VisualizablePipeline getVisualizablePipeline(String id) {
+    return find(id).orElse(null);
+  }
 }

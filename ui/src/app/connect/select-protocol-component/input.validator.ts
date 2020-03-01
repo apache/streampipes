@@ -16,8 +16,7 @@
  *
  */
 
-import { Directive } from '@angular/core';
-import {ValidatorFn, AbstractControl} from '@angular/forms';
+import {AbstractControl} from '@angular/forms';
 
 export function ValidateUrl(control: AbstractControl) {
   if(control.value == null){

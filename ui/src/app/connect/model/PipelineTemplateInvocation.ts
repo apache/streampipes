@@ -16,10 +16,10 @@
  *
  */
 
-import { RdfId } from '../../platform-services/tsonld/RdfId';
-import { RdfsClass } from '../../platform-services/tsonld/RdfsClass';
-import { RdfProperty } from '../../platform-services/tsonld/RdfsProperty';
-import { StaticProperty } from './StaticProperty';
+import {RdfId} from '../../platform-services/tsonld/RdfId';
+import {RdfsClass} from '../../platform-services/tsonld/RdfsClass';
+import {RdfProperty} from '../../platform-services/tsonld/RdfsProperty';
+import {StaticProperty} from './StaticProperty';
 
 @RdfsClass('sp:PipelineTemplateInvocation')
 export class PipelineTemplateInvocation {

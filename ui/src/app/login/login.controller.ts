@@ -1,4 +1,3 @@
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -50,9 +49,8 @@ export class LoginCtrl {
         this.authenticationFailed = false;
     }
 
-
     openDocumentation(){
-        this.$window.open('https://docs.streampipes.org', '_blank');
+        this.$window.open('https://streampipes.apache.org/docs', '_blank');
     };
 
     logIn() {

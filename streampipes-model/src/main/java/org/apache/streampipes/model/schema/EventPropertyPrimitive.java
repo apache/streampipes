@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.model.schema;
 
-import org.streampipes.empire.annotations.RdfProperty;
-import org.streampipes.empire.annotations.RdfsClass;
+import io.fogsy.empire.annotations.RdfProperty;
+import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.quality.EventPropertyQualityDefinition;
 import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.vocabulary.StreamPipes;

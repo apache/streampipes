@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.model.base;
 
-import org.streampipes.empire.annotations.RdfProperty;
+import io.fogsy.empire.annotations.RdfProperty;
 import org.apache.streampipes.logging.LoggerFactory;
 import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.SpDataStream;

@@ -514,7 +514,8 @@ xml-apis:xml-apis:1.3.04
 ---
 
 ================================================================
-
+STREAMPIPES BACKEND (all files except ui folder)
+================================================================
 The binary distribution of this product bundles these dependencies under the
 following license. See licenses/ for text of these licenses.
 
@@ -678,4 +679,130 @@ org.jboss.xnio:xnio-nio:3.3.8.Final
 org.reactivestreams:reactive-streams:1.0.2
 org.tukaani:xz:1.5
 ---
+
+================================================================
+STREAMPIPES UI (all files in the ui folder)
+================================================================
+
+The binary distribution of this product bundles these dependencies under the
+following license. See licenses/ for text of these licenses.
+
+---
+MIT License
+
+@angular-devkit/build-angular
+@angular/animations
+@angular/cdk
+@angular/common
+@angular/compiler
+@angular/core
+@angular/flex-layout
+@angular/forms
+@angular/material
+@angular/platform-browser
+@angular/platform-browser-dynamic
+@angular/upgrade
+@danielmoncada/angular-datetime-picker
+@stomp/ng2-stompjs
+@stomp/rx-stomp
+@swimlane/ngx-charts
+@uirouter/angular
+@uirouter/angular-hybrid
+@uirouter/angularjs
+@uirouter/core
+@uirouter/rx
+angular
+angular-animate
+angular-aria
+angular-cookies
+angular-datatables
+angular-gridster2
+angular-loading-bar
+angular-material
+angular-material-icons
+angular-notification-icons
+angular-plotly.js
+angular-sanitize
+angular-tree-component
+angular-trix
+angular-ui-bootstrap
+angular-ui-sortable
+angular2-uuid
+atoa
+bootstrap
+contra
+core-js
+crossvent
+custom-event
+dagre
+dragula
+es6-promise
+file-saver
+graphlib
+jquery
+jquery.panzoom
+konva
+lodash
+mobx
+moment
+ng-dynamic-component
+ng-file-upload
+ng-simple-slideshow
+ng2-dragula
+ngx-color-picker
+prismjs
+regenerator-runtime
+shepherd.js
+util
+webpack
+zone.js
+
+
+---
+BSD-3-Clause
+
+d3-array
+d3-brush
+d3-color
+d3-dispatch
+d3-drag
+d3-ease
+d3-format
+d3-hierarchy
+d3-interpolate
+d3-path
+d3-scale
+d3-selection
+d3-shape
+d3-time
+d3-time-format
+d3-timer
+d3-transition
+jsonld
+showdown
+ticky
+
+---
+ISC License
+
+inherits
+
+---
+BSD-2-Clause
+
+ng-showdown
+
+---
+Apache License 2.0
+
+reflect-metadata
+rxjs
+rxjs-compat
+tslib
+
+
+
+
+
+
 

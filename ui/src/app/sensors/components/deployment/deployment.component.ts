@@ -17,6 +17,7 @@
  */
 
 import {DeploymentController} from "./deployment.controller";
+
 declare const require: any;
 
 export let DeploymentComponent = {

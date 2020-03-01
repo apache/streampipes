@@ -16,16 +16,16 @@
  *
  */
 
-import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import { FreeTextStaticProperty } from '../model/FreeTextStaticProperty';
-import { StaticProperty } from '../model/StaticProperty';
-import { MappingPropertyUnary } from '../model/MappingPropertyUnary';
-import { OneOfStaticProperty } from '../model/OneOfStaticProperty';
-import { Logger } from '../../shared/logger/default-log.service';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {FreeTextStaticProperty} from '../model/FreeTextStaticProperty';
+import {StaticProperty} from '../model/StaticProperty';
+import {MappingPropertyUnary} from '../model/MappingPropertyUnary';
+import {OneOfStaticProperty} from '../model/OneOfStaticProperty';
+import {Logger} from '../../shared/logger/default-log.service';
 
-import { xsService } from '../../NS/XS.service';
-import { StaticPropertyUtilService } from './static-property-util.service';
-import { AnyStaticProperty } from '../model/AnyStaticProperty';
+import {xsService} from '../../NS/XS.service';
+import {StaticPropertyUtilService} from './static-property-util.service';
+import {AnyStaticProperty} from '../model/AnyStaticProperty';
 import {FileStaticProperty} from '../model/FileStaticProperty';
 import {MappingPropertyNary} from '../model/MappingPropertyNary';
 import {EventSchema} from '../schema-editor/model/EventSchema';
@@ -35,7 +35,7 @@ import {ConfigurationInfo} from "../model/message/ConfigurationInfo";
 import {SecretStaticProperty} from "../model/SecretStaticProperty";
 import {AlternativesStaticProperty} from '../model/AlternativesStaticProperty';
 import {GroupStaticProperty} from '../model/GroupStaticProperty';
-import { CollectionStaticProperty } from "../model/CollectionStaticProperty";
+import {CollectionStaticProperty} from "../model/CollectionStaticProperty";
 import {ColorPickerStaticProperty} from "../model/ColorPickerStaticProperty";
 
 @Component({

@@ -17,9 +17,9 @@
  */
 package org.apache.streampipes.model;
 
-import org.streampipes.empire.annotations.Namespaces;
-import org.streampipes.empire.annotations.RdfProperty;
-import org.streampipes.empire.annotations.RdfsClass;
+import io.fogsy.empire.annotations.Namespaces;
+import io.fogsy.empire.annotations.RdfProperty;
+import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.vocabulary.StreamPipes;
 

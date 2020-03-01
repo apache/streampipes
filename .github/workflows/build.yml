@@ -35,22 +35,65 @@ jobs:
           node-version: '12.x'
       - name: Build with Maven
         run: mvn clean package javadoc:aggregate
+      - name: Set env variables for Docker builds
+        run: |
+          echo "::set-env name=DOCKER_CLI_EXPERIMENTAL::enabled"
+          echo "::set-env name=MVN_VERSION::$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
+          echo "::set-env name=DOCKERHUB_APACHE_REPO::apachestreampipes"
+          echo "::set-env name=BASE_IMG_JRE_DEFAULT::adoptopenjdk/openjdk8-openj9:alpine-slim"
+          echo "::set-env name=BASE_IMG_JRE_ARM32V7::arm32v7/openjdk:11-jre-slim"
+          echo "::set-env name=BASE_IMG_JRE_ARM64V8::arm64v8/openjdk:11-jre-slim"
+          echo "::set-env name=BASE_IMG_NGINX_DEFAULT::nginx"
+          echo "::set-env name=BASE_IMG_NGINX_ARM32V7::arm32v7/nginx"
+          echo "::set-env name=BASE_IMG_NGINX_ARM64V8::arm64v8/nginx"
+      - name: Install qemu-user-static for multi-arch builds
+        run: |
+          sudo apt-get install qemu-user-static
+          echo "./streampipes-backend/ ./streampipes-connect-container-master/ ./ui/" | xargs -n 1 cp -v /usr/bin/qemu-*
       - name: Login to Docker Hub
         run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USER }} --password-stdin
+      - name: Enable Docker experimental feature for multi-arch builds
+        run: |
+          echo '{"experimental": true}' | sudo tee /etc/docker/daemon.json
+          sudo service docker restart
       - name: Build and Push Docker Backend Image
+        working-directory: ./streampipes-backend
+        env:
+          IMG_NAME_DEFAULT: ${{ env.DOCKERHUB_APACHE_REPO }}/backend:${{ env.MVN_VERSION }}
+          IMG_NAME_AMD64: ${{ env.DOCKERHUB_APACHE_REPO }}/backend:amd64-${{ env.MVN_VERSION }}
+          IMG_NAME_ARM32V7: ${{ env.DOCKERHUB_APACHE_REPO }}/backend:arm32v7-${{ env.MVN_VERSION }}
+          IMG_NAME_ARM64V8: ${{ env.DOCKERHUB_APACHE_REPO }}/backend:arm64v8-${{ env.MVN_VERSION }}
         run: |
-          MVN_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          BACKEND_IMAGE_NAME=apachestreampipes/backend:$MVN_VERSION
-          echo MVN_VERSION=$MVN_VERSION
-          echo BACKEND_IMAGE_NAME=$BACKEND_IMAGE_NAME
-          docker build --pull -t $BACKEND_IMAGE_NAME ./streampipes-backend/
-          docker push $BACKEND_IMAGE_NAME
+          docker build --pull --build-arg BASE_IMG=$BASE_IMG_JRE_DEFAULT -t $IMG_NAME_DEFAULT -t $IMG_NAME_AMD64 -f Dockerfile .
+          docker build --pull --build-arg BASE_IMG=$BASE_IMG_JRE_ARM32V7 -t $IMG_NAME_ARM32V7 -f arm.Dockerfile .
+          docker build --pull --build-arg BASE_IMG=$BASE_IMG_JRE_ARM64V8 -t $IMG_NAME_ARM64V8 -f aarch64.Dockerfile .
+          docker push $IMG_NAME_DEFAULT
+          docker push $IMG_NAME_AMD64
+          docker push $IMG_NAME_ARM32V7
+          docker push $IMG_NAME_ARM64V8
+          docker manifest create $IMG_NAME_DEFAULT $IMG_NAME_AMD64 $IMG_NAME_ARM32V7 $IMG_NAME_ARM64V8
+          docker manifest annotate $IMG_NAME_DEFAULT $IMG_NAME_ARM32V7 --os linux --arch arm
+          docker manifest annotate $IMG_NAME_DEFAULT $IMG_NAME_ARM64V8 --os linux --arch arm64
+          docker manifest push $IMG_NAME_DEFAULT
       - name: Build and Push Docker Connect Image
+        working-directory: ./streampipes-connect-container-master
+        env:
+          IMG_NAME_DEFAULT: ${{ env.DOCKERHUB_APACHE_REPO }}/streampipes-connect-container:${{ env.MVN_VERSION }}
+          IMG_NAME_AMD64: ${{ env.DOCKERHUB_APACHE_REPO }}/streampipes-connect-container:amd64-${{ env.MVN_VERSION }}
+          IMG_NAME_ARM32V7: ${{ env.DOCKERHUB_APACHE_REPO }}/streampipes-connect-container:arm32v7-${{ env.MVN_VERSION }}
+          IMG_NAME_ARM64V8: ${{ env.DOCKERHUB_APACHE_REPO }}/streampipes-connect-container:arm64v8-${{ env.MVN_VERSION }}
         run: |
-          MVN_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          CONNECT_IMAGE_NAME=apachestreampipes/streampipes-connect-container:$MVN_VERSION
-          docker build --pull -t $CONNECT_IMAGE_NAME ./streampipes-connect-container-master/
-          docker push $CONNECT_IMAGE_NAME
+          docker build --pull --build-arg BASE_IMG=$BASE_IMG_JRE_DEFAULT -t $IMG_NAME_DEFAULT -t $IMG_NAME_AMD64 -f Dockerfile .
+          docker build --pull --build-arg BASE_IMG=$BASE_IMG_JRE_ARM32V7 -t $IMG_NAME_ARM32V7 -f arm.Dockerfile .
+          docker build --pull --build-arg BASE_IMG=$BASE_IMG_JRE_ARM64V8 -t $IMG_NAME_ARM64V8 -f aarch64.Dockerfile .
+          docker push $IMG_NAME_DEFAULT
+          docker push $IMG_NAME_AMD64
+          docker push $IMG_NAME_ARM32V7
+          docker push $IMG_NAME_ARM64V8
+          docker manifest create $IMG_NAME_DEFAULT $IMG_NAME_AMD64 $IMG_NAME_ARM32V7 $IMG_NAME_ARM64V8
+          docker manifest annotate $IMG_NAME_DEFAULT $IMG_NAME_ARM32V7 --os linux --arch arm
+          docker manifest annotate $IMG_NAME_DEFAULT $IMG_NAME_ARM64V8 --os linux --arch arm64
+          docker manifest push $IMG_NAME_DEFAULT
       - name: Build UI
         working-directory: ./ui
         run: |
@@ -59,8 +102,21 @@ jobs:
           npm install --unsafe-perm
           npm run build
       - name: Build and Push Docker UI Image
+        working-directory: ./ui
+        env:
+          IMG_NAME_DEFAULT: ${{ env.DOCKERHUB_APACHE_REPO }}/ui:${{ env.MVN_VERSION }}
+          IMG_NAME_AMD64: ${{ env.DOCKERHUB_APACHE_REPO }}/ui:amd64-${{ env.MVN_VERSION }}
+          IMG_NAME_ARM32V7: ${{ env.DOCKERHUB_APACHE_REPO }}/ui:arm32v7-${{ env.MVN_VERSION }}
+          IMG_NAME_ARM64V8: ${{ env.DOCKERHUB_APACHE_REPO }}/ui:arm64v8-${{ env.MVN_VERSION }}
         run: |
-          MVN_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          UI_IMAGE_NAME=apachestreampipes/ui:$MVN_VERSION
-          docker build --no-cache --pull -t $UI_IMAGE_NAME ./ui
-          docker push $UI_IMAGE_NAME
+          docker build --no-cache --pull --build-arg BASE_IMG=$BASE_IMG_NGINX_DEFAULT -t $IMG_NAME_DEFAULT -t $IMG_NAME_AMD64 -f Dockerfile .
+          docker build --no-cache --pull --build-arg BASE_IMG=$BASE_IMG_NGINX_ARM32V7 -t $IMG_NAME_ARM32V7 -f arm.Dockerfile .
+          docker build --no-cache --pull --build-arg BASE_IMG=$BASE_IMG_NGINX_ARM64V8 -t $IMG_NAME_ARM64V8 -f aarch64.Dockerfile .
+          docker push $IMG_NAME_DEFAULT
+          docker push $IMG_NAME_AMD64
+          docker push $IMG_NAME_ARM32V7
+          docker push $IMG_NAME_ARM64V8
+          docker manifest create $IMG_NAME_DEFAULT $IMG_NAME_AMD64 $IMG_NAME_ARM32V7 $IMG_NAME_ARM64V8
+          docker manifest annotate $IMG_NAME_DEFAULT $IMG_NAME_ARM32V7 --os linux --arch arm
+          docker manifest annotate $IMG_NAME_DEFAULT $IMG_NAME_ARM64V8 --os linux --arch arm64
+          docker manifest push $IMG_NAME_DEFAULT

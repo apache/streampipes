@@ -17,31 +17,31 @@
  */
 
 ///<reference path="../model/connect/AdapterDescription.ts"/>
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, PipeTransform } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { RestService } from '../rest.service';
-import { FormatDescription } from '../model/connect/grounding/FormatDescription';
-import { AdapterDescription } from '../model/connect/AdapterDescription';
-import { MatDialog } from '@angular/material/dialog';
-import { MatStepper } from '@angular/material/stepper';
-import { AdapterStartedDialog } from './component/adapter-started-dialog.component';
-import { Logger } from '../../shared/logger/default-log.service';
-import { GenericAdapterSetDescription } from '../model/connect/GenericAdapterSetDescription';
-import { GenericAdapterStreamDescription } from '../model/connect/GenericAdapterStreamDescription';
-import { EventSchema } from '../schema-editor/model/EventSchema';
-import { SpecificAdapterSetDescription } from '../model/connect/SpecificAdapterSetDescription';
-import { SpecificAdapterStreamDescription } from '../model/connect/SpecificAdapterStreamDescription';
-import { TransformationRuleDescription } from '../model/connect/rules/TransformationRuleDescription';
-import { TransformationRuleService } from '../transformation-rule.service';
-import { ShepherdService } from '../../services/tour/shepherd.service';
-import { EventSchemaComponent } from '../schema-editor/event-schema/event-schema.component';
-import { ConnectService } from "../connect.service";
-import { RemoveDuplicatesRuleDescription } from '../model/connect/rules/RemoveDuplicatesRuleDescription';
-import { IconService } from './icon.service';
-import { TimestampPipe } from '../filter/timestamp.pipe';
-import { EventProperty } from '../schema-editor/model/EventProperty';
-import { EventRateTransformationRuleDescription } from '../model/connect/rules/EventRateTransformationRuleDescription';
-import { ConfigurationInfo } from "../model/message/ConfigurationInfo";
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {RestService} from '../rest.service';
+import {FormatDescription} from '../model/connect/grounding/FormatDescription';
+import {AdapterDescription} from '../model/connect/AdapterDescription';
+import {MatDialog} from '@angular/material/dialog';
+import {MatStepper} from '@angular/material/stepper';
+import {AdapterStartedDialog} from './component/adapter-started-dialog.component';
+import {Logger} from '../../shared/logger/default-log.service';
+import {GenericAdapterSetDescription} from '../model/connect/GenericAdapterSetDescription';
+import {GenericAdapterStreamDescription} from '../model/connect/GenericAdapterStreamDescription';
+import {EventSchema} from '../schema-editor/model/EventSchema';
+import {SpecificAdapterSetDescription} from '../model/connect/SpecificAdapterSetDescription';
+import {SpecificAdapterStreamDescription} from '../model/connect/SpecificAdapterStreamDescription';
+import {TransformationRuleDescription} from '../model/connect/rules/TransformationRuleDescription';
+import {TransformationRuleService} from '../transformation-rule.service';
+import {ShepherdService} from '../../services/tour/shepherd.service';
+import {EventSchemaComponent} from '../schema-editor/event-schema/event-schema.component';
+import {ConnectService} from "../connect.service";
+import {RemoveDuplicatesRuleDescription} from '../model/connect/rules/RemoveDuplicatesRuleDescription';
+import {IconService} from './icon.service';
+import {TimestampPipe} from '../filter/timestamp.pipe';
+import {EventProperty} from '../schema-editor/model/EventProperty';
+import {EventRateTransformationRuleDescription} from '../model/connect/rules/EventRateTransformationRuleDescription';
+import {ConfigurationInfo} from "../model/message/ConfigurationInfo";
 
 @Component({
     selector: 'sp-new-adapter',

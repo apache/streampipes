@@ -16,9 +16,8 @@
  *
  */
 
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { ProtocolDescription } from '../model/connect/grounding/ProtocolDescription';
-import {ConfigurationInfo} from "../model/message/ConfigurationInfo";
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {ProtocolDescription} from '../model/connect/grounding/ProtocolDescription';
 
 @Component({
   selector: 'app-protocol',

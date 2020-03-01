@@ -17,6 +17,7 @@
  */
 
 import {PipelineElementIconStandController} from "./pipeline-element-icon-stand.controller";
+
 declare const require: any;
 
 export let PipelineElementIconStandComponent = {

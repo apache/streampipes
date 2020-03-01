@@ -5,3 +5,319 @@ This product includes software developed at
 The Apache Software Foundation (http://www.apache.org/).
 
 ============================================================================
+
+@angular-devkit/build-angular
+Copyright (c) 2017 Google, Inc.
+---
+
+@angular/cdk
+Copyright (c) 2020 Google LLC.
+---
+
+@angular/flex-layout
+Copyright (c) 2020 Google LLC.
+---
+
+@angular/material
+Copyright (c) 2020 Google LLC.
+---
+
+@stomp/rx-stomp
+Copyright (c) 2018 Deepak Kumar
+---
+
+@stomp/stompjs
+Copyright (c) 2018 Deepak Kumar
+---
+
+@swimlane/ngx-charts
+Copyright (c) 2017 Swimlane
+---
+
+@uirouter/angular
+Copyright (c) 2013-2015 The AngularUI Team, Karsten Sperling
+---
+
+@uirouter/angular-hybrid
+Copyright (c) 2014-2016 Google, Inc.
+---
+
+@uirouter/angularjs
+Copyright (c) 2013-2018 The AngularUI Team, Karsten Sperling
+---
+
+@uirouter/core
+Copyright (c) 2013-2015 The AngularUI Team, Karsten Sperling
+---
+
+@uirouter/rx
+Copyright (c) 2016 UI-Router
+---
+
+angular
+Copyright (c) 2016 Angular
+---
+
+angular-animate
+Copyright (c) 2016 Angular
+---
+
+angular-aria
+Copyright (c) 2016 Angular
+---
+
+angular-cookies
+Copyright (c) 2016 Angular
+---
+
+angular-gridster2
+Copyright (c) 2019 Tiberiu Zuld
+---
+
+angular-loading-bar
+Copyright (c) 2013-2014 Wes Cruver
+---
+
+angular-material
+Copyright (c) 2014-2018 Google, Inc. http://angularjs.org
+---
+
+angular-material-icons
+Copyright (c) 2014 urmilparikh
+---
+
+angular-notification-icons
+Copyright (c) 2015 Jacob Meacham
+---
+
+angular-plotly.js
+Copyright (c) 2019 Plotly, Inc
+---
+
+angular-sanitize
+Copyright (c) 2016 Angular
+---
+
+angular-tree-component
+Copyright (c) 2016 500Tech LTD
+---
+
+angular-trix
+Copyright (c) 2015 Sachin N
+---
+
+angular-ui-sortable
+Copyright (c) 2012 the AngularUI Team, http://angular-ui.github.com
+---
+
+angular2-uuid
+Copyright (c) 2016 Wulf Solter
+---
+
+bootstrap
+Copyright (c) 2011-2015 Twitter, Inc
+---
+
+contra
+Copyright © 2014 Nicolas Bevacqua
+---
+
+core-js
+Copyright (c) 2014-2019 Denis Pushkarev
+---
+
+crossvent
+Copyright © 2014 Nicolas Bevacqua
+---
+
+d3-array
+d3-brush
+d3-color
+d3-dispatch
+d3-drag
+Copyright 2010-2016 Mike Bostock
+---
+
+d3-ease
+Copyright 2010-2016 Mike Bostock
+Copyright 2001 Robert Penner
+---
+
+d3-format
+Copyright 2010-2015 Mike Bostock
+---
+
+d3-hierarchy
+Copyright 2010-2016 Mike Bostock
+---
+
+d3-interpolate
+Copyright 2010-2016 Mike Bostock
+---
+
+d3-path
+Copyright 2015-2016 Mike Bostock
+---
+
+d3-scale
+Copyright 2010-2015 Mike Bostock
+---
+
+d3-selection
+Copyright (c) 2010-2018, Michael Bostock
+---
+
+d3-shape
+Copyright 2010-2015 Mike Bostock
+---
+
+d3-time
+Copyright 2010-2016 Mike Bostock
+---
+
+d3-time-format
+Copyright 2010-2017 Mike Bostock
+---
+
+d3-timer
+Copyright 2010-2016 Mike Bostock
+---
+
+d3-transition
+Copyright (c) 2010-2015, Michael Bostock
+---
+
+dagre
+Copyright (c) 2012-2014 Chris Pettitt
+---
+
+dragula
+Copyright © 2015-2016 Nicolas Bevacqua
+---
+
+es6-promise
+Copyright (c) 2014 Yehuda Katz, Tom Dale, Stefan Penner and contributors
+---
+
+file-saver
+Copyright © 2016 [Eli Grey][1].
+  [1]: http://eligrey.com
+---
+
+graphlib
+Copyright (c) 2012-2014 Chris Pettitt
+---
+
+inherits
+Copyright (c) Isaac Z. Schlueter
+---
+
+jquery.panzoom
+Copyright 2016 Timmy Willison
+---
+
+jsonld
+Copyright (c) 2010, Digital Bazaar, Inc.
+All rights reserved.
+---
+
+konva
+Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
+Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
+---
+
+lodash
+Copyright OpenJS Foundation and other contributors <https://openjsf.org/>
+
+Based on Underscore.js, copyright Jeremy Ashkenas,
+DocumentCloud and Investigative Reporters & Editors <http://underscorejs.org/>
+---
+
+mobx
+Copyright (c) 2015 Michel Weststrate
+---
+
+moment
+Copyright (c) JS Foundation and other contributors
+---
+
+ng-dynamic-component
+Copyright (c) 2016 Alex Malkevich
+---
+
+ng-file-upload
+Copyright (c) 2013 danialfarid
+---
+
+ng-showdown
+Copyright (c) 2015, showdownjs
+All rights reserved.
+---
+
+ng-simple-slideshow
+Copyright (c) 2017 Richard Jeffords
+---
+
+ng2-dragula
+Copyright (c) 2015-2016 Dmitriy Shekhovtsov <valorkin@gmail.com>
+Copyright (c) 2015-2016 Valor Software
+Copyright (c) 2015-2016 Nathan Walker <NathanWalker>
+---
+
+prismjs
+Copyright (c) 2012 Lea Verou
+---
+
+regenerator-runtime
+Copyright (c) 2014-present, Facebook, Inc.
+---
+
+showdown
+Showdown Copyright (c) 2007, John Fraser
+<http://www.attacklab.net/>
+All rights reserved.
+
+Original Markdown copyright (c) 2004, John Gruber
+<http://daringfireball.net/>
+All rights reserved.
+---
+
+ticky
+Copyright © 2015 Nicolas Bevacqua
+---
+
+util
+Copyright Joyent, Inc. and other Node contributors. All rights reserved.
+---
+
+webpack
+Copyright JS Foundation and other contributors
+---
+
+zone.js
+Copyright (c) 2010-2019 Google LLC. http://angular.io/license
+---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

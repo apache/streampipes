@@ -16,10 +16,6 @@
  *
  */
 
-import 'legacy/stomp';
-import {AuthService} from "../services/auth.service";
-
-declare const Stomp: any;
 
 export class AppCtrl {
 

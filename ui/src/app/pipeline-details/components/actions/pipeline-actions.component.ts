@@ -17,6 +17,7 @@
  */
 
 import {PipelineActionsController} from "./pipeline-actions.controller";
+
 declare const require: any;
 
 export let PipelineActionsComponent = {

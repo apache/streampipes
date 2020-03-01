@@ -16,7 +16,7 @@
  *
  */
 
-import {Component, Input, OnDestroy, OnInit} from "@angular/core";
+import {Component, OnDestroy, OnInit} from "@angular/core";
 import {RxStompService} from "@stomp/ng2-stompjs";
 import {BaseStreamPipesWidget} from "../base/base-widget";
 import {StaticPropertyExtractor} from "../../../sdk/extractor/static-property-extractor";

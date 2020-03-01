@@ -17,6 +17,7 @@
  */
 
 import {PipelineStatusController} from "./pipeline-status.controller";
+
 declare const require: any;
 
 export let PipelineStatusComponent = {

@@ -18,7 +18,6 @@
 
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {ConfigurationInfo} from '../../model/message/ConfigurationInfo';
-import {StaticProperty} from '../../model/StaticProperty';
 import {CollectionStaticProperty} from '../../model/CollectionStaticProperty';
 import {EventSchema} from '../../schema-editor/model/EventSchema';
 import {StaticPropertyUtilService} from '../static-property-util.service';

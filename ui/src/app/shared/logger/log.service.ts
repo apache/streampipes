@@ -20,7 +20,7 @@
 declare var console: any;
 
 // Import the application components and services.
-import { ILogger } from "./default-log.service";
+import {ILogger} from "./default-log.service";
 
 
 // I log values to the ambient console object.

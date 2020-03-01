@@ -20,9 +20,9 @@ import * as angular from 'angular';
 
 import spServices from '../services/services.module'
 
-import { RegisterCtrl } from './register.controller'
-import { LoginCtrl } from './login.controller'
-import { SetupCtrl } from './setup.controller'
+import {RegisterCtrl} from './register.controller'
+import {LoginCtrl} from './login.controller'
+import {SetupCtrl} from './setup.controller'
 import {StartupCtrl} from "./startup/startup.controller";
 
 export default angular.module('sp.login', [spServices])

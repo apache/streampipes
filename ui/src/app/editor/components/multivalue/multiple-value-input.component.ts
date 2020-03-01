@@ -17,6 +17,7 @@
  */
 
 import {MultipleValueInputController} from "./multiple-value-input.controller";
+
 declare const require: any;
 
 export let MultipleValueInputComponent = {

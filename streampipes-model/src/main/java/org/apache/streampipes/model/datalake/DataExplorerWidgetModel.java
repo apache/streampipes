@@ -18,10 +18,10 @@
 
 package org.apache.streampipes.model.datalake;
 
+import io.fogsy.empire.annotations.RdfProperty;
+import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.dashboard.DashboardEntity;
 import org.apache.streampipes.vocabulary.StreamPipes;
-import org.streampipes.empire.annotations.RdfProperty;
-import org.streampipes.empire.annotations.RdfsClass;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -31,6 +31,7 @@ import javax.persistence.OneToOne;
 @RdfsClass(StreamPipes.DATA_EXPLORER_WIDGET_MODEL)
 @Entity
 public class DataExplorerWidgetModel extends DashboardEntity {
+
 
   @RdfProperty(StreamPipes.HAS_DASHBOARD_WIDGET_ID)
   private String widgetId;

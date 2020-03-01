@@ -17,7 +17,6 @@
  */
 
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {AnyStaticProperty} from '../../model/AnyStaticProperty';
 import {OneOfStaticProperty} from '../../model/OneOfStaticProperty';
 
 @Component({
