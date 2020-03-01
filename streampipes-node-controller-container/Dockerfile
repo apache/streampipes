@@ -18,6 +18,7 @@ FROM $BASE_IMAGE
 
 EXPOSE 7077
 ENV CONSUL_LOCATION consul
+ENV NODE_INFO_YAML_FILE node_info.yml
 
 COPY target/streampipes-node-controller-container.jar  /streampipes-node-controller.jar
 

@@ -36,6 +36,10 @@
 
 		<!-- External dependencies -->
 		<dependency>
+			<groupId>io.fogsy</groupId>
+			<artifactId>qudt</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.eclipse.rdf4j</groupId>
 			<artifactId>rdf4j-rio-rdfxml</artifactId>
 		</dependency>

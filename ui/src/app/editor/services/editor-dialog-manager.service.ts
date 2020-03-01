@@ -80,7 +80,8 @@ export class EditorDialogManager {
             controllerAs: 'ctrl',
             template: require('../dialog/help/help-dialog.tmpl.html'),
             parent: angular.element(document.body),
-            clickOutsideToClose: true,
+            // must be false, otherwise polling of live data is not stopped in help-dialog.controller.js when dialog is closed
+            clickOutsideToClose: false,
             locals: {
                 pipelineElement: pipelineElementPayload,
             },

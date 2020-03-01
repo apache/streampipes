@@ -209,8 +209,16 @@ public class ConsulUtil {
   public static void deregisterService(String serviceId) {
     Consul consul = consulInstance();
 
+    LOG.info("Deregister Service: " + serviceId);
     consul.agentClient().deregister(serviceId);
-    LOG.info("Deregistered Service: " + serviceId);
+  }
+
+  public static void deleteKeys(String serviceId) {
+    Consul consul = consulInstance();
+
+    LOG.info("Delete keys: {}", serviceId);
+    // TODO: namespace should not be hardcoded
+    consul.keyValueClient().deleteKeys("/sp/v1/" + serviceId);
   }
 
   private static int registerServiceHttpClient(String body) throws IOException {

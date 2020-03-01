@@ -353,6 +353,13 @@ public class StreamPipes {
   public static final String SECRET_STATIC_PROPERTY = NS + "SecretStaticProperty";
   public static final String IS_ENCRYPTED = NS + "isEncrypted";
 
+  public static final String PE_DOCKER_CONTAINER = NS + "pipelineElementDockerContainer";
+  public static final String PE_DOCKER_CONTAINER_IMAGE_URI = NS + "dockerContainerImageUri";
+  public static final String PE_DOCKER_CONTAINER_NAME = NS + "dockerContainerName";
+  public static final String PE_DOCKER_CONTAINER_SERVICE_ID = NS + "dockerContainerServiceId";
+  public static final String PE_DOCKER_CONTAINER_ENV_VARS = NS + "dockerContainerEnvVars";
+  public static final String PE_DOCKER_CONTAINER_LABELS = NS + "dockerContainerLabels";
+
   // UI Rendering
 
   public static final String IS_HORIZONTAL_RENDERING = NS + "isHorizontalRendering";

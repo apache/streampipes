@@ -17,19 +17,10 @@
  */
 package org.apache.streampipes.manager.runtime;
 
-import com.google.common.base.Charsets;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import org.apache.http.HttpHeaders;
-import org.apache.http.client.fluent.Request;
-import org.apache.http.client.fluent.Response;
-import org.apache.http.entity.StringEntity;
+import org.apache.streampipes.messaging.kafka.SpKafkaConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.messaging.jms.ActiveMQConsumer;
 import org.apache.streampipes.model.SpDataStream;
@@ -37,29 +28,16 @@ import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.TransportFormat;
 
-import java.io.IOException;
-import java.util.Base64;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 public enum PipelineElementRuntimeInfoFetcher {
 
   INSTANCE;
 
-  Logger logger = LoggerFactory.getLogger(JsonParser.class);
+  Logger logger = LoggerFactory.getLogger(PipelineElementRuntimeInfoFetcher.class);
 
-  private static Set<String> consumerInstances = new HashSet<>();
   private Map<String, SpDataFormatConverter> converterMap;
-
-  private static final String CONSUMER_GROUP_ID = "streampipes-backend-listener-group-";
-  private static final String KAFKA_REST_ACCEPT = "application/vnd.kafka.binary.v2+json";
-  private static final String KAFKA_REST_CONTENT_TYPE = "application/vnd.kafka.v2+json";
-
-  private static final String OFFSET_FIELD_NAME = "offset";
-  private static final String VALUE_FIELD_NAME = "value";
-
 
   PipelineElementRuntimeInfoFetcher() {
     this.converterMap = new HashMap<>();
@@ -110,103 +88,6 @@ public enum PipelineElementRuntimeInfoFetcher {
     return spDataStream.getEventGrounding().getTransportFormats().get(0);
   }
 
-  private String getLatestEventFromKafka(SpDataStream spDataStream) throws SpRuntimeException {
-    String kafkaRestUrl = getKafkaRestUrl();
-    String kafkaTopic = getOutputTopic(spDataStream);
-
-    return getLatestSubscription(kafkaRestUrl, kafkaTopic, spDataStream);
-  }
-
-  private String getLatestSubscription(String kafkaRestUrl, String kafkaTopic,
-                                       SpDataStream spDataStream) throws SpRuntimeException {
-    String kafkaRestRecordsUrl = getConsumerInstanceUrl(kafkaRestUrl,
-            getConsumerInstanceId(kafkaTopic), kafkaTopic) + "/records";
-
-    try {
-      if (!consumerInstances.contains(getConsumerInstanceId(kafkaTopic)) ||
-              !converterMap.containsKey(kafkaTopic)) {
-        createSubscription(kafkaRestUrl, kafkaTopic);
-        consumerInstances.add(getConsumerInstanceId(kafkaTopic));
-        converterMap.put(kafkaTopic,
-                new SpDataFormatConverterGenerator(getTransportFormat(spDataStream)).makeConverter());
-      }
-      Response response = Request.Get(kafkaRestRecordsUrl)
-              .addHeader(HttpHeaders.ACCEPT, KAFKA_REST_ACCEPT)
-              .execute();
-
-      return extractPayload(response.returnContent().asString(), spDataStream);
-    } catch (IOException | SpRuntimeException e) {
-      if (!e.getMessage().equals("")) {
-        logger.error("Could not get any sample data from Kafka", e);
-      }
-      consumerInstances.remove(getConsumerInstanceId(kafkaTopic));
-
-      throw new SpRuntimeException(e.getMessage());
-    }
-  }
-
-  private void createSubscription(String kafkaRestUrl, String kafkaTopic) throws IOException, SpRuntimeException {
-    String consumerInstance = getConsumerInstanceId(kafkaTopic);
-
-    Integer statusCode = createConsumer(kafkaRestUrl, consumerInstance, kafkaTopic);
-    Integer subscriptionStatusCode = subscribeConsumer(kafkaRestUrl, consumerInstance, kafkaTopic);
-    if (subscriptionStatusCode != 204) {
-      throw new SpRuntimeException("Could not read message form Kafka-REST: " + kafkaRestUrl);
-    }
-
-  }
-
-  private Integer subscribeConsumer(String kafkaRestUrl, String consumerInstance, String kafkaTopic) throws IOException {
-    String subscribeConsumerUrl = getConsumerInstanceUrl(kafkaRestUrl, consumerInstance, kafkaTopic)
-            + "/subscription";
-
-
-    return Request.Post(subscribeConsumerUrl)
-            .addHeader(HttpHeaders.CONTENT_TYPE, KAFKA_REST_CONTENT_TYPE)
-            .body(new StringEntity(makeSubscribeConsumerBody(kafkaTopic), Charsets.UTF_8))
-            .execute()
-            .returnResponse()
-            .getStatusLine()
-            .getStatusCode();
-  }
-
-  private String getConsumerInstanceUrl(String kafkaRestUrl, String consumerInstance, String topic) {
-    return kafkaRestUrl + "/"
-            + "consumers/"
-            + getConsumerGroupId(topic)
-            + "/instances/"
-            + consumerInstance;
-  }
-
-  private String getConsumerGroupId(String topic) {
-    return CONSUMER_GROUP_ID + topic;
-  }
-
-  private String makeSubscribeConsumerBody(String kafkaTopic) {
-    return "{\"topics\":[\"" + kafkaTopic + "\"]}";
-  }
-
-  private Integer createConsumer(String kafkaRestUrl, String consumerInstance, String topic) throws IOException {
-    String createConsumerUrl = kafkaRestUrl + "/consumers/" + getConsumerGroupId(topic);
-    return Request.Post(createConsumerUrl)
-            .addHeader(HttpHeaders.CONTENT_TYPE, KAFKA_REST_CONTENT_TYPE)
-            .body(new StringEntity(makeCreateConsumerBody(consumerInstance), Charsets.UTF_8))
-            .execute()
-            .returnResponse()
-            .getStatusLine()
-            .getStatusCode();
-  }
-
-  private String makeCreateConsumerBody(String consumerInstance) {
-    return "{\"name\": \""
-            + consumerInstance
-            + "\", \"format\": \"binary\", \"auto.offset.reset\": \"latest\"}";
-  }
-
-  private String getConsumerInstanceId(String kafkaTopic) {
-    return CONSUMER_GROUP_ID + "-" + kafkaTopic;
-  }
-
   private String getOutputTopic(SpDataStream spDataStream) {
     return spDataStream
             .getEventGrounding()
@@ -215,33 +96,49 @@ public enum PipelineElementRuntimeInfoFetcher {
             .getActualTopicName();
   }
 
-  private String getKafkaRestUrl() {
-    return BackendConfig.INSTANCE.getKafkaRestUrl();
-  }
+  private String getLatestEventFromKafka(SpDataStream spDataStream) throws SpRuntimeException {
+    final String[] result = {null};
+    String kafkaTopic = getOutputTopic(spDataStream);
+    KafkaTransportProtocol protocol = (KafkaTransportProtocol) spDataStream.getEventGrounding().getTransportProtocol();
 
-  private String extractPayload(String rawResponse, SpDataStream spDataStream) throws SpRuntimeException {
-    Long lastOffset = 0L;
-    JsonElement jsonElement = new JsonParser().parse(rawResponse);
-    JsonObject lastItem;
+    // Change kafka config when running in development mode
+    if ("true".equals(System.getenv("SP_DEBUG"))) {
+      protocol.setBrokerHostname("localhost");
+      protocol.setKafkaPort(9094);
+    }
 
-    if (jsonElement.isJsonArray()) {
-      JsonArray allElements = jsonElement.getAsJsonArray();
-      if (allElements.size() > 0) {
-        lastItem = allElements.get(0).getAsJsonObject();
-        lastOffset = lastItem.get(OFFSET_FIELD_NAME).getAsLong();
-        for (int i = 1; i < allElements.size(); i++) {
-          JsonObject obj = allElements.get(i).getAsJsonObject();
-          Long offset = obj.get(OFFSET_FIELD_NAME).getAsLong();
-          if (offset > lastOffset) {
-            lastItem = obj;
-          }
+    if (!converterMap.containsKey(kafkaTopic)) {
+      this.converterMap.put(kafkaTopic,
+              new SpDataFormatConverterGenerator(getTransportFormat(spDataStream)).makeConverter());
+    }
+
+    SpKafkaConsumer kafkaConsumer = new SpKafkaConsumer(protocol, kafkaTopic, new InternalEventProcessor<byte[]>() {
+      @Override
+      public void onEvent(byte[] event) {
+        try {
+          result[0] = converterMap.get(kafkaTopic).convert(event);
+        } catch (SpRuntimeException e) {
+          e.printStackTrace();
         }
-        byte[] content = Base64
-                .getDecoder()
-                .decode(lastItem.get(VALUE_FIELD_NAME).getAsString());
-        return converterMap.get(getOutputTopic(spDataStream)).convert(content);
+      }
+    });
+
+    Thread t = new Thread(kafkaConsumer);
+    t.start();
+
+    long timeout = 0;
+    while (result[0] == null && timeout < 6000) {
+      try {
+        Thread.sleep(300);
+        timeout = timeout + 300;
+      } catch (InterruptedException e) {
+        e.printStackTrace();
       }
     }
-    return "{}";
+
+    kafkaConsumer.disconnect();
+
+    return result[0];
   }
+
 }

@@ -17,6 +17,7 @@ package org.apache.streampipes.node.controller.container.init;
  *
  */
 
+import org.apache.streampipes.node.controller.container.api.NodeDeploymentResource;
 import org.apache.streampipes.node.controller.container.api.NodeStatusResource;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.stereotype.Component;
@@ -26,5 +27,6 @@ public class NodeControllerContainerResourceConfig extends ResourceConfig {
 
     public NodeControllerContainerResourceConfig() {
         register(NodeStatusResource.class);
+        register(NodeDeploymentResource.class);
     }
 }
