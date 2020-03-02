@@ -1,0 +1,53 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div flex layout-fill layout="row" layout-align="start center" style="padding-top: 5px;">
+
+    <mat-form-field style="width: 270px; margin-left: 10px; margin-right: 10px;">
+        <mat-label>Start</mat-label>
+        <input matInput
+               [owlDateTime]="dt1"
+               [owlDateTimeTrigger]="dt1"
+               [(ngModel)]="dateRange.startDate"
+               (dateTimeChange)="reloadData()">
+        <mat-icon matSuffix [owlDateTimeTrigger]="dt1" style="color: grey">event</mat-icon>
+        <owl-date-time #dt1></owl-date-time>
+    </mat-form-field>
+    <mat-form-field style="width: 270px; margin-left: 10px; margin-right: 10px;">
+        <mat-label>End</mat-label>
+        <input matInput
+               [owlDateTime]="dt2"
+               [owlDateTimeTrigger]="dt2"
+               [(ngModel)]="dateRange.endDate"
+               (dateTimeChange)="reloadData()">
+        <mat-icon matSuffix [owlDateTimeTrigger]="dt2" style="color: grey">event</mat-icon>
+        <owl-date-time #dt2></owl-date-time>
+    </mat-form-field>
+
+    <button mat-raised-button
+            *ngFor="let item of possibleTimeButtons"
+            [color]="selectedTimeButton.value === item.value ? 'primary' : ''"
+            (click)="this.setCurrentDateRange(item)">{{item.value}}</button>
+
+
+    <button mat-icon-button class="icon" style="margin-left: 5px" color="primary">
+        <mat-icon style="font-size: 30px;height: 30px; width: 30px; padding-top: 3px" (click)="reloadData()">autorenew</mat-icon>
+    </button>
+
+
+</div>

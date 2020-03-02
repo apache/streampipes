@@ -23,10 +23,13 @@
                 <div fxFlex fxLayoutAlign="start center">
                     <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectDashboard($event)">
                         <mat-tab label="Start"></mat-tab>
-                        <mat-tab *ngFor="let dataViewDashboard of dataViewDashboards" label="{{dataViewDashboard.name}}"></mat-tab>
+                        <!--<mat-tab *ngFor="let dataViewDashboard of dataViewDashboards" label="{{dataViewDashboard.name}}"></mat-tab>-->
                     </mat-tab-group>
-                </div>
-                <div fxFlex fxLayoutAlign="end center" class="mr-20">
+
+                    <!--</div>-->
+                    <!--<div fxFlex fxLayoutAlign="start center" class="mr-20">-->
+                    <sp-time-range-selector *ngIf="selectedIndex"></sp-time-range-selector>
+
                     <button mat-button mat-icon-button color="primary"
                             *ngIf="selectedIndex > 0" (click)="toggleEditMode()" [disabled]="editMode">
                         <i class="material-icons">edit</i>
@@ -38,13 +41,13 @@
 
     <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100" *ngIf="dashboardsLoaded">
         <sp-data-explorer-dashboard-overview (selectDashboardEmitter)="openDashboard($event)"
-                                      (reloadDashboardsEmitter)="getDashboards()"
-                                      [dataViewDashboards]="dataViewDashboards"
-                                      *ngIf="!dashboardTabSelected">
+                                             (reloadDashboardsEmitter)="getDashboards()"
+                                             [dataViewDashboards]="dataViewDashboards"
+                                             *ngIf="!dashboardTabSelected">
 
         </sp-data-explorer-dashboard-overview>
         <sp-data-explorer-dashboard-panel fxLayout="column" [(editMode)]="editMode" [dashboard]="selectedDataViewDashboard"
-                                   style="height:100%;" *ngIf="dashboardTabSelected">
+                                          style="height:100%;" *ngIf="dashboardTabSelected">
 
         </sp-data-explorer-dashboard-panel>
     </div>

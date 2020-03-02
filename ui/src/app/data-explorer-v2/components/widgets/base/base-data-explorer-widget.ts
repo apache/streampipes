@@ -57,23 +57,23 @@ export abstract class BaseDataExplorerWidget implements OnChanges, OnInit, OnDes
     }
 
     prepareConfigExtraction() {
-        const extractor: StaticPropertyExtractor = new StaticPropertyExtractor(
-          this.widgetConfig.dashboardWidgetDataConfig.schema, this.widgetConfig.dashboardWidgetSettings.config);
-        if (extractor.hasStaticProperty(WidgetConfigBuilder.BACKGROUND_COLOR_KEY)) {
-            this.hasSelectableColorSettings = true;
-            this.selectedBackgroundColor = extractor.selectedColor(WidgetConfigBuilder.BACKGROUND_COLOR_KEY);
-            this.selectedPrimaryTextColor = extractor.selectedColor(WidgetConfigBuilder.PRIMARY_TEXT_COLOR_KEY);
-            this.selectedSecondaryTextColor = extractor.selectedColor(WidgetConfigBuilder.SECONDARY_TEXT_COLOR_KEY);
-        } else {
-            this.selectedBackgroundColor = this.defaultBackgroundColor;
-            this.selectedPrimaryTextColor = this.defaultPrimaryTextColor;
-            this.selectedSecondaryTextColor = this.defaultSecondaryTextColor;
-        }
-        if (extractor.hasStaticProperty(WidgetConfigBuilder.TITLE_KEY)) {
-            this.hasTitlePanelSettings = true;
-            this.selectedTitle = extractor.stringParameter(WidgetConfigBuilder.TITLE_KEY);
-        }
-        this.extractConfig(extractor);
+        // const extractor: StaticPropertyExtractor = new StaticPropertyExtractor(
+        //   this.widgetConfig.dashboardWidgetDataConfig.schema, this.widgetConfig.dashboardWidgetSettings.config);
+        // if (extractor.hasStaticProperty(WidgetConfigBuilder.BACKGROUND_COLOR_KEY)) {
+        //     this.hasSelectableColorSettings = true;
+        //     this.selectedBackgroundColor = extractor.selectedColor(WidgetConfigBuilder.BACKGROUND_COLOR_KEY);
+        //     this.selectedPrimaryTextColor = extractor.selectedColor(WidgetConfigBuilder.PRIMARY_TEXT_COLOR_KEY);
+        //     this.selectedSecondaryTextColor = extractor.selectedColor(WidgetConfigBuilder.SECONDARY_TEXT_COLOR_KEY);
+        // } else {
+        //     this.selectedBackgroundColor = this.defaultBackgroundColor;
+        //     this.selectedPrimaryTextColor = this.defaultPrimaryTextColor;
+        //     this.selectedSecondaryTextColor = this.defaultSecondaryTextColor;
+        // }
+        // if (extractor.hasStaticProperty(WidgetConfigBuilder.TITLE_KEY)) {
+        //     this.hasTitlePanelSettings = true;
+        //     this.selectedTitle = extractor.stringParameter(WidgetConfigBuilder.TITLE_KEY);
+        // }
+        // this.extractConfig(extractor);
     }
 
     ngOnDestroy(): void {

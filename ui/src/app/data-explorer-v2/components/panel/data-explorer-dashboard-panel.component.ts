@@ -19,12 +19,12 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable, Subscription } from 'rxjs';
+import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 import { DataExplorerWidgetModel } from '../../../core-model/datalake/DataExplorerWidgetModel';
 import { DataExplorerAddVisualizationDialogComponent } from '../../dialogs/add-widget/data-explorer-add-visualization-dialog.component';
 import { IDataViewDashboard, IDataViewDashboardItem } from '../../models/dataview-dashboard.model';
 import { DataViewDataExplorerService } from '../../services/data-view-data-explorer.service';
 import { RefreshDashboardService } from '../../services/refresh-dashboard.service';
-import forkJoin = module
 
 @Component({
   selector: 'sp-data-explorer-dashboard-panel',
@@ -105,7 +105,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
   prepareWidgetUpdates(): Array<Observable<any>> {
     const promises: Array<Observable<any>> = [];
     this.widgetsToUpdate.forEach((widget, key) => {
-      promises.push(this.dashboardService.updateWidget(widget));
+      promises.push(this.dataViewDataExplorerService.updateWidget(widget));
     });
 
     return promises;
@@ -127,7 +127,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
 
   deleteWidgets() {
     this.widgetIdsToRemove.forEach(widgetId => {
-      this.dashboardService.deleteWidget(widgetId).subscribe();
+      this.dataViewDataExplorerService.deleteWidget(widgetId).subscribe();
     });
   }
 }

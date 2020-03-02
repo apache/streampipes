@@ -41,6 +41,7 @@ import { ElementIconText } from '../services/get-element-icon-text.service';
 import { DataExplorerDashboardGridComponent } from './components/grid/data-explorer-dashboard-grid.component';
 import { DataExplorerDashboardOverviewComponent } from './components/overview/data-explorer-dashboard-overview.component';
 import { DataExplorerDashboardPanelComponent } from './components/panel/data-explorer-dashboard-panel.component';
+import { TimeRangeSelectorComponent } from './components/time-selector/timeRangeSelector.component';
 import { DataExplorerDashboardWidgetComponent } from './components/widget/data-explorer-dashboard-widget.component';
 import { DataDownloadDialog } from './components/widgets/old-explorer-widget/datadownloadDialog/dataDownload.dialog';
 import { OldExplorerComponent } from './components/widgets/old-explorer-widget/old-explorer.component';
@@ -102,6 +103,7 @@ export const MY_NATIVE_FORMATS = {
     DataExplorerEditDataViewDialogComponent,
     TableWidgetComponent,
     DataDownloadDialog,
+    TimeRangeSelectorComponent,
     OldExplorerComponent
   ],
   providers: [
