@@ -31,7 +31,7 @@
         <div fxFlex="100" fxLayout="column" style="margin:5px;width:100%">
             <mat-form-field class="full-width">
                 <mat-label>Dashboard Name</mat-label>
-                <input matInput [(ngModel)]="dashboard.name">
+                <input matInput required [(ngModel)]="dashboard.name">
             </mat-form-field>
             <mat-form-field class="full-width">
                 <mat-label>Description</mat-label>
@@ -47,7 +47,7 @@
     <button mat-button mat-raised-button class="mat-basic" (click)="onCancel()">
         Cancel
     </button>
-    <button mat-button mat-raised-button color="primary" (click)="onSave()">
+    <button mat-button mat-raised-button color="primary" [disabled]="dashboard.name === '' || dashboard.name === undefined" (click)="onSave()">
         {{createMode ? 'Create' : 'Save'}}
     </button>
 </div>
