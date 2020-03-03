@@ -18,7 +18,6 @@ package org.apache.streampipes.model.node.capabilities.hardware.resources;/*
 
 public class GPU {
     public boolean hasGPU;
-    public String arch;
     public int cudaCores;
     public String type;
 
@@ -28,14 +27,6 @@ public class GPU {
 
     public void setHasGPU(boolean hasGPU) {
         this.hasGPU = hasGPU;
-    }
-
-    public String getArch() {
-        return arch;
-    }
-
-    public void setArch(String arch) {
-        this.arch = arch;
     }
 
     public int getCudaCores() {

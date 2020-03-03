@@ -19,6 +19,7 @@ package org.apache.streampipes.node.controller.container.init;
 
 import org.apache.streampipes.container.util.ConsulUtil;
 import org.apache.streampipes.node.controller.container.config.NodeControllerConfig;
+import org.apache.streampipes.node.controller.container.config.NodeInfoStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -41,14 +42,17 @@ public class NodeControllerContainer {
         NodeControllerConfig nodeConfig = NodeControllerConfig.INSTANCE;
 
         SpringApplication app = new SpringApplication(NodeControllerContainer.class);
-        app.setDefaultProperties(Collections.singletonMap("server.port", nodeConfig.getNodeServicePort()));
+        app.setDefaultProperties(Collections.singletonMap("server.port", nodeConfig.getNodeControllerPort()));
         app.run();
+
+        LOG.info("Load static node system information");
+        NodeInfoStorage.init();
 
         // registration with consul here
         ConsulUtil.registerNodeControllerService(
-                nodeConfig.getNodeID(),
+                nodeConfig.getNodeServiceId(),
                 nodeConfig.getNodeHostName(),
-                nodeConfig.getNodeServicePort()
+                nodeConfig.getNodeControllerPort()
         );
 
     }

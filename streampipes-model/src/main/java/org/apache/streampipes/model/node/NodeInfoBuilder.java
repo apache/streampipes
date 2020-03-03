@@ -34,7 +34,7 @@ public class NodeInfoBuilder {
 
     private NodeInfoBuilder(String nodeId) {
         this.nodeInfo = new NodeInfo();
-        this.nodeInfo.setNodeId(nodeId);
+        this.nodeInfo.setNodeControllerId(nodeId);
         this.nodeMetadata = new NodeMetadata();
         this.nodeCapabilities = new NodeCapabilities();
         this.supportedPipelineElementAppIds = new ArrayList<>();
@@ -50,9 +50,13 @@ public class NodeInfoBuilder {
 //        return this;
 //    }
 
-    public NodeInfoBuilder withNodeNameAndPort(String nodeName, int nodePort) {
-        this.nodeMetadata.setNodeName(nodeName);
-        this.nodeMetadata.setNodePort(nodePort);
+    public NodeInfoBuilder withNodeControllerPort(int nodeControllerPort) {
+        this.nodeInfo.setNodeControllerPort(nodeControllerPort);
+        return this;
+    }
+
+    public NodeInfoBuilder withNodeHost(String nostHost) {
+        this.nodeMetadata.setNodeHost(nostHost);
         return this;
     }
 
@@ -75,6 +79,11 @@ public class NodeInfoBuilder {
         //this.nodeBrokerInfo.setTransportProtocol(makeJmsTransportProtocol(brokerHost, brokerPort));
         this.nodeBrokerInfo.setHost(brokerHost);
         this.nodeBrokerInfo.setPort(brokerPort);
+        return this;
+    }
+
+    public NodeInfoBuilder withNodeCapabilities(NodeCapabilities nodeCapabilities) {
+        this.nodeCapabilities = nodeCapabilities;
         return this;
     }
 

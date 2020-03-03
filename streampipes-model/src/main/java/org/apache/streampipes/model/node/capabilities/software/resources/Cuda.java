@@ -17,8 +17,18 @@ package org.apache.streampipes.model.node.capabilities.software.resources;/*
  */
 
 public class Cuda {
+
+    private boolean hasCuda;
     private String cudaDriverVersion;
     private String cudaRuntimeVersion;
+
+    public boolean hasCuda() {
+        return hasCuda;
+    }
+
+    public void setHasCuda(boolean hasCuda) {
+        this.hasCuda = hasCuda;
+    }
 
     public String getCudaDriverVersion() {
         return cudaDriverVersion;

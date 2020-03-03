@@ -17,13 +17,13 @@ package org.apache.streampipes.model.node.capabilities.hardware.resources;/*
  */
 
 public class MEM {
-    public int size;
+    public Long memTotal;
 
-    public int getSize() {
-        return size;
+    public Long getMemTotal() {
+        return memTotal;
     }
 
-    public void setSize(int size) {
-        this.size = size;
+    public void setMemTotal(Long memTotal) {
+        this.memTotal = memTotal;
     }
 }

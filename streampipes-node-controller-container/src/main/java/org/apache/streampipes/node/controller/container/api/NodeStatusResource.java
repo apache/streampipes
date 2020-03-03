@@ -16,9 +16,7 @@ package org.apache.streampipes.node.controller.container.api;
  * limitations under the License.
  *
  */
-
 import org.apache.streampipes.node.controller.container.description.NodeInfoDescription;
-
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

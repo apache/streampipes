@@ -357,6 +357,7 @@ public class StreamPipes {
   public static final String PE_DOCKER_CONTAINER_IMAGE_URI = NS + "dockerContainerImageUri";
   public static final String PE_DOCKER_CONTAINER_NAME = NS + "dockerContainerName";
   public static final String PE_DOCKER_CONTAINER_SERVICE_ID = NS + "dockerContainerServiceId";
+  public static final String PE_DOCKER_CONTAINER_PORTS = NS + "dockerContainerPorts";
   public static final String PE_DOCKER_CONTAINER_ENV_VARS = NS + "dockerContainerEnvVars";
   public static final String PE_DOCKER_CONTAINER_LABELS = NS + "dockerContainerLabels";
 

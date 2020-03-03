@@ -18,51 +18,60 @@ package org.apache.streampipes.node.controller.container.config;/*
 
 import org.apache.streampipes.config.SpConfig;
 import org.apache.streampipes.model.node.NodeInfo;
-import org.apache.streampipes.model.node.Node;
-import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.Constructor;
+import org.apache.streampipes.model.node.NodeInfoBuilder;
+import org.apache.streampipes.model.node.capabilities.hardware.Hardware;
+import org.apache.streampipes.model.node.capabilities.hardware.resources.CPU;
+import org.apache.streampipes.model.node.capabilities.hardware.resources.DISK;
+import org.apache.streampipes.model.node.capabilities.hardware.resources.GPU;
+import org.apache.streampipes.model.node.capabilities.hardware.resources.MEM;
+import org.apache.streampipes.model.node.capabilities.interfaces.Interfaces;
+import org.apache.streampipes.model.node.capabilities.software.Software;
+import org.apache.streampipes.node.controller.container.deployment.utils.DockerUtils;
 
-import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public enum NodeControllerConfig {
     INSTANCE;
 
     private SpConfig config;
-    private final static String node_service_id = "node/";
-    private Node node = parseNodeConfig(System.getenv("NODE_INFO_YAML_FILE"));
+
+    private static final String SLASH = "/";
+    private static final String DOT = ".";
+    private static final String DEFAULT_NODE_BROKER_NAME_SUFFIX = "broker";
+    private static final String node_service_id = "node";
 
     NodeControllerConfig() {
-        config = SpConfig.getSpConfig(node_service_id + node.getNodeInfo().getNodeId());
+        config = SpConfig.getSpConfig(getNodeServiceId());
 
-        config.register(ConfigKeys.NODE_ID_KEY, node.getNodeInfo().getNodeId(), "node id");
-        config.register(ConfigKeys.NODE_SERVICE_PORT_KEY, node.getNodeInfo().getNodeMetadata().getNodePort(), "node port");
-        config.register(ConfigKeys.NODE_METADATA_HOSTNAME_KEY, node.getNodeInfo().getNodeMetadata().getNodeName(), "node host name");
-        config.register(ConfigKeys.NODE_METADATA_LOCATION_KEY, node.getNodeInfo().getNodeMetadata().getNodeLocation(), "node location");
+        config.register(ConfigKeys.NODE_CONTROLLER_ID_KEY, "node-controller", "node controller id");
+        config.register(ConfigKeys.NODE_CONTROLLER_PORT_KEY,7077, "node controller port");
+        config.register(ConfigKeys.NODE_HOST_KEY, "host.docker.internal", "node host name");
+        config.register(ConfigKeys.NODE_LOCATION_KEY, "", "node location");
+        config.register(ConfigKeys.NODE_BROKER_HOST_KEY, getDefaultNodeBrokerHost(), "node broker host");
+        config.register(ConfigKeys.NODE_BROKER_PORT_KEY, 616161, "node broker port");
 
     }
 
-    public String getNodeID() {
-        return node.getNodeInfo().getNodeId();
+    public String getNodeServiceId() {
+        return node_service_id + SLASH + getEnv(ConfigKeys.NODE_HOST_KEY) + SLASH + getEnv(ConfigKeys.NODE_CONTROLLER_ID_KEY);
     }
 
-    public int getNodeServicePort(){
-        return node.getNodeInfo().getNodeMetadata().getNodePort();
+    private String getEnv(String key) {
+        return System.getenv(key);
+    }
+
+    private String getDefaultNodeBrokerHost() {
+        return getEnv(ConfigKeys.NODE_HOST_KEY) + DOT + DEFAULT_NODE_BROKER_NAME_SUFFIX;
+    }
+
+    public int getNodeControllerPort(){
+        return Integer.parseInt(getEnv(ConfigKeys.NODE_CONTROLLER_PORT_KEY));
     }
 
     public String getNodeHostName(){
-        return node.getNodeInfo().getNodeMetadata().getNodeName();
-    }
-
-    public Node getNodeInfoFromConfig(){
-        return node;
-    }
-
-    private static Node parseNodeConfig(String s) {
-        Yaml yaml = new Yaml(new Constructor(Node.class));
-        InputStream inputStream = NodeInfo.class
-                .getClassLoader()
-                .getResourceAsStream(s);
-        return yaml.load(inputStream);
+        return getEnv(ConfigKeys.NODE_HOST_KEY);
     }
 
 }

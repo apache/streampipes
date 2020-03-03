@@ -16,10 +16,11 @@ package org.apache.streampipes.node.controller.container.deployment.utils;/*
  *
  */
 
-import com.spotify.docker.client.messages.ContainerConfig;
-import com.spotify.docker.client.messages.EndpointConfig;
-import com.spotify.docker.client.messages.HostConfig;
-import com.spotify.docker.client.messages.PortBinding;
+import com.spotify.docker.client.DefaultDockerClient;
+import com.spotify.docker.client.DockerClient;
+import com.spotify.docker.client.exceptions.DockerCertificateException;
+import com.spotify.docker.client.exceptions.DockerException;
+import com.spotify.docker.client.messages.*;
 import com.spotify.docker.client.shaded.com.google.common.collect.ImmutableList;
 
 import java.util.Collections;
@@ -28,6 +29,40 @@ import java.util.List;
 import java.util.Map;
 
 public class DockerUtils {
+
+    static DockerClient dockerClient;
+
+    static {
+        try {
+            dockerClient = DefaultDockerClient.fromEnv().build();
+        } catch (DockerCertificateException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Map<String, String> getDockerInfo() {
+        try {
+            Map<String, String> dockerInfoMap = new HashMap<>();
+
+            Info info = dockerClient.info();
+            Version version = dockerClient.version();
+
+            //dockerInfoMap.put("architecture", info.architecture());
+            dockerInfoMap.put("serverVersion", info.serverVersion());
+            dockerInfoMap.put("apiVersion", version.apiVersion());
+            dockerInfoMap.put("memTotal", Long.toString(info.memTotal()));
+            dockerInfoMap.put("cpus", info.cpus().toString());
+            dockerInfoMap.put("os",  version.os());
+            dockerInfoMap.put("kernelVersion", version.kernelVersion());
+            dockerInfoMap.put("arch", version.arch());
+
+            return dockerInfoMap;
+        } catch (DockerException | InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return new HashMap<>();
+    }
 
     public static HostConfig getHostConfig(String network, String[] ports) {
         Map<String, List<PortBinding>> portBindings = new HashMap<>();
@@ -60,4 +95,5 @@ public class DockerUtils {
                 .aliases(ImmutableList.<String>of(containerName))
                 .build();
     }
+
 }

@@ -17,8 +17,8 @@ package org.apache.streampipes.model.node.capabilities.hardware.resources;/*
  */
 
 public class CPU {
-    private int cores;
-    private String arch;
+    public int cores;
+    public String arch;
 
     public int getCores() {
         return cores;

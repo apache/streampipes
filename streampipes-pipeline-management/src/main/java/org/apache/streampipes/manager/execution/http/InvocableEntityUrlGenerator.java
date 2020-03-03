@@ -61,7 +61,7 @@ public class InvocableEntityUrlGenerator extends EndpointUrlGenerator<InvocableS
             Optional<NodeInfo> nodeInfoOpt = getNodeInfo();
             if (nodeInfoOpt.isPresent()) {
                 NodeInfo nodeInfo = nodeInfoOpt.get();
-                return nodeInfo.getNodeMetadata().getNodeName()
+                return nodeInfo.getNodeMetadata().getNodeHost()
                         + COLON
                         + pipelineElement.getElementEndpointPort();
             } else {
@@ -84,7 +84,7 @@ public class InvocableEntityUrlGenerator extends EndpointUrlGenerator<InvocableS
         return new AvailableNodesFetcher()
                 .fetchNodes()
                 .stream()
-                .filter(node -> node.getNodeId().equals(pipelineElement.getDeploymentTargetNodeId()))
+                .filter(node -> node.getNodeControllerId().equals(pipelineElement.getDeploymentTargetNodeId()))
                 .findFirst();
     }
 

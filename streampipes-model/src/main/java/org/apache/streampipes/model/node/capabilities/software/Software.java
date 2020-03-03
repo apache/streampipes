@@ -21,7 +21,8 @@ import org.apache.streampipes.model.node.capabilities.software.resources.Docker;
 
 public class Software {
     private String os;
-    private Cuda cuda;
+    private String kernelVersion;
+//    private Cuda cuda;
     private Docker docker;
 
     public String getOs() {
@@ -40,11 +41,19 @@ public class Software {
         this.docker = docker;
     }
 
-    public Cuda getCuda() {
-        return cuda;
+    public String getKernelVersion() {
+        return kernelVersion;
     }
 
-    public void setCuda(Cuda cuda) {
-        this.cuda = cuda;
+    public void setKernelVersion(String kernelVersion) {
+        this.kernelVersion = kernelVersion;
     }
+
+    //    public Cuda getCuda() {
+//        return cuda;
+//    }
+//
+//    public void setCuda(Cuda cuda) {
+//        this.cuda = cuda;
+//    }
 }

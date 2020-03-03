@@ -18,8 +18,18 @@ package org.apache.streampipes.node.controller.container.config;
  */
 
 public class ConfigKeys {
-    final static String NODE_ID_KEY = "SP_NODE_ID";
-    final static String NODE_SERVICE_PORT_KEY = "SP_NODE_SERVICE_PORT";
-    final static String NODE_METADATA_HOSTNAME_KEY = "SP_NODE_METADATA_HOSTNAME";
-    final static String NODE_METADATA_LOCATION_KEY = "SP_NODE_METADATA_LOCATION";
+    final static String NODE_CONTROLLER_ID_KEY = "SP_NODE_CONTROLLER_ID";
+    final static String NODE_CONTROLLER_PORT_KEY = "SP_NODE_CONTROLLER_PORT";
+    final static String NODE_HOST_KEY = "SP_NODE_HOST";
+    final static String NODE_BROKER_HOST_KEY = "SP_NODE_BROKER_HOST";
+    final static String NODE_BROKER_PORT_KEY = "SP_NODE_BROKER_PORT";
+    final static String NODE_LOCATION_KEY = "SP_NODE_LOCATION";
+    final static String NODE_DESCRIPTION_KEY = "SP_NODE_DESCRIPTION";
+    final static String NODE_HAS_GPU_KEY = "SP_NODE_HAS_GPU";
+    final static String NODE_GPU_CUDA_CORES_KEY = "SP_NODE_GPU_CUDA_CORES";
+    final static String NODE_DISK_TYPE_KEY = "SP_NODE_DISK_TYPE";
+    final static String NODE_DISK_TOTAL_KEY = "SP_NODE_DISK_TOTAL";
+    final static String NODE_GPU_TYPE_KEY = "SP_NODE_GPU_TYPE";
+    final static String NODE_INTERFACES_KEY = "SP_NODE_INTERFACES";
+    final static String NODE_HAS_NVIDIA_DOCKER_RUNTIME_KEY = "SP_NODE_HAS_NVIDIA_DOCKER_RUNTIME";
 }

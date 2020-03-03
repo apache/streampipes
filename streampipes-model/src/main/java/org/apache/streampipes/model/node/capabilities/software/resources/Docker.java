@@ -20,10 +20,8 @@ public class Docker {
 
     private boolean hasDocker;
     private boolean hasNvidiaRuntime;
-    private String clientVersion;
     private String serverVersion;
     private String apiVersion;
-    private String apiMinVersion;
 
     public boolean hasDocker() {
         return hasDocker;
@@ -41,14 +39,6 @@ public class Docker {
         this.hasNvidiaRuntime = hasNvidiaRuntime;
     }
 
-    public String getClientVersion() {
-        return clientVersion;
-    }
-
-    public void setClientVersion(String clientVersion) {
-        this.clientVersion = clientVersion;
-    }
-
     public String getServerVersion() {
         return serverVersion;
     }
@@ -63,13 +53,5 @@ public class Docker {
 
     public void setApiVersion(String apiVersion) {
         this.apiVersion = apiVersion;
-    }
-
-    public String getApiMinVersion() {
-        return apiMinVersion;
-    }
-
-    public void setApiMinVersion(String apiMinVersion) {
-        this.apiMinVersion = apiMinVersion;
     }
 }

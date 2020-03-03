@@ -59,8 +59,8 @@ public class ConsulUtil {
   private static final String CONSUL_ENV_LOCATION = "CONSUL_LOCATION";
   private static final String CONSUL_URL_REGISTER_SERVICE = "v1/agent/service/register";
 
-  private static final String PRIMARY_NODE_IDENTIFIER = "primary";
-  private static final String SECONDARY_NODE_IDENTIFIER = "secondary";
+  private static final String PRIMARY_PE_IDENTIFIER = "primary";
+  private static final String SECONDARY_PE_IDENTIFIER = "secondary";
   private static final String NODE_ID_IDENTIFIER = "SP_NODE_ID";
 
   static Logger LOG = LoggerFactory.getLogger(ConsulUtil.class);
@@ -70,7 +70,7 @@ public class ConsulUtil {
   }
 
   public static void registerPeService(String serviceID, String url, int port) {
-    String serviceLocationTag = System.getenv(NODE_ID_IDENTIFIER) == null ? PRIMARY_NODE_IDENTIFIER : SECONDARY_NODE_IDENTIFIER;
+    String serviceLocationTag = System.getenv(NODE_ID_IDENTIFIER) == null ? PRIMARY_PE_IDENTIFIER : SECONDARY_PE_IDENTIFIER;
     registerService(PE_SERVICE_NAME, serviceID, url, port, Arrays.asList("pe", serviceLocationTag));
   }
 
@@ -175,7 +175,7 @@ public class ConsulUtil {
 
   public static List<String> getActivePEServicesEndPoints() {
     LOG.info("Load active PE service endpoints");
-    return getServiceEndpoints(PE_SERVICE_NAME, true, Collections.singletonList(PRIMARY_NODE_IDENTIFIER));
+    return getServiceEndpoints(PE_SERVICE_NAME, true, Collections.singletonList(PRIMARY_PE_IDENTIFIER));
   }
 
   public static List<String> getActiveNodeEndpoints() {

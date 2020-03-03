@@ -17,15 +17,15 @@ package org.apache.streampipes.model.node.capabilities.hardware.resources;/*
  */
 
 public class DISK {
-    private String size;
-    private String type;
+    public int diskTotal;
+    public String type;
 
-    public String getSize() {
-        return size;
+    public int getDiskTotal() {
+        return diskTotal;
     }
 
-    public void setSize(String size) {
-        this.size = size;
+    public void setDiskTotal(int diskTotal) {
+        this.diskTotal = diskTotal;
     }
 
     public String getType() {

@@ -22,6 +22,7 @@ import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
 import javax.persistence.Entity;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +39,9 @@ public class PipelineElementDockerContainer extends UnnamedStreamPipesEntity {
     @RdfProperty(StreamPipes.PE_DOCKER_CONTAINER_SERVICE_ID)
     private String serviceId;
 
+    @RdfProperty(StreamPipes.PE_DOCKER_CONTAINER_PORTS)
+    private String [] containerPorts;
+
     @RdfProperty(StreamPipes.PE_DOCKER_CONTAINER_ENV_VARS)
     private List<String> envVars;
 
@@ -52,11 +56,12 @@ public class PipelineElementDockerContainer extends UnnamedStreamPipesEntity {
         super(elementId);
     }
 
-    public PipelineElementDockerContainer(String imageURI, String containerName, String serviceId, List<String> envVars,
-                                          Map<String, String> labels) {
+    public PipelineElementDockerContainer(String imageURI, String containerName, String serviceId, String [] containerPorts,
+                                          List<String> envVars, Map<String, String> labels) {
         this.imageURI = imageURI;
         this.containerName = containerName;
         this.serviceId = serviceId;
+        this.containerPorts = containerPorts;
         this.envVars = envVars;
         this.labels = labels;
     }
@@ -66,6 +71,7 @@ public class PipelineElementDockerContainer extends UnnamedStreamPipesEntity {
         this.imageURI = imageURI;
         this.containerName = containerName;
         this.serviceId = serviceId;
+        this.containerPorts = containerPorts;
         this.envVars = envVars;
         this.labels = labels;
     }
@@ -94,6 +100,14 @@ public class PipelineElementDockerContainer extends UnnamedStreamPipesEntity {
         this.serviceId = serviceId;
     }
 
+    public String[] getContainerPorts() {
+        return containerPorts;
+    }
+
+    public void setContainerPorts(String[] containerPorts) {
+        this.containerPorts = containerPorts;
+    }
+
     public List<String> getEnvVars() {
         return envVars;
     }
@@ -116,6 +130,7 @@ public class PipelineElementDockerContainer extends UnnamedStreamPipesEntity {
                 "imageURI='" + imageURI + '\'' +
                 ", containerName='" + containerName + '\'' +
                 ", serviceId='" + serviceId + '\'' +
+                ", containerPorts=" + Arrays.toString(containerPorts) +
                 ", envVars=" + envVars +
                 ", labels=" + labels +
                 '}';

@@ -20,7 +20,8 @@ package org.apache.streampipes.model.node.capabilities.interfaces;/*
 public class Interfaces {
     public String name;
     public String type;
-    public String domainProperty;
+    public String connectionInfo;
+    public String connectionType;
 
     public String getName() {
         return name;
@@ -38,11 +39,19 @@ public class Interfaces {
         this.type = type;
     }
 
-    public String getDomainProperty() {
-        return domainProperty;
+    public String getConnectionInfo() {
+        return connectionInfo;
     }
 
-    public void setDomainProperty(String domainProperty) {
-        this.domainProperty = domainProperty;
+    public void setConnectionInfo(String connectionInfo) {
+        this.connectionInfo = connectionInfo;
+    }
+
+    public String getConnectionType() {
+        return connectionType;
+    }
+
+    public void setConnectionType(String connectionType) {
+        this.connectionType = connectionType;
     }
 }

@@ -52,7 +52,6 @@ public class PipelineElementDockerContainerManager {
         }
     }
 
-
     public static String deploy(PipelineElementDockerContainer container) throws DockerException, InterruptedException {
         LOG.info("Deployment request for: {}", container.getContainerName());
 
@@ -65,7 +64,7 @@ public class PipelineElementDockerContainerManager {
                     .image(container.getImageURI())
                     .labels(container.getLabels())
                     .env(container.getEnvVars())
-                    .hostConfig(DockerUtils.getHostConfig(SP_NETWORK))
+                    .hostConfig(DockerUtils.getHostConfig(SP_NETWORK, container.getContainerPorts()))
                     .networkingConfig(DockerUtils.getNetworkingConfig(SP_NETWORK, container.getContainerName()))
                     .build();
 

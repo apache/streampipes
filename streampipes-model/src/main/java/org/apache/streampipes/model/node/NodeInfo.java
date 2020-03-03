@@ -21,7 +21,8 @@ import java.util.List;
 
 public class NodeInfo {
 
-    private String nodeId;
+    private String nodeControllerId;
+    private int nodeControllerPort;
     private NodeMetadata nodeMetadata;
     private NodeBrokerInfo nodeBrokerInfo;
     private NodeCapabilities nodeCapabilities;
@@ -31,12 +32,20 @@ public class NodeInfo {
 
     }
 
-    public String getNodeId() {
-        return nodeId;
+    public String getNodeControllerId() {
+        return nodeControllerId;
     }
 
-    public void setNodeId(String nodeId) {
-        this.nodeId = nodeId;
+    public void setNodeControllerId(String nodeControllerId) {
+        this.nodeControllerId = nodeControllerId;
+    }
+
+    public int getNodeControllerPort() {
+        return nodeControllerPort;
+    }
+
+    public void setNodeControllerPort(int nodeControllerPort) {
+        this.nodeControllerPort = nodeControllerPort;
     }
 
     public NodeMetadata getNodeMetadata() {

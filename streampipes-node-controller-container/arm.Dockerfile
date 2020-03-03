@@ -17,11 +17,15 @@ ARG BASE_IMAGE=arm32v7/openjdk:11-jre-slim
 FROM $BASE_IMAGE
 
 ENV CONSUL_LOCATION consul
-ENV NODE_INFO_YAML_FILE node_info.yml
 
 EXPOSE 7077
 
 COPY qemu-arm-static /usr/bin
+RUN set -ex; \
+    apt -y update; \
+    apt -y --no-install-recommends install libjffi-jni; \
+    apt clean; \
+    rm -rf /tmp/apache-* /var/lib/apt/lists/*
 COPY target/streampipes-node-controller-container.jar  /streampipes-node-controller.jar
 
 ENTRYPOINT ["java", "-jar", "/streampipes-node-controller.jar"]

@@ -17,85 +17,12 @@ package org.apache.streampipes.node.controller.container.description;/*
  */
 
 import org.apache.streampipes.model.node.*;
-import org.apache.streampipes.model.node.capabilities.hardware.Hardware;
-import org.apache.streampipes.model.node.capabilities.interfaces.Interfaces;
-import org.apache.streampipes.model.node.capabilities.software.Software;
-import org.apache.streampipes.node.controller.container.config.NodeControllerConfig;
-
-import java.util.List;
+import org.apache.streampipes.node.controller.container.config.NodeInfoStorage;
 
 public class NodeInfoDescription {
 
-    private final static Node node = NodeControllerConfig.INSTANCE.getNodeInfoFromConfig();
-
     public static NodeInfo retrieveNodeInfo(){
-        return NodeInfoBuilder.create(nodeId())
-                .withNodeNameAndPort(nodeName(), nodePort())
-                .withNodeLocation(nodeLocation())
-                .withNodeDescription(nodeDescription())
-                .withNodeCapabilities(nodeHardware(), nodeSoftware(), nodeInterfaces())
-                .withJmsTransportProtocol(nodeBrokerHost(), nodeBrokerPort())
-                .withSupportedPipelineElements(supportedPipelineElements())
-                .build();
+        return NodeInfoStorage.getInstance().get();
     }
 
-    private static String nodeId() {
-        return getNodeInfo().getNodeId();
-    }
-
-    private static String nodeName() {
-        return getNodeMetadata().getNodeName();
-    }
-
-    private static int nodePort() {
-        return getNodeMetadata().getNodePort();
-    }
-
-    private static String nodeLocation() {
-        return getNodeMetadata().getNodeLocation();
-    }
-
-    private static String nodeDescription() {
-        return getNodeMetadata().getNodeDescription();
-    }
-
-    private static String nodeBrokerHost() {
-        return getNodeBrokerInfo().getHost();
-    }
-
-    private static int nodeBrokerPort() {
-        return getNodeBrokerInfo().getPort();
-    }
-
-    private static Hardware nodeHardware() {
-        return getNodeCapabilities().getHardware();
-    }
-
-    private static Software nodeSoftware() {
-        return getNodeCapabilities().getSoftware();
-    }
-
-    private static List<Interfaces> nodeInterfaces() {
-        return getNodeCapabilities().getInterfaces();
-    }
-
-    private static List<String> supportedPipelineElements() {
-        return getNodeInfo().getSupportedPipelineElementAppIds();
-    }
-
-    private static NodeInfo getNodeInfo() {
-        return node.getNodeInfo();
-    }
-
-    private static NodeMetadata getNodeMetadata() {
-        return getNodeInfo().getNodeMetadata();
-    }
-
-    private static NodeBrokerInfo getNodeBrokerInfo() {
-        return getNodeInfo().getNodeBrokerInfo();
-    }
-
-    private static NodeCapabilities getNodeCapabilities() {
-        return getNodeInfo().getNodeCapabilities();
-    }
 }
