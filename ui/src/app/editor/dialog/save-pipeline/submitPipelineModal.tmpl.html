@@ -60,6 +60,23 @@
                 </md-checkbox>
                 <div ng-if="ctrl.advancedSettings">
                     <h4>Nodes</h4>
+                    <div ng-repeat="pipelineElement in ctrl.pipeline.sepas">
+                        <div flex="100" layout="row">
+                            <div flex="50" layout="row" layout-align="start center">
+                                <span>{{pipelineElement.name}}</span>
+                            </div>
+                            <div flex="50" layout="row" layout-align="start center">
+                                <md-select ng-model="pipelineElement.deploymentTargetNodeId" style="margin: 0;">
+                                    <md-option
+                                            ng-value = "node.nodeControllerId" ng-repeat="node in
+                                            ctrl.deploymentOptions[pipelineElement.appId]">
+                                        <em>{{node.nodeMetadata.nodeHost}}
+                                        </em>
+                                    </md-option>
+                                </md-select>
+                            </div>
+                        </div>
+                    </div>
                     <div ng-repeat="pipelineElement in ctrl.pipeline.actions">
                         <div flex="100" layout="row">
                             <div flex="50" layout="row" layout-align="start center">
