@@ -115,7 +115,11 @@ public class NodeInfoStorage {
 
     // TODO: remove when not needed for anything
     private static List<String> getSupportedPipelineElements() {
-        return Collections.emptyList();
+         String[] supportedPipelineElements = envExists(ConfigKeys.NODE_SUPPORTED_PE_APP_ID_LIST_KEY)
+                .trim()
+                .replaceAll("\\[|\\]|\"", "")
+                .split("\\s*,\\s*");
+        return Arrays.asList(supportedPipelineElements);
     }
 
     private static Hardware getActualHardware(){

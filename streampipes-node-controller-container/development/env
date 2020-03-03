@@ -27,6 +27,7 @@ SP_NODE_DISK_TOTAL=200
 SP_NODE_DISK_TYPE=ssd
 SP_NODE_HAS_NVIDIA_DOCKER_RUNTIME=true
 SP_NODE_INTERFACES=["raspicam;sensor;/dev/video0;csi", "zed;sensor;/dev/video1;usb", "xdk;sensor;fc:d6:bd:10:2f:c5;bluetooth"]
+SP_NODE_SUPPORTED_PE_APP_ID_LIST=["org.apache.streampipes.processors.filters.jvm.numericalfilter", "org.apache.streampipes.processors.filters.jvm.compose", "org.apache.streampipes.processors.filters.jvm.threshold", "org.apache.streampipes.sinks.internal.jvm.dashboard", "org.apache.streampipes.sinks.internal.jvm.datalake"]
 SP_NODE_HAS_GPU=false
 #SP_NODE_GPU_CUDA_CORES=128
 #SP_NODE_GPU_TYPE=NVIDIA Tegra X1
