@@ -23,6 +23,7 @@ import { GroupedDataResult } from '../../core-model/datalake/GroupedDataResult';
 import { InfoResult } from '../../core-model/datalake/InfoResult';
 import { PageResult } from '../../core-model/datalake/PageResult';
 import { AuthStatusService } from '../../services/auth-status.service';
+import { Observable } from "rxjs/Observable";
 
 @Injectable()
 export class DatalakeRestService {
@@ -60,7 +61,7 @@ export class DatalakeRestService {
         return this.http.get<DataResult>(this.dataLakeUrlV3 + '/data/' + index + '/last/' + value + '/' + timeunit);
     }
 
-    getData(index, startDate, endDate, aggregationTimeUnit, aggregationValue) {
+    getData(index, startDate, endDate, aggregationTimeUnit, aggregationValue): Observable<DataResult> {
         return this.http.get<DataResult>(this.dataLakeUrlV3 + '/data/' + index + '/' + startDate + '/' + endDate + '?aggregationUnit=' + aggregationTimeUnit + '&aggregationValue=' + aggregationValue);
     }
 

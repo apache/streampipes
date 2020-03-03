@@ -21,6 +21,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Observable, Subscription } from 'rxjs';
 import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 import { DataExplorerWidgetModel } from '../../../core-model/datalake/DataExplorerWidgetModel';
+import { DateRange } from '../../../core-model/datalake/DateRange';
 import { DataExplorerAddVisualizationDialogComponent } from '../../dialogs/add-widget/data-explorer-add-visualization-dialog.component';
 import { IDataViewDashboard, IDataViewDashboardItem } from '../../models/dataview-dashboard.model';
 import { DataViewDataExplorerService } from '../../services/data-view-data-explorer.service';
@@ -33,9 +34,20 @@ import { RefreshDashboardService } from '../../services/refresh-dashboard.servic
 })
 export class DataExplorerDashboardPanelComponent implements OnInit {
 
-  @Input() dashboard: IDataViewDashboard;
-  @Input('editMode') editMode: boolean;
-  @Output('editModeChange') editModeChange: EventEmitter<boolean> = new EventEmitter();
+  @Input()
+  dashboard: IDataViewDashboard;
+
+  /**
+   * This is the date range (start, end) to view the data and is set in data-explorer.ts
+   */
+  @Input()
+  viewDateRange: DateRange;
+
+  @Input('editMode')
+  editMode: boolean;
+
+  @Output('editModeChange')
+  editModeChange: EventEmitter<boolean> = new EventEmitter();
 
   public items: IDataViewDashboardItem[];
 

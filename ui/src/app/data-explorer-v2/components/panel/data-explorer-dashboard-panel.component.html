@@ -28,8 +28,11 @@
             visualization</button>
     </div>
 
-    <sp-data-explorer-dashboard-grid [editMode]="editMode" [dashboard]="dashboard"
-                    (updateCallback)="updateAndQueueItemForDeletion($event)"
-                    (deleteCallback)="removeAndQueueItemForDeletion($event)"
-                    class="h-100"></sp-data-explorer-dashboard-grid>
+    <sp-data-explorer-dashboard-grid
+            [editMode]="editMode"
+            [dashboard]="dashboard"
+            [viewDateRange]="viewDateRange"
+            (updateCallback)="updateAndQueueItemForDeletion($event)"
+            (deleteCallback)="removeAndQueueItemForDeletion($event)"
+            class="h-100"></sp-data-explorer-dashboard-grid>
 </div>

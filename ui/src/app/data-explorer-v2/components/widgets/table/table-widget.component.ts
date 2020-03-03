@@ -17,43 +17,83 @@
  */
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { StaticPropertyExtractor } from '../../../sdk/extractor/static-property-extractor';
+import { DateRange } from '../../../../core-model/datalake/DateRange';
+import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
 import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
-import { TableConfig } from './table-config';
+import { MatTableDataSource } from "@angular/material/table";
+import { DataResult } from "../../../../core-model/datalake/DataResult";
 
 @Component({
-    selector: 'sp-data-explorer-table-widget',
-    templateUrl: './table-widget.component.html',
-    styleUrls: ['./table-widget.component.css']
+  selector: 'sp-data-explorer-table-widget',
+  templateUrl: './table-widget.component.html',
+  styleUrls: ['./table-widget.component.css']
 })
 export class TableWidgetComponent extends BaseDataExplorerWidget implements OnInit, OnDestroy {
 
-    item: any;
+  @Input()
+  viewDateRange: DateRange;
 
-    selectedProperty: string;
+  displayedColumns: string[] = ['time', 'count', 'randomNumber', 'timestamp'];
 
-    constructor() {
-        super();
+  dataSource = new MatTableDataSource();
+  // item: any;
+  //
+  // selectedProperty: string;
+
+  constructor(private dataLakeRestService: DatalakeRestService) {
+    super();
+  }
+
+  ngOnInit(): void {
+    const groupbyUnit = 's';
+    const groupbyValue = 1;
+
+    this.dataLakeRestService.getData(
+      this.dataExplorerWidget.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime(),
+      groupbyUnit, groupbyValue).subscribe(
+      (res: DataResult) => {
+
+          const transformed = this.transformData(res, 'time');
+
+          this.dataSource.data = this.displayData(transformed, 'time', this.displayedColumns);
+      }
+    );
+  }
+
+
+  transformData(data: DataResult, xKey: string): DataResult {
+    const tmp = [];
+    data.rows.forEach(row =>
+      tmp.push(this.createTableObject(data.headers, row))
+    );
+    data.rows = tmp;
+
+    return data;
+  }
+
+
+    displayData(transformedData: DataResult, xKey: string, yKeys: string[]) {
+        this.displayedColumns = Object.assign([], yKeys);
+        // this.displayedColumns.unshift(xKey);
+
+        // this.dataSource.data = transformedData.rows;
+        return transformedData.rows;
     }
 
-    ngOnInit(): void {
-        super.ngOnInit();
-    }
 
-    ngOnDestroy(): void {
-        super.ngOnDestroy();
-    }
+  createTableObject(keys, values) {
+    const object = {};
+    keys.forEach((key, index) => {
+      object[key] = values[index];
+    });
+    return object;
+  }
 
-    extractConfig(extractor: StaticPropertyExtractor) {
-        // this.selectedProperty = extractor.mappingPropertyValue(TableConfig.NUMBER_MAPPING_KEY);
-    }
 
-    isNumber(item: any): boolean {
-        return false;
-    }
+  ngOnDestroy(): void {
+  }
 
-    protected onEvent(event: any) {
-        this.item = event[this.selectedProperty];
-    }
-
+  isNumber(item: any): boolean {
+    return false;
+  }
 }

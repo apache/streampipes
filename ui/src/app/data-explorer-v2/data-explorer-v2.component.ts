@@ -38,11 +38,19 @@ export class DataExplorerV2Component implements OnInit {
 
     dataViewDashboards: IDataViewDashboard[];
 
+  /**
+   * This is the date range (start, end) to view the data
+   */
+  viewDateRange: DateRange;
+
     constructor(private dataViewService: DataViewDataExplorerService,
                 private refreshDashboardService: RefreshDashboardService) {}
 
+
     public ngOnInit() {
         this.getDashboards();
+        const currentTime = new Date();
+        this.viewDateRange = new DateRange(new Date(currentTime.getTime() - 100000 * 60000), currentTime);
         this.refreshDashboardService.refreshSubject.subscribe(currentDashboardId => {
             this.getDashboards(currentDashboardId);
         });
@@ -82,7 +90,7 @@ export class DataExplorerV2Component implements OnInit {
         this.editMode = ! (this.editMode);
     }
 
-    updateDate(dateRange: DateRange) {
-        console.log(dateRange);
+    updateDateRange(dateRange: DateRange) {
+      this.viewDateRange = dateRange;
     }
 }

@@ -36,6 +36,7 @@ import { DataDownloadDialog } from './datadownloadDialog/dataDownload.dialog';
 })
 export class OldExplorerComponent implements OnInit {
 
+
     myControl = new FormControl();
     infoResult: InfoResult[];
     filteredIndexInfos: Observable<InfoResult[]>;

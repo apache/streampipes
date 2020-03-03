@@ -16,22 +16,13 @@
  *
  */
 
-import { Input } from '@angular/core';
-import { GridsterItem, GridsterItemComponent } from 'angular-gridster2';
-import { DataExplorerWidgetModel } from '../../../../core-model/datalake/DataExplorerWidgetModel';
-import { IDataViewDashboardItem } from '../../../models/dataview-dashboard.model';
+import { Injectable } from "@angular/core";
 
-export abstract class BaseDataExplorerWidget {
+@Injectable()
+export class DataLakeService {
 
-    protected constructor() {
-    }
-
-    @Input() gridsterItem: GridsterItem;
-    @Input() gridsterItemComponent: GridsterItemComponent;
-    @Input() editMode: boolean;
-
-    @Input() dataViewDashboardItem: IDataViewDashboardItem;
-    @Input() dataExplorerWidget: DataExplorerWidgetModel;
+  constructor() {
+  }
 
 
 }

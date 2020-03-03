@@ -20,58 +20,72 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GridsterItem, GridsterItemComponent } from 'angular-gridster2';
 import { DataExplorerWidgetModel } from '../../../core-model/datalake/DataExplorerWidgetModel';
+import { DateRange } from '../../../core-model/datalake/DateRange';
 import { DataExplorerAddVisualizationDialogComponent } from '../../dialogs/add-widget/data-explorer-add-visualization-dialog.component';
 import { IDataViewDashboardItem } from '../../models/dataview-dashboard.model';
 import { DataViewDataExplorerService } from '../../services/data-view-data-explorer.service';
 
 @Component({
-    selector: 'sp-data-explorer-dashboard-widget',
-    templateUrl: './data-explorer-dashboard-widget.component.html',
-    styleUrls: ['./data-explorer-dashboard-widget.component.css']
+  selector: 'sp-data-explorer-dashboard-widget',
+  templateUrl: './data-explorer-dashboard-widget.component.html',
+  styleUrls: ['./data-explorer-dashboard-widget.component.css']
 })
 export class DataExplorerDashboardWidgetComponent implements OnInit {
 
-    @Input() widget: IDataViewDashboardItem;
-    @Input() editMode: boolean;
-    @Input() item: GridsterItem;
-    @Input() gridsterItemComponent: GridsterItemComponent;
+  @Input()
+  widget: IDataViewDashboardItem;
 
-    @Output() deleteCallback: EventEmitter<IDataViewDashboardItem> = new EventEmitter<IDataViewDashboardItem>();
-    @Output() updateCallback: EventEmitter<DataExplorerWidgetModel> = new EventEmitter<DataExplorerWidgetModel>();
+  @Input()
+  editMode: boolean;
 
-    widgetLoaded = false;
-    configuredWidget: DataExplorerWidgetModel;
+  @Input()
+  item: GridsterItem;
 
-    constructor(private dataViewDataExplorerService: DataViewDataExplorerService,
-                private dialog: MatDialog) {
-    }
+  @Input()
+  gridsterItemComponent: GridsterItemComponent;
 
-    ngOnInit(): void {
-        this.dataViewDataExplorerService.getWidget(this.widget.id).subscribe(response => {
-            this.configuredWidget = response;
-            this.widgetLoaded = true;
-        });
-    }
+  /**
+   * This is the date range (start, end) to view the data and is set in data-explorer.ts
+   */
+  @Input()
+  viewDateRange: DateRange;
 
-    removeWidget() {
-        this.deleteCallback.emit(this.widget);
-    }
+  @Output() deleteCallback: EventEmitter<IDataViewDashboardItem> = new EventEmitter<IDataViewDashboardItem>();
+  @Output() updateCallback: EventEmitter<DataExplorerWidgetModel> = new EventEmitter<DataExplorerWidgetModel>();
 
-    editWidget(): void {
-        const dialogRef = this.dialog.open(DataExplorerAddVisualizationDialogComponent, {
-            width: '70%',
-            height: '500px',
-            panelClass: 'custom-dialog-container',
-            data: {
-                'widget': this.configuredWidget
-            }
-        });
+  widgetLoaded = false;
+  configuredWidget: DataExplorerWidgetModel;
 
-        dialogRef.afterClosed().subscribe(widget => {
-            if (widget) {
-                this.configuredWidget = widget;
-                this.updateCallback.emit(this.configuredWidget);
-            }
-        });
-    }
+  constructor(private dataViewDataExplorerService: DataViewDataExplorerService,
+              private dialog: MatDialog) {
+  }
+
+  ngOnInit(): void {
+    this.dataViewDataExplorerService.getWidget(this.widget.id).subscribe(response => {
+      this.configuredWidget = response;
+      this.widgetLoaded = true;
+    });
+  }
+
+  removeWidget() {
+    this.deleteCallback.emit(this.widget);
+  }
+
+  editWidget(): void {
+    const dialogRef = this.dialog.open(DataExplorerAddVisualizationDialogComponent, {
+      width: '70%',
+      height: '500px',
+      panelClass: 'custom-dialog-container',
+      data: {
+        'widget': this.configuredWidget
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(widget => {
+      if (widget) {
+        this.configuredWidget = widget;
+        this.updateCallback.emit(this.configuredWidget);
+      }
+    });
+  }
 }

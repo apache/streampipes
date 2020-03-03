@@ -36,23 +36,13 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
     }
 
     ngOnInit(): void {
-        super.ngOnInit();
     }
 
     ngOnDestroy(): void {
-        super.ngOnDestroy();
-    }
-
-    extractConfig(extractor: StaticPropertyExtractor) {
-        // this.selectedProperty = extractor.mappingPropertyValue(TableConfig.NUMBER_MAPPING_KEY);
     }
 
     isNumber(item: any): boolean {
         return false;
-    }
-
-    protected onEvent(event: any) {
-        this.item = event[this.selectedProperty];
     }
 
 }

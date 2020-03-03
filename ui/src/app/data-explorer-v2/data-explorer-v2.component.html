@@ -28,7 +28,7 @@
 
                     <!--</div>-->
                     <!--<div fxFlex fxLayoutAlign="start center" class="mr-20">-->
-                    <sp-time-range-selector *ngIf="selectedIndex" (dateRangeEmitter)="updateDate($event)"></sp-time-range-selector>
+                    <sp-time-range-selector *ngIf="selectedIndex" (dateRangeEmitter)="updateDateRange($event)"></sp-time-range-selector>
 
                     <button mat-button mat-icon-button color="primary"
                             *ngIf="selectedIndex > 0" (click)="toggleEditMode()" [disabled]="editMode">
@@ -46,7 +46,10 @@
                                              *ngIf="!dashboardTabSelected">
 
         </sp-data-explorer-dashboard-overview>
-        <sp-data-explorer-dashboard-panel fxLayout="column" [(editMode)]="editMode" [dashboard]="selectedDataViewDashboard"
+        <sp-data-explorer-dashboard-panel fxLayout="column"
+                                          [(editMode)]="editMode"
+                                          [dashboard]="selectedDataViewDashboard"
+                                          [viewDateRange]="viewDateRange"
                                           style="height:100%;" *ngIf="dashboardTabSelected">
 
         </sp-data-explorer-dashboard-panel>

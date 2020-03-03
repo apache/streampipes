@@ -53,6 +53,8 @@ import { DataExplorerEditDataViewDialogComponent } from './dialogs/edit-dashboar
 import { DataViewDataExplorerService } from './services/data-view-data-explorer.service';
 import { RefreshDashboardService } from './services/refresh-dashboard.service';
 import { ResizeService } from './services/resize.service';
+import { DatalakeRestService } from "../core-services/datalake/datalake-rest.service";
+import { DataLakeService } from "./services/data-lake.service";
 
 const dashboardWidgets = [
 
@@ -111,6 +113,7 @@ export const MY_NATIVE_FORMATS = {
   providers: [
     SharedDatalakeRestService,
     DataViewDataExplorerService,
+    DataLakeService,
     ResizeService,
     RefreshDashboardService,
     SemanticTypeUtilsService,
