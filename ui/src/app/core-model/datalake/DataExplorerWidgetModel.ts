@@ -36,6 +36,9 @@ export class DataExplorerWidgetModel extends UnnamedStreamPipesEntity {
     @RdfProperty('sp:hasMeasurementName')
     measureName: string;
 
+    @RdfProperty('sp:hasDashboardWidgetType')
+    widgetType: string;
+
     @RdfProperty('sp:hasSchema')
     eventSchema: EventSchema;
 

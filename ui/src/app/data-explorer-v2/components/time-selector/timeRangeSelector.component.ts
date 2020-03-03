@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, EventEmitter, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { DateRange } from '../../../core-model/datalake/DateRange';
 
 @Component({
@@ -26,7 +26,6 @@ import { DateRange } from '../../../core-model/datalake/DateRange';
 })
 export class TimeRangeSelectorComponent implements OnInit {
 
-  // [0] start, [1] end
   @Output()
   dateRangeEmitter = new EventEmitter<DateRange>();
 
@@ -64,5 +63,6 @@ export class TimeRangeSelectorComponent implements OnInit {
     this.selectedTimeButton = item;
     const current = new Date();
     this.dateRange = new DateRange(new Date(current.getTime() - item.offset * 60000), current);
+    this.reloadData();
   }
 }

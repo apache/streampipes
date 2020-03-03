@@ -131,6 +131,7 @@ export class DataExplorerAddVisualizationDialogComponent implements OnInit {
       //  }
 
       configuredWidget.measureName = this.selectedDataSet.measureName;
+      configuredWidget.widgetType = this.selectedWidget;
       this.dataViewDataExplorerService.saveWidget(configuredWidget).subscribe(response => {
         this.dialogRef.close(response);
       });

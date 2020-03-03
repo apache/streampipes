@@ -71,7 +71,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
     const dashboardItem = {} as IDataViewDashboardItem;
     dashboardItem.widgetId = widget._id;
     dashboardItem.id = widget._id;
-    // TODO there should be a widget type DashboardWidget
+    dashboardItem.widgetType = widget.widgetType;
     dashboardItem.cols = 2;
     dashboardItem.rows = 2;
     dashboardItem.x = 0;

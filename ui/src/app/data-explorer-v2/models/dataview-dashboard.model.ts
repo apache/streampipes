@@ -22,6 +22,7 @@ export interface IDataViewDashboardConfig extends GridsterConfig {}
 
 export interface IDataViewDashboardItem extends GridsterItem {
     widgetId: string;
+    widgetType: string;
     id: string;
 }
 

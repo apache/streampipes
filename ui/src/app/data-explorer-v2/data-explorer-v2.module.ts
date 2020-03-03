@@ -43,6 +43,7 @@ import { DataExplorerDashboardOverviewComponent } from './components/overview/da
 import { DataExplorerDashboardPanelComponent } from './components/panel/data-explorer-dashboard-panel.component';
 import { TimeRangeSelectorComponent } from './components/time-selector/timeRangeSelector.component';
 import { DataExplorerDashboardWidgetComponent } from './components/widget/data-explorer-dashboard-widget.component';
+import { LineChartWidgetComponent } from './components/widgets/line-chart/line-chart-widget.component';
 import { DataDownloadDialog } from './components/widgets/old-explorer-widget/datadownloadDialog/dataDownload.dialog';
 import { OldExplorerComponent } from './components/widgets/old-explorer-widget/old-explorer.component';
 import { TableWidgetComponent } from './components/widgets/table/table-widget.component';
@@ -63,7 +64,7 @@ export const MY_NATIVE_FORMATS = {
   timePickerInput: {hour: 'numeric', minute: 'numeric', hour12: false},
   monthYearLabel: {year: 'numeric', month: 'short', hour12: false},
   dateA11yLabel: {year: 'numeric', month: 'long', day: 'numeric', hour12: false},
-  monthYearA11yLabel: {year: 'numeric', month: 'long', hour12: false},
+  monthYearA11yLabel: {year: 'numeric', month: 'long', hour12: false}
 };
 
 
@@ -91,7 +92,7 @@ export const MY_NATIVE_FORMATS = {
     CoreUiModule,
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
-    PlotlyViaWindowModule,
+    PlotlyViaWindowModule
   ],
   declarations: [
     DataExplorerV2Component,
@@ -102,6 +103,7 @@ export const MY_NATIVE_FORMATS = {
     DataExplorerAddVisualizationDialogComponent,
     DataExplorerEditDataViewDialogComponent,
     TableWidgetComponent,
+    LineChartWidgetComponent,
     DataDownloadDialog,
     TimeRangeSelectorComponent,
     OldExplorerComponent
@@ -115,11 +117,11 @@ export const MY_NATIVE_FORMATS = {
     {
       provide: 'RestApi',
       useFactory: ($injector: any) => $injector.get('RestApi'),
-      deps: ['$injector'],
+      deps: ['$injector']
     },
     ElementIconText,
     {
-      provide: InjectableRxStompConfig,
+      provide: InjectableRxStompConfig
     },
     {
       provide: RxStompService,
@@ -128,7 +130,7 @@ export const MY_NATIVE_FORMATS = {
     },
     {
       provide: OWL_DATE_TIME_FORMATS, useValue: MY_NATIVE_FORMATS
-    },
+    }
   ],
   exports: [
     DataExplorerV2Component
@@ -143,5 +145,4 @@ export class DataExplorerV2Module {
 
   constructor() {
   }
-
 }

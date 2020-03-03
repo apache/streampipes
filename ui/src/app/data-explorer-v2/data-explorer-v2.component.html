@@ -28,7 +28,7 @@
 
                     <!--</div>-->
                     <!--<div fxFlex fxLayoutAlign="start center" class="mr-20">-->
-                    <sp-time-range-selector *ngIf="selectedIndex"></sp-time-range-selector>
+                    <sp-time-range-selector *ngIf="selectedIndex" (dateRangeEmitter)="updateDate($event)"></sp-time-range-selector>
 
                     <button mat-button mat-icon-button color="primary"
                             *ngIf="selectedIndex > 0" (click)="toggleEditMode()" [disabled]="editMode">

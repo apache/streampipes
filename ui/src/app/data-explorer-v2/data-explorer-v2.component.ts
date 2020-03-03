@@ -17,6 +17,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
+import { DateRange } from '../core-model/datalake/DateRange';
 import { IDataViewDashboard } from './models/dataview-dashboard.model';
 import { DataViewDataExplorerService } from './services/data-view-data-explorer.service';
 import { RefreshDashboardService } from './services/refresh-dashboard.service';
@@ -79,5 +80,9 @@ export class DataExplorerV2Component implements OnInit {
 
     toggleEditMode() {
         this.editMode = ! (this.editMode);
+    }
+
+    updateDate(dateRange: DateRange) {
+        console.log(dateRange);
     }
 }

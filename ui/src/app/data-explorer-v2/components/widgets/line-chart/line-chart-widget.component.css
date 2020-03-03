@@ -16,22 +16,21 @@
  *
  */
 
-import {GridsterConfig, GridsterItem} from "angular-gridster2";
-
-export interface DashboardConfig extends GridsterConfig {}
-
-export interface DashboardItem extends GridsterItem {
-    widgetId: string;
-    widgetType: string;
-    id: string;
+.circleNumber {
+    width:100%;
+    height: 100%;
+    text-align: center;
+    left: 50%;
+    display:inline-grid;
+    align-content: center;
 }
 
-export interface Dashboard {
-    id?: string;
-    name?: string;
-    description?: string;
-    displayHeader?: boolean;
-    widgets?: Array<DashboardItem>;
-    _id?: string;
-    _rev?: string;
+
+.numberItem {
+    font-size:60px;
+    font-weight:bold;
+}
+
+.title-panel {
+    font-size:20px;
 }

@@ -33,7 +33,7 @@ export class DataExplorerWidgetRegistry {
     // }
 
     private static availableWidgets: string[] = [
-        'table',
+        'table', 'line-chart'
     ];
 
     static getAvailableWidgetTemplates(): string[] {

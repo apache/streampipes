@@ -19,7 +19,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'sp-time-range-selector',
+  selector: 'sp-old-time-range-selector',
   templateUrl: 'timeRangeSelector.component.html',
   styleUrls: ['./timeRangeSelector.component.css']
 })
