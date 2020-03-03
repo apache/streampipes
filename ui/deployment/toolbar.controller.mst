@@ -149,7 +149,7 @@ export class ToolbarController {
     };
 
     openDocumentation() {
-        this.$window.open('/docs', '_blank');
+        this.$window.open('https://streampipes.apache.org/docs', '_blank');
     };
 
     openInfo() {
