@@ -17,7 +17,8 @@
  */
 
 export interface NodeInfo {
-    nodeId: string;
+    nodeControllerId: string;
+    nodeControllerPort: number;
     nodeMetadata: NodeMetadata;
     nodeBrokerInfo: NodeBrokerInfo;
     nodeCapabilities: NodeCapabilities;
@@ -25,6 +26,7 @@ export interface NodeInfo {
 }
 
 export interface NodeMetadata {
+    nodeHost: string;
     nodeDescription: string;
     nodeLocation: string;
 }
@@ -70,6 +72,7 @@ export interface GpuCapability {
 
 export interface SoftwareCapability {
     os: string;
+    kernelVersion: string;
     cuda: CudaCapability
     docker: DockerCapability;
 }
@@ -91,5 +94,6 @@ export interface DockerCapability {
 export interface HardwareInterface {
     name: string;
     type: string;
-    domainProperty: string;
+    connectionInfo: string;
+    connectionType: string;
 }
