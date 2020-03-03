@@ -197,7 +197,7 @@ export class PipelineAssemblyController {
                 this.rawPipelineModel = msg.data;
                 this.$timeout(() => {
                     this.displayPipelineInEditor(true);
-                });
+                }, 100);
             }
         });
     }

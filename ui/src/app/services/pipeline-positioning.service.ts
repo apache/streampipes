@@ -42,14 +42,16 @@ export class PipelinePositioningService {
 
         for (var i = 0; i < rawPipelineModel.length; i++) {
             var currentPe = rawPipelineModel[i];
-            if (currentPe.type === "stream") {
-                this.JsplumbService.streamDropped(currentPe.payload.DOM, currentPe.payload, true, isPreview);
-            }
-            if (currentPe.type === "sepa") {
-                this.JsplumbService.sepaDropped(currentPe.payload.DOM, currentPe.payload, true, isPreview);
-            }
-            if (currentPe.type === "action") {
-                this.JsplumbService.actionDropped(currentPe.payload.DOM, currentPe.payload, true, isPreview);
+            if (!currentPe.settings.disabled) {
+                if (currentPe.type === "stream") {
+                    this.JsplumbService.streamDropped(currentPe.payload.DOM, currentPe.payload, true, isPreview);
+                }
+                if (currentPe.type === "sepa") {
+                    this.JsplumbService.sepaDropped(currentPe.payload.DOM, currentPe.payload, true, isPreview);
+                }
+                if (currentPe.type === "action") {
+                    this.JsplumbService.actionDropped(currentPe.payload.DOM, currentPe.payload, true, isPreview);
+                }
             }
         }
 
