@@ -22,6 +22,7 @@ import {MatTableDataSource} from "@angular/material/table";
 import {MatDialog} from "@angular/material/dialog";
 import {DashboardService} from "../../services/dashboard.service";
 import {EditDashboardDialogComponent} from "../../dialogs/edit-dashboard/edit-dashboard-dialog.component";
+import {Tuple2} from "../../../core-model/base/Tuple2";
 
 @Component({
     selector: 'dashboard-overview',
@@ -32,10 +33,10 @@ export class DashboardOverviewComponent implements OnInit {
 
     @Input() dashboards: Array<Dashboard>;
     @Output() reloadDashboardsEmitter = new EventEmitter<void>();
-    @Output() selectDashboardEmitter = new EventEmitter<Dashboard>();
+    @Output() selectDashboardEmitter = new EventEmitter<Tuple2<Dashboard, boolean>>();
 
     dataSource = new MatTableDataSource<Dashboard>();
-    displayedColumns: string[] = ['name', 'open', 'openWindow', 'edit', 'delete'];
+    displayedColumns: string[] = ['name', 'open', 'openWindow', 'settings', 'edit', 'delete'];
 
     constructor(private dashboardService: DashboardService,
                 public dialog: MatDialog) {
@@ -77,8 +78,11 @@ export class DashboardOverviewComponent implements OnInit {
         });
     }
 
-    showDashboard(dashboard: Dashboard) {
-        this.selectDashboardEmitter.emit(dashboard);
+    showDashboard(dashboard: Dashboard, openInEditMode: boolean) {
+        let data: Tuple2<Dashboard, boolean> = {} as Tuple2<Dashboard, boolean>;
+        data.a = dashboard;
+        data.b = openInEditMode;
+        this.selectDashboardEmitter.emit(data);
     }
 
     openExternalDashboard(dashboard: Dashboard) {
