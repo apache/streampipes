@@ -16,12 +16,13 @@
  *
  */
 
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from "@angular/core";
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { DataResult } from '../../../../core-model/datalake/DataResult';
 import { DateRange } from '../../../../core-model/datalake/DateRange';
 import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
+import { IDataViewDashboardItem } from '../../../models/dataview-dashboard.model';
 import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
 
 @Component({
@@ -35,6 +36,9 @@ export class TableWidgetComponent extends BaseDataExplorerWidget implements OnIn
   viewDateRange: DateRange;
 
   @ViewChild(MatSort, {static: true}) sort: MatSort;
+
+  @Output()
+  removeWidgetCallback: EventEmitter<boolean> = new EventEmitter();
 
   availableColumns: string[] = ['time', 'count', 'randomText', 'randomNumber', 'timestamp'];
   selectedColumns: string[] = ['time'];
@@ -91,6 +95,10 @@ export class TableWidgetComponent extends BaseDataExplorerWidget implements OnIn
   ngOnChanges(changes: SimpleChanges) {
     this.viewDateRange = changes.viewDateRange.currentValue;
     this.updateData();
+  }
+
+  removeWidget() {
+    this.removeWidgetCallback.emit(true);
   }
 
 }
