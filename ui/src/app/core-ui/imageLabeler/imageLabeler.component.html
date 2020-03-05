@@ -68,6 +68,8 @@
                 <button mat-button (click)="imageAnnotation.setPolygonMode()" [style.background-color]="imageAnnotation.isPolygonMode() ? 'lightgrey' : 'white'"> <mat-icon>details</mat-icon></button>
             </div>
 
+            <button mat-button [disabled]="imageAnnotation.saved && imageClassification.saved" (click)="save()"><mat-icon>save</mat-icon></button>
+
             <canvas (mousedown)="imageMouseDown($event)" (mousemove)="imageMouseMove($event)" (mouseup)="imageMouseUp($event)"
                     #canvas width="800" height="500" (dblclick)="dblclick($event)">
                 Your browser does not support the canvas element.
@@ -106,23 +108,15 @@
     <br />
 
     <div fxLayout="row" fxLayoutAlign="space-around center" >
-        <button mat-icon-button> <mat-icon>keyboard_arrow_left</mat-icon></button>
+        <button mat-icon-button (click)="previousImage()"> <mat-icon>keyboard_arrow_left</mat-icon></button>
 
-        <div fxLayout="row" fxLayoutAlign="center " style="height: 70px" class="imageBar">
-            <img src="https://cdn.pixabay.com/photo/2015/05/01/14/46/new-york-748595_1280.jpg">
-            <img src="https://cdn.pixabay.com/photo/2017/10/29/21/05/bridge-2900839_1280.jpg">
-            <img src="https://cdn.pixabay.com/photo/2017/10/29/21/05/bridge-2900839_1280.jpg">
-            <img src="https://cdn.pixabay.com/photo/2017/10/29/21/05/bridge-2900839_1280.jpg">
-            <img src="https://cdn.pixabay.com/photo/2016/02/19/11/01/taxi-1209542_1280.jpg">
-            <img src="https://cdn.pixabay.com/photo/2017/10/29/21/05/bridge-2900839_1280.jpg">
-            <img src="https://cdn.pixabay.com/photo/2017/10/29/21/05/bridge-2900839_1280.jpg">
-            <img src="https://cdn.pixabay.com/photo/2016/02/19/11/01/taxi-1209542_1280.jpg">
-            <img src="https://cdn.pixabay.com/photo/2015/05/01/14/46/new-york-748595_1280.jpg">
-            <img src="https://cdn.pixabay.com/photo/2017/10/29/21/05/bridge-2900839_1280.jpg">
+        <div fxLayout="row" fxLayoutAlign="center " class="imageBar">
+            <img *ngFor="let src of imagesSrcs; let i = index" src="{{src}}" (click)="imagesSrcIndex = i; changeImage(imagesSrcIndex)"
+                 [style.border]="i == imagesSrcIndex ? '5px solid #39b54a' : 'none'">
         </div>
 
 
-        <button mat-icon-button> <mat-icon>keyboard_arrow_right</mat-icon></button>
+        <button mat-icon-button (click)="nextImage()"> <mat-icon>keyboard_arrow_right</mat-icon></button>
 
     </div>
 </div>

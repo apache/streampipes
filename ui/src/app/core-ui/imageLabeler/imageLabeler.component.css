@@ -27,6 +27,7 @@ canvas {
 }
 
 .imageBar {
+    height: 70px;
     background-color: lightgrey;
 }
 

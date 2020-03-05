@@ -21,12 +21,18 @@ import { Injectable } from "@angular/core";
 export class ImageClassification {
 
   private classes: string[];
+  public saved: boolean = true;
+  private src;
 
-  newImage() {
+  newImage(src) {
+    this.saved = true;
+    this.src = src;
+    //TODO get class from backend
     this.classes = [];
   }
 
   addClass(clazz) {
+    this.saved = false;
     this.classes.push(clazz);
   }
 
@@ -35,6 +41,13 @@ export class ImageClassification {
   }
 
   removeClass(clazz) {
+    this.saved = false;
     this.classes = this.classes.filter(c => c != clazz);
+  }
+
+  save(): boolean {
+    //todo: save  in backend
+    this.saved = true;
+    return true;
   }
 }

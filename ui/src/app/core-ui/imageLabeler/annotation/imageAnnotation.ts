@@ -29,9 +29,15 @@ export class ImageAnnotation {
   private selectedAnnotation;
 
   private coco: CocoFormat;
+  private src;
+  public saved: boolean = true;
 
-  newImage(imageName, width, height) {
+
+  newImage(src, imageName, width, height) {
+    this.src = src;
+    //TODO get Coco file form backend if exists
     this.coco = new CocoFormat(imageName, width, height);
+    this.saved = true;
   }
 
   mouseDown(imageCord, scale) {
@@ -46,11 +52,13 @@ export class ImageAnnotation {
       ReactAnnotationUtil.mouseDownTransform(imageCord,
         this.selectedAnnotation, scale)
     } else if (this.interactionMode == AnnotationMode.PolygonLabeling){
+      this.saved = false;
       PolygonAnnotationUtil.mouseDownCreate(imageCord)
     }
   }
 
   mouseMover(imageCord, imageXShift, imageYShift, context, label) {
+    this.saved = false;
     if (this.interactionMode == AnnotationMode.PolygonTransform){
       PolygonAnnotationUtil.mouseMoveTransform(imageCord, this.selectedAnnotation)
     } else if (this.interactionMode == AnnotationMode.ReactLabeling) {
@@ -74,8 +82,10 @@ export class ImageAnnotation {
     PolygonAnnotationUtil.finishCreate(imageCords, this.coco, labelId)
   }
 
-  getSelectedAnnotation() {
-    return this.selectedAnnotation;
+  save(): boolean {
+    //TODO save coco file in backend
+    this.saved = true;
+    return true;
   }
 
   deleteAnnotation(annotation) {

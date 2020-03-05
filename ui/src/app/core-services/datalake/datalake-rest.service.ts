@@ -105,8 +105,19 @@ export class DatalakeRestService {
         return this.http.request(request)
     }
 
-    getImage(path) {
-
+    getImageSrcs() {
+        return [
+          'https://cdn.pixabay.com/photo/2017/10/29/21/05/bridge-2900839_1280.jpg',
+          'https://cdn.pixabay.com/photo/2014/04/02/19/32/dead-end-308178_1280.jpg',
+          'https://cdn.pixabay.com/photo/2015/05/01/14/46/new-york-748595_1280.jpg',
+          'https://cdn.pixabay.com/photo/2015/02/13/10/18/stop-634941_1280.jpg',
+          'https://cdn.pixabay.com/photo/2017/10/29/21/05/bridge-2900839_1280.jpg',
+          'https://cdn.pixabay.com/photo/2017/04/23/08/43/new-york-2253292_1280.jpg',
+          'https://cdn.pixabay.com/photo/2015/05/01/14/46/new-york-748595_1280.jpg',
+          'https://cdn.pixabay.com/photo/2017/10/29/21/05/bridge-2900839_1280.jpg',
+          'https://cdn.pixabay.com/photo/2015/02/13/10/18/stop-634941_1280.jpg',
+          'https://cdn.pixabay.com/photo/2017/10/29/21/05/bridge-2900839_1280.jpg',
+        ];
     }
 
     getLabels() {

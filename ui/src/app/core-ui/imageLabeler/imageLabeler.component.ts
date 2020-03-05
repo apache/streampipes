@@ -23,6 +23,7 @@ import { ColorUtil } from "./util/color.util";
 import { ImageAnnotation } from "./annotation/imageAnnotation";
 import { InteractionMode } from "./interactionMode";
 import { ImageClassification } from "./classification/imageClassification";
+import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Component({
   selector: 'sp-image-labeler',
@@ -44,6 +45,8 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
   private isHoverComponent;
 
   //image
+  public imagesSrcs;
+  public imagesSrcIndex;
   private image;
   private imageTranslationX = 0;
   private imageTranslationY = 0;
@@ -58,12 +61,16 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
   //scale
   private scale: number = 1;
 
-  constructor(private restService: DatalakeRestService, public imageAnnotation: ImageAnnotation, public imageClassification: ImageClassification) {
+
+  constructor(private restService: DatalakeRestService, public imageAnnotation: ImageAnnotation, public imageClassification: ImageClassification,
+              private snackBar: MatSnackBar) {
 
   }
 
   ngOnInit(): void {
     //1. get Image Paths
+    this.imagesSrcs = this.restService.getImageSrcs();
+    this.imagesSrcIndex = 0;
     //2. get Images
 
     //3. get Labels
@@ -89,19 +96,20 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
     this.context.lineWidth = 2;
   }
 
-  changeImage(url) {
+  changeImage(index) {
     this.image = new Image();
 
     this.image.onload = () => {
-      this.imageAnnotation.newImage("Test.png", this.image.width, this.image.height);
-      this.imageClassification.newImage();
+      let src = this.imagesSrcs[this.imagesSrcIndex]
+      this.imageAnnotation.newImage(src,"Test.png", this.image.width, this.image.height);
+      this.imageClassification.newImage(src);
       console.log('Image width: ' + this.image.width);
       console.log('Image height: ' + this.image.height);
       this.scale = Math.min(1, this.canvasWidth / this.image.width, this.canvasHeight / this.image.height);
       console.log('Set Scale to: ' + this.scale);
       this.draw();
     };
-    this.image.src = url;
+    this.image.src = this.imagesSrcs[this.imagesSrcIndex];
   }
 
   imageMouseDown(e) {
@@ -200,7 +208,6 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
     this.context.drawImage(this.image, this.canvasWidth / 2 - this.image.width / 2, this.canvasHeight / 2 - this.image.height / 2);
   }
 
-
   endDraw() {
     this.context.restore();
 
@@ -235,9 +242,9 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
       } else {
         let key = event.key;
         switch (key.toLowerCase()) {
-          case 'q': alert('Previous image'); //TODO
+          case 'q': this.previousImage();
             break;
-          case 'e': alert('Next image'); //TODOd
+          case 'e': this.nextImage();
             break;
           case 'w': this.imageTranslationY += 5; this.draw();
             break;
@@ -280,7 +287,47 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
     ]
   }
 
+  save() {
+    let success: boolean;
+
+    if (!this.imageAnnotation.saved) {
+      success = this.imageAnnotation.save();
+    }
+    if (!this.imageClassification.saved) {
+      success = this.imageClassification.save();
+    }
+    if (success) {
+      this.openSnackBar('Saved');
+    } else {
+      this.openSnackBar('Error while saving');
+    }
+  }
+
+  openSnackBar(message: string) {
+    this.snackBar.open(message, '', {
+      duration: 2000,
+      verticalPosition: 'top',
+      horizontalPosition: 'right'
+    });
+  }
+
   //UI Callbacks
+
+  nextImage() {
+    if (this.imagesSrcIndex < this.imagesSrcs.length - 1) {
+      this.save();
+      this.imagesSrcIndex++;
+      this.changeImage(this.imagesSrcIndex);
+    }
+  }
+
+  previousImage() {
+    if (this.imagesSrcIndex > 0) {
+      this.save();
+      this.imagesSrcIndex--;
+      this.changeImage(this.imagesSrcIndex);
+    }
+  }
 
   scroll(e) {
     this.scale += e.wheelDeltaY * (1/6000);
@@ -319,14 +366,17 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
   }
 
   setImageViewInteractionMode() {
+    this.save();
     this.interactionMode = InteractionMode.imageViewing;
   }
 
   setImageAnnotateInteractionMode() {
+    this.save();
     this.interactionMode = InteractionMode.imageAnnotate;
   }
 
   setImageClassifyInteractionMode() {
+    this.save();
     this.interactionMode = InteractionMode.imageClassify;
   }
 
