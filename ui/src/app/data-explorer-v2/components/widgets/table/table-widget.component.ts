@@ -16,70 +16,61 @@
  *
  */
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from "@angular/core";
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { DataResult } from '../../../../core-model/datalake/DataResult';
 import { DateRange } from '../../../../core-model/datalake/DateRange';
 import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
 import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
-import { MatTableDataSource } from "@angular/material/table";
-import { DataResult } from "../../../../core-model/datalake/DataResult";
 
 @Component({
   selector: 'sp-data-explorer-table-widget',
   templateUrl: './table-widget.component.html',
   styleUrls: ['./table-widget.component.css']
 })
-export class TableWidgetComponent extends BaseDataExplorerWidget implements OnInit, OnDestroy {
+export class TableWidgetComponent extends BaseDataExplorerWidget implements OnInit, OnDestroy, OnChanges  {
 
   @Input()
   viewDateRange: DateRange;
 
-  displayedColumns: string[] = ['time', 'count', 'randomNumber', 'timestamp'];
+  @ViewChild(MatSort, {static: true}) sort: MatSort;
+
+  availableColumns: string[] = ['time', 'count', 'randomText', 'randomNumber', 'timestamp'];
+  selectedColumns: string[] = ['time'];
 
   dataSource = new MatTableDataSource();
-  // item: any;
-  //
-  // selectedProperty: string;
 
   constructor(private dataLakeRestService: DatalakeRestService) {
     super();
   }
 
   ngOnInit(): void {
-    const groupbyUnit = 's';
-    const groupbyValue = 1;
+    this.dataSource.sort = this.sort;
 
-    this.dataLakeRestService.getData(
-      this.dataExplorerWidget.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime(),
-      groupbyUnit, groupbyValue).subscribe(
+    this.updateData();
+
+
+  }
+
+  updateData() {
+    this.dataLakeRestService.getDataAutoAggergation(
+      this.dataExplorerWidget.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime()).subscribe(
       (res: DataResult) => {
 
-          const transformed = this.transformData(res, 'time');
-
-          this.dataSource.data = this.displayData(transformed, 'time', this.displayedColumns);
+        this.dataSource.data = this.transformData(res);
       }
     );
   }
 
-
-  transformData(data: DataResult, xKey: string): DataResult {
-    const tmp = [];
+  transformData(data: DataResult) {
+    const result = [];
     data.rows.forEach(row =>
-      tmp.push(this.createTableObject(data.headers, row))
+      result.push(this.createTableObject(data.headers, row))
     );
-    data.rows = tmp;
 
-    return data;
+    return result;
   }
-
-
-    displayData(transformedData: DataResult, xKey: string, yKeys: string[]) {
-        this.displayedColumns = Object.assign([], yKeys);
-        // this.displayedColumns.unshift(xKey);
-
-        // this.dataSource.data = transformedData.rows;
-        return transformedData.rows;
-    }
-
 
   createTableObject(keys, values) {
     const object = {};
@@ -89,11 +80,17 @@ export class TableWidgetComponent extends BaseDataExplorerWidget implements OnIn
     return object;
   }
 
+  setSelectedColumn(selectedColumns: string[]) {
+    this.selectedColumns = selectedColumns;
+  }
 
   ngOnDestroy(): void {
+    this.dataSource.data = [];
   }
 
-  isNumber(item: any): boolean {
-    return false;
+  ngOnChanges(changes: SimpleChanges) {
+    this.viewDateRange = changes.viewDateRange.currentValue;
+    this.updateData();
   }
+
 }
