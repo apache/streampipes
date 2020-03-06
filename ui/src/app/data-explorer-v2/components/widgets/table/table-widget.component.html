@@ -19,7 +19,7 @@
 <!--<div>-->
 
 <div fxLayout="column" fxLayoutAlign="stretch">
-    <div class="assemblyOptions sp-blue-bg m-0 row header h-40" style="margin-left: 0px;margin-right: 0px;">
+    <div class="assemblyOptionsDataExplorer sp-blue-bg m-0 row header h-40" style="margin-left: 0px;margin-right: 0px;">
         <div fxFlex="100" layout="row" fxLayoutAlign="end center" style="margin-left: 0px;margin-right: 0px;">
             <mat-form-field appearance="outline">
                 <mat-label>Select Columns</mat-label>
@@ -49,11 +49,7 @@
     <!--</div>-->
 
 
-    <!--<div style="overflow-y: auto; max-height: calc(100% - 40px);">-->
-        <div style=" display: flex;
-  align-items: stretch;
-  height: 100%;
-  min-height: 100px;">
+    <div style=" overflow-y: auto;" [style.max-height.px]="gridsterItem.rows * 100 - 40">
         <table mat-table [dataSource]="dataSource" matSort>
 
             <ng-container *ngFor="let element of this.selectedColumns" [cdkColumnDef]="element">
