@@ -24,7 +24,7 @@
                [owlDateTime]="dt1"
                [owlDateTimeTrigger]="dt1"
                [(ngModel)]="dateRange.startDate"
-               (dateTimeChange)="reloadData()">
+               (dateTimeChange)="changeCustomDateRange()">
         <mat-icon matSuffix [owlDateTimeTrigger]="dt1" style="color: grey">event</mat-icon>
         <owl-date-time #dt1></owl-date-time>
     </mat-form-field>
@@ -34,7 +34,7 @@
                [owlDateTime]="dt2"
                [owlDateTimeTrigger]="dt2"
                [(ngModel)]="dateRange.endDate"
-               (dateTimeChange)="reloadData()">
+               (dateTimeChange)="changeCustomDateRange()">
         <mat-icon matSuffix [owlDateTimeTrigger]="dt2" style="color: grey">event</mat-icon>
         <owl-date-time #dt2></owl-date-time>
     </mat-form-field>

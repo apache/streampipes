@@ -55,6 +55,11 @@ export class TimeRangeSelectorComponent implements OnInit {
     this.dateRangeEmitter.emit(this.dateRange);
   }
 
+  changeCustomDateRange() {
+    this.selectedTimeButton =  this.possibleTimeButtons[this.possibleTimeButtons.length - 1];
+    this.reloadData();
+  }
+
   /**
    * Sets the current date range from now to the value of offset in the past
    * @param offset in minutes
