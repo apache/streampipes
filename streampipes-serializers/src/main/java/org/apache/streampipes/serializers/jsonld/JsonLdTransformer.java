@@ -69,8 +69,8 @@ public class JsonLdTransformer implements RdfTransformer {
           StreamPipes.CONNECT_WORKER_CONTAINER,
           StreamPipes.DASHBOARD_WIDGET_MODEL,
           StreamPipes.DASHBOARD_MODEL,
-          StreamPipes.DATA_EXPLORER_WIDGET_MODEL
-
+          StreamPipes.DATA_EXPLORER_WIDGET_MODEL,
+          StreamPipes.DATA_LAKE_MEASURE
   );
 
   private List<String> selectedRootElements;

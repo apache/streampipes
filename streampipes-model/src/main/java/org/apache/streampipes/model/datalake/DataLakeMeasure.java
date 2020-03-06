@@ -20,6 +20,7 @@ package org.apache.streampipes.model.datalake;
 
 import io.fogsy.empire.annotations.RdfProperty;
 import io.fogsy.empire.annotations.RdfsClass;
+import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
@@ -30,7 +31,7 @@ import javax.persistence.OneToOne;
 
 @RdfsClass(StreamPipes.DATA_LAKE_MEASURE)
 @Entity
-public class DataLakeMeasure {
+public class DataLakeMeasure extends UnnamedStreamPipesEntity {
 
     @RdfProperty(StreamPipes.HAS_MEASUREMENT_NAME)
     private String measureName;

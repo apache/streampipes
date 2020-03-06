@@ -53,6 +53,7 @@ import org.apache.streampipes.model.connect.worker.ConnectWorkerContainer;
 import org.apache.streampipes.model.dashboard.DashboardWidgetModel;
 import org.apache.streampipes.model.dashboard.VisualizablePipeline;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
+import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkDescription;
@@ -248,8 +249,8 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             DashboardWidgetModel.class,
             VisualizablePipeline.class,
             DataExplorerWidgetModel.class,
-            StreamPipesJsonLdContainer.class
-
+            StreamPipesJsonLdContainer.class,
+            DataLakeMeasure.class
     );
   }
 }

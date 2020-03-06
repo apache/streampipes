@@ -26,6 +26,8 @@ import org.apache.streampipes.rest.impl.datalake.model.DataResult;
 import org.apache.streampipes.rest.impl.datalake.model.GroupedDataResult;
 import org.apache.streampipes.rest.impl.datalake.model.PageResult;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
+import org.apache.streampipes.rest.shared.annotation.JsonLdSerialized;
+import org.apache.streampipes.rest.shared.util.SpMediaType;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -81,13 +83,13 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
   }
 
   @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @GsonWithIds
+  @JsonLdSerialized
+  @Produces(SpMediaType.JSONLD)
   @Path("/info")
   public Response getAllInfos() {
     List<DataLakeMeasure> result = this.dataLakeManagement.getInfos();
 
-    return Response.ok(new Gson().toJson(result)).build();
+    return ok(result);
   }
 
   @Deprecated
