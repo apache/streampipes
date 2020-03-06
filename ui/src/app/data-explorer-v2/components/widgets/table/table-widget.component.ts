@@ -16,13 +16,11 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { DataResult } from '../../../../core-model/datalake/DataResult';
-import { DateRange } from '../../../../core-model/datalake/DateRange';
 import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
-import { IDataViewDashboardItem } from '../../../models/dataview-dashboard.model';
 import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
 
 @Component({
@@ -32,13 +30,8 @@ import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
 })
 export class TableWidgetComponent extends BaseDataExplorerWidget implements OnInit, OnDestroy, OnChanges  {
 
-  @Input()
-  viewDateRange: DateRange;
 
   @ViewChild(MatSort, {static: true}) sort: MatSort;
-
-  @Output()
-  removeWidgetCallback: EventEmitter<boolean> = new EventEmitter();
 
   availableColumns: string[] = ['time', 'count', 'randomText', 'randomNumber', 'timestamp'];
   selectedColumns: string[] = ['time'];
@@ -97,8 +90,5 @@ export class TableWidgetComponent extends BaseDataExplorerWidget implements OnIn
     this.updateData();
   }
 
-  removeWidget() {
-    this.removeWidgetCallback.emit(true);
-  }
 
 }
