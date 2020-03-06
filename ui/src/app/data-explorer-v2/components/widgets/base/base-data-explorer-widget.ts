@@ -16,22 +16,33 @@
  *
  */
 
-import { Input } from '@angular/core';
+import { EventEmitter, Input, Output } from '@angular/core';
 import { GridsterItem, GridsterItemComponent } from 'angular-gridster2';
 import { DataExplorerWidgetModel } from '../../../../core-model/datalake/DataExplorerWidgetModel';
+import { DateRange } from '../../../../core-model/datalake/DateRange';
 import { IDataViewDashboardItem } from '../../../models/dataview-dashboard.model';
 
 export abstract class BaseDataExplorerWidget {
 
-    protected constructor() {
-    }
+  protected constructor() {
+  }
 
-    @Input() gridsterItem: GridsterItem;
-    @Input() gridsterItemComponent: GridsterItemComponent;
-    @Input() editMode: boolean;
+  @Output()
+  removeWidgetCallback: EventEmitter<boolean> = new EventEmitter();
 
-    @Input() dataViewDashboardItem: IDataViewDashboardItem;
-    @Input() dataExplorerWidget: DataExplorerWidgetModel;
+  @Input() gridsterItem: GridsterItem;
+  @Input() gridsterItemComponent: GridsterItemComponent;
+  @Input() editMode: boolean;
 
+  @Input()
+  viewDateRange: DateRange;
+
+
+  @Input() dataViewDashboardItem: IDataViewDashboardItem;
+  @Input() dataExplorerWidget: DataExplorerWidgetModel;
+
+  removeWidget() {
+    this.removeWidgetCallback.emit(true);
+  }
 
 }

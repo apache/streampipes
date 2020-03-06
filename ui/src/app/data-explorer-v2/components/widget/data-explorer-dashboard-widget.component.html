@@ -33,6 +33,7 @@
                 </div>
                 <div *ngIf="widget.widgetType === 'line-chart'" class="h-100 p-0">
                     <sp-data-explorer-line-chart-widget
+                            (removeWidgetCallback)="removeWidget()"
                             [viewDateRange]="viewDateRange"
                             [gridsterItem]="item"
                             [gridsterItemComponent]="gridsterItemComponent"
