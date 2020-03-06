@@ -22,7 +22,7 @@ import { from, Observable } from 'rxjs';
 import 'rxjs-compat/add/observable/of';
 import { map } from 'rxjs/operators';
 import { DataExplorerWidgetModel } from '../../core-model/datalake/DataExplorerWidgetModel';
-import { InfoResult } from '../../core-model/datalake/InfoResult';
+import { DataLakeMeasure } from '../../core-model/datalake/DataLakeMeasure';
 import { DatalakeRestService } from '../../core-services/datalake/datalake-rest.service';
 import { SharedDatalakeRestService } from '../../core-services/shared/shared-dashboard.service';
 import { TsonLdSerializerService } from '../../platform-services/tsonld-serializer.service';
@@ -42,8 +42,10 @@ export class DataViewDataExplorerService {
               private sharedDatalakeRestService: SharedDatalakeRestService) {
   }
 
-  getVisualizableData(): Observable<InfoResult[]> {
-    return this.dataLakeRestService.getAllInfos();
+  getVisualizableData(): Observable<DataLakeMeasure[]> {
+    return this.dataLakeRestService.getAllInfos().map(data => {
+      return this.tsonLdSerializerService.fromJsonLdContainer(data, 'sp:DataLakeMeasure');
+    });
   }
 
   getDataViews(): Observable<IDataViewDashboard[]> {

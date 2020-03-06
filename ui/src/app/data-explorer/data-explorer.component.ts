@@ -21,7 +21,7 @@ import { FormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs/Observable';
 import { map, startWith } from 'rxjs/operators';
-import { InfoResult } from '../core-model/datalake/InfoResult';
+import { DataLakeMeasure } from '../core-model/datalake/DataLakeMeasure';
 import { DatalakeRestService } from '../core-services/datalake/datalake-rest.service';
 
 @Component({
@@ -32,11 +32,11 @@ import { DatalakeRestService } from '../core-services/datalake/datalake-rest.ser
 export class DataExplorerComponent implements OnInit {
 
     myControl = new FormControl();
-    infoResult: InfoResult[];
-    filteredIndexInfos: Observable<InfoResult[]>;
+    infoResult: DataLakeMeasure[];
+    filteredIndexInfos: Observable<DataLakeMeasure[]>;
 
     page = 0;
-    selectedInfoResult: InfoResult = undefined;
+    selectedInfoResult: DataLakeMeasure = undefined;
 
     downloadFormat = 'csv';
     isDownloading = false;
@@ -61,7 +61,7 @@ export class DataExplorerComponent implements OnInit {
         this.selectedInfoResult = this._filter(index)[0];
     }
 
-    _filter(value: string): InfoResult[] {
+    _filter(value: string): DataLakeMeasure[] {
         const filterValue = value.toLowerCase();
 
         return this.infoResult.filter(option => option.measureName.toLowerCase().includes(filterValue));

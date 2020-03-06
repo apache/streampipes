@@ -20,7 +20,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { EventSchema } from '../../../connect/schema-editor/model/EventSchema';
 import { DataExplorerWidgetModel } from '../../../core-model/datalake/DataExplorerWidgetModel';
-import { InfoResult } from '../../../core-model/datalake/InfoResult';
+import { DataLakeMeasure } from '../../../core-model/datalake/DataLakeMeasure';
 import { ElementIconText } from '../../../services/get-element-icon-text.service';
 import { IDataViewDashboard } from '../../models/dataview-dashboard.model';
 import { DataExplorerWidgetRegistry } from '../../registry/data-explorer-widget-registry';
@@ -51,10 +51,10 @@ export class DataExplorerAddVisualizationDialogComponent implements OnInit {
     description: 'Select widget'
   }];
 
-  visualizableData: InfoResult[] = [];
+  visualizableData: DataLakeMeasure[] = [];
   availableWidgets: string[];
 
-  selectedDataSet: InfoResult;
+  selectedDataSet: DataLakeMeasure;
   selectedWidget: string;
 
   dashboard: IDataViewDashboard;

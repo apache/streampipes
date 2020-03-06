@@ -42,6 +42,13 @@ public class DataLakeMeasure extends UnnamedStreamPipesEntity {
     private EventSchema eventSchema;
 
     public DataLakeMeasure() {
+        super();
+    }
+
+    public DataLakeMeasure(DataLakeMeasure other) {
+        super(other);
+        this.measureName = other.getMeasureName();
+        this.eventSchema = new EventSchema(other.getEventSchema());
 
     }
 

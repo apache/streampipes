@@ -17,11 +17,18 @@
  */
 
 import { EventSchema } from '../../connect/schema-editor/model/EventSchema';
+import { RdfsClass } from '../../platform-services/tsonld/RdfsClass';
+import { RdfProperty } from '../../platform-services/tsonld/RdfsProperty';
 
-export class InfoResult {
-    public measureName: string;
-    public eventSchema: EventSchema;
+@RdfsClass('sp:DataLakeMeasure')
+export class DataLakeMeasure {
 
-    constructor () {
-    }
+  @RdfProperty('sp:hasMeasurementName')
+  public measureName: string;
+
+  @RdfProperty('sp:hasEventSchema')
+  public eventSchema: EventSchema;
+
+  constructor () {
+  }
 }

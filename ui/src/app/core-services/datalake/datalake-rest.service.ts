@@ -20,7 +20,7 @@ import { HttpClient, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { DataResult } from '../../core-model/datalake/DataResult';
 import { GroupedDataResult } from '../../core-model/datalake/GroupedDataResult';
-import { InfoResult } from '../../core-model/datalake/InfoResult';
+import { DataLakeMeasure } from '../../core-model/datalake/DataLakeMeasure';
 import { PageResult } from '../../core-model/datalake/PageResult';
 import { AuthStatusService } from '../../services/auth-status.service';
 import { Observable } from "rxjs/Observable";
@@ -42,7 +42,7 @@ export class DatalakeRestService {
 
 
     getAllInfos() {
-        return this.http.get<InfoResult[]>(this.dataLakeUrlV3 + '/info');
+        return this.http.get<DataLakeMeasure[]>(this.dataLakeUrlV3 + '/info');
     }
 
     getDataPage(index, itemsPerPage, page) {

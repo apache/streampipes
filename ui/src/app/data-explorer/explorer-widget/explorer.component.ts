@@ -25,7 +25,7 @@ import { Observable } from 'rxjs/Observable';
 import { map, startWith } from 'rxjs/operators';
 import { DataResult } from '../../core-model/datalake/DataResult';
 import { GroupedDataResult } from '../../core-model/datalake/GroupedDataResult';
-import { InfoResult } from '../../core-model/datalake/InfoResult';
+import { DataLakeMeasure } from '../../core-model/datalake/DataLakeMeasure';
 import { DatalakeRestService } from '../../core-services/datalake/datalake-rest.service';
 import { DataDownloadDialog } from './datadownloadDialog/dataDownload.dialog';
 
@@ -37,12 +37,12 @@ import { DataDownloadDialog } from './datadownloadDialog/dataDownload.dialog';
 export class ExplorerComponent implements OnInit {
 
     myControl = new FormControl();
-    infoResult: InfoResult[];
-    filteredIndexInfos: Observable<InfoResult[]>;
+    infoResult: DataLakeMeasure[];
+    filteredIndexInfos: Observable<DataLakeMeasure[]>;
 
     page = 0;
     // selectedIndex: string = '';
-    selectedInfoResult: InfoResult = undefined;
+    selectedInfoResult: DataLakeMeasure = undefined;
 
     // timeunit selection
     selectedTimeUnit = '1 Hour';
@@ -379,7 +379,7 @@ export class ExplorerComponent implements OnInit {
         });
     }
 
-    _filter(value: string): InfoResult[] {
+    _filter(value: string): DataLakeMeasure[] {
         const filterValue = value.toLowerCase();
 
         return this.infoResult.filter(option => option.measureName.toLowerCase().includes(filterValue));

@@ -89,7 +89,7 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
   public Response getAllInfos() {
     List<DataLakeMeasure> result = this.dataLakeManagement.getInfos();
 
-    return ok(result);
+    return ok(asContainer(result));
   }
 
   @Deprecated
