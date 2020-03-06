@@ -34,3 +34,12 @@
 .title-panel {
     font-size:20px;
 }
+
+.assemblyOptionsDataExplorer {
+    color: white;
+    padding: 5px;
+}
+
+::ng-deep .mat-form-field-wrapper {
+    padding: 0px !important;
+}
