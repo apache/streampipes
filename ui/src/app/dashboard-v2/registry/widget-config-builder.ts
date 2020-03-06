@@ -21,6 +21,9 @@ import {CollectedSchemaRequirements} from "../sdk/collected-schema-requirements"
 import {DashboardWidgetSettings} from "../../core-model/dashboard/DashboardWidgetSettings";
 import {Datatypes} from "../sdk/model/datatypes";
 import {ColorPickerStaticProperty} from "../../connect/model/ColorPickerStaticProperty";
+import {OneOfStaticProperty} from "../../connect/model/OneOfStaticProperty";
+import {StaticProperty} from "../../connect/model/StaticProperty";
+import {Option} from "../../connect/model/Option";
 
 export class WidgetConfigBuilder {
 
@@ -64,7 +67,7 @@ export class WidgetConfigBuilder {
     }
 
     requiredTextParameter(id: string, label: string, description: string): WidgetConfigBuilder {
-        let fst: FreeTextStaticProperty = this.prepareStaticProperty(id, label, description, Datatypes.String.toUri())
+        let fst: FreeTextStaticProperty = this.prepareFreeTextStaticProperty(id, label, description, Datatypes.String.toUri())
         this.widget.config.push(fst);
         return this;
     }
@@ -83,13 +86,27 @@ export class WidgetConfigBuilder {
 
 
     requiredIntegerParameter(id: string, label: string, description: string): WidgetConfigBuilder {
-        let fst: FreeTextStaticProperty = this.prepareStaticProperty(id, label, description, Datatypes.Integer.toUri())
+        let fst: FreeTextStaticProperty = this.prepareFreeTextStaticProperty(id, label, description, Datatypes.Integer.toUri())
         this.widget.config.push(fst);
         return this;
     }
 
+    requiredSingleValueSelection(id: string, label: string, description: string, options: Array<string>): WidgetConfigBuilder {
+        let osp: OneOfStaticProperty = new OneOfStaticProperty();
+        this.prepareStaticProperty(id, label, description, osp);
+
+        osp.options = [];
+        options.forEach(o => {
+            let option = new Option();
+            option.name = o;
+            osp.options.push(option);
+        });
+        this.widget.config.push(osp);
+        return this;
+    }
+
     requiredFloatParameter(id: string, label: string, description: string): WidgetConfigBuilder {
-        let fst: FreeTextStaticProperty = this.prepareStaticProperty(id, label, description, Datatypes.Float.toUri())
+        let fst: FreeTextStaticProperty = this.prepareFreeTextStaticProperty(id, label, description, Datatypes.Float.toUri())
         this.widget.config.push(fst);
         return this;
     }
@@ -101,11 +118,15 @@ export class WidgetConfigBuilder {
         return this;
     }
 
-    prepareStaticProperty(id: string, label: string, description: string, datatype: string) {
+    prepareStaticProperty(id: string, label: string, description: string, sp: StaticProperty) {
+        sp.internalName = id;
+        sp.label = label;
+        sp.description = description;
+    }
+
+    prepareFreeTextStaticProperty(id: string, label: string, description: string, datatype: string) {
         let fst: FreeTextStaticProperty = new FreeTextStaticProperty();
-        fst.internalName = id;
-        fst.label = label;
-        fst.description = description;
+        this.prepareStaticProperty(id, label, description, fst);
         fst.requiredDatatype = datatype;
 
         return fst;

@@ -81,7 +81,7 @@ export class AddVisualizationDialogComponent {
             this.availableWidgets = WidgetRegistry.getAvailableWidgetTemplates();
         } else {
             this.dialogTitle = "Edit widget";
-            this.selectedPipeline = this.data.widget.dashboardWidgetDataConfig;
+            this.selectedPipeline = this.data.pipeline;
             this.selectedWidget = this.data.widget.dashboardWidgetSettings;
             this.page = 'configure-widget';
         }

@@ -19,6 +19,7 @@
 import {EventProperty} from "../../connect/schema-editor/model/EventProperty";
 import {EventPropertyPrimitive} from "../../connect/schema-editor/model/EventPropertyPrimitive";
 import {Datatypes} from "./model/datatypes";
+import {Vocabulary} from "./model/vocabulary";
 
 export class EpRequirements {
 
@@ -33,6 +34,14 @@ export class EpRequirements {
 
     static imageReq(): EventProperty {
         return EpRequirements.domainPropertyReq("https://image.com");
+    }
+
+    static latitudeReq(): EventProperty {
+        return EpRequirements.domainPropertyReq(Vocabulary.GEO + "lat");
+    }
+
+    static longitudeReq(): EventProperty {
+        return EpRequirements.domainPropertyReq(Vocabulary.GEO + "long")
     }
 
     static timestampReq(): EventProperty {

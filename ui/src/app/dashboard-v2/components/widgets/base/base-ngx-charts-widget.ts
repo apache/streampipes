@@ -29,8 +29,8 @@ export abstract class BaseNgxChartsStreamPipesWidget extends BaseStreamPipesWidg
 
     colorScheme: any;
 
-    constructor(rxStompService: RxStompService, protected resizeService: ResizeService) {
-        super(rxStompService);
+    constructor(rxStompService: RxStompService, resizeService: ResizeService) {
+        super(rxStompService, resizeService, true);
     }
 
     ngOnInit() {
@@ -39,36 +39,12 @@ export abstract class BaseNgxChartsStreamPipesWidget extends BaseStreamPipesWidg
         this.view = [this.computeCurrentWidth(this.gridsterItemComponent),
             this.computeCurrentHeight(this.gridsterItemComponent)];
         this.displayChart = true;
-        this.resizeService.resizeSubject.subscribe(info => {
-            this.onResize(info);
-        });
     }
 
-    onResize(info: GridsterInfo) {
-        if (info.gridsterItem.id === this.gridsterItem.id) {
-            setTimeout(() => {
-                this.displayChart = false;
-                this.view = [this.computeCurrentWidth(info.gridsterItemComponent),
-                    this.computeCurrentHeight(info.gridsterItemComponent)];
-                this.displayChart = true;
-            }, 100);
-        }
-    }
-
-    computeCurrentWidth(gridsterItemComponent: GridsterItemComponent): number {
-        return (gridsterItemComponent.width - (BaseNgxChartsStreamPipesWidget.PADDING * 2));
-    }
-
-    computeCurrentHeight(gridsterItemComponent: GridsterItemComponent): number {
-        return (gridsterItemComponent.height - (BaseNgxChartsStreamPipesWidget.PADDING * 2) - this.editModeOffset() - this.titlePanelOffset());
-    }
-
-    editModeOffset(): number {
-        return this.editMode ? BaseNgxChartsStreamPipesWidget.EDIT_HEADER_HEIGHT : 0;
-    }
-
-    titlePanelOffset(): number {
-        return this.hasTitlePanelSettings ? 20 : 0;
+    protected onSizeChanged(width: number, height: number) {
+        this.displayChart = false;
+        this.view = [width, height];
+        this.displayChart = true;
     }
 
 }
