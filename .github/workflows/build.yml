@@ -98,7 +98,7 @@ jobs:
         working-directory: ./ui
         run: |
           NODE_OPTIONS=--max_old_space_size=6096
-          npm cache clean
+          npm cache clean --force
           npm install --unsafe-perm
           npm run build
       - name: Build and Push Docker UI Image
