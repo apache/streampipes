@@ -41,7 +41,7 @@ public class ConsulSpConfig extends SpConfig implements Runnable {
     private static final String NODE_ID_ENV_KEY = "SP_NODE_ID";
 
     public static final String SERVICE_ROUTE_PREFIX = "sp/v1/";
-    private static final String BASE_PREFIX = "base";
+    public static final String BASE_PREFIX = "base";
     private static final String CONFIG_PREIFX = "config";
     private static final String SLASH = "/";
     private static final String PRIMARY_NODE_KEY = "primary";

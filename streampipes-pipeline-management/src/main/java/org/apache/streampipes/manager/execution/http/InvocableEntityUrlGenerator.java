@@ -17,6 +17,8 @@
  */
 package org.apache.streampipes.manager.execution.http;
 
+import org.apache.streampipes.config.consul.ConsulSpConfig;
+import org.apache.streampipes.container.util.ConsulUtil;
 import org.apache.streampipes.manager.node.AvailableNodesFetcher;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -31,6 +33,7 @@ public class InvocableEntityUrlGenerator extends EndpointUrlGenerator<InvocableS
 
     private static final String DEFAULT_NODE_ID = "default";
     private static final String COLON = ":";
+    private static final String PE_PORT_KEY = "SP_PORT";
 
     public InvocableEntityUrlGenerator(InvocableStreamPipesEntity pipelineElement) {
         super(pipelineElement);
@@ -61,9 +64,19 @@ public class InvocableEntityUrlGenerator extends EndpointUrlGenerator<InvocableS
             Optional<NodeInfo> nodeInfoOpt = getNodeInfo();
             if (nodeInfoOpt.isPresent()) {
                 NodeInfo nodeInfo = nodeInfoOpt.get();
+                // TODO: get port from Consul
+                String route = ConsulSpConfig.SERVICE_ROUTE_PREFIX
+                        + pipelineElement.getElementEndpointServiceName()
+                        + SLASH
+                        + ConsulSpConfig.BASE_PREFIX
+                        + SLASH
+                        + nodeInfo.getNodeControllerId()
+                        + SLASH
+                        + PE_PORT_KEY;
+
                 return nodeInfo.getNodeMetadata().getNodeHost()
                         + COLON
-                        + pipelineElement.getElementEndpointPort();
+                        + ConsulUtil.getPortForService(route);
             } else {
                 return defaultHost();
             }

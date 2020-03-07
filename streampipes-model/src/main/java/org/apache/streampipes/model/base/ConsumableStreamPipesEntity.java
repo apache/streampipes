@@ -58,6 +58,9 @@ public abstract class ConsumableStreamPipesEntity extends NamedStreamPipesEntity
   @RdfProperty(StreamPipes.ELEMENT_ENDPOINT_PORT)
   private Integer elementEndpointPort;
 
+  @RdfProperty(StreamPipes.ELEMENT_ENDPOINT_SERVICE_NAME)
+  private String elementEndpointServiceName;
+
   public ConsumableStreamPipesEntity() {
     super();
     this.spDataStreams = new ArrayList<>();
@@ -74,6 +77,7 @@ public abstract class ConsumableStreamPipesEntity extends NamedStreamPipesEntity
     super(other);
     this.elementEndpointHostname = other.getElementEndpointHostname();
     this.elementEndpointPort = other.getElementEndpointPort();
+    this.elementEndpointServiceName = other.getElementEndpointServiceName();
     if (other.getSpDataStreams() != null) {
       this.spDataStreams = new Cloner().streams(other.getSpDataStreams());
     }
@@ -125,5 +129,13 @@ public abstract class ConsumableStreamPipesEntity extends NamedStreamPipesEntity
 
   public void setElementEndpointPort(Integer elementEndpointPort) {
     this.elementEndpointPort = elementEndpointPort;
+  }
+
+  public String getElementEndpointServiceName() {
+    return elementEndpointServiceName;
+  }
+
+  public void setElementEndpointServiceName(String elementEndpointServiceName) {
+    this.elementEndpointServiceName = elementEndpointServiceName;
   }
 }

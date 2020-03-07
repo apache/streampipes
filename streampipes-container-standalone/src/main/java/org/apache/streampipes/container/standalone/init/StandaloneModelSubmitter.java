@@ -32,6 +32,7 @@ import org.apache.streampipes.container.model.PeConfig;
 import org.apache.streampipes.container.util.ConsulUtil;
 
 import java.util.Collections;
+import java.util.UUID;
 
 import javax.annotation.PreDestroy;
 
@@ -49,6 +50,8 @@ public abstract class StandaloneModelSubmitter extends ModelSubmitter {
                 .setHostName(peConfig.getHost());
         DeclarersSingleton.getInstance()
                 .setPort(peConfig.getPort());
+        DeclarersSingleton.getInstance()
+                .setServiceName(peConfig.getId());
 
         SpringApplication app = new SpringApplication(StandaloneModelSubmitter.class);
         app.setDefaultProperties(Collections.singletonMap("server.port", peConfig.getPort()));

@@ -201,6 +201,7 @@ public abstract class Element<D extends Declarer> {
 
         ((ConsumableStreamPipesEntity) desc).setElementEndpointHostname(declarersSingleton.getHostname());
         ((ConsumableStreamPipesEntity) desc).setElementEndpointPort(declarersSingleton.getPort());
+        ((ConsumableStreamPipesEntity) desc).setElementEndpointServiceName(declarersSingleton.getServiceName());
 
         if (supportedProtocols.size() > 0 && supportedFormats.size() > 0) {
           // Overwrite existing grounding from default provided by declarers singleton

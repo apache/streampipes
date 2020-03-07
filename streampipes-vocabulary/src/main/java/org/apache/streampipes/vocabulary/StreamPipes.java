@@ -389,5 +389,6 @@ public class StreamPipes {
   public static final String DEPLOYMENT_TARGET_NODE_PORT = NS + "hasDeploymentTargetNodePort";
   public static final String ELEMENT_ENDPOINT_HOSTNAME = NS + "hasElementEndpointHostname";
   public static final String ELEMENT_ENDPOINT_PORT = NS + "hasElementEndpointPort" ;
-    public static final String DEPLOYMENT_RUNNING_INSTANCE_ID = NS + "hasDeploymentRunningInstanceId" ;
+  public static final String DEPLOYMENT_RUNNING_INSTANCE_ID = NS + "hasDeploymentRunningInstanceId" ;
+  public static final String ELEMENT_ENDPOINT_SERVICE_NAME = NS + "hasElementEndpointServiceName";
 }

@@ -80,6 +80,9 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
   @RdfProperty(StreamPipes.DEPLOYMENT_RUNNING_INSTANCE_ID)
   private String deploymentRunningInstanceId;
 
+  @RdfProperty(StreamPipes.ELEMENT_ENDPOINT_SERVICE_NAME)
+  private String elementEndpointServiceName;
+
   private List<SpDataStream> streamRequirements;
 
   private boolean configured;
@@ -100,6 +103,7 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
     this.deploymentTargetNodeId = other.getDeploymentTargetNodeId();
     this.deploymentTargetNodePort = other.getDeploymentTargetNodePort();
     this.deploymentRunningInstanceId = other.getDeploymentRunningInstanceId();
+    this.elementEndpointServiceName = other.getElementEndpointServiceName();
     if (other.getStreamRequirements() != null) {
       this.streamRequirements = new Cloner().streams(other.getStreamRequirements());
     }
@@ -127,6 +131,7 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
 
     this.setElementEndpointHostname(entityDescription.getElementEndpointHostname());
     this.setElementEndpointPort(entityDescription.getElementEndpointPort());
+    this.setElementEndpointServiceName(entityDescription.getElementEndpointServiceName());
   }
 
   public InvocableStreamPipesEntity(String uri, String name, String description, String iconUrl) {
@@ -254,5 +259,13 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
   public Logger getLogger(Class clazz) {
     //	return LoggerFactory.getPeLogger(clazz, getCorrespondingPipeline(), getUri(), peConfig);
     return LoggerFactory.getPeLogger(clazz, getCorrespondingPipeline(), getUri());
+  }
+
+  public String getElementEndpointServiceName() {
+    return elementEndpointServiceName;
+  }
+
+  public void setElementEndpointServiceName(String elementEndpointServiceName) {
+    this.elementEndpointServiceName = elementEndpointServiceName;
   }
 }

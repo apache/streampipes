@@ -45,10 +45,10 @@ public class SepaElement extends InvocableElement<DataProcessorInvocation,
         return DeclarersSingleton.getInstance().getEpaDeclarers();
     }
 
-    @Override
-    protected String getInstanceId(String uri, String elementId) {
-        return Util.getInstanceId(uri, "sepa", elementId);
-    }
+//    @Override
+//    protected String getInstanceId(String uri, String elementId) {
+//        return Util.getInstanceId(uri, "sepa", elementId);
+//    }
 
     @Override
     protected ProcessingElementParameterExtractor getExtractor(DataProcessorInvocation graph) {

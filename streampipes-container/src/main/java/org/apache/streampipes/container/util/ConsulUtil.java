@@ -19,6 +19,7 @@
 package org.apache.streampipes.container.util;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.orbitz.consul.AgentClient;
 import com.orbitz.consul.Consul;
 import com.orbitz.consul.HealthClient;
@@ -30,6 +31,8 @@ import com.orbitz.consul.model.health.ServiceHealth;
 import com.orbitz.consul.model.kv.Value;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.StringEntity;
+import org.apache.streampipes.config.consul.ConsulSpConfig;
+import org.apache.streampipes.config.model.ConfigItem;
 import org.apache.streampipes.container.model.consul.ConsulServiceRegistrationBody;
 import org.apache.streampipes.container.model.consul.HealthCheckConfiguration;
 import org.slf4j.Logger;
@@ -154,6 +157,17 @@ public class ConsulUtil {
       }
     }
     return keyValues;
+  }
+
+
+  public static String getPortForService(String route) {
+    String values = ConsulUtil.getKeyValue(route)
+            .values()
+            .stream()
+            .findFirst()
+            .get();
+
+    return new Gson().fromJson(values, ConfigItem.class).getValue();
   }
 
   public static void updateConfig(String key, String entry, boolean password) {

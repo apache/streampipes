@@ -16,18 +16,18 @@
 # Those parameters are used by IntelliJ to set the default consul parameters for development
 SP_BACKEND_HOST=host.docker.internal
 CONSUL_LOCATION=host.docker.internal
-SP_NODE_CONTROLLER_ID=node-controller
+SP_NODE_CONTROLLER_ID=edge.node-controller
 SP_NODE_CONTROLLER_PORT=7077
-SP_NODE_HOST=host.docker.internal
+SP_NODE_HOST=edge.node
 SP_NODE_DESCRIPTION=Laptop description
-SP_NODE_LOCATION=fog
+SP_NODE_LOCATION=edge
 SP_NODE_BROKER_HOST=host.docker.internal.broker
 SP_NODE_BROKER_PORT=616161
 SP_NODE_DISK_TOTAL=200
 SP_NODE_DISK_TYPE=ssd
 SP_NODE_HAS_NVIDIA_DOCKER_RUNTIME=true
 SP_NODE_INTERFACES=["raspicam;sensor;/dev/video0;csi", "zed;sensor;/dev/video1;usb", "xdk;sensor;fc:d6:bd:10:2f:c5;bluetooth"]
-SP_NODE_SUPPORTED_PE_APP_ID_LIST=["org.apache.streampipes.processors.filters.jvm.numericalfilter", "org.apache.streampipes.processors.filters.jvm.compose", "org.apache.streampipes.processors.filters.jvm.threshold", "org.apache.streampipes.sinks.internal.jvm.dashboard", "org.apache.streampipes.sinks.internal.jvm.datalake"]
+SP_NODE_SUPPORTED_PE_APP_ID_LIST=["org.apache.streampipes.processors.filters.jvm.numericalfilter", "org.apache.streampipes.processors.filters.jvm.compose", "org.apache.streampipes.processors.filters.jvm.threshold"]
 SP_NODE_HAS_GPU=false
 #SP_NODE_GPU_CUDA_CORES=128
 #SP_NODE_GPU_TYPE=NVIDIA Tegra X1

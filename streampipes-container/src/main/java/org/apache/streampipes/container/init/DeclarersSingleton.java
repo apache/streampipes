@@ -62,6 +62,7 @@ public class DeclarersSingleton {
   private int port;
   private String route;
   private String hostName;
+  private String serviceName;
 
 
   private DeclarersSingleton() {
@@ -239,5 +240,13 @@ public class DeclarersSingleton {
               es.declareModel(sourceDeclarer.declareModel());
               es.executeStream();
             });
+  }
+
+  public String getServiceName() {
+    return serviceName;
+  }
+
+  public void setServiceName(String serviceName) {
+    this.serviceName = serviceName;
   }
 }
