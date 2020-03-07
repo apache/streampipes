@@ -82,6 +82,7 @@
     "konva": "^3.2.4",
     "leaflet": "^1.6.0",
     "lodash": "3.10.1",
+    "material-design-icons": "^3.0.1",
     "ng-dynamic-component": "4.0.3",
     "ng-file-upload": "9.0.13",
     "@danielmoncada/angular-datetime-picker": "^9.2.0",

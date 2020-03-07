@@ -27,6 +27,7 @@ import {AreaConfig} from "../components/widgets/area/area-config";
 import {MapConfig} from "../components/widgets/map/map-config";
 import {RawConfig} from "../components/widgets/raw/raw-config";
 import {HtmlConfig} from "../components/widgets/html/html-config";
+import {TrafficLightConfig} from "../components/widgets/trafficlight/traffic-light-config";
 
 export class WidgetRegistry {
 
@@ -39,7 +40,8 @@ export class WidgetRegistry {
         new AreaConfig(),
         new MapConfig(),
         new RawConfig(),
-        new HtmlConfig()
+        new HtmlConfig(),
+        new TrafficLightConfig()
     ];
 
     static getAvailableWidgetTemplates(): Array<DashboardWidgetSettings> {
