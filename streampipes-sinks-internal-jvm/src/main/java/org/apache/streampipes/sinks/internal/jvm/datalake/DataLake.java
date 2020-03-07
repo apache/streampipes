@@ -80,7 +80,8 @@ public class DataLake implements EventSink<DataLakeParameters> {
     registerAtDataLake(parameters.getMeasurementName(), schema);
 
     imageProperties = schema.getEventProperties().stream()
-            .filter(eventProperty -> eventProperty.getDomainProperties().size() > 0 &&
+            .filter(eventProperty -> eventProperty.getDomainProperties() != null &&
+                    eventProperty.getDomainProperties().size() > 0 &&
                     eventProperty.getDomainProperties().get(0).toString().equals(SPSensor.IMAGE))
             .collect(Collectors.toList());
 
