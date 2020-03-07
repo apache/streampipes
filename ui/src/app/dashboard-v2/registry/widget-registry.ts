@@ -26,6 +26,7 @@ import {ImageConfig} from "../components/widgets/image/image-config";
 import {AreaConfig} from "../components/widgets/area/area-config";
 import {MapConfig} from "../components/widgets/map/map-config";
 import {RawConfig} from "../components/widgets/raw/raw-config";
+import {HtmlConfig} from "../components/widgets/html/html-config";
 
 export class WidgetRegistry {
 
@@ -37,7 +38,8 @@ export class WidgetRegistry {
         new ImageConfig(),
         new AreaConfig(),
         new MapConfig(),
-        new RawConfig()
+        new RawConfig(),
+        new HtmlConfig()
     ];
 
     static getAvailableWidgetTemplates(): Array<DashboardWidgetSettings> {

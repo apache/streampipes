@@ -76,6 +76,12 @@
                                 [widgetConfig]="configuredWidget"
                                 [widgetDataConfig]="widgetDataConfig" class="h-100"></raw-widget>
                 </div>
+                <div *ngIf="widget.widgetType === 'html'" class="h-100 p-0">
+                    <html-widget [gridsterItemComponent]="gridsterItemComponent"
+                                [gridsterItem]="item" [widget]="widget" [editMode]="editMode"
+                                [widgetConfig]="configuredWidget"
+                                [widgetDataConfig]="widgetDataConfig" class="h-100"></html-widget>
+                </div>
             </div>
         </div>
     </div>
