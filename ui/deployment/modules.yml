@@ -55,20 +55,6 @@ spPipelines:
   icon: 'av:ic_play_arrow_24px'
   homeImage: '/assets/img/home/pipelines.png'
   admin: False
-spDashboard:
-  ng5: False
-  ng1_templateUrl: '../dashboard/dashboard.html'
-  ng5_moduleName: ''
-  ng5_component: ''
-  ng5_componentPath: ''
-  path: './dashboard/dashboard.module'
-  link: 'streampipes.dashboard'
-  url: '/dashboard'
-  title: 'Live Dashboard'
-  description: 'The live dashboard visualizes data in real-time'
-  icon: 'editor:ic_insert_chart_24px'
-  homeImage: '/assets/img/home/dashboard.png'
-  admin: False
 spSensors:
   ng5: False
   ng1_templateUrl: '../sensors/sensors.html'
@@ -155,18 +141,18 @@ spAppOverview:
   icon: 'navigation:ic_apps_24px'
   homeImage: '/assets/img/home/configuration.png'
   admin: false
-spDashboard2:
+spDashboard:
   ng5: True
   ng1_templateUrl: ''
   ng1_controller: ''
   ng5_moduleName: 'DashboardModule'
   ng5_component: 'DashboardComponent'
-  ng5_componentPath: '../dashboard-v2/dashboard.component'
-  path: './dashboard-v2/dashboard.module'
-  link: 'streampipes.dashboardv2'
-  url: '/dashboardv2'
+  ng5_componentPath: '../dashboard/dashboard.component'
+  path: './dashboard/dashboard.module'
+  link: 'streampipes.dashboard'
+  url: '/dashboard'
   title: 'Dashboard'
-  description: 'dashboard-v2'
-  icon: 'navigation:ic_apps_24px'
+  description: 'The live dashboard visualizes data in real-time'
+  icon: 'editor:ic_insert_chart_24px'
   homeImage: '/assets/img/home/configuration.png'
   admin: false
