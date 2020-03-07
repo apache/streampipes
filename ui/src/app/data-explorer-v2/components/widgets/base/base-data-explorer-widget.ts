@@ -41,8 +41,21 @@ export abstract class BaseDataExplorerWidget {
   @Input() dataViewDashboardItem: IDataViewDashboardItem;
   @Input() dataExplorerWidget: DataExplorerWidgetModel;
 
-  removeWidget() {
+  public showNoDataInDateRange: boolean;
+  public showData: boolean;
+  public showIsLoadingData: boolean;
+
+
+  public removeWidget() {
     this.removeWidgetCallback.emit(true);
+  }
+
+  public setShownComponents(showNoDataInDateRange: boolean,
+                            showData: boolean, showIsLoadingData: boolean) {
+
+      this.showNoDataInDateRange = showNoDataInDateRange;
+      this.showData = showData;
+      this.showIsLoadingData = showIsLoadingData;
   }
 
 }

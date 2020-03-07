@@ -47,14 +47,15 @@ import { LineChartWidgetComponent } from './components/widgets/line-chart/line-c
 import { DataDownloadDialog } from './components/widgets/old-explorer-widget/datadownloadDialog/dataDownload.dialog';
 import { OldExplorerComponent } from './components/widgets/old-explorer-widget/old-explorer.component';
 import { TableWidgetComponent } from './components/widgets/table/table-widget.component';
+import { LoadDataSpinnerComponent } from './components/widgets/utils/load-data-spinner/load-data-spinner.component';
+import { NoDataInDateRangeComponent } from './components/widgets/utils/no-data/no-data-in-date-range.component';
 import { DataExplorerV2Component } from './data-explorer-v2.component';
 import { DataExplorerAddVisualizationDialogComponent } from './dialogs/add-widget/data-explorer-add-visualization-dialog.component';
 import { DataExplorerEditDataViewDialogComponent } from './dialogs/edit-dashboard/data-explorer-edit-data-view-dialog.component';
+import { DataLakeService } from './services/data-lake.service';
 import { DataViewDataExplorerService } from './services/data-view-data-explorer.service';
 import { RefreshDashboardService } from './services/refresh-dashboard.service';
 import { ResizeService } from './services/resize.service';
-import { DatalakeRestService } from "../core-services/datalake/datalake-rest.service";
-import { DataLakeService } from "./services/data-lake.service";
 
 const dashboardWidgets = [
 
@@ -108,7 +109,9 @@ export const MY_NATIVE_FORMATS = {
     LineChartWidgetComponent,
     DataDownloadDialog,
     TimeRangeSelectorComponent,
-    OldExplorerComponent
+    OldExplorerComponent,
+    NoDataInDateRangeComponent,
+    LoadDataSpinnerComponent
   ],
   providers: [
     SharedDatalakeRestService,

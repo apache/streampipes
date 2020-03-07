@@ -51,6 +51,8 @@ export class TableWidgetComponent extends BaseDataExplorerWidget implements OnIn
   }
 
   updateData() {
+    this.setShownComponents(false, false, true);
+
     this.dataLakeRestService.getDataAutoAggergation(
       this.dataExplorerWidget.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime()).subscribe(
       (res: DataResult) => {
@@ -62,9 +64,14 @@ export class TableWidgetComponent extends BaseDataExplorerWidget implements OnIn
 
   transformData(data: DataResult) {
     const result = [];
-    data.rows.forEach(row =>
-      result.push(this.createTableObject(data.headers, row))
-    );
+    if (data.total === 0) {
+      this.setShownComponents(true, false, false);
+    } else {
+      data.rows.forEach(row =>
+        result.push(this.createTableObject(data.headers, row))
+      );
+      this.setShownComponents(false, true, false);
+    }
 
     return result;
   }
