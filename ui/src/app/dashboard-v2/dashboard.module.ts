@@ -51,6 +51,7 @@ import {ImageWidgetComponent} from "./components/widgets/image/image-widget.comp
 import {AreaWidgetComponent} from "./components/widgets/area/area-widget.component";
 import {MapWidgetComponent} from "./components/widgets/map/map-widget.component";
 import {LeafletModule} from "@asymmetrik/ngx-leaflet";
+import {RawWidgetComponent} from "./components/widgets/raw/raw-widget.component";
 
 const dashboardWidgets = [
 
@@ -90,7 +91,8 @@ const dashboardWidgets = [
         TableWidgetComponent,
         GaugeWidgetComponent,
         ImageWidgetComponent,
-        MapWidgetComponent
+        MapWidgetComponent,
+        RawWidgetComponent
     ],
     providers: [
         DashboardService,

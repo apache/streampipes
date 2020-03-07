@@ -25,6 +25,7 @@ import {GaugeConfig} from "../components/widgets/gauge/gauge-config";
 import {ImageConfig} from "../components/widgets/image/image-config";
 import {AreaConfig} from "../components/widgets/area/area-config";
 import {MapConfig} from "../components/widgets/map/map-config";
+import {RawConfig} from "../components/widgets/raw/raw-config";
 
 export class WidgetRegistry {
 
@@ -35,7 +36,8 @@ export class WidgetRegistry {
         new GaugeConfig(),
         new ImageConfig(),
         new AreaConfig(),
-        new MapConfig()
+        new MapConfig(),
+        new RawConfig()
     ];
 
     static getAvailableWidgetTemplates(): Array<DashboardWidgetSettings> {
