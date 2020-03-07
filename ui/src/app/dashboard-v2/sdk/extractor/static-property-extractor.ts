@@ -22,6 +22,7 @@ import {MappingPropertyUnary} from "../../../connect/model/MappingPropertyUnary"
 import {FreeTextStaticProperty} from "../../../connect/model/FreeTextStaticProperty";
 import {ColorPickerStaticProperty} from "../../../connect/model/ColorPickerStaticProperty";
 import {MappingPropertyNary} from "../../../connect/model/MappingPropertyNary";
+import {OneOfStaticProperty} from "../../../connect/model/OneOfStaticProperty";
 
 export class StaticPropertyExtractor {
 
@@ -42,6 +43,11 @@ export class StaticPropertyExtractor {
     mappingPropertyValues(internalId: string): Array<string> {
         let sp: MappingPropertyNary = this.getStaticPropertyByName(internalId) as MappingPropertyNary;
         let properties: Array<string> = [];
+        // TODO this quick-fixes a deserialization bug in Tson-LD
+        if (!Array.isArray(sp.selectedProperties)) {
+            let value: string = sp.selectedProperties as any;
+            sp.selectedProperties = [value];
+        }
         sp.selectedProperties.forEach(ep => {
            properties.push(this.removePrefix(ep));
         });
@@ -56,6 +62,11 @@ export class StaticPropertyExtractor {
     selectedColor(internalId: string): any {
         let sp: ColorPickerStaticProperty = this.getStaticPropertyByName(internalId) as ColorPickerStaticProperty;
         return sp.selectedColor;
+    }
+
+    selectedSingleValue(internalId: string): string {
+        let sp: OneOfStaticProperty = this.getStaticPropertyByName(internalId) as OneOfStaticProperty;
+        return sp.options.find(o => o.selected).name;
     }
 
     stringParameter(internalId: string): string {

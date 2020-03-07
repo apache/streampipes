@@ -65,6 +65,7 @@ public class ConsulUtil {
   private static final String PRIMARY_PE_IDENTIFIER = "primary";
   private static final String SECONDARY_PE_IDENTIFIER = "secondary";
   private static final String NODE_ID_IDENTIFIER = "SP_NODE_ID";
+  private static final String SLASH = "/";
 
   static Logger LOG = LoggerFactory.getLogger(ConsulUtil.class);
 
@@ -74,7 +75,8 @@ public class ConsulUtil {
 
   public static void registerPeService(String serviceID, String url, int port) {
     String serviceLocationTag = System.getenv(NODE_ID_IDENTIFIER) == null ? PRIMARY_PE_IDENTIFIER : SECONDARY_PE_IDENTIFIER;
-    registerService(PE_SERVICE_NAME, serviceID, url, port, Arrays.asList("pe", serviceLocationTag));
+    String uniquePEServiceId = url + SLASH + serviceID;
+    registerService(PE_SERVICE_NAME, uniquePEServiceId, url, port, Arrays.asList("pe", serviceLocationTag));
   }
 
   public static void registerService(String serviceName, String serviceID, String url, int port, String tag) {
@@ -92,7 +94,8 @@ public class ConsulUtil {
   }
 
   public static void registerNodeControllerService(String serviceID, String url, int port) {
-    registerService(NODE_SERVICE_NAME, serviceID, url, port, "node");
+    String uniqueNodeServiceId = url + SLASH + serviceID;
+    registerService(NODE_SERVICE_NAME, uniqueNodeServiceId, url, port, "node");
   }
 
   //NOT TESTED

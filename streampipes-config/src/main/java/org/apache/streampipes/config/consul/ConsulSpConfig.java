@@ -42,9 +42,10 @@ public class ConsulSpConfig extends SpConfig implements Runnable {
 
     public static final String SERVICE_ROUTE_PREFIX = "sp/v1/";
     public static final String BASE_PREFIX = "base";
-    private static final String CONFIG_PREIFX = "config";
+    private static final String CONFIG_PREFIX = "config";
     private static final String SLASH = "/";
     private static final String PRIMARY_NODE_KEY = "primary";
+    public static final String SECONDARY_NODE_KEY = "secondary";
 
     private String serviceName;
     private  KeyValueClient kvClient;
@@ -250,13 +251,15 @@ public class ConsulSpConfig extends SpConfig implements Runnable {
         if (this.baseConfigKeys.contains(key)) {
             String nodeId = System.getenv(NODE_ID_ENV_KEY);
             if (nodeId == null) {
-                nodeId = PRIMARY_NODE_KEY;
+                //nodeId = PRIMARY_NODE_KEY;
+                configAppendix = BASE_PREFIX + SLASH + PRIMARY_NODE_KEY;
+            } else {
+                configAppendix = BASE_PREFIX + SLASH + SECONDARY_NODE_KEY + SLASH + nodeId;
             }
-            configAppendix = BASE_PREFIX + SLASH + nodeId;
         } else {
-            configAppendix = CONFIG_PREIFX;
+            configAppendix = CONFIG_PREFIX;
         }
-       return SERVICE_ROUTE_PREFIX + serviceName + SLASH +configAppendix +SLASH + key;
+       return SERVICE_ROUTE_PREFIX + serviceName + SLASH +configAppendix + SLASH + key;
     }
 
     private ConfigItem fromJson(String content) {

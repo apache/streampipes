@@ -21,6 +21,7 @@ import {RxStompService} from "@stomp/ng2-stompjs";
 import {BaseStreamPipesWidget} from "../base/base-widget";
 import {StaticPropertyExtractor} from "../../../sdk/extractor/static-property-extractor";
 import {NumberConfig} from "./number-config";
+import {ResizeService} from "../../../services/resize.service";
 
 @Component({
     selector: 'number-widget',
@@ -33,8 +34,8 @@ export class NumberWidgetComponent extends BaseStreamPipesWidget implements OnIn
 
     selectedProperty: string;
 
-    constructor(rxStompService: RxStompService) {
-        super(rxStompService);
+    constructor(rxStompService: RxStompService, resizeService: ResizeService) {
+        super(rxStompService, resizeService, false);
     }
 
     ngOnInit(): void {
@@ -55,6 +56,9 @@ export class NumberWidgetComponent extends BaseStreamPipesWidget implements OnIn
 
     protected onEvent(event: any) {
         this.item = event[this.selectedProperty];
+    }
+
+    protected onSizeChanged(width: number, height: number) {
     }
 
 }

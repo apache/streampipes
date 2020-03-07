@@ -49,6 +49,10 @@ import {SemanticTypeUtilsService} from '../core-services/semantic-type/semantic-
 import {GaugeWidgetComponent} from "./components/widgets/gauge/gauge-widget.component";
 import {ImageWidgetComponent} from "./components/widgets/image/image-widget.component";
 import {AreaWidgetComponent} from "./components/widgets/area/area-widget.component";
+import {MapWidgetComponent} from "./components/widgets/map/map-widget.component";
+import {LeafletModule} from "@asymmetrik/ngx-leaflet";
+import {RawWidgetComponent} from "./components/widgets/raw/raw-widget.component";
+import {HtmlWidgetComponent} from "./components/widgets/html/html-widget.component";
 
 const dashboardWidgets = [
 
@@ -72,6 +76,7 @@ const dashboardWidgets = [
         ConnectModule,
         NgxChartsModule,
         CdkTableModule,
+        LeafletModule
     ],
     declarations: [
         DashboardComponent,
@@ -86,7 +91,10 @@ const dashboardWidgets = [
         NumberWidgetComponent,
         TableWidgetComponent,
         GaugeWidgetComponent,
-        ImageWidgetComponent
+        ImageWidgetComponent,
+        MapWidgetComponent,
+        RawWidgetComponent,
+        HtmlWidgetComponent
     ],
     providers: [
         DashboardService,

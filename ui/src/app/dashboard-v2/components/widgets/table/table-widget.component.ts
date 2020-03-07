@@ -23,6 +23,7 @@ import {StaticPropertyExtractor} from "../../../sdk/extractor/static-property-ex
 import {MatTableDataSource} from "@angular/material/table";
 import {TableConfig} from "./table-config";
 import {SemanticTypeUtilsService} from "../../../../core-services/semantic-type/semantic-type-utils.service";
+import {ResizeService} from "../../../services/resize.service";
 
 @Component({
     selector: 'table-widget',
@@ -37,8 +38,8 @@ export class TableWidgetComponent extends BaseStreamPipesWidget implements OnIni
     dataSource = new MatTableDataSource();
     semanticTypes: { [key: string]: string; } = {};
 
-    constructor(rxStompService: RxStompService, private semanticTypeUtils: SemanticTypeUtilsService) {
-        super(rxStompService);
+    constructor(rxStompService: RxStompService, resizeService: ResizeService, private semanticTypeUtils: SemanticTypeUtilsService) {
+        super(rxStompService, resizeService, false);
     }
 
     ngOnInit(): void {
@@ -72,6 +73,9 @@ export class TableWidgetComponent extends BaseStreamPipesWidget implements OnIni
             object[key] = event[key];
         });
         return object;
+    }
+
+    protected onSizeChanged(width: number, height: number) {
     }
 
 }

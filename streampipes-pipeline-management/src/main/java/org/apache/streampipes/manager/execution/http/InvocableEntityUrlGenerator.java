@@ -70,6 +70,8 @@ public class InvocableEntityUrlGenerator extends EndpointUrlGenerator<InvocableS
                         + SLASH
                         + ConsulSpConfig.BASE_PREFIX
                         + SLASH
+                        + ConsulSpConfig.SECONDARY_NODE_KEY
+                        + SLASH
                         + nodeInfo.getNodeControllerId()
                         + SLASH
                         + PE_PORT_KEY;

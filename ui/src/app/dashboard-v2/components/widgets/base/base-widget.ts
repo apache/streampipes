@@ -26,6 +26,8 @@ import {Subscription} from "rxjs";
 import {GridsterItem, GridsterItemComponent} from "angular-gridster2";
 import {WidgetConfigBuilder} from "../../../registry/widget-config-builder";
 import {VisualizablePipeline} from "../../../../core-model/dashboard/VisualizablePipeline";
+import {ResizeService} from "../../../services/resize.service";
+import {GridsterInfo} from "../../../models/gridster-info.model";
 
 export abstract class BaseStreamPipesWidget implements OnChanges {
 
@@ -53,11 +55,17 @@ export abstract class BaseStreamPipesWidget implements OnChanges {
     defaultPrimaryTextColor: string = "#FFFFFF";
     defaultSecondaryTextColor: string = "#39B54A";
 
-    protected constructor(private rxStompService: RxStompService) {
+
+    protected constructor(private rxStompService: RxStompService,
+                          protected resizeService: ResizeService,
+                          protected adjustPadding: boolean) {
     }
 
     ngOnInit(): void {
         this.prepareConfigExtraction();
+        this.resizeService.resizeSubject.subscribe(info => {
+            this.onResize(info);
+        });
         this.subscription = this.rxStompService.watch("/topic/" +this.widgetDataConfig.topic).subscribe((message: Message) => {
             this.onEvent(JSON.parse(message.body));
         });
@@ -86,13 +94,44 @@ export abstract class BaseStreamPipesWidget implements OnChanges {
         this.subscription.unsubscribe();
     }
 
+    computeCurrentWidth(gridsterItemComponent: GridsterItemComponent): number {
+        return this.adjustPadding ?
+            (gridsterItemComponent.width - (BaseStreamPipesWidget.PADDING * 2)) :
+            gridsterItemComponent.width;
+    }
+
+    computeCurrentHeight(gridsterItemComponent: GridsterItemComponent): number {
+        return this.adjustPadding ?
+            (gridsterItemComponent.height - (BaseStreamPipesWidget.PADDING * 2) - this.editModeOffset() - this.titlePanelOffset()) :
+            gridsterItemComponent.height - this.editModeOffset() - this.titlePanelOffset();
+    }
+
+    editModeOffset(): number {
+        return this.editMode ? BaseStreamPipesWidget.EDIT_HEADER_HEIGHT : 0;
+    }
+
+    titlePanelOffset(): number {
+        return this.hasTitlePanelSettings ? 20 : 0;
+    }
+
     protected abstract extractConfig(extractor: StaticPropertyExtractor);
 
     protected abstract onEvent(event: any);
 
+    protected abstract onSizeChanged(width: number, height: number);
+
     ngOnChanges(changes: SimpleChanges): void {
         if (changes["widgetConfig"]) {
             this.prepareConfigExtraction();
+        }
+    }
+
+    onResize(info: GridsterInfo) {
+        if (info.gridsterItem.id === this.gridsterItem.id) {
+            setTimeout(() => {
+                this.onSizeChanged(this.computeCurrentWidth(info.gridsterItemComponent),
+                    this.computeCurrentHeight(info.gridsterItemComponent))
+            }, 100);
         }
     }
 }

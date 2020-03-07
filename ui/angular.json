@@ -18,7 +18,12 @@
             "tsConfig": "src/tsconfig.app.json",
             "polyfills": "src/polyfills.ts",
             "assets": [
-              "src/assets"
+              "src/assets",
+              {
+                "glob": "**/*",
+                "input": "node_modules/leaflet/dist/images",
+                "output": "assets/img"
+              }
             ],
             "styles": [
               "src/scss/main.scss"

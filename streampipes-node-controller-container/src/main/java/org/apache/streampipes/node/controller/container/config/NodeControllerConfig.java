@@ -40,10 +40,10 @@ public enum NodeControllerConfig {
     private static final String SLASH = "/";
     private static final String DOT = ".";
     private static final String DEFAULT_NODE_BROKER_NAME_SUFFIX = "broker";
-    private static final String node_service_id = "node";
+    private static final String node_service_id = "node/org.apache.streampipes.node.controller";
 
     NodeControllerConfig() {
-        config = SpConfig.getSpConfig(getNodeServiceId());
+        config = SpConfig.getSpConfig(node_service_id + SLASH + getNodeHostName());
 
         config.register(ConfigKeys.NODE_CONTROLLER_ID_KEY, "node-controller", "node controller id");
         config.register(ConfigKeys.NODE_CONTROLLER_PORT_KEY,7077, "node controller port");
@@ -55,7 +55,7 @@ public enum NodeControllerConfig {
     }
 
     public String getNodeServiceId() {
-        return node_service_id + SLASH + getEnv(ConfigKeys.NODE_HOST_KEY) + SLASH + getEnv(ConfigKeys.NODE_CONTROLLER_ID_KEY);
+        return node_service_id;
     }
 
     private String getEnv(String key) {

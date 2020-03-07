@@ -107,9 +107,10 @@ export class StaticPropertyUtilService{
         }
         //SelectionStaticProperty
         else if (val instanceof RuntimeResolvableAnyStaticProperty ||  val instanceof RuntimeResolvableOneOfStaticProperty){
-            val instanceof RuntimeResolvableAnyStaticProperty ? clone = new RuntimeResolvableAnyStaticProperty(id) :
-              clone = new RuntimeResolvableOneOfStaticProperty(id);
+            val instanceof RuntimeResolvableAnyStaticProperty ? clone = new RuntimeResolvableAnyStaticProperty() :
+              clone = new RuntimeResolvableOneOfStaticProperty();
 
+            clone.id = id;
             clone.dependsOn = val.dependsOn;
             clone.value = val.value;
             clone.requiredDomainProperty = val.requiredDomainProperty;
@@ -117,8 +118,9 @@ export class StaticPropertyUtilService{
             clone.horizontalRendering = val.horizontalRendering;
         }
         else if (val instanceof AnyStaticProperty || val instanceof OneOfStaticProperty){
-            val instanceof AnyStaticProperty ? clone = new AnyStaticProperty(id) : clone = new OneOfStaticProperty(id);
+            val instanceof AnyStaticProperty ? clone = new AnyStaticProperty() : clone = new OneOfStaticProperty();
 
+            clone.id = id;
             clone.value = val.value;
             clone.requiredDomainProperty = val.requiredDomainProperty;
             clone.options = val.options.map(option => this.cloneOption(option));

@@ -64,6 +64,24 @@
                                   [widgetConfig]="configuredWidget"
                                   [widgetDataConfig]="widgetDataConfig" class="h-100"></image-widget>
                 </div>
+                <div *ngIf="widget.widgetType === 'map'" class="h-100 p-0">
+                    <map-widget [gridsterItemComponent]="gridsterItemComponent"
+                                  [gridsterItem]="item" [widget]="widget" [editMode]="editMode"
+                                  [widgetConfig]="configuredWidget"
+                                  [widgetDataConfig]="widgetDataConfig" class="h-100"></map-widget>
+                </div>
+                <div *ngIf="widget.widgetType === 'raw'" class="h-100 p-0">
+                    <raw-widget [gridsterItemComponent]="gridsterItemComponent"
+                                [gridsterItem]="item" [widget]="widget" [editMode]="editMode"
+                                [widgetConfig]="configuredWidget"
+                                [widgetDataConfig]="widgetDataConfig" class="h-100"></raw-widget>
+                </div>
+                <div *ngIf="widget.widgetType === 'html'" class="h-100 p-0">
+                    <html-widget [gridsterItemComponent]="gridsterItemComponent"
+                                [gridsterItem]="item" [widget]="widget" [editMode]="editMode"
+                                [widgetConfig]="configuredWidget"
+                                [widgetDataConfig]="widgetDataConfig" class="h-100"></html-widget>
+                </div>
             </div>
         </div>
     </div>

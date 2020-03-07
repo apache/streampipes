@@ -20,6 +20,7 @@ import {Component, OnInit} from "@angular/core";
 import {Dashboard} from "./models/dashboard.model";
 import {DashboardService} from "./services/dashboard.service";
 import {RefreshDashboardService} from "./services/refresh-dashboard.service";
+import {Tuple2} from "../core-model/base/Tuple2";
 
 @Component({
     selector: 'dashboard',
@@ -48,8 +49,9 @@ export class DashboardComponent implements OnInit {
 
     }
 
-    openDashboard(dashboard: Dashboard) {
-        let index = this.dashboards.indexOf(dashboard);
+    openDashboard(data: Tuple2<Dashboard, boolean>) {
+        let index = this.dashboards.indexOf(data.a);
+        this.editMode = data.b;
         this.selectDashboard((index + 1));
     }
 

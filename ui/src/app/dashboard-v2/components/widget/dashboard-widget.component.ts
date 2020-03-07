@@ -68,7 +68,8 @@ export class DashboardWidgetComponent implements OnInit {
             height: '500px',
             panelClass: 'custom-dialog-container',
             data: {
-                "widget": this.configuredWidget
+                "widget": this.configuredWidget,
+                "pipeline": this.widgetDataConfig
             }
         });
 

@@ -26,8 +26,8 @@ export class RuntimeResolvableOneOfStaticProperty extends OneOfStaticProperty {
     @RdfProperty('sp:dependsOnStaticProperty')
     public dependsOn: string[] = [];
 
-    constructor(id: string) {
-        super(id);
+    constructor() {
+        super();
     }
 
 
