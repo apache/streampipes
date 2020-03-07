@@ -37,36 +37,25 @@
     <div style="width: 100%; height: 500px">
 
 
-    <div fxLayout="row">
-        <!--<div *ngIf="enablePaging" fxFlex="5">-->
-            <!--<button mat-icon-button (click)="clickPreviousPage()" class="paging-button" matTooltip="Going backwards in time">-->
-                <!--<mat-icon style="font-size: 30px;height: 30px; width: 30px">-->
-                    <!--chevron_left-->
-                <!--</mat-icon>-->
-            <!--</button>-->
-        <!--</div>-->
+        <div fxLayout="row">
+            <sp-load-data-spinner *ngIf="showIsLoadingData"></sp-load-data-spinner>
+
+            <sp-no-data-in-date-range *ngIf="showNoDataInDateRange" [viewDateRange]="viewDateRange"></sp-no-data-in-date-range>
 
 
-        <!-- Chart -->
-        <plotly-plot fxFlex
-                *ngIf="data !== undefined"
-                flex
-                [data]="data"
-                [layout]="graph.layout"
-                (relayout)="zoomIn($event)">
-        </plotly-plot>
+            <!-- Chart -->
+            <plotly-plot fxFlex
+                         *ngIf="data !== undefined"
+                         flex
+                         [data]="data"
+                         [layout]="graph.layout"
+                         (relayout)="zoomIn($event)">
+            </plotly-plot>
 
-        <!--<div *ngIf="enablePaging" fxFlex="5">-->
-            <!--<button mat-icon-button (click)="clickNextPage()" class="paging-button" matTooltip="Going forwards in time">-->
-                <!--<mat-icon style="font-size: 30px;height: 30px; width: 30px">-->
-                    <!--chevron_right-->
-                <!--</mat-icon>-->
-            <!--</button>-->
-        <!--</div>-->
+        </div>
+
+
     </div>
-
-
-</div>
 
 
 </div>
