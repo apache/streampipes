@@ -21,10 +21,18 @@ import {BaseNgxLineConfig} from "../base/base-ngx-line-config";
 export class LineConfig extends BaseNgxLineConfig {
 
     getWidgetLabel(): string {
-        return "line";
+        return "Line Chart";
     }
 
     getWidgetName(): string {
         return "line";
+    }
+
+    getWidgetDescription(): string {
+        return "A line chart with customizable axes and fields to display";
+    }
+
+    getWidgetIcon(): string {
+        return "fas fa-chart-line";
     }
 }

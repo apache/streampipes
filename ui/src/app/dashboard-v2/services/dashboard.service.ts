@@ -25,6 +25,7 @@ import {Dashboard} from "../models/dashboard.model";
 import {TsonLdSerializerService} from "../../platform-services/tsonld-serializer.service";
 import {DashboardWidget} from "../../core-model/dashboard/DashboardWidget";
 import {VisualizablePipeline} from "../../core-model/dashboard/VisualizablePipeline";
+import {RestApi} from "../../services/rest-api.service";
 
 @Injectable()
 export class DashboardService {
@@ -32,7 +33,19 @@ export class DashboardService {
 
     constructor(private http: HttpClient, 
                 private authStatusService: AuthStatusService,
-                private tsonLdSerializerService: TsonLdSerializerService,) {
+                private tsonLdSerializerService: TsonLdSerializerService) {
+    }
+
+    getPipelines(): Observable<Array<any>> {
+        return this.http.get(this.pipelinesUrl + "/own").map(data => {
+           return data as any[];
+        })
+    }
+
+    getPipelineById(id: string): Observable<any> {
+        return this.http.get(this.pipelinesUrl + "/" +id).map(data => {
+            return data as any;
+        })
     }
 
     getVisualizablePipelines(): Observable<Array<VisualizablePipeline>> {
@@ -85,6 +98,10 @@ export class DashboardService {
 
     private get dashboardUrl() {
         return this.baseUrl + '/api/v2/users/' + this.authStatusService.email + '/ld/dashboards'
+    }
+
+    private get pipelinesUrl() {
+        return this.baseUrl + '/api/v2/users/' + this.authStatusService.email + '/pipelines'
     }
 
     private get dashboardWidgetUrl() {

@@ -53,6 +53,12 @@ public class DashboardWidgetSettings extends UnnamedStreamPipesEntity {
   @RdfProperty(StreamPipes.HAS_SCHEMA)
   private EventSchema requiredSchema;
 
+  @RdfProperty(StreamPipes.HAS_WIDGET_ICON_NAME)
+  private String widgetIconName;
+
+  @RdfProperty(StreamPipes.HAS_WIDGET_DESCRIPTION)
+  private String widgetDescription;
+
   public DashboardWidgetSettings() {
     super();
   }
@@ -87,5 +93,21 @@ public class DashboardWidgetSettings extends UnnamedStreamPipesEntity {
 
   public void setRequiredSchema(EventSchema requiredSchema) {
     this.requiredSchema = requiredSchema;
+  }
+
+  public String getWidgetIconName() {
+    return widgetIconName;
+  }
+
+  public void setWidgetIconName(String widgetIconName) {
+    this.widgetIconName = widgetIconName;
+  }
+
+  public String getWidgetDescription() {
+    return widgetDescription;
+  }
+
+  public void setWidgetDescription(String widgetDescription) {
+    this.widgetDescription = widgetDescription;
   }
 }

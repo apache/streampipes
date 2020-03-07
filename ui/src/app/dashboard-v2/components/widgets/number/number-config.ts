@@ -31,7 +31,8 @@ export class NumberConfig extends WidgetConfig {
     }
 
     getConfig(): DashboardWidgetSettings {
-        return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel("number", "number")
+        return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel("number", "Single Value")
+            .withDescription("Displays a single number or text value")
             .requiredSchema(SchemaRequirementsBuilder
                 .create()
                 .requiredPropertyWithUnaryMapping(NumberConfig.NUMBER_MAPPING_KEY, "Select property", "", EpRequirements.numberReq())

@@ -30,7 +30,9 @@ export class HtmlConfig extends WidgetConfig {
     }
 
     getConfig(): DashboardWidgetSettings {
-        return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel("html", "html")
+        return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel("html", "HTML page")
+            .withDescription("Renders HTML markup (e.g., from a website)")
+            .withIcon("far fa-window-maximize")
             .requiredSchema(SchemaRequirementsBuilder
                 .create()
                 .requiredPropertyWithUnaryMapping(HtmlConfig.HTML_MAPPING_KEY, "HTML field", "", EpRequirements.anyProperty())

@@ -32,7 +32,9 @@ export class TableConfig extends WidgetConfig {
     }
 
     getConfig(): DashboardWidgetSettings {
-        return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel("table", "table")
+        return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel("table", "Table")
+            .withIcon("fas fa-table")
+            .withDescription("A table visualization with customizable columns.")
             .requiredSchema(SchemaRequirementsBuilder
                 .create()
                 .requiredPropertyWithNaryMapping(TableConfig.SELECTED_PROPERTIES_KEYS, "Select properties", "", EpRequirements.anyProperty())

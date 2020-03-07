@@ -34,7 +34,9 @@ export class TrafficLightConfig extends WidgetConfig {
     }
 
     getConfig(): DashboardWidgetSettings {
-        return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel("trafficlight", "trafficlight")
+        return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel("trafficlight", "Traffic Light")
+            .withIcon("fas fa-traffic-light")
+            .withDescription("A traffic light visualization with customizable warning range and threshold")
             .requiredSchema(SchemaRequirementsBuilder
                 .create()
                 .requiredPropertyWithUnaryMapping(TrafficLightConfig.NUMBER_MAPPING_KEY, "Field to observe", "", EpRequirements.numberReq())

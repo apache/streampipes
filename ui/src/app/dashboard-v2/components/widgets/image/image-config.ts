@@ -32,7 +32,9 @@ export class ImageConfig extends WidgetConfig {
     }
 
     getConfig(): DashboardWidgetSettings {
-        return WidgetConfigBuilder.create("image", "image")
+        return WidgetConfigBuilder.create("image", "Image")
+            .withDescription("Displays an image (e.g., from a camera)")
+            .withIcon("fas fa-image")
             .requiredSchema(SchemaRequirementsBuilder
                 .create()
                 .requiredPropertyWithUnaryMapping(ImageConfig.NUMBER_MAPPING_KEY, "Select property", "", EpRequirements.imageReq())

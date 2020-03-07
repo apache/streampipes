@@ -35,7 +35,9 @@ export class GaugeConfig extends WidgetConfig {
     }
 
     getConfig(): DashboardWidgetSettings {
-        return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel("gauge", "gauge")
+        return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel("gauge", "Gauge")
+            .withDescription("A gauge visualization")
+            .withIcon("fas fa-tachometer-alt")
             .requiredSchema(SchemaRequirementsBuilder
                 .create()
                 .requiredPropertyWithUnaryMapping(GaugeConfig.NUMBER_MAPPING_KEY, "Select property", "", EpRequirements.numberReq())

@@ -21,11 +21,19 @@ import {BaseNgxLineConfig} from "../base/base-ngx-line-config";
 export class AreaConfig extends BaseNgxLineConfig {
 
     getWidgetLabel(): string {
-        return "area";
+        return "Area Chart";
     }
 
     getWidgetName(): string {
         return "area";
+    }
+
+    getWidgetDescription(): string {
+        return "An area chart with customizable axes and fields to display";
+    }
+
+    getWidgetIcon(): string {
+        return "fas fa-chart-area";
     }
 
 

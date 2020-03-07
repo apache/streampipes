@@ -376,4 +376,6 @@ public class StreamPipes {
   public static final String DASHBOARD_WIDGET_DATA_CONFIG = NS + "DashboardWidgetDataConfig" ;
   public static final String COLOR_PICKER_STATIC_PROPERTY = NS + "ColorPickerStaticProperty";
   public static final String SELECTED_COLOR = NS + "hasSelectedColor";
+  public static final String HAS_WIDGET_ICON_NAME = NS + "hasWidgetIconName";
+  public static final String HAS_WIDGET_DESCRIPTION = NS + "hasWidgetDescription";
 }

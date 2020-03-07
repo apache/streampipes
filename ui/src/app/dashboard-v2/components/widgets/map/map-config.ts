@@ -33,7 +33,9 @@ export class MapConfig extends WidgetConfig {
     }
 
     getConfig(): DashboardWidgetSettings {
-        return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel("map", "map")
+        return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel("map", "Map")
+            .withIcon("fas fa-map")
+            .withDescription("A map including a marker to show the live position of a thing")
             .requiredSchema(SchemaRequirementsBuilder
                 .create()
                 .requiredPropertyWithUnaryMapping(MapConfig.LATITUDE_MAPPING_KEY, "Latitude field", "", EpRequirements.latitudeReq())

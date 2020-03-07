@@ -31,6 +31,8 @@ export abstract class BaseNgxLineConfig extends WidgetConfig {
 
     getConfig(): DashboardWidgetSettings {
         return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel(this.getWidgetName(), this.getWidgetLabel())
+            .withDescription(this.getWidgetDescription())
+            .withIcon(this.getWidgetIcon())
             .requiredSchema(SchemaRequirementsBuilder
                 .create()
                 .requiredPropertyWithUnaryMapping(BaseNgxLineConfig.TIMESTAMP_MAPPING_KEY, "Timestamp field", "", EpRequirements.timestampReq())
@@ -44,4 +46,8 @@ export abstract class BaseNgxLineConfig extends WidgetConfig {
     abstract getWidgetName(): string;
 
     abstract getWidgetLabel(): string;
+
+    abstract getWidgetDescription(): string;
+
+    abstract getWidgetIcon(): string;
 }

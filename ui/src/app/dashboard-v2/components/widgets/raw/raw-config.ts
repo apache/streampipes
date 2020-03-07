@@ -27,7 +27,9 @@ export class RawConfig extends WidgetConfig {
     }
 
     getConfig(): DashboardWidgetSettings {
-        return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel("raw", "raw")
+        return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel("raw", "Raw")
+            .withIcon("fas fa-terminal")
+            .withDescription("Displays the raw message as it comes in for testing purposes")
             .requiredSchema(SchemaRequirementsBuilder
                 .create()
                 .build())

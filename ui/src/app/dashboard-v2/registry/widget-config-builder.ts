@@ -66,6 +66,16 @@ export class WidgetConfigBuilder {
         return new WidgetConfigBuilder(widgetName, widgetLabel, true, true);
     }
 
+    withDescription(description: string): WidgetConfigBuilder {
+        this.widget.widgetDescription = description;
+        return this;
+    }
+
+    withIcon(fontAwesomeIconName: string): WidgetConfigBuilder {
+        this.widget.widgetIconName = fontAwesomeIconName;
+        return this;
+    }
+
     requiredTextParameter(id: string, label: string, description: string): WidgetConfigBuilder {
         let fst: FreeTextStaticProperty = this.prepareFreeTextStaticProperty(id, label, description, Datatypes.String.toUri())
         this.widget.config.push(fst);

@@ -76,15 +76,32 @@ export class AddVisualizationDialogComponent {
         if (!this.data) {
             this.dialogTitle = "Add widget";
             this.dashboardService.getVisualizablePipelines().subscribe(visualizations => {
-                this.visualizablePipelines = visualizations;
+                this.visualizablePipelines = [];
+                visualizations.forEach(vis => {
+                    this.dashboardService.getPipelineById(vis.pipelineId).subscribe(pipeline => {
+                        vis.pipelineName = pipeline.name;
+                        this.visualizablePipelines.push(vis);
+                        this.sortPipeline();
+                    });
+                })
             });
-            this.availableWidgets = WidgetRegistry.getAvailableWidgetTemplates();
+
+            this.availableWidgets = WidgetRegistry.getAvailableWidgetTemplates()
+            this.availableWidgets.sort((a, b) => {
+                return a.widgetLabel < b.widgetLabel ? -1 : 1;
+            });
         } else {
             this.dialogTitle = "Edit widget";
             this.selectedPipeline = this.data.pipeline;
             this.selectedWidget = this.data.widget.dashboardWidgetSettings;
             this.page = 'configure-widget';
         }
+    }
+
+    sortPipeline() {
+        this.visualizablePipelines.sort((a, b) => {
+            return a.pipelineName < b.pipelineName ? -1 : 1;
+        });
     }
 
     onCancel(): void {

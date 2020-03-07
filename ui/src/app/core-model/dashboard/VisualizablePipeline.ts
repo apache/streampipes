@@ -45,6 +45,8 @@ export class VisualizablePipeline {
     @RdfProperty('sp:hasTopic')
     topic:string;
 
+    pipelineName: string;
+
     constructor(id: string) {
         this.id = id;
     }
