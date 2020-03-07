@@ -53,6 +53,7 @@ import {MapWidgetComponent} from "./components/widgets/map/map-widget.component"
 import {LeafletModule} from "@asymmetrik/ngx-leaflet";
 import {RawWidgetComponent} from "./components/widgets/raw/raw-widget.component";
 import {HtmlWidgetComponent} from "./components/widgets/html/html-widget.component";
+import {TrafficLightWidgetComponent} from "./components/widgets/trafficlight/traffic-light-widget.component";
 
 const dashboardWidgets = [
 
@@ -94,7 +95,8 @@ const dashboardWidgets = [
         ImageWidgetComponent,
         MapWidgetComponent,
         RawWidgetComponent,
-        HtmlWidgetComponent
+        HtmlWidgetComponent,
+        TrafficLightWidgetComponent
     ],
     providers: [
         DashboardService,

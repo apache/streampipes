@@ -44,6 +44,8 @@ export class DashboardWidgetComponent implements OnInit {
     configuredWidget: DashboardWidget;
     widgetDataConfig: VisualizablePipeline;
 
+    pipelineNotRunning: boolean = false;
+
     constructor(private dashboardService: DashboardService,
                 private dialog: MatDialog) {
     }
@@ -53,7 +55,11 @@ export class DashboardWidgetComponent implements OnInit {
             this.configuredWidget = response;
             this.dashboardService.getVisualizablePipelineByTopic(this.configuredWidget.visualizablePipelineTopic).subscribe(pipeline => {
                 this.widgetDataConfig = pipeline;
+                this.pipelineNotRunning = false;
                 this.widgetLoaded = true;
+            }, err => {
+                this.widgetLoaded = true;
+                this.pipelineNotRunning = true;
             });
         });
     }
