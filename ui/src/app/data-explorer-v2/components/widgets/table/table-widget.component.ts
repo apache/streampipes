@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, OnChanges, OnDestroy, OnInit,  ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { DataResult } from '../../../../core-model/datalake/DataResult';
@@ -28,7 +28,7 @@ import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
   templateUrl: './table-widget.component.html',
   styleUrls: ['./table-widget.component.css']
 })
-export class TableWidgetComponent extends BaseDataExplorerWidget implements OnInit, OnDestroy, OnChanges  {
+export class TableWidgetComponent extends BaseDataExplorerWidget implements OnInit, OnDestroy {
 
 
   @ViewChild(MatSort, {static: true}) sort: MatSort;
@@ -92,10 +92,6 @@ export class TableWidgetComponent extends BaseDataExplorerWidget implements OnIn
     this.dataSource.data = [];
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    this.viewDateRange = changes.viewDateRange.currentValue;
-    this.updateData();
-  }
 
 
 }

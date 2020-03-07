@@ -16,13 +16,13 @@
  *
  */
 
-import { EventEmitter, Input, Output } from '@angular/core';
+import { EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { GridsterItem, GridsterItemComponent } from 'angular-gridster2';
 import { DataExplorerWidgetModel } from '../../../../core-model/datalake/DataExplorerWidgetModel';
 import { DateRange } from '../../../../core-model/datalake/DateRange';
 import { IDataViewDashboardItem } from '../../../models/dataview-dashboard.model';
 
-export abstract class BaseDataExplorerWidget {
+export abstract class BaseDataExplorerWidget implements OnChanges {
 
   protected constructor() {
   }
@@ -57,5 +57,12 @@ export abstract class BaseDataExplorerWidget {
       this.showData = showData;
       this.showIsLoadingData = showIsLoadingData;
   }
+
+  ngOnChanges(changes: SimpleChanges) {
+    this.viewDateRange = changes.viewDateRange.currentValue;
+    this.updateData();
+  }
+
+  public abstract updateData();
 
 }

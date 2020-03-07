@@ -93,12 +93,19 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
   }
 
   updateData() {
+
+    this.setShownComponents(false, false, true);
     this.dataLakeRestService.getDataAutoAggergation(
       this.dataExplorerWidget.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime()).subscribe(
       (res: DataResult) => {
-        const tmp = this.transformData(res, this.xKey);
+        if (res.total === 0) {
+          this.setShownComponents(true, false, false);
+        } else {
+          const tmp = this.transformData(res, this.xKey);
+          this.data = this.displayData(tmp, this.yKeys);
+          this.setShownComponents(false, true, false);
+        }
 
-        this.data = this.displayData(tmp, this.yKeys);
       }
     );
   }

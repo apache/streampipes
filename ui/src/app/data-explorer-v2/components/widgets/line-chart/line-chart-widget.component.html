@@ -45,7 +45,7 @@
 
             <!-- Chart -->
             <plotly-plot fxFlex
-                         *ngIf="data !== undefined"
+                         *ngIf="showData"
                          flex
                          [data]="data"
                          [layout]="graph.layout"
