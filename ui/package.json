@@ -9,11 +9,9 @@
   },
   "scripts": {
     "start": "node ./deployment/prebuild.js && ng serve",
-    "start-webpack": "node ./deployment/prebuild.js && webpack-dev-server -d --env=dev",
     "watchtest": "node ./deployment/prebuild.js && karma start ./karma.conf.js --no-auto-watch --single-run",
     "test": "node ./deployment/prebuild.js && karma start ./karma.conf.js",
-    "build": "node ./deployment/prebuild.js && set NODE_OPTIONS=--max-old-space-size=10192 && ng build --prod --stats-json",
-    "build-webpack": "node ./deployment/prebuild.js && webpack --display-modules --progress --env=prod",
+    "build": "node ./deployment/prebuild.js && set NODE_OPTIONS=--max-old-space-size=10192 && ng build --prod",
     "lint": "tslint -c tslint.json 'src/**/*.ts*"
   },
   "dependencies": {
