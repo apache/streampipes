@@ -19,7 +19,7 @@
 <div>
     <div class="assembly-options-preview sp-blue-bg">
         <div layout="row" layout-align="start center">
-            <h4>Quick Edit</h4>
+            <h4>Edit configuration</h4>
             <span flex></span>
             <md-button
                        class="md-icon-button" ng-click="ctrl.updatePipeline()" type="submit">
@@ -38,16 +38,6 @@
 
                 <div flex="100" layout="column" class="customize-item-main sp-blue-border-nopadding"
                      ng-repeat="staticProperty in ctrl.selectedElement.staticProperties">
-                    <div class="customize-item-title sp-blue-bg" layout="row" flex="100">
-                        <div flex="80" layout="row" layout-align="start center">
-                            {{staticProperty.properties.label}}
-                        </div>
-                        <div flex="20" layout="row" layout-align="end center" style="padding-left:10px;">
-                            <i class="material-icons"
-                               style="color: white;" popup-show="modules/editor/templates/popup.html"
-                               popup-placement="bottom">help</i>
-                        </div>
-                    </div>
                     <div class="md-padding">
                         <customize-dialog selected-element="ctrl.selectedElement"
                                           static-property="staticProperty"></customize-dialog>
