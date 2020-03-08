@@ -21,10 +21,9 @@ modules:
   - spEditor
   - spPipelines
   - spConnect
-#  - spDashboard
+  - spDashboard
   - spAppOverview
   - spAdd
   - spMyElements
   - spDataExplorer
   - spConfiguration
-  - spDashboard2

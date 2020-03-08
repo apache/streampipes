@@ -207,7 +207,6 @@ export class TsonLdSerializerService {
     }
 
     public fromJsonLdContainer(o: any, type:string): any {
-        console.log(o);
         return this.getTsonLd().fromJsonLdContainer(o, type);
     }
 

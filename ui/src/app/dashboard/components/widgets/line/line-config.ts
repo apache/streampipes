@@ -16,39 +16,23 @@
  *
  */
 
-import {RdfsClass} from "../../platform-services/tsonld/RdfsClass";
-import {EventSchema} from "../../connect/schema-editor/model/EventSchema";
-import {RdfId} from "../../platform-services/tsonld/RdfId";
-import {RdfProperty} from "../../platform-services/tsonld/RdfsProperty";
+import {BaseNgxLineConfig} from "../base/base-ngx-line-config";
 
-@RdfsClass('sp:VisualizablePipeline')
-export class VisualizablePipeline {
+export class LineConfig extends BaseNgxLineConfig {
 
-    @RdfId
-    public id: string;
-
-    @RdfProperty('sp:hasSchema')
-    schema: EventSchema;
-
-    @RdfProperty('sp:hasPipelineId')
-    pipelineId: string;
-
-    @RdfProperty('sp:couchDbId')
-    _id: string;
-
-    @RdfProperty('sp:couchDbRev')
-    _ref:string;
-
-    @RdfProperty('sp:hasVisualizationName')
-    visualizationName:string;
-
-    @RdfProperty('sp:hasTopic')
-    topic:string;
-
-    pipelineName: string;
-
-    constructor(id: string) {
-        this.id = id;
+    getWidgetLabel(): string {
+        return "Line Chart";
     }
 
+    getWidgetName(): string {
+        return "line";
+    }
+
+    getWidgetDescription(): string {
+        return "A line chart with customizable axes and fields to display";
+    }
+
+    getWidgetIcon(): string {
+        return "fas fa-chart-line";
+    }
 }
