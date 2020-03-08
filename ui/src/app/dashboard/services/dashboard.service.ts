@@ -78,6 +78,12 @@ export class DashboardService {
         });
     }
 
+    getDashboard(dashboardId: string): Observable<Dashboard> {
+        return this.http.get(this.dashboardUrl + "/" +dashboardId).map(data => {
+            return data as Dashboard;
+        })
+    }
+
     updateDashboard(dashboard: Dashboard): Observable<Dashboard> {
         return this.http.put(this.dashboardUrl + "/" +dashboard._id, dashboard).map(data => {
             return data as Dashboard;

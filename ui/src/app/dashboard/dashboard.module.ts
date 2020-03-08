@@ -54,6 +54,7 @@ import {LeafletModule} from "@asymmetrik/ngx-leaflet";
 import {RawWidgetComponent} from "./components/widgets/raw/raw-widget.component";
 import {HtmlWidgetComponent} from "./components/widgets/html/html-widget.component";
 import {TrafficLightWidgetComponent} from "./components/widgets/trafficlight/traffic-light-widget.component";
+import {StandaloneDashboardComponent} from "./components/standalone/standalone-dashboard.component";
 
 const dashboardWidgets = [
 
@@ -96,7 +97,8 @@ const dashboardWidgets = [
         MapWidgetComponent,
         RawWidgetComponent,
         HtmlWidgetComponent,
-        TrafficLightWidgetComponent
+        TrafficLightWidgetComponent,
+        StandaloneDashboardComponent
     ],
     providers: [
         DashboardService,
@@ -117,6 +119,11 @@ const dashboardWidgets = [
             provide: RxStompService,
             useFactory: rxStompServiceFactory,
             deps: [InjectableRxStompConfig]
+        },
+        {
+            provide: '$state',
+            useFactory: ($injector: any) => $injector.get('$state'),
+            deps: ['$injector']
         }
     ],
     exports: [
@@ -125,7 +132,8 @@ const dashboardWidgets = [
     entryComponents: [
         DashboardComponent,
         AddVisualizationDialogComponent,
-        EditDashboardDialogComponent
+        EditDashboardDialogComponent,
+        StandaloneDashboardComponent
     ]
 })
 export class DashboardModule {

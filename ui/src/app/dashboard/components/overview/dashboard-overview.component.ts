@@ -16,7 +16,7 @@
  *
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
+import {Component, EventEmitter, Inject, Input, OnInit, Output} from "@angular/core";
 import {Dashboard} from "../../models/dashboard.model";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatDialog} from "@angular/material/dialog";
@@ -38,7 +38,8 @@ export class DashboardOverviewComponent implements OnInit {
     dataSource = new MatTableDataSource<Dashboard>();
     displayedColumns: string[] = ['name', 'open', 'openWindow', 'settings', 'edit', 'delete'];
 
-    constructor(private dashboardService: DashboardService,
+    constructor(@Inject('$state') private $state: any,
+                private dashboardService: DashboardService,
                 public dialog: MatDialog) {
 
     }
@@ -86,7 +87,8 @@ export class DashboardOverviewComponent implements OnInit {
     }
 
     openExternalDashboard(dashboard: Dashboard) {
-
+        let href = this.$state.href('standalone', {dashboardId: dashboard._id});
+        window.open(href, "_blank");
     }
 
 }
