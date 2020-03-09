@@ -210,7 +210,6 @@ export class PipelineController {
 
     handleDeleteOption(pipelineElement) {
         this.JsplumbBridge.removeAllEndpoints(pipelineElement.payload.DOM);
-        //this.rawPipelineModel = this.rawPipelineModel.filter(item => !(item.payload.DOM == internalId));
         angular.forEach(this.rawPipelineModel, pe => {
            if (pe.payload.DOM == pipelineElement.payload.DOM) {
                pe.settings.disabled = true;

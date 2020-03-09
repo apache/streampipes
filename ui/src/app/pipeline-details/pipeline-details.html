@@ -23,7 +23,8 @@
                 <md-tab label="Overview" md-on-select="ctrl.setSelectedTab('overview')"></md-tab>
                 <md-tab label="Statistics" md-on-select="ctrl.setSelectedTab('statistics')"></md-tab>
                 <md-tab label="Errors" md-on-select="ctrl.setSelectedTab('errors')"></md-tab>
-                <md-tab label="QuickEdit" md-on-select="ctrl.setSelectedTab('quick-edit')"></md-tab>
+                <md-tab label="QuickEdit" md-on-select="ctrl.setSelectedTab('quick-edit')"
+                        ng-disabled="ctrl.pipeline.running"></md-tab>
             </md-tabs>
         </div>
     </div>

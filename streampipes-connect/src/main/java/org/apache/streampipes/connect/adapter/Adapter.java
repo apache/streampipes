@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.connect.adapter;
 
+import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
@@ -87,6 +88,12 @@ public abstract class Adapter<T extends AdapterDescription> implements Connector
     public void changeEventGrounding(TransportProtocol transportProtocol) {
         List<AdapterPipelineElement> pipelineElements =  this.adapterPipeline.getPipelineElements();
         SendToKafkaAdapterSink sink = (SendToKafkaAdapterSink) this.adapterPipeline.getPipelineSink();
+
+
+        if ("true".equals(System.getenv("SP_DEBUG"))) {
+            transportProtocol.setBrokerHostname("localhost");
+            ((KafkaTransportProtocol) transportProtocol).setKafkaPort(9094);
+        }
         sink.changeTransportProtocol(transportProtocol);
     }
 

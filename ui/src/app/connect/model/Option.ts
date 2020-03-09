@@ -19,9 +19,10 @@
 import {RdfId} from '../../platform-services/tsonld/RdfId';
 import {RdfProperty} from '../../platform-services/tsonld/RdfsProperty';
 import {RdfsClass} from '../../platform-services/tsonld/RdfsClass';
+import {UnnamedStreamPipesEntity} from "./UnnamedStreamPipesEntity";
 
 @RdfsClass('sp:Option')
-export class Option {
+export class Option extends UnnamedStreamPipesEntity {
   @RdfId
   public id: string;
 
@@ -36,4 +37,8 @@ export class Option {
 
   @RdfProperty('sp:isSelected')
   public selected: boolean;
+
+  constructor() {
+    super();
+  }
 }

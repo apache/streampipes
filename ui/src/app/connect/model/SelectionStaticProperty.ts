@@ -37,8 +37,7 @@ export class SelectionStaticProperty extends StaticProperty {
   @RdfProperty('sp:isHorizontalRendering')
   public horizontalRendering: boolean = true;
 
-  constructor(id: string) {
+  constructor() {
     super();
-    this.id = id;
   }
 }

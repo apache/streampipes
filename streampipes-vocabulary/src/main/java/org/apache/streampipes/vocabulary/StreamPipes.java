@@ -383,4 +383,6 @@ public class StreamPipes {
   public static final String HAS_DATA_LAKE_MEASURE = NS + "hasDataLakeMeasure";
   public static final String HAS_MEASUREMENT_NAME = NS + "hasMeasurementName";
   public static final String HAS_EVENT_SCHEMA = NS + "hasEventSchema";
+  public static final String HAS_WIDGET_ICON_NAME = NS + "hasWidgetIconName";
+  public static final String HAS_WIDGET_DESCRIPTION = NS + "hasWidgetDescription";
 }

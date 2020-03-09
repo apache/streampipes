@@ -36,6 +36,8 @@ export class PipelineAssemblyController {
     PipelinePositioningService: any;
     PipelineValidationService: PipelineValidationService;
     RestApi: RestApi;
+    $rootScope: any;
+
     selectMode: any;
     currentPipelineName: any;
     currentPipelineDescription: any;
@@ -49,7 +51,8 @@ export class PipelineAssemblyController {
     pipelineCacheRunning: boolean = false;
     pipelineCached: boolean = false;
 
-    constructor(JsplumbBridge,
+    constructor($rootScope,
+                JsplumbBridge,
                 PipelinePositioningService,
                 EditorDialogManager,
                 PipelineValidationService,
@@ -71,6 +74,7 @@ export class PipelineAssemblyController {
         this.$state = $state;
         this.TransitionService = TransitionService;
         this.ShepherdService = ShepherdService;
+        this.$rootScope = $rootScope;
 
         this.selectMode = true;
         this.currentZoomLevel = 1;
@@ -96,6 +100,10 @@ export class PipelineAssemblyController {
         } else {
             this.checkAndDisplayCachedPipeline();
         }
+
+        this.$rootScope.$on("pipeline.validate", () => {
+            this.pipelineValid = this.PipelineValidationService.isValidPipeline(this.rawPipelineModel);
+        });
     }
 
     autoLayout() {
@@ -189,7 +197,7 @@ export class PipelineAssemblyController {
                 this.rawPipelineModel = msg.data;
                 this.$timeout(() => {
                     this.displayPipelineInEditor(true);
-                });
+                }, 100);
             }
         });
     }
@@ -223,7 +231,9 @@ export class PipelineAssemblyController {
 
 }
 
-PipelineAssemblyController.$inject = ['JsplumbBridge',
+PipelineAssemblyController.$inject = [
+    '$rootScope',
+    'JsplumbBridge',
     'PipelinePositioningService',
     'EditorDialogManager',
     'PipelineValidationService',

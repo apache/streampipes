@@ -25,6 +25,7 @@ import { {{{ng5_component}}} } from '{{{ng5_componentPath}}}';
 import { HomeComponent } from '../home/home.component';
 import { InfoComponent } from '../info/info.component';
 import { AppContainerComponent } from '../app-container/app-container.component';
+import { StandaloneDashboardComponent } from "../dashboard/components/standalone/standalone-dashboard.component";
 
 export default function stateConfig($stateProvider, $urlRouterProvider) {
 
@@ -91,6 +92,15 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
                 component: AppContainerComponent,
               },
             },
+        })
+        .state('standalone', {
+            url: '/dashboard/standalone/:dashboardId',
+            params: {dashboardId: null},
+            views: {
+                'container': {
+                    component: StandaloneDashboardComponent
+                }
+            }
         })
         /*
         .state('streampipes.applinks', {
