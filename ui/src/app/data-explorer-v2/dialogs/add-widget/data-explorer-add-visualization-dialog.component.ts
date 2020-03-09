@@ -130,7 +130,7 @@ export class DataExplorerAddVisualizationDialogComponent implements OnInit {
       //       configuredWidget.eventSchema.eventProperties.push(ep.copy());
       //  }
 
-      configuredWidget.measureName = this.selectedDataSet.measureName;
+      configuredWidget.dataLakeMeasure = this.selectedDataSet;
       configuredWidget.widgetType = this.selectedWidget;
       this.dataViewDataExplorerService.saveWidget(configuredWidget).subscribe(response => {
         this.dialogRef.close(response);

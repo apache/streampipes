@@ -39,8 +39,8 @@ public class DataExplorerWidgetModel extends DashboardEntity {
   @RdfProperty(StreamPipes.HAS_DASHBOARD_WIDGET_TYPE)
   private String widgetType;
 
-  @RdfProperty(StreamPipes.HAS_MEASUREMENT_NAME)
-  private String measureName;
+//  @RdfProperty(StreamPipes.HAS_MEASUREMENT_NAME)
+//  private String measureName;
 
   @OneToOne(fetch = FetchType.EAGER,
           cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -65,14 +65,6 @@ public class DataExplorerWidgetModel extends DashboardEntity {
 
   public void setDataLakeMeasure(DataLakeMeasure dataLakeMeasure) {
     this.dataLakeMeasure = dataLakeMeasure;
-  }
-
-  public String getMeasureName() {
-    return measureName;
-  }
-
-  public void setMeasureName(String measureName) {
-    this.measureName = measureName;
   }
 
   public String getWidgetType() {

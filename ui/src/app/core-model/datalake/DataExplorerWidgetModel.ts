@@ -20,6 +20,7 @@ import { UnnamedStreamPipesEntity } from '../../connect/model/UnnamedStreamPipes
 import { EventSchema } from '../../connect/schema-editor/model/EventSchema';
 import { RdfsClass } from '../../platform-services/tsonld/RdfsClass';
 import { RdfProperty } from '../../platform-services/tsonld/RdfsProperty';
+import { DataLakeMeasure } from './DataLakeMeasure';
 
 @RdfsClass('sp:DataExplorerWidgetModel')
 export class DataExplorerWidgetModel extends UnnamedStreamPipesEntity {
@@ -33,14 +34,14 @@ export class DataExplorerWidgetModel extends UnnamedStreamPipesEntity {
     @RdfProperty('sp:hasDashboardWidgetId')
     widgetId: string;
 
-    @RdfProperty('sp:hasMeasurementName')
-    measureName: string;
+    // @RdfProperty('sp:hasMeasurementName')
+    // measureName: string;
 
     @RdfProperty('sp:hasDashboardWidgetType')
     widgetType: string;
 
-    @RdfProperty('sp:hasSchema')
-    eventSchema: EventSchema;
+    @RdfProperty('sp:hasDataLakeMeasure')
+    dataLakeMeasure: DataLakeMeasure
 
     constructor() {
         super();

@@ -54,7 +54,8 @@ export class TableWidgetComponent extends BaseDataExplorerWidget implements OnIn
     this.setShownComponents(false, false, true);
 
     this.dataLakeRestService.getDataAutoAggergation(
-      this.dataExplorerWidget.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime()).subscribe(
+      this.dataExplorerWidget.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime())
+      .subscribe(
       (res: DataResult) => {
 
         this.dataSource.data = this.transformData(res);
