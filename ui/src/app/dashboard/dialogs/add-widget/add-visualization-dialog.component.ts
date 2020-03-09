@@ -85,11 +85,6 @@ export class AddVisualizationDialogComponent {
                     });
                 })
             });
-
-            this.availableWidgets = WidgetRegistry.getAvailableWidgetTemplates()
-            this.availableWidgets.sort((a, b) => {
-                return a.widgetLabel < b.widgetLabel ? -1 : 1;
-            });
         } else {
             this.dialogTitle = "Edit widget";
             this.selectedPipeline = this.data.pipeline;
@@ -151,6 +146,10 @@ export class AddVisualizationDialogComponent {
 
     next() {
         if (this.page == 'select-pipeline') {
+            this.availableWidgets = WidgetRegistry.getCompatibleWidgetTemplates(this.selectedPipeline);
+            this.availableWidgets.sort((a, b) => {
+                return a.widgetLabel < b.widgetLabel ? -1 : 1;
+            });
             this.page = 'select-widget';
         } else if (this.page == 'select-widget') {
             this.page = 'configure-widget';
