@@ -30,6 +30,7 @@ import {DashboardWidgetSettings} from "../../../core-model/dashboard/DashboardWi
 import {VisualizablePipeline} from "../../../core-model/dashboard/VisualizablePipeline";
 import {Dashboard} from "../../models/dashboard.model";
 import {MappingPropertyNary} from "../../../connect/model/MappingPropertyNary";
+import {ConfigurationInfo} from "../../../connect/model/message/ConfigurationInfo";
 
 @Component({
     selector: 'add-visualization-dialog-component',
@@ -63,6 +64,8 @@ export class AddVisualizationDialogComponent {
     selectedType: any;
     page: any = "select-pipeline";
     dialogTitle: string;
+
+    configValid: boolean;
 
 
     constructor(
@@ -181,6 +184,12 @@ export class AddVisualizationDialogComponent {
 
     iconText(s) {
         return this.elementIconText.getElementIconText(s);
+    }
+
+    validConfiguration(valid: boolean) {
+        setTimeout(() => {
+            this.configValid = this.selectedWidget.config.every(sp => sp.isValid);
+        });
     }
 
 }

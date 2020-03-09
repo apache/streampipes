@@ -17,8 +17,16 @@
  */
 
 import {DashboardWidgetSettings} from "../../../../core-model/dashboard/DashboardWidgetSettings";
+import {Tuple2} from "../../../../core-model/base/Tuple2";
 
 export abstract class WidgetConfig {
 
     abstract getConfig(): DashboardWidgetSettings;
+
+    makeOption(optionName: string): Tuple2<string, string> {
+        let option: Tuple2<string, string> = {} as Tuple2<string, string>;
+        option.a = optionName;
+        option.b = optionName.replace(" ", "-");
+        return option;
+    }
 }

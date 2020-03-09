@@ -52,6 +52,7 @@ export class StaticMappingNaryComponent extends StaticMappingComponent implement
         if (!this.staticProperty.selectedProperties) {
             this.staticProperty.selectedProperties = [];
         }
+        this.inputEmitter.emit(true);
     }
 
     selectOption(property: EventProperty, $event) {

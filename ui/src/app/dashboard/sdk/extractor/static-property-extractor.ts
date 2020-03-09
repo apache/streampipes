@@ -44,13 +44,15 @@ export class StaticPropertyExtractor {
         let sp: MappingPropertyNary = this.getStaticPropertyByName(internalId) as MappingPropertyNary;
         let properties: Array<string> = [];
         // TODO this quick-fixes a deserialization bug in Tson-LD
-        if (!Array.isArray(sp.selectedProperties)) {
+        if (sp.selectedProperties && !Array.isArray(sp.selectedProperties)) {
             let value: string = sp.selectedProperties as any;
             sp.selectedProperties = [value];
         }
-        sp.selectedProperties.forEach(ep => {
-           properties.push(this.removePrefix(ep));
-        });
+        if (sp.selectedProperties) {
+            sp.selectedProperties.forEach(ep => {
+                properties.push(this.removePrefix(ep));
+            });
+        }
         return properties;
     }
 
