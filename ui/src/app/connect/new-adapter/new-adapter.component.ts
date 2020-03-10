@@ -17,31 +17,31 @@
  */
 
 ///<reference path="../model/connect/AdapterDescription.ts"/>
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {RestService} from '../rest.service';
-import {FormatDescription} from '../model/connect/grounding/FormatDescription';
-import {AdapterDescription} from '../model/connect/AdapterDescription';
-import {MatDialog} from '@angular/material/dialog';
-import {MatStepper} from '@angular/material/stepper';
-import {AdapterStartedDialog} from './component/adapter-started-dialog.component';
-import {Logger} from '../../shared/logger/default-log.service';
-import {GenericAdapterSetDescription} from '../model/connect/GenericAdapterSetDescription';
-import {GenericAdapterStreamDescription} from '../model/connect/GenericAdapterStreamDescription';
-import {EventSchema} from '../schema-editor/model/EventSchema';
-import {SpecificAdapterSetDescription} from '../model/connect/SpecificAdapterSetDescription';
-import {SpecificAdapterStreamDescription} from '../model/connect/SpecificAdapterStreamDescription';
-import {TransformationRuleDescription} from '../model/connect/rules/TransformationRuleDescription';
-import {TransformationRuleService} from '../transformation-rule.service';
-import {ShepherdService} from '../../services/tour/shepherd.service';
-import {EventSchemaComponent} from '../schema-editor/event-schema/event-schema.component';
-import {ConnectService} from "../connect.service";
-import {RemoveDuplicatesRuleDescription} from '../model/connect/rules/RemoveDuplicatesRuleDescription';
-import {IconService} from './icon.service';
-import {TimestampPipe} from '../filter/timestamp.pipe';
-import {EventProperty} from '../schema-editor/model/EventProperty';
-import {EventRateTransformationRuleDescription} from '../model/connect/rules/EventRateTransformationRuleDescription';
-import {ConfigurationInfo} from "../model/message/ConfigurationInfo";
+import { Component, EventEmitter, Input, OnInit, Output, PipeTransform, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { MatStepper } from '@angular/material/stepper';
+import { ShepherdService } from '../../services/tour/shepherd.service';
+import { Logger } from '../../shared/logger/default-log.service';
+import { ConnectService } from '../connect.service';
+import { TimestampPipe } from '../filter/timestamp.pipe';
+import { AdapterDescription } from '../model/connect/AdapterDescription';
+import { GenericAdapterSetDescription } from '../model/connect/GenericAdapterSetDescription';
+import { GenericAdapterStreamDescription } from '../model/connect/GenericAdapterStreamDescription';
+import { FormatDescription } from '../model/connect/grounding/FormatDescription';
+import { EventRateTransformationRuleDescription } from '../model/connect/rules/EventRateTransformationRuleDescription';
+import { RemoveDuplicatesRuleDescription } from '../model/connect/rules/RemoveDuplicatesRuleDescription';
+import { TransformationRuleDescription } from '../model/connect/rules/TransformationRuleDescription';
+import { SpecificAdapterSetDescription } from '../model/connect/SpecificAdapterSetDescription';
+import { SpecificAdapterStreamDescription } from '../model/connect/SpecificAdapterStreamDescription';
+import { ConfigurationInfo } from '../model/message/ConfigurationInfo';
+import { RestService } from '../rest.service';
+import { EventSchemaComponent } from '../schema-editor/event-schema/event-schema.component';
+import { EventProperty } from '../schema-editor/model/EventProperty';
+import { EventSchema } from '../schema-editor/model/EventSchema';
+import { TransformationRuleService } from '../transformation-rule.service';
+import { AdapterStartedDialog } from './component/adapter-started-dialog.component';
+import { IconService } from './icon.service';
 
 @Component({
     selector: 'sp-new-adapter',
@@ -51,23 +51,25 @@ import {ConfigurationInfo} from "../model/message/ConfigurationInfo";
 export class NewAdapterComponent implements OnInit {
 
 
+
+    constructor(
+        private logger: Logger,
+        private restService: RestService,
+        private transformationRuleService: TransformationRuleService,
+        public dialog: MatDialog,
+        private ShepherdService: ShepherdService,
+        private connectService: ConnectService,
+        private _formBuilder: FormBuilder,
+        private iconService: IconService,
+        private timestampPipe: TimestampPipe,
+    ) { }
+
+
     selectedUploadFile: File;
     fileName;
-    isGenericAdapter: boolean = false;
-    isDataSetDescription: boolean = false;
-    isDataStreamDescription: boolean = false;
-
-    handleFileInput(files: any) {
-        this.selectedUploadFile = files[0];
-        this.fileName = this.selectedUploadFile.name;
-
-        this.iconService.toBase64(this.selectedUploadFile)
-            .then(
-                data => {
-                    this.adapter.icon = (<string>data);
-                }
-            );
-    }
+    isGenericAdapter = false;
+    isDataSetDescription = false;
+    isDataStreamDescription = false;
 
 
     @Input()
@@ -86,14 +88,14 @@ export class NewAdapterComponent implements OnInit {
     protocolConfigurationValid: boolean;
     formatConfigurationValid: boolean;
 
-    removeDuplicates: boolean = false;
+    removeDuplicates = false;
     removeDuplicatesTime: number;
 
-    eventRateReduction: boolean = false;
+    eventRateReduction = false;
     eventRateTime: number;
-    eventRateMode: string = 'none';
+    eventRateMode = 'none';
 
-    saveInDataLake: boolean = false;
+    saveInDataLake = false;
     dataLakeTimestampField: string;
 
     startAdapterFormGroup: FormGroup;
@@ -103,36 +105,34 @@ export class NewAdapterComponent implements OnInit {
 
     timestampPropertiesInSchema: EventProperty[] = [];
 
-    hasInput: Boolean[];
+    hasInput: boolean[];
 
     // indicates whether user uses a template or not
-    fromTemplate: Boolean = false;
+    fromTemplate = false;
 
     // deactivates all edit functions when user starts a template
-    isEditable: Boolean = true;
+    isEditable = true;
 
     @ViewChild(EventSchemaComponent, { static: true })
     private eventSchemaComponent: EventSchemaComponent;
 
-    isSetAdapter: Boolean = false;
+    isSetAdapter = false;
 
     completedStaticProperty: ConfigurationInfo;
 
     isPreviewEnabled = false;
 
+    handleFileInput(files: any) {
+        this.selectedUploadFile = files[0];
+        this.fileName = this.selectedUploadFile.name;
 
-
-    constructor(
-        private logger: Logger,
-        private restService: RestService,
-        private transformationRuleService: TransformationRuleService,
-        public dialog: MatDialog,
-        private ShepherdService: ShepherdService,
-        private connectService: ConnectService,
-        private _formBuilder: FormBuilder,
-        private iconService: IconService,
-        private timestampPipe: TimestampPipe,
-    ) { }
+        this.iconService.toBase64(this.selectedUploadFile)
+            .then(
+                data => {
+                    this.adapter.icon = (data as string);
+                }
+            );
+    }
 
     ngOnInit() {
 
@@ -142,13 +142,13 @@ export class NewAdapterComponent implements OnInit {
         this.formatConfigurationValid = false;
 
         if (this.adapter instanceof GenericAdapterSetDescription) {
-            if ((<GenericAdapterSetDescription>this.adapter).format != undefined) {
+            if ((this.adapter as GenericAdapterSetDescription).format != undefined) {
                 this.formatConfigurationValid = true;
             }
         }
 
         if (this.adapter instanceof GenericAdapterStreamDescription) {
-            if ((<GenericAdapterStreamDescription>this.adapter).format != undefined) {
+            if ((this.adapter as GenericAdapterStreamDescription).format != undefined) {
                 this.formatConfigurationValid = true;
             }
         }
@@ -194,18 +194,18 @@ export class NewAdapterComponent implements OnInit {
             this.adapter.rules.push(new EventRateTransformationRuleDescription(this.eventRateTime, this.eventRateMode));
         }
 
-        let dialogRef = this.dialog.open(AdapterStartedDialog, {
+        const dialogRef = this.dialog.open(AdapterStartedDialog, {
             width: '70%',
             data: {
                 adapter: this.adapter,
-                storeAsTemplate: storeAsTemplate,
+                storeAsTemplate,
                 saveInDataLake: this.saveInDataLake,
                 dataLakeTimestampField: this.dataLakeTimestampField
             },
             panelClass: 'sp-no-padding-dialog'
         });
 
-        this.ShepherdService.trigger("button-startAdapter");
+        this.ShepherdService.trigger('button-startAdapter');
 
         dialogRef.afterClosed().subscribe(result => {
             this.updateAdapterEmitter.emit();
@@ -234,12 +234,12 @@ export class NewAdapterComponent implements OnInit {
     }
 
     clickProtocolSettingsNextButton(stepper: MatStepper) {
-        this.ShepherdService.trigger("specific-settings-next-button");
+        this.ShepherdService.trigger('specific-settings-next-button');
         this.goForward(stepper);
     }
 
     clickSpecificSettingsNextButton(stepper: MatStepper) {
-        this.ShepherdService.trigger("specific-settings-next-button");
+        this.ShepherdService.trigger('specific-settings-next-button');
         this.guessEventSchema();
         this.goForward(stepper);
     }
@@ -250,12 +250,12 @@ export class NewAdapterComponent implements OnInit {
         }
 
         // Auto selection of timestamp field for datalake
-        this.timestampPropertiesInSchema = this.timestampPipe.transform(this.eventSchema.eventProperties, "");
+        this.timestampPropertiesInSchema = this.timestampPipe.transform(this.eventSchema.eventProperties, '');
         if (this.timestampPropertiesInSchema.length > 0) {
             this.dataLakeTimestampField = this.timestampPropertiesInSchema[0].runtimeName;
         }
 
-        this.ShepherdService.trigger("event-schema-next-button");
+        this.ShepherdService.trigger('event-schema-next-button');
         this.goForward(stepper);
 
         if (this.adapter instanceof GenericAdapterSetDescription || this.adapter instanceof SpecificAdapterSetDescription) {
@@ -265,14 +265,14 @@ export class NewAdapterComponent implements OnInit {
     }
 
     clickFormatSelectionNextButton(stepper: MatStepper) {
-        this.ShepherdService.trigger("format-selection-next-button");
+        this.ShepherdService.trigger('format-selection-next-button');
         this.guessEventSchema();
         this.goForward(stepper);
     }
 
     guessEventSchema() {
-        var eventSchema: EventSchema = this.getEventSchema(this.adapter);
-        if (eventSchema.eventProperties.length == 0) {
+        const eventSchema: EventSchema = this.getEventSchema(this.adapter);
+        if (eventSchema.eventProperties.length === 0) {
             this.eventSchemaComponent.guessSchema();
         } else {
             this.oldEventSchema = eventSchema;
@@ -280,16 +280,16 @@ export class NewAdapterComponent implements OnInit {
     }
 
     getEventSchema(adapter: AdapterDescription): EventSchema {
-        var eventSchema: EventSchema;
+        let eventSchema: EventSchema;
 
-        if (adapter.constructor.name == 'GenericAdapterSetDescription') {
-            eventSchema = (<GenericAdapterSetDescription>adapter).dataSet.eventSchema;
-        } else if (adapter.constructor.name == 'SpecificAdapterSetDescription') {
-            eventSchema = (<SpecificAdapterSetDescription>adapter).dataSet.eventSchema;
-        } else if (adapter.constructor.name == 'GenericAdapterStreamDescription') {
-            eventSchema = (<GenericAdapterStreamDescription>adapter).dataStream.eventSchema;
-        } else if (adapter.constructor.name == 'SpecificAdapterStreamDescription') {
-            eventSchema = (<SpecificAdapterStreamDescription>adapter).dataStream.eventSchema;
+        if (adapter.constructor.name === 'GenericAdapterSetDescription') {
+            eventSchema = (adapter as GenericAdapterSetDescription).dataSet.eventSchema;
+        } else if (adapter.constructor.name === 'SpecificAdapterSetDescription') {
+            eventSchema = (adapter as SpecificAdapterSetDescription).dataSet.eventSchema;
+        } else if (adapter.constructor.name === 'GenericAdapterStreamDescription') {
+            eventSchema = (adapter as GenericAdapterStreamDescription).dataStream.eventSchema;
+        } else if (adapter.constructor.name === 'SpecificAdapterStreamDescription') {
+            eventSchema = (adapter as SpecificAdapterStreamDescription).dataStream.eventSchema;
         } else {
             return new EventSchema();
         }
@@ -303,14 +303,14 @@ export class NewAdapterComponent implements OnInit {
 
     public setSchema() {
 
-        if (this.adapter.constructor.name == 'GenericAdapterSetDescription') {
-            (<GenericAdapterSetDescription>this.adapter).dataSet.eventSchema = this.eventSchema;
-        } else if (this.adapter.constructor.name == 'SpecificAdapterSetDescription') {
-            (<SpecificAdapterSetDescription>this.adapter).dataSet.eventSchema = this.eventSchema;
-        } else if (this.adapter.constructor.name == 'GenericAdapterStreamDescription') {
-            (<GenericAdapterStreamDescription>this.adapter).dataStream.eventSchema = this.eventSchema;
-        } else if (this.adapter.constructor.name == 'SpecificAdapterStreamDescription') {
-            (<SpecificAdapterStreamDescription>this.adapter).dataStream.eventSchema = this.eventSchema;
+        if (this.adapter.constructor.name === 'GenericAdapterSetDescription') {
+            (this.adapter as GenericAdapterSetDescription).dataSet.eventSchema = this.eventSchema;
+        } else if (this.adapter.constructor.name === 'SpecificAdapterSetDescription') {
+            (this.adapter as SpecificAdapterSetDescription).dataSet.eventSchema = this.eventSchema;
+        } else if (this.adapter.constructor.name === 'GenericAdapterStreamDescription') {
+            (this.adapter as GenericAdapterStreamDescription).dataStream.eventSchema = this.eventSchema;
+        } else if (this.adapter.constructor.name === 'SpecificAdapterStreamDescription') {
+            (this.adapter as SpecificAdapterStreamDescription).dataStream.eventSchema = this.eventSchema;
         }
 
 
@@ -327,7 +327,7 @@ export class NewAdapterComponent implements OnInit {
             this.adapter instanceof GenericAdapterStreamDescription
         ) {
             this.adapter.format = selectedFormat;
-            if (selectedFormat.config.length == 0) {
+            if (selectedFormat.config.length === 0) {
                 this.validateFormat(true);
             }
         }
@@ -341,6 +341,6 @@ export class NewAdapterComponent implements OnInit {
     }
 
     triggerUpdate(configurationInfo: ConfigurationInfo) {
-        this.completedStaticProperty = Object.assign({}, configurationInfo);
+        this.completedStaticProperty = {...configurationInfo};
     }
 }
