@@ -19,7 +19,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { Dashboard } from '../../dashboard-v2/models/dashboard.model';
+import { Dashboard } from '../../dashboard/models/dashboard.model';
 import { AuthStatusService } from '../../services/auth-status.service';
 
 @Injectable()

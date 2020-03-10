@@ -29,12 +29,23 @@ import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
 export class LineChartWidgetComponent extends BaseDataExplorerWidget implements OnInit {
 
   data: any[] = undefined;
-  availableColumns: string[] = ['time', 'count', 'randomText', 'randomNumber', 'timestamp'];
-  yKeys: string[] = ['time', 'count', 'randomText', 'randomNumber', 'timestamp'];
-  xKey = 'time';
+  availableColumns: string[] = [];
+  yKeys: string[] = [];
+  xKey = 'timestamp';
 
   constructor(private dataLakeRestService: DatalakeRestService) {
     super();
+  }
+
+
+  ngOnInit(): void {
+
+    this.availableColumns = this.getPropertyKeys(this.dataExplorerWidget.dataLakeMeasure.eventSchema);
+
+    // Reduce selected columns when more then 6
+    this.yKeys = this.availableColumns.length > 6 ? this.availableColumns.slice(0, 5) : this.availableColumns;
+
+    this.updateData();
   }
 
 
@@ -88,9 +99,6 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
   };
 
 
-  ngOnInit(): void {
-    this.updateData();
-  }
 
   updateData() {
 

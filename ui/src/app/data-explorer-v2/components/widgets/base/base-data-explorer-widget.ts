@@ -21,6 +21,8 @@ import { GridsterItem, GridsterItemComponent } from 'angular-gridster2';
 import { DataExplorerWidgetModel } from '../../../../core-model/datalake/DataExplorerWidgetModel';
 import { DateRange } from '../../../../core-model/datalake/DateRange';
 import { IDataViewDashboardItem } from '../../../models/dataview-dashboard.model';
+import { EventSchema } from '../../../../connect/schema-editor/model/EventSchema';
+import { EventPropertyPrimitive } from '../../../../connect/schema-editor/model/EventPropertyPrimitive';
 
 export abstract class BaseDataExplorerWidget implements OnChanges {
 
@@ -64,5 +66,22 @@ export abstract class BaseDataExplorerWidget implements OnChanges {
   }
 
   public abstract updateData();
+
+  // TODO add static properties that are ignored
+  getPropertyKeys(eventSchema: EventSchema, except: string[] = []) {
+    const propertyKeys: string[] = [];
+
+    // eventSchema.eventProperties.forEach(p => {
+    //   if (except.p.domainProperty)
+    //   propertyKeys.push(p.getRuntimeName());
+    // });
+
+    return propertyKeys;
+  }
+
+  // TODO add get a specific property
+  getPropertyKeysOfStaticProperty(eventSchema) {
+
+  }
 
 }
