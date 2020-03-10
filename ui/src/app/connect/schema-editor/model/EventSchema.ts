@@ -16,11 +16,11 @@
  *
  */
 
-import {EventProperty} from './EventProperty';
-import {Injectable} from '@angular/core';
-import {RdfsClass} from '../../../platform-services/tsonld/RdfsClass';
-import {RdfProperty} from '../../../platform-services/tsonld/RdfsProperty';
-import {RdfId} from '../../../platform-services/tsonld/RdfId';
+import { Injectable } from '@angular/core';
+import { RdfId } from '../../../platform-services/tsonld/RdfId';
+import { RdfsClass } from '../../../platform-services/tsonld/RdfsClass';
+import { RdfProperty } from '../../../platform-services/tsonld/RdfsProperty';
+import { EventProperty } from './EventProperty';
 
 @Injectable()
 @RdfsClass('sp:EventSchema')
@@ -32,7 +32,7 @@ export class EventSchema {
     public id: string;
 
     @RdfProperty('sp:hasEventProperty')
-    public eventProperties: Array<EventProperty>;
+    public eventProperties: EventProperty[];
 
 
     constructor () {
@@ -42,7 +42,7 @@ export class EventSchema {
     public copy(): EventSchema {
         const newEventSchema = new EventSchema();
 
-        for (let ep of this.eventProperties) {
+        for (const ep of this.eventProperties) {
             newEventSchema.eventProperties.push(ep.copy());
         }
 

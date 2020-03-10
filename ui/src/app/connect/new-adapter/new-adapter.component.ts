@@ -282,13 +282,13 @@ export class NewAdapterComponent implements OnInit {
     getEventSchema(adapter: AdapterDescription): EventSchema {
         let eventSchema: EventSchema;
 
-        if (adapter.constructor.name === 'GenericAdapterSetDescription') {
+        if (adapter instanceof GenericAdapterSetDescription) {
             eventSchema = (adapter as GenericAdapterSetDescription).dataSet.eventSchema;
-        } else if (adapter.constructor.name === 'SpecificAdapterSetDescription') {
+        } else if (adapter instanceof SpecificAdapterSetDescription) {
             eventSchema = (adapter as SpecificAdapterSetDescription).dataSet.eventSchema;
-        } else if (adapter.constructor.name === 'GenericAdapterStreamDescription') {
+        } else if (adapter instanceof GenericAdapterStreamDescription) {
             eventSchema = (adapter as GenericAdapterStreamDescription).dataStream.eventSchema;
-        } else if (adapter.constructor.name === 'SpecificAdapterStreamDescription') {
+        } else if (adapter instanceof SpecificAdapterStreamDescription) {
             eventSchema = (adapter as SpecificAdapterStreamDescription).dataStream.eventSchema;
         } else {
             return new EventSchema();
@@ -303,14 +303,16 @@ export class NewAdapterComponent implements OnInit {
 
     public setSchema() {
 
-        if (this.adapter.constructor.name === 'GenericAdapterSetDescription') {
+        if (this.adapter instanceof  GenericAdapterSetDescription) {
             (this.adapter as GenericAdapterSetDescription).dataSet.eventSchema = this.eventSchema;
-        } else if (this.adapter.constructor.name === 'SpecificAdapterSetDescription') {
+        } else if (this.adapter instanceof SpecificAdapterSetDescription) {
             (this.adapter as SpecificAdapterSetDescription).dataSet.eventSchema = this.eventSchema;
-        } else if (this.adapter.constructor.name === 'GenericAdapterStreamDescription') {
+        } else if (this.adapter instanceof GenericAdapterStreamDescription) {
             (this.adapter as GenericAdapterStreamDescription).dataStream.eventSchema = this.eventSchema;
-        } else if (this.adapter.constructor.name === 'SpecificAdapterStreamDescription') {
+        } else if (this.adapter instanceof SpecificAdapterStreamDescription) {
             (this.adapter as SpecificAdapterStreamDescription).dataStream.eventSchema = this.eventSchema;
+        } else {
+            console.log('Error: Adapter type is unknown');
         }
 
 
