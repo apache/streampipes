@@ -1,0 +1,5 @@
+org.apache.streampipes.connect.adapters.iss.title=ISS Location
+org.apache.streampipes.connect.adapters.iss.description=Current Location of the International Space Station (ISS)
+
+polling-interval.title=Polling interval
+polling-interval.description=The update interval in seconds

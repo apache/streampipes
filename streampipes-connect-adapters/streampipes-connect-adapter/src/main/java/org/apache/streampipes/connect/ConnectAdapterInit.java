@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.connect;
 
+import org.apache.streampipes.connect.adapters.iss.IssAdapter;
 import org.apache.streampipes.connect.adapters.netio.NetioMQTTAdapter;
 import org.apache.streampipes.connect.adapters.netio.NetioRestAdapter;
 import org.apache.streampipes.connect.adapters.ti.TISensorTag;
@@ -84,7 +85,8 @@ public class ConnectAdapterInit extends AdapterWorkerContainer {
             .add(new TISensorTag())
             .add(new NetioRestAdapter())
             .add(new NetioMQTTAdapter())
-            .add(new Plc4xS7Adapter());
+            .add(new Plc4xS7Adapter())
+            .add(new IssAdapter());
 
     String workerUrl = ConnectWorkerConfig.INSTANCE.getConnectContainerWorkerUrl();
     String masterUrl = ConnectWorkerConfig.INSTANCE.getConnectContainerMasterUrl();
