@@ -71,8 +71,7 @@ public class IssAdapter extends PullAdapter {
 
     @Override
     protected void before() throws AdapterException {
-        ParameterExtractor extractor = new ParameterExtractor(adapterDescription.getConfig());
-        this.pollingIntervalInSeconds = extractor.singleValue(POLLING_INTERVAL_KEY, Integer.class);
+        this.pollingIntervalInSeconds = 5;
     }
 
     @Override
@@ -116,7 +115,6 @@ public class IssAdapter extends PullAdapter {
                 .withLocales(Locales.EN)
                 .withAssets(Assets.DOCUMENTATION)
                 .category(AdapterType.OpenData)
-                .requiredIntegerParameter(Labels.withId(POLLING_INTERVAL_KEY), 2)
                 .build();
         description.setAppId(ID);
 
