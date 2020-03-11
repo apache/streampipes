@@ -31,7 +31,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
   data: any[] = undefined;
   availableColumns: string[] = [];
   yKeys: string[] = [];
-  xKey = 'timestamp';
+  xKey: string;
 
   constructor(private dataLakeRestService: DatalakeRestService) {
     super();
@@ -40,7 +40,8 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
 
   ngOnInit(): void {
 
-    this.availableColumns = this.getPropertyKeys(this.dataExplorerWidget.dataLakeMeasure.eventSchema);
+    this.availableColumns = this.getNumericPropertyKeys(this.dataExplorerWidget.dataLakeMeasure.eventSchema);
+    this.xKey = this.getTimestampPropertyKey(this.dataExplorerWidget.dataLakeMeasure.eventSchema);
 
     // Reduce selected columns when more then 6
     this.yKeys = this.availableColumns.length > 6 ? this.availableColumns.slice(0, 5) : this.availableColumns;

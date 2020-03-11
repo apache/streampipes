@@ -45,7 +45,7 @@ export class TableWidgetComponent extends BaseDataExplorerWidget implements OnIn
 
   ngOnInit(): void {
     this.dataSource.sort = this.sort;
-    this.availableColumns = this.getPropertyKeys(this.dataExplorerWidget.dataLakeMeasure.eventSchema);
+    this.availableColumns = this.getValuePropertyKeys(this.dataExplorerWidget.dataLakeMeasure.eventSchema);
 
     // Reduce selected columns when more then 6
     this.selectedColumns = this.availableColumns.length > 6 ? this.availableColumns.slice(0, 5) : this.availableColumns;

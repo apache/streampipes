@@ -23,6 +23,7 @@ import { DateRange } from '../../../../core-model/datalake/DateRange';
 import { IDataViewDashboardItem } from '../../../models/dataview-dashboard.model';
 import { EventSchema } from '../../../../connect/schema-editor/model/EventSchema';
 import { EventPropertyPrimitive } from '../../../../connect/schema-editor/model/EventPropertyPrimitive';
+import { EventPropertyComponent } from '../../../../connect/schema-editor/event-property/event-property.component';
 
 export abstract class BaseDataExplorerWidget implements OnChanges {
 
@@ -67,17 +68,48 @@ export abstract class BaseDataExplorerWidget implements OnChanges {
 
   public abstract updateData();
 
-  // TODO add static properties that are ignored
-  getPropertyKeys(eventSchema: EventSchema, except: string[] = []) {
+  getValuePropertyKeys(eventSchema: EventSchema) {
     const propertyKeys: string[] = [];
 
-    // eventSchema.eventProperties.forEach(p => {
-    //   if (except.p.domainProperty)
-    //   propertyKeys.push(p.getRuntimeName());
-    // });
+    eventSchema.eventProperties.forEach(p => {
+      if (p.domainProperty !== 'http://schema.org/DateTime') {
+        propertyKeys.push(p.getRuntimeName());
+      }
+    });
 
     return propertyKeys;
   }
+
+  getNumericPropertyKeys(eventSchema: EventSchema) {
+    const propertyKeys: string[] = [];
+
+    eventSchema.eventProperties.forEach(p => {
+      if (p.domainProperty !== 'http://schema.org/DateTime' && this.isNumber(p)) {
+        propertyKeys.push(p.getRuntimeName());
+      }
+    });
+
+    return propertyKeys;
+  }
+
+  getTimestampPropertyKey(eventSchema: EventSchema) {
+    const propertyKeys: string[] = [];
+
+    const result = eventSchema.eventProperties.find(p =>
+      p.domainProperty === 'http://schema.org/DateTime'
+    );
+
+    return result.getRuntimeName();
+  }
+
+  isNumber(p: EventProperty): boolean {
+    return (p instanceof EventPropertyPrimitive &&
+      (p.runtimeType === 'http://www.w3.org/2001/XMLSchema#number') ||
+      (p.runtimeType === 'http://www.w3.org/2001/XMLSchema#float') ||
+    (p.runtimeType === 'http://www.w3.org/2001/XMLSchema#double') ||
+    (p.runtimeType === 'http://www.w3.org/2001/XMLSchema#integer'))
+      ? true : false;
+}
 
   // TODO add get a specific property
   getPropertyKeysOfStaticProperty(eventSchema) {
