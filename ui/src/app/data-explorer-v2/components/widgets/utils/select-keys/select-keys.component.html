@@ -1,0 +1,8 @@
+<mat-form-field appearance="outline">
+    <mat-label>Select Columns</mat-label>
+    <mat-select [ngModel]="this.selectedKeys" (selectionChange)="triggerSelectedKeys($event.value)" multiple>
+        <mat-option *ngFor="let column of availableKeys" [value]="column" style="background-color: #FFFFFF">
+            {{column}}
+        </mat-option>
+    </mat-select>
+</mat-form-field>

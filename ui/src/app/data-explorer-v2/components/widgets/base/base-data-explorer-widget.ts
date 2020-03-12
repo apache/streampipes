@@ -24,6 +24,7 @@ import { IDataViewDashboardItem } from '../../../models/dataview-dashboard.model
 import { EventSchema } from '../../../../connect/schema-editor/model/EventSchema';
 import { EventPropertyPrimitive } from '../../../../connect/schema-editor/model/EventPropertyPrimitive';
 import { EventPropertyComponent } from '../../../../connect/schema-editor/event-property/event-property.component';
+import { EventProperty } from '../../../../connect/schema-editor/model/EventProperty';
 
 export abstract class BaseDataExplorerWidget implements OnChanges {
 
@@ -104,10 +105,10 @@ export abstract class BaseDataExplorerWidget implements OnChanges {
 
   isNumber(p: EventProperty): boolean {
     return (p instanceof EventPropertyPrimitive &&
-      (p.runtimeType === 'http://www.w3.org/2001/XMLSchema#number') ||
-      (p.runtimeType === 'http://www.w3.org/2001/XMLSchema#float') ||
-    (p.runtimeType === 'http://www.w3.org/2001/XMLSchema#double') ||
-    (p.runtimeType === 'http://www.w3.org/2001/XMLSchema#integer'))
+      ((p as EventPropertyPrimitive).runtimeType === 'http://www.w3.org/2001/XMLSchema#number') ||
+      (p as EventPropertyPrimitive).runtimeType === 'http://www.w3.org/2001/XMLSchema#float') ||
+      ((p as EventPropertyPrimitive).runtimeType === 'http://www.w3.org/2001/XMLSchema#double') ||
+    ((p as EventPropertyPrimitive).runtimeType === 'http://www.w3.org/2001/XMLSchema#integer')
       ? true : false;
 }
 

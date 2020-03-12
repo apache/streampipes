@@ -56,6 +56,7 @@ import { DataLakeService } from './services/data-lake.service';
 import { DataViewDataExplorerService } from './services/data-view-data-explorer.service';
 import { RefreshDashboardService } from './services/refresh-dashboard.service';
 import { ResizeService } from './services/resize.service';
+import { SelectKeysComponent } from './components/widgets/utils/select-keys/select-keys.component';
 
 const dashboardWidgets = [
 
@@ -111,7 +112,8 @@ export const MY_NATIVE_FORMATS = {
     TimeRangeSelectorComponent,
     OldExplorerComponent,
     NoDataInDateRangeComponent,
-    LoadDataSpinnerComponent
+    LoadDataSpinnerComponent,
+    SelectKeysComponent
   ],
   providers: [
     SharedDatalakeRestService,

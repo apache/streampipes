@@ -19,14 +19,7 @@
 <div fxLayout="column" fxLayoutAlign="stretch">
     <div class="assemblyOptions sp-blue-bg m-0 row header h-40" style="margin-left: 0px;margin-right: 0px;">
         <div fxFlex="100" layout="row" fxLayoutAlign="end center" style="margin-left: 0px;margin-right: 0px;">
-            <mat-form-field appearance="outline">
-                <mat-label>Select Columns</mat-label>
-                <mat-select [ngModel]="this.yKeys" (selectionChange)="setSelectedColumn($event.value)" multiple>
-                    <mat-option *ngFor="let column of availableColumns" [value]="column" style="background-color: #FFFFFF">
-                        {{column}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
+            <sp-select-keys (changeSelectedKeys)="setSelectedColumn($event)" [availableKeys]="availableColumns" [selectedKeys]="yKeys"></sp-select-keys>
             <button mat-button mat-icon-button color="white" (click)="removeWidget()">
                 <i class="material-icons">clear</i>
             </button>
