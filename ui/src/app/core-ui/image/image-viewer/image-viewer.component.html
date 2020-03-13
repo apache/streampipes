@@ -16,21 +16,24 @@
   ~
   -->
 
-<div flex class="page-container page-container-padding" style="height: 1px">
-    <div flex="100" layout="column" style="padding:0px;background-color:#f6f6f6; display: inline-block; width: 100%;" >
-        <div flex layout-fill layout="row" layout-align="start center"
-             style="height:48px;padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
-            <label style="font-size: 30px; padding-top: 10px;">Data Explorer</label>
+<div>
+    <div fxLayout="column" fxLayoutAlign="space-between " >
+        <div  fxLayout="row" fxLayoutAlign="space-around start">
+            <div fxLayout="column" fxLayoutAlign="space-between " >
+                <sp-image-container
+                        [imageSrc]="imagesSrcs[imagesIndex]">
+                </sp-image-container>
+            </div>
         </div>
-    </div>
-
-    <div class="container-fluid">
-        <!--<sp-image-labeler></sp-image-labeler>-->
-        <sp-image></sp-image>
-
-
-
-
-        <!--    <sp-explorer></sp-explorer> -->
+        <br />
+        <br />
+        <sp-image-bar style="width: 100%"
+                      [imagesSrcs]="imagesSrcs"
+                      [selectedIndex]="imagesIndex"
+                      [enableShortCuts]="true"
+                      (indexChange)="handleImageIndexChange($event)"
+                      (pageUp)="handleImagePageUp($event)"
+                      (pageDown)="handleImagePageDown($event)">
+        </sp-image-bar>
     </div>
 </div>

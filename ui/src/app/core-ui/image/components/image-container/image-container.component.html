@@ -15,22 +15,6 @@
   ~ limitations under the License.
   ~
   -->
-
-<div flex class="page-container page-container-padding" style="height: 1px">
-    <div flex="100" layout="column" style="padding:0px;background-color:#f6f6f6; display: inline-block; width: 100%;" >
-        <div flex layout-fill layout="row" layout-align="start center"
-             style="height:48px;padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
-            <label style="font-size: 30px; padding-top: 10px;">Data Explorer</label>
-        </div>
-    </div>
-
-    <div class="container-fluid">
-        <!--<sp-image-labeler></sp-image-labeler>-->
-        <sp-image></sp-image>
-
-
-
-
-        <!--    <sp-explorer></sp-explorer> -->
-    </div>
+<div class="canvas-container">
+    <div id="canvas-container"  (dblclick)="dblclick($event)"></div>
 </div>

@@ -16,26 +16,35 @@
  *
  */
 
-import {NgModule} from '@angular/core';
-import {FlexLayoutModule} from '@angular/flex-layout';
-import {CommonModule} from '@angular/common';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
-import {CustomMaterialModule} from '../CustomMaterial/custom-material.module';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {CdkTableModule} from '@angular/cdk/table';
+import { CdkTableModule } from '@angular/cdk/table';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import {TableComponent} from './table/table.component';
-import {LineChartComponent} from './linechart/lineChart.component';
+import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
+import { LineChartComponent } from './linechart/lineChart.component';
+import { TableComponent } from './table/table.component';
 
-//import * as PlotlyJS from 'plotly.js/dist/plotly.js';
+// import * as PlotlyJS from 'plotly.js/dist/plotly.js';
 import { PlotlyViaWindowModule } from 'angular-plotly.js';
-import { ImageLabelerComponent } from "./imageLabeler/imageLabeler.component";
-import { ImageAnnotation } from "./imageLabeler/annotation/imageAnnotation";
-import { ImageClassification } from "./imageLabeler/classification/imageClassification";
-//PlotlyViaCDNModule.plotlyjs = PlotlyJS;
+import { ImageAnnotationsComponent } from './image/components/image-annotations/image-annotations.component';
+import { ImageBarComponent } from './image/components/image-bar/image-bar.component';
+import { ImageContainerComponent } from './image/components/image-container/image-container.component';
+import { ImageLabelsComponent } from './image/components/image-labels/image-labels.component';
+import { ImageCategorizeComponent } from './image/image-categorize/image-categorize.component';
+import { ImageLabelingComponent } from './image/image-labeling/image-labeling.component';
+import { ImageComponent } from './image/image.component';
+import { BrushLabelingService } from './image/services/BrushLabeling.service';
+import { ColorService } from './image/services/color.service';
+import { PolygonLabelingService } from './image/services/PolygonLabeling.service';
+import { ReactLabelingService } from './image/services/ReactLabeling.service';
+import { ImageViewerComponent } from './image/image-viewer/image-viewer.component';
+// PlotlyViaCDNModule.plotlyjs = PlotlyJS;
 
 @NgModule({
     imports: [
@@ -54,19 +63,29 @@ import { ImageClassification } from "./imageLabeler/classification/imageClassifi
     declarations: [
         TableComponent,
         LineChartComponent,
-        ImageLabelerComponent,
+        ImageComponent,
+        ImageContainerComponent,
+        ImageLabelingComponent,
+        ImageLabelsComponent,
+        ImageBarComponent,
+        ImageAnnotationsComponent,
+        ImageCategorizeComponent,
+        ImageViewerComponent,
     ],
     providers: [
         MatDatepickerModule,
-        ImageAnnotation,
-        ImageClassification
+        ColorService,
+        ReactLabelingService,
+        PolygonLabelingService,
+        BrushLabelingService,
     ],
     entryComponents: [
     ],
     exports: [
         TableComponent,
         LineChartComponent,
-        ImageLabelerComponent,
+        ImageComponent,
+        ImageLabelingComponent,
     ]
 })
 export class CoreUiModule {

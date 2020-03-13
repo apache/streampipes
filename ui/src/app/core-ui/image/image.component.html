@@ -16,21 +16,13 @@
   ~
   -->
 
-<div flex class="page-container page-container-padding" style="height: 1px">
-    <div flex="100" layout="column" style="padding:0px;background-color:#f6f6f6; display: inline-block; width: 100%;" >
-        <div flex layout-fill layout="row" layout-align="start center"
-             style="height:48px;padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
-            <label style="font-size: 30px; padding-top: 10px;">Data Explorer</label>
-        </div>
-    </div>
-
-    <div class="container-fluid">
-        <!--<sp-image-labeler></sp-image-labeler>-->
-        <sp-image></sp-image>
+<mat-button-toggle-group name="fontStyle" aria-label="Font Style" #group="matButtonToggleGroup" value="view">
+    <mat-button-toggle value="view">Viewer</mat-button-toggle>
+    <mat-button-toggle value="label">Label</mat-button-toggle>
+    <mat-button-toggle value="categorize">Categorize</mat-button-toggle>
+</mat-button-toggle-group>
 
 
-
-
-        <!--    <sp-explorer></sp-explorer> -->
-    </div>
-</div>
+<sp-image-viewer *ngIf="group.value === 'view'"></sp-image-viewer>
+<sp-image-labeling *ngIf="group.value === 'label'"></sp-image-labeling>
+<sp-image-categorize *ngIf="group.value === 'categorize'"></sp-image-categorize>

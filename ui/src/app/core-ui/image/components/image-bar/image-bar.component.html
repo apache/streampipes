@@ -16,21 +16,17 @@
   ~
   -->
 
-<div flex class="page-container page-container-padding" style="height: 1px">
-    <div flex="100" layout="column" style="padding:0px;background-color:#f6f6f6; display: inline-block; width: 100%;" >
-        <div flex layout-fill layout="row" layout-align="start center"
-             style="height:48px;padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
-            <label style="font-size: 30px; padding-top: 10px;">Data Explorer</label>
-        </div>
+<div fxLayout="row" fxLayoutAlign="space-around center" >
+    <button mat-icon-button (click)="previousPage()"> <mat-icon>skip_previous</mat-icon></button>
+    <button mat-icon-button (click)="previousImage()"> <mat-icon>keyboard_arrow_left</mat-icon></button>
+
+    <div fxLayout="row" fxLayoutAlign="center " class="imageBar">
+        <img *ngFor="let src of imagesSrcs; let i = index" src="{{src}}" (click)="changeImage(i)"
+             [style.border]="i == selectedIndex ? '5px solid #39b54a' : 'none'" style="height: 65px">
     </div>
 
-    <div class="container-fluid">
-        <!--<sp-image-labeler></sp-image-labeler>-->
-        <sp-image></sp-image>
 
+    <button mat-icon-button (click)="nextImage()"> <mat-icon>keyboard_arrow_right</mat-icon></button>
+    <button mat-icon-button (click)="nextPage()"> <mat-icon>skip_next</mat-icon></button>
 
-
-
-        <!--    <sp-explorer></sp-explorer> -->
-    </div>
 </div>

@@ -14,28 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export class ImageTranslationUtil {
 
-  private static lastImageTranslationX = 0;
-  private static lastImageTranslationY = 0;
-  private static lastMouseX = 0;
-  private static lastMouseY = 0;
+import { Injectable } from '@angular/core';
 
-  static mouseDown(mousePos, imageTranslationX, imageTranslationY) {
-    this.lastMouseX = mousePos[0];
-    this.lastMouseY = mousePos[1];
-    this.lastImageTranslationX = imageTranslationX;
-    this.lastImageTranslationY = imageTranslationY;
+@Injectable()
+export class ColorService {
+
+   getColor(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    let colour = '#';
+    for (let i = 0; i < 3; i++) {
+      const value = (hash >> (i * 8)) & 0xFF;
+      colour += ('00' + value.toString(16)).substr(-2);
+    }
+    return colour;
   }
-
-  static mouseMove(mousePos): [number, number] {
-    let mouseX = mousePos[0];
-    let mouseY = mousePos[1];
-    return [
-      this.lastImageTranslationX + (mouseX - this.lastMouseX)  ,
-      this.lastImageTranslationY + (mouseY- this.lastMouseY  )
-    ]
-  }
-
 
 }
