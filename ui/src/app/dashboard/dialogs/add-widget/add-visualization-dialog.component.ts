@@ -30,6 +30,7 @@ import {DashboardWidgetSettings} from "../../../core-model/dashboard/DashboardWi
 import {VisualizablePipeline} from "../../../core-model/dashboard/VisualizablePipeline";
 import {Dashboard} from "../../models/dashboard.model";
 import {MappingPropertyNary} from "../../../connect/model/MappingPropertyNary";
+import {ConfigurationInfo} from "../../../connect/model/message/ConfigurationInfo";
 
 @Component({
     selector: 'add-visualization-dialog-component',
@@ -64,6 +65,8 @@ export class AddVisualizationDialogComponent {
     page: any = "select-pipeline";
     dialogTitle: string;
 
+    configValid: boolean;
+
 
     constructor(
         public dialogRef: MatDialogRef<AddVisualizationDialogComponent>,
@@ -84,11 +87,6 @@ export class AddVisualizationDialogComponent {
                         this.sortPipeline();
                     });
                 })
-            });
-
-            this.availableWidgets = WidgetRegistry.getAvailableWidgetTemplates()
-            this.availableWidgets.sort((a, b) => {
-                return a.widgetLabel < b.widgetLabel ? -1 : 1;
             });
         } else {
             this.dialogTitle = "Edit widget";
@@ -151,6 +149,10 @@ export class AddVisualizationDialogComponent {
 
     next() {
         if (this.page == 'select-pipeline') {
+            this.availableWidgets = WidgetRegistry.getCompatibleWidgetTemplates(this.selectedPipeline);
+            this.availableWidgets.sort((a, b) => {
+                return a.widgetLabel < b.widgetLabel ? -1 : 1;
+            });
             this.page = 'select-widget';
         } else if (this.page == 'select-widget') {
             this.page = 'configure-widget';
@@ -182,6 +184,12 @@ export class AddVisualizationDialogComponent {
 
     iconText(s) {
         return this.elementIconText.getElementIconText(s);
+    }
+
+    validConfiguration(valid: boolean) {
+        setTimeout(() => {
+            this.configValid = this.selectedWidget.config.every(sp => sp.isValid);
+        });
     }
 
 }

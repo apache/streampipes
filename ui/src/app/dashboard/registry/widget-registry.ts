@@ -28,6 +28,9 @@ import {MapConfig} from "../components/widgets/map/map-config";
 import {RawConfig} from "../components/widgets/raw/raw-config";
 import {HtmlConfig} from "../components/widgets/html/html-config";
 import {TrafficLightConfig} from "../components/widgets/trafficlight/traffic-light-config";
+import {VisualizablePipeline} from "../../core-model/dashboard/VisualizablePipeline";
+import {EventSchema} from "../../connect/schema-editor/model/EventSchema";
+import {SchemaMatch} from "../sdk/matching/schema-match";
 
 export class WidgetRegistry {
 
@@ -48,5 +51,14 @@ export class WidgetRegistry {
         let widgetTemplates = new Array<DashboardWidgetSettings>();
         this.availableWidgets.forEach(widget => widgetTemplates.push(widget.getConfig()));
         return widgetTemplates;
+    }
+
+    static getCompatibleWidgetTemplates(pipeline: VisualizablePipeline) {
+        let inputSchema: EventSchema = pipeline.schema;
+        return this.getAvailableWidgetTemplates().filter(widget => WidgetRegistry.isCompatible(widget, inputSchema));
+    }
+
+    static isCompatible(widget: DashboardWidgetSettings, inputSchema: EventSchema) {
+        return new SchemaMatch().match(widget.requiredSchema, inputSchema);
     }
 }

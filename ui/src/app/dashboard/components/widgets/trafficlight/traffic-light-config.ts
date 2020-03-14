@@ -42,9 +42,9 @@ export class TrafficLightConfig extends WidgetConfig {
                 .requiredPropertyWithUnaryMapping(TrafficLightConfig.NUMBER_MAPPING_KEY, "Field to observe", "", EpRequirements.numberReq())
                 .build())
             .requiredIntegerParameter(TrafficLightConfig.CRITICAL_VALUE_KEY, "Threshold", "")
-            .requiredSingleValueSelection(TrafficLightConfig.CRITICAL_VALUE_LIMIT, "Operator", "", ["Upper Limit", "Under Limit"])
+            .requiredSingleValueSelection(TrafficLightConfig.CRITICAL_VALUE_LIMIT, "Operator", "", [this.makeOption("Upper" +
+            " Limit"), this.makeOption("Under Limit")])
             .requiredIntegerParameter(TrafficLightConfig.WARNING_RANGE_KEY, "Warning range (percent)", "")
             .build();
     }
-
 }
