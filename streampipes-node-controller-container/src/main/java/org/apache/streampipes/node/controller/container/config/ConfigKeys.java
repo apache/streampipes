@@ -33,4 +33,5 @@ public class ConfigKeys {
     final static String NODE_INTERFACES_KEY = "SP_NODE_INTERFACES";
     final static String NODE_HAS_NVIDIA_DOCKER_RUNTIME_KEY = "SP_NODE_HAS_NVIDIA_DOCKER_RUNTIME";
     final static String NODE_SUPPORTED_PE_APP_ID_LIST_KEY = "SP_NODE_SUPPORTED_PE_APP_ID_LIST";
+    final static String NODE_DOCKER_PRUNING_FREQ_KEY = "SP_NODE_PRUNING_FREQ";
 }

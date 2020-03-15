@@ -19,6 +19,13 @@ FROM $BASE_IMAGE
 EXPOSE 7077
 ENV CONSUL_LOCATION consul
 
+# Comment:
+# curl needed to talk to docker.sock for NodeJanitorManager
+# to prune images (docker-spotify does not support pruning)
+RUN set -x; \
+    apk --update add curl; \
+    rm -rf /var/cache/apk/*
+
 COPY target/streampipes-node-controller-container.jar  /streampipes-node-controller.jar
 
 ENTRYPOINT ["java", "-jar", "/streampipes-node-controller.jar"]

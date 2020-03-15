@@ -20,6 +20,7 @@ package org.apache.streampipes.node.controller.container.init;
 import org.apache.streampipes.container.util.ConsulUtil;
 import org.apache.streampipes.node.controller.container.config.NodeControllerConfig;
 import org.apache.streampipes.node.controller.container.config.NodeInfoStorage;
+import org.apache.streampipes.node.controller.container.management.node.NodeJanitorManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -47,6 +48,9 @@ public class NodeControllerContainer {
 
         LOG.info("Load static node system information");
         NodeInfoStorage.init();
+
+        LOG.info("Start Node Janitor manager");
+        NodeJanitorManager.getInstance().run();
 
         // registration with consul here
         ConsulUtil.registerNodeControllerService(

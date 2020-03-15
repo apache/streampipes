@@ -17,20 +17,6 @@ package org.apache.streampipes.node.controller.container.config;/*
  */
 
 import org.apache.streampipes.config.SpConfig;
-import org.apache.streampipes.model.node.NodeInfo;
-import org.apache.streampipes.model.node.NodeInfoBuilder;
-import org.apache.streampipes.model.node.capabilities.hardware.Hardware;
-import org.apache.streampipes.model.node.capabilities.hardware.resources.CPU;
-import org.apache.streampipes.model.node.capabilities.hardware.resources.DISK;
-import org.apache.streampipes.model.node.capabilities.hardware.resources.GPU;
-import org.apache.streampipes.model.node.capabilities.hardware.resources.MEM;
-import org.apache.streampipes.model.node.capabilities.interfaces.Interfaces;
-import org.apache.streampipes.model.node.capabilities.software.Software;
-import org.apache.streampipes.node.controller.container.deployment.utils.DockerUtils;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public enum NodeControllerConfig {
     INSTANCE;
@@ -41,6 +27,7 @@ public enum NodeControllerConfig {
     private static final String DOT = ".";
     private static final String DEFAULT_NODE_BROKER_NAME_SUFFIX = "broker";
     private static final String node_service_id = "node/org.apache.streampipes.node.controller";
+    private static final int DEFAULT_DOCKER_PRUNING_FREQ = 60;
 
     NodeControllerConfig() {
         config = SpConfig.getSpConfig(node_service_id + SLASH + getNodeHostName());
@@ -74,4 +61,10 @@ public enum NodeControllerConfig {
         return getEnv(ConfigKeys.NODE_HOST_KEY);
     }
 
+    public int getPruningFreq() {
+        if (getEnv(ConfigKeys.NODE_DOCKER_PRUNING_FREQ_KEY).equals("")) {
+            return DEFAULT_DOCKER_PRUNING_FREQ;
+        }
+        return Integer.parseInt(getEnv(ConfigKeys.NODE_DOCKER_PRUNING_FREQ_KEY));
+    }
 }

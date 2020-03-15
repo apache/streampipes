@@ -21,6 +21,12 @@ ENV CONSUL_LOCATION consul
 EXPOSE 7077
 
 COPY qemu-aarch64-static /usr/bin
+RUN set -ex; \
+    apt -y update; \
+    apt -y --no-install-recommends install curl; \
+    apt clean; \
+    rm -rf /tmp/apache-* /var/lib/apt/lists/*
+
 COPY target/streampipes-node-controller-container.jar  /streampipes-node-controller.jar
 
 ENTRYPOINT ["java", "-jar", "/streampipes-node-controller.jar"]

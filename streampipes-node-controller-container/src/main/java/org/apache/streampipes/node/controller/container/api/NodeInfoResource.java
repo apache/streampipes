@@ -16,6 +16,7 @@ package org.apache.streampipes.node.controller.container.api;
  * limitations under the License.
  *
  */
+import org.apache.streampipes.node.controller.container.description.NodeInfoDescription;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -23,15 +24,15 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/")
-public class NodeStatusResource {
+@Path("/node/info")
+public class NodeInfoResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getStatus() {
         return Response
                 .ok()
-                .status(Response.Status.OK)
+                .entity(NodeInfoDescription.retrieveNodeInfo())
                 .build();
     }
 }

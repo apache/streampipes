@@ -25,7 +25,8 @@ import org.apache.streampipes.model.node.capabilities.hardware.resources.MEM;
 import org.apache.streampipes.model.node.capabilities.interfaces.Interfaces;
 import org.apache.streampipes.model.node.capabilities.software.Software;
 import org.apache.streampipes.model.node.capabilities.software.resources.Docker;
-import org.apache.streampipes.node.controller.container.deployment.utils.DockerUtils;
+import org.apache.streampipes.node.controller.container.management.pe.DockerInfo;
+import org.apache.streampipes.node.controller.container.management.pe.DockerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.*;
@@ -39,7 +40,7 @@ public class NodeInfoStorage {
     private static final int DEFAULT_NODE_CONTROLLER_PORT = 7077;
     private static final int DEFAULT_NODE_BROKER_PORT = 616161;
 
-    private static final Map<String, String> SystemInfo = DockerUtils.getDockerInfo();
+    private static final DockerInfo DockerInfo = DockerUtils.getDockerInfo();
 
     private static NodeInfoStorage instance = null;
 
@@ -134,8 +135,8 @@ public class NodeInfoStorage {
 
     private static Software getActualSoftware(){
         Software software = new Software();
-        software.setOs(SystemInfo.get("os"));
-        software.setKernelVersion(SystemInfo.get("kernelVersion"));
+        software.setOs(DockerInfo.getOs());
+        software.setKernelVersion(DockerInfo.getKernelVersion());
         software.setDocker(getActualDocker());
 
         return software;
@@ -164,14 +165,14 @@ public class NodeInfoStorage {
 
     private static CPU getActualCpu(){
         CPU cpu = new CPU();
-        cpu.setCores(Integer.parseInt(SystemInfo.get("cpus")));
-        cpu.setArch(SystemInfo.get("arch"));
+        cpu.setCores(DockerInfo.getCpus());
+        cpu.setArch(DockerInfo.getArch());
         return cpu;
     }
 
     private static MEM getActualMem() {
         MEM mem = new MEM();
-        mem.setMemTotal(Long.parseLong(SystemInfo.get("memTotal")));
+        mem.setMemTotal(DockerInfo.getMemTotal());
         return mem;
     }
 
@@ -209,8 +210,8 @@ public class NodeInfoStorage {
         docker.setHasDocker(true);
         docker.setHasNvidiaRuntime(System.getenv(ConfigKeys.NODE_HAS_NVIDIA_DOCKER_RUNTIME_KEY) != null
                 ? Boolean.parseBoolean(System.getenv(ConfigKeys.NODE_HAS_NVIDIA_DOCKER_RUNTIME_KEY)) : false);
-        docker.setServerVersion(SystemInfo.get("serverVersion"));
-        docker.setApiVersion(SystemInfo.get("apiVersion"));
+        docker.setServerVersion(DockerInfo.getServerVersion());
+        docker.setApiVersion(DockerInfo.getApiVersion());
 
         return docker;
     }

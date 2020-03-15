@@ -16,31 +16,32 @@ package org.apache.streampipes.node.controller.container.api;/*
  *
  */
 
-import com.spotify.docker.client.exceptions.DockerException;
+import org.apache.http.HttpHeaders;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.streampipes.model.node.PipelineElementDockerContainer;
-import org.apache.streampipes.node.controller.container.deployment.PipelineElementDockerContainerManager;
+import org.apache.streampipes.node.controller.container.management.pe.DockerOrchestratorManager;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 
 @Path("/node/pe")
-public class NodeDeploymentResource {
+public class NodeControllerResource {
 
     @POST
     @Path("/container/deploy")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response deployPipelineElementContainer(PipelineElementDockerContainer container) {
-        try {
-            return Response
-                    .ok()
-                    .entity(PipelineElementDockerContainerManager.deploy(container))
-                    .build();
-        } catch (DockerException | InterruptedException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return Response
+                .ok()
+                .entity(DockerOrchestratorManager.getInstance().deploy(container))
+                .build();
     }
 
     @GET
@@ -49,7 +50,7 @@ public class NodeDeploymentResource {
     public Response getPipelineElementContainer(){
         return Response
                 .ok()
-                .entity(PipelineElementDockerContainerManager.getPipelineElementContainer())
+                .entity(DockerOrchestratorManager.getInstance().list())
                 .build();
     }
 
@@ -58,14 +59,13 @@ public class NodeDeploymentResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response stopPipelineElementContainer(PipelineElementDockerContainer container) {
-
         return Response
-                .ok(PipelineElementDockerContainerManager.stopAndRemove(container))
+                .ok(DockerOrchestratorManager.getInstance().remove(container))
                 .build();
     }
 
     @POST
-    @Path("/container/processor/invoke")
+    @Path("/container/invoke")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response invokePipelineElement(String appId) {
@@ -76,7 +76,7 @@ public class NodeDeploymentResource {
     }
 
     @POST
-    @Path("/container/processor/stop")
+    @Path("/container/detach")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response stopPipelineElement(String appId) {
@@ -90,10 +90,20 @@ public class NodeDeploymentResource {
     @Path("/container/register")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response registerPipelineElementInConsul(String serviceId) {
+    public Response registerPipelineElementInConsul(String message) {
         // TODO implement
+
+//        HttpClient client = HttpClients.custom().build();
+//        HttpUriRequest request = RequestBuilder.put()
+//                .setUri("http://localhost:8500/v1/agent/service/register")
+//                .setEntity(new StringEntity(message))
+//                .setHeader(HttpHeaders.CONTENT_TYPE, "application/json")
+//                .build();
+//        client.execute(request);
+
         return Response
                 .ok()
+                .status(Response.Status.OK)
                 .build();
     }
 }

@@ -23,9 +23,10 @@ EXPOSE 7077
 COPY qemu-arm-static /usr/bin
 RUN set -ex; \
     apt -y update; \
-    apt -y --no-install-recommends install libjffi-jni; \
+    apt -y --no-install-recommends install libjffi-jni curl; \
     apt clean; \
     rm -rf /tmp/apache-* /var/lib/apt/lists/*
+
 COPY target/streampipes-node-controller-container.jar  /streampipes-node-controller.jar
 
 ENTRYPOINT ["java", "-jar", "/streampipes-node-controller.jar"]
