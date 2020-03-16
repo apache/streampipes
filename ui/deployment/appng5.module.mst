@@ -45,6 +45,7 @@ import { {{{ng5_moduleName}}} } from '{{{path}}}';
 import {ConsoleLogService} from './shared/logger/log.service';
 import {Logger} from './shared/logger/default-log.service';
 import { AppContainerModule } from './app-container/app-container.module';
+import { NotificationModule } from './notifications/notifications.module';
 
 
 @NgModule({
@@ -65,6 +66,7 @@ import { AppContainerModule } from './app-container/app-container.module';
         AppAssetMonitoringModule,
         AppTransportMonitoringModule,
         AppContainerModule,
+        NotificationModule,
         {{#modulesActive}}
         {{#ng5}}
         {{{ng5_moduleName}}},
