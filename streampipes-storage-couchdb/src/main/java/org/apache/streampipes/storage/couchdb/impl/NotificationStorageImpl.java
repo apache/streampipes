@@ -18,12 +18,14 @@
 
 package org.apache.streampipes.storage.couchdb.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import org.apache.streampipes.model.Notification;
 import org.apache.streampipes.storage.api.INotificationStorage;
 import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,8 +45,24 @@ public class NotificationStorageImpl extends AbstractDao<Notification> implement
   }
 
   @Override
-  public List<Notification> getAllNotifications() {
-    return findAll();
+  public List<Notification> getAllNotifications(String notificationTypeId,
+                                                Integer offset,
+                                                Integer count) {
+    Gson gson = couchDbClientSupplier.get().getGson();
+    List<JsonObject> notifications =
+            couchDbClientSupplier
+                    .get()
+                    .view("notificationtypes/notificationtypes")
+                    .key(notificationTypeId)
+                    .includeDocs(true)
+                    .skip(offset)
+                    .limit(count)
+                    .query(JsonObject.class);
+
+    return notifications
+            .stream()
+            .map(notification -> gson.fromJson(notification, Notification.class))
+            .collect(Collectors.toList());
   }
 
   @Override

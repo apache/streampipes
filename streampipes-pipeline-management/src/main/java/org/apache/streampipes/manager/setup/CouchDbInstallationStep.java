@@ -35,6 +35,10 @@ public class CouchDbInstallationStep implements InstallationStep {
             Collections.singletonList("8099/api/v1/admin@streampipes.org/master/sources/");
     private static final String initRdfEndpointHost = "http://localhost:";
 
+    private static final String PREPARING_NOTIFICATIONS_TEXT = "Preparing database " +
+            "'notifications'...";
+    private static final String PREPARING_USERS_TEXT = "Preparing database 'users'...";
+
     public CouchDbInstallationStep() {
 
     }
@@ -83,6 +87,7 @@ public class CouchDbInstallationStep implements InstallationStep {
         List<Message> result = new ArrayList<>();
         result.add(addUserView());
         result.add(addConnectionView());
+        result.add(addNotificationView());
         return result;
     }
 
@@ -93,6 +98,26 @@ public class CouchDbInstallationStep implements InstallationStep {
                         .addRdfEndpoint(new RdfEndpoint(initRdfEndpointHost + p)));
 
         return Notifications.success("Discovering pipeline element endpoints...");
+    }
+
+    private Message addNotificationView() {
+        try {
+            DesignDocument userDocument = prepareDocument("_design/notificationtypes");
+            Map<String, MapReduce> views = new HashMap<>();
+
+            MapReduce notificationTypeFunction = new MapReduce();
+            notificationTypeFunction.setMap("function (doc) { var vizName = doc.title.replace(/\\s/g, '-'); var indexName = doc.correspondingPipelineId + '-' + vizName; emit(indexName, doc);}");
+
+            views.put("notificationtypes", notificationTypeFunction);
+
+            userDocument.setViews(views);
+            Response resp = Utils.getCouchDbNotificationClient().design().synchronizeWithDb(userDocument);
+
+            if (resp.getError() != null) return Notifications.error(PREPARING_NOTIFICATIONS_TEXT);
+            else return Notifications.success(PREPARING_NOTIFICATIONS_TEXT);
+        } catch (Exception e) {
+            return Notifications.error(PREPARING_NOTIFICATIONS_TEXT);
+        }
     }
 
     private Message addUserView() {
@@ -112,10 +137,10 @@ public class CouchDbInstallationStep implements InstallationStep {
             userDocument.setViews(views);
             Response resp = Utils.getCouchDbUserClient().design().synchronizeWithDb(userDocument);
 
-            if (resp.getError() != null) return Notifications.error("Preparing database 'users'...");
-            else return Notifications.success("Preparing database 'users'...");
+            if (resp.getError() != null) return Notifications.error(PREPARING_USERS_TEXT);
+            else return Notifications.success(PREPARING_USERS_TEXT);
         } catch (Exception e) {
-            return Notifications.error("Preparing database 'users'...");
+            return Notifications.error(PREPARING_USERS_TEXT);
         }
     }
 

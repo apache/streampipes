@@ -16,11 +16,55 @@
  *
  */
 
-import * as angular from 'angular';
+import {NgModule} from "@angular/core";
+import {CommonModule} from "@angular/common";
+import {MatTabsModule} from "@angular/material/tabs";
+import {FlexLayoutModule} from "@angular/flex-layout";
+import {CustomMaterialModule} from "../CustomMaterial/custom-material.module";
+import {FormsModule} from "@angular/forms";
+import {NotificationsComponent} from "./notifications.component";
+import {NotificationItemComponent} from "./components/notification-item.component";
+import {NotificationsService} from "./service/notifications.service";
+import {InjectableRxStompConfig, RxStompService, rxStompServiceFactory} from "@stomp/ng2-stompjs";
 
-import {NotificationsCtrl} from './notifications.controller';
+@NgModule({
+	imports: [
+		CommonModule,
+		MatTabsModule,
+		FlexLayoutModule,
+		CommonModule,
+		FlexLayoutModule,
+		CustomMaterialModule,
+		FormsModule
+	],
+	declarations: [
+		NotificationsComponent,
+		NotificationItemComponent
+	],
+	providers: [
+		NotificationsService,
+		{
+			provide: 'RestApi',
+			useFactory: ($injector: any) => $injector.get('RestApi'),
+			deps: ['$injector'],
+		},
+		{
+			provide: RxStompService,
+			useFactory: rxStompServiceFactory,
+			deps: [InjectableRxStompConfig]
+		},
+	],
+	exports: [
+		NotificationsComponent
+	],
+	entryComponents: [
+		NotificationsComponent,
+	]
+})
+export class NotificationModule {
 
-export default angular.module('sp.notifications', [])
-	.controller('NotificationsCtrl', NotificationsCtrl)
-	.name;
+	constructor() {
+	}
+
+}
 

@@ -202,7 +202,7 @@ export class ToolbarController {
         var passcode = 'admin';
         var websocketProtocol = this.$location.protocol() === "http" ? "ws" : "wss";
         var brokerUrl = websocketProtocol + '://' + this.$location.host() + ':' + this.$location.port() + '/streampipes/ws';
-        var inputTopic = '/topic/org.apache.streampipes.notifications';
+        var inputTopic = '/topic/org.apache.streampipes.notifications.' + this.AuthStatusService.email;
 
         let stompClient = new Client({
             brokerURL: brokerUrl,

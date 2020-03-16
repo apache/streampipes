@@ -378,4 +378,5 @@ public class StreamPipes {
   public static final String SELECTED_COLOR = NS + "hasSelectedColor";
   public static final String HAS_WIDGET_ICON_NAME = NS + "hasWidgetIconName";
   public static final String HAS_WIDGET_DESCRIPTION = NS + "hasWidgetDescription";
+  public static final String CORRESPONDING_USER = NS + "hasCorrespondingUser";
 }

@@ -22,7 +22,7 @@ import javax.ws.rs.core.Response;
 
 public interface INotification {
 
-	Response getNotifications();
+	Response getNotifications(String notificationTypeId, Integer offset, Integer count);
 
 	Response getUnreadNotifications();
 

@@ -1,0 +1,118 @@
+/*
+ *   Licensed to the Apache Software Foundation (ASF) under one or more
+ *   contributor license agreements.  See the NOTICE file distributed with
+ *   this work for additional information regarding copyright ownership.
+ *   The ASF licenses this file to You under the Apache License, Version 2.0
+ *   (the "License"); you may not use this file except in compliance with
+ *   the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ */
+
+@import '../../scss/_variables';
+
+.fixed-height {
+    flex-direction: row;
+    box-sizing: border-box;
+    display: flex;
+    flex: 1 1 100%;
+    max-height: 100%;
+    overflow-y: auto;
+}
+
+.page-container-max-height {
+    max-height: calc(100% - 20px);
+    //overflow: hidden;
+}
+
+.mr-20 {
+    margin-right:20px;
+}
+
+.notifications-overview {
+    border-right: 5px solid $sp-color-accent;
+}
+
+.notifications-details {
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex: 1;
+}
+
+.notification-details-wrapper {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.notification-header {
+    min-height: 75px;
+    padding: 10px 10px 10px 20px;
+    color: $sp-color-accent;
+}
+
+.header-divider {
+    display:flex;
+    align-self: center;
+    margin: 10px 20px;
+    width: 100%;
+    border-top: 2px solid $sp-color-accent
+}
+
+.notification-header-pipeline-name {
+    font-size: 14pt;
+}
+
+.notification-header-notification-name {
+    font-weight: 600;
+}
+
+.notification-avatar {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    color: white;
+}
+
+.list-item:hover {
+    background: #E0E0E0;
+    cursor: pointer;
+}
+
+.list-item {
+    border-bottom: 1px solid #BDBDBD;
+}
+
+.notification-pane {
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+    overflow-y: auto;
+    padding: 0px 30px 30px 0px;
+    overflow-x: hidden;
+}
+
+.notification-item {
+    margin-bottom: 30px;
+}
+
+.scrolling-auto {
+    overflow: auto;
+    width:100%;
+}
+
+.new-notification-info {
+    background: $sp-color-primary;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+

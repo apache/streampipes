@@ -25,7 +25,6 @@ import {Dashboard} from "../models/dashboard.model";
 import {TsonLdSerializerService} from "../../platform-services/tsonld-serializer.service";
 import {DashboardWidget} from "../../core-model/dashboard/DashboardWidget";
 import {VisualizablePipeline} from "../../core-model/dashboard/VisualizablePipeline";
-import {RestApi} from "../../services/rest-api.service";
 
 @Injectable()
 export class DashboardService {
