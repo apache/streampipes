@@ -27,6 +27,7 @@ import org.apache.streampipes.storage.couchdb.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,7 +54,9 @@ public class NotificationStorageImpl extends AbstractDao<Notification> implement
             couchDbClientSupplier
                     .get()
                     .view("notificationtypes/notificationtypes")
-                    .key(notificationTypeId)
+                    .startKey(Arrays.asList(notificationTypeId, "\ufff0"))
+                    .endKey("\ufff0")
+                    .descending(true)
                     .includeDocs(true)
                     .skip(offset)
                     .limit(count)

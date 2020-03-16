@@ -36,7 +36,9 @@
         <div fxFlex="30" class="notifications-overview scrolling-auto">
             <mat-list>
                 <mat-list-item *ngFor="let existingNotification of existingNotifications"
-                               (click)="selectNotification(existingNotification)" class="list-item">
+                               (click)="selectNotification(existingNotification)" class="list-item"
+                               [ngClass]="{'selected-notification':
+                               existingNotification.notificationId === currentlySelectedNotificationId}">
                     <div mat-list-avatar
                          class="notification-avatar sp-accent-bg">{{elementIconText.getElementIconText(existingNotification.pipelineName)}}
                     </div>

@@ -18,6 +18,7 @@
 export interface NotificationItem {
     title: string;
     createdAt: Date;
+    createdAtTimestamp: number;
     targetedAt: string;
     correspondingPipelineId: string;
     message: string;

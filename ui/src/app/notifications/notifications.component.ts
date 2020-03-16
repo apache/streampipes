@@ -105,6 +105,9 @@ export class NotificationsComponent implements OnInit {
 
     getNotifications(notification: ExistingNotification, offset: number, count: number, scrollToBottom: boolean) {
         this.notificationService.getNotifications(notification, offset, count).subscribe(notifications => {
+            notifications.sort((a, b) => {
+                return (a.createdAtTimestamp - b.createdAtTimestamp);
+            });
             this.notifications.unshift(...notifications);
             if (scrollToBottom) {
                 setTimeout(() => {
