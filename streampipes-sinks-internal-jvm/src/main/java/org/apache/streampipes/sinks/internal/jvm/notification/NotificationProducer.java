@@ -32,8 +32,12 @@ import java.util.Date;
 
 public class NotificationProducer implements EventSink<NotificationParameters> {
 
+  private static final String HASHTAG = "#";
+
   private String title;
   private String content;
+  private String correspondingPipelineId;
+  private String correspondingUser;
 
   private ActiveMQPublisher publisher;
   private Gson gson;
@@ -42,19 +46,25 @@ public class NotificationProducer implements EventSink<NotificationParameters> {
   @Override
   public void onInvocation(NotificationParameters parameters, EventSinkRuntimeContext runtimeContext) throws
           SpRuntimeException {
-    this.publisher = new ActiveMQPublisher(SinksInternalJvmConfig.INSTANCE.getJmsHost() + ":" + SinksInternalJvmConfig.INSTANCE.getJmsPort(),
-            "org.apache.streampipes.notifications");
     this.gson = new Gson();
     this.title = parameters.getTitle();
     this.content = parameters.getContent();
+    this.correspondingPipelineId = parameters.getGraph().getCorrespondingPipeline();
+    this.correspondingUser = parameters.getGraph().getCorrespondingUser();
+    this.publisher = new ActiveMQPublisher(SinksInternalJvmConfig.INSTANCE.getJmsHost() + ":" + SinksInternalJvmConfig.INSTANCE.getJmsPort(),
+            "org.apache.streampipes.notifications." + this.correspondingUser);
   }
 
   @Override
   public void onEvent(Event inputEvent) {
+    Date currentDate = new Date();
     Notification notification = new Notification();
     notification.setTitle(title);
-    notification.setMessage(content);
-    notification.setCreatedAt(new Date());
+    notification.setMessage(replacePlaceholders(inputEvent, content));
+    notification.setCreatedAt(currentDate);
+    notification.setCreatedAtTimestamp(currentDate.getTime());
+    notification.setCorrespondingPipelineId(correspondingPipelineId);
+    notification.setTargetedAt(correspondingUser);
 
     // TODO add targeted user to notification object
 
@@ -64,5 +74,12 @@ public class NotificationProducer implements EventSink<NotificationParameters> {
   @Override
   public void onDetach() throws SpRuntimeException {
     this.publisher.disconnect();
+  }
+
+  private String replacePlaceholders(Event event, String content) {
+    for(String key: event.getRaw().keySet()) {
+      content = content.replaceAll(HASHTAG + key + HASHTAG, event.getRaw().get(key).toString());
+    }
+    return content;
   }
 }
