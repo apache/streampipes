@@ -17,22 +17,23 @@
   -->
 
 <md-list style="padding-top:0px;">
-    <md-list-item class="md-1-line" ng-class="toolbarCtrl.getListItemClassName(item.link)"
+    <md-list-item class="md-1-line"
+                  ng-class="{'sp-navbar-item-selected' : item.link === toolbarCtrl.activePage, 'sp-navbar-item': item.link !== toolbarCtrl.activePage}"
                   ng-repeat="item in toolbarCtrl.menu" role="link" style="min-width:0px;padding:0px;">
         <md-button class="md-icon-button button-margin-iconbar" ng-click="toolbarCtrl.go(item.link)">
             <md-icon md-svg-icon="{{item.icon}}" aria-label="{{item.title}}"
-                     ng-class="toolbarCtrl.getIconClassName(item.link)"></md-icon>
+                     ng-class="{'sp-navbar-icon-selected' : item.link === toolbarCtrl.activePage, 'sp-navbar-icon': item.link !== toolbarCtrl.activePage}"></md-icon>
             <md-tooltip md-direction="right">
                 {{item.title}}
             </md-tooltip>
         </md-button>
     </md-list-item>
     <md-list-item class="md-1-line" role="link"
-                  ng-class="toolbarCtrl.getListItemClassName(item.link)">
+                  ng-class="{'sp-navbar-item-selected' : 'streampipes.notifications' === toolbarCtrl.activePage, 'sp-navbar-item': 'streampipes.notifications' !== toolbarCtrl.activePage}">
         <notification-icon count='toolbarCtrl.notificationCount'>
             <md-button class="md-icon-button button-margin-iconbar" ng-click="toolbarCtrl.go('streampipes.notifications')">
                 <md-icon md-svg-icon="communication:ic_chat_24px" aria-label="Notifications"
-                         ng-class="toolbarCtrl.getIconClassName(item.link)"></md-icon>
+                         ng-class="{'sp-navbar-icon-selected' : 'streampipes.notifications' === toolbarCtrl.activePage, 'sp-navbar-icon': 'streampipes.notifications' !== toolbarCtrl.activePage}"></md-icon>
                 <md-tooltip md-direction="right">
                     Notifications
                 </md-tooltip>
@@ -40,11 +41,12 @@
         </notification-icon>
     </md-list-item>
     <md-divider style="border-top-color:white;"></md-divider>
-    <md-list-item class="md-1-line" ng-class="toolbarCtrl.getListItemClassName(item.link)"
+    <md-list-item class="md-1-line"
+                  ng-class="{'sp-navbar-item-selected' : item.link === toolbarCtrl.activePage, 'sp-navbar-item': item.link !== toolbarCtrl.activePage}"
                   ng-repeat="item in toolbarCtrl.admin" role="link">
         <md-button class="md-icon-button button-margin-iconbar" ng-click="toolbarCtrl.go(item.link)">
             <md-icon md-svg-icon="{{item.icon}}" aria-label="{{item.title}}"
-                     ng-class="toolbarCtrl.getIconClassName(item.link)"></md-icon>
+                     ng-class="{'sp-navbar-icon-selected' : item.link === toolbarCtrl.activePage, 'sp-navbar-icon': item.link !== toolbarCtrl.activePage}"></md-icon>
             <md-tooltip md-direction="right">
                 {{item.title}}
             </md-tooltip>

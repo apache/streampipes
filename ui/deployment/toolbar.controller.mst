@@ -33,6 +33,7 @@ export class ToolbarController {
     admin: any;
     toggleLeft: any;
     activePage: any;
+    activePageName: any;
 
     feedbackOpen: boolean = false;
     accountMenuOpen: boolean = false;
@@ -105,7 +106,8 @@ export class ToolbarController {
 
     $onInit() {
         this.toggleLeft = this.buildToggler('left');
-        this.activePage = this.getPageTitle(this.$state.current.name);
+        this.activePage = this.$state.current.name;
+        this.activePageName = this.getPageTitle(this.activePage);
         this.updateUnreadNotifications();
         this.connectToBroker();
     }
@@ -128,16 +130,16 @@ export class ToolbarController {
             });
     };
 
-// TODO: Function overloading?
     go(path, payload?) {
         if (payload === undefined) {
             this.$state.go(path);
-            this.activePage = this.getPageTitle(path);
+            this.activePage = path;
             this.$mdSidenav('left').close();
         } else {
             this.$state.go(path, payload);
-            this.activePage = this.getPageTitle(path);
+            this.activePage = path;
         }
+        this.activePageName = this.getPageTitle(this.activePage);
     };
 
     logout() {
