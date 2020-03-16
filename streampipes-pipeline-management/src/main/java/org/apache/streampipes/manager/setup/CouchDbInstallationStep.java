@@ -106,7 +106,7 @@ public class CouchDbInstallationStep implements InstallationStep {
             Map<String, MapReduce> views = new HashMap<>();
 
             MapReduce notificationTypeFunction = new MapReduce();
-            notificationTypeFunction.setMap("function (doc) { var vizName = doc.title.replace(/\\s/g, '-'); var indexName = doc.correspondingPipelineId + '-' + vizName; emit(indexName, doc);}");
+            notificationTypeFunction.setMap("function (doc) { var vizName = doc.title.replace(/\\s/g, '-'); var indexName = doc.correspondingPipelineId + '-' + vizName; emit([indexName, doc.createdAtTimestamp], doc);}");
 
             views.put("notificationtypes", notificationTypeFunction);
 
