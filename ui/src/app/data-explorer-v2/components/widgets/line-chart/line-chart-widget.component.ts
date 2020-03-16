@@ -33,8 +33,8 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
   yKeys: string[] = [];
   xKey: string;
 
-  constructor(private dataLakeRestService: DatalakeRestService) {
-    super();
+  constructor(protected dataLakeRestService: DatalakeRestService) {
+    super(dataLakeRestService);
   }
 
 
@@ -178,5 +178,6 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
 
   setSelectedColumn(selectedColumns: string[]) {
     this.yKeys = selectedColumns;
+    this.updateData();
   }
 }

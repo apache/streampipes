@@ -17,7 +17,7 @@
   -->
 
 <div fxLayout="column" fxLayoutAlign="stretch">
-    <div class="assemblyOptions sp-blue-bg m-0 row header h-40" style="margin-left: 0px;margin-right: 0px;">
+    <div class="assemblyOptions sp-blue-bg m-0 row header h-40" style="margin-left: 0px;margin-right: 0px;margin-top: 0px;">
         <div fxFlex="100" layout="row" fxLayoutAlign="end center" style="margin-left: 0px;margin-right: 0px;">
             <sp-select-keys (changeSelectedKeys)="setSelectedColumn($event)" [availableKeys]="availableColumns" [selectedKeys]="yKeys"></sp-select-keys>
             <button mat-button mat-icon-button color="white" (click)="removeWidget()">

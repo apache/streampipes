@@ -41,7 +41,10 @@ export class DataExplorerWidgetModel extends UnnamedStreamPipesEntity {
     widgetType: string;
 
     @RdfProperty('sp:hasDataLakeMeasure')
-    dataLakeMeasure: DataLakeMeasure
+    dataLakeMeasure: DataLakeMeasure;
+
+    @RdfProperty('sp:hasSelectedKeys')
+    selectedKeys: string[];
 
     constructor() {
         super();

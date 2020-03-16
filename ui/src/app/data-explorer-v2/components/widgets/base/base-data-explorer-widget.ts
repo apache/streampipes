@@ -18,17 +18,18 @@
 
 import { EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { GridsterItem, GridsterItemComponent } from 'angular-gridster2';
+import { EventPropertyComponent } from '../../../../connect/schema-editor/event-property/event-property.component';
+import { EventProperty } from '../../../../connect/schema-editor/model/EventProperty';
+import { EventPropertyPrimitive } from '../../../../connect/schema-editor/model/EventPropertyPrimitive';
+import { EventSchema } from '../../../../connect/schema-editor/model/EventSchema';
 import { DataExplorerWidgetModel } from '../../../../core-model/datalake/DataExplorerWidgetModel';
 import { DateRange } from '../../../../core-model/datalake/DateRange';
 import { IDataViewDashboardItem } from '../../../models/dataview-dashboard.model';
-import { EventSchema } from '../../../../connect/schema-editor/model/EventSchema';
-import { EventPropertyPrimitive } from '../../../../connect/schema-editor/model/EventPropertyPrimitive';
-import { EventPropertyComponent } from '../../../../connect/schema-editor/event-property/event-property.component';
-import { EventProperty } from '../../../../connect/schema-editor/model/EventProperty';
+import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
 
 export abstract class BaseDataExplorerWidget implements OnChanges {
 
-  protected constructor() {
+  protected constructor(protected dataLakeRestService: DatalakeRestService) {
   }
 
   @Output()
@@ -44,6 +45,8 @@ export abstract class BaseDataExplorerWidget implements OnChanges {
 
   @Input() dataViewDashboardItem: IDataViewDashboardItem;
   @Input() dataExplorerWidget: DataExplorerWidgetModel;
+
+  public selectedProperties: string[];
 
   public showNoDataInDateRange: boolean;
   public showData: boolean;
@@ -112,9 +115,9 @@ export abstract class BaseDataExplorerWidget implements OnChanges {
       ? true : false;
 }
 
-  // TODO add get a specific property
-  getPropertyKeysOfStaticProperty(eventSchema) {
 
-  }
+  // updateDataExplorerWidget() {
+  //   this.
+  // }
 
 }

@@ -39,6 +39,9 @@ public class DataExplorerWidgetModel extends DashboardEntity {
   @RdfProperty(StreamPipes.HAS_DASHBOARD_WIDGET_TYPE)
   private String widgetType;
 
+  @RdfProperty(StreamPipes.HAS_DASHBOARD_WIDGET_TYPE)
+  private String selectedKeys;
+
 //  @RdfProperty(StreamPipes.HAS_MEASUREMENT_NAME)
 //  private String measureName;
 
@@ -73,5 +76,13 @@ public class DataExplorerWidgetModel extends DashboardEntity {
 
   public void setWidgetType(String widgetType) {
     this.widgetType = widgetType;
+  }
+
+  public String getSelectedKeys() {
+    return selectedKeys;
+  }
+
+  public void setSelectedKeys(String selectedKeys) {
+    this.selectedKeys = selectedKeys;
   }
 }
