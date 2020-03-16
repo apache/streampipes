@@ -19,7 +19,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { EventSchema } from '../../../../connect/schema-editor/model/EventSchema';
+import { EventProperty } from '../../../../connect/schema-editor/model/EventProperty';
 import { DataResult } from '../../../../core-model/datalake/DataResult';
 import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
 import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
@@ -34,8 +34,9 @@ export class TableWidgetComponent extends BaseDataExplorerWidget implements OnIn
 
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
-  availableColumns: string[];
-  selectedColumns: string[];
+  availableColumns: EventProperty[];
+  selectedColumns: EventProperty[];
+  columnNames: string[];
 
   dataSource = new MatTableDataSource();
 
@@ -45,17 +46,16 @@ export class TableWidgetComponent extends BaseDataExplorerWidget implements OnIn
 
   ngOnInit(): void {
     this.dataSource.sort = this.sort;
-    this.availableColumns = [this.getTimestampPropertyKey(this.dataExplorerWidget.dataLakeMeasure.eventSchema)];
+    this.availableColumns = [this.getTimestampProperty(this.dataExplorerWidget.dataLakeMeasure.eventSchema)];
     this.availableColumns = this.availableColumns.concat(this.getValuePropertyKeys(this.dataExplorerWidget.dataLakeMeasure.eventSchema));
 
     // Reduce selected columns when more then 6
     this.selectedColumns = this.availableColumns.length > 6 ? this.availableColumns.slice(0, 5) : this.availableColumns;
+    this.columnNames = this.getRuntimeNames(this.selectedColumns);
 
     this.updateData();
 
   }
-
-
 
   updateData() {
     this.setShownComponents(false, false, true);
@@ -91,8 +91,9 @@ export class TableWidgetComponent extends BaseDataExplorerWidget implements OnIn
     return object;
   }
 
-  setSelectedColumn(selectedColumns: string[]) {
+  setSelectedColumn(selectedColumns: EventProperty[]) {
     this.selectedColumns = selectedColumns;
+    this.columnNames = this.getRuntimeNames(this.selectedColumns);
   }
 
   ngOnDestroy(): void {

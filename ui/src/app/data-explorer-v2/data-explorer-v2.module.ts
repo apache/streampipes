@@ -49,6 +49,7 @@ import { OldExplorerComponent } from './components/widgets/old-explorer-widget/o
 import { TableWidgetComponent } from './components/widgets/table/table-widget.component';
 import { LoadDataSpinnerComponent } from './components/widgets/utils/load-data-spinner/load-data-spinner.component';
 import { NoDataInDateRangeComponent } from './components/widgets/utils/no-data/no-data-in-date-range.component';
+import { SelectPropertiesComponent } from './components/widgets/utils/select-properties/select-properties.component';
 import { DataExplorerV2Component } from './data-explorer-v2.component';
 import { DataExplorerAddVisualizationDialogComponent } from './dialogs/add-widget/data-explorer-add-visualization-dialog.component';
 import { DataExplorerEditDataViewDialogComponent } from './dialogs/edit-dashboard/data-explorer-edit-data-view-dialog.component';
@@ -56,7 +57,6 @@ import { DataLakeService } from './services/data-lake.service';
 import { DataViewDataExplorerService } from './services/data-view-data-explorer.service';
 import { RefreshDashboardService } from './services/refresh-dashboard.service';
 import { ResizeService } from './services/resize.service';
-import { SelectKeysComponent } from './components/widgets/utils/select-keys/select-keys.component';
 
 const dashboardWidgets = [
 
@@ -113,7 +113,7 @@ export const MY_NATIVE_FORMATS = {
     OldExplorerComponent,
     NoDataInDateRangeComponent,
     LoadDataSpinnerComponent,
-    SelectKeysComponent
+    SelectPropertiesComponent
   ],
   providers: [
     SharedDatalakeRestService,

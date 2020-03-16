@@ -18,14 +18,13 @@
 
 import { EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { GridsterItem, GridsterItemComponent } from 'angular-gridster2';
-import { EventPropertyComponent } from '../../../../connect/schema-editor/event-property/event-property.component';
 import { EventProperty } from '../../../../connect/schema-editor/model/EventProperty';
 import { EventPropertyPrimitive } from '../../../../connect/schema-editor/model/EventPropertyPrimitive';
 import { EventSchema } from '../../../../connect/schema-editor/model/EventSchema';
 import { DataExplorerWidgetModel } from '../../../../core-model/datalake/DataExplorerWidgetModel';
 import { DateRange } from '../../../../core-model/datalake/DateRange';
-import { IDataViewDashboardItem } from '../../../models/dataview-dashboard.model';
 import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
+import { IDataViewDashboardItem } from '../../../models/dataview-dashboard.model';
 
 export abstract class BaseDataExplorerWidget implements OnChanges {
 
@@ -60,9 +59,9 @@ export abstract class BaseDataExplorerWidget implements OnChanges {
   public setShownComponents(showNoDataInDateRange: boolean,
                             showData: boolean, showIsLoadingData: boolean) {
 
-      this.showNoDataInDateRange = showNoDataInDateRange;
-      this.showData = showData;
-      this.showIsLoadingData = showIsLoadingData;
+    this.showNoDataInDateRange = showNoDataInDateRange;
+    this.showData = showData;
+    this.showIsLoadingData = showIsLoadingData;
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -73,47 +72,61 @@ export abstract class BaseDataExplorerWidget implements OnChanges {
   public abstract updateData();
 
   getValuePropertyKeys(eventSchema: EventSchema) {
-    const propertyKeys: string[] = [];
+    const propertyKeys: EventProperty[] = [];
 
     eventSchema.eventProperties.forEach(p => {
       if (p.domainProperty !== 'http://schema.org/DateTime') {
-        propertyKeys.push(p.getRuntimeName());
+        propertyKeys.push(p);
       }
     });
 
     return propertyKeys;
   }
 
-  getNumericPropertyKeys(eventSchema: EventSchema) {
-    const propertyKeys: string[] = [];
+  getNumericProperty(eventSchema: EventSchema) {
+    const propertyKeys: EventProperty[] = [];
 
     eventSchema.eventProperties.forEach(p => {
       if (p.domainProperty !== 'http://schema.org/DateTime' && this.isNumber(p)) {
-        propertyKeys.push(p.getRuntimeName());
+        propertyKeys.push(p);
       }
     });
 
     return propertyKeys;
   }
 
-  getTimestampPropertyKey(eventSchema: EventSchema) {
+  getTimestampProperty(eventSchema: EventSchema) {
     const propertyKeys: string[] = [];
 
     const result = eventSchema.eventProperties.find(p =>
-      p.domainProperty === 'http://schema.org/DateTime'
+      this.isTimestamp(p)
     );
 
-    return result.getRuntimeName();
+    return result;
   }
 
   isNumber(p: EventProperty): boolean {
     return (p instanceof EventPropertyPrimitive &&
       ((p as EventPropertyPrimitive).runtimeType === 'http://www.w3.org/2001/XMLSchema#number') ||
       (p as EventPropertyPrimitive).runtimeType === 'http://www.w3.org/2001/XMLSchema#float') ||
-      ((p as EventPropertyPrimitive).runtimeType === 'http://www.w3.org/2001/XMLSchema#double') ||
+    ((p as EventPropertyPrimitive).runtimeType === 'http://www.w3.org/2001/XMLSchema#double') ||
     ((p as EventPropertyPrimitive).runtimeType === 'http://www.w3.org/2001/XMLSchema#integer')
       ? true : false;
-}
+  }
+
+  public isTimestamp(p: EventProperty) {
+    return p.domainProperty === 'http://schema.org/DateTime';
+  }
+
+  getRuntimeNames(properties: EventProperty[]): string[] {
+    const result = []
+    properties.forEach(p => {
+        result.push(p.runtimeName);
+    });
+
+    return result;
+  }
+
 
 
   // updateDataExplorerWidget() {

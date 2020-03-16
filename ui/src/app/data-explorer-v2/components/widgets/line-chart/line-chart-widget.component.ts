@@ -16,7 +16,8 @@
  *
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { EventProperty } from '../../../../connect/schema-editor/model/EventProperty';
 import { DataResult } from '../../../../core-model/datalake/DataResult';
 import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
 import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
@@ -29,7 +30,8 @@ import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
 export class LineChartWidgetComponent extends BaseDataExplorerWidget implements OnInit {
 
   data: any[] = undefined;
-  availableColumns: string[] = [];
+  availableColumns: EventProperty[] = [];
+  selectedColumns: EventProperty[] = [];
   yKeys: string[] = [];
   xKey: string;
 
@@ -40,12 +42,12 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
 
   ngOnInit(): void {
 
-    this.availableColumns = this.getNumericPropertyKeys(this.dataExplorerWidget.dataLakeMeasure.eventSchema);
-    this.xKey = this.getTimestampPropertyKey(this.dataExplorerWidget.dataLakeMeasure.eventSchema);
-
+    this.availableColumns = this.getNumericProperty(this.dataExplorerWidget.dataLakeMeasure.eventSchema);
     // Reduce selected columns when more then 6
-    this.yKeys = this.availableColumns.length > 6 ? this.availableColumns.slice(0, 5) : this.availableColumns;
+    this.selectedColumns = this.availableColumns.length > 6 ? this.availableColumns.slice(0, 5) : this.availableColumns;
 
+    this.xKey = this.getTimestampProperty(this.dataExplorerWidget.dataLakeMeasure.eventSchema).runtimeName;
+    this.yKeys = this.getRuntimeNames(this.selectedColumns);
     this.updateData();
   }
 
@@ -176,8 +178,9 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
     return data;
   }
 
-  setSelectedColumn(selectedColumns: string[]) {
-    this.yKeys = selectedColumns;
+  setSelectedColumn(selectedColumns: EventProperty[]) {
+    this.selectedColumns = selectedColumns;
+    this.yKeys = this.getRuntimeNames(selectedColumns);
     this.updateData();
   }
 }
