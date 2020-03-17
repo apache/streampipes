@@ -29,4 +29,6 @@ public interface INotification {
 	Response deleteNotification(String notification);
 
 	Response modifyNotificationStatus(String notificationId);
+
+	Response getUnreadNotificationsCount(String username);
 }

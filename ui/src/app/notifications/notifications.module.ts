@@ -52,7 +52,7 @@ import {InjectableRxStompConfig, RxStompService, rxStompServiceFactory} from "@s
 			provide: RxStompService,
 			useFactory: rxStompServiceFactory,
 			deps: [InjectableRxStompConfig]
-		},
+		}
 	],
 	exports: [
 		NotificationsComponent

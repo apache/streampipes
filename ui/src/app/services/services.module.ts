@@ -50,6 +50,7 @@ import DashboardTour from './tour/dashboard-tour.constants';
 import AdapterTour from './tour/adapter-tour.constants';
 import AdapterTour2 from './tour/adapter-tour-2.constants';
 import AdapterTour3 from './tour/adapter-tour-3.constants';
+import {NotificationCountService} from "./notification-count-service";
 
 
 export default angular.module('sp.services', [spConstants])
@@ -75,6 +76,7 @@ export default angular.module('sp.services', [spConstants])
 	.service('ShepherdService', ShepherdService)
 	.service('TourProviderService', TourProviderService)
 	.service('PropertySelectorService', PropertySelectorService)
+	.service('NotificationCountService', downgradeInjectable(NotificationCountService))
 	.constant('createPipelineTourConstants', CreatePipelineTour)
 	.constant('dashboardTourConstants', DashboardTour)
 	.constant('adapterTourConstants', AdapterTour)

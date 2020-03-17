@@ -19,6 +19,7 @@
 package org.apache.streampipes.storage.api;
 
 import org.apache.streampipes.model.Notification;
+import org.apache.streampipes.model.NotificationCount;
 
 import java.util.List;
 
@@ -29,6 +30,8 @@ public interface INotificationStorage {
   List<Notification> getAllNotifications(String notificationTypeId, Integer offset, Integer count);
 
   List<Notification> getUnreadNotifications();
+
+  NotificationCount getUnreadNotificationsCount(String username);
 
   boolean addNotification(Notification notification);
 

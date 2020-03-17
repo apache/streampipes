@@ -17,6 +17,7 @@
  */
 
 import { Client } from '@stomp/stompjs';
+import { NotificationCountService } from "../services/notification-count-service";
 
 export class ToolbarController {
     AuthStatusService: any;
@@ -28,7 +29,6 @@ export class ToolbarController {
     $location: any;
     unreadNotifications: any;
     title: any;
-    notificationCount: any;
     menu: any;
     admin: any;
     toggleLeft: any;
@@ -47,7 +47,15 @@ export class ToolbarController {
     feedbackMenuBackground: any = this.makeColor('background-color', this.greenColor);
     feedbackMenuIconColor: any = this.makeColor('color', this.whiteColor);
 
-    constructor($mdSidenav, $mdUtil, RestApi, $state, $window, $location, AuthStatusService, $scope) {
+    constructor($mdSidenav,
+                $mdUtil,
+                RestApi,
+                $state,
+                $window,
+                $location,
+                AuthStatusService,
+                $scope,
+                public NotificationCountService: NotificationCountService) {
         this.AuthStatusService = AuthStatusService;
         this.RestApi = RestApi;
         this.$mdSidenav = $mdSidenav;
@@ -66,7 +74,6 @@ export class ToolbarController {
         this.unreadNotifications = [];
         this.title = 'StreamPipes';
 
-        this.notificationCount = 0;
 
         this.AuthStatusService.userInfo = {
             Name: 'D',
@@ -108,7 +115,7 @@ export class ToolbarController {
         this.toggleLeft = this.buildToggler('left');
         this.activePage = this.$state.current.name;
         this.activePageName = this.getPageTitle(this.activePage);
-        this.updateUnreadNotifications();
+        this.NotificationCountService.loadUnreadNotifications();
         this.connectToBroker();
     }
 
@@ -116,19 +123,6 @@ export class ToolbarController {
     authenticated() {
         return this.AuthStatusService.authenticated;
     }
-
-    updateUnreadNotifications() {
-        this.RestApi.getNotifications()
-            .then(notifications => {
-                var notificationCount = 0;
-                notifications.data.forEach(value => {
-                    if (!value.read) {
-                        notificationCount++;
-                    }
-                });
-                this.notificationCount = notificationCount;
-            });
-    };
 
     go(path, payload?) {
         if (payload === undefined) {
@@ -218,7 +212,7 @@ export class ToolbarController {
         stompClient.onConnect = (frame) => {
 
             stompClient.subscribe(inputTopic, message => {
-                this.notificationCount++;
+                this.NotificationCountService.increaseNotificationCount(JSON.parse(message.body) as NotificationItem);
             });
         };
 
@@ -261,4 +255,12 @@ export class ToolbarController {
 
 };
 
-ToolbarController.$inject = ['$mdSidenav', '$mdUtil', 'RestApi', '$state', '$window', '$location', 'AuthStatusService', '$scope'];
+ToolbarController.$inject = ['$mdSidenav',
+    '$mdUtil',
+    'RestApi',
+    '$state',
+    '$window',
+    '$location',
+    'AuthStatusService',
+    '$scope',
+    'NotificationCountService'];

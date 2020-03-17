@@ -30,7 +30,7 @@
     </md-list-item>
     <md-list-item class="md-1-line" role="link"
                   ng-class="{'sp-navbar-item-selected' : 'streampipes.notifications' === toolbarCtrl.activePage, 'sp-navbar-item': 'streampipes.notifications' !== toolbarCtrl.activePage}">
-        <notification-icon count='toolbarCtrl.notificationCount'>
+        <notification-icon count='toolbarCtrl.NotificationCountService.unreadNotificationCount'>
             <md-button class="md-icon-button button-margin-iconbar" ng-click="toolbarCtrl.go('streampipes.notifications')">
                 <md-icon md-svg-icon="communication:ic_chat_24px" aria-label="Notifications"
                          ng-class="{'sp-navbar-icon-selected' : 'streampipes.notifications' === toolbarCtrl.activePage, 'sp-navbar-icon': 'streampipes.notifications' !== toolbarCtrl.activePage}"></md-icon>

@@ -14,26 +14,24 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
+package org.apache.streampipes.model;
 
-export interface NotificationItem {
-    _id: string;
-    _rev: string;
-    title: string;
-    createdAt: Date;
-    createdAtTimestamp: number;
-    targetedAt: string;
-    correspondingPipelineId: string;
-    message: string;
-    read: boolean;
-}
+public class NotificationCount {
 
-export interface ExistingNotification {
-    pipelineName: string;
-    notificationTitle: string;
-    pipelineId: string;
-    notificationId: string;
-}
+  private Integer count;
 
-export interface NotificationCount {
-    count: number;
+  public NotificationCount(Integer count) {
+    this.count = count;
+  }
+
+  public NotificationCount() {
+  }
+
+  public Integer getCount() {
+    return count;
+  }
+
+  public void setCount(Integer count) {
+    this.count = count;
+  }
 }
