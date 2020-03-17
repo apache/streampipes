@@ -27,6 +27,7 @@ import org.apache.streampipes.connect.adapter.model.generic.Protocol;
 import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
 
 import java.io.InputStream;
+import java.net.ConnectException;
 import java.util.concurrent.*;
 
 public abstract class PullProtocol extends Protocol {
@@ -64,8 +65,8 @@ public abstract class PullProtocol extends Protocol {
 
             format.reset();
             SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
-            InputStream data = getDataFromEndpoint();
             try {
+                InputStream data = getDataFromEndpoint();
                 if(data != null) {
                     parser.parse(data, stk);
                 } else {
@@ -74,6 +75,7 @@ public abstract class PullProtocol extends Protocol {
             } catch (ParseException e) {
                 logger.error("Error while parsing: " + e.getMessage());
             }
+
 
         };
 
@@ -93,5 +95,5 @@ public abstract class PullProtocol extends Protocol {
         scheduler.shutdownNow();
     }
 
-    abstract InputStream getDataFromEndpoint();
+    abstract InputStream getDataFromEndpoint() throws ParseException;
 }
