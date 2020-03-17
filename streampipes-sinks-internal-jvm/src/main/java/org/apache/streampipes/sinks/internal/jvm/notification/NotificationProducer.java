@@ -29,6 +29,7 @@ import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.runtime.EventSink;
 
 import java.util.Date;
+import java.util.UUID;
 
 public class NotificationProducer implements EventSink<NotificationParameters> {
 
@@ -59,6 +60,8 @@ public class NotificationProducer implements EventSink<NotificationParameters> {
   public void onEvent(Event inputEvent) {
     Date currentDate = new Date();
     Notification notification = new Notification();
+    notification.setId(UUID.randomUUID().toString());
+    notification.setRead(false);
     notification.setTitle(title);
     notification.setMessage(replacePlaceholders(inputEvent, content));
     notification.setCreatedAt(currentDate);
