@@ -25,8 +25,7 @@ import javax.servlet.ServletContextListener;
 
 public class NotificationListener implements ServletContextListener {
 
-  private static final String internalNotificationTopic = "org.apache.streampipes.notifications" +
-          ".riemer@fzi.de";
+  private static final String internalNotificationTopic = "org.apache.streampipes.notifications.>";
 
 
   @Override
