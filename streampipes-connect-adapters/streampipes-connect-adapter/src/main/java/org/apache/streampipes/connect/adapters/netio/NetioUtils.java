@@ -25,6 +25,8 @@ import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +46,24 @@ public class NetioUtils {
     public static final String POWER_FACTOR_KEY = "power_factor";
     public static final String LOAD_KEY = "load";
     public static final String ENERGY_KEY = "energy";
+
+    public static URI VOLT = null;
+    public static URI WATT = null;
+    public static URI AMPERE = null;
+    public static URI WATTHOUR = null;
+    public static URI HERTZ = null;
+
+    static {
+        try {
+            VOLT = new URI("http://qudt.org/vocab/unit#Volt");
+            WATT = new URI("http://qudt.org/vocab/unit#Watt");
+            AMPERE = new URI("http://qudt.org/vocab/unit#Ampere");
+            WATTHOUR = new URI("http://qudt.org/vocab/unit#Watthour");
+            HERTZ = new URI("http://qudt.org/vocab/unit#Hertz");
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
 
 
     public static GuessSchema getNetioSchema() {
@@ -65,12 +85,14 @@ public class NetioUtils {
                         .create(Datatypes.Float, VOLTAGE_KEY)
                         .label("Voltage")
                         .description("Instantaneous voltage")
+                        .measurementUnit(VOLT)
                         .build());
         allProperties.add(
                 PrimitivePropertyBuilder
                         .create(Datatypes.Float, FREQUENCY_KEY)
                         .label("Frequency")
                         .description("Instantaneous frequency")
+                        .measurementUnit(HERTZ)
                         .build());
         allProperties.add(
                 PrimitivePropertyBuilder
@@ -94,19 +116,20 @@ public class NetioUtils {
                 PrimitivePropertyBuilder
                         .create(Datatypes.Integer, ACTION_KEY)
                         .label("Action")
-                        .description("TODO")
+                        .description("")
                         .build());
         allProperties.add(
                 PrimitivePropertyBuilder
                         .create(Datatypes.Integer, DELAY_KEY)
                         .label("Delay")
-                        .description("TODO")
+                        .description("")
                         .build());
         allProperties.add(
                 PrimitivePropertyBuilder
                         .create(Datatypes.Float, CURRENT_KEY)
                         .label("Current")
                         .description("Instantaneous current for the specific power output")
+                        .measurementUnit(AMPERE)
                         .build());
         allProperties.add(
                 PrimitivePropertyBuilder
@@ -125,6 +148,7 @@ public class NetioUtils {
                         .create(Datatypes.Float, ENERGY_KEY)
                         .label("Energy")
                         .description("Instantaneous energy counter for the value for the specific power output")
+                        .measurementUnit(WATTHOUR)
                         .build());
 
         eventSchema.setEventProperties(allProperties);

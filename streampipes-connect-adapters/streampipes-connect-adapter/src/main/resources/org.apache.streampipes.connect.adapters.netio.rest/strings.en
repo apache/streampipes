@@ -1,4 +1,4 @@
-org.apache.streampipes.connect.adapters.netio.rest.title=NETIO REST
+org.apache.streampipes.connect.adapters.netio.rest.title=NETIO http JSON
 org.apache.streampipes.connect.adapters.netio.rest.description=Connect a NETIO REST power plug
 
 NETIO_IP.title=Netio endpoint
