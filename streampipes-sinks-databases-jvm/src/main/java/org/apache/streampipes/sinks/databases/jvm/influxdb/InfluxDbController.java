@@ -74,6 +74,7 @@ public class InfluxDbController extends StandaloneEventSinkDeclarer<InfluxDbPara
     Integer port = extractor.singleValueParameter(DATABASE_PORT_KEY, Integer.class);
     String dbName = extractor.singleValueParameter(DATABASE_NAME_KEY, String.class);
     String measureName = extractor.singleValueParameter(DATABASE_MEASUREMENT_KEY, String.class);
+    measureName = InfluxDb.prepareString(measureName);
     String user = extractor.singleValueParameter(DATABASE_USER_KEY, String.class);
     String password = extractor.secretValue(DATABASE_PASSWORD_KEY);
     String timestampField = extractor.mappingPropertyValue(TIMESTAMP_MAPPING_KEY);

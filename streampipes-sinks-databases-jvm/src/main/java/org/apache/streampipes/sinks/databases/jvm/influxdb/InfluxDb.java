@@ -61,4 +61,8 @@ public class InfluxDb implements EventSink<InfluxDbParameters> {
   public void onDetach() throws SpRuntimeException {
     influxDbClient.stop();
   }
+
+  public static String prepareString(String s) {
+    return s.toLowerCase().replaceAll("[^a-zA-Z0-9]", "");
+  }
 }

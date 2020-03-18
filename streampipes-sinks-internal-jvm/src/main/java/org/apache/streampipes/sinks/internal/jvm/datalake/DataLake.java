@@ -46,7 +46,7 @@ import java.util.stream.Collectors;
 public class DataLake implements EventSink<DataLakeParameters> {
 
 
-  private InfluxDbClient influxDbClient;
+  private DataLakeInfluxDbClient influxDbClient;
 
   private static Logger LOG;
 
@@ -62,7 +62,7 @@ public class DataLake implements EventSink<DataLakeParameters> {
 
     this.timestampField = parameters.getTimestampField();
 
-    this.influxDbClient = new InfluxDbClient(
+    this.influxDbClient = new DataLakeInfluxDbClient(
             parameters.getInfluxDbHost(),
             parameters.getInfluxDbPort(),
             parameters.getDatabaseName(),
@@ -77,6 +77,10 @@ public class DataLake implements EventSink<DataLakeParameters> {
     );
 
     EventSchema schema = runtimeContext.getInputSchemaInfo().get(0).getEventSchema();
+
+    schema.getEventProperties().stream().forEach(eventProperty -> {
+      eventProperty.setRuntimeName(prepareString(eventProperty.getRuntimeName()));
+    });
     registerAtDataLake(parameters.getMeasurementName(), schema);
 
     imageProperties = schema.getEventProperties().stream()
@@ -153,5 +157,9 @@ public class DataLake implements EventSink<DataLakeParameters> {
       LOG.error(e.toString());
     }
 
+  }
+
+  public static String prepareString(String s) {
+    return s.toLowerCase().replaceAll(" ", "_");
   }
 }
