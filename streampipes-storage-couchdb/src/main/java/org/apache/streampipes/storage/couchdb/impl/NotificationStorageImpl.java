@@ -21,6 +21,7 @@ package org.apache.streampipes.storage.couchdb.impl;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.apache.streampipes.model.Notification;
+import org.apache.streampipes.model.NotificationCount;
 import org.apache.streampipes.storage.api.INotificationStorage;
 import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
@@ -95,5 +96,23 @@ public class NotificationStorageImpl extends AbstractDao<Notification> implement
             .stream()
             .filter(m -> !m.isRead())
             .collect(Collectors.toList());
+  }
+
+  @Override
+  public NotificationCount getUnreadNotificationsCount(String username) {
+    List<JsonObject> count =
+            couchDbClientSupplier
+                    .get()
+                    .view("unread/unread")
+                    .key(username)
+                    .group(true)
+                    .query(JsonObject.class);
+
+    if (count.size() > 0) {
+      Integer countValue = count.get(0).get("value").getAsInt();
+      return new NotificationCount(countValue);
+    } else {
+      return new NotificationCount(0);
+    }
   }
 }

@@ -16,7 +16,7 @@
  *
  */
 
-import {Component, ElementRef, OnInit, ViewChild} from "@angular/core";
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from "@angular/core";
 import {RestApi} from "../services/rest-api.service";
 import {NotificationItem, ExistingNotification} from "./model/notifications.model";
 import {ElementIconText} from "../services/get-element-icon-text.service";
@@ -26,13 +26,14 @@ import {Subscription} from "rxjs";
 import {RxStompService} from "@stomp/ng2-stompjs";
 import {AuthStatusService} from "../services/auth-status.service";
 import {NotificationUtils} from "./utils/notifications.utils";
+import {NotificationCountService} from "../services/notification-count-service";
 
 @Component({
     selector: 'notifications',
     templateUrl: './notifications.component.html',
     styleUrls: ['./notifications.component.scss']
 })
-export class NotificationsComponent implements OnInit {
+export class NotificationsComponent implements OnInit, OnDestroy {
 
     static readonly NOTIFICATIONS_APP_ID = "org.apache.streampipes.sinks.internal.jvm.notification";
     static readonly NOTIFICATION_TOPIC_PREFIX = "org.apache.streampipes.notifications.";
@@ -48,6 +49,7 @@ export class NotificationsComponent implements OnInit {
 
     pipelinesWithNotificationsPresent: boolean = false;
     currentOffset: number = 0;
+    liveOffset: number = 0;
     previousScrollHeight: number;
 
     subscription: Subscription;
@@ -55,11 +57,14 @@ export class NotificationsComponent implements OnInit {
 
     newNotificationInfo: Array<boolean> = [];
 
+    newEventArriving: boolean = false;
+
     constructor(private RestApi: RestApi,
                 private AuthStatusService: AuthStatusService,
                 public elementIconText: ElementIconText,
                 private notificationService: NotificationsService,
-                private rxStompService: RxStompService) {
+                private rxStompService: RxStompService,
+                private NotificationCountService: NotificationCountService) {
         this.notifications = [];
         this.unreadNotifications = [];
         this.notificationTopic = NotificationsComponent.NOTIFICATION_TOPIC_PREFIX + AuthStatusService.email;
@@ -68,13 +73,32 @@ export class NotificationsComponent implements OnInit {
     ngOnInit() {
         this.getPipelinesWithNotifications();
         this.subscription = this.rxStompService.watch("/topic/" +this.notificationTopic).subscribe((message: Message) => {
+            let scrollToBottom = false;
+            if ((this.notificationContainer.nativeElement.scrollHeight - this.notificationContainer.nativeElement.scrollTop) <= (this.notificationContainer.nativeElement.clientHeight + 10) &&
+                (this.notificationContainer.nativeElement.scrollHeight - this.notificationContainer.nativeElement.scrollTop) >= (this.notificationContainer.nativeElement.clientHeight - 10)) {
+                scrollToBottom = true;
+            }
+            this.newEventArriving = true;
             let notification: NotificationItem = JSON.parse(message.body) as NotificationItem;
             let notificationId = NotificationUtils.makeNotificationId(notification.correspondingPipelineId, notification.title);
             if (this.currentlySelectedNotificationId === notificationId) {
                 this.notifications.push(notification);
+                this.liveOffset++;
+                notification.read = true;
+                setTimeout(() => {
+                    this.notificationService.updateNotification(notification).subscribe();
+                }, 500);
+
             } else {
                 this.newNotificationInfo[notificationId] = true;
             }
+            if (scrollToBottom) {
+                setTimeout(() => {
+                    this.notificationContainer.nativeElement.scrollTop = this.notificationContainer.nativeElement.scrollHeight + 100;
+                });
+            }
+
+            this.newEventArriving = false;
         });
     }
 
@@ -118,30 +142,36 @@ export class NotificationsComponent implements OnInit {
                     this.notificationContainer.nativeElement.scrollTop = this.notificationContainer.nativeElement.scrollHeight - this.previousScrollHeight;
                 })
             }
+            notifications.forEach(notification => {
+                if (!notification.read) {
+                    notification.read = true;
+                    this.NotificationCountService.decreaseNotificationCount();
+                    this.notificationService.updateNotification(notification).subscribe();
+                }
+            })
         })
-    };
-
-    changeNotificationStatus(notificationId) {
-        this.RestApi.updateNotification(notificationId)
-            .then(success => {
-                //this.getNotifications();
-                //this.$rootScope.updateUnreadNotifications();
-            });
     };
 
     selectNotification(notification: ExistingNotification) {
         this.notifications = [];
         this.currentOffset = 0;
+        this.liveOffset = 0;
         this.currentlySelectedNotification = notification;
         this.currentlySelectedNotificationId = NotificationUtils.makeNotificationIdFromNotification(notification);
-        this.getNotifications(notification, 0, 10, true);
+        this.NotificationCountService.lockIncreaseUpdateForId(this.currentlySelectedNotificationId);
+        this.getNotifications(notification, this.currentOffset, 10, true);
     }
 
     onScroll(event: any) {
         if (this.notificationContainer.nativeElement.scrollTop === 0) {
             this.currentOffset += 10;
             this.previousScrollHeight = this.notificationContainer.nativeElement.scrollHeight;
-            this.getNotifications(this.currentlySelectedNotification, this.notifications.length, 10, false);
+            this.getNotifications(this.currentlySelectedNotification, this.notifications.length + this.liveOffset, 10, false);
         }
+    }
+
+    ngOnDestroy(): void {
+        this.subscription.unsubscribe();
+        this.NotificationCountService.unlockIncreaseUpdate();
     }
 };

@@ -18,7 +18,7 @@
 import {HttpClient} from "@angular/common/http";
 import {AuthStatusService} from "../../services/auth-status.service";
 import {Observable} from "rxjs";
-import {ExistingNotification, NotificationItem} from "../model/notifications.model";
+import {ExistingNotification, NotificationCount, NotificationItem} from "../model/notifications.model";
 import {Injectable} from "@angular/core";
 import {NotificationUtils} from "../utils/notifications.utils";
 
@@ -27,6 +27,12 @@ export class NotificationsService {
 
     constructor(private http: HttpClient,
                 private authStatusService: AuthStatusService) {
+    }
+
+    getUnreadNotificationsCount(): Observable<NotificationCount> {
+        return this.http.get(this.notificationUrl + "/count").map(data => {
+            return data as NotificationCount;
+        })
     }
 
     getNotifications(existingNotification: ExistingNotification, offset: number, limit: number): Observable<NotificationItem[]> {
@@ -43,7 +49,9 @@ export class NotificationsService {
             });
     }
 
-
+    updateNotification(notificationItem: NotificationItem): Observable<any> {
+        return this.http.put(this.notificationUrl + "/" + notificationItem._id, notificationItem);
+    }
 
     private get baseUrl() {
         return '/streampipes-backend';

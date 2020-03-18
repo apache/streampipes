@@ -48,6 +48,15 @@ public class Notification extends AbstractRestInterface implements INotification
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @Path("/count")
+    @Override
+    public Response getUnreadNotificationsCount(@PathParam("username") String username) {
+        return ok(getNotificationStorage()
+                .getUnreadNotificationsCount(username));
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/unread")
     @Override
     public Response getUnreadNotifications() {

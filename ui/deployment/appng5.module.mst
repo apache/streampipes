@@ -35,6 +35,7 @@ import { HomeModule } from './home/home.module';
 import { InfoModule } from './info/info.module';
 import { AppAssetMonitoringModule } from "./app-asset-monitoring/app-asset-monitoring.module";
 import { AppTransportMonitoringModule } from "./app-transport-monitoring/app-transport-monitoring.module";
+import { NotificationCountService } from "./services/notification-count-service";
 
 {{#modulesActive}}
 {{#ng5}}
@@ -75,6 +76,7 @@ import { NotificationModule } from './notifications/notifications.module';
     ],
     providers: [
         AuthStatusService,
+        NotificationCountService,
         {provide: Logger, useClass: ConsoleLogService}
     ]
 })
