@@ -18,6 +18,7 @@
 
 import { Client } from '@stomp/stompjs';
 import { NotificationCountService } from "../services/notification-count-service";
+import { NotificationItem } from "../notifications/model/notifications.model";
 
 export class ToolbarController {
     AuthStatusService: any;
