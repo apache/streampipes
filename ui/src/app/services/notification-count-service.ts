@@ -38,9 +38,6 @@ export class NotificationCountService {
 
     increaseNotificationCount(notification: NotificationItem) {
         let id = this.makeId(notification.correspondingPipelineId, notification.title);
-        console.log(id);
-        console.log(this.lockNotificationId);
-        console.log(id === this.lockNotificationId);
         if (this.lockActive && (id === this.lockNotificationId)) {
         } else {
             this.unreadNotificationCount = this.unreadNotificationCount + 1;
