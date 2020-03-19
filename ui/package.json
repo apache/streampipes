@@ -99,6 +99,7 @@
     "slick-carousel": "1.6.0",
     "systemjs": "^0.21.6",
     "tslib": "^1.10.0",
+    "ng-pick-datetime": "^7.0.0",
     "trix": "0.10.1",
     "zone.js": "~0.10.2"
   },
