@@ -24,7 +24,6 @@ import org.apache.http.client.fluent.Request;
 import org.apache.streampipes.connect.adapter.Adapter;
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
 import org.apache.streampipes.connect.adapter.exception.ParseException;
-import org.apache.streampipes.connect.adapter.sdk.ParameterExtractor;
 import org.apache.streampipes.connect.adapter.util.PollingSettings;
 import org.apache.streampipes.connect.adapters.PullAdapter;
 import org.apache.streampipes.connect.adapters.iss.model.IssModel;
@@ -97,7 +96,7 @@ public class IssAdapter extends PullAdapter {
 
     private Map<String, Object> asMap(IssModel issModel) {
         Map<String, Object> event = new HashMap<>();
-        event.put(Timestamp, issModel.getTimestamp());
+        event.put(Timestamp, issModel.getTimestamp() * 1000);
         event.put(Latitude, issModel.getIssPosition().getLatitude());
         event.put(Longitude, issModel.getIssPosition().getLongitude());
 
