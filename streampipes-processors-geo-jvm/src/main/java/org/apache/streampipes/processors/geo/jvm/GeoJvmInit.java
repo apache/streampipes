@@ -32,6 +32,7 @@ import org.apache.streampipes.processors.geo.jvm.jts.processor.setEPSG.SetEpsgCo
 import org.apache.streampipes.processors.geo.jvm.processor.distancecalculator.DistanceCalculatorController;
 import org.apache.streampipes.processors.geo.jvm.processor.geocoder.GoogleMapsGeocodingController;
 import org.apache.streampipes.processors.geo.jvm.processor.revgeocoder.ReverseGeocodingController;
+import org.apache.streampipes.processors.geo.jvm.processor.speed.SpeedCalculatorController;
 import org.apache.streampipes.processors.geo.jvm.processor.staticgeocoder.StaticGoogleMapsGeocodingController;
 
 public class GeoJvmInit extends StandaloneModelSubmitter {
@@ -44,7 +45,8 @@ public class GeoJvmInit extends StandaloneModelSubmitter {
         .add(new StaticGoogleMapsGeocodingController())
         .add(new ReverseGeocodingController())
         .add(new SetEpsgController())
-        .add(new LatLngToGeoController());
+        .add(new LatLngToGeoController())
+        .add(new SpeedCalculatorController());
 
 
     DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),

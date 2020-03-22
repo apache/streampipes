@@ -19,6 +19,7 @@
 package org.apache.streampipes.processors.geo.jvm.processor.distancecalculator;
 
 import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.processors.geo.jvm.processor.util.DistanceUtil;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
@@ -41,7 +42,7 @@ public class DistanceCalculator implements EventProcessor<DistanceCalculatorPara
     float lat2 = event.getFieldBySelector(this.params.getLat2PropertyName()).getAsPrimitive().getAsFloat();
     float long2 = event.getFieldBySelector(this.params.getLong2PropertyName()).getAsPrimitive().getAsFloat();
 
-    double resultDist = dist(lat1, long1, lat2, long2);
+    double resultDist = DistanceUtil.dist(lat1, long1, lat2, long2);
 
     event.addField("distance", resultDist);
 
@@ -53,17 +54,4 @@ public class DistanceCalculator implements EventProcessor<DistanceCalculatorPara
 
   }
 
-
-  public static float dist(float lat1, float lng1, float lat2, float lng2) {
-    double earthRadius = 6371000; //meters
-    double dLat = Math.toRadians(lat2-lat1);
-    double dLng = Math.toRadians(lng2-lng1);
-    double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-            Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
-                    Math.sin(dLng/2) * Math.sin(dLng/2);
-    double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-    float dist = (float) (earthRadius * c);
-
-    return dist / 1000;
-  }
 }
