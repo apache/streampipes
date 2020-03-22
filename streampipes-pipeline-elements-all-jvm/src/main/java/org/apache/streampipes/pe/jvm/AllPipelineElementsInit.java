@@ -35,6 +35,12 @@ import org.apache.streampipes.processors.filters.jvm.processor.numericaltextfilt
 import org.apache.streampipes.processors.filters.jvm.processor.projection.ProjectionController;
 import org.apache.streampipes.processors.filters.jvm.processor.textfilter.TextFilterController;
 import org.apache.streampipes.processors.filters.jvm.processor.threshold.ThresholdDetectionController;
+import org.apache.streampipes.processors.geo.jvm.jts.processor.latLngToGeo.LatLngToGeoController;
+import org.apache.streampipes.processors.geo.jvm.jts.processor.setEPSG.SetEpsgController;
+import org.apache.streampipes.processors.geo.jvm.processor.distancecalculator.DistanceCalculatorController;
+import org.apache.streampipes.processors.geo.jvm.processor.geocoder.GoogleMapsGeocodingController;
+import org.apache.streampipes.processors.geo.jvm.processor.revgeocoder.ReverseGeocodingController;
+import org.apache.streampipes.processors.geo.jvm.processor.staticgeocoder.StaticGoogleMapsGeocodingController;
 import org.apache.streampipes.processors.imageprocessing.jvm.processor.genericclassification.GenericImageClassificationController;
 import org.apache.streampipes.processors.imageprocessing.jvm.processor.imagecropper.ImageCropperController;
 import org.apache.streampipes.processors.imageprocessing.jvm.processor.imageenrichment.ImageEnrichmentController;
@@ -117,7 +123,13 @@ public class AllPipelineElementsInit extends StandaloneModelSubmitter {
             .add(new OneSignalController())
             .add(new SlackNotificationController())
             .add(new NumericalTextFilterController())
-            .add(new SizeMeasureController());
+            .add(new SizeMeasureController())
+            .add(new DistanceCalculatorController())
+            .add(new GoogleMapsGeocodingController())
+            .add(new StaticGoogleMapsGeocodingController())
+            .add(new ReverseGeocodingController())
+            .add(new SetEpsgController())
+            .add(new LatLngToGeoController());
 
 
     DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),
