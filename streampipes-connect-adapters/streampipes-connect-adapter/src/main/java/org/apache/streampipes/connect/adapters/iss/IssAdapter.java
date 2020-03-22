@@ -112,7 +112,7 @@ public class IssAdapter extends PullAdapter {
     public SpecificAdapterStreamDescription declareModel() {
         SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(ID)
                 .withLocales(Locales.EN)
-                .withAssets(Assets.DOCUMENTATION)
+                .withAssets(Assets.DOCUMENTATION, Assets.ICON)
                 .category(AdapterType.OpenData)
                 .build();
         description.setAppId(ID);
