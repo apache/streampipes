@@ -16,22 +16,20 @@
   ~
   -->
 
-## Distance Calculator
-
-<p align="center"> 
-    <img src="icon.png" width="150px;" class="pe-image-documentation"/>
-</p>
+## Static Distance Calculator
 
 ***
 
 ## Description
 
-Calculates the distance between two latitude/longitude pairs in a single event.
+Calculates the distance (in km) between a fixed location (e.g., a place) and a latitude/longitude pair of an input
+ event.
 
 ***
 
 ## Required input
 
+Requires a data stream that provides latitude and longitude values.
 
 ***
 

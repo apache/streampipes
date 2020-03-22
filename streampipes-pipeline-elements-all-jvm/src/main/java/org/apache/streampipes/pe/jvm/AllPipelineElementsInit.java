@@ -41,6 +41,7 @@ import org.apache.streampipes.processors.geo.jvm.processor.distancecalculator.Di
 import org.apache.streampipes.processors.geo.jvm.processor.geocoder.GoogleMapsGeocodingController;
 import org.apache.streampipes.processors.geo.jvm.processor.revgeocoder.ReverseGeocodingController;
 import org.apache.streampipes.processors.geo.jvm.processor.speed.SpeedCalculatorController;
+import org.apache.streampipes.processors.geo.jvm.processor.staticdistancecalculator.StaticDistanceCalculatorController;
 import org.apache.streampipes.processors.geo.jvm.processor.staticgeocoder.StaticGoogleMapsGeocodingController;
 import org.apache.streampipes.processors.imageprocessing.jvm.processor.genericclassification.GenericImageClassificationController;
 import org.apache.streampipes.processors.imageprocessing.jvm.processor.imagecropper.ImageCropperController;
@@ -131,7 +132,8 @@ public class AllPipelineElementsInit extends StandaloneModelSubmitter {
             .add(new ReverseGeocodingController())
             .add(new SetEpsgController())
             .add(new LatLngToGeoController())
-            .add(new SpeedCalculatorController());
+            .add(new SpeedCalculatorController())
+            .add(new StaticDistanceCalculatorController());
 
 
     DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),
