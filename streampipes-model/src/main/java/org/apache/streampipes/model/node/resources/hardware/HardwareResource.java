@@ -1,4 +1,4 @@
-package org.apache.streampipes.model.node.capabilities.hardware;/*
+package org.apache.streampipes.model.node.resources.hardware;/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,16 +16,11 @@ package org.apache.streampipes.model.node.capabilities.hardware;/*
  *
  */
 
-import org.apache.streampipes.model.node.capabilities.hardware.resources.CPU;
-import org.apache.streampipes.model.node.capabilities.hardware.resources.DISK;
-import org.apache.streampipes.model.node.capabilities.hardware.resources.GPU;
-import org.apache.streampipes.model.node.capabilities.hardware.resources.MEM;
 
-
-public class Hardware {
+public class HardwareResource {
 
     public CPU cpu;
-    public MEM mem;
+    public MEM memory;
     public DISK disk;
     public GPU gpu;
 
@@ -37,12 +32,12 @@ public class Hardware {
         this.cpu = cpu;
     }
 
-    public MEM getMem() {
-        return mem;
+    public MEM getMemory() {
+        return memory;
     }
 
-    public void setMem(MEM mem) {
-        this.mem = mem;
+    public void setMemory(MEM memory) {
+        this.memory = memory;
     }
 
     public DISK getDisk() {

@@ -1,4 +1,4 @@
-package org.apache.streampipes.model.node.capabilities.software;/*
+package org.apache.streampipes.model.node.resources.software;/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,14 +16,11 @@ package org.apache.streampipes.model.node.capabilities.software;/*
  *
  */
 
-import org.apache.streampipes.model.node.capabilities.software.resources.Cuda;
-import org.apache.streampipes.model.node.capabilities.software.resources.Docker;
-
-public class Software {
-    private String os;
-    private String kernelVersion;
+public class SoftwareResource {
+    public String os;
+    public String kernelVersion;
 //    private Cuda cuda;
-    private Docker docker;
+    public Docker docker;
 
     public String getOs() {
         return os;

@@ -25,7 +25,7 @@ public class NodeInfo {
     private int nodeControllerPort;
     private NodeMetadata nodeMetadata;
     private NodeBrokerInfo nodeBrokerInfo;
-    private NodeCapabilities nodeCapabilities;
+    private NodeResources nodeResources;
     private List<String> supportedPipelineElementAppIds;
 
     public NodeInfo() {
@@ -56,12 +56,12 @@ public class NodeInfo {
         this.nodeMetadata = nodeMetadata;
     }
 
-    public NodeCapabilities getNodeCapabilities() {
-        return nodeCapabilities;
+    public NodeResources getNodeResources() {
+        return nodeResources;
     }
 
-    public void setNodeCapabilities(NodeCapabilities nodeCapabilities) {
-        this.nodeCapabilities = nodeCapabilities;
+    public void setNodeResources(NodeResources nodeResources) {
+        this.nodeResources = nodeResources;
     }
 
     public List<String> getSupportedPipelineElementAppIds() {

@@ -14,6 +14,7 @@
 # limitations under the License.
 
 ARG BASE_IMAGE=adoptopenjdk/openjdk8-openj9:alpine-slim
+#ARG BASE_IMAGE=adoptopenjdk:8-jre-openj9
 FROM $BASE_IMAGE
 
 EXPOSE 7077
@@ -23,7 +24,7 @@ ENV CONSUL_LOCATION consul
 # curl needed to talk to docker.sock for NodeJanitorManager
 # to prune images (docker-spotify does not support pruning)
 RUN set -x; \
-    apk --update add curl; \
+    apk --update add curl eudev-dev; \
     rm -rf /var/cache/apk/*
 
 COPY target/streampipes-node-controller-container.jar  /streampipes-node-controller.jar

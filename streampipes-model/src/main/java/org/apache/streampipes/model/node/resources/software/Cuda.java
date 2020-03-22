@@ -1,4 +1,4 @@
-package org.apache.streampipes.model.node.capabilities.interfaces;/*
+package org.apache.streampipes.model.node.resources.software;/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,42 +16,33 @@ package org.apache.streampipes.model.node.capabilities.interfaces;/*
  *
  */
 
+public class Cuda {
 
-public class Interfaces {
-    public String name;
-    public String type;
-    public String connectionInfo;
-    public String connectionType;
+    private boolean hasCuda;
+    private String cudaDriverVersion;
+    private String cudaRuntimeVersion;
 
-    public String getName() {
-        return name;
+    public boolean hasCuda() {
+        return hasCuda;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setHasCuda(boolean hasCuda) {
+        this.hasCuda = hasCuda;
     }
 
-    public String getType() {
-        return type;
+    public String getCudaDriverVersion() {
+        return cudaDriverVersion;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setCudaDriverVersion(String cudaDriverVersion) {
+        this.cudaDriverVersion = cudaDriverVersion;
     }
 
-    public String getConnectionInfo() {
-        return connectionInfo;
+    public String getCudaRuntimeVersion() {
+        return cudaRuntimeVersion;
     }
 
-    public void setConnectionInfo(String connectionInfo) {
-        this.connectionInfo = connectionInfo;
-    }
-
-    public String getConnectionType() {
-        return connectionType;
-    }
-
-    public void setConnectionType(String connectionType) {
-        this.connectionType = connectionType;
+    public void setCudaRuntimeVersion(String cudaRuntimeVersion) {
+        this.cudaRuntimeVersion = cudaRuntimeVersion;
     }
 }

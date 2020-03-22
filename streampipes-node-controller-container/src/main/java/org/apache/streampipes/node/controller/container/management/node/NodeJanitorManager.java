@@ -17,7 +17,7 @@ package org.apache.streampipes.node.controller.container.management.node;/*
  */
 
 import org.apache.streampipes.node.controller.container.config.NodeControllerConfig;
-import org.apache.streampipes.node.controller.container.management.pe.DockerUtils;
+import org.apache.streampipes.node.controller.container.management.container.DockerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,14 +48,14 @@ public class NodeJanitorManager {
 
     // regularly clean dangling docker images
     public void run() {
-        LOG.info("Create Janitor scheduler");
+        LOG.debug("Create Janitor scheduler");
 
         scheduledExecutorService =  Executors.newScheduledThreadPool(1);
         scheduledExecutorService.scheduleAtFixedRate(pruneDocker, 30, NodeControllerConfig.INSTANCE.getPruningFreq(), TimeUnit.MINUTES);
     }
 
     private final Runnable pruneDocker = () -> {
-        LOG.info("Clean up dangling images");
+        LOG.debug("Clean up dangling images");
         DockerUtils.prune();
     };
 

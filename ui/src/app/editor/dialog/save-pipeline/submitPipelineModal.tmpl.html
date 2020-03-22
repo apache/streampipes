@@ -70,7 +70,7 @@
                                     <md-option
                                             ng-value = "node.nodeControllerId" ng-repeat="node in
                                             ctrl.deploymentOptions[pipelineElement.appId]">
-                                        <em>{{node.nodeMetadata.nodeHost}}
+                                        <em>{{node.nodeMetadata.nodeAddress}}
                                         </em>
                                     </md-option>
                                 </md-select>
@@ -87,7 +87,7 @@
                                     <md-option
                                             ng-value = "node.nodeControllerId" ng-repeat="node in
                                             ctrl.deploymentOptions[pipelineElement.appId]">
-                                        <em>{{node.nodeMetadata.nodeHost}}
+                                        <em>{{node.nodeMetadata.nodeAddress}}
                                         </em>
                                     </md-option>
                                 </md-select>

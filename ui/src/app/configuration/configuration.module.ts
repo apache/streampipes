@@ -40,6 +40,7 @@ import {PipelineElementConfigurationComponent} from "./pipeline-element-configur
 import {MessagingConfigurationComponent} from "./messaging-configuration/messaging-configuration.component";
 import {DragDropModule} from "@angular/cdk/drag-drop";
 import {EdgeConfigurationComponent} from "./edge-configuration/edge-configuration.component";
+import {MatChipsModule} from "@angular/material/chips";
 
 @NgModule({
     imports: [

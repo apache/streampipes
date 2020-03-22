@@ -1,4 +1,4 @@
-package org.apache.streampipes.model.node.capabilities.hardware.resources;/*
+package org.apache.streampipes.model.node.resources.hardware;/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,32 +16,14 @@ package org.apache.streampipes.model.node.capabilities.hardware.resources;/*
  *
  */
 
-public class GPU {
-    public boolean hasGPU;
-    public int cudaCores;
-    public String type;
+public class DISK {
+    public long diskTotal;
 
-    public boolean hasGPU() {
-        return hasGPU;
+    public long getDiskTotal() {
+        return diskTotal;
     }
 
-    public void setHasGPU(boolean hasGPU) {
-        this.hasGPU = hasGPU;
-    }
-
-    public int getCudaCores() {
-        return cudaCores;
-    }
-
-    public void setCudaCores(int cudaCores) {
-        this.cudaCores = cudaCores;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
+    public void setDiskTotal(long diskTotal) {
+        this.diskTotal = diskTotal;
     }
 }

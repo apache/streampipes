@@ -20,7 +20,7 @@ ENV CONSUL_LOCATION consul
 
 EXPOSE 7077
 
-COPY qemu-aarch64-static /usr/bin
+#COPY qemu-aarch64-static /usr/bin
 RUN set -ex; \
     apt -y update; \
     apt -y --no-install-recommends install curl; \

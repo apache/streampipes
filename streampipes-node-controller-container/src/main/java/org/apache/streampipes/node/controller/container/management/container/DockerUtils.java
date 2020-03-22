@@ -1,4 +1,4 @@
-package org.apache.streampipes.node.controller.container.management.pe;/*
+package org.apache.streampipes.node.controller.container.management.container;/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,6 +16,10 @@ package org.apache.streampipes.node.controller.container.management.pe;/*
  *
  */
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.spotify.docker.client.DefaultDockerClient;
 import com.spotify.docker.client.DockerClient;
 import com.spotify.docker.client.exceptions.DockerCertificateException;
@@ -43,7 +47,7 @@ public class DockerUtils {
     private static final String BLANK_SPACE = " ";
 
     private static DockerUtils instance;
-    static DockerClient docker;
+    private static DockerClient docker;
 
     private DockerUtils() {
         init();
@@ -234,7 +238,6 @@ public class DockerUtils {
         public static DockerInfo getDockerInfo() {
         DockerInfo dockerInfo = new DockerInfo();
         try {
-
             Info info = docker.info();
             Version version = docker.version();
 
@@ -242,10 +245,11 @@ public class DockerUtils {
             dockerInfo.setApiVersion(version.apiVersion());
             dockerInfo.setKernelVersion(version.kernelVersion());
             dockerInfo.setArch(version.arch());
-            dockerInfo.setOs(version.os());
+            dockerInfo.setOsType(info.osType());
+            dockerInfo.setOs(info.operatingSystem());
             dockerInfo.setCpus(info.cpus());
             dockerInfo.setMemTotal(info.memTotal());
-
+            dockerInfo.setHasNvidiaRuntime(hasNvidiaRuntime());
 
             return dockerInfo;
         } catch (DockerException | InterruptedException e) {
@@ -281,5 +285,39 @@ public class DockerUtils {
                 .stream()
                 .filter(c -> c.labels().containsValue("pipeline-element"))
                 .collect(Collectors.toList());
+    }
+
+    private static boolean hasNvidiaRuntime() {
+        boolean hasNvidiaRuntime = false;
+        try {
+            Process p = Runtime.getRuntime().exec(
+                    "curl --unix-socket"
+                            + BLANK_SPACE
+                            + DOCKER_UNIX_SOCK
+                            + BLANK_SPACE
+                            + "http:/v" + getApiVersion() + "/info");
+
+            BufferedReader stdInput = new BufferedReader(new
+                    InputStreamReader(p.getInputStream()));
+
+            StringBuilder sb = new StringBuilder();
+
+            String line;
+            while ((line = stdInput.readLine()) != null) {
+                sb.append(line);
+            }
+            JsonObject rootObj = new JsonParser().parse(sb.toString()).getAsJsonObject();
+
+            // check if runtime nvidia exists
+            hasNvidiaRuntime = rootObj.getAsJsonObject("Runtimes")
+                    .keySet()
+                    .stream()
+                    .anyMatch(e -> e.equals("nvidia"));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return hasNvidiaRuntime;
     }
 }

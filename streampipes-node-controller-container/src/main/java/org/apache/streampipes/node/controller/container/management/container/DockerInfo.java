@@ -1,4 +1,4 @@
-package org.apache.streampipes.node.controller.container.management.pe;/*
+package org.apache.streampipes.node.controller.container.management.container;/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -23,19 +23,23 @@ public class DockerInfo {
     private Long memTotal;
     private int cpus;
     private String os;
+    private String osType;
     private String kernelVersion;
     private String arch;
+    private boolean hasNvidiaRuntime;
 
     public DockerInfo(){}
 
-    public DockerInfo(String serverVersion, String apiVersion, Long memTotal, int cpus, String os, String kernelVersion, String arch) {
+    public DockerInfo(String serverVersion, String apiVersion, Long memTotal, int cpus, String os, String osType, String kernelVersion, String arch, boolean hasNvidiaRuntime) {
         this.serverVersion = serverVersion;
         this.apiVersion = apiVersion;
         this.memTotal = memTotal;
         this.cpus = cpus;
         this.os = os;
+        this.osType = osType;
         this.kernelVersion = kernelVersion;
         this.arch = arch;
+        this.hasNvidiaRuntime = hasNvidiaRuntime;
     }
 
     public String getServerVersion() {
@@ -78,6 +82,14 @@ public class DockerInfo {
         this.os = os;
     }
 
+    public String getOsType() {
+        return osType;
+    }
+
+    public void setOsType(String osType) {
+        this.osType = osType;
+    }
+
     public String getKernelVersion() {
         return kernelVersion;
     }
@@ -92,5 +104,13 @@ public class DockerInfo {
 
     public void setArch(String arch) {
         this.arch = arch;
+    }
+
+    public boolean isHasNvidiaRuntime() {
+        return hasNvidiaRuntime;
+    }
+
+    public void setHasNvidiaRuntime(boolean hasNvidiaRuntime) {
+        this.hasNvidiaRuntime = hasNvidiaRuntime;
     }
 }

@@ -17,19 +17,27 @@ package org.apache.streampipes.node.controller.container.config;/*
  */
 
 import org.apache.streampipes.model.node.*;
-import org.apache.streampipes.model.node.capabilities.hardware.Hardware;
-import org.apache.streampipes.model.node.capabilities.hardware.resources.CPU;
-import org.apache.streampipes.model.node.capabilities.hardware.resources.DISK;
-import org.apache.streampipes.model.node.capabilities.hardware.resources.GPU;
-import org.apache.streampipes.model.node.capabilities.hardware.resources.MEM;
-import org.apache.streampipes.model.node.capabilities.interfaces.Interfaces;
-import org.apache.streampipes.model.node.capabilities.software.Software;
-import org.apache.streampipes.model.node.capabilities.software.resources.Docker;
-import org.apache.streampipes.node.controller.container.management.pe.DockerInfo;
-import org.apache.streampipes.node.controller.container.management.pe.DockerUtils;
+import org.apache.streampipes.model.node.resources.hardware.HardwareResource;
+import org.apache.streampipes.model.node.resources.hardware.CPU;
+import org.apache.streampipes.model.node.resources.hardware.DISK;
+import org.apache.streampipes.model.node.resources.hardware.GPU;
+import org.apache.streampipes.model.node.resources.hardware.MEM;
+import org.apache.streampipes.model.node.resources.interfaces.AccessibleSensorActuatorResource;
+import org.apache.streampipes.model.node.resources.software.SoftwareResource;
+import org.apache.streampipes.model.node.resources.software.Docker;
+import org.apache.streampipes.node.controller.container.management.container.DockerInfo;
+import org.apache.streampipes.node.controller.container.management.container.DockerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import oshi.SystemInfo;
+import oshi.hardware.ComputerSystem;
+import oshi.hardware.HardwareAbstractionLayer;
+import oshi.software.os.FileSystem;
+import oshi.software.os.OSFileStore;
+import oshi.software.os.OperatingSystem;
+
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class NodeInfoStorage {
 
@@ -40,7 +48,11 @@ public class NodeInfoStorage {
     private static final int DEFAULT_NODE_CONTROLLER_PORT = 7077;
     private static final int DEFAULT_NODE_BROKER_PORT = 616161;
 
-    private static final DockerInfo DockerInfo = DockerUtils.getDockerInfo();
+    private static DockerInfo DockerInfo = DockerUtils.getInstance().getDockerInfo();
+    // OSHI to retreive system information
+    private static SystemInfo si = new SystemInfo();
+    private static HardwareAbstractionLayer hal = si.getHardware();
+    private static OperatingSystem os = si.getOperatingSystem();
 
     private static NodeInfoStorage instance = null;
 
@@ -56,7 +68,7 @@ public class NodeInfoStorage {
         nodeInfo = n;
     }
 
-    public NodeInfo get() {
+    public NodeInfo retrieveNodeInfo() {
         return nodeInfo;
     }
 
@@ -66,8 +78,8 @@ public class NodeInfoStorage {
                 .withNodeControllerPort(getNodeControllerPort())
                 .withNodeHost(getNodeHost())
                 .withNodeLocation(getNodeLocation())
-                .withNodeDescription(getNodeDescription())
-                .withNodeCapabilities(getNodeCapabilities())
+                .withNodeModel(getNodeModel())
+                .withNodeResources(getNodeResources())
                 .withJmsTransportProtocol(getNodeBrokerHost(), getNodeBrokerPort())
                 .withSupportedPipelineElements(getSupportedPipelineElements())
                 .build();
@@ -88,21 +100,26 @@ public class NodeInfoStorage {
         return envExists(ConfigKeys.NODE_HOST_KEY);
     }
 
-    private static String getNodeLocation() {
-        return envExists(ConfigKeys.NODE_LOCATION_KEY);
+    private static List<String> getNodeLocation() {
+        return System.getenv()
+                .entrySet()
+                .stream()
+                .filter(e -> (e.getKey().contains(ConfigKeys.NODE_LOCATION_KEY)))
+                .map(x ->  x.getKey().replace(ConfigKeys.NODE_LOCATION_KEY + "_", "").toLowerCase() + "=" + x.getValue())
+                .collect(Collectors.toList());
     }
 
-    private static String getNodeDescription() {
-        return envExists(ConfigKeys.NODE_DESCRIPTION_KEY);
+    private static String getNodeModel() {
+        return !printComputerSystem(hal.getComputerSystem()).equals("") ? printComputerSystem(hal.getComputerSystem()) : "n/a";
     }
 
-    private static NodeCapabilities getNodeCapabilities() {
-        NodeCapabilities nodeCapabilities = new NodeCapabilities();
-        nodeCapabilities.setHardware(getActualHardware());
-        nodeCapabilities.setSoftware(getActualSoftware());
-        nodeCapabilities.setInterfaces(getActualInterfaces());
+    private static NodeResources getNodeResources() {
+        NodeResources nodeResources = new NodeResources();
+        nodeResources.setHardwareResource(getNodeHardwareResource());
+        nodeResources.setSoftwareResource(getNodeSoftwareResource());
+        nodeResources.setAccessibleSensorActuatorResource(getAcessibleSensorActuatorResources());
 
-        return nodeCapabilities;
+        return nodeResources;
     }
 
     private static String getNodeBrokerHost(){
@@ -123,70 +140,75 @@ public class NodeInfoStorage {
         return Arrays.asList(supportedPipelineElements);
     }
 
-    private static Hardware getActualHardware(){
-        Hardware hardware = new Hardware();
-        hardware.setGpu(getActualGpu());
-        hardware.setCpu(getActualCpu());
-        hardware.setMem(getActualMem());
-        hardware.setDisk(getActualDisk());
+    private static HardwareResource getNodeHardwareResource(){
+        HardwareResource hardwareResource = new HardwareResource();
+        hardwareResource.setGpu(getNodeGpu());
+        hardwareResource.setCpu(getNodeCpu());
+        hardwareResource.setMemory(getNodeMemory());
+        hardwareResource.setDisk(getNodeDisk());
 
-        return hardware;
+        return hardwareResource;
     }
 
-    private static Software getActualSoftware(){
-        Software software = new Software();
-        software.setOs(DockerInfo.getOs());
-        software.setKernelVersion(DockerInfo.getKernelVersion());
-        software.setDocker(getActualDocker());
+    private static SoftwareResource getNodeSoftwareResource(){
+        SoftwareResource softwareResource = new SoftwareResource();
+        softwareResource.setOs(DockerInfo.getOs());
+        softwareResource.setKernelVersion(DockerInfo.getKernelVersion());
+        softwareResource.setDocker(getDocker());
 
-        return software;
+        return softwareResource;
     }
 
-    private static List<Interfaces> getActualInterfaces(){
-        String[] interfaces = envExists(ConfigKeys.NODE_INTERFACES_KEY)
+    private static List<AccessibleSensorActuatorResource> getAcessibleSensorActuatorResources(){
+        String[] accessibleSensorActuatorResources = envExists(ConfigKeys.NODE_ACCESSIBLE_SENSOR_ACTUATOR_KEY)
                 .trim()
                 .replaceAll("\\[|\\]|\"", "")
                 .split("\\s*,\\s*");
 
-        List<Interfaces> interfacesList = new ArrayList<>();
-        for(String s: interfaces) {
+        List<AccessibleSensorActuatorResource> accessibleSensorActuatorResourceList = new ArrayList<>();
+        for(String s: accessibleSensorActuatorResources) {
             String [] substr = s.split(";");
-            Interfaces i = new Interfaces();
+            AccessibleSensorActuatorResource i = new AccessibleSensorActuatorResource();
             i.setName(substr[0]);
             i.setType(substr[1]);
             i.setConnectionInfo(substr[2]);
             i.setConnectionType(substr[3]);
 
-            interfacesList.add(i);
+            accessibleSensorActuatorResourceList.add(i);
         }
 
-        return interfacesList;
+        return accessibleSensorActuatorResourceList;
     }
 
-    private static CPU getActualCpu(){
+    private static CPU getNodeCpu(){
         CPU cpu = new CPU();
-        cpu.setCores(DockerInfo.getCpus());
-        cpu.setArch(DockerInfo.getArch());
+        if (DockerInfo.getOs().equals("Docker Desktop")) {
+            cpu.setCores(DockerInfo.getCpus());
+            cpu.setArch(DockerInfo.getArch());
+        } else {
+            cpu.setCores(hal.getProcessor().getLogicalProcessorCount());
+            cpu.setArch(DockerInfo.getArch());
+        }
         return cpu;
     }
 
-    private static MEM getActualMem() {
+    private static MEM getNodeMemory() {
         MEM mem = new MEM();
-        mem.setMemTotal(DockerInfo.getMemTotal());
+        if (DockerInfo.getOs().equals("Docker Desktop")) {
+            mem.setMemTotal(DockerInfo.getMemTotal());
+        } else {
+            mem.setMemTotal(hal.getMemory().getTotal());
+        }
         return mem;
     }
 
-    private static DISK getActualDisk() {
-        // TODO: add disk info
+    private static DISK getNodeDisk() {
         DISK disk = new DISK();
-        disk.setDiskTotal(System.getenv(ConfigKeys.NODE_DISK_TOTAL_KEY) != null
-                ? Integer.parseInt(System.getenv(ConfigKeys.NODE_DISK_TOTAL_KEY)) : 0);
-        disk.setType(envExists(ConfigKeys.NODE_DISK_TYPE_KEY));
-
+        disk.setDiskTotal(getDiskUsage(os.getFileSystem()));
         return disk;
     }
 
-    private static GPU getActualGpu(){
+    private static GPU getNodeGpu(){
         boolean hasGpu = Boolean.parseBoolean(envExists(ConfigKeys.NODE_HAS_GPU_KEY));
         GPU gpu = new GPU();
         if (!hasGpu) {
@@ -200,16 +222,14 @@ public class NodeInfoStorage {
             gpu.setType(System.getenv(ConfigKeys.NODE_GPU_TYPE_KEY) != null
                     ? System.getenv(ConfigKeys.NODE_GPU_TYPE_KEY) : "not specified");
         }
-
         return gpu;
     }
 
-    private static Docker getActualDocker() {
+    private static Docker getDocker() {
 
         Docker docker = new Docker();
         docker.setHasDocker(true);
-        docker.setHasNvidiaRuntime(System.getenv(ConfigKeys.NODE_HAS_NVIDIA_DOCKER_RUNTIME_KEY) != null
-                ? Boolean.parseBoolean(System.getenv(ConfigKeys.NODE_HAS_NVIDIA_DOCKER_RUNTIME_KEY)) : false);
+        docker.setHasNvidiaRuntime(DockerInfo.isHasNvidiaRuntime());
         docker.setServerVersion(DockerInfo.getServerVersion());
         docker.setApiVersion(DockerInfo.getApiVersion());
 
@@ -218,5 +238,30 @@ public class NodeInfoStorage {
 
     private static String envExists(String key) {
         return System.getenv(key) != null ? System.getenv(key) : "";
+    }
+
+    private static String printComputerSystem(ComputerSystem cs) {
+        return cs.getModel().trim();
+    }
+
+    private static Long getDiskUsage(FileSystem fs) {
+        OSFileStore[] fsArray = fs.getFileStores();
+        long diskTotal = 0L;
+        for(OSFileStore f : fsArray) {
+            // has SATA disk
+            if (f.getVolume().contains("/dev/sda")){
+                diskTotal = f.getTotalSpace();
+            }
+            // has NVME
+            else if (f.getVolume().contains("/dev/nvme")){
+                diskTotal = f.getTotalSpace();
+            }
+            // macos
+            else if (f.getVolume().contains("/dev/disk") && f.getMount().equals("/")){
+                diskTotal = f.getTotalSpace();
+            }
+        }
+
+        return diskTotal;
     }
 }

@@ -41,7 +41,19 @@ export class EdgeConfigurationComponent {
     getAvailableEdgeNodes() {
         this.configurationService.getAvailableEdgeNodes().subscribe(response => {
             this.availableEdgeNodes = response;
-            console.log(this.availableEdgeNodes);
+            this.availableEdgeNodes.forEach(x => {
+                x.nodeResources.hardwareResource.memory.memTotal = this.bytesToGB(x.nodeResources.hardwareResource.memory.memTotal);
+                x.nodeResources.hardwareResource.disk.diskTotal = this.bytesToGB(x.nodeResources.hardwareResource.disk.diskTotal)
+            });
         })
     }
+
+    bytesToGB(bytes) {
+        var b = 1;
+        var kb = b * 1024;
+        var mb = kb * 1024;
+        var gb = mb * 1024;
+        return (Math.round((bytes / gb) * 100) / 100);
+    };
+
 }

@@ -76,7 +76,7 @@ public class InvocableEntityUrlGenerator extends EndpointUrlGenerator<InvocableS
                         + SLASH
                         + PE_PORT_KEY;
 
-                return nodeInfo.getNodeMetadata().getNodeHost()
+                return nodeInfo.getNodeMetadata().getNodeAddress()
                         + COLON
                         + ConsulUtil.getPortForService(route);
             } else {

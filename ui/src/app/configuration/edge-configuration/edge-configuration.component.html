@@ -20,7 +20,7 @@
     <div fxFlex="100" fxLayout="row wrap" fxLayoutAlign="start stretch">
         <div fxFlex="100" class="assemblyOptions sp-blue-bg" style="padding:5px;">
             <div fxLayout="row" fxLayoutAlign="start center" fxFlex="100">
-                <h4>Edge Nodes</h4>
+                <h4>Node Overview</h4>
                 <span flex></span>
             </div>
         </div>
@@ -32,12 +32,27 @@
                 <mat-grid-tile class="gray" *ngFor="let node of availableEdgeNodes">
                     <mat-card class="example-card">
                         <mat-card-header>
-                            <mat-card-title>  {{node.nodeMetadata.nodeHost}}</mat-card-title>
-                            <mat-card-subtitle>{{node.nodeMetadata.nodeDescription}}</mat-card-subtitle>
+                            <div mat-card-avatar class="node-header-avatar"><i class="fas fa-server fa-3x"></i></div>
+                            <mat-card-title>{{node.nodeControllerId}}</mat-card-title>
+                            <mat-card-subtitle>{{node.nodeMetadata.nodeModel}} | <b>{{node.nodeResources.hardwareResource.cpu.arch}}</b></mat-card-subtitle>
                         </mat-card-header>
                         <mat-card-content>
-                            <p>
-                            </p>
+                            <div class="div-node-tag" *ngFor="let tag of node.nodeMetadata.nodeLocationTags">
+                                <span class="span-node-tag">{{tag}}</span>&nbsp;
+                            </div>
+<!--                            <div class="div-sa-tag" *ngFor="let element of node.nodeResources.accessibleSensorActuatorResource">-->
+<!--                                <span class="span-sa-tag">{{element.name}}</span>&nbsp;-->
+<!--                            </div>-->
+                                <ul class="fa-ul">
+                                    <li><span class="fa-li" style="color: darkgray"><i class="fas fa-link"></i></span>{{node.nodeMetadata.nodeAddress}}</li>
+                                    <li><span class="fa-li" style="color: darkgray"><i class="fab fa-docker"></i></span>{{node.nodeResources.softwareResource.docker.serverVersion}}</li>
+                                    <li><span class="fa-li" style="color: darkgray"><i class="fas fa-cube"></i></span>{{node.nodeResources.softwareResource.os}}</li>
+                                </ul>
+                                <ul class="fa-ul">
+                                    <li><span class="fa-li" style="color: darkgray"><i class="fas fa-microchip"></i></span><b>{{node.nodeResources.hardwareResource.cpu.cores}}</b> cores</li>
+                                    <li><span class="fa-li" style="color: darkgray"><i class="fas fa-memory"></i></span><b>{{node.nodeResources.hardwareResource.memory.memTotal}}</b> GiB</li>
+                                    <li><span class="fa-li" style="color: darkgray"><i class="fas fa-hdd"></i></span><b>{{node.nodeResources.hardwareResource.disk.diskTotal}}</b> GiB</li>
+                                </ul>
                         </mat-card-content>
                         <mat-card-actions>
                         </mat-card-actions>

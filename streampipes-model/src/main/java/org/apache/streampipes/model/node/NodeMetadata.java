@@ -17,42 +17,44 @@
  */
 package org.apache.streampipes.model.node;
 
+import java.util.List;
+
 public class NodeMetadata {
 
-    private String nodeHost;
-    private String nodeDescription;
-    private String nodeLocation;
+    private String nodeAddress;
+    private String nodeModel;
+    private List<String> nodeLocationTags;
 
     public NodeMetadata() {
     }
 
-    public NodeMetadata(String nodeHost, String nodeDescription, String nodeLocation) {
-        this.nodeHost = nodeHost;
-        this.nodeDescription = nodeDescription;
-        this.nodeLocation = nodeLocation;
+    public NodeMetadata(String nodeAddress, String nodeModel, List<String> nodeLocationTags) {
+        this.nodeAddress = nodeAddress;
+        this.nodeModel = nodeModel;
+        this.nodeLocationTags = nodeLocationTags;
     }
 
-    public String getNodeHost() {
-        return nodeHost;
+    public String getNodeAddress() {
+        return nodeAddress;
     }
 
-    public void setNodeHost(String nodeHost) {
-        this.nodeHost = nodeHost;
+    public void setNodeAddress(String nodeAddress) {
+        this.nodeAddress = nodeAddress;
     }
 
-    public String getNodeDescription() {
-        return nodeDescription;
+    public String getNodeModel() {
+        return nodeModel;
     }
 
-    public void setNodeDescription(String nodeDescription) {
-        this.nodeDescription = nodeDescription;
+    public void setNodeModel(String nodeModel) {
+        this.nodeModel = nodeModel;
     }
 
-    public String getNodeLocation() {
-        return nodeLocation;
+    public List<String> getNodeLocationTags() {
+        return nodeLocationTags;
     }
 
-    public void setNodeLocation(String nodeLocation) {
-        this.nodeLocation = nodeLocation;
+    public void setNodeLocationTags(List<String> nodeLocationTags) {
+        this.nodeLocationTags = nodeLocationTags;
     }
 }

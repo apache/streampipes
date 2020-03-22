@@ -27,7 +27,10 @@ public enum NodeControllerConfig {
     private static final String DOT = ".";
     private static final String DEFAULT_NODE_BROKER_NAME_SUFFIX = "broker";
     private static final String node_service_id = "node/org.apache.streampipes.node.controller";
-    private static final int DEFAULT_DOCKER_PRUNING_FREQ = 60;
+
+    // Node controller configs
+    private static final int DOCKER_PRUNING_FREQ_SECS = 60;
+    private static final int NODE_RESOURCE_UPDATE_FREQ_SECS = 30;
 
     NodeControllerConfig() {
         config = SpConfig.getSpConfig(node_service_id + SLASH + getNodeHostName());
@@ -61,10 +64,26 @@ public enum NodeControllerConfig {
         return getEnv(ConfigKeys.NODE_HOST_KEY);
     }
 
+
+    /**
+     *
+     * @return DOCKER_PRUNING_FREQ_SECS_KEY
+     */
     public int getPruningFreq() {
-        if (getEnv(ConfigKeys.NODE_DOCKER_PRUNING_FREQ_KEY).equals("")) {
-            return DEFAULT_DOCKER_PRUNING_FREQ;
+        if (getEnv(ConfigKeys.DOCKER_PRUNING_FREQ_SECS_KEY) == null) {
+            return DOCKER_PRUNING_FREQ_SECS;
         }
-        return Integer.parseInt(getEnv(ConfigKeys.NODE_DOCKER_PRUNING_FREQ_KEY));
+        return Integer.parseInt(getEnv(ConfigKeys.DOCKER_PRUNING_FREQ_SECS_KEY));
+    }
+
+    /**
+     *
+     * @return DOCKER_PRUNING_FREQ_SECS_KEY
+     */
+    public int getNodeResourceUpdateFreqSecs() {
+        if (getEnv(ConfigKeys.NODE_RESOURCE_UPDATE_FREQ_SECS_KEY) == null) {
+            return NODE_RESOURCE_UPDATE_FREQ_SECS;
+        }
+        return Integer.parseInt(getEnv(ConfigKeys.NODE_RESOURCE_UPDATE_FREQ_SECS_KEY));
     }
 }

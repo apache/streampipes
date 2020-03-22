@@ -21,12 +21,14 @@ import org.apache.streampipes.container.util.ConsulUtil;
 import org.apache.streampipes.node.controller.container.config.NodeControllerConfig;
 import org.apache.streampipes.node.controller.container.config.NodeInfoStorage;
 import org.apache.streampipes.node.controller.container.management.node.NodeJanitorManager;
+import org.apache.streampipes.node.controller.container.management.resource.ResourceManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+
 import javax.annotation.PreDestroy;
 import java.util.Collections;
 
@@ -46,11 +48,14 @@ public class NodeControllerContainer {
         app.setDefaultProperties(Collections.singletonMap("server.port", nodeConfig.getNodeControllerPort()));
         app.run();
 
-        LOG.info("Load static node system information");
+        LOG.info("Load static node metadata");
         NodeInfoStorage.init();
 
         LOG.info("Start Node Janitor manager");
         NodeJanitorManager.getInstance().run();
+
+        LOG.info("Start Node Resource manager");
+        ResourceManager.getInstance().run();
 
         // registration with consul here
         ConsulUtil.registerNodeControllerService(
@@ -64,4 +69,5 @@ public class NodeControllerContainer {
     @PreDestroy
     public void onExit(){
     }
+
 }

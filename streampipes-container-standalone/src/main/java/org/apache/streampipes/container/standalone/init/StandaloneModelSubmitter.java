@@ -19,6 +19,7 @@
 package org.apache.streampipes.container.standalone.init;
 
 
+import org.apache.streampipes.container.util.NodeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -62,6 +63,12 @@ public abstract class StandaloneModelSubmitter extends ModelSubmitter {
                 peConfig.getHost(),
                 peConfig.getPort()
         );
+
+//        NodeUtil.registerPeService(
+//                peConfig.getId(),
+//                peConfig.getHost(),
+//                peConfig.getPort()
+//        );
     }
 
     @PreDestroy

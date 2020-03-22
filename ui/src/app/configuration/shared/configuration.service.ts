@@ -24,7 +24,6 @@ import {map} from 'rxjs/operators';
 import {StreampipesPeContainer} from './streampipes-pe-container.model';
 import {MessagingSettings} from './messaging-settings.model';
 import {AuthStatusService} from "../../services/auth-status.service";
-import {Dashboard} from "../../dashboard-v2/models/dashboard.model";
 import {NodeInfo} from "../model/NodeInfo.model";
 
 @Injectable()

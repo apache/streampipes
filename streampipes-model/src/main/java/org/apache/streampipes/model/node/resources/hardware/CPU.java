@@ -1,4 +1,4 @@
-package org.apache.streampipes.node.controller.container.management.pe;/*
+package org.apache.streampipes.model.node.resources.hardware;/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,10 +16,23 @@ package org.apache.streampipes.node.controller.container.management.pe;/*
  *
  */
 
-public enum ContainerStatus {
-    DEPLOYED,
-    RUNNING,
-    STOPPED,
-    REMOVED,
-    UNKNOWN
+public class CPU {
+    public int cores;
+    public String arch;
+
+    public int getCores() {
+        return cores;
+    }
+
+    public void setCores(int cores) {
+        this.cores = cores;
+    }
+
+    public String getArch() {
+        return arch;
+    }
+
+    public void setArch(String arch) {
+        this.arch = arch;
+    }
 }

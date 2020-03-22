@@ -94,8 +94,8 @@ export class SavePipelineController {
         let nodeInfo = {} as NodeInfo;
         nodeInfo.nodeControllerId = "default";
         nodeInfo.nodeMetadata = {} as NodeMetadata;
-        nodeInfo.nodeMetadata.nodeHost = "default";
-        nodeInfo.nodeMetadata.nodeDescription = "Default Node";
+        nodeInfo.nodeMetadata.nodeAddress = "default";
+        nodeInfo.nodeMetadata.nodeModel = "Default Node";
         return nodeInfo;
     }
 

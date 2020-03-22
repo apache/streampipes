@@ -1,4 +1,5 @@
-package org.apache.streampipes.node.controller.container.description;/*
+package org.apache.streampipes.node.controller.container.api;
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -15,14 +16,35 @@ package org.apache.streampipes.node.controller.container.description;/*
  * limitations under the License.
  *
  */
-
-import org.apache.streampipes.model.node.*;
 import org.apache.streampipes.node.controller.container.config.NodeInfoStorage;
+import org.apache.streampipes.node.controller.container.management.resource.ResourceManager;
 
-public class NodeInfoDescription {
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
-    public static NodeInfo retrieveNodeInfo(){
-        return NodeInfoStorage.getInstance().get();
+@Path("/node")
+public class NodeInfoStatusResource {
+
+    @GET
+    @Path("/info")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getInfo() {
+        return Response
+                .ok()
+                .entity(NodeInfoStorage.getInstance().retrieveNodeInfo())
+                .build();
     }
 
+    @GET
+    @Path("/status")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getStatus() {
+        return Response
+                .ok()
+                .entity(ResourceManager.getInstance().retrieveNodeResources())
+                .build();
+    }
 }

@@ -24,11 +24,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/")
-public class NodeStatusResource {
+public class NodeResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getStatus() {
+    public Response getHealth() {
         return Response
                 .ok()
                 .status(Response.Status.OK)

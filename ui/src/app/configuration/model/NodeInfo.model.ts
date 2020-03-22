@@ -21,14 +21,14 @@ export interface NodeInfo {
     nodeControllerPort: number;
     nodeMetadata: NodeMetadata;
     nodeBrokerInfo: NodeBrokerInfo;
-    nodeCapabilities: NodeCapabilities;
+    nodeResources: NodeResources;
     supportedPipelineElementAppIds: string[];
 }
 
 export interface NodeMetadata {
-    nodeHost: string;
-    nodeDescription: string;
-    nodeLocation: string;
+    nodeAddress: string;
+    nodeModel: string;
+    nodeLocationTags: string[];
 }
 
 export interface NodeBrokerInfo {
@@ -36,53 +36,51 @@ export interface NodeBrokerInfo {
     port: number;
 }
 
-export interface NodeCapabilities {
-    hardware: HardwareCapability;
-    software: SoftwareCapability;
-    interfaces: HardwareInterface[];
+export interface NodeResources {
+    hardwareResource: HardwareResource;
+    softwareResource: SoftwareResource;
+    accessibleSensorActuatorResource: AccessibleSensorActuatorResource[];
 }
 
-export interface HardwareCapability {
-    cpu: CpuCapability;
-    mem: MemCapability;
-    disk: DiskCapability;
-    gpu: GpuCapability;
+export interface HardwareResource {
+    cpu: CpuResource;
+    memory: MemResource;
+    disk: DiskResource;
+    gpu: GpuResource;
 }
 
-export interface CpuCapability {
+export interface CpuResource {
     cores: number;
     arch: string;
 }
 
-export interface MemCapability {
-    size: number;
+export interface MemResource {
+    memTotal: number;
 }
 
-export interface DiskCapability {
-    size: string;
-    type: string;
+export interface DiskResource {
+    diskTotal: number;
 }
 
-export interface GpuCapability {
+export interface GpuResource {
     hasGpu: boolean;
-    arch: string;
     cudaCores: number;
     type: string;
 }
 
-export interface SoftwareCapability {
+export interface SoftwareResource {
     os: string;
     kernelVersion: string;
-    cuda: CudaCapability
-    docker: DockerCapability;
+    // cuda: CudaResource
+    docker: DockerResource;
 }
 
-export interface CudaCapability {
+export interface CudaResource {
     cudaDriverVersion: string;
     cudaRuntimeVersion: string;
 }
 
-export interface DockerCapability {
+export interface DockerResource {
     hasDocker: boolean;
     hasNvidiaRuntime: boolean;
     clientVersion: string;
@@ -91,7 +89,7 @@ export interface DockerCapability {
     apiMinVersion: string;
 }
 
-export interface HardwareInterface {
+export interface AccessibleSensorActuatorResource {
     name: string;
     type: string;
     connectionInfo: string;

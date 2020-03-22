@@ -1,4 +1,4 @@
-package org.apache.streampipes.model.node.capabilities.hardware.resources;/*
+package org.apache.streampipes.node.controller.container.management.pe;/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,23 +16,17 @@ package org.apache.streampipes.model.node.capabilities.hardware.resources;/*
  *
  */
 
-public class DISK {
-    public int diskTotal;
-    public String type;
+public class PipelineElementManager {
 
-    public int getDiskTotal() {
-        return diskTotal;
-    }
+    /**
+     * registeration of newly started pipeline element runtime container
+     */
 
-    public void setDiskTotal(int diskTotal) {
-        this.diskTotal = diskTotal;
-    }
+    /**
+     * invokes pipeline elements when pipeline is started
+     */
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
+    /**
+     * detaches pipeline elements when pipeline is stopped
+     */
 }

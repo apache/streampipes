@@ -18,9 +18,9 @@
 package org.apache.streampipes.model.node;
 
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
-import org.apache.streampipes.model.node.capabilities.hardware.Hardware;
-import org.apache.streampipes.model.node.capabilities.interfaces.Interfaces;
-import org.apache.streampipes.model.node.capabilities.software.Software;
+import org.apache.streampipes.model.node.resources.hardware.HardwareResource;
+import org.apache.streampipes.model.node.resources.interfaces.AccessibleSensorActuatorResource;
+import org.apache.streampipes.model.node.resources.software.SoftwareResource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,7 @@ import java.util.List;
 public class NodeInfoBuilder {
     private NodeInfo nodeInfo;
     private NodeMetadata nodeMetadata;
-    private NodeCapabilities nodeCapabilities;
+    private NodeResources nodeResources;
     private List<String> supportedPipelineElementAppIds;
     private NodeBrokerInfo nodeBrokerInfo;
 
@@ -36,7 +36,7 @@ public class NodeInfoBuilder {
         this.nodeInfo = new NodeInfo();
         this.nodeInfo.setNodeControllerId(nodeId);
         this.nodeMetadata = new NodeMetadata();
-        this.nodeCapabilities = new NodeCapabilities();
+        this.nodeResources = new NodeResources();
         this.supportedPipelineElementAppIds = new ArrayList<>();
         this.nodeBrokerInfo = new NodeBrokerInfo();
     }
@@ -55,18 +55,18 @@ public class NodeInfoBuilder {
         return this;
     }
 
-    public NodeInfoBuilder withNodeHost(String nostHost) {
-        this.nodeMetadata.setNodeHost(nostHost);
+    public NodeInfoBuilder withNodeHost(String nodeHost) {
+        this.nodeMetadata.setNodeAddress(nodeHost);
         return this;
     }
 
-    public NodeInfoBuilder withNodeLocation(String nodeLocation) {
-        this.nodeMetadata.setNodeLocation(nodeLocation);
+    public NodeInfoBuilder withNodeLocation(List<String> nodeLocationTags) {
+        this.nodeMetadata.setNodeLocationTags(nodeLocationTags);
         return this;
     }
 
-    public NodeInfoBuilder withNodeDescription(String nodeDescription) {
-        this.nodeMetadata.setNodeDescription(nodeDescription);
+    public NodeInfoBuilder withNodeModel(String nodeModel) {
+        this.nodeMetadata.setNodeModel(nodeModel);
         return this;
     }
 
@@ -82,15 +82,15 @@ public class NodeInfoBuilder {
         return this;
     }
 
-    public NodeInfoBuilder withNodeCapabilities(NodeCapabilities nodeCapabilities) {
-        this.nodeCapabilities = nodeCapabilities;
+    public NodeInfoBuilder withNodeResources(NodeResources nodeResources) {
+        this.nodeResources = nodeResources;
         return this;
     }
 
-    public NodeInfoBuilder withNodeCapabilities(Hardware hardware, Software software, List<Interfaces> interfaces) {
-        this.nodeCapabilities.setHardware(hardware);
-        this.nodeCapabilities.setSoftware(software);
-        this.nodeCapabilities.setInterfaces(interfaces);
+    public NodeInfoBuilder withNodeResources(HardwareResource hardwareResource, SoftwareResource softwareResource, List<AccessibleSensorActuatorResource> acessibleSAResourceList) {
+        this.nodeResources.setHardwareResource(hardwareResource);
+        this.nodeResources.setSoftwareResource(softwareResource);
+        this.nodeResources.setAccessibleSensorActuatorResource(acessibleSAResourceList);
         return this;
     }
 
@@ -101,7 +101,7 @@ public class NodeInfoBuilder {
 
     public NodeInfo build() {
         nodeInfo.setNodeMetadata(nodeMetadata);
-        nodeInfo.setNodeCapabilities(nodeCapabilities);
+        nodeInfo.setNodeResources(nodeResources);
         nodeInfo.setNodeBrokerInfo(nodeBrokerInfo);
         nodeInfo.setSupportedPipelineElementAppIds(supportedPipelineElementAppIds);
         return nodeInfo;

@@ -18,8 +18,8 @@ package org.apache.streampipes.node.controller.container.init;
  */
 
 import org.apache.streampipes.node.controller.container.api.NodeControllerResource;
-import org.apache.streampipes.node.controller.container.api.NodeInfoResource;
-import org.apache.streampipes.node.controller.container.api.NodeStatusResource;
+import org.apache.streampipes.node.controller.container.api.NodeInfoStatusResource;
+import org.apache.streampipes.node.controller.container.api.NodeResource;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.stereotype.Component;
 
@@ -27,8 +27,8 @@ import org.springframework.stereotype.Component;
 public class NodeControllerContainerResourceConfig extends ResourceConfig {
 
     public NodeControllerContainerResourceConfig() {
-        register(NodeStatusResource.class);
-        register(NodeInfoResource.class);
+        register(NodeResource.class);
+        register(NodeInfoStatusResource.class);
         register(NodeControllerResource.class);
     }
 }

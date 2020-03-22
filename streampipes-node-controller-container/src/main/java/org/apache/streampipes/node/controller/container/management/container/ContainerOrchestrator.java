@@ -1,4 +1,4 @@
-package org.apache.streampipes.model.node.capabilities.hardware.resources;/*
+package org.apache.streampipes.node.controller.container.management.container;/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,14 +16,12 @@ package org.apache.streampipes.model.node.capabilities.hardware.resources;/*
  *
  */
 
-public class MEM {
-    public Long memTotal;
+import org.apache.streampipes.model.node.PipelineElementDockerContainer;
 
-    public Long getMemTotal() {
-        return memTotal;
-    }
+public interface ContainerOrchestrator {
 
-    public void setMemTotal(Long memTotal) {
-        this.memTotal = memTotal;
-    }
+   String deploy(PipelineElementDockerContainer p);
+
+   String remove(PipelineElementDockerContainer p);
+
 }

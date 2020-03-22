@@ -1,4 +1,4 @@
-package org.apache.streampipes.model.node.capabilities.software.resources;/*
+package org.apache.streampipes.model.node.resources.hardware;/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,33 +16,14 @@ package org.apache.streampipes.model.node.capabilities.software.resources;/*
  *
  */
 
-public class Cuda {
+public class MEM {
+    public Long memTotal;
 
-    private boolean hasCuda;
-    private String cudaDriverVersion;
-    private String cudaRuntimeVersion;
-
-    public boolean hasCuda() {
-        return hasCuda;
+    public Long getMemTotal() {
+        return memTotal;
     }
 
-    public void setHasCuda(boolean hasCuda) {
-        this.hasCuda = hasCuda;
-    }
-
-    public String getCudaDriverVersion() {
-        return cudaDriverVersion;
-    }
-
-    public void setCudaDriverVersion(String cudaDriverVersion) {
-        this.cudaDriverVersion = cudaDriverVersion;
-    }
-
-    public String getCudaRuntimeVersion() {
-        return cudaRuntimeVersion;
-    }
-
-    public void setCudaRuntimeVersion(String cudaRuntimeVersion) {
-        this.cudaRuntimeVersion = cudaRuntimeVersion;
+    public void setMemTotal(Long memTotal) {
+        this.memTotal = memTotal;
     }
 }
