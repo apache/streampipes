@@ -62,6 +62,9 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
   @RdfProperty(StreamPipes.CORRESPONDING_PIPELINE)
   private String correspondingPipeline;
 
+  @RdfProperty(StreamPipes.CORRESPONDING_USER)
+  private String correspondingUser;
+
   @RdfProperty(StreamPipes.ELEMENT_ENDPOINT_HOSTNAME)
   private String elementEndpointHostname;
 
@@ -104,6 +107,7 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
     this.deploymentTargetNodePort = other.getDeploymentTargetNodePort();
     this.deploymentRunningInstanceId = other.getDeploymentRunningInstanceId();
     this.elementEndpointServiceName = other.getElementEndpointServiceName();
+    this.correspondingUser = other.getCorrespondingUser();
     if (other.getStreamRequirements() != null) {
       this.streamRequirements = new Cloner().streams(other.getStreamRequirements());
     }
@@ -253,6 +257,14 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
 
   public void setElementEndpointPort(Integer elementEndpointPort) {
     this.elementEndpointPort = elementEndpointPort;
+  }
+
+  public String getCorrespondingUser() {
+    return correspondingUser;
+  }
+
+  public void setCorrespondingUser(String correspondingUser) {
+    this.correspondingUser = correspondingUser;
   }
 
   //public Logger getLogger(Class clazz, PeConfig peConfig) {

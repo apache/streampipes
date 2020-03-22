@@ -17,6 +17,7 @@
  */
 
 import * as angular from 'angular';
+import {AuthStatusService} from "../services/auth-status.service";
 
 export class EditorCtrl {
 
@@ -26,7 +27,7 @@ export class EditorCtrl {
     $window: any;
     JsplumbBridge: any;
     EditorDialogManager: any;
-    AuthStatusService: any;
+    AuthStatusService: AuthStatusService;
     currentElements: any;
     allElements: any;
     currentModifiedPipelineId: any;
@@ -228,6 +229,7 @@ export class EditorCtrl {
                 let sepas = msg.data;
                 angular.forEach(sepas, sepa => {
                     sepa.type = 'sepa';
+                    sepa.correspondingUser = this.AuthStatusService.email;
                 });
                 this.allElements["sepa"] = sepas;
                 this.checkForTutorial();
@@ -240,6 +242,7 @@ export class EditorCtrl {
                 let actions = msg.data;
                 angular.forEach(actions, action => {
                     action.type = 'action';
+                    action.correspondingUser = this.AuthStatusService.email;
                 });
                 this.allElements["action"] = actions;
                 this.checkForTutorial();

@@ -24,6 +24,7 @@ import {MatTableDataSource} from "@angular/material/table";
 import {TableConfig} from "./table-config";
 import {SemanticTypeUtilsService} from "../../../../core-services/semantic-type/semantic-type-utils.service";
 import {ResizeService} from "../../../services/resize.service";
+import {DashboardService} from "../../../services/dashboard.service";
 
 @Component({
     selector: 'table-widget',
@@ -38,8 +39,8 @@ export class TableWidgetComponent extends BaseStreamPipesWidget implements OnIni
     dataSource = new MatTableDataSource();
     semanticTypes: { [key: string]: string; } = {};
 
-    constructor(rxStompService: RxStompService, resizeService: ResizeService, private semanticTypeUtils: SemanticTypeUtilsService) {
-        super(rxStompService, resizeService, false);
+    constructor(rxStompService: RxStompService, dashboardService: DashboardService, resizeService: ResizeService, private semanticTypeUtils: SemanticTypeUtilsService) {
+        super(rxStompService, dashboardService, resizeService, false);
     }
 
     ngOnInit(): void {

@@ -393,4 +393,5 @@ public class StreamPipes {
   public static final String ELEMENT_ENDPOINT_PORT = NS + "hasElementEndpointPort" ;
   public static final String DEPLOYMENT_RUNNING_INSTANCE_ID = NS + "hasDeploymentRunningInstanceId" ;
   public static final String ELEMENT_ENDPOINT_SERVICE_NAME = NS + "hasElementEndpointServiceName";
+  public static final String CORRESPONDING_USER = NS + "hasCorrespondingUser";
 }

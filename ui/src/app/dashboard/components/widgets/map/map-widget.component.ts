@@ -22,6 +22,7 @@ import {StaticPropertyExtractor} from "../../../sdk/extractor/static-property-ex
 import {MapConfig} from "./map-config";
 import {latLng, marker, Marker, tileLayer, Map, LatLngExpression, LatLng, icon, Content} from "leaflet";
 import {ResizeService} from "../../../services/resize.service";
+import {DashboardService} from "../../../services/dashboard.service";
 
 @Component({
     selector: 'map-widget',
@@ -52,8 +53,8 @@ export class MapWidgetComponent extends BaseStreamPipesWidget implements OnInit,
         center: latLng(46.879966, -121.726909)
     };
 
-    constructor(rxStompService: RxStompService, resizeService: ResizeService) {
-        super(rxStompService, resizeService, false);
+    constructor(rxStompService: RxStompService, dashboardService: DashboardService, resizeService: ResizeService) {
+        super(rxStompService, dashboardService, resizeService, false);
     }
 
     ngOnInit(): void {

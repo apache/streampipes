@@ -20,6 +20,7 @@ import {RxStompService} from "@stomp/ng2-stompjs";
 import {BaseStreamPipesWidget} from "../base/base-widget";
 import {StaticPropertyExtractor} from "../../../sdk/extractor/static-property-extractor";
 import {ResizeService} from "../../../services/resize.service";
+import {DashboardService} from "../../../services/dashboard.service";
 
 @Component({
     selector: 'raw-widget',
@@ -32,8 +33,8 @@ export class RawWidgetComponent extends BaseStreamPipesWidget implements OnInit,
     width: number;
     height: number;
 
-    constructor(rxStompService: RxStompService, resizeService: ResizeService) {
-        super(rxStompService, resizeService, false);
+    constructor(rxStompService: RxStompService, dashboardService: DashboardService, resizeService: ResizeService) {
+        super(rxStompService, dashboardService, resizeService, false);
     }
 
     ngOnInit(): void {

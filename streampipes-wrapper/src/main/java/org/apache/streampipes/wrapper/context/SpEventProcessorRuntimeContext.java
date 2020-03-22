@@ -29,9 +29,12 @@ public class SpEventProcessorRuntimeContext extends SpRuntimeContext implements
   private SchemaInfo outputSchemaInfo;
   private SourceInfo outputSourceInfo;
 
-  public SpEventProcessorRuntimeContext(List<SourceInfo> inputSourceInfo, List<SchemaInfo>
-          inputSchemaInfo, SourceInfo outputSourceInfo, SchemaInfo outputSchemaInfo) {
-    super(inputSourceInfo, inputSchemaInfo);
+  public SpEventProcessorRuntimeContext(List<SourceInfo> inputSourceInfo,
+                                        List<SchemaInfo> inputSchemaInfo,
+                                        SourceInfo outputSourceInfo,
+                                        SchemaInfo outputSchemaInfo,
+                                        String correspondingUser) {
+    super(inputSourceInfo, inputSchemaInfo, correspondingUser);
     this.outputSchemaInfo = outputSchemaInfo;
     this.outputSourceInfo = outputSourceInfo;
   }

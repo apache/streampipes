@@ -1,0 +1,69 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div fxLayout="column" class="page-container page-container-max-height">
+    <div fxLayout="row" style="padding:0px;background-color:#f6f6f6;">
+        <div fxFlex="100" style="line-height:24px;border-bottom:1px solid #ccc">
+            <div fxFlex="100" fxLayout="row">
+                <div fxFlex fxLayoutAlign="start center">
+                    <mat-tab-group>
+                        <mat-tab label="My Notifications"></mat-tab>
+                    </mat-tab-group>
+                </div>
+                <div fxFlex fxLayoutAlign="end center" class="mr-20">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed-height page-container-padding-inner" fxLayout="row" fxFlex="100">
+        <div fxFlex="30" class="notifications-overview scrolling-auto">
+            <mat-list>
+                <mat-list-item *ngFor="let existingNotification of existingNotifications"
+                               (click)="selectNotification(existingNotification)" class="list-item"
+                               [ngClass]="{'selected-notification':
+                               existingNotification.notificationId === currentlySelectedNotificationId}">
+                    <div mat-list-avatar
+                         class="notification-avatar sp-accent-bg">{{elementIconText.getElementIconText(existingNotification.pipelineName)}}
+                    </div>
+                    <h4 mat-line>{{existingNotification.pipelineName}}</h4>
+                    <p mat-line>{{existingNotification.notificationTitle}} </p>
+                    <div class="new-notification-info-panel">
+                        <div class="new-notification-info"
+                             *ngIf="currentlySelectedNotificationId != existingNotification.notificationId &&
+                             newNotificationInfo[existingNotification.notificationId]"></div>
+                    </div>
+                </mat-list-item>
+            </mat-list>
+        </div>
+        <div fxFlex="70" class="notifications-details" *ngIf="pipelinesWithNotificationsPresent">
+            <div class="notification-details-wrapper">
+                <div class="notification-header" fxLayout="column" fxLayoutAlign="center start">
+                    <div class="notification-header-pipeline-name">{{currentlySelectedNotification.pipelineName}}</div>
+                    <div class="notification-header-notification-name">{{currentlySelectedNotification.notificationTitle}}</div>
+                    <hr class="header-divider"/>
+                </div>
+                <div #notificationPane class="notification-pane" (scroll)="onScroll($event)">
+                    <notification-item [notification]="notification" *ngFor="let notification of notifications"></notification-item>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

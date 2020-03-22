@@ -21,6 +21,7 @@ import {ResizeService} from "../../../services/resize.service";
 import {BaseNgxChartsStreamPipesWidget} from "./base-ngx-charts-widget";
 import {StaticPropertyExtractor} from "../../../sdk/extractor/static-property-extractor";
 import {LineConfig} from "../line/line-config";
+import {DashboardService} from "../../../services/dashboard.service";
 
 export abstract class BaseNgxLineChartsStreamPipesWidget extends BaseNgxChartsStreamPipesWidget {
 
@@ -31,8 +32,8 @@ export abstract class BaseNgxLineChartsStreamPipesWidget extends BaseNgxChartsSt
     minYAxisRange: number;
     maxYAxisRange: number;
 
-    constructor(rxStompService: RxStompService, resizeService: ResizeService) {
-        super(rxStompService, resizeService);
+    constructor(rxStompService: RxStompService, dashboardService: DashboardService, resizeService: ResizeService) {
+        super(rxStompService, dashboardService, resizeService);
     }
 
     ngOnInit(): void {

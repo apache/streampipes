@@ -28,10 +28,7 @@ export class TsonLd {
   private context: { [key: string]: string; } = {};
   private classMapping: { [key: string]: any; } = {};
 
-  // private context: {key: string, value: string}[];
-
   constructor() {
-    // this.context = [];
 
   }
 
@@ -56,8 +53,6 @@ export class TsonLd {
 
     let promise = new Promise(function (resolve, reject) {
       (jsonld as any).flatten(obj, context, function (err, data) {
-
-        // console.log('flatten data: bla bla bla: ' + JSON.stringify(data, null, 2));
         resolve(data);
       });
     });
@@ -154,42 +149,50 @@ export class TsonLd {
 
   fromJsonLdType(obj: Object, type: String) {
     let topElement = null;
-    const graph = obj['@graph'];
-    for (const elem in graph) {
-      if (graph[elem]['@type'] === type) {
-        topElement = graph[elem];
-        obj['@graph'].splice(elem, 1);
+    let graph = obj['@graph'];
+    graph.forEach((elem, index) => {
+      if (elem['@type'] === type) {
+        topElement = elem;
+        obj['@graph'].splice(index, 1);
       }
+    });
+    if (topElement != null) {
+      obj['@graph'].unshift(topElement);
+      return this.fromJsonLd(obj);
+    } else {
+      console.log("Element"  +type + " not found in graph");
+      return {};
     }
-    obj['@graph'].unshift(topElement);
-    return this.fromJsonLd(obj);
   }
 
   fromJsonLdContainer(obj: Object, type: string): Array<any> {
     let topElements: Array<string> = [];
     let deserializedObjects: Array<any> = [];
-    const graph = obj['@graph'];
-    for (const elem in graph) {
-      if (graph[elem]['@type'] === type) {
-        topElements.push(this.removeNonCurrentTopElements(graph[elem]['@id'], obj, type));
-        //obj['@graph'].splice(elem, 1);
+    let graph = obj['@graph'];
+    graph.forEach(elem => {
+      if (elem['@type'] === type) {
+        topElements.push(this.makeJsonLdGraphForElement(elem['@id'], obj, type));
       }
-    }
+    });
     topElements.forEach(topElement => {
       deserializedObjects.push(this.fromJsonLdType(topElement, type));
     });
     return deserializedObjects;
   }
 
-  removeNonCurrentTopElements(id: string, obj: any, type: string): any {
-    const graph = obj['@graph'];
-    for (const elem in graph) {
-      if ((graph[elem]['@type'] === type && graph[elem]['@id'] !== id) || graph[elem]['@type'] === "sp:EntityContainer") {
-        // TODO
-        //obj['@graph'].splice(elem, 1);
+  makeJsonLdGraphForElement(id: string, obj: any, type: string): any {
+    let clonedObj = {} ;
+    clonedObj['@graph'] = [];
+    let graph = obj['@graph'];
+    graph.forEach(elem => {
+      if ((elem['@type'] === type && elem['@id'] !== id) || elem['@type'] === "sp:EntityContainer") {
+
+      } else {
+        clonedObj['@graph'].push(elem);
       }
-    }
-    return obj;
+    });
+    clonedObj['@context'] = obj['@context'];
+    return clonedObj;
   }
 
 

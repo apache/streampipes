@@ -22,6 +22,9 @@ import {BaseStreamPipesWidget} from "../base/base-widget";
 import {StaticPropertyExtractor} from "../../../sdk/extractor/static-property-extractor";
 import {NumberConfig} from "./number-config";
 import {ResizeService} from "../../../services/resize.service";
+import {EventProperty} from "../../../../connect/schema-editor/model/EventProperty";
+import {EventPropertyPrimitive} from "../../../../connect/schema-editor/model/EventPropertyPrimitive";
+import {DashboardService} from "../../../services/dashboard.service";
 
 @Component({
     selector: 'number-widget',
@@ -30,12 +33,13 @@ import {ResizeService} from "../../../services/resize.service";
 })
 export class NumberWidgetComponent extends BaseStreamPipesWidget implements OnInit, OnDestroy {
 
-    item: any;
+    item: any = "-";
 
     selectedProperty: string;
+    measurementUnitAbbrev: string;
 
-    constructor(rxStompService: RxStompService, resizeService: ResizeService) {
-        super(rxStompService, resizeService, false);
+    constructor(rxStompService: RxStompService, dashboardService: DashboardService, resizeService: ResizeService) {
+        super(rxStompService, dashboardService, resizeService, false);
     }
 
     ngOnInit(): void {
@@ -48,6 +52,12 @@ export class NumberWidgetComponent extends BaseStreamPipesWidget implements OnIn
 
     extractConfig(extractor: StaticPropertyExtractor) {
         this.selectedProperty = extractor.mappingPropertyValue(NumberConfig.NUMBER_MAPPING_KEY);
+        let eventProperty: EventPropertyPrimitive = extractor.getEventPropertyByName(this.selectedProperty) as EventPropertyPrimitive;
+        if (eventProperty.measurementUnit) {
+            this.dashboardService.getMeasurementUnitInfo(eventProperty.measurementUnit).subscribe(unit => {
+                this.measurementUnitAbbrev = unit.abbreviation;
+            })
+        }
     }
 
     isNumber(item: any): boolean {
@@ -55,7 +65,11 @@ export class NumberWidgetComponent extends BaseStreamPipesWidget implements OnIn
     }
 
     protected onEvent(event: any) {
-        this.item = event[this.selectedProperty];
+        let value = event[this.selectedProperty];
+        if (!isNaN(value)) {
+            value = value.toFixed(2);
+        }
+        this.item = value;
     }
 
     protected onSizeChanged(width: number, height: number) {

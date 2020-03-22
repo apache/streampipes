@@ -309,6 +309,10 @@ export class RestApi {
         return this.$http.get(this.urlBase() +"/notifications");
     }
 
+    getUnreadNotificationsCount() {
+        return this.$http.get(this.urlBase() +"/notifications/count");
+    }
+
     getUnreadNotifications() {
         return this.$http.get(this.urlBase() +"/notifications/unread");
     }
