@@ -39,7 +39,6 @@ export class TableConfig extends WidgetConfig {
                 .create()
                 .requiredPropertyWithNaryMapping(TableConfig.SELECTED_PROPERTIES_KEYS, "Select properties", "", EpRequirements.anyProperty())
                 .build())
-            .requiredTextParameter(TableConfig.TITLE_KEY, "Title", "The title")
             .build();
     }
 

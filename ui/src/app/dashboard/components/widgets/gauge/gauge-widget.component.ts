@@ -22,6 +22,7 @@ import {RxStompService} from "@stomp/ng2-stompjs";
 import {ResizeService} from "../../../services/resize.service";
 import {StaticPropertyExtractor} from "../../../sdk/extractor/static-property-extractor";
 import {GaugeConfig} from "./gauge-config";
+import {DashboardService} from "../../../services/dashboard.service";
 
 
 @Component({
@@ -37,8 +38,8 @@ export class GaugeWidgetComponent extends BaseNgxChartsStreamPipesWidget impleme
 
     selectedProperty: string;
 
-    constructor(rxStompService: RxStompService, resizeService: ResizeService, private el: ElementRef) {
-        super(rxStompService, resizeService);
+    constructor(rxStompService: RxStompService, dashboardService: DashboardService, resizeService: ResizeService, private el: ElementRef) {
+        super(rxStompService, dashboardService, resizeService);
     }
 
     ngOnInit(): void {

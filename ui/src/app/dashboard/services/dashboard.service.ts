@@ -25,6 +25,7 @@ import {Dashboard} from "../models/dashboard.model";
 import {TsonLdSerializerService} from "../../platform-services/tsonld-serializer.service";
 import {DashboardWidget} from "../../core-model/dashboard/DashboardWidget";
 import {VisualizablePipeline} from "../../core-model/dashboard/VisualizablePipeline";
+import {MeasurementUnit} from "../../core-model/measurement-unit/MeasurementUnit";
 
 @Injectable()
 export class DashboardService {
@@ -83,6 +84,12 @@ export class DashboardService {
         })
     }
 
+    getMeasurementUnitInfo(measurementUnitResource: string): Observable<MeasurementUnit> {
+        return this.http.get(this.measurementUnitsUrl  + "/" + encodeURIComponent(measurementUnitResource)).map(data => {
+            return data as MeasurementUnit
+        });
+    }
+
     updateDashboard(dashboard: Dashboard): Observable<Dashboard> {
         return this.http.put(this.dashboardUrl + "/" +dashboard._id, dashboard).map(data => {
             return data as Dashboard;
@@ -99,6 +106,10 @@ export class DashboardService {
 
     private get baseUrl() {
         return '/streampipes-backend';
+    }
+
+    private get measurementUnitsUrl() {
+        return this.baseUrl + '/api/v2/users/' + this.authStatusService.email + '/measurement-units'
     }
 
     private get dashboardUrl() {

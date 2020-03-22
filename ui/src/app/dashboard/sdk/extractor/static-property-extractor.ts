@@ -23,6 +23,7 @@ import {FreeTextStaticProperty} from "../../../connect/model/FreeTextStaticPrope
 import {ColorPickerStaticProperty} from "../../../connect/model/ColorPickerStaticProperty";
 import {MappingPropertyNary} from "../../../connect/model/MappingPropertyNary";
 import {OneOfStaticProperty} from "../../../connect/model/OneOfStaticProperty";
+import {EventProperty} from "../../../connect/schema-editor/model/EventProperty";
 
 export class StaticPropertyExtractor {
 
@@ -81,6 +82,10 @@ export class StaticPropertyExtractor {
 
     getStaticPropertyByName(internalId: string): StaticProperty {
         return this.staticProperties.find(sp => (sp.internalName == internalId));
+    }
+
+    getEventPropertyByName(runtimeName: string): EventProperty {
+        return this.inputSchema.eventProperties.find(ep => ep.runtimeName === runtimeName);
     }
 
 
