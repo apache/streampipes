@@ -16,7 +16,7 @@
  *
  */
 
-import {Component, HostListener} from "@angular/core";
+import {Component, EventEmitter, HostListener, Output} from "@angular/core";
 import Konva from "konva";
 import {AddPipelineDialogComponent} from "../../dialog/add-pipeline/add-pipeline-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
@@ -51,6 +51,8 @@ export class CreateAssetComponent {
 
     backgroundImagePresent: boolean = false;
     measurementPresent: boolean = false;
+
+    @Output() dashboardClosed = new EventEmitter<boolean>();
 
     constructor(public dialog: MatDialog, public shapeService: ShapeService) {
     }
@@ -130,6 +132,10 @@ export class CreateAssetComponent {
             height: '500px',
             panelClass: 'custom-dialog-container',
             data: {dashboardCanvas: this.mainCanvasStage as any, file: this.selectedUploadFile}
+        });
+        dialogRef.afterClosed().subscribe(closed => {
+            console.log("close");
+            this.dashboardClosed.emit(true);
         });
     }
 
