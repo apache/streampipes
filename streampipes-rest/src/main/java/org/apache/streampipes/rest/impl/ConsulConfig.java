@@ -21,6 +21,7 @@ package org.apache.streampipes.rest.impl;
 import static org.apache.streampipes.container.util.ConsulUtil.updateConfig;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.streampipes.config.backend.BackendConfig;
@@ -64,7 +65,10 @@ public class ConsulConfig extends AbstractRestInterface implements IConsulConfig
     for (Map.Entry<String, String> entry : peServices.entrySet()) {
       String serviceName = "";
       String serviceStatus = entry.getValue();
-      String mainKey = ConsulSpConfig.SERVICE_ROUTE_PREFIX + entry.getKey();
+      // remove host info from service route to gather k/v data from
+      String mainKey = entry.getKey().substring(entry.getKey().indexOf("/")+1);
+
+
 
       Map<String, String> meta = new HashMap<>();
       meta.put("status", serviceStatus);
@@ -137,7 +141,9 @@ public class ConsulConfig extends AbstractRestInterface implements IConsulConfig
     String prefix = peConfig.getMainKey();
 
     for (ConfigItem configItem : peConfig.getConfigs()) {
-      updateConfig(configItem.getKey(), new Gson().toJson(configItem),
+      JsonObject jsonObj = new Gson().toJsonTree(configItem).getAsJsonObject();
+      jsonObj.entrySet().removeIf(e -> e.getKey().equals("key"));
+      updateConfig(configItem.getKey(), jsonObj.toString(),
               configItem.isPassword());
     }
     return Response.status(Response.Status.OK).build();
@@ -174,11 +180,24 @@ public class ConsulConfig extends AbstractRestInterface implements IConsulConfig
   }
 
   public List<ConfigItem> getConfigForService(String serviceId) {
-    Map<String, String> keyValues = ConsulUtil.getKeyValue(ConsulSpConfig.SERVICE_ROUTE_PREFIX + serviceId);
+    //Map<String, String> keyValues = ConsulUtil.getKeyValue(ConsulSpConfig.SERVICE_ROUTE_PREFIX + serviceId);
+    Map<String, String> primaryKeyValues = ConsulUtil.getKeyValue(
+                  ConsulSpConfig.SERVICE_ROUTE_PREFIX
+                    + serviceId.substring(serviceId.indexOf("/")+1)
+                    + "/"
+                    + ConsulSpConfig.BASE_PREFIX
+                    + "/"
+                    + ConsulSpConfig.PRIMARY_NODE_KEY);
+
+    primaryKeyValues.putAll(ConsulUtil.getKeyValue(
+            ConsulSpConfig.SERVICE_ROUTE_PREFIX
+                    + serviceId.substring(serviceId.indexOf("/")+1)
+                    + "/"
+                    + ConsulSpConfig.CONFIG_PREFIX));
 
     List<ConfigItem> configItems = new LinkedList<>();
 
-    for (Map.Entry<String, String> entry : keyValues.entrySet()) {
+    for (Map.Entry<String, String> entry : primaryKeyValues.entrySet()) {
       ConfigItem configItem = new Gson().fromJson(entry.getValue(), ConfigItem.class);
       configItem.setKey(entry.getKey());
 
