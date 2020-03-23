@@ -16,7 +16,7 @@
  *
  */
 
-export class StreampipesPeContainerConifgs{
+export class StreampipesPeContainerConfigs{
     valueType: string;
     isPassword: boolean;
     description: string;

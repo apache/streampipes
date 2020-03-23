@@ -20,7 +20,7 @@ import {Injectable} from '@angular/core';
 import {Observable, of} from 'rxjs';
 
 import {StreampipesPeContainer} from './streampipes-pe-container.model';
-import {StreampipesPeContainerConifgs} from './streampipes-pe-container-configs';
+import {StreampipesPeContainerConfigs} from './streampipes-pe-container-configs';
 
 @Injectable()
 export class ConfigurationMockService {
@@ -34,8 +34,8 @@ export class ConfigurationMockService {
 
     getConsulServices(): Observable<StreampipesPeContainer[]> {
 
-        let config: StreampipesPeContainerConifgs []
-        config[0] = new StreampipesPeContainerConifgs
+        let config: StreampipesPeContainerConfigs []
+        config[0] = new StreampipesPeContainerConfigs
         config[0].description = "test int"
         config[0].key = 'testint'
         config[0].value = '80'

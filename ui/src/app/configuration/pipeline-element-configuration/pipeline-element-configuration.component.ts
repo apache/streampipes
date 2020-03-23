@@ -20,7 +20,7 @@ import {Component, ViewChild} from "@angular/core";
 import {animate, state, style, transition, trigger} from "@angular/animations";
 import {ConfigurationService} from "../shared/configuration.service";
 import {StreampipesPeContainer} from "../shared/streampipes-pe-container.model";
-import {StreampipesPeContainerConifgs} from "../shared/streampipes-pe-container-configs";
+import {StreampipesPeContainerConfigs} from "../shared/streampipes-pe-container-configs";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatTableDataSource} from "@angular/material/table";
 
@@ -76,7 +76,7 @@ export class PipelineElementConfigurationComponent {
                 return 0;
             }
         });
-        consulServices.forEach(cs => cs.configs.sort((a: StreampipesPeContainerConifgs, b: StreampipesPeContainerConifgs) => {
+        consulServices.forEach(cs => cs.configs.sort((a: StreampipesPeContainerConfigs, b: StreampipesPeContainerConfigs) => {
             if (a.key < b.key) {
                 return -1;
             } else if (a.key > b.key) {
