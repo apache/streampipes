@@ -12,28 +12,23 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+ARG BUILDER_IMAGE=node:13.8.0-alpine3.11
 ARG BASE_IMAGE=nginx
+
+FROM $BUILDER_IMAGE AS builder
+
+ENV NODE_PATH=/cache/node_modules \
+    NODE_OPTIONS="--max_old_space_size=6096"
+
+WORKDIR /builder/app
+
+COPY . ./
+RUN npm install --unsafe-perm; \
+    npm run build
+
 FROM $BASE_IMAGE
 
-COPY dist/ /usr/share/nginx/html/
-#COPY dist/assets/img/ /usr/share/nginx/html/assets/img/
-#COPY dist/assets/css/ /usr/share/nginx/html/assets/css/
-#COPY dist/assets/lib/ /usr/share/nginx/html/assets/lib/
-#COPY dist/assets/templates/ /usr/share/nginx/html/assets/templates/
-#COPY dist/assets/fonts/ /usr/share/nginx/html/assets/fonts/
-#COPY dist/index.html /usr/share/nginx/html/
-#COPY dist/main.bundle.js /usr/share/nginx/html/
-#COPY dist/main.bundle.js.gz /usr/share/nginx/html/
-#COPY dist/polyfills.bundle.js /usr/share/nginx/html/
-#COPY dist/polyfills.bundle.js.gz /usr/share/nginx/html/
-##COPY dist/runtime.bundle.js /usr/share/nginx/html/
-#COPY dist/style.bundle.js /usr/share/nginx/html/
-#COPY dist/style.bundle.js.gz /usr/share/nginx/html/
-#COPY dist/style.css /usr/share/nginx/html/
-#COPY dist/style.css.gz /usr/share/nginx/html/
-
-#COPY javadoc/ /usr/share/nginx/html/javadoc
+COPY --from=builder /builder/app/dist/ /usr/share/nginx/html/
 
 COPY nginx_config/nginx.conf /etc/nginx/nginx.conf
 COPY nginx_config/default.conf /etc/nginx/conf.d/default.conf
