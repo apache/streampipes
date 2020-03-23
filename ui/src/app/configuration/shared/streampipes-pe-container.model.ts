@@ -24,6 +24,7 @@ export interface StreampipesPeContainer {
     mainKey: string;
     meta: {
         status: string;
+        tag: string;
     }
     configs: [StreampipesPeContainerConfigs];
 }

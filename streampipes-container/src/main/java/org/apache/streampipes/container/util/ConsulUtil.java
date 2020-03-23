@@ -35,6 +35,7 @@ import org.apache.streampipes.config.consul.ConsulSpConfig;
 import org.apache.streampipes.config.model.ConfigItem;
 import org.apache.streampipes.container.model.consul.ConsulServiceRegistrationBody;
 import org.apache.streampipes.container.model.consul.HealthCheckConfiguration;
+import org.apache.streampipes.sdk.helpers.Tuple2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -116,7 +117,7 @@ public class ConsulUtil {
     }
     */
 
-  public static Map<String, String> getPEServices() {
+  public static Map<String, Tuple2<String, String>> getPEServices() {
     LOG.info("Load PE service status");
     Consul consul = consulInstance();
     AgentClient agent = consul.agentClient();
@@ -124,17 +125,22 @@ public class ConsulUtil {
     Map<String, Service> services = consul.agentClient().getServices();
     Map<String, HealthCheck> checks = agent.getChecks();
 
-    Map<String, String> peServices = new HashMap<>();
+    Map<String, Tuple2<String,String>> peServices = new HashMap<>();
 
     for (Map.Entry<String, Service> entry : services.entrySet()) {
       if (entry.getValue().getTags().contains(PE_SERVICE_NAME)) {
         String serviceId = entry.getValue().getId();
         String serviceStatus = "critical";
+        String serviceTag = "primary";
         if (checks.containsKey("service:" + entry.getKey())) {
           serviceStatus = checks.get("service:" + entry.getKey()).getStatus();
+          if (checks.get("service:" + entry.getKey()).getServiceTags().stream().noneMatch(e -> e.contains("primary"))) {
+            serviceTag = "secondary";
+          }
         }
-        LOG.info("Service id: " + serviceId + " service status: " + serviceStatus);
-        peServices.put(serviceId, serviceStatus);
+
+        LOG.info("Service id: " + serviceId + " service status: " + serviceStatus + " service tag: " + serviceTag);
+        peServices.put(serviceId, new Tuple2(serviceStatus, serviceTag));
       }
     }
     return peServices;

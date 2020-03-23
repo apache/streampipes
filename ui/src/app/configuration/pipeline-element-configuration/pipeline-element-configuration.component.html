@@ -38,6 +38,14 @@
                 </td>
             </ng-container>
 
+            <ng-container matColumnDef="tag">
+                <th fxFlex="40" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Tag
+                </th>
+                <td fxFlex="40" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
+                    {{element.meta.tag}}
+                </td>
+            </ng-container>
+
             <ng-container matColumnDef="name">
                 <th fxFlex="40" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Pipeline Element
                     Container
