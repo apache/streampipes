@@ -17,26 +17,23 @@
  */
 
 import {Injectable} from "@angular/core";
-import {Observable} from "rxjs";
-
-declare const Stomp: any;
+import {Observable, Subscription} from "rxjs";
+import {Message} from "@stomp/stompjs";
+import {RxStompService} from "@stomp/ng2-stompjs";
 
 @Injectable()
 export class WebsocketService {
 
-    constructor() {
+    subscription: Subscription;
+
+    constructor(private rxStompService: RxStompService) {
     }
 
     connect(url, topic): Observable<any> {
         return new Observable<any>(observable => {
-            let client = Stomp.client(url + "/topic/" +topic);
-
-            var onConnect = (frame => {
-                client.subscribe("/topic/" +topic, function (message) {
-                    observable.next(JSON.parse(message.body));
-                }, {'Sec-WebSocket-Protocol': 'v10.stomp, v11.stomp'});
+            this.subscription = this.rxStompService.watch("/topic/" +topic).subscribe((message: Message) => {
+                observable.next(JSON.parse(message.body));
             });
-            client.connect("admin", "admin", onConnect);
         });
     }
 

@@ -51,6 +51,7 @@ export class AppAssetMonitoringComponent {
 
     closeDashboard(dashboardClosed: boolean) {
         this.dashboardSelected = false;
+        this.selectedIndex = 0;
     }
 
 }
