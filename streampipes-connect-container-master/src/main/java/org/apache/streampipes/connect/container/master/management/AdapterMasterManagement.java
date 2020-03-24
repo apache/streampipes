@@ -70,8 +70,16 @@ public class AdapterMasterManagement {
           throws AdapterException {
 
     // Add EventGrounding to AdapterDescription
-    EventGrounding eventGrounding = GroundingService.createEventGrounding(
-            ConnectContainerConfig.INSTANCE.getKafkaHost(), ConnectContainerConfig.INSTANCE.getKafkaPort(), null);
+    EventGrounding eventGrounding;
+    if ("true".equals(System.getenv("SP_NODE_BROKER"))) {
+      eventGrounding = GroundingService.createEventGrounding(
+              "tcp://localhost", 61616, null);
+    }
+    else {
+      eventGrounding = GroundingService.createEventGrounding(
+              ConnectContainerConfig.INSTANCE.getKafkaHost(), ConnectContainerConfig.INSTANCE.getKafkaPort(), null);
+    }
+
     ad.setEventGrounding(eventGrounding);
 
     String uuid = UUID.randomUUID().toString();

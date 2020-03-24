@@ -22,10 +22,7 @@ import org.apache.streampipes.connect.adapter.util.TransportFormatGenerator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterSetDescription;
-import org.apache.streampipes.model.grounding.EventGrounding;
-import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
-import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
-import org.apache.streampipes.model.grounding.TopicDefinition;
+import org.apache.streampipes.model.grounding.*;
 import org.apache.streampipes.model.schema.EventSchema;
 
 import java.util.Collections;
@@ -37,7 +34,14 @@ public class GroundingService {
         EventGrounding eventGrounding = getEventGrounding(adapterDescription);
 
         String host = eventGrounding.getTransportProtocol().getBrokerHostname();
-        int port = ((KafkaTransportProtocol) eventGrounding.getTransportProtocol()).getKafkaPort();
+        int port = 0;
+        if ("true".equals(System.getenv("SP_NODE_BROKER"))) {
+            port = ((JmsTransportProtocol) eventGrounding.getTransportProtocol()).getPort();
+        }
+        else {
+            port = ((KafkaTransportProtocol) eventGrounding.getTransportProtocol()).getKafkaPort();
+        }
+
         return host + ":" + port;
     }
 
@@ -60,20 +64,35 @@ public class GroundingService {
         return eventGrounding;
     }
 
-    public static EventGrounding createEventGrounding(String kafkaHost, int kafkaPort, EventSchema eventSchema) {
+    public static EventGrounding createEventGrounding(String host, int port, EventSchema eventSchema) {
         EventGrounding eventGrounding = new EventGrounding();
-        KafkaTransportProtocol transportProtocol = new KafkaTransportProtocol();
-        transportProtocol.setBrokerHostname(kafkaHost);
-        transportProtocol.setKafkaPort(kafkaPort);
 
-        String topic = "org.apache.streampipes.connect." + UUID.randomUUID().toString();
-        TopicDefinition topicDefinition = new SimpleTopicDefinition(topic);
-        transportProtocol.setTopicDefinition(topicDefinition);
+        if ("true".equals(System.getenv("SP_NODE_BROKER"))) {
+            JmsTransportProtocol transportProtocol = new JmsTransportProtocol();
+            transportProtocol.setBrokerHostname(host);
+            transportProtocol.setPort(port);
 
-        eventGrounding.setTransportProtocol(transportProtocol);
-        eventGrounding.setTransportFormats(Collections
-                .singletonList(TransportFormatGenerator.getTransportFormat()));
+            String topic = "org.apache.streampipes.connect." + UUID.randomUUID().toString();
+            TopicDefinition topicDefinition = new SimpleTopicDefinition(topic);
+            transportProtocol.setTopicDefinition(topicDefinition);
 
+            eventGrounding.setTransportProtocol(transportProtocol);
+            eventGrounding.setTransportFormats(Collections
+                    .singletonList(TransportFormatGenerator.getTransportFormat()));
+        }
+        else {
+            KafkaTransportProtocol transportProtocol = new KafkaTransportProtocol();
+            transportProtocol.setBrokerHostname(host);
+            transportProtocol.setKafkaPort(port);
+
+            String topic = "org.apache.streampipes.connect." + UUID.randomUUID().toString();
+            TopicDefinition topicDefinition = new SimpleTopicDefinition(topic);
+            transportProtocol.setTopicDefinition(topicDefinition);
+
+            eventGrounding.setTransportProtocol(transportProtocol);
+            eventGrounding.setTransportFormats(Collections
+                    .singletonList(TransportFormatGenerator.getTransportFormat()));
+        }
 
         return eventGrounding;
     }

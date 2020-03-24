@@ -45,13 +45,13 @@ public class ProtocolSelector extends GroundingSelector {
                     .getEventGrounding()
                     .getTransportProtocol();
         } else {
-            if (supportsProtocol(KafkaTransportProtocol.class)) {
-                return kafkaTopic();
-            } else if (supportsProtocol(JmsTransportProtocol.class)) {
+             if (supportsProtocol(JmsTransportProtocol.class)) {
                 return new JmsTransportProtocol(BackendConfig.INSTANCE.getJmsHost(),
                         BackendConfig.INSTANCE.getJmsPort(),
                         outputTopic);
-            }
+            } else if (supportsProtocol(KafkaTransportProtocol.class)) {
+                 return kafkaTopic();
+             }
         }
         return kafkaTopic();
     }

@@ -27,15 +27,13 @@ import org.apache.streampipes.model.connect.rules.Schema.SchemaTransformationRul
 import org.apache.streampipes.model.connect.rules.Stream.StreamTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.ValueTransformationRuleDescription;
-import org.apache.streampipes.model.grounding.EventGrounding;
-import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
-import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
-import org.apache.streampipes.model.grounding.TransportProtocol;
+import org.apache.streampipes.model.grounding.*;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -91,9 +89,11 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
         this.category = new ArrayList<>();
 
         // TODO move to another place
-        TransportProtocol tp = new KafkaTransportProtocol();
-        tp.setTopicDefinition(new SimpleTopicDefinition("bb"));
-        this.eventGrounding.setTransportProtocol(tp);
+        TransportProtocol tpKafka = new KafkaTransportProtocol();
+        TransportProtocol tpJms = new JmsTransportProtocol();
+        tpKafka.setTopicDefinition(new SimpleTopicDefinition("bb"));
+        tpJms.setTopicDefinition(new SimpleTopicDefinition("cc"));
+        this.eventGrounding.setTransportProtocols(Arrays.asList(tpKafka,tpJms));
 //        this.eventGrounding.setTransportFormats(Arrays.asList(Formats.jsonFormat()));
 
 
