@@ -1,4 +1,3 @@
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -16,13 +15,26 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.config.backend;
 
-export interface MessagingSettings {
-    batchSize: number;
-    messageMaxBytes: number;
-    lingerMs: number;
-    acks: number;
+public enum SpProtocol {
 
-   prioritizedFormats: [string];
-   prioritizedProtocols: [string];
+  Kafka("Kafka", "org.apache.streampipes.model.grounding.KafkaTransportProtocol"),
+  Jms("JMS", "org.apache.streampipes.model.grounding.JmsTransportProtocol");
+
+  private String name;
+  private String protocolClass;
+
+  SpProtocol(String name, String protocolClass) {
+    this.name = name;
+    this.protocolClass = protocolClass;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public String getProtocolClass() {
+    return protocolClass;
+  }
 }

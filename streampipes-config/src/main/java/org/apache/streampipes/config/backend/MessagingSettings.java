@@ -28,6 +28,7 @@ public class MessagingSettings {
   private Integer acks;
 
   private List<SpDataFormat> prioritizedFormats;
+  private List<SpProtocol> prioritizedProtocols;
 
   public static MessagingSettings fromDefault() {
     return new MessagingSettings(1638400,
@@ -37,16 +38,19 @@ public class MessagingSettings {
             Arrays.asList(SpDataFormat.JSON,
                     SpDataFormat.CBOR,
             SpDataFormat.FST,
-            SpDataFormat.SMILE));
+            SpDataFormat.SMILE),
+            Arrays.asList(SpProtocol.Kafka, SpProtocol.Jms));
   }
 
   public MessagingSettings(Integer batchSize, Integer messageMaxBytes, Integer lingerMs,
-                           Integer acks, List<SpDataFormat> prioritizedFormats) {
+                           Integer acks, List<SpDataFormat> prioritizedFormats,
+                           List<SpProtocol> prioritizedProtocols) {
     this.batchSize = batchSize;
     this.messageMaxBytes = messageMaxBytes;
     this.lingerMs = lingerMs;
     this.acks = acks;
     this.prioritizedFormats = prioritizedFormats;
+    this.prioritizedProtocols = prioritizedProtocols;
   }
 
   public MessagingSettings() {
@@ -91,5 +95,13 @@ public class MessagingSettings {
 
   public void setPrioritizedFormats(List<SpDataFormat> prioritizedFormats) {
     this.prioritizedFormats = prioritizedFormats;
+  }
+
+  public List<SpProtocol> getPrioritizedProtocols() {
+    return prioritizedProtocols;
+  }
+
+  public void setPrioritizedProtocols(List<SpProtocol> prioritizedProtocols) {
+    this.prioritizedProtocols = prioritizedProtocols;
   }
 }

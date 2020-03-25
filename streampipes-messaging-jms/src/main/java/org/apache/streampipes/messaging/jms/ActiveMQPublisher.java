@@ -43,7 +43,7 @@ public class ActiveMQPublisher implements EventProducer<JmsTransportProtocol> {
   private Session session;
   private MessageProducer producer;
 
-  private Boolean connected;
+  private Boolean connected = false;
 
   public ActiveMQPublisher() {
 

@@ -19,6 +19,7 @@
 package org.apache.streampipes.manager.matching;
 
 import org.apache.streampipes.config.backend.BackendConfig;
+import org.apache.streampipes.config.backend.SpProtocol;
 import org.apache.streampipes.manager.util.TopicGenerator;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
@@ -33,10 +34,13 @@ import java.util.Set;
 public class ProtocolSelector extends GroundingSelector {
 
     private String outputTopic;
+    private List<SpProtocol> prioritizedProtocols;
 
     public ProtocolSelector(NamedStreamPipesEntity source, Set<InvocableStreamPipesEntity> targets) {
         super(source, targets);
         this.outputTopic = TopicGenerator.generateRandomTopic();
+        this.prioritizedProtocols =
+                BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedProtocols();
     }
 
     public TransportProtocol getPreferredProtocol() {
@@ -45,17 +49,24 @@ public class ProtocolSelector extends GroundingSelector {
                     .getEventGrounding()
                     .getTransportProtocol();
         } else {
-            // TODO: works only for kafka protocol
-            if (supportsProtocol(KafkaTransportProtocol.class)) {
-                 return kafkaTopic();
-             }
-            else if (supportsProtocol(JmsTransportProtocol.class)) {
-                return new JmsTransportProtocol(BackendConfig.INSTANCE.getJmsHost(),
-                        BackendConfig.INSTANCE.getJmsPort(),
-                        outputTopic);
+            for(SpProtocol prioritizedProtocol: prioritizedProtocols) {
+                if (prioritizedProtocol.getProtocolClass().equals(KafkaTransportProtocol.class.getCanonicalName()) &&
+                        supportsProtocol(KafkaTransportProtocol.class)) {
+                    return kafkaTopic();
+                }
+                else if (prioritizedProtocol.getProtocolClass().equals(JmsTransportProtocol.class.getCanonicalName()) &&
+                        supportsProtocol(JmsTransportProtocol.class)) {
+                    return jmsTopic();
+                }
             }
         }
         return kafkaTopic();
+    }
+
+    private TransportProtocol jmsTopic() {
+        return new JmsTransportProtocol(BackendConfig.INSTANCE.getJmsHost(),
+                BackendConfig.INSTANCE.getJmsPort(),
+                outputTopic);
     }
 
     private TransportProtocol kafkaTopic() {
@@ -76,7 +87,7 @@ public class ProtocolSelector extends GroundingSelector {
                         .getSupportedGrounding()
                         .getTransportProtocols()
                         .stream()
-                        .anyMatch(p -> protocol.isInstance(p)));
+                        .anyMatch(protocol::isInstance));
 
     }
 }
