@@ -46,7 +46,9 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
     selectedEndX = undefined;
     n_selected_points = undefined;
 
-    labels =  any[] = undefined;
+    // mocked labels
+    labels = {state: ['online', 'offline', 'active', 'inactive'], trend: ['increasing', 'decreasing'],
+        daytime: ['day', 'night']};
 
     private dialogReference = undefined;
 
