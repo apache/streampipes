@@ -46,7 +46,7 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
     selectedEndX = undefined;
     n_selected_points = undefined;
 
-    labels = {'test': ['testLabel'], 'categoryB': ['test123', 'bad', 'cdfgff', 'dssaadfgd', 'edggssd', 'ggfkfdjhssasddsdssadsasdsksdh', 'qab']};
+    labels =  any[] = undefined;
 
     private dialogReference = undefined;
 
@@ -151,6 +151,10 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
                 });
             });
             this.dataToDisplay = tmp;
+
+            /**
+             * TODO: fetching stored labels, filling this.labels and drawing related shapes
+             */
 
         } else {
             this.dataToDisplay = undefined;
@@ -309,6 +313,10 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
                             for (const point of series['selectedpoints']) {
                                 series['customdata'][point] = result;
                             }
+
+                            /**
+                             * TODO: saving labels persistently in database
+                             */
                         }
 
                         // adding coloured shape (based on selected label) to graph (equals selected time interval)
