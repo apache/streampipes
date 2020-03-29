@@ -1,0 +1,14 @@
+org.apache.streampipes.processors.transformation.jvm.stringoperator.timekeeping.title=Measure Time Between Two Sensors
+org.apache.streampipes.processors.transformation.jvm.stringoperator.timekeeping.description=Requires two strings and measures the time between two signals
+
+left-field.title=Left Field
+left-field.description=The string that starts the timer
+
+right-field.title=Right Field
+right-field.description=The boolean that triggers the event with the result of the timer
+
+time-field.title=Timer Field
+time-field.description=Time between the signal of the left and the right field
+
+count-field.title=Counter
+count-field.description=Amount of signals that where first on the left and then on the right sensor

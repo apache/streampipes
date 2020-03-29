@@ -1,0 +1,10 @@
+org.apache.streampipes.processors.transformation.jvm.stringoperator.timer.title=String Timer
+org.apache.streampipes.processors.transformation.jvm.stringoperator.timer.description=Measures how long a boolean measure does not change
+
+field.title=String Field
+field.description=The string field that is monitored
+
+timerField.title=Value to observe
+timerField.description=Define whether the time for true or false should be measured
+
+
