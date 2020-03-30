@@ -1,5 +1,0 @@
-org.apache.streampipes.processors.transformation.jvm.stringoperator.inverter.title=String Inverter
-org.apache.streampipes.processors.transformation.jvm.stringoperator.inverter.description=Inverts the string value of the selected field
-
-invert-field.title=Invert field
-invert-field.description=The field which should be inverted
