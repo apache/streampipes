@@ -32,8 +32,6 @@ public class ${classNamePrefix}Controller extends StandaloneEventSinkDeclarer<${
 							.create()
 							.requiredProperty(EpRequirements.anyProperty())
 							.build())
-						.supportedFormats(SupportedFormats.jsonFormat())
-						.supportedProtocols(SupportedProtocols.kafka())
 						.requiredTextParameter(Labels.from(EXAMPLE_KEY, "Example Text Parameter", "Example " +
 				"Text Parameter Description"))
 						.build();
