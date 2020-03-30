@@ -124,7 +124,6 @@ jobs:
           NODE_OPTIONS=--max_old_space_size=6096
           npm install --unsafe-perm
           npm run build
-          ls
       - name: Build and Push Docker UI Image
         working-directory: ./ui
         env:
@@ -133,7 +132,6 @@ jobs:
           IMG_NAME_ARM32V7: ${{ env.DOCKERHUB_APACHE_REPO }}/ui:arm32v7-${{ env.MVN_VERSION }}
           IMG_NAME_ARM64V8: ${{ env.DOCKERHUB_APACHE_REPO }}/ui:arm64v8-${{ env.MVN_VERSION }}
         run: |
-          ls
           docker build --no-cache --pull --build-arg BASE_IMG=$BASE_IMG_NGINX_DEFAULT -t $IMG_NAME_DEFAULT -t $IMG_NAME_AMD64 -f Dockerfile .
           docker build --no-cache --pull --build-arg BASE_IMG=$BASE_IMG_NGINX_ARM32V7 -t $IMG_NAME_ARM32V7 -f arm.Dockerfile .
           docker build --no-cache --pull --build-arg BASE_IMG=$BASE_IMG_NGINX_ARM64V8 -t $IMG_NAME_ARM64V8 -f aarch64.Dockerfile .
