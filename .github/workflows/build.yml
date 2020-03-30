@@ -38,10 +38,12 @@ jobs:
         #run: mvn clean package javadoc:aggregate
         run: mvn clean package -Denforcer.skip=True -DskipTests
       - name: Set env variables for Docker builds
+        # TODO: use apachestreampipes when merge back
+        # echo "::set-env name=DOCKERHUB_APACHE_REPO::apachestreampipes"
         run: |
           echo "::set-env name=DOCKER_CLI_EXPERIMENTAL::enabled"
           echo "::set-env name=MVN_VERSION::$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
-          echo "::set-env name=DOCKERHUB_APACHE_REPO::apachestreampipes"
+          echo "::set-env name=DOCKERHUB_APACHE_REPO::fogsyio"
           echo "::set-env name=BASE_IMG_JRE_DEFAULT::adoptopenjdk/openjdk8-openj9:alpine-slim"
           echo "::set-env name=BASE_IMG_JRE_ARM32V7::arm32v7/openjdk:11-jre-slim"
           echo "::set-env name=BASE_IMG_JRE_ARM64V8::arm64v8/openjdk:11-jre-slim"
