@@ -26,7 +26,7 @@
         </div>
         <div fxFlex="100" fxLayoutAlign="start start" class="sp-blue-border page-container-padding-inner">
             <mat-grid-list
-                    [cols]="3" [rowHeight]="200"
+                    [cols]="3" [rowHeight]="300"
                     [gutterSize]="10" fxFlex="100">
 
                 <mat-grid-tile class="gray" *ngFor="let node of availableEdgeNodes">
@@ -43,14 +43,9 @@
                             <div class="div-sa-tag" *ngFor="let element of node.nodeResources.accessibleSensorActuatorResource">
                                 <span class="span-sa-tag">{{element.name}}</span>&nbsp;
                             </div>
-                            <div>
-                                <ul class="ft-foot">
-                                    <li><span class="inclusion" style="color: darkgray"><i class="fas fa-link"></i></span>{{node.nodeMetadata.nodeAddress}}</li>
-                                    <li><span class="inclusion" style="color: darkgray"><i class="fab fa-docker"></i></span>{{node.nodeResources.softwareResource.docker.serverVersion}}</li>
-                                    <li><span class="inclusion" style="color: darkgray"><i class="fas fa-cube"></i></span>{{node.nodeResources.softwareResource.os}}</li>
-                                </ul>
-                            </div>
-                            <br>
+
+                            <hr/>
+
                             <div>
                                 <ul class="ft-foot-4">
                                     <li><span class="inclusion" style="color: darkgray"><i class="fas fa-microchip"></i></span><b>{{node.nodeResources.hardwareResource.cpu.cores}}</b> cores</li>
@@ -58,7 +53,13 @@
                                     <li><span class="inclusion" style="color: darkgray"><i class="fas fa-hdd"></i></span><b>{{node.nodeResources.hardwareResource.disk.diskTotal}}</b> GiB</li>
                                     <li><span class="inclusion" style="color: darkgray"><i class="fas fa-meteor"></i></span>GPU <b>{{node.nodeResources.softwareResource.docker.hasNvidiaRuntime}}</b></li>
                                 </ul>
+                                <ul class="ft-foot">
+                                    <li><span class="inclusion" style="color: darkgray"><i class="fas fa-link"></i></span>{{node.nodeMetadata.nodeAddress}}</li>
+                                    <li><span class="inclusion" style="color: darkgray"><i class="fab fa-docker"></i></span>{{node.nodeResources.softwareResource.docker.serverVersion}}</li>
+                                    <li><span class="inclusion" style="color: darkgray"><i class="fas fa-cube"></i></span>{{node.nodeResources.softwareResource.os}}</li>
+                                </ul>
                             </div>
+
                         </mat-card-content>
                         <mat-card-actions>
                         </mat-card-actions>
