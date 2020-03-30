@@ -53,7 +53,7 @@ jobs:
       - name: Install qemu-user-static for multi-arch builds
         run: |
           sudo apt-get install qemu-user-static
-          echo "./streampipes-backend/ ./streampipes-connect-container-master/ ./ui/" | xargs -n 1 cp -v /usr/bin/qemu-*
+          echo "./streampipes-backend/ ./streampipes-connect-container-master/ ./streampipes-node-controller-container/ ./ui/" | xargs -n 1 cp -v /usr/bin/qemu-*
       - name: Login to Docker Hub
         run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USER }} --password-stdin
       - name: Enable Docker experimental feature for multi-arch builds
