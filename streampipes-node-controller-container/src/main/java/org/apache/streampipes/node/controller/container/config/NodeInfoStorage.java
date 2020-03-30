@@ -161,24 +161,19 @@ public class NodeInfoStorage {
     }
 
     private static List<AccessibleSensorActuatorResource> getAcessibleSensorActuatorResources(){
-        String[] accessibleSensorActuatorResources = envExists(ConfigKeys.NODE_ACCESSIBLE_SENSOR_ACTUATOR_KEY)
-                .trim()
-                .replaceAll("\\[|\\]|\"", "")
-                .split("\\s*,\\s*");
-
-        List<AccessibleSensorActuatorResource> accessibleSensorActuatorResourceList = new ArrayList<>();
-        for(String s: accessibleSensorActuatorResources) {
-            String [] substr = s.split(";");
-            AccessibleSensorActuatorResource i = new AccessibleSensorActuatorResource();
-            i.setName(substr[0]);
-            i.setType(substr[1]);
-            i.setConnectionInfo(substr[2]);
-            i.setConnectionType(substr[3]);
-
-            accessibleSensorActuatorResourceList.add(i);
-        }
-
-        return accessibleSensorActuatorResourceList;
+        return System.getenv()
+                .entrySet()
+                .stream()
+                .filter(e -> (e.getKey().contains(ConfigKeys.NODE_ACCESSIBLE_SENSOR_ACTUATOR_KEY)))
+                .map(x -> {
+                    AccessibleSensorActuatorResource a = new AccessibleSensorActuatorResource();
+                    a.setName(x.getValue().split(";")[0]);
+                    a.setType(x.getValue().split(";")[1]);
+                    a.setConnectionInfo(x.getValue().split(";")[2]);
+                    a.setConnectionType(x.getValue().split(";")[3]);
+                    return a;
+                })
+                .collect(Collectors.toList());
     }
 
     private static CPU getNodeCpu(){
