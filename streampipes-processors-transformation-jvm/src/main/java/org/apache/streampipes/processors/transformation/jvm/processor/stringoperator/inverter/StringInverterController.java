@@ -35,7 +35,7 @@ public class StringInverterController extends StandaloneEventProcessingDeclarer<
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.booloperator.inverter")
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.stringoperator.inverter")
             .withLocales(Locales.EN)
             .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .requiredStream(StreamRequirementsBuilder.create()

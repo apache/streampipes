@@ -1,5 +1,5 @@
 org.apache.streampipes.processors.transformation.jvm.stringoperator.timer.title=String Timer
-org.apache.streampipes.processors.transformation.jvm.stringoperator.timer.description=Measures how long a boolean measure does not change
+org.apache.streampipes.processors.transformation.jvm.stringoperator.timer.description=Measures how long a string measure does not change
 
 field.title=String Field
 field.description=The string field that is monitored

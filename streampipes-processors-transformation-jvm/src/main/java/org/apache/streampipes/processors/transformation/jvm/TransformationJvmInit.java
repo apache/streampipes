@@ -61,10 +61,11 @@ public class TransformationJvmInit extends StandaloneModelSubmitter {
             .add(new CsvMetadataEnrichmentController())
             .add(new TaskDurationController())
             .add(new TransformToBooleanController())
-            // .add(new StringTimerController())
-            // .add(new StringInverterController())
-            // .add(new StringTimekeepingController())
-            .add(new StringCounterController());
+            .add(new StringCounterController())
+            .add(new StringTimerController());
+            // .add(new StringTimerController());
+            // .add(new StringInverterController());
+            // .add(new StringTimekeepingController());
 
     DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),
             new CborDataFormatFactory(),

@@ -24,7 +24,7 @@ import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
 
-public class StringInverter implements EventProcessor<org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.inverter.StringInverterParameters> {
+public class StringInverter implements EventProcessor<StringInverterParameters> {
 
   private static Logger LOG;
 
@@ -32,7 +32,7 @@ public class StringInverter implements EventProcessor<org.apache.streampipes.pro
 
 
   @Override
-  public void onInvocation(org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.inverter.StringInverterParameters booleanInverterParameters,
+  public void onInvocation(StringInverterParameters booleanInverterParameters,
                            SpOutputCollector spOutputCollector,
                            EventProcessorRuntimeContext runtimeContext) {
     LOG = booleanInverterParameters.getGraph().getLogger(StringInverter.class);

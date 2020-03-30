@@ -32,28 +32,20 @@ import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcess
 public class StringCounterController extends StandaloneEventProcessingDeclarer<StringCounterParameters> {
 
   public static final String FIELD_ID = "field";
-  public static final String FLANK_ID = "flank";
   public static final String COUNT_FIELD_ID = "countField";
-
   public static final String COUNT_FIELD_RUNTIME_NAME = "counter";
-
-  private static final String FLANK_UP = "FALSE -> TRUE";
-  private static final String FLANK_DOWN = "TRUE -> FALSE";
-  private static final String BOTH = "BOTH";
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.booloperator.counter")
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.stringoperator.counter")
             .withLocales(Locales.EN)
             .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .requiredStream(StreamRequirementsBuilder.create()
                     .requiredPropertyWithUnaryMapping(
-                            EpRequirements.booleanReq(),
+                            EpRequirements.stringReq(),
                             Labels.withId(FIELD_ID),
                             PropertyScope.NONE)
                     .build())
-
-            .requiredSingleValueSelection(Labels.withId(FLANK_ID), Options.from(BOTH, FLANK_UP, FLANK_DOWN))
             .outputStrategy(OutputStrategies.append(
                     EpProperties.numberEp(Labels.withId(COUNT_FIELD_ID), COUNT_FIELD_RUNTIME_NAME, "http://schema.org/Number")
             ))
@@ -63,17 +55,9 @@ public class StringCounterController extends StandaloneEventProcessingDeclarer<S
   @Override
   public ConfiguredEventProcessor<StringCounterParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 
-    String invertFieldName = extractor.mappingPropertyValue(FIELD_ID);
-    String flank = extractor.selectedSingleValue(FLANK_ID, String.class);
+    String selectedFieldName = extractor.mappingPropertyValue(FIELD_ID);
 
-    int flankUp = 0;
-    if (flank.equals(FLANK_DOWN)) {
-      flankUp = 1;
-    } else if (flank.equals(FLANK_UP)) {
-      flankUp = 2;
-    }
-
-    StringCounterParameters params = new StringCounterParameters(graph, invertFieldName, flankUp);
+    StringCounterParameters params = new StringCounterParameters(graph, selectedFieldName);
     return new ConfiguredEventProcessor<>(params, StringCounter::new);
   }
 }

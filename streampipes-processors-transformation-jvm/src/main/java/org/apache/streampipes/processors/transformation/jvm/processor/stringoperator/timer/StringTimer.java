@@ -20,12 +20,11 @@ package org.apache.streampipes.processors.transformation.jvm.processor.stringope
 
 import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.timer.StringTimerParameters;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
 
-public class StringTimer implements EventProcessor<org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.timer.StringTimerParameters> {
+public class StringTimer implements EventProcessor<StringTimerParameters> {
 
     private static Logger LOG;
 
@@ -41,7 +40,7 @@ public class StringTimer implements EventProcessor<org.apache.streampipes.proces
     public void onInvocation(StringTimerParameters booleanInverterParameters,
                              SpOutputCollector spOutputCollector,
                              EventProcessorRuntimeContext runtimeContext) {
-        LOG = booleanInverterParameters.getGraph().getLogger(org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.timer.StringTimer.class);
+        LOG = booleanInverterParameters.getGraph().getLogger(StringTimer.class);
         this.fieldName = booleanInverterParameters.getFieldName();
         this.measureTrue = booleanInverterParameters.isMeasureTrue();
         this.timestamp = Long.MIN_VALUE;

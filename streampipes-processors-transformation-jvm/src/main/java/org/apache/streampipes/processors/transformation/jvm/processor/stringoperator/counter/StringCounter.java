@@ -26,59 +26,45 @@ import org.apache.streampipes.wrapper.runtime.EventProcessor;
 
 public class StringCounter implements EventProcessor<StringCounterParameters> {
 
-  // From true to false or from false to true
-
   private static Logger LOG;
 
   private String fieldName;
-  private int flankUp;
+  private String fieldValueOfLastEvent;
 
-  private boolean fieldValueOfLastEvent;
   private int counter;
 
 
-
   @Override
-  public void onInvocation(StringCounterParameters booleanCounterParametersParameters,
+  public void onInvocation(StringCounterParameters stringCounterParametersParameters,
                            SpOutputCollector spOutputCollector,
                            EventProcessorRuntimeContext runtimeContext) {
-    LOG = booleanCounterParametersParameters.getGraph().getLogger(StringCounter.class);
-    this.fieldName = booleanCounterParametersParameters.getInvertFieldName();
-    this.flankUp = booleanCounterParametersParameters.getFlankUp();
+    LOG = stringCounterParametersParameters.getGraph().getLogger(StringCounter.class);
+    this.fieldName = stringCounterParametersParameters.getSelectedFieldName();
 
-    if (flankUp == 1) {
-        this.fieldValueOfLastEvent = true;
-    } else {
-        this.fieldValueOfLastEvent = false;
-    }
-
+    this.fieldValueOfLastEvent = "";
     this.counter = 0;
   }
 
   @Override
   public void onEvent(Event inputEvent, SpOutputCollector out) {
 
-      boolean value = inputEvent.getFieldBySelector(fieldName).getAsPrimitive().getAsBoolean();
+      String value = inputEvent.getFieldBySelector(fieldName).getAsPrimitive().getAsString();
       boolean updateCounter = false;
 
-      if (this.flankUp == 2) {
-        // detect up flanks
-        if (this.fieldValueOfLastEvent == false && value == true) {
-            updateCounter = true;
-        }
-      } else if (this.flankUp == 1){
-        // detect up flanks
-        if (this.fieldValueOfLastEvent == true && value == false) {
-            updateCounter = true;
-        }
+      System.out.println(fieldValueOfLastEvent);
+
+      if (!this.fieldValueOfLastEvent.equals(value)) {
+          System.out.println("if: " + value);
+          updateCounter = true;
       } else {
-          if (this.fieldValueOfLastEvent != value) {
-              updateCounter = true;
-          }
+          System.out.println("else: " + value);
+          updateCounter = false;
       }
 
       if (updateCounter) {
+          System.out.println("UpdateCounter: " + updateCounter);
           this.counter++;
+          System.out.println(counter);
           inputEvent.addField(StringCounterController.COUNT_FIELD_RUNTIME_NAME, this.counter);
           out.collect(inputEvent);
       }

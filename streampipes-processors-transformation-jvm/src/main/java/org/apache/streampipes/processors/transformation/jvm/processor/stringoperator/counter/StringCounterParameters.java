@@ -22,27 +22,15 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 public class StringCounterParameters extends EventProcessorBindingParams {
-    private String invertFieldName;
+    private String selectedFieldName;
 
-    /**
-     * Defines which boolean changes should be counted
-     * 0: BOTH
-     * 1: TRUE -> FALSE
-     * 2: FALSE -> TRUE
-     */
-    private int flankUp;
-
-    public StringCounterParameters(DataProcessorInvocation graph, String invertFieldName, int flankUp) {
+    public StringCounterParameters(DataProcessorInvocation graph, String selectedFieldName) {
         super(graph);
-        this.invertFieldName = invertFieldName;
-        this.flankUp = flankUp;
+        this.selectedFieldName = selectedFieldName;
     }
 
-    public String getInvertFieldName() {
-        return invertFieldName;
+    public String getSelectedFieldName() {
+        return selectedFieldName;
     }
 
-    public int getFlankUp() {
-        return flankUp;
-    }
 }
