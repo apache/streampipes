@@ -33,8 +33,9 @@ mat-card {
     margin: 10px;
 }
 
-ul {
-    column-count: 3;
+
+#resources {
+    column-count: 4;
 }
 
 li {
@@ -72,4 +73,36 @@ li {
     /*background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');*/
     color: darkgray;
     padding-top: 6px;
+}
+
+.ft-foot-4 {
+    column-count: 4;
+    float: left;
+    width: 100%;
+    padding: 3px 5px;
+    text-align:center;
+}
+
+.ft-foot {
+    column-count: 3;
+    float: left;
+    width: 100%;
+    padding: 3px 5px;
+    text-align:center;
+}
+.ft-foot .ft-foot-4 ul li {
+    display: inline-block;
+    margin:0 2px;
+}
+.inclusion {
+    color: darkgrey;
+    padding: 5px 0 5px 0;
+    /*display: block;*/
+    letter-spacing: 5px;
+    text-align: center;
+}
+.inclusion span {
+    display: block;
+    font-size: 10px;
+    text-transform: uppercase;
 }
