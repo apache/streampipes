@@ -252,6 +252,10 @@ public class NodeInfoStorage {
             else if (f.getVolume().contains("/dev/nvme")){
                 diskTotal = f.getTotalSpace();
             }
+            // Docker in RPi
+            else if (f.getVolume().contains("/dev/root")){
+                diskTotal = f.getTotalSpace();
+            }
             // macos
             else if (f.getVolume().contains("/dev/disk") && f.getMount().equals("/")){
                 diskTotal = f.getTotalSpace();
