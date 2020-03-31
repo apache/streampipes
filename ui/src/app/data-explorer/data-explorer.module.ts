@@ -16,27 +16,28 @@
  *
  */
 
-import {NgModule} from '@angular/core';
-import {FlexLayoutModule} from '@angular/flex-layout';
-import {CommonModule} from '@angular/common';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
-import {DataExplorerComponent} from './data-explorer.component';
+import { DataExplorerComponent } from './data-explorer.component';
 
-import {CustomMaterialModule} from '../CustomMaterial/custom-material.module';
-import {DatalakeRestService} from '../core-services/datalake/datalake-rest.service';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {CdkTableModule} from '@angular/cdk/table';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import {MatSnackBarModule} from '@angular/material/snack-bar';
-import {CoreUiModule} from '../core-ui/core-ui.module';
-import {ExplorerComponent} from './explorer/explorer.component';
-import {DataDownloadDialog} from './explorer/datadownloadDialog/dataDownload.dialog';
-
+import { CdkTableModule } from '@angular/cdk/table';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {
     OWL_DATE_TIME_FORMATS,
     OwlDateTimeModule,
     OwlNativeDateTimeModule
 } from '@danielmoncada/angular-datetime-picker';
+import { DatalakeRestService } from '../core-services/datalake/datalake-rest.service';
+import { CoreUiModule } from '../core-ui/core-ui.module';
+import { LabelingToolModule } from '../core-ui/linechart/labeling-tool/labeling-tool.module';
+import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
+import { DataDownloadDialog } from './explorer/datadownloadDialog/dataDownload.dialog';
+import { ExplorerComponent } from './explorer/explorer.component';
+
 
 export const MY_NATIVE_FORMATS = {
     fullPickerInput: {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: false},
@@ -60,6 +61,7 @@ export const MY_NATIVE_FORMATS = {
         CoreUiModule,
         OwlDateTimeModule,
         OwlNativeDateTimeModule,
+        LabelingToolModule
     ],
     declarations: [
         DataExplorerComponent,
