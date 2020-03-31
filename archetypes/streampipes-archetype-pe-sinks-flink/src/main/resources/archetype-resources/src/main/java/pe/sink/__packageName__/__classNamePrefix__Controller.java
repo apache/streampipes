@@ -34,8 +34,6 @@ public class ${classNamePrefix}Controller extends FlinkDataSinkDeclarer<${classN
 							.create()
 							.requiredProperty(EpRequirements.anyProperty())
 							.build())
-						.supportedFormats(SupportedFormats.jsonFormat())
-						.supportedProtocols(SupportedProtocols.kafka())
 						.requiredTextParameter(Labels.withId(EXAMPLE_KEY))
 						.build();
 	}
