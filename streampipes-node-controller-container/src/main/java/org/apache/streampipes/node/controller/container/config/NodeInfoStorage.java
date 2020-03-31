@@ -256,8 +256,12 @@ public class NodeInfoStorage {
             else if (f.getVolume().contains("/dev/root")){
                 diskTotal = f.getTotalSpace();
             }
+            // Docker in Jetson Nano
+            else if (f.getVolume().contains("/dev/mmcblk0p1")){
+                diskTotal = f.getTotalSpace();
+            }
             // macos
-            else if (f.getVolume().contains("/dev/disk") && f.getMount().equals("/")){
+            else if (f.getVolume().contains("/dev/mmcblk0p1") && f.getMount().equals("/")){
                 diskTotal = f.getTotalSpace();
             }
         }

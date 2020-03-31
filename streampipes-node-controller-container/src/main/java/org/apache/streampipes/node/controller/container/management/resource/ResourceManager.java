@@ -136,6 +136,18 @@ public class ResourceManager {
                 i.put("total", f.getTotalSpace());
                 m.put(f.getVolume(), i);
             }
+            // Docker in RPi
+            else if (f.getVolume().contains("/dev/root")){
+                i.put("available", f.getUsableSpace());
+                i.put("total", f.getTotalSpace());
+                m.put(f.getVolume(), i);
+            }
+            // Docker in Jetson Nano
+            else if (f.getVolume().contains("/dev/mmcblk0p1")){
+                i.put("available", f.getUsableSpace());
+                i.put("total", f.getTotalSpace());
+                m.put(f.getVolume(), i);
+            }
 //            // has SATA disk
 //            if (f.getVolume().contains("/dev/sda") && ( f.getMount().equals("/") || f.getMount().equals("/home"))){
 //                i.put("available", f.getUsableSpace());
