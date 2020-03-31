@@ -45,7 +45,7 @@ public class ResourceManager {
 
     private Calendar cal = Calendar.getInstance();
 
-    private Map<String, String> nodeResources = new HashMap<>();
+    private Map<String, Object> nodeResources = new HashMap<>();
 
     private static ResourceManager instance = null;
 
@@ -83,17 +83,21 @@ public class ResourceManager {
                 float cpuLoad = getCpuLoad(this.hal.getProcessor());
                 double cpuTemperature = getCpuTemperature(this.hal.getSensors());
                 long availableMemory = getAvailableMemory(this.hal.getMemory());
+                long usedMemory = this.hal.getMemory().getTotal() - availableMemory;
                 Map<String, Map<String, Long>> diskUsage = getDiskUsage(this.os.getFileSystem());
 
                 nodeResources.put("systemTime", dateFormat.format(cal.getTime()));
                 nodeResources.put("booted", booted);
                 nodeResources.put("uptime", uptime);
                 nodeResources.put("cpuLoad", String.format("%.1f%%", cpuLoad));
+                nodeResources.put("cpuLoadInPercent", cpuLoad);
                 nodeResources.put("cpuTemperature", String.format("%.2f°C", cpuTemperature));
-                nodeResources.put("availableMemory", String.format("%s", availableMemory));
+                nodeResources.put("cpuTemperatureCelcius", cpuTemperature);
+                nodeResources.put("availableMemory", availableMemory);
+                nodeResources.put("usedMemory", usedMemory);
 
                 for (Map.Entry<String, Map<String, Long>> k : diskUsage.entrySet()) {
-                    nodeResources.put("availableDisk",String.format("%s", k.getValue().get("available")));
+                    nodeResources.put("availableDisk", k.getValue().get("available"));
                 }
 
             } catch (InterruptedException e) {
