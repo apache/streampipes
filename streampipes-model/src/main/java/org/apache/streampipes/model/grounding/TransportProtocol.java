@@ -48,10 +48,10 @@ public abstract class TransportProtocol extends UnnamedStreamPipesEntity {
 		super();
 	}
 	
-	public TransportProtocol(String uri, TopicDefinition topicDefinition)
+	public TransportProtocol(String hostname, TopicDefinition topicDefinition)
 	{
 		super();
-		this.brokerHostname = uri;
+		this.brokerHostname = hostname;
 		this.topicDefinition = topicDefinition;
 	}
 

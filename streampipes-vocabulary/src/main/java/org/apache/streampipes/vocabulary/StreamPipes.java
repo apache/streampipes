@@ -111,6 +111,7 @@ public class StreamPipes {
 
   public static final String JMS_TRANSPORT_PROTOCOL = NS + "JmsTransportProtocol";
   public static final String KAFKA_TRANSPORT_PROTOCOL = NS + "KafkaTransportProtocol";
+  public static final String MQTT_TRANSPORT_PROTOCOL = NS + "MqttTransportProtocol";
   public static final String TRANSPORT_FORMAT = NS + "TransportFormat";
   public static final String TRANSPORT_PROTOCOL = NS + "TransportProtocol";
 
@@ -143,6 +144,7 @@ public class StreamPipes {
   public static final String HAS_TRANSPORT_PROTOCOL = NS + "hasTransportProtocol";
   public static final String HAS_TRANSPORT_FORMAT = NS + "hasTransportFormat";
   public static final String JMS_PORT = NS + "jmsPort";
+  public static final String HAS_MQTT_PORT = NS + "hasMqttPort";
 
   public static final String ZOOKEEPER_HOST = NS + "zookeeperHost";
   public static final String ZOOKEEPER_PORT = NS + "zookeeperPort";
