@@ -29,17 +29,13 @@
 }
 
 mat-card {
-    box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
+    box-shadow: 0 2px 1px -1px rgba(0, 0, 0, .2), 0 1px 1px 0 rgba(0, 0, 0, .14), 0 1px 3px 0 rgba(0, 0, 0, .12);
     margin: 10px;
-}
-
-ul {
-    column-count: 3;
 }
 
 li {
     color: darkgrey;
-    font-size: 12px;
+    font-size: 13px;
 }
 
 .div-node-tag{
@@ -72,4 +68,47 @@ li {
     /*background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');*/
     color: darkgray;
     padding-top: 6px;
+}
+
+/*.ft-foot-4 {*/
+/*    column-count: 4;*/
+/*    float: left;*/
+/*    width: 100%;*/
+/*    padding: 3px 0px;*/
+/*    margin-bottom: 1px;*/
+/*    text-align:center;*/
+/*}*/
+
+.ft-foot {
+    column-count: 3;
+    float: left;
+    width: 100%;
+    padding: 3px 0px;
+    margin-bottom: 1px;
+    text-align:center;
+}
+.ft-foot .ft-foot-4 ul li {
+    display: inline-block;
+    margin:0 2px;
+}
+.inclusion {
+    color: darkgrey;
+    padding: 5px 0 5px 0;
+    /*display: block;*/
+    letter-spacing: 5px;
+    text-align: center;
+}
+.inclusion span {
+    display: block;
+    font-size: 10px;
+    text-transform: uppercase;
+}
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 0.6em 3em;
+    padding: 0;
 }

@@ -42,6 +42,14 @@ export class EdgeConfigurationComponent {
         this.configurationService.getAvailableEdgeNodes().subscribe(response => {
             this.availableEdgeNodes = response;
             this.availableEdgeNodes.forEach(x => {
+                // Raspbian is too long -> shorten it
+                if (x.nodeResources.softwareResource.os.includes('Raspbian')) {
+                    if (x.nodeResources.softwareResource.os.includes('buster')) {
+                        if (x.nodeResources.softwareResource.os.includes('10')) {
+                            x.nodeResources.softwareResource.os = 'Raspbian 10 (buster)'
+                        }
+                    }
+                }
                 x.nodeResources.hardwareResource.memory.memTotal = this.bytesToGB(x.nodeResources.hardwareResource.memory.memTotal);
                 x.nodeResources.hardwareResource.disk.diskTotal = this.bytesToGB(x.nodeResources.hardwareResource.disk.diskTotal)
             });
