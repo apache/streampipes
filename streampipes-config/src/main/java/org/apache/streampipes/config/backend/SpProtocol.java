@@ -20,7 +20,8 @@ package org.apache.streampipes.config.backend;
 public enum SpProtocol {
 
   Kafka("Kafka", "org.apache.streampipes.model.grounding.KafkaTransportProtocol"),
-  Jms("JMS", "org.apache.streampipes.model.grounding.JmsTransportProtocol");
+  Jms("JMS", "org.apache.streampipes.model.grounding.JmsTransportProtocol"),
+  Mqtt("MQTT", "org.apache.streampipes.model.grounding.MqttTransportProtocol");
 
   private String name;
   private String protocolClass;

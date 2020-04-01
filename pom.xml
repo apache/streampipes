@@ -54,6 +54,7 @@
         <fst.version>2.56</fst.version>
         <geojson-jackson.version>1.8</geojson-jackson.version>
         <guava.version>27.1-jre</guava.version>
+        <hawtbuf.version>1.11</hawtbuf.version>
         <httpclient.version>4.5.10</httpclient.version>
         <httpcore.version>4.4.9</httpcore.version>
         <httpcore-osgi.version>4.4.9</httpcore-osgi.version>
@@ -519,6 +520,11 @@
                 <groupId>org.fusesource.mqtt-client</groupId>
                 <artifactId>mqtt-client</artifactId>
                 <version>${mqtt-client.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.fusesource.hawtbuf</groupId>
+                <artifactId>hawtbuf</artifactId>
+                <version>${hawtbuf.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.logging</groupId>

@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.model.util;
 
+import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.streampipes.model.ApplicationLink;
@@ -158,6 +159,8 @@ public class Cloner {
       return new KafkaTransportProtocol((KafkaTransportProtocol) protocol);
     } else if (protocol instanceof JmsTransportProtocol){
       return new JmsTransportProtocol((JmsTransportProtocol) protocol);
+    } else if (protocol instanceof MqttTransportProtocol) {
+      return new MqttTransportProtocol((MqttTransportProtocol) protocol);
     } else {
       LOG.error("Could not clone protocol of type {}", protocol.getClass().getCanonicalName());
       return protocol;

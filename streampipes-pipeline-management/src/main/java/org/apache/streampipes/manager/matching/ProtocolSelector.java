@@ -26,6 +26,7 @@ import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
+import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 
 import java.util.List;
@@ -57,10 +58,19 @@ public class ProtocolSelector extends GroundingSelector {
                 else if (prioritizedProtocol.getProtocolClass().equals(JmsTransportProtocol.class.getCanonicalName()) &&
                         supportsProtocol(JmsTransportProtocol.class)) {
                     return jmsTopic();
+                } else if (prioritizedProtocol.getProtocolClass().equals(MqttTransportProtocol.class.getCanonicalName()) &&
+                        supportsProtocol(MqttTransportProtocol.class)) {
+                    return mqttTopic();
                 }
             }
         }
         return kafkaTopic();
+    }
+
+    private TransportProtocol mqttTopic() {
+        return new MqttTransportProtocol(BackendConfig.INSTANCE.getMqttHost(),
+                BackendConfig.INSTANCE.getMqttPort(),
+                outputTopic);
     }
 
     private TransportProtocol jmsTopic() {

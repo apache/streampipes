@@ -15,13 +15,16 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.connect.adapter.preprocessing.elements;
 
-package org.apache.streampipes.connect.adapter.model.pipeline;
+import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipelineElement;
+import org.apache.streampipes.messaging.mqtt.MqttPublisher;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 
-import java.util.Map;
+public class SendToMqttAdapterSink extends SendToBrokerAdapterSink<MqttTransportProtocol> implements AdapterPipelineElement {
 
-public interface AdapterPipelineElement {
-
-    Map<String, Object> process(Map<String, Object> event);
-
+  public SendToMqttAdapterSink(AdapterDescription adapterDescription) {
+    super(adapterDescription, MqttPublisher::new, MqttTransportProtocol.class);
+  }
 }
