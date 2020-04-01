@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, EventEmitter, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, OnChanges, Output, Renderer2, SimpleChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PlotlyService } from 'angular-plotly.js';
 import { DataResult } from '../../core-model/datalake/DataResult';
@@ -36,7 +36,8 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
 
     @Output() zoomEvent =  new EventEmitter<[number, number]>();
 
-    constructor(public dialog: MatDialog, public plotlyService: PlotlyService, public colorService: ColorService) {
+    constructor(public dialog: MatDialog, public plotlyService: PlotlyService, public colorService: ColorService,
+                public renderer: Renderer2) {
         super();
     }
 
@@ -51,6 +52,9 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
         daytime: ['day', 'night']};
 
     private dialogReference = undefined;
+
+    // indicator variable if labeling mode is activated
+    private labelingModeOn = false;
 
     updatemenus = [
         {
@@ -104,19 +108,16 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
             // adding shapes for displaying labeled time intervals
             shapes: [],
             // box selection with fixed height
-            selectdirection: 'h'
+            selectdirection: 'h',
+
+            // default dragmode is zoom
+            dragmode: 'zoom'
         },
         config: {
             // removing lasso-selection, box-selecting, toggling-spikelines and exporting-to-image buttons
             modeBarButtonsToRemove: ['lasso2d', 'select2d', 'toggleSpikelines', 'toImage'],
             // adding custom button: labeling
-            modeBarButtonsToAdd: [{
-                name: 'Labeling',
-                icon: this.plotlyService.getPlotly().Icons.pencil,
-                direction: 'up',
-                click(gd) {
-                    const plotlyService = new PlotlyService();
-                    plotlyService.getPlotly().relayout(gd, 'dragmode', 'select'); }}],
+            modeBarButtonsToAdd: [this.createLabelingModeBarButton()],
             // removing plotly-icon from graph
             displaylogo: false
         }
@@ -242,6 +243,17 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
         // this.zoomEvent.emit([$event['xaxis.range[0]'], $event['xaxis.range[1]']]);
     }
 
+    handleDefaultModeBarButtonClicks($event) {
+        if (!('xaxis.autorange' in $event) && !('hovermode' in $event)) {
+            if ($event.dragmode !== 'select') {
+                this.deactivateLabelingMode();
+                this.labelingModeOn = false;
+            }
+        } else if (($event['xaxis.autorange'] === true || $event['hovermode'] === true) && this.labelingModeOn) {
+            this.activateLabelingMode();
+        }
+    }
+
     selectDataPoints($event) {
         // getting selected time interval
         const xStart = $event['range']['x'][0];
@@ -285,6 +297,11 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
 
             // displaying Info-Dialog 'Change Chart-Mode' if current graph mode is 'lines'
             if (this.dataToDisplay[0]['mode'] === 'lines') {
+
+                // deactivating labeling mode
+                this.labelingModeOn = false;
+                this.deactivateLabelingMode();
+
                 const dialogRef = this.dialog.open(ChangeChartmodeDialog,
                     {
                         width: '400px',
@@ -352,9 +369,94 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
                         };
 
                         this.graph.layout.shapes.push(shape);
+
+                        // remain in selection dragmode if labeling mode is still activated
+                        if (this.labelingModeOn) {
+                            this.graph.layout.dragmode = 'select';
+                        } else {
+                            this.graph.layout.dragmode = 'zoom';
+                        }
                     }
                 });
             }
         }
+    }
+
+    private createLabelingModeBarButton() {
+        const labelingModeBarButton = {
+            name: 'Labeling',
+            icon: this.plotlyService.getPlotly().Icons.pencil,
+            direction: 'up',
+            click: (gd) => {
+
+                // only allowing to activate labeling mode if current graph mode does not equal 'lines'
+                if (this.dataToDisplay[0]['mode'] !== 'lines') {
+                    this.labelingModeOn = !this.labelingModeOn;
+
+                    // activating labeling mode
+                    if (this.labelingModeOn) {
+                        this.activateLabelingMode();
+
+                        // deactivating labeling mode
+                    } else {
+                        this.deactivateLabelingMode();
+                    }
+
+                // otherwise displaying 'Change Chart Mode Dialog' or deactivating labeling mode
+                } else {
+                    if (this.labelingModeOn) {
+                        this.labelingModeOn = !this.labelingModeOn;
+                        this.deactivateLabelingMode();
+                    } else {
+                        this.openLabelingDialog();
+                    }
+                }
+            }
+        };
+        return labelingModeBarButton;
+    }
+
+    private activateLabelingMode() {
+        const modeBarButtons = document.getElementsByClassName('modebar-btn');
+
+        for (let i = 0; i < modeBarButtons.length; i++) {
+            if (modeBarButtons[i].getAttribute('data-title') === 'Labeling') {
+
+                // fetching path of labeling button icon
+                const path = modeBarButtons[i].getElementsByClassName('icon').item(0)
+                    .getElementsByTagName('path').item(0);
+
+                // adding 'clicked' to class list
+                modeBarButtons[i].classList.add('clicked');
+
+                // changing color of fetched path
+                this.renderer.setStyle(path, 'fill', '#39B54A');
+            }
+        }
+
+        // changing dragmode to 'select'
+        this.graph.layout.dragmode = 'select';
+    }
+
+    private deactivateLabelingMode() {
+        const modeBarButtons = document.getElementsByClassName('modebar-btn');
+
+        for (let i = 0; i < modeBarButtons.length; i++) {
+            if (modeBarButtons[i].getAttribute('data-title') === 'Labeling') {
+
+                // fetching path of labeling button icon
+                const path = modeBarButtons[i].getElementsByClassName('icon').item(0)
+                    .getElementsByTagName('path').item(0);
+
+                // removing 'clicked' from class list
+                modeBarButtons[i].classList.remove('clicked');
+
+                // changing path color to default plotly modebar button color
+                this.renderer.setStyle(path, 'fill', 'rgba(68, 68, 68, 0.3)');
+            }
+        }
+
+        // changing dragmode to 'zoom'
+        this.graph.layout.dragmode = 'zoom';
     }
 }

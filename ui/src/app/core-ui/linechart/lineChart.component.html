@@ -36,7 +36,7 @@
                      [data]="dataToDisplay"
                      [layout]="graph.layout"
                      [config]="graph.config"
-                     (relayout)="zoomIn($event)"
+                     (relayout)="handleDefaultModeBarButtonClicks($event)"
                      (selecting)="selectDataPoints($event)">
         </plotly-plot>
 
