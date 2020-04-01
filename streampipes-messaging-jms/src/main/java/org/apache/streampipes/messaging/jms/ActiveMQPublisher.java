@@ -70,11 +70,7 @@ public class ActiveMQPublisher implements EventProducer<JmsTransportProtocol> {
   @Override
   public void connect(JmsTransportProtocol protocolSettings) throws SpRuntimeException {
 
-    // TODO: fix in future: hostname should not contain scheme information
-    String url = protocolSettings.getBrokerHostname() + ":" + protocolSettings.getPort();
-    if (!protocolSettings.getBrokerHostname().startsWith("tcp://")) {
-      url = "tcp://" + protocolSettings.getBrokerHostname() + ":" + protocolSettings.getPort();
-    }
+    String url = ActiveMQUtils.makeActiveMqUrl(protocolSettings);
     ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(url);
 
     boolean co = false;

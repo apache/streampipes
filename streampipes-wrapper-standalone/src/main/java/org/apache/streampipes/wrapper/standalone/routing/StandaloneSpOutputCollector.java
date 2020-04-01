@@ -20,7 +20,6 @@ package org.apache.streampipes.wrapper.standalone.routing;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.messaging.InternalEventProcessor;
-import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.model.runtime.Event;
@@ -51,9 +50,6 @@ public class StandaloneSpOutputCollector<T extends TransportProtocol> extends
   @Override
   public void connect() throws SpRuntimeException {
     if (!protocolDefinition.getProducer().isConnected()) {
-      if (transportProtocol instanceof JmsTransportProtocol) {
-        transportProtocol.setBrokerHostname("tcp://" + transportProtocol.getBrokerHostname());
-      }
       protocolDefinition.getProducer().connect(transportProtocol);
     }
   }

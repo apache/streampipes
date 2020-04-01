@@ -31,16 +31,34 @@ public class MqttConsumer extends AbstractMqttConnector implements EventConsumer
     try {
       this.createBrokerConnection(protocolSettings);
       Topic[] topics = {new Topic(protocolSettings.getTopicDefinition().getActualTopicName(), QoS.AT_LEAST_ONCE)};
-      byte[] qoses = connection.subscribe(topics);
+      connection.subscribe(topics);
+      new Thread(new ConsumerThread(eventProcessor)).start();
 
-      while (connected) {
-        Message message = connection.receive();
-        byte[] payload = message.getPayload();
-        eventProcessor.onEvent(payload);
-        message.ack();
-      }
     } catch (Exception e) {
       throw new SpRuntimeException(e);
+    }
+  }
+
+  private class ConsumerThread implements Runnable {
+
+    private InternalEventProcessor<byte[]> eventProcessor;
+
+    public ConsumerThread(InternalEventProcessor<byte[]> eventProcessor) {
+      this.eventProcessor = eventProcessor;
+    }
+
+    @Override
+    public void run() {
+      try {
+        while (connected) {
+          Message message = connection.receive();
+          byte[] payload = message.getPayload();
+          eventProcessor.onEvent(payload);
+          message.ack();
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
     }
   }
 
