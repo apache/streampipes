@@ -62,7 +62,7 @@ public class ActiveMQConsumer extends ActiveMQConnectionProvider implements
     // TODO: fix in future: hostname should not contain scheme information
     String url = protocolSettings.getBrokerHostname() + ":" + protocolSettings.getPort();
     if (!protocolSettings.getBrokerHostname().startsWith("tcp://")) {
-      url = "tcp://" + url;
+      url = "tcp://" + protocolSettings.getBrokerHostname() + ":" + protocolSettings.getPort();
     }
 
     try {
