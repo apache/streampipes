@@ -59,7 +59,12 @@ public class ActiveMQConsumer extends ActiveMQConnectionProvider implements
   @Override
   public void connect(JmsTransportProtocol protocolSettings, InternalEventProcessor<byte[]>
           eventProcessor) throws SpRuntimeException {
+    // TODO: fix in future: hostname should not contain scheme information
     String url = protocolSettings.getBrokerHostname() + ":" + protocolSettings.getPort();
+    if (!protocolSettings.getBrokerHostname().startsWith("tcp://")) {
+      url = "tcp://" + url;
+    }
+
     try {
       this.eventProcessor = eventProcessor;
       session = startJmsConnection(url).createSession(false, Session.AUTO_ACKNOWLEDGE);
