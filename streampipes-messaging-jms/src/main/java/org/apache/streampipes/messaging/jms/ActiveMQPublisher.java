@@ -51,6 +51,7 @@ public class ActiveMQPublisher implements EventProducer<JmsTransportProtocol> {
 
   // TODO backwards compatibility, remove later
   public ActiveMQPublisher(String url, String topic) {
+    // TODO: fix in future: hostname should not contain scheme information, split in scheme + host + port
     JmsTransportProtocol protocol = new JmsTransportProtocol();
     protocol.setBrokerHostname(url.substring(0, url.lastIndexOf(":")));
     protocol.setPort(Integer.parseInt(url.substring(url.lastIndexOf(":") + 1, url.length())));
@@ -69,7 +70,11 @@ public class ActiveMQPublisher implements EventProducer<JmsTransportProtocol> {
   @Override
   public void connect(JmsTransportProtocol protocolSettings) throws SpRuntimeException {
 
+    // TODO: fix in future: hostname should not contain scheme information
     String url = protocolSettings.getBrokerHostname() + ":" + protocolSettings.getPort();
+    if (!protocolSettings.getBrokerHostname().startsWith("tcp://")) {
+      url = "tcp://" + protocolSettings.getBrokerHostname() + ":" + protocolSettings.getPort();
+    }
     ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(url);
 
     boolean co = false;
