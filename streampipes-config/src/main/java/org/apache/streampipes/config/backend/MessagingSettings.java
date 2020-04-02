@@ -39,7 +39,7 @@ public class MessagingSettings {
                     SpDataFormat.CBOR,
             SpDataFormat.FST,
             SpDataFormat.SMILE),
-            Arrays.asList(SpProtocol.Kafka, SpProtocol.Jms));
+            Arrays.asList(SpProtocol.Kafka, SpProtocol.Mqtt, SpProtocol.Jms));
   }
 
   public MessagingSettings(Integer batchSize, Integer messageMaxBytes, Integer lingerMs,

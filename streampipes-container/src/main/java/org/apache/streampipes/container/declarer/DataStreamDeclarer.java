@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.container.declarer;
 
+
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.graph.DataSourceDescription;
 

@@ -48,7 +48,7 @@ public abstract class AbstractNotificationSubscriber implements InternalEventPro
     private JmsTransportProtocol getConsumerSettings() {
         JmsTransportProtocol protocol = new JmsTransportProtocol();
         protocol.setPort(BackendConfig.INSTANCE.getJmsPort());
-        protocol.setBrokerHostname("tcp://" +BackendConfig.INSTANCE.getJmsHost());
+        protocol.setBrokerHostname(BackendConfig.INSTANCE.getJmsHost());
         protocol.setTopicDefinition(new SimpleTopicDefinition(topic));
 
         return protocol;
