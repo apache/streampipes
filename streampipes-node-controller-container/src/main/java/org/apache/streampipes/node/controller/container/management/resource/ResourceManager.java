@@ -82,8 +82,9 @@ public class ResourceManager {
                 String uptime = getUptime(this.os);
                 float cpuLoad = getCpuLoad(this.hal.getProcessor());
                 double cpuTemperature = getCpuTemperature(this.hal.getSensors());
-                long availableMemory = getAvailableMemory(this.hal.getMemory());
-                long usedMemory = this.hal.getMemory().getTotal() - availableMemory;
+                long totalMemory = this.hal.getMemory().getTotal();
+                long freeMemory = getAvailableMemory(this.hal.getMemory());
+                long usedMemory = this.hal.getMemory().getTotal() - freeMemory;
                 Map<String, Map<String, Long>> diskUsage = getDiskUsage(this.os.getFileSystem());
 
                 nodeResources.put("systemTime", dateFormat.format(cal.getTime()));
@@ -93,8 +94,9 @@ public class ResourceManager {
                 nodeResources.put("cpuLoadInPercent", cpuLoad);
                 nodeResources.put("cpuTemperature", String.format("%.2f°C", cpuTemperature));
                 nodeResources.put("cpuTemperatureCelcius", cpuTemperature);
-                nodeResources.put("availableMemory", availableMemory);
+                nodeResources.put("freeMemory", freeMemory);
                 nodeResources.put("usedMemory", usedMemory);
+                nodeResources.put("totalMemory", totalMemory);
 
                 for (Map.Entry<String, Map<String, Long>> k : diskUsage.entrySet()) {
                     nodeResources.put("availableDisk", k.getValue().get("available"));
