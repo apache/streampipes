@@ -27,6 +27,8 @@ import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.processors.siddhi.config.FilterSiddhiConfig;
+import org.apache.streampipes.processors.siddhi.frequency.FrequencyController;
+import org.apache.streampipes.processors.siddhi.frequencychange.FrequencyChangeController;
 import org.apache.streampipes.processors.siddhi.stop.StreamStopController;
 import org.apache.streampipes.processors.siddhi.trend.TrendController;
 
@@ -36,7 +38,9 @@ public class FiltersSiddhiInit extends StandaloneModelSubmitter {
     DeclarersSingleton
             .getInstance()
             .add(new TrendController())
-            .add(new StreamStopController());
+            .add(new StreamStopController())
+            .add(new FrequencyController())
+            .add(new FrequencyChangeController());
 
     DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),
             new CborDataFormatFactory(),
