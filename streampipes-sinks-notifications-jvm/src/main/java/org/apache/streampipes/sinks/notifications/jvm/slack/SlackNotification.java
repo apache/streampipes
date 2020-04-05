@@ -19,6 +19,9 @@
 package org.apache.streampipes.sinks.notifications.jvm.slack;
 
 import com.ullink.slack.simpleslackapi.SlackChannel;
+import com.ullink.slack.simpleslackapi.SlackSession;
+import com.ullink.slack.simpleslackapi.SlackUser;
+import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
@@ -28,28 +31,55 @@ import java.io.IOException;
 
 
 public class SlackNotification implements EventSink<SlackNotificationParameters> {
+
     private SlackNotificationParameters params;
+    private SlackSession session;
+    private Boolean sendToUser;
 
     @Override
     public void onInvocation(SlackNotificationParameters parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
         this.params = parameters;
+            // Initialize slack session
+            this.session = SlackSessionFactory.createWebSocketSlackSession(params.getAuthToken());
+            try {
+                this.session.connect();
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new SpRuntimeException("Could not connect to Slack");
+            }
+
+            this.sendToUser = params.getChannelType().equals("User");
+
+            if (this.sendToUser) {
+                SlackUser user = session.findUserByUserName(params.getUserChannel());
+                if (user == null) {
+                    throw new SpRuntimeException("The user: '" + params.getUserChannel() + "' does not exists");
+                }
+            } else {
+                SlackChannel channel = session.findChannelByName(params.getUserChannel());
+                if (channel == null || channel.getId() == null) {
+                    throw new SpRuntimeException("The channel: '" + params.getUserChannel() + "' does not " +
+                            "exists or " +
+                    "the bot has no rights to access it");
+                }
+            }
     }
 
     @Override
     public void onEvent(Event inputEvent) {
 
-        if (params.isSendToUser()) {
-            params.getSession().sendMessageToUser(params.getUserChannel(), params.getMessage(), null);
+        if (this.sendToUser) {
+            this.session.sendMessageToUser(params.getUserChannel(), params.getMessage(), null);
         } else {
-            SlackChannel channel = params.getSession().findChannelByName(params.getUserChannel());
-            params.getSession().sendMessage(channel, params.getMessage());
+            SlackChannel channel = this.session.findChannelByName(params.getUserChannel());
+            this.session.sendMessage(channel, params.getMessage());
         }
     }
 
     @Override
     public void onDetach() throws SpRuntimeException {
         try {
-            params.getSession().disconnect();
+            this.session.disconnect();
         } catch (IOException e) {
             throw new SpRuntimeException("Could not disconnect");
         }
