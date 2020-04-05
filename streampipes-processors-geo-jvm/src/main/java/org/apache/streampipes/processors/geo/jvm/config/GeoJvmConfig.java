@@ -28,7 +28,6 @@ public enum GeoJvmConfig implements PeConfig {
   private SpConfig config;
 
   public final static String serverUrl;
-  public final static String iconBaseUrl;
 
   private final static String service_id = "pe/org.apache.streampipes.processors.geo.jvm";
   private final static String service_name = "Processors Geo JVM";
@@ -39,9 +38,6 @@ public enum GeoJvmConfig implements PeConfig {
     config.register(ConfigKeys.HOST, service_container_name, "Hostname for the geo container");
     config.register(ConfigKeys.PORT, 8090, "Port for the pe esper");
 
-    config.register(ConfigKeys.ICON_HOST, "backend", "Hostname for the icon host");
-    config.register(ConfigKeys.ICON_PORT, 80, "Port for the icons in nginx");
-
     config.registerPassword(ConfigKeys.GOOGLE_API_KEY, "", "Google API Key for the routing service");
 
     config.register(ConfigKeys.SERVICE_NAME_KEY, service_name, "The name of the service");
@@ -50,12 +46,8 @@ public enum GeoJvmConfig implements PeConfig {
 
   static {
     serverUrl = GeoJvmConfig.INSTANCE.getHost() + ":" + GeoJvmConfig.INSTANCE.getPort();
-    iconBaseUrl = "http://" + GeoJvmConfig.INSTANCE.getIconHost() + ":" + GeoJvmConfig.INSTANCE.getIconPort() + "/assets/img/pe_icons";
   }
 
-  public static final String getIconUrl(String pictureName) {
-    return iconBaseUrl + "/" + pictureName + ".png";
-  }
 
   @Override
   public String getHost() {
@@ -65,14 +57,6 @@ public enum GeoJvmConfig implements PeConfig {
   @Override
   public int getPort() {
     return config.getInteger(ConfigKeys.PORT);
-  }
-
-  public String getIconHost() {
-    return config.getString(ConfigKeys.ICON_HOST);
-  }
-
-  public int getIconPort() {
-    return config.getInteger(ConfigKeys.ICON_PORT);
   }
 
   public String getGoogleApiKey() {

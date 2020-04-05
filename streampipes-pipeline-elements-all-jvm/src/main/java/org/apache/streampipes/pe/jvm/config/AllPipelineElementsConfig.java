@@ -26,7 +26,6 @@ public enum AllPipelineElementsConfig implements PeConfig {
   private SpConfig config;
 
   public final static String serverUrl;
-  public final static String iconBaseUrl;
 
   private final static String service_id = "pe/org.apache.streampipes.processors.all.jvm";
   private final static String service_name = "Processors JVM (Bundle)";
@@ -37,9 +36,6 @@ public enum AllPipelineElementsConfig implements PeConfig {
     config.register(ConfigKeys.HOST, service_container_name, "Hostname for the pe esper");
     config.register(ConfigKeys.PORT, 8090, "Port for the pe esper");
 
-    config.register(ConfigKeys.ICON_HOST, "backend", "Hostname for the icon host");
-    config.register(ConfigKeys.ICON_PORT, 80, "Port for the icons in nginx");
-
     config.register(ConfigKeys.SERVICE_NAME_KEY, service_name, "The name of the service");
 
   }
@@ -47,12 +43,6 @@ public enum AllPipelineElementsConfig implements PeConfig {
   static {
     serverUrl =
             AllPipelineElementsConfig.INSTANCE.getHost() + ":" + AllPipelineElementsConfig.INSTANCE.getPort();
-    iconBaseUrl =
-            "http://" + AllPipelineElementsConfig.INSTANCE.getIconHost() + ":" + AllPipelineElementsConfig.INSTANCE.getIconPort() + "/assets/img/pe_icons";
-  }
-
-  public static final String getIconUrl(String pictureName) {
-    return iconBaseUrl + "/" + pictureName + ".png";
   }
 
   @Override
@@ -63,14 +53,6 @@ public enum AllPipelineElementsConfig implements PeConfig {
   @Override
   public int getPort() {
     return config.getInteger(ConfigKeys.PORT);
-  }
-
-  public String getIconHost() {
-    return config.getString(ConfigKeys.ICON_HOST);
-  }
-
-  public int getIconPort() {
-    return config.getInteger(ConfigKeys.ICON_PORT);
   }
 
   @Override

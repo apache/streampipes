@@ -31,7 +31,6 @@ public enum VehicleSimulatorConfig implements PeConfig {
 
   private SpConfig config;
   public static String serverUrl;
-  public static String iconBaseUrl;
 
   VehicleSimulatorConfig() {
     config = SpConfig.getSpConfig(service_id);
@@ -47,15 +46,11 @@ public enum VehicleSimulatorConfig implements PeConfig {
     config.register(ConfigKeys.PORT, 8090, "Port of the sources project");
     config.register(ConfigKeys.KAFKA_HOST, "kafka", "Host for kafka of the pe demonstrator project");
     config.register(ConfigKeys.KAFKA_PORT, 9092, "Port for kafka of the pe demonstrator project");
-    config.register(ConfigKeys.ICON_HOST, "backend", "Hostname for the icon host");
-    config.register(ConfigKeys.ICON_PORT, 80, "Port for the icons in nginx");
     config.register(ConfigKeys.SERVICE_NAME, service_name, "StreamPipes example sources");
   }
 
   static {
     serverUrl = VehicleSimulatorConfig.INSTANCE.getHost() + ":" + VehicleSimulatorConfig.INSTANCE.getPort();
-
-    iconBaseUrl = "http://" + VehicleSimulatorConfig.INSTANCE.getIconHost() + ":" + VehicleSimulatorConfig.INSTANCE.getIconPort() + "/assets/img/pe_icons";
   }
 
   @Override
@@ -74,14 +69,6 @@ public enum VehicleSimulatorConfig implements PeConfig {
 
   public int getKafkaPort() {
     return config.getInteger(ConfigKeys.KAFKA_PORT);
-  }
-
-  public String getIconHost() {
-    return config.getString(ConfigKeys.ICON_HOST);
-  }
-
-  public int getIconPort() {
-    return config.getInteger(ConfigKeys.ICON_PORT);
   }
 
   @Override

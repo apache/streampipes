@@ -37,8 +37,6 @@ public enum GeoFlinkConfig implements PeConfig {
     config.register(ConfigKeys.PORT, 8090, "Port for the geo flink component");
     config.register(ConfigKeys.FLINK_HOST, "jobmanager", "Host for the flink cluster");
     config.register(ConfigKeys.FLINK_PORT, 8081, "Port for the flink cluster");
-    config.register(ConfigKeys.ICON_HOST, "backend", "Hostname for the icon host");
-    config.register(ConfigKeys.ICON_PORT, 80, "Port for the icons in nginx");
 
     config.register(ConfigKeys.DEBUG, false, "When set to true programs are not deployed to cluster, but executed locally");
 
@@ -62,20 +60,6 @@ public enum GeoFlinkConfig implements PeConfig {
 
   public int getFlinkPort() {
     return config.getInteger(ConfigKeys.FLINK_PORT);
-  }
-
-  public static final String iconBaseUrl = "http://" + GeoFlinkConfig.INSTANCE.getIconHost() + ":" + GeoFlinkConfig.INSTANCE.getIconPort() + "/assets/img/pe_icons";
-
-  public static final String getIconUrl(String pictureName) {
-    return iconBaseUrl + "/" + pictureName + ".png";
-  }
-
-  public String getIconHost() {
-    return config.getString(ConfigKeys.ICON_HOST);
-  }
-
-  public int getIconPort() {
-    return config.getInteger(ConfigKeys.ICON_PORT);
   }
 
   public boolean getDebug() {

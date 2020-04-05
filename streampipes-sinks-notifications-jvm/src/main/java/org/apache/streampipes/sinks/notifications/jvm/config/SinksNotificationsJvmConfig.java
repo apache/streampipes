@@ -28,7 +28,6 @@ public enum SinksNotificationsJvmConfig implements PeConfig {
   private SpConfig config;
 
   public final static String serverUrl;
-  public final static String iconBaseUrl;
 
   private final static String service_id = "pe/org.apache.streampipes.sinks.notifications.jvm";
   private final static String service_name = "Sinks Notifications JVM";
@@ -39,11 +38,6 @@ public enum SinksNotificationsJvmConfig implements PeConfig {
     config = SpConfig.getSpConfig(service_id);
     config.register(ConfigKeys.HOST, service_container_name, "Hostname for the notifications module");
     config.register(ConfigKeys.PORT, 8090, "Port for the pe esper");
-
-    config.register(ConfigKeys.ICON_HOST, "backend", "Hostname for the icon host");
-    config.register(ConfigKeys.ICON_PORT, 80, "Port for the icons in nginx");
-
-    config.register(ConfigKeys.SLACK_TOKEN, ConfigKeys.SLACK_NOT_INITIALIZED, "Token for the slack bot. Must be generated in slack");
 
     config.register(ConfigKeys.EMAIL_FROM, "", "The Email adress which send from");
     config.register(ConfigKeys.EMAIL_USERNAME, "", "The username of the email account");
@@ -60,11 +54,6 @@ public enum SinksNotificationsJvmConfig implements PeConfig {
 
   static {
     serverUrl = SinksNotificationsJvmConfig.INSTANCE.getHost() + ":" + SinksNotificationsJvmConfig.INSTANCE.getPort();
-    iconBaseUrl = "http://" + SinksNotificationsJvmConfig.INSTANCE.getIconHost() + ":" + SinksNotificationsJvmConfig.INSTANCE.getIconPort() + "/assets/img/pe_icons";
-  }
-
-  public static final String getIconUrl(String pictureName) {
-    return iconBaseUrl + "/" + pictureName + ".png";
   }
 
   @Override
@@ -75,18 +64,6 @@ public enum SinksNotificationsJvmConfig implements PeConfig {
   @Override
   public int getPort() {
     return config.getInteger(ConfigKeys.PORT);
-  }
-
-  public String getIconHost() {
-    return config.getString(ConfigKeys.ICON_HOST);
-  }
-
-  public int getIconPort() {
-    return config.getInteger(ConfigKeys.ICON_PORT);
-  }
-
-  public String getSlackToken() {
-    return config.getString(ConfigKeys.SLACK_TOKEN);
   }
 
   public String getEmailFrom() {

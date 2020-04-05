@@ -30,7 +30,6 @@ public enum ImageProcessingJvmConfig implements PeConfig {
 	private SpConfig config;
 
 	public final static String serverUrl;
-	public final static String iconBaseUrl;
 
 	private final static String service_id = "pe/org.apache.streampipes.processors.imageprocessing.jvm";
 	private final static String service_name = "Processors Image Processing JVM";
@@ -41,21 +40,12 @@ public enum ImageProcessingJvmConfig implements PeConfig {
 		config.register(ConfigKeys.HOST, service_container_name, "Hostname for the pe image processing");
 		config.register(ConfigKeys.PORT, 8090, "Port for the pe image processing");
 
-		config.register(ICON_HOST, "backend", "Hostname for the icon host");
-		config.register(ICON_PORT, 80, "Port for the icons in nginx");
-
 		config.register(ConfigKeys.SERVICE_NAME_KEY, service_name, "The name of the service");
 
 	}
 	
 	static {
 		serverUrl = ImageProcessingJvmConfig.INSTANCE.getHost() + ":" + ImageProcessingJvmConfig.INSTANCE.getPort();
-		iconBaseUrl = "http://" +ImageProcessingJvmConfig.INSTANCE.getIconHost() + ":" +
-						ImageProcessingJvmConfig.INSTANCE.getIconPort() +"/assets/img/pe_icons";
-	}
-
-	public static final String getIconUrl(String pictureName) {
-		return iconBaseUrl +"/" +pictureName +".png";
 	}
 
 	@Override
@@ -66,14 +56,6 @@ public enum ImageProcessingJvmConfig implements PeConfig {
 	@Override
 	public int getPort() {
 		return config.getInteger(ConfigKeys.PORT);
-	}
-
-	public String getIconHost() {
-		return config.getString(ICON_HOST);
-	}
-
-	public int getIconPort() {
-		return config.getInteger(ICON_PORT);
 	}
 
 	@Override

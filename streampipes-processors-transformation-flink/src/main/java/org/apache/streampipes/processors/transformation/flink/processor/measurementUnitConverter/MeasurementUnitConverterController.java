@@ -28,7 +28,6 @@ import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty;
-import org.apache.streampipes.processors.transformation.flink.config.TransformationFlinkConfig;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.PropertyRequirementsBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
@@ -59,7 +58,6 @@ public class MeasurementUnitConverterController extends
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.flink.measurement-unit-converter")
             .withLocales(Locales.EN)
             .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .iconUrl(TransformationFlinkConfig.getIconUrl("unit_conversion"))
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredPropertyWithUnaryMapping(PropertyRequirementsBuilder

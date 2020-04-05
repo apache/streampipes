@@ -27,7 +27,6 @@ public enum TextMiningFlinkConfig implements PeConfig {
   private SpConfig config;
   public static final String JAR_FILE = "./streampipes-processors-textmining-flink.jar";
 
-
   private final static String service_id = "pe/org.apache.streampipes.processors.textmining.flink";
   private final static String service_name = "Processors Text Mining Flink";
   private final static String service_container_name = "processors-textmining-flink";
@@ -40,9 +39,6 @@ public enum TextMiningFlinkConfig implements PeConfig {
     config.register(ConfigKeys.PORT, 8090, "Port for the pe mixed flink component");
     config.register(ConfigKeys.FLINK_HOST, "jobmanager", "Host for the flink cluster");
     config.register(ConfigKeys.FLINK_PORT, 8081, "Port for the flink cluster");
-
-    config.register(ConfigKeys.ICON_HOST, "backend", "Hostname for the icon host");
-    config.register(ConfigKeys.ICON_PORT, 80, "Port for the icons in nginx");
 
     config.register(ConfigKeys.DEBUG, false, "When set to true programs are not deployed to cluster, but executed locally");
 
@@ -66,20 +62,6 @@ public enum TextMiningFlinkConfig implements PeConfig {
 
   public int getFlinkPort() {
     return config.getInteger(ConfigKeys.FLINK_PORT);
-  }
-
-  public static final String iconBaseUrl = "http://" + TextMiningFlinkConfig.INSTANCE.getIconHost() + ":" + TextMiningFlinkConfig.INSTANCE.getIconPort() + "/assets/img/pe_icons";
-
-  public static final String getIconUrl(String pictureName) {
-    return iconBaseUrl + "/" + pictureName + ".png";
-  }
-
-  public String getIconHost() {
-    return config.getString(ConfigKeys.ICON_HOST);
-  }
-
-  public int getIconPort() {
-    return config.getInteger(ConfigKeys.ICON_PORT);
   }
 
   public boolean getDebug() {
