@@ -51,7 +51,7 @@ public class SlackNotificationController extends StandaloneEventSinkDeclarer<Sla
                     .requiredProperty(EpRequirements.anyProperty())
                     .build())
             .requiredTextParameter(Labels.withId(RECEIVER))
-            .requiredTextParameter(Labels.withId(CONTENT))
+            .requiredTextParameter(Labels.withId(CONTENT), false, true)
             .requiredSingleValueSelection(Labels.withId(CHANNEL_TYPE),
                     Options.from("User", "Channel"))
             .requiredSecret(Labels.withId(AUTH_TOKEN))
