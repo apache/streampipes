@@ -16,7 +16,7 @@ package org.apache.streampipes.node.controller.container.api;
  * limitations under the License.
  *
  */
-import org.apache.streampipes.node.controller.container.config.NodeInfoStorage;
+import org.apache.streampipes.node.controller.container.management.info.NodeInfoStorage;
 import org.apache.streampipes.node.controller.container.management.resource.ResourceManager;
 
 import javax.ws.rs.GET;

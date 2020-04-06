@@ -19,7 +19,7 @@ package org.apache.streampipes.node.controller.container.init;
 
 import org.apache.streampipes.container.util.ConsulUtil;
 import org.apache.streampipes.node.controller.container.config.NodeControllerConfig;
-import org.apache.streampipes.node.controller.container.config.NodeInfoStorage;
+import org.apache.streampipes.node.controller.container.management.info.NodeInfoStorage;
 import org.apache.streampipes.node.controller.container.management.node.NodeJanitorManager;
 import org.apache.streampipes.node.controller.container.management.resource.ResourceManager;
 import org.slf4j.Logger;

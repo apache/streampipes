@@ -1,4 +1,4 @@
-package org.apache.streampipes.node.controller.container.config;/*
+package org.apache.streampipes.node.controller.container.management.info;/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -25,6 +25,7 @@ import org.apache.streampipes.model.node.resources.hardware.MEM;
 import org.apache.streampipes.model.node.resources.interfaces.AccessibleSensorActuatorResource;
 import org.apache.streampipes.model.node.resources.software.SoftwareResource;
 import org.apache.streampipes.model.node.resources.software.Docker;
+import org.apache.streampipes.node.controller.container.config.NodeControllerConfig;
 import org.apache.streampipes.node.controller.container.management.container.DockerInfo;
 import org.apache.streampipes.node.controller.container.management.container.DockerUtils;
 import org.slf4j.Logger;
@@ -37,7 +38,6 @@ import oshi.software.os.OSFileStore;
 import oshi.software.os.OperatingSystem;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class NodeInfoStorage {
 
@@ -45,8 +45,6 @@ public class NodeInfoStorage {
             LoggerFactory.getLogger(NodeInfoStorage.class.getCanonicalName());
 
     private NodeInfo nodeInfo = new NodeInfo();
-    private static final int DEFAULT_NODE_CONTROLLER_PORT = 7077;
-    private static final int DEFAULT_NODE_BROKER_PORT = 616161;
 
     private static DockerInfo DockerInfo = DockerUtils.getInstance().getDockerInfo();
     // OSHI to retreive system information
@@ -88,25 +86,19 @@ public class NodeInfoStorage {
     }
 
     private static String getNodeControllerId(){
-        return envExists(ConfigKeys.NODE_CONTROLLER_ID_KEY);
+        return NodeControllerConfig.INSTANCE.getNodeControllerId();
     }
 
     private static int getNodeControllerPort(){
-        return System.getenv(ConfigKeys.NODE_CONTROLLER_PORT_KEY) != null
-                ? Integer.parseInt(System.getenv(ConfigKeys.NODE_CONTROLLER_PORT_KEY)) : DEFAULT_NODE_CONTROLLER_PORT;
+        return NodeControllerConfig.INSTANCE.getNodeControllerPort();
     }
 
     private static String getNodeHost(){
-        return envExists(ConfigKeys.NODE_HOST_KEY);
+        return NodeControllerConfig.INSTANCE.getNodeHostName();
     }
 
     private static List<String> getNodeLocation() {
-        return System.getenv()
-                .entrySet()
-                .stream()
-                .filter(e -> (e.getKey().contains(ConfigKeys.NODE_LOCATION_KEY)))
-                .map(x ->  x.getKey().replace(ConfigKeys.NODE_LOCATION_KEY + "_", "").toLowerCase() + "=" + x.getValue())
-                .collect(Collectors.toList());
+        return NodeControllerConfig.INSTANCE.getNodeLocations();
     }
 
     private static String getNodeModel() {
@@ -123,22 +115,16 @@ public class NodeInfoStorage {
     }
 
     private static String getNodeBrokerHost(){
-        return envExists(ConfigKeys.NODE_BROKER_HOST_KEY);
+        return NodeControllerConfig.INSTANCE.getNodeBrokerHost();
     }
 
     private static int getNodeBrokerPort(){
-        return System.getenv(ConfigKeys.NODE_BROKER_PORT_KEY) != null
-                ? Integer.parseInt(System.getenv(ConfigKeys.NODE_BROKER_PORT_KEY)) : DEFAULT_NODE_BROKER_PORT;
+        return NodeControllerConfig.INSTANCE.getNodeBrokerPort();
     }
 
-    // TODO: remove when not needed for anything
+    // TODO: get supported PE programmatically instead of environment variables
     private static List<String> getSupportedPipelineElements() {
-        return System.getenv()
-                .entrySet()
-                .stream()
-                .filter(e -> (e.getKey().contains(ConfigKeys.NODE_SUPPORTED_PE_APP_ID_KEY)))
-                .map(x -> x.getValue())
-                .collect(Collectors.toList());
+        return NodeControllerConfig.INSTANCE.getSupportedPipelineElements();
     }
 
     private static HardwareResource getNodeHardwareResource(){
@@ -161,19 +147,7 @@ public class NodeInfoStorage {
     }
 
     private static List<AccessibleSensorActuatorResource> getAcessibleSensorActuatorResources(){
-        return System.getenv()
-                .entrySet()
-                .stream()
-                .filter(e -> (e.getKey().contains(ConfigKeys.NODE_ACCESSIBLE_SENSOR_ACTUATOR_KEY)))
-                .map(x -> {
-                    AccessibleSensorActuatorResource a = new AccessibleSensorActuatorResource();
-                    a.setName(x.getValue().split(";")[0]);
-                    a.setType(x.getValue().split(";")[1]);
-                    a.setConnectionInfo(x.getValue().split(";")[2]);
-                    a.setConnectionType(x.getValue().split(";")[3]);
-                    return a;
-                })
-                .collect(Collectors.toList());
+        return NodeControllerConfig.INSTANCE.getAccessibleSensorActuator();
     }
 
     private static CPU getNodeCpu(){
@@ -204,8 +178,9 @@ public class NodeInfoStorage {
         return disk;
     }
 
+    // TODO: get node GPU info programmatically
     private static GPU getNodeGpu(){
-        boolean hasGpu = Boolean.parseBoolean(envExists(ConfigKeys.NODE_HAS_GPU_KEY));
+        boolean hasGpu = NodeControllerConfig.INSTANCE.hasNodeGpu();
         GPU gpu = new GPU();
         if (!hasGpu) {
             gpu.setHasGPU(hasGpu);
@@ -213,10 +188,8 @@ public class NodeInfoStorage {
             gpu.setType(null);
         } else {
             gpu.setHasGPU(hasGpu);
-            gpu.setCudaCores(System.getenv(ConfigKeys.NODE_GPU_CUDA_CORES_KEY) != null
-                    ? Integer.parseInt(System.getenv(ConfigKeys.NODE_GPU_CUDA_CORES_KEY)) : 0);
-            gpu.setType(System.getenv(ConfigKeys.NODE_GPU_TYPE_KEY) != null
-                    ? System.getenv(ConfigKeys.NODE_GPU_TYPE_KEY) : "not specified");
+            gpu.setCudaCores(NodeControllerConfig.INSTANCE.getGpuCores());
+            gpu.setType(NodeControllerConfig.INSTANCE.getGpuType());
         }
         return gpu;
     }
@@ -230,10 +203,6 @@ public class NodeInfoStorage {
         docker.setApiVersion(DockerInfo.getApiVersion());
 
         return docker;
-    }
-
-    private static String envExists(String key) {
-        return System.getenv(key) != null ? System.getenv(key) : "";
     }
 
     private static String printComputerSystem(ComputerSystem cs) {
