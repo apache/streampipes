@@ -32,6 +32,8 @@ import java.io.IOException;
 
 public class SlackNotification implements EventSink<SlackNotificationParameters> {
 
+    private static final String HASHTAG = "#";
+
     private SlackNotificationParameters params;
     private SlackSession session;
     private Boolean sendToUser;
@@ -66,13 +68,14 @@ public class SlackNotification implements EventSink<SlackNotificationParameters>
     }
 
     @Override
-    public void onEvent(Event inputEvent) {
-
+    public void onEvent(Event event) {
+        String message = replacePlaceholders(event, params.getMessage());
         if (this.sendToUser) {
-            this.session.sendMessageToUser(params.getUserChannel(), params.getMessage(), null);
+            this.session.sendMessageToUser(params.getUserChannel(),
+                    message, null);
         } else {
             SlackChannel channel = this.session.findChannelByName(params.getUserChannel());
-            this.session.sendMessage(channel, params.getMessage());
+            this.session.sendMessage(channel, message);
         }
     }
 
@@ -83,5 +86,12 @@ public class SlackNotification implements EventSink<SlackNotificationParameters>
         } catch (IOException e) {
             throw new SpRuntimeException("Could not disconnect");
         }
+    }
+
+    private String replacePlaceholders(Event event, String content) {
+        for(String key: event.getRaw().keySet()) {
+            content = content.replaceAll(HASHTAG + key + HASHTAG, event.getRaw().get(key).toString());
+        }
+        return content;
     }
 }
