@@ -26,23 +26,18 @@
 
 ## Description
 
-Removes boilerplate and extract fulltext from HTML
-Add a detailed description here
+Removes boilerplate tags from HTML and extracts fulltext
 
 ***
 
 ## Required input
-
+Requires a Text field containing the HTML
 
 ***
 
 ## Configuration
 
-Describe the configuration parameters here
-
-### 1st parameter
-
-
-### 2nd parameter
+Select the extractor type and output mode
 
 ## Output
+Appends a new text field containing the content of the html page without the boilerplate
