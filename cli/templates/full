@@ -18,10 +18,12 @@ processors-pattern-detection-flink
 processors-statistics-flink
 processors-transformation-flink
 processors-transformation-jvm
+processors-text-mining-jvm
 sinks-brokers-jvm
 sinks-databases-flink
 sinks-databases-jvm
 sinks-internal-jvm
+sinks-notifications-jvm
 sources-vehicle-simulator
 sources-watertank-simulator
 taskmanager
