@@ -72,6 +72,7 @@ import org.apache.streampipes.processors.transformation.jvm.processor.value.dura
 import org.apache.streampipes.sinks.brokers.jvm.bufferrest.BufferRestController;
 import org.apache.streampipes.sinks.brokers.jvm.jms.JmsController;
 import org.apache.streampipes.sinks.brokers.jvm.kafka.KafkaController;
+import org.apache.streampipes.sinks.brokers.jvm.mqtt.MqttController;
 import org.apache.streampipes.sinks.brokers.jvm.pulsar.PulsarController;
 import org.apache.streampipes.sinks.brokers.jvm.rabbitmq.RabbitMqController;
 import org.apache.streampipes.sinks.brokers.jvm.rest.RestController;
@@ -151,6 +152,7 @@ public class AllPipelineElementsInit extends StandaloneModelSubmitter {
             .add(new BufferRestController())
             .add(new RabbitMqController())
             .add(new PulsarController())
+            .add(new MqttController())
             // streampipes-sinks-databases-jvm
             .add(new CouchDbController())
             .add(new InfluxDbController())
