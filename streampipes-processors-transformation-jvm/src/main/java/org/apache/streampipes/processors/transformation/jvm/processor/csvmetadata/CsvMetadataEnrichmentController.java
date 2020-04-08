@@ -64,7 +64,7 @@ public class CsvMetadataEnrichmentController
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm"
             + ".csvmetadata")
             .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .requiredStream(StreamRequirementsBuilder.create()
                     .requiredPropertyWithUnaryMapping(
                             EpRequirements.anyProperty(),
