@@ -19,6 +19,7 @@
 package org.apache.streampipes.container.standalone.init;
 
 
+import org.apache.streampipes.container.util.NodeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -32,6 +33,7 @@ import org.apache.streampipes.container.model.PeConfig;
 import org.apache.streampipes.container.util.ConsulUtil;
 
 import java.util.Collections;
+import java.util.UUID;
 
 import javax.annotation.PreDestroy;
 
@@ -49,6 +51,8 @@ public abstract class StandaloneModelSubmitter extends ModelSubmitter {
                 .setHostName(peConfig.getHost());
         DeclarersSingleton.getInstance()
                 .setPort(peConfig.getPort());
+        DeclarersSingleton.getInstance()
+                .setServiceName(peConfig.getId());
 
         SpringApplication app = new SpringApplication(StandaloneModelSubmitter.class);
         app.setDefaultProperties(Collections.singletonMap("server.port", peConfig.getPort()));
@@ -59,6 +63,12 @@ public abstract class StandaloneModelSubmitter extends ModelSubmitter {
                 peConfig.getHost(),
                 peConfig.getPort()
         );
+
+//        NodeUtil.registerPeService(
+//                peConfig.getId(),
+//                peConfig.getHost(),
+//                peConfig.getPort()
+//        );
     }
 
     @PreDestroy

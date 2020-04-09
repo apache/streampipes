@@ -17,6 +17,7 @@
  */
 
 import {RestApi} from "../../../services/rest-api.service";
+import {NodeInfo, NodeMetadata} from "../../../configuration/model/NodeInfo.model";
 
 export class SavePipelineController {
 
@@ -33,6 +34,10 @@ export class SavePipelineController {
     submitPipelineForm: any;
     TransitionService: any;
     ShepherdService: any;
+
+    advancedSettings: boolean = false;
+
+    deploymentOptions: Array<any> = new Array<any>();
 
     constructor($mdDialog,
                 $state,
@@ -61,7 +66,37 @@ export class SavePipelineController {
         if (this.ShepherdService.isTourActive()) {
             this.ShepherdService.trigger("enter-pipeline-name");
         }
+        this.loadAndPrepareEdgeNodes();
 
+    }
+
+    loadAndPrepareEdgeNodes() {
+        this.RestApi.getAvailableEdgeNodes().then(response => {
+           let edgeNodes = response.data as NodeInfo[];
+           this.addAppIds(this.pipeline.sepas, edgeNodes);
+           this.addAppIds(this.pipeline.actions, edgeNodes);
+        });
+    }
+
+    addAppIds(pipelineElements, edgeNodes: Array<NodeInfo>) {
+        pipelineElements.forEach(pipelineElement => {
+            this.deploymentOptions[pipelineElement.appId] = [];
+            this.deploymentOptions[pipelineElement.appId].push(this.makeDefaultNodeInfo());
+            edgeNodes.forEach(nodeInfo => {
+                if (nodeInfo.supportedPipelineElementAppIds.some(appId => appId === pipelineElement.appId)) {
+                    this.deploymentOptions[pipelineElement.appId].push(nodeInfo);
+                }
+            })
+        });
+    }
+
+    makeDefaultNodeInfo() {
+        let nodeInfo = {} as NodeInfo;
+        nodeInfo.nodeControllerId = "default";
+        nodeInfo.nodeMetadata = {} as NodeMetadata;
+        nodeInfo.nodeMetadata.nodeAddress = "default";
+        nodeInfo.nodeMetadata.nodeModel = "Default Node";
+        return nodeInfo;
     }
 
     triggerTutorial() {
@@ -145,6 +180,10 @@ export class SavePipelineController {
                 .position("top right")
                 .hideDelay(3000)
         );
+    }
+
+    toggleAdvancedSettings() {
+        this.advancedSettings = ! (this.advancedSettings);
     }
 }
 

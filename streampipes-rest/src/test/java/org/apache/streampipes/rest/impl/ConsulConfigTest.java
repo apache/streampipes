@@ -61,7 +61,7 @@ public class ConsulConfigTest {
 
         ConsulConfig consulConfig = new ConsulConfig();
 
-        List<ConfigItem> result = consulConfig.getConfigForService("service_id");
+        List<ConfigItem> result = consulConfig.getConfigForService("service_id", "tag");
 
         assertNotNull(result);
         assertEquals(1, result.size());

@@ -17,7 +17,7 @@
  */
 
 import {Component, Input} from '@angular/core';
-import {StreampipesPeContainerConifgs} from "../shared/streampipes-pe-container-configs";
+import {StreampipesPeContainerConfigs} from "../shared/streampipes-pe-container-configs";
 import {ConfigurationService} from '../shared/configuration.service'
 
 @Component({
@@ -27,7 +27,7 @@ import {ConfigurationService} from '../shared/configuration.service'
     providers: [ConfigurationService]
 })
 export class ConsulConfigsTextComponent {
-    @Input() configuration: StreampipesPeContainerConifgs
+    @Input() configuration: StreampipesPeContainerConfigs
     constructor(public configService: ConfigurationService) {
     }
     

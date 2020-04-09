@@ -39,6 +39,8 @@ import {CustomMaterialModule} from "../CustomMaterial/custom-material.module";
 import {PipelineElementConfigurationComponent} from "./pipeline-element-configuration/pipeline-element-configuration.component";
 import {MessagingConfigurationComponent} from "./messaging-configuration/messaging-configuration.component";
 import {DragDropModule} from "@angular/cdk/drag-drop";
+import {EdgeConfigurationComponent} from "./edge-configuration/edge-configuration.component";
+import {MatChipsModule} from "@angular/material/chips";
 
 @NgModule({
     imports: [
@@ -63,7 +65,8 @@ import {DragDropModule} from "@angular/cdk/drag-drop";
         ConsulConfigsBooleanComponent,
         ConsulConfigsNumberComponent,
         PipelineElementConfigurationComponent,
-        MessagingConfigurationComponent
+        MessagingConfigurationComponent,
+        EdgeConfigurationComponent
     ],
     providers: [ConfigurationService],
     entryComponents: [ConfigurationComponent],

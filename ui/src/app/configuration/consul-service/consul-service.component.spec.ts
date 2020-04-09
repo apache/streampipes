@@ -107,7 +107,8 @@ class TestComponentWrapper {
         name: "TestName",
         mainKey: "id",
         meta: {
-            status: "passing"
+            status: "passing",
+            tag: "primary"
         },
         configs:[{
             key: "TECH ACTIVE",

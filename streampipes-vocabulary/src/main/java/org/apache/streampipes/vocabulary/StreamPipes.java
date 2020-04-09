@@ -355,6 +355,14 @@ public class StreamPipes {
   public static final String SECRET_STATIC_PROPERTY = NS + "SecretStaticProperty";
   public static final String IS_ENCRYPTED = NS + "isEncrypted";
 
+  public static final String PE_DOCKER_CONTAINER = NS + "pipelineElementDockerContainer";
+  public static final String PE_DOCKER_CONTAINER_IMAGE_URI = NS + "dockerContainerImageUri";
+  public static final String PE_DOCKER_CONTAINER_NAME = NS + "dockerContainerName";
+  public static final String PE_DOCKER_CONTAINER_SERVICE_ID = NS + "dockerContainerServiceId";
+  public static final String PE_DOCKER_CONTAINER_PORTS = NS + "dockerContainerPorts";
+  public static final String PE_DOCKER_CONTAINER_ENV_VARS = NS + "dockerContainerEnvVars";
+  public static final String PE_DOCKER_CONTAINER_LABELS = NS + "dockerContainerLabels";
+
   // UI Rendering
 
   public static final String IS_HORIZONTAL_RENDERING = NS + "isHorizontalRendering";
@@ -380,5 +388,12 @@ public class StreamPipes {
   public static final String SELECTED_COLOR = NS + "hasSelectedColor";
   public static final String HAS_WIDGET_ICON_NAME = NS + "hasWidgetIconName";
   public static final String HAS_WIDGET_DESCRIPTION = NS + "hasWidgetDescription";
+  public static final String DEPLOYMENT_TARGET_NODE_ID = NS + "hasDeploymentTargetNodeId";
+  public static final String DEPLOYMENT_TARGET_NODE_HOSTNAME = NS + "hasDeploymentTargetNodeHostname";
+  public static final String DEPLOYMENT_TARGET_NODE_PORT = NS + "hasDeploymentTargetNodePort";
+  public static final String ELEMENT_ENDPOINT_HOSTNAME = NS + "hasElementEndpointHostname";
+  public static final String ELEMENT_ENDPOINT_PORT = NS + "hasElementEndpointPort" ;
+  public static final String DEPLOYMENT_RUNNING_INSTANCE_ID = NS + "hasDeploymentRunningInstanceId" ;
+  public static final String ELEMENT_ENDPOINT_SERVICE_NAME = NS + "hasElementEndpointServiceName";
   public static final String CORRESPONDING_USER = NS + "hasCorrespondingUser";
 }

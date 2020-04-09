@@ -18,26 +18,40 @@
 
 package org.apache.streampipes.connect.adapter;
 
+import org.apache.streampipes.config.backend.BackendConfig;
+import org.apache.streampipes.config.backend.SpProtocol;
 import org.apache.streampipes.connect.adapter.util.TransportFormatGenerator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterSetDescription;
 import org.apache.streampipes.model.grounding.EventGrounding;
+import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
+import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
 import org.apache.streampipes.model.grounding.TopicDefinition;
-import org.apache.streampipes.model.schema.EventSchema;
+import org.apache.streampipes.model.grounding.TransportProtocol;
 
 import java.util.Collections;
 import java.util.UUID;
 
 public class GroundingService {
 
+    public static final String SP_NODE_BROKER_ENV = "SP_NODE_BROKER";
+    private static final String TOPIC_PREFIX = "org.apache.streampipes.connect.";
+
     public static String extractBroker(AdapterDescription adapterDescription) {
         EventGrounding eventGrounding = getEventGrounding(adapterDescription);
 
         String host = eventGrounding.getTransportProtocol().getBrokerHostname();
-        int port = ((KafkaTransportProtocol) eventGrounding.getTransportProtocol()).getKafkaPort();
+        int port = 0;
+        if ("true".equals(System.getenv(SP_NODE_BROKER_ENV))) {
+            port = ((JmsTransportProtocol) eventGrounding.getTransportProtocol()).getPort();
+        }
+        else {
+            port = ((KafkaTransportProtocol) eventGrounding.getTransportProtocol()).getKafkaPort();
+        }
+
         return host + ":" + port;
     }
 
@@ -60,21 +74,69 @@ public class GroundingService {
         return eventGrounding;
     }
 
-    public static EventGrounding createEventGrounding(String kafkaHost, int kafkaPort, EventSchema eventSchema) {
+    public static EventGrounding createEventGrounding() {
         EventGrounding eventGrounding = new EventGrounding();
-        KafkaTransportProtocol transportProtocol = new KafkaTransportProtocol();
-        transportProtocol.setBrokerHostname(kafkaHost);
-        transportProtocol.setKafkaPort(kafkaPort);
 
-        String topic = "org.apache.streampipes.connect." + UUID.randomUUID().toString();
+        String topic = TOPIC_PREFIX + UUID.randomUUID().toString();
         TopicDefinition topicDefinition = new SimpleTopicDefinition(topic);
-        transportProtocol.setTopicDefinition(topicDefinition);
 
-        eventGrounding.setTransportProtocol(transportProtocol);
+        SpProtocol prioritizedProtocol =
+                BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedProtocols().get(0);
+
+        if ("true".equals(System.getenv(SP_NODE_BROKER_ENV))) {
+            eventGrounding.setTransportProtocol(makeJmsTransportProtocol("localhost", 61616
+                    , topicDefinition));
+        } else if (isPrioritized(prioritizedProtocol, JmsTransportProtocol.class)) {
+            eventGrounding.setTransportProtocol(makeJmsTransportProtocol(BackendConfig.INSTANCE.getJmsHost(), BackendConfig.INSTANCE.getJmsPort(),
+                    topicDefinition));
+        } else if (isPrioritized(prioritizedProtocol, KafkaTransportProtocol.class)){
+            eventGrounding.setTransportProtocol(makeKafkaTransportProtocol(BackendConfig.INSTANCE.getKafkaHost(), BackendConfig.INSTANCE.getKafkaPort(), topicDefinition));
+        } else if (isPrioritized(prioritizedProtocol, MqttTransportProtocol.class)) {
+            eventGrounding.setTransportProtocol(makeMqttTransportProtocol(BackendConfig.INSTANCE.getMqttHost(), BackendConfig.INSTANCE.getMqttPort(),
+                    topicDefinition));
+        }
+
         eventGrounding.setTransportFormats(Collections
                 .singletonList(TransportFormatGenerator.getTransportFormat()));
 
-
         return eventGrounding;
+    }
+
+    public static Boolean isPrioritized(SpProtocol prioritizedProtocol,
+                                         Class<?> protocolClass) {
+        return prioritizedProtocol.getProtocolClass().equals(protocolClass.getCanonicalName());
+    }
+
+    private static JmsTransportProtocol makeJmsTransportProtocol(String hostname, Integer port,
+                                                          TopicDefinition topicDefinition) {
+        JmsTransportProtocol transportProtocol = new JmsTransportProtocol();
+        transportProtocol.setPort(port);
+        fillTransportProtocol(transportProtocol, hostname, topicDefinition);
+
+        return transportProtocol;
+    }
+
+    private static MqttTransportProtocol makeMqttTransportProtocol(String hostname, Integer port,
+                                                                 TopicDefinition topicDefinition) {
+        MqttTransportProtocol transportProtocol = new MqttTransportProtocol();
+        transportProtocol.setPort(port);
+        fillTransportProtocol(transportProtocol, hostname, topicDefinition);
+
+        return transportProtocol;
+    }
+
+    private static KafkaTransportProtocol makeKafkaTransportProtocol(String hostname, Integer port,
+                                                              TopicDefinition topicDefinition) {
+        KafkaTransportProtocol transportProtocol = new KafkaTransportProtocol();
+        transportProtocol.setKafkaPort(port);
+        fillTransportProtocol(transportProtocol, hostname, topicDefinition);
+
+        return transportProtocol;
+    }
+
+    private static void fillTransportProtocol(TransportProtocol protocol, String hostname,
+                                       TopicDefinition topicDefinition) {
+        protocol.setBrokerHostname(hostname);
+        protocol.setTopicDefinition(topicDefinition);
     }
 }

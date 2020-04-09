@@ -51,10 +51,10 @@ public class SecElement extends InvocableElement<DataSinkInvocation,
         return DeclarersSingleton.getInstance().getConsumerDeclarers();
     }
 
-    @Override
-    protected String getInstanceId(String uri, String elementId) {
-        return Util.getInstanceId(uri, "sec", elementId);
-    }
+//    @Override
+//    protected String getInstanceId(String uri, String elementId) {
+//        return Util.getInstanceId(uri, "sec", elementId);
+//    }
 
     @Override
     protected DataSinkParameterExtractor getExtractor(DataSinkInvocation graph) {

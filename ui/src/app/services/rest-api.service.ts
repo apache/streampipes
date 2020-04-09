@@ -21,6 +21,8 @@
 
 import {Inject, Injectable} from "@angular/core";
 import * as angular from 'angular';
+import {Observable} from "rxjs";
+import {NodeInfo} from "../configuration/model/NodeInfo.model";
 
 @Injectable()
 export class RestApi {
@@ -580,6 +582,10 @@ export class RestApi {
 
     removePipelineFromCache() {
         return this.$http.delete(this.urlBase() + "/pipeline-cache");
+    }
+
+    getAvailableEdgeNodes() {
+        return this.$http.get(this.urlBase() + "/nodes");
     }
 }
 

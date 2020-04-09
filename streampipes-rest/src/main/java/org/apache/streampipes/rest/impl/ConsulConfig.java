@@ -22,6 +22,7 @@ import static org.apache.streampipes.container.util.ConsulUtil.updateConfig;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import org.apache.streampipes.sdk.helpers.Tuple2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.streampipes.config.backend.BackendConfig;
@@ -58,18 +59,21 @@ public class ConsulConfig extends AbstractRestInterface implements IConsulConfig
   @Override
   public Response getAllServiceConfigs() {
     LOG.info("Request for all service configs");
-    Map<String, String> peServices = ConsulUtil.getPEServices();
+    Map<String, Tuple2<String,String>> peServices = ConsulUtil.getPEServices();
 
     List<PeConfig> peConfigs = new LinkedList<>();
 
-    for (Map.Entry<String, String> entry : peServices.entrySet()) {
+    for (Map.Entry<String, Tuple2<String,String>> entry : peServices.entrySet()) {
       String serviceName = "";
-      String serviceStatus = entry.getValue();
-      String mainKey = ConsulSpConfig.SERVICE_ROUTE_PREFIX + entry.getKey();
+      String serviceStatus = entry.getValue().a;
+      String serviceTag = entry.getValue().b;
+      // remove host info from service route to gather k/v data from
+      String mainKey = entry.getKey().substring(entry.getKey().indexOf("/")+1);
 
       Map<String, String> meta = new HashMap<>();
       meta.put("status", serviceStatus);
-      List<ConfigItem> configItems = getConfigForService(entry.getKey());
+      meta.put("tag", serviceTag);
+      List<ConfigItem> configItems = getConfigForService(entry.getKey(), serviceTag);
 
       PeConfig peConfig = new PeConfig();
 
@@ -176,8 +180,21 @@ public class ConsulConfig extends AbstractRestInterface implements IConsulConfig
     return ok();
   }
 
-  public List<ConfigItem> getConfigForService(String serviceId) {
-    Map<String, String> keyValues = ConsulUtil.getKeyValue(ConsulSpConfig.SERVICE_ROUTE_PREFIX + serviceId);
+  public List<ConfigItem> getConfigForService(String serviceId, String tag) {
+    //Map<String, String> keyValues = ConsulUtil.getKeyValue(ConsulSpConfig.SERVICE_ROUTE_PREFIX + serviceId);
+    Map<String, String> keyValues = ConsulUtil.getKeyValue(
+                  ConsulSpConfig.SERVICE_ROUTE_PREFIX
+                    + serviceId.substring(serviceId.indexOf("/")+1)
+                    + "/"
+                    + ConsulSpConfig.BASE_PREFIX
+                    + "/"
+                    + tag);
+
+    keyValues.putAll(ConsulUtil.getKeyValue(
+            ConsulSpConfig.SERVICE_ROUTE_PREFIX
+                    + serviceId.substring(serviceId.indexOf("/")+1)
+                    + "/"
+                    + ConsulSpConfig.CONFIG_PREFIX));
 
     List<ConfigItem> configItems = new LinkedList<>();
 

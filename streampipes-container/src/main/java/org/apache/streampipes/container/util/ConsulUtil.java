@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.container.util;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.orbitz.consul.AgentClient;
 import com.orbitz.consul.Consul;
 import com.orbitz.consul.HealthClient;
@@ -29,12 +31,20 @@ import com.orbitz.consul.model.health.ServiceHealth;
 import com.orbitz.consul.model.kv.Value;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.StringEntity;
+import org.apache.streampipes.config.consul.ConsulSpConfig;
+import org.apache.streampipes.config.model.ConfigItem;
+import org.apache.streampipes.container.model.consul.ConsulServiceRegistrationBody;
+import org.apache.streampipes.container.model.consul.HealthCheckConfiguration;
+import org.apache.streampipes.sdk.helpers.Tuple2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -48,9 +58,15 @@ public class ConsulUtil {
   //private static final String HEALTH_CHECK_TTL = "15s";
   //private static final String CONSUL_DEREGISTER_SERIVER_AFTER = "10s";
   private static final String PE_SERVICE_NAME = "pe";
+  private static final String NODE_SERVICE_NAME = "node";
 
   private static final String CONSUL_ENV_LOCATION = "CONSUL_LOCATION";
   private static final String CONSUL_URL_REGISTER_SERVICE = "v1/agent/service/register";
+
+  private static final String PRIMARY_PE_IDENTIFIER = "primary";
+  private static final String SECONDARY_PE_IDENTIFIER = "secondary";
+  private static final String NODE_ID_IDENTIFIER = "SP_NODE_ID";
+  private static final String SLASH = "/";
 
   static Logger LOG = LoggerFactory.getLogger(ConsulUtil.class);
 
@@ -59,17 +75,28 @@ public class ConsulUtil {
   }
 
   public static void registerPeService(String serviceID, String url, int port) {
-    registerService(PE_SERVICE_NAME, serviceID, url, port, "pe");
+    String serviceLocationTag = System.getenv(NODE_ID_IDENTIFIER) == null ? PRIMARY_PE_IDENTIFIER : SECONDARY_PE_IDENTIFIER;
+    String uniquePEServiceId = url + SLASH + serviceID;
+    registerService(PE_SERVICE_NAME, uniquePEServiceId, url, port, Arrays.asList("pe", serviceLocationTag));
   }
 
   public static void registerService(String serviceName, String serviceID, String url, int port, String tag) {
+    registerService(serviceName, serviceID, url, port, Collections.singletonList(tag));
+  }
+
+  public static void registerService(String serviceName, String serviceID, String url, int port, List<String> tag) {
     String body = createServiceRegisterBody(serviceName, serviceID, url, port, tag);
     try {
       registerServiceHttpClient(body);
-      LOG.info("Register service " + serviceID, "succesful");
+      LOG.info("Register service " + serviceID +" successful");
     } catch (IOException e) {
       LOG.error("Register service: " + serviceID, " - " + e.toString());
     }
+  }
+
+  public static void registerNodeControllerService(String serviceID, String url, int port) {
+    String uniqueNodeServiceId = url + SLASH + serviceID;
+    registerService(NODE_SERVICE_NAME, uniqueNodeServiceId, url, port, "node");
   }
 
   //NOT TESTED
@@ -90,7 +117,7 @@ public class ConsulUtil {
     }
     */
 
-  public static Map<String, String> getPEServices() {
+  public static Map<String, Tuple2<String, String>> getPEServices() {
     LOG.info("Load PE service status");
     Consul consul = consulInstance();
     AgentClient agent = consul.agentClient();
@@ -98,17 +125,22 @@ public class ConsulUtil {
     Map<String, Service> services = consul.agentClient().getServices();
     Map<String, HealthCheck> checks = agent.getChecks();
 
-    Map<String, String> peServices = new HashMap<>();
+    Map<String, Tuple2<String,String>> peServices = new HashMap<>();
 
     for (Map.Entry<String, Service> entry : services.entrySet()) {
       if (entry.getValue().getTags().contains(PE_SERVICE_NAME)) {
         String serviceId = entry.getValue().getId();
         String serviceStatus = "critical";
+        String serviceTag = "primary";
         if (checks.containsKey("service:" + entry.getKey())) {
           serviceStatus = checks.get("service:" + entry.getKey()).getStatus();
+          if (checks.get("service:" + entry.getKey()).getServiceTags().stream().noneMatch(e -> e.contains("primary"))) {
+            serviceTag = "secondary";
+          }
         }
-        LOG.info("Service id: " + serviceId + " service status: " + serviceStatus);
-        peServices.put(serviceId, serviceStatus);
+
+        LOG.info("Service id: " + serviceId + " service status: " + serviceStatus + " service tag: " + serviceTag);
+        peServices.put(serviceId, new Tuple2(serviceStatus, serviceTag));
       }
     }
     return peServices;
@@ -136,6 +168,17 @@ public class ConsulUtil {
     return keyValues;
   }
 
+
+  public static String getPortForService(String route) {
+    String values = ConsulUtil.getKeyValue(route)
+            .values()
+            .stream()
+            .findFirst()
+            .get();
+
+    return new Gson().fromJson(values, ConfigItem.class).getValue();
+  }
+
   public static void updateConfig(String key, String entry, boolean password) {
     Consul consul = consulInstance();
     KeyValueClient keyValueClient = consul.keyValueClient();
@@ -154,16 +197,34 @@ public class ConsulUtil {
   }
 
   public static List<String> getActivePEServicesEndPoints() {
-    LOG.info("Load active PE services endpoints");
+    LOG.info("Load active PE service endpoints");
+    return getServiceEndpoints(PE_SERVICE_NAME, true, Collections.singletonList(PRIMARY_PE_IDENTIFIER));
+  }
+
+  public static List<String> getActiveNodeEndpoints() {
+    LOG.info("Load active node service endpoints");
+    // TODO set restrictToHealthy to true, this is just for debugging
+    return getServiceEndpoints(NODE_SERVICE_NAME, false, new ArrayList<>());
+  }
+
+  public static List<String> getServiceEndpoints(String serviceGroup, boolean restrictToHealthy,
+                                                 List<String> filterByTags) {
     Consul consul = consulInstance();
     HealthClient healthClient = consul.healthClient();
     List<String> endpoints = new LinkedList<>();
 
-    List<ServiceHealth> nodes = healthClient.getHealthyServiceInstances(PE_SERVICE_NAME).getResponse();
+    List<ServiceHealth> nodes;
+    if (!restrictToHealthy) {
+      nodes = healthClient.getAllServiceInstances(serviceGroup).getResponse();
+    } else {
+      nodes = healthClient.getHealthyServiceInstances(serviceGroup).getResponse();
+    }
     for (ServiceHealth node : nodes) {
-      String endpoint = node.getService().getAddress() + ":" + node.getService().getPort();
-      LOG.info("Active PE endpoint:" + endpoint);
-      endpoints.add(endpoint);
+      if (node.getService().getTags().containsAll(filterByTags)) {
+        String endpoint = node.getService().getAddress() + ":" + node.getService().getPort();
+        LOG.info("Active" + serviceGroup + " endpoint:" + endpoint);
+        endpoints.add(endpoint);
+      }
     }
     return endpoints;
   }
@@ -171,8 +232,16 @@ public class ConsulUtil {
   public static void deregisterService(String serviceId) {
     Consul consul = consulInstance();
 
+    LOG.info("Deregister Service: " + serviceId);
     consul.agentClient().deregister(serviceId);
-    LOG.info("Deregistered Service: " + serviceId);
+  }
+
+  public static void deleteKeys(String serviceId) {
+    Consul consul = consulInstance();
+
+    LOG.info("Delete keys: {}", serviceId);
+    // TODO: namespace should not be hardcoded
+    consul.keyValueClient().deleteKeys("/sp/v1/" + serviceId);
   }
 
   private static int registerServiceHttpClient(String body) throws IOException {
@@ -184,26 +253,36 @@ public class ConsulUtil {
             .getStatusLine().getStatusCode();
   }
 
-  private static String createServiceRegisterBody(String name, String id, String url, int port, String tag) {
+  private static String createServiceRegisterBody(String name, String id, String url, int port, List<String> tags) {
     String healthCheckURL = PROTOCOL + url + ":" + port;
+    ConsulServiceRegistrationBody body = new ConsulServiceRegistrationBody();
+    body.setID(id);
+    body.setName(name);
+    body.setTags(tags);
+    body.setAddress(PROTOCOL + url);
+    body.setPort(port);
+    body.setEnableTagOverride(true);
+    body.setCheck(new HealthCheckConfiguration("GET", healthCheckURL, HEALTH_CHECK_INTERVAL));
 
-    return "{" +
-            "\"ID\": \"" + id + "\"," +
-            "\"Name\": \"" + name + "\"," +
-            "\"Tags\": [" +
-            "    \"" + tag + "\"" + ",\"urlprefix-/" + id + " strip=/" + id + "\"" +
-            " ]," +
-            " \"Address\": \"" + PROTOCOL + url + "\"," +
-            " \"Port\":" + port + "," +
-            " \"EnableTagOverride\": true" + "," +
-            "\"Check\": {" +
-            " \"Method\": \"GET\"" + "," +
-            " \"http\":" + "\"" + healthCheckURL + "\"," +
-            //  " \"DeregisterCriticalServiceAfter\":" +  "\"" + CONSUL_DEREGISTER_SERIVER_AFTER + "\"," +
-            " \"interval\":" + "\"" + HEALTH_CHECK_INTERVAL + "\"" + //"," +
-            //" \"TTL\":" + "\"" + HEALTH_CHECK_TTL + "\"" +
-            " }" +
-            "}";
+    return new Gson().toJson(body);
+
+//    return "{" +
+//            "\"ID\": \"" + id + "\"," +
+//            "\"Name\": \"" + name + "\"," +
+//            "\"Tags\": [" +
+//            "    \"" + tag + "\"" + ",\"urlprefix-/" + id + " strip=/" + id + "\"" +
+//            " ]," +
+//            " \"Address\": \"" + PROTOCOL + url + "\"," +
+//            " \"Port\":" + port + "," +
+//            " \"EnableTagOverride\": true" + "," +
+//            "\"Check\": {" +
+//            " \"Method\": \"GET\"" + "," +
+//            " \"http\":" + "\"" + healthCheckURL + "\"," +
+//            //  " \"DeregisterCriticalServiceAfter\":" +  "\"" + CONSUL_DEREGISTER_SERIVER_AFTER + "\"," +
+//            " \"interval\":" + "\"" + HEALTH_CHECK_INTERVAL + "\"" + //"," +
+//            //" \"TTL\":" + "\"" + HEALTH_CHECK_TTL + "\"" +
+//            " }" +
+//            "}";
   }
 
   private static URL consulURL() {

@@ -41,6 +41,8 @@ public enum BackendConfig {
 
     config.register(BackendConfigKeys.JMS_HOST, "activemq", "Hostname for backend service for active mq");
     config.register(BackendConfigKeys.JMS_PORT, 61616, "Port for backend service for active mq");
+    config.register(BackendConfigKeys.MQTT_HOST, "mqtt", "Hostname of mqtt service ");
+    config.register(BackendConfigKeys.MQTT_PORT, 1883, "Port of mqtt service");
     config.register(BackendConfigKeys.KAFKA_HOST, "kafka", "Hostname for backend service for kafka");
     config.register(BackendConfigKeys.KAFKA_PORT, 9092, "Port for backend service for kafka");
     config.register(BackendConfigKeys.ZOOKEEPER_HOST, "zookeeper", "Hostname for backend service for zookeeper");
@@ -109,6 +111,14 @@ public enum BackendConfig {
 
   public int getJmsPort() {
     return config.getInteger(BackendConfigKeys.JMS_PORT);
+  }
+
+  public String getMqttHost() {
+    return config.getString(BackendConfigKeys.MQTT_HOST);
+  }
+
+  public int getMqttPort() {
+    return config.getInteger(BackendConfigKeys.MQTT_PORT);
   }
 
   public String getKafkaHost() {
@@ -227,6 +237,8 @@ public enum BackendConfig {
   public String getEncryptionKey() {
     return config.getString(BackendConfigKeys.ENCRYPTION_KEY);
   }
+
+
 
 
 }

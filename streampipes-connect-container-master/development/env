@@ -18,3 +18,4 @@ SP_BACKEND_HOST=localhost
 SP_KAFKA_HOST=localhost
 SP_CONNECT_CONTAINER_HOST=localhost
 SP_COUCHDB_HOST=localhost
+#SP_NODE_BROKER=true

@@ -28,6 +28,7 @@ import org.apache.streampipes.rest.impl.Couchdb;
 import org.apache.streampipes.rest.impl.DataStream;
 import org.apache.streampipes.rest.impl.Deployment;
 import org.apache.streampipes.rest.impl.InternalPipelineTemplates;
+import org.apache.streampipes.rest.impl.Node;
 import org.apache.streampipes.rest.impl.MeasurementUnitResource;
 import org.apache.streampipes.rest.impl.Notification;
 import org.apache.streampipes.rest.impl.OntologyContext;
@@ -77,7 +78,6 @@ public class StreamPipesResourceConfig extends ResourceConfig {
 
   public StreamPipesResourceConfig() {
     register(Authentication.class);
-    register(Authentication.class);
     register(ApplicationLink.class);
     register(AssetDashboard.class);
     register(AutoComplete.class);
@@ -120,6 +120,8 @@ public class StreamPipesResourceConfig extends ResourceConfig {
     register(VirtualSensor.class);
     register(Visualization.class);
     register(VisualizablePipeline.class);
+    register(Node.class);
+
 
     // Serializers
     register(GsonWithIdProvider.class);

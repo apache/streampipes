@@ -52,6 +52,15 @@ public abstract class ConsumableStreamPipesEntity extends NamedStreamPipesEntity
   @RdfProperty(StreamPipes.SUPPORTED_GROUNDING)
   private EventGrounding supportedGrounding;
 
+  @RdfProperty(StreamPipes.ELEMENT_ENDPOINT_HOSTNAME)
+  private String elementEndpointHostname;
+
+  @RdfProperty(StreamPipes.ELEMENT_ENDPOINT_PORT)
+  private Integer elementEndpointPort;
+
+  @RdfProperty(StreamPipes.ELEMENT_ENDPOINT_SERVICE_NAME)
+  private String elementEndpointServiceName;
+
   public ConsumableStreamPipesEntity() {
     super();
     this.spDataStreams = new ArrayList<>();
@@ -66,6 +75,9 @@ public abstract class ConsumableStreamPipesEntity extends NamedStreamPipesEntity
 
   public ConsumableStreamPipesEntity(ConsumableStreamPipesEntity other) {
     super(other);
+    this.elementEndpointHostname = other.getElementEndpointHostname();
+    this.elementEndpointPort = other.getElementEndpointPort();
+    this.elementEndpointServiceName = other.getElementEndpointServiceName();
     if (other.getSpDataStreams() != null) {
       this.spDataStreams = new Cloner().streams(other.getSpDataStreams());
     }
@@ -103,4 +115,27 @@ public abstract class ConsumableStreamPipesEntity extends NamedStreamPipesEntity
     this.supportedGrounding = supportedGrounding;
   }
 
+  public String getElementEndpointHostname() {
+    return elementEndpointHostname;
+  }
+
+  public void setElementEndpointHostname(String elementEndpointHostname) {
+    this.elementEndpointHostname = elementEndpointHostname;
+  }
+
+  public Integer getElementEndpointPort() {
+    return elementEndpointPort;
+  }
+
+  public void setElementEndpointPort(Integer elementEndpointPort) {
+    this.elementEndpointPort = elementEndpointPort;
+  }
+
+  public String getElementEndpointServiceName() {
+    return elementEndpointServiceName;
+  }
+
+  public void setElementEndpointServiceName(String elementEndpointServiceName) {
+    this.elementEndpointServiceName = elementEndpointServiceName;
+  }
 }

@@ -60,7 +60,7 @@ public class StandaloneSpInputCollector<T extends TransportProtocol> extends
   @Override
   public void connect() throws SpRuntimeException {
     if (!protocolDefinition.getConsumer().isConnected()) {
-      protocolDefinition.getConsumer().connect(transportProtocol,this);
+        protocolDefinition.getConsumer().connect( transportProtocol,this);
     }
   }
 

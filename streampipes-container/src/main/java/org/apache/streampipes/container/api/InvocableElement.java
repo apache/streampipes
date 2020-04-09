@@ -51,7 +51,7 @@ public abstract class InvocableElement<I extends InvocableStreamPipesEntity, D e
         P extends AbstractParameterExtractor<I>> extends Element<D> {
 
     protected abstract Map<String, D> getElementDeclarers();
-    protected abstract String getInstanceId(String uri, String elementId);
+    //protected abstract String getInstanceId(String uri, String elementId);
 
     protected Class<I> clazz;
 
@@ -75,7 +75,8 @@ public abstract class InvocableElement<I extends InvocableStreamPipesEntity, D e
             InvocableDeclarer declarer = (InvocableDeclarer) getDeclarerById(elementId);
 
             if (declarer != null) {
-                String runningInstanceId = getInstanceId(graph.getElementId(), elementId);
+                //String runningInstanceId = getInstanceId(graph.getElementId(), elementId);
+                String runningInstanceId = graph.getDeploymentRunningInstanceId();
                 RunningInstances.INSTANCE.add(runningInstanceId, graph, declarer.getClass().newInstance());
                 Response resp = RunningInstances.INSTANCE.getInvocation(runningInstanceId).invokeRuntime(graph);
                 return Util.toResponseString(resp);

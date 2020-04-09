@@ -20,55 +20,62 @@ package org.apache.streampipes.manager.execution.http;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.streampipes.commons.Utils;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.client.pipeline.PipelineElementStatus;
 import org.apache.streampipes.serializers.jsonld.JsonLdTransformer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
 public class HttpRequestBuilder {
 
   private NamedStreamPipesEntity payload;
-  private String belongsTo;
+  private String endpointUrl;
+
+  private static final Integer CONNECT_TIMEOUT = 10000;
 
   private final static Logger LOG = LoggerFactory.getLogger(HttpRequestBuilder.class);
 
-  public HttpRequestBuilder(NamedStreamPipesEntity payload, String belongsTo) {
+  public HttpRequestBuilder(NamedStreamPipesEntity payload, String endpointUrl) {
     this.payload = payload;
-    this.belongsTo = belongsTo;
+    this.endpointUrl = endpointUrl;
   }
 
   public PipelineElementStatus invoke() {
-    LOG.info("Invoking element: " + belongsTo);
+    LOG.info("Invoking element: " + endpointUrl);
     try {
       String jsonLd = jsonLd();
-      Response httpResp =
-              Request.Post(belongsTo).bodyString(jsonLd, ContentType.APPLICATION_JSON).connectTimeout(10000).execute();
+      Response httpResp = Request
+              .Post(endpointUrl)
+              .bodyString(jsonLd, ContentType.APPLICATION_JSON)
+              .connectTimeout(CONNECT_TIMEOUT)
+              .execute();
       return handleResponse(httpResp);
     } catch (Exception e) {
       LOG.error(e.getMessage());
-      return new PipelineElementStatus(belongsTo, payload.getName(), false, e.getMessage());
+      return new PipelineElementStatus(endpointUrl, payload.getName(), false, e.getMessage());
     }
   }
 
   public PipelineElementStatus detach() {
     try {
-      Response httpResp = Request.Delete(belongsTo).connectTimeout(10000).execute();
+      Response httpResp = Request
+              .Delete(endpointUrl)
+              .connectTimeout(CONNECT_TIMEOUT)
+              .execute();
       return handleResponse(httpResp);
     } catch (Exception e) {
-      LOG.error("Could not stop pipeline " + belongsTo, e.getMessage());
-      return new PipelineElementStatus(belongsTo, payload.getName(), false, e.getMessage());
+      LOG.error("Could not stop pipeline " + endpointUrl, e.getMessage());
+      return new PipelineElementStatus(endpointUrl, payload.getName(), false, e.getMessage());
     }
   }
 
-  private PipelineElementStatus handleResponse(Response httpResp) throws JsonSyntaxException, ClientProtocolException, IOException {
+  private PipelineElementStatus handleResponse(Response httpResp) throws JsonSyntaxException, IOException {
     String resp = httpResp.returnContent().asString();
     org.apache.streampipes.model.Response streamPipesResp = new Gson().fromJson(resp, org.apache.streampipes.model.Response.class);
     return convert(streamPipesResp);
@@ -79,6 +86,6 @@ public class HttpRequestBuilder {
   }
 
   private PipelineElementStatus convert(org.apache.streampipes.model.Response response) {
-    return new PipelineElementStatus(belongsTo, payload.getName(), response.isSuccess(), response.getOptionalMessage());
+    return new PipelineElementStatus(endpointUrl, payload.getName(), response.isSuccess(), response.getOptionalMessage());
   }
 }

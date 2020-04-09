@@ -18,65 +18,22 @@
 
 package org.apache.streampipes.connect.adapter.preprocessing.elements;
 
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipelineElement;
-import org.apache.streampipes.connect.adapter.util.TransportFormatSelector;
-import org.apache.streampipes.dataformat.SpDataFormatDefinition;
 import org.apache.streampipes.messaging.kafka.SpKafkaProducer;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
-import org.apache.streampipes.model.grounding.TransportFormat;
-import org.apache.streampipes.model.grounding.TransportProtocol;
 
-import java.util.Map;
+public class SendToKafkaAdapterSink extends SendToBrokerAdapterSink<KafkaTransportProtocol> implements AdapterPipelineElement  {
 
-public class SendToKafkaAdapterSink implements AdapterPipelineElement  {
-    private SpKafkaProducer producer;
-    private SpDataFormatDefinition dataFormatDefinition;
 
-    // TODO Handle multiple Event Groundings and define what happens when none is provided
     public SendToKafkaAdapterSink(AdapterDescription adapterDescription) {
-        producer = new SpKafkaProducer();
-
-        KafkaTransportProtocol kafkaTransportProtocol = (KafkaTransportProtocol) adapterDescription
-                .getEventGrounding()
-                .getTransportProtocol();
-
-        if ("true".equals(System.getenv("SP_DEBUG"))) {
-            kafkaTransportProtocol.setBrokerHostname("localhost");
-            kafkaTransportProtocol.setKafkaPort(9094);
-        }
-
-        TransportFormat transportFormat =
-                adapterDescription.getEventGrounding().getTransportFormats().get(0);
-
-        this.dataFormatDefinition =
-                new TransportFormatSelector(transportFormat).getDataFormatDefinition();
-
-        producer.connect(kafkaTransportProtocol);
+        super(adapterDescription, SpKafkaProducer::new, KafkaTransportProtocol.class);
     }
 
     @Override
-    public Map<String, Object> process(Map<String, Object> event) {
-        try {
-            if (event != null) {
-
-                // TODO remove, just for performance tests
-                if ("true".equals(System.getenv("SP_DEBUG_CONNECT"))) {
-                    event.put("internal_t2", System.currentTimeMillis());
-                }
-
-                producer.publish(dataFormatDefinition.fromMap(event));
-            }
-        } catch (SpRuntimeException e) {
-            e.printStackTrace();
-        }
-
-        return null;
+    public void modifyProtocolForDebugging() {
+        this.protocol.setBrokerHostname("localhost");
+        this.protocol.setKafkaPort(9094);
     }
 
-    public void changeTransportProtocol(TransportProtocol transportProtocol) {
-        producer.disconnect();
-        producer.connect((KafkaTransportProtocol) transportProtocol);
-    }
 }
