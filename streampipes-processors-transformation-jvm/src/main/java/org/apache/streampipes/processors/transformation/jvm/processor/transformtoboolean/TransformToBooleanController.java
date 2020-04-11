@@ -48,7 +48,7 @@ public class TransformToBooleanController
     public DataProcessorDescription declareModel() {
         return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.transform-to-boolean")
                 .withLocales(Locales.EN)
-                .withAssets(Assets.DOCUMENTATION)
+                .withAssets(Assets.DOCUMENTATION, Assets.ICON)
                 .requiredStream(StreamRequirementsBuilder.create()
                         .requiredPropertyWithNaryMapping(
                                 EpRequirements.anyProperty(),   // anyProperty? Would be nice, to exclude
