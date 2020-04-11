@@ -16,7 +16,7 @@
   ~
   -->
 
-## Statistics Summary
+## Sliding Statistics Summary
 
 <p align="center"> 
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
@@ -26,12 +26,24 @@
 
 ## Description
 
-Calculate simple descriptive summary statistics for each selected list property.
+Calculate simple descriptive summary statistics for a selected property over a defined time interval.
 
-The statistics contain:
+***
+
+## Required input
+Requires a numerical property
+
+## Configuration
+
+* Define a value to observe
+* Select the time field
+* Group the event streams by an identifier
+* Set the time window size and scale (Seconds, Minutes, Hours)
+
+## Output
+The statistics are appended to the event and contain:
 * Minimum
 * Maximum
 * Sum
 * Standard Deviation
 * Variance
-
