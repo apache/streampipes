@@ -49,7 +49,7 @@ public class NameFinderController extends StandaloneEventProcessingDeclarer<Name
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.textmining.jvm.namefinder")
             .category(DataProcessorType.ENRICH_TEXT)
-            .withAssets(Assets.DOCUMENTATION)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .withLocales(Locales.EN)
             .requiredStream(StreamRequirementsBuilder
                     .create()
