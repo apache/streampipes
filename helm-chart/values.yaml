@@ -27,7 +27,6 @@ external:
   couchdbVersion: 2.3.1
   flinkVersion: 1.9.1-scala_2.11
   kafkaVersion: 2.2.0
-  kafkarestVersion: 5.2.3
   zookeeperVersion: 3.4.13
   influxdbVersion: 1.7
   iotdbVersion: latest

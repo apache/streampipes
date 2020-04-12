@@ -19,15 +19,15 @@
 # StreamPipes Helm Chart
 StreamPipes helm chart to deploy StreamPipes on Kubernetes.
 
-Currently: **StreamPipes v0.65.0**
+Currently: **StreamPipes v0.65.1-SNAPSHOT**
 
 ## Prerequisite
 
 Requires Helm (https://helm.sh/) and an active connection to a kubernetes cluster with a running tiller server.
 
 Tested with:
-* Kubernetes v1.14.8
-* Helm v2.16.1
+* Kubernetes v1.17.4
+* Helm v3.1.2
 
 ## Start StreamPipes
 
