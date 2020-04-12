@@ -70,11 +70,23 @@
                                 </div>
                             </div>
                         </div>
+                        <div flex="100" layout="column" ng-if="ctrl.restrictedEditMode">
+                            <div layout="column" class="customize-item-main-help" style="border: 2px solid #ffc400">
+                                <div class="customize-item-title-help" style="background: #ffc400;" flex="100"
+                                     layout="row">
+                                    You can only modify things that don't affect your pipeline structure. To fully
+                                    modify this element, make sure that it doesn't connect to any successors (remove
+                                    outgoing connectors).
+                                </div>
+                            </div>
+                        </div>
                         <div ng-repeat="staticProperty in ctrl.selectedElement.staticProperties">
                                     <customize-dialog customize-form="ctrl.customizeForm"
                                                       selected-element="ctrl.selectedElement"
                                                       static-property="staticProperty"
-                                                      display-recommended="ctrl.displayRecommended"></customize-dialog>
+                                                      display-recommended="ctrl.displayRecommended"
+                                                      restricted-edit-mode="ctrl.restrictedEditMode">
+                                    </customize-dialog>
 
                         </div>
                         <div ng-repeat="outputStrategy in ctrl.selectedElement.outputStrategies">
@@ -86,7 +98,8 @@
                                         </div>
                                     </div>
                                     <div class="customize-item-content">
-                                        <replace-output output-strategy="outputStrategy"></replace-output>
+                                        <replace-output output-strategy="outputStrategy"
+                                                        restricted-edit-mode="ctrl.restrictedEditMode"></replace-output>
                                     </div>
                                 </div>
                             </div>
@@ -103,7 +116,10 @@
                                     </div>
                                     <div class="customize-item-content">
                                         <custom-output output-strategy="outputStrategy"
-                                                       selected-element="ctrl.selectedElement" customize-form="ctrl.customizeForm" ></custom-output>
+                                                       selected-element="ctrl.selectedElement"
+                                                       customize-form="ctrl.customizeForm"
+                                                       restricted-edit-mode="ctrl.restrictedEditMode">
+                                        </custom-output>
                                     </div>
                                 </div>
                             </div>

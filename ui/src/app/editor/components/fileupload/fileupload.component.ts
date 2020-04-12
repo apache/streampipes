@@ -26,7 +26,8 @@ export let FileUploadComponent = {
         staticProperty: "=",
         inputStreams : "=",
         selectedElement: "=",
-        customizeForm: "="
+        customizeForm: "=",
+        restrictedEditMode: "="
     },
     controller: FileUploadController,
     controllerAs: 'ctrl'

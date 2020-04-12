@@ -26,7 +26,8 @@ export let CustomizeDialogComponent = {
         staticProperty: "=",
         selectedElement: "=",
         displayRecommended: "=",
-        customizeForm: "="
+        customizeForm: "=",
+        restrictedEditMode: "<"
     },
     controller: CustomizeDialogController,
     controllerAs: 'ctrl'
