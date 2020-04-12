@@ -17,13 +17,18 @@
   -->
 
 <div id="formWrapper" fxFlex="100" fxLayout="column">
-    <div fxFlex="100">
-        <p>{{staticProperty.label}}: <br>
+    <div fxFlex="100" fxLayoutAlign="start center">
+        <div>{{staticProperty.label}}:
             <mat-hint class="description">{{staticProperty.description}}</mat-hint>
-        </p>
+        </div>
+        <button mat-button mat-raised-button color="primary" class="small-button" (click)="selectAll()"
+                style="margin-right:10px;margin-left:10px;">Select all
+        </button>
+        <button mat-button mat-raised-button class="mat-basic small-button" (click)="selectNone()">Select
+            none</button>
     </div>
     <div fxFlex="100" fxLayout="row">
-                <mat-checkbox *ngFor="let property of availableProperties"
+                <mat-checkbox *ngFor="let property of availableProperties" [(ngModel)]="property['checked']"
                               (change)="selectOption(property, $event)"
                               style="margin-left: 10px;">
                     {{property.runtimeName}}

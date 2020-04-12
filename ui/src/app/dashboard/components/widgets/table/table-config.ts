@@ -37,7 +37,7 @@ export class TableConfig extends WidgetConfig {
             .withDescription("A table visualization with customizable columns.")
             .requiredSchema(SchemaRequirementsBuilder
                 .create()
-                .requiredPropertyWithNaryMapping(TableConfig.SELECTED_PROPERTIES_KEYS, "Select properties", "", EpRequirements.anyProperty())
+                .requiredPropertyWithNaryMapping(TableConfig.SELECTED_PROPERTIES_KEYS, "Fields to display", "", EpRequirements.anyProperty())
                 .build())
             .build();
     }

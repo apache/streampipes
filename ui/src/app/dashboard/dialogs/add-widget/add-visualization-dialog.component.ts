@@ -35,7 +35,7 @@ import {ConfigurationInfo} from "../../../connect/model/message/ConfigurationInf
 @Component({
     selector: 'add-visualization-dialog-component',
     templateUrl: './add-visualization-dialog.component.html',
-    styleUrls: ['./add-visualization-dialog.component.css']
+    styleUrls: ['./add-visualization-dialog.component.scss']
 })
 export class AddVisualizationDialogComponent {
 
