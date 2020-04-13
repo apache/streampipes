@@ -45,7 +45,7 @@ public class SpatialGridEnrichmentController extends FlinkDataProcessorDeclarer<
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processor.geo.flink")
             .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.lat)

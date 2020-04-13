@@ -26,22 +26,12 @@
 ## Description
 
 Image Enrichment: Crops an  + image based on  + given bounding box coordinates
-Add a detailed description here
 
 ***
 
 ## Required input
-
-
-***
-
-## Configuration
-
-Describe the configuration parameters here
-
-### 1st parameter
-
-
-### 2nd parameter
+An image and an array with bounding boxes.
+A box consists of the x and y coordinates in the image as well as the height and width 
 
 ## Output
+A new event for each box containing the cropped image

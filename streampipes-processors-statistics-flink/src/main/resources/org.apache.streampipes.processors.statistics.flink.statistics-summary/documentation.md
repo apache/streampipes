@@ -26,23 +26,12 @@
 
 ## Description
 
-Calculate simple descriptive summary statistics
-Add a detailed description here
+Calculate simple descriptive summary statistics for each selected list property.
 
-***
+The statistics contain:
+* Minimum
+* Maximum
+* Sum
+* Standard Deviation
+* Variance
 
-## Required input
-
-
-***
-
-## Configuration
-
-Describe the configuration parameters here
-
-### 1st parameter
-
-
-### 2nd parameter
-
-## Output

@@ -28,8 +28,8 @@
 
 Loads a trained model which finds names like locations or organizations.
 
-A list of trained models can be found [here](http://opennlp.sourceforge.net/models-1.5/).\
-A guide on how to train a new model can be found [here](https://opennlp.apache.org/docs/1.9.1/manual/opennlp.html#tools.namefind.training).
+A list of trained models can be found here: http://opennlp.sourceforge.net/models-1.5/.\
+A guide on how to train a new model can be found here: https://opennlp.apache.org/docs/1.9.1/manual/opennlp.html#tools.namefind.training.
 
 ***
 

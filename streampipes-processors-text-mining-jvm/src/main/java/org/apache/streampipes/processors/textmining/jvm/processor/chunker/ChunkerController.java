@@ -42,7 +42,7 @@ public class ChunkerController extends StandaloneEventProcessingDeclarer<Chunker
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.textmining.jvm.chunker")
             .category(DataProcessorType.ENRICH_TEXT)
-            .withAssets(Assets.DOCUMENTATION)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .withLocales(Locales.EN)
             .requiredStream(StreamRequirementsBuilder
                     .create()

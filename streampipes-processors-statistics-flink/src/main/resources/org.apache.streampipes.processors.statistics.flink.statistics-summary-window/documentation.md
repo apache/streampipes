@@ -16,7 +16,7 @@
   ~
   -->
 
-## Spatial Grid Enrichment
+## Sliding Statistics Summary
 
 <p align="center"> 
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
@@ -26,20 +26,24 @@
 
 ## Description
 
-Groups spatial events into cells of a given size.
-The result is like a chessboard pattern in which the geo coordinates are inserted. The user can define the coordinates of the first field.
+Calculate simple descriptive summary statistics for a selected property over a defined time interval.
 
 ***
 
 ## Required input
-Requires a latitude and longitude in the data stream.
+Requires a numerical property
 
 ## Configuration
 
-* Latitude property
-* Longitude property
-* The size of the cell
-* Latitude and longitude of the first cell
+* Define a value to observe
+* Select the time field
+* Group the event streams by an identifier
+* Set the time window size and scale (Seconds, Minutes, Hours)
 
 ## Output
-Appends the grid cell coordinates to the input event
+The statistics are appended to the event and contain:
+* Minimum
+* Maximum
+* Sum
+* Standard Deviation
+* Variance

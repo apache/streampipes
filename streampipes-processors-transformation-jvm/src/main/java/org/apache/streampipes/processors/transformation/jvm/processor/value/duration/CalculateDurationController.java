@@ -55,7 +55,7 @@ public class CalculateDurationController extends StandaloneEventProcessingDeclar
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.duration-value")
             .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .requiredStream(StreamRequirementsBuilder.create()
                     .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
                             Labels.withId(START_TS_FIELD_ID),
