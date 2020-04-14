@@ -34,15 +34,15 @@ Tested with:
 Run command:
 
 ```sh
-helm install ./ --name streampipes --set deployment=lite
+helm install streampipes ./ --set deployment=lite
 ```
 
 ```sh
-helm install ./ --name streampipes --set deployment=full
+helm install streampipes ./ --set deployment=full
 ```
 
 ## Delete StreamPipes
 
 ```sh
-helm del --purge streampipes
+helm del streampipes
 ```
