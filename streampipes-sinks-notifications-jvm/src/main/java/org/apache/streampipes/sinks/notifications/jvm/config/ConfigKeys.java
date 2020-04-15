@@ -27,8 +27,6 @@ public class ConfigKeys {
     final static String ICON_PORT = "SP_ICON_PORT";
     final static String SERVICE_NAME = "SP_SERVICE_NAME";
 
-    final static String SLACK_TOKEN = "SP_SLACK_TOKEN";
-
     public final static String EMAIL_FROM = "SP_EMAIL_FROM";
     public final static String EMAIL_USERNAME = "SP_EMAIL_USERNAME";
     public final static String EMAIL_PASSWORD = "SP_EMAIL_PASSWORD";

@@ -27,22 +27,19 @@
 ## Description
 
 This processor calculates the duration for a given stream with a start timestamp and an end timestamp.
-Add a detailed description here
 
 ***
 
 ## Required input
-
+Two timestamp fields
 
 ***
 
 ## Configuration
 
-Describe the configuration parameters here
-
-### 1st parameter
-
-
-### 2nd parameter
+* Start Timestamp: The first timestamp (t1)
+* End Timestamp: The second timestamp (t2)
+* Time Unit of the result
 
 ## Output
+Appends a new field with the difference of t2 and t1

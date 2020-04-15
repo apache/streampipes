@@ -9,3 +9,6 @@ content.description=The message that should be sent
 
 channel-type.title=User or Channel
 channel-type.description=Decide wether you want to sent a notification to a user or to a channel
+
+auth-token.title=Auth Token
+auth-token.description=The token to authenticate at Slack

@@ -1,4 +1,4 @@
-## Value Changed
+## Transform to Boolean
 
 <p align="center"> 
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
@@ -7,23 +7,20 @@
 ***
 
 ## Description
+This processors transforms numbers and strings to boolean values.
 
-This processor inverts a specific boolean
 
 ***
 
 ## Required input
-
+A string with the values "true", "True", "false", "False" or a number with value 1.0, 1, 0, or 0.0
 
 ***
 
 ## Configuration
 
-Describe the configuration parameters here
-
-### 1st parameter
-
-
-### 2nd parameter
+Select fields that should be converted to boolean.
 
 ## Output
+Selected properties of input events are transformed to booleans.
+When the value is not valid an error message is logged and the event is discarde.

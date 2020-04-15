@@ -30,18 +30,10 @@ This processor sends out an event everytime a specific object changes. It also a
 
 ***
 
-## Required input
-
-
-***
-
 ## Configuration
+Select property to monitor for changes
 
 Describe the configuration parameters here
 
-### 1st parameter
-
-
-### 2nd parameter
-
 ## Output
+Emit an event on change and append a timestamp when the change occured

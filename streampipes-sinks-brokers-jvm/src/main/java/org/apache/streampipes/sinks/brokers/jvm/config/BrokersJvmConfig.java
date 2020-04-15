@@ -28,7 +28,6 @@ public enum BrokersJvmConfig implements PeConfig {
 	private SpConfig config;
 
 	public final static String serverUrl;
-	public final static String iconBaseUrl;
 
 	private final static String service_id = "pe/org.apache.streampipes.sinks.brokers.jvm";
 	private final static String service_name = "Sinks Brokers JVM";
@@ -39,21 +38,14 @@ public enum BrokersJvmConfig implements PeConfig {
 		config.register(ConfigKeys.HOST, service_container_name, "Hostname for the pe esper");
 		config.register(ConfigKeys.PORT, 8090, "Port for the pe esper");
 
-		config.register(ConfigKeys.ICON_HOST, "backend", "Hostname for the icon host");
-		config.register(ConfigKeys.ICON_PORT, 80, "Port for the icons in nginx");
-
 		config.register(ConfigKeys.SERVICE_NAME, service_name, "The name of the service");
 
 	}
 	
 	static {
 		serverUrl = BrokersJvmConfig.INSTANCE.getHost() + ":" + BrokersJvmConfig.INSTANCE.getPort();
-		iconBaseUrl = "http://" + BrokersJvmConfig.INSTANCE.getIconHost() + ":" + BrokersJvmConfig.INSTANCE.getIconPort() +"/assets/img/pe_icons";
 	}
 
-	public static final String getIconUrl(String pictureName) {
-		return iconBaseUrl +"/" +pictureName +".png";
-	}
 
 	@Override
 	public String getHost() {
@@ -63,14 +55,6 @@ public enum BrokersJvmConfig implements PeConfig {
 	@Override
 	public int getPort() {
 		return config.getInteger(ConfigKeys.PORT);
-	}
-
-	public String getIconHost() {
-		return config.getString(ConfigKeys.ICON_HOST);
-	}
-
-	public int getIconPort() {
-		return config.getInteger(ConfigKeys.ICON_PORT);
 	}
 
 	@Override

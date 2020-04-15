@@ -48,6 +48,12 @@
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
+            <artifactId>streampipes-processors-text-mining-jvm</artifactId>
+            <version>0.65.1-SNAPSHOT</version>
+            <classifier>embed</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-processors-transformation-jvm</artifactId>
             <version>0.65.1-SNAPSHOT</version>
             <classifier>embed</classifier>
@@ -79,6 +85,12 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-processors-enricher-jvm</artifactId>
+            <version>0.65.1-SNAPSHOT</version>
+            <classifier>embed</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.streampipes</groupId>
+            <artifactId>streampipes-processors-geo-jvm</artifactId>
             <version>0.65.1-SNAPSHOT</version>
             <classifier>embed</classifier>
         </dependency>

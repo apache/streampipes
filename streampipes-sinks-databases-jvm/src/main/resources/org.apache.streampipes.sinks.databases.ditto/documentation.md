@@ -16,7 +16,7 @@
   ~
   -->
 
-## CouchDB
+## Eclipse Ditto
 
 <p align="center"> 
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
@@ -38,19 +38,7 @@ This sink does not have any requirements and works with any incoming event type.
 
 ## Configuration
 
-Describe the configuration parameters here
-
-### Hostname
-
-The hostname of the CouchDB instance.
-
-### Port
-
-The port of the CouchDB instance.
-
-### Database Name
-
-The name of the database where events will be stored
+(tbd)
 
 ## Output
 

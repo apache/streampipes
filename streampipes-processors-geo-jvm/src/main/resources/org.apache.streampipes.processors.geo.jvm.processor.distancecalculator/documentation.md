@@ -16,7 +16,7 @@
   ~
   -->
 
-## Spatial Grid Enrichment
+## Distance Calculator
 
 <p align="center"> 
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
@@ -26,8 +26,7 @@
 
 ## Description
 
-Groups spatial events into cells of a given size
-Add a detailed description here
+Calculates the distance between two latitude/longitude pairs in a single event.
 
 ***
 

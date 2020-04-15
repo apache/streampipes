@@ -1,0 +1,14 @@
+org.apache.streampipes.processors.geo.jvm.processor.staticdistancecalculator.title=Static Distance Calculator
+org.apache.streampipes.processors.geo.jvm.processor.staticdistancecalculator.description=Calculates the distance between a fixed location and a moving location
+
+latitude-key.title=Latitude field
+latitude-key.description=
+
+longitude-key.title=Longitude field
+longitude-key.description=
+
+selected-latitude-key.title=Latitude
+selected-latitude-key.description=The latitude value of the fixed location
+
+selected-longitude-key.title=Longitude
+selected-longitude-key.description=The longitude value of the fixed location

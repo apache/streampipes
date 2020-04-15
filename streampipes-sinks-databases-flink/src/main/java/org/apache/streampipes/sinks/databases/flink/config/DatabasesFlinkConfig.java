@@ -42,9 +42,6 @@ public enum DatabasesFlinkConfig implements PeConfig {
     config.register(ConfigKeys.ELASTIC_PORT, 9300, "Elasitc search port");
     config.register(ConfigKeys.ELASTIC_PORT_REST, 9200, "Elasitc search rest port");
 
-    config.register(ConfigKeys.ICON_HOST, "backend", "Hostname for the icon host");
-    config.register(ConfigKeys.ICON_PORT, 80, "Port for the icons in nginx");
-
     config.register(ConfigKeys.DEBUG, false, "When set to true programs are not deployed to cluster, but executed locally");
 
     config.register(ConfigKeys.SERVICE_NAME, service_name, "The name of the service");
@@ -75,21 +72,6 @@ public enum DatabasesFlinkConfig implements PeConfig {
 
   public int getElasticsearchPort() {
     return config.getInteger(ConfigKeys.ELASTIC_PORT);
-  }
-
-
-  public static final String iconBaseUrl = "http://" + DatabasesFlinkConfig.INSTANCE.getIconHost() + ":" + DatabasesFlinkConfig.INSTANCE.getIconPort() + "/assets/img/pe_icons";
-
-  public static final String getIconUrl(String pictureName) {
-    return iconBaseUrl + "/" + pictureName + ".png";
-  }
-
-  public String getIconHost() {
-    return config.getString(ConfigKeys.ICON_HOST);
-  }
-
-  public int getIconPort() {
-    return config.getInteger(ConfigKeys.ICON_PORT);
   }
 
   public int getElasticsearchPortRest() {

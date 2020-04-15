@@ -1,0 +1,14 @@
+org.apache.streampipes.processors.geo.jvm.processor.speed.title=Speed Calculator
+org.apache.streampipes.processors.geo.jvm.processor.speed.description=Calculates the speed of two latlng pairs in kilometers per hour
+
+timestamp-key.title=Timestamp field
+timestamp-key.description=
+
+latitude-key.title=Latitude field
+latitude-key.description=
+
+longitude-key.title=Longitude field
+longitude-key.description=
+
+count-window-key.title=Count window
+count-window-key.description=

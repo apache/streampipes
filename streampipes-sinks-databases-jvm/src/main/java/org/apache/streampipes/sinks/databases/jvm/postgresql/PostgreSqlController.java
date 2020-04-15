@@ -54,7 +54,7 @@ public class PostgreSqlController extends StandaloneEventSinkDeclarer<PostgreSql
             .requiredTextParameter(Labels.withId(DATABASE_NAME_KEY))
             .requiredTextParameter(Labels.withId(DATABASE_TABLE_KEY))
             .requiredTextParameter(Labels.withId(DATABASE_USER_KEY))
-            .requiredTextParameter(Labels.withId(DATABASE_PASSWORD_KEY))
+            .requiredSecret(Labels.withId(DATABASE_PASSWORD_KEY))
             .build();
   }
 
@@ -67,7 +67,7 @@ public class PostgreSqlController extends StandaloneEventSinkDeclarer<PostgreSql
     String dbName = extractor.singleValueParameter(DATABASE_NAME_KEY, String.class);
     String tableName = extractor.singleValueParameter(DATABASE_TABLE_KEY, String.class);
     String user = extractor.singleValueParameter(DATABASE_USER_KEY, String.class);
-    String password = extractor.singleValueParameter(DATABASE_PASSWORD_KEY, String.class);
+    String password = extractor.secretValue(DATABASE_PASSWORD_KEY);
 
     PostgreSqlParameters params = new PostgreSqlParameters(graph,
             hostname,

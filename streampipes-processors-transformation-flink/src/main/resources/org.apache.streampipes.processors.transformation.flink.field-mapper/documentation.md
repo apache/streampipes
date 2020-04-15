@@ -26,23 +26,38 @@
 
 ## Description
 
-Replaces one or more field with a new field and computes a hash value of these fields
-Add a detailed description here
-
-***
-
-## Required input
-
+Replaces one or more fields with a new field and computes a hash value of these fields
 
 ***
 
 ## Configuration
 
-Describe the configuration parameters here
+* Fields: Fields that will be mapped into a property
+* Name of the new field
 
-### 1st parameter
+***
 
+## Example
+Merge two fields into a hash value
+### Input  event
+```
+{
+  "timestamp":1586380104915,
+  "mass_flow":4.3167,
+  "temperature":40.05,
+  "sensorId":"flowrate01"
+}
+```
 
-### 2nd parameter
+### Configuration
+* Fields: mass_flow, temperature
+* Name of new field: demo
 
-## Output
+### Output event 
+```
+{
+  "timestamp":1586380104915,
+  "sensorId":"flowrate01"
+  "demo":"8ae11f5c83610104408d485b73120832",
+}
+```

@@ -1,4 +1,4 @@
-org.apache.streampipes.connect.adapters.netio.mqtt.title=NETIO MQTT
+org.apache.streampipes.connect.adapters.netio.mqtt.title=NETIO MQTT M2M
 org.apache.streampipes.connect.adapters.netio.mqtt.description=Connect a NETIO power plugs over MQTT
 
 access-mode.title=Access Mode

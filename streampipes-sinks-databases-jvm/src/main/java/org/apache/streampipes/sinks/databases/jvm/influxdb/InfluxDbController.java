@@ -62,7 +62,7 @@ public class InfluxDbController extends StandaloneEventSinkDeclarer<InfluxDbPara
             .requiredTextParameter(Labels.withId(DATABASE_NAME_KEY))
             .requiredTextParameter(Labels.withId(DATABASE_MEASUREMENT_KEY))
             .requiredTextParameter(Labels.withId(DATABASE_USER_KEY))
-            .requiredTextParameter(Labels.withId(DATABASE_PASSWORD_KEY))
+            .requiredSecret(Labels.withId(DATABASE_PASSWORD_KEY))
             .build();
   }
 
@@ -74,8 +74,9 @@ public class InfluxDbController extends StandaloneEventSinkDeclarer<InfluxDbPara
     Integer port = extractor.singleValueParameter(DATABASE_PORT_KEY, Integer.class);
     String dbName = extractor.singleValueParameter(DATABASE_NAME_KEY, String.class);
     String measureName = extractor.singleValueParameter(DATABASE_MEASUREMENT_KEY, String.class);
+    measureName = InfluxDb.prepareString(measureName);
     String user = extractor.singleValueParameter(DATABASE_USER_KEY, String.class);
-    String password = extractor.singleValueParameter(DATABASE_PASSWORD_KEY, String.class);
+    String password = extractor.secretValue(DATABASE_PASSWORD_KEY);
     String timestampField = extractor.mappingPropertyValue(TIMESTAMP_MAPPING_KEY);
     Integer batch_size = extractor.singleValueParameter(BATCH_INTERVAL_ACTIONS_KEY, Integer.class);
     Integer flush_duration = extractor.singleValueParameter(MAX_FLUSH_DURATION_KEY, Integer.class);

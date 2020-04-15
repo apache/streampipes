@@ -201,3 +201,8 @@
    limitations under the License.
 
 ===============================================================
+
+This project includes some sources that are also licensed under the Apache
+License Version 2.0:
+
+All files in streampipes-processors-transformation-flink/src/main/java/com.kohlschutter.boilerpipe (https://github.com/kohlschutter/boilerpipe)

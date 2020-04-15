@@ -30,6 +30,7 @@ import org.apache.streampipes.sinks.brokers.jvm.bufferrest.BufferRestController;
 import org.apache.streampipes.sinks.brokers.jvm.config.BrokersJvmConfig;
 import org.apache.streampipes.sinks.brokers.jvm.jms.JmsController;
 import org.apache.streampipes.sinks.brokers.jvm.kafka.KafkaController;
+import org.apache.streampipes.sinks.brokers.jvm.mqtt.MqttController;
 import org.apache.streampipes.sinks.brokers.jvm.pulsar.PulsarController;
 import org.apache.streampipes.sinks.brokers.jvm.rabbitmq.RabbitMqController;
 import org.apache.streampipes.sinks.brokers.jvm.rest.RestController;
@@ -44,6 +45,7 @@ public class BrokersJvmInit extends StandaloneModelSubmitter {
             .add(new RestController())
             .add(new BufferRestController())
             .add(new RabbitMqController())
+            .add(new MqttController())
             .add(new PulsarController());
 
     DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),

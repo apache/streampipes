@@ -36,7 +36,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Code is the same as InfluxDB (org.apache.streampipes.sinks.databases.jvm.influxdb) sink. Changes applied here should also be applied in the InfluxDB sink
  */
-public class InfluxDbClient {
+public class DataLakeInfluxDbClient {
 	private Integer influxDbPort;
 	private String influxDbHost;
 	private String databaseName;
@@ -53,17 +53,17 @@ public class InfluxDbClient {
 
 	private InfluxDB influxDb = null;
 
-	InfluxDbClient(String influxDbHost,
-			Integer influxDbPort,
-			String databaseName,
-			String measureName,
-			String user,
-			String password,
-			String timestampField,
-            Integer batchSize,
-            Integer flushDuration,
-			List<String> tagsFields,
-			Logger logger) throws SpRuntimeException {
+	DataLakeInfluxDbClient(String influxDbHost,
+                         Integer influxDbPort,
+                         String databaseName,
+                         String measureName,
+                         String user,
+                         String password,
+                         String timestampField,
+                         Integer batchSize,
+                         Integer flushDuration,
+                         List<String> tagsFields,
+                         Logger logger) throws SpRuntimeException {
 		this.influxDbHost = influxDbHost;
 		this.influxDbPort = influxDbPort;
 		this.databaseName = databaseName;
@@ -81,7 +81,7 @@ public class InfluxDbClient {
 	}
 
   /**
-   * Checks whether the {@link InfluxDbClient#influxDbHost} is valid
+   * Checks whether the {@link DataLakeInfluxDbClient#influxDbHost} is valid
    *
    * @throws SpRuntimeException If the hostname is not valid
    */
@@ -133,7 +133,7 @@ public class InfluxDbClient {
 
   /**
    * Checks whether the given database exists. Needs a working connection to an InfluxDB Server
-   * ({@link InfluxDbClient#influxDb} needs to be initialized)
+   * ({@link DataLakeInfluxDbClient#influxDb} needs to be initialized)
    *
    * @param dbName The name of the database, the method should look for
    * @return True if the database exists, false otherwise
@@ -172,34 +172,23 @@ public class InfluxDbClient {
 		}
 
 		Long timestampValue = event.getFieldBySelector(timestampField).getAsPrimitive().getAsLong();
-        Point.Builder p = Point.measurement(measureName).time(timestampValue, TimeUnit.MILLISECONDS);
+    Point.Builder p = Point.measurement(measureName).time(timestampValue, TimeUnit.MILLISECONDS);
 
-        for (Map.Entry<String, Object> pair : event.getRaw().entrySet()) {
-            if (!pair.getKey().matches("^[a-zA-Z_][a-zA-Z0-9_]*$")) {
-                throw new SpRuntimeException("Column name '" + pair.getKey() + "' not allowed "
-                        + "(allowed: '^[a-zA-Z_][a-zA-Z0-9_]*$')");
-            }
+      for (Map.Entry<String, Object> pair : event.getRaw().entrySet()) {
+          if (pair.getValue() instanceof Integer) {
+              p.addField(DataLake.prepareString(pair.getKey()), (Integer)pair.getValue());
+          } else if (pair.getValue() instanceof Long) {
+              p.addField(DataLake.prepareString(pair.getKey()), (Long)pair.getValue());
+          } else if (pair.getValue() instanceof Double) {
+              p.addField(DataLake.prepareString(pair.getKey()), (Double)pair.getValue());
+          } else if (pair.getValue() instanceof Boolean) {
+              p.addField(DataLake.prepareString(pair.getKey()), (Boolean)pair.getValue());
+          } else {
+              p.addField(DataLake.prepareString(pair.getKey()), pair.getValue().toString());
+          }
+      }
 
-
-            if (tagFields != null && tagFields.stream().anyMatch(tag -> tag.equals(pair.getKey()))) {
-                p.tag(pair.getKey(), pair.getValue().toString());
-            } else {
-                if (pair.getValue() instanceof Integer) {
-                    p.addField(pair.getKey(), (Integer)pair.getValue());
-                } else if (pair.getValue() instanceof Long) {
-                    p.addField(pair.getKey(), (Long)pair.getValue());
-                } else if (pair.getValue() instanceof Double) {
-                    p.addField(pair.getKey(), (Double)pair.getValue());
-                } else if (pair.getValue() instanceof Boolean) {
-                    p.addField(pair.getKey(), (Boolean)pair.getValue());
-                } else {
-                    p.addField(pair.getKey(), pair.getValue().toString());
-                }
-            }
-
-    }
-
-    influxDb.write(p.build());
+      influxDb.write(p.build());
 	}
 
   /**

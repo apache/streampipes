@@ -26,23 +26,20 @@
 
 ## Description
 
-Groups spatial events into cells of a given size
-Add a detailed description here
+Groups spatial events into cells of a given size.
+The result is like a chessboard pattern in which the geo coordinates are inserted. The user can define the coordinates of the first field.
 
 ***
 
 ## Required input
-
-
-***
+Requires a latitude and longitude in the data stream.
 
 ## Configuration
 
-Describe the configuration parameters here
-
-### 1st parameter
-
-
-### 2nd parameter
+* Latitude property
+* Longitude property
+* The size of the cell
+* Latitude and longitude of the first cell
 
 ## Output
+Appends the grid cell coordinates to the input event

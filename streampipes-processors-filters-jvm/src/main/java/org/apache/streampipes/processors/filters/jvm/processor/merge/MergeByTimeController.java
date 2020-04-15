@@ -48,7 +48,6 @@ public class MergeByTimeController extends StandaloneEventProcessingDeclarer<Mer
             .category(DataProcessorType.TRANSFORM)
             .withAssets(Assets.DOCUMENTATION, Assets.ICON, "merge_description.png")
             .withLocales(Locales.EN)
-            .iconUrl(FiltersJvmConfig.getIconUrl("projection"))
             .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(
                     EpRequirements.timestampReq(),
                     Labels.withId(TIMESTAMP_MAPPING_STREAM_1_KEY),

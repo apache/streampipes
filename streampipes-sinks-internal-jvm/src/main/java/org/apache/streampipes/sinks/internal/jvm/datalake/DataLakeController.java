@@ -61,6 +61,7 @@ public class DataLakeController extends StandaloneEventSinkDeclarer<DataLakePara
 
 
     String measureName = extractor.singleValueParameter(DATABASE_MEASUREMENT_KEY, String.class);
+    measureName = DataLake.prepareString(measureName);
     String timestampField = extractor.mappingPropertyValue(TIMESTAMP_MAPPING_KEY);
 
     String hostname = SinksInternalJvmConfig.INSTANCE.getDataLakeProtocol() + "://" + SinksInternalJvmConfig.INSTANCE.getDataLakeHost();

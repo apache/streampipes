@@ -1,0 +1,8 @@
+org.apache.streampipes.sinks.brokers.jvm.mqtt.title = MQTT Publisher
+org.apache.streampipes.sinks.brokers.jvm.mqtt.description = Publishes events to a MQTT topic
+
+topic.title= MQTT Topic
+topic.description=Select a MQTT topic
+
+broker-settings.title=MQTT broker settings (use prefix tcp://)
+broker-settings.description=Provide settings of the MQTT broker to connect with.
