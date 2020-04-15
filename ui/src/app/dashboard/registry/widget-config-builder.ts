@@ -24,6 +24,7 @@ import {ColorPickerStaticProperty} from "../../connect/model/ColorPickerStaticPr
 import {OneOfStaticProperty} from "../../connect/model/OneOfStaticProperty";
 import {StaticProperty} from "../../connect/model/StaticProperty";
 import {Option} from "../../connect/model/Option";
+import {Tuple2} from "../../core-model/base/Tuple2";
 
 export class WidgetConfigBuilder {
 
@@ -40,6 +41,9 @@ export class WidgetConfigBuilder {
         this.widget.widgetLabel = widgetLabel;
         this.widget.widgetName = widgetName;
         this.widget.config = [];
+        if (withTitlePanel) {
+            this.requiredTextParameter(WidgetConfigBuilder.TITLE_KEY, "Widget title", "The title of the widget")
+        }
         if (withColors) {
         this.requiredColorParameter(WidgetConfigBuilder.BACKGROUND_COLOR_KEY, "Background color", "The background" +
             " color", "#1B1464");
@@ -48,9 +52,6 @@ export class WidgetConfigBuilder {
         this.requiredColorParameter(WidgetConfigBuilder.SECONDARY_TEXT_COLOR_KEY, "Secondary text color", "The" +
             " secondary text" +
             " color", "#bebebe")
-        }
-        if (withTitlePanel) {
-        this.requiredTextParameter(WidgetConfigBuilder.TITLE_KEY, "Title", "The title")
         }
     }
 
@@ -101,14 +102,15 @@ export class WidgetConfigBuilder {
         return this;
     }
 
-    requiredSingleValueSelection(id: string, label: string, description: string, options: Array<string>): WidgetConfigBuilder {
+    requiredSingleValueSelection(id: string, label: string, description: string, options: Array<Tuple2<string, string>>): WidgetConfigBuilder {
         let osp: OneOfStaticProperty = new OneOfStaticProperty();
         this.prepareStaticProperty(id, label, description, osp);
 
         osp.options = [];
         options.forEach(o => {
             let option = new Option();
-            option.name = o;
+            option.name = o.a;
+            option.internalName = o.b;
             osp.options.push(option);
         });
         this.widget.config.push(osp);

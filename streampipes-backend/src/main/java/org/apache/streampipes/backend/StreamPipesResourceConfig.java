@@ -28,6 +28,7 @@ import org.apache.streampipes.rest.impl.Couchdb;
 import org.apache.streampipes.rest.impl.DataStream;
 import org.apache.streampipes.rest.impl.Deployment;
 import org.apache.streampipes.rest.impl.InternalPipelineTemplates;
+import org.apache.streampipes.rest.impl.MeasurementUnitResource;
 import org.apache.streampipes.rest.impl.Notification;
 import org.apache.streampipes.rest.impl.OntologyContext;
 import org.apache.streampipes.rest.impl.OntologyKnowledge;
@@ -79,37 +80,44 @@ public class StreamPipesResourceConfig extends ResourceConfig {
   public StreamPipesResourceConfig() {
     register(Authentication.class);
     register(Authentication.class);
+    register(ApplicationLink.class);
     register(AssetDashboard.class);
     register(AutoComplete.class);
-    register(PipelineElementCategory.class);
+    register(ConsulConfig.class);
+    register(ContainerProvidedOptions.class);
+    register(Couchdb.class);
+    register(DashboardWidget.class);
+    register(Dashboard.class);
+    register(DataLakeResourceV3.class);
+    register(DataLakeNoUserResourceV3.class);
+    register(DataStream.class);
     register(Deployment.class);
+    register(FileServingResource.class);
+    register(InternalPipelineTemplates.class);
+    register(MeasurementUnitResource.class);
     register(Notification.class);
     register(OntologyContext.class);
     register(OntologyKnowledge.class);
     register(OntologyMeasurementUnit.class);
     register(OntologyPipelineElement.class);
-    register(PipelineWithUserResource.class);
-    register(PipelineNoUserResource.class);
-    register(PipelineElementImportNoUser.class);
+    register(PipelineCache.class);
     register(PipelineCategory.class);
+    register(PipelineElementAsset.class);
+    register(PipelineElementCategory.class);
+    register(PipelineElementFile.class);
+    register(PipelineElementImportNoUser.class);
     register(PipelineElementImport.class);
+    register(PipelineElementRuntimeInfo.class);
+    register(PipelineNoUserResource.class);
+    register(PipelineTemplate.class);
+    register(PipelineWithUserResource.class);
+    register(RdfEndpoint.class);
     register(SemanticEventConsumer.class);
     register(SemanticEventProcessingAgent.class);
     register(SemanticEventProducer.class);
     register(Setup.class);
-    register(VirtualSensor.class);
-    register(Visualization.class);
-    register(RdfEndpoint.class);
-    register(ApplicationLink.class);
-    register(User.class);
-    register(ConsulConfig.class);
-    register(DataStream.class);
-    register(ContainerProvidedOptions.class);
     register(StreamPipesLogs.class);
-    register(PipelineTemplate.class);
-    register(Couchdb.class);
-    register(InternalPipelineTemplates.class);
-    register(PipelineElementRuntimeInfo.class);
+    register(User.class);
     register(Version.class);
     register(PipelineElementAsset.class);
     register(DataLakeDashboard.class);
@@ -120,16 +128,15 @@ public class StreamPipesResourceConfig extends ResourceConfig {
     register(FileServingResource.class);
     register(DashboardWidget.class);
     register(Dashboard.class);
+    register(VirtualSensor.class);
+    register(Visualization.class);
     register(VisualizablePipeline.class);
-    register(PipelineCache.class);
-
 
     // Serializers
     register(GsonWithIdProvider.class);
     register(GsonWithoutIdProvider.class);
     register(GsonClientModelProvider.class);
     register(JsonLdProvider.class);
-
     register(MultiPartFeature.class);
   }
 

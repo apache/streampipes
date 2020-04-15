@@ -66,7 +66,8 @@
                     <div fxFlex="100" fxLayout="column">
                         <app-static-property *ngFor="let config of selectedWidget.config" [staticProperty]="config"
                                              [staticProperties]="selectedWidget.config"
-                                             [eventSchema]="selectedPipeline.schema"></app-static-property>
+                                             [eventSchema]="selectedPipeline.schema"
+                                             (validateEmitter)="validConfiguration($event)"></app-static-property>
                     </div>
 
                 </div>
@@ -83,7 +84,8 @@
         && !(data)">
             Back
         </button>
-        <button mat-button mat-raised-button color="primary" (click)="next()">
+        <button mat-button mat-raised-button color="primary" (click)="next()" [disabled]="'configure-widget' === page
+         && !configValid">
             <span *ngIf="!data && 'configure-widget' === page">Create</span>
             <span *ngIf="data && 'configure-widget' === page">Save</span>
             <span *ngIf="data == null && !('configure-widget' === page)">Next</span>

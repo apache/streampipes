@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.serializers.jsonld;
 
+import io.fogsy.empire.core.empire.util.EmpireAnnotationProvider;
 import org.apache.streampipes.model.ApplicationLink;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
@@ -62,6 +63,7 @@ import org.apache.streampipes.model.graph.DataSourceDescription;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
+import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
 import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
@@ -119,7 +121,6 @@ import org.apache.streampipes.model.template.BoundPipelineElement;
 import org.apache.streampipes.model.template.PipelineTemplateDescription;
 import org.apache.streampipes.model.template.PipelineTemplateDescriptionContainer;
 import org.apache.streampipes.model.template.PipelineTemplateInvocation;
-import io.fogsy.empire.core.empire.util.EmpireAnnotationProvider;
 
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
@@ -187,6 +188,7 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             TransportFormat.class,
             JmsTransportProtocol.class,
             KafkaTransportProtocol.class,
+            MqttTransportProtocol.class,
             TransportProtocol.class,
             DomainStaticProperty.class,
             SupportedProperty.class,

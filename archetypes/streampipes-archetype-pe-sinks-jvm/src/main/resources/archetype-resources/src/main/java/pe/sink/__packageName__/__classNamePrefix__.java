@@ -4,6 +4,7 @@
 
 package ${package}.pe.sink.${packageName};
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.runtime.EventSink;
@@ -16,17 +17,17 @@ public class ${classNamePrefix} implements EventSink<${classNamePrefix}Parameter
 private static Logger LOG;
 
   @Override
-  public void onInvocation(${classNamePrefix}Parameters parameters, EventSinkRuntimeContext runtimeContext) {
+  public void onInvocation(${classNamePrefix}Parameters parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
 
   }
 
   @Override
-  public void onEvent(Event event) {
+  public void onEvent(Event event) throws SpRuntimeException {
 
   }
 
   @Override
-  public void onDetach() {
+  public void onDetach() throws SpRuntimeException {
 
   }
 }

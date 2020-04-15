@@ -28,6 +28,7 @@ import {WidgetConfigBuilder} from "../../../registry/widget-config-builder";
 import {VisualizablePipeline} from "../../../../core-model/dashboard/VisualizablePipeline";
 import {ResizeService} from "../../../services/resize.service";
 import {GridsterInfo} from "../../../models/gridster-info.model";
+import {DashboardService} from "../../../services/dashboard.service";
 
 export abstract class BaseStreamPipesWidget implements OnChanges {
 
@@ -57,6 +58,7 @@ export abstract class BaseStreamPipesWidget implements OnChanges {
 
 
     protected constructor(private rxStompService: RxStompService,
+                          protected dashboardService: DashboardService,
                           protected resizeService: ResizeService,
                           protected adjustPadding: boolean) {
     }

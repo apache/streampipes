@@ -122,7 +122,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
       url: '/notifications',
       views: {
         'spMain@streampipes': {
-          templateUrl: '../notifications/notifications.html',
+          templateUrl: '../notifications/notifications.component.html',
           controller: 'NotificationsCtrl',
         },
       },

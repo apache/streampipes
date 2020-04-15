@@ -22,11 +22,13 @@ import javax.ws.rs.core.Response;
 
 public interface INotification {
 
-	Response getNotifications();
+	Response getNotifications(String notificationTypeId, Integer offset, Integer count);
 
 	Response getUnreadNotifications();
 
 	Response deleteNotification(String notification);
 
 	Response modifyNotificationStatus(String notificationId);
+
+	Response getUnreadNotificationsCount(String username);
 }

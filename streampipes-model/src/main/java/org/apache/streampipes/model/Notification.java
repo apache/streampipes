@@ -29,7 +29,9 @@ public class Notification {
 
   private String title;
   private Date createdAt;
+  private long createdAtTimestamp;
   private String targetedAt;
+  private String correspondingPipelineId;
 
   private String message;
 
@@ -99,5 +101,21 @@ public class Notification {
 
   public void setRead(Boolean read) {
     this.read = read;
+  }
+
+  public String getCorrespondingPipelineId() {
+    return correspondingPipelineId;
+  }
+
+  public void setCorrespondingPipelineId(String correspondingPipelineId) {
+    this.correspondingPipelineId = correspondingPipelineId;
+  }
+
+  public long getCreatedAtTimestamp() {
+    return createdAtTimestamp;
+  }
+
+  public void setCreatedAtTimestamp(long createdAtTimestamp) {
+    this.createdAtTimestamp = createdAtTimestamp;
   }
 }

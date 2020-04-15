@@ -32,7 +32,8 @@ public class EventSinkRuntimeParams<B extends EventSinkBindingParams> extends
 
   @Override
   protected EventSinkRuntimeContext makeRuntimeContext() {
-    return new SpEventSinkRuntimeContext(getSourceInfo(), getSchemaInfo());
+    return new SpEventSinkRuntimeContext(getSourceInfo(), getSchemaInfo(),
+            bindingParams.getGraph().getCorrespondingUser());
   }
 
 }

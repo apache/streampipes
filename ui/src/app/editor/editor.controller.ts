@@ -17,16 +17,21 @@
  */
 
 import * as angular from 'angular';
+import {AuthStatusService} from "../services/auth-status.service";
+import {RestApi} from "../services/rest-api.service";
+import {ShepherdService} from "../services/tour/shepherd.service";
+import {JsplumbBridge} from "../services/jsplumb-bridge.service";
+import {EditorDialogManager} from "./services/editor-dialog-manager.service";
 
 export class EditorCtrl {
 
     $rootScope: any;
-    RestApi: any;
+    RestApi: RestApi;
     $stateParams: any;
     $window: any;
-    JsplumbBridge: any;
-    EditorDialogManager: any;
-    AuthStatusService: any;
+    JsplumbBridge: JsplumbBridge;
+    EditorDialogManager: EditorDialogManager;
+    AuthStatusService: AuthStatusService;
     currentElements: any;
     allElements: any;
     currentModifiedPipelineId: any;
@@ -36,8 +41,9 @@ export class EditorCtrl {
     activeType: any;
     tabs: any;
     currentlyFocusedElement: any;
-    ShepherdService: any;
+    ShepherdService: ShepherdService;
     isTutorialOpen: boolean = false;
+    elementFilter: string;
 
     requiredStreamForTutorialAppId: any = "org.apache.streampipes.sources.simulator.flowrate1";
     requiredProcessorForTutorialAppId: any = "org.apache.streampipes.processors.filters.jvm.numericalfilter";
@@ -45,13 +51,13 @@ export class EditorCtrl {
     missingElementsForTutorial: any = [];
 
     constructor($rootScope,
-                RestApi,
+                RestApi: RestApi,
                 $stateParams,
                 $window,
-                JsplumbBridge,
-                EditorDialogManager,
-                AuthStatusService,
-                ShepherdService) {
+                JsplumbBridge: JsplumbBridge,
+                EditorDialogManager: EditorDialogManager,
+                AuthStatusService: AuthStatusService,
+                ShepherdService: ShepherdService) {
 
         this.$rootScope = $rootScope;
         this.RestApi = RestApi;
@@ -194,6 +200,7 @@ export class EditorCtrl {
 
     loadCurrentElements(type) {
         this.currentElements = this.allElements[type];
+        this.elementFilter = "";
         this.activeType = type;
         this.ShepherdService.trigger("select-" +type);
     }
@@ -228,6 +235,7 @@ export class EditorCtrl {
                 let sepas = msg.data;
                 angular.forEach(sepas, sepa => {
                     sepa.type = 'sepa';
+                    sepa.correspondingUser = this.AuthStatusService.email;
                 });
                 this.allElements["sepa"] = sepas;
                 this.checkForTutorial();
@@ -240,6 +248,7 @@ export class EditorCtrl {
                 let actions = msg.data;
                 angular.forEach(actions, action => {
                     action.type = 'action';
+                    action.correspondingUser = this.AuthStatusService.email;
                 });
                 this.allElements["action"] = actions;
                 this.checkForTutorial();

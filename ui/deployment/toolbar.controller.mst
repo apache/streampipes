@@ -17,6 +17,8 @@
  */
 
 import { Client } from '@stomp/stompjs';
+import { NotificationCountService } from "../services/notification-count-service";
+import { NotificationItem } from "../notifications/model/notifications.model";
 
 export class ToolbarController {
     AuthStatusService: any;
@@ -28,11 +30,11 @@ export class ToolbarController {
     $location: any;
     unreadNotifications: any;
     title: any;
-    notificationCount: any;
     menu: any;
     admin: any;
     toggleLeft: any;
     activePage: any;
+    activePageName: any;
 
     feedbackOpen: boolean = false;
     accountMenuOpen: boolean = false;
@@ -46,7 +48,15 @@ export class ToolbarController {
     feedbackMenuBackground: any = this.makeColor('background-color', this.greenColor);
     feedbackMenuIconColor: any = this.makeColor('color', this.whiteColor);
 
-    constructor($mdSidenav, $mdUtil, RestApi, $state, $window, $location, AuthStatusService, $scope) {
+    constructor($mdSidenav,
+                $mdUtil,
+                RestApi,
+                $state,
+                $window,
+                $location,
+                AuthStatusService,
+                $scope,
+                public NotificationCountService: NotificationCountService) {
         this.AuthStatusService = AuthStatusService;
         this.RestApi = RestApi;
         this.$mdSidenav = $mdSidenav;
@@ -65,7 +75,6 @@ export class ToolbarController {
         this.unreadNotifications = [];
         this.title = 'StreamPipes';
 
-        this.notificationCount = 0;
 
         this.AuthStatusService.userInfo = {
             Name: 'D',
@@ -105,8 +114,9 @@ export class ToolbarController {
 
     $onInit() {
         this.toggleLeft = this.buildToggler('left');
-        this.activePage = this.getPageTitle(this.$state.current.name);
-        this.updateUnreadNotifications();
+        this.activePage = this.$state.current.name;
+        this.activePageName = this.getPageTitle(this.activePage);
+        this.NotificationCountService.loadUnreadNotifications();
         this.connectToBroker();
     }
 
@@ -115,29 +125,16 @@ export class ToolbarController {
         return this.AuthStatusService.authenticated;
     }
 
-    updateUnreadNotifications() {
-        this.RestApi.getNotifications()
-            .then(notifications => {
-                var notificationCount = 0;
-                notifications.data.forEach(value => {
-                    if (!value.read) {
-                        notificationCount++;
-                    }
-                });
-                this.notificationCount = notificationCount;
-            });
-    };
-
-// TODO: Function overloading?
     go(path, payload?) {
         if (payload === undefined) {
             this.$state.go(path);
-            this.activePage = this.getPageTitle(path);
+            this.activePage = path;
             this.$mdSidenav('left').close();
         } else {
             this.$state.go(path, payload);
-            this.activePage = this.getPageTitle(path);
+            this.activePage = path;
         }
+        this.activePageName = this.getPageTitle(this.activePage);
     };
 
     logout() {
@@ -202,7 +199,7 @@ export class ToolbarController {
         var passcode = 'admin';
         var websocketProtocol = this.$location.protocol() === "http" ? "ws" : "wss";
         var brokerUrl = websocketProtocol + '://' + this.$location.host() + ':' + this.$location.port() + '/streampipes/ws';
-        var inputTopic = '/topic/org.apache.streampipes.notifications';
+        var inputTopic = '/topic/org.apache.streampipes.notifications.' + this.AuthStatusService.email;
 
         let stompClient = new Client({
             brokerURL: brokerUrl,
@@ -216,7 +213,7 @@ export class ToolbarController {
         stompClient.onConnect = (frame) => {
 
             stompClient.subscribe(inputTopic, message => {
-                this.notificationCount++;
+                this.NotificationCountService.increaseNotificationCount(JSON.parse(message.body) as NotificationItem);
             });
         };
 
@@ -259,4 +256,12 @@ export class ToolbarController {
 
 };
 
-ToolbarController.$inject = ['$mdSidenav', '$mdUtil', 'RestApi', '$state', '$window', '$location', 'AuthStatusService', '$scope'];
+ToolbarController.$inject = ['$mdSidenav',
+    '$mdUtil',
+    'RestApi',
+    '$state',
+    '$window',
+    '$location',
+    'AuthStatusService',
+    '$scope',
+    'NotificationCountService'];

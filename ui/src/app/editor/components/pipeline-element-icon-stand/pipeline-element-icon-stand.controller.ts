@@ -18,19 +18,23 @@
 
 import * as angular from 'angular';
 
+import {RestApi} from "../../../services/rest-api.service";
+import {EditorDialogManager} from "../../services/editor-dialog-manager.service";
+
 export class PipelineElementIconStandController {
 
-    RestApi: any;
+    RestApi: RestApi;
     availableOptions: any;
     selectedOptions: any;
     options: any;
     activeType: any;
     currentElementName: any;
-    EditorDialogManager: any;
+    EditorDialogManager: EditorDialogManager;
     currentElements: any;
     $scope: any;
+    elementFilter: string;
 
-    constructor($scope, $rootScope, RestApi, EditorDialogManager) {
+    constructor($scope, $rootScope, RestApi: RestApi, EditorDialogManager: EditorDialogManager) {
         this.RestApi = RestApi;
         this.availableOptions = [];
         this.selectedOptions = [];

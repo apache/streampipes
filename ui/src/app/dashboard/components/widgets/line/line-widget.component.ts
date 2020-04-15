@@ -20,6 +20,7 @@ import {Component, OnDestroy, OnInit} from "@angular/core";
 import {RxStompService} from "@stomp/ng2-stompjs";
 import {ResizeService} from "../../../services/resize.service";
 import {BaseNgxLineChartsStreamPipesWidget} from "../base/base-ngx-line-charts-widget";
+import {DashboardService} from "../../../services/dashboard.service";
 
 @Component({
     selector: 'line-widget',
@@ -28,8 +29,8 @@ import {BaseNgxLineChartsStreamPipesWidget} from "../base/base-ngx-line-charts-w
 })
 export class LineWidgetComponent extends BaseNgxLineChartsStreamPipesWidget implements OnInit, OnDestroy {
 
-    constructor(rxStompService: RxStompService, resizeService: ResizeService) {
-        super(rxStompService, resizeService);
+    constructor(rxStompService: RxStompService, dashboardService: DashboardService, resizeService: ResizeService) {
+        super(rxStompService, dashboardService, resizeService);
     }
 
     ngOnInit(): void {

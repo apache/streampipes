@@ -18,6 +18,7 @@
 
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { FreeTextStaticProperty } from '../../../connect/model/FreeTextStaticProperty';
 import { MappingPropertyNary } from '../../../connect/model/MappingPropertyNary';
 import { MappingPropertyUnary } from '../../../connect/model/MappingPropertyUnary';
 import { EventProperty } from '../../../connect/schema-editor/model/EventProperty';
@@ -27,6 +28,7 @@ import { DashboardWidgetSettings } from '../../../core-model/dashboard/Dashboard
 import { VisualizablePipeline } from '../../../core-model/dashboard/VisualizablePipeline';
 import { ElementIconText } from '../../../services/get-element-icon-text.service';
 import { Dashboard } from '../../models/dashboard.model';
+import { WidgetConfigBuilder } from '../../registry/widget-config-builder';
 import { WidgetRegistry } from '../../registry/widget-registry';
 import { MappingPropertyGenerator } from '../../sdk/matching/mapping-property-generator';
 import { DashboardService } from '../../services/dashboard.service';
@@ -34,7 +36,7 @@ import { DashboardService } from '../../services/dashboard.service';
 @Component({
     selector: 'add-visualization-dialog-component',
     templateUrl: './add-visualization-dialog.component.html',
-    styleUrls: ['./add-visualization-dialog.component.css']
+    styleUrls: ['./add-visualization-dialog.component.scss']
 })
 export class AddVisualizationDialogComponent {
 
@@ -64,6 +66,8 @@ export class AddVisualizationDialogComponent {
     page: any = 'select-pipeline';
     dialogTitle: string;
 
+    configValid: boolean;
+
 
     constructor(
         public dialogRef: MatDialogRef<AddVisualizationDialogComponent>,
@@ -83,15 +87,10 @@ export class AddVisualizationDialogComponent {
                         this.visualizablePipelines.push(vis);
                         this.sortPipeline();
                     });
-                })
-            });
-
-            this.availableWidgets = WidgetRegistry.getAvailableWidgetTemplates()
-            this.availableWidgets.sort((a, b) => {
-                return a.widgetLabel < b.widgetLabel ? -1 : 1;
+                });
             });
         } else {
-            this.dialogTitle = "Edit widget";
+            this.dialogTitle = 'Edit widget';
             this.selectedPipeline = this.data.pipeline;
             this.selectedWidget = this.data.widget.dashboardWidgetSettings;
             this.page = 'configure-widget';
@@ -125,8 +124,7 @@ export class AddVisualizationDialogComponent {
     }
 
     getTabCss(page) {
-        if (page == this.page) { return 'md-fab md-accent'; }
-        else { return 'md-fab md-accent wizard-inactive'; }
+        if (page == this.page) { return 'md-fab md-accent'; } else { return 'md-fab md-accent wizard-inactive'; }
     }
 
     selectPipeline(vis) {
@@ -141,6 +139,9 @@ export class AddVisualizationDialogComponent {
                 const requirement: EventProperty = this.findRequirement(this.selectedWidget.requiredSchema, sp.internalName);
                 sp.mapsFromOptions = new MappingPropertyGenerator(requirement, this.selectedPipeline.schema.eventProperties).computeMatchingProperties();
             }
+            if (sp instanceof FreeTextStaticProperty && sp.internalName === WidgetConfigBuilder.TITLE_KEY) {
+                sp.value = this.selectedPipeline.visualizationName;
+            }
         });
         this.next();
     }
@@ -151,6 +152,10 @@ export class AddVisualizationDialogComponent {
 
     next() {
         if (this.page == 'select-pipeline') {
+            this.availableWidgets = WidgetRegistry.getCompatibleWidgetTemplates(this.selectedPipeline);
+            this.availableWidgets.sort((a, b) => {
+                return a.widgetLabel < b.widgetLabel ? -1 : 1;
+            });
             this.page = 'select-widget';
         } else if (this.page == 'select-widget') {
             this.page = 'configure-widget';
@@ -182,6 +187,12 @@ export class AddVisualizationDialogComponent {
 
     iconText(s) {
         return this.elementIconText.getElementIconText(s);
+    }
+
+    validConfiguration(valid: boolean) {
+        setTimeout(() => {
+            this.configValid = this.selectedWidget.config.every(sp => sp.isValid);
+        });
     }
 
 }

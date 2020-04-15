@@ -25,7 +25,8 @@ export let CustomOutputComponent = {
     bindings: {
         outputStrategy: "=",
         selectedElement: "=",
-        customizeForm: "="
+        customizeForm: "=",
+        restrictedEditMode: "<"
     },
     controller: CustomOutputController,
     controllerAs: 'ctrl'
