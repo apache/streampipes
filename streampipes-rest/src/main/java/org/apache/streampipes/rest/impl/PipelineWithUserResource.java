@@ -58,10 +58,6 @@ public class PipelineWithUserResource extends AbstractRestInterface implements I
 
     private static final Logger logger = LoggerFactory.getLogger(PipelineWithUserResource.class);
 
-    private static ArrayList<Integer> startMeasures = new ArrayList<>();
-    private static ArrayList<Integer> stopMeasures = new ArrayList<>();
-    private static int MAX_TEST_RUN = 10;
-
     @Override
     public Response getAvailable(String username) {
         // TODO Auto-generated method stub
@@ -145,24 +141,9 @@ public class PipelineWithUserResource extends AbstractRestInterface implements I
     public Response start(@PathParam("username") String username, @PathParam("pipelineId") String pipelineId) {
         try {
 
-            long start = System.currentTimeMillis();
-
             Pipeline pipeline = getPipelineStorage()
                     .getPipeline(pipelineId);
             PipelineOperationStatus status = Operations.startPipeline(pipeline);
-
-            // TODO: PERFORMANCE_TEST delete afterwards
-            int delta = (int) (System.currentTimeMillis() - start);
-
-            startMeasures.add(delta);
-            logger.info("add new measure {}", startMeasures);
-            if (startMeasures.size() == MAX_TEST_RUN) {
-                IntSummaryStatistics s = startMeasures
-                        .stream()
-                        .mapToInt((x) -> x)
-                        .summaryStatistics();
-                logger.info("start test results over {} test runs: {}", String.valueOf(MAX_TEST_RUN), s.toString());
-            }
 
             return ok(status);
         } catch (Exception e) {
@@ -177,24 +158,8 @@ public class PipelineWithUserResource extends AbstractRestInterface implements I
     @GsonWithIds
     public Response stop(@PathParam("username") String username, @PathParam("pipelineId") String pipelineId) {
 
-        long start = System.currentTimeMillis();
-
         logger.info("User: " + username + " stopped pipeline: " + pipelineId);
         PipelineManagement pm = new PipelineManagement();
-
-
-        // TODO: PERFORMANCE_TEST delete afterwards
-        int delta = (int) (System.currentTimeMillis() - start);
-
-        stopMeasures.add(delta);
-        logger.info("add new stop measure {}", stopMeasures);
-        if (stopMeasures.size() == MAX_TEST_RUN) {
-            IntSummaryStatistics s = stopMeasures
-                    .stream()
-                    .mapToInt((x) -> x)
-                    .summaryStatistics();
-            logger.info("stop test results over {} test runs: {}", String.valueOf(MAX_TEST_RUN), s.toString());
-        }
 
         return pm.stopPipeline(pipelineId);
     }
