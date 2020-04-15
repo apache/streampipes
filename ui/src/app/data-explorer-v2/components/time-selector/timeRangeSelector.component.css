@@ -15,3 +15,15 @@
  * limitations under the License.
  *
  */
+
+.start-date {
+    width: 130px;
+    margin-left: 10px;
+    margin-right: 5px;
+}
+
+.end-date {
+    width: 130px;
+    margin-left: 5px;
+    margin-right: 10px;
+}

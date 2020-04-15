@@ -18,24 +18,22 @@
 
 <div flex layout-fill layout="row" layout-align="start center" style="padding-top: 5px;">
 
-    <mat-form-field style="width: 270px; margin-left: 10px; margin-right: 10px;">
+    <mat-form-field appearance="outline" class="start-date">
         <mat-label>Start</mat-label>
         <input matInput
                [owlDateTime]="dt1"
                [owlDateTimeTrigger]="dt1"
                [(ngModel)]="dateRange.startDate"
                (dateTimeChange)="changeCustomDateRange()">
-        <mat-icon matSuffix [owlDateTimeTrigger]="dt1" style="color: grey">event</mat-icon>
         <owl-date-time #dt1></owl-date-time>
     </mat-form-field>
-    <mat-form-field style="width: 270px; margin-left: 10px; margin-right: 10px;">
+    <mat-form-field  appearance="outline" class="end-date">
         <mat-label>End</mat-label>
         <input matInput
                [owlDateTime]="dt2"
                [owlDateTimeTrigger]="dt2"
                [(ngModel)]="dateRange.endDate"
                (dateTimeChange)="changeCustomDateRange()">
-        <mat-icon matSuffix [owlDateTimeTrigger]="dt2" style="color: grey">event</mat-icon>
         <owl-date-time #dt2></owl-date-time>
     </mat-form-field>
 
