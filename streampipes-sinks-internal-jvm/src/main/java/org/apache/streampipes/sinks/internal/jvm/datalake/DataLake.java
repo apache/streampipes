@@ -98,6 +98,8 @@ public class DataLake implements EventSink<DataLakeParameters> {
         String image = event.getFieldByRuntimeName(eventProperty.getRuntimeName()).getAsPrimitive().getAsString();
 
         this.writeToImageFile(image, fileRoute);
+        fileRoute = fileRoute.replace("/", "_");
+        fileRoute = fileRoute.replace("." , "_");
         event.updateFieldBySelector("s0::" + eventProperty.getRuntimeName(), fileRoute);
       });
 
