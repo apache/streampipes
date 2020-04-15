@@ -33,6 +33,7 @@
                     <button mat-button (click)="setPolygonMode()" [style.background-color]="isPolygonMode() ? 'lightgrey' : 'white'"> <mat-icon>details</mat-icon></button>
                     <button mat-button (click)="setBrushMode()" [style.background-color]="isBrushMode() ? 'lightgrey' : 'white'"> <mat-icon>blur_circular</mat-icon></button>
                     <mat-slider [min]="1"  [max]="50" [step]="1" [thumbLabel]="true" [(ngModel)]="brushSize"></mat-slider>
+                    <button mat-button (click)="save()"> <mat-icon>save</mat-icon></button>
                 </div>
 
                 <sp-image-container
@@ -48,7 +49,7 @@
             </div>
 
             <sp-image-annotations
-                    [annotations]="this.cocoFiles[this.imagesIndex].annotations"
+                    [annotations]="this.cocoFiles[this.imagesIndex]?.annotations"
                     [labels]="labels"
                     (changeAnnotationLabel)="handleChangeAnnotationLabel($event)"
                     (deleteAnnotation)="handleDeleteAnnotation($event)">

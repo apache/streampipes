@@ -134,5 +134,15 @@ export class DatalakeRestService {
         };
     }
 
+    getImageUrl(imageRoute) {
+      return this.dataLakeUrlV3 + '/data/image/' + imageRoute + '/file';
+    }
 
+    getCocoFileForImage(imageRoute) {
+      return this.http.get(this.dataLakeUrlV3 + '/data/image/' + imageRoute + '/coco');
+    }
+
+    saveCocoFileForImage(imageRoute, data) {
+      return this.http.post(this.dataLakeUrlV3 + '/data/image/' + imageRoute + '/coco', data);
+    }
 }

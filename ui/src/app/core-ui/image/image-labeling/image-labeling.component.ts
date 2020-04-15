@@ -25,10 +25,11 @@ import { CocoFormat } from '../../../core-model/coco/Coco.format';
 import { DatalakeRestService } from '../../../core-services/datalake/datalake-rest.service';
 import { ImageContainerComponent } from '../components/image-container/image-container.component';
 import { ICoordinates } from '../model/coordinates';
+import { LabelingMode } from '../model/labeling-mode';
 import { BrushLabelingService } from '../services/BrushLabeling.service';
 import { PolygonLabelingService } from '../services/PolygonLabeling.service';
 import { ReactLabelingService } from '../services/ReactLabeling.service';
-import { LabelingMode } from '../model/labeling-mode';
+import { CocoFormatService } from "../services/CocoFormat.service";
 
 @Component({
   selector: 'sp-image-labeling',
@@ -52,35 +53,101 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit {
 
   @ViewChild(ImageContainerComponent) imageView: ImageContainerComponent;
 
+  measureName = 'testsix'; // TODO: Remove hard coded Index, should be injected
+  eventSchema = undefined; // TODO: event schema should be also injected
+  imageField = undefined;
+  pageIndex = undefined;
+  pageSum = undefined;
+
 
   public labelingMode: LabelingMode = LabelingMode.ReactLabeling;
 
   constructor(private restService: DatalakeRestService, private reactLabelingService: ReactLabelingService,
               private polygonLabelingService: PolygonLabelingService, private brushLabelingService: BrushLabelingService,
-              private snackBar: MatSnackBar) { }
+              private snackBar: MatSnackBar, private cocoFormatService: CocoFormatService) { }
 
   ngOnInit(): void {
+
+
     this.isHoverComponent = false;
     this.brushSize = 5;
+
+
+
 
     // 1. get labels
     this.labels = this.restService.getLabels();
 
     // 2. get Images
-    this.imagesSrcs = this.restService.getImageSrcs();
+    this.restService.getAllInfos().subscribe(
+      res => {
+        this.eventSchema = res.find(elem => elem.measureName = this.measureName).eventSchema;
+        const properties = this.eventSchema.eventProperties;
+        for (const prop of properties) {
+          if (prop.domainProperties.find(type => type === 'https://image.com')) {
+            this.imageField = prop;
+            break;
+          }
+        }
+        this.loadData();
+      }
+    );
+
     this.imagesIndex = 0;
 
     // 3. get Coco files
-    this.cocoFiles = [];
-    for (const src of this.imagesSrcs) {
-      const coco = new CocoFormat();
-      coco.addImage(src);
-      this.cocoFiles.push(coco);
-    }
+    // this.cocoFiles = [];
+    // for (const src of this.imagesSrcs) {
+      // const coco = new CocoFormat();
+      // this.cocoFormatService.addImage(coco, scr)
+      // coco.addImage(src);
+      // this.cocoFiles.push(coco);
+    // }
   }
 
   ngAfterViewInit(): void {
     this.imagesIndex = 0;
+  }
+
+  loadData() {
+    if (this.pageIndex === undefined) {
+      this.restService.getDataPageWithoutPage(this.measureName, 10).subscribe(
+        res => this.processData(res)
+      );
+    } else {
+      this.restService.getDataPage(this.measureName, 10, this.pageIndex).subscribe(
+        res => this.processData(res)
+      );
+    }
+  }
+
+  processData(pageResult) {
+    this.pageIndex = pageResult.page;
+    this.pageSum = pageResult.pageSum;
+    const imageIndex = pageResult.headers.findIndex(name => name === this.imageField.runtimeName);
+    const tmp = [];
+    this.cocoFiles = [];
+    pageResult.rows.forEach(row => {
+      tmp.push(this.restService.getImageUrl(row[imageIndex]))
+      this.restService.getCocoFileForImage(row[imageIndex]).subscribe(
+        coco => {
+          console.log('------------------------------' +
+            '--------------------------------')
+                  if (coco === null) {
+                    const cocoFile = new CocoFormat();
+                    this.cocoFormatService.addImage(cocoFile, (row[imageIndex]));
+                    this.cocoFiles.push(cocoFile);
+                  } else {
+                    this.cocoFiles.push(coco as CocoFormat);
+                  }
+                  console.log(this.cocoFiles);
+
+
+        }
+      );
+
+    });
+    this.imagesSrcs = tmp;
   }
 
 
@@ -128,7 +195,7 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit {
         case LabelingMode.ReactLabeling: {
           const result = this.reactLabelingService.endLabeling(position);
           const coco = this.cocoFiles[this.imagesIndex];
-          const annotation = coco.addReactAnnotationToFirstImage(result[0], result[1],
+          const annotation = this.cocoFormatService.addReactAnnotationToFirstImage(coco, result[0], result[1],
             this.selectedLabel.category, this.selectedLabel.label);
           this.reactLabelingService.draw(annotationLayer, shift, annotation, this.imageView);
         }
@@ -140,7 +207,7 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit {
         case LabelingMode.BrushLabeling: {
           const result = this.brushLabelingService.endLabeling(position);
           const coco = this.cocoFiles[this.imagesIndex];
-          const annotation = coco.addBrushAnnotationFirstImage(result[0], result[1],
+          const annotation = this.cocoFormatService.addBrushAnnotationFirstImage(coco, result[0], result[1],
             this.selectedLabel.category, this.selectedLabel.label);
           this.brushLabelingService.draw(annotationLayer, shift, annotation, this.imageView);
         }
@@ -155,7 +222,7 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit {
         case LabelingMode.PolygonLabeling:
           const points = this.polygonLabelingService.endLabeling(position);
           const coco = this.cocoFiles[this.imagesIndex];
-          const annotation = coco.addPolygonAnnotationFirstImage(points,
+          const annotation = this.cocoFormatService.addPolygonAnnotationFirstImage(coco, points,
             this.selectedLabel.category, this.selectedLabel.label);
           this.polygonLabelingService.draw(layer, shift, annotation, this.imageView);
       }
@@ -167,11 +234,11 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit {
     for (const annotation of coco.annotations) {
       annotation.isHovered = false;
       annotation.isSelected = false;
-      if (annotation.isBox()) {
+      if (this.cocoFormatService.isBoxAnnonation(annotation)) {
         this.reactLabelingService.draw(layer, shift, annotation, this.imageView);
-      } else if (annotation.isPolygon() && !annotation.isBrush()) {
+      } else if (this.cocoFormatService.isPolygonAnnonation(annotation) && !this.cocoFormatService.isBrushAnnonation(annotation)) {
         this.polygonLabelingService.draw(layer, shift, annotation, this.imageView);
-      } else if (annotation.isBrush()) {
+      } else if (this.cocoFormatService.isBrushAnnonation(annotation)) {
         this.brushLabelingService.draw(layer, shift, annotation, this.imageView);
       }
     }
@@ -210,7 +277,7 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit {
   /* sp-image-annotations handlers */
   handleChangeAnnotationLabel(change: [Annotation, string, string]) {
     const coco = this.cocoFiles[this.imagesIndex];
-    const categoryId = coco.getLabelId(change[1], change[2]);
+    const categoryId = this.cocoFormatService.getLabelId(coco, change[1], change[2]);
     change[0].category_id = categoryId;
     change[0].category_name = change[2];
     this.imageView.redrawAll();
@@ -219,7 +286,7 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit {
   handleDeleteAnnotation(annotation) {
     if (annotation !== undefined) {
       const coco = this.cocoFiles[this.imagesIndex];
-      coco.removeAnnotation(annotation.id);
+      this.cocoFormatService.removeAnnotation(coco, annotation.id);
       this.imageView.redrawAll();
     }
   }
@@ -236,11 +303,14 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private save() {
+  save() {
     // TODO
     const coco = this.cocoFiles[this.imagesIndex];
-    console.log(coco);
-    this.openSnackBar('TODO: Save coco file');
+    const imageSrcSplitted = this.imagesSrcs[this.imagesIndex].split('/');
+    const imageRoute = imageSrcSplitted[imageSrcSplitted.length - 2]
+    this.restService.saveCocoFileForImage(imageRoute, JSON.stringify(coco)).subscribe(
+      res =>    this.openSnackBar('Saved')
+    );
   }
 
   private openSnackBar(message: string) {

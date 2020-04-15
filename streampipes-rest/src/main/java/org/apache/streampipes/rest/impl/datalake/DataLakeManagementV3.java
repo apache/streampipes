@@ -20,6 +20,7 @@ package org.apache.streampipes.rest.impl.datalake;
 
 import com.google.gson.Gson;
 import okhttp3.OkHttpClient;
+import org.apache.commons.io.FileUtils;
 import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;
 import org.influxdb.dto.Query;
@@ -31,6 +32,7 @@ import org.apache.streampipes.rest.impl.datalake.model.GroupedDataResult;
 import org.apache.streampipes.rest.impl.datalake.model.PageResult;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.ParseException;
@@ -519,6 +521,55 @@ public class DataLakeManagementV3 {
     } catch (ParseException e) {
       return dateFormat2.parse(v);
     }
+  }
+
+
+  public byte[] getImage(String fileRoute) throws IOException {
+    fileRoute = getImageFileRoute(fileRoute);
+    File file = new File(fileRoute);
+    return FileUtils.readFileToByteArray(file);
+  }
+
+
+  public String getImageCoco(String fileRoute) throws IOException {
+    fileRoute = getImageFileRoute(fileRoute);
+    String cocoRoute = getCocoFileRoute(fileRoute);
+
+    File file = new File(cocoRoute);
+    if (!file.exists()) {
+      return "";
+    } else {
+      return FileUtils.readFileToString(file, "UTF-8");
+    }
+  }
+
+
+  public void saveImageCoco(String fileRoute, String data) throws IOException {
+    fileRoute = getImageFileRoute(fileRoute);
+    String cocoRoute = getCocoFileRoute(fileRoute);
+
+    File file = new File(cocoRoute);
+    file.getParentFile().mkdirs();
+    FileUtils.writeStringToFile(file, data, "UTF-8");
+
+  }
+
+  private String getImageFileRoute(String fileRoute) {
+    fileRoute = fileRoute.replace("_", "/");
+    fileRoute = fileRoute.replace("/png", ".png");
+    return fileRoute;
+  }
+
+  private String getCocoFileRoute(String imageRoute) {
+    String[] splitedRoute = imageRoute.split("/");
+    String route = "";
+    for (int i = 0; splitedRoute.length - 2  >= i; i++) {
+      route += "/" + splitedRoute[i];
+    }
+    route += "Coco";
+    route += "/" + splitedRoute[splitedRoute.length - 1];
+    route = route.replace(".png", ".json");
+    return route;
   }
 
 }

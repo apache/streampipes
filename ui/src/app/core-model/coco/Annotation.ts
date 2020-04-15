@@ -20,16 +20,4 @@ export class Annotation {
     this.brushSize = undefined;
   }
 
-  isBox() {
-    return this.bbox !== undefined;
-  }
-
-  isPolygon() {
-    return this.segmentation !== undefined && this.brushSize === undefined;
-  }
-
-  isBrush() {
-    return this.brushSize !== undefined;
-  }
-
 }
