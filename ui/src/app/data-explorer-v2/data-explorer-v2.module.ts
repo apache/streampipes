@@ -44,8 +44,8 @@ import { DataExplorerDashboardPanelComponent } from './components/panel/data-exp
 import { TimeRangeSelectorComponent } from './components/time-selector/timeRangeSelector.component';
 import { DataExplorerDashboardWidgetComponent } from './components/widget/data-explorer-dashboard-widget.component';
 import { LineChartWidgetComponent } from './components/widgets/line-chart/line-chart-widget.component';
-import { DataDownloadDialog } from './components/widgets/old-explorer-widget/datadownloadDialog/dataDownload.dialog';
-import { OldExplorerComponent } from './components/widgets/old-explorer-widget/old-explorer.component';
+// import { DataDownloadDialog } from './components/widgets/old-explorer-widget/datadownloadDialog/dataDownload.dialog';
+// import { OldExplorerComponent } from './components/widgets/old-explorer-widget/old-explorer.component';
 import { TableWidgetComponent } from './components/widgets/table/table-widget.component';
 import { LoadDataSpinnerComponent } from './components/widgets/utils/load-data-spinner/load-data-spinner.component';
 import { NoDataInDateRangeComponent } from './components/widgets/utils/no-data/no-data-in-date-range.component';
@@ -108,9 +108,7 @@ export const MY_NATIVE_FORMATS = {
     DataExplorerEditDataViewDialogComponent,
     TableWidgetComponent,
     LineChartWidgetComponent,
-    DataDownloadDialog,
     TimeRangeSelectorComponent,
-    OldExplorerComponent,
     NoDataInDateRangeComponent,
     LoadDataSpinnerComponent,
     SelectPropertiesComponent
