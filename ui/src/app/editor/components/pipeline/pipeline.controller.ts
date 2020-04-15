@@ -17,6 +17,7 @@
  */
 
 import * as angular from "angular";
+
 import {PipelineValidationService} from "../../services/pipeline-validation.service";
 import {RestApi} from "../../../services/rest-api.service";
 
@@ -209,7 +210,6 @@ export class PipelineController {
 
     handleDeleteOption(pipelineElement) {
         this.JsplumbBridge.removeAllEndpoints(pipelineElement.payload.DOM);
-        //this.rawPipelineModel = this.rawPipelineModel.filter(item => !(item.payload.DOM == internalId));
         angular.forEach(this.rawPipelineModel, pe => {
            if (pe.payload.DOM == pipelineElement.payload.DOM) {
                pe.settings.disabled = true;
@@ -275,7 +275,7 @@ export class PipelineController {
                             var sourceEndpoint = this.JsplumbBridge.selectEndpoints({element: info.targetEndpoint.elementId});
                             if (this.PipelineEditorService.isFullyConnected(pe)) {
                                 if ((pe.payload.staticProperties && pe.payload.staticProperties.length > 0) || this.isCustomOutput(pe)) {
-                                    this.EditorDialogManager.showCustomizeDialog($("#" +pe.payload.DOM), sourceEndpoint, pe.payload)
+                                    this.EditorDialogManager.showCustomizeDialog($("#" +pe.payload.DOM), sourceEndpoint, pe.payload, false)
                                         .then(() => {
                                             this.JsplumbService.activateEndpoint(pe.payload.DOM, !pe.payload.uncompleted);
                                         }, () => {

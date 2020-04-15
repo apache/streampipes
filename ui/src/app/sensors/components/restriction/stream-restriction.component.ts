@@ -17,6 +17,7 @@
  */
 
 import {StreamRestrictionController} from "./stream-restriction.controller";
+
 declare const require: any;
 
 export let StreamRestrictionComponent = {

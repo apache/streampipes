@@ -20,7 +20,7 @@ package org.apache.streampipes.model.dashboard;
 
 import com.google.gson.annotations.SerializedName;
 import org.apache.streampipes.vocabulary.StreamPipes;
-import org.streampipes.empire.annotations.RdfsClass;
+import io.fogsy.empire.annotations.RdfsClass;
 
 import java.util.List;
 

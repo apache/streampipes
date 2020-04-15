@@ -16,9 +16,9 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { StreampipesPeContainer } from "../shared/streampipes-pe-container.model";
-import { StreampipesPeContainerConifgs } from "../shared/streampipes-pe-container-configs";
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {StreampipesPeContainer} from "../shared/streampipes-pe-container.model";
+
 @Component({
     selector: 'consul-service',
     templateUrl: './consul-service.component.html',

@@ -16,9 +16,9 @@
  *
  */
 
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import {ProtocolDescription} from '../model/connect/grounding/ProtocolDescription';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {FormatDescription} from '../model/connect/grounding/FormatDescription';
+
 @Component({
     selector: 'app-format-list',
     templateUrl: './format-list.component.html',

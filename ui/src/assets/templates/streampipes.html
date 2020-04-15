@@ -16,14 +16,12 @@
   ~
   -->
 
-<div ng-controller="ToolbarController as toolbarCtrl">
+<div flex ng-controller="ToolbarController as toolbarCtrl" class="display: flex;min-height: 100vh; max-height: 100vh;">
     <div ui-view="spNavbar"></div>
-    <div layout="row">
-        <div md-whiteframe="6" style="width:40px;height:calc(100vh - 50px);color:white;" class="sp-darkblue"
+    <div style="display: flex;flex-direction: row; height: calc(100vh - 50px);">
+        <div md-whiteframe="6" style="width:40px;color:white;" class="sp-darkblue"
              ui-view="spIconBar"></div>
-        <div flex="100">
             <md-content class="sp-fade-only-enter" id="content" ui-view="spMain"
-                        style="background:#fff !important; height:calc(100vh - 50px);min-height:calc(100vh - 50px)"></md-content>
-        </div>
+                        style="background:#fff !important;flex-grow: 1;"></md-content>
     </div>
 </div>

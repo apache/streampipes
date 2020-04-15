@@ -16,14 +16,14 @@
  *
  */
 
-import { NgModule } from '@angular/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { CommonModule } from '@angular/common';
-import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
+import {NgModule} from '@angular/core';
+import {FlexLayoutModule} from '@angular/flex-layout';
+import {CommonModule} from '@angular/common';
+import {CustomMaterialModule} from '../CustomMaterial/custom-material.module';
 
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatGridListModule } from "@angular/material/grid-list";
-import { MatInputModule } from "@angular/material/input";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatGridListModule} from "@angular/material/grid-list";
+import {MatInputModule} from "@angular/material/input";
 import {FormsModule} from "@angular/forms";
 import {AppTransportMonitoringComponent} from "./app-transport-monitoring.component";
 import {IncomingViewComponent} from "./components/incoming/incoming-view.component";
@@ -39,7 +39,7 @@ import {TransportSummaryComponent} from "./components/transport-summary/transpor
 import {SlideshowModule} from "ng-simple-slideshow";
 import {TransportActivityGraphComponent} from "./components/transport-activity-graph/transport-activity-graph.component";
 import {TimestampConverterService} from "./services/timestamp-converter.service";
-import { NgxChartsModule } from '@swimlane/ngx-charts';
+import {NgxChartsModule} from '@swimlane/ngx-charts';
 
 @NgModule({
     imports: [

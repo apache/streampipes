@@ -84,14 +84,13 @@ export class PipelineElementOptionsController {
 
     removeElement(pipelineElement) {
         this.deleteFunction(pipelineElement);
-        this.$timeout(() => {
-            this.pipelineValid = this.PipelineValidationService.isValidPipeline(this.rawPipelineModel);
-        }, 200);
+        this.$rootScope.$broadcast("pipeline.validate");
 
     }
 
     openCustomizeDialog() {
-        this.EditorDialogManager.showCustomizeDialog($("#" + this.pipelineElement.payload.DOM), "", this.pipelineElement.payload)
+        let restrictedEditMode = ! (this.isRootElement());
+        this.EditorDialogManager.showCustomizeDialog($("#" + this.pipelineElement.payload.DOM), "", this.pipelineElement.payload, restrictedEditMode)
             .then(() => {
                 this.JsplumbService.activateEndpoint(this.pipelineElement.payload.DOM, !this.pipelineElement.payload.uncompleted);
             }, () => {

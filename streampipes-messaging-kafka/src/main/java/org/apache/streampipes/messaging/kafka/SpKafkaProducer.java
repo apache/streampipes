@@ -98,6 +98,7 @@ public class SpKafkaProducer implements EventProducer<KafkaTransportProtocol>, S
   private void createKafaTopic(KafkaTransportProtocol settings) {
     String zookeeperHost = settings.getZookeeperHost() + ":" + settings.getZookeeperPort();
 
+
     Properties props = new Properties();
     props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, brokerUrl);
 

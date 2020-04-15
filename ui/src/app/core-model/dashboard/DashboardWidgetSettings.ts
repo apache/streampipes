@@ -37,6 +37,12 @@ export class DashboardWidgetSettings extends UnnamedStreamPipesEntity {
     @RdfProperty('sp:hasSchema')
     requiredSchema: EventSchema;
 
+    @RdfProperty('sp:hasWidgetIconName')
+    widgetIconName: string;
+
+    @RdfProperty('sp:hasWidgetDescription')
+    widgetDescription: string;
+
     constructor() {
         super();
     }

@@ -19,6 +19,7 @@
 import * as angular from 'angular';
 
 import {JsonLdDialogController} from "./dialog/jsonldDialog.controller";
+
 declare const require: any;
 
 export class MyElementsCtrl {

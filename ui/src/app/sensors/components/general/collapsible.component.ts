@@ -17,6 +17,7 @@
  */
 
 import {CollapsibleController} from "./collapsible.controller";
+
 declare const require: any;
 
 export let CollapsibleComponent = {

@@ -16,9 +16,8 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
-import { StreampipesPeContainer } from "../shared/streampipes-pe-container.model";
-import { StreampipesPeContainerConifgs } from "../shared/streampipes-pe-container-configs";
+import {Component, Input} from '@angular/core';
+import {StreampipesPeContainerConifgs} from "../shared/streampipes-pe-container-configs";
 import {ConfigurationService} from '../shared/configuration.service'
 
 const hiddenPasswordString = '*****';

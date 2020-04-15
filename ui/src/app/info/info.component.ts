@@ -16,8 +16,8 @@
  *
  */
 
-import { Component } from '@angular/core';
-import { MatTabChangeEvent } from "@angular/material/tabs";
+import {Component} from '@angular/core';
+import {MatTabChangeEvent} from "@angular/material/tabs";
 
 @Component({
     templateUrl: './info.component.html',

@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.model.connect.grounding;
 
-import org.streampipes.empire.annotations.Namespaces;
-import org.streampipes.empire.annotations.RdfsClass;
+import io.fogsy.empire.annotations.Namespaces;
+import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 
 import javax.persistence.Entity;

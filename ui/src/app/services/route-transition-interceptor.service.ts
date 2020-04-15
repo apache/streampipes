@@ -18,7 +18,6 @@
 
 import {AuthService} from "./auth.service";
 import {AuthStatusService} from "./auth-status.service";
-import {RestApi} from "./rest-api.service";
 
 export class RouteTransitionInterceptorService {
 

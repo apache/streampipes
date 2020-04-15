@@ -17,6 +17,7 @@
  */
 
 import {CustomizeDialogController} from "./customize-dialog.controller";
+
 declare const require: any;
 
 export let CustomizeDialogComponent = {
@@ -25,7 +26,8 @@ export let CustomizeDialogComponent = {
         staticProperty: "=",
         selectedElement: "=",
         displayRecommended: "=",
-        customizeForm: "="
+        customizeForm: "=",
+        restrictedEditMode: "<"
     },
     controller: CustomizeDialogController,
     controllerAs: 'ctrl'

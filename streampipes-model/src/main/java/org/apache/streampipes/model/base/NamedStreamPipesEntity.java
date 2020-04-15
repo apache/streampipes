@@ -19,8 +19,8 @@
 package org.apache.streampipes.model.base;
 
 
-import org.streampipes.empire.annotations.RdfId;
-import org.streampipes.empire.annotations.RdfProperty;
+import io.fogsy.empire.annotations.RdfId;
+import io.fogsy.empire.annotations.RdfProperty;
 import org.apache.streampipes.model.ApplicationLink;
 import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.vocabulary.RDFS;

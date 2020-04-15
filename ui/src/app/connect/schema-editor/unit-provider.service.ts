@@ -16,7 +16,7 @@
  *
  */
 
-import { UnitDescription } from '../model/UnitDescription';
+import {UnitDescription} from '../model/UnitDescription';
 
 export class UnitProviderService {
 

@@ -27,10 +27,14 @@ public class SpRuntimeContext implements RuntimeContext {
 
   private List<SchemaInfo> inputSchemaInfo;
   private List<SourceInfo> sourceInfo;
+  private String correspondingUser;
 
-  public SpRuntimeContext(List<SourceInfo> sourceInfo, List<SchemaInfo> inputSchemaInfo) {
+  public SpRuntimeContext(List<SourceInfo> sourceInfo,
+                          List<SchemaInfo> inputSchemaInfo,
+                          String correspondingUser) {
     this.inputSchemaInfo = inputSchemaInfo;
     this.sourceInfo = sourceInfo;
+    this.correspondingUser = correspondingUser;
   }
 
   public SpRuntimeContext() {
@@ -51,5 +55,10 @@ public class SpRuntimeContext implements RuntimeContext {
   @Override
   public List<SourceInfo> getInputSourceInfo() {
     return sourceInfo;
+  }
+
+  @Override
+  public String getCorrespondingUser() {
+    return correspondingUser;
   }
 }

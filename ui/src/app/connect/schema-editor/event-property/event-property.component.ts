@@ -16,7 +16,7 @@
  *
  */
 
-import {Component, EventEmitter, OnInit, Output, Inject, SimpleChanges, OnChanges} from '@angular/core';
+import {Component, EventEmitter, Inject, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {EventProperty} from '../model/EventProperty';
 import {DomainPropertyProbabilityList} from '../model/DomainPropertyProbabilityList';

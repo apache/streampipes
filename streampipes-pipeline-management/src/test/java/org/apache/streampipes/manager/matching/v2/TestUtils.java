@@ -21,7 +21,7 @@ package org.apache.streampipes.manager.matching.v2;
 import org.apache.streampipes.container.declarer.EventStreamDeclarer;
 import org.apache.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
 import org.apache.streampipes.container.declarer.SemanticEventProducerDeclarer;
-import org.streampipes.empire.core.empire.SupportsRdfId;
+import io.fogsy.empire.core.empire.SupportsRdfId;
 import org.apache.streampipes.model.client.pipeline.Pipeline;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;

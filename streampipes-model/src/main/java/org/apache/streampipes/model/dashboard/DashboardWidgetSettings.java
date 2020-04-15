@@ -22,8 +22,8 @@ import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.vocabulary.StreamPipes;
-import org.streampipes.empire.annotations.RdfProperty;
-import org.streampipes.empire.annotations.RdfsClass;
+import io.fogsy.empire.annotations.RdfProperty;
+import io.fogsy.empire.annotations.RdfsClass;
 
 import java.util.List;
 
@@ -52,6 +52,12 @@ public class DashboardWidgetSettings extends UnnamedStreamPipesEntity {
           cascade = {CascadeType.PERSIST, CascadeType.MERGE})
   @RdfProperty(StreamPipes.HAS_SCHEMA)
   private EventSchema requiredSchema;
+
+  @RdfProperty(StreamPipes.HAS_WIDGET_ICON_NAME)
+  private String widgetIconName;
+
+  @RdfProperty(StreamPipes.HAS_WIDGET_DESCRIPTION)
+  private String widgetDescription;
 
   public DashboardWidgetSettings() {
     super();
@@ -87,5 +93,21 @@ public class DashboardWidgetSettings extends UnnamedStreamPipesEntity {
 
   public void setRequiredSchema(EventSchema requiredSchema) {
     this.requiredSchema = requiredSchema;
+  }
+
+  public String getWidgetIconName() {
+    return widgetIconName;
+  }
+
+  public void setWidgetIconName(String widgetIconName) {
+    this.widgetIconName = widgetIconName;
+  }
+
+  public String getWidgetDescription() {
+    return widgetDescription;
+  }
+
+  public void setWidgetDescription(String widgetDescription) {
+    this.widgetDescription = widgetDescription;
   }
 }

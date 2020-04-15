@@ -17,6 +17,7 @@
  */
 
 import {MappingUnaryController} from "./mappingunary.controller";
+
 declare const require: any;
 
 export let MappingUnaryComponent = {
@@ -25,6 +26,7 @@ export let MappingUnaryComponent = {
         staticProperty : "=",
         displayRecommended: "=",
         selectedElement: "=",
+        restrictedEditMode: "<"
     },
     controller: MappingUnaryController,
     controllerAs: 'ctrl'

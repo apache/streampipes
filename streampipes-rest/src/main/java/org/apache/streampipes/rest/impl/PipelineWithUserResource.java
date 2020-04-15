@@ -172,7 +172,7 @@ public class PipelineWithUserResource extends AbstractRestInterface implements I
         pipeline.setCreatedAt(new Date().getTime());
         //userService.addOwnPipeline(username, pipeline);
         Operations.storePipeline(pipeline);
-        SuccessMessage message = Notifications.success(NotificationType.PIPELINE_STORAGE_SUCCESS);
+        SuccessMessage message = Notifications.success("Pipeline stored");
         message.addNotification(new Notification("id", pipelineId));
         return ok(message);
     }
@@ -250,6 +250,7 @@ public class PipelineWithUserResource extends AbstractRestInterface implements I
         storedPipeline.setSepas(pipeline.getSepas());
         storedPipeline.setActions(pipeline.getActions());
         storedPipeline.setCreatedAt(System.currentTimeMillis());
+        storedPipeline.setPipelineCategories(pipeline.getPipelineCategories());
         Operations.updatePipeline(storedPipeline);
         return statusMessage(Notifications.success("Pipeline modified"));
     }

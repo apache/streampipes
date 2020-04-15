@@ -16,136 +16,129 @@
  *
  */
 
-import * as angular from 'angular';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FlexLayoutModule} from '@angular/flex-layout';
+import {GridsterModule} from 'angular-gridster2';
+import {DashboardComponent} from './dashboard.component';
+import {DynamicModule} from 'ng-dynamic-component';
+import {DashboardPanelComponent} from "./components/panel/dashboard-panel.component";
+import {MatTabsModule} from "@angular/material/tabs";
+import {DashboardWidgetComponent} from "./components/widget/dashboard-widget.component";
+import {CustomMaterialModule} from "../CustomMaterial/custom-material.module";
+import {FormsModule} from "@angular/forms";
+import {ColorPickerModule} from "ngx-color-picker";
+import {AddVisualizationDialogComponent} from "./dialogs/add-widget/add-visualization-dialog.component";
+import {MatGridListModule} from "@angular/material/grid-list";
+import {ElementIconText} from "../services/get-element-icon-text.service";
+import {DashboardService} from "./services/dashboard.service";
+import {ConnectModule} from "../connect/connect.module";
+import {NumberWidgetComponent} from "./components/widgets/number/number-widget.component";
+import {streamPipesStompConfig} from "./services/websocket.config";
+import {InjectableRxStompConfig, RxStompService, rxStompServiceFactory} from "@stomp/ng2-stompjs";
+import {DashboardOverviewComponent} from "./components/overview/dashboard-overview.component";
+import {EditDashboardDialogComponent} from "./dialogs/edit-dashboard/edit-dashboard-dialog.component";
+import {DashboardGridComponent} from "./components/grid/dashboard-grid.component";
+import {LineWidgetComponent} from "./components/widgets/line/line-widget.component";
+import {NgxChartsModule} from "@swimlane/ngx-charts";
+import {ResizeService} from "./services/resize.service";
+import {TableWidgetComponent} from "./components/widgets/table/table-widget.component";
+import {CdkTableModule} from "@angular/cdk/table";
+import {RefreshDashboardService} from "./services/refresh-dashboard.service";
+import {SemanticTypeUtilsService} from '../core-services/semantic-type/semantic-type-utils.service';
+import {GaugeWidgetComponent} from "./components/widgets/gauge/gauge-widget.component";
+import {ImageWidgetComponent} from "./components/widgets/image/image-widget.component";
+import {AreaWidgetComponent} from "./components/widgets/area/area-widget.component";
+import {MapWidgetComponent} from "./components/widgets/map/map-widget.component";
+import {LeafletModule} from "@asymmetrik/ngx-leaflet";
+import {RawWidgetComponent} from "./components/widgets/raw/raw-widget.component";
+import {HtmlWidgetComponent} from "./components/widgets/html/html-widget.component";
+import {TrafficLightWidgetComponent} from "./components/widgets/trafficlight/traffic-light-widget.component";
+import {StandaloneDashboardComponent} from "./components/standalone/standalone-dashboard.component";
 
-import * as _ from 'lodash';
+const dashboardWidgets = [
 
-import 'angular-ui-sortable';
-import 'angular-ui-bootstrap';
+];
 
-import 'npm/lodash';
-import 'legacy/stomp';
-import 'npm/angular-sanitize';
-import 'legacy/mlhr-table';
-import 'legacy/malhar-angular-dashboard';
-//import 'npm/epoch-charting';
-import 'npm/ngmap'
+@NgModule({
+    imports: [
+        CommonModule,
+        MatTabsModule,
+        DynamicModule.withComponents(
+            dashboardWidgets
+        ),
+        FlexLayoutModule,
+        GridsterModule,
+        CommonModule,
+        FlexLayoutModule,
+        CustomMaterialModule,
+        FormsModule,
+        ColorPickerModule,
+        MatGridListModule,
+        ConnectModule,
+        NgxChartsModule,
+        CdkTableModule,
+        LeafletModule
+    ],
+    declarations: [
+        DashboardComponent,
+        DashboardGridComponent,
+        DashboardOverviewComponent,
+        DashboardPanelComponent,
+        DashboardWidgetComponent,
+        AddVisualizationDialogComponent,
+        EditDashboardDialogComponent,
+        AreaWidgetComponent,
+        LineWidgetComponent,
+        NumberWidgetComponent,
+        TableWidgetComponent,
+        GaugeWidgetComponent,
+        ImageWidgetComponent,
+        MapWidgetComponent,
+        RawWidgetComponent,
+        HtmlWidgetComponent,
+        TrafficLightWidgetComponent,
+        StandaloneDashboardComponent
+    ],
+    providers: [
+        DashboardService,
+        ResizeService,
+        RefreshDashboardService,
+        SemanticTypeUtilsService,
+        {
+            provide: 'RestApi',
+            useFactory: ($injector: any) => $injector.get('RestApi'),
+            deps: ['$injector'],
+        },
+        ElementIconText,
+        {
+            provide: InjectableRxStompConfig,
+            useValue: streamPipesStompConfig
+        },
+        {
+            provide: RxStompService,
+            useFactory: rxStompServiceFactory,
+            deps: [InjectableRxStompConfig]
+        },
+        {
+            provide: '$state',
+            useFactory: ($injector: any) => $injector.get('$state'),
+            deps: ['$injector']
+        }
+    ],
+    exports: [
+        DashboardComponent
+    ],
+    entryComponents: [
+        DashboardComponent,
+        AddVisualizationDialogComponent,
+        EditDashboardDialogComponent,
+        StandaloneDashboardComponent
+    ]
+})
+export class DashboardModule {
 
-import { ConfigItemComponent } from "./components/config-item.component";
-import { DashboardCtrl } from './dashboard.controller';
-import { AddWidgetCtrl } from './add-widget.controller';
-import { WidgetInstances } from './widget-instances.service';
-import { WidgetTemplates } from './templates/widget-templates.service';
+    constructor() {
+    }
 
-import {WidgetDataModel} from "./widget-data-model.service";
-
-import { SocketConnectionDataModel } from './socket-connection-data-model.service';
-
-import soFilter from './templates/so.filter';
-
-import spNumberWidget from './templates/number/number.directive';
-import { spNumberWidgetConfig }from './templates/number/number-config.component';
-import { NumberDataModel } from './templates/number/number-data-model.service';
-
-import spVerticalbarWidget from './templates/verticalbar/verticalbar.directive';
-import { spVerticalbarWidgetConfig } from './templates/verticalbar/verticalbar-config.component';
-import { VerticalbarDataModel } from './templates/verticalbar/verticalbar-data-model.service';
-
-import spTableWidget from './templates/table/table.directive';
-import { spTableWidgetConfig } from './templates/table/table-config.component';
-import { TableDataModel } from './templates/table/table-data-model.service';
-
-import spLineWidget from './templates/line/line.directive';
-import { spLineWidgetConfig } from './templates/line/line-config.component';
-import { LineDataModel } from './templates/line/line-data-model.service';
-
-import spGaugeWidget from './templates/gauge/gauge.directive';
-import { spGaugeWidgetConfig } from './templates/gauge/gauge-config.component';
-import { GaugeDataModel } from './templates/gauge/gauge-data-model.service';
-
-import spTrafficlightWidget from './templates/trafficlight/trafficlight.directive';
-import { spTrafficlightWidgetConfig } from './templates/trafficlight/trafficlight-config.component';
-import { TrafficLightDataModel } from './templates/trafficlight/trafficlight-data-model.service';
-
-import spRawWidget from './templates/raw/raw.directive';
-import { spRawWidgetConfig } from './templates/raw/raw-config.component';
-import { RawDataModel } from './templates/raw/raw-data-model.service';
-//
-import spMapWidget from './templates/map/map.directive';
-import { spMapWidgetConfig } from './templates/map/map-config.component';
-import { MapDataModel } from './templates/map/map-data-model.service';
-
-import spHeatmapWidget from './templates/heatmap/heatmap.directive';
-import { spHeatmapWidgetConfig } from './templates/heatmap/heatmap-config.component';
-import { HeatmapDataModel } from './templates/heatmap/heatmap-data-model.service';
-
-import spImageWidget from './templates/image/image.directive';
-import { spImageWidgetConfig } from './templates/image/image-config.component';
-import { ImageDataModel } from './templates/image/image-data-model.service';
-import {DomainConceptComponent} from "../editor/components/domainconcept/domainconcept.component";
-
-import spHtmlWidget from './templates/html/html.directive';
-import {HtmlDataModel} from './templates/html/html-data-model.service';
-import {spHtmlWidgetConfig} from './templates/html/html-config.component';
-
-export default angular.module('sp.dashboard', ['ui.dashboard', 'datatorrent.mlhrTable', 'ngMap'])
-
-    .component('configItem', ConfigItemComponent)
-	.controller('DashboardCtrl', DashboardCtrl)
-	.controller('AddWidgetCtrl', AddWidgetCtrl)
-    .service('WidgetTemplates', WidgetTemplates)
-    .service('WidgetDataModel', WidgetDataModel)
-    .service('SocketConnectionDataModel', SocketConnectionDataModel)
-	.service('WidgetInstances', WidgetInstances)
-
-	.filter('soNumber', soFilter.soNumber)
-	.filter('soDateTime', soFilter.soDateTime)
-	.filter('numberFilter', soFilter.nu)
-	.filter('geoLat', soFilter.geoLat)
-	.filter('geoLng', soFilter.geoLng)
-
-    .directive('spNumberWidget', spNumberWidget)
-    .component('spNumberWidgetConfig', spNumberWidgetConfig)
-    .service('NumberDataModel', NumberDataModel)
-
-    .directive('spVerticalbarWidget', spVerticalbarWidget)
-    .component('spVerticalbarWidgetConfig', spVerticalbarWidgetConfig)
-    .service('VerticalbarDataModel', VerticalbarDataModel)
-
-    .directive('spTableWidget', spTableWidget)
-    .component('spTableWidgetConfig', spTableWidgetConfig)
-    .service('TableDataModel', TableDataModel)
-
-    .directive('spLineWidget', spLineWidget)
-    .component('spLineWidgetConfig', spLineWidgetConfig)
-    .service('LineDataModel', LineDataModel)
-
-    .directive('spGaugeWidget', spGaugeWidget)
-    .component('spGaugeWidgetConfig', spGaugeWidgetConfig)
-    .service('GaugeDataModel', GaugeDataModel)
-
-    .directive('spTrafficlightWidget', spTrafficlightWidget)
-    .component('spTrafficlightWidgetConfig', spTrafficlightWidgetConfig)
-    .service('TrafficLightDataModel', TrafficLightDataModel)
-
-    .directive('spRawWidget', spRawWidget)
-    .component('spRawWidgetConfig', spRawWidgetConfig)
-    .service('RawDataModel', RawDataModel)
-
-    .directive('spMapWidget', spMapWidget)
-    .component('spMapWidgetConfig', spMapWidgetConfig)
-    .service('MapDataModel', MapDataModel)
-
-    .directive('spHeatmapWidget', spHeatmapWidget)
-    .component('spHeatmapWidgetConfig', spHeatmapWidgetConfig)
-    .service('HeatmapDataModel', HeatmapDataModel)
-
-    .directive('spImageWidget', spImageWidget)
-    .component('spImageWidgetConfig', spImageWidgetConfig)
-    .service('ImageDataModel', ImageDataModel)
-
-    .directive('spHtmlWidget', spHtmlWidget)
-    .component('spHtmlWidgetConfig', spHtmlWidgetConfig)
-    .service('HtmlDataModel', HtmlDataModel)
-
-	.name;
+}

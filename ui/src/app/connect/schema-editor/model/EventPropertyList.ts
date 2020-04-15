@@ -20,6 +20,7 @@ import {EventProperty} from './EventProperty';
 import {RdfsClass} from '../../../platform-services/tsonld/RdfsClass';
 import {RdfProperty} from '../../../platform-services/tsonld/RdfsProperty';
 import {EventPropertyPrimitive} from "./EventPropertyPrimitive";
+
 //  extends EventProperty
 
 @RdfsClass('sp:EventPropertyList')

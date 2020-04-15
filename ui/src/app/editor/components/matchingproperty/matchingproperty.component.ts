@@ -17,6 +17,7 @@
  */
 
 import {MatchingPropertyController} from "./matchingproperty.controller";
+
 declare const require: any;
 
 export let MatchingPropertyComponent = {

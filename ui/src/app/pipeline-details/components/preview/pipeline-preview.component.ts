@@ -17,6 +17,7 @@
  */
 
 import {PipelinePreviewController} from "./pipeline-preview.controller";
+
 declare const require: any;
 
 export let PipelinePreviewComponent = {

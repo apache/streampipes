@@ -33,9 +33,11 @@
         <plotly-plot fxFlex
                 *ngIf="dataToDisplay !== undefined"
                 flex
-                [data]="dataToDisplay"
-                [layout]="graph.layout"
-                (relayout)="zoomIn($event)">
+                     [data]="dataToDisplay"
+                     [layout]="graph.layout"
+                     [config]="graph.config"
+                     (relayout)="handleDefaultModeBarButtonClicks($event)"
+                     (selecting)="selectDataPoints($event)">
         </plotly-plot>
 
         <div *ngIf="enablePaging" fxFlex="5">

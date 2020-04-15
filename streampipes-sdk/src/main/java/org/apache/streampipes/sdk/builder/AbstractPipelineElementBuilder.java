@@ -43,6 +43,10 @@ public abstract class AbstractPipelineElementBuilder<BU extends AbstractPipeline
     this.elementDescription.setAppId(appId);
   }
 
+  @Deprecated
+  /**
+   * @deprecated: Use {@link #withAssets(String...)} instead
+   */
   public BU iconUrl(String iconUrl) {
     elementDescription.setIconUrl(iconUrl);
     return me();

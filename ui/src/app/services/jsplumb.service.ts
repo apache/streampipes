@@ -16,7 +16,6 @@
  *
  */
 
-import * as angular from 'angular';
 import {ObjectProvider} from "./object-provider.service";
 import {JsplumbConfigService} from "./jsplumb-config.service";
 import {JsplumbBridge} from "./jsplumb-bridge.service";

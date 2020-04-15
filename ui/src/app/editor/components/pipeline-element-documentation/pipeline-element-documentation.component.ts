@@ -17,6 +17,7 @@
  */
 
 import {PipelineElementDocumentationController} from "./pipeline-element-documentation.controller";
+
 declare const require: any;
 
 export let PipelineElementDocumentationComponent = {

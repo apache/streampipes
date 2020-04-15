@@ -17,9 +17,6 @@
  */
 
 import * as angular from 'angular';
-
-declare const require: any;
-
 import {CustomizeController} from "../dialog/customize-pipeline-element/customize.controller";
 import {MatchingErrorController} from "../dialog/matching-error/matching-error.controller";
 import {TopicSelectionDialog} from "../dialog/topic/topic-selection-modal.controller";
@@ -28,6 +25,8 @@ import {HelpDialogController} from "../dialog/help/help-dialog.controller";
 import {SavePipelineController} from "../dialog/save-pipeline/save-pipeline.controller";
 import {WelcomeTourDialogController} from "../dialog/welcome-tour/welcome-tour-dialog.controller";
 import {MissingElementsForTutorialDialogController} from "../dialog/missing-elements-for-tutorial/missing-elements-for-tutorial-dialog.controller";
+
+declare const require: any;
 
 export class EditorDialogManager {
 
@@ -48,12 +47,13 @@ export class EditorDialogManager {
         this.$mdDialog.show(dialogContent);
     }
 
-    showCustomizeDialog(elementData, sourceEndpoint, sepa) {
+    showCustomizeDialog(elementData, sourceEndpoint, sepa, restrictedEditMode) {
         var dialogContent = this.DialogBuilder.getDialogTemplate(CustomizeController, require('../dialog/customize-pipeline-element/customizeElementDialog.tmpl.html'));
         dialogContent.locals = {
             elementData: elementData,
             sourceEndpoint: sourceEndpoint,
-            sepa: sepa
+            sepa: sepa,
+            restrictedEditMode: restrictedEditMode
         }
         return this.$mdDialog.show(dialogContent);
     };
@@ -81,7 +81,8 @@ export class EditorDialogManager {
             controllerAs: 'ctrl',
             template: require('../dialog/help/help-dialog.tmpl.html'),
             parent: angular.element(document.body),
-            clickOutsideToClose: true,
+            // must be false, otherwise polling of live data is not stopped in help-dialog.controller.js when dialog is closed
+            clickOutsideToClose: false,
             locals: {
                 pipelineElement: pipelineElementPayload,
             },

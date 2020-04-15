@@ -16,7 +16,7 @@
  *
  */
 
-import { EventProperty } from "./EventProperty";
+import {EventProperty} from "./EventProperty";
 
 export class ExampleNode extends EventProperty {
     name: string;

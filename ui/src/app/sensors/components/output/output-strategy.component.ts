@@ -17,6 +17,7 @@
  */
 
 import {OutputStrategyController} from "./output-strategy.controller";
+
 declare const require: any;
 
 export let OutputStrategyComponent = {

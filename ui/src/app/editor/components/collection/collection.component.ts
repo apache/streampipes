@@ -17,6 +17,7 @@
  */
 
 import {CollectionController} from "./collection.controller";
+
 declare const require: any;
 
 export let CollectionComponent = {

@@ -23,8 +23,6 @@ import 'angular-ui-bootstrap';
 
 import spServices from '../services/services.module';
 
-import 'legacy/flowtype';
-import 'legacy/jQuery.circleMenu';
 import 'jquery.panzoom';
 import 'npm/bootstrap';
 import 'npm/angular-trix';
@@ -34,10 +32,8 @@ import 'npm/ng-showdown';
 
 import {EditorCtrl} from './editor.controller';
 import myDataBind from './my-data-bind.directive';
-import imageBind  from './image-bind.directive';
-//import capitalize from './capitalize.filter';
+import imageBind from './image-bind.directive';
 import displayRecommendedFilter from './filter/display-recommended.filter';
-//import objectProvider from '../services/object-provider.service';
 
 import {AnyComponent} from './components/any/any.component';
 import {CustomOutputComponent} from './components/customoutput/customoutput.component';

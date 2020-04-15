@@ -21,35 +21,36 @@ import 'npm/dagre';
 
 import spConstants from '../constants/constants.module'
 
-import { ImageChecker } from './image-checker.service'
-import { AuthService } from './auth.service'
-import { ElementIconText } from './get-element-icon-text.service'
-import { InitTooltips } from './init-tooltips.service'
-import { RestApi } from './rest-api.service'
-import { AuthStatusService } from './auth-status.service'
-import { DomainProperties } from './domain-properties.service'
-import { JsplumbBridge } from './jsplumb-bridge.service'
-import { JsplumbService } from './jsplumb.service'
-import { PipelinePositioningService } from './pipeline-positioning.service'
-import { PipelineEditorService } from './pipeline-editor.service'
-import { DialogBuilder } from './dialog-builder.service'
-import { MeasurementUnits } from './measurement-units.service'
-import { DeploymentService } from './deployment.service'
-import { JsplumbConfigService } from './jsplumb-config.service'
-import { PipelineElementIconService } from './pipeline-icon.service'
-import { ObjectProvider } from './object-provider.service'
-import { downgradeInjectable } from '@angular/upgrade/static';
-import { TransitionService } from "./transition.service";
-import { ShepherdService } from "./tour/shepherd.service";
-import { TourProviderService } from "./tour/tour-provider.service";
-import { PropertySelectorService } from "./property-selector.service";
-import { RouteTransitionInterceptorService } from "./route-transition-interceptor.service";
+import {ImageChecker} from './image-checker.service'
+import {AuthService} from './auth.service'
+import {ElementIconText} from './get-element-icon-text.service'
+import {InitTooltips} from './init-tooltips.service'
+import {RestApi} from './rest-api.service'
+import {AuthStatusService} from './auth-status.service'
+import {DomainProperties} from './domain-properties.service'
+import {JsplumbBridge} from './jsplumb-bridge.service'
+import {JsplumbService} from './jsplumb.service'
+import {PipelinePositioningService} from './pipeline-positioning.service'
+import {PipelineEditorService} from './pipeline-editor.service'
+import {DialogBuilder} from './dialog-builder.service'
+import {MeasurementUnits} from './measurement-units.service'
+import {DeploymentService} from './deployment.service'
+import {JsplumbConfigService} from './jsplumb-config.service'
+import {PipelineElementIconService} from './pipeline-icon.service'
+import {ObjectProvider} from './object-provider.service'
+import {downgradeInjectable} from '@angular/upgrade/static';
+import {TransitionService} from "./transition.service";
+import {ShepherdService} from "./tour/shepherd.service";
+import {TourProviderService} from "./tour/tour-provider.service";
+import {PropertySelectorService} from "./property-selector.service";
+import {RouteTransitionInterceptorService} from "./route-transition-interceptor.service";
 
 import CreatePipelineTour from './tour/create-pipeline-tour.constants';
 import DashboardTour from './tour/dashboard-tour.constants';
 import AdapterTour from './tour/adapter-tour.constants';
 import AdapterTour2 from './tour/adapter-tour-2.constants';
 import AdapterTour3 from './tour/adapter-tour-3.constants';
+import {NotificationCountService} from "./notification-count-service";
 
 
 export default angular.module('sp.services', [spConstants])
@@ -75,6 +76,7 @@ export default angular.module('sp.services', [spConstants])
 	.service('ShepherdService', ShepherdService)
 	.service('TourProviderService', TourProviderService)
 	.service('PropertySelectorService', PropertySelectorService)
+	.service('NotificationCountService', downgradeInjectable(NotificationCountService))
 	.constant('createPipelineTourConstants', CreatePipelineTour)
 	.constant('dashboardTourConstants', DashboardTour)
 	.constant('adapterTourConstants', AdapterTour)

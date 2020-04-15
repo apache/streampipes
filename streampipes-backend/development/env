@@ -20,3 +20,4 @@ SP_BACKEND_HOST=localhost
 SP_INFLUX_HOST=localhost
 SP_INFLUX_PORT=8086
 SP_JMS_HOST=localhost
+SP_DEBUG=true

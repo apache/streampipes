@@ -72,19 +72,13 @@ public class ActiveMQPublisher implements EventProducer<JmsTransportProtocol> {
     String url = protocolSettings.getBrokerHostname() + ":" + protocolSettings.getPort();
     ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(url);
 
-    // TODO fix this
-    // it works but we need a better solution
-    // we should retry to connect when the service is not available immediately
     boolean co = false;
     do {
       try {
-        Thread.sleep(2000);
         this.connection = connectionFactory.createConnection();
         co = true;
       } catch (JMSException e) {
         LOG.error("Trying to connect...", e);
-      } catch (InterruptedException e) {
-        e.printStackTrace();
       }
     } while (!co);
 

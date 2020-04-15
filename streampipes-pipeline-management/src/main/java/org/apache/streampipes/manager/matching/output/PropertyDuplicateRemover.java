@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.manager.matching.output;
 
-import org.streampipes.empire.core.empire.SupportsRdfId;
+import io.fogsy.empire.core.empire.SupportsRdfId;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyNested;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;

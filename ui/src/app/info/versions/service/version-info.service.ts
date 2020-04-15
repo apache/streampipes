@@ -16,13 +16,13 @@
  *
  */
 
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 
-import { VersionInfo } from './version-info.model';
-import { SystemInfo } from "./system-info.model";
+import {VersionInfo} from './version-info.model';
+import {SystemInfo} from "./system-info.model";
 
 @Injectable()
 export class VersionInfoService {

@@ -17,6 +17,7 @@
  */
 
 import {PropertySelectionController} from "./property-selection.controller";
+
 declare const require: any;
 
 export let PropertySelectionComponent = {
@@ -25,7 +26,8 @@ export let PropertySelectionComponent = {
         outputStrategy: "=",
         eventProperty: "=",
         layer: "@",
-        togglePropertyKey: "&"
+        togglePropertyKey: "&",
+        restrictedEditMode: "<"
     },
     controller: PropertySelectionController,
     controllerAs: 'ctrl'

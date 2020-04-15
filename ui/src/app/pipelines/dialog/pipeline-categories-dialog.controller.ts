@@ -17,11 +17,12 @@
  */
 
 import * as angular from 'angular';
+import {RestApi} from "../../services/rest-api.service";
 
 export class PipelineCategoriesDialogController {
 
     $mdDialog: any;
-    RestApi: any;
+    RestApi: RestApi;
     newCategory: any;
     addSelected: any;
     addPipelineToCategorySelected: any;
@@ -32,7 +33,7 @@ export class PipelineCategoriesDialogController {
     refreshPipelines: any;
     getPipelineCategories;
 
-    constructor($mdDialog, RestApi, getPipelineCategories, refreshPipelines)
+    constructor($mdDialog, RestApi: RestApi, getPipelineCategories, refreshPipelines)
     {
         this.$mdDialog = $mdDialog;
         this.RestApi = RestApi;
@@ -47,6 +48,7 @@ export class PipelineCategoriesDialogController {
         this.refreshPipelines = refreshPipelines;
 
         this.fetchPipelineCategories();
+        this.fetchPipelines();
 
     }
 
@@ -102,6 +104,12 @@ export class PipelineCategoriesDialogController {
                 this.pipelineCategories = pipelineCategories.data;
             });
     };
+
+    fetchPipelines() {
+        this.RestApi.getOwnPipelines().then(pipelines => {
+            this.pipelines = pipelines.data;
+        })
+    }
 
     showAddToCategoryInput(categoryId, show) {
         this.addPipelineToCategorySelected[categoryId] = show;

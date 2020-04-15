@@ -16,23 +16,23 @@
  *
  */
 
-import { Injectable } from '@angular/core';
-import { StaticProperty } from '../model/StaticProperty';
-import { FreeTextStaticProperty } from '../model/FreeTextStaticProperty';
+import {Injectable} from '@angular/core';
+import {StaticProperty} from '../model/StaticProperty';
+import {FreeTextStaticProperty} from '../model/FreeTextStaticProperty';
 import {SecretStaticProperty} from "../model/SecretStaticProperty";
 import {CollectionStaticProperty} from '../model/CollectionStaticProperty';
-import { FileStaticProperty } from "../model/FileStaticProperty";
-import { AnyStaticProperty } from "../model/AnyStaticProperty";
-import { MappingPropertyUnary } from "../model/MappingPropertyUnary";
-import { OneOfStaticProperty } from "../model/OneOfStaticProperty";
-import { MappingPropertyNary } from "../model/MappingPropertyNary";
-import { RuntimeResolvableOneOfStaticProperty } from "../model/RuntimeResolvableOneOfStaticProperty";
-import { RuntimeResolvableAnyStaticProperty } from "../model/RuntimeResolvableAnyStaticProperty";
-import { GroupStaticProperty } from "../model/GroupStaticProperty";
-import { AlternativesStaticProperty } from "../model/AlternativesStaticProperty";
-import { AlternativeStaticProperty } from "../model/AlternativeStaticProperty";
-import { Option } from "../model/Option";
-import { URI } from "../model/URI";
+import {FileStaticProperty} from "../model/FileStaticProperty";
+import {AnyStaticProperty} from "../model/AnyStaticProperty";
+import {MappingPropertyUnary} from "../model/MappingPropertyUnary";
+import {OneOfStaticProperty} from "../model/OneOfStaticProperty";
+import {MappingPropertyNary} from "../model/MappingPropertyNary";
+import {RuntimeResolvableOneOfStaticProperty} from "../model/RuntimeResolvableOneOfStaticProperty";
+import {RuntimeResolvableAnyStaticProperty} from "../model/RuntimeResolvableAnyStaticProperty";
+import {GroupStaticProperty} from "../model/GroupStaticProperty";
+import {AlternativesStaticProperty} from "../model/AlternativesStaticProperty";
+import {AlternativeStaticProperty} from "../model/AlternativeStaticProperty";
+import {Option} from "../model/Option";
+import {URI} from "../model/URI";
 import {ColorPickerStaticProperty} from "../model/ColorPickerStaticProperty";
 
 
@@ -107,9 +107,10 @@ export class StaticPropertyUtilService{
         }
         //SelectionStaticProperty
         else if (val instanceof RuntimeResolvableAnyStaticProperty ||  val instanceof RuntimeResolvableOneOfStaticProperty){
-            val instanceof RuntimeResolvableAnyStaticProperty ? clone = new RuntimeResolvableAnyStaticProperty(id) :
-              clone = new RuntimeResolvableOneOfStaticProperty(id);
+            val instanceof RuntimeResolvableAnyStaticProperty ? clone = new RuntimeResolvableAnyStaticProperty() :
+              clone = new RuntimeResolvableOneOfStaticProperty();
 
+            clone.id = id;
             clone.dependsOn = val.dependsOn;
             clone.value = val.value;
             clone.requiredDomainProperty = val.requiredDomainProperty;
@@ -117,8 +118,9 @@ export class StaticPropertyUtilService{
             clone.horizontalRendering = val.horizontalRendering;
         }
         else if (val instanceof AnyStaticProperty || val instanceof OneOfStaticProperty){
-            val instanceof AnyStaticProperty ? clone = new AnyStaticProperty(id) : clone = new OneOfStaticProperty(id);
+            val instanceof AnyStaticProperty ? clone = new AnyStaticProperty() : clone = new OneOfStaticProperty();
 
+            clone.id = id;
             clone.value = val.value;
             clone.requiredDomainProperty = val.requiredDomainProperty;
             clone.options = val.options.map(option => this.cloneOption(option));

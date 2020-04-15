@@ -17,6 +17,7 @@
  */
 
 import {MappingNaryController} from "./mappingnary.controller";
+
 declare const require: any;
 
 export let MappingNaryComponent = {
@@ -24,7 +25,8 @@ export let MappingNaryComponent = {
     bindings: {
         staticProperty : "=",
         displayRecommended: "=",
-        selectedElement: "<"
+        selectedElement: "<",
+        restrictedEditMode: "<"
     },
     controller: MappingNaryController,
     controllerAs: 'ctrl'

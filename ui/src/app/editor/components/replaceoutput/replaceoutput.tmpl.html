@@ -24,7 +24,7 @@
     </md-select>
     <div ng-show="replaceOutput.renamingAllowed">
         <md-input-container flex> <label>New property name</label>
-            <input ng-model="replaceOutput.runtimeName"/>
+            <input ng-model="replaceOutput.runtimeName" ng-disabled="ctrl.restrictedEditMode"/>
         </md-input-container>
     </div>
 </div>

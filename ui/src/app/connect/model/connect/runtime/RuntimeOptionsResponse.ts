@@ -17,9 +17,7 @@
  */
 
 import {RdfsClass} from '../../../../platform-services/tsonld/RdfsClass';
-import {RdfId} from '../../../../platform-services/tsonld/RdfId';
 import {RdfProperty} from '../../../../platform-services/tsonld/RdfsProperty';
-import {StaticProperty} from "../../StaticProperty";
 import {RuntimeOptionsRequest} from "./RuntimeOptionsRequest";
 import {Option} from "../../Option";
 

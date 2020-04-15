@@ -24,8 +24,12 @@ import org.apache.streampipes.rest.shared.annotation.JsonLdSerialized;
 import org.apache.streampipes.rest.shared.util.SpMediaType;
 import org.apache.streampipes.storage.api.IVisualizablePipelineStorage;
 
+import java.util.List;
+import java.util.Optional;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
@@ -38,6 +42,31 @@ public class VisualizablePipeline extends AbstractRestInterface implements IVisu
   @Override
   public Response getVisualizablePipelines() {
     return ok(asContainer(getVisualizablePipelineStorage().getAllVisualizablePipelines()));
+  }
+
+  @GET
+  @JsonLdSerialized
+  @Produces(SpMediaType.JSONLD)
+  @Path("/{id}")
+  @Override
+  public Response getVisualizablePipeline(@PathParam("id") String id) {
+    org.apache.streampipes.model.dashboard.VisualizablePipeline pipeline = getVisualizablePipelineStorage().getVisualizablePipeline(id);
+   return pipeline != null ? ok(pipeline) : fail();
+  }
+
+  @GET
+  @JsonLdSerialized
+  @Produces(SpMediaType.JSONLD)
+  @Path("topic/{topic}")
+  @Override
+  public Response getVisualizablePipelineByTopic(@PathParam("topic") String topic) {
+    List<org.apache.streampipes.model.dashboard.VisualizablePipeline> pipelines =
+            getVisualizablePipelineStorage().getAllVisualizablePipelines();
+
+    Optional<org.apache.streampipes.model.dashboard.VisualizablePipeline> matchedPipeline =
+            pipelines.stream().filter(pipeline -> pipeline.getTopic().equals(topic)).findFirst();
+
+    return matchedPipeline.isPresent() ? ok(matchedPipeline.get()) : fail();
   }
 
   private IVisualizablePipelineStorage getVisualizablePipelineStorage() {

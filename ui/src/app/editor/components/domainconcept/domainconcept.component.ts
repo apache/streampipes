@@ -17,6 +17,7 @@
  */
 
 import {DomainConceptController} from "./domainconcept.controller";
+
 declare const require: any;
 
 export let DomainConceptComponent = {

@@ -54,6 +54,14 @@ public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, R
 
   }
 
+  public SpKafkaConsumer(KafkaTransportProtocol protocol, String topic, InternalEventProcessor<byte[]> eventProcessor) {
+      this.protocol = protocol;
+      this.topic = topic;
+      this.eventProcessor = eventProcessor;
+      this.isRunning = true;
+  }
+
+
   // TODO backwards compatibility, remove later
   public SpKafkaConsumer(String kafkaUrl, String topic, InternalEventProcessor<byte[]> callback) {
     KafkaTransportProtocol protocol = new KafkaTransportProtocol();

@@ -18,7 +18,6 @@
 
 import {RestApi} from "./rest-api.service";
 import {AuthStatusService} from "./auth-status.service";
-import {TransitionService} from "./transition.service";
 
 export class AuthService {
 

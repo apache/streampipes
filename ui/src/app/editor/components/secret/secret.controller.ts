@@ -16,7 +16,7 @@
  *
  */
 
-import * as angular from 'angular';
+import {OneOfRemoteController} from "../oneof-remote/oneof-remote.controller";
 
 export class SecretController {
 
@@ -45,3 +45,5 @@ export class SecretController {
         this.staticProperty.properties.encrypted=false;
     }
 }
+
+SecretController.$inject = ['$scope', '$rootScope'];

@@ -16,15 +16,21 @@
  *
  */
 
-import { TestBed, async, ComponentFixture } from '@angular/core/testing';
-import { CommonModule } from '@angular/common';
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { ConsulServiceComponent } from './consul-service.component';
-import { MatButtonModule, MatGridListModule, MatInputModule, MatIconModule, MatTooltipModule, MatCheckboxModule } from '@angular/material';
-import { FormsModule } from '@angular/forms';
-import { Component } from '@angular/core';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {StreampipesPeContainerConifgs} from '../shared/streampipes-pe-container-configs';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {CommonModule} from '@angular/common';
+import {FlexLayoutModule} from '@angular/flex-layout';
+import {ConsulServiceComponent} from './consul-service.component';
+import {
+    MatButtonModule,
+    MatCheckboxModule,
+    MatGridListModule,
+    MatIconModule,
+    MatInputModule,
+    MatTooltipModule
+} from '@angular/material';
+import {FormsModule} from '@angular/forms';
+import {Component} from '@angular/core';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {StreampipesPeContainer} from '../shared/streampipes-pe-container.model';
 
 describe('ConsulServiceComponent', () => {

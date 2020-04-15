@@ -21,7 +21,7 @@ package org.apache.streampipes.rest.shared.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.streampipes.commons.Utils;
-import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
+import io.fogsy.empire.core.empire.annotation.InvalidRdfException;
 import org.apache.streampipes.serializers.jsonld.JsonLdTransformer;
 
 import java.io.IOException;

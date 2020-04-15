@@ -50,6 +50,7 @@ export class StaticColorPickerComponent implements OnInit {
                 Validators.required
             ]),
         })
+        this.inputEmitter.emit(true);
     }
 
     valueChange(inputValue) {

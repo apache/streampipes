@@ -111,6 +111,7 @@ public class StreamPipes {
 
   public static final String JMS_TRANSPORT_PROTOCOL = NS + "JmsTransportProtocol";
   public static final String KAFKA_TRANSPORT_PROTOCOL = NS + "KafkaTransportProtocol";
+  public static final String MQTT_TRANSPORT_PROTOCOL = NS + "MqttTransportProtocol";
   public static final String TRANSPORT_FORMAT = NS + "TransportFormat";
   public static final String TRANSPORT_PROTOCOL = NS + "TransportProtocol";
 
@@ -143,6 +144,7 @@ public class StreamPipes {
   public static final String HAS_TRANSPORT_PROTOCOL = NS + "hasTransportProtocol";
   public static final String HAS_TRANSPORT_FORMAT = NS + "hasTransportFormat";
   public static final String JMS_PORT = NS + "jmsPort";
+  public static final String HAS_MQTT_PORT = NS + "hasMqttPort";
 
   public static final String ZOOKEEPER_HOST = NS + "zookeeperHost";
   public static final String ZOOKEEPER_PORT = NS + "zookeeperPort";
@@ -376,4 +378,7 @@ public class StreamPipes {
   public static final String DASHBOARD_WIDGET_DATA_CONFIG = NS + "DashboardWidgetDataConfig" ;
   public static final String COLOR_PICKER_STATIC_PROPERTY = NS + "ColorPickerStaticProperty";
   public static final String SELECTED_COLOR = NS + "hasSelectedColor";
+  public static final String HAS_WIDGET_ICON_NAME = NS + "hasWidgetIconName";
+  public static final String HAS_WIDGET_DESCRIPTION = NS + "hasWidgetDescription";
+  public static final String CORRESPONDING_USER = NS + "hasCorrespondingUser";
 }

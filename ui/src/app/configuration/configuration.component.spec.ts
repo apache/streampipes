@@ -16,13 +16,13 @@
  *
  */
 
-import { TestBed, async, ComponentFixture } from '@angular/core/testing';
-import { ConfigurationComponent } from './configuration.component';
-import { CommonModule } from '@angular/common';
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { ConfigurationService } from './shared/configuration.service';
-import { ConfigurationMockService } from './shared/configuration.test.service';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ConfigurationComponent} from './configuration.component';
+import {CommonModule} from '@angular/common';
+import {FlexLayoutModule} from '@angular/flex-layout';
+import {ConfigurationService} from './shared/configuration.service';
+import {ConfigurationMockService} from './shared/configuration.test.service';
+import {NO_ERRORS_SCHEMA} from '@angular/core';
 
 describe('ConfigurationComponent', () => {
 

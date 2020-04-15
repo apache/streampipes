@@ -17,6 +17,7 @@
  */
 
 import {AnyController} from "./any.controller";
+
 declare const require: any;
 
 export let AnyComponent = {

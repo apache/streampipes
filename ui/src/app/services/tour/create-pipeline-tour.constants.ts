@@ -45,7 +45,7 @@ export default {
                 stepId: "step-3",
                 title: "Selecting data streams",
                 text: "The first element of a pipeline is a data stream, which produces data you'd like to transform. <p>To select a stream, drag and drop the stream named <b>Flow Rate 1</b> to the assembly area below.</p>",
-                attachToElement: "#pe-icon-stand-org\\.streampipes\\.sources\\.simulator\\.flowrate1",
+                attachToElement: "#pe-icon-stand-org\\.apache\\.streampipes\\.sources\\.simulator\\.flowrate1",
                 attachPosition: "left",
                 buttons: [
                     "cancel",
@@ -76,7 +76,7 @@ export default {
                 stepId: "step-6",
                 title: "Selecting data processors",
                 text: "<p>Now you can see a variety of available data processors.</p><p>Processors can provide simple capabilities such as filters or aggregations, but can also provide more advanced capabilities such as trend and pattern detection or even pre-trained neural networks.</p><p>Select the processor called <b>Numerical Filter</b> and move it to the assembly area.</p>",
-                attachToElement: "#pe-icon-stand-org\\.streampipes\\.processors\\.filters\\.jvm\\.numericalfilter",
+                attachToElement: "#pe-icon-stand-org\\.apache\\.streampipes\\.processors\\.filters\\.jvm\\.numericalfilter",
                 attachPosition: "right",
                 buttons: [
                     "cancel"
@@ -116,7 +116,7 @@ export default {
                 stepId: "step-10",
                 title: "Finish Pipeline",
                 text: "<p>Almost there!</p>Select the <b>Dashboard</b> sink and connect the <b>Numerical Filter</b> to the Dashboard. Enter any visualization name in the configuration menu.</p>",
-                attachToElement: "#pe-icon-stand-org\\.streampipes\\.sinks\\.internal\\.jvm\\.dashboard",
+                attachToElement: "#pe-icon-stand-org\\.apache\\.streampipes\\.sinks\\.internal\\.jvm\\.dashboard",
                 attachPosition: "left",
                 buttons: [
                     "cancel"

@@ -98,8 +98,6 @@ fs.writeFileSync('src/app/home/home.service.ts', mustache.render(fs.readFileSync
 
 
 // Move Images
-fs.writeFileSync('src/assets/img/login/background.png', fs.readFileSync(config['login']['backgroundImage']));
-console.log('Moved: background.png');
 fs.writeFileSync('src/assets/img/login/logo.png', fs.readFileSync(config['login']['logo']));
 console.log('Moved: logo.png');
 fs.writeFileSync('src/assets/img/sp/sp-logo-right-white.png', fs.readFileSync(config['login']['logo-right']));

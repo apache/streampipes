@@ -72,13 +72,13 @@ export class SavePipelineController {
 
     displayErrors(data) {
         for (var i = 0, notification; notification = data.notifications[i]; i++) {
-            this.showToast("error", notification.description, notification.title);
+            this.showToast("error", notification.title, notification.description);
         }
     }
 
     displaySuccess(data) {
         if (data.notifications.length > 0) {
-            this.showToast("success", data.notifications[0].description, data.notifications[0].title);
+            this.showToast("success", data.notifications[0].title, data.notifications[0].description);
         }
     }
 
@@ -114,7 +114,7 @@ export class SavePipelineController {
                     this.displayErrors(data);
                 }
             }, data => {
-                this.showToast("error", "Could not fulfill request", "Connection Error");
+                this.showToast("error", "Connection Error", "Could not fulfill request");
             });
     };
 

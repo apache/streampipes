@@ -17,6 +17,7 @@
  */
 
 import {ValueSpecificationController} from "./value-specification.controller";
+
 declare const require: any;
 
 export let ValueSpecificationComponent = {

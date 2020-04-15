@@ -18,7 +18,6 @@
 
 import {RdfProperty} from '../../../platform-services/tsonld/RdfsProperty';
 import {RdfsClass} from '../../../platform-services/tsonld/RdfsClass';
-import {DataSetDescription} from '../DataSetDescription';
 import {AdapterDescription} from './AdapterDescription';
 import {DataStreamDescription} from '../DataStreamDescription';
 import {UUID} from 'angular2-uuid';

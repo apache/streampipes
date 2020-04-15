@@ -19,9 +19,9 @@
 package org.apache.streampipes.model.connect.adapter;
 
 import com.google.gson.annotations.SerializedName;
-import org.streampipes.empire.annotations.Namespaces;
-import org.streampipes.empire.annotations.RdfProperty;
-import org.streampipes.empire.annotations.RdfsClass;
+import io.fogsy.empire.annotations.Namespaces;
+import io.fogsy.empire.annotations.RdfProperty;
+import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.connect.rules.Schema.SchemaTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.Stream.StreamTransformationRuleDescription;

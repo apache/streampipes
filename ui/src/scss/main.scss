@@ -18,26 +18,33 @@
 
 @import './_variables';
 
-@import './thirdparty/spinkit';
-@import './thirdparty/please-wait';
-@import './thirdparty/jsplumb';
-@import './thirdparty/toastr';
-@import './thirdparty/prism';
-@import './thirdparty/loading-bar.min';
-@import './thirdparty/ng-prettyjson.min';
-@import './thirdparty/angular-ui-tree.min';
-@import './thirdparty/mlhr-table';
-@import './thirdparty/malhar-angular-dashboard';
-//@import './thirdparty/epoch.min';
-@import './thirdparty/trafficlight';
-@import './thirdparty/angularjs-datetime-picker';
-@import './thirdparty/angular-notification-icons.min';
-@import './thirdparty/indigo-pink';
-@import './thirdparty/shepherd-theme-default';
-@import './thirdparty/shepherd-theme-arrows';
-@import './thirdparty/shepherd-new';
+@import '~angular-tree-component/dist/angular-tree-component.css';
+@import '~angular-material/angular-material.scss';
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+@import '~bootstrap/dist/css/bootstrap.css';
+@import '~trix/dist/trix.css';
+@import '~slick-carousel/slick/slick-theme.css';
+@import '~slick-carousel/slick/slick.css';
+@import '~datatables.net-dt/css/jquery.dataTables.css';
+@import '~@fortawesome/fontawesome-free/css/all.css';
+@import '~angular-notification-icons/dist/angular-notification-icons.min.css';
+@import '~angular-ui-tree/dist/angular-ui-tree.min.css';
+@import '~angularjs-datetime-picker/angularjs-datetime-picker.css';
+@import '~jsplumb/dist/css/jsplumb.css';
+@import '~ng-prettyjson/dist/ng-prettyjson.min.css';
+@import '~prismjs/themes/prism.css';
+@import '~angular-loading-bar/build/loading-bar.min.css';
+@import '~shepherd.js/dist/css/shepherd-theme-default.css';
+@import "~ng-pick-datetime/assets/style/picker.min.css";
+@import '~leaflet/dist/leaflet.css';
+@import '~material-design-icons/iconfont/material-icons.css';
+
+@import '../assets/fonts/Roboto-Regular.css';
+
+@import './sp/shepherd-new';
 
 @import './sp/main';
+@import './sp/loading-bar';
 @import './sp/buttons';
 @import './sp/buttons.ng1';
 @import './sp/spinner';
@@ -56,6 +63,4 @@
 @import './sp/documentation.ng1';
 @import './sp/stepper';
 
-@import './thirdparty/colors.scss';
-
-@import '~angular-tree-component/dist/angular-tree-component.css';
+@import './sp/colors.scss';

@@ -17,6 +17,7 @@
  */
 
 import {MeasurementUnitController} from "./measurement-unit.controller";
+
 declare const require: any;
 
 export let MeasurementUnitComponent = {

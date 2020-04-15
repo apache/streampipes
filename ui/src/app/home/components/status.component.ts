@@ -16,8 +16,8 @@
  *
  */
 
-import { Component } from "@angular/core";
-import { RestApi } from "../../services/rest-api.service";
+import {Component} from "@angular/core";
+import {RestApi} from "../../services/rest-api.service";
 
 @Component({
     selector: 'status',

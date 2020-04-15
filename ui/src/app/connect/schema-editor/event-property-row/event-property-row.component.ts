@@ -21,14 +21,12 @@ import {EventProperty} from "../model/EventProperty";
 import {EventPropertyPrimitive} from "../model/EventPropertyPrimitive";
 import {EventPropertyNested} from "../model/EventPropertyNested";
 import {EventPropertyList} from "../model/EventPropertyList";
-import {AdapterDescription} from "../../model/connect/AdapterDescription";
 import {EventSchema} from "../model/EventSchema";
 import {UUID} from "angular2-uuid";
 import {EventPropertyComponent} from "../event-property/event-property.component";
 import {DomainPropertyProbabilityList} from "../model/DomainPropertyProbabilityList";
 import {TreeNode} from "angular-tree-component";
-import {DataTypesService} from "../data-type.service";
-import { MatDialog } from "@angular/material/dialog";
+import {MatDialog} from "@angular/material/dialog";
 
 @Component({
     selector: 'event-property-row',

@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.model.grounding;
 
-import org.streampipes.empire.annotations.RdfProperty;
-import org.streampipes.empire.annotations.RdfsClass;
+import io.fogsy.empire.annotations.RdfProperty;
+import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.vocabulary.StreamPipes;
@@ -48,10 +48,10 @@ public abstract class TransportProtocol extends UnnamedStreamPipesEntity {
 		super();
 	}
 	
-	public TransportProtocol(String uri, TopicDefinition topicDefinition)
+	public TransportProtocol(String hostname, TopicDefinition topicDefinition)
 	{
 		super();
-		this.brokerHostname = uri;
+		this.brokerHostname = hostname;
 		this.topicDefinition = topicDefinition;
 	}
 

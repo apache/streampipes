@@ -25,4 +25,6 @@ import java.util.List;
 public interface IVisualizablePipelineStorage {
 
   List<VisualizablePipeline> getAllVisualizablePipelines();
+
+  VisualizablePipeline getVisualizablePipeline(String id);
 }

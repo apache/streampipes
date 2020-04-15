@@ -17,6 +17,7 @@
  */
 
 import {OptionsController} from "./options.controller";
+
 declare const require: any;
 
 export let OptionsComponent = {

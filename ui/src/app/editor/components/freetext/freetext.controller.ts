@@ -17,7 +17,6 @@
  */
 
 import * as angular from 'angular';
-import {AnyRemoteController} from "../any-remote/any-remote.controller";
 
 export class FreeTextController {
 

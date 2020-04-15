@@ -17,6 +17,7 @@
  */
 
 import {SepaStreamDetailController} from "./sepa-stream-detail.controller";
+
 declare const require: any;
 
 export let SepaStreamDetailComponent = {

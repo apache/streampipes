@@ -19,8 +19,6 @@
 import {RdfId} from '../../platform-services/tsonld/RdfId';
 import {RdfProperty} from '../../platform-services/tsonld/RdfsProperty';
 import {RdfsClass} from '../../platform-services/tsonld/RdfsClass';
-import {FormatDescription} from './connect/grounding/FormatDescription';
-import {ProtocolDescription} from './connect/grounding/ProtocolDescription';
 import {EventSchema} from '../schema-editor/model/EventSchema';
 
 @RdfsClass('sp:DataSet')
