@@ -16,7 +16,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { DatalakeRestService } from "../../../core-services/datalake/datalake-rest.service";
+import { DatalakeRestService } from '../../../core-services/datalake/datalake-rest.service';
 
 @Component({
   selector: 'sp-image-viewer',
@@ -29,12 +29,70 @@ export class ImageViewerComponent implements OnInit {
   public imagesSrcs;
   public imagesIndex: number;
 
+  measureName = 'testsix'; // TODO: Remove hard coded Index, should be injected
+  eventSchema = undefined; // TODO: event schema should be also injected
+  imageField = undefined;
+  pageIndex = undefined;
+  pageSum = undefined;
+
+  // Flags
+  private setImagesIndexToFirst = false;
+  private setImagesIndexToLast = false;
+
   constructor(private restService: DatalakeRestService) { }
 
   ngOnInit(): void {
-    // 1. get Images
-    this.imagesSrcs = this.restService.getImageSrcs();
+    this.restService.getAllInfos().subscribe(
+      res => {
+        this.eventSchema = res.find(elem => elem.measureName = this.measureName).eventSchema;
+        const properties = this.eventSchema.eventProperties;
+        for (const prop of properties) {
+          if (prop.domainProperties.find(type => type === 'https://image.com')) {
+            this.imageField = prop;
+            break;
+          }
+        }
+        this.loadData();
+      }
+    );
+
     this.imagesIndex = 0;
+  }
+
+  loadData() {
+    if (this.pageIndex === undefined) {
+      this.restService.getDataPageWithoutPage(this.measureName, 10).subscribe(
+        res => this.processData(res)
+      );
+    } else {
+      this.restService.getDataPage(this.measureName, 10, this.pageIndex).subscribe(
+        res => this.processData(res)
+      );
+    }
+  }
+
+  processData(pageResult) {
+    if (pageResult.rows === undefined) {
+      this.pageIndex = pageResult.pageSum;
+    } else {
+      this.pageIndex = pageResult.page;
+      this.pageSum = pageResult.pageSum;
+
+      if (this.setImagesIndexToFirst) {
+        this.imagesIndex = 0;
+      } else if (this.setImagesIndexToLast) {
+        this.imagesIndex = pageResult.rows.length - 1;
+      }
+      this.setImagesIndexToLast = false;
+      this.setImagesIndexToFirst = false;
+
+      const imageIndex = pageResult.headers.findIndex(name => name === this.imageField.runtimeName);
+      const tmp = [];
+      pageResult.rows.forEach(row => {
+        tmp.push(this.restService.getImageUrl(row[imageIndex]));
+      });
+      this.imagesSrcs = tmp;
+    }
   }
 
   /* sp-image-bar */
@@ -42,11 +100,17 @@ export class ImageViewerComponent implements OnInit {
     this.imagesIndex = index;
   }
   handleImagePageUp(e) {
-    alert('Page Up - Load new data');
+    this.pageIndex += 1;
+    this.setImagesIndexToLast = true;
+    this.loadData();
   }
 
   handleImagePageDown(e) {
-    alert('Page Down - Load new data');
+    if (this.pageIndex - 1 >= 0) {
+      this.pageIndex -= 1;
+      this.setImagesIndexToFirst = true;
+      this.loadData();
+    }
   }
 
 }

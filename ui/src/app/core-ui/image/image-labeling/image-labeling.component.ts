@@ -71,18 +71,12 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit {
               private snackBar: MatSnackBar, private cocoFormatService: CocoFormatService) { }
 
   ngOnInit(): void {
-
-
     this.isHoverComponent = false;
     this.brushSize = 5;
 
-
-
-
-    // 1. get labels
+    // TODO Get Labels
     this.labels = this.restService.getLabels();
 
-    // 2. get Images
     this.restService.getAllInfos().subscribe(
       res => {
         this.eventSchema = res.find(elem => elem.measureName = this.measureName).eventSchema;
@@ -98,15 +92,6 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit {
     );
 
     this.imagesIndex = 0;
-
-    // 3. get Coco files
-    // this.cocoFiles = [];
-    // for (const src of this.imagesSrcs) {
-      // const coco = new CocoFormat();
-      // this.cocoFormatService.addImage(coco, scr)
-      // coco.addImage(src);
-      // this.cocoFiles.push(coco);
-    // }
   }
 
   ngAfterViewInit(): void {
