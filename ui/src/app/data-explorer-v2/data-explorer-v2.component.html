@@ -39,7 +39,7 @@
         </div>
     </div>
 
-    <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100" *ngIf="dashboardsLoaded">
+    <div class="page-container-padding-inner" fxLayout="column" fxFlex="100" *ngIf="dashboardsLoaded">
         <sp-data-explorer-dashboard-overview (selectDashboardEmitter)="openDashboard($event)"
                                              (reloadDashboardsEmitter)="getDashboards()"
                                              [dataViewDashboards]="dataViewDashboards"
@@ -50,8 +50,7 @@
                                           [(editMode)]="editMode"
                                           [dashboard]="selectedDataViewDashboard"
                                           [viewDateRange]="viewDateRange"
-                                          style="height:100%;" *ngIf="dashboardTabSelected">
-
+                                          class="dashboard-panel" *ngIf="dashboardTabSelected">
         </sp-data-explorer-dashboard-panel>
     </div>
 </div>

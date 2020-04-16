@@ -23,3 +23,9 @@ gridster ::ng-deep {
 gridster.edit ::ng-deep {
     background: #d3d3d3;
 }
+
+gridster.scrollVertical ::ng-deep {
+    min-height: 100%;
+    display: flex;
+    flex: 1 1 100%;
+}

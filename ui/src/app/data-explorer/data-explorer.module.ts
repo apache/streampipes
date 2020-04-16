@@ -26,18 +26,17 @@ import { CdkTableModule } from '@angular/cdk/table';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import {
+    OWL_DATE_TIME_FORMATS,
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule
+} from '@danielmoncada/angular-datetime-picker';
 import { DatalakeRestService } from '../core-services/datalake/datalake-rest.service';
 import { CoreUiModule } from '../core-ui/core-ui.module';
-import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
-import { DataDownloadDialog } from './explorer-widget/datadownloadDialog/dataDownload.dialog';
-import { ExplorerComponent } from './explorer-widget/explorer.component';
-
-import { OWL_DATE_TIME_FORMATS, OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
-import { PlotlyViaWindowModule } from 'angular-plotly.js';
-import { LineChartComponent } from './explorer-widget/explorer-visualisations/linechart/lineChart.component';
-import { TableComponent } from './explorer-widget/explorer-visualisations/table/table.component';
-import { TimeRangeSelectorComponent } from './time-selector/timeRangeSelector.component';
 import { LabelingToolModule } from '../core-ui/linechart/labeling-tool/labeling-tool.module';
+import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
+import { ExplorerComponent } from './explorer-widget/explorer.component';
+import { DataDownloadDialog } from './explorer-widget/datadownloadDialog/dataDownload.dialog';
 
 export const MY_NATIVE_FORMATS = {
   fullPickerInput: {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: false},
@@ -61,16 +60,12 @@ export const MY_NATIVE_FORMATS = {
         CoreUiModule,
         OwlDateTimeModule,
         OwlNativeDateTimeModule,
-        PlotlyViaWindowModule,
-        LabelingToolModule,
+        LabelingToolModule
     ],
     declarations: [
         DataExplorerComponent,
         ExplorerComponent,
         DataDownloadDialog,
-        TableComponent,
-        LineChartComponent,
-        TimeRangeSelectorComponent,
     ],
     providers: [
         DatalakeRestService,
@@ -83,8 +78,6 @@ export const MY_NATIVE_FORMATS = {
         DataDownloadDialog,
     ],
     exports: [
-      DataExplorerComponent,
-      ExplorerComponent
     ]
 })
 export class DataExplorerModule {

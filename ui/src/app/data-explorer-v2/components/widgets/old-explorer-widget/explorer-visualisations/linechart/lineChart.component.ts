@@ -19,12 +19,12 @@
 import { Component, EventEmitter, OnChanges, Output, Renderer2, SimpleChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PlotlyService } from 'angular-plotly.js';
-import { DataResult } from '../../core-model/datalake/DataResult';
-import { GroupedDataResult } from '../../core-model/datalake/GroupedDataResult';
-import { BaseChartComponent } from '../chart/baseChart.component';
-import { ChangeChartmodeDialog } from './labeling-tool/dialogs/change-chartmode/change-chartmode.dialog';
-import { LabelingDialog } from './labeling-tool/dialogs/labeling/labeling.dialog';
-import { ColorService } from './labeling-tool/services/color.service';
+import { DataResult } from '../../../../../../core-model/datalake/DataResult';
+import { GroupedDataResult } from '../../../../../../core-model/datalake/GroupedDataResult';
+import { ColorService } from '../../../../../../core-ui/linechart/labeling-tool/services/color.service';
+import { BaseVisualisationComponent } from '../base/baseVisualisation.component';
+import {ChangeChartmodeDialog} from "../../../../../../core-ui/linechart/labeling-tool/dialogs/change-chartmode/change-chartmode.dialog";
+import {LabelingDialog} from "../../../../../../core-ui/linechart/labeling-tool/dialogs/labeling/labeling.dialog";
 
 
 @Component({
@@ -32,7 +32,7 @@ import { ColorService } from './labeling-tool/services/color.service';
     templateUrl: './lineChart.component.html',
     styleUrls: ['./lineChart.component.css']
 })
-export class LineChartComponent extends BaseChartComponent implements OnChanges {
+export class LineChartComponent extends BaseVisualisationComponent implements OnChanges {
 
     @Output() zoomEvent =  new EventEmitter<[number, number]>();
 

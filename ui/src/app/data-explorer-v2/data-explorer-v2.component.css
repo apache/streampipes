@@ -19,3 +19,12 @@
 .mr-20 {
     margin-right:20px;
 }
+
+.dashboard-panel {
+    height: 100%;
+    flex-direction: column;
+    box-sizing: border-box;
+    display: flex;
+    flex: 1 1 100%;
+    overflow-y: auto;
+}
