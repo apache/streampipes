@@ -27,8 +27,6 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
-import { LineChartComponent } from './linechart/lineChart.component';
-import { TableComponent } from './table/table.component';
 
 // import * as PlotlyJS from 'plotly.js/dist/plotly.js';
 import { MatChipsModule } from '@angular/material/chips';
@@ -66,8 +64,6 @@ import { CocoFormatService } from "./image/services/CocoFormat.service";
         MatChipsModule
     ],
     declarations: [
-        TableComponent,
-        LineChartComponent,
         ImageComponent,
         ImageContainerComponent,
         ImageLabelingComponent,
@@ -88,8 +84,6 @@ import { CocoFormatService } from "./image/services/CocoFormat.service";
     entryComponents: [
     ],
     exports: [
-        TableComponent,
-        LineChartComponent,
         ImageComponent,
         ImageLabelingComponent,
     ]
