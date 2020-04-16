@@ -201,6 +201,12 @@
    limitations under the License.
 
 ------------------------------------------------------------------------------------
+
+=====
+BACKEND 3rd party dependencies: The list below includes all 3rd party dependencies used by the Apache StreamPipes
+backend (all code except the code from the ui/ folder. See below for a list of 3rd party dependencies of the UI.
+=====
+
 This project bundles some components that are also licensed under the Apache
 License Version 2.0:
 
@@ -513,9 +519,7 @@ xerces:xercesImpl:2.9.1
 xml-apis:xml-apis:1.3.04
 ---
 
-================================================================
-STREAMPIPES BACKEND (all files except ui folder)
-================================================================
+
 The binary distribution of this product bundles these dependencies under the
 following license. See licenses/ for text of these licenses.
 
