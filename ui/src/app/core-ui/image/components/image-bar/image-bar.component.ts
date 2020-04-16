@@ -47,19 +47,20 @@ export class ImageBarComponent implements OnInit {
 
   }
   previousImage() {
-    if (this.selectedIndex > 0) {
-      this.indexChange.emit(this.selectedIndex - 1);
+    if (this.selectedIndex < this.imagesSrcs.length - 1) {
+      this.indexChange.emit(this.selectedIndex + 1);
     } else {
       this.pageDown.emit();
     }
   }
   nextImage() {
-    if (this.selectedIndex < this.imagesSrcs.length - 1) {
-      this.indexChange.emit(this.selectedIndex + 1);
+    if (this.selectedIndex > 0) {
+      this.indexChange.emit(this.selectedIndex - 1);
     } else {
       this.pageUp.emit();
     }
   }
+
   nextPage() {
    this.pageUp.emit();
   }
@@ -70,10 +71,10 @@ export class ImageBarComponent implements OnInit {
       const key = event.key;
       switch (key.toLowerCase()) {
         case 'q':
-          this.previousImage();
+          this.nextImage();
           break;
         case 'e':
-          this.nextImage();
+          this.previousImage();
           break;
       }
     }

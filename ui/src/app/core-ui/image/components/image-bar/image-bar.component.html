@@ -17,8 +17,8 @@
   -->
 
 <div fxLayout="row" fxLayoutAlign="space-around center" >
-    <button mat-icon-button (click)="previousPage()"> <mat-icon>skip_previous</mat-icon></button>
-    <button mat-icon-button (click)="previousImage()"> <mat-icon>keyboard_arrow_left</mat-icon></button>
+    <button mat-icon-button (click)="nextPage()"> <mat-icon>skip_previous</mat-icon></button>
+    <button mat-icon-button (click)="nextImage()"> <mat-icon>keyboard_arrow_left</mat-icon></button>
 
     <div fxLayout="row" fxLayoutAlign="center " class="imageBar">
         <img *ngFor="let src of imagesSrcs; let i = index" src="{{src}}" (click)="changeImage(i)"
@@ -26,7 +26,7 @@
     </div>
 
 
-    <button mat-icon-button (click)="nextImage()"> <mat-icon>keyboard_arrow_right</mat-icon></button>
-    <button mat-icon-button (click)="nextPage()"> <mat-icon>skip_next</mat-icon></button>
+    <button mat-icon-button (click)="previousImage()"> <mat-icon>keyboard_arrow_right</mat-icon></button>
+    <button mat-icon-button (click)="previousPage()"> <mat-icon>skip_next</mat-icon></button>
 
 </div>

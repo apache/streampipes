@@ -17,7 +17,7 @@
  */
 
 
-import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import Konva from 'konva';
 import { Annotation } from '../../../core-model/coco/Annotation';
@@ -27,9 +27,9 @@ import { ImageContainerComponent } from '../components/image-container/image-con
 import { ICoordinates } from '../model/coordinates';
 import { LabelingMode } from '../model/labeling-mode';
 import { BrushLabelingService } from '../services/BrushLabeling.service';
+import { CocoFormatService } from '../services/CocoFormat.service';
 import { PolygonLabelingService } from '../services/PolygonLabeling.service';
 import { ReactLabelingService } from '../services/ReactLabeling.service';
-import { CocoFormatService } from "../services/CocoFormat.service";
 
 @Component({
   selector: 'sp-image-labeling',
@@ -43,10 +43,10 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit {
   public selectedLabel: {category, label};
 
   // images
-  public imagesSrcs;
+  public imagesSrcs = [];
   public imagesIndex: number;
 
-  public cocoFiles: CocoFormat[];
+  public cocoFiles: CocoFormat[] = [];
 
   public isHoverComponent;
   public brushSize: number;
@@ -58,6 +58,10 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit {
   imageField = undefined;
   pageIndex = undefined;
   pageSum = undefined;
+
+  // Flags
+  private setImagesIndexToFirst = false;
+  private setImagesIndexToLast = false;
 
 
   public labelingMode: LabelingMode = LabelingMode.ReactLabeling;
@@ -122,32 +126,43 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit {
   }
 
   processData(pageResult) {
-    this.pageIndex = pageResult.page;
-    this.pageSum = pageResult.pageSum;
-    const imageIndex = pageResult.headers.findIndex(name => name === this.imageField.runtimeName);
-    const tmp = [];
-    this.cocoFiles = [];
-    pageResult.rows.forEach(row => {
-      tmp.push(this.restService.getImageUrl(row[imageIndex]))
-      this.restService.getCocoFileForImage(row[imageIndex]).subscribe(
-        coco => {
-          console.log('------------------------------' +
-            '--------------------------------')
-                  if (coco === null) {
-                    const cocoFile = new CocoFormat();
-                    this.cocoFormatService.addImage(cocoFile, (row[imageIndex]));
-                    this.cocoFiles.push(cocoFile);
-                  } else {
-                    this.cocoFiles.push(coco as CocoFormat);
-                  }
-                  console.log(this.cocoFiles);
+    if (pageResult.rows === undefined) {
+      this.pageIndex = pageResult.pageSum;
+      this.openSnackBar('No new data found');
+    } else {
+      this.pageIndex = pageResult.page;
+      this.pageSum = pageResult.pageSum;
+
+      if (this.setImagesIndexToFirst) {
+        this.imagesIndex = 0;
+      } else if (this.setImagesIndexToLast) {
+        this.imagesIndex = pageResult.rows.length - 1;
+      }
+      this.setImagesIndexToLast = false;
+      this.setImagesIndexToFirst = false;
+
+      const imageIndex = pageResult.headers.findIndex(name => name === this.imageField.runtimeName);
+      const tmp = [];
+      this.cocoFiles = [];
+      pageResult.rows.forEach(row => {
+        tmp.push(this.restService.getImageUrl(row[imageIndex]));
+        this.restService.getCocoFileForImage(row[imageIndex]).subscribe(
+          coco => {
+            if (coco === null) {
+              const cocoFile = new CocoFormat();
+              this.cocoFormatService.addImage(cocoFile, (row[imageIndex]));
+              this.cocoFiles.push(cocoFile);
+            } else {
+              this.cocoFiles.push(coco as CocoFormat);
+            }
+          }
+        );
+
+      });
+      this.imagesSrcs = tmp;
+    }
 
 
-        }
-      );
-
-    });
-    this.imagesSrcs = tmp;
   }
 
 
@@ -266,12 +281,18 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit {
   }
   handleImagePageUp(e) {
     this.save();
-    alert('Page Up - Load new data');
+    this.pageIndex += 1;
+    this.setImagesIndexToLast = true;
+    this.loadData();
   }
 
   handleImagePageDown(e) {
     this.save();
-    alert('Page Down - Load new data');
+    if (this.pageIndex - 1 >= 0) {
+      this.pageIndex -= 1;
+      this.setImagesIndexToFirst = true;
+      this.loadData();
+    }
   }
 
   /* sp-image-annotations handlers */
@@ -307,7 +328,7 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit {
     // TODO
     const coco = this.cocoFiles[this.imagesIndex];
     const imageSrcSplitted = this.imagesSrcs[this.imagesIndex].split('/');
-    const imageRoute = imageSrcSplitted[imageSrcSplitted.length - 2]
+    const imageRoute = imageSrcSplitted[imageSrcSplitted.length - 2];
     this.restService.saveCocoFileForImage(imageRoute, JSON.stringify(coco)).subscribe(
       res =>    this.openSnackBar('Saved')
     );
