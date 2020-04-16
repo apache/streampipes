@@ -57,6 +57,7 @@ import { DataLakeService } from './services/data-lake.service';
 import { DataViewDataExplorerService } from './services/data-view-data-explorer.service';
 import { RefreshDashboardService } from './services/refresh-dashboard.service';
 import { ResizeService } from './services/resize.service';
+import {ImageWidgetComponent} from "./components/widgets/image/image-widget.component";
 
 const dashboardWidgets = [
 
@@ -107,6 +108,7 @@ export const MY_NATIVE_FORMATS = {
     DataExplorerAddVisualizationDialogComponent,
     DataExplorerEditDataViewDialogComponent,
     TableWidgetComponent,
+    ImageWidgetComponent,
     LineChartWidgetComponent,
     TimeRangeSelectorComponent,
     NoDataInDateRangeComponent,

@@ -41,6 +41,17 @@
                             [dataViewDashboardItem]="widget"
                             [dataExplorerWidget]="configuredWidget" class="h-100"></sp-data-explorer-line-chart-widget>
                 </div>
+                <div *ngIf="widget.widgetType === 'image'" class="h-100 p-0">
+                    <sp-data-explorer-image-widget
+                            (removeWidgetCallback)="removeWidget()"
+                            [viewDateRange]="viewDateRange"
+                            [gridsterItem]="item"
+                            [gridsterItemComponent]="gridsterItemComponent"
+                            [editMode]="editMode"
+                            [dataViewDashboardItem]="widget"
+                            [dataExplorerWidget]="configuredWidget" class="h-100"></sp-data-explorer-image-widget>
+                </div>
+
             </div>
         </div>
     </div>

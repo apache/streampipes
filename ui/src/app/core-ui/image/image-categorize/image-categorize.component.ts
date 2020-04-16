@@ -19,6 +19,7 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DatalakeRestService } from '../../../core-services/datalake/datalake-rest.service';
 import { ColorService } from '../services/color.service';
+import { TsonLdSerializerService } from '../../../platform-services/tsonld-serializer.service';
 
 
 @Component({
@@ -36,7 +37,7 @@ export class ImageCategorizeComponent implements OnInit, AfterViewInit {
   public imagesSrcs;
   public imagesIndex: number;
 
-  measureName = 'testsix'; // TODO: Remove hard coded Index, should be injected
+  measureName = 'image'; // TODO: Remove hard coded Index, should be injected
   eventSchema = undefined; // TODO: event schema should be also injected
   imageField = undefined;
   pageIndex = undefined;
@@ -46,7 +47,8 @@ export class ImageCategorizeComponent implements OnInit, AfterViewInit {
   private setImagesIndexToFirst = false;
   private setImagesIndexToLast = false;
 
-  constructor(private restService: DatalakeRestService, public colorService: ColorService, private snackBar: MatSnackBar) { }
+  constructor(private restService: DatalakeRestService, public colorService: ColorService, private snackBar: MatSnackBar,
+              private tsonLdSerializerService: TsonLdSerializerService) { }
 
   ngOnInit(): void {
     // TODO: Load labels for images
@@ -55,12 +57,15 @@ export class ImageCategorizeComponent implements OnInit, AfterViewInit {
     // TODO: Get Labels
     this.labels = this.restService.getLabels();
 
-    this.restService.getAllInfos().subscribe(
+    this.restService.getAllInfos().map(data => {
+      return this.tsonLdSerializerService.fromJsonLdContainer(data, 'sp:DataLakeMeasure');
+    }).subscribe(
       res => {
-        this.eventSchema = res.find(elem => elem.measureName = this.measureName).eventSchema;
+        this.eventSchema = res.find(elem => elem.measureName === this.measureName).eventSchema;
         const properties = this.eventSchema.eventProperties;
         for (const prop of properties) {
-          if (prop.domainProperties.find(type => type === 'https://image.com')) {
+          // if (prop.domainProperties.find(type => type === 'https://image.com')) {
+            if (prop.domainProperty === 'https://image.com') {
             this.imageField = prop;
             break;
           }

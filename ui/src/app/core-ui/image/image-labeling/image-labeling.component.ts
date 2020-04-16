@@ -30,6 +30,7 @@ import { BrushLabelingService } from '../services/BrushLabeling.service';
 import { CocoFormatService } from '../services/CocoFormat.service';
 import { PolygonLabelingService } from '../services/PolygonLabeling.service';
 import { ReactLabelingService } from '../services/ReactLabeling.service';
+import { TsonLdSerializerService } from '../../../platform-services/tsonld-serializer.service';
 
 @Component({
   selector: 'sp-image-labeling',
@@ -53,7 +54,7 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit {
 
   @ViewChild(ImageContainerComponent) imageView: ImageContainerComponent;
 
-  measureName = 'testsix'; // TODO: Remove hard coded Index, should be injected
+  measureName = 'image'; // TODO: Remove hard coded Index, should be injected
   eventSchema = undefined; // TODO: event schema should be also injected
   imageField = undefined;
   pageIndex = undefined;
@@ -68,7 +69,8 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit {
 
   constructor(private restService: DatalakeRestService, private reactLabelingService: ReactLabelingService,
               private polygonLabelingService: PolygonLabelingService, private brushLabelingService: BrushLabelingService,
-              private snackBar: MatSnackBar, private cocoFormatService: CocoFormatService) { }
+              private snackBar: MatSnackBar, private cocoFormatService: CocoFormatService,
+              private tsonLdSerializerService: TsonLdSerializerService) { }
 
   ngOnInit(): void {
     this.isHoverComponent = false;
@@ -77,12 +79,15 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit {
     // TODO Get Labels
     this.labels = this.restService.getLabels();
 
-    this.restService.getAllInfos().subscribe(
+    this.restService.getAllInfos().map(data => {
+      return this.tsonLdSerializerService.fromJsonLdContainer(data, 'sp:DataLakeMeasure');
+    }).subscribe(
       res => {
-        this.eventSchema = res.find(elem => elem.measureName = this.measureName).eventSchema;
+        this.eventSchema = res.find(elem => elem.measureName === this.measureName).eventSchema;
         const properties = this.eventSchema.eventProperties;
         for (const prop of properties) {
-          if (prop.domainProperties.find(type => type === 'https://image.com')) {
+          // if (prop.domainProperties.find(type => type === 'https://image.com')) {
+            if (prop.domainProperty === 'https://image.com') {
             this.imageField = prop;
             break;
           }

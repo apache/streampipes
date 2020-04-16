@@ -16,24 +16,22 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
-
-@Component({
-  selector: 'sp-image',
-  templateUrl: './image.component.html',
-  styleUrls: ['./image.component.css']
-})
-export class ImageComponent implements OnInit {
 
 
-  constructor() {
+.numberItem {
+    font-size:60px;
+    font-weight:bold;
+}
 
-  }
+.title-panel {
+    font-size:20px;
+}
 
-  ngOnInit(): void {
+.assemblyOptionsDataExplorer {
+    color: white;
+    padding: 5px;
+}
 
-  }
-
-
-
+::ng-deep .mat-form-field-wrapper {
+    padding: 0px !important;
 }
