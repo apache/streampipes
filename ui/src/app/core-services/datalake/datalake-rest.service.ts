@@ -106,4 +106,44 @@ export class DatalakeRestService {
         return this.http.request(request);
     }
 
+    getImageSrcs() {
+        return [
+          'https://cdn.pixabay.com/photo/2017/10/29/21/05/bridge-2900839_1280.jpg',
+          'https://cdn.pixabay.com/photo/2014/04/02/19/32/dead-end-308178_1280.jpg',
+          'https://cdn.pixabay.com/photo/2015/05/01/14/46/new-york-748595_1280.jpg',
+          'https://cdn.pixabay.com/photo/2015/02/13/10/18/stop-634941_1280.jpg',
+          'https://cdn.pixabay.com/photo/2017/10/29/21/05/bridge-2900839_1280.jpg',
+          'https://cdn.pixabay.com/photo/2017/04/23/08/43/new-york-2253292_1280.jpg',
+          'https://cdn.pixabay.com/photo/2015/05/01/14/46/new-york-748595_1280.jpg',
+          'https://cdn.pixabay.com/photo/2017/10/29/21/05/bridge-2900839_1280.jpg',
+          'https://cdn.pixabay.com/photo/2015/02/13/10/18/stop-634941_1280.jpg',
+          'https://cdn.pixabay.com/photo/2017/10/29/21/05/bridge-2900839_1280.jpg',
+        ];
+    }
+
+    getLabels() {
+        return {
+          'person': ['person', 'Child'],
+          'vehicle': ['bicycle', 'car', 'motorcycle', 'airplane', 'bus', 'train', 'truck', 'boat'],
+          'outdoor': ['traffic light', 'fire hydrant', 'stop sign', 'parking meter', 'bench'],
+          'animal': ['bird', 'cat', 'dog'],
+          'accessory': ['backpack', 'umbrella', 'handbag', 'suitcase'],
+          'sports': ['frisbee', 'sports ball', 'skis', 'frisbee', 'baseball bat'],
+          'kitchen': ['bottle', 'cup', 'fork', 'knife', 'spoon'],
+          'furniture': ['chair', 'couch', 'bed', 'table'],
+          'electronic': ['tv', 'laptop', 'mouse', 'keyboard']
+        };
+    }
+
+    getImageUrl(imageRoute) {
+      return this.dataLakeUrlV3 + '/data/image/' + imageRoute + '/file';
+    }
+
+    getCocoFileForImage(imageRoute) {
+      return this.http.get(this.dataLakeUrlV3 + '/data/image/' + imageRoute + '/coco');
+    }
+
+    saveCocoFileForImage(imageRoute, data) {
+      return this.http.post(this.dataLakeUrlV3 + '/data/image/' + imageRoute + '/coco', data);
+    }
 }

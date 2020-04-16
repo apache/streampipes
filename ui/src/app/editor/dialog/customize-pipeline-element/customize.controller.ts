@@ -38,8 +38,9 @@ export class CustomizeController {
     customizeForm: any;
     ShepherdService: ShepherdService;
     showDocumentation: boolean = false;
+    restrictedEditMode: boolean;
 
-    constructor($rootScope, $mdDialog, elementData, sourceEndpoint, sepa, ShepherdService) {
+    constructor($rootScope, $mdDialog, elementData, sourceEndpoint, sepa, restrictedEditMode, ShepherdService) {
         this.selectedElement = sepa;
         this.selection = [];
         this.matchingSelectionLeft = [];
@@ -53,6 +54,7 @@ export class CustomizeController {
         this.$mdDialog = $mdDialog;
         this.$rootScope = $rootScope;
         this.ShepherdService = ShepherdService;
+        this.restrictedEditMode = restrictedEditMode;
     }
 
     $onInit() {
@@ -99,8 +101,9 @@ export class CustomizeController {
             if (this.ShepherdService.isTourActive()) {
                 this.ShepherdService.trigger("save-" +this.selectedElement.type);
             }
+        } else {
+            this.invalid = true;
         }
-        else this.invalid = true;
 
     }
 
@@ -145,4 +148,4 @@ export class CustomizeController {
     }
 }
 
-CustomizeController.$inject = ['$rootScope', '$mdDialog', 'elementData', 'sourceEndpoint', 'sepa', 'ShepherdService'];
+CustomizeController.$inject = ['$rootScope', '$mdDialog', 'elementData', 'sourceEndpoint', 'sepa', 'restrictedEditMode', 'ShepherdService'];

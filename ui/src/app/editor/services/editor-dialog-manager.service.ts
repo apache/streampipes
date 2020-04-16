@@ -47,12 +47,13 @@ export class EditorDialogManager {
         this.$mdDialog.show(dialogContent);
     }
 
-    showCustomizeDialog(elementData, sourceEndpoint, sepa) {
+    showCustomizeDialog(elementData, sourceEndpoint, sepa, restrictedEditMode) {
         var dialogContent = this.DialogBuilder.getDialogTemplate(CustomizeController, require('../dialog/customize-pipeline-element/customizeElementDialog.tmpl.html'));
         dialogContent.locals = {
             elementData: elementData,
             sourceEndpoint: sourceEndpoint,
-            sepa: sepa
+            sepa: sepa,
+            restrictedEditMode: restrictedEditMode
         }
         return this.$mdDialog.show(dialogContent);
     };

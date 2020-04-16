@@ -19,7 +19,8 @@
 <div>
     <h5>Select File</h5>
     <md-input-container flex="100" layout="column">
-        <md-select required class="md-accent" name="{{ctrl.staticProperty.properties.elementId}}" ng-model="ctrl.staticProperty.properties.locationPath">
+        <md-select required class="md-accent" name="{{ctrl.staticProperty.properties.elementId}}"
+                   ng-model="ctrl.staticProperty.properties.locationPath" ng-disabled="ctrl.restrictedEditMode">
             <md-option ng-repeat="fileMetadata in ctrl.fileMetadataDescriptions track by $index" ng-value="fileMetadata.internalFilename" ng-selected="fileMetadata.internalFilename == ctrl.staticProperty.properties.locationPath">
                 <b>{{fileMetadata.originalFilename}}</b><br/>
             </md-option>
@@ -27,8 +28,9 @@
     </md-input-container>
     <hr/>
     <h5>Upload new file</h5>
-    <input ng-model="ctrl.file" type="file" name="file" id="file">
-    <sp-button sp-button-blue sp-button-small-padding ng-click="ctrl.uploadFile()" style="margin-top:10px;">
+    <input ng-model="ctrl.file" type="file" name="file" id="file" ng-disabled="ctrl.restrictedEditMode">
+    <sp-button sp-button-blue sp-button-small-padding ng-click="ctrl.uploadFile()" style="margin-top:10px;"
+               ng-disabled="ctrl.restrictedEditMode">
         <i class="material-icons" style="font-size:18px;">file_upload</i>
         <md-tooltip md-direction="top">
             Upload

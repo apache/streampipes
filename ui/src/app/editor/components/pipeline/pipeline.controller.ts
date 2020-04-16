@@ -275,7 +275,7 @@ export class PipelineController {
                             var sourceEndpoint = this.JsplumbBridge.selectEndpoints({element: info.targetEndpoint.elementId});
                             if (this.PipelineEditorService.isFullyConnected(pe)) {
                                 if ((pe.payload.staticProperties && pe.payload.staticProperties.length > 0) || this.isCustomOutput(pe)) {
-                                    this.EditorDialogManager.showCustomizeDialog($("#" +pe.payload.DOM), sourceEndpoint, pe.payload)
+                                    this.EditorDialogManager.showCustomizeDialog($("#" +pe.payload.DOM), sourceEndpoint, pe.payload, false)
                                         .then(() => {
                                             this.JsplumbService.activateEndpoint(pe.payload.DOM, !pe.payload.uncompleted);
                                         }, () => {

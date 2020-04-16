@@ -28,6 +28,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -38,9 +39,20 @@ public class Notification extends AbstractRestInterface implements INotification
     @Produces(MediaType.APPLICATION_JSON)
     @GsonWithIds
     @Override
-    public Response getNotifications() {
+    public Response getNotifications(@QueryParam("notificationType") String notificationTypeId,
+                                     @QueryParam("offset") Integer offset,
+                                     @QueryParam("count") Integer count) {
         return ok(getNotificationStorage()
-                .getAllNotifications());
+                .getAllNotifications(notificationTypeId, offset, count));
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/count")
+    @Override
+    public Response getUnreadNotificationsCount(@PathParam("username") String username) {
+        return ok(getNotificationStorage()
+                .getUnreadNotificationsCount(username));
     }
 
     @GET

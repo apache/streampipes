@@ -30,4 +30,6 @@ public interface RuntimeContext {
   List<SchemaInfo> getInputSchemaInfo();
 
   List<SourceInfo> getInputSourceInfo();
+
+  String getCorrespondingUser();
 }

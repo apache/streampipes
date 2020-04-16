@@ -31,20 +31,32 @@ export class StaticOneOfInputComponent implements OnInit {
 
   @Output() inputEmitter: EventEmitter<Boolean> = new EventEmitter<Boolean>();
 
+  selectedOption: string;
+
   constructor() { }
 
   ngOnInit() {
-      for (let option of this.staticProperty.options) {
-          option.selected = false;
+      if (this.noneSelected()) {
+          if (this.staticProperty.options.length > 0) {
+              this.staticProperty.options[0].selected = true;
+              this.selectedOption = this.staticProperty.options[0].id;
+          }
+      } else {
+          this.selectedOption = this.staticProperty.options.find(option => option.selected).id;
       }
+      this.inputEmitter.emit(true);
+  }
+
+  noneSelected(): boolean {
+      return this.staticProperty.options.every(o => !(o.selected));
   }
 
   select(id) {
+      this.selectedOption = this.staticProperty.options.find(option => option.id === id).id;
       for (let option of this.staticProperty.options) {
           option.selected = false;
       }
       this.staticProperty.options.find(option => option.id === id).selected = true;
       this.inputEmitter.emit(true)
   }
-
 }

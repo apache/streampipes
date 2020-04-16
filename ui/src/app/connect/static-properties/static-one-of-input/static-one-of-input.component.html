@@ -40,7 +40,7 @@
     <div *ngIf="staticProperty.horizontalRendering">
         <mat-form-field style="width: 100%">
             <mat-label>{{staticProperty.label}}</mat-label>
-            <mat-select>
+            <mat-select [(value)]="selectedOption">
                 <mat-option *ngFor="let option of staticProperty.options" [value]="option.id"
                             (click)="select(option.id)">
                     <label style="font-weight: normal">

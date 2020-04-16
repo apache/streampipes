@@ -18,13 +18,17 @@
 
 package org.apache.streampipes.storage.couchdb.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import org.apache.streampipes.model.Notification;
+import org.apache.streampipes.model.NotificationCount;
 import org.apache.streampipes.storage.api.INotificationStorage;
 import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,8 +47,26 @@ public class NotificationStorageImpl extends AbstractDao<Notification> implement
   }
 
   @Override
-  public List<Notification> getAllNotifications() {
-    return findAll();
+  public List<Notification> getAllNotifications(String notificationTypeId,
+                                                Integer offset,
+                                                Integer count) {
+    Gson gson = couchDbClientSupplier.get().getGson();
+    List<JsonObject> notifications =
+            couchDbClientSupplier
+                    .get()
+                    .view("notificationtypes/notificationtypes")
+                    .startKey(Arrays.asList(notificationTypeId, "\ufff0"))
+                    .endKey("\ufff0")
+                    .descending(true)
+                    .includeDocs(true)
+                    .skip(offset)
+                    .limit(count)
+                    .query(JsonObject.class);
+
+    return notifications
+            .stream()
+            .map(notification -> gson.fromJson(notification, Notification.class))
+            .collect(Collectors.toList());
   }
 
   @Override
@@ -74,5 +96,23 @@ public class NotificationStorageImpl extends AbstractDao<Notification> implement
             .stream()
             .filter(m -> !m.isRead())
             .collect(Collectors.toList());
+  }
+
+  @Override
+  public NotificationCount getUnreadNotificationsCount(String username) {
+    List<JsonObject> count =
+            couchDbClientSupplier
+                    .get()
+                    .view("unread/unread")
+                    .key(username)
+                    .group(true)
+                    .query(JsonObject.class);
+
+    if (count.size() > 0) {
+      Integer countValue = count.get(0).get("value").getAsInt();
+      return new NotificationCount(countValue);
+    } else {
+      return new NotificationCount(0);
+    }
   }
 }

@@ -34,7 +34,8 @@ public class EventProcessorRuntimeParams<B extends EventProcessorBindingParams> 
   protected EventProcessorRuntimeContext makeRuntimeContext() {
     return new SpEventProcessorRuntimeContext(getSourceInfo(),
             getSchemaInfo(), bindingParams.getOutputStreamParams()
-                    .getSourceInfo(), bindingParams.getOutputStreamParams().getSchemaInfo());
+                    .getSourceInfo(), bindingParams.getOutputStreamParams().getSchemaInfo(),
+            bindingParams.getGraph().getCorrespondingUser());
   }
 
 }

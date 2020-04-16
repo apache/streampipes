@@ -1,0 +1,38 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div fxLayout="column" fxLayoutAlign="space-between center">
+    <h2>Annotations</h2>
+    <mat-list>
+        <mat-list-item *ngFor="let annotation of annotations" (mouseover)="enterAnnotation(annotation)" (mouseout)="leaveAnnotation(annotation)"
+                       style="height: 30px; padding-top: 5px; padding-buttom: 5px; border-radius: 50px; margin-bottom: 5px"
+                       [style.background-color]="annotation.isHovered || annotation.isSelected ? 'lightgrey' : 'white'">
+            <mat-icon matListIcon [style.color]="colorService.getColor(annotation.category_name)" style="margin-top: -8px;">color_lens</mat-icon>
+            <mat-form-field>
+                <mat-select [value]="annotation.category_name">
+                    <mat-optgroup *ngFor="let category of categories" [label]="category">
+                        <mat-option *ngFor="let label of _labels[category]" [value]="label" (click)="changeLabel(annotation, label, category)">
+                            {{label}}
+                        </mat-option>
+                    </mat-optgroup>
+                </mat-select>
+            </mat-form-field>
+            <button mat-icon-button (click)="delete(annotation)" style="margin-top: -10px; margin-left: 10px"> <mat-icon>delete_forever</mat-icon></button>
+        </mat-list-item>
+    </mat-list>
+</div>

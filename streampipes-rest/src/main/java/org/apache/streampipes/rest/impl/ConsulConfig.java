@@ -21,6 +21,7 @@ package org.apache.streampipes.rest.impl;
 import static org.apache.streampipes.container.util.ConsulUtil.updateConfig;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.streampipes.config.backend.BackendConfig;
@@ -137,7 +138,9 @@ public class ConsulConfig extends AbstractRestInterface implements IConsulConfig
     String prefix = peConfig.getMainKey();
 
     for (ConfigItem configItem : peConfig.getConfigs()) {
-      updateConfig(configItem.getKey(), new Gson().toJson(configItem),
+      JsonObject jsonObj = new Gson().toJsonTree(configItem).getAsJsonObject();
+      jsonObj.entrySet().removeIf(e -> e.getKey().equals("key"));
+      updateConfig(configItem.getKey(), jsonObj.toString(),
               configItem.isPassword());
     }
     return Response.status(Response.Status.OK).build();

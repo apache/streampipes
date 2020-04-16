@@ -95,3 +95,5 @@ export class DomainConceptController {
     }
 
 }
+
+DomainConceptController.$inject = ['RestApi'];

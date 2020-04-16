@@ -53,17 +53,26 @@ export class StaticMappingUnaryComponent extends StaticMappingComponent implemen
     }
 
     isInSelection(ep: EventProperty): boolean {
+        // TODO this quick-fixes a deserialization bug in Tson-LD
+        if (!Array.isArray(this.staticProperty.mapsFromOptions)) {
+            let value: string = this.staticProperty.mapsFromOptions as any;
+            this.staticProperty.mapsFromOptions = [value];
+        }
         return this.staticProperty.mapsFromOptions.some(maps => maps === this.firstStreamPropertySelector + ep.runtimeName);
     }
 
     ngOnInit() {
         this.availableProperties = this.extractPossibleSelections();
         this.availableProperties.forEach(ep => ep.propertySelector = this.firstStreamPropertySelector + ep.runtimeName);
+        if (!this.staticProperty.selectedProperty) {
+            this.staticProperty.selectedProperty = this.availableProperties[0].propertySelector;
+        }
         this.unaryTextForm = new FormGroup({
             'unaryStaticText':new FormControl(this.inputValue, [
                 Validators.required,
             ]),
         })
+        this.inputEmitter.emit(true);
     }
 
 

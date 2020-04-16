@@ -33,11 +33,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -210,4 +206,23 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
             .build();
   }
 
+  @GET
+  @Path("/data/image/{route}/file")
+  @Produces("image/png")
+  public Response getImage(@PathParam("route") String fileRoute) throws IOException {
+    return ok(dataLakeManagement.getImage(fileRoute));
+  }
+
+  @GET
+  @Path("/data/image/{route}/coco")
+  @Produces("application/json")
+  public Response getImageCoco(@PathParam("route") String fileRoute) throws IOException {
+    return ok(dataLakeManagement.getImageCoco(fileRoute));
+  }
+
+  @POST
+  @Path("/data/image/{route}/coco")
+  public void saveImageCoco(@PathParam("route") String fileRoute, String data) throws IOException {
+    dataLakeManagement.saveImageCoco(fileRoute, data);
+  }
 }

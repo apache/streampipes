@@ -62,6 +62,9 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
   @RdfProperty(StreamPipes.CORRESPONDING_PIPELINE)
   private String correspondingPipeline;
 
+  @RdfProperty(StreamPipes.CORRESPONDING_USER)
+  private String correspondingUser;
+
   private List<SpDataStream> streamRequirements;
 
   private boolean configured;
@@ -76,6 +79,7 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
     this.correspondingPipeline = other.getCorrespondingPipeline();
     this.inputStreams = new Cloner().streams(other.getInputStreams());
     this.configured = other.isConfigured();
+    this.correspondingUser = other.getCorrespondingUser();
     if (other.getStreamRequirements() != null) {
       this.streamRequirements = new Cloner().streams(other.getStreamRequirements());
     }
@@ -159,6 +163,14 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
 
   public void setStatusInfoSettings(ElementStatusInfoSettings statusInfoSettings) {
     this.statusInfoSettings = statusInfoSettings;
+  }
+
+  public String getCorrespondingUser() {
+    return correspondingUser;
+  }
+
+  public void setCorrespondingUser(String correspondingUser) {
+    this.correspondingUser = correspondingUser;
   }
 
   //public Logger getLogger(Class clazz, PeConfig peConfig) {

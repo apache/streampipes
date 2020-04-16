@@ -51,11 +51,15 @@
         </div>
         <div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'MappingPropertyUnary'">
             <mapping-property-unary selected-element="ctrl.selectedElement" static-property="ctrl.staticProperty"
-                                    display-recommended="ctrl.displayRecommended"></mapping-property-unary>
+                                    display-recommended="ctrl.displayRecommended"
+                                    restricted-edit-mode="ctrl.restrictedEditMode">
+            </mapping-property-unary>
         </div>
         <div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'MappingPropertyNary'">
             <mapping-property-nary selected-element="ctrl.selectedElement" static-property="ctrl.staticProperty"
-                                   display-recommended="ctrl.displayRecommended"></mapping-property-nary>
+                                   display-recommended="ctrl.displayRecommended"
+                                   restricted-edit-mode="ctrl.restrictedEditMode">
+            </mapping-property-nary>
         </div>
         <div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'MatchingProperty'">
             <matching-property static-property="ctrl.staticProperty"></matching-property>
@@ -79,7 +83,9 @@
         </div>
         <div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'FileStaticProperty'">
             <file-static-property customize-form="ctrl.customizeForm" display-recommended="ctrl.displayRecommended"
-                   static-property="ctrl.staticProperty" selected-element="ctrl.selectedElement"></file-static-property>
+                   static-property="ctrl.staticProperty" selected-element="ctrl.selectedElement"
+                                  restricted-edit-mode="ctrl.restrictedEditMode">
+            </file-static-property>
         </div>
     </div>
 </div>

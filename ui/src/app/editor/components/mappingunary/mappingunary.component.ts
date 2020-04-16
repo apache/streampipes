@@ -26,6 +26,7 @@ export let MappingUnaryComponent = {
         staticProperty : "=",
         displayRecommended: "=",
         selectedElement: "=",
+        restrictedEditMode: "<"
     },
     controller: MappingUnaryController,
     controllerAs: 'ctrl'

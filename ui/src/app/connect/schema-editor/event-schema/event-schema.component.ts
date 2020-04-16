@@ -80,6 +80,9 @@ export class EventSchemaComponent implements OnChanges {
     this.restService.getGuessSchema(this.adapterDescription).subscribe(guessSchema => {
       this.isLoading = false;
       this.eventSchema = guessSchema.eventSchema;
+      this.eventSchema.eventProperties.sort((a, b) => {
+        return a.runtimeName < b.runtimeName ? -1 : 1;
+      });
       this.eventSchemaChange.emit(this.eventSchema);
       this.schemaGuess = guessSchema;
 

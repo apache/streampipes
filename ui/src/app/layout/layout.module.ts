@@ -24,6 +24,7 @@ import spServices from '../services/services.module'
 import {AppCtrl} from './app.controller'
 import {ToolbarController} from "./toolbar.controller";
 import {FeedbackComponent} from "./components/feedback.component";
+import {NotificationCountService} from "../services/notification-count-service";
 
 export default angular.module('sp.layout', [spServices, ngCookies, 'angular-notification-icons', 'ngAnimate'])
 	.component('spFeedback', FeedbackComponent)

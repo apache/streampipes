@@ -25,7 +25,8 @@ export let MappingNaryComponent = {
     bindings: {
         staticProperty : "=",
         displayRecommended: "=",
-        selectedElement: "<"
+        selectedElement: "<",
+        restrictedEditMode: "<"
     },
     controller: MappingNaryController,
     controllerAs: 'ctrl'

@@ -30,7 +30,6 @@ import spServices from './services/services.module';
 import spCore from './core/core.module';
 import spLayout from './layout/layout.module';
 import spLogin from './login/login.module';
-import spNotifications from './notifications/notifications.module';
 import spAppLinks from './applinks/applinks.module';
 import spPipelineDetails from './pipeline-details/pipeline-details.module';
 import { SpButtonDirective } from "./core/button/button.directive";
@@ -51,7 +50,6 @@ export const Ng1AppModule = angular
         spCore,
         spLayout,
         spLogin,
-        spNotifications,
         spAppLinks,
         spPipelineDetails,
         'ui.router',

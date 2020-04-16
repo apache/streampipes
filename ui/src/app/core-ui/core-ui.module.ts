@@ -27,6 +27,27 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
+import { LineChartComponent } from './linechart/lineChart.component';
+import { TableComponent } from './table/table.component';
+
+// import * as PlotlyJS from 'plotly.js/dist/plotly.js';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatSliderModule } from '@angular/material/slider';
+import { PlotlyViaWindowModule } from 'angular-plotly.js';
+import { ImageAnnotationsComponent } from './image/components/image-annotations/image-annotations.component';
+import { ImageBarComponent } from './image/components/image-bar/image-bar.component';
+import { ImageContainerComponent } from './image/components/image-container/image-container.component';
+import { ImageLabelsComponent } from './image/components/image-labels/image-labels.component';
+import { ImageCategorizeComponent } from './image/image-categorize/image-categorize.component';
+import { ImageLabelingComponent } from './image/image-labeling/image-labeling.component';
+import { ImageViewerComponent } from './image/image-viewer/image-viewer.component';
+import { ImageComponent } from './image/image.component';
+import { BrushLabelingService } from './image/services/BrushLabeling.service';
+import { ColorService } from './image/services/color.service';
+import { PolygonLabelingService } from './image/services/PolygonLabeling.service';
+import { ReactLabelingService } from './image/services/ReactLabeling.service';
+import { CocoFormatService } from "./image/services/CocoFormat.service";
+// PlotlyViaCDNModule.plotlyjs = PlotlyJS;
 
 @NgModule({
     imports: [
@@ -40,17 +61,37 @@ import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
         MatProgressSpinnerModule,
         MatDatepickerModule,
         MatNativeDateModule,
+        PlotlyViaWindowModule,
+        MatSliderModule,
+        MatChipsModule
     ],
     declarations: [
-
+        TableComponent,
+        LineChartComponent,
+        ImageComponent,
+        ImageContainerComponent,
+        ImageLabelingComponent,
+        ImageLabelsComponent,
+        ImageBarComponent,
+        ImageAnnotationsComponent,
+        ImageCategorizeComponent,
+        ImageViewerComponent,
     ],
     providers: [
-        MatDatepickerModule
+        MatDatepickerModule,
+        ColorService,
+        ReactLabelingService,
+        PolygonLabelingService,
+        BrushLabelingService,
+        CocoFormatService,
     ],
     entryComponents: [
     ],
     exports: [
-
+        TableComponent,
+        LineChartComponent,
+        ImageComponent,
+        ImageLabelingComponent,
     ]
 })
 export class CoreUiModule {

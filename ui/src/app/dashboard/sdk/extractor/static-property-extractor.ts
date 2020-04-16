@@ -23,6 +23,7 @@ import {FreeTextStaticProperty} from "../../../connect/model/FreeTextStaticPrope
 import {ColorPickerStaticProperty} from "../../../connect/model/ColorPickerStaticProperty";
 import {MappingPropertyNary} from "../../../connect/model/MappingPropertyNary";
 import {OneOfStaticProperty} from "../../../connect/model/OneOfStaticProperty";
+import {EventProperty} from "../../../connect/schema-editor/model/EventProperty";
 
 export class StaticPropertyExtractor {
 
@@ -44,13 +45,15 @@ export class StaticPropertyExtractor {
         let sp: MappingPropertyNary = this.getStaticPropertyByName(internalId) as MappingPropertyNary;
         let properties: Array<string> = [];
         // TODO this quick-fixes a deserialization bug in Tson-LD
-        if (!Array.isArray(sp.selectedProperties)) {
+        if (sp.selectedProperties && !Array.isArray(sp.selectedProperties)) {
             let value: string = sp.selectedProperties as any;
             sp.selectedProperties = [value];
         }
-        sp.selectedProperties.forEach(ep => {
-           properties.push(this.removePrefix(ep));
-        });
+        if (sp.selectedProperties) {
+            sp.selectedProperties.forEach(ep => {
+                properties.push(this.removePrefix(ep));
+            });
+        }
         return properties;
     }
 
@@ -79,6 +82,10 @@ export class StaticPropertyExtractor {
 
     getStaticPropertyByName(internalId: string): StaticProperty {
         return this.staticProperties.find(sp => (sp.internalName == internalId));
+    }
+
+    getEventPropertyByName(runtimeName: string): EventProperty {
+        return this.inputSchema.eventProperties.find(ep => ep.runtimeName === runtimeName);
     }
 
 

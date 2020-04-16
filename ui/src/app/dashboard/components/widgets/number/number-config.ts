@@ -35,7 +35,7 @@ export class NumberConfig extends WidgetConfig {
             .withDescription("Displays a single number or text value")
             .requiredSchema(SchemaRequirementsBuilder
                 .create()
-                .requiredPropertyWithUnaryMapping(NumberConfig.NUMBER_MAPPING_KEY, "Select property", "", EpRequirements.numberReq())
+                .requiredPropertyWithUnaryMapping(NumberConfig.NUMBER_MAPPING_KEY, "Select property", "", EpRequirements.anyProperty())
                 .build())
             .build();
     }

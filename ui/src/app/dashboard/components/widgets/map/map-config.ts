@@ -42,7 +42,7 @@ export class MapConfig extends WidgetConfig {
                 .requiredPropertyWithUnaryMapping(MapConfig.LONGITUDE_MAPPING_KEY, "Latitude field", "", EpRequirements.longitudeReq())
                 .requiredPropertyWithNaryMapping(MapConfig.ITEMS_MAPPING_KEY, "Fields to display", "", EpRequirements.anyProperty())
                 .build())
-            .requiredSingleValueSelection(MapConfig.MARKER_TYPE_KEY, "Marker type", "", ["Default", "Car"])
+            .requiredSingleValueSelection(MapConfig.MARKER_TYPE_KEY, "Marker type", "", [this.makeOption("Default"), this.makeOption("Car")])
             .build();
     }
 

@@ -37,6 +37,7 @@ import { PlotlyViaWindowModule } from 'angular-plotly.js';
 import { LineChartComponent } from './explorer-widget/explorer-visualisations/linechart/lineChart.component';
 import { TableComponent } from './explorer-widget/explorer-visualisations/table/table.component';
 import { TimeRangeSelectorComponent } from './time-selector/timeRangeSelector.component';
+import { LabelingToolModule } from '../core-ui/linechart/labeling-tool/labeling-tool.module';
 
 export const MY_NATIVE_FORMATS = {
   fullPickerInput: {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: false},
@@ -48,42 +49,43 @@ export const MY_NATIVE_FORMATS = {
 };
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FlexLayoutModule,
-    CustomMaterialModule,
-    ReactiveFormsModule,
-    FormsModule,
-    CdkTableModule,
-    MatSnackBarModule,
-    MatProgressSpinnerModule,
-    CoreUiModule,
-    OwlDateTimeModule,
-    OwlNativeDateTimeModule,
-    PlotlyViaWindowModule,
-  ],
-  declarations: [
-    DataExplorerComponent,
-    ExplorerComponent,
-    DataDownloadDialog,
-    TableComponent,
-    LineChartComponent,
-    TimeRangeSelectorComponent,
-  ],
-  providers: [
-    DatalakeRestService,
-    {
-      provide: OWL_DATE_TIME_FORMATS, useValue: MY_NATIVE_FORMATS
-    },
-  ],
-  entryComponents: [
-    DataExplorerComponent,
-    DataDownloadDialog,
-  ],
-  exports: [
-    DataExplorerComponent,
-    ExplorerComponent
-  ]
+    imports: [
+        CommonModule,
+        FlexLayoutModule,
+        CustomMaterialModule,
+        ReactiveFormsModule,
+        FormsModule,
+        CdkTableModule,
+        MatSnackBarModule,
+        MatProgressSpinnerModule,
+        CoreUiModule,
+        OwlDateTimeModule,
+        OwlNativeDateTimeModule,
+        PlotlyViaWindowModule,
+        LabelingToolModule,
+    ],
+    declarations: [
+        DataExplorerComponent,
+        ExplorerComponent,
+        DataDownloadDialog,
+        TableComponent,
+        LineChartComponent,
+        TimeRangeSelectorComponent,
+    ],
+    providers: [
+        DatalakeRestService,
+        {
+            provide: OWL_DATE_TIME_FORMATS, useValue: MY_NATIVE_FORMATS
+        },
+    ],
+    entryComponents: [
+        DataExplorerComponent,
+        DataDownloadDialog,
+    ],
+    exports: [
+      DataExplorerComponent,
+      ExplorerComponent
+    ]
 })
 export class DataExplorerModule {
 }

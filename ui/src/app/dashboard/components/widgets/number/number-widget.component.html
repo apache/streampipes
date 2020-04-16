@@ -20,8 +20,13 @@
     <div class="title-panel" *ngIf="hasTitlePanelSettings">
         {{selectedTitle}}
     </div>
-    <div class="numberItem">
-        <div *ngIf="isNumber(item)">{{item}}</div>
-        <div *ngIf="!isNumber(item)">{{item}}</div>
+    <div class="value-panel">
+        <div class="numberItem">
+            <div *ngIf="isNumber(item)">{{item}}</div>
+            <div *ngIf="!isNumber(item)">{{item}}</div>
+        </div>
+        <div class="measurementUnitItem" *ngIf="measurementUnitAbbrev">
+            {{measurementUnitAbbrev}}
+        </div>
     </div>
 </div>
