@@ -200,3 +200,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 
+
+============================================================================
+
+All files that are part of this project are licensed under the Apache License 2.0. This also applies for files that can not include an appropriate license header for technical reasons (e.g., /cli/templates/).
