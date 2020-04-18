@@ -60,6 +60,14 @@
                     <groupId>com.sun.jersey.contribs</groupId>
                     <artifactId>jersey-guice</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.paho</groupId>
+                    <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.metamx</groupId>
+                    <artifactId>tranquility_2.10</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
     </dependencies>

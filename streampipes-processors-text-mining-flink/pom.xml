@@ -89,6 +89,12 @@
             <groupId>io.flinkspector</groupId>
             <artifactId>flinkspector-datastream_2.11</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.flink</groupId>
+                    <artifactId>flink-runtime_2.11</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
