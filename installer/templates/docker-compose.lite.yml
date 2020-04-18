@@ -70,16 +70,9 @@ services:
     depends_on:
       - zookeeper
     environment:
-      # TODO: change named listener to INSIDE (kafka-rest)
-      # KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
-      # KAFKA_ADVERTISED_LISTENERS: INSIDE://:9092,OUTSIDE://localhost:9094 #(local, i.e. Single-Node with IDE + Docker)
-      # KAFKA_LISTENERS: INSIDE://:9092,OUTSIDE://:9094
-      # KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
-      #
-      #
       # see: https://github.com/confluentinc/schema-registry/issues/648
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,OUTSIDE:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://:9092,OUTSIDE://localhost:9094 #(local, i.e. Single-Node with IDE + Docker)
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://:9092,OUTSIDE://localhost:9094
       KAFKA_LISTENERS: PLAINTEXT://:9092,OUTSIDE://:9094
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_ADVERTISED_HOST_NAME: kafka
@@ -90,19 +83,6 @@ services:
     volumes:
       - kafka:/kafka
       - /var/run/docker.sock:/var/run/docker.sock
-    networks:
-      spnet:
-
-  kafka-rest:
-    image: confluentinc/cp-kafka-rest:5.2.3
-    ports:
-      - "8073:8082"
-    depends_on:
-      - zookeeper
-    environment:
-      - ZK_CONNECTION_STRING=zookeeper:2181
-      - KAFKA_REST_HOST_NAME=kafka-rest
-      - KAFKA_REST_ZOOKEEPER_CONNECT=zookeeper:2181
     networks:
       spnet:
 
@@ -133,10 +113,7 @@ services:
     networks:
       spnet:
 
-
-
 #### StreamPipes services
-
   backend:
     image: "${SP_DOCKER_REGISTRY}/backend:${SP_BACKEND_VERSION}"
     depends_on:
@@ -195,7 +172,6 @@ services:
 
 
 #### Lite version pipeline elements
-
   pipeline-elements-all-jvm:
     image: "${SP_DOCKER_REGISTRY}/pipeline-elements-all-jvm:${SP_PE_VERSION}"
     depends_on:
