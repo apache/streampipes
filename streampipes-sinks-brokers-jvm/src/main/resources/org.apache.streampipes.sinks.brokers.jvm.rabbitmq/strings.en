@@ -6,3 +6,19 @@ topic.description=Select a RabbitMQ topic
 
 broker-settings.title=RabbitMQ broker settings
 broker-settings.description=Provide settings of the RabbitMQ broker to connect with.
+
+host.title=Host
+host.description=Host or IP of the broker
+
+port.title=Port
+port.description=Port of the  broker (e.g. 5672)
+
+user.title=User
+user.description=User to log in to the broker
+
+password.title=Password
+password.description=Password of the user
+
+exchange-name.title=Exchange Name
+exchange-name.description=Leave empty for default exchange
+

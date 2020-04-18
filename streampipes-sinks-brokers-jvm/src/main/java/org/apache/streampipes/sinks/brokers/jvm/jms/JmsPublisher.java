@@ -21,6 +21,7 @@ package org.apache.streampipes.sinks.brokers.jvm.jms;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.apache.streampipes.messaging.jms.ActiveMQPublisher;
+import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.runtime.EventSink;
@@ -38,7 +39,10 @@ public class JmsPublisher implements EventSink<JmsParameters> {
 
   @Override
   public void onInvocation(JmsParameters params, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
-    this.publisher = new ActiveMQPublisher(params.getJmsHost() + ":" + params.getJmsPort(), params.getTopic());
+//    this.publisher = new ActiveMQPublisher(params.getJmsHost() + ":" + params.getJmsPort(), params.getTopic());
+    this.publisher = new ActiveMQPublisher();
+    JmsTransportProtocol jmsTransportProtocol = new JmsTransportProtocol(params.getJmsHost(),  params.getJmsPort(), params.getTopic());
+    this.publisher.connect(jmsTransportProtocol);
     if (!this.publisher.isConnected()) {
       throw new SpRuntimeException("Could not connect to JMS server " + params.getJmsHost() + " on Port: " + params.getJmsPort() + " to topic: " + params.getTopic());
     }

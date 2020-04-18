@@ -33,11 +33,13 @@ import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDec
 
 public class KafkaController extends StandaloneEventSinkDeclarer<KafkaParameters> {
 
-  private static final String KAFKA_BROKER_SETTINGS_KEY = "broker-settings";
+//  private static final String KAFKA_BROKER_SETTINGS_KEY = "broker-settings";
   private static final String TOPIC_KEY = "topic";
+  private static final String HOST_KEY = "host";
+  private static final String PORT_KEY = "port";
 
-  private static final String KAFKA_HOST_URI = "http://schema.org/kafkaHost";
-  private static final String KAFKA_PORT_URI = "http://schema.org/kafkaPort";
+//  private static final String KAFKA_HOST_URI = "http://schema.org/kafkaHost";
+//  private static final String KAFKA_PORT_URI = "http://schema.org/kafkaPort";
 
   @Override
   public DataSinkDescription declareModel() {
@@ -49,9 +51,11 @@ public class KafkaController extends StandaloneEventSinkDeclarer<KafkaParameters
                     .requiredProperty(EpRequirements.anyProperty())
                     .build())
             .requiredTextParameter(Labels.withId(TOPIC_KEY), false, false)
-            .requiredOntologyConcept(Labels.withId(KAFKA_BROKER_SETTINGS_KEY),
-                    OntologyProperties.mandatory(KAFKA_HOST_URI),
-                    OntologyProperties.mandatory(KAFKA_PORT_URI))
+            .requiredTextParameter(Labels.withId(HOST_KEY), false, false)
+            .requiredIntegerParameter(Labels.withId(PORT_KEY), 9092)
+//            .requiredOntologyConcept(Labels.withId(KAFKA_BROKER_SETTINGS_KEY),
+//                    OntologyProperties.mandatory(KAFKA_HOST_URI),
+//                    OntologyProperties.mandatory(KAFKA_PORT_URI))
             .build();
   }
 
@@ -60,10 +64,12 @@ public class KafkaController extends StandaloneEventSinkDeclarer<KafkaParameters
                                                            DataSinkParameterExtractor extractor) {
     String topic = extractor.singleValueParameter(TOPIC_KEY, String.class);
 
-    String kafkaHost = extractor.supportedOntologyPropertyValue(KAFKA_BROKER_SETTINGS_KEY, KAFKA_HOST_URI,
-            String.class);
-    Integer kafkaPort = extractor.supportedOntologyPropertyValue(KAFKA_BROKER_SETTINGS_KEY, KAFKA_PORT_URI,
-            Integer.class);
+    String kafkaHost = extractor.singleValueParameter(HOST_KEY, String.class);
+    Integer kafkaPort = extractor.singleValueParameter(PORT_KEY, Integer.class);
+//    String kafkaHost = extractor.supportedOntologyPropertyValue(KAFKA_BROKER_SETTINGS_KEY, KAFKA_HOST_URI,
+//            String.class);
+//    Integer kafkaPort = extractor.supportedOntologyPropertyValue(KAFKA_BROKER_SETTINGS_KEY, KAFKA_PORT_URI,
+//            Integer.class);
 
     KafkaParameters params = new KafkaParameters(graph, kafkaHost, kafkaPort, topic);
 
