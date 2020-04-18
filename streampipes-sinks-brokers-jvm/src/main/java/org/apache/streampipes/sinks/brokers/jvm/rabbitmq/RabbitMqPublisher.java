@@ -21,6 +21,7 @@ package org.apache.streampipes.sinks.brokers.jvm.rabbitmq;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,6 +49,7 @@ public class RabbitMqPublisher {
       this.params = params;
       this.exchangeName = params.getExchangeName();
       setupConnection();
+
       this.errorMode = false;
     } catch (IOException e) {
       LOG.error("Error (IOException) while connecting to RabbitMQ..entering error mode");
@@ -66,6 +68,10 @@ public class RabbitMqPublisher {
     this.factory.setPassword(params.getRabbitMqPassword());
     this.connection = factory.newConnection();
 
+  }
+
+  public boolean isConnected()  {
+    return this.connection.isOpen();
   }
 
   public void fire(byte[] event, String topic) {

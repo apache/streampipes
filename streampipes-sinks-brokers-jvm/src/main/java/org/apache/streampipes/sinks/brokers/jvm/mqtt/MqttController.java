@@ -33,11 +33,13 @@ import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDec
 
 public class MqttController extends StandaloneEventSinkDeclarer<MqttParameters> {
 
-    private static final String MQTT_BROKER_SETTINGS_KEY = "broker-settings";
+//    private static final String MQTT_BROKER_SETTINGS_KEY = "broker-settings";
     private static final String TOPIC_KEY = "topic";
+    private static final String HOST_KEY = "host";
+    private static final String PORT_KEY = "port";
 
-    private static final String MQTT_HOST_URI = "http://schema.org/mqttHost";
-    private static final String MQTT_PORT_URI = "http://schema.org/mqttPort";
+//    private static final String MQTT_HOST_URI = "http://schema.org/mqttHost";
+//    private static final String MQTT_PORT_URI = "http://schema.org/mqttPort";
 
     @Override
     public DataSinkDescription declareModel() {
@@ -49,9 +51,11 @@ public class MqttController extends StandaloneEventSinkDeclarer<MqttParameters> 
                         .requiredProperty(EpRequirements.anyProperty())
                         .build())
                 .requiredTextParameter(Labels.withId(TOPIC_KEY), false, false)
-                .requiredOntologyConcept(Labels.withId(MQTT_BROKER_SETTINGS_KEY),
-                        OntologyProperties.mandatory(MQTT_HOST_URI),
-                        OntologyProperties.mandatory(MQTT_PORT_URI))
+                .requiredTextParameter(Labels.withId(HOST_KEY), false, false)
+                .requiredIntegerParameter(Labels.withId(PORT_KEY), 1883)
+//                .requiredOntologyConcept(Labels.withId(MQTT_BROKER_SETTINGS_KEY),,
+//                        OntologyProperties.mandatory(MQTT_HOST_URI),
+//                        OntologyProperties.mandatory(MQTT_PORT_URI))
                 .build();
     }
 
@@ -60,10 +64,12 @@ public class MqttController extends StandaloneEventSinkDeclarer<MqttParameters> 
                                                              DataSinkParameterExtractor extractor) {
 
         String topic = extractor.singleValueParameter(TOPIC_KEY, String.class);
-        String mqttHost = extractor.supportedOntologyPropertyValue(MQTT_BROKER_SETTINGS_KEY, MQTT_HOST_URI,
-                String.class);
-        Integer mqttPort = extractor.supportedOntologyPropertyValue(MQTT_BROKER_SETTINGS_KEY, MQTT_PORT_URI,
-                Integer.class);
+        String mqttHost = extractor.singleValueParameter(HOST_KEY, String.class);
+        Integer mqttPort = extractor.singleValueParameter(PORT_KEY, Integer.class);
+//        String mqttHost = extractor.supportedOntologyPropertyValue(MQTT_BROKER_SETTINGS_KEY, MQTT_HOST_URI,
+//                String.class);
+//        Integer mqttPort = extractor.supportedOntologyPropertyValue(MQTT_BROKER_SETTINGS_KEY, MQTT_PORT_URI,
+//                Integer.class);
 
         MqttParameters params = new MqttParameters(graph, mqttHost, mqttPort, topic);
         return new ConfiguredEventSink<>(params, MqttPublisher::new);

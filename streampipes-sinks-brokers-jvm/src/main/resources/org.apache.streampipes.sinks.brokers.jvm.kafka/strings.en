@@ -6,3 +6,10 @@ topic.description=Select a Kafka topic
 
 broker-settings.title=Kafka broker settings
 broker-settings.description=Provide settings of the Kafka broker to connect with.
+
+host.title=Kafka Broker
+host.description=IP address or hostname of Kafka broker
+
+port.title=Port
+port.description=Port of the Kafka broker. Default port 9092
+

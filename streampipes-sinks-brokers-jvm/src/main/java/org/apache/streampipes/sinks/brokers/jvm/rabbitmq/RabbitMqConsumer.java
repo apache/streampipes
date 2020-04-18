@@ -45,6 +45,11 @@ public class RabbitMqConsumer implements EventSink<RabbitMqParameters> {
   public void onInvocation(RabbitMqParameters parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
     this.publisher = new RabbitMqPublisher(parameters);
     this.topic = parameters.getRabbitMqTopic();
+
+    if (!this.publisher.isConnected()) {
+      throw new SpRuntimeException("Could not establish conntection to RabbitMQ broker. Host: " +
+              parameters.getRabbitMqHost() + " Port: " + parameters.getRabbitMqPort());
+    }
   }
 
   @Override

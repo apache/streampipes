@@ -52,7 +52,7 @@ public enum SinksInternalJvmConfig implements PeConfig {
 		config.register(ConfigKeys.BACKEND_HOST, "backend", "Hostname for the StreamPipes-Backend");
 		config.register(ConfigKeys.BACKEND_PORT, 8030, "Port for the StreamPipes-Backend");
 		config.register(ConfigKeys.BACKEND_PROTOCOL, "http", "Protocol for the StreamPipes-Backend");
-		config.register(ConfigKeys.IMAGE_STORAGE_LOCATION, "/sp_images/", "Protocol for the StreamPipes-Backend");
+		config.register(ConfigKeys.IMAGE_STORAGE_LOCATION, "/sp_images/", "Storage location of the data lake images");
 
 		config.register(ConfigKeys.SERVICE_NAME, service_name, "The name of the service");
 

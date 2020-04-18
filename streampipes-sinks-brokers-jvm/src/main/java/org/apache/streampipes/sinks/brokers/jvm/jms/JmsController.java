@@ -36,9 +36,11 @@ public class JmsController extends StandaloneEventSinkDeclarer<JmsParameters> {
 
   private static final String JMS_BROKER_SETTINGS_KEY = "broker-settings";
   private static final String TOPIC_KEY = "topic";
+  private static final String HOST_KEY = "host";
+  private static final String PORT_KEY = "port";
 
-  private static final String JMS_HOST_URI = "http://schema.org/jmsHost";
-  private static final String JMS_PORT_URI = "http://schema.org/jmsPort";
+//  private static final String JMS_HOST_URI = "http://schema.org/jmsHost";
+//  private static final String JMS_PORT_URI = "http://schema.org/jmsPort";
 
   @Override
   public DataSinkDescription declareModel() {
@@ -50,9 +52,11 @@ public class JmsController extends StandaloneEventSinkDeclarer<JmsParameters> {
                     .requiredProperty(EpRequirements.anyProperty())
                     .build())
             .requiredTextParameter(Labels.withId(TOPIC_KEY), false, false)
-            .requiredOntologyConcept(Labels.withId(JMS_BROKER_SETTINGS_KEY),
-                    OntologyProperties.mandatory(JMS_HOST_URI),
-                    OntologyProperties.mandatory(JMS_PORT_URI))
+            .requiredTextParameter(Labels.withId(HOST_KEY), false, false)
+            .requiredIntegerParameter(Labels.withId(PORT_KEY), 61616)
+//            .requiredOntologyConcept(Labels.withId(JMS_BROKER_SETTINGS_KEY),
+//                    OntologyProperties.mandatory(JMS_HOST_URI),
+//                    OntologyProperties.mandatory(JMS_PORT_URI))
             .build();
   }
 
@@ -61,10 +65,12 @@ public class JmsController extends StandaloneEventSinkDeclarer<JmsParameters> {
 
     String topic = extractor.singleValueParameter(TOPIC_KEY, String.class);
 
-    String jmsHost = extractor.supportedOntologyPropertyValue(JMS_BROKER_SETTINGS_KEY, JMS_HOST_URI,
-            String.class);
-    Integer jmsPort = extractor.supportedOntologyPropertyValue(JMS_BROKER_SETTINGS_KEY, JMS_PORT_URI,
-            Integer.class);
+    String jmsHost = extractor.singleValueParameter(HOST_KEY, String.class);
+    Integer jmsPort = extractor.singleValueParameter(PORT_KEY, Integer.class);
+//    String jmsHost = extractor.supportedOntologyPropertyValue(JMS_BROKER_SETTINGS_KEY, JMS_HOST_URI,
+//            String.class);
+//    Integer jmsPort = extractor.supportedOntologyPropertyValue(JMS_BROKER_SETTINGS_KEY, JMS_PORT_URI,
+//            Integer.class);
 
     JmsParameters params = new JmsParameters(graph, jmsHost, jmsPort, topic);
 
