@@ -22,6 +22,7 @@ import io.flinkspector.datastream.DataStreamTestBase;
 import io.flinkspector.datastream.input.EventTimeInput;
 import io.flinkspector.datastream.input.EventTimeInputBuilder;
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.test.generator.InvocationGraphGenerator;
@@ -30,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+@Ignore
 public class TestCountProgram extends DataStreamTestBase {
 
   @Test
