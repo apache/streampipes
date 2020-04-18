@@ -18,7 +18,7 @@
 package org.apache.streampipes.wrapper.siddhi.engine;
 
 
-import org.wso2.siddhi.core.event.Event;
+import io.siddhi.core.event.Event;
 
 public interface SiddhiDebugCallback {
 

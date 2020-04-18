@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.wrapper.siddhi.manager;
 
-import org.wso2.siddhi.core.SiddhiManager;
+import io.siddhi.core.SiddhiManager;
 
 public enum SpSiddhiManager {
 
