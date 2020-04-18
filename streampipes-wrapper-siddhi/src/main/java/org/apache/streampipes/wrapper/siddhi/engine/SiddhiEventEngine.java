@@ -120,6 +120,8 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
       });
     }
 
+    siddhiAppRuntime.start();
+
   }
 
   private String getOutputTopicName(B parameters) {
@@ -136,7 +138,8 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
           schemaInfo, SourceInfo sourceInfo) {
     Map<String, Object> outMap = new HashMap<>();
     for (int i = 0; i < sortedEventKeys.size(); i++) {
-      outMap.put(sortedEventKeys.get(i), event.getData(i));
+        List<Object> tmp = (List<Object>) event.getData(i);
+      outMap.put(sortedEventKeys.get(i), tmp.get(0));
     }
     return EventFactory.fromMap(outMap, sourceInfo, schemaInfo);
   }
