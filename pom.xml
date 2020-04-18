@@ -84,6 +84,7 @@
         <xerces.version>2.9.1</xerces.version>
         <zstd-jni.version>1.4.3-1</zstd-jni.version>
         <mqtt-client.version>1.12</mqtt-client.version>
+        <hawtbuf.version>1.11</hawtbuf.version>
 
         <maven-shade-plugin.version>3.0.0</maven-shade-plugin.version>
     </properties>
@@ -313,6 +314,11 @@
                 <artifactId>mqtt-client</artifactId>
                 <version>${mqtt-client.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.fusesource.hawtbuf</groupId>
+                <artifactId>hawtbuf</artifactId>
+                <version>${hawtbuf.version}</version>
+            </dependency>
 
             <!-- Test dependencies -->
             <dependency>
@@ -337,6 +343,7 @@
                 <artifactId>streampipes-test-utils</artifactId>
                 <version>${streampipes.version}</version>
                 <scope>test</scope>
+                gi
             </dependency>
             <dependency>
                 <groupId>org.eclipse.ditto</groupId>
