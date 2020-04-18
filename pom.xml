@@ -343,7 +343,6 @@
                 <artifactId>streampipes-test-utils</artifactId>
                 <version>${streampipes.version}</version>
                 <scope>test</scope>
-                gi
             </dependency>
             <dependency>
                 <groupId>org.eclipse.ditto</groupId>
