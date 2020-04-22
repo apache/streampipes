@@ -24,7 +24,8 @@ export let PipelineElementIconStandComponent = {
     template: require('./pipeline-element-icon-stand.tmpl.html'),
     bindings: {
        currentElements: "=",
-       activeType: "="
+       activeType: "=",
+       elementFilter: "="
     },
     controller: PipelineElementIconStandController,
     controllerAs: 'ctrl'

@@ -62,7 +62,9 @@
         <div id="shepherd-test" ng-show="!ctrl.minimizedEditorStand"
              style="background-color:#f6f6f6;padding:0px;border-bottom:1px solid #ffffff">
             <pipeline-element-icon-stand active-type="ctrl.activeType"
-                                         current-elements="ctrl.currentElements"></pipeline-element-icon-stand>
+                                         current-elements="ctrl.currentElements"
+                                         element-filter="ctrl.elementFilter">
+            </pipeline-element-icon-stand>
         </div>
     </div>
     <pipeline-assembly raw-pipeline-model="ctrl.rawPipelineModel" all-elements="ctrl.allElements"

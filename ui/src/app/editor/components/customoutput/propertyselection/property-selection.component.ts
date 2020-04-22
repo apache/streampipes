@@ -26,7 +26,8 @@ export let PropertySelectionComponent = {
         outputStrategy: "=",
         eventProperty: "=",
         layer: "@",
-        togglePropertyKey: "&"
+        togglePropertyKey: "&",
+        restrictedEditMode: "<"
     },
     controller: PropertySelectionController,
     controllerAs: 'ctrl'

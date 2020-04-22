@@ -35,6 +35,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <dependency.locations.enabled>false</dependency.locations.enabled>
+        <owasp.check.skip>false</owasp.check.skip>
 
         <activemq-client.version>5.15.9</activemq-client.version>
         <asm.version>7.0</asm.version>
@@ -90,7 +91,7 @@
         <rendersnake.version>1.8</rendersnake.version>
         <retrofit.version>2.5.0</retrofit.version>
         <shiro.version>1.2.3</shiro.version>
-        <siddhi.version>4.5.11</siddhi.version>
+        <siddhi.version>5.1.12</siddhi.version>
         <slf4j.version>1.7.25</slf4j.version>
         <snappy-java.version>1.1.7.2</snappy-java.version>
         <spark.version>2.1.2</spark.version>
@@ -111,6 +112,7 @@
         <maven.dependency.plugin.version>3.1.1</maven.dependency.plugin.version>
         <maven.jar.plugin.version>3.1.2</maven.jar.plugin.version>
         <maven.source.plugin.version>3.1.0</maven.source.plugin.version>
+        <maven.dependency.check.plugin.version>5.2.2</maven.dependency.check.plugin.version>
     </properties>
 
     <name>Apache StreamPipes</name>
@@ -717,22 +719,22 @@
                 <version>${cloning.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.siddhi</groupId>
+                <groupId>io.siddhi</groupId>
                 <artifactId>siddhi-annotations</artifactId>
                 <version>${siddhi.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.siddhi</groupId>
+                <groupId>io.siddhi</groupId>
                 <artifactId>siddhi-core</artifactId>
                 <version>${siddhi.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.siddhi</groupId>
+                <groupId>io.siddhi</groupId>
                 <artifactId>siddhi-query-api</artifactId>
                 <version>${siddhi.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.siddhi</groupId>
+                <groupId>io.siddhi</groupId>
                 <artifactId>siddhi-query-compiler</artifactId>
                 <version>${siddhi.version}</version>
             </dependency>
@@ -1160,6 +1162,29 @@
                         </manifest>
                     </archive>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.owasp</groupId>
+                <artifactId>dependency-check-maven</artifactId>
+                <version>${maven.dependency.check.plugin.version}</version>
+                <configuration>
+                    <!-- use -Dowasp.check.skip=true to skip dependency check -->
+                    <skip>${owasp.check.skip}</skip>
+                    <format>HTML</format>
+                    <bundleAuditAnalyzerEnabled>false</bundleAuditAnalyzerEnabled>
+                    <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
+                    <failOnError>false</failOnError>
+                    <suppressionFile>tools/maven/owasp-dependency-check-suppression.xml</suppressionFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <!-- generates aggregated reports in target/ -->
+                            <goal>check</goal>
+                            <goal>aggregate</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

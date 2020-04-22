@@ -31,11 +31,13 @@ import {VisualizablePipeline} from "../../../core-model/dashboard/VisualizablePi
 import {Dashboard} from "../../models/dashboard.model";
 import {MappingPropertyNary} from "../../../connect/model/MappingPropertyNary";
 import {ConfigurationInfo} from "../../../connect/model/message/ConfigurationInfo";
+import {FreeTextStaticProperty} from "../../../connect/model/FreeTextStaticProperty";
+import {WidgetConfigBuilder} from "../../registry/widget-config-builder";
 
 @Component({
     selector: 'add-visualization-dialog-component',
     templateUrl: './add-visualization-dialog.component.html',
-    styleUrls: ['./add-visualization-dialog.component.css']
+    styleUrls: ['./add-visualization-dialog.component.scss']
 })
 export class AddVisualizationDialogComponent {
 
@@ -138,6 +140,9 @@ export class AddVisualizationDialogComponent {
             if (sp instanceof MappingPropertyUnary || sp instanceof MappingPropertyNary) {
                 let requirement: EventProperty = this.findRequirement(this.selectedWidget.requiredSchema, sp.internalName);
                 sp.mapsFromOptions = new MappingPropertyGenerator(requirement, this.selectedPipeline.schema.eventProperties).computeMatchingProperties();
+            }
+            if (sp instanceof FreeTextStaticProperty && sp.internalName === WidgetConfigBuilder.TITLE_KEY) {
+                sp.value = this.selectedPipeline.visualizationName;
             }
         });
         this.next();

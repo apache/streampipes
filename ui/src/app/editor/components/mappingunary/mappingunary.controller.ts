@@ -28,7 +28,7 @@ export class MappingUnaryController {
     $rootScope: any;
     PropertySelectorService: PropertySelectorService;
 
-    constructor($scope, $rootScope, PropertySelectorService) {
+    constructor($scope, $rootScope, PropertySelectorService, private $timeout) {
         this.$scope = $scope;
         this.$rootScope = $rootScope;
         this.PropertySelectorService = PropertySelectorService;
@@ -45,7 +45,9 @@ export class MappingUnaryController {
 
         if (!this.staticProperty.properties.selectedProperty) {
             this.staticProperty.properties.selectedProperty = this.availableProperties[0].properties.runtimeId;
-            this.$rootScope.$emit(this.staticProperty.properties.internalName);
+            this.$timeout(() => {
+                this.$rootScope.$emit(this.staticProperty.properties.internalName);
+            }, 20);
         }
     }
 
@@ -60,4 +62,4 @@ export class MappingUnaryController {
     }
 }
 
-MappingUnaryController.$inject=['$scope', '$rootScope', 'PropertySelectorService']
+MappingUnaryController.$inject=['$scope', '$rootScope', 'PropertySelectorService', '$timeout'];

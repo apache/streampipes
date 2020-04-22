@@ -28,7 +28,7 @@ import {EventSchema} from "../../schema-editor/model/EventSchema";
 @Component({
     selector: 'app-static-mapping-nary',
     templateUrl: './static-mapping-nary.component.html',
-    styleUrls: ['./static-mapping-nary.component.css']
+    styleUrls: ['./static-mapping-nary.component.scss']
 })
 export class StaticMappingNaryComponent extends StaticMappingComponent implements OnInit {
 
@@ -50,16 +50,29 @@ export class StaticMappingNaryComponent extends StaticMappingComponent implement
         this.availableProperties = this.extractPossibleSelections();
         this.availableProperties.forEach(ep => ep.propertySelector = this.firstStreamPropertySelector + ep.runtimeName);
         if (!this.staticProperty.selectedProperties) {
-            this.staticProperty.selectedProperties = [];
+            this.selectNone();
+        } else {
+            this.availableProperties.forEach(ep => {
+                if (this.staticProperty.selectedProperties.indexOf(ep.propertySelector) > -1) {
+                    ep["checked"] = true;
+                }
+            })
         }
         this.inputEmitter.emit(true);
     }
 
     selectOption(property: EventProperty, $event) {
-        if ($event.checked) {
-            this.staticProperty.selectedProperties.push(this.makeSelector(property));
+        if (property["checked"]) {
+            this.addProperty(property);
         } else {
-            this.staticProperty.selectedProperties.splice(this.staticProperty.selectedProperties.indexOf(this.makeSelector(property)));
+            this.staticProperty.selectedProperties.splice(this.staticProperty.selectedProperties.indexOf(this.makeSelector(property)), 1);
+            property["checked"] = false;
+        }
+    }
+
+    addProperty(property: EventProperty) {
+        if (this.staticProperty.selectedProperties.indexOf(property.propertySelector) < 0) {
+            this.staticProperty.selectedProperties.push(this.makeSelector(property));
         }
     }
 
@@ -69,10 +82,10 @@ export class StaticMappingNaryComponent extends StaticMappingComponent implement
 
     valueChange(inputValue) {
         this.inputValue = inputValue;
-        if(inputValue == "" || !inputValue) {
+        if (inputValue == "" || !inputValue) {
             this.hasInput = false;
         }
-        else{
+        else {
             this.hasInput = true;
         }
 
@@ -85,6 +98,21 @@ export class StaticMappingNaryComponent extends StaticMappingComponent implement
 
     isInSelection(ep: EventProperty): boolean {
         return this.staticProperty.mapsFromOptions.some(maps => maps === this.firstStreamPropertySelector + ep.runtimeName);
+    }
+
+    selectAll() {
+        this.selectNone();
+        this.availableProperties.forEach(ep => {
+            ep["checked"] = true;
+            this.addProperty(ep);
+        })
+    }
+
+    selectNone() {
+        this.staticProperty.selectedProperties = [];
+        this.availableProperties.forEach(ep => {
+            ep["checked"] = false;
+        });
     }
 
 }

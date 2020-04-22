@@ -201,6 +201,12 @@
    limitations under the License.
 
 ------------------------------------------------------------------------------------
+
+=====
+BACKEND 3rd party dependencies: The list below includes all 3rd party dependencies used by the Apache StreamPipes
+backend (all code except the code from the ui/ folder. See below for a list of 3rd party dependencies of the UI.
+=====
+
 This project bundles some components that are also licensed under the Apache
 License Version 2.0:
 
@@ -291,6 +297,10 @@ io.dropwizard.metrics:metrics-json:3.1.5
 io.dropwizard.metrics:metrics-jvm:3.1.5
 io.netty:netty-all:4.1.17.Final
 io.netty:netty:3.9.9.Final
+io.siddhi:siddhi-annotations:5.1.12
+io.siddhi:siddhi-core:5.1.12
+io.siddhi:siddhi-query-api:5.1.12
+io.siddhi:siddhi-query-compiler:5.1.12
 io.undertow:undertow-core:2.0.27.Final
 io.undertow:undertow-servlet:2.0.27.Final
 io.undertow:undertow-websockets-jsr:2.0.27.Final
@@ -499,10 +509,6 @@ org.streampipes:streampipes-empire-cp-common-utils:1.9.11
 org.streampipes:streampipes-empire-cp-openrdf-utils:1.9.11
 org.streampipes:streampipes-empire-pinto:1.9.11
 org.streampipes:streampipes-empire-rdf4j:1.9.11
-org.wso2.siddhi:siddhi-annotations:4.5.11
-org.wso2.siddhi:siddhi-core:4.5.11
-org.wso2.siddhi:siddhi-query-api:4.5.11
-org.wso2.siddhi:siddhi-query-compiler:4.5.11
 org.xerial.snappy:snappy-java:1.1.7.2
 org.xmlunit:xmlunit-core:2.6.2
 org.xmlunit:xmlunit-placeholders:2.6.2
@@ -513,9 +519,7 @@ xerces:xercesImpl:2.9.1
 xml-apis:xml-apis:1.3.04
 ---
 
-================================================================
-STREAMPIPES BACKEND (all files except ui folder)
-================================================================
+
 The binary distribution of this product bundles these dependencies under the
 following license. See licenses/ for text of these licenses.
 

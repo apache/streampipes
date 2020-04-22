@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <!--
   ~ Licensed to the Apache Software Foundation (ASF) under one or more
   ~ contributor license agreements.  See the NOTICE file distributed with
@@ -15,16 +16,17 @@
   ~ limitations under the License.
   ~
   -->
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
 
-<div ng-repeat="replaceOutput in ctrl.outputStrategy.properties.replaceProperties">
-    <md-select ng-model="ctrl.selection[replaceOutput.elementName]"  placeholder="Replace property">
-        <md-option ng-repeat="property in replaceOutput.replaceWithOptions" ng-value="property.properties.elementName">
-            <b>{{property.properties.runtimeName}}</b><br/>
-        </md-option>
-    </md-select>
-    <div ng-show="replaceOutput.renamingAllowed">
-        <md-input-container flex> <label>New property name</label>
-            <input ng-model="replaceOutput.runtimeName" ng-disabled="ctrl.restrictedEditMode"/>
-        </md-input-container>
-    </div>
-</div>
+    <!--
+        refer : https://jeremylong.github.io/DependencyCheck/general/suppression.html
+        for samples on suppressing false positives.
+    -->
+    <suppress>
+        <notes><![CDATA[
+        This suppresses all CVE entries that have a score below CVSS 7.
+        ]]></notes>
+        <cvssBelow>7</cvssBelow>
+    </suppress>
+
+</suppressions>

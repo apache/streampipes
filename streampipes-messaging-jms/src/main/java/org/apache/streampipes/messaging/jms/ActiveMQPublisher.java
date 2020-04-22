@@ -93,7 +93,8 @@ public class ActiveMQPublisher implements EventProducer<JmsTransportProtocol> {
       this.connection.start();
       this.connected = true;
     } catch (JMSException e) {
-      throw new SpRuntimeException("could not connect to activemq broker");
+      throw new SpRuntimeException("could not connect to activemq broker. Broker: '" +
+              protocolSettings.getBrokerHostname() + "' Port: " + protocolSettings.getPort());
     }
 
   }

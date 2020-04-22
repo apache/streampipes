@@ -25,6 +25,11 @@ export class OneOfController {
     constructor() { }
 
     $onInit() {
+        this.staticProperty.properties.options.forEach(o => {
+           if (o.selected) {
+               this.staticProperty.properties.currentSelection = o;
+           }
+        });
     }
 
     change(option) {
