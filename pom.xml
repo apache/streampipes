@@ -1191,9 +1191,8 @@
     </build>
 
     <scm>
-        <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/incubator-streampipes.git
-        </developerConnection>
-        <connection>scm:git:https://gitbox.apache.org/repos/asf/incubator-streampipes.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/apache/incubator-streampipes.git</developerConnection>
+        <connection>scm:git:ssh://git@github.com/apache/incubator-streampipes.git</connection>
         <url>https://github.com/apache/incubator-streampipes</url>
     </scm>
 
