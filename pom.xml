@@ -880,7 +880,7 @@
                                         <fileSet>
                                             <directory>${project.build.directory}</directory>
                                             <includes>
-                                                <include>apache-streampipes-${project.version}-incubating-source-release.zip
+                                                <include>apache-streampipes-${project.version}-incubating.zip
                                                 </include>
                                             </includes>
                                         </fileSet>
@@ -948,6 +948,13 @@
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <version>${spring-boot.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <configuration>
+                        <arguments>-Papache-release</arguments>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
