@@ -114,7 +114,7 @@
         <maven.dependency.check.plugin.version>5.2.2</maven.dependency.check.plugin.version>
     </properties>
 
-    <name>Apache StreamPipes</name>
+    <name>Apache StreamPipes (incubating)</name>
     <description>A self-service (Industrial) IoT toolbox to enable non-technical users to connect, analyze and explore
         IoT data streams.
     </description>
