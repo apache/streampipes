@@ -22,6 +22,7 @@ import static org.apache.streampipes.processors.transformation.flink.processor.h
 import io.flinkspector.core.collection.ExpectedRecords;
 import io.flinkspector.datastream.DataStreamTestBase;
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -36,6 +37,7 @@ import org.apache.streampipes.test.generator.InvocationGraphGenerator;
 import java.util.Arrays;
 
 @RunWith(Parameterized.class)
+@Ignore
 public class TestFieldHasherProgram extends DataStreamTestBase {
 
   @Parameterized.Parameters

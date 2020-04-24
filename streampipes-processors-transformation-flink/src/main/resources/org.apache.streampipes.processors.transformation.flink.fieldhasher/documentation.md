@@ -32,7 +32,7 @@ Add a detailed description here
 ***
 
 ## Required input
-
+Any field of type string
 
 ***
 

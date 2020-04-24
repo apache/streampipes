@@ -59,6 +59,8 @@
     </modules>
 
     <properties>
+        <owasp.check.skip>true</owasp.check.skip>
+
         <streampipes.version>0.65.1-SNAPSHOT</streampipes.version>
 
         <amqp-client.version>4.1.0</amqp-client.version>

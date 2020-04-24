@@ -22,6 +22,7 @@ import io.flinkspector.datastream.DataStreamTestBase;
 import io.flinkspector.datastream.input.EventTimeInput;
 import io.flinkspector.datastream.input.EventTimeInputBuilder;
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -33,6 +34,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @RunWith(Parameterized.class)
+@Ignore
 public class TestConverterProgram extends DataStreamTestBase {
 
   @Parameterized.Parameters

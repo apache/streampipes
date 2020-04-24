@@ -38,7 +38,8 @@ public class FieldHasher implements Serializable, FlatMapFunction<Event, Event> 
   @Override
   public void flatMap(Event in,
                       Collector<Event> out) throws Exception {
-    in.updateFieldBySelector(propertyName, hashAlgorithm.toHashValue(in.getFieldBySelector(propertyName)));
+    in.updateFieldBySelector(propertyName,
+            hashAlgorithm.toHashValue(in.getFieldBySelector(propertyName).getAsPrimitive().getAsString()));
     out.collect(in);
   }
 

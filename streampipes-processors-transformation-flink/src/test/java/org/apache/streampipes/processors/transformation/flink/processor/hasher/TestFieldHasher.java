@@ -110,7 +110,7 @@ public class TestFieldHasher extends DataStreamTestBase {
       if (output.size() != 1) {
         fail();
       } else {
-        assertEquals(expectedMap, output.get(0));
+        assertEquals(expectedMap.getRaw(), output.get(0).getRaw());
       }
     } catch (Exception e) {
       fail();

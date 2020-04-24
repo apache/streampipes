@@ -46,7 +46,7 @@ public class FieldHasherController extends FlinkDataProcessorDeclarer<FieldHashe
             .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .requiredStream(StreamRequirementsBuilder
                     .create()
-                    .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(), Labels.withId
+                    .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(), Labels.withId
                             (HASH_PROPERTIES), PropertyScope.NONE)
                     .build())
             .requiredSingleValueSelection(Labels.withId(HASH_ALGORITHM),
