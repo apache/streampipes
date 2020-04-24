@@ -92,6 +92,7 @@ ui/src/app/services/version/version.service.ts
 
 # compiled output
 ui/dist
+ui/dist/**
 ui/dist-server
 ui/tmp
 ui/out-tsc
