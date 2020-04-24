@@ -36,7 +36,7 @@ if (branchName === undefined) {
 // Check if Config-File for current Branch exists, otherwise use "def"
 if (!fs.existsSync('deployment/' + branchName + '/config.yml', 'utf8')) {
     console.log('Could not find Config for ' + branchName + '-Branch. Using Config for dev-Branch.');
-    branchName = 'dev';
+    branchName = 'rel';
 }
 
 // Read Config-File and check if it is valid
