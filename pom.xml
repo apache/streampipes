@@ -561,6 +561,8 @@
 
                         <exclude>**/system</exclude>
 
+                        <exclude>DISCLAIMER-WIP</exclude>
+
                         <!-- Language Files -->
                         <exclude>**/*.en</exclude>
 

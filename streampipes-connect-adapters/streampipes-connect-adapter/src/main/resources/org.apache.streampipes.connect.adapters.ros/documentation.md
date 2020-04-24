@@ -33,7 +33,7 @@ Connect Robots running on ROS
 
 ## Required input
 
-This sink does not have any requirements and works with any incoming event type.
+
 
 ***
 
