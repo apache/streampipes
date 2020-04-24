@@ -22,21 +22,20 @@ mustache = require('mustache');
 
 console.log('Pre-Build started.');
 
-// Get Branch Name from GitLab-CI
-let branchName = process.env.CI_COMMIT_REF_NAME;
+let branchName = process.env.BUILD_CONFIG.trim();
 
 // If Branch Name is not valid, use "def"
 if (branchName === undefined) {
-    console.log('Environment Variable invalid. Using Config for dev-Branch.');
+    console.log('Environment variable BUILD_CONFIG not present. Using config for dev.');
     branchName = 'dev';
 } else {
     console.log('Environment Variable valid. Using Config for ' + branchName + '-Branch.');
 }
 
-// Check if Config-File for current Branch exists, otherwise use "def"
-if (!fs.existsSync('deployment/' + branchName + '/config.yml', 'utf8')) {
+// Check if Confgit stig-File for current Branch exists, otherwise use "def"
+if (!(fs.existsSync('deployment/' + branchName + '/config.yml'))) {
     console.log('Could not find Config for ' + branchName + '-Branch. Using Config for dev-Branch.');
-    branchName = 'rel';
+    branchName = 'dev';
 }
 
 // Read Config-File and check if it is valid

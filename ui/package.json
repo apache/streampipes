@@ -12,6 +12,7 @@
     "watchtest": "node ./deployment/prebuild.js && karma start ./karma.conf.js --no-auto-watch --single-run",
     "test": "node ./deployment/prebuild.js && karma start ./karma.conf.js",
     "build": "node ./deployment/prebuild.js && set NODE_OPTIONS=--max-old-space-size=10192 && ng build --prod",
+    "build-rc": "set BUILD_CONFIG=rel && node ./deployment/prebuild.js && set NODE_OPTIONS=--max-old-space-size=10192 && ng build --prod",
     "lint": "tslint -c tslint.json 'src/**/*.ts*"
   },
   "dependencies": {
