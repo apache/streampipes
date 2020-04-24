@@ -22,7 +22,7 @@ mustache = require('mustache');
 
 console.log('Pre-Build started.');
 
-let branchName = process.env.BUILD_CONFIG.trim();
+let branchName = process.env.BUILD_CONFIG;
 
 // If Branch Name is not valid, use "def"
 if (branchName === undefined) {
@@ -30,6 +30,7 @@ if (branchName === undefined) {
     branchName = 'dev';
 } else {
     console.log('Environment Variable valid. Using Config for ' + branchName + '-Branch.');
+    branchName = branchName.trim();
 }
 
 // Check if Confgit stig-File for current Branch exists, otherwise use "def"
