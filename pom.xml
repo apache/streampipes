@@ -65,6 +65,7 @@
 
         <amqp-client.version>4.1.0</amqp-client.version>
         <boofcv.version>0.33</boofcv.version>
+        <classindex.version>3.9</classindex.version>
         <commons-math3.version>3.6.1</commons-math3.version>
         <ditto-client.version>1.0.0</ditto-client.version>
         <data-generator.version>1.4.1</data-generator.version>
@@ -73,6 +74,7 @@
         <language-detector.version>0.6</language-detector.version>
         <log4j-to-slf4j.version>2.8.2</log4j-to-slf4j.version>
         <mailapi.version>1.4.3</mailapi.version>
+        <metrics-core.version>3.1.2</metrics-core.version>
         <milo.version>2.22.1</milo.version>
         <nekohtml.version>1.9.13</nekohtml.version>
         <okhttp.version>3.13.1</okhttp.version>
@@ -212,6 +214,11 @@
                 <version>${slack-api.version}</version>
             </dependency>
             <dependency>
+                <groupId>io.dropwizard.metrics</groupId>
+                <artifactId>metrics-core</artifactId>
+                <version>${metrics-core.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>javax.mail</groupId>
                 <artifactId>mailapi</artifactId>
                 <version>${mailapi.version}</version>
@@ -277,9 +284,19 @@
                 <version>${pulsar.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.atteo.classindex</groupId>
+                <artifactId>classindex</artifactId>
+                <version>${classindex.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.boofcv</groupId>
                 <artifactId>boofcv-core</artifactId>
                 <version>${boofcv.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.ditto</groupId>
+                <artifactId>ditto-client</artifactId>
+                <version>${ditto-client.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.elasticsearch</groupId>
@@ -322,6 +339,8 @@
                 <version>${hawtbuf.version}</version>
             </dependency>
 
+
+
             <!-- Test dependencies -->
             <dependency>
                 <groupId>junit</groupId>
@@ -345,11 +364,6 @@
                 <artifactId>streampipes-test-utils</artifactId>
                 <version>${streampipes.version}</version>
                 <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.ditto</groupId>
-                <artifactId>ditto-client</artifactId>
-                <version>${ditto-client.version}</version>
             </dependency>
 
         </dependencies>
