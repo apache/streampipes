@@ -1073,9 +1073,7 @@
                         <exclude>streampipes-measurement-units/src/main/java/com/github/jqudt/**</exclude>
 
                         <!-- Exclude some UI files which we need to check in more detail -->
-<!--                        <exclude>ui/src/assets/**</exclude>-->
-<!--                        <exclude>ui/src/scss/**</exclude>-->
-<!--                        <exclude>ui/dist/**</exclude>-->
+                        <exclude>ui/src/assets/img/svg/**</exclude>
 
                         <!-- Exclude disclaimer and notice files -->
                         <exclude>DISCLAIMER-WIP</exclude>
