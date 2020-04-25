@@ -1,10 +1,10 @@
 package org.apache.streampipes.connect.adapters.ti;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import java.util.Map;
-
-import static org.junit.Assert.*;
 
 /*
 Copyright 2019 FZI Forschungszentrum Informatik
@@ -43,7 +43,7 @@ public class TISensorTagTest {
     public void parseEvent() {
         Map<String, Object> result = TISensorTag.parseEvent(event);
 
-        assertEquals(14, result.keySet().size());
+        assertEquals(16, result.keySet().size());
         assertEquals(result.get("ambientTemp"), 19.58);
         assertEquals(result.get("objectTemp"), 16.59);
         assertEquals(result.get("humidity"), 38.3917);
