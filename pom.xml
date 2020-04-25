@@ -23,11 +23,11 @@
     <parent>
         <groupId>org.apache.streampipes</groupId>
         <artifactId>streampipes-parent</artifactId>
-        <version>0.65.1-SNAPSHOT</version>
+        <version>0.66.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>streampipes-extensions</artifactId>
-    <version>0.65.1-SNAPSHOT</version>
+    <version>0.66.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -61,7 +61,7 @@
     <properties>
         <owasp.check.skip>true</owasp.check.skip>
 
-        <streampipes.version>0.65.1-SNAPSHOT</streampipes.version>
+        <streampipes.version>0.66.0-SNAPSHOT</streampipes.version>
 
         <amqp-client.version>4.1.0</amqp-client.version>
         <boofcv.version>0.33</boofcv.version>
