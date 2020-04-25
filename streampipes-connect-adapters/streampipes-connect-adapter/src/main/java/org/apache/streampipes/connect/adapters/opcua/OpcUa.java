@@ -19,11 +19,16 @@
 package org.apache.streampipes.connect.adapters.opcua;
 
 
+import static org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.Unsigned.uint;
+import static org.eclipse.milo.opcua.stack.core.util.ConversionUtil.toList;
+
+import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.sdk.utils.Datatypes;
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfig;
 import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaMonitoredItem;
 import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaSubscription;
-import org.eclipse.milo.opcua.stack.client.UaTcpStackClient;
+import org.eclipse.milo.opcua.stack.client.DiscoveryClient;
 import org.eclipse.milo.opcua.stack.core.AttributeId;
 import org.eclipse.milo.opcua.stack.core.Identifiers;
 import org.eclipse.milo.opcua.stack.core.security.SecurityPolicy;
@@ -32,25 +37,30 @@ import org.eclipse.milo.opcua.stack.core.types.builtin.LocalizedText;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.QualifiedName;
 import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
-import org.eclipse.milo.opcua.stack.core.types.enumerated.*;
-import org.eclipse.milo.opcua.stack.core.types.structured.*;
+import org.eclipse.milo.opcua.stack.core.types.enumerated.BrowseDirection;
+import org.eclipse.milo.opcua.stack.core.types.enumerated.BrowseResultMask;
+import org.eclipse.milo.opcua.stack.core.types.enumerated.MonitoringMode;
+import org.eclipse.milo.opcua.stack.core.types.enumerated.NodeClass;
+import org.eclipse.milo.opcua.stack.core.types.enumerated.TimestampsToReturn;
+import org.eclipse.milo.opcua.stack.core.types.structured.BrowseDescription;
+import org.eclipse.milo.opcua.stack.core.types.structured.BrowseResult;
+import org.eclipse.milo.opcua.stack.core.types.structured.EndpointDescription;
+import org.eclipse.milo.opcua.stack.core.types.structured.MonitoredItemCreateRequest;
+import org.eclipse.milo.opcua.stack.core.types.structured.MonitoringParameters;
+import org.eclipse.milo.opcua.stack.core.types.structured.ReadValueId;
+import org.eclipse.milo.opcua.stack.core.types.structured.ReferenceDescription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.streampipes.connect.adapter.exception.AdapterException;
-import org.apache.streampipes.sdk.utils.Datatypes;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.BiConsumer;
-
-import static org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.Unsigned.uint;
-import static org.eclipse.milo.opcua.stack.core.util.ConversionUtil.toList;
 
 public class OpcUa {
 
@@ -76,43 +86,26 @@ public class OpcUa {
     }
 
     public OpcUa(String opcServer, int opcServerPort, int namespaceIndex, String nodeId) {
-
-
-        this.opcServerURL = "opc.tcp://" + opcServer + ":" + opcServerPort;
-
-        if (isInteger(nodeId)) {
-            int integerNodeId = Integer.parseInt(nodeId);
-            this.node  = new NodeId(namespaceIndex, integerNodeId);
-        } else {
-            this.node  = new NodeId(namespaceIndex, nodeId);
-        }
-    }
-
-    public OpcUa(int namespaceIndex, String nodeId) {
-        if (isInteger(nodeId)) {
-            int integerNodeId = Integer.parseInt(nodeId);
-            this.node  = new NodeId(namespaceIndex, integerNodeId);
-        } else {
-            this.node  = new NodeId(namespaceIndex, nodeId);
-        }
-
+        this("opc.tcp://" + opcServer + ":" + opcServerPort, namespaceIndex, nodeId);
     }
 
     public void connect() throws Exception {
 
-        EndpointDescription[] endpoints = UaTcpStackClient.getEndpoints(this.opcServerURL).get();
+        List<EndpointDescription> endpoints = DiscoveryClient.getEndpoints(this.opcServerURL).get();
         String host = this.opcServerURL.split("://")[1].split(":")[0];
 
-        EndpointDescription tmpEndpoint = Arrays.stream(endpoints).filter(e ->
-            e.getSecurityPolicyUri().equals(SecurityPolicy.None.getSecurityPolicyUri())
-        ).findFirst().orElseThrow(() -> new Exception("No endpoint with security policy none"));
+        EndpointDescription tmpEndpoint = endpoints
+                .stream()
+                .filter(e -> e.getSecurityPolicyUri().equals(SecurityPolicy.None.getUri()))
+                .findFirst()
+                .orElseThrow(() -> new Exception("No endpoint with security policy none"));
 
-//        EndpointDescription tmpEndpoint = endpoints[0];
         tmpEndpoint = updateEndpointUrl(tmpEndpoint, host);
-        endpoints = new EndpointDescription[]{tmpEndpoint};
+        endpoints = Collections.singletonList(tmpEndpoint);
 
-        EndpointDescription endpoint = Arrays.stream(endpoints)
-                .filter(e -> e.getSecurityPolicyUri().equals(SecurityPolicy.None.getSecurityPolicyUri()))
+        EndpointDescription endpoint = endpoints
+                .stream()
+                .filter(e -> e.getSecurityPolicyUri().equals(SecurityPolicy.None.getUri()))
                 .findFirst().orElseThrow(() -> new Exception("no desired endpoints returned"));
 
         OpcUaClientConfig config = OpcUaClientConfig.builder()
@@ -121,7 +114,7 @@ public class OpcUa {
                 .setEndpoint(endpoint)
                 .build();
 
-        this.client = new OpcUaClient(config);
+        this.client = OpcUaClient.create(config);
         client.connect().get();
     }
 

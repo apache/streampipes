@@ -38,7 +38,6 @@
     <properties>
         <animal-sniffer-annotations.version>1.17</animal-sniffer-annotations.version>
         <bcprov.version>1.61</bcprov.version>
-        <camel.version>3.2.0</camel.version>
         <checker-qual.version>2.5.2</checker-qual.version>
         <commons-compress.version>1.18</commons-compress.version>
         <commons-text.version>1.4</commons-text.version>
@@ -49,6 +48,7 @@
         <jsrosbridge.version>0.2.0</jsrosbridge.version>
         <influxdb.java.version>2.14</influxdb.java.version>
         <hadoop.version>3.2.1</hadoop.version>
+        <milo.version>0.4.0</milo.version>
         <mysql-binlog-connector.version>0.18.1</mysql-binlog-connector.version>
         <mysql-connector-java.version>8.0.15</mysql-connector-java.version>
         <netty.version>4.1.39.Final</netty.version>
@@ -225,6 +225,11 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>animal-sniffer-annotations</artifactId>
                 <version>${animal-sniffer-annotations.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.milo</groupId>
+                <artifactId>sdk-client</artifactId>
+                <version>${milo.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.jersey.media</groupId>
