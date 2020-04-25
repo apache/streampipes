@@ -21,7 +21,7 @@
 #
 
 
-version: "2"
+version: "2.4"
 services:
 
   #### apache/incubator-streampipes
@@ -137,6 +137,7 @@ services:
 networks:
   spnet:
     driver: bridge
+    name: streampipes_network
     ipam:
       config:
         - subnet: 172.31.0.0/16
