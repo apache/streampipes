@@ -36,27 +36,29 @@
     </modules>
 
     <properties>
-        <camel.version>2.22.1</camel.version>
+        <animal-sniffer-annotations.version>1.17</animal-sniffer-annotations.version>
+        <bcprov.version>1.61</bcprov.version>
+        <camel.version>3.2.0</camel.version>
+        <checker-qual.version>2.5.2</checker-qual.version>
+        <commons-compress.version>1.18</commons-compress.version>
+        <commons-text.version>1.4</commons-text.version>
+        <errorprone-annotations.version>2.2.0</errorprone-annotations.version>
         <java-websocket.version>1.4.0</java-websocket.version>
         <javax-validation.version>2.0.1.Final</javax-validation.version>
         <javax-websocket-client-api.version>1.1</javax-websocket-client-api.version>
         <jsrosbridge.version>0.2.0</jsrosbridge.version>
         <influxdb.java.version>2.14</influxdb.java.version>
-        <hadoop.version>3.2.0</hadoop.version>
-        <lightcouch.version>0.1.8</lightcouch.version>
-        <mqtt-client.version>1.12</mqtt-client.version>
+        <hadoop.version>3.2.1</hadoop.version>
         <mysql-binlog-connector.version>0.18.1</mysql-binlog-connector.version>
         <mysql-connector-java.version>8.0.15</mysql-connector-java.version>
+        <netty.version>4.1.39.Final</netty.version>
+        <nimbus-jose-jwt.version>4.41.1</nimbus-jose-jwt.version>
         <okio.version>1.15.0</okio.version>
-        <opencsv.version>4.0</opencsv.version>
-        <plc4x.version>0.4.0</plc4x.version>
-        <pulsar.version>2.4.1</pulsar.version>
+        <opencsv.version>4.6</opencsv.version>
+        <plc4x.version>0.6.0</plc4x.version>
+        <protobuf.version>3.6.1</protobuf.version>
+        <pulsar.version>2.5.1</pulsar.version>
         <slack.version>1.2.0</slack.version>
-
-        <junit.version>4.12</junit.version>
-        <mockito.version>2.18.3</mockito.version>
-        <powermock.version>2.0.2</powermock.version>
-        <wiremock.version>2.24.1</wiremock.version>
     </properties>
 
     <dependencyManagement>
@@ -70,9 +72,29 @@
 
             <!-- External dependencies -->
             <dependency>
+                <groupId>com.fasterxml.jackson.module</groupId>
+                <artifactId>jackson-module-jaxb-annotations</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.github.shyiko</groupId>
                 <artifactId>mysql-binlog-connector-java</artifactId>
                 <version>${mysql-binlog-connector.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.errorprone</groupId>
+                <artifactId>error_prone_annotations</artifactId>
+                <version>${errorprone-annotations.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-java</artifactId>
+                <version>${protobuf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.nimbusds</groupId>
+                <artifactId>nimbus-jose-jwt</artifactId>
+                <version>${nimbus-jose-jwt.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.opencsv</groupId>
@@ -90,6 +112,31 @@
                 <version>${jsrosbridge.version}</version>
             </dependency>
             <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-buffer</artifactId>
+                <version>${netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-codec</artifactId>
+                <version>${netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-common</artifactId>
+                <version>${netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-transport</artifactId>
+                <version>${netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.websocket</groupId>
+                <artifactId>javax.websocket-api</artifactId>
+                <version>${javax-websocket-client-api.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql-connector-java.version}</version>
@@ -98,6 +145,16 @@
                 <groupId>org.apache.camel</groupId>
                 <artifactId>camel-milo</artifactId>
                 <version>${camel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-compress</artifactId>
+                <version>${commons-compress.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-text</artifactId>
+                <version>${commons-text.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
@@ -155,9 +212,19 @@
                 <version>${pulsar.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.fusesource.mqtt-client</groupId>
-                <artifactId>mqtt-client</artifactId>
-                <version>${mqtt-client.version}</version>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk15on</artifactId>
+                <version>${bcprov.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.checkerframework</groupId>
+                <artifactId>checker-qual</artifactId>
+                <version>${checker-qual.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>animal-sniffer-annotations</artifactId>
+                <version>${animal-sniffer-annotations.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.jersey.media</groupId>
