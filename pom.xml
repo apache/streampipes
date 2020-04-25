@@ -624,6 +624,7 @@
         <developerConnection>scm:git:ssh://git@github.com/apache/incubator-streampipes-extensions.git</developerConnection>
         <connection>scm:git:ssh://git@github.com/apache/incubator-streampipes-extensions.git</connection>
         <url>https://github.com/apache/incubator-streampipes-extensions</url>
-    </scm>
+      <tag>rel/0.66.0</tag>
+  </scm>
 
 </project>
