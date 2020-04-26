@@ -69,6 +69,7 @@
         <commons-math3.version>3.6.1</commons-math3.version>
         <ditto-client.version>1.0.0</ditto-client.version>
         <data-generator.version>1.4.1</data-generator.version>
+        <ddogleg.version>0.16</ddogleg.version>
         <google-maps-services.version>0.10.0</google-maps-services.version>
         <iotdb.version>0.8.0</iotdb.version>
         <language-detector.version>0.6</language-detector.version>
@@ -292,6 +293,11 @@
                 <groupId>org.boofcv</groupId>
                 <artifactId>boofcv-core</artifactId>
                 <version>${boofcv.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ddogleg</groupId>
+                <artifactId>ddogleg</artifactId>
+                <version>${ddogleg.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.ditto</groupId>

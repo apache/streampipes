@@ -80,7 +80,6 @@
         <dependency>
             <groupId>org.ddogleg</groupId>
             <artifactId>ddogleg</artifactId>
-            <version>0.16</version>
         </dependency>
     </dependencies>
 
