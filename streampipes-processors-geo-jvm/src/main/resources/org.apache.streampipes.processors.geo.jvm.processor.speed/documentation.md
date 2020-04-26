@@ -22,24 +22,28 @@
 
 ## Description
 
-Calculates the speed (in km/h) based on two latitude/longitude pairs. The distance of the two location pairs can be
- configured.
+Calculates the speed (in km/h) based on latitude/longitude values in a data stream. Therefore it uses the GPS and timestamps values of consecutive events. 
+It calculates the distance between two points (events) and how much time has passed. Based on those values the speed is calculated.
 
 ***
 
 ## Required input
 
-Requires a data stream that provides latitude and longitude values.
+Requires a data stream that provides latitude and longitude values as well as a timestamp.
 
 ***
 
 ## Configuration
 
-Describe the configuration parameters here
+### Timestamp field
 
-### 1st parameter
+### Latitude field
 
+### Longitude field
 
-### 2nd parameter
+### Count window
+Describes the number of stored events, used for the calculation. 
+E.g. a value of 5 means that thhe current event and the event (t-5) are used for the speed calculation.
 
 ## Output
+Appends the calculated speed in km/h.
