@@ -22,20 +22,20 @@ mustache = require('mustache');
 
 console.log('Pre-Build started.');
 
-let branchName = process.env.BUILD_CONFIG;
-
-// If Branch Name is not valid, use "def"
-if (branchName === undefined) {
-    console.log('Environment variable BUILD_CONFIG not present. Using config for dev.');
+let branchName = "dev";
+let programArgs = process.argv;
+// If build config is not valid, use "dev"
+if (programArgs.length <= 2) {
+    console.log('No build config specified. Using default config for dev.');
     branchName = 'dev';
 } else {
-    console.log('Environment Variable valid. Using Config for ' + branchName + '-Branch.');
-    branchName = branchName.trim();
+    branchName = programArgs[2].trim();
+    console.log('Build config specified. Using config for ' + branchName);
 }
 
 // Check if Confgit stig-File for current Branch exists, otherwise use "def"
 if (!(fs.existsSync('deployment/' + branchName + '/config.yml'))) {
-    console.log('Could not find Config for ' + branchName + '-Branch. Using Config for dev-Branch.');
+    console.log('Could not find config for ' + branchName + '. Using config for dev.');
     branchName = 'dev';
 }
 
