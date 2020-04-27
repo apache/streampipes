@@ -50,8 +50,8 @@ fatal()
 deployment_notice() {
 	echo
 	echo
-	echo "INFO: StreamPipes CE $1 is now ready to be used on your system"
-	echo "      Check https://streampipes.org/ for information on StreamPipes"
+	echo "INFO: StreamPipes $1 is now ready to be used on your system"
+	echo "      Check https://streampipes.apache.org/ for information on StreamPipes"
 	echo
 	echo "      Go to the UI and follow the instructions to get started: http://$2/"
 	echo
