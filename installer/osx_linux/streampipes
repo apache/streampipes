@@ -59,24 +59,24 @@ if [ ! -f ./docker-compose.yml ];
 			else
 				case $opt in
 			"StreamPipes Lite (few pipeline elements, needs less memory)")
-				version="lite"
+				version="Lite"
 				;;
 			"StreamPipes Full (more pipeline elements, requires > 16 GB RAM)")
-				version="full"
+				version="Full"
 				;;
 				esac
 				break
 
 			fi
 		done
-	echo $version;
-		if [ $version == "lite" ];
-		then
-			echo 'Configuring StreamPipes Lite'
-			cp ../templates/docker-compose.lite.yml ./docker-compose.yml
 
+		echo "Selected StreamPipes option: $version";
+
+		echo "Configuring StreamPipes $version"
+		if [ $version == "Lite" ];
+		then
+			cp ../templates/docker-compose.lite.yml ./docker-compose.yml
 		else
-			echo 'Configuring StreamPipes Full'
 			cp ../templates/docker-compose.full.yml ./docker-compose.yml
 		fi
 

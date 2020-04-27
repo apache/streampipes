@@ -58,11 +58,11 @@ if ($args[0] -eq "start")
 			 switch ($input)
 			 {
 				   '1' {
-						$version="lite"
+						$version="Lite"
 						break
 
 				   } '2' {
-						$version="full"
+						$version="Full"
 						break
 				   }
 			 }
@@ -70,12 +70,16 @@ if ($args[0] -eq "start")
 		}
 		until (($input -eq '1') -Or ($input -eq '2'))
 
+    Write-Host "Selected StreamPipes option: $version"
+
+    Write-Host "Configuring StreamPipes $version"
+
 		Copy-Item $envFileTemp -Destination $envFileDest
-		if ($version -eq "lite")
+		if ($version -eq "Lite")
 		{
 			Copy-Item $dockerComposeLiteTemp -Destination $dockerCompose
 		}
-		if ($version -eq "full")
+		if ($version -eq "Full")
 		{
 			Copy-Item $dockerComposeFullTemp -Destination $dockerCompose
 		}
