@@ -98,7 +98,7 @@ services:
 
 #### StreamPipes services
   backend:
-    image: "${SP_DOCKER_REGISTRY}/backend:${SP_BACKEND_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/backend:${SP_VERSION}"
     depends_on:
       - consul
       - couchdb
@@ -111,7 +111,7 @@ services:
       spnet:
 
   connect-master:
-    image: "${SP_DOCKER_REGISTRY}/streampipes-connect-container:${SP_BACKEND_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/streampipes-connect-container:${SP_VERSION}"
     depends_on:
       - consul
       - couchdb
@@ -127,7 +127,7 @@ services:
       spnet:
 
   connect-worker-main:
-    image: "${SP_DOCKER_REGISTRY}/connect-worker:${SP_BACKEND_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/connect-worker:${SP_VERSION}"
     depends_on:
       - consul
       - couchdb
@@ -142,7 +142,7 @@ services:
       spnet:
 
   nginx:
-    image: "${SP_DOCKER_REGISTRY}/ui:${SP_BACKEND_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/ui:${SP_VERSION}"
     ports:
       - "80:80"
     depends_on:
@@ -157,63 +157,63 @@ services:
 
 #### Lite version pipeline elements
   processors-filters-jvm:
-    image: "${SP_DOCKER_REGISTRY}/processors-filters-jvm:${SP_PE_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/processors-filters-jvm:${SP_VERSION}"
     depends_on:
       - "consul"
     networks:
       spnet:
 
   processors-filters-siddhi:
-    image: "${SP_DOCKER_REGISTRY}/processors-filters-siddhi:${SP_PE_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/processors-filters-siddhi:${SP_VERSION}"
     depends_on:
       - "consul"
     networks:
       spnet:
 
   processors-image-processing-jvm:
-    image: "${SP_DOCKER_REGISTRY}/processors-image-processing-jvm:${SP_PE_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/processors-image-processing-jvm:${SP_VERSION}"
     depends_on:
       - "consul"
     networks:
       spnet:
 
   processors-transformation-jvm:
-    image: "${SP_DOCKER_REGISTRY}/processors-transformation-jvm:${SP_PE_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/processors-transformation-jvm:${SP_VERSION}"
     depends_on:
       - "consul"
     networks:
       spnet:
 
   sinks-brokers-jvm:
-    image: "${SP_DOCKER_REGISTRY}/sinks-brokers-jvm:${SP_PE_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/sinks-brokers-jvm:${SP_VERSION}"
     depends_on:
       - "consul"
     networks:
       spnet:
 
   sinks-databases-jvm:
-    image: "${SP_DOCKER_REGISTRY}/sinks-databases-jvm:${SP_PE_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/sinks-databases-jvm:${SP_VERSION}"
     depends_on:
       - "consul"
     networks:
       spnet:
 
   sinks-internal-jvm:
-    image: "${SP_DOCKER_REGISTRY}/sinks-internal-jvm:${SP_PE_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/sinks-internal-jvm:${SP_VERSION}"
     depends_on:
       - "consul"
     networks:
       spnet:
 
   sinks-notifications-jvm:
-    image: "${SP_DOCKER_REGISTRY}/sinks-notifications-jvm:${SP_PE_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/sinks-notifications-jvm:${SP_VERSION}"
     depends_on:
       - "consul"
     networks:
       spnet:
 
   sources-watertank-simulator:
-    image: "${SP_DOCKER_REGISTRY}/sources-watertank-simulator:${SP_PE_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/sources-watertank-simulator:${SP_VERSION}"
     depends_on:
       - "consul"
       - "kafka"
@@ -223,49 +223,49 @@ services:
 #### Full version pipeline elements
 
   processors-aggregation-flink:
-    image: "${SP_DOCKER_REGISTRY}/processors-aggregation-flink:${SP_PE_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/processors-aggregation-flink:${SP_VERSION}"
     depends_on:
       - "consul"
     networks:
       spnet:
 
   processors-enricher-flink:
-    image: "${SP_DOCKER_REGISTRY}/processors-enricher-flink:${SP_PE_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/processors-enricher-flink:${SP_VERSION}"
     depends_on:
       - "consul"
     networks:
       spnet:
 
   processors-pattern-detection-flink:
-    image: "${SP_DOCKER_REGISTRY}/processors-pattern-detection-flink:${SP_PE_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/processors-pattern-detection-flink:${SP_VERSION}"
     depends_on:
       - "consul"
     networks:
       spnet:
 
   processors-statistics-flink:
-    image: "${SP_DOCKER_REGISTRY}/processors-statistics-flink:${SP_PE_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/processors-statistics-flink:${SP_VERSION}"
     depends_on:
       - "consul"
     networks:
       spnet:
 
   processors-transformation-flink:
-    image: "${SP_DOCKER_REGISTRY}/processors-transformation-flink:${SP_PE_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/processors-transformation-flink:${SP_VERSION}"
     depends_on:
       - "consul"
     networks:
       spnet:
 
   sinks-databases-flink:
-    image: "${SP_DOCKER_REGISTRY}/sinks-databases-flink:${SP_PE_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/sinks-databases-flink:${SP_VERSION}"
     depends_on:
       - "consul"
     networks:
       spnet:
 
   sources-vehicle-simulator:
-    image: "${SP_DOCKER_REGISTRY}/sources-vehicle-simulator:${SP_PE_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/sources-vehicle-simulator:${SP_VERSION}"
     depends_on:
       - "consul"
       - "kafka"
@@ -316,43 +316,6 @@ services:
     networks:
       spnet:
 
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.2.3
-    environment:
-      - cluster.name=streampipes-cluster
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      - "discovery.zen.ping.unicast.hosts=elasticsearch"
-    ports:
-      - "9200:9200"
-      - "9300:9300"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    volumes:
-      - elastic:/usr/share/elasticsearch/data
-    networks:
-      spnet:
-
-  kibana:
-    image: docker.elastic.co/kibana/kibana-oss:6.2.3
-    environment:
-      SERVER_NAME: ${SP_HOST}
-      ELASTICSEARCH_URL: http://elasticsearch:9200
-    ports:
-      - "5601:5601"
-    networks:
-      spnet:
-
-  iotdb:
-    image: xingtanzjr/iotdb
-    volumes:
-      - iotdb:/iotdb/data
-    ports:
-      - 6667:6667
-    networks:
-      spnet:
 
 volumes:
   backend:
@@ -363,8 +326,6 @@ volumes:
   kafka:
   zk-conf:
   zk-data:
-  elastic:
-  iotdb:
 
 
 networks:

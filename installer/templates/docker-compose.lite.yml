@@ -115,7 +115,7 @@ services:
 
 #### StreamPipes services
   backend:
-    image: "${SP_DOCKER_REGISTRY}/backend:${SP_BACKEND_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/backend:${SP_VERSION}"
     depends_on:
       - consul
       - couchdb
@@ -127,7 +127,7 @@ services:
       spnet:
 
   connect-master:
-    image: "${SP_DOCKER_REGISTRY}/streampipes-connect-container:${SP_BACKEND_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/streampipes-connect-container:${SP_VERSION}"
     depends_on:
       - consul
       - couchdb
@@ -143,7 +143,7 @@ services:
       spnet:
 
   connect-worker-main:
-    image: "${SP_DOCKER_REGISTRY}/connect-worker:${SP_BACKEND_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/connect-worker:${SP_VERSION}"
     depends_on:
       - consul
       - couchdb
@@ -158,7 +158,7 @@ services:
       spnet:
 
   nginx:
-    image: "${SP_DOCKER_REGISTRY}/ui:${SP_BACKEND_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/ui:${SP_VERSION}"
     ports:
       - "80:80"
     depends_on:
@@ -173,14 +173,14 @@ services:
 
 #### Lite version pipeline elements
   pipeline-elements-all-jvm:
-    image: "${SP_DOCKER_REGISTRY}/pipeline-elements-all-jvm:${SP_PE_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/pipeline-elements-all-jvm:${SP_VERSION}"
     depends_on:
       - "consul"
     networks:
       spnet:
 
   sources-watertank-simulator:
-    image: "${SP_DOCKER_REGISTRY}/sources-watertank-simulator:${SP_PE_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/sources-watertank-simulator:${SP_VERSION}"
     depends_on:
       - "consul"
       - "kafka"

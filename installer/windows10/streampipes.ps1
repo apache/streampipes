@@ -28,7 +28,7 @@ $dockerCompose = $currentDir + "/docker-compose.yml"
 $configFolder = $currentDir + "/config"
 
 function Show-Menu
-{     
+{
 	 Write-Host "StreamPipes can be started in two different setups:"
 	 Write-Host ""
      Write-Host "1: StreamPipes Lite (few pipeline elements, needs less memory)"
@@ -39,7 +39,7 @@ function Show-Menu
 
 if ($args[0] -eq "start")
 {
-	
+
 	Write-Host ' _______ __                              ______ __                    '
 	Write-Host '|     __|  |_.----.-----.---.-.--------.|   __ \__|.-----.-----.-----.'
 	Write-Host '|__     |   _|   _|  -__|  _  |        ||    __/  ||  _  |  -__|__ --|'
@@ -48,7 +48,7 @@ if ($args[0] -eq "start")
 	Write-Host ''
 	Write-Host 'Welcome to StreamPipes!'
 	Write-Host ''
-	
+
 	if (!(Test-Path  ($dockerCompose)))
 	{
 		do
@@ -60,7 +60,7 @@ if ($args[0] -eq "start")
 				   '1' {
 						$version="lite"
 						break
-						
+
 				   } '2' {
 						$version="full"
 						break
@@ -69,7 +69,7 @@ if ($args[0] -eq "start")
 			 pause
 		}
 		until (($input -eq '1') -Or ($input -eq '2'))
-		
+
 		Copy-Item $envFileTemp -Destination $envFileDest
 		if ($version -eq "lite")
 		{
@@ -79,13 +79,7 @@ if ($args[0] -eq "start")
 		{
 			Copy-Item $dockerComposeFullTemp -Destination $dockerCompose
 		}
-		if ($args[1] -eq "-ip")
-		{
-			$ip = (Get-NetIPConfiguration | Where-Object { $_.IPv4DefaultGateway -ne $null -and $_.NetAdapter.Status -ne "Disconnected" }).IPv4Address.IPAddress
-			(Get-Content $envFileDest).replace('SP_HOST=kafka', 'SP_HOST=' +$ip) | Set-Content $envFileDest
-			(Get-Content $envFileDest).replace('SP_KAFKA_HOST=kafka', 'SP_KAFKA_HOST=' +$ip) | Set-Content $envFileDest
-		} 		
-	} 	
+	}
 
 
     Invoke-Expression "docker-compose -f $dockerCompose pull"
@@ -93,7 +87,13 @@ if ($args[0] -eq "start")
 
     if ($LASTEXITCODE -eq 0)
     {
-        Write-Host "StreamPipes successfully started. Open browser and navigate to 'localhost"
+        Write-Host
+        Write-Host
+        Write-Host "INFO: StreamPipes is now ready to be used on your system"
+        Write-Host "      Check https://streampipes.apache.org/ for information on StreamPipes"
+        Write-Host
+        Write-Host "      Go to the UI and follow the instructions to get started: http://localhost/"
+        Write-Host
     }
     else
     {
@@ -120,5 +120,3 @@ if ($args[0] -eq "stop" -Or $args[0] -eq "clean")
         Write-Host "All StreamPipes system information was deleted. The system can now be installed again."
     }
 }
-
-
