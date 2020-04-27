@@ -13,17 +13,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# All non-required port mappings are disabled - you can uncomment these if needed
+
 version: "2"
 services:
 
 #### Mandatory external services
   activemq:
     image: fogsyio/activemq:5.15.9
-    ports:
-      - "61616:61616"
-      - "61614:61614"
-      - "8161:8161"
-      - "1883:1883"
+#    ports:
+#      - "61616:61616"
+#      - "61614:61614"
+#      - "8161:8161"
+#      - "1883:1883"
     networks:
       spnet:
 
@@ -46,17 +48,17 @@ services:
       - -ui
     volumes:
       - consul:/consul/data
-    ports:
-      - "8500:8500"
-      - "8600:8600"
+#    ports:
+#      - "8500:8500"
+#      - "8600:8600"
     networks:
       spnet:
         ipv4_address: 172.31.0.9
 
   couchdb:
     image: fogsyio/couchdb:2.3.1
-    ports:
-      - "5984:5984"
+#    ports:
+#      - "5984:5984"
     volumes:
       - couchdb:/opt/couchdb/data
     networks:
@@ -65,8 +67,8 @@ services:
   kafka:
     image: fogsyio/kafka:2.2.0
     hostname: kafka
-    ports:
-      - "9094:9094"
+#    ports:
+#      - "9094:9094"
     depends_on:
       - zookeeper
     environment:
@@ -88,8 +90,8 @@ services:
 
   zookeeper:
     image: fogsyio/zookeeper:3.4.13
-    ports:
-      - "2181:2181"
+#    ports:
+#      - "2181:2181"
     volumes:
       - zk-conf:/opt/zookeeper-3.4.13/conf
       - zk-data:/opt/zookeeper-3.4.13/data
@@ -102,8 +104,8 @@ services:
     depends_on:
       - consul
       - couchdb
-    ports:
-      - "8030:8030"
+#    ports:
+#      - "8030:8030"
     volumes:
       - backend:/root/.streampipes
       - backend:/streampipes-assets
@@ -115,8 +117,8 @@ services:
     depends_on:
       - consul
       - couchdb
-    ports:
-      - "8099:8099"
+#    ports:
+#      - "8099:8099"
     environment:
       - EXECUTION_MODE=MASTER
       - SP_CONNECT_CONTAINER_HOST=connect-master
@@ -131,8 +133,8 @@ services:
     depends_on:
       - consul
       - couchdb
-    ports:
-      - "8098:8098"
+#    ports:
+#      - "8098:8098"
     environment:
       - SP_CONNECT_CONTAINER_HOST=connect-master
       - SP_CONNECT_CONTAINER_WORKER=connect-worker-main

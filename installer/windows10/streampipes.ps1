@@ -96,7 +96,7 @@ if ($args[0] -eq "start")
         Write-Host "INFO: StreamPipes is now ready to be used on your system"
         Write-Host "      Check https://streampipes.apache.org/ for information on StreamPipes"
         Write-Host
-        Write-Host "      Go to the UI and follow the instructions to get started: http://localhost/"
+        Write-Host "      Go to the UI and follow the instructions to get started: http://localhost/ (or the hostname of the server)"
         Write-Host
     }
     else
