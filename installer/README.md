@@ -19,7 +19,7 @@
 # Install StreamPipes
 Clone this project or download the complete repository. To download the ZIP of the installer click on the green button `Clone or download`on the top right. Then click on `download ZIP`.
 
-A complete installation guide can be found at [https://www.streampipes.org/en/download](https://www.streampipes.org/en/download)
+A complete installation guide can be found at [https://streampipes.apache.org/download](https://streampipes.apache.org/download)
 
 ## Linux and OSX
 * Open the terminal and navigate to the directory `streampipes-installer/osx_linux`
@@ -53,5 +53,3 @@ Run the script with `./streampipes.bat <COMMAND>`. We provide three different co
   * Stops StreamPipes
 * `./streampipes.bat clean`:
   * Removes all configuration files. This must be done when your computer has a new IP address.
-  
- 
