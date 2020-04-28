@@ -1,0 +1,6 @@
+org.apache.streampipes.processors.geo.jvm.jts.processor.trajectory.title=Static Google Maps Geocoder
+org.apache.streampipes.processors.geo.jvm.jts.processor.trajectory.description=GTrajectory from JTS point events
+appends these coordinates to every input event.
+
+place.title=Place
+place.description=Trajectory from single point events

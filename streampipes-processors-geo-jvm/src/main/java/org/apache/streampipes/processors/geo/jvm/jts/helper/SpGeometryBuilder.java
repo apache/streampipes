@@ -19,6 +19,8 @@
 package org.apache.streampipes.processors.geo.jvm.jts.helper;
 
 import org.locationtech.jts.geom.*;
+import org.locationtech.jts.io.ParseException;
+import org.locationtech.jts.io.WKTReader;
 
 public class SpGeometryBuilder {
 
@@ -32,7 +34,7 @@ public class SpGeometryBuilder {
    *
    * @param lng Longitude value in the range -180 <Longitude > 180
    * @param lat Latitude value in the range -90 <LATITUDE > 90
-   * @param epsg EPSG Code for projection onfo
+   * @param epsg EPSG Code for projection info
    * @return a JTS Point Geometry Object with lat lng values. An empty point geometry is created if Latitude or Longitude values are out of range
    * or has null values.
    */
@@ -59,6 +61,37 @@ public class SpGeometryBuilder {
 
     return point;
   }
+
+
+  /**
+   * creates a Geometry from a wkt_string. string has to be valid and is not be checked. If invalid, an empty point
+   * geom is returned. method calls getPrecision method and creates a jts geometry factory and a WKT-parser object.
+   * from the wktString the
+   *
+   * @param wktString wkt text
+   * @param epsg EPSG Code for projection info
+   * @return Geometry geom: a JTS Geometry Object depending on the WKT input. An empty point geometry is created if Latitude or Longitude values are out of range
+   *    * or has null values
+   */
+  public static Geometry createSPGeom(String wktString, Integer epsg) {
+
+    Geometry geom;
+    PrecisionModel prec = getPrecisionModel(epsg);
+
+    GeometryFactory geomFactory = new GeometryFactory(prec, epsg);
+    WKTReader wktReader = new WKTReader(geomFactory);
+
+    try {
+      geom = wktReader.read(wktString);
+    } catch (ParseException e) {
+      // if wktString is invalid, an empty point geometry will be created as returnedGeom
+      geom = geomFactory.createPoint();
+    }
+
+    return geom;
+  }
+
+
 
   /**
    *
