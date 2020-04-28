@@ -27,6 +27,7 @@ import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.sdk.helpers.*;
 import org.apache.streampipes.sdk.utils.Assets;
+import org.apache.streampipes.vocabulary.Geo;
 import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
@@ -53,14 +54,14 @@ public class LatLngToGeoController extends  StandaloneEventProcessingDeclarer<La
                         StreamRequirementsBuilder
                                 .create()
                                 .requiredPropertyWithUnaryMapping(
-                                        EpRequirements.numberReq(),
+                                        EpRequirements.domainPropertyReq(Geo.lat),
                                         Labels.from(LAT_FIELD,
                                                 "Latitude field",
                                                 "Latitude value"),
                                         PropertyScope.NONE
                                 )
                                 .requiredPropertyWithUnaryMapping(
-                                        EpRequirements.numberReq(),
+                                        EpRequirements.domainPropertyReq(Geo.lng),
                                         Labels.from(LNG_FIELD,
                                                 "Longitude field",
                                                 "Longitude value"),
