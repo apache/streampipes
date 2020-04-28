@@ -26,22 +26,22 @@
 
 ## Description
 
-This processor creates a [JTS](https://github.com/locationtech/jts) Point geometry from  latitude and longitude value.
+This processor creates a  JTS Point geometry from  latitude and longitude value.
 
 ***
 
 ## Required input
 
-*  number value representing Latitude field
-*  number value representing Longitude field
-*  integer value representing EPSG field
+*  Ontology Vocabulary Latitude
+*  Ontology Vocabulary Longitude
+*  Integer value representing EPSG Code
 
 
 ***
 
 ## Configuration
 
-Creates a JTS Geometry Point from Latitude (x) and Longitude (y) values in the representing coordinate reference system [(CRS)](https://en.wikipedia.org/wiki/Spatial_reference_system) by the EPSG code.
+Creates a JTS Geometry Point from Longitude (x) and Latitude (y) values in the coordinate reference system represented by the EPSG code.
 An empty point geometry is created if latitude or longitude value is missing in the event (e.g. null value) or values are out of range. Allowed values for Longitude are between -180.00 and 180.00; Latitude values between -90.00 and 90.00.
 
 ### 1st parameter
@@ -57,7 +57,7 @@ EPSG code value
 
 ## Output
 
-Adds a point geometry in the Well Known Text [(WKT)](https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry) notation and in Longitude (y)  Latitude (x) axis order to the stream.
+Adds a point geometry in the Well Known Text notation and in Longitude (x)  Latitude (y) axis order to the stream.
 
 ### Example
 * Input stream: <br>
