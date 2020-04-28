@@ -79,7 +79,7 @@ public class LatLngToGeoController extends  StandaloneEventProcessingDeclarer<La
                                 "point_wkt",
                                 "wkt",
                                 "wkt point from long lat values"),
-                    WKT,
+                        WKT,
                         SO.Text))
                 )
 
