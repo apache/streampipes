@@ -18,7 +18,7 @@ deployment: lite
 pullPolicy: "Always"
 
 streampipes:
-  version: "0.65.1-SNAPSHOT"
+  version: "0.66.0-SNAPSHOT"
   registry: "apachestreampipes"
 
 external:
