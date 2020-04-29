@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.processors.geo.jvm.jts.helper;
 
-
 import org.locationtech.jts.geom.*;
 
 public class SpTrajectoryBuilder {
@@ -29,7 +28,7 @@ public class SpTrajectoryBuilder {
 
     /**
      * Constructor of SpTrajectory
-     * @param numberSubPoints Integer number of allowed subpoints of the trajectory
+     * @param numberSubPoints Integer number of allowed sub-points of the trajectory
      * @param description Text Description of the single Trajectory
      */
     public SpTrajectoryBuilder(int numberSubPoints, String description) {
@@ -41,17 +40,16 @@ public class SpTrajectoryBuilder {
 
     /**
      * getter method for description text
-     * @return
+     * @return description text
      */
     public String getDescription() {
         return description;
     }
 
     /**
-     * Adds a Point to the trajectory object and also handle removement depending on the
-     * number of choosen Subpoints
-     * @param point Point geometry
-     * @param m stores an extra integer to the subpoint of a trajectory
+     * Adds a Point to the trajectory object and also handle removes old point if {link #numberSubPoints} threshold is exceeded.
+     * @param point {@link org.locationtech.jts.geom.Point}
+     * @param m stores an extra integer to the sub-point of a trajectory {@link org.locationtech.jts.geom.CoordinateXYM#M}
      */
     public void addPointToTrajectory(Point point, Integer m) {
         coordinateList.add(createSingleTrajectoryCoordinate(point, m));
