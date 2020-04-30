@@ -1,0 +1,17 @@
+org.apache.streampipes.processors.transformation.jvm.stringoperator.timer.title=String Timer
+org.apache.streampipes.processors.transformation.jvm.stringoperator.timer.description=Measures how long a string value does not change
+
+field.title=String Field
+field.description=The string field that is monitored
+
+measuredTime.title = Measured Time
+measuredTime.description = The time for the va
+
+fieldValue.title = Field Value
+fieldValue.description = The corresponding field value
+
+outputUnit.title= Output Unit
+outputUnit.description = The output unit of the measured time
+
+
+
