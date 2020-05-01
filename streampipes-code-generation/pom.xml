@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.apache.streampipes</groupId>
         <artifactId>streampipes-parent</artifactId>
-        <version>0.66.0-SNAPSHOT</version>
+        <version>0.66.0</version>
     </parent>
 
     <artifactId>streampipes-code-generation</artifactId>
@@ -39,18 +39,18 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-container-standalone</artifactId>
-            <version>0.66.0-SNAPSHOT</version>
+            <version>0.66.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-model-client</artifactId>
-            <version>0.66.0-SNAPSHOT</version>
+            <version>0.66.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-sdk</artifactId>
-            <version>0.66.0-SNAPSHOT</version>
+            <version>0.66.0</version>
         </dependency>
 
         <!-- External dependencies -->
