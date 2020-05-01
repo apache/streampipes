@@ -573,11 +573,6 @@
                 <version>${jersey.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.glassfish.jersey.inject</groupId>
-                <artifactId>jersey-hk2</artifactId>
-                <version>${jersey.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.glassfish.jersey.media</groupId>
                 <artifactId>jersey-media-json-jackson</artifactId>
                 <version>${jersey.version}</version>
@@ -845,49 +840,33 @@
             <id>apache-release</id>
             <build>
                 <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-assembly-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>source-release-assembly</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>single</goal>
-                                </goals>
-                                <configuration combine.self="append">
-                                    <finalName>apache-streampipes-${project.version}-incubating</finalName>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
+                    <!--
+                      Create MD5 and SHA512 checksum files for the release artifacts.
+                    -->
                     <plugin>
                         <groupId>net.nicoulaj.maven.plugins</groupId>
                         <artifactId>checksum-maven-plugin</artifactId>
                         <version>1.8</version>
                         <executions>
                             <execution>
-                                <id>sign-source-release</id>
-                                <phase>package</phase>
                                 <goals>
                                     <goal>files</goal>
                                 </goals>
-                                <configuration>
-                                    <algorithms>
-                                        <algorithm>SHA-512</algorithm>
-                                    </algorithms>
-                                    <fileSets>
-                                        <fileSet>
-                                            <directory>${project.build.directory}</directory>
-                                            <includes>
-                                                <include>apache-streampipes-${project.version}-incubating.zip
-                                                </include>
-                                            </includes>
-                                        </fileSet>
-                                    </fileSets>
-                                </configuration>
                             </execution>
                         </executions>
+                        <configuration>
+                            <algorithms>
+                                <algorithm>SHA-512</algorithm>
+                            </algorithms>
+                            <fileSets>
+                                <fileSet>
+                                    <directory>${project.build.directory}</directory>
+                                    <includes>
+                                        <include>apache-streampipes-${project.version}-incubating-source-release.zip</include>
+                                    </includes>
+                                </fileSet>
+                            </fileSets>
+                        </configuration>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -954,6 +933,14 @@
                     <artifactId>maven-release-plugin</artifactId>
                     <configuration>
                         <arguments>-Papache-release</arguments>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>3.2.0</version>
+                    <configuration>
+                        <finalName>apache-streampipes-${project.version}-incubating</finalName>
                     </configuration>
                 </plugin>
             </plugins>
