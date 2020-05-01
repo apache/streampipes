@@ -23,7 +23,7 @@
 mvn archetype:generate                                  \
 			-DarchetypeGroupId=org.apache.streampipes                \
 			-DarchetypeArtifactId=streampipes-archetype-pe-sinks-flink         \
-			-DarchetypeVersion=0.60.2-SNAPSHOT                \
+			-DarchetypeVersion=0.66.0                \
 			-DgroupId=my.groupId \
 			-DartifactId=my-sink-flink
 			-DclassNamePrefix=MySink
