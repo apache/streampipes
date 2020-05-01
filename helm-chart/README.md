@@ -19,7 +19,7 @@
 # StreamPipes Helm Chart
 StreamPipes helm chart to deploy StreamPipes on Kubernetes.
 
-Currently: **StreamPipes v0.65.1-SNAPSHOT**
+Currently: **StreamPipes v0.66.0**
 
 ## Prerequisite
 
