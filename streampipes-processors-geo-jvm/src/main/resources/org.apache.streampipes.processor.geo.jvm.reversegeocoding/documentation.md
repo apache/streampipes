@@ -27,6 +27,8 @@
 
 This processor computes place name based on given lat/lng coordinates that are transmitted as fields from an event.
 
+This processor automatically downloads the file cities1000.zip from Geonames (http://download.geonames.org/export/dump/cities1000.zip). This file is provided under the CC BY 4.0 license, see https://creativecommons.org/licenses/by/4.0/ for license details.
+
 ***
 
 ## Required input

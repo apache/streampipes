@@ -590,6 +590,7 @@
 
                         <!-- External files -->
                         <exclude>streampipes-processors-transformation-flink/src/main/java/com/kohlschutter/boilerpipe/**</exclude>
+                        <exclude>streampipes-processors-geo-jvm/src/main/java/org/apache/streampipes/processors/geo/jvm/processor/revgeocoder/geocode/**</exclude>
 
                     </excludes>
                 </configuration>
