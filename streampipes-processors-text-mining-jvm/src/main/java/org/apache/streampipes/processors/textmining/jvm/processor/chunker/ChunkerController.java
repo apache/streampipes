@@ -31,12 +31,15 @@ import org.apache.streampipes.sdk.utils.Datatypes;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
+import java.io.IOException;
+
 public class ChunkerController extends StandaloneEventProcessingDeclarer<ChunkerParameters> {
 
   private static final String TAGS_FIELD_KEY = "tagsField";
   private static final String TOKENS_FIELD_KEY = "tokensField";
   static final String CHUNK_TYPE_FIELD_KEY = "chunkType";
   static final String CHUNK_FIELD_KEY = "chunk";
+  private static final String BINARY_FILE_KEY = "binary-file";
 
   @Override
   public DataProcessorDescription declareModel() {
@@ -44,6 +47,7 @@ public class ChunkerController extends StandaloneEventProcessingDeclarer<Chunker
             .category(DataProcessorType.ENRICH_TEXT)
             .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .withLocales(Locales.EN)
+            .requiredFile(Labels.withId(BINARY_FILE_KEY))
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredPropertyWithUnaryMapping(
@@ -73,7 +77,14 @@ public class ChunkerController extends StandaloneEventProcessingDeclarer<Chunker
     String tags = extractor.mappingPropertyValue(TAGS_FIELD_KEY);
     String tokens = extractor.mappingPropertyValue(TOKENS_FIELD_KEY);
 
-    ChunkerParameters params = new ChunkerParameters(graph, tags, tokens);
+    byte[] fileContent = null;
+    try {
+      fileContent = extractor.fileContentsAsByteArray(BINARY_FILE_KEY);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    ChunkerParameters params = new ChunkerParameters(graph, tags, tokens, fileContent);
     return new ConfiguredEventProcessor<>(params, Chunker::new);
   }
 }

@@ -41,6 +41,8 @@ Needs a stream with two string list properties:
 ## Configuration
 
 Assign the tokens and the part of speech tags to the corresponding stream property.
+To use this component you have to download or train an openNLP model:
+https://opennlp.apache.org/models.html
 
 ## Output
 

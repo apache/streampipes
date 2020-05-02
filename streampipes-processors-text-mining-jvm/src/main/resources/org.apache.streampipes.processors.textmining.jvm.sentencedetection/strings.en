@@ -3,3 +3,6 @@ org.apache.streampipes.processors.textmining.jvm.sentencedetection.description=S
 
 detectionField.title=Sentence detection
 detectionField.description=Specifies the event property from your stream that contains the text that should be split up
+
+binary-file.title=Model File
+binary-file.description=Provide a model from the OpenNLP project. You can find the link in the documentation of this processor.

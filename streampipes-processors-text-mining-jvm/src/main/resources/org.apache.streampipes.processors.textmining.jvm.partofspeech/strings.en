@@ -9,3 +9,6 @@ tagPos.description=The part of speech tag which was detected
 
 confidencePos.title=Confidence
 confidencePos.description=The probability that the detected part of speech is correct. Between 0 (no confidence) and 1 (highly confident).
+
+binary-file.title=Model File
+binary-file.description=Provide a model from the OpenNLP project. You can find the link in the documentation of this processor.

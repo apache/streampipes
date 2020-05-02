@@ -18,8 +18,11 @@
 
 package org.apache.streampipes.processors.textmining.jvm.processor.partofspeech;
 
+import opennlp.tools.langdetect.LanguageDetectorME;
+import opennlp.tools.langdetect.LanguageDetectorModel;
 import opennlp.tools.postag.POSModel;
 import opennlp.tools.postag.POSTaggerME;
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.field.ListField;
@@ -27,6 +30,7 @@ import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -38,20 +42,24 @@ public class PartOfSpeech implements EventProcessor<PartOfSpeechParameters> {
   private POSTaggerME posTagger;
 
   public PartOfSpeech() {
-    try (InputStream modelIn = getClass().getClassLoader().getResourceAsStream("partofspeech-en-v2.bin")) {
-      POSModel model = new POSModel(modelIn);
-      posTagger = new POSTaggerME(model);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
   }
 
   @Override
   public void onInvocation(PartOfSpeechParameters partOfSpeechParameters,
                            SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) {
+                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     LOG = partOfSpeechParameters.getGraph().getLogger(PartOfSpeech.class);
     this.detection = partOfSpeechParameters.getDetectionName();
+
+    InputStream modelIn = new ByteArrayInputStream(partOfSpeechParameters.getFileContent());
+    POSModel model = null;
+    try {
+      model = new POSModel(modelIn);
+    } catch (IOException e) {
+      throw new SpRuntimeException("Error when loading the uploaded model.", e);
+    }
+
+    posTagger = new POSTaggerME(model);
   }
 
   @Override

@@ -30,18 +30,22 @@ import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
+import java.io.IOException;
+
 public class TokenizerController extends StandaloneEventProcessingDeclarer<TokenizerParameters> {
 
   private static final String DETECTION_FIELD_KEY = "detectionField";
   static final String TOKEN_LIST_FIELD_KEY = "tokenList";
+  private static final String BINARY_FILE_KEY = "binary-file";
 
   //TODO: Maybe change outputStrategy to an array instead of tons of different strings
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.textmining.jvm.tokenizer")
             .category(DataProcessorType.ENRICH_TEXT)
-            .withAssets(Assets.DOCUMENTATION)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .withLocales(Locales.EN)
+            .requiredFile(Labels.withId(BINARY_FILE_KEY))
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredPropertyWithUnaryMapping(
@@ -60,7 +64,14 @@ public class TokenizerController extends StandaloneEventProcessingDeclarer<Token
 
     String detection = extractor.mappingPropertyValue(DETECTION_FIELD_KEY);
 
-    TokenizerParameters params = new TokenizerParameters(graph, detection);
+    byte[] fileContent = null;
+    try {
+      fileContent = extractor.fileContentsAsByteArray(BINARY_FILE_KEY);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    TokenizerParameters params = new TokenizerParameters(graph, detection, fileContent);
     return new ConfiguredEventProcessor<>(params, Tokenizer::new);
   }
 }

@@ -30,18 +30,22 @@ import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
+import java.io.IOException;
+
 public class LanguageDetectionController extends StandaloneEventProcessingDeclarer<LanguageDetectionParameters> {
 
   private static final String DETECTION_FIELD_KEY = "detectionField";
   static final String LANGUAGE_KEY = "language";
   static final String CONFIDENCE_KEY = "confidenceLanguage";
+  private static final String BINARY_FILE_KEY = "binary-file";
 
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.textmining.jvm.languagedetection")
             .category(DataProcessorType.ENRICH_TEXT)
-            .withAssets(Assets.DOCUMENTATION)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .withLocales(Locales.EN)
+            .requiredFile(Labels.withId(BINARY_FILE_KEY))
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredPropertyWithUnaryMapping(
@@ -66,7 +70,14 @@ public class LanguageDetectionController extends StandaloneEventProcessingDeclar
 
     String detection = extractor.mappingPropertyValue(DETECTION_FIELD_KEY);
 
-    LanguageDetectionParameters params = new LanguageDetectionParameters(graph, detection);
+    byte[] fileContent = null;
+    try {
+      fileContent = extractor.fileContentsAsByteArray(BINARY_FILE_KEY);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    LanguageDetectionParameters params = new LanguageDetectionParameters(graph, detection, fileContent);
     return new ConfiguredEventProcessor<>(params, LanguageDetection::new);
   }
 }

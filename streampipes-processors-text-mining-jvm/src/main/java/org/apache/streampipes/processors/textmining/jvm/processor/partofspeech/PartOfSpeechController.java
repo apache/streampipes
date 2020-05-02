@@ -31,18 +31,22 @@ import org.apache.streampipes.sdk.utils.Datatypes;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
+import java.io.IOException;
+
 public class PartOfSpeechController extends StandaloneEventProcessingDeclarer<PartOfSpeechParameters> {
 
   private static final String DETECTION_FIELD_KEY = "detectionField";
   static final String CONFIDENCE_KEY = "confidencePos";
   static final String TAG_KEY = "tagPos";
+  private static final String BINARY_FILE_KEY = "binary-file";
 
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.textmining.jvm.partofspeech")
             .category(DataProcessorType.ENRICH_TEXT)
-            .withAssets(Assets.DOCUMENTATION)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .withLocales(Locales.EN)
+            .requiredFile(Labels.withId(BINARY_FILE_KEY))
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredPropertyWithUnaryMapping(
@@ -67,7 +71,14 @@ public class PartOfSpeechController extends StandaloneEventProcessingDeclarer<Pa
 
     String detection = extractor.mappingPropertyValue(DETECTION_FIELD_KEY);
 
-    PartOfSpeechParameters params = new PartOfSpeechParameters(graph, detection);
+    byte[] fileContent = null;
+    try {
+      fileContent = extractor.fileContentsAsByteArray(BINARY_FILE_KEY);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    PartOfSpeechParameters params = new PartOfSpeechParameters(graph, detection, fileContent);
     return new ConfiguredEventProcessor<>(params, PartOfSpeech::new);
   }
 }

@@ -38,4 +38,5 @@ public class NameFinderParameters extends EventProcessorBindingParams {
     public String getModel() {
         return model;
     }
+
 }

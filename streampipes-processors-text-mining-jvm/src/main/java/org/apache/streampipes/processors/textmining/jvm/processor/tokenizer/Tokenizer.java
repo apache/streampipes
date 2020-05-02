@@ -18,14 +18,18 @@
 
 package org.apache.streampipes.processors.textmining.jvm.processor.tokenizer;
 
+import opennlp.tools.postag.POSModel;
+import opennlp.tools.postag.POSTaggerME;
 import opennlp.tools.tokenize.TokenizerME;
 import opennlp.tools.tokenize.TokenizerModel;
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -38,20 +42,24 @@ public class Tokenizer implements EventProcessor<TokenizerParameters> {
   private TokenizerME tokenizer;
 
   public Tokenizer() {
-    try (InputStream modelIn = getClass().getClassLoader().getResourceAsStream("tokenizer-en.bin")) {
-      TokenizerModel model = new TokenizerModel(modelIn);
-      tokenizer = new TokenizerME(model);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
   }
 
   @Override
   public void onInvocation(TokenizerParameters tokenizerParameters,
                            SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) {
+                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     LOG = tokenizerParameters.getGraph().getLogger(Tokenizer.class);
     this.detection = tokenizerParameters.getDetectionName();
+
+    InputStream modelIn = new ByteArrayInputStream(tokenizerParameters.getFileContent());
+    TokenizerModel model = null;
+    try {
+      model = new TokenizerModel(modelIn);
+    } catch (IOException e) {
+      throw new SpRuntimeException("Error when loading the uploaded model.", e);
+    }
+
+    tokenizer = new TokenizerME(model);
   }
 
   @Override

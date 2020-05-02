@@ -22,15 +22,21 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 public class TokenizerParameters extends EventProcessorBindingParams {
+    private byte[] fileContent;
     private String detectionName;
 
-    public TokenizerParameters(DataProcessorInvocation graph, String fieldName)
+    public TokenizerParameters(DataProcessorInvocation graph, String fieldName, byte[] fileContent)
     {
         super(graph);
         this.detectionName = fieldName;
+        this.fileContent = fileContent;
     }
 
     public String getDetectionName() {
         return detectionName;
+    }
+
+    public byte[] getFileContent() {
+        return fileContent;
     }
 }

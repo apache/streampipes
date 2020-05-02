@@ -30,16 +30,20 @@ import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
+import java.io.IOException;
+
 public class SentenceDetectionController extends StandaloneEventProcessingDeclarer<SentenceDetectionParameters> {
 
   private static final String DETECTION_FIELD_KEY = "detectionField";
+  private static final String BINARY_FILE_KEY = "binary-file";
 
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.textmining.jvm.sentencedetection")
             .category(DataProcessorType.ENRICH_TEXT)
-            .withAssets(Assets.DOCUMENTATION)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .withLocales(Locales.EN)
+            .requiredFile(Labels.withId(BINARY_FILE_KEY))
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredPropertyWithUnaryMapping(
@@ -56,7 +60,14 @@ public class SentenceDetectionController extends StandaloneEventProcessingDeclar
 
     String detection = extractor.mappingPropertyValue(DETECTION_FIELD_KEY);
 
-    SentenceDetectionParameters params = new SentenceDetectionParameters(graph, detection);
+    byte[] fileContent = null;
+    try {
+      fileContent = extractor.fileContentsAsByteArray(BINARY_FILE_KEY);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    SentenceDetectionParameters params = new SentenceDetectionParameters(graph, detection, fileContent);
     return new ConfiguredEventProcessor<>(params, SentenceDetection::new);
   }
 }

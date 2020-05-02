@@ -20,6 +20,7 @@ package org.apache.streampipes.processors.textmining.jvm.processor.chunker;
 
 import opennlp.tools.chunker.ChunkerME;
 import opennlp.tools.chunker.ChunkerModel;
+import opennlp.tools.sentdetect.SentenceModel;
 import opennlp.tools.util.Span;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.logging.api.Logger;
@@ -30,6 +31,7 @@ import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -44,21 +46,31 @@ public class Chunker implements EventProcessor<ChunkerParameters> {
   private ChunkerME chunker;
 
   public Chunker() {
-    try (InputStream modelIn = getClass().getClassLoader().getResourceAsStream("chunker-en.bin")) {
-      ChunkerModel model = new ChunkerModel(modelIn);
-      chunker = new ChunkerME(model);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+//    try (InputStream modelIn = getClass().getClassLoader().getResourceAsStream("chunker-en.bin")) {
+//      ChunkerModel model = new ChunkerModel(modelIn);
+//      chunker = new ChunkerME(model);
+//    } catch (IOException e) {
+//      e.printStackTrace();
+//    }
   }
 
   @Override
   public void onInvocation(ChunkerParameters chunkerParameters,
                            SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) {
+                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     LOG = chunkerParameters.getGraph().getLogger(Chunker.class);
     this.tags = chunkerParameters.getTags();
     this.tokens = chunkerParameters.getTokens();
+
+    InputStream modelIn = new ByteArrayInputStream(chunkerParameters.getFileContent());
+    ChunkerModel model = null;
+    try {
+      model = new ChunkerModel(modelIn);
+    } catch (IOException e) {
+      throw new SpRuntimeException("Error when loading the uploaded model.", e);
+    }
+
+    chunker = new ChunkerME(model);
   }
 
   @Override

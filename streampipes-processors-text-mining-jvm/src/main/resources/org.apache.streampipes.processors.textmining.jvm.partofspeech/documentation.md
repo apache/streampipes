@@ -40,6 +40,8 @@ A stream with a list property which contains the tokens.
 ## Configuration
 
 Simply assign the correct output of the previous stream to the part of speech detector input.
+To use this component you have to download or train an openNLP model:
+https://opennlp.apache.org/models.html
 
 ## Output
 

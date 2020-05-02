@@ -43,6 +43,7 @@ A stream with a list of tokens from a text.
 
 Configure the Name finder so that the tokens are assigned to the "List of Tokens" property
 
+
 #### Model parameter
 
 The trained model which should be used to find the names.

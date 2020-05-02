@@ -20,12 +20,15 @@ package org.apache.streampipes.processors.textmining.jvm.processor.sentencedetec
 
 import opennlp.tools.sentdetect.SentenceDetectorME;
 import opennlp.tools.sentdetect.SentenceModel;
+import org.apache.streampipes.commons.exceptions.SpException;
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -38,20 +41,24 @@ public class SentenceDetection implements EventProcessor<SentenceDetectionParame
   private SentenceDetectorME sentenceDetector ;
 
   public SentenceDetection() {
-    try (InputStream modelIn = getClass().getClassLoader().getResourceAsStream("sentence-detection-en.bin")) {
-      SentenceModel model = new SentenceModel(modelIn);
-      sentenceDetector = new SentenceDetectorME(model);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
   }
 
   @Override
   public void onInvocation(SentenceDetectionParameters sentenceDetectionParameters,
                            SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) {
+                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     LOG = sentenceDetectionParameters.getGraph().getLogger(SentenceDetection.class);
     this.detection = sentenceDetectionParameters.getDetectionName();
+
+    InputStream modelIn = new ByteArrayInputStream(sentenceDetectionParameters.getFileContent());
+    SentenceModel model = null;
+    try {
+      model = new SentenceModel(modelIn);
+    } catch (IOException e) {
+      throw new SpRuntimeException("Error when loading the uploaded model.", e);
+    }
+
+    sentenceDetector = new SentenceDetectorME(model);
   }
 
   @Override

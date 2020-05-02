@@ -146,6 +146,8 @@ The longer the text, the higher the accuracy of the language detector.
 ## Configuration
 
 Simply assign the correct output of the previous stream to the language detector input.
+To use this component you have to download or train an openNLP model:
+https://opennlp.apache.org/models.html
 
 ## Output
 

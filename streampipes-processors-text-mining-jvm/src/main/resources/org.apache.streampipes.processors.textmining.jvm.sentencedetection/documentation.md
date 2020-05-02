@@ -39,6 +39,8 @@ A stream with a string property which contains a text.
 ## Configuration
 
 Simply assign the correct output of the previous stream to the tokenizer input.
+To use this component you have to download or train an openNLP model:
+https://opennlp.apache.org/models.html
 
 ## Output
 

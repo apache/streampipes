@@ -12,3 +12,6 @@ confidence.description=The confidence with which each Chunk is tagged
 
 chunk.title=Chunk
 chunk.description=The chunk each token belongs to
+
+binary-file.title=Model File
+binary-file.description=Provide a model from the OpenNLP project. You can find the link in the documentation of this processor.

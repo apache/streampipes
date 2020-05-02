@@ -22,12 +22,16 @@ import opennlp.tools.langdetect.Language;
 import opennlp.tools.langdetect.LanguageDetector;
 import opennlp.tools.langdetect.LanguageDetectorME;
 import opennlp.tools.langdetect.LanguageDetectorModel;
+import opennlp.tools.sentdetect.SentenceDetectorME;
+import opennlp.tools.sentdetect.SentenceModel;
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -39,20 +43,24 @@ public class LanguageDetection implements EventProcessor<LanguageDetectionParame
   private LanguageDetector languageDetector;
 
   public LanguageDetection() {
-    try (InputStream modelIn = getClass().getClassLoader().getResourceAsStream("language-detection.bin")) {
-      LanguageDetectorModel model = new LanguageDetectorModel(modelIn);
-      languageDetector = new LanguageDetectorME(model);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
   }
 
   @Override
   public void onInvocation(LanguageDetectionParameters languageDetectionParameters,
                            SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) {
+                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     LOG = languageDetectionParameters.getGraph().getLogger(LanguageDetection.class);
     this.detection = languageDetectionParameters.getDetectionName();
+
+    InputStream modelIn = new ByteArrayInputStream(languageDetectionParameters.getFileContent());
+    LanguageDetectorModel model = null;
+    try {
+      model = new LanguageDetectorModel(modelIn);
+    } catch (IOException e) {
+      throw new SpRuntimeException("Error when loading the uploaded model.", e);
+    }
+
+    languageDetector = new LanguageDetectorME(model);
   }
 
   @Override

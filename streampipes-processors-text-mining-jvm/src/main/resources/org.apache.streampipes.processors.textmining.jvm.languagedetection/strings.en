@@ -9,3 +9,6 @@ language.description=The acronym of the detected language
 
 confidence.title=Confidence
 confidence.description=The probability that the detected language is correct. Between 0 (no confidence) and 1 (highly confident).
+
+binary-file.title=Model File
+binary-file.description=Provide a model from the OpenNLP project. You can find the link in the documentation of this processor.
