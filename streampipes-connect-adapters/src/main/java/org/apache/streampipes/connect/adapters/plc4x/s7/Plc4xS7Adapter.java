@@ -29,6 +29,7 @@ import org.apache.streampipes.connect.adapter.exception.AdapterException;
 import org.apache.streampipes.connect.adapter.sdk.ParameterExtractor;
 import org.apache.streampipes.connect.adapter.util.PollingSettings;
 import org.apache.streampipes.connect.adapters.PullAdapter;
+import org.apache.streampipes.connect.utils.MqttConnectUtils;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
@@ -97,6 +98,13 @@ public class Plc4xS7Adapter extends PullAdapter {
                 .iconUrl("plc4x.png")
                 .category(AdapterType.Manufacturing)
                 .requiredTextParameter(Labels.from(PLC_IP, "PLC Address", "Example: 192.168.34.56"))
+
+//                .requiredAlternatives(Labels.withId(ACCESS_MODE),
+//                  Alternatives.from(Labels.withId(ANONYMOUS_ACCESS)),
+//                  Alternatives.from(Labels.withId(USERNAME_ACCESS),
+//        StaticProperties.group(Labels.withId(USERNAME_GROUP),
+//                StaticProperties.stringFreeTextProperty(Labels.withId(USERNAME)),
+//                StaticProperties.secretValue(Labels.withId(PASSWORD))))
                 .requiredCollection(Labels.from(PLC_NODES, "Nodes", "The PLC Nodes"),
                     StaticProperties.stringFreeTextProperty(Labels.from(PLC_NODE_RUNTIME_NAME, "Runtime Name", "example: temperatur")),
                     StaticProperties.stringFreeTextProperty(Labels.from(PLC_NODE_NAME, "Node Name", "example: %Q0.4")),

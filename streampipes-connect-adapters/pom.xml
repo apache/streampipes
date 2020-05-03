@@ -24,16 +24,11 @@
         <groupId>org.apache.streampipes</groupId>
         <artifactId>streampipes-extensions</artifactId>
         <version>0.67.0-SNAPSHOT</version>
-        <relativePath>..</relativePath>
     </parent>
 
     <artifactId>streampipes-connect-adapters</artifactId>
 
     <packaging>pom</packaging>
-
-    <modules>
-        <module>streampipes-connect-adapter</module>
-    </modules>
 
     <properties>
         <animal-sniffer-annotations.version>1.17</animal-sniffer-annotations.version>
@@ -80,6 +75,11 @@
                 <groupId>com.github.shyiko</groupId>
                 <artifactId>mysql-binlog-connector-java</artifactId>
                 <version>${mysql-binlog-connector.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.influxdb</groupId>
+                <artifactId>influxdb-java</artifactId>
+                <version>${influxdb.java.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.google.errorprone</groupId>
@@ -132,6 +132,10 @@
                 <version>${netty.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.fusesource.mqtt-client</groupId>
+                <artifactId>mqtt-client</artifactId>
+            </dependency>
+            <dependency>
                 <groupId>javax.websocket</groupId>
                 <artifactId>javax.websocket-api</artifactId>
                 <version>${javax-websocket-client-api.version}</version>
@@ -140,6 +144,10 @@
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql-connector-java.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>fluent-hc</artifactId>
             </dependency>
             <dependency>
                 <groupId>org.apache.camel</groupId>
@@ -273,6 +281,11 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -315,6 +328,39 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <phase>package</phase>
+                        <configuration>
+                            <classifier>embed</classifier>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>org.apache.streampipes.connect.ConnectAdapterInit</mainClass>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        <finalName>streampipes-connect-adapters</finalName>
     </build>
 
 </project>
