@@ -56,13 +56,12 @@
         <slack.version>1.2.0</slack.version>
     </properties>
 
-    <dependencyManagement>
         <dependencies>
             <!-- StreamPipes dependencies -->
             <dependency>
                 <groupId>org.apache.streampipes</groupId>
                 <artifactId>streampipes-connect-container-worker</artifactId>
-                <version>${streampipes.version}</version>
+                <version>0.67.0-SNAPSHOT</version>
             </dependency>
 
             <!-- External dependencies -->
@@ -148,11 +147,6 @@
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>fluent-hc</artifactId>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.camel</groupId>
-                <artifactId>camel-milo</artifactId>
-                <version>${camel.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -287,7 +281,6 @@
                 <scope>test</scope>
             </dependency>
         </dependencies>
-    </dependencyManagement>
 
     <build>
         <pluginManagement>
