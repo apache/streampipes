@@ -20,7 +20,7 @@ package org.apache.streampipes.sinks.databases.jvm.opcua;
 
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfig;
-import org.eclipse.milo.opcua.stack.client.UaTcpStackClient;
+import org.eclipse.milo.opcua.stack.client.DiscoveryClient;
 import org.eclipse.milo.opcua.stack.core.security.SecurityPolicy;
 import org.eclipse.milo.opcua.stack.core.types.builtin.*;
 import org.eclipse.milo.opcua.stack.core.types.structured.EndpointDescription;
@@ -33,6 +33,7 @@ import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.runtime.EventSink;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -61,15 +62,15 @@ public class OpcUa implements EventSink<OpcUaParameters> {
 
 		this.params = parameters;
 
-		EndpointDescription[] endpoints;
+		List<EndpointDescription> endpoints;
 
 		try {
-			endpoints = UaTcpStackClient.getEndpoints(serverUrl).get();
+//			endpoints = UaTcpStackClient.getEndpoints(serverUrl).get();
+			endpoints = DiscoveryClient.getEndpoints(serverUrl).get();
 
-			EndpointDescription endpoint = null;
-
-			endpoint = Arrays.stream(endpoints)
-					.filter(e -> e.getSecurityPolicyUri().equals(SecurityPolicy.None.getSecurityPolicyUri()))
+			EndpointDescription endpoint = endpoints
+					.stream()
+					.filter(e -> e.getSecurityPolicyUri().equals(SecurityPolicy.None.getUri()))
 					.findFirst().orElseThrow(() -> new Exception("no desired endpoints returned"));
 
 			OpcUaClientConfig config = OpcUaClientConfig.builder()
@@ -78,8 +79,7 @@ public class OpcUa implements EventSink<OpcUaParameters> {
 					.setEndpoint(endpoint)
 					.build();
 
-			new OpcUaClient(config);
-			opcUaClient = new OpcUaClient(config);
+			opcUaClient = OpcUaClient.create(config);
 			opcUaClient.connect().get();
 
 		} catch (Exception e) {

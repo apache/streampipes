@@ -88,8 +88,8 @@
             <artifactId>iotdb-jdbc</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-milo</artifactId>
+            <groupId>org.eclipse.milo</groupId>
+            <artifactId>sdk-client</artifactId>
         </dependency>
         <dependency>
             <groupId>org.eclipse.ditto</groupId>
