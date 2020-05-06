@@ -64,7 +64,7 @@ jobs:
           echo '{"experimental": true}' | sudo tee /etc/docker/daemon.json
           sudo service docker restart
       - name: Build and Push Docker Image connect-worker-main
-        working-directory: ./streampipes-connect-adapters/streampipes-connect-adapter
+        working-directory: ./streampipes-connect-adapters
         env:
           IMG_NAME_DEFAULT: ${{ env.DOCKERHUB_APACHE_REPO }}/connect-worker:${{ env.MVN_VERSION }}
           IMG_NAME_AMD64: ${{ env.DOCKERHUB_APACHE_REPO }}/connect-worker:amd64-${{ env.MVN_VERSION }}
