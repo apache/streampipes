@@ -21,6 +21,6 @@ ENV CONSUL_LOCATION consul
 EXPOSE 8099
 
 COPY qemu-aarch64-static /usr/bin
-COPY target/streampipes-connect-adapter.jar  /streampipes-connect-adapter.jar
+COPY target/streampipes-connect-adapters.jar  /streampipes-connect-adapters.jar
 
-ENTRYPOINT ["java", "-jar", "/streampipes-connect-adapter.jar"]
+ENTRYPOINT ["java", "-jar", "/streampipes-connect-adapters.jar"]
