@@ -28,9 +28,6 @@
 
     <artifactId>streampipes-connect-adapters</artifactId>
 
-    <packaging>pom</packaging>
-
-
         <dependencies>
             <!-- StreamPipes dependencies -->
             <dependency>
