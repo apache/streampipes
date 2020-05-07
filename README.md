@@ -28,7 +28,7 @@ toolbox of data sources, data processors and data sinks. StreamPipes has an exch
 Pipeline elements in StreamPipes can be installed at runtime - the built-in SDK allows to easily implement new 
 pipeline elements according to your needs. Pipeline elements are standalone microservices that can run anywhere - centrally on your server, in a large-scale cluster or close at the edge.
 
-Find the core project at [https://github.com/apache/incubator-streampipes](https://github.com/apache/incuabtor-streampipes)
+Find the core project at [https://github.com/apache/incubator-streampipes](https://github.com/apache/incubator-streampipes)
 
 Learn more about StreamPipes at [https://streampipes.apache.org/](https://streampipes.apache.org/)
 
