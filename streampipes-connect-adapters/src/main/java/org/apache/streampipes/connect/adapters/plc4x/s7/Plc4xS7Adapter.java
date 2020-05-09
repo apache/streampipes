@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.connect.adapters.plc4x.s7;
 
+import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIConversion;
 import org.apache.plc4x.java.PlcDriverManager;
 import org.apache.plc4x.java.api.PlcConnection;
 import org.apache.plc4x.java.api.exceptions.PlcConnectionException;
@@ -38,8 +39,11 @@ import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
+import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
+import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
 import java.util.ArrayList;
@@ -53,17 +57,21 @@ public class Plc4xS7Adapter extends PullAdapter {
 
     /**
      * A unique id to identify the Plc4xS7Adapter
-      */
+     */
     public static final String ID = "org.apache.streampipes.connect.adapters.plc4x.s7";
 
     /**
      * Keys of user configuration parameters
      */
-    private static final String PLC_IP = "PLC_IP";
-    private static final String PLC_NODES = "PLC_NODES";
-    private static final String PLC_NODE_NAME = "PLC_NODE_NAME";
-    private static final String PLC_NODE_RUNTIME_NAME = "PLC_NODE_RUNTIME_NAME";
-    private static final String PLC_NODE_TYPE = "PLC_NODE_TYPE";
+    private static final String PLC_IP = "plc_ip";
+    private static final String PLC_NODES = "plc_nodes";
+    private static final String PLC_NODE_NAME = "plc_node_name";
+    private static final String PLC_NODE_RUNTIME_NAME = "plc_node_runtime_name";
+    private static final String PLC_NODE_TYPE = "plc_node_type";
+    private static final String PLC_NODES_FILE = "plc_nodes_file";
+    private static final String CONFIGURE = "configure";
+    private static final String MANUALLY = "manually";
+    private static final String CSV_UPLOAD = "csv-upload";
 
     /**
      * Values of user configuration parameters
@@ -87,6 +95,7 @@ public class Plc4xS7Adapter extends PullAdapter {
     }
 
 
+
     /**
      * Describe the adapter adapter and define what user inputs are required. Currently users can just select one node, this will be extended in the future
      * @return
@@ -94,27 +103,22 @@ public class Plc4xS7Adapter extends PullAdapter {
     @Override
     public SpecificAdapterStreamDescription declareModel() {
 
-        SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(ID, "PLC4X S7", "Connect directly to your PLC")
-                .iconUrl("plc4x.png")
+        SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(ID)
+                .withLocales(Locales.EN)
+                .withAssets(Assets.DOCUMENTATION, Assets.ICON)
                 .category(AdapterType.Manufacturing)
-                .requiredTextParameter(Labels.from(PLC_IP, "PLC Address", "Example: 192.168.34.56"))
-
-//                .requiredAlternatives(Labels.withId(ACCESS_MODE),
-//                  Alternatives.from(Labels.withId(ANONYMOUS_ACCESS)),
-//                  Alternatives.from(Labels.withId(USERNAME_ACCESS),
-//        StaticProperties.group(Labels.withId(USERNAME_GROUP),
-//                StaticProperties.stringFreeTextProperty(Labels.withId(USERNAME)),
-//                StaticProperties.secretValue(Labels.withId(PASSWORD))))
-                .requiredCollection(Labels.from(PLC_NODES, "Nodes", "The PLC Nodes"),
-                    StaticProperties.stringFreeTextProperty(Labels.from(PLC_NODE_RUNTIME_NAME, "Runtime Name", "example: temperatur")),
-                    StaticProperties.stringFreeTextProperty(Labels.from(PLC_NODE_NAME, "Node Name", "example: %Q0.4")),
-                    StaticProperties.singleValueSelection(Labels.from(PLC_NODE_TYPE, "Data Type", "example: bool"),
-                            Options.from("Bool",  "Byte", "Int", "Word", "Real"))
-
-                )
+                .requiredTextParameter(Labels.withId(PLC_IP))
+                .requiredAlternatives(Labels.withId(CONFIGURE),
+                                Alternatives.from(Labels.withId(MANUALLY),
+                                StaticProperties.collection(Labels.withId(PLC_NODES),
+                                        StaticProperties.stringFreeTextProperty(Labels.withId(PLC_NODE_RUNTIME_NAME)),
+                                        StaticProperties.stringFreeTextProperty(Labels.withId(PLC_NODE_NAME)),
+                                        StaticProperties.singleValueSelection(Labels.withId(PLC_NODE_TYPE),
+                                                Options.from("Bool",  "Byte", "Int", "Word", "Real")))),
+                                Alternatives.from(Labels.withId(CSV_UPLOAD),
+                                StaticProperties.fileProperty(Labels.withId(PLC_NODES_FILE))))
                 .build();
         description.setAppId(ID);
-
 
         return description;
     }
