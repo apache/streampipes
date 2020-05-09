@@ -18,7 +18,9 @@
 
 package org.apache.streampipes.connect.adapters.plc4x.s7;
 
-import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIConversion;
+import com.opencsv.CSVReader;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
 import org.apache.plc4x.java.PlcDriverManager;
 import org.apache.plc4x.java.api.PlcConnection;
 import org.apache.plc4x.java.api.exceptions.PlcConnectionException;
@@ -30,15 +32,19 @@ import org.apache.streampipes.connect.adapter.exception.AdapterException;
 import org.apache.streampipes.connect.adapter.sdk.ParameterExtractor;
 import org.apache.streampipes.connect.adapter.util.PollingSettings;
 import org.apache.streampipes.connect.adapters.PullAdapter;
-import org.apache.streampipes.connect.utils.MqttConnectUtils;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
+import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
+import org.apache.streampipes.model.staticproperty.FileStaticProperty;
+import org.apache.streampipes.model.staticproperty.StaticProperty;
+import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
+import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
@@ -46,6 +52,11 @@ import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -109,13 +120,13 @@ public class Plc4xS7Adapter extends PullAdapter {
                 .category(AdapterType.Manufacturing)
                 .requiredTextParameter(Labels.withId(PLC_IP))
                 .requiredAlternatives(Labels.withId(CONFIGURE),
-                                Alternatives.from(Labels.withId(MANUALLY),
+                        Alternatives.from(Labels.withId(MANUALLY),
                                 StaticProperties.collection(Labels.withId(PLC_NODES),
                                         StaticProperties.stringFreeTextProperty(Labels.withId(PLC_NODE_RUNTIME_NAME)),
                                         StaticProperties.stringFreeTextProperty(Labels.withId(PLC_NODE_NAME)),
                                         StaticProperties.singleValueSelection(Labels.withId(PLC_NODE_TYPE),
                                                 Options.from("Bool",  "Byte", "Int", "Word", "Real")))),
-                                Alternatives.from(Labels.withId(CSV_UPLOAD),
+                        Alternatives.from(Labels.withId(CSV_UPLOAD),
                                 StaticProperties.fileProperty(Labels.withId(PLC_NODES_FILE))))
                 .build();
         description.setAppId(ID);
@@ -254,22 +265,60 @@ public class Plc4xS7Adapter extends PullAdapter {
      * Extracts the user configuration from the SpecificAdapterStreamDescription and sets the local variales
      * @param adapterDescription
      */
-    private void getConfigurations(SpecificAdapterStreamDescription adapterDescription) {
-        ParameterExtractor extractor = new ParameterExtractor(adapterDescription.getConfig());
+    private void getConfigurations(SpecificAdapterStreamDescription adapterDescription) throws AdapterException {
+        StaticPropertyExtractor extractor =
+                StaticPropertyExtractor.from(adapterDescription.getConfig(), new ArrayList<>());
 
-        this.ip = extractor.singleValue(PLC_IP, String.class);
+        this.ip = extractor.singleValueParameter(PLC_IP, String.class);
+
+        String selectedAlternative = extractor.selectedAlternativeInternalId(CONFIGURE);
+        if (selectedAlternative.equals(CSV_UPLOAD)) {
+            // csv file
+            FileStaticProperty sp = (FileStaticProperty) extractor.getStaticPropertyByName(PLC_NODES_FILE);
+            this.nodes = new ArrayList<>();
+            try {
+                List<S7ConfigFile> configFiles = this.getCsvConfig(sp.getLocationPath());
+                for (S7ConfigFile entry : configFiles) {
+                    Map map = new HashMap();
+                    map.put(PLC_NODE_RUNTIME_NAME, entry.getName());
+                    map.put(PLC_NODE_NAME, entry.getLogicalAddress());
+                    map.put(PLC_NODE_TYPE, entry.getDataType());
+                    this.nodes.add(map);
+                }
+            } catch (FileNotFoundException e) {
+                throw new AdapterException("Could not read uploaded file");
+            }
 
 
-        this.nodes = new ArrayList<>();
-        List<ParameterExtractor> collectionExtractor = extractor.collectionGroup(PLC_NODES);
-        for (ParameterExtractor rowExtractor : collectionExtractor) {
-            Map map = new HashMap();
-            map.put(PLC_NODE_RUNTIME_NAME, rowExtractor.singleValue(PLC_NODE_RUNTIME_NAME, String.class));
-            map.put(PLC_NODE_NAME, rowExtractor.singleValue(PLC_NODE_NAME, String.class));
-            map.put(PLC_NODE_TYPE, rowExtractor.selectedSingleValueOption(PLC_NODE_TYPE));
-            this.nodes.add(map);
+        } else {
+            // manually
+            this.nodes = new ArrayList<>();
+            CollectionStaticProperty sp = (CollectionStaticProperty) extractor.getStaticPropertyByName(PLC_NODES);
+
+            for (StaticProperty member : sp.getMembers()) {
+                StaticPropertyExtractor memberExtractor =
+                        StaticPropertyExtractor.from(((StaticPropertyGroup) member).getStaticProperties(), new ArrayList<>());
+                Map map = new HashMap();
+                map.put(PLC_NODE_RUNTIME_NAME, memberExtractor.textParameter(PLC_NODE_RUNTIME_NAME));
+                map.put(PLC_NODE_NAME, memberExtractor.textParameter(PLC_NODE_NAME));
+                map.put(PLC_NODE_TYPE, memberExtractor.selectedSingleValue(PLC_NODE_TYPE, String.class));
+                this.nodes.add(map);
+            }
         }
 
+
+    }
+
+    private List<S7ConfigFile> getCsvConfig(String path) throws FileNotFoundException {
+
+        FileReader fr = new FileReader(path);
+        CSVReader reader = new CSVReader(fr, ';');
+        CsvToBean<S7ConfigFile> csvToBean = new CsvToBeanBuilder(reader)
+                .withType(S7ConfigFile.class)
+                .build();
+
+        List<S7ConfigFile> result = csvToBean.parse();
+        return result;
     }
 
     /**
