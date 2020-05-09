@@ -182,7 +182,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
     return spType.cast(getStaticPropertyByName(internalName));
   }
 
-  private StaticProperty getStaticPropertyByName(String name) {
+  public StaticProperty getStaticPropertyByName(String name) {
     return getStaticPropertyByName(sepaElement.getStaticProperties(), name);
   }
 
