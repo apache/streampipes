@@ -56,14 +56,14 @@ public class CreateTrajectoryFromPointsController extends  StandaloneEventProces
                         StreamRequirementsBuilder
                                 .create()
                                 .requiredPropertyWithUnaryMapping(
-                                        EpRequirements.stringReq(),
+                                        EpRequirements.domainPropertyReq("http://www.opengis.net/spec/geosparql/1.0#wktLiteral"),
                                         Labels.from(WKT,
                                                 "Geometry WKT",
                                                 "WKT of the requested Geometry"),
                                         PropertyScope.NONE
                                 )
                                 .requiredPropertyWithUnaryMapping(
-                                        EpRequirements.numberReq(),
+                                        EpRequirements.domainPropertyReq("http://streampipes.org/epsg"),
                                         Labels.from(EPSG, "EPSG Field", "EPSG Code for SRID"),
                                         PropertyScope.NONE
                                 )
