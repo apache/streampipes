@@ -29,7 +29,7 @@ public class SetEPSG implements EventProcessor<SetEpsgParameter> {
 
     public static Logger LOG;
     public SetEpsgParameter params;
-    public Integer epsg_value;
+    public Integer epsg;
 
 
 
@@ -37,13 +37,14 @@ public class SetEPSG implements EventProcessor<SetEpsgParameter> {
     public void onInvocation(SetEpsgParameter params, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
 
         LOG = params.getGraph().getLogger(SetEPSG.class);
-        this.params = params;
-        this.epsg_value = params.getEpsg_value();
+        this.epsg = params.getEpsg();
     }
 
     @Override
     public void onEvent(Event in, SpOutputCollector out)  {
-        in.addField(SetEpsgController.EPSG, epsg_value);
+        //in.addField("epsg-key", epsg);
+        in.addField("epsg", epsg);
+
         out.collect(in);
     }
 

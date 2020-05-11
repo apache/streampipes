@@ -21,10 +21,13 @@ package org.apache.streampipes.processors.geo.jvm.jts.processor.setEPSG;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.schema.PropertyScope;
+import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.utils.Datatypes;
 import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
@@ -32,44 +35,37 @@ import org.apache.streampipes.sdk.utils.Assets;
 
 public class SetEpsgController extends StandaloneEventProcessingDeclarer<SetEpsgParameter> {
 
-    public final static String EPSG = "EPSG";
     public final static String EPA_NAME = "EPSG Enricher";
+
+    public final static String EPSG_KEY = "epsg-key";
 
     @Override
     public DataProcessorDescription declareModel() {
         return ProcessingElementBuilder
-                .create("org.apache.streampipes.processors.geo.jvm.jts.processor.setEPSG",
-                        EPA_NAME,
-                        "Adds an EPSG Code to the event")
-                .category(DataProcessorType.GEO)
-                .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-                .requiredStream
-                        (StreamRequirementsBuilder
-                                .create()
-                                .build())
-                .requiredIntegerParameter(
-                        Labels.from(
-                                EPSG,
-                                "Sets EPSG Code",
-                                "Sets an EPSG Code. Default ist WGS84/WGS84 with number 4326"),
-                        4326)
-                .outputStrategy(
-                        OutputStrategies.append(
-                                EpProperties.numberEp(
-                                        Labels.from(
-                                                "EPSG Code",
-                                                "EPSG Code",
-                                                "EPSG Code for SRID"),
-                                        EPSG, SO.Number)))
-                .supportedFormats(SupportedFormats.jsonFormat())
-                .supportedProtocols(SupportedProtocols.kafka())
-                .build();
+            .create("org.apache.streampipes.processors.geo.jvm.jts.processor.setEPSG")
+            .category(DataProcessorType.GEO)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+            .withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder
+                .create()
+                .build())
+            .requiredIntegerParameter(Labels.withId(EPSG_KEY), 4326)
+
+            .outputStrategy(
+                OutputStrategies.append(PrimitivePropertyBuilder
+                    .create(Datatypes.Integer, "epsg")
+                    .domainProperty("http://data.ign.fr/def/ignf#CartesianCS")
+                    .build())
+            )
+            .supportedFormats(SupportedFormats.jsonFormat())
+            .supportedProtocols(SupportedProtocols.kafka())
+            .build();
     }
 
     @Override
     public ConfiguredEventProcessor<SetEpsgParameter> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 
-        Integer epsg_value = extractor.singleValueParameter(EPSG, Integer.class);
+        Integer epsg_value = extractor.singleValueParameter(EPSG_KEY, Integer.class);
         SetEpsgParameter params = new SetEpsgParameter(graph, epsg_value);
 
         return new ConfiguredEventProcessor<>(params, SetEPSG::new);

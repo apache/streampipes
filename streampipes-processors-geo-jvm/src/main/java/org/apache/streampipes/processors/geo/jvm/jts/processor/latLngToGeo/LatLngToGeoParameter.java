@@ -23,20 +23,20 @@ import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams
 
 public class LatLngToGeoParameter extends EventProcessorBindingParams {
 
-    private String epsg_value;
+    private String epsg;
     private String lat;
     private String lng;
 
-    public LatLngToGeoParameter(DataProcessorInvocation graph, String epsg_code, String lat, String lng) {
+    public LatLngToGeoParameter(DataProcessorInvocation graph, String epsg, String lat, String lng) {
         super(graph);
-        this.epsg_value = epsg_code;
+        this.epsg = epsg;
         this.lat = lat;
         this.lng = lng;
     }
 
 
-    public String getEpsg_value() {
-        return epsg_value;
+    public String getEpsg() {
+        return epsg;
     }
 
     public String getLat() {
