@@ -32,16 +32,21 @@ import org.locationtech.jts.geom.Point;
 public class CreateTrajectoryFromPoints implements EventProcessor<CreateTrajectoryFromPointsParameter> {
 
     private static Logger LOG;
-    private CreateTrajectoryFromPointsParameter params;
-    SpTrajectoryBuilder trajectory;
 
+    private SpTrajectoryBuilder trajectory;
+
+    private String geom_wkt;
+    private String epsg_code;
+    private String m_value;
 
 
     @Override
     public void onInvocation(CreateTrajectoryFromPointsParameter params, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
 
         LOG = params.getGraph().getLogger(CreateTrajectoryFromPointsParameter.class);
-        this.params = params;
+        this.geom_wkt =  params.getWkt();
+        this.epsg_code = params.getEpsg();
+        this.m_value = params.getM();
 
         trajectory = new SpTrajectoryBuilder(params.getSubpoints(), params.getDescription());
     }
@@ -49,18 +54,22 @@ public class CreateTrajectoryFromPoints implements EventProcessor<CreateTrajecto
     @Override
     public void onEvent(Event in, SpOutputCollector out) {
 
-        String wkt = in.getFieldBySelector(params.getWkt()).getAsPrimitive().getAsString();
-        Integer epsg = in.getFieldBySelector(params.getEpsg()).getAsPrimitive().getAsInt();
-        Integer m = in.getFieldBySelector(params.getM()).getAsPrimitive().getAsInt();
+        // extract values
+        String wkt = in.getFieldBySelector(geom_wkt).getAsPrimitive().getAsString();
+        Integer epsg = in.getFieldBySelector(epsg_code).getAsPrimitive().getAsInt();
+        Integer m = in.getFieldBySelector(m_value).getAsPrimitive().getAsInt();
 
+        //create JTS geometry
         Point eventGeom =  (Point) SpGeometryBuilder.createSPGeom(wkt,epsg);
 
-        //creates single trajectory
+        //adds point and m value to trajectory object
         trajectory.addPointToTrajectory(eventGeom, m);
+        // returns JTS LineString
         LineString geom = trajectory.returnAsLineString(eventGeom.getFactory());
 
-        in.addField(CreateTrajectoryFromPointsController.WKT, geom.toString());
-        in.addField(CreateTrajectoryFromPointsController.DESCRIPTION, trajectory.getDescription());
+        // adds to stream
+        in.addField("wkt-trajectory", geom.toString());
+        in.addField("description", trajectory.getDescription());
         out.collect(in);
 
     }
