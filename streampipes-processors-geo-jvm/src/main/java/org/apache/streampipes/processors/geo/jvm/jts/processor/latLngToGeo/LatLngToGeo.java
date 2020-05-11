@@ -30,23 +30,29 @@ import org.apache.streampipes.model.runtime.Event;
 public class LatLngToGeo implements EventProcessor<LatLngToGeoParameter> {
 
     private static Logger LOG;
-    private LatLngToGeoParameter params;
+    private String latitude;
+    private String longitude;
+    private String epsg_code;
 
 
     @Override
     public void onInvocation(LatLngToGeoParameter params, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
 
         LOG = params.getGraph().getLogger(LatLngToGeoParameter.class);
-        this.params = params;
+        this.latitude =  params.getLat();
+        this.longitude= params.getLng();
+        this.epsg_code = params.getEpsg();
+
     }
 
     @Override
     public void onEvent(Event in, SpOutputCollector out) {
 
-        Double lat = in.getFieldBySelector(params.getLat()).getAsPrimitive().getAsDouble();
-        Double lng = in.getFieldBySelector(params.getLng()).getAsPrimitive().getAsDouble();
-        Integer epsg_value = in.getFieldBySelector(params.getEpsg_value()).getAsPrimitive().getAsInt();
-        Point geom =  SpGeometryBuilder.createSPGeom(lng, lat, epsg_value);
+        Double lat = in.getFieldBySelector(latitude).getAsPrimitive().getAsDouble();
+        Double lng = in.getFieldBySelector(longitude).getAsPrimitive().getAsDouble();
+        Integer epsg = in.getFieldBySelector(epsg_code).getAsPrimitive().getAsInt();
+
+        Point geom =  SpGeometryBuilder.createSPGeom(lng, lat, epsg);
 
         if (!geom.isEmpty()){
             in.addField(LatLngToGeoController.WKT, geom.toString());

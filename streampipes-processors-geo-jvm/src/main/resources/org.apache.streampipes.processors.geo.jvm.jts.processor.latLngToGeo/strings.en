@@ -1,5 +1,6 @@
 org.apache.streampipes.processors.geo.jvm.jts.processor.latLngToGeo.title=Creates JTS Point
-org.apache.streampipes.processors.geo.jvm.jts.processor.latLngToGeo.description=Creats a JTS Point from Latitude and Longitude values
+org.apache.streampipes.processors.geo.jvm.jts.processor.latLngToGeo.description=Creates a JTS Point from Latitude and Longitude values
 
-place.title=JTS Point
-place.description=JTS Point Geometry
+latitude-key=Latitude value
+longitude-key=Longitude value
+epsg-key= EPSG Code
