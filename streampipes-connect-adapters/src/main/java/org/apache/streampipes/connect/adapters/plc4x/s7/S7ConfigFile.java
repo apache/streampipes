@@ -16,17 +16,12 @@ limitations under the License.
 
 package org.apache.streampipes.connect.adapters.plc4x.s7;
 
-import com.opencsv.bean.CsvBindByName;
-
 public class S7ConfigFile {
 
-    @CsvBindByName(column = "Name")
     private String name;
 
-    @CsvBindByName(column = "Data Type")
     private String dataType;
 
-    @CsvBindByName(column = "Logical Address")
     private String logicalAddress;
 
     public S7ConfigFile() {

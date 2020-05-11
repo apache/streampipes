@@ -21,6 +21,7 @@ package org.apache.streampipes.connect.adapters.plc4x.s7;
 import com.opencsv.CSVReader;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
+import com.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 import org.apache.plc4x.java.PlcDriverManager;
 import org.apache.plc4x.java.api.PlcConnection;
 import org.apache.plc4x.java.api.exceptions.PlcConnectionException;
@@ -305,16 +306,28 @@ public class Plc4xS7Adapter extends PullAdapter {
                 this.nodes.add(map);
             }
         }
-
-
     }
 
     private List<S7ConfigFile> getCsvConfig(String path) throws FileNotFoundException {
 
         FileReader fr = new FileReader(path);
         CSVReader reader = new CSVReader(fr, ';');
+
+        Map<String, String> mapping = new
+                HashMap<String, String>();
+        mapping.put("Name", "name");
+        mapping.put("Logical Address", "logicalAddress");
+        mapping.put("Data Type", "dataType");
+
+        HeaderColumnNameTranslateMappingStrategy strategy =
+                new HeaderColumnNameTranslateMappingStrategy();
+        strategy.setType(S7ConfigFile.class);
+        strategy.setColumnMapping(mapping);
+
+
         CsvToBean<S7ConfigFile> csvToBean = new CsvToBeanBuilder(reader)
                 .withType(S7ConfigFile.class)
+                .withMappingStrategy(strategy)
                 .build();
 
         List<S7ConfigFile> result = csvToBean.parse();
