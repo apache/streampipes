@@ -96,6 +96,10 @@
             <artifactId>ditto-client</artifactId>
             <version>${ditto-client.version}</version>
         </dependency>
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+        </dependency>
 
         <!-- 3rd party dependencies to avoid convergence errors -->
         <dependency>
