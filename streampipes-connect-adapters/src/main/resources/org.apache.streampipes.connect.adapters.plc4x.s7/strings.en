@@ -1,0 +1,29 @@
+org.apache.streampipes.connect.adapters.plc4x.s7.title=PLC4X S7
+org.apache.streampipes.connect.adapters.plc4x.s7.description=Connect directly to your PLC
+
+plc_ip.title=PLC Address
+plc_ip.description=Example: 192.168.34.56
+
+configure.title=Configuration
+configure.description=
+
+manually.title=Enter Manually
+manually.description=Enter the addresses to read the data from manually
+
+plc_nodes.title=Nodes
+plc_nodes.description=Define the nodes of the PLC
+
+plc_node_runtime_name.title=Runtime Name
+plc_node_runtime_name.description=example: temperature
+
+plc_node_name.title=Node Name
+plc_node_name.description=example: %Q0.4
+
+plc_node_type.title=Data Type
+plc_node_type.description=example: bool
+
+csv-upload.title=Upload CSV
+csv-upload.description=Export a CSV file with the configurations from the TIA portal
+
+plc_nodes_file.title=CSV File
+plc_nodes_file.description=Contains three columns 'Name', 'Data Type', 'Logical Address'

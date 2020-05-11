@@ -110,7 +110,7 @@
         <bcprov.version>1.61</bcprov.version>
         <checker-qual.version>2.5.2</checker-qual.version>
         <commons-compress.version>1.18</commons-compress.version>
-        <commons-text.version>1.4</commons-text.version>
+        <commons-text.version>1.8</commons-text.version>
         <errorprone-annotations.version>2.2.0</errorprone-annotations.version>
         <java-websocket.version>1.4.0</java-websocket.version>
         <javax-validation.version>2.0.1.Final</javax-validation.version>
