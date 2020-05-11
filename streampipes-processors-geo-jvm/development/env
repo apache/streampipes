@@ -15,5 +15,5 @@
 
 # Those parameters are used by IntelliJ to set the default consul parameters for development
 SP_PORT=8005
-SP_HOST=localhost
+SP_HOST=172.17.0.1
 SP_DEBUG=true
