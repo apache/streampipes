@@ -35,39 +35,39 @@ import org.apache.streampipes.sdk.utils.Assets;
 
 public class SetEpsgController extends StandaloneEventProcessingDeclarer<SetEpsgParameter> {
 
-    public final static String EPA_NAME = "EPSG Enricher";
+  public final static String EPA_NAME = "EPSG Enricher";
 
-    public final static String EPSG_KEY = "epsg-key";
+  public final static String EPSG_KEY = "epsg-key";
 
-    @Override
-    public DataProcessorDescription declareModel() {
-        return ProcessingElementBuilder
-            .create("org.apache.streampipes.processors.geo.jvm.jts.processor.setEPSG")
-            .category(DataProcessorType.GEO)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .withLocales(Locales.EN)
-            .requiredStream(StreamRequirementsBuilder
-                .create()
+  @Override
+  public DataProcessorDescription declareModel() {
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.geo.jvm.jts.processor.setEPSG")
+        .category(DataProcessorType.GEO)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withLocales(Locales.EN)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .build())
+        .requiredIntegerParameter(Labels.withId(EPSG_KEY), 4326)
+
+        .outputStrategy(
+            OutputStrategies.append(PrimitivePropertyBuilder
+                .create(Datatypes.Integer, "epsg")
+                .domainProperty("http://data.ign.fr/def/ignf#CartesianCS")
                 .build())
-            .requiredIntegerParameter(Labels.withId(EPSG_KEY), 4326)
+        )
+        .supportedFormats(SupportedFormats.jsonFormat())
+        .supportedProtocols(SupportedProtocols.kafka())
+        .build();
+  }
 
-            .outputStrategy(
-                OutputStrategies.append(PrimitivePropertyBuilder
-                    .create(Datatypes.Integer, "epsg")
-                    .domainProperty("http://data.ign.fr/def/ignf#CartesianCS")
-                    .build())
-            )
-            .supportedFormats(SupportedFormats.jsonFormat())
-            .supportedProtocols(SupportedProtocols.kafka())
-            .build();
-    }
+  @Override
+  public ConfiguredEventProcessor<SetEpsgParameter> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 
-    @Override
-    public ConfiguredEventProcessor<SetEpsgParameter> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+    Integer epsg_value = extractor.singleValueParameter(EPSG_KEY, Integer.class);
+    SetEpsgParameter params = new SetEpsgParameter(graph, epsg_value);
 
-        Integer epsg_value = extractor.singleValueParameter(EPSG_KEY, Integer.class);
-        SetEpsgParameter params = new SetEpsgParameter(graph, epsg_value);
-
-        return new ConfiguredEventProcessor<>(params, SetEPSG::new);
-    }
+    return new ConfiguredEventProcessor<>(params, SetEPSG::new);
+  }
 }

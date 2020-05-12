@@ -27,29 +27,28 @@ import org.apache.streampipes.model.runtime.Event;
 
 public class SetEPSG implements EventProcessor<SetEpsgParameter> {
 
-    public static Logger LOG;
-    public SetEpsgParameter params;
-    public Integer epsg;
+  public static Logger LOG;
+  public SetEpsgParameter params;
+  public Integer epsg;
 
 
+  @Override
+  public void onInvocation(SetEpsgParameter params, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
 
-    @Override
-    public void onInvocation(SetEpsgParameter params, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
+    LOG = params.getGraph().getLogger(SetEPSG.class);
+    this.epsg = params.getEpsg();
+  }
 
-        LOG = params.getGraph().getLogger(SetEPSG.class);
-        this.epsg = params.getEpsg();
-    }
+  @Override
+  public void onEvent(Event in, SpOutputCollector out) {
+    //in.addField("epsg-key", epsg);
+    in.addField("epsg", epsg);
 
-    @Override
-    public void onEvent(Event in, SpOutputCollector out)  {
-        //in.addField("epsg-key", epsg);
-        in.addField("epsg", epsg);
+    out.collect(in);
+  }
 
-        out.collect(in);
-    }
+  @Override
+  public void onDetach() {
 
-    @Override
-    public void onDetach() {
-
-    }
+  }
 }
