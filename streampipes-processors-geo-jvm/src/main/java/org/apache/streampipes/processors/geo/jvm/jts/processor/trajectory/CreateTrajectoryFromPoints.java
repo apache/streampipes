@@ -67,8 +67,8 @@ public class CreateTrajectoryFromPoints implements EventProcessor<CreateTrajecto
     LineString geom = trajectory.returnAsLineString(eventGeom.getFactory());
 
     // adds to stream
-    in.addField("wkt-trajectory", geom.toString());
-    in.addField("description", trajectory.getDescription());
+    in.addField(CreateTrajectoryFromPointsController.DESCRIPTION_RUNTIME, trajectory.getDescription());
+    in.addField(CreateTrajectoryFromPointsController.WKT_RUNTIME, geom.toString());
     out.collect(in);
   }
 

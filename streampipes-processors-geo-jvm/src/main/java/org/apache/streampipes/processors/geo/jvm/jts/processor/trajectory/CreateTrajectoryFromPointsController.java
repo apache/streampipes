@@ -40,7 +40,10 @@ public class CreateTrajectoryFromPointsController extends StandaloneEventProcess
   public final static String DESCRIPTION_KEY = "description-key";
   public final static String SUBPOINTS_KEY = "subpoints-key";
 
-  public final static String WKT = "trajectory_wkt";
+  public final static String WKT_KEY = "trajectory-key";
+  public final static String WKT_RUNTIME = "trajectoryWKT";
+
+  public final static String DESCRIPTION_RUNTIME = "trajectoryDescription";
 
 
   @Override
@@ -76,14 +79,14 @@ public class CreateTrajectoryFromPointsController extends StandaloneEventProcess
         )
 
         .outputStrategy(OutputStrategies.append(
-            EpProperties.numberEp(
-                Labels.withId(M_KEY),
-                "m-value",
-                SO.Number
+            EpProperties.stringEp(
+                Labels.withId(DESCRIPTION_KEY),
+                DESCRIPTION_RUNTIME,
+                SO.Text
             ),
             EpProperties.stringEp(
-                Labels.withId(WKT),
-                "trajectory-wkt",
+                Labels.withId(WKT_KEY),
+                WKT_RUNTIME,
                 "http://www.opengis.net/ont/geosparql#Geometry")
             )
         )
