@@ -46,8 +46,11 @@ The hostname of the Redis instance
 ### Port
 The port of the Redis instance (default 6379)
 
-### Key Field (Optional)
-Runtime field to be used as the key when storing the event. Use - for a auto generated key.
+### Key Field
+Runtime field to be used as the key when storing the event. If auto-increment is enabled, this setting will be ignored.
+
+### Auto Increment
+Enabling this will generate a sequential numeric key for every record inserted. (note: enabling this will ignore Key Field)
 
 ### Expiration Time (Optional)
 The expiration time for a persisted event.

@@ -8,7 +8,10 @@ redis_port.title=Port
 redis_port.description=The port of the Redis instance (default 6379)
 
 event_pk.title=Key Field
-event_pk.description=Runtime field to be used as the key when storing the event. Use - for generated key.
+event_pk.description=Runtime field to be used as the key when storing the event. If auto-increment is enabled, this setting will be ignored.
+
+event_key_ai.title=Auto Increment
+event_key_ai.description=Enabling this will generate a sequential numeric key for every record inserted. (note: enabling this will ignore Key Field)
 
 event_ttl.title=Expiration Time
 event_ttl.description=The expiration time for a persisted event.

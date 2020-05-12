@@ -26,8 +26,6 @@ import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.runtime.EventSink;
 
-import java.util.Map;
-
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -39,6 +37,7 @@ public class Redis implements EventSink<RedisParameters> {
     private static final String EVENT_COUNT = "sp:events";
     private static JedisPool jedisPool = null;
     private String primaryKey;
+    private Boolean autoIncrement;
     private String password;
     private String clientName;
     private Integer index;
@@ -48,6 +47,7 @@ public class Redis implements EventSink<RedisParameters> {
     public void onInvocation(RedisParameters parameters, EventSinkRuntimeContext runtimeContext) {
         if (jedisPool == null) initialPool(parameters);
         primaryKey = parameters.getPrimaryKey();
+        autoIncrement = parameters.isAutoIncrement();
         password = parameters.getRedisPassword();
         clientName = parameters.getRedisClient();
         index = parameters.getRedisIndex();
@@ -57,8 +57,7 @@ public class Redis implements EventSink<RedisParameters> {
     @Override
     public void onEvent(Event inputEvent) throws SpRuntimeException {
         try (Jedis jedis = getJedis()) {
-            Long count = jedis.incr(EVENT_COUNT);
-            final String eventKey = getEventKey(inputEvent, count);
+            final String eventKey = getEventKey(inputEvent, autoIncrement ? jedis.incr(EVENT_COUNT) : 0L);
             jedis.set(eventKey, getEventValue(inputEvent));
             if (ttl > -1) jedis.expire(eventKey, ttl);
         } catch (SpRuntimeException e) {
@@ -71,6 +70,7 @@ public class Redis implements EventSink<RedisParameters> {
     @Override
     public void onDetach() {
         if (jedisPool != null && !jedisPool.isClosed()) jedisPool.close();
+        jedisPool = null;
     }
 
     private void initialPool(RedisParameters parameters) {
@@ -99,16 +99,12 @@ public class Redis implements EventSink<RedisParameters> {
         return jedis;
     }
 
-    private String getEventKey(Event event, Long count) throws SpRuntimeException {
-        if ("-".equalsIgnoreCase(primaryKey)) {
+    private String getEventKey(Event event, Long count) {
+        if (autoIncrement) {
             return EVENT_PREFIX + count;
         } else {
-            final Map<String, Object> eventMap = event.getRaw();
-            if (eventMap.containsKey(primaryKey)) {
-                return EVENT_PREFIX + eventMap.get(primaryKey);
-            } else {
-                throw new SpRuntimeException("Could not find field " + primaryKey);
-            }
+            String value = event.getFieldBySelector(primaryKey).getAsPrimitive().getAsString();
+            return EVENT_PREFIX + value;
         }
     }
 
