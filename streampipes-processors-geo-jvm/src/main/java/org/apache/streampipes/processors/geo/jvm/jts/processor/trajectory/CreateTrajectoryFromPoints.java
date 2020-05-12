@@ -31,52 +31,50 @@ import org.locationtech.jts.geom.Point;
 
 public class CreateTrajectoryFromPoints implements EventProcessor<CreateTrajectoryFromPointsParameter> {
 
-    private static Logger LOG;
+  private static Logger LOG;
 
-    private SpTrajectoryBuilder trajectory;
+  private SpTrajectoryBuilder trajectory;
 
-    private String geom_wkt;
-    private String epsg_code;
-    private String m_value;
+  private String geom_wkt;
+  private String epsg_code;
+  private String m_value;
 
+  @Override
+  public void onInvocation(CreateTrajectoryFromPointsParameter params, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
 
-    @Override
-    public void onInvocation(CreateTrajectoryFromPointsParameter params, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
+    LOG = params.getGraph().getLogger(CreateTrajectoryFromPointsParameter.class);
+    this.geom_wkt = params.getWkt();
+    this.epsg_code = params.getEpsg();
+    this.m_value = params.getM();
 
-        LOG = params.getGraph().getLogger(CreateTrajectoryFromPointsParameter.class);
-        this.geom_wkt =  params.getWkt();
-        this.epsg_code = params.getEpsg();
-        this.m_value = params.getM();
+    trajectory = new SpTrajectoryBuilder(params.getSubpoints(), params.getDescription());
+  }
 
-        trajectory = new SpTrajectoryBuilder(params.getSubpoints(), params.getDescription());
-    }
+  @Override
+  public void onEvent(Event in, SpOutputCollector out) {
 
-    @Override
-    public void onEvent(Event in, SpOutputCollector out) {
+    // extract values
+    String wkt = in.getFieldBySelector(geom_wkt).getAsPrimitive().getAsString();
+    Integer epsg = in.getFieldBySelector(epsg_code).getAsPrimitive().getAsInt();
+    Integer m = in.getFieldBySelector(m_value).getAsPrimitive().getAsInt();
 
-        // extract values
-        String wkt = in.getFieldBySelector(geom_wkt).getAsPrimitive().getAsString();
-        Integer epsg = in.getFieldBySelector(epsg_code).getAsPrimitive().getAsInt();
-        Integer m = in.getFieldBySelector(m_value).getAsPrimitive().getAsInt();
+    //create JTS geometry
+    Point eventGeom = (Point) SpGeometryBuilder.createSPGeom(wkt, epsg);
 
-        //create JTS geometry
-        Point eventGeom =  (Point) SpGeometryBuilder.createSPGeom(wkt,epsg);
+    //adds point and m value to trajectory object
+    trajectory.addPointToTrajectory(eventGeom, m);
+    // returns JTS LineString
+    LineString geom = trajectory.returnAsLineString(eventGeom.getFactory());
 
-        //adds point and m value to trajectory object
-        trajectory.addPointToTrajectory(eventGeom, m);
-        // returns JTS LineString
-        LineString geom = trajectory.returnAsLineString(eventGeom.getFactory());
+    // adds to stream
+    in.addField("wkt-trajectory", geom.toString());
+    in.addField("description", trajectory.getDescription());
+    out.collect(in);
+  }
 
-        // adds to stream
-        in.addField("wkt-trajectory", geom.toString());
-        in.addField("description", trajectory.getDescription());
-        out.collect(in);
+  @Override
+  public void onDetach() {
 
-    }
-
-    @Override
-    public void onDetach() {
-
-    }
+  }
 }
 

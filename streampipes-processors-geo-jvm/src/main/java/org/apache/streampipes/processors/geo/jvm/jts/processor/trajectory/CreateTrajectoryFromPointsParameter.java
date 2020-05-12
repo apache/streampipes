@@ -23,39 +23,38 @@ import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams
 
 public class CreateTrajectoryFromPointsParameter extends EventProcessorBindingParams {
 
-    private String epsg;
-    private String wkt;
-    private String description;
-    private Integer subpoints;
-    private String m;
+  private String epsg;
+  private String wkt;
+  private String description;
+  private Integer subpoints;
+  private String m;
 
+  public CreateTrajectoryFromPointsParameter(DataProcessorInvocation graph, String wkt, String epsg, String description, Integer subpoints, String m) {
+    super(graph);
+    this.wkt = wkt;
+    this.epsg = epsg;
+    this.description = description;
+    this.subpoints = subpoints;
+    this.m = m;
+  }
 
-    public CreateTrajectoryFromPointsParameter(DataProcessorInvocation graph, String wkt, String epsg, String description, Integer subpoints, String m) {
-        super(graph);
-        this.wkt = wkt;
-        this.epsg = epsg;
-        this.description = description;
-        this.subpoints = subpoints;
-        this.m = m;
-    }
+  public String getEpsg() {
+    return epsg;
+  }
 
-    public String getEpsg() {
-        return epsg;
-    }
+  public String getWkt() {
+    return wkt;
+  }
 
-    public String getWkt() {
-        return wkt;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public String getDescription() {
-        return description;
-    }
+  public Integer getSubpoints() {
+    return subpoints;
+  }
 
-    public Integer getSubpoints() {
-        return subpoints;
-    }
-
-    public String getM() {
-        return m;
-    }
+  public String getM() {
+    return m;
+  }
 }
