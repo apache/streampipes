@@ -81,7 +81,7 @@ public class CreateTrajectoryFromPointsController extends StandaloneEventProcess
                 "m-value",
                 SO.Number
             ),
-            EpProperties.numberEp(
+            EpProperties.stringEp(
                 Labels.withId(WKT),
                 "trajectory-wkt",
                 "http://www.opengis.net/ont/geosparql#Geometry")
@@ -98,7 +98,7 @@ public class CreateTrajectoryFromPointsController extends StandaloneEventProcess
   public ConfiguredEventProcessor<CreateTrajectoryFromPointsParameter> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 
 
-    String wkt = extractor.mappingPropertyValue(WKT);
+    String wkt = extractor.mappingPropertyValue(POINT_KEY);
     String epsg = extractor.mappingPropertyValue(EPSG_KEY);
     String m = extractor.mappingPropertyValue(M_KEY);
 
