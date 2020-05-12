@@ -24,14 +24,14 @@ import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams
 public class SetEpsgParameter extends EventProcessorBindingParams {
 
 
-    private Integer epsg;
+  private Integer epsg;
 
-    public SetEpsgParameter(DataProcessorInvocation graph, Integer epsg) {
-        super(graph);
-        this.epsg = epsg;
-    }
+  public SetEpsgParameter(DataProcessorInvocation graph, Integer epsg) {
+    super(graph);
+    this.epsg = epsg;
+  }
 
-    public Integer getEpsg() {
-        return epsg;
-    }
+  public Integer getEpsg() {
+    return epsg;
+  }
 }

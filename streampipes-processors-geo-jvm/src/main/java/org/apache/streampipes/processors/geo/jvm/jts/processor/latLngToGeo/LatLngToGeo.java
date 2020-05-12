@@ -29,44 +29,44 @@ import org.apache.streampipes.model.runtime.Event;
 
 public class LatLngToGeo implements EventProcessor<LatLngToGeoParameter> {
 
-    private static Logger LOG;
-    private String latitude;
-    private String longitude;
-    private String epsg_code;
+  private static Logger LOG;
+  private String latitude;
+  private String longitude;
+  private String epsg_code;
 
 
-    @Override
-    public void onInvocation(LatLngToGeoParameter params, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
+  @Override
+  public void onInvocation(LatLngToGeoParameter params, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
 
-        LOG = params.getGraph().getLogger(LatLngToGeoParameter.class);
-        this.latitude =  params.getLat();
-        this.longitude= params.getLng();
-        this.epsg_code = params.getEpsg();
+    LOG = params.getGraph().getLogger(LatLngToGeoParameter.class);
+    this.latitude = params.getLat();
+    this.longitude = params.getLng();
+    this.epsg_code = params.getEpsg();
 
-    }
+  }
 
-    @Override
-    public void onEvent(Event in, SpOutputCollector out) {
+  @Override
+  public void onEvent(Event in, SpOutputCollector out) {
 
-        Double lat = in.getFieldBySelector(latitude).getAsPrimitive().getAsDouble();
-        Double lng = in.getFieldBySelector(longitude).getAsPrimitive().getAsDouble();
-        Integer epsg = in.getFieldBySelector(epsg_code).getAsPrimitive().getAsInt();
+    Double lat = in.getFieldBySelector(latitude).getAsPrimitive().getAsDouble();
+    Double lng = in.getFieldBySelector(longitude).getAsPrimitive().getAsDouble();
+    Integer epsg = in.getFieldBySelector(epsg_code).getAsPrimitive().getAsInt();
 
-        Point geom =  SpGeometryBuilder.createSPGeom(lng, lat, epsg);
+    Point geom = SpGeometryBuilder.createSPGeom(lng, lat, epsg);
 
-        if (!geom.isEmpty()){
-            in.addField(LatLngToGeoController.WKT, geom.toString());
-            out.collect(in);
-        } else {
-            LOG.warn("An empty point geometry in " + LatLngToGeoController.EPA_NAME + " is created due" +
-                "invalid input field. Latitude: " + lat + "Longitude: " + lng);
-            LOG.error("Event is filtered out due invalid geometry");
-            
-        }
-    }
-
-    @Override
-    public void onDetach() {
+    if (!geom.isEmpty()) {
+      in.addField(LatLngToGeoController.WKT, geom.toString());
+      out.collect(in);
+    } else {
+      LOG.warn("An empty point geometry in " + LatLngToGeoController.EPA_NAME + " is created due" +
+          "invalid input field. Latitude: " + lat + "Longitude: " + lng);
+      LOG.error("Event is filtered out due invalid geometry");
 
     }
+  }
+
+  @Override
+  public void onDetach() {
+
+  }
 }

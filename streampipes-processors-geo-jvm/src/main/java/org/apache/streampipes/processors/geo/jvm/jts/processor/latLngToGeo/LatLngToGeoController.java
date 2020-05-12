@@ -33,61 +33,61 @@ import org.apache.streampipes.vocabulary.Geo;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
-public class LatLngToGeoController extends  StandaloneEventProcessingDeclarer<LatLngToGeoParameter> {
+public class LatLngToGeoController extends StandaloneEventProcessingDeclarer<LatLngToGeoParameter> {
 
 
-    public final static String LAT_KEY = "latitude-key";
-    public final static String LNG_KEY = "longitude-key";
-    public final static String EPSG_KEY = "epsg-key";
+  public final static String LAT_KEY = "latitude-key";
+  public final static String LNG_KEY = "longitude-key";
+  public final static String EPSG_KEY = "epsg-key";
 
 
-    public final static String WKT = "geom-wkt";
-    public final static String EPA_NAME = "Create Point from Latitude and Longitude";
+  public final static String WKT = "geom-wkt";
+  public final static String EPA_NAME = "Create Point from Latitude and Longitude";
 
-    @Override
-    public DataProcessorDescription declareModel() {
-        return ProcessingElementBuilder
-            .create("org.apache.streampipes.processors.geo.jvm.jts.processor.latLngToGeo")
-            .category(DataProcessorType.GEO)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .withLocales(Locales.EN)
-            .requiredStream(
-                StreamRequirementsBuilder
-                    .create()
-                    .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.lat),
-                        Labels.withId(LAT_KEY), PropertyScope.MEASUREMENT_PROPERTY)
-                    .requiredPropertyWithUnaryMapping(
-                        EpRequirements.domainPropertyReq(Geo.lng),
-                        Labels.withId(LNG_KEY), PropertyScope.MEASUREMENT_PROPERTY)
-                    .requiredPropertyWithUnaryMapping(
-                        EpRequirements.domainPropertyReq("http://data.ign.fr/def/ignf#CartesianCS"),
-                        Labels.withId(EPSG_KEY), PropertyScope.MEASUREMENT_PROPERTY)
-                    .build()
-                )
-                .outputStrategy(
-                    OutputStrategies.append(
-                        PrimitivePropertyBuilder
-                            .create(Datatypes.String, WKT)
-                            .domainProperty("http://www.opengis.net/ont/geosparql#Geometry")
-                        .build())
-                )
+  @Override
+  public DataProcessorDescription declareModel() {
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.geo.jvm.jts.processor.latLngToGeo")
+        .category(DataProcessorType.GEO)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withLocales(Locales.EN)
+        .requiredStream(
+            StreamRequirementsBuilder
+                .create()
+                .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.lat),
+                    Labels.withId(LAT_KEY), PropertyScope.MEASUREMENT_PROPERTY)
+                .requiredPropertyWithUnaryMapping(
+                    EpRequirements.domainPropertyReq(Geo.lng),
+                    Labels.withId(LNG_KEY), PropertyScope.MEASUREMENT_PROPERTY)
+                .requiredPropertyWithUnaryMapping(
+                    EpRequirements.domainPropertyReq("http://data.ign.fr/def/ignf#CartesianCS"),
+                    Labels.withId(EPSG_KEY), PropertyScope.MEASUREMENT_PROPERTY)
+                .build()
+        )
+        .outputStrategy(
+            OutputStrategies.append(
+                PrimitivePropertyBuilder
+                    .create(Datatypes.String, WKT)
+                    .domainProperty("http://www.opengis.net/ont/geosparql#Geometry")
+                    .build())
+        )
 
-                .supportedFormats(SupportedFormats.jsonFormat())
-                .supportedProtocols(SupportedProtocols.kafka())
-                .build();
-    }
-
-
-    @Override
-    public ConfiguredEventProcessor<LatLngToGeoParameter> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+        .supportedFormats(SupportedFormats.jsonFormat())
+        .supportedProtocols(SupportedProtocols.kafka())
+        .build();
+  }
 
 
-        String lat = extractor.mappingPropertyValue(LAT_KEY);
-        String lng = extractor.mappingPropertyValue(LNG_KEY);
-        String epsg = extractor.mappingPropertyValue(EPSG_KEY);
+  @Override
+  public ConfiguredEventProcessor<LatLngToGeoParameter> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 
-        LatLngToGeoParameter params = new LatLngToGeoParameter(graph, epsg, lat, lng);
 
-        return new ConfiguredEventProcessor<>(params, LatLngToGeo::new);
-    }
+    String lat = extractor.mappingPropertyValue(LAT_KEY);
+    String lng = extractor.mappingPropertyValue(LNG_KEY);
+    String epsg = extractor.mappingPropertyValue(EPSG_KEY);
+
+    LatLngToGeoParameter params = new LatLngToGeoParameter(graph, epsg, lat, lng);
+
+    return new ConfiguredEventProcessor<>(params, LatLngToGeo::new);
+  }
 }
