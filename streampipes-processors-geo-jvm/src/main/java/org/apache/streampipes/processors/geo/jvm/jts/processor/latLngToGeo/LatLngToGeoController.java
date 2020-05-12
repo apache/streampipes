@@ -76,14 +76,6 @@ public class LatLngToGeoController extends StandaloneEventProcessingDeclarer<Lat
         .build();
   }
 
-        .supportedFormats(SupportedFormats.jsonFormat())
-        .supportedProtocols(SupportedProtocols.kafka())
-        .build();
-  }
-
-  @Override
-  public ConfiguredEventProcessor<LatLngToGeoParameter> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
-
   @Override
   public ConfiguredEventProcessor<LatLngToGeoParameter> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 
