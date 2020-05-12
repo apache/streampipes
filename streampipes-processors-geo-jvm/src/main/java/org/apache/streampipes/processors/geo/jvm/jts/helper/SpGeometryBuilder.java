@@ -28,10 +28,11 @@ public class SpGeometryBuilder {
   final static double LATITIDE_MAX = 90;
 
 
-  /**Creates a JTS point geometry from Longitude and Latitude values
+  /**
+   * Creates a JTS point geometry from Longitude and Latitude values
    *
-   * @param lng Longitude value in the range -180 <Longitude > 180
-   * @param lat Latitude value in the range -90 <LATITUDE > 90
+   * @param lng  Longitude value in the range -180 <Longitude > 180
+   * @param lat  Latitude value in the range -90 <LATITUDE > 90
    * @param epsg EPSG Code for projection onfo
    * @return a JTS Point Geometry Object with lat lng values. An empty point geometry is created if Latitude or Longitude values are out of range
    * or has null values.
@@ -61,13 +62,12 @@ public class SpGeometryBuilder {
   }
 
   /**
-   *
    * @param checkedvalue Any Value
-   * @param min Min value to check
-   * @param max max value to check
+   * @param min          Min value to check
+   * @param max          max value to check
    * @return boolean value true or false
    */
-  private static boolean isInWGSCoordinateRange(double checkedvalue, double min, double max){
+  private static boolean isInWGSCoordinateRange(double checkedvalue, double min, double max) {
     return checkedvalue > min && checkedvalue < max;
   }
 
@@ -76,6 +76,7 @@ public class SpGeometryBuilder {
    * Creates a JTS PrecisionModel with a specific precision.
    * WGS84/WGS84 will be created with 7 decimal positions.
    * Any other epsg code will create a precision with Ffloating type. See JTS PrecisionModel for more information
+   *
    * @param epsg EPSG alue
    * @return a JTS PrecisionModel
    */
@@ -84,7 +85,7 @@ public class SpGeometryBuilder {
 
     if (epsg == 4326) {
       // use scale precision with 7 decimal positions like default OSM
-       precisionModel = new PrecisionModel(1000000);
+      precisionModel = new PrecisionModel(1000000);
     } else {
       // use default constructor
       precisionModel = new PrecisionModel();
