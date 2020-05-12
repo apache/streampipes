@@ -40,8 +40,7 @@ public class LatLngToGeoController extends StandaloneEventProcessingDeclarer<Lat
   public final static String LNG_KEY = "longitude-key";
   public final static String EPSG_KEY = "epsg-key";
 
-
-  public final static String WKT = "geom-wkt";
+  public final static String WKT_RUNTIME = "geomWKT";
   public final static String EPA_NAME = "Create Point from Latitude and Longitude";
 
   @Override
@@ -67,7 +66,7 @@ public class LatLngToGeoController extends StandaloneEventProcessingDeclarer<Lat
         .outputStrategy(
             OutputStrategies.append(
                 PrimitivePropertyBuilder
-                    .create(Datatypes.String, WKT)
+                    .create(Datatypes.String, WKT_RUNTIME)
                     .domainProperty("http://www.opengis.net/ont/geosparql#Geometry")
                     .build())
         )

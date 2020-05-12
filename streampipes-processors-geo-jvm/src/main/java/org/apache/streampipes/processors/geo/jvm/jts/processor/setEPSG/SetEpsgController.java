@@ -38,6 +38,7 @@ public class SetEpsgController extends StandaloneEventProcessingDeclarer<SetEpsg
   public final static String EPA_NAME = "EPSG Enricher";
 
   public final static String EPSG_KEY = "epsg-key";
+  public final static String EPSG_RUNTIME = "epsg";
 
   @Override
   public DataProcessorDescription declareModel() {
@@ -53,7 +54,7 @@ public class SetEpsgController extends StandaloneEventProcessingDeclarer<SetEpsg
 
         .outputStrategy(
             OutputStrategies.append(PrimitivePropertyBuilder
-                .create(Datatypes.Integer, "epsg")
+                .create(Datatypes.Integer, EPSG_RUNTIME)
                 .domainProperty("http://data.ign.fr/def/ignf#CartesianCS")
                 .build())
         )

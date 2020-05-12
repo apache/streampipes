@@ -41,8 +41,7 @@ public class SetEPSG implements EventProcessor<SetEpsgParameter> {
 
   @Override
   public void onEvent(Event in, SpOutputCollector out) {
-    //in.addField("epsg-key", epsg);
-    in.addField("epsg", epsg);
+    in.addField(SetEpsgController.EPSG_RUNTIME, epsg);
 
     out.collect(in);
   }

@@ -55,7 +55,7 @@ public class LatLngToGeo implements EventProcessor<LatLngToGeoParameter> {
     Point geom = SpGeometryBuilder.createSPGeom(lng, lat, epsg);
 
     if (!geom.isEmpty()) {
-      in.addField(LatLngToGeoController.WKT, geom.toString());
+      in.addField(LatLngToGeoController.WKT_RUNTIME, geom.toString());
       out.collect(in);
     } else {
       LOG.warn("An empty point geometry in " + LatLngToGeoController.EPA_NAME + " is created due" +
