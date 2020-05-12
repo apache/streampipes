@@ -31,86 +31,83 @@ import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
-public class CreateTrajectoryFromPointsController extends  StandaloneEventProcessingDeclarer<CreateTrajectoryFromPointsParameter> {
+public class CreateTrajectoryFromPointsController extends StandaloneEventProcessingDeclarer<CreateTrajectoryFromPointsParameter> {
 
 
+  public final static String POINT_KEY = "point-key";
+  public final static String EPSG_KEY = "epsg-key";
+  public final static String M_KEY = "m-key";
+  public final static String DESCRIPTION_KEY = "description-key";
+  public final static String SUBPOINTS_KEY = "subpoints-key";
+
+  public final static String WKT = "trajectory_wkt";
 
 
-    public final static String POINT_KEY = "point-key";
-    public final static String EPSG_KEY = "epsg-key";
-    public final static String M_KEY = "m-key";
-    public final static String DESCRIPTION_KEY = "description-key";
-    public final static String SUBPOINTS_KEY = "subpoints-key";
+  @Override
+  public DataProcessorDescription declareModel() {
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.geo.jvm.jts.processor.trajectory")
+        .category(DataProcessorType.GEO)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withLocales(Locales.EN)
+        .requiredStream(
+            StreamRequirementsBuilder
+                .create()
+                .requiredPropertyWithUnaryMapping(
+                    EpRequirements.domainPropertyReq("http://www.opengis.net/ont/geosparql#Geometry"),
+                    Labels.withId(POINT_KEY), PropertyScope.MEASUREMENT_PROPERTY
+                )
+                .requiredPropertyWithUnaryMapping(
+                    EpRequirements.domainPropertyReq("http://data.ign.fr/def/ignf#CartesianCS"),
+                    Labels.withId(EPSG_KEY), PropertyScope.MEASUREMENT_PROPERTY
+                )
+                .requiredPropertyWithUnaryMapping(
+                    EpRequirements.numberReq(),
+                    Labels.withId(M_KEY), PropertyScope.MEASUREMENT_PROPERTY
+                )
+                .build()
+        )
+        .requiredTextParameter(
+            Labels.withId(DESCRIPTION_KEY)
+        )
+        .requiredIntegerParameter(
+            Labels.withId(SUBPOINTS_KEY),
+            2, 30, 1
+        )
 
-    public final static String WKT = "trajectory_wkt";
-    public final static String EPA_NAME = "Create Single Trajectory";
+        .outputStrategy(OutputStrategies.append(
+            EpProperties.numberEp(
+                Labels.withId(M_KEY),
+                "m-value",
+                SO.Number
+            ),
+            EpProperties.numberEp(
+                Labels.withId(WKT),
+                "trajectory-wkt",
+                "http://www.opengis.net/ont/geosparql#Geometry")
+            )
+        )
 
-
-    @Override
-    public DataProcessorDescription declareModel() {
-      return ProcessingElementBuilder
-          .create("org.apache.streampipes.processors.geo.jvm.jts.processor.trajectory")
-          .category(DataProcessorType.GEO)
-          .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-          .withLocales(Locales.EN)
-          .requiredStream(
-              StreamRequirementsBuilder
-                  .create()
-                  .requiredPropertyWithUnaryMapping(
-                      EpRequirements.domainPropertyReq("http://www.opengis.net/ont/geosparql#Geometry"),
-                      Labels.withId(POINT_KEY), PropertyScope.MEASUREMENT_PROPERTY
-                  )
-                  .requiredPropertyWithUnaryMapping(
-                      EpRequirements.domainPropertyReq("http://data.ign.fr/def/ignf#CartesianCS"),
-                      Labels.withId(EPSG_KEY), PropertyScope.MEASUREMENT_PROPERTY
-                  )
-                  .requiredPropertyWithUnaryMapping(
-                      EpRequirements.numberReq(),
-                      Labels.withId(M_KEY),  PropertyScope.MEASUREMENT_PROPERTY
-                  )
-                  .build()
-          )
-          .requiredTextParameter(
-              Labels.withId(DESCRIPTION_KEY)
-          )
-          .requiredIntegerParameter(
-              Labels.withId(SUBPOINTS_KEY),
-              2, 30, 1
-          )
-
-          .outputStrategy(OutputStrategies.append(
-              EpProperties.numberEp(
-                  Labels.withId(M_KEY),
-                  "m-value",
-                  SO.Number
-              ),
-              EpProperties.numberEp(
-                  Labels.withId(WKT),
-                  "trajectory-wkt",
-                  "http://www.opengis.net/ont/geosparql#Geometry")
-              )
-          )
-
-          .supportedFormats(SupportedFormats.jsonFormat())
-          .supportedProtocols(SupportedProtocols.kafka())
-          .build();
-    }
+        .supportedFormats(SupportedFormats.jsonFormat())
+        .supportedProtocols(SupportedProtocols.kafka())
+        .build();
+  }
 
 
-    @Override
-    public ConfiguredEventProcessor<CreateTrajectoryFromPointsParameter> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  @Override
+  public ConfiguredEventProcessor<CreateTrajectoryFromPointsParameter> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 
 
-        String wkt = extractor.mappingPropertyValue(WKT);
-        String epsg = extractor.mappingPropertyValue(EPSG_KEY);
-        String m = extractor.mappingPropertyValue(M_KEY);
+    String wkt = extractor.mappingPropertyValue(WKT);
+    String epsg = extractor.mappingPropertyValue(EPSG_KEY);
+    String m = extractor.mappingPropertyValue(M_KEY);
 
-        String description = extractor.singleValueParameter(DESCRIPTION_KEY, String.class);
-        Integer subpoints = extractor.singleValueParameter(SUBPOINTS_KEY, Integer.class);
+    String description = extractor.singleValueParameter(DESCRIPTION_KEY, String.class);
+    Integer subpoints = extractor.singleValueParameter(SUBPOINTS_KEY, Integer.class);
 
 
-        CreateTrajectoryFromPointsParameter params = new CreateTrajectoryFromPointsParameter(graph, wkt, epsg, description, subpoints, m);
+    CreateTrajectoryFromPointsParameter params = new CreateTrajectoryFromPointsParameter(graph, wkt, epsg, description, subpoints, m);
 
-        return new ConfiguredEventProcessor<>(params, CreateTrajectoryFromPoints::new);
-    }
+    return new ConfiguredEventProcessor<>(params, CreateTrajectoryFromPoints::new);
+  }
 }
