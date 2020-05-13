@@ -155,6 +155,8 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
             });
             this.dataToDisplay = tmp;
 
+
+
             /**
              * TODO: fetching stored labels, filling this.labels and drawing related shapes
              */
@@ -189,20 +191,24 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
         }
     }
 
-    transformData(data: DataResult, xKey: String): DataResult {
+    transformData(data: DataResult, xKey: string): DataResult {
         const tmp: any[] = [];
 
         const dataKeys = [];
+        const label_column = [];
 
         data.rows.forEach(row => {
             data.headers.forEach((headerName, index) => {
                 if (!dataKeys.includes(index) && typeof row[index] == 'number') {
                     dataKeys.push(index);
+                } else if (!label_column.includes(index) && typeof  row[index] == 'string' && data.headers[index] == "sp_internal_label") {
+                    label_column.push(index);
                 }
             });
         });
 
         const indexXkey = data.headers.findIndex(headerName => headerName === this.xKey);
+        const labels = [];
 
         dataKeys.forEach(key => {
             const headerName = data.headers[key];
@@ -218,9 +224,12 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
                    } else {
                        tmp[index].y.push(null);
                    }
+               } else if (label_column.length > 0 && label_column.includes(index)) {
+                   labels.push(row[index]);
                }
            });
         });
+        data.labels = labels;
         data.rows = tmp;
 
         return data;

@@ -20,4 +20,5 @@ export class DataResult {
     total: number;
     headers: string[];
     rows: any[];
+    labels: string[];
 }
