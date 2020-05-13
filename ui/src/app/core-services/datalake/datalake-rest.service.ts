@@ -106,8 +106,8 @@ export class DatalakeRestService {
     }
 
     saveLabelsInDatabase(index, startDate, endDate, label) {
-        const request = new HttpRequest('POST', this.dataLakeUrlV3 + '/data/' + index + '/labeling/' + startDate + '/' +
-            endDate + '/' + label,  {}, {
+        const request = new HttpRequest('POST', this.dataLakeUrlV3 + '/data/' + index + '/' + startDate + '/' +
+            endDate + '/labeling?label=' + label,  {}, {
             reportProgress: true,
             responseType: 'text'
         });
