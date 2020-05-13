@@ -26,16 +26,17 @@ import org.apache.streampipes.rest.impl.datalake.model.DataResult;
 import org.apache.streampipes.rest.impl.datalake.model.GroupedDataResult;
 import org.apache.streampipes.rest.impl.datalake.model.PageResult;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
+import org.influxdb.InfluxDB;
+import org.influxdb.dto.Point;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -156,6 +157,7 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
     String aggregationValue = info.getQueryParameters().getFirst("aggregationValue");
 
     DataResult result;
+
     try {
       if (aggregationUnit != null && aggregationValue != null) {
           result = dataLakeManagement.getEvents(index, startdate, enddate, aggregationUnit,
@@ -207,5 +209,17 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
             header("Content-Disposition", "attachment; filename=\"datalake." + format + "\"")
             .build();
   }
+
+  @POST
+  @Produces(MediaType.TEXT_PLAIN)
+  @Path("/data/{index}/labeling/{startdate}/{enddate}/{label}")
+    public Response labelData(@PathParam("index") String index,
+                              @PathParam("startdate") long startdate,
+                              @PathParam("enddate") long enddate,
+                              @PathParam("label") String label) {
+    
+    return Response.ok("Successfully updated database.", MediaType.TEXT_PLAIN).build();
+  }
+
 
 }
