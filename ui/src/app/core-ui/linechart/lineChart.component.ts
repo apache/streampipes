@@ -21,6 +21,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { PlotlyService } from 'angular-plotly.js';
 import { DataResult } from '../../core-model/datalake/DataResult';
 import { GroupedDataResult } from '../../core-model/datalake/GroupedDataResult';
+import { DatalakeRestService } from '../../core-services/datalake/datalake-rest.service';
 import { BaseChartComponent } from '../chart/baseChart.component';
 import { ChangeChartmodeDialog } from './labeling-tool/dialogs/change-chartmode/change-chartmode.dialog';
 import { LabelingDialog } from './labeling-tool/dialogs/labeling/labeling.dialog';
@@ -37,7 +38,7 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
     @Output() zoomEvent =  new EventEmitter<[number, number]>();
 
     constructor(public dialog: MatDialog, public plotlyService: PlotlyService, public colorService: ColorService,
-                public renderer: Renderer2) {
+                public renderer: Renderer2, private restService: DatalakeRestService) {
         super();
     }
 
@@ -55,6 +56,9 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
 
     // indicator variable if labeling mode is activated
     private labelingModeOn = false;
+
+    // indicator variable if labels has been changed
+    private changedLabels = false;
 
     updatemenus = [
         {
@@ -146,7 +150,7 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
                 transformedData.rows.forEach(serie => {
                     if (serie.name === key) {
                         tmp.push(serie);
-
+                       
                         // adding customdata property in order to store labels in graph
                         if (transformedData.labels !== undefined && transformedData.labels.length !== 0) {
                             serie['customdata'] = transformedData.labels;
@@ -345,11 +349,9 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
                             for (const point of series['selectedpoints']) {
                                 series['customdata'][point] = result;
                             }
-
-                            /**
-                             * TODO: saving labels persistently in database
-                             */
                         }
+                        this.dataToDisplay['labels'] = this.dataToDisplay[0]['customdata'];
+                        this.setChangedLabels(true);
 
                         // adding coloured shape (based on selected label) to graph (equals selected time interval)
                         this.addShapeToGraph(this.selectedStartX, this.selectedEndX, this.colorService.getColor(result));
@@ -442,6 +444,42 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
 
         // changing dragmode to 'zoom'
         this.graph.layout.dragmode = 'zoom';
+
+        // saving labels persistently
+        if (this.getChangedLabels()) {
+            this.saveLabelsInDatabase();
+        }
+    }
+
+    private saveLabelsInDatabase() {
+        let currentLabel = undefined;
+        let indices = [];
+        for (const label in this.dataToDisplay['labels']) {
+            if (currentLabel !== this.dataToDisplay['labels'][label] && indices.length > 0) {
+                const startdate = new Date(this.dataToDisplay[0]['x'][indices[0]]).getTime() - 1;
+                const enddate = new Date(this.dataToDisplay[0]['x'][indices[indices.length - 1]]).getTime() + 1;
+                this.restService.saveLabelsInDatabase(this.dataToDisplay['measureName'], startdate, enddate, currentLabel).subscribe(
+                res => {
+                 // console.log('Successfully wrote label ' + currentLabel + ' into database.');
+                }
+                );
+                currentLabel = undefined;
+                indices = [];
+                indices.push(label);
+            } else {
+                indices.push(label);
+            }
+
+            currentLabel = this.dataToDisplay['labels'][label];
+        }
+        const last_startdate = new Date(this.dataToDisplay[0]['x'][indices[0]]).getTime() - 1;
+        const last_enddate = new Date(this.dataToDisplay[0]['x'][indices[indices.length - 1]]).getTime() + 1;
+        this.restService.saveLabelsInDatabase(this.dataToDisplay['measureName'], last_startdate, last_enddate, currentLabel).subscribe(
+            res => {
+                 // console.log('Successfully wrote label ' + currentLabel + ' in last iterastion into database.');
+            });
+        this.setChangedLabels(false);
+
     }
 
     private addInitialColouredShapesToGraph() {
@@ -499,5 +537,13 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
         }
         };
         this.graph.layout.shapes.push(shape);
+    }
+
+    public setChangedLabels(state: boolean) {
+        this.changedLabels = state;
+    }
+
+    public getChangedLabels() {
+        return this.changedLabels;
     }
 }
