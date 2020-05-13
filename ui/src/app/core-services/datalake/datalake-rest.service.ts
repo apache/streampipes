@@ -73,7 +73,7 @@ export class DatalakeRestService {
     }
 
     getGroupedDataAutoAggergation(index, startDate, endDate, groupingTag) {
-            return this.http.get<GroupedDataResult>(this.dataLakeUrlV3 + '/data/' + index + '/' + startDate + '/' + endDate + '/grouping/' + groupingTag);
+        return this.http.get<GroupedDataResult>(this.dataLakeUrlV3 + '/data/' + index + '/' + startDate + '/' + endDate + '/grouping/' + groupingTag);
     }
 
 
@@ -81,7 +81,7 @@ export class DatalakeRestService {
         @deprecate
      */
     getFile(index, format) {
-        const request = new HttpRequest('GET', this.dataLakeUrlV3 + '/data/' + index + "?format=" + format,  {
+        const request = new HttpRequest('GET', this.dataLakeUrlV3 + '/data/' + index + "?format=" + format, {
             reportProgress: true,
             responseType: 'text'
         });
@@ -89,7 +89,7 @@ export class DatalakeRestService {
     }
 
     downloadRowData(index, format) {
-        const request = new HttpRequest('GET', this.dataLakeUrlV3 + '/data/' + index + "/download?format=" + format,  {
+        const request = new HttpRequest('GET', this.dataLakeUrlV3 + '/data/' + index + "/download?format=" + format, {
             reportProgress: true,
             responseType: 'text'
         });
@@ -105,4 +105,12 @@ export class DatalakeRestService {
         return this.http.request(request)
     }
 
+    saveLabelsInDatabase(index, startDate, endDate, label) {
+        const request = new HttpRequest('POST', this.dataLakeUrlV3 + '/data/' + index + '/labeling/' + startDate + '/' +
+            endDate + '/' + label,  {}, {
+            reportProgress: true,
+            responseType: 'text'
+        });
+        return this.http.request(request);
+    }
 }
