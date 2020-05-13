@@ -160,7 +160,11 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
                 });
             });
             this.dataToDisplay = tmp;
+            this.dataToDisplay['labels'] = transformedData.labels;
 
+            if (this.dataToDisplay['labels'] !== undefined && this.dataToDisplay['labels'].length > 0) {
+                this.addInitialColouredShapesToGraph();
+            }
 
         } else {
             this.dataToDisplay = undefined;
@@ -348,36 +352,7 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
                         }
 
                         // adding coloured shape (based on selected label) to graph (equals selected time interval)
-                        const color = this.colorService.getColor(result);
-                        const shape = {
-                            // shape: rectangle
-                            type: 'rect',
-
-                            // x-reference is assigned to the x-values
-                            xref: 'x',
-
-                            // y-reference is assigned to the plot paper [0,1]
-                            yref: 'paper',
-                            y0: 0,
-                            y1: 1,
-
-                            // start x: left side of selected time interval
-                            x0: this.selectedStartX,
-                            // end x: right side of selected time interval
-                            x1: this.selectedEndX,
-
-                            // adding color
-                            fillcolor: color,
-
-                            // opacity of 20%
-                            opacity: 0.2,
-
-                            line: {
-                                width: 0
-                            }
-                        };
-
-                        this.graph.layout.shapes.push(shape);
+                        this.addShapeToGraph(this.selectedStartX, this.selectedEndX, this.colorService.getColor(result));
 
                         // remain in selection dragmode if labeling mode is still activated
                         if (this.labelingModeOn) {
@@ -467,5 +442,62 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
 
         // changing dragmode to 'zoom'
         this.graph.layout.dragmode = 'zoom';
+    }
+
+    private addInitialColouredShapesToGraph() {
+        let selectedLabel = undefined;
+        let indices = [];
+        for (const label in this.dataToDisplay['labels']) {
+            if (selectedLabel !== this.dataToDisplay['labels'][label] && indices.length > 0) {
+                const startdate = new Date(this.dataToDisplay[0]['x'][indices[0]]).getTime();
+                const enddate = new Date(this.dataToDisplay[0]['x'][indices[indices.length - 1]]).getTime();
+                const color = this.colorService.getColor(selectedLabel);
+
+                this.addShapeToGraph(startdate, enddate, color);
+
+                selectedLabel = undefined;
+                indices = [];
+                indices.push(label);
+            } else {
+                indices.push(label);
+            }
+            selectedLabel = this.dataToDisplay['labels'][label];
+        }
+        const last_start = new Date(this.dataToDisplay[0]['x'][indices[0]]).getTime();
+        const last_end = new Date(this.dataToDisplay[0]['x'][indices[indices.length - 1]]).getTime();
+        const last_color = this.colorService.getColor(selectedLabel);
+
+        this.addShapeToGraph(last_start, last_end, last_color);
+    }
+
+    private addShapeToGraph(start, end, color) {
+        const shape = {
+        // shape: rectangle
+        type: 'rect',
+
+        // x-reference is assigned to the x-values
+        xref: 'x',
+
+        // y-reference is assigned to the plot paper [0,1]
+        yref: 'paper',
+        y0: 0,
+        y1: 1,
+
+        // start x: left side of selected time interval
+        x0: start,
+        // end x: right side of selected time interval
+        x1: end,
+
+        // adding color
+        fillcolor: color,
+
+        // opacity of 20%
+        opacity: 0.2,
+
+        line: {
+            width: 0
+        }
+        };
+        this.graph.layout.shapes.push(shape);
     }
 }
