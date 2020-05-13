@@ -217,7 +217,9 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
                               @PathParam("startdate") long startdate,
                               @PathParam("enddate") long enddate,
                               @PathParam("label") String label) {
-    
+
+    this.dataLakeManagement.updateLabels(index, startdate, enddate, label);
+
     return Response.ok("Successfully updated database.", MediaType.TEXT_PLAIN).build();
   }
 
