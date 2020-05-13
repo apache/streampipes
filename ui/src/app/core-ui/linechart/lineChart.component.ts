@@ -141,13 +141,19 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
     displayData(transformedData: DataResult, yKeys: string[]) {
         if (this.yKeys.length > 0) {
             const tmp = [];
+            tmp['measureName'] = transformedData.measureName;
             this.yKeys.forEach(key => {
                 transformedData.rows.forEach(serie => {
                     if (serie.name === key) {
                         tmp.push(serie);
 
                         // adding customdata property in order to store labels in graph
-                        serie['customdata'] = Array(serie['x'].length).fill('');
+                        if (transformedData.labels !== undefined && transformedData.labels.length !== 0) {
+                            serie['customdata'] = transformedData.labels;
+                        }
+                        else {
+                            serie['customdata'] = Array(serie['x'].length).fill('');
+                        }
                         // adding custom hovertemplate in order to display labels in graph
                         serie['hovertemplate'] = 'y: %{y}<br>' + 'x: %{x}<br>' + 'label: %{customdata}';
                     }
@@ -156,14 +162,8 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
             this.dataToDisplay = tmp;
 
 
-
-            /**
-             * TODO: fetching stored labels, filling this.labels and drawing related shapes
-             */
-
         } else {
             this.dataToDisplay = undefined;
-
         }
     }
 
