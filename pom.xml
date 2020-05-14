@@ -580,6 +580,12 @@
                 <version>${flink.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.flink</groupId>
+                <artifactId>flink-runtime_2.11</artifactId>
+                <version>${flink.version}</version>
+                <type>test-jar</type>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.streampipes</groupId>
                 <artifactId>streampipes-test-utils</artifactId>
                 <version>${streampipes.version}</version>
