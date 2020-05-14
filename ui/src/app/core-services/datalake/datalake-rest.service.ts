@@ -146,4 +146,5 @@ export class DatalakeRestService {
     saveCocoFileForImage(imageRoute, data) {
       return this.http.post(this.dataLakeUrlV3 + '/data/image/' + imageRoute + '/coco', data);
     }
+
 }

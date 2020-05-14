@@ -23,6 +23,7 @@ import okhttp3.OkHttpClient;
 import org.apache.commons.io.FileUtils;
 import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;
+import org.influxdb.dto.Point;
 import org.influxdb.dto.Query;
 import org.influxdb.dto.QueryResult;
 import org.apache.streampipes.config.backend.BackendConfig;
@@ -95,7 +96,6 @@ public class DataLakeManagementV3 {
 
     DataResult dataResult = convertResult(result);
     influxDB.close();
-
     return dataResult;
   }
 
@@ -572,4 +572,47 @@ public class DataLakeManagementV3 {
     return route;
   }
 
+  public void updateLabels(String index, long startdate, long enddate, String label) {
+    DataResult queryResult = getEvents(index, startdate, enddate);
+    Map<String, String> headerWithTypes = getHeadersWithTypes(index);
+    List<String> headers = queryResult.getHeaders();
+
+    InfluxDB influxDB = getInfluxDBClient();
+    influxDB.setDatabase(BackendConfig.INSTANCE.getInfluxDatabaseName());
+
+    for (List<Object> row : queryResult.getRows()) {
+      long timestampValue = Math.round((double) row.get(headers.indexOf("timestamp")));
+
+      Point.Builder p = Point.measurement(index).time(timestampValue, TimeUnit.MILLISECONDS);
+
+      for (int i = 1; i < row.size(); i++) {
+        String selected_header = headers.get(i);
+        if (!selected_header.equals("sp_internal_label")) {
+          if (headerWithTypes.get(selected_header).equals("integer")) {
+            p.addField(selected_header, Math.round((double) row.get(i)));
+          } else if (headerWithTypes.get(selected_header).equals("string")) {
+            p.addField(selected_header, row.get(i).toString());
+          }
+        } else {
+          p.addField(selected_header, label);
+        }
+      }
+      influxDB.write(p.build());
+    }
+    influxDB.close();
+  }
+
+  private Map<String, String> getHeadersWithTypes(String index) {
+      InfluxDB influxDB = getInfluxDBClient();
+      Query query = new Query("SHOW FIELD KEYS FROM " + index,
+              BackendConfig.INSTANCE.getInfluxDatabaseName());
+      QueryResult result = influxDB.query(query);
+      influxDB.close();
+
+      Map<String, String> headerTypes = new HashMap<String, String>();
+      for (List<Object> element : result.getResults().get(0).getSeries().get(0).getValues()) {
+        headerTypes.put(element.get(0).toString(), element.get(1).toString());
+      }
+      return headerTypes;
+    }
 }
