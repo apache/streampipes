@@ -30,7 +30,7 @@
 .idea/sqlDataSources.xml
 .idea/dynamic.xml
 .idea/uiDesigner.xml
-.idea
+.idea/*
 
 # Gradle:
 .idea/gradle.xml
@@ -92,6 +92,7 @@ ui/src/app/services/version/version.service.ts
 
 # compiled output
 ui/dist
+ui/dist/**
 ui/dist-server
 ui/tmp
 ui/out-tsc
@@ -100,7 +101,6 @@ ui/out-tsc
 ui/node_modules/
 
 # IDEs and editors
-/.idea
 .project
 .classpath
 .c9/
@@ -140,3 +140,6 @@ bundle.js.map
 
 package-lock.json
 logs/
+
+# Explicit includes
+!.idea/runConfigurations

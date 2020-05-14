@@ -28,11 +28,11 @@ import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
 import org.apache.streampipes.wrapper.siddhi.manager.SpSiddhiManager;
-import org.wso2.siddhi.core.SiddhiAppRuntime;
-import org.wso2.siddhi.core.SiddhiManager;
-import org.wso2.siddhi.core.event.Event;
-import org.wso2.siddhi.core.stream.input.InputHandler;
-import org.wso2.siddhi.core.stream.output.StreamCallback;
+import io.siddhi.core.SiddhiAppRuntime;
+import io.siddhi.core.SiddhiManager;
+import io.siddhi.core.event.Event;
+import io.siddhi.core.stream.input.InputHandler;
+import io.siddhi.core.stream.output.StreamCallback;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -120,6 +120,8 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
       });
     }
 
+    siddhiAppRuntime.start();
+
   }
 
   private String getOutputTopicName(B parameters) {
@@ -136,7 +138,8 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
           schemaInfo, SourceInfo sourceInfo) {
     Map<String, Object> outMap = new HashMap<>();
     for (int i = 0; i < sortedEventKeys.size(); i++) {
-      outMap.put(sortedEventKeys.get(i), event.getData(i));
+        List<Object> tmp = (List<Object>) event.getData(i);
+      outMap.put(sortedEventKeys.get(i), tmp.get(0));
     }
     return EventFactory.fromMap(outMap, sourceInfo, schemaInfo);
   }

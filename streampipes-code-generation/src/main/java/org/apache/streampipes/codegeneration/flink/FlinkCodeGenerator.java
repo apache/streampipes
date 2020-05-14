@@ -40,7 +40,7 @@ public abstract class FlinkCodeGenerator extends ImplementationCodeGenerator {
 		super(config, element);
 		packageName = config.getGroupId() + "." + config.getArtifactId();
 		name = config.getClassNamePrefix();
-		version = "0.40.3-SNAPSHOT";
+		version = "0.66.0";
 		port = Integer.toString(config.getPort());
 		
 		src = getTempDir() + "src" + File.separator + "main" + File.separator + "java" + File.separator;

@@ -23,7 +23,7 @@
 mvn archetype:generate                                  \
 			-DarchetypeGroupId=org.apache.streampipes                \
 			-DarchetypeArtifactId=streampipes-archetype-pe-processors-jvm          \
-			-DarchetypeVersion=0.60.2-SNAPSHOT               \
+			-DarchetypeVersion=0.66.0               \
 			-DgroupId=my.groupId \
 			-DartifactId=my-processor-jvm
 			-DclassNamePrefix=MyProcessor

@@ -23,5 +23,5 @@
   font-weight: 700;
   src: local('Roboto'),
   local('Roboto'),
-  url(Roboto-Regular.ttf) format('ttf');
+  url(assets/fonts/Roboto-Regular.ttf) format('ttf');
 }

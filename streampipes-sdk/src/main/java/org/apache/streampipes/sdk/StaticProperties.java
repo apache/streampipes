@@ -18,19 +18,7 @@
 
 package org.apache.streampipes.sdk;
 
-import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
-import org.apache.streampipes.model.staticproperty.OneOfStaticProperty;
-import org.apache.streampipes.model.staticproperty.Option;
-import org.apache.streampipes.model.staticproperty.PropertyValueSpecification;
-import org.apache.streampipes.model.staticproperty.RuntimeResolvableAnyStaticProperty;
-import org.apache.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty;
-import org.apache.streampipes.model.staticproperty.SecretStaticProperty;
-import org.apache.streampipes.model.staticproperty.StaticProperty;
-import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
-import org.apache.streampipes.model.staticproperty.SupportedProperty;
-import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
-import org.apache.streampipes.model.staticproperty.SelectionStaticProperty;
-import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
+import org.apache.streampipes.model.staticproperty.*;
 import org.apache.streampipes.sdk.helpers.Label;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
@@ -57,6 +45,13 @@ public class StaticProperties {
             label.getDescription());
     fsp.setRequiredDatatype(URI.create(datatype.toString()));
     return fsp;
+  }
+
+  public static FileStaticProperty fileProperty(Label label) {
+    FileStaticProperty fp = new FileStaticProperty(label.getInternalId(), label.getLabel(), label
+            .getDescription());
+
+    return fp;
   }
 
   public static RuntimeResolvableOneOfStaticProperty singleValueSelectionFromContainer(Label label) {

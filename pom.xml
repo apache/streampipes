@@ -17,8 +17,7 @@
   ~
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -29,12 +28,13 @@
 
     <groupId>org.apache.streampipes</groupId>
     <artifactId>streampipes-parent</artifactId>
-    <version>0.65.1-SNAPSHOT</version>
+    <version>0.67.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <dependency.locations.enabled>false</dependency.locations.enabled>
+        <owasp.check.skip>true</owasp.check.skip>
 
         <activemq-client.version>5.15.9</activemq-client.version>
         <asm.version>7.0</asm.version>
@@ -89,7 +89,7 @@
         <rendersnake.version>1.8</rendersnake.version>
         <retrofit.version>2.5.0</retrofit.version>
         <shiro.version>1.2.3</shiro.version>
-        <siddhi.version>4.5.11</siddhi.version>
+        <siddhi.version>5.1.12</siddhi.version>
         <slf4j.version>1.7.25</slf4j.version>
         <snappy-java.version>1.1.7.2</snappy-java.version>
         <spark.version>2.1.2</spark.version>
@@ -110,9 +110,11 @@
         <maven.dependency.plugin.version>3.1.1</maven.dependency.plugin.version>
         <maven.jar.plugin.version>3.1.2</maven.jar.plugin.version>
         <maven.source.plugin.version>3.1.0</maven.source.plugin.version>
+        <maven.dependency.check.plugin.version>5.2.2</maven.dependency.check.plugin.version>
+        <maven.shade.plugin.version>3.2.3</maven.shade.plugin.version>
     </properties>
 
-    <name>Apache StreamPipes</name>
+    <name>Apache StreamPipes (incubating)</name>
     <description>A self-service (Industrial) IoT toolbox to enable non-technical users to connect, analyze and explore
         IoT data streams.
     </description>
@@ -571,11 +573,6 @@
                 <version>${jersey.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.glassfish.jersey.inject</groupId>
-                <artifactId>jersey-hk2</artifactId>
-                <version>${jersey.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.glassfish.jersey.media</groupId>
                 <artifactId>jersey-media-json-jackson</artifactId>
                 <version>${jersey.version}</version>
@@ -711,22 +708,22 @@
                 <version>${cloning.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.siddhi</groupId>
+                <groupId>io.siddhi</groupId>
                 <artifactId>siddhi-annotations</artifactId>
                 <version>${siddhi.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.siddhi</groupId>
+                <groupId>io.siddhi</groupId>
                 <artifactId>siddhi-core</artifactId>
                 <version>${siddhi.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.siddhi</groupId>
+                <groupId>io.siddhi</groupId>
                 <artifactId>siddhi-query-api</artifactId>
                 <version>${siddhi.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.siddhi</groupId>
+                <groupId>io.siddhi</groupId>
                 <artifactId>siddhi-query-compiler</artifactId>
                 <version>${siddhi.version}</version>
             </dependency>
@@ -843,49 +840,33 @@
             <id>apache-release</id>
             <build>
                 <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-assembly-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>source-release-assembly</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>single</goal>
-                                </goals>
-                                <configuration combine.self="append">
-                                    <finalName>apache-streampipes-${project.version}-incubating</finalName>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
+                    <!--
+                      Create MD5 and SHA512 checksum files for the release artifacts.
+                    -->
                     <plugin>
                         <groupId>net.nicoulaj.maven.plugins</groupId>
                         <artifactId>checksum-maven-plugin</artifactId>
                         <version>1.8</version>
                         <executions>
                             <execution>
-                                <id>sign-source-release</id>
-                                <phase>package</phase>
                                 <goals>
                                     <goal>files</goal>
                                 </goals>
-                                <configuration>
-                                    <algorithms>
-                                        <algorithm>SHA-512</algorithm>
-                                    </algorithms>
-                                    <fileSets>
-                                        <fileSet>
-                                            <directory>${project.build.directory}</directory>
-                                            <includes>
-                                                <include>apache-streampipes-${project.version}-incubating-source-release.zip
-                                                </include>
-                                            </includes>
-                                        </fileSet>
-                                    </fileSets>
-                                </configuration>
                             </execution>
                         </executions>
+                        <configuration>
+                            <algorithms>
+                                <algorithm>SHA-512</algorithm>
+                            </algorithms>
+                            <fileSets>
+                                <fileSet>
+                                    <directory>${project.build.directory}</directory>
+                                    <includes>
+                                        <include>apache-streampipes-${project.version}-incubating-source-release.zip</include>
+                                    </includes>
+                                </fileSet>
+                            </fileSets>
+                        </configuration>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -940,12 +921,38 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-shade-plugin</artifactId>
-                    <version>${maven-shade-plugin.version}</version>
+                    <version>${maven.shade.plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <version>${spring-boot.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <configuration>
+                        <arguments>-Papache-release</arguments>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>3.2.0</version>
+                    <configuration>
+                        <finalName>apache-streampipes-${project.version}-incubating</finalName>
+                        <descriptors>
+                            <descriptor>tools/maven/assembly.xml</descriptor>
+                        </descriptors>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>net.revelc.code.formatter</groupId>
+                    <artifactId>formatter-maven-plugin</artifactId>
+                    <version>2.11.0</version>
+                    <configuration>
+                        <lineEnding>LF</lineEnding>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -978,7 +985,7 @@
                         </goals>
                         <configuration>
                             <rules>
-                                <dependencyConvergence/>
+                                <dependencyConvergence />
                             </rules>
                         </configuration>
                     </execution>
@@ -1064,9 +1071,7 @@
                         <exclude>streampipes-measurement-units/src/main/java/com/github/jqudt/**</exclude>
 
                         <!-- Exclude some UI files which we need to check in more detail -->
-                        <exclude>ui/src/assets/**</exclude>
-                        <exclude>ui/src/scss/**</exclude>
-                        <exclude>ui/dist/**</exclude>
+                        <exclude>ui/src/assets/img/svg/**</exclude>
 
                         <!-- Exclude disclaimer and notice files -->
                         <exclude>DISCLAIMER-WIP</exclude>
@@ -1154,15 +1159,38 @@
                     </archive>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.owasp</groupId>
+                <artifactId>dependency-check-maven</artifactId>
+                <version>${maven.dependency.check.plugin.version}</version>
+                <configuration>
+                    <!-- use -Dowasp.check.skip=true to skip dependency check -->
+                    <skip>${owasp.check.skip}</skip>
+                    <format>HTML</format>
+                    <bundleAuditAnalyzerEnabled>false</bundleAuditAnalyzerEnabled>
+                    <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
+                    <failOnError>false</failOnError>
+                    <suppressionFile>tools/maven/owasp-dependency-check-suppression.xml</suppressionFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <!-- generates aggregated reports in target/ -->
+                            <goal>check</goal>
+                            <goal>aggregate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
     <scm>
-        <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/incubator-streampipes.git
-        </developerConnection>
-        <connection>scm:git:https://gitbox.apache.org/repos/asf/incubator-streampipes.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/apache/incubator-streampipes.git</developerConnection>
+        <connection>scm:git:ssh://git@github.com/apache/incubator-streampipes.git</connection>
         <url>https://github.com/apache/incubator-streampipes</url>
-    </scm>
+      <tag>HEAD</tag>
+  </scm>
 
     <issueManagement>
         <system>Jira</system>

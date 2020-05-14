@@ -103,17 +103,36 @@ public class CouchDbInstallationStep implements InstallationStep {
     private Message addNotificationView() {
         try {
             DesignDocument userDocument = prepareDocument("_design/notificationtypes");
-            Map<String, MapReduce> views = new HashMap<>();
+            DesignDocument notificationCountDocument = prepareDocument("_design/unread");
 
+            Map<String, MapReduce> notificationTypeViews = new HashMap<>();
             MapReduce notificationTypeFunction = new MapReduce();
             notificationTypeFunction.setMap("function (doc) { var vizName = doc.title.replace(/\\s/g, '-'); var indexName = doc.correspondingPipelineId + '-' + vizName; emit([indexName, doc.createdAtTimestamp], doc);}");
-
-            views.put("notificationtypes", notificationTypeFunction);
-
-            userDocument.setViews(views);
+            notificationTypeViews.put("notificationtypes", notificationTypeFunction);
+            userDocument.setViews(notificationTypeViews);
             Response resp = Utils.getCouchDbNotificationClient().design().synchronizeWithDb(userDocument);
 
-            if (resp.getError() != null) return Notifications.error(PREPARING_NOTIFICATIONS_TEXT);
+            Map<String, MapReduce> notificationCountTypeViews = new HashMap<>();
+            MapReduce countFunction = new MapReduce();
+            countFunction.setMap("function (doc) {\n" +
+                    "  var user = doc.targetedAt; \n" +
+                    "  if (!doc.read) {\n" +
+                    "    emit(user, 1);\n" +
+                    "  }\n" +
+                    "}");
+            countFunction.setReduce("function (keys, values, rereduce) {\n" +
+                    "  if (rereduce) {\n" +
+                    "    return sum(values);\n" +
+                    "  } else {\n" +
+                    "    return values.length;\n" +
+                    "  }\n" +
+                    "}");
+            notificationCountTypeViews.put("unread", countFunction);
+            notificationCountDocument.setViews(notificationCountTypeViews);
+            Response countResp =
+                    Utils.getCouchDbNotificationClient().design().synchronizeWithDb(notificationCountDocument);
+
+            if (resp.getError() != null && countResp != null) return Notifications.error(PREPARING_NOTIFICATIONS_TEXT);
             else return Notifications.success(PREPARING_NOTIFICATIONS_TEXT);
         } catch (Exception e) {
             return Notifications.error(PREPARING_NOTIFICATIONS_TEXT);

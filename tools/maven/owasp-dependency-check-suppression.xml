@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 <!--
   ~ Licensed to the Apache Software Foundation (ASF) under one or more
   ~ contributor license agreements.  See the NOTICE file distributed with
@@ -16,14 +16,17 @@
   ~ limitations under the License.
   ~
   -->
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <parent>
-    <artifactId>semantic-epa-backend</artifactId>
-    <groupId>de.fzi.cep.sepa</groupId>
-    <version>0.0.1-SNAPSHOT</version>
-  </parent>
-  <modelVersion>4.0.0</modelVersion>
-  <artifactId>semantic-epa-model-client</artifactId>
-</project>
+    <!--
+        refer : https://jeremylong.github.io/DependencyCheck/general/suppression.html
+        for samples on suppressing false positives.
+    -->
+    <suppress>
+        <notes><![CDATA[
+        This suppresses all CVE entries that have a score below CVSS 7.
+        ]]></notes>
+        <cvssBelow>7</cvssBelow>
+    </suppress>
 
+</suppressions>

@@ -1,4 +1,3 @@
-#
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -13,13 +12,5 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
-#
 
-#Tue Nov 21 10:33:48 CET 2017
-package=org.apache.streampipes.test
-version=0.1-SNAPSHOT
-groupId=test-pe
-artifactId=basic
-classNamePrefix=Example
-packageName=example
+docker-compose up -d && ../incubator-streampipes-extensions/docker-compose up -d
