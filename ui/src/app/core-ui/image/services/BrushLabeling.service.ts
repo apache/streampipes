@@ -20,6 +20,7 @@ import Konva from 'konva';
 import { Annotation } from '../../../core-model/coco/Annotation';
 import { ICoordinates } from '../model/coordinates';
 import { ColorService } from './color.service';
+import { LabelingModeService } from './LabelingMode.service';
 
 @Injectable()
 export class BrushLabelingService {
@@ -29,7 +30,8 @@ export class BrushLabelingService {
 
   private isLabeling: boolean;
 
-  constructor(private colorService: ColorService) {
+  constructor(private colorService: ColorService,
+              private labelingMode: LabelingModeService) {
 
   }
 
@@ -100,43 +102,49 @@ export class BrushLabelingService {
       transformer.attachTo(line);
     }
 
-    this.addMouseHandler(line, annotation, layer, transformer);
-    this.addClickHandler(line, annotation, layer, transformer);
+    this.addMouseHandler(line, annotation, layer, transformer, this.labelingMode);
+    this.addClickHandler(line, annotation, layer, transformer, this.labelingMode);
 
     layer.add(line);
     layer.add(transformer);
   }
 
-  private addClickHandler(rect, annotation, layer, transformer) {
-    rect.on('click', function() {
-      annotation.isSelected = true;
-      transformer.attachTo(this);
-      layer.batchDraw();
-    });
+  private addClickHandler(brush, annotation, layer, transformer, labelingMode) {
+    brush.on('click', function() {
+      if (labelingMode.isNoneMode()) {
+        annotation.isSelected = !annotation.isSelected;
 
-    rect.on('dblclick', function() {
-      annotation.isSelected = false;
-      transformer.detach();
-      layer.batchDraw();
+        if (annotation.isSelected) {
+          transformer.attachTo(this);
+        } else {
+          transformer.detach();
+        }
+
+        layer.batchDraw();
+      }
     });
 
   }
 
-  private addMouseHandler(rect, annotation, layer, transformer) {
-    rect.on('mouseover', function() {
-      annotation.isHovered = true;
-      rect.opacity(0.8);
-      layer.batchDraw();
+  private addMouseHandler(brush, annotation, layer, transformer, labelingMode) {
+    brush.on('mouseover', function() {
+      if (labelingMode.isNoneMode()) {
+        annotation.isHovered = true;
+        brush.opacity(0.8);
+        layer.batchDraw();
+      }
     });
 
-    rect.on('mouseout', function() {
+    brush.on('mouseout', function() {
       annotation.isHovered = false;
-      rect.opacity(0.5);
+      brush.opacity(0.5);
       layer.batchDraw();
     });
 
     transformer.on('mouseover', function() {
-      annotation.isHovered = true;
+      if (labelingMode.isNoneMode()) {
+        annotation.isHovered = true;
+      }
     });
 
     transformer.on('mouseout', function() {

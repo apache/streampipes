@@ -20,6 +20,7 @@ import Konva from 'konva';
 import { Annotation } from '../../../core-model/coco/Annotation';
 import { ICoordinates } from '../model/coordinates';
 import { ColorService } from './color.service';
+import { LabelingModeService } from './LabelingMode.service';
 
 @Injectable()
 export class PolygonLabelingService {
@@ -29,7 +30,8 @@ export class PolygonLabelingService {
 
   private isLabeling: boolean;
 
-  constructor(private colorService: ColorService) {
+  constructor(private colorService: ColorService,
+              private labelingMode: LabelingModeService) {
     this.isLabeling = false;
   }
 
@@ -182,36 +184,41 @@ export class PolygonLabelingService {
       PolygonLabelingService.buildAnchors(layer, annotation, imageView, poly);
     }
 
-    this.addDragHandler(poly, annotation, layer, imageView);
-    this.addMouseHandler(poly, annotation, layer, transformer);
-    this.addClickHandler(poly, annotation, layer, transformer, imageView);
+    this.addDragHandler(poly, annotation, layer, imageView, this.labelingMode);
+    this.addMouseHandler(poly, annotation, layer, transformer, this.labelingMode);
+    this.addClickHandler(poly, annotation, layer, transformer, imageView, this.labelingMode);
 
     layer.add(poly);
     layer.add(transformer);
   }
 
-  private addClickHandler(poly, annotation, layer, transformer, imageView) {
+  private addClickHandler(poly, annotation, layer, transformer, imageView, labelingMode) {
     poly.on('click', function() {
-      annotation.isSelected = true;
-      transformer.attachTo(this);
-      PolygonLabelingService.buildAnchors(layer, annotation, imageView, poly);
-      layer.batchDraw();
-    });
+      if (labelingMode.isNoneMode()) {
 
-    poly.on('dblclick', function() {
-      annotation.isSelected = false;
-      PolygonLabelingService.removeAnchors(layer, annotation.id);
-      transformer.detach();
-      layer.batchDraw();
+        annotation.isSelected = !annotation.isSelected;
+
+        if (annotation.isSelected) {
+          annotation.isSelected = true;
+          transformer.attachTo(this);
+          PolygonLabelingService.buildAnchors(layer, annotation, imageView, poly);
+        } else {
+          PolygonLabelingService.removeAnchors(layer, annotation.id);
+          transformer.detach();
+        }
+        layer.batchDraw();
+      }
     });
 
   }
 
-  private addMouseHandler(poly, annotation, layer, transformer) {
+  private addMouseHandler(poly, annotation, layer, transformer, labelingMode) {
     poly.on('mouseover', function() {
-      annotation.isHovered = true;
-      this.opacity(0.8);
-      layer.batchDraw();
+      if (labelingMode.isNoneMode()) {
+        annotation.isHovered = true;
+        poly.opacity(0.8);
+        layer.batchDraw();
+      }
     });
 
     poly.on('mouseout', function() {
@@ -222,28 +229,36 @@ export class PolygonLabelingService {
   }
 
 
-  private addDragHandler(poly, annotation, layer, imageView) {
+  private addDragHandler(poly, annotation, layer, imageView, labelingMode) {
     let offset: number[];
 
     poly.on('dragstart', function() {
-      const position = imageView.getImagePointerPosition();
-      offset = [];
-      for (let i = 0; i < annotation.segmentation[0].length; i += 2) {
-        offset.push(annotation.segmentation[0][i] - position.x);
-        offset.push(annotation.segmentation[0][i + 1] - position.y);
+      if (!labelingMode.isNoneMode()) {
+        poly.stopDrag();
+      } else {
+        const position = imageView.getImagePointerPosition();
+        offset = [];
+        for (let i = 0; i < annotation.segmentation[0].length; i += 2) {
+          offset.push(annotation.segmentation[0][i] - position.x);
+          offset.push(annotation.segmentation[0][i + 1] - position.y);
+        }
       }
     });
 
     poly.on('dragmove', function() {
-      const position = imageView.getImagePointerPosition();
-      const tmp = [];
-      for (let i = 0; i < annotation.segmentation[0].length; i += 2) {
-        tmp.push(position.x + offset[i]);
-        tmp.push(position.y + offset[i + 1]);
-      }
-      annotation.segmentation[0] = tmp;
-      if (annotation.isSelected) {
-        PolygonLabelingService.buildAnchors(layer, annotation, imageView, poly);
+      if (!labelingMode.isNoneMode()) {
+        poly.stopDrag();
+      } else {
+        const position = imageView.getImagePointerPosition();
+        const tmp = [];
+        for (let i = 0; i < annotation.segmentation[0].length; i += 2) {
+          tmp.push(position.x + offset[i]);
+          tmp.push(position.y + offset[i + 1]);
+        }
+        annotation.segmentation[0] = tmp;
+        if (annotation.isSelected) {
+          PolygonLabelingService.buildAnchors(layer, annotation, imageView, poly);
+        }
       }
     });
 

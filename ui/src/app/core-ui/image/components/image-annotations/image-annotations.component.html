@@ -20,19 +20,25 @@
     <h2>Annotations</h2>
     <mat-list>
         <mat-list-item *ngFor="let annotation of annotations" (mouseover)="enterAnnotation(annotation)" (mouseout)="leaveAnnotation(annotation)"
-                       style="height: 30px; padding-top: 5px; padding-buttom: 5px; border-radius: 50px; margin-bottom: 5px"
+                       style="height: 40px; padding-top: 5px; padding-buttom: 5px; border-radius: 50px; margin-bottom: 5px"
                        [style.background-color]="annotation.isHovered || annotation.isSelected ? 'lightgrey' : 'white'">
-            <mat-icon matListIcon [style.color]="colorService.getColor(annotation.category_name)" style="margin-top: -8px;">color_lens</mat-icon>
             <mat-form-field>
                 <mat-select [value]="annotation.category_name">
+
+                    <mat-select-trigger>
+                        <mat-icon [style.color]="colorService.getColor(annotation.category_name)">color_lens</mat-icon>
+                        {{annotation.category_name}}
+                    </mat-select-trigger>
+
                     <mat-optgroup *ngFor="let category of categories" [label]="category">
                         <mat-option *ngFor="let label of _labels[category]" [value]="label" (click)="changeLabel(annotation, label, category)">
+                            <mat-icon [style.color]="colorService.getColor(label)">color_lens</mat-icon>
                             {{label}}
                         </mat-option>
                     </mat-optgroup>
                 </mat-select>
             </mat-form-field>
-            <button mat-icon-button (click)="delete(annotation)" style="margin-top: -10px; margin-left: 10px"> <mat-icon>delete_forever</mat-icon></button>
+            <button mat-icon-button (click)="delete(annotation)" style="margin-top: -10px; margin-left: -5px"> <mat-icon>delete_forever</mat-icon></button>
         </mat-list-item>
     </mat-list>
 </div>
