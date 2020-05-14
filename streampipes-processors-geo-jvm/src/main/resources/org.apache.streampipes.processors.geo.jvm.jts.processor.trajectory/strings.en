@@ -1,0 +1,20 @@
+org.apache.streampipes.processors.geo.jvm.jts.processor.trajectory.title=Single Trajectory Creator
+org.apache.streampipes.processors.geo.jvm.jts.processor.trajectory.description=Creates a trajectory from JTS point events
+
+point-key.title=JTS Point Event
+point-key.description=Single Point Event which will be added to the trajectory
+
+point-key.title=JTS Point Event
+point-key.description=Single Point Event which will be added to the trajectory
+
+epsg-key.title=CRS of Input Point
+epsg-key.description=EPSG-Code of input point
+
+m-key.title=measurement value
+m-key.description=Measurement value which will be stored with each point event
+
+description-key.title=description text of trajectory
+description-key.description=A description text for the trajectory
+
+subpoints-key.title=number of allowed sub-points
+subpoints-key.description=amount of allowed sub-points, creating the trajectory

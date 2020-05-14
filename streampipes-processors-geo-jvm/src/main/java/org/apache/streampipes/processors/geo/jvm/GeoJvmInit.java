@@ -29,6 +29,7 @@ import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.processors.geo.jvm.config.GeoJvmConfig;
 import org.apache.streampipes.processors.geo.jvm.jts.processor.latLngToGeo.LatLngToGeoController;
 import org.apache.streampipes.processors.geo.jvm.jts.processor.setEPSG.SetEpsgController;
+import org.apache.streampipes.processors.geo.jvm.jts.processor.trajectory.CreateTrajectoryFromPointsController;
 import org.apache.streampipes.processors.geo.jvm.processor.distancecalculator.DistanceCalculatorController;
 import org.apache.streampipes.processors.geo.jvm.processor.geocoder.GoogleMapsGeocodingController;
 import org.apache.streampipes.processors.geo.jvm.processor.revgeocoder.ReverseGeocodingController;
@@ -40,15 +41,16 @@ public class GeoJvmInit extends StandaloneModelSubmitter {
 
   public static void main(String[] args) {
     DeclarersSingleton
-        .getInstance()
-        .add(new DistanceCalculatorController())
-        .add(new GoogleMapsGeocodingController())
-        .add(new StaticGoogleMapsGeocodingController())
-        .add(new ReverseGeocodingController())
-        .add(new SetEpsgController())
-        .add(new LatLngToGeoController())
-        .add(new SpeedCalculatorController())
-        .add(new StaticDistanceCalculatorController());
+            .getInstance()
+            .add(new DistanceCalculatorController())
+            .add(new GoogleMapsGeocodingController())
+            .add(new StaticGoogleMapsGeocodingController())
+            .add(new ReverseGeocodingController())
+            .add(new SetEpsgController())
+            .add(new LatLngToGeoController())
+            .add(new CreateTrajectoryFromPointsController())
+            .add(new SpeedCalculatorController())
+            .add(new StaticDistanceCalculatorController());
 
 
     DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),

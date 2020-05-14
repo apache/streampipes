@@ -19,23 +19,24 @@
 package org.apache.streampipes.processors.geo.jvm.jts.helper;
 
 import org.locationtech.jts.geom.*;
+import org.locationtech.jts.io.ParseException;
+import org.locationtech.jts.io.WKTReader;
 
 public class SpGeometryBuilder {
 
   final static double LONGITUDE_MIN = -180.00;
   final static double LONGITUDE_MAX = 180.00;
   final static double LATITUDE_MIN = -90;
-  final static double LATITIDE_MAX = 90;
+  final static double LATITUDE_MAX = 90;
 
 
   /**
-   * Creates a JTS point geometry from Longitude and Latitude values
+   * Creates a {@link org.locationtech.jts.geom.Point} from <code>Latitude</code> and <code> Longitude</code> values
    *
-   * @param lng  Longitude value in the range -180 <Longitude > 180
-   * @param lat  Latitude value in the range -90 <LATITUDE > 90
-   * @param epsg EPSG Code for projection onfo
-   * @return a JTS Point Geometry Object with lat lng values. An empty point geometry is created if Latitude or Longitude values are out of range
-   * or has null values.
+   * @param lng  Longitude value in the range -180 &lt; Longitude &gt; 180
+   * @param lat  Latitude value in the range -90 &lt; LATITUDE &gt; 90
+   * @param epsg EPSG Code representing coordinate reference system
+   * @return a {@link org.locationtech.jts.geom.Point}. An empty point geometry is created if Latitude or Longitude values are out of range or has null values.
    */
   public static Point createSPGeom(Double lng, Double lat, Integer epsg) {
     Point point;
@@ -45,7 +46,7 @@ public class SpGeometryBuilder {
     //check if value is not null due missing stream value
     if ((lng != null) && (lat != null)) {
       //check if lat lng is in typical range
-      if (isInWGSCoordinateRange(lng, LONGITUDE_MIN, LONGITUDE_MAX) || isInWGSCoordinateRange(lat, LATITUDE_MIN, LATITIDE_MAX)) {
+      if (isInWGSCoordinateRange(lng, LONGITUDE_MIN, LONGITUDE_MAX) || isInWGSCoordinateRange(lat, LATITUDE_MIN, LATITUDE_MAX)) {
 
         Coordinate coordinate = new Coordinate(lng, lat);
         point = geomFactory.createPoint(coordinate);
@@ -61,24 +62,55 @@ public class SpGeometryBuilder {
     return point;
   }
 
+
   /**
-   * @param checkedvalue Any Value
-   * @param min          Min value to check
-   * @param max          max value to check
-   * @return boolean value true or false
+   * creates a Geometry from a wkt_string. string has to be valid and is not be checked. If invalid, an empty point
+   * geom is returned. method calls getPrecision method and creates a jts geometry factory and a WKT-parser object.
+   * from the wktString the
+   *
+   * @param wktString Well-known text representation of the input geometry
+   * @param epsg      EPSG Code representing SRID
+   * @return {@link org.locationtech.jts.geom.Geometry}. An empty point geometry is created if {@link org.locationtech.jts.io.ParseException} due invalid WKT-String
    */
-  private static boolean isInWGSCoordinateRange(double checkedvalue, double min, double max) {
-    return checkedvalue > min && checkedvalue < max;
+  public static Geometry createSPGeom(String wktString, Integer epsg) {
+
+    Geometry geom;
+    PrecisionModel prec = getPrecisionModel(epsg);
+
+    GeometryFactory geomFactory = new GeometryFactory(prec, epsg);
+    WKTReader wktReader = new WKTReader(geomFactory);
+
+    try {
+      geom = wktReader.read(wktString);
+    } catch (ParseException e) {
+      // if wktString is invalid, an empty point geometry will be created as returnedGeom
+      geom = geomFactory.createPoint();
+    }
+
+    return geom;
   }
 
 
   /**
-   * Creates a JTS PrecisionModel with a specific precision.
-   * WGS84/WGS84 will be created with 7 decimal positions.
-   * Any other epsg code will create a precision with Ffloating type. See JTS PrecisionModel for more information
+   * Is in wgs coordinate range boolean.
    *
-   * @param epsg EPSG alue
-   * @return a JTS PrecisionModel
+   * @param valueToCheck Any Value
+   * @param min          Min value to check
+   * @param max          max value to check
+   * @return true if value is in min max range
+   */
+  private static boolean isInWGSCoordinateRange(double valueToCheck, double min, double max){
+    return valueToCheck > min && valueToCheck < max;
+  }
+
+
+  /**
+   * Creates a {@link org.locationtech.jts.geom.PrecisionModel} with a specific precision.
+   * WGS84/WGS84 will be created a {@link org.locationtech.jts.geom.PrecisionModel#FIXED} with 7 decimal positions (scale 1000000).
+   * Any other epsg code will create a precision with {@link org.locationtech.jts.geom.PrecisionModel#FLOATING}.
+   *
+   * @param epsg EPSG Code representing SRID
+   * @return {@link org.locationtech.jts.geom.PrecisionModel}
    */
   private static PrecisionModel getPrecisionModel(Integer epsg) {
     PrecisionModel precisionModel;
