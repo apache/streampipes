@@ -21,18 +21,21 @@ package org.apache.streampipes.sinks.databases.jvm.redis;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
+import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventSink;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
 
 public class RedisController extends StandaloneEventSinkDeclarer<RedisParameters> {
     private static final String EVENT_PRIMARY_KEY = "event_pk";
+    private static final String EVENT_KEY_AUTO_INCREMENT = "event_key_ai";
     private static final String EVENT_TTL_KEY = "event_ttl";
     private static final String REDIS_HOST_KEY = "redis_host";
     private static final String REDIS_PORT_KEY = "redis_port";
@@ -52,11 +55,12 @@ public class RedisController extends StandaloneEventSinkDeclarer<RedisParameters
                 .category(DataSinkType.STORAGE)
                 .requiredStream(StreamRequirementsBuilder
                         .create()
-                        .requiredProperty(EpRequirements.anyProperty())
-                        .build())
+                        .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(),
+                                Labels.withId(EVENT_PRIMARY_KEY),
+                                PropertyScope.NONE).build())
+                .requiredSingleValueSelection(Labels.withId(EVENT_KEY_AUTO_INCREMENT), Options.from("False", "True"))
                 .requiredTextParameter(Labels.withId(REDIS_HOST_KEY))
                 .requiredIntegerParameter(Labels.withId(REDIS_PORT_KEY), 6379)
-                .requiredTextParameter(Labels.withId(EVENT_PRIMARY_KEY))
                 .requiredIntegerParameter(Labels.withId(EVENT_TTL_KEY), -1)
                 // TODO: Use this after optional parameters implementation
                 //  .requiredSecret(Labels.withId(REDIS_PASSWORD_KEY))
@@ -75,7 +79,8 @@ public class RedisController extends StandaloneEventSinkDeclarer<RedisParameters
                                                              DataSinkParameterExtractor extractor) {
         String redisHost = extractor.singleValueParameter(REDIS_HOST_KEY, String.class);
         Integer redisPort = extractor.singleValueParameter(REDIS_PORT_KEY, Integer.class);
-        String primaryKey = extractor.singleValueParameter(EVENT_PRIMARY_KEY, String.class);
+        String primaryKey = extractor.mappingPropertyValue(EVENT_PRIMARY_KEY);
+        Boolean autoIncrement = Boolean.valueOf(extractor.selectedSingleValue(EVENT_KEY_AUTO_INCREMENT, String.class));
         Integer ttl = extractor.singleValueParameter(EVENT_TTL_KEY, Integer.class);
         // TODO: Use this after optional parameters implementation
         //        String redisPassword = extractor.secretValue(REDIS_PASSWORD_KEY);
@@ -88,8 +93,9 @@ public class RedisController extends StandaloneEventSinkDeclarer<RedisParameters
         String redisPassword = "";
         String redisClient = "";
 
-        RedisParameters params = new RedisParameters(graph, primaryKey, ttl, redisHost, redisPort, redisPassword,
-                redisClient, redisIndex, redisPoolMaxActive, redisPoolMaxIdle, redisPoolMaxWait, redisPoolTimeout);
+        RedisParameters params = new RedisParameters(graph, primaryKey, autoIncrement, ttl, redisHost,
+                redisPort, redisPassword, redisClient, redisIndex, redisPoolMaxActive, redisPoolMaxIdle,
+                redisPoolMaxWait, redisPoolTimeout);
 
         return new ConfiguredEventSink<>(params, Redis::new);
     }

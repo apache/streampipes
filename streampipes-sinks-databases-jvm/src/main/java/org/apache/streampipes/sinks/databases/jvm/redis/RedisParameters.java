@@ -24,6 +24,7 @@ import org.apache.streampipes.wrapper.params.binding.EventSinkBindingParams;
 public class RedisParameters extends EventSinkBindingParams {
 
     private String primaryKey;
+    private Boolean autoIncrement;
     private Integer ttl;
     private String redisHost;
     private Integer redisPort;
@@ -37,6 +38,7 @@ public class RedisParameters extends EventSinkBindingParams {
 
     public RedisParameters(DataSinkInvocation graph,
                            String primaryKey,
+                           Boolean autoIncrement,
                            Integer ttl,
                            String redisHost,
                            Integer redisPort,
@@ -49,6 +51,7 @@ public class RedisParameters extends EventSinkBindingParams {
                            Integer redisPoolTimeout) {
         super(graph);
         this.primaryKey = primaryKey;
+        this.autoIncrement = autoIncrement;
         this.ttl = ttl;
         this.redisHost = redisHost;
         this.redisPort = redisPort;
@@ -63,6 +66,10 @@ public class RedisParameters extends EventSinkBindingParams {
 
     public String getPrimaryKey() {
         return primaryKey;
+    }
+
+    public Boolean isAutoIncrement() {
+        return autoIncrement;
     }
 
     public Integer getTTL() {
