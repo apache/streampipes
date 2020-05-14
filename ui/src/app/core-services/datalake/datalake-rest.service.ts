@@ -147,4 +147,13 @@ export class DatalakeRestService {
       return this.http.post(this.dataLakeUrlV3 + '/data/image/' + imageRoute + '/coco', data);
     }
 
+    saveLabelsInDatabase(index, startDate, endDate, label) {
+        const request = new HttpRequest('POST', this.dataLakeUrlV3 + '/data/' + index + '/' + startDate + '/' +
+            endDate + '/labeling?label=' + label,  {}, {
+            reportProgress: true,
+            responseType: 'text'
+        });
+        return this.http.request(request);
+    }
+
 }
