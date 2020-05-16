@@ -1,0 +1,8 @@
+org.apache.streampipes.connect.adapters.image.stream.title=Image Upload (Stream)
+org.apache.streampipes.connect.adapters.image.stream.description=
+
+interval-key.title=Interval [ms]
+interval-key.description=Define waiting time between the images
+
+zip-file-key.title=Zipped Folder With Images
+zip-file-key.description=A zip file that contains the images to stream
