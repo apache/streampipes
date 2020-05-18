@@ -225,7 +225,12 @@ public class DataLakeManagementV3 {
   }
 
   public PageResult getEvents(String index, int itemsPerPage) throws IOException {
-    int page = getMaxPage(index, itemsPerPage) - 1;
+    int page = getMaxPage(index, itemsPerPage);
+
+    if (page > 0) {
+      page = page -1;
+    }
+
     return getEvents(index, itemsPerPage, page);
   }
 
