@@ -385,4 +385,5 @@ public class StreamPipes {
   public static final String CODE_INPUT_STATIC_PROPERTY = NS + "CodeInputStaticProperty";
   public static final String HAS_LANGUAGE = NS + "hasLanguage";
   public static final String HAS_CODE_INPUT = NS + "hasCodeInput";
+  public static final String HAS_CODE_TEMPLATE = NS + "hasCodeTemplate";
 }

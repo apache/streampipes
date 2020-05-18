@@ -15,7 +15,12 @@
   ~ limitations under the License.
   ~
   -->
-<div layout="row" flex="100">
+
+<div flex="100" layout="row" layout-align="start center">
+    <sp-button sp-button-blue sp-button-small-padding ng-click="ctrl.resetCode()">Reset template
+    </sp-button>&nbsp;&nbsp;
+</div>
+<div layout="row" layout-align="end center" flex="100">
 <div layout="column" layout-align="start center">
 <i class="material-icons">info</i>
 </div>
@@ -23,6 +28,6 @@
 </div>
 
 <code-editor ng-model="ctrl.staticProperty.properties.value"
-             ng-if="ctrl.showEditor"
+             ng-if="ctrl.showEditor" code-template="{{ctrl.staticProperty.properties.codeTemplate}}"
              input-streams="{{ctrl.selectedElement}}">
 </code-editor>

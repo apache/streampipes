@@ -149,7 +149,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
     CodeInputStaticProperty codeInputStaticProperty = new CodeInputStaticProperty(label.getInternalId(),
             label.getLabel(), label.getDescription());
     codeInputStaticProperty.setLanguage(codeLanguage.name());
-    codeInputStaticProperty.setValue(codeLanguage.getDefaultSkeleton());
+    codeInputStaticProperty.setCodeTemplate(codeLanguage.getDefaultSkeleton());
     this.staticProperties.add(codeInputStaticProperty);
 
     return me();

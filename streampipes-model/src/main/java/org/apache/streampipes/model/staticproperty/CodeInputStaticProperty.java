@@ -31,6 +31,9 @@ public class CodeInputStaticProperty extends StaticProperty {
   @RdfProperty(StreamPipes.HAS_LANGUAGE)
   private String language;
 
+  @RdfProperty(StreamPipes.HAS_CODE_TEMPLATE)
+  private String codeTemplate;
+
   @RdfProperty(StreamPipes.HAS_CODE_INPUT)
   private String value;
 
@@ -42,6 +45,7 @@ public class CodeInputStaticProperty extends StaticProperty {
     super(other);
     this.language = other.getLanguage();
     this.value = other.getValue();
+    this.codeTemplate = other.getCodeTemplate();
   }
 
   public CodeInputStaticProperty(String internalName, String label, String description) {
@@ -62,5 +66,13 @@ public class CodeInputStaticProperty extends StaticProperty {
 
   public void setValue(String value) {
     this.value = value;
+  }
+
+  public String getCodeTemplate() {
+    return codeTemplate;
+  }
+
+  public void setCodeTemplate(String codeTemplate) {
+    this.codeTemplate = codeTemplate;
   }
 }

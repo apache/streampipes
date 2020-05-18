@@ -25,7 +25,20 @@ export class CodeInputController {
 
     showEditor: boolean = false;
 
+    $onInit() {
+        if (this.staticProperty.properties.value == undefined ||
+            this.staticProperty.properties.value == "") {
+            this.resetCode();
+        }
+    }
+
     $postLink() {
         this.showEditor = true;
     }
+
+    resetCode() {
+        this.staticProperty.properties.value = this.staticProperty.properties.codeTemplate;
+    };
+
+
 }

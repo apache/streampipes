@@ -37,7 +37,9 @@ export class CodeEditorDirective {
     }
 
     link(scope, element, attrs, ngModelCtrl, transclude) {
+
         let selectedElement = scope.$eval(attrs.inputStreams);
+        let codeTemplate = attrs.codeTemplate;
         scope.editor = CodeMirror(element[0], {
             mode: "javascript",
             autoRefresh: true,
@@ -65,6 +67,7 @@ export class CodeEditorDirective {
             ngModelCtrl.$setViewValue(scope.editor.getValue());
             scope.$emit('editor-change')
         })
+
     }
 
     enableCodeHints(selectedElement: any) {
