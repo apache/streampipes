@@ -135,6 +135,12 @@ export class DatalakeRestService {
         };
     }
 
+    get_timeseries_labels() {
+        // mocked labels
+        const labels = {state: ['online', 'offline', 'active', 'inactive'], trend: ['increasing', 'decreasing'], daytime: ['day', 'night']};
+        return labels;
+    }
+
     getImageUrl(imageRoute) {
       return this.dataLakeUrlV3 + '/data/image/' + imageRoute + '/file';
     }

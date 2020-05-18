@@ -21,8 +21,12 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSliderModule } from '@angular/material/slider';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { OWL_DATE_TIME_FORMATS, OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
@@ -36,6 +40,7 @@ import { ConnectModule } from '../connect/connect.module';
 import { SemanticTypeUtilsService } from '../core-services/semantic-type/semantic-type-utils.service';
 import { SharedDatalakeRestService } from '../core-services/shared/shared-dashboard.service';
 import { CoreUiModule } from '../core-ui/core-ui.module';
+import { LabelingToolModule } from '../core-ui/linechart/labeling-tool/labeling-tool.module';
 import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 import { ElementIconText } from '../services/get-element-icon-text.service';
 import { DataExplorerDashboardGridComponent } from './components/grid/data-explorer-dashboard-grid.component';
@@ -97,7 +102,12 @@ export const MY_NATIVE_FORMATS = {
     CoreUiModule,
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
-    PlotlyViaWindowModule
+    PlotlyViaWindowModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatSliderModule,
+    MatChipsModule,
+    LabelingToolModule
   ],
   declarations: [
     DataExplorerV2Component,

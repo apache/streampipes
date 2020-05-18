@@ -231,7 +231,7 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
   public Response getImageCoco(@PathParam("route") String fileRoute) throws IOException {
     return ok(dataLakeManagement.getImageCoco(fileRoute));
   }
-  
+
   @POST
   @Produces(MediaType.TEXT_PLAIN)
   @Path("/data/{index}/{startdate}/{enddate}/labeling")
