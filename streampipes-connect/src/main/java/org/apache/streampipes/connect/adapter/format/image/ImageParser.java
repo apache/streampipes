@@ -33,6 +33,8 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.apache.streampipes.sdk.helpers.EpProperties.imageProperty;
+
 
 public class ImageParser extends Parser {
 
@@ -55,13 +57,7 @@ public class ImageParser extends Parser {
     @Override
     public EventSchema getEventSchema(List<byte[]> oneEvent) {
         EventSchema resultSchema = new EventSchema();
-        EventPropertyPrimitive p = new EventPropertyPrimitive();
-        p.setRuntimeName("image");
-        p.setLabel("Image");
-        p.setRuntimeType(XSD._string.toString());
-
-        p.setDomainProperties(Arrays.asList(URI.create("https://image.com")));
-        resultSchema.addEventProperty(p);
+        resultSchema.addEventProperty(imageProperty("image"));
         return resultSchema;
     }
 }

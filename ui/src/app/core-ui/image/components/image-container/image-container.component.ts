@@ -17,7 +17,6 @@
 
 import { AfterViewInit, Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import Konva from 'konva';
-import { Context } from 'konva/types/Context';
 import { ICoordinates } from '../../model/coordinates';
 
 @Component({
@@ -46,6 +45,8 @@ export class ImageContainerComponent implements OnInit, AfterViewInit {
   shortCut: EventEmitter<string> = new EventEmitter<string>();
   @Output()
   dbclick: EventEmitter<[Konva.Layer, ICoordinates, ICoordinates]> = new EventEmitter<[Konva.Layer, ICoordinates, ICoordinates]>();
+  @Output()
+  mouseDownRight: EventEmitter<[Konva.Layer, ICoordinates, ICoordinates]> = new EventEmitter<[Konva.Layer, ICoordinates, ICoordinates]>();
 
 
   private image;
@@ -62,6 +63,7 @@ export class ImageContainerComponent implements OnInit, AfterViewInit {
   private lastImagePointerPosition: ICoordinates;
 
   private isLeftMouseDown: boolean;
+  private isMiddleMouseDown: boolean;
   private isRightMouseDown: boolean;
 
   private isHoverComponent: boolean;
@@ -72,6 +74,7 @@ export class ImageContainerComponent implements OnInit, AfterViewInit {
     this.scale = 1;
     this.imageShift = {x: 0, y: 0};
     this.isLeftMouseDown = false;
+    this.isMiddleMouseDown = false;
     this.isRightMouseDown = false;
     this.isHoverComponent = false;
   }
@@ -106,8 +109,10 @@ export class ImageContainerComponent implements OnInit, AfterViewInit {
   }
 
   getShift() {
-    const position = this.imageLayer.getChildren().toArray()[0].getPosition();
-    return {x: position.x, y: position.y};
+    if (this.imageLayer !== undefined) {
+      const position = this.imageLayer.getChildren().toArray()[0].getPosition();
+      return {x: position.x, y: position.y};
+    }
   }
   /* mouse handler */
 
@@ -120,13 +125,14 @@ export class ImageContainerComponent implements OnInit, AfterViewInit {
       this.drawLayer.batchDraw();
     } else if (button === 2) {
       // middle click
-
-    } else if (button === 3) {
-      // right click
-      this.isRightMouseDown = true;
+      this.isMiddleMouseDown = true;
       this.mainCanvasStage.container().style.cursor = 'move';
       this.lastImagePointerPosition = this.getImagePointerPosition();
       this.lastImageTranslation = this.imageShift;
+    } else if (button === 3) {
+      // right click
+      this.isRightMouseDown = true;
+      this.mouseDownRight.emit([this.drawLayer, this.getShift(), this.getImagePointerPosition()]);
     }
   }
 
@@ -135,7 +141,7 @@ export class ImageContainerComponent implements OnInit, AfterViewInit {
       this.drawLayer.destroyChildren();
       this.mouseMoveLeft.emit([this.drawLayer, this.getShift(), this.getImagePointerPosition()]);
       this.drawLayer.batchDraw();
-    } else if (this.isRightMouseDown) {
+    } else if (this.isMiddleMouseDown) {
       const imagePointerPosition = this.getImagePointerPosition();
       this.imageShift.x = this.lastImageTranslation.x + (imagePointerPosition.x - this.lastImagePointerPosition.x);
       this.imageShift.y = this.lastImageTranslation.y + (imagePointerPosition.y - this.lastImagePointerPosition.y);
@@ -157,8 +163,8 @@ export class ImageContainerComponent implements OnInit, AfterViewInit {
       this.drawLayer.batchDraw();
       this.annotationLayer.batchDraw();
     }
-    if (this.isRightMouseDown) {
-      this.isRightMouseDown = false;
+    if (this.isMiddleMouseDown) {
+      this.isMiddleMouseDown = false;
       this.mainCanvasStage.container().style.cursor = 'default';
     }
   }
@@ -173,8 +179,12 @@ export class ImageContainerComponent implements OnInit, AfterViewInit {
   /* Draw */
 
   redrawAll() {
-    this.drawLayer.destroyChildren();
-    this.annotationLayer.destroyChildren();
+    if (this.drawLayer !== undefined) {
+      this.drawLayer.destroyChildren();
+    }
+    if (this.annotationLayer !== undefined) {
+      this.annotationLayer.destroyChildren();
+    }
     this.childRedraw.emit([this.annotationLayer, this.getShift()]);
     this.shiftViewContent();
   }

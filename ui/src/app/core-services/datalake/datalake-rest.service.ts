@@ -18,12 +18,12 @@
 
 import { HttpClient, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { DataLakeMeasure } from '../../core-model/datalake/DataLakeMeasure';
 import { DataResult } from '../../core-model/datalake/DataResult';
 import { GroupedDataResult } from '../../core-model/datalake/GroupedDataResult';
-import { DataLakeMeasure } from '../../core-model/datalake/DataLakeMeasure';
 import { PageResult } from '../../core-model/datalake/PageResult';
 import { AuthStatusService } from '../../services/auth-status.service';
-import { Observable } from "rxjs/Observable";
 
 @Injectable()
 export class DatalakeRestService {

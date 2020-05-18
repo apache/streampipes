@@ -17,27 +17,28 @@
  */
 
 
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges, OnInit, ViewChild } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import Konva from 'konva';
 import { Annotation } from '../../../core-model/coco/Annotation';
 import { CocoFormat } from '../../../core-model/coco/Coco.format';
 import { DatalakeRestService } from '../../../core-services/datalake/datalake-rest.service';
+import { TsonLdSerializerService } from '../../../platform-services/tsonld-serializer.service';
 import { ImageContainerComponent } from '../components/image-container/image-container.component';
 import { ICoordinates } from '../model/coordinates';
 import { LabelingMode } from '../model/labeling-mode';
 import { BrushLabelingService } from '../services/BrushLabeling.service';
 import { CocoFormatService } from '../services/CocoFormat.service';
+import { LabelingModeService } from '../services/LabelingMode.service';
 import { PolygonLabelingService } from '../services/PolygonLabeling.service';
 import { ReactLabelingService } from '../services/ReactLabeling.service';
-import { TsonLdSerializerService } from '../../../platform-services/tsonld-serializer.service';
 
 @Component({
   selector: 'sp-image-labeling',
   templateUrl: './image-labeling.component.html',
   styleUrls: ['./image-labeling.component.css']
 })
-export class ImageLabelingComponent implements OnInit, AfterViewInit {
+export class ImageLabelingComponent implements OnInit, AfterViewInit, OnChanges {
 
   // label
   public labels;
@@ -54,8 +55,8 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit {
 
   @ViewChild(ImageContainerComponent) imageView: ImageContainerComponent;
 
-  measureName = 'image'; // TODO: Remove hard coded Index, should be injected
-  eventSchema = undefined; // TODO: event schema should be also injected
+  @Input() measureName = 'image'; // TODO: Remove default value for production
+  @Input() eventSchema = undefined; // TODO: event schema should be always injected by production
   imageField = undefined;
   pageIndex = undefined;
   pageSum = undefined;
@@ -65,38 +66,57 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit {
   private setImagesIndexToLast = false;
 
 
-  public labelingMode: LabelingMode = LabelingMode.ReactLabeling;
 
   constructor(private restService: DatalakeRestService, private reactLabelingService: ReactLabelingService,
               private polygonLabelingService: PolygonLabelingService, private brushLabelingService: BrushLabelingService,
               private snackBar: MatSnackBar, private cocoFormatService: CocoFormatService,
-              private tsonLdSerializerService: TsonLdSerializerService) { }
+              private tsonLdSerializerService: TsonLdSerializerService,
+              public labelingMode: LabelingModeService) { }
 
   ngOnInit(): void {
     this.isHoverComponent = false;
     this.brushSize = 5;
+    this.imagesIndex = 0;
 
-    // TODO Get Labels
+
     this.labels = this.restService.getLabels();
 
-    this.restService.getAllInfos().map(data => {
-      return this.tsonLdSerializerService.fromJsonLdContainer(data, 'sp:DataLakeMeasure');
-    }).subscribe(
-      res => {
-        this.eventSchema = res.find(elem => elem.measureName === this.measureName).eventSchema;
-        const properties = this.eventSchema.eventProperties;
-        for (const prop of properties) {
-          // if (prop.domainProperties.find(type => type === 'https://image.com')) {
+    // TODO remove for production, if default dev values are not necessary
+    if (this.eventSchema === undefined) {
+      this.restService.getAllInfos().map(data => {
+        return this.tsonLdSerializerService.fromJsonLdContainer(data, 'sp:DataLakeMeasure');
+      }).subscribe(
+        res => {
+          this.eventSchema = res.find(elem => elem.measureName === this.measureName).eventSchema;
+          const properties = this.eventSchema.eventProperties;
+          for (const prop of properties) {
+            // if (prop.domainProperties.find(type => type === 'https://image.com')) {
             if (prop.domainProperty === 'https://image.com') {
-            this.imageField = prop;
-            break;
+              this.imageField = prop;
+              break;
+            }
           }
+          this.loadData();
         }
-        this.loadData();
-      }
-    );
+      );
+    }
+  }
 
-    this.imagesIndex = 0;
+  ngOnChanges() {
+    if (this.eventSchema !== null) {
+      const properties = this.eventSchema.eventProperties;
+      for (const prop of properties) {
+        if (prop.domainProperty === 'https://image.com') {
+          this.imageField = prop;
+          break;
+        }
+      }
+      this.pageIndex = undefined;
+      this.pageSum = undefined;
+      this.imagesIndex = 0;
+
+      this.loadData();
+    }
   }
 
   ngAfterViewInit(): void {
@@ -159,7 +179,7 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit {
   /* sp-image-view handler */
   handleMouseDownLeft(layer: Konva.Layer, shift: ICoordinates, position: ICoordinates) {
     if (this.labelingEnabled()) {
-      switch (this.labelingMode) {
+      switch (this.labelingMode.getMode()) {
         case LabelingMode.ReactLabeling: this.reactLabelingService.startLabeling(position);
           break;
         case LabelingMode.PolygonLabeling: this.polygonLabelingService.startLabeling(position);
@@ -170,7 +190,7 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit {
   }
 
   handleMouseMove(layer: Konva.Layer, shift: ICoordinates, position: ICoordinates) {
-    switch (this.labelingMode) {
+    switch (this.labelingMode.getMode()) {
       case LabelingMode.PolygonLabeling: {
         this.polygonLabelingService.executeLabeling(position);
         this.polygonLabelingService.tempDraw(layer, shift, this.selectedLabel.label);
@@ -180,7 +200,7 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit {
 
   handleMouseMoveLeft(layer: Konva.Layer, shift: ICoordinates, position: ICoordinates) {
     if (this.labelingEnabled()) {
-      switch (this.labelingMode) {
+      switch (this.labelingMode.getMode()) {
         case LabelingMode.ReactLabeling: {
           this.reactLabelingService.executeLabeling(position);
           this.reactLabelingService.tempDraw(layer, shift, this.selectedLabel.label);
@@ -191,12 +211,12 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit {
           this.brushLabelingService.tempDraw(layer, shift, this.selectedLabel.label);
         }
       }
-    }
+   }
   }
 
   handleMouseUpLeft(annotationLayer: Konva.Layer, drawLayer: Konva.Layer, shift: ICoordinates, position: ICoordinates) {
     if (this.labelingEnabled()) {
-      switch (this.labelingMode) {
+      switch (this.labelingMode.getMode()) {
         case LabelingMode.ReactLabeling: {
           const result = this.reactLabelingService.endLabeling(position);
           const coco = this.cocoFiles[this.imagesIndex];
@@ -220,10 +240,14 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit {
     }
   }
 
+  handleMouseDownRight(layer: Konva.Layer, shift: ICoordinates, position: ICoordinates) {
+    this.labelingMode.toggleNoneMode();
+  }
+
 
   handleImageViewDBClick(layer: Konva.Layer, shift: ICoordinates, position: ICoordinates) {
     if (this.labelingEnabled()) {
-      switch (this.labelingMode) {
+      switch (this.labelingMode.getMode()) {
         case LabelingMode.PolygonLabeling:
           const points = this.polygonLabelingService.endLabeling(position);
           const coco = this.cocoFiles[this.imagesIndex];
@@ -236,15 +260,17 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit {
 
   handleChildRedraw(layer: Konva.Layer, shift: ICoordinates) {
     const coco = this.cocoFiles[this.imagesIndex];
-    for (const annotation of coco.annotations) {
-      annotation.isHovered = false;
-      annotation.isSelected = false;
-      if (this.cocoFormatService.isBoxAnnonation(annotation)) {
-        this.reactLabelingService.draw(layer, shift, annotation, this.imageView);
-      } else if (this.cocoFormatService.isPolygonAnnonation(annotation) && !this.cocoFormatService.isBrushAnnonation(annotation)) {
-        this.polygonLabelingService.draw(layer, shift, annotation, this.imageView);
-      } else if (this.cocoFormatService.isBrushAnnonation(annotation)) {
-        this.brushLabelingService.draw(layer, shift, annotation, this.imageView);
+    if (coco  !== undefined) {
+      for (const annotation of coco.annotations) {
+        annotation.isHovered = false;
+        annotation.isSelected = false;
+        if (this.cocoFormatService.isBoxAnnonation(annotation)) {
+          this.reactLabelingService.draw(layer, shift, annotation, this.imageView);
+        } else if (this.cocoFormatService.isPolygonAnnonation(annotation) && !this.cocoFormatService.isBrushAnnonation(annotation)) {
+          this.polygonLabelingService.draw(layer, shift, annotation, this.imageView);
+        } else if (this.cocoFormatService.isBrushAnnonation(annotation)) {
+          this.brushLabelingService.draw(layer, shift, annotation, this.imageView);
+        }
       }
     }
   }
@@ -306,7 +332,7 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit {
 
   private labelingEnabled() {
     const coco = this.cocoFiles[this.imagesIndex];
-    const annotation = coco.annotations.find(anno => anno.isHovered);
+    const annotation = coco.annotations.find(anno => anno.isHovered && anno.isSelected);
     if (annotation !== undefined) {
       return false;
     } else {
@@ -317,11 +343,13 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit {
   save() {
     // TODO
     const coco = this.cocoFiles[this.imagesIndex];
-    const imageSrcSplitted = this.imagesSrcs[this.imagesIndex].split('/');
-    const imageRoute = imageSrcSplitted[imageSrcSplitted.length - 2];
-    this.restService.saveCocoFileForImage(imageRoute, JSON.stringify(coco)).subscribe(
-      res =>    this.openSnackBar('Saved')
-    );
+    if (coco !== undefined) {
+      const imageSrcSplitted = this.imagesSrcs[this.imagesIndex].split('/');
+      const imageRoute = imageSrcSplitted[imageSrcSplitted.length - 2];
+      this.restService.saveCocoFileForImage(imageRoute, JSON.stringify(coco)).subscribe(
+        res =>    this.openSnackBar('Saved')
+      );
+    }
   }
 
   private openSnackBar(message: string) {
@@ -332,28 +360,4 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit {
     });
   }
 
-  /* UI */
-  isReactMode() {
-    return this.labelingMode === LabelingMode.ReactLabeling;
-  }
-
-  setReactMode() {
-    this.labelingMode = LabelingMode.ReactLabeling;
-  }
-
-  isPolygonMode() {
-    return this.labelingMode === LabelingMode.PolygonLabeling;
-  }
-
-  setPolygonMode() {
-    this.labelingMode = LabelingMode.PolygonLabeling;
-  }
-
-  isBrushMode() {
-    return this.labelingMode === LabelingMode.BrushLabeling;
-  }
-
-  setBrushMode() {
-    this.labelingMode = LabelingMode.BrushLabeling;
-  }
 }

@@ -20,6 +20,7 @@ import Konva from 'konva';
 import { Annotation } from '../../../core-model/coco/Annotation';
 import { ICoordinates } from '../model/coordinates';
 import { ColorService } from './color.service';
+import { LabelingModeService } from './LabelingMode.service';
 
 @Injectable()
 export class ReactLabelingService {
@@ -29,8 +30,8 @@ export class ReactLabelingService {
 
   private isLabeling: boolean;
 
-  constructor(private colorService: ColorService) {
-
+  constructor(private colorService: ColorService,
+              private labelingMode: LabelingModeService) {
   }
 
 
@@ -94,35 +95,38 @@ export class ReactLabelingService {
       transformer.attachTo(rect);
     }
 
-    this.addDragHandler(rect, annotation, imageView);
+    this.addDragHandler(rect, annotation, imageView, this.labelingMode);
     this.addTransformHandler(rect, annotation, imageView);
-    this.addMouseHandler(rect, annotation, layer, transformer);
-    this.addClickHandler(rect, annotation, layer, transformer);
+    this.addMouseHandler(rect, annotation, layer, transformer, this.labelingMode);
+    this.addClickHandler(rect, annotation, layer, transformer, this.labelingMode);
 
     layer.add(rect);
     layer.add(transformer);
   }
 
-  private addClickHandler(rect, annotation, layer, transformer) {
+  private addClickHandler(rect, annotation, layer, transformer, labelingMode) {
     rect.on('click', function() {
-      annotation.isSelected = true;
-      transformer.attachTo(this);
-      layer.batchDraw();
-    });
+      if (labelingMode.isNoneMode()) {
+        annotation.isSelected = !annotation.isSelected;
 
-    rect.on('dblclick', function() {
-      annotation.isSelected = false;
-      transformer.detach();
-      layer.batchDraw();
-    });
+        if (annotation.isSelected) {
+          transformer.attachTo(this);
+        } else {
+          transformer.detach();
+        }
 
+        layer.batchDraw();
+      }
+    });
   }
 
-  private addMouseHandler(rect, annotation, layer, transformer) {
+  private addMouseHandler(rect, annotation, layer, transformer, labelingMode) {
     rect.on('mouseover', function() {
-      annotation.isHovered = true;
-      rect.opacity(0.8);
-      layer.batchDraw();
+      if (labelingMode.isNoneMode()) {
+        annotation.isHovered = true;
+        rect.opacity(0.8);
+        layer.batchDraw();
+      }
     });
 
     rect.on('mouseout', function() {
@@ -132,7 +136,9 @@ export class ReactLabelingService {
     });
 
     transformer.on('mouseover', function() {
-      annotation.isHovered = true;
+      if (labelingMode.isNoneMode()) {
+        annotation.isHovered = true;
+      }
     });
 
     transformer.on('mouseout', function() {
@@ -179,18 +185,25 @@ export class ReactLabelingService {
     });
   }
 
-  private addDragHandler(rect, annotation, imageView) {
+  private addDragHandler(rect, annotation, imageView, labelingMode) {
     let offset: ICoordinates;
 
     rect.on('dragstart', function() {
-      const position = imageView.getImagePointerPosition();
-      offset = {x: annotation.bbox[0] - position.x, y: annotation.bbox[1] - position.y};
+      if (!labelingMode.isNoneMode()) {
+        rect.stopDrag();
+      } else {
+        const position = imageView.getImagePointerPosition();
+        offset = {x: annotation.bbox[0] - position.x, y: annotation.bbox[1] - position.y};
+      }
     });
 
     rect.on('dragmove', function() {
-      const position = imageView.getImagePointerPosition();
-      annotation.bbox[0] = imageView.getImagePointerPosition().x + offset.x;
-      annotation.bbox[1] = imageView.getImagePointerPosition().y + offset.y;
+      if (!labelingMode.isNoneMode()) {
+        rect.stopDrag();
+      } else {
+        const position = imageView.getImagePointerPosition();
+        annotation.bbox[0] = imageView.getImagePointerPosition().x + offset.x;
+        annotation.bbox[1] = imageView.getImagePointerPosition().y + offset.y;     }
     });
 
   }

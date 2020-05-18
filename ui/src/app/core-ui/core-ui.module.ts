@@ -45,6 +45,7 @@ import { ColorService } from './image/services/color.service';
 import { PolygonLabelingService } from './image/services/PolygonLabeling.service';
 import { ReactLabelingService } from './image/services/ReactLabeling.service';
 import { CocoFormatService } from "./image/services/CocoFormat.service";
+import { LabelingModeService } from "./image/services/LabelingMode.service";
 // PlotlyViaCDNModule.plotlyjs = PlotlyJS;
 
 @NgModule({
@@ -80,6 +81,7 @@ import { CocoFormatService } from "./image/services/CocoFormat.service";
         PolygonLabelingService,
         BrushLabelingService,
         CocoFormatService,
+        LabelingModeService,
     ],
     entryComponents: [
     ],
