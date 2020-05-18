@@ -16,7 +16,7 @@
   ~
   -->
 
-## Image upload (Stream)
+## Image upload (Set)
 
 <p align="center"> 
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
@@ -25,8 +25,8 @@
 ***
 
 ## Description
-
 Upload a zip file of images and create an event per image
+
 
 ***
 

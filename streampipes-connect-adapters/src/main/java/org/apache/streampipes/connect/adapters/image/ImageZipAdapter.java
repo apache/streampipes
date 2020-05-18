@@ -71,7 +71,7 @@ public class ImageZipAdapter {
         running = true;
 
         task = new Thread(() -> {
-            while (running) {
+            while (running && zipFileImageIterator.hasNext()) {
 
                 try {
                     String image = zipFileImageIterator.next();

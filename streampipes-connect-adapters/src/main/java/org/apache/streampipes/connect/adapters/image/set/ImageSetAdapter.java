@@ -16,5 +16,81 @@ limitations under the License.
 
 package org.apache.streampipes.connect.adapters.image.set;
 
-public class ImageSetAdapter {
+import org.apache.streampipes.connect.adapter.Adapter;
+import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.connect.adapter.exception.ParseException;
+import org.apache.streampipes.connect.adapter.model.specific.SpecificDataSetAdapter;
+import org.apache.streampipes.connect.adapters.image.ImageZipAdapter;
+import org.apache.streampipes.connect.adapters.image.ImageZipUtils;
+import org.apache.streampipes.model.connect.adapter.SpecificAdapterSetDescription;
+import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
+import org.apache.streampipes.sdk.builder.adapter.SpecificDataSetAdapterBuilder;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.utils.Assets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static org.apache.streampipes.sdk.helpers.EpProperties.imageProperty;
+import static org.apache.streampipes.sdk.helpers.EpProperties.timestampProperty;
+
+public class ImageSetAdapter extends SpecificDataSetAdapter {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ImageSetAdapter.class);
+
+    public static final String ID = "org.apache.streampipes.connect.adapters.image.set";
+
+    private ImageZipAdapter imageZipAdapter;
+
+    public ImageSetAdapter() {
+
+    }
+
+    public ImageSetAdapter(SpecificAdapterSetDescription adapterDescription) {
+        super(adapterDescription);
+    }
+
+    @Override
+    public SpecificAdapterSetDescription declareModel() {
+        SpecificAdapterSetDescription description = SpecificDataSetAdapterBuilder.create(ID)
+                .withLocales(Locales.EN)
+                .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+                .requiredIntegerParameter(Labels.withId(ImageZipUtils.INTERVAL_KEY))
+                .requiredFile(Labels.withId(ImageZipUtils.ZIP_FILE_KEY))
+                .build();
+        description.setAppId(ID);
+
+        return description;
+    }
+
+    @Override
+    public void startAdapter() throws AdapterException {
+        imageZipAdapter = new ImageZipAdapter(adapterDescription);
+        imageZipAdapter.start(adapterPipeline, false);
+    }
+
+    @Override
+    public void stopAdapter() throws AdapterException {
+        imageZipAdapter.stop();
+    }
+
+    @Override
+    public GuessSchema getSchema(SpecificAdapterSetDescription adapterDescription) throws AdapterException, ParseException
+    {
+        return GuessSchemaBuilder.create()
+                .property(timestampProperty(ImageZipUtils.TIMESTAMP))
+                .property(imageProperty(ImageZipUtils.IMAGE))
+                .build();
+    }
+
+    @Override
+    public Adapter getInstance(SpecificAdapterSetDescription adapterDescription) {
+        return new ImageSetAdapter(adapterDescription);
+    }
+
+    @Override
+    public String getId() {
+        return ID;
+    }
 }
