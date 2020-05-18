@@ -71,6 +71,8 @@ import {GroupComponent} from "./components/group/group.component";
 import {SecretComponent} from "./components/secret/secret.component";
 import {FileUploadComponent} from "./components/fileupload/fileupload.component";
 import {AnyRemoteComponent} from "./components/any-remote/any-remote.component";
+import {CodeInputComponent} from "./components/code/code.component";
+import {CodeEditorDirective} from "./components/code/code-editor.directive";
 
 
 export default angular.module('sp.editor', [spServices, 'ngSanitize', 'angularTrix', 'ngAnimate', 'datatables', 'ng-showdown'])
@@ -109,7 +111,9 @@ export default angular.module('sp.editor', [spServices, 'ngSanitize', 'angularTr
     .component('alternative', AlternativeComponent)
     .component('group', GroupComponent)
     .component('fileStaticProperty', FileUploadComponent)
+    .component('codeInput', CodeInputComponent)
     .service('EditorDialogManager', EditorDialogManager)
     .service('PipelineElementRecommendationService', PipelineElementRecommendationService)
     .service('PipelineValidationService', PipelineValidationService)
+    .directive('codeEditor', () => new CodeEditorDirective())
     .name;

@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.model.util;
 
+import org.apache.streampipes.model.staticproperty.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.streampipes.model.ApplicationLink;
@@ -65,25 +66,6 @@ import org.apache.streampipes.model.schema.EventPropertyNested;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.QuantitativeValue;
 import org.apache.streampipes.model.schema.ValueSpecification;
-import org.apache.streampipes.model.staticproperty.AnyStaticProperty;
-import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
-import org.apache.streampipes.model.staticproperty.DomainStaticProperty;
-import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
-import org.apache.streampipes.model.staticproperty.MappingPropertyNary;
-import org.apache.streampipes.model.staticproperty.MappingPropertyUnary;
-import org.apache.streampipes.model.staticproperty.MatchingStaticProperty;
-import org.apache.streampipes.model.staticproperty.OneOfStaticProperty;
-import org.apache.streampipes.model.staticproperty.Option;
-import org.apache.streampipes.model.staticproperty.RemoteOneOfStaticProperty;
-import org.apache.streampipes.model.staticproperty.RuntimeResolvableAnyStaticProperty;
-import org.apache.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty;
-import org.apache.streampipes.model.staticproperty.SecretStaticProperty;
-import org.apache.streampipes.model.staticproperty.StaticProperty;
-import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
-import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
-import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
-import org.apache.streampipes.model.staticproperty.SupportedProperty;
-import org.apache.streampipes.model.staticproperty.FileStaticProperty;
 import org.apache.streampipes.model.template.BoundPipelineElement;
 
 import java.util.ArrayList;
@@ -143,6 +125,8 @@ public class Cloner {
       return new SecretStaticProperty((SecretStaticProperty) o);
     } else if (o instanceof FileStaticProperty) {
       return new FileStaticProperty((FileStaticProperty) o);
+    } else if (o instanceof CodeInputStaticProperty) {
+      return new CodeInputStaticProperty((CodeInputStaticProperty) o);
     } else {
       return new StaticPropertyAlternative((StaticPropertyAlternative) o);
     }

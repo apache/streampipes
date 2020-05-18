@@ -18,20 +18,9 @@
 package org.apache.streampipes.sdk.builder;
 
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
-import org.apache.streampipes.model.staticproperty.AnyStaticProperty;
-import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
-import org.apache.streampipes.model.staticproperty.DomainStaticProperty;
-import org.apache.streampipes.model.staticproperty.FileStaticProperty;
-import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
-import org.apache.streampipes.model.staticproperty.OneOfStaticProperty;
-import org.apache.streampipes.model.staticproperty.Option;
-import org.apache.streampipes.model.staticproperty.PropertyValueSpecification;
-import org.apache.streampipes.model.staticproperty.SecretStaticProperty;
-import org.apache.streampipes.model.staticproperty.StaticProperty;
-import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
-import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
-import org.apache.streampipes.model.staticproperty.SupportedProperty;
+import org.apache.streampipes.model.staticproperty.*;
 import org.apache.streampipes.sdk.StaticProperties;
+import org.apache.streampipes.sdk.helpers.CodeLanguage;
 import org.apache.streampipes.sdk.helpers.Label;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.vocabulary.XSD;
@@ -144,6 +133,24 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
     SecretStaticProperty secretStaticProperty = new SecretStaticProperty(label.getInternalId(),
             label.getLabel(), label.getDescription());
     this.staticProperties.add(secretStaticProperty);
+
+    return me();
+  }
+
+  /**
+   * Assigns a new code block parameter which is required
+   * by the processing element.
+   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
+   *              user-friendly manner.
+   * @param codeLanguage The {@link org.apache.streampipes.sdk.helpers.CodeLanguage} code language the code block is built for.
+   * @return this
+   */
+  public BU requiredCodeblock(Label label, CodeLanguage codeLanguage) {
+    CodeInputStaticProperty codeInputStaticProperty = new CodeInputStaticProperty(label.getInternalId(),
+            label.getLabel(), label.getDescription());
+    codeInputStaticProperty.setLanguage(codeLanguage.name());
+    codeInputStaticProperty.setValue(codeLanguage.getDefaultSkeleton());
+    this.staticProperties.add(codeInputStaticProperty);
 
     return me();
   }

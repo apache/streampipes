@@ -16,25 +16,16 @@
  *
  */
 
-package org.apache.streampipes.model.staticproperty;
+export class CodeInputController {
 
-public enum StaticPropertyType {
-    AnyStaticProperty,
-    CollectionStaticProperty,
-    ColorPickerStaticProperty,
-    DomainStaticProperty,
-    FreeTextStaticProperty,
-    FileStaticProperty,
-    MappingPropertyUnary,
-    MappingPropertyNary,
-    MatchingStaticProperty,
-    OneOfStaticProperty,
-    RuntimeResolvableAnyStaticProperty,
-    RuntimeResolvableOneOfStaticProperty,
-    StaticPropertyGroup,
-    StaticPropertyAlternatives,
-    StaticPropertyAlternative,
-    SecretStaticProperty,
-    CodeInputStaticProperty;
+    staticProperty: any;
+    displayRecommended: boolean;
+    customizeForm: any;
+    selectedElement: any;
 
+    showEditor: boolean = false;
+
+    $postLink() {
+        this.showEditor = true;
+    }
 }
