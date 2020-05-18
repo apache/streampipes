@@ -37,7 +37,7 @@ export class LineChartComponent extends BaseVisualisationComponent implements On
     @Output() zoomEvent =  new EventEmitter<[number, number]>();
 
     constructor(public dialog: MatDialog, public plotlyService: PlotlyService, public colorService: ColorService,
-                public renderer: Renderer2) {
+                public renderer: Renderer2, private restService: DatalakeRestService) {
         super();
     }
 
@@ -55,6 +55,9 @@ export class LineChartComponent extends BaseVisualisationComponent implements On
 
     // indicator variable if labeling mode is activated
     private labelingModeOn = false;
+
+    // indicator variable if labels has been changed
+    private changedLabels = false;
 
     updatemenus = [
         {
@@ -141,27 +144,33 @@ export class LineChartComponent extends BaseVisualisationComponent implements On
     displayData(transformedData: DataResult, yKeys: string[]) {
         if (this.yKeys.length > 0) {
             const tmp = [];
+            tmp['measureName'] = transformedData.measureName;
             this.yKeys.forEach(key => {
                 transformedData.rows.forEach(serie => {
                     if (serie.name === key) {
                         tmp.push(serie);
-
+                       
                         // adding customdata property in order to store labels in graph
-                        serie['customdata'] = Array(serie['x'].length).fill('');
+                        if (transformedData.labels !== undefined && transformedData.labels.length !== 0) {
+                            serie['customdata'] = transformedData.labels;
+                        }
+                        else {
+                            serie['customdata'] = Array(serie['x'].length).fill('');
+                        }
                         // adding custom hovertemplate in order to display labels in graph
                         serie['hovertemplate'] = 'y: %{y}<br>' + 'x: %{x}<br>' + 'label: %{customdata}';
                     }
                 });
             });
             this.dataToDisplay = tmp;
+            this.dataToDisplay['labels'] = transformedData.labels;
 
-            /**
-             * TODO: fetching stored labels, filling this.labels and drawing related shapes
-             */
+            if (this.dataToDisplay['labels'] !== undefined && this.dataToDisplay['labels'].length > 0) {
+                this.addInitialColouredShapesToGraph();
+            }
 
         } else {
             this.dataToDisplay = undefined;
-
         }
     }
 
@@ -189,20 +198,24 @@ export class LineChartComponent extends BaseVisualisationComponent implements On
         }
     }
 
-    transformData(data: DataResult, xKey: String): DataResult {
+    transformData(data: DataResult, xKey: string): DataResult {
         const tmp: any[] = [];
 
         const dataKeys = [];
+        const label_column = [];
 
         data.rows.forEach(row => {
             data.headers.forEach((headerName, index) => {
                 if (!dataKeys.includes(index) && typeof row[index] == 'number') {
                     dataKeys.push(index);
+                } else if (!label_column.includes(index) && typeof  row[index] == 'string' && data.headers[index] == "sp_internal_label") {
+                    label_column.push(index);
                 }
             });
         });
 
         const indexXkey = data.headers.findIndex(headerName => headerName === this.xKey);
+        const labels = [];
 
         dataKeys.forEach(key => {
             const headerName = data.headers[key];
@@ -218,9 +231,12 @@ export class LineChartComponent extends BaseVisualisationComponent implements On
                    } else {
                        tmp[index].y.push(null);
                    }
+               } else if (label_column.length > 0 && label_column.includes(index)) {
+                   labels.push(row[index]);
                }
            });
         });
+        data.labels = labels;
         data.rows = tmp;
 
         return data;
@@ -332,43 +348,12 @@ export class LineChartComponent extends BaseVisualisationComponent implements On
                             for (const point of series['selectedpoints']) {
                                 series['customdata'][point] = result;
                             }
-
-                            /**
-                             * TODO: saving labels persistently in database
-                             */
                         }
+                        this.dataToDisplay['labels'] = this.dataToDisplay[0]['customdata'];
+                        this.setChangedLabels(true);
 
                         // adding coloured shape (based on selected label) to graph (equals selected time interval)
-                        const color = this.colorService.getColor(result);
-                        const shape = {
-                            // shape: rectangle
-                            type: 'rect',
-
-                            // x-reference is assigned to the x-values
-                            xref: 'x',
-
-                            // y-reference is assigned to the plot paper [0,1]
-                            yref: 'paper',
-                            y0: 0,
-                            y1: 1,
-
-                            // start x: left side of selected time interval
-                            x0: this.selectedStartX,
-                            // end x: right side of selected time interval
-                            x1: this.selectedEndX,
-
-                            // adding color
-                            fillcolor: color,
-
-                            // opacity of 20%
-                            opacity: 0.2,
-
-                            line: {
-                                width: 0
-                            }
-                        };
-
-                        this.graph.layout.shapes.push(shape);
+                        this.addShapeToGraph(this.selectedStartX, this.selectedEndX, this.colorService.getColor(result));
 
                         // remain in selection dragmode if labeling mode is still activated
                         if (this.labelingModeOn) {
@@ -458,5 +443,106 @@ export class LineChartComponent extends BaseVisualisationComponent implements On
 
         // changing dragmode to 'zoom'
         this.graph.layout.dragmode = 'zoom';
+
+        // saving labels persistently
+        if (this.getChangedLabels()) {
+            this.saveLabelsInDatabase();
+        }
+    }
+
+    private saveLabelsInDatabase() {
+        let currentLabel = undefined;
+        let indices = [];
+        for (const label in this.dataToDisplay['labels']) {
+            if (currentLabel !== this.dataToDisplay['labels'][label] && indices.length > 0) {
+                const startdate = new Date(this.dataToDisplay[0]['x'][indices[0]]).getTime() - 1;
+                const enddate = new Date(this.dataToDisplay[0]['x'][indices[indices.length - 1]]).getTime() + 1;
+                this.restService.saveLabelsInDatabase(this.dataToDisplay['measureName'], startdate, enddate, currentLabel).subscribe(
+                res => {
+                 // console.log('Successfully wrote label ' + currentLabel + ' into database.');
+                }
+                );
+                currentLabel = undefined;
+                indices = [];
+                indices.push(label);
+            } else {
+                indices.push(label);
+            }
+
+            currentLabel = this.dataToDisplay['labels'][label];
+        }
+        const last_startdate = new Date(this.dataToDisplay[0]['x'][indices[0]]).getTime() - 1;
+        const last_enddate = new Date(this.dataToDisplay[0]['x'][indices[indices.length - 1]]).getTime() + 1;
+        this.restService.saveLabelsInDatabase(this.dataToDisplay['measureName'], last_startdate, last_enddate, currentLabel).subscribe(
+            res => {
+                 // console.log('Successfully wrote label ' + currentLabel + ' in last iterastion into database.');
+            });
+        this.setChangedLabels(false);
+
+    }
+
+    private addInitialColouredShapesToGraph() {
+        let selectedLabel = undefined;
+        let indices = [];
+        for (const label in this.dataToDisplay['labels']) {
+            if (selectedLabel !== this.dataToDisplay['labels'][label] && indices.length > 0) {
+                const startdate = new Date(this.dataToDisplay[0]['x'][indices[0]]).getTime();
+                const enddate = new Date(this.dataToDisplay[0]['x'][indices[indices.length - 1]]).getTime();
+                const color = this.colorService.getColor(selectedLabel);
+
+                this.addShapeToGraph(startdate, enddate, color);
+
+                selectedLabel = undefined;
+                indices = [];
+                indices.push(label);
+            } else {
+                indices.push(label);
+            }
+            selectedLabel = this.dataToDisplay['labels'][label];
+        }
+        const last_start = new Date(this.dataToDisplay[0]['x'][indices[0]]).getTime();
+        const last_end = new Date(this.dataToDisplay[0]['x'][indices[indices.length - 1]]).getTime();
+        const last_color = this.colorService.getColor(selectedLabel);
+
+        this.addShapeToGraph(last_start, last_end, last_color);
+    }
+
+    private addShapeToGraph(start, end, color) {
+        const shape = {
+        // shape: rectangle
+        type: 'rect',
+
+        // x-reference is assigned to the x-values
+        xref: 'x',
+
+        // y-reference is assigned to the plot paper [0,1]
+        yref: 'paper',
+        y0: 0,
+        y1: 1,
+
+        // start x: left side of selected time interval
+        x0: start,
+        // end x: right side of selected time interval
+        x1: end,
+
+        // adding color
+        fillcolor: color,
+
+        // opacity of 20%
+        opacity: 0.2,
+
+        line: {
+            width: 0
+        }
+        };
+        this.graph.layout.shapes.push(shape);
+    }
+
+    public setChangedLabels(state: boolean) {
+        this.changedLabels = state;
+    }
+
+    public getChangedLabels() {
+        return this.changedLabels;
     }
 }

@@ -28,10 +28,15 @@ import org.apache.streampipes.rest.impl.datalake.model.PageResult;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
 import org.apache.streampipes.rest.shared.annotation.JsonLdSerialized;
 import org.apache.streampipes.rest.shared.util.SpMediaType;
+import org.influxdb.InfluxDB;
+import org.influxdb.dto.Point;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -154,6 +159,7 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
     String aggregationValue = info.getQueryParameters().getFirst("aggregationValue");
 
     DataResult result;
+
     try {
       if (aggregationUnit != null && aggregationValue != null) {
           result = dataLakeManagement.getEvents(index, startdate, enddate, aggregationUnit,
@@ -213,6 +219,12 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
     return ok(dataLakeManagement.getImage(fileRoute));
   }
 
+  @POST
+  @Path("/data/image/{route}/coco")
+  public void saveImageCoco(@PathParam("route") String fileRoute, String data) throws IOException {
+    dataLakeManagement.saveImageCoco(fileRoute, data);
+  }
+
   @GET
   @Path("/data/image/{route}/coco")
   @Produces("application/json")
@@ -221,8 +233,18 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
   }
 
   @POST
-  @Path("/data/image/{route}/coco")
-  public void saveImageCoco(@PathParam("route") String fileRoute, String data) throws IOException {
-    dataLakeManagement.saveImageCoco(fileRoute, data);
+  @Produces(MediaType.TEXT_PLAIN)
+  @Path("/data/{index}/{startdate}/{enddate}/labeling")
+    public Response labelData(@Context UriInfo info,
+                              @PathParam("index") String index,
+                              @PathParam("startdate") long startdate,
+                              @PathParam("enddate") long enddate) {
+
+        String label = info.getQueryParameters().getFirst("label");
+        this.dataLakeManagement.updateLabels(index, startdate, enddate, label);
+
+        return Response.ok("Successfully updated database.", MediaType.TEXT_PLAIN).build();
   }
+
+
 }

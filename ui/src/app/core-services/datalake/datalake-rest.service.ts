@@ -135,6 +135,12 @@ export class DatalakeRestService {
         };
     }
 
+    get_timeseries_labels() {
+        // mocked labels
+        const labels = {state: ['online', 'offline', 'active', 'inactive'], trend: ['increasing', 'decreasing'], daytime: ['day', 'night']};
+        return labels;
+    }
+
     getImageUrl(imageRoute) {
       return this.dataLakeUrlV3 + '/data/image/' + imageRoute + '/file';
     }
@@ -146,4 +152,14 @@ export class DatalakeRestService {
     saveCocoFileForImage(imageRoute, data) {
       return this.http.post(this.dataLakeUrlV3 + '/data/image/' + imageRoute + '/coco', data);
     }
+
+    saveLabelsInDatabase(index, startDate, endDate, label) {
+        const request = new HttpRequest('POST', this.dataLakeUrlV3 + '/data/' + index + '/' + startDate + '/' +
+            endDate + '/labeling?label=' + label,  {}, {
+            reportProgress: true,
+            responseType: 'text'
+        });
+        return this.http.request(request);
+    }
+
 }

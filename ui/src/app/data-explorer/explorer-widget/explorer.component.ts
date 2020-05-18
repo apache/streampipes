@@ -225,6 +225,7 @@ export class ExplorerComponent implements OnInit {
 
     processReceivedData(res) {
         if (res.total > 0) {
+            res.measureName = this.selectedInfoResult.measureName;
             this.data = res as DataResult;
             this.noDateFoundinTimeRange = false;
             if (this.yAxesKeys.length === 0) {
@@ -258,7 +259,7 @@ export class ExplorerComponent implements OnInit {
         this.selectedInfoResult = this._filter(index)[0];
         this.selectedInfoResult.eventSchema.eventProperties.forEach(property => {
 
-            // Check if property is Primitive (only primitives has a runtimeType
+            //Check if property is Primitive (only primitives has a runtimeType)
             if (property['runtimeType'] !== undefined) {
                 if (property['propertyScope'] !== undefined && property['propertyScope'] === 'DIMENSION_PROPERTY') {
                     this.dimensionProperties.push(property['runtimeName']);
@@ -266,6 +267,11 @@ export class ExplorerComponent implements OnInit {
                     (property['domainProperties'] === undefined || (property.domainProperty !== 'http://schema.org/DateTime' &&
                         property['domainProperties'][0] != 'http://schema.org/DateTime'))) {
 
+                    this.dataKeys.push(property['runtimeName']);
+                }
+                else if (this.isLabelProperty(property) &&
+                    (property['domainProperties'] === undefined || (property.domainProperty !== 'http://schema.org/DateTime' &&
+                        property['domainProperties'][0] != 'http://schema.org/DateTime'))) {
                     this.dataKeys.push(property['runtimeName']);
                 }
             } else {
@@ -392,6 +398,16 @@ export class ExplorerComponent implements OnInit {
             prop.runtimeType === 'http://www.w3.org/2001/XMLSchema#integer' ||
             prop.runtimeType === 'http://www.w3.org/2001/XMLSchema#double' ||
             prop.runtimeType === 'http://www.w3.org/2001/XMLSchema#decimal') {
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    isLabelProperty(prop) {
+        if (prop.runtimeType === 'http://www.w3.org/2001/XMLSchema#string' &&
+           prop.runtimeName === 'sp_internal_label') {
 
             return true;
         } else {

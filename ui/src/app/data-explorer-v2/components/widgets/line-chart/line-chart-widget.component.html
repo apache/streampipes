@@ -37,11 +37,13 @@
 
             <!-- Chart -->
             <plotly-plot fxFlex
-                         *ngIf="showData"
+                         *ngIf="data !== undefined"
                          flex
                          [data]="data"
                          [layout]="graph.layout"
-                         (relayout)="zoomIn($event)">
+                         [config]="graph.config"
+                         (relayout)="handleDefaultModeBarButtonClicks($event)"
+                         (selecting)="selectDataPoints($event)">
             </plotly-plot>
 
         </div>
