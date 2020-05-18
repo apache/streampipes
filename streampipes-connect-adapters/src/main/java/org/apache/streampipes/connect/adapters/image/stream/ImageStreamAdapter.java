@@ -16,31 +16,21 @@ limitations under the License.
 
 package org.apache.streampipes.connect.adapters.image.stream;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.streampipes.connect.adapter.Adapter;
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
 import org.apache.streampipes.connect.adapter.exception.ParseException;
 import org.apache.streampipes.connect.adapter.model.specific.SpecificDataStreamAdapter;
-import org.apache.streampipes.connect.adapters.iss.IssAdapter;
-import org.apache.streampipes.model.AdapterType;
+import org.apache.streampipes.connect.adapters.image.ImageZipAdapter;
+import org.apache.streampipes.connect.adapters.image.ImageZipUtils;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.model.staticproperty.FileStaticProperty;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 import org.apache.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
-import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.vocabulary.Geo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 import static org.apache.streampipes.sdk.helpers.EpProperties.*;
 
@@ -50,11 +40,7 @@ public class ImageStreamAdapter extends SpecificDataStreamAdapter {
 
     public static final String ID = "org.apache.streampipes.connect.adapters.image.stream";
 
-    private static final String INTERVAL_KEY = "interval-key";
-    private static final String ZIP_FILE_KEY = "zip-file-key";
-
-    private static final String Timestamp = "timestamp";
-    private static final String Image = "image";
+    private ImageZipAdapter imageZipAdapter;
 
     public ImageStreamAdapter() {
 
@@ -69,8 +55,8 @@ public class ImageStreamAdapter extends SpecificDataStreamAdapter {
         SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(ID)
                 .withLocales(Locales.EN)
                 .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-                .requiredIntegerParameter(Labels.withId(INTERVAL_KEY))
-                .requiredFile(Labels.withId(ZIP_FILE_KEY))
+                .requiredIntegerParameter(Labels.withId(ImageZipUtils.INTERVAL_KEY))
+                .requiredFile(Labels.withId(ImageZipUtils.ZIP_FILE_KEY))
                 .build();
         description.setAppId(ID);
 
@@ -79,26 +65,20 @@ public class ImageStreamAdapter extends SpecificDataStreamAdapter {
 
     @Override
     public void startAdapter() throws AdapterException {
-        StaticPropertyExtractor extractor =
-                StaticPropertyExtractor.from(adapterDescription.getConfig(), new ArrayList<>());
-        FileStaticProperty fileStaticProperty = (FileStaticProperty) extractor.getStaticPropertyByName(ZIP_FILE_KEY);
-
-        String fileUri = fileStaticProperty.getLocationPath();
-
+        imageZipAdapter = new ImageZipAdapter(adapterDescription);
+        imageZipAdapter.start(adapterPipeline, true);
     }
-
-
 
     @Override
     public void stopAdapter() throws AdapterException {
-
+        imageZipAdapter.stop();
     }
 
     @Override
     public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription) throws AdapterException, ParseException {
         return GuessSchemaBuilder.create()
-                .property(timestampProperty(Timestamp))
-                .property(imageProperty("image"))
+                .property(timestampProperty(ImageZipUtils.TIMESTAMP))
+                .property(imageProperty(ImageZipUtils.IMAGE))
                 .build();
     }
 

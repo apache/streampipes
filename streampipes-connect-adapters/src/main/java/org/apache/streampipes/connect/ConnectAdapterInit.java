@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.connect;
 
+import org.apache.streampipes.connect.adapters.image.stream.ImageStreamAdapter;
 import org.apache.streampipes.connect.adapters.iss.IssAdapter;
 import org.apache.streampipes.connect.adapters.netio.NetioMQTTAdapter;
 import org.apache.streampipes.connect.adapters.netio.NetioRestAdapter;
@@ -86,6 +87,7 @@ public class ConnectAdapterInit extends AdapterWorkerContainer {
             .add(new NetioRestAdapter())
             .add(new NetioMQTTAdapter())
             .add(new Plc4xS7Adapter())
+            .add(new ImageStreamAdapter())
             .add(new IssAdapter());
 
     String workerUrl = ConnectWorkerConfig.INSTANCE.getConnectContainerWorkerUrl();

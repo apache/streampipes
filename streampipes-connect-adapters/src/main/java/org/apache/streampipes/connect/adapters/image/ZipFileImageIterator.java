@@ -32,8 +32,12 @@ public class ZipFileImageIterator {
     private List<ZipEntry> allImages;
     private int current;
 
-    public ZipFileImageIterator(String zipFileRoute) throws IOException {
+    /* Defines whether the iterator starts from the beginning or not */
+    private boolean infinite;
+
+    public ZipFileImageIterator(String zipFileRoute, boolean infinite) throws IOException {
         this.zipFile = new ZipFile(zipFileRoute);
+        this.infinite = infinite;
 
         Enumeration<? extends ZipEntry> entries = zipFile.entries();
 
@@ -45,32 +49,30 @@ public class ZipFileImageIterator {
                 allImages.add(entry);
             }
         }
-        current = 0;
+        this.current = 0;
 
     }
 
     public boolean hasNext() {
-        return current < this.allImages.size();
+        return infinite || current < this.allImages.size();
     }
 
     public String next() throws IOException {
+
+        // Reset the current file counter when infinite is true and iterator is at the end
+        if (infinite) {
+            if (current >= this.allImages.size()) {
+                this.current = 0;
+            }
+        }
+
         ZipEntry entry = allImages.get(current);
         InputStream stream = zipFile.getInputStream(entry);
         byte[] bytes = IOUtils.toByteArray(stream);
 
         current++;
         String resultImage = Base64.getEncoder().encodeToString(bytes);
-        return entry.getName();
-    }
-
-    public static void main(String... args) throws IOException {
-        String route = "";
-        ZipFileImageIterator zipFileImageIterator = new ZipFileImageIterator(route);
-
-        while (zipFileImageIterator.hasNext()) {
-            System.out.println(zipFileImageIterator.next());
-        }
-
+        return resultImage;
     }
 
     private static boolean isImage(String name) {
