@@ -23,5 +23,10 @@ services:
 #      - "8098:8090"
     extra_hosts:
       - host.docker.internal:${HOST_DOCKER_INTERNAL}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:

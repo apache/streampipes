@@ -19,6 +19,11 @@ services:
     image: eclipse-mosquitto:1.5.4
     ports:
       - "1884:1883"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 

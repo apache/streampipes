@@ -25,6 +25,11 @@ services:
       - "65432:5432"
     volumes:
       - pgrouting_data:/var/lib/postgresql/data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 

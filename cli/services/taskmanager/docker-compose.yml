@@ -27,6 +27,11 @@ services:
       - TASK_MANAGER_NUMBER_OF_TASK_SLOTS=20
     extra_hosts:
       - host.docker.internal:${HOST_DOCKER_INTERNAL}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 

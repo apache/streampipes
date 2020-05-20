@@ -39,6 +39,11 @@ services:
     ports:
       - "8500:8500"
       - "8600:8600"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
         ipv4_address: 172.31.0.9

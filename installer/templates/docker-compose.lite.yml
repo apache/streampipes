@@ -26,6 +26,11 @@ services:
 #      - "61614:61614"
 #      - "8161:8161"
 #      - "1883:1883"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 
@@ -48,6 +53,11 @@ services:
       - -ui
     volumes:
       - consul:/consul/data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
 #    ports:
 #      - "8500:8500"
 #      - "8600:8600"
@@ -61,6 +71,11 @@ services:
 #      - "5984:5984"
     volumes:
       - couchdb:/opt/couchdb/data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 
@@ -85,6 +100,11 @@ services:
     volumes:
       - kafka:/kafka
       - /var/run/docker.sock:/var/run/docker.sock
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 
@@ -95,6 +115,11 @@ services:
     volumes:
       - zk-conf:/opt/zookeeper-3.4.13/conf
       - zk-data:/opt/zookeeper-3.4.13/data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 
@@ -112,6 +137,11 @@ services:
       # Data persistency
       # sudo mkdir -p /srv/docker/influxdb/data
       - influx:/var/lib/influxdb
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 
@@ -125,6 +155,11 @@ services:
 #      - "8030:8030"
     volumes:
       - backend:/root/.streampipes
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 
@@ -141,6 +176,11 @@ services:
       - SP_CONNECT_CONTAINER_WORKER=connect-worker
     volumes:
       - connect:/data/
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 
@@ -156,6 +196,11 @@ services:
       - SP_CONNECT_CONTAINER_WORKER=connect-worker-main
     volumes:
       - connect:/data/
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 
@@ -169,6 +214,11 @@ services:
       - consul
       - connect-master
       - backend
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 
@@ -178,6 +228,11 @@ services:
     image: "${SP_DOCKER_REGISTRY}/pipeline-elements-all-jvm:${SP_VERSION}"
     depends_on:
       - "consul"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 
@@ -186,6 +241,11 @@ services:
     depends_on:
       - "consul"
       - "kafka"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 

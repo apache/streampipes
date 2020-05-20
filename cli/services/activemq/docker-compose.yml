@@ -22,6 +22,11 @@ services:
       - "61614:61614"
       - "8161:8161"
       - "1883:1883"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 
