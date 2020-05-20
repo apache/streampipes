@@ -22,6 +22,7 @@ import {WidgetConfig} from "../components/widgets/base/base-config";
 import {LineConfig} from "../components/widgets/line/line-config";
 import {TableConfig} from "../components/widgets/table/table-config";
 import {GaugeConfig} from "../components/widgets/gauge/gauge-config";
+import {RendererConfig} from "../components/widgets/renderer/renderer-config";
 import {ImageConfig} from "../components/widgets/image/image-config";
 import {AreaConfig} from "../components/widgets/area/area-config";
 import {MapConfig} from "../components/widgets/map/map-config";
@@ -44,7 +45,8 @@ export class WidgetRegistry {
         new MapConfig(),
         new RawConfig(),
         new HtmlConfig(),
-        new TrafficLightConfig()
+        new TrafficLightConfig(),
+        new RendererConfig()
     ];
 
     static getAvailableWidgetTemplates(): Array<DashboardWidgetSettings> {
