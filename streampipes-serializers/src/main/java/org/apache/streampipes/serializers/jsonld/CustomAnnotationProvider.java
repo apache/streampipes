@@ -191,6 +191,7 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             EventRateTransformationRuleDescription.class,
             SecretStaticProperty.class,
             DashboardWidgetModel.class,
+            UserDefinedOutputStrategy.class,
             VisualizablePipeline.class,
             StreamPipesJsonLdContainer.class
 

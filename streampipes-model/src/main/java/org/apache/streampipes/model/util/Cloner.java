@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.model.util;
 
+import org.apache.streampipes.model.output.*;
 import org.apache.streampipes.model.staticproperty.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,16 +43,6 @@ import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.model.grounding.WildcardTopicDefinition;
 import org.apache.streampipes.model.grounding.WildcardTopicMapping;
-import org.apache.streampipes.model.output.AppendOutputStrategy;
-import org.apache.streampipes.model.output.CustomOutputStrategy;
-import org.apache.streampipes.model.output.CustomTransformOutputStrategy;
-import org.apache.streampipes.model.output.FixedOutputStrategy;
-import org.apache.streampipes.model.output.KeepOutputStrategy;
-import org.apache.streampipes.model.output.ListOutputStrategy;
-import org.apache.streampipes.model.output.OutputStrategy;
-import org.apache.streampipes.model.output.PropertyRenameRule;
-import org.apache.streampipes.model.output.TransformOperation;
-import org.apache.streampipes.model.output.TransformOutputStrategy;
 import org.apache.streampipes.model.quality.Accuracy;
 import org.apache.streampipes.model.quality.EventPropertyQualityDefinition;
 import org.apache.streampipes.model.quality.EventPropertyQualityRequirement;
@@ -89,6 +80,8 @@ public class Cloner {
       return new TransformOutputStrategy((TransformOutputStrategy) other);
     } else if (other instanceof CustomTransformOutputStrategy) {
       return new CustomTransformOutputStrategy((CustomTransformOutputStrategy) other);
+    } else if (other instanceof UserDefinedOutputStrategy) {
+      return new UserDefinedOutputStrategy((UserDefinedOutputStrategy) other);
     } else {
       return new AppendOutputStrategy((AppendOutputStrategy) other);
     }
