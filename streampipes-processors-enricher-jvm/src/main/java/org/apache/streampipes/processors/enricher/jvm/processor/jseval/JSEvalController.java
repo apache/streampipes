@@ -28,8 +28,6 @@ import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
-import org.apache.streampipes.sdk.helpers.SupportedFormats;
-import org.apache.streampipes.sdk.helpers.SupportedProtocols;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
@@ -50,8 +48,6 @@ public class JSEvalController extends StandaloneEventProcessingDeclarer<JSEvalPa
                         .build())
                 .requiredCodeblock(Labels.withId(JS_FUNCTION), CodeLanguage.Javascript)
                 .outputStrategy(OutputStrategies.userDefined())
-                .supportedProtocols(SupportedProtocols.kafka())
-                .supportedFormats(SupportedFormats.jsonFormat())
                 .build();
     }
 
