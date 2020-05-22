@@ -137,7 +137,11 @@ export class DatalakeRestService {
 
     get_timeseries_labels() {
         // mocked labels
-        const labels = {state: ['online', 'offline', 'active', 'inactive'], trend: ['increasing', 'decreasing'], daytime: ['day', 'night']};
+        const labels = {
+          state: ['online', 'offline', 'active', 'inactive'],
+          coffee: ['coffee', 'coffee special', 'espresso', '2x espresso', 'hot water'],
+          trend: ['increasing', 'decreasing'],
+          daytime: ['day', 'night']};
         return labels;
     }
 

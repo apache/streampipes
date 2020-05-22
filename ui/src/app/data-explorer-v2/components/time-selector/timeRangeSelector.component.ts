@@ -57,6 +57,7 @@ export class TimeRangeSelectorComponent implements OnInit {
 
   changeCustomDateRange() {
     this.selectedTimeButton =  this.possibleTimeButtons[this.possibleTimeButtons.length - 1];
+    this.dateRange = new DateRange(this.dateRange.startDate, this.dateRange.endDate)
     this.reloadData();
   }
 
