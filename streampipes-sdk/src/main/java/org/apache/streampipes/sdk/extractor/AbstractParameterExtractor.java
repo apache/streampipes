@@ -30,23 +30,7 @@ import org.apache.streampipes.model.schema.EventPropertyList;
 import org.apache.streampipes.model.schema.EventPropertyNested;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.PropertyScope;
-import org.apache.streampipes.model.staticproperty.AnyStaticProperty;
-import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
-import org.apache.streampipes.model.staticproperty.DomainStaticProperty;
-import org.apache.streampipes.model.staticproperty.FileStaticProperty;
-import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
-import org.apache.streampipes.model.staticproperty.MappingPropertyNary;
-import org.apache.streampipes.model.staticproperty.MappingPropertyUnary;
-import org.apache.streampipes.model.staticproperty.OneOfStaticProperty;
-import org.apache.streampipes.model.staticproperty.Option;
-import org.apache.streampipes.model.staticproperty.SecretStaticProperty;
-import org.apache.streampipes.model.staticproperty.SelectionStaticProperty;
-import org.apache.streampipes.model.staticproperty.StaticProperty;
-import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
-import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
-import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
-import org.apache.streampipes.model.staticproperty.StaticPropertyType;
-import org.apache.streampipes.model.staticproperty.SupportedProperty;
+import org.apache.streampipes.model.staticproperty.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -102,6 +86,10 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
   public String secretValue(String internalName) {
     return (getStaticPropertyByName(internalName, SecretStaticProperty.class)
             .getValue());
+  }
+
+  public String codeblockValue(String internalName) {
+    return getStaticPropertyByName(internalName,CodeInputStaticProperty.class).getValue();
   }
 
   public String fileContentsAsString(String internalName) throws IOException {

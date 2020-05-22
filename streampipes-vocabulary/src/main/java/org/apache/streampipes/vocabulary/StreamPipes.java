@@ -389,4 +389,10 @@ public class StreamPipes {
   public static final String HAS_WIDGET_DESCRIPTION = NS + "hasWidgetDescription";
   public static final String HAS_SELECTED_KEYS = NS + "hasSelectedKeys";
   public static final String CORRESPONDING_USER = NS + "hasCorrespondingUser";
+
+  public static final String CODE_INPUT_STATIC_PROPERTY = NS + "CodeInputStaticProperty";
+  public static final String HAS_LANGUAGE = NS + "hasLanguage";
+  public static final String HAS_CODE_INPUT = NS + "hasCodeInput";
+  public static final String HAS_CODE_TEMPLATE = NS + "hasCodeTemplate";
+  public static final String USER_DEFINED_OUTPUT_STRATEGY = NS + "UserDefinedOutputStrategy";
 }

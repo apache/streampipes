@@ -51,6 +51,10 @@ code[class*="language-"], pre[class*="language-"] {
   white-space:pre-wrap;
 }
 
+.CodeMirror-hints {
+  z-index: 1000;
+}
+
 .editor-error-notifications {
   position: absolute;
   left: -226px;

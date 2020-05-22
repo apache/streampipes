@@ -16,25 +16,22 @@
  *
  */
 
-package org.apache.streampipes.model.staticproperty;
+package org.apache.streampipes.sdk.helpers;
 
-public enum StaticPropertyType {
-    AnyStaticProperty,
-    CollectionStaticProperty,
-    ColorPickerStaticProperty,
-    DomainStaticProperty,
-    FreeTextStaticProperty,
-    FileStaticProperty,
-    MappingPropertyUnary,
-    MappingPropertyNary,
-    MatchingStaticProperty,
-    OneOfStaticProperty,
-    RuntimeResolvableAnyStaticProperty,
-    RuntimeResolvableOneOfStaticProperty,
-    StaticPropertyGroup,
-    StaticPropertyAlternatives,
-    StaticPropertyAlternative,
-    SecretStaticProperty,
-    CodeInputStaticProperty;
+public enum CodeLanguage {
+  Javascript("function process(event) {\n" +
+          "    // do processing here.\n" +
+          "    // return processed event.\n" +
+          "    return {id: event.id, tempInCelsius: (event.tempInKelvin - 273.15)};\n" +
+          "};");
 
+  private String defaultSkeleton;
+
+  CodeLanguage(String defaultSkeleton) {
+    this.defaultSkeleton = defaultSkeleton;
+  }
+
+  public String getDefaultSkeleton() {
+    return defaultSkeleton;
+  }
 }

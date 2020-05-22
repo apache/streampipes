@@ -16,25 +16,18 @@
  *
  */
 
-package org.apache.streampipes.model.staticproperty;
+import {UserDefinedOutputController} from "./user-defined-output.controller";
 
-public enum StaticPropertyType {
-    AnyStaticProperty,
-    CollectionStaticProperty,
-    ColorPickerStaticProperty,
-    DomainStaticProperty,
-    FreeTextStaticProperty,
-    FileStaticProperty,
-    MappingPropertyUnary,
-    MappingPropertyNary,
-    MatchingStaticProperty,
-    OneOfStaticProperty,
-    RuntimeResolvableAnyStaticProperty,
-    RuntimeResolvableOneOfStaticProperty,
-    StaticPropertyGroup,
-    StaticPropertyAlternatives,
-    StaticPropertyAlternative,
-    SecretStaticProperty,
-    CodeInputStaticProperty;
+declare const require: any;
 
-}
+export let UserDefinedOutputComponent = {
+    template: require('./user-defined-output.tmpl.html'),
+    bindings: {
+        outputStrategy: "=",
+        selectedElement: "=",
+        customizeForm: "=",
+        restrictedEditMode: "<"
+    },
+    controller: UserDefinedOutputController,
+    controllerAs: 'ctrl'
+};

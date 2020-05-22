@@ -16,25 +16,18 @@
  *
  */
 
-package org.apache.streampipes.model.staticproperty;
+import {CodeInputController} from "./code.controller";
 
-public enum StaticPropertyType {
-    AnyStaticProperty,
-    CollectionStaticProperty,
-    ColorPickerStaticProperty,
-    DomainStaticProperty,
-    FreeTextStaticProperty,
-    FileStaticProperty,
-    MappingPropertyUnary,
-    MappingPropertyNary,
-    MatchingStaticProperty,
-    OneOfStaticProperty,
-    RuntimeResolvableAnyStaticProperty,
-    RuntimeResolvableOneOfStaticProperty,
-    StaticPropertyGroup,
-    StaticPropertyAlternatives,
-    StaticPropertyAlternative,
-    SecretStaticProperty,
-    CodeInputStaticProperty;
+declare const require: any;
 
-}
+export let CodeInputComponent = {
+    template: require('./code.tmpl.html'),
+    bindings: {
+        staticProperty: "=",
+        displayRecommended: "=",
+        customizeForm: "=",
+        selectedElement: "="
+    },
+    controller: CodeInputController,
+    controllerAs: 'ctrl'
+};
