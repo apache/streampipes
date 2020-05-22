@@ -34,6 +34,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <dependency.locations.enabled>false</dependency.locations.enabled>
+        <maven.version>3.3.9</maven.version>
         <owasp.check.skip>true</owasp.check.skip>
 
         <activemq-client.version>5.15.9</activemq-client.version>
@@ -85,6 +86,8 @@
         <objenesis.version>2.5.1</objenesis.version>
         <okio.version>1.16.0</okio.version>
         <okhttp.version>3.12.2</okhttp.version>
+        <plexus-component-annotations.version>1.6</plexus-component-annotations.version>
+        <plexus-utils.version>3.0.22</plexus-utils.version>
         <rdf4j.version>3.1.0</rdf4j.version>
         <rendersnake.version>1.8</rendersnake.version>
         <retrofit.version>2.5.0</retrofit.version>
@@ -358,6 +361,26 @@
                 <version>${kafka.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-plugin-api</artifactId>
+                <version>${maven.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-core</artifactId>
+                <version>${maven.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-artifact</artifactId>
+                <version>${maven.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-compat</artifactId>
+                <version>${maven.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.activemq</groupId>
                 <artifactId>activemq-client</artifactId>
                 <version>${activemq-client.version}</version>
@@ -406,6 +429,16 @@
                 <groupId>org.apache.spark</groupId>
                 <artifactId>spark-streaming-kafka-0-10_2.11</artifactId>
                 <version>${spark.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.plexus</groupId>
+                <artifactId>plexus-component-annotations</artifactId>
+                <version>${plexus-component-annotations.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.plexus</groupId>
+                <artifactId>plexus-utils</artifactId>
+                <version>${plexus-utils.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
@@ -833,6 +866,7 @@
         <module>streampipes-connect-container-worker</module>
         <module>streampipes-container-base</module>
         <module>streampipes-messaging-mqtt</module>
+        <module>streampipes-maven-plugin</module>
     </modules>
 
     <profiles>
