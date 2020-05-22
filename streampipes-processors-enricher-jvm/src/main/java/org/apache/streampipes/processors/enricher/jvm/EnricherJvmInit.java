@@ -25,22 +25,27 @@ import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.processors.enricher.jvm.config.EnricherJvmConfig;
+import org.apache.streampipes.processors.enricher.jvm.processor.jseval.JSEvalController;
 import org.apache.streampipes.processors.enricher.jvm.processor.sizemeasure.SizeMeasureController;
 
 public class EnricherJvmInit extends StandaloneModelSubmitter {
 
   public static void main(String[] args) {
-    DeclarersSingleton
-            .getInstance()
-            .add(new SizeMeasureController());
+    DeclarersSingleton.getInstance()
+            .add(new SizeMeasureController())
+            .add(new JSEvalController());
 
-    DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),
+    DeclarersSingleton.getInstance().registerDataFormats(
+            new JsonDataFormatFactory(),
             new CborDataFormatFactory(),
             new SmileDataFormatFactory(),
-            new FstDataFormatFactory());
+            new FstDataFormatFactory()
+    );
 
-    DeclarersSingleton.getInstance().registerProtocols(new SpKafkaProtocolFactory(),
-            new SpJmsProtocolFactory());
+    DeclarersSingleton.getInstance().registerProtocols(
+            new SpKafkaProtocolFactory(),
+            new SpJmsProtocolFactory()
+    );
 
     new EnricherJvmInit().init(EnricherJvmConfig.INSTANCE);
   }
