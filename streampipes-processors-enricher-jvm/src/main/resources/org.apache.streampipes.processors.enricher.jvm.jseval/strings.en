@@ -1,0 +1,5 @@
+org.apache.streampipes.processors.enricher.jvm.jseval.title=JavaScript Eval
+org.apache.streampipes.processors.enricher.jvm.jseval.description=Pipeline element that allows writing user defined JavaScript function to enrich events.
+
+jsFunction.title=JavaScript Function
+jsFunction.description=Function to enrich event data.
