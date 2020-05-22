@@ -120,7 +120,6 @@ public class DataLakeInfluxDbClient {
     }
 
     // Checking whether the database exists
-    System.out.println(databaseExists(databaseName));
     if(!databaseExists(databaseName)) {
       logger.info("Database '" + databaseName + "' not found. Gets created ...");
       createDatabase(databaseName);
