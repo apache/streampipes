@@ -56,7 +56,7 @@ public class JSEval implements EventProcessor<JSEvalParameters> {
             final Map<String, Object> eventData = event.getRaw();
             Object result = ((Invocable) engine).invokeFunction("process", eventData);
             Map<String, Object> output = (Map<String, Object>) result;
-            output.forEach(event::addField);
+            output.forEach(outEvent::addField);
         } catch (ScriptException e) {
             throw new SpRuntimeException("Error in script: " + e.getMessage());
         } catch (ClassCastException e) {
