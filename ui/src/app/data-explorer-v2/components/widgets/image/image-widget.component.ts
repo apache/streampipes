@@ -23,6 +23,7 @@ import { EventProperty } from '../../../../connect/schema-editor/model/EventProp
 import { DataResult } from '../../../../core-model/datalake/DataResult';
 import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
 import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'sp-data-explorer-image-widget',
@@ -39,8 +40,8 @@ export class ImageWidgetComponent extends BaseDataExplorerWidget implements OnIn
 
   dataSource = new MatTableDataSource();
 
-  constructor(protected dataLakeRestService: DatalakeRestService) {
-    super(dataLakeRestService);
+  constructor(protected dataLakeRestService: DatalakeRestService, protected dialog: MatDialog, ) {
+    super(dataLakeRestService, dialog);
   }
 
   ngOnInit(): void {

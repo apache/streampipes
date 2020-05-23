@@ -48,9 +48,8 @@ import { DataExplorerDashboardOverviewComponent } from './components/overview/da
 import { DataExplorerDashboardPanelComponent } from './components/panel/data-explorer-dashboard-panel.component';
 import { TimeRangeSelectorComponent } from './components/time-selector/timeRangeSelector.component';
 import { DataExplorerDashboardWidgetComponent } from './components/widget/data-explorer-dashboard-widget.component';
+import { ImageWidgetComponent } from './components/widgets/image/image-widget.component';
 import { LineChartWidgetComponent } from './components/widgets/line-chart/line-chart-widget.component';
-// import { DataDownloadDialog } from './components/widgets/old-explorer-widget/datadownloadDialog/dataDownload.dialog';
-// import { OldExplorerComponent } from './components/widgets/old-explorer-widget/old-explorer.component';
 import { TableWidgetComponent } from './components/widgets/table/table-widget.component';
 import { LoadDataSpinnerComponent } from './components/widgets/utils/load-data-spinner/load-data-spinner.component';
 import { NoDataInDateRangeComponent } from './components/widgets/utils/no-data/no-data-in-date-range.component';
@@ -62,7 +61,7 @@ import { DataLakeService } from './services/data-lake.service';
 import { DataViewDataExplorerService } from './services/data-view-data-explorer.service';
 import { RefreshDashboardService } from './services/refresh-dashboard.service';
 import { ResizeService } from './services/resize.service';
-import {ImageWidgetComponent} from "./components/widgets/image/image-widget.component";
+import { DataDownloadDialog } from './components/datadownloadDialog/dataDownload.dialog';
 
 const dashboardWidgets = [
 
@@ -123,6 +122,7 @@ export const MY_NATIVE_FORMATS = {
     TimeRangeSelectorComponent,
     NoDataInDateRangeComponent,
     LoadDataSpinnerComponent,
+    DataDownloadDialog,
     SelectPropertiesComponent
   ],
   providers: [
@@ -156,6 +156,7 @@ export const MY_NATIVE_FORMATS = {
   entryComponents: [
     DataExplorerV2Component,
     DataExplorerAddVisualizationDialogComponent,
+    DataDownloadDialog,
     DataExplorerEditDataViewDialogComponent
   ]
 })

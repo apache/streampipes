@@ -17,6 +17,7 @@
  */
 
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { EventProperty } from '../../../../connect/schema-editor/model/EventProperty';
@@ -40,8 +41,8 @@ export class TableWidgetComponent extends BaseDataExplorerWidget implements OnIn
 
   dataSource = new MatTableDataSource();
 
-  constructor(protected dataLakeRestService: DatalakeRestService) {
-    super(dataLakeRestService);
+  constructor(protected dataLakeRestService: DatalakeRestService, protected dialog: MatDialog) {
+    super(dataLakeRestService, dialog);
   }
 
   ngOnInit(): void {

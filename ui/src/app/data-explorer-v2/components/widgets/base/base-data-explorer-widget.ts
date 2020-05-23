@@ -17,6 +17,7 @@
  */
 
 import { EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { GridsterItem, GridsterItemComponent } from 'angular-gridster2';
 import { EventProperty } from '../../../../connect/schema-editor/model/EventProperty';
 import { EventPropertyPrimitive } from '../../../../connect/schema-editor/model/EventPropertyPrimitive';
@@ -25,10 +26,11 @@ import { DataExplorerWidgetModel } from '../../../../core-model/datalake/DataExp
 import { DateRange } from '../../../../core-model/datalake/DateRange';
 import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
 import { IDataViewDashboardItem } from '../../../models/dataview-dashboard.model';
+import { DataDownloadDialog } from '../../datadownloadDialog/dataDownload.dialog';
 
 export abstract class BaseDataExplorerWidget implements OnChanges {
 
-  protected constructor(protected dataLakeRestService: DatalakeRestService) {
+  protected constructor(protected dataLakeRestService: DatalakeRestService, protected dialog: MatDialog) {
   }
 
   @Output()
@@ -51,13 +53,14 @@ export abstract class BaseDataExplorerWidget implements OnChanges {
   public showData: boolean;
   public showIsLoadingData: boolean;
 
-
   public removeWidget() {
     this.removeWidgetCallback.emit(true);
   }
 
   public setShownComponents(showNoDataInDateRange: boolean,
-                            showData: boolean, showIsLoadingData: boolean) {
+                            showData: boolean,
+                            showIsLoadingData: boolean,
+                            ) {
 
     this.showNoDataInDateRange = showNoDataInDateRange;
     this.showData = showData;
@@ -119,7 +122,7 @@ export abstract class BaseDataExplorerWidget implements OnChanges {
   }
 
   getRuntimeNames(properties: EventProperty[]): string[] {
-    const result = []
+    const result = [];
     properties.forEach(p => {
         result.push(p.runtimeName);
     });
@@ -127,10 +130,13 @@ export abstract class BaseDataExplorerWidget implements OnChanges {
     return result;
   }
 
+  downloadDataAsFile() {
+    const dialogRef = this.dialog.open(DataDownloadDialog, {
+      width: '600px',
+      data: { index: this.dataExplorerWidget.dataLakeMeasure.measureName, date: this.viewDateRange },
+      panelClass: 'custom-dialog-container'
 
-
-  // updateDataExplorerWidget() {
-  //   this.
-  // }
+    });
+  }
 
 }

@@ -46,7 +46,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
 
   constructor(public dialog: MatDialog, public plotlyService: PlotlyService, public colorService: ColorService,
               public renderer: Renderer2, protected dataLakeRestService: DatalakeRestService) {
-    super(dataLakeRestService);
+    super(dataLakeRestService, dialog);
   }
 
   // indicator variable if labeling mode is activated
