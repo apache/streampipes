@@ -108,6 +108,8 @@ public class DataLake implements EventSink<DataLakeParameters> {
         event.updateFieldBySelector("s0::" + eventProperty.getRuntimeName(), fileRoute);
       });
 
+      event.addField("sp_internal_label", "");
+
       influxDbClient.save(event);
     } catch (SpRuntimeException e) {
       LOG.error(e.getMessage());
