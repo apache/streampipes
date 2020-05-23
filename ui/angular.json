@@ -27,7 +27,6 @@
             ],
             "styles": [
               "src/scss/main.scss",
-              "src/assets/fonts/Roboto-Regular.css"
             ],
             "scripts": [
               "node_modules/systemjs/dist/system.js",
