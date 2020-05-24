@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.connect.protocol.stream;
 
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.utils.Assets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.streampipes.connect.SendToPipeline;
@@ -174,19 +176,16 @@ public class FileStreamProtocol extends Protocol {
 
   @Override
   public ProtocolDescription declareModel() {
-    return ProtocolDescriptionBuilder.create(ID, "File Stream", "Continuously streams the content of a " +
-            "file.")
+    return ProtocolDescriptionBuilder.create(ID)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+            .withLocales(Locales.EN)
             .sourceType(AdapterSourceType.STREAM)
             .category(AdapterType.Generic)
-            .iconUrl("file.png")
-            .requiredFile(Labels.from("filePath", "File", "File path"))
-            .requiredSingleValueSelection(Labels.from("replaceTimestamp", "Use current time for timestamp?",
-                    "Keep timestamps from File or replace with current."),
+            .requiredFile(Labels.withId("filePath"))
+            .requiredSingleValueSelection(Labels.withId("replaceTimestamp"),
                 Options.from("True", "False"))
-            .requiredFloatParameter(Labels.from("speed", "Replay Speed",
-                    "Replay Speed. For original speed set it to 1"))
-            .requiredFloatParameter(Labels.from("time-between-replay", "Time Between Replay",
-                    "Time between two rounds of replay. Time in seconds"))
+            .requiredFloatParameter(Labels.withId("speed"))
+            .requiredFloatParameter(Labels.withId("time-between-replay"))
             .build();
   }
 

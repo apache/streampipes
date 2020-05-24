@@ -30,6 +30,9 @@ public abstract class IexCloudAdapter extends PullAdapter {
   protected static final String IexCloudBaseUrl = "https://cloud.iexapis.com/stable/stock/";
   protected static final String Token = "?token=";
 
+  protected static final String TOKEN_KEY = "token";
+  protected static final String STOCK_SYMBOL_KEY = "stock-symbol";
+
   protected String apiToken;
   protected String stockQuote;
   private String iexCloudInstanceUrl;
@@ -38,8 +41,8 @@ public abstract class IexCloudAdapter extends PullAdapter {
   public IexCloudAdapter(SpecificAdapterStreamDescription adapterDescription, String restPath) {
     super(adapterDescription);
     ParameterExtractor extractor = new ParameterExtractor(adapterDescription.getConfig());
-    this.apiToken = extractor.secretValue("token");
-    this.stockQuote = extractor.singleValue("stock");
+    this.apiToken = extractor.secretValue(TOKEN_KEY);
+    this.stockQuote = extractor.singleValue(STOCK_SYMBOL_KEY);
     this.iexCloudInstanceUrl = IexCloudBaseUrl + stockQuote + restPath + Token + apiToken;
 
   }

@@ -21,6 +21,8 @@ import org.apache.streampipes.connect.adapter.Adapter;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.utils.Assets;
 
 public class WikipediaEditedArticlesAdapter extends WikipediaAdapter {
 
@@ -38,10 +40,10 @@ public class WikipediaEditedArticlesAdapter extends WikipediaAdapter {
 
   @Override
   public SpecificAdapterStreamDescription declareModel() {
-    return SpecificDataStreamAdapterBuilder.create(ID, "Wikipedia Edits", "Continuously publishes" +
-            " recent Wikipedia edits")
+    return SpecificDataStreamAdapterBuilder.create(ID)
+            .withLocales(Locales.EN)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .category(AdapterType.SocialMedia, AdapterType.OpenData)
-            .iconUrl("wikipedia.png")
             .build();
   }
 

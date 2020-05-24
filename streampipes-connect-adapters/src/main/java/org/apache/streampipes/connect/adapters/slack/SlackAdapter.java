@@ -28,6 +28,8 @@ import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 import org.apache.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
 import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.vocabulary.SO;
 
 import static org.apache.streampipes.sdk.helpers.EpProperties.stringEp;
@@ -59,11 +61,11 @@ public class SlackAdapter extends SpecificDataStreamAdapter {
 
   @Override
   public SpecificAdapterStreamDescription declareModel() {
-    return SpecificDataStreamAdapterBuilder.create(ID, "Slack", "Subscribes to a Slack channel")
+    return SpecificDataStreamAdapterBuilder.create(ID)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+            .withLocales(Locales.EN)
             .category(AdapterType.SocialMedia)
-            .iconUrl("slack.png")
-            .requiredTextParameter(Labels.from(SlackToken, "Slack API Token", "The API token of " +
-                    "your Slack workspace"))
+            .requiredTextParameter(Labels.withId(SlackToken))
             .build();
   }
 

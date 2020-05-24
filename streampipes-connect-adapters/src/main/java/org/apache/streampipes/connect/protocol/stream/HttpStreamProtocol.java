@@ -19,6 +19,8 @@
 package org.apache.streampipes.connect.protocol.stream;
 
 import org.apache.http.client.fluent.Request;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.utils.Assets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.streampipes.connect.adapter.exception.ParseException;
@@ -84,13 +86,13 @@ public class HttpStreamProtocol extends PullProtocol {
 
     @Override
     public ProtocolDescription declareModel() {
-        return ProtocolDescriptionBuilder.create(ID, "HTTP Stream", "This is the " +
-                "description for the http stream protocol")
+        return ProtocolDescriptionBuilder.create(ID)
+                .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+                .withLocales(Locales.EN)
                 .sourceType(AdapterSourceType.STREAM)
                 .category(AdapterType.Generic)
-                .iconUrl("rest.png")
-                .requiredTextParameter(Labels.from(URL_PROPERTY, "Url", "Example: http(s)://test-server.com"))
-                .requiredIntegerParameter(Labels.from(INTERVAL_PROPERTY, "Interval", "Example: 5 (Polling interval in seconds)"))
+                .requiredTextParameter(Labels.withId(URL_PROPERTY))
+                .requiredIntegerParameter(Labels.withId(INTERVAL_PROPERTY))
                 //.requiredTextParameter(Labels.from(ACCESS_TOKEN_PROPERTY, "Access Token", "Http
                 // Access Token"))
                 .build();

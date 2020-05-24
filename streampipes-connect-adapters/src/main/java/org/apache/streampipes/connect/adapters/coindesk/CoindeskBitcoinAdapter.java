@@ -33,7 +33,9 @@ import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 import org.apache.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
+import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.vocabulary.SO;
 
 import java.io.IOException;
@@ -45,6 +47,7 @@ public class CoindeskBitcoinAdapter extends PullAdapter {
 
   public static final String ID = "org.apache.streampipes.connect.adapters.coindesk";
 
+  private static final String CURRENCY_KEY = "currency";
   private static final String CoindeskUrl = "https://api.coindesk.com/v1/bpi/currentprice.json";
 
   private Currency currency;
@@ -56,7 +59,7 @@ public class CoindeskBitcoinAdapter extends PullAdapter {
   public CoindeskBitcoinAdapter(SpecificAdapterStreamDescription adapterDescription) {
     super(adapterDescription);
     ParameterExtractor extractor = new ParameterExtractor(adapterDescription.getConfig());
-    this.currency = Currency.valueOf(extractor.selectedSingleValueOption("currency"));
+    this.currency = Currency.valueOf(extractor.selectedSingleValueOption(CURRENCY_KEY));
 
   }
 
@@ -93,12 +96,11 @@ public class CoindeskBitcoinAdapter extends PullAdapter {
 
   @Override
   public SpecificAdapterStreamDescription declareModel() {
-    return SpecificDataStreamAdapterBuilder.create(ID, "Coindesk Bitcoin Stream", "The current " +
-            "bitcoin price from the Coindesk API.")
-            .iconUrl("coindesk.png")
+    return SpecificDataStreamAdapterBuilder.create(ID)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+            .withLocales(Locales.EN)
             .category(AdapterType.Finance)
-            .requiredSingleValueSelection(Labels.from("currency", "Currency", "The currency of the" +
-                    " bitcoin rate"), Options.from("USD", "EUR", "GBP"))
+            .requiredSingleValueSelection(Labels.withId(CURRENCY_KEY), Options.from("USD", "EUR", "GBP"))
             .build();
   }
 

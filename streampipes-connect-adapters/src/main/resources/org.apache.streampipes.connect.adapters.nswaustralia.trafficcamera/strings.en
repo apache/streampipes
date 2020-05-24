@@ -1,0 +1,6 @@
+org.apache.streampipes.connect.adapters.nswaustralia.trafficcamera.title=NSW Traffic Cameras
+org.apache.streampipes.connect.adapters.nswaustralia.trafficcamera.description=Traffic camera images produced by NSW Australia
+
+
+api-key.title=API Key
+api-key.description=The TfNSW API key

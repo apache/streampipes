@@ -19,6 +19,8 @@ package org.apache.streampipes.connect.protocol.stream.pulsar;
 
 import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.api.PulsarClientException;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.utils.Assets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.streampipes.connect.SendToPipeline;
@@ -95,16 +97,14 @@ public class PulsarProtocol extends BrokerProtocol implements ResolvesContainerP
 
   @Override
   public ProtocolDescription declareModel() {
-    return ProtocolDescriptionBuilder.create(ID,"Apache Pulsar","Consumes messages from an " +
-            "Apache Pulsar broker")
-            .iconUrl("pulsar.png")
+    return ProtocolDescriptionBuilder.create(ID)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+            .withLocales(Locales.EN)
             .category(AdapterType.Generic)
             .sourceType(AdapterSourceType.STREAM)
-            .requiredTextParameter(Labels.from(PULSAR_BROKER_HOST, "Broker Hostname",
-                    "Example: test.server.com"))
-            .requiredIntegerParameter(Labels.from(PULSAR_BROKER_PORT, "Broker Port", "Example: " +
-                    "6650"))
-            .requiredTextParameter(Labels.from(PULSAR_TOPIC, "Topic", ""))
+            .requiredTextParameter(Labels.withId(PULSAR_BROKER_HOST))
+            .requiredIntegerParameter(Labels.withId(PULSAR_BROKER_PORT), 6650)
+            .requiredTextParameter(Labels.withId(PULSAR_TOPIC))
 //            .requiredSingleValueSelectionFromContainer(Labels.from(PULSAR_TOPIC, "Topic",
 //                    "Example: topic"), Arrays.asList(PULSAR_BROKER_HOST, PULSAR_BROKER_PORT))
             .build();

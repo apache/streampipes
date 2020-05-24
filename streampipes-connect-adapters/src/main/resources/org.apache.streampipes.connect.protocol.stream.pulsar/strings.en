@@ -1,0 +1,13 @@
+org.apache.streampipes.connect.protocol.stream.pulsar.title=Apache Pulsar
+org.apache.streampipes.connect.protocol.stream.pulsar.description=Consumes messages from an Apache Pulsar broker
+
+pulsar-broker-host.title=Broker Hostname
+pulsar-broker-host.description=Example: test.server.com (No protocol)
+
+pulsar-broker-port.title=Broker Port
+pulsar-broker-port.description=Example: 6650
+
+pulsar-topic.title=Topic
+pulsar-topic.description=Example: test.topic
+
+

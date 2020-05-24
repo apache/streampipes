@@ -1,0 +1,26 @@
+org.apache.streampipes.connect.adapters.influxdb.stream.title=InfluxDB Stream Adapter
+org.apache.streampipes.connect.adapters.influxdb.stream.description=Creates a data stream for an InfluxDB measurement
+
+influxDbHost.title=Hostname
+influxDbHost.description=Hostname of the InfluxDB Server (needs an "http://" in front)
+
+influxDbPort.title=Port
+influxDbPort.description=Port of the InfluxDB Server (e.g. 8086)
+
+influxDbDatabase.title=Database
+influxDbDatabase.description=Name of the database
+
+influxDbMeasurement.title=Measurement
+influxDbMeasurement.description=Name of the measurement which should be observed
+
+influxDbUsername.title=Username
+influxDbUsername.description=The username to log into the InfluxDB
+
+influxDbPassword.title=Password
+influxDbPassword.description=The password to log into the InfluxDB
+
+replaceNullValues.title=Replace Null Values
+replaceNullValues.description=Should null values in the incoming data be replace by defaults? If not, these events are skipped
+
+pollingInterval.title=Polling interval (MS)
+pollingInterval.description=How often the database should be checked for new entries (in MS)

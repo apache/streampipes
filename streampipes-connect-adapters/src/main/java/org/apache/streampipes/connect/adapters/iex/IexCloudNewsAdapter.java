@@ -30,6 +30,8 @@ import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 import org.apache.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.vocabulary.SO;
 
 import java.io.IOException;
@@ -40,6 +42,7 @@ import java.util.concurrent.TimeUnit;
 public class IexCloudNewsAdapter extends IexCloudAdapter {
 
   public static final String ID = "org.apache.streampipes.connect.adapters.iex.news";
+
   private static final String News = "/news";
 
   private static final String Timestamp = "timestamp";
@@ -92,12 +95,12 @@ public class IexCloudNewsAdapter extends IexCloudAdapter {
 
   @Override
   public SpecificAdapterStreamDescription declareModel() {
-    return SpecificDataStreamAdapterBuilder.create(ID, "IEX Cloud News", "Fetches news for a " +
-            "given company (10 news / minutes maximum)")
-            .iconUrl("iexcloud.png")
+    return SpecificDataStreamAdapterBuilder.create(ID)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+            .withLocales(Locales.EN)
             .category(AdapterType.Finance, AdapterType.News)
-            .requiredSecret(Labels.from("token", "API Token", "The IEXCloud API token"))
-            .requiredTextParameter(Labels.from("stock", "Stock", "The stock symbol (e.g., AAPL)"))
+            .requiredSecret(Labels.withId(TOKEN_KEY))
+            .requiredTextParameter(Labels.withId(STOCK_SYMBOL_KEY))
             .build();
   }
 

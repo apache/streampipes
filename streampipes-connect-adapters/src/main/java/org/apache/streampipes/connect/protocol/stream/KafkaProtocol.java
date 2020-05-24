@@ -23,8 +23,6 @@ import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.serialization.LongDeserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.connect.SendToPipeline;
 import org.apache.streampipes.connect.adapter.exception.ParseException;
@@ -43,6 +41,10 @@ import org.apache.streampipes.sdk.builder.adapter.ProtocolDescriptionBuilder;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.AdapterSourceType;
 import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.utils.Assets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,7 +55,7 @@ public class KafkaProtocol extends BrokerProtocol implements ResolvesContainerPr
 
     Logger logger = LoggerFactory.getLogger(KafkaProtocol.class);
 
-    public static final String ID = "rg.apache.streampipes.connect.protocol.stream.kafka";
+    public static final String ID = "org.apache.streampipes.connect.protocol.stream.kafka";
 
     private Thread thread;
     private SpKafkaConsumer kafkaConsumer;
@@ -78,17 +80,14 @@ public class KafkaProtocol extends BrokerProtocol implements ResolvesContainerPr
 
     @Override
     public ProtocolDescription declareModel() {
-        return ProtocolDescriptionBuilder.create(ID,"Apache Kafka","Consumes messages from an " +
-                "Apache Kafka broker")
-                .iconUrl("kafka.jpg")
+        return ProtocolDescriptionBuilder.create(ID)
+                .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+                .withLocales(Locales.EN)
                 .category(AdapterType.Generic, AdapterType.Manufacturing)
                 .sourceType(AdapterSourceType.STREAM)
-                .requiredTextParameter(Labels.from("broker_url", "Broker Hostname",
-                        "Example: test.server.com (No protocol)"))
-                .requiredIntegerParameter(Labels.from("broker_port", "Broker Port", "Example: " +
-                        "9092"))
-                .requiredSingleValueSelectionFromContainer(Labels.from("topic", "Topic",
-                        "Example: test.topic"), Arrays.asList("broker_url", "broker_port"))
+                .requiredTextParameter(Labels.withId("broker_url"))
+                .requiredIntegerParameter(Labels.withId("broker_port"))
+                .requiredSingleValueSelectionFromContainer(Labels.withId("topic"), Arrays.asList("broker_url", "broker_port"))
                 .build();
     }
 

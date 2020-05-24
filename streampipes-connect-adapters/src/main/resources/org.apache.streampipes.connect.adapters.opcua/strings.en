@@ -1,0 +1,28 @@
+org.apache.streampipes.connect.adapters.opcua.title=OPC UA
+org.apache.streampipes.connect.adapters.opcua.description=Reads values from an OPC-UA server
+
+
+OPC_HOST_OR_URL.title=OPC Server
+OPC_HOST_OR_URL.description=
+
+OPC_URL.title=URL
+OPC_URL.description=
+
+OPC_HOST.title=Host/PPort
+OPC_HOST.description=
+
+OPC_SERVER_URL.title=URL
+OPC_SERVER_URL.description=Example: opc.tcp://test-server.com:4840
+
+OPC_SERVER_HOST.title=Host
+OPC_SERVER_HOST.description=Example: test-server.com (No leading opc.tcp://)
+
+OPC_SERVER_PORT.title=Port
+OPC_SERVER_PORT.description=Example: 4840
+
+NAMESPACE_INDEX.title=Namespace Index
+NAMESPACE.INDEX.description=Example: 2
+
+NODE_ID.title=Node ID
+NODE_ID.description=Id of the Node to read the values from
+

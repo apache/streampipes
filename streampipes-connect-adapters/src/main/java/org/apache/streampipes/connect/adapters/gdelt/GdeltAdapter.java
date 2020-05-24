@@ -29,6 +29,8 @@ import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
 import java.io.BufferedReader;
@@ -44,6 +46,8 @@ import java.util.zip.ZipInputStream;
 public class GdeltAdapter extends PullAdapter {
 
     public static final String ID = "org.apache.streampipes.connect.adapters.gdelt";
+
+
     private String url = "http://data.gdeltproject.org/gdeltv2/lastupdate.txt";
 
     public GdeltAdapter() {
@@ -61,10 +65,10 @@ public class GdeltAdapter extends PullAdapter {
 
     @Override
     public SpecificAdapterStreamDescription declareModel() {
-        SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(ID, "GDELT", "Global Database of Society")
-                .iconUrl("gdelt.png")
+        SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(ID)
+                .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+                .withLocales(Locales.EN)
                 .build();
-        description.setAppId(ID);
         return  description;
     }
 

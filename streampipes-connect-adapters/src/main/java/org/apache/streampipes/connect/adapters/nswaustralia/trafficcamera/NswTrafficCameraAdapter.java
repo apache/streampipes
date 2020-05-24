@@ -32,6 +32,8 @@ import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
 import java.io.IOException;
@@ -86,12 +88,11 @@ public class NswTrafficCameraAdapter extends PullAdapter {
 
   @Override
   public SpecificAdapterStreamDescription declareModel() {
-    SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(ID, "NSW Traffic Cameras", "Traffic camera " +
-            "images produced by NSW Australia")
+    SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(ID)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+            .withLocales(Locales.EN)
             .category(AdapterType.OpenData)
-            .requiredTextParameter(Labels.from("api-key", "API Key", "The TfNSW " +
-                    "API key"))
-            .iconUrl("nsw.png")
+            .requiredTextParameter(Labels.withId("api-key"))
             .build();
 
     description.setAppId(ID);

@@ -1,0 +1,16 @@
+org.apache.streampipes.connect.protocol.stream.file.title=File Stream
+org.apache.streampipes.connect.protocol.stream.file=Continuously streams the content from a file.
+
+filePath.title=File
+filePath.description=File Path
+
+replaceTimestamp.title=Use current time for timestamp?
+replaceTimestamp.description=Keep timestamps from File or replace with current.
+
+speed.title=Replay Speed
+speed.description=Replay Speed. For original speed, set it to 1
+
+time-between-replay.title=Time Between Replay
+time-between-replay.description=Time between two rounds of replay. Time in seconds
+
+

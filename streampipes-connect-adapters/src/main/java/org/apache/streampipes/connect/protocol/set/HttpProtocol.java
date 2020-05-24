@@ -19,6 +19,8 @@
 package org.apache.streampipes.connect.protocol.set;
 
 import org.apache.http.client.fluent.Request;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.utils.Assets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.streampipes.connect.SendToPipeline;
@@ -61,11 +63,12 @@ public class HttpProtocol extends Protocol {
 
     @Override
     public ProtocolDescription declareModel() {
-        return ProtocolDescriptionBuilder.create(ID, "HTTP Set", "Regularly poll an HTTP endpoint")
+        return ProtocolDescriptionBuilder.create(ID)
+                .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+                .withLocales(Locales.EN)
                 .category(AdapterType.Generic)
                 .sourceType(AdapterSourceType.SET)
-                .iconUrl("rest.png")
-                .requiredTextParameter(Labels.from("url", "Url", "Example: http(s)://test-server.com"))
+                .requiredTextParameter(Labels.withId("url"))
                 .build();
     }
 

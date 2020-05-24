@@ -1,0 +1,24 @@
+org.apache.streampipes.connect.adapters.mysql.stream.title=MySql Stream Adapter
+org.apache.streampipes.connect.adapters.mysql.stream.description=Creates a data stream for a SQL table
+
+
+mysqlHost.title=Hostname
+mysqlHost.description=Hostname of the MySql Server
+
+mysqlPort.title=Port
+mysqlPort.description=Port of the MySql Server. Default: 3306
+
+mysqlDatabase.title=Database
+mysqlDatabase.description=Database in which the table is located
+
+mysqlTable.title=Table
+mysqlTable.description=Table which should be watched
+
+mysqlUser.title=Username
+mysqlUser.description=Username of the user
+
+mysqlPassword.title=Password
+mysqlPassword.description=Password of the user
+
+replaceNullValues.title=Replace Null Values
+replaceNullValues.description=Should null values in the incoming data be replace by defaults? If not, these events are skipped

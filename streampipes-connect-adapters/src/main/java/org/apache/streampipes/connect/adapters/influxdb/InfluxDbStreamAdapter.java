@@ -28,8 +28,10 @@ import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescrip
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
 import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.Tuple2;
+import org.apache.streampipes.sdk.utils.Assets;
 
 import java.util.List;
 import java.util.Map;
@@ -38,7 +40,7 @@ import static org.apache.streampipes.connect.adapters.influxdb.InfluxDbClient.ge
 
 public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
 
-    public static final String ID = "org.apache.streampipes.connect.adapters.influxdb";
+    public static final String ID = "org.apache.streampipes.connect.adapters.influxdb.stream";
 
     private static final String POLLING_INTERVAL = "pollingInterval";
 
@@ -133,19 +135,17 @@ public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
 
     @Override
     public SpecificAdapterStreamDescription declareModel() {
-        SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(
-                ID,
-                "InfluxDB Stream Adapter",
-                "Creates a data stream for a InfluxDB measurement")
-                .iconUrl("influxdb.png")
-                .requiredTextParameter(Labels.from(InfluxDbClient.HOST, "Hostname", "Hostname of the InfluxDB Server (needs an \"http://\" in front)"))
-                .requiredIntegerParameter(Labels.from(InfluxDbClient.PORT, "Port", "Port of the InfluxDB Server (e.g. 8086"), 8086)
-                .requiredTextParameter(Labels.from(InfluxDbClient.DATABASE, "Database", "Name of the database"))
-                .requiredTextParameter(Labels.from(InfluxDbClient.MEASUREMENT, "Measurement", "Name of the measurement, which should be observed"))
-                .requiredTextParameter(Labels.from(InfluxDbClient.USERNAME, "Username", "The username to log into the InfluxDB"))
-                .requiredSecret(Labels.from(InfluxDbClient.PASSWORD, "Password", "The password to log into the InfluxDB"))
-                .requiredIntegerParameter(Labels.from(POLLING_INTERVAL, "Polling interval (MS)", "How often the database should be checked for new entries (in MS)"))
-                .requiredSingleValueSelection(Labels.from(InfluxDbClient.REPLACE_NULL_VALUES, "Replace Null Values", "Should null values in the incoming data be replace by defaults? If not, these events are skipped"),
+        SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(ID)
+                .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+                .withLocales(Locales.EN)
+                .requiredTextParameter(Labels.withId(InfluxDbClient.HOST))
+                .requiredIntegerParameter(Labels.withId(InfluxDbClient.PORT))
+                .requiredTextParameter(Labels.withId(InfluxDbClient.DATABASE))
+                .requiredTextParameter(Labels.withId(InfluxDbClient.MEASUREMENT))
+                .requiredTextParameter(Labels.withId(InfluxDbClient.USERNAME))
+                .requiredSecret(Labels.withId(InfluxDbClient.PASSWORD))
+                .requiredIntegerParameter(Labels.withId(POLLING_INTERVAL))
+                .requiredSingleValueSelection(Labels.withId(InfluxDbClient.REPLACE_NULL_VALUES),
                         Options.from(
                                 new Tuple2<>("Yes", InfluxDbClient.DO_REPLACE),
                                 new Tuple2<>("No", InfluxDbClient.DO_NOT_REPLACE)))

@@ -27,6 +27,8 @@ import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescrip
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
 import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.utils.Assets;
 
 public class RandomDataStreamAdapter extends SpecificDataStreamAdapter {
 
@@ -49,12 +51,11 @@ public class RandomDataStreamAdapter extends SpecificDataStreamAdapter {
 
   @Override
   public SpecificAdapterStreamDescription declareModel() {
-    return SpecificDataStreamAdapterBuilder.create(ID, "Random Data Simulator (Stream)",
-            "Publishes an endless stream of random events")
-            .iconUrl("dice.png")
+    return SpecificDataStreamAdapterBuilder.create(ID)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+            .withLocales(Locales.EN)
             .category(AdapterType.Debugging)
-            .requiredIntegerParameter(Labels.from(WaitTimeMs, "Wait Time (MS)", "The time to " +
-                    "wait between two events in milliseconds"))
+            .requiredIntegerParameter(Labels.withId(WaitTimeMs))
             .build();
   }
 

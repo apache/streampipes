@@ -30,6 +30,8 @@ import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 import org.apache.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.vocabulary.SO;
 
 import java.io.IOException;
@@ -56,12 +58,12 @@ public class IexCloudStockAdapter extends IexCloudAdapter {
 
   @Override
   public SpecificAdapterStreamDescription declareModel() {
-    return SpecificDataStreamAdapterBuilder.create(ID, "IEX Cloud Stock Quotes", "Live stock data" +
-            " provided by <a href='https://iexcloud.io'>IEX Cloud</a>")
-            .iconUrl("iexcloud.png")
+    return SpecificDataStreamAdapterBuilder.create(ID)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+            .withLocales(Locales.EN)
             .category(AdapterType.Finance)
-            .requiredSecret(Labels.from("token", "API Token", "The IEXCloud API token"))
-            .requiredTextParameter(Labels.from("stock", "Stock", "The stock symbol (e.g., AAPL)"))
+            .requiredSecret(Labels.withId(TOKEN_KEY))
+            .requiredTextParameter(Labels.withId(STOCK_SYMBOL_KEY))
             .build();
 
   }

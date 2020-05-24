@@ -27,8 +27,10 @@ import org.apache.streampipes.model.connect.adapter.SpecificAdapterSetDescriptio
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.sdk.builder.adapter.SpecificDataSetAdapterBuilder;
 import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.Tuple2;
+import org.apache.streampipes.sdk.utils.Assets;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -124,17 +126,16 @@ public class MySqlSetAdapter extends SpecificDataSetAdapter {
 
     @Override
     public SpecificAdapterSetDescription declareModel() {
-        SpecificAdapterSetDescription description = SpecificDataSetAdapterBuilder.create(ID,
-                "MySql Set Adapter",
-                "Creates a data set of a SQL table")
-                .iconUrl("sql.png")
-                .requiredTextParameter(Labels.from(MySqlClient.HOST, "Hostname", "Hostname of the MySql Server"))
-                .requiredIntegerParameter(Labels.from(MySqlClient.PORT, "Port", "Port of the MySql Server. Default: 3306"), 3306)
-                .requiredTextParameter(Labels.from(MySqlClient.DATABASE, "Database", "Database in which the table is located"))
-                .requiredTextParameter(Labels.from(MySqlClient.TABLE, "Table", "Table which should be watched"))
-                .requiredTextParameter(Labels.from(MySqlClient.USER, "Username", "Username of the user"))
-                .requiredSecret(Labels.from(MySqlClient.PASSWORD, "Password", "Password of the user"))
-                .requiredSingleValueSelection(Labels.from(MySqlClient.REPLACE_NULL_VALUES, "Replace Null Values", "Should null values in the incoming data be replace by defaults? If not, these events are skipped"),
+        SpecificAdapterSetDescription description = SpecificDataSetAdapterBuilder.create(ID)
+                .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+                .withLocales(Locales.EN)
+                .requiredTextParameter(Labels.withId(MySqlClient.HOST))
+                .requiredIntegerParameter(Labels.withId(MySqlClient.PORT), 3306)
+                .requiredTextParameter(Labels.withId(MySqlClient.DATABASE))
+                .requiredTextParameter(Labels.withId(MySqlClient.TABLE))
+                .requiredTextParameter(Labels.withId(MySqlClient.USER))
+                .requiredSecret(Labels.withId(MySqlClient.PASSWORD))
+                .requiredSingleValueSelection(Labels.withId(MySqlClient.REPLACE_NULL_VALUES),
                         Options.from(
                                 new Tuple2<>("Yes", MySqlClient.DO_REPLACE_NULL_VALUES),
                                 new Tuple2<>("No", MySqlClient.DO_NOT_REPLACE_NULL_VALUES)))

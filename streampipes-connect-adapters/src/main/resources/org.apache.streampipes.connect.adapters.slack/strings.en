@@ -1,0 +1,6 @@
+org.apache.streampipes.connect.adapters.slack.title=Slack
+org.apache.streampipes.connect.adapters.slack.description=Subscribes to a Slack channel
+
+
+slack-token.title=Slack API Token
+slack-token.description=The API token of your Slack workspace

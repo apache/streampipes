@@ -28,15 +28,17 @@ import org.apache.streampipes.model.connect.adapter.SpecificAdapterSetDescriptio
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.sdk.builder.adapter.SpecificDataSetAdapterBuilder;
 import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.Tuple2;
+import org.apache.streampipes.sdk.utils.Assets;
 
 import java.util.List;
 import java.util.Map;
 
 public class InfluxDbSetAdapter extends SpecificDataSetAdapter {
 
-    public static final String ID = "http://streampipes.org/adapter/specific/influxdbset";
+    public static final String ID = "org.apache.streampipes.connect.adapters.influxdb.set";
     public static final int BATCH_SIZE = 8192;
 
     private InfluxDbClient influxDbClient;
@@ -99,18 +101,16 @@ public class InfluxDbSetAdapter extends SpecificDataSetAdapter {
 
     @Override
     public SpecificAdapterSetDescription declareModel() {
-        SpecificAdapterSetDescription description = SpecificDataSetAdapterBuilder.create(
-                ID,
-                "InfluxDB Set Adapter",
-                "Creates a data set for a InfluxDB measurement")
-                .iconUrl("influxdb.png")
-                .requiredTextParameter(Labels.from(InfluxDbClient.HOST, "Hostname", "Hostname of the InfluxDB Server"))
-                .requiredIntegerParameter(Labels.from(InfluxDbClient.PORT, "Port", "Port of the InfluxDB Server"))
-                .requiredTextParameter(Labels.from(InfluxDbClient.DATABASE, "Database", "Name of the database"))
-                .requiredTextParameter(Labels.from(InfluxDbClient.MEASUREMENT, "Measurement", "Name of the measurement, which should be observed"))
-                .requiredTextParameter(Labels.from(InfluxDbClient.USERNAME, "Username", "The username to log into the InfluxDB"))
-                .requiredSecret(Labels.from(InfluxDbClient.PASSWORD, "Password", "The password to log into the InfluxDB"))
-                .requiredSingleValueSelection(Labels.from(InfluxDbClient.REPLACE_NULL_VALUES, "Replace Null Values", "Should null values in the incoming data be replace by defaults? If not, these events are skipped"),
+        SpecificAdapterSetDescription description = SpecificDataSetAdapterBuilder.create(ID)
+                .withAssets(Assets.ICON, Assets.DOCUMENTATION)
+                .withLocales(Locales.EN)
+                .requiredTextParameter(Labels.withId(InfluxDbClient.HOST))
+                .requiredIntegerParameter(Labels.withId(InfluxDbClient.PORT))
+                .requiredTextParameter(Labels.withId(InfluxDbClient.DATABASE))
+                .requiredTextParameter(Labels.withId(InfluxDbClient.MEASUREMENT))
+                .requiredTextParameter(Labels.withId(InfluxDbClient.USERNAME))
+                .requiredSecret(Labels.withId(InfluxDbClient.PASSWORD))
+                .requiredSingleValueSelection(Labels.withId(InfluxDbClient.REPLACE_NULL_VALUES),
                         Options.from(
                                 new Tuple2<>("Yes", InfluxDbClient.DO_REPLACE),
                                 new Tuple2<>("No", InfluxDbClient.DO_NOT_REPLACE)))

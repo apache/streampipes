@@ -1,0 +1,7 @@
+org.apache.streampipes.protocol.set.http.title=HTTP Set
+org.apache.streampipes.protocol.set.http.description=Regularly poll an HTTP endpoint
+
+url.title=URL
+url.description=Example: http(s)://test-server.com
+
+

@@ -18,15 +18,10 @@
 
 package org.apache.streampipes.connect.adapters.opcua;
 
-import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaMonitoredItem;
-import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
-import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.apache.streampipes.connect.adapter.Adapter;
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
 import org.apache.streampipes.connect.adapter.exception.ParseException;
 import org.apache.streampipes.connect.adapter.model.specific.SpecificDataStreamAdapter;
-import org.apache.streampipes.connect.adapter.sdk.ParameterExtractor;
-import org.apache.streampipes.container.api.ResolvesContainerProvidedOptions;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
@@ -38,8 +33,16 @@ import org.apache.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuild
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.utils.Assets;
+import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaMonitoredItem;
+import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
+import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class OpcUaAdapter extends SpecificDataStreamAdapter {
 
@@ -84,19 +87,20 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
     @Override
     public SpecificAdapterStreamDescription declareModel() {
 
-        SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(ID, "OPC UA", "Reads values from an OPC-UA server")
-                .iconUrl("opc.png")
+        SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(ID)
+                .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+                .withLocales(Locales.EN)
                 .category(AdapterType.Generic, AdapterType.Manufacturing)
-                .requiredAlternatives(Labels.from(OPC_HOST_OR_URL, "OPC Server", ""),
-                        Alternatives.from(Labels.from(OPC_URL, "URL", ""),
-                                StaticProperties.stringFreeTextProperty(Labels.from(OPC_SERVER_URL, "URL", "Example: opc.tcp://test-server.com:4840"))
+                .requiredAlternatives(Labels.withId(OPC_HOST_OR_URL),
+                        Alternatives.from(Labels.withId(OPC_URL),
+                                StaticProperties.stringFreeTextProperty(Labels.withId(OPC_SERVER_URL))
                         ),
-                        Alternatives.from(Labels.from(OPC_HOST, "Host/Port", ""),
+                        Alternatives.from(Labels.withId(OPC_HOST),
                                 StaticProperties.group(Labels.withId("host-port"),
-                                        StaticProperties.stringFreeTextProperty(Labels.from(OPC_SERVER_HOST, "Host", "Example: test-server.com (No leading opc.tcp://) ")),
-                                        StaticProperties.stringFreeTextProperty(Labels.from(OPC_SERVER_PORT, "Port", "Example: 4840")))))
-                .requiredTextParameter(Labels.from(NAMESPACE_INDEX, "Namespace Index", "Example: 2"))
-                .requiredTextParameter(Labels.from(NODE_ID, "Node Id", "Id of the Node to read the values from"))
+                                        StaticProperties.stringFreeTextProperty(Labels.withId(OPC_SERVER_HOST)),
+                                        StaticProperties.stringFreeTextProperty(Labels.withId(OPC_SERVER_PORT)))))
+                .requiredTextParameter(Labels.withId(NAMESPACE_INDEX))
+                .requiredTextParameter(Labels.withId(NODE_ID))
                 .build();
         description.setAppId(ID);
 

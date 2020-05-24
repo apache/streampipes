@@ -1,0 +1,10 @@
+org.apache.streampipes.connect.protocol.stream.http.title=HTTP Stream
+org.apache.streampipes.connect.protocol.stream.http.description=Continuously fetched events from an HTTP REST endpoint.
+
+url.title=URL
+url.description=Example: http(s)://test-server.com
+
+interval.title=Interval [sec]
+interval.description=Example: 5 (Polling interval in seconds)
+
+

@@ -19,6 +19,8 @@
 package org.apache.streampipes.connect.protocol.set;
 
 
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.utils.Assets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.streampipes.connect.SendToPipeline;
@@ -61,11 +63,12 @@ public class FileProtocol extends Protocol {
 
     @Override
     public ProtocolDescription declareModel() {
-        return ProtocolDescriptionBuilder.create(ID, "File Set", "Reads the content from a local file.")
+        return ProtocolDescriptionBuilder.create(ID)
+                .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+                .withLocales(Locales.EN)
                 .sourceType(AdapterSourceType.SET)
                 .category(AdapterType.Generic)
-                .iconUrl("file.png")
-                .requiredFile(Labels.from("filePath", "File", "File Path"))
+                .requiredFile(Labels.withId("filePath"))
                 .build();
     }
 

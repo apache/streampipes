@@ -1,0 +1,3 @@
+org.apache.streampipes.connect.adapters.wikipedia.edit.title=Wikipedia Edits
+org.apache.streampipes.connect.adapters.wikipedia.edit.description=Continuously publishes recent Wikipedia edits
+
