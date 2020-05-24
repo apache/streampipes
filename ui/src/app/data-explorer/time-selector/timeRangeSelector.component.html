@@ -1,0 +1,45 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div flex layout-fill layout="row" layout-align="start center" style="padding-top: 5px;">
+
+
+    <!--<div flex layout-fill class="option">-->
+        <!--<div class="optionName">Date range</div>-->
+        <!--<mat-form-field style="top: -10px; width: 270px">-->
+            <!--<input matInput [owlDateTime]="dt1" [owlDateTimeTrigger]="dt1"-->
+                   <!--[(ngModel)]="dateRange" [selectMode]="'range'" (dateTimeChange)="loadData()">-->
+            <!--<mat-icon matSuffix [owlDateTimeTrigger]="dt1" style="color: grey">event</mat-icon>-->
+            <!--<owl-date-time #dt1></owl-date-time>-->
+        <!--</mat-form-field>-->
+    <!--</div>-->
+    <button mat-button mat-stroked-button *ngIf="selectedTimeUnit !== '1 Hour'" (click)="selectTimeUnit('1 Hour')">1 Hour</button>
+    <button mat-button mat-stroked-button *ngIf="selectedTimeUnit === '1 Hour'"color="primary" mat-raised-button>1 Hour</button>
+    <button mat-button mat-stroked-button *ngIf="selectedTimeUnit !== '1 Day'" (click)="selectTimeUnit('1 Day')">1 Day</button>
+    <button mat-button mat-stroked-button *ngIf="selectedTimeUnit === '1 Day'"color="primary" mat-raised-button>1 Day</button>
+    <button mat-button mat-stroked-button *ngIf="selectedTimeUnit !== '1 Week'" (click)="selectTimeUnit('1 Week')">1 Week</button>
+    <button mat-button mat-stroked-button *ngIf="selectedTimeUnit === '1 Week'" color="primary" mat-raised-button>1 Week</button>
+    <button mat-button mat-stroked-button *ngIf="selectedTimeUnit !== '1 Month'" (click)="selectTimeUnit('1 Month')">1 Month</button>
+    <button mat-button mat-stroked-button *ngIf="selectedTimeUnit === '1 Month'" color="primary" mat-raised-button>1 Month</button>
+    <button mat-button mat-stroked-button *ngIf="selectedTimeUnit !== '1 Year'" (click)="selectTimeUnit('1 Year')">1 Year</button>
+    <button mat-button mat-stroked-button *ngIf="selectedTimeUnit === '1 Year'" color="primary" mat-raised-button>1 Year</button>
+    <button mat-button mat-stroked-button *ngIf="selectedTimeUnit !== 'Custom'" (click)="selectTimeUnit('Custom')">Custom</button>
+    <button mat-button mat-stroked-button *ngIf="selectedTimeUnit === 'Custom'" color="primary" mat-raised-button>Custom</button>
+
+
+</div>

@@ -16,23 +16,28 @@
  *
  */
 
-import {Component} from '@angular/core';
+import { Component, OnInit } from "@angular/core";
 
 @Component({
     templateUrl: './app-overview.component.html',
     styleUrls: ['./app-overview.component.css']
 })
-export class AppOverviewComponent {
+export class AppOverviewComponent implements OnInit {
 
-    selectedIndex: number = 0;
+    selectedIndex = 0;
     appOpen = false;
-    currentlySelectedApp: string = "";
+    currentlySelectedApp = '';
 
     apps: any[] = [
         {
-            appName: "Asset Dashboards",
-            appDescription: "Monitor measurements of your assets by placing visualizations on an image of your asset.",
-            appId: "asset-monitoring",
+            appName: 'Asset Dashboards',
+            appDescription: 'Monitor measurements of your assets by placing visualizations on an image of your asset.',
+            appId: 'asset-monitoring',
+        },
+        {
+            appName: 'Image Labeling',
+            appDescription: 'Label in data lake stored images.',
+            appId: 'image-labeling',
         },
     ];
 
@@ -54,7 +59,7 @@ export class AppOverviewComponent {
 
     appClosed() {
         this.appOpen = false;
-        this.currentlySelectedApp = "";
+        this.currentlySelectedApp = '';
     }
 
     selectApp(appId: string) {

@@ -16,10 +16,10 @@
  *
  */
 
-import {RdfsClass} from "../../platform-services/tsonld/RdfsClass";
-import {RdfProperty} from "../../platform-services/tsonld/RdfsProperty";
-import {DashboardWidgetSettings} from "./DashboardWidgetSettings";
-import {UnnamedStreamPipesEntity} from "../../connect/model/UnnamedStreamPipesEntity";
+import { UnnamedStreamPipesEntity } from '../../connect/model/UnnamedStreamPipesEntity';
+import { RdfsClass } from '../../platform-services/tsonld/RdfsClass';
+import { RdfProperty } from '../../platform-services/tsonld/RdfsProperty';
+import { DashboardWidgetSettings } from './DashboardWidgetSettings';
 
 @RdfsClass('sp:DashboardWidgetModel')
 export class DashboardWidget extends UnnamedStreamPipesEntity {
@@ -37,10 +37,10 @@ export class DashboardWidget extends UnnamedStreamPipesEntity {
     _id: string;
 
     @RdfProperty('sp:couchDbRev')
-    _ref:string;
+    _ref: string;
 
     @RdfProperty('sp:hasDashboardWidgetId')
-    widgetId:string;
+    widgetId: string;
 
     constructor() {
         super();

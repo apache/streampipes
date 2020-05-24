@@ -16,23 +16,22 @@
  *
  */
 
-import {Component, Inject} from "@angular/core";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {DashboardService} from "../../services/dashboard.service";
-import {ElementIconText} from "../../../services/get-element-icon-text.service";
-import {WidgetRegistry} from "../../registry/widget-registry";
-import {MappingPropertyUnary} from "../../../connect/model/MappingPropertyUnary";
-import {MappingPropertyGenerator} from "../../sdk/matching/mapping-property-generator";
-import {EventProperty} from "../../../connect/schema-editor/model/EventProperty";
-import {EventSchema} from "../../../connect/schema-editor/model/EventSchema";
-import {DashboardWidget} from "../../../core-model/dashboard/DashboardWidget";
-import {DashboardWidgetSettings} from "../../../core-model/dashboard/DashboardWidgetSettings";
-import {VisualizablePipeline} from "../../../core-model/dashboard/VisualizablePipeline";
-import {Dashboard} from "../../models/dashboard.model";
-import {MappingPropertyNary} from "../../../connect/model/MappingPropertyNary";
-import {ConfigurationInfo} from "../../../connect/model/message/ConfigurationInfo";
-import {FreeTextStaticProperty} from "../../../connect/model/FreeTextStaticProperty";
-import {WidgetConfigBuilder} from "../../registry/widget-config-builder";
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { FreeTextStaticProperty } from '../../../connect/model/FreeTextStaticProperty';
+import { MappingPropertyNary } from '../../../connect/model/MappingPropertyNary';
+import { MappingPropertyUnary } from '../../../connect/model/MappingPropertyUnary';
+import { EventProperty } from '../../../connect/schema-editor/model/EventProperty';
+import { EventSchema } from '../../../connect/schema-editor/model/EventSchema';
+import { DashboardWidget } from '../../../core-model/dashboard/DashboardWidget';
+import { DashboardWidgetSettings } from '../../../core-model/dashboard/DashboardWidgetSettings';
+import { VisualizablePipeline } from '../../../core-model/dashboard/VisualizablePipeline';
+import { ElementIconText } from '../../../services/get-element-icon-text.service';
+import { Dashboard } from '../../models/dashboard.model';
+import { WidgetConfigBuilder } from '../../registry/widget-config-builder';
+import { WidgetRegistry } from '../../registry/widget-registry';
+import { MappingPropertyGenerator } from '../../sdk/matching/mapping-property-generator';
+import { DashboardService } from '../../services/dashboard.service';
 
 @Component({
     selector: 'add-visualization-dialog-component',
@@ -42,21 +41,21 @@ import {WidgetConfigBuilder} from "../../registry/widget-config-builder";
 export class AddVisualizationDialogComponent {
 
     pages = [{
-        type: "select-pipeline",
-        title: "Select Pipeline",
-        description: "Select a pipeline you'd like to visualize"
+        type: 'select-pipeline',
+        title: 'Select Pipeline',
+        description: 'Select a pipeline you\'d like to visualize'
     }, {
-        type: "select-widget",
-        title: "Select Widget",
-        description: "Select widget"
+        type: 'select-widget',
+        title: 'Select Widget',
+        description: 'Select widget'
     }, {
-        type: "configure-widget",
-        title: "Configure Widget",
-        description: "Configure widget"
+        type: 'configure-widget',
+        title: 'Configure Widget',
+        description: 'Configure widget'
     }];
 
-    visualizablePipelines: Array<VisualizablePipeline> = [];
-    availableWidgets: Array<DashboardWidgetSettings>;
+    visualizablePipelines: VisualizablePipeline[] = [];
+    availableWidgets: DashboardWidgetSettings[];
 
     selectedPipeline: VisualizablePipeline;
     selectedWidget: DashboardWidgetSettings;
@@ -64,7 +63,7 @@ export class AddVisualizationDialogComponent {
     dashboard: Dashboard;
 
     selectedType: any;
-    page: any = "select-pipeline";
+    page: any = 'select-pipeline';
     dialogTitle: string;
 
     configValid: boolean;
@@ -79,7 +78,7 @@ export class AddVisualizationDialogComponent {
 
     ngOnInit() {
         if (!this.data) {
-            this.dialogTitle = "Add widget";
+            this.dialogTitle = 'Add widget';
             this.dashboardService.getVisualizablePipelines().subscribe(visualizations => {
                 this.visualizablePipelines = [];
                 visualizations.forEach(vis => {
@@ -88,10 +87,10 @@ export class AddVisualizationDialogComponent {
                         this.visualizablePipelines.push(vis);
                         this.sortPipeline();
                     });
-                })
+                });
             });
         } else {
-            this.dialogTitle = "Edit widget";
+            this.dialogTitle = 'Edit widget';
             this.selectedPipeline = this.data.pipeline;
             this.selectedWidget = this.data.widget.dashboardWidgetSettings;
             this.page = 'configure-widget';
@@ -118,15 +117,14 @@ export class AddVisualizationDialogComponent {
 
     getSelectedCss(selected, current) {
         if (selected == current) {
-            return "wizard-preview wizard-preview-selected";
+            return 'wizard-preview wizard-preview-selected';
         } else {
-            return "wizard-preview";
+            return 'wizard-preview';
         }
     }
 
     getTabCss(page) {
-        if (page == this.page) return "md-fab md-accent";
-        else return "md-fab md-accent wizard-inactive";
+        if (page == this.page) { return 'md-fab md-accent'; } else { return 'md-fab md-accent wizard-inactive'; }
     }
 
     selectPipeline(vis) {
@@ -138,7 +136,7 @@ export class AddVisualizationDialogComponent {
         this.selectedWidget = widget;
         this.selectedWidget.config.forEach(sp => {
             if (sp instanceof MappingPropertyUnary || sp instanceof MappingPropertyNary) {
-                let requirement: EventProperty = this.findRequirement(this.selectedWidget.requiredSchema, sp.internalName);
+                const requirement: EventProperty = this.findRequirement(this.selectedWidget.requiredSchema, sp.internalName);
                 sp.mapsFromOptions = new MappingPropertyGenerator(requirement, this.selectedPipeline.schema.eventProperties).computeMatchingProperties();
             }
             if (sp instanceof FreeTextStaticProperty && sp.internalName === WidgetConfigBuilder.TITLE_KEY) {
@@ -162,7 +160,7 @@ export class AddVisualizationDialogComponent {
         } else if (this.page == 'select-widget') {
             this.page = 'configure-widget';
         } else {
-            let configuredWidget: DashboardWidget = new DashboardWidget();
+            const configuredWidget: DashboardWidget = new DashboardWidget();
             configuredWidget.dashboardWidgetSettings = this.selectedWidget;
             configuredWidget.visualizablePipelineId = this.selectedPipeline._id;
             configuredWidget.visualizablePipelineTopic = this.selectedPipeline.topic;

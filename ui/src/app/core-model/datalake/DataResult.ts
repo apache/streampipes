@@ -17,7 +17,9 @@
  */
 
 export class DataResult {
+    measureName: string;
     total: number;
     headers: string[];
     rows: any[];
+    labels: string[];
 }
