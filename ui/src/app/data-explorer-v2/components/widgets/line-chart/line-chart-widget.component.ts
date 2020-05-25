@@ -51,10 +51,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
 
   // indicator variable if labeling mode is activated
   private labelingModeOn = false;
-
-  // indicator variable if labels has been changed
-  private changedLabels = false;
-
+  
   private dialogReference = undefined;
 
   updatemenus = [
@@ -323,7 +320,8 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
               }
             }
             this.data['labels'] = this.data[0]['customdata'];
-            this.setChangedLabels(true);
+            // saving labels persistently
+            this.saveLabelsInDatabase(result, this.selectedStartX, this.selectedEndX);
 
             // adding coloured shape (based on selected label) to graph (equals selected time interval)
             this.addShapeToGraph(this.selectedStartX, this.selectedEndX, this.colorService.getColor(result));
@@ -416,42 +414,17 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
 
     // changing dragmode to 'zoom'
     this.graph.layout.dragmode = 'zoom';
-
-    // saving labels persistently
-    if (this.getChangedLabels()) {
-      this.saveLabelsInDatabase();
-    }
+    
   }
 
-  private saveLabelsInDatabase() {
-    let currentLabel = undefined;
-    let indices = [];
-    for (const label in this.data['labels']) {
-      if (currentLabel !== this.data['labels'][label] && indices.length > 0) {
-        const startdate = new Date(this.data[0]['x'][indices[0]]).getTime() - 1;
-        const enddate = new Date(this.data[0]['x'][indices[indices.length - 1]]).getTime() + 1;
-        this.dataLakeRestService.saveLabelsInDatabase(this.data['measureName'], startdate, enddate, currentLabel).subscribe(
+  private saveLabelsInDatabase(label, start_X, end_X) {
+    const startdate = new Date(start_X).getTime() - 1;
+    const enddate = new Date(end_X).getTime() + 1;
+    this.dataLakeRestService.saveLabelsInDatabase(this.data['measureName'], startdate, enddate, label).subscribe(
             res => {
               // console.log('Successfully wrote label ' + currentLabel + ' into database.');
             }
-        );
-        currentLabel = undefined;
-        indices = [];
-        indices.push(label);
-      } else {
-        indices.push(label);
-      }
-
-      currentLabel = this.data['labels'][label];
-    }
-    const last_startdate = new Date(this.data[0]['x'][indices[0]]).getTime() - 1;
-    const last_enddate = new Date(this.data[0]['x'][indices[indices.length - 1]]).getTime() + 1;
-    this.dataLakeRestService.saveLabelsInDatabase(this.data['measureName'], last_startdate, last_enddate, currentLabel).subscribe(
-        res => {
-          // console.log('Successfully wrote label ' + currentLabel + ' in last iteration into database.');
-        });
-    this.setChangedLabels(false);
-
+            );
   }
 
   private addInitialColouredShapesToGraph() {
@@ -510,15 +483,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
     };
     this.graph.layout.shapes.push(shape);
   }
-
-  public setChangedLabels(state: boolean) {
-    this.changedLabels = state;
-  }
-
-  public getChangedLabels() {
-    return this.changedLabels;
-  }
-
+  
   setStartX(startX: string) {
     this.selectedStartX = startX;
   }
