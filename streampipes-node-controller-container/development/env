@@ -25,6 +25,7 @@ SP_NODE_LOCATION_MACHINE=universalrobot
 SP_NODE_ACCESSIBLE_SENSOR_ACTUATOR_RASPICAM=raspicam;sensor;/dev/video0;csi
 SP_NODE_ACCESSIBLE_SENSOR_ACTUATOR_ZED=zed;sensor;/dev/video1;usb
 SP_NODE_ACCESSIBLE_SENSOR_ACTUATOR_ROS=ros;universalrobot;192.168.0.80;network
+SP_NODE_SUPPORTED_PE_APP_ID_FILTER=org.apache.streampipes.processors.filters.jvm.numericalfilter
 SP_NODE_SUPPORTED_PE_APP_ID_ENRICH=org.apache.streampipes.processors.filters.jvm.enrich
 SP_NODE_SUPPORTED_PE_APP_ID_STATS=org.streampipes.pe.processors.internal.universalrobot.statscollector
 SP_NODE_SUPPORTED_PE_APP_ID_KPI=org.streampipes.pe.processors.internal.universalrobot.kpi

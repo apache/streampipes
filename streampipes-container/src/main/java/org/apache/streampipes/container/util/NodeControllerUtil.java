@@ -35,8 +35,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class NodeUtil {
-    static Logger LOG = LoggerFactory.getLogger(NodeUtil.class);
+public class NodeControllerUtil {
+    static Logger LOG = LoggerFactory.getLogger(NodeControllerUtil.class);
 
     private static final String PROTOCOL = "http://";
 
