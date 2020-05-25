@@ -16,7 +16,37 @@ package org.apache.streampipes.node.controller.container.management.pe;/*
  *
  */
 
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+import org.apache.http.client.fluent.Request;
+import org.apache.http.client.fluent.Response;
+import org.apache.http.entity.ContentType;
+import org.apache.streampipes.model.client.pipeline.PipelineElementStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+
 public class PipelineElementManager {
+
+    private static final Logger LOG =
+            LoggerFactory.getLogger(PipelineElementManager.class.getCanonicalName());
+
+    private static final Integer CONNECT_TIMEOUT = 10000;
+
+    private static PipelineElementManager instance = null;
+
+    private PipelineElementManager() {}
+
+    public static PipelineElementManager getInstance() {
+        if (instance == null) {
+            synchronized (PipelineElementManager.class) {
+                if (instance == null)
+                    instance = new PipelineElementManager();
+            }
+        }
+        return instance;
+    }
 
     /**
      * registeration of newly started pipeline element runtime container
@@ -25,8 +55,23 @@ public class PipelineElementManager {
     /**
      * invokes pipeline elements when pipeline is started
      */
+    public String invokePipelineElement(String pipelineElementEndpoint, String payload) {
+        LOG.info("Invoking element: {}" + pipelineElementEndpoint);
+        try {
+            Response httpResp = Request
+                    .Post(pipelineElementEndpoint)
+                    .bodyString(payload, ContentType.APPLICATION_JSON)
+                    .connectTimeout(CONNECT_TIMEOUT)
+                    .execute();
+            return httpResp.toString();
+        } catch (Exception e) {
+            LOG.error(e.getMessage());
+        }
+        return "";
+    }
 
     /**
      * detaches pipeline elements when pipeline is stopped
      */
+
 }

@@ -19,7 +19,6 @@
 package org.apache.streampipes.container.standalone.init;
 
 
-import org.apache.streampipes.container.util.NodeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -33,7 +32,6 @@ import org.apache.streampipes.container.model.PeConfig;
 import org.apache.streampipes.container.util.ConsulUtil;
 
 import java.util.Collections;
-import java.util.UUID;
 
 import javax.annotation.PreDestroy;
 

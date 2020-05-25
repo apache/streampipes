@@ -41,8 +41,16 @@ public class InvocableEntityUrlGenerator extends EndpointUrlGenerator<InvocableS
 
     @Override
     public String generateStartPipelineEndpointUrl() {
+//        return URLPREFIX
+//                + getHost()
+//                + SLASH
+//                + getIdentifier()
+//                + SLASH
+//                + pipelineElement.getAppId();
         return URLPREFIX
                 + getHost()
+                + SLASH
+                + "node/container/invoke"
                 + SLASH
                 + getIdentifier()
                 + SLASH
@@ -78,7 +86,8 @@ public class InvocableEntityUrlGenerator extends EndpointUrlGenerator<InvocableS
 
                 return nodeInfo.getNodeMetadata().getNodeAddress()
                         + COLON
-                        + ConsulUtil.getPortForService(route);
+                        + nodeInfo.getNodeControllerPort();
+                        //+ ConsulUtil.getPortForService(route);
             } else {
                 return defaultHost();
             }

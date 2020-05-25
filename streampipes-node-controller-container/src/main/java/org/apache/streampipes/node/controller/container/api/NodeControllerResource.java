@@ -16,15 +16,23 @@ package org.apache.streampipes.node.controller.container.api;/*
  *
  */
 
+import org.apache.streampipes.container.transform.Transformer;
+import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.node.PipelineElementDockerContainer;
 import org.apache.streampipes.node.controller.container.management.container.DockerOrchestratorManager;
+import org.apache.streampipes.node.controller.container.management.pe.PipelineElementManager;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 
 @Path("/node/container")
-public class NodeControllerResource {
+public class NodeControllerResource<I extends InvocableStreamPipesEntity> {
+
+    private static final String COLON = ":";
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -68,11 +76,29 @@ public class NodeControllerResource {
     }
 
     @POST
-    @Path("/invoke")
+    @Path("/invoke/{identifier}/{elementId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response invokePipelineElement(String appId) {
+    public Response invokePipelineElement(@PathParam("identifier") String identifier, @PathParam("elementId") String elementId, String payload) {
         // TODO implement
+        String pipelineElementEndpoint;
+        InvocableStreamPipesEntity graph;
+        try {
+            if (identifier.equals("sepa")) {
+                graph = Transformer.fromJsonLd(DataProcessorInvocation.class, payload);
+                pipelineElementEndpoint = graph.getBelongsTo();
+                PipelineElementManager.getInstance().invokePipelineElement(pipelineElementEndpoint, payload);
+            }
+            else if (identifier.equals("sec")) {
+                graph = Transformer.fromJsonLd(DataSinkInvocation.class, payload);
+                pipelineElementEndpoint = graph.getBelongsTo();
+                PipelineElementManager.getInstance().invokePipelineElement(pipelineElementEndpoint, payload);
+
+            }
+            //pipelineElementEndpoint = graph.getElementEndpointHostname() + COLON + graph.getElementEndpointPort() + "/" + identifier + "/" + elementId;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return Response
                 .ok()
                 .build();
