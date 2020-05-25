@@ -39,7 +39,7 @@
 @import '~leaflet/dist/leaflet.css';
 @import '~material-design-icons/iconfont/material-icons.css';
 
-@import '../assets/fonts/Roboto-Regular.css';
+@import '~roboto-fontface/css/roboto/roboto-fontface.css';
 
 @import './sp/shepherd-new';
 
@@ -64,3 +64,9 @@
 @import './sp/stepper';
 
 @import './sp/colors.scss';
+
+@import '~codemirror/lib/codemirror.css';
+@import '~codemirror/theme/darcula.css';
+@import '~codemirror/theme/dracula.css';
+@import '~codemirror/addon/hint/show-hint.css';
+@import '~codemirror/addon/lint/lint.css';

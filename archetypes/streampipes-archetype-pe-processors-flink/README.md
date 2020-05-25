@@ -23,7 +23,7 @@
 mvn archetype:generate                                  \
 			-DarchetypeGroupId=org.apache.streampipes                \
 			-DarchetypeArtifactId=streampipes-archetype-pe-processors-flink          \
-			-DarchetypeVersion=0.60.2-SNAPSHOT                \
+			-DarchetypeVersion=0.66.0               \
 			-DgroupId=my.test.groupId \
 			-DartifactId=my-test-artifact-id
 			-DclassNamePrefix=MyProcessor

@@ -20,8 +20,10 @@ package org.apache.streampipes.rest.impl.datalake;
 
 import com.google.gson.Gson;
 import okhttp3.OkHttpClient;
+import org.apache.commons.io.FileUtils;
 import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;
+import org.influxdb.dto.Point;
 import org.influxdb.dto.Query;
 import org.influxdb.dto.QueryResult;
 import org.apache.streampipes.config.backend.BackendConfig;
@@ -31,6 +33,7 @@ import org.apache.streampipes.rest.impl.datalake.model.GroupedDataResult;
 import org.apache.streampipes.rest.impl.datalake.model.PageResult;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.ParseException;
@@ -93,7 +96,6 @@ public class DataLakeManagementV3 {
 
     DataResult dataResult = convertResult(result);
     influxDB.close();
-
     return dataResult;
   }
 
@@ -224,6 +226,11 @@ public class DataLakeManagementV3 {
 
   public PageResult getEvents(String index, int itemsPerPage) throws IOException {
     int page = getMaxPage(index, itemsPerPage);
+
+    if (page > 0) {
+      page = page -1;
+    }
+
     return getEvents(index, itemsPerPage, page);
   }
 
@@ -521,4 +528,96 @@ public class DataLakeManagementV3 {
     }
   }
 
+
+  public byte[] getImage(String fileRoute) throws IOException {
+    fileRoute = getImageFileRoute(fileRoute);
+    File file = new File(fileRoute);
+    return FileUtils.readFileToByteArray(file);
+  }
+
+
+  public String getImageCoco(String fileRoute) throws IOException {
+    fileRoute = getImageFileRoute(fileRoute);
+    String cocoRoute = getCocoFileRoute(fileRoute);
+
+    File file = new File(cocoRoute);
+    if (!file.exists()) {
+      return "";
+    } else {
+      return FileUtils.readFileToString(file, "UTF-8");
+    }
+  }
+
+
+  public void saveImageCoco(String fileRoute, String data) throws IOException {
+    fileRoute = getImageFileRoute(fileRoute);
+    String cocoRoute = getCocoFileRoute(fileRoute);
+
+    File file = new File(cocoRoute);
+    file.getParentFile().mkdirs();
+    FileUtils.writeStringToFile(file, data, "UTF-8");
+
+  }
+
+  private String getImageFileRoute(String fileRoute) {
+    fileRoute = fileRoute.replace("_", "/");
+    fileRoute = fileRoute.replace("/png", ".png");
+    return fileRoute;
+  }
+
+  private String getCocoFileRoute(String imageRoute) {
+    String[] splitedRoute = imageRoute.split("/");
+    String route = "";
+    for (int i = 0; splitedRoute.length - 2  >= i; i++) {
+      route += "/" + splitedRoute[i];
+    }
+    route += "Coco";
+    route += "/" + splitedRoute[splitedRoute.length - 1];
+    route = route.replace(".png", ".json");
+    return route;
+  }
+
+  public void updateLabels(String index, long startdate, long enddate, String label) {
+    DataResult queryResult = getEvents(index, startdate, enddate);
+    Map<String, String> headerWithTypes = getHeadersWithTypes(index);
+    List<String> headers = queryResult.getHeaders();
+
+    InfluxDB influxDB = getInfluxDBClient();
+    influxDB.setDatabase(BackendConfig.INSTANCE.getInfluxDatabaseName());
+
+    for (List<Object> row : queryResult.getRows()) {
+      long timestampValue = Math.round((double) row.get(headers.indexOf("timestamp")));
+
+      Point.Builder p = Point.measurement(index).time(timestampValue, TimeUnit.MILLISECONDS);
+
+      for (int i = 1; i < row.size(); i++) {
+        String selected_header = headers.get(i);
+        if (!selected_header.equals("sp_internal_label")) {
+          if (headerWithTypes.get(selected_header).equals("integer")) {
+            p.addField(selected_header, Math.round((double) row.get(i)));
+          } else if (headerWithTypes.get(selected_header).equals("string")) {
+            p.addField(selected_header, row.get(i).toString());
+          }
+        } else {
+          p.addField(selected_header, label);
+        }
+      }
+      influxDB.write(p.build());
+    }
+    influxDB.close();
+  }
+
+  private Map<String, String> getHeadersWithTypes(String index) {
+      InfluxDB influxDB = getInfluxDBClient();
+      Query query = new Query("SHOW FIELD KEYS FROM " + index,
+              BackendConfig.INSTANCE.getInfluxDatabaseName());
+      QueryResult result = influxDB.query(query);
+      influxDB.close();
+
+      Map<String, String> headerTypes = new HashMap<String, String>();
+      for (List<Object> element : result.getResults().get(0).getSeries().get(0).getValues()) {
+        headerTypes.put(element.get(0).toString(), element.get(1).toString());
+      }
+      return headerTypes;
+    }
 }

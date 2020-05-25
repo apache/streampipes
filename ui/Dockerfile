@@ -26,5 +26,5 @@ COPY docker-entrypoint.sh /
 
 RUN chown -R nginx:nginx /usr/share/nginx/html/
 
-ENTRYPOINT ["/docker-entrypoint.sh"]
+ENTRYPOINT ["sh", "/docker-entrypoint.sh"]
 CMD ["nginx", "-g", "daemon off;"]

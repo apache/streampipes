@@ -87,5 +87,10 @@
                                   restricted-edit-mode="ctrl.restrictedEditMode">
             </file-static-property>
         </div>
+        <div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'CodeInputStaticProperty'">
+            <code-input customize-form="ctrl.customizeForm" display-recommended="ctrl.displayRecommended"
+                                  static-property="ctrl.staticProperty" selected-element="ctrl.selectedElement">
+            </code-input>
+        </div>
     </div>
 </div>

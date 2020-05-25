@@ -96,6 +96,8 @@ import {DashboardWidget} from "../core-model/dashboard/DashboardWidget";
 import {DashboardWidgetSettings} from "../core-model/dashboard/DashboardWidgetSettings";
 import {ColorPickerStaticProperty} from "../connect/model/ColorPickerStaticProperty";
 import {MappingPropertyNary} from "../connect/model/MappingPropertyNary";
+import { DataExplorerWidgetModel } from "../core-model/datalake/DataExplorerWidgetModel";
+import { DataLakeMeasure } from "../core-model/datalake/DataLakeMeasure";
 
 
 @Injectable()
@@ -190,6 +192,10 @@ export class TsonLdSerializerService {
         tsonld.addClassMapping(VisualizablePipeline);
         tsonld.addClassMapping(ColorPickerStaticProperty);
 
+        tsonld.addClassMapping(DataExplorerWidgetModel);
+        tsonld.addClassMapping(DataLakeMeasure);
+
+
         tsonld.addContext('sp', 'https://streampipes.org/vocabulary/v1/');
         tsonld.addContext('spi', 'urn:streampipes.org:spi:');
         tsonld.addContext('foaf', 'http://xmlns.com/foaf/0.1/');
@@ -206,8 +212,12 @@ export class TsonLdSerializerService {
         return this.getTsonLd().fromJsonLdType(o, type);
     }
 
-    public fromJsonLdContainer(o: any, type:string): any {
+    public fromJsonLdContainer(o: any, type: string): any {
         return this.getTsonLd().fromJsonLdContainer(o, type);
+    }
+
+    public jsonLdToFlattenJsonLd(object: any): any {
+        return this.getTsonLd().jsonLdToFlattenJsonLd(object);
     }
 
 }

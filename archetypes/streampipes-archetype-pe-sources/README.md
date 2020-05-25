@@ -23,7 +23,7 @@
 mvn archetype:generate                                  \
 			-DarchetypeGroupId=org.apache.streampipes                \
 			-DarchetypeArtifactId=streampipes-archetype-pe-sources         \
-			-DarchetypeVersion=0.60.2-SNAPSHOT                \
+			-DarchetypeVersion=0.66.0                \
 			-DgroupId=my.groupId \
 			-DartifactId=my-source
 			-DclassNamePrefix=MySource
