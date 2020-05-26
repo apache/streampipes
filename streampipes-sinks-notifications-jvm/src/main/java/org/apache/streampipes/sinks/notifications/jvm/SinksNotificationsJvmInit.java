@@ -30,6 +30,7 @@ import org.apache.streampipes.sinks.notifications.jvm.config.SinksNotificationsJ
 import org.apache.streampipes.sinks.notifications.jvm.email.EmailController;
 import org.apache.streampipes.sinks.notifications.jvm.onesignal.OneSignalController;
 import org.apache.streampipes.sinks.notifications.jvm.slack.SlackNotificationController;
+import org.apache.streampipes.sinks.notifications.jvm.telegram.TelegramController;
 
 public class SinksNotificationsJvmInit extends StandaloneModelSubmitter {
 
@@ -38,7 +39,8 @@ public class SinksNotificationsJvmInit extends StandaloneModelSubmitter {
             .getInstance()
             .add(new EmailController())
             .add(new OneSignalController())
-            .add(new SlackNotificationController());
+            .add(new SlackNotificationController())
+            .add(new TelegramController());
 
     DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),
             new CborDataFormatFactory(),
