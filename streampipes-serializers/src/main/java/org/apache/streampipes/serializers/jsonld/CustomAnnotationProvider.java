@@ -49,6 +49,21 @@ import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescrip
 import org.apache.streampipes.model.connect.worker.ConnectWorkerContainer;
 import org.apache.streampipes.model.dashboard.DashboardWidgetModel;
 import org.apache.streampipes.model.dashboard.VisualizablePipeline;
+import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
+import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.graph.DataProcessorDescription;
+import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.graph.DataSinkDescription;
+import org.apache.streampipes.model.graph.DataSinkInvocation;
+import org.apache.streampipes.model.graph.DataSourceDescription;
+import org.apache.streampipes.model.grounding.EventGrounding;
+import org.apache.streampipes.model.grounding.JmsTransportProtocol;
+import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
+import org.apache.streampipes.model.grounding.MqttTransportProtocol;
+import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
+import org.apache.streampipes.model.grounding.TransportFormat;
+import org.apache.streampipes.model.grounding.TransportProtocol;
+import org.apache.streampipes.model.grounding.WildcardTopicDefinition;
 import org.apache.streampipes.model.graph.*;
 import org.apache.streampipes.model.grounding.*;
 import org.apache.streampipes.model.monitoring.ElementStatusInfoSettings;
@@ -193,8 +208,9 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             DashboardWidgetModel.class,
             UserDefinedOutputStrategy.class,
             VisualizablePipeline.class,
-            StreamPipesJsonLdContainer.class
-
+            DataExplorerWidgetModel.class,
+            StreamPipesJsonLdContainer.class,
+            DataLakeMeasure.class
     );
   }
 }

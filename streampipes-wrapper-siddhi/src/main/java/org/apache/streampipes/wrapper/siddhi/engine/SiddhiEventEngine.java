@@ -34,12 +34,7 @@ import io.siddhi.core.event.Event;
 import io.siddhi.core.stream.input.InputHandler;
 import io.siddhi.core.stream.output.StreamCallback;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.StringJoiner;
+import java.util.*;
 
 public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> implements
         EventProcessor<B> {
@@ -138,8 +133,15 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
           schemaInfo, SourceInfo sourceInfo) {
     Map<String, Object> outMap = new HashMap<>();
     for (int i = 0; i < sortedEventKeys.size(); i++) {
+
+      if (event.getData(i) instanceof LinkedList) {
         List<Object> tmp = (List<Object>) event.getData(i);
-      outMap.put(sortedEventKeys.get(i), tmp.get(0));
+        outMap.put(sortedEventKeys.get(i), tmp.get(0));
+      }
+      else {
+        outMap.put(sortedEventKeys.get(i), event.getData(i));
+      }
+
     }
     return EventFactory.fromMap(outMap, sourceInfo, schemaInfo);
   }

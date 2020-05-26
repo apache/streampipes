@@ -103,7 +103,7 @@
     "shepherd.js": "2.4.0",
     "slick-carousel": "1.6.0",
     "systemjs": "0.21.6",
-    "tslib": "1.10.0",
+    "tslib": "1.11.1",
     "ng-pick-datetime": "7.0.0",
     "trix": "0.10.1",
     "zone.js": "0.10.2"
@@ -132,13 +132,13 @@
     "karma": "~2.0.0",
     "karma-chrome-launcher": "~2.2.0",
     "karma-coverage-istanbul-reporter": "^1.2.1",
-    "karma-firefox-launcher": "^1.1.0",
+    "karma-firefox-launcher": "^1.3.0",
     "karma-jasmine": "~1.1.0",
     "karma-jasmine-html-reporter": "^0.2.2",
     "karma-verbose-reporter": "0.0.6",
     "mini-css-extract-plugin": "^0.9.0",
     "mustache": "^2.3.0",
-    "node-sass": "^4.8.3",
+    "node-sass": "^4.13.1",
     "prettier": "1.14.2",
     "raw-loader": "^0.5.1",
     "sass-loader": "^6.0.7",
@@ -148,10 +148,10 @@
     "tslint-config-prettier": "^1.15.0",
     "typescript": "3.7.5",
     "uglifyjs-webpack-plugin": "^2.1.2",
-    "webpack": "^4.29.6",
-    "webpack-cli": "^3.2.3",
-    "webpack-dev-server": "^3.2.1",
+    "webpack": "^4.41.6",
     "webpack-bundle-analyzer": "^3.4.1",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3",
     "webpack-merge": "^4.2.1"
   }
 }
