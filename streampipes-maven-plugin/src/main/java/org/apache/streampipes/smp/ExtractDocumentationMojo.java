@@ -122,7 +122,7 @@ public class ExtractDocumentationMojo extends AbstractMojo {
 
       for (AssetModel assetModel : documentedPipelineElements) {
         Path docsPath = Paths.get(targetDir, DOCS_ROOT_FOLDER, DOCS_FOLDER,
-                assetModel.getAppId());
+                "pe");
         Path docsWebsitePath = Paths.get(targetDir, DOCS_ROOT_FOLDER, DOCS_WEBSITE_FOLDER,
                 assetModel.getAppId());
         Path imgPath = Paths.get(targetDir, DOCS_ROOT_FOLDER, IMG_FOLDER,
@@ -157,15 +157,9 @@ public class ExtractDocumentationMojo extends AbstractMojo {
         documentationFileContents = new ImagePathReplacer(documentationFileContents,
                 assetModel.getAppId()).replaceContentForDocs();
 
-        FileUtils.writeStringToFile(docsPath.resolve("documentation.md").toFile(),
+        FileUtils.writeStringToFile(docsPath.resolve(assetModel.getAppId() +".md").toFile(),
                 documentationFileContents);
 
-        // modify docs for website
-        String websiteFileContents = new ImagePathReplacer(originalDocumentationFileContents,
-                assetModel.getAppId()).replaceContentForWebsite();
-
-        FileUtils.writeStringToFile(docsWebsitePath.resolve("documentation.md").toFile(),
-                websiteFileContents);
       }
 
       Boolean existsOverviewFile = Files.exists(docsBasePath.resolve("pipeline-elements.md"));

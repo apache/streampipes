@@ -33,7 +33,7 @@ public class SidebarConfigGenerator extends OutputGenerator {
 
   public String generate() {
     JsonArray pipelineElements = new JsonArray();
-    assetModels.forEach(pe -> pipelineElements.add(pe.getAppId() + "/" + pe.getAppId()));
+    assetModels.forEach(pe -> pipelineElements.add("pe/" +pe.getAppId()));
 
     JsonObject pipelineElementObject = new JsonObject();
     pipelineElementObject.add("Pipeline Elements", pipelineElements);
