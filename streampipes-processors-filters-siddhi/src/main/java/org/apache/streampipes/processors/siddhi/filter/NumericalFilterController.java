@@ -47,7 +47,7 @@ public class NumericalFilterController extends StandaloneEventProcessingDeclarer
                             Labels.withId(NUMBER_MAPPING), PropertyScope.NONE).build())
             .outputStrategy(OutputStrategies.keep())
             .requiredSingleValueSelection(Labels.withId(OPERATION), Options.from("<", "<=", ">",
-                    ">=", "=="))
+                    ">=", "==", "!="))
             .requiredFloatParameter(Labels.withId(VALUE), NUMBER_MAPPING)
             .build();
   }
@@ -68,6 +68,8 @@ public class NumericalFilterController extends StandaloneEventProcessingDeclarer
       operation = "GE";
     } else if (stringOperation.equals("==")) {
       operation = "EQ";
+    } else if (stringOperation.equals("!=")) {
+      operation = "IE";
     }
 
     String filterProperty = extractor.mappingPropertyValue(NUMBER_MAPPING);

@@ -26,7 +26,26 @@ public class NumericalFilter extends SiddhiEventEngine<NumericalFilterParameters
   @Override
   protected String fromStatement(List<String> inputStreamNames, NumericalFilterParameters params) {
     String filterProperty = prepareName(params.getFilterProperty());
-    return "from " + inputStreamNames.get(0) +"[" + filterProperty +"<" + params.getThreshold() +"]";
+    String filterOperator = "";
+
+    if (params.getNumericalOperator() == NumericalOperator.EQ) {
+      filterOperator = "==";
+    } else if (params.getNumericalOperator() == NumericalOperator.GE) {
+      filterOperator = ">=";
+    } else if (params.getNumericalOperator() == NumericalOperator.GT) {
+      filterOperator = ">";
+    } else if (params.getNumericalOperator() == NumericalOperator.LE) {
+      filterOperator = "<=";
+    } else if (params.getNumericalOperator() == NumericalOperator.LT) {
+      filterOperator = "<";
+    } else if (params.getNumericalOperator() == NumericalOperator.IE) {
+      filterOperator = "!=";
+    }
+
+    // e.g. Filter for numberField value less than 10 and output all fields
+    //
+    // Siddhi query: from inputstreamname[numberField<10]
+    return "from " + inputStreamNames.get(0) +"[" + filterProperty + filterOperator + params.getThreshold() +"]";
   }
 
   @Override
