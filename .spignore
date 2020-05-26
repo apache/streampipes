@@ -1,7 +1,2 @@
-org.apache.streampipes.processors.aggregation.flink.count
-org.apache.streampipes.processor.imageclassification.jvm.image-cropper
-org.apache.streampipes.processors.pattern-detection.flink.sequence
-org.apache.streampipes.processors.pattern-detection.flink.absence
-org.apache.streampipes.processors.pattern-detection.flink.and
-org.apache.streampipes.processors.pattern-detection.flink.increase
-org.apache.streampipes.processors.statistics.flink.statistics-summary
+org.apache.streampipes.processors.enricher.jvm.jseval
+org.apache.streampipes.sinks.databases.jvm.redis
