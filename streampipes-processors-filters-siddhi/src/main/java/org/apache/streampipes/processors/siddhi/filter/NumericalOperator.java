@@ -19,5 +19,5 @@
 package org.apache.streampipes.processors.siddhi.filter;
 
 public enum NumericalOperator {
-GE, GT, LE, LT, EQ
+GE, GT, LE, LT, EQ, IE
 }

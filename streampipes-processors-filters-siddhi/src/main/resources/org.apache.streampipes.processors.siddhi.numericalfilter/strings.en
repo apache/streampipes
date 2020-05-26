@@ -1,5 +1,5 @@
 org.apache.streampipes.processors.siddhi.numericalfilter.title=Numerical Filter (Siddhi)
-org.apache.streampipes.processors.siddhi.numericalfilter.description=
+org.apache.streampipes.processors.siddhi.numericalfilter.description=Numerical Filter based on CEP engine Siddhi
 
 number-mapping.title=Field to Filter
 number-mapping.description=Specifies the field name where the filter operation should be applied on.
