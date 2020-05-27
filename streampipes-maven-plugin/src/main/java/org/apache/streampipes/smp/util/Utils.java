@@ -36,6 +36,10 @@ public class Utils {
             + appId;
   }
 
+  public static Path makeResourcePath(String sourcePath) {
+    return Paths.get(sourcePath, "src", "main", "resources");
+  }
+
   public static Path makeResourcePath(String sourcePath, String appId) {
     return Paths.get(sourcePath, "src", "main", "resources", appId);
   }

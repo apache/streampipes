@@ -28,7 +28,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.apache.streampipes.smp.extractor.ControllerFileFinder;
-import org.apache.streampipes.smp.extractor.DockerImageExtractor;
+import org.apache.streampipes.smp.extractor.ResourceDirectoryElementFinder;
 import org.apache.streampipes.smp.generator.*;
 import org.apache.streampipes.smp.model.AssetModel;
 import org.apache.streampipes.smp.util.DirectoryManager;
@@ -86,19 +86,27 @@ public class ExtractDocumentationMojo extends AbstractMojo {
     for (MavenProject currentModule : projects) {
       File baseDir = currentModule.getBasedir();
       List<String> sourceRoots = currentModule.getCompileSourceRoots();
+      List<AssetModel> allAssetModels = new ArrayList<>();
       //String targetDir = this.project.getModel().getBuild().getDirectory();
 
-      String dockerImageName =
-              new DockerImageExtractor(baseDir.getAbsolutePath()).extractImageName();
+      //String dockerImageName =
+      //        new DockerImageExtractor(baseDir.getAbsolutePath()).extractImageName();
 
-      List<AssetModel> allAssetModels = new ArrayList<>(new ControllerFileFinder(getLog(),
-              baseDir.getAbsolutePath(), sourceRoots.get(0),
-              "**/*Controller.java").makeAssetModels());
+      if (currentModule.getName().equals("streampipes-connect-adapters")) {
+        System.out.println("Opening adapters");
+        allAssetModels = new ResourceDirectoryElementFinder(sourceRoots.get(0), getLog(), baseDir.getAbsolutePath())
+                .makeAssetModels();
+        allAssetModels.forEach(am -> System.out.println(am.getAppId()));
+      } else {
+        allAssetModels = new ControllerFileFinder(getLog(),
+                baseDir.getAbsolutePath(), sourceRoots.get(0),
+                "**/*Controller.java").makeAssetModels();
+      }
 
       allAssetModels.forEach(am -> {
         am.setBaseDir(baseDir.getAbsolutePath());
         am.setModuleName(currentModule.getName());
-        am.setContainerName(dockerImageName);
+        //am.setContainerName(dockerImageName);
       });
 
       List<String> finalPipelineElementsToExclude = pipelineElementsToExclude;
@@ -106,10 +114,7 @@ public class ExtractDocumentationMojo extends AbstractMojo {
               allAssetModels
                       .stream()
                       .filter(am -> finalPipelineElementsToExclude.stream().noneMatch(pe -> pe.equals(am.getAppId())))
-                      .filter(am -> new File(Utils.makePath(baseDir.getAbsolutePath(),
-                              am.getAppId())).exists())
                       .collect(Collectors.toList()));
-
     }
     try {
       Collections.sort(documentedPipelineElements);
@@ -117,7 +122,7 @@ public class ExtractDocumentationMojo extends AbstractMojo {
 
       for (AssetModel assetModel : documentedPipelineElements) {
         Path docsPath = Paths.get(targetDir, DOCS_ROOT_FOLDER, DOCS_FOLDER,
-                assetModel.getAppId());
+                "pe");
         Path docsWebsitePath = Paths.get(targetDir, DOCS_ROOT_FOLDER, DOCS_WEBSITE_FOLDER,
                 assetModel.getAppId());
         Path imgPath = Paths.get(targetDir, DOCS_ROOT_FOLDER, IMG_FOLDER,
@@ -152,15 +157,9 @@ public class ExtractDocumentationMojo extends AbstractMojo {
         documentationFileContents = new ImagePathReplacer(documentationFileContents,
                 assetModel.getAppId()).replaceContentForDocs();
 
-        FileUtils.writeStringToFile(docsPath.resolve("documentation.md").toFile(),
+        FileUtils.writeStringToFile(docsPath.resolve(assetModel.getAppId() +".md").toFile(),
                 documentationFileContents);
 
-        // modify docs for website
-        String websiteFileContents = new ImagePathReplacer(originalDocumentationFileContents,
-                assetModel.getAppId()).replaceContentForWebsite();
-
-        FileUtils.writeStringToFile(docsWebsitePath.resolve("documentation.md").toFile(),
-                websiteFileContents);
       }
 
       Boolean existsOverviewFile = Files.exists(docsBasePath.resolve("pipeline-elements.md"));

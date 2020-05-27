@@ -15,31 +15,24 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.smp.extractor;
 
-package org.apache.streampipes.smp.generator;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import org.apache.maven.plugin.logging.Log;
 import org.apache.streampipes.smp.model.AssetModel;
 
 import java.util.List;
 
-public class SidebarConfigGenerator extends OutputGenerator {
+public abstract class ElementFinder {
 
+  protected String sourceRoot;
+  protected Log log;
+  protected String baseDir;
 
-  public SidebarConfigGenerator(List<AssetModel> assetModels) {
-    super(assetModels);
+  public ElementFinder(String sourceRoot, Log log, String baseDir) {
+    this.sourceRoot = sourceRoot;
+    this.log = log;
+    this.baseDir = baseDir;
   }
 
-  public String generate() {
-    JsonArray pipelineElements = new JsonArray();
-    assetModels.forEach(pe -> pipelineElements.add("pe/" +pe.getAppId()));
-
-    JsonObject pipelineElementObject = new JsonObject();
-    pipelineElementObject.add("Pipeline Elements", pipelineElements);
-    JsonObject jsonObject = new JsonObject();
-    jsonObject.add("pipeline-elements", pipelineElementObject);
-
-    return jsonObject.toString();
-  }
+  public abstract List<AssetModel> makeAssetModels();
 }
