@@ -375,10 +375,24 @@ public class StreamPipes {
   public static final String ENTITY_CONTAINER = NS + "EntityContainer";
   public static final String CONTAINS_ELEMENTS = NS + "containsElement";
   public static final String HAS_DASHBOARD_WIDGET_ID = NS + "hasDashboardWidgetId";
+  public static final String HAS_DASHBOARD_WIDGET_TYPE = NS + "hasDashboardWidgetType";
   public static final String DASHBOARD_WIDGET_DATA_CONFIG = NS + "DashboardWidgetDataConfig" ;
   public static final String COLOR_PICKER_STATIC_PROPERTY = NS + "ColorPickerStaticProperty";
   public static final String SELECTED_COLOR = NS + "hasSelectedColor";
+
+  public static final String DATA_EXPLORER_WIDGET_MODEL = NS + "DataExplorerWidgetModel";
+  public static final String DATA_LAKE_MEASURE = NS + "DataLakeMeasure";
+  public static final String HAS_DATA_LAKE_MEASURE = NS + "hasDataLakeMeasure";
+  public static final String HAS_MEASUREMENT_NAME = NS + "hasMeasurementName";
+  public static final String HAS_EVENT_SCHEMA = NS + "hasEventSchema";
   public static final String HAS_WIDGET_ICON_NAME = NS + "hasWidgetIconName";
   public static final String HAS_WIDGET_DESCRIPTION = NS + "hasWidgetDescription";
+  public static final String HAS_SELECTED_KEYS = NS + "hasSelectedKeys";
   public static final String CORRESPONDING_USER = NS + "hasCorrespondingUser";
+
+  public static final String CODE_INPUT_STATIC_PROPERTY = NS + "CodeInputStaticProperty";
+  public static final String HAS_LANGUAGE = NS + "hasLanguage";
+  public static final String HAS_CODE_INPUT = NS + "hasCodeInput";
+  public static final String HAS_CODE_TEMPLATE = NS + "hasCodeTemplate";
+  public static final String USER_DEFINED_OUTPUT_STRATEGY = NS + "UserDefinedOutputStrategy";
 }

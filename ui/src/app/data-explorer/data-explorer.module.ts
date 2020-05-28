@@ -35,17 +35,16 @@ import { DatalakeRestService } from '../core-services/datalake/datalake-rest.ser
 import { CoreUiModule } from '../core-ui/core-ui.module';
 import { LabelingToolModule } from '../core-ui/linechart/labeling-tool/labeling-tool.module';
 import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
-import { DataDownloadDialog } from './explorer/datadownloadDialog/dataDownload.dialog';
-import { ExplorerComponent } from './explorer/explorer.component';
-
+import { ExplorerComponent } from './explorer-widget/explorer.component';
+import { DataDownloadDialog } from './explorer-widget/datadownloadDialog/dataDownload.dialog';
 
 export const MY_NATIVE_FORMATS = {
-    fullPickerInput: {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: false},
-    datePickerInput: {year: 'numeric', month: 'numeric', day: 'numeric', hour12: false},
-    timePickerInput: {hour: 'numeric', minute: 'numeric', hour12: false},
-    monthYearLabel: {year: 'numeric', month: 'short', hour12: false},
-    dateA11yLabel: {year: 'numeric', month: 'long', day: 'numeric', hour12: false},
-    monthYearA11yLabel: {year: 'numeric', month: 'long', hour12: false},
+  fullPickerInput: {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: false},
+  datePickerInput: {year: 'numeric', month: 'numeric', day: 'numeric', hour12: false},
+  timePickerInput: {hour: 'numeric', minute: 'numeric', hour12: false},
+  monthYearLabel: {year: 'numeric', month: 'short', hour12: false},
+  dateA11yLabel: {year: 'numeric', month: 'long', day: 'numeric', hour12: false},
+  monthYearA11yLabel: {year: 'numeric', month: 'long', hour12: false},
 };
 
 @NgModule({

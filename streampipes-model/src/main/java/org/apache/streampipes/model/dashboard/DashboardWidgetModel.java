@@ -34,6 +34,9 @@ public class DashboardWidgetModel extends DashboardEntity {
   @RdfProperty(StreamPipes.HAS_DASHBOARD_WIDGET_ID)
   private String widgetId;
 
+  @RdfProperty(StreamPipes.HAS_DASHBOARD_WIDGET_TYPE)
+  private String  widgetType;
+
   @OneToOne(fetch = FetchType.EAGER,
           cascade = {CascadeType.PERSIST, CascadeType.MERGE})
   @RdfProperty(StreamPipes.HAS_DASHBOARD_WIDGET_SETTINGS)

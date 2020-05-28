@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.model.util;
 
+import org.apache.streampipes.model.output.*;
+import org.apache.streampipes.model.staticproperty.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.streampipes.model.ApplicationLink;
@@ -41,16 +43,6 @@ import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.model.grounding.WildcardTopicDefinition;
 import org.apache.streampipes.model.grounding.WildcardTopicMapping;
-import org.apache.streampipes.model.output.AppendOutputStrategy;
-import org.apache.streampipes.model.output.CustomOutputStrategy;
-import org.apache.streampipes.model.output.CustomTransformOutputStrategy;
-import org.apache.streampipes.model.output.FixedOutputStrategy;
-import org.apache.streampipes.model.output.KeepOutputStrategy;
-import org.apache.streampipes.model.output.ListOutputStrategy;
-import org.apache.streampipes.model.output.OutputStrategy;
-import org.apache.streampipes.model.output.PropertyRenameRule;
-import org.apache.streampipes.model.output.TransformOperation;
-import org.apache.streampipes.model.output.TransformOutputStrategy;
 import org.apache.streampipes.model.quality.Accuracy;
 import org.apache.streampipes.model.quality.EventPropertyQualityDefinition;
 import org.apache.streampipes.model.quality.EventPropertyQualityRequirement;
@@ -65,25 +57,6 @@ import org.apache.streampipes.model.schema.EventPropertyNested;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.QuantitativeValue;
 import org.apache.streampipes.model.schema.ValueSpecification;
-import org.apache.streampipes.model.staticproperty.AnyStaticProperty;
-import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
-import org.apache.streampipes.model.staticproperty.DomainStaticProperty;
-import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
-import org.apache.streampipes.model.staticproperty.MappingPropertyNary;
-import org.apache.streampipes.model.staticproperty.MappingPropertyUnary;
-import org.apache.streampipes.model.staticproperty.MatchingStaticProperty;
-import org.apache.streampipes.model.staticproperty.OneOfStaticProperty;
-import org.apache.streampipes.model.staticproperty.Option;
-import org.apache.streampipes.model.staticproperty.RemoteOneOfStaticProperty;
-import org.apache.streampipes.model.staticproperty.RuntimeResolvableAnyStaticProperty;
-import org.apache.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty;
-import org.apache.streampipes.model.staticproperty.SecretStaticProperty;
-import org.apache.streampipes.model.staticproperty.StaticProperty;
-import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
-import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
-import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
-import org.apache.streampipes.model.staticproperty.SupportedProperty;
-import org.apache.streampipes.model.staticproperty.FileStaticProperty;
 import org.apache.streampipes.model.template.BoundPipelineElement;
 
 import java.util.ArrayList;
@@ -107,6 +80,8 @@ public class Cloner {
       return new TransformOutputStrategy((TransformOutputStrategy) other);
     } else if (other instanceof CustomTransformOutputStrategy) {
       return new CustomTransformOutputStrategy((CustomTransformOutputStrategy) other);
+    } else if (other instanceof UserDefinedOutputStrategy) {
+      return new UserDefinedOutputStrategy((UserDefinedOutputStrategy) other);
     } else {
       return new AppendOutputStrategy((AppendOutputStrategy) other);
     }
@@ -143,6 +118,8 @@ public class Cloner {
       return new SecretStaticProperty((SecretStaticProperty) o);
     } else if (o instanceof FileStaticProperty) {
       return new FileStaticProperty((FileStaticProperty) o);
+    } else if (o instanceof CodeInputStaticProperty) {
+      return new CodeInputStaticProperty((CodeInputStaticProperty) o);
     } else {
       return new StaticPropertyAlternative((StaticPropertyAlternative) o);
     }

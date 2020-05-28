@@ -73,6 +73,7 @@ import {FileUploadComponent} from "./components/fileupload/fileupload.component"
 import {AnyRemoteComponent} from "./components/any-remote/any-remote.component";
 import {CodeInputComponent} from "./components/code/code.component";
 import {CodeEditorDirective} from "./components/code/code-editor.directive";
+import {UserDefinedOutputComponent} from "./components/userdefinedoutput/user-defined-output.component";
 
 
 export default angular.module('sp.editor', [spServices, 'ngSanitize', 'angularTrix', 'ngAnimate', 'datatables', 'ng-showdown'])
@@ -87,6 +88,7 @@ export default angular.module('sp.editor', [spServices, 'ngSanitize', 'angularTr
     .component('any', AnyComponent)
     .component('anyRemote', AnyRemoteComponent)
     .component('customOutput', CustomOutputComponent)
+    .component('userDefinedOutput', UserDefinedOutputComponent)
     .component('domainConceptInput', DomainConceptComponent)
     .component('freetext', FreeTextComponent)
     .component('secret', SecretComponent)

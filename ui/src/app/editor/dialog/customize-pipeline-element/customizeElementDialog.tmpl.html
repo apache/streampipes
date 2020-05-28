@@ -103,7 +103,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div ng-if="outputStrategy.type === 'org.apache.streampipes.model.output.CustomOutputStrategy'">
+                            <div ng-if="outputStrategy.type === 'org.apache.streampipes.model.output.CustomOutputStrategy' ||
+                                        outputStrategy.type === 'org.apache.streampipes.model.output.UserDefinedOutputStrategy'">
                                 <div layout="column" class="customize-item-main sp-blue-border-nopadding">
                                     <div class="customize-item-title sp-blue-bg" layout="row" flex="100">
                                         <div flex="80" layout="row" layout-align="start center">
@@ -114,12 +115,19 @@
 
                                         </div>
                                     </div>
-                                    <div class="customize-item-content">
+                                    <div class="customize-item-content" ng-if="outputStrategy.type === 'org.apache.streampipes.model.output.CustomOutputStrategy'">
                                         <custom-output output-strategy="outputStrategy"
                                                        selected-element="ctrl.selectedElement"
                                                        customize-form="ctrl.customizeForm"
                                                        restricted-edit-mode="ctrl.restrictedEditMode">
                                         </custom-output>
+                                    </div>
+                                    <div class="customize-item-content" ng-if="outputStrategy.type === 'org.apache.streampipes.model.output.UserDefinedOutputStrategy'">
+                                        <user-defined-output output-strategy="outputStrategy"
+                                                       selected-element="ctrl.selectedElement"
+                                                       customize-form="ctrl.customizeForm"
+                                                       restricted-edit-mode="ctrl.restrictedEditMode">
+                                        </user-defined-output>
                                     </div>
                                 </div>
                             </div>

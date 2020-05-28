@@ -27,3 +27,4 @@ modules:
   - spMyElements
   - spDataExplorer
   - spConfiguration
+  - spDataExplorer2

@@ -17,8 +17,8 @@
   -->
 
 [![Github Actions](https://img.shields.io/github/workflow/status/apache/incubator-streampipes/build-and-deploy-docker-dev)](https://github.com/apache/incubator-streampipes/actions/)
-[![Docker pulls](https://img.shields.io/docker/pulls/streampipes/backend.svg)](https://hub.docker.com/r/streampipes/backend/)
-[![Maven central](https://img.shields.io/maven-central/v/org.streampipes/streampipes-backend.svg)](https://img.shields.io/maven-central/v/org.streampipes/streampipes-backend.svg)
+[![Docker pulls](https://img.shields.io/docker/pulls/apachestreampipes/backend.svg)](https://hub.docker.com/r/apachestreampipes/backend/)
+[![Maven central](https://img.shields.io/maven-central/v/org.apache.streampipes/streampipes-backend.svg)](https://img.shields.io/maven-central/v/org.apache.streampipes/streampipes-backend.svg)
 [![License](https://img.shields.io/github/license/apache/incubator-streampipes.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 [![Last commit](https://img.shields.io/github/last-commit/apache/incubator-streampipes.svg)]()
 [![Twitter](https://img.shields.io/twitter/follow/StreamPipes.svg?label=Follow&style=social)](https://twitter.com/StreamPipes)
@@ -45,6 +45,7 @@
   * [Use Cases](#use-cases)
   * [Installation](#installation)
   * [Pipeline Elements](#pipeline-elements)
+  * [Building StreamPipes](#building-streampipes)
   * [Extending StreamPipes](#extending-streampipes)
   * [Bugs and Feature Requests](#bugs-and-feature-requests)
   * [Get help](#get-help)
@@ -100,6 +101,37 @@ For a more in-depth manual, read the installation guide at [https://streampipes.
 StreamPipes includes a repository of ready-to-use pipeline elements. A description of the standard elements can be 
 found in the Github repository [streampipes-extensions](https://www.github.com/apache/incubator-streampipes-extensions).
 
+## Building StreamPipes
+
+To properly build the StreamPipes core, the following tools should be installed:
+
+### Prerequisites
+* Java 8 JDK (minimum)
+* Maven (tested with 3.6)
+* NodeJS + NPM (tested with v12+/ v6+)
+* Docker + Docker-Compose
+
+### Building
+
+To build the core project, do the following:
+
+```
+    mvn clean package
+```
+
+To build the ui, switch to the ``ui`` folder and perform the following steps:
+
+```
+    npm install
+    npm run build
+```
+
+### Starting
+
+To start StreamPipes, run ``docker-compose up -d`` from the root directory.
+
+You can also use the installer or CLI as described in the ``Installation`` section.
+
 ## Extending StreamPipes
 
 You can easily add your own data streams, processors or sinks. A [Java-based SDK](https://streampipes.apache.org/docs/docs/dev-guide-tutorial-processors) and several [run-time wrappers](https://streampipes.apache.org/docs/docs/dev-guide-architecture) for popular streaming frameworks such as Apache Flink, Apache Spark and Apache 
@@ -132,7 +164,7 @@ Here are some first steps in case you want to contribute:
 * Send an email, tell us about your interests and which parts of Streampipes you'd like to contribute (e.g., core or UI)!
 * Ask for a mentor who helps you understanding the code base and guides you through the first setup steps
 * Find an issue in our [Jira](https://issues.apache.org/jira/projects/STREAMPIPES) which is tagged with a _newbie_ tag
-* Have a look at our developer wiki at [https://cwiki.apache.org/confluence/display/STREAMPIPES/Home](https://cwiki.apache.org/confluence/display/STREAMPIPES/Home) to learn more about StreamPipes development.
+* Have a look at our developer wiki at [https://cwiki.apache.org/confluence/display/STREAMPIPES](https://cwiki.apache.org/confluence/display/STREAMPIPES) to learn more about StreamPipes development.
 
 Have fun!
 

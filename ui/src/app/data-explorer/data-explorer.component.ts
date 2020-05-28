@@ -16,13 +16,13 @@
  *
  */
 
-import {Component, OnInit} from '@angular/core';
-import {DatalakeRestService} from '../core-services/datalake/datalake-rest.service';
-import {InfoResult} from '../core-model/datalake/InfoResult';
-import {Observable} from 'rxjs/Observable';
-import {FormControl} from '@angular/forms';
-import {map, startWith} from 'rxjs/operators';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Observable } from 'rxjs/Observable';
+import { map, startWith } from 'rxjs/operators';
+import { DataLakeMeasure } from '../core-model/datalake/DataLakeMeasure';
+import { DatalakeRestService } from '../core-services/datalake/datalake-rest.service';
 
 @Component({
     selector: 'sp-data-explorer',
@@ -32,15 +32,14 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 export class DataExplorerComponent implements OnInit {
 
     myControl = new FormControl();
-    infoResult: InfoResult[];
-    filteredIndexInfos: Observable<InfoResult[]>;
+    infoResult: DataLakeMeasure[];
+    filteredIndexInfos: Observable<DataLakeMeasure[]>;
 
-    page: number = 0;
-    //selectedIndex: string = '';
-    selectedInfoResult: InfoResult = undefined;
+    page = 0;
+    selectedInfoResult: DataLakeMeasure = undefined;
 
-    downloadFormat: string = 'csv';
-    isDownloading: boolean = false;
+    downloadFormat = 'csv';
+    isDownloading = false;
 
     constructor(private restService: DatalakeRestService, private snackBar: MatSnackBar) {
 
@@ -59,12 +58,10 @@ export class DataExplorerComponent implements OnInit {
     }
 
     selectIndex(index: string) {
-        this.selectedInfoResult = this._filter(index)[0]
-
-      //  this.selectedIndex = index;
+        this.selectedInfoResult = this._filter(index)[0];
     }
 
-    _filter(value: string): InfoResult[] {
+    _filter(value: string): DataLakeMeasure[] {
         const filterValue = value.toLowerCase();
 
         return this.infoResult.filter(option => option.measureName.toLowerCase().includes(filterValue));

@@ -156,3 +156,18 @@ spDashboard:
   icon: 'editor:ic_insert_chart_24px'
   homeImage: '/assets/img/home/configuration.png'
   admin: false
+spDataExplorer2:
+  ng5: True
+  ng1_templateUrl: ''
+  ng1_controller: ''
+  ng5_moduleName: 'DataExplorerV2Module'
+  ng5_component: 'DataExplorerV2Component'
+  ng5_componentPath: '../data-explorer-v2/data-explorer-v2.component'
+  path: './data-explorer-v2/data-explorer-v2.module'
+  link: 'streampipes.dataexplorerv2'
+  url: '/dataexplorerv2'
+  title: 'Data Explorer'
+  description: 'data-explorer-v2'
+  icon: 'navigation:ic_apps_24px'
+  homeImage: '/assets/img/home/configuration.png'
+  admin: false

@@ -34,6 +34,7 @@ public enum StaticPropertyType {
     StaticPropertyGroup,
     StaticPropertyAlternatives,
     StaticPropertyAlternative,
-    SecretStaticProperty;
+    SecretStaticProperty,
+    CodeInputStaticProperty;
 
 }
