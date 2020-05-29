@@ -128,6 +128,8 @@
         <protobuf.version>3.6.1</protobuf.version>
         <pulsar.version>2.5.1</pulsar.version>
         <slack.version>1.2.0</slack.version>
+        <poiji.version>2.7.0</poiji.version>
+
     </properties>
 
     <dependencyManagement>
@@ -292,6 +294,11 @@
                 <groupId>com.google.errorprone</groupId>
                 <artifactId>error_prone_annotations</artifactId>
                 <version>${errorprone-annotations.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.ozlerhakan</groupId>
+                <artifactId>poiji</artifactId>
+                <version>${poiji.version}</version>
             </dependency>
 
             <dependency>

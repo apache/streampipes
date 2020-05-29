@@ -22,8 +22,14 @@ plc_node_name.description=example: %Q0.4
 plc_node_type.title=Data Type
 plc_node_type.description=example: bool
 
-csv-upload.title=Upload CSV
-csv-upload.description=Export a CSV file with the configurations from the TIA portal
+csv_import.title=Import from CSV
+csv_import.description=Import a CSV file with the configurations from the TIA portal
 
-plc_nodes_file.title=CSV File
-plc_nodes_file.description=Contains three columns 'Name', 'Data Type', 'Logical Address'
+excel_import.title= Import from Excel file
+excel_import.description=Import a Excel file with the configurations from the TIA portal
+
+plc_nodes_csv_file.title=CSV File
+plc_nodes_csv_file.description=Contains three columns 'Name', 'Data Type', 'Logical Address'
+
+plc_nodes_excel_file.title=Excel File
+plc_nodes_excel_file.description=Contains three columns 'Name', 'Data Type', 'Logical Address'
