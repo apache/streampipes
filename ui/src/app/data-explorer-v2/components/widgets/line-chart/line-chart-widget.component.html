@@ -40,7 +40,7 @@
 
             <!-- Chart -->
             <plotly-plot fxFlex
-                         *ngIf="data !== undefined"
+                         *ngIf="data !== undefined && !showNoDataInDateRange"
                          flex
                          [data]="data"
                          [layout]="graph.layout"
