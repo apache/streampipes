@@ -17,13 +17,17 @@
  */
 
 package org.apache.streampipes.connect.adapters.plc4x.s7;
+import com.poiji.annotation.ExcelCellName;
 
 public class S7ConfigFile {
 
+    @ExcelCellName("Name")
     private String name;
 
+    @ExcelCellName("Data Type")
     private String dataType;
 
+    @ExcelCellName("Logical Address")
     private String logicalAddress;
 
     public S7ConfigFile() {
