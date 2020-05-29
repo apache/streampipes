@@ -54,7 +54,43 @@ export class TimeRangeSelectorComponent implements OnInit {
   reloadData() {
     this.dateRangeEmitter.emit(this.dateRange);
   }
-
+  increaseStart(){
+    
+    if(this.selectedTimeButton.offset == -1){
+      this.dateRange = new DateRange(new Date(this.dateRange.startDate.getTime() + 5*60000 ),this.dateRange.endDate);
+    }
+    else{
+      this.dateRange = new DateRange(new Date(this.dateRange.startDate.getTime() + this.selectedTimeButton.offset*60000 ),this.dateRange.endDate);
+    }
+    this.reloadData();
+  }
+  decreaseStart(){
+    if(this.selectedTimeButton.offset == -1){
+      this.dateRange = new DateRange(new Date(this.dateRange.startDate.getTime() - 5*60000 ),this.dateRange.endDate);
+    }
+    else{
+      this.dateRange = new DateRange(new Date(this.dateRange.startDate.getTime() - this.selectedTimeButton.offset*60000 ),this.dateRange.endDate);
+    }
+    this.reloadData();
+  }
+  increaseEnd(){
+    if(this.selectedTimeButton.offset == -1){
+      this.dateRange = new DateRange(this.dateRange.startDate,new Date(this.dateRange.endDate.getTime() + 5*60000 ));
+    }
+    else{
+      this.dateRange = new DateRange(this.dateRange.startDate,new Date(this.dateRange.endDate.getTime() + this.selectedTimeButton.offset*60000 ));
+    }
+    this.reloadData();
+  }
+  decreaseEnd(){
+    if(this.selectedTimeButton.offset == -1){
+      this.dateRange = new DateRange(this.dateRange.startDate,new Date(this.dateRange.endDate.getTime() - 5*60000 ));
+    }
+    else{
+      this.dateRange = new DateRange(this.dateRange.startDate,new Date(this.dateRange.endDate.getTime() - this.selectedTimeButton.offset*60000 ));
+    }
+    this.reloadData();
+  }
   changeCustomDateRange() {
     this.selectedTimeButton =  this.possibleTimeButtons[this.possibleTimeButtons.length - 1];
     this.dateRange = new DateRange(this.dateRange.startDate, this.dateRange.endDate)

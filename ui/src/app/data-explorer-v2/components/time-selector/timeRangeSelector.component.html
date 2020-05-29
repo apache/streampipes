@@ -17,7 +17,7 @@
   -->
 
 <div flex layout-fill layout="row" layout-align="start center" style="padding-top: 5px;">
-
+    <Button (click)="decreaseStart()"><</Button>
     <mat-form-field appearance="outline" class="start-date">
         <mat-label>Start</mat-label>
         <input matInput
@@ -27,6 +27,9 @@
                (dateTimeChange)="changeCustomDateRange()">
         <owl-date-time #dt1></owl-date-time>
     </mat-form-field>
+    <Button (click)="increaseStart()">></Button>
+    &nbsp;
+    <Button (click)="decreaseEnd()"><</Button>
     <mat-form-field  appearance="outline" class="end-date">
         <mat-label>End</mat-label>
         <input matInput
@@ -36,7 +39,8 @@
                (dateTimeChange)="changeCustomDateRange()">
         <owl-date-time #dt2></owl-date-time>
     </mat-form-field>
-
+    <Button (click)="increaseEnd()">></Button>
+    &nbsp;
     <button mat-raised-button
             *ngFor="let item of possibleTimeButtons"
             [color]="selectedTimeButton.value === item.value ? 'primary' : ''"
