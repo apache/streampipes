@@ -36,7 +36,12 @@
               "node_modules/jquery.panzoom/dist/jquery.panzoom.js",
               "node_modules/jquery-ui-dist/jquery-ui.js",
               "node_modules/jsplumb/dist/js/jsPlumb-2.1.3-min.js",
-              "node_modules/trix/dist/trix.js"
+              "node_modules/trix/dist/trix.js",
+              "src/assets/three.min.js",
+              "src/assets/threex.domevents.js",
+              "src/assets/OrbitControls.js",
+              "src/assets/PackWidget.js",
+              "src/assets/render.js"
             ]
           },
           "configurations": {
@@ -79,6 +84,25 @@
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
             "browserTarget": "app:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "src/test.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "tsconfig.spec.json",
+            "karmaConfig": "karma.conf.js",
+            "assets": [
+              "src/assets"
+            ],
+            "scripts": [
+              "src/assets/three.min.js",
+              "src/assets/threex.domevents.js",
+              "src/assets/OrbitControls.js",
+              "src/assets/PackWidget.js",
+              "src/assets/render.js"
+              ]
           }
         },
         "lint": {
