@@ -63,6 +63,7 @@ public class BooleanToStateController extends StandaloneEventProcessingDeclarer<
 //                            StaticProperties.mappingPropertyUnary(Labels.withId(STATE_MAPPING_ID), PropertyScope.NONE)))
             .outputStrategy(OutputStrategies.append(
                     EpProperties.listStringEp(Labels.withId(STATE_RESULT_FIELD_ID), RESULT_RUNTIME_NAME, SPSensor.STATE)
+//                    EpProperties.stringEp(Labels.withId(STATE_RESULT_FIELD_ID), RESULT_RUNTIME_NAME, SPSensor.STATE)
             ))
             .build();
   }

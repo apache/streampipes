@@ -20,12 +20,16 @@ package org.apache.streampipes.processors.transformation.jvm.processor.state.buf
 
 import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.model.runtime.field.AbstractField;
+import org.apache.streampipes.sdk.helpers.EpProperties;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.vocabulary.SO;
+import org.apache.streampipes.vocabulary.SPSensor;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class StateBuffer implements EventProcessor<StateBufferParameters> {
 
@@ -34,6 +38,7 @@ public class StateBuffer implements EventProcessor<StateBufferParameters> {
   private String stateProperty;
   private String sensorValueProperty;
 
+  private Map<String, List> stateBuffer;
 
   @Override
   public void onInvocation(StateBufferParameters stateBufferParameters,
@@ -44,13 +49,36 @@ public class StateBuffer implements EventProcessor<StateBufferParameters> {
     this.timeProperty = stateBufferParameters.getTimeProperty();
     this.stateProperty = stateBufferParameters.getStateProperty();
     this.sensorValueProperty = stateBufferParameters.getSensorValueProperty();
+    this.stateBuffer = new HashMap<>();
   }
 
   @Override
   public void onEvent(Event inputEvent, SpOutputCollector out) {
-      // TODO
 
-    out.collect(inputEvent);
+    long timestamp = inputEvent.getFieldBySelector(this.timeProperty).getAsPrimitive().getAsLong();
+    List<String> states = inputEvent.getFieldBySelector(this.stateProperty).getAsList().parseAsSimpleType(String.class);
+//    List<String> states = Arrays.asList(inputEvent.getFieldBySelector(this.stateProperty).getAsPrimitive().getAsString());
+    double value = inputEvent.getFieldBySelector(this.sensorValueProperty).getAsPrimitive().getAsDouble();
+
+    // add value to state buffer
+    for (String state : states) {
+      if (stateBuffer.containsKey(state)) {
+        stateBuffer.get(state).add(value);
+      } else {
+        stateBuffer.put(state, Arrays.asList(value));
+      }
+    }
+
+    // emit event if state is not in event anymore
+    for (String key : stateBuffer.keySet()) {
+      if (!states.contains(key)) {
+          Event resultEvent  = new Event();
+          resultEvent.addField(StateBufferController.VALUES, stateBuffer.get(key));
+          resultEvent.addField(StateBufferController.STATE, key);
+          out.collect(resultEvent);
+      }
+    }
+
   }
 
   @Override
