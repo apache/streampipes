@@ -19,5 +19,6 @@ package org.apache.streampipes.processors.filters.jvm.processor.limit.util;
 
 public enum WindowType {
     TIME,
-    LENGTH
+    LENGTH,
+    CRON
 }
