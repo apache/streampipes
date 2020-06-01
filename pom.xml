@@ -102,6 +102,7 @@
         <zstd-jni.version>1.4.3-1</zstd-jni.version>
         <mqtt-client.version>1.12</mqtt-client.version>
         <hawtbuf.version>1.11</hawtbuf.version>
+        <mysql-connector-java.version>8.0.15</mysql-connector-java.version>
 
         <maven-shade-plugin.version>3.0.0</maven-shade-plugin.version>
 
@@ -565,6 +566,11 @@
                 <groupId>redis.clients</groupId>
                 <artifactId>jedis</artifactId>
                 <version>${jedis.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql-connector-java.version}</version>
             </dependency>
 
 
