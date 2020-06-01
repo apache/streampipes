@@ -15,19 +15,19 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.processors.filters.jvm.processor.limit.window;
+package org.apache.streampipes.processors.filters.jvm.processor.limit.util;
 
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.processors.filters.jvm.processor.limit.window.Window;
+import org.quartz.Job;
+import org.quartz.JobDataMap;
+import org.quartz.JobExecutionContext;
 
-public interface Window {
+public class ProcessJob implements Job {
 
-    void init() throws SpRuntimeException;
-
-    void onEvent(Event event) throws SpRuntimeException;
-
-    void onTrigger();
-
-    void destroy() throws SpRuntimeException;
+    public void execute(JobExecutionContext context) {
+        JobDataMap dataMap = context.getJobDetail().getJobDataMap();
+        Window window = (Window) dataMap.get(SchedulerUtil.WINDOW_KEY);
+        window.onTrigger();
+    }
 
 }

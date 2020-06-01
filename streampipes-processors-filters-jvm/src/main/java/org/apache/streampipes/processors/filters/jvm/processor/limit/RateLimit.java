@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.processors.filters.jvm.processor.limit;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.filters.jvm.processor.limit.util.WindowFactory;
 import org.apache.streampipes.processors.filters.jvm.processor.limit.window.Window;
@@ -49,15 +50,22 @@ public class RateLimit implements EventProcessor<RateLimitParameters> {
     }
 
     @Override
-    public void onEvent(Event event, SpOutputCollector spOutputCollector) {
+    public void onEvent(Event event, SpOutputCollector spOutputCollector) throws SpRuntimeException {
         Object group = groupingEnabled ? getGroupKey(event) : DEFAULT_GROUP;
-        Window window = windows.computeIfAbsent(group, k -> factory.create());
+        Window window = windows.get(group);
+        if (window == null) {
+            window = factory.create();
+            window.init();
+            windows.put(group, window);
+        }
         window.onEvent(event);
     }
 
     @Override
-    public void onDetach() {
-        this.windows.values().forEach(Window::destroy);
+    public void onDetach() throws SpRuntimeException {
+        for (Window window : this.windows.values()) {
+            window.destroy();
+        }
     }
 
     private Object getGroupKey(Event event) {

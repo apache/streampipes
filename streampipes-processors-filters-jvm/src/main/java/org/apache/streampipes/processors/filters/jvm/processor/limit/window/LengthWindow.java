@@ -40,9 +40,14 @@ public class LengthWindow implements Window {
     }
 
     @Override
+    public void init() {
+        // do nothing.
+    }
+
+    @Override
     public void onEvent(Event event) {
         events.add(event);
-        process();
+        onTrigger();
     }
 
     @Override
@@ -50,7 +55,8 @@ public class LengthWindow implements Window {
         events.clear();
     }
 
-    private void process() {
+    @Override
+    public void onTrigger() {
         if (events.size() == 1) {
             if (eventSelection == EventSelection.FIRST) {
                 emit(events.get(0));
