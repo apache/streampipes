@@ -30,7 +30,6 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { OWL_DATE_TIME_FORMATS, OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
-import { InjectableRxStompConfig, RxStompService, rxStompServiceFactory } from '@stomp/ng2-stompjs';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { GridsterModule } from 'angular-gridster2';
 import { PlotlyViaWindowModule } from 'angular-plotly.js';
@@ -138,14 +137,6 @@ export const MY_NATIVE_FORMATS = {
       deps: ['$injector']
     },
     ElementIconText,
-    {
-      provide: InjectableRxStompConfig
-    },
-    {
-      provide: RxStompService,
-      useFactory: rxStompServiceFactory,
-      deps: [InjectableRxStompConfig]
-    },
     {
       provide: OWL_DATE_TIME_FORMATS, useValue: MY_NATIVE_FORMATS
     }
