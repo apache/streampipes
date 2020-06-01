@@ -43,13 +43,16 @@ Enabling this will use grouping with rate-limiting (note: disabling this will ig
 Runtime field to be used as the grouping key. If grouping is disabled, this setting will be ignored.
 
 ### Window Type
-This specifies the type of window to be used (time or length).
+This specifies the type of window to be used (time / length / cron).
 
 ### Length Window Size
-Length window size in event count.
+Length window size in event count (note: only works with length window type).
 
 ### Time Window Size
-Time window size in milliseconds.
+Time window size in milliseconds (note: only works with time window type).
+
+### Cron Window Expression
+[Cron expression](https://www.freeformatter.com/cron-expression-generator-quartz.html) to trigger and emit events (i.e `0 * * ? * *` for every minute) (note: only works with cron window type).
 
 ### Output Event Selection
 This specifies the event(s) that are selected to be emitted.

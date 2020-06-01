@@ -19,6 +19,12 @@ time-window.description=Time window configuration.
 time-window-size.title=Time Window Size
 time-window-size.description=Time window size in milliseconds.
 
+cron-window.title=Cron Window
+cron-window.description=Cron window configuration.
+
+cron-window-expr.title=Cron Window Expression
+cron-window-expr.description=Cron expression to trigger the window (i.e 0 * * ? * * for every minute).
+
 grouping-field.title=Grouping Field
 grouping-field.description=Runtime field to be used as the grouping key. If grouping is disabled, this setting will be ignored.
 
