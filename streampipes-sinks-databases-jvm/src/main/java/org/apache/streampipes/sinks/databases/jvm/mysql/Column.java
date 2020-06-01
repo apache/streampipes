@@ -19,6 +19,7 @@
 package org.apache.streampipes.sinks.databases.jvm.mysql;
 
 import org.apache.streampipes.sdk.utils.Datatypes;
+import org.apache.streampipes.vocabulary.SO;
 
 class Column {
     private Datatypes type;
@@ -50,8 +51,16 @@ class Column {
                 this.type = Datatypes.String;
                 def = "";
                 break;
+
+            case "date":
+            case "datetime":
+            case "time":
+            case "timestamp":
+            case "year":
+                this.type = Datatypes.Long;
+                def = System.currentTimeMillis();
+                break;
             default:
-                // date, datetime, time, timestamp, year
                 throw new IllegalArgumentException("Type " + type + " not supported.");
         }
         if (columnType.equals("tinyint(1)") || columnType.equals("bit(1)")) {

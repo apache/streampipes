@@ -23,10 +23,13 @@ import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
+import org.apache.streampipes.vocabulary.SO;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.apache.streampipes.sdk.helpers.EpProperties.timestampProperty;
 
 public class MySqlClient {
 
@@ -102,10 +105,18 @@ public class MySqlClient {
     List<EventProperty> allProperties = new ArrayList<>();
 
     for (Column column : columns) {
-      allProperties.add(PrimitivePropertyBuilder
-              .create(column.getType(), column.getName())
-              .label(column.getName())
-              .build());
+      if (SO.DateTime.equals(column.getDomainProperty())) {
+        allProperties.add(PrimitivePropertyBuilder
+                .create(column.getType(), column.getName())
+                .label(column.getName())
+                .domainProperty(SO.DateTime)
+                .build());
+      } else {
+        allProperties.add(PrimitivePropertyBuilder
+                .create(column.getType(), column.getName())
+                .label(column.getName())
+                .build());
+      }
     }
 
     eventSchema.setEventProperties(allProperties);

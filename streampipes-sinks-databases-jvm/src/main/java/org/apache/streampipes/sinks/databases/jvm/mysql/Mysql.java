@@ -24,6 +24,7 @@ import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.schema.EventPropertyNested;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.sinks.databases.jvm.jdbcclient.JdbcClient;
+import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.vocabulary.XSD;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.runtime.EventSink;
@@ -38,11 +39,13 @@ public class Mysql extends JdbcClient implements EventSink<MysqlParameters> {
     private MysqlParameters params;
     private static Logger LOG;
     private HashMap<String, Column> tableColumns;
+    private List<String> timestampKeys;
 
     @Override
     public void onInvocation(MysqlParameters params, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
 
         this.params = params;
+        this.timestampKeys = new ArrayList<>();
         LOG = params.getGraph().getLogger(Mysql.class);
 
         initializeJdbc(
@@ -112,6 +115,12 @@ public class Mysql extends JdbcClient implements EventSink<MysqlParameters> {
         }
     }
 
+    public static void main(String... args) {
+        long mil = System.currentTimeMillis();
+        java.sql.Timestamp timestamp = new java.sql.Timestamp(mil);
+
+        System.out.println(timestamp);
+    }
 
     @Override
     protected void save(final Event event) throws SpRuntimeException {
@@ -127,7 +136,14 @@ public class Mysql extends JdbcClient implements EventSink<MysqlParameters> {
                 if (event.getFieldByRuntimeName(s).getRawValue() instanceof String) {
                     sb2.append("\"").append(event.getFieldByRuntimeName(s).getRawValue().toString()).append("\", ");
                 } else {
-                    sb2.append(event.getFieldByRuntimeName(s).getRawValue().toString()).append(", ");
+                    //
+                    if (this.timestampKeys.contains(s)) {
+                        java.sql.Timestamp sqlTimestamp = new java.sql.Timestamp(event.getFieldByRuntimeName(s).getAsPrimitive().getAsLong());
+                        sb2.append("\"").append(sqlTimestamp).append("\", ");
+                    } else {
+                        sb2.append(event.getFieldByRuntimeName(s).getRawValue().toString()).append(", ");
+                    }
+
                 }
             }
             // Remove last comma
@@ -231,7 +247,14 @@ public class Mysql extends JdbcClient implements EventSink<MysqlParameters> {
 
                 // Adding the type of the property (e.g. "VARCHAR(255)")
                 if (property instanceof EventPropertyPrimitive) {
-                    s.append(SqlAttribute.getFromUri(((EventPropertyPrimitive) property).getRuntimeType()));
+                    // If domain property is a timestamp
+                    if (property.getDomainProperties().stream().anyMatch(x ->
+                       SO.DateTime.equals(x.toString()))) {
+                        s.append(SqlAttribute.DATETIME);
+                        this.timestampKeys.add(property.getRuntimeName());
+                    } else {
+                        s.append(SqlAttribute.getFromUri(((EventPropertyPrimitive) property).getRuntimeType()));
+                    }
                 } else {
                     // Must be an EventPropertyList then
                     s.append(SqlAttribute.getFromUri(XSD._string.toString()));
