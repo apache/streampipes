@@ -24,19 +24,19 @@ import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
-import org.quartz.SchedulerFactory;
 import org.quartz.Trigger;
 import org.quartz.impl.StdSchedulerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 public abstract class ScheduleWindow implements Window {
-    private static final SchedulerFactory SCHEDULER_FACTORY = new StdSchedulerFactory();
     private EventSelection eventSelection;
     private SpOutputCollector outputCollector;
     private List<Event> events;
     private Scheduler scheduler;
+    private static int schedulerCount = 0;
 
     ScheduleWindow(EventSelection eventSelection,
                    SpOutputCollector outputCollector) {
@@ -52,7 +52,7 @@ public abstract class ScheduleWindow implements Window {
     @Override
     public void init() throws SpRuntimeException {
         try {
-            scheduler = SCHEDULER_FACTORY.getScheduler();
+            scheduler = new StdSchedulerFactory(getSchedulerProps()).getScheduler();
             scheduler.start();
             scheduler.scheduleJob(getJob(), getTrigger());
         } catch (SchedulerException e) {
@@ -90,6 +90,7 @@ public abstract class ScheduleWindow implements Window {
             try {
                 scheduler.clear();
                 scheduler.shutdown();
+                scheduler = null;
             } catch (SchedulerException e) {
                 throw new SpRuntimeException("Unable to shutdown time window scheduler.", e);
             }
@@ -99,4 +100,15 @@ public abstract class ScheduleWindow implements Window {
     private void emit(Event e) {
         outputCollector.collect(e);
     }
+
+    private Properties getSchedulerProps() {
+        Properties properties = new Properties();
+        properties.setProperty("org.quartz.scheduler.instanceName", "WindowSchedulerName:" + (++schedulerCount));
+        properties.setProperty("org.quartz.scheduler.instanceId", "WindowSchedulerID:" + schedulerCount);
+        properties.setProperty("org.quartz.threadPool.class", "org.quartz.simpl.SimpleThreadPool");
+        properties.setProperty("org.quartz.threadPool.threadCount", "3");
+        properties.setProperty("org.quartz.threadPool.threadPriority", "5");
+        return properties;
+    }
+
 }

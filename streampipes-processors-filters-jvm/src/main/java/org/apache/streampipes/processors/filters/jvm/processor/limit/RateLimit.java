@@ -44,7 +44,7 @@ public class RateLimit implements EventProcessor<RateLimitParameters> {
         this.windows = new ConcurrentHashMap<>();
         this.factory = new WindowFactory(
                 parameters.getWindowType(),
-                parameters.getWindowSize(),
+                parameters.getWindowExpression(),
                 parameters.getEventSelection(),
                 outputCollector);
     }
