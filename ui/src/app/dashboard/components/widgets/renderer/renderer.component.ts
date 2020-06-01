@@ -260,8 +260,10 @@ export class RendererComponent implements OnInit {
             "height": 27,
             "width": 40
           },
-          "type": "KLT"
+          "type": "Cardboard"
         }
+
+        // TODO uncomment next line
     data = add_item(data,item)
 
     var boxes = convert(data);

@@ -121,7 +121,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
     }
   };
 
-  
+
   ngOnInit(): void {
 
     this.availableColumns = this.getNumericProperty(this.dataExplorerWidget.dataLakeMeasure.eventSchema);
@@ -133,6 +133,34 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
     this.updateData();
   }
 
+  changeResolution() {
+    console.log('Change Resolution');
+
+    this.setShownComponents(false, false, true);
+    this.dataLakeRestService.getData(
+      this.dataExplorerWidget.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime()
+      , 's', 1)
+      .subscribe((res: DataResult) => {
+
+          if (res.total === 0) {
+            this.setShownComponents(true, false, false);
+          } else {
+            res.measureName = this.dataExplorerWidget.dataLakeMeasure.measureName;
+            const tmp = this.transformData(res, this.xKey);
+            this.data = this.displayData(tmp, this.yKeys);
+            this.data['measureName'] = tmp.measureName;
+            this.data['labels'] = tmp.labels;
+
+            if (this.data['labels'] !== undefined && this.data['labels'].length > 0) {
+              this.addInitialColouredShapesToGraph();
+            }
+
+            this.setShownComponents(false, true, false);
+          }
+
+        }
+      );
+  }
 
   updateData() {
 
