@@ -46,6 +46,7 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
   private List<String> inputStreamNames;
 
   private List<String> sortedEventKeys;
+  private List<String> outputEventKeys;
 
   private Boolean debugMode;
   private SiddhiDebugCallback debugCallback;
@@ -57,6 +58,7 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
     this.siddhiInputHandlers = new HashMap<>();
     this.inputStreamNames = new ArrayList<>();
     sortedEventKeys = new ArrayList<>();
+    outputEventKeys = new ArrayList<>();
     this.debugMode = false;
   }
 
@@ -81,6 +83,10 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
       registerEventTypeIfNotExists(key, value);
       this.inputStreamNames.add(prepareName(key));
     });
+
+    LOG.info("Configuring output event keys for graph " + parameters.getGraph().getName());
+    //System.out.println("output key: " + key);
+    outputEventKeys.addAll(parameters.getOutEventType().keySet());
 
     String fromStatement = fromStatement(inputStreamNames, parameters);
     String selectStatement = selectStatement(parameters);
@@ -132,14 +138,14 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
   private org.apache.streampipes.model.runtime.Event toSpEvent(Event event, B parameters, SchemaInfo
           schemaInfo, SourceInfo sourceInfo) {
     Map<String, Object> outMap = new HashMap<>();
-    for (int i = 0; i < sortedEventKeys.size(); i++) {
+    for (int i = 0; i < outputEventKeys.size(); i++) {
 
       if (event.getData(i) instanceof LinkedList) {
         List<Object> tmp = (List<Object>) event.getData(i);
-        outMap.put(sortedEventKeys.get(i), tmp.get(0));
+        outMap.put(outputEventKeys.get(i), tmp.get(0));
       }
       else {
-        outMap.put(sortedEventKeys.get(i), event.getData(i));
+        outMap.put(outputEventKeys.get(i), event.getData(i));
       }
 
     }
@@ -235,19 +241,32 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
     StringBuilder selectString = new StringBuilder();
     selectString.append("select ");
 
-    if (sortedEventKeys.size() > 0) {
-      for (int i = 0; i < sortedEventKeys.size() - 1; i++) {
-        selectString.append(eventName + ".s0" + sortedEventKeys.get(i) + ",");
+    if (outputEventKeys.size() > 0) {
+      for (int i = 0; i < outputEventKeys.size() - 1; i++) {
+        selectString.append(eventName + ".s0" + outputEventKeys.get(i) + ",");
       }
-      selectString.append(eventName + ".s0" + sortedEventKeys.get(sortedEventKeys.size() - 1));
+      selectString.append(eventName + ".s0" + outputEventKeys.get(outputEventKeys.size() - 1));
 
     }
 
     return selectString.toString();
   }
 
+//  protected String getCustomOutputSelectStatement(DataProcessorInvocation invocation) {
+//    return getCustomOutputSelectStatement(invocation, "e1");
+//  }
+
   protected String getCustomOutputSelectStatement(DataProcessorInvocation invocation) {
-    return getCustomOutputSelectStatement(invocation, "e1");
+    StringBuilder selectString = new StringBuilder();
+    selectString.append("select ");
+
+    if (outputEventKeys.size() > 0) {
+      for (int i=0; i<outputEventKeys.size() - 1; i++) {
+        selectString.append("s0" + outputEventKeys.get(i) + ",");
+      }
+      selectString.append("s0" + outputEventKeys.get(outputEventKeys.size() - 1));
+    }
+    return selectString.toString();
   }
 
   public void setSortedEventKeys(List<String> sortedEventKeys) {
