@@ -41,6 +41,8 @@ public class StateBufferController extends StandaloneEventProcessingDeclarer<Sta
 
   public static final String VALUES = "values";
   public static final String STATE = "state";
+  public static final String TIMESTAMP = "timestamp";
+
 
   public static final String RESULT_RUNTIME_NAME = "current-state";
   public static final String RESULT_STATE_FIELD_ID = "result-state";
@@ -57,7 +59,7 @@ public class StateBufferController extends StandaloneEventProcessingDeclarer<Sta
                             Labels.withId(TIMESTAMP_FIELD_ID),
                             PropertyScope.HEADER_PROPERTY)
                     .requiredPropertyWithUnaryMapping(
-                            EpRequirements.domainPropertyReq(SPSensor.STATE),
+                            EpRequirements.domainPropertyReqList(SPSensor.STATE),
                             Labels.withId(STATE_FIELD_ID),
                             PropertyScope.NONE)
                     .requiredPropertyWithUnaryMapping(
@@ -67,6 +69,7 @@ public class StateBufferController extends StandaloneEventProcessingDeclarer<Sta
                     .build()
             )
             .outputStrategy(OutputStrategies.fixed(
+                    EpProperties.timestampProperty(TIMESTAMP),
                     EpProperties.listDoubleEp(Labels.withId(VALUES), RESULT_RUNTIME_NAME, SO.Number),
                     EpProperties.stringEp(Labels.withId(STATE), RESULT_STATE_FIELD_ID, SPSensor.STATE)
             ))

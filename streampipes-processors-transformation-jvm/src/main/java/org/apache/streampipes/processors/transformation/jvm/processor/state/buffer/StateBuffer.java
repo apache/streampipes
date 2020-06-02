@@ -57,7 +57,6 @@ public class StateBuffer implements EventProcessor<StateBufferParameters> {
 
     long timestamp = inputEvent.getFieldBySelector(this.timeProperty).getAsPrimitive().getAsLong();
     List<String> states = inputEvent.getFieldBySelector(this.stateProperty).getAsList().parseAsSimpleType(String.class);
-//    List<String> states = Arrays.asList(inputEvent.getFieldBySelector(this.stateProperty).getAsPrimitive().getAsString());
     double value = inputEvent.getFieldBySelector(this.sensorValueProperty).getAsPrimitive().getAsDouble();
 
     // add value to state buffer
@@ -65,20 +64,28 @@ public class StateBuffer implements EventProcessor<StateBufferParameters> {
       if (stateBuffer.containsKey(state)) {
         stateBuffer.get(state).add(value);
       } else {
-        stateBuffer.put(state, Arrays.asList(value));
+        List tmp = new ArrayList();
+        tmp.add(value);
+        stateBuffer.put(state, tmp);
       }
     }
 
     // emit event if state is not in event anymore
+    List<String> keysToRemove = new ArrayList<>();
     for (String key : stateBuffer.keySet()) {
       if (!states.contains(key)) {
           Event resultEvent  = new Event();
           resultEvent.addField(StateBufferController.VALUES, stateBuffer.get(key));
           resultEvent.addField(StateBufferController.STATE, key);
-          out.collect(resultEvent);
+          resultEvent.addField(StateBufferController.TIMESTAMP, timestamp);
+        out.collect(resultEvent);
+          keysToRemove.add(key);
       }
     }
 
+    for (String s : keysToRemove) {
+      stateBuffer.remove(s);
+    }
   }
 
   @Override
