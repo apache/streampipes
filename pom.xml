@@ -102,6 +102,7 @@
         <zstd-jni.version>1.4.3-1</zstd-jni.version>
         <mqtt-client.version>1.12</mqtt-client.version>
         <hawtbuf.version>1.11</hawtbuf.version>
+        <mysql-connector-java.version>8.0.15</mysql-connector-java.version>
 
         <maven-shade-plugin.version>3.0.0</maven-shade-plugin.version>
 
@@ -128,6 +129,8 @@
         <protobuf.version>3.6.1</protobuf.version>
         <pulsar.version>2.5.1</pulsar.version>
         <slack.version>1.2.0</slack.version>
+        <poiji.version>2.7.0</poiji.version>
+
     </properties>
 
     <dependencyManagement>
@@ -292,6 +295,11 @@
                 <groupId>com.google.errorprone</groupId>
                 <artifactId>error_prone_annotations</artifactId>
                 <version>${errorprone-annotations.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.ozlerhakan</groupId>
+                <artifactId>poiji</artifactId>
+                <version>${poiji.version}</version>
             </dependency>
 
             <dependency>
@@ -559,7 +567,16 @@
                 <artifactId>jedis</artifactId>
                 <version>${jedis.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql-connector-java.version}</version>
+            </dependency>
 
             <!-- Test dependencies -->
             <dependency>
