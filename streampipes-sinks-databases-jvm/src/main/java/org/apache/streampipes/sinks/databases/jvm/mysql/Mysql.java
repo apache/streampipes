@@ -100,9 +100,13 @@ public class Mysql extends JdbcClient implements EventSink<MysqlParameters> {
         extractTableInformation();
 
         for (EventProperty property : eventProperties) {
-            if (tableColumns.get(property.getRuntimeName()) != null) {
+            if (this.tableColumns.get(property.getRuntimeName()) != null) {
                 if (property instanceof EventPropertyPrimitive) {
-                    Column col = tableColumns.get(property.getRuntimeName());
+                    if (property.getDomainProperties().stream().anyMatch(x ->
+                            SO.DateTime.equals(x.toString()))) {
+                        this.timestampKeys.add(property.getRuntimeName());
+                    }
+                    Column col = this.tableColumns.get(property.getRuntimeName());
                     if (((EventPropertyPrimitive) property).getRuntimeType().equals(col.getType().toString())) {
                         continue;
                     } else {
@@ -115,16 +119,11 @@ public class Mysql extends JdbcClient implements EventSink<MysqlParameters> {
         }
     }
 
-    public static void main(String... args) {
-        long mil = System.currentTimeMillis();
-        java.sql.Timestamp timestamp = new java.sql.Timestamp(mil);
-
-        System.out.println(timestamp);
-    }
 
     @Override
     protected void save(final Event event) throws SpRuntimeException {
         checkConnected();
+
         try {
             Statement statement;
             statement = c.createStatement();
@@ -198,6 +197,10 @@ public class Mysql extends JdbcClient implements EventSink<MysqlParameters> {
                     String columnName = resultSet.getString("COLUMN_NAME");
                     String dataType = resultSet.getString("DATA_TYPE");
                     String columnType = resultSet.getString("COLUMN_TYPE");
+
+                    System.out.println((dataType));
+                    System.out.println((columnType));
+
                     tableColumns.put(columnName, new Column(dataType, columnType));
                 } while (resultSet.next());
             } else {
