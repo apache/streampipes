@@ -32,6 +32,7 @@ public class BooleanToState implements EventProcessor<BooleanToStateParameters> 
   private static Logger LOG;
 
   private List<String> stateFields;
+  private String  defaultState;
 
   @Override
   public void onInvocation(BooleanToStateParameters booleanInverterParameters,
@@ -39,6 +40,7 @@ public class BooleanToState implements EventProcessor<BooleanToStateParameters> 
                            EventProcessorRuntimeContext runtimeContext) {
     LOG = booleanInverterParameters.getGraph().getLogger(BooleanToState.class);
     this.stateFields = booleanInverterParameters.getStateFields();
+    this.defaultState = booleanInverterParameters.getDefaultState();
   }
 
   @Override
@@ -51,7 +53,10 @@ public class BooleanToState implements EventProcessor<BooleanToStateParameters> 
       }
     }
 
-    inputEvent.addField(BooleanToStateController.RESULT_RUNTIME_NAME, states.toArray());
+    if (states.size() == 0) {
+      states.add(this.defaultState);
+    }
+    inputEvent.addField(BooleanToStateController.CURRENT_STATE, states.toArray());
     out.collect(inputEvent);
   }
 

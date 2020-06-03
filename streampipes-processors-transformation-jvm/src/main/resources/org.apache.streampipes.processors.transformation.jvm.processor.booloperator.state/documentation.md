@@ -26,7 +26,7 @@
 
 ## Description
 
-With this processors boolean values can be converted to a state field representing the current state of the system.
+Convert boolean fields to a state string representing the current state of the system.
 This processor requires one or multiple boolean values in the data stream.
 For each of the selected values which are true, the runtime name is added to the states field.
 ***
@@ -36,6 +36,8 @@ For each of the selected values which are true, the runtime name is added to the
 ### Boolean Fields
 Boolean fields that are converted to the state when true
 
+### Default State
+When all boolean values are false, a default  state can be defined
 ***
 
 ## Configuration

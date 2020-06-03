@@ -44,9 +44,6 @@ public class StateBufferController extends StandaloneEventProcessingDeclarer<Sta
   public static final String TIMESTAMP = "timestamp";
 
 
-  public static final String RESULT_RUNTIME_NAME = "current-state";
-  public static final String RESULT_STATE_FIELD_ID = "result-state";
-
 
   @Override
   public DataProcessorDescription declareModel() {
@@ -70,8 +67,8 @@ public class StateBufferController extends StandaloneEventProcessingDeclarer<Sta
             )
             .outputStrategy(OutputStrategies.fixed(
                     EpProperties.timestampProperty(TIMESTAMP),
-                    EpProperties.listDoubleEp(Labels.withId(VALUES), RESULT_RUNTIME_NAME, SO.Number),
-                    EpProperties.stringEp(Labels.withId(STATE), RESULT_STATE_FIELD_ID, SPSensor.STATE)
+                    EpProperties.listDoubleEp(Labels.withId(VALUES), VALUES, SO.Number),
+                    EpProperties.listStringEp(Labels.withId(STATE), STATE, SPSensor.STATE)
             ))
             .build();
   }

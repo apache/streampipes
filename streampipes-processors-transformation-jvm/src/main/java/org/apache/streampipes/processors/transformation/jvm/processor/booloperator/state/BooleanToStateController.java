@@ -40,10 +40,10 @@ public class BooleanToStateController extends StandaloneEventProcessingDeclarer<
   public static final String GROUP_ID = "group-id";
   public static final String STATE_NAME_ID = "state-name-id";
   public static final String STATE_MAPPING_ID = "state-mapping-id";
-  public static final String STATE_RESULT_FIELD_ID = "state-result-field";
   public static final String BOOLEAN_STATE_FIELD = "boolean_state_field";
+  public static final String DEFAULT_STATE_ID = "default-state-id";
 
-  public static final String RESULT_RUNTIME_NAME = "current_state";
+  public static final String CURRENT_STATE = "current_state";
 
 
   @Override
@@ -61,9 +61,9 @@ public class BooleanToStateController extends StandaloneEventProcessingDeclarer<
 //                            Labels.withId(GROUP_ID),
 //                            StaticProperties.stringFreeTextProperty(Labels.withId(STATE_NAME_ID)),
 //                            StaticProperties.mappingPropertyUnary(Labels.withId(STATE_MAPPING_ID), PropertyScope.NONE)))
+            .requiredTextParameter(Labels.withId(DEFAULT_STATE_ID))
             .outputStrategy(OutputStrategies.append(
-                    EpProperties.listStringEp(Labels.withId(STATE_RESULT_FIELD_ID), RESULT_RUNTIME_NAME, SPSensor.STATE)
-//                    EpProperties.stringEp(Labels.withId(STATE_RESULT_FIELD_ID), RESULT_RUNTIME_NAME, SPSensor.STATE)
+                    EpProperties.listStringEp(Labels.withId(CURRENT_STATE), CURRENT_STATE, SPSensor.STATE)
             ))
             .build();
   }
@@ -72,8 +72,9 @@ public class BooleanToStateController extends StandaloneEventProcessingDeclarer<
   public ConfiguredEventProcessor<BooleanToStateParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 
     List<String> stateFields = extractor.mappingPropertyValues(BOOLEAN_STATE_FIELD);
+    String defaultState = extractor.singleValueParameter(DEFAULT_STATE_ID, String.class);
 
-    BooleanToStateParameters params = new BooleanToStateParameters(graph, stateFields);
+    BooleanToStateParameters params = new BooleanToStateParameters(graph, stateFields, defaultState);
 
     return new ConfiguredEventProcessor<>(params, BooleanToState::new);
   }

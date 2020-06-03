@@ -16,7 +16,7 @@
   ~
   -->
 
-## Boolean Timer
+## State Buffer
 
 <p align="center"> 
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
@@ -26,25 +26,23 @@
 
 ## Description
 
-This processor measures how long a boolean value does not change. Once the value is changes the event with the measured time is emitted.
-
+Buffers values of a sensor, while state does not change.
+Select a state field in the event. Events are buffered as long as state field does not change. When it changes result event is emitted.
 
 ***
 
 ## Required input
 
-A boolean value is required in the data stream.
+Define the state and sensor value field
 
-### Field
+### Timestamp
+A mapping  property for a timestamp field
 
-The boolean field which is monitored for state changes.
+### State
+Select the field representing the state 
 
-***
-
-## Configuration
-
-### Timer value
-Define whether it should be measured how long the value is true or how long the value is false.
+### Sensor value to cache
+Select the field with the numerical values to buffer
 
 ## Output
-Appends a field with the time how long the value did not change. Is emitted on the change of the boolean value. Runtime name: measured_time 
+Emits a new event on state change, with the fields `timestamp`, `state`, and a list containing all `sensor values`.

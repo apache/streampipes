@@ -76,7 +76,7 @@ public class StateBuffer implements EventProcessor<StateBufferParameters> {
       if (!states.contains(key)) {
           Event resultEvent  = new Event();
           resultEvent.addField(StateBufferController.VALUES, stateBuffer.get(key));
-          resultEvent.addField(StateBufferController.STATE, key);
+          resultEvent.addField(StateBufferController.STATE, Arrays.asList(key));
           resultEvent.addField(StateBufferController.TIMESTAMP, timestamp);
         out.collect(resultEvent);
           keysToRemove.add(key);
