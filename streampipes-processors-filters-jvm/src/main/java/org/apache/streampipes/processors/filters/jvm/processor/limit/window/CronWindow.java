@@ -17,17 +17,30 @@
  */
 package org.apache.streampipes.processors.filters.jvm.processor.limit.window;
 
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.processors.filters.jvm.processor.limit.util.EventSelection;
+import org.apache.streampipes.processors.filters.jvm.processor.limit.util.SchedulerUtil;
+import org.apache.streampipes.wrapper.routing.SpOutputCollector;
+import org.quartz.JobDetail;
+import org.quartz.Trigger;
 
-public interface Window {
+public class CronWindow extends ScheduleWindow {
+    private String cronExpression;
 
-    void init() throws SpRuntimeException;
+    public CronWindow(String cronExpression,
+                      EventSelection eventSelection,
+                      SpOutputCollector outputCollector) {
+        super(eventSelection, outputCollector);
+        this.cronExpression = cronExpression;
+    }
 
-    void onEvent(Event event) throws SpRuntimeException;
+    @Override
+    JobDetail getJob() {
+        return SchedulerUtil.createJob(this);
+    }
 
-    void onTrigger();
-
-    void destroy() throws SpRuntimeException;
+    @Override
+    Trigger getTrigger() {
+        return SchedulerUtil.getCronTrigger(cronExpression);
+    }
 
 }

@@ -27,11 +27,11 @@ public class RateLimitParameters extends EventProcessorBindingParams {
     private WindowType windowType;
     private Boolean groupingEnabled;
     private String groupingField;
-    private Integer windowSize;
+    private Object windowExpression;
 
     public RateLimitParameters(DataProcessorInvocation graph,
                                WindowType windowType,
-                               Integer windowSize,
+                               Object windowExpression,
                                Boolean groupingEnabled,
                                String groupingField,
                                EventSelection eventSelection) {
@@ -40,15 +40,15 @@ public class RateLimitParameters extends EventProcessorBindingParams {
         this.windowType = windowType;
         this.groupingEnabled = groupingEnabled;
         this.groupingField = groupingField;
-        this.windowSize = windowSize;
+        this.windowExpression = windowExpression;
     }
 
     public WindowType getWindowType() {
         return windowType;
     }
 
-    public int getWindowSize() {
-        return windowSize;
+    public Object getWindowExpression() {
+        return windowExpression;
     }
 
     public Boolean getGroupingEnabled() {

@@ -17,33 +17,35 @@
  */
 package org.apache.streampipes.processors.filters.jvm.processor.limit.util;
 
+import org.apache.streampipes.processors.filters.jvm.processor.limit.window.CronWindow;
 import org.apache.streampipes.processors.filters.jvm.processor.limit.window.LengthWindow;
 import org.apache.streampipes.processors.filters.jvm.processor.limit.window.TimeWindow;
 import org.apache.streampipes.processors.filters.jvm.processor.limit.window.Window;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 
 public class WindowFactory {
-
     private final WindowType windowType;
-    private final Integer windowSize;
+    private final Object windowExpression;
     private final EventSelection eventSelection;
     private final SpOutputCollector outputCollector;
 
     public WindowFactory(WindowType windowType,
-                         Integer windowSize,
+                         Object windowExpression,
                          EventSelection eventSelection,
                          SpOutputCollector outputCollector) {
         this.windowType = windowType;
-        this.windowSize = windowSize;
+        this.windowExpression = windowExpression;
         this.eventSelection = eventSelection;
         this.outputCollector = outputCollector;
     }
 
     public Window create() {
         if (WindowType.TIME == windowType) {
-            return new TimeWindow(windowSize, eventSelection, outputCollector);
+            return new TimeWindow((Integer) windowExpression, eventSelection, outputCollector);
         } else if (WindowType.LENGTH == windowType) {
-            return new LengthWindow(windowSize, eventSelection, outputCollector);
+            return new LengthWindow((Integer) windowExpression, eventSelection, outputCollector);
+        } else if (WindowType.CRON == windowType) {
+            return new CronWindow((String) windowExpression, eventSelection, outputCollector);
         } else {
             return null;
         }

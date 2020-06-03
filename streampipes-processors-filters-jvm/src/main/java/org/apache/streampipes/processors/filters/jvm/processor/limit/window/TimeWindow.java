@@ -17,70 +17,30 @@
  */
 package org.apache.streampipes.processors.filters.jvm.processor.limit.window;
 
-import com.google.common.util.concurrent.AbstractScheduledService;
-import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.filters.jvm.processor.limit.util.EventSelection;
+import org.apache.streampipes.processors.filters.jvm.processor.limit.util.SchedulerUtil;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
+import org.quartz.JobDetail;
+import org.quartz.Trigger;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-public class TimeWindow extends AbstractScheduledService implements Window {
+public class TimeWindow extends ScheduleWindow {
     private Integer windowSize;
-    private EventSelection eventSelection;
-    private SpOutputCollector outputCollector;
-    private List<Event> events;
 
     public TimeWindow(Integer windowSize,
                       EventSelection eventSelection,
                       SpOutputCollector outputCollector) {
+        super(eventSelection, outputCollector);
         this.windowSize = windowSize;
-        this.eventSelection = eventSelection;
-        this.outputCollector = outputCollector;
-        this.events = new ArrayList<>();
-        startAsync();
     }
 
     @Override
-    public void onEvent(Event event) {
-        events.add(event);
+    JobDetail getJob() {
+        return SchedulerUtil.createJob(this);
     }
 
     @Override
-    public void destroy() {
-        events.clear();
-        stopAsync();
+    Trigger getTrigger() {
+        return SchedulerUtil.getFixedRateTrigger(windowSize);
     }
 
-    @Override
-    protected void runOneIteration() {
-        process();
-    }
-
-    @Override
-    protected Scheduler scheduler() {
-        return Scheduler.newFixedRateSchedule(0, windowSize, TimeUnit.MILLISECONDS);
-    }
-
-    private void process() {
-        if (!events.isEmpty()) {
-            switch (eventSelection) {
-                case FIRST:
-                    emit(events.get(0));
-                    break;
-                case LAST:
-                    emit(events.get(events.size() - 1));
-                    break;
-                case ALL:
-                    events.forEach(this::emit);
-                    break;
-            }
-            events.clear();
-        }
-    }
-
-    private void emit(Event e) {
-        outputCollector.collect(e);
-    }
 }

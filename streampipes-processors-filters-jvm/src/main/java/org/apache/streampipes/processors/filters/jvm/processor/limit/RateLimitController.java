@@ -44,6 +44,8 @@ public class RateLimitController extends StandaloneEventProcessingDeclarer<RateL
     private static final String LENGTH_WINDOW_SIZE = "length-window-size";
     private static final String TIME_WINDOW = "time-window";
     private static final String TIME_WINDOW_SIZE = "time-window-size";
+    private static final String CRON_WINDOW = "cron-window";
+    private static final String CRON_WINDOW_EXPR = "cron-window-expr";
     private static final String GROUPING_FIELD = "grouping-field";
     private static final String GROUPING_ENABLED = "grouping-enabled";
     private static final String OPTION_FALSE = "False";
@@ -67,6 +69,8 @@ public class RateLimitController extends StandaloneEventProcessingDeclarer<RateL
                 .requiredAlternatives(Labels.withId(WINDOW_TYPE),
                         Alternatives.from(Labels.withId(TIME_WINDOW),
                                 StaticProperties.integerFreeTextProperty(Labels.withId(TIME_WINDOW_SIZE))),
+                        Alternatives.from(Labels.withId(CRON_WINDOW),
+                                StaticProperties.stringFreeTextProperty(Labels.withId(CRON_WINDOW_EXPR))),
                         Alternatives.from(Labels.withId(LENGTH_WINDOW),
                                 StaticProperties.integerFreeTextProperty(Labels.withId(LENGTH_WINDOW_SIZE))))
                 .requiredSingleValueSelection(Labels.withId(EVENT_SELECTION),
@@ -87,6 +91,11 @@ public class RateLimitController extends StandaloneEventProcessingDeclarer<RateL
             Integer windowSize = extractor.singleValueParameter(TIME_WINDOW_SIZE, Integer.class);
             RateLimitParameters params = new RateLimitParameters(graph, WindowType.TIME,
                     windowSize, groupingEnabled, groupingField, eventSelection);
+            return new ConfiguredEventProcessor<>(params, RateLimit::new);
+        } else if (CRON_WINDOW.equals(windowType)) {
+            String cronExpression = extractor.singleValueParameter(CRON_WINDOW_EXPR, String.class);
+            RateLimitParameters params = new RateLimitParameters(graph, WindowType.CRON,
+                    cronExpression, groupingEnabled, groupingField, eventSelection);
             return new ConfiguredEventProcessor<>(params, RateLimit::new);
         } else {
             Integer windowSize = extractor.singleValueParameter(LENGTH_WINDOW_SIZE, Integer.class);
