@@ -16,7 +16,7 @@
   ~
   -->
 
-## Boolean To State
+## State Buffer
 
 <p align="center"> 
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
@@ -26,22 +26,23 @@
 
 ## Description
 
-Convert boolean fields to a state string representing the current state of the system.
-This processor requires one or multiple boolean values in the data stream.
-For each of the selected values which are true, the runtime name is added to the states field.
+Buffers values of a sensor, while state does not change.
+Select a state field in the event. Events are buffered as long as state field does not change. When it changes result event is emitted.
+
 ***
 
 ## Required input
 
-### Boolean Fields
-Boolean fields that are converted to the state when true
+Define the state and sensor value field
 
-### Default State
-When all boolean values are false, a default  state can be defined
-***
+### Timestamp
+A mapping  property for a timestamp field
 
-## Configuration
-No further configuration required
+### State
+Select the field representing the state 
+
+### Sensor value to cache
+Select the field with the numerical values to buffer
 
 ## Output
-The output contains a new value with the string values of the state
+Emits a new event on state change, with the fields `timestamp`, `state`, and a list containing all `sensor values`.

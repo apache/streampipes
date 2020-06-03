@@ -25,10 +25,12 @@ import java.util.List;
 
 public class BooleanToStateParameters extends EventProcessorBindingParams {
     private List<String> stateFields;
+    private String defaultState;
 
-    public BooleanToStateParameters(DataProcessorInvocation graph, List<String> stateFields) {
+    public BooleanToStateParameters(DataProcessorInvocation graph, List<String> stateFields, String defaultState) {
         super(graph);
         this.stateFields = stateFields;
+        this.defaultState = defaultState;
     }
 
     public List<String> getStateFields() {
@@ -37,5 +39,13 @@ public class BooleanToStateParameters extends EventProcessorBindingParams {
 
     public void setStateFields(List<String> stateFields) {
         this.stateFields = stateFields;
+    }
+
+    public String getDefaultState() {
+        return defaultState;
+    }
+
+    public void setDefaultState(String defaultState) {
+        this.defaultState = defaultState;
     }
 }
