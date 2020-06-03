@@ -26,9 +26,11 @@ import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.pe.jvm.config.AllPipelineElementsConfig;
+import org.apache.streampipes.processors.enricher.jvm.processor.jseval.JSEvalController;
 import org.apache.streampipes.processors.enricher.jvm.processor.sizemeasure.SizeMeasureController;
 import org.apache.streampipes.processors.filters.jvm.processor.compose.ComposeController;
 import org.apache.streampipes.processors.filters.jvm.processor.enrich.MergeByEnrichController;
+import org.apache.streampipes.processors.filters.jvm.processor.limit.RateLimitController;
 import org.apache.streampipes.processors.filters.jvm.processor.merge.MergeByTimeController;
 import org.apache.streampipes.processors.filters.jvm.processor.numericalfilter.NumericalFilterController;
 import org.apache.streampipes.processors.filters.jvm.processor.numericaltextfilter.NumericalTextFilterController;
@@ -61,9 +63,12 @@ import org.apache.streampipes.processors.transformation.jvm.processor.array.coun
 import org.apache.streampipes.processors.transformation.jvm.processor.array.split.SplitArrayController;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.counter.BooleanCounterController;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.inverter.BooleanInverterController;
+import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.state.BooleanToStateController;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.timekeeping.BooleanTimekeepingController;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.timer.BooleanTimerController;
 import org.apache.streampipes.processors.transformation.jvm.processor.csvmetadata.CsvMetadataEnrichmentController;
+import org.apache.streampipes.processors.transformation.jvm.processor.state.buffer.StateBufferController;
+import org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.StateLabelerController;
 import org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.counter.StringCounterController;
 import org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.timer.StringTimerController;
 import org.apache.streampipes.processors.transformation.jvm.processor.task.TaskDurationController;
@@ -90,6 +95,7 @@ import org.apache.streampipes.sinks.internal.jvm.notification.NotificationContro
 import org.apache.streampipes.sinks.notifications.jvm.email.EmailController;
 import org.apache.streampipes.sinks.notifications.jvm.onesignal.OneSignalController;
 import org.apache.streampipes.sinks.notifications.jvm.slack.SlackNotificationController;
+import org.apache.streampipes.sinks.notifications.jvm.telegram.TelegramController;
 
 public class AllPipelineElementsInit extends StandaloneModelSubmitter {
 
@@ -98,6 +104,7 @@ public class AllPipelineElementsInit extends StandaloneModelSubmitter {
             .getInstance()
             // streampipes-processors-enricher-jvm
             .add(new SizeMeasureController())
+            .add(new JSEvalController())
             // streampipes-processors-filters-jvm
             .add(new NumericalFilterController())
             .add(new ThresholdDetectionController())
@@ -105,6 +112,7 @@ public class AllPipelineElementsInit extends StandaloneModelSubmitter {
             .add(new ProjectionController())
             .add(new MergeByEnrichController())
             .add(new MergeByTimeController())
+            .add(new RateLimitController())
             .add(new ComposeController())
             .add(new NumericalTextFilterController())
             // streampipes-processors-filers-siddhi
@@ -143,6 +151,9 @@ public class AllPipelineElementsInit extends StandaloneModelSubmitter {
             .add(new BooleanInverterController())
             .add(new BooleanTimekeepingController())
             .add(new BooleanTimerController())
+            .add(new StateBufferController())
+            .add(new StateLabelerController())
+            .add(new BooleanToStateController())
             .add(new CsvMetadataEnrichmentController())
             .add(new TaskDurationController())
             .add(new BooleanInverterController())
@@ -170,6 +181,7 @@ public class AllPipelineElementsInit extends StandaloneModelSubmitter {
             .add(new DashboardController())
             // streampipes-sinks-notifications-jvm
             .add(new EmailController())
+            .add(new TelegramController())
             .add(new OneSignalController())
             .add(new SlackNotificationController())
 
