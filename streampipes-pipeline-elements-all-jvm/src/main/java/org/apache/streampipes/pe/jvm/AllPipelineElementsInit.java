@@ -87,8 +87,10 @@ import org.apache.streampipes.sinks.databases.jvm.couchdb.CouchDbController;
 import org.apache.streampipes.sinks.databases.jvm.ditto.DittoController;
 import org.apache.streampipes.sinks.databases.jvm.influxdb.InfluxDbController;
 import org.apache.streampipes.sinks.databases.jvm.iotdb.IotDbController;
+import org.apache.streampipes.sinks.databases.jvm.mysql.MysqlController;
 import org.apache.streampipes.sinks.databases.jvm.opcua.UpcUaController;
 import org.apache.streampipes.sinks.databases.jvm.postgresql.PostgreSqlController;
+import org.apache.streampipes.sinks.databases.jvm.redis.RedisController;
 import org.apache.streampipes.sinks.internal.jvm.dashboard.DashboardController;
 import org.apache.streampipes.sinks.internal.jvm.datalake.DataLakeController;
 import org.apache.streampipes.sinks.internal.jvm.notification.NotificationController;
@@ -175,6 +177,8 @@ public class AllPipelineElementsInit extends StandaloneModelSubmitter {
             .add(new PostgreSqlController())
             .add(new IotDbController())
             .add(new DittoController())
+            .add(new RedisController())
+            .add(new MysqlController())
             // streampipes-sinks-internal-jvm
             .add(new NotificationController())
             .add(new DataLakeController())

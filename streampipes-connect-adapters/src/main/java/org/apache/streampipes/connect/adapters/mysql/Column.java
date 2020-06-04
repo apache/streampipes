@@ -59,7 +59,7 @@ class Column {
       case "time":
       case "timestamp":
       case "year":
-        this.type = Datatypes.Long;
+        this.type = Datatypes.Float;
         def = System.currentTimeMillis();
         this.domainProperty = SO.DateTime;
         break;

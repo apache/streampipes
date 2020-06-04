@@ -49,11 +49,11 @@ public class MysqlController extends StandaloneEventSinkDeclarer<MysqlParameters
                         .requiredProperty(EpRequirements.anyProperty())
                         .build())
                 .requiredTextParameter(Labels.withId(HOST_KEY), false, false)
+                .requiredIntegerParameter(Labels.withId(PORT_KEY), 3306)
                 .requiredTextParameter(Labels.withId(USER_KEY), false, false)
                 .requiredSecret(Labels.withId(PASSWORD_KEY))
                 .requiredTextParameter(Labels.withId(DB_KEY), false, false)
                 .requiredTextParameter(Labels.withId(TABLE_KEY), false, false)
-                .requiredIntegerParameter(Labels.withId(PORT_KEY), 3306)
                 .build();
     }
 
