@@ -81,6 +81,7 @@ public class MySqlSetAdapter extends SpecificDataSetAdapter {
                 if (executed) {
                     ResultSet resultSet = statement.getResultSet();
                     while (resultSet.next()) {
+
                         // Retrieve by column name
                         Map<String, Object> event = new HashMap<>();
                         for (Column column : mySqlClient.getColumns()) {
