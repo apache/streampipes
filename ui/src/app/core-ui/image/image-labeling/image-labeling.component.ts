@@ -47,6 +47,7 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit, OnChanges 
   // images
   public imagesSrcs = [];
   public imagesIndex: number;
+  imageDescription: String;
 
   public cocoFiles: CocoFormat[] = [];
 
@@ -77,8 +78,7 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit, OnChanges 
     this.isHoverComponent = false;
     this.brushSize = 5;
     this.imagesIndex = 0;
-
-
+    this.imageDescription = "The Description of the selected image"
     this.labels = this.restService.getLabels();
 
     // TODO remove for production, if default dev values are not necessary
@@ -351,7 +351,6 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit, OnChanges 
       );
     }
   }
-
   private openSnackBar(message: string) {
     this.snackBar.open(message, '', {
       duration: 2000,
