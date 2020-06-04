@@ -67,7 +67,7 @@ public class SplitArray implements EventProcessor<SplitArrayParameters> {
           outEvent.addField(key.getValue());
         }
       } else {
-        outEvent.addField("value", field);
+        outEvent.addField(SplitArrayController.VALUE, field);
       }
 
       for (String propertyName : keepProperties) {

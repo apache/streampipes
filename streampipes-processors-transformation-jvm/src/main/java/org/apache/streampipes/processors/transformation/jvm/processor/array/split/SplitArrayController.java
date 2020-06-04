@@ -22,9 +22,7 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.container.api.ResolvesContainerProvidedOutputStrategy;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.model.schema.EventProperty;
-import org.apache.streampipes.model.schema.EventSchema;
-import org.apache.streampipes.model.schema.PropertyScope;
+import org.apache.streampipes.model.schema.*;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
@@ -44,6 +42,7 @@ public class SplitArrayController extends StandaloneEventProcessingDeclarer<Spli
 
   public static final String KEEP_PROPERTIES_ID = "keep";
   public static final String ARRAY_FIELD_ID = "array-field";
+  public static final String VALUE = "array_value";
 
   @Override
   public DataProcessorDescription declareModel() {
@@ -80,10 +79,15 @@ public class SplitArrayController extends StandaloneEventProcessingDeclarer<Spli
     List<String> keepPropertySelectors = extractor.mappingPropertyValues(KEEP_PROPERTIES_ID);
 
     List<EventProperty> outProperties = new ArrayList<>();
-    EventProperty arrayProperty = extractor.getEventPropertyBySelector(arrayFieldSelector);
+    EventPropertyList arrayProperty = (EventPropertyList) extractor.getEventPropertyBySelector(arrayFieldSelector);
+    EventProperty newProperty = arrayProperty.getEventProperty();
+    newProperty.setRuntimeName(VALUE);
+    newProperty.setLabel("Array Value");
+    newProperty.setDescription("Contains values of the array. Created by Split Array processor.");
+
     List<EventProperty> keepProperties = extractor.getEventPropertiesBySelector
             (keepPropertySelectors);
-   outProperties.add(arrayProperty);
+   outProperties.add(newProperty);
    outProperties.addAll(keepProperties);
 
     return new EventSchema(outProperties);
