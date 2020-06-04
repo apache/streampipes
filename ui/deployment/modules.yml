@@ -171,3 +171,18 @@ spDataExplorer2:
   icon: 'navigation:ic_apps_24px'
   homeImage: '/assets/img/home/configuration.png'
   admin: false
+spEditor2:
+  ng5: True
+  ng1_templateUrl: ''
+  ng1_controller: ''
+  ng5_moduleName: 'EditorModule'
+  ng5_component: 'EditorComponent'
+  ng5_componentPath: '../editor-v2/editor.component'
+  path: './editor-v2/editor.module'
+  link: 'streampipes.editor2'
+  url: '/editor2'
+  title: 'Editor'
+  description: 'editor-v2'
+  icon: 'action:ic_dashboard_24px'
+  homeImage: '/assets/img/home/configuration.png'
+  admin: false

@@ -98,6 +98,12 @@ import {ColorPickerStaticProperty} from "../connect/model/ColorPickerStaticPrope
 import {MappingPropertyNary} from "../connect/model/MappingPropertyNary";
 import { DataExplorerWidgetModel } from "../core-model/datalake/DataExplorerWidgetModel";
 import { DataLakeMeasure } from "../core-model/datalake/DataLakeMeasure";
+import {UserDefinedOutputStrategy} from "../connect/model/output/UserDefinedOutputStrategy";
+import {CodeInputStaticProperty} from "../connect/model/CodeInputStaticProperty";
+import {DataSourceDescription} from "../connect/model/DataSourceDescription";
+import {EventGrounding} from "../connect/model/grounding/EventGrounding";
+import {TransportFormat} from "../connect/model/grounding/TransportFormat";
+import {TransportProtocol} from "../connect/model/grounding/TransportProtocol";
 
 
 @Injectable()
@@ -122,6 +128,10 @@ export class TsonLdSerializerService {
         tsonld.addClassMapping(SpecificAdapterStreamDescription);
         tsonld.addClassMapping(DataSetDescription);
         tsonld.addClassMapping(DataStreamDescription);
+        tsonld.addClassMapping(DataSourceDescription);
+        tsonld.addClassMapping(EventGrounding);
+        tsonld.addClassMapping(TransportFormat);
+        tsonld.addClassMapping(TransportProtocol);
         tsonld.addClassMapping(EventSchema);
         tsonld.addClassMapping(EventProperty);
         tsonld.addClassMapping(EventPropertyNested);
@@ -164,6 +174,7 @@ export class TsonLdSerializerService {
         tsonld.addClassMapping(BoundPipelineElement);
 
         tsonld.addClassMapping(AppendOutputStrategy);
+        tsonld.addClassMapping(CodeInputStaticProperty)
         tsonld.addClassMapping(CustomOutputStrategy);
         tsonld.addClassMapping(CustomTransformOutputStrategy);
         tsonld.addClassMapping(FixedOutputStrategy);
@@ -173,6 +184,7 @@ export class TsonLdSerializerService {
         tsonld.addClassMapping(PropertyRenameRule);
         tsonld.addClassMapping(TransformOperation);
         tsonld.addClassMapping(TransformOutputStrategy);
+        tsonld.addClassMapping(UserDefinedOutputStrategy);
 
         tsonld.addClassMapping(RuntimeResolvableAnyStaticProperty);
         tsonld.addClassMapping(RuntimeResolvableOneOfStaticProperty);

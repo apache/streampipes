@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.model.connect.rules.Schema;
+package org.apache.streampipes.model.connect.rules.schema;
 
 import io.fogsy.empire.annotations.Namespaces;
 import io.fogsy.empire.annotations.RdfProperty;
@@ -26,31 +26,32 @@ import org.apache.streampipes.vocabulary.StreamPipes;
 import javax.persistence.Entity;
 
 @Namespaces({StreamPipes.NS_PREFIX, StreamPipes.NS})
-@RdfsClass(StreamPipes.CREATE_NESTED_RULE_DESCRIPTION)
+@RdfsClass(StreamPipes.DELETE_RULE_DESCRIPTION)
 @Entity
-public class CreateNestedRuleDescription extends SchemaTransformationRuleDescription {
-  @RdfProperty(StreamPipes.RUNTIME_KEY)
-  private String runtimeKey;
+public class DeleteRuleDescription extends SchemaTransformationRuleDescription {
+    @RdfProperty(StreamPipes.RUNTIME_KEY)
+    private String runtimeKey;
 
-  public CreateNestedRuleDescription() {
-    super();
-  }
 
-  public CreateNestedRuleDescription(String runtimeKey) {
-    super();
-    this.runtimeKey = runtimeKey;
-  }
+    public DeleteRuleDescription() {
+        super();
+    }
 
-  public CreateNestedRuleDescription(CreateNestedRuleDescription other) {
-    super(other);
-    this.runtimeKey = other.getRuntimeKey();
-  }
+    public DeleteRuleDescription(String runtimeKey) {
+        super();
+        this.runtimeKey = runtimeKey;
+    }
 
-  public String getRuntimeKey() {
-    return runtimeKey;
-  }
+    public DeleteRuleDescription(DeleteRuleDescription other) {
+        super(other);
+        this.runtimeKey = other.getRuntimeKey();
+    }
 
-  public void setRuntimeKey(String runtimeKey) {
-    this.runtimeKey = runtimeKey;
-  }
+    public String getRuntimeKey() {
+        return runtimeKey;
+    }
+
+    public void setRuntimeKey(String runtimeKey) {
+        this.runtimeKey = runtimeKey;
+    }
 }

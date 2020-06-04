@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.model.connect.rules.Schema;
+package org.apache.streampipes.model.connect.rules.schema;
 
 import io.fogsy.empire.annotations.Namespaces;
 import io.fogsy.empire.annotations.RdfProperty;

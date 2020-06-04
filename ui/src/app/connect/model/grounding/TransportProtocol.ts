@@ -16,18 +16,17 @@
  *
  */
 
-package org.apache.streampipes.model.connect.rules.Schema;
+import {RdfsClass} from "../../../platform-services/tsonld/RdfsClass";
+import {UnnamedStreamPipesEntity} from "../UnnamedStreamPipesEntity";
+import {RdfProperty} from "../../../platform-services/tsonld/RdfsProperty";
+import {TopicDefinition} from "./TopicDefinition";
 
-import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
+@RdfsClass('sp:TransportProtocol')
+export class TransportProtocol extends UnnamedStreamPipesEntity {
 
-public abstract class SchemaTransformationRuleDescription extends TransformationRuleDescription {
+    @RdfProperty('sp:brokerHostname')
+    public brokerHostname: String;
 
-    public SchemaTransformationRuleDescription() {
-        super();
-    }
-
-    public SchemaTransformationRuleDescription(TransformationRuleDescription other) {
-        super();
-    }
-
+    @RdfProperty('sp:topic')
+    public topicDefinition: TopicDefinition;
 }

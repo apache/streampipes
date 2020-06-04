@@ -19,14 +19,16 @@
 package org.apache.streampipes.rest.shared.serializer;
 
 import com.google.gson.Gson;
-import org.apache.streampipes.serializers.json.GsonSerializer;
 import org.apache.streampipes.rest.shared.annotation.GsonWithoutIds;
+import org.apache.streampipes.serializers.json.GsonSerializer;
 
 import javax.annotation.Priority;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
+import java.lang.annotation.Annotation;
+import java.util.Arrays;
 
 @Provider
 @Priority(2)
@@ -38,5 +40,10 @@ public class GsonWithoutIdProvider extends GsonJerseyProvider {
     @Override
     protected Gson getGsonSerializer() {
         return GsonSerializer.getGsonWithIds();
+    }
+
+    @Override
+    protected boolean requiredAnnotationsPresent(Annotation[] annotations) {
+        return Arrays.stream(annotations).anyMatch(a -> a.annotationType().equals(GsonWithoutIds.class));
     }
 }

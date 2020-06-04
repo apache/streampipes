@@ -28,3 +28,4 @@ modules:
   - spDataExplorer
   - spConfiguration
   - spDataExplorer2
+  - spEditor2

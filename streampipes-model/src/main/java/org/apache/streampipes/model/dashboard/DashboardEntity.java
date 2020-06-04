@@ -18,11 +18,13 @@
 
 package org.apache.streampipes.model.dashboard;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.google.gson.annotations.SerializedName;
-import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
-import org.apache.streampipes.vocabulary.StreamPipes;
 import io.fogsy.empire.annotations.RdfProperty;
 import io.fogsy.empire.annotations.RdfsClass;
+import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
+import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
+import org.apache.streampipes.vocabulary.StreamPipes;
 
 import javax.persistence.Entity;
 import javax.persistence.MappedSuperclass;
@@ -30,6 +32,11 @@ import javax.persistence.MappedSuperclass;
 @RdfsClass(StreamPipes.DASHBOARD_ENTITY)
 @MappedSuperclass
 @Entity
+@JsonSubTypes({
+        @JsonSubTypes.Type(DashboardWidgetModel.class),
+        @JsonSubTypes.Type(VisualizablePipeline.class),
+        @JsonSubTypes.Type(DataExplorerWidgetModel.class)
+})
 public abstract class DashboardEntity extends UnnamedStreamPipesEntity {
 
   @RdfProperty("sp:couchDbId")

@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.model.connect.rules.Stream;
+package org.apache.streampipes.model.connect.rules.schema;
 
 import io.fogsy.empire.annotations.Namespaces;
 import io.fogsy.empire.annotations.RdfProperty;
@@ -26,28 +26,31 @@ import org.apache.streampipes.vocabulary.StreamPipes;
 import javax.persistence.Entity;
 
 @Namespaces({StreamPipes.NS_PREFIX, StreamPipes.NS})
-@RdfsClass(StreamPipes.REMOVE_DUPLICATES_RULE_DESCRIPTION)
+@RdfsClass(StreamPipes.CREATE_NESTED_RULE_DESCRIPTION)
 @Entity
-public class RemoveDuplicatesTransformationRuleDescription extends StreamTransformationRuleDescription {
+public class CreateNestedRuleDescription extends SchemaTransformationRuleDescription {
+  @RdfProperty(StreamPipes.RUNTIME_KEY)
+  private String runtimeKey;
 
-    @RdfProperty(StreamPipes.FILTER_TIME_WINDOW)
-    private String filterTimeWindow;
+  public CreateNestedRuleDescription() {
+    super();
+  }
 
+  public CreateNestedRuleDescription(String runtimeKey) {
+    super();
+    this.runtimeKey = runtimeKey;
+  }
 
-    public RemoveDuplicatesTransformationRuleDescription() {
-        super();
-    }
+  public CreateNestedRuleDescription(CreateNestedRuleDescription other) {
+    super(other);
+    this.runtimeKey = other.getRuntimeKey();
+  }
 
-    public RemoveDuplicatesTransformationRuleDescription(RemoveDuplicatesTransformationRuleDescription other) {
-        super(other);
-        this.filterTimeWindow = other.getFilterTimeWindow();
-    }
+  public String getRuntimeKey() {
+    return runtimeKey;
+  }
 
-    public String getFilterTimeWindow() {
-        return filterTimeWindow;
-    }
-
-    public void setFilterTimeWindow(String filterTimeWindow) {
-        this.filterTimeWindow = filterTimeWindow;
-    }
+  public void setRuntimeKey(String runtimeKey) {
+    this.runtimeKey = runtimeKey;
+  }
 }

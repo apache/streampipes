@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.model.connect.rules.Schema;
+package org.apache.streampipes.model.connect.rules.schema;
 
 import io.fogsy.empire.annotations.Namespaces;
 import io.fogsy.empire.annotations.RdfProperty;
@@ -26,32 +26,45 @@ import org.apache.streampipes.vocabulary.StreamPipes;
 import javax.persistence.Entity;
 
 @Namespaces({StreamPipes.NS_PREFIX, StreamPipes.NS})
-@RdfsClass(StreamPipes.DELETE_RULE_DESCRIPTION)
+@RdfsClass(StreamPipes.RENAME_RULE_DESCRIPTION)
 @Entity
-public class DeleteRuleDescription extends SchemaTransformationRuleDescription {
-    @RdfProperty(StreamPipes.RUNTIME_KEY)
-    private String runtimeKey;
+public class RenameRuleDescription extends SchemaTransformationRuleDescription {
 
+    @RdfProperty(StreamPipes.OLD_RUNTIME_NAME)
+    private String oldRuntimeKey;
 
-    public DeleteRuleDescription() {
+    @RdfProperty(StreamPipes.NEW_RUNTIME_NAME)
+    private String newRuntimeKey;
+
+    public RenameRuleDescription() {
         super();
     }
 
-    public DeleteRuleDescription(String runtimeKey) {
+    public RenameRuleDescription(String oldRuntimeKey, String newRuntimeKey) {
         super();
-        this.runtimeKey = runtimeKey;
+        this.oldRuntimeKey = oldRuntimeKey;
+        this.newRuntimeKey = newRuntimeKey;
     }
 
-    public DeleteRuleDescription(DeleteRuleDescription other) {
+    public RenameRuleDescription(RenameRuleDescription other) {
         super(other);
-        this.runtimeKey = other.getRuntimeKey();
+        this.oldRuntimeKey = other.getOldRuntimeKey();
+        this.newRuntimeKey = other.getNewRuntimeKey();
     }
 
-    public String getRuntimeKey() {
-        return runtimeKey;
+    public String getOldRuntimeKey() {
+        return oldRuntimeKey;
     }
 
-    public void setRuntimeKey(String runtimeKey) {
-        this.runtimeKey = runtimeKey;
+    public void setOldRuntimeKey(String oldRuntimeKey) {
+        this.oldRuntimeKey = oldRuntimeKey;
+    }
+
+    public String getNewRuntimeKey() {
+        return newRuntimeKey;
+    }
+
+    public void setNewRuntimeKey(String newRuntimeKey) {
+        this.newRuntimeKey = newRuntimeKey;
     }
 }

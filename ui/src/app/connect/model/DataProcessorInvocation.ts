@@ -21,15 +21,13 @@ import {RdfProperty} from '../../platform-services/tsonld/RdfsProperty';
 import {RdfsClass} from '../../platform-services/tsonld/RdfsClass';
 import {DataStreamDescription} from './DataStreamDescription';
 import {OutputStrategy} from './output/OutputStrategy';
+import {InvocableStreamPipesEntity} from "./InvocableStreamPipesEntity";
 
 @RdfsClass('sp:DataProcessorInvocation')
-export class DataProcessorInvocation {
+export class DataProcessorInvocation extends InvocableStreamPipesEntity {
 
     @RdfId
     public id: string;
-
-    @RdfProperty('http://www.w3.org/2000/01/rdf-schema#label')
-    public label: string;
 
     @RdfProperty('sp:produces')
     public outputStream: DataStreamDescription;
@@ -41,7 +39,7 @@ export class DataProcessorInvocation {
     public category: string[];
 
     constructor(id: string) {
-        this.id = id;
+        super(id);
     }
 
 }

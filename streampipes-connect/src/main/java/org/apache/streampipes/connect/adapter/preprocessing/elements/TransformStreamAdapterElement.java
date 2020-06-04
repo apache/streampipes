@@ -24,8 +24,8 @@ import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipelineElem
 import org.apache.streampipes.connect.adapter.preprocessing.transform.TransformationRule;
 import org.apache.streampipes.connect.adapter.preprocessing.transform.stream.EventRateTransformationRule;
 import org.apache.streampipes.connect.adapter.preprocessing.transform.stream.StreamEventTransformer;
-import org.apache.streampipes.model.connect.rules.Stream.EventRateTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.Stream.StreamTransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.stream.StreamTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
 
 import java.util.ArrayList;

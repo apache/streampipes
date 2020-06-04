@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.rest.impl;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -28,20 +27,14 @@ import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.graph.DataSourceDescription;
 import org.apache.streampipes.rest.api.IOntologyPipelineElement;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
-import org.apache.streampipes.serializers.json.GsonSerializer;
 import org.apache.streampipes.storage.management.StorageManager;
 
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 @Path("/v2/ontology")
 public class OntologyPipelineElement extends AbstractRestInterface implements IOntologyPipelineElement {
@@ -146,14 +139,4 @@ public class OntologyPipelineElement extends AbstractRestInterface implements IO
 
     return jsonObj;
   }
-
-  private Gson getGson(boolean keepIds) {
-    if (keepIds) {
-      return GsonSerializer.getGsonWithIds();
-    } else {
-      return GsonSerializer.getGsonWithoutIds();
-    }
-  }
-
-
 }

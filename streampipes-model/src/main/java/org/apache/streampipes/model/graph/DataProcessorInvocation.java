@@ -25,17 +25,13 @@ import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.output.OutputStrategy;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.util.Cloner;
+import org.apache.streampipes.model.util.RdfIdGenerator;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 @RdfsClass(StreamPipes.DATA_PROCESSOR_INVOCATION)
 @Entity
@@ -74,6 +70,7 @@ public class DataProcessorInvocation extends InvocableStreamPipesEntity implemen
     this.setStreamRequirements(sepa.getSpDataStreams());
     this.setAppId(sepa.getAppId());
     this.setIncludesAssets(sepa.isIncludesAssets());
+    this.setElementId(RdfIdGenerator.makeRdfId(this));
     //this.setUri(belongsTo +"/" +getElementId());
   }
 

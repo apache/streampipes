@@ -18,9 +18,13 @@
 
 package org.apache.streampipes.model.connect.rules;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 import io.fogsy.empire.annotations.Namespaces;
 import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
+import org.apache.streampipes.model.connect.rules.schema.SchemaTransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.stream.StreamTransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.value.ValueTransformationRuleDescription;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
 import javax.persistence.Entity;
@@ -28,6 +32,11 @@ import javax.persistence.Entity;
 @Namespaces({StreamPipes.NS_PREFIX, StreamPipes.NS})
 @RdfsClass(StreamPipes.TRANSFORM_RULE_DESCRIPTION)
 @Entity
+@JsonSubTypes({
+        @JsonSubTypes.Type(ValueTransformationRuleDescription.class),
+        @JsonSubTypes.Type(StreamTransformationRuleDescription.class),
+        @JsonSubTypes.Type(SchemaTransformationRuleDescription.class),
+})
 public abstract class TransformationRuleDescription extends UnnamedStreamPipesEntity {
 
 

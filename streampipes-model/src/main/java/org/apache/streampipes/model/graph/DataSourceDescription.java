@@ -21,24 +21,25 @@ package org.apache.streampipes.model.graph;
 import io.fogsy.empire.annotations.RdfProperty;
 import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.SpDataStream;
+import org.apache.streampipes.model.annotation.TsModel;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.vocabulary.StreamPipes;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * class that represents Semantic Event Producers.
  */
 @RdfsClass(StreamPipes.DATA_SOURCE_DESCRIPTION)
 @Entity
+@TsModel
 public class DataSourceDescription extends NamedStreamPipesEntity {
 
   private static final long serialVersionUID = 5607030219013954697L;

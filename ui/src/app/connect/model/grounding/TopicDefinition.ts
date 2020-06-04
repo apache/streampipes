@@ -16,18 +16,14 @@
  *
  */
 
-package org.apache.streampipes.model.connect.rules.Stream;
+import {RdfsClass} from "../../../platform-services/tsonld/RdfsClass";
+import {UnnamedStreamPipesEntity} from "../UnnamedStreamPipesEntity";
+import {RdfProperty} from "../../../platform-services/tsonld/RdfsProperty";
 
-import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
+@RdfsClass('sp:TopicDefinition')
+export class TopicDefinition extends UnnamedStreamPipesEntity {
 
+    @RdfProperty('sp:hasActualTopicName')
+    public actualTopicName: String;
 
-public abstract class StreamTransformationRuleDescription extends TransformationRuleDescription {
-
-    public StreamTransformationRuleDescription() {
-        super();
-    }
-
-    public StreamTransformationRuleDescription(TransformationRuleDescription other) {
-        super();
-    }
 }

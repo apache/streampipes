@@ -18,23 +18,29 @@
 
 package org.apache.streampipes.model.base;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 import io.fogsy.empire.annotations.RdfProperty;
 import org.apache.streampipes.logging.LoggerFactory;
 import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.SpDataStream;
+import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.monitoring.ElementStatusInfoSettings;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
-import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import java.util.List;
 
+@JsonSubTypes({
+        @JsonSubTypes.Type(DataProcessorInvocation.class),
+        @JsonSubTypes.Type(DataSinkInvocation.class),
+})
 public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity {
 
   private static final long serialVersionUID = 2727573914765473470L;
@@ -57,6 +63,9 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
   @RdfProperty(StreamPipes.STATUS_INFO_SETTINGS)
   private ElementStatusInfoSettings statusInfoSettings;
 
+  @OneToOne(fetch = FetchType.EAGER,
+          cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  @RdfProperty(StreamPipes.SUPPORTED_GROUNDING)
   private EventGrounding supportedGrounding;
 
   @RdfProperty(StreamPipes.CORRESPONDING_PIPELINE)
@@ -65,8 +74,12 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
   @RdfProperty(StreamPipes.CORRESPONDING_USER)
   private String correspondingUser;
 
+  @OneToMany(fetch = FetchType.EAGER,
+          cascade = {CascadeType.ALL})
+  @RdfProperty(StreamPipes.REQUIRES_STREAM)
   private List<SpDataStream> streamRequirements;
 
+  //@RdfProperty(StreamPipes.PE_CONFIGURED)
   private boolean configured;
 
   public InvocableStreamPipesEntity() {

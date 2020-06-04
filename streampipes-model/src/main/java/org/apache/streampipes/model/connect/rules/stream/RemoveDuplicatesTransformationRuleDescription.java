@@ -16,41 +16,38 @@
  *
  */
 
-package org.apache.streampipes.model.connect;
+package org.apache.streampipes.model.connect.rules.stream;
 
 import io.fogsy.empire.annotations.Namespaces;
 import io.fogsy.empire.annotations.RdfProperty;
 import io.fogsy.empire.annotations.RdfsClass;
-import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
+import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import java.util.ArrayList;
-import java.util.List;
 
-@Namespaces({"sp", "https://streampipes.org/vocabulary/v1/\""})
-@RdfsClass("sp:List")
+@Namespaces({StreamPipes.NS_PREFIX, StreamPipes.NS})
+@RdfsClass(StreamPipes.REMOVE_DUPLICATES_RULE_DESCRIPTION)
 @Entity
-public class ListDescription <T> extends UnnamedStreamPipesEntity {
-    // TODO not sure if I can deserialize it in the client
+public class RemoveDuplicatesTransformationRuleDescription extends StreamTransformationRuleDescription {
 
-    @OneToMany(fetch = FetchType.EAGER,
-            cascade = {CascadeType.ALL})
-    @RdfProperty("sp:list")
-    private List<T> list;
+    @RdfProperty(StreamPipes.FILTER_TIME_WINDOW)
+    private String filterTimeWindow;
 
-    public ListDescription() {
+
+    public RemoveDuplicatesTransformationRuleDescription() {
         super();
-        list = new ArrayList<>();
     }
 
-    public List<T> getList() {
-        return list;
+    public RemoveDuplicatesTransformationRuleDescription(RemoveDuplicatesTransformationRuleDescription other) {
+        super(other);
+        this.filterTimeWindow = other.getFilterTimeWindow();
     }
 
-    public void setList(List<T> list) {
-        this.list = list;
+    public String getFilterTimeWindow() {
+        return filterTimeWindow;
+    }
+
+    public void setFilterTimeWindow(String filterTimeWindow) {
+        this.filterTimeWindow = filterTimeWindow;
     }
 }

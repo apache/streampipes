@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.model.connect.rules.Schema;
+package org.apache.streampipes.model.connect.rules.stream;
 
 import io.fogsy.empire.annotations.Namespaces;
 import io.fogsy.empire.annotations.RdfProperty;
@@ -26,45 +26,41 @@ import org.apache.streampipes.vocabulary.StreamPipes;
 import javax.persistence.Entity;
 
 @Namespaces({StreamPipes.NS_PREFIX, StreamPipes.NS})
-@RdfsClass(StreamPipes.RENAME_RULE_DESCRIPTION)
+@RdfsClass(StreamPipes.EVENT_RATE_RULE_DESCRIPTION)
 @Entity
-public class RenameRuleDescription extends SchemaTransformationRuleDescription {
+public class EventRateTransformationRuleDescription extends StreamTransformationRuleDescription {
 
-    @RdfProperty(StreamPipes.OLD_RUNTIME_NAME)
-    private String oldRuntimeKey;
+    @RdfProperty(StreamPipes.AGGREGATION_TIME_WINDOW)
+    private long aggregationTimeWindow;
 
-    @RdfProperty(StreamPipes.NEW_RUNTIME_NAME)
-    private String newRuntimeKey;
+    //None (Values from last event), max, min, mean, sum (of the values in the time window)
+    @RdfProperty(StreamPipes.AGGREGATION_TYPE)
+    private String aggregationType;
 
-    public RenameRuleDescription() {
-        super();
+
+    public EventRateTransformationRuleDescription() {
+
     }
 
-    public RenameRuleDescription(String oldRuntimeKey, String newRuntimeKey) {
-        super();
-        this.oldRuntimeKey = oldRuntimeKey;
-        this.newRuntimeKey = newRuntimeKey;
-    }
-
-    public RenameRuleDescription(RenameRuleDescription other) {
+    public EventRateTransformationRuleDescription(EventRateTransformationRuleDescription other) {
         super(other);
-        this.oldRuntimeKey = other.getOldRuntimeKey();
-        this.newRuntimeKey = other.getNewRuntimeKey();
+        this.aggregationTimeWindow = other.getAggregationTimeWindow();
+        this.aggregationType = other.getAggregationType();
     }
 
-    public String getOldRuntimeKey() {
-        return oldRuntimeKey;
+    public long getAggregationTimeWindow() {
+        return aggregationTimeWindow;
     }
 
-    public void setOldRuntimeKey(String oldRuntimeKey) {
-        this.oldRuntimeKey = oldRuntimeKey;
+    public void setAggregationTimeWindow(long aggregationTimeWindow) {
+        this.aggregationTimeWindow = aggregationTimeWindow;
     }
 
-    public String getNewRuntimeKey() {
-        return newRuntimeKey;
+    public String getAggregationType() {
+        return aggregationType;
     }
 
-    public void setNewRuntimeKey(String newRuntimeKey) {
-        this.newRuntimeKey = newRuntimeKey;
+    public void setAggregationType(String aggregationTypes) {
+        this.aggregationType = aggregationTypes;
     }
 }

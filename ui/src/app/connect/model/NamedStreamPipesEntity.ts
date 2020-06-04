@@ -40,6 +40,8 @@ export class NamedStreamPipesEntity {
     @RdfProperty('sp:hasApplicationLink')
     public applicationLinks: Array<ApplicationLink>;
 
+    public type: string;
+
     constructor(uri: string) {
       this.uri = uri;
     }

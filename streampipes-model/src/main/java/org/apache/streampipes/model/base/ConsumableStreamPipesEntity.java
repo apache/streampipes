@@ -18,21 +18,27 @@
 
 package org.apache.streampipes.model.base;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 import io.fogsy.empire.annotations.RdfProperty;
 import org.apache.streampipes.model.SpDataStream;
+import org.apache.streampipes.model.graph.DataProcessorDescription;
+import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import java.util.ArrayList;
+import java.util.List;
 
+@JsonSubTypes({
+        @JsonSubTypes.Type(DataProcessorDescription.class),
+        @JsonSubTypes.Type(DataSinkDescription.class)
+})
 public abstract class ConsumableStreamPipesEntity extends NamedStreamPipesEntity {
 
   private static final long serialVersionUID = -6617391345752016449L;

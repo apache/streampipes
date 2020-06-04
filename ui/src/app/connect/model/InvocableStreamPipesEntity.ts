@@ -20,12 +20,14 @@ import {RdfProperty} from '../../platform-services/tsonld/RdfsProperty';
 import {RdfsClass} from '../../platform-services/tsonld/RdfsClass';
 import {NamedStreamPipesEntity} from "./NamedStreamPipesEntity";
 import {StaticProperty} from "./StaticProperty";
+import {DataStreamDescription} from "./DataStreamDescription";
+import {EventGrounding} from "./grounding/EventGrounding";
 
 @RdfsClass('sp:InvocableStreamPipesEntity')
 export class InvocableStreamPipesEntity extends NamedStreamPipesEntity {
 
-    //@RdfProperty('sp:receivesStream')
-    //public inputStreams: Array<SpDataStream>;
+    @RdfProperty('sp:receivesStream')
+    public inputStreams: DataStreamDescription[];
 
     @RdfProperty('sp:hasStaticProperty')
     public staticProperties: Array<StaticProperty>;
@@ -33,8 +35,20 @@ export class InvocableStreamPipesEntity extends NamedStreamPipesEntity {
     @RdfProperty('sp:belongsTo')
     public belongsTo: string;
 
+    @RdfProperty('sp:supportedGrounding')
+    public supportedGrounding: EventGrounding;
+
     @RdfProperty('sp:correspondingPipeline')
     public correspondingPipeline: string;
+
+    @RdfProperty('sp:hasCorrespondingUser')
+    public correspondingUser: string;
+
+    @RdfProperty('sp:requiresStream')
+    public streamRequirements: DataStreamDescription[];
+
+    @RdfProperty('sp:isPeConfigured')
+    public configured: boolean;
 
     constructor(id: string) {
         super(id);

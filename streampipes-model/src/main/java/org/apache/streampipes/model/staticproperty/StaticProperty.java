@@ -18,8 +18,10 @@
 
 package org.apache.streampipes.model.staticproperty;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 import io.fogsy.empire.annotations.RdfProperty;
 import io.fogsy.empire.annotations.RdfsClass;
+import org.apache.streampipes.model.annotation.TsModel;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.vocabulary.RDFS;
 import org.apache.streampipes.vocabulary.SO;
@@ -31,6 +33,26 @@ import javax.persistence.MappedSuperclass;
 @RdfsClass(StreamPipes.STATIC_PROPERTY)
 @MappedSuperclass
 @Entity
+@JsonSubTypes({
+        @JsonSubTypes.Type(AnyStaticProperty.class),
+        @JsonSubTypes.Type(CodeInputStaticProperty.class),
+        @JsonSubTypes.Type(CollectionStaticProperty.class),
+        @JsonSubTypes.Type(ColorPickerStaticProperty.class),
+        @JsonSubTypes.Type(DomainStaticProperty.class),
+        @JsonSubTypes.Type(FileStaticProperty.class),
+        @JsonSubTypes.Type(FreeTextStaticProperty.class),
+        @JsonSubTypes.Type(MappingPropertyUnary.class),
+        @JsonSubTypes.Type(MappingPropertyNary.class),
+        @JsonSubTypes.Type(MatchingStaticProperty.class),
+        @JsonSubTypes.Type(OneOfStaticProperty.class),
+        @JsonSubTypes.Type(RuntimeResolvableAnyStaticProperty.class),
+        @JsonSubTypes.Type(RuntimeResolvableOneOfStaticProperty.class),
+        @JsonSubTypes.Type(SecretStaticProperty.class),
+        @JsonSubTypes.Type(StaticPropertyAlternative.class),
+        @JsonSubTypes.Type(StaticPropertyAlternatives.class),
+        @JsonSubTypes.Type(StaticPropertyGroup.class),
+})
+@TsModel
 public abstract class StaticProperty extends UnnamedStreamPipesEntity {
 
   private static final long serialVersionUID = 2509153122084646025L;
