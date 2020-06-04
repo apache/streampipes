@@ -32,6 +32,7 @@ import org.apache.streampipes.model.schema.EventProperty;
 
 import java.sql.*;
 import java.util.*;
+import java.util.Objects;
 
 
 public class Mysql extends JdbcClient implements EventSink<MysqlParameters> {
@@ -102,12 +103,13 @@ public class Mysql extends JdbcClient implements EventSink<MysqlParameters> {
         for (EventProperty property : eventProperties) {
             if (this.tableColumns.get(property.getRuntimeName()) != null) {
                 if (property instanceof EventPropertyPrimitive) {
-                    if (property.getDomainProperties().stream().anyMatch(x ->
-                            SO.DateTime.equals(x.toString()))) {
-                        this.timestampKeys.add(property.getRuntimeName());
-                    }
                     Column col = this.tableColumns.get(property.getRuntimeName());
-                    if (((EventPropertyPrimitive) property).getRuntimeType().equals(col.getType().toString())) {
+                    // Validate SQL-DateTime separately
+                    if (property.getDomainProperties() != null && property.getDomainProperties().stream().anyMatch(x ->
+                            SO.DateTime.equals(x.toString())) && col.getType().toString().equals("http://www.w3.org/2001/XMLSchema#long")) {
+                        this.timestampKeys.add(property.getRuntimeName());
+                        continue;
+                    } else if (((EventPropertyPrimitive) property).getRuntimeType().equals(col.getType().toString())) {
                         continue;
                     } else {
                         throw new SpRuntimeException("Table '" + tableName + "' does not match the EventProperties");
@@ -197,10 +199,6 @@ public class Mysql extends JdbcClient implements EventSink<MysqlParameters> {
                     String columnName = resultSet.getString("COLUMN_NAME");
                     String dataType = resultSet.getString("DATA_TYPE");
                     String columnType = resultSet.getString("COLUMN_TYPE");
-
-                    System.out.println((dataType));
-                    System.out.println((columnType));
-
                     tableColumns.put(columnName, new Column(dataType, columnType));
                 } while (resultSet.next());
             } else {
@@ -251,7 +249,7 @@ public class Mysql extends JdbcClient implements EventSink<MysqlParameters> {
                 // Adding the type of the property (e.g. "VARCHAR(255)")
                 if (property instanceof EventPropertyPrimitive) {
                     // If domain property is a timestamp
-                    if (property.getDomainProperties().stream().anyMatch(x ->
+                    if (property.getDomainProperties() != null && property.getDomainProperties().stream().anyMatch(x ->
                        SO.DateTime.equals(x.toString()))) {
                         s.append(SqlAttribute.DATETIME);
                         this.timestampKeys.add(property.getRuntimeName());
