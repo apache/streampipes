@@ -65,9 +65,10 @@ public class Plc4xModbusAdapter extends PullAdapter{
 	/**
      * Keys of user configuration parameters
      */
-    private static final String PLC_IP = "plc_ip";
-    
-    private static final String PLC_NODES = "plc_nodes";
+  private static final String PLC_IP = "plc_ip";
+	private static final String PLC_PORT = "plc_port";
+
+	private static final String PLC_NODES = "plc_nodes";
     private static final String PLC_NODE_NAME = "plc_node_name";
     private static final String PLC_NODE_RUNTIME_NAME = "plc_node_runtime_name";
     private static final String PLC_NODE_ADDRESS = "plc_node_address";
@@ -78,7 +79,8 @@ public class Plc4xModbusAdapter extends PullAdapter{
      * Values of user configuration parameters
      */
     private String ip;
-    private List<Map<String, String>> nodes;
+	private int port;
+	private List<Map<String, String>> nodes;
 
     /**
      * Connection to the PLC
@@ -105,14 +107,16 @@ public class Plc4xModbusAdapter extends PullAdapter{
     			.withLocales(Locales.EN)
     			.withAssets(Assets.DOCUMENTATION, Assets.ICON)
     			.category(AdapterType.Manufacturing)
-    			.requiredTextParameter(Labels.from(PLC_IP, "PLC Address", "Example: 192.168.34.56"))
-    			.requiredCollection(Labels.from(PLC_NODES, "Nodes", "The PLC Nodes"),
-    					StaticProperties.collection(Labels.withId(PLC_NODES),
+    			.requiredTextParameter(Labels.withId(PLC_IP))
+					.requiredTextParameter(Labels.withId(PLC_PORT))
+					.requiredCollection(Labels.withId(PLC_NODES),
+//    					StaticProperties.collection(Labels.withId(PLC_NODES),
     							StaticProperties.stringFreeTextProperty(Labels.withId(PLC_NODE_RUNTIME_NAME)),
     							StaticProperties.stringFreeTextProperty(Labels.withId(PLC_NODE_NAME)),
     							StaticProperties.integerFreeTextProperty(Labels.withId(PLC_NODE_ADDRESS)),
-    							StaticProperties.singleValueSelection(Labels.withId(PLC_NODE_TYPE), 
-    									Options.from("Coil", "HoldingRegister"))))
+    							StaticProperties.singleValueSelection(Labels.withId(PLC_NODE_TYPE),
+    									Options.from("Coil", "HoldingRegister")))
+//			)
     			.build();
     	description.setAppId(ID);
     	
@@ -129,9 +133,10 @@ public class Plc4xModbusAdapter extends PullAdapter{
     	
     	StaticPropertyExtractor extractor = StaticPropertyExtractor.from(adapterDescription.getConfig(), new ArrayList<>());
     	
-    	this.ip = extractor.singleValueParameter(PLC_IP, String.class);    	
-    		
-		this.nodes = new ArrayList<>();
+    	this.ip = extractor.singleValueParameter(PLC_IP, String.class);
+			this.port = extractor.singleValueParameter(PLC_PORT, Integer.class);
+
+			this.nodes = new ArrayList<>();
 		CollectionStaticProperty sp = (CollectionStaticProperty) extractor.getStaticPropertyByName(PLC_NODES);
 		
 		for (StaticProperty member : sp.getMembers()) {
@@ -140,11 +145,12 @@ public class Plc4xModbusAdapter extends PullAdapter{
 			Map map = new HashMap();
 			map.put(PLC_NODE_RUNTIME_NAME, memberExtractor.textParameter(PLC_NODE_RUNTIME_NAME));
 			map.put(PLC_NODE_NAME, memberExtractor.textParameter(PLC_NODE_NAME));
-			map.put(PLC_NODE_ADDRESS, memberExtractor.selectedSingleValue(PLC_NODE_ADDRESS, Integer.class));
+			map.put(PLC_NODE_ADDRESS, memberExtractor.singleValueParameter(PLC_NODE_ADDRESS, Integer.class));
  			map.put(PLC_NODE_TYPE, memberExtractor.selectedSingleValue(PLC_NODE_TYPE, String.class));
+
 			this.nodes.add(map);
 		}
-		
+
 	}
     	
 
@@ -169,7 +175,7 @@ public class Plc4xModbusAdapter extends PullAdapter{
     
     /**
 	 * Takes the user input and creates the event schema. The event schema describes the properties of the event stream.
-	 * @param adapaterDescription
+	 * @param
 	 * @return
 	 * @throws AdapterException, ParseException
 	 */
@@ -192,7 +198,7 @@ public class Plc4xModbusAdapter extends PullAdapter{
 					PrimitivePropertyBuilder
 						.create(datatype, node.get(PLC_NODE_RUNTIME_NAME))
 						.label(node.get(PLC_NODE_RUNTIME_NAME))
-						.description("FieldAdress: " + node.get(PLC_NODE_TYPE) + " " + node.get(PLC_NODE_ADDRESS))
+						.description("FieldAdress: " + node.get(PLC_NODE_TYPE) + " " + String.valueOf(node.get(PLC_NODE_ADDRESS)))
 						.build());
 		}
 		
@@ -214,7 +220,7 @@ public class Plc4xModbusAdapter extends PullAdapter{
 		getConfigurations(adapterDescription);
 		
 		try {
-			this.plcConnection = new PlcDriverManager().getConnection("modbus:tcp://" + this.ip);
+			this.plcConnection = new PlcDriverManager().getConnection("modbus:tcp://" + this.ip + ":" + this.port);
 			
 			if (!this.plcConnection.getMetadata().canRead()) {
 				throw new AdapterException("The Modbus device on IP: " + this.ip + " does not support reading data");
