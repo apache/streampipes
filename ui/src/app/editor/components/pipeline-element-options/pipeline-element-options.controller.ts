@@ -17,9 +17,9 @@
  */
 
 import * as angular from 'angular';
-import {JsplumbBridge} from "../../../services/jsplumb-bridge.service";
-import {JsplumbService} from "../../../services/jsplumb.service";
-import {PipelineValidationService} from "../../services/pipeline-validation.service";
+import {JsplumbBridge} from "../../../editor-v2/services/jsplumb-bridge.service";
+import {JsplumbService} from "../../../editor-v2/services/jsplumb.service";
+import {PipelineValidationService} from "../../../editor-v2/services/pipeline-validation.service";
 import {TransitionService} from "../../../services/transition.service";
 import {RestApi} from "../../../services/rest-api.service";
 

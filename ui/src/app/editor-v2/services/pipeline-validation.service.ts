@@ -18,13 +18,13 @@
 
 import * as angular from 'angular';
 import * as dagre from 'dagre';
-import {JsplumbBridge} from "../../services/jsplumb-bridge.service";
+import {JsplumbBridge} from "./jsplumb-bridge.service";
+import {Injectable} from "@angular/core";
 
+@Injectable()
 export class PipelineValidationService {
 
-    ObjectProvider: any;
     errorMessages: any = [];
-    JsplumbBridge: JsplumbBridge;
 
     availableErrorMessages: any = [
         {title: "Did you add a data stream?", content: "Any pipeline needs at least one data stream."},
@@ -33,9 +33,7 @@ export class PipelineValidationService {
         {title: "Separate pipelines", content: "It seems you've created more than one pipeline at once. Create only one pipeline at a time!"}
     ];
 
-    constructor(ObjectProvider, JsplumbBridge) {
-        this.ObjectProvider = ObjectProvider;
-        this.JsplumbBridge = JsplumbBridge;
+    constructor(private JsplumbBridge: JsplumbBridge) {
     }
 
     isValidPipeline(rawPipelineModel) {
@@ -161,4 +159,4 @@ export class PipelineValidationService {
     }
 }
 
-PipelineValidationService.$inject=['ObjectProvider', 'JsplumbBridge'];
+//PipelineValidationService.$inject=['ObjectProvider', 'JsplumbBridge'];

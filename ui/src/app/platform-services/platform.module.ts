@@ -19,18 +19,17 @@
 import {NgModule} from '@angular/core';
 import {TsonLdSerializerService} from './tsonld-serializer.service';
 import {PipelineTemplateService} from './apis/pipeline-template.service';
+import {PipelineElementService} from "./apis/pipeline-element.service";
 
 @NgModule({
-    imports: [
-    ],
-    declarations: [
-    ],
-    providers: [
-        TsonLdSerializerService,
-        PipelineTemplateService
-    ],
-    entryComponents: [
-    ]
+  imports: [],
+  declarations: [],
+  providers: [
+    TsonLdSerializerService,
+    PipelineTemplateService,
+    PipelineElementService
+  ],
+  entryComponents: []
 })
 export class PlatformServicesModule {
 }

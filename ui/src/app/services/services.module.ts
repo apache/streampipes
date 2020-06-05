@@ -28,14 +28,14 @@ import {InitTooltips} from './init-tooltips.service'
 import {RestApi} from './rest-api.service'
 import {AuthStatusService} from './auth-status.service'
 import {DomainProperties} from './domain-properties.service'
-import {JsplumbBridge} from './jsplumb-bridge.service'
-import {JsplumbService} from './jsplumb.service'
-import {PipelinePositioningService} from './pipeline-positioning.service'
-import {PipelineEditorService} from './pipeline-editor.service'
+import {JsplumbBridge} from '../editor-v2/services/jsplumb-bridge.service'
+import {JsplumbService} from '../editor-v2/services/jsplumb.service'
+import {PipelinePositioningService} from '../editor-v2/services/pipeline-positioning.service'
+import {PipelineEditorService} from '../editor-v2/services/pipeline-editor.service'
 import {DialogBuilder} from './dialog-builder.service'
 import {MeasurementUnits} from './measurement-units.service'
 import {DeploymentService} from './deployment.service'
-import {JsplumbConfigService} from './jsplumb-config.service'
+import {JsplumbConfigService} from '../editor-v2/services/jsplumb-config.service'
 import {PipelineElementIconService} from './pipeline-icon.service'
 import {ObjectProvider} from './object-provider.service'
 import {downgradeInjectable} from '@angular/upgrade/static';
@@ -62,10 +62,10 @@ export default angular.module('sp.services', [spConstants])
 	.service('AuthStatusService', downgradeInjectable(AuthStatusService))
 	.service('ObjectProvider', ObjectProvider)
 	.service('DomainProperties', DomainProperties)
-	.service('JsplumbBridge', JsplumbBridge)
-	.service('JsplumbService', JsplumbService)
-	.service('PipelinePositioningService', PipelinePositioningService)
-	.service('PipelineEditorService', PipelineEditorService)
+	//.service('JsplumbBridge', downgradeInjectable(JsplumbBridge))
+	//.service('JsplumbService', downgradeInjectable(JsplumbService))
+	//.service('PipelinePositioningService', downgradeInjectable(PipelinePositioningService))
+	//.service('PipelineEditorService', PipelineEditorService)
 	.service('DialogBuilder', DialogBuilder)
     .service('MeasurementUnitsService', MeasurementUnits)
     .service('DeploymentService', DeploymentService)

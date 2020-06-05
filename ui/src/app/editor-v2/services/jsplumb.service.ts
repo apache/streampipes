@@ -16,27 +16,20 @@
  *
  */
 
-import {ObjectProvider} from "./object-provider.service";
 import {JsplumbConfigService} from "./jsplumb-config.service";
 import {JsplumbBridge} from "./jsplumb-bridge.service";
+import {Inject, Injectable} from "@angular/core";
 
+@Injectable()
 export class JsplumbService {
 
-    objectProvider: ObjectProvider;
     apiConstants: any;
-    JsplumbConfigService: JsplumbConfigService;
-    JsplumbBridge: JsplumbBridge;
-    $timeout: any;
     idCounter: any;
+    $timeout: any;
     RestApi: any;
 
-    constructor(ObjectProvider, JsplumbConfigService, JsplumbBridge, $timeout, RestApi) {
-        this.objectProvider = ObjectProvider;
-        this.JsplumbConfigService = JsplumbConfigService;
-        this.JsplumbBridge = JsplumbBridge;
-        this.$timeout = $timeout;
-        this.RestApi = RestApi;
-
+    constructor(private JsplumbConfigService: JsplumbConfigService,
+                private JsplumbBridge: JsplumbBridge) {
         this.idCounter = 0;
     }
 
@@ -255,4 +248,4 @@ export class JsplumbService {
     }
 }
 
-JsplumbService.$inject = ['ObjectProvider', 'JsplumbConfigService', 'JsplumbBridge', '$timeout', 'RestApi'];
+//JsplumbService.$inject = ['JsplumbConfigService', 'JsplumbBridge', '$timeout', 'RestApi'];

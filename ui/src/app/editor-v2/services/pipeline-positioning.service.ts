@@ -21,21 +21,18 @@ import * as dagre from "dagre";
 import {JsplumbBridge} from "./jsplumb-bridge.service";
 import {JsplumbConfigService} from "./jsplumb-config.service";
 import {JsplumbService} from "./jsplumb.service";
+import {Inject, Injectable} from "@angular/core";
 
 declare const jsPlumb: any;
 
+@Injectable()
 export class PipelinePositioningService {
 
-    JsplumbService: JsplumbService;
-    JsplumbConfigService: JsplumbConfigService;
-    JsplumbBridge: JsplumbBridge;
 
-    constructor(JsplumbService, JsplumbConfigService, JsplumbBridge) {
-        this.JsplumbService = JsplumbService;
-        this.JsplumbConfigService = JsplumbConfigService;
-        this.JsplumbBridge = JsplumbBridge;
+    constructor(private JsplumbService: JsplumbService,
+                private JsplumbConfigService: JsplumbConfigService,
+                private JsplumbBridge: JsplumbBridge) {
     }
-
 
     displayPipeline(rawPipelineModel, targetCanvas, isPreview, autoLayout) {
         var jsplumbConfig = isPreview ? this.JsplumbConfigService.getPreviewConfig() : this.JsplumbConfigService.getEditorConfig();
@@ -134,4 +131,4 @@ export class PipelinePositioningService {
 
 }
 
-PipelinePositioningService.$inject = ['JsplumbService', 'JsplumbConfigService', 'JsplumbBridge'];
+//PipelinePositioningService.$inject = ['JsplumbService', 'JsplumbConfigService', 'JsplumbBridge'];

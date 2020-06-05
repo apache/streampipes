@@ -20,8 +20,8 @@ import * as angular from 'angular';
 import {AuthStatusService} from "../services/auth-status.service";
 import {RestApi} from "../services/rest-api.service";
 import {ShepherdService} from "../services/tour/shepherd.service";
-import {JsplumbBridge} from "../services/jsplumb-bridge.service";
-import {EditorDialogManager} from "./services/editor-dialog-manager.service";
+import {JsplumbBridge} from "../editor-v2/services/jsplumb-bridge.service";
+import {EditorDialogManager} from "../editor-v2/services/editor-dialog-manager.service";
 
 export class EditorCtrl {
 

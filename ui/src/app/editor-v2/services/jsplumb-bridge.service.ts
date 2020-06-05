@@ -16,8 +16,11 @@
  *
  */
 
+import {Injectable} from "@angular/core";
+
 declare const jsPlumb: any;
 
+@Injectable()
 export class JsplumbBridge {
 
     constructor() {

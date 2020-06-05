@@ -19,7 +19,7 @@
 import * as angular from 'angular';
 
 import {RestApi} from "../../../services/rest-api.service";
-import {EditorDialogManager} from "../../services/editor-dialog-manager.service";
+import {EditorDialogManager} from "../../../editor-v2/services/editor-dialog-manager.service";
 
 export class PipelineElementIconStandController {
 

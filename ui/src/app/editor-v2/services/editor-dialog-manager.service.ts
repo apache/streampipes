@@ -17,14 +17,14 @@
  */
 
 import * as angular from 'angular';
-import {CustomizeController} from "../dialog/customize-pipeline-element/customize.controller";
-import {MatchingErrorController} from "../dialog/matching-error/matching-error.controller";
-import {TopicSelectionDialog} from "../dialog/topic/topic-selection-modal.controller";
-import {PossibleElementsController} from "../dialog/possible-elements/possible-elements-dialog.controller";
-import {HelpDialogController} from "../dialog/help/help-dialog.controller";
-import {SavePipelineController} from "../dialog/save-pipeline/save-pipeline.controller";
-import {WelcomeTourDialogController} from "../dialog/welcome-tour/welcome-tour-dialog.controller";
-import {MissingElementsForTutorialDialogController} from "../dialog/missing-elements-for-tutorial/missing-elements-for-tutorial-dialog.controller";
+import {CustomizeController} from "../../editor/dialog/customize-pipeline-element/customize.controller";
+import {MatchingErrorController} from "../../editor/dialog/matching-error/matching-error.controller";
+import {TopicSelectionDialog} from "../../editor/dialog/topic/topic-selection-modal.controller";
+import {PossibleElementsController} from "../../editor/dialog/possible-elements/possible-elements-dialog.controller";
+import {HelpDialogController} from "../../editor/dialog/help/help-dialog.controller";
+import {SavePipelineController} from "../../editor/dialog/save-pipeline/save-pipeline.controller";
+import {WelcomeTourDialogController} from "../../editor/dialog/welcome-tour/welcome-tour-dialog.controller";
+import {MissingElementsForTutorialDialogController} from "../../editor/dialog/missing-elements-for-tutorial/missing-elements-for-tutorial-dialog.controller";
 
 declare const require: any;
 
@@ -40,7 +40,7 @@ export class EditorDialogManager {
     }
 
     showMatchingErrorDialog(elementData) {
-        var dialogContent = this.DialogBuilder.getDialogTemplate(MatchingErrorController, require('../dialog/matching-error/matching-error.tmpl.html'));
+        var dialogContent = this.DialogBuilder.getDialogTemplate(MatchingErrorController, require('../../editor/dialog/matching-error/matching-error.tmpl.html'));
         dialogContent.locals = {
             elementData: elementData
         }
@@ -48,7 +48,7 @@ export class EditorDialogManager {
     }
 
     showCustomizeDialog(elementData, sourceEndpoint, sepa, restrictedEditMode) {
-        var dialogContent = this.DialogBuilder.getDialogTemplate(CustomizeController, require('../dialog/customize-pipeline-element/customizeElementDialog.tmpl.html'));
+        var dialogContent = this.DialogBuilder.getDialogTemplate(CustomizeController, require('../../editor/dialog/customize-pipeline-element/customizeElementDialog.tmpl.html'));
         dialogContent.locals = {
             elementData: elementData,
             sourceEndpoint: sourceEndpoint,
@@ -59,7 +59,7 @@ export class EditorDialogManager {
     };
 
     showCustomizeStreamDialog(streamDescription) {
-        var dialogContent = this.DialogBuilder.getDialogTemplate(TopicSelectionDialog, require('../dialog/topic/topic-selection-modal.tmpl.html'));
+        var dialogContent = this.DialogBuilder.getDialogTemplate(TopicSelectionDialog, require('../../editor/dialog/topic/topic-selection-modal.tmpl.html'));
         dialogContent.locals = {
             streamDescription: streamDescription
         }
@@ -67,7 +67,7 @@ export class EditorDialogManager {
     }
 
     showSavePipelineDialog(pipelineNew, modificationModeOn) {
-        var dialogContent = this.DialogBuilder.getDialogTemplate(SavePipelineController, require('../dialog/save-pipeline/submitPipelineModal.tmpl.html'));
+        var dialogContent = this.DialogBuilder.getDialogTemplate(SavePipelineController, require('../../editor/dialog/save-pipeline/submitPipelineModal.tmpl.html'));
         dialogContent.locals = {
             pipeline: pipelineNew,
             modificationMode: modificationModeOn
@@ -79,7 +79,7 @@ export class EditorDialogManager {
         this.$mdDialog.show({
             controller: HelpDialogController,
             controllerAs: 'ctrl',
-            template: require('../dialog/help/help-dialog.tmpl.html'),
+            template: require('../../editor/dialog/help/help-dialog.tmpl.html'),
             parent: angular.element(document.body),
             // must be false, otherwise polling of live data is not stopped in help-dialog.controller.js when dialog is closed
             clickOutsideToClose: false,
@@ -94,7 +94,7 @@ export class EditorDialogManager {
         this.$mdDialog.show({
             controller: PossibleElementsController,
             controllerAs: 'ctrl',
-            template: require('../dialog/possible-elements/possible-elements-dialog.tmpl.html'),
+            template: require('../../editor/dialog/possible-elements/possible-elements-dialog.tmpl.html'),
             parent: angular.element(document.body),
             clickOutsideToClose: true,
             bindToController: true,
@@ -119,7 +119,7 @@ export class EditorDialogManager {
         this.$mdDialog.show({
             controller: WelcomeTourDialogController,
             controllerAs: 'ctrl',
-            template: require('../dialog/welcome-tour/welcome-tour-dialog.tmpl.html'),
+            template: require('../../editor/dialog/welcome-tour/welcome-tour-dialog.tmpl.html'),
             parent: angular.element(document.body),
             clickOutsideToClose: false,
             bindToController: true,
@@ -133,7 +133,7 @@ export class EditorDialogManager {
         this.$mdDialog.show({
             controller: MissingElementsForTutorialDialogController,
             controllerAs: 'ctrl',
-            template: require('../dialog/missing-elements-for-tutorial/missing-elements-for-tutorial-dialog.tmpl.html'),
+            template: require('../../editor/dialog/missing-elements-for-tutorial/missing-elements-for-tutorial-dialog.tmpl.html'),
             parent: angular.element(document.body),
             clickOutsideToClose: false,
             bindToController: true,

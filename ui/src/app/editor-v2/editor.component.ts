@@ -18,10 +18,14 @@
 
 import {Component, OnInit} from "@angular/core";
 import {EditorService} from "./services/editor.service";
-import {DataStreamDescription} from "../connect/model/DataStreamDescription";
-import {DataSinkInvocation} from "../connect/model/DataSinkInvocation";
-import {DataSourceDescription} from "../connect/model/DataSourceDescription";
-import {DataProcessorInvocation} from "../core-model/gen/streampipes-model";
+import {
+    DataProcessorInvocation,
+    DataSinkInvocation,
+    DataSourceDescription, SpDataSet,
+    SpDataStream
+} from "../core-model/gen/streampipes-model";
+import {PipelineElementService} from "../platform-services/apis/pipeline-element.service";
+import {PipelineElementHolder} from "./model/editor.model";
 
 @Component({
     selector: 'editor',
@@ -30,75 +34,98 @@ import {DataProcessorInvocation} from "../core-model/gen/streampipes-model";
 })
 export class EditorComponent implements OnInit {
 
-    selectedIndex: number = 1;
-    activeType: string = "stream";
+    static readonly DATA_STREAM_IDENTIFIER = "org.apache.streampipes.model.SpDataStream";
+    static readonly DATA_SET_IDENTIFIER = "org.apache.streampipes.model.SpDataSet";
+    static readonly DATA_PROCESSOR_IDENTIFIER = "org.apache.streampipes.model.graph.DataProcessorInvocation";
+    static readonly DATA_SINK_IDENTIFIER = "org.apache.streampipes.model.graph.DataSinkInvoation";
 
-    availableDataStreams: DataStreamDescription[] = [];
+    selectedIndex: number = 1;
+    activeType: string = EditorComponent.DATA_STREAM_IDENTIFIER;
+
+    availableDataStreams: SpDataStream[] = [];
     availableDataProcessors: DataProcessorInvocation[] = [];
     availableDataSinks: DataSinkInvocation[] = [];
 
-    allElements: any = [];
-    currentElements: any = [];
+    allElements: PipelineElementHolder[] = [];
+    currentElements: (SpDataStream | DataProcessorInvocation | DataSinkInvocation)[] = [];
+
+    rawPipelineModel: any = [];
+    currentModifiedPipelineId: any;
 
     tabs = [
         {
             title: 'Data Sets',
-            type: 'set',
+            type: EditorComponent.DATA_SET_IDENTIFIER
         },
         {
             title: 'Data Streams',
-            type: 'stream',
+            type: EditorComponent.DATA_STREAM_IDENTIFIER
         },
         {
             title: 'Data Processors',
-            type: 'processor',
+            type: EditorComponent.DATA_PROCESSOR_IDENTIFIER
         },
         {
             title: 'Data Sinks',
-            type: 'sink',
+            type: EditorComponent.DATA_SINK_IDENTIFIER
         }
     ];
 
-    constructor(private editorService: EditorService) {
+    constructor(private editorService: EditorService,
+                private pipelineElementService: PipelineElementService) {
     }
 
-    public ngOnInit() {
-        this.editorService.getDataProcessors().subscribe(processors => {
-            //processors.forEach(processor => processor.type = "processor");
+    ngOnInit() {
+        this.pipelineElementService.getDataProcessors().subscribe(processors => {
             this.availableDataProcessors = processors;
-            console.log(processors);
-            this.allElements["processor"] = this.availableDataProcessors;
+            this.allElements[EditorComponent.DATA_PROCESSOR_IDENTIFIER] = this.availableDataProcessors;
         });
-        // this.editorService.getDataSources().subscribe(sources => {
-        //     this.availableDataStreams = this.collectStreams(sources);
-        //     this.allElements["stream"] = this.availableDataStreams;
-        // });
-        // this.editorService.getDataSinks().subscribe(sinks => {
-        //     sinks.forEach(processor => processor.type = "sink");
-        //     this.availableDataSinks = sinks;
-        //     this.allElements["sink"] = this.availableDataSinks;
-        // })
+        this.pipelineElementService.getDataSources().subscribe(sources => {
+            this.availableDataStreams = this.collectStreams(sources);
+            this.allElements[EditorComponent.DATA_STREAM_IDENTIFIER] = this.availableDataStreams
+                .filter(ds => ds["@class"] == EditorComponent.DATA_STREAM_IDENTIFIER );
+            this.allElements[EditorComponent.DATA_SET_IDENTIFIER] = this.availableDataStreams
+                .filter(ds => ds["@class"] == EditorComponent.DATA_SET_IDENTIFIER );
+            this.currentElements = this.allElements[EditorComponent.DATA_STREAM_IDENTIFIER];
+        });
+        this.pipelineElementService.getDataSinks().subscribe(sinks => {
+            this.availableDataSinks = sinks;
+            this.allElements[EditorComponent.DATA_SINK_IDENTIFIER] = this.availableDataSinks;
+        })
+
     }
 
     private collectStreams(sources: Array<DataSourceDescription>) {
-        let streams: DataStreamDescription[] = [];
+        let streams: SpDataStream[] = [];
         sources.forEach(source => {
-            if (!Array.isArray(source.spDataStreams)) {
-                source.spDataStreams = [source.spDataStreams];
-            }
             source.spDataStreams.forEach(stream => {
-                stream.type = "stream";
                 streams.push(stream);
             });
         });
         return streams;
     }
 
-
     selectPipelineElements(index : number) {
         this.selectedIndex = index;
         this.activeType = this.tabs[index].type;
         this.currentElements = this.allElements[this.activeType];
+        this.makeDraggable();
     }
+
+    makeDraggable() {
+        console.log("makuing drabbg");
+        (<any>$('.draggable-icon')).draggable({
+            revert: 'invalid',
+            helper: 'clone',
+            stack: '.draggable-icon',
+            start: function (el, ui) {
+                ui.helper.appendTo('#content');
+                $('#outerAssemblyArea').css('border', '3px dashed #39b54a');
+            },
+            stop: function (el, ui) {
+                $('#outerAssemblyArea').css('border', '3px solid rgb(156, 156, 156)');
+            }
+        });
+    };
 
 }

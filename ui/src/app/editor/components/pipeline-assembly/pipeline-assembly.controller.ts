@@ -16,7 +16,7 @@
  *
  */
 
-import {PipelineValidationService} from "../../services/pipeline-validation.service";
+import {PipelineValidationService} from "../../../editor-v2/services/pipeline-validation.service";
 import {RestApi} from "../../../services/rest-api.service";
 
 export class PipelineAssemblyController {

@@ -1,0 +1,115 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div>
+    <div class="assemblyOptions sp-blue-bg">
+        <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
+            <button mat-button style="display:flex;align-items:center;" class="md-button settings-bar-icon-button"
+                       ng-disabled="!pipelineValid"
+                       (click)="submit()" type="submit">
+<!--                <md-tooltip md-direction="top">-->
+<!--                    Save Pipeline-->
+<!--                </md-tooltip>-->
+                <mat-icon>save</mat-icon>&nbsp;Save pipeline
+            </button>
+            <button mat-button class="md-icon-button settings-bar-icon-button"
+                       ng-disabled="!selectMode"
+                       (click)="toggleSelectMode()">
+<!--                <md-tooltip md-direction="top">-->
+<!--                    Pan-->
+<!--                </md-tooltip>-->
+                <i class="material-icons">open_with</i>
+            </button>
+            <button mat-button class="md-icon-button settings-bar-icon-button" ng-disabled="selectMode"
+                       (click)="toggleSelectMode()">
+                <i class="material-icons">mode_edit</i>
+<!--                <md-tooltip md-direction="top">-->
+<!--                    Select-->
+<!--                </md-tooltip>-->
+            </button>
+            <button mat-button class="md-icon-button settings-bar-icon-button" ng-disabled="currentZoomLevel == 1"
+                       (click)="zoomIn()">
+                <i class="material-icons">zoom_in</i>
+<!--                <md-tooltip md-direction="top">-->
+<!--                    Zoom In-->
+<!--                </md-tooltip>-->
+            </button>
+            <button mat-button class="md-icon-button settings-bar-icon-button" ng-disabled="currentZoomLevel == 0.5"
+                       (click)="zoomOut()">
+                <i class="material-icons">zoom_out</i>
+<!--                <md-tooltip md-direction="top">-->
+<!--                    Zoom Out-->
+<!--                </md-tooltip>-->
+            </button>
+            <button mat-button class="md-icon-button settings-bar-icon-button" (click)="autoLayout()">
+                <i class="material-icons">settings_overscan</i>
+<!--                <md-tooltip md-direction="top">-->
+<!--                    Auto Layout-->
+<!--                </md-tooltip>-->
+            </button>
+            <div class="pipeline-cache-block">
+                <div ng-if="pipelineCached">All pipeline modifications saved.</div>
+<!--                <div ng-if="pipelineCacheRunning"><md-progress-circular-->
+<!--                        md-mode="indeterminate" class="pipeline-cache-progress"-->
+<!--                        md-diameter="10"></md-progress-circular>&nbsp;Saving pipeline-->
+<!--                    modifications</div>-->
+            </div>
+            <span fxFlex></span>
+            <div style="position:relative;">
+                <div *ngIf="!isPipelineAssemblyEmpty()" class="pipeline-validation-summary {{PipelineValidationService.errorMessages.length > 0 ? 'pipeline-validation-summary-error' : ''}}" ng-click="toggleErrorMessagesDisplayed()">
+                    <div fxLayout="row" fxLayoutAlign="center center">
+                        <div fxLayout="row" fxLayoutAlign="start center">
+                            <i class="material-icons" ng-if="PipelineValidationService.errorMessages.length > 0">notifications</i>
+                            <i class="material-icons" ng-if="PipelineValidationService.errorMessages.length === 0">done</i>
+                        </div>
+                        <div>
+                            <span *ngIf="PipelineValidationService.errorMessages.length === 0">Pipeline ok</span>
+                            <span *ngIf="PipelineValidationService.errorMessages.length > 0">{{PipelineValidationService.errorMessages.length}} {{PipelineValidationService.errorMessages.length > 1 ? 'hints' : 'hint'}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="editor-error-notifications" *ngIf="PipelineValidationService.errorMessages.length > 0 && errorMessagesDisplayed">
+                    <h5 style="color:darkred"><b>{{PipelineValidationService.errorMessages.length}} {{PipelineValidationService.errorMessages.length == 1 ? "error" : "errors"}} found.</b></h5>
+                    <hr/>
+                    <div *ngFor="let errorMessage of PipelineValidationService.errorMessages">
+                            <b>{{errorMessage.title}}</b>
+                        <div>{{errorMessage.content}}</div>
+                        <hr/>
+                    </div>
+                </div>
+            </div>
+            <button mat-button class="md-icon-button" ng-click="showClearAssemblyConfirmDialog($event)">
+                <i class="material-icons">clear</i>
+<!--                <md-tooltip md-direction="top">-->
+<!--                    Clear Assembly Area-->
+<!--                </md-tooltip>-->
+            </button>
+        </div>
+    </div>
+    <div id="outerAssemblyArea" class="outerAssembly sp-blue-border-nopadding">
+        <div mwlDroppable id="assembly" class="canvas" (drop)="elementDropped($event)">
+<!--            <pipeline pipeline-valid="ctrl.pipelineValid"-->
+<!--                      canvas-id="assembly"-->
+<!--                      raw-pipeline-model="ctrl.rawPipelineModel"-->
+<!--                      all-elements="ctrl.allElements"-->
+<!--                      preview="false"-->
+<!--                      pipeline-cached="ctrl.pipelineCached"-->
+<!--                      pipeline-cache-running="ctrl.pipelineCacheRunning"></pipeline>-->
+        </div>
+    </div>
+</div>

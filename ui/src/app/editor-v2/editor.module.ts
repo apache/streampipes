@@ -33,6 +33,13 @@ import {PipelineElementIconStandComponent} from "./components/pipeline-element-i
 import {PipelineAssemblyComponent} from "./components/pipeline-assembly/pipeline-assembly.component";
 import {ImageChecker} from "../services/image-checker.service";
 import {PipelineElementComponent} from "./components/pipeline-element/pipeline-element.component";
+import {JsplumbBridge} from "./services/jsplumb-bridge.service";
+import {PipelinePositioningService} from "./services/pipeline-positioning.service";
+import {JsplumbService} from "./services/jsplumb.service";
+import {JsplumbConfigService} from "./services/jsplumb-config.service";
+import {PipelineEditorService} from "./services/pipeline-editor.service";
+import {PipelineValidationService} from "./services/pipeline-validation.service";
+import {DragAndDropModule} from "angular-draggable-droppable";
 
 
 @NgModule({
@@ -45,7 +52,8 @@ import {PipelineElementComponent} from "./components/pipeline-element/pipeline-e
         FlexLayoutModule,
         CustomMaterialModule,
         FormsModule,
-        ConnectModule
+        ConnectModule,
+        DragAndDropModule
     ],
     declarations: [
         EditorComponent,
@@ -61,11 +69,22 @@ import {PipelineElementComponent} from "./components/pipeline-element/pipeline-e
             useFactory: ($injector: any) => $injector.get('RestApi'),
             deps: ['$injector'],
         },
+        JsplumbBridge,
+        JsplumbService,
+        JsplumbConfigService,
+        PipelineEditorService,
+        PipelinePositioningService,
+        PipelineValidationService,
         ElementIconText,
         ImageChecker,
         {
             provide: '$state',
             useFactory: ($injector: any) => $injector.get('$state'),
+            deps: ['$injector']
+        },
+        {
+            provide: '$timeout',
+            useFactory: ($injector: any) => $injector.get('$timeout'),
             deps: ['$injector']
         }
     ],

@@ -16,19 +16,3 @@
  *
  */
 
-import {Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
-import {AuthStatusService} from "../../services/auth-status.service";
-import {TsonLdSerializerService} from "../../platform-services/tsonld-serializer.service";
-
-@Injectable()
-export class EditorService {
-
-    constructor(private http: HttpClient,
-                private authStatusService: AuthStatusService,
-                private tsonLdSerializerService: TsonLdSerializerService) {
-    }
-
-
-
-}

@@ -50,13 +50,13 @@ import {CollectionComponent} from './components/collection/collection.component'
 import {CustomizeDialogComponent} from './components/customize/customize-dialog.component';
 import {TopicSelectionDialogComponent} from './components/topic/topic-selection-dialog.component';
 import {PipelineComponent} from './components/pipeline/pipeline.component';
-import {EditorDialogManager} from './services/editor-dialog-manager.service';
+import {EditorDialogManager} from '../editor-v2/services/editor-dialog-manager.service';
 import {PipelineElementComponent} from './components/pipeline-element/pipeline-element.component';
 import {PipelineElementRecommendationComponent} from "./components/pipeline-element-recommendation/pipeline-element-recommendation.component";
 import {PipelineElementRecommendationService} from "./services/pipeline-element-recommendation.service";
 import {PipelineAssemblyComponent} from "./components/pipeline-assembly/pipeline-assembly.component";
 import {PipelineElementIconStandComponent} from './components/pipeline-element-icon-stand/pipeline-element-icon-stand.component';
-import {PipelineValidationService} from "./services/pipeline-validation.service";
+import {PipelineValidationService} from "../editor-v2/services/pipeline-validation.service";
 import {OneOfRemoteComponent} from "./components/oneof-remote/oneof-remote.component";
 
 import {TextValidatorDirective} from "./validator/text/text-validator.directive";

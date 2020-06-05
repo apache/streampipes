@@ -16,6 +16,9 @@
  *
  */
 
+import {Injectable} from "@angular/core";
+
+@Injectable()
 export class PipelineEditorService {
 
     JsplumbBridge: any;
@@ -64,4 +67,4 @@ export class PipelineEditorService {
 
 }
 
-PipelineEditorService.$inject = ['JsplumbBridge'];
+//PipelineEditorService.$inject = ['JsplumbBridge'];
