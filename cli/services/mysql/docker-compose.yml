@@ -27,6 +27,11 @@ services:
       MYSQL_ROOT_PASSWORD: 7u*4rAy<rPh!v6@5
     extra_hosts:
       - host.docker.internal:${HOST_DOCKER_INTERNAL}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 

@@ -13,14 +13,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-version: "2"
+version: "2.0"
 services:
-  app-container:
-    image: ${SP_DOCKER_REGISTRY}streampipes/app-container/master:latest
-    ports:
-      - "3002:3000"
+  postgis:
+    image: postgis/postgis
     volumes:
-      - "../../apps:/usr/src/app/public/apps"
+      - postgis:/var/lib/postgresql/data
+    ports:
+      - 54321:5432
+    environment:
+       POSTGRES_USER: geo_streampipes
+       POSTGRES_PASSWORD: bQgu"FUR_VH6z>~j
     extra_hosts:
       - host.docker.internal:${HOST_DOCKER_INTERNAL}
     logging:
@@ -32,7 +35,7 @@ services:
       spnet:
 
 volumes:
-  connect:
+  postgis:
 
 networks:
   spnet:

@@ -27,6 +27,11 @@ services:
       PGADMIN_DEFAULT_PASSWORD: ")d,?C3?G7y[@V6}
     extra_hosts:
       - host.docker.internal:${HOST_DOCKER_INTERNAL}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 

@@ -25,6 +25,11 @@ services:
       - host.docker.internal:${HOST_DOCKER_INTERNAL}
     volumes:
       - sinks_internal:/sp_images
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 

@@ -26,6 +26,11 @@ services:
       CREATE_HEAP_SIZE: 2g
     extra_hosts:
       - host.docker.internal:${HOST_DOCKER_INTERNAL}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 

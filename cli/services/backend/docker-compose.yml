@@ -23,9 +23,14 @@ services:
     ports:
       - "8030:8030"
     extra_hosts:
-      - host.docker.internal:${HOST_DOCKER_INTERNAL}  
+      - host.docker.internal:${HOST_DOCKER_INTERNAL}
     volumes:
       - backend:/root/.streampipes
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 

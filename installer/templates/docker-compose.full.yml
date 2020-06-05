@@ -26,6 +26,11 @@ services:
 #      - "61614:61614"
 #      - "8161:8161"
 #      - "1883:1883"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 
@@ -51,6 +56,11 @@ services:
 #    ports:
 #      - "8500:8500"
 #      - "8600:8600"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
         ipv4_address: 172.31.0.9
@@ -61,6 +71,11 @@ services:
 #      - "5984:5984"
     volumes:
       - couchdb:/opt/couchdb/data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 
@@ -85,6 +100,11 @@ services:
     volumes:
       - kafka:/kafka
       - /var/run/docker.sock:/var/run/docker.sock
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 
@@ -95,6 +115,11 @@ services:
     volumes:
       - zk-conf:/opt/zookeeper-3.4.13/conf
       - zk-data:/opt/zookeeper-3.4.13/data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 
@@ -109,6 +134,11 @@ services:
     volumes:
       - backend:/root/.streampipes
       - backend:/streampipes-assets
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 
@@ -125,6 +155,11 @@ services:
       - SP_CONNECT_CONTAINER_WORKER=connect-worker
     volumes:
       - connect:/data/
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 
@@ -140,6 +175,11 @@ services:
       - SP_CONNECT_CONTAINER_WORKER=connect-worker-main
     volumes:
       - connect:/data/
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 
@@ -153,6 +193,11 @@ services:
       - consul
       - connect-master
       - backend
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 
@@ -162,6 +207,11 @@ services:
     image: "${SP_DOCKER_REGISTRY}/processors-filters-jvm:${SP_VERSION}"
     depends_on:
       - "consul"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 
@@ -169,6 +219,11 @@ services:
     image: "${SP_DOCKER_REGISTRY}/processors-filters-siddhi:${SP_VERSION}"
     depends_on:
       - "consul"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 
@@ -176,6 +231,11 @@ services:
     image: "${SP_DOCKER_REGISTRY}/processors-image-processing-jvm:${SP_VERSION}"
     depends_on:
       - "consul"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 
@@ -183,6 +243,11 @@ services:
     image: "${SP_DOCKER_REGISTRY}/processors-transformation-jvm:${SP_VERSION}"
     depends_on:
       - "consul"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 
@@ -190,6 +255,11 @@ services:
     image: "${SP_DOCKER_REGISTRY}/sinks-brokers-jvm:${SP_VERSION}"
     depends_on:
       - "consul"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 
@@ -197,6 +267,11 @@ services:
     image: "${SP_DOCKER_REGISTRY}/sinks-databases-jvm:${SP_VERSION}"
     depends_on:
       - "consul"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 
@@ -204,6 +279,11 @@ services:
     image: "${SP_DOCKER_REGISTRY}/sinks-internal-jvm:${SP_VERSION}"
     depends_on:
       - "consul"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 
@@ -211,6 +291,11 @@ services:
     image: "${SP_DOCKER_REGISTRY}/sinks-notifications-jvm:${SP_VERSION}"
     depends_on:
       - "consul"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 
@@ -219,6 +304,11 @@ services:
     depends_on:
       - "consul"
       - "kafka"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 
@@ -228,6 +318,11 @@ services:
     image: "${SP_DOCKER_REGISTRY}/processors-aggregation-flink:${SP_VERSION}"
     depends_on:
       - "consul"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 
@@ -235,6 +330,11 @@ services:
     image: "${SP_DOCKER_REGISTRY}/processors-enricher-flink:${SP_VERSION}"
     depends_on:
       - "consul"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 
@@ -242,6 +342,11 @@ services:
     image: "${SP_DOCKER_REGISTRY}/processors-pattern-detection-flink:${SP_VERSION}"
     depends_on:
       - "consul"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 
@@ -249,6 +354,11 @@ services:
     image: "${SP_DOCKER_REGISTRY}/processors-statistics-flink:${SP_VERSION}"
     depends_on:
       - "consul"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 
@@ -256,6 +366,11 @@ services:
     image: "${SP_DOCKER_REGISTRY}/processors-transformation-flink:${SP_VERSION}"
     depends_on:
       - "consul"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 
@@ -263,6 +378,11 @@ services:
     image: "${SP_DOCKER_REGISTRY}/sinks-databases-flink:${SP_VERSION}"
     depends_on:
       - "consul"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 
@@ -271,6 +391,11 @@ services:
     depends_on:
       - "consul"
       - "kafka"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 
@@ -285,6 +410,11 @@ services:
     command: jobmanager
     environment:
       - JOB_MANAGER_RPC_ADDRESS=jobmanager
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 
@@ -298,6 +428,11 @@ services:
     environment:
       - JOB_MANAGER_RPC_ADDRESS=jobmanager
       - TASK_MANAGER_NUMBER_OF_TASK_SLOTS=20
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 
@@ -315,6 +450,11 @@ services:
       # Data persistency
       # sudo mkdir -p /srv/docker/influxdb/data
       - influx:/var/lib/influxdb
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 

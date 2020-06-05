@@ -25,6 +25,11 @@ services:
       - INFLUXDB_ADMIN_ENABLED=true
     volumes:
       - chronograf:/var/lib/chronograf
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 

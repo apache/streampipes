@@ -26,12 +26,17 @@ services:
        POSTGRES_PASSWORD: bQgu"FUR_VH6z>~j
     extra_hosts:
       - host.docker.internal:${HOST_DOCKER_INTERNAL}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     networks:
       spnet:
 
 volumes:
   postgres:
-    
+
 networks:
   spnet:
     external: true
