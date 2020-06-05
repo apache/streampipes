@@ -15,7 +15,7 @@
 
 version: "2"
 services:
-  processors-filters-jvm:
+  processors-enricher-jvm:
     image: ${SP_DOCKER_REGISTRY}processors-enricher-jvm:${SP_PE_VERSION}
     depends_on:
       - "consul"
