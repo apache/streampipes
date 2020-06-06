@@ -18,8 +18,8 @@
 package org.apache.streampipes.manager.endpoint;
 
 import org.apache.streampipes.manager.operations.Operations;
-import org.apache.streampipes.model.client.messages.Message;
-import org.apache.streampipes.model.client.messages.NotificationType;
+import org.apache.streampipes.model.shared.message.Message;
+import org.apache.streampipes.model.shared.message.NotificationType;
 import org.apache.streampipes.model.client.messages.Notifications;
 
 import java.io.IOException;

@@ -42,7 +42,7 @@ public class PipelineCategory extends AbstractRestInterface {
 	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response addCategory(@PathParam("username") String username, org.apache.streampipes.model.client.pipeline.PipelineCategory pipelineCategory) {
+	public Response addCategory(@PathParam("username") String username, org.apache.streampipes.model.pipeline.PipelineCategory pipelineCategory) {
 		boolean success = getPipelineCategoryStorage()
 				.addPipelineCategory(pipelineCategory);
 		if (success) return ok(Notifications.success("Category successfully stored. "));

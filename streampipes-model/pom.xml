@@ -35,6 +35,11 @@
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
+            <artifactId>streampipes-model-shared</artifactId>
+            <version>0.67.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-logging</artifactId>
             <version>0.67.0-SNAPSHOT</version>
         </dependency>
@@ -99,10 +104,10 @@
                 <configuration>
                     <jsonLibrary>jackson2</jsonLibrary>
                     <classesWithAnnotations>
-                        <annotation>org.apache.streampipes.model.annotation.TsModel</annotation>
+                        <annotation>org.apache.streampipes.model.shared.annotation.TsModel</annotation>
                     </classesWithAnnotations>
                     <excludePropertyAnnotations>
-                        <annotation>org.apache.streampipes.model.annotation.TsIgnore</annotation>
+                        <annotation>org.apache.streampipes.model.shared.annotation.TsIgnore</annotation>
                     </excludePropertyAnnotations>
                     <excludeClasses>
                         <class>io.fogsy.empire.core.empire.SupportsRdfId</class>

@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.connect.rest;
 
-import org.apache.streampipes.model.client.messages.Message;
+import org.apache.streampipes.model.shared.message.Message;
 
 import javax.ws.rs.core.Response;
 

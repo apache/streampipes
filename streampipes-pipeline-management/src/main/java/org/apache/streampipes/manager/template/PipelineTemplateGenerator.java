@@ -26,7 +26,7 @@ import org.apache.streampipes.manager.template.instances.*;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
-import org.apache.streampipes.model.client.pipeline.DataSetModificationMessage;
+import org.apache.streampipes.model.pipeline.DataSetModificationMessage;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkDescription;

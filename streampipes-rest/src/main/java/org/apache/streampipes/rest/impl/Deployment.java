@@ -28,7 +28,7 @@ import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.client.deployment.DeploymentConfiguration;
 import org.apache.streampipes.model.client.deployment.ElementType;
-import org.apache.streampipes.model.client.messages.Message;
+import org.apache.streampipes.model.shared.message.Message;
 import org.apache.streampipes.model.client.messages.Notifications;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.graph.DataSourceDescription;

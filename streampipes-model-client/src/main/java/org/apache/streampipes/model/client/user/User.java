@@ -19,23 +19,17 @@
 package org.apache.streampipes.model.client.user;
 
 import com.google.gson.annotations.SerializedName;
-import org.apache.streampipes.model.client.pipeline.Pipeline;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.Entity;
-
-@Entity
 public class User {
 
 	private @SerializedName("_id") String userId;
 	protected @SerializedName("_rev") String rev;
 	protected String email;
 	private String password;
-		
-	private List<Pipeline> pipelines;
 	
 	private List<Element> ownSources;
 	private List<Element> ownSepas;
@@ -53,13 +47,12 @@ public class User {
 		this.hideTutorial = false;
 	}
 	
-	public User(String email, String password, Set<Role> roles, List<Pipeline> pipelines, List<Element> ownSources, List<Element> ownSepas, List<Element> ownActions) {
+	public User(String email, String password, Set<Role> roles, List<Element> ownSources, List<Element> ownSepas, List<Element> ownActions) {
 		super();
 		this.email = email;
 		
 		this.password = password;
 		this.roles = roles;
-		this.pipelines = pipelines;
 		
 		this.ownSources = ownSources;
 		this.ownSepas = ownSepas;
@@ -73,9 +66,7 @@ public class User {
 		this.email = email;
 		this.password = password;
 		this.roles = roles;
-		
-		this.pipelines = new ArrayList<>();
-		
+
 		this.ownActions = new ArrayList<>();
 		this.ownSepas = new ArrayList<>();
 		this.ownSources = new ArrayList<>();
@@ -117,24 +108,6 @@ public class User {
 
 	public void setUserId(String userId) {
 		this.userId = userId;
-	}
-
-
-	public List<Pipeline> getPipelines() {
-		return pipelines;
-	}
-
-	public void setPipelines(List<Pipeline> pipelines) {
-		this.pipelines = pipelines;
-	}
-
-	public void addOwnPipeline(Pipeline pipeline) {
-		if (this.pipelines == null) this.pipelines = new ArrayList<>();
-		this.pipelines.add(pipeline);
-	}
-
-	public void deletePipeline(String pipelineId) {
-		pipelines.remove(pipelineId);
 	}
 
 	public List<Element> getOwnSources() {

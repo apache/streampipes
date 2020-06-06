@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.model.client.messages;
 
+import org.apache.streampipes.model.shared.message.Message;
+
 import java.util.List;
 
 public class AppInstallationMessage {

@@ -21,7 +21,7 @@ package org.apache.streampipes.manager.verification.structure;
 import java.util.List;
 
 import org.apache.streampipes.manager.verification.messages.VerificationResult;
-import org.apache.streampipes.model.client.messages.NotificationType;
+import org.apache.streampipes.model.shared.message.NotificationType;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 
 public class GeneralVerifier<T extends NamedStreamPipesEntity> extends AbstractVerifier {

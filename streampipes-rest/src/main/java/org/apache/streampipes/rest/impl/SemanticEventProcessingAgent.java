@@ -19,7 +19,7 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
-import org.apache.streampipes.model.client.messages.NotificationType;
+import org.apache.streampipes.model.shared.message.NotificationType;
 import org.apache.streampipes.model.client.messages.Notifications;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;

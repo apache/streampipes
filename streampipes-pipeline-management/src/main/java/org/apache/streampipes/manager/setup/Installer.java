@@ -19,7 +19,7 @@
 package org.apache.streampipes.manager.setup;
 
 import org.apache.streampipes.config.backend.BackendConfig;
-import org.apache.streampipes.model.client.messages.Message;
+import org.apache.streampipes.model.shared.message.Message;
 import org.apache.streampipes.model.client.messages.SetupStatusMessage;
 import org.apache.streampipes.model.client.setup.InitialSettings;
 

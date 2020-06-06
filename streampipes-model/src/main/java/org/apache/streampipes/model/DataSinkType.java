@@ -21,7 +21,7 @@ package org.apache.streampipes.model;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.JsonNode;
-import org.apache.streampipes.model.annotation.TsModel;
+import org.apache.streampipes.model.shared.annotation.TsModel;
 
 @TsModel
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)

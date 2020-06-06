@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.manager.setup;
 
-import org.apache.streampipes.model.client.messages.Message;
+import org.apache.streampipes.model.shared.message.Message;
 import org.apache.streampipes.model.client.messages.Notifications;
 import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.client.user.User;

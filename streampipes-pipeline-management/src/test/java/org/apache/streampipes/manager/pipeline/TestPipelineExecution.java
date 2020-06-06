@@ -19,7 +19,7 @@
 package org.apache.streampipes.manager.pipeline;
 
 import org.apache.streampipes.manager.operations.Operations;
-import org.apache.streampipes.model.client.pipeline.Pipeline;
+import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 public class TestPipelineExecution {

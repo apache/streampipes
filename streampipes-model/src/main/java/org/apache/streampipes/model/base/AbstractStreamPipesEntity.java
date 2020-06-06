@@ -25,7 +25,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.fogsy.empire.annotations.Namespaces;
 import io.fogsy.empire.core.empire.SupportsRdfId;
 import io.fogsy.empire.core.empire.annotation.SupportsRdfIdImpl;
-import org.apache.streampipes.model.annotation.TsModel;
+import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.vocabulary.*;
 
 import java.io.Serializable;

@@ -23,7 +23,7 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.streampipes.model.*;
-import org.apache.streampipes.model.client.messages.Message;
+import org.apache.streampipes.model.shared.message.Message;
 import org.apache.streampipes.model.connect.adapter.*;
 import org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription;

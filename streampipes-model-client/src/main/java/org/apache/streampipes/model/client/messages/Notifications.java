@@ -18,6 +18,9 @@
 
 package org.apache.streampipes.model.client.messages;
 
+import org.apache.streampipes.model.shared.message.Notification;
+import org.apache.streampipes.model.shared.message.NotificationType;
+
 public class Notifications {
 
 	public static Notification create(NotificationType type)
@@ -60,39 +63,4 @@ public class Notifications {
 		return new ErrorMessage(new Notification(type.name(), type.description(), info));
 	}
 
-	//JsonLD
-	public static NotificationLd createLd(NotificationType type, String info)
-	{
-		return new NotificationLd(type.name(), type.description(), info);
-	}
-
-	public static SuccessMessageLd successLd(NotificationType type)
-	{
-		return new SuccessMessageLd(new NotificationLd(type.name(), type.description()));
-	}
-
-	public static SuccessMessageLd successLd(NotificationType type, String info)
-	{
-		return new SuccessMessageLd(new NotificationLd(type.name(), type.description(), info));
-	}
-
-	public static SuccessMessageLd successLd(String message)
-	{
-		return new SuccessMessageLd(new NotificationLd(message, ""));
-	}
-
-	public static ErrorMessageLd errorLd(NotificationType type)
-	{
-		return new ErrorMessageLd(new NotificationLd(type.name(), type.description()));
-	}
-
-	public static ErrorMessageLd errorLd(String message)
-	{
-		return new ErrorMessageLd(new NotificationLd(message, ""));
-	}
-
-	public static ErrorMessageLd errorLd(NotificationType type, String info)
-	{
-		return new ErrorMessageLd(new NotificationLd(type.name(), type.description(), info));
-	}
 }

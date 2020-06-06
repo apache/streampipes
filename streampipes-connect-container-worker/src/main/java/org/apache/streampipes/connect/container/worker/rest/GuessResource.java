@@ -65,10 +65,10 @@ public class GuessResource extends AbstractContainerResource {
           return ok(result);
       } catch (ParseException e) {
           logger.error("Error while parsing events: ", e);
-          return ok(Notifications.errorLd(e.getMessage()));
+          return ok(Notifications.error(e.getMessage()));
       } catch (Exception e) {
           logger.error("Error while guess schema for AdapterDescription: " + s, e);
-          return ok(Notifications.errorLd(e.getMessage()));
+          return ok(Notifications.error(e.getMessage()));
       }
 
   }

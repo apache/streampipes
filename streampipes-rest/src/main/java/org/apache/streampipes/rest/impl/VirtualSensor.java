@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.rest.impl;
 
-import org.apache.streampipes.model.client.messages.NotificationType;
+import org.apache.streampipes.model.shared.message.NotificationType;
 import org.apache.streampipes.serializers.json.Utils;
 import org.apache.streampipes.rest.api.IVirtualSensor;
 
@@ -40,7 +40,7 @@ public class VirtualSensor extends AbstractRestInterface implements IVirtualSens
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
 	public Response addVirtualSensor(@PathParam("username") String username, String virtualSensorDescription) {
-		org.apache.streampipes.model.client.VirtualSensor vs = Utils.getGson().fromJson(virtualSensorDescription, org.apache.streampipes.model.client.VirtualSensor.class);
+		org.apache.streampipes.model.VirtualSensor vs = Utils.getGson().fromJson(virtualSensorDescription, org.apache.streampipes.model.VirtualSensor.class);
 		//vs.setPipelineId(UUID.randomUUID().toString());
 		vs.setCreatedBy(username);
 		getPipelineStorage().storeVirtualSensor(username, vs);

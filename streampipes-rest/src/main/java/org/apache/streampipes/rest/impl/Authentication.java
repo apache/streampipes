@@ -25,7 +25,7 @@ import org.apache.shiro.subject.Subject;
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.manager.storage.UserManagementService;
 import org.apache.streampipes.model.client.messages.ErrorMessage;
-import org.apache.streampipes.model.client.messages.NotificationType;
+import org.apache.streampipes.model.shared.message.NotificationType;
 import org.apache.streampipes.model.client.messages.Notifications;
 import org.apache.streampipes.model.client.messages.SuccessMessage;
 import org.apache.streampipes.model.client.user.RegistrationData;

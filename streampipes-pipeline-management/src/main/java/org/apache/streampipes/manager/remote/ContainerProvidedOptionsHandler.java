@@ -21,7 +21,7 @@ import com.google.gson.JsonSyntaxException;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
-import org.apache.streampipes.model.client.runtime.ContainerProvidedOptionsParameterRequest;
+import org.apache.streampipes.model.runtime.ContainerProvidedOptionsParameterRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.apache.streampipes.model.staticproperty.Option;

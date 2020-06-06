@@ -19,40 +19,29 @@
 package org.apache.streampipes.rest.impl;
 
 import com.google.gson.JsonSyntaxException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.streampipes.commons.exceptions.NoMatchingFormatException;
-import org.apache.streampipes.commons.exceptions.NoMatchingJsonSchemaException;
-import org.apache.streampipes.commons.exceptions.NoMatchingProtocolException;
-import org.apache.streampipes.commons.exceptions.NoMatchingSchemaException;
-import org.apache.streampipes.commons.exceptions.NoSuitableSepasAvailableException;
-import org.apache.streampipes.commons.exceptions.RemoteServerNotAccessibleException;
+import org.apache.streampipes.commons.exceptions.*;
 import org.apache.streampipes.manager.execution.status.PipelineStatusManager;
 import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.client.exception.InvalidConnectionException;
-import org.apache.streampipes.model.client.messages.Notification;
-import org.apache.streampipes.model.client.messages.NotificationType;
+import org.apache.streampipes.model.shared.message.Notification;
+import org.apache.streampipes.model.shared.message.NotificationType;
 import org.apache.streampipes.model.client.messages.Notifications;
 import org.apache.streampipes.model.client.messages.SuccessMessage;
-import org.apache.streampipes.model.client.pipeline.Pipeline;
-import org.apache.streampipes.model.client.pipeline.PipelineOperationStatus;
+import org.apache.streampipes.model.pipeline.Pipeline;
+import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.rest.api.IPipeline;
 import org.apache.streampipes.rest.management.PipelineManagement;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
+import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.Date;
-import java.util.UUID;
-
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Date;
+import java.util.UUID;
 
 @Path("/v2/users/{username}/pipelines")
 public class PipelineWithUserResource extends AbstractRestInterface implements IPipeline {
@@ -209,7 +198,8 @@ public class PipelineWithUserResource extends AbstractRestInterface implements I
     @Path("/update")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    @GsonWithIds
+    @Consumes(MediaType.APPLICATION_JSON)
+    @JacksonSerialized
     public Response update(Pipeline pipeline, @PathParam("username") String username) {
         try {
             return ok(Operations.validatePipeline(pipeline, true, username));

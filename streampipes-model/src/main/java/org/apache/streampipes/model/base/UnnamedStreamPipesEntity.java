@@ -22,7 +22,7 @@ package org.apache.streampipes.model.base;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import io.fogsy.empire.annotations.RdfId;
 import io.fogsy.empire.annotations.RdfProperty;
-import org.apache.streampipes.model.annotation.TsIgnore;
+import org.apache.streampipes.model.shared.annotation.TsIgnore;
 import org.apache.streampipes.model.connect.guess.DomainPropertyProbability;
 import org.apache.streampipes.model.connect.guess.DomainPropertyProbabilityList;
 import org.apache.streampipes.model.connect.guess.GuessSchema;

@@ -21,7 +21,7 @@ import org.apache.streampipes.manager.endpoint.EndpointItemParser;
 import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.model.client.endpoint.RdfEndpoint;
 import org.apache.streampipes.model.client.endpoint.RdfEndpointItem;
-import org.apache.streampipes.model.client.messages.Message;
+import org.apache.streampipes.model.shared.message.Message;
 import org.apache.streampipes.model.client.messages.Notifications;
 
 import java.util.ArrayList;
