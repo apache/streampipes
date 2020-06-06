@@ -17,7 +17,7 @@
   -->
 
 <div *ngFor="let pipelineElement of rawPipelineModel" style="width:100%;height:100%;z-index:1">
-    <div *ngIf="pipelineElement.settings.disabled == undefined || !pipelineElement.settings.disabled">
+    <div *ngIf="pipelineElement.settings.disabled == undefined || !pipelineElement.settings.disabled" style="width:100%;height:100%;z-index:1">
     <span id="{{pipelineElement.payload.dom}}" style="{{getElementCss(pipelineElement.settings)}}"
           (click)="updateOptionsClick(pipelineElement.payload.dom)" (mouseenter)="updateMouseover(pipelineElement.payload.dom)" (mouseleave)="updateMouseover('')">
         <span style="z-index:5;"

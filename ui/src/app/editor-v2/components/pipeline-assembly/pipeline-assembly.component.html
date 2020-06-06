@@ -63,7 +63,7 @@
 <!--                </md-tooltip>-->
             </button>
             <div class="pipeline-cache-block">
-                <div ng-if="pipelineCached">All pipeline modifications saved.</div>
+                <div *ngIf="pipelineCached">All pipeline modifications saved.</div>
 <!--                <div ng-if="pipelineCacheRunning"><md-progress-circular-->
 <!--                        md-mode="indeterminate" class="pipeline-cache-progress"-->
 <!--                        md-diameter="10"></md-progress-circular>&nbsp;Saving pipeline-->
@@ -71,11 +71,11 @@
             </div>
             <span fxFlex></span>
             <div style="position:relative;">
-                <div *ngIf="!isPipelineAssemblyEmpty()" class="pipeline-validation-summary {{PipelineValidationService.errorMessages.length > 0 ? 'pipeline-validation-summary-error' : ''}}" ng-click="toggleErrorMessagesDisplayed()">
+                <div *ngIf="!isPipelineAssemblyEmpty()" class="pipeline-validation-summary {{PipelineValidationService.errorMessages.length > 0 ? 'pipeline-validation-summary-error' : ''}}" (click)="toggleErrorMessagesDisplayed()">
                     <div fxLayout="row" fxLayoutAlign="center center">
                         <div fxLayout="row" fxLayoutAlign="start center">
-                            <i class="material-icons" ng-if="PipelineValidationService.errorMessages.length > 0">notifications</i>
-                            <i class="material-icons" ng-if="PipelineValidationService.errorMessages.length === 0">done</i>
+                            <i class="material-icons" *ngIf="PipelineValidationService.errorMessages.length > 0">notifications</i>
+                            <i class="material-icons" *ngIf="PipelineValidationService.errorMessages.length === 0">done</i>
                         </div>
                         <div>
                             <span *ngIf="PipelineValidationService.errorMessages.length === 0">Pipeline ok</span>

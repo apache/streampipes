@@ -20,6 +20,7 @@ import * as angular from 'angular';
 import * as dagre from 'dagre';
 import {JsplumbBridge} from "./jsplumb-bridge.service";
 import {Injectable} from "@angular/core";
+import {PipelineElementConfig} from "../model/editor.model";
 
 @Injectable()
 export class PipelineValidationService {
@@ -109,7 +110,7 @@ export class PipelineValidationService {
         return tarjan.length == 1;
     }
 
-    isInAssembly(rawPipelineModel, type) {
+    isInAssembly(rawPipelineModel: PipelineElementConfig[], type) {
         var isElementInAssembly = false;
         angular.forEach(rawPipelineModel, pe => {
             if (pe.type === type && !pe.settings.disabled) {
@@ -119,7 +120,7 @@ export class PipelineValidationService {
         return isElementInAssembly;
     }
 
-    makeGraph(rawPipelineModel) {
+    makeGraph(rawPipelineModel: PipelineElementConfig[]) {
         var g = new dagre.graphlib.Graph();
         g.setGraph({rankdir: "LR"});
         g.setDefaultEdgeLabel(function () {
@@ -148,10 +149,10 @@ export class PipelineValidationService {
         return g;
     }
 
-    getElementOptions(id, rawPipelineModel) {
+    getElementOptions(id, rawPipelineModel: PipelineElementConfig[]) {
         var pipelineElement;
         rawPipelineModel.forEach(pe => {
-           if (pe.payload.DOM === id) {
+           if (pe.payload.dom === id) {
                pipelineElement = pe;
            }
         });

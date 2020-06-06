@@ -37,7 +37,7 @@ import {MeasurementUnits} from './measurement-units.service'
 import {DeploymentService} from './deployment.service'
 import {JsplumbConfigService} from '../editor-v2/services/jsplumb-config.service'
 import {PipelineElementIconService} from './pipeline-icon.service'
-import {ObjectProvider} from './object-provider.service'
+import {ObjectProvider} from '../editor-v2/services/object-provider.service'
 import {downgradeInjectable} from '@angular/upgrade/static';
 import {TransitionService} from "./transition.service";
 import {ShepherdService} from "./tour/shepherd.service";

@@ -82,6 +82,8 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
   //@RdfProperty(StreamPipes.PE_CONFIGURED)
   private boolean configured;
 
+  private boolean uncompleted;
+
   public InvocableStreamPipesEntity() {
     super();
   }
@@ -92,6 +94,7 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
     this.correspondingPipeline = other.getCorrespondingPipeline();
     this.inputStreams = new Cloner().streams(other.getInputStreams());
     this.configured = other.isConfigured();
+    this.uncompleted = other.isUncompleted();
     this.correspondingUser = other.getCorrespondingUser();
     if (other.getStreamRequirements() != null) {
       this.streamRequirements = new Cloner().streams(other.getStreamRequirements());
@@ -184,6 +187,14 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
 
   public void setCorrespondingUser(String correspondingUser) {
     this.correspondingUser = correspondingUser;
+  }
+
+  public boolean isUncompleted() {
+    return uncompleted;
+  }
+
+  public void setUncompleted(boolean uncompleted) {
+    this.uncompleted = uncompleted;
   }
 
   //public Logger getLogger(Class clazz, PeConfig peConfig) {

@@ -52,3 +52,5 @@ export enum PipelineElementType {
 }
 
 export type PipelineElementUnion = SpDataSet | SpDataStream | DataProcessorInvocation | DataSinkInvocation;
+
+export type InvocablePipelineElementUnion = DataProcessorInvocation | DataSinkInvocation;

@@ -148,7 +148,7 @@ export class JsplumbService {
             .toCssShortHand(PipelineElementTypeUtils.fromType(pipelineElement))
         pipelineElementConfig.payload = pipelineElement;
         pipelineElementConfig.settings = {connectable: connectable,
-            openCustomize: (pipelineElement as any).configured,
+            openCustomize: !(pipelineElement as any).configured,
             preview: isPreview,
             disabled: false,
             loadingStatus: false,

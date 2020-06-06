@@ -22,6 +22,7 @@ import {JsplumbBridge} from "./jsplumb-bridge.service";
 import {JsplumbConfigService} from "./jsplumb-config.service";
 import {JsplumbService} from "./jsplumb.service";
 import {Inject, Injectable} from "@angular/core";
+import {PipelineElementConfig} from "../model/editor.model";
 
 declare const jsPlumb: any;
 
@@ -34,20 +35,20 @@ export class PipelinePositioningService {
                 private JsplumbBridge: JsplumbBridge) {
     }
 
-    displayPipeline(rawPipelineModel, targetCanvas, isPreview, autoLayout) {
+    displayPipeline(rawPipelineModel: PipelineElementConfig[], targetCanvas, isPreview, autoLayout) {
         var jsplumbConfig = isPreview ? this.JsplumbConfigService.getPreviewConfig() : this.JsplumbConfigService.getEditorConfig();
 
         for (var i = 0; i < rawPipelineModel.length; i++) {
             var currentPe = rawPipelineModel[i];
             if (!currentPe.settings.disabled) {
                 if (currentPe.type === "stream") {
-                    this.JsplumbService.streamDropped(currentPe.payload.DOM, currentPe.payload, true, isPreview);
+                    this.JsplumbService.streamDropped(currentPe.payload.dom, currentPe.payload, true, isPreview);
                 }
                 if (currentPe.type === "sepa") {
-                    this.JsplumbService.sepaDropped(currentPe.payload.DOM, currentPe.payload, true, isPreview);
+                    this.JsplumbService.sepaDropped(currentPe.payload.dom, currentPe.payload, true, isPreview);
                 }
                 if (currentPe.type === "action") {
-                    this.JsplumbService.actionDropped(currentPe.payload.DOM, currentPe.payload, true, isPreview);
+                    this.JsplumbService.actionDropped(currentPe.payload.dom, currentPe.payload, true, isPreview);
                 }
             }
         }
@@ -83,18 +84,18 @@ export class PipelinePositioningService {
         });
     }
 
-    connectPipelineElements(json, detachable, jsplumbConfig) {
+    connectPipelineElements(rawPipelineModel: PipelineElementConfig[], detachable, jsplumbConfig) {
         var source, target;
 
         this.JsplumbBridge.setSuspendDrawing(true);
-        for (var i = 0; i < json.length; i++) {
-            var pe = json[i];
+        for (var i = 0; i < rawPipelineModel.length; i++) {
+            var pe = rawPipelineModel[i];
 
             if (pe.type == "sepa") {
                 if (pe.payload.connectedTo) {
                     for (var j = 0, connection; connection = pe.payload.connectedTo[j]; j++) {
                         source = connection;
-                        target = pe.payload.DOM;
+                        target = pe.payload.dom;
 
                         var options;
                         var id = "#" + source;
@@ -105,14 +106,14 @@ export class PipelinePositioningService {
                         }
 
                         let sourceEndpointId = "out-" + connection;
-                        let targetEndpointId = "in-" + j + "-" + pe.payload.DOM;
+                        let targetEndpointId = "in-" + j + "-" + pe.payload.dom;
                         this.JsplumbBridge.connect(
                             {uuids: [sourceEndpointId, targetEndpointId], detachable: detachable}
                         );
                     }
                 }
             } else if (pe.type == "action") {
-                target = pe.payload.DOM;
+                target = pe.payload.dom;
 
                 if (pe.payload.connectedTo) {
                     for (var j = 0, connection; connection = pe.payload.connectedTo[j]; j++) {

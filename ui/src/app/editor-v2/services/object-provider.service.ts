@@ -17,13 +17,16 @@
  */
 
 import * as angular from 'angular';
+import {Injectable} from "@angular/core";
+import {RestApi} from "../../services/rest-api.service";
+import {JsplumbBridge} from "./jsplumb-bridge.service";
+import {PipelineElementConfig} from "../model/editor.model";
 
 declare const jsPlumb: any;
 
+@Injectable()
 export class ObjectProvider {
 
-    RestApi: any;
-    JsplumbBridge: any;
     ImageChecker: any;
     adjustingPipelineState: any;
     plumbReady: any;
@@ -34,9 +37,8 @@ export class ObjectProvider {
     //this.currentPipeline = new this.Pipeline();
     adjustingPipeline: any;
 
-    constructor(RestApi, JsplumbBridge) {
-        this.RestApi = RestApi;
-        this.JsplumbBridge = JsplumbBridge;
+    constructor(private RestApi: RestApi,
+                private JsplumbBridge: JsplumbBridge) {
     }
 
     prepareElement(json) {
@@ -65,24 +67,24 @@ export class ObjectProvider {
         return pipeline;
     }
 
-    findElement(elementId, currentPipeline) {
-        var result = {};
-        angular.forEach(currentPipeline, pe => {
-            if (pe.payload.DOM === elementId) {
+    findElement(elementId, rawPipelineModel: PipelineElementConfig[]): PipelineElementConfig {
+        let result = {} as PipelineElementConfig;
+        angular.forEach(rawPipelineModel, pe => {
+            if (pe.payload.dom === elementId) {
                 result = pe;
             }
         });
         return result;
     }
 
-    addElementNew(pipeline, currentPipelineElements) {
+    addElementNew(pipeline, currentPipelineElements: PipelineElementConfig[]) {
         currentPipelineElements.forEach(pe => {
             if (pe.settings.disabled == undefined || !pe.settings.disabled) {
                 if (pe.type === 'sepa' || pe.type === 'action') {
                     var payload = pe.payload;
                     payload = this.prepareElement(payload);
                     var connections = this.JsplumbBridge.getConnections({
-                        target: $("#" + payload.DOM)
+                        target: $("#" + payload.dom)
                     });
                     for (var i = 0; i < connections.length; i++) {
                         payload.connectedTo.push(connections[i].sourceId);
@@ -121,4 +123,4 @@ export class ObjectProvider {
 
 }
 
-ObjectProvider.$inject = ['RestApi', 'JsplumbBridge'];
+//ObjectProvider.$inject = ['RestApi', 'JsplumbBridge'];

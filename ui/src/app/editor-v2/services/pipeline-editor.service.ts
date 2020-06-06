@@ -18,6 +18,7 @@
 
 import {Injectable} from "@angular/core";
 import {JsplumbBridge} from "./jsplumb-bridge.service";
+import {InvocablePipelineElementUnion, PipelineElementConfig} from "../model/editor.model";
 
 @Injectable()
 export class PipelineEditorService {
@@ -42,9 +43,10 @@ export class PipelineEditorService {
         return true;
     }
 
-    isFullyConnected(json) {
-        return json.payload.inputStreams == null ||
-            this.JsplumbBridge.getConnections({target: $("#" +json.payload.DOM)}).length == json.payload.inputStreams.length;
+    isFullyConnected(pipelineElementConfig: PipelineElementConfig) {
+        let payload = pipelineElementConfig.payload as InvocablePipelineElementUnion;
+        return payload.inputStreams == null ||
+            this.JsplumbBridge.getConnections({target: $("#" +payload.dom)}).length == payload.inputStreams.length;
     }
 
     getDropPositionY(helper, currentZoomLevel) {

@@ -26,11 +26,13 @@ import {JsplumbBridge} from "../../services/jsplumb-bridge.service";
 import {ShepherdService} from "../../../services/tour/shepherd.service";
 import {Component, Input, OnInit} from "@angular/core";
 import {
+  InvocablePipelineElementUnion,
   PipelineElementConfig,
   PipelineElementHolder,
   PipelineElementUnion
 } from "../../model/editor.model";
-import {SpDataStream} from "../../../core-model/gen/streampipes-model";
+import {DataProcessorInvocation, SpDataStream} from "../../../core-model/gen/streampipes-model";
+import {ObjectProvider} from "../../services/object-provider.service";
 
 @Component({
   selector: 'pipeline',
@@ -64,7 +66,6 @@ export class PipelineComponent implements OnInit {
 
   DialogBuilder: any;
   plumbReady: any;
-  objectProvider: any;
   EditorDialogManager: any;
   currentMouseOverElement: any;
   currentPipelineModel: any;
@@ -77,6 +78,7 @@ export class PipelineComponent implements OnInit {
   constructor(private JsplumbService: JsplumbService,
               private PipelineEditorService: PipelineEditorService,
               private JsplumbBridge: JsplumbBridge,
+              private ObjectProvider: ObjectProvider,
               //DialogBuilder,
               //EditorDialogManager,
               // TransitionService,
@@ -242,15 +244,15 @@ export class PipelineComponent implements OnInit {
     this.JsplumbBridge.unbind("connection");
 
     this.JsplumbBridge.bind("connectionMoved", (info, originalEvent) => {
-      var pe = this.objectProvider.findElement(info.newTargetEndpoint.elementId, this.rawPipelineModel);
-      var oldPe = this.objectProvider.findElement(info.originalTargetEndpoint.elementId, this.rawPipelineModel);
-      oldPe.payload.configured = false;
-      pe.payload.configured = false;
+      var pe = this.ObjectProvider.findElement(info.newTargetEndpoint.elementId, this.rawPipelineModel);
+      var oldPe = this.ObjectProvider.findElement(info.originalTargetEndpoint.elementId, this.rawPipelineModel);
+      (oldPe.payload as InvocablePipelineElementUnion).configured = false;
+      (pe.payload as InvocablePipelineElementUnion).configured = false;
     });
 
     this.JsplumbBridge.bind("connectionDetached", (info, originalEvent) => {
-      var pe = this.objectProvider.findElement(info.targetEndpoint.elementId, this.rawPipelineModel);
-      pe.payload.configured = false;
+      var pe = this.ObjectProvider.findElement(info.targetEndpoint.elementId, this.rawPipelineModel);
+      (pe.payload as InvocablePipelineElementUnion).configured = false;
       pe.settings.openCustomize = true;
       info.targetEndpoint.setType("empty");
       this.validatePipeline();
@@ -273,11 +275,11 @@ export class PipelineComponent implements OnInit {
     })
 
     this.JsplumbBridge.bind("connection", (info, originalEvent) => {
-      var pe = this.objectProvider.findElement(info.target.id, this.rawPipelineModel);
+      var pe = this.ObjectProvider.findElement(info.target.id, this.rawPipelineModel);
       if (pe.settings.openCustomize) {
-        this.currentPipelineModel = this.objectProvider.makePipeline(this.rawPipelineModel);
+        this.currentPipelineModel = this.ObjectProvider.makePipeline(this.rawPipelineModel);
         pe.settings.loadingStatus = true;
-        this.objectProvider.updatePipeline(this.currentPipelineModel)
+        this.ObjectProvider.updatePipeline(this.currentPipelineModel)
             .then(msg => {
               let data = msg.data;
               pe.settings.loadingStatus = false;
@@ -287,16 +289,17 @@ export class PipelineComponent implements OnInit {
                 this.modifyPipeline(data.pipelineModifications);
                 var sourceEndpoint = this.JsplumbBridge.selectEndpoints({element: info.targetEndpoint.elementId});
                 if (this.PipelineEditorService.isFullyConnected(pe)) {
-                  if ((pe.payload.staticProperties && pe.payload.staticProperties.length > 0) || this.isCustomOutput(pe)) {
-                    this.EditorDialogManager.showCustomizeDialog($("#" +pe.payload.DOM), sourceEndpoint, pe.payload, false)
+                  let payload = pe.payload as InvocablePipelineElementUnion;
+                  if ((payload.staticProperties && payload.staticProperties.length > 0) || this.isCustomOutput(pe)) {
+                    this.EditorDialogManager.showCustomizeDialog($("#" +pe.payload.dom), sourceEndpoint, pe.payload, false)
                         .then(() => {
-                          this.JsplumbService.activateEndpoint(pe.payload.DOM, !pe.payload.uncompleted);
+                          this.JsplumbService.activateEndpoint(pe.payload.dom, !payload.uncompleted);
                         }, () => {
-                          this.JsplumbService.activateEndpoint(pe.payload.DOM, !pe.payload.uncompleted);
+                          this.JsplumbService.activateEndpoint(pe.payload.dom, !payload.uncompleted);
                         });
                   } else {
                     //this.$rootScope.$broadcast("SepaElementConfigured", pe.payload.DOM);
-                    pe.payload.configured = true;
+                    (pe.payload as InvocablePipelineElementUnion).configured = true;
                   }
                 }
               } else {
@@ -320,10 +323,10 @@ export class PipelineComponent implements OnInit {
     for (var i = 0, modification; modification = pipelineModifications[i]; i++) {
       var id = modification.domId;
       if (id !== "undefined") {
-        var pe = this.objectProvider.findElement(id, this.rawPipelineModel);
-        pe.payload.staticProperties = modification.staticProperties;
-        pe.payload.outputStrategies = modification.outputStrategies;
-        pe.payload.inputStreams = modification.inputStreams;
+        var pe = this.ObjectProvider.findElement(id, this.rawPipelineModel);
+        (pe.payload as InvocablePipelineElementUnion).staticProperties = modification.staticProperties;
+        (pe.payload as DataProcessorInvocation).outputStrategies = modification.outputStrategies;
+        (pe.payload as InvocablePipelineElementUnion).inputStreams = modification.inputStreams;
       }
     }
   }
