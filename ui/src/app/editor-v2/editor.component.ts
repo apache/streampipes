@@ -21,11 +21,18 @@ import {EditorService} from "./services/editor.service";
 import {
     DataProcessorInvocation,
     DataSinkInvocation,
-    DataSourceDescription, SpDataSet,
+    DataSourceDescription,
     SpDataStream
 } from "../core-model/gen/streampipes-model";
 import {PipelineElementService} from "../platform-services/apis/pipeline-element.service";
-import {PipelineElementHolder} from "./model/editor.model";
+import {
+    PipelineElementConfig,
+    PipelineElementHolder,
+    PipelineElementType,
+    PipelineElementUnion
+} from "./model/editor.model";
+import {EditorConstants} from "./constants/editor.constants";
+import {PipelineElementTypeUtils} from "./utils/editor.utils";
 
 @Component({
     selector: 'editor',
@@ -34,40 +41,38 @@ import {PipelineElementHolder} from "./model/editor.model";
 })
 export class EditorComponent implements OnInit {
 
-    static readonly DATA_STREAM_IDENTIFIER = "org.apache.streampipes.model.SpDataStream";
-    static readonly DATA_SET_IDENTIFIER = "org.apache.streampipes.model.SpDataSet";
-    static readonly DATA_PROCESSOR_IDENTIFIER = "org.apache.streampipes.model.graph.DataProcessorInvocation";
-    static readonly DATA_SINK_IDENTIFIER = "org.apache.streampipes.model.graph.DataSinkInvoation";
-
     selectedIndex: number = 1;
-    activeType: string = EditorComponent.DATA_STREAM_IDENTIFIER;
+    activeType: PipelineElementType = PipelineElementType.DataStream;
 
     availableDataStreams: SpDataStream[] = [];
     availableDataProcessors: DataProcessorInvocation[] = [];
     availableDataSinks: DataSinkInvocation[] = [];
 
-    allElements: PipelineElementHolder[] = [];
-    currentElements: (SpDataStream | DataProcessorInvocation | DataSinkInvocation)[] = [];
+    allElements: PipelineElementUnion[] = [];
+    currentElements: Array<(SpDataStream | DataProcessorInvocation | DataSinkInvocation)> = [];
 
-    rawPipelineModel: any = [];
+    rawPipelineModel: PipelineElementConfig[] = [];
     currentModifiedPipelineId: any;
+
+    elementsLoaded = [false, false, false];
+    allElementsLoaded: boolean = false;
 
     tabs = [
         {
             title: 'Data Sets',
-            type: EditorComponent.DATA_SET_IDENTIFIER
+            type: PipelineElementType.DataSet
         },
         {
             title: 'Data Streams',
-            type: EditorComponent.DATA_STREAM_IDENTIFIER
+            type: PipelineElementType.DataStream
         },
         {
             title: 'Data Processors',
-            type: EditorComponent.DATA_PROCESSOR_IDENTIFIER
+            type: PipelineElementType.DataProcessor
         },
         {
             title: 'Data Sinks',
-            type: EditorComponent.DATA_SINK_IDENTIFIER
+            type: PipelineElementType.DataSink
         }
     ];
 
@@ -78,21 +83,29 @@ export class EditorComponent implements OnInit {
     ngOnInit() {
         this.pipelineElementService.getDataProcessors().subscribe(processors => {
             this.availableDataProcessors = processors;
-            this.allElements[EditorComponent.DATA_PROCESSOR_IDENTIFIER] = this.availableDataProcessors;
+            this.allElements = this.allElements.concat(processors);
+            this.afterPipelineElementLoaded(0);
         });
         this.pipelineElementService.getDataSources().subscribe(sources => {
             this.availableDataStreams = this.collectStreams(sources);
-            this.allElements[EditorComponent.DATA_STREAM_IDENTIFIER] = this.availableDataStreams
-                .filter(ds => ds["@class"] == EditorComponent.DATA_STREAM_IDENTIFIER );
-            this.allElements[EditorComponent.DATA_SET_IDENTIFIER] = this.availableDataStreams
-                .filter(ds => ds["@class"] == EditorComponent.DATA_SET_IDENTIFIER );
-            this.currentElements = this.allElements[EditorComponent.DATA_STREAM_IDENTIFIER];
+            this.allElements = this.allElements.concat(this.availableDataStreams);
+            this.selectPipelineElements(1);
+            this.afterPipelineElementLoaded(1);
         });
         this.pipelineElementService.getDataSinks().subscribe(sinks => {
             this.availableDataSinks = sinks;
-            this.allElements[EditorComponent.DATA_SINK_IDENTIFIER] = this.availableDataSinks;
+            this.allElements = this.allElements.concat(this.availableDataSinks);
+            this.afterPipelineElementLoaded(2);
         })
 
+    }
+
+    afterPipelineElementLoaded(index: number) {
+        this.elementsLoaded[index] = true;
+        if (this.elementsLoaded.every(e => e === true)) {
+            this.allElementsLoaded = true;
+            //this.makeDraggable();
+        }
     }
 
     private collectStreams(sources: Array<DataSourceDescription>) {
@@ -108,24 +121,10 @@ export class EditorComponent implements OnInit {
     selectPipelineElements(index : number) {
         this.selectedIndex = index;
         this.activeType = this.tabs[index].type;
-        this.currentElements = this.allElements[this.activeType];
-        this.makeDraggable();
+        this.currentElements = this.allElements
+            .filter(pe => pe instanceof PipelineElementTypeUtils.toType(this.activeType));
+        console.log(this.currentElements);
     }
 
-    makeDraggable() {
-        console.log("makuing drabbg");
-        (<any>$('.draggable-icon')).draggable({
-            revert: 'invalid',
-            helper: 'clone',
-            stack: '.draggable-icon',
-            start: function (el, ui) {
-                ui.helper.appendTo('#content');
-                $('#outerAssemblyArea').css('border', '3px dashed #39b54a');
-            },
-            stop: function (el, ui) {
-                $('#outerAssemblyArea').css('border', '3px solid rgb(156, 156, 156)');
-            }
-        });
-    };
 
 }

@@ -19,6 +19,8 @@
 import {JsplumbConfigService} from "./jsplumb-config.service";
 import {JsplumbBridge} from "./jsplumb-bridge.service";
 import {Inject, Injectable} from "@angular/core";
+import {PipelineElementConfig, PipelineElementUnion} from "../model/editor.model";
+import {PipelineElementTypeUtils} from "../utils/editor.utils";
 
 @Injectable()
 export class JsplumbService {
@@ -88,7 +90,7 @@ export class JsplumbService {
         var pipelineElementConfig = this.createNewPipelineElementConfigWithFixedCoordinates(pipelineElementDom, pipelineElement, false);
         pipelineModel.push(pipelineElementConfig);
         this.$timeout(() => {
-            this.createAssemblyElement(pipelineElementConfig.payload.DOM, pipelineElementConfig.payload, pipelineElementDom);
+            this.createAssemblyElement(pipelineElementConfig.payload.dom, pipelineElementConfig.payload, pipelineElementDom);
         });
     }
 
@@ -136,23 +138,27 @@ export class JsplumbService {
         return this.createNewPipelineElementConfig(json, coord, isPreview);
     }
 
-    createNewPipelineElementConfig(json, coordinates, isPreview) {
-        var displaySettings = isPreview ? 'connectable-preview' : 'connectable-editor';
-        var connectable = "connectable";
-        var pipelineElementConfig = {
-            type: json.type, settings: {
-                openCustomize: !json.configured,
-                preview: isPreview,
-                displaySettings: displaySettings,
-                connectable: connectable,
-                position: {
-                    x: coordinates.x,
-                    y: coordinates.y
-                }
-            }, payload: Object.assign({}, json)
-        };
-        if (!pipelineElementConfig.payload.DOM) {
-            pipelineElementConfig.payload.DOM = "jsplumb_" + this.idCounter + "_" + this.makeId(4);
+    createNewPipelineElementConfig(pipelineElement: PipelineElementUnion,
+                                   coordinates,
+                                   isPreview: boolean): PipelineElementConfig {
+        let displaySettings = isPreview ? 'connectable-preview' : 'connectable-editor';
+        let connectable = "connectable";
+        let pipelineElementConfig = {} as PipelineElementConfig;
+        pipelineElementConfig.type = PipelineElementTypeUtils
+            .toCssShortHand(PipelineElementTypeUtils.fromType(pipelineElement))
+        pipelineElementConfig.payload = pipelineElement;
+        pipelineElementConfig.settings = {connectable: connectable,
+            openCustomize: (pipelineElement as any).configured,
+            preview: isPreview,
+            disabled: false,
+            loadingStatus: false,
+            displaySettings: displaySettings,
+            position: {
+                x: coordinates.x,
+                y: coordinates.y
+            }};
+        if (!pipelineElementConfig.payload.dom) {
+            pipelineElementConfig.payload.dom = "jsplumb_" + this.idCounter + "_" + this.makeId(4);
             this.idCounter++;
         }
 

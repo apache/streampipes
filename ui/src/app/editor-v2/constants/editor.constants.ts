@@ -16,39 +16,10 @@
  *
  */
 
-import {
-  DataProcessorInvocation,
-  DataSinkInvocation, SpDataSet,
-  SpDataStream
-} from "../../core-model/gen/streampipes-model";
-import {EditorConstants} from "../constants/editor.constants";
+export class EditorConstants {
 
-export type PipelineElementHolder = {
-  [key: string]: Array<PipelineElementUnion>;
-};
-
-export interface PipelineElementConfig {
-  type: string,
-  settings: {
-    openCustomize: boolean,
-    preview: boolean,
-    displaySettings: string,
-    connectable: string,
-    disabled: boolean,
-    loadingStatus: boolean
-    position: {
-      x: number,
-      y: number
-    }
-  },
-  payload: PipelineElementUnion
+  static readonly DATA_STREAM_IDENTIFIER = "org.apache.streampipes.model.SpDataStream";
+  static readonly DATA_SET_IDENTIFIER = "org.apache.streampipes.model.SpDataSet";
+  static readonly DATA_PROCESSOR_IDENTIFIER = "org.apache.streampipes.model.graph.DataProcessorInvocation";
+  static readonly DATA_SINK_IDENTIFIER = "org.apache.streampipes.model.graph.DataSinkInvoation";
 }
-
-export enum PipelineElementType {
-  DataSet,
-  DataStream,
-  DataProcessor,
-  DataSink
-}
-
-export type PipelineElementUnion = SpDataSet | SpDataStream | DataProcessorInvocation | DataSinkInvocation;

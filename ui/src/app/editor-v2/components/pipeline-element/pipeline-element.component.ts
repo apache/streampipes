@@ -24,6 +24,7 @@ import * as angular from "angular";
 import {RestApi} from "../../../services/rest-api.service";
 import {ElementIconText} from "../../../services/get-element-icon-text.service";
 import {ImageChecker} from "../../../services/image-checker.service";
+import {PipelineElementUnion} from "../../model/editor.model";
 
 
 @Component({
@@ -37,7 +38,7 @@ export class PipelineElementComponent implements OnInit {
     iconText: any;
 
     @Input()
-    pipelineElement: any;
+    pipelineElement: PipelineElementUnion;
 
     @Input()
     preview: any;
@@ -57,7 +58,6 @@ export class PipelineElementComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        console.log(this.pipelineElement);
         this.iconText =  this.ElementIconText.getElementIconText(this.pipelineElement.name);
         this.checkImageAvailable();
     }
@@ -93,6 +93,5 @@ export class PipelineElementComponent implements OnInit {
             return 'width:70px;height:70px;';
         }
     }
-
 
 }

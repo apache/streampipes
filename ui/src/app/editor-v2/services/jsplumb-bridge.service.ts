@@ -39,6 +39,8 @@ export class JsplumbBridge {
     }
 
     setContainer(container) {
+        console.log("container");
+        console.log(container);
         jsPlumb.setContainer(container);
     }
 

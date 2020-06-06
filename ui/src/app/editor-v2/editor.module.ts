@@ -40,6 +40,9 @@ import {JsplumbConfigService} from "./services/jsplumb-config.service";
 import {PipelineEditorService} from "./services/pipeline-editor.service";
 import {PipelineValidationService} from "./services/pipeline-validation.service";
 import {DragAndDropModule} from "angular-draggable-droppable";
+import {PipelineComponent} from "./components/pipeline/pipeline.component";
+import {DragDropModule} from "@angular/cdk/drag-drop";
+import {DragulaModule} from "ng2-dragula";
 
 
 @NgModule({
@@ -53,13 +56,16 @@ import {DragAndDropModule} from "angular-draggable-droppable";
         CustomMaterialModule,
         FormsModule,
         ConnectModule,
-        DragAndDropModule
+        DragAndDropModule,
+        DragDropModule,
+        DragulaModule
     ],
     declarations: [
         EditorComponent,
         PipelineAssemblyComponent,
         PipelineElementIconStandComponent,
-        PipelineElementComponent
+        PipelineElementComponent,
+        PipelineComponent
     ],
     providers: [
         EditorService,

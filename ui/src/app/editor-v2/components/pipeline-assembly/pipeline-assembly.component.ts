@@ -28,6 +28,11 @@ import {JsplumbService} from "../../services/jsplumb.service";
 import {RestApi} from "../../../services/rest-api.service";
 import {TransitionService} from "../../../services/transition.service";
 import {ShepherdService} from "../../../services/tour/shepherd.service";
+import {
+    PipelineElementConfig,
+    PipelineElementHolder,
+    PipelineElementUnion
+} from "../../model/editor.model";
 
 
 @Component({
@@ -45,7 +50,7 @@ export class PipelineAssemblyComponent implements OnInit {
     preview: any;
 
     @Input()
-    rawPipelineModel: any;
+    rawPipelineModel: PipelineElementConfig[];
     selectMode: any;
     currentPipelineName: any;
     currentPipelineDescription: any;
@@ -54,7 +59,7 @@ export class PipelineAssemblyComponent implements OnInit {
     currentModifiedPipelineId: any;
 
     @Input()
-    allElements: any;
+    allElements: PipelineElementUnion[];
 
     errorMessagesDisplayed: any = false;
 
@@ -227,10 +232,6 @@ export class PipelineAssemblyComponent implements OnInit {
 
     isPipelineAssemblyEmpty() {
         return this.rawPipelineModel.length === 0 || this.rawPipelineModel.every(pe => pe.settings.disabled);
-    }
-
-    elementDropped($event) {
-        console.log($event);
     }
 
 }

@@ -17,14 +17,12 @@
  */
 
 import {Injectable} from "@angular/core";
+import {JsplumbBridge} from "./jsplumb-bridge.service";
 
 @Injectable()
 export class PipelineEditorService {
 
-    JsplumbBridge: any;
-
-    constructor(JsplumbBridge) {
-        this.JsplumbBridge = JsplumbBridge;
+    constructor(private JsplumbBridge: JsplumbBridge) {
     }
 
     getCoordinates(ui, currentZoomLevel) {

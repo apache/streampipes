@@ -74,10 +74,11 @@
     </div>
 </div>
 <div flex id="editor-icon-stand" class="icon-stand" *ngIf="currentElements">
-    <span mwlDraggable id="{{ element.name }}" (mouseenter)="updateMouseOver(element.name)"
+    <span id="{{ element.appId }}" (mouseenter)="updateMouseOver(element.name)"
           (mouseleave)="updateMouseOver('')"
           *ngFor="let element of currentElements"
-          class="draggable-icon tt" [dropData]="element"
+          class="draggable-icon tt"
+          [attr.data-pe]="element.elementId"
           [ngClass]="activeCssClass">
         <span id="container" style="position:relative;display:block;width:80px;height:80px;">
         <pipeline-element id="pe-icon-stand-{{ element.appId }}" style="margin-left:-3%" [iconStandSize]="true" [pipelineElement]="element"

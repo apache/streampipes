@@ -34,7 +34,7 @@
              style="background-color:#f6f6f6;padding:0px;border-bottom:1px solid #ffffff">
             <pipeline-element-icon-stand [activeType]="activeType"
                                          [currentElements]="currentElements"
-                                         element-filter="ctrl.elementFilter">
+                                         element-filter="ctrl.elementFilter" *ngIf="allElementsLoaded">
             </pipeline-element-icon-stand>
         </div>
         <pipeline-assembly [rawPipelineModel]="rawPipelineModel" [allElements]="allElements"

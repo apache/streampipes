@@ -27,7 +27,8 @@ import {
     SpDataSet,
     SpDataStream
 } from "../../../core-model/gen/streampipes-model";
-import {EditorComponent} from "../../editor.component";
+import {PipelineElementType, PipelineElementUnion} from "../../model/editor.model";
+import {PipelineElementTypeUtils} from "../../utils/editor.utils";
 
 
 @Component({
@@ -38,13 +39,13 @@ import {EditorComponent} from "../../editor.component";
 export class PipelineElementIconStandComponent implements OnInit {
 
     @Input()
-    currentElements: (SpDataSet | SpDataStream | DataProcessorInvocation | DataSinkInvocation)[];
+    currentElements: PipelineElementUnion[];
 
     elementFilter: string;
     availableOptions: any = [];
     selectedOptions: any = [];
 
-    _activeType: string;
+    _activeType: PipelineElementType;
     activeCssClass: string;
 
     currentElementName: string;
@@ -54,8 +55,11 @@ export class PipelineElementIconStandComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        console.log(this.activeType);
         this.loadOptions(this.activeType);
+    }
+
+    ngAfterViewInit() {
+        this.makeDraggable();
     }
 
     openHelpDialog(pipelineElement) {
@@ -114,21 +118,31 @@ export class PipelineElementIconStandComponent implements OnInit {
     }
 
     @Input()
-    set activeType(value: string) {
+    set activeType(value: PipelineElementType) {
         this._activeType = value;
         this.activeCssClass = this.makeActiveCssClass(value);
+        setTimeout(() => {
+            this.makeDraggable();
+        })
     };
 
-    makeActiveCssClass(elementType: string) {
-        if (EditorComponent.DATA_STREAM_IDENTIFIER === elementType) {
-            return "stream";
-        } else if (EditorComponent.DATA_SET_IDENTIFIER === elementType) {
-            return "set";
-        } else if (EditorComponent.DATA_PROCESSOR_IDENTIFIER === elementType) {
-            return "sepa";
-        } else {
-            return "action";
-        }
+    makeActiveCssClass(elementType: PipelineElementType): string {
+        return PipelineElementTypeUtils.toCssShortHand(elementType);
     }
+
+    makeDraggable() {
+        (<any>$('.draggable-icon')).draggable({
+            revert: 'invalid',
+            helper: 'clone',
+            stack: '.draggable-icon',
+            start: function (el, ui) {
+                ui.helper.appendTo('#content');
+                $('#outerAssemblyArea').css('border', '3px dashed #39b54a');
+            },
+            stop: function (el, ui) {
+                $('#outerAssemblyArea').css('border', '3px solid rgb(156, 156, 156)');
+            }
+        });
+    };
 
 }
