@@ -22,6 +22,7 @@ import {
   SpDataStream
 } from "../../core-model/gen/streampipes-model";
 import {EditorConstants} from "../constants/editor.constants";
+import {InjectionToken} from "@angular/core";
 
 export type PipelineElementHolder = {
   [key: string]: Array<PipelineElementUnion>;
@@ -51,6 +52,15 @@ export enum PipelineElementType {
   DataSink
 }
 
+export interface DialogConfig {
+  width?: string;
+  disableClose?: boolean;
+  autoFocus?: boolean;
+  title: string;
+}
+
 export type PipelineElementUnion = SpDataSet | SpDataStream | DataProcessorInvocation | DataSinkInvocation;
 
 export type InvocablePipelineElementUnion = DataProcessorInvocation | DataSinkInvocation;
+
+export const PIPELINE_ELEMENT_TOKEN = new InjectionToken<{}>('pipelineElement');

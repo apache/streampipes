@@ -43,6 +43,11 @@ import {PipelineComponent} from "./components/pipeline/pipeline.component";
 import {ObjectProvider} from "./services/object-provider.service";
 import {PipelineElementOptionsComponent} from "./components/pipeline-element-options/pipeline-element-options.component";
 import {PipelineElementRecommendationService} from "./services/pipeline-element-recommendation.service";
+import {PortalModule} from "@angular/cdk/portal";
+import {OverlayModule} from "@angular/cdk/overlay";
+import {PanelDialogComponent} from "./dialog/panel/panel-dialog.component";
+import {PanelDialogService} from "./dialog/panel/panel-dialog.service";
+import {CustomizeComponent} from "./dialog/customize/customize.component";
 
 @NgModule({
     imports: [
@@ -55,14 +60,18 @@ import {PipelineElementRecommendationService} from "./services/pipeline-element-
         CustomMaterialModule,
         FormsModule,
         ConnectModule,
+        PortalModule,
+        OverlayModule
     ],
     declarations: [
+        CustomizeComponent,
         EditorComponent,
         PipelineAssemblyComponent,
         PipelineElementIconStandComponent,
         PipelineElementComponent,
         PipelineElementOptionsComponent,
-        PipelineComponent
+        PipelineComponent,
+        PanelDialogComponent
     ],
     providers: [
         EditorService,
@@ -76,6 +85,7 @@ import {PipelineElementRecommendationService} from "./services/pipeline-element-
         JsplumbService,
         JsplumbConfigService,
         ObjectProvider,
+        PanelDialogService,
         PipelineEditorService,
         PipelinePositioningService,
         PipelineValidationService,
@@ -98,6 +108,7 @@ import {PipelineElementRecommendationService} from "./services/pipeline-element-
     ],
     entryComponents: [
         EditorComponent,
+        PanelDialogComponent
     ]
 })
 export class EditorModule {

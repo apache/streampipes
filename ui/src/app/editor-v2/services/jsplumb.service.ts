@@ -22,6 +22,11 @@ import {Inject, Injectable} from "@angular/core";
 import {PipelineElementConfig, PipelineElementUnion} from "../model/editor.model";
 import {PipelineElementTypeUtils} from "../utils/editor.utils";
 import * as angular from "angular";
+import {
+    DataProcessorInvocation, DataSinkInvocation,
+    SpDataSet,
+    SpDataStream
+} from "../../core-model/gen/streampipes-model";
 
 @Injectable()
 export class JsplumbService {
@@ -147,7 +152,7 @@ export class JsplumbService {
         let pipelineElementConfig = {} as PipelineElementConfig;
         pipelineElementConfig.type = PipelineElementTypeUtils
             .toCssShortHand(PipelineElementTypeUtils.fromType(pipelineElement))
-        pipelineElementConfig.payload = angular.copy(pipelineElement)
+        pipelineElementConfig.payload = this.clone(pipelineElement);
         pipelineElementConfig.settings = {connectable: connectable,
             openCustomize: !(pipelineElement as any).configured,
             preview: isPreview,
@@ -164,6 +169,18 @@ export class JsplumbService {
         }
 
         return pipelineElementConfig;
+    }
+
+    clone(pipelineElement: PipelineElementUnion) {
+        if (pipelineElement instanceof SpDataSet) {
+            return SpDataSet.fromData(pipelineElement, new SpDataSet());
+        } else if (pipelineElement instanceof SpDataStream) {
+            return SpDataStream.fromData(pipelineElement, new SpDataStream());
+        } else if (pipelineElement instanceof DataProcessorInvocation) {
+            return DataProcessorInvocation.fromData(pipelineElement, new DataProcessorInvocation());
+        } else {
+            return DataSinkInvocation.fromData(pipelineElement, new DataSinkInvocation());
+        }
     }
 
     makeId(count) {

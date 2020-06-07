@@ -268,15 +268,7 @@ export class RestApi {
         return this.$http.post(this.urlBase() +"/pe/options", resolvableOptionsParameterRequest);
     }
 
-    recommendPipelineElement(pipeline) {
-        return this.$http.post(this.urlBase() +"/pipelines/recommend", pipeline);
-    }
 
-    updatePartialPipeline(pipeline) {
-        return this.$http.post(this.urlBase() +"/pipelines/update", pipeline, {
-            ignoreLoadingBar: true
-        });
-    }
 
     updateDataSet(dataSet) {
         return this.$http.post(this.urlBase() +"/pipelines/update/dataset", dataSet);

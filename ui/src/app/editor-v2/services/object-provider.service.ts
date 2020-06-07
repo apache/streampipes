@@ -22,12 +22,14 @@ import {RestApi} from "../../services/rest-api.service";
 import {JsplumbBridge} from "./jsplumb-bridge.service";
 import {InvocablePipelineElementUnion, PipelineElementConfig} from "../model/editor.model";
 import {InvocableStreamPipesEntity, Pipeline} from "../../core-model/gen/streampipes-model";
+import {EditorService} from "./editor.service";
 
 @Injectable()
 export class ObjectProvider {
 
     constructor(private RestApi: RestApi,
-                private JsplumbBridge: JsplumbBridge) {
+                private JsplumbBridge: JsplumbBridge,
+                private EditorService: EditorService) {
     }
 
     prepareElement(pipelineElement: InvocablePipelineElementUnion) {
@@ -91,7 +93,7 @@ export class ObjectProvider {
     }
 
     updatePipeline(pipeline: Pipeline) {
-        return this.RestApi.updatePartialPipeline(pipeline);
+        return this.EditorService.updatePartialPipeline(pipeline);
     };
 
     storePipeline(pipeline) {

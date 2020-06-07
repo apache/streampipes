@@ -24,18 +24,22 @@ import {JsplumbService} from "../../services/jsplumb.service";
 import {PipelineEditorService} from "../../services/pipeline-editor.service";
 import {JsplumbBridge} from "../../services/jsplumb-bridge.service";
 import {ShepherdService} from "../../../services/tour/shepherd.service";
-import {Component, Input, OnInit, Pipe} from "@angular/core";
+import {Component, InjectionToken, Input, OnInit, Pipe} from "@angular/core";
 import {
-  InvocablePipelineElementUnion,
+  InvocablePipelineElementUnion, PIPELINE_ELEMENT_TOKEN,
   PipelineElementConfig,
   PipelineElementUnion
 } from "../../model/editor.model";
 import {
+  CustomOutputStrategy,
   DataProcessorInvocation,
   Pipeline,
   SpDataStream
 } from "../../../core-model/gen/streampipes-model";
 import {ObjectProvider} from "../../services/object-provider.service";
+import {PanelDialogService} from "../../dialog/panel/panel-dialog.service";
+import {CustomizeComponent} from "../../dialog/customize/customize.component";
+import {DialogRef} from "../../dialog/panel/dialog-ref";
 
 @Component({
   selector: 'pipeline',
@@ -87,7 +91,8 @@ export class PipelineComponent implements OnInit {
               // TransitionService,
               private ShepherdService: ShepherdService,
               private PipelineValidationService: PipelineValidationService,
-              private RestApi: RestApi) {
+              private RestApi: RestApi,
+              private PanelDialogService: PanelDialogService) {
     this.plumbReady = false;
     this.currentMouseOverElement = "";
     this.currentPipelineModel = new Pipeline();
@@ -281,26 +286,19 @@ export class PipelineComponent implements OnInit {
       var pe = this.ObjectProvider.findElement(info.target.id, this.rawPipelineModel);
       if (pe.settings.openCustomize) {
         this.currentPipelineModel = this.ObjectProvider.makePipeline(this.rawPipelineModel);
-        console.log(this.currentPipelineModel);
         pe.settings.loadingStatus = true;
         this.ObjectProvider.updatePipeline(this.currentPipelineModel)
-            .then(msg => {
-              let data = msg.data;
+            .subscribe(pipelineModificationMessage => {
               pe.settings.loadingStatus = false;
-              if (data.success) {
+              if (pipelineModificationMessage.success) {
                 info.targetEndpoint.setType("token");
                 this.validatePipeline();
-                this.modifyPipeline(data.pipelineModifications);
+                this.modifyPipeline(pipelineModificationMessage.pipelineModifications);
                 var sourceEndpoint = this.JsplumbBridge.selectEndpoints({element: info.targetEndpoint.elementId});
                 if (this.PipelineEditorService.isFullyConnected(pe)) {
                   let payload = pe.payload as InvocablePipelineElementUnion;
                   if ((payload.staticProperties && payload.staticProperties.length > 0) || this.isCustomOutput(pe)) {
-                    this.EditorDialogManager.showCustomizeDialog($("#" +pe.payload.dom), sourceEndpoint, pe.payload, false)
-                        .then(() => {
-                          this.JsplumbService.activateEndpoint(pe.payload.dom, !payload.uncompleted);
-                        }, () => {
-                          this.JsplumbService.activateEndpoint(pe.payload.dom, !payload.uncompleted);
-                        });
+                    this.showCustomizeDialog(pe);
                   } else {
                     //this.$rootScope.$broadcast("SepaElementConfigured", pe.payload.DOM);
                     (pe.payload as InvocablePipelineElementUnion).configured = true;
@@ -308,7 +306,7 @@ export class PipelineComponent implements OnInit {
                 }
               } else {
                 this.JsplumbBridge.detach(info.connection);
-                this.EditorDialogManager.showMatchingErrorDialog(data);
+                this.EditorDialogManager.showMatchingErrorDialog(pipelineModificationMessage);
               }
             });
       }
@@ -338,7 +336,7 @@ export class PipelineComponent implements OnInit {
   isCustomOutput(pe) {
     var custom = false;
     angular.forEach(pe.payload.outputStrategies, strategy => {
-      if (strategy.type == 'org.apache.streampipes.model.output.CustomOutputStrategy') {
+      if (strategy instanceof CustomOutputStrategy) {
         custom = true;
       }
     });
@@ -351,6 +349,27 @@ export class PipelineComponent implements OnInit {
       this.pipelineCacheRunning = false;
       this.pipelineCached = true;
     });
+  }
+
+  showCustomizeDialog(pipelineElement: PipelineElementConfig) {
+    const inputMap = {};
+    inputMap["pipelineElement"] = pipelineElement;
+
+    const dialogRef = this.PanelDialogService.open(CustomizeComponent, {
+      width: "400px",
+      title: "Customize " + pipelineElement.payload.name
+    }, inputMap);
+
+    dialogRef.afterClosed().subscribe(c => {
+
+    });
+
+    // this.EditorDialogManager.showCustomizeDialog($("#" +pe.payload.dom), sourceEndpoint, pe.payload, false)
+    //     .then(() => {
+    //       this.JsplumbService.activateEndpoint(pe.payload.dom, !payload.uncompleted);
+    //     }, () => {
+    //       this.JsplumbService.activateEndpoint(pe.payload.dom, !payload.uncompleted);
+    //     });
   }
 
 

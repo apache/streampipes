@@ -20,13 +20,37 @@ import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {AuthStatusService} from "../../services/auth-status.service";
 import {TsonLdSerializerService} from "../../platform-services/tsonld-serializer.service";
+import {
+    DataProcessorInvocation, PipelineElementRecommendationMessage,
+    PipelineModificationMessage
+} from "../../core-model/gen/streampipes-model";
+import {Observable} from "rxjs";
 
 @Injectable()
 export class EditorService {
 
     constructor(private http: HttpClient,
-                private authStatusService: AuthStatusService,
-                private tsonLdSerializerService: TsonLdSerializerService) {
+                private authStatusService: AuthStatusService) {
+    }
+
+    recommendPipelineElement(pipeline): Observable<PipelineElementRecommendationMessage> {
+        return this.http.post(this.pipelinesResourceUrl +"/recommend", pipeline)
+            .map(data => PipelineElementRecommendationMessage.fromData(data as any));
+    }
+
+    updatePartialPipeline(pipeline): Observable<PipelineModificationMessage> {
+        return this.http.post(this.pipelinesResourceUrl +"/update", pipeline)
+            .map(data => {
+                return PipelineModificationMessage.fromData(data as any);
+            });
+    }
+
+    private get baseUrl() {
+        return '/streampipes-backend';
+    }
+
+    private get pipelinesResourceUrl() {
+        return this.baseUrl + '/api/v2/users/' + this.authStatusService.email + '/pipelines'
     }
 
 
