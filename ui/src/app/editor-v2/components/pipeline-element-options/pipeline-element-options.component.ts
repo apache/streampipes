@@ -69,6 +69,9 @@ export class PipelineElementOptionsComponent implements OnInit{
   @Output()
   delete: EventEmitter<PipelineElementConfig> = new EventEmitter<PipelineElementConfig>();
 
+  @Output()
+  customize: EventEmitter<PipelineElementConfig> = new EventEmitter<PipelineElementConfig>();
+
   constructor(private ObjectProvider: ObjectProvider,
               private PipelineElementRecommendationService: PipelineElementRecommendationService,
               //private InitTooltips: InitTooltips,
@@ -101,10 +104,13 @@ export class PipelineElementOptionsComponent implements OnInit{
     }
   }
 
-  removeElement(pipelineElement) {
+  removeElement(pipelineElement: PipelineElementConfig) {
     this.delete.emit(pipelineElement);
     //this.$rootScope.$broadcast("pipeline.validate");
+  }
 
+  customizeElement(pipelineElement: PipelineElementConfig) {
+    this.customize.emit(pipelineElement);
   }
 
   openCustomizeDialog() {
