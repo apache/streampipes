@@ -46,7 +46,7 @@
                     (click)="zoomOut()">
                 <i class="material-icons">zoom_out</i>
             </button>
-            <button mat-button matTooltip="Auto Layout" [matTooltipPosition]="'below'"
+            <button mat-button matTooltip="Auto Layout" [matTooltipPosition]="'above'"
                     class="md-icon-button settings-bar-icon-button" (click)="autoLayout()">
                 <i class="material-icons">settings_overscan</i>
             </button>
@@ -87,7 +87,8 @@
                     </div>
                 </div>
             </div>
-            <button mat-button class="md-icon-button" ng-click="showClearAssemblyConfirmDialog($event)">
+            <button mat-button matTooltip="Clear Assembly Area" [matTooltipPosition]="'above'"
+                    class="md-icon-button" (click)="showClearAssemblyConfirmDialog($event)">
                 <i class="material-icons">clear</i>
                 <!--                <md-tooltip md-direction="top">-->
                 <!--                    Clear Assembly Area-->
