@@ -21,7 +21,7 @@ import {EditorService} from "./services/editor.service";
 import {
     DataProcessorInvocation,
     DataSinkInvocation,
-    DataSourceDescription,
+    DataSourceDescription, SpDataSet,
     SpDataStream
 } from "../core-model/gen/streampipes-model";
 import {PipelineElementService} from "../platform-services/apis/pipeline-element.service";
@@ -44,6 +44,7 @@ export class EditorComponent implements OnInit {
     selectedIndex: number = 1;
     activeType: PipelineElementType = PipelineElementType.DataStream;
 
+    availableDataSets: SpDataSet[] = [];
     availableDataStreams: SpDataStream[] = [];
     availableDataProcessors: DataProcessorInvocation[] = [];
     availableDataSinks: DataSinkInvocation[] = [];
@@ -87,8 +88,14 @@ export class EditorComponent implements OnInit {
             this.afterPipelineElementLoaded(0);
         });
         this.pipelineElementService.getDataSources().subscribe(sources => {
-            this.availableDataStreams = this.collectStreams(sources);
+            let allStreams = this.collectStreams(sources);
+            console.log(allStreams);
+            this.availableDataStreams = allStreams.filter(s => !(s instanceof SpDataSet));
+            this.availableDataSets = allStreams
+                .filter(s => s instanceof SpDataSet)
+                .map(s => s as SpDataSet);
             this.allElements = this.allElements.concat(this.availableDataStreams);
+
             this.selectPipelineElements(1);
             this.afterPipelineElementLoaded(1);
         });
@@ -104,11 +111,10 @@ export class EditorComponent implements OnInit {
         this.elementsLoaded[index] = true;
         if (this.elementsLoaded.every(e => e === true)) {
             this.allElementsLoaded = true;
-            //this.makeDraggable();
         }
     }
 
-    private collectStreams(sources: Array<DataSourceDescription>) {
+    collectStreams(sources: Array<DataSourceDescription>): SpDataStream[] {
         let streams: SpDataStream[] = [];
         sources.forEach(source => {
             source.spDataStreams.forEach(stream => {

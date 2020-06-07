@@ -18,13 +18,10 @@
 
 package org.apache.streampipes.model.base;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 import io.fogsy.empire.annotations.RdfProperty;
 import org.apache.streampipes.logging.LoggerFactory;
 import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.SpDataStream;
-import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.monitoring.ElementStatusInfoSettings;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
@@ -37,10 +34,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import java.util.List;
 
-@JsonSubTypes({
-        @JsonSubTypes.Type(DataProcessorInvocation.class),
-        @JsonSubTypes.Type(DataSinkInvocation.class),
-})
 public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity {
 
   private static final long serialVersionUID = 2727573914765473470L;

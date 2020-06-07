@@ -15,35 +15,49 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.shared.serializer;
 
-import com.google.gson.Gson;
-import org.apache.streampipes.rest.shared.annotation.GsonWithoutIds;
-import org.apache.streampipes.serializers.json.GsonSerializer;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeFactory;
+import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 
-import javax.annotation.Priority;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Writer;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
 import java.util.Arrays;
 
 @Provider
-@Priority(6)
-@GsonWithoutIds
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class GsonWithoutIdProvider extends GsonJerseyProvider {
+public class JacksonSerializationProvider extends JsonJerseyProvider {
 
-    @Override
-    protected Gson getGsonSerializer() {
-        return GsonSerializer.getGsonWithIds();
-    }
+  private static final ObjectMapper mapper = JacksonSerializer.getObjectMapper();
 
-    @Override
-    protected boolean requiredAnnotationsPresent(Annotation[] annotations) {
-        return Arrays.stream(annotations).anyMatch(a -> a.annotationType().equals(GsonWithoutIds.class));
-    }
+  public JacksonSerializationProvider() {
+    super();
+  }
+
+
+  @Override
+  protected boolean requiredAnnotationsPresent(Annotation[] annotations) {
+    return Arrays.stream(annotations).anyMatch(a -> a.annotationType().equals(JacksonSerialized.class));
+  }
+
+  @Override
+  protected void serialize(Object t, Type type, Writer writer) throws IOException {
+    mapper.writeValue(writer, t);
+  }
+
+  @Override
+  protected Object deserialize(InputStreamReader reader, Type type) throws IOException {
+    return mapper.readValue(reader, TypeFactory.rawClass(type));
+  }
 }

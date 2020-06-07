@@ -20,39 +20,28 @@ import * as angular from 'angular';
 import {Injectable} from "@angular/core";
 import {RestApi} from "../../services/rest-api.service";
 import {JsplumbBridge} from "./jsplumb-bridge.service";
-import {PipelineElementConfig} from "../model/editor.model";
-
-declare const jsPlumb: any;
+import {InvocablePipelineElementUnion, PipelineElementConfig} from "../model/editor.model";
+import {InvocableStreamPipesEntity, Pipeline} from "../../core-model/gen/streampipes-model";
 
 @Injectable()
 export class ObjectProvider {
-
-    ImageChecker: any;
-    adjustingPipelineState: any;
-    plumbReady: any;
-    sources: any;
-    sepas: any;
-    actions: any;
-    currentElement: any;
-    //this.currentPipeline = new this.Pipeline();
-    adjustingPipeline: any;
 
     constructor(private RestApi: RestApi,
                 private JsplumbBridge: JsplumbBridge) {
     }
 
-    prepareElement(json) {
-        json.connectedTo = [];
-        return json;
+    prepareElement(pipelineElement: InvocablePipelineElementUnion) {
+        pipelineElement.connectedTo = [];
+        return pipelineElement;
     }
 
-    preparePipeline() {
-        var pipeline = {};
-        pipeline['name'] = "";
-        pipeline['description'] = "";
-        pipeline['streams'] = [];
-        pipeline['sepas'] = [];
-        pipeline['actions'] = [];
+    preparePipeline(): Pipeline {
+        var pipeline = new Pipeline();
+        pipeline.name = "";
+        pipeline.description = "";
+        pipeline.streams = [];
+        pipeline.sepas = [];
+        pipeline.actions = [];
 
         return pipeline;
     }
@@ -61,7 +50,7 @@ export class ObjectProvider {
         return this.makePipeline(currentPipelineElements);
     }
 
-    makePipeline(currentPipelineElements) {
+    makePipeline(currentPipelineElements): Pipeline {
         var pipeline = this.preparePipeline();
         pipeline = this.addElementNew(pipeline, currentPipelineElements);
         return pipeline;
@@ -77,16 +66,16 @@ export class ObjectProvider {
         return result;
     }
 
-    addElementNew(pipeline, currentPipelineElements: PipelineElementConfig[]) {
+    addElementNew(pipeline, currentPipelineElements: PipelineElementConfig[]): Pipeline {
         currentPipelineElements.forEach(pe => {
             if (pe.settings.disabled == undefined || !pe.settings.disabled) {
                 if (pe.type === 'sepa' || pe.type === 'action') {
-                    var payload = pe.payload;
-                    payload = this.prepareElement(payload);
-                    var connections = this.JsplumbBridge.getConnections({
+                    let payload = pe.payload;
+                    payload = this.prepareElement(payload as InvocablePipelineElementUnion);
+                    let connections = this.JsplumbBridge.getConnections({
                         target: $("#" + payload.dom)
                     });
-                    for (var i = 0; i < connections.length; i++) {
+                    for (let i = 0; i < connections.length; i++) {
                         payload.connectedTo.push(connections[i].sourceId);
                     }
                     if (payload.connectedTo && payload.connectedTo.length > 0) {
@@ -101,7 +90,7 @@ export class ObjectProvider {
         return pipeline;
     }
 
-    updatePipeline(pipeline) {
+    updatePipeline(pipeline: Pipeline) {
         return this.RestApi.updatePartialPipeline(pipeline);
     };
 
@@ -109,18 +98,4 @@ export class ObjectProvider {
         return this.RestApi.storePipeline(pipeline);
 
     }
-
-    State() {
-        this.adjustingPipelineState = false;
-        this.plumbReady = false;
-        this.sources = {};
-        this.sepas = {};
-        this.actions = {};
-        this.currentElement = {};
-        //this.currentPipeline = new this.Pipeline();
-        this.adjustingPipeline = {};
-    };
-
 }
-
-//ObjectProvider.$inject = ['RestApi', 'JsplumbBridge'];

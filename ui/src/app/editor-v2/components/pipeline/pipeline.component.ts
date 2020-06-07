@@ -24,14 +24,17 @@ import {JsplumbService} from "../../services/jsplumb.service";
 import {PipelineEditorService} from "../../services/pipeline-editor.service";
 import {JsplumbBridge} from "../../services/jsplumb-bridge.service";
 import {ShepherdService} from "../../../services/tour/shepherd.service";
-import {Component, Input, OnInit} from "@angular/core";
+import {Component, Input, OnInit, Pipe} from "@angular/core";
 import {
   InvocablePipelineElementUnion,
   PipelineElementConfig,
-  PipelineElementHolder,
   PipelineElementUnion
 } from "../../model/editor.model";
-import {DataProcessorInvocation, SpDataStream} from "../../../core-model/gen/streampipes-model";
+import {
+  DataProcessorInvocation,
+  Pipeline,
+  SpDataStream
+} from "../../../core-model/gen/streampipes-model";
 import {ObjectProvider} from "../../services/object-provider.service";
 
 @Component({
@@ -68,7 +71,7 @@ export class PipelineComponent implements OnInit {
   plumbReady: any;
   EditorDialogManager: any;
   currentMouseOverElement: any;
-  currentPipelineModel: any;
+  currentPipelineModel: Pipeline;
   idCounter: any;
   currentZoomLevel: any;
   TransitionService: any;
@@ -87,7 +90,7 @@ export class PipelineComponent implements OnInit {
               private RestApi: RestApi) {
     this.plumbReady = false;
     this.currentMouseOverElement = "";
-    this.currentPipelineModel = {};
+    this.currentPipelineModel = new Pipeline();
     this.idCounter = 0;
 
     this.currentZoomLevel = 1;
@@ -278,6 +281,7 @@ export class PipelineComponent implements OnInit {
       var pe = this.ObjectProvider.findElement(info.target.id, this.rawPipelineModel);
       if (pe.settings.openCustomize) {
         this.currentPipelineModel = this.ObjectProvider.makePipeline(this.rawPipelineModel);
+        console.log(this.currentPipelineModel);
         pe.settings.loadingStatus = true;
         this.ObjectProvider.updatePipeline(this.currentPipelineModel)
             .then(msg => {

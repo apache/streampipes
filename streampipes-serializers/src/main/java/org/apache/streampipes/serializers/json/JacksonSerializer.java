@@ -15,25 +15,20 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.rest.shared.serializer;
+package org.apache.streampipes.serializers.json;
 
-import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
-import org.glassfish.jersey.jackson.JacksonFeature;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
-import javax.ws.rs.container.DynamicFeature;
-import javax.ws.rs.container.ResourceInfo;
-import javax.ws.rs.core.FeatureContext;
-import javax.ws.rs.ext.Provider;
-import java.util.Arrays;
+public class JacksonSerializer {
 
-@Provider
-public class JacksonSerializationFeature implements DynamicFeature {
-  @Override
-  public void configure(ResourceInfo resInfo, FeatureContext ctx) {
-    if (Arrays
-            .stream(resInfo.getResourceMethod().getDeclaredAnnotations())
-            .anyMatch(a -> a.annotationType().equals(JacksonSerialized.class))) {
-      ctx.register(JacksonFeature.class);
-    }
+  public static ObjectMapper getObjectMapper() {
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    mapper.activateDefaultTypingAsProperty(mapper.getPolymorphicTypeValidator(), ObjectMapper.DefaultTyping.JAVA_LANG_OBJECT, "@class");
+    mapper.enable(SerializationFeature.INDENT_OUTPUT);
+
+    return mapper;
   }
 }

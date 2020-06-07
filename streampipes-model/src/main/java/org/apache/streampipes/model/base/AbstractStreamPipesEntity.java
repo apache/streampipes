@@ -20,7 +20,6 @@ package org.apache.streampipes.model.base;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.fogsy.empire.annotations.Namespaces;
 import io.fogsy.empire.core.empire.SupportsRdfId;
@@ -39,10 +38,6 @@ import java.io.Serializable;
 				"dc",   "http://purl.org/dc/terms/", RDFS.NS_PREFIX, RDFS.NS, RDF.NS_PREFIX, RDF.NS, SO.NS_PREFIX, SO.NS,
 				SSN.NS_PREFIX, SSN.NS})
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property="@class")
-@JsonSubTypes({
-				@JsonSubTypes.Type(NamedStreamPipesEntity.class),
-				@JsonSubTypes.Type(UnnamedStreamPipesEntity.class)
-})
 @TsModel
 public class AbstractStreamPipesEntity implements SupportsRdfId, Serializable {
 

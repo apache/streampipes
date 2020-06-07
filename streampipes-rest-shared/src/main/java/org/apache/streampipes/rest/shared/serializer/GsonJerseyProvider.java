@@ -15,96 +15,25 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.shared.serializer;
 
 import com.google.gson.Gson;
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.ext.MessageBodyReader;
-import javax.ws.rs.ext.MessageBodyWriter;
-import java.io.*;
-import java.lang.annotation.Annotation;
+import java.io.InputStreamReader;
+import java.io.Writer;
 import java.lang.reflect.Type;
 
+public abstract class GsonJerseyProvider extends JsonJerseyProvider {
 
-public abstract class GsonJerseyProvider implements MessageBodyWriter<Object>,
-        MessageBodyReader<Object> {
+  protected abstract Gson getGsonSerializer();
 
-    private final String UTF8 = "UTF-8";
+  @Override
+  protected void serialize(Object t, Type type, Writer writer) {
+    getGsonSerializer().toJson(t, type, writer);
+  }
 
-    protected abstract Gson getGsonSerializer();
-
-    @Override
-    public boolean isReadable(Class<?> type, Type genericType,
-                              Annotation[] annotations, MediaType mediaType) {
-        return jsonSerialized(mediaType) && requiredAnnotationsPresent(annotations);
-    }
-
-    @Override
-    public Object readFrom(Class<Object> type, Type genericType,
-                           Annotation[] annotations, MediaType mediaType,
-                           MultivaluedMap<String, String> httpHeaders, InputStream entityStream)
-            throws IOException, WebApplicationException {
-
-        InputStreamReader streamReader = new InputStreamReader(entityStream, UTF8);
-
-        try {
-            Type jsonType;
-            if (type.equals(genericType)) {
-                jsonType = type;
-            } else {
-                jsonType = genericType;
-            }
-
-            return getGsonSerializer().fromJson(streamReader, jsonType);
-        } finally {
-            streamReader.close();
-        }
-
-    }
-
-    @Override
-    public boolean isWriteable(Class<?> type, Type genericType,
-                               Annotation[] annotations, MediaType mediaType) {
-        return jsonSerialized(mediaType) && requiredAnnotationsPresent(annotations);
-    }
-
-    @Override
-    public long getSize(Object t, Class<?> type, Type genericType,
-                        Annotation[] annotations, MediaType mediaType) {
-        return -1;
-    }
-
-    @Override
-    public void writeTo(Object t, Class<?> type, Type genericType,
-                        Annotation[] annotations, MediaType mediaType,
-                        MultivaluedMap<String, Object> httpHeaders,
-                        OutputStream entityStream) throws IOException,
-            WebApplicationException {
-
-        OutputStreamWriter writer = new OutputStreamWriter(entityStream, UTF8);
-
-        try {
-            Type jsonType;
-            if (type.equals(genericType)) {
-                jsonType = type;
-            } else {
-                jsonType = genericType;
-            }
-
-            getGsonSerializer().toJson(t, jsonType, writer);
-        } finally {
-            writer.close();
-        }
-    }
-
-    protected boolean jsonSerialized(MediaType mediaType) {
-        return mediaType.getType().equals(MediaType.APPLICATION_JSON_TYPE.getType()) &&
-                mediaType.getSubtype().equals(MediaType.APPLICATION_JSON_TYPE.getSubtype());
-    }
-
-    protected abstract boolean requiredAnnotationsPresent(Annotation[] annotations);
+  @Override
+  protected Object deserialize(InputStreamReader reader, Type type) {
+    return getGsonSerializer().fromJson(reader, type);
+  }
 }

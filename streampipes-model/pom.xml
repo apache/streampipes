@@ -113,6 +113,9 @@
                         <class>io.fogsy.empire.core.empire.SupportsRdfId</class>
                         <class>java.io.Serializable</class>
                     </excludeClasses>
+                    <customTypeMappings>
+                        <mapping>java.net.URI:string</mapping>
+                    </customTypeMappings>
                     <outputKind>module</outputKind>
                     <outputFileType>implementationFile</outputFileType>
                     <outputKind>module</outputKind>

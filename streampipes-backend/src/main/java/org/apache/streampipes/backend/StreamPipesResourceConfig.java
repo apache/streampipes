@@ -29,10 +29,7 @@ import org.apache.streampipes.rest.impl.datalake.DataLakeWidgetResource;
 import org.apache.streampipes.rest.impl.nouser.FileServingResource;
 import org.apache.streampipes.rest.impl.nouser.PipelineElementImportNoUser;
 import org.apache.streampipes.rest.impl.nouser.PipelineNoUserResource;
-import org.apache.streampipes.rest.shared.serializer.GsonClientModelProvider;
-import org.apache.streampipes.rest.shared.serializer.GsonWithIdProvider;
-import org.apache.streampipes.rest.shared.serializer.GsonWithoutIdProvider;
-import org.apache.streampipes.rest.shared.serializer.JsonLdProvider;
+import org.apache.streampipes.rest.shared.serializer.*;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.context.annotation.Configuration;
@@ -103,7 +100,7 @@ public class StreamPipesResourceConfig extends ResourceConfig {
     register(GsonWithoutIdProvider.class);
     register(GsonClientModelProvider.class);
     register(JsonLdProvider.class);
-    //register(JacksonFeature.class);
+    register(JacksonSerializationProvider.class);
     register(MultiPartFeature.class);
   }
 

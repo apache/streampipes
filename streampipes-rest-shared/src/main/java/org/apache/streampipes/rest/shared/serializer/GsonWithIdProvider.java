@@ -31,7 +31,7 @@ import java.lang.annotation.Annotation;
 import java.util.Arrays;
 
 @Provider
-@Priority(1)
+@Priority(5)
 @GsonWithIds
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -46,4 +46,6 @@ public class GsonWithIdProvider extends GsonJerseyProvider {
     protected boolean requiredAnnotationsPresent(Annotation[] annotations) {
         return Arrays.stream(annotations).anyMatch(a -> a.annotationType().equals(GsonWithIds.class));
     }
+
+
 }

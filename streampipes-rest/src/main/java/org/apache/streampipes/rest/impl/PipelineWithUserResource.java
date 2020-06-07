@@ -189,7 +189,8 @@ public class PipelineWithUserResource extends AbstractRestInterface implements I
     @Path("/update/dataset")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    @GsonWithIds
+    @Consumes(MediaType.APPLICATION_JSON)
+    @JacksonSerialized
     public Response updateDataSet(SpDataSet spDataSet, @PathParam("username")
             String username) {
         return ok(Operations.updateDataSet(spDataSet));
