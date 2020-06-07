@@ -19,63 +19,54 @@
 <div>
     <div class="assemblyOptions sp-blue-bg">
         <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
-            <button mat-button style="display:flex;align-items:center;" class="md-button settings-bar-icon-button"
-                       ng-disabled="!pipelineValid"
-                       (click)="submit()" type="submit">
-<!--                <md-tooltip md-direction="top">-->
-<!--                    Save Pipeline-->
-<!--                </md-tooltip>-->
+            <button mat-button matTooltip="Save Pipeline" [matTooltipPosition]="'above'"
+                    style="display:flex;align-items:center;" class="md-button settings-bar-icon-button"
+                    [disabled]="!pipelineValid"
+                    (click)="submit()" type="submit">
                 <mat-icon>save</mat-icon>&nbsp;Save pipeline
             </button>
-            <button mat-button class="md-icon-button settings-bar-icon-button"
-                       ng-disabled="!selectMode"
-                       (click)="toggleSelectMode()">
-<!--                <md-tooltip md-direction="top">-->
-<!--                    Pan-->
-<!--                </md-tooltip>-->
+            <button mat-button matTooltip="Pan" [matTooltipPosition]="'above'"
+                    class="md-icon-button settings-bar-icon-button"
+                    [disabled]="!selectMode"
+                    (click)="toggleSelectMode()">
                 <i class="material-icons">open_with</i>
             </button>
-            <button mat-button class="md-icon-button settings-bar-icon-button" ng-disabled="selectMode"
-                       (click)="toggleSelectMode()">
+            <button mat-button matTooltip="Select" [matTooltipPosition]="'above'"
+                    class="md-icon-button settings-bar-icon-button" [disabled]="selectMode"
+                    (click)="toggleSelectMode()">
                 <i class="material-icons">mode_edit</i>
-<!--                <md-tooltip md-direction="top">-->
-<!--                    Select-->
-<!--                </md-tooltip>-->
             </button>
-            <button mat-button class="md-icon-button settings-bar-icon-button" ng-disabled="currentZoomLevel == 1"
-                       (click)="zoomIn()">
+            <button mat-button matTooltip="Zoom In" [matTooltipPosition]="'above'"
+                    class="md-icon-button settings-bar-icon-button" [disabled]="currentZoomLevel == 1"
+                    (click)="zoomIn()">
                 <i class="material-icons">zoom_in</i>
-<!--                <md-tooltip md-direction="top">-->
-<!--                    Zoom In-->
-<!--                </md-tooltip>-->
             </button>
-            <button mat-button class="md-icon-button settings-bar-icon-button" ng-disabled="currentZoomLevel == 0.5"
-                       (click)="zoomOut()">
+            <button mat-button matTooltip="Zoom Out" [matTooltipPosition]="'above'"
+                    class="md-icon-button settings-bar-icon-button" [disabled]="currentZoomLevel == 0.5"
+                    (click)="zoomOut()">
                 <i class="material-icons">zoom_out</i>
-<!--                <md-tooltip md-direction="top">-->
-<!--                    Zoom Out-->
-<!--                </md-tooltip>-->
             </button>
-            <button mat-button class="md-icon-button settings-bar-icon-button" (click)="autoLayout()">
+            <button mat-button matTooltip="Auto Layout" [matTooltipPosition]="'below'"
+                    class="md-icon-button settings-bar-icon-button" (click)="autoLayout()">
                 <i class="material-icons">settings_overscan</i>
-<!--                <md-tooltip md-direction="top">-->
-<!--                    Auto Layout-->
-<!--                </md-tooltip>-->
             </button>
             <div class="pipeline-cache-block">
                 <div *ngIf="pipelineCached">All pipeline modifications saved.</div>
-<!--                <div ng-if="pipelineCacheRunning"><md-progress-circular-->
-<!--                        md-mode="indeterminate" class="pipeline-cache-progress"-->
-<!--                        md-diameter="10"></md-progress-circular>&nbsp;Saving pipeline-->
-<!--                    modifications</div>-->
+                <!--                <div ng-if="pipelineCacheRunning"><md-progress-circular-->
+                <!--                        md-mode="indeterminate" class="pipeline-cache-progress"-->
+                <!--                        md-diameter="10"></md-progress-circular>&nbsp;Saving pipeline-->
+                <!--                    modifications</div>-->
             </div>
             <span fxFlex></span>
             <div style="position:relative;">
-                <div *ngIf="!isPipelineAssemblyEmpty()" class="pipeline-validation-summary {{PipelineValidationService.errorMessages.length > 0 ? 'pipeline-validation-summary-error' : ''}}" (click)="toggleErrorMessagesDisplayed()">
+                <div *ngIf="!isPipelineAssemblyEmpty()"
+                     class="pipeline-validation-summary {{PipelineValidationService.errorMessages.length > 0 ? 'pipeline-validation-summary-error' : ''}}"
+                     (click)="toggleErrorMessagesDisplayed()">
                     <div fxLayout="row" fxLayoutAlign="center center">
                         <div fxLayout="row" fxLayoutAlign="start center">
                             <i class="material-icons" *ngIf="PipelineValidationService.errorMessages.length > 0">notifications</i>
-                            <i class="material-icons" *ngIf="PipelineValidationService.errorMessages.length === 0">done</i>
+                            <i class="material-icons"
+                               *ngIf="PipelineValidationService.errorMessages.length === 0">done</i>
                         </div>
                         <div>
                             <span *ngIf="PipelineValidationService.errorMessages.length === 0">Pipeline ok</span>
@@ -83,11 +74,14 @@
                         </div>
                     </div>
                 </div>
-                <div class="editor-error-notifications" *ngIf="PipelineValidationService.errorMessages.length > 0 && errorMessagesDisplayed">
-                    <h5 style="color:darkred"><b>{{PipelineValidationService.errorMessages.length}} {{PipelineValidationService.errorMessages.length == 1 ? "error" : "errors"}} found.</b></h5>
+                <div class="editor-error-notifications"
+                     *ngIf="PipelineValidationService.errorMessages.length > 0 && errorMessagesDisplayed">
+                    <h5 style="color:darkred">
+                        <b>{{PipelineValidationService.errorMessages.length}} {{PipelineValidationService.errorMessages.length == 1 ? "error" : "errors"}}
+                            found.</b></h5>
                     <hr/>
                     <div *ngFor="let errorMessage of PipelineValidationService.errorMessages">
-                            <b>{{errorMessage.title}}</b>
+                        <b>{{errorMessage.title}}</b>
                         <div>{{errorMessage.content}}</div>
                         <hr/>
                     </div>
@@ -95,9 +89,9 @@
             </div>
             <button mat-button class="md-icon-button" ng-click="showClearAssemblyConfirmDialog($event)">
                 <i class="material-icons">clear</i>
-<!--                <md-tooltip md-direction="top">-->
-<!--                    Clear Assembly Area-->
-<!--                </md-tooltip>-->
+                <!--                <md-tooltip md-direction="top">-->
+                <!--                    Clear Assembly Area-->
+                <!--                </md-tooltip>-->
             </button>
         </div>
     </div>

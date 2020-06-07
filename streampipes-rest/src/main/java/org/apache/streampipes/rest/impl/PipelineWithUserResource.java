@@ -169,7 +169,7 @@ public class PipelineWithUserResource extends AbstractRestInterface implements I
     @Path("/recommend")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    @GsonWithIds
+    @JacksonSerialized
     public Response recommend(@PathParam("username") String email, Pipeline pipeline) {
         try {
             return ok(Operations.findRecommendedElements(email, pipeline));

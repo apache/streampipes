@@ -17,13 +17,13 @@
  */
 
 import * as angular from 'angular';
+import {Injectable} from "@angular/core";
+import {RestApi} from "../../services/rest-api.service";
 
+@Injectable()
 export class PipelineElementRecommendationService {
 
-    RestApi: any;
-
-    constructor(RestApi) {
-        this.RestApi = RestApi;
+    constructor(private RestApi: RestApi) {
     }
 
     getRecommendations(allElements, currentPipeline) {

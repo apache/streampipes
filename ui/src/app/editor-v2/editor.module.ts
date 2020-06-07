@@ -41,6 +41,8 @@ import {PipelineEditorService} from "./services/pipeline-editor.service";
 import {PipelineValidationService} from "./services/pipeline-validation.service";
 import {PipelineComponent} from "./components/pipeline/pipeline.component";
 import {ObjectProvider} from "./services/object-provider.service";
+import {PipelineElementOptionsComponent} from "./components/pipeline-element-options/pipeline-element-options.component";
+import {PipelineElementRecommendationService} from "./services/pipeline-element-recommendation.service";
 
 @NgModule({
     imports: [
@@ -59,6 +61,7 @@ import {ObjectProvider} from "./services/object-provider.service";
         PipelineAssemblyComponent,
         PipelineElementIconStandComponent,
         PipelineElementComponent,
+        PipelineElementOptionsComponent,
         PipelineComponent
     ],
     providers: [
@@ -76,6 +79,7 @@ import {ObjectProvider} from "./services/object-provider.service";
         PipelineEditorService,
         PipelinePositioningService,
         PipelineValidationService,
+        PipelineElementRecommendationService,
         ElementIconText,
         ImageChecker,
         {

@@ -33,15 +33,15 @@
             </div>
             <pipeline-element [pipelineElement]="pipelineElement.payload" [preview]="preview"></pipeline-element>
         </span>
-<!--         <pipeline-element-options ng-if="!ctrl.preview" delete-function="ctrl.handleDeleteOption"-->
-<!--                                   current-mouse-over-element="ctrl.currentMouseOverElement"-->
-<!--                                   pipeline-valid="ctrl.pipelineValid"-->
-<!--                                   all-elements="ctrl.allElements"-->
-<!--                                   pipeline-element="pipelineElement"-->
-<!--                                   raw-pipeline-model="ctrl.rawPipelineModel"-->
-<!--                                   pipeline-element-id="pipelineElement.type == 'stream' ? pipelineElement.payload.elementId : pipelineElement.payload.belongsTo)"-->
-<!--                                   internal-id="" {{pipelineElement.payload.DOM}}">-->
-<!--        </pipeline-element-options>-->
+         <pipeline-element-options *ngIf="!preview" (delete)="handleDeleteOption($event)"
+                                   [currentMouseOverElement]="currentMouseOverElement"
+                                   [pipelineValid]="pipelineValid"
+                                   [allElements]="allElements"
+                                   [pipelineElement]="pipelineElement"
+                                   [rawPipelineModel]="rawPipelineModel"
+                                   [pipelineElementId]="pipelineElement.type == 'stream' ? pipelineElement.payload.elementId : pipelineElement.payload.belongsTo"
+                                   [internalId]="pipelineElement.payload.dom">
+        </pipeline-element-options>
     </span>
 </div>
 </div>

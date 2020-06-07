@@ -21,6 +21,7 @@ import {JsplumbBridge} from "./jsplumb-bridge.service";
 import {Inject, Injectable} from "@angular/core";
 import {PipelineElementConfig, PipelineElementUnion} from "../model/editor.model";
 import {PipelineElementTypeUtils} from "../utils/editor.utils";
+import * as angular from "angular";
 
 @Injectable()
 export class JsplumbService {
@@ -146,7 +147,7 @@ export class JsplumbService {
         let pipelineElementConfig = {} as PipelineElementConfig;
         pipelineElementConfig.type = PipelineElementTypeUtils
             .toCssShortHand(PipelineElementTypeUtils.fromType(pipelineElement))
-        pipelineElementConfig.payload = pipelineElement;
+        pipelineElementConfig.payload = angular.copy(pipelineElement)
         pipelineElementConfig.settings = {connectable: connectable,
             openCustomize: !(pipelineElement as any).configured,
             preview: isPreview,

@@ -70,7 +70,7 @@ export class PipelineComponent implements OnInit {
   DialogBuilder: any;
   plumbReady: any;
   EditorDialogManager: any;
-  currentMouseOverElement: any;
+  currentMouseOverElement: string;
   currentPipelineModel: Pipeline;
   idCounter: any;
   currentZoomLevel: any;
@@ -226,10 +226,10 @@ export class PipelineComponent implements OnInit {
     }
   }
 
-  handleDeleteOption(pipelineElement) {
+  handleDeleteOption(pipelineElement: PipelineElementConfig) {
     this.JsplumbBridge.removeAllEndpoints(pipelineElement.payload.dom);
     angular.forEach(this.rawPipelineModel, pe => {
-      if (pe.payload.dom == pipelineElement.payload.DOM) {
+      if (pe.payload.dom == pipelineElement.payload.dom) {
         pe.settings.disabled = true;
       }
     });

@@ -53,7 +53,7 @@ import {PipelineComponent} from './components/pipeline/pipeline.component';
 import {EditorDialogManager} from '../editor-v2/services/editor-dialog-manager.service';
 import {PipelineElementComponent} from './components/pipeline-element/pipeline-element.component';
 import {PipelineElementRecommendationComponent} from "./components/pipeline-element-recommendation/pipeline-element-recommendation.component";
-import {PipelineElementRecommendationService} from "./services/pipeline-element-recommendation.service";
+import {PipelineElementRecommendationService} from "../editor-v2/services/pipeline-element-recommendation.service";
 import {PipelineAssemblyComponent} from "./components/pipeline-assembly/pipeline-assembly.component";
 import {PipelineElementIconStandComponent} from './components/pipeline-element-icon-stand/pipeline-element-icon-stand.component';
 import {PipelineValidationService} from "../editor-v2/services/pipeline-validation.service";
