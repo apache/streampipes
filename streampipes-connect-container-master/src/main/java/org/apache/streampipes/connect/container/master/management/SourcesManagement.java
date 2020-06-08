@@ -70,15 +70,9 @@ public class SourcesManagement {
         adapterDescription.setId(newId);
 
         AdapterSetDescription decryptedAdapterDescription =
-                (AdapterSetDescription) new AdapterEncryptionService(new Cloner().adapterDescription(adapterDescription)).decrypt();
-
-//        String workerUrl = new Utils().getWorkerUrl(adapterDescription);
-//        String newUrl = Utils.addUserNameToApi(workerUrl, userName);
-
+                (AdapterSetDescription) new Cloner().adapterDescription(adapterDescription);
 
         WorkerRestClient.invokeSetAdapter(newUrl, decryptedAdapterDescription);
-
-
     }
 
     public void detachAdapter(String streamId, String runningInstanceId, String username) throws AdapterException {
