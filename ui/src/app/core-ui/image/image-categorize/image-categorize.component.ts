@@ -95,8 +95,9 @@ export class ImageCategorizeComponent implements OnInit, AfterViewInit {
 
   processData(pageResult) {
     if (pageResult.rows === undefined) {
-      this.pageIndex = pageResult.pageSum;
+      this.pageIndex = pageResult.pageSum - 1;
     } else {
+      pageResult.rows = pageResult.rows.reverse();
       this.pageIndex = pageResult.page;
       this.pageSum = pageResult.pageSum;
 
