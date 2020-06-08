@@ -30,11 +30,41 @@ export class CustomizeComponent implements OnInit {
   @Input()
   pipelineElement: PipelineElementConfig;
 
+  displayRecommended: boolean;
+  showDocumentation: boolean = false;
+  customizeForm: any;
+  restrictedEditMode: boolean;
+
+  selectedElement: any;
+  selection: any;
+  matchingSelectionLeft: any;
+  matchingSelectionRight: any;
+  invalid: any;
+  helpDialogVisible: any;
+  currentStaticProperty: any;
+  validationErrors: any;
+  configVisible: any;
+
+  sourceEndpoint: any;
+  sepa: any;
+
+  //ShepherdService: ShepherdService;
+
+
+
   constructor(private dialogRef: DialogRef<CustomizeComponent>) {
 
   }
 
   ngOnInit(): void {
+
+  }
+
+  close() {
+
+  }
+
+  save() {
 
   }
 

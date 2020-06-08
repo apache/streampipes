@@ -23,7 +23,7 @@
         <span style="z-index:5;"
               [ngClass]="getElementCssClasses(pipelineElement)">
             <div class="pipeline-element-progress-container sp-fade" *ngIf="pipelineElement.settings.loadingStatus">
-<!--                 <md-progress-circular md-mode="indeterminate" class="pipeline-element-progress" md-diameter="40px"></md-progress-circular>-->
+                 <mat-spinner [mode]="'indeterminate'" class="pipeline-element-progress" [diameter]="40"></mat-spinner>
             </div>
             <div class="pipeline-element-loading-container sp-fade-opacity" *ngIf="pipelineElement.settings.loadingStatus"></div>
             <div class="pipeline-element-configuration-invalid {{pipelineElement.type === 'stream' ? 'pi-stream' : 'pi-processor'}}" *ngIf="pipelineElement.payload.uncompleted">

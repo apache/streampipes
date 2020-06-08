@@ -19,16 +19,30 @@
 @import '../../../../scss/sp/colors';
 
 app-dialog-container {
-    width: 100%;
-    display: grid;
-    grid-template-rows: 40px 1fr;
-    padding: 0 10px;
-    background-color: #fff
+  width: 100%;
+  background-color: #fff
+}
+
+.dialog-panel-header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  background: #f6f6f6;
+  padding: 10px 0.5rem 0.5rem;
+}
+
+.dialog-panel-content {
+  flex: 1 1 100%;
 }
 
 .dialog-title {
-    font-weight: bold;
-    background: $sp-color-primary;
-    padding:20px;
-    color:white;
+  font-weight: bold;
+  border-left: 10px solid $sp-color-primary;
+  padding: 5px;
+  font-size:30px;
+  color: $sp-color-accent;
+}
+
+#portal {
+  width:100%;
 }

@@ -356,7 +356,7 @@ export class PipelineComponent implements OnInit {
     inputMap["pipelineElement"] = pipelineElement;
 
     const dialogRef = this.PanelDialogService.open(CustomizeComponent, {
-      width: "400px",
+      width: "60vw",
       title: "Customize " + pipelineElement.payload.name
     }, inputMap);
 

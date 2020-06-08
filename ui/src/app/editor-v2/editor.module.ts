@@ -48,6 +48,7 @@ import {OverlayModule} from "@angular/cdk/overlay";
 import {PanelDialogComponent} from "./dialog/panel/panel-dialog.component";
 import {PanelDialogService} from "./dialog/panel/panel-dialog.service";
 import {CustomizeComponent} from "./dialog/customize/customize.component";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 @NgModule({
     imports: [
@@ -61,7 +62,8 @@ import {CustomizeComponent} from "./dialog/customize/customize.component";
         FormsModule,
         ConnectModule,
         PortalModule,
-        OverlayModule
+        OverlayModule,
+        MatProgressSpinnerModule
     ],
     declarations: [
         CustomizeComponent,
