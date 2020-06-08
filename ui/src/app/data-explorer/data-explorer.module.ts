@@ -36,6 +36,7 @@ import { PlotlyViaWindowModule } from 'angular-plotly.js';
 import { DynamicModule } from 'ng-dynamic-component';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { ConnectModule } from '../connect/connect.module';
+import { DatalakeRestService } from '../core-services/datalake/datalake-rest.service';
 import { SemanticTypeUtilsService } from '../core-services/semantic-type/semantic-type-utils.service';
 import { SharedDatalakeRestService } from '../core-services/shared/shared-dashboard.service';
 import { CoreUiModule } from '../core-ui/core-ui.module';
@@ -51,18 +52,17 @@ import { DataExplorerDashboardWidgetComponent } from './components/widget/data-e
 import { ImageWidgetComponent } from './components/widgets/image/image-widget.component';
 import { LineChartWidgetComponent } from './components/widgets/line-chart/line-chart-widget.component';
 import { TableWidgetComponent } from './components/widgets/table/table-widget.component';
+import { AggregateConfigurationComponent } from './components/widgets/utils/aggregate-configuration/aggregate-configuration.component';
 import { LoadDataSpinnerComponent } from './components/widgets/utils/load-data-spinner/load-data-spinner.component';
 import { NoDataInDateRangeComponent } from './components/widgets/utils/no-data/no-data-in-date-range.component';
 import { SelectPropertiesComponent } from './components/widgets/utils/select-properties/select-properties.component';
-import { DataExplorerV2Component } from './data-explorer-v2.component';
+import { DataExplorerComponent } from './data-explorer.component';
 import { DataExplorerAddVisualizationDialogComponent } from './dialogs/add-widget/data-explorer-add-visualization-dialog.component';
 import { DataExplorerEditDataViewDialogComponent } from './dialogs/edit-dashboard/data-explorer-edit-data-view-dialog.component';
 import { DataLakeService } from './services/data-lake.service';
 import { DataViewDataExplorerService } from './services/data-view-data-explorer.service';
 import { RefreshDashboardService } from './services/refresh-dashboard.service';
 import { ResizeService } from './services/resize.service';
-import { AggregateConfigurationComponent } from './components/widgets/utils/aggregate-configuration/aggregate-configuration.component';
-import { DatalakeRestService } from '../core-services/datalake/datalake-rest.service';
 
 const dashboardWidgets = [
 
@@ -110,7 +110,7 @@ export const MY_NATIVE_FORMATS = {
     LabelingToolModule
   ],
   declarations: [
-    DataExplorerV2Component,
+    DataExplorerComponent,
     DataExplorerDashboardGridComponent,
     DataExplorerDashboardOverviewComponent,
     DataExplorerDashboardPanelComponent,
@@ -146,16 +146,16 @@ export const MY_NATIVE_FORMATS = {
     }
   ],
   exports: [
-    DataExplorerV2Component
+    DataExplorerComponent
   ],
   entryComponents: [
-    DataExplorerV2Component,
+    DataExplorerComponent,
     DataExplorerAddVisualizationDialogComponent,
     DataDownloadDialog,
     DataExplorerEditDataViewDialogComponent
   ]
 })
-export class DataExplorerV2Module {
+export class DataExplorerModule {
 
   constructor() {
   }

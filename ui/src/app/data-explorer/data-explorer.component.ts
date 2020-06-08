@@ -23,11 +23,11 @@ import { DataViewDataExplorerService } from './services/data-view-data-explorer.
 import { RefreshDashboardService } from './services/refresh-dashboard.service';
 
 @Component({
-    selector: 'sp-data-explorer-v2',
-    templateUrl: './data-explorer-v2.component.html',
-    styleUrls: ['./data-explorer-v2.component.css']
+    selector: 'sp-data-explorer',
+    templateUrl: './data-explorer.component.html',
+    styleUrls: ['./data-explorer.component.css']
 })
-export class DataExplorerV2Component implements OnInit {
+export class DataExplorerComponent implements OnInit {
 
     selectedDataViewDashboard: IDataViewDashboard;
     selectedIndex = 0;
