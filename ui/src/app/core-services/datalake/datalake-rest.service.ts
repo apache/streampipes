@@ -123,6 +123,7 @@ export class DatalakeRestService {
 
     getLabels() {
         return {
+          'sign': ['trafficsign'],
           'person': ['person', 'Child'],
           'vehicle': ['bicycle', 'car', 'motorcycle', 'airplane', 'bus', 'train', 'truck', 'boat'],
           'outdoor': ['traffic light', 'fire hydrant', 'stop sign', 'parking meter', 'bench'],
