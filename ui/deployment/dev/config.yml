@@ -22,9 +22,8 @@ modules:
   - spPipelines
   - spConnect
   - spDashboard
+  - spDataExplorer2
   - spAppOverview
   - spAdd
   - spMyElements
-  - spDataExplorer
   - spConfiguration
-  - spDataExplorer2

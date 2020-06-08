@@ -111,21 +111,6 @@ spConfiguration:
   icon: 'action:ic_settings_24px'
   homeImage: '/assets/img/home/configuration.png'
   admin: True
-spDataExplorer:
-  ng5: True
-  ng1_templateUrl: ''
-  ng1_controller: ''
-  ng5_moduleName: 'DataExplorerModule'
-  ng5_component: 'DataExplorerComponent'
-  ng5_componentPath: '../data-explorer/data-explorer.component'
-  path: './data-explorer/data-explorer.module'
-  link: 'streampipes.data-explorer'
-  url: '/data-explorer'
-  title: 'Data Explorer'
-  description: 'Data Explorer'
-  icon: 'action:ic_view_headline_24px'
-  homeImage: ''
-  admin: false
 spAppOverview:
   ng5: True
   ng1_templateUrl: ''
@@ -168,6 +153,6 @@ spDataExplorer2:
   url: '/dataexplorerv2'
   title: 'Data Explorer'
   description: 'data-explorer-v2'
-  icon: 'navigation:ic_apps_24px'
+  icon: 'action:ic_search_24px'
   homeImage: '/assets/img/home/configuration.png'
   admin: false

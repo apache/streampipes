@@ -51,7 +51,6 @@ import { DataExplorerDashboardWidgetComponent } from './components/widget/data-e
 import { ImageWidgetComponent } from './components/widgets/image/image-widget.component';
 import { LineChartWidgetComponent } from './components/widgets/line-chart/line-chart-widget.component';
 import { TableWidgetComponent } from './components/widgets/table/table-widget.component';
-import { AggregateConfigurationComponent } from './components/widgets/utils/aggregate-configuration/aggregate-configuration.component';
 import { LoadDataSpinnerComponent } from './components/widgets/utils/load-data-spinner/load-data-spinner.component';
 import { NoDataInDateRangeComponent } from './components/widgets/utils/no-data/no-data-in-date-range.component';
 import { SelectPropertiesComponent } from './components/widgets/utils/select-properties/select-properties.component';
@@ -62,6 +61,8 @@ import { DataLakeService } from './services/data-lake.service';
 import { DataViewDataExplorerService } from './services/data-view-data-explorer.service';
 import { RefreshDashboardService } from './services/refresh-dashboard.service';
 import { ResizeService } from './services/resize.service';
+import { AggregateConfigurationComponent } from './components/widgets/utils/aggregate-configuration/aggregate-configuration.component';
+import { DatalakeRestService } from '../core-services/datalake/datalake-rest.service';
 
 const dashboardWidgets = [
 
@@ -127,6 +128,7 @@ export const MY_NATIVE_FORMATS = {
     AggregateConfigurationComponent
   ],
   providers: [
+    DatalakeRestService,
     SharedDatalakeRestService,
     DataViewDataExplorerService,
     DataLakeService,
