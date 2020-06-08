@@ -51,7 +51,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
 
   // indicator variable if labeling mode is activated
   private labelingModeOn = false;
-  
+
   private dialogReference = undefined;
 
   updatemenus = [
@@ -133,13 +133,13 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
     this.updateData();
   }
 
-  changeResolution() {
-    console.log('Change Resolution');
-
+  changeResolution(event) {
+    const aggregationTimeUnit = event['aggregationTimeUnit'];
+    const aggregationValue = event['aggregationValue'];
     this.setShownComponents(false, false, true);
     this.dataLakeRestService.getData(
       this.dataExplorerWidget.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime()
-      , 's', 1)
+      , aggregationTimeUnit, aggregationValue)
       .subscribe((res: DataResult) => {
 
           if (res.total === 0) {

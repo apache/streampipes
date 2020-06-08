@@ -16,6 +16,33 @@
  *
  */
 
-/deep/ .mat-form-field-wrapper {
-    padding-bottom: 0em;
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { EventProperty } from '../../../../../connect/schema-editor/model/EventProperty';
+
+@Component({
+  selector: 'sp-aggregate-configuration',
+  templateUrl: './aggregate-configuration.component.html',
+  styleUrls: ['./aggregate-configuration.component.css']
+})
+export class AggregateConfigurationComponent implements OnInit {
+
+  aggregationValue = 1;
+
+  aggregationTimeUnit = 's';
+
+  autoAggregationActive = false;
+
+  @Output()
+  update: EventEmitter<any> = new EventEmitter();
+
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+
+  updateData() {
+    this.update.emit({'aggregationValue': this.aggregationValue, 'aggregationTimeUnit': this.aggregationTimeUnit});
+  }
+
+
 }
