@@ -40,7 +40,6 @@ export class DatalakeRestService {
         return this.baseUrl + '/api/v3/users/' + this.authStatusService.email + '/datalake';
     }
 
-
     getAllInfos() {
         return this.http.get<DataLakeMeasure[]>(this.dataLakeUrlV3 + '/info');
     }
@@ -51,14 +50,6 @@ export class DatalakeRestService {
 
     getDataPageWithoutPage(index, itemsPerPage) {
         return this.http.get<PageResult>(this.dataLakeUrlV3 + '/data/' + index + '/paging?itemsPerPage=' + itemsPerPage);
-    }
-
-    getLastData(index, timeunit, value, aggregationTimeUnit, aggregationValue) {
-        return this.http.get<DataResult>(this.dataLakeUrlV3 + '/data/' + index + '/last/' + value + '/' + timeunit + '?aggregationUnit=' + aggregationTimeUnit + '&aggregationValue=' + aggregationValue);
-    }
-
-    getLastDataAutoAggregation(index, timeunit, value) {
-        return this.http.get<DataResult>(this.dataLakeUrlV3 + '/data/' + index + '/last/' + value + '/' + timeunit);
     }
 
     getData(index, startDate, endDate, aggregationTimeUnit, aggregationValue): Observable<DataResult> {
@@ -74,19 +65,7 @@ export class DatalakeRestService {
     }
 
     getGroupedDataAutoAggergation(index, startDate, endDate, groupingTag) {
-            return this.http.get<GroupedDataResult>(this.dataLakeUrlV3 + '/data/' + index + '/' + startDate + '/' + endDate + '/grouping/' + groupingTag);
-    }
-
-
-    /*
-        @deprecate
-     */
-    getFile(index, format) {
-        const request = new HttpRequest('GET', this.dataLakeUrlV3 + '/data/' + index + '?format=' + format,  {
-            reportProgress: true,
-            responseType: 'text'
-        });
-        return this.http.request(request);
+      return this.http.get<GroupedDataResult>(this.dataLakeUrlV3 + '/data/' + index + '/' + startDate + '/' + endDate + '/grouping/' + groupingTag);
     }
 
     downloadRowData(index, format) {
@@ -104,21 +83,6 @@ export class DatalakeRestService {
             responseType: 'text'
         });
         return this.http.request(request);
-    }
-
-    getImageSrcs() {
-        return [
-          'https://cdn.pixabay.com/photo/2017/10/29/21/05/bridge-2900839_1280.jpg',
-          'https://cdn.pixabay.com/photo/2014/04/02/19/32/dead-end-308178_1280.jpg',
-          'https://cdn.pixabay.com/photo/2015/05/01/14/46/new-york-748595_1280.jpg',
-          'https://cdn.pixabay.com/photo/2015/02/13/10/18/stop-634941_1280.jpg',
-          'https://cdn.pixabay.com/photo/2017/10/29/21/05/bridge-2900839_1280.jpg',
-          'https://cdn.pixabay.com/photo/2017/04/23/08/43/new-york-2253292_1280.jpg',
-          'https://cdn.pixabay.com/photo/2015/05/01/14/46/new-york-748595_1280.jpg',
-          'https://cdn.pixabay.com/photo/2017/10/29/21/05/bridge-2900839_1280.jpg',
-          'https://cdn.pixabay.com/photo/2015/02/13/10/18/stop-634941_1280.jpg',
-          'https://cdn.pixabay.com/photo/2017/10/29/21/05/bridge-2900839_1280.jpg',
-        ];
     }
 
     getLabels() {
