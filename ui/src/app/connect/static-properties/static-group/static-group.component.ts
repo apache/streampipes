@@ -19,22 +19,16 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {GroupStaticProperty} from '../../model/GroupStaticProperty';
 import {EventSchema} from '../../schema-editor/model/EventSchema';
+import {AbstractStaticPropertyRenderer} from "../base/abstract-static-property";
+import {StaticPropertyGroup} from "../../../core-model/gen/streampipes-model";
 
 @Component({
     selector: 'app-static-group',
     templateUrl: './static-group.component.html',
     styleUrls: ['./static-group.component.css']
 })
-export class StaticGroupComponent {
-
-    @Input()
-    staticProperty: GroupStaticProperty;
-
-    @Input()
-    adapterId: string;
-
-    @Input()
-    eventSchema: EventSchema;
+export class StaticGroupComponent
+    extends AbstractStaticPropertyRenderer<StaticPropertyGroup> {
 
     @Output() inputEmitter: EventEmitter<Boolean> = new EventEmitter<Boolean>();
 

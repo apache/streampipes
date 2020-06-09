@@ -19,7 +19,7 @@
 <div class="dialog-container">
     <div class="mat-dialog-content">
         <div fxFlex="100" fxLayout="column">
-            <div style="height:100px;border-bottom:1px solid #ccc;padding-left:10px;padding-right:10px;background-color:#f6f6f6">
+            <div style="border-bottom:1px solid #ccc;padding:10px;background-color:#f6f6f6">
                 <div fxFlex="100" fxLayout="row" fxLayoutAlign="end end">
                     <mat-slide-toggle [(ngModel)]="showDocumentation" aria-label="Switch 1"
                                       [disabled]="!pipelineElement.payload.includesAssets">
@@ -30,9 +30,8 @@
                     </mat-slide-toggle>
                 </div>
             </div>
-            <div fxFlex="100" fxLayout="row">
-                <form name="customizeForm" flex="100">
-                    <div fxFlex="100" fxLayout="column" *ngIf="restrictedEditMode">
+            <div fxFlex="100" fxLayout="row" *ngIf="restrictedEditMode">
+                    <div fxFlex="100" fxLayout="column">
                         <div fxLayout="column" class="customize-item-main-help" style="border: 2px solid #ffc400">
                             <div class="customize-item-title-help" style="background: #ffc400;" fxFlex="100"
                                  fxLayout="row">
@@ -42,10 +41,15 @@
                             </div>
                         </div>
                     </div>
-                </form>
             </div>
             <div fxFlex="100" fxLayout="column" class="customize-section">
-
+                <form name="customizeForm" flex="100">
+                <app-static-property *ngFor="let config of cachedPipelineElement.staticProperties" [staticProperty]="config"
+                                     [staticProperties]="cachedPipelineElement.staticProperties"
+                                     [eventSchemas]="eventSchemas"
+                                     (validateEmitter)="validConfiguration($event)">
+                </app-static-property>
+                </form>
             </div>
         </div>
     </div>

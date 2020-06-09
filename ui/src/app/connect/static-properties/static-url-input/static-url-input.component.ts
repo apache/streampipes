@@ -21,19 +21,21 @@ import {StaticProperty} from '../../model/StaticProperty';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {ValidateUrl} from '../../select-protocol-component/input.validator';
 import {StaticPropertyUtilService} from '../static-property-util.service';
+import {AbstractStaticPropertyRenderer} from "../base/abstract-static-property";
+import {FreeTextStaticProperty} from "../../../core-model/gen/streampipes-model";
 
 @Component({
     selector: 'app-static-url-input',
     templateUrl: './static-url-input.component.html',
     styleUrls: ['./static-url-input.component.css']
 })
-export class StaticUrlInputComponent implements OnInit {
+export class StaticUrlInputComponent
+    extends AbstractStaticPropertyRenderer<FreeTextStaticProperty> implements OnInit {
 
     constructor(public staticPropertyUtil: StaticPropertyUtilService){
-
+        super();
     }
 
-    @Input() staticProperty: StaticProperty;
     @Output() inputEmitter: EventEmitter<Boolean> = new EventEmitter<Boolean>();
     
     freeTextForm: FormGroup;

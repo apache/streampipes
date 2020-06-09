@@ -19,21 +19,46 @@
 import {CdkPortalOutlet, ComponentPortal, Portal} from "@angular/cdk/portal";
 import {
   Component,
-  EventEmitter,
+  EventEmitter, HostBinding, HostListener,
   Input,
   OnInit,
   Output,
   ViewChild,
   ViewEncapsulation
 } from "@angular/core";
+import {animate, state, style, transition, trigger} from "@angular/animations";
+import {DialogRef} from "./dialog-ref";
 
 @Component({
   selector: "app-dialog-container",
   templateUrl: './panel-dialog.component.html',
   encapsulation: ViewEncapsulation.None,
-  styleUrls: ['./panel-dialog.component.scss']
+  styleUrls: ['./panel-dialog.component.scss'],
+  animations: [trigger('flyInOut', [
+    state('void', style({
+      transform: 'translateX(80vw)',
+    })),
+    state('in', style({
+      transform: 'translateX(0)',
+    })),
+    state('out', style({
+      transform: 'translateX(80vw)'
+    })),
+    transition('* => *', animate(300))
+  ])]
 })
 export class PanelDialogComponent<T> implements OnInit {
+
+  @HostBinding('@flyInOut') slideDown = 'in';
+
+  @HostListener('@flyInOut.done', ['$event']) startDrawerHandler(event: any): void {
+    if (event.toState === "out") {
+      this.containerEvent.emit({key: "CLOSE"});
+    }
+  }
+
+  @Output()
+  animationStateChanged = new EventEmitter<AnimationEvent>();
 
   @Input()
   dialogTitle = "";
@@ -50,6 +75,9 @@ export class PanelDialogComponent<T> implements OnInit {
   @Input()
   selectedPortal: Portal<T>;
 
+  @Input()
+  dialogRef: DialogRef<T>;
+
   constructor() {
   }
 
@@ -62,6 +90,10 @@ export class PanelDialogComponent<T> implements OnInit {
   }
 
   closeDialog() {
-    this.containerEvent.emit({key: "CLOSE"});
+    this.slideDown = "out";
+  }
+
+  close() {
+    this.dialogRef.close();
   }
 }

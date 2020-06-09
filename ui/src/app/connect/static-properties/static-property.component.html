@@ -17,23 +17,23 @@
   -->
 
 <!--<mat-form-field class="example-full-width">-->
-<app-static-url-input *ngIf="isFreeTextStaticProperty(staticProperty) && staticPropertyUtil.asFreeTextStaticProperty(staticProperty).render && staticPropertyUtil.asFreeTextStaticProperty(staticProperty).requiredDomainProperty == xsService.SO_URL "
+<app-static-url-input *ngIf="isFreeTextStaticProperty(staticProperty) && staticPropertyUtil.asFreeTextStaticProperty(staticProperty).requiredDomainProperty == xsService.SO_URL "
     (inputEmitter)="valueChange($event)" [staticProperty]="staticProperty">
 </app-static-url-input>
 
-<app-static-number-input *ngIf="isFreeTextStaticProperty(staticProperty) && staticPropertyUtil.asFreeTextStaticProperty(staticProperty).render && staticPropertyUtil.asFreeTextStaticProperty(staticProperty).requiredDomainProperty == xsService.XS_NUMBER"
+<app-static-number-input *ngIf="isFreeTextStaticProperty(staticProperty) && staticPropertyUtil.asFreeTextStaticProperty(staticProperty).requiredDomainProperty == xsService.XS_NUMBER"
                          (updateEmitter)="emitUpdate($event)" (inputEmitter)="valueChange($event)" [staticProperty]="staticProperty">
 </app-static-number-input>
 
-<app-static-text-input *ngIf="isFreeTextStaticProperty(staticProperty) && staticPropertyUtil.asFreeTextStaticProperty(staticProperty).render && staticPropertyUtil.asFreeTextStaticProperty (staticProperty).requiredDomainProperty == xsService.XS_STRING1"
+<app-static-text-input *ngIf="isFreeTextStaticProperty(staticProperty) && staticPropertyUtil.asFreeTextStaticProperty (staticProperty).requiredDomainProperty == xsService.XS_STRING1"
     (updateEmitter)="emitUpdate($event)" (inputEmitter)="valueChange($event)" [staticProperty]="staticProperty">
 </app-static-text-input>
 
-<app-static-secret-input *ngIf="isSecretStaticProperty(staticProperty) && staticPropertyUtil.asFreeTextStaticProperty(staticProperty).render"
+<app-static-secret-input *ngIf="isSecretStaticProperty(staticProperty)"
                        (updateEmitter)="emitUpdate($event)" (inputEmitter)="valueChange($event)" [staticProperty]="staticProperty">
 </app-static-secret-input>
 
-<app-static-free-input *ngIf="isFreeTextStaticProperty(staticProperty) && staticPropertyUtil.asFreeTextStaticProperty(staticProperty).render && (staticPropertyUtil.asFreeTextStaticProperty (staticProperty).requiredDomainProperty == '' || !staticPropertyUtil.asFreeTextStaticProperty (staticProperty).requiredDomainProperty) "
+<app-static-free-input *ngIf="isFreeTextStaticProperty(staticProperty) && (staticPropertyUtil.asFreeTextStaticProperty (staticProperty).requiredDomainProperty == '' || !staticPropertyUtil.asFreeTextStaticProperty (staticProperty).requiredDomainProperty) "
     (inputEmitter)="valueChange($event)" (updateEmitter)="emitUpdate($event)" [staticProperty]="staticProperty">
 </app-static-free-input>
 
@@ -59,29 +59,30 @@
 </app-static-one-of-input>
 
 <app-static-mapping-unary *ngIf="isMappingPropertyUnary(staticProperty)"
-                         [eventSchema]="eventSchema" (inputEmitter)="valueChange($event)" [staticProperty]="staticProperty">
+                         [eventSchemas]="eventSchemas" (inputEmitter)="valueChange($event)" [staticProperty]="staticProperty">
 </app-static-mapping-unary>
 
-<app-static-mapping-nary *ngIf="isMappingNaryProperty(staticProperty)" [eventSchema]="eventSchema"
+<app-static-mapping-nary *ngIf="isMappingNaryProperty(staticProperty)" [eventSchemas]="eventSchemas"
                          (inputEmitter)="valueChange($event)" [staticProperty]="staticProperty">
 </app-static-mapping-nary>
 
 <app-static-alternatives *ngIf="isAlternativesStaticProperty(staticProperty)"
-                         [adapterId]="adapterId" [eventSchema]="eventSchema"
+                         [adapterId]="adapterId" [eventSchemas]="eventSchemas"
                          [staticProperty]="staticProperty" class="test fullWidth"
                          (inputEmitter)="valueChange($event)">
 </app-static-alternatives>
 
 <app-static-group *ngIf="isGroupStaticProperty(staticProperty)"
-                  [adapterId]="adapterId" [eventSchema]="eventSchema"
+                  [adapterId]="adapterId" [eventSchemas]="eventSchemas"
                   [staticProperty]="staticProperty" class="test fullWidth"
                   (inputEmitter)="valueChange($event)">
 </app-static-group>
 
 <app-static-collection *ngIf="isCollectionStaticProperty(staticProperty)"
-                       [adapterId]="adapterId" [eventSchema]="eventSchema"
+                       [adapterId]="adapterId" [eventSchemas]="eventSchemas"
                        [staticProperty]="staticProperty" class="test fullWidth"
                        (inputEmitter)="valueChange($event)" (updateEmitter)="emitUpdate($event)">
 </app-static-collection>
+<mat-divider></mat-divider>
 
 

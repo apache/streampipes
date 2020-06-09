@@ -18,15 +18,19 @@
 
 import {StaticPropertyUtilService} from "../static-property-util.service";
 import {PropertySelectorService} from "../../../services/property-selector.service";
+import {AbstractStaticPropertyRenderer} from "../base/abstract-static-property";
+import {EventProperty, MappingProperty} from "../../../core-model/gen/streampipes-model";
 
 
-export abstract class StaticMappingComponent {
+export abstract class StaticMappingComponent<T extends MappingProperty>
+    extends AbstractStaticPropertyRenderer<T> {
 
     protected firstStreamPropertySelector: string = "s0::";
+    protected secondStreamPropertySelector: string = "s1::";
 
     constructor(private staticPropertyUtil: StaticPropertyUtilService,
                 private PropertySelectorService: PropertySelectorService){
-
+        super();
     }
 
     getName(eventProperty) {
@@ -35,4 +39,17 @@ export abstract class StaticMappingComponent {
             : eventProperty.runTimeName;
     }
 
+    extractPossibleSelections(): Array<EventProperty> {
+        let properties: Array<EventProperty> = [];
+        this.eventSchemas.forEach(schema => {
+            properties = properties.concat(schema.eventProperties.filter(ep => this.isInSelection(ep)));
+        });
+        return properties;
+    }
+
+    isInSelection(ep: EventProperty): boolean {
+        return this.staticProperty.mapsFromOptions
+            .some(maps => (maps === this.firstStreamPropertySelector + ep.runtimeName)
+                || maps === this.secondStreamPropertySelector + ep.runtimeName);
+    }
 }

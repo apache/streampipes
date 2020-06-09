@@ -19,12 +19,14 @@
 import {ComponentRef} from "@angular/core";
 import {OverlayRef} from "@angular/cdk/overlay";
 import {Observable, Subject} from "rxjs";
+import {PanelDialogComponent} from "./panel-dialog.component";
 
 export class DialogRef<T> {
   private _componentInstance: ComponentRef<T>;
-  private subject: Subject<any> = new Subject<any>();
+  private _afterClosed: Subject<any> = new Subject<any>();
 
-  constructor(private overlayRef: OverlayRef) {
+  constructor(private overlayRef: OverlayRef,
+              private dialogContainerRef: ComponentRef<PanelDialogComponent<unknown>>) {
   }
 
   get componentInstance() {
@@ -36,12 +38,15 @@ export class DialogRef<T> {
   }
 
   public close(data?: any) {
-    this.overlayRef.dispose();
-    this.subject.next(data);
+    this.dialogContainerRef.instance.closeDialog();
+    this._afterClosed.next(data);
+    this._afterClosed.complete();
   }
 
   public afterClosed(): Observable<any> {
-    return this.subject;
+    return this._afterClosed.asObservable();
   }
+
+
 
 }

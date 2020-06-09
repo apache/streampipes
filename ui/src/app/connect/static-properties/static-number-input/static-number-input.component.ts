@@ -22,18 +22,19 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {ValidateNumber} from '../../select-protocol-component/input.validator';
 import {StaticPropertyUtilService} from '../static-property-util.service';
 import {ConfigurationInfo} from "../../model/message/ConfigurationInfo";
+import {AbstractStaticPropertyRenderer} from "../base/abstract-static-property";
+import {FreeTextStaticProperty} from "../../../core-model/gen/streampipes-model";
 
 @Component({
     selector: 'app-static-number-input',
     templateUrl: './static-number-input.component.html',
     styleUrls: ['./static-number-input.component.css']
 })
-export class StaticNumberInputComponent implements OnInit {
-    @Input() staticProperty: StaticProperty;
+export class StaticNumberInputComponent
+    extends AbstractStaticPropertyRenderer<FreeTextStaticProperty> implements OnInit {
+
     @Output() inputEmitter: EventEmitter<any> = new EventEmitter<any>();
     @Output() updateEmitter: EventEmitter<ConfigurationInfo> = new EventEmitter();
-
-
 
     freeTextForm: FormGroup;
     inputValue: String;
@@ -42,7 +43,7 @@ export class StaticNumberInputComponent implements OnInit {
 
 
     constructor(public staticPropertyUtil: StaticPropertyUtilService){
-
+        super();
     }
 
     ngOnInit() {

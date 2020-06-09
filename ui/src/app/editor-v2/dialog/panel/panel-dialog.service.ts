@@ -49,33 +49,34 @@ export class PanelDialogService {
       panelClass: "dialog-container",
       width: config.width,
       maxWidth: "90vw",
-      height: "100vh"
+      height: "100vh",
     });
 
-    const dialogPreview = new ComponentPortal(PanelDialogComponent);
-    const dialogContainerRef = overlay.attach(dialogPreview);
-    dialogContainerRef.instance.dialogTitle = config.title;
-    const dialogRef = new DialogRef<T>(overlay);
+    const panelDialogContainer = new ComponentPortal(PanelDialogComponent);
+    const panelDialogContainerRef = overlay.attach(panelDialogContainer);
+    panelDialogContainerRef.instance.dialogTitle = config.title;
+    const dialogRef = new DialogRef<T>(overlay, panelDialogContainerRef);
 
     const injector = this.createInjector(dialogRef);
-    dialogContainerRef.instance.selectedPortal = new ComponentPortal(component,
+    panelDialogContainerRef.instance.selectedPortal = new ComponentPortal(component,
         null, injector);
-    dialogRef.componentInstance = dialogContainerRef.instance.attach();
+    panelDialogContainerRef.instance.dialogRef = dialogRef;
+    dialogRef.componentInstance = panelDialogContainerRef.instance.attach();
 
     Object.keys(inputMap).forEach(key => {
       dialogRef.componentInstance[key] = inputMap[key];
     })
 
-    this.applyDialogProperties(dialogContainerRef, overlay, config);
+    this.applyDialogProperties(panelDialogContainerRef, overlay, config);
 
     return dialogRef;
   }
 
-  private applyDialogProperties(componentRef: ComponentRef<any>,
+  private applyDialogProperties(panelDialogComponentRef: ComponentRef<any>,
                                 overlayRef: OverlayRef,
                                 config: DialogConfig
   ) {
-    componentRef.instance.containerEvent.subscribe(e => {
+    panelDialogComponentRef.instance.containerEvent.subscribe(e => {
       if (e.key === "CLOSE") {
         overlayRef.dispose();
       }

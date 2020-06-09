@@ -21,21 +21,23 @@ import {StaticProperty} from '../../model/StaticProperty';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {StaticPropertyUtilService} from '../static-property-util.service';
 import {ConfigurationInfo} from "../../model/message/ConfigurationInfo";
+import {SecretStaticProperty} from "../../../core-model/gen/streampipes-model";
+import {AbstractStaticPropertyRenderer} from "../base/abstract-static-property";
 
 @Component({
     selector: 'app-static-secret-input',
     templateUrl: './static-secret-input.component.html',
     styleUrls: ['./static-secret-input.component.css']
 })
-export class StaticSecretInputComponent implements OnInit {
+export class StaticSecretInputComponent
+    extends AbstractStaticPropertyRenderer<SecretStaticProperty> implements OnInit {
 
     constructor(public staticPropertyUtil: StaticPropertyUtilService){
-
+        super();
     }
 
     @Output() updateEmitter: EventEmitter<ConfigurationInfo> = new EventEmitter();
 
-    @Input() staticProperty: StaticProperty;
     @Output() inputEmitter: EventEmitter<any> = new EventEmitter<any>();
 
     inputValue: String;
@@ -53,7 +55,7 @@ export class StaticSecretInputComponent implements OnInit {
 
     valueChange(inputValue) {
         this.inputValue = inputValue;
-        this.staticPropertyUtil.asSecretStaticProperty(this.staticProperty).isEncrypted = false;
+        this.staticPropertyUtil.asSecretStaticProperty(this.staticProperty).encrypted = false;
 
         if (inputValue == "" || !inputValue) {
             this.hasInput = false;

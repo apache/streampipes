@@ -19,11 +19,9 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {StaticPropertyUtilService} from '../static-property-util.service';
-import {EventSchema} from '../../schema-editor/model/EventSchema';
 import {PropertySelectorService} from "../../../services/property-selector.service";
-import {MappingPropertyUnary} from "../../model/MappingPropertyUnary";
-import {EventProperty} from "../../schema-editor/model/EventProperty";
 import {StaticMappingComponent} from "../static-mapping/static-mapping";
+import {EventProperty, MappingPropertyUnary} from "../../../core-model/gen/streampipes-model";
 
 
 @Component({
@@ -31,39 +29,25 @@ import {StaticMappingComponent} from "../static-mapping/static-mapping";
     templateUrl: './static-mapping-unary.component.html',
     styleUrls: ['./static-mapping-unary.component.css']
 })
-export class StaticMappingUnaryComponent extends StaticMappingComponent implements OnInit {
+export class StaticMappingUnaryComponent extends StaticMappingComponent<MappingPropertyUnary> implements OnInit {
 
     @Output() inputEmitter: EventEmitter<Boolean> = new EventEmitter<Boolean>();
-    @Input() staticProperty: MappingPropertyUnary;
-    @Input() eventSchema: EventSchema;
 
     unaryTextForm: FormGroup;
     private inputValue: String;
     private hasInput: Boolean;
     private errorMessage = "Please enter a value";
-    availableProperties: Array<EventProperty>;
+    availableProperties: Array<any>;
 
     constructor(staticPropertyUtil: StaticPropertyUtilService,
                 PropertySelectorService: PropertySelectorService){
         super(staticPropertyUtil, PropertySelectorService);
     }
 
-    extractPossibleSelections(): Array<EventProperty> {
-        return this.eventSchema.eventProperties.filter(ep => this.isInSelection(ep));
-    }
-
-    isInSelection(ep: EventProperty): boolean {
-        // TODO this quick-fixes a deserialization bug in Tson-LD
-        if (!Array.isArray(this.staticProperty.mapsFromOptions)) {
-            let value: string = this.staticProperty.mapsFromOptions as any;
-            this.staticProperty.mapsFromOptions = [value];
-        }
-        return this.staticProperty.mapsFromOptions.some(maps => maps === this.firstStreamPropertySelector + ep.runtimeName);
-    }
-
     ngOnInit() {
         this.availableProperties = this.extractPossibleSelections();
-        this.availableProperties.forEach(ep => ep.propertySelector = this.firstStreamPropertySelector + ep.runtimeName);
+        this.availableProperties
+            .forEach(ep => ep.propertySelector = this.firstStreamPropertySelector + ep.runtimeName);
         if (!this.staticProperty.selectedProperty) {
             this.staticProperty.selectedProperty = this.availableProperties[0].propertySelector;
         }

@@ -16,25 +16,25 @@
  *
  */
 
-.dialog-container {
-    display: flex;
-    flex-flow: column;
-    align-items: stretch;
-    flex: 1 1 100%;
-    height:100%;
-}
+import {
+  EventSchema,
+  StaticProperty,
+  StaticPropertyUnion
+} from "../../../core-model/gen/streampipes-model";
+import {Input} from "@angular/core";
 
-.mat-dialog-content {
-    margin: 0px;
-    flex: 1 1 auto;
-}
+export abstract class AbstractStaticPropertyRenderer<T extends StaticProperty> {
 
-.mat-dialog-actions {
-    padding: 10px;
-}
+  @Input()
+  staticProperty: T;
 
-.customize-section {
-    display:flex;
-    flex: 1 1 auto;
-    padding: 20px;
+  @Input()
+  staticProperties: Array<StaticPropertyUnion>;
+
+  @Input()
+  eventSchemas: EventSchema[];
+
+  @Input()
+  adapterId: string;
+
 }

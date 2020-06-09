@@ -17,23 +17,24 @@
  */
 
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {OneOfStaticProperty} from '../../model/OneOfStaticProperty';
+import {AbstractStaticPropertyRenderer} from "../base/abstract-static-property";
+import {OneOfStaticProperty} from "../../../core-model/gen/streampipes-model";
 
 @Component({
   selector: 'app-static-one-of-input',
   templateUrl: './static-one-of-input.component.html',
   styleUrls: ['./static-one-of-input.component.css']
 })
-export class StaticOneOfInputComponent implements OnInit {
+export class StaticOneOfInputComponent extends AbstractStaticPropertyRenderer<OneOfStaticProperty> implements OnInit {
 
-  @Input()
-  staticProperty: OneOfStaticProperty;
 
   @Output() inputEmitter: EventEmitter<Boolean> = new EventEmitter<Boolean>();
 
   selectedOption: string;
 
-  constructor() { }
+  constructor() {
+    super();
+  }
 
   ngOnInit() {
       if (this.noneSelected()) {

@@ -21,18 +21,19 @@ import io.fogsy.empire.annotations.RdfProperty;
 import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
+import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.vocabulary.StreamPipes;
-
-import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import java.util.List;
 
 @RdfsClass(StreamPipes.RUNTIME_OPTIONS_REQUEST)
 @Entity
+@TsModel
 public class RuntimeOptionsRequest extends UnnamedStreamPipesEntity {
 
   @RdfProperty(StreamPipes.HAS_REQUEST_ID)

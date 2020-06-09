@@ -17,26 +17,23 @@
  */
 
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FreeTextStaticProperty} from '../model/FreeTextStaticProperty';
-import {StaticProperty} from '../model/StaticProperty';
-import {MappingPropertyUnary} from '../model/MappingPropertyUnary';
-import {OneOfStaticProperty} from '../model/OneOfStaticProperty';
 import {Logger} from '../../shared/logger/default-log.service';
 
 import {xsService} from '../../NS/XS.service';
 import {StaticPropertyUtilService} from './static-property-util.service';
-import {AnyStaticProperty} from '../model/AnyStaticProperty';
-import {FileStaticProperty} from '../model/FileStaticProperty';
-import {MappingPropertyNary} from '../model/MappingPropertyNary';
-import {EventSchema} from '../schema-editor/model/EventSchema';
-import {RuntimeResolvableOneOfStaticProperty} from "../model/RuntimeResolvableOneOfStaticProperty";
-import {RuntimeResolvableAnyStaticProperty} from "../model/RuntimeResolvableAnyStaticProperty";
 import {ConfigurationInfo} from "../model/message/ConfigurationInfo";
-import {SecretStaticProperty} from "../model/SecretStaticProperty";
-import {AlternativesStaticProperty} from '../model/AlternativesStaticProperty';
-import {GroupStaticProperty} from '../model/GroupStaticProperty';
-import {CollectionStaticProperty} from "../model/CollectionStaticProperty";
-import {ColorPickerStaticProperty} from "../model/ColorPickerStaticProperty";
+import {
+  AnyStaticProperty, CollectionStaticProperty, ColorPickerStaticProperty,
+  EventSchema,
+  FileStaticProperty,
+  FreeTextStaticProperty,
+  MappingPropertyNary,
+  MappingPropertyUnary,
+  OneOfStaticProperty, RuntimeResolvableAnyStaticProperty,
+  RuntimeResolvableOneOfStaticProperty,
+  SecretStaticProperty,
+  StaticProperty, StaticPropertyAlternatives, StaticPropertyGroup
+} from "../../core-model/gen/streampipes-model";
 
 @Component({
   selector: 'app-static-property',
@@ -45,6 +42,7 @@ import {ColorPickerStaticProperty} from "../model/ColorPickerStaticProperty";
   providers: [xsService],
 })
 export class StaticPropertyComponent implements OnInit {
+
   @Input()
   staticProperty: StaticProperty;
 
@@ -60,11 +58,8 @@ export class StaticPropertyComponent implements OnInit {
   @Output()
   updateEmitter: EventEmitter<ConfigurationInfo> = new EventEmitter();
 
-
   @Input()
-  eventSchema: EventSchema;
-
-  private frTxt: FreeTextStaticProperty;
+  eventSchemas: EventSchema[];
 
   @Input()
   completedStaticProperty: ConfigurationInfo;
@@ -92,8 +87,6 @@ export class StaticPropertyComponent implements OnInit {
     //     this.frTxt = <FreeTextStaticProperty> property;
     //     this.frTxt.requiredDomainProperty = "";
     // }
-    this.frTxt = <FreeTextStaticProperty>this.staticProperty;
-    this.frTxt.requiredDomainProperty = '';
   }
 
   isFreeTextStaticProperty(val) {
@@ -138,11 +131,11 @@ export class StaticPropertyComponent implements OnInit {
   }
 
   isGroupStaticProperty(val) {
-      return val instanceof GroupStaticProperty;
+      return val instanceof StaticPropertyGroup;
   }
 
   isAlternativesStaticProperty(val) {
-      return val instanceof AlternativesStaticProperty;
+      return val instanceof StaticPropertyAlternatives;
   }
 
   isCollectionStaticProperty(val) {
@@ -150,7 +143,7 @@ export class StaticPropertyComponent implements OnInit {
   }
 
   valueChange(hasInput) {
-    this.staticProperty.isValid = hasInput;
+    //this.staticProperty.isValid = hasInput;
     this.validateEmitter.emit();
   }
 

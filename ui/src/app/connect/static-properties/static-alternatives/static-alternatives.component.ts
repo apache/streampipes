@@ -17,26 +17,19 @@
  */
 
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {AlternativesStaticProperty} from '../../model/AlternativesStaticProperty';
 import {EventSchema} from '../../schema-editor/model/EventSchema';
 import {GroupStaticProperty} from '../../model/GroupStaticProperty';
+import {AbstractStaticPropertyRenderer} from "../base/abstract-static-property";
+import {StaticPropertyAlternatives} from "../../../core-model/gen/streampipes-model";
 
 @Component({
     selector: 'app-static-alternatives',
     templateUrl: './static-alternatives.component.html',
     styleUrls: ['./static-alternatives.component.css']
 })
-export class StaticAlternativesComponent implements OnInit {
+export class StaticAlternativesComponent
+    extends AbstractStaticPropertyRenderer<StaticPropertyAlternatives> implements OnInit {
 
-
-    @Input()
-    staticProperty: AlternativesStaticProperty;
-
-    @Input()
-    adapterId: string;
-
-    @Input()
-    eventSchema: EventSchema;
 
     @Output() inputEmitter: EventEmitter<Boolean> = new EventEmitter<Boolean>();
 

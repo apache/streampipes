@@ -22,21 +22,22 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {ValidateString} from '../../select-protocol-component/input.validator';
 import {StaticPropertyUtilService} from '../static-property-util.service';
 import {ConfigurationInfo} from "../../model/message/ConfigurationInfo";
+import {AbstractStaticPropertyRenderer} from "../base/abstract-static-property";
+import {FreeTextStaticProperty} from "../../../core-model/gen/streampipes-model";
 
 @Component({
     selector: 'app-static-text-input',
     templateUrl: './static-text-input.component.html',
     styleUrls: ['./static-text-input.component.css']
 })
-export class StaticTextInputComponent implements OnInit {
+export class StaticTextInputComponent
+    extends AbstractStaticPropertyRenderer<FreeTextStaticProperty> implements OnInit {
 
     constructor(public staticPropertyUtil: StaticPropertyUtilService){
-
+        super();
     }
 
     @Output() updateEmitter: EventEmitter<ConfigurationInfo> = new EventEmitter();
-
-    @Input() staticProperty: StaticProperty;
     @Output() inputEmitter: EventEmitter<any> = new EventEmitter<any>();
 
     freeTextForm: FormGroup;

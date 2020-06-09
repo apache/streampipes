@@ -17,24 +17,19 @@
  */
 
 import {Injectable} from '@angular/core';
-import {StaticProperty} from '../model/StaticProperty';
-import {FreeTextStaticProperty} from '../model/FreeTextStaticProperty';
-import {SecretStaticProperty} from "../model/SecretStaticProperty";
-import {CollectionStaticProperty} from '../model/CollectionStaticProperty';
-import {FileStaticProperty} from "../model/FileStaticProperty";
-import {AnyStaticProperty} from "../model/AnyStaticProperty";
-import {MappingPropertyUnary} from "../model/MappingPropertyUnary";
-import {OneOfStaticProperty} from "../model/OneOfStaticProperty";
-import {MappingPropertyNary} from "../model/MappingPropertyNary";
-import {RuntimeResolvableOneOfStaticProperty} from "../model/RuntimeResolvableOneOfStaticProperty";
-import {RuntimeResolvableAnyStaticProperty} from "../model/RuntimeResolvableAnyStaticProperty";
-import {GroupStaticProperty} from "../model/GroupStaticProperty";
-import {AlternativesStaticProperty} from "../model/AlternativesStaticProperty";
-import {AlternativeStaticProperty} from "../model/AlternativeStaticProperty";
-import {Option} from "../model/Option";
+import {
+    AnyStaticProperty,
+    CollectionStaticProperty,
+    ColorPickerStaticProperty,
+    FileStaticProperty,
+    FreeTextStaticProperty,
+    MappingPropertyNary,
+    MappingPropertyUnary, OneOfStaticProperty, Option,
+    RuntimeResolvableAnyStaticProperty, RuntimeResolvableOneOfStaticProperty,
+    SecretStaticProperty,
+    StaticProperty, StaticPropertyAlternative, StaticPropertyAlternatives, StaticPropertyGroup
+} from "../../core-model/gen/streampipes-model";
 import {URI} from "../model/URI";
-import {ColorPickerStaticProperty} from "../model/ColorPickerStaticProperty";
-
 
 @Injectable()
 export class StaticPropertyUtilService{
@@ -45,18 +40,19 @@ export class StaticPropertyUtilService{
 
         if (val instanceof FreeTextStaticProperty) {
             clone = new FreeTextStaticProperty();
-            clone.id = id;
+            clone.elementId = id;
             clone.value = val.value;
             clone.requiredDomainProperty = val.requiredDomainProperty;
         }
         else if (val instanceof FileStaticProperty) {
-            clone = new FileStaticProperty(id);
+            clone = new FileStaticProperty();
+            clone.elementId = id;
             clone.endpointUrl = val.endpointUrl;
             clone.locationPath = val.locationPath;
         }
         else if (val instanceof MappingPropertyUnary) {
             clone = new MappingPropertyUnary();
-            clone.id = id;
+            clone.elementId = id;
             clone.requirementSelector = val.requirementSelector;
             clone.mapsFromOptions = val.mapsFromOptions;
             clone.propertyScope = val.propertyScope;
@@ -64,39 +60,44 @@ export class StaticPropertyUtilService{
         }
         else if (val instanceof MappingPropertyNary) {
             clone = new MappingPropertyNary();
-            clone.id = id;
+            clone.elementId = id;
             clone.requirementSelector = val.requirementSelector;
             clone.mapsFromOptions = val.mapsFromOptions;
             clone.propertyScope = val.propertyScope;
             clone.selectedProperties = val.selectedProperties;
         }
         else if (val instanceof SecretStaticProperty) {
-            clone = new SecretStaticProperty(id);
+            clone = new SecretStaticProperty();
+            clone.elementId = id;
             clone.value = val.value;
-            clone.isEncrypted = val.isEncrypted;
+            clone.encrypted = val.encrypted;
         }
         else if (val instanceof ColorPickerStaticProperty) {
             clone = new ColorPickerStaticProperty();
             clone.id = id;
             clone.selectedProperty = val.selectedColor;
         }
-        else if (val instanceof GroupStaticProperty) {
-            clone = new GroupStaticProperty(id);
+        else if (val instanceof StaticPropertyGroup) {
+            clone = new StaticPropertyGroup();
+            clone.elementId = id;
             clone.staticProperties = val.staticProperties.map(elem => this.clone(elem));
             clone.showLabel = val.showLabel;
             clone.horizontalRendering = val.horizontalRendering;
           }
-        else if (val instanceof AlternativesStaticProperty) {
-            clone = new AlternativesStaticProperty(id);
+        else if (val instanceof StaticPropertyAlternatives) {
+            clone = new StaticPropertyAlternatives();
+            clone.elementId = id;
             clone.alternatives = val.alternatives.map(elem => this.clone(elem));
         }
-        else if (val instanceof AlternativeStaticProperty) {
-            clone = new AlternativeStaticProperty(id);
+        else if (val instanceof StaticPropertyAlternative) {
+            clone = new StaticPropertyAlternative();
+            clone.elementId = id;
             clone.selected = val.selected;
             clone.staticProperty = this.clone(val.staticProperty);
         }
         else if (val instanceof CollectionStaticProperty) {
-            clone = new CollectionStaticProperty(id);
+            clone = new CollectionStaticProperty();
+            clone.elementId = id;
             clone.staticPropertyTemplate = this.clone(val.staticPropertyTemplate);
             clone.members = val.members.map(elem => this.clone(elem));
             clone.memberType = val.memberType;
@@ -110,19 +111,19 @@ export class StaticPropertyUtilService{
             val instanceof RuntimeResolvableAnyStaticProperty ? clone = new RuntimeResolvableAnyStaticProperty() :
               clone = new RuntimeResolvableOneOfStaticProperty();
 
-            clone.id = id;
+            clone.elementId = id;
             clone.dependsOn = val.dependsOn;
-            clone.value = val.value;
-            clone.requiredDomainProperty = val.requiredDomainProperty;
+            //clone.value = val.value;
+            //clone.requiredDomainProperty = val.requiredDomainProperty;
             clone.options = val.options.map(option => this.cloneOption(option));
             clone.horizontalRendering = val.horizontalRendering;
         }
         else if (val instanceof AnyStaticProperty || val instanceof OneOfStaticProperty){
             val instanceof AnyStaticProperty ? clone = new AnyStaticProperty() : clone = new OneOfStaticProperty();
 
-            clone.id = id;
-            clone.value = val.value;
-            clone.requiredDomainProperty = val.requiredDomainProperty;
+            clone.elementId = id;
+            //clone.value = val.value;
+            //clone.requiredDomainProperty = val.requiredDomainProperty;
             clone.options = val.options.map(option => this.cloneOption(option));
             clone.horizontalRendering = val.horizontalRendering;
         }
@@ -132,7 +133,7 @@ export class StaticPropertyUtilService{
 
     private copyStaticPropertyProperty(src: StaticProperty, dst: StaticProperty): StaticProperty {
         dst.label = src.label;
-        dst.elementName = src.elementName;
+        //dst.elementName = src.elementName;
         dst.description = src.description;
         dst.internalName = src.internalName;
         dst.index = src.index;
@@ -141,8 +142,8 @@ export class StaticPropertyUtilService{
 
     private cloneOption(val: Option) {
         let clone = new Option();
-        clone.id = 'urn:streampipes.org:spi::' + this.generateID(6);
-        clone.elementName = val.elementName;
+        clone.elementId = 'urn:streampipes.org:spi::' + this.generateID(6);
+        //clone.elementName = val.elementName;
         clone.name = val.name;
         clone.internalName = val.internalName;
         clone.selected = val.selected;

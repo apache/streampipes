@@ -18,9 +18,9 @@
 
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {ConfigurationInfo} from '../../model/message/ConfigurationInfo';
-import {CollectionStaticProperty} from '../../model/CollectionStaticProperty';
-import {EventSchema} from '../../schema-editor/model/EventSchema';
 import {StaticPropertyUtilService} from '../static-property-util.service';
+import {CollectionStaticProperty} from "../../../core-model/gen/streampipes-model";
+import {AbstractStaticPropertyRenderer} from "../base/abstract-static-property";
 
 
 @Component({
@@ -28,21 +28,17 @@ import {StaticPropertyUtilService} from '../static-property-util.service';
     templateUrl: './static-collection.component.html',
     styleUrls: ['./static-collection.component.css']
 })
-export class StaticCollectionComponent {
+export class StaticCollectionComponent
+    extends AbstractStaticPropertyRenderer<CollectionStaticProperty> {
 
-    @Input() staticProperty: CollectionStaticProperty;
-    @Input() adapterId: string;
-    @Input() eventSchema: EventSchema;
 
     @Output() inputEmitter: EventEmitter<Boolean> = new EventEmitter<Boolean>();
     @Output() updateEmitter: EventEmitter<ConfigurationInfo> = new EventEmitter();
 
-
-
     private hasInput: Boolean;
 
     constructor(private staticPropertyUtil: StaticPropertyUtilService) {
-
+        super();
     }
 
 

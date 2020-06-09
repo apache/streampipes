@@ -20,15 +20,18 @@
 
 app-dialog-container {
   width: 100%;
-  background-color: #fff
+  background-color: #fff;
+  box-shadow: -7px 0px 5px -5px #5d5d5d;
 }
 
 .dialog-panel-header {
   display: flex;
   justify-content: space-between;
+  height: 50px;
+  min-height: 50px;
   width: 100%;
-  background: #f6f6f6;
-  padding: 10px 0.5rem 0.5rem;
+  background: $sp-color-accent;
+  align-items: center;
 }
 
 .dialog-panel-content {
@@ -36,11 +39,9 @@ app-dialog-container {
 }
 
 .dialog-title {
-  font-weight: bold;
-  border-left: 10px solid $sp-color-primary;
-  padding: 5px;
-  font-size:30px;
-  color: $sp-color-accent;
+  padding: 5px 5px 5px 15px;
+  font-size:25px;
+  color: white;
 }
 
 #portal {

@@ -34,7 +34,7 @@ import {AuthStatusService} from '../services/auth-status.service';
 import {StatusMessage} from "./model/message/StatusMessage";
 import {UnitDescription} from './model/UnitDescription';
 import {TsonLdSerializerService} from '../platform-services/tsonld-serializer.service';
-import {RuntimeOptionsResponse} from "./model/connect/runtime/RuntimeOptionsResponse";
+import {RuntimeOptionsResponse} from "../core-model/gen/streampipes-model";
 
 @Injectable()
 export class RestService {

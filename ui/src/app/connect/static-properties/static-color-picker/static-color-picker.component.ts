@@ -18,24 +18,25 @@
 
 import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import {ConfigurationInfo} from "../../model/message/ConfigurationInfo";
-import {StaticProperty} from "../../model/StaticProperty";
 import {StaticPropertyUtilService} from "../static-property-util.service";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {AbstractStaticPropertyRenderer} from "../base/abstract-static-property";
+import {ColorPickerStaticProperty} from "../../../core-model/gen/streampipes-model";
 
 @Component({
     selector: 'app-static-color-picker',
     templateUrl: './static-color-picker.component.html',
     styleUrls: ['./static-color-picker.component.css']
 })
-export class StaticColorPickerComponent implements OnInit {
+export class StaticColorPickerComponent
+    extends AbstractStaticPropertyRenderer<ColorPickerStaticProperty> implements OnInit {
 
     constructor(public staticPropertyUtil: StaticPropertyUtilService){
-
+        super();
     }
 
     @Output() updateEmitter: EventEmitter<ConfigurationInfo> = new EventEmitter();
 
-    @Input() staticProperty: StaticProperty;
     @Output() inputEmitter: EventEmitter<any> = new EventEmitter<any>();
 
     inputValue: String;

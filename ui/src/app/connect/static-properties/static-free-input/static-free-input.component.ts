@@ -21,6 +21,8 @@ import {StaticProperty} from '../../model/StaticProperty';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {StaticPropertyUtilService} from '../static-property-util.service';
 import {ConfigurationInfo} from "../../model/message/ConfigurationInfo";
+import {AbstractStaticPropertyRenderer} from "../base/abstract-static-property";
+import {FreeTextStaticProperty} from "../../../core-model/gen/streampipes-model";
 
 
 @Component({
@@ -28,10 +30,9 @@ import {ConfigurationInfo} from "../../model/message/ConfigurationInfo";
     templateUrl: './static-free-input.component.html',
     styleUrls: ['./static-free-input.component.css']
 })
-export class StaticFreeInputComponent implements OnInit {
+export class StaticFreeInputComponent
+    extends AbstractStaticPropertyRenderer<FreeTextStaticProperty> implements OnInit {
 
-
-    @Input() staticProperty: StaticProperty;
     @Output() inputEmitter: EventEmitter<Boolean> = new EventEmitter<Boolean>();
     @Output() updateEmitter: EventEmitter<ConfigurationInfo> = new EventEmitter();
     
@@ -41,7 +42,7 @@ export class StaticFreeInputComponent implements OnInit {
     errorMessage = "Please enter a value";
 
     constructor(public staticPropertyUtil: StaticPropertyUtilService){
-
+        super();
     }
 
 

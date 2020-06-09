@@ -17,8 +17,14 @@
  */
 
 import {Component, Input, OnInit} from "@angular/core";
-import {PipelineElementConfig} from "../../model/editor.model";
+import {
+  InvocablePipelineElementUnion,
+  PipelineElementConfig,
+  PipelineElementUnion
+} from "../../model/editor.model";
 import {DialogRef} from "../panel/dialog-ref";
+import {JsplumbService} from "../../services/jsplumb.service";
+import {EventSchema} from "../../../core-model/gen/streampipes-model";
 
 @Component({
   selector: 'customize-pipeline-element',
@@ -29,6 +35,9 @@ export class CustomizeComponent implements OnInit {
 
   @Input()
   pipelineElement: PipelineElementConfig;
+
+  cachedPipelineElement: InvocablePipelineElementUnion;
+  eventSchemas: EventSchema[] = [];
 
   displayRecommended: boolean;
   showDocumentation: boolean = false;
@@ -52,19 +61,28 @@ export class CustomizeComponent implements OnInit {
 
 
 
-  constructor(private dialogRef: DialogRef<CustomizeComponent>) {
+  constructor(private dialogRef: DialogRef<CustomizeComponent>,
+              private JsPlumbService: JsplumbService) {
 
   }
 
   ngOnInit(): void {
-
+    this.cachedPipelineElement = this.JsPlumbService.clone(this.pipelineElement.payload) as InvocablePipelineElementUnion;
+    this.cachedPipelineElement.inputStreams.forEach(is => {
+      this.eventSchemas = this.eventSchemas.concat(is.eventSchema);
+    });
   }
 
   close() {
-
+    this.dialogRef.close();
   }
 
   save() {
+    this.pipelineElement.payload = this.cachedPipelineElement;
+    this.dialogRef.close(this.pipelineElement);
+  }
+
+  validConfiguration(event: any) {
 
   }
 

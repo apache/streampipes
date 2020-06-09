@@ -361,7 +361,7 @@ export class PipelineComponent implements OnInit {
     }, inputMap);
 
     dialogRef.afterClosed().subscribe(c => {
-
+      console.log("after close");
     });
 
     // this.EditorDialogManager.showCustomizeDialog($("#" +pe.payload.dom), sourceEndpoint, pe.payload, false)
