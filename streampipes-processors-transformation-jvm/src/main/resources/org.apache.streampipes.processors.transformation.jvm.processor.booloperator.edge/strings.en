@@ -1,0 +1,15 @@
+org.apache.streampipes.processors.transformation.jvm.processor.booloperator.edge.title=Signal Edge Filter
+org.apache.streampipes.processors.transformation.jvm.processor.booloperator.edge.description=Forwards the event when a signal edge is detected
+
+boolean_state_field.title=Boolean Signal
+boolean_state_field.description=The signal to observe and detect the signal edge
+
+flank.title=Signal Edge
+flank.description=What kind of signal edge should be detected
+
+delay.title=Delay
+delay.description=How many events should be waited to forward the result?
+
+event-selection-id.title=Output Event Selection
+event-selection-id.description=This specifies the event(s) that are selected to be emitted.
+

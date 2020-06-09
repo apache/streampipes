@@ -30,6 +30,7 @@ import org.apache.streampipes.processors.transformation.jvm.config.Transformatio
 import org.apache.streampipes.processors.transformation.jvm.processor.array.count.CountArrayController;
 import org.apache.streampipes.processors.transformation.jvm.processor.array.split.SplitArrayController;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.counter.BooleanCounterController;
+import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.edge.SignalEdgeFilterController;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.inverter.BooleanInverterController;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.state.BooleanToStateController;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.timekeeping.BooleanTimekeepingController;
@@ -64,6 +65,7 @@ public class TransformationJvmInit extends StandaloneModelSubmitter {
             .add(new BooleanInverterController())
             .add(new TransformToBooleanController())
             .add(new StringTimerController())
+            .add(new SignalEdgeFilterController())
             .add(new BooleanToStateController())
             .add(new StateBufferController())
             .add(new StateLabelerController())
