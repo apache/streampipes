@@ -137,9 +137,10 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit, OnChanges 
 
   processData(pageResult) {
     if (pageResult.rows === undefined) {
-      this.pageIndex = pageResult.pageSum;
+      this.pageIndex = pageResult.pageSum - 1;
       this.openSnackBar('No new data found');
     } else {
+      pageResult.rows = pageResult.rows.reverse();
       this.pageIndex = pageResult.page;
       this.pageSum = pageResult.pageSum;
 
