@@ -18,8 +18,8 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DatalakeRestService } from '../../../core-services/datalake/datalake-rest.service';
-import { ColorService } from '../services/color.service';
 import { TsonLdSerializerService } from '../../../platform-services/tsonld-serializer.service';
+import { ColorService } from '../services/color.service';
 
 
 @Component({
