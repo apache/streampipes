@@ -242,10 +242,10 @@ public class Plc4xModbusAdapter extends PullAdapter{
 		
 		for (Map<String, String> node : this.nodes) {
 			if (node.get(PLC_NODE_TYPE).equals("Coil")) {
-				builder.addItem(node.get(PLC_NODE_NAME), "coil:" + node.get(PLC_NODE_ADDRESS));				
+				builder.addItem(node.get(PLC_NODE_NAME), "coil:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
 			}
 			else {
-				builder.addItem(node.get(PLC_NODE_NAME), "holding-register:" + node.get(PLC_NODE_ADDRESS));
+				builder.addItem(node.get(PLC_NODE_NAME), "holding-register:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
 			}
 		}
 		PlcReadRequest readRequest = builder.build();

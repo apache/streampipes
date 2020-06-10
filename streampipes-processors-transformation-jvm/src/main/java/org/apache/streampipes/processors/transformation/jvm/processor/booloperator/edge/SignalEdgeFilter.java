@@ -85,8 +85,6 @@ public class SignalEdgeFilter implements EventProcessor<SignalEdgeFilterParamete
       } else {
         this.delayCount++;
       }
-
-
     }
 
     this.lastValue = value;
