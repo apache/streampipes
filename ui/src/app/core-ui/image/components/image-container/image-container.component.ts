@@ -70,7 +70,7 @@ export class ImageContainerComponent implements OnInit, AfterViewInit {
 
   private isHoverComponent: boolean;
 
-  private isDrawingVar: boolean;
+  public isDrawingVar: boolean;
 
   constructor() { }
 
