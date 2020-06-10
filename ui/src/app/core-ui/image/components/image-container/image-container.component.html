@@ -16,5 +16,6 @@
   ~
   -->
 <div class="canvas-container">
+    <mat-spinner *ngIf="isDrawingVar" [diameter]="40" style="position: fixed"></mat-spinner>
     <div id="canvas-container"  (dblclick)="dblclick($event)"></div>
 </div>

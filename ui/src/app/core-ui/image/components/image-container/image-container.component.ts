@@ -47,6 +47,8 @@ export class ImageContainerComponent implements OnInit, AfterViewInit {
   dbclick: EventEmitter<[Konva.Layer, ICoordinates, ICoordinates]> = new EventEmitter<[Konva.Layer, ICoordinates, ICoordinates]>();
   @Output()
   mouseDownRight: EventEmitter<[Konva.Layer, ICoordinates, ICoordinates]> = new EventEmitter<[Konva.Layer, ICoordinates, ICoordinates]>();
+  @Output()
+  isDrawing: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 
   private image;
@@ -68,6 +70,8 @@ export class ImageContainerComponent implements OnInit, AfterViewInit {
 
   private isHoverComponent: boolean;
 
+  private isDrawingVar: boolean;
+
   constructor() { }
 
   ngOnInit(): void {
@@ -77,6 +81,7 @@ export class ImageContainerComponent implements OnInit, AfterViewInit {
     this.isMiddleMouseDown = false;
     this.isRightMouseDown = false;
     this.isHoverComponent = false;
+    this.isDrawingVar = false;
   }
 
   ngAfterViewInit(): void {
@@ -97,6 +102,8 @@ export class ImageContainerComponent implements OnInit, AfterViewInit {
   }
 
   loadImage(src) {
+    this.isDrawing.emit(true);
+    this.isDrawingVar = true;
     this.reset();
     this.image = new window.Image();
 
@@ -179,6 +186,9 @@ export class ImageContainerComponent implements OnInit, AfterViewInit {
   /* Draw */
 
   redrawAll() {
+    this.isDrawing.emit(true);
+    this.isDrawingVar = true;
+
     if (this.drawLayer !== undefined) {
       this.drawLayer.destroyChildren();
     }
@@ -187,6 +197,8 @@ export class ImageContainerComponent implements OnInit, AfterViewInit {
     }
     this.childRedraw.emit([this.annotationLayer, this.getShift()]);
     this.shiftViewContent();
+    this.isDrawing.emit(false);
+    this.isDrawingVar = false;
   }
 
   shiftViewContent() {
