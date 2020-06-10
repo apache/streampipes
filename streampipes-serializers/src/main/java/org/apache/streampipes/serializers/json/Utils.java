@@ -20,7 +20,7 @@ package org.apache.streampipes.serializers.json;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.apache.streampipes.model.shared.message.Message;
+import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.client.ontology.Range;
 
 

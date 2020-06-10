@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.manager.verification.messages;
 
-import org.apache.streampipes.model.shared.message.NotificationType;
+import org.apache.streampipes.model.message.NotificationType;
 
 public class VerificationError extends VerificationResult{
 	

@@ -18,24 +18,23 @@
 
 import * as angular from 'angular';
 import {Injectable} from "@angular/core";
-import {RestApi} from "../../services/rest-api.service";
+import {EditorService} from "./editor.service";
 
 @Injectable()
 export class PipelineElementRecommendationService {
 
-    constructor(private RestApi: RestApi) {
+    constructor(private EditorService: EditorService) {
     }
 
     getRecommendations(allElements, currentPipeline) {
         return new Promise((resolve, reject) => {
-            this.RestApi.recommendPipelineElement(currentPipeline)
-                .then(msg => {
-                    let data = msg.data;
-                    if (data.success) {
+            this.EditorService.recommendPipelineElement(currentPipeline)
+                .subscribe(msg => {
+                    if (msg.success) {
                         var result = {};
                         result["success"] = true;
-                        result['recommendations'] = this.populateRecommendedList(allElements, data.recommendedElements);
-                        result['possibleElements'] = this.collectPossibleElements(allElements, data.possibleElements);
+                        result['recommendations'] = this.populateRecommendedList(allElements, msg.recommendedElements);
+                        result['possibleElements'] = this.collectPossibleElements(allElements, msg.possibleElements);
                         resolve(result);
                     } else {
                         // TODO improve

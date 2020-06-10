@@ -19,9 +19,9 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
-import org.apache.streampipes.model.shared.message.Notification;
-import org.apache.streampipes.model.shared.message.NotificationType;
-import org.apache.streampipes.model.client.messages.Notifications;
+import org.apache.streampipes.model.message.Notification;
+import org.apache.streampipes.model.message.NotificationType;
+import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.graph.DataSourceDescription;
 import org.apache.streampipes.rest.api.IPipelineElement;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
@@ -150,7 +150,7 @@ public class SemanticEventProducer extends AbstractRestInterface implements IPip
 	@Path("/{elementUri}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@GsonWithIds
+	@JacksonSerialized
 	@Override
 	public Response getElement(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
 		// TODO Access rights

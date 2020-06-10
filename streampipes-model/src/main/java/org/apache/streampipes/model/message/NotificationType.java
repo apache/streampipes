@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.model.shared.message;
+package org.apache.streampipes.model.message;
 
 public enum NotificationType {
 	STORAGE_SUCCESS("Success", "Entity successfully stored"), 

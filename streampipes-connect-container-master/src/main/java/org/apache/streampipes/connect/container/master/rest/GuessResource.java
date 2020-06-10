@@ -18,24 +18,18 @@
 
 package org.apache.streampipes.connect.container.master.rest;
 
+import org.apache.streampipes.connect.adapter.exception.ParseException;
+import org.apache.streampipes.connect.container.master.management.GuessManagement;
+import org.apache.streampipes.connect.rest.AbstractContainerResource;
+import org.apache.streampipes.model.message.Notifications;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.apache.streampipes.connect.adapter.exception.ParseException;
-import org.apache.streampipes.connect.management.AdapterDeserializer;
-import org.apache.streampipes.connect.container.master.management.GuessManagement;
-import org.apache.streampipes.connect.rest.AbstractContainerResource;
-import org.apache.streampipes.model.client.messages.Notifications;
-import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.rest.shared.annotation.JsonLdSerialized;
-import org.apache.streampipes.rest.shared.util.SpMediaType;
-
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 
@@ -55,28 +49,29 @@ public class GuessResource extends AbstractContainerResource {
   }
 
   @POST
-  @JsonLdSerialized
+  @JacksonSerialized
   @Path("/schema")
-  @Produces(SpMediaType.JSONLD)
-  public Response guessSchema(String s, @PathParam("username") String userName) {
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response guessSchema(AdapterDescription adapterDescription, @PathParam("username") String userName) {
 
       try {
-          AdapterDescription adapterDescription = AdapterDeserializer.getAdapterDescription(s);
+          //AdapterDescription adapterDescription = AdapterDeserializer.getAdapterDescription(s);
           GuessSchema result = guessManagement.guessSchema(adapterDescription);
 
           return ok(result);
       } catch (ParseException e) {
           logger.error("Error while parsing events: ", e);
-          return ok(Notifications.error(e.getMessage()));
+          return error(Notifications.error(e.getMessage()));
       } catch (Exception e) {
-          logger.error("Error while guess schema for AdapterDescription: " + s, e);
-          return ok(Notifications.error(e.getMessage()));
+          logger.error("Error while guess schema for AdapterDescription: ", e);
+          return error(Notifications.error(e.getMessage()));
       }
 
   }
 
   @GET
-  @Produces(SpMediaType.JSONLD)
+  @JacksonSerialized
+  @Produces(MediaType.APPLICATION_JSON)
   @Path("/format")
   public Response guessFormat() {
     //TODO
@@ -85,7 +80,8 @@ public class GuessResource extends AbstractContainerResource {
 
 
   @GET
-  @Produces(SpMediaType.JSONLD)
+  @JacksonSerialized
+  @Produces(MediaType.APPLICATION_JSON)
   @Path("/formatdescription")
   public Response guessFormatDescription() {
     //TODO

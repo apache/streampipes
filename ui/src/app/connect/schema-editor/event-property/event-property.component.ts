@@ -18,14 +18,16 @@
 
 import {Component, EventEmitter, Inject, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {EventProperty} from '../model/EventProperty';
 import {DomainPropertyProbabilityList} from '../model/DomainPropertyProbabilityList';
 import {DomainPropertyProbability} from '../model/DomainPropertyProbability';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {EventPropertyPrimitive} from '../model/EventPropertyPrimitive';
 import {DataTypesService} from '../data-type.service';
-import {EventPropertyNested} from '../model/EventPropertyNested';
-import {EventPropertyList} from '../model/EventPropertyList';
+import {
+    EventProperty, EventPropertyList,
+    EventPropertyNested,
+    EventPropertyPrimitive, EventPropertyUnion
+} from "../../../core-model/gen/streampipes-model";
+import {EventPropertyRowComponent} from "../event-property-row/event-property-row.component";
 
 
 @Component({
@@ -37,9 +39,9 @@ export class EventPropertyComponent implements OnInit {
 
     soTimestamp = "http://schema.org/DateTime";
 
-    cachedProperty: EventProperty;
+    cachedProperty: EventPropertyUnion;
 
-    property: EventProperty;
+    property: EventPropertyUnion;
     domainProbability: DomainPropertyProbabilityList;
     isNested: boolean;
     isTimestampProperty: boolean = false;
@@ -47,7 +49,7 @@ export class EventPropertyComponent implements OnInit {
     private propertyForm: FormGroup;
     // protected dataTypes = dataTypes;
 
-    @Output() propertyChange = new EventEmitter<EventProperty>();
+    @Output() propertyChange = new EventEmitter<EventPropertyUnion>();
     domainPropertyGuess: any;
     private runtimeDataTypes;
 
@@ -55,16 +57,23 @@ export class EventPropertyComponent implements OnInit {
                 private dialogRef: MatDialogRef<EventPropertyComponent>,
                 private formBuilder: FormBuilder,
                 private dataTypeService: DataTypesService) {
-        this.property = data.property;
-        this.cachedProperty = this.property.copy();
-        this.domainProbability = data.domainProbability;
+    }
+
+    copyEp(ep: EventPropertyUnion) {
+        if (ep instanceof EventPropertyPrimitive) {
+            return EventPropertyPrimitive.fromData(ep as EventPropertyPrimitive, new EventPropertyPrimitive());
+        } else if (ep instanceof EventPropertyNested) {
+            return EventPropertyNested.fromData(ep as EventPropertyNested, new EventPropertyNested());
+        } else {
+            return EventPropertyList.fromData(ep as EventPropertyList, new EventPropertyList());
+        }
     }
 
     private createForm() {
         this.propertyForm = this.formBuilder.group({
-            label: [this.property.getLabel(), Validators.required],
-            runtimeName: [this.property.getRuntimeName(), Validators.required],
-            description: [this.property.getDescription(), Validators.required],
+            label: [this.property.label, Validators.required],
+            runtimeName: [this.property.runtimeName, Validators.required],
+            description: [this.property.description, Validators.required],
             domainProperty: ['', Validators.required],
             dataType: ['', Validators.required]
         });
@@ -83,17 +92,19 @@ export class EventPropertyComponent implements OnInit {
     }
 
     staticValueAddedByUser() {
-        if (this.property.id.startsWith('http://eventProperty.de/staticValue/')) {
+        if (this.property.elementId.startsWith('http://eventProperty.de/staticValue/')) {
             return true;
         } else {
             return false;
         }
-
     }
 
     ngOnInit(): void {
+        this.property = this.data.property;
+        this.cachedProperty = this.copyEp(this.cachedProperty);
+        this.domainProbability = this.data.domainProbability;
         this.runtimeDataTypes = this.dataTypeService.getDataTypes();
-        this.isTimestampProperty = this.cachedProperty.domainProperty === this.soTimestamp;
+        this.isTimestampProperty = this.cachedProperty.domainProperties.some(dp => dp === this.soTimestamp);
         this.isNested = this.isEventPropertyNested(this.property);
         this.createForm();
 
@@ -104,7 +115,7 @@ export class EventPropertyComponent implements OnInit {
         const tmpBestDomainProperty = this.getDomainPropertyWithHighestConfidence(this.domainPropertyGuess.list);
 
         if (tmpBestDomainProperty != null) {
-            this.property.domainProperty = tmpBestDomainProperty.domainProperty;
+            this.property.domainProperties = [tmpBestDomainProperty.domainProperty];
         }
     }
 
@@ -123,16 +134,16 @@ export class EventPropertyComponent implements OnInit {
     addTimestampDomainProperty() {
         if (!this.isTimestampProperty) {
             this.isTimestampProperty = true;
-            this.cachedProperty.domainProperty = this.soTimestamp;
+            this.cachedProperty.domainProperties = [this.soTimestamp];
         } else {
-            this.isTimestampProperty = this.cachedProperty.domainProperty === this.soTimestamp;
+            this.isTimestampProperty = this.cachedProperty.domainProperties.some(dp => dp === this.soTimestamp);
         }
     }
 
     save(): void {
         this.property.label = this.cachedProperty.label;
         this.property.description = this.cachedProperty.description;
-        this.property.domainProperty = this.cachedProperty.domainProperty;
+        this.property.domainProperties = this.cachedProperty.domainProperties;
         this.property.runtimeName = this.cachedProperty.runtimeName;
 
 
@@ -145,13 +156,13 @@ export class EventPropertyComponent implements OnInit {
             this.property.runtimeType = (this.cachedProperty as EventPropertyPrimitive).runtimeType;
             this.property.measurementUnit = (this.cachedProperty as EventPropertyPrimitive).measurementUnit;
 
-            this.property.measurementUnitTmp = (this.cachedProperty as EventPropertyPrimitive).measurementUnitTmp;
-            this.property.oldMeasurementUnit = (this.cachedProperty as EventPropertyPrimitive).oldMeasurementUnit;
-            this.property.hadMeasarumentUnit = (this.cachedProperty as EventPropertyPrimitive).hadMeasarumentUnit;;
+            (this.property as any).measurementUnitTmp = (this.cachedProperty as any).measurementUnitTmp;
+            (this.property as any).oldMeasurementUnit = (this.cachedProperty as any).oldMeasurementUnit;
+            (this.property as any).hadMeasarumentUnit = (this.cachedProperty as any).hadMeasarumentUnit;;
 
-            this.property.timestampTransformationMode = (this.cachedProperty as EventPropertyPrimitive).timestampTransformationMode;
-            this.property.timestampTransformationFormatString = (this.cachedProperty as EventPropertyPrimitive).timestampTransformationFormatString;
-            this.property.timestampTransformationMultiplier = (this.cachedProperty as EventPropertyPrimitive).timestampTransformationMultiplier;
+            (this.property as any).timestampTransformationMode = (this.cachedProperty as any).timestampTransformationMode;
+            (this.property as any).timestampTransformationFormatString = (this.cachedProperty as any).timestampTransformationFormatString;
+            (this.property as any).timestampTransformationMultiplier = (this.cachedProperty as any).timestampTransformationMultiplier;
 
         }
         this.dialogRef.close({ data: this.property});

@@ -20,7 +20,10 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {EventSchema} from '../../schema-editor/model/EventSchema';
 import {GroupStaticProperty} from '../../model/GroupStaticProperty';
 import {AbstractStaticPropertyRenderer} from "../base/abstract-static-property";
-import {StaticPropertyAlternatives} from "../../../core-model/gen/streampipes-model";
+import {
+    StaticPropertyAlternatives,
+    StaticPropertyGroup
+} from "../../../core-model/gen/streampipes-model";
 
 @Component({
     selector: 'app-static-alternatives',
@@ -56,8 +59,8 @@ export class StaticAlternativesComponent
             if (alternative !== undefined) {
                 if (alternative.staticProperty !== undefined) {
                     var childsAreValid = true;
-                    (<GroupStaticProperty> alternative.staticProperty).staticProperties.forEach(property => {
-                        if (!property.isValid) {
+                    (<StaticPropertyGroup> alternative.staticProperty).staticProperties.forEach(property => {
+                        if (!(property as any).isValid) {
                             childsAreValid = false
                         }
                     });
@@ -72,7 +75,7 @@ export class StaticAlternativesComponent
 
     radioSelectionChange(event) {
         this.staticProperty.alternatives.forEach(alternative => {
-            if (alternative.id == event.value.id) {
+            if (alternative.elementId == event.value.id) {
                 alternative.selected = true;
             } else {
                 alternative.selected = false;

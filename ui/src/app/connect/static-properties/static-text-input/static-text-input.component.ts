@@ -17,7 +17,6 @@
  */
 
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {StaticProperty} from '../../model/StaticProperty';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {ValidateString} from '../../select-protocol-component/input.validator';
 import {StaticPropertyUtilService} from '../static-property-util.service';

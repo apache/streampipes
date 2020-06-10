@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.connect.rest;
 
-import org.apache.streampipes.model.shared.message.Message;
+import org.apache.streampipes.model.message.Message;
 
 import javax.ws.rs.core.Response;
 
@@ -34,6 +34,13 @@ public abstract class AbstractContainerResource {
     protected <T> Response ok() {
         return Response
                 .ok()
+                .build();
+    }
+
+    protected <T> Response error(T entity) {
+        return Response
+                .status(500)
+                .entity(entity)
                 .build();
     }
 

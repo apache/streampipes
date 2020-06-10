@@ -22,9 +22,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.streampipes.manager.endpoint.EndpointItemParser;
 import org.apache.streampipes.manager.storage.UserService;
-import org.apache.streampipes.model.shared.message.Message;
-import org.apache.streampipes.model.shared.message.Notification;
-import org.apache.streampipes.model.shared.message.NotificationType;
+import org.apache.streampipes.model.message.Message;
+import org.apache.streampipes.model.message.Notification;
+import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.rest.impl.AbstractRestInterface;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorageCache;
 

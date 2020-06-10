@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.rest.impl.datalake;
 
-import org.apache.streampipes.model.shared.message.Notification;
+import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.rest.impl.AbstractRestInterface;
 import org.apache.streampipes.rest.impl.datalake.model.DataResult;

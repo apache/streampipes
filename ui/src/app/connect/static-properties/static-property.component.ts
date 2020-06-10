@@ -73,6 +73,8 @@ export class StaticPropertyComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log(this.staticProperty);
+    console.log(this.staticPropertyUtil.asFreeTextStaticProperty(this.staticProperty));
     // this.mappingFormControl.valueChanges
     //     .subscribe(res => {
     //         this.emitter.emit(res);

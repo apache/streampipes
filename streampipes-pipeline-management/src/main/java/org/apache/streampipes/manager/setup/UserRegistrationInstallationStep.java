@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.manager.setup;
 
-import org.apache.streampipes.model.shared.message.Message;
-import org.apache.streampipes.model.client.messages.Notifications;
+import org.apache.streampipes.model.message.Message;
+import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.client.user.User;
 import org.apache.streampipes.storage.management.StorageDispatcher;

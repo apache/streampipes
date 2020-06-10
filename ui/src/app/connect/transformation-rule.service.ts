@@ -17,21 +17,23 @@
  */
 
 import {Injectable} from '@angular/core';
-import {EventSchema} from './schema-editor/model/EventSchema';
-import {TransformationRuleDescription} from './model/connect/rules/TransformationRuleDescription';
 import {Logger} from '../shared/logger/default-log.service';
-import {RenameRuleDescription} from './model/connect/rules/RenameRuleDescription';
-import {EventProperty} from './schema-editor/model/EventProperty';
-import {EventPropertyPrimitive} from './schema-editor/model/EventPropertyPrimitive';
-import {EventPropertyNested} from './schema-editor/model/EventPropertyNested';
-import {AddNestedRuleDescription} from './model/connect/rules/AddNestedRuleDescription';
-import {MoveRuleDescription} from './model/connect/rules/MoveRuleDesctiption';
-import {DeleteRuleDescription} from './model/connect/rules/DeleteRuleDescription';
-import {UnitTransformRuleDescription} from './model/connect/rules/UnitTransformRuleDescription';
-import {AddTimestampRuleDescription} from './model/connect/rules/AddTimestampRuleDescription';
-import {AddValueTransformationRuleDescription} from './model/connect/rules/AddValueTransformationRuleDescription';
-import {TimestampTransformationRuleMode} from './model/connect/rules/TimestampTransformationRuleMode';
-import {TimestampTransformationRuleDescription} from './model/connect/rules/TimestampTransformationRuleDescription';
+import {
+    AddTimestampRuleDescription,
+    AddValueTransformationRuleDescription, CreateNestedRuleDescription,
+    DeleteRuleDescription,
+    EventProperty,
+    EventPropertyNested,
+    EventPropertyPrimitive,
+    EventPropertyUnion,
+    EventSchema,
+    MoveRuleDescription,
+    RenameRuleDescription,
+    TimestampTranfsformationRuleDescription,
+    TransformationRuleDescription, TransformationRuleDescriptionUnion,
+    UnitTransformRuleDescription
+} from "../core-model/gen/streampipes-model";
+import {TimestampTransformationRuleMode} from "./model/connect/rules/TimestampTransformationRuleMode";
 
 @Injectable()
 export class TransformationRuleService {
@@ -49,8 +51,8 @@ export class TransformationRuleService {
         this.newEventSchema = newEventSchema;
     }
 
-    public getTransformationRuleDescriptions(): TransformationRuleDescription[] {
-        var transformationRuleDescription: TransformationRuleDescription[] = [];
+    public getTransformationRuleDescriptions(): TransformationRuleDescriptionUnion[] {
+        var transformationRuleDescription: TransformationRuleDescriptionUnion[] = [];
 
         if (this.oldEventSchema == null || this.newEventSchema == null) {
             this.logger.error("Old and new schema must be defined")
@@ -61,13 +63,18 @@ export class TransformationRuleService {
                 // add to old event schema for the case users moved the property to a nested property
                 this.oldEventSchema.eventProperties.push(addedTimestampProperties);
 
-                transformationRuleDescription.push(new AddTimestampRuleDescription(addedTimestampProperties.getRuntimeName()));
+                let timestampRuleDescription: AddTimestampRuleDescription = new AddTimestampRuleDescription();
+                timestampRuleDescription.runtimeKey = addedTimestampProperties.runtimeName;
+                transformationRuleDescription.push(timestampRuleDescription);
             }
 
             let staticValueProperties = this.getStaticValueProperties(this.newEventSchema.eventProperties);
             for (let ep of staticValueProperties) {
                 this.oldEventSchema.eventProperties.push(ep);
-                transformationRuleDescription.push(new AddValueTransformationRuleDescription(ep.getRuntimeName(), (<EventPropertyPrimitive> ep).staticValue))
+                let rule: AddValueTransformationRuleDescription = new AddValueTransformationRuleDescription();
+                rule.runtimeKey = ep.runtimeName;
+                rule.staticValue = (ep as any).staticValue;
+                transformationRuleDescription.push(rule)
             }
 
             // Rename
@@ -113,8 +120,8 @@ export class TransformationRuleService {
                 result = result.concat(tmpResults);
 
             }
-            const keyOld: string = this.getCompleteRuntimeNameKey(oldEventSchema.eventProperties, eventProperty.id);
-            const keyNew: string = this.getCompleteRuntimeNameKey(newEventSchema.eventProperties, eventProperty.id);
+            const keyOld: string = this.getCompleteRuntimeNameKey(oldEventSchema.eventProperties, eventProperty.elementId);
+            const keyNew: string = this.getCompleteRuntimeNameKey(newEventSchema.eventProperties, eventProperty.elementId);
 
 
             // get prefix
@@ -132,7 +139,10 @@ export class TransformationRuleService {
                     } else {
                         keyOfOldValue = keyOldPrefix + "." + keyNew.substr(keyNew.lastIndexOf(".") + 1, keyNew.length);
                     }
-                    result.push(new MoveRuleDescription(keyOfOldValue, keyNewPrefix));
+                    let rule: MoveRuleDescription = new MoveRuleDescription();
+                    rule.oldRuntimeKey = keyOfOldValue;
+                    rule.newRuntimeKey = keyNewPrefix;
+                    result.push(rule);
                 }
             }
 
@@ -143,18 +153,20 @@ export class TransformationRuleService {
 
     public getCreateNestedRules(newEventProperties: EventProperty[],
                                 oldEventSchema: EventSchema,
-                                newEventSchema: EventSchema): AddNestedRuleDescription[] {
+                                newEventSchema: EventSchema): CreateNestedRuleDescription[] {
 
 
         var allNewIds: string[] = this.getAllIds(newEventSchema.eventProperties);
         var allOldIds: string[] = this.getAllIds(oldEventSchema.eventProperties);
 
-        const result: AddNestedRuleDescription[] = [];
+        const result: CreateNestedRuleDescription[] = [];
         for (let id of allNewIds) {
 
             if (allOldIds.indexOf(id) === -1) {
                 const key = this.getCompleteRuntimeNameKey(newEventSchema.eventProperties, id);
-                result.push(new AddNestedRuleDescription(key));
+                let rule: CreateNestedRuleDescription = new CreateNestedRuleDescription();
+                rule.runtimeKey = key;
+                result.push(rule);
             }
         }
 
@@ -169,10 +181,13 @@ export class TransformationRuleService {
         var result: RenameRuleDescription[] = [];
 
         for (let eventProperty of newEventProperties) {
-            const keyOld = this.getCompleteRuntimeNameKey(oldEventSchema.eventProperties, eventProperty.id);
-            const keyNew = this.getCompleteRuntimeNameKey(newEventSchema.eventProperties, eventProperty.id);
+            const keyOld = this.getCompleteRuntimeNameKey(oldEventSchema.eventProperties, eventProperty.elementId);
+            const keyNew = this.getCompleteRuntimeNameKey(newEventSchema.eventProperties, eventProperty.elementId);
 
-            result.push(new RenameRuleDescription(keyOld, keyNew));
+            let renameRule: RenameRuleDescription = new RenameRuleDescription();
+            renameRule.oldRuntimeKey = keyOld;
+            renameRule.newRuntimeKey = keyNew;
+            result.push(renameRule);
             if (eventProperty instanceof EventPropertyNested) {
 
                 const tmpResults: RenameRuleDescription[] = this.getRenameRules((<EventPropertyNested> eventProperty).eventProperties, oldEventSchema, newEventSchema);
@@ -225,7 +240,9 @@ export class TransformationRuleService {
 
         var resultRules: DeleteRuleDescription[] = [];
         for (let key of resultKeys) {
-            resultRules.push(new DeleteRuleDescription(key));
+            let rule: DeleteRuleDescription = new DeleteRuleDescription();
+            rule.runtimeKey = key;
+            resultRules.push(rule);
         }
 
         return resultRules;
@@ -240,13 +257,16 @@ export class TransformationRuleService {
 
             if (eventProperty instanceof EventPropertyPrimitive) {
                 const eventPropertyPrimitive =  eventProperty as EventPropertyPrimitive;
-                const keyNew = this.getCompleteRuntimeNameKey(newEventSchema.eventProperties, eventPropertyPrimitive.id);
+                const keyNew = this.getCompleteRuntimeNameKey(newEventSchema.eventProperties, eventPropertyPrimitive.elementId);
 
+                //let unitTransformation: UnitTransformRuleDescription = new UnitTransformRuleDescription();
+                //unitTransformation.fromUnitRessourceURL = eventPropertyPrimitive.
+                let rule: UnitTransformRuleDescription = new UnitTransformRuleDescription();
+                rule.runtimeKey = keyNew;
+                rule.fromUnitRessourceURL = (eventPropertyPrimitive as any).oldMeasurementUnit;
+                rule.toUnitRessourceURL = (eventPropertyPrimitive as any).measurementUnitTmp
 
-                result.push(new UnitTransformRuleDescription(keyNew,
-                    // TODO: use if backend deserialize URI correct
-                    //             eventPropertyPrimitive.oldMeasurementUnit, eventPropertyPrimitive.measurementUnit));
-                    eventPropertyPrimitive.oldMeasurementUnit, eventPropertyPrimitive.measurementUnitTmp));
+                result.push(rule);
             } else if (eventProperty instanceof EventPropertyNested) {
 
                 const tmpResults: UnitTransformRuleDescription[] =
@@ -276,13 +296,13 @@ export class TransformationRuleService {
 
         for (let eventProperty of eventProperties) {
 
-            if (eventProperty.id === id) {
-                return eventProperty.getRuntimeName();
+            if (eventProperty.elementId === id) {
+                return eventProperty.runtimeName;
             } else {
                 if (eventProperty instanceof EventPropertyNested) {
                     var methodResult = this.getCompleteRuntimeNameKey((<EventPropertyNested> eventProperty).eventProperties, id);
                     if (methodResult != null) {
-                        result = eventProperty.getRuntimeName() + "." + methodResult;
+                        result = eventProperty.runtimeName + "." + methodResult;
                     }
                 }
             }
@@ -313,7 +333,7 @@ export class TransformationRuleService {
         var result: string[] = [];
 
         for (let eventProperty of eventProperties) {
-            result.push(eventProperty.id);
+            result.push(eventProperty.elementId);
 
             if (eventProperty instanceof EventPropertyNested) {
                 result = result.concat(this.getAllIds((<EventPropertyNested> eventProperty).eventProperties));
@@ -327,7 +347,7 @@ export class TransformationRuleService {
 
         for (let eventProperty of eventProperties) {
 
-            if (eventProperty.id === id) {
+            if (eventProperty.elementId === id) {
                 return eventProperty;
             } else {
                 if (eventProperty instanceof EventPropertyNested) {
@@ -338,10 +358,10 @@ export class TransformationRuleService {
         return result;
     }
 
-    private getTimestampProperty(eventProperties: EventProperty[]): EventProperty {
+    private getTimestampProperty(eventProperties: EventPropertyUnion[]): EventPropertyUnion {
 
         for (let eventProperty of eventProperties) {
-            if (eventProperty.id.startsWith('http://eventProperty.de/timestamp/')) {
+            if (eventProperty.elementId.startsWith('http://eventProperty.de/timestamp/')) {
                 return eventProperty;
             }
 
@@ -357,11 +377,11 @@ export class TransformationRuleService {
         return null;
     }
 
-    private getStaticValueProperties(eventProperties: EventProperty[]): EventProperty[] {
+    private getStaticValueProperties(eventProperties: EventPropertyUnion[]): EventPropertyUnion[] {
         var result = [];
 
          for (let eventProperty of eventProperties) {
-            if (eventProperty.id.startsWith('http://eventProperty.de/staticValue/')) {
+            if (eventProperty.elementId.startsWith('http://eventProperty.de/staticValue/')) {
                 return [eventProperty];
             }
 
@@ -378,24 +398,25 @@ export class TransformationRuleService {
 
     public getTimestampTransformRules(newEventProperties: EventProperty[],
                                  oldEventSchema: EventSchema,
-                                 newEventSchema: EventSchema): TimestampTransformationRuleDescription[] {
-        var result: TimestampTransformationRuleDescription[] = [];
+                                 newEventSchema: EventSchema): TimestampTranfsformationRuleDescription[] {
+        var result: TimestampTranfsformationRuleDescription[] = [];
 
         for (let eventProperty of newEventProperties) {
 
             if (eventProperty instanceof EventPropertyPrimitive) {
                 const eventPropertyPrimitive = eventProperty as EventPropertyPrimitive;
-                const keyNew = this.getCompleteRuntimeNameKey(newEventSchema.eventProperties, eventPropertyPrimitive.id);
+                const keyNew = this.getCompleteRuntimeNameKey(newEventSchema.eventProperties, eventPropertyPrimitive.elementId);
 
-                if (eventProperty.isTimestampProperty()) {
-                    result.push(new TimestampTransformationRuleDescription(
-                        keyNew,
-                        eventProperty.timestampTransformationMode,
-                        eventProperty.timestampTransformationFormatString,
-                        eventProperty.timestampTransformationMultiplier));
+                if (this.isTimestampProperty(eventPropertyPrimitive)) {
+                    let rule: TimestampTranfsformationRuleDescription = new TimestampTranfsformationRuleDescription();
+                    rule.runtimeKey = keyNew;
+                    rule.mode = (eventProperty as any).timestampTransformationMode;
+                    rule.formatString = (eventProperty as any).timestampTransformationFormatString;
+                    rule.multiplier = (eventProperty as any).timestampTransformationMultiplier;
+                    result.push(rule);
                 }
             } else if (eventProperty instanceof EventPropertyNested) {
-                const tmpResults: TimestampTransformationRuleDescription[] =
+                const tmpResults: TimestampTranfsformationRuleDescription[] =
                     this.getTimestampTransformRules((<EventPropertyNested> eventProperty).eventProperties,  oldEventSchema, newEventSchema);
                 result = result.concat(tmpResults);
             }
@@ -403,7 +424,7 @@ export class TransformationRuleService {
 
         }
 
-        var filteredResult: TimestampTransformationRuleDescription[] = [];
+        var filteredResult: TimestampTranfsformationRuleDescription[] = [];
         for (let res of result) {
             // TODO: better solution to check if the mode is valid
             if (res.mode === TimestampTransformationRuleMode.FORMAT_STRING
@@ -416,5 +437,9 @@ export class TransformationRuleService {
         return filteredResult;
 
 
+    }
+
+    isTimestampProperty(property: EventPropertyPrimitive) {
+        return property.domainProperties.some(dp => dp === "http://schema.org/DateTime");
     }
 }

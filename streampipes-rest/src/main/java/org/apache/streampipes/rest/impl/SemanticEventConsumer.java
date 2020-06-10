@@ -19,9 +19,9 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
-import org.apache.streampipes.model.shared.message.Notification;
-import org.apache.streampipes.model.shared.message.NotificationType;
-import org.apache.streampipes.model.client.messages.Notifications;
+import org.apache.streampipes.model.message.Notification;
+import org.apache.streampipes.model.message.NotificationType;
+import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.rest.api.IPipelineElement;

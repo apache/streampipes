@@ -17,31 +17,33 @@
  */
 
 ///<reference path="../model/connect/AdapterDescription.ts"/>
-import { Component, EventEmitter, Input, OnInit, Output, PipeTransform, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
-import { MatStepper } from '@angular/material/stepper';
-import { ShepherdService } from '../../services/tour/shepherd.service';
-import { Logger } from '../../shared/logger/default-log.service';
-import { ConnectService } from '../connect.service';
-import { TimestampPipe } from '../filter/timestamp.pipe';
-import { AdapterDescription } from '../model/connect/AdapterDescription';
-import { GenericAdapterSetDescription } from '../model/connect/GenericAdapterSetDescription';
-import { GenericAdapterStreamDescription } from '../model/connect/GenericAdapterStreamDescription';
-import { FormatDescription } from '../model/connect/grounding/FormatDescription';
-import { EventRateTransformationRuleDescription } from '../model/connect/rules/EventRateTransformationRuleDescription';
-import { RemoveDuplicatesRuleDescription } from '../model/connect/rules/RemoveDuplicatesRuleDescription';
-import { TransformationRuleDescription } from '../model/connect/rules/TransformationRuleDescription';
-import { SpecificAdapterSetDescription } from '../model/connect/SpecificAdapterSetDescription';
-import { SpecificAdapterStreamDescription } from '../model/connect/SpecificAdapterStreamDescription';
-import { ConfigurationInfo } from '../model/message/ConfigurationInfo';
-import { RestService } from '../rest.service';
-import { EventSchemaComponent } from '../schema-editor/event-schema/event-schema.component';
-import { EventProperty } from '../schema-editor/model/EventProperty';
-import { EventSchema } from '../schema-editor/model/EventSchema';
-import { TransformationRuleService } from '../transformation-rule.service';
-import { AdapterStartedDialog } from './component/adapter-started-dialog.component';
-import { IconService } from './icon.service';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MatDialog} from '@angular/material/dialog';
+import {MatStepper} from '@angular/material/stepper';
+import {ShepherdService} from '../../services/tour/shepherd.service';
+import {Logger} from '../../shared/logger/default-log.service';
+import {ConnectService} from '../connect.service';
+import {TimestampPipe} from '../filter/timestamp.pipe';
+import {ConfigurationInfo} from '../model/message/ConfigurationInfo';
+import {RestService} from '../rest.service';
+import {TransformationRuleService} from '../transformation-rule.service';
+import {AdapterStartedDialog} from './component/adapter-started-dialog.component';
+import {IconService} from './icon.service';
+import {
+    AdapterDescription,
+    EventProperty,
+    EventRateTransformationRuleDescription,
+    EventSchema,
+    FormatDescription,
+    GenericAdapterSetDescription,
+    GenericAdapterStreamDescription,
+    RemoveDuplicatesTransformationRuleDescription,
+    SpecificAdapterSetDescription,
+    SpecificAdapterStreamDescription,
+    TransformationRuleDescriptionUnion
+} from "../../core-model/gen/streampipes-model";
+import {EventSchemaComponent} from "../schema-editor/event-schema/event-schema.component";
 
 @Component({
     selector: 'sp-new-adapter',
@@ -49,8 +51,6 @@ import { IconService } from './icon.service';
     styleUrls: ['./new-adapter.component.css'],
 })
 export class NewAdapterComponent implements OnInit {
-
-
 
     constructor(
         private logger: Logger,
@@ -142,13 +142,13 @@ export class NewAdapterComponent implements OnInit {
         this.formatConfigurationValid = false;
 
         if (this.adapter instanceof GenericAdapterSetDescription) {
-            if ((this.adapter as GenericAdapterSetDescription).format != undefined) {
+            if ((this.adapter as GenericAdapterSetDescription).formatDescription != undefined) {
                 this.formatConfigurationValid = true;
             }
         }
 
         if (this.adapter instanceof GenericAdapterStreamDescription) {
-            if ((this.adapter as GenericAdapterStreamDescription).format != undefined) {
+            if ((this.adapter as GenericAdapterStreamDescription).formatDescription != undefined) {
                 this.formatConfigurationValid = true;
             }
         }
@@ -177,8 +177,6 @@ export class NewAdapterComponent implements OnInit {
             this.fromTemplate = true;
             this.isEditable = false;
             this.oldEventSchema = this.eventSchema;
-
-
         }
     }
 
@@ -188,10 +186,15 @@ export class NewAdapterComponent implements OnInit {
 
     public triggerDialog(storeAsTemplate: boolean) {
         if (this.removeDuplicates) {
-            this.adapter.rules.push(new RemoveDuplicatesRuleDescription(this.removeDuplicatesTime));
+            let removeDuplicates: RemoveDuplicatesTransformationRuleDescription = new RemoveDuplicatesTransformationRuleDescription();
+            removeDuplicates.filterTimeWindow = (this.removeDuplicatesTime) as any;
+            this.adapter.rules.push(removeDuplicates);
         }
         if (this.eventRateReduction) {
-            this.adapter.rules.push(new EventRateTransformationRuleDescription(this.eventRateTime, this.eventRateMode));
+            let eventRate: EventRateTransformationRuleDescription = new EventRateTransformationRuleDescription();
+            eventRate.aggregationTimeWindow = this.eventRateMode as any;
+            eventRate.aggregationType = this.eventRateMode;
+            this.adapter.rules.push(eventRate);
         }
 
         const dialogRef = this.dialog.open(AdapterStartedDialog, {
@@ -272,6 +275,7 @@ export class NewAdapterComponent implements OnInit {
 
     guessEventSchema() {
         const eventSchema: EventSchema = this.getEventSchema(this.adapter);
+        console.log(eventSchema);
         if (eventSchema.eventProperties.length === 0) {
             this.eventSchemaComponent.guessSchema();
         } else {
@@ -283,21 +287,22 @@ export class NewAdapterComponent implements OnInit {
         let eventSchema: EventSchema;
 
         if (adapter instanceof GenericAdapterSetDescription) {
-            eventSchema = (adapter as GenericAdapterSetDescription).dataSet.eventSchema;
+            eventSchema = (adapter as GenericAdapterSetDescription).dataSet.eventSchema || new EventSchema();
         } else if (adapter instanceof SpecificAdapterSetDescription) {
-            eventSchema = (adapter as SpecificAdapterSetDescription).dataSet.eventSchema;
+            eventSchema = (adapter as SpecificAdapterSetDescription).dataSet.eventSchema || new EventSchema();
         } else if (adapter instanceof GenericAdapterStreamDescription) {
-            eventSchema = (adapter as GenericAdapterStreamDescription).dataStream.eventSchema;
+            eventSchema = (adapter as GenericAdapterStreamDescription).dataStream.eventSchema || new EventSchema();
         } else if (adapter instanceof SpecificAdapterStreamDescription) {
-            eventSchema = (adapter as SpecificAdapterStreamDescription).dataStream.eventSchema;
+            eventSchema = (adapter as SpecificAdapterStreamDescription).dataStream.eventSchema || new EventSchema();
         } else {
-            return new EventSchema();
+            eventSchema = new EventSchema();
         }
 
         if (eventSchema && eventSchema.eventProperties && eventSchema.eventProperties.length > 0) {
             return eventSchema;
         } else {
-            return new EventSchema();
+            eventSchema.eventProperties = [];
+            return eventSchema;
         }
     }
 
@@ -319,7 +324,7 @@ export class NewAdapterComponent implements OnInit {
         this.transformationRuleService.setOldEventSchema(this.oldEventSchema);
 
         this.transformationRuleService.setNewEventSchema(this.eventSchema);
-        const transformationRules: TransformationRuleDescription[] = this.transformationRuleService.getTransformationRuleDescriptions();
+        const transformationRules: TransformationRuleDescriptionUnion[] = this.transformationRuleService.getTransformationRuleDescriptions();
         this.adapter.rules = transformationRules;
     }
 
@@ -328,7 +333,7 @@ export class NewAdapterComponent implements OnInit {
             this.adapter instanceof GenericAdapterSetDescription ||
             this.adapter instanceof GenericAdapterStreamDescription
         ) {
-            this.adapter.format = selectedFormat;
+            this.adapter.formatDescription = selectedFormat;
             if (selectedFormat.config.length === 0) {
                 this.validateFormat(true);
             }

@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.rest.impl;
 
-import org.apache.streampipes.model.shared.message.NotificationType;
+import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.serializers.json.Utils;
 import org.apache.streampipes.rest.api.IVirtualSensor;
 

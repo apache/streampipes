@@ -21,7 +21,7 @@ package org.apache.streampipes.rest.impl;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import org.apache.streampipes.model.client.messages.Notifications;
+import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.graph.DataSourceDescription;

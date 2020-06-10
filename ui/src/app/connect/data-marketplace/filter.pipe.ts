@@ -30,8 +30,8 @@ export class FilterPipe implements PipeTransform {
         //check if search filterTerm is undefined
         if(filterTerm == undefined || !adapterDescription) return adapterDescription;
         return adapterDescription.filter(function(adapterDescription){
-            adapterDescription.label.replace(' ', '_');
-            if (adapterDescription.label.toLowerCase().includes(filterTerm.toLowerCase()) || adapterDescription.description.toLowerCase().includes(filterTerm.toLowerCase())) {
+            adapterDescription.name.replace(' ', '_');
+            if (adapterDescription.name.toLowerCase().includes(filterTerm.toLowerCase()) || adapterDescription.description.toLowerCase().includes(filterTerm.toLowerCase())) {
                 return true
             }
             else {

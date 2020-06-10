@@ -24,7 +24,7 @@ import java.util.List;
 import org.apache.streampipes.manager.verification.messages.VerificationError;
 import org.apache.streampipes.manager.verification.messages.VerificationResult;
 import org.apache.streampipes.manager.verification.messages.VerificationWarning;
-import org.apache.streampipes.model.shared.message.NotificationType;
+import org.apache.streampipes.model.message.NotificationType;
 
 public abstract class AbstractVerifier implements Verifier {
 

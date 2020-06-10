@@ -17,9 +17,8 @@
  */
 
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {EventPropertyList} from '../model/EventPropertyList';
-import {EventProperty} from '../model/EventProperty';
 import {DataTypesService} from '../data-type.service';
+import {EventProperty, EventPropertyList} from "../../../core-model/gen/streampipes-model";
 
 
 @Component({
@@ -32,7 +31,7 @@ export class EventPropertyListComponent implements OnInit {
   constructor(private dataTypeService: DataTypesService) { }
 
 
-  @Input() property: EventPropertyList;
+  @Input() property: any;
   @Input() index: number;
 
   runtimeDataTypes;

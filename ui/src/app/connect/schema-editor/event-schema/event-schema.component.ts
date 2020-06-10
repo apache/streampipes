@@ -18,16 +18,14 @@
 
 import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {RestService} from '../../rest.service';
-import {EventSchema} from '../model/EventSchema';
-import {AdapterDescription} from '../../model/connect/AdapterDescription';
-import {GuessSchema} from '../model/GuessSchema';
-import {NotificationLd} from '../../model/message/NotificationLd';
-import {EventProperty} from '../model/EventProperty';
-import {EventPropertyNested} from '../model/EventPropertyNested';
-import {EventPropertyPrimitive} from '../model/EventPropertyPrimitive';
 import {ITreeOptions, TreeComponent} from 'angular-tree-component';
 import {UUID} from 'angular2-uuid';
 import {DataTypesService} from '../data-type.service';
+import {
+  AdapterDescription, EventProperty, EventPropertyNested, EventPropertyPrimitive,
+  EventSchema,
+  GuessSchema, Notification
+} from "../../../core-model/gen/streampipes-model";
 
 @Component({
   selector: 'app-event-schema',
@@ -56,7 +54,7 @@ export class EventSchemaComponent implements OnChanges {
   isError = false;
   isPreviewEnabled = false;
   showErrorMessage = false;
-  errorMessages: NotificationLd[];
+  errorMessages: Notification[];
   nodes: EventProperty[] = new Array<EventProperty>();
   options: ITreeOptions = {
     childrenField: 'eventProperties',
@@ -86,7 +84,7 @@ export class EventSchemaComponent implements OnChanges {
       this.eventSchemaChange.emit(this.eventSchema);
       this.schemaGuess = guessSchema;
 
-      this.oldEventSchema = this.eventSchema.copy();
+      this.oldEventSchema = EventSchema.fromData(this.eventSchema, new EventSchema());
       this.oldEventSchemaChange.emit(this.oldEventSchema);
 
       this.refreshTree();
@@ -111,10 +109,13 @@ export class EventSchemaComponent implements OnChanges {
 
   public addNestedProperty(eventProperty?: EventPropertyNested): void {
     const uuid: string = UUID.UUID();
-    if (eventProperty === undefined) {
-      this.eventSchema.eventProperties.push(new EventPropertyNested(uuid, undefined));
+    let nested: EventPropertyNested = new EventPropertyNested();
+    nested.elementId = uuid;
+    nested.eventProperties = [];
+    if (!eventProperty) {
+      this.eventSchema.eventProperties.push(nested);
     } else {
-      eventProperty.eventProperties.push(new EventPropertyNested(uuid, undefined));
+      eventProperty.eventProperties.push(nested);
     }
     this.refreshTree();
   }
@@ -135,22 +136,24 @@ export class EventSchemaComponent implements OnChanges {
   }
 
   public addStaticValueProperty(): void {
-    const eventProperty = new EventPropertyPrimitive('staticValue/' + UUID.UUID(), undefined);
+    const eventProperty = new EventPropertyPrimitive();
+    eventProperty.elementId = 'staticValue/' + UUID.UUID(), undefined;
 
-    eventProperty.setRuntimeName('key_0');
-    eventProperty.setRuntimeType(this.dataTypesService.getStringTypeUrl());
+    eventProperty.runtimeName = 'key_0';
+    eventProperty.runtimeType = this.dataTypesService.getStringTypeUrl();
 
     this.eventSchema.eventProperties.push(eventProperty);
     this.refreshTree();
   }
 
   public addTimestampProperty(): void {
-    const eventProperty = new EventPropertyPrimitive('timestamp/' + UUID.UUID(), undefined);
+    const eventProperty = new EventPropertyPrimitive();
+    eventProperty.elementId = 'timestamp/' + UUID.UUID();
 
-    eventProperty.setRuntimeName('timestamp');
-    eventProperty.setLabel('Timestamp');
-    eventProperty.setDomainProperty('http://schema.org/DateTime');
-    eventProperty.setRuntimeType(this.dataTypesService.getNumberTypeUrl());
+    eventProperty.runtimeName = 'timestamp';
+    eventProperty.label = 'Timestamp';
+    eventProperty.domainProperties = ['http://schema.org/DateTime'];
+    eventProperty.runtimeType = this.dataTypesService.getNumberTypeUrl();
 
     this.eventSchema.eventProperties.push(eventProperty);
     this.refreshTree();

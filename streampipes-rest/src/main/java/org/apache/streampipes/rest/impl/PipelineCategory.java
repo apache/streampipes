@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.rest.impl;
 
-import org.apache.streampipes.model.client.messages.Notifications;
+import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.storage.api.IPipelineCategoryStorage;
 
 import javax.ws.rs.DELETE;

@@ -15,9 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.model.client.messages;
-
-import org.apache.streampipes.model.shared.message.Message;
+package org.apache.streampipes.model.message;
 
 import java.util.List;
 

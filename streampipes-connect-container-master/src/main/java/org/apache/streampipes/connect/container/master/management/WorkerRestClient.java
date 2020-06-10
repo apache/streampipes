@@ -24,6 +24,7 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
@@ -83,7 +84,7 @@ public class WorkerRestClient {
                 ad.setUri("https://streampipes.org/adapter/" + UUID.randomUUID());
             }
 
-            String adapterDescription = JsonLdUtils.toJsonLD(ad);
+            String adapterDescription = JacksonSerializer.getObjectMapper().writeValueAsString(ad);
 
             String responseString = Request.Post(url)
                     .bodyString(adapterDescription, ContentType.APPLICATION_JSON)

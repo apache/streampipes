@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.model.pipeline;
+package org.apache.streampipes.model.message;
 
 public class PipelineStatusMessage {
 

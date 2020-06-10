@@ -17,11 +17,11 @@
  */
 
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {AdapterDescription} from '../../model/connect/AdapterDescription';
 import {ConnectService} from '../../connect.service';
 import {DataMarketplaceService} from "../data-marketplace.service";
 import {AdapterExportDialog} from '../adapter-export/adapter-export-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
+import {AdapterDescription} from "../../../core-model/gen/streampipes-model";
 
 @Component({
   selector: 'sp-adapter-description',
@@ -52,8 +52,8 @@ export class AdapterDescriptionComponent {
   ngOnInit() {
       this.isDataSetDescription = this.connectService.isDataSetDescription(this.adapter);
       this.isDataStreamDescription = this.connectService.isDataStreamDescription(this.adapter);
-      this.isRunningAdapter = (this.adapter.couchDbId != undefined && !this.adapter.isTemplate);
-      this.adapterLabel = this.adapter.label.split(' ').join('_');
+      this.isRunningAdapter = (this.adapter.couchDBId != undefined && !(this.adapter as any).isTemplate);
+      this.adapterLabel = this.adapter.name.split(' ').join('_');
       this.className = this.getClassName();
   }
 
@@ -67,7 +67,7 @@ export class AdapterDescriptionComponent {
 
   deleteAdapter(adapter: AdapterDescription): void {
   this.deleting = true;
-      this.adapterToDelete = adapter.couchDbId;
+      this.adapterToDelete = adapter.couchDBId;
       this.dataMarketplaceService.deleteAdapter(adapter).subscribe(res => {
           this.adapterToDelete = undefined;
           this.updateAdapterEmitter.emit();
@@ -93,7 +93,7 @@ export class AdapterDescriptionComponent {
 
 
   deleteAdapterTemplate(adapter: AdapterDescription): void {
-      this.adapterToDelete = adapter.couchDbId;
+      this.adapterToDelete = adapter.couchDBId;
       this.dataMarketplaceService.deleteAdapterTemplate(adapter).subscribe(res => {
           this.adapterToDelete = undefined;
           this.updateAdapterEmitter.emit();

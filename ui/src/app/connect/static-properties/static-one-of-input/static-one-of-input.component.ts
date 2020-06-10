@@ -40,10 +40,10 @@ export class StaticOneOfInputComponent extends AbstractStaticPropertyRenderer<On
       if (this.noneSelected()) {
           if (this.staticProperty.options.length > 0) {
               this.staticProperty.options[0].selected = true;
-              this.selectedOption = this.staticProperty.options[0].id;
+              this.selectedOption = this.staticProperty.options[0].elementId;
           }
       } else {
-          this.selectedOption = this.staticProperty.options.find(option => option.selected).id;
+          this.selectedOption = this.staticProperty.options.find(option => option.selected).elementId;
       }
       this.inputEmitter.emit(true);
   }
@@ -53,11 +53,11 @@ export class StaticOneOfInputComponent extends AbstractStaticPropertyRenderer<On
   }
 
   select(id) {
-      this.selectedOption = this.staticProperty.options.find(option => option.id === id).id;
+      this.selectedOption = this.staticProperty.options.find(option => option.elementId === id).elementId;
       for (let option of this.staticProperty.options) {
           option.selected = false;
       }
-      this.staticProperty.options.find(option => option.id === id).selected = true;
+      this.staticProperty.options.find(option => option.elementId === id).selected = true;
       this.inputEmitter.emit(true)
   }
 }

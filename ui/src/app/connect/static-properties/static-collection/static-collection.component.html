@@ -27,7 +27,7 @@
     <div fxLayout="row" fxLayoutAlign="space-between center" *ngFor="let property of staticProperty.members; let i = index">
         <div fxFlex="grow">
             <app-static-property [adapterId]="adapterId"
-                                 [eventSchema]="eventSchema"
+                                 [eventSchemas]="eventSchemas"
                                  [staticProperty]="property"
                                  (validateEmitter)="valueChange($event)">
             </app-static-property>
@@ -44,7 +44,7 @@
         <div  fxFlex="grow" style="pointer-events: none; opacity: 0.4;">
             <app-static-property
                                 [adapterId]="adapterId"
-                                [eventSchema]="eventSchema"
+                                [eventSchemas]="eventSchemas"
                                 [staticProperty]="staticProperty.staticPropertyTemplate"
                                 (validateEmitter)="valueChange($event)">
             </app-static-property>

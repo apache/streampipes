@@ -53,6 +53,6 @@ export class ProtocolComponent {
     }
   }
   ngOnInit() {
-
+    console.log(this.protocol);
   }
 }

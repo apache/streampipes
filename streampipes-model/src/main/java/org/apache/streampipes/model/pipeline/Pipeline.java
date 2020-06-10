@@ -47,8 +47,11 @@ public class Pipeline extends ElementComposition {
 
   private List<String> pipelineCategories;
 
+  @JsonProperty("_id")
   private @SerializedName("_id")
   String pipelineId;
+
+  @JsonProperty("_rev")
   private @SerializedName("_rev")
   String rev;
 
@@ -98,7 +101,6 @@ public class Pipeline extends ElementComposition {
     this.createdByUser = createdByUser;
   }
 
-  @JsonProperty("_id")
   public String getPipelineId() {
     return pipelineId;
   }
@@ -107,7 +109,6 @@ public class Pipeline extends ElementComposition {
     this.pipelineId = pipelineId;
   }
 
-  @JsonProperty("_rev")
   public String getRev() {
     return rev;
   }

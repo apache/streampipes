@@ -24,17 +24,18 @@ import {from, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 
 
-import {ProtocolDescriptionList} from './model/connect/grounding/ProtocolDescriptionList';
-import {AdapterDescription} from './model/connect/AdapterDescription';
-import {FormatDescriptionList} from './model/connect/grounding/FormatDescriptionList';
-import {EventProperty} from './schema-editor/model/EventProperty';
-import {EventPropertyNested} from './schema-editor/model/EventPropertyNested';
-import {GuessSchema} from './schema-editor/model/GuessSchema';
 import {AuthStatusService} from '../services/auth-status.service';
-import {StatusMessage} from "./model/message/StatusMessage";
 import {UnitDescription} from './model/UnitDescription';
-import {TsonLdSerializerService} from '../platform-services/tsonld-serializer.service';
-import {RuntimeOptionsResponse} from "../core-model/gen/streampipes-model";
+import {
+    AdapterDescription, DataSourceDescription,
+    ErrorMessage,
+    FormatDescriptionList,
+    GuessSchema,
+    Message,
+    ProtocolDescriptionList,
+    RuntimeOptionsResponse
+} from "../core-model/gen/streampipes-model";
+import {StatusMessage} from "./model/message/StatusMessage";
 
 @Injectable()
 export class RestService {
@@ -42,105 +43,65 @@ export class RestService {
 
     constructor(
         private http: HttpClient,
-        private authStatusService: AuthStatusService,
-        private tsonLdSerializerService: TsonLdSerializerService,
-    ) { }
+        private authStatusService: AuthStatusService) { }
 
-    addAdapter(adapter: AdapterDescription): Observable<StatusMessage> {
+    addAdapter(adapter: AdapterDescription): Observable<Message> {
         return this.addAdapterDescription(adapter, '/master/adapters');
     }
 
-    addAdapterTemplate(adapter: AdapterDescription): Observable<StatusMessage> {
+    addAdapterTemplate(adapter: AdapterDescription): Observable<Message> {
         return this.addAdapterDescription(adapter, '/master/adapters/template');
     }
 
     fetchRemoteOptions(resolvableOptionsParameterRequest: any, adapterId: string): Observable<RuntimeOptionsResponse> {
         let promise = new Promise<RuntimeOptionsResponse>((resolve, reject) => {
-            this.tsonLdSerializerService.toJsonLd(resolvableOptionsParameterRequest).subscribe(serialized => {
-                const httpOptions = {
-                    headers: new HttpHeaders({
-                        'Content-Type': 'application/ld+json',
-                    }),
-                };
                 this.http.post("/streampipes-connect/api/v1/"
                     + this.authStatusService.email
                     + "/master/resolvable/"
                     + encodeURIComponent(adapterId)
-                    + "/configurations", serialized, httpOptions).pipe(map(response => {
-                        const r = this.tsonLdSerializerService.fromJsonLd(response, 'sp:RuntimeOptionsResponse');
-                        resolve(r);
+                    + "/configurations", resolvableOptionsParameterRequest)
+                    .pipe(map(response => {
+                        let resp = response as RuntimeOptionsResponse;
+                        resolve(resp);
                     })).subscribe();
-            });
         });
         return from(promise);
 
     }
 
-    addAdapterDescription(adapter: AdapterDescription, url: String): Observable<StatusMessage> {
+    addAdapterDescription(adapter: AdapterDescription, url: String): Observable<Message> {
         adapter.userName = this.authStatusService.email;
-        var self = this;
 
-
-        let promise = new Promise<StatusMessage>(function (resolve, reject) {
-            self.tsonLdSerializerService.toJsonLd(adapter).subscribe(res => {
-                const httpOptions = {
-                    headers: new HttpHeaders({
-                        'Content-Type': 'application/ld+json',
-                    }),
-                };
-                self.http
-                    .post(
-                        '/streampipes-connect/api/v1/' + self.authStatusService.email + url,
-                        res,
-                        httpOptions
-                    )
-                    .pipe(map(response => {
-                        var statusMessage = response as StatusMessage;
-                        resolve(statusMessage);
-                    }))
-                    .subscribe();
-            });
+        let promise = new Promise<Message>((resolve, reject) => {
+            this.http
+                .post(
+                    '/streampipes-connect/api/v1/' + this.authStatusService.email + url,
+                    adapter,
+                )
+                .pipe(map(response => {
+                    var statusMessage = response as Message;
+                    resolve(statusMessage);
+                }))
+                .subscribe();
         });
         return from(promise);
     }
 
 
     getGuessSchema(adapter: AdapterDescription): Observable<GuessSchema> {
-        let promise = new Promise<GuessSchema>((resolve, reject) => {
-            this.tsonLdSerializerService.toJsonLd(adapter).subscribe(res => {
-                return this.http
-                    .post('/streampipes-connect/api/v1/' + this.authStatusService.email + '/master/guess/schema', res)
-                    .pipe(map(response => {
-                        if (JSON.stringify(response).includes('sp:GuessSchema')) {
-                            const r = this.tsonLdSerializerService.fromJsonLd(response, 'sp:GuessSchema');
-                            r.eventSchema.eventProperties.sort((a, b) => a.index - b.index);
-                            this.removeHeaderKeys(r.eventSchema.eventProperties);
-                            resolve(r);
-                        } else {
-                            const r = this.tsonLdSerializerService.fromJsonLd(response, 'sp:ErrorMessage');
-                            reject(r);
-                        }
-
-                    }))
-                    .subscribe();
-            });
-        });
-        return from(promise);
-    }
-
-    removeHeaderKeys(eventProperties: EventProperty[]) {
-        // remove header key form schema
-        for (let ep of eventProperties) {
-            if (ep instanceof EventPropertyNested) {
-                this.removeHeaderKeys((<EventPropertyNested>ep).eventProperties);
-            }
-        }
-
-    }
-
-    getSourceDetails(sourceElementId): Observable<any> {
         return this.http
-            .get(this.makeUserDependentBaseUrl() + "/sources/" + encodeURIComponent(sourceElementId));
+            .post('/streampipes-connect/api/v1/' + this.authStatusService.email + '/master/guess/schema', adapter)
+            .pipe(map(response => {
+                return GuessSchema.fromData(response as GuessSchema);
+        }))
+
+    }
+
+    getSourceDetails(sourceElementId): Observable<DataSourceDescription> {
+        return this.http
+            .get(this.makeUserDependentBaseUrl() + "/sources/" + encodeURIComponent(sourceElementId)).pipe(map(response => {
+                return DataSourceDescription.fromData(response as DataSourceDescription);
+            }));
     }
 
     getRuntimeInfo(sourceDescription): Observable<any> {
@@ -159,21 +120,15 @@ export class RestService {
                 '/streampipes-connect/api/v1/riemer@fzi.de/master/description/formats'
             )
             .pipe(map(response => {
-                const res = self.tsonLdSerializerService.fromJsonLd(response, 'sp:FormatDescriptionList');
-                return res;
+                return FormatDescriptionList.fromData(response as FormatDescriptionList);
             }));
     }
 
     getProtocols(): Observable<ProtocolDescriptionList> {
-        var self = this;
         return this.http
             .get(this.host + 'api/v2/adapter/allProtocols')
             .pipe(map(response => {
-                const res = this.tsonLdSerializerService.fromJsonLd(
-                    response,
-                    'sp:ProtocolDescriptionList'
-                );
-                return res;
+                return response as ProtocolDescriptionList;
             }));
     }
 

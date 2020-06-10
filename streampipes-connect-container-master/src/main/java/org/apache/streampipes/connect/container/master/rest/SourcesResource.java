@@ -25,7 +25,7 @@ import org.apache.streampipes.connect.config.ConnectContainerConfig;
 import org.apache.streampipes.connect.container.master.management.SourcesManagement;
 import org.apache.streampipes.connect.rest.AbstractContainerResource;
 import org.apache.streampipes.model.SpDataSet;
-import org.apache.streampipes.model.client.messages.Notifications;
+import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.graph.DataSourceDescription;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
 import org.apache.streampipes.rest.shared.annotation.JsonLdSerialized;

@@ -16,12 +16,22 @@
  *
  */
 
-package org.apache.streampipes.model.shared.message;
+package org.apache.streampipes.model.message;
+
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import org.apache.streampipes.model.shared.annotation.TsModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@TsModel
+@JsonSubTypes({
+				@JsonSubTypes.Type(DataSetModificationMessage.class),
+				@JsonSubTypes.Type(ErrorMessage.class),
+				@JsonSubTypes.Type(SuccessMessage.class),
+				@JsonSubTypes.Type(PipelineModificationMessage.class),
+})
 public abstract class Message {
 
 	private boolean success;

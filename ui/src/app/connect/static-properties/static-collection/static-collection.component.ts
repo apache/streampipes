@@ -44,7 +44,7 @@ export class StaticCollectionComponent
 
     valueChange(inputValue) {
         if ((<CollectionStaticProperty> this.staticProperty).members !== undefined) {
-          let property = (<CollectionStaticProperty> this.staticProperty).members.find(member => member.isValid == false);
+          let property = (<CollectionStaticProperty> this.staticProperty).members.find(member => (member as any).isValid == false);
           property === undefined ? this.hasInput = true : this.hasInput = false;
         } else {
           this.hasInput = false;

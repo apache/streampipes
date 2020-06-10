@@ -19,8 +19,8 @@
 package org.apache.streampipes.manager.monitoring.runtime;
 
 import org.apache.streampipes.manager.execution.status.PipelineStatusManager;
-import org.apache.streampipes.model.pipeline.PipelineStatusMessage;
-import org.apache.streampipes.model.pipeline.PipelineStatusMessageType;
+import org.apache.streampipes.model.message.PipelineStatusMessage;
+import org.apache.streampipes.model.message.PipelineStatusMessageType;
 
 public class PipelineObserver {
 

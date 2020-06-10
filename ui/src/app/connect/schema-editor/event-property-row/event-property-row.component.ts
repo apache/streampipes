@@ -17,16 +17,16 @@
  */
 
 import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from "@angular/core";
-import {EventProperty} from "../model/EventProperty";
-import {EventPropertyPrimitive} from "../model/EventPropertyPrimitive";
-import {EventPropertyNested} from "../model/EventPropertyNested";
-import {EventPropertyList} from "../model/EventPropertyList";
-import {EventSchema} from "../model/EventSchema";
 import {UUID} from "angular2-uuid";
-import {EventPropertyComponent} from "../event-property/event-property.component";
 import {DomainPropertyProbabilityList} from "../model/DomainPropertyProbabilityList";
 import {TreeNode} from "angular-tree-component";
 import {MatDialog} from "@angular/material/dialog";
+import {
+    EventProperty, EventPropertyList, EventPropertyNested,
+    EventPropertyPrimitive, EventPropertyUnion,
+    EventSchema
+} from "../../../core-model/gen/streampipes-model";
+import {EventPropertyComponent} from "../event-property/event-property.component";
 
 @Component({
     selector: 'event-property-row',
@@ -183,9 +183,11 @@ export class EventPropertyRowComponent implements OnChanges {
     public addNestedProperty(eventProperty: EventPropertyNested): void {
         const uuid: string = UUID.UUID();
         if (!eventProperty.eventProperties) {
-            eventProperty.eventProperties = new Array<EventProperty>();
+            eventProperty.eventProperties = new Array<EventPropertyUnion>();
         }
-        eventProperty.eventProperties.push(new EventPropertyNested(uuid, undefined));
+        let property: EventPropertyNested = new EventPropertyNested();
+        property.elementId = uuid;
+        eventProperty.eventProperties.push(property);
         this.refreshTreeEmitter.emit();
     }
 

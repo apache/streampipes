@@ -16,18 +16,17 @@
  *
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
-import {StaticProperty} from '../model/StaticProperty';
-import {EventSchema} from '../schema-editor/model/EventSchema';
 import {ConfigurationInfo} from "../model/message/ConfigurationInfo";
+import {EventSchema, StaticProperty} from "../../core-model/gen/streampipes-model";
 
 @Component({
   selector: 'app-select-static-properties',
   templateUrl: './select-static-properties.component.html',
   styleUrls: ['./select-static-properties.component.css'],
 })
-export class SelectStaticPropertiesComponent {
+export class SelectStaticPropertiesComponent implements OnInit{
 
 
   @Input()
@@ -35,14 +34,23 @@ export class SelectStaticPropertiesComponent {
 
   @Input()
   staticProperties: StaticProperty[];
+
   @Input()
   eventSchema: EventSchema;
+
   @Output()
   validateEmitter = new EventEmitter();
+
   @Output()
   emitter: EventEmitter<any> = new EventEmitter<any>();
 
   completedStaticProperty: ConfigurationInfo;
+  eventSchemas: EventSchema[];
+
+  ngOnInit() {
+    console.log(this.staticProperties);
+    this.eventSchemas = [this.eventSchema];
+  }
 
   validateText() {
     if (this.staticProperties.every(this.allValid)) {

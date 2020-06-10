@@ -35,7 +35,7 @@ export class StaticGroupComponent
     private hasInput: Boolean;
 
     valueChange(inputValue) {
-        let property = this.staticProperty.staticProperties.find(property => property.isValid == false);
+        let property = this.staticProperty.staticProperties.find(property => (property as any).isValid == false);
         if (property == undefined) {
             this.hasInput = true;
         } else {

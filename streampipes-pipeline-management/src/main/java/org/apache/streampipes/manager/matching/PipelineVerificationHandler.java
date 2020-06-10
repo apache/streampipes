@@ -34,7 +34,7 @@ import org.apache.streampipes.model.client.connection.Connection;
 import org.apache.streampipes.model.client.exception.InvalidConnectionException;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineModification;
-import org.apache.streampipes.model.pipeline.PipelineModificationMessage;
+import org.apache.streampipes.model.message.PipelineModificationMessage;
 import org.apache.streampipes.model.constants.PropertySelectorConstants;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.output.CustomOutputStrategy;

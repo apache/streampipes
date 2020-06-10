@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.manager.verification.messages;
 
-import org.apache.streampipes.model.shared.message.Notification;
-import org.apache.streampipes.model.shared.message.NotificationType;
+import org.apache.streampipes.model.message.Notification;
+import org.apache.streampipes.model.message.NotificationType;
 
 public abstract class VerificationResult {
 

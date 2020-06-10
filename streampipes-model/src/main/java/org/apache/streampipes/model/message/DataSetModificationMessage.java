@@ -15,9 +15,8 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.model.pipeline;
+package org.apache.streampipes.model.message;
 
-import org.apache.streampipes.model.shared.message.Message;
 import org.apache.streampipes.model.grounding.EventGrounding;
 
 public class DataSetModificationMessage extends Message {

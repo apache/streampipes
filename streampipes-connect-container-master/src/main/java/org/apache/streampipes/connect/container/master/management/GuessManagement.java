@@ -18,17 +18,17 @@
 
 package org.apache.streampipes.connect.container.master.management;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
 import org.apache.streampipes.connect.adapter.exception.ParseException;
-import org.apache.streampipes.model.ErrorMessageLd;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.rest.shared.util.JsonLdUtils;
-import org.apache.streampipes.vocabulary.StreamPipes;
+import org.apache.streampipes.model.message.Message;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
@@ -49,12 +49,10 @@ public class GuessManagement {
 
         workerUrl = workerUrl + "api/v1/admin@streampipes.de/worker/guess/schema";
 
-
-
-        String ad = JsonLdUtils.toJsonLD(adapterDescription);
+        ObjectMapper mapper = JacksonSerializer.getObjectMapper();
 
         try {
-
+            String ad = mapper.writeValueAsString(adapterDescription);
             LOG.info("Guess schema at: " + workerUrl);
             String responseString = Request.Post(workerUrl)
                     .bodyString(ad, ContentType.APPLICATION_JSON)
@@ -62,14 +60,14 @@ public class GuessManagement {
                     .socketTimeout(100000)
                     .execute().returnContent().asString();
 
-            GuessSchema guessSchema = JsonLdUtils.fromJsonLd(responseString, GuessSchema.class);
+            GuessSchema guessSchema = mapper.readValue(responseString, GuessSchema.class);
 
             if (guessSchema.getEventSchema() != null) {
                 return guessSchema;
             } else {
-                ErrorMessageLd errorMessageLd = JsonLdUtils.fromJsonLd(responseString, ErrorMessageLd.class, StreamPipes.ERROR_MESSAGE);
-                if (errorMessageLd.getNotifications() != null && errorMessageLd.getNotifications().get(0) != null) {
-                    throw new AdapterException(errorMessageLd.getNotifications().get(0).getTitle());
+                Message errorMessage = mapper.readValue(responseString, Message.class);
+                if (errorMessage.getNotifications() != null && errorMessage.getNotifications().get(0) != null) {
+                    throw new AdapterException(errorMessage.getNotifications().get(0).getTitle());
                 } else {
                     throw new AdapterException("There was an error while guessing the schema in the worker with the URL: " + workerUrl + "\n" +
                             errorMessage);

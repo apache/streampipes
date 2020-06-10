@@ -17,9 +17,7 @@
  */
 
 import {Component, DoCheck, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {EventProperty} from '../model/EventProperty';
 import {Observable, Subscription} from 'rxjs';
-import {EventPropertyPrimitive} from '../model/EventPropertyPrimitive';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {DataTypesService} from '../data-type.service';
 import {DomainPropertyProbabilityList} from '../model/DomainPropertyProbabilityList';
@@ -28,6 +26,7 @@ import {RestService} from '../../rest.service';
 import {UnitDescription} from '../../model/UnitDescription';
 import {UnitProviderService} from '../unit-provider.service';
 import {map, startWith} from 'rxjs/operators';
+import {EventProperty, EventPropertyPrimitive} from "../../../core-model/gen/streampipes-model";
 
 @Component({
   selector: 'app-event-property-primitive',
@@ -36,7 +35,7 @@ import {map, startWith} from 'rxjs/operators';
 })
 export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
 
-  @Input() property: EventPropertyPrimitive;
+  @Input() property: any;
   @Input() index: number;
 
   @Input() domainPropertyGuess: DomainPropertyProbabilityList;
@@ -90,20 +89,20 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
 
   ngOnInit() {
     //   this.property.propertyNumber = this.index;
-    if (this.property.measurementUnitTmp !== undefined) {
-      this.property.oldMeasurementUnit = this.property.oldMeasurementUnit;
+    if ((this.property as any).measurementUnitTmp !== undefined) {
+      (this.property as any).oldMeasurementUnit = (this.property as any).oldMeasurementUnit;
       // TODO: use if backend deserialize URI correct
-      this.property.measurementUnitTmp = this.property.measurementUnitTmp;
-      this.hadMesarumentUnit = this.property.hadMeasarumentUnit;
-      this.transformUnitEnable = this.property.hadMeasarumentUnit;
-      const unit = this.allUnits.find(unitTmp => unitTmp.resource === this.property.oldMeasurementUnit);
+      (this.property as any).measurementUnitTmp = (this.property as any).measurementUnitTmp;
+      this.hadMesarumentUnit = (this.property as any).hadMeasarumentUnit;
+      this.transformUnitEnable = (this.property as any).hadMeasarumentUnit;
+      const unit = this.allUnits.find(unitTmp => unitTmp.resource === (this.property as any).oldMeasurementUnit);
       this.oldMeasurementUnitDipsplay = unit.label;
       this.stateCtrl.setValue(unit.label);
 
       this.restService.getFittingUnits(unit).subscribe(result => {
         this.possibleUnitTransformations = result;
         // this.selectUnit = this.possibleUnitTransformations[0];
-        this.selectUnit = this.allUnits.find(unitTmp => unitTmp.resource === this.property.measurementUnitTmp);
+        this.selectUnit = this.allUnits.find(unitTmp => unitTmp.resource === (this.property as any).measurementUnitTmp);
         this.transformUnitEnable = true
         this.changeTargetUnit(this.selectUnit);
       });
@@ -111,7 +110,7 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
       // this.newUnitStateCtrl.setValue(newUnit);
       // this.selectUnit = newUnit;
     }
-    this.property.timestampTransformationMultiplier = 1000;
+    (this.property as any).timestampTransformationMultiplier = 1000;
 
   }
 
@@ -120,7 +119,7 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
     }
 
   ngDoCheck() {
-    this.property.propertyNumber = this.index;
+    (this.property as any).propertyNumber = this.index;
   }
 
   private transformUnit() {
@@ -128,11 +127,11 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
       this.transformUnitEnable = false;
       // TODO: use if backend deserialize URI correct
       // this.property.measurementUnit = this.property.oldMeasurementUnit;
-      this.property.measurementUnitTmp = this.property.oldMeasurementUnit;
-      this.property.hadMeasarumentUnit = false;
+      (this.property as any).measurementUnitTmp = (this.property as any).oldMeasurementUnit;
+      (this.property as any).hadMeasarumentUnit = false;
     } else {
       const unit = this.allUnits.find(unitTmp => unitTmp.label === this.stateCtrl.value);
-      this.property.hadMeasarumentUnit = true;
+      (this.property as any).hadMeasarumentUnit = true;
       if (!unit) {
         return;
       }
@@ -151,13 +150,13 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
     const units: UnitDescription[] = this.allUnits.filter(unit => unit.label.toLowerCase().indexOf(filterValue) === 0);
     const unit: UnitDescription = this.allUnits.filter(unit => unit.label.toLocaleLowerCase() === filterValue)[0];
     if (unit !== undefined) {
-      this.property.oldMeasurementUnit = unit.resource;
-      this.property.measurementUnitTmp = unit.resource;
+      (this.property as any).oldMeasurementUnit = unit.resource;
+      (this.property as any).measurementUnitTmp = unit.resource;
       // TODO: use if backend deserialize URI correct
       //   this.property.measurementUnit = units.resource;
     } else {
-      this.property.oldMeasurementUnit = undefined;
-      this.property.measurementUnitTmp = undefined;
+      (this.property as any).oldMeasurementUnit = undefined;
+      (this.property as any).measurementUnitTmp = undefined;
       // TODO: use if backend deserialize URI correct
       //   this.property.measurementUnit = undefined;
     }
@@ -167,12 +166,12 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
   changeTargetUnit(unit: UnitDescription) {
     // TODO: use if backend deserialize URI correct
     // this.property.measurementUnit = unit.resource;
-    this.property.measurementUnitTmp = unit.resource;
+    (this.property as any).measurementUnitTmp = unit.resource;
       this.newUnitStateCtrl.setValue(unit);
   }
 
   staticValueAddedByUser() {
-    if (this.property.id.startsWith('http://eventProperty.de/staticValue/')) {
+    if (this.property.elementId.startsWith('http://eventProperty.de/staticValue/')) {
       return true;
     } else {
       return false;

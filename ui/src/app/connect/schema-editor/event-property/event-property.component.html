@@ -36,7 +36,7 @@
     <div class="form-group">
       <mat-form-field class="doubleWidth">
         <input matInput placeholder="Domain Property" class="dmainProperty" name="domainproperty" id="domainproperty"
-          [(ngModel)]="cachedProperty.domainProperty">
+          [(ngModel)]="cachedProperty.domainProperties[0]">
       </mat-form-field>
       <div *ngIf="!isNested">
         <mat-checkbox name="timestampCheckbox"

@@ -19,8 +19,8 @@
 package org.apache.streampipes.manager.setup;
 
 import org.apache.streampipes.config.backend.BackendConfig;
-import org.apache.streampipes.model.shared.message.Message;
-import org.apache.streampipes.model.client.messages.SetupStatusMessage;
+import org.apache.streampipes.model.message.Message;
+import org.apache.streampipes.model.message.SetupStatusMessage;
 import org.apache.streampipes.model.client.setup.InitialSettings;
 
 import java.util.ArrayList;

@@ -16,9 +16,9 @@
  *
  */
 
-package org.apache.streampipes.model.pipeline;
+package org.apache.streampipes.model.message;
 
-import org.apache.streampipes.model.shared.message.Message;
+import org.apache.streampipes.model.pipeline.PipelineModification;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
 import java.util.ArrayList;

@@ -16,10 +16,7 @@
  *
  */
 
-package org.apache.streampipes.model.client.messages;
-
-import org.apache.streampipes.model.shared.message.Notification;
-import org.apache.streampipes.model.shared.message.NotificationType;
+package org.apache.streampipes.model.message;
 
 public class Notifications {
 

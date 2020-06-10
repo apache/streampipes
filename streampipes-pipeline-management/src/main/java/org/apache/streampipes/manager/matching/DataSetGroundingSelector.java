@@ -21,7 +21,7 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.manager.util.TopicGenerator;
 import org.apache.streampipes.model.SpDataSet;
-import org.apache.streampipes.model.pipeline.DataSetModificationMessage;
+import org.apache.streampipes.model.message.DataSetModificationMessage;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.TransportFormat;
