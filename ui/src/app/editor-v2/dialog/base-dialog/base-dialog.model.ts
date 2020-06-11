@@ -14,6 +14,7 @@ export interface DialogConfig {
   disableClose?: boolean;
   autoFocus?: boolean;
   title: string;
+  data?: any;
 }
 
 export interface DialogPanelConfig {

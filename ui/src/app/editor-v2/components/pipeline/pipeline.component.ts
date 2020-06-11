@@ -356,10 +356,12 @@ export class PipelineComponent implements OnInit {
     inputMap["pipelineElement"] = pipelineElement;
 
     const dialogRef = this.dialogService.open(CustomizeComponent,{
-      width: "60vw",
       panelType: PanelType.SLIDE_IN_PANEL,
-      title: "Customize " + pipelineElement.payload.name
-    }, inputMap);
+      title: "Customize " + pipelineElement.payload.name,
+      data: {
+        "pipelineElement": pipelineElement
+      }
+    });
 
     dialogRef.afterClosed().subscribe(c => {
       console.log("after close");

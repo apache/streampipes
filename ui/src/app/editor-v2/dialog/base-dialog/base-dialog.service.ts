@@ -38,9 +38,8 @@ export class DialogService {
   }
 
   public open<T>(component: ComponentType<T>,
-                 config?: DialogConfig,
-                 inputMap?: Object): DialogRef<T> {
-    config = config || {width: "auto", title: "", panelType: PanelType.SLIDE_IN_PANEL};
+                 config?: DialogConfig): DialogRef<T> {
+    config = config || {width: "60vw", title: "", panelType: PanelType.SLIDE_IN_PANEL};
 
     const positionStrategy = this.getPositionStrategy(config.panelType);
     const panelConfig: BaseDialogConfig = this.getConfig(config.panelType);
@@ -57,8 +56,8 @@ export class DialogService {
     panelDialogContainerRef.instance.dialogRef = dialogRef;
     dialogRef.componentInstance = panelDialogContainerRef.instance.attach();
 
-    Object.keys(inputMap).forEach(key => {
-      dialogRef.componentInstance[key] = inputMap[key];
+    Object.keys(config.data).forEach(key => {
+      dialogRef.componentInstance[key] = config.data[key];
     })
 
     this.applyDialogProperties(panelDialogContainerRef, overlay, config);
