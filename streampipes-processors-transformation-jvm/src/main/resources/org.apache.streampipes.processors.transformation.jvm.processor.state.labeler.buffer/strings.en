@@ -1,5 +1,5 @@
-org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.title=State Labeler
-org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.description=Adds a label based on a  user defined rule to a sensor time-series
+org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.buffer.title=State Buffer Labeler
+org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.buffer.description=Adds a label based on a  user defined rule to a sensor time-series
 
 stateFilterId.title=Select a specific state
 stateFilterId.description=Add a filter to define which states to evaluate. Add '*' to select all states.

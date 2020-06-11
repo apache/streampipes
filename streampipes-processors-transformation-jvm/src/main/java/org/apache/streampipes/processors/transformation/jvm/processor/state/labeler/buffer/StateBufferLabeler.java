@@ -16,13 +16,14 @@
  *
  */
 
-package org.apache.streampipes.processors.transformation.jvm.processor.state.labeler;
+package org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.buffer;
 
 import com.google.common.math.Stats;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.model.Statement;
+import org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.model.StatementUtils;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
@@ -31,7 +32,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class StateLabeler implements EventProcessor<StateLabelerParameters> {
+public class StateBufferLabeler implements EventProcessor<StateBufferLabelerParameters> {
 
   private static Logger LOG;
   private String sensorListValueProperty;
@@ -41,27 +42,17 @@ public class StateLabeler implements EventProcessor<StateLabelerParameters> {
   private List<Statement> statements;
 
   @Override
-  public void onInvocation(StateLabelerParameters stateBufferParameters,
+  public void onInvocation(StateBufferLabelerParameters stateBufferParameters,
                            SpOutputCollector spOutputCollector,
                            EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
-    LOG = stateBufferParameters.getGraph().getLogger(StateLabeler.class);
+    LOG = stateBufferParameters.getGraph().getLogger(StateBufferLabeler.class);
 
     this.sensorListValueProperty = stateBufferParameters.getSensorListValueProperty();
     this.stateProperty = stateBufferParameters.getStateProperty();
     this.stateFilter = stateBufferParameters.getStateFilter();
     this.selectedOperation = stateBufferParameters.getSelectedOperation();
 
-    this.statements = new ArrayList<>();
-
-    for (String s : stateBufferParameters.getStatementsStrings()) {
-      Statement statement = Statement.getStatement(s);
-      if (statement == null) {
-        throw new SpRuntimeException("Statement: " + s + " is not correctly formatted");
-      }
-      this.statements.add(statement);
-    }
-    Collections.reverse(this.statements);
-
+    this.statements = StatementUtils.getStatements(stateBufferParameters.getStatementsStrings());
   }
 
   @Override
@@ -73,48 +64,20 @@ public class StateLabeler implements EventProcessor<StateLabelerParameters> {
     if (states.contains(this.stateFilter) || this.stateFilter.equals("*"))  {
       double calculatedValue;
 
-      if (StateLabelerController.MAXIMUM.equals(this.selectedOperation)) {
+      if (StateBufferLabelerController.MAXIMUM.equals(this.selectedOperation)) {
         calculatedValue = Stats.of(values).max();
-      } else if (StateLabelerController.MINIMUM.equals(this.selectedOperation)) {
+      } else if (StateBufferLabelerController.MINIMUM.equals(this.selectedOperation)) {
         calculatedValue = Stats.of(values).min();
       } else {
         calculatedValue = Stats.of(values).mean();
       }
 
-      String label = getLabel(calculatedValue);
-      if (label != null) {
-        inputEvent.addField(StateLabelerController.LABEL, label);
-        out.collect(inputEvent);
-      } else {
-        LOG.info("No condition of statements was fulfilled, add a default case (*) to the statements");
-      }
-
+      Event resultEvent = StatementUtils.addLabel(inputEvent, calculatedValue, this.statements, LOG);
+      out.collect(resultEvent);
     }
   }
 
   @Override
   public void onDetach() {
-  }
-
-  private String getLabel(double calculatedValue) {
-    for (Statement statement : this.statements) {
-      if (condition(statement, calculatedValue)) {
-        return statement.getLabel();
-      }
-    }
-    return null;
-  }
-
-  private boolean condition(Statement statement, double calculatedValue) {
-    if (">".equals(statement.getOperator())) {
-      return calculatedValue > statement.getValue();
-    } else if ("<".equals(statement.getOperator())) {
-      return calculatedValue < statement.getValue();
-    } else if ("=".equals(statement.getOperator())) {
-      return calculatedValue == statement.getValue();
-    } else {
-      return true;
-    }
-
   }
 }

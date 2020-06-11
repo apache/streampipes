@@ -16,32 +16,23 @@
  *
  */
 
-package org.apache.streampipes.processors.transformation.jvm.processor.state.labeler;
+package org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.number;
 
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 import java.util.List;
 
-public class StateLabelerParameters extends EventProcessorBindingParams {
+public class NumberLabelerParameters extends EventProcessorBindingParams {
 
     private String sensorListValueProperty;
-    private String stateProperty;
-    private String stateFilter;
-    private String selectedOperation;
     private List<String> statementsStrings;
 
-    public StateLabelerParameters(DataProcessorInvocation graph,
-                                  String sensorListValueProperty,
-                                  String stateProperty,
-                                  String stateFilter,
-                                  String selectedOperation,
-                                  List<String> statementsStrings) {
+    public NumberLabelerParameters(DataProcessorInvocation graph,
+                                   String sensorListValueProperty,
+                                   List<String> statementsStrings) {
         super(graph);
         this.sensorListValueProperty = sensorListValueProperty;
-        this.stateProperty = stateProperty;
-        this.stateFilter = stateFilter;
-        this.selectedOperation = selectedOperation;
         this.statementsStrings = statementsStrings;
     }
 
@@ -53,22 +44,6 @@ public class StateLabelerParameters extends EventProcessorBindingParams {
         this.sensorListValueProperty = sensorListValueProperty;
     }
 
-    public String getStateFilter() {
-        return stateFilter;
-    }
-
-    public void setStateFilter(String stateFilter) {
-        this.stateFilter = stateFilter;
-    }
-
-    public String getSelectedOperation() {
-        return selectedOperation;
-    }
-
-    public void setSelectedOperation(String selectedOperation) {
-        this.selectedOperation = selectedOperation;
-    }
-
     public List<String> getStatementsStrings() {
         return statementsStrings;
     }
@@ -77,11 +52,4 @@ public class StateLabelerParameters extends EventProcessorBindingParams {
         this.statementsStrings = statementsStrings;
     }
 
-    public String getStateProperty() {
-        return stateProperty;
-    }
-
-    public void setStateProperty(String stateProperty) {
-        this.stateProperty = stateProperty;
-    }
 }

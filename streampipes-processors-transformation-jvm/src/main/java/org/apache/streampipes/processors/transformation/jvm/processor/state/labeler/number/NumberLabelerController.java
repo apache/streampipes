@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.processors.transformation.jvm.processor.state.labeler;
+package org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.number;
 
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -33,39 +33,25 @@ import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcess
 
 import java.util.List;
 
-public class StateLabelerController extends StandaloneEventProcessingDeclarer<StateLabelerParameters> {
+public class NumberLabelerController extends StandaloneEventProcessingDeclarer<NumberLabelerParameters> {
 
-  public static final String STATE_FILTER_ID = "stateFilterId";
-  public static final String STATE_FIELD_ID = "stateFieldId";
-  public static final String OPERATIONS_ID = "operationsId";
   public static final String SENSOR_VALUE_ID = "sensorValueId";
   public static final String LABEL_COLLECTION_ID = "labelCollectionId";
   public static final String LABEL_STRING_ID = "labelStringId";
 
   public static final String LABEL = "label";
 
-  public static final String MINIMUM = "minimum";
-  public static final String MAXIMUM = "maximum";
-  public static final String AVERAGE = "average";
-
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.processor.state.labeler")
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.number")
             .withLocales(Locales.EN)
             .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .requiredStream(StreamRequirementsBuilder.create()
                     .requiredPropertyWithUnaryMapping(
-                            EpRequirements.listRequirement(),
+                            EpRequirements.numberReq(),
                             Labels.withId(SENSOR_VALUE_ID),
                             PropertyScope.NONE)
-                    .requiredPropertyWithUnaryMapping(
-                            EpRequirements.domainPropertyReqList(SPSensor.STATE),
-                            Labels.withId(STATE_FIELD_ID),
-                            PropertyScope.NONE)
                     .build())
-            .requiredTextParameter(Labels.withId(STATE_FILTER_ID))
-            .requiredSingleValueSelection(Labels.withId(OPERATIONS_ID),
-                    Options.from(MINIMUM, MAXIMUM, AVERAGE))
             .requiredParameterAsCollection(
                     Labels.withId(LABEL_COLLECTION_ID),
                       StaticProperties.stringFreeTextProperty(Labels.withId(LABEL_STRING_ID)))
@@ -83,17 +69,14 @@ public class StateLabelerController extends StandaloneEventProcessingDeclarer<St
   }
 
   @Override
-  public ConfiguredEventProcessor<StateLabelerParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<NumberLabelerParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 
     String sensorListValueProperty = extractor.mappingPropertyValue(SENSOR_VALUE_ID);
-    String stateProperty = extractor.mappingPropertyValue(STATE_FIELD_ID);
-    String stateFilter = extractor.singleValueParameter(STATE_FILTER_ID, String.class);
-    String selectedOperation = extractor.selectedSingleValue(OPERATIONS_ID, String.class);
 
     List<String> statementStrings = extractor.singleValueParameterFromCollection(LABEL_COLLECTION_ID, String.class);
 
-    StateLabelerParameters params = new StateLabelerParameters(graph, sensorListValueProperty, stateProperty, stateFilter, selectedOperation, statementStrings);
+    NumberLabelerParameters params = new NumberLabelerParameters(graph, sensorListValueProperty, statementStrings);
 
-    return new ConfiguredEventProcessor<>(params, StateLabeler::new);
+    return new ConfiguredEventProcessor<>(params, NumberLabeler::new);
   }
 }
