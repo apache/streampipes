@@ -37,9 +37,9 @@ import {
   SpDataStream
 } from "../../../core-model/gen/streampipes-model";
 import {ObjectProvider} from "../../services/object-provider.service";
-import {PanelDialogService} from "../../dialog/panel/panel-dialog.service";
 import {CustomizeComponent} from "../../dialog/customize/customize.component";
-import {DialogRef} from "../../dialog/panel/dialog-ref";
+import {PanelType} from "../../dialog/base-dialog/base-dialog.model";
+import {DialogService} from "../../dialog/base-dialog/base-dialog.service";
 
 @Component({
   selector: 'pipeline',
@@ -92,7 +92,7 @@ export class PipelineComponent implements OnInit {
               private ShepherdService: ShepherdService,
               private PipelineValidationService: PipelineValidationService,
               private RestApi: RestApi,
-              private PanelDialogService: PanelDialogService) {
+              private dialogService: DialogService) {
     this.plumbReady = false;
     this.currentMouseOverElement = "";
     this.currentPipelineModel = new Pipeline();
@@ -355,8 +355,9 @@ export class PipelineComponent implements OnInit {
     const inputMap = {};
     inputMap["pipelineElement"] = pipelineElement;
 
-    const dialogRef = this.PanelDialogService.open(CustomizeComponent, {
+    const dialogRef = this.dialogService.open(CustomizeComponent,{
       width: "60vw",
+      panelType: PanelType.SLIDE_IN_PANEL,
       title: "Customize " + pipelineElement.payload.name
     }, inputMap);
 

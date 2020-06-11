@@ -16,18 +16,17 @@
  *
  */
 
-import {CdkPortalOutlet, ComponentPortal, Portal} from "@angular/cdk/portal";
 import {
   Component,
-  EventEmitter, HostBinding, HostListener,
-  Input,
+  EventEmitter,
+  HostBinding,
+  HostListener,
   OnInit,
   Output,
-  ViewChild,
   ViewEncapsulation
 } from "@angular/core";
 import {animate, state, style, transition, trigger} from "@angular/animations";
-import {DialogRef} from "./dialog-ref";
+import {BaseDialogComponent} from "../base-dialog/base-dialog.component";
 
 @Component({
   selector: "app-dialog-container",
@@ -47,7 +46,7 @@ import {DialogRef} from "./dialog-ref";
     transition('* => *', animate(300))
   ])]
 })
-export class PanelDialogComponent<T> implements OnInit {
+export class PanelDialogComponent<T> extends BaseDialogComponent<T> implements OnInit {
 
   @HostBinding('@flyInOut') slideDown = 'in';
 
@@ -60,40 +59,15 @@ export class PanelDialogComponent<T> implements OnInit {
   @Output()
   animationStateChanged = new EventEmitter<AnimationEvent>();
 
-  @Input()
-  dialogTitle = "";
-
-  @Input()
-  comp: ComponentPortal<T>;
-
-  @Output()
-  containerEvent = new EventEmitter<{ key: "CLOSE" }>();
-
-  @ViewChild("portal", {read: CdkPortalOutlet, static: true})
-  portal: CdkPortalOutlet;
-
-  @Input()
-  selectedPortal: Portal<T>;
-
-  @Input()
-  dialogRef: DialogRef<T>;
-
   constructor() {
+    super();
   }
 
   ngOnInit() {
-  }
-
-  attach() {
-    const c = this.portal.attach(this.selectedPortal);
-    return c.instance;
   }
 
   closeDialog() {
     this.slideDown = "out";
   }
 
-  close() {
-    this.dialogRef.close();
-  }
 }

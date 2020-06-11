@@ -16,17 +16,22 @@
  *
  */
 
-import {ComponentType, Overlay, OverlayRef,} from "@angular/cdk/overlay";
-import {ComponentPortal, PortalInjector,} from "@angular/cdk/portal";
-import {PanelDialogComponent} from "./panel-dialog.component";
-import {DialogConfig} from "../../model/editor.model";
+import {ComponentType, Overlay, OverlayRef} from "@angular/cdk/overlay";
 import {ComponentRef, Injectable, Injector} from "@angular/core";
 import {DialogRef} from "./dialog-ref";
+import {ComponentPortal, PortalInjector} from "@angular/cdk/portal";
+import {BaseDialogComponent} from "./base-dialog.component";
+import {BaseDialogComponentUnion, DialogConfig, PanelType} from "./base-dialog.model";
+import {PanelDialogComponent} from "../panel-dialog/panel-dialog.component";
+import {StandardDialogComponent} from "../standard-dialog/standard-dialog.component";
+import {BaseDialogConfig} from "./base-dialog.config";
+import {PanelDialogConfig} from "../panel-dialog/panel-dialog.config";
+import {StandardDialogConfig} from "../standard-dialog/standard-dialog.config";
 
 @Injectable({
   providedIn: "root"
 })
-export class PanelDialogService {
+export class DialogService {
 
   constructor(private overlay: Overlay, private injector: Injector) {
 
@@ -35,24 +40,13 @@ export class PanelDialogService {
   public open<T>(component: ComponentType<T>,
                  config?: DialogConfig,
                  inputMap?: Object): DialogRef<T> {
-    config = config || {width: "auto", title: ""};
+    config = config || {width: "auto", title: "", panelType: PanelType.SLIDE_IN_PANEL};
 
-    const positionStrategy = this.overlay
-        .position()
-        .global()
-        .top("0")
-        .right("0");
+    const positionStrategy = this.getPositionStrategy(config.panelType);
+    const panelConfig: BaseDialogConfig = this.getConfig(config.panelType);
+    const overlay = this.overlay.create(panelConfig.getOverlayConfig(config, positionStrategy));
 
-    const overlay = this.overlay.create({
-      hasBackdrop: true,
-      positionStrategy,
-      panelClass: "dialog-container",
-      width: config.width,
-      maxWidth: "90vw",
-      height: "100vh",
-    });
-
-    const panelDialogContainer = new ComponentPortal(PanelDialogComponent);
+    const panelDialogContainer = new ComponentPortal(this.getPanel(config.panelType));
     const panelDialogContainerRef = overlay.attach(panelDialogContainer);
     panelDialogContainerRef.instance.dialogTitle = config.title;
     const dialogRef = new DialogRef<T>(overlay, panelDialogContainerRef);
@@ -72,10 +66,15 @@ export class PanelDialogService {
     return dialogRef;
   }
 
+  private createInjector<T, OUTER extends BaseDialogComponent<T>>(dialogRef: DialogRef<T>) {
+    const injectorMap = new WeakMap();
+    injectorMap.set(DialogRef, dialogRef);
+    return new PortalInjector(this.injector, injectorMap);
+  }
+
   private applyDialogProperties(panelDialogComponentRef: ComponentRef<any>,
                                 overlayRef: OverlayRef,
-                                config: DialogConfig
-  ) {
+                                config: DialogConfig) {
     panelDialogComponentRef.instance.containerEvent.subscribe(e => {
       if (e.key === "CLOSE") {
         overlayRef.dispose();
@@ -86,13 +85,17 @@ export class PanelDialogService {
     }
   }
 
-  private createInjector<T>(dialogRef: DialogRef<T>) {
-    const injectorMap = new WeakMap();
-    injectorMap.set(DialogRef, dialogRef);
-    return new PortalInjector(this.injector, injectorMap);
+  getPositionStrategy(panelType: PanelType) {
+    return this.getConfig(panelType).getPosition(this.overlay);
+  };
+
+  getPanel(panelType: PanelType): ComponentType<BaseDialogComponentUnion> {
+    return panelType == PanelType.SLIDE_IN_PANEL ? PanelDialogComponent : StandardDialogComponent;
   }
+
+  getConfig(panelType: PanelType): BaseDialogConfig {
+    return panelType == PanelType.SLIDE_IN_PANEL ? new PanelDialogConfig() :
+        new StandardDialogConfig();
+  }
+
 }
-
-
-
-

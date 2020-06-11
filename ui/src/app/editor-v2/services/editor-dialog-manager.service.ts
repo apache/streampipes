@@ -47,17 +47,6 @@ export class EditorDialogManager {
         this.$mdDialog.show(dialogContent);
     }
 
-    showCustomizeDialog(elementData, sourceEndpoint, sepa, restrictedEditMode) {
-        var dialogContent = this.DialogBuilder.getDialogTemplate(CustomizeController, require('../../editor/dialog/customize-pipeline-element/customizeElementDialog.tmpl.html'));
-        dialogContent.locals = {
-            elementData: elementData,
-            sourceEndpoint: sourceEndpoint,
-            sepa: sepa,
-            restrictedEditMode: restrictedEditMode
-        }
-        return this.$mdDialog.show(dialogContent);
-    };
-
     showCustomizeStreamDialog(streamDescription) {
         var dialogContent = this.DialogBuilder.getDialogTemplate(TopicSelectionDialog, require('../../editor/dialog/topic/topic-selection-modal.tmpl.html'));
         dialogContent.locals = {

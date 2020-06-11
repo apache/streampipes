@@ -19,14 +19,14 @@
 import {ComponentRef} from "@angular/core";
 import {OverlayRef} from "@angular/cdk/overlay";
 import {Observable, Subject} from "rxjs";
-import {PanelDialogComponent} from "./panel-dialog.component";
+import {BaseDialogComponentUnion} from "./base-dialog.model";
 
 export class DialogRef<T> {
   private _componentInstance: ComponentRef<T>;
   private _afterClosed: Subject<any> = new Subject<any>();
 
   constructor(private overlayRef: OverlayRef,
-              private dialogContainerRef: ComponentRef<PanelDialogComponent<unknown>>) {
+              private dialogContainerRef: ComponentRef<BaseDialogComponentUnion>) {
   }
 
   get componentInstance() {

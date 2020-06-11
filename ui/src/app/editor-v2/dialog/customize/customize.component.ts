@@ -17,12 +17,8 @@
  */
 
 import {Component, Input, OnInit} from "@angular/core";
-import {
-  InvocablePipelineElementUnion,
-  PipelineElementConfig,
-  PipelineElementUnion
-} from "../../model/editor.model";
-import {DialogRef} from "../panel/dialog-ref";
+import {InvocablePipelineElementUnion, PipelineElementConfig} from "../../model/editor.model";
+import {DialogRef} from "../base-dialog/dialog-ref";
 import {JsplumbService} from "../../services/jsplumb.service";
 import {EventSchema} from "../../../core-model/gen/streampipes-model";
 

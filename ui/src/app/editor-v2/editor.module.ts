@@ -45,10 +45,11 @@ import {PipelineElementOptionsComponent} from "./components/pipeline-element-opt
 import {PipelineElementRecommendationService} from "./services/pipeline-element-recommendation.service";
 import {PortalModule} from "@angular/cdk/portal";
 import {OverlayModule} from "@angular/cdk/overlay";
-import {PanelDialogComponent} from "./dialog/panel/panel-dialog.component";
-import {PanelDialogService} from "./dialog/panel/panel-dialog.service";
+import {PanelDialogComponent} from "./dialog/panel-dialog/panel-dialog.component";
 import {CustomizeComponent} from "./dialog/customize/customize.component";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {StandardDialogComponent} from "./dialog/standard-dialog/standard-dialog.component";
+import {DialogService} from "./dialog/base-dialog/base-dialog.service";
 
 @NgModule({
     imports: [
@@ -73,7 +74,8 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
         PipelineElementComponent,
         PipelineElementOptionsComponent,
         PipelineComponent,
-        PanelDialogComponent
+        PanelDialogComponent,
+        StandardDialogComponent
     ],
     providers: [
         EditorService,
@@ -87,7 +89,7 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
         JsplumbService,
         JsplumbConfigService,
         ObjectProvider,
-        PanelDialogService,
+        DialogService,
         PipelineEditorService,
         PipelinePositioningService,
         PipelineValidationService,

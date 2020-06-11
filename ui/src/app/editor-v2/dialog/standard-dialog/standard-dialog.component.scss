@@ -16,9 +16,9 @@
  *
  */
 
-@import '../../../../scss/sp/colors';
+@import 'src/scss/sp/colors';
 
-app-dialog-container {
+standard-dialog-container {
   width: 100%;
   background-color: #fff;
   box-shadow: -7px 0px 5px -5px #5d5d5d;
@@ -36,6 +36,7 @@ app-dialog-container {
 
 .dialog-panel-content {
   flex: 1 1 100%;
+  background: white;
 }
 
 .dialog-title {

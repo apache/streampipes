@@ -52,13 +52,6 @@ export enum PipelineElementType {
   DataSink
 }
 
-export interface DialogConfig {
-  width?: string;
-  disableClose?: boolean;
-  autoFocus?: boolean;
-  title: string;
-}
-
 export type PipelineElementUnion = SpDataSet | SpDataStream | DataProcessorInvocation | DataSinkInvocation;
 
 export type InvocablePipelineElementUnion = DataProcessorInvocation | DataSinkInvocation;
