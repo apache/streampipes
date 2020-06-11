@@ -95,10 +95,10 @@
                                  [widgetDataConfig]="widgetDataConfig" class="h-100"></traffic-light-widget>
                 </div>
                 <div *ngIf="widget.widgetType === 'pallet'" class="h-100 p-0">
-                    <app-renderer [gridsterItemComponent]="gridsterItemComponent"
+                    <sp-pallet [gridsterItemComponent]="gridsterItemComponent"
                                  [gridsterItem]="item" [widget]="widget" [editMode]="editMode"
                                  [widgetConfig]="configuredWidget"
-                                 [widgetDataConfig]="widgetDataConfig" class="h-100"></app-renderer>
+                                 [widgetDataConfig]="widgetDataConfig" class="h-100"></sp-pallet>
                 </div>
             </div>
         </div>

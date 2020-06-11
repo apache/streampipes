@@ -87,6 +87,7 @@ export class DatalakeRestService {
 
     getLabels() {
         return {
+          'boxes': ['blue', 'red'],
           'sign': ['trafficsign'],
           'person': ['person', 'Child'],
           'vehicle': ['bicycle', 'car', 'motorcycle', 'airplane', 'bus', 'train', 'truck', 'boat'],

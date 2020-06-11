@@ -47,7 +47,7 @@ import {CdkTableModule} from "@angular/cdk/table";
 import {RefreshDashboardService} from "./services/refresh-dashboard.service";
 import {SemanticTypeUtilsService} from '../core-services/semantic-type/semantic-type-utils.service';
 import {GaugeWidgetComponent} from "./components/widgets/gauge/gauge-widget.component";
-import {RendererComponent} from "./components/widgets/renderer/renderer.component";
+import {PalletComponent} from "./components/widgets/pallet/pallet.component";
 import {ImageWidgetComponent} from "./components/widgets/image/image-widget.component";
 import {AreaWidgetComponent} from "./components/widgets/area/area-widget.component";
 import {MapWidgetComponent} from "./components/widgets/map/map-widget.component";
@@ -94,7 +94,7 @@ const dashboardWidgets = [
         NumberWidgetComponent,
         TableWidgetComponent,
         GaugeWidgetComponent,
-        RendererComponent,
+        PalletComponent,
         ImageWidgetComponent,
         MapWidgetComponent,
         RawWidgetComponent,

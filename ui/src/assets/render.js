@@ -160,7 +160,12 @@ function render_on_canvas(canvas_id, viewpoint, options_pref, boxes, pallet) {
 	options.width = options_pref.width;
 	options.height = options_pref.height;
 	scene = new PackWidget.Scene();
+	element = document.getElementById(canvas_id);
+	if (element.firstChild) {
+		element.removeChild(element.firstChild);
+	}
 	renderer = new PackWidget.Renderer(scene, document.getElementById(canvas_id), options);
+	// document.getElementById(canvas_id)[0].remove();
 	for (i = 0; i < boxes.items.length; i++) {
 		renderer.addBox(boxes.items[i]);
 	}
