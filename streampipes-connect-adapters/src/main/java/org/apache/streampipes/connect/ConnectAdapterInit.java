@@ -21,6 +21,7 @@ package org.apache.streampipes.connect;
 import org.apache.streampipes.connect.adapters.image.set.ImageSetAdapter;
 import org.apache.streampipes.connect.adapters.image.stream.ImageStreamAdapter;
 import org.apache.streampipes.connect.adapters.iss.IssAdapter;
+import org.apache.streampipes.connect.adapters.flic.FlicMQTTAdapter;
 import org.apache.streampipes.connect.adapters.netio.NetioMQTTAdapter;
 import org.apache.streampipes.connect.adapters.netio.NetioRestAdapter;
 import org.apache.streampipes.connect.adapters.plc4x.modbus.Plc4xModbusAdapter;
@@ -92,7 +93,8 @@ public class ConnectAdapterInit extends AdapterWorkerContainer {
             .add(new Plc4xModbusAdapter())
             .add(new ImageStreamAdapter())
             .add(new ImageSetAdapter())
-            .add(new IssAdapter());
+            .add(new IssAdapter())
+            .add(new FlicMQTTAdapter());
 
     String workerUrl = ConnectWorkerConfig.INSTANCE.getConnectContainerWorkerUrl();
     String masterUrl = ConnectWorkerConfig.INSTANCE.getConnectContainerMasterUrl();
