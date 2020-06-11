@@ -38,8 +38,8 @@ import {
 } from "../../../core-model/gen/streampipes-model";
 import {ObjectProvider} from "../../services/object-provider.service";
 import {CustomizeComponent} from "../../dialog/customize/customize.component";
-import {PanelType} from "../../dialog/base-dialog/base-dialog.model";
-import {DialogService} from "../../dialog/base-dialog/base-dialog.service";
+import {PanelType} from "../../../core-ui/dialog/base-dialog/base-dialog.model";
+import {DialogService} from "../../../core-ui/dialog/base-dialog/base-dialog.service";
 
 @Component({
   selector: 'pipeline',
@@ -352,9 +352,6 @@ export class PipelineComponent implements OnInit {
   }
 
   showCustomizeDialog(pipelineElement: PipelineElementConfig) {
-    const inputMap = {};
-    inputMap["pipelineElement"] = pipelineElement;
-
     const dialogRef = this.dialogService.open(CustomizeComponent,{
       panelType: PanelType.SLIDE_IN_PANEL,
       title: "Customize " + pipelineElement.payload.name,

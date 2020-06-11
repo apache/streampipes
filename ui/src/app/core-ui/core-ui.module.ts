@@ -46,6 +46,11 @@ import { PolygonLabelingService } from './image/services/PolygonLabeling.service
 import { ReactLabelingService } from './image/services/ReactLabeling.service';
 import { CocoFormatService } from "./image/services/CocoFormat.service";
 import { LabelingModeService } from "./image/services/LabelingMode.service";
+import {StandardDialogComponent} from "./dialog/standard-dialog/standard-dialog.component";
+import {PanelDialogComponent} from "./dialog/panel-dialog/panel-dialog.component";
+import {DialogService} from "./dialog/base-dialog/base-dialog.service";
+import {PortalModule} from "@angular/cdk/portal";
+import {OverlayModule} from "@angular/cdk/overlay";
 // PlotlyViaCDNModule.plotlyjs = PlotlyJS;
 
 @NgModule({
@@ -62,7 +67,9 @@ import { LabelingModeService } from "./image/services/LabelingMode.service";
         MatNativeDateModule,
         PlotlyViaWindowModule,
         MatSliderModule,
-        MatChipsModule
+        MatChipsModule,
+        PortalModule,
+        OverlayModule,
     ],
     declarations: [
         ImageComponent,
@@ -73,6 +80,8 @@ import { LabelingModeService } from "./image/services/LabelingMode.service";
         ImageAnnotationsComponent,
         ImageCategorizeComponent,
         ImageViewerComponent,
+        StandardDialogComponent,
+        PanelDialogComponent
     ],
     providers: [
         MatDatepickerModule,
@@ -82,12 +91,15 @@ import { LabelingModeService } from "./image/services/LabelingMode.service";
         BrushLabelingService,
         CocoFormatService,
         LabelingModeService,
+        DialogService
     ],
     entryComponents: [
     ],
     exports: [
         ImageComponent,
         ImageLabelingComponent,
+        StandardDialogComponent,
+        PanelDialogComponent
     ]
 })
 export class CoreUiModule {

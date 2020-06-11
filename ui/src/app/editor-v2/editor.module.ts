@@ -45,14 +45,13 @@ import {PipelineElementOptionsComponent} from "./components/pipeline-element-opt
 import {PipelineElementRecommendationService} from "./services/pipeline-element-recommendation.service";
 import {PortalModule} from "@angular/cdk/portal";
 import {OverlayModule} from "@angular/cdk/overlay";
-import {PanelDialogComponent} from "./dialog/panel-dialog/panel-dialog.component";
 import {CustomizeComponent} from "./dialog/customize/customize.component";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
-import {StandardDialogComponent} from "./dialog/standard-dialog/standard-dialog.component";
-import {DialogService} from "./dialog/base-dialog/base-dialog.service";
+import {CoreUiModule} from "../core-ui/core-ui.module";
 
 @NgModule({
     imports: [
+        CoreUiModule,
         CommonModule,
         MatTabsModule,
         FlexLayoutModule,
@@ -62,8 +61,6 @@ import {DialogService} from "./dialog/base-dialog/base-dialog.service";
         CustomMaterialModule,
         FormsModule,
         ConnectModule,
-        PortalModule,
-        OverlayModule,
         MatProgressSpinnerModule
     ],
     declarations: [
@@ -73,9 +70,7 @@ import {DialogService} from "./dialog/base-dialog/base-dialog.service";
         PipelineElementIconStandComponent,
         PipelineElementComponent,
         PipelineElementOptionsComponent,
-        PipelineComponent,
-        PanelDialogComponent,
-        StandardDialogComponent
+        PipelineComponent
     ],
     providers: [
         EditorService,
@@ -89,7 +84,6 @@ import {DialogService} from "./dialog/base-dialog/base-dialog.service";
         JsplumbService,
         JsplumbConfigService,
         ObjectProvider,
-        DialogService,
         PipelineEditorService,
         PipelinePositioningService,
         PipelineValidationService,
@@ -111,8 +105,7 @@ import {DialogService} from "./dialog/base-dialog/base-dialog.service";
         EditorComponent
     ],
     entryComponents: [
-        EditorComponent,
-        PanelDialogComponent
+        EditorComponent
     ]
 })
 export class EditorModule {
