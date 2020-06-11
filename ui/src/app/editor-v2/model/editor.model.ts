@@ -36,7 +36,8 @@ export interface PipelineElementConfig {
     displaySettings: string,
     connectable: string,
     disabled: boolean,
-    loadingStatus: boolean
+    loadingStatus: boolean,
+    completed: boolean
     position: {
       x: number,
       y: number

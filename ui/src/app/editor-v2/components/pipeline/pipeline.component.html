@@ -26,7 +26,7 @@
                  <mat-spinner [mode]="'indeterminate'" class="pipeline-element-progress" [diameter]="40"></mat-spinner>
             </div>
             <div class="pipeline-element-loading-container sp-fade-opacity" *ngIf="pipelineElement.settings.loadingStatus"></div>
-            <div class="pipeline-element-configuration-invalid {{pipelineElement.type === 'stream' ? 'pi-stream' : 'pi-processor'}}" *ngIf="pipelineElement.payload.uncompleted">
+            <div class="pipeline-element-configuration-invalid {{pipelineElement.type === 'stream' ? 'pi-stream' : 'pi-processor'}}" *ngIf="!pipelineElement.settings.completed">
                 <i class="material-icons pipeline-element-configuration-invalid-icon">
                 warning
                 </i>

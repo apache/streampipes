@@ -75,11 +75,12 @@ export class CustomizeComponent implements OnInit {
 
   save() {
     this.pipelineElement.payload = this.cachedPipelineElement;
+    this.pipelineElement.settings.completed = true;
+    this.pipelineElement.payload.configured = true;
     this.dialogRef.close(this.pipelineElement);
   }
 
   validConfiguration(event: any) {
-
   }
 
 }

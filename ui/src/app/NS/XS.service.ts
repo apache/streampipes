@@ -23,7 +23,7 @@ export class xsService {
 
   XS_STRING: string = "xs:string";
   XS_INTEGER: string = "http://www.w3.org/2001/XMLSchema#integer";
-  XS_DOUBLE: string = "http://www.w3.org/2001/XMLSchema#:double";
+  XS_DOUBLE: string = "http://www.w3.org/2001/XMLSchema#double";
   XS_BOOLEAN: string = "http://www.w3.org/2001/XMLSchema#boolean";
   XS_NUMBER: string = "http://www.w3.org/2001/XMLSchema#number";
   XS_STRING1: string = "http://www.w3.org/2001/XMLSchema#string";

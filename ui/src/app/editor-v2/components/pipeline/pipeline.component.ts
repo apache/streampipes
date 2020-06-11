@@ -110,6 +110,8 @@ export class PipelineComponent implements OnInit {
   validatePipeline() {
     //this.$timeout(() => {
       this.pipelineValid = this.PipelineValidationService.isValidPipeline(this.rawPipelineModel);
+      console.log("validating");
+      console.log(this.pipelineValid);
     //}, 200);
   }
 
@@ -361,15 +363,8 @@ export class PipelineComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(c => {
-      console.log("after close");
+      this.JsplumbService.activateEndpoint(pipelineElement.payload.dom, pipelineElement.settings.completed)
     });
-
-    // this.EditorDialogManager.showCustomizeDialog($("#" +pe.payload.dom), sourceEndpoint, pe.payload, false)
-    //     .then(() => {
-    //       this.JsplumbService.activateEndpoint(pe.payload.dom, !payload.uncompleted);
-    //     }, () => {
-    //       this.JsplumbService.activateEndpoint(pe.payload.dom, !payload.uncompleted);
-    //     });
   }
 
 

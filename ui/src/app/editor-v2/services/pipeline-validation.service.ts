@@ -26,6 +26,7 @@ import {PipelineElementConfig} from "../model/editor.model";
 export class PipelineValidationService {
 
     errorMessages: any = [];
+    pipelineValid: boolean = false;
 
     availableErrorMessages: any = [
         {title: "Did you add a data stream?", content: "Any pipeline needs at least one data stream."},
@@ -58,7 +59,8 @@ export class PipelineValidationService {
             this.errorMessages = [];
         }
 
-        return streamInAssembly && actionInAssembly && allElementsConnected && onlyOnePipelineCreated;
+        this.pipelineValid = streamInAssembly && actionInAssembly && allElementsConnected && onlyOnePipelineCreated;
+        return this.pipelineValid;
     }
 
     isEmptyPipeline(rawPipelineModel) {

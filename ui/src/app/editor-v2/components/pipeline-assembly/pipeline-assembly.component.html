@@ -21,7 +21,7 @@
         <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
             <button mat-button matTooltip="Save Pipeline" [matTooltipPosition]="'above'"
                     style="display:flex;align-items:center;" class="md-button settings-bar-icon-button"
-                    [disabled]="!pipelineValid"
+                    [disabled]="!PipelineValidationService.pipelineValid"
                     (click)="submit()" type="submit">
                 <mat-icon>save</mat-icon>&nbsp;Save pipeline
             </button>
