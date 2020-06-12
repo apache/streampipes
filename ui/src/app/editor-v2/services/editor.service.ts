@@ -24,15 +24,18 @@ import {
     DataProcessorInvocation, PipelineElementRecommendationMessage,
     PipelineModificationMessage
 } from "../../core-model/gen/streampipes-model";
-import {Observable} from "rxjs";
+import {Observable, Subject} from "rxjs";
 import {PlatformServicesCommons} from "../../platform-services/apis/commons.service";
 
 @Injectable()
 export class EditorService {
 
+    private pipelineElementConfigured = new Subject<string>();
+
+    public pipelineElementConfigured$ = this.pipelineElementConfigured.asObservable();
+
     constructor(private http: HttpClient,
-                private platformServicesCommons: PlatformServicesCommons,
-                private authStatusService: AuthStatusService) {
+                private platformServicesCommons: PlatformServicesCommons) {
     }
 
     recommendPipelineElement(pipeline): Observable<PipelineElementRecommendationMessage> {
@@ -62,6 +65,11 @@ export class EditorService {
     private get pipelinesResourceUrl() {
         return this.platformServicesCommons.authUserBasePath() + '/pipelines'
     }
+
+    announceConfiguredElement(pipelineElementDomId: string) {
+        this.pipelineElementConfigured.next(pipelineElementDomId);
+    }
+
 
 
 

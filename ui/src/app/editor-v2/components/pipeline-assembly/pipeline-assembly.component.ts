@@ -16,25 +16,15 @@
  *
  */
 
-import {
-    Component, Input,
-    OnInit,
-} from "@angular/core";
+import {Component, Input, OnInit,} from "@angular/core";
 import {JsplumbBridge} from "../../services/jsplumb-bridge.service";
 import {PipelinePositioningService} from "../../services/pipeline-positioning.service";
-import {EditorDialogManager} from "../../services/editor-dialog-manager.service";
 import {PipelineValidationService} from "../../services/pipeline-validation.service";
 import {JsplumbService} from "../../services/jsplumb.service";
 import {RestApi} from "../../../services/rest-api.service";
-import {TransitionService} from "../../../services/transition.service";
 import {ShepherdService} from "../../../services/tour/shepherd.service";
-import {
-    PipelineElementConfig,
-    PipelineElementHolder,
-    PipelineElementUnion
-} from "../../model/editor.model";
+import {PipelineElementConfig, PipelineElementUnion} from "../../model/editor.model";
 import {ObjectProvider} from "../../services/object-provider.service";
-import {CustomizeComponent} from "../../dialog/customize/customize.component";
 import {PanelType} from "../../../core-ui/dialog/base-dialog/base-dialog.model";
 import {SavePipelineComponent} from "../../dialog/save-pipeline/save-pipeline.component";
 import {DialogService} from "../../../core-ui/dialog/base-dialog/base-dialog.service";

@@ -24,9 +24,9 @@ import {JsplumbService} from "../../services/jsplumb.service";
 import {PipelineEditorService} from "../../services/pipeline-editor.service";
 import {JsplumbBridge} from "../../services/jsplumb-bridge.service";
 import {ShepherdService} from "../../../services/tour/shepherd.service";
-import {Component, InjectionToken, Input, OnInit, Pipe} from "@angular/core";
+import {Component, Input, OnInit} from "@angular/core";
 import {
-  InvocablePipelineElementUnion, PIPELINE_ELEMENT_TOKEN,
+  InvocablePipelineElementUnion,
   PipelineElementConfig,
   PipelineElementUnion
 } from "../../model/editor.model";
@@ -40,6 +40,7 @@ import {ObjectProvider} from "../../services/object-provider.service";
 import {CustomizeComponent} from "../../dialog/customize/customize.component";
 import {PanelType} from "../../../core-ui/dialog/base-dialog/base-dialog.model";
 import {DialogService} from "../../../core-ui/dialog/base-dialog/base-dialog.service";
+import {EditorService} from "../../services/editor.service";
 
 @Component({
   selector: 'pipeline',
@@ -86,6 +87,7 @@ export class PipelineComponent implements OnInit {
               private PipelineEditorService: PipelineEditorService,
               private JsplumbBridge: JsplumbBridge,
               private ObjectProvider: ObjectProvider,
+              private EditorService: EditorService,
               //DialogBuilder,
               //EditorDialogManager,
               // TransitionService,
@@ -302,6 +304,7 @@ export class PipelineComponent implements OnInit {
                   if ((payload.staticProperties && payload.staticProperties.length > 0) || this.isCustomOutput(pe)) {
                     this.showCustomizeDialog(pe);
                   } else {
+                    this.announceConfiguredElement(pe);
                     //this.$rootScope.$broadcast("SepaElementConfigured", pe.payload.DOM);
                     (pe.payload as InvocablePipelineElementUnion).configured = true;
                   }
@@ -363,8 +366,14 @@ export class PipelineComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(c => {
-      this.JsplumbService.activateEndpoint(pipelineElement.payload.dom, pipelineElement.settings.completed)
+      if (c) {
+        this.JsplumbService.activateEndpoint(pipelineElement.payload.dom, pipelineElement.settings.completed)
+      }
     });
+  }
+
+  announceConfiguredElement(pe: PipelineElementConfig) {
+    this.EditorService.announceConfiguredElement(pe.payload.dom);
   }
 
 

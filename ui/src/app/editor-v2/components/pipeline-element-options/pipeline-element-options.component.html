@@ -62,8 +62,8 @@
         {{pipelineElement.payload.name}}
     </div>
 </div>
-<!--<pipeline-element-recommendation raw-pipeline-model="ctrl.rawPipelineModel"-->
-<!--                                 pipeline-element-dom-id="ctrl.pipelineElement.payload.DOM"-->
-<!--                                 recommended-elements="ctrl.recommendedElements"-->
-<!--                                 recommendations-shown="ctrl.recommendationsShown"></pipeline-element-recommendation>-->
+<pipeline-element-recommendation [rawPipelineModel]="rawPipelineModel"
+                                 [pipelineElementDomId]="pipelineElement.payload.dom"
+                                 [recommendedElements]="recommendedElements"
+                                 [recommendationsShown]="recommendationsShown" *ngIf="recommendationsAvailable"></pipeline-element-recommendation>
 

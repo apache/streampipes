@@ -16,17 +16,9 @@
  *
  */
 
-import {
-    Component, Input,
-    OnInit,
-} from "@angular/core";
+import {Component, Input, OnInit,} from "@angular/core";
 import * as angular from "angular";
 import {RestApi} from "../../../services/rest-api.service";
-import {
-    DataProcessorInvocation, DataSinkInvocation,
-    SpDataSet,
-    SpDataStream
-} from "../../../core-model/gen/streampipes-model";
 import {PipelineElementType, PipelineElementUnion} from "../../model/editor.model";
 import {PipelineElementTypeUtils} from "../../utils/editor.utils";
 

@@ -16,11 +16,7 @@
  *
  */
 
-import {
-    Component, Input,
-    OnInit,
-} from "@angular/core";
-import * as angular from "angular";
+import {Component, Input, OnInit,} from "@angular/core";
 import {RestApi} from "../../../services/rest-api.service";
 import {ElementIconText} from "../../../services/get-element-icon-text.service";
 import {ImageChecker} from "../../../services/image-checker.service";

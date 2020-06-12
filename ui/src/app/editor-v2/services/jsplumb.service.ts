@@ -31,9 +31,7 @@ import {
 @Injectable()
 export class JsplumbService {
 
-    apiConstants: any;
     idCounter: any;
-    $timeout: any;
     RestApi: any;
 
     constructor(private JsplumbConfigService: JsplumbConfigService,
@@ -95,7 +93,7 @@ export class JsplumbService {
         var pipelineElementDom = $("#" + pipelineElementDomId);
         var pipelineElementConfig = this.createNewPipelineElementConfigWithFixedCoordinates(pipelineElementDom, pipelineElement, false);
         pipelineModel.push(pipelineElementConfig);
-        this.$timeout(() => {
+        setTimeout(() => {
             this.createAssemblyElement(pipelineElementConfig.payload.dom, pipelineElementConfig.payload, pipelineElementDom);
         });
     }

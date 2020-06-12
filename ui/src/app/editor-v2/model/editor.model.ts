@@ -46,6 +46,13 @@ export interface PipelineElementConfig {
   payload: PipelineElementUnion
 }
 
+export interface PipelineElementRecommendationLayout {
+  skewStyle: any;
+  unskewStyle: any;
+  unskewStyleLabel: any;
+  type: string
+}
+
 export enum PipelineElementType {
   DataSet,
   DataStream,

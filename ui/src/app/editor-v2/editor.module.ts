@@ -49,6 +49,7 @@ import {CustomizeComponent} from "./dialog/customize/customize.component";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {CoreUiModule} from "../core-ui/core-ui.module";
 import {SavePipelineComponent} from "./dialog/save-pipeline/save-pipeline.component";
+import {PipelineElementRecommendationComponent} from "./components/pipeline-element-recommendation/pipeline-element-recommendation.component";
 
 @NgModule({
     imports: [
@@ -71,6 +72,7 @@ import {SavePipelineComponent} from "./dialog/save-pipeline/save-pipeline.compon
         PipelineElementIconStandComponent,
         PipelineElementComponent,
         PipelineElementOptionsComponent,
+        PipelineElementRecommendationComponent,
         PipelineComponent,
         SavePipelineComponent
     ],

@@ -26,11 +26,12 @@ import {PipelineElementRecommendationService} from "../../services/pipeline-elem
 import {ObjectProvider} from "../../services/object-provider.service";
 import {
   InvocablePipelineElementUnion,
-  PipelineElementConfig, PipelineElementType,
+  PipelineElementConfig,
   PipelineElementUnion
 } from "../../model/editor.model";
 import {SpDataStream, WildcardTopicDefinition} from "../../../core-model/gen/streampipes-model";
 import {PipelineElementTypeUtils} from "../../utils/editor.utils";
+import {EditorService} from "../../services/editor.service";
 
 @Component({
   selector: 'pipeline-element-options',
@@ -74,6 +75,7 @@ export class PipelineElementOptionsComponent implements OnInit{
 
   constructor(private ObjectProvider: ObjectProvider,
               private PipelineElementRecommendationService: PipelineElementRecommendationService,
+              private EditorService: EditorService,
               //private InitTooltips: InitTooltips,
               private JsplumbBridge: JsplumbBridge,
               //private EditorDialogManager: EditorDialogManager,
@@ -89,18 +91,18 @@ export class PipelineElementOptionsComponent implements OnInit{
   }
 
   ngOnInit() {
-    // this.$rootScope.$on("SepaElementConfigured", (event, item) => {
-    //   this.pipelineElement.settings.openCustomize = false;
-    //   this.RestApi.updateCachedPipeline(this.rawPipelineModel);
-    //   if (item === this.pipelineElement.payload.DOM) {
-    //     this.initRecs(this.pipelineElement.payload.DOM, this.rawPipelineModel);
-    //   }
-    // });
+    this.EditorService.pipelineElementConfigured$.subscribe(pipelineElementDomId => {
+      this.pipelineElement.settings.openCustomize = false;
+      this.RestApi.updateCachedPipeline(this.rawPipelineModel);
+      if (pipelineElementDomId === this.pipelineElement.payload.dom) {
+        this.initRecs(this.pipelineElement.payload.dom);
+      }
+    });
     let pipelineElementType = PipelineElementTypeUtils.fromType(this.pipelineElement.payload);
     this.pipelineElementCssType = PipelineElementTypeUtils.toCssShortHand(pipelineElementType);
 
     if (this.pipelineElement.type === 'stream') {
-      this.initRecs(this.pipelineElement.payload.dom, this.rawPipelineModel);
+      this.initRecs(this.pipelineElement.payload.dom);
     }
   }
 
@@ -131,16 +133,16 @@ export class PipelineElementOptionsComponent implements OnInit{
     //this.EditorDialogManager.showCustomizeStreamDialog(this.pipelineElement.payload);
   }
 
-  initRecs(elementId, currentPipelineElements) {
-    // var currentPipeline = this.ObjectProvider.makePipeline(angular.copy(currentPipelineElements));
-    // this.PipelineElementRecommendationService.getRecommendations(this.allElements, currentPipeline).then((result) => {
-    //   if (result.success) {
-    //     this.possibleElements = result.possibleElements;
-    //     this.recommendedElements = result.recommendations;
-    //     this.recommendationsAvailable = true;
-    //     //this.InitTooltips.initTooltips();
-    //   }
-    // });
+  initRecs(elementId) {
+    var currentPipeline = this.ObjectProvider.makePipeline(angular.copy(this.rawPipelineModel));
+    this.EditorService.recommendPipelineElement(currentPipeline).subscribe((result) => {
+      if (result.success) {
+        this.possibleElements = this.PipelineElementRecommendationService.collectPossibleElements(this.allElements, result.possibleElements);
+        this.recommendedElements = this.PipelineElementRecommendationService.populateRecommendedList(this.allElements, result.recommendedElements);
+        this.recommendationsAvailable = true;
+        //this.InitTooltips.initTooltips();
+      }
+    });
   }
 
   showRecommendations(e) {

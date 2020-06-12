@@ -19,6 +19,12 @@
 import * as angular from 'angular';
 import {Injectable} from "@angular/core";
 import {EditorService} from "./editor.service";
+import {PipelineElementUnion} from "../model/editor.model";
+import {
+    InvocableStreamPipesEntity,
+    PipelineElementRecommendation,
+    SpDataStream
+} from "../../core-model/gen/streampipes-model";
 
 @Injectable()
 export class PipelineElementRecommendationService {
@@ -26,29 +32,10 @@ export class PipelineElementRecommendationService {
     constructor(private EditorService: EditorService) {
     }
 
-    getRecommendations(allElements, currentPipeline) {
-        return new Promise((resolve, reject) => {
-            this.EditorService.recommendPipelineElement(currentPipeline)
-                .subscribe(msg => {
-                    if (msg.success) {
-                        var result = {};
-                        result["success"] = true;
-                        result['recommendations'] = this.populateRecommendedList(allElements, msg.recommendedElements);
-                        result['possibleElements'] = this.collectPossibleElements(allElements, msg.possibleElements);
-                        resolve(result);
-                    } else {
-                        // TODO improve
-                        var noresult = {success: false};
-                        resolve(noresult);
-                    }
-                });
-        });
-    }
-
-    collectPossibleElements(allElements, possibleElements) {
+    collectPossibleElements(allElements: PipelineElementUnion[], possibleElements: PipelineElementRecommendation[]) {
         var possibleElementConfigs = [];
         angular.forEach(possibleElements, pe => {
-            possibleElementConfigs.push(this.getPipelineElementContents(allElements, pe.elementId));
+            possibleElementConfigs.push(this.getPipelineElementContents(allElements, pe.elementId)[0]);
         })
         return possibleElementConfigs;
     }
@@ -62,32 +49,16 @@ export class PipelineElementRecommendationService {
         var el;
         for (var i = 0; i < maxRecs; i++) {
             el = recs[i];
-            var element = this.getPipelineElementContents(allElements, el.elementId);
-            element.weight = el.weight;
+            var element = this.getPipelineElementContents(allElements, el.elementId)[0];
+            (element as any).weight = el.weight;
             elementRecommendations.push(element);
         }
         return elementRecommendations;
 
     }
 
-    getPipelineElementContents(allElements, belongsTo) {
-        var pipelineElement = undefined;
-        angular.forEach(allElements, category => {
-            angular.forEach(category, sepa => {
-                if (sepa.type != 'stream') {
-                    if (sepa.belongsTo == belongsTo) {
-                        pipelineElement = sepa;
-                    }
-                } else {
-                    if (sepa.elementId == belongsTo) {
-                        pipelineElement = sepa;
-                    }
-                }
-            });
-        });
-        return pipelineElement;
+    getPipelineElementContents(allElements: PipelineElementUnion[], belongsTo: string) {
+        return allElements
+                .filter(pe => (pe instanceof SpDataStream && pe.elementId === belongsTo) || (pe instanceof InvocableStreamPipesEntity && pe.belongsTo === belongsTo));
     }
-
 }
-
-PipelineElementRecommendationService.$inject=['RestApi']
