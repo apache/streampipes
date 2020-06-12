@@ -19,7 +19,9 @@
 package org.apache.streampipes.model.pipeline;
 
 import com.google.gson.annotations.SerializedName;
+import org.apache.streampipes.model.shared.annotation.TsModel;
 
+@TsModel
 public class PipelineCategory {
 
 	private String categoryName;

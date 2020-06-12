@@ -64,7 +64,7 @@ public class PipelineWithUserResource extends AbstractRestInterface implements I
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/own")
-    @GsonWithIds
+    @JacksonSerialized
     @Override
     public Response getOwn(@PathParam("username") String username) {
         return ok(getUserService()
@@ -74,7 +74,7 @@ public class PipelineWithUserResource extends AbstractRestInterface implements I
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/system")
-    @GsonWithIds
+    @JacksonSerialized
     @Override
     public Response getSystemPipelines() {
         return ok(getPipelineStorage().getSystemPipelines());
@@ -127,7 +127,7 @@ public class PipelineWithUserResource extends AbstractRestInterface implements I
     @Path("/{pipelineId}/start")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @GsonWithIds
+    @JacksonSerialized
     public Response start(@PathParam("username") String username, @PathParam("pipelineId") String pipelineId) {
         try {
             Pipeline pipeline = getPipelineStorage()
@@ -143,7 +143,7 @@ public class PipelineWithUserResource extends AbstractRestInterface implements I
     @Path("/{pipelineId}/stop")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @GsonWithIds
+    @JacksonSerialized
     public Response stop(@PathParam("username") String username, @PathParam("pipelineId") String pipelineId) {
         logger.info("User: " + username + " stopped pipeline: " + pipelineId);
         PipelineManagement pm = new PipelineManagement();
@@ -152,7 +152,7 @@ public class PipelineWithUserResource extends AbstractRestInterface implements I
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    @GsonWithIds
+    @JacksonSerialized
     public Response addPipeline(@PathParam("username") String username, Pipeline pipeline) {
         String pipelineId = UUID.randomUUID().toString();
         pipeline.setPipelineId(pipelineId);

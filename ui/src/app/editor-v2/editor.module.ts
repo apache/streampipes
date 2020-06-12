@@ -48,6 +48,7 @@ import {OverlayModule} from "@angular/cdk/overlay";
 import {CustomizeComponent} from "./dialog/customize/customize.component";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {CoreUiModule} from "../core-ui/core-ui.module";
+import {SavePipelineComponent} from "./dialog/save-pipeline/save-pipeline.component";
 
 @NgModule({
     imports: [
@@ -70,7 +71,8 @@ import {CoreUiModule} from "../core-ui/core-ui.module";
         PipelineElementIconStandComponent,
         PipelineElementComponent,
         PipelineElementOptionsComponent,
-        PipelineComponent
+        PipelineComponent,
+        SavePipelineComponent
     ],
     providers: [
         EditorService,

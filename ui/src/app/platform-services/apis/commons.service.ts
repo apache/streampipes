@@ -16,25 +16,23 @@
  *
  */
 
-.dialog-container {
-    display: flex;
-    flex-flow: column;
-    align-items: stretch;
-    flex: 1 1 100%;
-    height:100%;
+import {AuthStatusService} from "../../services/auth-status.service";
+import {Injectable} from "@angular/core";
+
+@Injectable()
+export class PlatformServicesCommons {
+
+  constructor(private authStatusService: AuthStatusService) {
+
+  }
+
+  get basePath(): string {
+    return '/streampipes-backend';
+  }
+
+  authUserBasePath() {
+    return this.basePath + '/api/v2/users/' + this.authStatusService.email;
+  }
+
 }
 
-.mat-dialog-content {
-    margin: 0px;
-    flex: 1 1 auto;
-}
-
-.mat-dialog-actions {
-    padding: 10px;
-}
-
-.customize-section {
-    display:flex;
-    flex: 1 1 auto;
-    padding: 20px;
-}

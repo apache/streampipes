@@ -25,12 +25,13 @@ import {
   DataSinkInvocation,
   DataSourceDescription
 } from "../../core-model/gen/streampipes-model";
+import {PlatformServicesCommons} from "./commons.service";
 
 @Injectable()
 export class PipelineElementService {
 
   constructor(private http: HttpClient,
-              private authStatusService: AuthStatusService) {
+              private platformServicesCommons: PlatformServicesCommons) {
   }
 
   getDataProcessors(): Observable<Array<DataProcessorInvocation>> {
@@ -51,19 +52,15 @@ export class PipelineElementService {
     })
   }
 
-  private get baseUrl(): string {
-    return '/streampipes-backend';
-  }
-
   private get dataProcessorsUrl(): string {
-    return this.baseUrl + '/api/v2/users/' + this.authStatusService.email + '/sepas'
+    return this.platformServicesCommons.authUserBasePath() + '/sepas'
   }
 
   private get dataSourcesUrl(): string {
-    return this.baseUrl + '/api/v2/users/' + this.authStatusService.email + '/sources'
+    return this.platformServicesCommons.authUserBasePath() + '/sources'
   }
 
   private get dataSinksUrl(): string {
-    return this.baseUrl + '/api/v2/users/' + this.authStatusService.email + '/actions'
+    return this.platformServicesCommons.authUserBasePath() + '/actions'
   }
 }

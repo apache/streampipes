@@ -25,7 +25,7 @@ import {EventSchema} from "../../../core-model/gen/streampipes-model";
 @Component({
   selector: 'customize-pipeline-element',
   templateUrl: './customize.component.html',
-  styleUrls: ['./customize.component.css']
+  styleUrls: ['./customize.component.scss']
 })
 export class CustomizeComponent implements OnInit {
 

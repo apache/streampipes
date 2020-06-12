@@ -18,9 +18,12 @@
 
 package org.apache.streampipes.model.pipeline;
 
+import org.apache.streampipes.model.shared.annotation.TsModel;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@TsModel
 public class PipelineOperationStatus {
 
 	private String pipelineId;

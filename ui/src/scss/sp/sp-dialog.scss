@@ -1,4 +1,4 @@
-/*
+/*!
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,24 +16,19 @@
  *
  */
 
-import {NgModule} from '@angular/core';
-import {TsonLdSerializerService} from './tsonld-serializer.service';
-import {PipelineTemplateService} from './apis/pipeline-template.service';
-import {PipelineElementService} from "./apis/pipeline-element.service";
-import {PipelineService} from "./apis/pipeline.service";
-import {PlatformServicesCommons} from "./apis/commons.service";
+.dialog-container {
+  display: flex;
+  flex-flow: column;
+  align-items: stretch;
+  flex: 1 1 100%;
+  height:100%;
+}
 
-@NgModule({
-  imports: [],
-  declarations: [],
-  providers: [
-    PlatformServicesCommons,
-    TsonLdSerializerService,
-    PipelineTemplateService,
-    PipelineElementService,
-    PipelineService
-  ],
-  entryComponents: []
-})
-export class PlatformServicesModule {
+.mat-dialog-content {
+  margin: 0px;
+  flex: 1 1 auto;
+}
+
+.mat-dialog-actions {
+  padding: 10px;
 }

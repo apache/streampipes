@@ -25,11 +25,13 @@ import {
     PipelineModificationMessage
 } from "../../core-model/gen/streampipes-model";
 import {Observable} from "rxjs";
+import {PlatformServicesCommons} from "../../platform-services/apis/commons.service";
 
 @Injectable()
 export class EditorService {
 
     constructor(private http: HttpClient,
+                private platformServicesCommons: PlatformServicesCommons,
                 private authStatusService: AuthStatusService) {
     }
 
@@ -45,12 +47,20 @@ export class EditorService {
             });
     }
 
-    private get baseUrl() {
-        return '/streampipes-backend';
+    getCachedPipeline() {
+        return this.http.get(this.platformServicesCommons.authUserBasePath() + "/pipeline-cache");
+    }
+
+    updateCachedPipeline(rawPipelineModel: any) {
+        return this.http.post(this.platformServicesCommons.authUserBasePath() + "/pipeline-cache", rawPipelineModel);
+    }
+
+    removePipelineFromCache() {
+        return this.http.delete(this.platformServicesCommons.authUserBasePath() + "/pipeline-cache");
     }
 
     private get pipelinesResourceUrl() {
-        return this.baseUrl + '/api/v2/users/' + this.authStatusService.email + '/pipelines'
+        return this.platformServicesCommons.authUserBasePath() + '/pipelines'
     }
 
 

@@ -1,0 +1,65 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div class="dialog-container">
+    <div class="mat-dialog-content padding-20">
+        <div fxFlex="100" fxLayout="column">
+
+        <form name="submitPipelineForm">
+            <div fxFlex="100" fxLayout="column">
+                <div id="overwriteCheckbox" class="checkbox" *ngIf="modificationMode">
+                    <mat-radio-group class="md-accent" [(ngModel)]="updateMode">
+                        <mat-radio-button [value]="'update'">
+                            Update pipeline <b>{{pipeline.name}}</b>
+                        </mat-radio-button>
+                        <mat-radio-button [value]="'clone'">
+                            Create new pipeline
+                        </mat-radio-button>
+                    </mat-radio-group>
+                </div>
+                <div fxFlex="100" fxLayout="column" *ngIf="!modificationMode || updateMode=='clone'">
+                    <mat-form-field fxFlex><mat-label>Pipeline Name</mat-label>
+                        <input matInput name="pipelineName" [(ngModel)]="pipeline.name" required [maxLength]="40"/>
+<!--                        <span ng-show="submitPipelineForm.pipelineName.$touched && submitPipelineForm.pipelineName.$error.required">Please provide a pipeline name.</span>-->
+<!--                        <span ng-show="submitPipelineForm.pipelineName.$error.maxlength">Please provide a shorter pipeline name.</span>-->
+                    </mat-form-field>
+                    <mat-form-field fxFlex><mat-label>Description</mat-label>
+                        <input matInput name="pipelineDescription" [(ngModel)]="pipeline.description" [maxLength]="80"/>
+<!--                        <span ng-show="submitPipelineForm.pipelineDescription.$error.maxlength">Please provide a shorter description.</span>-->
+                    </mat-form-field>
+                </div>
+                <mat-checkbox (click)="triggerTutorial()" aria-label="Start Pipeline" [(ngModel)]="startPipelineAfterStorage">
+                    Start pipeline immediately
+                </mat-checkbox>
+            </div>
+        </form>
+        </div>
+    </div>
+    <div class="mat-dialog-actions">
+        <mat-divider style="margin-bottom:10px;"></mat-divider>
+        <button mat-button mat-raised-button color="primary" (click)="savePipelineName(false)" style="margin-right:10px;">
+            Save
+        </button>
+        <button mat-button mat-raised-button color="primary" (click)="savePipelineName(true)" style="margin-right:10px;">
+            Save and go to pipeline view
+        </button>
+        <button mat-button mat-raised-button class="mat-basic" (click)="hide()">
+            Cancel
+        </button>
+    </div>
+</div>

@@ -33,6 +33,11 @@ import {
     PipelineElementHolder,
     PipelineElementUnion
 } from "../../model/editor.model";
+import {ObjectProvider} from "../../services/object-provider.service";
+import {CustomizeComponent} from "../../dialog/customize/customize.component";
+import {PanelType} from "../../../core-ui/dialog/base-dialog/base-dialog.model";
+import {SavePipelineComponent} from "../../dialog/save-pipeline/save-pipeline.component";
+import {DialogService} from "../../../core-ui/dialog/base-dialog/base-dialog.service";
 
 
 @Component({
@@ -43,7 +48,6 @@ import {
 export class PipelineAssemblyComponent implements OnInit {
 
     PipelineEditorService: any;
-    ObjectProvider: any;
     DialogBuilder: any;
     currentMouseOverElement: any;
     currentZoomLevel: any;
@@ -74,12 +78,14 @@ export class PipelineAssemblyComponent implements OnInit {
 
     constructor(private JsplumbBridge: JsplumbBridge,
                 private PipelinePositioningService: PipelinePositioningService,
+                private ObjectProvider: ObjectProvider,
                 //private EditorDialogManager: EditorDialogManager,
                 public PipelineValidationService: PipelineValidationService,
                 private RestApi: RestApi,
                 private JsplumbService: JsplumbService,
                 //private TransitionService: TransitionService,
-                private ShepherdService: ShepherdService) {
+                private ShepherdService: ShepherdService,
+                private dialogService: DialogService) {
 
         this.selectMode = true;
         this.currentZoomLevel = 1;
@@ -192,7 +198,14 @@ export class PipelineAssemblyComponent implements OnInit {
             pipeline._id = this.currentModifiedPipelineId;
         }
 
-        this.openPipelineNameModal(pipeline, (!!this.currentModifiedPipelineId));
+        const dialogRef = this.dialogService.open(SavePipelineComponent,{
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: "Save pipeline",
+            data: {
+                "pipeline": pipeline,
+                "currentModifiedPipelineId": this.currentModifiedPipelineId
+            }
+        });
     }
 
 
