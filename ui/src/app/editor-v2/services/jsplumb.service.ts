@@ -150,6 +150,7 @@ export class JsplumbService {
         let pipelineElementConfig = {} as PipelineElementConfig;
         pipelineElementConfig.type = PipelineElementTypeUtils
             .toCssShortHand(PipelineElementTypeUtils.fromType(pipelineElement))
+        console.log(pipelineElementConfig.type);
         pipelineElementConfig.payload = this.clone(pipelineElement);
         pipelineElementConfig.settings = {connectable: connectable,
             openCustomize: !(pipelineElement as any).configured,

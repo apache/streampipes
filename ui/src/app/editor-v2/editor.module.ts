@@ -50,12 +50,15 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {CoreUiModule} from "../core-ui/core-ui.module";
 import {SavePipelineComponent} from "./dialog/save-pipeline/save-pipeline.component";
 import {PipelineElementRecommendationComponent} from "./components/pipeline-element-recommendation/pipeline-element-recommendation.component";
+import {CompatibleElementsComponent} from "./dialog/compatible-elements/compatible-elements.component";
+import {MatListModule} from "@angular/material/list";
 
 @NgModule({
     imports: [
         CoreUiModule,
         CommonModule,
         MatTabsModule,
+        MatListModule,
         FlexLayoutModule,
         GridsterModule,
         CommonModule,
@@ -66,6 +69,7 @@ import {PipelineElementRecommendationComponent} from "./components/pipeline-elem
         MatProgressSpinnerModule
     ],
     declarations: [
+        CompatibleElementsComponent,
         CustomizeComponent,
         EditorComponent,
         PipelineAssemblyComponent,

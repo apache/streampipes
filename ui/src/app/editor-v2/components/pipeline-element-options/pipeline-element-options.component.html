@@ -40,7 +40,7 @@
     <span class="options-button possible-button" *ngIf="pipelineElement.type!='action'" style="z-index:10">
         <button mat-button mat-icon-button matTooltip="Compatible Elements" [matTooltipPosition]="'below'"
                 [disabled]="!possibleElements || possibleElements.length == 0 || !isConfigured()"
-                (click)="EditorDialogManager.openPossibleElementsDialog(rawPipelineModel, possibleElements, pipelineElement.payload.dom)">
+                (click)="openPossibleElementsDialog()">
             <i class="material-icons">visibility</i>
     </button>
     </span>

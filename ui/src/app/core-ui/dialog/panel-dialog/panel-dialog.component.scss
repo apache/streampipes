@@ -24,6 +24,12 @@ app-dialog-container {
   box-shadow: -7px 0px 5px -5px #5d5d5d;
 }
 
+.dialog-panel {
+  height: 100vh;
+  display: grid;
+  grid-template-rows: 50px auto;
+}
+
 .dialog-panel-header {
   display: flex;
   justify-content: space-between;
@@ -35,7 +41,8 @@ app-dialog-container {
 }
 
 .dialog-panel-content {
-  flex: 1 1 100%;
+  height: 100%;
+  overflow-y:auto;
 }
 
 .dialog-title {

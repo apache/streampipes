@@ -1,4 +1,4 @@
-/*!
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,23 +16,25 @@
  *
  */
 
-.dialog-container {
-  display: grid;
-  height: 100%;
-  grid-template-rows: 1fr auto;
+@import '../../../../scss/sp/sp-dialog.scss';
+
+
+
+.element-name {
 
 }
 
-.mat-dialog-content {
-  margin: 0px;
-  overflow-y:auto;
-  flex: 1 1 auto;
+.element-description {
+
 }
 
-.mat-dialog-actions {
-  padding: 10px;
+.m-10 {
+  padding-top:10px;
+  padding-bottom:10px;
 }
 
-.p-15 {
-  padding: 15px;
+
+
+.list-item {
+
 }

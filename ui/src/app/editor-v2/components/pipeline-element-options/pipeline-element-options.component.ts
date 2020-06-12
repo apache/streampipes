@@ -32,6 +32,9 @@ import {
 import {SpDataStream, WildcardTopicDefinition} from "../../../core-model/gen/streampipes-model";
 import {PipelineElementTypeUtils} from "../../utils/editor.utils";
 import {EditorService} from "../../services/editor.service";
+import {PanelType} from "../../../core-ui/dialog/base-dialog/base-dialog.model";
+import {DialogService} from "../../../core-ui/dialog/base-dialog/base-dialog.service";
+import {CompatibleElementsComponent} from "../../dialog/compatible-elements/compatible-elements.component";
 
 @Component({
   selector: 'pipeline-element-options',
@@ -41,8 +44,8 @@ import {EditorService} from "../../services/editor.service";
 export class PipelineElementOptionsComponent implements OnInit{
 
   recommendationsAvailable: any;
-  possibleElements: any;
-  recommendedElements: any;
+  possibleElements: PipelineElementUnion[];
+  recommendedElements: PipelineElementUnion[];
   recommendationsShown: any;
   pipelineElementCssType: string;
 
@@ -75,10 +78,10 @@ export class PipelineElementOptionsComponent implements OnInit{
 
   constructor(private ObjectProvider: ObjectProvider,
               private PipelineElementRecommendationService: PipelineElementRecommendationService,
+              private DialogService: DialogService,
               private EditorService: EditorService,
               //private InitTooltips: InitTooltips,
               private JsplumbBridge: JsplumbBridge,
-              //private EditorDialogManager: EditorDialogManager,
               private JsplumbService: JsplumbService,
               //private TransitionService: TransitionService,
               private PipelineValidationService: PipelineValidationService,
@@ -142,6 +145,22 @@ export class PipelineElementOptionsComponent implements OnInit{
         this.recommendationsAvailable = true;
         //this.InitTooltips.initTooltips();
       }
+    });
+  }
+
+  openPossibleElementsDialog() {
+    const dialogRef = this.DialogService.open(CompatibleElementsComponent,{
+      panelType: PanelType.SLIDE_IN_PANEL,
+      title: "Compatible Elements",
+      data: {
+        "rawPipelineModel": this.rawPipelineModel,
+        "possibleElements": this.possibleElements,
+        "pipelineElementDomId": this.pipelineElement.payload.dom
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(c => {
+
     });
   }
 
