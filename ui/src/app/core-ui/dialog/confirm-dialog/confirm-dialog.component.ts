@@ -1,4 +1,4 @@
-/*!
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,23 +16,22 @@
  *
  */
 
-.sp-dialog-container {
-  display: grid;
-  height: 100%;
-  grid-template-rows: auto 10px 60px;
+import {Component, Inject} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 
-}
 
-.sp-dialog-content {
-  margin: 0px;
-  overflow-y:auto;
-  flex: 1 1 auto;
-}
+@Component({
+  selector: 'confirmation-dialog',
+  templateUrl: './confirm-dialog.component.html',
+  styleUrls: ['./confirm-dialog.component.scss']
+})
+export class ConfirmDialogComponent {
+  constructor(
+      public dialogRef: MatDialogRef<ConfirmDialogComponent>,
+      @Inject(MAT_DIALOG_DATA) public data: any) {
+  }
 
-.sp-dialog-actions {
-  padding: 10px;
-}
-
-.p-15 {
-  padding: 15px;
+  onCancel(): void {
+    this.dialogRef.close();
+  }
 }

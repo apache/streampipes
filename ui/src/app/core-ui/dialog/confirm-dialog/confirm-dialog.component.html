@@ -1,0 +1,10 @@
+<div fxFlex="100" fxLayout="column">
+    <div>
+        <h4>{{data.title}}</h4>
+        <h5>{{data.subtitle}}</h5>
+    </div>
+    <div fxFlex="100" fxLayoutAlign="end center" class="footer">
+        <button mat-button (click)="onCancel()">No</button>
+        <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Yes</button>
+    </div>
+</div>

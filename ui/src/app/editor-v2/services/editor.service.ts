@@ -34,6 +34,8 @@ export class EditorService {
 
     public pipelineElementConfigured$ = this.pipelineElementConfigured.asObservable();
 
+    pipelineAssemblyEmpty: boolean = true;
+
     constructor(private http: HttpClient,
                 private platformServicesCommons: PlatformServicesCommons) {
     }
@@ -68,6 +70,10 @@ export class EditorService {
 
     announceConfiguredElement(pipelineElementDomId: string) {
         this.pipelineElementConfigured.next(pipelineElementDomId);
+    }
+
+    makePipelineAssemblyEmpty(status) {
+        this.pipelineAssemblyEmpty = status;
     }
 
 

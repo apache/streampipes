@@ -39,7 +39,6 @@ import {JsplumbConfigService} from '../editor-v2/services/jsplumb-config.service
 import {PipelineElementIconService} from './pipeline-icon.service'
 import {ObjectProvider} from '../editor-v2/services/object-provider.service'
 import {downgradeInjectable} from '@angular/upgrade/static';
-import {TransitionService} from "./transition.service";
 import {ShepherdService} from "./tour/shepherd.service";
 import {TourProviderService} from "./tour/tour-provider.service";
 import {PropertySelectorService} from "./property-selector.service";
@@ -72,7 +71,6 @@ export default angular.module('sp.services', [spConstants])
     .service('JsplumbConfigService', JsplumbConfigService)
     .service('PipelineElementIconService', PipelineElementIconService)
 	.service('RouteTransitionInterceptorService', RouteTransitionInterceptorService)
-	.service('TransitionService', TransitionService)
 	.service('ShepherdService', ShepherdService)
 	.service('TourProviderService', TourProviderService)
 	.service('PropertySelectorService', PropertySelectorService)

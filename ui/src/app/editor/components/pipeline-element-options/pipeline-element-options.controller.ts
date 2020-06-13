@@ -20,7 +20,6 @@ import * as angular from 'angular';
 import {JsplumbBridge} from "../../../editor-v2/services/jsplumb-bridge.service";
 import {JsplumbService} from "../../../editor-v2/services/jsplumb.service";
 import {PipelineValidationService} from "../../../editor-v2/services/pipeline-validation.service";
-import {TransitionService} from "../../../services/transition.service";
 import {RestApi} from "../../../services/rest-api.service";
 
 export class PipelineElementOptionsController {
@@ -40,7 +39,6 @@ export class PipelineElementOptionsController {
     rawPipelineModel: any;
     allElements: any;
     deleteFunction: any;
-    TransitionService: TransitionService;
     $rootScope: any;
     $timeout: any;
     RestApi: RestApi;
@@ -56,7 +54,6 @@ export class PipelineElementOptionsController {
         this.JsplumbBridge = JsplumbBridge;
         this.EditorDialogManager = EditorDialogManager;
         this.JsplumbService = JsplumbService;
-        this.TransitionService = TransitionService;
         this.PipelineValidationService = PipelineValidationService;
         this.RestApi = RestApi;
 

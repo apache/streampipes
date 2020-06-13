@@ -117,7 +117,7 @@ export class SavePipelineComponent implements OnInit {
   afterStorage(data: Message, switchTab) {
     this.displaySuccess(data);
     this.hide();
-    //this.TransitionService.makePipelineAssemblyEmpty(true);
+    this.editorService.makePipelineAssemblyEmpty(true);
     this.editorService.removePipelineFromCache();
     if (this.ShepherdService.isTourActive()) {
       this.ShepherdService.hideCurrentStep();

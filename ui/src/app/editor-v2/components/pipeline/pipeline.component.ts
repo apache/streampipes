@@ -176,7 +176,7 @@ export class PipelineComponent implements OnInit {
         let pipelineElementId = ui.draggable.data("pe");
         let pipelineElement: PipelineElementUnion = this.findPipelineElementByElementId(pipelineElementId);
         if (ui.draggable.hasClass('draggable-icon')) {
-          //this.TransitionService.makePipelineAssemblyEmpty(false);
+          this.EditorService.makePipelineAssemblyEmpty(false);
           var pipelineElementConfig = this.JsplumbService.createNewPipelineElementConfig(pipelineElement, this.PipelineEditorService.getCoordinates(ui, this.currentZoomLevel), false);
           if ((this.isStreamInPipeline() && pipelineElementConfig.type == 'set') ||
               this.isSetInPipeline() && pipelineElementConfig.type == 'stream') {
@@ -243,7 +243,7 @@ export class PipelineComponent implements OnInit {
       }
     });
     if (this.rawPipelineModel.every(pe => pe.settings.disabled)) {
-      this.TransitionService.makePipelineAssemblyEmpty(true);
+      this.EditorService.makePipelineAssemblyEmpty(true);
     }
     this.JsplumbBridge.repaintEverything();
     this.RestApi.updateCachedPipeline(this.rawPipelineModel);

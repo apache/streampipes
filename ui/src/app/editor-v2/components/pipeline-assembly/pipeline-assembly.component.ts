@@ -28,6 +28,9 @@ import {ObjectProvider} from "../../services/object-provider.service";
 import {PanelType} from "../../../core-ui/dialog/base-dialog/base-dialog.model";
 import {SavePipelineComponent} from "../../dialog/save-pipeline/save-pipeline.component";
 import {DialogService} from "../../../core-ui/dialog/base-dialog/base-dialog.service";
+import {ConfirmDialogComponent} from "../../../core-ui/dialog/confirm-dialog/confirm-dialog.component";
+import {MatDialog} from "@angular/material/dialog";
+import {EditorService} from "../../services/editor.service";
 
 
 @Component({
@@ -64,22 +67,20 @@ export class PipelineAssemblyComponent implements OnInit {
 
     // Remove later
     EditorDialogManager: any;
-    TransitionService: any;
 
     constructor(private JsplumbBridge: JsplumbBridge,
                 private PipelinePositioningService: PipelinePositioningService,
                 private ObjectProvider: ObjectProvider,
-                //private EditorDialogManager: EditorDialogManager,
+                private EditorService: EditorService,
                 public PipelineValidationService: PipelineValidationService,
                 private RestApi: RestApi,
                 private JsplumbService: JsplumbService,
-                //private TransitionService: TransitionService,
                 private ShepherdService: ShepherdService,
-                private dialogService: DialogService) {
+                private dialogService: DialogService,
+                private dialog: MatDialog) {
 
         this.selectMode = true;
         this.currentZoomLevel = 1;
-
 
     }
 
@@ -141,15 +142,22 @@ export class PipelineAssemblyComponent implements OnInit {
         ($("#assembly") as any).panzoom("zoom", zoomOut);
     }
 
-    showClearAssemblyConfirmDialog(ev) {
-        this.EditorDialogManager.showClearAssemblyDialog(ev).then(() => {
-            if (this.currentModifiedPipelineId) {
-                this.currentModifiedPipelineId = undefined;
+    showClearAssemblyConfirmDialog(event: any) {
+        let dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            width: '500px',
+            data: {
+                "title": "Do you really want to delete the current pipeline?",
+                "subtitle": "This cannot be undone."
+            },
+        });
+        dialogRef.afterClosed().subscribe(ev => {
+            if (ev) {
+                if (this.currentModifiedPipelineId) {
+                    this.currentModifiedPipelineId = undefined;
+                }
+                this.clearAssembly();
+                this.EditorService.makePipelineAssemblyEmpty(true);
             }
-            this.clearAssembly();
-            this.TransitionService.makePipelineAssemblyEmpty(true);
-
-        }, function () {
         });
     };
 
@@ -225,7 +233,7 @@ export class PipelineAssemblyComponent implements OnInit {
 
     displayPipelineInEditor(autoLayout) {
         this.PipelinePositioningService.displayPipeline(this.rawPipelineModel, "#assembly", false, autoLayout);
-        this.TransitionService.makePipelineAssemblyEmpty(false);
+        this.EditorService.makePipelineAssemblyEmpty(false);
         this.pipelineValid = this.PipelineValidationService.isValidPipeline(this.rawPipelineModel);
     }
 

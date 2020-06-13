@@ -73,13 +73,15 @@ export class CompatibleElementsComponent {
 
   makeStandardStyle() {
     return {
-      background: "white"
+      background: "white",
+      cursor: "auto"
     }
   }
 
   makeHoverStyle() {
     return {
-      background: "lightgrey"
+      background: "lightgrey",
+      cursor: "pointer"
     }
   }
 

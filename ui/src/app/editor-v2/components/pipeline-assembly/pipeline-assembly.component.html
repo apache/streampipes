@@ -87,7 +87,7 @@
                     </div>
                 </div>
             </div>
-            <button mat-button matTooltip="Clear Assembly Area" [matTooltipPosition]="'above'"
+            <button mat-button matTooltip="Clear Assembly Area" [matTooltipPosition]="'above'" [disabled]="EditorService.pipelineAssemblyEmpty"
                     class="md-icon-button" (click)="showClearAssemblyConfirmDialog($event)">
                 <i class="material-icons">clear</i>
             </button>

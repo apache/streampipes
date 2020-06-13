@@ -51,6 +51,7 @@ import {PanelDialogComponent} from "./dialog/panel-dialog/panel-dialog.component
 import {DialogService} from "./dialog/base-dialog/base-dialog.service";
 import {PortalModule} from "@angular/cdk/portal";
 import {OverlayModule} from "@angular/cdk/overlay";
+import {ConfirmDialogComponent} from "./dialog/confirm-dialog/confirm-dialog.component";
 // PlotlyViaCDNModule.plotlyjs = PlotlyJS;
 
 @NgModule({
@@ -72,6 +73,7 @@ import {OverlayModule} from "@angular/cdk/overlay";
         OverlayModule,
     ],
     declarations: [
+        ConfirmDialogComponent,
         ImageComponent,
         ImageContainerComponent,
         ImageLabelingComponent,
@@ -99,7 +101,8 @@ import {OverlayModule} from "@angular/cdk/overlay";
         ImageComponent,
         ImageLabelingComponent,
         StandardDialogComponent,
-        PanelDialogComponent
+        PanelDialogComponent,
+        ConfirmDialogComponent
     ]
 })
 export class CoreUiModule {

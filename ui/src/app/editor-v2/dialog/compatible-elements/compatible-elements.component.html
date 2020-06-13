@@ -16,8 +16,8 @@
   ~
   -->
 
-<div class="dialog-container">
-    <div class="mat-dialog-content p-15">
+<div class="sp-dialog-container">
+    <div class="sp-dialog-content p-15">
         <div fxFlex="100" fxLayout="column">
             <div *ngFor="let possibleElement of possibleElements; index as i" (click)="create(possibleElement)">
                 <div fxLayout="row" class="m-10" fxLayoutAlign="start center" [style]="styles[i]" (mouseenter)="changeStyle(i, true)" (mouseleave)="changeStyle(i, false)" >
@@ -33,10 +33,11 @@
             </div>
         </div>
     </div>
-        <div class="mat-dialog-actions">
-            <mat-divider style="margin-bottom:10px;"></mat-divider>
-            <button mat-button mat-raised-button class="mat-basic" (click)="hide()">
-                Cancel
-            </button>
-        </div>
+    <mat-divider></mat-divider>
+    <div class="sp-dialog-actions">
+
+        <button mat-button mat-raised-button class="mat-basic" (click)="hide()">
+            Cancel
+        </button>
+    </div>
 </div>
