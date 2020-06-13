@@ -24,7 +24,7 @@ import {JsplumbService} from "../../services/jsplumb.service";
 import {PipelineEditorService} from "../../services/pipeline-editor.service";
 import {JsplumbBridge} from "../../services/jsplumb-bridge.service";
 import {ShepherdService} from "../../../services/tour/shepherd.service";
-import {Component, Input, OnInit} from "@angular/core";
+import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import {
   InvocablePipelineElementUnion,
   PipelineElementConfig,
@@ -67,8 +67,14 @@ export class PipelineComponent implements OnInit {
   @Input()
   pipelineCached: boolean;
 
+  @Output()
+  pipelineCachedChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
+
   @Input()
   pipelineCacheRunning: boolean;
+
+  @Output()
+  pipelineCacheRunningChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   availablePipelineElementCache: PipelineElementUnion[];
 
@@ -110,11 +116,7 @@ export class PipelineComponent implements OnInit {
   }
 
   validatePipeline() {
-    //this.$timeout(() => {
       this.pipelineValid = this.PipelineValidationService.isValidPipeline(this.rawPipelineModel);
-      console.log("validating");
-      console.log(this.pipelineValid);
-    //}, 200);
   }
 
   ngOnDestroy() {
@@ -246,7 +248,7 @@ export class PipelineComponent implements OnInit {
       this.EditorService.makePipelineAssemblyEmpty(true);
     }
     this.JsplumbBridge.repaintEverything();
-    this.RestApi.updateCachedPipeline(this.rawPipelineModel);
+    this.triggerPipelineCacheUpdate();
   }
 
   initPlumb() {
@@ -350,9 +352,12 @@ export class PipelineComponent implements OnInit {
 
   triggerPipelineCacheUpdate() {
     this.pipelineCacheRunning = true;
-    this.RestApi.updateCachedPipeline(this.rawPipelineModel).then(msg => {
+    this.pipelineCacheRunningChanged.emit(this.pipelineCacheRunning);
+    this.EditorService.updateCachedPipeline(this.rawPipelineModel).subscribe(msg => {
       this.pipelineCacheRunning = false;
+      this.pipelineCacheRunningChanged.emit(this.pipelineCacheRunning)
       this.pipelineCached = true;
+      this.pipelineCachedChanged.emit(this.pipelineCached);
     });
   }
 
@@ -367,7 +372,9 @@ export class PipelineComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(c => {
       if (c) {
-        this.JsplumbService.activateEndpoint(pipelineElement.payload.dom, pipelineElement.settings.completed)
+        pipelineElement.settings.openCustomize = false;
+        this.JsplumbService.activateEndpoint(pipelineElement.payload.dom, pipelineElement.settings.completed);
+        this.triggerPipelineCacheUpdate();
       }
     });
   }

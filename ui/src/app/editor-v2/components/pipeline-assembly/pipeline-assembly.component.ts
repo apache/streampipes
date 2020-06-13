@@ -88,7 +88,7 @@ export class PipelineAssemblyComponent implements OnInit {
         if (this.currentModifiedPipelineId) {
             //this.displayPipelineById();
         } else {
-            //this.checkAndDisplayCachedPipeline();
+            this.checkAndDisplayCachedPipeline();
         }
 
         // this.$rootScope.$on("pipeline.validate", () => {
@@ -178,7 +178,7 @@ export class PipelineAssemblyComponent implements OnInit {
         this.currentZoomLevel = 1;
         this.JsplumbBridge.setZoom(this.currentZoomLevel);
         this.JsplumbBridge.repaintEverything();
-        this.RestApi.removePipelineFromCache().then(msg => {
+        this.EditorService.removePipelineFromCache().subscribe(msg => {
             this.pipelineCached = false;
             this.pipelineCacheRunning = false;
         });
@@ -212,9 +212,9 @@ export class PipelineAssemblyComponent implements OnInit {
     }
 
     checkAndDisplayCachedPipeline() {
-        this.RestApi.getCachedPipeline().then(msg => {
-            if (msg.data !== "") {
-                this.rawPipelineModel = msg.data;
+        this.EditorService.getCachedPipeline().subscribe(msg => {
+            if (msg) {
+                this.rawPipelineModel = msg as any;
                 this.displayPipelineInEditor(true);
             }
         });
@@ -232,9 +232,11 @@ export class PipelineAssemblyComponent implements OnInit {
     };
 
     displayPipelineInEditor(autoLayout) {
-        this.PipelinePositioningService.displayPipeline(this.rawPipelineModel, "#assembly", false, autoLayout);
-        this.EditorService.makePipelineAssemblyEmpty(false);
-        this.pipelineValid = this.PipelineValidationService.isValidPipeline(this.rawPipelineModel);
+        setTimeout(() => {
+            this.PipelinePositioningService.displayPipeline(this.rawPipelineModel, "#assembly", false, autoLayout);
+            this.EditorService.makePipelineAssemblyEmpty(false);
+            this.pipelineValid = this.PipelineValidationService.isValidPipeline(this.rawPipelineModel);
+        });
     }
 
     toggleErrorMessagesDisplayed() {

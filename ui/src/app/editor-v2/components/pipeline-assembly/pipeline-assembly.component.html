@@ -52,10 +52,10 @@
             </button>
             <div class="pipeline-cache-block">
                 <div *ngIf="pipelineCached">All pipeline modifications saved.</div>
-                <!--                <div ng-if="pipelineCacheRunning"><md-progress-circular-->
-                <!--                        md-mode="indeterminate" class="pipeline-cache-progress"-->
-                <!--                        md-diameter="10"></md-progress-circular>&nbsp;Saving pipeline-->
-                <!--                    modifications</div>-->
+                    <div *ngIf="pipelineCacheRunning">
+                        <mat-spinner [mode]="'indeterminate'" class="pipeline-cache-progress" [diameter]="10">
+                        </mat-spinner>&nbsp;Saving pipeline
+                        modifications</div>
             </div>
             <span fxFlex></span>
             <div style="position:relative;">
@@ -101,7 +101,10 @@
                       [allElements]="allElements"
                       [preview]="false"
                       [pipelineCached]="pipelineCached"
-                      [pipelineCacheRunning]="pipelineCacheRunning"></pipeline>
+                      [pipelineCacheRunning]="pipelineCacheRunning"
+                      (pipelineCachedChanged)="pipelineCached=$event"
+                      (pipelineCacheRunningChanged)="pipelineCacheRunning=$event"
+            ></pipeline>
         </div>
     </div>
 </div>
