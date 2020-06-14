@@ -128,6 +128,9 @@ export class EditorComponent implements OnInit {
         this.selectedIndex = index;
         this.activeType = this.tabs[index].type;
         this.currentElements = this.allElements
-            .filter(pe => pe instanceof PipelineElementTypeUtils.toType(this.activeType));
+            .filter(pe => pe instanceof PipelineElementTypeUtils.toType(this.activeType))
+            .sort((a, b) => {
+                return a.name.localeCompare(b.name);
+            });
     }
 }
