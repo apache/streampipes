@@ -101,8 +101,7 @@ export class PipelineElementOptionsComponent implements OnInit{
         this.initRecs(this.pipelineElement.payload.dom);
       }
     });
-    let pipelineElementType = PipelineElementTypeUtils.fromType(this.pipelineElement.payload);
-    this.pipelineElementCssType = PipelineElementTypeUtils.toCssShortHand(pipelineElementType);
+    this.pipelineElementCssType = this.pipelineElement.type;
 
     if (this.pipelineElement.type === 'stream') {
       this.initRecs(this.pipelineElement.payload.dom);
