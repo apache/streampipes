@@ -170,6 +170,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
         {{#ng5}}
         .state('{{{link}}}', {
             url: '{{{url}}}',
+            {{#containsPipeline}}{{ng1_templateUrl}}{{/containsPipeline}}
             views: {
                 "spMain@streampipes": {
                     component: {{{ng5_component}}}
