@@ -16,27 +16,37 @@
  *
  */
 
-import {AuthStatusService} from "../../services/auth-status.service";
-import {Injectable} from "@angular/core";
+import {Component, Input, OnInit} from "@angular/core";
+import {PipelineElementService} from "../../../platform-services/apis/pipeline-element.service";
 
-@Injectable()
-export class PlatformServicesCommons {
+@Component({
+  selector: 'pipeline-element-documentation',
+  templateUrl: './pipeline-element-documentation.component.html',
+  styleUrls: ['./pipeline-element-documentation.component.scss']
+})
+export class PipelineElementDocumentationComponent implements OnInit {
 
-  constructor(private authStatusService: AuthStatusService) {
+  @Input()
+  appId: string;
+
+  @Input()
+  useStyling: boolean;
+
+  documentationMarkdown: any;
+  error: any;
+
+  constructor(private PipelineElementService: PipelineElementService) {
 
   }
 
-  get basePath(): string {
-    return '/streampipes-backend';
+  ngOnInit(): void {
+    this.PipelineElementService.getDocumentation(this.appId).subscribe(msg => {
+      this.error = false;
+      this.documentationMarkdown = msg;
+    }, error => {
+      this.error = true;
+    });
   }
 
-  authUserBasePath() {
-    return this.basePath + '/api/v2/users/' + this.authStatusService.email;
-  }
-
-  get unauthenticatedBasePath() {
-    return this.basePath + '/api/v2';
-  }
 
 }
-

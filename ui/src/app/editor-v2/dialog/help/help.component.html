@@ -27,42 +27,43 @@
             <mat-tab *ngFor="let tab of tabs" label="{{tab.title}}">
             </mat-tab>
         </mat-tab-group>
+        <div style="margin-top:15px;">
+            <div *ngIf="selectedIndex == 0 && streamMode">
+                <h5>Field Names</h5>
 
-        <div *ngIf="selectedIndex == 0 && streamMode">
-            <h5>Field Names</h5>
-
-            <div>
-                <table class="dataTable row-border hover">
-                    <thead>
-                    <tr>
-                        <th>Field Name</th>
-                        <th>Description</th>
-                        <th>Runtime Name</th>
-                        <th>Type</th>
-                    </tr>
-                    </thead>
-                    <tbody id="preview-data-rows-id">
-                    <tr *ngFor="let property of pipelineElement.eventSchema.eventProperties">
-                        <td>{{property.label ? property.label : "(n/a)"}}</td>
-                        <td>{{property.description ? property.description : "(n/a)"}}</td>
-                        <td>{{property.runtimeName}}</td>
-                        <td>{{getFriendlyRuntimeType(property.runtimeType)}}</td>
-                    </tr>
-                    </tbody>
-                </table>
+                <div>
+                    <table class="dataTable row-border hover">
+                        <thead>
+                        <tr>
+                            <th>Field Name</th>
+                            <th>Description</th>
+                            <th>Runtime Name</th>
+                            <th>Type</th>
+                        </tr>
+                        </thead>
+                        <tbody id="preview-data-rows-id">
+                        <tr *ngFor="let property of pipelineElement.eventSchema.eventProperties">
+                            <td>{{property.label ? property.label : "(n/a)"}}</td>
+                            <td>{{property.description ? property.description : "(n/a)"}}</td>
+                            <td>{{property.runtimeName}}</td>
+                            <td>{{getFriendlyRuntimeType(property.runtimeType)}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div *ngIf="selectedIndex == 1 && streamMode">
+                <div>
+                    <pipeline-element-runtime-info [streamDescription]="pipelineElement" [pollingActive]="pollingActive"></pipeline-element-runtime-info>
+                </div>
+            </div>
+            <div *ngIf="selectedTab == 2 || !(streamMode)">
+                <pipeline-element-documentation [useStyling]="false" [appId]="pipelineElement.appId"></pipeline-element-documentation>
             </div>
         </div>
-        <div *ngIf="selectedIndex == 1 && streamMode">
-            <div>
-                <pipeline-element-runtime-info [streamDescription]="pipelineElement" [pollingActive]="pollingActive"></pipeline-element-runtime-info>
-            </div>
-        </div>
-<!--        <div *ngIf="selectedTab == 'documentation'">-->
-<!--            <pipeline-element-documentation use-styling="false" app-id="ctrl.pipelineElement.appId"></pipeline-element-documentation>-->
-<!--        </div>-->
     </div>
     <mat-divider></mat-divider>
-    <div class="sp-dialog-actions">
+    <div class="sp-dialog-actions actions-align-right">
         <button mat-button mat-raised-button class="mat-basic" (click)="close()">
             Close
         </button>

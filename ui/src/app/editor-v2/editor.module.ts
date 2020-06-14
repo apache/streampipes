@@ -53,6 +53,8 @@ import {PipelineElementRecommendationComponent} from "./components/pipeline-elem
 import {CompatibleElementsComponent} from "./dialog/compatible-elements/compatible-elements.component";
 import {MatListModule} from "@angular/material/list";
 import {HelpComponent} from "./dialog/help/help.component";
+import {PipelineElementDocumentationComponent} from "./components/pipeline-element-documentation/pipeline-element-documentation.component";
+import { ShowdownModule } from 'ngx-showdown';
 
 @NgModule({
     imports: [
@@ -67,7 +69,8 @@ import {HelpComponent} from "./dialog/help/help.component";
         CustomMaterialModule,
         FormsModule,
         ConnectModule,
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
+        ShowdownModule
     ],
     declarations: [
         CompatibleElementsComponent,
@@ -75,8 +78,9 @@ import {HelpComponent} from "./dialog/help/help.component";
         EditorComponent,
         HelpComponent,
         PipelineAssemblyComponent,
-        PipelineElementIconStandComponent,
         PipelineElementComponent,
+        PipelineElementDocumentationComponent,
+        PipelineElementIconStandComponent,
         PipelineElementOptionsComponent,
         PipelineElementRecommendationComponent,
         PipelineComponent,

@@ -52,6 +52,13 @@ export class PipelineElementService {
     })
   }
 
+  getDocumentation(appId) {
+    return this.http.get(this.platformServicesCommons.unauthenticatedBasePath
+        + "/pe/"
+        + appId
+        + "/assets/documentation", {responseType: 'text'});
+  }
+
   private get dataProcessorsUrl(): string {
     return this.platformServicesCommons.authUserBasePath() + '/sepas'
   }
@@ -63,4 +70,5 @@ export class PipelineElementService {
   private get dataSinksUrl(): string {
     return this.platformServicesCommons.authUserBasePath() + '/actions'
   }
+
 }

@@ -28,7 +28,6 @@ import 'npm/bootstrap';
 import 'npm/angular-trix';
 import 'npm/angular-datatables';
 import 'npm/angular-sanitize';
-import 'npm/ng-showdown';
 
 import {EditorCtrl} from './editor.controller';
 import myDataBind from './my-data-bind.directive';
@@ -76,7 +75,7 @@ import {CodeEditorDirective} from "./components/code/code-editor.directive";
 import {UserDefinedOutputComponent} from "./components/userdefinedoutput/user-defined-output.component";
 
 
-export default angular.module('sp.editor', [spServices, 'ngSanitize', 'angularTrix', 'ngAnimate', 'datatables', 'ng-showdown'])
+export default angular.module('sp.editor', [spServices, 'ngSanitize', 'angularTrix', 'ngAnimate', 'datatables'])
     .controller('EditorCtrl', EditorCtrl)
     .directive('myDataBind', myDataBind)
     .directive('imageBind', imageBind)
