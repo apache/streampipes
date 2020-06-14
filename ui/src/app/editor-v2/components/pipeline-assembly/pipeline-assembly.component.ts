@@ -71,7 +71,7 @@ export class PipelineAssemblyComponent implements OnInit {
     constructor(private JsplumbBridge: JsplumbBridge,
                 private PipelinePositioningService: PipelinePositioningService,
                 private ObjectProvider: ObjectProvider,
-                private EditorService: EditorService,
+                public EditorService: EditorService,
                 public PipelineValidationService: PipelineValidationService,
                 private RestApi: RestApi,
                 private JsplumbService: JsplumbService,

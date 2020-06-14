@@ -22,7 +22,6 @@ import {ShepherdService} from '../../../services/tour/shepherd.service';
 import {RestService} from "../../rest.service";
 import {PipelineTemplateService} from '../../../platform-services/apis/pipeline-template.service';
 import {
-    EventPropertyUnion,
     FreeTextStaticProperty,
     GenericAdapterSetDescription,
     MappingPropertyUnary,
@@ -83,7 +82,6 @@ export class AdapterStartedDialog {
                         this.restService.getSourceDetails(x.notifications[0].title).subscribe(x => {
                             this.streamDescription = x.spDataStreams[0];
                             this.pollingActive = true;
-                            this.getLatestRuntimeInfo();
                         });
                     }
 
@@ -114,40 +112,7 @@ export class AdapterStartedDialog {
         }
     }
 
-    getLatestRuntimeInfo() {
-        this.restService.getRuntimeInfo(this.streamDescription).subscribe(data => {
-            if (!(Object.keys(data).length === 0 && data.constructor === Object)) {
-                this.runtimeData = data;
-            }
 
-            if (this.pollingActive) {
-                setTimeout(() => {
-                    this.getLatestRuntimeInfo();
-                }, 1000);
-            }
-        });
-    }
-
-    isPropertyType(property: EventPropertyUnion, type) {
-      return property.domainProperties !== undefined && property.domainProperties.length === 1 &&
-        property.domainProperties[0] === type;
-    }
-
-    isImage(property) {
-        return this.isPropertyType(property, 'https://image.com');
-    }
-
-    isTimestamp(property) {
-      return this.isPropertyType(property, 'http://schema.org/DateTime');
-    }
-
-    hasNoDomainProperty(property) {
-        if (this.isTimestamp(property) || this.isImage(property)) {
-            return false;
-        } else {
-            return true;
-        }
-    }
 
     onCloseConfirm() {
         this.pollingActive = false;

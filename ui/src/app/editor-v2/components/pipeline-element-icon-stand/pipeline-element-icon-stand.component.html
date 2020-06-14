@@ -86,7 +86,7 @@
             <span style="display:block;width:100%;height:100%;position:absolute; top:0; left:0;"
                   *ngIf="currentElementName===element.name">
                 <span class="help-button-icon-stand" style="z-index:10"><md-button
-                        ng-click="openHelpDialog(element)"
+                        (click)="openHelpDialog(element)"
                         class="md-icon-button"
                         style="margin:0px;font-size:20px;">?</md-button>
                 </span>

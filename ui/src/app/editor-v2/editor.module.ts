@@ -52,6 +52,7 @@ import {SavePipelineComponent} from "./dialog/save-pipeline/save-pipeline.compon
 import {PipelineElementRecommendationComponent} from "./components/pipeline-element-recommendation/pipeline-element-recommendation.component";
 import {CompatibleElementsComponent} from "./dialog/compatible-elements/compatible-elements.component";
 import {MatListModule} from "@angular/material/list";
+import {HelpComponent} from "./dialog/help/help.component";
 
 @NgModule({
     imports: [
@@ -72,6 +73,7 @@ import {MatListModule} from "@angular/material/list";
         CompatibleElementsComponent,
         CustomizeComponent,
         EditorComponent,
+        HelpComponent,
         PipelineAssemblyComponent,
         PipelineElementIconStandComponent,
         PipelineElementComponent,

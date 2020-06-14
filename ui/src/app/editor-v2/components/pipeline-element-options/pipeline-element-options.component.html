@@ -55,7 +55,7 @@
     </span>
     <span class="options-button help-button" style="z-index:10">
         <button matTooltip="Help" [matTooltipPosition]="'below'"
-                mat-button mat-icon-button ng-click="openHelpDialog()">?
+                mat-button mat-icon-button (click)="openHelpDialog()">?
             </button>
     </span>
     <div class="editor-pe-info" [ngClass]="'pe-info-' + pipelineElementCssType">

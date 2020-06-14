@@ -63,13 +63,10 @@ export const Ng1AppModule = angular
     ])
     .decorator('$rootScope', rootScopeDelegate)
     .config(['$urlServiceProvider', ($urlService) => $urlService.deferIntercept()])
-    .run(["$rootScope", "$transitions", "TransitionService", "RouteTransitionInterceptorService",
-        function ($rootScope, $transitions, TransitionService, RouteTransitionInterceptorService) {
+    .run(["$rootScope", "$transitions", "RouteTransitionInterceptorService",
+        function ($rootScope, $transitions, RouteTransitionInterceptorService) {
             $transitions.onBefore({}, transition => {
               return RouteTransitionInterceptorService.onTransitionStarted(transition);
-            });
-            $transitions.onStart({}, transition => {
-                return TransitionService.onTransitionStarted(transition);
             });
             //window['loading_screen'].finish();
     }])

@@ -94,6 +94,7 @@ import {EventPropertyRowComponent} from "./schema-editor/event-property-row/even
 import {PropertySelectorService} from "../services/property-selector.service";
 import {StaticColorPickerComponent} from "./static-properties/static-color-picker/static-color-picker.component";
 import {ColorPickerModule} from "ngx-color-picker";
+import {PipelineElementRuntimeInfoComponent} from "./new-adapter/component/runtime-info/pipeline-element-runtime-info.component";
 
 
 @NgModule({
@@ -115,7 +116,8 @@ import {ColorPickerModule} from "ngx-color-picker";
     ],
     exports: [
         StaticPropertyComponent,
-        SelectStaticPropertiesComponent
+        SelectStaticPropertiesComponent,
+        PipelineElementRuntimeInfoComponent
     ],
     declarations: [
         NewAdapterComponent,
@@ -157,7 +159,8 @@ import {ColorPickerModule} from "ngx-color-picker";
         StaticGroupComponent,
         StaticAlternativesComponent,
         StaticCollectionComponent,
-        StaticColorPickerComponent
+        StaticColorPickerComponent,
+        PipelineElementRuntimeInfoComponent
     ],
     providers: [
         RestService,

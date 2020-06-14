@@ -21,6 +21,7 @@ import * as angular from "angular";
 import {RestApi} from "../../../services/rest-api.service";
 import {PipelineElementType, PipelineElementUnion} from "../../model/editor.model";
 import {PipelineElementTypeUtils} from "../../utils/editor.utils";
+import {EditorService} from "../../services/editor.service";
 
 
 @Component({
@@ -42,7 +43,8 @@ export class PipelineElementIconStandComponent implements OnInit {
 
     currentElementName: string;
 
-    constructor(private RestApi: RestApi) {
+    constructor(private RestApi: RestApi,
+                private EditorService: EditorService) {
 
     }
 
@@ -55,7 +57,7 @@ export class PipelineElementIconStandComponent implements OnInit {
     }
 
     openHelpDialog(pipelineElement) {
-        //this.EditorDialogManager.openHelpDialog(pipelineElement);
+        this.EditorService.openHelpDialog(pipelineElement);
     }
 
     updateMouseOver(elementAppId: string) {

@@ -129,7 +129,7 @@ export class PipelineElementOptionsComponent implements OnInit{
   }
 
   openHelpDialog() {
-    //this.EditorDialogManager.openHelpDialog(this.pipelineElement.payload);
+    this.EditorService.openHelpDialog(this.pipelineElement.payload);
   }
 
   openCustomizeStreamDialog() {

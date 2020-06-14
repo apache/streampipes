@@ -18,14 +18,16 @@
 
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
-import {AuthStatusService} from "../../services/auth-status.service";
-import {TsonLdSerializerService} from "../../platform-services/tsonld-serializer.service";
 import {
-    DataProcessorInvocation, PipelineElementRecommendationMessage,
+    PipelineElementRecommendationMessage,
     PipelineModificationMessage
 } from "../../core-model/gen/streampipes-model";
 import {Observable, Subject} from "rxjs";
 import {PlatformServicesCommons} from "../../platform-services/apis/commons.service";
+import {PipelineElementUnion} from "../model/editor.model";
+import {PanelType} from "../../core-ui/dialog/base-dialog/base-dialog.model";
+import {DialogService} from "../../core-ui/dialog/base-dialog/base-dialog.service";
+import {HelpComponent} from "../dialog/help/help.component";
 
 @Injectable()
 export class EditorService {
@@ -37,7 +39,8 @@ export class EditorService {
     pipelineAssemblyEmpty: boolean = true;
 
     constructor(private http: HttpClient,
-                private platformServicesCommons: PlatformServicesCommons) {
+                private platformServicesCommons: PlatformServicesCommons,
+                private DialogService: DialogService) {
     }
 
     recommendPipelineElement(pipeline): Observable<PipelineElementRecommendationMessage> {
@@ -76,7 +79,14 @@ export class EditorService {
         this.pipelineAssemblyEmpty = status;
     }
 
-
-
-
+    openHelpDialog(pipelineElement: PipelineElementUnion) {
+        this.DialogService.open(HelpComponent,{
+            panelType: PanelType.STANDARD_PANEL,
+            title: pipelineElement.name,
+            width: "70vw",
+            data: {
+                "pipelineElement": pipelineElement
+            }
+        });
+    }
 }
