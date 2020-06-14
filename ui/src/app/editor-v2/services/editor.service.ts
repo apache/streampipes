@@ -59,6 +59,18 @@ export class EditorService {
         return this.http.get(this.platformServicesCommons.authUserBasePath() + "/pipeline-cache");
     }
 
+    getEpCategories() {
+        return this.http.get(this.platformServicesCommons.unauthenticatedBasePath + "/categories/ep");
+    }
+
+    getEpaCategories() {
+        return this.http.get(this.platformServicesCommons.unauthenticatedBasePath + "/categories/epa");
+    }
+
+    getEcCategories() {
+        return this.http.get(this.platformServicesCommons.unauthenticatedBasePath + "/categories/ec");
+    }
+
     updateCachedPipeline(rawPipelineModel: any) {
         return this.http.post(this.platformServicesCommons.authUserBasePath() + "/pipeline-cache", rawPipelineModel);
     }

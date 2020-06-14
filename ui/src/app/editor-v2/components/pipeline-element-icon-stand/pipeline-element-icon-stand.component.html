@@ -22,61 +22,36 @@
         <div fxLayoutAlign="start center" fxLayout="row">
             <div fxLayout="row" style="margin-right: 5px">
                 <i class="material-icons">search</i>
-                <input type="text" ng-model="elementFilter" placeholder="Find Element"
+                <input type="text" (keyup)="applyFilter()" [(ngModel)]="elementFilter" placeholder="Find Element"
                        style="background-color:#f6f6f6;border: none;border-bottom: solid 2px rgb(27, 20, 100);">&nbsp;
             </div>
             <div fxLayout="row">
-                <button mat-button [matMenuTriggerFor]="menu"><i class="material-icons">list</i>Filter by category</button>
+                <button mat-button [matMenuTriggerFor]="menu"><div class="menu-text-color"><i class="material-icons">list</i>&nbsp;Filter by category</div></button>
                 <mat-menu #menu="matMenu">
-                    <button mat-menu-item>
-                        <i class="material-icons">done</i>&nbsp;Select all
+                    <button mat-menu-item (click)="selectAllOptions()">
+                        <div class="menu-text-color"><i class="material-icons">done</i>&nbsp;Select all</div>
                     </button>
-                    <button mat-menu-item>
-                        <i class="material-icons">clear</i>&nbsp;Deselect all
+                    <button mat-menu-item (click)="deselectAllOptions()">
+                        <div class="menu-text-color"><i class="material-icons">clear</i>&nbsp;Deselect all</div>
+                    </button>
+                    <mat-divider></mat-divider>
+                    <button (click)="toggleOption(option)" mat-menu-item *ngFor="let option of currentCategories">
+                        <div class="menu-text-color" *ngIf="optionSelected(option)">
+                            <i class="material-icons">visibility</i>&nbsp;{{option.label}}
+                        </div>
+                        <div  class="menu-text-color" *ngIf="!optionSelected(option)">
+                            <i class="material-icons">visibility_off</i>&nbsp;{{option.label}}
+                        </div>
                     </button>
                 </mat-menu>
-<!--                <md-menu-bar>-->
-<!--                    <md-menu>-->
-<!--                        <button ng-click="$mdOpenMenu()" class="sp-accent">-->
-<!--                            <md-icon md-svg-icon="action:ic_view_list_24px"-->
-<!--                                     class="sp-accent"></md-icon>-->
-<!--                            Filter by category-->
-<!--                        </button>-->
-<!--                        <md-menu-content>-->
-<!--                            <md-menu-item class="md-indent">-->
-<!--                                <md-icon md-svg-icon="action:ic_done_24px"-->
-<!--                                         class="sp-accent"></md-icon>-->
-<!--                                <md-button ng-click="ctrl.selectAllOptions()">&nbsp;Select all</md-button>-->
-<!--                            </md-menu-item>-->
-<!--                            <md-menu-item class="md-indent">-->
-<!--                                <md-icon md-svg-icon="content:ic_clear_24px"-->
-<!--                                         class="sp-accent"></md-icon>-->
-<!--                                <md-button ng-click="ctrl.deselectAllOptions()">&nbsp;Deselect all</md-button>-->
-<!--                            </md-menu-item>-->
-<!--                            <md-menu-divider></md-menu-divider>-->
-<!--                            <div ng-repeat="option in ctrl.availableOptions[ctrl.activeType] | orderBy: 'label'">-->
-<!--                                <md-menu-item class="md-indent">-->
-<!--                                    <md-icon md-svg-icon="action:ic_visibility_24px"-->
-<!--                                             class="sp-accent"-->
-<!--                                             ng-if="ctrl.optionSelected(option)"></md-icon>-->
-<!--                                    <md-icon md-svg-icon="action:ic_visibility_off_24px"-->
-<!--                                             class="sp-accent"-->
-<!--                                             ng-if="!ctrl.optionSelected(option)"></md-icon>-->
-<!--                                    <md-button ng-click="ctrl.toggleFilter(option)">&nbsp;{{option.label}}-->
-<!--                                    </md-button>-->
-<!--                                </md-menu-item>-->
-<!--                            </div>-->
-<!--                        </md-menu-content>-->
-<!--                    </md-menu>-->
-<!--                </md-menu-bar>-->
             </div>
         </div>
     </div>
 </div>
-<div flex id="editor-icon-stand" class="icon-stand" *ngIf="currentElements">
+<div flex id="editor-icon-stand" class="icon-stand" *ngIf="currentlyFilteredElements">
     <span id="{{ element.appId }}" (mouseenter)="updateMouseOver(element.name)"
           (mouseleave)="updateMouseOver('')"
-          *ngFor="let element of currentElements"
+          *ngFor="let element of currentlyFilteredElements"
           class="draggable-icon tt"
           [attr.data-pe]="element.elementId"
           [ngClass]="activeCssClass">

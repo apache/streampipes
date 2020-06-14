@@ -15,3 +15,11 @@
  * limitations under the License.
  *
  */
+
+@import '../../../../scss/_variables.scss';
+
+.menu-text-color {
+    color: $sp-color-accent;
+    display: flex;
+    align-items: center;
+}

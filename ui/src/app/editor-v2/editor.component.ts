@@ -129,8 +129,5 @@ export class EditorComponent implements OnInit {
         this.activeType = this.tabs[index].type;
         this.currentElements = this.allElements
             .filter(pe => pe instanceof PipelineElementTypeUtils.toType(this.activeType));
-        console.log(this.currentElements);
     }
-
-
 }
