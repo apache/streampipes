@@ -89,7 +89,6 @@ export class EditorComponent implements OnInit {
         });
         this.pipelineElementService.getDataSources().subscribe(sources => {
             let allStreams = this.collectStreams(sources);
-            console.log(allStreams);
             this.availableDataStreams = allStreams.filter(s => !(s instanceof SpDataSet));
             this.availableDataSets = allStreams
                 .filter(s => s instanceof SpDataSet)

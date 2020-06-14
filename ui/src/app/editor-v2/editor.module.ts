@@ -55,6 +55,7 @@ import {MatListModule} from "@angular/material/list";
 import {HelpComponent} from "./dialog/help/help.component";
 import {PipelineElementDocumentationComponent} from "./components/pipeline-element-documentation/pipeline-element-documentation.component";
 import { ShowdownModule } from 'ngx-showdown';
+import {SafeCss} from "./utils/style-sanitizer";
 
 @NgModule({
     imports: [
@@ -84,7 +85,8 @@ import { ShowdownModule } from 'ngx-showdown';
         PipelineElementOptionsComponent,
         PipelineElementRecommendationComponent,
         PipelineComponent,
-        SavePipelineComponent
+        SavePipelineComponent,
+        SafeCss
     ],
     providers: [
         EditorService,
@@ -113,7 +115,8 @@ import { ShowdownModule } from 'ngx-showdown';
             provide: '$timeout',
             useFactory: ($injector: any) => $injector.get('$timeout'),
             deps: ['$injector']
-        }
+        },
+        SafeCss
     ],
     exports: [
         EditorComponent

@@ -21,6 +21,7 @@ import {Component, Input, OnInit} from "@angular/core";
 import {PipelineElementConfig, PipelineElementRecommendationLayout} from "../../model/editor.model";
 import {DataProcessorInvocation} from "../../../core-model/gen/streampipes-model";
 import {DomSanitizer} from "@angular/platform-browser";
+import {SafeCss} from "../../utils/style-sanitizer";
 
 @Component({
   selector: 'pipeline-element-recommendation',
@@ -41,10 +42,10 @@ export class PipelineElementRecommendationComponent implements OnInit {
   @Input()
   recommendedElements: any;
 
-  recommendationLayout: PipelineElementRecommendationLayout[] = [];
+  recommendationsPrepared: boolean = false;
 
   constructor(private JsplumbService: JsplumbService,
-              public DomSanitizer: DomSanitizer) {
+              public safeCss: SafeCss) {
 
   }
 
@@ -54,14 +55,18 @@ export class PipelineElementRecommendationComponent implements OnInit {
 
   prepareStyles() {
     this.recommendedElements.forEach((element, index) => {
-      let layoutSettings: PipelineElementRecommendationLayout = {
-        skewStyle: element.name ? this.getSkewStyle(index) : {'opacity':0},
-        unskewStyle: this.getUnskewStyle(element, index),
-        unskewStyleLabel: this.getUnskewStyleLabel(index),
-        type: element instanceof DataProcessorInvocation ? "sepa" : "action"
-      };
-      this.recommendationLayout.push(layoutSettings);
+      this.setLayoutSettings(element, index);
     });
+    this.recommendationsPrepared = true;
+  }
+
+  setLayoutSettings(element, index) {
+    element.layoutSettings = {
+      skewStyle: element.name ? this.getSkewStyle(index) : {'opacity': 0},
+      unskewStyle: this.getUnskewStyle(element, index),
+      unskewStyleLabel: this.getUnskewStyleLabel(index),
+      type: element instanceof DataProcessorInvocation ? "sepa" : "action"
+    };
   }
 
   create(recommendedElement) {
@@ -73,10 +78,8 @@ export class PipelineElementRecommendationComponent implements OnInit {
     var unskew = -(this.getSkew());
     var rotate = -(90 - (this.getSkew() / 2));
 
-    return {
-      "transform": "skew(" + unskew + "deg)" + " rotate(" + rotate + "deg)" + " scale(1)",
-      "background-color": this.getBackgroundColor(recommendedElement, index)
-    };
+    return "transform: skew(" + unskew + "deg)" + " rotate(" + rotate + "deg)" + " scale(1);"
+       +"background-color: " +this.getBackgroundColor(recommendedElement, index);
   }
 
   getBackgroundColor(recommendedElement, index) {
@@ -100,9 +103,7 @@ export class PipelineElementRecommendationComponent implements OnInit {
     var skew = this.getSkew();
     var rotate = (index + 1) * this.getAngle();
 
-    return {
-      "transform": "rotate(" + rotate + "deg) skew(" + skew + "deg)"
-    };
+    return "transform: rotate(" + rotate + "deg) skew(" + skew + "deg);";
   }
 
   getUnskewStyleLabel(index) {
@@ -110,20 +111,18 @@ export class PipelineElementRecommendationComponent implements OnInit {
     var rotate =  (index + 1) * this.getAngle();
     var unrotate = -360 + (rotate*-1);
 
-    return {
-      "transform": "skew(" + unskew + "deg)" + " rotate(" + unrotate + "deg)" + " scale(1)",
-      "z-index": -1,
-      "margin-left":"50%",
-      "margin-top":"50%",
-      "position": "absolute",
-      "background": "white",
-      "height": "50px",
-      "width":"50px",
-      "font-size": "16px",
-      "text-align": "center",
-      "line-height": "50px",
-      "top": "0px"
-    };
+    return "transform: skew(" + unskew + "deg)" + " rotate(" + unrotate + "deg)" + " scale(1);"
+      +"z-index: -1;"
+      +"margin-left: 50%;"
+      +"margin-top: 50%;"
+      +"position: absolute;"
+      +"background: white;"
+      +"height: 50px;"
+      +"width: 50px;"
+      +"font-size: 16px;"
+      +"text-align: center;"
+      +"line-height: 50px;"
+      +"top: 0px;";
   }
 
   getSkew() {
@@ -137,7 +136,9 @@ export class PipelineElementRecommendationComponent implements OnInit {
   fillRemainingItems() {
     if (this.recommendedElements.length < 6) {
       for (var i = this.recommendedElements.length; i < 6; i++) {
-        this.recommendedElements.push({fakeElement: true});
+        let element = {fakeElement: true};
+        this.setLayoutSettings(element, i);
+        this.recommendedElements.push(element);
       }
     }
   }

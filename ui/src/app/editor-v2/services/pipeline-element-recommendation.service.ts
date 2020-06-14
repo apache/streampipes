@@ -41,15 +41,15 @@ export class PipelineElementRecommendationService {
     }
 
     populateRecommendedList(allElements, recs) {
-        var elementRecommendations = [];
+        let elementRecommendations: any = [];
         recs.sort(function (a, b) {
             return (a.count > b.count) ? -1 : ((b.count > a.count) ? 1 : 0);
         });
-        var maxRecs = recs.length > 7 ? 7 : recs.length;
-        var el;
-        for (var i = 0; i < maxRecs; i++) {
-            el = recs[i];
-            var element = this.getPipelineElementContents(allElements, el.elementId)[0];
+        let maxRecs = recs.length > 7 ? 7 : recs.length;
+        for (let i = 0; i < maxRecs; i++) {
+            let el = recs[i];
+            let elements = this.getPipelineElementContents(allElements, el.elementId);
+            let element = elements[0];
             (element as any).weight = el.weight;
             elementRecommendations.push(element);
         }
@@ -59,6 +59,7 @@ export class PipelineElementRecommendationService {
 
     getPipelineElementContents(allElements: PipelineElementUnion[], belongsTo: string) {
         return allElements
-                .filter(pe => (pe instanceof SpDataStream && pe.elementId === belongsTo) || (pe instanceof InvocableStreamPipesEntity && pe.belongsTo === belongsTo));
+                .filter(pe => (pe instanceof SpDataStream && pe.elementId === belongsTo)
+                    || (pe instanceof InvocableStreamPipesEntity && pe.belongsTo === belongsTo));
     }
 }

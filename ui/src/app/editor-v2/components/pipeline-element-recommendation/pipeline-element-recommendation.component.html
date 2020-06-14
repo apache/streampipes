@@ -16,16 +16,14 @@
   ~
   -->
 
-<div class="cv-wrapper" [ngClass]="recommendationsShown ? 'opened-nav' : ''"
-     *ngIf="recommendedElements.length > 0">
+<div *ngIf="recommendationsPrepared && recommendedElements.length > 0" class="cv-wrapper" [ngClass]="recommendationsShown ? 'opened-nav' : ''">
     <ul>
-        <li *ngFor="let recommendedElement of recommendedElements; index as i"
-            [style]="DomSanitizer.bypassSecurityTrustStyle(recommendationLayout[i].skewStyle)">
-            {{recommendedElement}}
-            <a [style]="DomSanitizer.bypassSecurityTrustStyle(recommendationLayout[i].unskewStyle)" [ngClass]="recommendationLayout[i].type" (click)="create(recommendedElement)" *ngIf="recommendedElement.name">
+        <li *ngFor="let recommendedElement of recommendedElements"
+            [style]="recommendedElement.layoutSettings.skewStyle | safeCss">
+            <a [style]="recommendedElement.layoutSettings.unskewStyle | safeCss" [ngClass]="recommendedElement.layoutSettings.type" (click)="create(recommendedElement)" *ngIf="recommendedElement.name">
             </a>
-            <div (click)="create(recommendedElement)" [style]="DomSanitizer.bypassSecurityTrustStyle(recommendationLayout[i].unskewStyleLabel)"
-                 class="{{recommendationLayout[i].type}}">
+            <div (click)="create(recommendedElement)" [style]="recommendedElement.layoutSettings.unskewStyleLabel | safeCss"
+                 class="{{recommendedElement.layoutSettings.type}}">
                 <pipeline-element [iconSize]="'small'" [pipelineElement]="recommendedElement" *ngIf="recommendedElement.name">
                 </pipeline-element>
             </div>
