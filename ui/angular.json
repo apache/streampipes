@@ -92,11 +92,6 @@
               "src/assets"
             ],
             "scripts": [
-              "src/assets/three.min.js",
-              "src/assets/threex.domevents.js",
-              "src/assets/OrbitControls.js",
-              "src/assets/PackWidget.js",
-              "src/assets/render.js"
               ]
           }
         },
