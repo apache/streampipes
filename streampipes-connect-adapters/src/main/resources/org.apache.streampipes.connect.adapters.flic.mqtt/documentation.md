@@ -46,5 +46,8 @@ Example: tcp://test-server.com:1883 (Protocol required. Port required)
 
 The user can choose between unauthenticated or authenticated access.
 
+### TOPIC
+The topic the MQTT broker publishes to.
+
 ## Output
 

@@ -72,6 +72,7 @@ public class FlicMQTTAdapter extends SpecificDataStreamAdapter {
                 .category(AdapterType.Energy)
                 .requiredTextParameter(MqttConnectUtils.getBrokerUrlLabel())
                 .requiredAlternatives(MqttConnectUtils.getAccessModeLabel(), MqttConnectUtils.getAlternativesOne(), MqttConnectUtils.getAlternativesTwo())
+                .requiredTextParameter(MqttConnectUtils.getTopicLabel())
                 .build();
         description.setAppId(ID);
 
@@ -93,7 +94,7 @@ public class FlicMQTTAdapter extends SpecificDataStreamAdapter {
         StaticPropertyExtractor extractor =
                 StaticPropertyExtractor.from(adapterDescription.getConfig(), new ArrayList<>());
 
-        this.mqttConfig = MqttConnectUtils.getMqttConfig(extractor, "devices/flic/messages/events/");
+        this.mqttConfig = MqttConnectUtils.getMqttConfig(extractor); 
         this.mqttConsumer = new MqttConsumer(this.mqttConfig, new EventProcessor(adapterPipeline));
 
         thread = new Thread(this.mqttConsumer);
