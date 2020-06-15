@@ -25,13 +25,29 @@
                         <mat-tab *ngFor="let tab of tabs" label="{{tab.title}}"></mat-tab>
                     </mat-tab-group>
                 </div>
+                <div fxFlex="30" fxLayout="row" fxLayoutAlign="end center"
+                     style="padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
+                    <button mat-button class="md-icon-button" (click)="startCreatePipelineTour()" [matTooltip]="'Tutorial'">
+                        <i class="material-icons text-color">
+                            school
+                        </i>
+                    </button>
+                    <button mat-button class="md-icon-button" *ngIf="!minimizedEditorStand"
+                               (click)="toggleEditorStand()" [matTooltip]="'Hide'">
+                        <i class="material-icons text-color">arrow_drop_up</i>
+                    </button>
+                    <button mat-button class="md-icon-button" *ngIf="minimizedEditorStand"
+                               (click)="toggleEditorStand()" [matTooltip]="'Show'">
+                        <i class="material-icons text-color">arrow_drop_down</i>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
     <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100">
         <div id="shepherd-test"
-             style="background-color:#f6f6f6;padding:0px;border-bottom:1px solid #ffffff">
+             style="background-color:#f6f6f6;padding:0px;border-bottom:1px solid #ffffff" [hidden]="minimizedEditorStand">
             <pipeline-element-icon-stand [activeType]="activeType"
                                          [currentElements]="currentElements"
                                          *ngIf="allElementsLoaded">

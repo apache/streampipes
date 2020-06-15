@@ -15,3 +15,9 @@
  * limitations under the License.
  *
  */
+
+@import '../../scss/variables';
+
+.text-color {
+  color: $sp-color-accent;
+}
