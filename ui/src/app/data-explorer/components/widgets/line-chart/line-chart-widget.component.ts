@@ -458,13 +458,13 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
   private addInitialColouredShapesToGraph() {
     let selectedLabel = undefined;
     let indices = [];
-    for (const label in this.data['labels']) {
+    for (let label = 0; label <= this.data['labels'].length; label++) {
       if (selectedLabel !== this.data['labels'][label] && indices.length > 0) {
         const startdate = new Date(this.data[0]['x'][indices[0]]).getTime();
         const enddate = new Date(this.data[0]['x'][indices[indices.length - 1]]).getTime();
         const color = this.colorService.getColor(selectedLabel);
 
-        this.addShapeToGraph(startdate, enddate, color);
+        this.addShapeToGraph(startdate, enddate, color, true);
 
         selectedLabel = undefined;
         indices = [];
@@ -474,44 +474,79 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
       }
       selectedLabel = this.data['labels'][label];
     }
-    const last_start = new Date(this.data[0]['x'][indices[0]]).getTime();
-    const last_end = new Date(this.data[0]['x'][indices[indices.length - 1]]).getTime();
-    const last_color = this.colorService.getColor(selectedLabel);
-
-    this.addShapeToGraph(last_start, last_end, last_color);
   }
 
-  private addShapeToGraph(start, end, color) {
-    const shape = {
-      // shape: rectangle
-      type: 'rect',
+  private addShapeToGraph(start, end, color, initial= false) {
+    start = new Date(start).getTime();
+    end = new Date(end).getTime();
 
-      // x-reference is assigned to the x-values
-      xref: 'x',
+    const shape = this.createShape(start, end, color);
 
-      // y-reference is assigned to the plot paper [0,1]
-      yref: 'paper',
-      y0: 0,
-      y1: 1,
+    if (!initial) {
+      const updated_shapes = [];
 
-      // start x: left side of selected time interval
-      x0: start,
-      // end x: right side of selected time interval
-      x1: end,
+      for (let i = 0; i < this.graph.layout.shapes.length; i++) {
+        const selected_shape = this.graph.layout.shapes[i];
+        const x0 = selected_shape['x0'];
+        const x1 = selected_shape['x1'];
 
-      // adding color
-      fillcolor: color,
+        if (x0 <= start && x1 > start && x1 <= end) {
+          selected_shape.x1 = start;
+          updated_shapes.push(selected_shape);
 
-      // opacity of 20%
-      opacity: 0.2,
+        } else if (x0 >= start && x0 <= end) {
+          if (x1 > end) {
+            selected_shape.x0 = end;
+            updated_shapes.push(selected_shape);
+          }
 
-      line: {
-        width: 0
+        } else if (x0 <= start && x1 > end) {
+          const left_shape = this.createShape(x0, start, selected_shape.fillcolor);
+          updated_shapes.push(left_shape);
+
+          const right_shape = this.createShape(end, x1, selected_shape.fillcolor);
+          updated_shapes.push(right_shape);
+
+        } else {
+          updated_shapes.push(selected_shape);
+        }
       }
-    };
+      this.graph.layout.shapes = updated_shapes;
+    }
     this.graph.layout.shapes.push(shape);
   }
-  
+
+  private createShape(start, end, color) {
+    const shape = {
+    // shape: rectangle
+    type: 'rect',
+
+    // x-reference is assigned to the x-values
+    xref: 'x',
+
+    // y-reference is assigned to the plot paper [0,1]
+    yref: 'paper',
+    y0: 0,
+    y1: 1,
+
+    // start x: left side of selected time interval
+    x0: start,
+    // end x: right side of selected time interval
+    x1: end,
+
+    // adding color
+    fillcolor: color,
+
+    // opacity of 20%
+    opacity: 0.2,
+
+    line: {
+      width: 0
+    }
+  };
+  return shape;
+  }
+
   setStartX(startX: string) {
     this.selectedStartX = startX;
   }
