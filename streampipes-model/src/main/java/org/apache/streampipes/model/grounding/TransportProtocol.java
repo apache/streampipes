@@ -81,18 +81,4 @@ public abstract class TransportProtocol extends UnnamedStreamPipesEntity {
 		this.topicDefinition = topicDefinition;
 	}
 
-//	// TODO only kept for backwards compatibility, remove later
-//	@Deprecated
-//	public String getTopicName() {
-//		return topicDefinition.getActualTopicName();
-//	}
-//
-//	@Deprecated
-//	public void setTopicName(String topicName) {
-//		if (this.topicDefinition == null) {
-//			this.topicDefinition = new SimpleTopicDefinition();
-//		}
-//		this.topicDefinition.setActualTopicName(topicName);
-//	}
-
 }
