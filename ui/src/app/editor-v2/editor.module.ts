@@ -57,6 +57,7 @@ import {PipelineElementDocumentationComponent} from "./components/pipeline-eleme
 import { ShowdownModule } from 'ngx-showdown';
 import {SafeCss} from "./utils/style-sanitizer";
 import {MatchingErrorComponent} from "./dialog/matching-error/matching-error.component";
+import {WelcomeTourComponent} from "./dialog/welcome-tour/welcome-tour.component";
 
 @NgModule({
     imports: [
@@ -88,7 +89,8 @@ import {MatchingErrorComponent} from "./dialog/matching-error/matching-error.com
         PipelineElementRecommendationComponent,
         PipelineComponent,
         SavePipelineComponent,
-        SafeCss
+        SafeCss,
+        WelcomeTourComponent
     ],
     providers: [
         EditorService,

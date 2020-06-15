@@ -33,6 +33,11 @@ import {
 } from "./model/editor.model";
 import {EditorConstants} from "./constants/editor.constants";
 import {PipelineElementTypeUtils} from "./utils/editor.utils";
+import {AuthStatusService} from "../services/auth-status.service";
+import {MatchingErrorComponent} from "./dialog/matching-error/matching-error.component";
+import {PanelType} from "../core-ui/dialog/base-dialog/base-dialog.model";
+import {WelcomeTourComponent} from "./dialog/welcome-tour/welcome-tour.component";
+import {DialogService} from "../core-ui/dialog/base-dialog/base-dialog.service";
 
 @Component({
     selector: 'editor',
@@ -65,6 +70,8 @@ export class EditorComponent implements OnInit {
     requiredSinkForTutorialAppId: any = "org.apache.streampipes.sinks.internal.jvm.dashboard";
     missingElementsForTutorial: any = [];
 
+    isTutorialOpen: boolean = false;
+
     tabs = [
         {
             title: 'Data Sets',
@@ -85,7 +92,9 @@ export class EditorComponent implements OnInit {
     ];
 
     constructor(private editorService: EditorService,
-                private pipelineElementService: PipelineElementService) {
+                private pipelineElementService: PipelineElementService,
+                private AuthStatusService: AuthStatusService,
+                private dialogService: DialogService) {
     }
 
     ngOnInit() {
@@ -117,6 +126,28 @@ export class EditorComponent implements OnInit {
         this.elementsLoaded[index] = true;
         if (this.elementsLoaded.every(e => e === true)) {
             this.allElementsLoaded = true;
+            this.checkForTutorial();
+        }
+    }
+
+    checkForTutorial() {
+        if (this.AuthStatusService.email != undefined) {
+            this.editorService
+                .getUserDetails()
+                .subscribe(user => {
+                    if ((!user.hideTutorial) && !this.isTutorialOpen) {
+                        if (this.requiredPipelineElementsForTourPresent()) {
+                            this.isTutorialOpen = true;
+                            this.dialogService.open(WelcomeTourComponent, {
+                                panelType: PanelType.STANDARD_PANEL,
+                                title: "Welcome to StreamPipes",
+                                data: {
+                                    "user": user
+                                }
+                            });
+                        }
+                    }
+                });
         }
     }
 

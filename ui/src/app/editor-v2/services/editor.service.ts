@@ -71,6 +71,14 @@ export class EditorService {
         return this.http.get(this.platformServicesCommons.unauthenticatedBasePath + "/categories/ec");
     }
 
+    getUserDetails(): Observable<any> {
+        return this.http.get(this.platformServicesCommons.authUserBasePath());
+    }
+
+    updateUserDetails(user) {
+        return this.http.put(this.platformServicesCommons.authUserBasePath(), user);
+    }
+
     updateCachedPipeline(rawPipelineModel: any) {
         return this.http.post(this.platformServicesCommons.authUserBasePath() + "/pipeline-cache", rawPipelineModel);
     }
