@@ -220,7 +220,7 @@ public class PipelineWithUserResource extends AbstractRestInterface implements I
             return constructErrorMessage(new Notification(NotificationType.REMOTE_SERVER_NOT_ACCESSIBLE
                     , e.getMessage()));
         } catch (InvalidConnectionException e) {
-            return ok(e.getErrorLog());
+            return badRequest(e.getErrorLog());
         } catch (Exception e) {
             e.printStackTrace();
             return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR,

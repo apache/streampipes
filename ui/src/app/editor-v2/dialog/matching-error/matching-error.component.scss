@@ -16,42 +16,4 @@
  *
  */
 
-@import 'src/scss/sp/colors';
-
-standard-dialog-container {
-  width: 100%;
-  background-color: #fff;
-  box-shadow: -7px 0px 5px -5px #5d5d5d;
-}
-
-.dialog-panel {
-  max-height: 80vh;
-  height: 100%;
-  display: grid;
-  grid-template-rows: 50px auto;
-}
-
-.dialog-panel-header {
-  display: flex;
-  justify-content: space-between;
-  height: 50px;
-  min-height: 50px;
-  width: 100%;
-  background: $sp-color-accent;
-  align-items: center;
-}
-
-.dialog-panel-content {
-  height: 100%;
-  overflow-y:auto;
-}
-
-.dialog-title {
-  padding: 5px 5px 5px 15px;
-  font-size:25px;
-  color: white;
-}
-
-#portal {
-  width:100%;
-}
+@import '../../../../scss/sp/sp-dialog.scss';

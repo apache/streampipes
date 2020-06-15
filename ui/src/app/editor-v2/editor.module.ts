@@ -56,6 +56,7 @@ import {HelpComponent} from "./dialog/help/help.component";
 import {PipelineElementDocumentationComponent} from "./components/pipeline-element-documentation/pipeline-element-documentation.component";
 import { ShowdownModule } from 'ngx-showdown';
 import {SafeCss} from "./utils/style-sanitizer";
+import {MatchingErrorComponent} from "./dialog/matching-error/matching-error.component";
 
 @NgModule({
     imports: [
@@ -78,6 +79,7 @@ import {SafeCss} from "./utils/style-sanitizer";
         CustomizeComponent,
         EditorComponent,
         HelpComponent,
+        MatchingErrorComponent,
         PipelineAssemblyComponent,
         PipelineElementComponent,
         PipelineElementDocumentationComponent,

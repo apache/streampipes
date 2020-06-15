@@ -41,6 +41,8 @@ import {CustomizeComponent} from "../../dialog/customize/customize.component";
 import {PanelType} from "../../../core-ui/dialog/base-dialog/base-dialog.model";
 import {DialogService} from "../../../core-ui/dialog/base-dialog/base-dialog.service";
 import {EditorService} from "../../services/editor.service";
+import {MatchingResultMessage} from "../../../core-model/gen/streampipes-model-client";
+import {MatchingErrorComponent} from "../../dialog/matching-error/matching-error.component";
 
 @Component({
   selector: 'pipeline',
@@ -296,25 +298,25 @@ export class PipelineComponent implements OnInit {
         this.ObjectProvider.updatePipeline(this.currentPipelineModel)
             .subscribe(pipelineModificationMessage => {
               pe.settings.loadingStatus = false;
-              if (pipelineModificationMessage.success) {
-                info.targetEndpoint.setType("token");
-                this.validatePipeline();
-                this.modifyPipeline(pipelineModificationMessage.pipelineModifications);
-                var sourceEndpoint = this.JsplumbBridge.selectEndpoints({element: info.targetEndpoint.elementId});
-                if (this.PipelineEditorService.isFullyConnected(pe)) {
-                  let payload = pe.payload as InvocablePipelineElementUnion;
-                  if ((payload.staticProperties && payload.staticProperties.length > 0) || this.isCustomOutput(pe)) {
-                    this.showCustomizeDialog(pe);
-                  } else {
-                    this.announceConfiguredElement(pe);
-                    //this.$rootScope.$broadcast("SepaElementConfigured", pe.payload.DOM);
-                    (pe.payload as InvocablePipelineElementUnion).configured = true;
-                  }
+              info.targetEndpoint.setType("token");
+              this.validatePipeline();
+              this.modifyPipeline(pipelineModificationMessage.pipelineModifications);
+              var sourceEndpoint = this.JsplumbBridge.selectEndpoints({element: info.targetEndpoint.elementId});
+              if (this.PipelineEditorService.isFullyConnected(pe)) {
+                let payload = pe.payload as InvocablePipelineElementUnion;
+                if ((payload.staticProperties && payload.staticProperties.length > 0) || this.isCustomOutput(pe)) {
+                  this.showCustomizeDialog(pe);
+                } else {
+                  this.announceConfiguredElement(pe);
+                  //this.$rootScope.$broadcast("SepaElementConfigured", pe.payload.DOM);
+                  (pe.payload as InvocablePipelineElementUnion).configured = true;
                 }
-              } else {
-                this.JsplumbBridge.detach(info.connection);
-                this.EditorDialogManager.showMatchingErrorDialog(pipelineModificationMessage);
               }
+            }, status => {
+              pe.settings.loadingStatus = false;
+              this.JsplumbBridge.detach(info.connection);
+              let matchingResultMessage = (status.error as any[]).map(e => MatchingResultMessage.fromData(e as MatchingResultMessage));
+              this.showMatchingErrorDialog(matchingResultMessage);
             });
       }
     });
@@ -358,6 +360,16 @@ export class PipelineComponent implements OnInit {
       this.pipelineCacheRunningChanged.emit(this.pipelineCacheRunning)
       this.pipelineCached = true;
       this.pipelineCachedChanged.emit(this.pipelineCached);
+    });
+  }
+
+  showMatchingErrorDialog(matchingResultMessage: MatchingResultMessage[]) {
+    this.dialogService.open(MatchingErrorComponent, {
+      panelType: PanelType.STANDARD_PANEL,
+      title: "Invalid Connection",
+      data: {
+        "matchingResultMessage": matchingResultMessage
+      }
     });
   }
 

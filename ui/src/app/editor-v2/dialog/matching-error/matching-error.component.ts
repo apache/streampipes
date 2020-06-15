@@ -16,42 +16,32 @@
  *
  */
 
-@import 'src/scss/sp/colors';
+import {Component, Input} from "@angular/core";
+import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
+import {MatchingResultMessage} from "../../../core-model/gen/streampipes-model-client";
 
-standard-dialog-container {
-  width: 100%;
-  background-color: #fff;
-  box-shadow: -7px 0px 5px -5px #5d5d5d;
-}
+@Component({
+  selector: 'matching-error',
+  templateUrl: './matching-error.component.html',
+  styleUrls: ['./matching-error.component.scss']
+})
+export class MatchingErrorComponent {
 
-.dialog-panel {
-  max-height: 80vh;
-  height: 100%;
-  display: grid;
-  grid-template-rows: 50px auto;
-}
+  @Input()
+  matchingResultMessage: MatchingResultMessage[];
 
-.dialog-panel-header {
-  display: flex;
-  justify-content: space-between;
-  height: 50px;
-  min-height: 50px;
-  width: 100%;
-  background: $sp-color-accent;
-  align-items: center;
-}
+  msg: any;
+  statusDetailsVisible: any;
 
-.dialog-panel-content {
-  height: 100%;
-  overflow-y:auto;
-}
+  constructor(private DialogRef: DialogRef<MatchingErrorComponent>) {
 
-.dialog-title {
-  padding: 5px 5px 5px 15px;
-  font-size:25px;
-  color: white;
-}
+  }
 
-#portal {
-  width:100%;
+  close() {
+    this.DialogRef.close();
+  };
+
+  toggleStatusDetailsVisible() {
+    this.statusDetailsVisible = !(this.statusDetailsVisible);
+  }
 }
