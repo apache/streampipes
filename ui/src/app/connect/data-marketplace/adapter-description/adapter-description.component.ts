@@ -22,6 +22,7 @@ import {ConnectService} from '../../connect.service';
 import {DataMarketplaceService} from "../data-marketplace.service";
 import {AdapterExportDialog} from '../adapter-export/adapter-export-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
+import {AdapterDescriptionDialogComponent} from './help-dialog/adapter-description-dialog.component'
 
 @Component({
   selector: 'sp-adapter-description',
@@ -63,6 +64,14 @@ export class AdapterDescriptionComponent {
 
   isSpecificDescription(): boolean {
     return this.connectService.isSpecificDescription(this.adapter);
+  }
+  showAdapterDescription(adapter){
+    const dialogRef = this.dialog.open(AdapterDescriptionDialogComponent, {
+      width: '70%',
+      height: '500px',
+      panelClass: 'custom-dialog-container',
+      data : adapter
+  });
   }
 
   deleteAdapter(adapter: AdapterDescription): void {

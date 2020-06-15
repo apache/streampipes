@@ -25,6 +25,10 @@
                 <mat-icon *ngIf="isDataStreamDescription" class="real-time">lens</mat-icon>
                 <p *ngIf="isDataSetDescription">Data Set</p>
                 <p *ngIf="isDataStreamDescription">Data Stream</p>
+                <md-button (click)="showAdapterDescription(adapter)" mat-button matTooltip="Description">
+                    <span class="material-icons">
+                info
+            </span></md-button>
             </div>
         </div>
         <div fxLayoutAlign="start center" fxLayout="column" class="icon">
