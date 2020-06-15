@@ -16,7 +16,7 @@
   ~
   -->
 
-## Ros Bridge
+## Flic MQTT Adapter
 
 <p align="center"> 
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
@@ -26,33 +26,25 @@
 
 ## Description
 
-Connect Flic Adapter 
-
+Connect Flic Smart Button over MQTT
 
 ***
 
 ## Required input
 
-This sink does not have any requirements and works with any incoming event type.
-
+This adapter uses the MQTT protocol and requires the data in following exemplary JSON format:
+{ "timestamp": 1584973344615, "click_type": SINGLE, "button_id": button1 }.
 ***
 
 ## Configuration
 
-Describe the configuration parameters here
+### Broker URL 
 
-### Ros Bridge
+Example: tcp://test-server.com:1883 (Protocol required. Port required)
 
-Example: test-server.com (No protocol)
+### Access Mode
 
-### Port
-
-The port of the ROS instance.
-
-### Topic
-
-Example: /battery (Starts with /)
-
+The user can choose between unauthenticated or authenticated access.
 
 ## Output
 

@@ -24,11 +24,18 @@ import javax.annotation.Generated;
 @Generated("net.hexar.json2pojo")
 public class FlicOutput {
 
-    @SerializedName("ButtonID")
+    @SerializedName("timestamp")
+    private Long timestamp;
+
+    @SerializedName("button_id")
     private String buttonID;
 
-    @SerializedName("ClickType")
+    @SerializedName("click_type")
     private String clickType;
+
+    public Long getTimestamp() { return  timestamp; }
+
+    public void setTimestamp(Long timestamp) { this.timestamp = timestamp; }
 
     public String getButtonID() { return buttonID; }
 

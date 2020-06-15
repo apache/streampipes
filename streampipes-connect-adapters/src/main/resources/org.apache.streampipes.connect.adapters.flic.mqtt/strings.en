@@ -1,5 +1,5 @@
 org.apache.streampipes.connect.adapters.flic.mqtt.title= Flic MQTT
-org.apache.streampipes.connect.adapters.flic.mqtt.description= Connect a Flic Apater over MQTT
+org.apache.streampipes.connect.adapters.flic.mqtt.description= Connect a Flic Smart Button over MQTT
 
 access-mode.title=Access Mode
 access-mode.description=

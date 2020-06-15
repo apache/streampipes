@@ -18,8 +18,6 @@
 
 package org.apache.streampipes.connect.adapters.flic;
 
-import org.apache.streampipes.connect.adapters.netio.model.NetioGlobalMeasure;
-import org.apache.streampipes.connect.adapters.netio.model.NetioPowerOutput;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
@@ -27,8 +25,6 @@ import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -69,7 +65,7 @@ public class FlicUtils {
     public static Map<String, Object> getEvent(FlicOutput output) {
         Map<String, Object> event = new HashMap<>();
 
-        event.put(TIMESTAMP_KEY, System.currentTimeMillis());
+        event.put(TIMESTAMP_KEY, output.getTimestamp());
         event.put(BUTTON_ID_KEY, output.getButtonID());
         event.put(CLICK_TYPE_KEY, output.getClickType());
         return event;
