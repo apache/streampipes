@@ -70,7 +70,7 @@ public class ConnectAdapterInit extends AdapterWorkerContainer {
             .add(new HttpStreamProtocol())
             .add(new PulsarProtocol())
 //
-//            // Specific Adapters
+//          // Specific Adapters
             .add(new GdeltAdapter())
             .add(new CoindeskBitcoinAdapter())
             .add(new IexCloudNewsAdapter())
