@@ -16,7 +16,7 @@
  *
  */
 
-import { Pipe, PipeTransform } from '@angular/core';
+import {Pipe, PipeTransform} from '@angular/core';
 import {DomSanitizer, SafeStyle} from "@angular/platform-browser";
 
 @Pipe({name: 'safeCss'})

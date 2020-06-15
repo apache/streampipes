@@ -18,10 +18,10 @@
 
 import {
   DataProcessorInvocation,
-  DataSinkInvocation, SpDataSet,
+  DataSinkInvocation,
+  SpDataSet,
   SpDataStream
 } from "../../core-model/gen/streampipes-model";
-import {EditorConstants} from "../constants/editor.constants";
 import {InjectionToken} from "@angular/core";
 
 export type PipelineElementHolder = {

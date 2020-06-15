@@ -21,20 +21,18 @@ import {EditorService} from "./services/editor.service";
 import {
     DataProcessorInvocation,
     DataSinkInvocation,
-    DataSourceDescription, SpDataSet,
+    DataSourceDescription,
+    SpDataSet,
     SpDataStream
 } from "../core-model/gen/streampipes-model";
 import {PipelineElementService} from "../platform-services/apis/pipeline-element.service";
 import {
     PipelineElementConfig,
-    PipelineElementHolder,
     PipelineElementType,
     PipelineElementUnion
 } from "./model/editor.model";
-import {EditorConstants} from "./constants/editor.constants";
 import {PipelineElementTypeUtils} from "./utils/editor.utils";
 import {AuthStatusService} from "../services/auth-status.service";
-import {MatchingErrorComponent} from "./dialog/matching-error/matching-error.component";
 import {PanelType} from "../core-ui/dialog/base-dialog/base-dialog.model";
 import {WelcomeTourComponent} from "./dialog/welcome-tour/welcome-tour.component";
 import {DialogService} from "../core-ui/dialog/base-dialog/base-dialog.service";

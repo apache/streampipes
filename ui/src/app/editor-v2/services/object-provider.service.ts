@@ -21,7 +21,7 @@ import {Injectable} from "@angular/core";
 import {RestApi} from "../../services/rest-api.service";
 import {JsplumbBridge} from "./jsplumb-bridge.service";
 import {InvocablePipelineElementUnion, PipelineElementConfig} from "../model/editor.model";
-import {InvocableStreamPipesEntity, Pipeline} from "../../core-model/gen/streampipes-model";
+import {Pipeline} from "../../core-model/gen/streampipes-model";
 import {EditorService} from "./editor.service";
 
 @Injectable()

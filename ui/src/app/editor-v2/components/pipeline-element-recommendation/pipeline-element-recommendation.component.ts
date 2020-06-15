@@ -18,9 +18,8 @@
 
 import {JsplumbService} from "../../services/jsplumb.service";
 import {Component, Input, OnInit} from "@angular/core";
-import {PipelineElementConfig, PipelineElementRecommendationLayout} from "../../model/editor.model";
+import {PipelineElementConfig} from "../../model/editor.model";
 import {DataProcessorInvocation} from "../../../core-model/gen/streampipes-model";
-import {DomSanitizer} from "@angular/platform-browser";
 import {SafeCss} from "../../utils/style-sanitizer";
 
 @Component({

@@ -17,7 +17,6 @@
  */
 
 import * as angular from 'angular';
-import {CustomizeController} from "../../editor/dialog/customize-pipeline-element/customize.controller";
 import {MatchingErrorController} from "../../editor/dialog/matching-error/matching-error.controller";
 import {TopicSelectionDialog} from "../../editor/dialog/topic/topic-selection-modal.controller";
 import {PossibleElementsController} from "../../editor/dialog/possible-elements/possible-elements-dialog.controller";

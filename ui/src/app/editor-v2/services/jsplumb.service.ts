@@ -18,12 +18,12 @@
 
 import {JsplumbConfigService} from "./jsplumb-config.service";
 import {JsplumbBridge} from "./jsplumb-bridge.service";
-import {Inject, Injectable} from "@angular/core";
+import {Injectable} from "@angular/core";
 import {PipelineElementConfig, PipelineElementUnion} from "../model/editor.model";
 import {PipelineElementTypeUtils} from "../utils/editor.utils";
-import * as angular from "angular";
 import {
-    DataProcessorInvocation, DataSinkInvocation,
+    DataProcessorInvocation,
+    DataSinkInvocation,
     SpDataSet,
     SpDataStream
 } from "../../core-model/gen/streampipes-model";

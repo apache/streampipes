@@ -21,7 +21,7 @@ import * as dagre from "dagre";
 import {JsplumbBridge} from "./jsplumb-bridge.service";
 import {JsplumbConfigService} from "./jsplumb-config.service";
 import {JsplumbService} from "./jsplumb.service";
-import {Inject, Injectable} from "@angular/core";
+import {Injectable} from "@angular/core";
 import {PipelineElementConfig} from "../model/editor.model";
 
 declare const jsPlumb: any;

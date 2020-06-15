@@ -19,11 +19,7 @@
 import {Component, Input} from "@angular/core";
 import {PipelineElementUnion} from "../../model/editor.model";
 import {PipelineElementService} from "../../../platform-services/apis/pipeline-element.service";
-import {
-  DataProcessorInvocation,
-  SpDataSet,
-  SpDataStream
-} from "../../../core-model/gen/streampipes-model";
+import {SpDataStream} from "../../../core-model/gen/streampipes-model";
 import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
 import {PipelineElementTypeUtils} from "../../utils/editor.utils";
 
