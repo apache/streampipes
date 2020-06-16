@@ -55,6 +55,7 @@ import {ShowdownModule} from 'ngx-showdown';
 import {SafeCss} from "./utils/style-sanitizer";
 import {MatchingErrorComponent} from "./dialog/matching-error/matching-error.component";
 import {WelcomeTourComponent} from "./dialog/welcome-tour/welcome-tour.component";
+import {MissingElementsForTutorialComponent} from "./dialog/missing-elements-for-tutorial/missing-elements-for-tutorial.component";
 
 @NgModule({
     imports: [
@@ -78,6 +79,7 @@ import {WelcomeTourComponent} from "./dialog/welcome-tour/welcome-tour.component
         EditorComponent,
         HelpComponent,
         MatchingErrorComponent,
+        MissingElementsForTutorialComponent,
         PipelineAssemblyComponent,
         PipelineElementComponent,
         PipelineElementDocumentationComponent,

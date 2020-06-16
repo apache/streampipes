@@ -36,6 +36,7 @@ import {AuthStatusService} from "../services/auth-status.service";
 import {PanelType} from "../core-ui/dialog/base-dialog/base-dialog.model";
 import {WelcomeTourComponent} from "./dialog/welcome-tour/welcome-tour.component";
 import {DialogService} from "../core-ui/dialog/base-dialog/base-dialog.service";
+import {MissingElementsForTutorialComponent} from "./dialog/missing-elements-for-tutorial/missing-elements-for-tutorial.component";
 
 @Component({
     selector: 'editor',
@@ -182,13 +183,19 @@ export class EditorComponent implements OnInit {
                 this.missingElementsForTutorial.push({"name" : "Flow Rate 1", "appId" : this.requiredStreamForTutorialAppId });
             }
             if (!this.requiredProcessorForTourPresent()) {
-                this.missingElementsForTutorial.push({"name" : "Field Hasher", "appId" : this.requiredProcessorForTutorialAppId});
+                this.missingElementsForTutorial.push({"name" : "Numerical Filter", "appId" : this.requiredProcessorForTutorialAppId});
             }
             if (!this.requiredSinkForTourPresent()) {
                 this.missingElementsForTutorial.push({"name" : "Dashboard Sink", "appId" : this.requiredSinkForTutorialAppId});
             }
 
-            //this.EditorDialogManager.showMissingElementsForTutorialDialog(this.missingElementsForTutorial);
+            this.dialogService.open(MissingElementsForTutorialComponent, {
+                panelType: PanelType.STANDARD_PANEL,
+                title: "Tutorial requires pipeline elements",
+                data: {
+                    "missingElementsForTutorial": this.missingElementsForTutorial
+                }
+            });
         }
     }
 
@@ -199,17 +206,17 @@ export class EditorComponent implements OnInit {
     }
 
     requiredStreamForTourPresent() {
-        return this.requiredPeForTourPresent(this.allElements["stream"],
+        return this.requiredPeForTourPresent(this.allElements,
             this.requiredStreamForTutorialAppId);
     }
 
     requiredProcessorForTourPresent() {
-        return this.requiredPeForTourPresent(this.allElements["sepa"],
+        return this.requiredPeForTourPresent(this.allElements,
             this.requiredProcessorForTutorialAppId);
     }
 
     requiredSinkForTourPresent() {
-        return this.requiredPeForTourPresent(this.allElements["action"],
+        return this.requiredPeForTourPresent(this.allElements,
             this.requiredSinkForTutorialAppId);
     }
 
