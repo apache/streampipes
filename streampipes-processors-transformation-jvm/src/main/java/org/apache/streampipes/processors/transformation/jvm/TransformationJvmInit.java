@@ -37,7 +37,8 @@ import org.apache.streampipes.processors.transformation.jvm.processor.booloperat
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.timer.BooleanTimerController;
 import org.apache.streampipes.processors.transformation.jvm.processor.csvmetadata.CsvMetadataEnrichmentController;
 import org.apache.streampipes.processors.transformation.jvm.processor.state.buffer.StateBufferController;
-import org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.StateLabelerController;
+import org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.buffer.StateBufferLabelerController;
+import org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.number.NumberLabelerController;
 import org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.counter.StringCounterController;
 import org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.timer.StringTimerController;
 import org.apache.streampipes.processors.transformation.jvm.processor.task.TaskDurationController;
@@ -68,7 +69,8 @@ public class TransformationJvmInit extends StandaloneModelSubmitter {
             .add(new SignalEdgeFilterController())
             .add(new BooleanToStateController())
             .add(new StateBufferController())
-            .add(new StateLabelerController())
+            .add(new StateBufferLabelerController())
+            .add(new NumberLabelerController())
             .add(new StringCounterController());
 
     DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),

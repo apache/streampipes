@@ -24,60 +24,6 @@ public class Statement {
     public Statement() {
     }
 
-    /**
-     * This method checks if the user input is correct. When not null is returned
-     * @param s
-     * @return
-     */
-    public static Statement getStatement(String s) {
-        Statement result = new Statement();
-
-        String[] parts  = s.split(";");
-        // default case
-        if (parts.length == 2) {
-            if (parts[0].equals("*")) {
-                result.setOperator(parts[0]);
-                result.setLabel(parts[1]);
-                return result;
-            } else {
-                return null;
-            }
-        }
-
-        // all other valid cases
-        if (parts.length ==  3) {
-
-            if (parts[0].equals(">") || parts[0].equals("<") || parts[0].equals("=")) {
-                result.setOperator(parts[0]);
-            } else {
-                return null;
-            }
-
-            if (isNumeric(parts[1].replaceAll("-", ""))) {
-                result.setValue(Double.parseDouble(parts[1]));
-            } else {
-                return null;
-            }
-
-            result.setLabel(parts[2]);
-
-            return result;
-        } else {
-            return null;
-        }
-    }
-
-    private static boolean isNumeric(final String str) {
-
-        // null or empty
-        if (str == null || str.length() == 0) {
-            return false;
-        }
-
-        return str.chars().allMatch(Character::isDigit);
-
-    }
-
     public String getOperator() {
         return operator;
     }

@@ -16,7 +16,7 @@
   ~
   -->
 
-## State Labeler
+## Number Labeler
 
 <p align="center"> 
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
@@ -26,32 +26,21 @@
 
 ## Description
 
-Apply a rule to a time-series recorded during a state of a machine. (E.g. when minimum value is lower then 10, add label `not ok` else add label `ok`)
-
+Apply a rule to a value of a field. (E.g. when minimum value is lower then 10, add label `not ok` else add label `ok`)
 
 ***
 
 ## Required input
 
-Requires a list with sensor values and a field defining the state
+Requires a sensor value
 
-### Sensor values
+### Sensor value
 
-An array representing sensor values recorded during the state.
-
-### State field
-
-A field representing the state when the sensor values where recorded.
+A number representing the current sensor value.
 
 ***
 
 ## Configuration
-
-### Select a specific state
-When you are interested in the values of a specific state add it here. All other states will be ignored. To get results of all states enter `*`
-
-### Operation
-Operation that will be performed on the sensor values (calculate `maximim`, or `average`, or `minimum`) 
 
 ### Condition
 Define a rule which label to add. Example: `<;5;nok` means when the calculated value is smaller then 5 add label ok.
