@@ -22,4 +22,4 @@ EXPOSE 8090
 
 COPY target/streampipes-processors-enricher-jvm.jar  /streampipes-processing-element-container.jar
 
-ENTRYPOINT ["java", "-jar", "/streampipes-processing-element-container.jar"]
+ENTRYPOINT ["java", "--add-modules", "jdk.scripting.nashorn", "-jar", "/streampipes-processing-element-container.jar"]
