@@ -182,7 +182,8 @@ public class Plc4xS7Adapter extends PullAdapter {
         getConfigurations(adapterDescription);
 
         try {
-            this.plcConnection= new PlcDriverManager().getConnection("s7://" + this.ip + "/1/1");
+//            this.plcConnection= new PlcDriverManager().getConnection("s7://" + this.ip + "/1/1");
+            this.plcConnection= new PlcDriverManager().getConnection("s7://" + this.ip);
 
             if (!this.plcConnection.getMetadata().canRead()) {
                 throw new AdapterException("The S7 on IP: " + this.ip + " does not support reading data");
