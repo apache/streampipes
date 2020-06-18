@@ -66,7 +66,14 @@
                 </i>
                 <mat-spinner *ngIf="deleteInProgress(adapter.couchDbId)" [diameter]="20" fxLayoutAlign="center"></mat-spinner>
             </button>
-
+        </div>
+        <div fxFlex="30" fxLayout="row" fxLayoutAlign="end end" class="delete">
+            <button matTooltip="Delete Adapter Template" color="primary" mat-fab (click)="openAdapterDocumentation(adapter); $event.stopPropagation()" [disabled]="deleteInProgress(adapter.couchDbId)">
+                <i class="material-icons" *ngIf="!deleteInProgress(adapter.couchDbId)">
+                    delete
+                </i>
+                <mat-spinner *ngIf="deleteInProgress(adapter.couchDbId)" [diameter]="20" fxLayoutAlign="center"></mat-spinner>
+            </button>
         </div>
         <!--<div fxFlex="30" *ngIf="!adapter.couchDbId" fxLayout="row" fxLayoutAlign="end end">-->
             <!--<button color="primary" mat-fab>-->
