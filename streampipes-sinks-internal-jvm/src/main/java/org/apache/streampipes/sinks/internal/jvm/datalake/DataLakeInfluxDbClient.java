@@ -174,16 +174,20 @@ public class DataLakeInfluxDbClient {
     Point.Builder p = Point.measurement(measureName).time(timestampValue, TimeUnit.MILLISECONDS);
 
       for (Map.Entry<String, Object> pair : event.getRaw().entrySet()) {
-          if (pair.getValue() instanceof Integer) {
-              p.addField(DataLake.prepareString(pair.getKey()), (Integer)pair.getValue());
-          } else if (pair.getValue() instanceof Long) {
-              p.addField(DataLake.prepareString(pair.getKey()), (Long)pair.getValue());
-          } else if (pair.getValue() instanceof Double) {
-              p.addField(DataLake.prepareString(pair.getKey()), (Double)pair.getValue());
-          } else if (pair.getValue() instanceof Boolean) {
-              p.addField(DataLake.prepareString(pair.getKey()), (Boolean)pair.getValue());
+          if (tagFields != null && tagFields.stream().anyMatch(tag -> tag.equals(pair.getKey()))) {
+              p.tag(pair.getKey(), pair.getValue().toString());
           } else {
-              p.addField(DataLake.prepareString(pair.getKey()), pair.getValue().toString());
+              if (pair.getValue() instanceof Integer) {
+                  p.addField(DataLake.prepareString(pair.getKey()), (Integer) pair.getValue());
+              } else if (pair.getValue() instanceof Long) {
+                  p.addField(DataLake.prepareString(pair.getKey()), (Long) pair.getValue());
+              } else if (pair.getValue() instanceof Double) {
+                  p.addField(DataLake.prepareString(pair.getKey()), (Double) pair.getValue());
+              } else if (pair.getValue() instanceof Boolean) {
+                  p.addField(DataLake.prepareString(pair.getKey()), (Boolean) pair.getValue());
+              } else {
+                  p.addField(DataLake.prepareString(pair.getKey()), pair.getValue().toString());
+              }
           }
       }
 
