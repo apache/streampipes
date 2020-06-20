@@ -1,0 +1,73 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div fxLayout="column" fxLayoutAlign="stretch">
+    <div class="assemblyOptions sp-blue-bg m-0 row header h-40" style="margin-left: 0px;margin-right: 0px;margin-top: 0px;">
+
+        <div fxFlex="100" layout="row" fxLayoutAlign="end center" style="margin-left: 0px;margin-right: 0px;">
+            <sp-select-properties
+                    style="margin-right: 10px;"
+                    (changeSelectedProperties)="setSelectedColumn($event)"
+                    [availableProperties]="availableColumns"
+                    [selectedProperties]="selectedColumns">
+            </sp-select-properties>
+
+            <sp-aggregate-configuration
+                    (update)="changeResolution($event)">
+            </sp-aggregate-configuration>
+
+            <button mat-icon-button matTooltip="Download data" class="icon" (click)="downloadDataAsFile()" color="white">
+                <i class="material-icons">get_app</i>
+            </button>
+<!--            <button mat-button mat-icon-button color="white" (click)="changeResolution()">-->
+<!--                <i class="material-icons">autorenew</i>-->
+<!--            </button>-->
+            <button mat-button mat-icon-button color="white" (click)="removeWidget()">
+                <i class="material-icons">clear</i>
+            </button>
+        </div>
+    </div>
+
+
+    <div style="width: 100%; height: 500px">
+
+
+        <div fxLayout="row">
+            <sp-load-data-spinner *ngIf="showIsLoadingData"></sp-load-data-spinner>
+
+            <sp-no-data-in-date-range *ngIf="showNoDataInDateRange" [viewDateRange]="viewDateRange"></sp-no-data-in-date-range>
+
+            <!-- Chart -->
+            <plotly-plot fxFlex
+                         *ngIf="data !== undefined && !showNoDataInDateRange"
+                         flex
+                         [data]="data"
+                         [layout]="graph.layout"
+                         [config]="graph.config"
+                         (relayout)="handleDefaultModeBarButtonClicks($event)"
+                         (selecting)="selectDataPoints($event)">
+            </plotly-plot>
+
+        </div>
+
+
+    </div>
+
+
+</div>
+

@@ -67,7 +67,7 @@ export class ImageBarComponent implements OnInit {
 
   @HostListener('document:keydown', ['$event'])
   handleShortCuts(event: KeyboardEvent) {
-    if (this.enableShortCuts) {
+    if (this.enableShortCuts && !event.repeat) {
       const key = event.key;
       switch (key.toLowerCase()) {
         case 'q':

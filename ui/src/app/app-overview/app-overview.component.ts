@@ -39,6 +39,11 @@ export class AppOverviewComponent implements OnInit {
             appDescription: 'Label in data lake stored images.',
             appId: 'image-labeling',
         },
+        {
+            appName: 'New App',
+            appDescription: 'An app that has some function',
+            appId: 'new-app',
+        }
     ];
 
     constructor() {

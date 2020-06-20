@@ -61,6 +61,7 @@ export class CocoFormatService {
     annotation.iscrowd = 0;
     annotation.image_id = 1;
     annotation.bbox = [cords.x, cords.y, size.x, size.y];
+    annotation.area = size.x * size.y
     annotation.category_id = CocoFormatService.getLabelId(coco, supercategory, category);
     annotation.category_name = category;
     coco.annotations.push(annotation);

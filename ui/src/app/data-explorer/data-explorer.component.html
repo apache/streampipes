@@ -16,14 +16,41 @@
   ~
   -->
 
-<div flex class="page-container page-container-padding" style="height: 1px">
-    <div flex="100" layout="column" style="padding:0px;background-color:#f6f6f6; display: inline-block; width: 100%;" >
-        <div flex layout-fill layout="row" layout-align="end center"
-             style="height:48px;padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
+<div fxLayout="column" class="page-container">
+    <div fxLayout="row" style="padding:0px;background-color:#f6f6f6;">
+        <div fxFlex="100" style="line-height:24px;border-bottom:1px solid #ccc">
+            <div fxFlex="100" fxLayout="row">
+                <div fxFlex fxLayoutAlign="start center">
+                    <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectDashboard($event)">
+                        <mat-tab label="Start"></mat-tab>
+                        <!--<mat-tab *ngFor="let dataViewDashboard of dataViewDashboards" label="{{dataViewDashboard.name}}"></mat-tab>-->
+                    </mat-tab-group>
+
+                    <!--</div>-->
+                    <!--<div fxFlex fxLayoutAlign="start center" class="mr-20">-->
+                    <sp-time-range-selector *ngIf="selectedIndex" (dateRangeEmitter)="updateDateRange($event)"></sp-time-range-selector>
+
+                    <button mat-button mat-icon-button color="primary"
+                            *ngIf="selectedIndex > 0" (click)="toggleEditMode()" [disabled]="editMode">
+                        <i class="material-icons">edit</i>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="container-fluid">
-        <sp-explorer></sp-explorer>
+    <div class="page-container-padding-inner" fxLayout="column" fxFlex="100" *ngIf="dashboardsLoaded">
+        <sp-data-explorer-dashboard-overview (selectDashboardEmitter)="openDashboard($event)"
+                                             (reloadDashboardsEmitter)="getDashboards()"
+                                             [dataViewDashboards]="dataViewDashboards"
+                                             *ngIf="!dashboardTabSelected">
+
+        </sp-data-explorer-dashboard-overview>
+        <sp-data-explorer-dashboard-panel fxLayout="column"
+                                          [(editMode)]="editMode"
+                                          [dashboard]="selectedDataViewDashboard"
+                                          [viewDateRange]="viewDateRange"
+                                          class="dashboard-panel" *ngIf="dashboardTabSelected">
+        </sp-data-explorer-dashboard-panel>
     </div>
 </div>

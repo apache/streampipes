@@ -206,17 +206,13 @@ This project includes some sources that are also licensed under the Apache
 License Version 2.0:
 
 All SVG files in ui/src/assets/img/svg (https://github.com/google/material-design-icons)
-MaterialIcons-Regular.eot (https://github.com/google/material-design-icons/tree/master/iconfont)
-MaterialIcons-Regular.ttf (https://github.com/google/material-design-icons/tree/master/iconfont)
-MaterialIcons-Regular.woff (https://github.com/google/material-design-icons/tree/master/iconfont)
-MaterialIcons-Regular.woff2 (https://github.com/google/material-design-icons/tree/master/iconfont)
-Roboto-Regular.ttf (https://github.com/google/roboto/)
+
 
 ===============================================================
 
 This project includes some sources that are are licensed under the 3-clause BSD license:
 
-All files in streampipes-measurement-units/src/main/java/com.github.jqudt (https://github.com/egonw/jqudt),
+All files in streampipes-measurement-units/src/main/java/com/github/jqudt (https://github.com/egonw/jqudt),
 
 Copyright (C) 2012  Egon Willighagen <egonw@users.sf.net>
 

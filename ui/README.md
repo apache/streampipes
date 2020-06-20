@@ -18,14 +18,14 @@
 
 <h1 align="center">
   <br>
-   <img src="https://docs.streampipes.org/img/logo.png" 
+   <img src="https://streampipes.apache.org/img/sp-logo-color.png" 
    alt="StreamPipes Logo" title="StreamPipes Logo" width="50%"/>
   <br>
 </h1>
 <h3 align="center">Self-Service Data Analytics for the (Industrial) IoT</h3>
 <h4 align="center">StreamPipes is a complete toolbox to easily analyze IoT (big) data streams without programming skills.</h4>
 <p align="center">  
-    <img src="https://www.streampipes.org/images/screenshot.png" alt="StreamPipes Pipeline Editor"/>
+    <img src="https://streampipes.apache.org/img/streampipes-screenshot.png" alt="StreamPipes Pipeline Editor"/>
 </p>
 
 ***
