@@ -19,7 +19,7 @@
 
 <div fxLayout="column" fxLayoutAlign="stretch">
     <div fxFlex="100" layout="row" fxLayoutAlign="end center" style="margin-left: 0px;margin-right: 0px;">
-        <mat-slide-toggle [(ngModel)]="autoAggregationActive">Group</mat-slide-toggle>
+        <mat-slide-toggle [(ngModel)]="autoAggregationActive">Interval</mat-slide-toggle>
         <div  *ngIf="autoAggregationActive" class="option" style="margin-left: 5px">
             <mat-form-field style="width: 80px; margin-right: 5px">
                 <input matInput type="number" [(ngModel)]="aggregationValue">

@@ -26,6 +26,7 @@ import { ChangeChartmodeDialog } from '../../../../core-ui/linechart/labeling-to
 import { LabelingDialog } from '../../../../core-ui/linechart/labeling-tool/dialogs/labeling/labeling.dialog';
 import { ColorService } from '../../../../core-ui/linechart/labeling-tool/services/color.service';
 import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
+import { GroupedDataResult } from '../../../../core-model/datalake/GroupedDataResult';
 
 @Component({
   selector: 'sp-data-explorer-line-chart-widget',
@@ -37,6 +38,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
   data: any[] = undefined;
   availableColumns: EventProperty[] = [];
   selectedColumns: EventProperty[] = [];
+  dimensionProperties: EventProperty[] = [];
   yKeys: string[] = [];
   xKey: string;
 
@@ -125,12 +127,44 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
   ngOnInit(): void {
 
     this.availableColumns = this.getNumericProperty(this.dataExplorerWidget.dataLakeMeasure.eventSchema);
+    this.dimensionProperties = this.getDimenstionProperties(this.dataExplorerWidget.dataLakeMeasure.eventSchema);
+
     // Reduce selected columns when more then 6
     this.selectedColumns = this.availableColumns.length > 6 ? this.availableColumns.slice(0, 5) : this.availableColumns;
 
     this.xKey = this.getTimestampProperty(this.dataExplorerWidget.dataLakeMeasure.eventSchema).runtimeName;
     this.yKeys = this.getRuntimeNames(this.selectedColumns);
     this.updateData();
+  }
+
+  changeGroupingResolution(event) {
+    // TODO  next get grouped data from backend
+    const groupValue = event['groupValue'];
+
+    console.log(event);
+    this.dataLakeRestService.getGroupedDataAutoAggergation(
+      this.dataExplorerWidget.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime()
+      , groupValue)
+      .subscribe((res: GroupedDataResult) => {
+
+          if (res.total === 0) {
+            this.setShownComponents(true, false, false);
+          } else {
+            // res.measureName = this.dataExplorerWidget.dataLakeMeasure.measureName;
+            const tmp = this.transformGroupedData(res, this.xKey);
+            this.data = this.displayGroupedData(tmp, this.yKeys);
+            // this.data['measureName'] = tmp.measureName;
+            // this.data['labels'] = tmp.labels;
+
+            if (this.data['labels'] !== undefined && this.data['labels'].length > 0) {
+              this.addInitialColouredShapesToGraph();
+            }
+
+            this.setShownComponents(false, true, false);
+          }
+
+        }
+      );
   }
 
   changeResolution(event) {
@@ -218,6 +252,31 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
     }
   }
 
+  displayGroupedData(transformedData: GroupedDataResult, yKeys: string[]) {
+    if (this.yKeys.length > 0) {
+
+      const tmp = [];
+
+      const groupNames = Object.keys(transformedData.dataResults);
+      for (const groupName of groupNames)  {
+        const value = transformedData.dataResults[groupName];
+        this.yKeys.forEach(key => {
+          value.rows.forEach(serie => {
+            if (serie.name === key) {
+              serie.name = groupName + ' ' + serie.name;
+              tmp.push(serie);
+            }
+          });
+        });
+      }
+      return tmp;
+
+    } else {
+      return undefined;
+    }
+  }
+
+
   transformData(data: DataResult, xKey: string): DataResult {
     const tmp: any[] = [];
 
@@ -259,6 +318,15 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
     });
     data.rows = tmp;
     data.labels = labels;
+
+    return data;
+  }
+
+  transformGroupedData(data: GroupedDataResult, xKey: string): GroupedDataResult {
+    for (const key in data.dataResults) {
+      const dataResult = data.dataResults[key];
+      dataResult.rows = this.transformData(dataResult, xKey).rows;
+    }
 
     return data;
   }

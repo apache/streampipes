@@ -31,6 +31,11 @@
                     (update)="changeResolution($event)">
             </sp-aggregate-configuration>
 
+            <sp-group-configuration [dimensionProperties]="dimensionProperties"
+                    (update)="changeGroupingResolution($event)">
+            </sp-group-configuration>
+
+
             <button mat-icon-button matTooltip="Download data" class="icon" (click)="downloadDataAsFile()" color="white">
                 <i class="material-icons">get_app</i>
             </button>

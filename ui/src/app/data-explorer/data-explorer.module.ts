@@ -63,6 +63,7 @@ import { DataLakeService } from './services/data-lake.service';
 import { DataViewDataExplorerService } from './services/data-view-data-explorer.service';
 import { RefreshDashboardService } from './services/refresh-dashboard.service';
 import { ResizeService } from './services/resize.service';
+import { GroupConfigurationComponent } from './components/widgets/utils/group-configuration/group-configuration.component';
 
 const dashboardWidgets = [
 
@@ -125,7 +126,8 @@ export const MY_NATIVE_FORMATS = {
     LoadDataSpinnerComponent,
     DataDownloadDialog,
     SelectPropertiesComponent,
-    AggregateConfigurationComponent
+    AggregateConfigurationComponent,
+    GroupConfigurationComponent
   ],
   providers: [
     DatalakeRestService,
