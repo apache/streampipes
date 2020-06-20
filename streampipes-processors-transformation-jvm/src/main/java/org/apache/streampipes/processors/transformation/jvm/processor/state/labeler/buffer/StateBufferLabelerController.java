@@ -77,7 +77,7 @@ public class StateBufferLabelerController extends StandaloneEventProcessingDecla
 //                        Options.from("Bool",  "Byte", "Int", "Word", "Real"))))
 
             .outputStrategy(OutputStrategies.append(
-                    EpProperties.stringEp(Labels.withId(LABEL), LABEL, SPSensor.STATE)
+                    EpProperties.stringEp(Labels.withId(LABEL), LABEL, SPSensor.STATE, PropertyScope.DIMENSION_PROPERTY)
             ))
             .build();
   }
