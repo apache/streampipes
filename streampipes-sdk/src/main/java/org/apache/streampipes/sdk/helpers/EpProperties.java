@@ -234,6 +234,22 @@ public class EpProperties {
   }
 
   /**
+   * Creates a new primitive property of type string and the provided domain property.
+   *
+   * @param runtimeName    The field identifier of the event property at runtime.
+   * @param domainProperty The semantics of the list property as a String. The string should correspond to a URI
+   *                       provided by a vocabulary. Use one of the vocabularies provided in
+   *                       {@link org.apache.streampipes.vocabulary} or create your own domain-specific vocabulary.
+   * @param propertyScope  The scope for the property, whether it is a HEADER, MEASUREMENT, od DIMENSION property
+   * @return {@link org.apache.streampipes.model.schema.EventPropertyPrimitive}
+   */
+  public static EventPropertyPrimitive stringEp(Label label, String runtimeName, String domainProperty, PropertyScope propertyScope) {
+    EventPropertyPrimitive ep = ep(label, XSD._string.toString(), runtimeName, domainProperty);
+    ep.setPropertyScope(propertyScope.name());
+    return ep;
+  }
+
+  /**
    * Creates a new primitive property of type string and the provided domain property. In addition, the value range
    * of the property is restricted to the defined {@link org.apache.streampipes.model.schema.Enumeration}
    *
