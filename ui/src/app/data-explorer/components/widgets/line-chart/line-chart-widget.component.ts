@@ -21,12 +21,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { PlotlyService } from 'angular-plotly.js';
 import { EventProperty } from '../../../../connect/schema-editor/model/EventProperty';
 import { DataResult } from '../../../../core-model/datalake/DataResult';
+import { GroupedDataResult } from '../../../../core-model/datalake/GroupedDataResult';
 import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
 import { ChangeChartmodeDialog } from '../../../../core-ui/linechart/labeling-tool/dialogs/change-chartmode/change-chartmode.dialog';
 import { LabelingDialog } from '../../../../core-ui/linechart/labeling-tool/dialogs/labeling/labeling.dialog';
 import { ColorService } from '../../../../core-ui/linechart/labeling-tool/services/color.service';
 import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
-import { GroupedDataResult } from '../../../../core-model/datalake/GroupedDataResult';
 
 @Component({
   selector: 'sp-data-explorer-line-chart-widget',
@@ -42,9 +42,18 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
   yKeys: string[] = [];
   xKey: string;
 
+  advancedSettingsActive = false;
+
   selectedStartX = undefined;
   selectedEndX = undefined;
   n_selected_points = undefined;
+
+
+
+  aggregationValue = 1;
+  aggregationTimeUnit = 's';
+  groupValue = 'None';
+  showCountValue = false;
 
   constructor(public dialog: MatDialog, public plotlyService: PlotlyService, public colorService: ColorService,
               public renderer: Renderer2, protected dataLakeRestService: DatalakeRestService) {
@@ -137,90 +146,85 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
     this.updateData();
   }
 
-  changeGroupingResolution(event) {
-    // TODO  next get grouped data from backend
-    const groupValue = event['groupValue'];
-
-    console.log(event);
-    this.dataLakeRestService.getGroupedDataAutoAggergation(
-      this.dataExplorerWidget.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime()
-      , groupValue)
-      .subscribe((res: GroupedDataResult) => {
-
-          if (res.total === 0) {
-            this.setShownComponents(true, false, false);
-          } else {
-            // res.measureName = this.dataExplorerWidget.dataLakeMeasure.measureName;
-            const tmp = this.transformGroupedData(res, this.xKey);
-            this.data = this.displayGroupedData(tmp, this.yKeys);
-            // this.data['measureName'] = tmp.measureName;
-            // this.data['labels'] = tmp.labels;
-
-            if (this.data['labels'] !== undefined && this.data['labels'].length > 0) {
-              this.addInitialColouredShapesToGraph();
-            }
-
-            this.setShownComponents(false, true, false);
-          }
-
-        }
-      );
-  }
-
-  changeResolution(event) {
-    const aggregationTimeUnit = event['aggregationTimeUnit'];
-    const aggregationValue = event['aggregationValue'];
-    this.setShownComponents(false, false, true);
-    this.dataLakeRestService.getData(
-      this.dataExplorerWidget.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime()
-      , aggregationTimeUnit, aggregationValue)
-      .subscribe((res: DataResult) => {
-
-          if (res.total === 0) {
-            this.setShownComponents(true, false, false);
-          } else {
-            res.measureName = this.dataExplorerWidget.dataLakeMeasure.measureName;
-            const tmp = this.transformData(res, this.xKey);
-            this.data = this.displayData(tmp, this.yKeys);
-            this.data['measureName'] = tmp.measureName;
-            this.data['labels'] = tmp.labels;
-
-            if (this.data['labels'] !== undefined && this.data['labels'].length > 0) {
-              this.addInitialColouredShapesToGraph();
-            }
-
-            this.setShownComponents(false, true, false);
-          }
-
-        }
-      );
-  }
-
   updateData() {
+    if (!this.advancedSettingsActive) {
+      this.setShownComponents(false, false, true);
+      this.dataLakeRestService.getDataAutoAggergation(
+        this.dataExplorerWidget.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime())
+        .subscribe((res: DataResult) => {
 
-    this.setShownComponents(false, false, true);
-    this.dataLakeRestService.getDataAutoAggergation(
-      this.dataExplorerWidget.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime())
-      .subscribe((res: DataResult) => {
+            if (res.total === 0) {
+              this.setShownComponents(true, false, false);
+            } else {
+              res.measureName = this.dataExplorerWidget.dataLakeMeasure.measureName;
+              const tmp = this.transformData(res, this.xKey);
+              this.data = this.displayData(tmp, this.yKeys);
+              this.data['measureName'] = tmp.measureName;
+              this.data['labels'] = tmp.labels;
 
-        if (res.total === 0) {
-          this.setShownComponents(true, false, false);
-        } else {
-          res.measureName = this.dataExplorerWidget.dataLakeMeasure.measureName;
-          const tmp = this.transformData(res, this.xKey);
-          this.data = this.displayData(tmp, this.yKeys);
-          this.data['measureName'] = tmp.measureName;
-          this.data['labels'] = tmp.labels;
+              if (this.data['labels'] !== undefined && this.data['labels'].length > 0) {
+                this.addInitialColouredShapesToGraph();
+              }
 
-          if (this.data['labels'] !== undefined && this.data['labels'].length > 0) {
-            this.addInitialColouredShapesToGraph();
+              this.setShownComponents(false, true, false);
+            }
+
           }
+        );
+    } else {
 
-          this.setShownComponents(false, true, false);
-        }
+      if (this.groupValue === 'None') {
+        this.setShownComponents(false, false, true);
+        this.dataLakeRestService.getData(
+          this.dataExplorerWidget.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime()
+          , this.aggregationTimeUnit, this.aggregationValue)
+          .subscribe((res: DataResult) => {
 
+              if (res.total === 0) {
+                this.setShownComponents(true, false, false);
+              } else {
+                res.measureName = this.dataExplorerWidget.dataLakeMeasure.measureName;
+                const tmp = this.transformData(res, this.xKey);
+                this.data = this.displayData(tmp, this.yKeys);
+                this.data['measureName'] = tmp.measureName;
+                this.data['labels'] = tmp.labels;
+
+                if (this.data['labels'] !== undefined && this.data['labels'].length > 0) {
+                  this.addInitialColouredShapesToGraph();
+                }
+
+                this.setShownComponents(false, true, false);
+              }
+
+            }
+          );
+      } else {
+
+        this.dataLakeRestService.getGroupedData(
+          this.dataExplorerWidget.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime(),
+          this.aggregationTimeUnit, this.aggregationValue, this.groupValue)
+          .subscribe((res: GroupedDataResult) => {
+
+              if (res.total === 0) {
+                this.setShownComponents(true, false, false);
+              } else {
+                // res.measureName = this.dataExplorerWidget.dataLakeMeasure.measureName;
+                const tmp = this.transformGroupedData(res, this.xKey);
+                this.data = this.displayGroupedData(tmp, this.yKeys);
+                // this.data['measureName'] = tmp.measureName;
+                // this.data['labels'] = tmp.labels;
+
+                if (this.data !== undefined && this.data['labels'] !== undefined && this.data['labels'].length > 0) {
+                  this.addInitialColouredShapesToGraph();
+                }
+
+                this.setShownComponents(false, true, false);
+              }
+
+            }
+          );
       }
-    );
+    }
   }
 
 
@@ -253,12 +257,13 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
   }
 
   displayGroupedData(transformedData: GroupedDataResult, yKeys: string[]) {
-    if (this.yKeys.length > 0) {
+    // if (this.yKeys.length > 0) {
 
+    console.log('count value ' + this.showCountValue);
       const tmp = [];
 
       const groupNames = Object.keys(transformedData.dataResults);
-      for (const groupName of groupNames)  {
+      for (const groupName of groupNames) {
         const value = transformedData.dataResults[groupName];
         this.yKeys.forEach(key => {
           value.rows.forEach(serie => {
@@ -268,12 +273,23 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
             }
           });
         });
+
+        if (this.showCountValue) {
+          let containsCount = false;
+          value.rows.forEach(serie => {
+            if (serie.name.startsWith('count') && !containsCount) {
+              serie.name = groupName + ' count';
+              tmp.push(serie);
+              containsCount = true;
+            }
+          });
+        }
       }
       return tmp;
 
-    } else {
-      return undefined;
-    }
+    // } else {
+    //   return undefined;
+    // }
   }
 
 
@@ -287,8 +303,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
       data.headers.forEach((headerName, index) => {
         if (!dataKeys.includes(index) && typeof row[index] === 'number') {
           dataKeys.push(index);
-        }
-        else if (!label_column.includes(index) && typeof  row[index] == 'string' && data.headers[index] == "sp_internal_label") {
+        } else if (!label_column.includes(index) && typeof  row[index] == 'string' && data.headers[index] == 'sp_internal_label') {
           label_column.push(index);
         }
       });
@@ -510,7 +525,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
 
     // changing dragmode to 'zoom'
     this.graph.layout.dragmode = 'zoom';
-    
+
   }
 
   private saveLabelsInDatabase(label, start_X, end_X) {
@@ -524,7 +539,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
   }
 
   private addInitialColouredShapesToGraph() {
-    let selectedLabel = undefined;
+    let selectedLabel;
     let indices = [];
     for (let label = 0; label <= this.data['labels'].length; label++) {
       if (selectedLabel !== this.data['labels'][label] && indices.length > 0) {

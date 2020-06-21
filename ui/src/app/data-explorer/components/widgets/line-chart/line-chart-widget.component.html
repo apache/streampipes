@@ -27,14 +27,28 @@
                     [selectedProperties]="selectedColumns">
             </sp-select-properties>
 
+
+
+            <mat-slide-toggle [(ngModel)]="advancedSettingsActive">Advanced</mat-slide-toggle>
             <sp-aggregate-configuration
-                    (update)="changeResolution($event)">
+                    *ngIf="advancedSettingsActive"
+                    [(aggregationValue)]="aggregationValue"
+                    [(aggregationTimeUnit)]="aggregationTimeUnit">
             </sp-aggregate-configuration>
 
-            <sp-group-configuration [dimensionProperties]="dimensionProperties"
-                    (update)="changeGroupingResolution($event)">
+            <sp-group-configuration
+                    [dimensionProperties]="dimensionProperties"
+                    *ngIf="advancedSettingsActive"
+                    [(groupValue)]="groupValue"
+                    [(showCountValue)]="showCountValue">
             </sp-group-configuration>
 
+
+            <button
+                    *ngIf="advancedSettingsActive"
+                    (click)="updateData()" mat-button mat-icon-button color="white">
+                <i class="material-icons">autorenew</i>
+            </button>
 
             <button mat-icon-button matTooltip="Download data" class="icon" (click)="downloadDataAsFile()" color="white">
                 <i class="material-icons">get_app</i>

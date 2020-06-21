@@ -27,12 +27,21 @@ import { EventProperty } from '../../../../../connect/schema-editor/model/EventP
 export class GroupConfigurationComponent implements OnInit {
 
   groupingAvailable = true;
-  groupingActive = false;
 
-  groupValue = 'None';
-
+  @Input()
+  groupValue;
   @Output()
-  update: EventEmitter<any> = new EventEmitter();
+  groupValueChange = new EventEmitter();
+
+  showCountValueCheckbox = false;
+
+  @Input()
+  showCountValue = false;
+  @Output()
+  showCountValueChange = new EventEmitter();
+
+  // @Output()
+  // update: EventEmitter<any> = new EventEmitter();
 
   @Input()
   dimensionProperties: EventProperty[];
@@ -46,9 +55,16 @@ export class GroupConfigurationComponent implements OnInit {
     }
   }
 
-  updateData() {
-    this.update.emit({'groupValue': this.groupValue});
+  onModelChange(event, type) {
+    if (type === 'groupValue') {
+      if (this.groupValue !== 'None') {
+        this.showCountValueCheckbox = true;
+      } else {
+        this.showCountValueCheckbox = false;
+        this.showCountValue = false;
+      }
+    }
+    this[`${type}Change`].emit(event);
   }
-
 
 }

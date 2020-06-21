@@ -26,23 +26,24 @@ import { EventProperty } from '../../../../../connect/schema-editor/model/EventP
 })
 export class AggregateConfigurationComponent implements OnInit {
 
-  aggregationValue = 1;
-
-  aggregationTimeUnit = 's';
-
-  autoAggregationActive = false;
-
+  @Input()
+  aggregationValue;
   @Output()
-  update: EventEmitter<any> = new EventEmitter();
+  aggregationValueChange = new EventEmitter();
+
+
+  @Input()
+  aggregationTimeUnit;
+  @Output()
+  aggregationTimeUnitChange = new EventEmitter();
 
   constructor() { }
 
   ngOnInit(): void {
   }
 
-  updateData() {
-    this.update.emit({'aggregationValue': this.aggregationValue, 'aggregationTimeUnit': this.aggregationTimeUnit});
+  onModelChange(event, type) {
+    this[`${type}Change`].emit(event);
   }
-
 
 }

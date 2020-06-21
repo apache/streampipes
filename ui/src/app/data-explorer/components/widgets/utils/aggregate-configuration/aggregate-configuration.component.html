@@ -19,14 +19,10 @@
 
 <div fxLayout="column" fxLayoutAlign="stretch">
     <div fxFlex="100" layout="row" fxLayoutAlign="end center" style="margin-left: 0px;margin-right: 0px;">
-        <mat-slide-toggle [(ngModel)]="autoAggregationActive">Interval</mat-slide-toggle>
-        <div  *ngIf="autoAggregationActive" class="option" style="margin-left: 5px">
-            <mat-form-field style="width: 80px; margin-right: 5px">
-                <input matInput type="number" [(ngModel)]="aggregationValue">
-                <mat-label>Value</mat-label>
-            </mat-form-field>
+        <div   class="option" style="margin-left: 5px">
+
             <mat-form-field style="width: 100px">
-                <mat-select [(value)]="aggregationTimeUnit">
+                <mat-select [(ngModel)]="aggregationTimeUnit" (ngModelChange)="onModelChange($event,'aggregationTimeUnit')">
                     <mat-option style="background-color: #FFFFFF" value="ms">Milliseconds</mat-option>
                     <mat-option style="background-color: #FFFFFF" value="s">Second</mat-option>
                     <mat-option style="background-color: #FFFFFF" value="m">Minute</mat-option>
@@ -38,10 +34,10 @@
                 </mat-select>
                 <mat-label>Unit</mat-label>
             </mat-form-field>
-<!--            <button mat-button mat-icon-button color="white" (click)="removeWidget()">-->
-            <button (click)="updateData()" mat-button mat-icon-button color="white">
-                <i class="material-icons">autorenew</i>
-            </button>
+            <mat-form-field style="width: 80px; margin-left: 5px">
+                <input matInput type="number" [(ngModel)]="aggregationValue" (ngModelChange)="onModelChange($event,'aggregationValue')">
+                <mat-label>Value</mat-label>
+            </mat-form-field>
         </div>
     </div>
 </div>
