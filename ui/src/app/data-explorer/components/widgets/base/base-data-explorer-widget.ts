@@ -98,7 +98,7 @@ export abstract class BaseDataExplorerWidget implements OnChanges {
     return propertyKeys;
   }
 
-  getDimenstionProperties(eventSchema: EventSchema) {
+  getDimensionProperties(eventSchema: EventSchema) {
     const result: EventProperty[] = [];
     eventSchema.eventProperties.forEach(property => {
       if (property.propertyScope === 'DIMENSION_PROPERTY') {

@@ -136,7 +136,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
   ngOnInit(): void {
 
     this.availableColumns = this.getNumericProperty(this.dataExplorerWidget.dataLakeMeasure.eventSchema);
-    this.dimensionProperties = this.getDimenstionProperties(this.dataExplorerWidget.dataLakeMeasure.eventSchema);
+    this.dimensionProperties = this.getDimensionProperties(this.dataExplorerWidget.dataLakeMeasure.eventSchema);
 
     // Reduce selected columns when more then 6
     this.selectedColumns = this.availableColumns.length > 6 ? this.availableColumns.slice(0, 5) : this.availableColumns;
