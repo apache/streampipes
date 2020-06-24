@@ -69,6 +69,10 @@ export class TableWidgetComponent extends BaseDataExplorerWidget implements OnIn
       }
     );
   }
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
 
   transformData(data: DataResult) {
     const result = [];

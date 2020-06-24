@@ -36,7 +36,12 @@
         <sp-load-data-spinner *ngIf="showIsLoadingData"></sp-load-data-spinner>
 
         <sp-no-data-in-date-range *ngIf="showNoDataInDateRange" [viewDateRange]="viewDateRange"></sp-no-data-in-date-range>
-
+        <mat-form-field>
+            <label>Filter</label>
+            <br/>
+            <br/>
+            <input matInput (keyup)="applyFilter($event)">
+          </mat-form-field>
         <table *ngIf="showData" mat-table [dataSource]="dataSource" matSort >
             <ng-container *ngFor="let element of this.selectedColumns" [cdkColumnDef]="element.runtimeName">
 
