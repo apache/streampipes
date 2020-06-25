@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-
+import { DataSource } from '@angular/cdk/table';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
@@ -31,7 +31,6 @@ import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
   styleUrls: ['./table-widget.component.css']
 })
 export class TableWidgetComponent extends BaseDataExplorerWidget implements OnInit, OnDestroy {
-
 
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
@@ -73,6 +72,18 @@ export class TableWidgetComponent extends BaseDataExplorerWidget implements OnIn
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
+
+  setupFilter(column: string) {
+    this.dataSource.filterPredicate = (d: unknown, filter: string) => {
+      const textToSearch = String(d[column]) && String(d[column]).toLowerCase()|| '';
+      return textToSearch.indexOf(filter) !== -1;
+    };
+  }
+
+  applyFilter1(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+  
 
   transformData(data: DataResult) {
     const result = [];
