@@ -47,10 +47,7 @@ import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -141,10 +138,18 @@ public class Plc4xModbusAdapter extends PullAdapter{
 
 		this.nodes = new ArrayList<>();
 		CollectionStaticProperty sp = (CollectionStaticProperty) extractor.getStaticPropertyByName(PLC_NODES);
-		
+		Set<Integer> ids = new HashSet<>();
+		Set<String> names = new HashSet<>();
 		for (StaticProperty member : sp.getMembers()) {
 			StaticPropertyExtractor memberExtractor = 
 					StaticPropertyExtractor.from(((StaticPropertyGroup) member).getStaticProperties(), new ArrayList<>());
+
+			if (ids.add(memberExtractor.singleValueParameter(PLC_NODE_ID, Integer.class)) ||
+				names.add(memberExtractor.textParameter(PLC_NODE_RUNTIME_NAME)) == false) {
+
+				throw new AdapterException("NodeID or RuntimeName is specified twice." +
+											"Please prevent duplicate names.");
+			}
 			Map map = new HashMap();
 			map.put(PLC_NODE_RUNTIME_NAME, memberExtractor.textParameter(PLC_NODE_RUNTIME_NAME));
 			map.put(PLC_NODE_ID, memberExtractor.singleValueParameter(PLC_NODE_ID, Integer.class));
