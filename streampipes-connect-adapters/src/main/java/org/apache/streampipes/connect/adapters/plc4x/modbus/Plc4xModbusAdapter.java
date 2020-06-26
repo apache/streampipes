@@ -117,7 +117,7 @@ public class Plc4xModbusAdapter extends PullAdapter{
     							StaticProperties.integerFreeTextProperty(Labels.withId(PLC_NODE_ID)),
     							StaticProperties.integerFreeTextProperty(Labels.withId(PLC_NODE_ADDRESS)),
     							StaticProperties.singleValueSelection(Labels.withId(PLC_NODE_TYPE),
-    									Options.from("Coil", "HoldingRegister")))
+    									Options.from("DiscreteInput", "Coil", "InputRegister", "HoldingRegister")))
 //			)
     			.build();
     	description.setAppId(ID);
@@ -169,8 +169,10 @@ public class Plc4xModbusAdapter extends PullAdapter{
     	String type = plcType.substring(plcType.lastIndexOf(":") + 1);
     	
     	switch (type) {
-    	case "COIL": return Datatypes.Boolean;
-    	case "HOLDINGREGISTER": return Datatypes.Integer;
+		case "DISCRETEINPUT":
+    	case "COIL": return Datatypes.Boolean;break;
+    	case "INPUTREGISTER":
+    	case "HOLDINGREGISTER": return Datatypes.Integer;break;
     	default:
     		throw new AdapterException("Datatype " + plcType + " is not supported");
     	}    	
@@ -201,7 +203,7 @@ public class Plc4xModbusAdapter extends PullAdapter{
 					PrimitivePropertyBuilder
 						.create(datatype, node.get(PLC_NODE_RUNTIME_NAME))
 						.label(node.get(PLC_NODE_RUNTIME_NAME))
-						.description("FieldAdress: " + node.get(PLC_NODE_TYPE) + " " + String.valueOf(node.get(PLC_NODE_ADDRESS)))
+						.description("FieldAddress: " + node.get(PLC_NODE_TYPE) + " " + String.valueOf(node.get(PLC_NODE_ADDRESS)))
 						.build());
 		}
 		
@@ -245,13 +247,21 @@ public class Plc4xModbusAdapter extends PullAdapter{
 		PlcReadRequest.Builder builder = plcConnection.readRequestBuilder();
 		for (Map<String, String> node : this.nodes) {
 
-			if (node.get(PLC_NODE_TYPE).equals("Coil")) {
-				builder.addItem(String.valueOf(node.get(PLC_NODE_ID)), "coil:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
-			}
-			else {
-				builder.addItem(String.valueOf(node.get(PLC_NODE_ID)), "holding-register:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
-			}
+			switch (node.get(PLC_NODE_TYPE)){
+				case "Coil":
+					builder.addItem(String.valueOf(node.get(PLC_NODE_ID)),
+								"coil:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
+				case "HoldingRegister":
+					builder.addItem(String.valueOf(node.get(PLC_NODE_ID)),
+								"holding-register:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
+				case "DiscreteInput":
+					builder.addItem(String.valueOf(node.get(PLC_NODE_ID)),
+								"discrete-input:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
+				case "InputRegister":
+					builder.addItem(String.valueOf(node.get(PLC_NODE_ID)),
+									"input-register:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
 		}
+	}
 		PlcReadRequest readRequest = builder.build();
 		
 		
@@ -272,11 +282,14 @@ public class Plc4xModbusAdapter extends PullAdapter{
 		Map<String, Object> event = new HashMap<>();
 		for (Map<String, String> node :  this.nodes) {
 			if (response.getResponseCode(node.get(PLC_NODE_ID)) == PlcResponseCode.OK) {
-				if (node.get(PLC_NODE_TYPE).equals("Coil")) {
-					event.put(node.get(PLC_NODE_RUNTIME_NAME), response.getBoolean(node.get(PLC_NODE_ID)));
-				}
-				else {
-					event.put(node.get(PLC_NODE_RUNTIME_NAME), response.getInteger(node.get(PLC_NODE_ID)));
+
+				switch (node.get(PLC_NODE_TYPE)){
+					case "Coil":
+					case "DiscreteInput": event.put(node.get(PLC_NODE_RUNTIME_NAME),
+													response.getBoolean(node.get(PLC_NODE_ID)));break;
+					case "InputRegister":
+					case "HoldingRegister":
+						event.put(node.get(PLC_NODE_RUNTIME_NAME), response.getInteger(node.get(PLC_NODE_ID)));break;
 				}
 			}
 			else {
