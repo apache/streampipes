@@ -69,7 +69,7 @@ public class Plc4xModbusAdapter extends PullAdapter{
 	private static final String PLC_PORT = "plc_port";
 
 	private static final String PLC_NODES = "plc_nodes";
-    private static final String PLC_NODE_NAME = "plc_node_name";
+    private static final String PLC_NODE_ID = "plc_node_id";
     private static final String PLC_NODE_RUNTIME_NAME = "plc_node_runtime_name";
     private static final String PLC_NODE_ADDRESS = "plc_node_address";
     private static final String PLC_NODE_TYPE = "plc_node_type";
@@ -80,6 +80,7 @@ public class Plc4xModbusAdapter extends PullAdapter{
      */
     private String ip;
 	private int port;
+	private int slaveID;
 	private List<Map<String, String>> nodes;
 
     /**
@@ -98,8 +99,9 @@ public class Plc4xModbusAdapter extends PullAdapter{
     }
     
     /**
-     * Describe the adapter adapter and define what user inputs are required. Currently users can just select one node, this will be extended in the future
-     * @return
+     * Describe the adapter adapter and define what user inputs are required. Currently users can just select one node,
+	 * this will be extended in the future
+     * @return description of adapter
      */
     @Override
     public SpecificAdapterStreamDescription declareModel() {
@@ -112,7 +114,7 @@ public class Plc4xModbusAdapter extends PullAdapter{
 					.requiredCollection(Labels.withId(PLC_NODES),
 //    					StaticProperties.collection(Labels.withId(PLC_NODES),
     							StaticProperties.stringFreeTextProperty(Labels.withId(PLC_NODE_RUNTIME_NAME)),
-    							StaticProperties.stringFreeTextProperty(Labels.withId(PLC_NODE_NAME)),
+    							StaticProperties.integerFreeTextProperty(Labels.withId(PLC_NODE_ID)),
     							StaticProperties.integerFreeTextProperty(Labels.withId(PLC_NODE_ADDRESS)),
     							StaticProperties.singleValueSelection(Labels.withId(PLC_NODE_TYPE),
     									Options.from("Coil", "HoldingRegister")))
@@ -125,7 +127,7 @@ public class Plc4xModbusAdapter extends PullAdapter{
    
     /**
      * Extracts the user configuration from the SpecificAdapterStreamDescription and sets the local variables
-     * @param adapterDescription
+     * @param adapterDescription description of the adapter
      * @throws AdapterException
      */
     private void getConfigurations(SpecificAdapterStreamDescription adapterDescription)
@@ -134,9 +136,10 @@ public class Plc4xModbusAdapter extends PullAdapter{
     	StaticPropertyExtractor extractor = StaticPropertyExtractor.from(adapterDescription.getConfig(), new ArrayList<>());
     	
     	this.ip = extractor.singleValueParameter(PLC_IP, String.class);
-			this.port = extractor.singleValueParameter(PLC_PORT, Integer.class);
+    	this.port = extractor.singleValueParameter(PLC_PORT, Integer.class);
+    	this.slaveID = extractor.singleValueParameter(PLC_NODE_ID, Integer.class);
 
-			this.nodes = new ArrayList<>();
+		this.nodes = new ArrayList<>();
 		CollectionStaticProperty sp = (CollectionStaticProperty) extractor.getStaticPropertyByName(PLC_NODES);
 		
 		for (StaticProperty member : sp.getMembers()) {
@@ -144,7 +147,7 @@ public class Plc4xModbusAdapter extends PullAdapter{
 					StaticPropertyExtractor.from(((StaticPropertyGroup) member).getStaticProperties(), new ArrayList<>());
 			Map map = new HashMap();
 			map.put(PLC_NODE_RUNTIME_NAME, memberExtractor.textParameter(PLC_NODE_RUNTIME_NAME));
-			map.put(PLC_NODE_NAME, memberExtractor.textParameter(PLC_NODE_NAME));
+			map.put(PLC_NODE_ID, memberExtractor.singleValueParameter(PLC_NODE_ID, Integer.class));
 			map.put(PLC_NODE_ADDRESS, memberExtractor.singleValueParameter(PLC_NODE_ADDRESS, Integer.class));
  			map.put(PLC_NODE_TYPE, memberExtractor.selectedSingleValue(PLC_NODE_TYPE, String.class));
 
@@ -220,7 +223,8 @@ public class Plc4xModbusAdapter extends PullAdapter{
 		getConfigurations(adapterDescription);
 		
 		try {
-			this.plcConnection = new PlcDriverManager().getConnection("modbus:tcp://" + this.ip + ":" + this.port);
+			this.plcConnection = new PlcDriverManager().getConnection("modbus:tcp://" + this.ip + ":" + this.port
+																	  + "?unit-identifier=" + this.slaveID);
 			
 			if (!this.plcConnection.getMetadata().canRead()) {
 				throw new AdapterException("The Modbus device on IP: " + this.ip + " does not support reading data");
@@ -239,13 +243,13 @@ public class Plc4xModbusAdapter extends PullAdapter{
 		
 		// create PLC read request
 		PlcReadRequest.Builder builder = plcConnection.readRequestBuilder();
-		
 		for (Map<String, String> node : this.nodes) {
+
 			if (node.get(PLC_NODE_TYPE).equals("Coil")) {
-				builder.addItem(node.get(PLC_NODE_NAME), "coil:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
+				builder.addItem(String.valueOf(node.get(PLC_NODE_ID)), "coil:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
 			}
 			else {
-				builder.addItem(node.get(PLC_NODE_NAME), "holding-register:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
+				builder.addItem(String.valueOf(node.get(PLC_NODE_ID)), "holding-register:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
 			}
 		}
 		PlcReadRequest readRequest = builder.build();
@@ -267,17 +271,17 @@ public class Plc4xModbusAdapter extends PullAdapter{
 		// Create an event containing the value of the PLC
 		Map<String, Object> event = new HashMap<>();
 		for (Map<String, String> node :  this.nodes) {
-			if (response.getResponseCode(node.get(PLC_NODE_NAME)) == PlcResponseCode.OK) {
+			if (response.getResponseCode(node.get(PLC_NODE_ID)) == PlcResponseCode.OK) {
 				if (node.get(PLC_NODE_TYPE).equals("Coil")) {
-					event.put(node.get(PLC_NODE_RUNTIME_NAME), response.getBoolean(node.get(PLC_NODE_NAME)));
+					event.put(node.get(PLC_NODE_RUNTIME_NAME), response.getBoolean(node.get(PLC_NODE_ID)));
 				}
 				else {
-					event.put(node.get(PLC_NODE_RUNTIME_NAME), response.getInteger(node.get(PLC_NODE_NAME)));
+					event.put(node.get(PLC_NODE_RUNTIME_NAME), response.getInteger(node.get(PLC_NODE_ID)));
 				}
 			}
 			else {
-				logger.error("Error[" + node.get(PLC_NODE_NAME) + "]: " +
-								response.getResponseCode(node.get(PLC_NODE_NAME)));
+				logger.error("Error[" + node.get(PLC_NODE_ID) + "]: " +
+								response.getResponseCode(node.get(PLC_NODE_ID)));
 			}			
 		}
 		
