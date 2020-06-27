@@ -120,6 +120,8 @@ public class Cloner {
       return new FileStaticProperty((FileStaticProperty) o);
     } else if (o instanceof CodeInputStaticProperty) {
       return new CodeInputStaticProperty((CodeInputStaticProperty) o);
+    } else if (o instanceof ColorPickerStaticProperty) {
+      return new ColorPickerStaticProperty((ColorPickerStaticProperty) o);
     } else {
       return new StaticPropertyAlternative((StaticPropertyAlternative) o);
     }
