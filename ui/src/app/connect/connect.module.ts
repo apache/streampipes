@@ -46,10 +46,7 @@ import {DragulaModule} from 'ng2-dragula';
 import {AdapterStartedDialog} from './new-adapter/component/adapter-started-dialog.component';
 import {DataTypesService} from './schema-editor/data-type.service';
 import {StaticFreeInputComponent} from './static-properties/static-free-input/static-free-input.component';
-import {StaticNumberInputComponent} from './static-properties/static-number-input/static-number-input.component';
 import {StaticPropertyUtilService} from './static-properties/static-property-util.service';
-import {StaticTextInputComponent} from './static-properties/static-text-input/static-text-input.component';
-import {StaticUrlInputComponent} from './static-properties/static-url-input/static-url-input.component';
 import {TransformationRuleService} from './transformation-rule.service';
 import {StaticSecretInputComponent} from "./static-properties/static-secret-input/static-secret-input.component";
 
@@ -133,9 +130,6 @@ import {xsService} from "../NS/XS.service";
         AdapterStartedDialog,
         AdapterExportDialog,
         AdapterUploadDialog,
-        StaticNumberInputComponent,
-        StaticUrlInputComponent,
-        StaticTextInputComponent,
         StaticFreeInputComponent,
         StaticSecretInputComponent,
         StaticFileInputComponent,

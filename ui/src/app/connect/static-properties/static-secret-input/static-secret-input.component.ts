@@ -22,6 +22,7 @@ import {StaticPropertyUtilService} from '../static-property-util.service';
 import {ConfigurationInfo} from "../../model/message/ConfigurationInfo";
 import {SecretStaticProperty} from "../../../core-model/gen/streampipes-model";
 import {AbstractStaticPropertyRenderer} from "../base/abstract-static-property";
+import {AbstractValidatedStaticPropertyRenderer} from "../base/abstract-validated-static-property";
 
 @Component({
     selector: 'app-static-secret-input',
@@ -29,7 +30,7 @@ import {AbstractStaticPropertyRenderer} from "../base/abstract-static-property";
     styleUrls: ['./static-secret-input.component.css']
 })
 export class StaticSecretInputComponent
-    extends AbstractStaticPropertyRenderer<SecretStaticProperty> implements OnInit {
+    extends AbstractValidatedStaticPropertyRenderer<SecretStaticProperty> implements OnInit {
 
     constructor(public staticPropertyUtil: StaticPropertyUtilService){
         super();
@@ -37,37 +38,22 @@ export class StaticSecretInputComponent
 
     @Output() updateEmitter: EventEmitter<ConfigurationInfo> = new EventEmitter();
 
-    @Output() inputEmitter: EventEmitter<any> = new EventEmitter<any>();
-
-    inputValue: String;
-    hasInput: Boolean;
-    secretForm: FormGroup;
-    private errorMessage = "Please enter a valid Text";
-
     ngOnInit() {
-        this.secretForm = new FormGroup({
-            'secretStaticProperty': new FormControl(this.inputValue, [
-                Validators.required
-            ]),
-        })
+        this.addValidator(this.staticProperty.value, Validators.required);
+        this.enableValidators();
     }
 
-    valueChange(inputValue) {
-        this.inputValue = inputValue;
-        this.staticPropertyUtil.asSecretStaticProperty(this.staticProperty).encrypted = false;
-
-        if (inputValue == "" || !inputValue) {
-            this.hasInput = false;
-        } else {
-            this.hasInput = true;
-        }
-
-        this.inputEmitter.emit(this.hasInput);
-
-    }
 
     emitUpdate() {
         this.updateEmitter.emit(new ConfigurationInfo(this.staticProperty.internalName, this.staticPropertyUtil.asFreeTextStaticProperty(this.staticProperty).value && this.staticPropertyUtil.asFreeTextStaticProperty(this.staticProperty).value !== ""));
+    }
+
+    onStatusChange(status: any) {
+    }
+
+    onValueChange(value: any) {
+        this.staticProperty.value = value;
+        this.staticProperty.encrypted=false;
     }
 
 }

@@ -20,7 +20,7 @@
 <div fxFlex="100">{{staticProperty.label}}</div>
 
 <app-static-secret-input *ngIf="isSecretStaticProperty(staticProperty)"
-                       (updateEmitter)="emitUpdate($event)" (inputEmitter)="valueChange($event)" [staticProperty]="staticProperty">
+                       (updateEmitter)="emitUpdate($event)" [staticProperty]="staticProperty" [parentForm]="parentForm">
 </app-static-secret-input>
 
 <app-static-free-input *ngIf="isFreeTextStaticProperty(staticProperty)"
