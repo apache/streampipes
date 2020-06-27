@@ -42,11 +42,12 @@
                         </div>
                     </div>
             </div>
-            <div fxFlex="100" fxLayout="column" class="customize-section">
-                <form name="customizeForm" flex="100">
+            <div fxFlex="100" fxLayout="column" class="customize-section p-15">
+                <form [formGroup]="parentForm" flex="100">
                 <app-static-property *ngFor="let config of cachedPipelineElement.staticProperties" [staticProperty]="config"
                                      [staticProperties]="cachedPipelineElement.staticProperties"
                                      [eventSchemas]="eventSchemas"
+                                     [parentForm]="parentForm"
                                      (validateEmitter)="validConfiguration($event)">
                 </app-static-property>
                 </form>
@@ -55,7 +56,7 @@
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions">
-        <button mat-button mat-raised-button color="primary" (click)="save()" style="margin-right:10px;">
+        <button mat-button mat-raised-button color="primary" (click)="save()" style="margin-right:10px;" [disabled]="!(formValid)">
             Save
         </button>
         <button mat-button mat-raised-button class="mat-basic" (click)="close()">

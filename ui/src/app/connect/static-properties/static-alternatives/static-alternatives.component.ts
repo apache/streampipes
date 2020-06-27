@@ -16,13 +16,11 @@
  *
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {EventSchema} from '../../schema-editor/model/EventSchema';
-import {GroupStaticProperty} from '../../model/GroupStaticProperty';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {AbstractStaticPropertyRenderer} from "../base/abstract-static-property";
 import {
-    StaticPropertyAlternatives,
-    StaticPropertyGroup
+  StaticPropertyAlternatives,
+  StaticPropertyGroup
 } from "../../../core-model/gen/streampipes-model";
 
 @Component({

@@ -377,6 +377,7 @@ export class PipelineComponent implements OnInit {
     const dialogRef = this.dialogService.open(CustomizeComponent,{
       panelType: PanelType.SLIDE_IN_PANEL,
       title: "Customize " + pipelineElement.payload.name,
+      width: "50vw",
       data: {
         "pipelineElement": pipelineElement
       }

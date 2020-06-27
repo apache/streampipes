@@ -16,25 +16,15 @@
   ~
   -->
 
-<!--<mat-form-field class="example-full-width">-->
-<app-static-url-input *ngIf="isFreeTextStaticProperty(staticProperty) && staticPropertyUtil.asFreeTextStaticProperty(staticProperty).requiredDomainProperty == xsService.SO_URL "
-    (inputEmitter)="valueChange($event)" [staticProperty]="staticProperty">
-</app-static-url-input>
-
-<app-static-number-input *ngIf="isFreeTextStaticProperty(staticProperty) && xsService.isNumber(staticPropertyUtil.asFreeTextStaticProperty(staticProperty).requiredDomainProperty)"
-                         (updateEmitter)="emitUpdate($event)" (inputEmitter)="valueChange($event)" [staticProperty]="staticProperty">
-</app-static-number-input>
-
-<app-static-text-input *ngIf="isFreeTextStaticProperty(staticProperty) && staticPropertyUtil.asFreeTextStaticProperty (staticProperty).requiredDomainProperty === xsService.XS_STRING1"
-    (updateEmitter)="emitUpdate($event)" (inputEmitter)="valueChange($event)" [staticProperty]="staticProperty">
-</app-static-text-input>
+<div fxFlex="100" fxLayout="column">
+<div fxFlex="100">{{staticProperty.label}}</div>
 
 <app-static-secret-input *ngIf="isSecretStaticProperty(staticProperty)"
                        (updateEmitter)="emitUpdate($event)" (inputEmitter)="valueChange($event)" [staticProperty]="staticProperty">
 </app-static-secret-input>
 
-<app-static-free-input *ngIf="isFreeTextStaticProperty(staticProperty) && (staticPropertyUtil.asFreeTextStaticProperty (staticProperty).requiredDomainProperty == '' || !staticPropertyUtil.asFreeTextStaticProperty (staticProperty).requiredDomainProperty) "
-    (inputEmitter)="valueChange($event)" (updateEmitter)="emitUpdate($event)" [staticProperty]="staticProperty">
+<app-static-free-input *ngIf="isFreeTextStaticProperty(staticProperty)"
+    (updateEmitter)="emitUpdate($event)" [staticProperty]="staticProperty"  [parentForm]="parentForm">
 </app-static-free-input>
 
 <app-static-file-input *ngIf="isFileStaticProperty(staticProperty)"
@@ -59,7 +49,7 @@
 </app-static-one-of-input>
 
 <app-static-mapping-unary *ngIf="isMappingPropertyUnary(staticProperty)"
-                         [eventSchemas]="eventSchemas" (inputEmitter)="valueChange($event)" [staticProperty]="staticProperty">
+                         [eventSchemas]="eventSchemas" (inputEmitter)="valueChange($event)" [staticProperty]="staticProperty" [parentForm]="parentForm">
 </app-static-mapping-unary>
 
 <app-static-mapping-nary *ngIf="isMappingNaryProperty(staticProperty)" [eventSchemas]="eventSchemas"
@@ -83,7 +73,6 @@
                        [staticProperty]="staticProperty" class="test fullWidth"
                        (inputEmitter)="valueChange($event)" (updateEmitter)="emitUpdate($event)">
 </app-static-collection>
+</div>
 <mat-divider></mat-divider>
-
-{{staticProperty.internalName}}
 

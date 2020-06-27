@@ -16,12 +16,18 @@
  *
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {ValidatorFn, Validators} from '@angular/forms';
 import {StaticPropertyUtilService} from '../static-property-util.service';
 import {ConfigurationInfo} from "../../model/message/ConfigurationInfo";
-import {AbstractStaticPropertyRenderer} from "../base/abstract-static-property";
 import {FreeTextStaticProperty} from "../../../core-model/gen/streampipes-model";
+import {xsService} from "../../../NS/XS.service";
+import {
+    ValidateNumber,
+    ValidateString,
+    ValidateUrl
+} from "../../select-protocol-component/input.validator";
+import {AbstractValidatedStaticPropertyRenderer} from "../base/abstract-validated-static-property";
 
 
 @Component({
@@ -30,43 +36,48 @@ import {FreeTextStaticProperty} from "../../../core-model/gen/streampipes-model"
     styleUrls: ['./static-free-input.component.css']
 })
 export class StaticFreeInputComponent
-    extends AbstractStaticPropertyRenderer<FreeTextStaticProperty> implements OnInit {
+    extends AbstractValidatedStaticPropertyRenderer<FreeTextStaticProperty> implements OnInit {
 
-    @Output() inputEmitter: EventEmitter<Boolean> = new EventEmitter<Boolean>();
-    @Output() updateEmitter: EventEmitter<ConfigurationInfo> = new EventEmitter();
-    
-    freeTextForm: FormGroup;
-    inputValue: String;
-    hasInput: Boolean;
-    errorMessage = "Please enter a value";
 
-    constructor(public staticPropertyUtil: StaticPropertyUtilService){
+    constructor(public staticPropertyUtil: StaticPropertyUtilService,
+                private xsService: xsService){
         super();
     }
 
 
     ngOnInit() {
-        this.freeTextForm = new FormGroup({
-            'freeStaticText':new FormControl(this.inputValue, [
-                Validators.required,
-            ]),
-        })
+        this.addValidator(this.staticProperty.value, this.collectValidators());
+        this.enableValidators();
     }
 
-    valueChange(inputValue) {
-        this.inputValue = inputValue;
-        if(inputValue == "" || !inputValue) {
-            this.hasInput = false;
-        }
-        else{
-            this.hasInput = true;
+    collectValidators() {
+        let validators: ValidatorFn[] = [];
+        validators.push(Validators.required);
+        if (this.xsService.isNumber(this.staticProperty.requiredDatatype) ||
+            this.xsService.isNumber(this.staticProperty.requiredDomainProperty)) {
+            validators.push(ValidateNumber);
+            this.errorMessage = "The value should be a number";
+        } else if (this.staticProperty.requiredDomainProperty === this.xsService.SO_URL) {
+            validators.push(ValidateUrl);
+            this.errorMessage = "Please enter a valid URL";
+        } else if (this.staticProperty.requiredDatatype === this.xsService.XS_STRING1) {
+            validators.push(ValidateString);
+            this.errorMessage = "Please enter a valid String";
         }
 
-        this.inputEmitter.emit(this.hasInput);
+        return validators;
     }
 
     emitUpdate() {
-        let valid = (this.staticPropertyUtil.asFreeTextStaticProperty(this.staticProperty).value != undefined && this.staticPropertyUtil.asFreeTextStaticProperty(this.staticProperty).value !== "");
+        let valid = (this.staticProperty.value != undefined && this.staticProperty.value !== "");
         this.updateEmitter.emit(new ConfigurationInfo(this.staticProperty.internalName, valid));
+    }
+
+    onStatusChange(status: any) {
+
+    }
+
+    onValueChange(value: any) {
+        this.staticProperty.value = value;
     }
 }

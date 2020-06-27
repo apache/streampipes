@@ -16,7 +16,7 @@
  *
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {AbstractStaticPropertyRenderer} from "../base/abstract-static-property";
 import {AnyStaticProperty} from "../../../core-model/gen/streampipes-model";
 

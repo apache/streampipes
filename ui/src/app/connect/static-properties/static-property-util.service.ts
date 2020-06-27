@@ -18,16 +18,22 @@
 
 import {Injectable} from '@angular/core';
 import {
-    AnyStaticProperty,
-    CollectionStaticProperty,
-    ColorPickerStaticProperty,
-    FileStaticProperty,
-    FreeTextStaticProperty,
-    MappingPropertyNary,
-    MappingPropertyUnary, OneOfStaticProperty, Option,
-    RuntimeResolvableAnyStaticProperty, RuntimeResolvableOneOfStaticProperty,
-    SecretStaticProperty,
-    StaticProperty, StaticPropertyAlternative, StaticPropertyAlternatives, StaticPropertyGroup
+  AnyStaticProperty,
+  CollectionStaticProperty,
+  ColorPickerStaticProperty,
+  FileStaticProperty,
+  FreeTextStaticProperty,
+  MappingPropertyNary,
+  MappingPropertyUnary,
+  OneOfStaticProperty,
+  Option,
+  RuntimeResolvableAnyStaticProperty,
+  RuntimeResolvableOneOfStaticProperty,
+  SecretStaticProperty,
+  StaticProperty,
+  StaticPropertyAlternative,
+  StaticPropertyAlternatives,
+  StaticPropertyGroup
 } from "../../core-model/gen/streampipes-model";
 import {URI} from "../model/URI";
 

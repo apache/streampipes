@@ -16,13 +16,21 @@
  *
  */
 
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges
+} from '@angular/core';
 import {RestService} from "../../rest.service";
 import {ConfigurationInfo} from "../../model/message/ConfigurationInfo";
 import {AbstractStaticPropertyRenderer} from "../base/abstract-static-property";
 import {
-    RuntimeOptionsRequest,
-    RuntimeResolvableOneOfStaticProperty
+  RuntimeOptionsRequest,
+  RuntimeResolvableOneOfStaticProperty
 } from "../../../core-model/gen/streampipes-model";
 
 @Component({

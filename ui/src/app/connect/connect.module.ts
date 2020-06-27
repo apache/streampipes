@@ -95,6 +95,7 @@ import {PropertySelectorService} from "../services/property-selector.service";
 import {StaticColorPickerComponent} from "./static-properties/static-color-picker/static-color-picker.component";
 import {ColorPickerModule} from "ngx-color-picker";
 import {PipelineElementRuntimeInfoComponent} from "./new-adapter/component/runtime-info/pipeline-element-runtime-info.component";
+import {xsService} from "../NS/XS.service";
 
 
 @NgModule({
@@ -176,6 +177,7 @@ import {PipelineElementRuntimeInfoComponent} from "./new-adapter/component/runti
         FileRestService,
         StaticFileRestService,
         PropertySelectorService,
+        xsService,
         {
             provide: '$state',
             useFactory: ($injector: any) => $injector.get('$state'),

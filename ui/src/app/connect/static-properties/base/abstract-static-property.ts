@@ -21,7 +21,9 @@ import {
   StaticProperty,
   StaticPropertyUnion
 } from "../../../core-model/gen/streampipes-model";
-import {Input} from "@angular/core";
+import {EventEmitter, Input, Output} from "@angular/core";
+import {FormGroup} from "@angular/forms";
+import {ConfigurationInfo} from "../../model/message/ConfigurationInfo";
 
 export abstract class AbstractStaticPropertyRenderer<T extends StaticProperty> {
 
@@ -36,5 +38,15 @@ export abstract class AbstractStaticPropertyRenderer<T extends StaticProperty> {
 
   @Input()
   adapterId: string;
+
+  @Input()
+  parentForm: FormGroup;
+
+  @Output() updateEmitter: EventEmitter<ConfigurationInfo> = new EventEmitter();
+
+
+  constructor() {
+
+  }
 
 }

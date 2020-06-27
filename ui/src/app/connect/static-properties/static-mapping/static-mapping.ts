@@ -18,12 +18,12 @@
 
 import {StaticPropertyUtilService} from "../static-property-util.service";
 import {PropertySelectorService} from "../../../services/property-selector.service";
-import {AbstractStaticPropertyRenderer} from "../base/abstract-static-property";
 import {EventProperty, MappingProperty} from "../../../core-model/gen/streampipes-model";
+import {AbstractValidatedStaticPropertyRenderer} from "../base/abstract-validated-static-property";
 
 
 export abstract class StaticMappingComponent<T extends MappingProperty>
-    extends AbstractStaticPropertyRenderer<T> {
+    extends AbstractValidatedStaticPropertyRenderer<T> {
 
     protected firstStreamPropertySelector: string = "s0::";
     protected secondStreamPropertySelector: string = "s1::";

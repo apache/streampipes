@@ -16,7 +16,7 @@
  *
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {StaticPropertyUtilService} from '../static-property-util.service';
 import {StaticMappingComponent} from "../static-mapping/static-mapping";
 import {PropertySelectorService} from "../../../services/property-selector.service";

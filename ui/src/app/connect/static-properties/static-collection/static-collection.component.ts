@@ -16,7 +16,7 @@
  *
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 import {ConfigurationInfo} from '../../model/message/ConfigurationInfo';
 import {StaticPropertyUtilService} from '../static-property-util.service';
 import {CollectionStaticProperty} from "../../../core-model/gen/streampipes-model";

@@ -16,18 +16,26 @@
  *
  */
 
-import {Component, Input, OnInit} from "@angular/core";
+import {
+  AfterContentChecked,
+  AfterViewChecked,
+  AfterViewInit, ChangeDetectorRef,
+  Component,
+  Input,
+  OnInit
+} from "@angular/core";
 import {InvocablePipelineElementUnion, PipelineElementConfig} from "../../model/editor.model";
 import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
 import {JsplumbService} from "../../services/jsplumb.service";
 import {EventSchema} from "../../../core-model/gen/streampipes-model";
+import {FormBuilder, FormGroup} from "@angular/forms";
 
 @Component({
   selector: 'customize-pipeline-element',
   templateUrl: './customize.component.html',
   styleUrls: ['./customize.component.scss']
 })
-export class CustomizeComponent implements OnInit {
+export class CustomizeComponent implements OnInit, AfterViewInit {
 
   @Input()
   pipelineElement: PipelineElementConfig;
@@ -37,7 +45,6 @@ export class CustomizeComponent implements OnInit {
 
   displayRecommended: boolean;
   showDocumentation: boolean = false;
-  customizeForm: any;
   restrictedEditMode: boolean;
 
   selectedElement: any;
@@ -53,12 +60,16 @@ export class CustomizeComponent implements OnInit {
   sourceEndpoint: any;
   sepa: any;
 
+  parentForm: FormGroup;
+  formValid: boolean;
+  viewInitialized: boolean = false;
+
   //ShepherdService: ShepherdService;
 
-
-
   constructor(private dialogRef: DialogRef<CustomizeComponent>,
-              private JsPlumbService: JsplumbService) {
+              private JsPlumbService: JsplumbService,
+              private fb: FormBuilder,
+              private changeDetectorRef: ChangeDetectorRef) {
 
   }
 
@@ -67,6 +78,18 @@ export class CustomizeComponent implements OnInit {
     this.cachedPipelineElement.inputStreams.forEach(is => {
       this.eventSchemas = this.eventSchemas.concat(is.eventSchema);
     });
+    this.formValid = this.pipelineElement.settings.completed;
+
+    this.parentForm = this.fb.group({
+    });
+
+    this.parentForm.valueChanges.subscribe(v => {
+      console.log(v);
+    });
+
+    this.parentForm.statusChanges.subscribe((status)=>{
+      this.formValid = this.viewInitialized && this.parentForm.valid;
+    })
   }
 
   close() {
@@ -81,6 +104,13 @@ export class CustomizeComponent implements OnInit {
   }
 
   validConfiguration(event: any) {
+
+  }
+
+  ngAfterViewInit(): void {
+    this.viewInitialized = true;
+    this.formValid = this.viewInitialized && this.parentForm.valid;
+    this.changeDetectorRef.detectChanges();
   }
 
 }

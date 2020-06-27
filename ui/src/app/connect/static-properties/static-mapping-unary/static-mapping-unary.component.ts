@@ -16,12 +16,12 @@
  *
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Validators} from '@angular/forms';
 import {StaticPropertyUtilService} from '../static-property-util.service';
 import {PropertySelectorService} from "../../../services/property-selector.service";
 import {StaticMappingComponent} from "../static-mapping/static-mapping";
-import {EventProperty, MappingPropertyUnary} from "../../../core-model/gen/streampipes-model";
+import {MappingPropertyUnary} from "../../../core-model/gen/streampipes-model";
 
 
 @Component({
@@ -33,10 +33,6 @@ export class StaticMappingUnaryComponent extends StaticMappingComponent<MappingP
 
     @Output() inputEmitter: EventEmitter<Boolean> = new EventEmitter<Boolean>();
 
-    unaryTextForm: FormGroup;
-    private inputValue: String;
-    private hasInput: Boolean;
-    private errorMessage = "Please enter a value";
     availableProperties: Array<any>;
 
     constructor(staticPropertyUtil: StaticPropertyUtilService,
@@ -51,26 +47,15 @@ export class StaticMappingUnaryComponent extends StaticMappingComponent<MappingP
         if (!this.staticProperty.selectedProperty) {
             this.staticProperty.selectedProperty = this.availableProperties[0].propertySelector;
         }
-        this.unaryTextForm = new FormGroup({
-            'unaryStaticText':new FormControl(this.inputValue, [
-                Validators.required,
-            ]),
-        })
-        this.inputEmitter.emit(true);
+        this.addValidator(this.staticProperty.selectedProperty, Validators.required);
+        this.enableValidators();
     }
 
+    onStatusChange(status: any) {
+    }
 
-
-    valueChange(inputValue) {
-        this.inputValue = inputValue;
-        if (inputValue == "" || !inputValue) {
-            this.hasInput = false;
-        }
-        else{
-            this.hasInput = true;
-        }
-
-        this.inputEmitter.emit(this.hasInput);
+    onValueChange(value: any) {
+        this.staticProperty.selectedProperty = value;
     }
 
 

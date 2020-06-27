@@ -23,17 +23,23 @@ import {xsService} from '../../NS/XS.service';
 import {StaticPropertyUtilService} from './static-property-util.service';
 import {ConfigurationInfo} from "../model/message/ConfigurationInfo";
 import {
-  AnyStaticProperty, CollectionStaticProperty, ColorPickerStaticProperty,
+  AnyStaticProperty,
+  CollectionStaticProperty,
+  ColorPickerStaticProperty,
   EventSchema,
   FileStaticProperty,
   FreeTextStaticProperty,
   MappingPropertyNary,
   MappingPropertyUnary,
-  OneOfStaticProperty, RuntimeResolvableAnyStaticProperty,
+  OneOfStaticProperty,
+  RuntimeResolvableAnyStaticProperty,
   RuntimeResolvableOneOfStaticProperty,
   SecretStaticProperty,
-  StaticProperty, StaticPropertyAlternatives, StaticPropertyGroup
+  StaticProperty,
+  StaticPropertyAlternatives,
+  StaticPropertyGroup
 } from "../../core-model/gen/streampipes-model";
+import {FormGroup} from "@angular/forms";
 
 @Component({
   selector: 'app-static-property',
@@ -64,6 +70,9 @@ export class StaticPropertyComponent implements OnInit {
   @Input()
   completedStaticProperty: ConfigurationInfo;
 
+  @Input()
+  parentForm: FormGroup;
+
   constructor(
     private logger: Logger,
     public xsService: xsService,
@@ -73,22 +82,7 @@ export class StaticPropertyComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.staticProperty);
-    console.log(this.staticPropertyUtil.asFreeTextStaticProperty(this.staticProperty));
-    // this.mappingFormControl.valueChanges
-    //     .subscribe(res => {
-    //         this.emitter.emit(res);
-    //     });
 
-    // this.freeTextFormControl.valueChanges
-    //     .subscribe(res => {
-    //         this.emitter.emit();
-    //     });
-    // for(let property of this.staticProperties) {
-
-    //     this.frTxt = <FreeTextStaticProperty> property;
-    //     this.frTxt.requiredDomainProperty = "";
-    // }
   }
 
   isFreeTextStaticProperty(val) {
