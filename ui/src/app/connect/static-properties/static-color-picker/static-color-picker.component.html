@@ -15,22 +15,17 @@
   ~ limitations under the License.
   ~
   -->
-<div id="formWrapper">
-    <div fxFlex="100">
-        <p>{{staticProperty.label}}: <br>
-            <mat-hint class="description">{{staticProperty.description}}</mat-hint>
-        </p>
-    </div>
+<div [formGroup]="parentForm" id="formWrapper">
     <div fxFlex="100" fxLayout="row">
-    <form [formGroup]="colorPickerForm">
         <mat-form-field>
-            <input matInput id="{{ 'input-' + staticProperty.label.toLowerCase() }}"
-                   [(colorPicker)]="staticPropertyUtil.asColorPickerStaticProperty(staticProperty).selectedColor"
-                   formControlName="colorPickerStaticProperty"
-                   [style.background]="staticPropertyUtil.asColorPickerStaticProperty(staticProperty).selectedColor" required
+            <input matInput
+                   [(colorPicker)]="staticProperty.selectedColor"
+                   (colorPickerChange)="parentForm.get(staticProperty.internalName).setValue($event)"
+                   [cpPosition]="'bottom'"
+                   formControlName="{{staticProperty.internalName}}"
+                   [style.background]="staticProperty.selectedColor" required
                    (blur)="emitUpdate()" [cpPresetColors] = "presetColors"/>
         </mat-form-field>
-    </form>
     </div>
 </div>
 

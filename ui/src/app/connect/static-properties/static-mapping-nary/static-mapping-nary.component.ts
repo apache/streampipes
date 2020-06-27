@@ -102,4 +102,10 @@ export class StaticMappingNaryComponent extends StaticMappingComponent<MappingPr
         });
     }
 
+    onStatusChange(status: any) {
+    }
+
+    onValueChange(value: any) {
+    }
+
 }
