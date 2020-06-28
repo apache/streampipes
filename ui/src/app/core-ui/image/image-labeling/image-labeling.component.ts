@@ -47,11 +47,14 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit, OnChanges 
   // images
   public imagesSrcs = [];
   public imagesIndex: number;
+  imageDescription: string;
 
   public cocoFiles: CocoFormat[] = [];
 
   public isHoverComponent;
   public brushSize: number;
+
+  public isDrawing: boolean = false;
 
   @ViewChild(ImageContainerComponent) imageView: ImageContainerComponent;
 
@@ -77,8 +80,7 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit, OnChanges 
     this.isHoverComponent = false;
     this.brushSize = 5;
     this.imagesIndex = 0;
-
-
+    this.imageDescription = "The Description of the selected image"
     this.labels = this.restService.getLabels();
 
     // TODO remove for production, if default dev values are not necessary
@@ -137,9 +139,10 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit, OnChanges 
 
   processData(pageResult) {
     if (pageResult.rows === undefined) {
-      this.pageIndex = pageResult.pageSum;
+      this.pageIndex = pageResult.pageSum - 1;
       this.openSnackBar('No new data found');
     } else {
+      pageResult.rows = pageResult.rows.reverse();
       this.pageIndex = pageResult.page;
       this.pageSum = pageResult.pageSum;
 
@@ -285,6 +288,10 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit, OnChanges 
     }
   }
 
+  handleIsDrawing(bool: boolean) {
+    this.isDrawing = bool;
+  }
+
   /* sp-image-labels handler */
   handleLabelChange(label: {category, label}) {
     this.selectedLabel = label;
@@ -292,39 +299,49 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit, OnChanges 
 
   /* sp-image-bar */
   handleImageIndexChange(index) {
-    this.save();
-    this.imagesIndex = index;
+    if (!this.isDrawing) {
+      this.save();
+      this.imagesIndex = index;
+    }
   }
   handleImagePageUp(e) {
-    this.save();
-    this.pageIndex += 1;
-    this.setImagesIndexToLast = true;
-    this.loadData();
+    if (!this.isDrawing) {
+      this.save();
+      this.pageIndex += 1;
+      this.setImagesIndexToLast = true;
+      this.loadData();
+    }
   }
 
   handleImagePageDown(e) {
-    this.save();
-    if (this.pageIndex - 1 >= 0) {
-      this.pageIndex -= 1;
-      this.setImagesIndexToFirst = true;
-      this.loadData();
+    if (!this.isDrawing) {
+      this.save();
+      if (this.pageIndex - 1 >= 0) {
+        this.pageIndex -= 1;
+        this.setImagesIndexToFirst = true;
+        this.loadData();
+      }
     }
   }
 
   /* sp-image-annotations handlers */
   handleChangeAnnotationLabel(change: [Annotation, string, string]) {
-    const coco = this.cocoFiles[this.imagesIndex];
-    const categoryId = this.cocoFormatService.getLabelId(coco, change[1], change[2]);
-    change[0].category_id = categoryId;
-    change[0].category_name = change[2];
-    this.imageView.redrawAll();
+    if (!this.isDrawing) {
+      const coco = this.cocoFiles[this.imagesIndex];
+      const categoryId = this.cocoFormatService.getLabelId(coco, change[1], change[2]);
+      change[0].category_id = categoryId;
+      change[0].category_name = change[2];
+      this.imageView.redrawAll();
+    }
   }
 
   handleDeleteAnnotation(annotation) {
-    if (annotation !== undefined) {
-      const coco = this.cocoFiles[this.imagesIndex];
-      this.cocoFormatService.removeAnnotation(coco, annotation.id);
-      this.imageView.redrawAll();
+    if (!this.isDrawing) {
+      if (annotation !== undefined) {
+        const coco = this.cocoFiles[this.imagesIndex];
+        this.cocoFormatService.removeAnnotation(coco, annotation.id);
+        this.imageView.redrawAll();
+      }
     }
   }
 
@@ -341,7 +358,6 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit, OnChanges 
   }
 
   save() {
-    // TODO
     const coco = this.cocoFiles[this.imagesIndex];
     if (coco !== undefined) {
       const imageSrcSplitted = this.imagesSrcs[this.imagesIndex].split('/');
@@ -351,7 +367,6 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit, OnChanges 
       );
     }
   }
-
   private openSnackBar(message: string) {
     this.snackBar.open(message, '', {
       duration: 2000,
@@ -359,5 +374,6 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit, OnChanges 
       horizontalPosition: 'right'
     });
   }
+
 
 }

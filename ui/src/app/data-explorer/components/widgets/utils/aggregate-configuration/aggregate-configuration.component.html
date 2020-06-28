@@ -1,0 +1,43 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+
+<div fxLayout="column" fxLayoutAlign="stretch">
+    <div fxFlex="100" layout="row" fxLayoutAlign="end center" style="margin-left: 0px;margin-right: 0px;">
+        <div   class="option" style="margin-left: 5px">
+
+            <mat-form-field style="width: 100px">
+                <mat-select [(ngModel)]="aggregationTimeUnit" (ngModelChange)="onModelChange($event,'aggregationTimeUnit')">
+                    <mat-option style="background-color: #FFFFFF" value="ms">Milliseconds</mat-option>
+                    <mat-option style="background-color: #FFFFFF" value="s">Second</mat-option>
+                    <mat-option style="background-color: #FFFFFF" value="m">Minute</mat-option>
+                    <mat-option style="background-color: #FFFFFF" value="h">Hour</mat-option>
+                    <mat-option style="background-color: #FFFFFF" value="d">Day</mat-option>
+                    <mat-option style="background-color: #FFFFFF" value="w">Week</mat-option>
+                    <mat-option style="background-color: #FFFFFF" value="month">Month</mat-option>
+                    <mat-option style="background-color: #FFFFFF" value="year">Year</mat-option>
+                </mat-select>
+                <mat-label>Unit</mat-label>
+            </mat-form-field>
+            <mat-form-field style="width: 80px; margin-left: 5px">
+                <input matInput type="number" [(ngModel)]="aggregationValue" (ngModelChange)="onModelChange($event,'aggregationValue')">
+                <mat-label>Value</mat-label>
+            </mat-form-field>
+        </div>
+    </div>
+</div>

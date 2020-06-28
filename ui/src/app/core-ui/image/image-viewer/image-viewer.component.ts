@@ -19,7 +19,7 @@ import { Component, OnInit } from '@angular/core';
 import { DatalakeRestService } from '../../../core-services/datalake/datalake-rest.service';
 import { Observable } from 'rxjs';
 import { DataLakeMeasure } from '../../../core-model/datalake/DataLakeMeasure';
-import { DataViewDataExplorerService } from '../../../data-explorer-v2/services/data-view-data-explorer.service';
+import { DataViewDataExplorerService } from '../../../data-explorer/services/data-view-data-explorer.service';
 import { TsonLdSerializerService } from '../../../platform-services/tsonld-serializer.service';
 
 @Component({
@@ -87,8 +87,9 @@ export class ImageViewerComponent implements OnInit {
 
   processData(pageResult) {
     if (pageResult.rows === undefined) {
-      this.pageIndex = pageResult.pageSum;
+      this.pageIndex = pageResult.pageSum - 1;
     } else {
+      pageResult.rows = pageResult.rows.reverse();
       this.pageIndex = pageResult.page;
       this.pageSum = pageResult.pageSum;
 

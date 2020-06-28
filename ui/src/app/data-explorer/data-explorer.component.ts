@@ -17,59 +17,80 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Observable } from 'rxjs/Observable';
-import { map, startWith } from 'rxjs/operators';
-import { DataLakeMeasure } from '../core-model/datalake/DataLakeMeasure';
-import { DatalakeRestService } from '../core-services/datalake/datalake-rest.service';
+import { DateRange } from '../core-model/datalake/DateRange';
+import { IDataViewDashboard } from './models/dataview-dashboard.model';
+import { DataViewDataExplorerService } from './services/data-view-data-explorer.service';
+import { RefreshDashboardService } from './services/refresh-dashboard.service';
 
 @Component({
     selector: 'sp-data-explorer',
     templateUrl: './data-explorer.component.html',
-    styleUrls: ['./data-explorer.css']
+    styleUrls: ['./data-explorer.component.css']
 })
 export class DataExplorerComponent implements OnInit {
 
-    myControl = new FormControl();
-    infoResult: DataLakeMeasure[];
-    filteredIndexInfos: Observable<DataLakeMeasure[]>;
+    selectedDataViewDashboard: IDataViewDashboard;
+    selectedIndex = 0;
+    dashboardsLoaded = false;
+    dashboardTabSelected = false;
 
-    page = 0;
-    selectedInfoResult: DataLakeMeasure = undefined;
+    editMode = false;
 
-    downloadFormat = 'csv';
-    isDownloading = false;
+    dataViewDashboards: IDataViewDashboard[];
 
-    constructor(private restService: DatalakeRestService, private snackBar: MatSnackBar) {
+  /**
+   * This is the date range (start, end) to view the data
+   */
+  viewDateRange: DateRange;
 
-    }
+    constructor(private dataViewService: DataViewDataExplorerService,
+                private refreshDashboardService: RefreshDashboardService) {}
 
-    ngOnInit(): void {
-        this.restService.getAllInfos().subscribe(res => {
-                this.infoResult = res;
-                this.filteredIndexInfos = this.myControl.valueChanges
-                    .pipe(
-                        startWith(''),
-                        map(value => this._filter(value))
-                    );
-            }
-        );
-    }
 
-    selectIndex(index: string) {
-        this.selectedInfoResult = this._filter(index)[0];
-    }
-
-    _filter(value: string): DataLakeMeasure[] {
-        const filterValue = value.toLowerCase();
-
-        return this.infoResult.filter(option => option.measureName.toLowerCase().includes(filterValue));
-    }
-
-    openSnackBar(message: string) {
-        this.snackBar.open(message, 'Close', {
-            duration: 2000,
+    public ngOnInit() {
+        this.getDashboards();
+        const currentTime = new Date();
+        this.viewDateRange = new DateRange(new Date(currentTime.getTime() - 100000 * 60000), currentTime);
+        this.refreshDashboardService.refreshSubject.subscribe(currentDashboardId => {
+            this.getDashboards(currentDashboardId);
         });
+
+    }
+
+    openDashboard(dashboard: IDataViewDashboard) {
+        const index = this.dataViewDashboards.indexOf(dashboard);
+        this.selectDashboard((index + 1));
+    }
+
+    selectDashboard(index: number) {
+        this.selectedIndex = index;
+        if (index === 0) {
+            this.dashboardTabSelected = false;
+        } else {
+            this.dashboardTabSelected = true;
+            this.selectedDataViewDashboard = this.dataViewDashboards[(index - 1)];
+        }
+    }
+
+    protected getDashboards(currentDashboardId?: string) {
+        this.dashboardsLoaded = false;
+        this.dataViewService.getDataViews().subscribe(data => {
+            this.dataViewDashboards = data;
+            if (currentDashboardId) {
+                const currentDashboard = this.dataViewDashboards.find(d => d._id === currentDashboardId);
+                this.selectDashboard(this.dataViewDashboards.indexOf(currentDashboard) + 1);
+            } else {
+                this.selectedIndex = 0;
+            }
+            this.dashboardsLoaded = true;
+        });
+    }
+
+    toggleEditMode() {
+        this.editMode = ! (this.editMode);
+    }
+
+    updateDateRange(dateRange: DateRange) {
+      this.viewDateRange = dateRange;
     }
 }

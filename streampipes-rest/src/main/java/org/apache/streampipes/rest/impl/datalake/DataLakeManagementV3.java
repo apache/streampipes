@@ -75,7 +75,7 @@ public class DataLakeManagementV3 {
   public GroupedDataResult getEvents(String index, long startDate, long endDate, String aggregationUnit, int aggregationValue,
                                      String groupingTag) {
     InfluxDB influxDB = getInfluxDBClient();
-    Query query = new Query("SELECT mean(*) FROM " + index + " WHERE time > " + startDate * 1000000 + " AND time < " + endDate * 1000000
+    Query query = new Query("SELECT mean(*), count(*) FROM " + index + " WHERE time > " + startDate * 1000000 + " AND time < " + endDate * 1000000
             + " GROUP BY " + groupingTag + ",time(" + aggregationValue + aggregationUnit + ") fill(none) ORDER BY time",
             BackendConfig.INSTANCE.getInfluxDatabaseName());
     QueryResult result = influxDB.query(query);
