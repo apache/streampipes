@@ -24,6 +24,7 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
+import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -130,20 +131,19 @@ public class WorkerRestClient {
 
     }
 
-    public static RuntimeOptionsResponse getConfiguration(String workerEndpoint, String elementId, String username, String runtimeOptionsRequest) throws AdapterException {
+    public static RuntimeOptionsResponse getConfiguration(String workerEndpoint, String elementId, String username, RuntimeOptionsRequest runtimeOptionsRequest) throws AdapterException {
         String element = encodeValue(elementId);
         String url = workerEndpoint + "api/v1/" + username + "/worker/resolvable/" + element + "/configurations";
-//        url = encodeValue(url);
-//        String url = workerEndpoint + "/api/v1/" + username + "/worker/resolvable/abc/configurations";
 
         try {
+            String payload = JacksonSerializer.getObjectMapper().writeValueAsString(runtimeOptionsRequest);
             String responseString = Request.Post(url)
-                       .bodyString(runtimeOptionsRequest, ContentType.APPLICATION_JSON)
+                       .bodyString(payload, ContentType.APPLICATION_JSON)
                        .connectTimeout(1000)
                        .socketTimeout(100000)
                        .execute().returnContent().asString();
 
-            return JsonLdUtils.fromJsonLd(responseString, RuntimeOptionsResponse.class);
+            return JacksonSerializer.getObjectMapper().readValue(responseString, RuntimeOptionsResponse.class);
 
         } catch (IOException e) {
             e.printStackTrace();

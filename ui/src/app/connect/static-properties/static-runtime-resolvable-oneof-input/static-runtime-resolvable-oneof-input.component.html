@@ -27,7 +27,7 @@
         <div fxFlex fxLayout="row">
             <div fxLayout="column" *ngIf="showOptions || staticProperty.options" style="margin-left: 10px">
                 <mat-radio-button *ngFor="let option of staticProperty.options"
-                                  (click)="select(option.id)" [checked]="option.selected">
+                                  (click)="select(option.elementId)" [checked]="option.selected">
                     <label style="font-weight: normal">
                         {{option.name}}
                     </label>
@@ -47,8 +47,8 @@
             <mat-label>{{staticProperty.label}}</mat-label>
             <span matPrefix *ngIf="loading"><mat-spinner style="top:5px" [diameter]="20"></mat-spinner></span>
             <mat-select>
-                <mat-option *ngFor="let option of staticProperty.options" [value]="option.id"
-                            (click)="select(option.id)">
+                <mat-option *ngFor="let option of staticProperty.options" [value]="option.elementId"
+                            (click)="select(option.elementId)">
                     <label style="font-weight: normal">
                         {{option.name}}
                     </label>
