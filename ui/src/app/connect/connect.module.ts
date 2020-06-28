@@ -29,7 +29,6 @@ import {ConnectComponent} from './connect.component';
 import {NewAdapterComponent} from './new-adapter/new-adapter.component';
 
 import {FormatFormComponent} from './format-form/format-form.component';
-import {SelectProtocolComponent} from './select-protocol-component/select-protocol.component';
 
 import {EventPropertyPrimitiveComponent} from './schema-editor/event-property-primitive/event-property-primitive.component';
 import {EventPropertyComponent} from './schema-editor/event-property/event-property.component';
@@ -59,7 +58,6 @@ import {DataMarketplaceComponent} from './data-marketplace/data-marketplace.comp
 import {DataMarketplaceService} from './data-marketplace/data-marketplace.service';
 import {FormatComponent} from './format-component/format.component';
 import {FormatListComponent} from './format-list-component/format-list.component';
-import {ProtocolListComponent} from './protocol-list-component/protocol-list.component';
 import {UnitProviderService} from './schema-editor/unit-provider.service';
 import {SelectStaticPropertiesComponent} from './select-static-properties-component/select-static-properties.component';
 import {StaticAnyInput} from './static-properties/static-any-input/static-any-input.component';
@@ -119,7 +117,6 @@ import {xsService} from "../NS/XS.service";
     ],
     declarations: [
         NewAdapterComponent,
-        SelectProtocolComponent,
         FormatFormComponent,
         EventSchemaComponent,
         EventPropertyPrimitiveComponent,
@@ -138,7 +135,6 @@ import {xsService} from "../NS/XS.service";
         TimestampPipe,
         StaticAnyInput,
         ProtocolComponent,
-        ProtocolListComponent,
         FormatListComponent,
         FormatComponent,
         DataMarketplaceComponent,

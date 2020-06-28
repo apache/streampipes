@@ -53,21 +53,29 @@
                     <h4 *ngIf="isGenericAdapter">Protocol settings</h4>
                 </div>
                 <div class="sp-blue-border padding">
+                    <form [formGroup]="parentForm" fxFlex="100">
                     <app-static-property *ngFor="let config of adapter.config" [staticProperty]="config"
-                        [staticProperties]="adapter.config" [adapterId]="adapter.appId"
+                        [staticProperties]="adapter.config" [adapterId]="adapter.appId" [parentForm]="parentForm"
                         (updateEmitter)="triggerUpdate($event)" [completedStaticProperty]="completedStaticProperty">
                     </app-static-property>
-                    <app-protocol (validateEmitter)="validateProtocol($event)" [protocol]="adapter.protocolDescription"
-                        *ngIf="isGenericAdapter"></app-protocol>
+                        <div fxFlex="100"  *ngIf="isGenericAdapter">
+                        <app-static-property *ngFor="let config of adapter.protocolDescription.config" [staticProperty]="config"
+                                             [staticProperties]="adapter.protocolDescription.config" [adapterId]="adapter.appId" [parentForm]="parentForm"
+                                             (updateEmitter)="triggerUpdate($event)" [completedStaticProperty]="completedStaticProperty">
+                        </app-static-property>
+                        </div>
+<!--                    <app-protocol (validateEmitter)="validateProtocol($event)" [protocol]="adapter.protocolDescription"-->
+<!--                        *ngIf="isGenericAdapter"></app-protocol>-->
+                    </form>
                 </div>
             </div>
             <div fxLayoutAlign="end">
                 <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
                 <div id="specific-settings-next-button">
-                    <button class="stepper-button" *ngIf="isGenericAdapter" [disabled]="!protocolConfigurationValid"
+                    <button class="stepper-button" *ngIf="isGenericAdapter" [disabled]="!adapterSettingsFormValid"
                         (click)="clickProtocolSettingsNextButton(stepper)" color="primary" mat-raised-button>Next
                     </button>
-                    <button class="stepper-button" *ngIf="!isGenericAdapter"
+                    <button class="stepper-button" *ngIf="!isGenericAdapter" [disabled]="!adapterSettingsFormValid"
                         (click)="clickSpecificSettingsNextButton(stepper)" color="primary" mat-raised-button>Next
                     </button>
                 </div>

@@ -17,7 +17,15 @@
  */
 
 ///<reference path="../model/connect/AdapterDescription.ts"/>
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {
+    AfterViewInit, ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    ViewChild
+} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MatDialog} from '@angular/material/dialog';
 import {MatStepper} from '@angular/material/stepper';
@@ -50,20 +58,7 @@ import {EventSchemaComponent} from "../schema-editor/event-schema/event-schema.c
     templateUrl: './new-adapter.component.html',
     styleUrls: ['./new-adapter.component.css'],
 })
-export class NewAdapterComponent implements OnInit {
-
-    constructor(
-        private logger: Logger,
-        private restService: RestService,
-        private transformationRuleService: TransformationRuleService,
-        public dialog: MatDialog,
-        private ShepherdService: ShepherdService,
-        private connectService: ConnectService,
-        private _formBuilder: FormBuilder,
-        private iconService: IconService,
-        private timestampPipe: TimestampPipe,
-    ) { }
-
+export class NewAdapterComponent implements OnInit, AfterViewInit {
 
     selectedUploadFile: File;
     fileName;
@@ -122,6 +117,22 @@ export class NewAdapterComponent implements OnInit {
 
     isPreviewEnabled = false;
 
+    parentForm: FormGroup;
+    adapterSettingsFormValid: boolean = false;
+    viewInitialized: boolean = false;
+
+    constructor(
+        private logger: Logger,
+        private restService: RestService,
+        private transformationRuleService: TransformationRuleService,
+        public dialog: MatDialog,
+        private ShepherdService: ShepherdService,
+        private connectService: ConnectService,
+        private _formBuilder: FormBuilder,
+        private iconService: IconService,
+        private timestampPipe: TimestampPipe,
+        private changeDetectorRef: ChangeDetectorRef) { }
+
     handleFileInput(files: any) {
         this.selectedUploadFile = files[0];
         this.fileName = this.selectedUploadFile.name;
@@ -135,6 +146,9 @@ export class NewAdapterComponent implements OnInit {
     }
 
     ngOnInit() {
+
+        this.parentForm = this._formBuilder.group({
+        });
 
         this.isGenericAdapter = this.connectService.isGenericDescription(this.adapter);
         this.isDataSetDescription = this.connectService.isDataSetDescription(this.adapter);
@@ -178,6 +192,16 @@ export class NewAdapterComponent implements OnInit {
             this.isEditable = false;
             this.oldEventSchema = this.eventSchema;
         }
+
+        this.parentForm.statusChanges.subscribe((status)=>{
+            this.adapterSettingsFormValid = this.viewInitialized && this.parentForm.valid;
+        })
+    }
+
+    ngAfterViewInit() {
+        this.viewInitialized = true;
+        this.adapterSettingsFormValid = this.viewInitialized && this.parentForm.valid;
+        this.changeDetectorRef.detectChanges();
     }
 
     public showPreview(isPreviewEnabled) {

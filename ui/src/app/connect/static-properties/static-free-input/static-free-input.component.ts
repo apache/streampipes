@@ -26,7 +26,7 @@ import {
     ValidateNumber,
     ValidateString,
     ValidateUrl
-} from "../../select-protocol-component/input.validator";
+} from "../input.validator";
 import {AbstractValidatedStaticPropertyRenderer} from "../base/abstract-validated-static-property";
 
 

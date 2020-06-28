@@ -43,7 +43,7 @@
                     </div>
             </div>
             <div fxFlex="100" fxLayout="column" class="customize-section p-15">
-                <form [formGroup]="parentForm" flex="100">
+                <form [formGroup]="parentForm" fxFlex="100">
                 <app-static-property *ngFor="let config of cachedPipelineElement.staticProperties" [staticProperty]="config"
                                      [staticProperties]="cachedPipelineElement.staticProperties"
                                      [eventSchemas]="eventSchemas"

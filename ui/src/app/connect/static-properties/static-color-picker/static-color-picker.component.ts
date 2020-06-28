@@ -55,7 +55,7 @@ export class StaticColorPickerComponent
     }
 
     onValueChange(value: any) {
-       
+
     }
 
 }
