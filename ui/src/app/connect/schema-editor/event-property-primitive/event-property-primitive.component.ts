@@ -26,7 +26,7 @@ import {RestService} from '../../rest.service';
 import {UnitDescription} from '../../model/UnitDescription';
 import {UnitProviderService} from '../unit-provider.service';
 import {map, startWith} from 'rxjs/operators';
-import {EventProperty, EventPropertyPrimitive} from "../../../core-model/gen/streampipes-model";
+import {EventProperty} from "../../../core-model/gen/streampipes-model";
 
 @Component({
   selector: 'app-event-property-primitive',
@@ -34,6 +34,8 @@ import {EventProperty, EventPropertyPrimitive} from "../../../core-model/gen/str
   styleUrls: ['./event-property-primitive.component.css']
 })
 export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
+
+  soTimestamp = "http://schema.org/DateTime";
 
   @Input() property: any;
   @Input() index: number;
@@ -60,6 +62,7 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
   private oldMeasurementUnitDipsplay;
 
   private selectedTimeMultiplier;
+  isTimestampProperty: boolean;
 
 
 
@@ -89,6 +92,7 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
 
   ngOnInit() {
     //   this.property.propertyNumber = this.index;
+    this.isTimestampProperty = this.property.domainProperties.some(dp => dp === this.soTimestamp);
     if ((this.property as any).measurementUnitTmp !== undefined) {
       (this.property as any).oldMeasurementUnit = (this.property as any).oldMeasurementUnit;
       // TODO: use if backend deserialize URI correct

@@ -18,16 +18,14 @@
 
 import {Component, EventEmitter, Inject, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {DomainPropertyProbabilityList} from '../model/DomainPropertyProbabilityList';
-import {DomainPropertyProbability} from '../model/DomainPropertyProbability';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {DataTypesService} from '../data-type.service';
 import {
-    EventProperty, EventPropertyList,
+    EventPropertyList,
     EventPropertyNested,
-    EventPropertyPrimitive, EventPropertyUnion
+    EventPropertyPrimitive,
+    EventPropertyUnion
 } from "../../../core-model/gen/streampipes-model";
-import {EventPropertyRowComponent} from "../event-property-row/event-property-row.component";
 
 
 @Component({
@@ -39,24 +37,38 @@ export class EventPropertyComponent implements OnInit {
 
     soTimestamp = "http://schema.org/DateTime";
 
-    cachedProperty: EventPropertyUnion;
+    @Output() propertyChange = new EventEmitter<EventPropertyUnion>();
 
-    property: EventPropertyUnion;
-    domainProbability: DomainPropertyProbabilityList;
-    isNested: boolean;
+    cachedProperty: any;
+    property: any;
+    isEditable: boolean;
+
     isTimestampProperty: boolean = false;
+    isEventPropertyPrimitive: boolean;
+    isEventPropertyNested: boolean;
+    isEventPropertyList: boolean;
 
     private propertyForm: FormGroup;
     // protected dataTypes = dataTypes;
 
-    @Output() propertyChange = new EventEmitter<EventPropertyUnion>();
-    domainPropertyGuess: any;
     private runtimeDataTypes;
 
     constructor(@Inject(MAT_DIALOG_DATA) public data: any,
                 private dialogRef: MatDialogRef<EventPropertyComponent>,
                 private formBuilder: FormBuilder,
                 private dataTypeService: DataTypesService) {
+    }
+
+    ngOnInit(): void {
+        this.property = this.data.property;
+        this.isEditable = this.data.isEditable;
+        this.cachedProperty = this.copyEp(this.property);
+        this.runtimeDataTypes = this.dataTypeService.getDataTypes();
+        this.isTimestampProperty = this.cachedProperty.domainProperties && this.cachedProperty.domainProperties.some(dp => dp === this.soTimestamp);
+        this.isEventPropertyList = this.property instanceof EventPropertyList;
+        this.isEventPropertyPrimitive = this.property instanceof EventPropertyPrimitive;
+        this.isEventPropertyNested = this.property instanceof EventPropertyNested;
+        this.createForm();
     }
 
     copyEp(ep: EventPropertyUnion) {
@@ -79,56 +91,8 @@ export class EventPropertyComponent implements OnInit {
         });
     }
 
-    isEventPropertyPrimitive(instance: EventProperty): boolean {
-        return instance instanceof EventPropertyPrimitive;
-    }
-
-    private isEventPropertyNested(instance: EventProperty): boolean {
-        return instance instanceof EventPropertyNested;
-    }
-
-    isEventPropertyList(instance: EventProperty): boolean {
-        return instance instanceof EventPropertyList;
-    }
-
     staticValueAddedByUser() {
-        if (this.property.elementId.startsWith('http://eventProperty.de/staticValue/')) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    ngOnInit(): void {
-        this.property = this.data.property;
-        this.cachedProperty = this.copyEp(this.cachedProperty);
-        this.domainProbability = this.data.domainProbability;
-        this.runtimeDataTypes = this.dataTypeService.getDataTypes();
-        this.isTimestampProperty = this.cachedProperty.domainProperties.some(dp => dp === this.soTimestamp);
-        this.isNested = this.isEventPropertyNested(this.property);
-        this.createForm();
-
-        if (this.domainPropertyGuess == null) {
-            this.domainPropertyGuess = new DomainPropertyProbabilityList();
-        }
-
-        const tmpBestDomainProperty = this.getDomainPropertyWithHighestConfidence(this.domainPropertyGuess.list);
-
-        if (tmpBestDomainProperty != null) {
-            this.property.domainProperties = [tmpBestDomainProperty.domainProperty];
-        }
-    }
-
-    private getDomainPropertyWithHighestConfidence(list: DomainPropertyProbability[]): DomainPropertyProbability {
-        var result: DomainPropertyProbability = null;
-
-        for (var _i = 0; _i < list.length; _i++) {
-            if (result == null || +result.probability < +list[_i].probability) {
-                result = list[_i];
-            }
-        }
-
-        return result;
+        return (this.property.elementId.startsWith('http://eventProperty.de/staticValue/'));
     }
 
     addTimestampDomainProperty() {
@@ -145,7 +109,6 @@ export class EventPropertyComponent implements OnInit {
         this.property.description = this.cachedProperty.description;
         this.property.domainProperties = this.cachedProperty.domainProperties;
         this.property.runtimeName = this.cachedProperty.runtimeName;
-
 
         if (this.property instanceof EventPropertyList) {
             // @ts-ignore

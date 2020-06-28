@@ -196,7 +196,6 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
         this.parentForm.statusChanges.subscribe((status)=>{
             this.adapterSettingsFormValid = this.viewInitialized && this.parentForm.valid;
         })
-
     }
 
     ngAfterViewInit() {

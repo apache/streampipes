@@ -89,6 +89,7 @@ public abstract class EventProperty extends UnnamedStreamPipesEntity {
     super(prefix + UUID.randomUUID().toString());
     this.requiresEventPropertyQualities = new ArrayList<>();
     this.eventPropertyQualities = new ArrayList<>();
+    this.domainProperties = new ArrayList<>();
   }
 
   public EventProperty(EventProperty other) {

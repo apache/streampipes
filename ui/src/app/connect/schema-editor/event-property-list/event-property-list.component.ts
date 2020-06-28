@@ -18,7 +18,7 @@
 
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {DataTypesService} from '../data-type.service';
-import {EventProperty, EventPropertyList} from "../../../core-model/gen/streampipes-model";
+import {EventProperty} from "../../../core-model/gen/streampipes-model";
 
 
 @Component({

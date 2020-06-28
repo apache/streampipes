@@ -132,7 +132,6 @@ export class DataMarketplaceComponent implements OnInit {
 
     selectAdapter(adapterDescription: AdapterDescriptionUnion) {
         this.newAdapterFromDescription = this.dataMarketplaceService.cloneAdapterDescription(adapterDescription);
-
         (this.newAdapterFromDescription as any).templateTitle = this.newAdapterFromDescription.name;
         this.newAdapterFromDescription.name = "";
         this.newAdapterFromDescription.description = "";

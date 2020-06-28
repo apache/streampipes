@@ -16,15 +16,27 @@
  *
  */
 
-import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild} from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import {RestService} from '../../rest.service';
 import {ITreeOptions, TreeComponent} from 'angular-tree-component';
 import {UUID} from 'angular2-uuid';
 import {DataTypesService} from '../data-type.service';
 import {
-  AdapterDescription, EventProperty, EventPropertyNested, EventPropertyPrimitive,
+  AdapterDescription,
+  EventProperty,
+  EventPropertyNested,
+  EventPropertyPrimitive,
   EventSchema,
-  GuessSchema, Notification
+  GuessSchema,
+  Notification
 } from "../../../core-model/gen/streampipes-model";
 
 @Component({
@@ -92,8 +104,8 @@ export class EventSchemaComponent implements OnChanges {
       this.isEditable = true;
       this.isEditableChange.emit(true);
     },
-      error => {
-        this.errorMessages = error.notifications;
+      errorMessage => {
+        this.errorMessages = errorMessage.error.notifications;
         this.isError = true;
         this.isLoading = false;
         this.eventSchema = new EventSchema();

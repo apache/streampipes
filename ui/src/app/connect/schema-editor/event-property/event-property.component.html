@@ -38,20 +38,13 @@
         <input matInput placeholder="Domain Property" class="dmainProperty" name="domainproperty" id="domainproperty"
           [(ngModel)]="cachedProperty.domainProperties[0]">
       </mat-form-field>
-      <div *ngIf="!isNested">
+      <div *ngIf="!isEventPropertyNested">
         <mat-checkbox name="timestampCheckbox"
                       (change)="addTimestampDomainProperty()" [checked]="isTimestampProperty">
           Mark as timestamp
         </mat-checkbox>
       </div>
-      <!--<mat-autocomplete #auto="matAutocomplete">-->
-      <!--<mat-option *ngFor="let propertyGuess of domainPropertyGuess.list" [value]="propertyGuess.domainProperty">-->
-      <!--{{ propertyGuess.domainProperty + propertyGuess.probability}}-->
-      <!--</mat-option>-->
-      <!--</mat-autocomplete>-->
     </div>
-
-
 
     <div class="form-group">
       <mat-form-field class="doubleWidth">
@@ -63,12 +56,12 @@
     </div>
   </form>
 
-  <div *ngIf="isEventPropertyPrimitive(property)">
-    <app-event-property-primitive [domainPropertyGuess]="domainProbability" [isEditable]="isEditable"
+  <div *ngIf="isEventPropertyPrimitive">
+    <app-event-property-primitive [isEditable]="isEditable"
       [property]="cachedProperty">
     </app-event-property-primitive>
   </div>
-  <div *ngIf="isEventPropertyList(property)">
+  <div *ngIf="isEventPropertyList">
     <app-event-property-list [isEditable]="isEditable" [property]="cachedProperty">
     </app-event-property-list>
   </div>
