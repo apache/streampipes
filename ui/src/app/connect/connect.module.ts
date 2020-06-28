@@ -49,8 +49,6 @@ import {StaticPropertyUtilService} from './static-properties/static-property-uti
 import {TransformationRuleService} from './transformation-rule.service';
 import {StaticSecretInputComponent} from "./static-properties/static-secret-input/static-secret-input.component";
 
-import {ProtocolComponent} from './protocol-component/protocol.component';
-
 import {ShepherdService} from '../services/tour/shepherd.service';
 import {ConnectService} from './connect.service';
 import {AdapterDescriptionComponent} from './data-marketplace/adapter-description/adapter-description.component';
@@ -134,7 +132,6 @@ import {xsService} from "../NS/XS.service";
         StaticMappingUnaryComponent,
         TimestampPipe,
         StaticAnyInput,
-        ProtocolComponent,
         FormatListComponent,
         FormatComponent,
         DataMarketplaceComponent,
