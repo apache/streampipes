@@ -39,7 +39,7 @@ import {TransformationRuleService} from '../transformation-rule.service';
 import {AdapterStartedDialog} from './component/adapter-started-dialog.component';
 import {IconService} from './icon.service';
 import {
-    AdapterDescription,
+    AdapterDescription, AdapterDescriptionUnion,
     EventProperty,
     EventRateTransformationRuleDescription,
     EventSchema,
@@ -68,7 +68,7 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
 
 
     @Input()
-    adapter: AdapterDescription;
+    adapter: AdapterDescriptionUnion;
 
     @Output()
     removeSelectionEmitter: EventEmitter<void> = new EventEmitter<void>();
@@ -196,6 +196,7 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
         this.parentForm.statusChanges.subscribe((status)=>{
             this.adapterSettingsFormValid = this.viewInitialized && this.parentForm.valid;
         })
+
     }
 
     ngAfterViewInit() {
