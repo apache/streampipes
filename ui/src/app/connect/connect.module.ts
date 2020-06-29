@@ -89,6 +89,7 @@ import {StaticColorPickerComponent} from "./static-properties/static-color-picke
 import {ColorPickerModule} from "ngx-color-picker";
 import {PipelineElementRuntimeInfoComponent} from "./new-adapter/component/runtime-info/pipeline-element-runtime-info.component";
 import {xsService} from "../NS/XS.service";
+import {MatSliderModule} from "@angular/material/slider";
 
 
 @NgModule({
@@ -104,6 +105,7 @@ import {xsService} from "../NS/XS.service";
         MatProgressSpinnerModule,
         MatInputModule,
         MatFormFieldModule,
+        MatSliderModule,
         PlatformServicesModule,
         TreeModule.forRoot(),
         ColorPickerModule

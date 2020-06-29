@@ -58,6 +58,7 @@ public class RdfEndpoint extends AbstractRestInterface implements IRdfEndpoint {
   @DELETE
   @Path("/{rdfEndpointId}")
   @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
   @GsonWithIds
   @Override
   public Response removeRdfEndpoint(@PathParam("rdfEndpointId") String rdfEndpointId) {

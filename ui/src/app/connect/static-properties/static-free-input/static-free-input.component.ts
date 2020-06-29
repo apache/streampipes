@@ -33,7 +33,7 @@ import {AbstractValidatedStaticPropertyRenderer} from "../base/abstract-validate
 @Component({
     selector: 'app-static-free-input',
     templateUrl: './static-free-input.component.html',
-    styleUrls: ['./static-free-input.component.css']
+    styleUrls: ['./static-free-input.component.scss']
 })
 export class StaticFreeInputComponent
     extends AbstractValidatedStaticPropertyRenderer<FreeTextStaticProperty> implements OnInit {
@@ -79,5 +79,6 @@ export class StaticFreeInputComponent
 
     onValueChange(value: any) {
         this.staticProperty.value = value;
+        this.parentForm.updateValueAndValidity();
     }
 }

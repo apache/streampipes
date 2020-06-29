@@ -17,15 +17,26 @@
   -->
 
 <div [formGroup]="parentForm" id="formWrapper" fxFlex="100" fxLayout="column">
-    <div fxFlex fxLayout="row">
-            <mat-form-field fxFlex>
-                <input formControlName="{{staticProperty.internalName}}" fxFlex id="{{ 'input-' + staticProperty.label.toLowerCase() }}" matInput [placeholder]="staticProperty.label"
-                    required (blur)="emitUpdate()">
-                <mat-hint>{{staticProperty.description}}</mat-hint>
+    <div fxFlex fxLayout="row" *ngIf="!staticProperty.valueSpecification">
+        <mat-form-field fxFlex>
+            <input formControlName="{{staticProperty.internalName}}" fxFlex
+                   matInput
+                   [placeholder]="staticProperty.label"
+                   required (blur)="emitUpdate()">
+            <mat-hint>{{staticProperty.description}}</mat-hint>
 
-                <mat-error *ngIf="!fieldValid">
-                    {{errorMessage}}
-                </mat-error>
-            </mat-form-field>
+            <mat-error *ngIf="!fieldValid">
+                {{errorMessage}}
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <div *ngIf="staticProperty.valueSpecification">
+        <div fxLayout="column" fxFlex="100">
+            <mat-slider thumbLabel formControlName="{{staticProperty.internalName}}"
+                    [max]="staticProperty.valueSpecification.maxValue"
+                    [min]="staticProperty.valueSpecification.minValue"
+                    [step]="staticProperty.valueSpecification.step">
+            </mat-slider>
+        </div>
     </div>
 </div>
