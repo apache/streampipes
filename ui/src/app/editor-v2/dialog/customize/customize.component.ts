@@ -100,6 +100,7 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
     this.pipelineElement.payload = this.cachedPipelineElement;
     this.pipelineElement.settings.completed = true;
     this.pipelineElement.payload.configured = true;
+    console.log(this.pipelineElement);
     this.dialogRef.close(this.pipelineElement);
   }
 

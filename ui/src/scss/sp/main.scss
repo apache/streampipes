@@ -51,6 +51,10 @@ code[class*="language-"], pre[class*="language-"] {
   white-space:pre-wrap;
 }
 
+.ql-container {
+  height: auto;
+}
+
 .CodeMirror-hints {
   z-index: 1000;
 }

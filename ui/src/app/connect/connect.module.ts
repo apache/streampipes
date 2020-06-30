@@ -90,6 +90,8 @@ import {ColorPickerModule} from "ngx-color-picker";
 import {PipelineElementRuntimeInfoComponent} from "./new-adapter/component/runtime-info/pipeline-element-runtime-info.component";
 import {xsService} from "../NS/XS.service";
 import {MatSliderModule} from "@angular/material/slider";
+import { QuillModule } from 'ngx-quill'
+import {MatChipsModule} from "@angular/material/chips";
 
 
 @NgModule({
@@ -103,12 +105,14 @@ import {MatSliderModule} from "@angular/material/slider";
         CustomMaterialModule,
         DragulaModule,
         MatProgressSpinnerModule,
+        MatChipsModule,
         MatInputModule,
         MatFormFieldModule,
         MatSliderModule,
         PlatformServicesModule,
         TreeModule.forRoot(),
-        ColorPickerModule
+        ColorPickerModule,
+        QuillModule.forRoot()
     ],
     exports: [
         StaticPropertyComponent,

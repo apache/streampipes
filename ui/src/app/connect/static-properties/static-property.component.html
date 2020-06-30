@@ -32,6 +32,7 @@
             <app-static-free-input *ngIf="isFreeTextStaticProperty(staticProperty)"
                                    [staticProperty]="staticProperty"
                                    [parentForm]="parentForm"
+                                   [eventSchemas]="eventSchemas"
                                    (updateEmitter)="emitUpdate($event)">
             </app-static-free-input>
 

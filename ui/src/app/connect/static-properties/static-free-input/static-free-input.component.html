@@ -16,8 +16,8 @@
   ~
   -->
 
-<div [formGroup]="parentForm" id="formWrapper" fxFlex="100" fxLayout="column">
-    <div fxFlex fxLayout="row" *ngIf="!staticProperty.valueSpecification">
+<div [formGroup]="parentForm" fxFlex="100" fxLayout="column">
+    <div fxFlex fxLayout="row" *ngIf="!staticProperty.valueSpecification && !staticProperty.multiLine">
         <mat-form-field fxFlex>
             <input formControlName="{{staticProperty.internalName}}" fxFlex
                    matInput
@@ -37,6 +37,19 @@
                     [min]="staticProperty.valueSpecification.minValue"
                     [step]="staticProperty.valueSpecification.step">
             </mat-slider>
+        </div>
+    </div>
+    <div *ngIf="!staticProperty.valueSpecification && !staticProperty.mapsTo" fxFlex="100" fxLayout="column">
+        <div fxFlex="100" fxLayout="column" *ngIf="staticProperty.placeholdersSupported">
+            <h5>Possible placeholders: </h5>
+            <div fxFlex="100" fxLayout="row" style="background:white;">
+                <mat-chip-list style="margin-bottom:10px;">
+                    <mat-chip (click)="applyPlaceholder(property.runtimeName)" color="primary" *ngFor="let property of eventSchemas[0].eventProperties">#{{property.runtimeName}}#</mat-chip>
+                </mat-chip-list>
+            </div>
+        </div>
+        <div fxFlex="100" *ngIf="staticProperty.multiLine">
+            <quill-editor #textEditor formControlName="{{staticProperty.internalName}}" [modules]="quillModules"></quill-editor>
         </div>
     </div>
 </div>

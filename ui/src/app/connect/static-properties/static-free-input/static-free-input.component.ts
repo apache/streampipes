@@ -16,69 +16,87 @@
  *
  */
 
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {ValidatorFn, Validators} from '@angular/forms';
 import {StaticPropertyUtilService} from '../static-property-util.service';
 import {ConfigurationInfo} from "../../model/message/ConfigurationInfo";
 import {FreeTextStaticProperty} from "../../../core-model/gen/streampipes-model";
 import {xsService} from "../../../NS/XS.service";
 import {
-    ValidateNumber,
-    ValidateString,
-    ValidateUrl
+  ValidateNumber,
+  ValidateString,
+  ValidateUrl
 } from "../input.validator";
 import {AbstractValidatedStaticPropertyRenderer} from "../base/abstract-validated-static-property";
+import {QuillEditorComponent} from "ngx-quill";
 
 
 @Component({
-    selector: 'app-static-free-input',
-    templateUrl: './static-free-input.component.html',
-    styleUrls: ['./static-free-input.component.scss']
+  selector: 'app-static-free-input',
+  templateUrl: './static-free-input.component.html',
+  styleUrls: ['./static-free-input.component.scss']
 })
 export class StaticFreeInputComponent
     extends AbstractValidatedStaticPropertyRenderer<FreeTextStaticProperty> implements OnInit {
 
 
-    constructor(public staticPropertyUtil: StaticPropertyUtilService,
-                private xsService: xsService){
-        super();
+  quillModules: any = {
+    toolbar: [['bold', 'italic', 'underline', 'strike'],
+      [{'header': 1}, {'header': 2}],
+      [{'size': ['small', false, 'large', 'huge']}],
+      [{'header': [1, 2, 3, 4, 5, 6, false]}],
+      [{ 'color': [] }, { 'background': [] }],
+    ]
+  };
+
+  @ViewChild('textEditor', {static: false})
+  quillEditorComponent: QuillEditorComponent;
+
+  constructor(public staticPropertyUtil: StaticPropertyUtilService,
+              private xsService: xsService) {
+    super();
+  }
+
+
+  ngOnInit() {
+    this.addValidator(this.staticProperty.value, this.collectValidators());
+    this.enableValidators();
+  }
+
+  collectValidators() {
+    let validators: ValidatorFn[] = [];
+    validators.push(Validators.required);
+    if (this.xsService.isNumber(this.staticProperty.requiredDatatype) ||
+        this.xsService.isNumber(this.staticProperty.requiredDomainProperty)) {
+      validators.push(ValidateNumber);
+      this.errorMessage = "The value should be a number";
+    } else if (this.staticProperty.requiredDomainProperty === this.xsService.SO_URL) {
+      validators.push(ValidateUrl);
+      this.errorMessage = "Please enter a valid URL";
+    } else if (this.staticProperty.requiredDatatype === this.xsService.XS_STRING1) {
+      validators.push(ValidateString);
+      this.errorMessage = "Please enter a valid String";
     }
 
+    return validators;
+  }
 
-    ngOnInit() {
-        this.addValidator(this.staticProperty.value, this.collectValidators());
-        this.enableValidators();
-    }
+  emitUpdate() {
+    let valid = (this.staticProperty.value != undefined && this.staticProperty.value !== "");
+    this.updateEmitter.emit(new ConfigurationInfo(this.staticProperty.internalName, valid));
+  }
 
-    collectValidators() {
-        let validators: ValidatorFn[] = [];
-        validators.push(Validators.required);
-        if (this.xsService.isNumber(this.staticProperty.requiredDatatype) ||
-            this.xsService.isNumber(this.staticProperty.requiredDomainProperty)) {
-            validators.push(ValidateNumber);
-            this.errorMessage = "The value should be a number";
-        } else if (this.staticProperty.requiredDomainProperty === this.xsService.SO_URL) {
-            validators.push(ValidateUrl);
-            this.errorMessage = "Please enter a valid URL";
-        } else if (this.staticProperty.requiredDatatype === this.xsService.XS_STRING1) {
-            validators.push(ValidateString);
-            this.errorMessage = "Please enter a valid String";
-        }
+  onStatusChange(status: any) {
 
-        return validators;
-    }
+  }
 
-    emitUpdate() {
-        let valid = (this.staticProperty.value != undefined && this.staticProperty.value !== "");
-        this.updateEmitter.emit(new ConfigurationInfo(this.staticProperty.internalName, valid));
-    }
+  onValueChange(value: any) {
+    this.staticProperty.value = value;
+    this.parentForm.updateValueAndValidity();
+  }
 
-    onStatusChange(status: any) {
-
-    }
-
-    onValueChange(value: any) {
-        this.staticProperty.value = value;
-        this.parentForm.updateValueAndValidity();
-    }
+  applyPlaceholder(runtimeName) {
+    let currentIndex = this.quillEditorComponent.quillEditor.selection.savedRange.index;
+    this.quillEditorComponent.quillEditor.insertText(currentIndex, "#" + runtimeName + "#", "user");
+  }
 }
