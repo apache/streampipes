@@ -1,12 +1,13 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="ImageProcessingJvmInit" type="Application" factoryName="Application">
+  <configuration default="false" name="AggregationFlinkInit" type="Application" factoryName="Application">
     <envs>
-      <env name="SP_PORT" value="6035" />
+      <env name="SP_PORT" value="6005" />
       <env name="SP_HOST" value="host.docker.internal" />
       <env name="SP_DEBUG" value="true" />
+      <env name="SP_FLINK_DEBUG" value="true" />
     </envs>
-    <option name="MAIN_CLASS_NAME" value="org.apache.streampipes.processors.imageprocessing.jvm.ImageProcessingJvmInit" />
-    <module name="streampipes-processors-image-processing-jvm" />
+    <option name="MAIN_CLASS_NAME" value="org.apache.streampipes.processors.aggregation.flink.AggregationFlinkInit" />
+    <module name="streampipes-processors-aggregation-flink" />
     <extension name="net.ashald.envfile">
       <option name="IS_ENABLED" value="false" />
       <option name="IS_SUBST" value="false" />
