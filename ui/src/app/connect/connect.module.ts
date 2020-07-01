@@ -30,8 +30,7 @@ import {NewAdapterComponent} from './new-adapter/new-adapter.component';
 
 import {FormatFormComponent} from './format-form/format-form.component';
 
-import {EventPropertyPrimitiveComponent} from './schema-editor/event-property-primitive/event-property-primitive.component';
-import {EventPropertyComponent} from './schema-editor/event-property/event-property.component';
+import {EditEventPropertyPrimitiveComponent} from './dialog/edit-event-property-primitive/edit-event-property-primitive.component';
 import {EventSchemaComponent} from './schema-editor/event-schema/event-schema.component';
 
 import {StaticPropertyComponent} from './static-properties/static-property.component';
@@ -75,7 +74,7 @@ import {StaticCollectionComponent} from './static-properties/static-collection/s
 import {FilterPipe} from '../connect/data-marketplace/filter.pipe';
 import {AdapterExportDialog} from './data-marketplace/adapter-export/adapter-export-dialog.component';
 import {AdapterUploadDialog} from './data-marketplace/adapter-upload/adapter-upload-dialog.component';
-import {EventPropertyListComponent} from './schema-editor/event-property-list/event-property-list.component';
+import {EditEventPropertyListComponent} from './dialog/edit-event-property-list/edit-event-property-list.component';
 import {StaticMappingNaryComponent} from './static-properties/static-mapping-nary/static-mapping-nary.component';
 import {StaticMappingUnaryComponent} from './static-properties/static-mapping-unary/static-mapping-unary.component';
 import {TimestampPipe} from './filter/timestamp.pipe';
@@ -92,6 +91,7 @@ import {xsService} from "../NS/XS.service";
 import {MatSliderModule} from "@angular/material/slider";
 import { QuillModule } from 'ngx-quill'
 import {MatChipsModule} from "@angular/material/chips";
+import { EditEventPropertyComponent } from './dialog/edit-event-property/edit-event-property.component';
 
 
 @NgModule({
@@ -123,10 +123,10 @@ import {MatChipsModule} from "@angular/material/chips";
         NewAdapterComponent,
         FormatFormComponent,
         EventSchemaComponent,
-        EventPropertyPrimitiveComponent,
-        EventPropertyComponent,
+        EditEventPropertyPrimitiveComponent,
+        EditEventPropertyComponent,
         EventPropertyRowComponent,
-        EventPropertyListComponent,
+        EditEventPropertyListComponent,
         StaticPropertyComponent,
         AdapterStartedDialog,
         AdapterExportDialog,
@@ -187,6 +187,6 @@ import {MatChipsModule} from "@angular/material/chips";
             deps: ['$injector'],
         },
     ],
-    entryComponents: [ConnectComponent, AdapterStartedDialog, AdapterExportDialog, AdapterUploadDialog, EventPropertyComponent],
+    entryComponents: [ConnectComponent, AdapterStartedDialog, AdapterExportDialog, AdapterUploadDialog, EditEventPropertyComponent],
 })
 export class ConnectModule { }

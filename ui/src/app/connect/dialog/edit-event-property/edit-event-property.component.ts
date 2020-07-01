@@ -19,7 +19,7 @@
 import {Component, EventEmitter, Inject, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {DataTypesService} from '../data-type.service';
+import {DataTypesService} from '../../schema-editor/data-type.service';
 import {
     EventPropertyList,
     EventPropertyNested,
@@ -30,12 +30,12 @@ import {
 
 @Component({
     selector: 'app-event-property',
-    templateUrl: './event-property.component.html',
-    styleUrls: ['./event-property.component.css']
+    templateUrl: './edit-event-property.component.html',
+    styleUrls: ['./edit-event-property.component.css']
 })
-export class EventPropertyComponent implements OnInit {
+export class EditEventPropertyComponent implements OnInit {
 
-    soTimestamp = "http://schema.org/DateTime";
+    soTimestamp = 'http://schema.org/DateTime';
 
     @Output() propertyChange = new EventEmitter<EventPropertyUnion>();
 

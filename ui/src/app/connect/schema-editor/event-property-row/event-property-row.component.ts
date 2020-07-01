@@ -29,7 +29,7 @@ import {
     EventPropertyUnion,
     EventSchema
 } from "../../../core-model/gen/streampipes-model";
-import {EventPropertyComponent} from "../event-property/event-property.component";
+import { EditEventPropertyComponent } from '../../dialog/edit-event-property/edit-event-property.component';
 
 @Component({
     selector: 'event-property-row',
@@ -113,7 +113,7 @@ export class EventPropertyRowComponent implements OnChanges {
 
 
     public openEditDialog(data): void {
-        let dialogRef = this.dialog.open(EventPropertyComponent, {
+        let dialogRef = this.dialog.open(EditEventPropertyComponent, {
             data: {
                 property: data,
                 isEditable: this.isEditable

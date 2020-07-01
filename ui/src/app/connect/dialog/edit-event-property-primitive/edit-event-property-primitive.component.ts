@@ -19,23 +19,23 @@
 import {Component, DoCheck, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import {DataTypesService} from '../data-type.service';
-import {DomainPropertyProbabilityList} from '../model/DomainPropertyProbabilityList';
+import {DataTypesService} from '../../schema-editor/data-type.service';
+import {DomainPropertyProbabilityList} from '../../schema-editor/model/DomainPropertyProbabilityList';
 import {ShepherdService} from '../../../services/tour/shepherd.service';
 import {RestService} from '../../rest.service';
 import {UnitDescription} from '../../model/UnitDescription';
-import {UnitProviderService} from '../unit-provider.service';
+import {UnitProviderService} from '../../schema-editor/unit-provider.service';
 import {map, startWith} from 'rxjs/operators';
 import {EventProperty} from "../../../core-model/gen/streampipes-model";
 
 @Component({
   selector: 'app-event-property-primitive',
-  templateUrl: './event-property-primitive.component.html',
-  styleUrls: ['./event-property-primitive.component.css']
+  templateUrl: './edit-event-property-primitive.component.html',
+  styleUrls: ['./edit-event-property-primitive.component.css']
 })
-export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
+export class EditEventPropertyPrimitiveComponent implements OnInit, DoCheck {
 
-  soTimestamp = "http://schema.org/DateTime";
+  soTimestamp = 'http://schema.org/DateTime';
 
   @Input() property: any;
   @Input() index: number;

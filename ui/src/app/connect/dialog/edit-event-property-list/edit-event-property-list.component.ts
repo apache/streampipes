@@ -17,16 +17,16 @@
  */
 
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {DataTypesService} from '../data-type.service';
+import {DataTypesService} from '../../schema-editor/data-type.service';
 import {EventProperty} from "../../../core-model/gen/streampipes-model";
 
 
 @Component({
   selector: 'app-event-property-list',
-  templateUrl: './event-property-list.component.html',
-  styleUrls: ['./event-property-list.component.css']
+  templateUrl: './edit-event-property-list.component.html',
+  styleUrls: ['./edit-event-property-list.component.css']
 })
-export class EventPropertyListComponent implements OnInit {
+export class EditEventPropertyListComponent implements OnInit {
 
   constructor(private dataTypeService: DataTypesService) { }
 
