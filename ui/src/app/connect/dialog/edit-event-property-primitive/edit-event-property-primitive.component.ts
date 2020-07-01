@@ -16,20 +16,18 @@
  *
  */
 
-import {Component, DoCheck, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Observable, Subscription} from 'rxjs';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import {DataTypesService} from '../../schema-editor/data-type.service';
-import {DomainPropertyProbabilityList} from '../../schema-editor/model/DomainPropertyProbabilityList';
-import {ShepherdService} from '../../../services/tour/shepherd.service';
-import {RestService} from '../../rest.service';
-import {UnitDescription} from '../../model/UnitDescription';
-import {UnitProviderService} from '../../schema-editor/unit-provider.service';
-import {map, startWith} from 'rxjs/operators';
-import {EventProperty} from "../../../core-model/gen/streampipes-model";
+import { Component, DoCheck, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { EventProperty } from '../../../core-model/gen/streampipes-model';
+import { ShepherdService } from '../../../services/tour/shepherd.service';
+import { RestService } from '../../rest.service';
+import { DataTypesService } from '../../schema-editor/data-type.service';
+import { DomainPropertyProbabilityList } from '../../schema-editor/model/DomainPropertyProbabilityList';
+import { UnitProviderService } from '../../schema-editor/unit-provider.service';
 
 @Component({
-  selector: 'app-event-property-primitive',
+  selector: 'sp-edit-event-property-primitive',
   templateUrl: './edit-event-property-primitive.component.html',
   styleUrls: ['./edit-event-property-primitive.component.css']
 })
@@ -37,7 +35,7 @@ export class EditEventPropertyPrimitiveComponent implements OnInit, DoCheck {
 
   soTimestamp = 'http://schema.org/DateTime';
 
-  @Input() property: any;
+  @Input() cachedProperty: any;
   @Input() index: number;
 
   @Input() domainPropertyGuess: DomainPropertyProbabilityList;
@@ -47,19 +45,7 @@ export class EditEventPropertyPrimitiveComponent implements OnInit, DoCheck {
   @Output() addPrimitive: EventEmitter<EventProperty> = new EventEmitter<EventProperty>();
   @Output() addNested: EventEmitter<any> = new EventEmitter<any>();
 
-  private propertyPrimitivForm: FormGroup;
   runtimeDataTypes;
-
-  private transformUnitEnable = false;
-  private possibleUnitTransformations: UnitDescription[] = [];
-  private selectUnit: UnitDescription;
-  private allUnits: UnitDescription[];
-  private stateCtrl = new FormControl();
-
-  private newUnitStateCtrl = new FormControl();
-  private filteredUnits: Observable<UnitDescription[]>;
-  private hadMesarumentUnit = false;
-  private oldMeasurementUnitDipsplay;
 
   private selectedTimeMultiplier;
   isTimestampProperty: boolean;
@@ -75,15 +61,8 @@ export class EditEventPropertyPrimitiveComponent implements OnInit, DoCheck {
 
     this.runtimeDataTypes = this.dataTypeService.getDataTypes();
 
-    this.allUnits = this.unitProviderService.getUnits();
-    this.filteredUnits = this.stateCtrl.valueChanges
-      .pipe(
-        startWith(''),
-        map(unit => unit ? this._filteredUnits(unit) : this.allUnits.slice())
-      );
-
     // Set preselected value
-    this.selectedTimeMultiplier = "second";
+    this.selectedTimeMultiplier = 'second';
   }
 
   protected open = false;
@@ -91,96 +70,20 @@ export class EditEventPropertyPrimitiveComponent implements OnInit, DoCheck {
 
 
   ngOnInit() {
-    //   this.property.propertyNumber = this.index;
-    this.isTimestampProperty = this.property.domainProperties.some(dp => dp === this.soTimestamp);
-    if ((this.property as any).measurementUnitTmp !== undefined) {
-      (this.property as any).oldMeasurementUnit = (this.property as any).oldMeasurementUnit;
-      // TODO: use if backend deserialize URI correct
-      (this.property as any).measurementUnitTmp = (this.property as any).measurementUnitTmp;
-      this.hadMesarumentUnit = (this.property as any).hadMeasarumentUnit;
-      this.transformUnitEnable = (this.property as any).hadMeasarumentUnit;
-      const unit = this.allUnits.find(unitTmp => unitTmp.resource === (this.property as any).oldMeasurementUnit);
-      this.oldMeasurementUnitDipsplay = unit.label;
-      this.stateCtrl.setValue(unit.label);
-
-      this.restService.getFittingUnits(unit).subscribe(result => {
-        this.possibleUnitTransformations = result;
-        // this.selectUnit = this.possibleUnitTransformations[0];
-        this.selectUnit = this.allUnits.find(unitTmp => unitTmp.resource === (this.property as any).measurementUnitTmp);
-        this.transformUnitEnable = true
-        this.changeTargetUnit(this.selectUnit);
-      });
-      // const newUnit = this.allUnits.find(unitTmp => unitTmp.resource === this.property.measurementUnitTmp);
-      // this.newUnitStateCtrl.setValue(newUnit);
-      // this.selectUnit = newUnit;
-    }
-    (this.property as any).timestampTransformationMultiplier = 1000;
-
+    this.isTimestampProperty = this.cachedProperty.domainProperties.some(dp => dp === this.soTimestamp);
+    (this.cachedProperty as any).timestampTransformationMultiplier = 1000;
   }
-
-    compareFn(c1: any, c2:any): boolean {
-        return c1 && c2 ? c1.resource === c2.resource : c1 === c2;
-    }
 
   ngDoCheck() {
-    (this.property as any).propertyNumber = this.index;
-  }
-
-  private transformUnit() {
-    if (this.transformUnitEnable) {
-      this.transformUnitEnable = false;
-      // TODO: use if backend deserialize URI correct
-      // this.property.measurementUnit = this.property.oldMeasurementUnit;
-      (this.property as any).measurementUnitTmp = (this.property as any).oldMeasurementUnit;
-      (this.property as any).hadMeasarumentUnit = false;
-    } else {
-      const unit = this.allUnits.find(unitTmp => unitTmp.label === this.stateCtrl.value);
-      (this.property as any).hadMeasarumentUnit = true;
-      if (!unit) {
-        return;
-      }
-
-      this.restService.getFittingUnits(unit).subscribe(result => {
-        this.possibleUnitTransformations = result;
-        this.selectUnit = this.possibleUnitTransformations[0];
-        this.transformUnitEnable = true
-        this.changeTargetUnit(this.selectUnit);
-      });
-    }
-  }
-
-  private _filteredUnits(value: string): UnitDescription[] {
-    const filterValue = value.toLowerCase();
-    const units: UnitDescription[] = this.allUnits.filter(unit => unit.label.toLowerCase().indexOf(filterValue) === 0);
-    const unit: UnitDescription = this.allUnits.filter(unit => unit.label.toLocaleLowerCase() === filterValue)[0];
-    if (unit !== undefined) {
-      (this.property as any).oldMeasurementUnit = unit.resource;
-      (this.property as any).measurementUnitTmp = unit.resource;
-      // TODO: use if backend deserialize URI correct
-      //   this.property.measurementUnit = units.resource;
-    } else {
-      (this.property as any).oldMeasurementUnit = undefined;
-      (this.property as any).measurementUnitTmp = undefined;
-      // TODO: use if backend deserialize URI correct
-      //   this.property.measurementUnit = undefined;
-    }
-    return units;
-  }
-
-  changeTargetUnit(unit: UnitDescription) {
-    // TODO: use if backend deserialize URI correct
-    // this.property.measurementUnit = unit.resource;
-    (this.property as any).measurementUnitTmp = unit.resource;
-      this.newUnitStateCtrl.setValue(unit);
+    (this.cachedProperty as any).propertyNumber = this.index;
   }
 
   staticValueAddedByUser() {
-    if (this.property.elementId.startsWith('http://eventProperty.de/staticValue/')) {
+    if (this.cachedProperty.elementId.startsWith('http://eventProperty.de/staticValue/')) {
       return true;
     } else {
       return false;
     }
-
   }
 
 }

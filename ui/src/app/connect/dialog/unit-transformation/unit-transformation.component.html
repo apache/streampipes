@@ -1,0 +1,49 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div fxLayout="row" fxLayoutAlign="start" *ngIf="showUnitTransformation">
+    <div class="form-group" fxFlexAlign="center" style="width: 155px">
+        <mat-form-field *ngIf="!hadMeasarumentUnit" class="example-full-width" style="width: 155px">
+            <input matInput placeholder="Unit" [matAutocomplete]="auto" [formControl]="stateCtrl"
+                   [attr.disabled]="transformUnitEnable ? '' : null">
+            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                <mat-option *ngFor="let unit of filteredUnits | async" [value]="unit.label">
+                    {{unit.label}}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+        <mat-form-field *ngIf="hadMeasarumentUnit" class="example-full-width" style="width: 155px">
+            <input matInput placeholder="Unit" disabled [(ngModel)]="oldMeasurementUnitDipsplay">
+        </mat-form-field>
+
+    </div>
+    <button mat-button (click)="transformUnit()" color="primary" class="form-group" fxFlexAlign="center"
+            style="min-width: 60px; max-width: 60px">
+        <mat-icon *ngIf="!transformUnitEnable">arrow_forward</mat-icon>
+        <mat-icon *ngIf="transformUnitEnable" style="transform: rotate(180deg)">arrow_forward</mat-icon>
+    </button>
+    <mat-form-field class="example-full-width" style="width: 155px" *ngIf="transformUnitEnable">
+        <mat-select placeholder="New Unit" [(ngModel)]="selectUnit" [formControl]="newUnitStateCtrl"[compareWith]="compareFn">
+            <mat-option *ngFor="let unit of possibleUnitTransformations" [value]="unit"
+                        (click)="changeTargetUnit(unit)">
+                {{unit.label}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>
+

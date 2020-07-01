@@ -92,6 +92,7 @@ import {MatSliderModule} from "@angular/material/slider";
 import { QuillModule } from 'ngx-quill'
 import {MatChipsModule} from "@angular/material/chips";
 import { EditEventPropertyComponent } from './dialog/edit-event-property/edit-event-property.component';
+import { UnitTransformationComponent } from './dialog/unit-transformation/unit-transformation.component';
 
 
 @NgModule({
@@ -154,7 +155,8 @@ import { EditEventPropertyComponent } from './dialog/edit-event-property/edit-ev
         StaticAlternativesComponent,
         StaticCollectionComponent,
         StaticColorPickerComponent,
-        PipelineElementRuntimeInfoComponent
+        PipelineElementRuntimeInfoComponent,
+        UnitTransformationComponent
     ],
     providers: [
         RestService,

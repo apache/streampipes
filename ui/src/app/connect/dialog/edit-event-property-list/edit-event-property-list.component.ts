@@ -16,13 +16,12 @@
  *
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {DataTypesService} from '../../schema-editor/data-type.service';
-import {EventProperty} from "../../../core-model/gen/streampipes-model";
-
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { EventProperty } from '../../../core-model/gen/streampipes-model';
+import { DataTypesService } from '../../schema-editor/data-type.service';
 
 @Component({
-  selector: 'app-event-property-list',
+  selector: 'sp-edit-event-property-list',
   templateUrl: './edit-event-property-list.component.html',
   styleUrls: ['./edit-event-property-list.component.css']
 })
