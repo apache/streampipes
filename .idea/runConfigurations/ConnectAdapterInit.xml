@@ -1,0 +1,27 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="ConnectAdapterInit" type="Application" factoryName="Application">
+    <envs>
+      <env name="SP_CONNECT_CONTAINER_WORKER_HOST" value="host.docker.internal" />
+      <env name="SP_CONNECT_CONTAINER_HOST" value="host.docker.internal" />
+      <env name="SP_CONNECT_CONTAINER_MASTER_HOST" value="localhost" />
+      <env name="SP_DATA_LOCATION" value="./test_data/" />
+      <env name="SP_DEBUG" value="true" />
+      <env name="SP_DEBUG_CONNECT" value="false" />
+    </envs>
+    <option name="MAIN_CLASS_NAME" value="org.apache.streampipes.connect.ConnectAdapterInit" />
+    <module name="streampipes-connect-adapters" />
+    <extension name="net.ashald.envfile">
+      <option name="IS_ENABLED" value="false" />
+      <option name="IS_SUBST" value="false" />
+      <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+      <option name="IS_IGNORE_MISSING_FILES" value="false" />
+      <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+      <ENTRIES>
+        <ENTRY IS_ENABLED="true" PARSER="runconfig" />
+      </ENTRIES>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
