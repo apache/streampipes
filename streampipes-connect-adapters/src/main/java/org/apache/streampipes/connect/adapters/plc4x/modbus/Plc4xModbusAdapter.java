@@ -175,9 +175,9 @@ public class Plc4xModbusAdapter extends PullAdapter{
     	
     	switch (type) {
 		case "DISCRETEINPUT":
-    	case "COIL": return Datatypes.Boolean;break;
+    	case "COIL": return Datatypes.Boolean;
     	case "INPUTREGISTER":
-    	case "HOLDINGREGISTER": return Datatypes.Integer;break;
+    	case "HOLDINGREGISTER": return Datatypes.Integer;
     	default:
     		throw new AdapterException("Datatype " + plcType + " is not supported");
     	}    	
