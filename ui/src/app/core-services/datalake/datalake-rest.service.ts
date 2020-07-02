@@ -60,7 +60,7 @@ export class DatalakeRestService {
         return this.http.get<GroupedDataResult>(this.dataLakeUrlV3 + '/data/' + index + '/' + startDate + '/' + endDate + '/grouping/' + groupingTag + '?aggregationUnit=' + aggregationTimeUnit + '&aggregationValue=' + aggregationValue);
     }
 
-    getDataAutoAggergation(index, startDate, endDate) {
+    getDataAutoAggregation(index, startDate, endDate) {
         return this.http.get<DataResult>(this.dataLakeUrlV3 + '/data/' + index + '/' + startDate + '/' + endDate);
     }
 
@@ -123,9 +123,9 @@ export class DatalakeRestService {
       return this.http.post(this.dataLakeUrlV3 + '/data/image/' + imageRoute + '/coco', data);
     }
 
-    saveLabelsInDatabase(index, startDate, endDate, label) {
+    saveLabelsInDatabase(index, labelColumn, startDate, endDate, label) {
         const request = new HttpRequest('POST', this.dataLakeUrlV3 + '/data/' + index + '/' + startDate + '/' +
-            endDate + '/labeling?label=' + label,  {}, {
+            endDate + '/labeling/' + labelColumn + '?label=' + label,  {}, {
             reportProgress: true,
             responseType: 'text'
         });

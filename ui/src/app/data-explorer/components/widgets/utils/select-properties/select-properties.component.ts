@@ -35,6 +35,12 @@ export class SelectPropertiesComponent implements OnInit {
   @Input()
   selectedProperties: EventProperty[];
 
+  @Input()
+  label: string;
+
+  @Input()
+  multiple: boolean
+
   constructor() { }
 
   ngOnInit(): void {

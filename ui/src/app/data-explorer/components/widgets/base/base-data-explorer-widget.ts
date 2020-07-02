@@ -109,6 +109,16 @@ export abstract class BaseDataExplorerWidget implements OnChanges {
     return result;
   }
 
+  getNonNumericProperties(eventSchema: EventSchema) {
+    const result: EventProperty[] = [];
+    eventSchema.eventProperties.forEach(p => {
+      if (p.domainProperty !== 'http://schema.org/DateTime' && !this.isNumber(p)) {
+        result.push(p);
+      }
+    });
+
+    return result;
+  }
 
   getTimestampProperty(eventSchema: EventSchema) {
     const propertyKeys: string[] = [];
