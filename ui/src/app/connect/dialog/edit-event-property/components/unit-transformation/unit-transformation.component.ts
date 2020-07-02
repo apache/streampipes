@@ -20,9 +20,9 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { UnitDescription } from '../../model/UnitDescription';
-import { RestService } from '../../rest.service';
-import { UnitProviderService } from '../../schema-editor/unit-provider.service';
+import { UnitDescription } from '../../../../model/UnitDescription';
+import { RestService } from '../../../../rest.service';
+import { UnitProviderService } from '../../../../schema-editor/unit-provider.service';
 
 @Component({
   selector: 'sp-unit-transformation',

@@ -30,7 +30,7 @@ import { NewAdapterComponent } from './new-adapter/new-adapter.component';
 
 import { FormatFormComponent } from './format-form/format-form.component';
 
-import { EditEventPropertyPrimitiveComponent } from './dialog/edit-event-property-primitive/edit-event-property-primitive.component';
+import { EditEventPropertyPrimitiveComponent } from './dialog/edit-event-property/components/edit-event-property-primitive/edit-event-property-primitive.component';
 import { EventSchemaComponent } from './schema-editor/event-schema/event-schema.component';
 
 import { StaticPropertyComponent } from './static-properties/static-property.component';
@@ -75,7 +75,7 @@ import { FilterPipe } from '../connect/data-marketplace/filter.pipe';
 import { PlatformServicesModule } from '../platform-services/platform.module';
 import { AdapterExportDialog } from './data-marketplace/adapter-export/adapter-export-dialog.component';
 import { AdapterUploadDialog } from './data-marketplace/adapter-upload/adapter-upload-dialog.component';
-import { EditEventPropertyListComponent } from './dialog/edit-event-property-list/edit-event-property-list.component';
+import { EditEventPropertyListComponent } from './dialog/edit-event-property/components/edit-event-property-list/edit-event-property-list.component';
 import { TimestampPipe } from './filter/timestamp.pipe';
 import { StaticMappingNaryComponent } from './static-properties/static-mapping-nary/static-mapping-nary.component';
 import { StaticMappingUnaryComponent } from './static-properties/static-mapping-unary/static-mapping-unary.component';
@@ -88,13 +88,13 @@ import { QuillModule } from 'ngx-quill';
 import { xsService } from '../NS/XS.service';
 import { PropertySelectorService } from '../services/property-selector.service';
 import { EditEventPropertyComponent } from './dialog/edit-event-property/edit-event-property.component';
-import { UnitTransformationComponent } from './dialog/unit-transformation/unit-transformation.component';
+import { UnitTransformationComponent } from './dialog/edit-event-property/components/unit-transformation/unit-transformation.component';
 import { PipelineElementRuntimeInfoComponent } from './new-adapter/component/runtime-info/pipeline-element-runtime-info.component';
 import { EventPropertyRowComponent } from './schema-editor/event-property-row/event-property-row.component';
 import { EventSchemaPreviewComponent } from './schema-editor/event-schema-preview/event-schema-preview.component';
 import { StaticColorPickerComponent } from './static-properties/static-color-picker/static-color-picker.component';
-import { EditTimestampPropertyComponent } from './dialog/edit-timestamp-property/edit-timestamp-property.component';
-import { EditDataTypeComponent } from './dialog/edit-data-type/edit-data-type.component';
+import { EditTimestampPropertyComponent } from './dialog/edit-event-property/components/edit-timestamp-property/edit-timestamp-property.component';
+import { EditDataTypeComponent } from './dialog/edit-event-property/components/edit-data-type/edit-data-type.component';
 
 
 @NgModule({
