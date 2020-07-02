@@ -16,29 +16,6 @@
  *
  */
 
-.header {
-  border-left: thin;
-}
-.container {
-  border: dotted;
-}
 .doubleWidth {
   width: 370px !important;
-}
-.divBorder {
-  /* margin: auto; */
-  width: 380px;
-  /* border: solid #ccc 2px;
-  border-radius: 5px; */
-}
-
-.aThirdWidth {
-  width: 120px !important;
-}
-.onhover:hover {
-  background-color: darkgrey;
-}
-
-::ng-deep .cdk-overlay-pane {
-  width: auto !important;
 }

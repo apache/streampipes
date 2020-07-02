@@ -16,11 +16,9 @@
  *
  */
 
-import { Component, DoCheck, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { EventProperty } from '../../../core-model/gen/streampipes-model';
 import { DataTypesService } from '../../schema-editor/data-type.service';
-import { DomainPropertyProbabilityList } from '../../schema-editor/model/DomainPropertyProbabilityList';
 
 @Component({
   selector: 'sp-edit-event-property-primitive',
@@ -29,43 +27,20 @@ import { DomainPropertyProbabilityList } from '../../schema-editor/model/DomainP
 })
 export class EditEventPropertyPrimitiveComponent implements OnInit {
 
-  soTimestamp = 'http://schema.org/DateTime';
-
   @Input() cachedProperty: any;
   @Input() index: number;
-
-  @Input() domainPropertyGuess: DomainPropertyProbabilityList;
-  @Input() isEditable: boolean;
-
-  @Output() delete: EventEmitter<EventProperty> = new EventEmitter<EventProperty>();
-  @Output() addPrimitive: EventEmitter<EventProperty> = new EventEmitter<EventProperty>();
-  @Output() addNested: EventEmitter<any> = new EventEmitter<any>();
+  @Input() isTimestampProperty: boolean;
 
   runtimeDataTypes;
 
-  private selectedTimeMultiplier;
-  isTimestampProperty: boolean;
-
   constructor(private formBuilder: FormBuilder,
-    private dataTypeService: DataTypesService) {
-    this.dataTypeService = dataTypeService;
-
-    this.runtimeDataTypes = this.dataTypeService.getDataTypes();
-
-    // Set preselected value
-    this.selectedTimeMultiplier = 'second';
+              private dataTypeService: DataTypesService
+              ) {
   }
-
-  protected open = false;
 
   ngOnInit() {
-    this.isTimestampProperty = this.cachedProperty.domainProperties.some(dp => dp === this.soTimestamp);
-    // (this.cachedProperty as any).timestampTransformationMultiplier = 1000;
+    this.runtimeDataTypes = this.dataTypeService.getDataTypes();
   }
-
-  // ngDoCheck() {
-    // (this.cachedProperty as any).propertyNumber = this.index;
-  // }
 
   staticValueAddedByUser() {
     if (this.cachedProperty.elementId.startsWith('http://eventProperty.de/staticValue/')) {

@@ -25,6 +25,7 @@ import {
     EventPropertyPrimitive,
     EventPropertyUnion
 } from '../../../core-model/gen/streampipes-model';
+import { SemanticTypeUtilsService } from '../../../core-services/semantic-type/semantic-type-utils.service';
 import { DataTypesService } from '../../schema-editor/data-type.service';
 
 
@@ -55,7 +56,8 @@ export class EditEventPropertyComponent implements OnInit {
     constructor(@Inject(MAT_DIALOG_DATA) public data: any,
                 private dialogRef: MatDialogRef<EditEventPropertyComponent>,
                 private formBuilder: FormBuilder,
-                private dataTypeService: DataTypesService) {
+                private dataTypeService: DataTypesService,
+                private semanticTypeUtilsService: SemanticTypeUtilsService) {
     }
 
     ngOnInit(): void {
@@ -63,7 +65,7 @@ export class EditEventPropertyComponent implements OnInit {
         this.isEditable = this.data.isEditable;
         this.cachedProperty = this.copyEp(this.property);
         this.runtimeDataTypes = this.dataTypeService.getDataTypes();
-        this.isTimestampProperty = this.cachedProperty.domainProperties && this.cachedProperty.domainProperties.some(dp => dp === this.soTimestamp);
+        this.isTimestampProperty = this.semanticTypeUtilsService.isTimestamp(this.cachedProperty);
         this.isEventPropertyList = this.property instanceof EventPropertyList;
         this.isEventPropertyPrimitive = this.property instanceof EventPropertyPrimitive;
         this.isEventPropertyNested = this.property instanceof EventPropertyNested;
@@ -72,7 +74,11 @@ export class EditEventPropertyComponent implements OnInit {
 
     copyEp(ep: EventPropertyUnion) {
         if (ep instanceof EventPropertyPrimitive) {
-            return EventPropertyPrimitive.fromData(ep as EventPropertyPrimitive, new EventPropertyPrimitive());
+            const result = EventPropertyPrimitive.fromData(ep as EventPropertyPrimitive, new EventPropertyPrimitive());
+            (result as any).timestampTransformationMode = (ep as any).timestampTransformationMode;
+            (result as any).timestampTransformationFormatString = (ep as any).timestampTransformationFormatString;
+            (result as any).timestampTransformationMultiplier = (ep as any).timestampTransformationMultiplier;
+            return result;
         } else if (ep instanceof EventPropertyNested) {
             return EventPropertyNested.fromData(ep as EventPropertyNested, new EventPropertyNested());
         } else {
@@ -94,12 +100,13 @@ export class EditEventPropertyComponent implements OnInit {
         return (this.property.elementId.startsWith('http://eventProperty.de/staticValue/'));
     }
 
-    addTimestampDomainProperty() {
-        if (!this.isTimestampProperty) {
+    editTimestampDomainProperty(checked: boolean) {
+        if (checked) {
             this.isTimestampProperty = true;
             this.cachedProperty.domainProperties = [this.soTimestamp];
         } else {
-            this.isTimestampProperty = this.cachedProperty.domainProperties.some(dp => dp === this.soTimestamp);
+            this.cachedProperty.domainProperties = [];
+            this.isTimestampProperty = false;
         }
     }
 

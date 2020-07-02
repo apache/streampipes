@@ -35,7 +35,6 @@
 
     <div class="form-group">
       <mat-form-field class="doubleWidth">
-        <!-- <input matInput placeholder="Description"  name="description" id="description" [(ngModel)]="property.description"> -->
         <textarea matInput name="description" placeholder="Description" id="description"
           [(ngModel)]="cachedProperty.description" cols="20" rows="2"></textarea>
       </mat-form-field>
@@ -48,7 +47,7 @@
       </mat-form-field>
       <div *ngIf="!isEventPropertyNested">
         <mat-checkbox name="timestampCheckbox"
-                      (change)="addTimestampDomainProperty()" [checked]="isTimestampProperty">
+                      (change)="editTimestampDomainProperty($event.checked)" [checked]="isTimestampProperty">
           Mark as timestamp
         </mat-checkbox>
       </div>
@@ -57,7 +56,7 @@
 
   <div *ngIf="isEventPropertyPrimitive">
     <sp-edit-event-property-primitive
-            [isEditable]="isEditable"
+            [isTimestampProperty]="isTimestampProperty"
             [cachedProperty]="cachedProperty">
     </sp-edit-event-property-primitive>
   </div>

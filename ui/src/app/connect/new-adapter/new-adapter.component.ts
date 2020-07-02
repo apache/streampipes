@@ -299,7 +299,6 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
 
     guessEventSchema() {
         const eventSchema: EventSchema = this.getEventSchema(this.adapter);
-        console.log(eventSchema);
         if (eventSchema.eventProperties.length === 0) {
             this.eventSchemaComponent.guessSchema();
         } else {

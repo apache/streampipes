@@ -16,76 +16,23 @@
  *
  */
 
-import { Component, DoCheck, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { Subscription } from 'rxjs';
-import { EventProperty } from '../../../core-model/gen/streampipes-model';
-import { ShepherdService } from '../../../services/tour/shepherd.service';
-import { RestService } from '../../rest.service';
-import { DataTypesService } from '../../schema-editor/data-type.service';
-import { DomainPropertyProbabilityList } from '../../schema-editor/model/DomainPropertyProbabilityList';
-import { UnitProviderService } from '../../schema-editor/unit-provider.service';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'sp-edit-timestamp-property',
   templateUrl: './edit-timestamp-property.component.html',
   styleUrls: ['./edit-timestamp-property.component.css']
 })
-export class EditTimestampPropertyComponent implements OnInit, DoCheck {
-
-  soTimestamp = 'http://schema.org/DateTime';
+export class EditTimestampPropertyComponent {
 
   @Input() cachedProperty: any;
   @Input() showEditTimestampProperty: boolean;
 
-  @Input() index: number;
-
-  @Input() domainPropertyGuess: DomainPropertyProbabilityList;
-  @Input() isEditable: boolean;
-
-  @Output() delete: EventEmitter<EventProperty> = new EventEmitter<EventProperty>();
-  @Output() addPrimitive: EventEmitter<EventProperty> = new EventEmitter<EventProperty>();
-  @Output() addNested: EventEmitter<any> = new EventEmitter<any>();
-
-  runtimeDataTypes;
-
   private selectedTimeMultiplier;
-  isTimestampProperty: boolean;
 
-
-
-  constructor(private formBuilder: FormBuilder,
-    private dataTypeService: DataTypesService,
-    private ShepherdService: ShepherdService,
-    private restService: RestService,
-    private unitProviderService: UnitProviderService) {
-    this.dataTypeService = dataTypeService;
-
-    this.runtimeDataTypes = this.dataTypeService.getDataTypes();
-
+  constructor() {
     // Set preselected value
     this.selectedTimeMultiplier = 'second';
-  }
-
-  protected open = false;
-  subscription: Subscription;
-
-
-  ngOnInit() {
-    this.isTimestampProperty = this.cachedProperty.domainProperties.some(dp => dp === this.soTimestamp);
-    (this.cachedProperty as any).timestampTransformationMultiplier = 1000;
-  }
-
-  ngDoCheck() {
-    (this.cachedProperty as any).propertyNumber = this.index;
-  }
-
-  staticValueAddedByUser() {
-    if (this.cachedProperty.elementId.startsWith('http://eventProperty.de/staticValue/')) {
-      return true;
-    } else {
-      return false;
-    }
   }
 
 }
