@@ -35,8 +35,16 @@
 
     <div class="form-group">
       <mat-form-field class="doubleWidth">
+        <!-- <input matInput placeholder="Description"  name="description" id="description" [(ngModel)]="property.description"> -->
+        <textarea matInput name="description" placeholder="Description" id="description"
+          [(ngModel)]="cachedProperty.description" cols="20" rows="2"></textarea>
+      </mat-form-field>
+    </div>
+
+    <div class="form-group">
+      <mat-form-field class="doubleWidth">
         <input matInput placeholder="Domain Property" class="dmainProperty" name="domainproperty" id="domainproperty"
-          [(ngModel)]="cachedProperty.domainProperties[0]">
+               [(ngModel)]="cachedProperty.domainProperties[0]">
       </mat-form-field>
       <div *ngIf="!isEventPropertyNested">
         <mat-checkbox name="timestampCheckbox"
@@ -45,25 +53,17 @@
         </mat-checkbox>
       </div>
     </div>
-
-    <div class="form-group">
-      <mat-form-field class="doubleWidth">
-        <!-- <input matInput placeholder="Description"  name="description" id="description" [(ngModel)]="property.description"> -->
-        <textarea matInput name="description" placeholder="Description" id="description"
-          [(ngModel)]="cachedProperty.description" cols="20" rows="2"></textarea>
-
-      </mat-form-field>
-    </div>
   </form>
 
   <div *ngIf="isEventPropertyPrimitive">
-    <app-event-property-primitive [isEditable]="isEditable"
-      [property]="cachedProperty">
-    </app-event-property-primitive>
+    <sp-edit-event-property-primitive
+            [isEditable]="isEditable"
+            [cachedProperty]="cachedProperty">
+    </sp-edit-event-property-primitive>
   </div>
   <div *ngIf="isEventPropertyList">
-    <app-event-property-list [isEditable]="isEditable" [property]="cachedProperty">
-    </app-event-property-list>
+    <sp-edit-event-property-list [isEditable]="isEditable" [property]="cachedProperty">
+    </sp-edit-event-property-list>
   </div>
 
 </mat-dialog-content>

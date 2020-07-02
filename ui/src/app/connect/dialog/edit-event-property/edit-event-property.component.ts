@@ -16,26 +16,26 @@
  *
  */
 
-import {Component, EventEmitter, Inject, OnInit, Output} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {DataTypesService} from '../data-type.service';
+import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {
     EventPropertyList,
     EventPropertyNested,
     EventPropertyPrimitive,
     EventPropertyUnion
-} from "../../../core-model/gen/streampipes-model";
+} from '../../../core-model/gen/streampipes-model';
+import { DataTypesService } from '../../schema-editor/data-type.service';
 
 
 @Component({
-    selector: 'app-event-property',
-    templateUrl: './event-property.component.html',
-    styleUrls: ['./event-property.component.css']
+    selector: 'sp-edit-event-property',
+    templateUrl: './edit-event-property.component.html',
+    styleUrls: ['./edit-event-property.component.css']
 })
-export class EventPropertyComponent implements OnInit {
+export class EditEventPropertyComponent implements OnInit {
 
-    soTimestamp = "http://schema.org/DateTime";
+    soTimestamp = 'http://schema.org/DateTime';
 
     @Output() propertyChange = new EventEmitter<EventPropertyUnion>();
 
@@ -43,18 +43,17 @@ export class EventPropertyComponent implements OnInit {
     property: any;
     isEditable: boolean;
 
-    isTimestampProperty: boolean = false;
+    isTimestampProperty = false;
     isEventPropertyPrimitive: boolean;
     isEventPropertyNested: boolean;
     isEventPropertyList: boolean;
 
     private propertyForm: FormGroup;
-    // protected dataTypes = dataTypes;
 
     private runtimeDataTypes;
 
     constructor(@Inject(MAT_DIALOG_DATA) public data: any,
-                private dialogRef: MatDialogRef<EventPropertyComponent>,
+                private dialogRef: MatDialogRef<EditEventPropertyComponent>,
                 private formBuilder: FormBuilder,
                 private dataTypeService: DataTypesService) {
     }
@@ -121,7 +120,7 @@ export class EventPropertyComponent implements OnInit {
 
             (this.property as any).measurementUnitTmp = (this.cachedProperty as any).measurementUnitTmp;
             (this.property as any).oldMeasurementUnit = (this.cachedProperty as any).oldMeasurementUnit;
-            (this.property as any).hadMeasarumentUnit = (this.cachedProperty as any).hadMeasarumentUnit;;
+            (this.property as any).hadMeasarumentUnit = (this.cachedProperty as any).hadMeasarumentUnit;
 
             (this.property as any).timestampTransformationMode = (this.cachedProperty as any).timestampTransformationMode;
             (this.property as any).timestampTransformationFormatString = (this.cachedProperty as any).timestampTransformationFormatString;

@@ -24,7 +24,6 @@ import {
 import {AbstractValidatedStaticPropertyRenderer} from "../base/abstract-validated-static-property";
 import {AfterViewInit, Component, OnInit, ViewChild} from "@angular/core";
 
-import CodeMirror from 'codemirror';
 import 'codemirror/mode/javascript/javascript';
 import 'codemirror/addon/edit/closebrackets';
 import 'codemirror/addon/hint/show-hint';
@@ -32,6 +31,7 @@ import 'codemirror/addon/hint/javascript-hint';
 import 'codemirror/addon/lint/javascript-lint';
 import 'codemirror/addon/lint/lint';
 import {JSHINT} from 'jshint';
+import * as CodeMirror from "codemirror";
 
 (<any>window).JSHINT = JSHINT;
 
@@ -84,8 +84,8 @@ export class StaticCodeInputComponent
   };
 
   enableCodeHints() {
-    var jsHint = CodeMirror.hint.javascript;
-    CodeMirror.hint.javascript = (cm) => {
+    var jsHint = (CodeMirror as any).hint.javascript;
+    (CodeMirror as any).hint.javascript = (cm) => {
       let cursor = cm.getCursor();
       let token = cm.getTokenAt(cursor);
       let inner = {from: cm.getCursor(), to: cm.getCursor(), list: []};

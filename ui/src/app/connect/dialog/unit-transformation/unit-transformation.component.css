@@ -16,31 +16,29 @@
  *
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {DataTypesService} from '../data-type.service';
-import {EventProperty} from "../../../core-model/gen/streampipes-model";
+.header {
+  border-left: thin;
+}
+.container {
+  border: dotted;
+}
+.doubleWidth {
+  width: 370px !important;
+}
+.divBorder {
+  /* margin: auto; */
+  width: 380px;
+  /* border: solid #ccc 2px;
+  border-radius: 5px; */
+}
 
+.aThirdWidth {
+  width: 120px !important;
+}
+.onhover:hover {
+  background-color: darkgrey;
+}
 
-@Component({
-  selector: 'app-event-property-list',
-  templateUrl: './event-property-list.component.html',
-  styleUrls: ['./event-property-list.component.css']
-})
-export class EventPropertyListComponent implements OnInit {
-
-  constructor(private dataTypeService: DataTypesService) { }
-
-
-  @Input() property: any;
-  @Input() index: number;
-
-  runtimeDataTypes;
-
-  @Input() isEditable: boolean;
-
-  @Output() delete: EventEmitter<EventProperty> = new EventEmitter<EventProperty>();
-
-  ngOnInit() {
-    this.runtimeDataTypes = this.dataTypeService.getDataTypes();
-  }
+::ng-deep .cdk-overlay-pane {
+  width: auto !important;
 }
