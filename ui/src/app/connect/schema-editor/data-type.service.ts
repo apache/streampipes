@@ -16,35 +16,38 @@
  *
  */
 
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
 @Injectable()
 export class DataTypesService {
-  private dataTypes: {label: String, url: String}[]= [
-  {
-    label: 'String - A textual datatype, e.g., \'machine1\'',
-    url: 'http://www.w3.org/2001/XMLSchema#string'},
-  {
-    label: 'Boolean - A true/false value',
-    url: 'http://www.w3.org/2001/XMLSchema#boolean'},
-  {
-    label:  'Float - A number, e.g., \'1.25\'',
-    url: 'http://www.w3.org/2001/XMLSchema#float'
-  }];
+  private dataTypes: Array<{label: string, url: string}> = [
+    {
+      label: 'String - A textual datatype, e.g., \'machine1\'',
+      url: 'http://www.w3.org/2001/XMLSchema#string'},
+    {
+      label: 'Boolean - A true/false value',
+      url: 'http://www.w3.org/2001/XMLSchema#boolean'},
+    {
+      label:  'Float - A number, e.g., \'1.25\'',
+      url: 'http://www.w3.org/2001/XMLSchema#float'
+    }, {
+      label:  'Integer - A number, e.g., \'2\'',
+      url: 'http://www.w3.org/2001/XMLSchema#integer'
+    }
+  ];
 
   constructor() {}
 
-  getLabel(url: String): String {
-    for (let i = 0; i < this.dataTypes.length; i++) {
-      if (this.dataTypes[i].url === url) {
-        return this.dataTypes[i].label;
+  getLabel(url: string): string {
+    for (const dataType of this.dataTypes) {
+      if (dataType.url === url) {
+        return dataType.label;
       }
     }
-
-    return 'Unvalid data type';
+    return 'Invalid data type';
   }
 
-  getUrl(id: number): String {
+  getUrl(id: number): string {
     return this.dataTypes[id].url;
   }
 
@@ -59,6 +62,7 @@ export class DataTypesService {
   getStringTypeUrl(): string {
     return String(this.dataTypes[0].url);
   }
+
   getBooleanTypeUrl(): string {
     return String(this.dataTypes[1].url);
   }

@@ -27,7 +27,7 @@ import { DomainPropertyProbabilityList } from '../../schema-editor/model/DomainP
   templateUrl: './edit-event-property-primitive.component.html',
   styleUrls: ['./edit-event-property-primitive.component.css']
 })
-export class EditEventPropertyPrimitiveComponent implements OnInit, DoCheck {
+export class EditEventPropertyPrimitiveComponent implements OnInit {
 
   soTimestamp = 'http://schema.org/DateTime';
 
@@ -60,12 +60,12 @@ export class EditEventPropertyPrimitiveComponent implements OnInit, DoCheck {
 
   ngOnInit() {
     this.isTimestampProperty = this.cachedProperty.domainProperties.some(dp => dp === this.soTimestamp);
-    (this.cachedProperty as any).timestampTransformationMultiplier = 1000;
+    // (this.cachedProperty as any).timestampTransformationMultiplier = 1000;
   }
 
-  ngDoCheck() {
-    (this.cachedProperty as any).propertyNumber = this.index;
-  }
+  // ngDoCheck() {
+    // (this.cachedProperty as any).propertyNumber = this.index;
+  // }
 
   staticValueAddedByUser() {
     if (this.cachedProperty.elementId.startsWith('http://eventProperty.de/staticValue/')) {
