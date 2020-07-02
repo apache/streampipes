@@ -17,8 +17,8 @@
   -->
 
 <mat-form-field appearance="outline" class="sp_form_field_wrapper">
-    <mat-label>Select Columns</mat-label>
-    <mat-select [ngModel]="this.selectedProperties" (selectionChange)="triggerSelectedProperties($event.value)" multiple>
+    <mat-label>{{this.label}}</mat-label>
+    <mat-select [ngModel]="this.selectedProperties" (selectionChange)="triggerSelectedProperties($event.value)" [multiple]="multiple">
         <mat-option *ngFor="let column of availableProperties" [value]="column" style="background-color: #FFFFFF">
             {{column.runtimeName}}
         </mat-option>
