@@ -92,7 +92,8 @@ import {xsService} from "../NS/XS.service";
 import {MatSliderModule} from "@angular/material/slider";
 import { QuillModule } from 'ngx-quill'
 import {MatChipsModule} from "@angular/material/chips";
-
+import {StaticCodeInputComponent} from "./static-properties/static-code-input/static-code-input.component";
+import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 
 @NgModule({
     imports: [
@@ -100,6 +101,7 @@ import {MatChipsModule} from "@angular/material/chips";
         FormsModule,
         ReactiveFormsModule,
         CommonModule,
+        CodemirrorModule,
         FlexLayoutModule,
         MatGridListModule,
         CustomMaterialModule,
@@ -154,6 +156,7 @@ import {MatChipsModule} from "@angular/material/chips";
         StaticAlternativesComponent,
         StaticCollectionComponent,
         StaticColorPickerComponent,
+        StaticCodeInputComponent,
         PipelineElementRuntimeInfoComponent
     ],
     providers: [

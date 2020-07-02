@@ -23,7 +23,7 @@ import {xsService} from '../../NS/XS.service';
 import {StaticPropertyUtilService} from './static-property-util.service';
 import {ConfigurationInfo} from "../model/message/ConfigurationInfo";
 import {
-  AnyStaticProperty,
+  AnyStaticProperty, CodeInputStaticProperty,
   CollectionStaticProperty,
   ColorPickerStaticProperty,
   EventSchema,
@@ -83,6 +83,10 @@ export class StaticPropertyComponent implements OnInit {
 
   ngOnInit() {
 
+  }
+
+  isCodeInputStaticProperty(val) {
+    return val instanceof CodeInputStaticProperty;
   }
 
   isFreeTextStaticProperty(val) {
