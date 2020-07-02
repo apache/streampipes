@@ -20,16 +20,16 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { UnitDescription } from '../../model/UnitDescription';
-import { RestService } from '../../rest.service';
-import { UnitProviderService } from '../../schema-editor/unit-provider.service';
+import { UnitDescription } from '../../../../model/UnitDescription';
+import { RestService } from '../../../../rest.service';
+import { UnitProviderService } from '../../../../schema-editor/unit-provider.service';
 
 @Component({
-  selector: 'sp-unit-transformation',
-  templateUrl: './unit-transformation.component.html',
-  styleUrls: ['./unit-transformation.component.css']
+  selector: 'sp-edit-unit-transformation',
+  templateUrl: './edit-unit-transformation.component.html',
+  styleUrls: ['./edit-unit-transformation.component.css']
 })
-export class UnitTransformationComponent implements OnInit {
+export class EditUnitTransformationComponent implements OnInit {
 
   @Input() cachedProperty: any;
   @Input() showUnitTransformation: boolean;
@@ -42,7 +42,7 @@ export class UnitTransformationComponent implements OnInit {
 
   private newUnitStateCtrl = new FormControl();
   private filteredUnits: Observable<UnitDescription[]>;
-  private hadMesarumentUnit = false;
+  public hadMeasurementUnit = false;
   private oldMeasurementUnitDipsplay;
 
   constructor(private formBuilder: FormBuilder,
@@ -66,7 +66,7 @@ export class UnitTransformationComponent implements OnInit {
       (this.cachedProperty as any).oldMeasurementUnit = (this.cachedProperty as any).oldMeasurementUnit;
       // TODO: use if backend deserialize URI correct
       (this.cachedProperty as any).measurementUnitTmp = (this.cachedProperty as any).measurementUnitTmp;
-      this.hadMesarumentUnit = (this.cachedProperty as any).hadMeasarumentUnit;
+      this.hadMeasurementUnit = (this.cachedProperty as any).hadMeasarumentUnit;
       this.transformUnitEnable = (this.cachedProperty as any).hadMeasarumentUnit;
       const unit = this.allUnits.find(unitTmp => unitTmp.resource === (this.cachedProperty as any).oldMeasurementUnit);
       this.oldMeasurementUnitDipsplay = unit.label;
@@ -76,7 +76,7 @@ export class UnitTransformationComponent implements OnInit {
         this.possibleUnitTransformations = result;
         // this.selectUnit = this.possibleUnitTransformations[0];
         this.selectUnit = this.allUnits.find(unitTmp => unitTmp.resource === (this.cachedProperty as any).measurementUnitTmp);
-        this.transformUnitEnable = true;
+        // this.transformUnitEnable = true;
         this.changeTargetUnit(this.selectUnit);
       });
     }

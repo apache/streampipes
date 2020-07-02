@@ -16,14 +16,14 @@
  *
  */
 
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
   AdapterDescription,
   GenericAdapterSetDescription,
   GenericAdapterStreamDescription,
   SpecificAdapterSetDescription,
   SpecificAdapterStreamDescription
-} from "../core-model/gen/streampipes-model";
+} from '../core-model/gen/streampipes-model';
 
 @Injectable()
 export class ConnectService {

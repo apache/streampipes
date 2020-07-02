@@ -16,30 +16,23 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { EventProperty } from '../../../core-model/gen/streampipes-model';
-import { DataTypesService } from '../../schema-editor/data-type.service';
+import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'sp-edit-event-property-list',
-  templateUrl: './edit-event-property-list.component.html',
-  styleUrls: ['./edit-event-property-list.component.css']
+  selector: 'sp-edit-timestamp-property',
+  templateUrl: './edit-timestamp-property.component.html',
+  styleUrls: ['./edit-timestamp-property.component.css']
 })
-export class EditEventPropertyListComponent implements OnInit {
+export class EditTimestampPropertyComponent {
 
-  constructor(private dataTypeService: DataTypesService) { }
+  @Input() cachedProperty: any;
+  @Input() showEditTimestampProperty: boolean;
 
+  private selectedTimeMultiplier;
 
-  @Input() property: any;
-  @Input() index: number;
-
-  runtimeDataTypes;
-
-  @Input() isEditable: boolean;
-
-  @Output() delete: EventEmitter<EventProperty> = new EventEmitter<EventProperty>();
-
-  ngOnInit() {
-    this.runtimeDataTypes = this.dataTypeService.getDataTypes();
+  constructor() {
+    // Set preselected value
+    this.selectedTimeMultiplier = 'second';
   }
+
 }

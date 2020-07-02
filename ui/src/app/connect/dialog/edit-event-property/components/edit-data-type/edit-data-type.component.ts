@@ -16,31 +16,28 @@
  *
  */
 
-import { Injectable } from '@angular/core';
-import { EventProperty } from '../../core-model/gen/streampipes-model';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { DataTypesService } from '../../../../schema-editor/data-type.service';
 
-@Injectable()
-export class SemanticTypeUtilsService {
+@Component({
+  selector: 'sp-edit-data-type',
+  templateUrl: './edit-data-type.component.html',
+  styleUrls: ['./edit-data-type.component.css']
+})
+export class EditDataTypeComponent implements OnInit {
 
-    public TIMESTAMP = 'http://schema.org/DateTime';
-    public IMAGE = 'https://image.com';
+  @Input() cachedProperty: any;
+  @Output() dataTypeChanged = new EventEmitter<boolean>();
 
-    constructor() {
-    }
+  runtimeDataTypes;
+  constructor(private dataTypeService: DataTypesService) { }
 
-    public getValue(inputValue, semanticType) {
-        if (semanticType === this.TIMESTAMP) {
-            return new Date(inputValue).toLocaleString() ;
-        } else {
-            return inputValue;
-        }
-    }
+  ngOnInit() {
+    this.runtimeDataTypes = this.dataTypeService.getDataTypes();
+  }
 
-    public isTimestamp(property: EventProperty): boolean {
-       return property.domainProperties.includes(this.TIMESTAMP);
-    }
+  valueChanged() {
+    this.dataTypeChanged.emit(true);
+  }
 
-    public is(property: EventProperty, uri: string): boolean {
-        return property.domainProperties.includes(uri);
-    }
 }

@@ -16,31 +16,17 @@
  *
  */
 
-import { Injectable } from '@angular/core';
-import { EventProperty } from '../../core-model/gen/streampipes-model';
+import { Component, Input } from '@angular/core';
 
-@Injectable()
-export class SemanticTypeUtilsService {
+@Component({
+  selector: 'sp-edit-event-property-list',
+  templateUrl: './edit-event-property-list.component.html',
+  styleUrls: ['./edit-event-property-list.component.css']
+})
+export class EditEventPropertyListComponent {
 
-    public TIMESTAMP = 'http://schema.org/DateTime';
-    public IMAGE = 'https://image.com';
+  constructor() { }
 
-    constructor() {
-    }
+  @Input() cachedProperty: any;
 
-    public getValue(inputValue, semanticType) {
-        if (semanticType === this.TIMESTAMP) {
-            return new Date(inputValue).toLocaleString() ;
-        } else {
-            return inputValue;
-        }
-    }
-
-    public isTimestamp(property: EventProperty): boolean {
-       return property.domainProperties.includes(this.TIMESTAMP);
-    }
-
-    public is(property: EventProperty, uri: string): boolean {
-        return property.domainProperties.includes(uri);
-    }
 }
