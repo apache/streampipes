@@ -31,36 +31,10 @@
             [showUnitTransformation]="!isTimestampProperty">
     </sp-unit-transformation>
 
-    <div fxLayout="row" fxLayoutAlign="start" *ngIf="isTimestampProperty">
-        <div class="form-group" fxFlexAlign="center">
-            <mat-form-field [class.example-full-width]="cachedProperty.timestampTransformationMode !== undefined "
-                style="margin-right: 10px" [class.doubleWidth]="cachedProperty.timestampTransformationMode === undefined"
-                [class.aThirdWidth]="selectedTimeMultiplier === 'custom' && cachedProperty.timestampTransformationMode === 'timeUnit'">
-                <mat-select placeholder="Timestamp converter (unix timestamp)"
-                    [(value)]="cachedProperty.timestampTransformationMode">
-                    <mat-option>None</mat-option>
-                    <mat-option value="formatString">Date String</mat-option>
-                    <mat-option value="timeUnit">Date Number</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
-        <div class="form-group" fxFlexAlign="center">
-            <mat-form-field *ngIf="cachedProperty.timestampTransformationMode === 'formatString'">
-                <input matInput placeholder="E.g. yyyy-MM-dd HH:mm:ss.SSSZ"
-                    [(ngModel)]="cachedProperty.timestampTransformationFormatString">
-            </mat-form-field>
-            <mat-form-field *ngIf="cachedProperty.timestampTransformationMode === 'timeUnit'"
-                [class.example-full-width]="selectedTimeMultiplier !== 'custom'"
-                [class.aThirdWidth]="selectedTimeMultiplier === 'custom'">
-                <mat-select placeholder="Current time unit" [(value)]="selectedTimeMultiplier">
-                    <mat-option value="milliseconds" (click)="cachedProperty.timestampTransformationMultiplier = 0">
-                        Milliseconds</mat-option>
-                    <mat-option value="second" (click)="cachedProperty.timestampTransformationMultiplier = 1000">Seconds
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
-    </div>
+    <sp-edit-timestamp-property
+            [cachedProperty]= "cachedProperty"
+            showEditTimestampProperty="!isTimestampProperty">
+    </sp-edit-timestamp-property>
 
     <mat-form-field *ngIf="staticValueAddedByUser()" class="doubleWidth">
         <input matInput placeholder="Static Value" name="static_value" id="static_value" [matAutocomplete]="auto"

@@ -18,20 +18,26 @@
 
 import { Component, DoCheck, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { EventProperty } from '../../../core-model/gen/streampipes-model';
+import { ShepherdService } from '../../../services/tour/shepherd.service';
+import { RestService } from '../../rest.service';
 import { DataTypesService } from '../../schema-editor/data-type.service';
 import { DomainPropertyProbabilityList } from '../../schema-editor/model/DomainPropertyProbabilityList';
+import { UnitProviderService } from '../../schema-editor/unit-provider.service';
 
 @Component({
-  selector: 'sp-edit-event-property-primitive',
-  templateUrl: './edit-event-property-primitive.component.html',
-  styleUrls: ['./edit-event-property-primitive.component.css']
+  selector: 'sp-edit-timestamp-property',
+  templateUrl: './edit-timestamp-property.component.html',
+  styleUrls: ['./edit-timestamp-property.component.css']
 })
-export class EditEventPropertyPrimitiveComponent implements OnInit, DoCheck {
+export class EditTimestampPropertyComponent implements OnInit, DoCheck {
 
   soTimestamp = 'http://schema.org/DateTime';
 
   @Input() cachedProperty: any;
+  @Input() showEditTimestampProperty: boolean;
+
   @Input() index: number;
 
   @Input() domainPropertyGuess: DomainPropertyProbabilityList;
@@ -46,8 +52,13 @@ export class EditEventPropertyPrimitiveComponent implements OnInit, DoCheck {
   private selectedTimeMultiplier;
   isTimestampProperty: boolean;
 
+
+
   constructor(private formBuilder: FormBuilder,
-    private dataTypeService: DataTypesService) {
+    private dataTypeService: DataTypesService,
+    private ShepherdService: ShepherdService,
+    private restService: RestService,
+    private unitProviderService: UnitProviderService) {
     this.dataTypeService = dataTypeService;
 
     this.runtimeDataTypes = this.dataTypeService.getDataTypes();
@@ -57,6 +68,8 @@ export class EditEventPropertyPrimitiveComponent implements OnInit, DoCheck {
   }
 
   protected open = false;
+  subscription: Subscription;
+
 
   ngOnInit() {
     this.isTimestampProperty = this.cachedProperty.domainProperties.some(dp => dp === this.soTimestamp);
