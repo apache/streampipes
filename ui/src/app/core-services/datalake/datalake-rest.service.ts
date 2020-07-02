@@ -60,7 +60,7 @@ export class DatalakeRestService {
         return this.http.get<GroupedDataResult>(this.dataLakeUrlV3 + '/data/' + index + '/' + startDate + '/' + endDate + '/grouping/' + groupingTag + '?aggregationUnit=' + aggregationTimeUnit + '&aggregationValue=' + aggregationValue);
     }
 
-    getDataAutoAggergation(index, startDate, endDate) {
+    getDataAutoAggregation(index, startDate, endDate) {
         return this.http.get<DataResult>(this.dataLakeUrlV3 + '/data/' + index + '/' + startDate + '/' + endDate);
     }
 

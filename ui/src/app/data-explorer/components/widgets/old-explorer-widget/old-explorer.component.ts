@@ -187,7 +187,7 @@ export class OldExplorerComponent implements OnInit {
         } else {
             if (this.selectedGroup === undefined) {
                 this.restService
-                  .getDataAutoAggergation(this.selectedInfoResult.measureName, this.dateRange[0].getTime(), this.dateRange[1].getTime())
+                  .getDataAutoAggregation(this.selectedInfoResult.measureName, this.dateRange[0].getTime(), this.dateRange[1].getTime())
                   .subscribe(
                     res => {
                         this.processReceivedData(res);

@@ -161,7 +161,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
     this.graph.layout.shapes = [];
     if (!this.advancedSettingsActive) {
       this.setShownComponents(false, false, true);
-      this.dataLakeRestService.getDataAutoAggergation(
+      this.dataLakeRestService.getDataAutoAggregation(
         this.dataExplorerWidget.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime())
         .subscribe((res: DataResult) => {
             if (res.total === 0) {

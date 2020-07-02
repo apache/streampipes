@@ -60,7 +60,7 @@ export class ImageWidgetComponent extends BaseDataExplorerWidget implements OnIn
   updateData() {
     this.setShownComponents(false, false, true);
 
-    this.dataLakeRestService.getDataAutoAggergation(
+    this.dataLakeRestService.getDataAutoAggregation(
       this.dataExplorerWidget.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime())
       .subscribe(
       (res: DataResult) => {
