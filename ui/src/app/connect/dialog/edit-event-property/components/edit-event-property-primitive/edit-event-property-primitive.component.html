@@ -25,12 +25,13 @@
 
     <sp-edit-data-type
             *ngIf="!isTimestampProperty"
-            [cachedProperty]= "cachedProperty">
+            [cachedProperty]= "cachedProperty"
+            (dataTypeChanged)="setShowUnitTransformation()">
     </sp-edit-data-type>
 
     <sp-edit-unit-transformation
             [cachedProperty]= "cachedProperty"
-            [showUnitTransformation]="!isTimestampProperty">
+            [showUnitTransformation]="!hideUnitTransformation">
     </sp-edit-unit-transformation>
 
     <mat-form-field *ngIf="staticValueAddedByUser()" class="doubleWidth">

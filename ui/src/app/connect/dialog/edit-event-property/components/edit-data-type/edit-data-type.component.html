@@ -17,7 +17,7 @@
   -->
 
 <mat-form-field class="doubleWidth" >
-    <mat-select placeholder="Runtime Type" [(ngModel)]="cachedProperty.runtimeType">
+    <mat-select placeholder="Runtime Type" [(ngModel)]="cachedProperty.runtimeType" (selectionChange)="valueChanged()">
         <mat-option *ngFor="let dataType of runtimeDataTypes" [value]="dataType.url">
             {{ dataType.label }}
         </mat-option>

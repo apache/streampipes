@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DataTypesService } from '../../../../schema-editor/data-type.service';
 
 @Component({
@@ -27,12 +27,17 @@ import { DataTypesService } from '../../../../schema-editor/data-type.service';
 export class EditDataTypeComponent implements OnInit {
 
   @Input() cachedProperty: any;
+  @Output() dataTypeChanged = new EventEmitter<boolean>();
 
   runtimeDataTypes;
   constructor(private dataTypeService: DataTypesService) { }
 
   ngOnInit() {
     this.runtimeDataTypes = this.dataTypeService.getDataTypes();
+  }
+
+  valueChanged() {
+    this.dataTypeChanged.emit(true);
   }
 
 }

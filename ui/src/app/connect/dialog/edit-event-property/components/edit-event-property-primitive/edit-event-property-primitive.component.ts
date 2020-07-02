@@ -17,7 +17,6 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
 import { DataTypesService } from '../../../../schema-editor/data-type.service';
 
 @Component({
@@ -25,20 +24,25 @@ import { DataTypesService } from '../../../../schema-editor/data-type.service';
   templateUrl: './edit-event-property-primitive.component.html',
   styleUrls: ['./edit-event-property-primitive.component.css']
 })
-export class EditEventPropertyPrimitiveComponent {
+export class EditEventPropertyPrimitiveComponent implements OnInit {
 
   @Input() cachedProperty: any;
   @Input() index: number;
   @Input() isTimestampProperty: boolean;
 
-  // runtimeDataTypes;
+  hideUnitTransformation: boolean;
 
-  constructor() {
+  constructor(private dataTypesService: DataTypesService) {
   }
 
-  // ngOnInit() {
-  //   this.runtimeDataTypes = this.dataTypeService.getDataTypes();
-  // }
+  ngOnInit(): void {
+    this.setShowUnitTransformation();
+  }
+
+  setShowUnitTransformation() {
+    this.hideUnitTransformation = this.isTimestampProperty ||
+      !this.dataTypesService.isNumeric(this.cachedProperty.runtimeType);
+  }
 
   staticValueAddedByUser() {
     if (this.cachedProperty.elementId.startsWith('http://eventProperty.de/staticValue/')) {

@@ -67,4 +67,9 @@ export class DataTypesService {
     return String(this.dataTypes[1].url);
   }
 
+  isNumeric(uri: string) {
+    const numericDataTypes = ['http://www.w3.org/2001/XMLSchema#float', 'http://www.w3.org/2001/XMLSchema#integer'];
+    return numericDataTypes.includes(uri);
+  }
+
 }
