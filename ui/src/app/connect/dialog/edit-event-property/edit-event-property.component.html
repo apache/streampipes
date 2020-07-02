@@ -54,16 +54,15 @@
     </div>
   </form>
 
-  <div *ngIf="isEventPropertyPrimitive">
-    <sp-edit-event-property-primitive
-            [isTimestampProperty]="isTimestampProperty"
-            [cachedProperty]="cachedProperty">
-    </sp-edit-event-property-primitive>
-  </div>
-  <div *ngIf="isEventPropertyList">
-    <sp-edit-event-property-list [isEditable]="isEditable" [property]="cachedProperty">
-    </sp-edit-event-property-list>
-  </div>
+  <sp-edit-event-property-primitive
+          *ngIf="isEventPropertyPrimitive"
+          [isTimestampProperty]="isTimestampProperty"
+          [cachedProperty]="cachedProperty">
+  </sp-edit-event-property-primitive>
+  <sp-edit-event-property-list
+          *ngIf="isEventPropertyList"
+          [property]="cachedProperty">
+  </sp-edit-event-property-list>
 
 </mat-dialog-content>
 

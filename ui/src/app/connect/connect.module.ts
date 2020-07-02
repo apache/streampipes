@@ -94,6 +94,7 @@ import { EventPropertyRowComponent } from './schema-editor/event-property-row/ev
 import { EventSchemaPreviewComponent } from './schema-editor/event-schema-preview/event-schema-preview.component';
 import { StaticColorPickerComponent } from './static-properties/static-color-picker/static-color-picker.component';
 import { EditTimestampPropertyComponent } from './dialog/edit-timestamp-property/edit-timestamp-property.component';
+import { EditDataTypeComponent } from './dialog/edit-data-type/edit-data-type.component';
 
 
 @NgModule({
@@ -158,7 +159,8 @@ import { EditTimestampPropertyComponent } from './dialog/edit-timestamp-property
         StaticColorPickerComponent,
         PipelineElementRuntimeInfoComponent,
         UnitTransformationComponent,
-        EditTimestampPropertyComponent
+        EditTimestampPropertyComponent,
+        EditDataTypeComponent
     ],
     providers: [
         RestService,

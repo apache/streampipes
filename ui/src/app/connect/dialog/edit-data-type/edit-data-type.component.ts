@@ -16,17 +16,23 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { DataTypesService } from '../../schema-editor/data-type.service';
 
 @Component({
-  selector: 'sp-edit-event-property-list',
-  templateUrl: './edit-event-property-list.component.html',
-  styleUrls: ['./edit-event-property-list.component.css']
+  selector: 'sp-edit-data-type',
+  templateUrl: './edit-data-type.component.html',
+  styleUrls: ['./edit-data-type.component.css']
 })
-export class EditEventPropertyListComponent {
-
-  constructor() { }
+export class EditDataTypeComponent implements OnInit {
 
   @Input() cachedProperty: any;
+
+  runtimeDataTypes;
+  constructor(private dataTypeService: DataTypesService) { }
+
+  ngOnInit() {
+    this.runtimeDataTypes = this.dataTypeService.getDataTypes();
+  }
 
 }

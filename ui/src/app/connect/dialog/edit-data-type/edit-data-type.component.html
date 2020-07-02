@@ -16,26 +16,10 @@
   ~
   -->
 
-<div class="divBorder">
-    <sp-edit-timestamp-property
-            *ngIf="isTimestampProperty"
-            [cachedProperty]= "cachedProperty"
-            showEditTimestampProperty="!isTimestampProperty">
-    </sp-edit-timestamp-property>
-
-    <sp-edit-data-type
-            *ngIf="!isTimestampProperty"
-            [cachedProperty]= "cachedProperty">
-    </sp-edit-data-type>
-
-    <sp-unit-transformation
-            [cachedProperty]= "cachedProperty"
-            [showUnitTransformation]="!isTimestampProperty">
-    </sp-unit-transformation>
-
-    <mat-form-field *ngIf="staticValueAddedByUser()" class="doubleWidth">
-        <input matInput placeholder="Static Value" name="static_value" id="static_value"
-            [(ngModel)]="cachedProperty.staticValue">
-    </mat-form-field>
-
-</div>
+<mat-form-field class="doubleWidth" >
+    <mat-select placeholder="Runtime Type" [(ngModel)]="cachedProperty.runtimeType">
+        <mat-option *ngFor="let dataType of runtimeDataTypes" [value]="dataType.url">
+            {{ dataType.label }}
+        </mat-option>
+    </mat-select>
+</mat-form-field>
