@@ -25,11 +25,11 @@ import { RestService } from '../../../../rest.service';
 import { UnitProviderService } from '../../../../schema-editor/unit-provider.service';
 
 @Component({
-  selector: 'sp-unit-transformation',
-  templateUrl: './unit-transformation.component.html',
-  styleUrls: ['./unit-transformation.component.css']
+  selector: 'sp-edit-unit-transformation',
+  templateUrl: './edit-unit-transformation.component.html',
+  styleUrls: ['./edit-unit-transformation.component.css']
 })
-export class UnitTransformationComponent implements OnInit {
+export class EditUnitTransformationComponent implements OnInit {
 
   @Input() cachedProperty: any;
   @Input() showUnitTransformation: boolean;

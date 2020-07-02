@@ -87,14 +87,14 @@ import { ColorPickerModule } from 'ngx-color-picker';
 import { QuillModule } from 'ngx-quill';
 import { xsService } from '../NS/XS.service';
 import { PropertySelectorService } from '../services/property-selector.service';
+import { EditDataTypeComponent } from './dialog/edit-event-property/components/edit-data-type/edit-data-type.component';
+import { EditTimestampPropertyComponent } from './dialog/edit-event-property/components/edit-timestamp-property/edit-timestamp-property.component';
+import { EditUnitTransformationComponent } from './dialog/edit-event-property/components/edit-unit-transformation/edit-unit-transformation.component';
 import { EditEventPropertyComponent } from './dialog/edit-event-property/edit-event-property.component';
-import { UnitTransformationComponent } from './dialog/edit-event-property/components/unit-transformation/unit-transformation.component';
 import { PipelineElementRuntimeInfoComponent } from './new-adapter/component/runtime-info/pipeline-element-runtime-info.component';
 import { EventPropertyRowComponent } from './schema-editor/event-property-row/event-property-row.component';
 import { EventSchemaPreviewComponent } from './schema-editor/event-schema-preview/event-schema-preview.component';
 import { StaticColorPickerComponent } from './static-properties/static-color-picker/static-color-picker.component';
-import { EditTimestampPropertyComponent } from './dialog/edit-event-property/components/edit-timestamp-property/edit-timestamp-property.component';
-import { EditDataTypeComponent } from './dialog/edit-event-property/components/edit-data-type/edit-data-type.component';
 
 
 @NgModule({
@@ -158,7 +158,7 @@ import { EditDataTypeComponent } from './dialog/edit-event-property/components/e
         StaticCollectionComponent,
         StaticColorPickerComponent,
         PipelineElementRuntimeInfoComponent,
-        UnitTransformationComponent,
+        EditUnitTransformationComponent,
         EditTimestampPropertyComponent,
         EditDataTypeComponent
     ],
