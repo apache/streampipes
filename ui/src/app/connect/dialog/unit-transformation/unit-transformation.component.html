@@ -18,7 +18,7 @@
 
 <div fxLayout="row" fxLayoutAlign="start" *ngIf="showUnitTransformation">
     <div class="form-group" fxFlexAlign="center" style="width: 155px">
-        <mat-form-field *ngIf="!hadMeasarumentUnit" class="example-full-width" style="width: 155px">
+        <mat-form-field *ngIf="!hadMeasurementUnit" class="example-full-width" style="width: 155px">
             <input matInput placeholder="Unit" [matAutocomplete]="auto" [formControl]="stateCtrl"
                    [attr.disabled]="transformUnitEnable ? '' : null">
             <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
@@ -27,7 +27,7 @@
                 </mat-option>
             </mat-autocomplete>
         </mat-form-field>
-        <mat-form-field *ngIf="hadMeasarumentUnit" class="example-full-width" style="width: 155px">
+        <mat-form-field *ngIf="hadMeasurementUnit" class="example-full-width" style="width: 155px">
             <input matInput placeholder="Unit" disabled [(ngModel)]="oldMeasurementUnitDipsplay">
         </mat-form-field>
 

@@ -75,6 +75,12 @@ export class EditEventPropertyComponent implements OnInit {
     copyEp(ep: EventPropertyUnion) {
         if (ep instanceof EventPropertyPrimitive) {
             const result = EventPropertyPrimitive.fromData(ep as EventPropertyPrimitive, new EventPropertyPrimitive());
+
+            result.measurementUnit = (ep as EventPropertyPrimitive).measurementUnit;
+            (result as any).measurementUnitTmp = (ep as any).measurementUnitTmp;
+            (result as any).oldMeasurementUnit = (ep as any).oldMeasurementUnit;
+            (result as any).hadMeasarumentUnit = (ep as any).hadMeasarumentUnit;
+
             (result as any).timestampTransformationMode = (ep as any).timestampTransformationMode;
             (result as any).timestampTransformationFormatString = (ep as any).timestampTransformationFormatString;
             (result as any).timestampTransformationMultiplier = (ep as any).timestampTransformationMultiplier;
@@ -123,7 +129,8 @@ export class EditEventPropertyComponent implements OnInit {
 
         if (this.property instanceof EventPropertyPrimitive) {
             this.property.runtimeType = (this.cachedProperty as EventPropertyPrimitive).runtimeType;
-            this.property.measurementUnit = (this.cachedProperty as EventPropertyPrimitive).measurementUnit;
+
+            this.property.measurementUnit = (this.cachedProperty as any).oldMeasurementUnit;
 
             (this.property as any).measurementUnitTmp = (this.cachedProperty as any).measurementUnitTmp;
             (this.property as any).oldMeasurementUnit = (this.cachedProperty as any).oldMeasurementUnit;
