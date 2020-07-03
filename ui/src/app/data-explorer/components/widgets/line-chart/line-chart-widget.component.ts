@@ -48,7 +48,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
   private nonNumericKey: string = undefined;
 
   advancedSettingsActive = false;
-  showNonNumericData  = false;
+  showLabelColumnSelection  = true;
 
   selectedStartX = undefined;
   selectedEndX = undefined;
@@ -179,7 +179,6 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
           }
         );
     } else {
-
       if (this.groupValue === 'None') {
         this.setShownComponents(false, false, true);
         this.dataLakeRestService.getData(
@@ -651,6 +650,11 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
     }
   };
   return shape;
+  }
+
+  handlingAdvancedToggleChange() {
+    this.showLabelColumnSelection = !this.showLabelColumnSelection;
+    this.updateData();
   }
 
   setStartX(startX: string) {

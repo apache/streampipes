@@ -33,14 +33,13 @@
                     label="Select Label Column"
                     multiple = false
                     style="margin-right: 10px;"
+                    *ngIf="showLabelColumnSelection"
                     (changeSelectedProperties)="setSelectedLabelColumn($event)"
                     [availableProperties]="availableNonNumericColumns"
                     [selectedProperties]="selectedNonNumericColumn">
             </sp-select-properties>
 
-
-
-            <mat-slide-toggle [(ngModel)]="advancedSettingsActive">Advanced</mat-slide-toggle>
+            <mat-slide-toggle [(ngModel)]="advancedSettingsActive" (change)="handlingAdvancedToggleChange()">Advanced</mat-slide-toggle>
             <sp-aggregate-configuration
                     *ngIf="advancedSettingsActive"
                     [(aggregationValue)]="aggregationValue"
