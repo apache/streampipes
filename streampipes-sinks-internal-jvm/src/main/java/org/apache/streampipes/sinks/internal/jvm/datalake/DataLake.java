@@ -97,8 +97,8 @@ public class DataLake implements EventSink<DataLakeParameters> {
   public void onEvent(Event event) {
     try {
 
-      String eventTimestamp = Long.toString(event.getFieldBySelector(this.timestampField).getAsPrimitive().getAsLong());
       this.imageProperties.stream().forEach(eventProperty -> {
+        String eventTimestamp = Long.toString(event.getFieldBySelector(this.timestampField).getAsPrimitive().getAsLong());
         String fileRoute = this.imageDirectory + eventProperty.getRuntimeName() + "/" + eventTimestamp + ".png";
         String image = event.getFieldByRuntimeName(eventProperty.getRuntimeName()).getAsPrimitive().getAsString();
 
