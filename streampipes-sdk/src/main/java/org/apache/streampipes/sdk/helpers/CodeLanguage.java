@@ -23,7 +23,7 @@ public enum CodeLanguage {
           "    // do processing here.\n" +
           "    // return processed event.\n" +
           "    return {id: event.id, tempInCelsius: (event.tempInKelvin - 273.15)};\n" +
-          "};");
+          "}");
 
   private String defaultSkeleton;
 
