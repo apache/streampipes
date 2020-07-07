@@ -55,8 +55,11 @@ public class JSEval implements EventProcessor<JSEvalParameters> {
         try {
             final Map<String, Object> eventData = event.getRaw();
             Object result = ((Invocable) engine).invokeFunction("process", eventData);
-            Map<String, Object> output = (Map<String, Object>) result;
-            output.forEach(outEvent::addField);
+            if (result != null) {
+                Map<String, Object> output = (Map<String, Object>) result;
+                output.forEach(outEvent::addField);
+                outputCollector.collect(outEvent);
+            }
         } catch (ScriptException e) {
             throw new SpRuntimeException("Error in script: " + e.getMessage());
         } catch (ClassCastException e) {
@@ -64,7 +67,6 @@ public class JSEval implements EventProcessor<JSEvalParameters> {
         } catch (NoSuchMethodException e) {
             throw new SpRuntimeException("`process(event){ return {}; };` method not found in script: " + code);
         }
-        outputCollector.collect(outEvent);
     }
 
     @Override
