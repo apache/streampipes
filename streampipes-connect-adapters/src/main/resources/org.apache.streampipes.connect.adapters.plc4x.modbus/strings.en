@@ -39,3 +39,7 @@ plc_nodes_excel_file.description=Contains three columns 'Name', 'Data Type', 'Lo
 
 plc_node_address.title=Node Address
 plc_node_address.description=
+
+plc_node_id.title=Node Id
+plc_node_id.description=
+
