@@ -108,10 +108,10 @@ public class Plc4xModbusAdapter extends PullAdapter{
     			.category(AdapterType.Manufacturing)
     			.requiredTextParameter(Labels.withId(PLC_IP))
 					.requiredTextParameter(Labels.withId(PLC_PORT))
+					.requiredTextParameter(Labels.withId(PLC_NODE_ID))
 					.requiredCollection(Labels.withId(PLC_NODES),
 //    					StaticProperties.collection(Labels.withId(PLC_NODES),
     							StaticProperties.stringFreeTextProperty(Labels.withId(PLC_NODE_RUNTIME_NAME)),
-    							StaticProperties.integerFreeTextProperty(Labels.withId(PLC_NODE_ID)),
     							StaticProperties.integerFreeTextProperty(Labels.withId(PLC_NODE_ADDRESS)),
     							StaticProperties.singleValueSelection(Labels.withId(PLC_NODE_TYPE),
     									Options.from("DiscreteInput", "Coil", "InputRegister", "HoldingRegister")))
@@ -152,7 +152,6 @@ public class Plc4xModbusAdapter extends PullAdapter{
 			}
 			Map map = new HashMap();
 			map.put(PLC_NODE_RUNTIME_NAME, memberExtractor.textParameter(PLC_NODE_RUNTIME_NAME));
-			map.put(PLC_NODE_ID, memberExtractor.singleValueParameter(PLC_NODE_ID, Integer.class));
 			map.put(PLC_NODE_ADDRESS, memberExtractor.singleValueParameter(PLC_NODE_ADDRESS, Integer.class));
  			map.put(PLC_NODE_TYPE, memberExtractor.selectedSingleValue(PLC_NODE_TYPE, String.class));
 
@@ -254,16 +253,16 @@ public class Plc4xModbusAdapter extends PullAdapter{
 
 			switch (node.get(PLC_NODE_TYPE)){
 				case "Coil":
-					builder.addItem(String.valueOf(node.get(PLC_NODE_ID)),
+					builder.addItem("Coil-" + String.valueOf(node.get(PLC_NODE_ADDRESS)),
 								"coil:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
 				case "HoldingRegister":
-					builder.addItem(String.valueOf(node.get(PLC_NODE_ID)),
+					builder.addItem("HoldingRegister-" + String.valueOf(node.get(PLC_NODE_ADDRESS)),
 								"holding-register:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
 				case "DiscreteInput":
-					builder.addItem(String.valueOf(node.get(PLC_NODE_ID)),
+					builder.addItem("DiscreteInput-" + String.valueOf(node.get(PLC_NODE_ADDRESS)),
 								"discrete-input:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
 				case "InputRegister":
-					builder.addItem(String.valueOf(node.get(PLC_NODE_ID)),
+					builder.addItem("InputRegister-" + String.valueOf(node.get(PLC_NODE_ADDRESS)),
 									"input-register:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
 		}
 	}
@@ -289,12 +288,12 @@ public class Plc4xModbusAdapter extends PullAdapter{
 			if (response.getResponseCode(node.get(PLC_NODE_ID)) == PlcResponseCode.OK) {
 
 				switch (node.get(PLC_NODE_TYPE)){
-					case "Coil":
+					case "Coil":event.put(node.get(PLC_NODE_RUNTIME_NAME), response.getBoolean("Coil-" + String.valueOf(node.get(PLC_NODE_ADDRESS))));break;
 					case "DiscreteInput": event.put(node.get(PLC_NODE_RUNTIME_NAME),
-													response.getBoolean(node.get(PLC_NODE_ID)));break;
-					case "InputRegister":
+													response.getBoolean("DiscreteInput-" + String.valueOf(node.get(PLC_NODE_ADDRESS))));break;
+					case "InputRegister": event.put(node.get(PLC_NODE_RUNTIME_NAME), response.getBoolean("InputRegister-" + String.valueOf(node.get(PLC_NODE_ADDRESS))));break;
 					case "HoldingRegister":
-						event.put(node.get(PLC_NODE_RUNTIME_NAME), response.getInteger(node.get(PLC_NODE_ID)));break;
+						event.put(node.get(PLC_NODE_RUNTIME_NAME), response.getInteger("HoldingRegister-" + String.valueOf(node.get(PLC_NODE_ADDRESS))));break;
 				}
 			}
 			else {
