@@ -49,6 +49,9 @@ public enum SinksInternalJvmConfig implements PeConfig {
 		config.register(ConfigKeys.DATA_LAKE_HOST, "influxdb", "Hostname for the StreamPipes data lake database");
 		config.register(ConfigKeys.DATA_LAKE_PROTOCOL, "http", "Protocol for the StreamPipes data lake database");
 		config.register(ConfigKeys.DATA_LAKE_PORT, 8086, "Port for the StreamPipes data lake database");
+		config.register(ConfigKeys.DATA_LAKE_USERNAME, "default", "Username for the StreamPipes data lake database");
+		config.registerPassword(ConfigKeys.DATA_LAKE_PASSWORD, "default", "Password for the StreamPipes data lake database");
+		config.register(ConfigKeys.DATA_LAKE_DATABASE_NAME, "sp", "Database name for the StreamPipes data lake database");
 		config.register(ConfigKeys.BACKEND_HOST, "backend", "Hostname for the StreamPipes-Backend");
 		config.register(ConfigKeys.BACKEND_PORT, 8030, "Port for the StreamPipes-Backend");
 		config.register(ConfigKeys.BACKEND_PROTOCOL, "http", "Protocol for the StreamPipes-Backend");
@@ -112,6 +115,21 @@ public enum SinksInternalJvmConfig implements PeConfig {
 	public Integer getDataLakePort() {
 		return config.getInteger(ConfigKeys.DATA_LAKE_PORT);
 	}
+
+	public String getDataLakeUsername() {
+		return config.getString(ConfigKeys.DATA_LAKE_USERNAME);
+	}
+
+
+	public String getDataLakePassword() {
+		return config.getString(ConfigKeys.DATA_LAKE_PASSWORD);
+	}
+
+
+	public String getDataLakeDatabaseName() {
+		return config.getString(ConfigKeys.DATA_LAKE_DATABASE_NAME);
+	}
+
 
 	@Override
 	public String getId() {
