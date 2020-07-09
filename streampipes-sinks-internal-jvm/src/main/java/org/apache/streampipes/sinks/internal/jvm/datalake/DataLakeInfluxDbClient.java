@@ -127,7 +127,7 @@ public class DataLakeInfluxDbClient {
 
     // setting up the database
     influxDb.setDatabase(databaseName);
-    influxDb.enableBatch(BatchOptions.DEFAULTS.actions(batchSize).flushDuration(flushDuration));
+    influxDb.enableBatch(batchSize, flushDuration, TimeUnit.MILLISECONDS);
 	}
 
   /**
@@ -198,6 +198,12 @@ public class DataLakeInfluxDbClient {
    * Shuts down the connection to the InfluxDB server
    */
 	void stop() {
-    influxDb.close();
+	    influxDb.flush();
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        influxDb.close();
 	}
 }
