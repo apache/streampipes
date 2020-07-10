@@ -4,13 +4,9 @@ org.apache.streampipes.connect.protocol.stream.file=Continuously streams the con
 filePath.title=File
 filePath.description=File Path
 
-replaceTimestamp.title=Use current time for timestamp?
-replaceTimestamp.description=Keep timestamps from File or replace with current.
+replaceTimestamp.title=Use current time
+replaceTimestamp.description=Replace Event Time with Current Timestamp
 
 speed.title=Replay Speed
-speed.description=Replay Speed. For original speed, set it to 1
-
-time-between-replay.title=Time Between Replay
-time-between-replay.description=Time between two rounds of replay. Time in seconds
-
+speed.description=original = 1; speedup 2x = 2; half speed  =  0.5
 
