@@ -66,7 +66,8 @@
                     <div fxFlex="100" fxLayout="column">
                         <app-static-property *ngFor="let config of selectedWidget.config" [staticProperty]="config"
                                              [staticProperties]="selectedWidget.config"
-                                             [eventSchema]="selectedPipeline.schema"
+                                             [eventSchemas]="[selectedPipeline.schema]"
+                                             [fieldName]="config.internalName"
                                              (validateEmitter)="validConfiguration($event)"></app-static-property>
                     </div>
 

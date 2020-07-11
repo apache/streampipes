@@ -54,13 +54,21 @@
                 </div>
                 <div class="sp-blue-border padding">
                     <form [formGroup]="parentForm" fxFlex="100">
-                    <app-static-property *ngFor="let config of adapter.config" [staticProperty]="config"
-                        [staticProperties]="adapter.config" [adapterId]="adapter.appId" [parentForm]="parentForm"
+                    <app-static-property *ngFor="let config of adapter.config"
+                                         [staticProperty]="config"
+                                         [staticProperties]="adapter.config"
+                                         [adapterId]="adapter.appId"
+                                         [parentForm]="parentForm"
+                                         [fieldName]="config.internalName"
                         (updateEmitter)="triggerUpdate($event)" [completedStaticProperty]="completedStaticProperty">
                     </app-static-property>
                         <div fxFlex="100"  *ngIf="isGenericAdapter">
-                        <app-static-property *ngFor="let config of adapter.protocolDescription.config" [staticProperty]="config"
-                                             [staticProperties]="adapter.protocolDescription.config" [adapterId]="adapter.appId" [parentForm]="parentForm"
+                        <app-static-property *ngFor="let config of adapter.protocolDescription.config"
+                                             [staticProperty]="config"
+                                             [staticProperties]="adapter.protocolDescription.config"
+                                             [adapterId]="adapter.appId"
+                                             [parentForm]="parentForm"
+                                             [fieldName]="config.internalName"
                                              (updateEmitter)="triggerUpdate($event)" [completedStaticProperty]="completedStaticProperty">
                         </app-static-property>
                         </div>

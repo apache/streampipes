@@ -134,6 +134,7 @@ export class StaticPropertyUtilService{
             clone.horizontalRendering = val.horizontalRendering;
         }
         clone = this.copyStaticPropertyProperty(val, clone);
+        clone["@class"] = val["@class"];
         return clone;
     }
 

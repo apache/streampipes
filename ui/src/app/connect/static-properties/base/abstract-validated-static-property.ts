@@ -30,17 +30,17 @@ export abstract class AbstractValidatedStaticPropertyRenderer<T extends StaticPr
   }
 
   enableValidators() {
-    this.parentForm.controls[this.staticProperty.internalName].valueChanges.subscribe(value => {
+    this.parentForm.controls[this.fieldName].valueChanges.subscribe(value => {
      this.onValueChange(value);
     });
-    this.parentForm.controls[this.staticProperty.internalName].statusChanges.subscribe(status => {
+    this.parentForm.controls[this.fieldName].statusChanges.subscribe(status => {
       this.fieldValid = status === "VALID";
       this.onStatusChange(status);
     })
   }
 
   addValidator(defaultValue: any, validators: ValidatorFn | ValidatorFn[]) {
-    this.parentForm.addControl(this.staticProperty.internalName, new FormControl(defaultValue, validators));
+    this.parentForm.addControl(this.fieldName, new FormControl(defaultValue, validators));
     this.parentForm.updateValueAndValidity();
   }
 

@@ -42,6 +42,9 @@ export abstract class AbstractStaticPropertyRenderer<T extends StaticProperty> {
   @Input()
   parentForm: FormGroup;
 
+  @Input()
+  fieldName: string;
+
   @Output() updateEmitter: EventEmitter<ConfigurationInfo> = new EventEmitter();
 
 

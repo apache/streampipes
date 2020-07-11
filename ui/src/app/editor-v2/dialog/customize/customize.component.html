@@ -48,6 +48,7 @@
                                      [staticProperties]="cachedPipelineElement.staticProperties"
                                      [eventSchemas]="eventSchemas"
                                      [parentForm]="parentForm"
+                                     [fieldName]="config.internalName"
                                      (validateEmitter)="validConfiguration($event)">
                 </app-static-property>
                 </form>

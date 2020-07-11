@@ -73,6 +73,9 @@ export class StaticPropertyComponent implements OnInit {
   @Input()
   parentForm: FormGroup;
 
+  @Input()
+  fieldName: string;
+
   constructor(
     private logger: Logger,
     public xsService: xsService,
@@ -82,7 +85,6 @@ export class StaticPropertyComponent implements OnInit {
   }
 
   ngOnInit() {
-
   }
 
   isCodeInputStaticProperty(val) {

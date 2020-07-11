@@ -19,7 +19,7 @@
 <div [formGroup]="parentForm" fxFlex="100" fxLayout="column">
     <div fxFlex fxLayout="row" *ngIf="!staticProperty.valueSpecification && !staticProperty.multiLine">
         <mat-form-field fxFlex>
-            <input formControlName="{{staticProperty.internalName}}" fxFlex
+            <input formControlName="{{fieldName}}" fxFlex
                    matInput
                    [placeholder]="staticProperty.label"
                    required (blur)="emitUpdate()">
@@ -32,7 +32,7 @@
     </div>
     <div *ngIf="staticProperty.valueSpecification">
         <div fxLayout="column" fxFlex="100">
-            <mat-slider thumbLabel formControlName="{{staticProperty.internalName}}"
+            <mat-slider thumbLabel formControlName="{{fieldName}}"
                     [max]="staticProperty.valueSpecification.maxValue"
                     [min]="staticProperty.valueSpecification.minValue"
                     [step]="staticProperty.valueSpecification.step">
@@ -49,7 +49,7 @@
             </div>
         </div>
         <div fxFlex="100" *ngIf="staticProperty.multiLine">
-            <quill-editor #textEditor formControlName="{{staticProperty.internalName}}" [modules]="quillModules"></quill-editor>
+            <quill-editor #textEditor formControlName="{{fieldName}}" [modules]="quillModules"></quill-editor>
         </div>
     </div>
 </div>

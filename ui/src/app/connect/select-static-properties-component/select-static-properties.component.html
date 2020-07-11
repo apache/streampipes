@@ -17,6 +17,10 @@
   -->
 
 <div id="select-static-properties" *ngFor="let staticProperty of staticProperties" class="blockElement fullWidth">
-    <app-static-property [adapterId]="adapterId" [staticProperties]="staticProperties" [eventSchemas]="eventSchema" [staticProperty]="staticProperty" (validateEmitter)="validateText()" (updateEmitter)="triggerUpdate($event)" [completedStaticProperty]="completedStaticProperty" class="test fullWidth">
+    <app-static-property [adapterId]="adapterId"
+                         [staticProperties]="staticProperties"
+                         [eventSchemas]="eventSchema"
+                         [fieldName]="staticProperty.internalName"
+                         [staticProperty]="staticProperty" (validateEmitter)="validateText()" (updateEmitter)="triggerUpdate($event)" [completedStaticProperty]="completedStaticProperty" class="test fullWidth">
     </app-static-property>
 </div>

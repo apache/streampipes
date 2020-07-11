@@ -27,12 +27,14 @@
                                    [staticProperty]="staticProperty"
                                    [parentForm]="parentForm"
                                    [eventSchemas]="eventSchemas"
+                                   [fieldName]="fieldName"
                                    (updateEmitter)="emitUpdate($event)">
             </app-static-code-input>
 
             <app-static-secret-input *ngIf="isSecretStaticProperty(staticProperty)"
                                      [staticProperty]="staticProperty"
                                      [parentForm]="parentForm"
+                                     [fieldName]="fieldName"
                                      (updateEmitter)="emitUpdate($event)">
             </app-static-secret-input>
 
@@ -40,6 +42,7 @@
                                    [staticProperty]="staticProperty"
                                    [parentForm]="parentForm"
                                    [eventSchemas]="eventSchemas"
+                                   [fieldName]="fieldName"
                                    (updateEmitter)="emitUpdate($event)">
             </app-static-free-input>
 
@@ -51,6 +54,7 @@
             <app-static-color-picker *ngIf="isColorPickerStaticProperty(staticProperty)"
                                      [staticProperty]="staticProperty"
                                      [parentForm]="parentForm"
+                                     [fieldName]="fieldName"
                                      (updateEmitter)="emitUpdate($event)">
             </app-static-color-picker>
 
@@ -75,8 +79,11 @@
             </app-static-one-of-input>
 
             <app-static-mapping-unary *ngIf="isMappingPropertyUnary(staticProperty)"
-                                      [eventSchemas]="eventSchemas" (inputEmitter)="valueChange($event)"
-                                      [staticProperty]="staticProperty" [parentForm]="parentForm">
+                                      [eventSchemas]="eventSchemas"
+                                      [staticProperty]="staticProperty"
+                                      [parentForm]="parentForm"
+                                      [fieldName]="fieldName"
+                                      (inputEmitter)="valueChange($event)">
             </app-static-mapping-unary>
 
             <app-static-mapping-nary *ngIf="isMappingNaryProperty(staticProperty)" [eventSchemas]="eventSchemas"
@@ -96,9 +103,11 @@
             </app-static-group>
 
             <app-static-collection *ngIf="isCollectionStaticProperty(staticProperty)"
-                                   [adapterId]="adapterId" [eventSchemas]="eventSchemas"
+                                   [adapterId]="adapterId"
+                                   [eventSchemas]="eventSchemas"
+                                   [parentForm]="parentForm"
                                    [staticProperty]="staticProperty" class="test fullWidth"
-                                   (inputEmitter)="valueChange($event)" (updateEmitter)="emitUpdate($event)">
+                                   (updateEmitter)="emitUpdate($event)">
             </app-static-collection>
         </div>
     </div>
