@@ -39,7 +39,7 @@ export class SchemaRequirementsBuilder {
     requiredPropertyWithUnaryMapping(internalId: string, label: string, description: string, eventProperty: EventProperty): SchemaRequirementsBuilder {
         eventProperty.setRuntimeName(internalId);
         let mp = this.makeMappingProperty(internalId, label, description, new MappingPropertyUnary());
-
+        
         this.staticProperties.push(mp);
         this.requiredEventProperties.push(eventProperty);
 

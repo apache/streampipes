@@ -89,7 +89,7 @@ public class PipelineElementGridGenerator {
   }
 
   private DomContent makeDocumentationLink() {
-    return a(DOCUMENTATION).withHref("/docs/docs/" + assetModel.getAppId() + "/" +assetModel.getAppId());
+    return a(DOCUMENTATION).withHref("/docs/docs/pe/" + assetModel.getAppId());
   }
 
   private DomContent makeBlank() {

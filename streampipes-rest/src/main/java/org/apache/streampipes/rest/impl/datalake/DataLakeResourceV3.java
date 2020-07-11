@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.rest.impl.datalake;
 
-import com.google.gson.Gson;
 import org.apache.streampipes.model.client.messages.Notification;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.rest.impl.AbstractRestInterface;
@@ -28,15 +27,10 @@ import org.apache.streampipes.rest.impl.datalake.model.PageResult;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
 import org.apache.streampipes.rest.shared.annotation.JsonLdSerialized;
 import org.apache.streampipes.rest.shared.util.SpMediaType;
-import org.influxdb.InfluxDB;
-import org.influxdb.dto.Point;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -234,14 +228,15 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
 
   @POST
   @Produces(MediaType.TEXT_PLAIN)
-  @Path("/data/{index}/{startdate}/{enddate}/labeling")
+  @Path("/data/{index}/{startdate}/{enddate}/labeling/{column}")
     public Response labelData(@Context UriInfo info,
                               @PathParam("index") String index,
                               @PathParam("startdate") long startdate,
-                              @PathParam("enddate") long enddate) {
+                              @PathParam("enddate") long enddate,
+                              @PathParam("column") String column) {
 
         String label = info.getQueryParameters().getFirst("label");
-        this.dataLakeManagement.updateLabels(index, startdate, enddate, label);
+        this.dataLakeManagement.updateLabels(index, column, startdate, enddate, label);
 
         return Response.ok("Successfully updated database.", MediaType.TEXT_PLAIN).build();
   }

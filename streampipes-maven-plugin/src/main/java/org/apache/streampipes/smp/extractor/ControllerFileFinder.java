@@ -27,18 +27,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ControllerFileFinder {
+public class ControllerFileFinder extends ElementFinder {
 
-  private String sourceRoot;
   private String filterPattern;
-  private Log log;
-  private String baseDir;
 
   public ControllerFileFinder(Log log, String baseDir, String sourceRoot, String filterPattern) {
-    this.sourceRoot = sourceRoot;
+    super(sourceRoot, log, baseDir);
     this.filterPattern = filterPattern;
-    this.log = log;
-    this.baseDir = baseDir;
   }
 
   public String[] findFiles() {
@@ -50,6 +45,7 @@ public class ControllerFileFinder {
     return fileSetManager.getIncludedFiles(fileSet);
   }
 
+  @Override
   public List<AssetModel> makeAssetModels() {
     List<AssetModel> allAssetModels = new ArrayList<>();
     for (String file : findFiles()) {

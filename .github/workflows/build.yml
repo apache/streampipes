@@ -48,6 +48,7 @@ jobs:
           echo "::set-env name=BASE_IMG_NGINX_ARM64V8::arm64v8/nginx"
       - name: Install qemu-user-static for multi-arch builds
         run: |
+          sudo apt-get update
           sudo apt-get install qemu-user-static
           echo "./streampipes-backend/ ./streampipes-connect-container-master/ ./streampipes-node-controller-container/ ./ui/" | xargs -n 1 cp -v /usr/bin/qemu-*
       - name: Login to Docker Hub

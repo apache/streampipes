@@ -75,7 +75,7 @@ public class DataLakeManagementV3 {
   public GroupedDataResult getEvents(String index, long startDate, long endDate, String aggregationUnit, int aggregationValue,
                                      String groupingTag) {
     InfluxDB influxDB = getInfluxDBClient();
-    Query query = new Query("SELECT mean(*) FROM " + index + " WHERE time > " + startDate * 1000000 + " AND time < " + endDate * 1000000
+    Query query = new Query("SELECT mean(*), count(*) FROM " + index + " WHERE time > " + startDate * 1000000 + " AND time < " + endDate * 1000000
             + " GROUP BY " + groupingTag + ",time(" + aggregationValue + aggregationUnit + ") fill(none) ORDER BY time",
             BackendConfig.INSTANCE.getInfluxDatabaseName());
     QueryResult result = influxDB.query(query);
@@ -577,7 +577,7 @@ public class DataLakeManagementV3 {
     return route;
   }
 
-  public void updateLabels(String index, long startdate, long enddate, String label) {
+  public void updateLabels(String index, String labelColumn, long startdate, long enddate, String label) {
     DataResult queryResult = getEvents(index, startdate, enddate);
     Map<String, String> headerWithTypes = getHeadersWithTypes(index);
     List<String> headers = queryResult.getHeaders();
@@ -592,7 +592,7 @@ public class DataLakeManagementV3 {
 
       for (int i = 1; i < row.size(); i++) {
         String selected_header = headers.get(i);
-        if (!selected_header.equals("sp_internal_label")) {
+        if (!selected_header.equals(labelColumn)) {
           if (headerWithTypes.get(selected_header).equals("integer")) {
             p.addField(selected_header, Math.round((double) row.get(i)));
           } else if (headerWithTypes.get(selected_header).equals("string")) {
