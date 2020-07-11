@@ -56,6 +56,9 @@ import {SafeCss} from "./utils/style-sanitizer";
 import {MatchingErrorComponent} from "./dialog/matching-error/matching-error.component";
 import {WelcomeTourComponent} from "./dialog/welcome-tour/welcome-tour.component";
 import {MissingElementsForTutorialComponent} from "./dialog/missing-elements-for-tutorial/missing-elements-for-tutorial.component";
+import {OutputStrategyComponent} from "./components/output-strategy/output-strategy.component";
+import {CustomOutputStrategyComponent} from "./components/output-strategy/custom-output/custom-output-strategy.component";
+import {PropertySelectionComponent} from "./components/output-strategy/property-selection/property-selection.component";
 
 @NgModule({
     imports: [
@@ -77,10 +80,12 @@ import {MissingElementsForTutorialComponent} from "./dialog/missing-elements-for
     declarations: [
         CompatibleElementsComponent,
         CustomizeComponent,
+        CustomOutputStrategyComponent,
         EditorComponent,
         HelpComponent,
         MatchingErrorComponent,
         MissingElementsForTutorialComponent,
+        OutputStrategyComponent,
         PipelineAssemblyComponent,
         PipelineElementComponent,
         PipelineElementDocumentationComponent,
@@ -88,6 +93,7 @@ import {MissingElementsForTutorialComponent} from "./dialog/missing-elements-for
         PipelineElementOptionsComponent,
         PipelineElementRecommendationComponent,
         PipelineComponent,
+        PropertySelectionComponent,
         SavePipelineComponent,
         SafeCss,
         WelcomeTourComponent

@@ -17,6 +17,7 @@
  */
 
 import {Injectable} from "@angular/core";
+import {EventPropertyNested, EventPropertyUnion} from "../core-model/gen/streampipes-model";
 
 @Injectable()
 export class PropertySelectorService {
@@ -29,15 +30,15 @@ export class PropertySelectorService {
 
     }
 
-    makeProperties(eventProperties, availablePropertyKeys, currentPointer) {
+    makeProperties(eventProperties: Array<any>, availablePropertyKeys: Array<string>, currentPointer) {
         let outputProperties = [];
 
         eventProperties.forEach(ep => {
             availablePropertyKeys.forEach(apk => {
                 if (this.isInSelection(ep, apk, currentPointer)) {
-                    ep.properties.runtimeId = this.makeSelector(currentPointer, ep.properties.runtimeName);
+                    ep.runtimeId = this.makeSelector(currentPointer, ep.runtimeName);
                     if (this.isNested(ep)) {
-                        ep.properties.eventProperties = this.makeProperties(ep.properties.eventProperties, availablePropertyKeys, this.makeSelector(currentPointer, ep.properties.runtimeName));
+                        ep.eventProperties = this.makeProperties(ep.eventProperties, availablePropertyKeys, this.makeSelector(currentPointer, ep.properties.runtimeName));
                     }
                     outputProperties.push(ep);
                 }
@@ -46,7 +47,7 @@ export class PropertySelectorService {
         return outputProperties;
     }
 
-    makeFlatProperties(eventProperties, availablePropertyKeys) {
+    makeFlatProperties(eventProperties: Array<EventPropertyUnion>, availablePropertyKeys: Array<string>) {
         let outputProperties = [];
 
         availablePropertyKeys.forEach(apk => {
@@ -57,15 +58,15 @@ export class PropertySelectorService {
         return outputProperties;
     }
 
-    makeProperty(eventProperties, propertySelector, originalSelector) {
+    makeProperty(eventProperties: Array<any>, propertySelector, originalSelector) {
         let outputProperty;
         eventProperties.forEach(ep => {
-            if (ep.properties.runtimeName === propertySelector[0]) {
+            if (ep.runtimeName === propertySelector[0]) {
                 if (this.isNested(ep)) {
                     propertySelector.shift();
-                    outputProperty = this.makeProperty(ep.properties.eventProperties, propertySelector, originalSelector);
+                    outputProperty = this.makeProperty(ep.eventProperties, propertySelector, originalSelector);
                 } else {
-                    ep.properties.runtimeId = originalSelector;
+                    ep.runtimeId = originalSelector;
                     outputProperty = ep;
                     outputProperty.properties.niceLabel = this.makeNiceLabel(originalSelector);
                 }
@@ -79,13 +80,13 @@ export class PropertySelectorService {
     }
 
     isNested(ep) {
-        return ep.type === "org.apache.streampipes.model.schema.EventPropertyNested";
+        return ep instanceof EventPropertyNested;
     }
 
-    isInSelection(inputProperty, propertySelector, currentPropertyPointer) {
+    isInSelection(inputProperty: EventPropertyUnion, propertySelector, currentPropertyPointer) {
         return (currentPropertyPointer
             + this.propertyDelimiter
-            + inputProperty.properties.runtimeName) === propertySelector;
+            + inputProperty.runtimeName) === propertySelector;
 
     }
 

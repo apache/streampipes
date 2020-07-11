@@ -27,7 +27,7 @@ import {
 import {InvocablePipelineElementUnion, PipelineElementConfig} from "../../model/editor.model";
 import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
 import {JsplumbService} from "../../services/jsplumb.service";
-import {EventSchema} from "../../../core-model/gen/streampipes-model";
+import {DataProcessorInvocation, EventSchema} from "../../../core-model/gen/streampipes-model";
 import {FormBuilder, FormGroup} from "@angular/forms";
 
 @Component({
@@ -40,12 +40,14 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
   @Input()
   pipelineElement: PipelineElementConfig;
 
+  @Input()
+  restrictedEditMode: boolean;
+
   cachedPipelineElement: InvocablePipelineElementUnion;
   eventSchemas: EventSchema[] = [];
 
   displayRecommended: boolean;
   showDocumentation: boolean = false;
-  restrictedEditMode: boolean;
 
   selectedElement: any;
   selection: any;
@@ -64,6 +66,8 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
   formValid: boolean;
   viewInitialized: boolean = false;
 
+  isDataProcessor: boolean = false;
+
   //ShepherdService: ShepherdService;
 
   constructor(private dialogRef: DialogRef<CustomizeComponent>,
@@ -75,6 +79,7 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.cachedPipelineElement = this.JsPlumbService.clone(this.pipelineElement.payload) as InvocablePipelineElementUnion;
+    this.isDataProcessor = this.cachedPipelineElement instanceof DataProcessorInvocation;
     this.cachedPipelineElement.inputStreams.forEach(is => {
       this.eventSchemas = this.eventSchemas.concat(is.eventSchema);
     });
