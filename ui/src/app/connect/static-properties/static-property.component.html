@@ -18,11 +18,11 @@
 
 <div fxFlex="100" fxLayout="column">
     <div fxFlex="100" fxLayout="row" class="static-property-panel">
-        <div fxFlex="40" fxLayout="column">
+        <div fxFlex="30" fxLayout="column">
             <b>{{staticProperty.label}}</b>
             <mat-hint class="description">{{staticProperty.description}}</mat-hint>
         </div>
-        <div fxFlex="60">
+        <div fxFlex="70">
             <app-static-code-input *ngIf="isCodeInputStaticProperty(staticProperty)"
                                    [staticProperty]="staticProperty"
                                    [parentForm]="parentForm"

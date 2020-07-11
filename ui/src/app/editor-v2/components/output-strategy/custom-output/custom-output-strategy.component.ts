@@ -20,7 +20,7 @@ import {Component, OnInit} from "@angular/core";
 import {CustomOutputStrategy} from "../../../../core-model/gen/streampipes-model";
 import {BaseOutputStrategy} from "../base/BaseOutputStrategy";
 import {PropertySelectorService} from "../../../../services/property-selector.service";
-import {FormControl, Validators} from "@angular/forms";
+import {FormControl} from "@angular/forms";
 
 @Component({
   selector: 'custom-output-strategy',
