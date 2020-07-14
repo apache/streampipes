@@ -34,6 +34,10 @@ import io.siddhi.core.event.Event;
 import io.siddhi.core.stream.input.InputHandler;
 import io.siddhi.core.stream.output.StreamCallback;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.*;
 
 public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> implements
@@ -50,6 +54,8 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
 
   private Boolean debugMode;
   private SiddhiDebugCallback debugCallback;
+
+  private String timestampField;
 
   private static final Logger LOG = LoggerFactory.getLogger(SiddhiEventEngine.class);
 
@@ -76,6 +82,7 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
 
     SiddhiManager siddhiManager = SpSiddhiManager.INSTANCE.getSiddhiManager();
 
+    this.timestampField = removeStreamIdFromTimestamp(setTimestamp(parameters));
 
     LOG.info("Configuring event types for graph " + parameters.getGraph().getName());
     parameters.getInEventTypes().forEach((key, value) -> {
@@ -125,6 +132,10 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
 
   }
 
+  private String removeStreamIdFromTimestamp(String timestampField) {
+    return timestampField !=null ? timestampField.replaceAll("s0::", "") : null;
+  }
+
   private String getOutputTopicName(B parameters) {
     return parameters
             .getGraph()
@@ -163,7 +174,13 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
     }
 
     for (String key : sortedEventKeys) {
-      joiner.add("s0" + key + " " + toType((Class<?>) typeMap.get(key)));
+      // TODO: get timestamp field from user params
+      if(key.equalsIgnoreCase(this.timestampField)) {
+        joiner.add("s0" + key + " LONG");
+      }
+      else {
+        joiner.add("s0" + key + " " + toType((Class<?>) typeMap.get(key)));
+      }
     }
 
     this.siddhiAppString.append(defineStreamPrefix);
@@ -228,12 +245,17 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
 
   protected abstract String selectStatement(final B bindingParameters);
 
+  protected String setTimestamp(final B bindingparameters) {
+    return null;
+  }
+
   protected String prepareName(String eventName) {
     return eventName
             .replaceAll("\\.", "")
             .replaceAll("-", "")
             .replaceAll("::", "");
   }
+
 
 
   protected String getCustomOutputSelectStatement(DataProcessorInvocation invocation,
