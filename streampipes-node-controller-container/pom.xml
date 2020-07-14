@@ -21,7 +21,7 @@
     <parent>
         <artifactId>streampipes-parent</artifactId>
         <groupId>org.apache.streampipes</groupId>
-        <version>0.65.1-SNAPSHOT</version>
+        <version>0.67.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -32,22 +32,27 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-container-base</artifactId>
-            <version>0.65.1-SNAPSHOT</version>
+            <version>0.67.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-container</artifactId>
-            <version>0.65.1-SNAPSHOT</version>
+            <version>0.67.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-config</artifactId>
-            <version>0.65.1-SNAPSHOT</version>
+            <version>0.67.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-model</artifactId>
-            <version>0.65.1-SNAPSHOT</version>
+            <version>0.67.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.streampipes</groupId>
+            <artifactId>streampipes-messaging</artifactId>
+            <version>0.67.0-SNAPSHOT</version>
         </dependency>
 
         <!--external dependencies-->
@@ -70,6 +75,22 @@
             <groupId>com.github.oshi</groupId>
             <artifactId>oshi-core</artifactId>
             <version>4.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.paho</groupId>
+            <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
+            <version>1.2.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-clients</artifactId>
+            <version>2.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.streampipes</groupId>
+            <artifactId>streampipes-messaging-kafka</artifactId>
+            <version>0.67.0-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

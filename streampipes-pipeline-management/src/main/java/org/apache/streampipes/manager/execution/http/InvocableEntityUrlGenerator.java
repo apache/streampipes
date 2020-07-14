@@ -41,20 +41,22 @@ public class InvocableEntityUrlGenerator extends EndpointUrlGenerator<InvocableS
 
     @Override
     public String generateStartPipelineEndpointUrl() {
-//        return URLPREFIX
-//                + getHost()
-//                + SLASH
-//                + getIdentifier()
-//                + SLASH
-//                + pipelineElement.getAppId();
+        // TODO: normal setup
         return URLPREFIX
                 + getHost()
-                + SLASH
-                + "node/container/invoke"
                 + SLASH
                 + getIdentifier()
                 + SLASH
                 + pipelineElement.getAppId();
+        // TODO: uncomment for edge tests
+//        return URLPREFIX
+//                + getHost()
+//                + SLASH
+//                + "node/container/invoke"
+//                + SLASH
+//                + getIdentifier()
+//                + SLASH
+//                + pipelineElement.getAppId();
     }
 
     @Override

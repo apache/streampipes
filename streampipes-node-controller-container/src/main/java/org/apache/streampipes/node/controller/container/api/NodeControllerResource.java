@@ -16,6 +16,7 @@ package org.apache.streampipes.node.controller.container.api;/*
  *
  */
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.container.transform.Transformer;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -23,6 +24,9 @@ import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.node.PipelineElementDockerContainer;
 import org.apache.streampipes.node.controller.container.management.container.DockerOrchestratorManager;
 import org.apache.streampipes.node.controller.container.management.pe.PipelineElementManager;
+import org.apache.streampipes.node.controller.container.management.relay.EventRelayManager;
+import org.apache.streampipes.node.controller.container.management.relay.RunningRelayInstances;
+import org.eclipse.paho.client.mqttv3.MqttException;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -80,12 +84,19 @@ public class NodeControllerResource<I extends InvocableStreamPipesEntity> {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response invokePipelineElement(@PathParam("identifier") String identifier, @PathParam("elementId") String elementId, String payload) {
+
         // TODO implement
         String pipelineElementEndpoint;
         InvocableStreamPipesEntity graph;
         try {
             if (identifier.equals("sepa")) {
                 graph = Transformer.fromJsonLd(DataProcessorInvocation.class, payload);
+
+                // TODO: start event relay to remote broker
+//                EventRelayManager eventRelayManager = new EventRelayManager(graph);
+//                eventRelayManager.start();
+//                RunningRelayInstances.INSTANCE.addRelay(eventRelayManager.getRelayedTopic(), eventRelayManager);
+
                 pipelineElementEndpoint = graph.getBelongsTo();
                 PipelineElementManager.getInstance().invokePipelineElement(pipelineElementEndpoint, payload);
             }
@@ -108,8 +119,13 @@ public class NodeControllerResource<I extends InvocableStreamPipesEntity> {
     @Path("/detach")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response detachPipelineElement(String appId) {
+    public Response detachPipelineElement(String appId) throws SpRuntimeException {
         // TODO implement
+
+        // TODO: stop event relay to remote broker
+        EventRelayManager relay = RunningRelayInstances.INSTANCE.removeRelay(appId);
+        relay.stop();
+
         return Response
                 .ok()
                 .build();
@@ -122,6 +138,36 @@ public class NodeControllerResource<I extends InvocableStreamPipesEntity> {
     public Response removePipelineElementContainer(PipelineElementDockerContainer container) {
         return Response
                 .ok(DockerOrchestratorManager.getInstance().remove(container))
+                .build();
+    }
+
+    // TODO: Debug-only.
+    @POST
+    @Path("/relay/start")
+    public Response debugRelayEventStream(String msg) throws SpRuntimeException {
+        // TODO implement
+
+        System.out.println(msg);
+        EventRelayManager eventRelayManager = new EventRelayManager();
+        eventRelayManager.start();
+        RunningRelayInstances.INSTANCE.addRelay(eventRelayManager.getRelayedTopic(), eventRelayManager);
+
+        return Response
+                .ok()
+                .build();
+    }
+
+    @POST
+    @Path("/relay/stop")
+    public Response debugStopRelayEventStream(String msg) throws SpRuntimeException {
+        // TODO implement
+
+        System.out.println(msg);
+        EventRelayManager eventRelayManager = RunningRelayInstances.INSTANCE.get("org.apache.streampipes.flowrate01");
+        eventRelayManager.stop();
+
+        return Response
+                .ok()
                 .build();
     }
 }

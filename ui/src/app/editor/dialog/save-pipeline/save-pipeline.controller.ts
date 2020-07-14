@@ -18,6 +18,8 @@
 
 import {RestApi} from "../../../services/rest-api.service";
 import {NodeInfo, NodeMetadata} from "../../../configuration/model/NodeInfo.model";
+import {Browser} from "leaflet";
+import edge = Browser.edge;
 
 export class SavePipelineController {
 
@@ -133,6 +135,9 @@ export class SavePipelineController {
         }
 
         let storageRequest;
+        this.pipeline.sepas;
+
+        console.log(this.pipeline);
 
         if (this.modificationMode && this.updateMode === 'update') {
             storageRequest = this.RestApi.updatePipeline(this.pipeline);

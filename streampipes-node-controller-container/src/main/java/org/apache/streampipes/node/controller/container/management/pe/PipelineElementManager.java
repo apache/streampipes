@@ -73,5 +73,9 @@ public class PipelineElementManager {
     /**
      * detaches pipeline elements when pipeline is stopped
      */
+    // TODO: implement detach pe logic
+    public void detachPipelineElement() {
+
+    }
 
 }

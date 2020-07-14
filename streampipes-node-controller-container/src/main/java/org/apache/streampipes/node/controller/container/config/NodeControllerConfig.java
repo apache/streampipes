@@ -41,6 +41,7 @@ public enum NodeControllerConfig {
     // Node controller configs
     private static final int DEFAULT_DOCKER_PRUNING_FREQ_SECS = 60;
     private static final int DEFAULT_NODE_RESOURCE_UPDATE_FREQ_SECS = 30;
+    private static final int DEFAULT_EVENT_BUFFER_SIZE = 1000;
 
     NodeControllerConfig() {
         config = SpConfig.getSpConfig(node_service_id + SLASH + getNodeHostName());
@@ -54,11 +55,9 @@ public enum NodeControllerConfig {
 
     }
 
-
     public String getNodeServiceId() {
         return node_service_id;
     }
-
 
     /**
      *
@@ -193,6 +192,11 @@ public enum NodeControllerConfig {
     public int getNodeResourceUpdateFreqSecs() {
         return envExist(ConfigKeys.NODE_RESOURCE_UPDATE_FREQ_SECS_KEY) ? getEnvAsInteger(ConfigKeys.NODE_RESOURCE_UPDATE_FREQ_SECS_KEY) :
                 DEFAULT_NODE_RESOURCE_UPDATE_FREQ_SECS;
+    }
+
+    public int getEventBufferSize() {
+        return envExist(ConfigKeys.NODE_EVENT_BUFFER_SIZE) ? getEnvAsInteger(ConfigKeys.NODE_EVENT_BUFFER_SIZE) :
+                DEFAULT_EVENT_BUFFER_SIZE;
     }
 
     private boolean envExist(String key) {
