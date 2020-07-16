@@ -214,7 +214,7 @@ export class PipelineAssemblyComponent implements OnInit {
     checkAndDisplayCachedPipeline() {
         this.EditorService.getCachedPipeline().subscribe(msg => {
             if (msg) {
-                this.rawPipelineModel = msg as any;
+                this.rawPipelineModel = msg;
                 this.displayPipelineInEditor(true);
             }
         });

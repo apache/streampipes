@@ -19,15 +19,17 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {
-    PipelineElementRecommendationMessage,
-    PipelineModificationMessage
+  DataProcessorInvocation, DataSinkInvocation,
+  PipelineElementRecommendationMessage,
+  PipelineModificationMessage, SpDataSet, SpDataStream
 } from "../../core-model/gen/streampipes-model";
 import {Observable, Subject} from "rxjs";
 import {PlatformServicesCommons} from "../../platform-services/apis/commons.service";
-import {PipelineElementUnion} from "../model/editor.model";
+import {PipelineElementConfig, PipelineElementUnion} from "../model/editor.model";
 import {PanelType} from "../../core-ui/dialog/base-dialog/base-dialog.model";
 import {DialogService} from "../../core-ui/dialog/base-dialog/base-dialog.service";
 import {HelpComponent} from "../dialog/help/help.component";
+import {map} from "rxjs/operators";
 
 @Injectable()
 export class EditorService {
@@ -55,8 +57,25 @@ export class EditorService {
             });
     }
 
-    getCachedPipeline() {
-        return this.http.get(this.platformServicesCommons.authUserBasePath() + "/pipeline-cache");
+    getCachedPipeline(): Observable<PipelineElementConfig[]> {
+        return this.http.get(this.platformServicesCommons.authUserBasePath() + "/pipeline-cache")
+            .pipe(map(result => {
+                let configs: PipelineElementConfig[] = result as PipelineElementConfig[];
+                configs.map(config => config.payload = this.convert(config.payload));
+                return configs;
+            }));
+    }
+
+    convert(payload: any) {
+      if (payload['@class'] === "org.apache.streampipes.model.SpDataSet") {
+        return SpDataSet.fromData(payload as SpDataSet);
+      } else if (payload['@class'] === "org.apache.streampipes.model.SpDataStream") {
+        return SpDataStream.fromData(payload as SpDataStream);
+      } else if (payload['@class'] === "org.apache.streampipes.model.graph.DataProcessorInvocation") {
+        return DataProcessorInvocation.fromData(payload as DataProcessorInvocation);
+      } else {
+        return DataSinkInvocation.fromData(payload as DataSinkInvocation);
+      }
     }
 
     getEpCategories() {
