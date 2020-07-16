@@ -41,6 +41,10 @@ export class OutputStrategyComponent implements OnInit {
 
   label: string;
 
+  customizableOutputStrategy: boolean;
+
   ngOnInit(): void {
+    this.customizableOutputStrategy = this.outputStrategy['@class'] === 'org.apache.streampipes.model.output.CustomOutputStrategy' ||
+        this.outputStrategy['@class'] === 'org.apache.streampipes.model.output.UserDefinedOutputStrategy';
   }
 }
