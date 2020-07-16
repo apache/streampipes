@@ -36,6 +36,7 @@ export class SavePipelineController {
     submitPipelineForm: any;
     TransitionService: any;
     ShepherdService: any;
+    edgeNodes: NodeInfo[]
 
     advancedSettings: boolean = false;
 
@@ -74,9 +75,10 @@ export class SavePipelineController {
 
     loadAndPrepareEdgeNodes() {
         this.RestApi.getAvailableEdgeNodes().then(response => {
-           let edgeNodes = response.data as NodeInfo[];
-           this.addAppIds(this.pipeline.sepas, edgeNodes);
-           this.addAppIds(this.pipeline.actions, edgeNodes);
+           //let edgeNodes = response.data as NodeInfo[];
+            this.edgeNodes = response.data;
+           this.addAppIds(this.pipeline.sepas, this.edgeNodes);
+           this.addAppIds(this.pipeline.actions, this.edgeNodes);
         });
     }
 
@@ -127,6 +129,26 @@ export class SavePipelineController {
 
     };
 
+    modifyPipelineElementsDeployments(pipelineElements) {
+        pipelineElements.forEach(p => {
+            let selectedTargetNodeId = p.deploymentTargetNodeId
+            if(selectedTargetNodeId != "default") {
+                let selectedNode = this.edgeNodes
+                    .filter(node => node.nodeControllerId === selectedTargetNodeId)
+
+                p.deploymentTargetNodeHostname = selectedNode
+                    .map(node => node.nodeMetadata.nodeAddress)[0]
+
+                p.deploymentTargetNodePort = selectedNode
+                    .map(node => node.nodeControllerPort)[0]
+            }
+            else {
+                p.deploymentTargetNodeHostname = null
+                p.deploymentTargetNodePort = null
+            }
+        })
+    }
+
 
     savePipelineName(switchTab) {
         if (this.pipeline.name == "") {
@@ -135,13 +157,14 @@ export class SavePipelineController {
         }
 
         let storageRequest;
-        this.pipeline.sepas;
-
-        console.log(this.pipeline);
 
         if (this.modificationMode && this.updateMode === 'update') {
+            this.modifyPipelineElementsDeployments(this.pipeline.sepas)
+            this.modifyPipelineElementsDeployments(this.pipeline.actions)
             storageRequest = this.RestApi.updatePipeline(this.pipeline);
         } else {
+            this.modifyPipelineElementsDeployments(this.pipeline.sepas)
+            this.modifyPipelineElementsDeployments(this.pipeline.actions)
             storageRequest = this.RestApi.storePipeline(this.pipeline);
         }
 

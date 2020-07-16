@@ -49,6 +49,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ConsulUtil {
 
@@ -169,14 +170,32 @@ public class ConsulUtil {
   }
 
 
-  public static String getPortForService(String route) {
-    String values = ConsulUtil.getKeyValue(route)
+  public static int getElementEndpointPort(String route) {
+    String value = ConsulUtil.getKeyValue(route)
             .values()
             .stream()
             .findFirst()
             .get();
 
-    return new Gson().fromJson(values, ConfigItem.class).getValue();
+//    List<String> list = ConsulUtil.getKeyValue(route)
+//            .entrySet()
+//            .stream()
+//            .map(m -> {
+//              return new Gson().fromJson(m.getValue(), ConfigItem.class).getValue();
+//            })
+//            .collect(Collectors.toList());
+
+    return Integer.parseInt(new Gson().fromJson(value, ConfigItem.class).getValue());
+  }
+
+  public static String getElementEndpointHostname(String route) {
+    String value = ConsulUtil.getKeyValue(route)
+            .values()
+            .stream()
+            .findFirst()
+            .get();
+
+    return new Gson().fromJson(value, ConfigItem.class).getValue();
   }
 
   public static void updateConfig(String key, String entry, boolean password) {

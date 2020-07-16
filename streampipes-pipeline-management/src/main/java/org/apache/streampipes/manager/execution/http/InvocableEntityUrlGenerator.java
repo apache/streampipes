@@ -34,6 +34,9 @@ public class InvocableEntityUrlGenerator extends EndpointUrlGenerator<InvocableS
     private static final String DEFAULT_NODE_ID = "default";
     private static final String COLON = ":";
     private static final String PE_PORT_KEY = "SP_PORT";
+    private static final String PE_HOST_KEY = "SP_HOST";
+
+    private static final String NODE_CONTROLLER_ROUTE = "node/container/invoke";
 
     public InvocableEntityUrlGenerator(InvocableStreamPipesEntity pipelineElement) {
         super(pipelineElement);
@@ -41,22 +44,22 @@ public class InvocableEntityUrlGenerator extends EndpointUrlGenerator<InvocableS
 
     @Override
     public String generateStartPipelineEndpointUrl() {
-        // TODO: normal setup
-        return URLPREFIX
-                + getHost()
-                + SLASH
-                + getIdentifier()
-                + SLASH
-                + pipelineElement.getAppId();
-        // TODO: uncomment for edge tests
+//        // TODO: normal setup
 //        return URLPREFIX
 //                + getHost()
-//                + SLASH
-//                + "node/container/invoke"
 //                + SLASH
 //                + getIdentifier()
 //                + SLASH
 //                + pipelineElement.getAppId();
+        // TODO: uncomment for edge tests
+        return URLPREFIX
+                + getHost()
+                + SLASH
+                + NODE_CONTROLLER_ROUTE
+                + SLASH
+                + getIdentifier()
+                + SLASH
+                + pipelineElement.getAppId();
     }
 
     @Override
@@ -70,11 +73,10 @@ public class InvocableEntityUrlGenerator extends EndpointUrlGenerator<InvocableS
         if (pipelineElement.getDeploymentTargetNodeId() == null ||
                 pipelineElement.getDeploymentTargetNodeId().equals(DEFAULT_NODE_ID)) {
             return defaultHost();
-        } else {
-            Optional<NodeInfo> nodeInfoOpt = getNodeInfo();
-            if (nodeInfoOpt.isPresent()) {
-                NodeInfo nodeInfo = nodeInfoOpt.get();
-                // TODO: get port from Consul
+        }
+        else {
+            if (deploymentTargetNodeRunning()) {
+
                 String route = ConsulSpConfig.SERVICE_ROUTE_PREFIX
                         + pipelineElement.getElementEndpointServiceName()
                         + SLASH
@@ -82,18 +84,47 @@ public class InvocableEntityUrlGenerator extends EndpointUrlGenerator<InvocableS
                         + SLASH
                         + ConsulSpConfig.SECONDARY_NODE_KEY
                         + SLASH
-                        + nodeInfo.getNodeControllerId()
-                        + SLASH
-                        + PE_PORT_KEY;
+                        + pipelineElement.getDeploymentTargetNodeId()
+                        + SLASH;
 
-                return nodeInfo.getNodeMetadata().getNodeAddress()
+                // Needed because secondary PE uses information from primary
+                pipelineElement.setElementEndpointPort(ConsulUtil.getElementEndpointPort(route + PE_PORT_KEY));
+                pipelineElement.setElementEndpointHostname(ConsulUtil.getElementEndpointHostname(route + PE_HOST_KEY));
+                // TODO: adapt elementId + belongsTo
+
+                return pipelineElement.getDeploymentTargetNodeHostname()
                         + COLON
-                        + nodeInfo.getNodeControllerPort();
-                        //+ ConsulUtil.getPortForService(route);
-            } else {
+                        + pipelineElement.getDeploymentTargetNodePort();
+            }
+            else {
                 return defaultHost();
             }
         }
+//        else {
+//            Optional<NodeInfo> nodeInfoOpt = getNodeInfo();
+//            if (nodeInfoOpt.isPresent()) {
+//                NodeInfo nodeInfo = nodeInfoOpt.get();
+//                // TODO: get port from Consul
+//                String route = ConsulSpConfig.SERVICE_ROUTE_PREFIX
+//                        + pipelineElement.getElementEndpointServiceName()
+//                        + SLASH
+//                        + ConsulSpConfig.BASE_PREFIX
+//                        + SLASH
+//                        + ConsulSpConfig.SECONDARY_NODE_KEY
+//                        + SLASH
+//                        + nodeInfo.getNodeControllerId()
+//                        + SLASH
+//                        + PE_PORT_KEY;
+//
+//                return nodeInfo.getNodeMetadata().getNodeAddress()
+//                        + COLON
+//                        + nodeInfo.getNodeControllerPort();
+//                        //+ ConsulUtil.getPortForService(route);
+//            }
+//            else {
+//                return defaultHost();
+//            }
+//        }
     }
 
     private String defaultHost() {
@@ -112,6 +143,13 @@ public class InvocableEntityUrlGenerator extends EndpointUrlGenerator<InvocableS
                 .stream()
                 .filter(node -> node.getNodeControllerId().equals(pipelineElement.getDeploymentTargetNodeId()))
                 .findFirst();
+    }
+
+    private boolean deploymentTargetNodeRunning() {
+        return new AvailableNodesFetcher()
+                .fetchNodes()
+                .stream()
+                .anyMatch(node -> node.getNodeControllerId().equals(pipelineElement.getDeploymentTargetNodeId()));
     }
 
 }
