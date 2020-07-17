@@ -45,6 +45,9 @@ export abstract class AbstractStaticPropertyRenderer<T extends StaticProperty> {
   @Input()
   fieldName: string;
 
+  @Input()
+  displayRecommended: boolean;
+
   @Output() updateEmitter: EventEmitter<ConfigurationInfo> = new EventEmitter();
 
 

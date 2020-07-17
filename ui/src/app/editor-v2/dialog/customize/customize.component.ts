@@ -46,7 +46,7 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
   cachedPipelineElement: InvocablePipelineElementUnion;
   eventSchemas: EventSchema[] = [];
 
-  displayRecommended: boolean;
+  displayRecommended: boolean = true;
   showDocumentation: boolean = false;
 
   selectedElement: any;

@@ -71,34 +71,46 @@
 
             <app-static-any-input
                     *ngIf="isAnyStaticProperty(staticProperty) && !isRuntimeResolvableAnyStaticProperty(staticProperty)"
-                    (inputEmitter)="valueChange($event)" [staticProperty]="staticProperty"></app-static-any-input>
+                    (inputEmitter)="valueChange($event)"
+                    [staticProperty]="staticProperty"></app-static-any-input>
 
             <app-static-one-of-input
                     *ngIf="isOneOfStaticProperty(staticProperty) && !isRuntimeResolvableOneOfStaticProperty(staticProperty)"
-                    (inputEmitter)="valueChange($event)" [staticProperty]="staticProperty">
+                    (inputEmitter)="valueChange($event)"
+                    [staticProperty]="staticProperty">
             </app-static-one-of-input>
 
             <app-static-mapping-unary *ngIf="isMappingPropertyUnary(staticProperty)"
                                       [eventSchemas]="eventSchemas"
                                       [staticProperty]="staticProperty"
+                                      [displayRecommended]="displayRecommended"
                                       [parentForm]="parentForm"
                                       [fieldName]="fieldName"
                                       (inputEmitter)="valueChange($event)">
             </app-static-mapping-unary>
 
-            <app-static-mapping-nary *ngIf="isMappingNaryProperty(staticProperty)" [eventSchemas]="eventSchemas"
-                                     (inputEmitter)="valueChange($event)" [staticProperty]="staticProperty">
+            <app-static-mapping-nary *ngIf="isMappingNaryProperty(staticProperty)"
+                                     [eventSchemas]="eventSchemas"
+                                     [staticProperty]="staticProperty"
+                                     [displayRecommended]="displayRecommended"
+                                     (inputEmitter)="valueChange($event)">
             </app-static-mapping-nary>
 
             <app-static-alternatives *ngIf="isAlternativesStaticProperty(staticProperty)"
-                                     [adapterId]="adapterId" [eventSchemas]="eventSchemas"
-                                     [staticProperty]="staticProperty" class="test fullWidth"
+                                     [adapterId]="adapterId"
+                                     [eventSchemas]="eventSchemas"
+                                     [staticProperty]="staticProperty"
+                                     [displayRecommended]="displayRecommended"
+                                     class="test fullWidth"
                                      (inputEmitter)="valueChange($event)">
             </app-static-alternatives>
 
             <app-static-group *ngIf="isGroupStaticProperty(staticProperty)"
-                              [adapterId]="adapterId" [eventSchemas]="eventSchemas"
-                              [staticProperty]="staticProperty" class="test fullWidth"
+                              [adapterId]="adapterId"
+                              [eventSchemas]="eventSchemas"
+                              [staticProperty]="staticProperty"
+                              [displayRecommended]="displayRecommended"
+                              class="test fullWidth"
                               (inputEmitter)="valueChange($event)">
             </app-static-group>
 

@@ -50,8 +50,11 @@
 
                 <div class="sp-blue-border" style="padding-top: 0px; padding-bottom: 0px;
                                                    padding-left: 10px; padding-right: 10px">
-                    <app-static-property [adapterId]="adapterId" [eventSchemas]="eventSchemas"
-                                         [staticProperty]="alternative.staticProperty" (validateEmitter)="valueChange($event)"
+                    <app-static-property [adapterId]="adapterId"
+                                         [eventSchemas]="eventSchemas"
+                                         [staticProperty]="alternative.staticProperty"
+                                         [displayRecommended]="displayRecommended"
+                                         (validateEmitter)="valueChange($event)"
                                          class="test fullWidth">
                     </app-static-property>
                 </div>

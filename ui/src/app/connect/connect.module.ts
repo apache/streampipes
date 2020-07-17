@@ -97,6 +97,7 @@ import { PipelineElementRuntimeInfoComponent } from './new-adapter/component/run
 import { EventPropertyRowComponent } from './schema-editor/event-property-row/event-property-row.component';
 import { EventSchemaPreviewComponent } from './schema-editor/event-schema-preview/event-schema-preview.component';
 import { StaticColorPickerComponent } from './static-properties/static-color-picker/static-color-picker.component';
+import {DisplayRecommendedPipe} from "./static-properties/filter/display-recommended.pipe";
 
 
 @NgModule({
@@ -142,6 +143,7 @@ import { StaticColorPickerComponent } from './static-properties/static-color-pic
         StaticFileInputComponent,
         StaticMappingNaryComponent,
         StaticMappingUnaryComponent,
+        DisplayRecommendedPipe,
         TimestampPipe,
         StaticAnyInput,
         FormatListComponent,
@@ -176,6 +178,7 @@ import { StaticColorPickerComponent } from './static-properties/static-color-pic
         IconService,
         ShepherdService,
         UnitProviderService,
+        DisplayRecommendedPipe,
         TimestampPipe,
         FileRestService,
         StaticFileRestService,

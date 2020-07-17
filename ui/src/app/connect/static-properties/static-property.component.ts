@@ -76,6 +76,9 @@ export class StaticPropertyComponent implements OnInit {
   @Input()
   fieldName: string;
 
+  @Input()
+  displayRecommended: boolean;
+
   constructor(
     private logger: Logger,
     public xsService: xsService,

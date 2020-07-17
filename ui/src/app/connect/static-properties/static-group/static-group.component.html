@@ -18,8 +18,12 @@
 
 <div *ngIf="!staticProperty.horizontalRendering" class="padding" fxLayout="column">
     <app-static-property *ngFor="let property of staticProperty.staticProperties"
-                         [adapterId]="adapterId" [staticProperties]="staticProperties" [eventSchema]="eventSchema"
-                         [staticProperty]="property" (validateEmitter)="valueChange($event)" class="test fullWidth">
+                         [adapterId]="adapterId"
+                         [staticProperties]="staticProperties"
+                         [eventSchemas]="eventSchemas"
+                         [staticProperty]="property"
+                         [displayRecommended]="displayRecommended"
+                         (validateEmitter)="valueChange($event)" class="test fullWidth">
     </app-static-property>
 </div>
 

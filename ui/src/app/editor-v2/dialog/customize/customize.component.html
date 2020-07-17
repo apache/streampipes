@@ -25,6 +25,7 @@
                                       [disabled]="!pipelineElement.payload.includesAssets">
                         Show documentation
                     </mat-slide-toggle>
+                    <span>&nbsp;</span>
                     <mat-slide-toggle [(ngModel)]="displayRecommended" aria-label="Switch 1">
                         Show only recommended settings
                     </mat-slide-toggle>
@@ -46,6 +47,7 @@
                 <form [formGroup]="parentForm" fxFlex="100">
                     <app-static-property *ngFor="let config of cachedPipelineElement.staticProperties"
                                          [staticProperty]="config"
+                                         [displayRecommended]="displayRecommended"
                                          [staticProperties]="cachedPipelineElement.staticProperties"
                                          [eventSchemas]="eventSchemas"
                                          [parentForm]="parentForm"
