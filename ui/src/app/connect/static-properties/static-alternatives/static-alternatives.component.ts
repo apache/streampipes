@@ -16,7 +16,7 @@
  *
  */
 
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {ChangeDetectorRef, Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {AbstractStaticPropertyRenderer} from "../base/abstract-static-property";
 import {
   StaticPropertyAlternatives,
@@ -34,52 +34,25 @@ export class StaticAlternativesComponent
 
     @Output() inputEmitter: EventEmitter<Boolean> = new EventEmitter<Boolean>();
 
-    private hasInput: Boolean;
     private errorMessage = "Please select a option";
+
+    constructor(private changeDetectorRef: ChangeDetectorRef) {
+        super();
+    }
 
     ngOnInit(): void {
         this.staticProperty.alternatives.forEach( alternative => alternative.selected = false);
-        // TODO: Remove hack
-        if (this.staticProperty.alternatives.length === 1) {
-            this.hasInput = true;
-            this.inputEmitter.emit(this.hasInput);
-        }
-    }
-
-    valueChange(inputValue) {
-        // TODO: Remove hack
-        if (this.staticProperty.alternatives.length === 1) {
-            this.hasInput = true;
-        } else {
-
-            this.hasInput = false;
-            let alternative = this.staticProperty.alternatives.find(alternative => alternative.selected == true);
-            if (alternative !== undefined) {
-                if (alternative.staticProperty !== undefined) {
-                    var childsAreValid = true;
-                    (<StaticPropertyGroup> alternative.staticProperty).staticProperties.forEach(property => {
-                        if (!(property as any).isValid) {
-                            childsAreValid = false
-                        }
-                    });
-                    this.hasInput = childsAreValid;
-                } else {
-                    this.hasInput = true;
-                }
-            }
-        }
-        this.inputEmitter.emit(this.hasInput);
     }
 
     radioSelectionChange(event) {
         this.staticProperty.alternatives.forEach(alternative => {
-            if (alternative.elementId == event.value.id) {
+            if (alternative.elementId == event.value.elementId) {
                 alternative.selected = true;
             } else {
                 alternative.selected = false;
             }
         });
-        this.valueChange(event);
+        this.changeDetectorRef.detectChanges();
     }
 
 }

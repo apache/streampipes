@@ -17,12 +17,12 @@
   -->
 
 <div fxFlex="100" fxLayout="column">
-    <div fxFlex="100" fxLayout="row" class="static-property-panel">
-        <div fxFlex="30" fxLayout="column">
+    <div fxFlex="100" fxLayout="column" class="static-property-panel">
+        <div fxFlex="100" fxLayout="column" style="margin-bottom:10px;">
             <b>{{staticProperty.label}}</b>
             <mat-hint class="description">{{staticProperty.description}}</mat-hint>
         </div>
-        <div fxFlex="70">
+        <div fxFlex="100">
             <app-static-code-input *ngIf="isCodeInputStaticProperty(staticProperty)"
                                    [staticProperty]="staticProperty"
                                    [parentForm]="parentForm"
@@ -99,6 +99,7 @@
             <app-static-alternatives *ngIf="isAlternativesStaticProperty(staticProperty)"
                                      [adapterId]="adapterId"
                                      [eventSchemas]="eventSchemas"
+                                     [parentForm]="parentForm"
                                      [staticProperty]="staticProperty"
                                      [displayRecommended]="displayRecommended"
                                      class="test fullWidth"
@@ -108,6 +109,7 @@
             <app-static-group *ngIf="isGroupStaticProperty(staticProperty)"
                               [adapterId]="adapterId"
                               [eventSchemas]="eventSchemas"
+                              [parentForm]="parentForm"
                               [staticProperty]="staticProperty"
                               [displayRecommended]="displayRecommended"
                               class="test fullWidth"

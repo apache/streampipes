@@ -19,8 +19,10 @@
 import {StaticProperty} from "../../../core-model/gen/streampipes-model";
 import {AbstractStaticPropertyRenderer} from "./abstract-static-property";
 import {FormControl, ValidatorFn} from "@angular/forms";
+import {OnDestroy} from "@angular/core";
 
-export abstract class AbstractValidatedStaticPropertyRenderer<T extends StaticProperty> extends AbstractStaticPropertyRenderer<T> {
+export abstract class AbstractValidatedStaticPropertyRenderer<T extends StaticProperty>
+    extends AbstractStaticPropertyRenderer<T> implements OnDestroy {
 
   errorMessage = "Please enter a value";
   fieldValid: boolean;
@@ -48,4 +50,10 @@ export abstract class AbstractValidatedStaticPropertyRenderer<T extends StaticPr
   abstract onValueChange(value: any);
 
   abstract onStatusChange(status: any);
+
+  ngOnDestroy(): void {
+    if (this.parentForm) {
+      this.parentForm.removeControl(this.fieldName);
+    }
+  }
 }
