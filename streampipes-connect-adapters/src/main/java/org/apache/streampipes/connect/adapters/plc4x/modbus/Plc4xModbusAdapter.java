@@ -286,7 +286,8 @@ public class Plc4xModbusAdapter extends PullAdapter{
 		// Create an event containing the value of the PLC
 		Map<String, Object> event = new HashMap<>();
 		for (Map<String, String> node :  this.nodes) {
-			if (response.getResponseCode(node.get(PLC_NODE_ID)) == PlcResponseCode.OK) {
+		    // TODO node does not contain node id, alternative: node address is an integer and no string
+//			if (response.getResponseCode(node.get(PLC_NODE_ID)) == PlcResponseCode.OK) {
 
 				switch (node.get(PLC_NODE_TYPE)){
 					case "Coil":event.put(node.get(PLC_NODE_RUNTIME_NAME), response.getBoolean("Coil-" + String.valueOf(node.get(PLC_NODE_ADDRESS))));break;
@@ -297,11 +298,11 @@ public class Plc4xModbusAdapter extends PullAdapter{
 						event.put(node.get(PLC_NODE_RUNTIME_NAME), response.getInteger("HoldingRegister-" + String.valueOf(node.get(PLC_NODE_ADDRESS))));break;
 				}
 			}
-			else {
-				logger.error("Error[" + node.get(PLC_NODE_ID) + "]: " +
-						response.getResponseCode(node.get(PLC_NODE_ID)));
-			}
-		}
+//			else {
+//				logger.error("Error[" + node.get(PLC_NODE_ID) + "]: " +
+//						response.getResponseCode(node.get(PLC_NODE_ID)));
+//			}
+//		}
 
 		// publish the final event
 		adapterPipeline.process(event);
