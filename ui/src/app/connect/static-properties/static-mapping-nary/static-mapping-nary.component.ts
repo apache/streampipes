@@ -32,8 +32,6 @@ export class StaticMappingNaryComponent extends StaticMappingComponent<MappingPr
 
     @Output() inputEmitter: EventEmitter<Boolean> = new EventEmitter<Boolean>();
 
-    private inputValue: String;
-    private hasInput: Boolean;
     availableProperties: Array<any>;
 
     constructor(staticPropertyUtil: StaticPropertyUtilService,
@@ -73,18 +71,6 @@ export class StaticMappingNaryComponent extends StaticMappingComponent<MappingPr
 
     makeSelector(property: EventProperty) {
         return this.firstStreamPropertySelector + property.runtimeName;
-    }
-
-    valueChange(inputValue) {
-        this.inputValue = inputValue;
-        if (inputValue == "" || !inputValue) {
-            this.hasInput = false;
-        }
-        else {
-            this.hasInput = true;
-        }
-
-        this.inputEmitter.emit(this.hasInput);
     }
 
     selectAll() {
