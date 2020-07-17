@@ -144,6 +144,7 @@ public class Plc4xModbusAdapter extends PullAdapter{
 			StaticPropertyExtractor memberExtractor =
 					StaticPropertyExtractor.from(((StaticPropertyGroup) member).getStaticProperties(), new ArrayList<>());
 
+			// ensure that NODE_ADDRESS and NODE_RUNTIME_TIME appear only once to prevent duplicates
 			if (ids.add(memberExtractor.singleValueParameter(PLC_NODE_ADDRESS, Integer.class)) == false ||
 					names.add(memberExtractor.textParameter(PLC_NODE_RUNTIME_NAME)) == false) {
 
@@ -254,16 +255,16 @@ public class Plc4xModbusAdapter extends PullAdapter{
 
 			switch (node.get(PLC_NODE_TYPE)){
 				case "Coil":
-					builder.addItem("Coil-" + String.valueOf(node.get(PLC_NODE_ADDRESS)),
+					builder.addItem(node.get(PLC_NODE_RUNTIME_NAME),
 							"coil:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
 				case "HoldingRegister":
-					builder.addItem("HoldingRegister-" + String.valueOf(node.get(PLC_NODE_ADDRESS)),
+					builder.addItem(node.get(PLC_NODE_RUNTIME_NAME),
 							"holding-register:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
 				case "DiscreteInput":
-					builder.addItem("DiscreteInput-" + String.valueOf(node.get(PLC_NODE_ADDRESS)),
+					builder.addItem(node.get(PLC_NODE_RUNTIME_NAME),
 							"discrete-input:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
 				case "InputRegister":
-					builder.addItem("InputRegister-" + String.valueOf(node.get(PLC_NODE_ADDRESS)),
+					builder.addItem(node.get(PLC_NODE_RUNTIME_NAME),
 							"input-register:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
 			}
 		}
@@ -286,23 +287,28 @@ public class Plc4xModbusAdapter extends PullAdapter{
 		// Create an event containing the value of the PLC
 		Map<String, Object> event = new HashMap<>();
 		for (Map<String, String> node :  this.nodes) {
-		    // TODO node does not contain node id, alternative: node address is an integer and no string
-//			if (response.getResponseCode(node.get(PLC_NODE_ID)) == PlcResponseCode.OK) {
+			// TODO node does not contain node id, alternative: node address is an integer and no string
+			if (response.getResponseCode(node.get(PLC_NODE_RUNTIME_NAME)) == PlcResponseCode.OK) {
 
-				switch (node.get(PLC_NODE_TYPE)){
-					case "Coil":event.put(node.get(PLC_NODE_RUNTIME_NAME), response.getBoolean("Coil-" + String.valueOf(node.get(PLC_NODE_ADDRESS))));break;
-					case "DiscreteInput": event.put(node.get(PLC_NODE_RUNTIME_NAME),
-							response.getBoolean("DiscreteInput-" + String.valueOf(node.get(PLC_NODE_ADDRESS))));break;
-					case "InputRegister": event.put(node.get(PLC_NODE_RUNTIME_NAME), response.getBoolean("InputRegister-" + String.valueOf(node.get(PLC_NODE_ADDRESS))));break;
+				switch (node.get(PLC_NODE_TYPE)) {
+					case "Coil":
+						event.put(node.get(PLC_NODE_RUNTIME_NAME), response.getBoolean(node.get(PLC_NODE_RUNTIME_NAME)));
+						break;
+					case "DiscreteInput":
+						event.put(node.get(PLC_NODE_RUNTIME_NAME), response.getBoolean(node.get(PLC_NODE_RUNTIME_NAME)));
+						break;
+					case "InputRegister":
+						event.put(node.get(PLC_NODE_RUNTIME_NAME), response.getBoolean(node.get(PLC_NODE_RUNTIME_NAME)));
+						break;
 					case "HoldingRegister":
-						event.put(node.get(PLC_NODE_RUNTIME_NAME), response.getInteger("HoldingRegister-" + String.valueOf(node.get(PLC_NODE_ADDRESS))));break;
+						event.put(node.get(PLC_NODE_RUNTIME_NAME), response.getInteger(node.get(PLC_NODE_RUNTIME_NAME)));
+						break;
 				}
+			} else {
+				logger.error("Error[" + node.get(PLC_NODE_ID) + "]: " +
+						response.getResponseCode(node.get(PLC_NODE_ID)));
 			}
-//			else {
-//				logger.error("Error[" + node.get(PLC_NODE_ID) + "]: " +
-//						response.getResponseCode(node.get(PLC_NODE_ID)));
-//			}
-//		}
+		}
 
 		// publish the final event
 		adapterPipeline.process(event);
