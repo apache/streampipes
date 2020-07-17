@@ -287,7 +287,7 @@ public class Plc4xModbusAdapter extends PullAdapter{
 		// Create an event containing the value of the PLC
 		Map<String, Object> event = new HashMap<>();
 		for (Map<String, String> node :  this.nodes) {
-			// TODO node does not contain node id, alternative: node address is an integer and no string
+
 			if (response.getResponseCode(node.get(PLC_NODE_RUNTIME_NAME)) == PlcResponseCode.OK) {
 
 				switch (node.get(PLC_NODE_TYPE)) {
@@ -305,8 +305,8 @@ public class Plc4xModbusAdapter extends PullAdapter{
 						break;
 				}
 			} else {
-				logger.error("Error[" + node.get(PLC_NODE_ID) + "]: " +
-						response.getResponseCode(node.get(PLC_NODE_ID)));
+				logger.error("Error[" + node.get(PLC_NODE_RUNTIME_NAME) + "]: " +
+						response.getResponseCode(node.get(PLC_NODE_RUNTIME_NAME)));
 			}
 		}
 
