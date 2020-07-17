@@ -43,6 +43,7 @@ import {DialogService} from "../../../core-ui/dialog/base-dialog/base-dialog.ser
 import {EditorService} from "../../services/editor.service";
 import {MatchingResultMessage} from "../../../core-model/gen/streampipes-model-client";
 import {MatchingErrorComponent} from "../../dialog/matching-error/matching-error.component";
+import {Tuple2} from "../../../core-model/base/Tuple2";
 
 @Component({
   selector: 'pipeline',
@@ -305,7 +306,7 @@ export class PipelineComponent implements OnInit {
               if (this.PipelineEditorService.isFullyConnected(pe)) {
                 let payload = pe.payload as InvocablePipelineElementUnion;
                 if ((payload.staticProperties && payload.staticProperties.length > 0) || this.isCustomOutput(pe)) {
-                  this.showCustomizeDialog(pe);
+                  this.showCustomizeDialog({a: false, b: pe});
                 } else {
                   this.announceConfiguredElement(pe);
                   //this.$rootScope.$broadcast("SepaElementConfigured", pe.payload.DOM);
@@ -373,20 +374,21 @@ export class PipelineComponent implements OnInit {
     });
   }
 
-  showCustomizeDialog(pipelineElement: PipelineElementConfig) {
+  showCustomizeDialog(pipelineElementInfo: Tuple2<Boolean, PipelineElementConfig>) {
     const dialogRef = this.dialogService.open(CustomizeComponent,{
       panelType: PanelType.SLIDE_IN_PANEL,
-      title: "Customize " + pipelineElement.payload.name,
+      title: "Customize " + pipelineElementInfo.b.payload.name,
       width: "50vw",
       data: {
-        "pipelineElement": pipelineElement
+        "pipelineElement": pipelineElementInfo.b,
+        "restrictedEditMode": pipelineElementInfo.a
       }
     });
 
     dialogRef.afterClosed().subscribe(c => {
       if (c) {
-        pipelineElement.settings.openCustomize = false;
-        this.JsplumbService.activateEndpoint(pipelineElement.payload.dom, pipelineElement.settings.completed);
+        pipelineElementInfo.b.settings.openCustomize = false;
+        this.JsplumbService.activateEndpoint(pipelineElementInfo.b.payload.dom, pipelineElementInfo.b.settings.completed);
         this.triggerPipelineCacheUpdate();
       }
     });

@@ -34,6 +34,7 @@ import {EditorService} from "../../services/editor.service";
 import {PanelType} from "../../../core-ui/dialog/base-dialog/base-dialog.model";
 import {DialogService} from "../../../core-ui/dialog/base-dialog/base-dialog.service";
 import {CompatibleElementsComponent} from "../../dialog/compatible-elements/compatible-elements.component";
+import {Tuple2} from "../../../core-model/base/Tuple2";
 
 @Component({
   selector: 'pipeline-element-options',
@@ -73,7 +74,7 @@ export class PipelineElementOptionsComponent implements OnInit{
   delete: EventEmitter<PipelineElementConfig> = new EventEmitter<PipelineElementConfig>();
 
   @Output()
-  customize: EventEmitter<PipelineElementConfig> = new EventEmitter<PipelineElementConfig>();
+  customize: EventEmitter<Tuple2<Boolean, PipelineElementConfig>> = new EventEmitter<Tuple2<Boolean, PipelineElementConfig>>();
 
   constructor(private ObjectProvider: ObjectProvider,
               private PipelineElementRecommendationService: PipelineElementRecommendationService,
@@ -113,7 +114,9 @@ export class PipelineElementOptionsComponent implements OnInit{
   }
 
   customizeElement(pipelineElement: PipelineElementConfig) {
-    this.customize.emit(pipelineElement);
+    let restrictedEditMode = ! (this.isRootElement());
+    let customizeInfo = {a: restrictedEditMode, b: pipelineElement} as Tuple2<Boolean, PipelineElementConfig>;
+    this.customize.emit(customizeInfo);
   }
 
   openCustomizeDialog() {
