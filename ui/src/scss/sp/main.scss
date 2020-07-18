@@ -18,18 +18,6 @@
 
 @import '../_variables';
 
-@-webkit-keyframes typing {
-  from {
-    width: 0;
-  }
-}
-
-@-webkit-keyframes blink-caret {
-  50% {
-    border-color: transparent;
-  }
-}
-
 md-progress-linear.md-accent .md-container {
   background-color: rgb(168, 168, 168);
 }
@@ -84,17 +72,6 @@ md-dialog-actions {
 
 .mat-step-header .mat-step-icon {
   background-color: $sp-color-accent;
-}
-
-.welcome-animation {
-  font-family: Arial;
-  border-right: .1em solid black;
-  width: 16.5em;
-  width: 5ch;
-  white-space: nowrap;
-  overflow: hidden;
-  -webkit-animation: typing 1s steps(5, end),
-  blink-caret .5s step-end infinite alternate;
 }
 
 .cv-wrapper {

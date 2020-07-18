@@ -37,6 +37,7 @@ import {PanelType} from "../core-ui/dialog/base-dialog/base-dialog.model";
 import {WelcomeTourComponent} from "./dialog/welcome-tour/welcome-tour.component";
 import {DialogService} from "../core-ui/dialog/base-dialog/base-dialog.service";
 import {MissingElementsForTutorialComponent} from "./dialog/missing-elements-for-tutorial/missing-elements-for-tutorial.component";
+import {ShepherdService} from "../services/tour/shepherd.service";
 
 @Component({
     selector: 'editor',
@@ -93,7 +94,8 @@ export class EditorComponent implements OnInit {
     constructor(private editorService: EditorService,
                 private pipelineElementService: PipelineElementService,
                 private AuthStatusService: AuthStatusService,
-                private dialogService: DialogService) {
+                private dialogService: DialogService,
+                private shepherdService: ShepherdService) {
     }
 
     ngOnInit() {
@@ -176,7 +178,7 @@ export class EditorComponent implements OnInit {
 
     startCreatePipelineTour() {
         if (this.requiredPipelineElementsForTourPresent()) {
-            //this.ShepherdService.startCreatePipelineTour();
+            this.shepherdService.startCreatePipelineTour();
         } else {
             this.missingElementsForTutorial = [];
             if (!this.requiredStreamForTourPresent()) {
