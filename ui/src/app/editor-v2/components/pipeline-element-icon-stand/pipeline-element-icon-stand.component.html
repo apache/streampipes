@@ -15,57 +15,58 @@
   ~ limitations under the License.
   ~
   -->
+<div fxFlex="100" fxLayout="column" class="border">
+    <div class="editorIconStandOptions" style="padding:0px;">
+        <div fxFlex="100" fxLayout="row" fxLayoutAlign="start start" style="padding-top:2px;padding-left:10px;">
 
-<div class="editorIconStandOptions" style="padding:0px;">
-    <div fxFlex="100" fxLayout="row" fxLayoutAlign="start start" style="padding-top:2px;padding-left:10px;">
-
-        <div fxLayoutAlign="start center" fxLayout="row">
-            <div fxLayout="row" style="margin-right: 5px">
-                <i class="material-icons">search</i>
-                <input type="text" (keyup)="applyFilter()" [(ngModel)]="elementFilter" placeholder="Find Element"
-                       style="background-color:#f6f6f6;border: none;border-bottom: solid 2px rgb(27, 20, 100);">&nbsp;
-            </div>
-            <div fxLayout="row">
-                <button mat-button [matMenuTriggerFor]="menu"><div class="menu-text-color"><i class="material-icons">list</i>&nbsp;Filter by category</div></button>
-                <mat-menu #menu="matMenu">
-                    <button mat-menu-item (click)="selectAllOptions()">
-                        <div class="menu-text-color"><i class="material-icons">done</i>&nbsp;Select all</div>
-                    </button>
-                    <button mat-menu-item (click)="deselectAllOptions()">
-                        <div class="menu-text-color"><i class="material-icons">clear</i>&nbsp;Deselect all</div>
-                    </button>
-                    <mat-divider></mat-divider>
-                    <button (click)="toggleOption(option)" mat-menu-item *ngFor="let option of currentCategories">
-                        <div class="menu-text-color" *ngIf="optionSelected(option)">
-                            <i class="material-icons">visibility</i>&nbsp;{{option.label}}
-                        </div>
-                        <div  class="menu-text-color" *ngIf="!optionSelected(option)">
-                            <i class="material-icons">visibility_off</i>&nbsp;{{option.label}}
-                        </div>
-                    </button>
-                </mat-menu>
+            <div fxLayoutAlign="start center" fxLayout="row">
+                <div fxLayout="row" style="margin-right: 5px">
+                    <i class="material-icons">search</i>
+                    <input type="text" (keyup)="applyFilter()" [(ngModel)]="elementFilter" placeholder="Find Element"
+                           style="background-color:#f6f6f6;border: none;border-bottom: solid 2px rgb(27, 20, 100);">&nbsp;
+                </div>
+                <div fxLayout="row">
+                    <button mat-button [matMenuTriggerFor]="menu"><div class="menu-text-color"><i class="material-icons">list</i>&nbsp;Filter by category</div></button>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item (click)="selectAllOptions()">
+                            <div class="menu-text-color"><i class="material-icons">done</i>&nbsp;Select all</div>
+                        </button>
+                        <button mat-menu-item (click)="deselectAllOptions()">
+                            <div class="menu-text-color"><i class="material-icons">clear</i>&nbsp;Deselect all</div>
+                        </button>
+                        <mat-divider></mat-divider>
+                        <button (click)="toggleOption(option)" mat-menu-item *ngFor="let option of currentCategories">
+                            <div class="menu-text-color" *ngIf="optionSelected(option)">
+                                <i class="material-icons">visibility</i>&nbsp;{{option.label}}
+                            </div>
+                            <div  class="menu-text-color" *ngIf="!optionSelected(option)">
+                                <i class="material-icons">visibility_off</i>&nbsp;{{option.label}}
+                            </div>
+                        </button>
+                    </mat-menu>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div flex id="editor-icon-stand" class="icon-stand" *ngIf="currentlyFilteredElements">
-    <span matTooltip="{{element.name}}" [matTooltipPosition]="'above'" [matTooltipClass]="tooltip" id="{{ element.appId }}" (mouseenter)="updateMouseOver(element.name)"
-          (mouseleave)="updateMouseOver('')"
-          *ngFor="let element of currentlyFilteredElements"
-          class="draggable-icon tt"
-          [attr.data-pe]="element.elementId"
-          [ngClass]="activeCssClass">
-        <span id="container" style="position:relative;display:block;width:80px;height:80px;">
-        <pipeline-element id="pe-icon-stand-{{ element.appId }}" style="margin-left:-3%" [iconStandSize]="true" [pipelineElement]="element"
-                          [preview]="false"></pipeline-element>
-            <span style="display:block;width:100%;height:100%;position:absolute; top:0; left:0;"
-                  *ngIf="currentElementName===element.name">
-                <span class="help-button-icon-stand" style="z-index:10"><md-button
-                        (click)="openHelpDialog(element)"
-                        class="md-icon-button"
-                        style="margin:0px;font-size:20px;">?</md-button>
+    <div flex id="editor-icon-stand" class="icon-stand" *ngIf="currentlyFilteredElements">
+        <span matTooltip="{{element.name}}" [matTooltipPosition]="'above'" [matTooltipClass]="tooltip" id="{{ element.appId }}" (mouseenter)="updateMouseOver(element.name)"
+              (mouseleave)="updateMouseOver('')"
+              *ngFor="let element of currentlyFilteredElements"
+              class="draggable-icon tt"
+              [attr.data-pe]="element.elementId"
+              [ngClass]="activeCssClass">
+            <span id="container" style="position:relative;display:block;width:80px;height:80px;">
+            <pipeline-element id="pe-icon-stand-{{ element.appId }}" style="margin-left:-3%" [iconStandSize]="true" [pipelineElement]="element"
+                              [preview]="false"></pipeline-element>
+                <span style="display:block;width:100%;height:100%;position:absolute; top:0; left:0;"
+                      *ngIf="currentElementName===element.name">
+                    <span class="help-button-icon-stand" style="z-index:10"><md-button
+                            (click)="openHelpDialog(element)"
+                            class="md-icon-button"
+                            style="margin:0px;font-size:20px;">?</md-button>
+                    </span>
                 </span>
             </span>
         </span>
-    </span>
+    </div>
 </div>
