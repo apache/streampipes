@@ -21,7 +21,10 @@
 standard-dialog-container {
   width: 100%;
   background-color: #fff;
-  box-shadow: -7px 0px 5px -5px #5d5d5d;
+  border-radius: 5px;
+  -webkit-box-shadow: 0 10px 6px -6px #777;
+  -moz-box-shadow: 0 10px 6px -6px #777;
+  box-shadow: 0 10px 6px -6px #777;
 }
 
 .standard-dialog-panel {
@@ -31,14 +34,16 @@ standard-dialog-container {
   grid-template-rows: 50px auto;
 }
 
-.dialog-panel-header {
+.standard-dialog-panel-header {
   display: flex;
   justify-content: space-between;
   height: 50px;
   min-height: 50px;
   width: 100%;
-  background: $sp-color-accent;
+  background: $sp-color-primary;
   align-items: center;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
 }
 
 .dialog-panel-content {

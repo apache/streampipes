@@ -21,7 +21,7 @@
 app-dialog-container {
   width: 100%;
   background-color: #fff;
-  box-shadow: -7px 0px 5px -5px #5d5d5d;
+  box-shadow: -7px 0px 5px -5px #777;
 }
 
 .dialog-panel {
@@ -36,7 +36,7 @@ app-dialog-container {
   height: 50px;
   min-height: 50px;
   width: 100%;
-  background: $sp-color-accent;
+  background: $sp-color-primary;
   align-items: center;
 }
 
