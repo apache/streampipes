@@ -84,6 +84,7 @@ export class PipelineElementIconStandComponent implements OnInit {
         this.currentlyFilteredElements = this.currentElements.filter(el => {
             return this.matchesText(el) && this.matchesCategory(el);
         })
+        this.makeDraggable();
     }
 
     matchesText(el: PipelineElementUnion): boolean {
