@@ -152,18 +152,20 @@ export class PipelineElementIconStandComponent implements OnInit {
     }
 
     makeDraggable() {
-        (<any>$('.draggable-icon')).draggable({
-            revert: 'invalid',
-            helper: 'clone',
-            stack: '.draggable-icon',
-            start: function (el, ui) {
-                ui.helper.appendTo('#content');
-                $('#outerAssemblyArea').css('border', '3px dashed #39b54a');
-            },
-            stop: function (el, ui) {
-                $('#outerAssemblyArea').css('border', '3px solid rgb(156, 156, 156)');
-            }
-        });
+       setTimeout(() => {
+           (<any>$('.draggable-icon')).draggable({
+               revert: 'invalid',
+               helper: 'clone',
+               stack: '.draggable-icon',
+               start: function (el, ui) {
+                   ui.helper.appendTo('#content');
+                   $('#outerAssemblyArea').css('border', '3px dashed #39b54a');
+               },
+               stop: function (el, ui) {
+                   $('#outerAssemblyArea').css('border', '3px solid rgb(156, 156, 156)');
+               }
+           });
+       });
     };
 
 }

@@ -15,3 +15,16 @@
  * limitations under the License.
  *
  */
+
+.mat-spinner-color::ng-deep svg circle{
+    stroke: #FFFFFF !important;
+}
+
+.pipeline-cache-progress {
+    display:inline-block;
+}
+
+.pipeline-cache-block {
+    height: 100%;
+    margin-left:15px;
+}

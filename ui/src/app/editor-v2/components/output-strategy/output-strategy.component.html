@@ -17,11 +17,11 @@
   -->
 
 <div fxFlex="100" fxLayout="column" *ngIf="customizableOutputStrategy">
-    <div fxFlex="100" fxLayout="row" class="static-property-panel">
-        <div fxFlex="30" fxLayout="column">
+    <div fxFlex="100" fxLayout="column" class="static-property-panel">
+        <div fxFlex="100" fxLayout="column">
             <b>Select output</b>
         </div>
-        <div fxFlex="70">
+        <div fxFlex="100">
             <div class="customize-item-content"
                  *ngIf="outputStrategy['@class'] === 'org.apache.streampipes.model.output.CustomOutputStrategy'">
                 <custom-output-strategy [outputStrategy]="outputStrategy"

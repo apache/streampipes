@@ -190,26 +190,19 @@ export class PipelineComponent implements OnInit {
             this.rawPipelineModel.push(pipelineElementConfig);
             if (ui.draggable.hasClass('set')) {
               setTimeout(() => {
-                setTimeout(() => {
-                  this.JsplumbService.setDropped(pipelineElementConfig.payload.dom, pipelineElementConfig.payload, true, false);
-                }, 10);
-              });
+                this.JsplumbService.setDropped(pipelineElementConfig.payload.dom, pipelineElementConfig.payload, true, false);
+              }, 10);
             }
             else if (ui.draggable.hasClass('stream')) {
               this.checkTopicModel(pipelineElementConfig);
             } else if (ui.draggable.hasClass('sepa')) {
-              setTimeout(() => {
                 setTimeout(() => {
                   this.JsplumbService.sepaDropped(pipelineElementConfig.payload.dom, pipelineElementConfig.payload, true, false);
                 }, 10);
-              });
-              //Droppable Actions
             } else if (ui.draggable.hasClass('action')) {
-              setTimeout(() => {
                 setTimeout(() => {
                   this.JsplumbService.actionDropped(pipelineElementConfig.payload.dom, pipelineElementConfig.payload, true, false);
-                });
-              }, 10);
+                }, 10);
             }
             if (this.ShepherdService.isTourActive()) {
               this.ShepherdService.trigger("drop-" +pipelineElementConfig.type);
@@ -225,11 +218,9 @@ export class PipelineComponent implements OnInit {
   }
 
   checkTopicModel(pipelineElementConfig: PipelineElementConfig) {
-    setTimeout(() => {
       setTimeout(() => {
         this.JsplumbService.streamDropped(pipelineElementConfig.payload.dom, pipelineElementConfig.payload, true, false);
-      });
-    });
+      }, 10);
 
     var streamDescription = pipelineElementConfig.payload as SpDataStream;
     if (streamDescription
@@ -389,6 +380,7 @@ export class PipelineComponent implements OnInit {
       if (c) {
         pipelineElementInfo.b.settings.openCustomize = false;
         this.JsplumbService.activateEndpoint(pipelineElementInfo.b.payload.dom, pipelineElementInfo.b.settings.completed);
+        this.JsplumbBridge.getSourceEndpoint(pipelineElementInfo.b.payload.dom).setType("token");
         this.triggerPipelineCacheUpdate();
       }
     });

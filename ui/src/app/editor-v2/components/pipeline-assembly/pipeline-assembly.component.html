@@ -23,7 +23,7 @@
                     style="display:flex;align-items:center;" class="md-button settings-bar-icon-button"
                     [disabled]="!PipelineValidationService.pipelineValid"
                     (click)="submit()" type="submit">
-                <mat-icon>save</mat-icon>&nbsp;Save pipeline
+                <mat-icon>save</mat-icon>&nbsp;<span>Save pipeline</span>
             </button>
             <button mat-button matTooltip="Pan" [matTooltipPosition]="'above'"
                     class="md-icon-button settings-bar-icon-button"
@@ -50,12 +50,13 @@
                     class="md-icon-button settings-bar-icon-button" (click)="autoLayout()">
                 <i class="material-icons">settings_overscan</i>
             </button>
-            <div class="pipeline-cache-block">
-                <div *ngIf="pipelineCached">All pipeline modifications saved.</div>
-                    <div *ngIf="pipelineCacheRunning">
-                        <mat-spinner [mode]="'indeterminate'" class="pipeline-cache-progress" [diameter]="10">
-                        </mat-spinner>&nbsp;Saving pipeline
-                        modifications</div>
+            <div fxLayout="column" fxLayoutAlign="start center" class="pipeline-cache-block">
+                <div fxFlex="100" fxLayoutAlign="start center" fxLayout="row" *ngIf="pipelineCached || pipelineCacheRunning">
+                    <div *ngIf="pipelineCached" fxLayout="row" fxLayoutAlign="start center">
+                        <mat-spinner [mode]="'indeterminate'" class="mat-spinner-color" [diameter]="15" *ngIf="pipelineCacheRunning"></mat-spinner>
+                        <span>&nbsp;{{pipelineCacheRunning ? '&nbsp;Saving pipeline modifications' : 'All pipeline modifications saved.'}}</span>
+                    </div>
+                </div>
             </div>
             <span fxFlex></span>
             <div style="position:relative;">

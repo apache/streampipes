@@ -36,7 +36,7 @@ import {EditorService} from "../../services/editor.service";
 @Component({
     selector: 'pipeline-assembly',
     templateUrl: './pipeline-assembly.component.html',
-    styleUrls: ['./pipeline-assembly.component.css']
+    styleUrls: ['./pipeline-assembly.component.scss']
 })
 export class PipelineAssemblyComponent implements OnInit {
 
