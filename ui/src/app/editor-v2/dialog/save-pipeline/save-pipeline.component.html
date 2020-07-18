@@ -20,7 +20,6 @@
     <div class="sp-dialog-content padding-20">
         <div fxFlex="100" fxLayout="column">
 
-        <form name="submitPipelineForm">
             <div fxFlex="100" fxLayout="column">
                 <div id="overwriteCheckbox" class="checkbox" *ngIf="modificationMode">
                     <mat-radio-group class="md-accent" [(ngModel)]="updateMode">
@@ -32,30 +31,31 @@
                         </mat-radio-button>
                     </mat-radio-group>
                 </div>
+                <form [formGroup]="submitPipelineForm">
                 <div fxFlex="100" fxLayout="column" *ngIf="!modificationMode || updateMode=='clone'">
                     <mat-form-field fxFlex><mat-label>Pipeline Name</mat-label>
-                        <input matInput name="pipelineName" [(ngModel)]="pipeline.name" required [maxLength]="40"/>
+                        <input [formControlName]="'pipelineName'" matInput name="pipelineName"/>
 <!--                        <span ng-show="submitPipelineForm.pipelineName.$touched && submitPipelineForm.pipelineName.$error.required">Please provide a pipeline name.</span>-->
 <!--                        <span ng-show="submitPipelineForm.pipelineName.$error.maxlength">Please provide a shorter pipeline name.</span>-->
                     </mat-form-field>
                     <mat-form-field fxFlex><mat-label>Description</mat-label>
-                        <input matInput name="pipelineDescription" [(ngModel)]="pipeline.description" [maxLength]="80"/>
+                        <input [formControlName]="'pipelineDescription'" matInput/>
 <!--                        <span ng-show="submitPipelineForm.pipelineDescription.$error.maxlength">Please provide a shorter description.</span>-->
                     </mat-form-field>
                 </div>
+                </form>
                 <mat-checkbox (click)="triggerTutorial()" aria-label="Start Pipeline" [(ngModel)]="startPipelineAfterStorage">
                     Start pipeline immediately
                 </mat-checkbox>
             </div>
-        </form>
         </div>
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions">
-        <button mat-button mat-raised-button color="primary" (click)="savePipelineName(false)" style="margin-right:10px;">
+        <button [disabled]="!submitPipelineForm.valid" mat-button mat-raised-button color="primary" (click)="savePipelineName(false)" style="margin-right:10px;">
             Save
         </button>
-        <button mat-button mat-raised-button color="primary" (click)="savePipelineName(true)" style="margin-right:10px;">
+        <button [disabled]="!submitPipelineForm.valid" mat-button mat-raised-button color="primary" (click)="savePipelineName(true)" style="margin-right:10px;">
             Save and go to pipeline view
         </button>
         <button mat-button mat-raised-button class="mat-basic" (click)="hide()">

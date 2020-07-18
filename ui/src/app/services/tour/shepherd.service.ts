@@ -30,7 +30,9 @@ export class ShepherdService {
     currentTourSettings: any;
     timeWaitMillis: number;
 
-    constructor(@Inject('$timeout') $timeout, @Inject('$state') $state, @Inject('TourProviderService') TourProviderService) {
+    constructor(@Inject('$timeout') $timeout,
+                @Inject('$state') $state,
+                @Inject('TourProviderService') TourProviderService) {
         this.$timeout = $timeout;
         this.$state = $state;
         this.TourProviderService = TourProviderService;

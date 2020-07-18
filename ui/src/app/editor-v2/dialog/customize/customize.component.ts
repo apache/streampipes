@@ -29,6 +29,7 @@ import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
 import {JsplumbService} from "../../services/jsplumb.service";
 import {DataProcessorInvocation, EventSchema} from "../../../core-model/gen/streampipes-model";
 import {FormBuilder, FormGroup} from "@angular/forms";
+import {ShepherdService} from "../../../services/tour/shepherd.service";
 
 @Component({
   selector: 'customize-pipeline-element',
@@ -49,7 +50,6 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
   displayRecommended: boolean = true;
   showDocumentation: boolean = false;
 
-  selectedElement: any;
   selection: any;
   matchingSelectionLeft: any;
   matchingSelectionRight: any;
@@ -68,10 +68,9 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
 
   isDataProcessor: boolean = false;
 
-  //ShepherdService: ShepherdService;
-
   constructor(private dialogRef: DialogRef<CustomizeComponent>,
               private JsPlumbService: JsplumbService,
+              private ShepherdService: ShepherdService,
               private fb: FormBuilder,
               private changeDetectorRef: ChangeDetectorRef) {
 
@@ -94,6 +93,9 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
     this.parentForm.statusChanges.subscribe((status)=>{
       this.formValid = this.viewInitialized && this.parentForm.valid;
     })
+    if (this.ShepherdService.isTourActive()) {
+      this.ShepherdService.trigger("customize-" +this.pipelineElement.type);
+    }
   }
 
   close() {
@@ -104,7 +106,9 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
     this.pipelineElement.payload = this.cachedPipelineElement;
     this.pipelineElement.settings.completed = true;
     this.pipelineElement.payload.configured = true;
-    console.log(this.pipelineElement);
+    if (this.ShepherdService.isTourActive()) {
+      this.ShepherdService.trigger("save-" +this.pipelineElement.type);
+    }
     this.dialogRef.close(this.pipelineElement);
   }
 

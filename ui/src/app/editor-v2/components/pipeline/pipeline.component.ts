@@ -192,7 +192,7 @@ export class PipelineComponent implements OnInit {
               setTimeout(() => {
                 setTimeout(() => {
                   this.JsplumbService.setDropped(pipelineElementConfig.payload.dom, pipelineElementConfig.payload, true, false);
-                });
+                }, 10);
               });
             }
             else if (ui.draggable.hasClass('stream')) {
@@ -201,7 +201,7 @@ export class PipelineComponent implements OnInit {
               setTimeout(() => {
                 setTimeout(() => {
                   this.JsplumbService.sepaDropped(pipelineElementConfig.payload.dom, pipelineElementConfig.payload, true, false);
-                });
+                }, 10);
               });
               //Droppable Actions
             } else if (ui.draggable.hasClass('action')) {
@@ -209,7 +209,7 @@ export class PipelineComponent implements OnInit {
                 setTimeout(() => {
                   this.JsplumbService.actionDropped(pipelineElementConfig.payload.dom, pipelineElementConfig.payload, true, false);
                 });
-              });
+              }, 10);
             }
             if (this.ShepherdService.isTourActive()) {
               this.ShepherdService.trigger("drop-" +pipelineElementConfig.type);

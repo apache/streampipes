@@ -23,6 +23,7 @@ import {ObjectProvider} from "../../services/object-provider.service";
 import {EditorService} from "../../services/editor.service";
 import {PipelineService} from "../../../platform-services/apis/pipeline.service";
 import {ShepherdService} from "../../../services/tour/shepherd.service";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'save-pipeline',
@@ -34,7 +35,8 @@ export class SavePipelineComponent implements OnInit {
   pipelineCategories: any;
   startPipelineAfterStorage: any;
   updateMode: any;
-  submitPipelineForm: any;
+
+  submitPipelineForm: FormGroup = new FormGroup({});
   TransitionService: any;
 
   @Input()
@@ -57,6 +59,20 @@ export class SavePipelineComponent implements OnInit {
 
   ngOnInit() {
     this.getPipelineCategories();
+    this.submitPipelineForm.addControl("pipelineName", new FormControl(this.pipeline.name,
+        [Validators.required,
+          Validators.maxLength(40)]))
+    this.submitPipelineForm.addControl("pipelineDescription", new FormControl(this.pipeline.description,
+        [Validators.maxLength(80)]))
+
+    this.submitPipelineForm.controls["pipelineName"].valueChanges.subscribe(value => {
+      this.pipeline.name = value;
+    });
+
+    this.submitPipelineForm.controls["pipelineDescription"].valueChanges.subscribe(value => {
+      this.pipeline.description = value;
+    });
+
     if (this.ShepherdService.isTourActive()) {
       this.ShepherdService.trigger("enter-pipeline-name");
     }
@@ -83,8 +99,8 @@ export class SavePipelineComponent implements OnInit {
 
   getPipelineCategories() {
     this.pipelineService.getPipelineCategories().subscribe(pipelineCategories => {
-          this.pipelineCategories = pipelineCategories;
-        });
+      this.pipelineCategories = pipelineCategories;
+    });
   };
 
 

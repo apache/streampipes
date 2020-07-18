@@ -170,6 +170,7 @@ export class EditorComponent implements OnInit {
             .sort((a, b) => {
                 return a.name.localeCompare(b.name);
             });
+        this.shepherdService.trigger("select-" +PipelineElementTypeUtils.toCssShortHand(this.activeType));
     }
 
     toggleEditorStand() {
