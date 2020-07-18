@@ -20,6 +20,8 @@ import {ComponentRef} from "@angular/core";
 import {OverlayRef} from "@angular/cdk/overlay";
 import {Observable, Subject} from "rxjs";
 import {BaseDialogComponentUnion} from "./base-dialog.model";
+import {OverlaySizeConfig} from "@angular/cdk/overlay/overlay-ref";
+import {OverlayConfig} from "@angular/cdk/overlay/overlay-config";
 
 export class DialogRef<T> {
   private _componentInstance: ComponentRef<T>;
@@ -47,6 +49,11 @@ export class DialogRef<T> {
     return this._afterClosed.asObservable();
   }
 
+  public changeDialogSize(sizeConfig: OverlaySizeConfig) {
+    this.overlayRef.updateSize(sizeConfig);
+  }
 
-
+  public currentConfig(): OverlayConfig {
+    return this.overlayRef.getConfig();
+  }
 }

@@ -48,7 +48,7 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
   eventSchemas: EventSchema[] = [];
 
   displayRecommended: boolean = true;
-  showDocumentation: boolean = false;
+  _showDocumentation: boolean = false;
 
   selection: any;
   matchingSelectionLeft: any;
@@ -67,6 +67,7 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
   viewInitialized: boolean = false;
 
   isDataProcessor: boolean = false;
+  originalDialogWidth: string | number;
 
   constructor(private dialogRef: DialogRef<CustomizeComponent>,
               private JsPlumbService: JsplumbService,
@@ -77,6 +78,7 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.originalDialogWidth = this.dialogRef.currentConfig().width;
     this.cachedPipelineElement = this.JsPlumbService.clone(this.pipelineElement.payload) as InvocablePipelineElementUnion;
     this.isDataProcessor = this.cachedPipelineElement instanceof DataProcessorInvocation;
     this.cachedPipelineElement.inputStreams.forEach(is => {
@@ -114,6 +116,19 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
 
   validConfiguration(event: any) {
 
+  }
+
+  set showDocumentation(value: boolean) {
+    if (value) {
+      this.dialogRef.changeDialogSize({width: "90vw"})
+    } else {
+      this.dialogRef.changeDialogSize({width: this.originalDialogWidth})
+    }
+    this._showDocumentation = value;
+  }
+
+  get showDocumentation(): boolean {
+    return this._showDocumentation;
   }
 
   ngAfterViewInit(): void {
