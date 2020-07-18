@@ -22,7 +22,7 @@ plc_node_runtime_name.description=example: temperature
 plc_node_name.title=Node Name
 plc_node_name.description=
 
-plc_node_type.title=Data Type
+plc_node_type.title=Object Type
 plc_node_type.description=example: Coil
 
 csv_import.title=Import from CSV
@@ -40,6 +40,6 @@ plc_nodes_excel_file.description=Contains three columns 'Name', 'Data Type', 'Lo
 plc_node_address.title=Node Address
 plc_node_address.description= field in the corresponding register
 
-plc_node_id.title=Node Id
-plc_node_id.description=
+plc_node_id.title=Node ID
+plc_node_id.description= ID of the specific device
 
