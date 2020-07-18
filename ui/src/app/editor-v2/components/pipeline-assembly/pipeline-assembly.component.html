@@ -20,34 +20,34 @@
     <div class="assemblyOptions sp-blue-bg">
         <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
             <button mat-button matTooltip="Save Pipeline" [matTooltipPosition]="'above'"
-                    style="display:flex;align-items:center;" class="md-button settings-bar-icon-button"
+                    style="display:flex;align-items:center;" class="settings-bar-icon-button"
                     [disabled]="!PipelineValidationService.pipelineValid"
                     (click)="submit()" type="submit">
                 <mat-icon>save</mat-icon>&nbsp;<span>Save pipeline</span>
             </button>
             <button mat-button matTooltip="Pan" [matTooltipPosition]="'above'"
-                    class="md-icon-button settings-bar-icon-button"
+                    class="settings-bar-icon-button"
                     [disabled]="!selectMode"
                     (click)="toggleSelectMode()">
                 <i class="material-icons">open_with</i>
             </button>
             <button mat-button matTooltip="Select" [matTooltipPosition]="'above'"
-                    class="md-icon-button settings-bar-icon-button" [disabled]="selectMode"
+                    class="settings-bar-icon-button" [disabled]="selectMode"
                     (click)="toggleSelectMode()">
                 <i class="material-icons">mode_edit</i>
             </button>
             <button mat-button matTooltip="Zoom In" [matTooltipPosition]="'above'"
-                    class="md-icon-button settings-bar-icon-button" [disabled]="currentZoomLevel == 1"
+                    class="settings-bar-icon-button" [disabled]="currentZoomLevel == 1"
                     (click)="zoomIn()">
                 <i class="material-icons">zoom_in</i>
             </button>
             <button mat-button matTooltip="Zoom Out" [matTooltipPosition]="'above'"
-                    class="md-icon-button settings-bar-icon-button" [disabled]="currentZoomLevel == 0.5"
+                    class="settings-bar-icon-button" [disabled]="currentZoomLevel == 0.5"
                     (click)="zoomOut()">
                 <i class="material-icons">zoom_out</i>
             </button>
             <button mat-button matTooltip="Auto Layout" [matTooltipPosition]="'above'"
-                    class="md-icon-button settings-bar-icon-button" (click)="autoLayout()">
+                    class="settings-bar-icon-button" (click)="autoLayout()">
                 <i class="material-icons">settings_overscan</i>
             </button>
             <div fxLayout="column" fxLayoutAlign="start center" class="pipeline-cache-block">

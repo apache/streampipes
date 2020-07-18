@@ -120,12 +120,10 @@ export class PipelineAssemblyComponent implements OnInit {
     toggleSelectMode() {
         if (this.selectMode) {
             ($("#assembly") as any).panzoom("option", "disablePan", false);
-            ($("#assembly") as any).selectable("disable");
             this.selectMode = false;
         }
         else {
             ($("#assembly") as any).panzoom("option", "disablePan", true);
-            ($("#assembly") as any).selectable("enable");
             this.selectMode = true;
         }
     }
