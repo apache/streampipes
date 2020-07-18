@@ -164,6 +164,7 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
     String defineStreamPrefix = "define stream " + prepareName(eventTypeName);
     StringJoiner joiner = new StringJoiner(",");
 
+    sortedEventKeys.clear();
     for (String key : typeMap.keySet()) {
       sortedEventKeys.add(key);
       Collections.sort(sortedEventKeys);
