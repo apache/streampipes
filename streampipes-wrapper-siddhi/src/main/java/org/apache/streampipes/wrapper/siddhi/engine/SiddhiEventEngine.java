@@ -170,7 +170,7 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
       Collections.sort(sortedEventKeys);
     }
 
-    listOfEventKeys.put(prepareName(eventTypeName), sortedEventKeys)
+    listOfEventKeys.put(eventTypeName, sortedEventKeys)
 
     for (String key : sortedEventKeys) {
       // TODO: get timestamp field from user params
@@ -222,7 +222,7 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
     try {
       String sourceId = event.getSourceInfo().getSourceId()
       InputHandler inputHandler = siddhiInputHandlers.get(sourceId);
-      List<String> eventKeys = listOfEventKeys.get(prepareName(sourceId));
+      List<String> eventKeys = listOfEventKeys.get(sourceId);
 
       inputHandler.send(toObjArr(eventKeys, event.getRaw()));
     } catch (InterruptedException e) {
