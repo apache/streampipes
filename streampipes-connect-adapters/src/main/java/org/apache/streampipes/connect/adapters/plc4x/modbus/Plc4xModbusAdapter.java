@@ -256,16 +256,16 @@ public class Plc4xModbusAdapter extends PullAdapter{
 			switch (node.get(PLC_NODE_TYPE)){
 				case "Coil":
 					builder.addItem(node.get(PLC_NODE_RUNTIME_NAME),
-							"coil:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
+							"coil:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));break;
 				case "HoldingRegister":
 					builder.addItem(node.get(PLC_NODE_RUNTIME_NAME),
-							"holding-register:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
+							"holding-register:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));break;
 				case "DiscreteInput":
 					builder.addItem(node.get(PLC_NODE_RUNTIME_NAME),
-							"discrete-input:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
+							"discrete-input:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));break;
 				case "InputRegister":
 					builder.addItem(node.get(PLC_NODE_RUNTIME_NAME),
-							"input-register:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
+							"input-register:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));break;
 			}
 		}
 		PlcReadRequest readRequest = builder.build();
