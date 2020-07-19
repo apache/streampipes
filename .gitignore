@@ -149,4 +149,5 @@ venv
 *pyc
 dist/
 *whl
+*egg-info/
 __pycache__
