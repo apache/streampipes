@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.model.dashboard;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.google.gson.annotations.SerializedName;
 import io.fogsy.empire.annotations.RdfProperty;
@@ -40,9 +41,11 @@ import javax.persistence.MappedSuperclass;
 public abstract class DashboardEntity extends UnnamedStreamPipesEntity {
 
   @RdfProperty("sp:couchDbId")
+  @JsonProperty("_id")
   private @SerializedName("_id") String id;
 
   @RdfProperty("sp:couchDbRev")
+  @JsonProperty("_rev")
   private @SerializedName("_rev") String rev;
 
   public DashboardEntity() {

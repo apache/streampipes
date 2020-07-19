@@ -51,22 +51,23 @@ export class PipelineService {
     return this.http.get(this.platformServicesCommons.authUserBasePath() + "/pipelines/" + pipelineId + "/stop");
   }
 
-  getPipelineById(pipelineId) {
-    return this.http.get(this.platformServicesCommons.authUserBasePath() + "/pipelines/" + pipelineId);
+  getPipelineById(pipelineId): Observable<Pipeline> {
+    return this.http.get(this.platformServicesCommons.authUserBasePath() + "/pipelines/" + pipelineId)
+        .pipe(map(response => Pipeline.fromData(response as Pipeline)));
   }
 
   getPipelineStatusById(pipelineId) {
     return this.http.get(this.platformServicesCommons.authUserBasePath() + "/pipelines/" + pipelineId + "/status");
   }
 
-  storePipeline(pipeline): Observable<Message> {
+  storePipeline(pipeline: Pipeline): Observable<Message> {
     return this.http.post(this.platformServicesCommons.authUserBasePath() + "/pipelines", pipeline)
         .pipe(map(response => {
           return Message.fromData(response as Message);
         }));
   }
 
-  updatePipeline(pipeline): Observable<Message> {
+  updatePipeline(pipeline: Pipeline): Observable<Message> {
     var pipelineId = pipeline._id;
     return this.http.put(this.platformServicesCommons.authUserBasePath() + "/pipelines/" + pipelineId, pipeline)
         .pipe(map(response => {

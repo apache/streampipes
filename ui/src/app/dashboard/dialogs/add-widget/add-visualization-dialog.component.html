@@ -68,7 +68,8 @@
                                              [staticProperties]="selectedWidget.config"
                                              [eventSchemas]="[selectedPipeline.schema]"
                                              [fieldName]="config.internalName"
-                                             (validateEmitter)="validConfiguration($event)"></app-static-property>
+                                             [parentForm]="parentForm">
+                        </app-static-property>
                     </div>
 
                 </div>
@@ -86,7 +87,7 @@
             Back
         </button>
         <button mat-button mat-raised-button color="primary" (click)="next()" [disabled]="'configure-widget' === page
-         && !configValid">
+         && !formValid">
             <span *ngIf="!data && 'configure-widget' === page">Create</span>
             <span *ngIf="data && 'configure-widget' === page">Save</span>
             <span *ngIf="data == null && !('configure-widget' === page)">Next</span>

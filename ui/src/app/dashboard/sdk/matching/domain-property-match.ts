@@ -18,11 +18,15 @@
 
 export class DomainPropertyMatch {
 
-    match(domainPropertyRequirement: string, domainPropertyOffer: string) {
-        if (domainPropertyRequirement == undefined) {
+    match(domainPropertyRequirements: Array<string>, domainPropertyOffers: Array<string>) {
+        if (domainPropertyRequirements == undefined || domainPropertyRequirements.length == 0) {
             return true;
         } else {
-            return domainPropertyRequirement == domainPropertyOffer;
+            if (!domainPropertyOffers) {
+                return false;
+            } else {
+                return domainPropertyRequirements[0] == domainPropertyOffers[0];
+            }
         }
     }
 }

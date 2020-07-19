@@ -16,9 +16,6 @@
  *
  */
 
-import { EventSchema } from '../../connect/schema-editor/model/EventSchema';
-import { DashboardWidgetSettings } from '../../core-model/dashboard/DashboardWidgetSettings';
-import { VisualizablePipeline } from '../../core-model/dashboard/VisualizablePipeline';
 import { AreaConfig } from '../components/widgets/area/area-config';
 import { WidgetConfig } from '../components/widgets/base/base-config';
 import { GaugeConfig } from '../components/widgets/gauge/gauge-config';
@@ -32,6 +29,10 @@ import { RawConfig } from '../components/widgets/raw/raw-config';
 import { TableConfig } from '../components/widgets/table/table-config';
 import { TrafficLightConfig } from '../components/widgets/trafficlight/traffic-light-config';
 import { SchemaMatch } from '../sdk/matching/schema-match';
+import {
+    DashboardWidgetSettings, EventSchema,
+    VisualizablePipeline
+} from "../../core-model/gen/streampipes-model";
 
 export class WidgetRegistry {
 
