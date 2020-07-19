@@ -143,3 +143,10 @@ logs/
 
 # Explicit includes
 !.idea/runConfigurations
+
+# Python
+venv
+*pyc
+dist/
+*whl
+__pycache__

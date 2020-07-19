@@ -1,0 +1,3 @@
+confluent-kafka==1.4.2
+Flask==1.1.2
+waitress==1.4.4
