@@ -85,10 +85,19 @@
                             <goal>repackage</goal>
                         </goals>
                         <configuration>
-                            <mainClass>org.apache.streampipes.connect.container.master.init.AdapterMasterContainer</mainClass>
+                            <mainClass>org.apache.streampipes.connect.container.master.init.AdapterMasterContainer
+                            </mainClass>
                         </configuration>
                     </execution>
                 </executions>
+                <configuration>
+                    <environmentVariables>
+                        <SP_BACKEND_HOST>localhost</SP_BACKEND_HOST>
+                        <SP_KAFKA_HOST>localhost</SP_KAFKA_HOST>
+                        <SP_CONNECT_CONTAINER_HOST>localhost</SP_CONNECT_CONTAINER_HOST>
+                        <SP_COUCHDB_HOST>localhost</SP_COUCHDB_HOST>
+                    </environmentVariables>
+                </configuration>
             </plugin>
         </plugins>
         <finalName>streampipes-connect-container-master</finalName>
