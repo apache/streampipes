@@ -163,6 +163,7 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
   private void registerEventTypeIfNotExists(String eventTypeName, Map<String, Object> typeMap) {
     String defineStreamPrefix = "define stream " + prepareName(eventTypeName);
     StringJoiner joiner = new StringJoiner(",");
+    int currentNoOfStreams = this.listOfEventKeys.size();
 
     List<String> sortedEventKeys = new ArrayList<>();
     for (String key : typeMap.keySet()) {
@@ -175,10 +176,10 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
     for (String key : sortedEventKeys) {
       // TODO: get timestamp field from user params
       if(key.equalsIgnoreCase(this.timestampField)) {
-        joiner.add("s0" + key + " LONG");
+        joiner.add("s" + currentNoOfStreams + key + " LONG");
       }
       else {
-        joiner.add("s0" + key + " " + toType((Class<?>) typeMap.get(key)));
+        joiner.add("s" + currentNoOfStreams + key + " " + toType((Class<?>) typeMap.get(key)));
       }
     }
 
