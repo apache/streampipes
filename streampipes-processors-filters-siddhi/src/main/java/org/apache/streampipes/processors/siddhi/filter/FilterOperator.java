@@ -18,6 +18,6 @@
 
 package org.apache.streampipes.processors.siddhi.filter;
 
-public enum NumericalOperator {
+public enum FilterOperator {
 GE, GT, LE, LT, EQ, IE
 }

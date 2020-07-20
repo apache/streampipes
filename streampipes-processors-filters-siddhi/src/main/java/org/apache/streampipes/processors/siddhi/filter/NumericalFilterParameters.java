@@ -24,14 +24,14 @@ import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams
 public class NumericalFilterParameters extends EventProcessorBindingParams {
 
   private double threshold;
-  private NumericalOperator numericalOperator;
+  private FilterOperator filterOperator;
   private String filterProperty;
 
-  public NumericalFilterParameters(DataProcessorInvocation graph, Double threshold, NumericalOperator
-          numericalOperator, String filterProperty) {
+  public NumericalFilterParameters(DataProcessorInvocation graph, Double threshold, FilterOperator
+          filterOperator, String filterProperty) {
     super(graph);
     this.threshold = threshold;
-    this.numericalOperator = numericalOperator;
+    this.filterOperator = filterOperator;
     this.filterProperty = filterProperty;
   }
 
@@ -39,8 +39,8 @@ public class NumericalFilterParameters extends EventProcessorBindingParams {
     return threshold;
   }
 
-  public NumericalOperator getNumericalOperator() {
-    return numericalOperator;
+  public FilterOperator getFilterOperator() {
+    return filterOperator;
   }
 
   public String getFilterProperty() {

@@ -40,15 +40,16 @@ public class NumericalFilterController extends StandaloneEventProcessingDeclarer
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.siddhi.numericalfilter")
             .category(DataProcessorType.FILTER)
             .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+            .withAssets(Assets.DOCUMENTATION)
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
                             Labels.withId(NUMBER_MAPPING), PropertyScope.NONE).build())
-            .outputStrategy(OutputStrategies.keep())
             .requiredSingleValueSelection(Labels.withId(OPERATION), Options.from("<", "<=", ">",
                     ">=", "==", "!="))
             .requiredFloatParameter(Labels.withId(VALUE), NUMBER_MAPPING)
+            //.outputStrategy(OutputStrategies.keep())
+            .outputStrategy(OutputStrategies.custom())
             .build();
   }
 
@@ -74,7 +75,7 @@ public class NumericalFilterController extends StandaloneEventProcessingDeclarer
 
     String filterProperty = extractor.mappingPropertyValue(NUMBER_MAPPING);
 
-    NumericalFilterParameters staticParam = new NumericalFilterParameters(graph, threshold, NumericalOperator.valueOf
+    NumericalFilterParameters staticParam = new NumericalFilterParameters(graph, threshold, FilterOperator.valueOf
             (operation)
             , filterProperty);
 

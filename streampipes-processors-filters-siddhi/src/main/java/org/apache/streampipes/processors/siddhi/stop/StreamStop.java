@@ -36,10 +36,7 @@ public class StreamStop extends SiddhiEventEngine<StreamStopParameters> {
 
   @Override
   protected String selectStatement(StreamStopParameters params) {
-      setSortedEventKeys(Arrays.asList("timestamp", "message"));
+      //setSortedEventKeys(Arrays.asList("timestamp", "message"));
     return "select currentTimeMillis() as timestamp, 'Event stream has stopped' as message";
   }
-
-
-
 }
