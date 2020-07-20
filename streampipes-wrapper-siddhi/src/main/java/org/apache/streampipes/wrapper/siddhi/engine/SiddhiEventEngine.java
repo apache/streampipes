@@ -295,6 +295,26 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
     return selectString.toString();
   }
 
+  protected String getCustomOutputSelectStatement(DataProcessorInvocation invocation, int streamNumber) {
+    return getCustomOutputSelectStatement(invocation, null, streamNumber);
+  }
+  protected String getCustomOutputSelectStatement(DataProcessorInvocation invocation,
+                                                  String eventName,
+                                                  int streamNumber) {
+    StringBuilder selectString = new StringBuilder();
+    selectString.append("select ");
+    String prefix = (eventName == null) ? "s" + streamNumber : eventName + ".s" + streamNumber;
+
+    if (outputEventKeys.size() > 0) {
+      for (int i = 0; i < outputEventKeys.size() - 1; i++) {
+        selectString.append(prefix + outputEventKeys.get(i) + ",");
+      }
+      selectString.append(prefix + outputEventKeys.get(outputEventKeys.size() - 1));
+
+    }
+    return selectString.toString();
+  }
+
   public void setSortedEventKeys(List<String> sortedEventKeys) {
     String streamId = (String) this.listOfEventKeys.keySet().toArray()[0];    // only reliable if there is only one stream, else use changeEventKeys() to respective streamId
     changeEventKeys(streamId, sortedEventKeys);
