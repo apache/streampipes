@@ -17,7 +17,8 @@
 """Manages processor life cycle"""
 import logging
 from abc import ABC
-from streampipes.configuration import kafka_thread
+
+from streampipes.configuration import kafka_consumer_thread
 
 
 class Declarer(ABC):
@@ -40,33 +41,40 @@ class Declarer(ABC):
 
 class ProcessorDispatcher(ABC):
     _running_instances = {}
+
     logger = logging.getLogger(__name__)
 
     @classmethod
-    def start(cls, processor_id=None, **kwargs):
+    def start(cls, **kwargs):
+        processor_id = kwargs.get('processor_id')
         try:
             processor = Declarer.get_processor(processor_id)(**kwargs)
             processor.init()
-            cls._running_instances[processor.invoke_id] = processor
+            cls._running_instances[processor.invocation_id] = processor
+
             return {'status': 'success'}
 
         except KeyError:
             err = "KeyError. processor_id not found"
-            cls.logger.info('{}: {}'.format(err,processor_id))
+            cls.logger.info('{}: {}'.format(err, processor_id))
             return {'status': err}
 
     @classmethod
-    def stop(cls, invocation_id=None):
+    def stop(cls, **kwargs):
+        invocation_id = kwargs.get('invocation_id')
         try:
             processor = cls._running_instances[invocation_id]
             active_threads = processor.active_threads()
             processor.stop()
-            active_threads[kafka_thread].join()
+            active_threads[kafka_consumer_thread].join()
+
             del processor
             cls._running_instances.pop(invocation_id)
+
             return {'status': 'success'}
 
         except KeyError:
             err = "KeyError. invocation_id not found"
             cls.logger.info('{}: {}'.format(err,invocation_id))
+
             return {'status': err}

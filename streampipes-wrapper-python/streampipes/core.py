@@ -17,13 +17,13 @@
 """contains relevant base classes"""
 import json
 import logging
-import queue
-import uuid
 from abc import ABC, abstractmethod
+from confluent_kafka.admin import AdminClient
+
 from streampipes.api import API
-from streampipes.configuration import kafka_thread, banner
-from confluent_kafka import Producer, Consumer
+from streampipes.configuration import banner, kafka_consumer_thread
 from streampipes.helper import threaded
+from confluent_kafka import Producer, Consumer
 
 
 class StandaloneSubmitter(ABC):
@@ -46,7 +46,6 @@ class EventProcessor(ABC):
         'session.timeout.ms': 30000,
         'fetch.max.bytes': 5000012,
         'auto.offset.reset': 'latest',
-        'group.id': 'streampipes_python_' + str(uuid.uuid4()),
     }
 
     _DEFAULT_KAFKA_PRODUCER_CONFIG = {
@@ -59,14 +58,13 @@ class EventProcessor(ABC):
     def __init__(self, **kwargs):
         """initialize EventProcessor with Kafka Prodcuer and Consumer"""
         self.logger = logging.getLogger(__name__)
+
         self._input_topics = kwargs.get('input_topics')
         self._output_topics = kwargs.get('output_topics')
         self._invocation_id = kwargs.get('invocation_id')
         self._bootstrap_servers = kwargs.get('bootstrap_servers')
         self.static_properties = kwargs.get('static_properties')
 
-        # exchange events via queue - maybe register callback would be better
-        self.queue = queue.Queue(maxsize=0)
         self._running = False
         self._threads = {}
 
@@ -74,21 +72,23 @@ class EventProcessor(ABC):
             self._DEFAULT_KAFKA_CONSUMER_CONFIG['bootstrap.servers'] = self._bootstrap_servers
             self._DEFAULT_KAFKA_PRODUCER_CONFIG['bootstrap.servers'] = self._bootstrap_servers
 
-        self._producer = Producer(**self._DEFAULT_KAFKA_PRODUCER_CONFIG)
-        self._consumer = Consumer(**self._DEFAULT_KAFKA_CONSUMER_CONFIG)
+        self._DEFAULT_KAFKA_CONSUMER_CONFIG['group.id'] = 'streampipes_python_' + self._invocation_id
+
+        self._producer = Producer(self._DEFAULT_KAFKA_PRODUCER_CONFIG)
+        self._consumer = Consumer(self._DEFAULT_KAFKA_CONSUMER_CONFIG)
         #self._create_topic(topic=self._output_topics, conf=self._DEFAULT_KAFKA_PRODUCER_CONFIG)
 
         self.on_invocation()
 
     def init(self):
-        self.logger.info('start processor {}'.format(self._invocation_id))
-        self._threads[kafka_thread] = self.kafka_thread_main()
+        self.logger.info('start processor {}'.format(self.invocation_id))
+        self._threads[kafka_consumer_thread] = self._consume(self._input_topics)
 
     def active_threads(self):
         return self._threads
 
     @property
-    def invoke_id(self):
+    def invocation_id(self):
         return self._invocation_id
 
     def __del__(self):
@@ -115,18 +115,7 @@ class EventProcessor(ABC):
             self._produce(result)
 
     @threaded
-    def kafka_thread_main(self):
-        """ start threaded kafka consumer """
-        try:
-            self._consumer_run(self._input_topics)
-        except KeyboardInterrupt:
-            self.logger.info("consumer: aborted by user")
-            self._running = False
-        except Exception as ex:
-            self.logger.fatal("consumer: fatal exception: {}".format(ex))
-            self._running = False
-
-    def _consumer_run(self, topics):
+    def _consume(self, topics):
         """ retrieve events from kafka """
         self._consumer.subscribe(topics=[topics])
         self._running = True
@@ -143,6 +132,7 @@ class EventProcessor(ABC):
                     continue
             else:
                 try:
+                    # json -> dict
                     event = json.loads(msg.value().decode('utf-8'))
                     if isinstance(event, int):
                         self.logger.info("Integer not allowed {}".format(event))
@@ -157,6 +147,7 @@ class EventProcessor(ABC):
         """ send events to kafka """
         event = json.dumps(result).encode('utf-8')
         try:
+            # dict -> json
             self._producer.produce(self._output_topics, value=event)
         except BufferError:
             self._producer.poll(1)
@@ -175,7 +166,7 @@ class EventProcessor(ABC):
     #             raise
 
     def stop(self):
-        self.logger.info('stop processor {}'.format(self._invocation_id))
+        self.logger.info('stop processor {}'.format(self.invocation_id))
         self._running = False
         self._consumer.close()
         self._producer.flush()

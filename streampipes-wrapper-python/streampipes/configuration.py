@@ -19,7 +19,7 @@ import os
 
 flask_host = os.getenv('FLASK_HOST', '0.0.0.0')
 port = os.getenv('SP_PORT', 5000)
-kafka_thread = 'kafka_thread'
+kafka_consumer_thread = 'kafka_consumer_thread'
 
 banner="""\
  _______ __                              ______ __

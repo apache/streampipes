@@ -58,7 +58,7 @@ class API(object):
         :param json: contains invocation graph.
         :return: None.
         """
-        return ProcessorDispatcher.start(app_id=kwargs.get('processor_id'), **kwargs)
+        return ProcessorDispatcher.start(**kwargs)
 
     @staticmethod
     def detach(**kwargs):
@@ -67,4 +67,4 @@ class API(object):
         :param json: contains elementId to be terminated
         :return: None.
         """
-        return ProcessorDispatcher.stop(invocation_id=kwargs.get('invocation_id'))
+        return ProcessorDispatcher.stop(**kwargs)
