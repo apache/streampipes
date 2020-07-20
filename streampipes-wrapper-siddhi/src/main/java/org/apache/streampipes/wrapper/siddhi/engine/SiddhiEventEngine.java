@@ -294,9 +294,12 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
     return selectString.toString();
   }
 
-  /*
   public void setSortedEventKeys(List<String> sortedEventKeys) {
-    this.sortedEventKeys = sortedEventKeys;
+    String streamId = (String) this.listOfEventKeys.keySet().toArray()[0];    // only reliable if there is only one stream, else use changeEventKeys() to respective streamId
+    changeEventKeys(streamId, sortedEventKeys);
   }
-   */
+
+  public void changeEventKeys(String streamId, List<String> newEventKeys) {
+    this.listOfEventKeys.put(streamId, newEventKeys);
+  }
 }
