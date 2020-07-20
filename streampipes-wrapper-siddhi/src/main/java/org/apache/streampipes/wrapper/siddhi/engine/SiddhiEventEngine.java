@@ -129,7 +129,7 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
   }
 
   private String removeStreamIdFromTimestamp(String timestampField) {
-    return timestampField !=null ? timestampField.replaceAll("s0::", "") : null;
+    return timestampField !=null ? timestampField.replaceAll("s.::", "") : null;
   }
 
   private String getOutputTopicName(B parameters) {
