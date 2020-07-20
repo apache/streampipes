@@ -170,7 +170,7 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
       Collections.sort(sortedEventKeys);
     }
 
-    listOfEventKeys.put(eventTypeName, sortedEventKeys)
+    listOfEventKeys.put(eventTypeName, sortedEventKeys);
 
     for (String key : sortedEventKeys) {
       // TODO: get timestamp field from user params
@@ -220,7 +220,7 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
   @Override
   public void onEvent(org.apache.streampipes.model.runtime.Event event, SpOutputCollector collector) {
     try {
-      String sourceId = event.getSourceInfo().getSourceId()
+      String sourceId = event.getSourceInfo().getSourceId();
       InputHandler inputHandler = siddhiInputHandlers.get(sourceId);
       List<String> eventKeys = listOfEventKeys.get(sourceId);
 
@@ -294,7 +294,9 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
     return selectString.toString();
   }
 
+  /*
   public void setSortedEventKeys(List<String> sortedEventKeys) {
     this.sortedEventKeys = sortedEventKeys;
   }
+   */
 }
