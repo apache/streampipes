@@ -39,7 +39,7 @@ public class BoxCoordinates {
             Math.round(height),
             Math.round(x),
             Math.round(y),
-            Math.round(score),
+            score,
             classesindex);
   }
 
