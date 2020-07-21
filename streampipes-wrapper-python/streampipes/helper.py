@@ -1,3 +1,4 @@
+#
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -12,10 +13,16 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
+"""some helper methods"""
+import threading
 
-SP_COUCHDB_HOST=localhost
-SP_BACKEND_HOST=localhost
-SP_INFLUX_HOST=localhost
-SP_INFLUX_PORT=8086
-SP_JMS_HOST=localhost
-SP_DEBUG=true
+
+def threaded(func):
+    def wrapper(*args, **kwargs):
+        thread_name = args[0]._invocation_id
+        thread = threading.Thread(target=func, args=args, kwargs=kwargs, name=thread_name)
+        thread.start()
+        return thread
+
+    return wrapper
