@@ -24,15 +24,15 @@ public class ImageEnrichmentParameters extends EventProcessorBindingParams {
 
   private String imageProperty;
   private String boxArray;
-  private String scoresArray;
-  private String labelsArray;
 
   private String boxWidth;
   private String boxHeight;
   private String boxX;
   private String boxY;
+  private String score;
+  private String classesindex;
 
-  public ImageEnrichmentParameters(DataProcessorInvocation graph, String imageProperty, String boxArray, String boxWidth, String boxHeight, String boxX, String boxY, String scoresArray, String labelsArray) {
+  public ImageEnrichmentParameters(DataProcessorInvocation graph, String imageProperty, String boxArray, String boxWidth, String boxHeight, String boxX, String boxY, String score, String classesindex) {
     super(graph);
     this.imageProperty = imageProperty;
     this.boxArray = boxArray;
@@ -40,8 +40,8 @@ public class ImageEnrichmentParameters extends EventProcessorBindingParams {
     this.boxHeight = boxHeight;
     this.boxX = boxX;
     this.boxY = boxY;
-    this.scoresArray = scoresArray;
-    this.labelsArray = labelsArray;
+    this.score = score;
+    this.classesindex = classesindex;
   }
 
   public ImageEnrichmentParameters(DataProcessorInvocation graph, String imageProperty, String boxArray, String boxWidth, String boxHeight, String boxX, String boxY) {
@@ -87,11 +87,11 @@ public class ImageEnrichmentParameters extends EventProcessorBindingParams {
     return boxY;
   }
 
-  public String getScoresArray() {
-    return scoresArray;
+  public String getScore() {
+    return score;
   }
 
-  public String getLabelsArray() {
-    return labelsArray;
+  public String getClassesindex() {
+    return classesindex;
   }
 }

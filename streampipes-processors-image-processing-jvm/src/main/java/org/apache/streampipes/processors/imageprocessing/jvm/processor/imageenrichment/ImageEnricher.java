@@ -46,22 +46,19 @@ public class ImageEnricher implements EventProcessor<ImageEnrichmentParameters> 
     Optional<BufferedImage> imageOpt =
             imageTransformer.getImage();
 
-    List<Double> scores =  in.getFieldBySelector(params.getScoresArray()).getAsList().castItems(Double.class);
-    List<String> labels = in.getFieldBySelector(params.getLabelsArray()).getAsList().castItems(String.class);
-
 
     if (imageOpt.isPresent()) {
       BufferedImage image = imageOpt.get();
       List<Map<String, Object>> allBoxesMap = imageTransformer.getAllBoxCoordinates();
 
-      for (int i = 0; i < allBoxesMap.size(); i++) {
+      for (Map<String, Object> box : allBoxesMap) {
 
-        BoxCoordinates boxCoordinates = imageTransformer.getBoxCoordinates(image, allBoxesMap.get(i));
+        BoxCoordinates boxCoordinates = imageTransformer.getBoxCoordinatesWithAnnotations(image, box);
 
         Graphics2D graph = image.createGraphics();
 
         //set color
-        Color color = ColorUtil.getColor(labels.get(i).hashCode());
+        Color color = ColorUtil.getColor(boxCoordinates.getClassesindex().hashCode());
         graph.setColor(color);
 
         //Box
@@ -70,7 +67,7 @@ public class ImageEnricher implements EventProcessor<ImageEnrichmentParameters> 
                 boxCoordinates.getHeight()));
 
         //Label
-        String str = labels.get(i) + ": " + scores.get(i);
+        String str = boxCoordinates.getClassesindex() + ": " + boxCoordinates.getScore();
 
         FontMetrics fm = graph.getFontMetrics();
         Rectangle2D rect = fm.getStringBounds(str, graph);

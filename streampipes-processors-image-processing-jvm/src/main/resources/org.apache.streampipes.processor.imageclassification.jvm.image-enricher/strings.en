@@ -6,9 +6,3 @@ image-property.description=The field containing the image.
 
 box-array-property.title=Bounding box field
 box-array-property.description=The field containing a list of bounding boxes.
-
-score-array-property.title=Scores field
-score-array-property.description=The field containing a list of scores.
-
-label-array-property.title=Labels field
-label-array-property.description=The field containing a list of labels.

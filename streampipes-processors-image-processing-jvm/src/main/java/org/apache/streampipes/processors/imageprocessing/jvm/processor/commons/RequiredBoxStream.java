@@ -28,8 +28,6 @@ public class RequiredBoxStream {
 
   public static final String IMAGE_PROPERTY = "image-property";
   public static final String BOX_ARRAY_PROPERTY = "box-array-property";
-  public static final String SCORE_ARRAY_PROPERTY = "score-array-property";
-  public static final String LABEL_ARRAY_PROPERTY = "label-array-property";
 
   public static CollectedStreamRequirements getBoxStream() {
         return StreamRequirementsBuilder
@@ -39,12 +37,6 @@ public class RequiredBoxStream {
                     PropertyScope.NONE)
             .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReqList("https://streampipes.org/boundingboxes"),
                     Labels.withId(BOX_ARRAY_PROPERTY),
-                    PropertyScope.NONE)
-            .requiredPropertyWithUnaryMapping(EpRequirements.listRequirement(Datatypes.Number),
-                    Labels.withId(SCORE_ARRAY_PROPERTY),
-                    PropertyScope.NONE)
-            .requiredPropertyWithUnaryMapping(EpRequirements.listRequirement(Datatypes.String),
-                    Labels.withId(LABEL_ARRAY_PROPERTY),
                     PropertyScope.NONE)
             .build();
   }

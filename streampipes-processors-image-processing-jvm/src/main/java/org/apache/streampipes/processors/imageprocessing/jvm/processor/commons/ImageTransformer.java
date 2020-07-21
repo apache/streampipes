@@ -65,11 +65,27 @@ public class ImageTransformer extends PlainImageTransformer<ImageEnrichmentParam
     Float width = toFloat(box.get(params.getBoxWidth()));
     Float height = toFloat(box.get(params.getBoxHeight()));
 
+
     return BoxCoordinates.make(width, height, x, y);
   }
 
+  public BoxCoordinates getBoxCoordinatesWithAnnotations(BufferedImage image, Map<String, Object> box) {
+    Float x = toFloat(box.get(params.getBoxX()));
+    Float y = toFloat(box.get(params.getBoxY()));
+    Float width = toFloat(box.get(params.getBoxWidth()));
+    Float height = toFloat(box.get(params.getBoxHeight()));
+    Float score = toFloat(box.get(params.getScore()));
+    String classesindex = toString(box.get(params.getClassesindex()));
+
+    return BoxCoordinates.make(width, height, x, y, score, classesindex);
+  }
+
   private Float toFloat(Object obj) {
-    return Float.parseFloat(String.valueOf(obj));
+    return Float.parseFloat(toString(obj));
+  }
+
+  private String toString(Object obj) {
+    return String.valueOf(obj);
   }
 
 
