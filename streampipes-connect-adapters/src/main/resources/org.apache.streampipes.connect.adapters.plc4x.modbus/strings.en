@@ -17,13 +17,13 @@ plc_nodes.title=Nodes
 plc_nodes.description=Define the nodes of the PLC
 
 plc_node_runtime_name.title=Runtime Name
-plc_node_runtime_name.description=example: temperature
+plc_node_runtime_name.description=Example: temperature
 
 plc_node_name.title=Node Name
 plc_node_name.description=
 
-plc_node_type.title=Data Type
-plc_node_type.description=example: Coil
+plc_node_type.title=Object Type
+plc_node_type.description=Example: Coil
 
 csv_import.title=Import from CSV
 csv_import.description=Import a CSV file with the configurations from the TIA portal
@@ -38,8 +38,8 @@ plc_nodes_excel_file.title=Excel File
 plc_nodes_excel_file.description=Contains three columns 'Name', 'Data Type', 'Logical Address'
 
 plc_node_address.title=Node Address
-plc_node_address.description= field in the corresponding register
+plc_node_address.description= Address/field in the corresponding register
 
-plc_node_id.title=Node Id
-plc_node_id.description=
+plc_node_id.title=Node ID
+plc_node_id.description= ID of the specific device
 

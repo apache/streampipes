@@ -23,6 +23,7 @@ import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
 
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.Base64;
 import java.util.List;
@@ -45,20 +46,43 @@ public class ImageEnricher implements EventProcessor<ImageEnrichmentParameters> 
     Optional<BufferedImage> imageOpt =
             imageTransformer.getImage();
 
+    List<Double> scores =  in.getFieldBySelector(params.getScoresArray()).getAsList().castItems(Double.class);
+    List<String> labels = in.getFieldBySelector(params.getLabelsArray()).getAsList().castItems(String.class);
+
+
     if (imageOpt.isPresent()) {
       BufferedImage image = imageOpt.get();
       List<Map<String, Object>> allBoxesMap = imageTransformer.getAllBoxCoordinates();
 
-      for (Map<String, Object> box : allBoxesMap) {
+      for (int i = 0; i < allBoxesMap.size(); i++) {
 
-        BoxCoordinates boxCoordinates = imageTransformer.getBoxCoordinates(image, box);
+        BoxCoordinates boxCoordinates = imageTransformer.getBoxCoordinates(image, allBoxesMap.get(i));
 
         Graphics2D graph = image.createGraphics();
-        int alpha = 180;
-        Color color = new Color(133, 148, 229, alpha);
+
+        //set color
+        Color color = ColorUtil.getColor(labels.get(i).hashCode());
         graph.setColor(color);
-        graph.fill(new Rectangle(boxCoordinates.getX(), boxCoordinates.getY(), boxCoordinates.getWidth(),
+
+        //Box
+        graph.setStroke(new BasicStroke(5));
+        graph.draw(new Rectangle(boxCoordinates.getX(), boxCoordinates.getY(), boxCoordinates.getWidth(),
                 boxCoordinates.getHeight()));
+
+        //Label
+        String str = labels.get(i) + ": " + scores.get(i);
+
+        FontMetrics fm = graph.getFontMetrics();
+        Rectangle2D rect = fm.getStringBounds(str, graph);
+
+        graph.fillRect(boxCoordinates.getX(),
+                boxCoordinates.getY() - fm.getAscent(),
+                (int) rect.getWidth(),
+                (int) rect.getHeight());
+
+        graph.setColor(Color.white);
+        graph.drawString(str, boxCoordinates.getX(), boxCoordinates.getY());
+
         graph.dispose();
 
       }

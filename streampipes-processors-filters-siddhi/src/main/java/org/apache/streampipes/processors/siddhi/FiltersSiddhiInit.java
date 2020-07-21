@@ -39,10 +39,12 @@ public class FiltersSiddhiInit extends StandaloneModelSubmitter {
     DeclarersSingleton
             .getInstance()
             .add(new TrendController())
-            .add(new StreamStopController())
-            .add(new FrequencyController())
-            .add(new FrequencyChangeController())
             .add(new NumericalFilterController());
+            // TODO: currently not working
+//            .add(new StreamStopController())
+//            .add(new FrequencyController())
+//            .add(new FrequencyChangeController())
+
 
     DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),
             new CborDataFormatFactory(),

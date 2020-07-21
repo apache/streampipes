@@ -17,28 +17,37 @@
  */
 package org.apache.streampipes.processors.siddhi.filter;
 
+import org.apache.streampipes.wrapper.siddhi.engine.SiddhiDebugCallback;
 import org.apache.streampipes.wrapper.siddhi.engine.SiddhiEventEngine;
 
 import java.util.List;
 
 public class NumericalFilter extends SiddhiEventEngine<NumericalFilterParameters> {
 
+  public NumericalFilter() {
+    super();
+  }
+
+  public NumericalFilter(SiddhiDebugCallback callback) {
+    super(callback);
+  }
+
   @Override
   protected String fromStatement(List<String> inputStreamNames, NumericalFilterParameters params) {
     String filterProperty = prepareName(params.getFilterProperty());
     String filterOperator = "";
 
-    if (params.getNumericalOperator() == NumericalOperator.EQ) {
+    if (params.getFilterOperator() == FilterOperator.EQ) {
       filterOperator = "==";
-    } else if (params.getNumericalOperator() == NumericalOperator.GE) {
+    } else if (params.getFilterOperator() == FilterOperator.GE) {
       filterOperator = ">=";
-    } else if (params.getNumericalOperator() == NumericalOperator.GT) {
+    } else if (params.getFilterOperator() == FilterOperator.GT) {
       filterOperator = ">";
-    } else if (params.getNumericalOperator() == NumericalOperator.LE) {
+    } else if (params.getFilterOperator() == FilterOperator.LE) {
       filterOperator = "<=";
-    } else if (params.getNumericalOperator() == NumericalOperator.LT) {
+    } else if (params.getFilterOperator() == FilterOperator.LT) {
       filterOperator = "<";
-    } else if (params.getNumericalOperator() == NumericalOperator.IE) {
+    } else if (params.getFilterOperator() == FilterOperator.IE) {
       filterOperator = "!=";
     }
 
@@ -49,8 +58,7 @@ public class NumericalFilter extends SiddhiEventEngine<NumericalFilterParameters
   }
 
   @Override
-  protected String selectStatement(NumericalFilterParameters bindingParameters) {
-    return "select *";
+  protected String selectStatement(NumericalFilterParameters params) {
+    return getCustomOutputSelectStatement(params.getGraph());
   }
-
 }
