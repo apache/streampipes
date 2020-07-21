@@ -145,10 +145,11 @@ public class Plc4xS7Adapter extends PullAdapter {
      */
     @Override
     public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription) throws AdapterException {
-        // TODO add a validation to check if the user input is available in the PLC
 
         // Extract user input
         getConfigurations(adapterDescription);
+
+        // TODO add a validation to check if the user input is available in the PLC
 
         GuessSchema guessSchema = new GuessSchema();
 
@@ -182,15 +183,14 @@ public class Plc4xS7Adapter extends PullAdapter {
         getConfigurations(adapterDescription);
 
         try {
-//            this.plcConnection= new PlcDriverManager().getConnection("s7://" + this.ip + "/1/1");
-            this.plcConnection= new PlcDriverManager().getConnection("s7://" + this.ip);
+            this.plcConnection = new PlcDriverManager().getConnection("s7://" + this.ip);
 
             if (!this.plcConnection.getMetadata().canRead()) {
                 throw new AdapterException("The S7 on IP: " + this.ip + " does not support reading data");
             }
 
         } catch (PlcConnectionException e) {
-            throw new AdapterException("Could not establish connection to S7 with ip " + this.ip);
+            throw new AdapterException("Could not establish connection to S7 with ip " + this.ip, e);
         }
     }
 
