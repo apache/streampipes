@@ -14,8 +14,6 @@
 # limitations under the License.
 
 SP_COUCHDB_HOST=localhost
-SP_KAFKA_REST_HOST=localhost
-SP_KAFKA_REST_PORT=8073
 SP_BACKEND_HOST=localhost
 SP_INFLUX_HOST=localhost
 SP_INFLUX_PORT=8086
