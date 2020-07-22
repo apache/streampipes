@@ -17,7 +17,10 @@
  */
 package org.apache.streampipes.manager.runtime;
 
+import com.google.inject.internal.cglib.core.$LocalVariablesSorter;
 import org.apache.streampipes.messaging.kafka.SpKafkaConsumer;
+import org.apache.streampipes.messaging.mqtt.MqttConsumer;
+import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -47,10 +50,12 @@ public enum PipelineElementRuntimeInfoFetcher {
 
     if (spDataStream.getEventGrounding().getTransportProtocol() instanceof KafkaTransportProtocol) {
       return getLatestEventFromKafka(spDataStream);
-    } else {
-      return getLatestEventFromJms(spDataStream);
     }
-
+    else if (spDataStream.getEventGrounding().getTransportProtocol() instanceof JmsTransportProtocol){
+      return getLatestEventFromJms(spDataStream);
+    } else {
+      return getLatestEventFromMqtt(spDataStream);
+    }
   }
 
   private String getLatestEventFromJms(SpDataStream spDataStream) throws SpRuntimeException {
@@ -94,6 +99,38 @@ public enum PipelineElementRuntimeInfoFetcher {
             .getTransportProtocol()
             .getTopicDefinition()
             .getActualTopicName();
+  }
+
+  private String getLatestEventFromMqtt(SpDataStream spDataStream) throws SpRuntimeException {
+    final String[] result = {null};
+    String mqttTopic = getOutputTopic(spDataStream);
+    MqttTransportProtocol protocol = (MqttTransportProtocol) spDataStream.getEventGrounding().getTransportProtocol();
+
+    if (!converterMap.containsKey(mqttTopic)){
+      this.converterMap.put(mqttTopic, new SpDataFormatConverterGenerator(getTransportFormat(spDataStream)).makeConverter());
+    }
+    MqttConsumer mqttConsumer = new MqttConsumer();
+    mqttConsumer.connect(protocol, new InternalEventProcessor<byte[]>() {
+      @Override
+      public void onEvent(byte[] event) {
+        try {
+          result[0] = converterMap.get(mqttTopic).convert(event);
+          mqttConsumer.disconnect();
+        } catch (SpRuntimeException e) {
+          e.printStackTrace();
+        }
+      }
+    });
+
+    while (result[0] == null) {
+      try {
+        Thread.sleep(300);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+    }
+
+    return result[0];
   }
 
   private String getLatestEventFromKafka(SpDataStream spDataStream) throws SpRuntimeException {
