@@ -51,7 +51,7 @@ export class WidgetConfigBuilder {
                 " primary text color", "#FFFFFF");
         this.requiredColorParameter(WidgetConfigBuilder.SECONDARY_TEXT_COLOR_KEY, "Secondary text color", "The" +
             " secondary text" +
-            " color", "#bebebe")
+            " color", "#39B54A");
         }
     }
 
