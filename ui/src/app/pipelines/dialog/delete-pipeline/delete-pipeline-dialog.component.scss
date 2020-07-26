@@ -16,29 +16,4 @@
  *
  */
 
-export class PipelineStatusDialogController {
-
-    $mdDialog: any;
-    statusDetailsVisible: any;
-    data: any;
-
-    constructor($mdDialog, data) {
-        this.$mdDialog = $mdDialog;
-        this.statusDetailsVisible = false;
-        this.data = data;
-    }
-
-    hide() {
-        this.$mdDialog.hide();
-    };
-
-    cancel() {
-        this.$mdDialog.cancel();
-    };
-
-    toggleStatusDetailsVisible() {
-        this.statusDetailsVisible = !(this.statusDetailsVisible);
-    }
-}
-
-PipelineStatusDialogController.$inject = ['$mdDialog', 'data'];
+@import '../../../../scss/sp/sp-dialog.scss';

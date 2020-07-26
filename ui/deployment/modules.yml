@@ -43,11 +43,11 @@ spConnect:
   homeImage: '/assets/img/home/editor.png'
   admin: False
 spPipelines:
-  ng5: False
-  ng1_templateUrl: '../pipelines/pipelines.html'
-  ng5_moduleName: ''
-  ng5_component: ''
-  ng5_componentPath: ''
+  ng5: True
+  ng1_templateUrl: ''
+  ng5_moduleName: 'PipelinesModule'
+  ng5_component: 'PipelinesComponent'
+  ng5_componentPath: '../pipelines/pipelines.component'
   path: './pipelines/pipelines.module'
   link: 'streampipes.pipelines'
   url: '/pipelines/:pipeline'

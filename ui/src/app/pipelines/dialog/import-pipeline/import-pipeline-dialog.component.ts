@@ -16,25 +16,27 @@
  *
  */
 
-import {RestApi} from "../../services/rest-api.service";
+import {Component, OnInit} from "@angular/core";
+import {PipelineService} from "../../../platform-services/apis/pipeline.service";
+import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
+import {forkJoin} from "rxjs";
+import {Pipeline} from "../../../core-model/gen/streampipes-model";
 
-export class ImportPipelineDialogController {
-
-    $mdDialog: any;
-    PipelineOperationsService: any;
-
-    refreshPipelines: any;
-    RestApi: RestApi;
+@Component({
+    selector: 'import-pipeline-dialog',
+    templateUrl: './import-pipeline-dialog.component.html',
+    styleUrls: ['./import-pipeline-dialog.component.scss']
+})
+export class ImportPipelineDialogComponent {
 
     isInProgress: any = false;
     currentStatus: any;
     page = "upload-pipelines";
 
-    availablePipelines: any[];
-    selectedPipelines: any[];
+    availablePipelines: Pipeline[] = [];
+    selectedPipelines: Pipeline[] = [];
 
     importing: boolean = false;
-    $q: any;
 
     pages = [{
         type: "upload-pipelines",
@@ -50,33 +52,23 @@ export class ImportPipelineDialogController {
         description: ""
     }];
 
-    constructor($mdDialog, RestApi: RestApi, refreshPipelines, $q) {
-        this.$mdDialog = $mdDialog;
-        this.RestApi = RestApi;
-        this.refreshPipelines = refreshPipelines;
-        this.$q = $q;
+    constructor(private PipelineService: PipelineService,
+                private DialogRef: DialogRef<ImportPipelineDialogComponent>) {
     }
 
-    $onInit() {
-
-
-    }
-
-    upload(file) {
+    handleFileInput(files: any) {
+        let file = files[0];
         var aReader = new FileReader();
         aReader.readAsText(file, "UTF-8");
         aReader.onload = evt => {
             this.availablePipelines = JSON.parse(aReader.result as string);
+            console.log(this.availablePipelines);
             this.page = "select-pipelines";
         }
-    };
+    }
 
-    hide() {
-        this.$mdDialog.hide();
-    };
-
-    cancel() {
-        this.$mdDialog.cancel();
+    close(refreshPipelines: boolean) {
+        this.DialogRef.close(refreshPipelines);
     };
 
     back() {
@@ -87,23 +79,32 @@ export class ImportPipelineDialogController {
         }
     }
 
+    toggleSelectedPipeline(pipeline: Pipeline) {
+        console.log(pipeline);
+        if (this.selectedPipelines.some(p => p._id = pipeline._id)) {
+            this.selectedPipelines.splice(this.selectedPipelines.findIndex(sp => sp._id === pipeline._id), 1);
+        } else {
+            this.selectedPipelines.push(pipeline);
+        }
+    }
+
     storePipelines() {
-        var promises = [];
-        this.selectedPipelines.forEach(pipeline => {
-            pipeline._rev = undefined;
-            pipeline._id = undefined;
-            promises.push(this.RestApi.storePipeline(pipeline));
-        });
-        this.$q.all(promises).then(result => {
-            this.importing = false;
-            this.refreshPipelines();
-            this.hide();
-        });
+        console.log(this.selectedPipelines);
+         var promises = [];
+         this.selectedPipelines.forEach(pipeline => {
+             pipeline._rev = undefined;
+             pipeline._id = undefined;
+             promises.push(this.PipelineService.storePipeline(pipeline));
+         });
+
+         forkJoin(promises).subscribe(results => {
+             this.importing = false;
+             this.close(true);
+         })
     }
 
     startImport() {
         this.page = 'import-pipelines';
-        this.selectedPipelines = this.availablePipelines.filter(p => p.selectedForUpload);
         this.importing = true;
         this.storePipelines();
     }

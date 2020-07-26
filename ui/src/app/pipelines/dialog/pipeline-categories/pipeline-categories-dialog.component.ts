@@ -17,39 +17,52 @@
  */
 
 import * as angular from 'angular';
-import {RestApi} from "../../services/rest-api.service";
+import {Component, Input, OnInit} from "@angular/core";
+import {Pipeline, PipelineCategory} from "../../../core-model/gen/streampipes-model";
+import {PipelineService} from "../../../platform-services/apis/pipeline.service";
+import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
 
-export class PipelineCategoriesDialogController {
+@Component({
+    selector: 'pipeline-categories-dialog',
+    templateUrl: './pipeline-categories-dialog.component.html',
+    styleUrls: ['./pipeline-categories-dialog.component.scss']
+})
+export class PipelineCategoriesDialogComponent implements OnInit {
 
-    $mdDialog: any;
-    RestApi: RestApi;
-    newCategory: any;
     addSelected: any;
+
     addPipelineToCategorySelected: any;
     categoryDetailsVisible: any;
-    selectedPipelineId: any;
-    pipelineCategories: any;
-    pipelines: any;
-    refreshPipelines: any;
-    getPipelineCategories;
 
-    constructor($mdDialog, RestApi: RestApi, getPipelineCategories, refreshPipelines)
+    selectedPipelineId: string;
+    pipelineCategories: PipelineCategory[];
+
+    newCategoryName: string;
+    newCategoryDescription: string;
+
+    @Input()
+    pipelines: Pipeline[];
+
+    @Input()
+    systemPipelines: Pipeline[];
+
+    //getPipelineCategories;
+
+    constructor(private pipelineService: PipelineService,
+                private dialogRef: DialogRef<PipelineCategoriesDialogComponent>)
     {
-        this.$mdDialog = $mdDialog;
-        this.RestApi = RestApi;
-        this.newCategory = {};
-        this.newCategory.categoryName = "";
-        this.newCategory.categoryDescription = "";
         this.addSelected = false;
         this.addPipelineToCategorySelected = [];
         this.categoryDetailsVisible = [];
         this.selectedPipelineId = "";
-        this.getPipelineCategories = getPipelineCategories;
-        this.refreshPipelines = refreshPipelines;
+        //this.getPipelineCategories = getPipelineCategories;
+        //this.refreshPipelines = refreshPipelines;
 
+    }
+
+    ngOnInit() {
         this.fetchPipelineCategories();
         this.fetchPipelines();
-
     }
 
     toggleCategoryDetailsVisibility(categoryId) {
@@ -58,7 +71,8 @@ export class PipelineCategoriesDialogController {
 
 
     addPipelineToCategory(pipelineCategory) {
-        var pipeline = this.findPipeline(pipelineCategory.selectedPipelineId);
+        console.log(pipelineCategory);
+        var pipeline = this.findPipeline(this.selectedPipelineId);
         if (pipeline['pipelineCategories'] == undefined) pipeline['pipelineCategories'] = [];
         pipeline['pipelineCategories'].push(pipelineCategory._id);
         this.storeUpdatedPipeline(pipeline);
@@ -71,10 +85,10 @@ export class PipelineCategoriesDialogController {
     }
 
     storeUpdatedPipeline(pipeline) {
-        this.RestApi.updatePipeline(pipeline)
-            .then(msg => {
-                this.refreshPipelines();
-                this.getPipelineCategories();
+        this.pipelineService.updatePipeline(pipeline)
+            .subscribe(msg => {
+                //this.refreshPipelines();
+                //this.getPipelineCategories();
                 this.fetchPipelineCategories();
             });
     }
@@ -90,53 +104,47 @@ export class PipelineCategoriesDialogController {
     }
 
     addPipelineCategory() {
-        this.RestApi.storePipelineCategory(this.newCategory)
-            .then(data => {
+        let newCategory: any = {};
+        newCategory.categoryName = this.newCategoryName;
+        newCategory.categoryDescription = this.newCategoryDescription;
+        this.pipelineService.storePipelineCategory(newCategory)
+            .subscribe(data => {
                 this.fetchPipelineCategories();
-                this.getPipelineCategories();
                 this.addSelected = false;
             });
     }
 
     fetchPipelineCategories() {
-        this.RestApi.getPipelineCategories()
-            .then(pipelineCategories => {
-                this.pipelineCategories = pipelineCategories.data;
+        this.pipelineService.getPipelineCategories()
+            .subscribe(pipelineCategories => {
+                this.pipelineCategories = pipelineCategories;
             });
     };
 
     fetchPipelines() {
-        this.RestApi.getOwnPipelines().then(pipelines => {
-            this.pipelines = pipelines.data;
-        })
+
     }
 
     showAddToCategoryInput(categoryId, show) {
         this.addPipelineToCategorySelected[categoryId] = show;
         this.categoryDetailsVisible[categoryId] = true;
+        console.log(this.categoryDetailsVisible);
     }
 
     deletePipelineCategory(pipelineId) {
-        this.RestApi.deletePipelineCategory(pipelineId)
-            .then(data => {
+        this.pipelineService.deletePipelineCategory(pipelineId)
+            .subscribe(data => {
                 this.fetchPipelineCategories();
-                this.getPipelineCategories();
             });
     }
 
     showAddInput() {
         this.addSelected = true;
-        this.newCategory.categoryName = "";
-        this.newCategory.categoryDescription = "";
+        this.newCategoryName = "";
+        this.newCategoryDescription = "";
     }
 
-    hide() {
-        this.$mdDialog.hide();
-    }
-
-    cancel() {
-        this.$mdDialog.cancel();
+    close() {
+        this.dialogRef.close();
     }
 }
-
-PipelineCategoriesDialogController.$inject = ['$mdDialog', 'RestApi', 'getPipelineCategories', 'refreshPipelines'];

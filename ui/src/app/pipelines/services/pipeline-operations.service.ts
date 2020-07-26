@@ -16,12 +16,15 @@
  *
  */
 
-import * as angular from 'angular';
-import {PipelineStatusDialogController} from "../dialog/pipeline-status-dialog.controller";
-import {DeletePipelineDialogController} from "../dialog/delete-pipeline-dialog.controller";
-import {RestApi} from "../../services/rest-api.service";
 import {ShepherdService} from "../../services/tour/shepherd.service";
-import {Inject, Injectable} from "@angular/core";
+import {EventEmitter, Inject, Injectable} from "@angular/core";
+import {PipelineService} from "../../platform-services/apis/pipeline.service";
+import {PanelType} from "../../core-ui/dialog/base-dialog/base-dialog.model";
+import {DialogService} from "../../core-ui/dialog/base-dialog/base-dialog.service";
+import {PipelineStatusDialogComponent} from "../dialog/pipeline-status/pipeline-status-dialog.component";
+import {Pipeline, PipelineOperationStatus} from "../../core-model/gen/streampipes-model";
+import {DeletePipelineDialogComponent} from "../dialog/delete-pipeline/delete-pipeline-dialog.component";
+import {DialogRef} from "../../core-ui/dialog/base-dialog/dialog-ref";
 
 declare const require: any;
 
@@ -31,81 +34,65 @@ export class PipelineOperationsService {
   starting: any;
   stopping: any;
 
-  constructor(@Inject('$mdDialog') private $mdDialog,
-              @Inject('RestApi') private RestApi: RestApi,
-              @Inject('$state') private $state,
-              @Inject('ShepherdService') private ShepherdService: ShepherdService) {
+  constructor(
+      //@Inject('RestApi') private RestApi: RestApi,
+      @Inject('$state') private $state,
+      private ShepherdService: ShepherdService,
+      private PipelineService: PipelineService,
+      private DialogService: DialogService) {
   }
 
-  startPipeline(pipelineId, toggleRunningOperation, refreshPipelines) {
+  startPipeline(pipelineId: string,
+                toggleRunningOperation,
+                refreshPipelinesEmitter: EventEmitter<boolean>) {
     toggleRunningOperation('starting');
-    this.RestApi.startPipeline(pipelineId)
-        .then(msg => {
-          let data = msg.data;
-          this.showDialog(data);
-          refreshPipelines();
-          toggleRunningOperation('starting');
-          if (this.ShepherdService.isTourActive()) {
-            this.ShepherdService.trigger("pipeline-started");
-          }
-        }, error => {
-          toggleRunningOperation('starting');
-          this.showDialog({
-            notifications: [{
-              title: "Network Error",
-              description: "Please check your Network."
-            }]
-          });
-        });
+    this.PipelineService.startPipeline(pipelineId).subscribe(msg => {
+      refreshPipelinesEmitter.emit(true);
+      if (this.ShepherdService.isTourActive()) {
+        this.ShepherdService.trigger("pipeline-started");
+      }
+      this.showDialog(msg);
+    }, error => {
+      this.showDialog({title: "Network Error", success: false, pipelineId: undefined, pipelineName: undefined, elementStatus: []})
+    });
   };
 
-  stopPipeline(pipelineId, toggleRunningOperation, refreshPipelines) {
+  stopPipeline(pipelineId: string, toggleRunningOperation, refreshPipelinesEmitter: EventEmitter<boolean>) {
     toggleRunningOperation('stopping');
-    this.RestApi.stopPipeline(pipelineId)
-        .then(msg => {
-          let data = msg.data;
-          toggleRunningOperation('stopping');
-          this.showDialog(data);
-          refreshPipelines();
-        }, error => {
-          toggleRunningOperation('stopping');
-          this.showDialog({
-            notifications: [{
-              title: "Network Error",
-              description: "Please check your Network."
-            }]
-          });
-
-        });
+    this.PipelineService.stopPipeline(pipelineId).subscribe(msg => {
+      refreshPipelinesEmitter.emit(true);
+      this.showDialog(msg);
+    }, error => {
+      this.showDialog({title: "Network Error", success: false, pipelineId: undefined, pipelineName: undefined, elementStatus: []})
+    });
   };
 
-  showDeleteDialog(pipeline, refreshPipelines) {
-    this.$mdDialog.show({
-      controller: DeletePipelineDialogController,
-      controllerAs: 'ctrl',
-      template: require('../dialog/delete-pipeline-dialog.tmpl.html'),
-      parent: angular.element(document.body),
-      clickOutsideToClose: false,
-      locals: {
-        pipeline: pipeline,
-        refreshPipelines: refreshPipelines
-      },
-      bindToController: true
+  showDeleteDialog(pipeline: Pipeline, refreshPipelinesEmitter: EventEmitter<boolean>) {
+    let dialogRef: DialogRef<DeletePipelineDialogComponent> = this.DialogService.open(DeletePipelineDialogComponent, {
+      panelType: PanelType.STANDARD_PANEL,
+      title: "Delete Pipeline",
+      width: "70vw",
+      data: {
+        "pipeline": pipeline,
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(data => {
+      if (data) {
+        refreshPipelinesEmitter.emit(true);
+      }
     })
   };
 
-  showDialog(data) {
-    this.$mdDialog.show({
-      controller: PipelineStatusDialogController,
-      controllerAs: 'ctrl',
-      template: require('../dialog/pipeline-status-dialog.tmpl.html'),
-      parent: angular.element(document.body),
-      clickOutsideToClose: false,
-      locals: {
-        data: data
-      },
-      bindToController: true
-    })
+  showDialog(data: PipelineOperationStatus) {
+    this.DialogService.open(PipelineStatusDialogComponent, {
+      panelType: PanelType.STANDARD_PANEL,
+      title: "Pipeline Status",
+      width: "70vw",
+      data: {
+        "pipelineOperationStatus": data
+      }
+    });
   };
 
   showPipelineInEditor(id) {
@@ -121,8 +108,8 @@ export class PipelineOperationsService {
   }
 
   showLogs(id) {
-    this.$state.go("streampipes.pipelinelogs", {pipeline: id});
+    //this.$state.go("streampipes.pipelinelogs", {pipeline: id});
   }
 }
 
-PipelineOperationsService.$inject = ['$mdDialog', 'RestApi', '$state', 'ShepherdService'];
+//PipelineOperationsService.$inject = ['$mdDialog', 'RestApi', '$state', 'ShepherdService'];

@@ -16,18 +16,4 @@
  *
  */
 
-import {Pipe, PipeTransform} from "@angular/core";
-import {Pipeline} from "../core-model/gen/streampipes-model";
-
-@Pipe({
-	name: 'categoryAlreadyInPipelineFilter',
-	pure: false
-})
-export class CategoryAlreadyInPipelinePipe implements PipeTransform {
-
-	transform(pipelines: Pipeline[], categoryId: string): any {
-		return pipelines.filter(pipeline => {
-			return !pipeline.pipelineCategories || !(pipeline.pipelineCategories.some(pc => pc === categoryId));
-		});
-	}
-};
+@import '../../../../scss/sp/sp-dialog.scss';

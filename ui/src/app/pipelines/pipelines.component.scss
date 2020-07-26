@@ -16,18 +16,14 @@
  *
  */
 
-import {Pipe, PipeTransform} from "@angular/core";
-import {Pipeline} from "../core-model/gen/streampipes-model";
+.page-container-padding-inner {
+  margin: 20px;
+}
 
-@Pipe({
-	name: 'categoryAlreadyInPipelineFilter',
-	pure: false
-})
-export class CategoryAlreadyInPipelinePipe implements PipeTransform {
+.mr-10 {
+  margin-right: 10px;
+}
 
-	transform(pipelines: Pipeline[], categoryId: string): any {
-		return pipelines.filter(pipeline => {
-			return !pipeline.pipelineCategories || !(pipeline.pipelineCategories.some(pc => pc === categoryId));
-		});
-	}
-};
+.mt-20 {
+  margin-top: 20px;
+}

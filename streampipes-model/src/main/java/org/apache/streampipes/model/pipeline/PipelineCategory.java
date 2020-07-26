@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.model.pipeline;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
@@ -26,8 +27,11 @@ public class PipelineCategory {
 
 	private String categoryName;
 	private String categoryDescription;
-	
+
+	@JsonProperty("_id")
 	private @SerializedName("_id") String categoryId;
+
+	@JsonProperty("_rev")
 	private @SerializedName("_rev") String rev;
 	
 	public PipelineCategory() {

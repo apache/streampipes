@@ -16,18 +16,16 @@
  *
  */
 
-import {Pipe, PipeTransform} from "@angular/core";
-import {Pipeline} from "../core-model/gen/streampipes-model";
+@import '../../../../scss/sp/colors';
+@import '../../../../scss/sp/sp-dialog.scss';
 
-@Pipe({
-	name: 'categoryAlreadyInPipelineFilter',
-	pure: false
-})
-export class CategoryAlreadyInPipelinePipe implements PipeTransform {
+.success-text {
+  font-size:14pt;
+}
 
-	transform(pipelines: Pipeline[], categoryId: string): any {
-		return pipelines.filter(pipeline => {
-			return !pipeline.pipelineCategories || !(pipeline.pipelineCategories.some(pc => pc === categoryId));
-		});
-	}
-};
+.error-message {
+  background-color: black;
+  color: white;
+  padding: 10px;
+  width: 100%;
+}

@@ -16,55 +16,49 @@
  *
  */
 
-export class DeletePipelineDialogController {
+import {Component, Input} from "@angular/core";
+import {Pipeline} from "../../../core-model/gen/streampipes-model";
+import {PipelineService} from "../../../platform-services/apis/pipeline.service";
+import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
 
-    $mdDialog: any;
-    PipelineOperationsService: any;
+@Component({
+    selector: 'delete-pipeline-dialog',
+    templateUrl: './delete-pipeline-dialog.component.html',
+    styleUrls: ['./delete-pipeline-dialog.component.scss']
+})
+export class DeletePipelineDialogComponent {
 
-    pipeline: any;
-    refreshPipelines: any;
-    RestApi: any;
+    @Input()
+    pipeline: Pipeline;
 
-    isInProgress: any = false;
+    isInProgress: boolean = false;
     currentStatus: any;
 
-    constructor($mdDialog, RestApi, pipeline, refreshPipelines) {
-        this.$mdDialog = $mdDialog;
-        this.RestApi = RestApi;
-        this.pipeline = pipeline;
-        this.refreshPipelines = refreshPipelines;
+    constructor(private dialogRef: DialogRef<DeletePipelineDialogComponent>,
+                private pipelineService: PipelineService) {
     }
 
-    hide() {
-        this.$mdDialog.hide();
-    };
-
-    cancel() {
-        this.$mdDialog.cancel();
+    close(refreshPipelines: boolean) {
+        this.dialogRef.close(refreshPipelines);
     };
 
     deletePipeline() {
         this.isInProgress = true;
         this.currentStatus = "Deleting pipeline...";
-        this.RestApi.deleteOwnPipeline(this.pipeline._id)
-            .then(data => {
-                this.refreshPipelines();
-                this.hide();
+        this.pipelineService.deleteOwnPipeline(this.pipeline._id)
+            .subscribe(data => {
+                this.close(true);
             });
     }
 
     stopAndDeletePipeline() {
         this.isInProgress = true;
         this.currentStatus = "Stopping pipeline...";
-        this.RestApi.stopPipeline(this.pipeline._id)
-            .then(data => {
+        this.pipelineService.stopPipeline(this.pipeline._id)
+            .subscribe(data => {
                this.deletePipeline();
             }, data => {
                 this.deletePipeline();
             });
     }
-
-
 }
-
-DeletePipelineDialogController.$inject = ['$mdDialog', 'RestApi', 'pipeline', 'refreshPipelines'];

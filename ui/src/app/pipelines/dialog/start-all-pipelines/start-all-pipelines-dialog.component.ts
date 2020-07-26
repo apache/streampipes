@@ -17,39 +17,46 @@
  */
 
 import * as angular from 'angular';
+import {Component, Input, OnInit} from "@angular/core";
+import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
+import {Pipeline} from "../../../core-model/gen/streampipes-model";
+import {PipelineService} from "../../../platform-services/apis/pipeline.service";
 
-export class StartAllPipelinesController {
+@Component({
+    selector: 'start-all-pipelines-dialog',
+    templateUrl: './start-all-pipelines-dialog.component.html',
+    styleUrls: ['./start-all-pipelines-dialog.component.scss']
+})
+export class StartAllPipelinesDialogComponent implements OnInit {
 
-    $mdDialog: any;
-    RestApi: any;
-    pipelines: any;
-    activeCategory: any;
-    pipelinesToModify: any;
+    @Input()
+    pipelines: Pipeline[];
+
+    @Input()
+    activeCategory: string;
+
+    pipelinesToModify: Pipeline[];
     installationStatus: any;
-    installationFinished: any;
-    page: any;
-    nextButton: any;
-    installationRunning: any;
-    action: any;
-    pipeline: any;
-    refreshPipelines: any;
+    installationFinished: boolean;
+    page: string;
+    nextButton: string;
+    installationRunning: boolean;
 
-    constructor($mdDialog, RestApi, pipelines, action, activeCategory, refreshPipelines) {
-        this.$mdDialog = $mdDialog;
-        this.RestApi = RestApi;
-        this.pipelines = pipelines;
-        this.activeCategory = activeCategory;
+    @Input()
+    action: boolean;
+
+
+    constructor(private DialogRef: DialogRef<StartAllPipelinesDialogComponent>,
+                private PipelineService: PipelineService) {
         this.pipelinesToModify = [];
         this.installationStatus = [];
         this.installationFinished = false;
         this.page = "preview";
         this.nextButton = "Next";
         this.installationRunning = false;
-        this.action = action;
-        this.refreshPipelines = refreshPipelines;
     }
 
-    $onInit() {
+    ngOnInit() {
         this.getPipelinesToModify();
         if (this.pipelinesToModify.length == 0) {
             this.nextButton = "Close";
@@ -57,17 +64,13 @@ export class StartAllPipelinesController {
         }
     }
 
-    hide() {
-        this.$mdDialog.hide();
-    };
-
-    cancel() {
-        this.$mdDialog.cancel();
+    close(refreshPipelines: boolean) {
+        this.DialogRef.close(refreshPipelines);
     };
 
     next() {
         if (this.page == "installation") {
-            this.cancel();
+            this.close(true);
         } else {
             this.page = "installation";
             this.initiateInstallation(this.pipelinesToModify[0], 0);
@@ -82,11 +85,11 @@ export class StartAllPipelinesController {
         });
     }
 
-    hasCategory(pipeline) {
+    hasCategory(pipeline: Pipeline) {
         var categoryPresent = false;
-        if (this.activeCategory == "") return true;
+        if (!this.activeCategory) return true;
         else {
-            angular.forEach(this.pipeline.pipelineCategories, category => {
+            angular.forEach(pipeline.pipelineCategories, category => {
                 if (category == this.activeCategory) {
                     categoryPresent = true;
                 }
@@ -106,9 +109,8 @@ export class StartAllPipelinesController {
     }
 
     startPipeline(pipeline, index) {
-        this.RestApi.startPipeline(pipeline._id)
-            .then(msg => {
-                let data = msg.data;
+        this.PipelineService.startPipeline(pipeline._id)
+            .subscribe(data => {
                 if (data.success) {
                     this.installationStatus[index].status = "success";
                 } else {
@@ -117,12 +119,11 @@ export class StartAllPipelinesController {
             }, data => {
                 this.installationStatus[index].status = "error";
             })
-            .then(() => {
+            .add(() => {
                 if (index < this.pipelinesToModify.length - 1) {
                     index++;
                     this.initiateInstallation(this.pipelinesToModify[index], index);
                 } else {
-                    this.refreshPipelines();
                     this.nextButton = "Close";
                     this.installationRunning = false;
                 }
@@ -131,9 +132,8 @@ export class StartAllPipelinesController {
     
 
     stopPipeline(pipeline, index) {
-        this.RestApi.stopPipeline(pipeline._id)
-            .then(msg => {
-                let data = msg.data;
+        this.PipelineService.stopPipeline(pipeline._id)
+            .subscribe(data => {
                 if (data.success) {
                     this.installationStatus[index].status = "success";
                 } else {
@@ -142,22 +142,14 @@ export class StartAllPipelinesController {
             }, data => {
                 this.installationStatus[index].status = "error";
             })
-            .then(() => {
+            .add(() => {
                 if (index < this.pipelinesToModify.length - 1) {
                     index++;
                     this.initiateInstallation(this.pipelinesToModify[index], index);
                 } else {
-                    this.refreshPipelines();
                     this.nextButton = "Close";
                     this.installationRunning = false;
                 }
             });
     }
 }
-
-StartAllPipelinesController.$inject = ['$mdDialog',
-    'RestApi',
-    'pipelines',
-    'action',
-    'activeCategory',
-    'refreshPipelines'];
