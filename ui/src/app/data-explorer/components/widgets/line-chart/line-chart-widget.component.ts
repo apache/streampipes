@@ -149,7 +149,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
     // Reduce selected columns when more then 6
     this.selectedColumns = this.availableColumns.length > 6 ? this.availableColumns.slice(0, 5) : this.availableColumns;
     if (this.availableNonNumericColumns.length > 0) {
-      this.selectedNonNumericColumn = this.availableNonNumericColumns[0];
+      // this.selectedNonNumericColumn = this.availableNonNumericColumns[0];
     }
     this.xKey = this.getTimestampProperty(this.dataExplorerWidget.dataLakeMeasure.eventSchema).runtimeName;
     this.yKeys = this.getRuntimeNames(this.selectedColumns);
@@ -553,6 +553,9 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
   private saveLabelsInDatabase(label, start_X, end_X) {
     const startdate = new Date(start_X).getTime() - 1;
     const enddate = new Date(end_X).getTime() + 1;
+    if (this.nonNumericKey === undefined) {
+      this.nonNumericKey = 'sp_internal_label';
+    }
     this.dataLakeRestService.saveLabelsInDatabase(this.data['measureName'], this.nonNumericKey, startdate, enddate, label).subscribe(
             res => {
               // console.log('Successfully wrote label ' + currentLabel + ' into database.');
