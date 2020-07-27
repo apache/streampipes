@@ -556,6 +556,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
     if (this.nonNumericKey === undefined) {
       this.nonNumericKey = 'sp_internal_label';
     }
+
     this.dataLakeRestService.saveLabelsInDatabase(this.data['measureName'], this.nonNumericKey, startdate, enddate, label).subscribe(
             res => {
               // console.log('Successfully wrote label ' + currentLabel + ' into database.');

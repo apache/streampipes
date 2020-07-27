@@ -15,6 +15,10 @@
     </envs>
     <option name="MAIN_CLASS_NAME" value="org.apache.streampipes.sinks.internal.jvm.SinksInternalJvmInit" />
     <module name="streampipes-sinks-internal-jvm" />
+    <extension name="net.ashald.envfile">
+      <option name="IS_ENABLED" value="false" />
+      <ENTRIES />
+    </extension>
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

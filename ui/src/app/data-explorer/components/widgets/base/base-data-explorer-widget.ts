@@ -117,6 +117,11 @@ export abstract class BaseDataExplorerWidget implements OnChanges {
       }
     });
 
+    const b = new EventPropertyPrimitive();
+    b.setRuntimeType('https://www.w3.org/2001/XMLSchema#string');
+    b.setRuntimeName('sp_internal_label');
+    result.push(b);
+
     return result;
   }
 
