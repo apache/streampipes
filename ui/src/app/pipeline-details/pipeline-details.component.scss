@@ -16,19 +16,3 @@
  *
  */
 
-import {RestApi} from "../../../services/rest-api.service";
-
-export class QuickEditController {
-
-    pipeline: any;
-
-    constructor(private restApi: RestApi) {
-
-    }
-
-    updatePipeline() {
-        this.restApi.updatePipeline(this.pipeline);
-    }
-}
-
-QuickEditController.$inject = ['RestApi'];

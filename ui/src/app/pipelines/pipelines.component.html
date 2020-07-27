@@ -59,8 +59,7 @@
         </div>
         <div class="sp-blue-border">
             <pipeline-overview [activeCategoryId]="activeCategoryId" [pipelines]="pipelines"
-                              (refreshPipelinesEmitter)="refreshPipelines()"
-                              *ngIf="pipelines.length > 0"></pipeline-overview>
+                              (refreshPipelinesEmitter)="refreshPipelines()"></pipeline-overview>
         </div>
         <div style="margin-top:20px;margin-bottom:20px;"></div>
         <div class="assemblyOptions sp-blue-bg">
@@ -68,8 +67,7 @@
         </div>
         <div class="sp-blue-border">
             <pipeline-overview [activeCategoryId]="activeCategoryId" [pipelines]="systemPipelines"
-                              (refreshPipelinesEmitter)="refreshPipelines()"
-                              *ngIf="pipelines.length > 0"></pipeline-overview>
+                              (refreshPipelinesEmitter)="refreshPipelines()"></pipeline-overview>
         </div>
     </div>
 </div>

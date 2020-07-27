@@ -118,7 +118,7 @@ public class PipelineWithUserResource extends AbstractRestInterface implements I
     @GET
     @Path("/{pipelineId}")
     @Produces(MediaType.APPLICATION_JSON)
-    @GsonWithIds
+    @JacksonSerialized
     @Override
     public Response getElement(@PathParam("username") String username, @PathParam("pipelineId") String pipelineId) {
         return ok(getPipelineStorage().getPipeline(pipelineId));

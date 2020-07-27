@@ -27,6 +27,7 @@ import { InfoComponent } from '../info/info.component';
 import { AppContainerComponent } from '../app-container/app-container.component';
 import { StandaloneDashboardComponent } from "../dashboard/components/standalone/standalone-dashboard.component";
 import { NotificationsComponent } from "../notifications/notifications.component";
+import { PipelineDetailsComponent } from '../pipeline-details/pipeline-details.component';
 
 export default function stateConfig($stateProvider, $urlRouterProvider) {
 
@@ -64,7 +65,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
             params: {pipeline: null},
             views: {
                 'spMain@streampipes': {
-                    template: require('../pipeline-details/pipeline-details.html')
+                    component: PipelineDetailsComponent
                 }
             }
         })

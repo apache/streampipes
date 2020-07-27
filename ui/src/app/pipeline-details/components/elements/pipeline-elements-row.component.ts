@@ -16,16 +16,44 @@
  *
  */
 
-import {PipelineElementsRowController} from "./pipeline-elements-row.controller";
+import {Component, Input, OnInit} from "@angular/core";
+import {PipelineElementUnion} from "../../../editor-v2/model/editor.model";
+import {Pipeline} from "../../../core-model/gen/streampipes-model";
+import {PipelineElementTypeUtils} from "../../../editor-v2/utils/editor.utils";
 
-declare const require: any;
+@Component({
+    selector: 'pipeline-elements-row',
+    templateUrl: './pipeline-elements-row.component.html',
+})
+export class PipelineElementsRowComponent implements OnInit {
 
-export let PipelineElementsRowComponent = {
-    template: require('./pipeline-elements-row.tmpl.html'),
-    bindings: {
-        element: "<",
-        pipeline: "<"
-    },
-    controller: PipelineElementsRowController,
-    controllerAs: 'ctrl'
-};
+    elementType: string;
+
+    @Input()
+    pipeline: Pipeline;
+
+    _element: PipelineElementUnion;
+
+    constructor() {
+
+    }
+
+    ngOnInit() {
+        this.updateType();
+    }
+
+    get element() {
+        return this._element;
+    }
+
+    @Input()
+    set element(element: PipelineElementUnion) {
+        this._element = element;
+        this.updateType();
+    }
+
+    updateType() {
+        this.elementType = PipelineElementTypeUtils.toCssShortHand(PipelineElementTypeUtils.fromType(this._element));
+    }
+
+}

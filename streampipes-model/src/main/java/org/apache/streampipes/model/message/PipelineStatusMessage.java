@@ -18,6 +18,9 @@
 
 package org.apache.streampipes.model.message;
 
+import org.apache.streampipes.model.shared.annotation.TsModel;
+
+@TsModel
 public class PipelineStatusMessage {
 
 	private String pipelineId;

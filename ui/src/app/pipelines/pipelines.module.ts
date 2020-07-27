@@ -38,14 +38,6 @@ import {PipelineCategoriesDialogComponent} from "./dialog/pipeline-categories/pi
 import {FormsModule} from "@angular/forms";
 import {PipelineInCategoryPipe} from "./pipeline-category.filter";
 
-// export default angular.module('sp.pipeline', [spServices, ngFileUpload, 'ngSanitize', 'datatables'])
-// 	.controller('PipelineCtrl', PipelineCtrl)
-// 	.component('pipelineDetails', PipelineDetailsComponent)
-// 	.filter('pipelineCategoryFilter', PipelineCategoryFilter)
-// 	.filter('categoryAlreadyInPipelineFilter', CategoryAlreadyInPipelineFilter)
-// 	.service('PipelineOperationsService', PipelineOperationsService)
-// 	.name;
-
 @NgModule({
   imports: [
     FlexLayoutModule,
@@ -68,11 +60,6 @@ import {PipelineInCategoryPipe} from "./pipeline-category.filter";
     CategoryAlreadyInPipelinePipe,
   ],
   providers: [
-    {
-      provide: '$state',
-      useFactory: ($injector: any) => $injector.get('$state'),
-      deps: ['$injector']
-    },
     PipelineOperationsService,
     CategoryAlreadyInPipelinePipe,
     PipelineInCategoryPipe

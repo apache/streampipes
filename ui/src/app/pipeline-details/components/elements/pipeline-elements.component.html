@@ -16,15 +16,24 @@
   ~
   -->
 
-<div class="assembly-options-preview sp-blue-bg">
-    <div layout="row" layout-align="start center">
-        <h4>Preview: {{ctrl.name}}</h4>
+<div>
+    <div class="assembly-options-preview sp-blue-bg">
+        <div fxLayout="row" fxLayoutAlign="start center">
+            <h4>Element Details</h4>
+        </div>
     </div>
-</div>
-<div class="outer-assembly-preview">
-    <div class="canvas-preview-inner">
-        <div id="{{ctrl.jspcanvas}}" class="canvas-preview">
-            <pipeline raw-pipeline-model="ctrl.rawPipelineModel" preview="true"></pipeline>
+    <div class="sp-blue-border" style="max-height: 800px;overflow:auto;">
+        <div *ngIf="selectedElement">
+            <div fxLayout="column" style="padding:5px;padding-left:10px;">
+                <pipeline-elements-row [pipeline]="pipeline" [element]="selectedElement"></pipeline-elements-row>
+
+                <mat-divider></mat-divider>
+                <div style="margin-bottom:15px;"></div>
+
+            </div>
+        </div>
+        <div fxLayout="column" fxLayoutAlign="center center" *ngIf="!selectedElement">
+            (select an element in the preview window to see details)
         </div>
     </div>
 </div>

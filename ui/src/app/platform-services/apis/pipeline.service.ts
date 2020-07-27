@@ -23,8 +23,8 @@ import {Observable} from "rxjs";
 import {
   Message,
   Pipeline,
-  PipelineCategory,
-  PipelineOperationStatus
+  PipelineCategory, PipelineElementStatus,
+  PipelineOperationStatus, PipelineStatusMessage
 } from "../../core-model/gen/streampipes-model";
 import {map} from "rxjs/operators";
 
@@ -66,10 +66,6 @@ export class PipelineService {
         .pipe(map(response => Pipeline.fromData(response as Pipeline)));
   }
 
-  getPipelineStatusById(pipelineId) {
-    return this.http.get(this.platformServicesCommons.authUserBasePath() + "/pipelines/" + pipelineId + "/status");
-  }
-
   storePipeline(pipeline: Pipeline): Observable<Message> {
     return this.http.post(this.platformServicesCommons.authUserBasePath() + "/pipelines", pipeline)
         .pipe(map(response => {
@@ -100,5 +96,12 @@ export class PipelineService {
       return (response as any[]).map(p => Pipeline.fromData(p));
     }))
   };
+
+  getPipelineStatusById(pipelineId): Observable<PipelineStatusMessage[]> {
+    return this.http.get(this.platformServicesCommons.authUserBasePath() + "/pipelines/" + pipelineId + "/status")
+        .pipe(map(response => {
+          return (response as any[]).map(r => PipelineStatusMessage.fromData(r));
+        }));
+  }
 
 }

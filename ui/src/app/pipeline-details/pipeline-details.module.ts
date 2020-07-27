@@ -16,27 +16,69 @@
  *
  */
 
-import * as angular from 'angular';
+import {NgModule} from "@angular/core";
+import {FlexLayoutModule} from "@angular/flex-layout";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {MatTabsModule} from "@angular/material/tabs";
+import {MatButtonModule} from "@angular/material/button";
+import {CustomMaterialModule} from "../CustomMaterial/custom-material.module";
+import {CommonModule} from "@angular/common";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {PipelineDetailsComponent} from "./pipeline-details.component";
+import {PipelinePreviewComponent} from "./components/preview/pipeline-preview.component";
+import {EditorModule} from "../editor-v2/editor.module";
+import {PipelineActionsComponent} from "./components/actions/pipeline-actions.component";
+import {PipelineStatusComponent} from "./components/status/pipeline-status.component";
+import {PipelineElementsComponent} from "./components/elements/pipeline-elements.component";
+import {PipelineElementsRowComponent} from "./components/elements/pipeline-elements-row.component";
+import {QuickEditComponent} from "./components/edit/quickedit.component";
+import {ConnectModule} from "../connect/connect.module";
 
-import spServices from '../services/services.module';
+// export default angular.module('sp.pipelineDetails', [spServices])
+//     .controller('PipelineDetailsCtrl', PipelineDetailsCtrl)
+//     .component('pipelineStatus', PipelineStatusComponent)
+//     .component('pipelinePreview', PipelinePreviewComponent)
+//     .component('pipelineElements', PipelineElementsComponent)
+//     .component('pipelineElementsRow', PipelineElementsRowComponent)
+//     .component('pipelineActions', PipelineActionsComponent)
+//     .component('quickEdit', QuickEditComponent)
+//     //.component('customizeDialog', CustomizeDialogComponent)
+//     .name;
 
-import {PipelinePreviewComponent} from './components/preview/pipeline-preview.component';
-import {PipelineStatusComponent} from './components/status/pipeline-status.component';
-import {PipelineElementsComponent} from './components/elements/pipeline-elements.component'
-import {PipelineElementsRowComponent} from './components/elements/pipeline-elements-row.component';
-import {PipelineActionsComponent} from './components/actions/pipeline-actions.component';
-//import {CustomizeDialogComponent} from '../editor/components/customize/customize-dialog.component';
-import {QuickEditComponent} from './components/edit/quickedit.component';
+@NgModule({
+  imports: [
+    FlexLayoutModule,
+    FormsModule,
+    MatTabsModule,
+    MatButtonModule,
+    CustomMaterialModule,
+    CommonModule,
+    MatProgressSpinnerModule,
+    EditorModule,
+    ConnectModule,
+    FormsModule,
+    ReactiveFormsModule
+  ],
+  declarations: [
+    PipelineActionsComponent,
+    PipelineElementsComponent,
+    PipelineElementsRowComponent,
+    PipelineDetailsComponent,
+    PipelineStatusComponent,
+    PipelinePreviewComponent,
+    QuickEditComponent
+  ],
+  providers: [],
+  exports: [
+    PipelineDetailsComponent
+  ],
+  entryComponents: [
+    PipelineDetailsComponent
+  ]
+})
+export class PipelineDetailsModule {
 
-import {PipelineDetailsCtrl} from './pipeline-details.controller';
+  constructor() {
+  }
 
-export default angular.module('sp.pipelineDetails', [spServices])
-    .controller('PipelineDetailsCtrl', PipelineDetailsCtrl)
-    .component('pipelineStatus', PipelineStatusComponent)
-    .component('pipelinePreview', PipelinePreviewComponent)
-    .component('pipelineElements', PipelineElementsComponent)
-    .component('pipelineElementsRow', PipelineElementsRowComponent)
-    .component('pipelineActions', PipelineActionsComponent)
-    .component('quickEdit', QuickEditComponent)
-    //.component('customizeDialog', CustomizeDialogComponent)
-    .name;
+}

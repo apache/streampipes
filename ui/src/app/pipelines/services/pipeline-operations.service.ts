@@ -48,6 +48,7 @@ export class PipelineOperationsService {
     toggleRunningOperation('starting');
     this.PipelineService.startPipeline(pipelineId).subscribe(msg => {
       refreshPipelinesEmitter.emit(true);
+      toggleRunningOperation('starting');
       if (this.ShepherdService.isTourActive()) {
         this.ShepherdService.trigger("pipeline-started");
       }
@@ -61,13 +62,14 @@ export class PipelineOperationsService {
     toggleRunningOperation('stopping');
     this.PipelineService.stopPipeline(pipelineId).subscribe(msg => {
       refreshPipelinesEmitter.emit(true);
+      toggleRunningOperation('stopping');
       this.showDialog(msg);
     }, error => {
       this.showDialog({title: "Network Error", success: false, pipelineId: undefined, pipelineName: undefined, elementStatus: []})
     });
   };
 
-  showDeleteDialog(pipeline: Pipeline, refreshPipelinesEmitter: EventEmitter<boolean>) {
+  showDeleteDialog(pipeline: Pipeline, refreshPipelinesEmitter: EventEmitter<boolean>, switchToPipelineView?: any) {
     let dialogRef: DialogRef<DeletePipelineDialogComponent> = this.DialogService.open(DeletePipelineDialogComponent, {
       panelType: PanelType.STANDARD_PANEL,
       title: "Delete Pipeline",
@@ -79,7 +81,11 @@ export class PipelineOperationsService {
 
     dialogRef.afterClosed().subscribe(data => {
       if (data) {
-        refreshPipelinesEmitter.emit(true);
+        if (!switchToPipelineView) {
+          refreshPipelinesEmitter.emit(true);
+        } else {
+          switchToPipelineView();
+        }
       }
     })
   };

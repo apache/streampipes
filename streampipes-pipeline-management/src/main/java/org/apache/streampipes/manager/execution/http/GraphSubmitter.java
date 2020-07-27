@@ -65,7 +65,7 @@ public class GraphSubmitter {
     } else {
       LOG.info("Could not start pipeline, initializing rollback...");
       rollbackInvokedPipelineElements(status);
-      status.setTitle("Could not start pipeline" + pipelineName + ".");
+      status.setTitle("Could not start pipeline " + pipelineName + ".");
     }
     return status;
   }

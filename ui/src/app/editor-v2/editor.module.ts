@@ -131,9 +131,11 @@ import {UserDefinedOutputStrategyComponent} from "./components/output-strategy/u
         },
         SafeCss
     ],
-    exports: [
-        EditorComponent
-    ],
+  exports: [
+    EditorComponent,
+    PipelineComponent,
+    PipelineElementComponent
+  ],
     entryComponents: [
         EditorComponent
     ]
