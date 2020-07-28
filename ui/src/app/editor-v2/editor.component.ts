@@ -16,7 +16,7 @@
  *
  */
 
-import {Component, OnInit} from "@angular/core";
+import {Component, Inject, OnInit} from "@angular/core";
 import {EditorService} from "./services/editor.service";
 import {
     DataProcessorInvocation,
@@ -58,7 +58,7 @@ export class EditorComponent implements OnInit {
     currentElements: Array<(SpDataStream | DataProcessorInvocation | DataSinkInvocation)> = [];
 
     rawPipelineModel: PipelineElementConfig[] = [];
-    currentModifiedPipelineId: any;
+    currentModifiedPipelineId: string;
 
     elementsLoaded = [false, false, false];
     allElementsLoaded: boolean = false;
@@ -95,10 +95,14 @@ export class EditorComponent implements OnInit {
                 private pipelineElementService: PipelineElementService,
                 private AuthStatusService: AuthStatusService,
                 private dialogService: DialogService,
-                private shepherdService: ShepherdService) {
+                private shepherdService: ShepherdService,
+                @Inject("$stateParams") private $stateParams) {
     }
 
     ngOnInit() {
+        if (this.$stateParams.pipeline) {
+            this.currentModifiedPipelineId = this.$stateParams.pipeline;
+        }
         this.pipelineElementService.getDataProcessors().subscribe(processors => {
             this.availableDataProcessors = processors;
             this.allElements = this.allElements.concat(processors);

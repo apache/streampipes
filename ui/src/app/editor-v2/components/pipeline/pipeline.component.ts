@@ -44,6 +44,8 @@ import {EditorService} from "../../services/editor.service";
 import {MatchingResultMessage} from "../../../core-model/gen/streampipes-model-client";
 import {MatchingErrorComponent} from "../../dialog/matching-error/matching-error.component";
 import {Tuple2} from "../../../core-model/base/Tuple2";
+import {ConfirmDialogComponent} from "../../../core-ui/dialog/confirm-dialog/confirm-dialog.component";
+import {MatDialog} from "@angular/material/dialog";
 
 @Component({
   selector: 'pipeline',
@@ -81,9 +83,7 @@ export class PipelineComponent implements OnInit {
 
   availablePipelineElementCache: PipelineElementUnion[];
 
-  DialogBuilder: any;
   plumbReady: any;
-  EditorDialogManager: any;
   currentMouseOverElement: string;
   currentPipelineModel: Pipeline;
   idCounter: any;
@@ -97,13 +97,11 @@ export class PipelineComponent implements OnInit {
               private JsplumbBridge: JsplumbBridge,
               private ObjectProvider: ObjectProvider,
               private EditorService: EditorService,
-              //DialogBuilder,
-              //EditorDialogManager,
-              // TransitionService,
               private ShepherdService: ShepherdService,
               private PipelineValidationService: PipelineValidationService,
               private RestApi: RestApi,
-              private dialogService: DialogService) {
+              private dialogService: DialogService,
+              private dialog: MatDialog) {
     this.plumbReady = false;
     this.currentMouseOverElement = "";
     this.currentPipelineModel = new Pipeline();
@@ -166,7 +164,15 @@ export class PipelineComponent implements OnInit {
   }
 
   showMixedStreamAlert() {
-    this.EditorDialogManager.showMixedStreamAlert();
+    this.dialog.open(ConfirmDialogComponent, {
+      width: '500px',
+      data: {
+        "title": "Do you really want to delete the current pipeline?",
+        "subtitle": "This cannot be undone.",
+        "confirmAndCancel": false,
+        "okTitle": "Close",
+      },
+    });
   }
 
   findPipelineElementByElementId(elementId: string) {
@@ -182,7 +188,7 @@ export class PipelineComponent implements OnInit {
         let pipelineElement: PipelineElementUnion = this.findPipelineElementByElementId(pipelineElementId);
         if (ui.draggable.hasClass('draggable-icon')) {
           this.EditorService.makePipelineAssemblyEmpty(false);
-          var pipelineElementConfig = this.JsplumbService.createNewPipelineElementConfig(pipelineElement, this.PipelineEditorService.getCoordinates(ui, this.currentZoomLevel), false);
+          var pipelineElementConfig = this.JsplumbService.createNewPipelineElementConfig(pipelineElement, this.PipelineEditorService.getCoordinates(ui, this.currentZoomLevel), false, false);
           if ((this.isStreamInPipeline() && pipelineElementConfig.type == 'set') ||
               this.isSetInPipeline() && pipelineElementConfig.type == 'stream') {
             this.showMixedStreamAlert();
@@ -227,7 +233,7 @@ export class PipelineComponent implements OnInit {
         .eventGrounding
         .transportProtocols[0]
         .topicDefinition["@class"] === "org.apache.streampipes.model.grounding.WildcardTopicDefinition") {
-      this.EditorDialogManager.showCustomizeStreamDialog(streamDescription);
+      //this.EditorDialogManager.showCustomizeStreamDialog(streamDescription);
     }
   }
 

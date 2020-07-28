@@ -84,8 +84,7 @@ export class JsplumbService {
 
     toConfig(pe, type, isPreview) {
         pe.type = type;
-        pe.configured = true;
-        return this.createNewPipelineElementConfig(pe, {x: 100, y: 100}, isPreview);
+        return this.createNewPipelineElementConfig(pe, {x: 100, y: 100}, isPreview, true);
     }
 
 
@@ -139,12 +138,13 @@ export class JsplumbService {
         var x = $parentElement.position().left;
         var y = $parentElement.position().top;
         var coord = {'x': x + 200, 'y': y};
-        return this.createNewPipelineElementConfig(json, coord, isPreview);
+        return this.createNewPipelineElementConfig(json, coord, isPreview, false);
     }
 
     createNewPipelineElementConfig(pipelineElement: PipelineElementUnion,
                                    coordinates,
-                                   isPreview: boolean): PipelineElementConfig {
+                                   isPreview: boolean,
+                                   isCompleted: boolean): PipelineElementConfig {
         let displaySettings = isPreview ? 'connectable-preview' : 'connectable-editor';
         let connectable = "connectable";
         let pipelineElementConfig = {} as PipelineElementConfig;
@@ -154,7 +154,7 @@ export class JsplumbService {
         pipelineElementConfig.settings = {connectable: connectable,
             openCustomize: !(pipelineElement as any).configured,
             preview: isPreview,
-            completed: (pipelineElement instanceof SpDataStream || isPreview),
+            completed: (pipelineElement instanceof SpDataStream || isPreview || isCompleted),
             disabled: false,
             loadingStatus: false,
             displaySettings: displaySettings,

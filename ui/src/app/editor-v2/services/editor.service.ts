@@ -60,6 +60,7 @@ export class EditorService {
     getCachedPipeline(): Observable<PipelineElementConfig[]> {
         return this.http.get(this.platformServicesCommons.authUserBasePath() + "/pipeline-cache")
             .pipe(map(result => {
+              console.log(result);
                 let configs: PipelineElementConfig[] = result as PipelineElementConfig[];
                 configs.map(config => config.payload = this.convert(config.payload));
                 return configs;

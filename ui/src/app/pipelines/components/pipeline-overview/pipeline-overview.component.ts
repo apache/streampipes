@@ -35,6 +35,9 @@ export class PipelineOverviewComponent implements OnInit {
 
   filteredPipelinesAvailable: boolean = false;
 
+  @Input()
+  pipelineToStart: Pipeline;
+
   @Output()
   refreshPipelinesEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
@@ -56,13 +59,11 @@ export class PipelineOverviewComponent implements OnInit {
   ngOnInit() {
     this.toggleRunningOperation = this.toggleRunningOperation.bind(this);
 
-    this.pipelines.forEach(pipeline => {
-      if ((pipeline as any).immediateStart) {
-        if (!pipeline.running) {
-          this.pipelineOperationsService.startPipeline(pipeline._id, this.toggleRunningOperation, this.refreshPipelinesEmitter);
-        }
+    if (this.pipelineToStart) {
+      if (!this.pipelineToStart.running) {
+        this.pipelineOperationsService.startPipeline(this.pipelineToStart._id, this.toggleRunningOperation, this.refreshPipelinesEmitter);
       }
-    });
+    }
   }
 
   toggleRunningOperation(currentOperation) {

@@ -18,7 +18,7 @@
 
 import * as angular from 'angular';
 import * as FileSaver from 'file-saver';
-import {Component, OnInit} from "@angular/core";
+import {Component, Inject, OnInit} from "@angular/core";
 import {PipelineService} from "../platform-services/apis/pipeline.service";
 import {Pipeline, PipelineCategory} from '../core-model/gen/streampipes-model';
 import {DialogService} from "../core-ui/dialog/base-dialog/base-dialog.service";
@@ -27,6 +27,7 @@ import {ImportPipelineDialogComponent} from "./dialog/import-pipeline/import-pip
 import {DialogRef} from "../core-ui/dialog/base-dialog/dialog-ref";
 import {StartAllPipelinesDialogComponent} from "./dialog/start-all-pipelines/start-all-pipelines-dialog.component";
 import {PipelineCategoriesDialogComponent} from "./dialog/pipeline-categories/pipeline-categories-dialog.component";
+import {zip} from "rxjs";
 
 declare const jsPlumb: any;
 declare const require: any;
@@ -38,39 +39,34 @@ declare const require: any;
 })
 export class PipelinesComponent implements OnInit {
 
-    RestApi: any;
-    $mdDialog: any;
-    $state: any;
-    $timeout: any;
-    $stateParams: any;
-    ImageChecker: any;
-    ElementIconText: any;
     pipeline: Pipeline;
     pipelines: Array<Pipeline> = [];
     systemPipelines: Array<Pipeline> = [];
-    pipelinShowing: any;
-    pipelinePlumb: any;
-    starting: any;
-    stopping: any;
+    starting: boolean;
+    stopping: boolean;
     pipelineCategories: Array<PipelineCategory>;
     activeCategoryId: string;
-    startPipelineDirectly: any;
+    pipelineIdToStart: string;
+
+    pipelineToStart: Pipeline;
+    systemPipelineToStart: Pipeline;
+
+    pipelinesReady: boolean = false;
 
     selectedCategoryIndex: number = 0;
 
     constructor(private pipelineService: PipelineService,
-                private DialogService: DialogService) {
+                private DialogService: DialogService,
+                @Inject('$stateParams') private $stateParams) {
         this.pipelineCategories = [];
         this.starting = false;
         this.stopping = false;
-        //     this.startPipelineDirectly = $stateParams.pipeline;
-
+        this.pipelineIdToStart = $stateParams.pipeline;
     }
 
     ngOnInit() {
         this.getPipelineCategories();
         this.getPipelines();
-        this.getSystemPipelines();
     }
 
     setSelectedTab(index) {
@@ -89,27 +85,28 @@ export class PipelinesComponent implements OnInit {
 
     getPipelines() {
         this.pipelines = [];
-        this.pipelineService.getOwnPipelines()
-            .subscribe(pipelines => {
-                this.pipelines = pipelines;
-                if (this.startPipelineDirectly != "") {
-                    this.pipelines.forEach(pipeline => {
-                        if (pipeline._id == this.startPipelineDirectly) {
-                            (pipeline as any).immediateStart = true;
-                        }
-                    });
-                    this.startPipelineDirectly = "";
-                }
-            });
-
+        zip(this.pipelineService.getOwnPipelines(), this.pipelineService.getSystemPipelines()).subscribe(allPipelines => {
+            this.pipelines = allPipelines[0];
+            this.systemPipelines = allPipelines[1];
+            this.checkForImmediateStart(allPipelines);
+            this.pipelinesReady = true;
+        });
     };
 
-    getSystemPipelines() {
-        this.systemPipelines = [];
-        this.pipelineService.getSystemPipelines()
-            .subscribe(pipelines => {
-                this.systemPipelines = pipelines;
-            });
+    checkForImmediateStart(allPipelines: Pipeline[][]) {
+        this.pipelineToStart = undefined;
+        allPipelines.forEach((pipelines , index) => {
+           pipelines.forEach(pipeline => {
+               if (pipeline._id == this.pipelineIdToStart) {
+                   if (index == 0) {
+                       this.pipelineToStart = pipeline;
+                   } else {
+                       this.systemPipelineToStart = pipeline;
+                   }
+               }
+           })
+        });
+        this.pipelineIdToStart = undefined;
     }
 
     getPipelineCategories() {
@@ -117,11 +114,6 @@ export class PipelinesComponent implements OnInit {
             .subscribe(pipelineCategories => {
                 this.pipelineCategories = pipelineCategories;
             });
-    };
-
-    isTextIconShown(element) {
-        return element.iconUrl == null || element.iconUrl == 'http://localhost:8080/img' || typeof element.iconUrl === 'undefined';
-
     };
 
     activeClass(pipeline) {
@@ -195,9 +187,7 @@ export class PipelinesComponent implements OnInit {
 
     refreshPipelines() {
         this.getPipelines();
-        this.getSystemPipelines();
     }
-
 
     showPipeline(pipeline) {
         pipeline.display = !pipeline.display;

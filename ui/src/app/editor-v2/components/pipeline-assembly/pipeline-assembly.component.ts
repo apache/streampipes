@@ -21,7 +21,6 @@ import {JsplumbBridge} from "../../services/jsplumb-bridge.service";
 import {PipelinePositioningService} from "../../services/pipeline-positioning.service";
 import {PipelineValidationService} from "../../services/pipeline-validation.service";
 import {JsplumbService} from "../../services/jsplumb.service";
-import {RestApi} from "../../../services/rest-api.service";
 import {ShepherdService} from "../../../services/tour/shepherd.service";
 import {PipelineElementConfig, PipelineElementUnion} from "../../model/editor.model";
 import {ObjectProvider} from "../../services/object-provider.service";
@@ -31,6 +30,7 @@ import {DialogService} from "../../../core-ui/dialog/base-dialog/base-dialog.ser
 import {ConfirmDialogComponent} from "../../../core-ui/dialog/confirm-dialog/confirm-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
 import {EditorService} from "../../services/editor.service";
+import {PipelineService} from "../../../platform-services/apis/pipeline.service";
 
 
 @Component({
@@ -65,15 +65,13 @@ export class PipelineAssemblyComponent implements OnInit {
     pipelineCacheRunning: boolean = false;
     pipelineCached: boolean = false;
 
-    // Remove later
-    EditorDialogManager: any;
 
     constructor(private JsplumbBridge: JsplumbBridge,
                 private PipelinePositioningService: PipelinePositioningService,
                 private ObjectProvider: ObjectProvider,
                 public EditorService: EditorService,
                 public PipelineValidationService: PipelineValidationService,
-                private RestApi: RestApi,
+                private PipelineService: PipelineService,
                 private JsplumbService: JsplumbService,
                 private ShepherdService: ShepherdService,
                 private dialogService: DialogService,
@@ -86,7 +84,7 @@ export class PipelineAssemblyComponent implements OnInit {
 
     ngOnInit(): void {
         if (this.currentModifiedPipelineId) {
-            //this.displayPipelineById();
+            this.displayPipelineById();
         } else {
             this.checkAndDisplayCachedPipeline();
         }
@@ -145,7 +143,10 @@ export class PipelineAssemblyComponent implements OnInit {
             width: '500px',
             data: {
                 "title": "Do you really want to delete the current pipeline?",
-                "subtitle": "This cannot be undone."
+                "subtitle": "This cannot be undone.",
+                "cancelTitle": "No",
+                "okTitle": "Yes",
+                "confirmAndCancel": true
             },
         });
         dialogRef.afterClosed().subscribe(ev => {
@@ -204,11 +205,6 @@ export class PipelineAssemblyComponent implements OnInit {
         });
     }
 
-
-    openPipelineNameModal(pipeline, modificationMode) {
-        this.EditorDialogManager.showSavePipelineDialog(pipeline, modificationMode);
-    }
-
     checkAndDisplayCachedPipeline() {
         this.EditorService.getCachedPipeline().subscribe(msg => {
             if (msg) {
@@ -219,12 +215,13 @@ export class PipelineAssemblyComponent implements OnInit {
     }
 
     displayPipelineById() {
-        this.RestApi.getPipelineById(this.currentModifiedPipelineId)
-            .then((msg) => {
-                let pipeline = msg.data;
+        this.PipelineService.getPipelineById(this.currentModifiedPipelineId)
+            .subscribe((msg) => {
+                let pipeline = msg;
                 this.currentPipelineName = pipeline.name;
                 this.currentPipelineDescription = pipeline.description;
                 this.rawPipelineModel = this.JsplumbService.makeRawPipeline(pipeline, false);
+                console.log(this.rawPipelineModel);
                 this.displayPipelineInEditor(true);
             });
     };
