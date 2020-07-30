@@ -23,6 +23,7 @@
             <mat-form-field appearance="outline" class="sp_form_field_wrapper" style="margin-right: 5px;">
                 <mat-label>Search</mat-label>
                 <input matInput (input)="onFilterChange($event.target.value)" >
+
             </mat-form-field>
 
             <sp-select-properties
@@ -53,7 +54,8 @@
             mat-sort
             *ngIf="showData"
             [dataSource]="dataSource" matSort
-            (matSortChange)="sortData($event)">
+            (matSortChange)="sortData($event)"
+            class="table">
 
             <ng-container
                     *ngFor="let element of this.selectedColumns"
