@@ -21,7 +21,14 @@
 <div fxLayout="column" fxLayoutAlign="stretch">
     <div class="assemblyOptionsDataExplorer sp-blue-bg m-0 row header h-40" style="margin-left: 0px;margin-right: 0px;">
         <div fxFlex="100" layout="row" fxLayoutAlign="end center" style="margin-left: 0px;margin-right: 0px;">
-            <sp-select-properties (changeSelectedProperties)="setSelectedColumn($event)" [availableProperties]="availableColumns" [selectedProperties]="selectedColumns"></sp-select-properties>
+            <sp-select-properties
+                    label="Select Columns"
+                    multiple = true
+                    (changeSelectedProperties)="setSelectedColumn($event)"
+                    [availableProperties]="availableColumns"
+                    [selectedProperties]="selectedColumns"
+            ></sp-select-properties>
+
             <button mat-icon-button matTooltip="Download data" class="icon" (click)="downloadDataAsFile()" color="white">
                 <i class="material-icons">get_app</i>
             </button>
