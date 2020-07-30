@@ -58,12 +58,15 @@ export class EditorService {
     }
 
     getCachedPipeline(): Observable<PipelineElementConfig[]> {
-        return this.http.get(this.platformServicesCommons.authUserBasePath() + "/pipeline-cache")
+        return this.http.get(this.platformServicesCommons.authUserBasePath() + '/pipeline-cache')
             .pipe(map(result => {
-              console.log(result);
-                let configs: PipelineElementConfig[] = result as PipelineElementConfig[];
+              if (result === null) {
+                return [];
+              } else {
+                const configs: PipelineElementConfig[] = result as PipelineElementConfig[];
                 configs.map(config => config.payload = this.convert(config.payload));
                 return configs;
+              }
             }));
     }
 

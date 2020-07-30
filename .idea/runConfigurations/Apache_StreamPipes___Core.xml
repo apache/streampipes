@@ -10,6 +10,10 @@
     </envs>
     <option name="MAIN_CLASS_NAME" value="org.apache.streampipes.backend.StreamPipesBackendApplication" />
     <module name="streampipes-backend" />
+    <extension name="net.ashald.envfile">
+      <option name="IS_ENABLED" value="false" />
+      <ENTRIES />
+    </extension>
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
