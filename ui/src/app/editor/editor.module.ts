@@ -16,105 +16,132 @@
  *
  */
 
-import * as angular from 'angular';
-
-import 'angular-ui-sortable';
-import 'angular-ui-bootstrap';
-
-import spServices from '../services/services.module';
-
-import 'jquery.panzoom';
-import 'npm/bootstrap';
-import 'npm/angular-trix';
-import 'npm/angular-datatables';
-import 'npm/angular-sanitize';
-
-import {EditorCtrl} from './editor.controller';
-import myDataBind from './my-data-bind.directive';
-import imageBind from './image-bind.directive';
-import displayRecommendedFilter from './filter/display-recommended.filter';
-
-import {AnyComponent} from './components/any/any.component';
-import {CustomOutputComponent} from './components/customoutput/customoutput.component';
-import {DomainConceptComponent} from './components/domainconcept/domainconcept.component';
-import {FreeTextComponent} from './components/freetext/freetext.component';
-import {MappingUnaryComponent} from './components/mappingunary/mappingunary.component';
-import {MappingNaryComponent} from './components/mappingnary/mappingnary.component';
-import {MatchingPropertyComponent} from './components/matchingproperty/matchingproperty.component';
-import {OneOfComponent} from './components/oneof/oneof.component';
-import {ReplaceOutputComponent} from './components/replaceoutput/replaceoutput.component';
-import {MultipleValueInputComponent} from './components/multivalue/multiple-value-input.component';
-import {PipelineElementOptionsComponent} from './components/pipeline-element-options/pipeline-element-options.component';
-import {CollectionComponent} from './components/collection/collection.component';
-import {CustomizeDialogComponent} from './components/customize/customize-dialog.component';
-import {TopicSelectionDialogComponent} from './components/topic/topic-selection-dialog.component';
-import {PipelineComponent} from './components/pipeline/pipeline.component';
-import {EditorDialogManager} from '../editor-v2/services/editor-dialog-manager.service';
-import {PipelineElementComponent} from './components/pipeline-element/pipeline-element.component';
-import {PipelineElementRecommendationComponent} from "./components/pipeline-element-recommendation/pipeline-element-recommendation.component";
-import {PipelineElementRecommendationService} from "../editor-v2/services/pipeline-element-recommendation.service";
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FlexLayoutModule} from '@angular/flex-layout';
+import {GridsterModule} from 'angular-gridster2';
+import {MatTabsModule} from "@angular/material/tabs";
+import {CustomMaterialModule} from "../CustomMaterial/custom-material.module";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {ElementIconText} from "../services/get-element-icon-text.service";
+import {SemanticTypeUtilsService} from '../core-services/semantic-type/semantic-type-utils.service';
+import {EditorComponent} from "./editor.component";
+import {ConnectModule} from "../connect/connect.module";
+import {EditorService} from "./services/editor.service";
+import {PipelineElementIconStandComponent} from "./components/pipeline-element-icon-stand/pipeline-element-icon-stand.component";
 import {PipelineAssemblyComponent} from "./components/pipeline-assembly/pipeline-assembly.component";
-import {PipelineElementIconStandComponent} from './components/pipeline-element-icon-stand/pipeline-element-icon-stand.component';
-import {PipelineValidationService} from "../editor-v2/services/pipeline-validation.service";
-import {OneOfRemoteComponent} from "./components/oneof-remote/oneof-remote.component";
-
-import {TextValidatorDirective} from "./validator/text/text-validator.directive";
-
-import selectFilter from './filter/select.filter';
-import elementNameFilter from './filter/element-name.filter';
-import {PropertySelectionComponent} from "./components/customoutput/propertyselection/property-selection.component";
+import {ImageChecker} from "../services/image-checker.service";
+import {PipelineElementComponent} from "./components/pipeline-element/pipeline-element.component";
+import {JsplumbBridge} from "./services/jsplumb-bridge.service";
+import {PipelinePositioningService} from "./services/pipeline-positioning.service";
+import {JsplumbService} from "./services/jsplumb.service";
+import {JsplumbConfigService} from "./services/jsplumb-config.service";
+import {PipelineEditorService} from "./services/pipeline-editor.service";
+import {PipelineValidationService} from "./services/pipeline-validation.service";
+import {PipelineComponent} from "./components/pipeline/pipeline.component";
+import {ObjectProvider} from "./services/object-provider.service";
+import {PipelineElementOptionsComponent} from "./components/pipeline-element-options/pipeline-element-options.component";
+import {PipelineElementRecommendationService} from "./services/pipeline-element-recommendation.service";
+import {CustomizeComponent} from "./dialog/customize/customize.component";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {CoreUiModule} from "../core-ui/core-ui.module";
+import {SavePipelineComponent} from "./dialog/save-pipeline/save-pipeline.component";
+import {PipelineElementRecommendationComponent} from "./components/pipeline-element-recommendation/pipeline-element-recommendation.component";
+import {CompatibleElementsComponent} from "./dialog/compatible-elements/compatible-elements.component";
+import {MatListModule} from "@angular/material/list";
+import {HelpComponent} from "./dialog/help/help.component";
 import {PipelineElementDocumentationComponent} from "./components/pipeline-element-documentation/pipeline-element-documentation.component";
-import {CustomOutputValidatorDirective} from "./validator/text/custom-output-validator.directive";
-import {AlternativeComponent} from "./components/alternative/alternative.component";
-import {GroupComponent} from "./components/group/group.component";
-import {SecretComponent} from "./components/secret/secret.component";
-import {FileUploadComponent} from "./components/fileupload/fileupload.component";
-import {AnyRemoteComponent} from "./components/any-remote/any-remote.component";
-import {CodeInputComponent} from "./components/code/code.component";
-import {CodeEditorDirective} from "./components/code/code-editor.directive";
-import {UserDefinedOutputComponent} from "./components/userdefinedoutput/user-defined-output.component";
+import {ShowdownModule} from 'ngx-showdown';
+import {SafeCss} from "./utils/style-sanitizer";
+import {MatchingErrorComponent} from "./dialog/matching-error/matching-error.component";
+import {WelcomeTourComponent} from "./dialog/welcome-tour/welcome-tour.component";
+import {MissingElementsForTutorialComponent} from "./dialog/missing-elements-for-tutorial/missing-elements-for-tutorial.component";
+import {OutputStrategyComponent} from "./components/output-strategy/output-strategy.component";
+import {CustomOutputStrategyComponent} from "./components/output-strategy/custom-output/custom-output-strategy.component";
+import {PropertySelectionComponent} from "./components/output-strategy/property-selection/property-selection.component";
+import {UserDefinedOutputStrategyComponent} from "./components/output-strategy/user-defined-output/user-defined-output.component";
 
+@NgModule({
+    imports: [
+        CoreUiModule,
+        CommonModule,
+        MatTabsModule,
+        MatListModule,
+        FlexLayoutModule,
+        GridsterModule,
+        CommonModule,
+        FlexLayoutModule,
+        CustomMaterialModule,
+        FormsModule,
+        ConnectModule,
+        MatProgressSpinnerModule,
+        ShowdownModule,
+        ReactiveFormsModule
+    ],
+    declarations: [
+        CompatibleElementsComponent,
+        CustomizeComponent,
+        CustomOutputStrategyComponent,
+        EditorComponent,
+        HelpComponent,
+        MatchingErrorComponent,
+        MissingElementsForTutorialComponent,
+        OutputStrategyComponent,
+        UserDefinedOutputStrategyComponent,
+        PipelineAssemblyComponent,
+        PipelineElementComponent,
+        PipelineElementDocumentationComponent,
+        PipelineElementIconStandComponent,
+        PipelineElementOptionsComponent,
+        PipelineElementRecommendationComponent,
+        PipelineComponent,
+        PropertySelectionComponent,
+        SavePipelineComponent,
+        SafeCss,
+        WelcomeTourComponent
+    ],
+    providers: [
+        EditorService,
+        SemanticTypeUtilsService,
+        {
+            provide: 'RestApi',
+            useFactory: ($injector: any) => $injector.get('RestApi'),
+            deps: ['$injector'],
+        },
+        JsplumbBridge,
+        JsplumbService,
+        JsplumbConfigService,
+        ObjectProvider,
+        PipelineEditorService,
+        PipelinePositioningService,
+        PipelineValidationService,
+        PipelineElementRecommendationService,
+        ElementIconText,
+        ImageChecker,
+        {
+            provide: '$state',
+            useFactory: ($injector: any) => $injector.get('$state'),
+            deps: ['$injector']
+        },
+        {
+            provide: '$timeout',
+            useFactory: ($injector: any) => $injector.get('$timeout'),
+            deps: ['$injector']
+        },
+        SafeCss
+    ],
+  exports: [
+    EditorComponent,
+    PipelineComponent,
+    PipelineElementComponent
+  ],
+    entryComponents: [
+        EditorComponent
+    ]
+})
+export class EditorModule {
 
-export default angular.module('sp.editor', [spServices, 'ngSanitize', 'angularTrix', 'ngAnimate', 'datatables'])
-    .controller('EditorCtrl', EditorCtrl)
-    .directive('myDataBind', myDataBind)
-    .directive('imageBind', imageBind)
-    .directive("textValidator", () => new TextValidatorDirective())
-    .directive("customOutputValidator", () => new CustomOutputValidatorDirective())
-    .filter('displayRecommendedFilter', displayRecommendedFilter)
-    .filter('selectFilter', selectFilter)
-    .filter('elementNameFilter', elementNameFilter)
-    .component('any', AnyComponent)
-    .component('anyRemote', AnyRemoteComponent)
-    .component('customOutput', CustomOutputComponent)
-    .component('userDefinedOutput', UserDefinedOutputComponent)
-    .component('domainConceptInput', DomainConceptComponent)
-    .component('freetext', FreeTextComponent)
-    .component('secret', SecretComponent)
-    .component('mappingPropertyNary', MappingNaryComponent)
-    .component('mappingPropertyUnary', MappingUnaryComponent)
-    .component('matchingProperty', MatchingPropertyComponent)
-    .component('oneof', OneOfComponent)
-    .component('oneofRemote', OneOfRemoteComponent)
-    .component('propertySelection', PropertySelectionComponent)
-    .component('replaceOutput', ReplaceOutputComponent)
-    .component('multipleValueInput', MultipleValueInputComponent)
-    .component('collectionStaticProperty', CollectionComponent)
-    .component('customizeDialog', CustomizeDialogComponent)
-    .component('topicSelectionDialog', TopicSelectionDialogComponent)
-    .component('pipeline', PipelineComponent)
-    .component('pipelineElement', PipelineElementComponent)
-    .component('pipelineElementRecommendation', PipelineElementRecommendationComponent)
-    .component('pipelineAssembly', PipelineAssemblyComponent)
-    .component('pipelineElementIconStand', PipelineElementIconStandComponent)
-    .component('pipelineElementOptions', PipelineElementOptionsComponent)
-    .component('pipelineElementDocumentation', PipelineElementDocumentationComponent)
-    .component('alternative', AlternativeComponent)
-    .component('group', GroupComponent)
-    .component('fileStaticProperty', FileUploadComponent)
-    .component('codeInput', CodeInputComponent)
-    .service('EditorDialogManager', EditorDialogManager)
-    .service('PipelineElementRecommendationService', PipelineElementRecommendationService)
-    .service('PipelineValidationService', PipelineValidationService)
-    .directive('codeEditor', () => new CodeEditorDirective())
-    .name;
+    constructor() {
+    }
+
+}

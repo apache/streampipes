@@ -16,22 +16,176 @@
  *
  */
 
-import {PipelineElementOptionsController} from "./pipeline-element-options.controller";
+import * as angular from 'angular';
+import {JsplumbBridge} from "../../services/jsplumb-bridge.service";
+import {JsplumbService} from "../../services/jsplumb.service";
+import {PipelineValidationService} from "../../services/pipeline-validation.service";
+import {RestApi} from "../../../services/rest-api.service";
+import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
+import {PipelineElementRecommendationService} from "../../services/pipeline-element-recommendation.service";
+import {ObjectProvider} from "../../services/object-provider.service";
+import {
+  InvocablePipelineElementUnion,
+  PipelineElementConfig,
+  PipelineElementUnion
+} from "../../model/editor.model";
+import {SpDataStream, WildcardTopicDefinition} from "../../../core-model/gen/streampipes-model";
+import {EditorService} from "../../services/editor.service";
+import {PanelType} from "../../../core-ui/dialog/base-dialog/base-dialog.model";
+import {DialogService} from "../../../core-ui/dialog/base-dialog/base-dialog.service";
+import {CompatibleElementsComponent} from "../../dialog/compatible-elements/compatible-elements.component";
+import {Tuple2} from "../../../core-model/base/Tuple2";
 
-declare const require: any;
+@Component({
+  selector: 'pipeline-element-options',
+  templateUrl: './pipeline-element-options.component.html',
+  styleUrls: ['./pipeline-element-options.component.css']
+})
+export class PipelineElementOptionsComponent implements OnInit{
 
-export let PipelineElementOptionsComponent = {
-    template: require('./pipeline-element-options.tmpl.html'),
-    bindings: {
-        pipelineElementId: "@",
-        internalId: "@",
-        pipelineElement: "<",
-        allElements: "=",
-        deleteFunction: "=",
-        rawPipelineModel: "=",
-        currentMouseOverElement: "=",
-        pipelineValid: "="
-    },
-    controller: PipelineElementOptionsController,
-    controllerAs: 'ctrl'
-};
+  recommendationsAvailable: any;
+  possibleElements: PipelineElementUnion[];
+  recommendedElements: PipelineElementUnion[];
+  recommendationsShown: any;
+  pipelineElementCssType: string;
+
+  @Input()
+  currentMouseOverElement: string;
+
+  @Input()
+  pipelineElementId: string;
+
+  @Input()
+  pipelineValid: boolean;
+
+  @Input()
+  internalId: string;
+
+  @Input()
+  pipelineElement: PipelineElementConfig;
+
+  @Input()
+  rawPipelineModel: PipelineElementConfig[];
+
+  @Input()
+  allElements: PipelineElementUnion[];
+
+  @Output()
+  delete: EventEmitter<PipelineElementConfig> = new EventEmitter<PipelineElementConfig>();
+
+  @Output()
+  customize: EventEmitter<Tuple2<Boolean, PipelineElementConfig>> = new EventEmitter<Tuple2<Boolean, PipelineElementConfig>>();
+
+  constructor(private ObjectProvider: ObjectProvider,
+              private PipelineElementRecommendationService: PipelineElementRecommendationService,
+              private DialogService: DialogService,
+              private EditorService: EditorService,
+              //private InitTooltips: InitTooltips,
+              private JsplumbBridge: JsplumbBridge,
+              private JsplumbService: JsplumbService,
+              //private TransitionService: TransitionService,
+              private PipelineValidationService: PipelineValidationService,
+              private RestApi: RestApi) {
+    this.recommendationsAvailable = false;
+    this.possibleElements = [];
+    this.recommendedElements = [];
+    this.recommendationsShown = false;
+
+  }
+
+  ngOnInit() {
+    this.EditorService.pipelineElementConfigured$.subscribe(pipelineElementDomId => {
+      this.pipelineElement.settings.openCustomize = false;
+      this.RestApi.updateCachedPipeline(this.rawPipelineModel);
+      if (pipelineElementDomId === this.pipelineElement.payload.dom) {
+        this.initRecs(this.pipelineElement.payload.dom);
+      }
+    });
+    this.pipelineElementCssType = this.pipelineElement.type;
+
+    if (this.pipelineElement.type === 'stream') {
+      this.initRecs(this.pipelineElement.payload.dom);
+    }
+  }
+
+  removeElement(pipelineElement: PipelineElementConfig) {
+    this.delete.emit(pipelineElement);
+    //this.$rootScope.$broadcast("pipeline.validate");
+  }
+
+  customizeElement(pipelineElement: PipelineElementConfig) {
+    let restrictedEditMode = ! (this.isRootElement());
+    let customizeInfo = {a: restrictedEditMode, b: pipelineElement} as Tuple2<Boolean, PipelineElementConfig>;
+    this.customize.emit(customizeInfo);
+  }
+
+  openCustomizeDialog() {
+    let restrictedEditMode = ! (this.isRootElement());
+    // this.EditorDialogManager.showCustomizeDialog($("#" + this.pipelineElement.payload.dom), "", this.pipelineElement.payload, restrictedEditMode)
+    //     .then(() => {
+    //       this.JsplumbService.activateEndpoint(this.pipelineElement.payload.dom, !this.pipelineElement.payload.uncompleted);
+    //     }, () => {
+    //       this.JsplumbService.activateEndpoint(this.pipelineElement.payload.dom, !this.pipelineElement.payload.uncompleted);
+    //     });
+  }
+
+  openHelpDialog() {
+    this.EditorService.openHelpDialog(this.pipelineElement.payload);
+  }
+
+  openCustomizeStreamDialog() {
+    //this.EditorDialogManager.showCustomizeStreamDialog(this.pipelineElement.payload);
+  }
+
+  initRecs(elementId) {
+    var currentPipeline = this.ObjectProvider.makePipeline(angular.copy(this.rawPipelineModel));
+    this.EditorService.recommendPipelineElement(currentPipeline).subscribe((result) => {
+      if (result.success) {
+        this.possibleElements = this.PipelineElementRecommendationService.collectPossibleElements(this.allElements, result.possibleElements);
+        this.recommendedElements = this.PipelineElementRecommendationService.populateRecommendedList(this.allElements, result.recommendedElements);
+        this.recommendationsAvailable = true;
+        //this.InitTooltips.initTooltips();
+      }
+    });
+  }
+
+  openPossibleElementsDialog() {
+    const dialogRef = this.DialogService.open(CompatibleElementsComponent,{
+      panelType: PanelType.SLIDE_IN_PANEL,
+      title: "Compatible Elements",
+      data: {
+        "rawPipelineModel": this.rawPipelineModel,
+        "possibleElements": this.possibleElements,
+        "pipelineElementDomId": this.pipelineElement.payload.dom
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(c => {
+
+    });
+  }
+
+  showRecommendations(e) {
+    this.recommendationsShown = !this.recommendationsShown;
+    e.stopPropagation();
+  }
+
+  isRootElement() {
+    return this.JsplumbBridge.getConnections({source: this.pipelineElement.payload.dom}).length === 0;
+  }
+
+  isConfigured() {
+    if (this.pipelineElement.type == 'stream') return true;
+    else {
+      return (this.pipelineElement.payload as InvocablePipelineElementUnion).configured;
+    }
+  }
+
+  isWildcardTopic() {
+    return (this.pipelineElement
+        .payload as SpDataStream)
+        .eventGrounding
+        .transportProtocols[0]
+        .topicDefinition instanceof WildcardTopicDefinition;
+  }
+}

@@ -19,17 +19,17 @@
 import {Component, Inject, OnInit} from "@angular/core";
 import {EditorService} from "./services/editor.service";
 import {
-    DataProcessorInvocation,
-    DataSinkInvocation,
-    DataSourceDescription,
-    SpDataSet,
-    SpDataStream
+  DataProcessorInvocation,
+  DataSinkInvocation,
+  DataSourceDescription,
+  SpDataSet,
+  SpDataStream
 } from "../core-model/gen/streampipes-model";
 import {PipelineElementService} from "../platform-services/apis/pipeline-element.service";
 import {
-    PipelineElementConfig,
-    PipelineElementType,
-    PipelineElementUnion
+  PipelineElementConfig,
+  PipelineElementType,
+  PipelineElementUnion
 } from "./model/editor.model";
 import {PipelineElementTypeUtils} from "./utils/editor.utils";
 import {AuthStatusService} from "../services/auth-status.service";

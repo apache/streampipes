@@ -18,11 +18,11 @@
 
 import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import {Pipeline} from "../../../core-model/gen/streampipes-model";
-import {PipelineElementConfig, PipelineElementUnion} from "../../../editor-v2/model/editor.model";
-import {PipelinePositioningService} from "../../../editor-v2/services/pipeline-positioning.service";
-import {JsplumbService} from "../../../editor-v2/services/jsplumb.service";
-import {JsplumbBridge} from "../../../editor-v2/services/jsplumb-bridge.service";
-import {ObjectProvider} from "../../../editor-v2/services/object-provider.service";
+import {PipelineElementConfig, PipelineElementUnion} from "../../../editor/model/editor.model";
+import {PipelinePositioningService} from "../../../editor/services/pipeline-positioning.service";
+import {JsplumbService} from "../../../editor/services/jsplumb.service";
+import {JsplumbBridge} from "../../../editor/services/jsplumb-bridge.service";
+import {ObjectProvider} from "../../../editor/services/object-provider.service";
 
 @Component({
     selector: 'pipeline-preview',

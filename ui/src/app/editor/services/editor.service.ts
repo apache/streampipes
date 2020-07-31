@@ -19,9 +19,13 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {
-  DataProcessorInvocation, DataSetModificationMessage, DataSinkInvocation,
+  DataProcessorInvocation,
+  DataSetModificationMessage,
+  DataSinkInvocation,
   PipelineElementRecommendationMessage,
-  PipelineModificationMessage, SpDataSet, SpDataStream
+  PipelineModificationMessage,
+  SpDataSet,
+  SpDataStream
 } from "../../core-model/gen/streampipes-model";
 import {Observable, Subject} from "rxjs";
 import {PlatformServicesCommons} from "../../platform-services/apis/commons.service";

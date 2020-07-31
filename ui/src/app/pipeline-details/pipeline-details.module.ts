@@ -26,24 +26,13 @@ import {CommonModule} from "@angular/common";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {PipelineDetailsComponent} from "./pipeline-details.component";
 import {PipelinePreviewComponent} from "./components/preview/pipeline-preview.component";
-import {EditorModule} from "../editor-v2/editor.module";
+import {EditorModule} from "../editor/editor.module";
 import {PipelineActionsComponent} from "./components/actions/pipeline-actions.component";
 import {PipelineStatusComponent} from "./components/status/pipeline-status.component";
 import {PipelineElementsComponent} from "./components/elements/pipeline-elements.component";
 import {PipelineElementsRowComponent} from "./components/elements/pipeline-elements-row.component";
 import {QuickEditComponent} from "./components/edit/quickedit.component";
 import {ConnectModule} from "../connect/connect.module";
-
-// export default angular.module('sp.pipelineDetails', [spServices])
-//     .controller('PipelineDetailsCtrl', PipelineDetailsCtrl)
-//     .component('pipelineStatus', PipelineStatusComponent)
-//     .component('pipelinePreview', PipelinePreviewComponent)
-//     .component('pipelineElements', PipelineElementsComponent)
-//     .component('pipelineElementsRow', PipelineElementsRowComponent)
-//     .component('pipelineActions', PipelineActionsComponent)
-//     .component('quickEdit', QuickEditComponent)
-//     //.component('customizeDialog', CustomizeDialogComponent)
-//     .name;
 
 @NgModule({
   imports: [

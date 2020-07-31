@@ -19,14 +19,14 @@ spEditor:
   ng1_controller: ''
   ng5_moduleName: 'EditorModule'
   ng5_component: 'EditorComponent'
-  ng5_componentPath: '../editor-v2/editor.component'
-  path: './editor-v2/editor.module'
+  ng5_componentPath: '../editor/editor.component'
+  path: './editor/editor.module'
   link: 'streampipes.editor'
   url: '/editor/:pipeline'
   title: 'Editor'
-  description: 'editor-v2'
+  description: 'editor'
   icon: 'action:ic_dashboard_24px'
-  homeImage: '/assets/img/home/configuration.png'
+  homeImage: '/assets/img/home/editor.png'
   admin: false
 spConnect:
   ng5: True

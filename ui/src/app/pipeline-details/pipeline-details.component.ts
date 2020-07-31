@@ -19,7 +19,7 @@
 import {Component, Inject, OnInit} from "@angular/core";
 import {PipelineService} from "../platform-services/apis/pipeline.service";
 import {Pipeline} from "../core-model/gen/streampipes-model";
-import {PipelineElementUnion} from "../editor-v2/model/editor.model";
+import {PipelineElementUnion} from "../editor/model/editor.model";
 
 @Component({
     selector: 'pipeline-details',

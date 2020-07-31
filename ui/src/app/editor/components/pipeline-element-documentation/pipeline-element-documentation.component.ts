@@ -16,16 +16,37 @@
  *
  */
 
-import {PipelineElementDocumentationController} from "./pipeline-element-documentation.controller";
+import {Component, Input, OnInit} from "@angular/core";
+import {PipelineElementService} from "../../../platform-services/apis/pipeline-element.service";
 
-declare const require: any;
+@Component({
+  selector: 'pipeline-element-documentation',
+  templateUrl: './pipeline-element-documentation.component.html',
+  styleUrls: ['./pipeline-element-documentation.component.scss']
+})
+export class PipelineElementDocumentationComponent implements OnInit {
 
-export let PipelineElementDocumentationComponent = {
-    template: require('./pipeline-element-documentation.tmpl.html'),
-    bindings: {
-        appId: "=",
-        useStyling: "="
-    },
-    controller: PipelineElementDocumentationController,
-    controllerAs: 'ctrl'
-};
+  @Input()
+  appId: string;
+
+  @Input()
+  useStyling: boolean;
+
+  documentationMarkdown: any;
+  error: any;
+
+  constructor(private PipelineElementService: PipelineElementService) {
+
+  }
+
+  ngOnInit(): void {
+    this.PipelineElementService.getDocumentation(this.appId).subscribe(msg => {
+      this.error = false;
+      this.documentationMarkdown = msg;
+    }, error => {
+      this.error = true;
+    });
+  }
+
+
+}

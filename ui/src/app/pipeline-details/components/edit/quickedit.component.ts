@@ -32,7 +32,7 @@ import {
     EventSchema,
     Pipeline
 } from "../../../core-model/gen/streampipes-model";
-import {PipelineElementUnion} from "../../../editor-v2/model/editor.model";
+import {PipelineElementUnion} from "../../../editor/model/editor.model";
 import {FormBuilder, FormGroup} from "@angular/forms";
 
 @Component({

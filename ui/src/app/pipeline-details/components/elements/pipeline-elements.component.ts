@@ -17,7 +17,7 @@
  */
 
 import {Component, Input} from "@angular/core";
-import {PipelineElementUnion} from "../../../editor-v2/model/editor.model";
+import {PipelineElementUnion} from "../../../editor/model/editor.model";
 import {Pipeline} from "../../../core-model/gen/streampipes-model";
 
 @Component({

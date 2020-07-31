@@ -16,14 +16,7 @@
  *
  */
 
-import {
-  AfterContentChecked,
-  AfterViewChecked,
-  AfterViewInit, ChangeDetectorRef,
-  Component,
-  Input,
-  OnInit
-} from "@angular/core";
+import {AfterViewInit, ChangeDetectorRef, Component, Input, OnInit} from "@angular/core";
 import {InvocablePipelineElementUnion, PipelineElementConfig} from "../../model/editor.model";
 import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
 import {JsplumbService} from "../../services/jsplumb.service";

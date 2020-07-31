@@ -17,9 +17,9 @@
  */
 
 import {Component, Input, OnInit} from "@angular/core";
-import {PipelineElementUnion} from "../../../editor-v2/model/editor.model";
+import {PipelineElementUnion} from "../../../editor/model/editor.model";
 import {Pipeline} from "../../../core-model/gen/streampipes-model";
-import {PipelineElementTypeUtils} from "../../../editor-v2/utils/editor.utils";
+import {PipelineElementTypeUtils} from "../../../editor/utils/editor.utils";
 
 @Component({
     selector: 'pipeline-elements-row',
