@@ -17,7 +17,10 @@ package org.apache.streampipes.node.controller.container.api;/*
  */
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.container.declarer.InvocableDeclarer;
+import org.apache.streampipes.container.init.RunningInstances;
 import org.apache.streampipes.container.transform.Transformer;
+import org.apache.streampipes.container.util.Util;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
@@ -27,6 +30,8 @@ import org.apache.streampipes.node.controller.container.management.pe.PipelineEl
 import org.apache.streampipes.node.controller.container.management.relay.EventRelayManager;
 import org.apache.streampipes.node.controller.container.management.relay.RunningRelayInstances;
 import org.eclipse.paho.client.mqttv3.MqttException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -35,6 +40,9 @@ import java.io.IOException;
 
 @Path("/node/container")
 public class NodeControllerResource<I extends InvocableStreamPipesEntity> {
+    private static final Logger LOG =
+            LoggerFactory.getLogger(NodeControllerResource.class.getCanonicalName());
+
 
     private static final String COLON = ":";
 
@@ -97,8 +105,7 @@ public class NodeControllerResource<I extends InvocableStreamPipesEntity> {
 //                eventRelayManager.start();
 //                RunningRelayInstances.INSTANCE.addRelay(eventRelayManager.getRelayedTopic(), eventRelayManager);
 
-                pipelineElementEndpoint = graph.getBelongsTo();
-                PipelineElementManager.getInstance().invokePipelineElement(pipelineElementEndpoint, payload);
+                PipelineElementManager.getInstance().invokePipelineElement(graph.getBelongsTo(), payload);
             }
             else if (identifier.equals("sec")) {
                 graph = Transformer.fromJsonLd(DataSinkInvocation.class, payload);
@@ -113,6 +120,17 @@ public class NodeControllerResource<I extends InvocableStreamPipesEntity> {
         return Response
                 .ok()
                 .build();
+    }
+
+    // TODO move endpoint to /elementId/instances/runningInstanceId
+    @DELETE
+    @Path("{elementId}/{runningInstanceId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String detach(@PathParam("elementId") String elementId, @PathParam("runningInstanceId") String runningInstanceId) {
+
+        LOG.info("receive stop request elementId={}, runningInstanceId={}", elementId, runningInstanceId);
+
+        return Util.toResponseString(elementId, false, "Could not find the running instance with id: " + runningInstanceId);
     }
 
     @POST

@@ -28,15 +28,15 @@ import java.util.Optional;
 
 public class InvocableEntityUrlGenerator extends EndpointUrlGenerator<InvocableStreamPipesEntity> {
 
+    private static final String COLON = ":";
+    private static final String SLASH = "/";
     protected static final String SINK_IDENTIFIER = "sec";
     protected static final String PROCESSOR_IDENTIFIER = "sepa";
-
     private static final String DEFAULT_NODE_ID = "default";
-    private static final String COLON = ":";
     private static final String PE_PORT_KEY = "SP_PORT";
     private static final String PE_HOST_KEY = "SP_HOST";
 
-    private static final String NODE_CONTROLLER_ROUTE = "node/container/invoke";
+    private static final String NODE_CONTROLLER_ROUTE = "node/container";
 
     public InvocableEntityUrlGenerator(InvocableStreamPipesEntity pipelineElement) {
         super(pipelineElement);
@@ -44,26 +44,32 @@ public class InvocableEntityUrlGenerator extends EndpointUrlGenerator<InvocableS
 
     @Override
     public String generateStartPipelineEndpointUrl() {
-//        // TODO: normal setup
-//        return URLPREFIX
-//                + getHost()
-//                + SLASH
-//                + getIdentifier()
-//                + SLASH
-//                + pipelineElement.getAppId();
-        // TODO: uncomment for edge tests
-        return URLPREFIX
-                + getHost()
-                + SLASH
-                + NODE_CONTROLLER_ROUTE
-                + SLASH
-                + getIdentifier()
-                + SLASH
-                + pipelineElement.getAppId();
+        if (pipelineElement.getDeploymentTargetNodeId() == null ||
+                pipelineElement.getDeploymentTargetNodeId().equals(DEFAULT_NODE_ID)) {
+            // default deployments to primary pipeline element
+            return URLPREFIX
+                    + getHost()
+                    + SLASH
+                    + getIdentifier()
+                    + SLASH
+                    + pipelineElement.getAppId();
+        } else {
+            // edge deployments to secondary pipeline element
+            return URLPREFIX
+                    + getHost()
+                    + SLASH
+                    + NODE_CONTROLLER_ROUTE
+                    + "invoke"
+                    + SLASH
+                    + getIdentifier()
+                    + SLASH
+                    + pipelineElement.getAppId();
+        }
     }
 
     @Override
     public String generateStopPipelineEndpointUrl() {
+        // TODO: handle stop requests
         return generateStartPipelineEndpointUrl()
                 + SLASH
                 + pipelineElement.getDeploymentRunningInstanceId();
@@ -87,10 +93,16 @@ public class InvocableEntityUrlGenerator extends EndpointUrlGenerator<InvocableS
                         + pipelineElement.getDeploymentTargetNodeId()
                         + SLASH;
 
-                // Needed because secondary PE uses information from primary
-                pipelineElement.setElementEndpointPort(ConsulUtil.getElementEndpointPort(route + PE_PORT_KEY));
-                pipelineElement.setElementEndpointHostname(ConsulUtil.getElementEndpointHostname(route + PE_HOST_KEY));
-                // TODO: adapt elementId + belongsTo
+                String host = ConsulUtil.getElementEndpointHostname(route + PE_HOST_KEY);
+                int port = ConsulUtil.getElementEndpointPort(route + PE_PORT_KEY);
+
+                // Necessary because secondary pipeline element description is not stored in backend
+                // It uses information from primary pipeline element. Node controller will locally forward
+                // request accordingly, thus fields must be correct.
+                pipelineElement.setElementEndpointHostname(host);
+                pipelineElement.setElementEndpointPort(port);
+                pipelineElement.setBelongsTo(URLPREFIX + host + COLON + port + SLASH + getIdentifier() + SLASH + pipelineElement.getAppId());
+                pipelineElement.setElementId(pipelineElement.getBelongsTo() + SLASH + pipelineElement.getDeploymentRunningInstanceId());
 
                 return pipelineElement.getDeploymentTargetNodeHostname()
                         + COLON
@@ -100,31 +112,6 @@ public class InvocableEntityUrlGenerator extends EndpointUrlGenerator<InvocableS
                 return defaultHost();
             }
         }
-//        else {
-//            Optional<NodeInfo> nodeInfoOpt = getNodeInfo();
-//            if (nodeInfoOpt.isPresent()) {
-//                NodeInfo nodeInfo = nodeInfoOpt.get();
-//                // TODO: get port from Consul
-//                String route = ConsulSpConfig.SERVICE_ROUTE_PREFIX
-//                        + pipelineElement.getElementEndpointServiceName()
-//                        + SLASH
-//                        + ConsulSpConfig.BASE_PREFIX
-//                        + SLASH
-//                        + ConsulSpConfig.SECONDARY_NODE_KEY
-//                        + SLASH
-//                        + nodeInfo.getNodeControllerId()
-//                        + SLASH
-//                        + PE_PORT_KEY;
-//
-//                return nodeInfo.getNodeMetadata().getNodeAddress()
-//                        + COLON
-//                        + nodeInfo.getNodeControllerPort();
-//                        //+ ConsulUtil.getPortForService(route);
-//            }
-//            else {
-//                return defaultHost();
-//            }
-//        }
     }
 
     private String defaultHost() {

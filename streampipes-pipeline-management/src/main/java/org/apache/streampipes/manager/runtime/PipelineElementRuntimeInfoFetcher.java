@@ -35,11 +35,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum PipelineElementRuntimeInfoFetcher {
-
   INSTANCE;
 
   Logger logger = LoggerFactory.getLogger(PipelineElementRuntimeInfoFetcher.class);
 
+  private int FETCH_INTERVAL_MS = 300;
   private Map<String, SpDataFormatConverter> converterMap;
 
   PipelineElementRuntimeInfoFetcher() {
@@ -56,6 +56,18 @@ public enum PipelineElementRuntimeInfoFetcher {
     } else {
       return getLatestEventFromMqtt(spDataStream);
     }
+  }
+
+  private TransportFormat getTransportFormat(SpDataStream spDataStream) {
+    return spDataStream.getEventGrounding().getTransportFormats().get(0);
+  }
+
+  private String getOutputTopic(SpDataStream spDataStream) {
+    return spDataStream
+            .getEventGrounding()
+            .getTransportProtocol()
+            .getTopicDefinition()
+            .getActualTopicName();
   }
 
   private String getLatestEventFromJms(SpDataStream spDataStream) throws SpRuntimeException {
@@ -80,25 +92,13 @@ public enum PipelineElementRuntimeInfoFetcher {
 
     while (result[0] == null) {
       try {
-        Thread.sleep(300);
+        Thread.sleep(FETCH_INTERVAL_MS);
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
     }
 
     return result[0];
-  }
-
-  private TransportFormat getTransportFormat(SpDataStream spDataStream) {
-    return spDataStream.getEventGrounding().getTransportFormats().get(0);
-  }
-
-  private String getOutputTopic(SpDataStream spDataStream) {
-    return spDataStream
-            .getEventGrounding()
-            .getTransportProtocol()
-            .getTopicDefinition()
-            .getActualTopicName();
   }
 
   private String getLatestEventFromMqtt(SpDataStream spDataStream) throws SpRuntimeException {
@@ -124,7 +124,7 @@ public enum PipelineElementRuntimeInfoFetcher {
 
     while (result[0] == null) {
       try {
-        Thread.sleep(300);
+        Thread.sleep(FETCH_INTERVAL_MS);
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
@@ -166,7 +166,7 @@ public enum PipelineElementRuntimeInfoFetcher {
     long timeout = 0;
     while (result[0] == null && timeout < 6000) {
       try {
-        Thread.sleep(300);
+        Thread.sleep(FETCH_INTERVAL_MS);
         timeout = timeout + 300;
       } catch (InterruptedException e) {
         e.printStackTrace();

@@ -56,7 +56,7 @@ public class PipelineElementManager {
      * invokes pipeline elements when pipeline is started
      */
     public String invokePipelineElement(String pipelineElementEndpoint, String payload) {
-        LOG.info("Invoking element: {}" + pipelineElementEndpoint);
+        LOG.info("Invoking element: {}", pipelineElementEndpoint);
         try {
             Response httpResp = Request
                     .Post(pipelineElementEndpoint)
