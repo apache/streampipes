@@ -23,18 +23,17 @@ import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.InputStreamBody;
-import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
-import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
-import org.apache.streampipes.serializers.json.JacksonSerializer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterSetDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
+import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
+import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
-import org.apache.streampipes.rest.shared.util.JsonLdUtils;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.couchdb.impl.AdapterStorageImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -108,12 +107,7 @@ public class WorkerRestClient {
         try {
             logger.info("Trying to stopAdapter adpater on endpoint: " + url);
 
-            // TODO quick fix because otherwise it is not serialized to json-ld
-            if (ad.getUri() == null) {
-                logger.error("Adapter uri is null this should not happen " + ad);
-            }
-
-            String adapterDescription = JsonLdUtils.toJsonLD(ad);
+            String adapterDescription = JacksonSerializer.getObjectMapper().writeValueAsString(ad);
 
             // TODO change this to a delete request
             String responseString = Request.Post(url)

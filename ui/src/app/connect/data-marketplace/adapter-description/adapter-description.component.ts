@@ -50,6 +50,7 @@ export class AdapterDescriptionComponent {
   constructor(private connectService: ConnectService, private dataMarketplaceService: DataMarketplaceService, public dialog: MatDialog) {}
 
   ngOnInit() {
+    if (this.adapter.name == null) this.adapter.name = "";
       this.isDataSetDescription = this.connectService.isDataSetDescription(this.adapter);
       this.isDataStreamDescription = this.connectService.isDataStreamDescription(this.adapter);
       this.isRunningAdapter = (this.adapter.couchDBId != undefined && !(this.adapter as any).isTemplate);

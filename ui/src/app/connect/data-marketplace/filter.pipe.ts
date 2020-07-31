@@ -17,6 +17,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
+import {AdapterDescriptionUnion} from "../../core-model/gen/streampipes-model";
 
 @Pipe({
     name: 'filter'
@@ -24,21 +25,16 @@ import {Pipe, PipeTransform} from '@angular/core';
 
 export class FilterPipe implements PipeTransform {
 
-
-
-    transform(adapterDescription: any, filterTerm?: any): any{
+    transform(adapterDescriptions: AdapterDescriptionUnion[], filterTerm?: any): any{
         //check if search filterTerm is undefined
-        if(filterTerm == undefined || !adapterDescription) return adapterDescription;
-        return adapterDescription.filter(function(adapterDescription){
-            adapterDescription.name.replace(' ', '_');
-            if (adapterDescription.name.toLowerCase().includes(filterTerm.toLowerCase()) || adapterDescription.description.toLowerCase().includes(filterTerm.toLowerCase())) {
-                return true
-            }
-            else {
-                return false
+        if(filterTerm == undefined || !adapterDescriptions) return adapterDescriptions;
+        return adapterDescriptions.filter(adapterDescription => {
+            if (adapterDescription.name == null) {
+                return true;
+            } else {
+                adapterDescription.name.replace(' ', '_');
+                return adapterDescription.name.toLowerCase().includes(filterTerm.toLowerCase()) || adapterDescription.description.toLowerCase().includes(filterTerm.toLowerCase());
             }
         });
-
     }
-
 }

@@ -27,15 +27,16 @@ import {
     SpDataSet,
     SpDataStream
 } from "../../core-model/gen/streampipes-model";
+import {EditorService} from "./editor.service";
 
 @Injectable()
 export class JsplumbService {
 
     idCounter: any;
-    RestApi: any;
 
     constructor(private JsplumbConfigService: JsplumbConfigService,
-                private JsplumbBridge: JsplumbBridge) {
+                private JsplumbBridge: JsplumbBridge,
+                private EditorService: EditorService) {
         this.idCounter = 0;
     }
 
@@ -204,8 +205,7 @@ export class JsplumbService {
     };
 
     setDropped($newElement, json, endpoints, preview) {
-        this.RestApi.updateDataSet(json).then(msg => {
-            let data = msg.data;
+        this.EditorService.updateDataSet(json).subscribe(data => {
             json.eventGrounding = data.eventGrounding;
             json.datasetInvocationId = data.invocationId;
             this.streamDropped($newElement, json, endpoints, preview);

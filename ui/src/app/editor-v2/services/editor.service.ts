@@ -19,7 +19,7 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {
-  DataProcessorInvocation, DataSinkInvocation,
+  DataProcessorInvocation, DataSetModificationMessage, DataSinkInvocation,
   PipelineElementRecommendationMessage,
   PipelineModificationMessage, SpDataSet, SpDataStream
 } from "../../core-model/gen/streampipes-model";
@@ -56,6 +56,11 @@ export class EditorService {
                 return PipelineModificationMessage.fromData(data as any);
             });
     }
+
+  updateDataSet(dataSet): Observable<DataSetModificationMessage> {
+    return this.http.post(this.platformServicesCommons.authUserBasePath() +"/pipelines/update/dataset", dataSet)
+        .pipe(map(data => DataSetModificationMessage.fromData(data as DataSetModificationMessage)));
+  }
 
     getCachedPipeline(): Observable<PipelineElementConfig[]> {
         return this.http.get(this.platformServicesCommons.authUserBasePath() + '/pipeline-cache')

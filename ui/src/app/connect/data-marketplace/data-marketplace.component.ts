@@ -147,9 +147,6 @@ export class DataMarketplaceComponent implements OnInit {
             this.newAdapterFromDescription.dataSet.eventSchema = new EventSchema();
             this.newAdapterFromDescription.dataSet.eventSchema["@class"] = "org.apache.streampipes.model.schema.EventSchema";
         }
-        console.log("new adapter");
-        console.log(this.newAdapterFromDescription);
-
         this.ShepherdService.trigger("select-adapter");
     }
 

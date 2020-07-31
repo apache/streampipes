@@ -115,6 +115,7 @@ export class EditorComponent implements OnInit {
                 .filter(s => s instanceof SpDataSet)
                 .map(s => s as SpDataSet);
             this.allElements = this.allElements.concat(this.availableDataStreams);
+            this.allElements = this.allElements.concat(this.availableDataSets);
 
             this.selectPipelineElements(1);
             this.afterPipelineElementLoaded(1);

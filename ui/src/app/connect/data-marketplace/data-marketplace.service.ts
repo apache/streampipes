@@ -50,7 +50,6 @@ export class DataMarketplaceService {
 
   getAdapterDescriptions(): Observable<AdapterDescriptionUnion[]> {
     return this.requestAdapterDescriptions('/master/description/adapters').pipe(map(response => {
-      console.log(response);
       return (response as any[]).map(resp => AdapterDescription.fromDataUnion(resp)).filter(ad => this.connectService.isSpecificDescription(ad));
     }));
   }
