@@ -1,3 +1,4 @@
+#
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -12,10 +13,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
+"""global logging"""
 
-SP_COUCHDB_HOST=localhost
-SP_BACKEND_HOST=localhost
-SP_INFLUX_HOST=localhost
-SP_INFLUX_PORT=8086
-SP_JMS_HOST=localhost
-SP_DEBUG=true
+import logging
+
+LOGGING_FORMAT = "%(asctime)s [%(levelname)s] %(name)s — [%(filename)s:%(lineno)s - %(funcName)s()] — %(message)s"
+logging.basicConfig(level=logging.INFO, format=LOGGING_FORMAT)
+logging.getLogger(__name__).addHandler(logging.NullHandler())

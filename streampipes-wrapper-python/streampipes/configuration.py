@@ -1,3 +1,4 @@
+#
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -12,10 +13,19 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
+"""config file"""
+import os
 
-SP_COUCHDB_HOST=localhost
-SP_BACKEND_HOST=localhost
-SP_INFLUX_HOST=localhost
-SP_INFLUX_PORT=8086
-SP_JMS_HOST=localhost
-SP_DEBUG=true
+flask_host = os.getenv('FLASK_HOST', '0.0.0.0')
+port = os.getenv('SP_PORT', 5000)
+kafka_consumer_thread = 'kafka_consumer_thread'
+
+banner="""\
+ _______ __                              ______ __
+|     __|  |_.----.-----.---.-.--------.|   __ \__|.-----.-----.-----.
+|__     |   _|   _|  -__|  _  |        ||    __/  ||  _  |  -__|__ --|
+|_______|____|__| |_____|___._|__|__|__||___|  |__||   __|_____|_____|
+                                                   |__|
+** StreamPipes Pipeline Element Container for Python **
+                            """

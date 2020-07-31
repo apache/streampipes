@@ -61,7 +61,7 @@ export class TableWidgetComponent extends BaseDataExplorerWidget implements OnIn
   updateData() {
     this.setShownComponents(false, false, true);
 
-    this.dataLakeRestService.getDataAutoAggergation(
+    this.dataLakeRestService.getDataAutoAggregation(
       this.dataExplorerWidget.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime())
       .subscribe(
       (res: DataResult) => {
@@ -101,6 +101,25 @@ export class TableWidgetComponent extends BaseDataExplorerWidget implements OnIn
     this.dataSource.data = [];
   }
 
+  onFilterChange(searchValue: string): void {
+    this.dataSource.filter = searchValue.trim().toLowerCase();
+  }
 
+  sortData(event) {
+    if (event.direction === 'asc') {
+      this.dataSource.data = this.dataSource.data.sort(
+        (a, b) => (a[event.active] > b[event.active]) ? 1 : ((b[event.active] > a[event.active]) ? -1 : 0));
+    }
+
+    if (event.direction === 'desc') {
+      this.dataSource.data = this.dataSource.data.sort(
+        (a, b) => (a[event.active] > b[event.active]) ? -1 : ((b[event.active] > a[event.active]) ? 1 : 0));
+    }
+
+    if (event.direction === '') {
+      this.dataSource.data = this.dataSource.data.sort(
+        (a, b) => (a['timestamp'] > b['timestamp']) ? 1 : ((b['timestamp'] > a['timestamp']) ? -1 : 0));
+    }
+  }
 
 }

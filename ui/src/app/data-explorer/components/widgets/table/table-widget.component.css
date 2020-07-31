@@ -16,7 +16,9 @@
  *
  */
 
-
+.table {
+    width: 100%;
+}
 
 .numberItem {
     font-size:60px;

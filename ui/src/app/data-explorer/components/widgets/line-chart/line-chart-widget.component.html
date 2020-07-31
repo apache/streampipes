@@ -21,15 +21,25 @@
 
         <div fxFlex="100" layout="row" fxLayoutAlign="end center" style="margin-left: 0px;margin-right: 0px;">
             <sp-select-properties
+                    label="Select Properties"
+                    multiple = true
                     style="margin-right: 10px;"
                     (changeSelectedProperties)="setSelectedColumn($event)"
                     [availableProperties]="availableColumns"
                     [selectedProperties]="selectedColumns">
             </sp-select-properties>
 
+            <sp-select-properties
+                    label="Select Label Column"
+                    multiple = false
+                    style="margin-right: 10px;"
+                    *ngIf="showLabelColumnSelection"
+                    (changeSelectedProperties)="setSelectedLabelColumn($event)"
+                    [availableProperties]="availableNonNumericColumns"
+                    [selectedProperties]="selectedNonNumericColumn">
+            </sp-select-properties>
 
-
-            <mat-slide-toggle [(ngModel)]="advancedSettingsActive">Advanced</mat-slide-toggle>
+            <mat-slide-toggle [(ngModel)]="advancedSettingsActive" (change)="handlingAdvancedToggleChange()">Advanced</mat-slide-toggle>
             <sp-aggregate-configuration
                     *ngIf="advancedSettingsActive"
                     [(aggregationValue)]="aggregationValue"
