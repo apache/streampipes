@@ -165,10 +165,9 @@ export class PipelineComponent implements OnInit {
     this.dialog.open(ConfirmDialogComponent, {
       width: '500px',
       data: {
-        "title": "Do you really want to delete the current pipeline?",
-        "subtitle": "This cannot be undone.",
+        "title": "Currently, it is not possible to mix data streams and data sets in a single pipeline.",
         "confirmAndCancel": false,
-        "okTitle": "Close",
+        "okTitle": "Ok",
       },
     });
   }
