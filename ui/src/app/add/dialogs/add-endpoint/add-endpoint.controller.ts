@@ -16,10 +16,12 @@
  *
  */
 
+import {RestApi} from "../../../services/rest-api.service";
+
 export class AddEndpointController {
 
     $mdDialog: any;
-    RestApi: any;
+    RestApi: RestApi;
     rdfEndpoints: any;
     addSelected: any;
     newEndpoint: any;

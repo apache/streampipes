@@ -19,7 +19,6 @@
 import * as angular from "angular";
 
 import {PipelineValidationService} from "../../../editor-v2/services/pipeline-validation.service";
-import {RestApi} from "../../../services/rest-api.service";
 import {JsplumbService} from "../../services/jsplumb.service";
 import {PipelineEditorService} from "../../services/pipeline-editor.service";
 import {JsplumbBridge} from "../../services/jsplumb-bridge.service";
@@ -99,7 +98,6 @@ export class PipelineComponent implements OnInit {
               private EditorService: EditorService,
               private ShepherdService: ShepherdService,
               private PipelineValidationService: PipelineValidationService,
-              private RestApi: RestApi,
               private dialogService: DialogService,
               private dialog: MatDialog) {
     this.plumbReady = false;

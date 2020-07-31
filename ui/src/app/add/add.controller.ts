@@ -19,12 +19,13 @@
 import {AddEndpointController} from './dialogs/add-endpoint/add-endpoint.controller';
 import {EndpointInstallationController} from './dialogs/endpoint-installation/endpoint-installation.controller';
 import * as angular from 'angular';
+import {RestApi} from "../services/rest-api.service";
 
 declare const require: any;
 
 export class AddCtrl {
 
-    RestApi: any;
+    RestApi: RestApi;
     $mdDialog: any;
     ElementIconText: any;
     elements: any;

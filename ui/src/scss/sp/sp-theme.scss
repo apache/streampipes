@@ -1,0 +1,79 @@
+
+@import '~@angular/material/theming';
+@import '../variables';
+
+@include mat-core();
+
+$mat-streampipes-accent: (
+        50: #ffebee,
+        100: #ffcdd2,
+        200: #72e879,
+        300: #49e750,
+        400: #49e750,
+        500: $sp-color-primary,
+        600: #06c12a,
+        700: #01a51d,
+        800: #00841b,
+        900: #005818,
+        A100: #ff8a80,
+        A200: #ff5252,
+        A400: #ff1744,
+        A700: #d50000,
+        contrast: (
+                50: $black-87-opacity,
+                100: $black-87-opacity,
+                200: $black-87-opacity,
+                300: $black-87-opacity,
+                400: $black-87-opacity,
+                500: white,
+                600: white,
+                700: white,
+                800: $white-87-opacity,
+                900: $white-87-opacity,
+                A100: $black-87-opacity,
+                A200: white,
+                A400: white,
+                A700: white,
+        )
+);
+
+$mat-streampipes: (
+        50: #ffebee,
+        100: #ffcdd2,
+        200: #4e3c93,
+        300: #2a0c9a,
+        400: #395481,
+        500: $sp-color-accent,
+        600: #0303a3,
+        700: #01016a,
+        800: #000039,
+        900: #00002b,
+        A100: #ff8a80,
+        A200: #ff5252,
+        A400: #ff1744,
+        A700: #d50000,
+        contrast: (
+                50: $black-87-opacity,
+                100: $black-87-opacity,
+                200: $black-87-opacity,
+                300: $black-87-opacity,
+                400: $black-87-opacity,
+                500: white,
+                600: white,
+                700: white,
+                800: $white-87-opacity,
+                900: $white-87-opacity,
+                A100: $black-87-opacity,
+                A200: white,
+                A400: white,
+                A700: white,
+        )
+);
+
+$custom-theme-primary: mat-palette($mat-streampipes);
+$custom-theme-accent: mat-palette($mat-streampipes-accent);
+$custom-theme-warn: mat-palette($mat-red);
+
+$custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $custom-theme-warn);
+
+@include angular-material-theme($custom-theme);

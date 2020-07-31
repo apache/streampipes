@@ -20,7 +20,7 @@
 
 @import '~angular-tree-component/dist/angular-tree-component.css';
 @import '~angular-material/angular-material.scss';
-@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+//@import '~@angular/material/prebuilt-themes/indigo-pink.css';
 @import '~bootstrap/dist/css/bootstrap.css';
 @import '~slick-carousel/slick/slick-theme.css';
 @import '~slick-carousel/slick/slick.css';
@@ -42,6 +42,8 @@
 @import '~roboto-fontface/css/roboto/roboto-fontface.css';
 
 @import './sp/shepherd-new';
+
+@import './sp/sp-theme';
 
 @import './sp/main';
 @import './sp/loading-bar';

@@ -26,7 +26,7 @@
               }
             ],
             "styles": [
-              "src/scss/main.scss",
+              "src/scss/main.scss"
             ],
             "scripts": [
               "node_modules/systemjs/dist/system.js",

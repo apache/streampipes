@@ -16,10 +16,12 @@
  *
  */
 
+import {RestApi} from "../../../services/rest-api.service";
+
 export class EndpointInstallationController {
 
     $mdDialog: any;
-    RestApi: any;
+    RestApi: RestApi;
     endpointItems : any;
     install: any;
     endpointItemsToInstall: any;

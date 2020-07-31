@@ -16,9 +16,11 @@
  *
  */
 
+import {RestApi} from "../services/rest-api.service";
+
 export class AppLinksCtrl {
 
-    RestApi: any;
+    RestApi: RestApi;
     $window: any;
     applicationLinks: any;
 
