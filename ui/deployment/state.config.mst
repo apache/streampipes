@@ -104,16 +104,6 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
                 }
             }
         })
-        /*
-        .state('streampipes.applinks', {
-            url: '/applinks',
-            views: {
-                "spMain@streampipes": {
-                    template: require('../applinks/applinks.tmpl.html')
-                }
-            }
-        })
-        */
         .state('register', {
             url: '/register',
             views: {
