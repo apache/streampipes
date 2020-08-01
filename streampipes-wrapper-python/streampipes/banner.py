@@ -14,15 +14,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-"""some helper methods"""
-import threading
+"""banner"""
 
-
-def threaded(func):
-    def wrapper(*args, **kwargs):
-        thread_name = args[0]._invocation_id
-        thread = threading.Thread(target=func, args=args, kwargs=kwargs, name=thread_name)
-        thread.start()
-        return thread
-
-    return wrapper
+banner = """\
+ _______ __                              ______ __
+|     __|  |_.----.-----.---.-.--------.|   __ \__|.-----.-----.-----.
+|__     |   _|   _|  -__|  _  |        ||    __/  ||  _  |  -__|__ --|
+|_______|____|__| |_____|___._|__|__|__||___|  |__||   __|_____|_____|
+                                                   |__|
+** StreamPipes Pipeline Element Container for Python **
+                            """

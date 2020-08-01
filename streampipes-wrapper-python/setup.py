@@ -16,7 +16,7 @@
 #
 """"""
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 import io
 import os
@@ -28,7 +28,8 @@ with io.open(os.path.join(this_directory, 'README.md'), 'r', encoding='utf-8') a
 setup(
     name='apache-streampipes-python',
     version='0.67.0-SNAPSHOT',
-    packages=["streampipes"],
+    #packages=["streampipes"],
+    packages=find_packages(),
     url='https://github.com/apache/incubator-streampipes',
     license='https://www.apache.org/licenses/LICENSE-2.0',
     license_files=["LICENSE", "NOTICE"],
@@ -41,6 +42,7 @@ setup(
         'confluent-kafka==1.4.2',
         'Flask==1.1.2',
         'waitress==1.4.4',
+        'python-consul==1.1.0'
     ],
     tests_require=[],
     python_requires='>=3.5',

@@ -18,8 +18,6 @@
 import logging
 from abc import ABC
 
-from streampipes.configuration import kafka_consumer_thread
-
 
 class Declarer(ABC):
     """ EventProcessorManager holds running processor instances """
@@ -66,7 +64,7 @@ class ProcessorDispatcher(ABC):
             processor = cls._running_instances[invocation_id]
             active_threads = processor.active_threads()
             processor.stop()
-            active_threads[kafka_consumer_thread].join()
+            active_threads['kafka'].join()
 
             del processor
             cls._running_instances.pop(invocation_id)

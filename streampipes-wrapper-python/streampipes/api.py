@@ -15,10 +15,11 @@
 # limitations under the License.
 #
 """ API endpoints """
-from flask import request, jsonify, Flask
+import json
+
+from flask import request, jsonify, Flask, Response, make_response
 from waitress import serve
 
-from streampipes.configuration import flask_host, port
 from streampipes.manager import ProcessorDispatcher
 
 
@@ -28,28 +29,38 @@ class EndpointAction(object):
 
     def __call__(self, *args, **kwargs):
         """ call corresponding handler method """
-        response = self.action(**request.get_json())
-        return jsonify(response)
+        if request.get_json() is not None:
+            resp = self.action(**request.get_json())
+        else:
+            resp = self.action()
+
+        return make_response(jsonify(resp), 200)
 
 
 class API(object):
     """ EventProcessorAPI contains relevant RESTful endpoints to start and stop """
     app = None
 
-    def __init__(self, name='python-processor'):
-        self.app = Flask(name)
+    def __init__(self, port: int):
+        self.app = Flask('python-processor')
+        self.port = port
         self.add_endpoints()
 
     def run(self):
-        serve(self.app, host=flask_host, port=port)
+        serve(self.app, host='0.0.0.0', port=self.port)
 
     def add_endpoints(self):
         """ define and add event processor API endpoints """
+        self.add_endpoint(endpoint='/', endpoint_name='/', methods=['GET'], handler=self.welcome)
         self.add_endpoint(endpoint='/invoke', endpoint_name='/invoke', methods=['POST'], handler=self.invoke)
         self.add_endpoint(endpoint='/detach', endpoint_name='/detach', methods=['POST'], handler=self.detach)
 
     def add_endpoint(self, endpoint=None, endpoint_name=None, handler=None, methods=None):
         self.app.add_url_rule(endpoint, endpoint_name, EndpointAction(handler), methods=methods)
+
+    @staticmethod
+    def welcome():
+        return {'welcome': 'hello-world!'}
 
     @staticmethod
     def invoke(**kwargs):

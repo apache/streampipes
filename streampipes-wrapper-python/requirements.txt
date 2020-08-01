@@ -6,3 +6,5 @@ Jinja2==2.11.2
 MarkupSafe==1.1.1
 waitress==1.4.4
 Werkzeug==1.0.1
+
+setuptools~=49.2.0

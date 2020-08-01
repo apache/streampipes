@@ -14,18 +14,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-"""config file"""
-import os
+import json
 
-flask_host = os.getenv('FLASK_HOST', '0.0.0.0')
-port = os.getenv('SP_PORT', 5000)
-kafka_consumer_thread = 'kafka_consumer_thread'
 
-banner="""\
- _______ __                              ______ __
-|     __|  |_.----.-----.---.-.--------.|   __ \__|.-----.-----.-----.
-|__     |   _|   _|  -__|  _  |        ||    __/  ||  _  |  -__|__ --|
-|_______|____|__| |_____|___._|__|__|__||___|  |__||   __|_____|_____|
-                                                   |__|
-** StreamPipes Pipeline Element Container for Python **
-                            """
+class ConfigItem(object):
+    def __init__(self):
+        self.value = None
+        self.value_type = None
+        self.description = None
+        self.configuration_scope = None
+        self.is_password = None
+
+    def to_json(self):
+        d = {}
+        for k,v in self.__dict__.items():
+            elements = k.split('_')
+            camel_case = elements[0] + ''.join(x.title() for x in elements[1:])
+            d[camel_case] = v
+
+        return json.dumps(d)
