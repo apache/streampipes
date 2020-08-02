@@ -37,7 +37,7 @@ class Config(object):
         elif type is 'service':
             self.service = self.__env_or_default(env_key, default)
 
-        ConsulUtils.register_config(self.app_id, env_key, default, description, configuration_scope, is_password)
+        ConsulUtils().register_config(self.app_id, env_key, default, description, configuration_scope, is_password)
 
     @staticmethod
     def __env_or_default(key, default):

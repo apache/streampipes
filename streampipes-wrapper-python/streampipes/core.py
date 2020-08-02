@@ -21,20 +21,22 @@ import threading
 from abc import ABC, abstractmethod
 from confluent_kafka.admin import AdminClient
 from confluent_kafka import Producer, Consumer
-from streampipes.api import API
-from streampipes.banner import banner
-from streampipes.model.processor_config import Config
+
+from streampipes.api.rest import PipelineElementApi
+from streampipes.base.banner import banner
+from streampipes.model.pipeline_element_config import Config
 from streampipes.utils.register import ConsulUtils
 
 
 class StandaloneModelSubmitter(ABC):
     @classmethod
     def init(cls, config: Config):
+        # print banner
         print(banner)
-        api = API(port=config.port)
-        threading.Thread(target=api.run()).start()
-
-        ConsulUtils.register_service(app_id=config.app_id, host=config.host, port=int(config.port))
+        # start api
+        PipelineElementApi().run(port=config.port)
+        # register pipeline element service
+        ConsulUtils().register_service(app_id=config.app_id, host=config.host, port=int(config.port))
 
 
 class EventProcessor(ABC):
@@ -115,7 +117,6 @@ class EventProcessor(ABC):
         if result is not None:
             self.__produce(result)
 
-    #@threaded
     def __consume(self):
         """ retrieve events from kafka """
         self._consumer.subscribe(topics=[self._input_topics])
