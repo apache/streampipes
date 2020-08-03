@@ -40,7 +40,6 @@ class ConsulUtils(object):
         if not port:
             raise ValueError
 
-        print('register service at consul for key: {}'.format(app_id))
         self.consul.agent.service.register(name='pe',
                                            service_id=app_id,
                                            address=host,
@@ -93,7 +92,6 @@ class ConsulUtils(object):
         index, data = self.consul.kv.get(key)
         # TODO: update existing keys?
         if data is None:
-            print('register config item at consul for key: {}'.format(env_key))
             self.consul.kv.put(key, config_item.to_json())
 
     def _get_consul_key(self, app_id, key):
