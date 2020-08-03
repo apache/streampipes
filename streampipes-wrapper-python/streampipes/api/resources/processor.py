@@ -14,19 +14,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from flask import Blueprint, request, make_response, jsonify
-from streampipes.manager import ProcessorDispatcher
-
-sepa_blueprint = Blueprint('sepa', __name__)
+from streampipes.api.resources.base import InvocableElement
 
 
-@sepa_blueprint.route('/invoke', methods=['POST'])
-def invoke():
-    resp = ProcessorDispatcher.start(**request.json)
-    return make_response(jsonify(resp), 200)
+class SepaElementResource(InvocableElement):
 
+    def get_instance_id(self, uri: str, element_id: str):
+        pass
 
-@sepa_blueprint.route('/detach', methods=['POST'])
-def detach():
-    resp = ProcessorDispatcher.stop(**request.json)
-    return make_response(jsonify(resp), 200)
+    def get_element_declarers(self):
+        pass
+
+    def get_extractor(self, graph):
+        pass
+
+    def create_grounding_debug_information(self, graph):
+        pass
+

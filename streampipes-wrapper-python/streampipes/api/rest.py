@@ -15,32 +15,31 @@
 # limitations under the License.
 #
 """ API endpoints """
-import sys
 import threading
 
+import bjoern
 from flask import Flask
-from waitress import serve
-
-
-class FlaskProductionConfig(object):
-    DEBUG = False
-    DEVELOPMENT = False
+from streampipes.api.resources.processor import SepaElementResource
+from streampipes.api.resources.welcome import WelcomeResource
 
 
 class PipelineElementApi(object):
+    _FLASK_CONFIG = {
+        'DEBUG': False,
+        'DEVELOPMENT': False
+    }
 
     def __init__(self):
         self.app = Flask(__name__, instance_relative_config=False)
-        self.app.config.from_object(FlaskProductionConfig)
+        self.app.config.from_object(self._FLASK_CONFIG)
 
         with self.app.app_context():
-            # import endpoints
-            from streampipes.api.resources import welcome
-            from streampipes.api.resources import sepa
 
-            # register blueprints
-            self.app.register_blueprint(welcome.welcome_blueprint)
-            self.app.register_blueprint(sepa.sepa_blueprint)
+            # register resources
+            SepaElementResource.register(self.app, route_base='/', route_prefix='sepa')
+            WelcomeResource.register(self.app, route_base='/')
 
     def run(self, port: int):
-        threading.Thread(target=serve, kwargs={'app': self.app, 'host': '0.0.0.0', 'port': port}).start()
+        print('serving API via bjoern WSGI server ... {}:{}'.format('0.0.0.0', port))
+        threading.Thread(target=bjoern.run, args=(self.app,), kwargs={'host': '0.0.0.0', 'port': int(port)}).start()
+

@@ -18,7 +18,6 @@
 import os
 import consul
 from consul import Check
-
 from streampipes.model.config_item import ConfigItem
 
 
@@ -31,9 +30,17 @@ class ConsulUtils(object):
     }
 
     def __init__(self):
-        self.consul = self.__consul()
+        self.consul = self._consul()
 
     def register_service(self, app_id: str, host: str, port: int):
+        if not app_id:
+            raise ValueError
+        if not host:
+            raise ValueError
+        if not port:
+            raise ValueError
+
+        print('register service at consul for key: {}'.format(app_id))
         self.consul.agent.service.register(name='pe',
                                            service_id=app_id,
                                            address=host,
@@ -46,19 +53,28 @@ class ConsulUtils(object):
 
     def register_config(self, app_id: str, env_key: str, default, description: str, configuration_scope=None,
                         is_password=None):
+        if not app_id:
+            raise ValueError
+        if not env_key:
+            raise ValueError
+        if not default:
+            raise ValueError
+        if not description:
+            raise ValueError
+
         config_item = ConfigItem()
 
         if env_key is not None:
             if os.getenv(env_key):
                 env_value = os.getenv(env_key)
                 config_item.value = env_value
-                config_item.value_type = self.__check_default_type(env_value)
+                config_item.value_type = self._check_default_type(env_value)
             else:
                 config_item.value = default
-                config_item.value_type = self.__check_default_type(default)
+                config_item.value_type = self._check_default_type(default)
         else:
             config_item.value = default
-            config_item.value_type = self.__check_default_type(default)
+            config_item.value_type = self._check_default_type(default)
 
         config_item.description = description
 
@@ -73,17 +89,18 @@ class ConsulUtils(object):
         else:
             config_item.is_password = False
 
-        key = self.__get_consul_key(app_id, env_key)
+        key = self._get_consul_key(app_id, env_key)
         index, data = self.consul.kv.get(key)
         # TODO: update existing keys?
         if data is None:
+            print('register config item at consul for key: {}'.format(env_key))
             self.consul.kv.put(key, config_item.to_json())
 
-    def __get_consul_key(self, app_id, key):
+    def _get_consul_key(self, app_id, key):
         return self._DEFAULT_CONSUL_CONFIG['CONSUL_BASIC_ROUTE'] + app_id + '/' + key
 
     @staticmethod
-    def __env_or_default(key, default):
+    def _env_or_default(key, default):
         if key is not None:
             if os.getenv(key):
                 return os.getenv(key)
@@ -93,7 +110,7 @@ class ConsulUtils(object):
             return default
 
     @staticmethod
-    def __check_default_type(value) -> str:
+    def _check_default_type(value) -> str:
         if isinstance(value, int):
             return 'xs:integer'
         elif isinstance(value, str):
@@ -103,7 +120,7 @@ class ConsulUtils(object):
         elif isinstance(value, float):
             return 'xs:float'
 
-    def __consul(self):
+    def _consul(self):
         if os.getenv('CONSUL_LOCATION'):
             return consul.Consul(host=os.getenv('CONSUL_LOCATION'),
                                  port=self._DEFAULT_CONSUL_CONFIG['CONSUL_PORT'])

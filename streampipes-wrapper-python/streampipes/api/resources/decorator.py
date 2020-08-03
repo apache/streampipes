@@ -14,18 +14,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from flask import make_response, jsonify, request
-from flask_classful import FlaskView
-from streampipes.api.resources.decorator import consumes
+import functools
+from flask import request, abort
 
 
-class WelcomeResource(FlaskView):
-
-    @consumes(media_type=['application/json','text/html'])
-    def index(self):
-        if request.content_type == 'application/json':
-            resp = {'welcome': 'hello-world!'}
-            return make_response(jsonify(resp), 200)
-        elif request.content_type == 'text/html':
-            return "<p>Got it!</p>"
-        return 'welcome!'
+def consumes(media_type):
+    def consumes_decorator(f):
+        @functools.wraps(f)
+        def decorated_function(*args, **kwargs):
+            for entry in media_type:
+                if request.content_type == entry:
+                    return f(*args, **kwargs)
+            abort(404)
+        return decorated_function
+    return consumes_decorator

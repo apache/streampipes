@@ -21,7 +21,6 @@ import threading
 from abc import ABC, abstractmethod
 from confluent_kafka.admin import AdminClient
 from confluent_kafka import Producer, Consumer
-
 from streampipes.api.rest import PipelineElementApi
 from streampipes.base.banner import banner
 from streampipes.model.pipeline_element_config import Config
