@@ -163,15 +163,15 @@
                                 placeholder="Adapter Description" [(ngModel)]="adapter.description">
                         </mat-form-field>
 
-                        <mat-form-field *ngIf="isEditable" style="width: 50%" (click)="fileInput.click();">
-                            <input matInput placeholder="Icon" disabled (value)="fileName">
-                            <input #fileInput type="file" style="display:none;"
-                                (change)="handleFileInput($event.target.files)">
-                            {{fileName}}
-                            <button color="primary" matSuffix mat-button style="min-width: 0px">
-                                <mat-icon>insert_drive_file</mat-icon>
-                            </button>
-                        </mat-form-field>
+<!--                        <mat-form-field *ngIf="isEditable" style="width: 50%" (click)="fileInput.click();">-->
+<!--                            <input matInput placeholder="Icon" disabled (value)="fileName">-->
+<!--                            <input #fileInput type="file" style="display:none;"-->
+<!--                                (change)="handleFileInput($event.target.files)">-->
+<!--                            {{fileName}}-->
+<!--                            <button color="primary" matSuffix mat-button style="min-width: 0px">-->
+<!--                                <mat-icon>insert_drive_file</mat-icon>-->
+<!--                            </button>-->
+<!--                        </mat-form-field>-->
 
 
                         <mat-checkbox [disabled]="!isEditable" [(ngModel)]="removeDuplicates"
@@ -226,11 +226,11 @@
                 <div fxLayoutAlign="end">
                     <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
                     <button class="mat-basic stepper-button" mat-raised-button (click)="goBack(stepper)">Back</button>
-                    <button [disabled]="startAdapterFormGroup.invalid || !isEditable" mat-raised-button
-                        id="button-saveTemplate" color="primary" (click)="saveTemplate()" mat-button
-                        style="margin-left:10px;">
-                        Save as Template
-                    </button>
+<!--                    <button [disabled]="startAdapterFormGroup.invalid || !isEditable" mat-raised-button-->
+<!--                        id="button-saveTemplate" color="primary" (click)="saveTemplate()" mat-button-->
+<!--                        style="margin-left:10px;">-->
+<!--                        Save as Template-->
+<!--                    </button>-->
                     <button [disabled]="startAdapterFormGroup.invalid" mat-raised-button id="button-startAdapter"
                         color="primary" (click)="startAdapter()" mat-button style="margin-left:10px;">
                         Start Adapter

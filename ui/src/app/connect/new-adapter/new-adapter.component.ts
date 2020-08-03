@@ -193,9 +193,9 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
             this.oldEventSchema = this.eventSchema;
         }
 
-        this.parentForm.statusChanges.subscribe((status)=>{
+        this.parentForm.statusChanges.subscribe((status) => {
             this.adapterSettingsFormValid = this.viewInitialized && this.parentForm.valid;
-        })
+        });
     }
 
     ngAfterViewInit() {
@@ -210,12 +210,14 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
 
     public triggerDialog(storeAsTemplate: boolean) {
         if (this.removeDuplicates) {
-            let removeDuplicates: RemoveDuplicatesTransformationRuleDescription = new RemoveDuplicatesTransformationRuleDescription();
+            const removeDuplicates: RemoveDuplicatesTransformationRuleDescription = new RemoveDuplicatesTransformationRuleDescription();
+            removeDuplicates['@class'] = 'org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription';
             removeDuplicates.filterTimeWindow = (this.removeDuplicatesTime) as any;
             this.adapter.rules.push(removeDuplicates);
         }
         if (this.eventRateReduction) {
-            let eventRate: EventRateTransformationRuleDescription = new EventRateTransformationRuleDescription();
+            const eventRate: EventRateTransformationRuleDescription = new EventRateTransformationRuleDescription();
+            eventRate['@class'] = 'org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription';
             eventRate.aggregationTimeWindow = this.eventRateMode as any;
             eventRate.aggregationType = this.eventRateMode;
             this.adapter.rules.push(eventRate);

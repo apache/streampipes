@@ -16,8 +16,7 @@
  *
  */
 
-import {Injectable} from '@angular/core';
-import {Logger} from '../shared/logger/default-log.service';
+import { Injectable } from '@angular/core';
 import {
     AddTimestampRuleDescription,
     AddValueTransformationRuleDescription, CreateNestedRuleDescription,
@@ -30,10 +29,11 @@ import {
     MoveRuleDescription,
     RenameRuleDescription,
     TimestampTranfsformationRuleDescription,
-    TransformationRuleDescription, TransformationRuleDescriptionUnion,
+     TransformationRuleDescriptionUnion,
     UnitTransformRuleDescription
-} from "../core-model/gen/streampipes-model";
-import {TimestampTransformationRuleMode} from "./model/connect/rules/TimestampTransformationRuleMode";
+} from '../core-model/gen/streampipes-model';
+import { Logger } from '../shared/logger/default-log.service';
+import { TimestampTransformationRuleMode } from './model/connect/rules/TimestampTransformationRuleMode';
 
 @Injectable()
 export class TransformationRuleService {
@@ -52,29 +52,31 @@ export class TransformationRuleService {
     }
 
     public getTransformationRuleDescriptions(): TransformationRuleDescriptionUnion[] {
-        var transformationRuleDescription: TransformationRuleDescriptionUnion[] = [];
+        let transformationRuleDescription: TransformationRuleDescriptionUnion[] = [];
 
         if (this.oldEventSchema == null || this.newEventSchema == null) {
-            this.logger.error("Old and new schema must be defined")
+            this.logger.error('Old and new schema must be defined');
         } else {
 
-            let addedTimestampProperties = this.getTimestampProperty(this.newEventSchema.eventProperties);
+            const addedTimestampProperties = this.getTimestampProperty(this.newEventSchema.eventProperties);
             if (addedTimestampProperties) {
                 // add to old event schema for the case users moved the property to a nested property
                 this.oldEventSchema.eventProperties.push(addedTimestampProperties);
 
-                let timestampRuleDescription: AddTimestampRuleDescription = new AddTimestampRuleDescription();
+                const timestampRuleDescription: AddTimestampRuleDescription = new AddTimestampRuleDescription();
+                timestampRuleDescription['@class'] = 'org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription';
                 timestampRuleDescription.runtimeKey = addedTimestampProperties.runtimeName;
                 transformationRuleDescription.push(timestampRuleDescription);
             }
 
-            let staticValueProperties = this.getStaticValueProperties(this.newEventSchema.eventProperties);
-            for (let ep of staticValueProperties) {
+            const staticValueProperties = this.getStaticValueProperties(this.newEventSchema.eventProperties);
+            for (const ep of staticValueProperties) {
                 this.oldEventSchema.eventProperties.push(ep);
-                let rule: AddValueTransformationRuleDescription = new AddValueTransformationRuleDescription();
+                const rule: AddValueTransformationRuleDescription = new AddValueTransformationRuleDescription();
+                rule['class'] = 'org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription';
                 rule.runtimeKey = ep.runtimeName;
                 rule.staticValue = (ep as any).staticValue;
-                transformationRuleDescription.push(rule)
+                transformationRuleDescription.push(rule);
             }
 
             // Rename
@@ -110,13 +112,14 @@ export class TransformationRuleService {
                         oldEventSchema: EventSchema,
                         newEventSchema: EventSchema): MoveRuleDescription[] {
 
-        var result: MoveRuleDescription[] = [];
+        let result: MoveRuleDescription[] = [];
 
-        for (let eventProperty of newEventProperties) {
+        for (const eventProperty of newEventProperties) {
 
             if (eventProperty instanceof EventPropertyNested) {
 
-                const tmpResults: MoveRuleDescription[] = this.getMoveRules((<EventPropertyNested> eventProperty).eventProperties, oldEventSchema, newEventSchema);
+                const tmpResults: MoveRuleDescription[] = this.getMoveRules(
+                  (<EventPropertyNested> eventProperty).eventProperties, oldEventSchema, newEventSchema);
                 result = result.concat(tmpResults);
 
             }
@@ -127,19 +130,20 @@ export class TransformationRuleService {
             // get prefix
             if (keyOld && keyNew) {
 
-                const keyOldPrefix: string = keyOld.substr(0, keyOld.lastIndexOf("."));
-                const keyNewPrefix: string = keyNew.substr(0, keyNew.lastIndexOf("."));
+                const keyOldPrefix: string = keyOld.substr(0, keyOld.lastIndexOf('.'));
+                const keyNewPrefix: string = keyNew.substr(0, keyNew.lastIndexOf('.'));
 
-                if (keyOldPrefix != keyNewPrefix) {
+                if (keyOldPrefix !== keyNewPrefix) {
 
                     // old key is equals old route and new name
-                    var keyOfOldValue = "";
-                    if (keyOldPrefix === "") {
-                        keyOfOldValue = keyNew.substr(keyNew.lastIndexOf(".") + 1, keyNew.length)
+                    var keyOfOldValue = '';
+                    if (keyOldPrefix === '') {
+                        keyOfOldValue = keyNew.substr(keyNew.lastIndexOf('.') + 1, keyNew.length);
                     } else {
-                        keyOfOldValue = keyOldPrefix + "." + keyNew.substr(keyNew.lastIndexOf(".") + 1, keyNew.length);
+                        keyOfOldValue = keyOldPrefix + '.' + keyNew.substr(keyNew.lastIndexOf('.') + 1, keyNew.length);
                     }
-                    let rule: MoveRuleDescription = new MoveRuleDescription();
+                    const rule: MoveRuleDescription = new MoveRuleDescription();
+                    rule['class'] = 'org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription';
                     rule.oldRuntimeKey = keyOfOldValue;
                     rule.newRuntimeKey = keyNewPrefix;
                     result.push(rule);
@@ -156,15 +160,16 @@ export class TransformationRuleService {
                                 newEventSchema: EventSchema): CreateNestedRuleDescription[] {
 
 
-        var allNewIds: string[] = this.getAllIds(newEventSchema.eventProperties);
-        var allOldIds: string[] = this.getAllIds(oldEventSchema.eventProperties);
+        const allNewIds: string[] = this.getAllIds(newEventSchema.eventProperties);
+        const allOldIds: string[] = this.getAllIds(oldEventSchema.eventProperties);
 
         const result: CreateNestedRuleDescription[] = [];
-        for (let id of allNewIds) {
+        for (const id of allNewIds) {
 
             if (allOldIds.indexOf(id) === -1) {
                 const key = this.getCompleteRuntimeNameKey(newEventSchema.eventProperties, id);
-                let rule: CreateNestedRuleDescription = new CreateNestedRuleDescription();
+                const rule: CreateNestedRuleDescription = new CreateNestedRuleDescription();
+                rule['class'] = 'org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription';
                 rule.runtimeKey = key;
                 result.push(rule);
             }
@@ -184,7 +189,8 @@ export class TransformationRuleService {
             const keyOld = this.getCompleteRuntimeNameKey(oldEventSchema.eventProperties, eventProperty.elementId);
             const keyNew = this.getCompleteRuntimeNameKey(newEventSchema.eventProperties, eventProperty.elementId);
 
-            let renameRule: RenameRuleDescription = new RenameRuleDescription();
+            const renameRule: RenameRuleDescription = new RenameRuleDescription();
+            renameRule['class'] = 'org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription';
             renameRule.oldRuntimeKey = keyOld;
             renameRule.newRuntimeKey = keyNew;
             result.push(renameRule);
@@ -238,9 +244,10 @@ export class TransformationRuleService {
 
         resultKeys = uniqEs6(resultKeys);
 
-        var resultRules: DeleteRuleDescription[] = [];
-        for (let key of resultKeys) {
-            let rule: DeleteRuleDescription = new DeleteRuleDescription();
+        const resultRules: DeleteRuleDescription[] = [];
+        for (const key of resultKeys) {
+            const rule: DeleteRuleDescription = new DeleteRuleDescription();
+            rule['@class'] = 'org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription';
             rule.runtimeKey = key;
             resultRules.push(rule);
         }
@@ -261,7 +268,8 @@ export class TransformationRuleService {
 
                 //let unitTransformation: UnitTransformRuleDescription = new UnitTransformRuleDescription();
                 //unitTransformation.fromUnitRessourceURL = eventPropertyPrimitive.
-                let rule: UnitTransformRuleDescription = new UnitTransformRuleDescription();
+                const rule: UnitTransformRuleDescription = new UnitTransformRuleDescription();
+                rule['class'] = 'org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription';
                 rule.runtimeKey = keyNew;
                 rule.fromUnitRessourceURL = (eventPropertyPrimitive as any).oldMeasurementUnit;
                 rule.toUnitRessourceURL = (eventPropertyPrimitive as any).measurementUnitTmp
@@ -408,7 +416,8 @@ export class TransformationRuleService {
                 const keyNew = this.getCompleteRuntimeNameKey(newEventSchema.eventProperties, eventPropertyPrimitive.elementId);
 
                 if (this.isTimestampProperty(eventPropertyPrimitive)) {
-                    let rule: TimestampTranfsformationRuleDescription = new TimestampTranfsformationRuleDescription();
+                    const rule: TimestampTranfsformationRuleDescription = new TimestampTranfsformationRuleDescription();
+                    rule['class'] = 'org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription';
                     rule.runtimeKey = keyNew;
                     rule.mode = (eventProperty as any).timestampTransformationMode;
                     rule.formatString = (eventProperty as any).timestampTransformationFormatString;
