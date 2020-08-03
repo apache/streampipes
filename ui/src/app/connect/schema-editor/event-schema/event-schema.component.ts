@@ -121,7 +121,8 @@ export class EventSchemaComponent implements OnChanges {
 
   public addNestedProperty(eventProperty?: EventPropertyNested): void {
     const uuid: string = UUID.UUID();
-    let nested: EventPropertyNested = new EventPropertyNested();
+    const nested: EventPropertyNested = new EventPropertyNested();
+    nested['@class'] = 'org.apache.streampipes.model.schema.EventPropertyNested';
     nested.elementId = uuid;
     nested.eventProperties = [];
     if (!eventProperty) {
@@ -149,7 +150,8 @@ export class EventSchemaComponent implements OnChanges {
 
   public addStaticValueProperty(): void {
     const eventProperty = new EventPropertyPrimitive();
-    eventProperty.elementId = 'staticValue/' + UUID.UUID(), undefined;
+    eventProperty['@class'] = 'org.apache.streampipes.model.schema.EventPropertyPrimitive';
+    eventProperty.elementId = 'staticValue/' + UUID.UUID();
 
     eventProperty.runtimeName = 'key_0';
     eventProperty.runtimeType = this.dataTypesService.getStringTypeUrl();
@@ -160,7 +162,8 @@ export class EventSchemaComponent implements OnChanges {
 
   public addTimestampProperty(): void {
     const eventProperty = new EventPropertyPrimitive();
-    eventProperty.elementId = 'timestamp/' + UUID.UUID();
+    eventProperty['@class'] = 'org.apache.streampipes.model.schema.EventPropertyPrimitive';
+    eventProperty.elementId = 'http://eventProperty.de/timestamp/' + UUID.UUID();
 
     eventProperty.runtimeName = 'timestamp';
     eventProperty.label = 'Timestamp';
