@@ -151,10 +151,12 @@ export class EventSchemaComponent implements OnChanges {
   public addStaticValueProperty(): void {
     const eventProperty = new EventPropertyPrimitive();
     eventProperty['@class'] = 'org.apache.streampipes.model.schema.EventPropertyPrimitive';
-    eventProperty.elementId = 'staticValue/' + UUID.UUID();
+    eventProperty.elementId = 'http://eventProperty.de/staticValue/' + UUID.UUID();
 
     eventProperty.runtimeName = 'key_0';
+    (eventProperty as any).staticValue = '';
     eventProperty.runtimeType = this.dataTypesService.getStringTypeUrl();
+    eventProperty.domainProperties =  [];
 
     this.eventSchema.eventProperties.push(eventProperty);
     this.refreshTree();

@@ -32,11 +32,15 @@ export class EditEventPropertyPrimitiveComponent implements OnInit {
 
   hideUnitTransformation: boolean;
 
+  addedByUser: boolean;
+
   constructor(private dataTypesService: DataTypesService) {
   }
 
   ngOnInit(): void {
     this.setShowUnitTransformation();
+    this.addedByUser = this.staticValueAddedByUser();
+    this.cachedProperty.staticValue = '';
   }
 
   setShowUnitTransformation() {
