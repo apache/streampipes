@@ -125,6 +125,7 @@ export class EventSchemaComponent implements OnChanges {
     nested['@class'] = 'org.apache.streampipes.model.schema.EventPropertyNested';
     nested.elementId = uuid;
     nested.eventProperties = [];
+    nested.domainProperties =  [];
     if (!eventProperty) {
       this.eventSchema.eventProperties.push(nested);
     } else {
