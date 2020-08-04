@@ -14,18 +14,30 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from flask import make_response, jsonify, request
-from flask_classful import FlaskView
-from streampipes.api.resources.decorator import consumes
+from flask import make_response, jsonify, request, render_template
+from flask_classful import FlaskView, route
+from flask_negotiate import produces
 
 
 class WelcomeResource(FlaskView):
+    dummy_processors = [{
+            'name': 'Greeter Python',
+            'uri': 'http://localhost:5000/sepa/org.apache.streampipes.python.processor.greeter',
+            'description': 'Greeter Python Description'
+        },
+        {
+            'name': 'DoNothing Python',
+            'uri': 'http://localhost:5000/sepa/org.apache.streampipes.python.processor.donothing',
+            'description': 'Donothing Python Description'
+        }]
 
-    @consumes(media_type=['application/json','text/html'])
-    def index(self):
-        if request.content_type == 'application/json':
-            resp = {'welcome': 'hello-world!'}
+    @route('/', methods=['GET'])
+    @produces('application/json','text/html')
+    def welcome(self):
+        if request.accept_mimetypes['text/html']:
+            return render_template('index.html', processors=self.dummy_processors)
+
+        if request.accept_mimetypes['application/json']:
+            resp = {'success': True}
             return make_response(jsonify(resp), 200)
-        elif request.content_type == 'text/html':
-            return "<p>Got it!</p>"
-        return 'welcome!'
+

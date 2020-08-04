@@ -29,6 +29,7 @@ setup(
     name='apache-streampipes-python',
     version='0.67.0-SNAPSHOT',
     packages=find_packages(),
+    package_data={'streampipes': ['api/templates/*']},
     url='https://github.com/apache/incubator-streampipes',
     license='https://www.apache.org/licenses/LICENSE-2.0',
     license_files=["LICENSE", "NOTICE"],
@@ -41,6 +42,7 @@ setup(
         'confluent-kafka==1.4.2',
         'Flask==1.1.2',
         'flask-classful==0.14.2',
+        'Flask-Negotiate==0.1.0',
         'bjoern==3.1.0',
         'python-consul==1.1.0'
     ],

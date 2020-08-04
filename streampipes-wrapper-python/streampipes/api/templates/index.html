@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>StreamPipes Python</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style type="text/css">
+        body {padding-top: 70px;}
+    </style>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top" style="background: rgb(57, 181, 74)">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" style="color:white;">StreamPipes Pipeline Element Container</a>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <h4>This is a developer-oriented view. Navigate to 'Install Pipeline Elements' in the
+        StreamPipes UI to import the elements shown here.
+    </h4>
+            {% for processor in processors %}
+            <h3>{{ processor.name }}</h3>
+            <h4>URI: {{ processor.uri }}</h4>
+            <h4>Description: {{ processor.description }}</h4>
+            {% endfor %}
+</div>
+</body>
+</html>

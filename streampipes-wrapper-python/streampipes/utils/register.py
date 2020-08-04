@@ -48,7 +48,7 @@ class ConsulUtils(object):
                                            check=Check.http(url='http://' + host + ':' + str(port),
                                                             interval=self._DEFAULT_CONSUL_CONFIG[
                                                                 'HEALTHCHECK_INTERVAL'],
-                                                            header={"Content-Type": ["application/json"]}))
+                                                            header={"Accept": ["application/json"]}))
 
     def register_config(self, app_id: str, env_key: str, default, description: str, configuration_scope=None,
                         is_password=None):

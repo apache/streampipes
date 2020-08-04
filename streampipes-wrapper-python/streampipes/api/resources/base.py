@@ -18,7 +18,7 @@ import abc
 import os
 from flask import jsonify, make_response
 from flask_classful import FlaskView, route
-from streampipes.api.resources.decorator import consumes
+from flask_negotiate import consumes
 
 
 class Element(FlaskView):
@@ -81,7 +81,7 @@ class InvocableElement(Element):
     __metaclass__ = abc.ABC
 
     @route('/<element_id>', methods=['POST'])
-    @consumes(media_type=['application/json'])
+    @consumes('application/json')
     def invoke_runtime(self, element_id: str):
         # TODO: parse invocation graph
         # payload = request.json
@@ -89,14 +89,14 @@ class InvocableElement(Element):
         return make_response(jsonify(resp), 200)
 
     @route('/<element_id>/configurations', methods=['POST'])
-    @consumes(media_type=['application/json'])
+    @consumes('application/json')
     def fetch_configurations(self, element_id: str):
         # payload = request.json
         resp = {'element_id': element_id, 'config': 'sucess'}
         return make_response(jsonify(resp), 200)
 
     @route('/<element_id>/output', methods=['POST'])
-    @consumes(media_type=['application/json'])
+    @consumes('application/json')
     def fetch_output_configurations(self, element_id: str):
         # payload = request.json
         resp = {'element_id': element_id, 'output': 'sucess'}
