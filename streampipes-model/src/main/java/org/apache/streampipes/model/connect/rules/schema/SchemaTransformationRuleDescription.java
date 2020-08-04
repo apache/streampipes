@@ -21,12 +21,6 @@ package org.apache.streampipes.model.connect.rules.schema;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
 
-@JsonSubTypes({
-        @JsonSubTypes.Type(CreateNestedRuleDescription.class),
-        @JsonSubTypes.Type(DeleteRuleDescription.class),
-        @JsonSubTypes.Type(RenameRuleDescription.class),
-        @JsonSubTypes.Type(MoveRuleDescription.class),
-})
 public abstract class SchemaTransformationRuleDescription extends TransformationRuleDescription {
 
     public SchemaTransformationRuleDescription() {

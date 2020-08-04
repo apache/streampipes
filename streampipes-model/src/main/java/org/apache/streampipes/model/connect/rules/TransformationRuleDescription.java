@@ -52,6 +52,10 @@ import javax.persistence.Entity;
         @JsonSubTypes.Type(DeleteRuleDescription.class),
         @JsonSubTypes.Type(RenameRuleDescription.class),
         @JsonSubTypes.Type(MoveRuleDescription.class),
+        @JsonSubTypes.Type(CreateNestedRuleDescription.class),
+        @JsonSubTypes.Type(DeleteRuleDescription.class),
+        @JsonSubTypes.Type(RenameRuleDescription.class),
+        @JsonSubTypes.Type(MoveRuleDescription.class),
 })
 public abstract class TransformationRuleDescription extends UnnamedStreamPipesEntity {
 
