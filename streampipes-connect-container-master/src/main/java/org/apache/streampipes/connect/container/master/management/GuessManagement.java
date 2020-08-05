@@ -19,13 +19,18 @@
 package org.apache.streampipes.connect.container.master.management;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.fluent.Request;
+import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
+import org.apache.http.util.EntityUtils;
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
 import org.apache.streampipes.connect.adapter.exception.ParseException;
+import org.apache.streampipes.connect.adapter.exception.WorkerAdapterException;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.model.message.Message;
+import org.apache.streampipes.model.message.ErrorMessage;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,17 +39,13 @@ import java.io.IOException;
 
 public class GuessManagement {
 
-    private String errorMessage = "Sorry, something went wrong! Hit the feedback button (top right corner) to ask for help. If you think you've found a bug, fill an issue on our Github Page";
-
     private static Logger LOG = LoggerFactory.getLogger(GuessManagement.class);
 
-    private WorkerAdministrationManagement workerAdministrationManagement;
-
     public GuessManagement() {
-        this.workerAdministrationManagement = new WorkerAdministrationManagement();
+
     }
 
-    public GuessSchema guessSchema(AdapterDescription adapterDescription) throws AdapterException, ParseException {
+    public GuessSchema guessSchema(AdapterDescription adapterDescription) throws AdapterException, ParseException, WorkerAdapterException {
         String workerUrl = new Utils().getWorkerUrl(adapterDescription);
 
         workerUrl = workerUrl + "api/v1/admin@streampipes.de/worker/guess/schema";
@@ -54,45 +55,29 @@ public class GuessManagement {
         try {
             String ad = mapper.writeValueAsString(adapterDescription);
             LOG.info("Guess schema at: " + workerUrl);
-            String responseString = Request.Post(workerUrl)
+            Response requestResponse = Request.Post(workerUrl)
                     .bodyString(ad, ContentType.APPLICATION_JSON)
                     .connectTimeout(1000)
                     .socketTimeout(100000)
-                    .execute().returnContent().asString();
+                    .execute();
 
-            GuessSchema guessSchema = mapper.readValue(responseString, GuessSchema.class);
+            HttpResponse httpResponse = requestResponse.returnResponse();
+            String responseString = EntityUtils.toString(httpResponse.getEntity());
 
-            if (guessSchema.getEventSchema() != null) {
+            if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                GuessSchema guessSchema = mapper.readValue(responseString, GuessSchema.class);
                 return guessSchema;
-            } else {
-                Message errorMessage = mapper.readValue(responseString, Message.class);
-                if (errorMessage.getNotifications() != null && errorMessage.getNotifications().get(0) != null) {
-                    throw new AdapterException(errorMessage.getNotifications().get(0).getTitle());
-                } else {
-                    throw new AdapterException("There was an error while guessing the schema in the worker with the URL: " + workerUrl + "\n" +
-                            errorMessage);
-                }
+            }  else {
+                    ErrorMessage errorMessage = mapper.readValue(responseString, ErrorMessage.class);
 
-
+                    LOG.error(errorMessage.getElementName());
+                    throw new WorkerAdapterException(errorMessage);
             }
 
-
         } catch (IOException e) {
-            e.printStackTrace();
-            throw new AdapterException("Connect Worker: " + workerUrl + " is currently not available.\n" +
-                    errorMessage);
+            LOG.error(e.getMessage());
+            throw new AdapterException("Error in connect worker: " + workerUrl, e);
         }
     }
-
-    public void guessFormat() {
-        // TODO implement
-    }
-
-
-    public void  guessFormatDescription() {
-        // TODO implement
-    }
-
-
 
 }

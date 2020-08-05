@@ -39,6 +39,10 @@ public abstract class Message {
 	
 	private List<Notification> notifications;
 	
+	public Message(){
+
+  }
+
 	public Message(boolean success){
 		this.success = success;
 		this.notifications = null;

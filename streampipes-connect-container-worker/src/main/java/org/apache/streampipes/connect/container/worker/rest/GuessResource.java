@@ -58,16 +58,15 @@ public class GuessResource extends AbstractContainerResource {
   public Response guessSchema(AdapterDescription adapterDescription, @PathParam("username") String userName) {
 
       try {
-          //AdapterDescription adapterDescription = AdapterDeserializer.getAdapterDescription(s);
           GuessSchema result = guessManagement.guessSchema(adapterDescription);
 
           return ok(result);
       } catch (ParseException e) {
           logger.error("Error while parsing events: ", e);
-          return ok(Notifications.error(e.getMessage()));
+          return error(Notifications.error(e.getMessage()));
       } catch (Exception e) {
           logger.error("Error while guess schema for AdapterDescription: " + adapterDescription.getAdapterId(), e);
-          return ok(Notifications.error(e.getMessage()));
+          return error(Notifications.error(e.getMessage()));
       }
 
   }

@@ -25,6 +25,10 @@ import java.util.List;
 @TsModel
 public class ErrorMessage extends Message {
 
+	public ErrorMessage() {
+		super();
+
+	}
 	public ErrorMessage(Notification...notifications) {
 		super(false, notifications);
 	}	
