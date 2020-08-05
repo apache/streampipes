@@ -36,11 +36,11 @@
     <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start" class="page-container-padding-inner" *ngIf="endpointItemsLoadingComplete" >
         <div fxLayoutAlign="start start" fxLayout="column">
             <div fxFlex="100" fxLayout="row" style="margin-bottom:20px;">
-                <button mat-button mat-raised-button (click)="selectAll(true)" class="mr-10">
+                <button mat-button mat-flat-button color="primary" (click)="selectAll(true)" class="mr-10">
                     <i class="material-icons">done</i>
                     &nbsp;Select all
                 </button>
-                <button mat-button mat-raised-button (click)="selectAll(false)" class="mr-10">
+                <button mat-button mat-flat-button color="primary" (click)="selectAll(false)" class="mr-10">
                     <i class="material-icons">clear</i>
                     &nbsp;Select none
                 </button>

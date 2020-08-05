@@ -17,6 +17,8 @@
  */
 
 import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {PipelineElementEndpointService} from "../../../platform-services/apis/pipeline-element-endpoint.service";
 
 @Component({
   selector: 'endpoint-item',
@@ -36,6 +38,11 @@ export class EndpointItemComponent implements OnInit {
 
   @Output()
   triggerInstallation: EventEmitter<any> = new EventEmitter<any>();
+
+  constructor(private snackBar: MatSnackBar,
+              private PipelineElementEndpointService: PipelineElementEndpointService) {
+
+  }
 
   ngOnInit(): void {
    this.findItemTypeTitle();
@@ -93,5 +100,18 @@ export class EndpointItemComponent implements OnInit {
     let endpointItems = [];
     endpointItems.push(endpointItem);
     this.triggerInstallation.emit({endpointItems: endpointItems, install: false});
+  }
+
+  refresh(elementUri) {
+    this.PipelineElementEndpointService.update(elementUri)
+        .subscribe(msg => {
+          console.log(msg);
+          this.snackBar.open(msg.notifications[0].title, "Ok", {
+            duration: 2000
+          });
+        })
+        .add(() => {
+          //this.loadCurrentElements(type);
+        });
   }
 }

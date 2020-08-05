@@ -19,10 +19,10 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
-import org.apache.streampipes.model.message.NotificationType;
-import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.message.NotificationType;
+import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.api.IPipelineElement;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
@@ -32,7 +32,6 @@ import org.apache.streampipes.storage.rdf4j.filter.Filter;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -109,12 +108,8 @@ public class SemanticEventProcessingAgent extends AbstractRestInterface implemen
 	@GsonWithIds
 	@Override
 	public Response removeOwn(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
-		try {
-			getUserService().deleteOwnSepa(username, elementUri);
-			getPipelineElementRdfStorage().deleteDataProcessor(getPipelineElementRdfStorage().getDataProcessorById(elementUri));
-		} catch (URISyntaxException e) {
-			return constructErrorMessage(Notifications.create(NotificationType.STORAGE_ERROR, e.getMessage()));
-		}
+		getUserService().deleteOwnSepa(username, elementUri);
+		getPipelineElementRdfStorage().deleteDataProcessor(getPipelineElementRdfStorage().getDataProcessorById(elementUri));
 		return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
 	}
 
@@ -123,11 +118,7 @@ public class SemanticEventProcessingAgent extends AbstractRestInterface implemen
 	@Produces(MediaType.TEXT_PLAIN)
 	@Override
 	public String getAsJsonLd(@PathParam("elementUri") String elementUri) {
-		try {
-			return toJsonLd(getPipelineElementRdfStorage().getDataProcessorById(elementUri));
-		} catch (URISyntaxException e) {
-			return toJson(constructErrorMessage(Notifications.create(NotificationType.UNKNOWN_ERROR, e.getMessage())));
-		}
+		return toJsonLd(getPipelineElementRdfStorage().getDataProcessorById(elementUri));
 	}
 
 	@Path("/{elementUri}")
@@ -137,11 +128,7 @@ public class SemanticEventProcessingAgent extends AbstractRestInterface implemen
 	@Override
 	public Response getElement(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
 		// TODO Access rights
-		try {
-			return ok(new DataProcessorInvocation(new DataProcessorInvocation(getPipelineElementRdfStorage().getDataProcessorById(elementUri))));
-		} catch (URISyntaxException e) {
-			return statusMessage(Notifications.error(NotificationType.UNKNOWN_ERROR, e.getMessage()));
-		}
+		return ok(new DataProcessorInvocation(new DataProcessorInvocation(getPipelineElementRdfStorage().getDataProcessorById(elementUri))));
 	}
 
 }

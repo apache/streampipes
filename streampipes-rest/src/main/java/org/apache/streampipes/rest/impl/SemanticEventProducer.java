@@ -19,10 +19,10 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
+import org.apache.streampipes.model.graph.DataSourceDescription;
 import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.message.Notifications;
-import org.apache.streampipes.model.graph.DataSourceDescription;
 import org.apache.streampipes.rest.api.IPipelineElement;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
@@ -32,7 +32,6 @@ import org.apache.streampipes.storage.rdf4j.filter.Filter;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,11 +46,7 @@ public class SemanticEventProducer extends AbstractRestInterface implements IPip
 	{
 		try {
 			return ok(new DataSourceDescription(getPipelineElementRdfStorage().getDataSourceById(sourceId)));
-		} catch (URISyntaxException e) {
-			return constructErrorMessage(new Notification(NotificationType.URIOFFLINE.title(),
-					NotificationType.URIOFFLINE.description(), e.getMessage()));
-		} catch (Exception e)
-		{
+		} catch (Exception e) {
 			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(),
 					NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
 		}
@@ -125,12 +120,8 @@ public class SemanticEventProducer extends AbstractRestInterface implements IPip
 	@GsonWithIds
 	@Override
 	public Response removeOwn(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
-		try {
-			getUserService().deleteOwnSource(username, elementUri);
-			getPipelineElementRdfStorage().deleteDataSink(getPipelineElementRdfStorage().getDataSinkById(elementUri));
-		} catch (URISyntaxException e) {
-			return constructErrorMessage(new Notification(NotificationType.STORAGE_ERROR.title(), NotificationType.STORAGE_ERROR.description(), e.getMessage()));
-		}
+		getUserService().deleteOwnSource(username, elementUri);
+		getPipelineElementRdfStorage().deleteDataSink(getPipelineElementRdfStorage().getDataSinkById(elementUri));
 		return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
 	}
 
@@ -139,11 +130,7 @@ public class SemanticEventProducer extends AbstractRestInterface implements IPip
 	@Produces(MediaType.TEXT_PLAIN)
 	@Override
 	public String getAsJsonLd(@PathParam("elementUri") String elementUri) {
-		try {
-			return toJsonLd(getPipelineElementRdfStorage().getDataSinkById(elementUri));
-		} catch (URISyntaxException e) {
-			return toJson(statusMessage(Notifications.error(NotificationType.UNKNOWN_ERROR)));
-		}
+		return toJsonLd(getPipelineElementRdfStorage().getDataSinkById(elementUri));
 	}
 
 	
@@ -154,11 +141,7 @@ public class SemanticEventProducer extends AbstractRestInterface implements IPip
 	@Override
 	public Response getElement(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
 		// TODO Access rights
-		try {
-			return ok(new DataSourceDescription(getPipelineElementRdfStorage().getDataSourceById(elementUri)));
-		} catch (URISyntaxException e) {
-			return statusMessage(Notifications.error(NotificationType.UNKNOWN_ERROR, e.getMessage()));
-		}
+		return ok(new DataSourceDescription(getPipelineElementRdfStorage().getDataSourceById(elementUri)));
 	}
 
 }

@@ -35,6 +35,15 @@
                     <i class="material-icons small-icon">delete</i>
                     <span>&nbsp;Uninstall</span>
                 </button>
+                <div *ngIf="item.installed" style="margin-left:5px;">
+                    <button class="small-button mat-basic no-min-width" mat-raised-button mat-button [matMenuTriggerFor]="menu"><span style="font-size:12px;">...</span></button>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item (click)="refresh(item.uri)">
+                            <mat-icon>refresh</mat-icon>
+                            <span>&nbsp;Update</span>
+                        </button>
+                    </mat-menu>
+                </div>
             </div>
         </div>
     </div>

@@ -20,8 +20,6 @@ package org.apache.streampipes.rest.impl;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.manager.assets.AssetManager;
 import org.apache.streampipes.manager.endpoint.EndpointItemParser;
@@ -33,23 +31,17 @@ import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorageCache;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.ws.rs.DELETE;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 @Path("/v2/users/{username}/element")
 public class PipelineElementImport extends AbstractRestInterface {
@@ -139,7 +131,7 @@ public class PipelineElementImport extends AbstractRestInterface {
                 NotificationType.STORAGE_ERROR.description()));
       }
       AssetManager.deleteAsset(appId);
-    } catch (URISyntaxException | IOException e) {
+    } catch (IOException e) {
       return constructErrorMessage(new Notification(NotificationType.STORAGE_ERROR.title(),
               NotificationType.STORAGE_ERROR.description()));
     }
@@ -152,19 +144,14 @@ public class PipelineElementImport extends AbstractRestInterface {
   public Response getActionAsJsonLd(@PathParam("id") String elementId) {
     IPipelineElementDescriptionStorage requestor = getPipelineElementRdfStorage();
     elementId = decode(elementId);
-    try {
-      if (requestor.getDataProcessorById(elementId) != null) {
-        return ok(toJsonLd(requestor.getDataProcessorById(elementId)));
-      } else if (requestor.getDataSourceById(elementId) != null) {
-        return ok(toJsonLd(requestor.getDataSourceById(elementId)));
-      } else if (requestor.getDataSinkById(elementId) != null) {
-        return ok(toJsonLd(requestor.getDataSinkById(elementId)));
-      } else {
-        return ok(Notifications.create(NotificationType.UNKNOWN_ERROR));
-      }
-    } catch (URISyntaxException e) {
-      return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(),
-              NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
+    if (requestor.getDataProcessorById(elementId) != null) {
+      return ok(toJsonLd(requestor.getDataProcessorById(elementId)));
+    } else if (requestor.getDataSourceById(elementId) != null) {
+      return ok(toJsonLd(requestor.getDataSourceById(elementId)));
+    } else if (requestor.getDataSinkById(elementId) != null) {
+      return ok(toJsonLd(requestor.getDataSinkById(elementId)));
+    } else {
+      return ok(Notifications.create(NotificationType.UNKNOWN_ERROR));
     }
   }
 }

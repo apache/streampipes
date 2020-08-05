@@ -19,11 +19,10 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
-import org.apache.streampipes.model.message.Notification;
-import org.apache.streampipes.model.message.NotificationType;
-import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
+import org.apache.streampipes.model.message.NotificationType;
+import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.api.IPipelineElement;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
@@ -34,7 +33,6 @@ import org.apache.streampipes.storage.rdf4j.filter.Filter;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -107,13 +105,9 @@ public class SemanticEventConsumer extends AbstractRestInterface implements IPip
   @GsonWithIds
   @Override
   public Response removeOwn(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
-    try {
-      IPipelineElementDescriptionStorage requestor = getPipelineElementRdfStorage();
-      getUserService().deleteOwnAction(username, elementUri);
-      requestor.deleteDataSink(requestor.getDataSinkById(elementUri));
-    } catch (URISyntaxException e) {
-      return constructErrorMessage(new Notification(NotificationType.STORAGE_ERROR.title(), NotificationType.STORAGE_ERROR.description(), e.getMessage()));
-    }
+    IPipelineElementDescriptionStorage requestor = getPipelineElementRdfStorage();
+    getUserService().deleteOwnAction(username, elementUri);
+    requestor.deleteDataSink(requestor.getDataSinkById(elementUri));
     return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
   }
 
@@ -122,11 +116,7 @@ public class SemanticEventConsumer extends AbstractRestInterface implements IPip
   @Produces(MediaType.TEXT_PLAIN)
   @Override
   public String getAsJsonLd(@PathParam("elementUri") String elementUri) {
-    try {
-      return toJsonLd(getPipelineElementRdfStorage().getDataSinkById(elementUri));
-    } catch (URISyntaxException e) {
-      return toJson(constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage())));
-    }
+    return toJsonLd(getPipelineElementRdfStorage().getDataSinkById(elementUri));
   }
 
   @Path("/{elementUri}")
@@ -135,12 +125,6 @@ public class SemanticEventConsumer extends AbstractRestInterface implements IPip
   @GsonWithIds
   @Override
   public Response getElement(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
-    try {
-      return ok(new DataSinkInvocation(new DataSinkInvocation(getPipelineElementRdfStorage().getDataSinkById(elementUri))));
-    } catch (URISyntaxException e) {
-      return statusMessage(Notifications.error(NotificationType.UNKNOWN_ERROR, e.getMessage()));
-    }
+    return ok(new DataSinkInvocation(new DataSinkInvocation(getPipelineElementRdfStorage().getDataSinkById(elementUri))));
   }
-
-
 }
