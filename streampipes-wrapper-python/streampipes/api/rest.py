@@ -19,6 +19,8 @@ import threading
 
 import bjoern
 from flask import Flask
+
+from streampipes.api.resources.dummy import DummyInterimsResource
 from streampipes.api.resources.processor import SepaElementResource
 from streampipes.api.resources.welcome import WelcomeResource
 
@@ -38,8 +40,10 @@ class PipelineElementApi(object):
             # register resources
             SepaElementResource.register(self.app, route_base='/', route_prefix='sepa')
             WelcomeResource.register(self.app, route_base='/')
+            # TODO: delete when finished
+            DummyInterimsResource.register(self.app, route_base='/')
 
     def run(self, port: int):
-        print('serving API via bjoern WSGI server ... {}:{}'.format('0.0.0.0', port))
+        print('serving API via bjoern WSGI server ... http://{}:{}'.format('0.0.0.0', port))
         threading.Thread(target=bjoern.run, args=(self.app,), kwargs={'host': '0.0.0.0', 'port': int(port)}).start()
 

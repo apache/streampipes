@@ -14,21 +14,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from streampipes.api.resources.base import InvocableElement
+from flask import request
+from flask_classful import FlaskView, route
+from streampipes.manager import ProcessorDispatcher
 
 
-# TODO: implement
-class SepaElementResource(InvocableElement):
+# TODO: Delete when finished
+# will be deleted and is only necessary for interims working example still relying on Java
+class DummyInterimsResource(FlaskView):
 
-    def get_instance_id(self, uri: str, element_id: str):
-        pass
+    @route('/invoke', methods=['POST'])
+    def start(self):
+        return ProcessorDispatcher.start(**request.get_json())
 
-    def get_element_declarers(self):
-        pass
-
-    def get_extractor(self, graph):
-        pass
-
-    def create_grounding_debug_information(self, graph):
-        pass
-
+    @route('/detach', methods=['POST'])
+    def stop(self):
+        return ProcessorDispatcher.stop(**request.get_json())

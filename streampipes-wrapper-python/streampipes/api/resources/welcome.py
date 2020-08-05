@@ -34,6 +34,8 @@ class WelcomeResource(FlaskView):
     @route('/', methods=['GET'])
     @produces('application/json','text/html')
     def welcome(self):
+        # TODO: get description of all declared semantic event processor agents (sepa)
+        # TODO: DeclarerSingleton().get_declarers()
         if request.accept_mimetypes['text/html']:
             return render_template('index.html', processors=self.dummy_processors)
 

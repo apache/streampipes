@@ -21,21 +21,6 @@ import threading
 from abc import ABC, abstractmethod
 from confluent_kafka.admin import AdminClient
 from confluent_kafka import Producer, Consumer
-from streampipes.api.rest import PipelineElementApi
-from streampipes.base.banner import banner
-from streampipes.model.pipeline_element_config import Config
-from streampipes.utils.register import ConsulUtils
-
-
-class StandaloneModelSubmitter(ABC):
-    @classmethod
-    def init(cls, config: Config):
-        # print banner
-        print(banner)
-        # start api
-        PipelineElementApi().run(port=config.port)
-        # register pipeline element service
-        ConsulUtils().register_service(app_id=config.app_id, host=config.host, port=int(config.port))
 
 
 class EventProcessor(ABC):

@@ -24,7 +24,7 @@
     </h4>
             {% for processor in processors %}
             <h3>{{ processor.name }}</h3>
-            <h4>URI: {{ processor.uri }}</h4>
+            <h4>URI: <a href="{{ processor.uri }}">{{ processor.uri }}</a></h4>
             <h4>Description: {{ processor.description }}</h4>
             {% endfor %}
 </div>

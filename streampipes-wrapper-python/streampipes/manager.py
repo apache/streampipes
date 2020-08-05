@@ -16,28 +16,13 @@
 #
 """Manages processor life cycle"""
 import logging
-from abc import ABC
+import abc
+from streampipes.declarer import DeclarerSingleton
 
 
-class Declarer(ABC):
-    """ EventProcessorManager holds running processor instances """
-    _processors = {}
+class ProcessorDispatcher(object):
+    __metaclass__ = abc.ABC
 
-    @classmethod
-    def add(cls, processors=None):
-        """ holds dict with <app_id, processor class>"""
-        cls._processors = processors
-
-    @classmethod
-    def get_processor(cls, key):
-        return cls._processors[key]
-
-    @classmethod
-    def get(cls):
-        return cls._processors
-
-
-class ProcessorDispatcher(ABC):
     _running_instances = {}
 
     logger = logging.getLogger(__name__)
@@ -46,7 +31,7 @@ class ProcessorDispatcher(ABC):
     def start(cls, **kwargs):
         processor_id = kwargs.get('processor_id')
         try:
-            processor = Declarer.get_processor(processor_id)(**kwargs)
+            processor = DeclarerSingleton().get_processor(processor_id)(**kwargs)
             processor.init()
             cls._running_instances[processor.invocation_id] = processor
 
