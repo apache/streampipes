@@ -16,26 +16,18 @@
  *
  */
 
-import {NgModule} from '@angular/core';
-import {TsonLdSerializerService} from './tsonld-serializer.service';
-import {PipelineTemplateService} from './apis/pipeline-template.service';
-import {PipelineElementService} from "./apis/pipeline-element.service";
-import {PipelineService} from "./apis/pipeline.service";
-import {PlatformServicesCommons} from "./apis/commons.service";
-import {PipelineElementEndpointService} from "./apis/pipeline-element-endpoint.service";
+.pipeline-element-box {
+  height: 100%;
+  box-shadow: 1px 1px 2px #555;
+  border: 1px solid gray;
+  cursor: pointer;
+  padding: 10px;
+}
 
-@NgModule({
-  imports: [],
-  declarations: [],
-  providers: [
-    PlatformServicesCommons,
-    PipelineElementEndpointService,
-    TsonLdSerializerService,
-    PipelineTemplateService,
-    PipelineElementService,
-    PipelineService
-  ],
-  entryComponents: []
-})
-export class PlatformServicesModule {
+.small-icon {
+  font-size:12px;
+}
+
+.ml-5 {
+  margin-left:5px;
 }

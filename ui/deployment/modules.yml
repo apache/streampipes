@@ -70,11 +70,11 @@ spSensors:
   homeImage: '/assets/img/home/sensors.png'
   admin: False
 spAdd:
-  ng5: False
-  ng1_templateUrl: '../add/add.html'
-  ng5_moduleName: ''
-  ng5_component: ''
-  ng5_componentPath: ''
+  ng5: True
+  ng1_templateUrl: ''
+  ng5_moduleName: 'AddModule'
+  ng5_component: 'AddComponent'
+  ng5_componentPath: '../add/add.component'
   path: './add/add.module'
   link: 'streampipes.add'
   url: '/add'

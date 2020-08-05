@@ -16,26 +16,26 @@
  *
  */
 
-import {NgModule} from '@angular/core';
-import {TsonLdSerializerService} from './tsonld-serializer.service';
-import {PipelineTemplateService} from './apis/pipeline-template.service';
-import {PipelineElementService} from "./apis/pipeline-element.service";
-import {PipelineService} from "./apis/pipeline.service";
-import {PlatformServicesCommons} from "./apis/commons.service";
-import {PipelineElementEndpointService} from "./apis/pipeline-element-endpoint.service";
+import {Pipe, PipeTransform} from '@angular/core';
 
-@NgModule({
-  imports: [],
-  declarations: [],
-  providers: [
-    PlatformServicesCommons,
-    PipelineElementEndpointService,
-    TsonLdSerializerService,
-    PipelineTemplateService,
-    PipelineElementService,
-    PipelineService
-  ],
-  entryComponents: []
-})
-export class PlatformServicesModule {
+@Pipe({name: 'orderBy'})
+export class OrderByPipe implements PipeTransform {
+
+  transform(value: any[], order = '', column: string = ''): any[] {
+    if (!value || order === '' || !order) {
+      return value;
+    }
+    if (value.length <= 1) {
+      return value;
+    }
+    if (!column || column === '') {
+      if (order === 'asc') {
+        return value.sort();
+      } else {
+        return value.sort().reverse();
+      }
+    }
+    let sortedValues = value.sort((a, b) => a[column].localeCompare(b[column]));
+    return order === 'asc' ? sortedValues : sortedValues.reverse();
+  }
 }
