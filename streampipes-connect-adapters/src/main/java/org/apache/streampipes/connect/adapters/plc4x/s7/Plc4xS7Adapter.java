@@ -33,6 +33,7 @@ import org.apache.streampipes.connect.adapter.Adapter;
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
 import org.apache.streampipes.connect.adapter.util.PollingSettings;
 import org.apache.streampipes.connect.adapters.PullAdapter;
+import org.apache.streampipes.connect.protocol.stream.KafkaProtocol;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
@@ -52,6 +53,8 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.sdk.utils.Datatypes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -69,6 +72,8 @@ public class Plc4xS7Adapter extends PullAdapter {
      * A unique id to identify the Plc4xS7Adapter
      */
     public static final String ID = "org.apache.streampipes.connect.adapters.plc4x.s7";
+
+    Logger LOG = LoggerFactory.getLogger(Plc4xS7Adapter.class);
 
     /**
      * Keys of user configuration parameters
@@ -212,27 +217,28 @@ public class Plc4xS7Adapter extends PullAdapter {
         PlcReadResponse response = null;
         try {
             response = readRequest.execute().get();
+
+            // Create an event containing the value of the PLC
+            Map<String, Object> event = new HashMap<>();
+            for (Map<String, String> node : this.nodes) {
+                if(response.getResponseCode(node.get(PLC_NODE_NAME)) == PlcResponseCode.OK) {
+                    event.put(node.get(PLC_NODE_RUNTIME_NAME), response.getObject(node.get(PLC_NODE_NAME)));
+                }
+
+                else {
+                    logger.error("Error[" + node.get(PLC_NODE_NAME) + "]: " +
+                            response.getResponseCode(node.get(PLC_NODE_NAME)).name());
+                }
+            }
+
+            // publish the final event
+            adapterPipeline.process(event);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            LOG.error(e.getMessage());
         } catch (ExecutionException e) {
-            e.printStackTrace();
+            LOG.error(e.getMessage());
         }
 
-        // Create an event containing the value of the PLC
-        Map<String, Object> event = new HashMap<>();
-        for (Map<String, String> node : this.nodes) {
-            if(response.getResponseCode(node.get(PLC_NODE_NAME)) == PlcResponseCode.OK) {
-                event.put(node.get(PLC_NODE_RUNTIME_NAME), response.getObject(node.get(PLC_NODE_NAME)));
-            }
-
-            else {
-                logger.error("Error[" + node.get(PLC_NODE_NAME) + "]: " +
-                        response.getResponseCode(node.get(PLC_NODE_NAME)).name());
-            }
-        }
-
-        // publish the final event
-        adapterPipeline.process(event);
     }
 
 
