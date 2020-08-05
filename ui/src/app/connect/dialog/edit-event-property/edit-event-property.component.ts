@@ -84,6 +84,8 @@ export class EditEventPropertyComponent implements OnInit {
             (result as any).timestampTransformationMode = (ep as any).timestampTransformationMode;
             (result as any).timestampTransformationFormatString = (ep as any).timestampTransformationFormatString;
             (result as any).timestampTransformationMultiplier = (ep as any).timestampTransformationMultiplier;
+
+            (result as any).staticValue = (ep as any).staticValue;
             return result;
         } else if (ep instanceof EventPropertyNested) {
             return EventPropertyNested.fromData(ep as EventPropertyNested, new EventPropertyNested());
@@ -140,6 +142,7 @@ export class EditEventPropertyComponent implements OnInit {
             (this.property as any).timestampTransformationFormatString = (this.cachedProperty as any).timestampTransformationFormatString;
             (this.property as any).timestampTransformationMultiplier = (this.cachedProperty as any).timestampTransformationMultiplier;
 
+            (this.property as any).staticValue = (this.cachedProperty as any).staticValue;
         }
         this.dialogRef.close({ data: this.property});
     }
