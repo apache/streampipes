@@ -19,6 +19,7 @@
 package org.apache.streampipes.connect.container.master.rest;
 
 import org.apache.streampipes.connect.adapter.exception.ParseException;
+import org.apache.streampipes.connect.adapter.exception.WorkerAdapterException;
 import org.apache.streampipes.connect.container.master.management.GuessManagement;
 import org.apache.streampipes.connect.rest.AbstractContainerResource;
 import org.apache.streampipes.model.message.Notifications;
@@ -55,37 +56,19 @@ public class GuessResource extends AbstractContainerResource {
   public Response guessSchema(AdapterDescription adapterDescription, @PathParam("username") String userName) {
 
       try {
-          //AdapterDescription adapterDescription = AdapterDeserializer.getAdapterDescription(s);
           GuessSchema result = guessManagement.guessSchema(adapterDescription);
 
           return ok(result);
       } catch (ParseException e) {
           logger.error("Error while parsing events: ", e);
           return error(Notifications.error(e.getMessage()));
+      } catch (WorkerAdapterException e) {
+          return error(e.getContent());
       } catch (Exception e) {
           logger.error("Error while guess schema for AdapterDescription: ", e);
           return error(Notifications.error(e.getMessage()));
       }
 
-  }
-
-  @GET
-  @JacksonSerialized
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("/format")
-  public Response guessFormat() {
-    //TODO
-    return ok(true);
-  }
-
-
-  @GET
-  @JacksonSerialized
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("/formatdescription")
-  public Response guessFormatDescription() {
-    //TODO
-    return ok(true);
   }
 
   public void setGuessManagement(GuessManagement guessManagement) {

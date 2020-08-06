@@ -24,6 +24,10 @@ public class Notification {
   private String description;
   private String additionalInformation;
 
+  public Notification() {
+
+  }
+
   public Notification(String title, String description) {
     super();
     this.title = title;
