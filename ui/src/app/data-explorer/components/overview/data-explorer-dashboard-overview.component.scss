@@ -20,6 +20,30 @@ table {
     width:100%;
 }
 
+.mat-table {
+    background: #FAFAFA;
+}
+
+.mat-paginator {
+    border-top: 1px solid rgba(0,0,0,.12);
+    background: #FAFAFA;
+}
+
+.mat-row:nth-child(even) {
+    background-color: #FAFAFA;
+}
+.mat-row:nth-child(odd) {
+    background-color:#ffffff;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.p-2 {
+    padding: 2px;
+}
+
 .m-20 {
     margin: 20px;
 }

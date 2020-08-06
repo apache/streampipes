@@ -26,7 +26,7 @@ import { DataViewDataExplorerService } from '../../services/data-view-data-explo
 @Component({
     selector: 'sp-data-explorer-dashboard-overview',
     templateUrl: './data-explorer-dashboard-overview.component.html',
-    styleUrls: ['./data-explorer-dashboard-overview.component.css']
+    styleUrls: ['./data-explorer-dashboard-overview.component.scss']
 })
 export class DataExplorerDashboardOverviewComponent implements OnInit {
 

@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.rest.shared.serializer;
 
-import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
