@@ -27,6 +27,7 @@ public class RdfEndpointItem {
     private String uri;
     private String type;
     private boolean installed;
+    private String appId;
 
     private List<RdfEndpointItem> streams;
 
@@ -80,5 +81,13 @@ public class RdfEndpointItem {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId;
     }
 }

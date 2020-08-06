@@ -16,26 +16,19 @@
  *
  */
 
-import {NgModule} from '@angular/core';
-import {TsonLdSerializerService} from './tsonld-serializer.service';
-import {PipelineTemplateService} from './apis/pipeline-template.service';
-import {PipelineElementService} from "./apis/pipeline-element.service";
-import {PipelineService} from "./apis/pipeline.service";
-import {PlatformServicesCommons} from "./apis/commons.service";
-import {PipelineElementEndpointService} from "./apis/pipeline-element-endpoint.service";
+import {Pipe, PipeTransform} from "@angular/core";
 
-@NgModule({
-  imports: [],
-  declarations: [],
-  providers: [
-    PlatformServicesCommons,
-    PipelineElementEndpointService,
-    TsonLdSerializerService,
-    PipelineTemplateService,
-    PipelineElementService,
-    PipelineService
-  ],
-  entryComponents: []
+@Pipe({
+  name: 'pipelineElementTypeFilter',
+  pure: false
 })
-export class PlatformServicesModule {
+export class PipelineElementTypeFilter implements PipeTransform {
+
+  transform(value: any[], type: string): any[] {
+    if (type === "all") {
+      return value;
+    } else {
+      return value.filter(v => v.type === type);
+    }
+  }
 }

@@ -45,7 +45,7 @@ export class PipelineOverviewComponent implements OnInit {
 
   dataSource: MatTableDataSource<Pipeline>;
 
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   pageSize: number = 1;
 
   starting: any;
@@ -81,8 +81,7 @@ export class PipelineOverviewComponent implements OnInit {
   @Input()
   set pipelines(pipelines: Array<Pipeline>) {
     this._pipelines = pipelines;
-    this.dataSource = new MatTableDataSource<Pipeline>(this.filterPipelines());
-    this.dataSource.paginator = this.paginator;
+    this.addPipelinesToTable();
   }
 
   get activeCategoryId(): string {
@@ -93,8 +92,15 @@ export class PipelineOverviewComponent implements OnInit {
   set activeCategoryId(activeCategoryId: string) {
     this._activeCategoryId = activeCategoryId;
     if (this._pipelines) {
-      this.dataSource = new MatTableDataSource<Pipeline>(this.filterPipelines());
+      this.addPipelinesToTable();
     }
+  }
+
+  addPipelinesToTable() {
+    this.dataSource = new MatTableDataSource<Pipeline>(this.filterPipelines());
+    setTimeout(() => {
+      this.dataSource.paginator = this.paginator;
+    });
   }
 
   filterPipelines(): Pipeline[] {
