@@ -19,7 +19,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ElementIconText } from '../../../services/get-element-icon-text.service';
-import { IDataViewDashboard } from '../../models/dataview-dashboard.model';
+import {IDataViewDashboard, IWidget} from '../../models/dataview-dashboard.model';
 import { DataExplorerWidgetRegistry } from '../../registry/data-explorer-widget-registry';
 import { DataViewDataExplorerService } from '../../services/data-view-data-explorer.service';
 import {
@@ -54,7 +54,7 @@ export class DataExplorerAddVisualizationDialogComponent implements OnInit {
   }];
 
   visualizableData: DataLakeMeasure[] = [];
-  availableWidgets: string[];
+  availableWidgets: IWidget[];
 
   selectedDataSet: DataLakeMeasure;
   selectedWidget: string;

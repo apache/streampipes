@@ -31,35 +31,30 @@
             <div fxFlex="100" style="margin:5px;width:100%">
                 <div *ngIf="page == 'select-pipeline'">
                     <h4>{{pages[0].description}}</h4>
-                    <mat-grid-list
-                            [cols]="3" [rowHeight]="200"
-                            [gutterSize]="100">
-
-                        <mat-grid-tile class="gray" *ngFor="let dataSet of visualizableData">
-                            <div [ngClass]="getSelectedPipelineCss(dataSet)"
-                                 (click)="selectPipeline(dataSet)">
-                                {{iconText(dataSet.measureName)}}
-                                <h5>{{dataSet.measureName}}</h5>
+                    <mat-list>
+                        <mat-list-item *ngFor="let dataSet of visualizableData"
+                                       (click)="selectPipeline(dataSet)" class="list-item">
+                            <div mat-list-avatar
+                                 class="pipeline-avatar sp-accent-bg">{{iconText(dataSet.measureName)}}
                             </div>
-                        </mat-grid-tile>
-                    </mat-grid-list>
+                            <h4 mat-line>{{dataSet.measureName}}</h4>
+                        </mat-list-item>
+                    </mat-list>
                 </div>
 
                 <!-- Select Type -->
                 <div *ngIf="page == 'select-widget'" fxLayout="column">
                     <h4>{{pages[1].description}}</h4>
-                    <mat-grid-list
-                            [cols]="3" [rowHeight]="200"
-                            [gutterSize]="100">
-
-                        <mat-grid-tile class="gray" *ngFor="let widget of availableWidgets">
-                            <div [ngClass]="getSelectedPipelineCss(widget)"
-                                 (click)="selectWidget(widget)">
-                                {{iconText(widget)}}
-                                <h5>{{widget}}</h5>
+                    <mat-list>
+                        <mat-list-item *ngFor="let widget of availableWidgets"
+                                       (click)="selectWidget(widget.id)" class="list-item">
+                            <div mat-list-avatar
+                                 class="pipeline-avatar sp-accent-bg">
+                                <span>{{iconText(widget.label)}}</span>
                             </div>
-                        </mat-grid-tile>
-                    </mat-grid-list>
+                            <h4 mat-line>{{widget.label}}</h4>
+                        </mat-list-item>
+                    </mat-list>
                 </div>
             </div>
         </div>
