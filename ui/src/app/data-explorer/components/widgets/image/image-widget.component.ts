@@ -19,11 +19,11 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { EventProperty } from '../../../../connect/schema-editor/model/EventProperty';
 import { DataResult } from '../../../../core-model/datalake/DataResult';
 import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
 import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
 import { MatDialog } from '@angular/material/dialog';
+import {EventPropertyUnion} from "../../../../core-model/gen/streampipes-model";
 
 @Component({
   selector: 'sp-data-explorer-image-widget',
@@ -34,8 +34,8 @@ export class ImageWidgetComponent extends BaseDataExplorerWidget implements OnIn
 
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
-  availableColumns: EventProperty[];
-  selectedColumns: EventProperty[];
+  availableColumns: EventPropertyUnion[];
+  selectedColumns: EventPropertyUnion[];
   columnNames: string[];
 
   dataSource = new MatTableDataSource();
@@ -70,7 +70,7 @@ export class ImageWidgetComponent extends BaseDataExplorerWidget implements OnIn
   }
 
 
-  setSelectedColumn(selectedColumns: EventProperty[]) {
+  setSelectedColumn(selectedColumns: EventPropertyUnion[]) {
     this.selectedColumns = selectedColumns;
     this.columnNames = this.getRuntimeNames(this.selectedColumns);
   }

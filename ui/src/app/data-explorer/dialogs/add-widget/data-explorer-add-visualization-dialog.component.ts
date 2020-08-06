@@ -18,13 +18,15 @@
 
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { EventSchema } from '../../../connect/schema-editor/model/EventSchema';
-import { DataExplorerWidgetModel } from '../../../core-model/datalake/DataExplorerWidgetModel';
-import { DataLakeMeasure } from '../../../core-model/datalake/DataLakeMeasure';
 import { ElementIconText } from '../../../services/get-element-icon-text.service';
 import { IDataViewDashboard } from '../../models/dataview-dashboard.model';
 import { DataExplorerWidgetRegistry } from '../../registry/data-explorer-widget-registry';
 import { DataViewDataExplorerService } from '../../services/data-view-data-explorer.service';
+import {
+  DataExplorerWidgetModel,
+  DataLakeMeasure,
+  EventSchema
+} from "../../../core-model/gen/streampipes-model";
 
 @Component({
   selector: 'sp-data-explorer-add-visualization-dialog-component',
@@ -122,7 +124,7 @@ export class DataExplorerAddVisualizationDialogComponent implements OnInit {
       this.page = 'select-widget';
     } else if (this.page === 'select-widget') {
       const configuredWidget: DataExplorerWidgetModel = new DataExplorerWidgetModel();
-
+      configuredWidget["@class"] = "org.apache.streampipes.model.datalake.DataExplorerWidgetModel";
       // TODO find solution for event schema
       // configuredWidget.eventSchema = new EventSchema();
       // configuredWidget.eventSchema.eventProperties = this.selectedDataSet.eventSchema.eventProperties;
@@ -131,6 +133,7 @@ export class DataExplorerAddVisualizationDialogComponent implements OnInit {
       //  }
 
       configuredWidget.dataLakeMeasure = this.selectedDataSet;
+      configuredWidget.dataLakeMeasure["@class"] = "org.apache.streampipes.model.datalake.DataLakeMeasure";
       configuredWidget.widgetType = this.selectedWidget;
       this.dataViewDataExplorerService.saveWidget(configuredWidget).subscribe(response => {
         this.dialogRef.close(response);
