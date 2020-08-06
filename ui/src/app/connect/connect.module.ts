@@ -59,7 +59,6 @@ import { FormatComponent } from './format-component/format.component';
 import { FormatListComponent } from './format-list-component/format-list.component';
 import { IconService } from './new-adapter/icon.service';
 import { UnitProviderService } from './schema-editor/unit-provider.service';
-import { SelectStaticPropertiesComponent } from './select-static-properties-component/select-static-properties.component';
 import { StaticAlternativesComponent } from './static-properties/static-alternatives/static-alternatives.component';
 import { StaticAnyInput } from './static-properties/static-any-input/static-any-input.component';
 import { StaticCollectionComponent } from './static-properties/static-collection/static-collection.component';
@@ -123,7 +122,6 @@ import {DisplayRecommendedPipe} from "./static-properties/filter/display-recomme
     ],
     exports: [
         StaticPropertyComponent,
-        SelectStaticPropertiesComponent,
         PipelineElementRuntimeInfoComponent
     ],
     declarations: [
@@ -151,7 +149,6 @@ import {DisplayRecommendedPipe} from "./static-properties/filter/display-recomme
         DataMarketplaceComponent,
         AdapterDescriptionComponent,
         ConnectComponent,
-        SelectStaticPropertiesComponent,
         StaticOneOfInputComponent,
         StaticRuntimeResolvableAnyInputComponent,
         StaticRuntimeResolvableOneOfInputComponent,
