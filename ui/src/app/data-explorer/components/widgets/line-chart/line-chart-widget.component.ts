@@ -19,7 +19,6 @@
 import { Component, OnInit, Renderer2 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PlotlyService } from 'angular-plotly.js';
-import { EventProperty } from '../../../../connect/schema-editor/model/EventProperty';
 import { DataResult } from '../../../../core-model/datalake/DataResult';
 import { GroupedDataResult } from '../../../../core-model/datalake/GroupedDataResult';
 import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
@@ -27,6 +26,7 @@ import { ChangeChartmodeDialog } from '../../../../core-ui/linechart/labeling-to
 import { LabelingDialog } from '../../../../core-ui/linechart/labeling-tool/dialogs/labeling/labeling.dialog';
 import { ColorService } from '../../../../core-ui/linechart/labeling-tool/services/color.service';
 import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
+import {EventPropertyUnion} from "../../../../core-model/gen/streampipes-model";
 
 @Component({
   selector: 'sp-data-explorer-line-chart-widget',
@@ -37,11 +37,11 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
 
   data: any[] = undefined;
   labels: any[] = undefined;
-  availableColumns: EventProperty[] = [];
-  availableNonNumericColumns: EventProperty[] = [];
-  selectedColumns: EventProperty[] = [];
-  selectedNonNumericColumn: EventProperty = undefined;
-  dimensionProperties: EventProperty[] = [];
+  availableColumns: EventPropertyUnion[] = [];
+  availableNonNumericColumns: EventPropertyUnion[] = [];
+  selectedColumns: EventPropertyUnion[] = [];
+  selectedNonNumericColumn: EventPropertyUnion = undefined;
+  dimensionProperties: EventPropertyUnion[] = [];
 
   yKeys: string[] = [];
   xKey: string;
@@ -362,13 +362,13 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
     return data;
   }
 
-  setSelectedColumn(selectedColumns: EventProperty[]) {
+  setSelectedColumn(selectedColumns: EventPropertyUnion[]) {
     this.selectedColumns = selectedColumns;
     this.yKeys = this.getRuntimeNames(selectedColumns);
     this.updateData();
   }
 
-  setSelectedLabelColumn(selectedLabelColumn: EventProperty) {
+  setSelectedLabelColumn(selectedLabelColumn: EventPropertyUnion) {
     this.selectedNonNumericColumn = selectedLabelColumn;
     this.nonNumericKey = selectedLabelColumn.runtimeName;
     this.updateData();

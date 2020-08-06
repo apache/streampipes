@@ -18,14 +18,10 @@
 
 package org.apache.streampipes.rest.impl.datalake;
 
-import org.apache.streampipes.model.dashboard.DashboardWidgetModel;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
-import org.apache.streampipes.rest.api.dashboard.IDashboardWidget;
 import org.apache.streampipes.rest.api.dataexplorer.IDataExplorerWidget;
 import org.apache.streampipes.rest.impl.AbstractRestInterface;
-import org.apache.streampipes.rest.shared.annotation.JsonLdSerialized;
-import org.apache.streampipes.rest.shared.util.SpMediaType;
-import org.apache.streampipes.storage.api.IDashboardWidgetStorage;
+import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.storage.api.IDataExplorerWidgetStorage;
 
 import javax.ws.rs.*;
@@ -36,16 +32,16 @@ import javax.ws.rs.core.Response;
 public class DataLakeWidgetResource extends AbstractRestInterface implements IDataExplorerWidget {
 
   @GET
-  @JsonLdSerialized
+  @JacksonSerialized
   @Produces(MediaType.APPLICATION_JSON)
   @Override
   public Response getAllDataExplorerWidgets() {
-    return ok(asContainer(getDataExplorerWidgetStorage().getAllDataExplorerWidgets()));
+    return ok(getDataExplorerWidgetStorage().getAllDataExplorerWidgets());
   }
 
   @GET
-  @JsonLdSerialized
-  @Produces(SpMediaType.JSONLD)
+  @JacksonSerialized
+  @Produces(MediaType.APPLICATION_JSON)
   @Path("/{widgetId}")
   @Override
   public Response getDataExplorerWidget(@PathParam("widgetId") String widgetId) {
@@ -53,8 +49,8 @@ public class DataLakeWidgetResource extends AbstractRestInterface implements IDa
   }
 
   @PUT
-  @JsonLdSerialized
-  @Consumes(SpMediaType.JSONLD)
+  @JacksonSerialized
+  @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/{widgetId}")
   @Override
@@ -64,6 +60,7 @@ public class DataLakeWidgetResource extends AbstractRestInterface implements IDa
   }
 
   @DELETE
+  @JacksonSerialized
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/{widgetId}")
   @Override
@@ -73,9 +70,9 @@ public class DataLakeWidgetResource extends AbstractRestInterface implements IDa
   }
 
   @POST
-  @JsonLdSerialized
-  @Produces(SpMediaType.JSONLD)
-  @Consumes(SpMediaType.JSONLD)
+  @JacksonSerialized
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
   @Override
   public Response createDataExplorerWidget(DataExplorerWidgetModel dataExplorerWidgetModel) {
     String widgetId = getDataExplorerWidgetStorage().storeDataExplorerWidget(dataExplorerWidgetModel);

@@ -26,13 +26,13 @@ import {
   ViewChildren
 } from '@angular/core';
 import { GridsterItemComponent, GridType } from 'angular-gridster2';
-import { DataExplorerWidgetModel } from '../../../core-model/datalake/DataExplorerWidgetModel';
 import { DateRange } from '../../../core-model/datalake/DateRange';
 import { GridsterInfo } from '../../../dashboard/models/gridster-info.model';
 import { IDataViewDashboard, IDataViewDashboardConfig, IDataViewDashboardItem } from '../../models/dataview-dashboard.model';
 import { DataViewDataExplorerService } from '../../services/data-view-data-explorer.service';
 import { RefreshDashboardService } from '../../services/refresh-dashboard.service';
 import { ResizeService } from '../../services/resize.service';
+import {DataExplorerWidgetModel} from "../../../core-model/gen/streampipes-model";
 
 @Component({
   selector: 'sp-data-explorer-dashboard-grid',

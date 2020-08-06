@@ -19,14 +19,15 @@
 import { EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GridsterItem, GridsterItemComponent } from 'angular-gridster2';
-import { EventProperty } from '../../../../connect/schema-editor/model/EventProperty';
-import { EventPropertyPrimitive } from '../../../../connect/schema-editor/model/EventPropertyPrimitive';
-import { EventSchema } from '../../../../connect/schema-editor/model/EventSchema';
-import { DataExplorerWidgetModel } from '../../../../core-model/datalake/DataExplorerWidgetModel';
 import { DateRange } from '../../../../core-model/datalake/DateRange';
 import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
 import { IDataViewDashboardItem } from '../../../models/dataview-dashboard.model';
 import { DataDownloadDialog } from '../../datadownloadDialog/dataDownload.dialog';
+import {
+  DataExplorerWidgetModel,
+  EventProperty, EventPropertyPrimitive, EventPropertyUnion,
+  EventSchema
+} from "../../../../core-model/gen/streampipes-model";
 
 export abstract class BaseDataExplorerWidget implements OnChanges {
 
@@ -75,10 +76,10 @@ export abstract class BaseDataExplorerWidget implements OnChanges {
   public abstract updateData();
 
   getValuePropertyKeys(eventSchema: EventSchema) {
-    const propertyKeys: EventProperty[] = [];
+    const propertyKeys: EventPropertyUnion[] = [];
 
     eventSchema.eventProperties.forEach(p => {
-      if (p.domainProperty !== 'http://schema.org/DateTime') {
+      if (!(p.domainProperties.some(dp => dp === 'http://schema.org/DateTime'))) {
         propertyKeys.push(p);
       }
     });
@@ -87,10 +88,10 @@ export abstract class BaseDataExplorerWidget implements OnChanges {
   }
 
   getNumericProperty(eventSchema: EventSchema) {
-    const propertyKeys: EventProperty[] = [];
+    const propertyKeys: EventPropertyUnion[] = [];
 
     eventSchema.eventProperties.forEach(p => {
-      if (p.domainProperty !== 'http://schema.org/DateTime' && this.isNumber(p)) {
+      if (!(p.domainProperties.some(dp => dp === 'http://schema.org/DateTime')) && this.isNumber(p)) {
         propertyKeys.push(p);
       }
     });
@@ -99,7 +100,7 @@ export abstract class BaseDataExplorerWidget implements OnChanges {
   }
 
   getDimensionProperties(eventSchema: EventSchema) {
-    const result: EventProperty[] = [];
+    const result: EventPropertyUnion[] = [];
     eventSchema.eventProperties.forEach(property => {
       if (property.propertyScope === 'DIMENSION_PROPERTY') {
         result.push(property);
@@ -110,16 +111,17 @@ export abstract class BaseDataExplorerWidget implements OnChanges {
   }
 
   getNonNumericProperties(eventSchema: EventSchema) {
-    const result: EventProperty[] = [];
+    const result: EventPropertyUnion[] = [];
     eventSchema.eventProperties.forEach(p => {
-      if (p.domainProperty !== 'http://schema.org/DateTime' && !this.isNumber(p)) {
+      if (!(p.domainProperties.some(dp => dp === 'http://schema.org/DateTime')) && !this.isNumber(p)) {
         result.push(p);
       }
     });
 
     const b = new EventPropertyPrimitive();
-    b.setRuntimeType('https://www.w3.org/2001/XMLSchema#string');
-    b.setRuntimeName('sp_internal_label');
+    b["@class"] = "org.apache.streampipes.model.schema.EventPropertyPrimitive";
+    b.runtimeType = 'https://www.w3.org/2001/XMLSchema#string';
+    b.runtimeName = 'sp_internal_label';
     result.push(b);
 
     return result;
@@ -135,7 +137,7 @@ export abstract class BaseDataExplorerWidget implements OnChanges {
     return result;
   }
 
-  isNumber(p: EventProperty): boolean {
+  isNumber(p: EventPropertyUnion): boolean {
     return (p instanceof EventPropertyPrimitive &&
       ((p as EventPropertyPrimitive).runtimeType === 'http://www.w3.org/2001/XMLSchema#number') ||
       (p as EventPropertyPrimitive).runtimeType === 'http://www.w3.org/2001/XMLSchema#float') ||
@@ -145,7 +147,7 @@ export abstract class BaseDataExplorerWidget implements OnChanges {
   }
 
   public isTimestamp(p: EventProperty) {
-    return p.domainProperty === 'http://schema.org/DateTime';
+    return p.domainProperties.some(dp => dp === 'http://schema.org/DateTime');
   }
 
   getRuntimeNames(properties: EventProperty[]): string[] {
