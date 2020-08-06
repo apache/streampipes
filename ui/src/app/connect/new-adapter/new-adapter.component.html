@@ -106,11 +106,20 @@
                     </div>
                     <div class="sp-blue-border padding">
                         <div fxFlex="100" *ngIf="adapter.formatDescription">
-                            <app-select-static-properties (validateEmitter)="validateFormat($event)"
-                                [staticProperties]="adapter.formatDescription.config" class="fullWidth">
-                            </app-select-static-properties>
-                            <h5 *ngIf="adapter.formatDescription.config.length === 0" style="text-align:center;">(no further
-                                configuration needed)</h5>
+                            <form [formGroup]="formatForm" fxFlex="100">
+                                <app-static-property *ngFor="let config of adapter.formatDescription.config"
+                                                     [staticProperty]="config"
+                                                     [staticProperties]="adapter.config"
+                                                     [adapterId]="adapter.appId"
+                                                     [parentForm]="formatForm"
+                                                     [fieldName]="config.internalName"
+                                                     (updateEmitter)="triggerUpdate($event)"
+                                                     [completedStaticProperty]="completedStaticProperty">
+
+                                </app-static-property>
+                                <h5 *ngIf="adapter.formatDescription.config.length === 0" style="text-align:center;">(no further
+                                    configuration needed)</h5>
+                            </form>
                         </div>
                     </div>
                 </div>
