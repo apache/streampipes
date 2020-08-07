@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.connect.adapters.opcua;
 
+import com.github.jsonldjava.utils.Obj;
 import org.apache.streampipes.connect.adapter.Adapter;
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
 import org.apache.streampipes.connect.adapter.exception.ParseException;
@@ -116,7 +117,12 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
 
         // ensure that event is complete and all opc ua subscriptions transmitted at least one value
         if (event.keySet().size() >= this.numberProperties) {
-            adapterPipeline.process(event);
+            Map <String, Object> newEvent = new HashMap<>();
+            // deep copy of event to prevent preprocessor error
+            for (String k : event.keySet()) {
+              newEvent.put(k, event.get(k));
+            }
+            adapterPipeline.process(newEvent);
         }
     }
 
