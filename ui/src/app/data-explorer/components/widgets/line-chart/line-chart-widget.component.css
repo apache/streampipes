@@ -34,3 +34,9 @@
 .title-panel {
     font-size:20px;
 }
+
+.assemblyOptionsDataExplorer {
+    background: #f6f6f6;
+    border-bottom: 1px solid #ccc;
+    padding: 5px;
+}

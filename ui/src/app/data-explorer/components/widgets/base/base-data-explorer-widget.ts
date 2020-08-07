@@ -158,14 +158,4 @@ export abstract class BaseDataExplorerWidget implements OnChanges {
 
     return result;
   }
-
-  downloadDataAsFile() {
-    const dialogRef = this.dialog.open(DataDownloadDialog, {
-      width: '600px',
-      data: { index: this.dataExplorerWidget.dataLakeMeasure.measureName, date: this.viewDateRange },
-      panelClass: 'custom-dialog-container'
-
-    });
-  }
-
 }

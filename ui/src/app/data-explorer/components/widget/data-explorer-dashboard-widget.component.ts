@@ -24,11 +24,12 @@ import { DataExplorerAddVisualizationDialogComponent } from '../../dialogs/add-w
 import { IDataViewDashboardItem } from '../../models/dataview-dashboard.model';
 import { DataViewDataExplorerService } from '../../services/data-view-data-explorer.service';
 import {DataExplorerWidgetModel} from "../../../core-model/gen/streampipes-model";
+import {DataDownloadDialog} from "../datadownloadDialog/dataDownload.dialog";
 
 @Component({
   selector: 'sp-data-explorer-dashboard-widget',
   templateUrl: './data-explorer-dashboard-widget.component.html',
-  styleUrls: ['./data-explorer-dashboard-widget.component.css']
+  styleUrls: ['./data-explorer-dashboard-widget.component.scss']
 })
 export class DataExplorerDashboardWidgetComponent implements OnInit {
 
@@ -86,6 +87,14 @@ export class DataExplorerDashboardWidgetComponent implements OnInit {
         this.configuredWidget = widget;
         this.updateCallback.emit(this.configuredWidget);
       }
+    });
+  }
+
+  downloadDataAsFile() {
+    const dialogRef = this.dialog.open(DataDownloadDialog, {
+      width: '600px',
+      data: { index: this.configuredWidget.dataLakeMeasure.measureName, date: this.viewDateRange },
+      panelClass: 'custom-dialog-container'
     });
   }
 }
