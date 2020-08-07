@@ -16,11 +16,13 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import { DateRange } from '../core-model/datalake/DateRange';
 import { IDataViewDashboard } from './models/dataview-dashboard.model';
 import { DataViewDataExplorerService } from './services/data-view-data-explorer.service';
 import { RefreshDashboardService } from './services/refresh-dashboard.service';
+import {DashboardPanelComponent} from "../dashboard/components/panel/dashboard-panel.component";
+import {DataExplorerDashboardPanelComponent} from "./components/panel/data-explorer-dashboard-panel.component";
 
 @Component({
     selector: 'sp-data-explorer',
@@ -35,8 +37,11 @@ export class DataExplorerComponent implements OnInit {
     dashboardTabSelected = false;
 
     editMode = true;
+    gridVisible: boolean = true;
 
     dataViewDashboards: IDataViewDashboard[];
+
+  @ViewChild('dashboardPanel') dashboardPanel: DataExplorerDashboardPanelComponent;
 
   /**
    * This is the date range (start, end) to view the data
@@ -92,5 +97,17 @@ export class DataExplorerComponent implements OnInit {
 
     updateDateRange(dateRange: DateRange) {
       this.viewDateRange = dateRange;
+    }
+
+    saveDashboard() {
+     this.dashboardPanel.updateDashboard(false);
+    }
+
+    addVisualization() {
+      this.dashboardPanel.addWidget();
+    }
+
+    toggleGrid() {
+      this.dashboardPanel.toggleGrid(this.gridVisible);
     }
 }

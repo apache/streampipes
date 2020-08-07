@@ -17,27 +17,34 @@
  */
 
 import {
-  Component, EventEmitter,
+  Component,
+  EventEmitter,
   Input,
   OnChanges,
-  OnInit, Output,
+  OnInit,
+  Output,
   QueryList,
   SimpleChanges,
-  ViewChildren
+  ViewChildren,
+  ViewEncapsulation
 } from '@angular/core';
-import { GridsterItemComponent, GridType } from 'angular-gridster2';
-import { DateRange } from '../../../core-model/datalake/DateRange';
-import { GridsterInfo } from '../../../dashboard/models/gridster-info.model';
-import { IDataViewDashboard, IDataViewDashboardConfig, IDataViewDashboardItem } from '../../models/dataview-dashboard.model';
-import { DataViewDataExplorerService } from '../../services/data-view-data-explorer.service';
-import { RefreshDashboardService } from '../../services/refresh-dashboard.service';
-import { ResizeService } from '../../services/resize.service';
+import {GridsterItemComponent, GridType} from 'angular-gridster2';
+import {DateRange} from '../../../core-model/datalake/DateRange';
+import {GridsterInfo} from '../../../dashboard/models/gridster-info.model';
+import {
+  IDataViewDashboard,
+  IDataViewDashboardConfig,
+  IDataViewDashboardItem
+} from '../../models/dataview-dashboard.model';
+import {DataViewDataExplorerService} from '../../services/data-view-data-explorer.service';
+import {RefreshDashboardService} from '../../services/refresh-dashboard.service';
+import {ResizeService} from '../../services/resize.service';
 import {DataExplorerWidgetModel} from "../../../core-model/gen/streampipes-model";
 
 @Component({
   selector: 'sp-data-explorer-dashboard-grid',
   templateUrl: './data-explorer-dashboard-grid.component.html',
-  styleUrls: ['./data-explorer-dashboard-grid.component.css']
+  styleUrls: ['./data-explorer-dashboard-grid.component.scss'],
 })
 export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
 
@@ -77,6 +84,8 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
       minRows: 4,
       fixedRowHeight: 100,
       fixedColWidth: 100,
+      margin: 5,
+      displayGrid: "always",
       resizable: { enabled: this.editMode },
       itemResizeCallback: ((item, itemComponent) => {
         this.resizeService.notify({gridsterItem: item, gridsterItemComponent: itemComponent} as GridsterInfo);
@@ -102,6 +111,11 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
 
   propagateItemUpdate(dashboardWidget: DataExplorerWidgetModel) {
     this.updateCallback.emit(dashboardWidget);
+  }
+
+  toggleGrid() {
+    this.options.displayGrid = this.options.displayGrid === "none" ? "always" : "none";
+    this.options.api.optionsChanged();
   }
 
 }

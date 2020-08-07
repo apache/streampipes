@@ -38,7 +38,6 @@
                    [owlDateTime]="dt1"
                    [owlDateTimeTrigger]="dt1"
                    [(ngModel)]="dateRange.startDate"
-                   [disabled]="selectedTimeButton.value !== 'custom'"
                    (dateTimeChange)="changeCustomDateRange()">
             <owl-date-time #dt1></owl-date-time>
         </mat-form-field>
@@ -48,7 +47,6 @@
                    [owlDateTime]="dt2"
                    [owlDateTimeTrigger]="dt2"
                    [(ngModel)]="dateRange.endDate"
-                   [disabled]="selectedTimeButton.value !== 'custom'"
                    (dateTimeChange)="changeCustomDateRange()">
             <owl-date-time #dt2></owl-date-time>
         </mat-form-field>

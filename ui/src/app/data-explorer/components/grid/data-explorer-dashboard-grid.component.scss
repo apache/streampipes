@@ -16,16 +16,26 @@
  *
  */
 
-gridster ::ng-deep {
+gridster.custom-gridster-style ::ng-deep {
     background: white;
 }
 
-gridster.edit ::ng-deep {
-    background: #d3d3d3;
+gridster.custom-gridster-style.edit ::ng-deep {
+    background: white;
 }
 
 gridster.scrollVertical ::ng-deep {
     min-height: 100%;
     display: flex;
     flex: 1 1 100%;
+}
+
+::ng-deep gridster.custom-gridster-style>.gridster-row {
+    border-bottom: 1px solid #ccc;
+    border-top: 1px solid #ccc;
+}
+
+::ng-deep gridster.custom-gridster-style>div.gridster-column {
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
 }

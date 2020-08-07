@@ -86,3 +86,7 @@
     display: inline;
     margin-right: 10px;
 }
+
+.pl-10 {
+    padding-left: 10px;
+}

@@ -20,7 +20,7 @@
     <h2>{{dashboard.name}}</h2>
     <h3>{{dashboard.description}}</h3>
 </div>
-<gridster [options]="options" [ngClass]="editMode ? 'edit' : ''">
+<gridster [options]="options" [ngClass]="editMode ? 'edit' : ''" class="custom-gridster-style">
     <ng-container *ngFor="let item of dashboard.widgets;let i=index">
         <gridster-item [item]="item" #gridsterItemComponent>
             <sp-data-explorer-dashboard-widget
