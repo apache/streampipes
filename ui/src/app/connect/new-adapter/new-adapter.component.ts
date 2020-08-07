@@ -16,7 +16,6 @@
  *
  */
 
-///<reference path="../model/connect/AdapterDescription.ts"/>
 import {
     AfterViewInit, ChangeDetectorRef,
     Component,
@@ -26,18 +25,9 @@ import {
     Output,
     ViewChild
 } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {MatDialog} from '@angular/material/dialog';
-import {MatStepper} from '@angular/material/stepper';
-import {ShepherdService} from '../../services/tour/shepherd.service';
-import {Logger} from '../../shared/logger/default-log.service';
-import {ConnectService} from '../connect.service';
-import {TimestampPipe} from '../filter/timestamp.pipe';
-import {ConfigurationInfo} from '../model/message/ConfigurationInfo';
-import {RestService} from '../rest.service';
-import {TransformationRuleService} from '../transformation-rule.service';
-import {AdapterStartedDialog} from './component/adapter-started-dialog.component';
-import {IconService} from './icon.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { MatStepper } from '@angular/material/stepper';
 import {
     AdapterDescription, AdapterDescriptionUnion,
     EventProperty,
@@ -50,8 +40,17 @@ import {
     SpecificAdapterSetDescription,
     SpecificAdapterStreamDescription,
     TransformationRuleDescriptionUnion
-} from "../../core-model/gen/streampipes-model";
-import {EventSchemaComponent} from "../schema-editor/event-schema/event-schema.component";
+} from '../../core-model/gen/streampipes-model';
+import { ShepherdService } from '../../services/tour/shepherd.service';
+import { Logger } from '../../shared/logger/default-log.service';
+import { ConnectService } from '../connect.service';
+import { TimestampPipe } from '../filter/timestamp.pipe';
+import { ConfigurationInfo } from '../model/message/ConfigurationInfo';
+import { RestService } from '../rest.service';
+import { EventSchemaComponent } from '../schema-editor/event-schema/event-schema.component';
+import { TransformationRuleService } from '../transformation-rule.service';
+import { AdapterStartedDialog } from './component/adapter-started-dialog.component';
+import { IconService } from './icon.service';
 
 @Component({
     selector: 'sp-new-adapter',
@@ -118,8 +117,9 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
     isPreviewEnabled = false;
 
     parentForm: FormGroup;
-    adapterSettingsFormValid: boolean = false;
-    viewInitialized: boolean = false;
+    formatForm: FormGroup;
+    adapterSettingsFormValid = false;
+    viewInitialized = false;
 
     constructor(
         private logger: Logger,
@@ -148,6 +148,9 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
     ngOnInit() {
 
         this.parentForm = this._formBuilder.group({
+        });
+
+        this.formatForm = this._formBuilder.group({
         });
 
         this.isGenericAdapter = this.connectService.isGenericDescription(this.adapter);
@@ -195,6 +198,10 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
 
         this.parentForm.statusChanges.subscribe((status) => {
             this.adapterSettingsFormValid = this.viewInitialized && this.parentForm.valid;
+        });
+
+        this.formatForm.statusChanges.subscribe((status) => {
+          this.validateFormat(this.viewInitialized && this.formatForm.valid);
         });
     }
 
@@ -349,7 +356,8 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
         this.transformationRuleService.setOldEventSchema(this.oldEventSchema);
 
         this.transformationRuleService.setNewEventSchema(this.eventSchema);
-        const transformationRules: TransformationRuleDescriptionUnion[] = this.transformationRuleService.getTransformationRuleDescriptions();
+        const transformationRules: TransformationRuleDescriptionUnion[] =
+          this.transformationRuleService.getTransformationRuleDescriptions();
         this.adapter.rules = transformationRules;
     }
 
