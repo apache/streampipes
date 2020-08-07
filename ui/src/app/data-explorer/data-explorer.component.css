@@ -71,3 +71,18 @@
     border-bottom: 3px solid transparent;
     border-top: 3px solid #f5b53f;
 }
+
+.fixed-height {
+    height: 50px;
+}
+
+.data-explorer-options {
+    padding:0px;
+    background-color:#f6f6f6;
+    border-bottom: 1px solid #cccccc;
+}
+
+.data-explorer-options-item {
+    display: inline;
+    margin-right: 10px;
+}

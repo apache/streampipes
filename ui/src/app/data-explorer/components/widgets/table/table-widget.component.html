@@ -31,8 +31,8 @@
                     multiple = true
                     (changeSelectedProperties)="setSelectedColumn($event)"
                     [availableProperties]="availableColumns"
-                    [selectedProperties]="selectedColumns"
-            ></sp-select-properties>
+                    [selectedProperties]="selectedColumns">
+            </sp-select-properties>
 
             <button mat-icon-button matTooltip="Download data" class="icon" (click)="downloadDataAsFile()" color="white">
                 <i class="material-icons">get_app</i>

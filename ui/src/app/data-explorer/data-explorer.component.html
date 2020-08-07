@@ -23,20 +23,22 @@
                 <div fxFlex fxLayoutAlign="start center">
                     <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectDashboard($event)">
                         <mat-tab label="Start"></mat-tab>
-                        <!--<mat-tab *ngFor="let dataViewDashboard of dataViewDashboards" label="{{dataViewDashboard.name}}"></mat-tab>-->
+                        <mat-tab *ngFor="let dataViewDashboard of dataViewDashboards" label="{{dataViewDashboard.name}}"></mat-tab>
                     </mat-tab-group>
-
-                    <!--</div>-->
-                    <!--<div fxFlex fxLayoutAlign="start center" class="mr-20">-->
-                    <sp-time-range-selector *ngIf="selectedIndex" (dateRangeEmitter)="updateDateRange($event)"></sp-time-range-selector>
-
-                    <button mat-button mat-icon-button color="primary"
-                            *ngIf="selectedIndex > 0" (click)="toggleEditMode()" [disabled]="editMode">
-                        <i class="material-icons">edit</i>
-                    </button>
                 </div>
             </div>
         </div>
+    </div>
+    <div class="fixed-height data-explorer-options" fxLayout="column" *ngIf="selectedIndex > 0">
+        <div class="data-explorer-options-item" fxLayoutAlign="end center" fxFlex fxLayout="row">
+            <sp-time-range-selector *ngIf="selectedIndex" (dateRangeEmitter)="updateDateRange($event)"></sp-time-range-selector>
+        </div>
+<!--        <div class="data-explorer-options-item" fxLayoutAlign="start center" fxLayout="row">-->
+<!--            <button mat-button mat-icon-button color="primary"-->
+<!--                    *ngIf="selectedIndex > 0" (click)="toggleEditMode()" [disabled]="editMode">-->
+<!--                <i class="material-icons">edit</i>-->
+<!--            </button>-->
+<!--        </div>-->
     </div>
 
     <div class="page-container-padding-inner" fxLayout="column" fxFlex="100" *ngIf="dashboardsLoaded">

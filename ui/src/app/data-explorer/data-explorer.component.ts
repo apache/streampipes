@@ -34,7 +34,7 @@ export class DataExplorerComponent implements OnInit {
     dashboardsLoaded = false;
     dashboardTabSelected = false;
 
-    editMode = false;
+    editMode = true;
 
     dataViewDashboards: IDataViewDashboard[];
 

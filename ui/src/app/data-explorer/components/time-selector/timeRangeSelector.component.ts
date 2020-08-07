@@ -16,13 +16,14 @@
  *
  */
 
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { DateRange } from '../../../core-model/datalake/DateRange';
+import {Component, EventEmitter, OnInit, Output, ViewEncapsulation} from '@angular/core';
+import {DateRange} from '../../../core-model/datalake/DateRange';
 
 @Component({
   selector: 'sp-time-range-selector',
   templateUrl: 'timeRangeSelector.component.html',
-  styleUrls: ['./timeRangeSelector.component.css']
+  styleUrls: ['./timeRangeSelector.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class TimeRangeSelectorComponent implements OnInit {
 
