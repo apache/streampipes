@@ -34,7 +34,7 @@ jobs:
         with:
           node-version: '13.x'
       - name: Build with Maven
-        run: mvn clean package javadoc:aggregate
+        run: mvn clean install javadoc:aggregate
       - name: Set env variables for Docker builds
         run: |
           echo "::set-env name=DOCKER_CLI_EXPERIMENTAL::enabled"
