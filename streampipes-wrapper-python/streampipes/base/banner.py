@@ -14,14 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-"""config file"""
-import os
+"""banner"""
 
-flask_host = os.getenv('FLASK_HOST', '0.0.0.0')
-port = os.getenv('SP_PORT', 5000)
-kafka_consumer_thread = 'kafka_consumer_thread'
-
-banner="""\
+banner = """\
  _______ __                              ______ __
 |     __|  |_.----.-----.---.-.--------.|   __ \__|.-----.-----.-----.
 |__     |   _|   _|  -__|  _  |        ||    __/  ||  _  |  -__|__ --|

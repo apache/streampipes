@@ -14,15 +14,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-"""some helper methods"""
-import threading
+from flask import request
+from flask_classful import FlaskView, route
+from streampipes.manager import ProcessorDispatcher
 
 
-def threaded(func):
-    def wrapper(*args, **kwargs):
-        thread_name = args[0]._invocation_id
-        thread = threading.Thread(target=func, args=args, kwargs=kwargs, name=thread_name)
-        thread.start()
-        return thread
+# TODO: Delete when finished
+# will be deleted and is only necessary for interims working example still relying on Java
+class DummyInterimsResource(FlaskView):
 
-    return wrapper
+    @route('/invoke', methods=['POST'])
+    def start(self):
+        return ProcessorDispatcher.start(**request.get_json())
+
+    @route('/detach', methods=['POST'])
+    def stop(self):
+        return ProcessorDispatcher.stop(**request.get_json())

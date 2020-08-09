@@ -16,30 +16,13 @@
 #
 """Manages processor life cycle"""
 import logging
-from abc import ABC
-
-from streampipes.configuration import kafka_consumer_thread
-
-
-class Declarer(ABC):
-    """ EventProcessorManager holds running processor instances """
-    _processors = {}
-
-    @classmethod
-    def add(cls, processors=None):
-        """ holds dict with <app_id, processor class>"""
-        cls._processors = processors
-
-    @classmethod
-    def get_processor(cls, key):
-        return cls._processors[key]
-
-    @classmethod
-    def get(cls):
-        return cls._processors
+import abc
+from streampipes.declarer import DeclarerSingleton
 
 
-class ProcessorDispatcher(ABC):
+class ProcessorDispatcher(object):
+    __metaclass__ = abc.ABC
+
     _running_instances = {}
 
     logger = logging.getLogger(__name__)
@@ -48,7 +31,7 @@ class ProcessorDispatcher(ABC):
     def start(cls, **kwargs):
         processor_id = kwargs.get('processor_id')
         try:
-            processor = Declarer.get_processor(processor_id)(**kwargs)
+            processor = DeclarerSingleton().get_processor(processor_id)(**kwargs)
             processor.init()
             cls._running_instances[processor.invocation_id] = processor
 
@@ -66,7 +49,7 @@ class ProcessorDispatcher(ABC):
             processor = cls._running_instances[invocation_id]
             active_threads = processor.active_threads()
             processor.stop()
-            active_threads[kafka_consumer_thread].join()
+            active_threads['kafka'].join()
 
             del processor
             cls._running_instances.pop(invocation_id)

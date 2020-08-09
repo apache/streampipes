@@ -17,25 +17,10 @@
 """contains relevant base classes"""
 import json
 import logging
+import threading
 from abc import ABC, abstractmethod
 from confluent_kafka.admin import AdminClient
-
-from streampipes.api import API
-from streampipes.configuration import banner, kafka_consumer_thread
-from streampipes.helper import threaded
 from confluent_kafka import Producer, Consumer
-
-
-class StandaloneSubmitter(ABC):
-    @classmethod
-    def init(cls):
-        cls._load_banner()
-        cls.api = API()
-        cls.api.run()
-
-    @classmethod
-    def _load_banner(cls):
-        print(banner)
 
 
 class EventProcessor(ABC):
@@ -82,7 +67,9 @@ class EventProcessor(ABC):
 
     def init(self):
         self.logger.info('start processor {}'.format(self.invocation_id))
-        self._threads[kafka_consumer_thread] = self._consume(self._input_topics)
+        thread = threading.Thread(target=self.__consume, name=self.invocation_id)
+        thread.start()
+        self._threads['kafka'] = thread
 
     def active_threads(self):
         return self._threads
@@ -108,16 +95,15 @@ class EventProcessor(ABC):
         """ on_detach is called when processor is stopped """
         pass
 
-    def _on_event(self, event):
+    def __on_event(self, event):
         result = self.on_event(event)
 
         if result is not None:
-            self._produce(result)
+            self.__produce(result)
 
-    @threaded
-    def _consume(self, topics):
+    def __consume(self):
         """ retrieve events from kafka """
-        self._consumer.subscribe(topics=[topics])
+        self._consumer.subscribe(topics=[self._input_topics])
         self._running = True
 
         while self._running:
@@ -141,9 +127,9 @@ class EventProcessor(ABC):
                     self.logger.info("Not a valid json {}".format(e))
                     continue
 
-                self._on_event(event)
+                self.__on_event(event)
 
-    def _produce(self, result):
+    def __produce(self, result):
         """ send events to kafka """
         event = json.dumps(result).encode('utf-8')
         try:
