@@ -30,19 +30,6 @@
     margin-right: 10px;
 }
 
-mat-form-field.mat-form-field.form-field-size {
-    font-size: 12px;
-}
-
-mat-form-field.mat-form-field.form-field-size-smaller {
-    font-size: 10px;
-}
-
-.form-field-margin .mat-form-field-wrapper{
-    margin-bottom: -1.25em;
-    padding-bottom: 1.25em;
-}
-
 .button-margin {
     border-radius: 0;
     padding-left: 4px;
@@ -62,20 +49,4 @@ mat-form-field.mat-form-field.form-field-size-smaller {
 .time-wrapper {
     border: 1px solid $sp-color-accent;
     background: white;
-}
-
-.smaller-button-font-size.mat-raised-button {
-    font-size: 0.8em;
-    letter-spacing: 0.05em;
-}
-
-.icon-button-font-size.mat-button {
-    font-size: 0.8em;
-    letter-spacing: 0.05em;
-}
-
-.button-icon.mat-button {
-    min-width:0;
-    border-radius: 0;
-    padding: 0 4px;
 }

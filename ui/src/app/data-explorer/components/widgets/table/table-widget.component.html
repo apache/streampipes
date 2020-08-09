@@ -19,11 +19,10 @@
 <div fxLayout="column" fxLayoutAlign="stretch">
     <div class="assemblyOptionsDataExplorer sp-blue-bg m-0 row header h-40" style="margin-left: 0px;margin-right: 0px;">
 
-        <div fxFlex="100" layout="row" fxLayoutAlign="end center" style="margin-left: 0px;margin-right: 0px;">
-            <mat-form-field appearance="outline" class="sp_form_field_wrapper" style="margin-right: 5px;">
-                <mat-label>Search</mat-label>
+        <div fxFlex="100" layout="row" fxLayoutAlign="start center" style="margin-left: 0px;margin-right: 0px;">
+            <mat-form-field appearance="standard" class="form-field-margin form-field-size-smaller" style="margin-right: 5px;">
+                <mat-label><mat-icon>search</mat-icon><span>&nbsp;Search</span></mat-label>
                 <input matInput (input)="onFilterChange($event.target.value)" >
-
             </mat-form-field>
 
             <sp-select-properties

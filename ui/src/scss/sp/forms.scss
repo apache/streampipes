@@ -1,4 +1,4 @@
-/*
+/*!
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,40 +16,31 @@
  *
  */
 
-@import '../../../../scss/variables';
-
-.h-100 {
-    height:100%;
+mat-form-field.mat-form-field.form-field-size {
+  font-size: 12px;
 }
 
-.h-40 {
-    height:35px;
+mat-form-field.mat-form-field.form-field-size-smaller {
+  font-size: 10px;
 }
 
-.p-0 {
-    padding:0;
+.form-field-margin .mat-form-field-wrapper{
+  margin-bottom: -1.25em;
+  padding-bottom: 1.25em;
 }
 
-.p-20 {
-    padding: 20px;
+.smaller-button-font-size.mat-raised-button {
+  font-size: 0.8em;
+  letter-spacing: 0.05em;
 }
 
-.m-0 {
-    margin:0;
+.icon-button-font-size.mat-button {
+  font-size: 0.8em;
+  letter-spacing: 0.05em;
 }
 
-.box {
-    display: flex;
-    flex-flow: column;
-    height: 100%;
-    border:3px solid $sp-color-accent-light;
+.button-icon.mat-button {
+  min-width:0;
+  border-radius: 0;
+  padding: 0 4px;
 }
-
-.box .row.content {
-    flex: 1 1 auto;
-}
-
-.box .row.header {
-    flex: 0 1 auto;
-}
-

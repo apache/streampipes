@@ -87,8 +87,8 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
     dashboardItem.widgetId = widget._id;
     dashboardItem.id = widget._id;
     dashboardItem.widgetType = widget.widgetType;
-    dashboardItem.cols = 2;
-    dashboardItem.rows = 2;
+    dashboardItem.cols = 3;
+    dashboardItem.rows = 4;
     dashboardItem.x = 0;
     dashboardItem.y = 0;
     this.dashboard.widgets.push(dashboardItem);
