@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import {AfterViewInit, Component, OnInit, Renderer2} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PlotlyService } from 'angular-plotly.js';
 import { DataResult } from '../../../../core-model/datalake/DataResult';
@@ -27,6 +27,7 @@ import { LabelingDialog } from '../../../../core-ui/linechart/labeling-tool/dial
 import { ColorService } from '../../../../core-ui/linechart/labeling-tool/services/color.service';
 import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
 import {EventPropertyUnion} from "../../../../core-model/gen/streampipes-model";
+import {ResizeService} from "../../../services/resize.service";
 
 @Component({
   selector: 'sp-data-explorer-line-chart-widget',
@@ -62,8 +63,12 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
   showCountValue = false;
 
 
-  constructor(public dialog: MatDialog, public plotlyService: PlotlyService, public colorService: ColorService,
-              public renderer: Renderer2, protected dataLakeRestService: DatalakeRestService) {
+  constructor(public dialog: MatDialog,
+              public plotlyService: PlotlyService,
+              public colorService: ColorService,
+              public renderer: Renderer2,
+              protected dataLakeRestService: DatalakeRestService,
+              private resizeService: ResizeService) {
     super(dataLakeRestService, dialog);
   }
 
@@ -109,8 +114,8 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
   graph = {
     layout: {
       autosize: true,
-      plot_bgcolor: '#fafafa',
-      paper_bgcolor: '#fafafa',
+      plot_bgcolor: '#fff',
+      paper_bgcolor: '#fff',
       xaxis: {
         type: 'date',
       },
@@ -141,7 +146,6 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
 
 
   ngOnInit(): void {
-
     this.availableColumns = this.getNumericProperty(this.dataExplorerWidget.dataLakeMeasure.eventSchema);
     this.dimensionProperties = this.getDimensionProperties(this.dataExplorerWidget.dataLakeMeasure.eventSchema);
     this.availableNonNumericColumns = this.getNonNumericProperties(this.dataExplorerWidget.dataLakeMeasure.eventSchema);
@@ -153,8 +157,17 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
     }
     this.xKey = this.getTimestampProperty(this.dataExplorerWidget.dataLakeMeasure.eventSchema).runtimeName;
     this.yKeys = this.getRuntimeNames(this.selectedColumns);
-    this.nonNumericKey = this.selectedNonNumericColumn.runtimeName;
+    //this.nonNumericKey = this.selectedNonNumericColumn.runtimeName;
     this.updateData();
+    this.resizeService.resizeSubject.subscribe(info => {
+      if (info.gridsterItem.id === this.gridsterItem.id) {
+        setTimeout(() => {
+          this.graph.layout.autosize = false;
+          (this.graph.layout as any).width = (info.gridsterItemComponent.width - 10);
+          (this.graph.layout as any).height = (info.gridsterItemComponent.height - 80);
+        }, 100)
+      }
+    });
   }
 
   updateData() {

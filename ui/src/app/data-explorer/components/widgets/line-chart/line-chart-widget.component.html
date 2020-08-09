@@ -16,9 +16,8 @@
   ~
   -->
 
-<div fxLayout="column" fxLayoutAlign="stretch">
-    <div class="assemblyOptionsDataExplorer sp-blue-bg m-0 row header h-40" style="margin-left: 0px;margin-right: 0px;margin-top: 0px;">
-
+<div class="widget-content">
+    <div class="widget-inner-options" style="margin-left: 0;margin-right: 0;margin-top: 0;">
         <div fxFlex="100" fxLayout="row">
             <div fxFlex="100" layout="row" fxLayoutAlign="start center" style="margin-left: 0px;margin-right: 0px;">
                 <sp-select-properties
@@ -62,21 +61,28 @@
             </div>
         </div>
     </div>
-    <div fxFlex="100" fxLayout="column" style="width: 100%;">
-        <div fxLayout="column" fxFlex="100" fxLayoutAlign="center center">
-            <sp-load-data-spinner *ngIf="showIsLoadingData"></sp-load-data-spinner>
-            <sp-no-data-in-date-range *ngIf="showNoDataInDateRange" [viewDateRange]="viewDateRange"></sp-no-data-in-date-range>
-            <!-- Chart -->
-            <plotly-plot fxFlex
-                         *ngIf="data !== undefined && !showNoDataInDateRange"
-                         flex
-                         [data]="data"
-                         [layout]="graph.layout"
-                         [config]="graph.config"
-                         (relayout)="handleDefaultModeBarButtonClicks($event)"
-                         (selecting)="selectDataPoints($event)">
-            </plotly-plot>
-        </div>
+    <div class="widget-inner-content" style="height: 100%;overflow-y:hidden;">
+        <sp-load-data-spinner *ngIf="showIsLoadingData"></sp-load-data-spinner>
+        <sp-no-data-in-date-range *ngIf="showNoDataInDateRange" [viewDateRange]="viewDateRange"></sp-no-data-in-date-range>
+        <plotly-plot *ngIf="data !== undefined && !showNoDataInDateRange && !showIsLoadingData"
+                     class="plotly-container"
+                     [data]="data"
+                     [layout]="graph.layout"
+                     [config]="graph.config"
+                     (relayout)="handleDefaultModeBarButtonClicks($event)"
+                     (selecting)="selectDataPoints($event)">
+        </plotly-plot>
     </div>
 </div>
+<!--<div fxLayout="column" fxLayoutAlign="stretch">-->
+
+<!--    <div fxFlex="100" fxLayout="column" style="width: 100%;">-->
+<!--        <div fxLayout="column" fxFlex="100" fxLayoutAlign="center center">-->
+<!--            -->
+
+            <!-- Chart -->
+
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
 

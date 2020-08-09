@@ -28,7 +28,7 @@ import {EventPropertyUnion} from "../../../../core-model/gen/streampipes-model";
 @Component({
   selector: 'sp-data-explorer-table-widget',
   templateUrl: './table-widget.component.html',
-  styleUrls: ['./table-widget.component.css']
+  styleUrls: ['./table-widget.component.scss']
 })
 export class TableWidgetComponent extends BaseDataExplorerWidget implements OnInit, OnDestroy {
 

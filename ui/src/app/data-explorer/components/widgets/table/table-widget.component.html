@@ -16,9 +16,8 @@
   ~
   -->
 
-<div fxLayout="column" fxLayoutAlign="stretch">
-    <div class="assemblyOptionsDataExplorer sp-blue-bg m-0 row header h-40" style="margin-left: 0px;margin-right: 0px;">
-
+<div class="widget-content">
+    <div class="widget-inner-options" style="margin-left: 0;margin-right: 0;margin-top: 0;">
         <div fxFlex="100" layout="row" fxLayoutAlign="start center" style="margin-left: 0px;margin-right: 0px;">
             <mat-form-field appearance="standard" class="form-field-margin form-field-size-smaller" style="margin-right: 5px;">
                 <mat-label><mat-icon>search</mat-icon><span>&nbsp;Search</span></mat-label>
@@ -34,8 +33,8 @@
             </sp-select-properties>
         </div>
     </div>
-
-    <div style=" overflow-y: auto;" [style.max-height.px]="gridsterItem.rows * 100 - 40">
+    <div class="widget-inner-content" style="overflow-y: auto;">
+<!--    <div style=" overflow-y: auto;" [style.max-height.px]="gridsterItem.rows * 100 - 40">-->
 
         <sp-load-data-spinner *ngIf="showIsLoadingData"></sp-load-data-spinner>
 
@@ -53,11 +52,11 @@
                     *ngFor="let element of this.selectedColumns"
                     [cdkColumnDef]="element.runtimeName">
                 <div *ngIf="!isTimestamp(element)">
-                    <th mat-header-cell mat-sort-header *matHeaderCellDef mat-sort-header><label style="font-size: large">{{element.runtimeName}}</label></th>
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef mat-sort-header><label class="column-header">{{element.runtimeName}}</label></th>
                     <td mat-cell *matCellDef="let row"style="text-align: center;">{{row[element.runtimeName]}}</td>
                 </div>
                 <div *ngIf="isTimestamp(element)">
-                    <th mat-header-cell mat-sort-header *matHeaderCellDef mat-sort-header><label style="font-size: large">{{element.runtimeName}}</label></th>
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef mat-sort-header><label class="column-header">{{element.runtimeName}}</label></th>
                     <td mat-cell  *matCellDef="let row"style="text-align: left;">{{row[element.runtimeName]| date:'yyyy-MM-dd HH:mm:ss'}}</td>
                 </div>
             </ng-container>

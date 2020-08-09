@@ -98,19 +98,13 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
     this.dataViewDataExplorerService.updateDashboard(this.dashboard).subscribe(result => {
         if (this.widgetsToUpdate.size > 0) {
             forkJoin(this.prepareWidgetUpdates()).subscribe(result => {
-                if (closeEditMode) {
-                  this.closeEditModeAndReloadDashboard(false);
-                }
+                  this.closeEditModeAndReloadDashboard(closeEditMode);
             });
         } else {
             this.deleteWidgets();
-            if (closeEditMode) {
-              this.closeEditModeAndReloadDashboard(false);
-            }
+            this.closeEditModeAndReloadDashboard(false);
         }
     });
-
-    this.closeEditModeAndReloadDashboard(false);
   }
 
   closeEditModeAndReloadDashboard(closeEditMode: boolean) {
@@ -150,7 +144,6 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
   }
 
   toggleGrid(gridVisible: boolean) {
-    console.log(this.dashboardGrid);
     this.dashboardGrid.toggleGrid();
   }
 }

@@ -1,4 +1,4 @@
-/*
+/*!
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,19 +16,25 @@
  *
  */
 
-
-
-.numberItem {
-    font-size:60px;
-    font-weight:bold;
+.widget-content {
+  width:100%;
+  height: calc(100% - 40px);
 }
 
-.title-panel {
-    font-size:20px;
+.widget-inner-options {
+  background: #f6f6f6;
+  border-bottom: 1px solid #ccc;
+  padding: 5px;
+  height: 40px;
 }
 
-.plotly-container {
-    width: 100%;
-    align-self:start;
-    height: calc(100% - 40px);
+.widget-inner-content {
+  width: 100%;
+  height: calc(100% - 40px);
+  align-content: center;
+  align-items: center;
+  display:flex;
+  justify-content: center;
+  overflow-y: auto;
+  overflow-x: auto;
 }
