@@ -66,11 +66,11 @@ public class DataLakeController extends StandaloneEventSinkDeclarer<DataLakePara
 
     String hostname = SinksInternalJvmConfig.INSTANCE.getDataLakeProtocol() + "://" + SinksInternalJvmConfig.INSTANCE.getDataLakeHost();
     Integer port = SinksInternalJvmConfig.INSTANCE.getDataLakePort();
-    String dbName = "sp";
-    String user = "default";
-    String password = "default";
-    Integer batch_size = 100;
-    Integer flush_duration = 1000;
+    String dbName = SinksInternalJvmConfig.INSTANCE.getDataLakeDatabaseName();
+    String user = SinksInternalJvmConfig.INSTANCE.getDataLakeUsername();
+    String password = SinksInternalJvmConfig.INSTANCE.getDataLakePassword();
+    Integer batch_size = 2000;
+    Integer flush_duration = 500;
 
     List<String> dimensionProperties = extractor.getEventPropertiesRuntimeNamesByScope(PropertyScope.DIMENSION_PROPERTY);
 

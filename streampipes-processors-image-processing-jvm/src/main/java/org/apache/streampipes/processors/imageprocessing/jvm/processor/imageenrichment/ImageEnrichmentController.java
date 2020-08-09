@@ -44,7 +44,6 @@ public class ImageEnrichmentController extends StandaloneEventProcessingDeclarer
             .requiredStream(RequiredBoxStream.getBoxStream())
             .outputStrategy(OutputStrategies.fixed(
                     EpProperties.stringEp(Labels.empty(), "image", "https://image.com")
-
             ))
             .build();
   }
@@ -55,7 +54,7 @@ public class ImageEnrichmentController extends StandaloneEventProcessingDeclarer
     String boxArray = extractor.mappingPropertyValue(RequiredBoxStream.BOX_ARRAY_PROPERTY);
 
     ImageEnrichmentParameters params = new ImageEnrichmentParameters(dataProcessorInvocation, imageProperty,
-            boxArray, "box_width", "box_height", "box_x", "box_y");
+            boxArray, "box_width", "box_height", "box_x", "box_y", "score", "classesindex");
 
     return new ConfiguredEventProcessor<>(params, ImageEnricher::new);
 

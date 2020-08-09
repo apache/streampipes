@@ -19,11 +19,13 @@
 package org.apache.streampipes.connect.adapters.mysql;
 
 import org.apache.streampipes.sdk.utils.Datatypes;
+import org.apache.streampipes.vocabulary.SO;
 
 class Column {
   private String name;
   private Datatypes type;
   private Object def;
+  private String domainProperty;
 
   Column(String name, String dataType, String columnType) {
     this.name = name;
@@ -52,8 +54,16 @@ class Column {
         this.type = Datatypes.String;
         def = "";
         break;
+      case "date":
+      case "datetime":
+      case "time":
+      case "timestamp":
+      case "year":
+        this.type = Datatypes.Float;
+        def = System.currentTimeMillis();
+        this.domainProperty = SO.DateTime;
+        break;
       default:
-        // date, datetime, time, timestamp, year
         throw new IllegalArgumentException("Type " + type + " not supported.");
     }
     if (columnType.equals("tinyint(1)") || columnType.equals("bit(1)")) {
@@ -72,5 +82,9 @@ class Column {
   }
   public Object getDefault() {
     return def;
+  }
+
+  public String getDomainProperty() {
+    return domainProperty;
   }
 }

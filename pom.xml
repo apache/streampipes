@@ -84,6 +84,7 @@
         <javax-websocket-client-api.version>1.1</javax-websocket-client-api.version>
         <jsrosbridge.version>0.2.0</jsrosbridge.version>
         <jedis.version>3.3.0</jedis.version>
+        <quartz.version>2.3.2</quartz.version>
 
         <language-detector.version>0.6</language-detector.version>
         <log4j-to-slf4j.version>2.8.2</log4j-to-slf4j.version>
@@ -102,6 +103,7 @@
         <zstd-jni.version>1.4.3-1</zstd-jni.version>
         <mqtt-client.version>1.12</mqtt-client.version>
         <hawtbuf.version>1.11</hawtbuf.version>
+        <mysql-connector-java.version>8.0.15</mysql-connector-java.version>
 
         <maven-shade-plugin.version>3.0.0</maven-shade-plugin.version>
 
@@ -124,10 +126,12 @@
         <netty.version>4.1.39.Final</netty.version>
         <nimbus-jose-jwt.version>4.41.1</nimbus-jose-jwt.version>
         <opencsv.version>4.6</opencsv.version>
-        <plc4x.version>0.6.0</plc4x.version>
+        <plc4x.version>0.7.0</plc4x.version>
         <protobuf.version>3.6.1</protobuf.version>
         <pulsar.version>2.5.1</pulsar.version>
         <slack.version>1.2.0</slack.version>
+        <poiji.version>2.7.0</poiji.version>
+
     </properties>
 
     <dependencyManagement>
@@ -274,6 +278,12 @@
                 <scope>runtime</scope>
             </dependency>
             <dependency>
+            	<groupId>org.apache.plc4x</groupId>
+            	<artifactId>plc4j-driver-modbus</artifactId>
+            	<version>${plc4x.version}</version>
+            	<scope>runtime</scope>
+            </dependency>
+            <dependency>
                 <groupId>com.google.protobuf</groupId>
                 <artifactId>protobuf-java</artifactId>
                 <version>${protobuf.version}</version>
@@ -292,6 +302,11 @@
                 <groupId>com.google.errorprone</groupId>
                 <artifactId>error_prone_annotations</artifactId>
                 <version>${errorprone-annotations.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.ozlerhakan</groupId>
+                <artifactId>poiji</artifactId>
+                <version>${poiji.version}</version>
             </dependency>
 
             <dependency>
@@ -559,7 +574,16 @@
                 <artifactId>jedis</artifactId>
                 <version>${jedis.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>org.quartz-scheduler</groupId>
+                <artifactId>quartz</artifactId>
+                <version>${quartz.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql-connector-java.version}</version>
+            </dependency>
 
             <!-- Test dependencies -->
             <dependency>

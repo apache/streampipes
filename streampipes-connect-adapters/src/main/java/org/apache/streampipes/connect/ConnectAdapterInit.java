@@ -21,8 +21,10 @@ package org.apache.streampipes.connect;
 import org.apache.streampipes.connect.adapters.image.set.ImageSetAdapter;
 import org.apache.streampipes.connect.adapters.image.stream.ImageStreamAdapter;
 import org.apache.streampipes.connect.adapters.iss.IssAdapter;
+import org.apache.streampipes.connect.adapters.flic.FlicMQTTAdapter;
 import org.apache.streampipes.connect.adapters.netio.NetioMQTTAdapter;
 import org.apache.streampipes.connect.adapters.netio.NetioRestAdapter;
+import org.apache.streampipes.connect.adapters.plc4x.modbus.Plc4xModbusAdapter;
 import org.apache.streampipes.connect.adapters.ti.TISensorTag;
 import org.apache.streampipes.connect.protocol.set.HttpProtocol;
 import org.apache.streampipes.connect.adapters.coindesk.CoindeskBitcoinAdapter;
@@ -68,7 +70,7 @@ public class ConnectAdapterInit extends AdapterWorkerContainer {
             .add(new HttpStreamProtocol())
             .add(new PulsarProtocol())
 //
-//            // Specific Adapters
+//          // Specific Adapters
             .add(new GdeltAdapter())
             .add(new CoindeskBitcoinAdapter())
             .add(new IexCloudNewsAdapter())
@@ -88,9 +90,11 @@ public class ConnectAdapterInit extends AdapterWorkerContainer {
             .add(new NetioRestAdapter())
             .add(new NetioMQTTAdapter())
             .add(new Plc4xS7Adapter())
+            .add(new Plc4xModbusAdapter())
             .add(new ImageStreamAdapter())
             .add(new ImageSetAdapter())
-            .add(new IssAdapter());
+            .add(new IssAdapter())
+            .add(new FlicMQTTAdapter());
 
     String workerUrl = ConnectWorkerConfig.INSTANCE.getConnectContainerWorkerUrl();
     String masterUrl = ConnectWorkerConfig.INSTANCE.getConnectContainerMasterUrl();

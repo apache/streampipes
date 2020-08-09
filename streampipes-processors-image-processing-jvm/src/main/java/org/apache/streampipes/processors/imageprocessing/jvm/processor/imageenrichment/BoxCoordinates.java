@@ -23,6 +23,8 @@ public class BoxCoordinates {
   private int height;
   private int x;
   private int y;
+  private float score;
+  private String classesindex;
 
   public static BoxCoordinates make(Float width, Float height, Float x, Float
           y) {
@@ -32,11 +34,29 @@ public class BoxCoordinates {
             Math.round(y));
   }
 
+  public static BoxCoordinates make(Float width, Float height, Float x, Float y, float score, String classesindex) {
+    return new BoxCoordinates(Math.round(width),
+            Math.round(height),
+            Math.round(x),
+            Math.round(y),
+            score,
+            classesindex);
+  }
+
   public BoxCoordinates(int width, int height, int x, int y) {
     this.width = width;
     this.height = height;
     this.x = x;
     this.y = y;
+  }
+
+  public BoxCoordinates(int width, int height, int x, int y, float score, String classesindex) {
+    this.width = width;
+    this.height = height;
+    this.x = x;
+    this.y = y;
+    this.score = score;
+    this.classesindex = classesindex;
   }
 
   public int getWidth() {
@@ -53,5 +73,13 @@ public class BoxCoordinates {
 
   public int getY() {
     return y;
+  }
+
+  public float getScore() {
+    return score;
+  }
+
+  public String getClassesindex() {
+    return classesindex;
   }
 }

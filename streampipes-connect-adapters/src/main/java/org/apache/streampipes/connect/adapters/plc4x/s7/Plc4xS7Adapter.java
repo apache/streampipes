@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.connect.adapters.plc4x.s7;
 
+import com.poiji.bind.Poiji;
 import com.opencsv.CSVReader;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
@@ -30,9 +31,9 @@ import org.apache.plc4x.java.api.messages.PlcReadResponse;
 import org.apache.plc4x.java.api.types.PlcResponseCode;
 import org.apache.streampipes.connect.adapter.Adapter;
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
-import org.apache.streampipes.connect.adapter.sdk.ParameterExtractor;
 import org.apache.streampipes.connect.adapter.util.PollingSettings;
 import org.apache.streampipes.connect.adapters.PullAdapter;
+import org.apache.streampipes.connect.protocol.stream.KafkaProtocol;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
@@ -52,18 +53,18 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.sdk.utils.Datatypes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.io.File;
 
 public class Plc4xS7Adapter extends PullAdapter {
 
@@ -71,6 +72,8 @@ public class Plc4xS7Adapter extends PullAdapter {
      * A unique id to identify the Plc4xS7Adapter
      */
     public static final String ID = "org.apache.streampipes.connect.adapters.plc4x.s7";
+
+    Logger LOG = LoggerFactory.getLogger(Plc4xS7Adapter.class);
 
     /**
      * Keys of user configuration parameters
@@ -80,10 +83,12 @@ public class Plc4xS7Adapter extends PullAdapter {
     private static final String PLC_NODE_NAME = "plc_node_name";
     private static final String PLC_NODE_RUNTIME_NAME = "plc_node_runtime_name";
     private static final String PLC_NODE_TYPE = "plc_node_type";
-    private static final String PLC_NODES_FILE = "plc_nodes_file";
+    private static final String PLC_NODES_CSV_FILE = "plc_nodes_csv_file";
+    private static final String PLC_NODES_EXCEL_FILE = "plc_nodes_excel_file";
     private static final String CONFIGURE = "configure";
     private static final String MANUALLY = "manually";
-    private static final String CSV_UPLOAD = "csv-upload";
+    private static final String CSV_IMPORT = "csv_import";
+    private static final String EXCEL_IMPORT = "excel_import";
 
     /**
      * Values of user configuration parameters
@@ -127,8 +132,10 @@ public class Plc4xS7Adapter extends PullAdapter {
                                         StaticProperties.stringFreeTextProperty(Labels.withId(PLC_NODE_NAME)),
                                         StaticProperties.singleValueSelection(Labels.withId(PLC_NODE_TYPE),
                                                 Options.from("Bool",  "Byte", "Int", "Word", "Real")))),
-                        Alternatives.from(Labels.withId(CSV_UPLOAD),
-                                StaticProperties.fileProperty(Labels.withId(PLC_NODES_FILE))))
+                        Alternatives.from(Labels.withId(CSV_IMPORT),
+                                StaticProperties.fileProperty(Labels.withId(PLC_NODES_CSV_FILE))),
+                        Alternatives.from(Labels.withId(EXCEL_IMPORT),
+                                StaticProperties.fileProperty(Labels.withId(PLC_NODES_EXCEL_FILE))))
                 .build();
         description.setAppId(ID);
 
@@ -143,10 +150,11 @@ public class Plc4xS7Adapter extends PullAdapter {
      */
     @Override
     public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription) throws AdapterException {
-        // TODO add a validation to check if the user input is available in the PLC
 
         // Extract user input
         getConfigurations(adapterDescription);
+
+        // TODO add a validation to check if the user input is available in the PLC
 
         GuessSchema guessSchema = new GuessSchema();
 
@@ -180,14 +188,14 @@ public class Plc4xS7Adapter extends PullAdapter {
         getConfigurations(adapterDescription);
 
         try {
-            this.plcConnection= new PlcDriverManager().getConnection("s7://" + this.ip + "/1/1");
+            this.plcConnection = new PlcDriverManager().getConnection("s7://" + this.ip);
 
             if (!this.plcConnection.getMetadata().canRead()) {
                 throw new AdapterException("The S7 on IP: " + this.ip + " does not support reading data");
             }
 
         } catch (PlcConnectionException e) {
-            throw new AdapterException("Could not establish connection to S7 with ip " + this.ip);
+            throw new AdapterException("Could not establish connection to S7 with ip " + this.ip, e);
         }
     }
 
@@ -209,27 +217,28 @@ public class Plc4xS7Adapter extends PullAdapter {
         PlcReadResponse response = null;
         try {
             response = readRequest.execute().get();
+
+            // Create an event containing the value of the PLC
+            Map<String, Object> event = new HashMap<>();
+            for (Map<String, String> node : this.nodes) {
+                if(response.getResponseCode(node.get(PLC_NODE_NAME)) == PlcResponseCode.OK) {
+                    event.put(node.get(PLC_NODE_RUNTIME_NAME), response.getObject(node.get(PLC_NODE_NAME)));
+                }
+
+                else {
+                    logger.error("Error[" + node.get(PLC_NODE_NAME) + "]: " +
+                            response.getResponseCode(node.get(PLC_NODE_NAME)).name());
+                }
+            }
+
+            // publish the final event
+            adapterPipeline.process(event);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            LOG.error(e.getMessage());
         } catch (ExecutionException e) {
-            e.printStackTrace();
+            LOG.error(e.getMessage());
         }
 
-        // Create an event containing the value of the PLC
-        Map<String, Object> event = new HashMap<>();
-        for (Map<String, String> node : this.nodes) {
-            if(response.getResponseCode(node.get(PLC_NODE_NAME)) == PlcResponseCode.OK) {
-                event.put(node.get(PLC_NODE_RUNTIME_NAME), response.getObject(node.get(PLC_NODE_NAME)));
-            }
-
-            else {
-                logger.error("Error[" + node.get(PLC_NODE_NAME) + "]: " +
-                        response.getResponseCode(node.get(PLC_NODE_NAME)).name());
-            }
-        }
-
-        // publish the final event
-        adapterPipeline.process(event);
     }
 
 
@@ -273,9 +282,9 @@ public class Plc4xS7Adapter extends PullAdapter {
         this.ip = extractor.singleValueParameter(PLC_IP, String.class);
 
         String selectedAlternative = extractor.selectedAlternativeInternalId(CONFIGURE);
-        if (selectedAlternative.equals(CSV_UPLOAD)) {
-            // csv file
-            FileStaticProperty sp = (FileStaticProperty) extractor.getStaticPropertyByName(PLC_NODES_FILE);
+        if (selectedAlternative.equals(CSV_IMPORT)) {
+            // CSV file
+            FileStaticProperty sp = (FileStaticProperty) extractor.getStaticPropertyByName(PLC_NODES_CSV_FILE);
             this.nodes = new ArrayList<>();
             try {
                 List<S7ConfigFile> configFiles = this.getCsvConfig(sp.getLocationPath());
@@ -287,12 +296,28 @@ public class Plc4xS7Adapter extends PullAdapter {
                     this.nodes.add(map);
                 }
             } catch (FileNotFoundException e) {
-                throw new AdapterException("Could not read uploaded file");
+                throw new AdapterException("Could not read imported file");
             }
 
+        } else if (selectedAlternative.equals(EXCEL_IMPORT)) {
+            // Excel file
+            FileStaticProperty sp = (FileStaticProperty) extractor.getStaticPropertyByName(PLC_NODES_EXCEL_FILE);
+            this.nodes = new ArrayList<>();
+            try {
+                List<S7ConfigFile> configFiles = this.getExcelConfig(sp.getLocationPath());
+                for (S7ConfigFile entry : configFiles) {
+                    Map map = new HashMap();
+                    map.put(PLC_NODE_RUNTIME_NAME, entry.getName());
+                    map.put(PLC_NODE_NAME, entry.getLogicalAddress());
+                    map.put(PLC_NODE_TYPE, entry.getDataType());
+                    this.nodes.add(map);
+                }
+            } catch (FileNotFoundException e) {
+                throw new AdapterException("Could not read imported file");
+            }
 
         } else {
-            // manually
+            // Manually
             this.nodes = new ArrayList<>();
             CollectionStaticProperty sp = (CollectionStaticProperty) extractor.getStaticPropertyByName(PLC_NODES);
 
@@ -306,6 +331,12 @@ public class Plc4xS7Adapter extends PullAdapter {
                 this.nodes.add(map);
             }
         }
+    }
+
+
+    private List<S7ConfigFile> getExcelConfig(String path) throws FileNotFoundException {
+        List<S7ConfigFile> configFiles = Poiji.fromExcel(new File(path), S7ConfigFile.class);
+        return configFiles;
     }
 
     private List<S7ConfigFile> getCsvConfig(String path) throws FileNotFoundException {
@@ -324,14 +355,13 @@ public class Plc4xS7Adapter extends PullAdapter {
         strategy.setType(S7ConfigFile.class);
         strategy.setColumnMapping(mapping);
 
-
         CsvToBean<S7ConfigFile> csvToBean = new CsvToBeanBuilder(reader)
                 .withType(S7ConfigFile.class)
                 .withMappingStrategy(strategy)
                 .build();
 
-        List<S7ConfigFile> result = csvToBean.parse();
-        return result;
+        List<S7ConfigFile> configFiles = csvToBean.parse();
+        return configFiles;
     }
 
     /**

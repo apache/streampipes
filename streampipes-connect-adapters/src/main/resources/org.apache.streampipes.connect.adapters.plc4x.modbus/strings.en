@@ -1,0 +1,45 @@
+org.apache.streampipes.connect.adapters.plc4x.modbus.title=PLC4X MODBUS
+org.apache.streampipes.connect.adapters.plc4x.modbus.description=Connect directly to your MODBUS PLC
+
+plc_ip.title=PLC Address
+plc_ip.description=Example: 192.168.34.56
+
+plc_port.title=PLC Port
+plc_port.description=Example: 502
+
+configure.title=Configuration
+configure.description=
+
+manually.title=Enter Manually
+manually.description=Enter the addresses to read the data from manually
+
+plc_nodes.title=Nodes
+plc_nodes.description=Define the nodes of the PLC
+
+plc_node_runtime_name.title=Runtime Name
+plc_node_runtime_name.description=Example: temperature
+
+plc_node_name.title=Node Name
+plc_node_name.description=
+
+plc_node_type.title=Object Type
+plc_node_type.description=Example: Coil
+
+csv_import.title=Import from CSV
+csv_import.description=Import a CSV file with the configurations from the TIA portal
+
+excel_import.title= Import from Excel file
+excel_import.description=Import a Excel file with the configurations from the TIA portal
+
+plc_nodes_csv_file.title=CSV File
+plc_nodes_csv_file.description=Contains three columns 'Name', 'Data Type', 'Logical Address'
+
+plc_nodes_excel_file.title=Excel File
+plc_nodes_excel_file.description=Contains three columns 'Name', 'Data Type', 'Logical Address'
+
+plc_node_address.title=Node Address
+plc_node_address.description= Address/field in the corresponding register
+
+plc_node_id.title=Node ID
+plc_node_id.description= ID of the specific device
+

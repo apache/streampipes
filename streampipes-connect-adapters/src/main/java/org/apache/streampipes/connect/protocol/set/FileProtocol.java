@@ -76,8 +76,6 @@ public class FileProtocol extends Protocol {
     public Protocol getInstance(ProtocolDescription protocolDescription, Parser parser, Format format) {
         ParameterExtractor extractor = new ParameterExtractor(protocolDescription.getConfig());
 
-//        String fileUri = extractor.singleValue("fileUri");
-
         FileStaticProperty fileStaticProperty = (FileStaticProperty) extractor.getStaticPropertyByName("filePath");
 
         String fileUri = fileStaticProperty.getLocationPath();

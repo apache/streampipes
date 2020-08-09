@@ -30,6 +30,9 @@ public class ConfigKeys {
     final static String DATA_LAKE_HOST = "SP_DATA_LAKE_HOST";
     final static String DATA_LAKE_PROTOCOL = "SP_DATA_LAKE_PROTOCOL";
     final static String DATA_LAKE_PORT = "SP_DATA_LAKE_PORT";
+    final static String DATA_LAKE_USERNAME = "SP_DATA_LAKE_USERNAME";
+    final static String DATA_LAKE_PASSWORD = "SP_DATA_LAKE_PASSWORD";
+    final static String DATA_LAKE_DATABASE_NAME = "SP_DATA_LAKE_DATABASE_NAME";
     final static String BACKEND_HOST = "SP_BACKEND_HOST";
     final static String BACKEND_PORT = "SP_BACKEND_PORT";
     final static String BACKEND_PROTOCOL = "SP_BACKEND_PROTOCOL";

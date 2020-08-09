@@ -1,0 +1,14 @@
+org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.number.title=Number Labeler
+org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.number.description=Adds a label based on a  user defined rule to a sensor time-series
+
+sensorValueId.title=Sensor value
+sensorValueId.description=The value used for the labeling
+
+labelCollectionId.title=Condition
+labelCollectionId.description=Add a condition with the following scheme (Order is important) '<;5;ok', '<;10;ok' or '*;nok' as a default label
+
+label.title=Label
+label.description=User defined label for data
+
+labelStringId.title=Condition
+labelStringId.description=Add a condition with the following scheme (Order is important) '<;5;ok', '<;10;ok' or '*;nok' as a default label

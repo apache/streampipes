@@ -1,0 +1,23 @@
+org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.buffer.title=State Buffer Labeler
+org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.buffer.description=Adds a label based on a  user defined rule to a sensor time-series
+
+stateFilterId.title=Select a specific state
+stateFilterId.description=Add a filter to define which states to evaluate. Add '*' to select all states.
+
+stateFieldId.title=State field
+stateFieldId.description=Select the field containing the state of the event
+
+operationsId.title=Operation
+operationsId.description=Define the operation that should be applied on sensor values
+
+sensorValueId.title=Sensor values
+sensorValueId.description=The array containing the sensor values to evaluate
+
+labelCollectionId.title=Condition
+labelCollectionId.description=Add a condition with the following scheme (Order is important) '<;5;ok', '<;10;ok' or '*;nok' as a default label
+
+label.title=Label
+label.description=User defined label for data
+
+labelStringId.title=Condition
+labelStringId.description=Add a condition with the following scheme (Order is important) '<;5;ok', '<;10;ok' or '*;nok' as a default label

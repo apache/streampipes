@@ -22,6 +22,7 @@ import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.helpers.CollectedStreamRequirements;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.utils.Datatypes;
 
 public class RequiredBoxStream {
 

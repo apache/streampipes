@@ -33,6 +33,7 @@ import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.vocabulary.SO;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -42,6 +43,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import static org.apache.streampipes.sdk.helpers.EpProperties.timestampProperty;
 
 public class MySqlAdapter extends SpecificDataStreamAdapter {
 
@@ -183,10 +186,19 @@ public class MySqlAdapter extends SpecificDataStreamAdapter {
     extractTableInformation();
 
     for (Column column : tableSchema) {
-      allProperties.add(PrimitivePropertyBuilder
-              .create(column.getType(), database + "." + table + "." + column.getName())
-              .label(column.getName())
-              .build());
+      if (SO.DateTime.equals(column.getDomainProperty())) {
+        allProperties.add(PrimitivePropertyBuilder
+                .create(column.getType(), column.getName())
+                .label(column.getName())
+                .domainProperty(SO.DateTime)
+                .build());
+      } else {
+        allProperties.add(PrimitivePropertyBuilder
+                .create(column.getType(), column.getName())
+                .label(column.getName())
+                .build());
+      }
+
     }
 
     eventSchema.setEventProperties(allProperties);

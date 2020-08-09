@@ -140,10 +140,14 @@ public class FileStreamProtocol extends Protocol {
   @Override
   public Protocol getInstance(ProtocolDescription protocolDescription, Parser parser, Format format) {
     ParameterExtractor extractor = new ParameterExtractor(protocolDescription.getConfig());
-    String replaceTimestampString = extractor.selectedSingleValueOption("replaceTimestamp");
-    boolean replaceTimestamp = replaceTimestampString.equals("True") ? true : false;
+
+    List<String> replaceTimestampStringList = extractor.selectedMultiValues("replaceTimestamp");
+//    String replaceTimestampString = extractor.selectedSingleValueOption("replaceTimestamp");
+    boolean replaceTimestamp = replaceTimestampStringList.size() == 0 ? false : true;
+
     float speedUp = Float.parseFloat(extractor.singleValue("speed"));
-    int timeBetweenReplay = Integer.parseInt(extractor.singleValue("time-between-replay"));
+
+    int timeBetweenReplay = 1;
 
     FileStaticProperty fileStaticProperty = (FileStaticProperty) extractor.getStaticPropertyByName("filePath");
 
@@ -182,10 +186,11 @@ public class FileStreamProtocol extends Protocol {
             .sourceType(AdapterSourceType.STREAM)
             .category(AdapterType.Generic)
             .requiredFile(Labels.withId("filePath"))
-            .requiredSingleValueSelection(Labels.withId("replaceTimestamp"),
-                Options.from("True", "False"))
+//            .requiredSingleValueSelection(Labels.withId("replaceTimestamp"),
+//                Options.from("True", "False"))
+            .requiredMultiValueSelection(Labels.withId("replaceTimestamp"),
+                    Options.from(""))
             .requiredFloatParameter(Labels.withId("speed"))
-            .requiredFloatParameter(Labels.withId("time-between-replay"))
             .build();
   }
 

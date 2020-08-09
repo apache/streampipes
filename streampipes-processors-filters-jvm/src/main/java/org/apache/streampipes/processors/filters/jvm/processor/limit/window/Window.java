@@ -15,9 +15,19 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.processors.filters.jvm.processor.limit.window;
 
-package org.apache.streampipes.processors.siddhi.filter;
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.model.runtime.Event;
 
-public enum NumericalOperator {
-GE, GT, LE, LT, EQ, IE
+public interface Window {
+
+    void init() throws SpRuntimeException;
+
+    void onEvent(Event event) throws SpRuntimeException;
+
+    void onTrigger();
+
+    void destroy() throws SpRuntimeException;
+
 }
