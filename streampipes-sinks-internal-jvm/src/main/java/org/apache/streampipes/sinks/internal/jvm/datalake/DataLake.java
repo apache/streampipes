@@ -20,17 +20,15 @@ package org.apache.streampipes.sinks.internal.jvm.datalake;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
-import org.apache.streampipes.serializers.json.Utils;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.sinks.internal.jvm.config.SinksInternalJvmConfig;
 import org.apache.streampipes.vocabulary.SPSensor;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
@@ -143,19 +141,18 @@ public class DataLake implements EventSink<DataLakeParameters> {
    * @throws SpRuntimeException
    */
   private void registerAtDataLake(String measure, EventSchema eventSchema) throws SpRuntimeException {
-    HttpClient httpClient = new DefaultHttpClient();
     String url = SinksInternalJvmConfig.INSTANCE.getStreamPipesBackendUrl();
-    HttpPost httpPost = new HttpPost(url + "/streampipes-backend/api/v3/noauth/datalake/" + measure);
-    httpPost.setHeader("Content-type", "application/json");
-
-    String json = Utils.getGson().toJson(eventSchema);
-    StringEntity stringEntity = new StringEntity(json, ContentType.APPLICATION_JSON);
-    httpPost.setEntity(stringEntity);
 
     try {
-      HttpResponse response = httpClient.execute(httpPost);
+      String json = JacksonSerializer.getObjectMapper().writeValueAsString(eventSchema);
+      StringEntity stringEntity = new StringEntity(json, ContentType.APPLICATION_JSON);
+      HttpResponse response = Request.Post(url + "/streampipes-backend/api/v3/noauth/datalake/" + measure)
+              .addHeader("Content-type", "application/json")
+              .body(stringEntity)
+              .execute()
+              .returnResponse();
       if (response.getStatusLine().getStatusCode() == 409) {
-        throw new SpRuntimeException("The measuremnt '" + measure +"' is already registered as Data lake with different Event schema");
+        throw new SpRuntimeException("The measurement '" + measure +"' is already registered as Data lake with different Event schema");
       }
     } catch (IOException e) {
       LOG.error(e.toString());
