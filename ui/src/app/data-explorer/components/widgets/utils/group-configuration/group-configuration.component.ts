@@ -16,8 +16,8 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { EventProperty } from '../../../../../connect/schema-editor/model/EventProperty';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {EventProperty} from '../../../../../connect/schema-editor/model/EventProperty';
 
 @Component({
   selector: 'sp-group-configuration',

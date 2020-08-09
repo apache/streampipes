@@ -16,8 +16,8 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
-import { DateRange } from '../../../../../core-model/datalake/DateRange';
+import {Component, Input, OnInit} from '@angular/core';
+import {DateRange} from '../../../../../core-model/datalake/DateRange';
 
 @Component({
   selector: 'sp-no-data-in-date-range',

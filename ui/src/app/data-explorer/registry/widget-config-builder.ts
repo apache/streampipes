@@ -16,11 +16,11 @@
  *
  */
 
-import { ColorPickerStaticProperty } from '../../connect/model/ColorPickerStaticProperty';
-import { FreeTextStaticProperty } from '../../connect/model/FreeTextStaticProperty';
-import { DashboardWidgetSettings } from '../../core-model/dashboard/DashboardWidgetSettings';
-import { CollectedSchemaRequirements } from '../sdk/collected-schema-requirements';
-import { Datatypes } from '../sdk/model/datatypes';
+import {ColorPickerStaticProperty} from '../../connect/model/ColorPickerStaticProperty';
+import {FreeTextStaticProperty} from '../../connect/model/FreeTextStaticProperty';
+import {DashboardWidgetSettings} from '../../core-model/dashboard/DashboardWidgetSettings';
+import {CollectedSchemaRequirements} from '../sdk/collected-schema-requirements';
+import {Datatypes} from '../sdk/model/datatypes';
 
 export class WidgetConfigBuilder {
 
