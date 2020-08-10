@@ -18,14 +18,20 @@
 
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {DataMarketplaceService} from './data-marketplace.service';
-import {AdapterDescription} from '../model/connect/AdapterDescription';
 import {ShepherdService} from "../../services/tour/shepherd.service";
 import {ConnectService} from '../connect.service';
 import {FilterPipe} from './filter.pipe';
 import {AdapterUploadDialog} from './adapter-upload/adapter-upload-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
-import {AdapterDescriptionList} from '../model/connect/AdapterDescriptionList';
-import {TsonLdSerializerService} from '../../platform-services/tsonld-serializer.service';
+import {
+    AdapterDescription,
+    AdapterDescriptionList,
+    AdapterDescriptionUnion,
+    AdapterSetDescription,
+    AdapterStreamDescription,
+    EventSchema, SpDataSet,
+    SpDataStream
+} from "../../core-model/gen/streampipes-model";
 
 @Component({
     selector: 'sp-data-marketplace',
@@ -33,12 +39,12 @@ import {TsonLdSerializerService} from '../../platform-services/tsonld-serializer
     styleUrls: ['./data-marketplace.component.css']
 })
 export class DataMarketplaceComponent implements OnInit {
-    adapterDescriptions: AdapterDescription[];
-    newAdapterFromDescription: AdapterDescription;
-    filteredAdapterDescriptions: AdapterDescription[];
-    adapters: AdapterDescription[];
-    filteredAdapters: AdapterDescription[];
-    visibleAdapters: AdapterDescription[];
+    adapterDescriptions: AdapterDescriptionUnion[];
+    newAdapterFromDescription: AdapterDescriptionUnion;
+    filteredAdapterDescriptions: AdapterDescriptionUnion[];
+    adapters: AdapterDescriptionUnion[];
+    filteredAdapters: AdapterDescriptionUnion[];
+    visibleAdapters: AdapterDescriptionUnion[];
 
     @Output()
     selectAdapterEmitter: EventEmitter<AdapterDescription> = new EventEmitter<AdapterDescription>();
@@ -55,9 +61,7 @@ export class DataMarketplaceComponent implements OnInit {
     constructor(private dataMarketplaceService: DataMarketplaceService,
                 private ShepherdService: ShepherdService,
                 private connectService: ConnectService,
-                public dialog: MatDialog,
-                private tsonLdSerializerService: TsonLdSerializerService,
-    ) {
+                public dialog: MatDialog) {
     }
 
     ngOnInit() {
@@ -82,22 +86,23 @@ export class DataMarketplaceComponent implements OnInit {
         this.adapterDescriptions = [];
 
         this.dataMarketplaceService
-            .getGenericAndSpecifigAdapterDescriptions()
-            .subscribe(res => {
-                res.subscribe(adapterDescriptions => {
-                    this.adapterDescriptions = this.adapterDescriptions.concat(adapterDescriptions);
-                    this.adapterDescriptions.sort((a, b) => a.label.localeCompare(b.label));
-                    this.filteredAdapterDescriptions = this.adapterDescriptions;
-                });
+            .getGenericAndSpecificAdapterDescriptions()
+            .subscribe((allAdapters) => {
+                this.adapterDescriptions = this.adapterDescriptions.concat(allAdapters[0]);
+                this.adapterDescriptions = this.adapterDescriptions.concat(allAdapters[1]);
+                this.adapterDescriptions
+                    .sort((a, b) => a.name.localeCompare(b.name));
+                this.filteredAdapterDescriptions = this.adapterDescriptions;
             });
 
         this.dataMarketplaceService.getAdapterTemplates().subscribe(adapterTemplates => {
             adapterTemplates.forEach(function (adapterTemplate) {
-                adapterTemplate.isTemplate = true;
+                (adapterTemplate as any).isTemplate = true;
             });
 
             this.adapterDescriptions = this.adapterDescriptions.concat(adapterTemplates);
-            this.adapterDescriptions.sort((a, b) => a.label.localeCompare(b.label));
+            this.adapterDescriptions
+                .sort((a, b) => a.name.localeCompare(b.name));
             this.filteredAdapterDescriptions = this.adapterDescriptions;
         });
     }
@@ -125,17 +130,27 @@ export class DataMarketplaceComponent implements OnInit {
         this.ShepherdService.startAdapterTour3();
     }
 
-    selectAdapter(adapterDescription: AdapterDescription) {
+    selectAdapter(adapterDescription: AdapterDescriptionUnion) {
         this.newAdapterFromDescription = this.dataMarketplaceService.cloneAdapterDescription(adapterDescription);
-
-        this.newAdapterFromDescription.templateTitle = this.newAdapterFromDescription.label;
-        this.newAdapterFromDescription.label = "";
+        (this.newAdapterFromDescription as any).templateTitle = this.newAdapterFromDescription.name;
+        this.newAdapterFromDescription.name = "";
         this.newAdapterFromDescription.description = "";
-
+        if (this.newAdapterFromDescription instanceof AdapterStreamDescription) {
+            this.newAdapterFromDescription.dataStream = new SpDataStream();
+            this.newAdapterFromDescription.dataStream["@class"] = "org.apache.streampipes.model.SpDataStream";
+            this.newAdapterFromDescription.dataStream.eventSchema = new EventSchema();
+            this.newAdapterFromDescription.dataStream.eventSchema["@class"] = "org.apache.streampipes.model.schema.EventSchema";
+        }
+        if (this.newAdapterFromDescription instanceof AdapterSetDescription) {
+            this.newAdapterFromDescription.dataSet = new SpDataSet();
+            this.newAdapterFromDescription.dataSet["@class"] = "org.apache.streampipes.model.SpDataSet";
+            this.newAdapterFromDescription.dataSet.eventSchema = new EventSchema();
+            this.newAdapterFromDescription.dataSet.eventSchema["@class"] = "org.apache.streampipes.model.schema.EventSchema";
+        }
         this.ShepherdService.trigger("select-adapter");
     }
 
-    templateFromRunningAdapter(adapter: AdapterDescription) {
+    templateFromRunningAdapter(adapter: AdapterDescriptionUnion) {
         this.selectedIndexChange(0);
         this.selectAdapter(adapter);
 
@@ -152,14 +167,15 @@ export class DataMarketplaceComponent implements OnInit {
     downloadAllAdapterTemplates() {
         var adapterTemplates: AdapterDescription[] = [];
         this.adapterDescriptions.forEach(function (adapterTemplate) {
-            if (adapterTemplate.isTemplate) {
+            if ((adapterTemplate as any).isTemplate) {
                 delete adapterTemplate['userName'];
                 adapterTemplates.push(adapterTemplate);
             }
         });
 
-        let adapterDescriptionList: AdapterDescriptionList  = new AdapterDescriptionList("http://streampipes.org/exportedList");
-        adapterDescriptionList.list = adapterTemplates;
+        let adapterDescriptionList: AdapterDescriptionList  = new AdapterDescriptionList();
+        adapterDescriptionList.elementId = "http://streampipes.org/exportedList";
+        adapterDescriptionList.list = adapterTemplates as AdapterDescriptionUnion[];
 
 
         // this.tsonLdSerializerService.toJsonLd(this.data.adapter).subscribe(res => {
@@ -173,15 +189,12 @@ export class DataMarketplaceComponent implements OnInit {
         // });
 
         // this.adapterJsonLd = this.tsonLdSerializerService.toJsonLd(this.data.adapter);
-        this.tsonLdSerializerService.toJsonLd(adapterDescriptionList).subscribe(res => {
-            let data = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(res, null, 2));
-            let downloader = document.createElement('a');
+        let data = "data:text/json;charset=utf-8," +encodeURIComponent(JSON.stringify(adapterDescriptionList, null, 2));
+        let downloader = document.createElement('a');
 
-            downloader.setAttribute('href', data);
-            downloader.setAttribute('download', 'all-adapter-templates.json');
-            downloader.click();
-
-        });
+        downloader.setAttribute('href', data);
+        downloader.setAttribute('download', 'all-adapter-templates.json');
+        downloader.click();
     }
 
     uploadAdapterTemplates() {
@@ -209,7 +222,7 @@ export class DataMarketplaceComponent implements OnInit {
         this.filteredAdapters = filteredAdapterTemplateCategories;
     }
 
-    filterAdapterCategory(currentElements: AdapterDescription[]): AdapterDescription[] {
+    filterAdapterCategory(currentElements: AdapterDescriptionUnion[]): AdapterDescriptionUnion[] {
         if (this.selectedCategory == this.adapterCategories[0].type) {
             return currentElements;
         } else {
@@ -217,7 +230,7 @@ export class DataMarketplaceComponent implements OnInit {
         }
     }
 
-    filterAdapterType(currentElements: AdapterDescription[]): AdapterDescription[] {
+    filterAdapterType(currentElements: AdapterDescriptionUnion[]): AdapterDescriptionUnion[] {
         if (this.selectedType == this.adapterTypes[0]) {
             return currentElements;
         } else if (this.selectedType == this.adapterTypes[1]) {

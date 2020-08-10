@@ -16,11 +16,11 @@
  *
  */
 
-import { Injectable } from '@angular/core';
-import { RdfId } from '../../../platform-services/tsonld/RdfId';
-import { RdfsClass } from '../../../platform-services/tsonld/RdfsClass';
-import { RdfProperty } from '../../../platform-services/tsonld/RdfsProperty';
-import { EventProperty } from './EventProperty';
+import {Injectable} from '@angular/core';
+import {RdfId} from '../../../platform-services/tsonld/RdfId';
+import {RdfsClass} from '../../../platform-services/tsonld/RdfsClass';
+import {RdfProperty} from '../../../platform-services/tsonld/RdfsProperty';
+import {EventProperty} from './EventProperty';
 
 @Injectable()
 @RdfsClass('sp:EventSchema')

@@ -18,23 +18,22 @@
 
 package org.apache.streampipes.model.staticproperty;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 import io.fogsy.empire.annotations.RdfProperty;
 import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 @RdfsClass(StreamPipes.MAPPING_PROPERTY)
 @MappedSuperclass
 @Entity
+@JsonSubTypes({
+        @JsonSubTypes.Type(MappingPropertyNary.class),
+        @JsonSubTypes.Type(MappingPropertyUnary.class)
+})
 public abstract class MappingProperty extends StaticProperty {
 
   private static final long serialVersionUID = -7849999126274124847L;

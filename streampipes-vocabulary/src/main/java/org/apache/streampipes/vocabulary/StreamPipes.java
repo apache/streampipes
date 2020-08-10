@@ -395,4 +395,5 @@ public class StreamPipes {
   public static final String HAS_CODE_INPUT = NS + "hasCodeInput";
   public static final String HAS_CODE_TEMPLATE = NS + "hasCodeTemplate";
   public static final String USER_DEFINED_OUTPUT_STRATEGY = NS + "UserDefinedOutputStrategy";
+  public static final String PE_CONFIGURED = NS + "isPeConfigured" ;
 }

@@ -18,9 +18,10 @@
 
 package org.apache.streampipes.model;
 
-import org.apache.commons.lang.RandomStringUtils;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 import io.fogsy.empire.annotations.RdfProperty;
 import io.fogsy.empire.annotations.RdfsClass;
+import org.apache.commons.lang.RandomStringUtils;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.quality.EventStreamQualityDefinition;
@@ -31,18 +32,17 @@ import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-
 @RdfsClass(StreamPipes.DATA_STREAM)
 @Entity
+@JsonSubTypes({
+        @JsonSubTypes.Type(SpDataStream.class),
+        @JsonSubTypes.Type(SpDataSet.class)
+})
 public class SpDataStream extends NamedStreamPipesEntity {
 
   private static final long serialVersionUID = -5732549347563182863L;

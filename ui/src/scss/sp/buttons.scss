@@ -80,6 +80,7 @@
     padding: 0.25em 0.75em;
     font-size: 0.8em;
     max-height: 20px;
+    line-height: 10px;
 }
 
 .mat-raised-button.mat-primary:hover:enabled {
@@ -95,7 +96,7 @@
 
 .mat-raised-button.mat-basic:enabled {
   background: #e5e5e5;
-  color: rgba(0, 0, 0, 0.75);
+  color: rgba(0, 0, 0, 0.67);
 }
 
 .mat-raised-button.mat-basic:hover:enabled {

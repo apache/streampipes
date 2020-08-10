@@ -24,18 +24,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.streampipes.connect.container.worker.management.FileManagement;
 import org.apache.streampipes.connect.rest.AbstractContainerResource;
-import org.apache.streampipes.model.client.messages.Notifications;
+import org.apache.streampipes.model.message.Notifications;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -56,6 +51,7 @@ public class FileResource extends AbstractContainerResource {
 
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response uploadFiles(@FormDataParam("file_upload") InputStream uploadedInputStream,
         @FormDataParam("file_upload") FormDataContentDisposition fileDetail) {
 

@@ -18,7 +18,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { DatalakeRestService } from "../core-services/datalake/datalake-rest.service";
 import { TsonLdSerializerService } from "../platform-services/tsonld-serializer.service";
-import { DataLakeMeasure } from "../core-model/datalake/DataLakeMeasure";
+import {DataLakeMeasure} from "../core-model/gen/streampipes-model";
 
 @Component({
     selector: 'app-image-labeling',

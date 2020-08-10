@@ -19,9 +19,10 @@
 import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {RestService} from "../../rest.service";
-import {TsonLdSerializerService} from '../../../platform-services/tsonld-serializer.service';
-import {AdapterDescriptionList} from '../../model/connect/AdapterDescriptionList';
-import {AdapterDescription} from '../../model/connect/AdapterDescription';
+import {
+    AdapterDescription,
+    AdapterDescriptionList
+} from "../../../core-model/gen/streampipes-model";
 
 @Component({
     selector: 'sp-dialog-adapter-started-dialog',
@@ -36,7 +37,6 @@ export class AdapterUploadDialog {
     constructor(
         public dialogRef: MatDialogRef<AdapterUploadDialog>,
         private restService: RestService,
-        private tsonLdSerializerService: TsonLdSerializerService,
         @Inject(MAT_DIALOG_DATA) public data: any) {
 
     }
@@ -56,8 +56,8 @@ export class AdapterUploadDialog {
             var jsonString: any = fileReader.result;
             var json = JSON.parse(jsonString);
 
-            if (jsonString.indexOf('AdapterDescriptionList') != -1) {
-                let allTemplates: AdapterDescriptionList  = this.tsonLdSerializerService.fromJsonLd(json, 'sp:AdapterDescriptionList');
+            if (jsonString["@class"].contains('AdapterDescriptionList') != -1) {
+                let allTemplates: AdapterDescriptionList  = AdapterDescriptionList.fromData(json as AdapterDescriptionList);
                 let self = this;
 
                 allTemplates.list.forEach(function (adapterTemplate) {
@@ -68,16 +68,7 @@ export class AdapterUploadDialog {
             } else {
 
                 let adapterTemplate: AdapterDescription;
-
-                if (jsonString.indexOf('GenericAdapterSetDescription') != -1) {
-                    adapterTemplate = this.tsonLdSerializerService.fromJsonLd(json, 'sp:GenericAdapterSetDescription');
-                } else if (jsonString.indexOf('SpecificAdapterSetDescription') != -1) {
-                    adapterTemplate = this.tsonLdSerializerService.fromJsonLd(json, 'sp:SpecificAdapterSetDescription');
-                } else if (jsonString.indexOf('GenericAdapterStreamDescription') != -1) {
-                    adapterTemplate = this.tsonLdSerializerService.fromJsonLd(json, 'sp:GenericAdapterStreamDescription');
-                } else if (jsonString.indexOf('SpecificAdapterStreamDescription') != -1) {
-                    adapterTemplate = this.tsonLdSerializerService.fromJsonLd(json, 'sp:SpecificAdapterStreamDescription');
-                }
+                adapterTemplate = AdapterDescription.fromDataUnion(json);
 
                 this.restService.addAdapterTemplate(adapterTemplate).subscribe(x => {
                 });
@@ -87,8 +78,6 @@ export class AdapterUploadDialog {
         fileReader.readAsText(this.selectedUploadFile);
 
     }
-
-    storeAdapter
 
     onCloseConfirm() {
         this.dialogRef.close('Confirm');

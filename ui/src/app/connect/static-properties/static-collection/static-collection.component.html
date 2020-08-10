@@ -16,20 +16,14 @@
   ~
   -->
 
-<div id="formWrapper" fxFlex="100" fxLayout="column">
-
-    <div>
-        <p>{{staticProperty.label}}: <br>
-            <mat-hint class="description">{{staticProperty.description}}</mat-hint>
-        </p>
-    </div>
-
+<div fxFlex="100" fxLayout="column">
     <div fxLayout="row" fxLayoutAlign="space-between center" *ngFor="let property of staticProperty.members; let i = index">
         <div fxFlex="grow">
             <app-static-property [adapterId]="adapterId"
-                                 [eventSchema]="eventSchema"
-                                 [staticProperty]="property"
-                                 (validateEmitter)="valueChange($event)">
+                                 [eventSchemas]="eventSchemas"
+                                 [parentForm]="parentForm"
+                                 [fieldName]="property.internalName + '-' + i"
+                                 [staticProperty]="property">
             </app-static-property>
         </div>
         <div fxFlex="nogrow" style="width: 50px" fxLayout="row" fxLayoutAlign="end center">
@@ -38,25 +32,11 @@
             </button>
         </div>
     </div>
-
-
-    <div fxLayout="row" fxLayoutAlign="space-between center">
-        <div  fxFlex="grow" style="pointer-events: none; opacity: 0.4;">
-            <app-static-property
-                                [adapterId]="adapterId"
-                                [eventSchema]="eventSchema"
-                                [staticProperty]="staticProperty.staticPropertyTemplate"
-                                (validateEmitter)="valueChange($event)">
-            </app-static-property>
-        </div>
-        <div fxFlex="nogrow" style="width: 50px" fxLayout="row" fxLayoutAlign="end center">
-            <button mat-icon-button class="icon-button" (click)="add()">
-                <mat-icon class="icon">add</mat-icon>
-            </button>
-        </div>
+    <div fxFlex>
+        <button mat-button mat-flat-button (click)="add()">
+            <mat-icon class="icon">add</mat-icon><span>Add more</span>
+        </button>
     </div>
-
-
 </div>
 
 

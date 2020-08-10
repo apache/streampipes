@@ -19,11 +19,13 @@
 import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import {DashboardItem} from "../../models/dashboard.model";
 import {DashboardService} from "../../services/dashboard.service";
-import {DashboardWidget} from "../../../core-model/dashboard/DashboardWidget";
 import {GridsterItem, GridsterItemComponent} from "angular-gridster2";
 import {AddVisualizationDialogComponent} from "../../dialogs/add-widget/add-visualization-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
-import {VisualizablePipeline} from "../../../core-model/dashboard/VisualizablePipeline";
+import {
+    DashboardWidgetModel,
+    VisualizablePipeline
+} from "../../../core-model/gen/streampipes-model";
 
 @Component({
     selector: 'dashboard-widget',
@@ -38,10 +40,10 @@ export class DashboardWidgetComponent implements OnInit {
     @Input() gridsterItemComponent: GridsterItemComponent;
 
     @Output() deleteCallback: EventEmitter<DashboardItem> = new EventEmitter<DashboardItem>();
-    @Output() updateCallback: EventEmitter<DashboardWidget> = new EventEmitter<DashboardWidget>();
+    @Output() updateCallback: EventEmitter<DashboardWidgetModel> = new EventEmitter<DashboardWidgetModel>();
 
     widgetLoaded: boolean = false;
-    configuredWidget: DashboardWidget;
+    configuredWidget: DashboardWidgetModel;
     widgetDataConfig: VisualizablePipeline;
 
     pipelineNotRunning: boolean = false;

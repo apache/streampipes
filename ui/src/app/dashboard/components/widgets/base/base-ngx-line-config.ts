@@ -17,10 +17,10 @@
  */
 
 import {WidgetConfig} from "./base-config";
-import {DashboardWidgetSettings} from "../../../../core-model/dashboard/DashboardWidgetSettings";
 import {WidgetConfigBuilder} from "../../../registry/widget-config-builder";
 import {SchemaRequirementsBuilder} from "../../../sdk/schema-requirements-builder";
 import {EpRequirements} from "../../../sdk/ep-requirements";
+import {DashboardWidgetSettings} from "../../../../core-model/gen/streampipes-model";
 
 export abstract class BaseNgxLineConfig extends WidgetConfig {
 

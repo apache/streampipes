@@ -22,15 +22,15 @@ import io.fogsy.empire.annotations.RdfProperty;
 import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
+import org.apache.streampipes.model.util.RdfIdGenerator;
 import org.apache.streampipes.vocabulary.StreamPipes;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 
 @RdfsClass(StreamPipes.DATA_SINK_INVOCATION)
 @Entity
@@ -61,6 +61,7 @@ public class DataSinkInvocation extends InvocableStreamPipesEntity {
     this.setStreamRequirements(sec.getSpDataStreams());
     this.setAppId(sec.getAppId());
     this.setIncludesAssets(sec.isIncludesAssets());
+    this.setElementId(RdfIdGenerator.makeRdfId(this));
     //this.setUri(belongsTo +"/" +getElementId());
   }
 

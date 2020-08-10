@@ -26,7 +26,7 @@
               }
             ],
             "styles": [
-              "src/scss/main.scss",
+              "src/scss/main.scss"
             ],
             "scripts": [
               "node_modules/systemjs/dist/system.js",
@@ -36,7 +36,7 @@
               "node_modules/jquery.panzoom/dist/jquery.panzoom.js",
               "node_modules/jquery-ui-dist/jquery-ui.js",
               "node_modules/jsplumb/dist/js/jsPlumb-2.1.3-min.js",
-              "node_modules/trix/dist/trix.js"
+              "node_modules/quill/dist/quill.js"
             ]
           },
           "configurations": {

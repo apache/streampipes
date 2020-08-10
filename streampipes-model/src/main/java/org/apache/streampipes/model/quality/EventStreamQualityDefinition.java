@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.model.quality;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
@@ -27,6 +28,10 @@ import javax.persistence.MappedSuperclass;
 @RdfsClass(StreamPipes.EVENT_STREAM_QUALITY_DEFINITION)
 @MappedSuperclass
 @Entity
+@JsonSubTypes({
+				@JsonSubTypes.Type(Frequency.class),
+				@JsonSubTypes.Type(Latency.class),
+})
 public class EventStreamQualityDefinition extends MeasurementProperty {
 
 	private static final long serialVersionUID = 6310763356941481868L;

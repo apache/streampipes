@@ -22,15 +22,12 @@ import org.apache.streampipes.connect.adapter.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.management.WorkerAdministrationManagement;
 import org.apache.streampipes.connect.container.master.management.WorkerRestClient;
 import org.apache.streampipes.connect.rest.AbstractContainerResource;
+import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
-import org.apache.streampipes.rest.shared.annotation.JsonLdSerialized;
-import org.apache.streampipes.rest.shared.util.SpMediaType;
+import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/api/v1/{username}/master/resolvable")
@@ -45,12 +42,12 @@ public class RuntimeResolvableResource extends AbstractContainerResource {
 
     @POST
     @Path("{id}/configurations")
-    @JsonLdSerialized
-    @Produces(SpMediaType.JSONLD)
-    @Consumes(SpMediaType.JSONLD)
+    @JacksonSerialized
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response fetchConfigurations(@PathParam("id") String elementId,
                                         @PathParam("username") String username,
-                                        String payload) {
+                                        RuntimeOptionsRequest runtimeOptionsRequest) {
 
         // TODO add solution for formats
 //        ResolvesContainerProvidedOptions runtimeResolvableOptions = RuntimeResovable.getRuntimeResolvableFormat(elementId);
@@ -60,7 +57,7 @@ public class RuntimeResolvableResource extends AbstractContainerResource {
 
         try {
 
-            RuntimeOptionsResponse result = WorkerRestClient.getConfiguration(workerEndpoint, elementId, username, payload);
+            RuntimeOptionsResponse result = WorkerRestClient.getConfiguration(workerEndpoint, elementId, username, runtimeOptionsRequest);
 
             return ok(result);
         } catch (AdapterException e) {

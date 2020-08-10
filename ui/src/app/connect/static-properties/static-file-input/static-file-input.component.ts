@@ -16,12 +16,12 @@
  *
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {StaticProperty} from '../../model/StaticProperty';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {StaticPropertyUtilService} from '../static-property-util.service';
 import {StaticFileRestService} from './static-file-rest.service';
-import {FileStaticProperty} from '../../model/FileStaticProperty';
 import {HttpEventType, HttpResponse} from '@angular/common/http';
+import {AbstractStaticPropertyRenderer} from "../base/abstract-static-property";
+import {FileStaticProperty} from "../../../core-model/gen/streampipes-model";
 
 
 @Component({
@@ -29,11 +29,8 @@ import {HttpEventType, HttpResponse} from '@angular/common/http';
     templateUrl: './static-file-input.component.html',
     styleUrls: ['./static-file-input.component.css']
 })
-export class StaticFileInputComponent implements OnInit {
+export class StaticFileInputComponent extends AbstractStaticPropertyRenderer<FileStaticProperty> implements OnInit {
 
-
-    @Input() staticProperty: StaticProperty;
-    @Input() adapterId: String;
     @Output() inputEmitter: EventEmitter<Boolean> = new EventEmitter<Boolean>();
 
     inputValue: String;
@@ -46,8 +43,9 @@ export class StaticFileInputComponent implements OnInit {
 
     uploadStatus = 0;
 
-    constructor(public staticPropertyUtil: StaticPropertyUtilService, private staticFileRestService: StaticFileRestService){
-
+    constructor(public staticPropertyUtil: StaticPropertyUtilService,
+                private staticFileRestService: StaticFileRestService){
+        super();
     }
 
     ngOnInit() {

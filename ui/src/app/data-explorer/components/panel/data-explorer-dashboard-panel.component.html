@@ -16,19 +16,9 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column" class="m-20">
-    <div fxLayout="row wrap" style="margin-bottom:20px;" *ngIf="editMode">
-        <button mat-button mat-raised-button color="primary" (click)="updateDashboardAndCloseEditMode()"
-                style="margin-right:10px;">Save
-        </button>
-        <button mat-button mat-raised-button class="mat-basic" (click)="discardChanges()"
-                style="margin-right:10px;">Discard
-        </button>
-        <button mat-button mat-raised-button color="primary" (click)="addWidget()" [disabled]="!editMode">Add
-            visualization</button>
-    </div>
-
+<div fxFlex="100" fxLayout="column">
     <sp-data-explorer-dashboard-grid
+            #dashboardGrid
             [editMode]="editMode"
             [dashboard]="dashboard"
             [viewDateRange]="viewDateRange"

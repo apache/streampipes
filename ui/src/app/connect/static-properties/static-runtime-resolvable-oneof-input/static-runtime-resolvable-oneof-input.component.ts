@@ -16,28 +16,30 @@
  *
  */
 
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {RuntimeResolvableOneOfStaticProperty} from "../../model/RuntimeResolvableOneOfStaticProperty";
-import {StaticProperty} from "../../model/StaticProperty";
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges
+} from '@angular/core';
 import {RestService} from "../../rest.service";
-import {RuntimeOptionsRequest} from "../../model/connect/runtime/RuntimeOptionsRequest";
 import {ConfigurationInfo} from "../../model/message/ConfigurationInfo";
+import {AbstractStaticPropertyRenderer} from "../base/abstract-static-property";
+import {
+  RuntimeOptionsRequest,
+  RuntimeResolvableOneOfStaticProperty
+} from "../../../core-model/gen/streampipes-model";
 
 @Component({
     selector: 'app-static-runtime-resolvable-oneof-input',
     templateUrl: './static-runtime-resolvable-oneof-input.component.html',
     styleUrls: ['./static-runtime-resolvable-oneof-input.component.css']
 })
-export class StaticRuntimeResolvableOneOfInputComponent implements OnInit, OnChanges {
-
-    @Input()
-    staticProperty: RuntimeResolvableOneOfStaticProperty;
-
-    @Input()
-    staticProperties: StaticProperty[];
-
-    @Input()
-    adapterId: string;
+export class StaticRuntimeResolvableOneOfInputComponent
+    extends AbstractStaticPropertyRenderer<RuntimeResolvableOneOfStaticProperty> implements OnInit, OnChanges {
 
     @Input()
     completedStaticProperty: ConfigurationInfo;
@@ -49,6 +51,7 @@ export class StaticRuntimeResolvableOneOfInputComponent implements OnInit, OnCha
     dependentStaticProperties: any = new Map();
 
     constructor(private RestService: RestService) {
+        super();
     }
 
     ngOnInit() {
@@ -88,7 +91,7 @@ export class StaticRuntimeResolvableOneOfInputComponent implements OnInit, OnCha
         for (let option of this.staticProperty.options) {
             option.selected = false;
         }
-        this.staticProperty.options.find(option => option.id === id).selected = true;
+        this.staticProperty.options.find(option => option.elementId === id).selected = true;
         this.inputEmitter.emit(true)
     }
 

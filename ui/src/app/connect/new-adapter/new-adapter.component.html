@@ -53,21 +53,35 @@
                     <h4 *ngIf="isGenericAdapter">Protocol settings</h4>
                 </div>
                 <div class="sp-blue-border padding">
-                    <app-static-property *ngFor="let config of adapter.config" [staticProperty]="config"
-                        [staticProperties]="adapter.config" [adapterId]="adapter.appId"
+                    <form [formGroup]="parentForm" fxFlex="100">
+                    <app-static-property *ngFor="let config of adapter.config"
+                                         [staticProperty]="config"
+                                         [staticProperties]="adapter.config"
+                                         [adapterId]="adapter.appId"
+                                         [parentForm]="parentForm"
+                                         [fieldName]="config.internalName"
                         (updateEmitter)="triggerUpdate($event)" [completedStaticProperty]="completedStaticProperty">
                     </app-static-property>
-                    <app-protocol (validateEmitter)="validateProtocol($event)" [protocol]="adapter.protocol"
-                        *ngIf="isGenericAdapter"></app-protocol>
+                        <div fxFlex="100"  *ngIf="isGenericAdapter">
+                        <app-static-property *ngFor="let config of adapter.protocolDescription.config"
+                                             [staticProperty]="config"
+                                             [staticProperties]="adapter.protocolDescription.config"
+                                             [adapterId]="adapter.appId"
+                                             [parentForm]="parentForm"
+                                             [fieldName]="config.internalName"
+                                             (updateEmitter)="triggerUpdate($event)" [completedStaticProperty]="completedStaticProperty">
+                        </app-static-property>
+                        </div>
+                    </form>
                 </div>
             </div>
             <div fxLayoutAlign="end">
                 <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
                 <div id="specific-settings-next-button">
-                    <button class="stepper-button" *ngIf="isGenericAdapter" [disabled]="!protocolConfigurationValid"
+                    <button class="stepper-button" *ngIf="isGenericAdapter" [disabled]="!adapterSettingsFormValid"
                         (click)="clickProtocolSettingsNextButton(stepper)" color="primary" mat-raised-button>Next
                     </button>
-                    <button class="stepper-button" *ngIf="!isGenericAdapter"
+                    <button class="stepper-button" *ngIf="!isGenericAdapter" [disabled]="!adapterSettingsFormValid"
                         (click)="clickSpecificSettingsNextButton(stepper)" color="primary" mat-raised-button>Next
                     </button>
                 </div>
@@ -84,19 +98,28 @@
                     </div>
                     <div class="sp-blue-border padding">
                         <app-format-form fxFlex="100" (selectedFormatEmitter)="formatSelected($event)"
-                            [(selectedFormat)]="adapter.format" [allFormats]="allFormats"></app-format-form>
+                            [(selectedFormat)]="adapter.formatDescription" [allFormats]="allFormats"></app-format-form>
                     </div>
 
                     <div class="assemblyOptions sp-blue-bg">
                         <h4>Configure format</h4>
                     </div>
                     <div class="sp-blue-border padding">
-                        <div fxFlex="100" *ngIf="adapter.format">
-                            <app-select-static-properties (validateEmitter)="validateFormat($event)"
-                                [staticProperties]="adapter.format.config" class="fullWidth">
-                            </app-select-static-properties>
-                            <h5 *ngIf="adapter.format.config.length === 0" style="text-align:center;">(no further
-                                configuration needed)</h5>
+                        <div fxFlex="100" *ngIf="adapter.formatDescription">
+                            <form [formGroup]="formatForm" fxFlex="100">
+                                <app-static-property *ngFor="let config of adapter.formatDescription.config"
+                                                     [staticProperty]="config"
+                                                     [staticProperties]="adapter.config"
+                                                     [adapterId]="adapter.appId"
+                                                     [parentForm]="formatForm"
+                                                     [fieldName]="config.internalName"
+                                                     (updateEmitter)="triggerUpdate($event)"
+                                                     [completedStaticProperty]="completedStaticProperty">
+
+                                </app-static-property>
+                                <h5 *ngIf="adapter.formatDescription.config.length === 0" style="text-align:center;">(no further
+                                    configuration needed)</h5>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -142,22 +165,22 @@
                     <div fxLayoutAlign="center" fxLayout="column" fxFlex="100">
                         <mat-form-field>
                             <input matInput id="input-AdapterName" placeholder="Adapter Name"
-                                formControlName="startAdapterFormCtrl" [(ngModel)]="adapter.label">
+                                formControlName="startAdapterFormCtrl" [(ngModel)]="adapter.name">
                         </mat-form-field>
                         <mat-form-field>
                             <input matInput id="input-AdapterDescription" [ngModelOptions]="{standalone: true}"
                                 placeholder="Adapter Description" [(ngModel)]="adapter.description">
                         </mat-form-field>
 
-                        <mat-form-field *ngIf="isEditable" style="width: 50%" (click)="fileInput.click();">
-                            <input matInput placeholder="Icon" disabled (value)="fileName">
-                            <input #fileInput type="file" style="display:none;"
-                                (change)="handleFileInput($event.target.files)">
-                            {{fileName}}
-                            <button color="primary" matSuffix mat-button style="min-width: 0px">
-                                <mat-icon>insert_drive_file</mat-icon>
-                            </button>
-                        </mat-form-field>
+<!--                        <mat-form-field *ngIf="isEditable" style="width: 50%" (click)="fileInput.click();">-->
+<!--                            <input matInput placeholder="Icon" disabled (value)="fileName">-->
+<!--                            <input #fileInput type="file" style="display:none;"-->
+<!--                                (change)="handleFileInput($event.target.files)">-->
+<!--                            {{fileName}}-->
+<!--                            <button color="primary" matSuffix mat-button style="min-width: 0px">-->
+<!--                                <mat-icon>insert_drive_file</mat-icon>-->
+<!--                            </button>-->
+<!--                        </mat-form-field>-->
 
 
                         <mat-checkbox [disabled]="!isEditable" [(ngModel)]="removeDuplicates"
@@ -212,11 +235,11 @@
                 <div fxLayoutAlign="end">
                     <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
                     <button class="mat-basic stepper-button" mat-raised-button (click)="goBack(stepper)">Back</button>
-                    <button [disabled]="startAdapterFormGroup.invalid || !isEditable" mat-raised-button
-                        id="button-saveTemplate" color="primary" (click)="saveTemplate()" mat-button
-                        style="margin-left:10px;">
-                        Save as Template
-                    </button>
+<!--                    <button [disabled]="startAdapterFormGroup.invalid || !isEditable" mat-raised-button-->
+<!--                        id="button-saveTemplate" color="primary" (click)="saveTemplate()" mat-button-->
+<!--                        style="margin-left:10px;">-->
+<!--                        Save as Template-->
+<!--                    </button>-->
                     <button [disabled]="startAdapterFormGroup.invalid" mat-raised-button id="button-startAdapter"
                         color="primary" (click)="startAdapter()" mat-button style="margin-left:10px;">
                         Start Adapter

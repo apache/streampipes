@@ -18,6 +18,13 @@
 
 package org.apache.streampipes.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.JsonNode;
+import org.apache.streampipes.model.shared.annotation.TsModel;
+
+@TsModel
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum DataSinkType {
 
   VISUALIZATION_CHART("Charts", ""),
@@ -36,11 +43,20 @@ public enum DataSinkType {
     this.description = description;
   }
 
+  public String getCode() {
+    return this.name();
+  }
+
   public String getLabel() {
     return label;
   }
 
   public String getDescription() {
     return description;
+  }
+
+  @JsonCreator
+  public static AdapterType fromString(JsonNode json) {
+    return AdapterType.valueOf(json.get("code").asText());
   }
 }

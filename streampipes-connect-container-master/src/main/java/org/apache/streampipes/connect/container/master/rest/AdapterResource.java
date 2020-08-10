@@ -18,31 +18,22 @@
 
 package org.apache.streampipes.connect.container.master.rest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.management.AdapterMasterManagement;
 import org.apache.streampipes.connect.container.master.management.Utils;
-import org.apache.streampipes.connect.management.AdapterDeserializer;
 import org.apache.streampipes.connect.rest.AbstractContainerResource;
-import org.apache.streampipes.model.client.messages.Notifications;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterDescriptionList;
-import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
-import org.apache.streampipes.rest.shared.annotation.JsonLdSerialized;
-import org.apache.streampipes.rest.shared.util.SpMediaType;
+import org.apache.streampipes.model.message.Notifications;
+import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.storage.couchdb.impl.AdapterStorageImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.List;
-
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 @Path("/api/v1/{username}/master/adapters")
 public class AdapterResource extends AbstractContainerResource {
@@ -57,22 +48,12 @@ public class AdapterResource extends AbstractContainerResource {
     }
 
     @POST
-//    @JsonLdSerialized
     @Path("/")
-    @GsonWithIds
+    @JacksonSerialized
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addAdapter(String s, @PathParam("username") String userName) {
+    public Response addAdapter(AdapterDescription adapterDescription, @PathParam("username") String userName) {
 
-        AdapterDescription adapterDescription = null;
         String adapterId;
-
-        try {
-            adapterDescription = AdapterDeserializer.getAdapterDescription(s);
-        } catch (AdapterException e) {
-            LOG.error("Could not deserialize AdapterDescription: " + s, e);
-            e.printStackTrace();
-        }
-
         LOG.info("User: " + userName + " starts adapter " + adapterDescription.getAdapterId());
 
 
@@ -92,9 +73,9 @@ public class AdapterResource extends AbstractContainerResource {
     }
 
     @GET
-    @JsonLdSerialized
+    @JacksonSerialized
     @Path("/{id}")
-    @Produces(SpMediaType.JSONLD)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response getAdapter(@PathParam("id") String id, @PathParam("username") String userName) {
 
         try {
@@ -110,7 +91,7 @@ public class AdapterResource extends AbstractContainerResource {
 
 
     @DELETE
-    @JsonLdSerialized
+    @JacksonSerialized
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteAdapter(@PathParam("id") String id, @PathParam("username") String userName) {
@@ -130,9 +111,9 @@ public class AdapterResource extends AbstractContainerResource {
     }
 
     @GET
-    @JsonLdSerialized
+    @JacksonSerialized
     @Path("/")
-    @Produces(SpMediaType.JSONLD)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response getAllAdapters(String id, @PathParam("username") String userName) {
         try {
             List<AdapterDescription> allAdapterDescription = adapterMasterManagement.getAllAdapters(new AdapterStorageImpl());

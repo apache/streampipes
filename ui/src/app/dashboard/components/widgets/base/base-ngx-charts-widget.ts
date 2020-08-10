@@ -19,8 +19,6 @@
 import {BaseStreamPipesWidget} from "./base-widget";
 import {RxStompService} from "@stomp/ng2-stompjs";
 import {ResizeService} from "../../../services/resize.service";
-import {GridsterInfo} from "../../../models/gridster-info.model";
-import {GridsterItemComponent} from "angular-gridster2";
 import {DashboardService} from "../../../services/dashboard.service";
 
 export abstract class BaseNgxChartsStreamPipesWidget extends BaseStreamPipesWidget {

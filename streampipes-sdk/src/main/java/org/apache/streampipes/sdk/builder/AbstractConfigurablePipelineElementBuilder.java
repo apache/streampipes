@@ -169,6 +169,36 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
     return me();
   }
 
+  /**
+   * Assigns a new color picker parameter which is required by the pipeline
+   * element.
+   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
+   *              user-friendly manner.
+   *
+   * @return
+   */
+  public BU requiredColorParameter(Label label) {
+    ColorPickerStaticProperty csp = new ColorPickerStaticProperty(label.getInternalId(), label.getLabel(), label.getDescription());
+    this.staticProperties.add(csp);
+
+    return me();
+  }
+
+  /**
+   * Assigns a new color picker parameter which is required by the pipeline
+   * element.
+   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
+   *              user-friendly manner.
+   * @param defaultColor The default color, encoded as an HTML color code
+   * @return
+   */
+  public BU requiredColorParameter(Label label, String defaultColor) {
+    ColorPickerStaticProperty csp = new ColorPickerStaticProperty(label.getInternalId(), label.getLabel(), label.getDescription());
+    csp.setSelectedColor(defaultColor);
+    this.staticProperties.add(csp);
+
+    return me();
+  }
 
   /**
    * @deprecated Use {@link #requiredTextParameter(Label, String)}

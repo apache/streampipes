@@ -16,11 +16,10 @@
  *
  */
 
-import { DashboardWidgetSettings } from '../../../../core-model/dashboard/DashboardWidgetSettings';
-import { WidgetConfigBuilder } from '../../../registry/widget-config-builder';
-import { EpRequirements } from '../../../sdk/ep-requirements';
-import { SchemaRequirementsBuilder } from '../../../sdk/schema-requirements-builder';
 import { WidgetConfig } from '../base/base-config';
+import {WidgetConfigBuilder} from "../../../../dashboard/registry/widget-config-builder";
+import {SchemaRequirementsBuilder} from "../../../../dashboard/sdk/schema-requirements-builder";
+import {DashboardWidgetSettings} from "../../../../core-model/gen/streampipes-model";
 
 export class TableConfig extends WidgetConfig {
 

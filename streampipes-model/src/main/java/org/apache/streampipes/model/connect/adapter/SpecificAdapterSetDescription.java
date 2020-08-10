@@ -20,12 +20,14 @@ package org.apache.streampipes.model.connect.adapter;
 
 import io.fogsy.empire.annotations.Namespaces;
 import io.fogsy.empire.annotations.RdfsClass;
+import org.apache.streampipes.model.shared.annotation.TsModel;
 
 import javax.persistence.Entity;
 
 @Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
 @RdfsClass("sp:SpecificAdapterSetDescription")
 @Entity
+@TsModel
 public class SpecificAdapterSetDescription extends AdapterSetDescription {
 
     public SpecificAdapterSetDescription() {

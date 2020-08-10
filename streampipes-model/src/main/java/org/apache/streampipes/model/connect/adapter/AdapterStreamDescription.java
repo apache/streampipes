@@ -17,6 +17,7 @@
  */
 
 package org.apache.streampipes.model.connect.adapter;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 import io.fogsy.empire.annotations.Namespaces;
 import io.fogsy.empire.annotations.RdfProperty;
 import io.fogsy.empire.annotations.RdfsClass;
@@ -28,6 +29,10 @@ import javax.persistence.Entity;
 @Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
 @RdfsClass(StreamPipes.ADAPTER_STREAM_DESCRIPTION)
 @Entity
+@JsonSubTypes({
+        @JsonSubTypes.Type(SpecificAdapterStreamDescription.class),
+        @JsonSubTypes.Type(SpecificAdapterStreamDescription.class)
+})
 public abstract class AdapterStreamDescription extends AdapterDescription {
 
     @RdfProperty("sp:hasDataStream")

@@ -20,18 +20,13 @@ import {RdfId} from '../../platform-services/tsonld/RdfId';
 import {RdfProperty} from '../../platform-services/tsonld/RdfsProperty';
 import {RdfsClass} from '../../platform-services/tsonld/RdfsClass';
 import {EventSchema} from '../schema-editor/model/EventSchema';
+import {NamedStreamPipesEntity} from "./NamedStreamPipesEntity";
 
 @RdfsClass('sp:DataStream')
-export class DataStreamDescription {
+export class DataStreamDescription extends NamedStreamPipesEntity {
 
     @RdfId
     public id: string;
-
-    @RdfProperty('http://www.w3.org/2000/01/rdf-schema#label')
-    public label: string;
-
-    @RdfProperty('http://www.w3.org/2000/01/rdf-schema#description')
-    public description: string;
 
     @RdfProperty('sp:hasUri')
     public uri: string;
@@ -40,7 +35,7 @@ export class DataStreamDescription {
     public eventSchema: EventSchema;
 
     constructor(id: string) {
-        this.id = id;
+        super(id);
     }
 
 }

@@ -25,3 +25,14 @@
   height: 100%;
   margin-right: 10px; */
 }
+
+.static-property-panel {
+  border-left:5px solid gray;
+  padding-left: 10px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.description {
+  font-size: 10px;
+}

@@ -28,18 +28,17 @@ import {InitTooltips} from './init-tooltips.service'
 import {RestApi} from './rest-api.service'
 import {AuthStatusService} from './auth-status.service'
 import {DomainProperties} from './domain-properties.service'
-import {JsplumbBridge} from './jsplumb-bridge.service'
-import {JsplumbService} from './jsplumb.service'
-import {PipelinePositioningService} from './pipeline-positioning.service'
-import {PipelineEditorService} from './pipeline-editor.service'
+import {JsplumbBridge} from '../editor/services/jsplumb-bridge.service'
+import {JsplumbService} from '../editor/services/jsplumb.service'
+import {PipelinePositioningService} from '../editor/services/pipeline-positioning.service'
+import {PipelineEditorService} from '../editor/services/pipeline-editor.service'
 import {DialogBuilder} from './dialog-builder.service'
 import {MeasurementUnits} from './measurement-units.service'
 import {DeploymentService} from './deployment.service'
-import {JsplumbConfigService} from './jsplumb-config.service'
+import {JsplumbConfigService} from '../editor/services/jsplumb-config.service'
 import {PipelineElementIconService} from './pipeline-icon.service'
-import {ObjectProvider} from './object-provider.service'
+import {ObjectProvider} from '../editor/services/object-provider.service'
 import {downgradeInjectable} from '@angular/upgrade/static';
-import {TransitionService} from "./transition.service";
 import {ShepherdService} from "./tour/shepherd.service";
 import {TourProviderService} from "./tour/tour-provider.service";
 import {PropertySelectorService} from "./property-selector.service";
@@ -62,17 +61,16 @@ export default angular.module('sp.services', [spConstants])
 	.service('AuthStatusService', downgradeInjectable(AuthStatusService))
 	.service('ObjectProvider', ObjectProvider)
 	.service('DomainProperties', DomainProperties)
-	.service('JsplumbBridge', JsplumbBridge)
-	.service('JsplumbService', JsplumbService)
-	.service('PipelinePositioningService', PipelinePositioningService)
-	.service('PipelineEditorService', PipelineEditorService)
+	//.service('JsplumbBridge', downgradeInjectable(JsplumbBridge))
+	//.service('JsplumbService', downgradeInjectable(JsplumbService))
+	//.service('PipelinePositioningService', downgradeInjectable(PipelinePositioningService))
+	//.service('PipelineEditorService', PipelineEditorService)
 	.service('DialogBuilder', DialogBuilder)
     .service('MeasurementUnitsService', MeasurementUnits)
     .service('DeploymentService', DeploymentService)
     .service('JsplumbConfigService', JsplumbConfigService)
     .service('PipelineElementIconService', PipelineElementIconService)
 	.service('RouteTransitionInterceptorService', RouteTransitionInterceptorService)
-	.service('TransitionService', TransitionService)
 	.service('ShepherdService', ShepherdService)
 	.service('TourProviderService', TourProviderService)
 	.service('PropertySelectorService', PropertySelectorService)

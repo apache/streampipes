@@ -34,6 +34,7 @@ import { AuthStatusService } from './services/auth-status.service';
 import { HomeModule } from './home/home.module';
 import { InfoModule } from './info/info.module';
 import { AppAssetMonitoringModule } from "./app-asset-monitoring/app-asset-monitoring.module";
+import { PipelineDetailsModule } from './pipeline-details/pipeline-details.module';
 import { AppTransportMonitoringModule } from "./app-transport-monitoring/app-transport-monitoring.module";
 import { NotificationCountService } from "./services/notification-count-service";
 
@@ -68,6 +69,7 @@ import { NotificationModule } from './notifications/notifications.module';
         AppTransportMonitoringModule,
         AppContainerModule,
         NotificationModule,
+        PipelineDetailsModule,
         {{#modulesActive}}
         {{#ng5}}
         {{{ng5_moduleName}}},
@@ -76,6 +78,16 @@ import { NotificationModule } from './notifications/notifications.module';
     ],
     providers: [
         AuthStatusService,
+        {
+          provide: '$stateParams',
+          useFactory: ($injector: any) => $injector.get('$stateParams'),
+          deps: ['$injector']
+        },
+        {
+          provide: '$state',
+          useFactory: ($injector: any) => $injector.get('$state'),
+          deps: ['$injector']
+        },
         NotificationCountService,
         {provide: Logger, useClass: ConsoleLogService}
     ]

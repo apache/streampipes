@@ -16,87 +16,73 @@
   ~
   -->
 
-<div fxLayout="column" fxLayoutAlign="stretch">
-    <div class="assemblyOptions sp-blue-bg m-0 row header h-40" style="margin-left: 0px;margin-right: 0px;margin-top: 0px;">
+<div class="widget-content">
+    <div class="widget-inner-options" style="margin-left: 0;margin-right: 0;margin-top: 0;">
+        <div fxFlex="100" fxLayout="row">
+            <div fxFlex="100" layout="row" fxLayoutAlign="start center" style="margin-left: 0px;margin-right: 0px;">
+                <sp-select-properties
+                        label="Select Properties"
+                        multiple = true
+                        style="margin-right: 10px;"
+                        (changeSelectedProperties)="setSelectedColumn($event)"
+                        [availableProperties]="availableColumns"
+                        [selectedProperties]="selectedColumns">
+                </sp-select-properties>
 
-        <div fxFlex="100" layout="row" fxLayoutAlign="end center" style="margin-left: 0px;margin-right: 0px;">
-            <sp-select-properties
-                    label="Select Properties"
-                    multiple = true
-                    style="margin-right: 10px;"
-                    (changeSelectedProperties)="setSelectedColumn($event)"
-                    [availableProperties]="availableColumns"
-                    [selectedProperties]="selectedColumns">
-            </sp-select-properties>
+                <sp-select-properties
+                        label="Select Label Column"
+                        multiple = false
+                        style="margin-right: 10px;"
+                        *ngIf="showLabelColumnSelection"
+                        (changeSelectedProperties)="setSelectedLabelColumn($event)"
+                        [availableProperties]="availableNonNumericColumns"
+                        [selectedProperties]="selectedNonNumericColumn">
+                </sp-select-properties>
+                <sp-aggregate-configuration
+                        *ngIf="advancedSettingsActive"
+                        [(aggregationValue)]="aggregationValue"
+                        [(aggregationTimeUnit)]="aggregationTimeUnit">
+                </sp-aggregate-configuration>
 
-            <sp-select-properties
-                    label="Select Label Column"
-                    multiple = false
-                    style="margin-right: 10px;"
-                    *ngIf="showLabelColumnSelection"
-                    (changeSelectedProperties)="setSelectedLabelColumn($event)"
-                    [availableProperties]="availableNonNumericColumns"
-                    [selectedProperties]="selectedNonNumericColumn">
-            </sp-select-properties>
-
-            <mat-slide-toggle [(ngModel)]="advancedSettingsActive" (change)="handlingAdvancedToggleChange()">Advanced</mat-slide-toggle>
-            <sp-aggregate-configuration
-                    *ngIf="advancedSettingsActive"
-                    [(aggregationValue)]="aggregationValue"
-                    [(aggregationTimeUnit)]="aggregationTimeUnit">
-            </sp-aggregate-configuration>
-
-            <sp-group-configuration
-                    [dimensionProperties]="dimensionProperties"
-                    *ngIf="advancedSettingsActive"
-                    [(groupValue)]="groupValue"
-                    [(showCountValue)]="showCountValue">
-            </sp-group-configuration>
-
-
-            <button
-                    *ngIf="advancedSettingsActive"
-                    (click)="updateData()" mat-button mat-icon-button color="white">
-                <i class="material-icons">autorenew</i>
-            </button>
-
-            <button mat-icon-button matTooltip="Download data" class="icon" (click)="downloadDataAsFile()" color="white">
-                <i class="material-icons">get_app</i>
-            </button>
-<!--            <button mat-button mat-icon-button color="white" (click)="changeResolution()">-->
-<!--                <i class="material-icons">autorenew</i>-->
-<!--            </button>-->
-            <button mat-button mat-icon-button color="white" (click)="removeWidget()">
-                <i class="material-icons">clear</i>
-            </button>
+                <sp-group-configuration
+                        [dimensionProperties]="dimensionProperties"
+                        *ngIf="advancedSettingsActive"
+                        [(groupValue)]="groupValue"
+                        [(showCountValue)]="showCountValue">
+                </sp-group-configuration>
+                <button
+                        *ngIf="advancedSettingsActive"
+                        (click)="updateData()" mat-button mat-icon-button color="primary">
+                    <mat-icon>autorenew</mat-icon>
+                </button>
+            </div>
+            <div fxFlex fxLayoutAlign="end center">
+                <mat-slide-toggle color="primary" [(ngModel)]="advancedSettingsActive" (change)="handlingAdvancedToggleChange()">Aggregate</mat-slide-toggle>
+            </div>
         </div>
     </div>
+    <div class="widget-inner-content" style="height: 100%;overflow-y:hidden;">
+        <sp-load-data-spinner *ngIf="showIsLoadingData"></sp-load-data-spinner>
+        <sp-no-data-in-date-range *ngIf="showNoDataInDateRange" [viewDateRange]="viewDateRange"></sp-no-data-in-date-range>
+        <plotly-plot *ngIf="data !== undefined && !showNoDataInDateRange && !showIsLoadingData"
+                     class="plotly-container"
+                     [data]="data"
+                     [layout]="graph.layout"
+                     [config]="graph.config"
+                     (relayout)="handleDefaultModeBarButtonClicks($event)"
+                     (selecting)="selectDataPoints($event)">
+        </plotly-plot>
+    </div>
+</div>
+<!--<div fxLayout="column" fxLayoutAlign="stretch">-->
 
-
-    <div style="width: 100%; height: 500px">
-
-
-        <div fxLayout="row">
-            <sp-load-data-spinner *ngIf="showIsLoadingData"></sp-load-data-spinner>
-
-            <sp-no-data-in-date-range *ngIf="showNoDataInDateRange" [viewDateRange]="viewDateRange"></sp-no-data-in-date-range>
+<!--    <div fxFlex="100" fxLayout="column" style="width: 100%;">-->
+<!--        <div fxLayout="column" fxFlex="100" fxLayoutAlign="center center">-->
+<!--            -->
 
             <!-- Chart -->
-            <plotly-plot fxFlex
-                         *ngIf="data !== undefined && !showNoDataInDateRange"
-                         flex
-                         [data]="data"
-                         [layout]="graph.layout"
-                         [config]="graph.config"
-                         (relayout)="handleDefaultModeBarButtonClicks($event)"
-                         (selecting)="selectDataPoints($event)">
-            </plotly-plot>
 
-        </div>
-
-
-    </div>
-
-
-</div>
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
 

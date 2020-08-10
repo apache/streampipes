@@ -20,33 +20,32 @@ package org.apache.streampipes.rest.impl.dashboard;
 
 import org.apache.streampipes.rest.api.dashboard.IVisualizablePipeline;
 import org.apache.streampipes.rest.impl.AbstractRestInterface;
-import org.apache.streampipes.rest.shared.annotation.JsonLdSerialized;
-import org.apache.streampipes.rest.shared.util.SpMediaType;
+import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.storage.api.IVisualizablePipelineStorage;
-
-import java.util.List;
-import java.util.Optional;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
+import java.util.Optional;
 
-@Path("/v2/users/{username}/ld/pipelines")
+@Path("/v2/users/{username}/dashboard/pipelines")
 public class VisualizablePipeline extends AbstractRestInterface implements IVisualizablePipeline {
 
   @GET
-  @JsonLdSerialized
-  @Produces(SpMediaType.JSONLD)
+  @JacksonSerialized
+  @Produces(MediaType.APPLICATION_JSON)
   @Override
   public Response getVisualizablePipelines() {
-    return ok(asContainer(getVisualizablePipelineStorage().getAllVisualizablePipelines()));
+    return ok(getVisualizablePipelineStorage().getAllVisualizablePipelines());
   }
 
   @GET
-  @JsonLdSerialized
-  @Produces(SpMediaType.JSONLD)
+  @JacksonSerialized
+  @Produces(MediaType.APPLICATION_JSON)
   @Path("/{id}")
   @Override
   public Response getVisualizablePipeline(@PathParam("id") String id) {
@@ -55,8 +54,8 @@ public class VisualizablePipeline extends AbstractRestInterface implements IVisu
   }
 
   @GET
-  @JsonLdSerialized
-  @Produces(SpMediaType.JSONLD)
+  @JacksonSerialized
+  @Produces(MediaType.APPLICATION_JSON)
   @Path("topic/{topic}")
   @Override
   public Response getVisualizablePipelineByTopic(@PathParam("topic") String topic) {

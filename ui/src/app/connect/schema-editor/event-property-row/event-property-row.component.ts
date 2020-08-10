@@ -17,16 +17,19 @@
  */
 
 import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from "@angular/core";
-import {EventProperty} from "../model/EventProperty";
-import {EventPropertyPrimitive} from "../model/EventPropertyPrimitive";
-import {EventPropertyNested} from "../model/EventPropertyNested";
-import {EventPropertyList} from "../model/EventPropertyList";
-import {EventSchema} from "../model/EventSchema";
 import {UUID} from "angular2-uuid";
-import {EventPropertyComponent} from "../event-property/event-property.component";
 import {DomainPropertyProbabilityList} from "../model/DomainPropertyProbabilityList";
 import {TreeNode} from "angular-tree-component";
 import {MatDialog} from "@angular/material/dialog";
+import {
+    EventProperty,
+    EventPropertyList,
+    EventPropertyNested,
+    EventPropertyPrimitive,
+    EventPropertyUnion,
+    EventSchema
+} from "../../../core-model/gen/streampipes-model";
+import { EditEventPropertyComponent } from '../../dialog/edit-event-property/edit-event-property.component';
 
 @Component({
     selector: 'event-property-row',
@@ -63,6 +66,10 @@ export class EventPropertyRowComponent implements OnChanges {
         this.isList = this.isEventPropertyList(this.node.data);
         this.isNested = this.isEventPropertyNested(this.node.data);
         this.timestampProperty = this.isTimestampProperty(this.node.data);
+
+        if (!this.node.data.propertyScope) {
+            this.node.data.propertyScope = "MEASUREMENT_PROPERTY";
+        }
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -81,7 +88,7 @@ export class EventPropertyRowComponent implements OnChanges {
     }
 
     public getLabel(eventProperty: EventProperty) {
-        if (eventProperty.label !== undefined && eventProperty.label !== '') {
+        if (eventProperty.label && eventProperty.label !== '') {
             return eventProperty.label;
         } else if (eventProperty.runtimeName !== undefined && eventProperty.runtimeName !== '') {
             return eventProperty.runtimeName;
@@ -96,7 +103,7 @@ export class EventPropertyRowComponent implements OnChanges {
     }
 
     isTimestampProperty(node) {
-        if (node.domainProperty === "http://schema.org/DateTime") {
+        if (node.domainProperties && node.domainProperties.some(dp => dp === "http://schema.org/DateTime")) {
             node.runtimeType = "http://www.w3.org/2001/XMLSchema#float";
             return true;
         } else {
@@ -106,27 +113,16 @@ export class EventPropertyRowComponent implements OnChanges {
 
 
     public openEditDialog(data): void {
-        let dialogRef = this.dialog.open(EventPropertyComponent, {
+        let dialogRef = this.dialog.open(EditEventPropertyComponent, {
             data: {
                 property: data,
-                domainProbability: this.getDomainProbability(data.runTimeName)
+                isEditable: this.isEditable
             },
         });
         dialogRef.afterClosed().subscribe(result => {
+            this.timestampProperty = this.isTimestampProperty(this.node.data);
             this.refreshTreeEmitter.emit();
         });
-    }
-
-    public getDomainProbability(name: string): DomainPropertyProbabilityList {
-        let result: DomainPropertyProbabilityList;
-
-        for (const entry of this.domainPropertyGuesses) {
-            if (entry.runtimeName === name) {
-                result = entry;
-            }
-        }
-
-        return result;
     }
 
     public selectProperty(id: string, eventProperties: any): void {
@@ -183,11 +179,11 @@ export class EventPropertyRowComponent implements OnChanges {
     public addNestedProperty(eventProperty: EventPropertyNested): void {
         const uuid: string = UUID.UUID();
         if (!eventProperty.eventProperties) {
-            eventProperty.eventProperties = new Array<EventProperty>();
+            eventProperty.eventProperties = new Array<EventPropertyUnion>();
         }
-        eventProperty.eventProperties.push(new EventPropertyNested(uuid, undefined));
+        let property: EventPropertyNested = new EventPropertyNested();
+        property.elementId = uuid;
+        eventProperty.eventProperties.push(property);
         this.refreshTreeEmitter.emit();
     }
-
-
 }

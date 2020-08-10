@@ -18,15 +18,13 @@
 
 package org.apache.streampipes.connect.container.master.rest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.streampipes.connect.container.master.management.WorkerAdministrationManagement;
 import org.apache.streampipes.connect.rest.AbstractContainerResource;
-import org.apache.streampipes.model.client.messages.Notifications;
 import org.apache.streampipes.model.connect.worker.ConnectWorkerContainer;
-import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
-import org.apache.streampipes.rest.shared.util.JsonLdUtils;
-import org.apache.streampipes.vocabulary.StreamPipes;
+import org.apache.streampipes.model.message.Notifications;
+import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -46,14 +44,12 @@ public class WorkerAdministrationResource extends AbstractContainerResource {
     }
 
     @POST
-    @GsonWithIds
+    @JacksonSerialized
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addWorkerContainer(String connectWorkerContainerString) {
-        ConnectWorkerContainer connectWorkerContainer = JsonLdUtils.fromJsonLd(connectWorkerContainerString, ConnectWorkerContainer.class, StreamPipes.CONNECT_WORKER_CONTAINER);
+    public Response addWorkerContainer(ConnectWorkerContainer connectWorkerContainer) {
         LOG.info("Worker container: " + connectWorkerContainer.getEndpointUrl() + " was detected");
         this.workerAdministrationManagement.register(connectWorkerContainer);
-
 
         return ok(Notifications.success("Worker Container sucessfully added"));
     }

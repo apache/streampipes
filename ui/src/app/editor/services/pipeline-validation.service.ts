@@ -18,13 +18,15 @@
 
 import * as angular from 'angular';
 import * as dagre from 'dagre';
-import {JsplumbBridge} from "../../services/jsplumb-bridge.service";
+import {JsplumbBridge} from "./jsplumb-bridge.service";
+import {Injectable} from "@angular/core";
+import {PipelineElementConfig} from "../model/editor.model";
 
+@Injectable()
 export class PipelineValidationService {
 
-    ObjectProvider: any;
     errorMessages: any = [];
-    JsplumbBridge: JsplumbBridge;
+    pipelineValid: boolean = false;
 
     availableErrorMessages: any = [
         {title: "Did you add a data stream?", content: "Any pipeline needs at least one data stream."},
@@ -33,9 +35,7 @@ export class PipelineValidationService {
         {title: "Separate pipelines", content: "It seems you've created more than one pipeline at once. Create only one pipeline at a time!"}
     ];
 
-    constructor(ObjectProvider, JsplumbBridge) {
-        this.ObjectProvider = ObjectProvider;
-        this.JsplumbBridge = JsplumbBridge;
+    constructor(private JsplumbBridge: JsplumbBridge) {
     }
 
     isValidPipeline(rawPipelineModel) {
@@ -59,7 +59,8 @@ export class PipelineValidationService {
             this.errorMessages = [];
         }
 
-        return streamInAssembly && actionInAssembly && allElementsConnected && onlyOnePipelineCreated;
+        this.pipelineValid = streamInAssembly && actionInAssembly && allElementsConnected && onlyOnePipelineCreated;
+        return this.pipelineValid;
     }
 
     isEmptyPipeline(rawPipelineModel) {
@@ -111,7 +112,7 @@ export class PipelineValidationService {
         return tarjan.length == 1;
     }
 
-    isInAssembly(rawPipelineModel, type) {
+    isInAssembly(rawPipelineModel: PipelineElementConfig[], type) {
         var isElementInAssembly = false;
         angular.forEach(rawPipelineModel, pe => {
             if (pe.type === type && !pe.settings.disabled) {
@@ -121,7 +122,7 @@ export class PipelineValidationService {
         return isElementInAssembly;
     }
 
-    makeGraph(rawPipelineModel) {
+    makeGraph(rawPipelineModel: PipelineElementConfig[]) {
         var g = new dagre.graphlib.Graph();
         g.setGraph({rankdir: "LR"});
         g.setDefaultEdgeLabel(function () {
@@ -150,10 +151,10 @@ export class PipelineValidationService {
         return g;
     }
 
-    getElementOptions(id, rawPipelineModel) {
+    getElementOptions(id, rawPipelineModel: PipelineElementConfig[]) {
         var pipelineElement;
         rawPipelineModel.forEach(pe => {
-           if (pe.payload.DOM === id) {
+           if (pe.payload.dom === id) {
                pipelineElement = pe;
            }
         });
@@ -161,4 +162,4 @@ export class PipelineValidationService {
     }
 }
 
-PipelineValidationService.$inject=['ObjectProvider', 'JsplumbBridge'];
+//PipelineValidationService.$inject=['ObjectProvider', 'JsplumbBridge'];

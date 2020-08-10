@@ -27,6 +27,7 @@ import { InfoComponent } from '../info/info.component';
 import { AppContainerComponent } from '../app-container/app-container.component';
 import { StandaloneDashboardComponent } from "../dashboard/components/standalone/standalone-dashboard.component";
 import { NotificationsComponent } from "../notifications/notifications.component";
+import { PipelineDetailsComponent } from '../pipeline-details/pipeline-details.component';
 
 export default function stateConfig($stateProvider, $urlRouterProvider) {
 
@@ -64,7 +65,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
             params: {pipeline: null},
             views: {
                 'spMain@streampipes': {
-                    template: require('../pipeline-details/pipeline-details.html')
+                    component: PipelineDetailsComponent
                 }
             }
         })
@@ -103,16 +104,6 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
                 }
             }
         })
-        /*
-        .state('streampipes.applinks', {
-            url: '/applinks',
-            views: {
-                "spMain@streampipes": {
-                    template: require('../applinks/applinks.tmpl.html')
-                }
-            }
-        })
-        */
         .state('register', {
             url: '/register',
             views: {
@@ -170,6 +161,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
         {{#ng5}}
         .state('{{{link}}}', {
             url: '{{{url}}}',
+            {{#containsPipeline}}{{ng1_templateUrl}}{{/containsPipeline}}
             views: {
                 "spMain@streampipes": {
                     component: {{{ng5_component}}}

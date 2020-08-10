@@ -19,9 +19,10 @@
 package org.apache.streampipes.model.base;
 
 
-import org.apache.commons.lang.RandomStringUtils;
 import io.fogsy.empire.annotations.RdfId;
 import io.fogsy.empire.annotations.RdfProperty;
+import org.apache.streampipes.model.shared.annotation.TsIgnore;
+import org.apache.streampipes.model.util.RdfIdGenerator;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
 /**
@@ -31,19 +32,15 @@ public abstract class UnnamedStreamPipesEntity extends AbstractStreamPipesEntity
 
   private static final long serialVersionUID = 8051137255998890188L;
 
-  private static final String prefix = "urn:streampipes.org:spi:";
-
   @RdfId
   @RdfProperty(StreamPipes.HAS_ELEMENT_NAME)
+  @TsIgnore
   private String elementId;
 
 
   public UnnamedStreamPipesEntity() {
     super();
-    this.elementId = prefix
-            + this.getClass().getSimpleName().toLowerCase()
-            + ":"
-            + RandomStringUtils.randomAlphabetic(6);
+    this.elementId = RdfIdGenerator.makeRdfId(this);
   }
 
   public UnnamedStreamPipesEntity(UnnamedStreamPipesEntity other) {

@@ -18,49 +18,37 @@
 
 package org.apache.streampipes.rest.impl;
 
+import io.fogsy.empire.core.empire.annotation.InvalidRdfException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
+import org.apache.streampipes.commons.Utils;
+import org.apache.streampipes.manager.endpoint.HttpJsonParser;
+import org.apache.streampipes.manager.storage.UserManagementService;
+import org.apache.streampipes.manager.storage.UserService;
 import org.apache.streampipes.model.base.AbstractStreamPipesEntity;
+import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.base.StreamPipesJsonLdContainer;
+import org.apache.streampipes.model.message.Notification;
+import org.apache.streampipes.model.message.*;
+import org.apache.streampipes.serializers.json.GsonSerializer;
+import org.apache.streampipes.serializers.jsonld.JsonLdTransformer;
+import org.apache.streampipes.storage.api.*;
+import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.storage.management.StorageManager;
+import org.apache.streampipes.storage.rdf4j.util.Transformer;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.rio.RDFHandlerException;
 import org.eclipse.rdf4j.rio.RDFParseException;
 import org.eclipse.rdf4j.rio.UnsupportedRDFormatException;
-import org.apache.streampipes.commons.Utils;
-import io.fogsy.empire.core.empire.annotation.InvalidRdfException;
-import org.apache.streampipes.manager.endpoint.HttpJsonParser;
-import org.apache.streampipes.manager.storage.UserManagementService;
-import org.apache.streampipes.manager.storage.UserService;
-import org.apache.streampipes.model.base.NamedStreamPipesEntity;
-import org.apache.streampipes.model.client.messages.ErrorMessage;
-import org.apache.streampipes.model.client.messages.Message;
-import org.apache.streampipes.model.client.messages.Notification;
-import org.apache.streampipes.model.client.messages.NotificationType;
-import org.apache.streampipes.model.client.messages.SuccessMessage;
-import org.apache.streampipes.serializers.json.GsonSerializer;
-import org.apache.streampipes.serializers.jsonld.JsonLdTransformer;
-import org.apache.streampipes.storage.api.IDataLakeStorage;
-import org.apache.streampipes.storage.api.IFileMetadataStorage;
-import org.apache.streampipes.storage.api.INoSqlStorage;
-import org.apache.streampipes.storage.api.INotificationStorage;
-import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorageCache;
-import org.apache.streampipes.storage.api.IPipelineStorage;
-import org.apache.streampipes.storage.api.ITripleStorage;
-import org.apache.streampipes.storage.api.IUserStorage;
-import org.apache.streampipes.storage.api.IVisualizationStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
-import org.apache.streampipes.storage.management.StorageManager;
-import org.apache.streampipes.storage.rdf4j.util.Transformer;
 
+import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.util.List;
-
-import javax.ws.rs.core.Response;
 
 public abstract class AbstractRestInterface {
 
@@ -150,7 +138,6 @@ public abstract class AbstractRestInterface {
     return statusMessage(new ErrorMessage(notifications));
   }
 
-
   protected String getCurrentUsername() throws AuthenticationException {
     if (SecurityUtils.getSubject().isAuthenticated()) {
       return SecurityUtils.getSubject().getPrincipal().toString();
@@ -178,9 +165,22 @@ public abstract class AbstractRestInterface {
             .build();
   }
 
+  protected Response statusMessage(Message message, Response.ResponseBuilder builder) {
+    return builder
+            .entity(message)
+            .build();
+  }
+
   protected <T> Response ok(T entity) {
     return Response
             .ok(entity)
+            .build();
+  }
+
+  protected <T> Response badRequest(T entity) {
+    return Response
+            .status(400)
+            .entity(entity)
             .build();
   }
 

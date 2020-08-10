@@ -16,6 +16,7 @@
  */
 package org.apache.streampipes.connect.container.worker.init;
 
+import org.apache.streampipes.rest.shared.serializer.JacksonSerializationProvider;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.springframework.stereotype.Component;
 import org.apache.streampipes.connect.container.worker.rest.FileResource;
@@ -40,5 +41,7 @@ public class AdapterWorkerContainerResourceConfig extends AdapterContainerConfig
     register(MultiPartFeature.class);
     register(AdapterResource.class);
     register(ProtocolResource.class);
+
+    register(JacksonSerializationProvider.class);
   }
 }

@@ -18,24 +18,30 @@
 
 package org.apache.streampipes.model.output;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 import io.fogsy.empire.annotations.RdfProperty;
 import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.OneToMany;
 
 @RdfsClass(StreamPipes.OUTPUT_STRATEGY)
 @MappedSuperclass
 @Entity
+@JsonSubTypes({
+        @JsonSubTypes.Type(AppendOutputStrategy.class),
+        @JsonSubTypes.Type(CustomOutputStrategy.class),
+        @JsonSubTypes.Type(CustomTransformOutputStrategy.class),
+        @JsonSubTypes.Type(FixedOutputStrategy.class),
+        @JsonSubTypes.Type(KeepOutputStrategy.class),
+        @JsonSubTypes.Type(ListOutputStrategy.class),
+        @JsonSubTypes.Type(TransformOutputStrategy.class),
+        @JsonSubTypes.Type(UserDefinedOutputStrategy.class),
+})
 public abstract class OutputStrategy extends UnnamedStreamPipesEntity {
 
   private static final long serialVersionUID = 1953204905003864143L;

@@ -18,18 +18,6 @@
 
 @import '../_variables';
 
-@-webkit-keyframes typing {
-  from {
-    width: 0;
-  }
-}
-
-@-webkit-keyframes blink-caret {
-  50% {
-    border-color: transparent;
-  }
-}
-
 md-progress-linear.md-accent .md-container {
   background-color: rgb(168, 168, 168);
 }
@@ -49,6 +37,10 @@ body {
 
 code[class*="language-"], pre[class*="language-"] {
   white-space:pre-wrap;
+}
+
+.ql-container {
+  height: auto;
 }
 
 .CodeMirror-hints {
@@ -80,17 +72,6 @@ md-dialog-actions {
 
 .mat-step-header .mat-step-icon {
   background-color: $sp-color-accent;
-}
-
-.welcome-animation {
-  font-family: Arial;
-  border-right: .1em solid black;
-  width: 16.5em;
-  width: 5ch;
-  white-space: nowrap;
-  overflow: hidden;
-  -webkit-animation: typing 1s steps(5, end),
-  blink-caret .5s step-end infinite alternate;
 }
 
 .cv-wrapper {
@@ -789,6 +770,7 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
   margin-top: 5px;
   box-shadow: 1px 1px 2px #555;
   text-align: center;
+  z-index:200;
 }
 
 .block {
@@ -902,16 +884,6 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
   color: black;
   padding: 0px;
   /* 	margin-top: 1%;  */
-}
-
-.icon-stand {
-  max-height: 200px;
-  margin-bottom: 1%;
-  padding-bottom: 1%;
-  overflow-y: auto;
-  /* 	border: 2px solid rgb(63,81,181); */
-  border-top: 0px;
-
 }
 
 .outerAssembly {

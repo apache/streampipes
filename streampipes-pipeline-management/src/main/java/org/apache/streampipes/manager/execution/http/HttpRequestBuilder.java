@@ -28,7 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.streampipes.commons.Utils;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
-import org.apache.streampipes.model.client.pipeline.PipelineElementStatus;
+import org.apache.streampipes.model.pipeline.PipelineElementStatus;
 import org.apache.streampipes.serializers.jsonld.JsonLdTransformer;
 
 import java.io.IOException;

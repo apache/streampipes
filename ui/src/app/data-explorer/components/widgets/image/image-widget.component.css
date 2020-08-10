@@ -35,3 +35,9 @@
 ::ng-deep .mat-form-field-wrapper {
     padding: 0px !important;
 }
+
+.assemblyOptionsDataExplorer {
+    background: #f6f6f6;
+    border-bottom: 1px solid #ccc;
+    padding: 5px;
+}

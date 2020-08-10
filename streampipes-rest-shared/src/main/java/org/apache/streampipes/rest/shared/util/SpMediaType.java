@@ -17,7 +17,11 @@
  */
 package org.apache.streampipes.rest.shared.util;
 
+import javax.ws.rs.core.MediaType;
+
 public class SpMediaType {
 
   public static final String JSONLD = "application/ld+json";
+
+  public static final MediaType JSONLD_TYPE = new MediaType("application", "ld+json");
 }

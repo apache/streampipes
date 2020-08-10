@@ -23,16 +23,17 @@ import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.InputStreamBody;
-import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterSetDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
+import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
+import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
-import org.apache.streampipes.rest.shared.util.JsonLdUtils;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.couchdb.impl.AdapterStorageImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -83,7 +84,7 @@ public class WorkerRestClient {
                 ad.setUri("https://streampipes.org/adapter/" + UUID.randomUUID());
             }
 
-            String adapterDescription = JsonLdUtils.toJsonLD(ad);
+            String adapterDescription = JacksonSerializer.getObjectMapper().writeValueAsString(ad);
 
             String responseString = Request.Post(url)
                     .bodyString(adapterDescription, ContentType.APPLICATION_JSON)
@@ -106,12 +107,7 @@ public class WorkerRestClient {
         try {
             logger.info("Trying to stopAdapter adpater on endpoint: " + url);
 
-            // TODO quick fix because otherwise it is not serialized to json-ld
-            if (ad.getUri() == null) {
-                logger.error("Adapter uri is null this should not happen " + ad);
-            }
-
-            String adapterDescription = JsonLdUtils.toJsonLD(ad);
+            String adapterDescription = JacksonSerializer.getObjectMapper().writeValueAsString(ad);
 
             // TODO change this to a delete request
             String responseString = Request.Post(url)
@@ -129,20 +125,19 @@ public class WorkerRestClient {
 
     }
 
-    public static RuntimeOptionsResponse getConfiguration(String workerEndpoint, String elementId, String username, String runtimeOptionsRequest) throws AdapterException {
+    public static RuntimeOptionsResponse getConfiguration(String workerEndpoint, String elementId, String username, RuntimeOptionsRequest runtimeOptionsRequest) throws AdapterException {
         String element = encodeValue(elementId);
         String url = workerEndpoint + "api/v1/" + username + "/worker/resolvable/" + element + "/configurations";
-//        url = encodeValue(url);
-//        String url = workerEndpoint + "/api/v1/" + username + "/worker/resolvable/abc/configurations";
 
         try {
+            String payload = JacksonSerializer.getObjectMapper().writeValueAsString(runtimeOptionsRequest);
             String responseString = Request.Post(url)
-                       .bodyString(runtimeOptionsRequest, ContentType.APPLICATION_JSON)
+                       .bodyString(payload, ContentType.APPLICATION_JSON)
                        .connectTimeout(1000)
                        .socketTimeout(100000)
                        .execute().returnContent().asString();
 
-            return JsonLdUtils.fromJsonLd(responseString, RuntimeOptionsResponse.class);
+            return JacksonSerializer.getObjectMapper().readValue(responseString, RuntimeOptionsResponse.class);
 
         } catch (IOException e) {
             e.printStackTrace();

@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.model.dashboard;
 
+import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.vocabulary.StreamPipes;
 import io.fogsy.empire.annotations.RdfProperty;
 import io.fogsy.empire.annotations.RdfsClass;
@@ -29,6 +30,7 @@ import javax.persistence.OneToOne;
 
 @RdfsClass(StreamPipes.DASHBOARD_WIDGET_MODEL)
 @Entity
+@TsModel
 public class DashboardWidgetModel extends DashboardEntity {
 
   @RdfProperty(StreamPipes.HAS_DASHBOARD_WIDGET_ID)

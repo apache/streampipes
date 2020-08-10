@@ -16,21 +16,18 @@
  *
  */
 
-import * as angular from 'angular';
+import {Pipe, PipeTransform} from "@angular/core";
+import {Pipeline} from "../core-model/gen/streampipes-model";
 
-export function PipelineCategoryFilter() {
-	return function(pipelines, categoryId) {
-		var result = [];
-		var showAll = false;
-		if (categoryId == "") showAll = true;
-		angular.forEach(pipelines, function(pipeline) {
-			if (showAll) result.push(pipeline);
-			else {
-				angular.forEach(pipeline.pipelineCategories, function(category) {
-					if (category == categoryId) result.push(pipeline);
-				})
-			}
-		})
-		return result;
-	};
+@Pipe({
+	name: 'pipelineInCategoryFilter',
+	pure: false
+})
+export class PipelineInCategoryPipe implements PipeTransform {
+
+	transform(pipelines: Pipeline[], categoryId: string): any {
+		return pipelines.filter(pipeline => {
+			return pipeline.pipelineCategories && pipeline.pipelineCategories.some(pc => pc === categoryId);
+		});
+	}
 };

@@ -18,71 +18,73 @@
 
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {AuthStatusService} from '../../services/auth-status.service';
-import {AdapterDescriptionList} from '../model/connect/AdapterDescriptionList';
-import {AdapterDescription} from '../model/connect/AdapterDescription';
-import {GenericAdapterSetDescription} from '../model/connect/GenericAdapterSetDescription';
-import {SpecificAdapterSetDescription} from '../model/connect/SpecificAdapterSetDescription';
-import {GenericAdapterStreamDescription} from '../model/connect/GenericAdapterStreamDescription';
-import {SpecificAdapterStreamDescription} from '../model/connect/SpecificAdapterStreamDescription';
-import {ProtocolDescription} from '../model/connect/grounding/ProtocolDescription';
 import {ConnectService} from '../connect.service';
-import {RestApi} from "../../services/rest-api.service";
-import {TsonLdSerializerService} from "../../platform-services/tsonld-serializer.service";
-import {AlternativesStaticProperty} from "../model/AlternativesStaticProperty";
-import {GroupStaticProperty} from "../model/GroupStaticProperty";
-import {StaticProperty} from "../model/StaticProperty";
-import {CollectionStaticProperty} from "../model/CollectionStaticProperty";
+import {
+  AdapterDescription,
+  AdapterDescriptionList,
+  AdapterDescriptionUnion,
+  EventSchema,
+  GenericAdapterSetDescription,
+  GenericAdapterStreamDescription,
+  ProtocolDescription,
+  ProtocolDescriptionList,
+  SpDataSet,
+  SpDataStream,
+  SpecificAdapterSetDescription,
+  SpecificAdapterStreamDescription
+} from "../../core-model/gen/streampipes-model";
+import {Observable, zip} from "rxjs";
 
 @Injectable()
 export class DataMarketplaceService {
   private host = '/streampipes-connect/';
 
   constructor(
-    private http: HttpClient,
-    private authStatusService: AuthStatusService,
-    private connectService: ConnectService,
-    private restApi: RestApi,
-    private tsonLdSerializer: TsonLdSerializerService
-  ) {}
-
-
-  getAdapterDescriptions(): Observable<AdapterDescription[]> {
-      return this.requestAdapterDescriptions('/master/description/adapters');
+      private http: HttpClient,
+      private authStatusService: AuthStatusService,
+      private connectService: ConnectService) {
   }
 
-  getAdapters(): Observable<AdapterDescription[]> {
+
+  getAdapterDescriptions(): Observable<AdapterDescriptionUnion[]> {
+    return this.requestAdapterDescriptions('/master/description/adapters').pipe(map(response => {
+      return (response as any[]).map(resp => AdapterDescription.fromDataUnion(resp)).filter(ad => this.connectService.isSpecificDescription(ad));
+    }));
+  }
+
+  getAdapters(): Observable<AdapterDescriptionUnion[]> {
     return this.requestAdapterDescriptions('/master/adapters');
   }
 
-  getAdapterTemplates(): Observable<AdapterDescription[]> {
+  getAdapterTemplates(): Observable<AdapterDescriptionUnion[]> {
     return this.requestAdapterDescriptions('/master/adapters/template/all');
   }
 
-  requestAdapterDescriptions(path: string) : Observable<AdapterDescription[]> {
+  requestAdapterDescriptions(path: string): Observable<AdapterDescriptionUnion[]> {
     return this.http
-      .get(
-        this.host +
-          'api/v1/' +
-          this.authStatusService.email +
-          path
-      )
-      .pipe(map(response => {
-        if(response['@graph'] === undefined) return [];
-        const res: AdapterDescriptionList = this.tsonLdSerializer.fromJsonLd(
-          response,
-          'sp:AdapterDescriptionList'
-        );
-        res.list.forEach(adapterDescription => {
-          adapterDescription.config.sort((a, b) => a.index - b.index);
-          adapterDescription.config.forEach(sp => {
-            this.sortStaticProperties(sp)
-          });
-        });
-        return res.list;
-      }));
+        .get(
+            this.host +
+            'api/v1/' +
+            this.authStatusService.email +
+            path
+        )
+        .pipe(map(response => {
+          let adapterDescriptionList: AdapterDescriptionList = AdapterDescriptionList.fromData(response as AdapterDescriptionList);
+          return adapterDescriptionList.list;
+          // const res: AdapterDescriptionList = this.tsonLdSerializer.fromJsonLd(
+          //   response,
+          //   'sp:AdapterDescriptionList'
+          // );
+          // res.list.forEach(adapterDescription => {
+          //   adapterDescription.config.sort((a, b) => a.index - b.index);
+          //   adapterDescription.config.forEach(sp => {
+          //     this.sortStaticProperties(sp)
+          //   });
+          // });
+          // return res.list;
+        }));
   }
 
   deleteAdapter(adapter: AdapterDescription): Observable<Object> {
@@ -90,7 +92,7 @@ export class DataMarketplaceService {
   }
 
   deleteAdapterTemplate(adapter: AdapterDescription): Observable<Object> {
-      return this.deleteRequest(adapter, '/master/adapters/template/')
+    return this.deleteRequest(adapter, '/master/adapters/template/')
   }
 
   getAdapterCategories(): Observable<Object> {
@@ -103,114 +105,101 @@ export class DataMarketplaceService {
 
   private deleteRequest(adapter: AdapterDescription, url: String) {
     return this.http.delete(
-      this.host +
+        this.host +
         'api/v1/' +
         this.authStatusService.email +
         url +
-        adapter.couchDbId
+        adapter.couchDBId
     );
   }
 
-  getProtocols(): Observable<ProtocolDescription[]> {
+  getProtocols(): Observable<AdapterDescriptionUnion[]> {
     return this.http
-      .get(
-        this.host +
-          'api/v1/' +
-          this.authStatusService.email +
-          '/master/description/protocols'
-      )
-      .pipe(map(response => {
-        const res = this.tsonLdSerializer.fromJsonLd(
-          response,
-          'sp:ProtocolDescriptionList'
-        );
-        res.list.forEach(protocolDescription => {
-          protocolDescription.config.sort((a, b) => a.index - b.index);
-          protocolDescription.config.forEach(sp => {
-            this.sortStaticProperties(sp)
-          });
-        });
-        return res.list;
-      }));
+        .get(
+            this.host +
+            'api/v1/' +
+            this.authStatusService.email +
+            '/master/description/protocols'
+        )
+        .pipe(map(response => {
+          let adapterDescriptions: AdapterDescriptionUnion[] = [];
+          let protocols: ProtocolDescription[] = (ProtocolDescriptionList.fromData(response as ProtocolDescriptionList)).list;
+
+          for (let protocol of protocols) {
+            let newAdapterDescription: AdapterDescriptionUnion;
+            if (protocol.sourceType === 'SET') {
+              newAdapterDescription = new GenericAdapterSetDescription();
+              newAdapterDescription["@class"] = "org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription";
+              newAdapterDescription.elementId = 'http://streampipes.org/genericadaptersetdescription'
+              newAdapterDescription.dataSet = new SpDataSet();
+              newAdapterDescription.dataSet.eventSchema = new EventSchema();
+            } else if (protocol.sourceType === 'STREAM') {
+              newAdapterDescription = new GenericAdapterStreamDescription();
+              newAdapterDescription["@class"] = "org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription";
+              newAdapterDescription.elementId = 'http://streampipes.org/genericadapterstreamdescription'
+              newAdapterDescription.dataStream = new SpDataStream();
+              newAdapterDescription.dataStream.eventSchema = new EventSchema();
+            }
+            newAdapterDescription.appId = protocol.appId;
+            newAdapterDescription.name = protocol.name;
+            newAdapterDescription.description = protocol.description;
+            newAdapterDescription.iconUrl = protocol.iconUrl;
+            newAdapterDescription.uri = newAdapterDescription.elementId;
+            newAdapterDescription.category = protocol.category;
+            newAdapterDescription.includedAssets = protocol.includedAssets;
+            newAdapterDescription.includesAssets = protocol.includesAssets;
+            newAdapterDescription.includedLocales = protocol.includedLocales;
+            newAdapterDescription.includesLocales = protocol.includesLocales;
+
+            if (
+                newAdapterDescription instanceof GenericAdapterSetDescription ||
+                newAdapterDescription instanceof GenericAdapterStreamDescription
+            ) {
+              newAdapterDescription.protocolDescription = protocol;
+            }
+            adapterDescriptions.push(newAdapterDescription);
+          }
+          return adapterDescriptions;
+        }));
   }
 
-  sortStaticProperties(sp: StaticProperty) {
-    if (sp instanceof AlternativesStaticProperty) {
-      sp.alternatives.sort((a, b) => a.index - b.index);
-      sp.alternatives.forEach(a => {
-        if (a.staticProperty instanceof GroupStaticProperty) {
-          a.staticProperty.staticProperties.sort((a, b) => a.index - b.index);
-        } else if (a.staticProperty instanceof CollectionStaticProperty) {
-          this.sortStaticProperties((<CollectionStaticProperty> a.staticProperty).staticPropertyTemplate)
-        }
-      })
-    } else if (sp instanceof GroupStaticProperty) {
-        sp.staticProperties.sort((a, b) => a.index - b.index);
-    } else if (sp instanceof CollectionStaticProperty) {
-        this.sortStaticProperties((<CollectionStaticProperty> sp).staticPropertyTemplate)
-    }
+  // sortStaticProperties(sp: StaticProperty) {
+  //   if (sp instanceof AlternativesStaticProperty) {
+  //     sp.alternatives.sort((a, b) => a.index - b.index);
+  //     sp.alternatives.forEach(a => {
+  //       if (a.staticProperty instanceof GroupStaticProperty) {
+  //         a.staticProperty.staticProperties.sort((a, b) => a.index - b.index);
+  //       } else if (a.staticProperty instanceof CollectionStaticProperty) {
+  //         this.sortStaticProperties((<CollectionStaticProperty> a.staticProperty).staticPropertyTemplate)
+  //       }
+  //     })
+  //   } else if (sp instanceof GroupStaticProperty) {
+  //       sp.staticProperties.sort((a, b) => a.index - b.index);
+  //   } else if (sp instanceof CollectionStaticProperty) {
+  //       this.sortStaticProperties((<CollectionStaticProperty> sp).staticPropertyTemplate)
+  //   }
+  // }
+
+  getGenericAndSpecificAdapterDescriptions(): Observable<[AdapterDescriptionUnion[], AdapterDescriptionUnion[]]> {
+  return zip(this.getAdapterDescriptions(), this.getProtocols());
   }
 
-  getGenericAndSpecifigAdapterDescriptions(): Observable<
-    Observable<AdapterDescription[]>
-  > {
-    return this.getAdapterDescriptions().pipe(map(adapterDescriptions => {
-      adapterDescriptions = adapterDescriptions.filter(
-        this.connectService.isSpecificDescription
-      );
+  cloneAdapterDescription(toClone: AdapterDescriptionUnion): AdapterDescriptionUnion {
+    var result: AdapterDescriptionUnion;
 
-      return this.getProtocols().pipe(map(protocols => {
-        for (let protocol of protocols) {
-          let newAdapterDescription: AdapterDescription;
-          if (protocol.id.includes('sp:protocol/set') || protocol.sourceType === 'SET') {
-            newAdapterDescription = new GenericAdapterSetDescription(
-              'http://streampipes.org/genericadaptersetdescription'
-            );
-          } else if (protocol.id.includes('sp:protocol/stream') || protocol.sourceType === 'STREAM') {
-            newAdapterDescription = new GenericAdapterStreamDescription(
-              'http://streampipes.org/genericadapterstreamdescription'
-            );
-          }
-          newAdapterDescription.appId = protocol.appId;
-          newAdapterDescription.label = protocol.label;
-          newAdapterDescription.description = protocol.description;
-          newAdapterDescription.iconUrl = protocol.iconUrl;
-          newAdapterDescription.uri = newAdapterDescription.id;
-          newAdapterDescription.category = protocol.category;
-          newAdapterDescription.includedAssets = protocol.includedAssets;
-          newAdapterDescription.includesAssets = protocol.includesAssets;
-          newAdapterDescription.includedLocales = protocol.includedLocales;
-          newAdapterDescription.includesLocales = protocol.includesLocales;
-
-          if (
-            newAdapterDescription instanceof GenericAdapterSetDescription ||
-            newAdapterDescription instanceof GenericAdapterStreamDescription
-          ) {
-            newAdapterDescription.protocol = protocol;
-          }
-          adapterDescriptions.push(newAdapterDescription);
-        }
-        return adapterDescriptions;
-      }));
-    }));
-  }
-
-  cloneAdapterDescription(toClone: AdapterDescription): AdapterDescription {
-    var result: AdapterDescription;
-
-      if (this.connectService.isGenericDescription(toClone)) {
-          if (this.connectService.isDataStreamDescription(toClone)) {
-              result = Object.assign(new GenericAdapterStreamDescription(toClone.id), toClone);
-          } else {
-              result = Object.assign(new GenericAdapterSetDescription(toClone.id), toClone);
-          }
-      } else {
-          if (this.connectService.isDataStreamDescription(toClone)) {
-              result = Object.assign(new SpecificAdapterStreamDescription(toClone.id), toClone);
-          } else {
-              result = Object.assign(new SpecificAdapterSetDescription(toClone.id), toClone);
-          }
+    if (this.connectService.isGenericDescription(toClone)) {
+      if (toClone instanceof GenericAdapterStreamDescription) {
+        result = GenericAdapterStreamDescription.fromData(toClone, new GenericAdapterStreamDescription());
+      } else if (toClone instanceof GenericAdapterSetDescription) {
+        result = GenericAdapterSetDescription.fromData(toClone, new GenericAdapterSetDescription());
       }
+    } else {
+      if (toClone instanceof SpecificAdapterStreamDescription) {
+        result = SpecificAdapterStreamDescription.fromData(toClone, new SpecificAdapterStreamDescription());
+      } else if (toClone instanceof SpecificAdapterSetDescription) {
+        result = SpecificAdapterSetDescription.fromData(toClone, new SpecificAdapterSetDescription());
+      }
+    }
 
     return result;
   }

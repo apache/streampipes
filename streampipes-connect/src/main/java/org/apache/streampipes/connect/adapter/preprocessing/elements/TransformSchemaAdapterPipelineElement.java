@@ -25,7 +25,7 @@ import org.apache.streampipes.connect.adapter.preprocessing.Util;
 import org.apache.streampipes.connect.adapter.preprocessing.transform.*;
 import org.apache.streampipes.connect.adapter.preprocessing.transform.schema.*;
 import org.apache.streampipes.model.connect.rules.*;
-import org.apache.streampipes.model.connect.rules.Schema.*;
+import org.apache.streampipes.model.connect.rules.schema.*;
 
 import java.util.ArrayList;
 import java.util.List;

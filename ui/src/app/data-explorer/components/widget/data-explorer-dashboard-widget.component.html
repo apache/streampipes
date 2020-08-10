@@ -18,8 +18,18 @@
 
 <div style="height:100%;">
     <div class="box">
-        <div class="h-100 p-0 row content"style="margin-left: 0px;margin-right: 0px;">
-            <!--        <div *ngIf="widget."></div>-->
+        <div class="assemblyOptions sp-blue-bg m-0 row header h-40" *ngIf="editMode">
+            <div fxFlex="100" layout="row" fxLayoutAlign="end center">
+                <button mat-icon-button matTooltip="Download data" class="icon" (click)="downloadDataAsFile()" color="white">
+                    <i class="material-icons">get_app</i>
+                </button>
+                <button mat-button mat-icon-button color="white" (click)="removeWidget()">
+                    <i class="material-icons">clear</i>
+                </button>
+            </div>
+
+        </div>
+        <div class="h-100 p-0 row content gridster-item-content" style="margin-left: 0px;margin-right: 0px;">
             <div *ngIf="widgetLoaded" class="h-100">
                 <div *ngIf="widget.widgetType === 'table'" class="h-100 p-0">
                     <sp-data-explorer-table-widget

@@ -53,3 +53,19 @@ mat-dialog-content {
 .mat-radio-button {
     padding: 10px;
 }
+
+.pipeline-avatar {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    color:white;
+}
+
+.list-item:hover {
+    background: #E0E0E0;
+    cursor: pointer;
+}
+
+.list-item {
+    border-bottom: 1px solid #BDBDBD;
+}

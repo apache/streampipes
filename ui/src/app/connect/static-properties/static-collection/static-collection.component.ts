@@ -16,11 +16,16 @@
  *
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {ConfigurationInfo} from '../../model/message/ConfigurationInfo';
-import {CollectionStaticProperty} from '../../model/CollectionStaticProperty';
-import {EventSchema} from '../../schema-editor/model/EventSchema';
 import {StaticPropertyUtilService} from '../static-property-util.service';
+import {
+    CollectionStaticProperty,
+    StaticProperty,
+    StaticPropertyUnion
+} from "../../../core-model/gen/streampipes-model";
+import {AbstractStaticPropertyRenderer} from "../base/abstract-static-property";
+import {AbstractValidatedStaticPropertyRenderer} from "../base/abstract-validated-static-property";
 
 
 @Component({
@@ -28,50 +33,37 @@ import {StaticPropertyUtilService} from '../static-property-util.service';
     templateUrl: './static-collection.component.html',
     styleUrls: ['./static-collection.component.css']
 })
-export class StaticCollectionComponent {
-
-    @Input() staticProperty: CollectionStaticProperty;
-    @Input() adapterId: string;
-    @Input() eventSchema: EventSchema;
-
-    @Output() inputEmitter: EventEmitter<Boolean> = new EventEmitter<Boolean>();
-    @Output() updateEmitter: EventEmitter<ConfigurationInfo> = new EventEmitter();
-
-
-
-    private hasInput: Boolean;
+export class StaticCollectionComponent
+    extends AbstractValidatedStaticPropertyRenderer<CollectionStaticProperty> implements OnInit {
 
     constructor(private staticPropertyUtil: StaticPropertyUtilService) {
-
+        super();
     }
 
-
-    valueChange(inputValue) {
-        if ((<CollectionStaticProperty> this.staticProperty).members !== undefined) {
-          let property = (<CollectionStaticProperty> this.staticProperty).members.find(member => member.isValid == false);
-          property === undefined ? this.hasInput = true : this.hasInput = false;
-        } else {
-          this.hasInput = false;
-        }
-
-        this.inputEmitter.emit(this.hasInput);
-        this.emitUpdate(this.hasInput);
+    ngOnInit() {
     }
+
 
     emitUpdate(valid) {
         this.updateEmitter.emit(new ConfigurationInfo(this.staticProperty.internalName, valid));
     }
 
     add() {
-        if (   (<CollectionStaticProperty> (this.staticProperty)).members === undefined) {
-            (<CollectionStaticProperty> (this.staticProperty)).members = [];
+        if (!this.staticProperty.members) {
+            this.staticProperty.members = [];
         }
-        let clone = this.staticPropertyUtil.clone((<CollectionStaticProperty> (this.staticProperty)).staticPropertyTemplate);
-        (<CollectionStaticProperty> (this.staticProperty)).members.push(clone)
+        let clone = this.staticPropertyUtil.clone(this.staticProperty.staticPropertyTemplate);
+        this.staticProperty.members.push(clone);
     }
 
     remove(i) {
-        (<CollectionStaticProperty> (this.staticProperty)).members.splice(i,1).slice(0);
+        this.staticProperty.members.splice(i,1).slice(0);
+    }
+
+    onStatusChange(status: any) {
+    }
+
+    onValueChange(value: any) {
     }
 
 }

@@ -22,7 +22,6 @@ import { RdfsClass } from '../../platform-services/tsonld/RdfsClass';
 @RdfsClass('sp:UnnamedStreamPipesEntity')
 export class UnnamedStreamPipesEntity {
 
-
     @RdfId
     public id: string;
 

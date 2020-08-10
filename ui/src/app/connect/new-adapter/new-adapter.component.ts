@@ -16,29 +16,38 @@
  *
  */
 
-///<reference path="../model/connect/AdapterDescription.ts"/>
-import { Component, EventEmitter, Input, OnInit, Output, PipeTransform, ViewChild } from '@angular/core';
+import {
+    AfterViewInit, ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    ViewChild
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatStepper } from '@angular/material/stepper';
+import {
+    AdapterDescription, AdapterDescriptionUnion,
+    EventProperty,
+    EventRateTransformationRuleDescription,
+    EventSchema,
+    FormatDescription,
+    GenericAdapterSetDescription,
+    GenericAdapterStreamDescription,
+    RemoveDuplicatesTransformationRuleDescription,
+    SpecificAdapterSetDescription,
+    SpecificAdapterStreamDescription,
+    TransformationRuleDescriptionUnion
+} from '../../core-model/gen/streampipes-model';
 import { ShepherdService } from '../../services/tour/shepherd.service';
 import { Logger } from '../../shared/logger/default-log.service';
 import { ConnectService } from '../connect.service';
 import { TimestampPipe } from '../filter/timestamp.pipe';
-import { AdapterDescription } from '../model/connect/AdapterDescription';
-import { GenericAdapterSetDescription } from '../model/connect/GenericAdapterSetDescription';
-import { GenericAdapterStreamDescription } from '../model/connect/GenericAdapterStreamDescription';
-import { FormatDescription } from '../model/connect/grounding/FormatDescription';
-import { EventRateTransformationRuleDescription } from '../model/connect/rules/EventRateTransformationRuleDescription';
-import { RemoveDuplicatesRuleDescription } from '../model/connect/rules/RemoveDuplicatesRuleDescription';
-import { TransformationRuleDescription } from '../model/connect/rules/TransformationRuleDescription';
-import { SpecificAdapterSetDescription } from '../model/connect/SpecificAdapterSetDescription';
-import { SpecificAdapterStreamDescription } from '../model/connect/SpecificAdapterStreamDescription';
 import { ConfigurationInfo } from '../model/message/ConfigurationInfo';
 import { RestService } from '../rest.service';
 import { EventSchemaComponent } from '../schema-editor/event-schema/event-schema.component';
-import { EventProperty } from '../schema-editor/model/EventProperty';
-import { EventSchema } from '../schema-editor/model/EventSchema';
 import { TransformationRuleService } from '../transformation-rule.service';
 import { AdapterStartedDialog } from './component/adapter-started-dialog.component';
 import { IconService } from './icon.service';
@@ -48,22 +57,7 @@ import { IconService } from './icon.service';
     templateUrl: './new-adapter.component.html',
     styleUrls: ['./new-adapter.component.css'],
 })
-export class NewAdapterComponent implements OnInit {
-
-
-
-    constructor(
-        private logger: Logger,
-        private restService: RestService,
-        private transformationRuleService: TransformationRuleService,
-        public dialog: MatDialog,
-        private ShepherdService: ShepherdService,
-        private connectService: ConnectService,
-        private _formBuilder: FormBuilder,
-        private iconService: IconService,
-        private timestampPipe: TimestampPipe,
-    ) { }
-
+export class NewAdapterComponent implements OnInit, AfterViewInit {
 
     selectedUploadFile: File;
     fileName;
@@ -73,7 +67,7 @@ export class NewAdapterComponent implements OnInit {
 
 
     @Input()
-    adapter: AdapterDescription;
+    adapter: AdapterDescriptionUnion;
 
     @Output()
     removeSelectionEmitter: EventEmitter<void> = new EventEmitter<void>();
@@ -122,6 +116,23 @@ export class NewAdapterComponent implements OnInit {
 
     isPreviewEnabled = false;
 
+    parentForm: FormGroup;
+    formatForm: FormGroup;
+    adapterSettingsFormValid = false;
+    viewInitialized = false;
+
+    constructor(
+        private logger: Logger,
+        private restService: RestService,
+        private transformationRuleService: TransformationRuleService,
+        public dialog: MatDialog,
+        private ShepherdService: ShepherdService,
+        private connectService: ConnectService,
+        private _formBuilder: FormBuilder,
+        private iconService: IconService,
+        private timestampPipe: TimestampPipe,
+        private changeDetectorRef: ChangeDetectorRef) { }
+
     handleFileInput(files: any) {
         this.selectedUploadFile = files[0];
         this.fileName = this.selectedUploadFile.name;
@@ -136,19 +147,25 @@ export class NewAdapterComponent implements OnInit {
 
     ngOnInit() {
 
+        this.parentForm = this._formBuilder.group({
+        });
+
+        this.formatForm = this._formBuilder.group({
+        });
+
         this.isGenericAdapter = this.connectService.isGenericDescription(this.adapter);
         this.isDataSetDescription = this.connectService.isDataSetDescription(this.adapter);
         this.isDataStreamDescription = this.connectService.isDataStreamDescription(this.adapter);
         this.formatConfigurationValid = false;
 
         if (this.adapter instanceof GenericAdapterSetDescription) {
-            if ((this.adapter as GenericAdapterSetDescription).format != undefined) {
+            if ((this.adapter as GenericAdapterSetDescription).formatDescription != undefined) {
                 this.formatConfigurationValid = true;
             }
         }
 
         if (this.adapter instanceof GenericAdapterStreamDescription) {
-            if ((this.adapter as GenericAdapterStreamDescription).format != undefined) {
+            if ((this.adapter as GenericAdapterStreamDescription).formatDescription != undefined) {
                 this.formatConfigurationValid = true;
             }
         }
@@ -177,9 +194,21 @@ export class NewAdapterComponent implements OnInit {
             this.fromTemplate = true;
             this.isEditable = false;
             this.oldEventSchema = this.eventSchema;
-
-
         }
+
+        this.parentForm.statusChanges.subscribe((status) => {
+            this.adapterSettingsFormValid = this.viewInitialized && this.parentForm.valid;
+        });
+
+        this.formatForm.statusChanges.subscribe((status) => {
+          this.validateFormat(this.viewInitialized && this.formatForm.valid);
+        });
+    }
+
+    ngAfterViewInit() {
+        this.viewInitialized = true;
+        this.adapterSettingsFormValid = this.viewInitialized && this.parentForm.valid;
+        this.changeDetectorRef.detectChanges();
     }
 
     public showPreview(isPreviewEnabled) {
@@ -188,10 +217,17 @@ export class NewAdapterComponent implements OnInit {
 
     public triggerDialog(storeAsTemplate: boolean) {
         if (this.removeDuplicates) {
-            this.adapter.rules.push(new RemoveDuplicatesRuleDescription(this.removeDuplicatesTime));
+            const removeDuplicates: RemoveDuplicatesTransformationRuleDescription = new RemoveDuplicatesTransformationRuleDescription();
+            removeDuplicates['@class'] = 'org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription';
+            removeDuplicates.filterTimeWindow = (this.removeDuplicatesTime) as any;
+            this.adapter.rules.push(removeDuplicates);
         }
         if (this.eventRateReduction) {
-            this.adapter.rules.push(new EventRateTransformationRuleDescription(this.eventRateTime, this.eventRateMode));
+            const eventRate: EventRateTransformationRuleDescription = new EventRateTransformationRuleDescription();
+            eventRate['@class'] = 'org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription';
+            eventRate.aggregationTimeWindow = this.eventRateMode as any;
+            eventRate.aggregationType = this.eventRateMode;
+            this.adapter.rules.push(eventRate);
         }
 
         const dialogRef = this.dialog.open(AdapterStartedDialog, {
@@ -283,21 +319,22 @@ export class NewAdapterComponent implements OnInit {
         let eventSchema: EventSchema;
 
         if (adapter instanceof GenericAdapterSetDescription) {
-            eventSchema = (adapter as GenericAdapterSetDescription).dataSet.eventSchema;
+            eventSchema = (adapter as GenericAdapterSetDescription).dataSet.eventSchema || new EventSchema();
         } else if (adapter instanceof SpecificAdapterSetDescription) {
-            eventSchema = (adapter as SpecificAdapterSetDescription).dataSet.eventSchema;
+            eventSchema = (adapter as SpecificAdapterSetDescription).dataSet.eventSchema || new EventSchema();
         } else if (adapter instanceof GenericAdapterStreamDescription) {
-            eventSchema = (adapter as GenericAdapterStreamDescription).dataStream.eventSchema;
+            eventSchema = (adapter as GenericAdapterStreamDescription).dataStream.eventSchema || new EventSchema();
         } else if (adapter instanceof SpecificAdapterStreamDescription) {
-            eventSchema = (adapter as SpecificAdapterStreamDescription).dataStream.eventSchema;
+            eventSchema = (adapter as SpecificAdapterStreamDescription).dataStream.eventSchema || new EventSchema();
         } else {
-            return new EventSchema();
+            eventSchema = new EventSchema();
         }
 
         if (eventSchema && eventSchema.eventProperties && eventSchema.eventProperties.length > 0) {
             return eventSchema;
         } else {
-            return new EventSchema();
+            eventSchema.eventProperties = [];
+            return eventSchema;
         }
     }
 
@@ -319,7 +356,8 @@ export class NewAdapterComponent implements OnInit {
         this.transformationRuleService.setOldEventSchema(this.oldEventSchema);
 
         this.transformationRuleService.setNewEventSchema(this.eventSchema);
-        const transformationRules: TransformationRuleDescription[] = this.transformationRuleService.getTransformationRuleDescriptions();
+        const transformationRules: TransformationRuleDescriptionUnion[] =
+          this.transformationRuleService.getTransformationRuleDescriptions();
         this.adapter.rules = transformationRules;
     }
 
@@ -328,7 +366,7 @@ export class NewAdapterComponent implements OnInit {
             this.adapter instanceof GenericAdapterSetDescription ||
             this.adapter instanceof GenericAdapterStreamDescription
         ) {
-            this.adapter.format = selectedFormat;
+            this.adapter.formatDescription = selectedFormat;
             if (selectedFormat.config.length === 0) {
                 this.validateFormat(true);
             }

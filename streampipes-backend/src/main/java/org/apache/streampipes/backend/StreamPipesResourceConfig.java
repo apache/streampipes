@@ -18,41 +18,7 @@
 
 package org.apache.streampipes.backend;
 
-import org.apache.streampipes.rest.impl.ApplicationLink;
-import org.apache.streampipes.rest.impl.AssetDashboard;
-import org.apache.streampipes.rest.impl.Authentication;
-import org.apache.streampipes.rest.impl.AutoComplete;
-import org.apache.streampipes.rest.impl.ConsulConfig;
-import org.apache.streampipes.rest.impl.ContainerProvidedOptions;
-import org.apache.streampipes.rest.impl.Couchdb;
-import org.apache.streampipes.rest.impl.DataStream;
-import org.apache.streampipes.rest.impl.Deployment;
-import org.apache.streampipes.rest.impl.InternalPipelineTemplates;
-import org.apache.streampipes.rest.impl.MeasurementUnitResource;
-import org.apache.streampipes.rest.impl.Notification;
-import org.apache.streampipes.rest.impl.OntologyContext;
-import org.apache.streampipes.rest.impl.OntologyKnowledge;
-import org.apache.streampipes.rest.impl.OntologyMeasurementUnit;
-import org.apache.streampipes.rest.impl.OntologyPipelineElement;
-import org.apache.streampipes.rest.impl.PipelineCache;
-import org.apache.streampipes.rest.impl.PipelineCategory;
-import org.apache.streampipes.rest.impl.PipelineElementAsset;
-import org.apache.streampipes.rest.impl.PipelineElementCategory;
-import org.apache.streampipes.rest.impl.PipelineElementFile;
-import org.apache.streampipes.rest.impl.PipelineElementImport;
-import org.apache.streampipes.rest.impl.PipelineElementRuntimeInfo;
-import org.apache.streampipes.rest.impl.PipelineTemplate;
-import org.apache.streampipes.rest.impl.PipelineWithUserResource;
-import org.apache.streampipes.rest.impl.RdfEndpoint;
-import org.apache.streampipes.rest.impl.SemanticEventConsumer;
-import org.apache.streampipes.rest.impl.SemanticEventProcessingAgent;
-import org.apache.streampipes.rest.impl.SemanticEventProducer;
-import org.apache.streampipes.rest.impl.Setup;
-import org.apache.streampipes.rest.impl.StreamPipesLogs;
-import org.apache.streampipes.rest.impl.User;
-import org.apache.streampipes.rest.impl.Version;
-import org.apache.streampipes.rest.impl.VirtualSensor;
-import org.apache.streampipes.rest.impl.Visualization;
+import org.apache.streampipes.rest.impl.*;
 import org.apache.streampipes.rest.impl.dashboard.Dashboard;
 import org.apache.streampipes.rest.impl.dashboard.DashboardWidget;
 import org.apache.streampipes.rest.impl.dashboard.VisualizablePipeline;
@@ -63,10 +29,7 @@ import org.apache.streampipes.rest.impl.datalake.DataLakeWidgetResource;
 import org.apache.streampipes.rest.impl.nouser.FileServingResource;
 import org.apache.streampipes.rest.impl.nouser.PipelineElementImportNoUser;
 import org.apache.streampipes.rest.impl.nouser.PipelineNoUserResource;
-import org.apache.streampipes.rest.shared.serializer.GsonClientModelProvider;
-import org.apache.streampipes.rest.shared.serializer.GsonWithIdProvider;
-import org.apache.streampipes.rest.shared.serializer.GsonWithoutIdProvider;
-import org.apache.streampipes.rest.shared.serializer.JsonLdProvider;
+import org.apache.streampipes.rest.shared.serializer.*;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.context.annotation.Configuration;
@@ -137,6 +100,7 @@ public class StreamPipesResourceConfig extends ResourceConfig {
     register(GsonWithoutIdProvider.class);
     register(GsonClientModelProvider.class);
     register(JsonLdProvider.class);
+    register(JacksonSerializationProvider.class);
     register(MultiPartFeature.class);
   }
 

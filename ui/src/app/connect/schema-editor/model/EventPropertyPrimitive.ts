@@ -84,14 +84,7 @@ export class EventPropertyPrimitive extends EventProperty {
         this.runtimeType = runtimeType;
     }
 
-    isTimestampProperty() {
-        if (this.domainProperty === "http://schema.org/DateTime") {
-            this.runtimeType = "http://www.w3.org/2001/XMLSchema#float";
-            return true;
-        } else {
-            return false;
-        }
-    }
+
 
 
 

@@ -18,18 +18,17 @@
 package org.apache.streampipes.connect.container.master.rest;
 
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
-import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.streampipes.connect.container.master.management.Utils;
 import org.apache.streampipes.connect.container.master.management.DescriptionManagement;
+import org.apache.streampipes.connect.container.master.management.Utils;
 import org.apache.streampipes.connect.rest.AbstractContainerResource;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterDescriptionList;
 import org.apache.streampipes.model.connect.grounding.FormatDescriptionList;
+import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescriptionList;
-import org.apache.streampipes.rest.shared.annotation.JsonLdSerialized;
-import org.apache.streampipes.rest.shared.util.SpMediaType;
+import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -55,9 +54,9 @@ public class DescriptionResource extends AbstractContainerResource {
     }
 
     @GET
-    @JsonLdSerialized
+    @JacksonSerialized
     @Path("/formats")
-    @Produces(SpMediaType.JSONLD)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response getFormats() {
         FormatDescriptionList result = descriptionManagement.getFormats();
 
@@ -65,9 +64,9 @@ public class DescriptionResource extends AbstractContainerResource {
     }
 
     @GET
-    @JsonLdSerialized
+    @JacksonSerialized
     @Path("/protocols")
-    @Produces(SpMediaType.JSONLD)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response getProtocols() {
         ProtocolDescriptionList result = descriptionManagement.getProtocols();
 
@@ -75,9 +74,9 @@ public class DescriptionResource extends AbstractContainerResource {
     }
 
     @GET
-    @JsonLdSerialized
+    @JacksonSerialized
     @Path("/adapters")
-    @Produces(SpMediaType.JSONLD)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response getAdapters() {
         AdapterDescriptionList result = descriptionManagement.getAdapters();
 
@@ -158,7 +157,7 @@ public class DescriptionResource extends AbstractContainerResource {
                 return ok(result);
             }
         } catch (AdapterException e) {
-            logger.error("Not found adapter with id " + id, e);
+            logger.error("Not found adapter with id " + id);
             return fail();
         }
     }

@@ -16,13 +16,11 @@
  *
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {StaticPropertyUtilService} from '../static-property-util.service';
-import {MappingPropertyNary} from "../../model/MappingPropertyNary";
 import {StaticMappingComponent} from "../static-mapping/static-mapping";
 import {PropertySelectorService} from "../../../services/property-selector.service";
-import {EventProperty} from "../../schema-editor/model/EventProperty";
-import {EventSchema} from "../../schema-editor/model/EventSchema";
+import {EventProperty, MappingPropertyNary} from "../../../core-model/gen/streampipes-model";
 
 
 @Component({
@@ -30,16 +28,11 @@ import {EventSchema} from "../../schema-editor/model/EventSchema";
     templateUrl: './static-mapping-nary.component.html',
     styleUrls: ['./static-mapping-nary.component.scss']
 })
-export class StaticMappingNaryComponent extends StaticMappingComponent implements OnInit {
+export class StaticMappingNaryComponent extends StaticMappingComponent<MappingPropertyNary> implements OnInit {
 
-
-    @Input() staticProperty: MappingPropertyNary;
-    @Input() eventSchema: EventSchema;
     @Output() inputEmitter: EventEmitter<Boolean> = new EventEmitter<Boolean>();
 
-    private inputValue: String;
-    private hasInput: Boolean;
-    availableProperties: Array<EventProperty>;
+    availableProperties: Array<any>;
 
     constructor(staticPropertyUtil: StaticPropertyUtilService,
                 PropertySelectorService: PropertySelectorService){
@@ -61,7 +54,7 @@ export class StaticMappingNaryComponent extends StaticMappingComponent implement
         this.inputEmitter.emit(true);
     }
 
-    selectOption(property: EventProperty, $event) {
+    selectOption(property: any, $event) {
         if (property["checked"]) {
             this.addProperty(property);
         } else {
@@ -70,7 +63,7 @@ export class StaticMappingNaryComponent extends StaticMappingComponent implement
         }
     }
 
-    addProperty(property: EventProperty) {
+    addProperty(property: any) {
         if (this.staticProperty.selectedProperties.indexOf(property.propertySelector) < 0) {
             this.staticProperty.selectedProperties.push(this.makeSelector(property));
         }
@@ -78,26 +71,6 @@ export class StaticMappingNaryComponent extends StaticMappingComponent implement
 
     makeSelector(property: EventProperty) {
         return this.firstStreamPropertySelector + property.runtimeName;
-    }
-
-    valueChange(inputValue) {
-        this.inputValue = inputValue;
-        if (inputValue == "" || !inputValue) {
-            this.hasInput = false;
-        }
-        else {
-            this.hasInput = true;
-        }
-
-        this.inputEmitter.emit(this.hasInput);
-    }
-
-    extractPossibleSelections(): Array<EventProperty> {
-        return this.eventSchema.eventProperties.filter(ep => this.isInSelection(ep));
-    }
-
-    isInSelection(ep: EventProperty): boolean {
-        return this.staticProperty.mapsFromOptions.some(maps => maps === this.firstStreamPropertySelector + ep.runtimeName);
     }
 
     selectAll() {
@@ -113,6 +86,12 @@ export class StaticMappingNaryComponent extends StaticMappingComponent implement
         this.availableProperties.forEach(ep => {
             ep["checked"] = false;
         });
+    }
+
+    onStatusChange(status: any) {
+    }
+
+    onValueChange(value: any) {
     }
 
 }

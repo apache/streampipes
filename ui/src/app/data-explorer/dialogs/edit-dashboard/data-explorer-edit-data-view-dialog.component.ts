@@ -16,10 +16,10 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
-import { IDataViewDashboard } from '../../models/dataview-dashboard.model';
-import { DataViewDataExplorerService } from '../../services/data-view-data-explorer.service';
+import {Component, OnInit} from '@angular/core';
+import {MatDialogRef} from '@angular/material/dialog';
+import {IDataViewDashboard} from '../../models/dataview-dashboard.model';
+import {DataViewDataExplorerService} from '../../services/data-view-data-explorer.service';
 
 @Component({
     selector: 'sp-data-explorer-edit-data-view-dialog-component',

@@ -47,7 +47,7 @@ export class TableWidgetComponent extends BaseStreamPipesWidget implements OnIni
         super.ngOnInit();
 
         this.widgetDataConfig.schema.eventProperties.forEach((key, index) => {
-            this.semanticTypes[key.runtimeName] = key.domainProperty
+            this.semanticTypes[key.runtimeName] = key.domainProperties[0]
         });
     }
 

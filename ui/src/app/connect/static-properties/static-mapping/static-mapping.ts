@@ -18,15 +18,23 @@
 
 import {StaticPropertyUtilService} from "../static-property-util.service";
 import {PropertySelectorService} from "../../../services/property-selector.service";
+import {
+    EventProperty, EventPropertyList, EventPropertyNested, EventPropertyPrimitive,
+    EventPropertyUnion,
+    MappingProperty
+} from "../../../core-model/gen/streampipes-model";
+import {AbstractValidatedStaticPropertyRenderer} from "../base/abstract-validated-static-property";
 
 
-export abstract class StaticMappingComponent {
+export abstract class StaticMappingComponent<T extends MappingProperty>
+    extends AbstractValidatedStaticPropertyRenderer<T> {
 
     protected firstStreamPropertySelector: string = "s0::";
+    protected secondStreamPropertySelector: string = "s1::";
 
     constructor(private staticPropertyUtil: StaticPropertyUtilService,
                 private PropertySelectorService: PropertySelectorService){
-
+        super();
     }
 
     getName(eventProperty) {
@@ -35,4 +43,30 @@ export abstract class StaticMappingComponent {
             : eventProperty.runTimeName;
     }
 
+    extractPossibleSelections(): Array<EventProperty> {
+        let properties: Array<EventProperty> = [];
+        this.eventSchemas.forEach(schema => {
+            properties = properties.concat(schema
+                .eventProperties
+                .filter(ep => this.isInSelection(ep))
+                .map(ep => this.cloneEp(ep)));
+        });
+        return properties;
+    }
+
+    isInSelection(ep: EventProperty): boolean {
+        return this.staticProperty.mapsFromOptions
+            .some(maps => (maps === this.firstStreamPropertySelector + ep.runtimeName)
+                || maps === this.secondStreamPropertySelector + ep.runtimeName);
+    }
+
+    cloneEp(ep: EventPropertyUnion) {
+        if (ep instanceof EventPropertyPrimitive) {
+            return EventPropertyPrimitive.fromData(ep, new EventPropertyPrimitive());
+        } else if (ep instanceof EventPropertyList) {
+            return EventPropertyList.fromData(ep, new EventPropertyList());
+        } else {
+            return EventPropertyNested.fromData(ep, new EventPropertyNested());
+        }
+    }
 }

@@ -20,7 +20,7 @@ package org.apache.streampipes.manager.monitoring.runtime;
 
 import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.model.SpDataStream;
-import org.apache.streampipes.model.client.pipeline.Pipeline;
+import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSourceDescription;
 import org.apache.streampipes.model.schema.EventProperty;

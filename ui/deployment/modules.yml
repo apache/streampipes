@@ -14,19 +14,20 @@
 # limitations under the License.
 
 spEditor:
-  ng5: False
-  ng1_templateUrl: '../editor/editor.html'
-  ng5_moduleName: ''
-  ng5_component: ''
-  ng5_componentPath: ''
+  ng5: True
+  ng1_templateUrl: ''
+  ng1_controller: ''
+  ng5_moduleName: 'EditorModule'
+  ng5_component: 'EditorComponent'
+  ng5_componentPath: '../editor/editor.component'
   path: './editor/editor.module'
   link: 'streampipes.editor'
   url: '/editor/:pipeline'
-  title: 'Pipeline Editor'
-  description: 'The editor can be used to model new pipelines'
+  title: 'Editor'
+  description: 'editor'
   icon: 'action:ic_dashboard_24px'
   homeImage: '/assets/img/home/editor.png'
-  admin: False
+  admin: false
 spConnect:
   ng5: True
   ng1_templateUrl: ''
@@ -42,11 +43,11 @@ spConnect:
   homeImage: '/assets/img/home/editor.png'
   admin: False
 spPipelines:
-  ng5: False
-  ng1_templateUrl: '../pipelines/pipelines.html'
-  ng5_moduleName: ''
-  ng5_component: ''
-  ng5_componentPath: ''
+  ng5: True
+  ng1_templateUrl: ''
+  ng5_moduleName: 'PipelinesModule'
+  ng5_component: 'PipelinesComponent'
+  ng5_componentPath: '../pipelines/pipelines.component'
   path: './pipelines/pipelines.module'
   link: 'streampipes.pipelines'
   url: '/pipelines/:pipeline'
@@ -69,11 +70,11 @@ spSensors:
   homeImage: '/assets/img/home/sensors.png'
   admin: False
 spAdd:
-  ng5: False
-  ng1_templateUrl: '../add/add.html'
-  ng5_moduleName: ''
-  ng5_component: ''
-  ng5_componentPath: ''
+  ng5: True
+  ng1_templateUrl: ''
+  ng5_moduleName: 'AddModule'
+  ng5_component: 'AddComponent'
+  ng5_componentPath: '../add/add.component'
   path: './add/add.module'
   link: 'streampipes.add'
   url: '/add'
@@ -81,20 +82,6 @@ spAdd:
   description: 'The marketplace can be used to extend StreamPipes with new algorithms and data sinks'
   icon: 'file:ic_cloud_download_24px'
   homeImage: '/assets/img/home/add.png'
-  admin: True
-spMyElements:
-  ng5: False
-  ng1_templateUrl: '../myelements/myelements.html'
-  ng5_moduleName: ''
-  ng5_component: ''
-  ng5_componentPath: ''
-  path: './myelements/my-elements.module'
-  link: 'streampipes.myelements'
-  url: '/myelements'
-  title: 'My Elements'
-  description: 'My Elements'
-  icon: 'image:ic_portrait_24px'
-  homeImage: '/assets/img/home/myelements.png'
   admin: True
 spConfiguration:
   ng5: True

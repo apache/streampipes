@@ -156,38 +156,6 @@ export class RestApi {
 
     };
 
-    add(elementUri, ispublic) {
-        return this.$http({
-            method: 'POST',
-            url: this.urlBase() + "/element",
-            data: $.param({uri: elementUri, publicElement: ispublic}),
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        })
-    }
-
-    addBatch(elementUris, ispublic) {
-        return this.$http({
-            method: 'POST',
-            url: this.urlBase() + "/element/batch",
-            data: $.param({uri: elementUris, publicElement: ispublic}),
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        })
-    }
-
-    update(elementUri) {
-        return this.$http({
-            method: 'PUT',
-            url: this.urlBase() + "/element/" + encodeURIComponent(elementUri)
-        })
-    }
-
-    del(elementUri) {
-        return this.$http({
-            method: 'DELETE',
-            url: this.urlBase() + "/element/" + encodeURIComponent(elementUri)
-        })
-    }
-
     jsonld(elementUri) {
         return this.$http.get(this.urlBase() +"/element/" + encodeURIComponent(elementUri) +"/jsonld");
     }
@@ -268,15 +236,7 @@ export class RestApi {
         return this.$http.post(this.urlBase() +"/pe/options", resolvableOptionsParameterRequest);
     }
 
-    recommendPipelineElement(pipeline) {
-        return this.$http.post(this.urlBase() +"/pipelines/recommend", pipeline);
-    }
 
-    updatePartialPipeline(pipeline) {
-        return this.$http.post(this.urlBase() +"/pipelines/update", pipeline, {
-            ignoreLoadingBar: true
-        });
-    }
 
     updateDataSet(dataSet) {
         return this.$http.post(this.urlBase() +"/pipelines/update/dataset", dataSet);
@@ -502,21 +462,6 @@ export class RestApi {
         return this.$http.get(this.urlBase() +"/marketplace/pods");
     }
 
-    getRdfEndpoints() {
-        return this.$http.get(this.urlBase() +"/rdfendpoints");
-    }
-
-    getRdfEndpointItems() {
-        return this.$http.get(this.urlBase() +"/rdfendpoints/items");
-    }
-
-    addRdfEndpoint(rdfEndpoint) {
-        return this.$http.post(this.urlBase() +"/rdfendpoints", rdfEndpoint);
-    }
-
-    removeRdfEndpoint(rdfEndpointId) {
-        return this.$http.delete(this.urlBase() +"/rdfendpoints/" +rdfEndpointId);
-    }
 
     getAuthc() {
         return this.$http.get(this.getServerUrl() + "/admin/authc");

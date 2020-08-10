@@ -16,10 +16,10 @@
  *
  */
 
-import { DashboardWidgetSettings } from '../../../../core-model/dashboard/DashboardWidgetSettings';
-import { WidgetConfigBuilder } from '../../../registry/widget-config-builder';
-import { SchemaRequirementsBuilder } from '../../../sdk/schema-requirements-builder';
 import { WidgetConfig } from '../base/base-config';
+import {DashboardWidgetSettings} from "../../../../core-model/gen/streampipes-model";
+import {WidgetConfigBuilder} from "../../../../dashboard/registry/widget-config-builder";
+import {SchemaRequirementsBuilder} from "../../../../dashboard/sdk/schema-requirements-builder";
 
 export class LineChartConfig extends WidgetConfig {
 

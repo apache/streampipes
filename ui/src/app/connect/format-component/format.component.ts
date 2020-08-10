@@ -17,8 +17,8 @@
  */
 
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {FormatDescription} from '../model/connect/grounding/FormatDescription';
 import {ShepherdService} from '../../services/tour/shepherd.service';
+import {FormatDescription} from "../../core-model/gen/streampipes-model";
 
 @Component({
   selector: 'app-format',
@@ -47,12 +47,12 @@ export class FormatComponent {
     this.selectedFormat = this.format;
     this.selectedFormatEmitter.emit(this.selectedFormat);
 
-    this.ShepherdService.trigger("select-" + this.selectedFormat.label.toLocaleLowerCase());
+    this.ShepherdService.trigger("select-" + this.selectedFormat.name.toLocaleLowerCase());
 
   }
 
   validateText(textValid) {
-    if (textValid && this.format.edit) {
+    if (textValid && (this.format as any).edit) {
       this.validateEmitter.emit(true);
       this.selectedFormat = this.format;
       this.selectedFormatEmitter.emit(this.selectedFormat);
@@ -65,7 +65,7 @@ export class FormatComponent {
     if (!this.selectedFormat || !this.format) {
       return false;
     } else {
-        return this.selectedFormat.label === this.format.label;
+        return this.selectedFormat.name === this.format.name;
     }
   }
   ngOnInit() {}

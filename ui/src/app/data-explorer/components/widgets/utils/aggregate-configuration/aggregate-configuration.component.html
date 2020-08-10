@@ -18,10 +18,10 @@
 
 
 <div fxLayout="column" fxLayoutAlign="stretch">
-    <div fxFlex="100" layout="row" fxLayoutAlign="end center" style="margin-left: 0px;margin-right: 0px;">
-        <div   class="option" style="margin-left: 5px">
+    <div fxFlex="100" layout="row" fxLayoutAlign="start center" style="margin-left: 0px;margin-right: 0px;">
+        <div class="option" style="margin-left: 5px">
 
-            <mat-form-field style="width: 100px">
+            <mat-form-field class="form-field-margin form-field-size-smaller">
                 <mat-select [(ngModel)]="aggregationTimeUnit" (ngModelChange)="onModelChange($event,'aggregationTimeUnit')">
                     <mat-option style="background-color: #FFFFFF" value="ms">Milliseconds</mat-option>
                     <mat-option style="background-color: #FFFFFF" value="s">Second</mat-option>
@@ -34,7 +34,7 @@
                 </mat-select>
                 <mat-label>Unit</mat-label>
             </mat-form-field>
-            <mat-form-field style="width: 80px; margin-left: 5px">
+            <mat-form-field class="form-field-margin form-field-size-smaller">
                 <input matInput type="number" [(ngModel)]="aggregationValue" (ngModelChange)="onModelChange($event,'aggregationValue')">
                 <mat-label>Value</mat-label>
             </mat-form-field>

@@ -92,6 +92,10 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
     return getStaticPropertyByName(internalName,CodeInputStaticProperty.class).getValue();
   }
 
+  public String selectedColor(String internalName) {
+    return getStaticPropertyByName(internalName, ColorPickerStaticProperty.class).getSelectedColor();
+  }
+
   public String fileContentsAsString(String internalName) throws IOException {
     String filename =
             getStaticPropertyByName(internalName, FileStaticProperty.class).getLocationPath();

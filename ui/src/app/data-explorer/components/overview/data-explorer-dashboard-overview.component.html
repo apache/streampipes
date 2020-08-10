@@ -31,69 +31,70 @@
             </div>
         </div>
         <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start" class="sp-blue-border">
+            <div fxFlex="100" fxLayout="column" class="w-100 p-2">
+                <table mat-table [dataSource]="dataSource" multiTemplateDataRows>
 
-            <table fxFlex="95" mat-table [dataSource]="dataSource" multiTemplateDataRows>
+                    <ng-container matColumnDef="name">
+                        <th fxFlex="60" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Dashboard</th>
+                        <td fxFlex="60" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
+                            {{element.name}}<br/>
+                            {{element.description}}
+                        </td>
+                    </ng-container>
 
-                <ng-container matColumnDef="name">
-                    <th fxFlex="60" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Dashboard</th>
-                    <td fxFlex="60" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
-                        {{element.name}}<br/>
-                        {{element.description}}
-                    </td>
-                </ng-container>
+                    <ng-container matColumnDef="open">
+                        <th fxFlex="10" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Show</th>
+                        <td fxFlex="10" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
+                            <div fxLayout="row">
+                                <button mat-button mat-icon-button color="primary"
+                                        (click)="showDashboard(element)">
+                                    <i class="material-icons">visibility</i>
+                                </button>
+                            </div>
+                        </td>
+                    </ng-container>
 
-                <ng-container matColumnDef="open">
-                    <th fxFlex="10" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Show</th>
-                    <td fxFlex="10" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
-                        <div fxLayout="row">
-                            <button mat-button mat-icon-button color="primary"
-                                    (click)="showDashboard(element)">
-                                <i class="material-icons">visibility</i>
-                            </button>
-                        </div>
-                    </td>
-                </ng-container>
+                    <ng-container matColumnDef="openWindow">
+                        <th fxFlex="10" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Window</th>
+                        <td fxFlex="10" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
+                            <div fxLayout="row">
+                                <button mat-button mat-icon-button color="primary"
+                                        (click)="openExternalDashboard(element)">
+                                    <i class="material-icons">open_in_new</i>
+                                </button>
+                            </div>
+                        </td>
+                    </ng-container>
 
-                <ng-container matColumnDef="openWindow">
-                    <th fxFlex="10" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Window</th>
-                    <td fxFlex="10" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
-                        <div fxLayout="row">
-                            <button mat-button mat-icon-button color="primary"
-                                    (click)="openExternalDashboard(element)">
-                                <i class="material-icons">open_in_new</i>
-                            </button>
-                        </div>
-                    </td>
-                </ng-container>
+                    <ng-container matColumnDef="edit">
+                        <th fxFlex="10" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Edit</th>
+                        <td fxFlex="10" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
+                            <div fxLayout="row">
+                                <button mat-button mat-icon-button color="primary"
+                                        (click)="openEditDashboardDialog(element)">
+                                    <i class="material-icons">edit</i>
+                                </button>
+                            </div>
+                        </td>
+                    </ng-container>
 
-                <ng-container matColumnDef="edit">
-                    <th fxFlex="10" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Edit</th>
-                    <td fxFlex="10" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
-                        <div fxLayout="row">
-                            <button mat-button mat-icon-button color="primary"
-                                    (click)="openEditDashboardDialog(element)">
-                                <i class="material-icons">edit</i>
-                            </button>
-                        </div>
-                    </td>
-                </ng-container>
+                    <ng-container matColumnDef="delete">
+                        <th fxFlex="10" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Delete</th>
+                        <td fxFlex="10" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
+                            <div fxLayout="row">
+                                <button mat-button mat-icon-button color="primary"
+                                        (click)="openDeleteDashboardDialog(element)">
+                                    <i class="material-icons">delete</i>
+                                </button>
+                            </div>
+                        </td>
+                    </ng-container>
 
-                <ng-container matColumnDef="delete">
-                    <th fxFlex="10" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Delete</th>
-                    <td fxFlex="10" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
-                        <div fxLayout="row">
-                            <button mat-button mat-icon-button color="primary"
-                                    (click)="openDeleteDashboardDialog(element)">
-                                <i class="material-icons">delete</i>
-                            </button>
-                        </div>
-                    </td>
-                </ng-container>
-
-                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr mat-row *matRowDef="let element; columns: displayedColumns;">
-                </tr>
-            </table>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
 </div>

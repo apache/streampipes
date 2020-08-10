@@ -16,16 +16,17 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable, Subscription } from 'rxjs';
 import { forkJoin } from 'rxjs/internal/observable/forkJoin';
-import { DataExplorerWidgetModel } from '../../../core-model/datalake/DataExplorerWidgetModel';
 import { DateRange } from '../../../core-model/datalake/DateRange';
 import { DataExplorerAddVisualizationDialogComponent } from '../../dialogs/add-widget/data-explorer-add-visualization-dialog.component';
 import { IDataViewDashboard, IDataViewDashboardItem } from '../../models/dataview-dashboard.model';
 import { DataViewDataExplorerService } from '../../services/data-view-data-explorer.service';
 import { RefreshDashboardService } from '../../services/refresh-dashboard.service';
+import {DataExplorerWidgetModel} from "../../../core-model/gen/streampipes-model";
+import {DataExplorerDashboardGridComponent} from "../grid/data-explorer-dashboard-grid.component";
 
 @Component({
   selector: 'sp-data-explorer-dashboard-panel',
@@ -48,6 +49,8 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
 
   @Output('editModeChange')
   editModeChange: EventEmitter<boolean> = new EventEmitter();
+
+  @ViewChild('dashboardGrid') dashboardGrid: DataExplorerDashboardGridComponent;
 
   public items: IDataViewDashboardItem[];
 
@@ -84,33 +87,30 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
     dashboardItem.widgetId = widget._id;
     dashboardItem.id = widget._id;
     dashboardItem.widgetType = widget.widgetType;
-    dashboardItem.cols = 2;
-    dashboardItem.rows = 2;
+    dashboardItem.cols = 3;
+    dashboardItem.rows = 4;
     dashboardItem.x = 0;
     dashboardItem.y = 0;
     this.dashboard.widgets.push(dashboardItem);
   }
 
-  updateDashboardAndCloseEditMode() {
+  updateDashboard(closeEditMode?: boolean) {
     this.dataViewDataExplorerService.updateDashboard(this.dashboard).subscribe(result => {
         if (this.widgetsToUpdate.size > 0) {
             forkJoin(this.prepareWidgetUpdates()).subscribe(result => {
-                this.closeEditModeAndReloadDashboard();
+                  this.closeEditModeAndReloadDashboard(closeEditMode);
             });
         } else {
             this.deleteWidgets();
-            this.closeEditModeAndReloadDashboard();
+            this.closeEditModeAndReloadDashboard(false);
         }
     });
-
-    this.editModeChange.emit(!(this.editMode));
-    this.refreshDashboardService.notify(this.dashboard._id);
-    this.closeEditModeAndReloadDashboard();
-
   }
 
-  closeEditModeAndReloadDashboard() {
-    this.editModeChange.emit(!(this.editMode));
+  closeEditModeAndReloadDashboard(closeEditMode: boolean) {
+    if (closeEditMode) {
+      this.editModeChange.emit(!(this.editMode));
+    }
     this.refreshDashboardService.notify(this.dashboard._id);
   }
 
@@ -141,5 +141,9 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
     this.widgetIdsToRemove.forEach(widgetId => {
       this.dataViewDataExplorerService.deleteWidget(widgetId).subscribe();
     });
+  }
+
+  toggleGrid(gridVisible: boolean) {
+    this.dashboardGrid.toggleGrid();
   }
 }

@@ -20,12 +20,15 @@ import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {ShepherdService} from '../../../services/tour/shepherd.service';
 import {RestService} from "../../rest.service";
-import {StatusMessage} from "../../model/message/StatusMessage";
-import {GenericAdapterSetDescription} from '../../model/connect/GenericAdapterSetDescription';
-import {SpecificAdapterSetDescription} from '../../model/connect/SpecificAdapterSetDescription';
 import {PipelineTemplateService} from '../../../platform-services/apis/pipeline-template.service';
-import {FreeTextStaticProperty} from '../../model/FreeTextStaticProperty';
-import {MappingPropertyUnary} from '../../model/MappingPropertyUnary';
+import {
+    FreeTextStaticProperty,
+    GenericAdapterSetDescription,
+    MappingPropertyUnary,
+    Message,
+    SpDataStream,
+    SpecificAdapterSetDescription
+} from "../../../core-model/gen/streampipes-model";
 
 @Component({
     selector: 'sp-dialog-adapter-started-dialog',
@@ -35,12 +38,12 @@ import {MappingPropertyUnary} from '../../model/MappingPropertyUnary';
 export class AdapterStartedDialog {
 
     adapterInstalled: boolean = false;
-    private adapterStatus: StatusMessage;
-    private streamDescription: any;
+    public adapterStatus: Message;
+    public streamDescription: SpDataStream;
     private pollingActive: boolean = false;
-    private runtimeData: any;
-    private isSetAdapter: boolean = false;
-    private isTemplate: boolean = false;
+    public runtimeData: any;
+    public isSetAdapter: boolean = false;
+    public isTemplate: boolean = false;
 
     private saveInDataLake: boolean;
 
@@ -59,7 +62,7 @@ export class AdapterStartedDialog {
         if (this.data.storeAsTemplate) {
 
             this.restService.addAdapterTemplate(this.data.adapter).subscribe(x => {
-                this.adapterStatus = x;
+                this.adapterStatus = x as Message;
                 this.isTemplate = true;
                 this.adapterInstalled = true;
             });
@@ -79,7 +82,6 @@ export class AdapterStartedDialog {
                         this.restService.getSourceDetails(x.notifications[0].title).subscribe(x => {
                             this.streamDescription = x.spDataStreams[0];
                             this.pollingActive = true;
-                            this.getLatestRuntimeInfo();
                         });
                     }
 
@@ -101,53 +103,16 @@ export class AdapterStartedDialog {
 
                                 res.pipelineTemplateId = templateName;
                                 res.name = this.data.adapter.label;
-
                                 this.pipelineTemplateService.createPipelineTemplateInvocation(res);
-
                             });
                     }
-
-
                 }
             });
 
         }
     }
 
-    getLatestRuntimeInfo() {
-        this.restService.getRuntimeInfo(this.streamDescription).subscribe(data => {
-            if (!(Object.keys(data).length === 0 && data.constructor === Object)) {
-                this.runtimeData = data;
-            }
 
-            if (this.pollingActive) {
-                setTimeout(() => {
-                    this.getLatestRuntimeInfo();
-                }, 1000);
-            }
-        });
-    }
-
-    isPropertyType(property, type) {
-      return property.properties.domainProperties !== undefined && property.properties.domainProperties.length === 1 &&
-        property.properties.domainProperties[0] === type;
-    }
-
-    isImage(property) {
-        return this.isPropertyType(property, 'https://image.com');
-    }
-
-    isTimestamp(property) {
-      return this.isPropertyType(property, 'http://schema.org/DateTime');
-    }
-
-    hasNoDomainProperty(property) {
-        if (this.isTimestamp(property) || this.isImage(property)) {
-            return false;
-        } else {
-            return true;
-        }
-    }
 
     onCloseConfirm() {
         this.pollingActive = false;

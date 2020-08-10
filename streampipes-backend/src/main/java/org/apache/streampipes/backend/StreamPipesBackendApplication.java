@@ -20,6 +20,10 @@ package org.apache.streampipes.backend;
 import org.apache.shiro.web.env.EnvironmentLoaderListener;
 import org.apache.shiro.web.servlet.OncePerRequestFilter;
 import org.apache.shiro.web.servlet.ShiroFilter;
+import org.apache.streampipes.app.file.export.application.AppFileExportApplication;
+import org.apache.streampipes.manager.operations.Operations;
+import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
+import org.apache.streampipes.rest.notifications.NotificationListener;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,15 +35,10 @@ import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.apache.streampipes.app.file.export.application.AppFileExportApplication;
-import org.apache.streampipes.manager.operations.Operations;
-import org.apache.streampipes.model.client.pipeline.PipelineOperationStatus;
-import org.apache.streampipes.rest.notifications.NotificationListener;
-
-import java.util.List;
 
 import javax.annotation.PreDestroy;
 import javax.servlet.ServletContextListener;
+import java.util.List;
 
 @Configuration
 @EnableAutoConfiguration

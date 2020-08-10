@@ -18,22 +18,24 @@
 
 import {Input, OnChanges, SimpleChanges} from "@angular/core";
 import {DashboardItem} from "../../../models/dashboard.model";
-import {DashboardWidget} from "../../../../core-model/dashboard/DashboardWidget";
 import {StaticPropertyExtractor} from "../../../sdk/extractor/static-property-extractor";
 import {RxStompService} from "@stomp/ng2-stompjs";
 import {Message} from "@stomp/stompjs";
 import {Subscription} from "rxjs";
 import {GridsterItem, GridsterItemComponent} from "angular-gridster2";
 import {WidgetConfigBuilder} from "../../../registry/widget-config-builder";
-import {VisualizablePipeline} from "../../../../core-model/dashboard/VisualizablePipeline";
 import {ResizeService} from "../../../services/resize.service";
 import {GridsterInfo} from "../../../models/gridster-info.model";
 import {DashboardService} from "../../../services/dashboard.service";
+import {
+    DashboardWidgetModel,
+    VisualizablePipeline
+} from "../../../../core-model/gen/streampipes-model";
 
 export abstract class BaseStreamPipesWidget implements OnChanges {
 
     @Input() widget: DashboardItem;
-    @Input() widgetConfig: DashboardWidget;
+    @Input() widgetConfig: DashboardWidgetModel;
     @Input() widgetDataConfig: VisualizablePipeline;
     @Input() gridsterItem: GridsterItem;
     @Input() gridsterItemComponent: GridsterItemComponent;

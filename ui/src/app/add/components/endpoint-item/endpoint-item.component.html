@@ -1,0 +1,71 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div fxFlex="100" fxLayout="column" fxLayoutAlign="start start" class="pipeline-element-box"
+     style="padding:5px;margin-bottom:10px;background:{{getSelectedBackground()}}">
+    <div fxFlex fxLayout="row" style="width:100%;">
+        <div style="margin-right:10px;margin-left:10px;margin-top:10px;">
+            <div class="draggable-icon {{item.type}}">{{iconText(item.name)}}</div>
+        </div>
+        <div fxFlex fxLayout="column">
+            <div fxFlex fxLayoutAlign="end start">
+                <span class="{{itemTypeStyle}}">{{itemTypeTitle}}</span>
+            </div>
+            <div fxFlex fxLayoutAlign="start end" class="ml-5">
+                <button class="small-button" mat-button mat-raised-button color="primary" (click)="installSingleElement(item)" *ngIf="!item.installed">
+                    <i class="material-icons small-icon">cloud_download</i>
+                    <span>&nbsp;Install</span>
+                </button>
+                <button class="small-button" mat-button mat-raised-button color="primary"  (click)="uninstallSingleElement(item)" *ngIf="item.installed">
+                    <i class="material-icons small-icon">delete</i>
+                    <span>&nbsp;Uninstall</span>
+                </button>
+                <div *ngIf="item.installed" style="margin-left:5px;">
+                    <button class="small-button mat-basic no-min-width" mat-raised-button mat-button [matMenuTriggerFor]="menu"><span style="font-size:12px;">...</span></button>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item (click)="refresh(item.uri)">
+                            <mat-icon>refresh</mat-icon>
+                            <span>&nbsp;Update</span>
+                        </button>
+                    </mat-menu>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div fxFlex="100" fxLayout="column" style="padding-left:10px;margin-top:10px;">
+        <div fxLayout="column">
+            <div fxFlex fxLayout="column">
+                <h3><b>{{item.name}}</b></h3>
+                <p>{{item.description}}</p>
+                <div fxFlex fxLayout="column" *ngIf="item.type=='source'">
+                    <div fxLayout="row" fxLayoutAlign="start center" *ngFor="let stream of item.streams">
+                        <div style="min-height:60px;">
+                            <div class="draggable-icon-preview stream" style="margin-right:10px;">
+                                {{iconText(stream.name)}}
+                            </div>
+                        </div>
+                        <div style="min-height:60px;margin-left:10px;">
+                            <h5><b>{{stream.name}}</b></h5>
+                            <p>{{stream.description}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
