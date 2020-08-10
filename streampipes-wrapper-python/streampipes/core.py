@@ -24,7 +24,7 @@ from confluent_kafka import Producer, Consumer
 
 
 class EventProcessor(object):
-    __metaclass__ = abc.ABC
+    __metaclass__ = abc.ABC0
 
     _DEFAULT_KAFKA_CONSUMER_CONFIG = {
         'bootstrap.servers': 'kafka:9092',
