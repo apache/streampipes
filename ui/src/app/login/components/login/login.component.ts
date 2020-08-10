@@ -16,53 +16,47 @@
  *
  */
 
-import {ShepherdService} from "../services/tour/shepherd.service";
+import {ShepherdService} from "../../../services/tour/shepherd.service";
+import {Component, Inject} from "@angular/core";
+import {RestApi} from "../../../services/rest-api.service";
+import {AuthStatusService} from "../../../services/auth-status.service";
+import {FormGroup} from "@angular/forms";
+import {LoginService} from "../../services/login.service";
 
-export class LoginCtrl {
+@Component({
+    selector: 'login',
+    templateUrl: './login.component.html'
+})
+export class LoginComponent {
 
-    $timeout: any;
-    $log: any;
-    $location: any;
-    $state: any;
-    $stateParams: any;
-    $window: any;
-    RestApi: any;
-    AuthStatusService: any;
     loading: any;
     authenticationFailed: any;
     credentials: any;
-    ShepherdService: ShepherdService;
 
-    constructor($timeout, $log, $location, $state, $stateParams, RestApi, $window, AuthStatusService, ShepherdService) {
-        this.$timeout = $timeout;
-        this.$log = $log;
-        this.$location = $location;
-        this.$state = $state;
-        this.$stateParams = $stateParams;
-        this.$window = $window;
-        this.RestApi = RestApi;
-        this.AuthStatusService = AuthStatusService;
-
-        this.ShepherdService = ShepherdService;
-
+    constructor(private loginService: LoginService,
+                @Inject('$stateParams') private $stateParams,
+                @Inject("$state") private $state: any,
+                private AuthStatusService: AuthStatusService,
+                private ShepherdService: ShepherdService) {
         this.loading = false;
         this.authenticationFailed = false;
+        this.credentials = {};
     }
 
     openDocumentation(){
-        this.$window.open('https://streampipes.apache.org/docs', '_blank');
+       window.open('https://streampipes.apache.org/docs', '_blank');
     };
 
     logIn() {
         this.authenticationFailed = false;
         this.loading = true;
-        this.RestApi.login(this.credentials)
-            .then(response => { // success
+        this.loginService.login(this.credentials)
+            .subscribe(response => { // success
                     this.loading = false;
-                    if (response.data.success) {
-                        this.AuthStatusService.username = response.data.info.authc.principal.username;
-                        this.AuthStatusService.email = response.data.info.authc.principal.email;
-                        this.AuthStatusService.token = response.data.token;
+                    if (response.success) {
+                        this.AuthStatusService.username = response.info.authc.principal.username;
+                        this.AuthStatusService.email = response.info.authc.principal.email;
+                        this.AuthStatusService.token = response.token;
                         this.AuthStatusService.authenticated = true;
                         this.$state.go("streampipes");
                     }
@@ -80,8 +74,6 @@ export class LoginCtrl {
     };
 
     setSheperdServiceDelay() {
-        this.ShepherdService.setTimeWaitMillies(100);
+        //this.ShepherdService.setTimeWaitMillies(100);
     }
 };
-
-LoginCtrl.$inject = ['$timeout', '$log', '$location', '$state', '$stateParams', 'RestApi', '$window', 'AuthStatusService', 'ShepherdService'];

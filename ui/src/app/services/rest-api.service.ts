@@ -467,20 +467,12 @@ export class RestApi {
         return this.$http.get(this.getServerUrl() + "/admin/authc");
     }
 
-    login(credentials) {
-        return this.$http.post(this.getServerUrl() + "/admin/login", credentials);
-    }
-
     loginSso(credentials, componentId, sessionId) {
         return this.$http.post(this.getServerUrl() + "/admin/login/" +componentId +"?session=" +sessionId, credentials);
     }
 
     logout() {
         return this.$http.get(this.getServerUrl() + "/admin/logout");
-    }
-
-    setupInstall(setup, installationStep) {
-        return this.$http.post(this.getServerUrl() + "/setup/install/" +installationStep, setup);
     }
 
     register(payload) {

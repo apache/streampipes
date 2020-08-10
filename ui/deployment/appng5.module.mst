@@ -31,12 +31,15 @@ import { FormsModule } from '@angular/forms';
 import { CustomMaterialModule } from './CustomMaterial/custom-material.module';
 import { AuthStatusService } from './services/auth-status.service';
 
+import { CoreModule } from './core-v2/core.module';
+import { LoginModule } from './login/login.module';
 import { HomeModule } from './home/home.module';
 import { InfoModule } from './info/info.module';
 import { AppAssetMonitoringModule } from "./app-asset-monitoring/app-asset-monitoring.module";
 import { PipelineDetailsModule } from './pipeline-details/pipeline-details.module';
 import { AppTransportMonitoringModule } from "./app-transport-monitoring/app-transport-monitoring.module";
 import { NotificationCountService } from "./services/notification-count-service";
+import {AuthService} from "./services/auth.service";
 
 {{#modulesActive}}
 {{#ng5}}
@@ -62,6 +65,7 @@ import { NotificationModule } from './notifications/notifications.module';
         HttpClientModule,
         FormsModule,
         UIRouterUpgradeModule.forRoot(),
+        LoginModule,
         HomeModule,
         ConfigurationModule,
         InfoModule,
@@ -78,6 +82,7 @@ import { NotificationModule } from './notifications/notifications.module';
     ],
     providers: [
         AuthStatusService,
+        AuthService,
         {
           provide: '$stateParams',
           useFactory: ($injector: any) => $injector.get('$stateParams'),

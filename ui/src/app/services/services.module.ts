@@ -54,7 +54,7 @@ import {NotificationCountService} from "./notification-count-service";
 
 export default angular.module('sp.services', [spConstants])
 	.service('ImageChecker', ImageChecker)
-	.service('AuthService', AuthService)
+	.service('AuthService', downgradeInjectable(AuthService))
 	.service('ElementIconText', ElementIconText)
 	.service('InitTooltips', InitTooltips)
 	.service('RestApi', RestApi)

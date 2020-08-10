@@ -24,6 +24,9 @@ import { {{{ng5_component}}} } from '{{{ng5_componentPath}}}';
 {{/modulesActive}}
 import { HomeComponent } from '../home/home.component';
 import { InfoComponent } from '../info/info.component';
+import { LoginComponent } from '../login/components/login/login.component';
+import { SetupComponent } from '../login/components/setup/setup.component';
+import { StartupComponent } from '../login/components/startup/startup.component';
 import { AppContainerComponent } from '../app-container/app-container.component';
 import { StandaloneDashboardComponent } from "../dashboard/components/standalone/standalone-dashboard.component";
 import { NotificationsComponent } from "../notifications/notifications.component";
@@ -74,7 +77,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
             params: {target: null},
             views: {
                 'container': {
-                    templateUrl: '../../assets/templates/login.html'
+                    component: LoginComponent
                 }
             }
         })
@@ -83,7 +86,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
             params: {target: null},
             views: {
                 'container': {
-                    template: require('../login/startup/startup.html')
+                    component: StartupComponent
                 }
             }
         })
@@ -104,19 +107,11 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
                 }
             }
         })
-        .state('register', {
-            url: '/register',
-            views: {
-                'container': {
-                    templateUrl: '../../assets/templates/register.html'
-                }
-            }
-        })
         .state('setup', {
             url: '/setup',
             views: {
                 'container': {
-                    templateUrl: '../../assets/templates/setup.html'
+                    component: SetupComponent
                 }
             }
         })

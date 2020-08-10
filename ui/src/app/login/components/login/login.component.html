@@ -1,0 +1,79 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div class="md-padding full-background sp-fade" fxLayout="row" fxLayoutAlign="center center"
+     style="min-height:100vh !important;">
+    <div fxFlex="40" fxLayout="column" fxLayoutAlign="center center">
+        <mat-card class="card-100-center box-shadow-login" style="padding:20px;position:relative;top:-25px;">
+            <div fxFlex="100" fxLayout="column">
+                <div fxLayout="row" fxFlex="60" fxLayoutAlign="center center"
+                     style="margin-left:auto;margin-right:auto;">
+                    <div fxFlex="60" fxLayoutAlign="center center" fxLayout="row"
+                         style="color:white;width:100%;"><img
+                            alt="icon" src="../../../../assets/img/login/logo.png" style="width:100%;">
+                    </div>
+                </div>
+                <div fxFlex="100" fxLayout="column" fxLayoutAlign="center start">
+                    <h1>Login</h1>
+                </div>
+                <div fxFlex="100" fxLayout="column">
+                    <form #loginForm="ngForm" fxFlex="100" fxLayout="column">
+                        <div fxFlex="100" fxLayout="column">
+                            <mat-form-field fxFlex>
+                                <mat-label>Email</mat-label>
+                                <input [(ngModel)]="credentials.username" matInput type="email" name="username" class="sp" required/>
+                            </mat-form-field>
+                            <mat-form-field fxFlex>
+                                <mat-label>Password</mat-label>
+                                <input [(ngModel)]="credentials.password" matInput name="password" type="password" class="sp" required/>
+                            </mat-form-field>
+                            <mat-checkbox [(ngModel)]="credentials.rememberMe" name="rememberMe" class="sp" color="primary">Remember Me</mat-checkbox>
+    <!--                        <md-input-container class="sp"><label class="sp">Email</label> <input-->
+    <!--                                type="email" class="sp" ng-model="ctrl.credentials.username" required>-->
+    <!--                        </md-input-container>-->
+    <!--                        <md-input-container class="sp" flex><label>Password</label>-->
+    <!--                            <input type="password" ng-model="ctrl.credentials.password" required>-->
+    <!--                        </md-input-container>-->
+    <!--                        <md-input-container flex>-->
+    <!--                            <md-checkbox-->
+    <!--                                    ng-model="ctrl.credentials.rememberMe"> Remember me-->
+    <!--                            </md-checkbox>-->
+    <!--                        </md-input-container>-->
+                        </div>
+                        <div class="form-actions" style="margin-top:20px;">
+                            <button mat-button mat-raised-button color="primary" (click)="logIn()"
+                                    [disabled]="!loginForm.form.valid || loading">Login
+                            </button>
+                            <mat-spinner [mode]="'indeterminate'" color="primary"
+                                         *ngIf="loading"></mat-spinner>
+                            <div class="md-warn" *ngIf="authenticationFailed">
+                                <h4>The password you entered is incorrect. Please try again.</h4>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </mat-card>
+        <div fxFlex="100" fxLayout="column" fxLayoutAlign="center center">
+            <button mat-button mat-raised-button color="primary" (click)="openDocumentation()"
+                    style="min-width:0px;padding-left:20px;padding-right:20px;font-size:18px;">
+                View Docs
+            </button>
+        </div>
+    </div>
+</div>

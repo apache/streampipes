@@ -16,25 +16,39 @@
  *
  */
 
-export class SetupCtrl {
+import {Component} from "@angular/core";
+import {RestApi} from "../../../services/rest-api.service";
+import {FormGroup} from "@angular/forms";
+import {LoginService} from "../../services/login.service";
 
-    $location: any;
-    RestApi: any;
-    $mdToast:any;
+@Component({
+    selector: 'setup',
+    templateUrl: './setup.component.html'
+})
+export class SetupComponent {
+
     installationFinished: any;
     installationSuccessful: any;
     installationResults: any;
     loading: any;
     showAdvancedSettings: any;
-    setup: any;
+    setup: any = {
+        couchDbHost: '',
+        kafkaHost: '',
+        zookeeperHost: '',
+        jmsHost: '',
+        adminEmail: '',
+        adminPassword: '',
+        installPipelineElements: true
+    };
     setupForm: any;
     installationRunning: any;
     nextTaskTitle: any;
 
-    constructor($location, RestApi, $mdToast) {
-        this.$location = $location;
-        this.RestApi = RestApi;
-        this.$mdToast = $mdToast;
+    parentForm: FormGroup = new FormGroup({});
+
+    constructor(private loginService: LoginService,
+                private RestApi: RestApi) {
 
         this.installationFinished = false;
         this.installationSuccessful = false;
@@ -42,22 +56,13 @@ export class SetupCtrl {
         this.loading = false;
         this.showAdvancedSettings = false;
 
-        this.setup = {
-            couchDbHost: '',
-            kafkaHost: '',
-            zookeeperHost: '',
-            jmsHost: '',
-            adminEmail: '',
-            adminPassword: '',
-            installPipelineElements: true
-        };
+        this.setup
     }
 
     configure(currentInstallationStep) {
         this.installationRunning = true;
         this.loading = true;
-        this.RestApi.setupInstall(this.setup, currentInstallationStep).then(msg => {
-            let data = msg.data;
+        this.loginService.setupInstall(this.setup, currentInstallationStep).subscribe(data => {
             this.installationResults = this.installationResults.concat(data.statusMessages);
             this.nextTaskTitle = data.nextTaskTitle;
             let nextInstallationStep = currentInstallationStep + 1;
@@ -80,12 +85,12 @@ export class SetupCtrl {
     }
 
     showToast(string) {
-        this.$mdToast.show(
-            this.$mdToast.simple()
-                .content(string)
-                .position("right")
-                .hideDelay(3000)
-        );
+        // this.$mdToast.show(
+        //     this.$mdToast.simple()
+        //         .content(string)
+        //         .position("right")
+        //         .hideDelay(3000)
+        // );
     };
 
     addPod(podUrls) {
@@ -96,6 +101,4 @@ export class SetupCtrl {
     removePod(podUrls, index) {
         podUrls.splice(index, 1);
     }
-};
-
-SetupCtrl.$inject = ['$location', 'RestApi', '$mdToast'];
+}

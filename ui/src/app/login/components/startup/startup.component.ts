@@ -16,30 +16,27 @@
  *
  */
 
-import {AuthService} from "../../services/auth.service";
-import {AuthStatusService} from "../../services/auth-status.service";
+import {AuthService} from "../../../services/auth.service";
+import {AuthStatusService} from "../../../services/auth-status.service";
+import {Component, Inject, OnInit} from "@angular/core";
 
-export class StartupCtrl {
-
-    AuthService: AuthService;
-    AuthStatusService: AuthStatusService;
-    $state: any;
-    $timeout: any;
+@Component({
+    selector: 'startup',
+    templateUrl: './startup.component.html'
+})
+export class StartupComponent implements OnInit {
 
     progress: number = 0;
     currentStep = 0;
     maxLoadingTimeInSeconds = 300;
     loadingIntervalInSeconds = 1;
 
-    constructor(AuthService, AuthStatusService, $state, $timeout) {
-        this.AuthService = AuthService;
-        this.AuthStatusService = AuthStatusService;
-        this.$state = $state;
-        this.$timeout = $timeout;
-
+    constructor(private AuthService: AuthService,
+                private AuthStatusService: AuthStatusService,
+                @Inject("$state") private $state: any) {
     }
 
-    $onInit() {
+    ngOnInit() {
         this.checkStatus();
     }
 
@@ -50,12 +47,9 @@ export class StartupCtrl {
         }, () => {
             this.currentStep += this.loadingIntervalInSeconds;
             this.progress = (this.currentStep / this.maxLoadingTimeInSeconds) * 100;
-            this.$timeout(() => {
+            setTimeout(() => {
                 this.checkStatus();
             }, this.loadingIntervalInSeconds*1000);
         });
     }
-
 }
-
-StartupCtrl.$inject = ['AuthService', 'AuthStatusService', '$state', '$timeout'];

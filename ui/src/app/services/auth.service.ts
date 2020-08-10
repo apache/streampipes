@@ -18,21 +18,13 @@
 
 import {RestApi} from "./rest-api.service";
 import {AuthStatusService} from "./auth-status.service";
+import {Inject, Injectable} from "@angular/core";
 
+@Injectable()
 export class AuthService {
 
-    AuthStatusService: AuthStatusService;
-    $rootScope: any;
-    $location: any;
-    $state: any;
-    RestApi: RestApi;
-
-    constructor($rootScope, $location, $state, RestApi, AuthStatusService) {
-        this.AuthStatusService = AuthStatusService;
-        this.$rootScope = $rootScope;
-        this.$location = $location;
-        this.$state = $state;
-        this.RestApi = RestApi;
+    constructor(@Inject("RestApi") private RestApi: RestApi,
+                @Inject("AuthStatusService") private AuthStatusService: AuthStatusService) {
     }
 
     checkConfiguration() {
@@ -40,7 +32,8 @@ export class AuthService {
             if (response.data.configured) {
                 this.AuthStatusService.configured = true;
 
-                this.$rootScope.appConfig = response.data.appConfig;
+                // TODO
+                //this.$rootScope.appConfig = response.data.appConfig;
             } else {
                 this.AuthStatusService.configured = false;
             }
@@ -54,16 +47,9 @@ export class AuthService {
                 this.AuthStatusService.email = response.data.info.authc.principal.email;
                 this.AuthStatusService.authenticated = true;
                 this.AuthStatusService.token = response.data.token;
-
-                // this.RestApi.getNotifications()
-                //     .then(notifications => {
-                //         this.$rootScope.unreadNotifications = notifications.data;
-                //     });
             } else {
                 this.AuthStatusService.authenticated = false;
             }
         })
     }
 }
-
-AuthService.$inject = ['$rootScope', '$location', '$state', 'RestApi', 'AuthStatusService'];
