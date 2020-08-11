@@ -17,6 +17,14 @@
  *
  */
 
+import createPipelineTourConstants from './create-pipeline-tour.constants';
+import dashboardTourConstants from './dashboard-tour.constants';
+import adapterTourConstants from './adapter-tour.constants';
+import adapterTour2Constants from './adapter-tour-2.constants';
+import adapterTour3Constants from './adapter-tour-3.constants';
+import {Injectable} from "@angular/core";
+
+@Injectable()
 export class TourProviderService {
 
     guidedTours: any;
@@ -24,7 +32,7 @@ export class TourProviderService {
     // This is needed to configure the time in cypress test cases
     time: any;
 
-    constructor(createPipelineTourConstants, dashboardTourConstants, adapterTourConstants, adapterTour2Constants, adapterTour3Constants) {
+    constructor() {
         this.guidedTours = [];
         this.guidedTours.push(createPipelineTourConstants.createPipelineTour);
         this.guidedTours.push(dashboardTourConstants.dashboardTour);
@@ -53,6 +61,3 @@ export class TourProviderService {
         return this.time;
     }
 }
-
-TourProviderService.$inject = ['createPipelineTourConstants', 'dashboardTourConstants',
-    'adapterTourConstants', 'adapterTour2Constants', 'adapterTour3Constants'];

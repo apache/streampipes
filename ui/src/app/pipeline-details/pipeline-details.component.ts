@@ -20,6 +20,7 @@ import {Component, Inject, OnInit} from "@angular/core";
 import {PipelineService} from "../platform-services/apis/pipeline.service";
 import {Pipeline} from "../core-model/gen/streampipes-model";
 import {PipelineElementUnion} from "../editor/model/editor.model";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
     selector: 'pipeline-details',
@@ -35,13 +36,17 @@ export class PipelineDetailsComponent implements OnInit {
     selectedIndex: number = 0;
     selectedElement: PipelineElementUnion;
 
-    constructor(@Inject('$stateParams') private $stateParams,
+    constructor(private ActivatedRoute: ActivatedRoute,
                 private pipelineService: PipelineService) {
-        this.currentPipeline = $stateParams.pipeline;
     }
 
     ngOnInit() {
-        this.loadPipeline();
+        this.ActivatedRoute.queryParams.subscribe(params => {
+            if (params['pipeline']) {
+                this.currentPipeline = params['pipeline'];
+                this.loadPipeline();
+            }
+        });
     }
 
     setSelectedIndex(index: number) {

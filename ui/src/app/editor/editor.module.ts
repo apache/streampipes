@@ -103,11 +103,6 @@ import {UserDefinedOutputStrategyComponent} from "./components/output-strategy/u
     providers: [
         EditorService,
         SemanticTypeUtilsService,
-        {
-            provide: 'RestApi',
-            useFactory: ($injector: any) => $injector.get('RestApi'),
-            deps: ['$injector'],
-        },
         JsplumbBridge,
         JsplumbService,
         JsplumbConfigService,
@@ -118,16 +113,6 @@ import {UserDefinedOutputStrategyComponent} from "./components/output-strategy/u
         PipelineElementRecommendationService,
         ElementIconText,
         ImageChecker,
-        {
-            provide: '$state',
-            useFactory: ($injector: any) => $injector.get('$state'),
-            deps: ['$injector']
-        },
-        {
-            provide: '$timeout',
-            useFactory: ($injector: any) => $injector.get('$timeout'),
-            deps: ['$injector']
-        },
         SafeCss
     ],
   exports: [

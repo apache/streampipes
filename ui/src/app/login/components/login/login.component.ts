@@ -22,6 +22,7 @@ import {RestApi} from "../../../services/rest-api.service";
 import {AuthStatusService} from "../../../services/auth-status.service";
 import {FormGroup} from "@angular/forms";
 import {LoginService} from "../../services/login.service";
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'login',
@@ -34,8 +35,7 @@ export class LoginComponent {
     credentials: any;
 
     constructor(private loginService: LoginService,
-                @Inject('$stateParams') private $stateParams,
-                @Inject("$state") private $state: any,
+                private Router: Router,
                 private AuthStatusService: AuthStatusService,
                 private ShepherdService: ShepherdService) {
         this.loading = false;
@@ -58,7 +58,7 @@ export class LoginComponent {
                         this.AuthStatusService.email = response.info.authc.principal.email;
                         this.AuthStatusService.token = response.token;
                         this.AuthStatusService.authenticated = true;
-                        this.$state.go("streampipes");
+                        this.Router.navigateByUrl("");
                     }
                     else {
                         this.AuthStatusService.authenticated = false;

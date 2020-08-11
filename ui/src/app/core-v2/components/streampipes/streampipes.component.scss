@@ -16,15 +16,8 @@
  *
  */
 
-import {FeedbackController} from "./feedback.controller";
+@import "../../../../scss/variables";
 
-declare const require: any;
-
-export let FeedbackComponent = {
-    template: require('./feedback.tmpl.html'),
-    bindings: {
-        closeFeedbackWindow: "&",
-    },
-    controller: FeedbackController,
-    controllerAs: 'ctrl'
-};
+.iconbar {
+  background: $sp-color-primary;
+}

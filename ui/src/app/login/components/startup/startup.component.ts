@@ -41,7 +41,7 @@ export class StartupComponent implements OnInit {
     }
 
     checkStatus() {
-        this.AuthService.checkConfiguration().then(() => {
+        this.AuthService.checkConfiguration().subscribe(() => {
             this.progress = 100;
             this.$state.go("setup");
         }, () => {

@@ -103,8 +103,8 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     }
 
     getPipelinesWithNotifications() {
-        this.RestApi.getOwnPipelines().then(pipelines => {
-            this.filterForNotifications(pipelines.data);
+        this.RestApi.getOwnPipelines().subscribe(pipelines => {
+            this.filterForNotifications(pipelines);
             if (this.existingNotifications.length > 0) {
                 this.pipelinesWithNotificationsPresent = true;
                 this.selectNotification(this.existingNotifications[0]);

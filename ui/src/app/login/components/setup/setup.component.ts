@@ -68,13 +68,12 @@ export class SetupComponent {
             let nextInstallationStep = currentInstallationStep + 1;
             if (nextInstallationStep > (data.installationStepCount - 1)) {
                 this.RestApi.configured()
-                    .then(msg => {
-                        let data = msg.data;
+                    .subscribe(data => {
                         if (data.configured) {
                             this.installationFinished = true;
                             this.loading = false;
                         }
-                    }).error(data => {
+                    }), (data => {
                     this.loading = false;
                     this.showToast("Fatal error, contact administrator");
                 });

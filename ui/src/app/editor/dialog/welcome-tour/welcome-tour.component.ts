@@ -42,7 +42,7 @@ export class WelcomeTourComponent {
 
   hideTourForever() {
     this.user.hideTutorial = true;
-    this.RestApi.updateUserDetails(this.user).then(data => {
+    this.RestApi.updateUserDetails(this.user).subscribe(data => {
       this.close();
     });
   }

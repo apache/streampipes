@@ -16,19 +16,15 @@
  *
  */
 
-import {Injectable} from '@angular/core';
+import {Component, OnInit} from "@angular/core";
 
-@Injectable()
-export class AuthStatusService {
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html'
+})
+export class AppComponent implements OnInit {
 
-    user: any;
-    email: string;
-    username: string;
-    token: string;
-    authenticated: boolean = false;
-    configured: boolean = false;
-
-    constructor() {
-    }
+  ngOnInit(): void {
+  }
 
 }

@@ -21,25 +21,49 @@ import {MatGridListModule} from '@angular/material/grid-list';
 import {MatIconModule} from '@angular/material/icon';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {CommonModule} from '@angular/common';
+import {StreampipesComponent} from "./components/streampipes/streampipes.component";
+import {FeedbackComponent} from "./components/feedback/feedback.component";
+import {MatButtonModule} from "@angular/material/button";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {MatInputModule} from "@angular/material/input";
+import {FormsModule} from "@angular/forms";
+import {RouterModule} from "@angular/router";
+import {ToolbarComponent} from "./components/toolbar/toolbar.component";
+import {MatToolbarModule} from "@angular/material/toolbar";
+import {MatTooltipModule} from "@angular/material/tooltip";
+import {IconbarComponent} from "./components/iconbar/iconbar.component";
+import {MatDividerModule} from '@angular/material/divider';
+import {MatListModule} from "@angular/material/list";
+import {MatMenuModule} from "@angular/material/menu";
 
 @NgModule({
   imports: [
     CommonModule,
     FlexLayoutModule,
     MatGridListModule,
-    MatIconModule
+    MatDividerModule,
+    MatListModule,
+    MatIconModule,
+    MatMenuModule,
+    MatButtonModule,
+    MatTooltipModule,
+    MatProgressSpinnerModule,
+    MatInputModule,
+    MatToolbarModule,
+    FormsModule,
+    RouterModule
   ],
   declarations: [
-
+    StreampipesComponent,
+    FeedbackComponent,
+    IconbarComponent,
+    ToolbarComponent
   ],
   providers: [
-    {
-      provide: 'AuthStatusService',
-      useFactory: ($injector: any) => $injector.get('AuthStatusService'),
-      deps: ['$injector'],
-    },
+
   ],
   entryComponents: [
+    StreampipesComponent
   ]
 })
 export class CoreModule {

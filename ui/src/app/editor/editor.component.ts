@@ -38,6 +38,7 @@ import {WelcomeTourComponent} from "./dialog/welcome-tour/welcome-tour.component
 import {DialogService} from "../core-ui/dialog/base-dialog/base-dialog.service";
 import {MissingElementsForTutorialComponent} from "./dialog/missing-elements-for-tutorial/missing-elements-for-tutorial.component";
 import {ShepherdService} from "../services/tour/shepherd.service";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
     selector: 'editor',
@@ -96,13 +97,15 @@ export class EditorComponent implements OnInit {
                 private AuthStatusService: AuthStatusService,
                 private dialogService: DialogService,
                 private shepherdService: ShepherdService,
-                @Inject("$stateParams") private $stateParams) {
+                private ActivatedRoute: ActivatedRoute) {
     }
 
     ngOnInit() {
-        if (this.$stateParams.pipeline) {
-            this.currentModifiedPipelineId = this.$stateParams.pipeline;
-        }
+        this.ActivatedRoute.queryParams.subscribe(params => {
+            if (params['pipeline']) {
+                this.currentModifiedPipelineId = params['pipeline'];
+            }
+        });
         this.pipelineElementService.getDataProcessors().subscribe(processors => {
             this.availableDataProcessors = processors;
             this.allElements = this.allElements.concat(processors);

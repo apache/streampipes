@@ -16,14 +16,18 @@
  *
  */
 
-import {AppCtrl} from "../app.controller";
+import {AppCtrl} from "../../../layout/app.controller";
+import {Component, EventEmitter, OnInit, Output} from "@angular/core";
 
-export class FeedbackController {
+@Component({
+    selector: 'feedback',
+    templateUrl: './feedback.component.html',
+})
+export class FeedbackComponent implements OnInit {
 
-    $http: any;
-    $window: any;
+    @Output()
+    closeFeedbackEmitter: EventEmitter<void> = new EventEmitter<void>();
 
-    closeFeedbackWindow: any;
     feedback: any = {};
 
     sendingFeedback: boolean = false;
@@ -35,42 +39,21 @@ export class FeedbackController {
 
     targetEmail = "users@streampipes.apache.org";
 
-    constructor($http, $window) {
-        this.$http = $http;
-        this.$window = $window;
+    constructor() {
     }
 
-    $onInit() {
+    ngOnInit() {
         this.sendingFeedback = false;
         this.sendingFeedbackFinished = false;
     }
 
     closeDialog() {
-        this.closeFeedbackWindow();
+        this.closeFeedbackEmitter.emit();
     }
 
     sendMail(){
         this.sendingFeedback = true;
-        this.$window.open("mailto:"+ this.targetEmail + "?subject=" +"[USER-FEEDBACK]" +"&body=" +this.feedback.feedbackText, "_self");
+        window.open("mailto:"+ this.targetEmail + "?subject=" +"[USER-FEEDBACK]" +"&body=" +this.feedback.feedbackText, "_self");
         this.sendingFeedbackFinished = true;
     };
-
-    sendFeedback() {
-        this.sendingFeedback = true;
-        this.$http({
-            url: this.feedbackUrl,
-            dataType: "json",
-            data: 'email=' + encodeURIComponent(this.feedback.email) +'&feedbackText=' + encodeURIComponent(this.feedback.feedbackText),
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            method: "POST",
-            withCredentials: false,
-        }).then(msg => {
-            this.sendingFeedbackFinished = true;
-        })
-    };
-
 }
-
-FeedbackController.$inject = ['$http', '$window'];

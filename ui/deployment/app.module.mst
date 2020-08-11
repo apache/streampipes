@@ -16,6 +16,7 @@
  *
  */
 
+/*
 'use strict';
 
 import * as angular from 'angular';
@@ -66,3 +67,5 @@ export const Ng1AppModule = angular
     }])
     .config(mdThemingProviderConfig)
     .directive("spButton", ['$mdButtonInkRipple', '$mdTheming', '$mdAria', '$mdInteraction', ($mdButtonInkRipple, $mdTheming, $mdAria, $mdInteraction) => new SpButtonDirective($mdButtonInkRipple, $mdTheming, $mdAria, $mdInteraction)]);
+
+    */

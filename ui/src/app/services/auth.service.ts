@@ -19,6 +19,7 @@
 import {RestApi} from "./rest-api.service";
 import {AuthStatusService} from "./auth-status.service";
 import {Inject, Injectable} from "@angular/core";
+import {Observable} from "rxjs";
 
 @Injectable()
 export class AuthService {
@@ -28,25 +29,27 @@ export class AuthService {
     }
 
     checkConfiguration() {
-        return this.RestApi.configured().then(response => {
-            if (response.data.configured) {
+        return Observable.create((observer) => this.RestApi.configured().subscribe(response => {
+            if (response.configured) {
                 this.AuthStatusService.configured = true;
-
                 // TODO
                 //this.$rootScope.appConfig = response.data.appConfig;
             } else {
                 this.AuthStatusService.configured = false;
             }
-        });
+            observer.complete();
+        }, error => {
+            observer.error();
+        }));
     }
 
     checkAuthentication() {
-        return this.RestApi.getAuthc().then(response => {
-            if (response.data.success) {
-                this.AuthStatusService.username = response.data.info.authc.principal.username;
-                this.AuthStatusService.email = response.data.info.authc.principal.email;
+        return this.RestApi.getAuthc().subscribe(response => {
+            if (response.success) {
+                this.AuthStatusService.username = response.info.authc.principal.username;
+                this.AuthStatusService.email = response.info.authc.principal.email;
                 this.AuthStatusService.authenticated = true;
-                this.AuthStatusService.token = response.data.token;
+                this.AuthStatusService.token = response.token;
             } else {
                 this.AuthStatusService.authenticated = false;
             }

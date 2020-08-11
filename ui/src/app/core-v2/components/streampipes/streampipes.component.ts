@@ -16,26 +16,18 @@
  *
  */
 
-export class DomainProperties {
+import {Component, OnInit} from "@angular/core";
 
-	$http: any;
-	RestApi: any;
-	availableDomainProperties: any;
+@Component({
+  selector: 'streampipes',
+  templateUrl: './streampipes.component.html',
+  styleUrls: ['./streampipes.component.scss']
+})
+export class StreampipesComponent implements OnInit {
 
-	constructor($http, RestApi) {
-		this.$http = $http;
-		this.RestApi = RestApi;
-		this.availableDomainProperties = {};
-		this.RestApi.getOntologyProperties()
-            .then(propertiesData => {
-                this.availableDomainProperties = propertiesData.data;
-            });
-	}
 
-	getDomainProperties() {
-		return this.availableDomainProperties;
-	}
+  ngOnInit(): void {
+  }
+
 
 }
-
-//DomainProperties.$inject = ['$http', 'RestApi'];

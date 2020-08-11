@@ -16,18 +16,14 @@
  *
  */
 
-import * as angular from 'angular';
-import ngCookies from 'angular-cookies';
-import 'npm/angular-notification-icons';
-
-import spServices from '../services/services.module'
-import {AppCtrl} from './app.controller'
-import {ToolbarController} from "./toolbar.controller";
-import {FeedbackComponent} from "./components/feedback.component";
-import {NotificationCountService} from "../services/notification-count-service";
-
-export default angular.module('sp.layout', [spServices, ngCookies, 'angular-notification-icons', 'ngAnimate'])
-	.component('spFeedback', FeedbackComponent)
-	.controller('AppCtrl', AppCtrl)
-	.controller('ToolbarController', ToolbarController)
-	.name;
+// import * as angular from 'angular';
+// import ngCookies from 'angular-cookies';
+// import 'npm/angular-notification-icons';
+//
+// import {AppCtrl} from './app.controller'
+// import {ToolbarController} from "./toolbar.controller";
+//
+// export default angular.module('sp.layout', [spServices, ngCookies, 'angular-notification-icons', 'ngAnimate'])
+// 	.controller('AppCtrl', AppCtrl)
+// 	.controller('ToolbarController', ToolbarController)
+// 	.name;

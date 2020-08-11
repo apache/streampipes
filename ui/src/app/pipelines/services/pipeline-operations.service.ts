@@ -25,6 +25,7 @@ import {PipelineStatusDialogComponent} from "../dialog/pipeline-status/pipeline-
 import {Pipeline, PipelineOperationStatus} from "../../core-model/gen/streampipes-model";
 import {DeletePipelineDialogComponent} from "../dialog/delete-pipeline/delete-pipeline-dialog.component";
 import {DialogRef} from "../../core-ui/dialog/base-dialog/dialog-ref";
+import {Router} from "@angular/router";
 
 declare const require: any;
 
@@ -35,11 +36,10 @@ export class PipelineOperationsService {
   stopping: any;
 
   constructor(
-      //@Inject('RestApi') private RestApi: RestApi,
-      @Inject('$state') private $state,
       private ShepherdService: ShepherdService,
       private PipelineService: PipelineService,
-      private DialogService: DialogService) {
+      private DialogService: DialogService,
+      private Router: Router) {
   }
 
   startPipeline(pipelineId: string,
@@ -102,11 +102,11 @@ export class PipelineOperationsService {
   };
 
   showPipelineInEditor(id) {
-    this.$state.go("streampipes.editor", {pipeline: id});
+    this.Router.navigate(["editor"], { queryParams: { pipeline: id }});
   }
 
   showPipelineDetails(id) {
-    this.$state.go("streampipes.pipelineDetails", {pipeline: id});
+    this.Router.navigate(["pipeline-details"], { queryParams: { pipeline: id }});
   }
 
   modifyPipeline(pipeline) {
@@ -117,5 +117,3 @@ export class PipelineOperationsService {
     //this.$state.go("streampipes.pipelinelogs", {pipeline: id});
   }
 }
-
-//PipelineOperationsService.$inject = ['$mdDialog', 'RestApi', '$state', 'ShepherdService'];

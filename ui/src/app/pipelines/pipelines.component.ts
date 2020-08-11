@@ -28,6 +28,7 @@ import {DialogRef} from "../core-ui/dialog/base-dialog/dialog-ref";
 import {StartAllPipelinesDialogComponent} from "./dialog/start-all-pipelines/start-all-pipelines-dialog.component";
 import {PipelineCategoriesDialogComponent} from "./dialog/pipeline-categories/pipeline-categories-dialog.component";
 import {zip} from "rxjs";
+import {ActivatedRoute} from "@angular/router";
 
 declare const jsPlumb: any;
 declare const require: any;
@@ -57,16 +58,20 @@ export class PipelinesComponent implements OnInit {
 
     constructor(private pipelineService: PipelineService,
                 private DialogService: DialogService,
-                @Inject('$stateParams') private $stateParams) {
+                private ActivatedRoute: ActivatedRoute) {
         this.pipelineCategories = [];
         this.starting = false;
         this.stopping = false;
-        this.pipelineIdToStart = $stateParams.pipeline;
     }
 
     ngOnInit() {
-        this.getPipelineCategories();
-        this.getPipelines();
+        this.ActivatedRoute.queryParams.subscribe(params => {
+            if (params['pipeline']) {
+                this.pipelineToStart = params['pipeline'];
+            }
+            this.getPipelineCategories();
+            this.getPipelines();
+        });
     }
 
     setSelectedTab(index) {

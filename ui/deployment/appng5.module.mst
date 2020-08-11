@@ -19,10 +19,10 @@
 import './app.module';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { UpgradeModule } from '@angular/upgrade/static';
+//import { UpgradeModule } from '@angular/upgrade/static';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { UIRouterUpgradeModule } from '@uirouter/angular-hybrid';
+//import { UIRouterUpgradeModule } from '@uirouter/angular-hybrid';
 import { HttpClientModule } from '@angular/common/http';
 import { MatIconModule } from '@angular/material/icon';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -52,19 +52,29 @@ import {Logger} from './shared/logger/default-log.service';
 import { AppContainerModule } from './app-container/app-container.module';
 import { NotificationModule } from './notifications/notifications.module';
 
+import {AppComponent} from './app.component';
+import {AppRoutingModule} from './app-routing.module';
+
+import {ServicesModule} from "./services/services.module";
+
+import * as $ from 'jquery';
 
 @NgModule({
+    declarations: [
+        AppComponent
+    ],
     imports: [
+        AppRoutingModule,
         BrowserModule,
         BrowserAnimationsModule,
-        UpgradeModule,
+        //UpgradeModule,
         CustomMaterialModule,
         MatGridListModule,
         MatIconModule,
         FlexLayoutModule,
         HttpClientModule,
         FormsModule,
-        UIRouterUpgradeModule.forRoot(),
+        //UIRouterUpgradeModule.forRoot(),
         LoginModule,
         HomeModule,
         ConfigurationModule,
@@ -74,6 +84,7 @@ import { NotificationModule } from './notifications/notifications.module';
         AppContainerModule,
         NotificationModule,
         PipelineDetailsModule,
+        ServicesModule,
         {{#modulesActive}}
         {{#ng5}}
         {{{ng5_moduleName}}},
@@ -83,6 +94,7 @@ import { NotificationModule } from './notifications/notifications.module';
     providers: [
         AuthStatusService,
         AuthService,
+        /*
         {
           provide: '$stateParams',
           useFactory: ($injector: any) => $injector.get('$stateParams'),
@@ -93,16 +105,12 @@ import { NotificationModule } from './notifications/notifications.module';
           useFactory: ($injector: any) => $injector.get('$state'),
           deps: ['$injector']
         },
+        */
         NotificationCountService,
         {provide: Logger, useClass: ConsoleLogService}
-    ]
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule {
 
-    constructor(private upgrade: UpgradeModule) {
-    }
-
-    ngDoBootstrap() {
-        this.upgrade.bootstrap(document.body, ['streamPipesApp'], {strictDi: true});
-    }
 }
