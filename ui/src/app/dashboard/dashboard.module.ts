@@ -107,11 +107,6 @@ const dashboardWidgets = [
         ResizeService,
         RefreshDashboardService,
         SemanticTypeUtilsService,
-        {
-            provide: 'RestApi',
-            useFactory: ($injector: any) => $injector.get('RestApi'),
-            deps: ['$injector'],
-        },
         ElementIconText,
         {
             provide: InjectableRxStompConfig,
@@ -122,11 +117,6 @@ const dashboardWidgets = [
             useFactory: rxStompServiceFactory,
             deps: [InjectableRxStompConfig]
         },
-        {
-            provide: '$state',
-            useFactory: ($injector: any) => $injector.get('$state'),
-            deps: ['$injector']
-        }
     ],
     exports: [
         DashboardComponent

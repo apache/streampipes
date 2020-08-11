@@ -31,10 +31,12 @@ import {AppOverviewComponent} from "./app-overview/app-overview.component";
 import {AddComponent} from "./add/add.component";
 import {ConfigurationComponent} from "./configuration/configuration.component";
 import {PipelineDetailsComponent} from "./pipeline-details/pipeline-details.component";
+import {StandaloneDashboardComponent} from "./dashboard/components/standalone/standalone-dashboard.component";
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'setup', component: SetupComponent },
+  { path: 'standalone/:dashboardId', component: StandaloneDashboardComponent },
   { path: '', component: StreampipesComponent, children: [
       { path: '', component: HomeComponent },
       { path: 'add', component: AddComponent },

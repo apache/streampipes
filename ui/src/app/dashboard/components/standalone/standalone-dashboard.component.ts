@@ -19,6 +19,7 @@ import {Component, OnInit} from "@angular/core";
 import {Dashboard} from "../../models/dashboard.model";
 import {UIRouter} from "@uirouter/core";
 import {DashboardService} from "../../services/dashboard.service";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
     templateUrl: './standalone-dashboard.component.html',
@@ -29,16 +30,20 @@ export class StandaloneDashboardComponent implements OnInit {
     dashboard: Dashboard;
     dashboardReady: boolean = false;
 
-    constructor(private uiRouter: UIRouter,
+    constructor(private ActivatedRoute: ActivatedRoute,
                 private dashboardService: DashboardService) {
     }
 
     ngOnInit(): void {
-        let dashboardId = this.uiRouter.globals.params.dashboardId;
-        this.dashboardService.getDashboard(dashboardId).subscribe(dashboard => {
-            this.dashboard = dashboard;
-            this.dashboardReady = true;
-        })
+        this.ActivatedRoute.params.subscribe(params => {
+            if (params['dashboardId']) {
+                let dashboardId = params['dashboardId'];
+                console.log(dashboardId);
+                this.dashboardService.getDashboard(dashboardId).subscribe(dashboard => {
+                    this.dashboard = dashboard;
+                    this.dashboardReady = true;
+                })
+            }
+        });
     }
-
 }
