@@ -34,6 +34,8 @@ import {StartupComponent} from './components/startup/startup.component';
 import {MatDividerModule} from "@angular/material/divider";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {LoginService} from "./services/login.service";
+import {AuthStatusService} from "../services/auth-status.service";
+import {RestApi} from "../services/rest-api.service";
 
 @NgModule({
   imports: [
@@ -59,18 +61,14 @@ import {LoginService} from "./services/login.service";
   ],
   providers: [
     LoginService,
-    {
-      provide: 'AuthStatusService',
-      useFactory: ($injector: any) => $injector.get('AuthStatusService'),
-      deps: ['$injector'],
-    },
-    {
-      provide: 'RestApi',
-      useFactory: ($injector: any) => $injector.get('RestApi'),
-      deps: ['$injector'],
-    },
+    AuthStatusService,
+    RestApi
   ],
-  entryComponents: []
+  entryComponents: [
+    LoginComponent,
+    SetupComponent,
+    StartupComponent
+  ]
 })
 export class LoginModule {
 }

@@ -24,20 +24,21 @@ import {Observable} from "rxjs";
 @Injectable()
 export class AuthService {
 
-    constructor(@Inject("RestApi") private RestApi: RestApi,
-                @Inject("AuthStatusService") private AuthStatusService: AuthStatusService) {
+    constructor(private RestApi: RestApi,
+                private AuthStatusService: AuthStatusService) {
     }
 
-    checkConfiguration() {
+    checkConfiguration(): Observable<boolean> {
         return Observable.create((observer) => this.RestApi.configured().subscribe(response => {
             if (response.configured) {
                 this.AuthStatusService.configured = true;
                 // TODO
                 //this.$rootScope.appConfig = response.data.appConfig;
+                observer.next(true);
             } else {
                 this.AuthStatusService.configured = false;
+                observer.next(false);
             }
-            observer.complete();
         }, error => {
             observer.error();
         }));

@@ -32,13 +32,19 @@ import {AddComponent} from "./add/add.component";
 import {ConfigurationComponent} from "./configuration/configuration.component";
 import {PipelineDetailsComponent} from "./pipeline-details/pipeline-details.component";
 import {StandaloneDashboardComponent} from "./dashboard/components/standalone/standalone-dashboard.component";
+import {AuthCanActivateChildrenGuard} from "./_guards/auth.can-activate-children.guard";
+import {ConfiguredCanActivateGuard} from "./_guards/configured.can-activate.guard";
+import {StartupComponent} from "./login/components/startup/startup.component";
+import {AlreadyConfiguredCanActivateGuard} from "./_guards/already-configured.can-activate.guard";
+import {LoggedInCanActivateGuard} from "./_guards/logged-in.can-activate.guard";
 
 const routes: Routes = [
-  { path: 'login', component: LoginComponent },
-  { path: 'setup', component: SetupComponent },
+  { path: 'login', component: LoginComponent, canActivate: [ConfiguredCanActivateGuard, LoggedInCanActivateGuard]},
+  { path: 'setup', component: SetupComponent, canActivate: [AlreadyConfiguredCanActivateGuard] },
+  { path: 'startup', component: StartupComponent },
   { path: 'standalone/:dashboardId', component: StandaloneDashboardComponent },
   { path: '', component: StreampipesComponent, children: [
-      { path: '', component: HomeComponent },
+      { path: '', component: HomeComponent, canActivate: [ConfiguredCanActivateGuard] },
       { path: 'add', component: AddComponent },
       { path: 'app-overview', component: AppOverviewComponent },
       { path: 'connect', component: ConnectComponent },
@@ -48,11 +54,17 @@ const routes: Routes = [
       { path: 'editor', component: EditorComponent },
       { path: 'pipelines', component: PipelinesComponent },
       { path: 'pipeline-details', component: PipelineDetailsComponent }
-    ]}
+    ], canActivateChild: [AuthCanActivateChildrenGuard] }
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, {useHash: true})],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  providers: [
+      AuthCanActivateChildrenGuard,
+      AlreadyConfiguredCanActivateGuard,
+      ConfiguredCanActivateGuard,
+      LoggedInCanActivateGuard
+  ]
 })
 export class AppRoutingModule { }

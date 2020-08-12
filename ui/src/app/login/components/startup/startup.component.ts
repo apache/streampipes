@@ -19,6 +19,7 @@
 import {AuthService} from "../../../services/auth.service";
 import {AuthStatusService} from "../../../services/auth-status.service";
 import {Component, Inject, OnInit} from "@angular/core";
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'startup',
@@ -33,7 +34,7 @@ export class StartupComponent implements OnInit {
 
     constructor(private AuthService: AuthService,
                 private AuthStatusService: AuthStatusService,
-                @Inject("$state") private $state: any) {
+                private Router: Router) {
     }
 
     ngOnInit() {
@@ -41,9 +42,10 @@ export class StartupComponent implements OnInit {
     }
 
     checkStatus() {
-        this.AuthService.checkConfiguration().subscribe(() => {
+        this.AuthService.checkConfiguration().subscribe((configured) => {
             this.progress = 100;
-            this.$state.go("setup");
+            let target: string = configured ? 'login' : 'setup';
+            this.Router.navigate([target]);
         }, () => {
             this.currentStep += this.loadingIntervalInSeconds;
             this.progress = (this.currentStep / this.maxLoadingTimeInSeconds) * 100;
