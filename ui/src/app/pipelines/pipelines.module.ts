@@ -16,9 +16,6 @@
  *
  */
 
-import 'npm/angular-datatables';
-import 'npm/angular-sanitize';
-
 import {CategoryAlreadyInPipelinePipe} from './category-already-in-pipeline.filter';
 import {PipelineOperationsService} from "./services/pipeline-operations.service";
 import {PipelinesComponent} from "./pipelines.component";

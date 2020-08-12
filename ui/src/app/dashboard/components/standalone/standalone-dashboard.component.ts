@@ -17,7 +17,6 @@
 
 import {Component, OnInit} from "@angular/core";
 import {Dashboard} from "../../models/dashboard.model";
-import {UIRouter} from "@uirouter/core";
 import {DashboardService} from "../../services/dashboard.service";
 import {ActivatedRoute} from "@angular/router";
 
