@@ -27,16 +27,14 @@
                 <span class="{{itemTypeStyle}}">{{itemTypeTitle}}</span>
             </div>
             <div fxFlex fxLayoutAlign="start end" class="ml-5">
-                <button class="small-button" mat-button mat-raised-button color="primary" (click)="installSingleElement(item)" *ngIf="!item.installed">
-                    <i class="material-icons small-icon">cloud_download</i>
+                <button class="small-button-add" mat-button mat-raised-button color="primary" (click)="installSingleElement(item)" *ngIf="!item.installed">
                     <span>&nbsp;Install</span>
                 </button>
-                <button class="small-button" mat-button mat-raised-button color="primary"  (click)="uninstallSingleElement(item)" *ngIf="item.installed">
-                    <i class="material-icons small-icon">delete</i>
+                <button class="small-button-add-inverted" mat-button mat-raised-button (click)="uninstallSingleElement(item)" *ngIf="item.installed">
                     <span>&nbsp;Uninstall</span>
                 </button>
                 <div *ngIf="item.installed" style="margin-left:5px;">
-                    <button class="small-button mat-basic no-min-width" mat-raised-button mat-button [matMenuTriggerFor]="menu"><span style="font-size:12px;">...</span></button>
+                    <button class="small-button-add mat-basic no-min-width" mat-raised-button mat-button [matMenuTriggerFor]="menu"><span style="font-size:12px;">...</span></button>
                     <mat-menu #menu="matMenu">
                         <button mat-menu-item (click)="refresh(item.uri)">
                             <mat-icon>refresh</mat-icon>
