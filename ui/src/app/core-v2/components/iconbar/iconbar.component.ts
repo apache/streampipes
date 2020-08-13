@@ -38,6 +38,7 @@ export class IconbarComponent extends BaseNavigationComponent implements OnInit 
   }
 
   ngOnInit(): void {
+    super.onInit();
   }
 
   connectToBroker() {

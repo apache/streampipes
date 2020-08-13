@@ -19,16 +19,14 @@
 <mat-toolbar class="md-primary md-hue-2 top-nav" color="accent">
     <div class="md-toolbar-tools" style="height:50px;max-height:50px;width:100%;">
         <div fxFlex="60" fxLayout fxLayoutAlign="start center">
-            <h1 class="md-toolbar-tools" style="height:50px;max-height:50px;">
-                <div class="sp-darkblue"
-                     style="align-items:left;padding:5px;border-radius:0px;margin-right:15px;position:relative;left:20px;">
-                    <img
-                            alt="icon" src="../../../../assets/img/sp/sp-logo-right-white.png" style="height:28px;">
+            <div class="md-toolbar-tools" style="height:50px;max-height:50px;" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                <div class="sp-darkblue" style="padding:5px;border-radius:0px;margin-right:15px;position:relative;left:20px;">
+                    <img alt="icon" src="../../../../assets/img/sp/sp-logo-right-white.png" style="height:28px;">
                 </div>
                 <div style="color:white;padding: 5px 5px;font-size:15px;margin-left:10px;">
-                    <h4 style="margin-top:18px;font-size:12pt;font-weight:bold;">{{activePageName}}</h4>
+                    <h4 style="margin-top:12px;font-size:12pt;font-weight:bold;">{{activePageName}}</h4>
                 </div>
-            </h1>
+            </div>
         </div>
         <span fxFlex></span>
         <div fxFlex="40" fxLayout fxLayoutAlign="end center" *ngIf="authenticated" style="height:100%;">

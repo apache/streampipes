@@ -47,6 +47,7 @@ export class ToolbarComponent extends BaseNavigationComponent implements OnInit 
   }
 
   ngOnInit(): void {
+    super.onInit();
   }
   
   openMenu() {

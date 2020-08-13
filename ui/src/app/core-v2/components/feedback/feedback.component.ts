@@ -16,7 +16,6 @@
  *
  */
 
-import {AppCtrl} from "../../../layout/app.controller";
 import {Component, EventEmitter, OnInit, Output} from "@angular/core";
 
 @Component({

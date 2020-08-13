@@ -17,8 +17,7 @@
  */
 
 
-
-import {Router} from "@angular/router";
+import {NavigationEnd, Router} from "@angular/router";
 
 export abstract class BaseNavigationComponent {
 
@@ -50,7 +49,7 @@ export abstract class BaseNavigationComponent {
     },
     {
       link: 'dashboard',
-      title: 'Dashboard',
+      title: 'Live Dashboard',
       icon: 'insert_chart'
     },
     {
@@ -82,6 +81,17 @@ export abstract class BaseNavigationComponent {
 
   }
 
+  onInit() {
+    this.activePage = "";
+    this.activePageName = this.getPageTitle(this.activePage);
+    this.Router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.activePage = event.url.replace("/", "");
+        this.activePageName = this.getPageTitle(this.activePage);
+      }
+    });
+  }
+
   getActivePage() {
     return this.activePage;
   }
@@ -94,10 +104,8 @@ export abstract class BaseNavigationComponent {
         currentTitle = m.title;
       }
     });
-    if (path == 'streampipes.pipelineDetails') {
+    if (path == 'pipeline-details') {
       currentTitle = 'Pipeline Details';
-    } else if (path == 'streampipes.edit') {
-      currentTitle = this.menu[0].title;
     }
     return currentTitle;
   }
