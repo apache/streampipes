@@ -82,7 +82,7 @@ export abstract class BaseNavigationComponent {
   }
 
   onInit() {
-    this.activePage = "";
+    this.activePage = this.Router.url.replace("/", "");
     this.activePageName = this.getPageTitle(this.activePage);
     this.Router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {

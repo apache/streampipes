@@ -19,6 +19,7 @@
 import {Component, EventEmitter, Inject, Input, OnInit, Output} from "@angular/core";
 import {PipelineOperationsService} from "../../../pipelines/services/pipeline-operations.service";
 import {Pipeline} from "../../../core-model/gen/streampipes-model";
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'pipeline-actions',
@@ -36,8 +37,7 @@ export class PipelineActionsComponent implements OnInit {
     reloadPipelineEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     constructor(public pipelineOperationsService: PipelineOperationsService,
-                @Inject('$state') private $state) {
-        this.$state = $state;
+                private Router: Router) {
     }
 
     ngOnInit() {
@@ -54,7 +54,7 @@ export class PipelineActionsComponent implements OnInit {
     }
 
     switchToPipelineView() {
-        this.$state.go("streampipes.pipelines");
+        this.Router.navigate(["pipelines"]);
     }
 
     startPipeline() {
