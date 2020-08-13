@@ -215,4 +215,11 @@ public class User {
 		this.hideTutorial = hideTutorial;
 	}
 
+	public String getRev() {
+		return rev;
+	}
+
+	public void setRev(String rev) {
+		this.rev = rev;
+	}
 }

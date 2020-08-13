@@ -15,15 +15,17 @@
 # limitations under the License.
 #
 """contains relevant base classes"""
+import abc
 import json
 import logging
 import threading
-from abc import ABC, abstractmethod
 from confluent_kafka.admin import AdminClient
 from confluent_kafka import Producer, Consumer
 
 
-class EventProcessor(ABC):
+class EventProcessor(object):
+    __metaclass__ = abc.ABC0
+
     _DEFAULT_KAFKA_CONSUMER_CONFIG = {
         'bootstrap.servers': 'kafka:9092',
         'enable.auto.commit': True,
@@ -67,7 +69,7 @@ class EventProcessor(ABC):
 
     def init(self):
         self.logger.info('start processor {}'.format(self.invocation_id))
-        thread = threading.Thread(target=self.__consume, name=self.invocation_id)
+        thread = threading.Thread(target=self._consume, name=self.invocation_id)
         thread.start()
         self._threads['kafka'] = thread
 
@@ -81,27 +83,27 @@ class EventProcessor(ABC):
     def __del__(self):
         pass
 
-    @abstractmethod
+    @abc.abstractmethod
     def on_invocation(self):
         """ on_invocation is called when processor is started """
 
-    @abstractmethod
+    @abc.abstractmethod
     def on_event(self, event):
         """ on_event receives kafka consumer messages """
         pass
 
-    @abstractmethod
+    @abc.abstractmethod
     def on_detach(self):
         """ on_detach is called when processor is stopped """
         pass
 
-    def __on_event(self, event):
+    def _on_event(self, event):
         result = self.on_event(event)
 
         if result is not None:
-            self.__produce(result)
+            self._produce(result)
 
-    def __consume(self):
+    def _consume(self):
         """ retrieve events from kafka """
         self._consumer.subscribe(topics=[self._input_topics])
         self._running = True
@@ -127,9 +129,9 @@ class EventProcessor(ABC):
                     self.logger.info("Not a valid json {}".format(e))
                     continue
 
-                self.__on_event(event)
+                self._on_event(event)
 
-    def __produce(self, result):
+    def _produce(self, result):
         """ send events to kafka """
         event = json.dumps(result).encode('utf-8')
         try:
