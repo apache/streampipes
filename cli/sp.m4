@@ -124,7 +124,7 @@ startStreamPipes() {
 
 	if [ ! -f "$SP_HOME/system" ];
 	then
-		moveSystemConfig default
+		moveSystemConfig lite
 	fi
 
 	if [ ! -f "$SP_HOME/.env" ];
