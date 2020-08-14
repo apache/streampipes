@@ -16,7 +16,6 @@
  *
  */
 
-import * as angular from 'angular';
 import {Injectable} from "@angular/core";
 import {RestApi} from "../../services/rest-api.service";
 import {JsplumbBridge} from "./jsplumb-bridge.service";
@@ -60,7 +59,7 @@ export class ObjectProvider {
 
     findElement(elementId, rawPipelineModel: PipelineElementConfig[]): PipelineElementConfig {
         let result = {} as PipelineElementConfig;
-        angular.forEach(rawPipelineModel, pe => {
+        rawPipelineModel.forEach(pe => {
             if (pe.payload.dom === elementId) {
                 result = pe;
             }

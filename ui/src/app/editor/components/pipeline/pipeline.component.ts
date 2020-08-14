@@ -16,8 +16,6 @@
  *
  */
 
-import * as angular from "angular";
-
 import {PipelineValidationService} from "../../services/pipeline-validation.service";
 import {JsplumbService} from "../../services/jsplumb.service";
 import {PipelineEditorService} from "../../services/pipeline-editor.service";
@@ -236,7 +234,7 @@ export class PipelineComponent implements OnInit {
 
   handleDeleteOption(pipelineElement: PipelineElementConfig) {
     this.JsplumbBridge.removeAllEndpoints(pipelineElement.payload.dom);
-    angular.forEach(this.rawPipelineModel, pe => {
+    this.rawPipelineModel.forEach(pe => {
       if (pe.payload.dom == pipelineElement.payload.dom) {
         pe.settings.disabled = true;
       }
@@ -339,7 +337,7 @@ export class PipelineComponent implements OnInit {
 
   isCustomOutput(pe) {
     var custom = false;
-    angular.forEach(pe.payload.outputStrategies, strategy => {
+    pe.payload.outputStrategies.forEach(strategy => {
       if (strategy instanceof CustomOutputStrategy) {
         custom = true;
       }

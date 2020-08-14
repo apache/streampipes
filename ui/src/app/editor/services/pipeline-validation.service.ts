@@ -16,7 +16,6 @@
  *
  */
 
-import * as angular from 'angular';
 import * as dagre from 'dagre';
 import {JsplumbBridge} from "./jsplumb-bridge.service";
 import {Injectable} from "@angular/core";
@@ -114,7 +113,7 @@ export class PipelineValidationService {
 
     isInAssembly(rawPipelineModel: PipelineElementConfig[], type) {
         var isElementInAssembly = false;
-        angular.forEach(rawPipelineModel, pe => {
+        rawPipelineModel.forEach(pe => {
             if (pe.type === type && !pe.settings.disabled) {
                 isElementInAssembly = true;
             }

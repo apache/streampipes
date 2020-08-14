@@ -16,7 +16,6 @@
  *
  */
 
-import * as angular from 'angular';
 import * as FileSaver from 'file-saver';
 import {Component, Inject, OnInit} from "@angular/core";
 import {PipelineService} from "../platform-services/apis/pipeline.service";
@@ -127,7 +126,7 @@ export class PipelinesComponent implements OnInit {
 
     checkCurrentSelectionStatus(status) {
         var active = true;
-        angular.forEach(this.pipelines, pipeline => {
+        this.pipelines.forEach(pipeline => {
             if (!this.activeCategoryId || pipeline.pipelineCategories.some(pc => pc === this.activeCategoryId)) {
                 if (pipeline.running == status) {
                     active = false;

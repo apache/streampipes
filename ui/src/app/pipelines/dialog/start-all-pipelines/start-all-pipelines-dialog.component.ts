@@ -16,7 +16,6 @@
  *
  */
 
-import * as angular from 'angular';
 import {Component, Input, OnInit} from "@angular/core";
 import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
 import {Pipeline} from "../../../core-model/gen/streampipes-model";
@@ -78,7 +77,7 @@ export class StartAllPipelinesDialogComponent implements OnInit {
     }
 
     getPipelinesToModify() {
-        angular.forEach(this.pipelines, pipeline => {
+        this.pipelines.forEach(pipeline => {
             if (pipeline.running != this.action && this.hasCategory(pipeline)) {
                 this.pipelinesToModify.push(pipeline);
             }
@@ -89,7 +88,7 @@ export class StartAllPipelinesDialogComponent implements OnInit {
         var categoryPresent = false;
         if (!this.activeCategory) return true;
         else {
-            angular.forEach(pipeline.pipelineCategories, category => {
+            pipeline.pipelineCategories.forEach(category => {
                 if (category == this.activeCategory) {
                     categoryPresent = true;
                 }

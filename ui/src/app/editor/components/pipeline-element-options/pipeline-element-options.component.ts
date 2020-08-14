@@ -16,7 +16,6 @@
  *
  */
 
-import * as angular from 'angular';
 import {JsplumbBridge} from "../../services/jsplumb-bridge.service";
 import {JsplumbService} from "../../services/jsplumb.service";
 import {PipelineValidationService} from "../../services/pipeline-validation.service";
@@ -35,6 +34,7 @@ import {PanelType} from "../../../core-ui/dialog/base-dialog/base-dialog.model";
 import {DialogService} from "../../../core-ui/dialog/base-dialog/base-dialog.service";
 import {CompatibleElementsComponent} from "../../dialog/compatible-elements/compatible-elements.component";
 import {Tuple2} from "../../../core-model/base/Tuple2";
+import { cloneDeep } from "lodash";
 
 @Component({
   selector: 'pipeline-element-options',
@@ -138,7 +138,8 @@ export class PipelineElementOptionsComponent implements OnInit{
   }
 
   initRecs(elementId) {
-    var currentPipeline = this.ObjectProvider.makePipeline(angular.copy(this.rawPipelineModel));
+
+    var currentPipeline = this.ObjectProvider.makePipeline(cloneDeep(this.rawPipelineModel));
     this.EditorService.recommendPipelineElement(currentPipeline).subscribe((result) => {
       if (result.success) {
         this.possibleElements = this.PipelineElementRecommendationService.collectPossibleElements(this.allElements, result.possibleElements);

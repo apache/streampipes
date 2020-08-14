@@ -16,7 +16,6 @@
  *
  */
 
-import * as angular from 'angular';
 import {Component, Input, OnInit} from "@angular/core";
 import {Pipeline, PipelineCategory} from "../../../core-model/gen/streampipes-model";
 import {PipelineService} from "../../../platform-services/apis/pipeline.service";
@@ -95,7 +94,7 @@ export class PipelineCategoriesDialogComponent implements OnInit {
 
     findPipeline(pipelineId) {
         var matchedPipeline = {};
-        angular.forEach(this.pipelines, function (pipeline) {
+        this.pipelines.forEach(pipeline => {
             if (pipeline._id == pipelineId) {
                 matchedPipeline = pipeline;
             }

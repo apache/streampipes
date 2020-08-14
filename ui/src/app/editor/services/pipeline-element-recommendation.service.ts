@@ -16,7 +16,6 @@
  *
  */
 
-import * as angular from 'angular';
 import {Injectable} from "@angular/core";
 import {EditorService} from "./editor.service";
 import {PipelineElementUnion} from "../model/editor.model";
@@ -34,7 +33,7 @@ export class PipelineElementRecommendationService {
 
     collectPossibleElements(allElements: PipelineElementUnion[], possibleElements: PipelineElementRecommendation[]) {
         var possibleElementConfigs = [];
-        angular.forEach(possibleElements, pe => {
+        possibleElements.forEach(pe => {
             possibleElementConfigs.push(this.getPipelineElementContents(allElements, pe.elementId)[0]);
         })
         return possibleElementConfigs;

@@ -34,6 +34,8 @@
     "@danielmoncada/angular-datetime-picker": "9.2.0",
     "@fortawesome/fontawesome-free": "5.12.1",
     "@ngui/datetime-picker": "0.16.2",
+    "@ngx-loading-bar/core": "5.1.0",
+    "@ngx-loading-bar/http-client": "5.1.0",
     "@stomp/ng2-stompjs": "7.2.0",
     "@swimlane/ngx-charts": "13.0.2",
     "angular-gridster2": "8.3.0",

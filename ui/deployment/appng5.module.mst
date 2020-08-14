@@ -19,10 +19,8 @@
 import './app.module';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-//import { UpgradeModule } from '@angular/upgrade/static';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { FlexLayoutModule } from '@angular/flex-layout';
-//import { UIRouterUpgradeModule } from '@uirouter/angular-hybrid';
 import { HttpClientModule } from '@angular/common/http';
 import { MatIconModule } from '@angular/material/icon';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -39,7 +37,9 @@ import { AppAssetMonitoringModule } from "./app-asset-monitoring/app-asset-monit
 import { PipelineDetailsModule } from './pipeline-details/pipeline-details.module';
 import { AppTransportMonitoringModule } from "./app-transport-monitoring/app-transport-monitoring.module";
 import { NotificationCountService } from "./services/notification-count-service";
-import {AuthService} from "./services/auth.service";
+import { AuthService } from "./services/auth.service";
+import { LoadingBarHttpClientModule } from '@ngx-loading-bar/http-client';
+import { LOADING_BAR_CONFIG } from '@ngx-loading-bar/core';
 
 {{#modulesActive}}
 {{#ng5}}
@@ -47,15 +47,15 @@ import { {{{ng5_moduleName}}} } from '{{{path}}}';
 {{/ng5}}
 {{/modulesActive}}
 
-import {ConsoleLogService} from './shared/logger/log.service';
-import {Logger} from './shared/logger/default-log.service';
+import { ConsoleLogService } from './shared/logger/log.service';
+import { Logger } from './shared/logger/default-log.service';
 import { AppContainerModule } from './app-container/app-container.module';
 import { NotificationModule } from './notifications/notifications.module';
 
-import {AppComponent} from './app.component';
-import {AppRoutingModule} from './app-routing.module';
+import { AppComponent } from './app.component';
+import { AppRoutingModule } from './app-routing.module';
 
-import {ServicesModule} from "./services/services.module";
+import { ServicesModule } from "./services/services.module";
 
 import * as $ from 'jquery';
 
@@ -67,15 +67,14 @@ import * as $ from 'jquery';
         AppRoutingModule,
         BrowserModule,
         BrowserAnimationsModule,
-        //UpgradeModule,
         CustomMaterialModule,
         MatGridListModule,
         MatIconModule,
         FlexLayoutModule,
         HttpClientModule,
         FormsModule,
-        //UIRouterUpgradeModule.forRoot(),
         LoginModule,
+        LoadingBarHttpClientModule,
         HomeModule,
         ConfigurationModule,
         InfoModule,
@@ -94,20 +93,9 @@ import * as $ from 'jquery';
     providers: [
         AuthStatusService,
         AuthService,
-        /*
-        {
-          provide: '$stateParams',
-          useFactory: ($injector: any) => $injector.get('$stateParams'),
-          deps: ['$injector']
-        },
-        {
-          provide: '$state',
-          useFactory: ($injector: any) => $injector.get('$state'),
-          deps: ['$injector']
-        },
-        */
         NotificationCountService,
-        {provide: Logger, useClass: ConsoleLogService}
+        { provide: Logger, useClass: ConsoleLogService },
+        { provide: LOADING_BAR_CONFIG, useValue: { latencyThreshold: 100 }},
     ],
     bootstrap: [AppComponent]
 })
