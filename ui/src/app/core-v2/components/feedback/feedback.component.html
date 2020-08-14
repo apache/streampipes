@@ -16,25 +16,26 @@
   ~
   -->
 
-<div class="feedback-container md-whiteframe-z1">
+<div class="feedback-container" (click) = "$event.stopPropagation()">
     <div fxLayout="column" fxFlex="100" *ngIf="!sendingFeedback">
         <div fxLayout="column" fxFlex="50" fxLayoutAlign="start center">
             <div class="feedback-title">We welcome your feedback!</div>
         </div>
         <div fxLayout="column" fxFlex="40" fxLayoutAlign="start center" style="margin-bottom:20px;">
-            <div class="feedback-explainer">Your feedback helps us to improve StreamPipes.<br/>
-                Features you'd like to see, bugs you've found or things you like - tell us what you think!
+            <div fxFlex="100" class="feedback-explainer">
+                <span>Your feedback helps us to improve StreamPipes.</span>
+                <span>Features you'd like to see, bugs you've found or things you like - tell us what you think!</span>
             </div>
         </div>
         <div fxLayout="column" fxFlex="40" fxLayoutAlign="start center" style="margin-bottom:20px;">
-            <mat-form-field class="md-block feedback-width-100 feedback-font-size-small">
+            <mat-form-field class="feedback-width-100 feedback-font-size-small">
                 <label>Your feedback</label>
                 <textarea matInput [(ngModel)]="feedback.feedbackText" maxlength="500" rows="5"></textarea>
             </mat-form-field>
         </div>
         <div fxLayout="column" fxFlex="40" fxLayoutAlign="end center">
             <div fxLayout="row" fxLayoutAlign="end end">
-                <button mat-button mat-raised-button class="mat-basic" (click)="closeDialog()">
+                <button mat-button mat-raised-button class="mat-basic" (click)="closeDialog()" style="margin-right:10px;">
                     Close
                 </button>
                 <button mat-button mat-raised-button color="primary" type="submit"
@@ -44,7 +45,7 @@
             </div>
         </div>
     </div>
-    <div fxLayout="column" *ngIf="sendingFeedback" class="feedback-height-100">
+    <div fxFlex="100" fxLayout="column" *ngIf="sendingFeedback" class="feedback-height-100">
         <div *ngIf="!sendingFeedbackFinished" class="feedback-height-100">
             <div fxLayout="column" fxLayoutAlign="center center" fxFlex="100" fxLayoutFill>
                 <mat-spinner [mode]="'indeterminate'" [diameter]="96"></mat-spinner>

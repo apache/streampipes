@@ -148,11 +148,6 @@ export const MY_NATIVE_FORMATS = {
     ResizeService,
     RefreshDashboardService,
     SemanticTypeUtilsService,
-    {
-      provide: 'RestApi',
-      useFactory: ($injector: any) => $injector.get('RestApi'),
-      deps: ['$injector']
-    },
     ElementIconText,
     {
       provide: OWL_DATE_TIME_FORMATS, useValue: MY_NATIVE_FORMATS

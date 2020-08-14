@@ -19,6 +19,7 @@
 import {Component} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
 import {HomeService} from './home.service';
+import {Router} from "@angular/router";
 
 @Component({
     templateUrl: './home.component.html',
@@ -28,7 +29,9 @@ export class HomeComponent {
 
     serviceLinks = [];
 
-    constructor(private homeService: HomeService, private sanitizer: DomSanitizer/*, private stateService: StateService*/) {
+    constructor(private homeService: HomeService,
+                private sanitizer: DomSanitizer,
+                private Router: Router) {
         this.serviceLinks = this.homeService.getServiceLinks();
     }
 
@@ -40,7 +43,7 @@ export class HomeComponent {
         if (link.link.newWindow) {
             window.open(link.link.value);
         } else {
-            //this.stateService.go(link.link.value);
+            this.Router.navigate([link.link.value]);
         }
     }
 

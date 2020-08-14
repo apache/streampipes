@@ -36,7 +36,7 @@ export class FeedbackComponent implements OnInit {
     feedbackUrl = "";
     debugFeedbackUrl = "";
 
-    targetEmail = "users@streampipes.apache.org";
+    targetEmail = "dev@streampipes.apache.org";
 
     constructor() {
     }
@@ -48,6 +48,8 @@ export class FeedbackComponent implements OnInit {
 
     closeDialog() {
         this.closeFeedbackEmitter.emit();
+        this.sendingFeedback = false;
+        this.sendingFeedbackFinished = false;
     }
 
     sendMail(){

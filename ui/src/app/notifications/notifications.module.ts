@@ -44,11 +44,6 @@ import {InjectableRxStompConfig, RxStompService, rxStompServiceFactory} from "@s
 	providers: [
 		NotificationsService,
 		{
-			provide: 'RestApi',
-			useFactory: ($injector: any) => $injector.get('RestApi'),
-			deps: ['$injector'],
-		},
-		{
 			provide: RxStompService,
 			useFactory: rxStompServiceFactory,
 			deps: [InjectableRxStompConfig]

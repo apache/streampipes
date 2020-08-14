@@ -174,7 +174,6 @@ import {TourProviderService} from "../services/tour/tour-provider.service";
         StaticPropertyUtilService,
         DataMarketplaceService,
         IconService,
-        ShepherdService,
         UnitProviderService,
         DisplayRecommendedPipe,
         TimestampPipe,

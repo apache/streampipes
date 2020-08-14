@@ -31,24 +31,32 @@
         <span fxFlex></span>
         <div fxFlex="40" fxLayout fxLayoutAlign="end center" *ngIf="authenticated" style="height:100%;">
             <div style="height:100%;">
-                <div [ngStyle]="feedbackMenuBackground" fxLayout fxLayoutAlign="center center" style="height: 100%;">
-                <button mat-button mat-icon-button
-                        matTooltip="Feedback" matTooltipPosition="below"
-                        [ngClass]="feedbackOpen ? 'sp-icon-button-no-hover' : 'sp-icon-button'" (click)="toggleFeedback()" style="min-width:0px;" layout layout-align="center center">
-                    <i [ngStyle]="feedbackMenuIconColor" class="material-icons">feedback</i>
-                </button>
+                <div [ngStyle]="feedbackOpen.menuOpen ? {'background-color': 'white'} : {'background-color': '#39b54a'}" fxLayout fxLayoutAlign="center center" style="height: 100%;">
+                    <button mat-button mat-icon-button
+                            [matMenuTriggerFor]="feedbackMenu"
+                            #feedbackOpen="matMenuTrigger"
+                            matTooltip="Feedback" matTooltipPosition="below"
+                            [ngClass]="feedbackOpen.menuOpen ? 'sp-icon-button-no-hover' : 'sp-icon-button'" style="min-width:0px;" fxLayout fxLayoutAlign="center center">
+                        <i [ngStyle]="feedbackOpen.menuOpen ? {'color': '#39b54a'} : {'color': 'white'}" class="material-icons">feedback</i>
+                    </button>
                 </div>
-                <feedback style="position:relative;left: -348px;" *ngIf="feedbackOpen" (closeFeedbackEmitter)="closeFeedbackWindow()"></feedback>
             </div>
-            <button mat-button mat-icon-button
-                    [ngClass]="accountMenuOpen ? 'sp-icon-button-no-hover' : 'sp-icon-button'" style="min-width:0px;"
-                    [matMenuTriggerFor]="menu"
-                    matTooltip="User Preferences" matTooltipPosition="below"
-                    (menuOpened)="openMenu()" (menuClosed)="closeMenu()">
-                <i [ngStyle]="accountMenuIconColor" class="material-icons">account_circle</i>
-            </button>
-            <mat-menu #menu="matMenu" id="account" [ngStyle]="accountMenuBackground"
-                      md-position-mode="target-right target" md-offset="8 52" style="margin:inherit;height:100%;" fxLayout fxLayoutAlign="center center">
+            <mat-menu #feedbackMenu="matMenu" style="max-width: none;" class="feedback-menu-content">
+                <feedback (closeFeedbackEmitter)="closeFeedbackWindow()"></feedback>
+            </mat-menu>
+            <div style="height:100%;">
+                <div [ngStyle]="accountMenuOpen.menuOpen ? {'background-color': 'white'} : {'background-color': '#39b54a'}" fxLayout fxLayoutAlign="center center" style="height: 100%;">
+                    <button mat-button mat-icon-button
+                            fxLayout fxLayoutAlign="center center"
+                            [ngClass]="accountMenuOpen.menuOpen ? 'sp-icon-button-no-hover' : 'sp-icon-button'" style="min-width:0px;"
+                            [matMenuTriggerFor]="menu"
+                            #accountMenuOpen="matMenuTrigger"
+                            matTooltip="User Preferences" matTooltipPosition="below">
+                        <i [ngStyle]="accountMenuOpen.menuOpen ? {'color': '#39b54a'} : {'color': 'white'}" class="material-icons">account_circle</i>
+                    </button>
+                </div>
+            </div>
+            <mat-menu #menu="matMenu" id="account">
                 <button mat-menu-item (click)="openInfo()" style="min-width:0px;">
                     <mat-icon aria-label="Info">help</mat-icon>
                     Info

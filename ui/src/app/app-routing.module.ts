@@ -37,6 +37,7 @@ import {ConfiguredCanActivateGuard} from "./_guards/configured.can-activate.guar
 import {StartupComponent} from "./login/components/startup/startup.component";
 import {AlreadyConfiguredCanActivateGuard} from "./_guards/already-configured.can-activate.guard";
 import {LoggedInCanActivateGuard} from "./_guards/logged-in.can-activate.guard";
+import {InfoComponent} from "./info/info.component";
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [ConfiguredCanActivateGuard, LoggedInCanActivateGuard]},
@@ -53,6 +54,7 @@ const routes: Routes = [
       { path: 'dataexplorer', component: DataExplorerComponent },
       { path: 'editor', component: EditorComponent },
       { path: 'pipelines', component: PipelinesComponent },
+      { path: 'info', component: InfoComponent },
       { path: 'pipeline-details', component: PipelineDetailsComponent }
     ], canActivateChild: [AuthCanActivateChildrenGuard] }
 ];

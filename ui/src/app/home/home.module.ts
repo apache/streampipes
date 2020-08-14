@@ -38,23 +38,7 @@ import {RestApi} from "../services/rest-api.service";
         StatusComponent
     ],
     providers: [
-        HomeService,
-        RestApi,
-        {
-            provide: '$http',
-            useFactory: ($injector: any) => $injector.get('$http'),
-            deps: ['$injector'],
-        },
-        {
-            provide: 'apiConstants',
-            useFactory: ($injector: any) => $injector.get('apiConstants'),
-            deps: ['$injector'],
-        },
-        {
-            provide: 'AuthStatusService',
-            useFactory: ($injector: any) => $injector.get('AuthStatusService'),
-            deps: ['$injector'],
-        },
+        HomeService
     ],
     entryComponents: [
         HomeComponent

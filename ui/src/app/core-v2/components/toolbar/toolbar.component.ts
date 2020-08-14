@@ -16,29 +16,22 @@
  *
  */
 
-import {Component, OnInit} from "@angular/core";
+import {Component, OnInit, ViewChild} from "@angular/core";
 import {BaseNavigationComponent} from "../base-navigation.component";
 import {Router} from "@angular/router";
 import {RestApi} from "../../../services/rest-api.service";
 import {AuthStatusService} from "../../../services/auth-status.service";
+import {MatMenuTrigger} from "@angular/material/menu";
 
 @Component({
   selector: 'toolbar',
   templateUrl: './toolbar.component.html',
+  styleUrls: ['./toolbar.component.scss']
 })
 export class ToolbarComponent extends BaseNavigationComponent implements OnInit {
 
-  feedbackOpen: boolean = false;
-  accountMenuOpen: boolean = false;
-
-  whiteColor: string = "#FFFFFF";
-  greenColor: string = "#39b54a";
-
-  accountMenuBackground: any = this.makeColor('background-color', this.greenColor);
-  accountMenuIconColor: any = this.makeColor('color', this.whiteColor);
-
-  feedbackMenuBackground: any = this.makeColor('background-color', this.greenColor);
-  feedbackMenuIconColor: any = this.makeColor('color', this.whiteColor);
+  @ViewChild('feedbackOpen') feedbackOpen: MatMenuTrigger;
+  @ViewChild('accountMenuOpen') accountMenuOpen: MatMenuTrigger;
 
   constructor(Router: Router,
               private RestApi: RestApi,
@@ -49,47 +42,10 @@ export class ToolbarComponent extends BaseNavigationComponent implements OnInit 
   ngOnInit(): void {
     super.onInit();
   }
-  
-  openMenu() {
-    this.accountMenuOpen = true;
-  }
-  
-  closeMenu() {
-    this.accountMenuOpen = false;
-  }
-
-  makeColor(type: string, color: string) {
-    return {[type]: color};
-  }
-
-  toggleFeedback() {
-    this.feedbackOpen = !this.feedbackOpen;
-    this.updateFeedbackColors();
-  }
 
   closeFeedbackWindow() {
-    this.updateFeedbackColors();
-    this.feedbackOpen = false;
-  }
-
-  triggerAccountMenu($mdMenu, $event) {
-    this.updateAccountColors();
-    this.accountMenuOpen = true;
-    $mdMenu.open($event)
-  }
-
-  updateAccountColors() {
-    this.accountMenuBackground = this.getNewColor('background-color', this.accountMenuBackground);
-    this.accountMenuIconColor = this.getNewColor('color', this.accountMenuIconColor);
-  }
-
-  updateFeedbackColors() {
-    this.feedbackMenuBackground = this.getNewColor('background-color', this.feedbackMenuBackground);
-    this.feedbackMenuIconColor = this.getNewColor('color', this.feedbackMenuIconColor);
-  }
-
-  getNewColor(type: string, currentColor: any) {
-    return currentColor[type] == this.greenColor ? this.makeColor(type, this.whiteColor) : this.makeColor(type, this.greenColor);
+    //this.feedbackOpen = false;
+    this.feedbackOpen.closeMenu();
   }
 
   openDocumentation() {
@@ -97,7 +53,7 @@ export class ToolbarComponent extends BaseNavigationComponent implements OnInit 
   };
 
   openInfo() {
-    this.Router.navigateByUrl("info");
+    this.Router.navigate(["info"]);
     this.activePage = "Info";
   }
 
