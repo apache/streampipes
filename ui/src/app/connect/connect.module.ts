@@ -97,6 +97,7 @@ import { EventPropertyRowComponent } from './schema-editor/event-property-row/ev
 import { EventSchemaPreviewComponent } from './schema-editor/event-schema-preview/event-schema-preview.component';
 import { StaticColorPickerComponent } from './static-properties/static-color-picker/static-color-picker.component';
 import {DisplayRecommendedPipe} from "./static-properties/filter/display-recommended.pipe";
+import {TourProviderService} from "../services/tour/tour-provider.service";
 
 
 @NgModule({
@@ -181,21 +182,7 @@ import {DisplayRecommendedPipe} from "./static-properties/filter/display-recomme
         StaticFileRestService,
         PropertySelectorService,
         xsService,
-        {
-            provide: '$state',
-            useFactory: ($injector: any) => $injector.get('$state'),
-            deps: ['$injector'],
-        },
-        {
-            provide: '$timeout',
-            useFactory: ($injector: any) => $injector.get('$timeout'),
-            deps: ['$injector'],
-        },
-        {
-            provide: 'TourProviderService',
-            useFactory: ($injector: any) => $injector.get('TourProviderService'),
-            deps: ['$injector'],
-        },
+        TourProviderService
     ],
     entryComponents: [ConnectComponent, AdapterStartedDialog, AdapterExportDialog, AdapterUploadDialog, EditEventPropertyComponent],
 })

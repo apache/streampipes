@@ -180,5 +180,3 @@ export class ShepherdService {
        return this.TourProviderService.getTime();
     }
 }
-
-ShepherdService.$inject = ['$timeout', '$state', 'TourProviderService'];

@@ -16,7 +16,7 @@
  *
  */
 
-import {Component, Inject, Input, OnInit} from "@angular/core";
+import {Component, Input, OnInit} from "@angular/core";
 import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
 import {Message, Pipeline} from "../../../core-model/gen/streampipes-model";
 import {ObjectProvider} from "../../services/object-provider.service";
@@ -24,6 +24,7 @@ import {EditorService} from "../../services/editor.service";
 import {PipelineService} from "../../../platform-services/apis/pipeline.service";
 import {ShepherdService} from "../../../services/tour/shepherd.service";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'save-pipeline',
@@ -49,7 +50,7 @@ export class SavePipelineComponent implements OnInit {
               private objectProvider: ObjectProvider,
               private pipelineService: PipelineService,
               //TransitionService,
-              @Inject("$state") private $state: any,
+              private Router: Router,
               private ShepherdService: ShepherdService) {
     this.pipelineCategories = [];
     this.updateMode = "update";
@@ -139,15 +140,14 @@ export class SavePipelineComponent implements OnInit {
       this.ShepherdService.hideCurrentStep();
     }
     if (switchTab && !this.startPipelineAfterStorage) {
-      this.$state.go("streampipes.pipelines");
+      this.Router.navigate(["pipelines"]);
     }
     if (this.startPipelineAfterStorage) {
-      this.$state.go("streampipes.pipelines", {pipeline: data.notifications[1].description});
+      this.Router.navigate(["pipelines"], { queryParams: {pipeline: data.notifications[1].description}});
     }
   }
 
   hide() {
     this.dialogRef.close();
-    //this.$mdDialog.hide();
   };
 }
