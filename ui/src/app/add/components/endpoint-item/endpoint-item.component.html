@@ -27,10 +27,12 @@
                 <span class="{{itemTypeStyle}}">{{itemTypeTitle}}</span>
             </div>
             <div fxFlex fxLayoutAlign="start end" class="ml-5">
-                <button class="small-button-add" mat-button mat-raised-button color="primary" (click)="installSingleElement(item)" *ngIf="!item.installed">
+                <button class="small-button-add" mat-button mat-raised-button color="primary"
+                        (click)="installSingleElement($event, item)" *ngIf="!item.installed">
                     <span>&nbsp;Install</span>
                 </button>
-                <button class="small-button-add-inverted" mat-button mat-raised-button (click)="uninstallSingleElement(item)" *ngIf="item.installed">
+                <button class="small-button-add-inverted" mat-button mat-raised-button
+                        (click)="uninstallSingleElement($event, item)" *ngIf="item.installed">
                     <span>&nbsp;Uninstall</span>
                 </button>
                 <div *ngIf="item.installed" style="margin-left:5px;">

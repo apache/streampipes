@@ -41,6 +41,8 @@ export class AddComponent implements OnInit {
 
     selectedCategoryIndex: number = 0;
 
+    selectedEndpointItems: any[] = [];
+
     constructor(private RestApi: RestApi,
                 private AddService: AddService,
                 private DialogService: DialogService,
@@ -57,10 +59,16 @@ export class AddComponent implements OnInit {
     }
 
     toggleSelected(endpointItem) {
+        if (this.selectedEndpointItems.some(item => item === endpointItem.uri)) {
+            this.selectedEndpointItems.splice(this.selectedEndpointItems.indexOf(endpointItem.uri), 1);
+        } else {
+            this.selectedEndpointItems.push(endpointItem.uri);
+        }
         endpointItem.selected = !endpointItem.selected;
     }
 
     setSelectedTab(index: number) {
+        this.selectedEndpointItems = [];
         this.selectedTab = this.availableTypes[index];
     }
 

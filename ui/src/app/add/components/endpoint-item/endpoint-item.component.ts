@@ -90,16 +90,18 @@ export class EndpointItemComponent implements OnInit {
     }
   }
 
-  installSingleElement(endpointItem) {
+  installSingleElement(event: Event, endpointItem) {
     let endpointItems = [];
     endpointItems.push(endpointItem);
     this.triggerInstallation.emit({endpointItems: endpointItems, install: true});
+    event.stopPropagation();
   }
 
-  uninstallSingleElement(endpointItem) {
+  uninstallSingleElement(event: Event, endpointItem) {
     let endpointItems = [];
     endpointItems.push(endpointItem);
     this.triggerInstallation.emit({endpointItems: endpointItems, install: false});
+    event.stopPropagation();
   }
 
   refresh(elementUri) {

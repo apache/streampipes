@@ -36,25 +36,29 @@
     <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start" class="page-container-padding-inner" *ngIf="endpointItemsLoadingComplete" >
         <div fxLayoutAlign="start start" fxLayout="column">
             <div fxFlex="100" fxLayout="row" style="margin-bottom:20px;">
-                <button mat-button mat-flat-button color="primary" (click)="selectAll(true)" class="mr-10">
+                <button mat-button mat-raised-button class="mat-basic mr-10" (click)="selectAll(true)">
                     <i class="material-icons">done</i>
                     &nbsp;Select all
                 </button>
-                <button mat-button mat-flat-button color="primary" (click)="selectAll(false)" class="mr-10">
+                <button mat-button mat-raised-button class="mat-basic mr-10" (click)="selectAll(false)">
                     <i class="material-icons">clear</i>
                     &nbsp;Select none
                 </button>
-                <button mat-button mat-raised-button color="primary" (click)="installSelected()" class="mr-10">
+                <button mat-button mat-raised-button color="primary"
+                        [disabled]="selectedEndpointItems.length === 0"
+                        (click)="installSelected()" class="mr-10">
                     <i class="material-icons">cloud_download</i>
                     &nbsp;Install selected
                 </button>
-                <button mat-button mat-raised-button color="primary" (click)="uninstallSelected()">
+                <button mat-button mat-raised-button color="primary"
+                        [disabled]="selectedEndpointItems.length === 0"
+                        (click)="uninstallSelected()">
                     <i class="material-icons">delete</i>
                     &nbsp;Uninstall selected
                 </button>
             </div>
         </div>
-        <div fxLayout="row wrap">
+        <div fxLayout="row wrap" style="width: 100%;">
             <endpoint-item fxFlex="33"
                            [itemSelected]="endpointItem.selected"
                            [item]="endpointItem"

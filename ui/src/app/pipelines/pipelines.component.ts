@@ -133,7 +133,6 @@ export class PipelinesComponent implements OnInit {
                 }
             }
         });
-
         return active;
     }
 
