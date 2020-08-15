@@ -32,14 +32,11 @@ import {LoggedInCanActivateGuard} from "./_guards/logged-in.can-activate.guard";
 import {InfoComponent} from "./info/info.component";
 import {NotificationsComponent} from "./notifications/notifications.component";
 
-import { EditorComponent } from './editor/editor.component';
-import { PipelinesComponent } from './pipelines/pipelines.component';
-import { ConnectComponent } from './connect/connect.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { DataExplorerComponent } from './data-explorer/data-explorer.component';
-import { AppOverviewComponent } from './app-overview/app-overview.component';
-import { AddComponent } from './add/add.component';
-import { ConfigurationComponent } from './configuration/configuration.component';
+{{#modulesActive}}
+{{#ng5}}
+import { {{{ng5_component}}} } from '{{{ng5_componentPath}}}';
+{{/ng5}}
+{{/modulesActive}}
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [ConfiguredCanActivateGuard, LoggedInCanActivateGuard]},
@@ -48,14 +45,11 @@ const routes: Routes = [
   { path: 'standalone/:dashboardId', component: StandaloneDashboardComponent },
   { path: '', component: StreampipesComponent, children: [
       { path: '', component: HomeComponent, canActivate: [ConfiguredCanActivateGuard] },
-      { path: 'editor', component: EditorComponent },
-      { path: 'pipelines', component: PipelinesComponent },
-      { path: 'connect', component: ConnectComponent },
-      { path: 'dashboard', component: DashboardComponent },
-      { path: 'dataexplorer', component: DataExplorerComponent },
-      { path: 'app-overview', component: AppOverviewComponent },
-      { path: 'add', component: AddComponent },
-      { path: 'configuration', component: ConfigurationComponent },
+      {{#modulesActive}}
+      {{#ng5}}
+      { path: '{{{link}}}', component: {{{ng5_component}}} },
+      {{/ng5}}
+      {{/modulesActive}}
       { path: 'notifications', component: NotificationsComponent },
       { path: 'info', component: InfoComponent },
       { path: 'pipeline-details', component: PipelineDetailsComponent }

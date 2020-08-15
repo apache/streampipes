@@ -29,7 +29,7 @@ import { FormsModule } from '@angular/forms';
 import { CustomMaterialModule } from './CustomMaterial/custom-material.module';
 import { AuthStatusService } from './services/auth-status.service';
 
-import { CoreModule } from './core-v2/core.module';
+import { CoreModule } from './core/core.module';
 import { LoginModule } from './login/login.module';
 import { HomeModule } from './home/home.module';
 import { InfoModule } from './info/info.module';
@@ -40,6 +40,8 @@ import { NotificationCountService } from "./services/notification-count-service"
 import { AuthService } from "./services/auth.service";
 import { LoadingBarHttpClientModule } from '@ngx-loading-bar/http-client';
 import { LOADING_BAR_CONFIG } from '@ngx-loading-bar/core';
+
+import {InjectableRxStompConfig, RxStompService, rxStompServiceFactory} from "@stomp/ng2-stompjs";
 
 {{#modulesActive}}
 {{#ng5}}
@@ -67,6 +69,7 @@ import * as $ from 'jquery';
         AppRoutingModule,
         BrowserModule,
         BrowserAnimationsModule,
+        CoreModule,
         CustomMaterialModule,
         MatGridListModule,
         MatIconModule,

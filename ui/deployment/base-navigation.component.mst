@@ -32,49 +32,27 @@ export abstract class BaseNavigationComponent {
       title: 'Home',
       icon: 'home'
     },
+    {{#modulesActive}}
+    {{^admin}}
     {
-      link: 'editor',
-      title: 'Editor',
-      icon: 'dashboard'
+        link: '{{{link}}}',
+        title: '{{{title}}}',
+        icon: '{{{icon}}}'
     },
-    {
-      link: 'pipelines',
-      title: 'Pipelines',
-      icon: 'play_arrow'
-    },
-    {
-      link: 'connect',
-      title: 'StreamPipes Connect',
-      icon: 'power'
-    },
-    {
-      link: 'dashboard',
-      title: 'Live Dashboard',
-      icon: 'insert_chart'
-    },
-    {
-      link: 'dataexplorer',
-      title: 'Data Explorer',
-      icon: 'search'
-    },
-    {
-      link: 'app-overview',
-      title: 'Apps',
-      icon: 'apps'
-    },
+    {{/admin}}
+    {{/modulesActive}}
   ];
 
   admin = [
+    {{#modulesActive}}
+    {{#admin}}
     {
-      link: 'add',
-      title: 'Install Pipeline Elements',
-      icon: 'cloud_download'
+        link: '{{{link}}}',
+        title: '{{{title}}}',
+        icon: '{{{icon}}}'
     },
-    {
-      link: 'configuration',
-      title: 'Configuration',
-      icon: 'settings'
-    },
+    {{/admin}}
+    {{/modulesActive}}
   ];
 
   constructor(protected Router: Router) {
