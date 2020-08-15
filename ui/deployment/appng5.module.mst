@@ -96,6 +96,11 @@ import * as $ from 'jquery';
         NotificationCountService,
         { provide: Logger, useClass: ConsoleLogService },
         { provide: LOADING_BAR_CONFIG, useValue: { latencyThreshold: 100 }},
+        {
+        			provide: RxStompService,
+        			useFactory: rxStompServiceFactory,
+        			deps: [InjectableRxStompConfig]
+        }
     ],
     bootstrap: [AppComponent]
 })

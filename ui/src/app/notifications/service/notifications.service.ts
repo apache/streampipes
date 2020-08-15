@@ -50,7 +50,9 @@ export class NotificationsService {
     }
 
     updateNotification(notificationItem: NotificationItem): Observable<any> {
-        return this.http.put(this.notificationUrl + "/" + notificationItem._id, notificationItem);
+        return this.http.put(this.notificationUrl + "/" + notificationItem._id, notificationItem, {
+            headers: { ignoreLoadingBar: '' }
+        });
     }
 
     private get baseUrl() {

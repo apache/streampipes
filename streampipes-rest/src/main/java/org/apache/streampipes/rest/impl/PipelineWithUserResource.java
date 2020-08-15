@@ -159,6 +159,8 @@ public class PipelineWithUserResource extends AbstractRestInterface implements I
         pipeline.setRunning(false);
         pipeline.setCreatedByUser(username);
         pipeline.setCreatedAt(new Date().getTime());
+        pipeline.getSepas().forEach(processor -> processor.setCorrespondingUser(username));
+        pipeline.getActions().forEach(action -> action.setCorrespondingUser(username));
         //userService.addOwnPipeline(username, pipeline);
         Operations.storePipeline(pipeline);
         SuccessMessage message = Notifications.success("Pipeline stored");

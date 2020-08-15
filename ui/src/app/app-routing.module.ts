@@ -38,6 +38,7 @@ import {StartupComponent} from "./login/components/startup/startup.component";
 import {AlreadyConfiguredCanActivateGuard} from "./_guards/already-configured.can-activate.guard";
 import {LoggedInCanActivateGuard} from "./_guards/logged-in.can-activate.guard";
 import {InfoComponent} from "./info/info.component";
+import {NotificationsComponent} from "./notifications/notifications.component";
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [ConfiguredCanActivateGuard, LoggedInCanActivateGuard]},
@@ -53,6 +54,7 @@ const routes: Routes = [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'dataexplorer', component: DataExplorerComponent },
       { path: 'editor', component: EditorComponent },
+      { path: 'notifications', component: NotificationsComponent },
       { path: 'pipelines', component: PipelinesComponent },
       { path: 'info', component: InfoComponent },
       { path: 'pipeline-details', component: PipelineDetailsComponent }

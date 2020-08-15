@@ -42,12 +42,7 @@ import {InjectableRxStompConfig, RxStompService, rxStompServiceFactory} from "@s
 		NotificationItemComponent
 	],
 	providers: [
-		NotificationsService,
-		{
-			provide: RxStompService,
-			useFactory: rxStompServiceFactory,
-			deps: [InjectableRxStompConfig]
-		}
+		NotificationsService
 	],
 	exports: [
 		NotificationsComponent

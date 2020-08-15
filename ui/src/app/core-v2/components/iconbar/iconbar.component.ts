@@ -30,22 +30,25 @@ import {NotificationCountService} from "../../../services/notification-count-ser
 })
 export class IconbarComponent extends BaseNavigationComponent implements OnInit {
 
+  unreadNotifications: number = 0;
 
   constructor(Router: Router,
               private AuthStatusService: AuthStatusService,
-              private NotificationCountService: NotificationCountService) {
+              public NotificationCountService: NotificationCountService) {
     super(Router);
   }
 
   ngOnInit(): void {
     super.onInit();
+    this.connectToBroker();
+    this.NotificationCountService.loadUnreadNotifications();
   }
 
   connectToBroker() {
     var login = 'admin';
     var passcode = 'admin';
-    var websocketProtocol = window.location.protocol === "http" ? "ws" : "wss";
-    var brokerUrl = websocketProtocol + '://' + window.location.host + ':' + window.location.port + '/streampipes/ws';
+    var websocketProtocol = window.location.protocol === "http:" ? "ws" : "wss";
+    var brokerUrl = websocketProtocol + '://' + window.location.hostname + ':' + window.location.port + '/streampipes/ws';
     var inputTopic = '/topic/org.apache.streampipes.notifications.' + this.AuthStatusService.email;
 
     let stompClient = new Client({

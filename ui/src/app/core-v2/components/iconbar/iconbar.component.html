@@ -18,29 +18,30 @@
 
 <div style="padding-top:0px;">
     <div [ngClass]="item.link === activePage ? 'sp-navbar-item-selected': 'sp-navbar-item'"
-                  *ngFor="let item of menu" style="min-width:0px;padding:0px;padding-top:5px;padding-bottom:5px;">
-        <button mat-button mat-icon-button class="button-margin-iconbar" (click)="go(item.link)" matTooltip="{{item.title}}" matTooltipPosition="right">
+         *ngFor="let item of menu" style="min-width:0px;padding:0px;padding-top:5px;padding-bottom:5px;">
+        <button mat-button mat-icon-button class="button-margin-iconbar" (click)="go(item.link)"
+                matTooltip="{{item.title}}" matTooltipPosition="right">
             <mat-icon [ngClass]="item.link === activePage ? 'sp-navbar-icon-selected' : 'sp-navbar-icon'">
                 {{item.icon}}
             </mat-icon>
         </button>
     </div>
-    <div  [ngClass]="'streampipes.notifications' === activePage ? 'sp-navbar-item-selected' : 'sp-navbar-item'">
-<!--        <notification-icon count='toolbarCtrl.NotificationCountService.unreadNotificationCount'>-->
-<!--            <md-button class="md-icon-button button-margin-iconbar" ng-click="go('streampipes.notifications')">-->
-<!--                <md-icon md-svg-icon="communication:ic_chat_24px" aria-label="Notifications"-->
-<!--                         ng-class="{'sp-navbar-icon-selected' : 'streampipes.notifications' === activePage, 'sp-navbar-icon': 'streampipes.notifications' !== activePage}"></md-icon>-->
-<!--                <md-tooltip md-direction="right">-->
-<!--                    Notifications-->
-<!--                </md-tooltip>-->
-<!--            </md-button>-->
-<!--        </notification-icon>-->
+    <div [ngClass]="'notifications' === activePage ? 'sp-navbar-item-selected' : 'sp-navbar-item'"
+         style="padding-top:5px;padding-bottom:5px;">
+        <button mat-button mat-icon-button class="md-icon-button button-margin-iconbar"
+                (click)="go('notifications')"
+                matTooltip="Notifications" matTooltipPosition="right">
+            <mat-icon [matBadge]="NotificationCountService.unreadNotificationCount" [matBadgeHidden]="NotificationCountService.unreadNotificationCount == 0" [ngClass]="'notifications' === activePage ?'sp-navbar-icon-selected' : 'sp-navbar-icon'">chat
+            </mat-icon>
+        </button>
     </div>
     <mat-divider style="border-top-color:white;"></mat-divider>
     <div [ngClass]="item.link === activePage ? 'sp-navbar-item-selected' : 'sp-navbar-item'"
-                  *ngFor="let item of admin" style="padding-top:5px;padding-bottom:5px;">
-        <button mat-button mat-icon-button class="md-icon-button button-margin-iconbar" (click)="go(item.link)" matTooltip="{{item.title}}">
-            <mat-icon [ngClass]="item.link === activePage ?'sp-navbar-icon-selected' : 'sp-navbar-icon'">{{item.icon}}</mat-icon>
+         *ngFor="let item of admin" style="padding-top:5px;padding-bottom:5px;">
+        <button mat-button mat-icon-button class="md-icon-button button-margin-iconbar" (click)="go(item.link)"
+                matTooltip="{{item.title}}">
+            <mat-icon
+                    [ngClass]="item.link === activePage ?'sp-navbar-icon-selected' : 'sp-navbar-icon'">{{item.icon}}</mat-icon>
         </button>
     </div>
 </div>

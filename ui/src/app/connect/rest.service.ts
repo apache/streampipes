@@ -101,7 +101,9 @@ export class RestService {
     }
 
     getRuntimeInfo(sourceDescription): Observable<any> {
-        return this.http.post(this.makeUserDependentBaseUrl() + "/pipeline-element/runtime", sourceDescription);
+        return this.http.post(this.makeUserDependentBaseUrl() + "/pipeline-element/runtime", sourceDescription, {
+            headers: { ignoreLoadingBar: '' }
+        });
     }
 
     makeUserDependentBaseUrl() {

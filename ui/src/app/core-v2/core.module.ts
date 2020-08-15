@@ -35,6 +35,7 @@ import {IconbarComponent} from "./components/iconbar/iconbar.component";
 import {MatDividerModule} from '@angular/material/divider';
 import {MatListModule} from "@angular/material/list";
 import {MatMenuModule} from "@angular/material/menu";
+import {MatBadgeModule} from "@angular/material/badge";
 
 @NgModule({
   imports: [
@@ -45,6 +46,7 @@ import {MatMenuModule} from "@angular/material/menu";
     MatListModule,
     MatIconModule,
     MatMenuModule,
+    MatBadgeModule,
     MatButtonModule,
     MatTooltipModule,
     MatProgressSpinnerModule,
@@ -59,9 +61,7 @@ import {MatMenuModule} from "@angular/material/menu";
     IconbarComponent,
     ToolbarComponent
   ],
-  providers: [
-
-  ],
+  providers: [],
   entryComponents: [
     StreampipesComponent
   ]

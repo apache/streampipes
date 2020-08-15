@@ -27,6 +27,7 @@ import {RxStompService} from "@stomp/ng2-stompjs";
 import {AuthStatusService} from "../services/auth-status.service";
 import {NotificationUtils} from "./utils/notifications.utils";
 import {NotificationCountService} from "../services/notification-count-service";
+import {FreeTextStaticProperty, Pipeline} from "../core-model/gen/streampipes-model";
 
 @Component({
     selector: 'notifications',
@@ -112,14 +113,14 @@ export class NotificationsComponent implements OnInit, OnDestroy {
         });
     }
 
-    filterForNotifications(pipelines: any) {
+    filterForNotifications(pipelines: Pipeline[]) {
         pipelines.forEach(pipeline => {
            let notificationActions = pipeline.actions.filter(sink => sink.appId === NotificationsComponent.NOTIFICATIONS_APP_ID);
              notificationActions.forEach(notificationAction => {
                 let notificationName = notificationAction
                     .staticProperties
-                    .filter(sp => sp.properties.internalName === NotificationsComponent.NOTIFICATION_TITLE_KEY)
-                    .map(sp => sp.properties.value)[0];
+                    .filter(sp => sp.internalName === NotificationsComponent.NOTIFICATION_TITLE_KEY)
+                    .map(sp => (sp as FreeTextStaticProperty).value)[0];
                 let pipelineName = pipeline.name;
                 this.existingNotifications.push({notificationTitle: notificationName,
                     pipelineName: pipelineName, pipelineId: pipeline._id, notificationId: NotificationUtils.makeNotificationId(pipeline._id, notificationName)});

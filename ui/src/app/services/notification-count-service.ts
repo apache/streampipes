@@ -62,5 +62,3 @@ export class NotificationCountService {
         return pipelineId + '-' + vizName;
     }
 }
-
-NotificationCountService.$inject = ['RestApi'];
