@@ -17,7 +17,7 @@
  */
 
 import * as FileSaver from 'file-saver';
-import {Component, Inject, OnInit} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {PipelineService} from "../platform-services/apis/pipeline.service";
 import {Pipeline, PipelineCategory} from '../core-model/gen/streampipes-model';
 import {DialogService} from "../core-ui/dialog/base-dialog/base-dialog.service";
@@ -28,9 +28,6 @@ import {StartAllPipelinesDialogComponent} from "./dialog/start-all-pipelines/sta
 import {PipelineCategoriesDialogComponent} from "./dialog/pipeline-categories/pipeline-categories-dialog.component";
 import {zip} from "rxjs";
 import {ActivatedRoute} from "@angular/router";
-
-declare const jsPlumb: any;
-declare const require: any;
 
 @Component({
     selector: 'pipelines',
@@ -46,6 +43,7 @@ export class PipelinesComponent implements OnInit {
     stopping: boolean;
     pipelineCategories: Array<PipelineCategory>;
     activeCategoryId: string;
+
     pipelineIdToStart: string;
 
     pipelineToStart: Pipeline;
@@ -66,7 +64,7 @@ export class PipelinesComponent implements OnInit {
     ngOnInit() {
         this.ActivatedRoute.queryParams.subscribe(params => {
             if (params['pipeline']) {
-                this.pipelineToStart = params['pipeline'];
+                this.pipelineIdToStart = params['pipeline'];
             }
             this.getPipelineCategories();
             this.getPipelines();
