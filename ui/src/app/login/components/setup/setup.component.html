@@ -115,7 +115,7 @@
                         <div fxFlex fxLayout style="width:80%" class="center center" *ngIf="nextTaskTitle != ''">
                             <div fxFlex="80" style="width:50%"><h4>{{nextTaskTitle}}</h4></div>
                             <div fxFlex="20" style="width:50%">
-                        <mat-spinner class="md-accent" [mode]="'indeterminate'"
+                        <mat-spinner class="md-accent" [mode]="'indeterminate'" [diameter]="20" style="margin-top:10px;"
                                               *ngIf="loading"></mat-spinner>
                             </div>
                         </div>

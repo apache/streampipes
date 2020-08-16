@@ -43,24 +43,15 @@
                                 <input [(ngModel)]="credentials.password" matInput name="password" type="password" class="sp" required/>
                             </mat-form-field>
                             <mat-checkbox [(ngModel)]="credentials.rememberMe" name="rememberMe" class="sp" color="primary">Remember Me</mat-checkbox>
-    <!--                        <md-input-container class="sp"><label class="sp">Email</label> <input-->
-    <!--                                type="email" class="sp" ng-model="ctrl.credentials.username" required>-->
-    <!--                        </md-input-container>-->
-    <!--                        <md-input-container class="sp" flex><label>Password</label>-->
-    <!--                            <input type="password" ng-model="ctrl.credentials.password" required>-->
-    <!--                        </md-input-container>-->
-    <!--                        <md-input-container flex>-->
-    <!--                            <md-checkbox-->
-    <!--                                    ng-model="ctrl.credentials.rememberMe"> Remember me-->
-    <!--                            </md-checkbox>-->
-    <!--                        </md-input-container>-->
                         </div>
                         <div class="form-actions" style="margin-top:20px;">
                             <button mat-button mat-raised-button color="primary" (click)="logIn()"
-                                    [disabled]="!loginForm.form.valid || loading">Login
+                                    [disabled]="!loginForm.form.valid || loading">
+                                <span *ngIf="loading">Logging in...</span>
+                                <span *ngIf="!loading">Login</span>
                             </button>
-                            <mat-spinner [mode]="'indeterminate'" color="primary"
-                                         *ngIf="loading"></mat-spinner>
+                            <mat-spinner [mode]="'indeterminate'" color="primary" [diameter]="20"
+                                         *ngIf="loading" style="margin-top:10px;"></mat-spinner>
                             <div class="md-warn" *ngIf="authenticationFailed">
                                 <h4>The password you entered is incorrect. Please try again.</h4>
                             </div>

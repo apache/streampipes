@@ -39,7 +39,8 @@ import { {{{ng5_component}}} } from '{{{ng5_componentPath}}}';
 {{/modulesActive}}
 
 const routes: Routes = [
-  { path: 'login', component: LoginComponent, canActivate: [ConfiguredCanActivateGuard, LoggedInCanActivateGuard]},
+  { path: 'login', component: LoginComponent, canActivate: [ConfiguredCanActivateGuard, LoggedInCanActivateGuard],
+  data: {animation: 'LoginPage'}},
   { path: 'setup', component: SetupComponent, canActivate: [AlreadyConfiguredCanActivateGuard] },
   { path: 'startup', component: StartupComponent },
   { path: 'standalone/:dashboardId', component: StandaloneDashboardComponent },
