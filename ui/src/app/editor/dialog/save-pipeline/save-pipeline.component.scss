@@ -27,3 +27,11 @@
 .padding-20 {
   padding: 20px;
 }
+
+.mb-10 {
+  margin-bottom: 10px;
+}
+
+::ng-deep .pipeline-radio-group .mat-radio-label {
+  padding: 0;
+}

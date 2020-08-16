@@ -21,18 +21,18 @@
         <div fxFlex="100" fxLayout="column">
 
             <div fxFlex="100" fxLayout="column">
-                <div id="overwriteCheckbox" class="checkbox" *ngIf="modificationMode">
-                    <mat-radio-group class="md-accent" [(ngModel)]="updateMode">
-                        <mat-radio-button [value]="'update'">
+                <div id="overwriteCheckbox" class="checkbox" *ngIf="currentModifiedPipelineId">
+                    <mat-radio-group [(ngModel)]="updateMode" fxLayout="column" color="primary" class="pipeline-radio-group">
+                        <mat-radio-button [value]="'update'" class="mb-10" style="padding-left: 0;">
                             Update pipeline <b>{{pipeline.name}}</b>
                         </mat-radio-button>
-                        <mat-radio-button [value]="'clone'">
+                        <mat-radio-button [value]="'clone'" class="mb-10">
                             Create new pipeline
                         </mat-radio-button>
                     </mat-radio-group>
                 </div>
                 <form [formGroup]="submitPipelineForm">
-                <div fxFlex="100" fxLayout="column" *ngIf="!modificationMode || updateMode=='clone'">
+                <div fxFlex="100" fxLayout="column" *ngIf="!currentModifiedPipelineId || updateMode=='clone'">
                     <mat-form-field fxFlex><mat-label>Pipeline Name</mat-label>
                         <input [formControlName]="'pipelineName'" matInput name="pipelineName"/>
 <!--                        <span ng-show="submitPipelineForm.pipelineName.$touched && submitPipelineForm.pipelineName.$error.required">Please provide a pipeline name.</span>-->

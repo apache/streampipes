@@ -38,24 +38,24 @@ export class SavePipelineComponent implements OnInit {
   updateMode: any;
 
   submitPipelineForm: FormGroup = new FormGroup({});
-  TransitionService: any;
 
   @Input()
   pipeline: Pipeline;
+
   @Input()
   modificationMode: string;
+
+  @Input()
+  currentModifiedPipelineId: string;
 
   constructor(private editorService: EditorService,
               private dialogRef: DialogRef<SavePipelineComponent>,
               private objectProvider: ObjectProvider,
               private pipelineService: PipelineService,
-              //TransitionService,
               private Router: Router,
               private ShepherdService: ShepherdService) {
     this.pipelineCategories = [];
     this.updateMode = "update";
-    //this.TransitionService = TransitionService;
-    //this.ShepherdService = ShepherdService;
   }
 
   ngOnInit() {
@@ -113,9 +113,10 @@ export class SavePipelineComponent implements OnInit {
 
     let storageRequest;
 
-    if (this.modificationMode && this.updateMode === 'update') {
+    if (this.currentModifiedPipelineId && this.updateMode === 'update') {
       storageRequest = this.pipelineService.updatePipeline(this.pipeline);
     } else {
+      this.pipeline._id = undefined;
       storageRequest = this.pipelineService.storePipeline(this.pipeline);
     }
 
