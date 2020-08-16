@@ -42,9 +42,8 @@ import { AddComponent } from './add/add.component';
 import { ConfigurationComponent } from './configuration/configuration.component';
 
 const routes: Routes = [
-  { path: 'login', component: LoginComponent,
-    canActivate: [ConfiguredCanActivateGuard, LoggedInCanActivateGuard],
-    data: {animation: 'LoginPage'}},
+  { path: 'login', component: LoginComponent, canActivate: [ConfiguredCanActivateGuard, LoggedInCanActivateGuard],
+  data: {animation: 'LoginPage'}},
   { path: 'setup', component: SetupComponent, canActivate: [AlreadyConfiguredCanActivateGuard] },
   { path: 'startup', component: StartupComponent },
   { path: 'standalone/:dashboardId', component: StandaloneDashboardComponent },
@@ -61,7 +60,7 @@ const routes: Routes = [
       { path: 'notifications', component: NotificationsComponent },
       { path: 'info', component: InfoComponent },
       { path: 'pipeline-details', component: PipelineDetailsComponent }
-    ], canActivateChild: [AuthCanActivateChildrenGuard]}
+    ], canActivateChild: [AuthCanActivateChildrenGuard] }
 ];
 
 @NgModule({

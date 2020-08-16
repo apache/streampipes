@@ -21,6 +21,7 @@ src/assets/lib/apps/*
 
 # prebuild
 src/app/app.module.ts
+src/app/app-routing.module.ts
 src/app/appng5.module.ts
 src/app/core/state.config.ts
 src/app/layout/toolbar.controller.ts
