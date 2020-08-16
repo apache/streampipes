@@ -24,8 +24,10 @@ import {
     MappingProperty
 } from "../../../core-model/gen/streampipes-model";
 import {AbstractValidatedStaticPropertyRenderer} from "../base/abstract-validated-static-property";
+import { Directive } from "@angular/core";
 
 
+@Directive()
 export abstract class StaticMappingComponent<T extends MappingProperty>
     extends AbstractValidatedStaticPropertyRenderer<T> {
 

@@ -16,10 +16,11 @@
  *
  */
 
-import {EventEmitter, Input, Output, ViewChild} from "@angular/core";
+import { EventEmitter, Input, Output, ViewChild, Directive } from "@angular/core";
 import {CdkPortalOutlet, ComponentPortal, Portal} from "@angular/cdk/portal";
 import {DialogRef} from "./dialog-ref";
 
+@Directive()
 export abstract class BaseDialogComponent<T> {
 
   @Input()

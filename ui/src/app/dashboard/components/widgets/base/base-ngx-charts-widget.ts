@@ -20,7 +20,9 @@ import {BaseStreamPipesWidget} from "./base-widget";
 import {RxStompService} from "@stomp/ng2-stompjs";
 import {ResizeService} from "../../../services/resize.service";
 import {DashboardService} from "../../../services/dashboard.service";
+import { Directive } from "@angular/core";
 
+@Directive()
 export abstract class BaseNgxChartsStreamPipesWidget extends BaseStreamPipesWidget {
 
     view: any[] = [];

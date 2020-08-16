@@ -16,7 +16,7 @@
  *
  */
 
-import { EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { EventEmitter, Input, OnChanges, Output, SimpleChanges, Directive } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GridsterItem, GridsterItemComponent } from 'angular-gridster2';
 import { DateRange } from '../../../../core-model/datalake/DateRange';
@@ -29,6 +29,7 @@ import {
   EventSchema
 } from "../../../../core-model/gen/streampipes-model";
 
+@Directive()
 export abstract class BaseDataExplorerWidget implements OnChanges {
 
   protected constructor(protected dataLakeRestService: DatalakeRestService, protected dialog: MatDialog) {

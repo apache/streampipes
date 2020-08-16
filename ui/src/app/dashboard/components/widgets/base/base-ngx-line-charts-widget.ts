@@ -22,7 +22,9 @@ import {BaseNgxChartsStreamPipesWidget} from "./base-ngx-charts-widget";
 import {StaticPropertyExtractor} from "../../../sdk/extractor/static-property-extractor";
 import {LineConfig} from "../line/line-config";
 import {DashboardService} from "../../../services/dashboard.service";
+import { Directive } from "@angular/core";
 
+@Directive()
 export abstract class BaseNgxLineChartsStreamPipesWidget extends BaseNgxChartsStreamPipesWidget {
 
     multi:any = [];

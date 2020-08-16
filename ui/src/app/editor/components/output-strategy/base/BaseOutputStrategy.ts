@@ -16,13 +16,14 @@
  *
  */
 
-import {Input} from "@angular/core";
+import { Input, Directive } from "@angular/core";
 import {FormGroup} from "@angular/forms";
 import {
   DataProcessorInvocation,
   OutputStrategy
 } from "../../../../core-model/gen/streampipes-model";
 
+@Directive()
 export abstract class BaseOutputStrategy<T extends OutputStrategy> {
 
   @Input()

@@ -16,7 +16,7 @@
  *
  */
 
-import {Input, OnChanges, SimpleChanges} from "@angular/core";
+import { Input, OnChanges, SimpleChanges, Directive } from "@angular/core";
 import {DashboardItem} from "../../../models/dashboard.model";
 import {StaticPropertyExtractor} from "../../../sdk/extractor/static-property-extractor";
 import {RxStompService} from "@stomp/ng2-stompjs";
@@ -32,6 +32,7 @@ import {
     VisualizablePipeline
 } from "../../../../core-model/gen/streampipes-model";
 
+@Directive()
 export abstract class BaseStreamPipesWidget implements OnChanges {
 
     @Input() widget: DashboardItem;
