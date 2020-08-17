@@ -22,9 +22,6 @@ cli_help() {
   cat <<EOF
 StreamPipes CLI - Manage your StreamPipes environment with ease
 
-Version:      $(show_version)
-GitHub:       https://github.com/apache/incubator-streampipes-installer
-
 Usage: $cli_name COMMAND [OPTIONS]
 
 Options:

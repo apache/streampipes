@@ -27,13 +27,11 @@ The StreamPipes command-line interface (CLI) is focused on developers in order t
 ```bash
 StreamPipes CLI - Manage your StreamPipes environment with ease
 
-Version:      0.67.0-SNAPSHOT, build 4dbadbb
-GitHub:       https://github.com/apache/incubator-streampipes-installer
-
 Usage: streampipes COMMAND [OPTIONS]
 
 Options:
-  --help, -h  show help
+  --help, -h      show help
+  --version, -v   show version
 
 Commands:
   clean       Clean all configs/docker data volumes from system
