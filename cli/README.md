@@ -73,13 +73,13 @@ streampipes template --list
 streampipes template --set pipeline-element
 ```
 
-**Start** environment in `dev` mode.
-> **IMPORTANT**: Make sure use this flag since we rely on open ports to core service such as `consul`, `couchdb`, `kafka` etc.
+**Start** environment ( default: `dev` mode).
+> **NOTE**: `dev` mode is enabled by default since we rely on open ports to core service such as `consul`, `couchdb`, `kafka` etc. to reach from the IDE when developing.
 
 ```bash
-streampipes start --dev
+streampipes start
 # start in regular mode with unmapped ports
-# streampipes start
+# streampipes start --user
 ```
 Now you're good to go to write your new pipeline element :tada: :tada: :tada:
 
