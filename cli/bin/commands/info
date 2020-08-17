@@ -33,7 +33,7 @@ if [ "$#" -gt 1 ]; then
 fi
 
 cat <<EOF
-Version:      $(cat $STREAMPIPES_WORKDIR/VERSION), build $(git --git-dir "$(dirname "$STREAMPIPES_WORKDIR")/.git" rev-parse --short HEAD)
+Version:      $(show_version)
 GitHub:       https://github.com/apache/incubator-streampipes-installer
 Website:      https://streampipes.apache.org
 Bug Report:   dev@streampipes.apache.org

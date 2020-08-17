@@ -31,6 +31,10 @@ fatal(){
   exit 1
 }
 
+show_version(){
+  echo $(cat $STREAMPIPES_WORKDIR/VERSION), build $(git --git-dir "$(dirname "$STREAMPIPES_WORKDIR")/.git" rev-parse --short HEAD)
+}
+
 show_banner(){
   cat <<EOF
   _______ __                              ______ __

@@ -124,6 +124,9 @@ Simply add the path the cli directory to your `$PATH` variable, e.g. in your `.b
 export PATH="/path/to/incubator-streampipes-installer/cli:$PATH"
 ```
 
+## Upgrade to new version
+To upgrade to a new version, simply edit the version tag in `VERSION`.
+
 ## Get help
 If you have any problems during the installation or questions around StreamPipes, you'll get help through one of our community channels:
 

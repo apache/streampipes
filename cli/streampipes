@@ -22,13 +22,14 @@ cli_help() {
   cat <<EOF
 StreamPipes CLI - Manage your StreamPipes environment with ease
 
-Version:      $(cat $STREAMPIPES_WORKDIR/VERSION), build $(git --git-dir "$(dirname "$STREAMPIPES_WORKDIR")/.git" rev-parse --short HEAD)
+Version:      $(show_version)
 GitHub:       https://github.com/apache/incubator-streampipes-installer
 
 Usage: $cli_name COMMAND [OPTIONS]
 
 Options:
-  --help, -h  show help
+  --help, -h      show help
+  --version, -v   show version
 
 Commands:
   clean       Clean all configs/docker data volumes from system
@@ -78,7 +79,10 @@ case "$1" in
   template)
     "$STREAMPIPES_WORKDIR/bin/commands/template" "${@:2}"
     ;;
-  *)
+  -v|--version)
+    show_version
+    ;;
+  -h|--help|*)
     cli_help
     ;;
 esac
