@@ -18,6 +18,8 @@ CYAN=$'\e[0;36m'
 RED=$'\e[0;31m'
 NC=$'\e[0m'
 
+OS=`uname`
+
 info(){
   echo "${CYAN}[INFO]${NC} $1"
 }
@@ -63,6 +65,19 @@ deployment_notice() {
             StreamPipes UI: http://localhost/
 
 EOF
+}
+
+set_lf_line_encoding(){
+  case "$(uname -s)" in
+      Darwin)
+        # for MacOS
+        sed -i '' $'s/\r$//' $1
+        ;;
+      *)
+        # for Linux and Windows
+        sed -i 's/\r$//' $1
+        ;;
+  esac
 }
 
 is_streampipes_running(){

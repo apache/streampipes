@@ -68,8 +68,9 @@ fi
 
 if [ -n "$set_template" ]; then
   if [ -e $STREAMPIPES_WORKDIR/bin/templates/environments/$set_template ]; then
-  	cp $STREAMPIPES_WORKDIR/bin/templates/environments/$set_template $STREAMPIPES_WORKDIR/.environment
     info "Set environment template to '$set_template'"
+  	cp $STREAMPIPES_WORKDIR/bin/templates/environments/$set_template $STREAMPIPES_WORKDIR/.environment
+    set_lf_line_encoding $STREAMPIPES_WORKDIR/.environment
   else
   	fatal "Template not found '$set_template'"
   fi
