@@ -15,60 +15,122 @@
   ~ limitations under the License.
   ~
   -->
+# StreamPipes CLI - The Developer's Favorite
 
-# CLI tool for StreamPipes
+The StreamPipes command-line interface (CLI) is focused on developers in order to provide an easy entrypoint to set up a suitable dev environment, either planning on developing
 
-All active services are defined in the system file.
-All available services are in the services folder.
+* new extensions such as **connect adapters, processors, sinks** or,
+* new core features for **backend** and **ui**.
 
-## Features Suggestion
-* start (service-name) (--hostname "valueHostName") (--defaultip)
-  * Starts StreamPipes or service
-* stop (service-name) 
-  * Stops StreamPipes and deletes containers
-* restart (service-name) 
-  * Restarts containers
-* update (service-name) (--renew)
-  * Downloads new docker images 
-  * --renew restart containers after download
-* set-template (template-name)
-  * Replaces the systems file with file mode-name
-* log (service-name)
-  * Prints the logs of the service
+**Current version:** 0.67.0-SNAPSHOT
 
-* list-available
-* list-active
-* list-templates
+```bash
+StreamPipes CLI - Manage your StreamPipes environment with ease
 
-* activate (service-name) (--all)
-  * Adds service to system and starts
-* add (service-name) (--all)
-  * Adds service to system 
-* deactivate {remove} (service-name)  (--all)
-  * Stops container and removes from system file
-* clean
-  * Stops and cleans SP installation, remove networks
-* remove-settings: 
-  * Stops StreamPipes and deletes .env file
-* set-version:
-  * Change the StreamPipes version in the tmpl_env file
+Version:      0.67.0-SNAPSHOT, build 4dbadbb
+GitHub:       https://github.com/apache/incubator-streampipes-installer
 
-* generate-compose-file
+Usage: streampipes COMMAND [OPTIONS]
 
+Options:
+  --help, -h  show help
 
-## Flags
+Commands:
+  clean       Clean all configs/docker data volumes from system
+  info        Get information
+  logs        Get container logs for specific container
+  ps          List all StreamPipes container for running environment
+  pull        Download latest images from Dockerhub
+  restart     Restart StreamPipes environment
+  start       Start StreamPipes environment
+  stop        Stop and Remove StreamPipes environment
+  template    Select StreamPipes environment template
 
-* ARG_OPTIONAL_SINGLE([hostname], , [The default hostname of your server], )
-* ARG_OPTIONAL_BOOLEAN([defaultip],d, [When set the first ip is used as default])
-* ARG_OPTIONAL_BOOLEAN([all],a, [Select all available StreamPipes services])
+Run 'streampipes COMMAND --help' for more info on a command.
+```
+
+## Prerequisite
+The CLI is basically a wrapper around multiple `docker` and `docker-compose` commands plus some additional sugar.
+
+* Docker >= 17.06.0
+* Docker-Compose >= 1.17.0 (Compose file format: 3.4)
+* On Windows hosts: GitBash
 
 
-## Usage
-~/argbash/argbash-2.7.0/bin/argbash sp.m4 -o sp
+Tested on: **macOS, Linux, Windows*)**
+
+> **NOTE**: *) If you're using Windows the CLI only works in combination with GitBash - PowerShell won't work.
 
 
-## Naming Files / Folders
-* active-services
-* services/
-* system-configurations -> templates/
-* tmpl_env
+## Usage: Along dev life-cycle
+**List** available environment templates
+```bash
+streampipes template --list
+```
+
+**Set** environment template, e.g. `pipeline-element` if you want to write a new pipeline element
+```bash
+streampipes template --set pipeline-element
+```
+
+**Start** environment in `dev` mode.
+> **IMPORTANT**: Make sure use this flag since we rely on open ports to core service such as `consul`, `couchdb`, `kafka` etc.
+
+```bash
+streampipes start --dev
+# start in regular mode with unmapped ports
+# streampipes start
+```
+Now you're good to go to write your new pipeline element :tada: :tada: :tada:
+
+> **HINT for extensions**: Use our [Maven archetypes](https://streampipes.apache.org/docs/docs/dev-guide-archetype/) to setup a project skeleton and use your IDE of choice for development. However, we do recommend using IntelliJ.
+
+> **HINT for core**: To work on `backend` or `ui` features you need to set the template to `backend` and clone the core repository [incubator-streampipes](https://github.com/apache/incubator-streampipes) - check the prerequisites there for more information.
+
+**Stop** environment and remove docker container
+```bash
+streampipes stop
+```
+
+## Additionally, useful commands
+
+**Get logs** of specific service
+```bash
+streampipes logs --follow backend
+```
+
+**Update** all services of current environment
+```bash
+streampipes pull
+```
+
+**Restart** all services of current environment or specific services
+```bash
+streampipes restart
+# restart backend & consul
+# streampipes restart backend consul
+```
+
+**Clean** your system and remove created StreamPipes Docker volumes
+```bash
+streampipes clean
+```
+
+## Run `streampipes` from anywhere? No problem
+Simply add the path the cli directory to your `$PATH` variable, e.g. in your `.bashrc` or `.zshrc`
+> **NOTE**: So far, only tested on **macOS** and **Linux**.
+
+```bash
+export PATH="/path/to/incubator-streampipes-installer/cli:$PATH"
+```
+
+## Get help
+If you have any problems during the installation or questions around StreamPipes, you'll get help through one of our community channels:
+
+- [Slack](https://slack.streampipes.org)
+- [Mailing Lists](https://streampipes.apache.org/mailinglists.html)
+
+And don't forget to follow us on [Twitter](https://twitter.com/streampipes)!
+
+## License
+[Apache License 2.0](../LICENSE)

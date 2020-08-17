@@ -1,0 +1,9 @@
+[environment:backend]
+activemq
+kafka
+consul
+zookeeper
+couchdb
+influxdb
+connect-master
+ui

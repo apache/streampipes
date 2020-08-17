@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+set -e
+. "$STREAMPIPES_WORKDIR/bin/common"
+
+cli_help_stop() {
+  cat <<EOF
+Stop and remove StreamPipes environment
+
+Usage: streampipes stop [OPTIONS]
+
+Options:
+  -v, --volumes   Remove named volumes
+EOF
+
+  exit 1
+}
+
+[ "$1" == '--help' ] || [ "$1" == '-h' ] && cli_help_stop
+
+if [ "$#" -gt 2 ]; then
+    fatal "Illegal number of arguments, see 'streampipes ${0##*/} --help'"
+fi
+
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        -v|--volumes) clean=true; shift ;;
+        -|--*=) fatal "Unsupported flag $1, see 'streampipes ${0##*/} --help'" >&2 ; shift ;;
+        *) fatal "Wrong usage, see 'streampipes ${0##*/} --help'" ;;
+    esac
+done
+
+remove_network(){
+  info "Remove network: 'spnet'"
+  run "docker network rm spnet" > /dev/null 2>&1
+}
+
+if is_streampipes_running; then
+  get_curr_environment
+  concatenate_compose_files
+  info "Stop environment: $curr_environment"
+
+  if [ "$clean" = true ]; then
+    info "Remove all StreamPipes container and named volumes"
+    run "$docker_compose_files down -v"
+    remove_network
+  else
+    info "Remove all StreamPipes container"
+    run "$docker_compose_files down"
+    remove_network
+  fi
+
+else
+  info "No StreamPipes environment running"
+fi

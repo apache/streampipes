@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+set -e
+. "$STREAMPIPES_WORKDIR/bin/common"
+
+cli_help_logs() {
+  cat <<EOF
+View output from containers
+
+Usage: streampipes logs [OPTIONS] [SERVICE]
+
+Options:
+  -f, --follow    Follow log output
+EOF
+
+  exit 1
+}
+
+[ "$1" == '--help' ] || [ "$1" == '-h' ] && cli_help_logs
+
+if [ "$#" -gt 2 ]; then
+    fatal "Illegal number of arguments, see 'streampipes ${0##*/} --help'"
+fi
+
+svc=""
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        -f|--follow)
+          if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
+            follow=true
+            svc=$2
+            shift 2
+          else
+            fatal "Argument for $1 is missing" >&2
+          fi
+          ;;
+        -*|--*=) fatal "Unsupported flag $1, see 'streampipes ${0##*/} --help'" >&2 ;;
+        *) fatal "Wrong usage, see 'streampipes ${0##*/} --help'" ;;
+    esac
+done
+
+if is_streampipes_running; then
+  concatenate_compose_files
+  if [ "$follow" = true ]; then
+    run "$docker_compose_files logs -f $svc"
+  else
+    run "$docker_compose_files logs $svc"
+  fi
+else
+  info "No StreamPipes environment running"
+fi

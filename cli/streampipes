@@ -1,0 +1,84 @@
+#!/usr/bin/env bash
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+set -e
+export STREAMPIPES_WORKDIR=$(cd $(dirname $0) && pwd)
+. "$STREAMPIPES_WORKDIR/bin/common"
+
+cli_help() {
+  cli_name=${0##*/}
+  cat <<EOF
+StreamPipes CLI - Manage your StreamPipes environment with ease
+
+Version:      $(cat $STREAMPIPES_WORKDIR/VERSION), build $(git --git-dir "$(dirname "$STREAMPIPES_WORKDIR")/.git" rev-parse --short HEAD)
+GitHub:       https://github.com/apache/incubator-streampipes-installer
+
+Usage: $cli_name COMMAND [OPTIONS]
+
+Options:
+  --help, -h  show help
+
+Commands:
+  clean       Clean all configs/docker data volumes from system
+  info        Get information
+  logs        Get container logs for specific container
+  ps          List all StreamPipes container for running environment
+  pull        Download latest images from Dockerhub
+  restart     Restart StreamPipes environment
+  start       Start StreamPipes environment
+  stop        Stop and Remove StreamPipes environment
+  template    Select StreamPipes environment template
+
+Run '$cli_name COMMAND --help' for more info on a command.
+EOF
+
+  exit 1
+}
+
+case "$1" in
+  clean)
+    "$STREAMPIPES_WORKDIR/bin/commands/clean" "$2"
+    ;;
+  info)
+    "$STREAMPIPES_WORKDIR/bin/commands/info" "$2"
+    ;;
+  logs)
+    "$STREAMPIPES_WORKDIR/bin/commands/logs" "${@:2}"
+    ;;
+  # deploy)
+  #   "$STREAMPIPES_WORKDIR/bin/commands/deploy" "$2"
+  #   ;;
+  ps)
+    "$STREAMPIPES_WORKDIR/bin/commands/ps" "$2"
+    ;;
+  pull)
+    "$STREAMPIPES_WORKDIR/bin/commands/pull" "$2"
+    ;;
+  restart)
+    "$STREAMPIPES_WORKDIR/bin/commands/restart" "${@:2}"
+    ;;
+  start)
+    "$STREAMPIPES_WORKDIR/bin/commands/start" "${@:2}"
+    ;;
+  stop)
+    "$STREAMPIPES_WORKDIR/bin/commands/stop" "${@:2}"
+    ;;
+  template)
+    "$STREAMPIPES_WORKDIR/bin/commands/template" "${@:2}"
+    ;;
+  *)
+    cli_help
+    ;;
+esac
