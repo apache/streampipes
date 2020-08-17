@@ -33,7 +33,7 @@ Go to http://localhost to finish the installation in the browser.
 * Docker >= 17.06.0
 * Docker-Compose >= 1.17.0 (Compose file format: 3.4)
 
-Tested on: **macOS, Linux, Windows**
+Tested on: **macOS, Linux, Windows** (CMD, PowerShell, GitBash)
 
 > **NOTE**: On purpose, we disabled all port mappings except of http port **80** to access the StreamPipes UI to provide minimal surface for conflicting ports.
 

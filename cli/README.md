@@ -52,12 +52,12 @@ The CLI is basically a wrapper around multiple `docker` and `docker-compose` com
 
 * Docker >= 17.06.0
 * Docker-Compose >= 1.17.0 (Compose file format: 3.4)
-* On Windows hosts: GitBash
+* For Windows Developer: GitBash only
 
 
 Tested on: **macOS**, **Linux**, **Windows***)
 
-> **NOTE**: *) If you're using Windows the CLI only works in combination with GitBash - PowerShell won't work.
+> **NOTE**: *) If you're using Windows the CLI only works in combination with GitBash - CMD, PowerShell won't work.
 
 
 ## Usage: Along dev life-cycle
@@ -115,12 +115,16 @@ streampipes clean
 ```
 
 ## Run `streampipes` from anywhere? No problem
-Simply add the path the cli directory to your `$PATH` variable, e.g. in your `.bashrc` or `.zshrc`
-> **NOTE**: So far, only tested on **macOS** and **Linux**.
+Simply add the path to this cli directory to your `$PATH` (on macOS, Linux) variable, e.g. in your `.bashrc` or `.zshrc`, or `%PATH%` (on Windows).
+
+For **macOS**, or **Linux**:
 
 ```bash
 export PATH="/path/to/incubator-streampipes-installer/cli:$PATH"
 ```
+
+For **Windows 10**, e.g. check this [documentation](https://helpdeskgeek.com/windows-10/add-windows-path-environment-variable/).
+
 
 ## Upgrade to new version
 To upgrade to a new version, simply edit the version tag in `VERSION`.
