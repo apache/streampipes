@@ -70,6 +70,18 @@ docker-compose -f docker-compose.full.yml down
 #docker-compose -f docker-compose.full.yml down -v
 ```
 
+## Update services
+To actively pull the latest available Docker images use:
+```bash
+docker-compose pull
+# docker-compose -f docker-compose.full.yml pull
+```
+
+## Upgrade
+To upgrade to another StreamPipes version, simply edit the `SP_VERSION` in the `.env` file.
+```
+SP_VERSION=<VERSION>
+```
 
 ## Get help
 Since we purely levarage Docker Compose, please see their [documentation](https://docs.docker.com/compose/) in case you want to find out more about their available [commands](https://docs.docker.com/compose/reference/overview/).
