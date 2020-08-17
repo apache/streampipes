@@ -16,7 +16,7 @@
 #
 import abc
 import os
-from flask import jsonify, make_response
+from flask import jsonify, make_response, request
 from flask_classful import FlaskView, route
 from flask_negotiate import consumes
 
@@ -85,6 +85,7 @@ class InvocableElement(Element):
     def invoke_runtime(self, element_id: str):
         # TODO: parse invocation graph
         # payload = request.json
+        print(request.json)
         resp = {'element_id': element_id, 'status': 'sucess'}
         return make_response(jsonify(resp), 200)
 

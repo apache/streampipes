@@ -51,10 +51,10 @@ class DeclarerSingleton(metaclass=Singleton):
     def get(cls):
         return cls._processors
 
-    # def get_declarers(self):
-    #     return self.sepa_declarers
-    #
-    # def get_base_uri(self):
-    #     return 'http://' + self.host + ':' + self.port + self.route
+    def get_declarers(self):
+        return self.sepa_declarers
+
+    def get_base_uri(self):
+        return 'http://' + self.host + ':' + self.port + self.route
 
 
