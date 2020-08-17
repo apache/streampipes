@@ -57,7 +57,7 @@ The CLI is basically a wrapper around multiple `docker` and `docker-compose` com
 * On Windows hosts: GitBash
 
 
-Tested on: **macOS, Linux, Windows*)**
+Tested on: **macOS**, **Linux**, **Windows***)
 
 > **NOTE**: *) If you're using Windows the CLI only works in combination with GitBash - PowerShell won't work.
 
