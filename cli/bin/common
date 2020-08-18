@@ -100,7 +100,7 @@ get_curr_environment() {
 load_env_file() {
   if [ -f $STREAMPIPES_WORKDIR/.env ]; then
       # Load Environment Variables
-      export $(cat .env | grep -v '#' | awk '/=/ {print $1}')
+      export $(cat $STREAMPIPES_WORKDIR/.env | grep -v '#' | awk '/=/ {print $1}')
   fi
 }
 
