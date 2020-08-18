@@ -26,6 +26,31 @@ The StreamPipes command-line interface (CLI) is focused on developers in order t
 **Current version:** 0.67.0-SNAPSHOT
 <!-- END do not edit -->
 
+#### TL;DR
+
+```bash
+$ streampipes template -l
+[INFO] Currently available StreamPipes environment templates
+pipeline-element
+...
+$ streampipes template -s pipeline-element
+$ streampipes up -d
+```
+
+## Prerequisite
+The CLI is basically a wrapper around multiple `docker` and `docker-compose` commands plus some additional sugar.
+
+* Docker >= 17.06.0
+* Docker-Compose >= 1.17.0 (Compose file format: 3.4)
+* For Windows Developer: GitBash only
+
+
+Tested on: **macOS**, **Linux**, **Windows***)
+
+> **NOTE**: *) If you're using Windows the CLI only works in combination with GitBash - CMD, PowerShell won't work.
+
+
+## CLI commands overview
 ```bash
 StreamPipes CLI - Manage your StreamPipes environment with ease
 
@@ -48,19 +73,6 @@ Commands:
 
 Run 'streampipes COMMAND --help' for more info on a command.
 ```
-
-## Prerequisite
-The CLI is basically a wrapper around multiple `docker` and `docker-compose` commands plus some additional sugar.
-
-* Docker >= 17.06.0
-* Docker-Compose >= 1.17.0 (Compose file format: 3.4)
-* For Windows Developer: GitBash only
-
-
-Tested on: **macOS**, **Linux**, **Windows***)
-
-> **NOTE**: *) If you're using Windows the CLI only works in combination with GitBash - CMD, PowerShell won't work.
-
 
 ## Usage: Along dev life-cycle
 **List** available environment templates
