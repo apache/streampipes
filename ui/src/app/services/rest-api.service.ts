@@ -472,4 +472,12 @@ export class RestApi {
     removePipelineFromCache() {
         return this.$http.delete(this.urlBase() + "/pipeline-cache");
     }
+
+    getVersionInfo() {
+        return this.$http.get(this.getServerUrl() + "/info/versions");
+    }
+
+    getSystemInfo() {
+        return this.$http.get(this.getServerUrl() + "/info/system");
+    }
 }
