@@ -136,7 +136,7 @@ export class SavePipelineComponent implements OnInit {
     this.displaySuccess(data);
     this.hide();
     this.editorService.makePipelineAssemblyEmpty(true);
-    this.editorService.removePipelineFromCache();
+    this.editorService.removePipelineFromCache().subscribe();
     if (this.ShepherdService.isTourActive()) {
       this.ShepherdService.hideCurrentStep();
     }
