@@ -22,6 +22,7 @@ import {Router} from "@angular/router";
 import {RestApi} from "../../../services/rest-api.service";
 import {AuthStatusService} from "../../../services/auth-status.service";
 import {MatMenuTrigger} from "@angular/material/menu";
+import {VersionInfo} from "../../../info/versions/service/version-info.model";
 
 @Component({
   selector: 'toolbar',
@@ -33,6 +34,8 @@ export class ToolbarComponent extends BaseNavigationComponent implements OnInit 
   @ViewChild('feedbackOpen') feedbackOpen: MatMenuTrigger;
   @ViewChild('accountMenuOpen') accountMenuOpen: MatMenuTrigger;
 
+  versionInfo: VersionInfo;
+
   constructor(Router: Router,
               private RestApi: RestApi,
               private AuthStatusService: AuthStatusService) {
@@ -41,6 +44,7 @@ export class ToolbarComponent extends BaseNavigationComponent implements OnInit 
 
   ngOnInit(): void {
     super.onInit();
+    this.getVersion()
   }
 
   closeFeedbackWindow() {
@@ -65,4 +69,9 @@ export class ToolbarComponent extends BaseNavigationComponent implements OnInit 
     });
   };
 
+  getVersion(){
+    this.RestApi.getVersionInfo().subscribe((response) => {
+      this.versionInfo = response as VersionInfo;
+    })
+  }
 }

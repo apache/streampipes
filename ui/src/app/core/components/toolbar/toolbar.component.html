@@ -30,6 +30,9 @@
         </div>
         <span fxFlex></span>
         <div fxFlex="40" fxLayout fxLayoutAlign="end center" *ngIf="authenticated" style="height:100%;">
+            <div style="color:white;padding: 5px 5px;margin-left:10px;font-size:12pt;">
+                <span style="margin-top:12px;font-weight:bold;">version: </span><span style="font-weight: normal;" *ngIf="versionInfo">{{versionInfo.backendVersion}}</span>
+            </div>
             <div style="height:100%;">
                 <div [ngStyle]="feedbackOpen.menuOpen ? {'background-color': 'white'} : {'background-color': '#39b54a'}" fxLayout fxLayoutAlign="center center" style="height: 100%;">
                     <button mat-button mat-icon-button

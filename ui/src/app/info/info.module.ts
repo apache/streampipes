@@ -34,7 +34,6 @@ import {CustomMaterialModule} from "../CustomMaterial/custom-material.module";
 import {LicenseComponent} from "./license/license.component";
 import {AboutComponent} from "./about/about.component";
 import {VersionsComponent} from "./versions/versions.component";
-import {VersionInfoService} from "./versions/service/version-info.service";
 
 @NgModule({
     imports: [
@@ -56,9 +55,7 @@ import {VersionInfoService} from "./versions/service/version-info.service";
         VersionsComponent,
         AboutComponent
     ],
-    providers: [
-        VersionInfoService
-    ],
+    providers: [],
     entryComponents: [
         InfoComponent
     ]
