@@ -97,17 +97,24 @@ get_curr_environment() {
   fi
 }
 
+load_env_file() {
+  if [ -f $STREAMPIPES_WORKDIR/.env ]; then
+      # Load Environment Variables
+      export $(cat .env | grep -v '#' | awk '/=/ {print $1}')
+  fi
+}
+
 concatenate_compose_files() {
-  DEPLOY_MODE=$1
+  no_ports=$1
   search_str="[environment:"
 
   docker_compose_files="docker-compose --env-file $STREAMPIPES_WORKDIR/.env"
   while IFS='' read -r line || [[ -n "$line" ]]; do
     if [[ "$line" != *"$search_str"* ]]; then
-      if [ "$DEPLOY_MODE" == "dev" ]; then
-        docker_compose_files="$docker_compose_files -f $STREAMPIPES_WORKDIR/deploy/standalone/$line/docker-compose.yml -f $STREAMPIPES_WORKDIR/deploy/standalone/$line/docker-compose.dev.yml"
-      else
+      if [ "$no_ports" = true ]; then
         docker_compose_files="$docker_compose_files -f $STREAMPIPES_WORKDIR/deploy/standalone/$line/docker-compose.yml"
+      else
+        docker_compose_files="$docker_compose_files -f $STREAMPIPES_WORKDIR/deploy/standalone/$line/docker-compose.yml -f $STREAMPIPES_WORKDIR/deploy/standalone/$line/docker-compose.dev.yml"
       fi
     fi
   done < "$STREAMPIPES_WORKDIR/.environment"

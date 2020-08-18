@@ -16,11 +16,13 @@
 set -e
 . "$STREAMPIPES_WORKDIR/bin/common"
 
+clean_volumes=false
+
 cli_help_stop() {
   cat <<EOF
-Stop and remove StreamPipes environment
+Stops and removes StreamPipes environment containers, networks, volumes, and images
 
-Usage: streampipes stop [OPTIONS]
+Usage: streampipes down [OPTIONS]
 
 Options:
   -v, --volumes   Remove named volumes
@@ -37,14 +39,14 @@ fi
 
 while [[ "$#" -gt 0 ]]; do
     case $1 in
-        -v|--volumes) clean=true; shift ;;
+        -v|--volumes) clean_volumes=true; shift ;;
         -|--*=) fatal "Unsupported flag $1, see 'streampipes ${0##*/} --help'" >&2 ; shift ;;
         *) fatal "Wrong usage, see 'streampipes ${0##*/} --help'" ;;
     esac
 done
 
-remove_network(){
-  info "Remove network: 'spnet'"
+remove_external_docker_network(){
+  info "Remove docker network: 'spnet'"
   run "docker network rm spnet" > /dev/null 2>&1
 }
 
@@ -53,14 +55,14 @@ if is_streampipes_running; then
   concatenate_compose_files
   info "Stop environment: $curr_environment"
 
-  if [ "$clean" = true ]; then
+  if [ "$clean_volumes" = true ]; then
     info "Remove all StreamPipes container and named volumes"
     run "$docker_compose_files down -v"
-    remove_network
+    remove_external_docker_network
   else
     info "Remove all StreamPipes container"
     run "$docker_compose_files down"
-    remove_network
+    remove_external_docker_network
   fi
 
 else

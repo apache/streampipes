@@ -37,14 +37,14 @@ Options:
 
 Commands:
   clean       Clean all configs/docker data volumes from system
+  down        Stop and remove StreamPipes containers, networks and volumes
   info        Get information
   logs        Get container logs for specific container
   ps          List all StreamPipes container for running environment
   pull        Download latest images from Dockerhub
   restart     Restart StreamPipes environment
-  start       Start StreamPipes environment
-  stop        Stop and Remove StreamPipes environment
   template    Select StreamPipes environment template
+  up          Create and start StreamPipes container environment
 
 Run 'streampipes COMMAND --help' for more info on a command.
 ```
@@ -74,12 +74,12 @@ streampipes template --set pipeline-element
 ```
 
 **Start** environment ( default: `dev` mode).
-> **NOTE**: `dev` mode is enabled by default since we rely on open ports to core service such as `consul`, `couchdb`, `kafka` etc. to reach from the IDE when developing.
+> **NOTE**: `dev` mode is enabled by default since we rely on open ports to core service such as `consul`, `couchdb`, `kafka` etc. to reach from the IDE when developing. If you don't want to map ports (except the UI port), then use the `--no-ports` flag.
 
 ```bash
-streampipes start
-# start in regular mode with unmapped ports
-# streampipes start --user
+streampipes up -d
+# start in production mode with unmapped ports
+# streampipes up -d --no-ports
 ```
 Now you're good to go to write your new pipeline element :tada: :tada: :tada:
 
@@ -89,10 +89,20 @@ Now you're good to go to write your new pipeline element :tada: :tada: :tada:
 
 **Stop** environment and remove docker container
 ```bash
-streampipes stop
+streampipes down
+# want to also clean docker data volumes when stopping the environment?
+# streampipes down -v
 ```
 
 ## Additionally, useful commands
+
+**Start individual services only?** We got you! You chose a template that suits your needs and now you only want to start individual services from it, e.g. only Kafka and Consul.
+
+> **NOTE**: the service names need to be present and match your current `.environment`.
+
+```bash
+streampipes up -d kafka consul
+```
 
 **Get logs** of specific service
 ```bash
@@ -111,7 +121,7 @@ streampipes restart
 # streampipes restart backend consul
 ```
 
-**Clean** your system and remove created StreamPipes Docker volumes
+**Clean** your system and remove created StreamPipes Docker volumes (if not already cleaned when shutting down the environment (see above `streampipes down -v`).
 ```bash
 streampipes clean
 ```
