@@ -22,7 +22,9 @@ The StreamPipes command-line interface (CLI) is focused on developers in order t
 * new extensions such as **connect adapters, processors, sinks** or,
 * new core features for **backend** and **ui**.
 
+<!-- BEGIN do not edit: set via ../upgrade_versions.sh -->
 **Current version:** 0.67.0-SNAPSHOT
+<!-- END do not edit -->
 
 ```bash
 StreamPipes CLI - Manage your StreamPipes environment with ease

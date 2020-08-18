@@ -18,7 +18,9 @@
 # StreamPipes k8s - The Operator's Dream
 StreamPipes k8s is a helm chart to deploy StreamPipes on Kubernetes.
 
+<!-- BEGIN do not edit: set via ../upgrade_versions.sh -->
 **Current version:** 0.67.0-SNAPSHOT
+<!-- END do not edit -->
 
 ## Prerequisite
 Requires Helm (https://helm.sh/) and an active connection to a kubernetes cluster with a running tiller server.
