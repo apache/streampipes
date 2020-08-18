@@ -384,6 +384,7 @@ export class PipelineComponent implements OnInit {
         this.JsplumbBridge.getSourceEndpoint(pipelineElementInfo.b.payload.dom).setType("token");
         this.triggerPipelineCacheUpdate();
       }
+      this.validatePipeline();
     });
   }
 

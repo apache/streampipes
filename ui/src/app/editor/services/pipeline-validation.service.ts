@@ -20,6 +20,7 @@ import * as dagre from 'dagre';
 import {JsplumbBridge} from "./jsplumb-bridge.service";
 import {Injectable} from "@angular/core";
 import {PipelineElementConfig} from "../model/editor.model";
+import {DataProcessorInvocation, DataSinkInvocation} from "../../core-model/gen/streampipes-model";
 
 @Injectable()
 export class PipelineValidationService {
@@ -31,7 +32,8 @@ export class PipelineValidationService {
         {title: "Did you add a data stream?", content: "Any pipeline needs at least one data stream."},
         {title: "Did you add a data sink?", content: "Any pipeline needs at least one data sink."},
         {title: "Did you connect all elements?", content: "No orphaned elements are allowed within a pipeline, make sure to connect all elements."},
-        {title: "Separate pipelines", content: "It seems you've created more than one pipeline at once. Create only one pipeline at a time!"}
+        {title: "Separate pipelines", content: "It seems you've created more than one pipeline at once. Create only one pipeline at a time!"},
+        {title: "Did you configure all elements?", content: "There's a pipeline element which is missing some configuration."},
     ];
 
     constructor(private JsplumbBridge: JsplumbBridge) {
@@ -43,9 +45,11 @@ export class PipelineValidationService {
         let actionInAssembly = this.isActionInAssembly(rawPipelineModel);
         let allElementsConnected = true;
         let onlyOnePipelineCreated = true;
+        let allElementsConfigured = true;
 
         if (streamInAssembly && (sepaInAssembly || actionInAssembly)) {
             allElementsConnected = this.allElementsConnected(rawPipelineModel);
+            allElementsConfigured = this.allElementsConfigured(rawPipelineModel);
         }
 
         if (streamInAssembly && actionInAssembly && allElementsConnected) {
@@ -53,12 +57,13 @@ export class PipelineValidationService {
         }
 
         if (!this.isEmptyPipeline(rawPipelineModel)) {
-            this.buildErrorMessages(streamInAssembly, actionInAssembly, allElementsConnected, onlyOnePipelineCreated);
+            this.buildErrorMessages(streamInAssembly, actionInAssembly, allElementsConnected, onlyOnePipelineCreated, allElementsConfigured);
         } else {
             this.errorMessages = [];
         }
 
-        this.pipelineValid = streamInAssembly && actionInAssembly && allElementsConnected && onlyOnePipelineCreated;
+        this.pipelineValid = streamInAssembly && actionInAssembly &&
+            allElementsConnected && onlyOnePipelineCreated && allElementsConfigured;
         return this.pipelineValid;
     }
 
@@ -66,7 +71,7 @@ export class PipelineValidationService {
         return !this.isActionInAssembly(rawPipelineModel) && !this.isStreamInAssembly(rawPipelineModel) && !this.isInAssembly(rawPipelineModel, 'sepa');
     }
 
-    buildErrorMessages(streamInAssembly, actionInAssembly, allElementsConnected, onlyOnePipelineCreated) {
+    buildErrorMessages(streamInAssembly, actionInAssembly, allElementsConnected, onlyOnePipelineCreated, allElementsConfigured) {
         this.errorMessages = [];
         if (!streamInAssembly) {
             this.errorMessages.push(this.availableErrorMessages[0]);
@@ -80,6 +85,15 @@ export class PipelineValidationService {
         if (!onlyOnePipelineCreated) {
             this.errorMessages.push(this.availableErrorMessages[3]);
         }
+        if (!allElementsConfigured) {
+            this.errorMessages.push(this.availableErrorMessages[4]);
+        }
+    }
+
+    allElementsConfigured(rawPipelineModel: PipelineElementConfig[]): boolean {
+        return rawPipelineModel
+            .filter(config => ((config.payload instanceof DataProcessorInvocation) || (config.payload instanceof DataSinkInvocation)))
+            .every(config => config.settings.completed);
     }
 
     allElementsConnected(rawPipelineModel) {
