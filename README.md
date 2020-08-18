@@ -25,12 +25,7 @@ This project contains a variety of StreamPipes installation and operation option
 
 > **NOTE**: StreamPipes CLI & k8s are highly recommended for developers or operators. Standard users should stick to StreamPipes Compose.
 
-## Prerequisite
-* Docker >= 17.06.0
-* Docker-Compose >= 1.17.0 (Compose file format: 3.4)
-
-
-## Usage
+## How to get started?
 Clone this project
 ```bash
 git clone https://github.com/apache/incubator-streampipes-installer
