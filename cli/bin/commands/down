@@ -20,7 +20,7 @@ clean_volumes=false
 
 cli_help_stop() {
   cat <<EOF
-Stops and removes StreamPipes environment containers, networks, volumes, and images
+Stops and removes StreamPipes environment containers
 
 Usage: streampipes down [OPTIONS]
 
@@ -45,24 +45,17 @@ while [[ "$#" -gt 0 ]]; do
     esac
 done
 
-remove_external_docker_network(){
-  info "Remove docker network: 'spnet'"
-  run "docker network rm spnet" > /dev/null 2>&1
-}
-
 if is_streampipes_running; then
   get_curr_environment
   concatenate_compose_files
   info "Stop environment: $curr_environment"
 
   if [ "$clean_volumes" = true ]; then
-    info "Remove all StreamPipes container and named volumes"
+    info "Removing StreamPipes containers and named volumes"
     run "$docker_compose_files down -v"
-    remove_external_docker_network
   else
-    info "Remove all StreamPipes container"
+    info "Removing StreamPipes containers"
     run "$docker_compose_files down"
-    remove_external_docker_network
   fi
 
 else

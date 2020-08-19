@@ -27,6 +27,11 @@ The StreamPipes command-line interface (CLI) is focused on developers in order t
 <!-- END do not edit -->
 
 #### TL;DR
+<!-- ![](demo/streampipes-min.gif) -->
+<!-- <img src="demo/streampipes-min.gif" style="display: block;
+  margin-left: auto;
+  margin-right: auto;" width="100%"> -->
+
 
 ```bash
 $ streampipes template -l
@@ -51,6 +56,7 @@ Tested on: **macOS**, **Linux**, **Windows***)
 
 
 ## CLI commands overview
+
 ```bash
 StreamPipes CLI - Manage your StreamPipes environment with ease
 
@@ -61,8 +67,8 @@ Options:
   --version, -v   show version
 
 Commands:
-  clean       Clean all configs/docker data volumes from system
-  down        Stop and remove StreamPipes containers, networks and volumes
+  clean       Remove StreamPipes data volumes, dangling images and network
+  down        Stop and remove StreamPipes containers
   info        Get information
   logs        Get container logs for specific container
   ps          List all StreamPipes container for running environment

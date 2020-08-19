@@ -48,7 +48,14 @@ while [[ "$#" -gt 0 ]]; do
           fi
           ;;
         -*|--*=) fatal "Unsupported flag $1, see 'streampipes ${0##*/} --help'" >&2 ;;
-        *) fatal "Wrong usage, see 'streampipes ${0##*/} --help'" ;;
+        *)
+          if [ -z "$2" ]; then
+            svc=$1
+            shift
+          else
+            fatal "Wrong usage, can only view logs of one service. see 'streampipes ${0##*/} --help'"
+          fi
+        ;;
     esac
 done
 

@@ -29,8 +29,8 @@ Options:
   --version, -v   show version
 
 Commands:
-  clean       Clean all configs/docker data volumes from system
-  down        Stop and remove StreamPipes containers, networks and (optionally volumes)
+  clean       Remove StreamPipes data volumes, dangling images and network
+  down        Stop and remove StreamPipes containers
   info        Get information
   logs        Get container logs for specific container
   ps          List all StreamPipes container for running environment
@@ -47,7 +47,7 @@ EOF
 
 case "$1" in
   clean)
-    "$STREAMPIPES_WORKDIR/bin/commands/clean" "$2"
+    "$STREAMPIPES_WORKDIR/bin/commands/clean" "${@:2}"
     ;;
   down)
     "$STREAMPIPES_WORKDIR/bin/commands/down" "${@:2}"
