@@ -17,7 +17,7 @@
 """ API endpoints """
 import threading
 
-import bjoern
+from waitress import serve
 from flask import Flask
 
 from streampipes.api.resources.dummy import DummyInterimsResource
@@ -44,6 +44,6 @@ class PipelineElementApi(object):
             DummyInterimsResource.register(self.app, route_base='/')
 
     def run(self, port: int):
-        print('serving API via bjoern WSGI server ... http://{}:{}'.format('0.0.0.0', port))
-        threading.Thread(target=bjoern.run, args=(self.app,), kwargs={'host': '0.0.0.0', 'port': int(port)}).start()
+        print('serving API via waitress WSGI server ... http://{}:{}'.format('0.0.0.0', port))
+        threading.Thread(target=serve, args=(self.app,), kwargs={'host': '0.0.0.0', 'port': int(port), '_quiet': True}).start()
 

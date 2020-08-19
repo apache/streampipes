@@ -42,7 +42,6 @@ public class StreamPipesResourceConfig extends ResourceConfig {
 
   public StreamPipesResourceConfig() {
     register(Authentication.class);
-    register(Authentication.class);
     register(ApplicationLink.class);
     register(AssetDashboard.class);
     register(AutoComplete.class);
