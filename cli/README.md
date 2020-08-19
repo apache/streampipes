@@ -144,9 +144,11 @@ streampipes restart
 # streampipes restart backend consul
 ```
 
-**Clean** your system and remove created StreamPipes Docker volumes (if not already cleaned when shutting down the environment (see above `streampipes down -v`).
+**Clean** your system and remove created StreamPipes Docker volumes, StreamPipes docker network and dangling StreamPipes images of old image layers.
 ```bash
 streampipes clean
+# remove volumes, network and dangling images
+# streampipes clean --volumes
 ```
 
 ## Modify/Create an environment template
