@@ -80,6 +80,11 @@ Run 'streampipes COMMAND --help' for more info on a command.
 streampipes template --list
 ```
 
+**Inspect** services in a given template to know what kind of services will be started as part this environment
+```bash
+streampipes template --inspect pipeline-element
+```
+
 **Set** environment template, e.g. `pipeline-element` if you want to write a new pipeline element
 ```bash
 streampipes template --set pipeline-element
@@ -136,6 +141,37 @@ streampipes restart
 **Clean** your system and remove created StreamPipes Docker volumes (if not already cleaned when shutting down the environment (see above `streampipes down -v`).
 ```bash
 streampipes clean
+```
+
+## Modify/Create an environment template
+As of now, this step has to be done **manually**. All environment templates are located in `bin/templates/environments`.
+
+```bash
+├── backend
+├── full
+├── lite
+├── pipeline-element
+└── ui
+```
+**Modifying an existing template**. To modify an existing template, you can simply add a `<YOUR_NEW_SERVICE>` to the template.
+> **NOTE**: You need to make sure, that the service your are adding exists in `deploy/standalone/service/<YOUR_NEW_SERVICE>`. If your're adding a completely new service take a look at existing ones, create a new service directory and include a `docker-compose.yml` and `docker-compose.dev.yml` file.
+
+```
+[environment:backend]
+activemq
+kafka
+...
+<YOUR_NEW_SERVICE>
+```
+
+**Creating a new** template. To create a new template, place a new file `bin/templates/environments/<YOUR_NEW_TEMPLATE>` in the template directory. Open the file and use the following schema.
+> **IMPORTANT**: Please make sure to have `[environment:<YOUR_NEW_TEMPLATE>]` header in the first line of your new template matching the name of the file. Make sure to use small caps letters (lowercase) only.
+
+```
+[environment:<YOUR_NEW_TEMPLATE>]
+<SERVICE_1>
+<SERVICE_2>
+...
 ```
 
 ## Run `streampipes` from anywhere? No problem
