@@ -25,7 +25,7 @@ Stops and removes StreamPipes environment containers, networks, volumes, and ima
 Usage: streampipes down [OPTIONS]
 
 Options:
-  -v, --volumes   Remove named volumes
+  -v, --volumes   Remove named volumes when stopping and removing containers
 EOF
 
   exit 1
