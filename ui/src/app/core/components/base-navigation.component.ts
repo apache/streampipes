@@ -34,7 +34,7 @@ export abstract class BaseNavigationComponent {
     },
     {
         link: 'editor',
-        title: 'Editor',
+        title: 'Pipeline Editor',
         icon: 'dashboard'
     },
     {
@@ -44,7 +44,7 @@ export abstract class BaseNavigationComponent {
     },
     {
         link: 'connect',
-        title: 'StreamPipes Connect',
+        title: 'Connect',
         icon: 'power'
     },
     {

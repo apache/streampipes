@@ -18,6 +18,8 @@
 
 import {Component} from "@angular/core";
 import {RestApi} from "../../services/rest-api.service";
+import {Router} from "@angular/router";
+import {NotificationCountService} from "../../services/notification-count-service";
 
 @Component({
     selector: 'status',
@@ -30,7 +32,9 @@ export class StatusComponent {
     runningPipelines: number = 0;
     installedPipelineElements: number = 0;
 
-    constructor(private RestApi: RestApi) {
+    constructor(private RestApi: RestApi,
+                private Router: Router,
+                public NotificationCountService: NotificationCountService) {
 
     }
 
@@ -73,5 +77,9 @@ export class StatusComponent {
 
     addPipelineElementList(msg) {
         this.installedPipelineElements += msg.length;
+    }
+
+    navigate(url: string) {
+        this.Router.navigate([url]);
     }
 }

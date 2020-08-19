@@ -19,23 +19,39 @@
 <div fxLayout="column" class="page-container page-container-padding">
     <div fxFlex fxLayout="row" fxLayoutAlign="start start">
         <div fxFlex="100">
-            <div class="md-padding">
-                <h1>Welcome to Apache StreamPipes!</h1>
-                <hr>
-                <status></status>
-                <div class="home-margin">
-                    <div class="assemblyOptions sp-blue-bg" style="padding:5px;">
-                        <h4>StreamPipes Modules</h4>
+            <div fxFlex="100" fxLayout="column">
+                <div class="p-10 header-margin" fxLayoutAlign="center center">
+                    <div class="welcome-text">Welcome to Apache
+                        <span class="welcome-green">S</span>
+                        <span class="welcome-blue">tream</span>
+                        <span class="welcome-green">P</span>
+                        <span class="welcome-blue">ipes</span>!
                     </div>
-                    <div class="sp-blue-border home-padding">
-                        <mat-grid-list cols="3" gutterSize="1em" rowHeight="30:9">
-                            <mat-grid-tile attr.id="{{link.name.replace(' ', '-')}}-link" (click)="openLink(link)"
-                                           *ngFor="let link of serviceLinks"
-                                           class="home-image-wrapper">
-                                <div class="home-image" [style.background-image]="getBackground(link.imageUrl)"></div>
-                                <h4 class="home-image-caption sp-accent-bg">{{link.name}}</h4>
-                            </mat-grid-tile>
-                        </mat-grid-list>
+                </div>
+                <div fxLayout="column" fxFlex="100" class="home-margin">
+                    <div fxFlex="100" fxLayoutAlign="start center">
+                        <status fxFlex="100"></status>
+                    </div>
+                    <div fxFlex="100">
+                        <div class="assemblyOptions sp-blue-bg mt-0 round-border" style="padding:5px;">
+                            <h4>StreamPipes Modules</h4>
+                        </div>
+                        <div class="sp-blue-border pt-0" fxLayout="column">
+                            <div fxFlex="100" fxLayout="column">
+                                <mat-list class="modules-list">
+                                    <mat-list-item *ngFor="let link of serviceLinks"
+                                                   (click)="openLink(link)" class="list-item">
+                                        <div mat-list-avatar
+                                             class="pipeline-avatar sp-accent-bg">
+                                            <mat-icon>{{link.icon}}</mat-icon>
+                                        </div>
+                                        <div mat-line style="font-weight:bold;font-size:14pt;">{{link.name}}</div>
+                                        <p mat-line class="module-description">{{link.description}}</p>
+                                        <mat-divider></mat-divider>
+                                    </mat-list-item>
+                                </mat-list>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
