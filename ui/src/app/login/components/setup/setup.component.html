@@ -19,7 +19,7 @@
 <div class="md-padding full-background" fxLayout="row" fxLayoutAlign="center center"
      style="min-height:100vh !important;">
     <div fxFlex="40" fxLayout="column" fxLayoutAlign="center center">
-        <mat-card class="card-100-center box-shadow-login" style="padding:20px;overflow-y:auto;height:80vh;">
+        <mat-card class="card-100-center box-shadow-login" style="padding:20px;overflow-y:auto;">
             <div fxFlex="100" fxLayout="column">
                 <div fxLayout="row" fxLayoutAlign="center center" style="margin-left:auto;margin-right:auto;margin-bottom:20px;">
                     <div fxFlex="60" fxLayoutAlign="center center" fxLayout="row"
@@ -27,7 +27,7 @@
                             style="margin-top:40px;width:400px;" alt="icon" src="../../../../assets/img/login/logo.png">
                     </div>
                 </div>
-                <form #setupForm="ngForm" >
+                <form #setupForm="ngForm">
                 <mat-card-title>
                     <div fxFlex="100" fxLayout="column">
 
@@ -47,58 +47,10 @@
                             <mat-label>Password</mat-label>
                             <input [(ngModel)]="setup.adminPassword" matInput type="password" name="password" class="sp" required/>
                         </mat-form-field>
-                        <mat-checkbox color="primary" [(ngModel)]="setup.installPipelineElements" name="install"><span>Also install available data streams, processors and sinks.</span></mat-checkbox>
-<!--                        <md-input-container flex>-->
-<!--                            <label>Email</label>-->
-<!--                            <input name="email" type="email" ng-model="ctrl.setup.adminEmail" required>-->
-<!--                            <span ng-show="ctrl.setupForm.email.$touched && ctrl.setupForm.email.$error.required">The email field can't be blank.</span>-->
-<!--                            <span ng-show="ctrl.setupForm.email.$error.email">This is not a valid email.</span>-->
-<!--                        </md-input-container>-->
-<!--                        <md-input-container flex>-->
-<!--                            <label>Password</label>-->
-<!--                            <input name="password" type="password" ng-model="ctrl.setup.adminPassword" required>-->
-<!--                            <span ng-show="ctrl.setupForm.password.$touched && ctrl.setupForm.password.$error.required">The password field can't be blank.</span>-->
-<!--                        </md-input-container>-->
+                        <mat-checkbox style="margin-bottom: 10px;" color="primary" [(ngModel)]="setup.installPipelineElements" name="install"><span>Also install available data streams, processors and sinks.</span></mat-checkbox>
                     </div>
-<!--                    <md-checkbox ng-model="ctrl.setup.installPipelineElements" aria-label="Install pipeline elements">-->
-<!--                        Also install available data streams, processors and sinks.-->
-<!--                    </md-checkbox>-->
-
                 </div>
                 <div>
-                    <div *ngIf="showAdvancedSettings && !installationRunning">
-                        <div fxFlex fxLayout="column">
-                            <h3>Advanced Settings</h3>
-                            <div fxLayout="row">
-                                <mat-form-field fxFlex="45" fxLayoutAlign="start center">
-                                    <mat-label>CouchDB Host</mat-label>
-                                    <input [(ngModel)]="setup.couchDbHost" matInput name="couchDbHost" class="sp"/>
-                                </mat-form-field>
-                                <mat-form-field fxFlex="45" fxLayoutAlign="end center">
-                                    <mat-label>JMS Host</mat-label>
-                                    <input [(ngModel)]="setup.jmsHost" matInput name="jmsHost" class="sp"/>
-                                </mat-form-field>
-                            </div>
-                            <div fxLayout="row">
-                                <mat-form-field fxFlex="45" fxLayoutAlign="start center">
-                                    <mat-label>Kafka Host</mat-label>
-                                    <input [(ngModel)]="setup.kafkaHost" matInput name="kafkaHost" class="sp"/>
-                                </mat-form-field>
-                                <mat-form-field fxFlex="45" fxLayoutAlign="end center">
-                                    <mat-label>Zookeeper Host</mat-label>
-                                    <input [(ngModel)]="setup.zookeeperHost" matInput name="zookeeperHost" class="sp"/>
-                                </mat-form-field>
-<!--                                <md-input-container flex>-->
-<!--                                    <label>Kafka Host</label>-->
-<!--                                    <input name="kafkaHost" ng-model="ctrl.setup.kafkaHost">-->
-<!--                                </md-input-container>-->
-<!--                                <md-input-container flex>-->
-<!--                                    <label>Zookeeper Host</label>-->
-<!--                                    <input name="zookeeperHost" ng-model="ctrl.setup.zookeeperHost">-->
-<!--                                </md-input-container>-->
-                            </div>
-                        </div>
-                    </div>
                     <div *ngIf="installationRunning">
                         <h3>Installation Results</h3>
                         <div *ngFor="let msg of installationResults">
@@ -128,22 +80,12 @@
                     <mat-divider></mat-divider>
                     <mat-card-actions fxLayout="row" fxLayoutAlign="end center" *ngIf="!installationRunning">
                         <div fxFlex fxLayout="column">
-
-                            <div fxLayout="row">
+                            <div fxLayout="row" style="margin-top: 10px; margin-bottom: 10px;">
                                 <button mat-button mat-raised-button color="primary"
-                                           [disabled]="!(parentForm.valid) || loading || installationFinished"
+                                           [disabled]="!(setupForm.valid) || loading || installationFinished"
                                            (click)="configure(0)">Install
                                 </button>
-                                <button mat-button mat-raised-button class="mat-basic" *ngIf="!showAdvancedSettings"
-                                           (click)="showAdvancedSettings = !showAdvancedSettings"
-                                           [disabled]="installationFinished">Show Advanced Settings
-                                </button>
-                                <button mat-button mat-raised-button class="mat-basic" *ngIf="showAdvancedSettings"
-                                           (click)="showAdvancedSettings = !showAdvancedSettings"
-                                           [disabled]="installationFinished">Hide Advanced Settings
-                                </button>
                             </div>
-
                         </div>
                     </mat-card-actions>
                 </div>
