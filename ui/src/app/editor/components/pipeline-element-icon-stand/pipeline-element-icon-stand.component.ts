@@ -88,7 +88,7 @@ export class PipelineElementIconStandComponent implements OnInit {
     }
 
     matchesText(el: PipelineElementUnion): boolean {
-        return this.elementFilter === "" || el.name.includes(this.elementFilter);
+        return this.elementFilter === "" || el.name.toLowerCase().includes(this.elementFilter.toLowerCase());
     }
 
     matchesCategory(el: PipelineElementUnion): boolean {
