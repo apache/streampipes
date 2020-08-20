@@ -18,11 +18,9 @@
 
 package org.apache.streampipes.manager.setup;
 
-import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.manager.endpoint.EndpointFetcher;
 import org.apache.streampipes.model.client.endpoint.RdfEndpoint;
 import org.apache.streampipes.model.client.setup.InitialSettings;
-import org.apache.streampipes.storage.couchdb.utils.CouchDbConfig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +29,6 @@ public class InstallationConfiguration {
 
 	public static List<InstallationStep> getInstallationSteps(InitialSettings settings)
 	{
-
-		setInitialConfiguration(settings);
 		List<InstallationStep> steps = new ArrayList<>();
 
 		steps.add(new CouchDbInstallationStep());
@@ -48,24 +44,5 @@ public class InstallationConfiguration {
 		steps.add(new CacheInitializationInstallationStep());
 		
 		return steps;
-	}
-
-	/**
-	 * Set the initial configuration when the user specifies it in the user interface during the installation
-	 * @param s settings the user provided in the installation dialogue
-	 */
-	private static void setInitialConfiguration(InitialSettings s) {
-	   if (!"".equals(s.getCouchDbHost())) {
-		   CouchDbConfig.INSTANCE.setHost(s.getCouchDbHost());
-	   }
-	   if (!"".equals(s.getKafkaHost())) {
-		   BackendConfig.INSTANCE.setKafkaHost(s.getKafkaHost());
-	   }
-	   if (!"".equals(s.getZookeeperHost())) {
-		   BackendConfig.INSTANCE.setZookeeperHost(s.getZookeeperHost());
-	   }
-	   if (!"".equals(s.getJmsHost())) {
-		   BackendConfig.INSTANCE.setJmsHost(s.getJmsHost());
-	   }
 	}
 }
