@@ -1,0 +1,11 @@
+[environment:adapter]
+activemq
+backend
+consul
+connect-master
+couchdb
+kafka
+ui
+zookeeper
+pipeline-elements-all-jvm
+influxdb

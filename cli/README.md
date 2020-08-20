@@ -155,11 +155,13 @@ streampipes clean
 As of now, this step has to be done **manually**. All environment templates are located in `bin/templates/environments`.
 
 ```bash
-├── backend
-├── full
-├── lite
-├── pipeline-element
-└── ui
+├── adapter               # developing a new connect adapter
+├── backend               # developing core backend features
+├── basic                 # wanna run core, UI, connect etc from the IDE?
+├── full                  # full version containing more pipeline elements
+├── lite                  # few pipeline elements, less memory  
+├── pipeline-element      # developing new pipeline-elements
+└── ui                    # developing UI features
 ```
 **Modifying an existing template**. To modify an existing template, you can simply add a `<YOUR_NEW_SERVICE>` to the template.
 > **NOTE**: You need to make sure, that the service your are adding exists in `deploy/standalone/service/<YOUR_NEW_SERVICE>`. If your're adding a completely new service take a look at existing ones, create a new service directory and include a `docker-compose.yml` and `docker-compose.dev.yml` file.

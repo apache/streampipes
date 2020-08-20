@@ -59,10 +59,12 @@ EOF
 deployment_notice() {
   cat <<EOF
 
-    Apache StreamPipes is now ready to use. Open your browser
-    and follow the instructions to get started:
+    Apache StreamPipes environment is now up and running. Have fun developing!
 
-            StreamPipes UI: http://localhost/
+            Check docs for help:  https://streampipes.apache.org/docs
+
+    When you're environment contains the UI, open your browser and follow the
+    instructions to get started: http://localhost/
 
 EOF
 }
