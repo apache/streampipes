@@ -60,7 +60,7 @@
         <div class="data-marketplace-options-item">
             <mat-form-field>
                 <mat-select [(value)]="selectedCategory" (selectionChange)="filterAdapter($event)">
-                    <mat-option *ngFor="let category of adapterCategories" [value]="category.type">
+                    <mat-option *ngFor="let category of adapterCategories" [value]="category.code">
                         {{category.label}}
                     </mat-option>
                 </mat-select>

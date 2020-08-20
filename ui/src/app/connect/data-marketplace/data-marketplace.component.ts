@@ -73,7 +73,7 @@ export class DataMarketplaceComponent implements OnInit {
     loadAvailableTypeCategories() {
         this.dataMarketplaceService.getAdapterCategories().subscribe(res => {
             this.adapterCategories = res;
-            this.adapterCategories.unshift({type: "All", label: "All categories", description: ""});
+            this.adapterCategories.unshift({label: "All categories", description: "", code: "All"});
         });
     }
 
