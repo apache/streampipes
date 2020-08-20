@@ -52,6 +52,31 @@ It's easy to get started:
 * Follow the installation guide at [https://streampipes.apache.org/docs/docs/user-guide-installation](https://streampipes.apache.org/docs/docs/user-guide-installation)
 * Check the [tour](https://streampipes.apache.org/docs/docs/user-guide-tour) and build your first pipeline!
 
+## Building StreamPipes
+
+To properly build the StreamPipes extensions project, the following tools should be installed:
+
+### Prerequisites
+* Java 8 JDK (minimum)
+* Maven (tested with 3.6)
+* NodeJS + NPM (tested with v12+/ v6+)
+* Docker + Docker-Compose
+
+### Building
+
+To build the extensions project, do the following:
+
+```
+    mvn clean package
+```
+
+### Starting
+
+To start StreamPipes Extensions, run ``docker-compose up -d`` from the root directory. Make sure the core (incubator-streampipes) is already started.
+
+You can also use the installer or CLI as described in the ``Getting Started`` section.
+
+
 ## Bugs and Feature Requests
 
 If you've found a bug or have a feature that you'd love to see in StreamPipes, feel free to create an issue in our Jira:
@@ -62,7 +87,6 @@ If you've found a bug or have a feature that you'd love to see in StreamPipes, f
 If you have any problems during the installation or questions around StreamPipes, you'll get help through one of our 
 community channels:
 
-- [Slack](https://slack.streampipes.org)
 - [Mailing Lists](https://streampipes.apache.org/mailinglists.html)
 
 And don't forget to follow us on [Twitter](https://twitter.com/streampipes)!
