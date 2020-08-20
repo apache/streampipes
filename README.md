@@ -149,7 +149,6 @@ If you've found a bug or have a feature that you'd love to see in StreamPipes, f
 If you have any problems during the installation or questions around StreamPipes, you'll get help through one of our 
 community channels:
 
-- [Slack](https://slack.streampipes.org)
 - [Mailing Lists](https://streampipes.apache.org/mailinglists.html)
 
 And don't forget to follow us on [Twitter](https://twitter.com/streampipes)!
