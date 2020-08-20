@@ -22,16 +22,17 @@ import {ShepherdService} from "../../services/tour/shepherd.service";
 import {ConnectService} from '../connect.service';
 import {FilterPipe} from './filter.pipe';
 import {AdapterUploadDialog} from './adapter-upload/adapter-upload-dialog.component';
-import {MatDialog} from '@angular/material/dialog';
 import {
     AdapterDescription,
-    AdapterDescriptionList,
     AdapterDescriptionUnion,
     AdapterSetDescription,
     AdapterStreamDescription,
-    EventSchema, SpDataSet,
+    EventSchema,
+    SpDataSet,
     SpDataStream
 } from "../../core-model/gen/streampipes-model";
+import {PanelType} from "../../core-ui/dialog/base-dialog/base-dialog.model";
+import {DialogService} from "../../core-ui/dialog/base-dialog/base-dialog.service";
 
 @Component({
     selector: 'sp-data-marketplace',
@@ -61,7 +62,7 @@ export class DataMarketplaceComponent implements OnInit {
     constructor(private dataMarketplaceService: DataMarketplaceService,
                 private ShepherdService: ShepherdService,
                 private connectService: ConnectService,
-                public dialog: MatDialog) {
+                private dialogService: DialogService) {
     }
 
     ngOnInit() {
@@ -173,23 +174,7 @@ export class DataMarketplaceComponent implements OnInit {
             }
         });
 
-        let adapterDescriptionList: AdapterDescriptionList  = new AdapterDescriptionList();
-        adapterDescriptionList.elementId = "http://streampipes.org/exportedList";
-        adapterDescriptionList.list = adapterTemplates as AdapterDescriptionUnion[];
-
-
-        // this.tsonLdSerializerService.toJsonLd(this.data.adapter).subscribe(res => {
-        //     var data = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(res, null, 2));
-        //     var downloader = document.createElement('a');
-        //
-        //     downloader.setAttribute('href', data);
-        //     downloader.setAttribute('download', this.data.adapter.label + '-adapter-template.json');
-        //     downloader.click();
-        //
-        // });
-
-        // this.adapterJsonLd = this.tsonLdSerializerService.toJsonLd(this.data.adapter);
-        let data = "data:text/json;charset=utf-8," +encodeURIComponent(JSON.stringify(adapterDescriptionList, null, 2));
+        let data = "data:text/json;charset=utf-8," +encodeURIComponent(JSON.stringify(adapterTemplates, null, 2));
         let downloader = document.createElement('a');
 
         downloader.setAttribute('href', data);
@@ -198,12 +183,10 @@ export class DataMarketplaceComponent implements OnInit {
     }
 
     uploadAdapterTemplates() {
-        let dialogRef = this.dialog.open(AdapterUploadDialog, {
-            width: '70%',
-            data: {
-                // adapter: adapter
-            },
-            panelClass: 'sp-no-padding-dialog'
+        let dialogRef = this.dialogService.open(AdapterUploadDialog,{
+            panelType: PanelType.STANDARD_PANEL,
+            title: "Upload adapter templates",
+            width: "50vw"
         });
 
         dialogRef.afterClosed().subscribe(result => {

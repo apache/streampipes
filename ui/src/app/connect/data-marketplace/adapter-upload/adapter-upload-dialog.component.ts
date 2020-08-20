@@ -16,71 +16,49 @@
  *
  */
 
-import {Component, Inject} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {Component} from '@angular/core';
 import {RestService} from "../../rest.service";
-import {
-    AdapterDescription,
-    AdapterDescriptionList
-} from "../../../core-model/gen/streampipes-model";
+import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
 
 @Component({
     selector: 'sp-dialog-adapter-started-dialog',
     templateUrl: './adapter-upload-dialog.html',
-    styleUrls: ['./adapter-upload-dialog.component.css'],
+    styleUrls: ['./adapter-upload-dialog.component.scss'],
 })
 export class AdapterUploadDialog {
 
     private selectedUploadFile: File;
-    uploaded: boolean;
+    uploaded: boolean = false;
 
-    constructor(
-        public dialogRef: MatDialogRef<AdapterUploadDialog>,
-        private restService: RestService,
-        @Inject(MAT_DIALOG_DATA) public data: any) {
+    constructor(private dialogRef: DialogRef<AdapterUploadDialog>,
+        private restService: RestService) {
 
     }
 
     ngOnInit() {
-        this.uploaded = false;
     }
 
     handleFileInput(files: any) {
         this.selectedUploadFile = files[0];
-
 
         let fileReader = new FileReader();
         fileReader.onload = (e) => {
             this.uploaded = true;
 
             var jsonString: any = fileReader.result;
-            var json = JSON.parse(jsonString);
+            let allTemplates: any[] = JSON.parse(jsonString);
 
-            if (jsonString["@class"].contains('AdapterDescriptionList') != -1) {
-                let allTemplates: AdapterDescriptionList  = AdapterDescriptionList.fromData(json as AdapterDescriptionList);
-                let self = this;
-
-                allTemplates.list.forEach(function (adapterTemplate) {
-                    self.restService.addAdapterTemplate(adapterTemplate).subscribe(x => {
-                    });
-                });
-
-            } else {
-
-                let adapterTemplate: AdapterDescription;
-                adapterTemplate = AdapterDescription.fromDataUnion(json);
-
+            allTemplates.forEach(adapterTemplate => {
                 this.restService.addAdapterTemplate(adapterTemplate).subscribe(x => {
                 });
-            }
+            });
 
         }
         fileReader.readAsText(this.selectedUploadFile);
-
     }
 
     onCloseConfirm() {
-        this.dialogRef.close('Confirm');
+        this.dialogRef.close();
     }
 
 }

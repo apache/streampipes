@@ -22,6 +22,8 @@ import {DataMarketplaceService} from "../data-marketplace.service";
 import {AdapterExportDialog} from '../adapter-export/adapter-export-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
 import {AdapterDescription} from "../../../core-model/gen/streampipes-model";
+import {PanelType} from "../../../core-ui/dialog/base-dialog/base-dialog.model";
+import {DialogService} from "../../../core-ui/dialog/base-dialog/base-dialog.service";
 
 @Component({
   selector: 'sp-adapter-description',
@@ -47,7 +49,10 @@ export class AdapterDescriptionComponent {
   isRunningAdapter: boolean = false;
   adapterLabel: string;
 
-  constructor(private connectService: ConnectService, private dataMarketplaceService: DataMarketplaceService, public dialog: MatDialog) {}
+  constructor(private connectService: ConnectService,
+              private dataMarketplaceService: DataMarketplaceService,
+              private dialogService: DialogService,
+              public dialog: MatDialog) {}
 
   ngOnInit() {
     if (this.adapter.name == null) this.adapter.name = "";
@@ -77,21 +82,15 @@ export class AdapterDescriptionComponent {
   }
 
   shareAdapterTemplate(adapter: AdapterDescription): void {
-
-        let dialogRef = this.dialog.open(AdapterExportDialog, {
-            width: '70%',
-            data: { adapter: adapter
-            },
-            panelClass: 'sp-no-padding-dialog'
-        });
-
-        dialogRef.afterClosed().subscribe(result => {
-
-        });
-
-
+    this.dialogService.open(AdapterExportDialog,{
+      panelType: PanelType.STANDARD_PANEL,
+      title: "Export adapter template",
+      width: "50vw",
+      data: {
+        "adapter": adapter
+      }
+    });
   }
-
 
   deleteAdapterTemplate(adapter: AdapterDescription): void {
       this.adapterToDelete = adapter.couchDBId;
