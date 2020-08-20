@@ -1,0 +1,13 @@
+[environment:lite]
+ui
+backend
+connect-master
+connect-worker-main
+activemq
+consul
+couchdb
+kafka
+zookeeper
+influxdb
+sources-watertank-simulator
+pipeline-elements-all-jvm

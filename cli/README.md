@@ -15,146 +15,197 @@
   ~ limitations under the License.
   ~
   -->
+# StreamPipes CLI - The Developer's Favorite
 
-# CLI for StreamPipes
-The StreamPipes CLI is focused on developer, either planning to write new extensions such as **connect adapters, processors, sinks**  or working on the core of StreamPipes, namely **backend** or **ui**. To provide more flexibility what services need to be running we provide the CLI to easily set up a suitable dev environment locally.
+The StreamPipes command-line interface (CLI) is focused on developers in order to provide an easy entrypoint to set up a suitable dev environment, either planning on developing
 
-#### Structure & Description
-The CLI is written in [argbash](https://github.com/matejak/argbash) and basically is a wrapper around several docker-compose commands plus some additional sugar.
+* new extensions such as **connect adapters, processors, sinks** or,
+* new core features for **backend** and **ui**.
+
+<!-- BEGIN do not edit: set via ../upgrade_versions.sh -->
+**Current version:** 0.67.0-SNAPSHOT
+<!-- END do not edit -->
+
+#### TL;DR
+<!-- ![](demo/streampipes-min.gif) -->
+<!-- <img src="demo/streampipes-min.gif" style="display: block;
+  margin-left: auto;
+  margin-right: auto;" width="100%"> -->
+
 
 ```bash
-.
-├── README.md
-├── services/   # holds all docker-compose service descriptions
-├── sp          # CLI
-├── sp.m4       # argbash file    
-├── templates/  # holds all dev templates used to generate `system` file
-└── tmpl_env    # template env file used to generate `.env` file
+$ streampipes template -l
+[INFO] Currently available StreamPipes environment templates
+pipeline-element
+...
+$ streampipes template -s pipeline-element
+$ streampipes up -d
 ```
 
-<!-- ## TL;DR
-```bash
-# start StreamPipes standalone lite version including current Java processors
-./sp start
-``` -->
+## Prerequisite
+The CLI is basically a wrapper around multiple `docker` and `docker-compose` commands plus some additional sugar.
 
-## Prequisite
-* Docker
-* Docker-Compose
-* Free ports (see mapped ports of services under `services/<service>/docker-compose.yml`)
+* Docker >= 17.06.0
+* Docker-Compose >= 1.17.0 (Compose file format: 3.4)
+* For Windows Developer: GitBash only
 
-> **NOTE**: By using the CLI, we explicitely map ports of services to the host system. Thus, it might happy that you run into port conflicts if any other service already binds to that address.
 
-## Template structure
+Tested on: **macOS**, **Linux**, **Windows***)
 
-We provide necessary `service templates` for various development scenarios:
+> **NOTE**: *) If you're using Windows the CLI only works in combination with GitBash - CMD, PowerShell won't work.
+
+
+## CLI commands overview
 
 ```bash
-templates
-├── backend-dev # for core development
-├── full        # for developing distributed extensions (Flink processors)
-├── lite        # for developing standalone extensions (Java processors)
-└── ui-dev      # for ui development
+StreamPipes CLI - Manage your StreamPipes environment with ease
+
+Usage: streampipes COMMAND [OPTIONS]
+
+Options:
+  --help, -h      show help
+  --version, -v   show version
+
+Commands:
+  clean       Remove StreamPipes data volumes, dangling images and network
+  down        Stop and remove StreamPipes containers
+  info        Get information
+  logs        Get container logs for specific container
+  ps          List all StreamPipes container for running environment
+  pull        Download latest images from Dockerhub
+  restart     Restart StreamPipes environment
+  template    Select StreamPipes environment template
+  up          Create and start StreamPipes container environment
+
+Run 'streampipes COMMAND --help' for more info on a command.
 ```
 
-## Usage along Dev cycle: set-template, start, stop, (clean), update
-
-**First**, we select a template - this copies the content of the template and creates a new `system` file in the root dir:
+## Usage: Along dev life-cycle
+**List** available environment templates
 ```bash
-./sp set-template <TEMPLATE>
-
-# ./sp set-template lite
-# [INFO]  Set configuration for template: lite
+streampipes template --list
 ```
 
-**Second**, we start the setup - this parsed the system file and iterates through the services directory, and appends each docker-compose.yml file.
-> **Note**: Issuing this command also pull the necessary images
-
+**Inspect** services in a given template to know what kind of services will be started as part this environment
 ```bash
-./sp start
-
-
-# ...
-#
-# INFO: StreamPipes 0.67.0-SNAPSHOT is now ready to be used on your system
-#       Check https://streampipes.apache.org/ for information on StreamPipes
-#
-#       Go to the UI and follow the instructions to get started: http://localhost/
+streampipes template --inspect pipeline-element
 ```
 
-**Third**, stopping the setup is as easy as follows:
+**Set** environment template, e.g. `pipeline-element` if you want to write a new pipeline element
 ```bash
-./sp stop
+streampipes template --set pipeline-element
 ```
 
-**Fourth (Optional)**, stopping the service does not remove the created Docker volumes. In case you also want to clean this up use the following command.
-```bash
-./sp clean
-```
-
-Additionally, if you want to update the services specified in your current `system` file, you can run:
+**Start** environment ( default: `dev` mode).
+> **NOTE**: `dev` mode is enabled by default since we rely on open ports to core service such as `consul`, `couchdb`, `kafka` etc. to reach from the IDE when developing. If you don't want to map ports (except the UI port), then use the `--no-ports` flag.
 
 ```bash
-./sp update
+streampipes up -d
+# start in production mode with unmapped ports
+# streampipes up -d --no-ports
+```
+Now you're good to go to write your new pipeline element :tada: :tada: :tada:
+
+> **HINT for extensions**: Use our [Maven archetypes](https://streampipes.apache.org/docs/docs/dev-guide-archetype/) to setup a project skeleton and use your IDE of choice for development. However, we do recommend using IntelliJ.
+
+> **HINT for core**: To work on `backend` or `ui` features you need to set the template to `backend` and clone the core repository [incubator-streampipes](https://github.com/apache/incubator-streampipes) - check the prerequisites there for more information.
+
+**Stop** environment and remove docker container
+```bash
+streampipes down
+# want to also clean docker data volumes when stopping the environment?
+# streampipes down -v
 ```
 
-## Update changes to CLI
-We leverage [argbash](https://github.com/matejak/argbash) to build this CLI. To include changes to `sp.m4` file we can generate a new version of `sp` using the following command.
+## Additionally, useful commands
+
+**Start individual services only?** We got you! You chose a template that suits your needs and now you only want to start individual services from it, e.g. only Kafka and Consul.
+
+> **NOTE**: the service names need to be present and match your current `.environment`.
 
 ```bash
-${PATH_TO_ARGBASH}/bin/argbash sp.m4 -o sp
+streampipes up -d kafka consul
 ```
 
-<!-- All active services are defined in the system file.
-All available services are in the services folder.
+**Get logs** of specific service
+```bash
+streampipes logs --follow backend
+```
 
-## Features Suggestion
-* start (service-name) (--hostname "valueHostName") (--defaultip)
-  * Starts StreamPipes or service
-* stop (service-name)
-  * Stops StreamPipes and deletes containers
-* restart (service-name)
-  * Restarts containers
-* update (service-name) (--renew)
-  * Downloads new docker images
-  * --renew restart containers after download
-* set-template (template-name)
-  * Replaces the systems file with file mode-name
-* log (service-name)
-  * Prints the logs of the service
+**Update** all services of current environment
+```bash
+streampipes pull
+```
 
-* list-available
-* list-active
-* list-templates
+**Restart** all services of current environment or specific services
+```bash
+streampipes restart
+# restart backend & consul
+# streampipes restart backend consul
+```
 
-* activate (service-name) (--all)
-  * Adds service to system and starts
-* add (service-name) (--all)
-  * Adds service to system
-* deactivate {remove} (service-name)  (--all)
-  * Stops container and removes from system file
-* clean
-  * Stops and cleans SP installation, remove networks
-* remove-settings:
-  * Stops StreamPipes and deletes .env file
-* set-version:
-  * Change the StreamPipes version in the tmpl_env file
+**Clean** your system and remove created StreamPipes Docker volumes, StreamPipes docker network and dangling StreamPipes images of old image layers.
+```bash
+streampipes clean
+# remove volumes, network and dangling images
+# streampipes clean --volumes
+```
 
-* generate-compose-file
+## Modify/Create an environment template
+As of now, this step has to be done **manually**. All environment templates are located in `bin/templates/environments`.
+
+```bash
+├── adapter               # developing a new connect adapter
+├── backend               # developing core backend features
+├── basic                 # wanna run core, UI, connect etc from the IDE?
+├── full                  # full version containing more pipeline elements
+├── lite                  # few pipeline elements, less memory  
+├── pipeline-element      # developing new pipeline-elements
+└── ui                    # developing UI features
+```
+**Modifying an existing template**. To modify an existing template, you can simply add a `<YOUR_NEW_SERVICE>` to the template.
+> **NOTE**: You need to make sure, that the service your are adding exists in `deploy/standalone/service/<YOUR_NEW_SERVICE>`. If your're adding a completely new service take a look at existing ones, create a new service directory and include a `docker-compose.yml` and `docker-compose.dev.yml` file.
+
+```
+[environment:backend]
+activemq
+kafka
+...
+<YOUR_NEW_SERVICE>
+```
+
+**Creating a new** template. To create a new template, place a new file `bin/templates/environments/<YOUR_NEW_TEMPLATE>` in the template directory. Open the file and use the following schema.
+> **IMPORTANT**: Please make sure to have `[environment:<YOUR_NEW_TEMPLATE>]` header in the first line of your new template matching the name of the file. Make sure to use small caps letters (lowercase) only.
+
+```
+[environment:<YOUR_NEW_TEMPLATE>]
+<SERVICE_1>
+<SERVICE_2>
+...
+```
+
+## Run `streampipes` from anywhere? No problem
+Simply add the path to this cli directory to your `$PATH` (on macOS, Linux) variable, e.g. in your `.bashrc` or `.zshrc`, or `%PATH%` (on Windows).
+
+For **macOS**, or **Linux**:
+
+```bash
+export PATH="/path/to/incubator-streampipes-installer/cli:$PATH"
+```
+
+For **Windows 10**, e.g. check this [documentation](https://helpdeskgeek.com/windows-10/add-windows-path-environment-variable/).
 
 
-## Flags
+## Upgrade to new version
+To upgrade to a new version, simply edit the version tag in `VERSION`.
 
-* ARG_OPTIONAL_SINGLE([hostname], , [The default hostname of your server], )
-* ARG_OPTIONAL_BOOLEAN([defaultip],d, [When set the first ip is used as default])
-* ARG_OPTIONAL_BOOLEAN([all],a, [Select all available StreamPipes services])
+## Get help
+If you have any problems during the installation or questions around StreamPipes, you'll get help through one of our community channels:
 
+- [Slack](https://slack.streampipes.org)
+- [Mailing Lists](https://streampipes.apache.org/mailinglists.html)
 
+And don't forget to follow us on [Twitter](https://twitter.com/streampipes)!
 
-
-
-## Naming Files / Folders
-* active-services
-* services/
-* system-configurations -> templates/
-* tmpl_env -->
+## License
+[Apache License 2.0](../LICENSE)

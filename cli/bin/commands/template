@@ -1,0 +1,119 @@
+#!/usr/bin/env bash
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+set -e
+. "$STREAMPIPES_WORKDIR/bin/common"
+
+STREAMPIPES_TEMPLATE_PATH=$STREAMPIPES_WORKDIR/bin/templates/environments
+
+cli_help_template() {
+  cat <<EOF
+Select StreamPipes environment template
+
+Usage: streampipes template [OPTIONS]
+
+Example:
+# list all available environment templates
+streampipes template --list
+
+# inspect services in environment template
+streampipes template --inspect backend
+
+# set specific template, here 'backend'
+streampipes template --set backend
+
+Options:
+  -i, --inspect   Inspect services in environment template
+  -l, --list      List all available environment templates
+  -s, --set       Set environment templates
+EOF
+
+  exit 1
+}
+
+[ "$1" == '--help' ] || [ "$1" == '-h' ] || [ -z "$1" ] && cli_help_template
+
+if [ "$#" -gt 3 ]; then
+    fatal "Illegal number of arguments, see 'streampipes ${0##*/} --help'"
+fi
+
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        -i|--inspect)
+          if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
+            inspect_template="$2"
+            shift 2
+          else
+            fatal "Template for $1 is missing" >&2
+          fi
+          ;;
+        -l|--list) list_templates=true; shift ;;
+        -s|--set)
+          if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
+            set_template="$2"
+            shift 2
+          else
+            fatal "Template for $1 is missing" >&2
+          fi
+          ;;
+        *) fatal "Unsupported command $1, see 'streampipes ${0##*/} --help'" >&2 ;;
+    esac
+done
+
+check_template(){
+  template=$STREAMPIPES_TEMPLATE_PATH/$1
+  if [ ! -f "$template" ]; then
+    fatal "Template not found '$1'. see 'streampipes ${0##*/} --list'"
+  fi
+}
+
+list_templates(){
+  info "StreamPipes environment templates"
+  for entry in "$STREAMPIPES_TEMPLATE_PATH"/*
+  do
+    echo "${entry##*/}"
+  done
+}
+
+set_template(){
+  check_template $set_template
+  info "Set environment to template '$set_template'"
+  cp $STREAMPIPES_TEMPLATE_PATH/$set_template $STREAMPIPES_WORKDIR/.environment
+  set_lf_line_encoding $STREAMPIPES_WORKDIR/.environment
+}
+
+inspect_template(){
+  check_template $inspect_template
+  search_str="[environment:"
+
+  info "Inspect services in template '$inspect_template'"
+  while IFS='' read -r line || [[ -n "$line" ]]; do
+    if [[ "$line" != *"$search_str"* ]]; then
+      echo $line
+    fi
+  done < "$STREAMPIPES_TEMPLATE_PATH/$inspect_template"
+}
+
+if [ "$list_templates" = true ]; then
+  list_templates
+fi
+
+if [ -n "$inspect_template" ]; then
+  inspect_template
+fi
+
+if [ -n "$set_template" ]; then
+  set_template
+fi
