@@ -32,6 +32,14 @@ git clone https://github.com/apache/incubator-streampipes-installer
 ```
 or download the ZIP of the installer. Click on the green button `Code` on the top right. Then click on `Download ZIP`.
 
+## Upgrade version for all options
+To upgrade the StreamPipes version all at once for all options and README files you can use the little helper script.
+> **IMPORTANT**: This script does not check for valid version input.
+
+```bash
+./upgrade_versions.sh <version>
+```
+
 ## Get help
 If you have any problems during the installation or questions around StreamPipes, you'll get help through one of our community channels:
 
