@@ -47,7 +47,7 @@ remove_dangling_images(){
     info "Removing dangling StreamPipes images"
     run "docker images -f dangling=true | grep "apachestreampipes" | awk '{print $3}' | xargs docker rmi"
   else
-    warning "No dangling StreamPipes images found"
+    info "No dangling StreamPipes images found"
   fi
 }
 
@@ -57,7 +57,7 @@ remove_unused_volumes(){
     info "Removing StreamPipes docker volumes"
     run "docker volume rm $(docker volume ls --filter name=streampipes -q)"
   else
-    warning "No unused StreamPipes docker volumes found"
+    info "No unused StreamPipes docker volumes found"
   fi
 }
 
@@ -66,18 +66,28 @@ remove_docker_network(){
     info "Removing StreamPipes docker network"
     run "docker network rm spnet" > /dev/null 2>&1
   else
-    warning "No StreamPipes docker network found"
+    info "No StreamPipes docker network found"
   fi
 }
 
 continue_check(){
-  cat << EOF
-$(warning "This will remove:")
-  - StreamPipes docker network
-  - all unused StreamPipes data volumes
-  - all dangling StreamPipes images
+
+  if [ "$clean_volumes" = true ]; then
+    cat << EOF
+  $(warning "This will remove:")
+    - StreamPipes docker network
+    - all unused StreamPipes data volumes
+    - all dangling StreamPipes images
 
 EOF
+  else
+    cat << EOF
+  $(warning "This will remove:")
+    - StreamPipes docker network
+    - all dangling StreamPipes images
+
+EOF
+  fi
   read -p "Are you sure you want to continue? [y/N]: " input
 
   if [[ "$input" != "y"  && "$input" != "Y" && "$input" != "yes" && "$input" != "Yes" && "$input" != "YES" ]]; then
