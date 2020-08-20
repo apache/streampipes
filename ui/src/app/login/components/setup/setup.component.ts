@@ -33,19 +33,12 @@ export class SetupComponent {
     loading: any;
     showAdvancedSettings: any;
     setup: any = {
-        couchDbHost: '',
-        kafkaHost: '',
-        zookeeperHost: '',
-        jmsHost: '',
         adminEmail: '',
         adminPassword: '',
         installPipelineElements: true
     };
-    setupForm: any;
     installationRunning: any;
     nextTaskTitle: any;
-
-    parentForm: FormGroup = new FormGroup({});
 
     constructor(private loginService: LoginService,
                 private RestApi: RestApi) {
@@ -55,8 +48,6 @@ export class SetupComponent {
         this.installationResults = [];
         this.loading = false;
         this.showAdvancedSettings = false;
-
-        this.setup
     }
 
     configure(currentInstallationStep) {
