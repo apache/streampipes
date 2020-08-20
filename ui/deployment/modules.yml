@@ -38,7 +38,7 @@ spConnect:
   link: 'connect'
   url: '/connect'
   title: 'Connect'
-  description: 'StremPipes Connect lets you easily connect new data sources for a variety of data formats and protocols.'
+  description: 'StreamPipes Connect lets you easily connect new data sources for a variety of data formats and protocols.'
   icon: 'power'
   homeImage: '/assets/img/home/editor.png'
   admin: False
@@ -79,7 +79,7 @@ spAdd:
   link: 'add'
   url: '/add'
   title: 'Install Pipeline Elements'
-  description: 'The pipeline element installation module can be used to extend StreamPipes with new algorithms and data sinks'
+  description: 'The pipeline element installation module can be used to extend StreamPipes with new algorithms and data sinks.'
   icon: 'cloud_download'
   homeImage: '/assets/img/home/add.png'
   admin: True
