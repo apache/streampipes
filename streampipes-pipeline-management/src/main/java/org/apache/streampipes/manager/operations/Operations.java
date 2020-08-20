@@ -38,14 +38,14 @@ import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.client.endpoint.RdfEndpoint;
 import org.apache.streampipes.model.client.endpoint.RdfEndpointItem;
-import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.DataSetModificationMessage;
+import org.apache.streampipes.model.message.Message;
+import org.apache.streampipes.model.message.PipelineModificationMessage;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineElementRecommendationMessage;
-import org.apache.streampipes.model.message.PipelineModificationMessage;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
-import org.apache.streampipes.model.runtime.ContainerProvidedOptionsParameterRequest;
-import org.apache.streampipes.model.staticproperty.Option;
+import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
+import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.apache.streampipes.model.template.PipelineTemplateDescription;
 import org.apache.streampipes.model.template.PipelineTemplateInvocation;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -156,7 +156,7 @@ public class Operations {
     return new WildcardTopicGenerator(stream).computeActualTopic();
   }
 
-  public static List<Option> fetchRemoteOptions(ContainerProvidedOptionsParameterRequest request) {
+  public static RuntimeOptionsResponse fetchRemoteOptions(RuntimeOptionsRequest request) {
     return new ContainerProvidedOptionsHandler().fetchRemoteOptions(request);
   }
 

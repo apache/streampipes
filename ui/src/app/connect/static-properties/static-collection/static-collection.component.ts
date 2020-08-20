@@ -16,15 +16,10 @@
  *
  */
 
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ConfigurationInfo} from '../../model/message/ConfigurationInfo';
 import {StaticPropertyUtilService} from '../static-property-util.service';
-import {
-    CollectionStaticProperty,
-    StaticProperty,
-    StaticPropertyUnion
-} from "../../../core-model/gen/streampipes-model";
-import {AbstractStaticPropertyRenderer} from "../base/abstract-static-property";
+import {CollectionStaticProperty} from "../../../core-model/gen/streampipes-model";
 import {AbstractValidatedStaticPropertyRenderer} from "../base/abstract-validated-static-property";
 
 

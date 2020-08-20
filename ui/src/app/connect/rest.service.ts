@@ -53,18 +53,6 @@ export class RestService {
         return this.addAdapterDescription(adapter, '/master/adapters/template');
     }
 
-    fetchRemoteOptions(resolvableOptionsParameterRequest: any, adapterId: string): Observable<RuntimeOptionsResponse> {
-        resolvableOptionsParameterRequest["@class"] = "org.apache.streampipes.model.runtime.RuntimeOptionsRequest";
-        return this.http.post("/streampipes-connect/api/v1/"
-            + this.authStatusService.email
-            + "/master/resolvable/"
-            + encodeURIComponent(adapterId)
-            + "/configurations", resolvableOptionsParameterRequest)
-            .pipe(map(response => {
-                return RuntimeOptionsResponse.fromData(response as RuntimeOptionsResponse);
-            }));
-    }
-
     addAdapterDescription(adapter: AdapterDescription, url: String): Observable<Message> {
         adapter.userName = this.authStatusService.email;
 

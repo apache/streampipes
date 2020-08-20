@@ -16,35 +16,34 @@
  *
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {RuntimeResolvableAnyStaticProperty} from "../../model/RuntimeResolvableAnyStaticProperty";
+import {Component, OnInit} from '@angular/core';
+import {BaseRuntimeResolvableInput} from "../static-runtime-resolvable-input/base-runtime-resolvable-input";
+import {RuntimeResolvableAnyStaticProperty} from "../../../core-model/gen/streampipes-model";
+import {RuntimeResolvableService} from "../static-runtime-resolvable-input/runtime-resolvable.service";
 
 @Component({
     selector: 'app-static-runtime-resolvable-any-input',
     templateUrl: './static-runtime-resolvable-any-input.component.html',
     styleUrls: ['./static-runtime-resolvable-any-input.component.css']
 })
-export class StaticRuntimeResolvableAnyInputComponent implements OnInit {
+export class StaticRuntimeResolvableAnyInputComponent extends BaseRuntimeResolvableInput<RuntimeResolvableAnyStaticProperty> implements OnInit {
 
-    @Input()
-    staticProperty: RuntimeResolvableAnyStaticProperty;
-
-    @Output() inputEmitter: EventEmitter<Boolean> = new EventEmitter<Boolean>();
-
-    constructor() { }
+    constructor(RuntimeResolvableService: RuntimeResolvableService) {
+        super(RuntimeResolvableService);
+    }
 
     ngOnInit() {
-        for (let option of this.staticProperty.options) {
-            option.selected = false;
-        }
+        super.onInit();
     }
 
     select(id) {
         for (let option of this.staticProperty.options) {
             option.selected = false;
         }
-        this.staticProperty.options.find(option => option.id === id).selected = true;
-        this.inputEmitter.emit(true)
+        this.staticProperty.options.find(option => option.elementId === id).selected = true;
+    }
+
+    afterOptionsLoaded() {
     }
 
 }

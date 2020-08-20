@@ -16,22 +16,10 @@
  *
  */
 
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChanges
-} from '@angular/core';
-import {RestService} from "../../rest.service";
-import {ConfigurationInfo} from "../../model/message/ConfigurationInfo";
-import {AbstractStaticPropertyRenderer} from "../base/abstract-static-property";
-import {
-  RuntimeOptionsRequest,
-  RuntimeResolvableOneOfStaticProperty
-} from "../../../core-model/gen/streampipes-model";
+import {Component, OnChanges, OnInit} from '@angular/core';
+import {RuntimeResolvableOneOfStaticProperty} from "../../../core-model/gen/streampipes-model";
+import {BaseRuntimeResolvableInput} from "../static-runtime-resolvable-input/base-runtime-resolvable-input";
+import {RuntimeResolvableService} from "../static-runtime-resolvable-input/runtime-resolvable.service";
 
 @Component({
     selector: 'app-static-runtime-resolvable-oneof-input',
@@ -39,52 +27,20 @@ import {
     styleUrls: ['./static-runtime-resolvable-oneof-input.component.css']
 })
 export class StaticRuntimeResolvableOneOfInputComponent
-    extends AbstractStaticPropertyRenderer<RuntimeResolvableOneOfStaticProperty> implements OnInit, OnChanges {
+    extends BaseRuntimeResolvableInput<RuntimeResolvableOneOfStaticProperty> implements OnInit, OnChanges {
 
-    @Input()
-    completedStaticProperty: ConfigurationInfo;
-
-    @Output() inputEmitter: EventEmitter<Boolean> = new EventEmitter<Boolean>();
-
-    showOptions: boolean = false;
-    loading: boolean = false;
-    dependentStaticProperties: any = new Map();
-
-    constructor(private RestService: RestService) {
-        super();
+    constructor(RuntimeResolvableService: RuntimeResolvableService) {
+        super(RuntimeResolvableService);
     }
 
     ngOnInit() {
-        for (let option of this.staticProperty.options) {
-            option.selected = false;
-        }
-
-        if (this.staticProperty.options.length == 0 && (!this.staticProperty.dependsOn || this.staticProperty.dependsOn.length == 0)) {
-            this.loadOptionsFromRestApi();
-        }
-
-        if (this.staticProperty.dependsOn && this.staticProperty.dependsOn.length > 0) {
-            this.staticProperty.dependsOn.forEach(dp => {
-                this.dependentStaticProperties.set(dp, false);
-            });
-        }
+        super.onInit();
     }
 
-    loadOptionsFromRestApi() {
-        var resolvableOptionsParameterRequest = new RuntimeOptionsRequest();
-        resolvableOptionsParameterRequest.staticProperties = this.staticProperties;
-        resolvableOptionsParameterRequest.requestId = this.staticProperty.internalName;
-
-        this.showOptions = false;
-        this.loading = true;
-        this.RestService.fetchRemoteOptions(resolvableOptionsParameterRequest, this.adapterId).subscribe(msg => {
-            this.staticProperty.options = msg.options;
-            if (this.staticProperty.options && this.staticProperty.options.length > 0) {
-                this.staticProperty.options[0].selected = true;
-            }
-            this.loading = false;
-            this.showOptions = true;
-        });
+    afterOptionsLoaded() {
+        if (this.staticProperty.options && this.staticProperty.options.length > 0) {
+            this.staticProperty.options[0].selected = true;
+        }
     }
 
     select(id) {
@@ -92,18 +48,5 @@ export class StaticRuntimeResolvableOneOfInputComponent
             option.selected = false;
         }
         this.staticProperty.options.find(option => option.elementId === id).selected = true;
-        this.inputEmitter.emit(true)
-    }
-
-
-    ngOnChanges(changes: SimpleChanges): void {
-        if (changes['completedStaticProperty']) {
-            if (this.completedStaticProperty != undefined) {
-                this.dependentStaticProperties.set(this.completedStaticProperty.staticPropertyInternalName, this.completedStaticProperty.configured);
-                if (Array.from(this.dependentStaticProperties.values()).every(v => v === true)) {
-                    this.loadOptionsFromRestApi();
-                }
-            }
-        }
     }
 }

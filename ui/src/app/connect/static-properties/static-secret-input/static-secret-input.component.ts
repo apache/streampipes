@@ -17,11 +17,10 @@
  */
 
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {Validators} from '@angular/forms';
 import {StaticPropertyUtilService} from '../static-property-util.service';
 import {ConfigurationInfo} from "../../model/message/ConfigurationInfo";
 import {SecretStaticProperty} from "../../../core-model/gen/streampipes-model";
-import {AbstractStaticPropertyRenderer} from "../base/abstract-static-property";
 import {AbstractValidatedStaticPropertyRenderer} from "../base/abstract-validated-static-property";
 
 @Component({

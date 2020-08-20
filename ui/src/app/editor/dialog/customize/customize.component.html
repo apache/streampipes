@@ -21,12 +21,13 @@
         <div fxFlex="100" fxLayout="column">
             <div style="border-bottom:1px solid #ccc;padding:10px;background-color:#f6f6f6">
                 <div fxFlex="100" fxLayout="row" fxLayoutAlign="end end">
-                    <mat-slide-toggle [(ngModel)]="showDocumentation" aria-label="Switch 1"
+                    <mat-slide-toggle [(ngModel)]="showDocumentation"
+                                      color="primary"
                                       [disabled]="!pipelineElement.payload.includesAssets">
                         Show documentation
                     </mat-slide-toggle>
                     <span>&nbsp;</span>
-                    <mat-slide-toggle [(ngModel)]="displayRecommended" aria-label="Switch 1">
+                    <mat-slide-toggle [(ngModel)]="displayRecommended" color="primary">
                         Show only recommended settings
                     </mat-slide-toggle>
                 </div>
@@ -50,11 +51,14 @@
                             <form [formGroup]="parentForm" fxFlex="100">
                                 <app-static-property *ngFor="let config of cachedPipelineElement.staticProperties"
                                                      [staticProperty]="config"
+                                                     [pipelineElement] = "cachedPipelineElement"
                                                      [displayRecommended]="displayRecommended"
                                                      [staticProperties]="cachedPipelineElement.staticProperties"
                                                      [eventSchemas]="eventSchemas"
                                                      [parentForm]="parentForm"
                                                      [fieldName]="config.internalName"
+                                                     [completedStaticProperty]="completedStaticProperty"
+                                                     (updateEmitter)="triggerUpdate($event)"
                                                      (validateEmitter)="validConfiguration($event)">
                                 </app-static-property>
                                 <div *ngIf="isDataProcessor">

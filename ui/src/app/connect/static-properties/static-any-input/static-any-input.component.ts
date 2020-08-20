@@ -36,4 +36,10 @@ export class StaticAnyInput extends AbstractStaticPropertyRenderer<AnyStaticProp
     }
     this.inputEmitter.emit(true);
   }
+
+  select(elementId: string) {
+    this.staticProperty.options
+        .filter(option => option.elementId === elementId)
+        .forEach(option => option.selected = !(option.selected));
+  }
 }

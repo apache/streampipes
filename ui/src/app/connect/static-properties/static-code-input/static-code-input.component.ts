@@ -16,13 +16,9 @@
  *
  */
 
-import {AbstractStaticPropertyRenderer} from "../base/abstract-static-property";
-import {
-  CodeInputStaticProperty,
-  CollectionStaticProperty
-} from "../../../core-model/gen/streampipes-model";
+import {CodeInputStaticProperty} from "../../../core-model/gen/streampipes-model";
 import {AbstractValidatedStaticPropertyRenderer} from "../base/abstract-validated-static-property";
-import {AfterViewInit, Component, OnInit, ViewChild} from "@angular/core";
+import {AfterViewInit, Component, OnInit} from "@angular/core";
 
 import 'codemirror/mode/javascript/javascript';
 import 'codemirror/addon/edit/closebrackets';

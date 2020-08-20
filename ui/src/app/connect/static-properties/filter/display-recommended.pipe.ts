@@ -17,7 +17,6 @@
  */
 
 import {Pipe, PipeTransform} from "@angular/core";
-import * as angular from "angular";
 import {EventPropertyUnion} from "../../../core-model/gen/streampipes-model";
 
 @Pipe({name: 'displayRecommendedPipe'})

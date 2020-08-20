@@ -98,6 +98,7 @@ import { EventSchemaPreviewComponent } from './schema-editor/event-schema-previe
 import { StaticColorPickerComponent } from './static-properties/static-color-picker/static-color-picker.component';
 import {DisplayRecommendedPipe} from "./static-properties/filter/display-recommended.pipe";
 import {TourProviderService} from "../services/tour/tour-provider.service";
+import {RuntimeResolvableService} from "./static-properties/static-runtime-resolvable-input/runtime-resolvable.service";
 
 
 @NgModule({
@@ -168,6 +169,7 @@ import {TourProviderService} from "../services/tour/tour-provider.service";
     ],
     providers: [
         RestService,
+        RuntimeResolvableService,
         ConnectService,
         DataTypesService,
         TransformationRuleService,

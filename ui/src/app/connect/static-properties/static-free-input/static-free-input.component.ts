@@ -16,17 +16,13 @@
  *
  */
 
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {ValidatorFn, Validators} from '@angular/forms';
 import {StaticPropertyUtilService} from '../static-property-util.service';
 import {ConfigurationInfo} from "../../model/message/ConfigurationInfo";
 import {FreeTextStaticProperty} from "../../../core-model/gen/streampipes-model";
 import {xsService} from "../../../NS/XS.service";
-import {
-  ValidateNumber,
-  ValidateString,
-  ValidateUrl
-} from "../input.validator";
+import {ValidateNumber, ValidateString, ValidateUrl} from "../input.validator";
 import {AbstractValidatedStaticPropertyRenderer} from "../base/abstract-validated-static-property";
 import {QuillEditorComponent} from "ngx-quill";
 

@@ -47,7 +47,7 @@ export class DataMarketplaceComponent implements OnInit {
     visibleAdapters: AdapterDescriptionUnion[];
 
     @Output()
-    selectAdapterEmitter: EventEmitter<AdapterDescription> = new EventEmitter<AdapterDescription>();
+    selectAdapterEmitter: EventEmitter<AdapterDescriptionUnion> = new EventEmitter<AdapterDescriptionUnion>();
 
     selectedIndex: number = 0;
     filterTerm: string = "";

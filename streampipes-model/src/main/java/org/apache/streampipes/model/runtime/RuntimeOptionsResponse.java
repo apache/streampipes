@@ -27,6 +27,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.List;
 
 @RdfsClass(StreamPipes.RUNTIME_OPTIONS_RESPONSE)
@@ -41,6 +42,7 @@ public class RuntimeOptionsResponse extends RuntimeOptionsRequest {
 
   public RuntimeOptionsResponse() {
     super();
+    this.options = new ArrayList<>();
   }
 
   public RuntimeOptionsResponse(RuntimeOptionsRequest request, List<Option> options) {

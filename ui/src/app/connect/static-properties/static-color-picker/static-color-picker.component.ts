@@ -16,11 +16,10 @@
  *
  */
 
-import {Component, EventEmitter, OnInit, Output} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {ConfigurationInfo} from "../../model/message/ConfigurationInfo";
 import {StaticPropertyUtilService} from "../static-property-util.service";
-import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {AbstractStaticPropertyRenderer} from "../base/abstract-static-property";
+import {FormGroup, Validators} from "@angular/forms";
 import {ColorPickerStaticProperty} from "../../../core-model/gen/streampipes-model";
 import {AbstractValidatedStaticPropertyRenderer} from "../base/abstract-validated-static-property";
 

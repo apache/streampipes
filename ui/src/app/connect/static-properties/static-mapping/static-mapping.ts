@@ -19,12 +19,15 @@
 import {StaticPropertyUtilService} from "../static-property-util.service";
 import {PropertySelectorService} from "../../../services/property-selector.service";
 import {
-    EventProperty, EventPropertyList, EventPropertyNested, EventPropertyPrimitive,
-    EventPropertyUnion,
-    MappingProperty
+  EventProperty,
+  EventPropertyList,
+  EventPropertyNested,
+  EventPropertyPrimitive,
+  EventPropertyUnion,
+  MappingProperty
 } from "../../../core-model/gen/streampipes-model";
 import {AbstractValidatedStaticPropertyRenderer} from "../base/abstract-validated-static-property";
-import { Directive } from "@angular/core";
+import {Directive} from "@angular/core";
 
 
 @Directive()
