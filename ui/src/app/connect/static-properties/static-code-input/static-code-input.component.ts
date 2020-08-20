@@ -53,7 +53,6 @@ export class StaticCodeInputComponent
     }
   };
 
-
   constructor() {
     super();
   }
@@ -62,7 +61,6 @@ export class StaticCodeInputComponent
     if (!this.staticProperty.value || this.staticProperty.value === "") {
       this.staticProperty.value = this.staticProperty.codeTemplate;
     }
-
   }
 
   ngAfterViewInit() {
