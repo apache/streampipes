@@ -45,7 +45,11 @@ done
 remove_dangling_images(){
   if [ "$(docker images -f dangling=true | grep "apachestreampipes")" ]; then
     info "Removing dangling StreamPipes images"
-    run "docker images -f dangling=true | grep "apachestreampipes" | awk '{print $3}' | xargs docker rmi"
+    dangling_imgs=$(docker images -f dangling=true | grep "apachestreampipes" | awk '{print $3}')
+    for img in "${dangling_imgs[@]}"
+    do
+    	run "docker rmi $img"
+    done
   else
     info "No dangling StreamPipes images found"
   fi
