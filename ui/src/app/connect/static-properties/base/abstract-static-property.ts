@@ -21,9 +21,10 @@ import {
   StaticProperty,
   StaticPropertyUnion
 } from "../../../core-model/gen/streampipes-model";
-import { EventEmitter, Input, Output, Directive } from "@angular/core";
+import {Directive, EventEmitter, Input, Output} from "@angular/core";
 import {FormGroup} from "@angular/forms";
 import {ConfigurationInfo} from "../../model/message/ConfigurationInfo";
+import {InvocablePipelineElementUnion} from "../../../editor/model/editor.model";
 
 @Directive()
 export abstract class AbstractStaticPropertyRenderer<T extends StaticProperty> {
@@ -39,6 +40,9 @@ export abstract class AbstractStaticPropertyRenderer<T extends StaticProperty> {
 
   @Input()
   adapterId: string;
+
+  @Input()
+  pipelineElement: InvocablePipelineElementUnion;
 
   @Input()
   parentForm: FormGroup;

@@ -23,6 +23,7 @@ import {JsplumbService} from "../../services/jsplumb.service";
 import {DataProcessorInvocation, EventSchema} from "../../../core-model/gen/streampipes-model";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {ShepherdService} from "../../../services/tour/shepherd.service";
+import {ConfigurationInfo} from "../../../connect/model/message/ConfigurationInfo";
 
 @Component({
   selector: 'customize-pipeline-element',
@@ -61,6 +62,7 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
 
   isDataProcessor: boolean = false;
   originalDialogWidth: string | number;
+  completedStaticProperty: ConfigurationInfo;
 
   constructor(private dialogRef: DialogRef<CustomizeComponent>,
               private JsPlumbService: JsplumbService,
@@ -128,6 +130,10 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
     this.viewInitialized = true;
     this.formValid = this.viewInitialized && this.parentForm.valid;
     this.changeDetectorRef.detectChanges();
+  }
+
+  triggerUpdate(configurationInfo: ConfigurationInfo) {
+    this.completedStaticProperty = {...configurationInfo};
   }
 
 }

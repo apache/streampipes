@@ -20,11 +20,10 @@ package org.apache.streampipes.connect.container.master.rest;
 
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.management.AdapterTemplateMasterManagement;
-import org.apache.streampipes.connect.management.AdapterDeserializer;
 import org.apache.streampipes.connect.rest.AbstractContainerResource;
-import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterDescriptionList;
+import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,17 +49,7 @@ public class AdapterTemplateResource extends AbstractContainerResource {
     @Path("/")
     @JacksonSerialized
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addAdapterTemplate(String s, @PathParam("username") String userName) {
-
-        AdapterDescription adapterDescription = null;
-
-        try {
-            adapterDescription = AdapterDeserializer.getAdapterDescription(s);
-        } catch (AdapterException e) {
-            logger.error("Could not deserialize AdapterDescription: " + s, e);
-            e.printStackTrace();
-        }
-
+    public Response addAdapterTemplate(AdapterDescription adapterDescription, @PathParam("username") String userName) {
         try {
             String adapterTemplateId = adapterTemplateMasterManagement.addAdapterTemplate(adapterDescription);
             logger.info("User: " + userName + " added adapter as adapter template");
@@ -70,8 +59,6 @@ public class AdapterTemplateResource extends AbstractContainerResource {
             logger.error("Error while storing the adapter template", e);
             return ok(Notifications.error(e.getMessage()));
         }
-
-
     }
 
     @GET

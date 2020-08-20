@@ -19,7 +19,7 @@
 import {StaticProperty} from "../../../core-model/gen/streampipes-model";
 import {AbstractStaticPropertyRenderer} from "./abstract-static-property";
 import {FormControl, ValidatorFn} from "@angular/forms";
-import { OnDestroy, Directive } from "@angular/core";
+import {Directive, OnDestroy} from "@angular/core";
 
 @Directive()
 export abstract class AbstractValidatedStaticPropertyRenderer<T extends StaticProperty>

@@ -56,9 +56,11 @@ export class DialogService {
     panelDialogContainerRef.instance.dialogRef = dialogRef;
     dialogRef.componentInstance = panelDialogContainerRef.instance.attach();
 
-    Object.keys(config.data).forEach(key => {
-      dialogRef.componentInstance[key] = config.data[key];
-    })
+    if (config.data) {
+      Object.keys(config.data).forEach(key => {
+        dialogRef.componentInstance[key] = config.data[key];
+      })
+    }
 
     this.applyDialogProperties(panelDialogContainerRef, overlay, config);
 

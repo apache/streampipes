@@ -23,7 +23,8 @@ import {xsService} from '../../NS/XS.service';
 import {StaticPropertyUtilService} from './static-property-util.service';
 import {ConfigurationInfo} from "../model/message/ConfigurationInfo";
 import {
-  AnyStaticProperty, CodeInputStaticProperty,
+  AnyStaticProperty,
+  CodeInputStaticProperty,
   CollectionStaticProperty,
   ColorPickerStaticProperty,
   EventSchema,
@@ -40,6 +41,7 @@ import {
   StaticPropertyGroup
 } from "../../core-model/gen/streampipes-model";
 import {FormGroup} from "@angular/forms";
+import {InvocablePipelineElementUnion} from "../../editor/model/editor.model";
 
 @Component({
   selector: 'app-static-property',
@@ -78,6 +80,9 @@ export class StaticPropertyComponent implements OnInit {
 
   @Input()
   displayRecommended: boolean;
+
+  @Input()
+  pipelineElement: InvocablePipelineElementUnion;
 
   constructor(
     private logger: Logger,

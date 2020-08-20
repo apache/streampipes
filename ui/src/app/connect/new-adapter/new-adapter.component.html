@@ -235,11 +235,11 @@
                 <div fxLayoutAlign="end">
                     <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
                     <button class="mat-basic stepper-button" mat-raised-button (click)="goBack(stepper)">Back</button>
-<!--                    <button [disabled]="startAdapterFormGroup.invalid || !isEditable" mat-raised-button-->
-<!--                        id="button-saveTemplate" color="primary" (click)="saveTemplate()" mat-button-->
-<!--                        style="margin-left:10px;">-->
-<!--                        Save as Template-->
-<!--                    </button>-->
+                    <button [disabled]="startAdapterFormGroup.invalid || !isEditable" mat-raised-button
+                        id="button-saveTemplate" color="primary" (click)="saveTemplate()" mat-button
+                        style="margin-left:10px;">
+                        Save as Template
+                    </button>
                     <button [disabled]="startAdapterFormGroup.invalid" mat-raised-button id="button-startAdapter"
                         color="primary" (click)="startAdapter()" mat-button style="margin-left:10px;">
                         Start Adapter

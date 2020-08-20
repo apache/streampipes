@@ -21,62 +21,39 @@ import com.google.gson.JsonSyntaxException;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
-import org.apache.streampipes.model.runtime.ContainerProvidedOptionsParameterRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
-import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.serializers.json.GsonSerializer;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class ContainerProvidedOptionsHandler {
 
 
-  public List<Option> fetchRemoteOptions(ContainerProvidedOptionsParameterRequest parameterRequest) {
+  public RuntimeOptionsResponse fetchRemoteOptions(RuntimeOptionsRequest request) {
 
-    RuntimeOptionsRequest request = new RuntimeOptionsRequest();
-    request.setRequestId(parameterRequest.getRuntimeResolvableInternalId());
-    request.setInputStreams(parameterRequest.getInputStreams());
-    request.setStaticProperties(parameterRequest.getStaticProperties());
-    request.setAppId(parameterRequest.getAppId());
-//    Optional<RuntimeResolvableSelectionStaticProperty> runtimeResolvableOpt = findProperty
-//            (parameterRequest.getStaticProperties(), parameterRequest.getRuntimeResolvableInternalId());
-//
-//    if (runtimeResolvableOpt.isPresent()) {
-//      RuntimeResolvableSelectionStaticProperty rsp = runtimeResolvableOpt.get();
-//      RuntimeOptionsRequest request = new RuntimeOptionsRequest(rsp.getInternalName());
-//
-//      if (rsp.getLinkedMappingPropertyId() != null) {
-//        Optional<EventProperty> eventPropertyOpt = findEventProperty(parameterRequest.getEventProperties(),
-//                parameterRequest.getStaticProperties(), rsp
-//                        .getLinkedMappingPropertyId());
-//        eventPropertyOpt.ifPresent(request::setMappedEventProperty);
-//      }
+//    RuntimeOptionsRequest request = new RuntimeOptionsRequest();
+//    request.setRequestId(parameterRequest.getRuntimeResolvableInternalId());
+//    request.setInputStreams(parameterRequest.getInputStreams());
+//    request.setStaticProperties(parameterRequest.getStaticProperties());
+//    request.setAppId(parameterRequest.getAppId());
+
     String httpRequestBody = GsonSerializer.getGsonWithIds()
             .toJson(request);
 
     try {
-      Response httpResp = Request.Post(parameterRequest.getBelongsTo() + "/configurations").bodyString(httpRequestBody, ContentType.APPLICATION_JSON).execute();
+      Response httpResp = Request.Post(request.getBelongsTo() + "/configurations").bodyString(httpRequestBody, ContentType.APPLICATION_JSON).execute();
       return handleResponse(httpResp);
     } catch (Exception e) {
       e.printStackTrace();
-      return new ArrayList<>();
+      return new RuntimeOptionsResponse();
     }
   }
 
-  private List<Option> handleResponse(Response httpResp) throws JsonSyntaxException, IOException {
+  private RuntimeOptionsResponse handleResponse(Response httpResp) throws JsonSyntaxException, IOException {
     String resp = httpResp.returnContent().asString();
-    RuntimeOptionsResponse response = GsonSerializer
+    return GsonSerializer
             .getGsonWithIds()
             .fromJson(resp, RuntimeOptionsResponse.class);
-
-    return response
-            .getOptions()
-            .stream()
-            .map(Option::new)
-            .collect(Collectors.toList());
   }
 }

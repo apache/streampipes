@@ -48,6 +48,12 @@ export class SavePipelineComponent implements OnInit {
   @Input()
   currentModifiedPipelineId: string;
 
+  saving: boolean = false;
+  saved: boolean = false;
+
+  storageError: boolean = false;
+  errorMessage: string = '';
+
   constructor(private editorService: EditorService,
               private dialogRef: DialogRef<SavePipelineComponent>,
               private objectProvider: ObjectProvider,
@@ -86,16 +92,9 @@ export class SavePipelineComponent implements OnInit {
     }
   }
 
-  displayErrors(data) {
-    for (var i = 0, notification; notification = data.notifications[i]; i++) {
-      //this.showToast("error", notification.title, notification.description);
-    }
-  }
-
-  displaySuccess(data) {
-    if (data.notifications.length > 0) {
-      //this.showToast("success", data.notifications[0].title, data.notifications[0].description);
-    }
+  displayErrors(data?: string) {
+    this.storageError = true;
+    this.errorMessage = data;
   }
 
   getPipelineCategories() {
@@ -105,7 +104,7 @@ export class SavePipelineComponent implements OnInit {
   };
 
 
-  savePipelineName(switchTab) {
+  savePipeline(switchTab) {
     if (this.pipeline.name == "") {
       //this.showToast("error", "Please enter a name for your pipeline");
       return false;
@@ -123,17 +122,17 @@ export class SavePipelineComponent implements OnInit {
     storageRequest
         .subscribe(statusMessage => {
           if (statusMessage.success) {
-            this.afterStorage(statusMessage, switchTab);
+            let pipelineId: string = this.currentModifiedPipelineId || statusMessage.notifications[1].description;
+            this.afterStorage(statusMessage, switchTab, pipelineId);
           } else {
-            this.displayErrors(statusMessage);
+            this.displayErrors(statusMessage.notifications[0]);
           }
         }, data => {
-          //this.showToast("error", "Connection Error", "Could not fulfill request");
+          this.displayErrors();
         });
   };
 
-  afterStorage(data: Message, switchTab) {
-    this.displaySuccess(data);
+  afterStorage(statusMessage: Message, switchTab, pipelineId?: string) {
     this.hide();
     this.editorService.makePipelineAssemblyEmpty(true);
     this.editorService.removePipelineFromCache().subscribe();
@@ -144,7 +143,7 @@ export class SavePipelineComponent implements OnInit {
       this.Router.navigate(["pipelines"]);
     }
     if (this.startPipelineAfterStorage) {
-      this.Router.navigate(["pipelines"], { queryParams: {pipeline: data.notifications[1].description}});
+      this.Router.navigate(["pipelines"], { queryParams: {pipeline: pipelineId}});
     }
   }
 

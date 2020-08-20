@@ -17,13 +17,14 @@
   -->
 
 <div id="formWrapper" fxFlex="100" fxLayout="column">
-
+    <div>
+        <button mat-button mat-raised-button color="primary" class="small-button"
+                (click)="loadOptionsFromRestApi()"
+                style="margin-right:10px;margin-left:10px;" [disabled]="!showOptions">
+            <span>Reload</span>
+        </button>
+    </div>
     <div *ngIf="!staticProperty.horizontalRendering" fxLayout="column">
-        <div>
-            <p>{{staticProperty.label}}: <br>
-                <mat-hint class="description">{{staticProperty.description}}</mat-hint>
-            </p>
-        </div>
         <div fxFlex fxLayout="row">
             <div fxLayout="column" *ngIf="showOptions || staticProperty.options" style="margin-left: 10px">
                 <mat-radio-button *ngFor="let option of staticProperty.options"
@@ -33,11 +34,11 @@
                     </label>
                 </mat-radio-button>
             </div>
-            <div fxLayout="column" *ngIf="!showOptions && !staticProperty.options && !loading">
-                (waiting for input)
+            <div fxLayout="column" *ngIf="!showOptions && !loading">
+                <span>(waiting for input)</span>
             </div>
             <div fxLayout="column" *ngIf="loading">
-                <mat-spinner [diameter]="20"></mat-spinner>
+                <mat-spinner [mode]="'indeterminate'" [diameter]="20"></mat-spinner>
             </div>
         </div>
     </div>

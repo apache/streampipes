@@ -18,8 +18,8 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.manager.operations.Operations;
-import org.apache.streampipes.model.runtime.ContainerProvidedOptionsParameterRequest;
-import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
+import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
+import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -34,8 +34,8 @@ public class ContainerProvidedOptions extends AbstractRestInterface {
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  @GsonWithIds
-  public Response fetchRemoteOptions(ContainerProvidedOptionsParameterRequest request) {
+  @JacksonSerialized
+  public Response fetchRemoteOptions(RuntimeOptionsRequest request) {
     return ok(Operations.fetchRemoteOptions(request));
   }
 }

@@ -16,6 +16,10 @@
  *
  */
 
+.adapter-description-container {
+  width: 100%;
+}
+
 .adapter-description {
   padding: 15px;
 }

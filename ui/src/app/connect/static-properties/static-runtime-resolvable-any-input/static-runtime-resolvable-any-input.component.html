@@ -18,15 +18,25 @@
 
 
 <div id="formWrapper" fxFlex="100" fxLayout="column">
-
-    <div *ngIf="!staticProperty.horizontalRendering" fxLayout="column">
-
-        <p>{{staticProperty.label}}: <br>
-            <mat-hint class="description">{{staticProperty.description}}</mat-hint>
-        </p>
-        <mat-checkbox style="padding-left: 10px" *ngFor="let option of staticProperty.options" [(ngModel)]="option.selected">
+    <div>
+        <button mat-button mat-raised-button color="primary" class="small-button"
+                (click)="loadOptionsFromRestApi()"
+                style="margin-right:10px;margin-left:10px;" [disabled]="!showOptions">
+            <span>Reload</span>
+        </button>
+    </div>
+    <div *ngIf="!staticProperty.horizontalRendering" fxLayout="column" style="margin-top:10px;">
+        <mat-checkbox style="padding-left: 10px;"
+                      color="primary"
+                      *ngFor="let option of staticProperty.options" [(ngModel)]="option.selected">
             {{option.name}}
         </mat-checkbox>
+    </div>
+    <div fxLayout="column" *ngIf="!showOptions && !loading">
+        <span>(waiting for input)</span>
+    </div>
+    <div fxLayout="column" *ngIf="loading">
+        <mat-spinner [mode]="'indeterminate'" [diameter]="20"></mat-spinner>
     </div>
 
     <div *ngIf="staticProperty.horizontalRendering">

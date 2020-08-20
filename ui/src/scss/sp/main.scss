@@ -35,6 +35,11 @@ body {
   width: 100%;
 }
 
+.md-toolbar-tools {
+  width: 100%;
+  align-items: center;
+}
+
 code[class*="language-"], pre[class*="language-"] {
   white-space:pre-wrap;
 }

@@ -52,6 +52,8 @@ public class RuntimeOptionsRequest extends UnnamedStreamPipesEntity {
   @RdfProperty(StreamPipes.RECEIVES_STREAM)
   protected List<SpDataStream> inputStreams;
 
+  private String belongsTo;
+
   public RuntimeOptionsRequest() {
     super();
   }
@@ -99,5 +101,13 @@ public class RuntimeOptionsRequest extends UnnamedStreamPipesEntity {
 
   public void setAppId(String appId) {
     this.appId = appId;
+  }
+
+  public String getBelongsTo() {
+    return belongsTo;
+  }
+
+  public void setBelongsTo(String belongsTo) {
+    this.belongsTo = belongsTo;
   }
 }
