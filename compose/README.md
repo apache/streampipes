@@ -85,6 +85,11 @@ To upgrade to another StreamPipes version, simply edit the `SP_VERSION` in the `
 SP_VERSION=<VERSION>
 ```
 
+## Bugs and Feature Requests
+
+If you've found a bug or have a feature that you'd love to see in StreamPipes, feel free to create an issue in our Jira:
+[https://issues.apache.org/jira/projects/STREAMPIPES](https://issues.apache.org/jira/projects/STREAMPIPES)
+
 ## Get help
 Since we purely levarage Docker Compose, please see their [documentation](https://docs.docker.com/compose/) in case you want to find out more about their available [commands](https://docs.docker.com/compose/reference/overview/).
 

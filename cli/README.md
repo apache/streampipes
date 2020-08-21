@@ -165,7 +165,7 @@ As of now, this step has to be done **manually**. All environment templates are 
 ├── pipeline-element      # developing new pipeline-elements
 └── ui                    # developing UI features
 ```
-**Modifying an existing template**. To modify an existing template, you can simply add a `<YOUR_NEW_SERVICE>` to the template.
+**Modifying an existing environment template**. To modify an existing template, you can simply add a `<YOUR_NEW_SERVICE>` to the template.
 > **NOTE**: You need to make sure, that the service your are adding exists in `deploy/standalone/service/<YOUR_NEW_SERVICE>`. If your're adding a completely new service take a look at existing ones, create a new service directory and include a `docker-compose.yml` and `docker-compose.dev.yml` file.
 
 ```
@@ -176,11 +176,11 @@ kafka
 <YOUR_NEW_SERVICE>
 ```
 
-**Creating a new** template. To create a new template, place a new file `bin/templates/environments/<YOUR_NEW_TEMPLATE>` in the template directory. Open the file and use the following schema.
-> **IMPORTANT**: Please make sure to have `[environment:<YOUR_NEW_TEMPLATE>]` header in the first line of your new template matching the name of the file. Make sure to use small caps letters (lowercase) only.
+**Creating a new** environment template. To create a new environment template, place a new file `bin/templates/environments/<YOUR_NEW_ENVIRONMENT>` in the template directory. Open the file and use the following schema.
+> **IMPORTANT**: Please make sure to have `[environment:<YOUR_NEW_ENVIRONMENT>]` header in the first line of your new template matching the name of the file. Make sure to use small caps letters (lowercase) only.
 
 ```
-[environment:<YOUR_NEW_TEMPLATE>]
+[environment:<YOUR_NEW_ENVIRONMENT>]
 <SERVICE_1>
 <SERVICE_2>
 ...
@@ -200,6 +200,11 @@ For **Windows 10**, e.g. check this [documentation](https://helpdeskgeek.com/win
 
 ## Upgrade to new version
 To upgrade to a new version, simply edit the version tag in `VERSION`.
+
+## Bugs and Feature Requests
+
+If you've found a bug or have a feature that you'd love to see in StreamPipes, feel free to create an issue in our Jira:
+[https://issues.apache.org/jira/projects/STREAMPIPES](https://issues.apache.org/jira/projects/STREAMPIPES)
 
 ## Get help
 If you have any problems during the installation or questions around StreamPipes, you'll get help through one of our community channels:

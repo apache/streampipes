@@ -40,6 +40,11 @@ To upgrade the StreamPipes version all at once for all options and README files 
 ./upgrade_versions.sh <version>
 ```
 
+## Bugs and Feature Requests
+
+If you've found a bug or have a feature that you'd love to see in StreamPipes, feel free to create an issue in our Jira:
+[https://issues.apache.org/jira/projects/STREAMPIPES](https://issues.apache.org/jira/projects/STREAMPIPES)
+
 ## Get help
 If you have any problems during the installation or questions around StreamPipes, you'll get help through one of our community channels:
 
