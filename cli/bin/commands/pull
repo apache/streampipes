@@ -34,5 +34,5 @@ fi
 
 concatenate_compose_files
 get_curr_environment
-info "Pull latest docker images of environment: '$curr_environment'"
+info "Pull latest docker images for environment: '$curr_environment'"
 run "$docker_compose_files pull"

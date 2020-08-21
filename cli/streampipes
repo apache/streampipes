@@ -31,12 +31,12 @@ Options:
 Commands:
   clean       Remove StreamPipes data volumes, dangling images and network
   down        Stop and remove StreamPipes containers
+  env         Inspect and select StreamPipes environments
   info        Get information
   logs        Get container logs for specific container
   ps          List all StreamPipes container for running environment
   pull        Download latest images from Dockerhub
   restart     Restart StreamPipes environment
-  template    Select StreamPipes environment template
   up          Create and start StreamPipes container environment
 
 Run '$cli_name COMMAND --help' for more info on a command.
@@ -51,6 +51,9 @@ case "$1" in
     ;;
   down)
     "$STREAMPIPES_WORKDIR/bin/commands/down" "${@:2}"
+    ;;
+  env)
+    "$STREAMPIPES_WORKDIR/bin/commands/env" "${@:2}"
     ;;
   info)
     "$STREAMPIPES_WORKDIR/bin/commands/info" "$2"
@@ -69,9 +72,6 @@ case "$1" in
     ;;
   restart)
     "$STREAMPIPES_WORKDIR/bin/commands/restart" "${@:2}"
-    ;;
-  template)
-    "$STREAMPIPES_WORKDIR/bin/commands/template" "${@:2}"
     ;;
   up)
     "$STREAMPIPES_WORKDIR/bin/commands/up" "${@:2}"

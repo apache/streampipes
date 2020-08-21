@@ -18,32 +18,32 @@ set -e
 
 STREAMPIPES_TEMPLATE_PATH=$STREAMPIPES_WORKDIR/bin/templates/environments
 
-cli_help_template() {
+cli_help_env() {
   cat <<EOF
-Select StreamPipes environment template
+View current environment or inspect and select StreamPipes environment.
 
-Usage: streampipes template [OPTIONS]
+Usage: streampipes env [OPTIONS]
 
 Example:
-# list all available environment templates
-streampipes template --list
+# list all available environments
+streampipes env --list
 
-# inspect services in environment template
-streampipes template --inspect backend
+# inspect services in environments
+streampipes env --inspect backend
 
-# set specific template, here 'backend'
-streampipes template --set backend
+# set specific environment, here 'backend'
+streampipes env --set backend
 
 Options:
-  -i, --inspect   Inspect services in environment template
-  -l, --list      List all available environment templates
-  -s, --set       Set environment templates
+  -i, --inspect   Inspect services in environment
+  -l, --list      List all available environments
+  -s, --set       Set environment
 EOF
 
   exit 1
 }
 
-[ "$1" == '--help' ] || [ "$1" == '-h' ] || [ -z "$1" ] && cli_help_template
+[ "$1" == '--help' ] || [ "$1" == '-h' ] && cli_help_env
 
 if [ "$#" -gt 3 ]; then
     fatal "Illegal number of arguments, see 'streampipes ${0##*/} --help'"
@@ -53,67 +53,82 @@ while [[ "$#" -gt 0 ]]; do
     case $1 in
         -i|--inspect)
           if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
-            inspect_template="$2"
+            inspect_environment="$2"
             shift 2
           else
-            fatal "Template for $1 is missing" >&2
+            fatal "Environment for $1 is missing" >&2
           fi
           ;;
-        -l|--list) list_templates=true; shift ;;
+        -l|--list) list_environments=true; shift ;;
         -s|--set)
           if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
-            set_template="$2"
+            set_environment="$2"
             shift 2
           else
-            fatal "Template for $1 is missing" >&2
+            fatal "Environment for $1 is missing" >&2
           fi
           ;;
         *) fatal "Unsupported command $1, see 'streampipes ${0##*/} --help'" >&2 ;;
     esac
 done
 
-check_template(){
-  template=$STREAMPIPES_TEMPLATE_PATH/$1
-  if [ ! -f "$template" ]; then
-    fatal "Template not found '$1'. see 'streampipes ${0##*/} --list'"
+show_curr_environment(){
+  if [ ! -f "$STREAMPIPES_WORKDIR/.environment" ]; then
+    fatal "No environment set. See 'streampipes ${0##*/} --help'"
+  else
+    get_curr_environment
+    info "Current environment: $curr_environment"
   fi
 }
 
-list_templates(){
-  info "StreamPipes environment templates"
+check_environment(){
+  template=$STREAMPIPES_TEMPLATE_PATH/$1
+  if [ ! -f "$template" ]; then
+    fatal "Environment not found '$1'. see 'streampipes ${0##*/} --list'"
+  fi
+}
+
+list_environments(){
+  info "Available StreamPipes environment templates:"
   for entry in "$STREAMPIPES_TEMPLATE_PATH"/*
   do
     echo "${entry##*/}"
   done
 }
 
-set_template(){
-  check_template $set_template
-  info "Set environment to template '$set_template'"
-  cp $STREAMPIPES_TEMPLATE_PATH/$set_template $STREAMPIPES_WORKDIR/.environment
+set_environment(){
+  check_environment $set_environment
+  info "Set environment to '$set_environment'"
+  cp $STREAMPIPES_TEMPLATE_PATH/$set_environment $STREAMPIPES_WORKDIR/.environment
   set_lf_line_encoding $STREAMPIPES_WORKDIR/.environment
 }
 
-inspect_template(){
-  check_template $inspect_template
+inspect_environment(){
+  check_environment $inspect_environment
   search_str="[environment:"
 
-  info "Inspect services in template '$inspect_template'"
+  info "Inspect services in environment '$inspect_environment'"
   while IFS='' read -r line || [[ -n "$line" ]]; do
     if [[ "$line" != *"$search_str"* ]]; then
       echo $line
     fi
-  done < "$STREAMPIPES_TEMPLATE_PATH/$inspect_template"
+  done < "$STREAMPIPES_TEMPLATE_PATH/$inspect_environment"
 }
 
-if [ "$list_templates" = true ]; then
-  list_templates
+
+if [ "$list_environments" = true ]; then
+  list_environments
 fi
 
-if [ -n "$inspect_template" ]; then
-  inspect_template
+if [ -n "$inspect_environment" ]; then
+  inspect_environment
 fi
 
-if [ -n "$set_template" ]; then
-  set_template
+if [ -n "$set_environment" ]; then
+  set_environment
+fi
+
+if [[ -z "$1" && "$list_environments" != true && ! -n "$inspect_environment" \
+      && ! -n "$set_environment" ]]; then
+  show_curr_environment
 fi

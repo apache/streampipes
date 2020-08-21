@@ -26,21 +26,17 @@ The StreamPipes command-line interface (CLI) is focused on developers in order t
 **Current version:** 0.67.0-SNAPSHOT
 <!-- END do not edit -->
 
-#### TL;DR
-<!-- ![](demo/streampipes-min.gif) -->
-<!-- <img src="demo/streampipes-min.gif" style="display: block;
-  margin-left: auto;
-  margin-right: auto;" width="100%"> -->
-
+## TL;DR
 
 ```bash
-$ streampipes template -l
-[INFO] Currently available StreamPipes environment templates
+streampipes env --list
+[INFO] Available StreamPipes environment templates:
 pipeline-element
 ...
-$ streampipes template -s pipeline-element
-$ streampipes up -d
+streampipes env --set pipeline-element
+streampipes up -d
 ```
+> **NOTE**: use `./streampipes` if you haven't add it to the PATH and sourced it (see section "Run `streampipes` from anywhere?").
 
 ## Prerequisite
 The CLI is basically a wrapper around multiple `docker` and `docker-compose` commands plus some additional sugar.
@@ -69,34 +65,35 @@ Options:
 Commands:
   clean       Remove StreamPipes data volumes, dangling images and network
   down        Stop and remove StreamPipes containers
+  env         Inspect and select StreamPipes environments
   info        Get information
   logs        Get container logs for specific container
   ps          List all StreamPipes container for running environment
   pull        Download latest images from Dockerhub
   restart     Restart StreamPipes environment
-  template    Select StreamPipes environment template
   up          Create and start StreamPipes container environment
 
 Run 'streampipes COMMAND --help' for more info on a command.
 ```
 
 ## Usage: Along dev life-cycle
-**List** available environment templates
+
+**List** available environment templates.
 ```bash
-streampipes template --list
+streampipes env --list
 ```
 
-**Inspect** services in a given template to know what kind of services will be started as part this environment
+**Inspect** services in an available environment to know what kind of services it is composed of.
 ```bash
-streampipes template --inspect pipeline-element
+streampipes env --inspect pipeline-element
 ```
 
-**Set** environment template, e.g. `pipeline-element` if you want to write a new pipeline element
+**Set** environment, e.g. `pipeline-element`, if you want to write a new pipeline element.
 ```bash
-streampipes template --set pipeline-element
+streampipes env --set pipeline-element
 ```
 
-**Start** environment ( default: `dev` mode).
+**Start** environment ( default: `dev` mode). Here the service definition in the selected environment is used to start the multi-container landscape.
 > **NOTE**: `dev` mode is enabled by default since we rely on open ports to core service such as `consul`, `couchdb`, `kafka` etc. to reach from the IDE when developing. If you don't want to map ports (except the UI port), then use the `--no-ports` flag.
 
 ```bash
@@ -127,7 +124,12 @@ streampipes down
 streampipes up -d kafka consul
 ```
 
-**Get logs** of specific service
+**Get current environment** (if previously set using `streampipes env --set <environment>`).
+```bash
+streampipes env
+```
+
+**Get logs** of specific service and use optional `--follow` flag to stay attached to the logs.
 ```bash
 streampipes logs --follow backend
 ```
