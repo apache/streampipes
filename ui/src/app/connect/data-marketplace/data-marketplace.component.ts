@@ -206,7 +206,7 @@ export class DataMarketplaceComponent implements OnInit {
     }
 
     filterAdapterCategory(currentElements: AdapterDescriptionUnion[]): AdapterDescriptionUnion[] {
-        if (this.selectedCategory == this.adapterCategories[0].type) {
+        if (this.selectedCategory == this.adapterCategories[0].code) {
             return currentElements;
         } else {
             return currentElements.filter(adapterDescription => adapterDescription.category.indexOf(this.selectedCategory) != -1);

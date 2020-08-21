@@ -25,8 +25,6 @@ import {Pipe, PipeTransform} from "@angular/core";
 export class PipelineElementInstallationStatusFilter implements PipeTransform {
 
   transform(values: any[], filterTerm: string): any[] {
-    console.log(values);
-    console.log(filterTerm);
     if (filterTerm === "all") {
       return values;
     } else {
