@@ -28,21 +28,18 @@
                 </mat-tab>
             </mat-tab-group>
         </div>
-        <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center" style="padding-left:10px;padding-right: 50px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc"
+        <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center" style="padding-left:10px;padding-right:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc"
             *ngIf="selectedIndex === 0 && newAdapterFromDescription === undefined">
             <button mat-icon-button id="startAdapterTutorial3" (click)="startAdapterTutorial3()" matTooltip="Tutorial: Generic Adapter">
-                <i class="material-icons">
-                    school
-                </i>
+                <mat-icon color="primary">school</mat-icon>
             </button>
         </div>
     </div>
 
     <div fxLayout="row" class="fixed-height data-marketplace-options">
 
-        <div class="data-marketplace-options-item" fxLayoutAlign="start center" fxLayout="row">
-            <mat-icon>search</mat-icon>
-
+        <div class="data-marketplace-options-item pl-5" style="margin-top:8px;" fxLayoutAlign="start center" fxLayout="row">
+            <mat-icon color="primary">search</mat-icon>
             <mat-form-field class="form-style">
                 <input matInput placeholder="Find Element" value="" (input)="updateFilterTerm($event.target.value)"
                     name="something">
@@ -72,8 +69,14 @@
         <mat-icon class="icon-style" matTooltip="Upload Adapter Templates" (click)="uploadAdapterTemplates()" style="margin-right: 15px; cursor: pointer;">cloud_upload</mat-icon>
 
     </div>
-
-    <div class="container-fluid marketplace-container">
+    <div class="container-fluid marketplace-container" *ngIf="adapterLoadingError" fxFlex="100" fxLayoutAlign="center center" fxLayout="row">
+        <h4>Available adapters could not be loaded. Did you start a StreamPipes Connect worker node?</h4>
+    </div>
+    <div class="container-fluid marketplace-container" *ngIf="adaptersLoading" fxFlex="100" fxLayoutAlign="center center" fxLayout="row">
+        <mat-spinner [mode]="'indeterminate'" [diameter]="20"></mat-spinner>
+        <h4>&nbsp;&nbsp;Searching for available adapters, please wait...</h4>
+    </div>
+    <div class="container-fluid marketplace-container" *ngIf="!adaptersLoading && !adapterLoadingError">
         <div *ngIf="selectedIndex === 0">
 
             <div *ngIf="newAdapterFromDescription===undefined" fxLayout="row wrap" fxLayoutAlign="start stretch" class="adapter-description-container">

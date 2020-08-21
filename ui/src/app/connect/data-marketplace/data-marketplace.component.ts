@@ -59,6 +59,9 @@ export class DataMarketplaceComponent implements OnInit {
     adapterCategories: any;
     selectedCategory: any = "All";
 
+    adaptersLoading: boolean = true;
+    adapterLoadingError: boolean = false;
+
     constructor(private dataMarketplaceService: DataMarketplaceService,
                 private ShepherdService: ShepherdService,
                 private connectService: ConnectService,
@@ -84,6 +87,7 @@ export class DataMarketplaceComponent implements OnInit {
     }
 
     getAdapterDescriptions(): void {
+        this.adaptersLoading = true;
         this.adapterDescriptions = [];
 
         this.dataMarketplaceService
@@ -94,6 +98,10 @@ export class DataMarketplaceComponent implements OnInit {
                 this.adapterDescriptions
                     .sort((a, b) => a.name.localeCompare(b.name));
                 this.filteredAdapterDescriptions = this.adapterDescriptions;
+                this.adaptersLoading = false;
+            }, error => {
+                this.adaptersLoading = false;
+                this.adapterLoadingError = true;
             });
 
         this.dataMarketplaceService.getAdapterTemplates().subscribe(adapterTemplates => {
