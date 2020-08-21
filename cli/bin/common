@@ -111,7 +111,7 @@ concatenate_compose_files() {
   no_ports=$1
   search_str="[environment:"
   docker_compose_files="docker-compose --env-file $STREAMPIPES_WORKDIR/.env"
-  
+
   while IFS='' read -r line; do
     [[ -n "$line" && "$line" != *"$search_str"* && "$line" != [[:blank:]#]* ]] &&
       if [ "$no_ports" = true ]; then

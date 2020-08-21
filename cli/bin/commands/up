@@ -52,13 +52,13 @@ done
 configure(){
 
   if [ ! -f "$STREAMPIPES_WORKDIR/.environment" ]; then
-    fatal "Environment missing. See 'streampipes template'"
+    fatal "Environment missing. See 'streampipes env --help'"
   fi
 
   startup_notice
   get_curr_environment
 
-  info "Version: $(cat $STREAMPIPES_WORKDIR/VERSION)"
+  info "Version: $(cat $STREAMPIPES_WORKDIR/VERSION | grep -v '#' | awk NF)"
   info "Environment: '$curr_environment'"
   if [ "$no_ports" = true ]; then
     info "Mode: Production mode, all ports closed"
@@ -68,7 +68,7 @@ configure(){
 
   if [ ! -f "$STREAMPIPES_WORKDIR/.env" ]; then
     info "Configure $STREAMPIPES_WORKDIR/.env"
-    sed "s/##VERSION##/$(cat $STREAMPIPES_WORKDIR/VERSION)/g" \
+    sed "s/##VERSION##/$(cat $STREAMPIPES_WORKDIR/VERSION | grep -v '#' | awk NF)/g" \
         $STREAMPIPES_WORKDIR/bin/templates/env.template > $STREAMPIPES_WORKDIR/.env
   fi
 }
