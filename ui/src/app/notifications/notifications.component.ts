@@ -49,6 +49,8 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     currentlySelectedNotificationId: string;
 
     pipelinesWithNotificationsPresent: boolean = false;
+    notificationsLoading: boolean = false;
+
     currentOffset: number = 0;
     liveOffset: number = 0;
     previousScrollHeight: number;
@@ -104,8 +106,10 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     }
 
     getPipelinesWithNotifications() {
+        this.notificationsLoading = true;
         this.RestApi.getOwnPipelines().subscribe(pipelines => {
             this.filterForNotifications(pipelines);
+            this.notificationsLoading = false;
             if (this.existingNotifications.length > 0) {
                 this.pipelinesWithNotificationsPresent = true;
                 this.selectNotification(this.existingNotifications[0]);
