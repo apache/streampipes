@@ -43,6 +43,9 @@ export class AddComponent implements OnInit {
 
     selectedEndpointItems: any[] = [];
 
+    _filterTerm: string = "";
+    _selectedInstallationStatus: string = "all";
+
     constructor(private RestApi: RestApi,
                 private AddService: AddService,
                 private DialogService: DialogService,
@@ -69,6 +72,7 @@ export class AddComponent implements OnInit {
 
     setSelectedTab(index: number) {
         this.selectedEndpointItems = [];
+        this.selectAll(false);
         this.selectedTab = this.availableTypes[index];
     }
 
@@ -77,8 +81,14 @@ export class AddComponent implements OnInit {
     }
 
     selectAll(selected) {
+        this.selectedEndpointItems = [];
         this.endpointItems.forEach(item => {
-            if (item.type === this.selectedTab || this.selectedTab == 'all') item.selected = selected;
+            if (item.type === this.selectedTab || this.selectedTab == 'all') {
+                item.selected = selected;
+                if (selected) {
+                    this.selectedEndpointItems.push(item.uri);
+                }
+            }
         });
         this.ChangeDetectorRef.detectChanges();
     }
@@ -163,5 +173,23 @@ export class AddComponent implements OnInit {
                 this.getEndpointItems();
             }
         })
+    }
+
+    set filterTerm(filterTerm: string) {
+        this._filterTerm = filterTerm;
+        this.selectAll(false);
+    }
+
+    get filterTerm(): string {
+        return this._filterTerm;
+    }
+
+    set selectedInstallationStatus(installationStatus: string) {
+        this._selectedInstallationStatus = installationStatus;
+        this.selectAll(false);
+    }
+
+    get selectedInstallationStatus(): string {
+        return this._selectedInstallationStatus;
     }
 }
