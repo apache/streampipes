@@ -38,7 +38,7 @@ EOF
 if is_streampipes_running; then
 
   if [ -z "$1" ]; then
-    get_current_environment
+    get_curr_environment
     concatenate_compose_files
     info "Restarting all services in environment: '$curr_environment'"
     run "$docker_compose_files restart"
