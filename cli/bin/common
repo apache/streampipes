@@ -63,8 +63,8 @@ deployment_notice() {
 
             Check docs for help:  https://streampipes.apache.org/docs
 
-    When you're environment contains the UI, open your browser and follow the
-    instructions to get started: http://localhost/
+    If your environment contains the StreamPipes UI, open your browser and follow
+    the instructions to get started: http://localhost/
 
 EOF
 }
@@ -92,11 +92,12 @@ is_streampipes_running(){
 
 get_curr_environment() {
   search_str="[environment:"
-  line=$(head -n 1 $STREAMPIPES_WORKDIR/.environment)
-  if [[ "$line" == *"$search_str"* ]]; then
+
+  while IFS='' read -r line; do
+    [[ "$line" == *"$search_str"* ]] &&
     helper=${line#*$search_str}
     curr_environment=${helper%]*}
-  fi
+  done < "$STREAMPIPES_WORKDIR/.environment"
 }
 
 load_env_file() {
@@ -109,16 +110,15 @@ load_env_file() {
 concatenate_compose_files() {
   no_ports=$1
   search_str="[environment:"
-
   docker_compose_files="docker-compose --env-file $STREAMPIPES_WORKDIR/.env"
-  while IFS='' read -r line || [[ -n "$line" ]]; do
-    if [[ "$line" != *"$search_str"* ]]; then
+  
+  while IFS='' read -r line; do
+    [[ -n "$line" && "$line" != *"$search_str"* && "$line" != [[:blank:]#]* ]] &&
       if [ "$no_ports" = true ]; then
         docker_compose_files="$docker_compose_files -f $STREAMPIPES_WORKDIR/deploy/standalone/$line/docker-compose.yml"
       else
         docker_compose_files="$docker_compose_files -f $STREAMPIPES_WORKDIR/deploy/standalone/$line/docker-compose.yml -f $STREAMPIPES_WORKDIR/deploy/standalone/$line/docker-compose.dev.yml"
       fi
-    fi
   done < "$STREAMPIPES_WORKDIR/.environment"
 }
 

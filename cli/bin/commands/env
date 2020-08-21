@@ -107,14 +107,12 @@ inspect_environment(){
   check_environment $inspect_environment
   search_str="[environment:"
 
+
   info "Inspect services in environment '$inspect_environment'"
-  while IFS='' read -r line || [[ -n "$line" ]]; do
-    if [[ "$line" != *"$search_str"* ]]; then
-      echo $line
-    fi
+  while IFS='' read -r line; do
+    [[ -n "$line" && "$line" != *"$search_str"* && "$line" != [[:blank:]#]* ]] && echo "$line"
   done < "$STREAMPIPES_TEMPLATE_PATH/$inspect_environment"
 }
-
 
 if [ "$list_environments" = true ]; then
   list_environments
