@@ -16,8 +16,7 @@
  *
  */
 
-import {AfterViewInit, ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {AfterViewInit, ChangeDetectorRef, Component, Inject, Input, OnInit} from '@angular/core';
 import { ElementIconText } from '../../../services/get-element-icon-text.service';
 import { Dashboard } from '../../models/dashboard.model';
 import { WidgetConfigBuilder } from '../../registry/widget-config-builder';
@@ -35,6 +34,7 @@ import {
 } from "../../../core-model/gen/streampipes-model";
 import {PipelineService} from "../../../platform-services/apis/pipeline.service";
 import {FormBuilder, FormGroup} from "@angular/forms";
+import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
 
 @Component({
     selector: 'add-visualization-dialog-component',
@@ -74,10 +74,18 @@ export class AddVisualizationDialogComponent implements OnInit, AfterViewInit {
     formValid: boolean = false;
     viewInitialized: boolean = false;
 
+    @Input()
+    pipeline: VisualizablePipeline;
+
+    @Input()
+    widget: DashboardWidgetModel;
+
+    @Input()
+    editMode: boolean;
+
 
     constructor(
-        public dialogRef: MatDialogRef<AddVisualizationDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: any,
+        private dialogRef: DialogRef<AddVisualizationDialogComponent>,
         private dashboardService: DashboardService,
         private pipelineService: PipelineService,
         public elementIconText: ElementIconText,
@@ -90,7 +98,7 @@ export class AddVisualizationDialogComponent implements OnInit, AfterViewInit {
         this.parentForm.statusChanges.subscribe(status => {
            this.formValid = this.viewInitialized && this.parentForm.valid;
         });
-        if (!this.data) {
+        if (!this.editMode) {
             this.dialogTitle = 'Add widget';
             this.dashboardService.getVisualizablePipelines().subscribe(visualizations => {
                 this.visualizablePipelines = [];
@@ -104,8 +112,8 @@ export class AddVisualizationDialogComponent implements OnInit, AfterViewInit {
             });
         } else {
             this.dialogTitle = 'Edit widget';
-            this.selectedPipeline = this.data.pipeline;
-            this.selectedWidget = this.data.widget.dashboardWidgetSettings;
+            this.selectedPipeline = this.pipeline;
+            this.selectedWidget = this.widget.dashboardWidgetSettings;
             this.page = 'configure-widget';
         }
     }
@@ -185,14 +193,14 @@ export class AddVisualizationDialogComponent implements OnInit, AfterViewInit {
             configuredWidget.dashboardWidgetSettings["@class"] = "org.apache.streampipes.model.dashboard.DashboardWidgetSettings";
             configuredWidget.visualizablePipelineId = this.selectedPipeline._id;
             configuredWidget.visualizablePipelineTopic = this.selectedPipeline.topic;
-            if (!this.data) {
+            if (!this.editMode) {
                 this.dashboardService.saveWidget(configuredWidget).subscribe(response => {
                     this.dialogRef.close(response);
                 });
             } else {
-                configuredWidget._id = this.data.widget._id;
-                configuredWidget._rev = this.data.widget._rev;
-                configuredWidget.widgetId = this.data.widget.widgetId;
+                configuredWidget._id = this.widget._id;
+                configuredWidget._rev = this.widget._rev;
+                configuredWidget.widgetId = this.widget.widgetId;
                 this.dialogRef.close(configuredWidget);
             }
         }

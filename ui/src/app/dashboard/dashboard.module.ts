@@ -56,6 +56,7 @@ import {RawWidgetComponent} from "./components/widgets/raw/raw-widget.component"
 import {HtmlWidgetComponent} from "./components/widgets/html/html-widget.component";
 import {TrafficLightWidgetComponent} from "./components/widgets/trafficlight/traffic-light-widget.component";
 import {StandaloneDashboardComponent} from "./components/standalone/standalone-dashboard.component";
+import {CoreUiModule} from "../core-ui/core-ui.module";
 
 const dashboardWidgets = [
 
@@ -64,6 +65,7 @@ const dashboardWidgets = [
 @NgModule({
     imports: [
         CommonModule,
+        CoreUiModule,
         MatTabsModule,
         DynamicModule.withComponents(
             dashboardWidgets

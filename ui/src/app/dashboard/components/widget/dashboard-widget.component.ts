@@ -21,11 +21,12 @@ import {DashboardItem} from "../../models/dashboard.model";
 import {DashboardService} from "../../services/dashboard.service";
 import {GridsterItem, GridsterItemComponent} from "angular-gridster2";
 import {AddVisualizationDialogComponent} from "../../dialogs/add-widget/add-visualization-dialog.component";
-import {MatDialog} from "@angular/material/dialog";
 import {
     DashboardWidgetModel,
     VisualizablePipeline
 } from "../../../core-model/gen/streampipes-model";
+import {PanelType} from "../../../core-ui/dialog/base-dialog/base-dialog.model";
+import {DialogService} from "../../../core-ui/dialog/base-dialog/base-dialog.service";
 
 @Component({
     selector: 'dashboard-widget',
@@ -49,7 +50,7 @@ export class DashboardWidgetComponent implements OnInit {
     pipelineNotRunning: boolean = false;
 
     constructor(private dashboardService: DashboardService,
-                private dialog: MatDialog) {
+                private dialogService: DialogService) {
     }
 
     ngOnInit(): void {
@@ -71,13 +72,14 @@ export class DashboardWidgetComponent implements OnInit {
     }
 
     editWidget(): void {
-        const dialogRef = this.dialog.open(AddVisualizationDialogComponent, {
-            width: '70%',
-            height: '500px',
-            panelClass: 'custom-dialog-container',
+        const dialogRef = this.dialogService.open(AddVisualizationDialogComponent,{
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: "Edit widget",
+            width: "50vw",
             data: {
                 "widget": this.configuredWidget,
-                "pipeline": this.widgetDataConfig
+                "pipeline": this.widgetDataConfig,
+                "editMode": true
             }
         });
 

@@ -16,17 +16,8 @@
 ~
 -->
 
-<mat-toolbar>
-        <div class="md-toolbar-tools">
-            <h2>{{dialogTitle}}</h2>
-            <span fxFlex></span>
-            <button mat-icon-button (click)="onCancel()">
-                <i class="material-icons">close</i>
-            </button>
-        </div>
-    </mat-toolbar>
-    <mat-divider></mat-divider>
-    <div mat-dialog-content class="md-dialog-content">
+<div class="sp-dialog-container">
+    <div class="sp-dialog-content p-15">
         <div fxFlex="100">
             <div fxFlex="100" style="margin:5px;width:100%">
                 <div *ngIf="page == 'select-pipeline'">
@@ -78,20 +69,19 @@
         </div>
     </div>
     <mat-divider></mat-divider>
-    <div mat-dialog-actions fxLayout="row" fxLayoutAlign="end center">
-        <button mat-button mat-raised-button class="mat-basic" (click)="onCancel()">
+    <div class="sp-dialog-actions">
+        <button mat-button mat-raised-button class="mat-basic" (click)="onCancel()" style="margin-right:10px;">
             Cancel
         </button>
         <button mat-button mat-raised-button class="mat-basic" (click)="back()" *ngIf="(!('select-pipeline'===page))
-        && !(data)">
+        && !(editMode)" style="margin-right:10px;">
             Back
         </button>
         <button mat-button mat-raised-button color="primary" (click)="next()" [disabled]="'configure-widget' === page
          && !formValid">
-            <span *ngIf="!data && 'configure-widget' === page">Create</span>
-            <span *ngIf="data && 'configure-widget' === page">Save</span>
-            <span *ngIf="data == null && !('configure-widget' === page)">Next</span>
+            <span *ngIf="!editMode && 'configure-widget' === page">Create</span>
+            <span *ngIf="editMode && 'configure-widget' === page">Save</span>
+            <span *ngIf="editMode == null && !('configure-widget' === page)">Next</span>
         </button>
     </div>
-
-
+</div>
