@@ -53,7 +53,7 @@ Tested on: **macOS**, **Linux**, **Windows***)
 
 ## CLI commands overview
 
-```bash
+```
 StreamPipes CLI - Manage your StreamPipes environment with ease
 
 Usage: streampipes COMMAND [OPTIONS]
