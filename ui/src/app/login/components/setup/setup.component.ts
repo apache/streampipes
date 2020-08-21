@@ -16,79 +16,70 @@
  *
  */
 
-import {Component} from "@angular/core";
+import {Component, ElementRef, ViewChild} from "@angular/core";
 import {RestApi} from "../../../services/rest-api.service";
 import {FormGroup} from "@angular/forms";
 import {LoginService} from "../../services/login.service";
+import {Router} from "@angular/router";
 
 @Component({
-    selector: 'setup',
-    templateUrl: './setup.component.html'
+  selector: 'setup',
+  templateUrl: './setup.component.html',
+  styleUrls: ['./setup.component.scss']
 })
 export class SetupComponent {
 
-    installationFinished: any;
-    installationSuccessful: any;
-    installationResults: any;
-    loading: any;
-    showAdvancedSettings: any;
-    setup: any = {
-        adminEmail: '',
-        adminPassword: '',
-        installPipelineElements: true
-    };
-    installationRunning: any;
-    nextTaskTitle: any;
+  @ViewChild('scroll') private scrollContainer: ElementRef;
 
-    constructor(private loginService: LoginService,
-                private RestApi: RestApi) {
+  installationFinished: boolean;
+  installationSuccessful: boolean;
+  installationResults: any;
+  loading: any;
+  setup: any = {
+    adminEmail: '',
+    adminPassword: '',
+    installPipelineElements: true
+  };
+  installationRunning: any;
+  nextTaskTitle: any;
 
-        this.installationFinished = false;
-        this.installationSuccessful = false;
-        this.installationResults = [];
-        this.loading = false;
-        this.showAdvancedSettings = false;
-    }
+  constructor(private loginService: LoginService,
+              private RestApi: RestApi,
+              private router: Router) {
 
-    configure(currentInstallationStep) {
-        this.installationRunning = true;
-        this.loading = true;
-        this.loginService.setupInstall(this.setup, currentInstallationStep).subscribe(data => {
-            this.installationResults = this.installationResults.concat(data.statusMessages);
-            this.nextTaskTitle = data.nextTaskTitle;
-            let nextInstallationStep = currentInstallationStep + 1;
-            if (nextInstallationStep > (data.installationStepCount - 1)) {
-                this.RestApi.configured()
-                    .subscribe(data => {
-                        if (data.configured) {
-                            this.installationFinished = true;
-                            this.loading = false;
-                        }
-                    }), (data => {
-                    this.loading = false;
-                    this.showToast("Fatal error, contact administrator");
-                });
-            } else {
-                this.configure(nextInstallationStep);
-            }
-        });
-    }
+    this.installationFinished = false;
+    this.installationSuccessful = false;
+    this.installationResults = [];
+    this.loading = false;
+  }
 
-    showToast(string) {
-        // this.$mdToast.show(
-        //     this.$mdToast.simple()
-        //         .content(string)
-        //         .position("right")
-        //         .hideDelay(3000)
-        // );
-    };
+  configure(currentInstallationStep) {
+    this.installationRunning = true;
+    this.loading = true;
 
-    addPod(podUrls) {
-        if (podUrls == undefined) podUrls = [];
-        podUrls.push("localhost");
-    }
+    this.loginService.setupInstall(this.setup, currentInstallationStep).subscribe(data => {
+        this.installationResults = this.installationResults.concat(data.statusMessages);
+        this.nextTaskTitle = data.nextTaskTitle;
+        this.scrollContainer.nativeElement.scrollTop = this.scrollContainer.nativeElement.scrollHeight;
+        let nextInstallationStep = currentInstallationStep + 1;
+        if (nextInstallationStep > (data.installationStepCount - 1)) {
+            this.RestApi.configured()
+                .subscribe(data => {
+                    if (data.configured) {
+                        this.installationFinished = true;
+                        this.loading = false;
+                    }
+                }), (data => {
+                this.loading = false;
+                //this.showToast("Fatal error, contact administrator");
+            });
+        } else {
+            this.configure(nextInstallationStep);
+        }
+    });
+  }
 
-    removePod(podUrls, index) {
-        podUrls.splice(index, 1);
-    }
+  openLoginPage() {
+    this.router.navigate(['login']);
+  }
 }

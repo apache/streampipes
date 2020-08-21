@@ -27,6 +27,7 @@ import org.apache.streampipes.model.client.setup.InitialSettings;
 import org.apache.streampipes.rest.api.ISetup;
 import org.apache.streampipes.rest.notifications.NotificationListener;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
+import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -52,7 +53,7 @@ public class Setup extends AbstractRestInterface implements ISetup {
 
   @POST
   @Path("/install/{currentInstallationStep}")
-  @GsonWithIds
+  @JacksonSerialized
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   @Override

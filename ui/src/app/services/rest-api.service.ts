@@ -163,10 +163,8 @@ export class RestApi {
 
     configured(): Observable<any> {
         return this.$http.get(this.getServerUrl() + "/setup/configured", {
-            //ignoreLoadingBar: true,
-            //timeout: 2000
+            headers: { ignoreLoadingBar: '' }
         });
-
     }
 
     getConfiguration() {

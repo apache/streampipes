@@ -16,82 +16,79 @@
   ~
   -->
 
-<div class="md-padding full-background" fxLayout="row" fxLayoutAlign="center center"
-     style="min-height:100vh !important;">
-    <div fxFlex="40" fxLayout="column" fxLayoutAlign="center center">
-        <mat-card class="card-100-center box-shadow-login" style="padding:20px;overflow-y:auto;">
-            <div fxFlex="100" fxLayout="column">
-                <div fxLayout="row" fxLayoutAlign="center center" style="margin-left:auto;margin-right:auto;margin-bottom:20px;">
-                    <div fxFlex="60" fxLayoutAlign="center center" fxLayout="row"
-                         style="color:white;"><img
-                            style="margin-top:40px;width:400px;" alt="icon" src="../../../../assets/img/login/logo.png">
-                    </div>
+<div class="full-background setup-container" fxLayout="row" fxLayoutAlign="center center">
+    <div fxFlex="80" fxLayout="column" fxLayoutAlign="center center">
+        <div fxFlex="100" fxLayout="column" class="box-shadow-login setup-card">
+            <form #setupForm="ngForm" fxFlex="100" fxLayout="column">
+                <div class="setup-header p-20">
+                    <img class="sp-logo" alt="icon" src="../../../../assets/img/login/logo.png">
+                    <h1 class="text-center">Welcome!</h1>
+                    <h4 class="text-center">The setup of the system might take a minute. Create a user and you are ready to
+                        go!</h4>
                 </div>
-                <form #setupForm="ngForm">
-                <mat-card-title>
-                    <div fxFlex="100" fxLayout="column">
-
-                        <h1>Welcome!</h1>
-                        <h4>The setup of the system might take a minute. Create a user and you are ready to
-                            go!</h4>
-                    </div>
-                </mat-card-title>
-                <div *ngIf="!installationRunning">
-                    <h3>Initial User</h3>
-                    <div fxLayout="column">
-                        <mat-form-field fxFlex>
-                            <mat-label>Email</mat-label>
-                            <input [(ngModel)]="setup.adminEmail" matInput type="email" name="email" class="sp" required/>
-                        </mat-form-field>
-                        <mat-form-field fxFlex>
-                            <mat-label>Password</mat-label>
-                            <input [(ngModel)]="setup.adminPassword" matInput type="password" name="password" class="sp" required/>
-                        </mat-form-field>
-                        <mat-checkbox style="margin-bottom: 10px;" color="primary" [(ngModel)]="setup.installPipelineElements" name="install"><span>Also install available data streams, processors and sinks.</span></mat-checkbox>
-                    </div>
+                <div fxFlex="100" fxLayout="column" *ngIf="!installationRunning" >
+                        <div class="setup-inline-content">
+                            <h3>Initial User</h3>
+                            <div fxLayout="column">
+                                <mat-form-field fxFlex>
+                                    <mat-label>Email</mat-label>
+                                    <input [(ngModel)]="setup.adminEmail" matInput type="email" name="email" class="sp"
+                                           required/>
+                                </mat-form-field>
+                                <mat-form-field fxFlex>
+                                    <mat-label>Password</mat-label>
+                                    <input [(ngModel)]="setup.adminPassword" matInput type="password" name="password"
+                                           class="sp" required/>
+                                </mat-form-field>
+                                <mat-checkbox style="margin-bottom: 10px;" color="primary"
+                                              [(ngModel)]="setup.installPipelineElements" name="install"><span>Also install available data streams, processors and sinks.</span>
+                                </mat-checkbox>
+                            </div>
+                        </div>
                 </div>
-                <div>
-                    <div *ngIf="installationRunning">
-                        <h3>Installation Results</h3>
+                <div *ngIf="installationRunning" #scroll class="installation-status-container">
+                    <div fxLayout="column" class="setup-inline-content">
                         <div *ngFor="let msg of installationResults">
-                            <div fxFlex fxLayout="row" style="width:80%" class="center center">
-                                <div fxFlex="80" style="width:50%"><h4>{{msg.properties.notifications[0].title}}</h4></div>
+                            <div fxFlex fxLayout="row">
+                                <div fxFlex="80" style="width:50%">
+                                    <h4>{{msg.notifications[0].title}}</h4></div>
                                 <div fxFlex="20" style="width:50%">
-                                    <mat-icon class="md-accent" style="width: 36px; height: 36px"
-                                             *ngIf="msg.properties.success">done</mat-icon>
-                                    <mat-icon class="md-accent" style="width: 36px; height: 36px"
-                                             *ngIf="!(msg.properties.success)">error</mat-icon>
+                                    <mat-icon class="md-accent" color="primary" style="width: 36px; height: 36px"
+                                              *ngIf="msg.success">done
+                                    </mat-icon>
+                                    <mat-icon class="md-accent" color="primary" style="width: 36px; height: 36px"
+                                              *ngIf="!(msg.success)">error
+                                    </mat-icon>
                                 </div>
                             </div>
                         </div>
-                        <div fxFlex fxLayout style="width:80%" class="center center" *ngIf="nextTaskTitle != ''">
+                        <div fxFlex fxLayout="row" *ngIf="nextTaskTitle != ''">
                             <div fxFlex="80" style="width:50%"><h4>{{nextTaskTitle}}</h4></div>
                             <div fxFlex="20" style="width:50%">
-                        <mat-spinner class="md-accent" [mode]="'indeterminate'" [diameter]="20" style="margin-top:10px;"
-                                              *ngIf="loading"></mat-spinner>
+                                <mat-spinner class="md-accent" [mode]="'indeterminate'" [diameter]="20"
+                                             style="margin-top:10px;"
+                                             *ngIf="loading"></mat-spinner>
                             </div>
-                        </div>
-                        <div *ngIf="installationFinished">
-                            <h3><a class="md-accent">
-                                <mat-icon style="width: 36px; height: 36px">arrow_forward</mat-icon>
-                                Go to login page</a></h3>
                         </div>
                     </div>
-                    <mat-divider></mat-divider>
-                    <mat-card-actions fxLayout="row" fxLayoutAlign="end center" *ngIf="!installationRunning">
-                        <div fxFlex fxLayout="column">
-                            <div fxLayout="row" style="margin-top: 10px; margin-bottom: 10px;">
-                                <button mat-button mat-raised-button color="primary"
-                                           [disabled]="!(setupForm.valid) || loading || installationFinished"
-                                           (click)="configure(0)">Install
-                                </button>
-                            </div>
-                        </div>
-                    </mat-card-actions>
+                </div>
+                <mat-divider></mat-divider>
+                <div fxLayout="row" fxLayoutAlign="center center">
+                    <div fxLayout="row" style="margin-top: 10px; margin-bottom: 10px;">
+                        <button mat-button mat-raised-button color="primary"
+                                [disabled]="!(setupForm.valid) || loading || installationFinished"
+                                (click)="configure(0)" *ngIf="!installationFinished">
+                            <span>{{!installationRunning ? 'Install' : 'Installing...'}}</span>
+                        </button>
+                        <button mat-button mat-raised-button color="primary"
+                                (click)="openLoginPage()" *ngIf="installationFinished">
+                            <mat-icon>arrow_forward</mat-icon>
+                            <span>Go to login page</span>
+                        </button>
+                    </div>
                 </div>
             </form>
-            </div>
-        </mat-card>
+        </div>
     </div>
 </div>
 
