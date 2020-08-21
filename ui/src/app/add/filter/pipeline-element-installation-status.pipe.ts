@@ -16,25 +16,22 @@
  *
  */
 
-.page-container-padding-inner {
-  margin: 20px;
-}
+import {Pipe, PipeTransform} from "@angular/core";
 
-.p-15 {
-  padding: 15px;
-}
+@Pipe({
+  name: 'pipelineElementInstallationStatusFilter',
+  pure: false
+})
+export class PipelineElementInstallationStatusFilter implements PipeTransform {
 
-.mr-10 {
-  margin-right: 10px;
-}
-
-.add-options {
-  padding:0px;
-  background-color:#f6f6f6;
-  border-bottom: 1px solid #cccccc;
-}
-
-.add-options-item {
-  display: inline;
-  margin-right: 10px;
+  transform(values: any[], filterTerm: string): any[] {
+    console.log(values);
+    console.log(filterTerm);
+    if (filterTerm === "all") {
+      return values;
+    } else {
+      let installed = filterTerm === "installed";
+      return values.filter(v => v.installed === installed);
+    }
+  }
 }

@@ -31,6 +31,8 @@ import {AddService} from "./services/add.service";
 import {AddEndpointComponent} from "./dialogs/add-endpoint/add-endpoint.component";
 import {OrderByPipe} from "./filter/order-by.pipe";
 import {EndpointInstallationComponent} from "./dialogs/endpoint-installation/endpoint-installation.component";
+import {PipelineElementNameFilter} from "./filter/pipeline-element-name.pipe";
+import {PipelineElementInstallationStatusFilter} from "./filter/pipeline-element-installation-status.pipe";
 
 @NgModule({
   imports: [
@@ -48,11 +50,15 @@ import {EndpointInstallationComponent} from "./dialogs/endpoint-installation/end
     EndpointInstallationComponent,
     EndpointItemComponent,
     OrderByPipe,
+    PipelineElementNameFilter,
+    PipelineElementInstallationStatusFilter,
     PipelineElementTypeFilter
   ],
   providers: [
     AddService,
     OrderByPipe,
+    PipelineElementInstallationStatusFilter,
+    PipelineElementNameFilter,
     PipelineElementTypeFilter
   ],
   exports: [

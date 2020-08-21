@@ -16,25 +16,19 @@
  *
  */
 
-.page-container-padding-inner {
-  margin: 20px;
-}
+import {Pipe, PipeTransform} from "@angular/core";
 
-.p-15 {
-  padding: 15px;
-}
+@Pipe({
+  name: 'pipelineElementNameFilter',
+  pure: false
+})
+export class PipelineElementNameFilter implements PipeTransform {
 
-.mr-10 {
-  margin-right: 10px;
-}
-
-.add-options {
-  padding:0px;
-  background-color:#f6f6f6;
-  border-bottom: 1px solid #cccccc;
-}
-
-.add-options-item {
-  display: inline;
-  margin-right: 10px;
+  transform(values: any[], filterTerm: string): any[] {
+    if (filterTerm === "") {
+      return values;
+    } else {
+      return values.filter(v => v.name.toLowerCase().includes(filterTerm.toLowerCase()));
+    }
+  }
 }
