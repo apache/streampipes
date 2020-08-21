@@ -73,7 +73,7 @@
                         </div>
                     </div>
                 </div>
-                <div fxFlex="50" *ngIf="_showDocumentation" style="padding-left:10px;border-left: 2px solid rgb(204, 204, 204);">
+                <div fxFlex="50" *ngIf="showDocumentation" style="padding-left:10px;border-left: 2px solid rgb(204, 204, 204);">
                     <pipeline-element-documentation [useStyling]="false" [appId]="pipelineElement.payload.appId"></pipeline-element-documentation>
                 </div>
             </div>
