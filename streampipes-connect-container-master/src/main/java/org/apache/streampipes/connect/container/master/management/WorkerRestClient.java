@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.connect.container.master.management;
 
-import com.google.gson.Gson;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntity;
@@ -196,7 +195,7 @@ public class WorkerRestClient {
                     .connectTimeout(1000)
                     .socketTimeout(100000)
                     .execute().returnContent().asString();
-            List<String> paths = new Gson().fromJson(stringResponse, List.class);
+            List<String> paths = JacksonSerializer.getObjectMapper().readValue(stringResponse, List.class);
 
             logger.info("Got File paths successfully");
             return paths;

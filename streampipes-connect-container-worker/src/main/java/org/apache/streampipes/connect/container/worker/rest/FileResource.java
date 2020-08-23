@@ -18,21 +18,21 @@
 
 package org.apache.streampipes.connect.container.worker.rest;
 
+import org.apache.streampipes.connect.container.worker.management.FileManagement;
+import org.apache.streampipes.connect.rest.AbstractContainerResource;
+import org.apache.streampipes.model.message.Notifications;
+import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.streampipes.connect.container.worker.management.FileManagement;
-import org.apache.streampipes.connect.rest.AbstractContainerResource;
-import org.apache.streampipes.model.message.Notifications;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 @Path("/api/v1/{username}/worker/file")
 public class FileResource extends AbstractContainerResource {
@@ -81,6 +81,8 @@ public class FileResource extends AbstractContainerResource {
     }
 
     @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @JacksonSerialized
     public Response getFilePaths(@PathParam("username") String username) {
         return ok(fileManagement.getFilePaths());
     }
