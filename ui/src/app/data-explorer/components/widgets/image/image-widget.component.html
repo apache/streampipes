@@ -17,22 +17,22 @@
   -->
 
 
-<div fxLayout="column" fxLayoutAlign="stretch">
-    <div class="assemblyOptionsDataExplorer sp-blue-bg m-0 row header h-40" style="margin-left: 0px;margin-right: 0px;">
-        <div fxFlex="100" layout="row" fxLayoutAlign="end center" style="margin-left: 0px;margin-right: 0px;">
-            <sp-select-properties (changeSelectedProperties)="setSelectedColumn($event)" [availableProperties]="availableColumns" [selectedProperties]="selectedColumns"></sp-select-properties>
+<div class="widget-content">
+    <div class="widget-inner-options" style="margin-left: 0;margin-right: 0;margin-top: 0;">
+        <div fxFlex="100" fxLayout="row">
+            <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center" style="margin-left: 0px;margin-right: 0px;">
+                <sp-select-properties multiple="true" (changeSelectedProperties)="setSelectedColumn($event)" [availableProperties]="availableColumns" [selectedProperties]="selectedColumns"></sp-select-properties>
+            </div>
         </div>
     </div>
 
-    <div style=" overflow-y: auto;" [style.max-height.px]="gridsterItem.rows * 100 - 40">
+    <div class="widget-inner-content">
+        <sp-load-data-spinner *ngIf="showIsLoadingData"></sp-load-data-spinner>
+        <sp-no-data-in-date-range *ngIf="showNoDataInDateRange" [viewDateRange]="viewDateRange"></sp-no-data-in-date-range>
+<!--        <sp-image [availableImageData]="availableImageData"></sp-image>-->
+        <div class="image-container">
 
-<!--        <sp-load-data-spinner *ngIf="showIsLoadingData"></sp-load-data-spinner>-->
-
-<!--        <sp-no-data-in-date-range *ngIf="showNoDataInDateRange" [viewDateRange]="viewDateRange"></sp-no-data-in-date-range>-->
-
-
-        <sp-image></sp-image>
+        </div>
 
     </div>
-
 </div>

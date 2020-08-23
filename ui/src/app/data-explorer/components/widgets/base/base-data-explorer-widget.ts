@@ -151,7 +151,7 @@ export abstract class BaseDataExplorerWidget implements OnChanges {
     return p.domainProperties.some(dp => dp === 'http://schema.org/DateTime');
   }
 
-  getRuntimeNames(properties: EventProperty[]): string[] {
+  getRuntimeNames(properties: EventPropertyUnion[]): string[] {
     const result = [];
     properties.forEach(p => {
         result.push(p.runtimeName);

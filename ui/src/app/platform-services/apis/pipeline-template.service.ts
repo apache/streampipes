@@ -33,7 +33,6 @@ export class PipelineTemplateService {
     constructor(
         private http: HttpClient,
         private authStatusService: AuthStatusService,
-        private tsonLdSerializerService: TsonLdSerializerService,
     ) {}
 
     getServerUrl() {
@@ -80,7 +79,7 @@ export class PipelineTemplateService {
 
                 // Currently tsonld dows not support objects that just contain one root object without an enclosing @graph array
                 if ('@graph' in response) {
-                    res = this.tsonLdSerializerService.fromJsonLd(response, 'sp:PipelineTemplateInvocation');
+                    //res = this.tsonLdSerializerService.fromJsonLd(response, 'sp:PipelineTemplateInvocation');
                 } else {
                     res = new PipelineTemplateInvocation(response['@id']);
                     res.dataSetId = response['sp:hasDataSetId'];
@@ -111,11 +110,11 @@ export class PipelineTemplateService {
 
     createPipelineTemplateInvocation(invocation: PipelineTemplateInvocation) {
 
-        this.tsonLdSerializerService.toJsonLd(invocation).subscribe(res => {
-            this.http
-                .post(this.getServerUrl() + '/api/v2/users/'+ this.authStatusService.email + '/pipeline-templates', res)
-                .subscribe();
-        });
+        // this.tsonLdSerializerService.toJsonLd(invocation).subscribe(res => {
+        //     this.http
+        //         .post(this.getServerUrl() + '/api/v2/users/'+ this.authStatusService.email + '/pipeline-templates', res)
+        //         .subscribe();
+        // });
     }
 
 }

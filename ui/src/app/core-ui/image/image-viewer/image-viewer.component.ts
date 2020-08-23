@@ -40,7 +40,7 @@ export class ImageViewerComponent implements OnInit {
   private setImagesIndexToFirst = false;
   private setImagesIndexToLast = false;
 
-  constructor(private restService: DatalakeRestService, private tsonLdSerializerService: TsonLdSerializerService) { }
+  constructor(private restService: DatalakeRestService) { }
 
   ngOnInit(): void {
 
@@ -50,10 +50,7 @@ export class ImageViewerComponent implements OnInit {
     //   });
     // }
 
-    this.restService.getAllInfos().map(data => {
-      return this.tsonLdSerializerService.fromJsonLdContainer(data, 'sp:DataLakeMeasure');
-    }).subscribe(
-      res => {
+    this.restService.getAllInfos().subscribe( res => {
         this.eventSchema = res.find(elem => elem.measureName === this.measureName).eventSchema;
         const properties = this.eventSchema.eventProperties;
         for (const prop of properties) {

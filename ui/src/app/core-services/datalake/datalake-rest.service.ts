@@ -18,12 +18,13 @@
 
 import { HttpClient, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { DataResult } from '../../core-model/datalake/DataResult';
 import { GroupedDataResult } from '../../core-model/datalake/GroupedDataResult';
 import { PageResult } from '../../core-model/datalake/PageResult';
 import { AuthStatusService } from '../../services/auth-status.service';
 import {DataLakeMeasure} from "../../core-model/gen/streampipes-model";
+import {map} from "rxjs/operators";
 
 @Injectable()
 export class DatalakeRestService {
@@ -40,8 +41,10 @@ export class DatalakeRestService {
         return this.baseUrl + '/api/v3/users/' + this.authStatusService.email + '/datalake';
     }
 
-    getAllInfos() {
-        return this.http.get<DataLakeMeasure[]>(this.dataLakeUrlV3 + '/info');
+    getAllInfos(): Observable<DataLakeMeasure[]> {
+        return this.http.get(this.dataLakeUrlV3 + '/info').pipe(map(response => {
+          return (response as any[]).map(p => DataLakeMeasure.fromData(p));
+        }));
     }
 
     getDataPage(index, itemsPerPage, page) {

@@ -57,10 +57,7 @@ export class ImageCategorizeComponent implements OnInit, AfterViewInit {
     // TODO: Get Labels
     this.labels = this.restService.getLabels();
 
-    this.restService.getAllInfos().map(data => {
-      return this.tsonLdSerializerService.fromJsonLdContainer(data, 'sp:DataLakeMeasure');
-    }).subscribe(
-      res => {
+    this.restService.getAllInfos().subscribe(res => {
         this.eventSchema = res.find(elem => elem.measureName === this.measureName).eventSchema;
         const properties = this.eventSchema.eventProperties;
         for (const prop of properties) {

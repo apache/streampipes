@@ -73,7 +73,6 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit, OnChanges 
   constructor(private restService: DatalakeRestService, private reactLabelingService: ReactLabelingService,
               private polygonLabelingService: PolygonLabelingService, private brushLabelingService: BrushLabelingService,
               private snackBar: MatSnackBar, private cocoFormatService: CocoFormatService,
-              private tsonLdSerializerService: TsonLdSerializerService,
               public labelingMode: LabelingModeService) { }
 
   ngOnInit(): void {
@@ -85,10 +84,7 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit, OnChanges 
 
     // TODO remove for production, if default dev values are not necessary
     if (this.eventSchema === undefined) {
-      this.restService.getAllInfos().map(data => {
-        return this.tsonLdSerializerService.fromJsonLdContainer(data, 'sp:DataLakeMeasure');
-      }).subscribe(
-        res => {
+      this.restService.getAllInfos().subscribe(res => {
           this.eventSchema = res.find(elem => elem.measureName === this.measureName).eventSchema;
           const properties = this.eventSchema.eventProperties;
           for (const prop of properties) {

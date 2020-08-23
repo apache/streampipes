@@ -33,22 +33,16 @@ export class AppImageLabelingComponent implements  OnInit {
 
   @Output() appOpened = new EventEmitter<boolean>();
 
-  constructor(private restService: DatalakeRestService,
-              private tsonLdSerializerService: TsonLdSerializerService) {
+  constructor(private restService: DatalakeRestService) {
 
   }
 
   ngOnInit() {
       this.appOpened.emit(true);
-        this.restService.getAllInfos().map(data => {
-          return this.tsonLdSerializerService.fromJsonLdContainer(data, 'sp:DataLakeMeasure');
-        }).subscribe(
-          res => {
+        this.restService.getAllInfos().subscribe(res => {
               this.dataLakeMeasures = res;
               this.selectedMeasure = res[0];
           }
         );
   }
-
-
 }
