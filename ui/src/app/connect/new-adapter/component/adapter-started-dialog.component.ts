@@ -22,12 +22,12 @@ import {ShepherdService} from '../../../services/tour/shepherd.service';
 import {RestService} from "../../rest.service";
 import {PipelineTemplateService} from '../../../platform-services/apis/pipeline-template.service';
 import {
-    FreeTextStaticProperty,
-    GenericAdapterSetDescription,
-    MappingPropertyUnary,
-    Message,
-    SpDataStream,
-    SpecificAdapterSetDescription
+  FreeTextStaticProperty,
+  GenericAdapterSetDescription,
+  MappingPropertyUnary,
+  Message,
+  SpDataStream,
+  SpecificAdapterSetDescription
 } from "../../../core-model/gen/streampipes-model";
 
 @Component({

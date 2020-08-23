@@ -17,7 +17,6 @@
  */
 
 import {Component} from '@angular/core';
-import {AdapterDescription} from './model/connect/AdapterDescription';
 import {AdapterDescriptionUnion} from "../core-model/gen/streampipes-model";
 
 @Component({

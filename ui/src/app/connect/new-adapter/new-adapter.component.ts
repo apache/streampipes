@@ -17,40 +17,42 @@
  */
 
 import {
-    AfterViewInit, ChangeDetectorRef,
-    Component,
-    EventEmitter,
-    Input,
-    OnInit,
-    Output,
-    ViewChild
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
-import { MatStepper } from '@angular/material/stepper';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MatDialog} from '@angular/material/dialog';
+import {MatStepper} from '@angular/material/stepper';
 import {
-    AdapterDescription, AdapterDescriptionUnion,
-    EventProperty,
-    EventRateTransformationRuleDescription,
-    EventSchema,
-    FormatDescription,
-    GenericAdapterSetDescription,
-    GenericAdapterStreamDescription,
-    RemoveDuplicatesTransformationRuleDescription,
-    SpecificAdapterSetDescription,
-    SpecificAdapterStreamDescription,
-    TransformationRuleDescriptionUnion
+  AdapterDescription,
+  AdapterDescriptionUnion,
+  EventProperty,
+  EventRateTransformationRuleDescription,
+  EventSchema,
+  FormatDescription,
+  GenericAdapterSetDescription,
+  GenericAdapterStreamDescription,
+  RemoveDuplicatesTransformationRuleDescription,
+  SpecificAdapterSetDescription,
+  SpecificAdapterStreamDescription,
+  TransformationRuleDescriptionUnion
 } from '../../core-model/gen/streampipes-model';
-import { ShepherdService } from '../../services/tour/shepherd.service';
-import { Logger } from '../../shared/logger/default-log.service';
-import { ConnectService } from '../connect.service';
-import { TimestampPipe } from '../filter/timestamp.pipe';
-import { ConfigurationInfo } from '../model/message/ConfigurationInfo';
-import { RestService } from '../rest.service';
-import { EventSchemaComponent } from '../schema-editor/event-schema/event-schema.component';
-import { TransformationRuleService } from '../transformation-rule.service';
-import { AdapterStartedDialog } from './component/adapter-started-dialog.component';
-import { IconService } from './icon.service';
+import {ShepherdService} from '../../services/tour/shepherd.service';
+import {Logger} from '../../shared/logger/default-log.service';
+import {ConnectService} from '../connect.service';
+import {TimestampPipe} from '../filter/timestamp.pipe';
+import {ConfigurationInfo} from '../model/message/ConfigurationInfo';
+import {RestService} from '../rest.service';
+import {EventSchemaComponent} from '../schema-editor/event-schema/event-schema.component';
+import {TransformationRuleService} from '../transformation-rule.service';
+import {AdapterStartedDialog} from './component/adapter-started-dialog.component';
+import {IconService} from './icon.service';
 
 @Component({
     selector: 'sp-new-adapter',

@@ -20,7 +20,6 @@ import {RdfsClass} from "../../../platform-services/tsonld/RdfsClass";
 import {UnnamedStreamPipesEntity} from "../UnnamedStreamPipesEntity";
 import {TransportProtocol} from "./TransportProtocol";
 import {RdfProperty} from "../../../platform-services/tsonld/RdfsProperty";
-import {TransportFormat} from "./TransportFormat";
 
 @RdfsClass('sp:DataStreamGrounding')
 export class EventGrounding extends UnnamedStreamPipesEntity {

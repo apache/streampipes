@@ -18,7 +18,7 @@
 
 import {Injectable} from '@angular/core';
 
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 
 import {from, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
@@ -27,15 +27,13 @@ import {map} from 'rxjs/operators';
 import {AuthStatusService} from '../services/auth-status.service';
 import {UnitDescription} from './model/UnitDescription';
 import {
-    AdapterDescription, DataSourceDescription,
-    ErrorMessage,
+    AdapterDescription,
+    DataSourceDescription,
     FormatDescriptionList,
     GuessSchema,
     Message,
-    ProtocolDescriptionList,
-    RuntimeOptionsResponse
+    ProtocolDescriptionList
 } from "../core-model/gen/streampipes-model";
-import {StatusMessage} from "./model/message/StatusMessage";
 
 @Injectable()
 export class RestService {

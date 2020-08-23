@@ -23,13 +23,13 @@ import {ConnectService} from '../connect.service';
 import {FilterPipe} from './filter.pipe';
 import {AdapterUploadDialog} from './adapter-upload/adapter-upload-dialog.component';
 import {
-    AdapterDescription,
-    AdapterDescriptionUnion,
-    AdapterSetDescription,
-    AdapterStreamDescription,
-    EventSchema,
-    SpDataSet,
-    SpDataStream
+  AdapterDescription,
+  AdapterDescriptionUnion,
+  AdapterSetDescription,
+  AdapterStreamDescription,
+  EventSchema,
+  SpDataSet,
+  SpDataStream
 } from "../../core-model/gen/streampipes-model";
 import {PanelType} from "../../core-ui/dialog/base-dialog/base-dialog.model";
 import {DialogService} from "../../core-ui/dialog/base-dialog/base-dialog.service";

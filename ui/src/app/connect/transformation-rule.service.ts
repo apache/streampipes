@@ -16,10 +16,11 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {
     AddTimestampRuleDescription,
-    AddValueTransformationRuleDescription, CreateNestedRuleDescription,
+    AddValueTransformationRuleDescription,
+    CreateNestedRuleDescription,
     DeleteRuleDescription,
     EventProperty,
     EventPropertyNested,
@@ -29,11 +30,11 @@ import {
     MoveRuleDescription,
     RenameRuleDescription,
     TimestampTranfsformationRuleDescription,
-     TransformationRuleDescriptionUnion,
+    TransformationRuleDescriptionUnion,
     UnitTransformRuleDescription
 } from '../core-model/gen/streampipes-model';
-import { Logger } from '../shared/logger/default-log.service';
-import { TimestampTransformationRuleMode } from './model/connect/rules/TimestampTransformationRuleMode';
+import {Logger} from '../shared/logger/default-log.service';
+import {TimestampTransformationRuleMode} from './model/connect/rules/TimestampTransformationRuleMode';
 
 @Injectable()
 export class TransformationRuleService {

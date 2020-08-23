@@ -17,7 +17,6 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {EventProperty} from '../schema-editor/model/EventProperty';
 import {EventPropertyUnion} from "../../core-model/gen/streampipes-model";
 
 @Pipe({

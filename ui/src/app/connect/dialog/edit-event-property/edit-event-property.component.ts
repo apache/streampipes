@@ -16,17 +16,17 @@
  *
  */
 
-import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {Component, EventEmitter, Inject, OnInit, Output} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {
-    EventPropertyList,
-    EventPropertyNested,
-    EventPropertyPrimitive,
-    EventPropertyUnion
+  EventPropertyList,
+  EventPropertyNested,
+  EventPropertyPrimitive,
+  EventPropertyUnion
 } from '../../../core-model/gen/streampipes-model';
-import { SemanticTypeUtilsService } from '../../../core-services/semantic-type/semantic-type-utils.service';
-import { DataTypesService } from '../../schema-editor/data-type.service';
+import {SemanticTypeUtilsService} from '../../../core-services/semantic-type/semantic-type-utils.service';
+import {DataTypesService} from '../../schema-editor/data-type.service';
 
 
 @Component({

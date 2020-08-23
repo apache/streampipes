@@ -18,8 +18,6 @@
 
 import {RdfsClass} from "../../../platform-services/tsonld/RdfsClass";
 import {UnnamedStreamPipesEntity} from "../UnnamedStreamPipesEntity";
-import {RdfProperty} from "../../../platform-services/tsonld/RdfsProperty";
-import {URI} from "../URI";
 
 @RdfsClass('sp:TransportFormat')
 export class TransportFormat extends UnnamedStreamPipesEntity {

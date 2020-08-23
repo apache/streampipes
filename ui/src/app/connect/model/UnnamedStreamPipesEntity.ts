@@ -16,8 +16,8 @@
  *
  */
 
-import { RdfId } from '../../platform-services/tsonld/RdfId';
-import { RdfsClass } from '../../platform-services/tsonld/RdfsClass';
+import {RdfId} from '../../platform-services/tsonld/RdfId';
+import {RdfsClass} from '../../platform-services/tsonld/RdfsClass';
 
 @RdfsClass('sp:UnnamedStreamPipesEntity')
 export class UnnamedStreamPipesEntity {

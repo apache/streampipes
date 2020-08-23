@@ -22,14 +22,14 @@ import {DomainPropertyProbabilityList} from "../model/DomainPropertyProbabilityL
 import {TreeNode} from "angular-tree-component";
 import {MatDialog} from "@angular/material/dialog";
 import {
-    EventProperty,
-    EventPropertyList,
-    EventPropertyNested,
-    EventPropertyPrimitive,
-    EventPropertyUnion,
-    EventSchema
+  EventProperty,
+  EventPropertyList,
+  EventPropertyNested,
+  EventPropertyPrimitive,
+  EventPropertyUnion,
+  EventSchema
 } from "../../../core-model/gen/streampipes-model";
-import { EditEventPropertyComponent } from '../../dialog/edit-event-property/edit-event-property.component';
+import {EditEventPropertyComponent} from '../../dialog/edit-event-property/edit-event-property.component';
 
 @Component({
     selector: 'event-property-row',
