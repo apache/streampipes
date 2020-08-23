@@ -17,21 +17,20 @@
  */
 
 
-import { AfterViewInit, Component, Input, OnChanges, OnInit, ViewChild } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import {AfterViewInit, Component, Input, OnChanges, OnInit, ViewChild} from '@angular/core';
+import {MatSnackBar} from '@angular/material/snack-bar';
 import Konva from 'konva';
-import { Annotation } from '../../../core-model/coco/Annotation';
-import { CocoFormat } from '../../../core-model/coco/Coco.format';
-import { DatalakeRestService } from '../../../core-services/datalake/datalake-rest.service';
-import { TsonLdSerializerService } from '../../../platform-services/tsonld-serializer.service';
-import { ImageContainerComponent } from '../components/image-container/image-container.component';
-import { ICoordinates } from '../model/coordinates';
-import { LabelingMode } from '../model/labeling-mode';
-import { BrushLabelingService } from '../services/BrushLabeling.service';
-import { CocoFormatService } from '../services/CocoFormat.service';
-import { LabelingModeService } from '../services/LabelingMode.service';
-import { PolygonLabelingService } from '../services/PolygonLabeling.service';
-import { ReactLabelingService } from '../services/ReactLabeling.service';
+import {Annotation} from '../../../core-model/coco/Annotation';
+import {CocoFormat} from '../../../core-model/coco/Coco.format';
+import {DatalakeRestService} from '../../../core-services/datalake/datalake-rest.service';
+import {ImageContainerComponent} from '../components/image-container/image-container.component';
+import {ICoordinates} from '../model/coordinates';
+import {LabelingMode} from '../model/labeling-mode';
+import {BrushLabelingService} from '../services/BrushLabeling.service';
+import {CocoFormatService} from '../services/CocoFormat.service';
+import {LabelingModeService} from '../services/LabelingMode.service';
+import {PolygonLabelingService} from '../services/PolygonLabeling.service';
+import {ReactLabelingService} from '../services/ReactLabeling.service';
 
 @Component({
   selector: 'sp-image-labeling',

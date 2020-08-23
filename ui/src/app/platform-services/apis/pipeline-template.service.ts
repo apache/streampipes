@@ -25,7 +25,6 @@ import {PipelineTemplateInvocation} from '../../connect/model/PipelineTemplateIn
 import {StaticProperty} from '../../connect/model/StaticProperty';
 import {AuthStatusService} from '../../services/auth-status.service';
 import 'rxjs-compat/add/operator/map';
-import {TsonLdSerializerService} from '../tsonld-serializer.service';
 
 @Injectable()
 export class PipelineTemplateService {

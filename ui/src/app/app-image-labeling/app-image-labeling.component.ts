@@ -15,9 +15,8 @@
  * limitations under the License.
  */
 
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { DatalakeRestService } from "../core-services/datalake/datalake-rest.service";
-import { TsonLdSerializerService } from "../platform-services/tsonld-serializer.service";
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {DatalakeRestService} from "../core-services/datalake/datalake-rest.service";
 import {DataLakeMeasure} from "../core-model/gen/streampipes-model";
 
 @Component({

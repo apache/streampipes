@@ -18,7 +18,6 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DatalakeRestService } from '../../../core-services/datalake/datalake-rest.service';
-import { TsonLdSerializerService } from '../../../platform-services/tsonld-serializer.service';
 import { ColorService } from '../services/color.service';
 
 
@@ -47,8 +46,7 @@ export class ImageCategorizeComponent implements OnInit, AfterViewInit {
   private setImagesIndexToFirst = false;
   private setImagesIndexToLast = false;
 
-  constructor(private restService: DatalakeRestService, public colorService: ColorService, private snackBar: MatSnackBar,
-              private tsonLdSerializerService: TsonLdSerializerService) { }
+  constructor(private restService: DatalakeRestService, public colorService: ColorService, private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     // TODO: Load labels for images

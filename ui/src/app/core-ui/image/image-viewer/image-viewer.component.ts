@@ -15,9 +15,8 @@
  * limitations under the License.
  */
 
-import { Component, OnInit } from '@angular/core';
-import { DatalakeRestService } from '../../../core-services/datalake/datalake-rest.service';
-import { TsonLdSerializerService } from '../../../platform-services/tsonld-serializer.service';
+import {Component, OnInit} from '@angular/core';
+import {DatalakeRestService} from '../../../core-services/datalake/datalake-rest.service';
 
 @Component({
   selector: 'sp-image-viewer',

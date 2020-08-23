@@ -16,13 +16,12 @@
  *
  */
 
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {HttpClient} from "@angular/common/http";
 import {Injectable} from "@angular/core";
 import {map} from "rxjs/operators";
-import {from, Observable} from "rxjs";
+import {Observable} from "rxjs";
 import {AuthStatusService} from "../../services/auth-status.service";
 import {Dashboard} from "../models/dashboard.model";
-import {TsonLdSerializerService} from "../../platform-services/tsonld-serializer.service";
 import {MeasurementUnit} from "../../core-model/measurement-unit/MeasurementUnit";
 import {DashboardWidgetModel, VisualizablePipeline} from "../../core-model/gen/streampipes-model";
 
@@ -31,8 +30,7 @@ export class DashboardService {
 
 
     constructor(private http: HttpClient, 
-                private authStatusService: AuthStatusService,
-                private tsonLdSerializerService: TsonLdSerializerService) {
+                private authStatusService: AuthStatusService) {
     }
 
 

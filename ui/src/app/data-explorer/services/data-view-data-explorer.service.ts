@@ -16,14 +16,13 @@
  *
  */
 
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {from, Observable} from 'rxjs';
+import {Observable} from 'rxjs';
 import 'rxjs-compat/add/observable/of';
 import {map} from 'rxjs/operators';
 import {DatalakeRestService} from '../../core-services/datalake/datalake-rest.service';
 import {SharedDatalakeRestService} from '../../core-services/shared/shared-dashboard.service';
-import {TsonLdSerializerService} from '../../platform-services/tsonld-serializer.service';
 import {AuthStatusService} from '../../services/auth-status.service';
 import {IDataViewDashboard} from '../models/dataview-dashboard.model';
 import {DataExplorerWidgetModel, DataLakeMeasure} from "../../core-model/gen/streampipes-model";
