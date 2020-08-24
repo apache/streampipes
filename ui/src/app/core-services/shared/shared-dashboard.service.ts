@@ -18,10 +18,10 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { Dashboard } from '../../dashboard/models/dashboard.model';
 import { AuthStatusService } from '../../services/auth-status.service';
 import {map} from "rxjs/operators";
+import {Observable} from "rxjs";
 
 @Injectable()
 export class SharedDatalakeRestService {

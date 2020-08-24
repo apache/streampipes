@@ -19,12 +19,11 @@
 //import _ from 'lodash';
 
 
-import {Inject, Injectable} from "@angular/core";
-import * as angular from 'angular';
+import {Injectable} from "@angular/core";
 import {AuthStatusService} from "./auth-status.service";
 import {PlatformServicesCommons} from "../platform-services/apis/commons.service";
 import {HttpClient} from "@angular/common/http";
-import { Observable } from 'rxjs/Observable';
+import {Observable} from "rxjs";
 
 @Injectable()
 export class RestApi {

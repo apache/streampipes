@@ -37,7 +37,6 @@ import {
 import {NgxChartsModule} from '@swimlane/ngx-charts';
 import {GridsterModule} from 'angular-gridster2';
 import {PlotlyViaWindowModule} from 'angular-plotly.js';
-import {DynamicModule} from 'ng-dynamic-component';
 import {ColorPickerModule} from 'ngx-color-picker';
 import {ConnectModule} from '../connect/connect.module';
 import {DatalakeRestService} from '../core-services/datalake/datalake-rest.service';
@@ -93,9 +92,6 @@ export const MY_NATIVE_FORMATS = {
   imports: [
     CommonModule,
     MatTabsModule,
-    DynamicModule.withComponents(
-        dashboardWidgets
-    ),
     FlexLayoutModule,
     GridsterModule,
     CommonModule,

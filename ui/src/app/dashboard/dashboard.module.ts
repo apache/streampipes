@@ -21,7 +21,6 @@ import {CommonModule} from '@angular/common';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {GridsterModule} from 'angular-gridster2';
 import {DashboardComponent} from './dashboard.component';
-import {DynamicModule} from 'ng-dynamic-component';
 import {DashboardPanelComponent} from "./components/panel/dashboard-panel.component";
 import {MatTabsModule} from "@angular/material/tabs";
 import {DashboardWidgetComponent} from "./components/widget/dashboard-widget.component";
@@ -58,18 +57,11 @@ import {TrafficLightWidgetComponent} from "./components/widgets/trafficlight/tra
 import {StandaloneDashboardComponent} from "./components/standalone/standalone-dashboard.component";
 import {CoreUiModule} from "../core-ui/core-ui.module";
 
-const dashboardWidgets = [
-
-];
-
 @NgModule({
     imports: [
         CommonModule,
         CoreUiModule,
         MatTabsModule,
-        DynamicModule.withComponents(
-            dashboardWidgets
-        ),
         FlexLayoutModule,
         GridsterModule,
         CommonModule,

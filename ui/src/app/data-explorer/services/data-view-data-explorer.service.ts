@@ -19,7 +19,6 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import 'rxjs-compat/add/observable/of';
 import {map} from 'rxjs/operators';
 import {DatalakeRestService} from '../../core-services/datalake/datalake-rest.service';
 import {SharedDatalakeRestService} from '../../core-services/shared/shared-dashboard.service';
