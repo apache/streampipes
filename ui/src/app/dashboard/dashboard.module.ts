@@ -31,7 +31,6 @@ import {AddVisualizationDialogComponent} from "./dialogs/add-widget/add-visualiz
 import {MatGridListModule} from "@angular/material/grid-list";
 import {ElementIconText} from "../services/get-element-icon-text.service";
 import {DashboardService} from "./services/dashboard.service";
-import {ConnectModule} from "../connect/connect.module";
 import {NumberWidgetComponent} from "./components/widgets/number/number-widget.component";
 import {streamPipesStompConfig} from "./services/websocket.config";
 import {InjectableRxStompConfig, RxStompService, rxStompServiceFactory} from "@stomp/ng2-stompjs";
@@ -62,15 +61,12 @@ import {CoreUiModule} from "../core-ui/core-ui.module";
         CommonModule,
         CoreUiModule,
         MatTabsModule,
-        FlexLayoutModule,
         GridsterModule,
-        CommonModule,
         FlexLayoutModule,
         CustomMaterialModule,
         FormsModule,
         ColorPickerModule,
         MatGridListModule,
-        ConnectModule,
         NgxChartsModule,
         CdkTableModule,
         LeafletModule

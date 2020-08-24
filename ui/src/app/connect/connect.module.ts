@@ -33,8 +33,6 @@ import {FormatFormComponent} from './format-form/format-form.component';
 import {EditEventPropertyPrimitiveComponent} from './dialog/edit-event-property/components/edit-event-property-primitive/edit-event-property-primitive.component';
 import {EventSchemaComponent} from './schema-editor/event-schema/event-schema.component';
 
-import {StaticPropertyComponent} from './static-properties/static-property.component';
-
 import {CustomMaterialModule} from '../CustomMaterial/custom-material.module';
 
 import {RestService} from './rest.service';
@@ -43,9 +41,7 @@ import {MatInputModule} from '@angular/material/input';
 import {DragulaModule} from 'ng2-dragula';
 import {AdapterStartedDialog} from './new-adapter/component/adapter-started-dialog.component';
 import {DataTypesService} from './schema-editor/data-type.service';
-import {StaticFreeInputComponent} from './static-properties/static-free-input/static-free-input.component';
-import {StaticPropertyUtilService} from './static-properties/static-property-util.service';
-import {StaticSecretInputComponent} from './static-properties/static-secret-input/static-secret-input.component';
+import {StaticPropertyUtilService} from '../core-ui/static-properties/static-property-util.service';
 import {TransformationRuleService} from './transformation-rule.service';
 import {ConnectService} from './connect.service';
 import {AdapterDescriptionComponent} from './data-marketplace/adapter-description/adapter-description.component';
@@ -57,33 +53,17 @@ import {FormatComponent} from './format-component/format.component';
 import {FormatListComponent} from './format-list-component/format-list.component';
 import {IconService} from './new-adapter/icon.service';
 import {UnitProviderService} from './schema-editor/unit-provider.service';
-import {StaticAlternativesComponent} from './static-properties/static-alternatives/static-alternatives.component';
-import {StaticAnyInput} from './static-properties/static-any-input/static-any-input.component';
-import {StaticCollectionComponent} from './static-properties/static-collection/static-collection.component';
-import {StaticFileInputComponent} from './static-properties/static-file-input/static-file-input.component';
-import {StaticFileRestService} from './static-properties/static-file-input/static-file-rest.service';
-import {StaticGroupComponent} from './static-properties/static-group/static-group.component';
-import {StaticOneOfInputComponent} from './static-properties/static-one-of-input/static-one-of-input.component';
-import {StaticRuntimeResolvableAnyInputComponent} from './static-properties/static-runtime-resolvable-any-input/static-runtime-resolvable-any-input.component';
-import {StaticRuntimeResolvableOneOfInputComponent} from './static-properties/static-runtime-resolvable-oneof-input/static-runtime-resolvable-oneof-input.component';
 
 
-import {FilterPipe} from '../connect/data-marketplace/filter.pipe';
+import {FilterPipe} from './data-marketplace/filter.pipe';
 import {PlatformServicesModule} from '../platform-services/platform.module';
 import {AdapterExportDialog} from './data-marketplace/adapter-export/adapter-export-dialog.component';
 import {AdapterUploadDialog} from './data-marketplace/adapter-upload/adapter-upload-dialog.component';
 import {EditEventPropertyListComponent} from './dialog/edit-event-property/components/edit-event-property-list/edit-event-property-list.component';
 import {TimestampPipe} from './filter/timestamp.pipe';
-import {StaticMappingNaryComponent} from './static-properties/static-mapping-nary/static-mapping-nary.component';
-import {StaticMappingUnaryComponent} from './static-properties/static-mapping-unary/static-mapping-unary.component';
-
-import {StaticCodeInputComponent} from "./static-properties/static-code-input/static-code-input.component";
-import {CodemirrorModule} from '@ctrl/ngx-codemirror';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatSliderModule} from '@angular/material/slider';
 import {TreeModule} from 'angular-tree-component';
-import {ColorPickerModule} from 'ngx-color-picker';
-import {QuillModule} from 'ngx-quill';
 import {xsService} from '../NS/XS.service';
 import {PropertySelectorService} from '../services/property-selector.service';
 import {EditDataTypeComponent} from './dialog/edit-event-property/components/edit-data-type/edit-data-type.component';
@@ -93,19 +73,16 @@ import {EditEventPropertyComponent} from './dialog/edit-event-property/edit-even
 import {PipelineElementRuntimeInfoComponent} from './new-adapter/component/runtime-info/pipeline-element-runtime-info.component';
 import {EventPropertyRowComponent} from './schema-editor/event-property-row/event-property-row.component';
 import {EventSchemaPreviewComponent} from './schema-editor/event-schema-preview/event-schema-preview.component';
-import {StaticColorPickerComponent} from './static-properties/static-color-picker/static-color-picker.component';
-import {DisplayRecommendedPipe} from "./static-properties/filter/display-recommended.pipe";
 import {TourProviderService} from "../services/tour/tour-provider.service";
-import {RuntimeResolvableService} from "./static-properties/static-runtime-resolvable-input/runtime-resolvable.service";
-
+import {CoreUiModule} from "../core-ui/core-ui.module";
 
 @NgModule({
     imports: [
         BrowserModule,
+        CoreUiModule,
         FormsModule,
         ReactiveFormsModule,
         CommonModule,
-        CodemirrorModule,
         FlexLayoutModule,
         MatGridListModule,
         CustomMaterialModule,
@@ -117,57 +94,38 @@ import {RuntimeResolvableService} from "./static-properties/static-runtime-resol
         MatSliderModule,
         PlatformServicesModule,
         TreeModule.forRoot(),
-        ColorPickerModule,
-        QuillModule.forRoot()
     ],
     exports: [
-        StaticPropertyComponent,
         PipelineElementRuntimeInfoComponent
     ],
     declarations: [
-        NewAdapterComponent,
-        FormatFormComponent,
+        AdapterDescriptionComponent,
+        AdapterExportDialog,
+        AdapterStartedDialog,
+        AdapterUploadDialog,
+        ConnectComponent,
+        DataMarketplaceComponent,
         EventSchemaComponent,
         EditEventPropertyPrimitiveComponent,
         EditEventPropertyComponent,
         EventPropertyRowComponent,
         EditEventPropertyListComponent,
-        StaticPropertyComponent,
-        AdapterStartedDialog,
-        AdapterExportDialog,
-        AdapterUploadDialog,
-        StaticFreeInputComponent,
-        StaticSecretInputComponent,
-        StaticFileInputComponent,
-        StaticMappingNaryComponent,
-        StaticMappingUnaryComponent,
-        DisplayRecommendedPipe,
-        TimestampPipe,
-        StaticAnyInput,
-        FormatListComponent,
-        FormatComponent,
-        DataMarketplaceComponent,
-        AdapterDescriptionComponent,
-        ConnectComponent,
-        StaticOneOfInputComponent,
-        StaticRuntimeResolvableAnyInputComponent,
-        StaticRuntimeResolvableOneOfInputComponent,
-        FileManagementComponent,
-        FilterPipe,
-        EventSchemaPreviewComponent,
-        StaticGroupComponent,
-        StaticAlternativesComponent,
-        StaticCollectionComponent,
-        StaticColorPickerComponent,
-        StaticCodeInputComponent,
-        PipelineElementRuntimeInfoComponent,
         EditUnitTransformationComponent,
         EditTimestampPropertyComponent,
-        EditDataTypeComponent
+        EditDataTypeComponent,
+        EventSchemaPreviewComponent,
+        FileManagementComponent,
+        FilterPipe,
+        FormatComponent,
+        FormatFormComponent,
+        FormatListComponent,
+        NewAdapterComponent,
+        PipelineElementRuntimeInfoComponent,
+        TimestampPipe
     ],
     providers: [
         RestService,
-        RuntimeResolvableService,
+
         ConnectService,
         DataTypesService,
         TransformationRuleService,
@@ -175,10 +133,8 @@ import {RuntimeResolvableService} from "./static-properties/static-runtime-resol
         DataMarketplaceService,
         IconService,
         UnitProviderService,
-        DisplayRecommendedPipe,
         TimestampPipe,
         FileRestService,
-        StaticFileRestService,
         PropertySelectorService,
         xsService,
         TourProviderService

@@ -52,12 +52,35 @@ import {DialogService} from "./dialog/base-dialog/base-dialog.service";
 import {PortalModule} from "@angular/cdk/portal";
 import {OverlayModule} from "@angular/cdk/overlay";
 import {ConfirmDialogComponent} from "./dialog/confirm-dialog/confirm-dialog.component";
+import {StaticAnyInput} from "./static-properties/static-any-input/static-any-input.component";
+import {StaticPropertyComponent} from "./static-properties/static-property.component";
+import {StaticFreeInputComponent} from "./static-properties/static-free-input/static-free-input.component";
+import {StaticSecretInputComponent} from "./static-properties/static-secret-input/static-secret-input.component";
+import {StaticFileInputComponent} from "./static-properties/static-file-input/static-file-input.component";
+import {StaticMappingNaryComponent} from "./static-properties/static-mapping-nary/static-mapping-nary.component";
+import {StaticMappingUnaryComponent} from "./static-properties/static-mapping-unary/static-mapping-unary.component";
+import {StaticGroupComponent} from "./static-properties/static-group/static-group.component";
+import {StaticAlternativesComponent} from "./static-properties/static-alternatives/static-alternatives.component";
+import {StaticCollectionComponent} from "./static-properties/static-collection/static-collection.component";
+import {StaticColorPickerComponent} from "./static-properties/static-color-picker/static-color-picker.component";
+import {StaticCodeInputComponent} from "./static-properties/static-code-input/static-code-input.component";
+import {StaticOneOfInputComponent} from "./static-properties/static-one-of-input/static-one-of-input.component";
+import {StaticRuntimeResolvableAnyInputComponent} from "./static-properties/static-runtime-resolvable-any-input/static-runtime-resolvable-any-input.component";
+import {StaticRuntimeResolvableOneOfInputComponent} from "./static-properties/static-runtime-resolvable-oneof-input/static-runtime-resolvable-oneof-input.component";
+import {RuntimeResolvableService} from "./static-properties/static-runtime-resolvable-input/runtime-resolvable.service";
+import {StaticFileRestService} from "./static-properties/static-file-input/static-file-rest.service";
+import {DisplayRecommendedPipe} from "./static-properties/filter/display-recommended.pipe";
+import {ColorPickerModule} from "ngx-color-picker";
+import {QuillModule} from "ngx-quill";
+import {CodemirrorModule} from "@ctrl/ngx-codemirror";
 // PlotlyViaCDNModule.plotlyjs = PlotlyJS;
 
 @NgModule({
     imports: [
         CommonModule,
+        ColorPickerModule,
         FlexLayoutModule,
+        CodemirrorModule,
         CustomMaterialModule,
         ReactiveFormsModule,
         FormsModule,
@@ -71,9 +94,11 @@ import {ConfirmDialogComponent} from "./dialog/confirm-dialog/confirm-dialog.com
         MatChipsModule,
         PortalModule,
         OverlayModule,
+        QuillModule.forRoot()
     ],
     declarations: [
         ConfirmDialogComponent,
+        DisplayRecommendedPipe,
         ImageComponent,
         ImageContainerComponent,
         ImageLabelingComponent,
@@ -83,17 +108,35 @@ import {ConfirmDialogComponent} from "./dialog/confirm-dialog/confirm-dialog.com
         ImageCategorizeComponent,
         ImageViewerComponent,
         StandardDialogComponent,
-        PanelDialogComponent
+        PanelDialogComponent,
+        StaticAnyInput,
+        StaticPropertyComponent,
+        StaticFreeInputComponent,
+        StaticSecretInputComponent,
+        StaticFileInputComponent,
+        StaticMappingNaryComponent,
+        StaticMappingUnaryComponent,
+        StaticGroupComponent,
+        StaticAlternativesComponent,
+        StaticCollectionComponent,
+        StaticColorPickerComponent,
+        StaticCodeInputComponent,
+        StaticOneOfInputComponent,
+        StaticRuntimeResolvableAnyInputComponent,
+        StaticRuntimeResolvableOneOfInputComponent,
     ],
     providers: [
         MatDatepickerModule,
         ColorService,
+        DisplayRecommendedPipe,
         ReactLabelingService,
         PolygonLabelingService,
         BrushLabelingService,
         CocoFormatService,
         LabelingModeService,
-        DialogService
+        DialogService,
+        RuntimeResolvableService,
+        StaticFileRestService,
     ],
     entryComponents: [
     ],
@@ -102,7 +145,22 @@ import {ConfirmDialogComponent} from "./dialog/confirm-dialog/confirm-dialog.com
         ImageLabelingComponent,
         StandardDialogComponent,
         PanelDialogComponent,
-        ConfirmDialogComponent
+        ConfirmDialogComponent,
+        StaticAnyInput,
+        StaticPropertyComponent,
+        StaticFreeInputComponent,
+        StaticSecretInputComponent,
+        StaticFileInputComponent,
+        StaticMappingNaryComponent,
+        StaticMappingUnaryComponent,
+        StaticGroupComponent,
+        StaticAlternativesComponent,
+        StaticCollectionComponent,
+        StaticColorPickerComponent,
+        StaticCodeInputComponent,
+        StaticOneOfInputComponent,
+        StaticRuntimeResolvableAnyInputComponent,
+        StaticRuntimeResolvableOneOfInputComponent,
     ]
 })
 export class CoreUiModule {

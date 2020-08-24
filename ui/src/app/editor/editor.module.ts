@@ -26,7 +26,6 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {ElementIconText} from "../services/get-element-icon-text.service";
 import {SemanticTypeUtilsService} from '../core-services/semantic-type/semantic-type-utils.service';
 import {EditorComponent} from "./editor.component";
-import {ConnectModule} from "../connect/connect.module";
 import {EditorService} from "./services/editor.service";
 import {PipelineElementIconStandComponent} from "./components/pipeline-element-icon-stand/pipeline-element-icon-stand.component";
 import {PipelineAssemblyComponent} from "./components/pipeline-assembly/pipeline-assembly.component";
@@ -73,7 +72,6 @@ import {UserDefinedOutputStrategyComponent} from "./components/output-strategy/u
         FlexLayoutModule,
         CustomMaterialModule,
         FormsModule,
-        ConnectModule,
         MatProgressSpinnerModule,
         ShowdownModule,
         ReactiveFormsModule

@@ -16,14 +16,9 @@
  *
  */
 
-@import '../../../../scss/sp/colors';
-
-#formWrapper {
-    height: 60px;
-}
+@import 'src/scss/sp/buttons';
 
 p {
-    width: 100px;
     float: left;
     margin: 20px  15px 0 0;
 }
@@ -31,7 +26,7 @@ form {
     float: left;
 }
 
-::ng-deep.mat-accent ::ng-deep.mat-slider-track-fill, .mat-accent ::ng-deep.mat-slider-thumb, .mat-accent ::ng-deep.mat-slider-thumb-label {
-    background-color: $sp-color-accent;
+.description {
+    font-size: 10px;
 }
 

@@ -32,10 +32,11 @@ import {PipelineStatusComponent} from "./components/status/pipeline-status.compo
 import {PipelineElementsComponent} from "./components/elements/pipeline-elements.component";
 import {PipelineElementsRowComponent} from "./components/elements/pipeline-elements-row.component";
 import {QuickEditComponent} from "./components/edit/quickedit.component";
-import {ConnectModule} from "../connect/connect.module";
+import {CoreUiModule} from "../core-ui/core-ui.module";
 
 @NgModule({
   imports: [
+    CoreUiModule,
     FlexLayoutModule,
     FormsModule,
     MatTabsModule,
@@ -44,7 +45,6 @@ import {ConnectModule} from "../connect/connect.module";
     CommonModule,
     MatProgressSpinnerModule,
     EditorModule,
-    ConnectModule,
     FormsModule,
     ReactiveFormsModule
   ],

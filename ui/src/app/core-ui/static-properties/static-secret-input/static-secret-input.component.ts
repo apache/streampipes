@@ -19,7 +19,7 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {Validators} from '@angular/forms';
 import {StaticPropertyUtilService} from '../static-property-util.service';
-import {ConfigurationInfo} from "../../model/ConfigurationInfo";
+import {ConfigurationInfo} from "../../../connect/model/ConfigurationInfo";
 import {SecretStaticProperty} from "../../../core-model/gen/streampipes-model";
 import {AbstractValidatedStaticPropertyRenderer} from "../base/abstract-validated-static-property";
 
