@@ -58,11 +58,13 @@ import {OutputStrategyComponent} from "./components/output-strategy/output-strat
 import {CustomOutputStrategyComponent} from "./components/output-strategy/custom-output/custom-output-strategy.component";
 import {PropertySelectionComponent} from "./components/output-strategy/property-selection/property-selection.component";
 import {UserDefinedOutputStrategyComponent} from "./components/output-strategy/user-defined-output/user-defined-output.component";
+import {ConnectModule} from "../connect/connect.module";
 
 @NgModule({
     imports: [
         CoreUiModule,
         CommonModule,
+        ConnectModule,
         MatTabsModule,
         MatListModule,
         FlexLayoutModule,
