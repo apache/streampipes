@@ -26,39 +26,39 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {BrowserModule} from '@angular/platform-browser';
 
 import {ConnectComponent} from './connect.component';
-import {NewAdapterComponent} from './new-adapter/new-adapter.component';
+import {NewAdapterComponent} from './components/new-adapter/new-adapter.component';
 
-import {FormatFormComponent} from './format-form/format-form.component';
+import {FormatFormComponent} from './components/format-form/format-form.component';
 
 import {EditEventPropertyPrimitiveComponent} from './dialog/edit-event-property/components/edit-event-property-primitive/edit-event-property-primitive.component';
-import {EventSchemaComponent} from './schema-editor/event-schema/event-schema.component';
+import {EventSchemaComponent} from './components/schema-editor/event-schema/event-schema.component';
 
 import {CustomMaterialModule} from '../CustomMaterial/custom-material.module';
 
-import {RestService} from './rest.service';
+import {RestService} from './services/rest.service';
 
 import {MatInputModule} from '@angular/material/input';
 import {DragulaModule} from 'ng2-dragula';
-import {AdapterStartedDialog} from './new-adapter/component/adapter-started-dialog.component';
-import {DataTypesService} from './schema-editor/data-type.service';
+import {AdapterStartedDialog} from './dialog/adapter-started/adapter-started-dialog.component';
+import {DataTypesService} from './services/data-type.service';
 import {StaticPropertyUtilService} from '../core-ui/static-properties/static-property-util.service';
-import {TransformationRuleService} from './transformation-rule.service';
-import {ConnectService} from './connect.service';
-import {AdapterDescriptionComponent} from './data-marketplace/adapter-description/adapter-description.component';
-import {DataMarketplaceComponent} from './data-marketplace/data-marketplace.component';
-import {DataMarketplaceService} from './data-marketplace/data-marketplace.service';
-import {FileManagementComponent} from './file-management/file-management.component';
-import {FileRestService} from './file-management/service/filerest.service';
-import {FormatComponent} from './format-component/format.component';
-import {FormatListComponent} from './format-list-component/format-list.component';
-import {IconService} from './new-adapter/icon.service';
-import {UnitProviderService} from './schema-editor/unit-provider.service';
+import {TransformationRuleService} from './services/transformation-rule.service';
+import {ConnectService} from './services/connect.service';
+import {AdapterDescriptionComponent} from './components/data-marketplace/adapter-description/adapter-description.component';
+import {DataMarketplaceComponent} from './components/data-marketplace/data-marketplace.component';
+import {DataMarketplaceService} from './services/data-marketplace.service';
+import {FileManagementComponent} from './components/file-management/file-management.component';
+import {FileRestService} from './services/filerest.service';
+import {FormatComponent} from './components/format-component/format.component';
+import {FormatListComponent} from './components/format-list-component/format-list.component';
+import {IconService} from './services/icon.service';
+import {UnitProviderService} from './services/unit-provider.service';
 
 
-import {FilterPipe} from './data-marketplace/filter.pipe';
+import {FilterPipe} from './filter/filter.pipe';
 import {PlatformServicesModule} from '../platform-services/platform.module';
-import {AdapterExportDialog} from './data-marketplace/adapter-export/adapter-export-dialog.component';
-import {AdapterUploadDialog} from './data-marketplace/adapter-upload/adapter-upload-dialog.component';
+import {AdapterExportDialog} from './dialog/adapter-export/adapter-export-dialog.component';
+import {AdapterUploadDialog} from './dialog/adapter-upload/adapter-upload-dialog.component';
 import {EditEventPropertyListComponent} from './dialog/edit-event-property/components/edit-event-property-list/edit-event-property-list.component';
 import {TimestampPipe} from './filter/timestamp.pipe';
 import {MatChipsModule} from '@angular/material/chips';
@@ -70,9 +70,9 @@ import {EditDataTypeComponent} from './dialog/edit-event-property/components/edi
 import {EditTimestampPropertyComponent} from './dialog/edit-event-property/components/edit-timestamp-property/edit-timestamp-property.component';
 import {EditUnitTransformationComponent} from './dialog/edit-event-property/components/edit-unit-transformation/edit-unit-transformation.component';
 import {EditEventPropertyComponent} from './dialog/edit-event-property/edit-event-property.component';
-import {PipelineElementRuntimeInfoComponent} from './new-adapter/component/runtime-info/pipeline-element-runtime-info.component';
-import {EventPropertyRowComponent} from './schema-editor/event-property-row/event-property-row.component';
-import {EventSchemaPreviewComponent} from './schema-editor/event-schema-preview/event-schema-preview.component';
+import {PipelineElementRuntimeInfoComponent} from './components/runtime-info/pipeline-element-runtime-info.component';
+import {EventPropertyRowComponent} from './components/schema-editor/event-property-row/event-property-row.component';
+import {EventSchemaPreviewComponent} from './components/schema-editor/event-schema-preview/event-schema-preview.component';
 import {TourProviderService} from "../services/tour/tour-provider.service";
 import {CoreUiModule} from "../core-ui/core-ui.module";
 

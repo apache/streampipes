@@ -26,7 +26,7 @@ import {
   EventPropertyUnion
 } from '../../../core-model/gen/streampipes-model';
 import {SemanticTypeUtilsService} from '../../../core-services/semantic-type/semantic-type-utils.service';
-import {DataTypesService} from '../../schema-editor/data-type.service';
+import {DataTypesService} from '../../services/data-type.service';
 
 
 @Component({

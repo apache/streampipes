@@ -16,28 +16,14 @@
  *
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {DataTypesService} from '../../../../services/data-type.service';
+import {Component, Input} from "@angular/core";
+import {EventSchema} from "../../../../core-model/gen/streampipes-model";
 
 @Component({
-  selector: 'sp-edit-data-type',
-  templateUrl: './edit-data-type.component.html',
-  styleUrls: ['./edit-data-type.component.css']
+    selector: 'app-event-schema-preview',
+    templateUrl: './event-schema-preview.component.html',
+    styleUrls: ['./event-schema-preview.component.css']
 })
-export class EditDataTypeComponent implements OnInit {
-
-  @Input() cachedProperty: any;
-  @Output() dataTypeChanged = new EventEmitter<boolean>();
-
-  runtimeDataTypes;
-  constructor(private dataTypeService: DataTypesService) { }
-
-  ngOnInit() {
-    this.runtimeDataTypes = this.dataTypeService.getDataTypes();
-  }
-
-  valueChanged() {
-    this.dataTypeChanged.emit(true);
-  }
-
+export class EventSchemaPreviewComponent {
+    @Input() eventSchema: EventSchema;
 }

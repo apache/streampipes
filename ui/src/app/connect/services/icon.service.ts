@@ -16,28 +16,25 @@
  *
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {DataTypesService} from '../../../../services/data-type.service';
+import {Injectable} from '@angular/core';
 
-@Component({
-  selector: 'sp-edit-data-type',
-  templateUrl: './edit-data-type.component.html',
-  styleUrls: ['./edit-data-type.component.css']
-})
-export class EditDataTypeComponent implements OnInit {
+@Injectable()
+export class IconService {
 
-  @Input() cachedProperty: any;
-  @Output() dataTypeChanged = new EventEmitter<boolean>();
+  constructor(
+  ) {}
 
-  runtimeDataTypes;
-  constructor(private dataTypeService: DataTypesService) { }
+     getBase64(file: File) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+    }
 
-  ngOnInit() {
-    this.runtimeDataTypes = this.dataTypeService.getDataTypes();
-  }
-
-  valueChanged() {
-    this.dataTypeChanged.emit(true);
+  toBase64(file: File) {
+      return this.getBase64(file);
   }
 
 }

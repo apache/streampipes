@@ -17,7 +17,7 @@
  */
 
 import {Component, Input, OnInit} from '@angular/core';
-import {DataTypesService} from '../../../../schema-editor/data-type.service';
+import {DataTypesService} from '../../../../services/data-type.service';
 
 @Component({
   selector: 'sp-edit-event-property-primitive',
