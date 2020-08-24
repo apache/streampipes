@@ -35,7 +35,7 @@ export class DataExplorerDashboardOverviewComponent implements OnInit {
     @Output() selectDashboardEmitter = new EventEmitter<IDataViewDashboard>();
 
     dataSource = new MatTableDataSource<IDataViewDashboard>();
-    displayedColumns: string[] = ['name', 'open', 'openWindow', 'edit', 'delete'];
+    displayedColumns: string[] = ['name', 'open', 'delete'];
 
     constructor(private dashboardService: DataViewDataExplorerService,
                 public dialog: MatDialog) {
@@ -79,10 +79,6 @@ export class DataExplorerDashboardOverviewComponent implements OnInit {
 
     showDashboard(dashboard: IDataViewDashboard) {
         this.selectDashboardEmitter.emit(dashboard);
-    }
-
-    openExternalDashboard(dashboard: IDataViewDashboard) {
-
     }
 
 }
