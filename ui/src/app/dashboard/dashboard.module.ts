@@ -29,7 +29,6 @@ import {FormsModule} from "@angular/forms";
 import {ColorPickerModule} from "ngx-color-picker";
 import {AddVisualizationDialogComponent} from "./dialogs/add-widget/add-visualization-dialog.component";
 import {MatGridListModule} from "@angular/material/grid-list";
-import {ElementIconText} from "../services/get-element-icon-text.service";
 import {DashboardService} from "./services/dashboard.service";
 import {NumberWidgetComponent} from "./components/widgets/number/number-widget.component";
 import {streamPipesStompConfig} from "./services/websocket.config";
@@ -97,7 +96,6 @@ import {CoreUiModule} from "../core-ui/core-ui.module";
         ResizeService,
         RefreshDashboardService,
         SemanticTypeUtilsService,
-        ElementIconText,
         {
             provide: InjectableRxStompConfig,
             useValue: streamPipesStompConfig

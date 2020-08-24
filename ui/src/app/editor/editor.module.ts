@@ -23,7 +23,6 @@ import {GridsterModule} from 'angular-gridster2';
 import {MatTabsModule} from "@angular/material/tabs";
 import {CustomMaterialModule} from "../CustomMaterial/custom-material.module";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {ElementIconText} from "../services/get-element-icon-text.service";
 import {SemanticTypeUtilsService} from '../core-services/semantic-type/semantic-type-utils.service';
 import {EditorComponent} from "./editor.component";
 import {EditorService} from "./services/editor.service";
@@ -109,7 +108,6 @@ import {UserDefinedOutputStrategyComponent} from "./components/output-strategy/u
         PipelinePositioningService,
         PipelineValidationService,
         PipelineElementRecommendationService,
-        ElementIconText,
         ImageChecker,
         SafeCss
     ],

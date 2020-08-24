@@ -44,7 +44,6 @@ import {SharedDatalakeRestService} from '../core-services/shared/shared-dashboar
 import {CoreUiModule} from '../core-ui/core-ui.module';
 import {LabelingToolModule} from '../core-ui/linechart/labeling-tool/labeling-tool.module';
 import {CustomMaterialModule} from '../CustomMaterial/custom-material.module';
-import {ElementIconText} from '../services/get-element-icon-text.service';
 import {DataDownloadDialog} from './components/datadownloadDialog/dataDownload.dialog';
 import {DataExplorerDashboardGridComponent} from './components/grid/data-explorer-dashboard-grid.component';
 import {DataExplorerDashboardOverviewComponent} from './components/overview/data-explorer-dashboard-overview.component';
@@ -141,7 +140,6 @@ export const MY_NATIVE_FORMATS = {
     ResizeService,
     RefreshDashboardService,
     SemanticTypeUtilsService,
-    ElementIconText,
     {
       provide: OWL_DATE_TIME_FORMATS, useValue: MY_NATIVE_FORMATS
     }
