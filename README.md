@@ -25,6 +25,12 @@ This project contains a variety of StreamPipes installation and operation option
 
 > **NOTE**: StreamPipes CLI & k8s are highly recommended for developers or operators. Standard users should stick to StreamPipes Compose.
 
+This is useful in order to easily spin up StreamPipe's microservice environment consisting of:
+
+* **backend**, **connect master** and **ui** container (see [incubator-streampipes](https://github.com/apache/incubator-streampipes))
+* **extensions**, i.e. connect adapter, custom sources and pipeline elements (see [incubator-streampipes-extensions](https://github.com/apache/incubator-streampipes-extensions)), as well as
+* mandatory **third-party services** such as databases, message broker etc.
+
 ## How to get started?
 Clone this project
 ```bash
