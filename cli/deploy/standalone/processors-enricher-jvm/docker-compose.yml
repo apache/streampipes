@@ -16,7 +16,7 @@
 version: "3.4"
 services:
   processors-enricher-jvm:
-    image: ${SP_DOCKER_REGISTRY}processors-enricher-jvm:${SP_PE_VERSION}
+    image: ${SP_DOCKER_REGISTRY}processors-enricher-jvm:${SP_VERSION}
     depends_on:
       - "consul"
     logging:

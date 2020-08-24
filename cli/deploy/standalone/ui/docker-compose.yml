@@ -16,7 +16,7 @@
 version: "3.4"
 services:
   ui:
-    image: ${SP_DOCKER_REGISTRY}ui:${SP_BACKEND_VERSION}
+    image: ${SP_DOCKER_REGISTRY}ui:${SP_VERSION}
     ports:
       - "80:80"
     depends_on:

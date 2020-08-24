@@ -16,7 +16,7 @@
 version: "3.4"
 services:
   sources-watertank-simulator:
-    image: ${SP_DOCKER_REGISTRY}sources-watertank-simulator:${SP_PE_VERSION}
+    image: ${SP_DOCKER_REGISTRY}sources-watertank-simulator:${SP_VERSION}
     depends_on:
       - "consul"
 #    ports:

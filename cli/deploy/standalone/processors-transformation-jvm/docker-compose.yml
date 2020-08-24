@@ -16,7 +16,7 @@
 version: "3.4"
 services:
   processors-transformation-jvm:
-    image: ${SP_DOCKER_REGISTRY}processors-transformation-jvm:${SP_PE_VERSION}
+    image: ${SP_DOCKER_REGISTRY}processors-transformation-jvm:${SP_VERSION}
     depends_on:
       - "consul"
 #    ports:

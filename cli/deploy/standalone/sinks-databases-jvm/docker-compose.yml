@@ -16,7 +16,7 @@
 version: "3.4"
 services:
   sinks-databases-jvm:
-    image: ${SP_DOCKER_REGISTRY}sinks-databases-jvm:${SP_PE_VERSION}
+    image: ${SP_DOCKER_REGISTRY}sinks-databases-jvm:${SP_VERSION}
     depends_on:
       - "consul"
     logging:

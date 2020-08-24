@@ -16,7 +16,7 @@
 version: "3.4"
 services:
   processors-statistics-flink:
-    image: ${SP_DOCKER_REGISTRY}processors-statistics-flink:${SP_PE_VERSION}
+    image: ${SP_DOCKER_REGISTRY}processors-statistics-flink:${SP_VERSION}
     depends_on:
       - "consul"
       - "jobmanager"      

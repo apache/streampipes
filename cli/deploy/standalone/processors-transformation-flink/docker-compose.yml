@@ -16,7 +16,7 @@
 version: "3.4"
 services:
   processors-transformation-flink:
-    image: ${SP_DOCKER_REGISTRY}processors-transformation-flink:${SP_PE_VERSION}
+    image: ${SP_DOCKER_REGISTRY}processors-transformation-flink:${SP_VERSION}
     depends_on:
       - "consul"
       - "jobmanager"      

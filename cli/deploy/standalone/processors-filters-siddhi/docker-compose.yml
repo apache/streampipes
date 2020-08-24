@@ -16,7 +16,7 @@
 version: "3.4"
 services:
   processors-filters-siddhi:
-    image: ${SP_DOCKER_REGISTRY}processors-filters-siddhi:${SP_PE_VERSION}
+    image: ${SP_DOCKER_REGISTRY}processors-filters-siddhi:${SP_VERSION}
     depends_on:
       - "consul"
     logging:

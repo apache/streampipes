@@ -16,7 +16,7 @@
 version: "3.4"
 services:
   pipeline-elements-all-jvm:
-    image: ${SP_DOCKER_REGISTRY}pipeline-elements-all-jvm:${SP_PE_VERSION}
+    image: ${SP_DOCKER_REGISTRY}pipeline-elements-all-jvm:${SP_VERSION}
     depends_on:
       - "consul"
     volumes:

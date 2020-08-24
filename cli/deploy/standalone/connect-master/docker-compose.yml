@@ -16,7 +16,7 @@
 version: "3.4"
 services:
   connect-master:
-    image: ${SP_DOCKER_REGISTRY}streampipes-connect-container:${SP_BACKEND_VERSION}
+    image: ${SP_DOCKER_REGISTRY}streampipes-connect-container:${SP_VERSION}
     depends_on:
       - consul
       - couchdb
