@@ -17,7 +17,7 @@
  */
 
 import {Component, Input} from "@angular/core";
-import {EventSchema} from "../model/EventSchema";
+import {EventSchema} from "../../../core-model/gen/streampipes-model";
 
 @Component({
     selector: 'app-event-schema-preview',

@@ -17,7 +17,7 @@
  */
 
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {EventProperty} from '../../../../../connect/schema-editor/model/EventProperty';
+import {EventPropertyUnion} from "../../../../../core-model/gen/streampipes-model";
 
 @Component({
   selector: 'sp-group-configuration',
@@ -44,7 +44,7 @@ export class GroupConfigurationComponent implements OnInit {
   // update: EventEmitter<any> = new EventEmitter();
 
   @Input()
-  dimensionProperties: EventProperty[];
+  dimensionProperties: EventPropertyUnion[];
 
   constructor() {
   }

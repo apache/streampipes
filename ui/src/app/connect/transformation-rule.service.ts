@@ -34,7 +34,7 @@ import {
     UnitTransformRuleDescription
 } from '../core-model/gen/streampipes-model';
 import {Logger} from '../shared/logger/default-log.service';
-import {TimestampTransformationRuleMode} from './model/connect/rules/TimestampTransformationRuleMode';
+import {TimestampTransformationRuleMode} from './model/TimestampTransformationRuleMode';
 
 @Injectable()
 export class TransformationRuleService {

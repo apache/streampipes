@@ -18,7 +18,6 @@
 
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
-import {AuthStatusService} from "../../services/auth-status.service";
 import {Observable} from "rxjs";
 import {
   DataProcessorInvocation,
@@ -26,6 +25,7 @@ import {
   DataSourceDescription
 } from "../../core-model/gen/streampipes-model";
 import {PlatformServicesCommons} from "./commons.service";
+import {map} from "rxjs/operators";
 
 @Injectable()
 export class PipelineElementService {
@@ -35,21 +35,21 @@ export class PipelineElementService {
   }
 
   getDataProcessors(): Observable<Array<DataProcessorInvocation>> {
-    return this.http.get(this.dataProcessorsUrl + "/own").map(data => {
+    return this.http.get(this.dataProcessorsUrl + "/own").pipe(map(data => {
       return (data as []).map(dpi => DataProcessorInvocation.fromData(dpi));
-    })
+    }));
   }
 
   getDataSinks(): Observable<Array<DataSinkInvocation>> {
-    return this.http.get(this.dataSinksUrl + "/own").map(data => {
+    return this.http.get(this.dataSinksUrl + "/own").pipe(map(data => {
       return (data as []).map(dpi => DataSinkInvocation.fromData(dpi));
-    })
+    }));
   }
 
   getDataSources(): Observable<Array<DataSourceDescription>> {
-    return this.http.get(this.dataSourcesUrl + "/own").map(data => {
+    return this.http.get(this.dataSourcesUrl + "/own").pipe(map(data => {
       return (data as []).map(dpi => DataSourceDescription.fromData(dpi));
-    })
+    }));
   }
 
   getDocumentation(appId) {

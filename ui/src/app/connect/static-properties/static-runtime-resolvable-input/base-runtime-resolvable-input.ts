@@ -26,7 +26,7 @@ import {
 import {RuntimeResolvableService} from "./runtime-resolvable.service";
 import {Observable} from "rxjs";
 import {Directive, Input, OnChanges, SimpleChanges} from "@angular/core";
-import {ConfigurationInfo} from "../../model/message/ConfigurationInfo";
+import {ConfigurationInfo} from "../../model/ConfigurationInfo";
 
 @Directive()
 export abstract class BaseRuntimeResolvableInput<T extends RuntimeResolvableAnyStaticProperty | RuntimeResolvableOneOfStaticProperty>

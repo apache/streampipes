@@ -41,9 +41,9 @@ export class DataViewDataExplorerService {
 
   getVisualizableData(): Observable<DataLakeMeasure[]> {
 
-    return this.dataLakeRestService.getAllInfos().map(data => {
+    return this.dataLakeRestService.getAllInfos().pipe(map(data => {
       return (data as any[]).map(d => DataLakeMeasure.fromData(d as DataLakeMeasure));
-    });
+    }));
   }
 
   getDataViews(): Observable<IDataViewDashboard[]> {

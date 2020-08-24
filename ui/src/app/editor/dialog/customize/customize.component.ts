@@ -23,7 +23,7 @@ import {JsplumbService} from "../../services/jsplumb.service";
 import {DataProcessorInvocation, EventSchema} from "../../../core-model/gen/streampipes-model";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {ShepherdService} from "../../../services/tour/shepherd.service";
-import {ConfigurationInfo} from "../../../connect/model/message/ConfigurationInfo";
+import {ConfigurationInfo} from "../../../connect/model/ConfigurationInfo";
 
 @Component({
   selector: 'customize-pipeline-element',

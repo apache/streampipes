@@ -17,7 +17,6 @@
  */
 
 import {NgModule} from '@angular/core';
-import {PipelineTemplateService} from './apis/pipeline-template.service';
 import {PipelineElementService} from "./apis/pipeline-element.service";
 import {PipelineService} from "./apis/pipeline.service";
 import {PlatformServicesCommons} from "./apis/commons.service";
@@ -29,7 +28,7 @@ import {PipelineElementEndpointService} from "./apis/pipeline-element-endpoint.s
   providers: [
     PlatformServicesCommons,
     PipelineElementEndpointService,
-    PipelineTemplateService,
+    //PipelineTemplateService,
     PipelineElementService,
     PipelineService
   ],

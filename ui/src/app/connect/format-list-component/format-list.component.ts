@@ -17,7 +17,7 @@
  */
 
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {FormatDescription} from '../model/connect/grounding/FormatDescription';
+import {FormatDescription} from "../../core-model/gen/streampipes-model";
 
 @Component({
     selector: 'app-format-list',
@@ -38,7 +38,7 @@ export class FormatListComponent {
 
       this.allFormats.forEach(format => {
         if(format!=selectedFormat){
-          format.edit = false;
+          (format as any).edit = false;
         }
       });
 

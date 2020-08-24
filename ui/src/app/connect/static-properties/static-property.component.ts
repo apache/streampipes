@@ -21,7 +21,7 @@ import {Logger} from '../../shared/logger/default-log.service';
 
 import {xsService} from '../../NS/XS.service';
 import {StaticPropertyUtilService} from './static-property-util.service';
-import {ConfigurationInfo} from "../model/message/ConfigurationInfo";
+import {ConfigurationInfo} from "../model/ConfigurationInfo";
 import {
   AnyStaticProperty,
   CodeInputStaticProperty,

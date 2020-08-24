@@ -35,7 +35,6 @@ import {
   StaticPropertyAlternatives,
   StaticPropertyGroup
 } from "../../core-model/gen/streampipes-model";
-import {URI} from "../model/URI";
 
 @Injectable()
 export class StaticPropertyUtilService{
@@ -107,10 +106,6 @@ export class StaticPropertyUtilService{
             clone.staticPropertyTemplate = this.clone(val.staticPropertyTemplate);
             clone.members = val.members.map(elem => this.clone(elem));
             clone.memberType = val.memberType;
-        }
-        else if (val instanceof URI) {
-            clone = new URI(id);
-            clone.tmp = val.tmp
         }
         //SelectionStaticProperty
         else if (val instanceof RuntimeResolvableAnyStaticProperty ||  val instanceof RuntimeResolvableOneOfStaticProperty){

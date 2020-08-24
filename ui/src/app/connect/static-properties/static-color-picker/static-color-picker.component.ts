@@ -17,7 +17,7 @@
  */
 
 import {Component, OnInit} from "@angular/core";
-import {ConfigurationInfo} from "../../model/message/ConfigurationInfo";
+import {ConfigurationInfo} from "../../model/ConfigurationInfo";
 import {StaticPropertyUtilService} from "../static-property-util.service";
 import {FormGroup, Validators} from "@angular/forms";
 import {ColorPickerStaticProperty} from "../../../core-model/gen/streampipes-model";

@@ -23,7 +23,11 @@ import {Observable} from "rxjs";
 import {AuthStatusService} from "../../services/auth-status.service";
 import {Dashboard} from "../models/dashboard.model";
 import {MeasurementUnit} from "../../core-model/measurement-unit/MeasurementUnit";
-import {DashboardWidgetModel, VisualizablePipeline} from "../../core-model/gen/streampipes-model";
+import {
+    DashboardWidgetModel,
+    Pipeline,
+    VisualizablePipeline
+} from "../../core-model/gen/streampipes-model";
 
 @Injectable()
 export class DashboardService {
@@ -34,10 +38,10 @@ export class DashboardService {
     }
 
 
-    getPipelineById(id: string): Observable<any> {
-        return this.http.get(this.pipelinesUrl + "/" +id).map(data => {
-            return data as any;
-        })
+    getPipelineById(id: string): Observable<Pipeline> {
+        return this.http.get(this.pipelinesUrl + "/" +id).pipe(map(data => {
+            return Pipeline.fromData(data as any);
+        }));
     }
 
     getVisualizablePipelines(): Observable<Array<VisualizablePipeline>> {
@@ -65,27 +69,27 @@ export class DashboardService {
     }
 
     getDashboards(): Observable<Array<Dashboard>> {
-        return this.http.get(this.dashboardUrl).map(data => {
+        return this.http.get(this.dashboardUrl).pipe(map(data => {
            return data as Dashboard[];
-        });
+        }));
     }
 
     getDashboard(dashboardId: string): Observable<Dashboard> {
-        return this.http.get(this.dashboardUrl + "/" +dashboardId).map(data => {
+        return this.http.get(this.dashboardUrl + "/" +dashboardId).pipe(map(data => {
             return data as Dashboard;
-        })
+        }));
     }
 
     getMeasurementUnitInfo(measurementUnitResource: string): Observable<MeasurementUnit> {
-        return this.http.get(this.measurementUnitsUrl  + "/" + encodeURIComponent(measurementUnitResource)).map(data => {
+        return this.http.get(this.measurementUnitsUrl  + "/" + encodeURIComponent(measurementUnitResource)).pipe(map(data => {
             return data as MeasurementUnit
-        });
+        }));
     }
 
     updateDashboard(dashboard: Dashboard): Observable<Dashboard> {
-        return this.http.put(this.dashboardUrl + "/" +dashboard._id, dashboard).map(data => {
+        return this.http.put(this.dashboardUrl + "/" +dashboard._id, dashboard).pipe(map(data => {
             return data as Dashboard;
-        });
+        }));
     }
 
     deleteDashboard(dashboard: Dashboard): Observable<any> {

@@ -16,7 +16,6 @@
  *
  */
 
-import {EventProperty} from "../../../connect/schema-editor/model/EventProperty";
 import {PropertyMatch} from "./property-match";
 import {EventPropertyUnion} from "../../../core-model/gen/streampipes-model";
 

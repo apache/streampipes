@@ -20,7 +20,6 @@ import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {ShepherdService} from '../../../services/tour/shepherd.service';
 import {RestService} from "../../rest.service";
-import {PipelineTemplateService} from '../../../platform-services/apis/pipeline-template.service';
 import {
   FreeTextStaticProperty,
   GenericAdapterSetDescription,
@@ -51,8 +50,7 @@ export class AdapterStartedDialog {
         public dialogRef: MatDialogRef<AdapterStartedDialog>,
         private restService: RestService,
         @Inject(MAT_DIALOG_DATA) public data: any,
-        private ShepherdService: ShepherdService,
-        private pipelineTemplateService: PipelineTemplateService) { }
+        private ShepherdService: ShepherdService) { }
 
     ngOnInit() {
         this.startAdapter();
@@ -86,25 +84,26 @@ export class AdapterStartedDialog {
                     }
 
                     if (this.data.saveInDataLake) {
-                        const templateName = "org.apache.streampipes.manager.template.instances.DataLakePipelineTemplate";
-                        x.notifications[0].title
-                        this.pipelineTemplateService.getPipelineTemplateInvocation(x.notifications[0].title + "/streams", templateName)
-                            .subscribe(res => {
-
-                                res.list.forEach(property => {
-                                    if (property instanceof FreeTextStaticProperty && "domId2db_measurement" == property.internalName) {
-                                        property.value = this.data.adapter.label.toLowerCase().replace(" ", "_");
-                                    } else if (property instanceof MappingPropertyUnary && "domId2timestamp_mapping" == property.internalName) {
-                                        property.selectedProperty = "s0::" + this.data.dataLakeTimestampField;
-                                    }
-
-
-                                });
-
-                                res.pipelineTemplateId = templateName;
-                                res.name = this.data.adapter.label;
-                                this.pipelineTemplateService.createPipelineTemplateInvocation(res);
-                            });
+                        // TODO pipeline templates are currently not working, this should be changed to use the new UI model
+                        // const templateName = "org.apache.streampipes.manager.template.instances.DataLakePipelineTemplate";
+                        // x.notifications[0].title
+                        // this.pipelineTemplateService.getPipelineTemplateInvocation(x.notifications[0].title + "/streams", templateName)
+                        //     .subscribe(res => {
+                        //
+                        //         res.list.forEach(property => {
+                        //             if (property instanceof FreeTextStaticProperty && "domId2db_measurement" == property.internalName) {
+                        //                 property.value = this.data.adapter.label.toLowerCase().replace(" ", "_");
+                        //             } else if (property instanceof MappingPropertyUnary && "domId2timestamp_mapping" == property.internalName) {
+                        //                 property.selectedProperty = "s0::" + this.data.dataLakeTimestampField;
+                        //             }
+                        //
+                        //
+                        //         });
+                        //
+                        //         res.pipelineTemplateId = templateName;
+                        //         res.name = this.data.adapter.label;
+                        //         this.pipelineTemplateService.createPipelineTemplateInvocation(res);
+                        //     });
                     }
                 }
             });

@@ -16,15 +16,15 @@
  *
  */
 
-import {EventProperty} from "../../../connect/schema-editor/model/EventProperty";
 import {PropertyMatch} from "./property-match";
+import {EventPropertyUnion} from "../../../core-model/gen/streampipes-model";
 
 export class MappingPropertyGenerator {
 
     private selector: string = "s0";
     private separator: string = "::";
 
-    constructor(private requiredEventProperty: EventProperty, private providedEventProperties: Array<EventProperty>) {
+    constructor(private requiredEventProperty: EventPropertyUnion, private providedEventProperties: Array<EventPropertyUnion>) {
 
     }
 

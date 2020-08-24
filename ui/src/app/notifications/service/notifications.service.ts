@@ -21,6 +21,7 @@ import {Observable} from "rxjs";
 import {ExistingNotification, NotificationCount, NotificationItem} from "../model/notifications.model";
 import {Injectable} from "@angular/core";
 import {NotificationUtils} from "../utils/notifications.utils";
+import {map} from "rxjs/operators";
 
 @Injectable()
 export class NotificationsService {
@@ -30,9 +31,9 @@ export class NotificationsService {
     }
 
     getUnreadNotificationsCount(): Observable<NotificationCount> {
-        return this.http.get(this.notificationUrl + "/count").map(data => {
+        return this.http.get(this.notificationUrl + "/count").pipe(map(data => {
             return data as NotificationCount;
-        })
+        }));
     }
 
     getNotifications(existingNotification: ExistingNotification, offset: number, limit: number): Observable<NotificationItem[]> {
@@ -44,9 +45,9 @@ export class NotificationsService {
                 + "offset=" + offset
                 + "&"
                 + "count=" + limit)
-            .map(data => {
+            .pipe(map(data => {
                 return data as NotificationItem[];
-            });
+            }));
     }
 
     updateNotification(notificationItem: NotificationItem): Observable<any> {

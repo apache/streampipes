@@ -47,7 +47,7 @@ import {ShepherdService} from '../../services/tour/shepherd.service';
 import {Logger} from '../../shared/logger/default-log.service';
 import {ConnectService} from '../connect.service';
 import {TimestampPipe} from '../filter/timestamp.pipe';
-import {ConfigurationInfo} from '../model/message/ConfigurationInfo';
+import {ConfigurationInfo} from '../model/ConfigurationInfo';
 import {RestService} from '../rest.service';
 import {EventSchemaComponent} from '../schema-editor/event-schema/event-schema.component';
 import {TransformationRuleService} from '../transformation-rule.service';

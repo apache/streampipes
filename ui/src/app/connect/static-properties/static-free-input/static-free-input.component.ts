@@ -19,7 +19,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ValidatorFn, Validators} from '@angular/forms';
 import {StaticPropertyUtilService} from '../static-property-util.service';
-import {ConfigurationInfo} from "../../model/message/ConfigurationInfo";
+import {ConfigurationInfo} from "../../model/ConfigurationInfo";
 import {FreeTextStaticProperty} from "../../../core-model/gen/streampipes-model";
 import {xsService} from "../../../NS/XS.service";
 import {ValidateNumber, ValidateString, ValidateUrl} from "../input.validator";

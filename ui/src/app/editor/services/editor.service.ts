@@ -51,14 +51,14 @@ export class EditorService {
 
     recommendPipelineElement(pipeline): Observable<PipelineElementRecommendationMessage> {
         return this.http.post(this.pipelinesResourceUrl +"/recommend", pipeline)
-            .map(data => PipelineElementRecommendationMessage.fromData(data as any));
+            .pipe(map(data => PipelineElementRecommendationMessage.fromData(data as any)));
     }
 
     updatePartialPipeline(pipeline): Observable<PipelineModificationMessage> {
         return this.http.post(this.pipelinesResourceUrl +"/update", pipeline)
-            .map(data => {
+            .pipe(map(data => {
                 return PipelineModificationMessage.fromData(data as any);
-            });
+            }));
     }
 
   updateDataSet(dataSet): Observable<DataSetModificationMessage> {

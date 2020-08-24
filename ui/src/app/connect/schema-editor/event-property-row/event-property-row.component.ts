@@ -18,7 +18,6 @@
 
 import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from "@angular/core";
 import {UUID} from "angular2-uuid";
-import {DomainPropertyProbabilityList} from "../model/DomainPropertyProbabilityList";
 import {TreeNode} from "angular-tree-component";
 import {MatDialog} from "@angular/material/dialog";
 import {
@@ -40,7 +39,6 @@ export class EventPropertyRowComponent implements OnChanges {
 
     @Input() node: TreeNode;
     @Input() isEditable = true;
-    @Input() domainPropertyGuesses: DomainPropertyProbabilityList[] = [];
     @Input() eventSchema: EventSchema = new EventSchema();
     @Input() countSelected: number;
 
@@ -110,7 +108,6 @@ export class EventPropertyRowComponent implements OnChanges {
             return false;
         }
     }
-
 
     public openEditDialog(data): void {
         let dialogRef = this.dialog.open(EditEventPropertyComponent, {

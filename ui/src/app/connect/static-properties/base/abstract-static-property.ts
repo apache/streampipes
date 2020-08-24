@@ -23,7 +23,7 @@ import {
 } from "../../../core-model/gen/streampipes-model";
 import {Directive, EventEmitter, Input, Output} from "@angular/core";
 import {FormGroup} from "@angular/forms";
-import {ConfigurationInfo} from "../../model/message/ConfigurationInfo";
+import {ConfigurationInfo} from "../../model/ConfigurationInfo";
 import {InvocablePipelineElementUnion} from "../../../editor/model/editor.model";
 
 @Directive()

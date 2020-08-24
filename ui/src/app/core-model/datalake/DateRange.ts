@@ -16,16 +16,9 @@
  *
  */
 
-import { RdfsClass } from '../../platform-services/tsonld/RdfsClass';
-import { RdfProperty } from '../../platform-services/tsonld/RdfsProperty';
-
-@RdfsClass('sp:DateRange')
 export class DateRange {
 
-    @RdfProperty('sp:startDate')
     public startDate: Date;
-
-    @RdfProperty('sp:endDate')
     public endDate: Date;
 
     constructor(startDate: Date, endDate: Date) {

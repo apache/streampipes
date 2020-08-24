@@ -16,9 +16,6 @@
  *
  */
 
-import { DashboardWidgetSettings } from '../../core-model/dashboard/DashboardWidgetSettings';
-import { WidgetConfig } from '../components/widgets/base/base-config';
-import { TableConfig } from '../components/widgets/table/table-config';
 import {IWidget} from "../models/dataview-dashboard.model";
 
 export class DataExplorerWidgetRegistry {
