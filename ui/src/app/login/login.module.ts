@@ -62,7 +62,6 @@ import {RestApi} from "../services/rest-api.service";
   providers: [
     LoginService,
     AuthStatusService,
-    RestApi
   ],
   entryComponents: [
     LoginComponent,

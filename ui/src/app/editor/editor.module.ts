@@ -23,7 +23,6 @@ import {GridsterModule} from 'angular-gridster2';
 import {MatTabsModule} from "@angular/material/tabs";
 import {CustomMaterialModule} from "../CustomMaterial/custom-material.module";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {ElementIconText} from "../services/get-element-icon-text.service";
 import {SemanticTypeUtilsService} from '../core-services/semantic-type/semantic-type-utils.service';
 import {EditorComponent} from "./editor.component";
 import {EditorService} from "./services/editor.service";
@@ -59,11 +58,13 @@ import {OutputStrategyComponent} from "./components/output-strategy/output-strat
 import {CustomOutputStrategyComponent} from "./components/output-strategy/custom-output/custom-output-strategy.component";
 import {PropertySelectionComponent} from "./components/output-strategy/property-selection/property-selection.component";
 import {UserDefinedOutputStrategyComponent} from "./components/output-strategy/user-defined-output/user-defined-output.component";
+import {ConnectModule} from "../connect/connect.module";
 
 @NgModule({
     imports: [
         CoreUiModule,
         CommonModule,
+        ConnectModule,
         MatTabsModule,
         MatListModule,
         FlexLayoutModule,
@@ -109,7 +110,6 @@ import {UserDefinedOutputStrategyComponent} from "./components/output-strategy/u
         PipelinePositioningService,
         PipelineValidationService,
         PipelineElementRecommendationService,
-        ElementIconText,
         ImageChecker,
         SafeCss
     ],

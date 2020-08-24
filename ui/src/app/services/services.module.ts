@@ -16,43 +16,14 @@
  *
  */
 
-
-// export default angular.module('sp.services', [spConstants])
-// 	.service('ImageChecker', ImageChecker)
-// 	.service('AuthService', downgradeInjectable(AuthService))
-// 	.service('ElementIconText', ElementIconText)
-// 	.service('InitTooltips', InitTooltips)
-// 	.service('RestApi', RestApi)
-// 	.service('AuthStatusService', downgradeInjectable(AuthStatusService))
-// 	.service('ObjectProvider', ObjectProvider)
-// 	.service('DomainProperties', DomainProperties)
-// 	//.service('JsplumbBridge', downgradeInjectable(JsplumbBridge))
-// 	//.service('JsplumbService', downgradeInjectable(JsplumbService))
-// 	//.service('PipelinePositioningService', downgradeInjectable(PipelinePositioningService))
-// 	//.service('PipelineEditorService', PipelineEditorService)
-// 	.service('DialogBuilder', DialogBuilder)
-//     .service('MeasurementUnitsService', MeasurementUnits)
-//     .service('DeploymentService', DeploymentService)
-//     .service('JsplumbConfigService', JsplumbConfigService)
-//     .service('PipelineElementIconService', PipelineElementIconService)
-// 	.service('RouteTransitionInterceptorService', RouteTransitionInterceptorService)
-// 	.service('ShepherdService', ShepherdService)
-// 	.service('TourProviderService', TourProviderService)
-// 	.service('PropertySelectorService', PropertySelectorService)
-// 	.service('NotificationCountService', downgradeInjectable(NotificationCountService))
-// 	.constant('createPipelineTourConstants', CreatePipelineTour)
-// 	.constant('dashboardTourConstants', DashboardTour)
-// 	.constant('adapterTourConstants', AdapterTour)
-//     .constant('adapterTour2Constants', AdapterTour2)
-//     .constant('adapterTour3Constants', AdapterTour3)
-// 	.name;
-
 import {NgModule} from "@angular/core";
 import {RestApi} from "./rest-api.service";
 import {AuthService} from "./auth.service";
 import {ShepherdService} from "./tour/shepherd.service";
 import {TourProviderService} from "./tour/tour-provider.service";
 import {NotificationCountService} from "./notification-count-service";
+import {PropertySelectorService} from "./property-selector.service";
+import {ElementIconText} from "./get-element-icon-text.service";
 
 @NgModule({
   imports: [],
@@ -60,9 +31,11 @@ import {NotificationCountService} from "./notification-count-service";
   providers: [
     RestApi,
     AuthService,
+    ElementIconText,
     ShepherdService,
     TourProviderService,
     NotificationCountService,
+    PropertySelectorService,
   ],
   entryComponents: []
 })

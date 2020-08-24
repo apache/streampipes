@@ -32,9 +32,7 @@ import { CoreModule } from './core/core.module';
 import { LoginModule } from './login/login.module';
 import { HomeModule } from './home/home.module';
 import { InfoModule } from './info/info.module';
-import { AppAssetMonitoringModule } from "./app-asset-monitoring/app-asset-monitoring.module";
 import { PipelineDetailsModule } from './pipeline-details/pipeline-details.module';
-import { AppTransportMonitoringModule } from "./app-transport-monitoring/app-transport-monitoring.module";
 import { NotificationCountService } from "./services/notification-count-service";
 import { AuthService } from "./services/auth.service";
 import { LoadingBarHttpClientModule } from '@ngx-loading-bar/http-client';
@@ -50,12 +48,11 @@ import { {{{ng5_moduleName}}} } from '{{{path}}}';
 
 import { ConsoleLogService } from './shared/logger/log.service';
 import { Logger } from './shared/logger/default-log.service';
-import { AppContainerModule } from './app-container/app-container.module';
 import { NotificationModule } from './notifications/notifications.module';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-
+import { PlatformServicesModule } from "./platform-services/platform.module";
 import { ServicesModule } from "./services/services.module";
 
 import * as $ from 'jquery';
@@ -78,12 +75,9 @@ import * as $ from 'jquery';
         LoginModule,
         LoadingBarHttpClientModule,
         HomeModule,
-        ConfigurationModule,
         InfoModule,
-        AppAssetMonitoringModule,
-        AppTransportMonitoringModule,
-        AppContainerModule,
         NotificationModule,
+        PlatformServicesModule,
         PipelineDetailsModule,
         ServicesModule,
         {{#modulesActive}}

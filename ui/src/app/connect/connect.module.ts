@@ -78,7 +78,6 @@ import {CoreUiModule} from "../core-ui/core-ui.module";
 
 @NgModule({
     imports: [
-        BrowserModule,
         CoreUiModule,
         FormsModule,
         ReactiveFormsModule,
@@ -92,7 +91,6 @@ import {CoreUiModule} from "../core-ui/core-ui.module";
         MatInputModule,
         MatFormFieldModule,
         MatSliderModule,
-        PlatformServicesModule,
         TreeModule.forRoot(),
     ],
     exports: [
@@ -125,7 +123,6 @@ import {CoreUiModule} from "../core-ui/core-ui.module";
     ],
     providers: [
         RestService,
-
         ConnectService,
         DataTypesService,
         TransformationRuleService,
@@ -135,9 +132,7 @@ import {CoreUiModule} from "../core-ui/core-ui.module";
         UnitProviderService,
         TimestampPipe,
         FileRestService,
-        PropertySelectorService,
         xsService,
-        TourProviderService
     ],
     entryComponents: [ConnectComponent, AdapterStartedDialog, AdapterExportDialog, AdapterUploadDialog, EditEventPropertyComponent],
 })
