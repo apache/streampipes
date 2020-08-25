@@ -93,4 +93,7 @@ $custom-theme-warn: mat-palette($mat-red);
 
 $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $custom-theme-warn);
 
+$custom-typography: mat-typography-config($font-family: 'Roboto, Arial');
+
+@include angular-material-typography($custom-typography);
 @include angular-material-theme($custom-theme);
