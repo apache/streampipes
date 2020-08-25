@@ -41,7 +41,7 @@
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions actions-align-right">
-        <button mat-button mat-raised-button class="mat-basic" (click)="close()" style="margin-right: 10px;">
+        <button mat-button mat-raised-button class="mat-basic" (click)="close()" style="margin-right: 10px;" *ngIf="nextButton !== 'Close'">
             Close
         </button>
         <button mat-button mat-raised-button color="primary" (click)="next()" [disabled]="installationRunning">
