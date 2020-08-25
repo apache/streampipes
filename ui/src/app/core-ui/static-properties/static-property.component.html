@@ -97,6 +97,8 @@
 
             <app-static-mapping-nary *ngIf="isMappingNaryProperty(staticProperty)"
                                      [eventSchemas]="eventSchemas"
+                                     [parentForm]="parentForm"
+                                     [fieldName]="fieldName"
                                      [staticProperty]="staticProperty"
                                      [displayRecommended]="displayRecommended"
                                      (inputEmitter)="valueChange($event)">
@@ -126,6 +128,7 @@
                                    [adapterId]="adapterId"
                                    [eventSchemas]="eventSchemas"
                                    [parentForm]="parentForm"
+                                   [displayRecommended]="displayRecommended"
                                    [staticProperty]="staticProperty" class="test fullWidth"
                                    (updateEmitter)="emitUpdate($event)">
             </app-static-collection>

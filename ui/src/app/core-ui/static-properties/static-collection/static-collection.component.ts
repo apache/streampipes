@@ -38,7 +38,6 @@ export class StaticCollectionComponent
     ngOnInit() {
     }
 
-
     emitUpdate(valid) {
         this.updateEmitter.emit(new ConfigurationInfo(this.staticProperty.internalName, valid));
     }
@@ -49,10 +48,18 @@ export class StaticCollectionComponent
         }
         let clone = this.staticPropertyUtil.clone(this.staticProperty.staticPropertyTemplate);
         this.staticProperty.members.push(clone);
+        this.updateIndex();
     }
 
     remove(i) {
         this.staticProperty.members.splice(i,1).slice(0);
+        this.updateIndex();
+    }
+
+    updateIndex() {
+        this.staticProperty.members.forEach((property, index) => {
+            property.index = index;
+        })
     }
 
     onStatusChange(status: any) {

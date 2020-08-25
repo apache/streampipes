@@ -33,6 +33,11 @@ public class EpRequirements {
     return new EventPropertyList();
   }
 
+  public static EventProperty withMappingPropertyId(String internalId, EventProperty requirement) {
+    requirement.setRuntimeName(internalId);
+    return requirement;
+  }
+
   public static EventPropertyList nestedListRequirement() {
     EventPropertyList listEp = new EventPropertyList();
     listEp.setEventProperty(new EventPropertyNested());

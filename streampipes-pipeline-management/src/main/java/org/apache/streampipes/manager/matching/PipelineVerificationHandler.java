@@ -32,13 +32,14 @@ import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.client.connection.Connection;
 import org.apache.streampipes.model.client.exception.InvalidConnectionException;
-import org.apache.streampipes.model.pipeline.Pipeline;
-import org.apache.streampipes.model.pipeline.PipelineModification;
-import org.apache.streampipes.model.message.PipelineModificationMessage;
 import org.apache.streampipes.model.constants.PropertySelectorConstants;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.message.PipelineModificationMessage;
 import org.apache.streampipes.model.output.CustomOutputStrategy;
+import org.apache.streampipes.model.pipeline.Pipeline;
+import org.apache.streampipes.model.pipeline.PipelineModification;
 import org.apache.streampipes.model.schema.EventProperty;
+import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
 import org.apache.streampipes.model.staticproperty.MappingProperty;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -50,11 +51,11 @@ public class PipelineVerificationHandler {
   private Pipeline pipeline;
   private PipelineModificationMessage pipelineModificationMessage;
   private List<InvocableStreamPipesEntity> invocationGraphs;
-  private InvocableStreamPipesEntity rdfRootElement;
+  private InvocableStreamPipesEntity rootPipelineElement;
 
   public PipelineVerificationHandler(Pipeline pipeline) throws NoSepaInPipelineException {
     this.pipeline = pipeline;
-    this.rdfRootElement = PipelineVerificationUtils.getRootNode(pipeline);
+    this.rootPipelineElement = PipelineVerificationUtils.getRootNode(pipeline);
     this.invocationGraphs = new ArrayList<>();
     this.pipelineModificationMessage = new PipelineModificationMessage();
   }
@@ -63,8 +64,8 @@ public class PipelineVerificationHandler {
 
     ElementVerification verifier = new ElementVerification();
     boolean verified = true;
-    InvocableStreamPipesEntity rightElement = rdfRootElement;
-    List<String> connectedTo = rdfRootElement.getConnectedTo();
+    InvocableStreamPipesEntity rightElement = rootPipelineElement;
+    List<String> connectedTo = rootPipelineElement.getConnectedTo();
 
     for (String domId : connectedTo) {
       NamedStreamPipesEntity element = TreeUtils.findSEPAElement(domId, pipeline.getSepas(), pipeline.getStreams());
@@ -95,13 +96,13 @@ public class PipelineVerificationHandler {
    * @return PipelineValidationHandler
    */
   public PipelineVerificationHandler computeMappingProperties() {
-    List<String> connectedTo = rdfRootElement.getConnectedTo();
-    String domId = rdfRootElement.getDOM();
+    List<String> connectedTo = rootPipelineElement.getConnectedTo();
+    String domId = rootPipelineElement.getDOM();
 
     List<SpDataStream> tempStreams = new ArrayList<>();
 
     for (int i = 0; i < connectedTo.size(); i++) {
-      NamedStreamPipesEntity element = TreeUtils.findSEPAElement(rdfRootElement
+      NamedStreamPipesEntity element = TreeUtils.findSEPAElement(rootPipelineElement
               .getConnectedTo().get(i), pipeline.getSepas(), pipeline
               .getStreams());
 
@@ -118,16 +119,16 @@ public class PipelineVerificationHandler {
         }
 
         tempStreams.add(incomingStream);
-        if (rdfRootElement.getStreamRequirements().size() - 1 == i) {
+        if (rootPipelineElement.getStreamRequirements().size() - 1 == i) {
           updateStaticProperties(tempStreams);
           PipelineModification modification = new PipelineModification(
                   domId,
-                  rdfRootElement.getElementId(),
-                  rdfRootElement.getStaticProperties());
+                  rootPipelineElement.getElementId(),
+                  rootPipelineElement.getStaticProperties());
           modification.setInputStreams(tempStreams);
           updateOutputStrategy(tempStreams);
-          if (rdfRootElement instanceof DataProcessorInvocation) {
-            modification.setOutputStrategies(((DataProcessorInvocation) rdfRootElement).getOutputStrategies());
+          if (rootPipelineElement instanceof DataProcessorInvocation) {
+            modification.setOutputStrategies(((DataProcessorInvocation) rootPipelineElement).getOutputStrategies());
           }
           pipelineModificationMessage.addPipelineModification(modification);
         }
@@ -138,13 +139,19 @@ public class PipelineVerificationHandler {
 
   private void updateStaticProperties(List<SpDataStream> inputStreams) {
 
-    rdfRootElement
+    rootPipelineElement
             .getStaticProperties()
             .stream()
-            .filter(property -> property instanceof MappingProperty)
+            .filter(property -> (property instanceof MappingProperty
+                    || ((property instanceof CollectionStaticProperty) && ((CollectionStaticProperty) property).getStaticPropertyTemplate() instanceof MappingProperty)))
             .forEach(property -> {
+              MappingProperty mappingProperty;
 
-              MappingProperty mappingProperty = (MappingProperty) property;
+              if (property instanceof MappingProperty) {
+                mappingProperty = (MappingProperty) property;
+              } else {
+                mappingProperty = (MappingProperty) ((CollectionStaticProperty) property).getStaticPropertyTemplate();
+              }
 
               if (!mappingProperty.getRequirementSelector().equals("")) {
                 mappingProperty.setMapsFromOptions(generateSelectorsFromRequirement
@@ -162,7 +169,7 @@ public class PipelineVerificationHandler {
             (requirementSelector);
 
     EventProperty propertyRequirement = selector.findPropertyRequirement
-            (rdfRootElement.getStreamRequirements());
+            (rootPipelineElement.getStreamRequirements());
     SpDataStream inputStream = selector.getAffectedStream(inputStreams);
 
     List<String> availablePropertySelectors = new PropertySelectorGenerator(inputStream
@@ -189,8 +196,8 @@ public class PipelineVerificationHandler {
 
   private void updateOutputStrategy(List<SpDataStream> inputStreams) {
 
-    if (rdfRootElement instanceof DataProcessorInvocation) {
-      ((DataProcessorInvocation) rdfRootElement)
+    if (rootPipelineElement instanceof DataProcessorInvocation) {
+      ((DataProcessorInvocation) rootPipelineElement)
               .getOutputStrategies()
               .stream()
               .filter(strategy -> strategy instanceof CustomOutputStrategy)
@@ -211,7 +218,7 @@ public class PipelineVerificationHandler {
   }
 
   public PipelineVerificationHandler storeConnection() {
-    String fromId = rdfRootElement.getConnectedTo().get(rdfRootElement.getConnectedTo().size() - 1);
+    String fromId = rootPipelineElement.getConnectedTo().get(rootPipelineElement.getConnectedTo().size() - 1);
     NamedStreamPipesEntity sepaElement = TreeUtils.findSEPAElement(fromId, pipeline.getSepas(), pipeline.getStreams());
     String sourceId;
     if (sepaElement instanceof SpDataStream) {
@@ -219,7 +226,7 @@ public class PipelineVerificationHandler {
     } else {
       sourceId = ((InvocableStreamPipesEntity) sepaElement).getBelongsTo();
     }
-    Connection connection = new Connection(sourceId, rdfRootElement.getBelongsTo());
+    Connection connection = new Connection(sourceId, rootPipelineElement.getBelongsTo());
     StorageDispatcher.INSTANCE.getNoSqlStore().getConnectionStorageApi().addConnection(connection);
     return this;
   }
