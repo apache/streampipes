@@ -78,7 +78,7 @@ continue_check(){
 
   if [ "$clean_volumes" = true ]; then
     cat << EOF
-  $(warning "This will remove:")
+$(warning "This will remove:")
     - StreamPipes docker network
     - all unused StreamPipes data volumes
     - all dangling StreamPipes images
@@ -86,7 +86,7 @@ continue_check(){
 EOF
   else
     cat << EOF
-  $(warning "This will remove:")
+$(warning "This will remove:")
     - StreamPipes docker network
     - all dangling StreamPipes images
 

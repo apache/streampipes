@@ -45,15 +45,33 @@ while [[ "$#" -gt 0 ]]; do
     esac
 done
 
+continue_check(){
+    cat << EOF
+$(warning "This option will remove:")
+    - all StreamPipes data volumes
+
+EOF
+
+  read -p "Are you sure you want to continue? [y/N]: " input
+
+  if [[ "$input" != "y"  && "$input" != "Y" && "$input" != "yes" && "$input" != "Yes" && "$input" != "YES" ]]; then
+    exit 1
+  fi
+}
+
 if is_streampipes_running; then
-  get_curr_environment
-  concatenate_compose_files
-  info "Stop environment: $curr_environment"
 
   if [ "$clean_volumes" = true ]; then
+    continue_check
+    get_curr_environment
+    concatenate_compose_files
+    info "Stop environment: $curr_environment"
     info "Removing StreamPipes containers and named volumes"
     run "$docker_compose_files down -v"
   else
+    get_curr_environment
+    concatenate_compose_files
+    info "Stop environment: $curr_environment"
     info "Removing StreamPipes containers"
     run "$docker_compose_files down"
   fi
