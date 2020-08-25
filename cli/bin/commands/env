@@ -16,7 +16,7 @@
 set -e
 . "$STREAMPIPES_WORKDIR/bin/common"
 
-STREAMPIPES_TEMPLATE_PATH=$STREAMPIPES_WORKDIR/bin/templates/environments
+STREAMPIPES_ENVIRONMENTS_PATH=$STREAMPIPES_WORKDIR/environments
 
 cli_help_env() {
   cat <<EOF
@@ -73,7 +73,7 @@ while [[ "$#" -gt 0 ]]; do
 done
 
 show_curr_environment(){
-  if [ ! -f "$STREAMPIPES_WORKDIR/.environment" ]; then
+  if [ ! -f "$STREAMPIPES_WORKDIR/.spenv" ]; then
     fatal "No environment set. See 'streampipes ${0##*/} --help'"
   else
     get_curr_environment
@@ -82,7 +82,7 @@ show_curr_environment(){
 }
 
 check_environment(){
-  template=$STREAMPIPES_TEMPLATE_PATH/$1
+  template=$STREAMPIPES_ENVIRONMENTS_PATH/$1
   if [ ! -f "$template" ]; then
     fatal "Environment not found '$1'. see 'streampipes ${0##*/} --list'"
   fi
@@ -90,7 +90,7 @@ check_environment(){
 
 list_environments(){
   info "Available StreamPipes environment templates:"
-  for entry in "$STREAMPIPES_TEMPLATE_PATH"/*
+  for entry in "$STREAMPIPES_ENVIRONMENTS_PATH"/*
   do
     echo "${entry##*/}"
   done
@@ -99,8 +99,8 @@ list_environments(){
 set_environment(){
   check_environment $set_environment
   info "Set environment to '$set_environment'"
-  cp $STREAMPIPES_TEMPLATE_PATH/$set_environment $STREAMPIPES_WORKDIR/.environment
-  set_lf_line_encoding $STREAMPIPES_WORKDIR/.environment
+  cp $STREAMPIPES_ENVIRONMENTS_PATH/$set_environment $STREAMPIPES_WORKDIR/.spenv
+  set_lf_line_encoding $STREAMPIPES_WORKDIR/.spenv
 }
 
 inspect_environment(){
@@ -111,7 +111,7 @@ inspect_environment(){
   info "Inspect services in environment '$inspect_environment'"
   while IFS='' read -r line; do
     [[ -n "$line" && "$line" != *"$search_str"* && "$line" != [[:blank:]#]* ]] && echo "$line"
-  done < "$STREAMPIPES_TEMPLATE_PATH/$inspect_environment"
+  done < "$STREAMPIPES_ENVIRONMENTS_PATH/$inspect_environment"
 }
 
 if [ "$list_environments" = true ]; then
@@ -123,7 +123,11 @@ if [ -n "$inspect_environment" ]; then
 fi
 
 if [ -n "$set_environment" ]; then
-  set_environment
+  if is_streampipes_running; then
+    warning "Cannot change template on already running environment. Stop it before changing 'streampipes down'."
+  else
+    set_environment
+  fi
 fi
 
 if [[ -z "$1" && "$list_environments" != true && ! -n "$inspect_environment" \

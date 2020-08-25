@@ -118,7 +118,7 @@ streampipes down
 
 **Start individual services only?** We got you! You chose a template that suits your needs and now you only want to start individual services from it, e.g. only Kafka and Consul.
 
-> **NOTE**: the service names need to be present and match your current `.environment`.
+> **NOTE**: the service names need to be present and match your current `.spenv` environment.
 
 ```bash
 streampipes up -d kafka consul
@@ -154,7 +154,7 @@ streampipes clean
 ```
 
 ## Modify/Create an environment template
-As of now, this step has to be done **manually**. All environment templates are located in `bin/templates/environments`.
+As of now, this step has to be done **manually**. All environments are located in `environments/`.
 
 ```bash
 ├── adapter               # developing a new connect adapter
@@ -176,7 +176,7 @@ kafka
 <YOUR_NEW_SERVICE>
 ```
 
-**Creating a new** environment template. To create a new environment template, place a new file `bin/templates/environments/<YOUR_NEW_ENVIRONMENT>` in the template directory. Open the file and use the following schema.
+**Creating a new** environment template. To create a new environment template, place a new file `environments/<YOUR_NEW_ENVIRONMENT>` in the template directory. Open the file and use the following schema.
 > **IMPORTANT**: Please make sure to have `[environment:<YOUR_NEW_ENVIRONMENT>]` header in the first line of your new template matching the name of the file. Make sure to use small caps letters (lowercase) only.
 
 ```
@@ -199,7 +199,7 @@ For **Windows 10**, e.g. check this [documentation](https://helpdeskgeek.com/win
 
 
 ## Upgrade to new version
-To upgrade to a new version, simply edit the version tag in `VERSION`.
+To upgrade to a new version, simply edit the version tag `SP_VERSION` in the `.env` file.
 
 ## Bugs and Feature Requests
 

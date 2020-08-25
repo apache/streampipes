@@ -32,6 +32,13 @@ if [ "$#" -gt 1 ]; then
     fatal "Illegal number of arguments, see 'streampipes ${0##*/} --help'"
 fi
 
+environment_exists(){
+  if [ ! -f "$STREAMPIPES_WORKDIR/.spenv" ]; then
+    fatal "Environment missing, need to be set before pulling. See 'streampipes env --help'"
+  fi
+}
+
+environment_exists
 concatenate_compose_files
 get_curr_environment
 info "Pull latest docker images for environment: '$curr_environment'"

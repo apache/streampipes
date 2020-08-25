@@ -34,7 +34,11 @@ fatal(){
 }
 
 show_version(){
-  echo $(cat $STREAMPIPES_WORKDIR/VERSION), build $(git --git-dir "$(dirname "$STREAMPIPES_WORKDIR")/.git" rev-parse --short HEAD)
+  echo $(sed -n 's/^SP_VERSION=//p' $STREAMPIPES_WORKDIR/.env), build $(git --git-dir "$(dirname "$STREAMPIPES_WORKDIR")/.git" rev-parse --short HEAD)
+}
+
+show_version_no_build(){
+  echo $(sed -n 's/^SP_VERSION=//p' $STREAMPIPES_WORKDIR/.env)
 }
 
 show_banner(){
@@ -97,14 +101,7 @@ get_curr_environment() {
     [[ "$line" == *"$search_str"* ]] &&
     helper=${line#*$search_str}
     curr_environment=${helper%]*}
-  done < "$STREAMPIPES_WORKDIR/.environment"
-}
-
-load_env_file() {
-  if [ -f $STREAMPIPES_WORKDIR/.env ]; then
-      # Load Environment Variables
-      export $(cat $STREAMPIPES_WORKDIR/.env | grep -v '#' | awk '/=/ {print $1}')
-  fi
+  done < "$STREAMPIPES_WORKDIR/.spenv"
 }
 
 concatenate_compose_files() {
@@ -119,7 +116,7 @@ concatenate_compose_files() {
       else
         docker_compose_files="$docker_compose_files -f $STREAMPIPES_WORKDIR/deploy/standalone/$line/docker-compose.yml -f $STREAMPIPES_WORKDIR/deploy/standalone/$line/docker-compose.dev.yml"
       fi
-  done < "$STREAMPIPES_WORKDIR/.environment"
+  done < "$STREAMPIPES_WORKDIR/.spenv"
 }
 
 run() {

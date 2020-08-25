@@ -51,33 +51,27 @@ done
 
 configure(){
 
-  if [ ! -f "$STREAMPIPES_WORKDIR/.environment" ]; then
+  if [ ! -f "$STREAMPIPES_WORKDIR/.spenv" ]; then
     fatal "Environment missing. See 'streampipes env --help'"
   fi
 
   startup_notice
   get_curr_environment
 
-  info "Version: $(cat $STREAMPIPES_WORKDIR/VERSION | grep -v '#' | awk NF)"
+  info "Version: $(show_version_no_build)"
   info "Environment: '$curr_environment'"
   if [ "$no_ports" = true ]; then
     info "Mode: Production mode, all ports closed"
   else
     info "Mode: Development mode, all ports mapped"
   fi
-
-  if [ ! -f "$STREAMPIPES_WORKDIR/.env" ]; then
-    info "Configure $STREAMPIPES_WORKDIR/.env"
-    sed "s/##VERSION##/$(cat $STREAMPIPES_WORKDIR/VERSION | grep -v '#' | awk NF)/g" \
-        $STREAMPIPES_WORKDIR/bin/templates/env.template > $STREAMPIPES_WORKDIR/.env
-  fi
 }
 
 create_external_docker_network() {
 	if [ ! "$(docker network ls | grep spnet)" ]; then
-    #subnet=$(sed -n 's/^SP_SUBNET=//p' $STREAMPIPES_WORKDIR/.env)
 	  info "Creating docker network 'spnet'"
-	  run "docker network create --driver=bridge --subnet=$SP_SUBNET spnet" > /dev/null 2>&1
+    subnet=$(sed -n 's/^SP_SUBNET=//p' $STREAMPIPES_WORKDIR/.env)
+	  run "docker network create --driver=bridge --subnet=$subnet spnet" > /dev/null 2>&1
 	else
 	  info "Docker network 'spnet' already exists. Continuing"
 	fi
@@ -85,7 +79,6 @@ create_external_docker_network() {
 
 start_environment(){
   configure
-  load_env_file
   concatenate_compose_files $no_ports
   create_external_docker_network
   info "Creating docker volumes and starting docker containers"

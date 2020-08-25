@@ -33,8 +33,8 @@ if [ "$#" -gt 1 ]; then
 fi
 
 if is_streampipes_running; then
-  load_env_file
-  docker ps --filter "name=${COMPOSE_PROJECT_NAME}_*" --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}'
+  project_name=$(sed -n 's/^COMPOSE_PROJECT_NAME=//p' $STREAMPIPES_WORKDIR/.env)
+  docker ps --filter "name=${project_name}_*" --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}'
 else
   info "No StreamPipes environment running"
 fi

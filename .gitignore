@@ -17,8 +17,7 @@
 .DS_Store
 
 # hidden files in cli
-.env
-.environment
+.spenv
 
 # track env file in compose dir
 !*/compose/.env
