@@ -17,6 +17,7 @@
 
 import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
+import { DetectedBoxModel } from '../../../../app-transport-monitoring/model/detected-box.model';
 
 @Component({
   selector: 'sp-image-bar',
@@ -25,11 +26,19 @@ import { DatalakeRestService } from '../../../../core-services/datalake/datalake
 })
 export class ImageBarComponent implements OnInit {
 
-  @Input() imagesSrcs: string [];
+  public _imageRoutes;
+
+  @Input()
+  set imagesRoutes(imageRoutes) {
+    this.maxImages = imageRoutes.length;
+    this._imageRoutes = imageRoutes;
+  }
   @Input() selectedIndex: number;
   @Input() enableShortCuts: boolean;
 
   @Output() indexChange: EventEmitter<number> = new EventEmitter<number>();
+
+  public maxImages;
   // @Output() pageUp: EventEmitter<void> = new EventEmitter<void>();
   // @Output() pageDown: EventEmitter<void> = new EventEmitter<void>();
 
@@ -48,7 +57,7 @@ export class ImageBarComponent implements OnInit {
 
   }
   previousImage() {
-    if (this.selectedIndex < this.imagesSrcs.length - 1) {
+    if (this.selectedIndex < this._imageRoutes.length - 1) {
       this.indexChange.emit(this.selectedIndex + 1);
     } else {
       // this.pageDown.emit();
