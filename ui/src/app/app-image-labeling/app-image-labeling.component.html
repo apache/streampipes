@@ -20,7 +20,7 @@
         <div fxLayout="fill" style="line-height:24px;border-bottom:1px solid #ccc">
             <mat-form-field style="margin-top: 5px; margin-left: 5px;">
                 <mat-label>Select data lake measurement</mat-label>
-                <mat-select [(value)]="selectedMeasure">
+                <mat-select (selectionChange)="changeMeasure($event)" [(value)]="selectedMeasure">
                     <mat-option *ngFor="let measure of dataLakeMeasures" [value]="measure">
                         {{measure.measureName}}
                     </mat-option>
@@ -30,6 +30,8 @@
     </div>
 
     <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100">
-        <sp-image-labeling [measureName]="selectedMeasure?.measureName"></sp-image-labeling>
+<!--        <sp-image-labelin ></sp-image-labeling>-->
+
+        <sp-image-labeling *ngIf="imagesRoutes.length > 0" [imagesRoutes]="imagesRoutes"></sp-image-labeling>
     </div>
 </div>

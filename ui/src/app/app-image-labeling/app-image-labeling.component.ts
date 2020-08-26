@@ -15,10 +15,12 @@
  * limitations under the License.
  */
 
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {DatalakeRestService} from "../core-services/datalake/datalake-rest.service";
-import {DataLakeMeasure} from "../core-model/gen/streampipes-model";
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { DatalakeRestService } from '../core-services/datalake/datalake-rest.service';
+import { DataLakeMeasure, EventPropertyUnion, EventSchema } from '../core-model/gen/streampipes-model';
 import { CocoFormat } from '../core-model/coco/Coco.format';
+import { DataResult } from '../core-model/datalake/DataResult';
+import { DateRange } from '../core-model/datalake/DateRange';
 
 @Component({
     selector: 'app-image-labeling',
@@ -27,18 +29,18 @@ import { CocoFormat } from '../core-model/coco/Coco.format';
 })
 export class AppImageLabelingComponent implements  OnInit {
 
-  public imagesSrcs = [];
+  public imagesRoutes = [];
 
   dataLakeMeasures: DataLakeMeasure[] = [];
   selectedMeasure: DataLakeMeasure;
 
+  imageProperty: string;
+
   @Output() appOpened = new EventEmitter<boolean>();
 
-  public pageIndex;
-  public measureName;
-
-  constructor(private restService: DatalakeRestService) {
-
+  constructor(
+    protected dataLakeRestService: DatalakeRestService,
+    private restService: DatalakeRestService) {
   }
 
   ngOnInit() {
@@ -46,62 +48,41 @@ export class AppImageLabelingComponent implements  OnInit {
         this.restService.getAllInfos().subscribe(res => {
               this.dataLakeMeasures = res;
               this.selectedMeasure = res[0];
+              this.updateData();
           }
         );
   }
 
+  changeMeasure(newMeasure) {
+    this.selectedMeasure = newMeasure.value;
+    this.updateData();
+  }
 
-  // loadData() {
-  //   if (this.pageIndex === undefined) {
-  //     this.restService.getDataPageWithoutPage(this.measureName, 10).subscribe(
-  //       res => this.processData(res)
-  //     );
-  //   } else {
-  //     this.restService.getDataPage(this.measureName, 10, this.pageIndex).subscribe(
-  //       res => this.processData(res)
-  //     );
-  //   }
-  // }
+  updateData() {
+    const current = new Date();
+    const dateRange = new DateRange(new Date(current.getTime() - 10000 * 60000), current);
 
-  // processData(pageResult) {
-  //   if (pageResult.rows === undefined) {
-  //     this.pageIndex = pageResult.pageSum - 1;
-  //     this.openSnackBar('No new data found');
-  //   } else {
-  //     pageResult.rows = pageResult.rows.reverse();
-  //     this.pageIndex = pageResult.page;
-  //     this.pageSum = pageResult.pageSum;
-  //
-  //     if (this.setImagesIndexToFirst) {
-  //       this.imagesIndex = 0;
-  //     } else if (this.setImagesIndexToLast) {
-  //       this.imagesIndex = pageResult.rows.length - 1;
-  //     }
-  //     this.setImagesIndexToLast = false;
-  //     this.setImagesIndexToFirst = false;
-  //
-  //     const imageIndex = pageResult.headers.findIndex(name => name === this.imageField.runtimeName);
-  //     const tmp = [];
-  //     this.cocoFiles = [];
-  //     pageResult.rows.forEach(row => {
-  //       tmp.push(this.restService.getImageUrl(row[imageIndex]));
-  //
-  //       // This is relevant for coco
-  //       this.restService.getCocoFileForImage(row[imageIndex]).subscribe(
-  //         coco => {
-  //           if (coco === null) {
-  //             const cocoFile = new CocoFormat();
-  //             this.cocoFormatService.addImage(cocoFile, (row[imageIndex]));
-  //             this.cocoFiles.push(cocoFile);
-  //           } else {
-  //             this.cocoFiles.push(coco as CocoFormat);
-  //           }
-  //         }
-  //       );
-  //
-  //     });
-  //     this.imagesSrcs = tmp;
-  //   }
-  // }
+    this.dataLakeRestService.getDataAutoAggregation(
+      this.selectedMeasure.measureName, dateRange.startDate.getTime(), dateRange.endDate.getTime())
+      .subscribe(
+        (res: DataResult) => {
+
+         this.imageProperty = this.getImageProperties(this.selectedMeasure.eventSchema)[0].runtimeName;
+          // this.availableImageData = res;
+          this.imagesRoutes = [];
+          if (res.rows !== null) {
+            const imageField = res.headers.findIndex(name => name === this.imageProperty);
+            res.rows.forEach(row => {
+              this.imagesRoutes.push(row[imageField]);
+            });
+
+          }
+        }
+      );
+  }
+
+  getImageProperties(eventSchema: EventSchema): EventPropertyUnion[] {
+    return eventSchema.eventProperties.filter(ep => ep.domainProperties.some(dp => dp === 'https://image.com'));
+  }
 
 }
