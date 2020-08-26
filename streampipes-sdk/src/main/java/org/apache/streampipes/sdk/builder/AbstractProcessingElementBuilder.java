@@ -94,7 +94,7 @@ public abstract class AbstractProcessingElementBuilder<BU extends
   }
 
   private List<MappingProperty> rewrite(List<MappingProperty> mappingProperties, int index) {
-    mappingProperties.stream().forEach(mp -> mp.setRequirementSelector
+    mappingProperties.forEach(mp -> mp.setRequirementSelector
             (getIndex(index) + PropertySelectorConstants.PROPERTY_DELIMITER + mp
                     .getRequirementSelector()));
     return mappingProperties;

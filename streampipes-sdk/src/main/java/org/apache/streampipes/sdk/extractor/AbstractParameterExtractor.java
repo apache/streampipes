@@ -33,10 +33,7 @@ import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.model.staticproperty.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesEntity> {
@@ -153,6 +150,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
     return collection
             .getMembers()
             .stream()
+            .sorted(Comparator.comparingInt(StaticProperty::getIndex))
             .map(sp -> (FreeTextStaticProperty) sp)
             .map(FreeTextStaticProperty::getValue)
             .map(v -> typeParser.parse(v, targetClass))
@@ -209,6 +207,17 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
 
   public String mappingPropertyValue(String staticPropertyName) {
     return getPropertySelectorFromUnaryMapping(staticPropertyName);
+  }
+
+  public List<String> getUnaryMappingsFromCollection(String collectionStaticPropertyName) {
+    CollectionStaticProperty collection = getStaticPropertyByName(collectionStaticPropertyName, CollectionStaticProperty.class);
+    return collection
+            .getMembers()
+            .stream()
+            .sorted(Comparator.comparingInt(StaticProperty::getIndex))
+            .map(sp -> (MappingPropertyUnary) sp)
+            .map(MappingPropertyUnary::getSelectedProperty)
+            .collect(Collectors.toList());
   }
 
   public List<String> mappingPropertyValues(String staticPropertyName) {

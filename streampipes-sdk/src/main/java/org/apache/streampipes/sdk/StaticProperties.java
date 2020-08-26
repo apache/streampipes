@@ -18,8 +18,10 @@
 
 package org.apache.streampipes.sdk;
 
+import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.model.staticproperty.*;
 import org.apache.streampipes.sdk.helpers.Label;
+import org.apache.streampipes.sdk.helpers.RequirementsSelector;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
 import java.net.URI;
@@ -27,6 +29,18 @@ import java.util.Arrays;
 import java.util.List;
 
 public class StaticProperties {
+
+  public static MappingPropertyUnary mappingPropertyUnary(Label label, RequirementsSelector requirementsSelector, PropertyScope propertyScope) {
+    MappingPropertyUnary mp = new MappingPropertyUnary(label.getInternalId(), label
+            .getInternalId(),
+            label.getLabel(),
+            label.getDescription());
+
+    mp.setRequirementSelector(requirementsSelector.toSelector(label.getInternalId()));
+    mp.setPropertyScope(propertyScope.name());
+
+    return mp;
+  }
 
   public static FreeTextStaticProperty stringFreeTextProperty(Label label) {
     return freeTextProperty(label, Datatypes.String);
@@ -118,7 +132,7 @@ public class StaticProperties {
       setHorizontalRendering(staticProperty);
     }
 
-    if (sp.length > 0) {
+    if (sp.length > 1) {
       StaticPropertyGroup group = StaticProperties.group(label);
       group.setHorizontalRendering(true);
       group.setStaticProperties(Arrays.asList(sp));
