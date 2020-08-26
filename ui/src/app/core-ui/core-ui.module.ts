@@ -138,28 +138,29 @@ import {CodemirrorModule} from "@ctrl/ngx-codemirror";
     ],
     entryComponents: [
     ],
-    exports: [
-        ImageComponent,
-        ImageLabelingComponent,
-        StandardDialogComponent,
-        PanelDialogComponent,
-        ConfirmDialogComponent,
-        StaticAnyInput,
-        StaticPropertyComponent,
-        StaticFreeInputComponent,
-        StaticSecretInputComponent,
-        StaticFileInputComponent,
-        StaticMappingNaryComponent,
-        StaticMappingUnaryComponent,
-        StaticGroupComponent,
-        StaticAlternativesComponent,
-        StaticCollectionComponent,
-        StaticColorPickerComponent,
-        StaticCodeInputComponent,
-        StaticOneOfInputComponent,
-        StaticRuntimeResolvableAnyInputComponent,
-        StaticRuntimeResolvableOneOfInputComponent,
-    ]
+  exports: [
+    ImageComponent,
+    ImageLabelingComponent,
+    StandardDialogComponent,
+    PanelDialogComponent,
+    ConfirmDialogComponent,
+    StaticAnyInput,
+    StaticPropertyComponent,
+    StaticFreeInputComponent,
+    StaticSecretInputComponent,
+    StaticFileInputComponent,
+    StaticMappingNaryComponent,
+    StaticMappingUnaryComponent,
+    StaticGroupComponent,
+    StaticAlternativesComponent,
+    StaticCollectionComponent,
+    StaticColorPickerComponent,
+    StaticCodeInputComponent,
+    StaticOneOfInputComponent,
+    StaticRuntimeResolvableAnyInputComponent,
+    StaticRuntimeResolvableOneOfInputComponent,
+    ImageViewerComponent
+  ]
 })
 export class CoreUiModule {
 }

@@ -17,35 +17,41 @@
  */
 
 
-import {AfterViewInit, Component, Input, OnChanges, OnInit, ViewChild} from '@angular/core';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import Konva from 'konva';
-import {Annotation} from '../../../core-model/coco/Annotation';
-import {CocoFormat} from '../../../core-model/coco/Coco.format';
-import {DatalakeRestService} from '../../../core-services/datalake/datalake-rest.service';
-import {ImageContainerComponent} from '../components/image-container/image-container.component';
-import {ICoordinates} from '../model/coordinates';
-import {LabelingMode} from '../model/labeling-mode';
-import {BrushLabelingService} from '../services/BrushLabeling.service';
-import {CocoFormatService} from '../services/CocoFormat.service';
-import {LabelingModeService} from '../services/LabelingMode.service';
-import {PolygonLabelingService} from '../services/PolygonLabeling.service';
-import {ReactLabelingService} from '../services/ReactLabeling.service';
+import { Annotation } from '../../../core-model/coco/Annotation';
+import { CocoFormat } from '../../../core-model/coco/Coco.format';
+import { DatalakeRestService } from '../../../core-services/datalake/datalake-rest.service';
+import { ImageContainerComponent } from '../components/image-container/image-container.component';
+import { ICoordinates } from '../model/coordinates';
+import { LabelingMode } from '../model/labeling-mode';
+import { BrushLabelingService } from '../services/BrushLabeling.service';
+import { CocoFormatService } from '../services/CocoFormat.service';
+import { LabelingModeService } from '../services/LabelingMode.service';
+import { PolygonLabelingService } from '../services/PolygonLabeling.service';
+import { ReactLabelingService } from '../services/ReactLabeling.service';
 
 @Component({
   selector: 'sp-image-labeling',
   templateUrl: './image-labeling.component.html',
   styleUrls: ['./image-labeling.component.css']
 })
-export class ImageLabelingComponent implements OnInit, AfterViewInit, OnChanges {
+export class ImageLabelingComponent implements OnInit {
 
   // label
   public labels;
   public selectedLabel: {category, label};
 
   // images
+
+  @Input()
   public imagesSrcs = [];
+  // public imagesSrcs = [];
+  @Input()
   public imagesIndex: number;
+  // public imagesIndex: number;
+
   imageDescription: string;
 
   public cocoFiles: CocoFormat[] = [];
@@ -53,15 +59,16 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit, OnChanges 
   public isHoverComponent;
   public brushSize: number;
 
-  public isDrawing: boolean = false;
+  public isDrawing = false;
 
   @ViewChild(ImageContainerComponent) imageView: ImageContainerComponent;
 
-  @Input() measureName = 'image'; // TODO: Remove default value for production
-  @Input() eventSchema = undefined; // TODO: event schema should be always injected by production
-  imageField = undefined;
-  pageIndex = undefined;
-  pageSum = undefined;
+  @Input()
+  measureName;
+  // eventSchema = undefined; // TODO: event schema should be always injected by production
+  // imageField = undefined;
+  // pageIndex = undefined;
+  // pageSum = undefined;
 
   // Flags
   private setImagesIndexToFirst = false;
@@ -77,101 +84,129 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit, OnChanges 
   ngOnInit(): void {
     this.isHoverComponent = false;
     this.brushSize = 5;
-    this.imagesIndex = 0;
-    this.imageDescription = "The Description of the selected image"
+    // this.imagesIndex = 0;
     this.labels = this.restService.getLabels();
 
-    // TODO remove for production, if default dev values are not necessary
-    if (this.eventSchema === undefined) {
-      this.restService.getAllInfos().subscribe(res => {
-          this.eventSchema = res.find(elem => elem.measureName === this.measureName).eventSchema;
-          const properties = this.eventSchema.eventProperties;
-          for (const prop of properties) {
-            // if (prop.domainProperties.find(type => type === 'https://image.com')) {
-            if (prop.domainProperty === 'https://image.com') {
-              this.imageField = prop;
-              break;
-            }
-          }
-          this.loadData();
-        }
-      );
+    // // TODO remove for production, if default dev values are not necessary
+    // if (this.eventSchema === undefined) {
+    //   this.restService.getAllInfos().subscribe(res => {
+    //       this.eventSchema = res.find(elem => elem.measureName === this.measureName).eventSchema;
+    //       const properties = this.eventSchema.eventProperties;
+    //       for (const prop of properties) {
+    //         if (prop.domainProperties.find(type => type === 'https://image.com')) {
+    //         // if (prop.domainProperty === 'https://image.com') {
+    //           this.imageField = prop;
+    //           break;
+    //         }
+    //       }
+    //       this.loadData();
+    //     }
+    //   );
+    // }
+  }
+
+  /* sp-image-bar */
+  handleImageIndexChange(index) {
+    if (!this.isDrawing) {
+      this.save();
+      this.imagesIndex = index;
     }
   }
 
-  ngOnChanges() {
-    if (this.eventSchema !== null) {
-      const properties = this.eventSchema.eventProperties;
-      for (const prop of properties) {
-        if (prop.domainProperty === 'https://image.com') {
-          this.imageField = prop;
-          break;
-        }
-      }
-      this.pageIndex = undefined;
-      this.pageSum = undefined;
-      this.imagesIndex = 0;
-
-      this.loadData();
+  handleImagePageUp(e) {
+    if (!this.isDrawing) {
+      // this.save();
+      // this.pageIndex += 1;
+      this.setImagesIndexToLast = true;
+      // this.loadData();
     }
   }
 
-  ngAfterViewInit(): void {
-    this.imagesIndex = 0;
-  }
-
-  loadData() {
-    if (this.pageIndex === undefined) {
-      this.restService.getDataPageWithoutPage(this.measureName, 10).subscribe(
-        res => this.processData(res)
-      );
-    } else {
-      this.restService.getDataPage(this.measureName, 10, this.pageIndex).subscribe(
-        res => this.processData(res)
-      );
+  handleImagePageDown(e) {
+    if (!this.isDrawing) {
+      this.save();
+      // if (this.pageIndex - 1 >= 0) {
+      //   this.pageIndex -= 1;
+        this.setImagesIndexToFirst = true;
+      //   this.loadData();
+      // }
     }
   }
 
-  processData(pageResult) {
-    if (pageResult.rows === undefined) {
-      this.pageIndex = pageResult.pageSum - 1;
-      this.openSnackBar('No new data found');
-    } else {
-      pageResult.rows = pageResult.rows.reverse();
-      this.pageIndex = pageResult.page;
-      this.pageSum = pageResult.pageSum;
 
-      if (this.setImagesIndexToFirst) {
-        this.imagesIndex = 0;
-      } else if (this.setImagesIndexToLast) {
-        this.imagesIndex = pageResult.rows.length - 1;
-      }
-      this.setImagesIndexToLast = false;
-      this.setImagesIndexToFirst = false;
+  // ngOnChanges() {
+  //   if (this.eventSchema !== null) {
+  //     const properties = this.eventSchema.eventProperties;
+  //     for (const prop of properties) {
+  //       if (prop.domainProperty === 'https://image.com') {
+  //         this.imageField = prop;
+  //         break;
+  //       }
+  //     }
+  //     this.pageIndex = undefined;
+  //     this.pageSum = undefined;
+  //     this.imagesIndex = 0;
+  //
+  //     this.loadData();
+  //   }
+  // }
 
-      const imageIndex = pageResult.headers.findIndex(name => name === this.imageField.runtimeName);
-      const tmp = [];
-      this.cocoFiles = [];
-      pageResult.rows.forEach(row => {
-        tmp.push(this.restService.getImageUrl(row[imageIndex]));
-        this.restService.getCocoFileForImage(row[imageIndex]).subscribe(
-          coco => {
-            if (coco === null) {
-              const cocoFile = new CocoFormat();
-              this.cocoFormatService.addImage(cocoFile, (row[imageIndex]));
-              this.cocoFiles.push(cocoFile);
-            } else {
-              this.cocoFiles.push(coco as CocoFormat);
-            }
-          }
-        );
+  // ngAfterViewInit(): void {
+  //   this.imagesIndex = 0;
+  // }
 
-      });
-      this.imagesSrcs = tmp;
-    }
+  // loadData() {
+  //   if (this.pageIndex === undefined) {
+  //     this.restService.getDataPageWithoutPage(this.measureName, 10).subscribe(
+  //       res => this.processData(res)
+  //     );
+  //   } else {
+  //     this.restService.getDataPage(this.measureName, 10, this.pageIndex).subscribe(
+  //       res => this.processData(res)
+  //     );
+  //   }
+  // }
 
-
-  }
+  // processData(pageResult) {
+  //   if (pageResult.rows === undefined) {
+  //     this.pageIndex = pageResult.pageSum - 1;
+  //     this.openSnackBar('No new data found');
+  //   } else {
+  //     pageResult.rows = pageResult.rows.reverse();
+  //     this.pageIndex = pageResult.page;
+  //     this.pageSum = pageResult.pageSum;
+  //
+  //     if (this.setImagesIndexToFirst) {
+  //       this.imagesIndex = 0;
+  //     } else if (this.setImagesIndexToLast) {
+  //       this.imagesIndex = pageResult.rows.length - 1;
+  //     }
+  //     this.setImagesIndexToLast = false;
+  //     this.setImagesIndexToFirst = false;
+  //
+  //     const imageIndex = pageResult.headers.findIndex(name => name === this.imageField.runtimeName);
+  //     const tmp = [];
+  //     this.cocoFiles = [];
+  //     pageResult.rows.forEach(row => {
+  //       tmp.push(this.restService.getImageUrl(row[imageIndex]));
+  //
+  //       // This is relevant for coco
+  //       this.restService.getCocoFileForImage(row[imageIndex]).subscribe(
+  //         coco => {
+  //           if (coco === null) {
+  //             const cocoFile = new CocoFormat();
+  //             this.cocoFormatService.addImage(cocoFile, (row[imageIndex]));
+  //             this.cocoFiles.push(cocoFile);
+  //           } else {
+  //             this.cocoFiles.push(coco as CocoFormat);
+  //           }
+  //         }
+  //       );
+  //
+  //     });
+  //     this.imagesSrcs = tmp;
+  //   }
+  // }
 
 
   /* sp-image-view handler */
@@ -292,32 +327,6 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit, OnChanges 
     this.selectedLabel = label;
   }
 
-  /* sp-image-bar */
-  handleImageIndexChange(index) {
-    if (!this.isDrawing) {
-      this.save();
-      this.imagesIndex = index;
-    }
-  }
-  handleImagePageUp(e) {
-    if (!this.isDrawing) {
-      this.save();
-      this.pageIndex += 1;
-      this.setImagesIndexToLast = true;
-      this.loadData();
-    }
-  }
-
-  handleImagePageDown(e) {
-    if (!this.isDrawing) {
-      this.save();
-      if (this.pageIndex - 1 >= 0) {
-        this.pageIndex -= 1;
-        this.setImagesIndexToFirst = true;
-        this.loadData();
-      }
-    }
-  }
 
   /* sp-image-annotations handlers */
   handleChangeAnnotationLabel(change: [Annotation, string, string]) {

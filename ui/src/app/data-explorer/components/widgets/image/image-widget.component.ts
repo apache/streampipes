@@ -16,14 +16,13 @@
  *
  */
 
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {MatSort} from '@angular/material/sort';
-import {MatTableDataSource} from '@angular/material/table';
-import {DataResult} from '../../../../core-model/datalake/DataResult';
-import {DatalakeRestService} from '../../../../core-services/datalake/datalake-rest.service';
-import {BaseDataExplorerWidget} from '../base/base-data-explorer-widget';
-import {MatDialog} from '@angular/material/dialog';
-import {EventPropertyUnion, EventSchema} from "../../../../core-model/gen/streampipes-model";
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatSort } from '@angular/material/sort';
+import { DataResult } from '../../../../core-model/datalake/DataResult';
+import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
+import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
+import { MatDialog } from '@angular/material/dialog';
+import { EventPropertyUnion, EventSchema } from '../../../../core-model/gen/streampipes-model';
 
 @Component({
   selector: 'sp-data-explorer-image-widget',
@@ -35,23 +34,24 @@ export class ImageWidgetComponent extends BaseDataExplorerWidget implements OnIn
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
   availableColumns: EventPropertyUnion[];
-  selectedColumns: EventPropertyUnion[];
-  columnNames: string[];
+  selectedColumn: EventPropertyUnion;
 
-  availableImageData: DataResult;
+  public imagesRoutes = [];
 
-  constructor(protected dataLakeRestService: DatalakeRestService, protected dialog: MatDialog,) {
+  constructor(
+    protected dataLakeRestService: DatalakeRestService,
+    protected dialog: MatDialog) {
     super(dataLakeRestService, dialog);
   }
 
   ngOnInit(): void {
     this.availableColumns = this.getImageProperties(this.dataExplorerWidget.dataLakeMeasure.eventSchema);
-    this.selectedColumns = [this.availableColumns[0]];
+    this.selectedColumn = this.availableColumns[0];
     this.updateData();
   }
 
   getImageProperties(eventSchema: EventSchema): EventPropertyUnion[] {
-    return eventSchema.eventProperties.filter(ep => ep.domainProperties.some(dp => dp === "https://image.com"));
+    return eventSchema.eventProperties.filter(ep => ep.domainProperties.some(dp => dp === 'https://image.com'));
   }
 
   updateData() {
@@ -61,15 +61,17 @@ export class ImageWidgetComponent extends BaseDataExplorerWidget implements OnIn
         this.dataExplorerWidget.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime())
         .subscribe(
             (res: DataResult) => {
-             this.availableImageData = res;
+             // this.availableImageData = res;
              this.showIsLoadingData = false;
+              this.imagesRoutes = [];
+              if (res.rows !== null) {
+                const imageField = res.headers.findIndex(name => name === this.selectedColumn.runtimeName);
+                res.rows.forEach(row => {
+                  this.imagesRoutes.push(row[imageField]);
+                });
+              }
             }
         );
-  }
-
-  setSelectedColumn(selectedColumns: EventPropertyUnion[]) {
-    this.selectedColumns = selectedColumns;
-    this.columnNames = this.getRuntimeNames(this.selectedColumns);
   }
 
   ngOnDestroy(): void {
