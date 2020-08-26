@@ -21,7 +21,7 @@
     <button mat-icon-button (click)="nextImage()"> <mat-icon>keyboard_arrow_left</mat-icon></button>
 
     <div fxLayout="row" fxLayoutAlign="center " class="imageBar">
-        <img *ngFor="let src of imagesSrcs; let i = index" src="{{src}}" (click)="changeImage(i)"
+        <img *ngFor="let src of imagesSrcs; let i = index" src="{{this.restService.getImageUrl(src)}}" (click)="changeImage(i)"
              [style.border]="i == selectedIndex ? '5px solid #39b54a' : 'none'" style="height: 65px">
     </div>
 

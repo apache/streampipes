@@ -16,6 +16,7 @@
  */
 
 import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
 
 @Component({
   selector: 'sp-image-bar',
@@ -29,11 +30,11 @@ export class ImageBarComponent implements OnInit {
   @Input() enableShortCuts: boolean;
 
   @Output() indexChange: EventEmitter<number> = new EventEmitter<number>();
-  @Output() pageUp: EventEmitter<void> = new EventEmitter<void>();
-  @Output() pageDown: EventEmitter<void> = new EventEmitter<void>();
+  // @Output() pageUp: EventEmitter<void> = new EventEmitter<void>();
+  // @Output() pageDown: EventEmitter<void> = new EventEmitter<void>();
 
 
-  constructor() { }
+  constructor(private restService: DatalakeRestService) { }
 
   ngOnInit(): void {
   }
@@ -43,26 +44,26 @@ export class ImageBarComponent implements OnInit {
   }
 
   previousPage() {
-    this.pageDown.emit();
+    // this.pageDown.emit();
 
   }
   previousImage() {
     if (this.selectedIndex < this.imagesSrcs.length - 1) {
       this.indexChange.emit(this.selectedIndex + 1);
     } else {
-      this.pageDown.emit();
+      // this.pageDown.emit();
     }
   }
   nextImage() {
     if (this.selectedIndex > 0) {
       this.indexChange.emit(this.selectedIndex - 1);
     } else {
-      this.pageUp.emit();
+      // this.pageUp.emit();
     }
   }
 
   nextPage() {
-   this.pageUp.emit();
+   // this.pageUp.emit();
   }
 
   @HostListener('document:keydown', ['$event'])

@@ -21,7 +21,8 @@
     <div class="widget-inner-options" style="margin-left: 0;margin-right: 0;margin-top: 0;">
         <div fxFlex="100" fxLayout="row">
             <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center" style="margin-left: 0px;margin-right: 0px;">
-                <sp-select-properties multiple="true" (changeSelectedProperties)="setSelectedColumn($event)" [availableProperties]="availableColumns" [selectedProperties]="selectedColumns"></sp-select-properties>
+<!--                <sp-select-properties (changeSelectedProperties)="setSelectedColumn($event)" [availableProperties]="availableColumns" [selectedProperties]="selectedColumn"></sp-select-properties>-->
+                <sp-select-properties [availableProperties]="availableColumns" [selectedProperties]="selectedColumn"></sp-select-properties>
             </div>
         </div>
     </div>
@@ -30,6 +31,7 @@
         <sp-load-data-spinner *ngIf="showIsLoadingData"></sp-load-data-spinner>
         <sp-no-data-in-date-range *ngIf="showNoDataInDateRange" [viewDateRange]="viewDateRange"></sp-no-data-in-date-range>
 <!--        <sp-image [availableImageData]="availableImageData"></sp-image>-->
+        <sp-image-viewer [imagesRoutes]="imagesRoutes"></sp-image-viewer>
         <div class="image-container">
 
         </div>

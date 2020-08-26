@@ -35,23 +35,28 @@ export class ImageWidgetComponent extends BaseDataExplorerWidget implements OnIn
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
   availableColumns: EventPropertyUnion[];
-  selectedColumns: EventPropertyUnion[];
+  selectedColumn: EventPropertyUnion;
   columnNames: string[];
 
-  availableImageData: DataResult;
+  // availableImageData: DataResult;
 
-  constructor(protected dataLakeRestService: DatalakeRestService, protected dialog: MatDialog,) {
+  public imagesRoutes = [];
+
+  constructor(
+    protected dataLakeRestService: DatalakeRestService,
+    protected dialog: MatDialog,
+    private restService: DatalakeRestService) {
     super(dataLakeRestService, dialog);
   }
 
   ngOnInit(): void {
     this.availableColumns = this.getImageProperties(this.dataExplorerWidget.dataLakeMeasure.eventSchema);
-    this.selectedColumns = [this.availableColumns[0]];
+    this.selectedColumn = this.availableColumns[0];
     this.updateData();
   }
 
   getImageProperties(eventSchema: EventSchema): EventPropertyUnion[] {
-    return eventSchema.eventProperties.filter(ep => ep.domainProperties.some(dp => dp === "https://image.com"));
+    return eventSchema.eventProperties.filter(ep => ep.domainProperties.some(dp => dp === 'https://image.com'));
   }
 
   updateData() {
@@ -61,16 +66,24 @@ export class ImageWidgetComponent extends BaseDataExplorerWidget implements OnIn
         this.dataExplorerWidget.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime())
         .subscribe(
             (res: DataResult) => {
-             this.availableImageData = res;
+             // this.availableImageData = res;
              this.showIsLoadingData = false;
+              this.imagesRoutes = [];
+              if (res.rows !== null) {
+                const imageField = res.headers.findIndex(name => name === this.selectedColumn.runtimeName);
+                res.rows.forEach(row => {
+                  this.imagesRoutes.push(row[imageField]);
+                  // this.imagesSrcs.push(this.restService.getImageUrl(row[this.selectedColumn.runtimeName]));
+                });
+              }
             }
         );
   }
 
-  setSelectedColumn(selectedColumns: EventPropertyUnion[]) {
-    this.selectedColumns = selectedColumns;
-    this.columnNames = this.getRuntimeNames(this.selectedColumns);
-  }
+  // setSelectedColumn(selectedColumns: EventPropertyUnion[]) {
+  //   this.selectedColumn = selectedColumns;
+  //   this.columnNames = this.getRuntimeNames(this.selectedColumns);
+  // }
 
   ngOnDestroy(): void {
 
