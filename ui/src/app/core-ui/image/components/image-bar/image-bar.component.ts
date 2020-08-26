@@ -41,7 +41,7 @@ export class ImageBarComponent implements OnInit {
   public maxImages;
 
 
-  constructor(private restService: DatalakeRestService) { }
+  constructor(public restService: DatalakeRestService) { }
 
   ngOnInit(): void {
   }

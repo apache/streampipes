@@ -23,51 +23,16 @@ import { DatalakeRestService } from '../../../core-services/datalake/datalake-re
   templateUrl: './image-viewer.component.html',
   styleUrls: ['./image-viewer.component.css']
 })
-export class ImageViewerComponent implements OnInit {
+export class ImageViewerComponent {
 
   @Input()
   public imagesRoutes;
 
   public imagesIndex = 0;
-  // public imagesIndex: number;
-
-  // @Input()
-  // measureName; // TODO: Remove hard coded Index, should be injected
-
-  // eventSchema = undefined; // TODO: event schema should be also injected
-  // imageField = undefined;
-  // pageIndex = undefined;
-  // pageSum = undefined;
-
-  // Flags
-  // private setImagesIndexToFirst = false;
-  // private setImagesIndexToLast = false;
 
   constructor() {}
 
-  ngOnInit(): void {
-    // this.imagesSrcs = [];
-    // this.imagesRoutes.forEach(route => {
-    //   this.imagesSrcs.push(this.restService.getImageUrl(route));
-    // });
-  }
-
-  // /* sp-image-bar */
   handleImageIndexChange(index) {
     this.imagesIndex = index;
   }
-  // handleImagePageUp(e) {
-  //   this.pageIndex += 1;
-  //   this.setImagesIndexToLast = true;
-  //   this.loadData();
-  // }
-  //
-  // handleImagePageDown(e) {
-  //   if (this.pageIndex - 1 >= 0) {
-  //     this.pageIndex -= 1;
-  //     this.setImagesIndexToFirst = true;
-  //     this.loadData();
-  //   }
-  // }
-
 }

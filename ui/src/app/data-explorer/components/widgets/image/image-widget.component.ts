@@ -16,14 +16,13 @@
  *
  */
 
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {MatSort} from '@angular/material/sort';
-import {MatTableDataSource} from '@angular/material/table';
-import {DataResult} from '../../../../core-model/datalake/DataResult';
-import {DatalakeRestService} from '../../../../core-services/datalake/datalake-rest.service';
-import {BaseDataExplorerWidget} from '../base/base-data-explorer-widget';
-import {MatDialog} from '@angular/material/dialog';
-import {EventPropertyUnion, EventSchema} from "../../../../core-model/gen/streampipes-model";
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatSort } from '@angular/material/sort';
+import { DataResult } from '../../../../core-model/datalake/DataResult';
+import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
+import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
+import { MatDialog } from '@angular/material/dialog';
+import { EventPropertyUnion, EventSchema } from '../../../../core-model/gen/streampipes-model';
 
 @Component({
   selector: 'sp-data-explorer-image-widget',
@@ -36,16 +35,12 @@ export class ImageWidgetComponent extends BaseDataExplorerWidget implements OnIn
 
   availableColumns: EventPropertyUnion[];
   selectedColumn: EventPropertyUnion;
-  columnNames: string[];
-
-  // availableImageData: DataResult;
 
   public imagesRoutes = [];
 
   constructor(
     protected dataLakeRestService: DatalakeRestService,
-    protected dialog: MatDialog,
-    private restService: DatalakeRestService) {
+    protected dialog: MatDialog) {
     super(dataLakeRestService, dialog);
   }
 
@@ -73,17 +68,11 @@ export class ImageWidgetComponent extends BaseDataExplorerWidget implements OnIn
                 const imageField = res.headers.findIndex(name => name === this.selectedColumn.runtimeName);
                 res.rows.forEach(row => {
                   this.imagesRoutes.push(row[imageField]);
-                  // this.imagesSrcs.push(this.restService.getImageUrl(row[this.selectedColumn.runtimeName]));
                 });
               }
             }
         );
   }
-
-  // setSelectedColumn(selectedColumns: EventPropertyUnion[]) {
-  //   this.selectedColumn = selectedColumns;
-  //   this.columnNames = this.getRuntimeNames(this.selectedColumns);
-  // }
 
   ngOnDestroy(): void {
 
