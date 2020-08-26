@@ -39,8 +39,6 @@ export class ImageBarComponent implements OnInit {
   @Output() indexChange: EventEmitter<number> = new EventEmitter<number>();
 
   public maxImages;
-  // @Output() pageUp: EventEmitter<void> = new EventEmitter<void>();
-  // @Output() pageDown: EventEmitter<void> = new EventEmitter<void>();
 
 
   constructor(private restService: DatalakeRestService) { }
@@ -52,27 +50,24 @@ export class ImageBarComponent implements OnInit {
     this.indexChange.emit(index);
   }
 
-  previousPage() {
-    // this.pageDown.emit();
-
+  goToStart() {
+    this.indexChange.emit(0);
   }
+
   previousImage() {
     if (this.selectedIndex < this._imageRoutes.length - 1) {
       this.indexChange.emit(this.selectedIndex + 1);
-    } else {
-      // this.pageDown.emit();
-    }
-  }
-  nextImage() {
-    if (this.selectedIndex > 0) {
-      this.indexChange.emit(this.selectedIndex - 1);
-    } else {
-      // this.pageUp.emit();
     }
   }
 
-  nextPage() {
-   // this.pageUp.emit();
+  nextImage() {
+    if (this.selectedIndex > 0) {
+      this.indexChange.emit(this.selectedIndex - 1);
+    }
+  }
+
+  goToEnd() {
+    this.indexChange.emit(this.maxImages - 1);
   }
 
   @HostListener('document:keydown', ['$event'])

@@ -20,3 +20,11 @@
     height: 70px;
     width: 1000px;
 }
+
+.imagePreview {
+    height: 65px
+}
+
+.imageFocus {
+    border: 5px solid #39b54a
+}
