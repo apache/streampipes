@@ -79,6 +79,7 @@ public class Plc4xS7Adapter extends PullAdapter {
      * Keys of user configuration parameters
      */
     private static final String PLC_IP = "plc_ip";
+    private static final String PLC_POLLING_INTERVAL = "plc_polling_interval";
     private static final String PLC_NODES = "plc_nodes";
     private static final String PLC_NODE_NAME = "plc_node_name";
     private static final String PLC_NODE_RUNTIME_NAME = "plc_node_runtime_name";
@@ -94,6 +95,7 @@ public class Plc4xS7Adapter extends PullAdapter {
      * Values of user configuration parameters
      */
     private String ip;
+    private int pollingInterval;
     private List<Map<String, String>> nodes;
 
     /**
@@ -125,6 +127,7 @@ public class Plc4xS7Adapter extends PullAdapter {
                 .withAssets(Assets.DOCUMENTATION, Assets.ICON)
                 .category(AdapterType.Manufacturing)
                 .requiredTextParameter(Labels.withId(PLC_IP))
+                .requiredIntegerParameter(Labels.withId(PLC_POLLING_INTERVAL), 1000)
                 .requiredAlternatives(Labels.withId(CONFIGURE),
                         Alternatives.from(Labels.withId(MANUALLY),
                                 StaticProperties.collection(Labels.withId(PLC_NODES),
@@ -153,6 +156,10 @@ public class Plc4xS7Adapter extends PullAdapter {
 
         // Extract user input
         getConfigurations(adapterDescription);
+
+        if (this.pollingInterval < 10) {
+            throw new AdapterException("Polling interval must be higher then 10. Current value: " + this.pollingInterval);
+        }
 
         // TODO add a validation to check if the user input is available in the PLC
 
@@ -241,14 +248,13 @@ public class Plc4xS7Adapter extends PullAdapter {
 
     }
 
-
     /**
      * Define the polling interval of this adapter. Default is to poll every second
      * @return
      */
     @Override
     protected PollingSettings getPollingInterval() {
-        return PollingSettings.from(TimeUnit.SECONDS, 1);
+        return PollingSettings.from(TimeUnit.MILLISECONDS, this.pollingInterval);
     }
 
     /**
@@ -280,6 +286,7 @@ public class Plc4xS7Adapter extends PullAdapter {
                 StaticPropertyExtractor.from(adapterDescription.getConfig(), new ArrayList<>());
 
         this.ip = extractor.singleValueParameter(PLC_IP, String.class);
+        this.pollingInterval = extractor.singleValueParameter(PLC_POLLING_INTERVAL, Integer.class);
 
         String selectedAlternative = extractor.selectedAlternativeInternalId(CONFIGURE);
         if (selectedAlternative.equals(CSV_IMPORT)) {

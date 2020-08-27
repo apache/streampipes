@@ -4,6 +4,9 @@ org.apache.streampipes.connect.adapters.plc4x.s7.description=Connect directly to
 plc_ip.title=PLC Address
 plc_ip.description=Example: 192.168.34.56
 
+plc_polling_interval.title=Polling Interval [ms]
+plc_polling_interval.description=Polling Interval of adapter in milliseconds. Minimum value is 10.
+
 configure.title=Configuration
 configure.description=
 
