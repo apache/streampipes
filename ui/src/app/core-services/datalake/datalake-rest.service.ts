@@ -126,6 +126,10 @@ export class DatalakeRestService {
       return this.http.post(this.dataLakeUrlV3 + '/data/image/' + imageRoute + '/coco', data);
     }
 
+    removeAllData() {
+      return this.http.delete(this.dataLakeUrlV3 + '/data/delete/all');
+    }
+
     saveLabelsInDatabase(index, labelColumn, startDate, endDate, label) {
         const request = new HttpRequest('POST', this.dataLakeUrlV3 + '/data/' + index + '/' + startDate + '/' +
             endDate + '/labeling/' + labelColumn + '?label=' + label,  {}, {

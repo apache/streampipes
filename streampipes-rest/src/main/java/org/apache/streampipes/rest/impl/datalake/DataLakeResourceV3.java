@@ -188,6 +188,16 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
     }
   }
 
+  @DELETE
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("/data/delete/all")
+  public Response removeAllData() {
+
+    boolean result = dataLakeManagement.removeAllDataFromDataLake();
+
+    return Response.ok(result).build();
+  }
+
   @GET
   @Produces(MediaType.APPLICATION_OCTET_STREAM)
   @Path("/data/{index}/{startdate}/{enddate}/download")
