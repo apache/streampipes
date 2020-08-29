@@ -18,11 +18,11 @@
 
 .imageBar {
     height: 70px;
-    width: 1000px;
+    /*width: 640px;*/
 }
 
 .imagePreview {
-    height: 65px
+    /*height: 65px*/
 }
 
 .imageFocus {

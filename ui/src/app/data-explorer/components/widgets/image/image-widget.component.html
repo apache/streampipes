@@ -29,6 +29,11 @@
     <div class="widget-inner-content">
         <sp-load-data-spinner *ngIf="showIsLoadingData"></sp-load-data-spinner>
         <sp-no-data-in-date-range *ngIf="imagesRoutes.length === 0" [viewDateRange]="viewDateRange"></sp-no-data-in-date-range>
-        <sp-image-viewer *ngIf="imagesRoutes.length > 0" [imagesRoutes]="imagesRoutes"></sp-image-viewer>
+        <sp-image-viewer *ngIf="imagesRoutes.length > 0"
+                         [imagesRoutes]="imagesRoutes"
+                         [canvasHeight]="canvasHeight"
+                         [canvasWidth]="canvasWidth"
+                         [imagePreviewHeight]="imagePreviewHeight"
+        ></sp-image-viewer>
     </div>
 </div>

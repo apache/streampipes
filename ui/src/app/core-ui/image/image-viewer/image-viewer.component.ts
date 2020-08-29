@@ -28,6 +28,16 @@ export class ImageViewerComponent {
   @Input()
   public imagesRoutes;
 
+  @Input()
+  public canvasHeight = 500;
+
+  @Input()
+  public canvasWidth = 800;
+
+  @Input()
+  public imagePreviewHeight = 65;
+
+
   public imagesIndex = 0;
 
   constructor() {}

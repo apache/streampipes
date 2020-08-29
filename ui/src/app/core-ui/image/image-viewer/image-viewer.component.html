@@ -21,7 +21,9 @@
         <div  fxLayout="row" fxLayoutAlign="space-around start">
             <div fxLayout="column" fxLayoutAlign="space-between " >
                 <sp-image-container *ngIf="imagesRoutes.length > 0"
-                        [imageSrc]="imagesRoutes[imagesIndex]">
+                                    [imageSrc]="imagesRoutes[imagesIndex]"
+                                    [canvasWidth]="canvasWidth"
+                                    [canvasHeight]="canvasHeight">
                 </sp-image-container>
             </div>
         </div>
@@ -31,6 +33,7 @@
                       [imagesRoutes]="imagesRoutes"
                       [selectedIndex]="imagesIndex"
                       [enableShortCuts]="true"
+                      [imagePreviewHeight]="imagePreviewHeight"
                       (indexChange)="handleImageIndexChange($event)">
         </sp-image-bar>
     </div>
