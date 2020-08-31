@@ -38,14 +38,17 @@ public class NumberLabeler implements EventProcessor<NumberLabelerParameters> {
   private List<Statement> statements;
 
   @Override
-  public void onInvocation(NumberLabelerParameters stateBufferParameters,
+  public void onInvocation(NumberLabelerParameters numberLabelerParameters,
                            SpOutputCollector spOutputCollector,
                            EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
-    LOG = stateBufferParameters.getGraph().getLogger(NumberLabeler.class);
+    LOG = numberLabelerParameters.getGraph().getLogger(NumberLabeler.class);
 
-    this.sensorListValueProperty = stateBufferParameters.getSensorListValueProperty();
+    this.statements = StatementUtils.getStatements(
+            numberLabelerParameters.getNumberValues(),
+            numberLabelerParameters.getLabelStrings(),
+            numberLabelerParameters.getComparators());
 
-    this.statements = StatementUtils.getStatements(stateBufferParameters.getStatementsStrings());
+    this.sensorListValueProperty = numberLabelerParameters.getSensorListValueProperty();
   }
 
   @Override
