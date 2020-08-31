@@ -68,28 +68,6 @@ public class StatementUtils {
     }
 
     /**
-     * Extracts Statements from Strings
-     * @param statementStrings
-     * @return
-     * @throws SpRuntimeException
-     */
-    @Deprecated
-    public static List<Statement> getStatements(List<String> statementStrings) throws SpRuntimeException {
-        List<Statement> statements = new ArrayList<>();
-
-        for (String s : statementStrings) {
-            Statement statement = getStatement(s);
-            if (statement == null) {
-                throw new SpRuntimeException("Statement: " + s + " is not correctly formatted");
-            }
-            statements.add(statement);
-        }
-
-        Collections.reverse(statements);
-        return statements;
-    }
-
-    /**
      * This method checks if the user input is correct. When not null is returned
      * @param s
      * @return

@@ -29,20 +29,26 @@ public class StateBufferLabelerParameters extends EventProcessorBindingParams {
     private String stateProperty;
     private String stateFilter;
     private String selectedOperation;
-    private List<String> statementsStrings;
+    private List<Integer> numberValues;
+    private List<String> labelStrings;
+    private List<String> comparators;
 
     public StateBufferLabelerParameters(DataProcessorInvocation graph,
                                         String sensorListValueProperty,
                                         String stateProperty,
                                         String stateFilter,
                                         String selectedOperation,
-                                        List<String> statementsStrings) {
+                                        List<Integer> numberValues,
+                                        List<String> labelStrings,
+                                        List<String> comparators) {
         super(graph);
         this.sensorListValueProperty = sensorListValueProperty;
         this.stateProperty = stateProperty;
         this.stateFilter = stateFilter;
         this.selectedOperation = selectedOperation;
-        this.statementsStrings = statementsStrings;
+        this.numberValues = numberValues;
+        this.labelStrings = labelStrings;
+        this.comparators = comparators;
     }
 
     public String getSensorListValueProperty() {
@@ -69,19 +75,35 @@ public class StateBufferLabelerParameters extends EventProcessorBindingParams {
         this.selectedOperation = selectedOperation;
     }
 
-    public List<String> getStatementsStrings() {
-        return statementsStrings;
-    }
-
-    public void setStatementsStrings(List<String> statementsStrings) {
-        this.statementsStrings = statementsStrings;
-    }
-
     public String getStateProperty() {
         return stateProperty;
     }
 
     public void setStateProperty(String stateProperty) {
         this.stateProperty = stateProperty;
+    }
+
+    public List<Integer> getNumberValues() {
+        return numberValues;
+    }
+
+    public void setNumberValues(List<Integer> numberValues) {
+        this.numberValues = numberValues;
+    }
+
+    public List<String> getLabelStrings() {
+        return labelStrings;
+    }
+
+    public void setLabelStrings(List<String> labelStrings) {
+        this.labelStrings = labelStrings;
+    }
+
+    public List<String> getComparators() {
+        return comparators;
+    }
+
+    public void setComparators(List<String> comparators) {
+        this.comparators = comparators;
     }
 }
