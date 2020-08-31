@@ -21,7 +21,15 @@ import {JsplumbService} from "../../services/jsplumb.service";
 import {PipelineEditorService} from "../../services/pipeline-editor.service";
 import {JsplumbBridge} from "../../services/jsplumb-bridge.service";
 import {ShepherdService} from "../../../services/tour/shepherd.service";
-import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  NgZone,
+  OnInit,
+  Output
+} from "@angular/core";
 import {
   InvocablePipelineElementUnion,
   PipelineElementConfig,
@@ -97,7 +105,8 @@ export class PipelineComponent implements OnInit {
               private ShepherdService: ShepherdService,
               private PipelineValidationService: PipelineValidationService,
               private dialogService: DialogService,
-              private dialog: MatDialog) {
+              private dialog: MatDialog,
+              private ngZone: NgZone) {
     this.plumbReady = false;
     this.currentMouseOverElement = "";
     this.currentPipelineModel = new Pipeline();
@@ -113,8 +122,10 @@ export class PipelineComponent implements OnInit {
   }
 
   validatePipeline() {
+    this.ngZone.run(() => {
       this.pipelineValid = this.PipelineValidationService
           .isValidPipeline(this.rawPipelineModel.filter(pe => !(pe.settings.disabled)));
+    });
   }
 
   ngOnDestroy() {
@@ -193,7 +204,7 @@ export class PipelineComponent implements OnInit {
             if (ui.draggable.hasClass('set')) {
               setTimeout(() => {
                 this.JsplumbService.setDropped(pipelineElementConfig.payload.dom, pipelineElementConfig.payload, true, false);
-              }, 10);
+              }, 0);
             }
             else if (ui.draggable.hasClass('stream')) {
               this.checkTopicModel(pipelineElementConfig);

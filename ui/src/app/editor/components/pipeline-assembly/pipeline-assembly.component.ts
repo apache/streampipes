@@ -16,7 +16,7 @@
  *
  */
 
-import {Component, Input, OnInit,} from "@angular/core";
+import {Component, Input, NgZone, OnInit,} from "@angular/core";
 import {JsplumbBridge} from "../../services/jsplumb-bridge.service";
 import {PipelinePositioningService} from "../../services/pipeline-positioning.service";
 import {PipelineValidationService} from "../../services/pipeline-validation.service";
@@ -75,7 +75,8 @@ export class PipelineAssemblyComponent implements OnInit {
                 private JsplumbService: JsplumbService,
                 private ShepherdService: ShepherdService,
                 private dialogService: DialogService,
-                private dialog: MatDialog) {
+                private dialog: MatDialog,
+                private ngZone: NgZone) {
 
         this.selectMode = true;
         this.currentZoomLevel = 1;
@@ -88,10 +89,6 @@ export class PipelineAssemblyComponent implements OnInit {
         } else {
             this.checkAndDisplayCachedPipeline();
         }
-
-        // this.$rootScope.$on("pipeline.validate", () => {
-        //     this.pipelineValid = this.PipelineValidationService.isValidPipeline(this.rawPipelineModel);
-        // });
     }
 
     ngAfterViewInit() {
@@ -230,7 +227,9 @@ export class PipelineAssemblyComponent implements OnInit {
         setTimeout(() => {
             this.PipelinePositioningService.displayPipeline(this.rawPipelineModel, "#assembly", false, autoLayout);
             this.EditorService.makePipelineAssemblyEmpty(false);
-            this.pipelineValid = this.PipelineValidationService.isValidPipeline(this.rawPipelineModel);
+            this.ngZone.run(() => {
+                this.pipelineValid = this.PipelineValidationService.isValidPipeline(this.rawPipelineModel);
+            });
         });
     }
 

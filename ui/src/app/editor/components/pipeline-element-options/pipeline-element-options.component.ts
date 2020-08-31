@@ -119,16 +119,6 @@ export class PipelineElementOptionsComponent implements OnInit{
     this.customize.emit(customizeInfo);
   }
 
-  openCustomizeDialog() {
-    let restrictedEditMode = ! (this.isRootElement());
-    // this.EditorDialogManager.showCustomizeDialog($("#" + this.pipelineElement.payload.dom), "", this.pipelineElement.payload, restrictedEditMode)
-    //     .then(() => {
-    //       this.JsplumbService.activateEndpoint(this.pipelineElement.payload.dom, !this.pipelineElement.payload.uncompleted);
-    //     }, () => {
-    //       this.JsplumbService.activateEndpoint(this.pipelineElement.payload.dom, !this.pipelineElement.payload.uncompleted);
-    //     });
-  }
-
   openHelpDialog() {
     this.EditorService.openHelpDialog(this.pipelineElement.payload);
   }
