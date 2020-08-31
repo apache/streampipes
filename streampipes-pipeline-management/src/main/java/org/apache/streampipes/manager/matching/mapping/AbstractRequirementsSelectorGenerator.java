@@ -15,27 +15,19 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.manager.matching.mapping;
 
-.example-full-width {
-  width: 100%;
-}
-.staticProperty {
-  /* display: block !important;
-  width: 100%;
-  height: 100%;
-  margin-right: 10px; */
-}
+import org.apache.streampipes.model.SpDataStream;
 
-.static-property-panel {
-  padding-left: 10px;
-  margin-bottom: 10px;
-  margin-top: 10px;
-}
+import java.util.List;
 
-.static-property-panel-border {
-  border-left:5px solid gray;
-}
+public abstract class AbstractRequirementsSelectorGenerator {
 
-.description {
-  font-size: 10px;
+  protected List<SpDataStream> inputStreams;
+
+  public AbstractRequirementsSelectorGenerator(List<SpDataStream> inputStreams) {
+    this.inputStreams = inputStreams;
+  }
+
+  public abstract List<String> generateSelectors();
 }

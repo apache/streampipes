@@ -145,6 +145,19 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
             .getInternalName(), targetClass);
   }
 
+  public List<StaticPropertyGroup> collectionMembersAsGroup(String internalName) {
+    return getStaticPropertyByName(internalName, CollectionStaticProperty.class)
+            .getMembers()
+            .stream()
+            .map(sp -> (StaticPropertyGroup) sp)
+            .sorted(Comparator.comparingInt(StaticProperty::getIndex))
+            .collect(Collectors.toList());
+  }
+
+  public StaticProperty extractGroupMember(String internalName, StaticPropertyGroup group) {
+    return getStaticPropertyByName(group.getStaticProperties(), internalName);
+  }
+
   public <V> List<V> singleValueParameterFromCollection(String internalName, Class<V> targetClass) {
     CollectionStaticProperty collection = getStaticPropertyByName(internalName, CollectionStaticProperty.class);
     return collection

@@ -84,6 +84,11 @@ export class StaticPropertyComponent implements OnInit {
   @Input()
   pipelineElement: InvocablePipelineElementUnion;
 
+  showLabel: boolean = true;
+
+  @Input()
+  showBorder: boolean = true;
+
   constructor(
     private logger: Logger,
     public xsService: xsService,
@@ -93,6 +98,8 @@ export class StaticPropertyComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.showLabel = !(this.staticProperty instanceof StaticPropertyGroup) ||
+        (this.staticProperty as StaticPropertyGroup).showLabel;
   }
 
   isCodeInputStaticProperty(val) {

@@ -164,4 +164,9 @@ public abstract class StaticProperty extends UnnamedStreamPipesEntity {
   public void setIndex(int index) {
     this.index = index;
   }
+
+  public <T extends StaticProperty> T as(Class<T> targetClass) {
+    return targetClass.cast(this);
+  }
+
 }

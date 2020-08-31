@@ -113,7 +113,8 @@ export class PipelineComponent implements OnInit {
   }
 
   validatePipeline() {
-      this.pipelineValid = this.PipelineValidationService.isValidPipeline(this.rawPipelineModel);
+      this.pipelineValid = this.PipelineValidationService
+          .isValidPipeline(this.rawPipelineModel.filter(pe => !(pe.settings.disabled)));
   }
 
   ngOnDestroy() {

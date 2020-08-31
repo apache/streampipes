@@ -17,8 +17,9 @@
   -->
 
 <div fxFlex="100" fxLayout="column">
-    <div fxFlex="100" fxLayout="column" class="static-property-panel">
-        <div fxFlex="100" fxLayout="column" style="margin-bottom:10px;">
+    <div fxFlex="100" fxLayout="column" class="static-property-panel"
+         [ngClass]="showBorder ? 'static-property-panel-border': ''">
+        <div fxFlex="100" fxLayout="column" style="margin-bottom:10px;" *ngIf="showLabel">
             <b>{{staticProperty.label}}</b>
             <mat-hint class="description">{{staticProperty.description}}</mat-hint>
         </div>
@@ -118,16 +119,18 @@
                               [adapterId]="adapterId"
                               [eventSchemas]="eventSchemas"
                               [parentForm]="parentForm"
+                              [fieldName]="fieldName"
                               [staticProperty]="staticProperty"
                               [displayRecommended]="displayRecommended"
                               class="test fullWidth"
-                              (inputEmitter)="valueChange($event)">
+                              (updateEmitter)="emitUpdate($event)">
             </app-static-group>
 
             <app-static-collection *ngIf="isCollectionStaticProperty(staticProperty)"
                                    [adapterId]="adapterId"
                                    [eventSchemas]="eventSchemas"
                                    [parentForm]="parentForm"
+                                   [fieldName]="fieldName"
                                    [displayRecommended]="displayRecommended"
                                    [staticProperty]="staticProperty" class="test fullWidth"
                                    (updateEmitter)="emitUpdate($event)">

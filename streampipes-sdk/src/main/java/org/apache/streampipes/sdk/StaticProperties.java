@@ -114,6 +114,13 @@ public class StaticProperties {
             label.getDescription(), staticProperties);
   }
 
+  public static StaticPropertyGroup group(Label label, Boolean showLabels, StaticProperty... sp) {
+    StaticPropertyGroup group = group(label, sp);
+    group.setShowLabel(showLabels);
+
+    return group;
+  }
+
   public static OneOfStaticProperty singleValueSelection(Label label, List<Option> options) {
     OneOfStaticProperty osp = new OneOfStaticProperty(label.getInternalId(), label.getLabel(),
             label.getDescription());
