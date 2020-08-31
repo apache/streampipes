@@ -15,48 +15,19 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.manager.matching.mapping;
 
-@import 'src/scss/sp/colors';
+import org.apache.streampipes.model.SpDataStream;
 
-standard-dialog-container {
-  width: 100%;
-  background-color: #fff;
-  border-radius: 5px;
-  -webkit-box-shadow: 0 10px 6px -6px #777;
-  -moz-box-shadow: 0 10px 6px -6px #777;
-  box-shadow: 0 10px 6px -6px #777;
-}
+import java.util.List;
 
-.standard-dialog-panel {
-  max-height: 80vh;
-  height: 100%;
-  display: grid;
-  grid-template-rows: 50px auto;
-}
+public abstract class AbstractRequirementsSelectorGenerator {
 
-.standard-dialog-panel-header {
-  display: flex;
-  justify-content: space-between;
-  height: 50px;
-  min-height: 50px;
-  width: 100%;
-  background: $sp-color-primary;
-  align-items: center;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-}
+  protected List<SpDataStream> inputStreams;
 
-.dialog-panel-content {
-  height: 100%;
-  overflow-y:auto;
-}
+  public AbstractRequirementsSelectorGenerator(List<SpDataStream> inputStreams) {
+    this.inputStreams = inputStreams;
+  }
 
-.dialog-title {
-  padding: 5px 5px 5px 15px;
-  font-size:20px;
-  color: white;
-}
-
-#portal {
-  width:100%;
+  public abstract List<String> generateSelectors();
 }

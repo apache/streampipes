@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.manager.matching.v2.mapping;
+package org.apache.streampipes.manager.matching.mapping;
 
 import org.apache.streampipes.manager.matching.v2.PropertyMatch;
 import org.apache.streampipes.manager.selector.PropertyFinder;

@@ -42,7 +42,6 @@ export class StaticPropertyUtilService{
     public clone(val: StaticProperty) {
         let clone;
         let id = 'urn:streampipes.org:spi::' + this.generateID(6);
-
         if (val instanceof FreeTextStaticProperty) {
             clone = new FreeTextStaticProperty();
             clone.elementId = id;

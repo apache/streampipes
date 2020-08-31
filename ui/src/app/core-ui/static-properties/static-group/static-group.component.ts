@@ -16,7 +16,7 @@
  *
  */
 
-import {Component, EventEmitter, Output} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {AbstractStaticPropertyRenderer} from "../base/abstract-static-property";
 import {StaticPropertyGroup} from "../../../core-model/gen/streampipes-model";
 
@@ -26,20 +26,14 @@ import {StaticPropertyGroup} from "../../../core-model/gen/streampipes-model";
     styleUrls: ['./static-group.component.css']
 })
 export class StaticGroupComponent
-    extends AbstractStaticPropertyRenderer<StaticPropertyGroup> {
+    extends AbstractStaticPropertyRenderer<StaticPropertyGroup> implements OnInit {
 
     @Output() inputEmitter: EventEmitter<Boolean> = new EventEmitter<Boolean>();
 
     private hasInput: Boolean;
 
-    valueChange(inputValue) {
-        let property = this.staticProperty.staticProperties.find(property => (property as any).isValid == false);
-        if (property == undefined) {
-            this.hasInput = true;
-        } else {
-            this.hasInput = false;
-        }
-        this.inputEmitter.emit(this.hasInput)
+    ngOnInit() {
+        //console.log(this.staticProperty);
     }
 
 }
