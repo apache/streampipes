@@ -20,7 +20,7 @@ services:
     depends_on:
       - "consul"
     volumes:
-      - spImagesDatalake:/spImages
+      - files:/spImages
     logging:
       driver: "json-file"
       options:
@@ -30,7 +30,7 @@ services:
       spnet:
 
 volumes:
-  spImagesDatalake:
+  files:
 
 networks:
   spnet:

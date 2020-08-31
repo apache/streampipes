@@ -22,7 +22,7 @@ services:
       - couchdb
     volumes:
       - backend:/root/.streampipes
-      - spImagesDatalake:/spImages
+      - files:/spImages
     logging:
       driver: "json-file"
       options:
@@ -33,7 +33,7 @@ services:
 
 volumes:
   backend:
-  spImagesDatalake:
+  files:
 
 networks:
   spnet:

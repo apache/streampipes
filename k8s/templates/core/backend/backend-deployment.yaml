@@ -13,34 +13,42 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-{{- if eq .Values.deployment "full" }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: kibana
+  name: backend
 spec:
   selector:
     matchLabels:
-      app: kibana
+      app: backend
   replicas: 1
   template:
     metadata:
       labels:
-        app: kibana
+        app: backend
     spec:
       initContainers:
-        - name: init-wait-elasticsearch
+        - name: init-wait-consul
           image: alpine
-          command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 elasticsearch 9200 && exit 0 || sleep 3; done; exit 1"]
+          command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 consul 8600 && exit 0 || sleep 3; done; exit 1"]
+        - name: init-wait-couchdb
+          image: alpine
+          command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 couchdb 5984 && exit 0 || sleep 3; done; exit 1"]
+      volumes:
+        - name: backend-pv
+          persistentVolumeClaim:
+            claimName: backend-pvc
+        - name: files-pv
+          persistentVolumeClaim:
+            claimName: files-pvc            
       containers:
-        - name: kibana
-          image: docker.elastic.co/kibana/kibana-oss:{{ .Values.external.kibanaVersion }}
+        - name: backend
+          image: {{ .Values.streampipes.registry }}/backend:{{ .Values.streampipes.version }}
           imagePullPolicy: {{ .Values.pullPolicy }}
           ports:
-            - containerPort: 5601
-          env:
-            - name: ELASTICSEARCH_URL
-              value: http://elasticsearch:9200
-            - name: SERVER_NAME
-              value: kibana
-{{- end }}
+            - containerPort: 8030
+          volumeMounts:
+            - mountPath: "/root/.streampipes"
+              name: backend-pv
+            - mountPath: "/spImages"
+              name: files-pv

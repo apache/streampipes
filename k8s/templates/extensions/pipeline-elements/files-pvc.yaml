@@ -13,17 +13,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-{{- if eq .Values.deployment "full" }}
+{{- if (eq .Values.deployment "lite") or (eq .Values.deployment "full") }}
 apiVersion: v1
-kind: Service
+kind: PersistentVolumeClaim
 metadata:
-  name: kibana
+  name: files-pvc
 spec:
-  selector:
-    app: kibana
-  ports:
-    - name: main
-      protocol: TCP
-      port: 5601
-      targetPort: 5601
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
 {{- end }}

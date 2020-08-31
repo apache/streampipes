@@ -13,29 +13,36 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-{{- if (eq .Values.deployment "lite") }}
+{{- if (eq .Values.deployment "full") }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: pipeline-elements-all-jvm
+  name: sinks-internal-jvm
 spec:
   selector:
     matchLabels:
-      app: pipeline-elements-all-jvm
+      app: sinks-internal-jvm
   replicas: 1
   template:
     metadata:
       labels:
-        app: pipeline-elements-all-jvm
+        app: sinks-internal-jvm
     spec:
       initContainers:
         - name: init-wait-consul
           image: alpine
           command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 consul 8600 && exit 0 || sleep 3; done; exit 1"]
+      volumes:
+        - name: files-pv
+          persistentVolumeClaim:
+            claimName: files-pvc            
       containers:
-        - name: pipeline-elements-all-jvm
-          image: {{ .Values.streampipes.registry }}/pipeline-elements-all-jvm:{{ .Values.streampipes.version }}
+        - name: sinks-internal-jvm
+          image: {{ .Values.streampipes.registry }}/sinks-internal-jvm:{{ .Values.streampipes.version }}
           imagePullPolicy: {{ .Values.pullPolicy }}
           ports:
             - containerPort: 8090
+          volumeMounts:
+            - mountPath: "/spImages"
+              name: files-pv                
 {{- end }}

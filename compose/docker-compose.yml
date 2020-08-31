@@ -32,6 +32,7 @@ services:
       - couchdb
     volumes:
       - backend:/root/.streampipes
+      - files:/spImages
     logging: *default-logging
     networks:
       spnet:
@@ -143,8 +144,7 @@ services:
   zookeeper:
     image: fogsyio/zookeeper:3.4.13
     volumes:
-      - zk-conf:/opt/zookeeper-3.4.13/conf
-      - zk-data:/opt/zookeeper-3.4.13/data
+      - zookeeper:/opt/zookeeper-3.4.13
     logging: *default-logging
     networks:
       spnet:
@@ -156,7 +156,7 @@ services:
       - INFLUXDB_REPORTING_DISABLED=false
       - INFLUXDB_ADMIN_ENABLED=true
     volumes:
-      - influx:/var/lib/influxdb
+      - influxdb:/var/lib/influxdb
     logging: *default-logging
     networks:
       spnet:
@@ -165,7 +165,9 @@ services:
   pipeline-elements-all-jvm:
     image: "${SP_DOCKER_REGISTRY}/pipeline-elements-all-jvm:${SP_VERSION}"
     depends_on:
-      - "consul"
+      - consul
+    volumes:
+      - files:/spImages
     logging: *default-logging
     networks:
       spnet:
@@ -173,8 +175,8 @@ services:
   sources-watertank-simulator:
     image: "${SP_DOCKER_REGISTRY}/sources-watertank-simulator:${SP_VERSION}"
     depends_on:
-      - "consul"
-      - "kafka"
+      - consul
+      - kafka
     logging: *default-logging
     networks:
       spnet:
@@ -186,9 +188,9 @@ volumes:
   connect:
   couchdb:
   kafka:
-  zk-conf:
-  zk-data:
-  influx:
+  zookeeper:
+  influxdb:
+  files:
 
 
 networks:

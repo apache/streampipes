@@ -18,8 +18,7 @@ services:
   zookeeper:
     image: fogsyio/zookeeper:3.4.13
     volumes:
-      - zk-conf:/opt/zookeeper-3.4.13/conf
-      - zk-data:/opt/zookeeper-3.4.13/data
+      - zookeeper:/opt/zookeeper-3.4.13
     logging:
       driver: "json-file"
       options:
@@ -29,8 +28,7 @@ services:
       spnet:
 
 volumes:
-  zk-conf:
-  zk-data:
+  zookeeper:
 
 networks:
   spnet:
