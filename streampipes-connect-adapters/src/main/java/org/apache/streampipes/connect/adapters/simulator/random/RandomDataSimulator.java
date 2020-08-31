@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.connect.adapters.simulator;
+package org.apache.streampipes.connect.adapters.simulator.random;
 
 import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
 

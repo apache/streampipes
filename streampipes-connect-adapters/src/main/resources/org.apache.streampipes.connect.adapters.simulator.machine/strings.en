@@ -1,0 +1,8 @@
+org.apache.streampipes.connect.adapters.simulator.machine.title=Machine Data Simulator
+org.apache.streampipes.connect.adapters.simulator.machine.description=Publishes various simulated machine sensor data
+
+wait-time-ms.title=Wait Time (MS)
+wait-time-ms.description=The time to wait between two events in milliseconds
+
+selected-simulator-option.title=Select sensor
+selected-simulator-option.description=Select simulated sensor data to be published

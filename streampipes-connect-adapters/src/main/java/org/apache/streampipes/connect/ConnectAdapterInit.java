@@ -25,6 +25,7 @@ import org.apache.streampipes.connect.adapters.flic.FlicMQTTAdapter;
 import org.apache.streampipes.connect.adapters.netio.NetioMQTTAdapter;
 import org.apache.streampipes.connect.adapters.netio.NetioRestAdapter;
 import org.apache.streampipes.connect.adapters.plc4x.modbus.Plc4xModbusAdapter;
+import org.apache.streampipes.connect.adapters.simulator.machine.MachineDataStreamAdapter;
 import org.apache.streampipes.connect.adapters.ti.TISensorTag;
 import org.apache.streampipes.connect.protocol.set.HttpProtocol;
 import org.apache.streampipes.connect.adapters.coindesk.CoindeskBitcoinAdapter;
@@ -38,8 +39,8 @@ import org.apache.streampipes.connect.adapters.mysql.MySqlStreamAdapter;
 import org.apache.streampipes.connect.adapters.opcua.OpcUaAdapter;
 import org.apache.streampipes.connect.adapters.plc4x.s7.Plc4xS7Adapter;
 import org.apache.streampipes.connect.adapters.ros.RosBridgeAdapter;
-import org.apache.streampipes.connect.adapters.simulator.RandomDataSetAdapter;
-import org.apache.streampipes.connect.adapters.simulator.RandomDataStreamAdapter;
+import org.apache.streampipes.connect.adapters.simulator.random.RandomDataSetAdapter;
+import org.apache.streampipes.connect.adapters.simulator.random.RandomDataStreamAdapter;
 import org.apache.streampipes.connect.adapters.slack.SlackAdapter;
 import org.apache.streampipes.connect.adapters.wikipedia.WikipediaEditedArticlesAdapter;
 import org.apache.streampipes.connect.adapters.wikipedia.WikipediaNewArticlesAdapter;
@@ -79,6 +80,7 @@ public class ConnectAdapterInit extends AdapterWorkerContainer {
             .add(new MySqlSetAdapter())
             .add(new RandomDataSetAdapter())
             .add(new RandomDataStreamAdapter())
+            .add(new MachineDataStreamAdapter())
             .add(new SlackAdapter())
             .add(new WikipediaEditedArticlesAdapter())
             .add(new WikipediaNewArticlesAdapter())
