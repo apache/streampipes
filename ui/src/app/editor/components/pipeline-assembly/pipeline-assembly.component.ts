@@ -218,7 +218,6 @@ export class PipelineAssemblyComponent implements OnInit {
                 this.currentPipelineName = pipeline.name;
                 this.currentPipelineDescription = pipeline.description;
                 this.rawPipelineModel = this.JsplumbService.makeRawPipeline(pipeline, false);
-                console.log(this.rawPipelineModel);
                 this.displayPipelineInEditor(true);
             });
     };
@@ -228,7 +227,8 @@ export class PipelineAssemblyComponent implements OnInit {
             this.PipelinePositioningService.displayPipeline(this.rawPipelineModel, "#assembly", false, autoLayout);
             this.EditorService.makePipelineAssemblyEmpty(false);
             this.ngZone.run(() => {
-                this.pipelineValid = this.PipelineValidationService.isValidPipeline(this.rawPipelineModel);
+                this.pipelineValid = this.PipelineValidationService
+                    .isValidPipeline(this.rawPipelineModel.filter(pe => !(pe.settings.disabled)));
             });
         });
     }

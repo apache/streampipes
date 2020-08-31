@@ -40,6 +40,7 @@ export class PipelineValidationService {
     }
 
     isValidPipeline(rawPipelineModel) {
+        console.log(rawPipelineModel);
         let streamInAssembly = this.isStreamInAssembly(rawPipelineModel);
         let sepaInAssembly = this.isSepaInAssembly(rawPipelineModel);
         let actionInAssembly = this.isActionInAssembly(rawPipelineModel);
