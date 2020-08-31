@@ -36,6 +36,10 @@ export class ImageWidgetComponent extends BaseDataExplorerWidget implements OnIn
   availableColumns: EventPropertyUnion[];
   selectedColumn: EventPropertyUnion;
 
+  canvasHeight;
+  canvasWidth;
+  imagePreviewHeight;
+
   public imagesRoutes = [];
 
   constructor(
@@ -45,6 +49,10 @@ export class ImageWidgetComponent extends BaseDataExplorerWidget implements OnIn
   }
 
   ngOnInit(): void {
+    this.canvasHeight = this.gridsterItemComponent.height - 240;
+    this.canvasWidth = this.gridsterItemComponent.width - 20;
+    this.imagePreviewHeight = this.gridsterItemComponent.width / 14;
+
     this.availableColumns = this.getImageProperties(this.dataExplorerWidget.dataLakeMeasure.eventSchema);
     this.selectedColumn = this.availableColumns[0];
     this.updateData();

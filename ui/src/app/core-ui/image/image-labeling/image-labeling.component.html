@@ -64,7 +64,7 @@
             </div>
 
             <sp-image-annotations style="width: 270px"
-                    [annotations]="this.cocoFiles[this.imagesIndex]?.annotations"
+                    [annotations]="this.cocoFile?.annotations"
                     [labels]="labels"
                     (changeAnnotationLabel)="handleChangeAnnotationLabel($event)"
                     (deleteAnnotation)="handleDeleteAnnotation($event)">

@@ -143,6 +143,7 @@ export class StaticPropertyUtilService{
 
     private cloneOption(val: Option) {
         let clone = new Option();
+        clone['@class']  = 'org.apache.streampipes.model.staticproperty.Option';
         clone.elementId = 'urn:streampipes.org:spi::' + this.generateID(6);
         //clone.elementName = val.elementName;
         clone.name = val.name;

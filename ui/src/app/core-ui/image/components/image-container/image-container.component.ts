@@ -32,6 +32,12 @@ export class ImageContainerComponent implements OnInit, AfterViewInit {
     this.loadImage(src);
   }
 
+  @Input()
+  public canvasHeight = 500;
+
+  @Input()
+  public canvasWidth = 800;
+
   @Output()
   childRedraw: EventEmitter<[Konva.Layer, ICoordinates]> = new EventEmitter<[Konva.Layer, ICoordinates]>();
   @Output()
@@ -95,11 +101,19 @@ export class ImageContainerComponent implements OnInit, AfterViewInit {
     // TODO fit to parent
     this.mainCanvasStage = new Konva.Stage({
       container: 'canvas-container',
-      width: 800,
-      height: 500
+      width: this.canvasWidth,
+      height: this.canvasHeight
     });
     this.registerEventHandler();
+    window.addEventListener('resize', this.fitStageIntoParentContainer);
 
+  }
+
+  fitStageIntoParentContainer() {
+    this.mainCanvasStage.width(500);
+    this.mainCanvasStage.height(500 * this.scale);
+    this.mainCanvasStage.scale({ x: this.scale, y: this.scale });
+    this.mainCanvasStage.draw();
   }
 
   loadImage(src) {

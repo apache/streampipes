@@ -35,6 +35,7 @@ export class ImageBarComponent implements OnInit {
   }
   @Input() selectedIndex: number;
   @Input() enableShortCuts: boolean;
+  @Input() imagePreviewHeight = 65;
 
   @Output() indexChange: EventEmitter<number> = new EventEmitter<number>();
 

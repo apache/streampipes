@@ -348,6 +348,31 @@ public class DataLakeManagementV3 {
     };
   }
 
+  public boolean removeAllDataFromDataLake() {
+    List<DataLakeMeasure> allMeasurements = getInfos();
+
+    // Remove data from influxdb
+    InfluxDB influxDB = getInfluxDBClient();
+    for (DataLakeMeasure measure : allMeasurements) {
+
+      Query query = new Query("DROP MEASUREMENT " + measure.getMeasureName(),
+              BackendConfig.INSTANCE.getInfluxDatabaseName());
+
+      QueryResult influx_result = influxDB.query(query);
+
+      if (influx_result.hasError() || influx_result.getResults().get(0).getError() != null) {
+          influxDB.close();
+          return false;
+      }
+    }
+
+    influxDB.close();
+
+
+
+    return true;
+  }
+
   private Query getRawDataQueryWithPage(int page, int itemsPerRequest, String index,
                                         @Nullable Long startDate, @Nullable Long endDate) {
     Query query;
