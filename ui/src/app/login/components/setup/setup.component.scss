@@ -23,21 +23,20 @@
 
 .setup-card {
   max-height: 80vh;
-  height: 80vh;
-  width:100%;
+  width:45%;
   overflow-y:auto;
 }
 
 .setup-header {
   margin-left:auto;
   margin-right:auto;
-  height:300px;
 }
 
 .setup-inline-content {
   width:500px;
   margin-left:auto;
   margin-right:auto;
+  padding-bottom: 5%;
 }
 
 .installation-status-container {
@@ -51,6 +50,8 @@
   width:300px;
   margin-left:auto;
   margin-right:auto;
+  padding-top: 5%;
+  padding-bottom: 5%;
 }
 
 .text-center {
