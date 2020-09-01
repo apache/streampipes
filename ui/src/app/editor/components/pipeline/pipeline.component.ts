@@ -313,8 +313,8 @@ export class PipelineComponent implements OnInit {
                   this.showCustomizeDialog({a: false, b: pe});
                 } else {
                   this.announceConfiguredElement(pe);
-                  //this.$rootScope.$broadcast("SepaElementConfigured", pe.payload.DOM);
                   (pe.payload as InvocablePipelineElementUnion).configured = true;
+                  pe.settings.completed = true;
                 }
               }
             }, status => {
@@ -395,6 +395,7 @@ export class PipelineComponent implements OnInit {
         this.JsplumbService.activateEndpoint(pipelineElementInfo.b.payload.dom, pipelineElementInfo.b.settings.completed);
         this.JsplumbBridge.getSourceEndpoint(pipelineElementInfo.b.payload.dom).setType("token");
         this.triggerPipelineCacheUpdate();
+        this.announceConfiguredElement(pipelineElementInfo.b);
       }
       this.validatePipeline();
     });

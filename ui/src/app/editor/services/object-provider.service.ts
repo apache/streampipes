@@ -69,7 +69,7 @@ export class ObjectProvider {
 
     addElementNew(pipeline, currentPipelineElements: PipelineElementConfig[]): Pipeline {
         currentPipelineElements.forEach(pe => {
-            if (pe.settings.disabled == undefined || !pe.settings.disabled) {
+            if (pe.settings.disabled == undefined || !(pe.settings.disabled)) {
                 if (pe.type === 'sepa' || pe.type === 'action') {
                     let payload = pe.payload;
                     payload = this.prepareElement(payload as InvocablePipelineElementUnion);
