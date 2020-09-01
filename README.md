@@ -85,7 +85,7 @@ The extensible toolbox of data processors and sinks supports use cases such as
 
 ## Installation
 
-The quickest way to run StreamPipes including the latest extensions (adapters, pipeline elements) is by using our Docker-based [installation & operation options](https://www.github.com/apache/dev/incubator-streampipes-installer), namely: 
+The quickest way to run StreamPipes including the latest extensions (adapters, pipeline elements) is by using our Docker-based [installation & operation options](https://www.github.com/apache/incubator-streampipes-installer), namely: 
 
 * **[StreamPipes Compose](https://github.com/apache/incubator-streampipes-installer/compose)** - The User's Choice
 * **[StreamPipes CLI](https://github.com/apache/incubator-streampipes-installer/cli)** - The Developer's Favorite
