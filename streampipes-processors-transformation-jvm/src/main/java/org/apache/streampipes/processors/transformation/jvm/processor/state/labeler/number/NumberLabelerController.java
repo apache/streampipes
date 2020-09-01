@@ -21,6 +21,9 @@ package org.apache.streampipes.processors.transformation.jvm.processor.state.lab
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.schema.PropertyScope;
+import org.apache.streampipes.model.staticproperty.*;
+import org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.model.Statement;
+import org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.model.StatementUtils;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
@@ -32,11 +35,14 @@ import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class NumberLabelerController extends StandaloneEventProcessingDeclarer<NumberLabelerParameters> {
 
   public static final String SENSOR_VALUE_ID = "sensorValueId";
   public static final String LABEL_COLLECTION_ID = "labelCollectionId";
+  public static final String COMPARATOR_ID = "comparatorId";
+  public static final String NUMBER_VALUE_ID = "numberValueId";
   public static final String LABEL_STRING_ID = "labelStringId";
 
   public static final String LABEL = "label";
@@ -52,15 +58,15 @@ public class NumberLabelerController extends StandaloneEventProcessingDeclarer<N
                             Labels.withId(SENSOR_VALUE_ID),
                             PropertyScope.NONE)
                     .build())
-            .requiredParameterAsCollection(
+            .requiredCollection(
                     Labels.withId(LABEL_COLLECTION_ID),
-                      StaticProperties.stringFreeTextProperty(Labels.withId(LABEL_STRING_ID)))
-
-//            StaticProperties.collection(Labels.withId(PLC_NODES),
-//                StaticProperties.stringFreeTextProperty(Labels.withId(PLC_NODE_RUNTIME_NAME)),
-//                StaticProperties.stringFreeTextProperty(Labels.withId(PLC_NODE_NAME)),
-//                StaticProperties.singleValueSelection(Labels.withId(PLC_NODE_TYPE),
-//                        Options.from("Bool",  "Byte", "Int", "Word", "Real"))))
+                    StaticProperties.group(Labels.from("group", "Group", ""), false,
+                      StaticProperties.singleValueSelection(Labels.withId(COMPARATOR_ID),
+                          Options.from("<", "<=", ">", ">=", "==", "*")),
+                      StaticProperties.doubleFreeTextProperty(Labels.withId(NUMBER_VALUE_ID)),
+                      StaticProperties.stringFreeTextProperty(Labels.withId(LABEL_STRING_ID))
+                    )
+            )
 
             .outputStrategy(OutputStrategies.append(
                     EpProperties.stringEp(Labels.withId(LABEL), LABEL, SPSensor.STATE, PropertyScope.DIMENSION_PROPERTY)
@@ -73,9 +79,39 @@ public class NumberLabelerController extends StandaloneEventProcessingDeclarer<N
 
     String sensorListValueProperty = extractor.mappingPropertyValue(SENSOR_VALUE_ID);
 
-    List<String> statementStrings = extractor.singleValueParameterFromCollection(LABEL_COLLECTION_ID, String.class);
+    List<StaticPropertyGroup> groupItems = extractor.collectionMembersAsGroup(LABEL_COLLECTION_ID);
 
-    NumberLabelerParameters params = new NumberLabelerParameters(graph, sensorListValueProperty, statementStrings);
+    List<Integer> numberValues = groupItems
+            .stream()
+            .map(group -> (
+                    extractor
+                    .extractGroupMember(NUMBER_VALUE_ID, group)
+                    .as(FreeTextStaticProperty.class))
+                    .getValue())
+            .map(Integer::parseInt)
+            .collect(Collectors.toList());
+
+    List<String> labelStrings = groupItems
+            .stream()
+            .map(group -> (extractor
+                    .extractGroupMember(LABEL_STRING_ID, group)
+                    .as(FreeTextStaticProperty.class))
+                    .getValue())
+            .collect(Collectors.toList());
+
+    List<String> comparators = groupItems
+            .stream()
+            .map(group -> (extractor
+                    .extractGroupMember(COMPARATOR_ID, group)
+                    .as(OneOfStaticProperty.class))
+                    .getOptions()
+                    .stream()
+                    .filter(Option::isSelected).findFirst().get().getName())
+            .collect(Collectors.toList());
+
+
+    NumberLabelerParameters params = new NumberLabelerParameters(graph, sensorListValueProperty, numberValues, labelStrings, comparators);
+
 
     return new ConfiguredEventProcessor<>(params, NumberLabeler::new);
   }

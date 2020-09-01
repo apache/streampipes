@@ -42,17 +42,20 @@ public class StateBufferLabeler implements EventProcessor<StateBufferLabelerPara
   private List<Statement> statements;
 
   @Override
-  public void onInvocation(StateBufferLabelerParameters stateBufferParameters,
+  public void onInvocation(StateBufferLabelerParameters stateBufferLabelerParameters,
                            SpOutputCollector spOutputCollector,
                            EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
-    LOG = stateBufferParameters.getGraph().getLogger(StateBufferLabeler.class);
+    LOG = stateBufferLabelerParameters.getGraph().getLogger(StateBufferLabeler.class);
 
-    this.sensorListValueProperty = stateBufferParameters.getSensorListValueProperty();
-    this.stateProperty = stateBufferParameters.getStateProperty();
-    this.stateFilter = stateBufferParameters.getStateFilter();
-    this.selectedOperation = stateBufferParameters.getSelectedOperation();
+    this.sensorListValueProperty = stateBufferLabelerParameters.getSensorListValueProperty();
+    this.stateProperty = stateBufferLabelerParameters.getStateProperty();
+    this.stateFilter = stateBufferLabelerParameters.getStateFilter();
+    this.selectedOperation = stateBufferLabelerParameters.getSelectedOperation();
 
-    this.statements = StatementUtils.getStatements(stateBufferParameters.getStatementsStrings());
+    this.statements = StatementUtils.getStatements(
+            stateBufferLabelerParameters.getNumberValues(),
+            stateBufferLabelerParameters.getLabelStrings(),
+            stateBufferLabelerParameters.getComparators());
   }
 
   @Override

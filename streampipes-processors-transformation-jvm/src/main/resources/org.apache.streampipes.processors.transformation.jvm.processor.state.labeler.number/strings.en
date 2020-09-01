@@ -5,10 +5,16 @@ sensorValueId.title=Sensor value
 sensorValueId.description=The value used for the labeling
 
 labelCollectionId.title=Condition
-labelCollectionId.description=Add a condition with the following scheme (Order is important) '<;5;ok', '<;10;ok' or '*;nok' as a default label
+labelCollectionId.description=Add a condition to provide a label for the data
 
 label.title=Label
 label.description=User defined label for data
 
-labelStringId.title=Condition
-labelStringId.description=Add a condition with the following scheme (Order is important) '<;5;ok', '<;10;ok' or '*;nok' as a default label
+labelStringId.title=Label Value
+labelStringId.description=Provide the label value to be added to the event
+
+comparatorId.title=Comparator
+comparatorId.description=Select a comparator
+
+numberValueId.title=Numerical Value
+numberValueId.description=Specify the numerical value for the condition

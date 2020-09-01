@@ -50,25 +50,21 @@ public class StatementUtils {
     }
 
 
-    /**
-     * Extracts Statements from Strings
-     * @param statementStrings
-     * @return
-     * @throws SpRuntimeException
-     */
-    public static List<Statement> getStatements(List<String> statementStrings) throws SpRuntimeException {
-        List<Statement> statements = new ArrayList<>();
 
-        for (String s : statementStrings) {
-            Statement statement = getStatement(s);
-            if (statement == null) {
-                throw new SpRuntimeException("Statement: " + s + " is not correctly formatted");
-            }
-            statements.add(statement);
+    public static List<Statement> getStatements(List<Integer> numberValues, List<String> labelStrings, List<String> comparators) throws SpRuntimeException {
+
+        List<Statement> result = new ArrayList<>();
+
+        for (int i = 0; i < numberValues.size(); i++) {
+            Statement statement = new Statement();
+            statement.setLabel(labelStrings.get(i));
+            statement.setOperator(comparators.get(i));
+            statement.setValue(numberValues.get(i));
+
+            result.add(statement);
         }
 
-        Collections.reverse(statements);
-        return statements;
+        return result;
     }
 
     /**
@@ -126,6 +122,10 @@ public class StatementUtils {
     private static boolean condition(Statement statement, double calculatedValue) {
         if (">".equals(statement.getOperator())) {
             return calculatedValue > statement.getValue();
+        } else if (">=".equals(statement.getOperator())) {
+            return calculatedValue < statement.getValue();
+        } else if ("<=".equals(statement.getOperator())) {
+            return calculatedValue <= statement.getValue();
         } else if ("<".equals(statement.getOperator())) {
             return calculatedValue < statement.getValue();
         } else if ("=".equals(statement.getOperator())) {

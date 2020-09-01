@@ -26,14 +26,17 @@ import java.util.List;
 public class NumberLabelerParameters extends EventProcessorBindingParams {
 
     private String sensorListValueProperty;
-    private List<String> statementsStrings;
 
-    public NumberLabelerParameters(DataProcessorInvocation graph,
-                                   String sensorListValueProperty,
-                                   List<String> statementsStrings) {
+    private List<Integer> numberValues;
+    private List<String> labelStrings;
+    private List<String> comparators;
+
+    public NumberLabelerParameters(DataProcessorInvocation graph, String sensorListValueProperty, List<Integer> numberValues, List<String> labelStrings, List<String> comparators) {
         super(graph);
         this.sensorListValueProperty = sensorListValueProperty;
-        this.statementsStrings = statementsStrings;
+        this.numberValues = numberValues;
+        this.labelStrings = labelStrings;
+        this.comparators = comparators;
     }
 
     public String getSensorListValueProperty() {
@@ -44,12 +47,27 @@ public class NumberLabelerParameters extends EventProcessorBindingParams {
         this.sensorListValueProperty = sensorListValueProperty;
     }
 
-    public List<String> getStatementsStrings() {
-        return statementsStrings;
+    public List<Integer> getNumberValues() {
+        return numberValues;
     }
 
-    public void setStatementsStrings(List<String> statementsStrings) {
-        this.statementsStrings = statementsStrings;
+    public void setNumberValues(List<Integer> numberValues) {
+        this.numberValues = numberValues;
     }
 
+    public List<String> getLabelStrings() {
+        return labelStrings;
+    }
+
+    public void setLabelStrings(List<String> labelStrings) {
+        this.labelStrings = labelStrings;
+    }
+
+    public List<String> getComparators() {
+        return comparators;
+    }
+
+    public void setComparators(List<String> comparators) {
+        this.comparators = comparators;
+    }
 }
