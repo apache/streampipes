@@ -104,11 +104,13 @@ export class WidgetConfigBuilder {
 
     requiredSingleValueSelection(id: string, label: string, description: string, options: Array<Tuple2<string, string>>): WidgetConfigBuilder {
         let osp: OneOfStaticProperty = new OneOfStaticProperty();
-        this.prepareStaticProperty(id, label, description, osp);
+        this.prepareStaticProperty(id, label, description, osp,
+            "org.apache.streampipes.model.staticproperty.OneOfStaticProperty");
 
         osp.options = [];
         options.forEach(o => {
             let option = new Option();
+            option["@class"] = "org.apache.streampipes.model.staticproperty.Option";
             option.name = o.a;
             option.internalName = o.b;
             osp.options.push(option);
@@ -130,16 +132,20 @@ export class WidgetConfigBuilder {
         return this;
     }
 
-    prepareStaticProperty(id: string, label: string, description: string, sp: StaticProperty) {
+    prepareStaticProperty(id: string,
+                          label: string,
+                          description: string,
+                          sp: StaticProperty,
+                          targetClass: any) {
         sp.internalName = id;
         sp.label = label;
         sp.description = description;
-        sp["@class"] = "org.apache.streampipes.model.staticproperty.FreeTextStaticProperty";
+        sp["@class"] = targetClass;
     }
 
     prepareFreeTextStaticProperty(id: string, label: string, description: string, datatype: string) {
         let fst: FreeTextStaticProperty = new FreeTextStaticProperty();
-        this.prepareStaticProperty(id, label, description, fst);
+        this.prepareStaticProperty(id, label, description, fst, "org.apache.streampipes.model.staticproperty.FreeTextStaticProperty");
         fst.requiredDatatype = datatype;
 
         return fst;
