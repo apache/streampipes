@@ -57,14 +57,16 @@
 
 ## About Apache StreamPipes
 
-Apache StreamPipes (incubating) enables flexible modeling of stream processing pipelines by providing a graphical
- modeling editor on top of existing stream processing frameworks.
+Apache StreamPipes (incubating) enables flexible modeling of stream processing pipelines by providing a graphical 
+modeling editor on top of existing stream processing frameworks.
 
 It empowers non-technical users to quickly define and execute processing pipelines based on an easily extensible 
-toolbox of data sources, data processors and data sinks. StreamPipes has an exchangeable runtime execution layer and executes pipelines using one of the provided wrappers, e.g., for Apache Flink or Apache Kafka Streams.
+toolbox of data sources, data processors and data sinks. StreamPipes has an exchangeable runtime execution layer and 
+executes pipelines using one of the provided wrappers, e.g., standalone or distributed in Apache Flink.
 
 Pipeline elements in StreamPipes can be installed at runtime - the built-in SDK allows to easily implement new 
-pipeline elements according to your needs. Pipeline elements are standalone microservices that can run anywhere - centrally on your server, in a large-scale cluster or close at the edge.
+pipeline elements according to your needs. Pipeline elements are standalone microservices that can run anywhere - 
+centrally on your server, in a large-scale cluster or close at the edge.
 
 ## Use Cases
 
@@ -95,9 +97,9 @@ Please follow the instructions provided in the corresponding `README.md` to get 
 
 For a more in-depth manual, read the installation guide at [https://streampipes.apache.org/docs/docs/user-guide-installation/](https://streampipes.apache.org/docs/docs/user-guide-installation/)!
 
-## Pipeline Elements
+## Extensions: Connect Adapters and Pipeline Elements
 
-StreamPipes includes a repository of ready-to-use pipeline elements. A description of the standard elements can be 
+StreamPipes includes a repository of StreamPipes Connect adapters for a variety of IoT data sources as well as ready-to-use pipeline elements. A description of the standard elements can be 
 found in the Github repository [streampipes-extensions](https://www.github.com/apache/incubator-streampipes-extensions).
 
 ## Building StreamPipes
