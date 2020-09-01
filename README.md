@@ -33,7 +33,7 @@
 <h4 align="center">StreamPipes is a self-service (Industrial) IoT toolbox to enable non-technical users to connect
 , analyze and explore IoT data streams. </h4>
 <p align="center">  
-    <img src="https://streampipes.apache.org/img/screenshots/pipeline-editor-2.png" alt="StreamPipes Pipeline
+    <img src="https://streampipes.apache.org/img/screenshots/streampipes-overview.png" alt="StreamPipes Pipeline
      Editor"/>
 </p>
 
