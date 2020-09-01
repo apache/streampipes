@@ -80,17 +80,14 @@ export class PipelineElementOptionsComponent implements OnInit{
               private PipelineElementRecommendationService: PipelineElementRecommendationService,
               private DialogService: DialogService,
               private EditorService: EditorService,
-              //private InitTooltips: InitTooltips,
               private JsplumbBridge: JsplumbBridge,
               private JsplumbService: JsplumbService,
-              //private TransitionService: TransitionService,
               private PipelineValidationService: PipelineValidationService,
               private RestApi: RestApi) {
     this.recommendationsAvailable = false;
     this.possibleElements = [];
     this.recommendedElements = [];
     this.recommendationsShown = false;
-
   }
 
   ngOnInit() {
@@ -103,14 +100,13 @@ export class PipelineElementOptionsComponent implements OnInit{
     });
     this.pipelineElementCssType = this.pipelineElement.type;
 
-    if (this.pipelineElement.type === 'stream') {
+    if (this.pipelineElement.type === 'stream' || this.pipelineElement.settings.completed) {
       this.initRecs(this.pipelineElement.payload.dom);
     }
   }
 
   removeElement(pipelineElement: PipelineElementConfig) {
     this.delete.emit(pipelineElement);
-    //this.$rootScope.$broadcast("pipeline.validate");
   }
 
   customizeElement(pipelineElement: PipelineElementConfig) {
@@ -127,15 +123,20 @@ export class PipelineElementOptionsComponent implements OnInit{
     //this.EditorDialogManager.showCustomizeStreamDialog(this.pipelineElement.payload);
   }
 
-  initRecs(elementId) {
-
-    var currentPipeline = this.ObjectProvider.makePipeline(cloneDeep(this.rawPipelineModel));
+  initRecs(pipelineElementDomId) {
+    let clonedModel: PipelineElementConfig[] = cloneDeep(this.rawPipelineModel);
+    clonedModel.forEach(pe => {
+      if (pe.payload.dom === pipelineElementDomId && (pe.type !== 'stream')) {
+        pe.settings.completed = false;
+        (pe.payload as InvocablePipelineElementUnion).configured = false;
+      }
+    })
+    var currentPipeline = this.ObjectProvider.makePipeline(clonedModel);
     this.EditorService.recommendPipelineElement(currentPipeline).subscribe((result) => {
       if (result.success) {
         this.possibleElements = this.PipelineElementRecommendationService.collectPossibleElements(this.allElements, result.possibleElements);
         this.recommendedElements = this.PipelineElementRecommendationService.populateRecommendedList(this.allElements, result.recommendedElements);
         this.recommendationsAvailable = true;
-        //this.InitTooltips.initTooltips();
       }
     });
   }

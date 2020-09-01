@@ -19,8 +19,8 @@
 <div *ngIf="recommendationsPrepared && recommendedElements.length > 0" class="cv-wrapper" [ngClass]="recommendationsShown ? 'opened-nav' : ''">
     <ul>
         <li *ngFor="let recommendedElement of recommendedElements"
-            [style]="recommendedElement.layoutSettings.skewStyle | safeCss">
-            <a [style]="recommendedElement.layoutSettings.unskewStyle | safeCss" [ngClass]="recommendedElement.layoutSettings.type" (click)="create(recommendedElement)" *ngIf="recommendedElement.name">
+            [style]="recommendedElement.layoutSettings.skewStyle">
+            <a [style]="recommendedElement.layoutSettings.unskewStyle" [ngClass]="recommendedElement.layoutSettings.type" (click)="create(recommendedElement)" *ngIf="recommendedElement.name">
             </a>
             <div (click)="create(recommendedElement)" [style]="recommendedElement.layoutSettings.unskewStyleLabel | safeCss"
                  class="{{recommendedElement.layoutSettings.type}}">

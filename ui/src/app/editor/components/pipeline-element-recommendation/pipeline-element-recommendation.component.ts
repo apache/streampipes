@@ -38,8 +38,7 @@ export class PipelineElementRecommendationComponent implements OnInit {
   @Input()
   pipelineElementDomId: string;
 
-  @Input()
-  recommendedElements: any;
+  _recommendedElements: any;
 
   recommendationsPrepared: boolean = false;
 
@@ -49,21 +48,21 @@ export class PipelineElementRecommendationComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.prepareStyles();
+
   }
 
-  prepareStyles() {
-    this.recommendedElements.forEach((element, index) => {
-      this.setLayoutSettings(element, index);
+  prepareStyles(recommendedElements) {
+    this.fillRemainingItems(recommendedElements);
+    recommendedElements.forEach((element, index) => {
+      this.setLayoutSettings(element, index, recommendedElements);
     });
-    this.recommendationsPrepared = true;
   }
 
-  setLayoutSettings(element, index) {
+  setLayoutSettings(element, index, recommendedElements) {
     element.layoutSettings = {
-      skewStyle: element.name ? this.getSkewStyle(index) : {'opacity': 0},
-      unskewStyle: this.getUnskewStyle(element, index),
-      unskewStyleLabel: this.getUnskewStyleLabel(index),
+      skewStyle: element.name ? this.getSkewStyle(index, recommendedElements) : {'opacity': 0},
+      unskewStyle: this.getUnskewStyle(element, index,recommendedElements),
+      unskewStyleLabel: this.getUnskewStyleLabel(index, recommendedElements),
       type: element instanceof DataProcessorInvocation ? "sepa" : "action"
     };
   }
@@ -73,18 +72,18 @@ export class PipelineElementRecommendationComponent implements OnInit {
     this.JsplumbService.createElement(this.rawPipelineModel, recommendedElement, this.pipelineElementDomId);
   }
 
-  getUnskewStyle(recommendedElement, index) {
-    var unskew = -(this.getSkew());
-    var rotate = -(90 - (this.getSkew() / 2));
+  getUnskewStyle(recommendedElement, index, recommendedElements) {
+    var unskew = -(this.getSkew(recommendedElements));
+    var rotate = -(90 - (this.getSkew(recommendedElements) / 2));
 
     return "transform: skew(" + unskew + "deg)" + " rotate(" + rotate + "deg)" + " scale(1);"
        +"background-color: " +this.getBackgroundColor(recommendedElement, index);
   }
 
   getBackgroundColor(recommendedElement, index) {
-    var alpha = recommendedElement.weight < 0.2 ? 0.2 : (recommendedElement.weight - 0.2);
+    var alpha = (recommendedElement.weight < 0.2 ? 0.2 : (recommendedElement.weight - 0.2));
+    alpha = Math.round((alpha * 10)) / 10;
     var rgb = recommendedElement instanceof DataProcessorInvocation ? this.getSepaColor(index) : this.getActionColor(index);
-
     return "rgba(" +rgb +"," +alpha +")";
   }
 
@@ -96,18 +95,17 @@ export class PipelineElementRecommendationComponent implements OnInit {
     return (index % 2 === 0) ? "63, 81, 181" : "79, 101, 230";
   }
 
-  getSkewStyle(index) {
-    this.fillRemainingItems();
+  getSkewStyle(index, recommendedElements) {
     // transform: rotate(72deg) skew(18deg);
-    var skew = this.getSkew();
-    var rotate = (index + 1) * this.getAngle();
+    var skew = this.getSkew(recommendedElements);
+    var rotate = (index + 1) * this.getAngle(recommendedElements);
 
     return "transform: rotate(" + rotate + "deg) skew(" + skew + "deg);";
   }
 
-  getUnskewStyleLabel(index) {
-    var unskew = -(this.getSkew());
-    var rotate =  (index + 1) * this.getAngle();
+  getUnskewStyleLabel(index, recommendedElements) {
+    var unskew = -(this.getSkew(recommendedElements));
+    var rotate =  (index + 1) * this.getAngle(recommendedElements);
     var unrotate = -360 + (rotate*-1);
 
     return "transform: skew(" + unskew + "deg)" + " rotate(" + unrotate + "deg)" + " scale(1);"
@@ -124,21 +122,36 @@ export class PipelineElementRecommendationComponent implements OnInit {
       +"top: 0px;";
   }
 
-  getSkew() {
-    return (90 - this.getAngle());
+  getSkew(recommendedElements) {
+    return (90 - this.getAngle(recommendedElements));
   }
 
-  getAngle() {
-    return (360 / this.recommendedElements.length);
+  getAngle(recommendedElements) {
+    return (360 / recommendedElements.length);
   }
 
-  fillRemainingItems() {
-    if (this.recommendedElements.length < 6) {
-      for (var i = this.recommendedElements.length; i < 6; i++) {
-        let element = {fakeElement: true};
-        this.setLayoutSettings(element, i);
-        this.recommendedElements.push(element);
+  fillRemainingItems(recommendedElements) {
+    if (recommendedElements.length < 6) {
+      for (var i = recommendedElements.length; i < 6; i++) {
+        let element = {fakeElement: true, weight: 0};
+        //this.setLayoutSettings(element, i);
+        recommendedElements.push(element);
       }
     }
+  }
+
+  get recommendedElements() {
+    return this._recommendedElements;
+  }
+
+  @Input()
+  set recommendedElements(recommendedElements: any) {
+    console.log("set");
+    console.log(this.pipelineElementDomId);
+    console.log(recommendedElements);
+    this.recommendationsPrepared = false;
+    this.prepareStyles(recommendedElements);
+    this._recommendedElements = recommendedElements;
+    this.recommendationsPrepared = true;
   }
 }
