@@ -29,13 +29,16 @@ StreamPipes Compose is a simple collection of user-friendly `docker-compose` fil
 ```bash
 docker-compose up -d
 ```
-Go to http://localhost to finish the installation in the browser.
+Go to http://localhost to finish the installation in the browser. Once finished, switch to the pipeline editor and start the interactive tour or check the [online tour](https://streampipes.apache.org/docs/docs/user-guide-tour/) to learn how to create your first pipeline!
 
 ## Prerequisite
 * Docker >= 17.06.0
 * Docker-Compose >= 1.17.0 (Compose file format: 3.4)
+* Google Chrome (recommended), Mozilla Firefox, Microsoft Edge
 
-Tested on: **macOS, Linux, Windows** (CMD, PowerShell, GitBash)
+Tested on: **macOS, Linux, Windows 10** (CMD, PowerShell, GitBash)
+
+**macOS** and **Windows 10** (Pro, Enterprise, Education) users can easily get Docker and Docker-Compose on their systems by installing **Docker for Mac/Windows** (recommended).
 
 > **NOTE**: On purpose, we disabled all port mappings except of http port **80** to access the StreamPipes UI to provide minimal surface for conflicting ports.
 
@@ -52,7 +55,7 @@ We provide two options to get you going:
 docker-compose up -d
 # go to after all services are started http://localhost
 ```
-After all containers are successfully started just got to your browser and visit http://localhost to finish the installation.
+After all containers are successfully started just got to your browser and visit http://localhost to finish the installation. Once finished, switch to the pipeline editor and start the interactive tour or check the [online tour](https://streampipes.apache.org/docs/docs/user-guide-tour/) to learn how to create your first pipeline!
 
 **Stopping** the **default** option is similarly easy:
 ```bash
