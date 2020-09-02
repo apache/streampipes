@@ -17,10 +17,6 @@
   -->
 
 <div fxLayout="row" fxLayoutAlign="start center">
-<!--    <Button (click)="decreaseTime()"><</Button>-->
-
-<!--    <Button (click)="increaseTime()">></Button>-->
-<!--    &nbsp;-->
     <div class="time-range-wrapper" fxFlex fxLayoutAlign="center center">
     <button mat-button mat-raised-button
             *ngFor="let item of possibleTimeButtons"
@@ -58,7 +54,7 @@
         <button mat-button mat-raised-button color="primary"
                 class="button-margin smaller-button-font-size"
                 matTooltip="Reload" matTooltipPosition="above">
-            <mat-icon (click)="reloadData()">autorenew</mat-icon>
+            <mat-icon (click)="refreshData()">autorenew</mat-icon>
         </button>
     </div>
 </div>

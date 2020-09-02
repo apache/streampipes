@@ -64,6 +64,15 @@ export class TimeRangeSelectorComponent implements OnInit {
     this.changeTimeByInterval((a, b) => a - b);
   }
 
+  refreshData() {
+    const difference = this.dateRange.endDate.getTime() - this.dateRange.startDate.getTime();
+
+    const current = new Date();
+    this.dateRange = new DateRange(new Date(current.getTime() - difference), current);
+
+    this.reloadData();
+  }
+
   private  changeTimeByInterval(func) {
     const difference = this.dateRange.endDate.getTime() - this.dateRange.startDate.getTime();
     const newStartTime = new Date(func(this.dateRange.startDate.getTime(), difference));
