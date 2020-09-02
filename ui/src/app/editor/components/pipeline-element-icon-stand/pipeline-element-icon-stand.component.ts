@@ -99,7 +99,7 @@ export class PipelineElementIconStandComponent implements OnInit {
         return this._activeType === PipelineElementType.DataStream ||
             this._activeType === PipelineElementType.DataSet ?
             this.selectedOptions.some(c => el.category.some(cg => c.type === cg)) :
-            this.selectedOptions.some(c => el.category.some(cg => c.code === cg));
+            this.selectedOptions.some(c => !(el.category) || el.category.length === 0 || el.category.some(cg => c.code === cg));
     }
 
     toggleOption(option) {
