@@ -17,7 +17,7 @@
   -->
 
 <div *ngIf="currentMouseOverElement==pipelineElement.payload.dom" class="sp-fade-options">
-    <span class="options-button customize-button" *ngIf="pipelineElement.type!='stream' && pipelineElement.settings.completed" style="z-index:10">
+    <span class="options-button customize-button" *ngIf="pipelineElement.type!='stream'" style="z-index:10">
         <button mat-button mat-icon-button matTooltip="Configure Element"
                 [matTooltipPosition]="'above'"
                 (click)="customizeElement(pipelineElement)">
