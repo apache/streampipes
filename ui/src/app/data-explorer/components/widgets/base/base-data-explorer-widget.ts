@@ -139,12 +139,21 @@ export abstract class BaseDataExplorerWidget implements OnChanges {
   }
 
   isNumber(p: EventPropertyUnion): boolean {
-    return (p instanceof EventPropertyPrimitive &&
-      ((p as EventPropertyPrimitive).runtimeType === 'http://www.w3.org/2001/XMLSchema#number') ||
-      (p as EventPropertyPrimitive).runtimeType === 'http://www.w3.org/2001/XMLSchema#float') ||
-    ((p as EventPropertyPrimitive).runtimeType === 'http://www.w3.org/2001/XMLSchema#double') ||
-    ((p as EventPropertyPrimitive).runtimeType === 'http://www.w3.org/2001/XMLSchema#integer')
-      ? true : false;
+    if (p instanceof EventPropertyPrimitive) {
+      const runtimeType = (p as EventPropertyPrimitive).runtimeType;
+
+      return runtimeType === 'http://schema.org/Number' ||
+      runtimeType === 'http://www.w3.org/2001/XMLSchema#float' ||
+      runtimeType === 'http://www.w3.org/2001/XMLSchema#double' ||
+      runtimeType === 'http://www.w3.org/2001/XMLSchema#integer' ||
+      runtimeType === 'https://schema.org/Number' ||
+      runtimeType === 'https://www.w3.org/2001/XMLSchema#float' ||
+      runtimeType === 'https://www.w3.org/2001/XMLSchema#double' ||
+      runtimeType === 'https://www.w3.org/2001/XMLSchema#integer'
+        ? true : false;
+    } else {
+      return  false;
+    }
   }
 
   public isTimestamp(p: EventProperty) {
