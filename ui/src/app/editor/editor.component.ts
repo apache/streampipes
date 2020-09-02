@@ -27,9 +27,9 @@ import {
 } from "../core-model/gen/streampipes-model";
 import {PipelineElementService} from "../platform-services/apis/pipeline-element.service";
 import {
-  PipelineElementConfig,
-  PipelineElementType,
-  PipelineElementUnion
+    PipelineElementConfig, PipelineElementIdentifier,
+    PipelineElementType,
+    PipelineElementUnion, TabsModel
 } from "./model/editor.model";
 import {PipelineElementTypeUtils} from "./utils/editor.utils";
 import {AuthStatusService} from "../services/auth-status.service";
@@ -39,6 +39,7 @@ import {DialogService} from "../core-ui/dialog/base-dialog/base-dialog.service";
 import {MissingElementsForTutorialComponent} from "./dialog/missing-elements-for-tutorial/missing-elements-for-tutorial.component";
 import {ShepherdService} from "../services/tour/shepherd.service";
 import {ActivatedRoute} from "@angular/router";
+import {EditorConstants} from "./constants/editor.constants";
 
 @Component({
     selector: 'editor',
@@ -48,7 +49,8 @@ import {ActivatedRoute} from "@angular/router";
 export class EditorComponent implements OnInit {
 
     selectedIndex: number = 1;
-    activeType: PipelineElementType = PipelineElementType.DataStream;
+    activeType: PipelineElementIdentifier = EditorConstants.DATA_STREAM_IDENTIFIER;
+    activeShorthand: string;
 
     availableDataSets: SpDataSet[] = [];
     availableDataStreams: SpDataStream[] = [];
@@ -73,22 +75,26 @@ export class EditorComponent implements OnInit {
 
     isTutorialOpen: boolean = false;
 
-    tabs = [
+    tabs: TabsModel[] = [
         {
             title: 'Data Sets',
-            type: PipelineElementType.DataSet
+            type: EditorConstants.DATA_SET_IDENTIFIER,
+            shorthand: "set"
         },
         {
             title: 'Data Streams',
-            type: PipelineElementType.DataStream
+            type: EditorConstants.DATA_STREAM_IDENTIFIER,
+            shorthand: "stream"
         },
         {
             title: 'Data Processors',
-            type: PipelineElementType.DataProcessor
+            type: EditorConstants.DATA_PROCESSOR_IDENTIFIER,
+            shorthand: "sepa"
         },
         {
             title: 'Data Sinks',
-            type: PipelineElementType.DataSink
+            type: EditorConstants.DATA_SINK_IDENTIFIER,
+            shorthand: "action"
         }
     ];
 
@@ -173,12 +179,13 @@ export class EditorComponent implements OnInit {
     selectPipelineElements(index : number) {
         this.selectedIndex = index;
         this.activeType = this.tabs[index].type;
+        this.activeShorthand = this.tabs[index].shorthand;
         this.currentElements = this.allElements
-            .filter(pe => pe instanceof PipelineElementTypeUtils.toType(this.activeType))
+            .filter(pe => pe["@class"] === this.activeType)
             .sort((a, b) => {
                 return a.name.localeCompare(b.name);
             });
-        this.shepherdService.trigger("select-" +PipelineElementTypeUtils.toCssShortHand(this.activeType));
+        this.shepherdService.trigger("select-" +this.activeShorthand);
     }
 
     toggleEditorStand() {

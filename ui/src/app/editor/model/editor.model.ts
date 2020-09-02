@@ -23,6 +23,7 @@ import {
   SpDataStream
 } from "../../core-model/gen/streampipes-model";
 import {InjectionToken} from "@angular/core";
+import {EditorConstants} from "../constants/editor.constants";
 
 export type PipelineElementHolder = {
   [key: string]: Array<PipelineElementUnion>;
@@ -60,8 +61,23 @@ export enum PipelineElementType {
   DataSink
 }
 
-export type PipelineElementUnion = SpDataSet | SpDataStream | DataProcessorInvocation | DataSinkInvocation;
+export interface TabsModel {
+  title: string,
+  type: PipelineElementIdentifier,
+  shorthand: string
+}
+
+export type PipelineElementUnion =
+    SpDataSet
+    | SpDataStream
+    | DataProcessorInvocation
+    | DataSinkInvocation;
 
 export type InvocablePipelineElementUnion = DataProcessorInvocation | DataSinkInvocation;
 
 export const PIPELINE_ELEMENT_TOKEN = new InjectionToken<{}>('pipelineElement');
+
+export type PipelineElementIdentifier = "org.apache.streampipes.model.SpDataStream"
+    | "org.apache.streampipes.model.SpDataSet"
+    | "org.apache.streampipes.model.graph.DataProcessorInvocation"
+    | "org.apache.streampipes.model.graph.DataSinkInvocation";

@@ -17,7 +17,11 @@
  */
 
 import {EditorConstants} from "../constants/editor.constants";
-import {PipelineElementType, PipelineElementUnion} from "../model/editor.model";
+import {
+  PipelineElementIdentifier,
+  PipelineElementType,
+  PipelineElementUnion
+} from "../model/editor.model";
 import {
   DataProcessorInvocation,
   DataSinkInvocation,
