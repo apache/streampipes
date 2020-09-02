@@ -162,6 +162,7 @@ public class StreamPipes {
   public static final String KAFKA_BATCH_SIZE = NS + "kafkaBatchSize";
   public static final String KAFKA_OFFSET = NS + "kafkaOffset";
   public static final String KAFKA_GROUP_ID = NS + "kafkaGroupId";
+  public static final String KAFKA_MAX_REQUEST_SIZE = NS + "kafkaMaxRequestSize";
 
   public static final String ERROR_TOPIC = NS + "errorTopic";
   public static final String STATS_TOPIC = NS + "statsTopic";
@@ -396,4 +397,5 @@ public class StreamPipes {
   public static final String HAS_CODE_TEMPLATE = NS + "hasCodeTemplate";
   public static final String USER_DEFINED_OUTPUT_STRATEGY = NS + "UserDefinedOutputStrategy";
   public static final String PE_CONFIGURED = NS + "isPeConfigured" ;
+
 }

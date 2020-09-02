@@ -45,6 +45,9 @@ public class KafkaTransportProtocol extends TransportProtocol {
   @RdfProperty(StreamPipes.KAFKA_MESSAGE_MAX_BYTES)
   private String messageMaxBytes;
 
+  @RdfProperty(StreamPipes.KAFKA_MAX_REQUEST_SIZE)
+  private String maxRequestSize;
+
   @RdfProperty(StreamPipes.KAFKA_ACKS)
   private String acks;
 
@@ -76,6 +79,13 @@ public class KafkaTransportProtocol extends TransportProtocol {
     this.kafkaPort = other.getKafkaPort();
     this.zookeeperHost = other.getZookeeperHost();
     this.zookeeperPort = other.getZookeeperPort();
+    this.acks = other.getAcks();
+    this.batchSize = other.getBatchSize();
+    this.groupId = other.getGroupId();
+    this.lingerMs = other.getLingerMs();
+    this.maxRequestSize = other.getMaxRequestSize();
+    this.messageMaxBytes = other.getMessageMaxBytes();
+    this.offset = other.getOffset();
   }
 
   public KafkaTransportProtocol(String kafkaHost, Integer kafkaPort, WildcardTopicDefinition wildcardTopicDefinition) {
@@ -163,5 +173,13 @@ public class KafkaTransportProtocol extends TransportProtocol {
 
   public void setGroupId(String groupId) {
     this.groupId = groupId;
+  }
+
+  public String getMaxRequestSize() {
+    return maxRequestSize;
+  }
+
+  public void setMaxRequestSize(String maxRequestSize) {
+    this.maxRequestSize = maxRequestSize;
   }
 }
