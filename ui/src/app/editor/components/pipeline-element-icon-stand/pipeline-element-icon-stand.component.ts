@@ -18,7 +18,11 @@
 
 import {Component, Input, OnInit,} from "@angular/core";
 import {RestApi} from "../../../services/rest-api.service";
-import {PipelineElementType, PipelineElementUnion} from "../../model/editor.model";
+import {
+    PipelineElementIdentifier,
+    PipelineElementType,
+    PipelineElementUnion
+} from "../../model/editor.model";
 import {PipelineElementTypeUtils} from "../../utils/editor.utils";
 import {EditorService} from "../../services/editor.service";
 import {zip} from "rxjs";
@@ -95,7 +99,7 @@ export class PipelineElementIconStandComponent implements OnInit {
         return this._activeType === PipelineElementType.DataStream ||
             this._activeType === PipelineElementType.DataSet ?
             this.selectedOptions.some(c => el.category.some(cg => c.type === cg)) :
-            this.selectedOptions.some(c => el.category.some(cg => c.code === cg));
+            this.selectedOptions.some(c => !(el.category) || el.category.length === 0 || el.category.some(cg => c.code === cg));
     }
 
     toggleOption(option) {
@@ -125,13 +129,14 @@ export class PipelineElementIconStandComponent implements OnInit {
     }
 
     @Input()
-    set activeType(value: PipelineElementType) {
-        this._activeType = value;
+    set activeType(value: PipelineElementIdentifier) {
+        let activeType = PipelineElementTypeUtils.fromClassName(value);
+        this._activeType = activeType;
         if (this.allCategories.length > 0) {
             this.currentCategories = this.allCategories[this._activeType];
             this.selectedOptions = [...this.currentCategories];
         }
-        this.activeCssClass = this.makeActiveCssClass(value);
+        this.activeCssClass = this.makeActiveCssClass(activeType);
         setTimeout(() => {
             this.makeDraggable();
         })
