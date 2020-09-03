@@ -488,6 +488,70 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   }
 
   /**
+   * @deprecated Use {@link #requiredFloatParameter(Label, Float, Float, Float)} instead.
+   * Defines a number-based configuration parameter of type float provided by preprocessing developers at preprocessing
+   * authoring time. In addition, an allowed value range of the expected input can be assigned.
+   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
+   *              user-friendly manner.
+   * @param min The minimum value of the allowed value range.
+   * @param max The maximum value of the allowed value range.
+   * @param step The granularity
+   * @return this
+   */
+  public BU requiredFloatParameter(String internalId, String label, String description, Float min, Float max, Float step) {
+    FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(internalId,
+            label,
+            description,
+            XSD._double.toString());
+
+    PropertyValueSpecification valueSpecification = new PropertyValueSpecification(min, max, step);
+    fsp.setValueSpecification(valueSpecification);
+    this.staticProperties.add(fsp);
+
+    return me();
+  }
+
+  /**
+   * Defines a number-based configuration parameter of type float provided by preprocessing developers at preprocessing
+   * authoring time. In addition, an allowed value range of the expected input can be assigned.
+   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
+   *              user-friendly manner.
+   * @param min The minimum value of the allowed value range.
+   * @param max The maximum value of the allowed value range.
+   * @param step The granularity
+   * @return this
+   */
+  public BU requiredFloatParameter(Label label, Float min, Float max, Float step) {
+    FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label, XSD._double.toString());
+    PropertyValueSpecification valueSpecification = new PropertyValueSpecification(min, max, step);
+    fsp.setValueSpecification(valueSpecification);
+    this.staticProperties.add(fsp);
+
+    return me();
+  }
+
+  /**
+   * Defines a number-based configuration parameter of type float provided by preprocessing developers at preprocessing
+   * authoring time. In addition, an allowed value range of the expected input can be assigned.
+   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
+   *              user-friendly manner.
+   * @param defaultValue The default float value.
+   * @param min The minimum value of the allowed value range.
+   * @param max The maximum value of the allowed value range.
+   * @param step The granularity
+   * @return this
+   */
+  public BU requiredFloatParameter(Label label, Float defaultValue, Float min, Float max, Float step) {
+    FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label, XSD._double.toString());
+    fsp.setValue(String.valueOf(defaultValue));
+    PropertyValueSpecification valueSpecification = new PropertyValueSpecification(min, max, step);
+    fsp.setValueSpecification(valueSpecification);
+    this.staticProperties.add(fsp);
+
+    return me();
+  }
+
+  /**
    * @deprecated Use {@link #requiredSingleValueSelection(Label, Option...)} instead.
    * @param options An arbitrary number of {@link org.apache.streampipes.model.staticproperty.Option} elements. Use
    * {@link org.apache.streampipes.sdk.helpers.Options} to create option elements from string values.
@@ -628,29 +692,6 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
 
   public BU requiredIntegerParameter(String internalId, String label, String description, Integer min, Integer max, Integer step) {
     return requiredIntegerParameter(Labels.from(internalId, label, description), min, max, step);
-  }
-
-  /**
-   * Defines a number-based configuration parameter of type float provided by preprocessing developers at preprocessing
-   * authoring time. In addition, an allowed value range of the expected input can be assigned.
-   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
-   *              user-friendly manner.
-   * @param min The minimum value of the allowed value range.
-   * @param max The maximum value of the allowed value range.
-   * @param step The granularity
-   * @return this
-   */
-  public BU requiredFloatParameter(String internalId, String label, String description, Float min, Float max, Float step) {
-    FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(internalId,
-            label,
-            description,
-            XSD._double.toString());
-
-    PropertyValueSpecification valueSpecification = new PropertyValueSpecification(min, max, step);
-    fsp.setValueSpecification(valueSpecification);
-    this.staticProperties.add(fsp);
-
-    return me();
   }
 
   /**
