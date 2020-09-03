@@ -27,7 +27,7 @@ services:
   #### apache/incubator-streampipes-extensions
   connect-worker-main:
     build:
-      context: ./streampipes-connect-adapters/streampipes-connect-adapter
+      context: ./streampipes-connect-adapters
       dockerfile: Dockerfile
       args:
         BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine-slim
