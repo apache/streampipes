@@ -31,8 +31,6 @@ import org.apache.streampipes.container.api.WelcomePage;
 public class PipelineElementContainerResourceConfig extends ResourceConfig {
 
   public PipelineElementContainerResourceConfig() {
-    register(Element.class);
-    register(InvocableElement.class);
     register(SecElement.class);
     register(SepaElement.class);
     register(SepElement.class);
