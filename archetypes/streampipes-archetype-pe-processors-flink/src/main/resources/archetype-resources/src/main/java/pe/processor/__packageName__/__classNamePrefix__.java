@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 #set( $symbol_pound = '#' )
 #set( $symbol_dollar = '$' )
 #set( $symbol_escape = '\' )
@@ -29,9 +28,15 @@ import org.apache.streampipes.model.runtime.Event;
 
 public class ${classNamePrefix} implements FlatMapFunction<Event, Event> {
 
-  @Override
-  public void flatMap(Event in, Collector<Event> out) throws Exception {
+  private String exampleText;
 
-    out.collect(in);
+  public ${classNamePrefix}(String exampleText) {
+    this.exampleText = exampleText;
+  }
+
+  @Override
+  public void flatMap(Event event, Collector<Event> out) {
+    event.addField("appendedText", exampleText);
+    out.collect(event);
   }
 }

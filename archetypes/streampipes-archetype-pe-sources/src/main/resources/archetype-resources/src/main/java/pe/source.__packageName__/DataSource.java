@@ -16,7 +16,7 @@
  *
  */
 
-package ${package}.pe.${packageName};
+package ${package}.pe.source.${packageName};
 
 import org.apache.streampipes.container.declarer.DataStreamDeclarer;
 import org.apache.streampipes.container.declarer.SemanticEventProducerDeclarer;
@@ -30,7 +30,7 @@ import java.util.List;
 public class DataSource implements SemanticEventProducerDeclarer {
 
   public DataSourceDescription declareModel() {
-    return DataSourceBuilder.create("${package}.${packageName}.source", "${classNamePrefix} " +
+    return DataSourceBuilder.create("${package}.pe.source.${packageName}", "${classNamePrefix} " +
         "Source", "")
             .build();
   }

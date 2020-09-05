@@ -15,34 +15,37 @@
  * limitations under the License.
  *
  */
-
 #set( $symbol_pound = '#' )
 #set( $symbol_dollar = '$' )
 #set( $symbol_escape = '\' )
+#set( $svc_name = $package.getClass().forName("org.apache.velocity.util.StringUtils").sub("$artifactId", "-", " ") )
+
 package ${package}.config;
 
 import org.apache.streampipes.config.SpConfig;
 import org.apache.streampipes.container.model.PeConfig;
 
 public enum Config implements PeConfig {
-
   INSTANCE;
 
   private SpConfig config;
-  public static final String JAR_FILE = "./streampipes-processing-element-container.jar";
-
-  private final static String SERVICE_ID = "pe/${package}";
+  private final static String SERVICE_ID = "pe/${package}.source";
 
   Config() {
     config = SpConfig.getSpConfig(SERVICE_ID);
+    config.register(ConfigKeys.HOST, "${artifactId}", "Data source host");
+    config.register(ConfigKeys.PORT, 8090, "Data source port");
+    config.register(ConfigKeys.SERVICE_NAME, "${svc_name}", "Data source service name");
+    config.register(ConfigKeys.KAFKA_HOST, "kafka", "Kafka host");
+    config.register(ConfigKeys.KAFKA_PORT, 9092, "Kafka port");
+  }
 
-    config.register(ConfigKeys.HOST, "${artifactId}", "Hostname for the pe source component");
-    config.register(ConfigKeys.PORT, 8090, "Port for the pe source component");
-    config.register(ConfigKeys.ICON_HOST, "backend", "Hostname for the icon host");
-    config.register(ConfigKeys.ICON_PORT, 80, "Port for the icons in nginx");
+  public String getKafkaHost() {
+    return config.getString(ConfigKeys.KAFKA_HOST);
+  }
 
-    config.register(ConfigKeys.SERVICE_NAME, "${packageName}", "The name of the service");
-
+  public int getKafkaPort() {
+    return config.getInteger(ConfigKeys.KAFKA_PORT);
   }
 
   @Override
@@ -53,21 +56,6 @@ public enum Config implements PeConfig {
   @Override
   public int getPort() {
     return config.getInteger(ConfigKeys.PORT);
-  }
-
-  public static final String iconBaseUrl = "http://" + Config.INSTANCE.getIconHost() + ":" +
-          Config.INSTANCE.getIconPort() + "/assets/img/pe_icons";
-
-  public static final String getIconUrl(String pictureName) {
-    return iconBaseUrl + "/" + pictureName + ".png";
-  }
-
-  public String getIconHost() {
-    return config.getString(ConfigKeys.ICON_HOST);
-  }
-
-  public int getIconPort() {
-    return config.getInteger(ConfigKeys.ICON_PORT);
   }
 
   @Override

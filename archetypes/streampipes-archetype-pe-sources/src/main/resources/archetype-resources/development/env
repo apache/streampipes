@@ -17,4 +17,5 @@
 SP_PORT=8005
 SP_HOST=host.docker.internal
 SP_DEBUG=true
-SP_FLINK_DEBUG=true
+SP_KAFKA_HOST=localhost
+SP_KAFKA_PORT=9094

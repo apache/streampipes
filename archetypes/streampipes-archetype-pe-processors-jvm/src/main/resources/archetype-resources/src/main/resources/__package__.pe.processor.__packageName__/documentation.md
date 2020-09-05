@@ -15,8 +15,9 @@
   ~ limitations under the License.
   ~
   -->
+#set( $double_pound = '##' )
 
-## ${classNamePrefix}
+${double_pound} ${classNamePrefix}
 
 <p align="center"> 
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
@@ -24,19 +25,18 @@
 
 ***
 
-## Description
-
-Describe your new processor here!
-
-***
-
-## Required input
-What are the input requirements of your processor?
+${double_pound} Description
+Describe your new data processor here!
 
 ***
 
-## Configuration
-What are the configurations a user has to provide
+${double_pound} Required input
+What are the input requirements of your data processor?
 
-## Output
-How do the events your processor emits look like.
+***
+
+${double_pound} Configuration
+What are the configurations a user has to provide?
+
+${double_pound} Output
+How do the events your data processor emits look like?

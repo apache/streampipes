@@ -15,24 +15,39 @@
  * limitations under the License.
  *
  */
-
 #set( $symbol_pound = '#' )
 #set( $symbol_dollar = '$' )
 #set( $symbol_escape = '\' )
-package ${package}.main;
+
+package ${package};
 
 import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.container.standalone.init.StandaloneModelSubmitter;
+import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
+import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
+import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
+import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
+import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
+import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import ${package}.config.Config;
-import ${package}.pe.${packageName}.DataSource;
+import ${package}.pe.sink.${packageName}.${classNamePrefix}Controller;
 
 public class Init extends StandaloneModelSubmitter {
 
-  public static void main(String[] args) throws Exception {
+  public static void main(String[] args) {
     DeclarersSingleton.getInstance()
-            .add(new DataSource());
+            .add(new ${classNamePrefix}Controller());
+
+    DeclarersSingleton.getInstance().registerDataFormats(
+            new JsonDataFormatFactory(),
+            new CborDataFormatFactory(),
+            new SmileDataFormatFactory(),
+            new FstDataFormatFactory());
+
+    DeclarersSingleton.getInstance().registerProtocols(
+            new SpKafkaProtocolFactory(),
+            new SpJmsProtocolFactory());
 
     new Init().init(Config.INSTANCE);
-
   }
 }

@@ -36,15 +36,9 @@
             </includes>
         </fileSet>
         <fileSet filtered="true" packaged="false" encoding="UTF-8">
-            <directory></directory>
-            <includes>
-                <include>Dockerfile</include>
-            </includes>
-        </fileSet>
-        <fileSet filtered="true" packaged="false" encoding="UTF-8">
             <directory/>
             <includes>
-                <include>deployment/docker-compose.yml</include>
+                <include>Dockerfile</include>
             </includes>
         </fileSet>
         <fileSet filtered="true" packaged="false" encoding="UTF-8">
@@ -54,16 +48,10 @@
                 <include>**/*.md</include>
             </includes>
         </fileSet>
-        <!--<binaries>-->
-            <!--<directory>src/main/resources</directory>-->
-            <!--<includes>-->
-                <!--<include>**/*.png</include>-->
-            <!--</includes>-->
-        <!--</binaries>-->
-        <fileSet filtered="true" packaged="false" encoding="UTF-8">
-            <directory/>
+        <fileSet filtered="false" packaged="false" >
+            <directory>src/main/resources</directory>
             <includes>
-                <include>deployment/system</include>
+                <include>**/*.png</include>
             </includes>
         </fileSet>
         <fileSet filtered="true" packaged="false" encoding="UTF-8">

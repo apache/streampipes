@@ -15,10 +15,10 @@
  * limitations under the License.
  *
  */
-
 #set( $symbol_pound = '#' )
 #set( $symbol_dollar = '$' )
 #set( $symbol_escape = '\' )
+
 package ${package}.pe.sink.${packageName};
 
 import org.apache.streampipes.model.graph.DataSinkInvocation;
@@ -26,15 +26,27 @@ import org.apache.streampipes.wrapper.params.binding.EventSinkBindingParams;
 
 public class ${classNamePrefix}Parameters extends EventSinkBindingParams {
 
-  private String exampleText;
+  private String host;
+  private int port;
+  private String password;
 
-  public ${classNamePrefix}Parameters(DataSinkInvocation graph, String exampleText) {
+  public ${classNamePrefix}Parameters(DataSinkInvocation graph, String host, int port, String password) {
     super(graph);
-    this.exampleText = exampleText;
+    this.host = host;
+    this.port = port;
+    this.password = password;
   }
 
-  public String getExampleText() {
-    return exampleText;
+  public String getHost() {
+    return host;
+  }
+
+  public int getPort() {
+    return port;
+  }
+
+  public String getPassword() {
+    return password;
   }
 
 }

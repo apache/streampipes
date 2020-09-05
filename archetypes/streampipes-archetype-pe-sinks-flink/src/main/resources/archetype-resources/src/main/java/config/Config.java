@@ -15,48 +15,30 @@
  * limitations under the License.
  *
  */
-
 #set( $symbol_pound = '#' )
 #set( $symbol_dollar = '$' )
 #set( $symbol_escape = '\' )
+#set( $svc_name = $package.getClass().forName("org.apache.velocity.util.StringUtils").sub("$artifactId", "-", " ") )
 package ${package}.config;
 
 import org.apache.streampipes.config.SpConfig;
 import org.apache.streampipes.container.model.PeConfig;
 
 public enum Config implements PeConfig {
-
   INSTANCE;
 
   private SpConfig config;
   public static final String JAR_FILE = "./streampipes-processing-element-container.jar";
-
-  private final static String SERVICE_ID = "pe/${package}";
+  private final static String SERVICE_ID = "pe/${package}.sink.flink";
 
   Config() {
     config = SpConfig.getSpConfig(SERVICE_ID);
-
-    config.register(ConfigKeys.HOST, "${artifactId}", "Hostname for the pe mixed flink component");
-    config.register(ConfigKeys.PORT, 8090, "Port for the pe mixed flink component");
-    config.register(ConfigKeys.FLINK_HOST, "jobmanager", "Host for the flink cluster");
-    config.register(ConfigKeys.FLINK_PORT, 6123, "Port for the flink cluster");
-    config.register(ConfigKeys.ICON_HOST, "backend", "Hostname for the icon host");
-    config.register(ConfigKeys.ICON_PORT, 80, "Port for the icons in nginx");
-
-    config.register(ConfigKeys.DEBUG, false, "When set to true programs are not deployed to cluster, but executed locally");
-
-    config.register(ConfigKeys.SERVICE_NAME, "${packageName}", "The name of the service");
-
-  }
-
-  @Override
-  public String getHost() {
-    return config.getString(ConfigKeys.HOST);
-  }
-
-  @Override
-  public int getPort() {
-    return config.getInteger(ConfigKeys.PORT);
+    config.register(ConfigKeys.HOST, "${artifactId}", "Data sink host");
+    config.register(ConfigKeys.PORT, 8090, "Data sink port");
+    config.register(ConfigKeys.SERVICE_NAME, "${svc_name}", "Data sink service name");
+    config.register(ConfigKeys.FLINK_HOST, "jobmanager", "Flink jobmanager host");
+    config.register(ConfigKeys.FLINK_PORT, 8081, "Flink jobmanager port");
+    config.register(ConfigKeys.FLINK_DEBUG, false, "When set to true programs are not deployed to cluster, but executed locally");
   }
 
   public String getFlinkHost() {
@@ -67,23 +49,18 @@ public enum Config implements PeConfig {
     return config.getInteger(ConfigKeys.FLINK_PORT);
   }
 
-  public static final String iconBaseUrl = "http://" + Config.INSTANCE.getIconHost() + ":" +
-          Config.INSTANCE.getIconPort() + "/assets/img/pe_icons";
-
-  public static final String getIconUrl(String pictureName) {
-    return iconBaseUrl + "/" + pictureName + ".png";
+  public boolean getFlinkDebug() {
+    return config.getBoolean(ConfigKeys.FLINK_DEBUG);
   }
 
-  public String getIconHost() {
-    return config.getString(ConfigKeys.ICON_HOST);
+  @Override
+  public String getHost() {
+    return config.getString(ConfigKeys.HOST);
   }
 
-  public int getIconPort() {
-    return config.getInteger(ConfigKeys.ICON_PORT);
-  }
-
-  public boolean getDebug() {
-    return config.getBoolean(ConfigKeys.DEBUG);
+  @Override
+  public int getPort() {
+    return config.getInteger(ConfigKeys.PORT);
   }
 
   @Override

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 #set( $symbol_pound = '#' )
 #set( $symbol_dollar = '$' )
 #set( $symbol_escape = '\' )
@@ -31,14 +30,14 @@ import org.apache.streampipes.wrapper.flink.FlinkDeploymentConfig;
 
 import java.io.Serializable;
 
-public class ${classNamePrefix}Program extends
-        FlinkDataProcessorRuntime<${classNamePrefix}Parameters>
-implements Serializable {
+public class ${classNamePrefix}Program extends FlinkDataProcessorRuntime<${classNamePrefix}Parameters> implements Serializable {
 
   private static final long serialVersionUID = 1L;
+  private final ${classNamePrefix}Parameters params;
 
   public ${classNamePrefix}Program(${classNamePrefix}Parameters params, boolean debug) {
     super(params, debug);
+    this.params = params;
   }
 
   @Override
@@ -52,6 +51,6 @@ implements Serializable {
         DataStream<Event>... messageStream) {
 
     return messageStream[0]
-        .flatMap(new ${classNamePrefix}());
+        .flatMap(new ${classNamePrefix}(this.params.getExampleText()));
   }
 }

@@ -34,9 +34,11 @@ public class ${classNamePrefix}Program extends FlinkDataSinkRuntime<${classNameP
 implements Serializable {
 
   private static final long serialVersionUID = 1L;
+  private final ${classNamePrefix}Parameters params;
 
   public ${classNamePrefix}Program(${classNamePrefix}Parameters params, boolean debug) {
     super(params, debug);
+    this.params = params;
   }
 
   @Override
@@ -50,5 +52,8 @@ implements Serializable {
           DataStream<Event>... convertedStream) {
 
     // TODO add logic here
+    // params.getHost();
+    // params.getPort();
+    // params.getPassword();
   }
 }
