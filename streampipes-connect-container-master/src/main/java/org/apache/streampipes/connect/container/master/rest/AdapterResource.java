@@ -48,7 +48,6 @@ public class AdapterResource extends AbstractContainerResource {
     }
 
     @POST
-    @Path("/")
     @JacksonSerialized
     @Produces(MediaType.APPLICATION_JSON)
     public Response addAdapter(AdapterDescription adapterDescription, @PathParam("username") String userName) {
@@ -112,9 +111,8 @@ public class AdapterResource extends AbstractContainerResource {
 
     @GET
     @JacksonSerialized
-    @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllAdapters(String id, @PathParam("username") String userName) {
+    public Response getAllAdapters(@PathParam("username") String userName) {
         try {
             List<AdapterDescription> allAdapterDescription = adapterMasterManagement.getAllAdapters(new AdapterStorageImpl());
             AdapterDescriptionList result = new AdapterDescriptionList();
