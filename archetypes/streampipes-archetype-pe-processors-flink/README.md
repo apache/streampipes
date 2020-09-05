@@ -20,7 +20,7 @@
 
 ### Usage
 
-````bash
+```bash
 mvn archetype:generate \
  -DarchetypeGroupId=org.apache.streampipes \
  -DarchetypeArtifactId=streampipes-archetype-pe-processors-flink \
@@ -29,7 +29,7 @@ mvn archetype:generate \
  -DclassNamePrefix=MyFlinkProcessor \
  -DartifactId=my-processor-flink \
  -Dversion=<VERSION>
-````
+```
 			
 ### Variables
 
