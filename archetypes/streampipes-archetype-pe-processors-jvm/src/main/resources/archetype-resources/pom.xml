@@ -25,7 +25,7 @@
     <version>${version}</version>
 
     <properties>
-        <sp.version>0.67.0-SNAPSHOT</sp.version>
+        <sp.version>0.68.0-SNAPSHOT</sp.version>
     </properties>
 
     <dependencies>
@@ -98,7 +98,7 @@
                             <goal>repackage</goal>
                         </goals>
                         <configuration>
-                            <mainClass>${package}.main.Init</mainClass>
+                            <mainClass>${package}.Init</mainClass>
                         </configuration>
                     </execution>
                 </executions>
