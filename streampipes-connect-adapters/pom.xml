@@ -233,6 +233,16 @@
                 <artifactId>junit</artifactId>
                 <scope>test</scope>
             </dependency>
+
+            <!-- dependency convergence -->
+            <dependency>
+                <groupId>org.glassfish.jaxb</groupId>
+                <artifactId>jaxb-runtime</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-collections4</artifactId>
+            </dependency>
         </dependencies>
 
     <build>
