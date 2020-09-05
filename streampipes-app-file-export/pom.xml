@@ -67,6 +67,12 @@
             <artifactId>lightcouch</artifactId>
         </dependency>
 
+        <!-- dependency convergence -->
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+        </dependency>
+
         <!-- Test dependencies -->
 
     </dependencies>
