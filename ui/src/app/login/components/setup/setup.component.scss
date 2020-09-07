@@ -23,13 +23,15 @@
 
 .setup-card {
   max-height: 80vh;
-  width:45%;
+  height: 80vh;
+  width:55%;
   overflow-y:auto;
 }
 
 .setup-header {
   margin-left:auto;
   margin-right:auto;
+  height:300px;
 }
 
 .setup-inline-content {
