@@ -13,29 +13,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-{{- if (eq .Values.deployment "full") }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: sinks-brokers-jvm
+  name: pipeline-elements-all-jvm
 spec:
   selector:
     matchLabels:
-      app: sinks-brokers-jvm
+      app: pipeline-elements-all-jvm
   replicas: 1
   template:
     metadata:
       labels:
-        app: sinks-brokers-jvm
+        app: pipeline-elements-all-jvm
     spec:
       initContainers:
         - name: init-wait-consul
           image: alpine
           command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 consul 8600 && exit 0 || sleep 3; done; exit 1"]
       containers:
-        - name: sinks-brokers-jvm
-          image: {{ .Values.streampipes.registry }}/sinks-brokers-jvm:{{ .Values.streampipes.version }}
+        - name: sinks-internal-jvm
+          image: {{ .Values.streampipes.registry }}/sources-watertank-simulator:{{ .Values.streampipes.version }}
           imagePullPolicy: {{ .Values.pullPolicy }}
           ports:
             - containerPort: 8090
-{{- end }}

@@ -14,28 +14,18 @@
 # limitations under the License.
 
 {{- if (eq .Values.deployment "full") }}
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Service
 metadata:
-  name: sinks-databases-jvm
+  name: pipeline-elements-all-flink
+  labels:
+    name: pipeline-elements-all-flink
 spec:
   selector:
-    matchLabels:
-      app: sinks-databases-jvm
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        app: sinks-databases-jvm
-    spec:
-      initContainers:
-        - name: init-wait-consul
-          image: alpine
-          command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 consul 8600 && exit 0 || sleep 3; done; exit 1"]
-      containers:
-        - name: sinks-databases-jvm
-          image: {{ .Values.streampipes.registry }}/sinks-databases-jvm:{{ .Values.streampipes.version }}
-          imagePullPolicy: {{ .Values.pullPolicy }}
-          ports:
-            - containerPort: 8090
+    app: pipeline-elements-all-flink
+  ports:
+    - name: main
+      protocol: TCP
+      port: 8090
+      targetPort: 8090
 {{- end }}

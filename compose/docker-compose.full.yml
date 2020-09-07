@@ -194,53 +194,8 @@ services:
       spnet:
 
   # Full version pipeline elements
-  processors-aggregation-flink:
-    image: "${SP_DOCKER_REGISTRY}/processors-aggregation-flink:${SP_VERSION}"
-    depends_on:
-      - consul
-      - jobmanager
-    logging: *default-logging
-    networks:
-      spnet:
-
-  processors-enricher-flink:
-    image: "${SP_DOCKER_REGISTRY}/processors-enricher-flink:${SP_VERSION}"
-    depends_on:
-      - consul
-      - jobmanager
-    logging: *default-logging
-    networks:
-      spnet:
-
-  processors-pattern-detection-flink:
-    image: "${SP_DOCKER_REGISTRY}/processors-pattern-detection-flink:${SP_VERSION}"
-    depends_on:
-      - consul
-      - jobmanager
-    logging: *default-logging
-    networks:
-      spnet:
-
-  processors-statistics-flink:
-    image: "${SP_DOCKER_REGISTRY}/processors-statistics-flink:${SP_VERSION}"
-    depends_on:
-      - consul
-      - jobmanager
-    logging: *default-logging
-    networks:
-      spnet:
-
-  processors-transformation-flink:
-    image: "${SP_DOCKER_REGISTRY}/processors-transformation-flink:${SP_VERSION}"
-    depends_on:
-      - consul
-      - jobmanager
-    logging: *default-logging
-    networks:
-      spnet:
-
-  sinks-databases-flink:
-    image: "${SP_DOCKER_REGISTRY}/sinks-databases-flink:${SP_VERSION}"
+  pipeline-elements-all-flink:
+    image: "${SP_DOCKER_REGISTRY}/pipeline-elements-all-flink:${SP_VERSION}"
     depends_on:
       - consul
       - jobmanager
