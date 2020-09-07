@@ -13,19 +13,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-{{- if (eq .Values.deployment "full") }}
-apiVersion: v1
-kind: Service
-metadata:
-  name: sinks-databases-jvm
-  labels:
-    name: sinks-databases-jvm
-spec:
-  selector:
-    app: sinks-databases-jvm
-  ports:
-    - name: main
-      protocol: TCP
-      port: 8090
-      targetPort: 8090
-{{- end }}
+version: "3.4"
+services:
+  pipeline-elements-all-flink:
+    image: ${SP_DOCKER_REGISTRY}pipeline-elements-all-flink:${SP_VERSION}
+    depends_on:
+      - "consul"
+      - "jobmanager"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
+    networks:
+      spnet:
+
+networks:
+  spnet:
+    external: true
