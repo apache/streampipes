@@ -17,7 +17,10 @@
             "main": "src/main.ts",
             "tsConfig": "src/tsconfig.app.json",
             "polyfills": "src/polyfills.ts",
-            "allowedCommonJsDependencies": ["lodash", "codemirror"],
+            "allowedCommonJsDependencies": [
+              "lodash",
+              "codemirror"
+            ],
             "assets": [
               "src/assets",
               {
@@ -42,6 +45,12 @@
           },
           "configurations": {
             "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
               "budgets": [
                 {
                   "type": "anyComponentStyle",
@@ -93,7 +102,7 @@
               "src/assets"
             ],
             "scripts": [
-              ]
+            ]
           }
         },
         "lint": {
