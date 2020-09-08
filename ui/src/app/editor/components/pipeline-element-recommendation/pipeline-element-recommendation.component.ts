@@ -146,9 +146,6 @@ export class PipelineElementRecommendationComponent implements OnInit {
 
   @Input()
   set recommendedElements(recommendedElements: any) {
-    console.log("set");
-    console.log(this.pipelineElementDomId);
-    console.log(recommendedElements);
     this.recommendationsPrepared = false;
     this.prepareStyles(recommendedElements);
     this._recommendedElements = recommendedElements;
