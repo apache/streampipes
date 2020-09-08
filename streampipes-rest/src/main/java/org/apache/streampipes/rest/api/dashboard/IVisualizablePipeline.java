@@ -27,4 +27,6 @@ public interface IVisualizablePipeline {
   Response getVisualizablePipeline(String id);
 
   Response getVisualizablePipelineByTopic(String topic);
+
+  Response getVisualizablePipelineByPipelineIdAndVisualizationName(String pipelineId, String visualizationName);
 }
