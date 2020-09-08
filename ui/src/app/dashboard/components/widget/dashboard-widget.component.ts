@@ -56,7 +56,8 @@ export class DashboardWidgetComponent implements OnInit {
     ngOnInit(): void {
         this.dashboardService.getWidget(this.widget.id).subscribe(response => {
             this.configuredWidget = response;
-            this.dashboardService.getVisualizablePipelineByTopic(this.configuredWidget.visualizablePipelineTopic).subscribe(pipeline => {
+            this.dashboardService.getVisualizablePipelineByPipelineIdAndVisualizationName(this.configuredWidget.pipelineId,
+                this.configuredWidget.visualizationName).subscribe(pipeline => {
                 this.widgetDataConfig = pipeline;
                 this.pipelineNotRunning = false;
                 this.widgetLoaded = true;

@@ -68,7 +68,28 @@ public class VisualizablePipeline extends AbstractRestInterface implements IVisu
     return matchedPipeline.isPresent() ? ok(matchedPipeline.get()) : fail();
   }
 
+  @GET
+  @JacksonSerialized
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("{pipelineId}/{visualizationName}")
+  @Override
+  public Response getVisualizablePipelineByPipelineIdAndVisualizationName(@PathParam("pipelineId") String pipelineId,
+                                                                          @PathParam("visualizationName") String visualizationName) {
+    List<org.apache.streampipes.model.dashboard.VisualizablePipeline> pipelines =
+            getVisualizablePipelineStorage().getAllVisualizablePipelines();
+
+    Optional<org.apache.streampipes.model.dashboard.VisualizablePipeline> matchedPipeline =
+            pipelines
+                    .stream()
+                    .filter(pipeline -> pipeline.getPipelineId().equals(pipelineId)
+                            && pipeline.getVisualizationName().equals(visualizationName)).findFirst();
+
+    return matchedPipeline.isPresent() ? ok(matchedPipeline.get()) : fail();
+  }
+
   private IVisualizablePipelineStorage getVisualizablePipelineStorage() {
     return getNoSqlStorage().getVisualizablePipelineStorage();
   }
+
+
 }

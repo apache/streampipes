@@ -50,6 +50,9 @@ public class DashboardWidgetModel extends DashboardEntity {
   @RdfProperty(StreamPipes.HAS_TOPIC)
   private String visualizablePipelineTopic;
 
+  private String visualizationName;
+  private String pipelineId;
+
   public DashboardWidgetModel() {
     super();
   }
@@ -84,5 +87,21 @@ public class DashboardWidgetModel extends DashboardEntity {
 
   public void setVisualizablePipelineTopic(String visualizablePipelineTopic) {
     this.visualizablePipelineTopic = visualizablePipelineTopic;
+  }
+
+  public String getVisualizationName() {
+    return visualizationName;
+  }
+
+  public void setVisualizationName(String visualizationName) {
+    this.visualizationName = visualizationName;
+  }
+
+  public String getPipelineId() {
+    return pipelineId;
+  }
+
+  public void setPipelineId(String pipelineId) {
+    this.pipelineId = pipelineId;
   }
 }

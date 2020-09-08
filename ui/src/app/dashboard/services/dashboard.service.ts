@@ -68,6 +68,14 @@ export class DashboardService {
             }));
     }
 
+    getVisualizablePipelineByPipelineIdAndVisualizationName(pipelineId: string, visualizationName: string): Observable<VisualizablePipeline> {
+        return this.http
+            .get(this.visualizablePipelineUrl + "/" + pipelineId + "/" + visualizationName)
+            .pipe(map(data => {
+                return VisualizablePipeline.fromData(data as VisualizablePipeline);
+            }));
+    }
+
     getDashboards(): Observable<Array<Dashboard>> {
         return this.http.get(this.dashboardUrl).pipe(map(data => {
            return data as Dashboard[];
