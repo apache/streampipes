@@ -4,5 +4,8 @@ org.apache.streampipes.processors.transformation.jvm.booloperator.counter.descri
 field.title=Boolean Field
 field.description=The field of the boolean to monitor
 
+flank.title=Flank Parameter
+flank.description=The change in a sequence which triggers counting
+
 countField.title=Counter
 countField.description=Amount of changes of boolean value

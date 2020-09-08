@@ -50,7 +50,7 @@ A user can configure whether the changes from TRUE to FALSE, FALSE to TRUE, or a
 Either:
 * TRUE -> FALSE: Increase counter on a true followed by a false 
 * FALSE -> TRUE: Increase counter on a false followed by a true
-* BOTH: Increas counter on each change of the boolean value on two consecutive events
+* BOTH: Increase counter on each change of the boolean value on two consecutive events
 
 ## Output
 
