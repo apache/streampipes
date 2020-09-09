@@ -19,7 +19,6 @@ package org.apache.streampipes.processors.siddhi.trend;
 
 import static org.junit.Assert.assertEquals;
 
-import org.apache.streampipes.model.util.SchemaUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
