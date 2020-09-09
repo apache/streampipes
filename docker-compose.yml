@@ -83,7 +83,7 @@ services:
 
   sources-vehicle-simulator:
     build:
-      context: ./streampipes-sources-watertank-simulator
+      context: ./streampipes-sources-vehicle-simulator
       dockerfile: Dockerfile
       args:
         BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine-slim
