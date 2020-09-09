@@ -26,7 +26,7 @@ jobs:
     steps:
       - name: Set Branch env variable
         run: |
-          echo "::set-env name=GITHUB_BRANCH::${GITHUB_REF##*/}"
+          echo "::set-env name=GITHUB_BRANCH::${GITHUB_REF#refs/*/}"
           echo ${{ env.GITHUB_BRANCH }}
       - name: Checkout incubator-streampipes project
         uses: actions/checkout@v2
