@@ -21,7 +21,16 @@
 #
 
 
-version: "2.4"
+version: "3.4"
+
+# global logging
+x-logging:
+  &default-logging
+  options:
+    max-size: '12m'
+    max-file: '5'
+  driver: json-file
+
 services:
 
   #### apache/incubator-streampipes-extensions
@@ -34,6 +43,7 @@ services:
     environment:
       - SP_CONNECT_CONTAINER_HOST=connect-master
       - SP_CONNECT_CONTAINER_WORKER=connect-worker-main
+    logging: *default-logging
     networks:
       spnet:
 
@@ -43,6 +53,17 @@ services:
       dockerfile: Dockerfile
       args:
         BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine-slim
+    logging: *default-logging
+    networks:
+      spnet:
+
+  pipeline-elements-all-flink:
+    build:
+      context: ./streampipes-pipeline-elements-all-flink
+      dockerfile: Dockerfile
+      args:
+        BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine-slim
+    logging: *default-logging
     networks:
       spnet:
 
@@ -52,10 +73,20 @@ services:
       dockerfile: Dockerfile
       args:
         BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine-slim
+    logging: *default-logging
+    networks:
+      spnet:
+
+  sources-vehicle-simulator:
+    build:
+      context: ./streampipes-sources-watertank-simulator
+      dockerfile: Dockerfile
+      args:
+        BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine-slim
+    logging: *default-logging
     networks:
       spnet:
 
 networks:
   spnet:
     external: true
-    name: streampipes_network
