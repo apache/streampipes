@@ -1,19 +1,16 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Apache StreamPipes - Core" type="Application" factoryName="Application">
+  <configuration default="false" name="backend" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <module name="streampipes-backend" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="org.apache.streampipes.backend.StreamPipesBackendApplication" />
+    <option name="ALTERNATIVE_JRE_PATH" />
     <envs>
       <env name="SP_COUCHDB_HOST" value="localhost" />
       <env name="SP_BACKEND_HOST" value="localhost" />
       <env name="SP_INFLUX_HOST" value="localhost" />
       <env name="SP_INFLUX_PORT" value="8086" />
       <env name="SP_JMS_HOST" value="localhost" />
-      <env name="SP_DEBUG" value="true" />
+      <env name="SP_DEBUG" value="true " />
     </envs>
-    <option name="MAIN_CLASS_NAME" value="org.apache.streampipes.backend.StreamPipesBackendApplication" />
-    <module name="streampipes-backend" />
-    <extension name="net.ashald.envfile">
-      <option name="IS_ENABLED" value="false" />
-      <ENTRIES />
-    </extension>
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
