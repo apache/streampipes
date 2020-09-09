@@ -83,8 +83,24 @@
                         <goals>
                             <goal>repackage</goal>
                         </goals>
+                        <configuration>
+                            <mainClass>org.apache.streampipes.backend.StreamPipesBackendApplication
+                            </mainClass>
+                        </configuration>
                     </execution>
                 </executions>
+                <configuration>
+                    <environmentVariables>
+                        <SP_COUCHDB_HOST>localhost</SP_COUCHDB_HOST>
+                        <SP_KAFKA_REST_HOST>localhost</SP_KAFKA_REST_HOST>
+                        <SP_KAFKA_REST_PORT>8073</SP_KAFKA_REST_PORT>
+                        <SP_BACKEND_HOST>localhost</SP_BACKEND_HOST>
+                        <SP_INFLUX_HOST>localhost</SP_INFLUX_HOST>
+                        <SP_INFLUX_PORT>8086</SP_INFLUX_PORT>
+                        <SP_JMS_HOST>localhost</SP_JMS_HOST>
+                        <SP_DEBUG>true</SP_DEBUG>
+                    </environmentVariables>
+                </configuration>
             </plugin>
         </plugins>
         <finalName>streampipes-backend</finalName>
