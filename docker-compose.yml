@@ -21,7 +21,7 @@
 #
 
 
-version: "3.4"
+version: "3.8"
 
 # global logging
 x-logging:
@@ -40,6 +40,7 @@ services:
       dockerfile: Dockerfile
       args:
         BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine-slim
+    image: incubator-streampipes_backend:release-validation
     depends_on:
       - consul
       - couchdb
@@ -53,6 +54,7 @@ services:
       dockerfile: Dockerfile
       args:
         BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine-slim
+    image: incubator-streampipes_connect-master:release-validation
     depends_on:
       - consul
       - couchdb
@@ -70,6 +72,7 @@ services:
       dockerfile: Dockerfile
       args:
         BASE_IMAGE: nginx
+    image: incubator-streampipes_ui:release-validation
     ports:
       - "80:80"
     depends_on:
@@ -154,6 +157,7 @@ services:
 
 networks:
   spnet:
+    name: spnet
     driver: bridge
     ipam:
       config:
