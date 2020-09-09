@@ -15,21 +15,37 @@
  * limitations under the License.
  */
 
-import { Component} from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
-    selector: 'sp-dialog-change-chartmode',
-    templateUrl: './change-chartmode.dialog.html',
-    styleUrls: ['./change-chartmode.dialog.css']
+    selector: 'sp-point-selection-info',
+    templateUrl: './point-selection-info.component.html',
+    styleUrls: ['./point-selection-info.component.css']
 })
-export class ChangeChartmodeDialog {
+export class PointSelectionInfoComponent implements OnInit {
 
-    constructor(
-        public dialogRef: MatDialogRef<ChangeChartmodeDialog>) {
+    @Input()
+    set startX(startX) {
+        this._startX = startX;
     }
 
-    onOKClick(): void {
-        this.dialogRef.close();
+    @Input()
+    set endX(endX) {
+        this._endX = endX;
+    }
+
+    @Input()
+    set n_selected_points(n_selected_points) {
+        this._n_selected_points = n_selected_points;
+    }
+
+    public _startX: string;
+    public _endX: string;
+    public _n_selected_points: number;
+
+    constructor() {
+    }
+
+    ngOnInit(): void {
     }
 }

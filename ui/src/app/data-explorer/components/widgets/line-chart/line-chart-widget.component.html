@@ -70,7 +70,9 @@
                      [layout]="graph.layout"
                      [config]="graph.config"
                      (relayout)="handleDefaultModeBarButtonClicks($event)"
-                     (selecting)="selectDataPoints($event)">
+                     (selecting)="selectDataPoints($event)"
+                     (plotly_click)="test($event)">
+
         </plotly-plot>
     </div>
 </div>

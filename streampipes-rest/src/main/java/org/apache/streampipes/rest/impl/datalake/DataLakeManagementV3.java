@@ -602,7 +602,7 @@ public class DataLakeManagementV3 {
     return route;
   }
 
-  public void updateLabels(String index, String labelColumn, long startdate, long enddate, String label) {
+  public void updateLabels(String index, String labelColumn, long startdate, long enddate, String label, String timestampColumn) {
     DataResult queryResult = getEvents(index, startdate, enddate);
     Map<String, String> headerWithTypes = getHeadersWithTypes(index);
     List<String> headers = queryResult.getHeaders();
@@ -611,7 +611,7 @@ public class DataLakeManagementV3 {
     influxDB.setDatabase(BackendConfig.INSTANCE.getInfluxDatabaseName());
 
     for (List<Object> row : queryResult.getRows()) {
-      long timestampValue = Math.round((double) row.get(headers.indexOf("timestamp")));
+      long timestampValue = Math.round((double) row.get(headers.indexOf(timestampColumn)));
 
       Point.Builder p = Point.measurement(index).time(timestampValue, TimeUnit.MILLISECONDS);
 

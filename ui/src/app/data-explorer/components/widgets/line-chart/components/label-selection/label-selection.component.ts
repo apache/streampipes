@@ -16,7 +16,7 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import { ColorService} from '../../services/color.service';
+import { ColorService } from '../../services/color.service';
 
 @Component({
     selector: 'sp-label-selection',

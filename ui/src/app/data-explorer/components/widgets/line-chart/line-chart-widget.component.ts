@@ -16,18 +16,18 @@
  *
  */
 
-import {AfterViewInit, Component, OnInit, Renderer2} from '@angular/core';
+import {  Component, OnInit, Renderer2 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PlotlyService } from 'angular-plotly.js';
 import { DataResult } from '../../../../core-model/datalake/DataResult';
 import { GroupedDataResult } from '../../../../core-model/datalake/GroupedDataResult';
 import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
-import { ChangeChartmodeDialog } from '../../../../core-ui/linechart/labeling-tool/dialogs/change-chartmode/change-chartmode.dialog';
-import { LabelingDialog } from '../../../../core-ui/linechart/labeling-tool/dialogs/labeling/labeling.dialog';
-import { ColorService } from '../../../../core-ui/linechart/labeling-tool/services/color.service';
+import { ChangeChartmodeDialog } from './dialogs/change-chartmode/change-chartmode.dialog';
+import { LabelingDialog } from './dialogs/labeling/labeling.dialog';
+import { ColorService } from './services/color.service';
 import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
-import {EventPropertyUnion} from "../../../../core-model/gen/streampipes-model";
-import {ResizeService} from "../../../services/resize.service";
+import { EventPropertyUnion } from '../../../../core-model/gen/streampipes-model';
+import { ResizeService } from '../../../services/resize.service';
 
 @Component({
   selector: 'sp-data-explorer-line-chart-widget',
@@ -157,7 +157,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
     }
     this.xKey = this.getTimestampProperty(this.dataExplorerWidget.dataLakeMeasure.eventSchema).runtimeName;
     this.yKeys = this.getRuntimeNames(this.selectedColumns);
-    //this.nonNumericKey = this.selectedNonNumericColumn.runtimeName;
+    // this.nonNumericKey = this.selectedNonNumericColumn.runtimeName;
     this.updateData();
     this.resizeService.resizeSubject.subscribe(info => {
       if (info.gridsterItem.id === this.gridsterItem.id) {
@@ -165,7 +165,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
           this.graph.layout.autosize = false;
           (this.graph.layout as any).width = (info.gridsterItemComponent.width - 10);
           (this.graph.layout as any).height = (info.gridsterItemComponent.height - 80);
-        }, 100)
+        }, 100);
       }
     });
   }
@@ -258,7 +258,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
   }
 
   loadLabels(transformedData: DataResult, labelKey: string) {
-    let labels = undefined;
+    let labels;
     if (labelKey !== undefined) {
       transformedData.rows.forEach(serie => {
         if (serie.name === labelKey) {
@@ -287,7 +287,6 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
   displayGroupedData(transformedData: GroupedDataResult, yKeys: string[]) {
     // if (this.yKeys.length > 0) {
 
-    console.log('count value ' + this.showCountValue);
       const tmp = [];
 
       const groupNames = Object.keys(transformedData.dataResults);
@@ -314,10 +313,6 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
         }
       }
       return tmp;
-
-    // } else {
-    //   return undefined;
-    // }
   }
 
   transformData(data: DataResult, xKey: string): DataResult {
@@ -398,8 +393,13 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
     }
   }
 
+  test($event) {
+    console.log($event);
+  }
+
   selectDataPoints($event) {
     // getting selected time interval
+    console.log($event);
     const xStart = $event['range']['x'][0];
     const xEnd = $event['range']['x'][1];
 
@@ -570,8 +570,9 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
       this.nonNumericKey = 'sp_internal_label';
     }
 
-    this.dataLakeRestService.saveLabelsInDatabase(this.data['measureName'], this.nonNumericKey, startdate, enddate, label).subscribe(
+    this.dataLakeRestService.saveLabelsInDatabase(this.data['measureName'], this.nonNumericKey, startdate, enddate, label, this.xKey).subscribe(
             res => {
+              // TODO add pop up similar to images
               // console.log('Successfully wrote label ' + currentLabel + ' into database.');
             }
             );
