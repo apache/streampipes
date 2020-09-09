@@ -11,7 +11,7 @@
     "start": "node ./deployment/prebuild.js && ng serve",
     "watchtest": "node ./deployment/prebuild.js && karma start ./karma.conf.js --no-auto-watch --single-run",
     "test": "node ./deployment/prebuild.js && karma start ./karma.conf.js",
-    "build": "node ./deployment/prebuild.js && set NODE_OPTIONS=--max-old-space-size=10192 && ng build --prod --stats-json",
+    "build": "node ./deployment/prebuild.js && set NODE_OPTIONS=--max-old-space-size=10192 && ng build --prod",
     "build-rc": "node ./deployment/prebuild.js rel && set NODE_OPTIONS=--max-old-space-size=10192 && ng build --prod",
     "lint": "tslint -c tslint.json 'src/**/*.ts*",
     "analyze": "webpack-bundle-analyzer dist/stats.json"
