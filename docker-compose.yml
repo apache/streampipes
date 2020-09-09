@@ -21,7 +21,7 @@
 #
 
 
-version: "3.4"
+version: "3.8"
 
 # global logging
 x-logging:
@@ -40,6 +40,7 @@ services:
       dockerfile: Dockerfile
       args:
         BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine-slim
+    image: incubator-streampipes_connect-worker-main:release-validation
     environment:
       - SP_CONNECT_CONTAINER_HOST=connect-master
       - SP_CONNECT_CONTAINER_WORKER=connect-worker-main
@@ -53,6 +54,7 @@ services:
       dockerfile: Dockerfile
       args:
         BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine-slim
+    image: incubator-streampipes_pipeline-elements-all-jvm:release-validation
     logging: *default-logging
     networks:
       spnet:
@@ -63,6 +65,7 @@ services:
       dockerfile: Dockerfile
       args:
         BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine-slim
+    image: incubator-streampipes_pipeline-elements-all-flink:release-validation
     logging: *default-logging
     networks:
       spnet:
@@ -73,6 +76,7 @@ services:
       dockerfile: Dockerfile
       args:
         BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine-slim
+    image: incubator-streampipes_sources-watertank-simulator:release-validation
     logging: *default-logging
     networks:
       spnet:
@@ -83,6 +87,7 @@ services:
       dockerfile: Dockerfile
       args:
         BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine-slim
+    image: incubator-streampipes_sources-vehicle-simulator:release-validation
     logging: *default-logging
     networks:
       spnet:
