@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="ConnectAdapterInit" type="Application" factoryName="Application">
+  <configuration default="false" name="connect-adapters" type="Application" factoryName="Application">
     <envs>
       <env name="SP_CONNECT_CONTAINER_WORKER_HOST" value="host.docker.internal" />
       <env name="SP_CONNECT_CONTAINER_HOST" value="host.docker.internal" />

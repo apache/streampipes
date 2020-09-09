@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="BrokersJvmInit" type="Application" factoryName="Application">
+  <configuration default="false" name="sinks-brokers-jvm" type="Application" factoryName="Application">
     <envs>
       <env name="SP_PORT" value="7005" />
       <env name="SP_HOST" value="host.docker.internal" />

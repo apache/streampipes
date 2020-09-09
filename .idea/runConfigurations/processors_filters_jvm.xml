@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="FiltersJvmInit" type="Application" factoryName="Application">
+  <configuration default="false" name="processors-filters-jvm" type="Application" factoryName="Application">
     <envs>
       <env name="SP_PORT" value="6025" />
       <env name="SP_HOST" value="host.docker.internal" />

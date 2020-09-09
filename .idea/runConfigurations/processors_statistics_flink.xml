@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="StatisticsFlinkInit" type="Application" factoryName="Application">
+  <configuration default="false" name="processors-statistics-flink" type="Application" factoryName="Application">
     <envs>
       <env name="SP_PORT" value="6045" />
       <env name="SP_HOST" value="host.docker.internal" />

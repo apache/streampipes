@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="GeoJvmInit" type="Application" factoryName="Application">
+  <configuration default="false" name="processors-geo-jvm" type="Application" factoryName="Application">
     <envs>
       <env name="SP_PORT" value="8005" />
       <env name="SP_HOST" value="172.17.0.1" />

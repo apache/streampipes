@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="EnricherJvmInit" type="Application" factoryName="Application">
+  <configuration default="false" name="processors-enricher-jvm" type="Application" factoryName="Application">
     <envs>
       <env name="SP_PORT" value="6015" />
       <env name="SP_HOST" value="host.docker.internal" />
