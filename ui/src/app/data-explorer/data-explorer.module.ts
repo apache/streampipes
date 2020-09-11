@@ -18,7 +18,7 @@
 
 import { CdkTableModule } from '@angular/cdk/table';
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatChipsModule } from '@angular/material/chips';
@@ -67,7 +67,6 @@ import { GroupConfigurationComponent } from './components/widgets/utils/group-co
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { PointSelectionInfoComponent } from './components/widgets/line-chart/components/point-selection-info/point-selection-info.component';
 import { LabelSelectionComponent } from './components/widgets/line-chart/components/label-selection/label-selection.component';
-import { ChangeChartmodeDialog } from './components/widgets/line-chart/dialogs/change-chartmode/change-chartmode.dialog';
 import { LabelingDialog } from './components/widgets/line-chart/dialogs/labeling/labeling.dialog';
 import { ColorService } from './components/widgets/line-chart/services/color.service';
 
@@ -131,7 +130,6 @@ export const MY_NATIVE_FORMATS = {
     NoDataInDateRangeComponent,
     LoadDataSpinnerComponent,
     DataDownloadDialog,
-    ChangeChartmodeDialog,
     LabelingDialog,
     SelectPropertiesComponent,
     LabelSelectionComponent ,

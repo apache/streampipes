@@ -141,6 +141,7 @@ import {CodemirrorModule} from "@ctrl/ngx-codemirror";
   exports: [
     ImageComponent,
     ImageLabelingComponent,
+    ImageLabelsComponent,
     StandardDialogComponent,
     PanelDialogComponent,
     ConfirmDialogComponent,

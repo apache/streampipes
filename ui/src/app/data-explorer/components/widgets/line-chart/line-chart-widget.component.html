@@ -55,23 +55,36 @@
                         (click)="updateData()" mat-button mat-icon-button color="primary">
                     <mat-icon>autorenew</mat-icon>
                 </button>
+                <div >
+                    <mat-slide-toggle color="primary" [(ngModel)]="advancedSettingsActive" (change)="handlingAdvancedToggleChange()">Aggregate</mat-slide-toggle>
+                </div>
             </div>
+
             <div fxFlex fxLayoutAlign="end center">
-                <mat-slide-toggle color="primary" [(ngModel)]="advancedSettingsActive" (change)="handlingAdvancedToggleChange()">Aggregate</mat-slide-toggle>
+                <mat-slide-toggle color="primary" [(ngModel)]="labelingModeOn" (change)="toggleLabelingMode()">Label</mat-slide-toggle>
             </div>
         </div>
     </div>
     <div class="widget-inner-content" style="height: 100%;overflow-y:hidden;">
         <sp-load-data-spinner *ngIf="showIsLoadingData"></sp-load-data-spinner>
         <sp-no-data-in-date-range *ngIf="showNoDataInDateRange" [viewDateRange]="viewDateRange"></sp-no-data-in-date-range>
+
+
+        <sp-image-labels *ngIf="labelingModeOn"
+                         [labels]="possibleLabels"
+                         [enableShortCuts]="true"
+                         (labelChange)="handleLabelChange($event)">
+        </sp-image-labels>
+
         <plotly-plot *ngIf="data !== undefined && !showNoDataInDateRange && !showIsLoadingData"
                      class="plotly-container"
+                     [class.labeling-active]="labelingModeOn"
                      [data]="data"
                      [layout]="graph.layout"
                      [config]="graph.config"
-                     (relayout)="handleDefaultModeBarButtonClicks($event)"
                      (selecting)="selectDataPoints($event)"
                      (plotly_click)="test($event)">
+            <!--                     (relayout)="handleDefaultModeBarButtonClicks($event)"-->
 
         </plotly-plot>
     </div>

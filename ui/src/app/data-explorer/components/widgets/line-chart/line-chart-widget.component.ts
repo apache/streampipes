@@ -22,7 +22,6 @@ import { PlotlyService } from 'angular-plotly.js';
 import { DataResult } from '../../../../core-model/datalake/DataResult';
 import { GroupedDataResult } from '../../../../core-model/datalake/GroupedDataResult';
 import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
-import { ChangeChartmodeDialog } from './dialogs/change-chartmode/change-chartmode.dialog';
 import { LabelingDialog } from './dialogs/labeling/labeling.dialog';
 import { ColorService } from './services/color.service';
 import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
@@ -55,12 +54,15 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
   selectedEndX = undefined;
   n_selected_points = undefined;
 
-
+  possibleLabels;
 
   aggregationValue = 1;
   aggregationTimeUnit = 's';
   groupValue = 'None';
   showCountValue = false;
+
+  // this can be set to scale the line chart according to the layout
+  offsetRightLineChart = 10;
 
 
   constructor(public dialog: MatDialog,
@@ -73,7 +75,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
   }
 
   // indicator variable if labeling mode is activated
-  private labelingModeOn = false;
+  labelingModeOn = false;
 
   private dialogReference = undefined;
 
@@ -138,7 +140,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
       // removing lasso-selection, box-selecting, toggling-spikelines and exporting-to-image buttons
       modeBarButtonsToRemove: ['lasso2d', 'select2d', 'toggleSpikelines', 'toImage'],
       // adding custom button: labeling
-      modeBarButtonsToAdd: [this.createLabelingModeBarButton()],
+      // modeBarButtonsToAdd: [this.createLabelingModeBarButton()],
       // removing plotly-icon from graph
       displaylogo: false
     }
@@ -163,11 +165,14 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
       if (info.gridsterItem.id === this.gridsterItem.id) {
         setTimeout(() => {
           this.graph.layout.autosize = false;
-          (this.graph.layout as any).width = (info.gridsterItemComponent.width - 10);
+          (this.graph.layout as any).width = (info.gridsterItemComponent.width - this.offsetRightLineChart);
           (this.graph.layout as any).height = (info.gridsterItemComponent.height - 80);
         }, 100);
       }
     });
+
+
+    this.possibleLabels = this.dataLakeRestService.getLabels();
   }
 
   updateData() {
@@ -198,19 +203,19 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
           this.dataExplorerWidget.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime()
           , this.aggregationTimeUnit, this.aggregationValue)
           .subscribe((res: DataResult) => {
-                if (res.total === 0) {
-                  this.setShownComponents(true, false, false);
-                } else {
-                  res.measureName = this.dataExplorerWidget.dataLakeMeasure.measureName;
-                  const tmp = this.transformData(res, this.xKey);
-                  this.data = this.displayData(tmp, this.yKeys);
-                  this.labels = this.loadLabels(tmp, this.nonNumericKey);
-                  this.addLabelsToGraph(this.data, this.labels);
-                  this.data['measureName'] = tmp.measureName;
+              if (res.total === 0) {
+                this.setShownComponents(true, false, false);
+              } else {
+                res.measureName = this.dataExplorerWidget.dataLakeMeasure.measureName;
+                const tmp = this.transformData(res, this.xKey);
+                this.data = this.displayData(tmp, this.yKeys);
+                this.labels = this.loadLabels(tmp, this.nonNumericKey);
+                this.addLabelsToGraph(this.data, this.labels);
+                this.data['measureName'] = tmp.measureName;
 
-                  this.setShownComponents(false, true, false);
-                }
+                this.setShownComponents(false, true, false);
               }
+            }
           );
       } else {
         this.dataLakeRestService.getGroupedData(
@@ -287,32 +292,32 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
   displayGroupedData(transformedData: GroupedDataResult, yKeys: string[]) {
     // if (this.yKeys.length > 0) {
 
-      const tmp = [];
+    const tmp = [];
 
-      const groupNames = Object.keys(transformedData.dataResults);
-      for (const groupName of groupNames) {
-        const value = transformedData.dataResults[groupName];
-        this.yKeys.forEach(key => {
-          value.rows.forEach(serie => {
-            if (serie.name === key) {
-              serie.name = groupName + ' ' + serie.name;
-              tmp.push(serie);
-            }
-          });
+    const groupNames = Object.keys(transformedData.dataResults);
+    for (const groupName of groupNames) {
+      const value = transformedData.dataResults[groupName];
+      this.yKeys.forEach(key => {
+        value.rows.forEach(serie => {
+          if (serie.name === key) {
+            serie.name = groupName + ' ' + serie.name;
+            tmp.push(serie);
+          }
         });
+      });
 
-        if (this.showCountValue) {
-          let containsCount = false;
-          value.rows.forEach(serie => {
-            if (serie.name.startsWith('count') && !containsCount) {
-              serie.name = groupName + ' count';
-              tmp.push(serie);
-              containsCount = true;
-            }
-          });
-        }
+      if (this.showCountValue) {
+        let containsCount = false;
+        value.rows.forEach(serie => {
+          if (serie.name.startsWith('count') && !containsCount) {
+            serie.name = groupName + ' count';
+            tmp.push(serie);
+            containsCount = true;
+          }
+        });
       }
-      return tmp;
+    }
+    return tmp;
   }
 
   transformData(data: DataResult, xKey: string): DataResult {
@@ -382,16 +387,16 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
     this.updateData();
   }
 
-  handleDefaultModeBarButtonClicks($event) {
-    if (!('xaxis.autorange' in $event) && !('hovermode' in $event)) {
-      if ($event.dragmode !== 'select') {
-        this.deactivateLabelingMode();
-        this.labelingModeOn = false;
-      }
-    } else if (($event['xaxis.autorange'] === true || $event['hovermode'] === true) && this.labelingModeOn) {
-      this.activateLabelingMode();
-    }
-  }
+  // handleDefaultModeBarButtonClicks($event) {
+  //   if (!('xaxis.autorange' in $event) && !('hovermode' in $event)) {
+  //     if ($event.dragmode !== 'select') {
+  //       this.deactivateLabelingMode();
+  //       this.labelingModeOn = false;
+  //     }
+  //   } else if (($event['xaxis.autorange'] === true || $event['hovermode'] === true) && this.labelingModeOn) {
+  //     this.activateLabelingMode();
+  //   }
+  // }
 
   test($event) {
     console.log($event);
@@ -434,24 +439,24 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
         this.labelingModeOn = false;
         this.deactivateLabelingMode();
 
-        const dialogRef = this.dialog.open(ChangeChartmodeDialog,
-            {
-              width: '400px',
-              position: {top: '150px'}
-            });
-
-        this.dialogReference = dialogRef;
+        // const dialogRef = this.dialog.open(ChangeChartmodeDialog,
+        //   {
+        //     width: '400px',
+        //     position: {top: '150px'}
+        //   });
+        //
+        // this.dialogReference = dialogRef;
 
         // displaying Labeling-Dialog, obtaining selected label and drawing coloured shape
       } else {
         const dialogRef = this.dialog.open(LabelingDialog,
-            {
-              width: '400px',
-              height: 'auto',
-              position: {top: '75px'},
-              data: {labels: this.dataLakeRestService.get_timeseries_labels(), selected_label: '', startX: this.selectedStartX, endX:
-                this.selectedEndX, n_selected_points: this.n_selected_points}
-            });
+          {
+            width: '400px',
+            height: 'auto',
+            position: {top: '75px'},
+            data: {labels: this.dataLakeRestService.get_timeseries_labels(), selected_label: '', startX: this.selectedStartX, endX:
+              this.selectedEndX, n_selected_points: this.n_selected_points}
+          });
 
         this.dialogReference = dialogRef;
 
@@ -484,39 +489,36 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
     }
   }
 
-  private createLabelingModeBarButton() {
-    const labelingModeBarButton = {
-      name: 'Labeling',
-      icon: this.plotlyService.getPlotly().Icons.pencil,
-      direction: 'up',
-      click: (gd) => {
+  handleLabelChange(event) {
 
-        // only allowing to activate labeling mode if current graph mode does not equal 'lines'
-        if (this.data[0]['mode'] !== 'lines') {
-          this.labelingModeOn = !this.labelingModeOn;
-
-          // activating labeling mode
-          if (this.labelingModeOn) {
-            this.activateLabelingMode();
-
-            // deactivating labeling mode
-          } else {
-            this.deactivateLabelingMode();
-          }
-
-          // otherwise displaying 'Change Chart Mode Dialog' or deactivating labeling mode
-        } else {
-          if (this.labelingModeOn) {
-            this.labelingModeOn = !this.labelingModeOn;
-            this.deactivateLabelingMode();
-          } else {
-            this.openLabelingDialog();
-          }
-        }
-      }
-    };
-    return labelingModeBarButton;
   }
+
+  toggleLabelingMode() {
+    // only allowing to activate labeling mode if current graph mode does not equal 'lines'
+    if (this.labelingModeOn) {
+      for (let i = 0; i < this.data.length; i++) {
+        this.data[i]['mode'] = 'lines+markers';
+      }
+      this.activateLabelingMode();
+      this.offsetRightLineChart = 150;
+    } else {
+      this.labelingModeOn = false;
+      this.offsetRightLineChart = 10;
+      this.deactivateLabelingMode();
+    }
+  }
+
+  // private createLabelingModeBarButton() {
+  //   const labelingModeBarButton = {
+  //     name: 'Labeling',
+  //     icon: this.plotlyService.getPlotly().Icons.pencil,
+  //     direction: 'up',
+  //     click: (gd) => {
+  //       this.toggleLabelingMode();
+  //     }
+  //   };
+  //   return labelingModeBarButton;
+  // }
 
   private activateLabelingMode() {
     const modeBarButtons = document.getElementsByClassName('modebar-btn');
@@ -526,7 +528,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
 
         // fetching path of labeling button icon
         const path = modeBarButtons[i].getElementsByClassName('icon').item(0)
-            .getElementsByTagName('path').item(0);
+          .getElementsByTagName('path').item(0);
 
         // adding 'clicked' to class list
         modeBarButtons[i].classList.add('clicked');
@@ -548,7 +550,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
 
         // fetching path of labeling button icon
         const path = modeBarButtons[i].getElementsByClassName('icon').item(0)
-            .getElementsByTagName('path').item(0);
+          .getElementsByTagName('path').item(0);
 
         // removing 'clicked' from class list
         modeBarButtons[i].classList.remove('clicked');
@@ -571,11 +573,11 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
     }
 
     this.dataLakeRestService.saveLabelsInDatabase(this.data['measureName'], this.nonNumericKey, startdate, enddate, label, this.xKey).subscribe(
-            res => {
-              // TODO add pop up similar to images
-              // console.log('Successfully wrote label ' + currentLabel + ' into database.');
-            }
-            );
+      res => {
+        // TODO add pop up similar to images
+        // console.log('Successfully wrote label ' + currentLabel + ' into database.');
+      }
+    );
   }
 
   private addInitialColouredShapesToGraph() {
@@ -641,33 +643,33 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
 
   private createShape(start, end, color) {
     const shape = {
-    // shape: rectangle
-    type: 'rect',
+      // shape: rectangle
+      type: 'rect',
 
-    // x-reference is assigned to the x-values
-    xref: 'x',
+      // x-reference is assigned to the x-values
+      xref: 'x',
 
-    // y-reference is assigned to the plot paper [0,1]
-    yref: 'paper',
-    y0: 0,
-    y1: 1,
+      // y-reference is assigned to the plot paper [0,1]
+      yref: 'paper',
+      y0: 0,
+      y1: 1,
 
-    // start x: left side of selected time interval
-    x0: start,
-    // end x: right side of selected time interval
-    x1: end,
+      // start x: left side of selected time interval
+      x0: start,
+      // end x: right side of selected time interval
+      x1: end,
 
-    // adding color
-    fillcolor: color,
+      // adding color
+      fillcolor: color,
 
-    // opacity of 20%
-    opacity: 0.2,
+      // opacity of 20%
+      opacity: 0.2,
 
-    line: {
-      width: 0
-    }
-  };
-  return shape;
+      line: {
+        width: 0
+      }
+    };
+    return shape;
   }
 
   handlingAdvancedToggleChange() {
