@@ -263,7 +263,7 @@ public class WorkerRestClient {
 
     private static byte[] getIconAsset(String baseUrl,  String appId) throws AdapterException {
         String url = baseUrl + "/" + appId + "/assets/icon";
-        logger.info("Trying to Icon from endpoint: " + url);
+        logger.info("Trying to get icon from endpoint: " + url);
 
         try {
             byte[] responseString = Request.Get(url)

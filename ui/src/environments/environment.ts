@@ -16,55 +16,7 @@
  *
  */
 
-.setup-container {
-  min-height:100vh !important;
-  max-height: 100vh;
-}
+export const environment = {
+  production: false
+};
 
-.setup-card {
-  max-height: 80vh;
-  height: 80vh;
-  width:55%;
-  overflow-y:auto;
-}
-
-.setup-header {
-  margin-left:auto;
-  margin-right:auto;
-  height:300px;
-}
-
-.setup-inline-content {
-  width:500px;
-  margin-left:auto;
-  margin-right:auto;
-  padding-bottom: 5%;
-}
-
-.installation-status-container {
-  height:100%;
-  max-height:100%;
-  overflow-y:auto;
-}
-
-.sp-logo {
-  display:block;
-  width:300px;
-  margin-left:auto;
-  margin-right:auto;
-  padding-top: 5%;
-  padding-bottom: 5%;
-}
-
-.text-center {
-  text-align:center;
-}
-
-.p-20 {
-  padding: 20px;
-}
-
-.plr-20 {
-  padding-left:20px;
-  padding-right:20px;
-}

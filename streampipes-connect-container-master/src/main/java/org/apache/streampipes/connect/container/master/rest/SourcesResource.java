@@ -65,7 +65,6 @@ public class SourcesResource extends AbstractContainerResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @GsonWithIds
-    @Path("/")
     public Response getAllAdaptersInstallDescription(@PathParam("username") String username) {
 
         try {

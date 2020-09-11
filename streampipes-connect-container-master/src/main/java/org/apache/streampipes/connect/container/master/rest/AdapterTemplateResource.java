@@ -46,7 +46,6 @@ public class AdapterTemplateResource extends AbstractContainerResource {
     }
 
     @POST
-    @Path("/")
     @JacksonSerialized
     @Produces(MediaType.APPLICATION_JSON)
     public Response addAdapterTemplate(AdapterDescription adapterDescription, @PathParam("username") String userName) {
@@ -65,7 +64,7 @@ public class AdapterTemplateResource extends AbstractContainerResource {
     @JacksonSerialized
     @Path("/all")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllAdapterTemplates(String id, @PathParam("username") String userName) {
+    public Response getAllAdapterTemplates(@PathParam("username") String userName) {
         try {
             AdapterDescriptionList result = adapterTemplateMasterManagement.getAllAdapterTemplates();
 
@@ -76,7 +75,6 @@ public class AdapterTemplateResource extends AbstractContainerResource {
         }
 
     }
-
 
     @DELETE
     @JacksonSerialized

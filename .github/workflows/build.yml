@@ -19,6 +19,7 @@ on:
   push:
     branches:
       - dev
+      - 'rel/**'
 jobs:
   build-and-push-to-docker:
     runs-on: ubuntu-latest

@@ -95,4 +95,11 @@ export class StaticFreeInputComponent
     let currentIndex = this.quillEditorComponent.quillEditor.selection.savedRange.index;
     this.quillEditorComponent.quillEditor.insertText(currentIndex, "#" + runtimeName + "#", "user");
   }
+
+  formatLabel(value: number) {
+    if (!Number.isInteger(value)) {
+      value = Number((value).toFixed(1));
+    }
+    return value;
+  }
 }

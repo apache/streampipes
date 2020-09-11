@@ -45,7 +45,6 @@ public class WorkerAdministrationResource extends AbstractContainerResource {
 
     @POST
     @JacksonSerialized
-    @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     public Response addWorkerContainer(ConnectWorkerContainer connectWorkerContainer) {
         LOG.info("Worker container: " + connectWorkerContainer.getEndpointUrl() + " was detected");

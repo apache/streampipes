@@ -26,17 +26,9 @@ ${double_pound} ${classNamePrefix}
 ***
 
 ${double_pound} Description
-Describe your new data processor here!
+Describe your new data source here!
 
 ***
-
-${double_pound} Required input
-What are the input requirements of your data processor?
-
-***
-
-${double_pound} Configuration
-What are the configurations a user has to provide?
 
 ${double_pound} Output
-How do the events your data processor emits look like?
+How do the events your data source emits look like?

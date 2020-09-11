@@ -35,7 +35,8 @@
             <mat-slider thumbLabel formControlName="{{fieldName}}"
                     [max]="staticProperty.valueSpecification.maxValue"
                     [min]="staticProperty.valueSpecification.minValue"
-                    [step]="staticProperty.valueSpecification.step">
+                    [step]="staticProperty.valueSpecification.step"
+                    [displayWith]="formatLabel">
             </mat-slider>
         </div>
     </div>

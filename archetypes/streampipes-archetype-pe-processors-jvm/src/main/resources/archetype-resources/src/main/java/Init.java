@@ -19,7 +19,7 @@
 #set( $symbol_pound = '#' )
 #set( $symbol_dollar = '$' )
 #set( $symbol_escape = '\' )
-package ${package}.main;
+package ${package};
 
 import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.container.standalone.init.StandaloneModelSubmitter;
@@ -35,24 +35,20 @@ import ${package}.pe.processor.${packageName}.${classNamePrefix}Controller;
 
 public class Init extends StandaloneModelSubmitter {
 
-  public static void main(String[] args) throws Exception {
+  public static void main(String[] args) {
     DeclarersSingleton.getInstance()
             .add(new ${classNamePrefix}Controller());
 
-    DeclarersSingleton.getInstance().setPort(Config.INSTANCE.getPort());
-    DeclarersSingleton.getInstance().setHostName(Config.INSTANCE.getHost());
-
-    DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),
+    DeclarersSingleton.getInstance().registerDataFormats(
+            new JsonDataFormatFactory(),
             new CborDataFormatFactory(),
             new SmileDataFormatFactory(),
             new FstDataFormatFactory());
 
-    DeclarersSingleton.getInstance().registerProtocols(new SpKafkaProtocolFactory(),
+    DeclarersSingleton.getInstance().registerProtocols(
+            new SpKafkaProtocolFactory(),
             new SpJmsProtocolFactory());
 
     new Init().init(Config.INSTANCE);
-
   }
-
-
 }

@@ -20,14 +20,16 @@
 
 ### Usage
 
-mvn archetype:generate                                  \
-			-DarchetypeGroupId=org.apache.streampipes                \
-			-DarchetypeArtifactId=streampipes-archetype-pe-processors-flink          \
-			-DarchetypeVersion=0.66.0               \
-			-DgroupId=my.test.groupId \
-			-DartifactId=my-test-artifact-id
-			-DclassNamePrefix=MyProcessor
-			-DpackageName=mypackagename
+```bash
+mvn archetype:generate \
+ -DarchetypeGroupId=org.apache.streampipes \
+ -DarchetypeArtifactId=streampipes-archetype-pe-processors-flink \
+ -DarchetypeVersion=<VERSION> \
+ -DgroupId=org.myorga \
+ -DclassNamePrefix=MyFlinkProcessor \
+ -DartifactId=my-processor-flink \
+ -Dversion=<VERSION>
+```
 			
 ### Variables
 

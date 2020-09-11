@@ -19,43 +19,19 @@
 #set( $symbol_pound = '#' )
 #set( $symbol_dollar = '$' )
 #set( $symbol_escape = '\' )
-package ${package}.main;
+package ${package};
 
 import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.container.standalone.init.StandaloneModelSubmitter;
-import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
-import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
-
 import ${package}.config.Config;
-import ${package}.pe.sink.${packageName}.${classNamePrefix}Controller;
-
-import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
-import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
-import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
-import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
-import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
-import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
+import ${package}.pe.source.${packageName}.DataSource;
 
 public class Init extends StandaloneModelSubmitter {
 
   public static void main(String[] args) throws Exception {
     DeclarersSingleton.getInstance()
-            .add(new ${classNamePrefix}Controller());
-
-    DeclarersSingleton.getInstance().setPort(Config.INSTANCE.getPort());
-    DeclarersSingleton.getInstance().setHostName(Config.INSTANCE.getHost());
-
-    DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),
-            new CborDataFormatFactory(),
-            new SmileDataFormatFactory(),
-            new FstDataFormatFactory());
-
-    DeclarersSingleton.getInstance().registerProtocols(new SpKafkaProtocolFactory(),
-            new SpJmsProtocolFactory());
+            .add(new DataSource());
 
     new Init().init(Config.INSTANCE);
-
   }
-
-
 }

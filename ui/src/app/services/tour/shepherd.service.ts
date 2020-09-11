@@ -141,7 +141,7 @@ export class ShepherdService {
     }
 
     isTourActive() {
-        return Shepherd.activeTour !== undefined;
+        return Shepherd.activeTour;
     }
 
     hideCurrentStep() {
