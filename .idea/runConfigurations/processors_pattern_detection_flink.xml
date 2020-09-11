@@ -1,0 +1,15 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="processors-pattern-detection-flink" type="Application" factoryName="Application">
+    <envs>
+      <env name="SP_PORT" value="6040" />
+      <env name="SP_HOST" value="host.docker.internal" />
+      <env name="SP_DEBUG" value="true" />
+      <env name="SP_FLINK_DEBUG" value="true" />
+    </envs>
+    <option name="MAIN_CLASS_NAME" value="org.apache.streampipes.processors.pattern.detection.flink.PatternDetectionFlinkInit" />
+    <module name="streampipes-processors-pattern-detection-flink" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
