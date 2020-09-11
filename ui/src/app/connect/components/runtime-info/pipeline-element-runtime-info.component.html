@@ -16,7 +16,7 @@
   ~
   -->
 
-<div *ngIf="!runtimeData">
+<div *ngIf="!runtimeData && !runtimeDataError">
     <div fxLayout="column">
         <div fxLayoutAlign="center" >
             <mat-spinner [diameter]="40" fxLayoutAlign="center" style="margin: 10px 0 5px 0" >Loading</mat-spinner>
@@ -44,4 +44,7 @@
         </tr>
         </tbody>
     </table>
+</div>
+<div *ngIf="runtimeDataError">
+    <p>Preview is currently unavailable.</p>
 </div>
