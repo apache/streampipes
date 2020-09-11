@@ -44,8 +44,8 @@
   * [About Apache StreamPipes](#about-streampipes)
   * [Use Cases](#use-cases)
   * [Installation](#installation)
-  * [Pipeline Elements](#pipeline-elements)
   * [Building StreamPipes](#building-streampipes)
+  * [Pipeline Elements](#pipeline-elements)  
   * [Extending StreamPipes](#extending-streampipes)
   * [Bugs and Feature Requests](#bugs-and-feature-requests)
   * [Get help](#get-help)
@@ -97,11 +97,6 @@ Please follow the instructions provided in the corresponding `README.md` to get 
 
 For a more in-depth manual, read the [installation guide](https://streampipes.apache.org/docs/docs/user-guide-installation/).
 
-## Extensions: Connect Adapters and Pipeline Elements
-
-StreamPipes includes a repository of StreamPipes Connect adapters for a variety of IoT data sources as well as ready-to-use pipeline elements. A description of the standard elements can be 
-found in the Github repository [streampipes-extensions](https://www.github.com/apache/incubator-streampipes-extensions).
-
 ## Building StreamPipes
 
 To properly build the StreamPipes core, the following tools should be installed:
@@ -132,6 +127,13 @@ To build the ui, switch to the ``ui`` folder and perform the following steps:
 To start StreamPipes, run ``docker-compose up -d`` from the root directory.
 
 You can also use the installer or CLI as described in the ``Installation`` section.
+
+## Pipeline Elements
+StreamPipes includes a repository of extensions for
+* **Connect adapters** for a variety of IoT data sources as well as 
+* **Data Processors** and **Data Sinks** as ready-to-use pipeline elements. 
+
+A description of the standard elements can be found in the Github repository [streampipes-extensions](https://www.github.com/apache/incubator-streampipes-extensions).
 
 ## Extending StreamPipes
 
