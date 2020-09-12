@@ -55,6 +55,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
   n_selected_points = undefined;
 
   possibleLabels;
+  selectedLabel;
 
   aggregationValue = 1;
   aggregationTimeUnit = 's';
@@ -398,35 +399,84 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
   //   }
   // }
 
-  test($event) {
-    console.log($event);
+  changeLabelOfArea($event) {
+    console.log($event.points[0].customdata);
+    console.log($event.points[0].x);
+    const selected = $event.points[0];
+    const allData = selected.fullData;
+
+    const labelOfSelected = selected.customdata;
+    const dateOfSelected = new Date(selected.x);
+    const indexOfSelected = allData.x.map(Number).indexOf(+dateOfSelected);
+
+    // got to left to get class change
+    let searchIndex = indexOfSelected;
+
+    while (labelOfSelected === allData.customdata[searchIndex]) {
+      searchIndex = searchIndex - 1;
+    }
+
+    this.selectedStartX = allData.x[searchIndex + 1];
+
+    searchIndex = indexOfSelected;
+
+    while (labelOfSelected === allData.customdata[searchIndex]) {
+      searchIndex = searchIndex + 1;
+    }
+
+    this.selectedEndX = allData.x[searchIndex - 1];
+
+    console.log($event.points[0].fullData.x[indexOfSelected]);
+    console.log($event.points[0].fullData.customdata[indexOfSelected]);
+
+    this.saveLabelsInDatabase(this.selectedLabel.label, this.selectedStartX, this.selectedEndX);
+
+    // adding coloured shape (based on selected label) to graph (equals selected time interval)
+    this.addShapeToGraph(this.selectedStartX, this.selectedEndX, this.colorService.getColor(this.selectedLabel.label));
+
+
   }
 
   selectDataPoints($event) {
-    // getting selected time interval
-    console.log($event);
-    const xStart = $event['range']['x'][0];
-    const xEnd = $event['range']['x'][1];
 
-    // updating related global time interval properties
-    this.setStartX(xStart);
-    this.setEndX(xEnd);
+    if ($event !== undefined) {
+      // getting selected time interval
+      const xStart = $event['range']['x'][0];
+      const xEnd = $event['range']['x'][1];
 
-    // getting number of selected data points
-    let selected_points = 0;
-    for (const series of this.data) {
-      if (series['selectedpoints'] !== undefined) {
-        selected_points = selected_points + series['selectedpoints'].length;
+      // updating related global time interval properties
+      this.setStartX(xStart);
+      this.setEndX(xEnd);
+
+      // getting number of selected data points
+      let selected_points = 0;
+      for (const series of this.data) {
+        if (series['selectedpoints'] !== undefined) {
+          selected_points = selected_points + series['selectedpoints'].length;
+        }
       }
+
+      // updating related global variable
+      this.setNSelectedPoints(selected_points);
+
+      // opening Labeling-Dialog
+
+      for (const series of this.data) {
+        for (const point of series['selectedpoints']) {
+          series['customdata'][point] = this.selectedLabel.label;
+        }
+      }
+      this.labels = this.data[0]['customdata'];
+      // saving labels persistently
+      this.saveLabelsInDatabase(this.selectedLabel.label, this.selectedStartX, this.selectedEndX);
+
+      // adding coloured shape (based on selected label) to graph (equals selected time interval)
+      this.addShapeToGraph(this.selectedStartX, this.selectedEndX, this.colorService.getColor(this.selectedLabel.label));
+
+      // this.openLabelingDialog();
+      // this.dialogReference.componentInstance.data = {labels: this.dataLakeRestService.get_timeseries_labels(), selected_label: '',
+      //   startX: this.selectedStartX, endX: this.selectedEndX, n_selected_points: this.n_selected_points};
     }
-
-    // updating related global variable
-    this.setNSelectedPoints(selected_points);
-
-    // opening Labeling-Dialog
-    this.openLabelingDialog();
-    this.dialogReference.componentInstance.data = {labels: this.dataLakeRestService.get_timeseries_labels(), selected_label: '',
-      startX: this.selectedStartX, endX: this.selectedEndX, n_selected_points: this.n_selected_points};
   }
 
   private openLabelingDialog() {
@@ -449,48 +499,60 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
 
         // displaying Labeling-Dialog, obtaining selected label and drawing coloured shape
       } else {
-        const dialogRef = this.dialog.open(LabelingDialog,
-          {
-            width: '400px',
-            height: 'auto',
-            position: {top: '75px'},
-            data: {labels: this.dataLakeRestService.get_timeseries_labels(), selected_label: '', startX: this.selectedStartX, endX:
-              this.selectedEndX, n_selected_points: this.n_selected_points}
-          });
+        // const dialogRef = this.dialog.open(LabelingDialog,
+        //   {
+        //     width: '400px',
+        //     height: 'auto',
+        //     position: {top: '75px'},
+        //     data: {labels: this.dataLakeRestService.get_timeseries_labels(), selected_label: '', startX: this.selectedStartX, endX:
+        //       this.selectedEndX, n_selected_points: this.n_selected_points}
+        //   });
+        //
+        // this.dialogReference = dialogRef;
 
-        this.dialogReference = dialogRef;
+        for (const series of this.data) {
+          for (const point of series['selectedpoints']) {
+            series['customdata'][point] = this.selectedLabel.label;
+          }
+        }
+        this.labels = this.data[0]['customdata'];
+        // saving labels persistently
+        this.saveLabelsInDatabase(this.selectedLabel.label, this.selectedStartX, this.selectedEndX);
+
+        // adding coloured shape (based on selected label) to graph (equals selected time interval)
+        this.addShapeToGraph(this.selectedStartX, this.selectedEndX, this.colorService.getColor(this.selectedLabel.label));
 
         // after closing Labeling-Dialog
-        dialogRef.afterClosed().subscribe(result => {
-
-          // adding selected label to displayed data points
-          if (result !== undefined) {
-            for (const series of this.data) {
-              for (const point of series['selectedpoints']) {
-                series['customdata'][point] = result;
-              }
-            }
-            this.labels = this.data[0]['customdata'];
-            // saving labels persistently
-            this.saveLabelsInDatabase(result, this.selectedStartX, this.selectedEndX);
-
-            // adding coloured shape (based on selected label) to graph (equals selected time interval)
-            this.addShapeToGraph(this.selectedStartX, this.selectedEndX, this.colorService.getColor(result));
-
-            // remain in selection dragmode if labeling mode is still activated
-            if (this.labelingModeOn) {
-              this.graph.layout.dragmode = 'select';
-            } else {
-              this.graph.layout.dragmode = 'zoom';
-            }
-          }
-        });
+        // dialogRef.afterClosed().subscribe(result => {
+        //
+        //   // adding selected label to displayed data points
+        //   if (result !== undefined) {
+        //     for (const series of this.data) {
+        //       for (const point of series['selectedpoints']) {
+        //         series['customdata'][point] = result;
+        //       }
+        //     }
+        //     this.labels = this.data[0]['customdata'];
+        //     // saving labels persistently
+        //     this.saveLabelsInDatabase(result, this.selectedStartX, this.selectedEndX);
+        //
+        //     // adding coloured shape (based on selected label) to graph (equals selected time interval)
+        //     this.addShapeToGraph(this.selectedStartX, this.selectedEndX, this.colorService.getColor(result));
+        //
+        //     // remain in selection dragmode if labeling mode is still activated
+        //     // if (this.labelingModeOn) {
+        //     //   this.graph.layout.dragmode = 'select';
+        //     // } else {
+        //     //   this.graph.layout.dragmode = 'zoom';
+        //     // }
+        //   }
+        // });
       }
     }
   }
 
-  handleLabelChange(event) {
-
+  handleLabelChange(label: {category, label}) {
+    this.selectedLabel = label;
   }
 
   toggleLabelingMode() {

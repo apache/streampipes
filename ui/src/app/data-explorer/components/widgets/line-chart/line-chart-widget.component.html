@@ -82,8 +82,8 @@
                      [data]="data"
                      [layout]="graph.layout"
                      [config]="graph.config"
-                     (selecting)="selectDataPoints($event)"
-                     (plotly_click)="test($event)">
+                     (selected)="selectDataPoints($event)"
+                     (plotly_click)="changeLabelOfArea($event)">
             <!--                     (relayout)="handleDefaultModeBarButtonClicks($event)"-->
 
         </plotly-plot>
