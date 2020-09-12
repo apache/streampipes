@@ -32,3 +32,9 @@
 .description {
     font-size: 10px;
 }
+
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    margin-top: 5px;
+}

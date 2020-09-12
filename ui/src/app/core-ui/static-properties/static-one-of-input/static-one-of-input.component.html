@@ -22,12 +22,14 @@
     <div *ngIf="!staticProperty.horizontalRendering" fxLayout="column">
         <div fxFlex fxLayout="row">
             <div fxLayout="column" style="margin-left: 10px">
-                <mat-radio-button *ngFor="let option of staticProperty.options" style="margin-top: -10px"
-                                  (click)="select(option.elementId)" [checked]="option.selected">
-                    <label style="font-weight: normal">
-                        {{option.name}}
-                    </label>
-                </mat-radio-button>
+                <mat-radio-group class="radio-group">
+                    <mat-radio-button *ngFor="let option of staticProperty.options" style="margin-top: -10px"
+                                      [value]="option" (click)="select(option.elementId)" [checked]="option.selected">
+                        <label style="font-weight: normal">
+                            {{option.name}}
+                        </label>
+                    </mat-radio-button>
+                </mat-radio-group>
             </div>
         </div>
     </div>
