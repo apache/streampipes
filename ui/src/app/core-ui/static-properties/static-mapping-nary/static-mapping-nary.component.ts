@@ -92,6 +92,7 @@ export class StaticMappingNaryComponent extends StaticMappingComponent<MappingPr
     }
 
     onValueChange(value: any) {
+        this.emitUpdate();
     }
 
 }

@@ -22,6 +22,7 @@ import {StaticPropertyUtilService} from '../static-property-util.service';
 import {PropertySelectorService} from "../../../services/property-selector.service";
 import {StaticMappingComponent} from "../static-mapping/static-mapping";
 import {MappingPropertyUnary} from "../../../core-model/gen/streampipes-model";
+import {ConfigurationInfo} from "../../../connect/model/ConfigurationInfo";
 
 
 @Component({
@@ -56,8 +57,7 @@ export class StaticMappingUnaryComponent extends StaticMappingComponent<MappingP
 
     onValueChange(value: any) {
         this.staticProperty.selectedProperty = value;
+        this.emitUpdate();
     }
-
-
 
 }
