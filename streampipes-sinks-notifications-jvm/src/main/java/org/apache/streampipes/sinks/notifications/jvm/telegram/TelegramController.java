@@ -32,7 +32,7 @@ import org.apache.streampipes.wrapper.standalone.ConfiguredEventSink;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
 
 public class TelegramController extends StandaloneEventSinkDeclarer<TelegramParameters> {
-    private static final String CHANNEL_NAME = "channel-name";
+    private static final String CHANNEL_NAME_OR_CHAT_ID = "channel-chat-name";
     private static final String MESSAGE_TEXT = "message-text";
     private static final String BOT_API_KEY = "api-key";
 
@@ -47,8 +47,8 @@ public class TelegramController extends StandaloneEventSinkDeclarer<TelegramPara
                         .requiredProperty(EpRequirements.anyProperty())
                         .build())
                 .requiredSecret(Labels.withId(BOT_API_KEY))
-                .requiredTextParameter(Labels.withId(CHANNEL_NAME))
-                .requiredTextParameter(Labels.withId(MESSAGE_TEXT), true, true)
+                .requiredTextParameter(Labels.withId(CHANNEL_NAME_OR_CHAT_ID))
+                .requiredTextParameter(Labels.withId(MESSAGE_TEXT), true, true, true)
                 .build();
     }
 
@@ -57,9 +57,9 @@ public class TelegramController extends StandaloneEventSinkDeclarer<TelegramPara
     public ConfiguredEventSink<TelegramParameters> onInvocation(DataSinkInvocation graph,
                                                                 DataSinkParameterExtractor extractor) {
         String apiKey = extractor.secretValue(BOT_API_KEY);
-        String channel = extractor.singleValueParameter(CHANNEL_NAME, String.class);
+        String channelOrChatId = extractor.singleValueParameter(CHANNEL_NAME_OR_CHAT_ID, String.class);
         String message = extractor.singleValueParameter(MESSAGE_TEXT, String.class);
-        TelegramParameters params = new TelegramParameters(graph, apiKey, channel, message);
+        TelegramParameters params = new TelegramParameters(graph, apiKey, channelOrChatId, message);
         return new ConfiguredEventSink<>(params, TelegramPublisher::new);
     }
 }

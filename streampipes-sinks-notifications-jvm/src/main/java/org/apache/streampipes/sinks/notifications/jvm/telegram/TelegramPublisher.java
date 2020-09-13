@@ -34,18 +34,19 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class TelegramPublisher implements EventSink<TelegramParameters> {
-    private static final String ENDPOINT = "https://api.telegram.org/bot%s/sendMessage?chat_id=%s&text=%s";
+    private static final String ENDPOINT = "https://api.telegram.org/bot%s/sendMessage?chat_id=%s&text=%s&parse_mode=%s";
     private static final OkHttpClient HTTP_CLIENT = new OkHttpClient();
     private static final String HASH_TAG = "#";
+    private static final String HTML = "HTML";
     private String apiKey;
-    private String channel;
+    private String channelOrChatId;
     private String message;
 
     @Override
     public void onInvocation(TelegramParameters parameters,
                              EventSinkRuntimeContext runtimeContext) {
         this.apiKey = parameters.getApiKey();
-        this.channel = parameters.getChannel();
+        this.channelOrChatId = parameters.getChannelOrChatId();
         this.message = parameters.getMessage();
     }
 
@@ -55,7 +56,7 @@ public class TelegramPublisher implements EventSink<TelegramParameters> {
             String content = replacePlaceholders(event, this.message);
             content = trimHTML(content);
             content = URLEncoder.encode(content, StandardCharsets.UTF_8.toString());
-            String url = String.format(ENDPOINT, this.apiKey, this.channel, content);
+            String url = String.format(ENDPOINT, this.apiKey, this.channelOrChatId, content, HTML);
             Request request = new Request.Builder().url(url).build();
             try (Response response = HTTP_CLIENT.newCall(request).execute()) {
                 if (!response.isSuccessful()) {
@@ -85,8 +86,9 @@ public class TelegramPublisher implements EventSink<TelegramParameters> {
     }
 
     private String trimHTML(String content) {
-        content = content.replaceAll("<div><!--block-->", "");
-        content = content.replaceAll("&nbsp;</div>", "");
+        content = content.replaceAll("(</h[^>]+><h[^>]+>)|(</h[^>]+><[^>]+>)|(</p><p>)", "\n");
+        content = content.replaceAll("(<h[^>]+>)|(</p>)|(<p>)|(<span[^>]+>)|(</span>)", "");
+
         return content;
     }
 }
