@@ -19,7 +19,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 2.23.603 on 2020-06-15 21:49:32.
+// Generated using typescript-generator version 2.24.612 on 2020-09-13 16:47:42.
 
 export class MatchingResultMessage {
     description: string;

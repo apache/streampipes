@@ -53,6 +53,9 @@ public class FreeTextStaticProperty extends StaticProperty {
   @RdfProperty(StreamPipes.HTML_ALLOWED)
   private boolean htmlAllowed;
 
+  @RdfProperty(StreamPipes.HTML_FONT_FORMAT)
+  private boolean htmlFontFormat;
+
   @RdfProperty(StreamPipes.PLACEHOLDERS_SUPPORTED)
   private boolean placeholdersSupported;
 
@@ -74,6 +77,7 @@ public class FreeTextStaticProperty extends StaticProperty {
     }
     this.value = other.getValue();
     this.htmlAllowed = other.isHtmlAllowed();
+    this.htmlFontFormat = other.isHtmlFontFormat();
     this.multiLine = other.isMultiLine();
     this.placeholdersSupported = other.isPlaceholdersSupported();
     this.mapsTo = other.getMapsTo();
@@ -145,6 +149,14 @@ public class FreeTextStaticProperty extends StaticProperty {
 
   public void setHtmlAllowed(boolean htmlAllowed) {
     this.htmlAllowed = htmlAllowed;
+  }
+
+  public boolean isHtmlFontFormat() {
+    return htmlFontFormat;
+  }
+
+  public void setHtmlFontFormat(boolean htmlFontFormat) {
+    this.htmlFontFormat = htmlFontFormat;
   }
 
   public boolean isPlaceholdersSupported() {

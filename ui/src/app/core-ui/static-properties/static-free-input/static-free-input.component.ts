@@ -45,6 +45,11 @@ export class StaticFreeInputComponent
     ]
   };
 
+  quillModulesFontFormat: any = {
+    toolbar: [['bold', 'italic', 'underline', 'strike'],
+    ]
+  };
+
   @ViewChild('textEditor', {static: false})
   quillEditorComponent: QuillEditorComponent;
 

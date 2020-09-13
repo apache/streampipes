@@ -50,7 +50,8 @@
             </div>
         </div>
         <div fxFlex="100" *ngIf="staticProperty.multiLine">
-            <quill-editor #textEditor formControlName="{{fieldName}}" [modules]="quillModules"></quill-editor>
+            <quill-editor *ngIf="staticProperty.htmlFontFormat" #textEditor formControlName="{{fieldName}}" [modules]="quillModulesFontFormat"></quill-editor>
+            <quill-editor *ngIf="!staticProperty.htmlFontFormat" #textEditor formControlName="{{fieldName}}" [modules]="quillModules"></quill-editor>
         </div>
     </div>
 </div>
