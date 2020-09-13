@@ -277,6 +277,32 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
     return me();
   }
 
+  /**
+   * Defines a text-based configuration parameter provided by pipeline developers at pipeline authoring time.
+   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
+   *              user-friendly manner.
+   * @param multiLine Defines whether the input dialog allows multiple lines.
+   * @param placeholdersSupported Defines whether placeholders are supported, i.e., event property field names that
+   *                              are replaced with the actual value at pipeline execution time.
+   * @param htmlFontFormat Defines to only use bold, italic, striked in dialog.
+   * @return this
+   */
+  public BU requiredTextParameter(Label label, boolean multiLine, boolean placeholdersSupported, boolean htmlFontFormat) {
+    FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label, XSD._string.toString());
+    if (multiLine) {
+      fsp.setMultiLine(true);
+    }
+    if (placeholdersSupported) {
+      fsp.setPlaceholdersSupported(true);
+    }
+    if (htmlFontFormat) {
+      fsp.setHtmlFontFormat(true);
+    }
+    this.staticProperties.add(fsp);
+
+    return me();
+  }
+
 
   /**
    * @deprecated Use {@link #requiredIntegerParameter(Label)} instead
