@@ -28,6 +28,7 @@ import {
 } from "../../../core-model/gen/streampipes-model";
 import {AbstractValidatedStaticPropertyRenderer} from "../base/abstract-validated-static-property";
 import {Directive} from "@angular/core";
+import {ConfigurationInfo} from "../../../connect/model/ConfigurationInfo";
 
 
 @Directive()
@@ -73,5 +74,9 @@ export abstract class StaticMappingComponent<T extends MappingProperty>
         } else {
             return EventPropertyNested.fromData(ep, new EventPropertyNested());
         }
+    }
+
+    emitUpdate() {
+        this.updateEmitter.emit(new ConfigurationInfo(this.staticProperty.internalName, true));
     }
 }
