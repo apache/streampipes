@@ -34,6 +34,7 @@ export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
 
   runtimeData: any;
   timer: any;
+  runtimeDataError: boolean = false;
 
   constructor(private RestService: RestService) {
 
@@ -51,15 +52,20 @@ export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
 
   getLatestRuntimeInfo() {
     this.RestService.getRuntimeInfo(this.streamDescription).subscribe(data => {
-      if (!(Object.keys(data).length === 0 && data.constructor === Object)) {
-        this.runtimeData = data;
-      }
+     if (data) {
+       this.runtimeDataError = false;
+       if (!(Object.keys(data).length === 0 && data.constructor === Object)) {
+         this.runtimeData = data;
+       }
 
-      if (this._pollingActive) {
-          this.timer = setTimeout(() => {
-            this.getLatestRuntimeInfo();
-          }, 1000);
-      }
+       if (this._pollingActive) {
+         this.timer = setTimeout(() => {
+           this.getLatestRuntimeInfo();
+         }, 1000);
+       }
+     } else {
+       this.runtimeDataError = true;
+     }
     });
   }
 
