@@ -68,7 +68,9 @@ deployment_notice() {
             Check docs for help:  https://streampipes.apache.org/docs
 
     If your environment contains the StreamPipes UI, open your browser and follow
-    the instructions to get started: http://localhost/
+    the instructions to get started:
+    
+    Docker for Mac/Windows, Linux:     http://localhost/   OR    http://HOST_IP/
 
 EOF
 }
