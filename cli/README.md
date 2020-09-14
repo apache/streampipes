@@ -42,7 +42,7 @@ streampipes up -d
 The CLI is basically a wrapper around multiple `docker` and `docker-compose` commands plus some additional sugar.
 
 * Docker >= 17.06.0
-* Docker-Compose >= 1.17.0 (Compose file format: 3.4)
+* Docker-Compose >= 1.26.0 (Compose file format: 3.4)
 * Google Chrome (recommended), Mozilla Firefox, Microsoft Edge
 * For Windows Developer: GitBash only
 
