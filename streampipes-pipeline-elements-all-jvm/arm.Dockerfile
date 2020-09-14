@@ -21,11 +21,6 @@ ENV CONSUL_LOCATION consul
 EXPOSE 8090
 
 COPY qemu-arm-static /usr/bin
-# needed pkgs processors-image-processing-jvm
-RUN apk --update add --no-cache \
-    fontconfig \
-    ttf-dejavu
-
 COPY target/streampipes-processors-all-jvm.jar  /streampipes-processing-element-container.jar
 
 ENTRYPOINT ["java", "-jar", "/streampipes-processing-element-container.jar"]
