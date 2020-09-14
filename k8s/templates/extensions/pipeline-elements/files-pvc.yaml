@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-{{- if (eq .Values.deployment "lite") or (eq .Values.deployment "full") }}
+
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -23,5 +23,4 @@ spec:
     - ReadWriteMany
   resources:
     requests:
-      storage: 1Gi
-{{- end }}
+      storage: 256Mi
