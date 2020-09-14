@@ -26,7 +26,7 @@ StreamPipes k8s is a helm chart to deploy StreamPipes on Kubernetes.
 Requires Helm (https://helm.sh/) and an active connection to a kubernetes cluster with a running tiller server.
 
 Tested with:
-* K3s v1.18.6+k3s1 (6f56fa1d) with K8s v1.18.6
+* K3s v1.18.8+k3s1 (6b595318) with K8s v1.18.8
 * Helm v3.1.2
 
 ## Usage

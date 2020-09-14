@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
         - name: taskmanager
-          image: "flink:{{ .Values.external.flinkVersion }}"
+          image: fogsyio/flink:{{ .Values.external.flinkVersion }}
           imagePullPolicy: {{ .Values.pullPolicy }}
           args: ["taskmanager"]
           ports:
