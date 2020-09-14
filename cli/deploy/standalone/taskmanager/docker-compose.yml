@@ -16,7 +16,7 @@
 version: "3.4"
 services:
   taskmanager:
-    image: flink:1.9.1-scala_2.11
+    image: fogsyio/flink:1.9.1-scala_2.11
     depends_on:
       - jobmanager
     command: taskmanager
