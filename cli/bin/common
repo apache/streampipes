@@ -70,7 +70,8 @@ deployment_notice() {
     If your environment contains the StreamPipes UI, open your browser and follow
     the instructions to get started:
     
-    Docker for Mac/Windows, Linux:     http://localhost/   OR    http://HOST_IP/
+    Local Docker for Mac/Windows, Linux:     http://localhost/   
+    Remote Docker host:                      http://HOST_IP/
 
 EOF
 }
