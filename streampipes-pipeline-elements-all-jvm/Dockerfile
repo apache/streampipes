@@ -13,12 +13,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-ARG BASE_IMAGE=adoptopenjdk/openjdk9-openj9:alpine
+ARG BASE_IMAGE=adoptopenjdk/openjdk8-openj9:alpine-slim
 FROM $BASE_IMAGE
 
 ENV CONSUL_LOCATION consul
 
 EXPOSE 8090
+
+# needed pkgs processors-image-processing-jvm
+RUN apk --update add --no-cache \
+    fontconfig \
+    ttf-dejavu
 
 COPY target/streampipes-processors-all-jvm.jar  /streampipes-processing-element-container.jar
 
