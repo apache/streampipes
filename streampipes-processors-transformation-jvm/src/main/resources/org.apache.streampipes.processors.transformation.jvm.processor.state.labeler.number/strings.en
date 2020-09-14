@@ -7,6 +7,15 @@ sensorValueId.description=The value used for the labeling
 labelCollectionId.title=Condition
 labelCollectionId.description=Add a condition to provide a label for the data
 
+stateFilterId.title=Select a specific state
+stateFilterId.description=Add a filter to define which states to evaluate. Add '*' to select all states.
+
+stateFieldId.title=State field
+stateFieldId.description=Select the field containing the state of the event
+
+operationsId.title=Operation
+operationsId.description=Define the operation that should be applied on sensor values
+
 label.title=Label
 label.description=User defined label for data
 

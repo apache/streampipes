@@ -16,13 +16,11 @@
  *
  */
 
-package org.apache.streampipes.processors.transformation.jvm.processor.booloperator.state;
+package org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.state;
 
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.schema.PropertyScope;
-import org.apache.streampipes.model.staticproperty.MappingPropertyUnary;
-import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
@@ -34,22 +32,21 @@ import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcess
 
 import java.util.List;
 
-public class BooleanToStateController extends StandaloneEventProcessingDeclarer<BooleanToStateParameters> {
+public class StringToStateController extends StandaloneEventProcessingDeclarer<StringToStateParameters> {
 
-  public static final String BOOLEAN_STATE_FIELD = "boolean_state_field";
-  public static final String DEFAULT_STATE_ID = "default-state-id";
+  public static final String STRING_STATE_FIELD = "string_state_field";
 
   public static final String CURRENT_STATE = "current_state";
 
+
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.processor.booloperator.state")
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.state")
             .withLocales(Locales.EN)
             .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .requiredStream(StreamRequirementsBuilder.create()
-                    .requiredPropertyWithNaryMapping(EpRequirements.booleanReq(), Labels.withId(BOOLEAN_STATE_FIELD), PropertyScope.NONE)
+                    .requiredPropertyWithNaryMapping(EpRequirements.stringReq(), Labels.withId(STRING_STATE_FIELD), PropertyScope.NONE)
                     .build())
-            .requiredTextParameter(Labels.withId(DEFAULT_STATE_ID))
             .outputStrategy(OutputStrategies.append(
                     EpProperties.listStringEp(Labels.withId(CURRENT_STATE), CURRENT_STATE, SPSensor.STATE)
             ))
@@ -57,13 +54,12 @@ public class BooleanToStateController extends StandaloneEventProcessingDeclarer<
   }
 
   @Override
-  public ConfiguredEventProcessor<BooleanToStateParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<StringToStateParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 
-    List<String> stateFields = extractor.mappingPropertyValues(BOOLEAN_STATE_FIELD);
-    String defaultState = extractor.singleValueParameter(DEFAULT_STATE_ID, String.class);
+    List<String> stateFields = extractor.mappingPropertyValues(STRING_STATE_FIELD);
 
-    BooleanToStateParameters params = new BooleanToStateParameters(graph, stateFields, defaultState);
+    StringToStateParameters params = new StringToStateParameters(graph, stateFields);
 
-    return new ConfiguredEventProcessor<>(params, BooleanToState::new);
+    return new ConfiguredEventProcessor<>(params, StringToState::new);
   }
 }
