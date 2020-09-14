@@ -16,16 +16,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: pipeline-elements-all-jvm
+  name: sources-watertank-simulator
 spec:
   selector:
     matchLabels:
-      app: pipeline-elements-all-jvm
+      app: sources-watertank-simulator
   replicas: 1
   template:
     metadata:
       labels:
-        app: pipeline-elements-all-jvm
+        app: sources-watertank-simulator
     spec:
       initContainers:
         - name: init-wait-consul
