@@ -184,6 +184,13 @@ public abstract class AbstractRestInterface {
             .build();
   }
 
+  protected <T> Response serverError(T entity) {
+    return Response
+            .status(500)
+            .entity(entity)
+            .build();
+  }
+
   protected StreamPipesJsonLdContainer asContainer(List<? extends AbstractStreamPipesEntity> elements) {
     return new StreamPipesJsonLdContainer(elements);
   }

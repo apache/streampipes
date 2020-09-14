@@ -47,6 +47,7 @@ export class StaticMappingUnaryComponent extends StaticMappingComponent<MappingP
             .forEach(ep => ep.propertySelector = this.firstStreamPropertySelector + ep.runtimeName);
         if (!this.staticProperty.selectedProperty) {
             this.staticProperty.selectedProperty = this.availableProperties[0].propertySelector;
+            this.emitUpdate();
         }
         this.addValidator(this.staticProperty.selectedProperty, Validators.required);
         this.enableValidators();
