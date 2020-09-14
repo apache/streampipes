@@ -35,7 +35,11 @@ spec:
           args: ["jobmanager"]
           ports:
             - containerPort: 8081
+              name: webui
             - containerPort: 6123
+              name: rpc
+            - containerPort: 6124
+              name: blob-server
           env:
             - name: JOB_MANAGER_RPC_ADDRESS
               value: jobmanager
