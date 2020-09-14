@@ -40,7 +40,8 @@ spec:
             claimName: backend-pvc
         - name: files-pv
           persistentVolumeClaim:
-            claimName: files-pvc            
+            claimName: files-pvc
+            readOnly: true          
       containers:
         - name: backend
           image: {{ .Values.streampipes.registry }}/backend:{{ .Values.streampipes.version }}
@@ -52,3 +53,4 @@ spec:
               name: backend-pv
             - mountPath: "/spImages"
               name: files-pv
+              readOnly: true
