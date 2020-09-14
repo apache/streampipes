@@ -22,12 +22,13 @@ spec:
   selector:
     app: jobmanager
   ports:
-    - name: main
-      protocol: TCP
+    - name: webui
       port: 8081
       targetPort: 8081
-    - name: manager
-      protocol: TCP
+    - name: rpc
       port: 6123
       targetPort: 6123
+    - name: blob-server
+      port: 6124
+      targetPort: 6124      
 {{- end }}
