@@ -24,7 +24,6 @@ import { ImageConfig } from '../components/widgets/image/image-config';
 import { LineConfig } from '../components/widgets/line/line-config';
 import { MapConfig } from '../components/widgets/map/map-config';
 import { NumberConfig } from '../components/widgets/number/number-config';
-import { PalletConfig } from '../components/widgets/pallet/pallet-config';
 import { RawConfig } from '../components/widgets/raw/raw-config';
 import { TableConfig } from '../components/widgets/table/table-config';
 import { TrafficLightConfig } from '../components/widgets/trafficlight/traffic-light-config';
@@ -32,7 +31,7 @@ import { SchemaMatch } from '../sdk/matching/schema-match';
 import {
     DashboardWidgetSettings, EventSchema,
     VisualizablePipeline
-} from "../../core-model/gen/streampipes-model";
+} from '../../core-model/gen/streampipes-model';
 
 export class WidgetRegistry {
 
@@ -46,8 +45,7 @@ export class WidgetRegistry {
         new MapConfig(),
         new RawConfig(),
         new HtmlConfig(),
-        new TrafficLightConfig(),
-        new PalletConfig()
+        new TrafficLightConfig()
     ];
 
     static getAvailableWidgetTemplates(): DashboardWidgetSettings[] {
