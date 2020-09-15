@@ -17,23 +17,19 @@
  */
 package org.apache.streampipes.rest.impl;
 
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
-import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.apache.streampipes.manager.file.FileManager;
 import org.apache.streampipes.model.client.file.FileMetadata;
 import org.apache.streampipes.rest.api.IPipelineElementFile;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 
-import java.io.InputStream;
-import java.util.List;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Path("/v2/users/{username}/files")
 public class PipelineElementFile extends AbstractRestInterface implements IPipelineElementFile {
@@ -54,9 +50,18 @@ public class PipelineElementFile extends AbstractRestInterface implements IPipel
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Override
-  public Response getFileInfo() {
+  public Response getFileInfo(@QueryParam("filetypes") String filetypes) {
     List<FileMetadata> allFiles = getFileMetadataStorage().getAllFileMetadataDescriptions();
-    return ok(allFiles);
+    return filetypes != null ? ok(filterFiletypes(allFiles, filetypes)) : ok(allFiles);
+  }
+
+  private List<FileMetadata> filterFiletypes(List<FileMetadata> allFiles, String filetypes) {
+    return allFiles
+            .stream()
+            .filter(fileMetadata -> Arrays
+                    .stream(filetypes.split(","))
+                    .anyMatch(ft -> ft.equals(fileMetadata.getFiletype())))
+            .collect(Collectors.toList());
   }
 
 }

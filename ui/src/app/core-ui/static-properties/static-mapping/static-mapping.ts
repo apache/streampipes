@@ -75,8 +75,4 @@ export abstract class StaticMappingComponent<T extends MappingProperty>
             return EventPropertyNested.fromData(ep, new EventPropertyNested());
         }
     }
-
-    emitUpdate() {
-        this.updateEmitter.emit(new ConfigurationInfo(this.staticProperty.internalName, true));
-    }
 }

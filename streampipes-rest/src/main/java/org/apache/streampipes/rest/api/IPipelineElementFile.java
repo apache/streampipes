@@ -19,14 +19,13 @@ package org.apache.streampipes.rest.api;
 
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 
-import java.io.InputStream;
-
 import javax.ws.rs.core.Response;
+import java.io.InputStream;
 
 public interface IPipelineElementFile {
 
   Response storeFile(String username, InputStream inputStream, FormDataContentDisposition formData);
 
-  Response getFileInfo();
+  Response getFileInfo(String filteredFiletypes);
 
 }

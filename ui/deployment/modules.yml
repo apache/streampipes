@@ -143,3 +143,18 @@ spDataExplorer:
   icon: 'search'
   homeImage: '/assets/img/home/configuration.png'
   admin: false
+spFiles:
+  ng5: True
+  ng1_templateUrl: ''
+  ng1_controller: ''
+  ng5_moduleName: 'FilesModule'
+  ng5_component: 'FilesComponent'
+  ng5_componentPath: './files/files.component'
+  path: './files/files.module'
+  link: 'files'
+  url: '/files'
+  title: 'File Management'
+  description: 'The file management module lets you upload and manage files that are used by adapters or pipeline elements.'
+  icon: 'folder'
+  homeImage: '/assets/img/home/configuration.png'
+  admin: true
