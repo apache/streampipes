@@ -20,11 +20,13 @@ package org.apache.streampipes.sdk;
 
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.model.staticproperty.*;
+import org.apache.streampipes.sdk.helpers.Filetypes;
 import org.apache.streampipes.sdk.helpers.Label;
 import org.apache.streampipes.sdk.helpers.RequirementsSelector;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -65,6 +67,20 @@ public class StaticProperties {
     FileStaticProperty fp = new FileStaticProperty(label.getInternalId(), label.getLabel(), label
             .getDescription());
 
+    return fp;
+  }
+
+  public static FileStaticProperty fileProperty(Label label, Filetypes... requiredFiletypes) {
+    FileStaticProperty fp = fileProperty(label);
+    List<String> collectedFiletypes = new ArrayList<>();
+    Arrays.stream(requiredFiletypes).forEach(rf -> collectedFiletypes.addAll(rf.getFileExtensions()));
+    fp.setRequiredFiletypes(collectedFiletypes);
+    return fp;
+  }
+
+  public static FileStaticProperty fileProperty(Label label, String... requiredFiletypes) {
+    FileStaticProperty fp = fileProperty(label);
+    fp.setRequiredFiletypes(Arrays.asList(requiredFiletypes.clone()));
     return fp;
   }
 
