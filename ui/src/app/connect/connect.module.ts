@@ -23,7 +23,6 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import {BrowserModule} from '@angular/platform-browser';
 
 import {ConnectComponent} from './connect.component';
 import {NewAdapterComponent} from './components/new-adapter/new-adapter.component';
@@ -47,8 +46,6 @@ import {ConnectService} from './services/connect.service';
 import {AdapterDescriptionComponent} from './components/data-marketplace/adapter-description/adapter-description.component';
 import {DataMarketplaceComponent} from './components/data-marketplace/data-marketplace.component';
 import {DataMarketplaceService} from './services/data-marketplace.service';
-import {FileManagementComponent} from './components/file-management/file-management.component';
-import {FileRestService} from './services/filerest.service';
 import {FormatComponent} from './components/format-component/format.component';
 import {FormatListComponent} from './components/format-list-component/format-list.component';
 import {IconService} from './services/icon.service';
@@ -56,7 +53,6 @@ import {UnitProviderService} from './services/unit-provider.service';
 
 
 import {FilterPipe} from './filter/filter.pipe';
-import {PlatformServicesModule} from '../platform-services/platform.module';
 import {AdapterExportDialog} from './dialog/adapter-export/adapter-export-dialog.component';
 import {AdapterUploadDialog} from './dialog/adapter-upload/adapter-upload-dialog.component';
 import {EditEventPropertyListComponent} from './dialog/edit-event-property/components/edit-event-property-list/edit-event-property-list.component';
@@ -65,7 +61,6 @@ import {MatChipsModule} from '@angular/material/chips';
 import {MatSliderModule} from '@angular/material/slider';
 import {TreeModule} from 'angular-tree-component';
 import {xsService} from '../NS/XS.service';
-import {PropertySelectorService} from '../services/property-selector.service';
 import {EditDataTypeComponent} from './dialog/edit-event-property/components/edit-data-type/edit-data-type.component';
 import {EditTimestampPropertyComponent} from './dialog/edit-event-property/components/edit-timestamp-property/edit-timestamp-property.component';
 import {EditUnitTransformationComponent} from './dialog/edit-event-property/components/edit-unit-transformation/edit-unit-transformation.component';
@@ -73,7 +68,6 @@ import {EditEventPropertyComponent} from './dialog/edit-event-property/edit-even
 import {PipelineElementRuntimeInfoComponent} from './components/runtime-info/pipeline-element-runtime-info.component';
 import {EventPropertyRowComponent} from './components/schema-editor/event-property-row/event-property-row.component';
 import {EventSchemaPreviewComponent} from './components/schema-editor/event-schema-preview/event-schema-preview.component';
-import {TourProviderService} from "../services/tour/tour-provider.service";
 import {CoreUiModule} from "../core-ui/core-ui.module";
 
 @NgModule({
@@ -112,7 +106,6 @@ import {CoreUiModule} from "../core-ui/core-ui.module";
         EditTimestampPropertyComponent,
         EditDataTypeComponent,
         EventSchemaPreviewComponent,
-        FileManagementComponent,
         FilterPipe,
         FormatComponent,
         FormatFormComponent,
@@ -131,7 +124,6 @@ import {CoreUiModule} from "../core-ui/core-ui.module";
         IconService,
         UnitProviderService,
         TimestampPipe,
-        FileRestService,
         xsService,
     ],
     entryComponents: [ConnectComponent, AdapterStartedDialog, AdapterExportDialog, AdapterUploadDialog, EditEventPropertyComponent],
