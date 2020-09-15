@@ -15,20 +15,26 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.sdk.helpers;
 
-p {
-    width: 100px;
-    float: left;
-    margin: 20px  15px 0 0;
-}
-form {
-    float: left;
-}
+import java.util.Arrays;
+import java.util.List;
 
-.green-icon {
-    color: green;
-}
+public enum Filetypes {
 
-.green-icon svg {
-    fill: green;
+  CSV("csv"),
+  JSON("json"),
+  XML("xml"),
+  ZIP("zip"),
+  JPG("jpg", "jpeg");
+
+  private List<String> fileExtensions;
+
+  Filetypes(String... fileExtensions) {
+    this.fileExtensions = Arrays.asList(fileExtensions);
+  }
+
+  public List<String> getFileExtensions() {
+    return fileExtensions;
+  }
 }

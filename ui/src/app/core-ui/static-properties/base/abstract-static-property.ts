@@ -60,4 +60,8 @@ export abstract class AbstractStaticPropertyRenderer<T extends StaticProperty> {
 
   }
 
+  emitUpdate(valid?: boolean) {
+    this.updateEmitter.emit(new ConfigurationInfo(this.staticProperty.internalName, valid));
+  }
+
 }

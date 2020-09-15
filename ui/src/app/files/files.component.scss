@@ -16,19 +16,18 @@
  *
  */
 
-p {
-    width: 100px;
-    float: left;
-    margin: 20px  15px 0 0;
-}
-form {
-    float: left;
+.add-options {
+  background-color:#f6f6f6;
+  border-bottom: 1px solid #cccccc;
+  padding-top:10px;
+  padding-bottom:10px;
 }
 
-.green-icon {
-    color: green;
+.page-container-padding-inner {
+  margin: 20px;
 }
 
-.green-icon svg {
-    fill: green;
+.add-options-item {
+  display: inline;
+  margin-right: 10px;
 }

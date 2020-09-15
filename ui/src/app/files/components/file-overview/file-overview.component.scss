@@ -16,19 +16,25 @@
  *
  */
 
-p {
-    width: 100px;
-    float: left;
-    margin: 20px  15px 0 0;
-}
-form {
-    float: left;
+.mat-table {
+  background: #FAFAFA;
 }
 
-.green-icon {
-    color: green;
+.mat-paginator {
+  border-top: 1px solid rgba(0,0,0,.12);
+  background: #FAFAFA;
 }
 
-.green-icon svg {
-    fill: green;
+.mat-row:nth-child(even) {
+  background-color: #FAFAFA;
+}
+.mat-row:nth-child(odd) {
+  background-color:#ffffff;
+}
+
+.filetype-container {
+  background: #00aeff;
+  color: white;
+  padding: 5px 15px;
+  border-radius: 5px;
 }

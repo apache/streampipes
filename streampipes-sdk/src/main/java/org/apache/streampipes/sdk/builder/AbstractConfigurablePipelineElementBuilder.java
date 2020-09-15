@@ -21,6 +21,7 @@ import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.staticproperty.*;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.helpers.CodeLanguage;
+import org.apache.streampipes.sdk.helpers.Filetypes;
 import org.apache.streampipes.sdk.helpers.Label;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.vocabulary.XSD;
@@ -689,6 +690,39 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
     FileStaticProperty fp =  new FileStaticProperty(label.getInternalId(), label.getLabel(), label
             .getDescription());
 
+    this.staticProperties.add(fp);
+
+    return me();
+
+  }
+
+  /**
+   *
+   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
+   *    user-friendly manner.
+   * @param requiredFiletypes A list of {@link org.apache.streampipes.sdk.helpers.Filetypes} required filetypes the element supports.
+   * @return this
+   */
+  public BU requiredFile(Label label, Filetypes... requiredFiletypes) {
+    List<String> collectedFiletypes = new ArrayList<>();
+    Arrays.stream(requiredFiletypes).forEach(rf -> collectedFiletypes.addAll(rf.getFileExtensions()));
+
+    return requiredFile(label, collectedFiletypes.toArray(new String[0]));
+  }
+
+  /**
+   *
+   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
+   *    user-friendly manner.
+   * @param requiredFiletypes A list of required filetypes (a string marking the file extension) the element supports.
+   * @return this
+   */
+  public BU requiredFile(Label label, String... requiredFiletypes) {
+    FileStaticProperty fp =  new FileStaticProperty(label.getInternalId(), label.getLabel(), label
+            .getDescription());
+
+    List<String> collectedFiletypes = Arrays.asList(requiredFiletypes);
+    fp.setRequiredFiletypes(collectedFiletypes);
     this.staticProperties.add(fp);
 
     return me();

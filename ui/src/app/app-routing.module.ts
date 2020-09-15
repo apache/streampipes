@@ -39,6 +39,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { DataExplorerComponent } from './data-explorer/data-explorer.component';
 import { AppOverviewComponent } from './app-overview/app-overview.component';
 import { AddComponent } from './add/add.component';
+import { FilesComponent } from './files/files.component';
 import { ConfigurationComponent } from './configuration/configuration.component';
 
 const routes: Routes = [
@@ -56,6 +57,7 @@ const routes: Routes = [
       { path: 'dataexplorer', component: DataExplorerComponent },
       { path: 'app-overview', component: AppOverviewComponent },
       { path: 'add', component: AddComponent },
+      { path: 'files', component: FilesComponent },
       { path: 'configuration', component: ConfigurationComponent },
       { path: 'notifications', component: NotificationsComponent },
       { path: 'info', component: InfoComponent },

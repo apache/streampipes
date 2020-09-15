@@ -71,6 +71,11 @@ export abstract class BaseNavigationComponent {
         icon: 'cloud_download'
     },
     {
+        link: 'files',
+        title: 'File Management',
+        icon: 'folder'
+    },
+    {
         link: 'configuration',
         title: 'Configuration',
         icon: 'settings'
