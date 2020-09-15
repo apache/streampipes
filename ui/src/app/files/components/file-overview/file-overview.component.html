@@ -40,14 +40,10 @@
         <ng-container matColumnDef="action">
             <th mat-header-cell *matHeaderCellDef> Action</th>
             <td mat-cell *matCellDef="let fileMetadata">
-                <div fxLayout="row">
-                    <span fxFlex fxFlexOrder="3" fxLayout="row" fxLayoutAlign="center center">
-                    <button color="primary" mat-button mat-icon-button matTooltip="Delete pipeline" matTooltipPosition="above"
+                    <button color="primary" mat-button mat-icon-button matTooltip="Delete file" matTooltipPosition="above"
                             (click)="deleteFile(fileMetadata)">
                         <i class="material-icons">delete</i>
                     </button>
-                </span>
-                </div>
             </td>
         </ng-container>
 

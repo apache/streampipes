@@ -47,6 +47,13 @@ public class PipelineElementFile extends AbstractRestInterface implements IPipel
     }
   }
 
+  @DELETE
+  @Path("{fileId}")
+  public Response deleteFile(@PathParam("fileId") String fileId) {
+    FileManager.deleteFile(fileId);
+    return ok();
+  }
+
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Override

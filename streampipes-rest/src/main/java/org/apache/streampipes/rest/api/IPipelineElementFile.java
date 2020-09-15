@@ -28,4 +28,6 @@ public interface IPipelineElementFile {
 
   Response getFileInfo(String filteredFiletypes);
 
+  Response deleteFile(String fileId);
+
 }

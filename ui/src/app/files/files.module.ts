@@ -38,6 +38,7 @@ import {FileOverviewComponent} from "./components/file-overview/file-overview.co
 import {MatTableModule} from "@angular/material/table";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatChipsModule} from "@angular/material/chips";
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 @NgModule({
   imports: [
@@ -58,6 +59,7 @@ import {MatChipsModule} from "@angular/material/chips";
     MatProgressBarModule,
     MatTableModule,
     MatTabsModule,
+    MatTooltipModule,
     PlatformServicesModule,
     ServicesModule
   ],
