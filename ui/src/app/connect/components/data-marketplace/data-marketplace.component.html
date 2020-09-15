@@ -22,9 +22,7 @@
             <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectedIndexChange($event)">
                 <mat-tab label="Data Marketplace">
                 </mat-tab>
-                <mat-tab id="all-adapters" label="All Adapters">
-                </mat-tab>
-                <mat-tab id="uploaded-files" label="Files">
+                <mat-tab id="all-adapters" label="Running Adapters">
                 </mat-tab>
             </mat-tab-group>
         </div>
@@ -97,11 +95,6 @@
                 <sp-adapter-description class="adapter-description" fxFlex="33" *ngFor="let adapter of filteredAdapters | filter:filterTerm"
                     [adapter]="adapter" (createTemplateEmitter)="templateFromRunningAdapter(adapter)"
                     (updateAdapterEmitter)="updateDescriptionsAndRunningAdatpers()"></sp-adapter-description>
-            </div>
-        </div>
-        <div *ngIf="selectedIndex === 2">
-            <div fxLayout="row wrap" fxLayoutAlign="start stretch" class="adapter-container">
-                <sp-file-management fxFlex="100" fxLayout="column"></sp-file-management>
             </div>
         </div>
     </div>
