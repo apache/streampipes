@@ -56,4 +56,8 @@ export class FilesService {
           return (response as any[]).map(fm => FileMetadata.fromData(fm));
         }));
   }
+
+  deleteFile(fileId: string) {
+    return this.http.delete(this.platformServicesCommons.authUserBasePath() + "/files/" + fileId);
+  }
 }
