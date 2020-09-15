@@ -23,10 +23,12 @@ import java.util.List;
 public enum Filetypes {
 
   CSV("csv"),
+  JPG("jpg", "jpeg"),
   JSON("json"),
+  XLS("xls"),
+  XLSX("xlsx"),
   XML("xml"),
-  ZIP("zip"),
-  JPG("jpg", "jpeg");
+  ZIP("zip");
 
   private List<String> fileExtensions;
 
