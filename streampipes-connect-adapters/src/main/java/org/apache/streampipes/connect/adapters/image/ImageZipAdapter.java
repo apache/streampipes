@@ -22,13 +22,11 @@ import org.apache.streampipes.connect.adapter.exception.AdapterException;
 import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
 import org.apache.streampipes.connect.adapters.image.stream.ImageStreamAdapter;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.staticproperty.FileStaticProperty;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,16 +53,13 @@ public class ImageZipAdapter {
      */
     public void start(AdapterPipeline adapterPipeline, boolean infinite) throws AdapterException {
         StaticPropertyExtractor extractor =
-                StaticPropertyExtractor.from(adapterDescription.getConfig(), new ArrayList<>());
-
-        FileStaticProperty fileStaticProperty = (FileStaticProperty) extractor.getStaticPropertyByName(ImageZipUtils.ZIP_FILE_KEY);
-        String fileUri = fileStaticProperty.getLocationPath();
+                StaticPropertyExtractor.from(adapterDescription.getConfig());
 
         Integer timeBetweenReplay = extractor.singleValueParameter(ImageZipUtils.INTERVAL_KEY, Integer.class);
-
+        String zipFileUrl = extractor.selectedFileFetchUrl(ImageZipUtils.ZIP_FILE_KEY);
         ZipFileImageIterator zipFileImageIterator;
         try {
-            zipFileImageIterator = new ZipFileImageIterator(fileUri, infinite);
+            zipFileImageIterator = new ZipFileImageIterator(zipFileUrl, infinite);
         } catch (IOException e) {
             throw new AdapterException("Error while reading images in the zip file");
         }

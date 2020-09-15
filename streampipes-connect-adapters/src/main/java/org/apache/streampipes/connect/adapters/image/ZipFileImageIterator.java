@@ -18,37 +18,37 @@
 
 package org.apache.streampipes.connect.adapters.image;
 
-import org.apache.commons.io.IOUtils;
+import org.apache.http.client.fluent.Request;
 
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 
 public class ZipFileImageIterator {
-    private ZipFile zipFile;
-    private List<ZipEntry> allImages;
+
+    private static final int BUFFER_SIZE = 4096;
+
+    private List<byte[]> allImages;
     private int current;
 
     /* Defines whether the iterator starts from the beginning or not */
     private boolean infinite;
 
-    public ZipFileImageIterator(String zipFileRoute, boolean infinite) throws IOException {
-        this.zipFile = new ZipFile(zipFileRoute);
+    public ZipFileImageIterator(String zipFileUrl, boolean infinite) throws IOException {
+        ZipInputStream inputStream = fetchZipInputStream(zipFileUrl);
         this.infinite = infinite;
 
-        Enumeration<? extends ZipEntry> entries = zipFile.entries();
-
+        ZipEntry entry;
         this.allImages = new ArrayList<>();
 
-        while(entries.hasMoreElements()){
-            ZipEntry entry = entries.nextElement();
+        while((entry = inputStream.getNextEntry()) != null) {
             if (isImage(entry.getName())){
-                allImages.add(entry);
+                allImages.add(extractFile(inputStream));
             }
         }
         this.current = 0;
@@ -68,9 +68,7 @@ public class ZipFileImageIterator {
             }
         }
 
-        ZipEntry entry = allImages.get(current);
-        InputStream stream = zipFile.getInputStream(entry);
-        byte[] bytes = IOUtils.toByteArray(stream);
+        byte[] bytes = allImages.get(current);
 
         current++;
         String resultImage = Base64.getEncoder().encodeToString(bytes);
@@ -83,5 +81,23 @@ public class ZipFileImageIterator {
                         name.toLowerCase().endsWith(".jpg") ||
                         name.toLowerCase().endsWith(".jpeg"));
 
+    }
+
+    private ZipInputStream fetchZipInputStream(String fileFetchUrl) throws IOException {
+        return new ZipInputStream(Request.Get(fileFetchUrl).execute().returnContent().asStream());
+    }
+
+    private byte[] extractFile(ZipInputStream zipIn) throws IOException {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        BufferedOutputStream bos = new BufferedOutputStream(outputStream);
+        byte[] bytesIn = new byte[BUFFER_SIZE];
+        int read = 0;
+        while ((read = zipIn.read(bytesIn)) != -1) {
+            bos.write(bytesIn, 0, read);
+        }
+        bos.close();
+        byte[] bytes = outputStream.toByteArray();
+        outputStream.close();
+        return bytes;
     }
 }

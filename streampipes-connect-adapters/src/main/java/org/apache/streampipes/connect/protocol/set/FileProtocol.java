@@ -19,10 +19,7 @@
 package org.apache.streampipes.connect.protocol.set;
 
 
-import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.sdk.utils.Assets;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.http.client.fluent.Request;
 import org.apache.streampipes.connect.SendToPipeline;
 import org.apache.streampipes.connect.adapter.exception.ParseException;
 import org.apache.streampipes.connect.adapter.guess.SchemaGuesser;
@@ -30,17 +27,24 @@ import org.apache.streampipes.connect.adapter.model.generic.Format;
 import org.apache.streampipes.connect.adapter.model.generic.Parser;
 import org.apache.streampipes.connect.adapter.model.generic.Protocol;
 import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
-import org.apache.streampipes.connect.adapter.sdk.ParameterExtractor;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.schema.EventSchema;
-import org.apache.streampipes.model.staticproperty.FileStaticProperty;
 import org.apache.streampipes.sdk.builder.adapter.ProtocolDescriptionBuilder;
+import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.AdapterSourceType;
+import org.apache.streampipes.sdk.helpers.Filetypes;
 import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.utils.Assets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -51,14 +55,14 @@ public class FileProtocol extends Protocol {
 
     public static final String ID = "org.apache.streampipes.protocol.set.file";
 
-    private String fileUri;
+    private String fileFetchUrl;
 
     public FileProtocol() {
     }
 
-    public FileProtocol(Parser parser, Format format, String fileUri) {
+    public FileProtocol(Parser parser, Format format, String fileFetchUrl) {
         super(parser, format);
-        this.fileUri = fileUri;
+        this.fileFetchUrl = fileFetchUrl;
     }
 
     @Override
@@ -68,18 +72,16 @@ public class FileProtocol extends Protocol {
                 .withLocales(Locales.EN)
                 .sourceType(AdapterSourceType.SET)
                 .category(AdapterType.Generic)
-                .requiredFile(Labels.withId("filePath"))
+                .requiredFile(Labels.withId("filePath"), Filetypes.XML, Filetypes.JSON, Filetypes.CSV)
                 .build();
     }
 
     @Override
     public Protocol getInstance(ProtocolDescription protocolDescription, Parser parser, Format format) {
-        ParameterExtractor extractor = new ParameterExtractor(protocolDescription.getConfig());
+        StaticPropertyExtractor extractor = StaticPropertyExtractor.from(protocolDescription.getConfig());
 
-        FileStaticProperty fileStaticProperty = (FileStaticProperty) extractor.getStaticPropertyByName("filePath");
-
-        String fileUri = fileStaticProperty.getLocationPath();
-        return new FileProtocol(parser, format, fileUri);
+        String fileFetchUrl = extractor.selectedFileFetchUrl("filePath");
+        return new FileProtocol(parser, format, fileFetchUrl);
     }
 
     @Override
@@ -95,18 +97,11 @@ public class FileProtocol extends Protocol {
 
         SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
         try {
-            fr = new FileReader(fileUri);
-            BufferedReader br = new BufferedReader(fr);
-
-            InputStream inn = new FileInputStream(fileUri);
-            parser.parse(inn, stk);
-
-            fr.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            InputStream in = Request.Get(fileFetchUrl).execute().returnContent().asStream();;
+            parser.parse(in, stk);
         } catch (IOException e) {
             e.printStackTrace();
-        }  catch (ParseException e) {
+        } catch (ParseException e) {
             logger.error("Error while parsing: " + e.getMessage());
         }
     }
@@ -152,25 +147,17 @@ public class FileProtocol extends Protocol {
 //        return result;
     }
 
-
     public InputStream getDataFromEndpoint() throws ParseException {
-        FileReader fr = null;
-        InputStream inn = null;
-
         try {
-            fr = new FileReader(fileUri);
-            BufferedReader br = new BufferedReader(fr);
-
-            inn = new FileInputStream(fileUri);
-
+            return Request.Get(fileFetchUrl).execute().returnContent().asStream();
         } catch (FileNotFoundException e) {
-            throw new ParseException("File not found: " + fileUri);
+            throw new ParseException("File not found: " + fileFetchUrl);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new ParseException("Could not receive Data from file: " + fileFetchUrl);
         }
-        if (inn == null)
-            throw new ParseException("Could not receive Data from file: " + fileUri);
-
-        return inn;
     }
+
     @Override
     public List<Map<String, Object>> getNElements(int n) throws ParseException {
         List<Map<String, Object>> result = new ArrayList<>();

@@ -17,8 +17,6 @@
  */
 package org.apache.streampipes.processors.transformation.jvm.processor.csvmetadata;
 
-import static org.apache.streampipes.processors.transformation.jvm.processor.csvmetadata.CsvMetadataEnrichmentUtils.getCsvParser;
-
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -34,10 +32,7 @@ import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
-import org.apache.streampipes.sdk.helpers.EpRequirements;
-import org.apache.streampipes.sdk.helpers.Labels;
-import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.sdk.helpers.OutputStrategies;
+import org.apache.streampipes.sdk.helpers.*;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
@@ -48,6 +43,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.apache.streampipes.processors.transformation.jvm.processor.csvmetadata.CsvMetadataEnrichmentUtils.getCsvParser;
 
 public class CsvMetadataEnrichmentController
         extends StandaloneEventProcessingDeclarer<CsvMetadataEnrichmentParameters>
@@ -71,7 +68,7 @@ public class CsvMetadataEnrichmentController
                             Labels.withId(MAPPING_FIELD_KEY),
                             PropertyScope.NONE)
                     .build())
-            .requiredFile(Labels.withId(CSV_FILE_KEY))
+            .requiredFile(Labels.withId(CSV_FILE_KEY), Filetypes.CSV)
             .requiredSingleValueSelectionFromContainer(Labels.withId(FIELD_TO_MATCH),
                     Arrays.asList(MAPPING_FIELD_KEY, CSV_FILE_KEY))
             .requiredMultiValueSelectionFromContainer(Labels.withId(FIELDS_TO_APPEND_KEY),

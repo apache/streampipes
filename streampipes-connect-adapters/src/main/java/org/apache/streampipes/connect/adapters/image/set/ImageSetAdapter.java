@@ -28,6 +28,7 @@ import org.apache.streampipes.model.connect.adapter.SpecificAdapterSetDescriptio
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 import org.apache.streampipes.sdk.builder.adapter.SpecificDataSetAdapterBuilder;
+import org.apache.streampipes.sdk.helpers.Filetypes;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
@@ -59,7 +60,7 @@ public class ImageSetAdapter extends SpecificDataSetAdapter {
                 .withLocales(Locales.EN)
                 .withAssets(Assets.DOCUMENTATION, Assets.ICON)
                 .requiredIntegerParameter(Labels.withId(ImageZipUtils.INTERVAL_KEY))
-                .requiredFile(Labels.withId(ImageZipUtils.ZIP_FILE_KEY))
+                .requiredFile(Labels.withId(ImageZipUtils.ZIP_FILE_KEY), Filetypes.ZIP)
                 .build();
         description.setAppId(ID);
 
