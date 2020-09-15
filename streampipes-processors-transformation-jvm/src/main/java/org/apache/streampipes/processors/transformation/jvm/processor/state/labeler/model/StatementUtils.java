@@ -123,7 +123,7 @@ public class StatementUtils {
         if (">".equals(statement.getOperator())) {
             return calculatedValue > statement.getValue();
         } else if (">=".equals(statement.getOperator())) {
-            return calculatedValue < statement.getValue();
+            return calculatedValue >= statement.getValue();
         } else if ("<=".equals(statement.getOperator())) {
             return calculatedValue <= statement.getValue();
         } else if ("<".equals(statement.getOperator())) {
