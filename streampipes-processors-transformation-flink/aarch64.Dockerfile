@@ -21,6 +21,6 @@ ENV CONSUL_LOCATION consul
 EXPOSE 8090
 
 COPY qemu-aarch64-static /usr/bin
-COPY target/streampipes-processors-transformation-flink.jar  /streampipes-processors-transformation-flink.jar
+COPY target/streampipes-processors-transformation-flink.jar  /streampipes-processing-element-container.jar
 
-ENTRYPOINT ["java", "-jar", "/streampipes-processors-transformation-flink.jar"]
+ENTRYPOINT ["java", "-jar", "/streampipes-processing-element-container.jar"]

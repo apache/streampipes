@@ -25,7 +25,7 @@ public enum TransformationFlinkConfig implements PeConfig {
   INSTANCE;
 
   private SpConfig config;
-  public static final String JAR_FILE = "./streampipes-processors-transformation-flink.jar";
+  public static final String JAR_FILE = "./streampipes-processing-element-container.jar";
 
   private final static String service_id = "pe/org.apache.streampipes.processors.transformation.flink";
   private final static String service_name = "Processors Transformation Flink";
