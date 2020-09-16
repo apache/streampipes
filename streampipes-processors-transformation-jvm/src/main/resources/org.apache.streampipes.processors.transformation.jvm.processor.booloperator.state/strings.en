@@ -10,5 +10,5 @@ collection-id.description=Test
 default-state-id.title=Default State
 default-state-id.description=Define a default state, when all values are false
 
-boolean_state.title=Current State
-boolean_state_field.description=
+boolean_state_field.title=Current State
+boolean_state_field.description=When value is true runtime name is added as state to resulting event

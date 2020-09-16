@@ -72,6 +72,7 @@ import org.apache.streampipes.processors.transformation.jvm.processor.state.buff
 import org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.buffer.StateBufferLabelerController;
 import org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.number.NumberLabelerController;
 import org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.counter.StringCounterController;
+import org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.state.StringToStateController;
 import org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.timer.StringTimerController;
 import org.apache.streampipes.processors.transformation.jvm.processor.task.TaskDurationController;
 import org.apache.streampipes.processors.transformation.jvm.processor.timestampextractor.TimestampExtractorController;
@@ -157,6 +158,7 @@ public class AllPipelineElementsInit extends StandaloneModelSubmitter {
             .add(new BooleanTimerController())
             .add(new StateBufferController())
             .add(new StateBufferLabelerController())
+            .add(new StringToStateController())
             .add(new SignalEdgeFilterController())
             .add(new BooleanToStateController())
             .add(new CsvMetadataEnrichmentController())
