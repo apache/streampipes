@@ -44,7 +44,7 @@ public class PipelineVerificationHandler {
 
   private final Pipeline pipeline;
   private final PipelineModificationMessage pipelineModificationMessage;
-  private final List<InvocableStreamPipesEntity> invocationGraphs;
+  private List<InvocableStreamPipesEntity> invocationGraphs;
   private final InvocableStreamPipesEntity rootPipelineElement;
 
   public PipelineVerificationHandler(Pipeline pipeline) throws NoSepaInPipelineException {
@@ -61,7 +61,8 @@ public class PipelineVerificationHandler {
    * @throws InvalidConnectionException if the connection is not considered valid
    */
   public PipelineVerificationHandler validateConnection() throws InvalidConnectionException {
-    new ConnectionValidator(pipeline, invocationGraphs, rootPipelineElement).validateConnection();
+    invocationGraphs = new ConnectionValidator(pipeline, invocationGraphs, rootPipelineElement)
+            .validateConnection();
     return this;
   }
 
@@ -182,13 +183,13 @@ public class PipelineVerificationHandler {
     return pipelineModificationMessage;
   }
 
+  public List<InvocableStreamPipesEntity> getInvocationGraphs() {
+    return this.invocationGraphs;
+  }
+
   public List<InvocableStreamPipesEntity> makeInvocationGraphs() {
-    if (onlyStreamAncestorsPresentInPipeline()) {
-      return new ArrayList<>();
-    } else {
-      PipelineGraph pipelineGraph = new PipelineGraphBuilder(pipeline).buildGraph();
-      return new InvocationGraphBuilder(pipelineGraph, null).buildGraphs();
-    }
+    PipelineGraph pipelineGraph = new PipelineGraphBuilder(pipeline).buildGraph();
+    return new InvocationGraphBuilder(pipelineGraph, null).buildGraphs();
   }
 
   private boolean onlyStreamAncestorsPresentInPipeline() {
@@ -198,4 +199,5 @@ public class PipelineVerificationHandler {
             .map(connectedTo -> TreeUtils.findSEPAElement(connectedTo, pipeline.getSepas(), pipeline.getStreams()))
             .allMatch(pe -> pe instanceof SpDataStream);
   }
+
 }

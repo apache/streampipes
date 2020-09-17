@@ -17,7 +17,7 @@
  */
 
 import {JsplumbService} from "../../services/jsplumb.service";
-import {Component, Input, OnInit} from "@angular/core";
+import {AfterViewInit, ChangeDetectorRef, Component, Input, OnInit} from "@angular/core";
 import {PipelineElementConfig} from "../../model/editor.model";
 import {DataProcessorInvocation} from "../../../core-model/gen/streampipes-model";
 import {SafeCss} from "../../utils/style-sanitizer";
@@ -27,7 +27,7 @@ import {SafeCss} from "../../utils/style-sanitizer";
   templateUrl: './pipeline-element-recommendation.component.html',
   styleUrls: ['./pipeline-element-recommendation.component.scss']
 })
-export class PipelineElementRecommendationComponent implements OnInit {
+export class PipelineElementRecommendationComponent implements OnInit, AfterViewInit {
 
   @Input()
   recommendationsShown: boolean;
@@ -38,7 +38,8 @@ export class PipelineElementRecommendationComponent implements OnInit {
   @Input()
   pipelineElementDomId: string;
 
-  _recommendedElements: any;
+  @Input()
+  recommendedElements: any;
 
   recommendationsPrepared: boolean = false;
 
@@ -48,11 +49,16 @@ export class PipelineElementRecommendationComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.fillRemainingItems();
+    this.prepareStyles(this.recommendedElements);
+    this.recommendationsPrepared = true;
+  }
+
+  ngAfterViewInit(): void {
 
   }
 
   prepareStyles(recommendedElements) {
-    this.fillRemainingItems(recommendedElements);
     recommendedElements.forEach((element, index) => {
       this.setLayoutSettings(element, index, recommendedElements);
     });
@@ -130,25 +136,12 @@ export class PipelineElementRecommendationComponent implements OnInit {
     return (360 / recommendedElements.length);
   }
 
-  fillRemainingItems(recommendedElements) {
-    if (recommendedElements.length < 6) {
-      for (var i = recommendedElements.length; i < 6; i++) {
+  fillRemainingItems() {
+    if (this.recommendedElements.length < 6) {
+      for (var i = this.recommendedElements.length; i < 6; i++) {
         let element = {fakeElement: true, weight: 0};
-        //this.setLayoutSettings(element, i);
-        recommendedElements.push(element);
+        this.recommendedElements.push(element);
       }
     }
-  }
-
-  get recommendedElements() {
-    return this._recommendedElements;
-  }
-
-  @Input()
-  set recommendedElements(recommendedElements: any) {
-    this.recommendationsPrepared = false;
-    this.prepareStyles(recommendedElements);
-    this._recommendedElements = recommendedElements;
-    this.recommendationsPrepared = true;
   }
 }

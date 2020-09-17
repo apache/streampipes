@@ -20,7 +20,9 @@ package org.apache.streampipes.manager.recommender;
 
 import org.apache.streampipes.commons.exceptions.NoSepaInPipelineException;
 import org.apache.streampipes.commons.exceptions.NoSuitableSepasAvailableException;
-import org.apache.streampipes.manager.matching.PipelineVerificationHandler;
+import org.apache.streampipes.manager.data.PipelineGraph;
+import org.apache.streampipes.manager.data.PipelineGraphBuilder;
+import org.apache.streampipes.manager.matching.InvocationGraphBuilder;
 import org.apache.streampipes.manager.matching.v2.StreamMatch;
 import org.apache.streampipes.manager.storage.UserManagementService;
 import org.apache.streampipes.manager.util.PipelineVerificationUtils;
@@ -30,17 +32,19 @@ import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.client.exception.InvalidConnectionException;
 import org.apache.streampipes.model.client.matching.MatchingResultMessage;
-import org.apache.streampipes.model.pipeline.Pipeline;
-import org.apache.streampipes.model.pipeline.PipelineElementRecommendation;
-import org.apache.streampipes.model.pipeline.PipelineElementRecommendationMessage;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
+import org.apache.streampipes.model.pipeline.Pipeline;
+import org.apache.streampipes.model.pipeline.PipelineElementRecommendation;
+import org.apache.streampipes.model.pipeline.PipelineElementRecommendationMessage;
 import org.apache.streampipes.storage.api.INoSqlStorage;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.storage.management.StorageManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +52,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ElementRecommender {
+
+  private static final Logger LOG = LoggerFactory.getLogger(ElementRecommender.class);
 
   private Pipeline pipeline;
   private String email;
@@ -205,9 +211,9 @@ public class ElementRecommender {
     } else if (rootNode instanceof DataSinkInvocation) {
       return Optional.empty();
     } else {
-      List<InvocableStreamPipesEntity> graphs = new PipelineVerificationHandler(pipeline)
-              .validateConnection()
-              .makeInvocationGraphs();
+      ((DataProcessorInvocation) rootNode).setConfigured(true);
+      PipelineGraph pipelineGraph = new PipelineGraphBuilder(pipeline).buildGraph();
+      List<InvocableStreamPipesEntity> graphs = new InvocationGraphBuilder(pipelineGraph, null).buildGraphs();
 
       Optional<InvocableStreamPipesEntity> rootElementWithOutputStream = graphs
               .stream()
