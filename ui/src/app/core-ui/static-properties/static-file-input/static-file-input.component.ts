@@ -62,10 +62,16 @@ export class StaticFileInputComponent extends AbstractStaticPropertyRenderer<Fil
         this.fetchFileMetadata();
     }
 
-    fetchFileMetadata() {
+    fetchFileMetadata(internalFilenameToSelect?: any) {
         this.filesService.getFileMetadata(this.staticProperty.requiredFiletypes).subscribe(fm => {
             this.fileMetadata = fm;
-            if (this.staticProperty.locationPath) {
+            if (internalFilenameToSelect) {
+                this.chooseExistingFile = true;
+                this.selectedFile =
+                    this.fileMetadata.find(fm => fm.internalFilename === internalFilenameToSelect);
+                this.selectOption(this.selectedFile);
+                this.emitUpdate(true);
+            } else if (this.staticProperty.locationPath) {
                 this.selectedFile =
                     this.fileMetadata.find(fm => fm.internalFilename === this.staticProperty.locationPath);
             } else {
@@ -95,9 +101,8 @@ export class StaticFileInputComponent extends AbstractStaticPropertyRenderer<Fil
                     if (event.type == HttpEventType.UploadProgress) {
                         this.uploadStatus = Math.round(100 * event.loaded / event.total);
                     } else if (event instanceof HttpResponse) {
-                        this.fetchFileMetadata();
-                        (<FileStaticProperty> (this.staticProperty)).locationPath = event.body.notifications[0].title;
-                               this.emitUpdate(true);
+                        let internalFilename = event.body.internalFilename;
+                        this.fetchFileMetadata(internalFilename);
                     }
                 },
                 error => {
