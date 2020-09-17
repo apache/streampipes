@@ -23,6 +23,6 @@
     </div>
     <div fxFlex="100" fxLayoutAlign="end center" class="footer">
         <button mat-button (click)="onCancel()" *ngIf="data.confirmAndCancel">{{data.cancelTitle}}</button>
-        <button mat-button [mat-dialog-close]="true" cdkFocusInitial>{{data.okTitle}}</button>
+        <button mat-button (click)="onOk()" cdkFocusInitial>{{data.okTitle}}</button>
     </div>
 </div>
