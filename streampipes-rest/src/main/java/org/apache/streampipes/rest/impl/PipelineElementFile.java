@@ -40,8 +40,8 @@ public class PipelineElementFile extends AbstractRestInterface implements IPipel
                             @FormDataParam("file_upload") InputStream uploadedInputStream,
                             @FormDataParam("file_upload") FormDataContentDisposition fileDetail) {
     try {
-      FileManager.storeFile(username, fileDetail.getFileName(), uploadedInputStream);
-      return ok();
+      FileMetadata metadata = FileManager.storeFile(username, fileDetail.getFileName(), uploadedInputStream);
+      return ok(metadata);
     } catch (Exception e) {
       return fail();
     }
