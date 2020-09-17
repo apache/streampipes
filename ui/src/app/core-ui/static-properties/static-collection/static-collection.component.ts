@@ -17,7 +17,6 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {ConfigurationInfo} from '../../../connect/model/ConfigurationInfo';
 import {StaticPropertyUtilService} from '../static-property-util.service';
 import {CollectionStaticProperty} from "../../../core-model/gen/streampipes-model";
 import {AbstractValidatedStaticPropertyRenderer} from "../base/abstract-validated-static-property";
@@ -36,10 +35,6 @@ export class StaticCollectionComponent
     }
 
     ngOnInit() {
-    }
-
-    emitUpdate(valid) {
-        this.updateEmitter.emit(new ConfigurationInfo(this.staticProperty.internalName, valid));
     }
 
     add() {

@@ -25,14 +25,11 @@ import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.constants.PropertySelectorConstants;
-import org.apache.streampipes.model.schema.EventProperty;
-import org.apache.streampipes.model.schema.EventPropertyList;
-import org.apache.streampipes.model.schema.EventPropertyNested;
-import org.apache.streampipes.model.schema.EventPropertyPrimitive;
-import org.apache.streampipes.model.schema.PropertyScope;
+import org.apache.streampipes.model.schema.*;
 import org.apache.streampipes.model.staticproperty.*;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -94,15 +91,26 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
   }
 
   public String fileContentsAsString(String internalName) throws IOException {
-    String filename =
-            getStaticPropertyByName(internalName, FileStaticProperty.class).getLocationPath();
+    String filename = selectedFilename(internalName);
     return Request.Get(makeFileRequestPath(filename)).execute().returnContent().asString();
   }
 
   public byte[] fileContentsAsByteArray(String internalName) throws IOException {
-    String filename =
-            getStaticPropertyByName(internalName, FileStaticProperty.class).getLocationPath();
+    String filename = selectedFilename(internalName);
     return Request.Get(makeFileRequestPath(filename)).execute().returnContent().asBytes();
+  }
+
+  public InputStream fileContentsAsStream(String internalName) throws IOException {
+    String filename = selectedFilename(internalName);
+    return Request.Get(makeFileRequestPath(filename)).execute().returnContent().asStream();
+  }
+
+  public String selectedFilename(String internalName) {
+    return getStaticPropertyByName(internalName, FileStaticProperty.class).getLocationPath();
+  }
+
+  public String selectedFileFetchUrl(String internalName) {
+    return makeFileRequestPath(selectedFilename(internalName));
   }
 
   private String makeFileRequestPath(String filename) {

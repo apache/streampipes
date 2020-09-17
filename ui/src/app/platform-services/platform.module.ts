@@ -21,11 +21,13 @@ import {PipelineElementService} from "./apis/pipeline-element.service";
 import {PipelineService} from "./apis/pipeline.service";
 import {PlatformServicesCommons} from "./apis/commons.service";
 import {PipelineElementEndpointService} from "./apis/pipeline-element-endpoint.service";
+import {FilesService} from "./apis/files.service";
 
 @NgModule({
   imports: [],
   declarations: [],
   providers: [
+    FilesService,
     PlatformServicesCommons,
     PipelineElementEndpointService,
     //PipelineTemplateService,

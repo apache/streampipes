@@ -22,6 +22,8 @@ import {StaticFileRestService} from './static-file-rest.service';
 import {HttpEventType, HttpResponse} from '@angular/common/http';
 import {AbstractStaticPropertyRenderer} from "../base/abstract-static-property";
 import {FileStaticProperty} from "../../../core-model/gen/streampipes-model";
+import {FilesService} from "../../../platform-services/apis/files.service";
+import {FileMetadata} from "../../../core-model/gen/streampipes-model-client";
 
 
 @Component({
@@ -33,6 +35,8 @@ export class StaticFileInputComponent extends AbstractStaticPropertyRenderer<Fil
 
     @Output() inputEmitter: EventEmitter<Boolean> = new EventEmitter<Boolean>();
 
+    chooseExistingFile: boolean = true;
+
     inputValue: String;
     fileName: String;
 
@@ -43,12 +47,38 @@ export class StaticFileInputComponent extends AbstractStaticPropertyRenderer<Fil
 
     uploadStatus = 0;
 
+    fileMetadata: FileMetadata[];
+    selectedFile: FileMetadata;
+
+    filesLoaded: boolean = false;
+
     constructor(public staticPropertyUtil: StaticPropertyUtilService,
-                private staticFileRestService: StaticFileRestService){
+                private staticFileRestService: StaticFileRestService,
+                private filesService: FilesService){
         super();
     }
 
     ngOnInit() {
+        this.fetchFileMetadata();
+    }
+
+    fetchFileMetadata() {
+        this.filesService.getFileMetadata(this.staticProperty.requiredFiletypes).subscribe(fm => {
+            this.fileMetadata = fm;
+            if (this.staticProperty.locationPath) {
+                this.selectedFile =
+                    this.fileMetadata.find(fm => fm.internalFilename === this.staticProperty.locationPath);
+            } else {
+                if (this.fileMetadata.length > 0) {
+                    this.selectedFile = this.fileMetadata[0];
+                    this.staticProperty.locationPath = this.selectedFile.internalFilename;
+                    this.emitUpdate(true);
+                } else {
+                    this.chooseExistingFile = false;
+                }
+            }
+            this.filesLoaded = true;
+        });
     }
 
     handleFileInput(files: any) {
@@ -60,19 +90,18 @@ export class StaticFileInputComponent extends AbstractStaticPropertyRenderer<Fil
     upload() {
         this.uploadStatus = 0;
         if (this.selectedUploadFile !== undefined) {
-            this.staticFileRestService.uploadFile(this.adapterId, this.selectedUploadFile).subscribe(
+            this.filesService.uploadFile(this.selectedUploadFile).subscribe(
                 event => {
                     if (event.type == HttpEventType.UploadProgress) {
                         this.uploadStatus = Math.round(100 * event.loaded / event.total);
                     } else if (event instanceof HttpResponse) {
+                        this.fetchFileMetadata();
                         (<FileStaticProperty> (this.staticProperty)).locationPath = event.body.notifications[0].title;
-                               this.valueChange(true);
+                               this.emitUpdate(true);
                     }
                 },
                 error => {
-                    this.valueChange(false);
                 },
-
             );
         }
     }
@@ -87,6 +116,14 @@ export class StaticFileInputComponent extends AbstractStaticPropertyRenderer<Fil
         }
 
         this.inputEmitter.emit(this.hasInput);
+    }
+
+    selectOption(fileMetadata: FileMetadata) {
+        this.staticProperty.locationPath = fileMetadata.internalFilename;
+    }
+
+    displayFn(fileMetadata: FileMetadata) {
+        return fileMetadata ? fileMetadata.originalFilename : "";
     }
 
 }

@@ -19,7 +19,34 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 2.24.612 on 2020-09-13 16:47:42.
+// Generated using typescript-generator version 2.24.612 on 2020-09-14 21:40:09.
+
+export class FileMetadata {
+    createdAt: number;
+    createdByUser: string;
+    fileId: string;
+    filetype: string;
+    internalFilename: string;
+    lastModified: number;
+    originalFilename: string;
+    rev: string;
+
+    static fromData(data: FileMetadata, target?: FileMetadata): FileMetadata {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new FileMetadata();
+        instance.fileId = data.fileId;
+        instance.rev = data.rev;
+        instance.internalFilename = data.internalFilename;
+        instance.originalFilename = data.originalFilename;
+        instance.filetype = data.filetype;
+        instance.createdAt = data.createdAt;
+        instance.lastModified = data.lastModified;
+        instance.createdByUser = data.createdByUser;
+        return instance;
+    }
+}
 
 export class MatchingResultMessage {
     description: string;

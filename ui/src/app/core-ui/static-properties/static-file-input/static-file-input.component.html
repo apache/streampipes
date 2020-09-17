@@ -16,17 +16,40 @@
   ~
   -->
 
-<div id="formWrapper" fxFlex="100" fxLayout="row">
-    <div fxFlex fxLayout="row">
-        <form fxFlex>
-
-            <mat-form-field style="width: 95%" (click)="fileInput.click();">
-                <input  matInput placeholder="{{staticProperty.label}}" disabled (value)="fileName">
+<div fxFlex="100" fxLayout="column">
+    <div fxFlex="100" fxLayout="column">
+        <div fxFlex="row">
+            <mat-radio-group [(ngModel)]="chooseExistingFile" color="primary">
+                <mat-radio-button style="margin-right:10px;" [value]="true">Choose existing file</mat-radio-button>
+                <mat-radio-button [value]="false">Upload new file</mat-radio-button>
+            </mat-radio-group>
+        </div>
+        <div *ngIf="chooseExistingFile && filesLoaded">
+            <mat-form-field>
+                <input type="text"
+                       placeholder="Select file"
+                       [(ngModel)]="selectedFile"
+                       matInput
+                       [matAutocomplete]="auto">
+                <button mat-button *ngIf="selectedFile" matSuffix mat-icon-button aria-label="Clear" (click)="selectedFile={}">
+                    <mat-icon>close</mat-icon>
+                </button>
+                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectOption($event.option.value)" [displayWith]="displayFn">
+                    <mat-option *ngFor="let fileMetadata of fileMetadata" [value]="fileMetadata">
+                        {{fileMetadata.originalFilename}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+        <div *ngIf="!chooseExistingFile">
+            <mat-form-field style="width: 95%" (click)="fileInput.click();" *ngIf="!chooseExistingFile">
+                <input matInput placeholder="{{staticProperty.label}}" disabled (value)="fileName">
                 <input #fileInput type="file" style="display:none;"
                        (change)="handleFileInput($event.target.files)">
                 <div>
                     {{fileName}}
-                    <mat-progress-bar mode="determinate" value="{{uploadStatus}}" *ngIf="uploadStatus > 0"></mat-progress-bar>
+                    <mat-progress-bar mode="determinate" value="{{uploadStatus}}"
+                                      *ngIf="uploadStatus > 0"></mat-progress-bar>
                 </div>
 
 
@@ -41,12 +64,12 @@
                 </mat-error>
 
             </mat-form-field>
-        </form>
-        <!--<div fxLayoutAlign="center none">-->
-        <div>
-            <button color="primary" mat-raised-button (click)="upload()">
-                Upload
-            </button>
+            <!--<div fxLayoutAlign="center none">-->
+            <div>
+                <button color="primary" mat-raised-button (click)="upload()">
+                    Upload
+                </button>
+            </div>
         </div>
 
     </div>

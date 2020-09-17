@@ -15,19 +15,5 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.rest.api;
 
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
-
-import javax.ws.rs.core.Response;
-import java.io.InputStream;
-
-public interface IPipelineElementFile {
-
-  Response storeFile(String username, InputStream inputStream, FormDataContentDisposition formData);
-
-  Response getFileInfo(String filteredFiletypes);
-
-  Response deleteFile(String fileId);
-
-}
+@import 'src/scss/sp/sp-dialog';

@@ -28,6 +28,7 @@ import {
 } from "../../../core-model/gen/streampipes-model";
 import {AbstractValidatedStaticPropertyRenderer} from "../base/abstract-validated-static-property";
 import {Directive} from "@angular/core";
+import {ConfigurationInfo} from "../../../connect/model/ConfigurationInfo";
 
 
 @Directive()
