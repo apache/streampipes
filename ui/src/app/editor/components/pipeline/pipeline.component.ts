@@ -312,9 +312,9 @@ export class PipelineComponent implements OnInit {
                 if ((payload.staticProperties && payload.staticProperties.length > 0) || this.isCustomOutput(pe)) {
                   this.showCustomizeDialog({a: false, b: pe});
                 } else {
-                  this.announceConfiguredElement(pe);
                   (pe.payload as InvocablePipelineElementUnion).configured = true;
                   pe.settings.completed = true;
+                  this.announceConfiguredElement(pe);
                 }
               }
             }, status => {
@@ -410,6 +410,7 @@ export class PipelineComponent implements OnInit {
     dialogRef.afterClosed().subscribe(c => {
       if (c) {
         pipelineElementInfo.b.settings.openCustomize = false;
+        (pipelineElementInfo.b.payload as InvocablePipelineElementUnion).configured = true;
         this.JsplumbService.activateEndpoint(pipelineElementInfo.b.payload.dom, pipelineElementInfo.b.settings.completed);
         this.JsplumbBridge.getSourceEndpoint(pipelineElementInfo.b.payload.dom).setType("token");
         this.triggerPipelineCacheUpdate();

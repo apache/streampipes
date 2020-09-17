@@ -20,7 +20,7 @@ import {JsplumbBridge} from "../../services/jsplumb-bridge.service";
 import {JsplumbService} from "../../services/jsplumb.service";
 import {PipelineValidationService} from "../../services/pipeline-validation.service";
 import {RestApi} from "../../../services/rest-api.service";
-import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from "@angular/core";
 import {PipelineElementRecommendationService} from "../../services/pipeline-element-recommendation.service";
 import {ObjectProvider} from "../../services/object-provider.service";
 import {
@@ -35,18 +35,19 @@ import {DialogService} from "../../../core-ui/dialog/base-dialog/base-dialog.ser
 import {CompatibleElementsComponent} from "../../dialog/compatible-elements/compatible-elements.component";
 import {Tuple2} from "../../../core-model/base/Tuple2";
 import { cloneDeep } from "lodash";
+import {Observable, Subscription} from "rxjs";
 
 @Component({
   selector: 'pipeline-element-options',
   templateUrl: './pipeline-element-options.component.html',
   styleUrls: ['./pipeline-element-options.component.css']
 })
-export class PipelineElementOptionsComponent implements OnInit{
+export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
 
-  recommendationsAvailable: any;
+  recommendationsAvailable: any = false;
   possibleElements: PipelineElementUnion[];
   recommendedElements: PipelineElementUnion[];
-  recommendationsShown: any;
+  recommendationsShown: any = false;
   pipelineElementCssType: string;
 
   @Input()
@@ -76,6 +77,8 @@ export class PipelineElementOptionsComponent implements OnInit{
   @Output()
   customize: EventEmitter<Tuple2<Boolean, PipelineElementConfig>> = new EventEmitter<Tuple2<Boolean, PipelineElementConfig>>();
 
+  pipelineElementConfiguredObservable: Subscription;
+
   constructor(private ObjectProvider: ObjectProvider,
               private PipelineElementRecommendationService: PipelineElementRecommendationService,
               private DialogService: DialogService,
@@ -91,7 +94,7 @@ export class PipelineElementOptionsComponent implements OnInit{
   }
 
   ngOnInit() {
-    this.EditorService.pipelineElementConfigured$.subscribe(pipelineElementDomId => {
+    this.pipelineElementConfiguredObservable = this.EditorService.pipelineElementConfigured$.subscribe(pipelineElementDomId => {
       this.pipelineElement.settings.openCustomize = false;
       this.RestApi.updateCachedPipeline(this.rawPipelineModel);
       if (pipelineElementDomId === this.pipelineElement.payload.dom) {
@@ -134,8 +137,8 @@ export class PipelineElementOptionsComponent implements OnInit{
     var currentPipeline = this.ObjectProvider.makePipeline(clonedModel);
     this.EditorService.recommendPipelineElement(currentPipeline).subscribe((result) => {
       if (result.success) {
-        this.possibleElements = this.PipelineElementRecommendationService.collectPossibleElements(this.allElements, result.possibleElements);
-        this.recommendedElements = this.PipelineElementRecommendationService.populateRecommendedList(this.allElements, result.recommendedElements);
+        this.possibleElements = cloneDeep(this.PipelineElementRecommendationService.collectPossibleElements(this.allElements, result.possibleElements));
+        this.recommendedElements = cloneDeep(this.PipelineElementRecommendationService.populateRecommendedList(this.allElements, result.recommendedElements));
         this.recommendationsAvailable = true;
       }
     });
@@ -179,5 +182,9 @@ export class PipelineElementOptionsComponent implements OnInit{
         .eventGrounding
         .transportProtocols[0]
         .topicDefinition instanceof WildcardTopicDefinition;
+  }
+
+  ngOnDestroy(): void {
+    this.pipelineElementConfiguredObservable.unsubscribe();
   }
 }

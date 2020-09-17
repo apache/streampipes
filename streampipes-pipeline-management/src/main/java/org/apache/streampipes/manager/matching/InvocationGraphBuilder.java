@@ -72,7 +72,7 @@ public class InvocationGraphBuilder {
             .getEventGrounding();
 
     if (source instanceof InvocableStreamPipesEntity) {
-      if (source instanceof DataProcessorInvocation) {
+      if (source instanceof DataProcessorInvocation && ((DataProcessorInvocation) source).isConfigured()) {
 
         DataProcessorInvocation dataProcessorInvocation = (DataProcessorInvocation) source;
         Tuple2<EventSchema, ? extends OutputStrategy> outputSettings;
@@ -190,4 +190,5 @@ public class InvocationGraphBuilder {
             .findFirst()
             .get();
   }
+
 }
