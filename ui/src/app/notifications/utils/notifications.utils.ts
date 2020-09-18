@@ -24,7 +24,7 @@ export class NotificationUtils {
     }
 
     static makeNotificationId(pipelineId: string, notificationTitle: string) {
-        let vizName = notificationTitle.replace(/\\s/g, '-');
+        let vizName = notificationTitle.replace(/\s/g, '-');
         return pipelineId + '-' + vizName;
     }
 }
