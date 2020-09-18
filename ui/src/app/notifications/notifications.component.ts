@@ -75,6 +75,9 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.getPipelinesWithNotifications();
+    }
+
+    createSubscription() {
         this.subscription = this.rxStompService.watch("/topic/" +this.notificationTopic).subscribe((message: Message) => {
             let scrollToBottom = false;
             if ((this.notificationContainer.nativeElement.scrollHeight - this.notificationContainer.nativeElement.scrollTop) <= (this.notificationContainer.nativeElement.clientHeight + 10) &&
@@ -113,6 +116,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
             if (this.existingNotifications.length > 0) {
                 this.pipelinesWithNotificationsPresent = true;
                 this.selectNotification(this.existingNotifications[0]);
+                this.createSubscription();
             }
         });
     }
@@ -176,7 +180,9 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.subscription.unsubscribe();
+        if (this.subscription) {
+            this.subscription.unsubscribe();
+        }
         this.NotificationCountService.unlockIncreaseUpdate();
     }
 };
