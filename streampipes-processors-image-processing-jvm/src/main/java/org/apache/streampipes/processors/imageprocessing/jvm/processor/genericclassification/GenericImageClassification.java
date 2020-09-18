@@ -88,10 +88,9 @@ public class GenericImageClassification implements EventProcessor<GenericImageCl
       if (scores.size() > 0) {
         System.out.println(scores.get(0).score +":" +categories.get(scores.get(0).category));
         //scores.forEach(score -> System.out.println(score.category +":" +categories.get(score.category) +":" +score));
-        Event outEvent = new Event();
-        outEvent.addField("score", scores.get(0).score);
-        outEvent.addField("category", categories.get(scores.get(0).category));
-        out.collect(outEvent);
+        in.addField("score", scores.get(0).score);
+        in.addField("category", categories.get(scores.get(0).category));
+        out.collect(in);
       }
     }
   }

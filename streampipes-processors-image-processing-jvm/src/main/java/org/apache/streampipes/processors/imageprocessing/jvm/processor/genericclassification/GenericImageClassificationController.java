@@ -45,7 +45,7 @@ public class GenericImageClassificationController extends StandaloneEventProcess
                                     .domainPropertyReq("https://image.com"), Labels.withId(IMAGE),
                             PropertyScope.NONE)
                     .build())
-            .outputStrategy(OutputStrategies.fixed(
+            .outputStrategy(OutputStrategies.append(
                     EpProperties.doubleEp(Labels.empty(), "score", "https://schema.org/score"),
                     EpProperties.stringEp(Labels.empty(), "category", "https://schema.org/category")
 
