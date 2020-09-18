@@ -21,6 +21,7 @@ import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from "@angula
 import {PipelineOperationsService} from "../../services/pipeline-operations.service";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
+import {MatSort} from "@angular/material/sort";
 
 
 @Component({
@@ -47,6 +48,8 @@ export class PipelineOverviewComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   pageSize: number = 1;
+
+  @ViewChild(MatSort) sort: MatSort;
 
   starting: any;
   stopping: any;
@@ -100,12 +103,13 @@ export class PipelineOverviewComponent implements OnInit {
     this.dataSource = new MatTableDataSource<Pipeline>(this.filterPipelines());
     setTimeout(() => {
       this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
     });
   }
 
   filterPipelines(): Pipeline[] {
     let filteredPipelines: Pipeline[] = this._pipelines.filter(pipeline => !(this._activeCategoryId) || (pipeline.pipelineCategories && pipeline.pipelineCategories.some(pc => pc === this.activeCategoryId)));
     this.filteredPipelinesAvailable = filteredPipelines.length > 0;
-    return filteredPipelines;
+    return filteredPipelines.sort((a, b) => a.name.localeCompare(b.name));
   }
 }
