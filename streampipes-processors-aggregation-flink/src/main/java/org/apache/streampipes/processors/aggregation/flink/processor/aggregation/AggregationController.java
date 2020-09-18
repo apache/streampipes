@@ -25,15 +25,19 @@ import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.schema.EventProperty;
+import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.processors.aggregation.flink.config.AggregationFlinkConfig;
 import org.apache.streampipes.sdk.StaticProperties;
+import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.sdk.helpers.*;
 import org.apache.streampipes.sdk.utils.Assets;
+import org.apache.streampipes.sdk.utils.Datatypes;
+import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 
@@ -138,7 +142,11 @@ public class AggregationController extends FlinkDataProcessorDeclarer<Aggregatio
     for (String aggregate: aggregateKeyList) {
       String propertyPrefix = StringUtils.substringAfterLast(aggregate, ":");
       String runtimeName = propertyPrefix + "_" + operationKey.toLowerCase();
-      eventSchema.addEventProperty(EpProperties.doubleEp(Labels.withId(runtimeName), runtimeName, "http://schema.org/Number"));
+      EventPropertyPrimitive primitive = PrimitivePropertyBuilder.create(Datatypes.Double, runtimeName)
+              .domainProperty(SO.Number)
+              .scope(PropertyScope.MEASUREMENT_PROPERTY)
+              .build();
+      eventSchema.addEventProperty(primitive);
     }
     return eventSchema;
   }
