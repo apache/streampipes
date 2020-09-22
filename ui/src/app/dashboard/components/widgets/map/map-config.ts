@@ -15,35 +15,41 @@
  *   limitations under the License.
  */
 
-import {WidgetConfigBuilder} from "../../../registry/widget-config-builder";
-import {SchemaRequirementsBuilder} from "../../../sdk/schema-requirements-builder";
-import {EpRequirements} from "../../../sdk/ep-requirements";
-import {WidgetConfig} from "../base/base-config";
-import {DashboardWidgetSettings} from "../../../../core-model/gen/streampipes-model";
+import { WidgetConfigBuilder } from '../../../registry/widget-config-builder';
+import { SchemaRequirementsBuilder } from '../../../sdk/schema-requirements-builder';
+import { EpRequirements } from '../../../sdk/ep-requirements';
+import { WidgetConfig } from '../base/base-config';
+import { DashboardWidgetSettings } from '../../../../core-model/gen/streampipes-model';
 
 export class MapConfig extends WidgetConfig {
 
-    static readonly LATITUDE_MAPPING_KEY: string = "latitude-mapping";
-    static readonly LONGITUDE_MAPPING_KEY: string = "longitude-mapping";
-    static readonly ITEMS_MAPPING_KEY: string = "items-mapping";
-    static readonly MARKER_TYPE_KEY: string = "marker-type-mapping";
+    static readonly LATITUDE_MAPPING_KEY: string = 'latitude-mapping';
+    static readonly LONGITUDE_MAPPING_KEY: string = 'longitude-mapping';
+    static readonly ITEMS_MAPPING_KEY: string = 'items-mapping';
+    static readonly ID_MAPPING_KEY: string = 'ids-mapping';
+    static readonly MARKER_TYPE_KEY: string = 'marker-type-mapping';
+    static readonly CENTER_MAP_KEY: string = 'center-map-mapping';
 
     constructor() {
         super();
     }
 
     getConfig(): DashboardWidgetSettings {
-        return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel("map", "Map")
-            .withIcon("fas fa-map")
-            .withDescription("A map including a marker to show the live position of a thing")
-            .requiredSchema(SchemaRequirementsBuilder
-                .create()
-                .requiredPropertyWithUnaryMapping(MapConfig.LATITUDE_MAPPING_KEY, "Latitude field", "", EpRequirements.latitudeReq())
-                .requiredPropertyWithUnaryMapping(MapConfig.LONGITUDE_MAPPING_KEY, "Latitude field", "", EpRequirements.longitudeReq())
-                .requiredPropertyWithNaryMapping(MapConfig.ITEMS_MAPPING_KEY, "Fields to display", "", EpRequirements.anyProperty())
-                .build())
-            .requiredSingleValueSelection(MapConfig.MARKER_TYPE_KEY, "Marker type", "", [this.makeOption("Default"), this.makeOption("Car")])
-            .build();
+        return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel('map', 'Map')
+          .withIcon('fas fa-map')
+          .withDescription('A map including a marker to show the live position of a thing')
+          .requiredSchema(SchemaRequirementsBuilder
+            .create()
+            .requiredPropertyWithUnaryMapping(MapConfig.LATITUDE_MAPPING_KEY, 'Latitude field', '', EpRequirements.latitudeReq())
+            .requiredPropertyWithUnaryMapping(MapConfig.LONGITUDE_MAPPING_KEY, 'Latitude field', '', EpRequirements.longitudeReq())
+            .requiredPropertyWithNaryMapping(MapConfig.ID_MAPPING_KEY, 'Group Markers', 'Each id gets its own marker', EpRequirements.anyProperty())
+            .requiredPropertyWithNaryMapping(MapConfig.ITEMS_MAPPING_KEY, 'Fields to display', '', EpRequirements.anyProperty())
+            .build())
+          .requiredSingleValueSelection(
+            MapConfig.CENTER_MAP_KEY, 'Center map', 'Center the map around new markers', [this.makeOption('Center'), this.makeOption('No Center')])
+          .requiredSingleValueSelection(
+            MapConfig.MARKER_TYPE_KEY, 'Marker type', '', [this.makeOption('Default'), this.makeOption('Car')])
+          .build();
     }
 
 }
