@@ -41,7 +41,7 @@
 
 ## Table of contents
 
-  * [About Apache StreamPipes](#about-streampipes)
+  * [About Apache StreamPipes](#about-apache-streampipes)
   * [Use Cases](#use-cases)
   * [Installation](#installation)
   * [Building StreamPipes](#building-streampipes)
