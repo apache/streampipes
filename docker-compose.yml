@@ -133,6 +133,9 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_ADVERTISED_HOST_NAME: kafka
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_MESSAGE_MAX_BYTES: 5000012
+      KAFKA_FETCH_MESSAGE_MAX_BYTES: 5000012
+      KAFKA_REPLICA_FETCH_MAX_BYTES: 10000000
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     logging: *default-logging
