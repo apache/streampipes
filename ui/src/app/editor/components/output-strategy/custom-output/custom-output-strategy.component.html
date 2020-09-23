@@ -31,7 +31,7 @@
         <property-selection (validateForm)="checkFormValidity()" [outputStrategy]="outputStrategy" [eventProperty]="property"
                             [layer]="0" [restrictedEditMode]="restrictedEditMode"></property-selection>
     </div>
-    <div *ngIf="collectedPropertiesSecondStream.length > 0">
+    <div fxLayout="column" fxFlex="100" *ngIf="collectedPropertiesSecondStream.length > 0">
         <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
             <h5 style="margin-right:10px;">{{selectedElement.inputStreams[1].name}}</h5>
             <button mat-button mat-raised-button color="primary" class="small-button"
