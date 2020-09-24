@@ -207,25 +207,25 @@ public class PipelineWithUserResource extends AbstractRestInterface implements I
         try {
             return ok(Operations.validatePipeline(pipeline, true, username));
         } catch (JsonSyntaxException e) {
-            return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR,
+            return badRequest(new Notification(NotificationType.UNKNOWN_ERROR,
                     e.getMessage()));
         } catch (NoMatchingSchemaException e) {
-            return constructErrorMessage(new Notification(NotificationType.NO_VALID_CONNECTION,
+            return badRequest(new Notification(NotificationType.NO_VALID_CONNECTION,
                     e.getMessage()));
         } catch (NoMatchingFormatException e) {
-            return constructErrorMessage(new Notification(NotificationType.NO_MATCHING_FORMAT_CONNECTION,
+            return badRequest(new Notification(NotificationType.NO_MATCHING_FORMAT_CONNECTION,
                     e.getMessage()));
         } catch (NoMatchingProtocolException e) {
-            return constructErrorMessage(new Notification(NotificationType.NO_MATCHING_PROTOCOL_CONNECTION,
+            return badRequest(new Notification(NotificationType.NO_MATCHING_PROTOCOL_CONNECTION,
                     e.getMessage()));
         } catch (RemoteServerNotAccessibleException | NoMatchingJsonSchemaException e) {
-            return constructErrorMessage(new Notification(NotificationType.REMOTE_SERVER_NOT_ACCESSIBLE
+            return serverError(new Notification(NotificationType.REMOTE_SERVER_NOT_ACCESSIBLE
                     , e.getMessage()));
         } catch (InvalidConnectionException e) {
             return badRequest(e.getErrorLog());
         } catch (Exception e) {
             e.printStackTrace();
-            return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR,
+            return serverError(new Notification(NotificationType.UNKNOWN_ERROR,
                     e.getMessage()));
         }
     }

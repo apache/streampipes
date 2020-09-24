@@ -28,7 +28,7 @@ import java.util.UUID;
 
 public class FileManager {
 
-  public static void storeFile(String user,
+  public static FileMetadata storeFile(String user,
                                String filename,
                                InputStream fileInputStream) throws IOException {
 
@@ -37,6 +37,7 @@ public class FileManager {
     FileMetadata fileMetadata = makeFileMetadata(user, filename, internalFilename, filetype);
     new FileHandler().storeFile(internalFilename, fileInputStream);
     storeFileMetadata(fileMetadata);
+    return fileMetadata;
   }
 
   public static void deleteFile(String id) {

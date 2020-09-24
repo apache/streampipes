@@ -37,7 +37,7 @@ import {
 } from "../../model/editor.model";
 import {
   CustomOutputStrategy,
-  DataProcessorInvocation,
+  DataProcessorInvocation, ErrorMessage,
   Pipeline,
   SpDataStream
 } from "../../../core-model/gen/streampipes-model";
@@ -312,16 +312,20 @@ export class PipelineComponent implements OnInit {
                 if ((payload.staticProperties && payload.staticProperties.length > 0) || this.isCustomOutput(pe)) {
                   this.showCustomizeDialog({a: false, b: pe});
                 } else {
-                  this.announceConfiguredElement(pe);
                   (pe.payload as InvocablePipelineElementUnion).configured = true;
                   pe.settings.completed = true;
+                  this.announceConfiguredElement(pe);
                 }
               }
             }, status => {
               pe.settings.loadingStatus = false;
               this.JsplumbBridge.detach(info.connection);
-              let matchingResultMessage = (status.error as any[]).map(e => MatchingResultMessage.fromData(e as MatchingResultMessage));
-              this.showMatchingErrorDialog(matchingResultMessage);
+              if (Array.isArray(status.error)) {
+                let matchingResultMessage = (status.error as any[]).map(e => MatchingResultMessage.fromData(e as MatchingResultMessage));
+                this.showMatchingErrorDialog(matchingResultMessage);
+              } else {
+                this.showErrorDialog(status.error.title, status.error.description);
+              }
             });
       }
     });
@@ -336,14 +340,16 @@ export class PipelineComponent implements OnInit {
   }
 
   modifyPipeline(pipelineModifications) {
-    for (var i = 0, modification; modification = pipelineModifications[i]; i++) {
-      var id = modification.domId;
-      if (id !== "undefined") {
-        var pe = this.ObjectProvider.findElement(id, this.rawPipelineModel);
-        (pe.payload as InvocablePipelineElementUnion).staticProperties = modification.staticProperties;
-        (pe.payload as DataProcessorInvocation).outputStrategies = modification.outputStrategies;
-        (pe.payload as InvocablePipelineElementUnion).inputStreams = modification.inputStreams;
-      }
+    if (pipelineModifications) {
+      pipelineModifications.forEach(modification => {
+        var id = modification.domId;
+        if (id !== "undefined") {
+          var pe = this.ObjectProvider.findElement(id, this.rawPipelineModel);
+          (pe.payload as InvocablePipelineElementUnion).staticProperties = modification.staticProperties;
+          (pe.payload as DataProcessorInvocation).outputStrategies = modification.outputStrategies;
+          (pe.payload as InvocablePipelineElementUnion).inputStreams = modification.inputStreams;
+        }
+      });
     }
   }
 
@@ -365,6 +371,18 @@ export class PipelineComponent implements OnInit {
       this.pipelineCacheRunningChanged.emit(this.pipelineCacheRunning)
       this.pipelineCached = true;
       this.pipelineCachedChanged.emit(this.pipelineCached);
+    });
+  }
+
+  showErrorDialog(title, description) {
+    this.dialog.open(ConfirmDialogComponent, {
+      width: '500px',
+      data: {
+        "title": title,
+        "subtitle": description,
+        "okTitle": "Ok",
+        "confirmAndCancel": false
+      },
     });
   }
 
@@ -392,6 +410,7 @@ export class PipelineComponent implements OnInit {
     dialogRef.afterClosed().subscribe(c => {
       if (c) {
         pipelineElementInfo.b.settings.openCustomize = false;
+        (pipelineElementInfo.b.payload as InvocablePipelineElementUnion).configured = true;
         this.JsplumbService.activateEndpoint(pipelineElementInfo.b.payload.dom, pipelineElementInfo.b.settings.completed);
         this.JsplumbBridge.getSourceEndpoint(pipelineElementInfo.b.payload.dom).setType("token");
         this.triggerPipelineCacheUpdate();

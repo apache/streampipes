@@ -18,7 +18,9 @@
 package org.apache.streampipes.model.client.file;
 
 import com.google.gson.annotations.SerializedName;
+import org.apache.streampipes.model.shared.annotation.TsModel;
 
+@TsModel
 public class FileMetadata {
 
   private @SerializedName("_id")

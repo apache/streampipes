@@ -21,6 +21,7 @@ import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.staticproperty.*;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.helpers.CodeLanguage;
+import org.apache.streampipes.sdk.helpers.Filetypes;
 import org.apache.streampipes.sdk.helpers.Label;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.vocabulary.XSD;
@@ -271,6 +272,32 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
     }
     if (placeholdersSupported) {
       fsp.setPlaceholdersSupported(true);
+    }
+    this.staticProperties.add(fsp);
+
+    return me();
+  }
+
+  /**
+   * Defines a text-based configuration parameter provided by pipeline developers at pipeline authoring time.
+   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
+   *              user-friendly manner.
+   * @param multiLine Defines whether the input dialog allows multiple lines.
+   * @param placeholdersSupported Defines whether placeholders are supported, i.e., event property field names that
+   *                              are replaced with the actual value at pipeline execution time.
+   * @param htmlFontFormat Defines to only use bold, italic, striked in dialog.
+   * @return this
+   */
+  public BU requiredTextParameter(Label label, boolean multiLine, boolean placeholdersSupported, boolean htmlFontFormat) {
+    FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label, XSD._string.toString());
+    if (multiLine) {
+      fsp.setMultiLine(true);
+    }
+    if (placeholdersSupported) {
+      fsp.setPlaceholdersSupported(true);
+    }
+    if (htmlFontFormat) {
+      fsp.setHtmlFontFormat(true);
     }
     this.staticProperties.add(fsp);
 
@@ -704,6 +731,39 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
     FileStaticProperty fp =  new FileStaticProperty(label.getInternalId(), label.getLabel(), label
             .getDescription());
 
+    this.staticProperties.add(fp);
+
+    return me();
+
+  }
+
+  /**
+   *
+   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
+   *    user-friendly manner.
+   * @param requiredFiletypes A list of {@link org.apache.streampipes.sdk.helpers.Filetypes} required filetypes the element supports.
+   * @return this
+   */
+  public BU requiredFile(Label label, Filetypes... requiredFiletypes) {
+    List<String> collectedFiletypes = new ArrayList<>();
+    Arrays.stream(requiredFiletypes).forEach(rf -> collectedFiletypes.addAll(rf.getFileExtensions()));
+
+    return requiredFile(label, collectedFiletypes.toArray(new String[0]));
+  }
+
+  /**
+   *
+   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
+   *    user-friendly manner.
+   * @param requiredFiletypes A list of required filetypes (a string marking the file extension) the element supports.
+   * @return this
+   */
+  public BU requiredFile(Label label, String... requiredFiletypes) {
+    FileStaticProperty fp =  new FileStaticProperty(label.getInternalId(), label.getLabel(), label
+            .getDescription());
+
+    List<String> collectedFiletypes = Arrays.asList(requiredFiletypes);
+    fp.setRequiredFiletypes(collectedFiletypes);
     this.staticProperties.add(fp);
 
     return me();

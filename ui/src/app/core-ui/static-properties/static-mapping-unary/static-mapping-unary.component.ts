@@ -23,7 +23,6 @@ import {PropertySelectorService} from "../../../services/property-selector.servi
 import {StaticMappingComponent} from "../static-mapping/static-mapping";
 import {MappingPropertyUnary} from "../../../core-model/gen/streampipes-model";
 
-
 @Component({
     selector: 'app-static-mapping-unary',
     templateUrl: './static-mapping-unary.component.html',
@@ -44,8 +43,11 @@ export class StaticMappingUnaryComponent extends StaticMappingComponent<MappingP
         this.availableProperties = this.extractPossibleSelections();
         this.availableProperties
             .forEach(ep => ep.propertySelector = this.firstStreamPropertySelector + ep.runtimeName);
-        if (!this.staticProperty.selectedProperty) {
+        console.log(this.staticProperty.selectedProperty);
+        if (!(this.staticProperty.selectedProperty)) {
+            console.log("setting property");
             this.staticProperty.selectedProperty = this.availableProperties[0].propertySelector;
+            this.emitUpdate(true);
         }
         this.addValidator(this.staticProperty.selectedProperty, Validators.required);
         this.enableValidators();
@@ -56,8 +58,7 @@ export class StaticMappingUnaryComponent extends StaticMappingComponent<MappingP
 
     onValueChange(value: any) {
         this.staticProperty.selectedProperty = value;
+        this.emitUpdate(true);
     }
-
-
 
 }

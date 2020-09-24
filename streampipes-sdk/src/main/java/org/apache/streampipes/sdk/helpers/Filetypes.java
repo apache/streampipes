@@ -15,4 +15,28 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.sdk.helpers;
 
+import java.util.Arrays;
+import java.util.List;
+
+public enum Filetypes {
+
+  CSV("csv"),
+  JPG("jpg", "jpeg"),
+  JSON("json"),
+  XLS("xls"),
+  XLSX("xlsx"),
+  XML("xml"),
+  ZIP("zip");
+
+  private List<String> fileExtensions;
+
+  Filetypes(String... fileExtensions) {
+    this.fileExtensions = Arrays.asList(fileExtensions);
+  }
+
+  public List<String> getFileExtensions() {
+    return fileExtensions;
+  }
+}

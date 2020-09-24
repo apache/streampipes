@@ -17,20 +17,11 @@
  */
 package org.apache.streampipes.connect.container.master.init;
 
+import org.apache.streampipes.connect.container.master.rest.*;
+import org.apache.streampipes.connect.init.AdapterContainerConfig;
 import org.apache.streampipes.rest.shared.serializer.JacksonSerializationProvider;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.springframework.stereotype.Component;
-import org.apache.streampipes.connect.container.master.rest.AdapterResource;
-import org.apache.streampipes.connect.container.master.rest.AdapterTemplateResource;
-import org.apache.streampipes.connect.container.master.rest.DescriptionResource;
-import org.apache.streampipes.connect.container.master.rest.FileResource;
-import org.apache.streampipes.connect.container.master.rest.GuessResource;
-import org.apache.streampipes.connect.container.master.rest.RuntimeResolvableResource;
-import org.apache.streampipes.connect.container.master.rest.SourcesResource;
-import org.apache.streampipes.connect.container.master.rest.UnitResource;
-import org.apache.streampipes.connect.container.master.rest.WelcomePageMaster;
-import org.apache.streampipes.connect.container.master.rest.WorkerAdministrationResource;
-import org.apache.streampipes.connect.init.AdapterContainerConfig;
 
 
 @Component
@@ -44,7 +35,6 @@ public class AdapterMasterContainerResourceConfig extends AdapterContainerConfig
     register(DescriptionResource.class);
     register(SourcesResource.class);
     register(GuessResource.class);
-    register(FileResource.class);
     register(MultiPartFeature.class);
     register(UnitResource.class);
     register(WorkerAdministrationResource.class);

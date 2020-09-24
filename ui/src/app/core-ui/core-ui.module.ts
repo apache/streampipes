@@ -72,6 +72,7 @@ import {DisplayRecommendedPipe} from "./static-properties/filter/display-recomme
 import {ColorPickerModule} from "ngx-color-picker";
 import {QuillModule} from "ngx-quill";
 import {CodemirrorModule} from "@ctrl/ngx-codemirror";
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
 
 @NgModule({
     imports: [
@@ -83,6 +84,7 @@ import {CodemirrorModule} from "@ctrl/ngx-codemirror";
         ReactiveFormsModule,
         FormsModule,
         CdkTableModule,
+        MatAutocompleteModule,
         MatSnackBarModule,
         MatProgressSpinnerModule,
         MatDatepickerModule,

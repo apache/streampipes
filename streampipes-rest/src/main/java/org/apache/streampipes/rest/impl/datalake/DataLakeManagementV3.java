@@ -332,11 +332,15 @@ public class DataLakeManagementV3 {
                   if (!isFirstInRow) {
                     outputStream.write(toBytes(";"));
                   }
-                  isFirstInRow = false;
+                  isFirstInRow = false  ;
                   if (i1 == 0) {
                     element = ((Double) element).longValue();
                   }
-                  outputStream.write(toBytes(element.toString()));
+                  if (element == null) {
+                    outputStream.write(toBytes(""));
+                  } else {
+                    outputStream.write(toBytes(element.toString()));
+                  }
                 }
                 outputStream.write(toBytes("\n"));
               }

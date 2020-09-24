@@ -34,6 +34,8 @@ import {StartAllPipelinesDialogComponent} from "./dialog/start-all-pipelines/sta
 import {PipelineCategoriesDialogComponent} from "./dialog/pipeline-categories/pipeline-categories-dialog.component";
 import {FormsModule} from "@angular/forms";
 import {PipelineInCategoryPipe} from "./pipeline-category.filter";
+import {MatSortModule} from "@angular/material/sort";
+import {MatTableModule} from "@angular/material/table";
 
 @NgModule({
   imports: [
@@ -43,7 +45,9 @@ import {PipelineInCategoryPipe} from "./pipeline-category.filter";
     MatButtonModule,
     CustomMaterialModule,
     CommonModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatSortModule,
+    MatTableModule
   ],
   declarations: [
     DeletePipelineDialogComponent,

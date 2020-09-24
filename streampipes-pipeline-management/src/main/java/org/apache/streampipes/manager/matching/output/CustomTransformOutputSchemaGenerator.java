@@ -27,7 +27,7 @@ import org.apache.streampipes.model.output.CustomTransformOutputStrategy;
 import org.apache.streampipes.model.output.OutputStrategy;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.sdk.helpers.Tuple2;
-import org.apache.streampipes.serializers.json.GsonSerializer;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import java.io.IOException;
 
@@ -58,9 +58,8 @@ public class CustomTransformOutputSchemaGenerator extends OutputSchemaGenerator<
   }
 
   private EventSchema makeRequest() {
-    String httpRequestBody = GsonSerializer.getGsonWithIds().toJson(dataProcessorInvocation);
-
     try {
+      String httpRequestBody = JacksonSerializer.getObjectMapper().writeValueAsString(dataProcessorInvocation);
       Response httpResp = Request.Post(dataProcessorInvocation.getBelongsTo() + "/output").bodyString(httpRequestBody,
               ContentType
                       .APPLICATION_JSON).execute();
@@ -73,10 +72,9 @@ public class CustomTransformOutputSchemaGenerator extends OutputSchemaGenerator<
 
   private EventSchema handleResponse(Response httpResp) throws JsonSyntaxException, IOException {
     String resp = httpResp.returnContent().asString();
-    EventSchema outputSchema = GsonSerializer
-            .getGsonWithIds()
-            .fromJson(resp, EventSchema.class);
 
-    return outputSchema;
+    return JacksonSerializer
+            .getObjectMapper()
+            .readValue(resp, EventSchema.class);
   }
 }

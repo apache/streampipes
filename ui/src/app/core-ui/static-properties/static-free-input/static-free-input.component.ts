@@ -45,6 +45,11 @@ export class StaticFreeInputComponent
     ]
   };
 
+  quillModulesFontFormat: any = {
+    toolbar: [['bold', 'italic', 'underline', 'strike'],
+    ]
+  };
+
   @ViewChild('textEditor', {static: false})
   quillEditorComponent: QuillEditorComponent;
 
@@ -92,8 +97,13 @@ export class StaticFreeInputComponent
   }
 
   applyPlaceholder(runtimeName) {
-    let currentIndex = this.quillEditorComponent.quillEditor.selection.savedRange.index;
-    this.quillEditorComponent.quillEditor.insertText(currentIndex, "#" + runtimeName + "#", "user");
+    let valueToInsert = "#" + runtimeName + "#";
+    if (this.quillEditorComponent) {
+      let currentIndex = this.quillEditorComponent.quillEditor.selection.savedRange.index;
+      this.quillEditorComponent.quillEditor.insertText(currentIndex, valueToInsert, "user");
+    } else {
+      this.parentForm.controls[this.fieldName].setValue(this.parentForm.controls[this.fieldName].value + " " +valueToInsert);
+    }
   }
 
   formatLabel(value: number) {
