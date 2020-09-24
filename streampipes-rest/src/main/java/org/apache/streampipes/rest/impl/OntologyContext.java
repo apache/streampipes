@@ -20,7 +20,7 @@ package org.apache.streampipes.rest.impl;
 
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.apache.streampipes.storage.management.StorageManager;
-import org.apache.streampipes.model.client.messages.Notifications;
+import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.client.ontology.Context;
 import org.apache.streampipes.rest.api.IOntologyContext;
 

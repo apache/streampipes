@@ -1,0 +1,99 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+@import '../../scss/variables';
+
+.pageheadbar {
+    padding: 0 0 0 10px;
+    background-color: #f6f6f6;
+    font-size: 14px;
+    line-height: 24px;
+    border-bottom: 1px solid #ccc;
+}
+
+.mt-0 {
+    margin-top: 0;
+}
+
+.round-border {
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.welcome-text {
+    font-size: 30pt;
+    font-weight: bold;
+}
+
+.header-margin {
+    margin-top: 20px;
+}
+
+.welcome-green {
+    color: $sp-color-primary;
+}
+
+.welcome-blue {
+    color: $sp-color-accent;
+}
+
+
+.home-margin {
+    margin: 10px;
+}
+
+.home-padding {
+    padding: 15px;
+}
+
+.p-10 {
+    padding: 10px;
+}
+
+.home-image-small {
+    height:150px;
+    width:100%;
+}
+
+.pipeline-avatar {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    color:white;
+}
+
+.pt-0 {
+    padding-top: 0;
+}
+
+::ng-deep .modules-list.mat-list-base {
+    padding-top: 0;
+}
+
+.list-item:nth-child(even) {
+    background-color: #FAFAFA;
+}
+.list-item:nth-child(odd) {
+    background-color:#ffffff;
+}
+
+.list-item:hover {
+    background-color: #e2e2e2;
+    cursor: pointer;
+}
+

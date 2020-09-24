@@ -79,23 +79,11 @@ for (let module of config.modules) {
     console.log('Active Angular ' + (modules[module]['ng5']===true?5:1) + ' Module: ' + module);
 }
 
-modulesActive.containsPipeline = function() {
-    return function(cv, render) {
-        if (render(cv).includes(":pipeline") != -1) {
-            return "params: {pipeline: null},"
-        }
-
-        return "";
-    }
-};
-
 // Create necessary JavaScript-Files from Template and move to respective Directory
-fs.writeFileSync('src/app/app.module.ts', mustache.render(fs.readFileSync('deployment/app.module.mst', 'utf8').toString(), modulesActive));
 fs.writeFileSync('src/app/appng5.module.ts', mustache.render(fs.readFileSync('deployment/appng5.module.mst', 'utf8').toString(), modulesActive));
-fs.writeFileSync('src/app/core/state.config.ts', mustache.render(fs.readFileSync('deployment/state.config.mst', 'utf8').toString(), modulesActive));
-fs.writeFileSync('src/app/layout/toolbar.controller.ts', mustache.render(fs.readFileSync('deployment/toolbar.controller.mst', 'utf8').toString(), modulesActive));
 fs.writeFileSync('src/app/home/home.service.ts', mustache.render(fs.readFileSync('deployment/home.service.mst', 'utf8').toString(), modulesActive));
-
+fs.writeFileSync('src/app/app-routing.module.ts', mustache.render(fs.readFileSync('deployment/app-routing.module.mst', 'utf8').toString(), modulesActive));
+fs.writeFileSync('src/app/core/components/base-navigation.component.ts', mustache.render(fs.readFileSync('deployment/base-navigation.component.mst', 'utf8').toString(), modulesActive));
 
 // Move Images
 fs.writeFileSync('src/assets/img/login/logo.png', fs.readFileSync(config['login']['logo']));

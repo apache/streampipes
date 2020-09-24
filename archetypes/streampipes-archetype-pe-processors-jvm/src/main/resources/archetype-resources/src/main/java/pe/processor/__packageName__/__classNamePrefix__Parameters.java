@@ -15,10 +15,10 @@
  * limitations under the License.
  *
  */
-
 #set( $symbol_pound = '#' )
 #set( $symbol_dollar = '$' )
 #set( $symbol_escape = '\' )
+
 package ${package}.pe.processor.${packageName};
 
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -36,5 +36,4 @@ public class ${classNamePrefix}Parameters extends EventProcessorBindingParams {
   public String getExampleText() {
     return exampleText;
   }
-
 }

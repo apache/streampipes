@@ -18,9 +18,10 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { Dashboard } from '../../dashboard/models/dashboard.model';
 import { AuthStatusService } from '../../services/auth-status.service';
+import {map} from "rxjs/operators";
+import {Observable} from "rxjs";
 
 @Injectable()
 export class SharedDatalakeRestService {
@@ -30,15 +31,15 @@ export class SharedDatalakeRestService {
     }
 
     getDashboards(dashboardUrl: string): Observable<Dashboard[]> {
-        return this.http.get(dashboardUrl).map(data => {
+        return this.http.get(dashboardUrl).pipe(map(data => {
            return data as Dashboard[];
-        });
+        }));
     }
 
     updateDashboard(dashboardUrl: string, dashboard: Dashboard): Observable<Dashboard> {
-        return this.http.put(dashboardUrl + '/' + dashboard._id, dashboard).map(data => {
+        return this.http.put(dashboardUrl + '/' + dashboard._id, dashboard).pipe(map(data => {
             return data as Dashboard;
-        });
+        }));
     }
 
     deleteDashboard(dashboardUrl: string, dashboard: Dashboard): Observable<any> {

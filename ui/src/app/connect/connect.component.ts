@@ -17,7 +17,7 @@
  */
 
 import {Component} from '@angular/core';
-import {AdapterDescription} from './model/connect/AdapterDescription';
+import {AdapterDescriptionUnion} from "../core-model/gen/streampipes-model";
 
 @Component({
   selector: 'sp-connect',
@@ -25,9 +25,9 @@ import {AdapterDescription} from './model/connect/AdapterDescription';
   styleUrls: ['./connect.component.css'],
 })
 export class ConnectComponent {
-  newAdapterFromDescription: AdapterDescription;
+  newAdapterFromDescription: AdapterDescriptionUnion;
 
-  selectAdapter(adapterDescription: AdapterDescription) {
+  selectAdapter(adapterDescription: AdapterDescriptionUnion) {
     this.newAdapterFromDescription = adapterDescription;
   }
 

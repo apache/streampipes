@@ -26,13 +26,13 @@ export class NotificationCountService {
     lockNotificationId: string;
     lockActive: boolean = false;
 
-    constructor(@Inject("RestApi") private RestApi: RestApi) {
+    constructor(private RestApi: RestApi) {
     }
 
     loadUnreadNotifications() {
         this.RestApi.getUnreadNotificationsCount()
-            .then(response => {
-                this.unreadNotificationCount = response.data.count;
+            .subscribe(response => {
+                this.unreadNotificationCount = response.count;
             });
     }
 
@@ -62,5 +62,3 @@ export class NotificationCountService {
         return pipelineId + '-' + vizName;
     }
 }
-
-NotificationCountService.$inject = ['RestApi'];

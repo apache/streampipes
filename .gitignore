@@ -83,12 +83,10 @@ ui/src/assets/lib/apps/*
 
 
 # prebuild
-ui/src/app/app.module.ts
 ui/src/app/appng5.module.ts
-ui/src/app/core/state.config.ts
-ui/src/app/layout/toolbar.controller.ts
+ui/src/app/core/components/base-navigation.component.ts
+ui/src/app/app-routing.module.ts
 ui/src/app/home/home.service.ts
-ui/src/app/services/version/version.service.ts
 
 # compiled output
 ui/dist

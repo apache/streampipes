@@ -33,17 +33,18 @@ export class AppOverviewComponent implements OnInit {
             appName: 'Asset Dashboards',
             appDescription: 'Monitor measurements of your assets by placing visualizations on an image of your asset.',
             appId: 'asset-monitoring',
-        },
-        {
-            appName: 'Image Labeling',
-            appDescription: 'Label in data lake stored images.',
-            appId: 'image-labeling',
-        },
-        {
-            appName: 'New App',
-            appDescription: 'An app that has some function',
-            appId: 'new-app',
         }
+        // ,
+        // {
+        //     appName: 'Image Labeling',
+        //     appDescription: 'Label in data lake stored images.',
+        //     appId: 'image-labeling',
+        // },
+        // {
+        //     appName: 'New App',
+        //     appDescription: 'An app that has some function',
+        //     appId: 'new-app',
+        // }
     ];
 
     constructor() {

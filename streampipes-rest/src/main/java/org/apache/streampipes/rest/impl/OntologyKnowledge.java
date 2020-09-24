@@ -32,7 +32,7 @@ import org.eclipse.rdf4j.query.MalformedQueryException;
 import org.eclipse.rdf4j.query.QueryEvaluationException;
 import org.eclipse.rdf4j.repository.RepositoryException;
 
-import org.apache.streampipes.model.client.messages.Notifications;
+import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.client.ontology.Concept;
 import org.apache.streampipes.model.client.ontology.Instance;
 import org.apache.streampipes.model.client.ontology.Namespace;

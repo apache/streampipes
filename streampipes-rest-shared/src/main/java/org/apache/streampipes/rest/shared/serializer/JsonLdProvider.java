@@ -18,7 +18,6 @@
 package org.apache.streampipes.rest.shared.serializer;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.streampipes.rest.shared.annotation.JsonLdSerialized;
 import org.apache.streampipes.rest.shared.util.JsonLdUtils;
 import org.apache.streampipes.rest.shared.util.SpMediaType;
 import org.apache.streampipes.serializers.jsonld.JsonLdTransformer;
@@ -36,7 +35,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
 @Provider
-@JsonLdSerialized
 @Produces(SpMediaType.JSONLD)
 @Consumes(SpMediaType.JSONLD)
 public class JsonLdProvider implements MessageBodyWriter<Object>,
@@ -46,7 +44,7 @@ public class JsonLdProvider implements MessageBodyWriter<Object>,
 
   @Override
   public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
-    return true;
+    return jsonLdSerialized(mediaType);
   }
 
   @Override
@@ -60,7 +58,7 @@ public class JsonLdProvider implements MessageBodyWriter<Object>,
 
   @Override
   public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
-    return true;
+    return jsonLdSerialized(mediaType);
   }
 
   @Override
@@ -74,5 +72,10 @@ public class JsonLdProvider implements MessageBodyWriter<Object>,
     try (OutputStreamWriter writer = new OutputStreamWriter(entityStream, UTF8)) {
       writer.write(JsonLdUtils.toJsonLD(o));
     }
+  }
+
+  protected boolean jsonLdSerialized(MediaType mediaType) {
+    return mediaType.getType().equals(SpMediaType.JSONLD_TYPE.getType()) &&
+            mediaType.getSubtype().equals(SpMediaType.JSONLD_TYPE.getSubtype());
   }
 }

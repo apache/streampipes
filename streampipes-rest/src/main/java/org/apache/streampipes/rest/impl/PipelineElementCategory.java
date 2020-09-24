@@ -24,22 +24,24 @@ import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.client.Category;
 import org.apache.streampipes.model.graph.DataSourceDescription;
 import org.apache.streampipes.rest.api.IPipelineElementCategory;
+import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.storage.management.StorageManager;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Path("/v2/categories")
 public class PipelineElementCategory extends AbstractRestInterface implements IPipelineElementCategory {
 
 	@GET
 	@Path("/ep")
-	@Produces("application/json")
+	@Produces(MediaType.APPLICATION_JSON)
+	@JacksonSerialized
 	@Override
 	public Response getEps() {
 		return ok(makeCategories(StorageManager.INSTANCE.getPipelineElementStorage().getAllDataSources()));
@@ -47,7 +49,8 @@ public class PipelineElementCategory extends AbstractRestInterface implements IP
 
 	@GET
 	@Path("/epa")
-	@Produces("application/json")
+	@Produces(MediaType.APPLICATION_JSON)
+	@JacksonSerialized
 	@Override
 	public Response getEpaCategories() {
 		return ok(DataProcessorType.values());
@@ -55,7 +58,8 @@ public class PipelineElementCategory extends AbstractRestInterface implements IP
 
 	@GET
 	@Path("/adapter")
-	@Produces("application/json")
+	@Produces(MediaType.APPLICATION_JSON)
+	@JacksonSerialized
 	@Override
 	public Response getAdapterCategories() {
 		return ok(AdapterType.values());
@@ -63,7 +67,8 @@ public class PipelineElementCategory extends AbstractRestInterface implements IP
 
 	@GET
 	@Path("/ec")
-	@Produces("application/json")
+	@Produces(MediaType.APPLICATION_JSON)
+	@JacksonSerialized
 	@Override
 	public Response getEcCategories() {
 		return ok(DataSinkType.values());

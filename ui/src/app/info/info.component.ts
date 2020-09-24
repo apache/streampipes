@@ -32,7 +32,6 @@ export class InfoComponent {
     }
 
     tabChanged(tabChangeEvent: MatTabChangeEvent): void {
-        console.log(tabChangeEvent);
         this.currentTabIndex = tabChangeEvent.index;
     }
 

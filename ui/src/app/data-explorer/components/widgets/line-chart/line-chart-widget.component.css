@@ -16,14 +16,6 @@
  *
  */
 
-.circleNumber {
-    width:100%;
-    height: 100%;
-    text-align: center;
-    left: 50%;
-    display:inline-grid;
-    align-content: center;
-}
 
 
 .numberItem {
@@ -33,4 +25,10 @@
 
 .title-panel {
     font-size:20px;
+}
+
+.plotly-container {
+    width: 100%;
+    align-self:start;
+    height: calc(100% - 40px);
 }

@@ -31,8 +31,14 @@
             </div>
         </div>
     </div>
-
-    <div class="fixed-height page-container-padding-inner" fxLayout="row" fxFlex="100">
+    <div class="container-fluid marketplace-container" *ngIf="notificationsLoading" fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
+        <mat-spinner [mode]="'indeterminate'" [diameter]="20"></mat-spinner>
+        <h4>Loading notifications...</h4>
+    </div>
+    <div class="fixed-height page-container-padding-inner" *ngIf="!notificationsLoading && !pipelinesWithNotificationsPresent" fxFlex="100" fxLayoutAlign="center center" fxLayout="row">
+        <h4>No notifications available. Create a new pipeline using the Notification Sink to create your first notification!</h4>
+    </div>
+    <div class="fixed-height page-container-padding-inner" fxLayout="row" fxFlex="100" *ngIf="!notificationsLoading && pipelinesWithNotificationsPresent">
         <div fxFlex="30" class="notifications-overview scrolling-auto">
             <mat-list>
                 <mat-list-item *ngFor="let existingNotification of existingNotifications"
@@ -52,7 +58,7 @@
                 </mat-list-item>
             </mat-list>
         </div>
-        <div fxFlex="70" class="notifications-details" *ngIf="pipelinesWithNotificationsPresent">
+        <div fxFlex="70" class="notifications-details">
             <div class="notification-details-wrapper">
                 <div class="notification-header" fxLayout="column" fxLayoutAlign="center start">
                     <div class="notification-header-pipeline-name">{{currentlySelectedNotification.pipelineName}}</div>

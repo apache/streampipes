@@ -18,6 +18,8 @@
 
 import {Component} from "@angular/core";
 import {RestApi} from "../../services/rest-api.service";
+import {Router} from "@angular/router";
+import {NotificationCountService} from "../../services/notification-count-service";
 
 @Component({
     selector: 'status',
@@ -30,7 +32,9 @@ export class StatusComponent {
     runningPipelines: number = 0;
     installedPipelineElements: number = 0;
 
-    constructor(private RestApi: RestApi) {
+    constructor(private RestApi: RestApi,
+                private Router: Router,
+                public NotificationCountService: NotificationCountService) {
 
     }
 
@@ -42,8 +46,7 @@ export class StatusComponent {
     }
 
     getPipelines() {
-        this.RestApi.getOwnPipelines().then(msg => {
-           let pipelines = msg.data;
+        this.RestApi.getOwnPipelines().subscribe(pipelines => {
            this.pipelines = pipelines.length;
            this.runningPipelines = pipelines.filter(p => p.running).length;
         });
@@ -51,8 +54,7 @@ export class StatusComponent {
 
     getStreams() {
         this.RestApi.getOwnSources()
-            .then((msg) => {
-                let sources = msg.data;
+            .subscribe((sources) => {
                 sources.forEach((source, i, sources) => {
                     this.installedPipelineElements += source.spDataStreams.length;
                 });
@@ -61,19 +63,23 @@ export class StatusComponent {
 
     getProcessors() {
         this.RestApi.getOwnSepas()
-            .then(msg => {
+            .subscribe(msg => {
                 this.addPipelineElementList(msg);
             });
     };
 
     getSinks() {
         this.RestApi.getOwnActions()
-            .then(msg => {
+            .subscribe(msg => {
                this.addPipelineElementList(msg);
             });
     };
 
     addPipelineElementList(msg) {
-        this.installedPipelineElements += msg.data.length;
+        this.installedPipelineElements += msg.length;
+    }
+
+    navigate(url: string) {
+        this.Router.navigate([url]);
     }
 }

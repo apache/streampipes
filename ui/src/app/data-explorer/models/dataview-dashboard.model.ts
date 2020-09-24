@@ -35,3 +35,8 @@ export interface IDataViewDashboard {
     _id?: string;
     _rev?: string;
 }
+
+export interface IWidget {
+    id: string;
+    label: string;
+}

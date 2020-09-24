@@ -16,61 +16,68 @@
  *
  */
 
-import { CdkTableModule } from '@angular/cdk/table';
-import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSliderModule } from '@angular/material/slider';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatTabsModule } from '@angular/material/tabs';
-import { OWL_DATE_TIME_FORMATS, OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { GridsterModule } from 'angular-gridster2';
-import { PlotlyViaWindowModule } from 'angular-plotly.js';
-import { DynamicModule } from 'ng-dynamic-component';
-import { ColorPickerModule } from 'ngx-color-picker';
-import { ConnectModule } from '../connect/connect.module';
-import { DatalakeRestService } from '../core-services/datalake/datalake-rest.service';
-import { SemanticTypeUtilsService } from '../core-services/semantic-type/semantic-type-utils.service';
-import { SharedDatalakeRestService } from '../core-services/shared/shared-dashboard.service';
-import { CoreUiModule } from '../core-ui/core-ui.module';
-import { LabelingToolModule } from '../core-ui/linechart/labeling-tool/labeling-tool.module';
-import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
-import { ElementIconText } from '../services/get-element-icon-text.service';
-import { DataDownloadDialog } from './components/datadownloadDialog/dataDownload.dialog';
-import { DataExplorerDashboardGridComponent } from './components/grid/data-explorer-dashboard-grid.component';
-import { DataExplorerDashboardOverviewComponent } from './components/overview/data-explorer-dashboard-overview.component';
-import { DataExplorerDashboardPanelComponent } from './components/panel/data-explorer-dashboard-panel.component';
-import { TimeRangeSelectorComponent } from './components/time-selector/timeRangeSelector.component';
-import { DataExplorerDashboardWidgetComponent } from './components/widget/data-explorer-dashboard-widget.component';
-import { ImageWidgetComponent } from './components/widgets/image/image-widget.component';
-import { LineChartWidgetComponent } from './components/widgets/line-chart/line-chart-widget.component';
-import { TableWidgetComponent } from './components/widgets/table/table-widget.component';
-import { AggregateConfigurationComponent } from './components/widgets/utils/aggregate-configuration/aggregate-configuration.component';
-import { LoadDataSpinnerComponent } from './components/widgets/utils/load-data-spinner/load-data-spinner.component';
-import { NoDataInDateRangeComponent } from './components/widgets/utils/no-data/no-data-in-date-range.component';
-import { SelectPropertiesComponent } from './components/widgets/utils/select-properties/select-properties.component';
-import { DataExplorerComponent } from './data-explorer.component';
-import { DataExplorerAddVisualizationDialogComponent } from './dialogs/add-widget/data-explorer-add-visualization-dialog.component';
-import { DataExplorerEditDataViewDialogComponent } from './dialogs/edit-dashboard/data-explorer-edit-data-view-dialog.component';
-import { DataLakeService } from './services/data-lake.service';
-import { DataViewDataExplorerService } from './services/data-view-data-explorer.service';
-import { RefreshDashboardService } from './services/refresh-dashboard.service';
-import { ResizeService } from './services/resize.service';
-import { GroupConfigurationComponent } from './components/widgets/utils/group-configuration/group-configuration.component';
+import {CdkTableModule} from '@angular/cdk/table';
+import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
+import {FlexLayoutModule} from '@angular/flex-layout';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MatChipsModule} from '@angular/material/chips';
+import {MatNativeDateModule} from '@angular/material/core';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatGridListModule} from '@angular/material/grid-list';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatSliderModule} from '@angular/material/slider';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatTabsModule} from '@angular/material/tabs';
+import {
+  OWL_DATE_TIME_FORMATS,
+  OwlDateTimeModule,
+  OwlNativeDateTimeModule
+} from '@danielmoncada/angular-datetime-picker';
+import {NgxChartsModule} from '@swimlane/ngx-charts';
+import {GridsterModule} from 'angular-gridster2';
+import {PlotlyViaWindowModule} from 'angular-plotly.js';
+import {ColorPickerModule} from 'ngx-color-picker';
+import {DatalakeRestService} from '../core-services/datalake/datalake-rest.service';
+import {SemanticTypeUtilsService} from '../core-services/semantic-type/semantic-type-utils.service';
+import {SharedDatalakeRestService} from '../core-services/shared/shared-dashboard.service';
+import {CoreUiModule} from '../core-ui/core-ui.module';
+import {LabelingToolModule} from '../core-ui/linechart/labeling-tool/labeling-tool.module';
+import {CustomMaterialModule} from '../CustomMaterial/custom-material.module';
+import {DataDownloadDialog} from './components/datadownloadDialog/dataDownload.dialog';
+import {DataExplorerDashboardGridComponent} from './components/grid/data-explorer-dashboard-grid.component';
+import {DataExplorerDashboardOverviewComponent} from './components/overview/data-explorer-dashboard-overview.component';
+import {DataExplorerDashboardPanelComponent} from './components/panel/data-explorer-dashboard-panel.component';
+import {TimeRangeSelectorComponent} from './components/time-selector/timeRangeSelector.component';
+import {DataExplorerDashboardWidgetComponent} from './components/widget/data-explorer-dashboard-widget.component';
+import {ImageWidgetComponent} from './components/widgets/image/image-widget.component';
+import {LineChartWidgetComponent} from './components/widgets/line-chart/line-chart-widget.component';
+import {TableWidgetComponent} from './components/widgets/table/table-widget.component';
+import {AggregateConfigurationComponent} from './components/widgets/utils/aggregate-configuration/aggregate-configuration.component';
+import {LoadDataSpinnerComponent} from './components/widgets/utils/load-data-spinner/load-data-spinner.component';
+import {NoDataInDateRangeComponent} from './components/widgets/utils/no-data/no-data-in-date-range.component';
+import {SelectPropertiesComponent} from './components/widgets/utils/select-properties/select-properties.component';
+import {DataExplorerComponent} from './data-explorer.component';
+import {DataExplorerAddVisualizationDialogComponent} from './dialogs/add-widget/data-explorer-add-visualization-dialog.component';
+import {DataExplorerEditDataViewDialogComponent} from './dialogs/edit-dashboard/data-explorer-edit-data-view-dialog.component';
+import {DataLakeService} from './services/data-lake.service';
+import {DataViewDataExplorerService} from './services/data-view-data-explorer.service';
+import {RefreshDashboardService} from './services/refresh-dashboard.service';
+import {ResizeService} from './services/resize.service';
+import {GroupConfigurationComponent} from './components/widgets/utils/group-configuration/group-configuration.component';
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 
-const dashboardWidgets = [
-
-];
+const dashboardWidgets = [];
 
 export const MY_NATIVE_FORMATS = {
-  fullPickerInput: {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: false},
+  fullPickerInput: {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: false
+  },
   datePickerInput: {year: 'numeric', month: 'numeric', day: 'numeric', hour12: false},
   timePickerInput: {hour: 'numeric', minute: 'numeric', hour12: false},
   monthYearLabel: {year: 'numeric', month: 'short', hour12: false},
@@ -82,19 +89,14 @@ export const MY_NATIVE_FORMATS = {
 @NgModule({
   imports: [
     CommonModule,
+    CoreUiModule,
     MatTabsModule,
-    DynamicModule.withComponents(
-      dashboardWidgets
-    ),
-    FlexLayoutModule,
     GridsterModule,
-    CommonModule,
     FlexLayoutModule,
     CustomMaterialModule,
     FormsModule,
     ColorPickerModule,
     MatGridListModule,
-    ConnectModule,
     NgxChartsModule,
     CdkTableModule,
     MatSnackBarModule,
@@ -107,6 +109,7 @@ export const MY_NATIVE_FORMATS = {
     MatDatepickerModule,
     MatNativeDateModule,
     MatSliderModule,
+    MatSlideToggleModule,
     MatChipsModule,
     LabelingToolModule
   ],
@@ -137,12 +140,6 @@ export const MY_NATIVE_FORMATS = {
     ResizeService,
     RefreshDashboardService,
     SemanticTypeUtilsService,
-    {
-      provide: 'RestApi',
-      useFactory: ($injector: any) => $injector.get('RestApi'),
-      deps: ['$injector']
-    },
-    ElementIconText,
     {
       provide: OWL_DATE_TIME_FORMATS, useValue: MY_NATIVE_FORMATS
     }

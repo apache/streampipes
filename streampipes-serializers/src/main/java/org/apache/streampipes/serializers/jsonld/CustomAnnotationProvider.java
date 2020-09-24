@@ -24,10 +24,6 @@ import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.SpDataStreamContainer;
 import org.apache.streampipes.model.base.StreamPipesJsonLdContainer;
-import org.apache.streampipes.model.client.messages.ErrorMessageLd;
-import org.apache.streampipes.model.client.messages.MessageLd;
-import org.apache.streampipes.model.client.messages.NotificationLd;
-import org.apache.streampipes.model.client.messages.SuccessMessageLd;
 import org.apache.streampipes.model.connect.adapter.*;
 import org.apache.streampipes.model.connect.grounding.FormatDescription;
 import org.apache.streampipes.model.connect.grounding.FormatDescriptionList;
@@ -36,12 +32,12 @@ import org.apache.streampipes.model.connect.grounding.ProtocolDescriptionList;
 import org.apache.streampipes.model.connect.guess.DomainPropertyProbability;
 import org.apache.streampipes.model.connect.guess.DomainPropertyProbabilityList;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.model.connect.rules.Schema.CreateNestedRuleDescription;
-import org.apache.streampipes.model.connect.rules.Schema.DeleteRuleDescription;
-import org.apache.streampipes.model.connect.rules.Schema.MoveRuleDescription;
-import org.apache.streampipes.model.connect.rules.Schema.RenameRuleDescription;
-import org.apache.streampipes.model.connect.rules.Stream.EventRateTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.Stream.RemoveDuplicatesTransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription;
+import org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription;
+import org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription;
+import org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription;
+import org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription;
@@ -51,19 +47,6 @@ import org.apache.streampipes.model.dashboard.DashboardWidgetModel;
 import org.apache.streampipes.model.dashboard.VisualizablePipeline;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
-import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.model.graph.DataSinkDescription;
-import org.apache.streampipes.model.graph.DataSinkInvocation;
-import org.apache.streampipes.model.graph.DataSourceDescription;
-import org.apache.streampipes.model.grounding.EventGrounding;
-import org.apache.streampipes.model.grounding.JmsTransportProtocol;
-import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
-import org.apache.streampipes.model.grounding.MqttTransportProtocol;
-import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
-import org.apache.streampipes.model.grounding.TransportFormat;
-import org.apache.streampipes.model.grounding.TransportProtocol;
-import org.apache.streampipes.model.grounding.WildcardTopicDefinition;
 import org.apache.streampipes.model.graph.*;
 import org.apache.streampipes.model.grounding.*;
 import org.apache.streampipes.model.monitoring.ElementStatusInfoSettings;
@@ -189,10 +172,6 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             AddValueTransformationRuleDescription.class,
             AddValueTransformationRuleDescription.class,
             PropertyRenameRule.class,
-            ErrorMessageLd.class,
-            SuccessMessageLd.class,
-            MessageLd.class,
-            NotificationLd.class,
             AddTimestampRuleDescription.class,
             PropertyRenameRule.class,
             TimestampTranfsformationRuleDescription.class,

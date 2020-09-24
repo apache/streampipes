@@ -19,31 +19,29 @@
 //import _ from 'lodash';
 
 
-import {Inject, Injectable} from "@angular/core";
-import * as angular from 'angular';
+import {Injectable} from "@angular/core";
+import {AuthStatusService} from "./auth-status.service";
+import {PlatformServicesCommons} from "../platform-services/apis/commons.service";
+import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {NodeInfo} from "../configuration/model/NodeInfo.model";
 
 @Injectable()
 export class RestApi {
 
-    AuthStatusService: any;
-    $http: any;
-    apiConstants: any;
     encodeURIComponent: any;
     
-    constructor (@Inject('$http') $http, @Inject('apiConstants') apiConstants, @Inject('AuthStatusService') AuthStatusService) {
+    constructor (private AuthStatusService: AuthStatusService,
+                 private platformServicesCommons: PlatformServicesCommons,
+                 private $http: HttpClient) {
         this.AuthStatusService = AuthStatusService;
-        this.$http = $http;
-        this.apiConstants = apiConstants;
     }
 
     getServerUrl() {
-        return this.apiConstants.contextPath + this.apiConstants.api;
+        return this.platformServicesCommons.unauthenticatedBasePath;
     }
 
     urlBase() {
-        return this.getServerUrl() +'/users/' + this.AuthStatusService.email;
+        return this.platformServicesCommons.authUserBasePath();
     };
 
     getAssetUrl(appId) {
@@ -81,21 +79,21 @@ export class RestApi {
         return this.$http.get(this.urlBase() +"/actions/favorites");
     };
 
-    addPreferredAction(elementUri) {
-        return this.$http({
-            method: 'POST',
-            url: this.urlBase() + "/actions/favorites",
-            data: $.param({uri: elementUri}),
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        })
-    }
-
-    removePreferredAction(elementUri) {
-        return this.$http({
-            method: 'DELETE',
-            url: this.urlBase() + "/actions/favorites/" + encodeURIComponent(elementUri)
-        })
-    }
+    // addPreferredAction(elementUri) {
+    //     return this.$http({
+    //         method: 'POST',
+    //         url: this.urlBase() + "/actions/favorites",
+    //         data: $.param({uri: elementUri}),
+    //         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+    //     })
+    // }
+    //
+    // removePreferredAction(elementUri) {
+    //     return this.$http({
+    //         method: 'DELETE',
+    //         url: this.urlBase() + "/actions/favorites/" + encodeURIComponent(elementUri)
+    //     })
+    // }
 
     getOwnSepas() {
         return this.$http.get(this.urlBase() +"/sepas/own");
@@ -109,23 +107,23 @@ export class RestApi {
         return this.$http.get(this.urlBase() +"/sepas/favorites");
     };
 
-    addPreferredSepa(elementUri) {
-        return this.$http({
-            method: 'POST',
-            url: this.urlBase() + "/sepas/favorites",
-            data: $.param({uri: elementUri}),
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        })
-    }
+    // addPreferredSepa(elementUri) {
+    //     return this.$http({
+    //         method: 'POST',
+    //         url: this.urlBase() + "/sepas/favorites",
+    //         data: $.param({uri: elementUri}),
+    //         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+    //     })
+    // }
+    //
+    // removePreferredSepa(elementUri) {
+    //     return this.$http({
+    //         method: 'DELETE',
+    //         url: this.urlBase() + "/sepas/favorites/" + encodeURIComponent(elementUri)
+    //     })
+    // }
 
-    removePreferredSepa(elementUri) {
-        return this.$http({
-            method: 'DELETE',
-            url: this.urlBase() + "/sepas/favorites/" + encodeURIComponent(elementUri)
-        })
-    }
-
-    getOwnSources() {
+    getOwnSources(): Observable<any> {
         return this.$http.get(this.urlBase() +"/sources/own");
     };
 
@@ -137,69 +135,35 @@ export class RestApi {
         return this.$http.get(this.urlBase() +"/sources/favorites");
     };
 
-    addPreferredSource(elementUri) {
-        return this.$http({
-            method: 'POST',
-            url: this.urlBase() + "/sources/favorites",
-            data: $.param({uri: elementUri}),
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        })
-    }
-
-    removePreferredSource(elementUri) {
-        return this.$http({
-            method: 'DELETE',
-            url: this.urlBase() + "/sources/favorites/" + encodeURIComponent(elementUri)
-        })
-    }
+    // addPreferredSource(elementUri) {
+    //     return this.$http({
+    //         method: 'POST',
+    //         url: this.urlBase() + "/sources/favorites",
+    //         data: $.param({uri: elementUri}),
+    //         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+    //     })
+    // }
+    //
+    // removePreferredSource(elementUri) {
+    //     return this.$http({
+    //         method: 'DELETE',
+    //         url: this.urlBase() + "/sources/favorites/" + encodeURIComponent(elementUri)
+    //     })
+    // }
 
     getOwnStreams(source){
         return this.$http.get(this.urlBase() + "/sources/" + encodeURIComponent(source.uri) + "/streams");
 
     };
 
-    add(elementUri, ispublic) {
-        return this.$http({
-            method: 'POST',
-            url: this.urlBase() + "/element",
-            data: $.param({uri: elementUri, publicElement: ispublic}),
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        })
-    }
-
-    addBatch(elementUris, ispublic) {
-        return this.$http({
-            method: 'POST',
-            url: this.urlBase() + "/element/batch",
-            data: $.param({uri: elementUris, publicElement: ispublic}),
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        })
-    }
-
-    update(elementUri) {
-        return this.$http({
-            method: 'PUT',
-            url: this.urlBase() + "/element/" + encodeURIComponent(elementUri)
-        })
-    }
-
-    del(elementUri) {
-        return this.$http({
-            method: 'DELETE',
-            url: this.urlBase() + "/element/" + encodeURIComponent(elementUri)
-        })
-    }
-
     jsonld(elementUri) {
         return this.$http.get(this.urlBase() +"/element/" + encodeURIComponent(elementUri) +"/jsonld");
     }
 
-    configured() {
+    configured(): Observable<any> {
         return this.$http.get(this.getServerUrl() + "/setup/configured", {
-            ignoreLoadingBar: true,
-            timeout: 2000
+            headers: { ignoreLoadingBar: '' }
         });
-
     }
 
     getConfiguration() {
@@ -212,7 +176,7 @@ export class RestApi {
         //return this.$http.get(this.getServerUrl() +"/semantic-epa-backend/api/v2/setup/configured");
     };
 
-    getOwnPipelines() {
+    getOwnPipelines(): Observable<any> {
         return this.$http.get(this.urlBase() +"/pipelines/own");
         //return this.$http.get("/semantic-epa-backend/api/pipelines");
     };
@@ -229,28 +193,6 @@ export class RestApi {
         return this.$http.post(this.urlBase() +"/streams/update", stream);
     }
 
-    deleteOwnPipeline(pipelineId) {
-
-        // delete all the widgets that use the pipeline results
-
-        // this.$http.get("/dashboard/_all_docs?include_docs=true").then(function(data) {
-        //     var toDelete = _.chain(data.data.rows)
-        //         .filter(function(o) {
-        //             return o.doc.visualisation.pipelineId == pipelineId;
-        //         }).value();
-
-            // _.map(toDelete, function(o) {
-            //     this.$http.delete("/dashboard/" + o.doc._id + '?rev=' + o.doc._rev);
-            // });
-
-        // });
-
-        return this.$http({
-            method: 'DELETE',
-            url: this.urlBase() + "/pipelines/" +pipelineId
-        });
-    }
-
     getPipelineCategories() {
         return this.$http.get(this.urlBase() +"/pipelinecategories");
     };
@@ -259,26 +201,11 @@ export class RestApi {
         return this.$http.post(this.urlBase() +"/pipelinecategories", pipelineCategory);
     };
 
-    deletePipelineCategory(categoryId) {
-        return this.$http({
-            method: 'DELETE',
-            url: this.urlBase() + "/pipelinecategories/" +categoryId
-        });
-    }
-
     fetchRemoteOptions(resolvableOptionsParameterRequest) {
         return this.$http.post(this.urlBase() +"/pe/options", resolvableOptionsParameterRequest);
     }
 
-    recommendPipelineElement(pipeline) {
-        return this.$http.post(this.urlBase() +"/pipelines/recommend", pipeline);
-    }
 
-    updatePartialPipeline(pipeline) {
-        return this.$http.post(this.urlBase() +"/pipelines/update", pipeline, {
-            ignoreLoadingBar: true
-        });
-    }
 
     updateDataSet(dataSet) {
         return this.$http.post(this.urlBase() +"/pipelines/update/dataset", dataSet);
@@ -309,23 +236,12 @@ export class RestApi {
         return this.$http.get(this.urlBase() +"/notifications");
     }
 
-    getUnreadNotificationsCount() {
+    getUnreadNotificationsCount(): Observable<any> {
         return this.$http.get(this.urlBase() +"/notifications/count");
     }
 
     getUnreadNotifications() {
         return this.$http.get(this.urlBase() +"/notifications/unread");
-    }
-
-    updateNotification(notificationId) {
-        return this.$http.put(this.urlBase() +"/notifications/" +notificationId);
-    }
-
-    deleteNotifications(notificationId) {
-        return this.$http({
-            method: 'DELETE',
-            url: this.urlBase() + "/notifications/" +notificationId
-        });
     }
 
     getSepaById(elementId) {
@@ -364,13 +280,6 @@ export class RestApi {
         return this.$http.post(this.getServerUrl() + "/ontology/namespaces", namespace);
     }
 
-    deleteOntologyNamespace(prefix) {
-        return this.$http({
-            method: 'DELETE',
-            url: this.getServerUrl() + "/ontology/namespaces/" + encodeURIComponent(prefix)
-        });
-    }
-
     addOntologyConcept(conceptData) {
         return this.$http.post(this.getServerUrl() + "/ontology/types", conceptData);
     }
@@ -395,37 +304,37 @@ export class RestApi {
         return this.$http.put(this.getServerUrl() + "/ontology/instances/" + encodeURIComponent(instanceId), instanceData);
     }
 
-    deleteOntologyInstance(instanceId) {
-        return this.$http({
-            method: 'DELETE',
-            url: this.getServerUrl() + "/ontology/instances/" + encodeURIComponent(instanceId)
-        });
-    }
-
-    deleteOntologyProperty(propertyId) {
-        return this.$http({
-            method: 'DELETE',
-            url: this.getServerUrl() + "/ontology/properties/" + encodeURIComponent(propertyId)
-        });
-    }
-
-    deleteOntologyConcept(conceptId) {
-        return this.$http({
-            method: 'DELETE',
-            url: this.getServerUrl() + "/ontology/types/" + encodeURIComponent(conceptId)
-        });
-    }
+    // deleteOntologyInstance(instanceId) {
+    //     return this.$http({
+    //         method: 'DELETE',
+    //         url: this.getServerUrl() + "/ontology/instances/" + encodeURIComponent(instanceId)
+    //     });
+    // }
+    //
+    // deleteOntologyProperty(propertyId) {
+    //     return this.$http({
+    //         method: 'DELETE',
+    //         url: this.getServerUrl() + "/ontology/properties/" + encodeURIComponent(propertyId)
+    //     });
+    // }
+    //
+    // deleteOntologyConcept(conceptId) {
+    //     return this.$http({
+    //         method: 'DELETE',
+    //         url: this.getServerUrl() + "/ontology/types/" + encodeURIComponent(conceptId)
+    //     });
+    // }
 
     getAvailableContexts() {
         return this.$http.get(this.getServerUrl()+ "/contexts");
     };
 
-    deleteContext(contextId) {
-        return this.$http({
-            method: 'DELETE',
-            url: this.getServerUrl() + "/contexts/" + encodeURIComponent(contextId)
-        });
-    }
+    // deleteContext(contextId) {
+    //     return this.$http({
+    //         method: 'DELETE',
+    //         url: this.getServerUrl() + "/contexts/" + encodeURIComponent(contextId)
+    //     });
+    // }
 
     getDomainKnowledgeItems(query) {
         return this.$http.post(this.getServerUrl() + "/autocomplete/domain", query);
@@ -504,28 +413,9 @@ export class RestApi {
         return this.$http.get(this.urlBase() +"/marketplace/pods");
     }
 
-    getRdfEndpoints() {
-        return this.$http.get(this.urlBase() +"/rdfendpoints");
-    }
 
-    getRdfEndpointItems() {
-        return this.$http.get(this.urlBase() +"/rdfendpoints/items");
-    }
-
-    addRdfEndpoint(rdfEndpoint) {
-        return this.$http.post(this.urlBase() +"/rdfendpoints", rdfEndpoint);
-    }
-
-    removeRdfEndpoint(rdfEndpointId) {
-        return this.$http.delete(this.urlBase() +"/rdfendpoints/" +rdfEndpointId);
-    }
-
-    getAuthc() {
+    getAuthc(): Observable<any> {
         return this.$http.get(this.getServerUrl() + "/admin/authc");
-    }
-
-    login(credentials) {
-        return this.$http.post(this.getServerUrl() + "/admin/login", credentials);
     }
 
     loginSso(credentials, componentId, sessionId) {
@@ -536,37 +426,33 @@ export class RestApi {
         return this.$http.get(this.getServerUrl() + "/admin/logout");
     }
 
-    setupInstall(setup, installationStep) {
-        return this.$http.post(this.getServerUrl() + "/setup/install/" +installationStep, setup);
-    }
-
     register(payload) {
         return this.$http.post(this.getServerUrl() +"/admin/register", payload);
     }
 
-    deployStorm(payload) {
-        return this.$http({method: 'GET', responseType : 'arraybuffer', headers: {'Accept' : 'application/zip'}, url: this.urlBase() + '/deploy/storm'})
-
-    }
+    // deployStorm(payload) {
+    //     return this.$http({method: 'GET', responseType : 'arraybuffer', headers: {'Accept' : 'application/zip'}, url: this.urlBase() + '/deploy/storm'})
+    //
+    // }
 
     getApplicationLinks() {
         return this.$http.get(this.getServerUrl() + "/applink");
     };
 
-    getRuntimeInfo(dataStream) {
-        return this.$http.post(this.urlBase() +"/pipeline-element/runtime", dataStream, {
-            ignoreLoadingBar: true
-        });
-    }
+    // getRuntimeInfo(dataStream) {
+    //     return this.$http.post(this.urlBase() +"/pipeline-element/runtime", dataStream, {
+    //         ignoreLoadingBar: true
+    //     });
+    // }
 
     getDocumentation(appId) {
         return this.$http.get(this.getAssetUrl(appId) +"/documentation");
     }
 
-    uploadFile(data) {
-        return this.$http.post(this.urlBase() + "/files", data, {headers: {'Content-Type': undefined },
-            transformRequest: angular.identity});
-    }
+    // uploadFile(data) {
+    //     return this.$http.post(this.urlBase() + "/files", data, {headers: {'Content-Type': undefined },
+    //         transformRequest: angular.identity});
+    // }
 
     getFileMetadata() {
         return this.$http.get(this.urlBase() + "/files");
@@ -584,9 +470,15 @@ export class RestApi {
         return this.$http.delete(this.urlBase() + "/pipeline-cache");
     }
 
+    getVersionInfo() {
+        return this.$http.get(this.getServerUrl() + "/info/versions");
+    }
+
     getAvailableEdgeNodes() {
         return this.$http.get(this.urlBase() + "/nodes");
     }
-}
 
-RestApi.$inject = ['$http', 'apiConstants', 'AuthStatusService'];
+    getSystemInfo() {
+        return this.$http.get(this.getServerUrl() + "/info/system");
+    }
+}

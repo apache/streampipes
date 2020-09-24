@@ -16,17 +16,17 @@
  *
  */
 
-import {EventSchema} from "../../../connect/schema-editor/model/EventSchema";
-import {StaticProperty} from "../../../connect/model/StaticProperty";
-import {MappingPropertyUnary} from "../../../connect/model/MappingPropertyUnary";
-import {FreeTextStaticProperty} from "../../../connect/model/FreeTextStaticProperty";
-import {ColorPickerStaticProperty} from "../../../connect/model/ColorPickerStaticProperty";
-import {MappingPropertyNary} from "../../../connect/model/MappingPropertyNary";
+import {
+    ColorPickerStaticProperty,
+    EventSchema, FreeTextStaticProperty, MappingPropertyNary,
+    MappingPropertyUnary,
+    StaticPropertyUnion
+} from "../../../core-model/gen/streampipes-model";
 
 export class StaticPropertyExtractor {
 
     constructor(private inputSchema: EventSchema,
-                private staticProperties: Array<StaticProperty>) {
+                private staticProperties: Array<StaticPropertyUnion>) {
 
     }
 
@@ -66,7 +66,7 @@ export class StaticPropertyExtractor {
         return this.singleValueParameter(internalId) as number;
     }
 
-    getStaticPropertyByName(internalId: string): StaticProperty {
+    getStaticPropertyByName(internalId: string): StaticPropertyUnion {
         return this.staticProperties.find(sp => (sp.internalName == internalId));
     }
 

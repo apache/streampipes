@@ -33,7 +33,7 @@
 <h4 align="center">StreamPipes is a self-service (Industrial) IoT toolbox to enable non-technical users to connect
 , analyze and explore IoT data streams. </h4>
 <p align="center">  
-    <img src="https://streampipes.apache.org/img/screenshots/pipeline-editor-2.png" alt="StreamPipes Pipeline
+    <img src="https://streampipes.apache.org/img/screenshots/streampipes-overview.png" alt="StreamPipes Pipeline
      Editor"/>
 </p>
 
@@ -44,8 +44,8 @@
   * [About Apache StreamPipes](#about-streampipes)
   * [Use Cases](#use-cases)
   * [Installation](#installation)
-  * [Pipeline Elements](#pipeline-elements)
   * [Building StreamPipes](#building-streampipes)
+  * [Pipeline Elements](#pipeline-elements)  
   * [Extending StreamPipes](#extending-streampipes)
   * [Bugs and Feature Requests](#bugs-and-feature-requests)
   * [Get help](#get-help)
@@ -57,20 +57,21 @@
 
 ## About Apache StreamPipes
 
-Apache StreamPipes (incubating) enables flexible modeling of stream processing pipelines by providing a graphical
- modeling
- editor on top of existing stream processing frameworks.
+Apache StreamPipes (incubating) enables flexible modeling of stream processing pipelines by providing a graphical 
+modeling editor on top of existing stream processing frameworks.
 
-It leverages non-technical users to quickly define and execute processing pipelines based on an easily extensible 
-toolbox of data sources, data processors and data sinks. StreamPipes has an exchangeable runtime execution layer and executes pipelines using one of the provided wrappers, e.g., for Apache Flink or Apache Kafka Streams.
+It empowers non-technical users to quickly define and execute processing pipelines based on an easily extensible 
+toolbox of data sources, data processors and data sinks. StreamPipes has an exchangeable runtime execution layer and 
+executes pipelines using one of the provided wrappers, e.g., standalone or distributed in Apache Flink.
 
 Pipeline elements in StreamPipes can be installed at runtime - the built-in SDK allows to easily implement new 
-pipeline elements according to your needs. Pipeline elements are standalone microservices that can run anywhere - centrally on your server, in a large-scale cluster or close at the edge.
+pipeline elements according to your needs. Pipeline elements are standalone microservices that can run anywhere - 
+centrally on your server, in a large-scale cluster or close at the edge.
 
 ## Use Cases
 
-StreamPipes allows you to connect IoT data sources using the SDK or the built-in graphical tool StreamPipes 
-Connect.
+StreamPipes allows you to connect IoT data sources using the SDK or the built-in graphical tool **StreamPipes 
+Connect**.
 
 The extensible toolbox of data processors and sinks supports use cases such as
 * Continuously **store** IoT data streams to third party systems (e.g., databases)
@@ -84,22 +85,17 @@ The extensible toolbox of data processors and sinks supports use cases such as
 
 ## Installation
 
-The quickest way to run StreamPipes is the Docker-based installer script available for Unix, Mac and Windows (10).
+The quickest way to run StreamPipes including the latest extensions (adapters, pipeline elements) is by using our Docker-based [installation & operation options](https://www.github.com/apache/incubator-streampipes-installer), namely: 
 
-It's easy to get started:
-1. Make sure you have [Docker](https://docs.docker.com/install/) and [Docker Compose](https://docs.docker.com/compose/install/) installed.
-2. Clone or download the installer script from [https://www.github.com/apache/incubator-streampipes-installer](https://www.github.com/apache/incubator-streampipes-installer)
-3. Execute ``./streampipes start`` 
-4. Enter the hostname and choose the version you'd like to run (the Lite version runs with less memory assigned to Docker (< 6 GB), use the full version if you have more memory available)
-5. Open your browser, navigate to ``http://YOUR_HOSTNAME_HERE`` and follow the installation instructions.
-6. Once finished, switch to the pipeline editor and start the interactive tour or check the [online tour](https://streampipes.apache.org/docs/docs/user-guide-tour/) to learn how to create your first pipeline!
+* **[StreamPipes Compose](https://github.com/apache/incubator-streampipes-installer/compose)** - The User's Choice
+* **[StreamPipes CLI](https://github.com/apache/incubator-streampipes-installer/cli)** - The Developer's Favorite
+* **[StreamPipes k8s](https://github.com/apache/incubator-streampipes-installer/k8s)** - The Operator's Dream
 
-For a more in-depth manual, read the installation guide at [https://streampipes.apache.org/docs/docs/user-guide-installation/](https://streampipes.apache.org/docs/docs/user-guide-installation/)!
+> **NOTE**: StreamPipes CLI & k8s are highly recommended for developers or operators. Standard users should stick to StreamPipes Compose.
 
-## Pipeline Elements
+Please follow the instructions provided in the corresponding `README.md` to get started.
 
-StreamPipes includes a repository of ready-to-use pipeline elements. A description of the standard elements can be 
-found in the Github repository [streampipes-extensions](https://www.github.com/apache/incubator-streampipes-extensions).
+For a more in-depth manual, read the [installation guide](https://streampipes.apache.org/docs/docs/user-guide-installation/).
 
 ## Building StreamPipes
 
@@ -132,6 +128,13 @@ To start StreamPipes, run ``docker-compose up -d`` from the root directory.
 
 You can also use the installer or CLI as described in the ``Installation`` section.
 
+## Pipeline Elements
+StreamPipes includes a repository of extensions for
+* **Connect adapters** for a variety of IoT data sources as well as 
+* **Data Processors** and **Data Sinks** as ready-to-use pipeline elements. 
+
+A description of the standard elements can be found in the Github repository [streampipes-extensions](https://www.github.com/apache/incubator-streampipes-extensions).
+
 ## Extending StreamPipes
 
 You can easily add your own data streams, processors or sinks. A [Java-based SDK](https://streampipes.apache.org/docs/docs/dev-guide-tutorial-processors) and several [run-time wrappers](https://streampipes.apache.org/docs/docs/dev-guide-architecture) for popular streaming frameworks such as Apache Flink, Apache Spark and Apache 
@@ -149,7 +152,6 @@ If you've found a bug or have a feature that you'd love to see in StreamPipes, f
 If you have any problems during the installation or questions around StreamPipes, you'll get help through one of our 
 community channels:
 
-- [Slack](https://slack.streampipes.org)
 - [Mailing Lists](https://streampipes.apache.org/mailinglists.html)
 
 And don't forget to follow us on [Twitter](https://twitter.com/streampipes)!

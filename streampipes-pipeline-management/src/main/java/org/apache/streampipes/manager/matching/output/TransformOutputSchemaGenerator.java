@@ -26,28 +26,17 @@ import org.apache.streampipes.model.output.TransformOutputStrategy;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
-import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
-import org.apache.streampipes.model.staticproperty.MappingPropertyUnary;
-import org.apache.streampipes.model.staticproperty.Option;
-import org.apache.streampipes.model.staticproperty.SelectionStaticProperty;
-import org.apache.streampipes.model.staticproperty.StaticProperty;
+import org.apache.streampipes.model.staticproperty.*;
 import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.sdk.helpers.Tuple2;
 
 import java.net.URI;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class TransformOutputSchemaGenerator extends OutputSchemaGenerator<TransformOutputStrategy> {
 
-  private DataProcessorInvocation dataProcessorInvocation;
-
-  protected static final String prefix = "urn:streampipes.org:spi:";
+  private  List<StaticProperty> staticProperties;
 
   public static TransformOutputSchemaGenerator from(OutputStrategy strategy,
                                                     DataProcessorInvocation invocation) {
@@ -57,7 +46,7 @@ public class TransformOutputSchemaGenerator extends OutputSchemaGenerator<Transf
   public TransformOutputSchemaGenerator(TransformOutputStrategy strategy, DataProcessorInvocation
    invocation) {
     super(strategy);
-    this.dataProcessorInvocation = invocation;
+    this.staticProperties = invocation.getStaticProperties();
   }
 
   @Override
@@ -68,7 +57,7 @@ public class TransformOutputSchemaGenerator extends OutputSchemaGenerator<Transf
     EventSchema inSchema = stream.getEventSchema();
     outputStrategy.getTransformOperations().forEach(to -> {
       Optional<MappingPropertyUnary> mappingPropertyOpt = findMappingProperty(to.getMappingPropertyInternalName(),
-              dataProcessorInvocation.getStaticProperties());
+              staticProperties);
 
       if (mappingPropertyOpt.isPresent()) {
         Optional<EventProperty> eventPropertyOpt = findEventProperty(mappingPropertyOpt.get().getSelectedProperty()
@@ -77,21 +66,16 @@ public class TransformOutputSchemaGenerator extends OutputSchemaGenerator<Transf
 
         if (eventPropertyOpt.isPresent()) {
           EventProperty eventProperty = eventPropertyOpt.get();
-          modifiedEventProperties.put(eventProperty.getElementId(), modifyEventProperty(eventProperty, to,
-                  dataProcessorInvocation.getStaticProperties()));
+          modifiedEventProperties.put(eventProperty.getElementId(), modifyEventProperty(cloneEp(eventProperty), to,
+                  staticProperties));
         }
       }
     });
 
-    List<EventProperty> newProperties = inSchema.getEventProperties().stream().map(ep -> {
-      if (modifiedEventProperties.containsKey(ep.getElementId())) {
-        EventProperty newProperty = modifiedEventProperties.get(ep.getElementId());
-        newProperty.setElementId(prefix + UUID.randomUUID().toString());
-        return newProperty;
-      } else {
-        return ep;
-      }
-    }).collect(Collectors.toList());
+    List<EventProperty> newProperties = inSchema.getEventProperties()
+            .stream()
+            .map(ep -> modifiedEventProperties.getOrDefault(ep.getElementId(), ep))
+            .collect(Collectors.toList());
 
     outSchema.setEventProperties(newProperties);
     return makeTuple(outSchema);
@@ -131,7 +115,7 @@ public class TransformOutputSchemaGenerator extends OutputSchemaGenerator<Transf
   private Option findSelected(List<Option> options) {
     return options
             .stream()
-            .filter(o -> o.isSelected())
+            .filter(Option::isSelected)
             .findFirst()
             .get();
   }
@@ -158,7 +142,7 @@ public class TransformOutputSchemaGenerator extends OutputSchemaGenerator<Transf
       }
 
     } else if (transformOperationType == TransformOperationType.DOMAIN_PROPERTY_TRANSFORMATION) {
-      eventProperty.setDomainProperties(Arrays.asList(URI.create(value)));
+      eventProperty.setDomainProperties(Collections.singletonList(URI.create(value)));
 
     } else if (transformOperationType == TransformOperationType.RUNTIME_NAME_TRANSFORMATION) {
       eventProperty.setRuntimeName(value);
@@ -173,7 +157,6 @@ public class TransformOutputSchemaGenerator extends OutputSchemaGenerator<Transf
     return eventProperties
             .stream()
             .filter(ep -> ep.getRuntimeName().equals(removePrefix(propertySelector)))
-            .map(this::cloneEp)
             .findFirst();
   }
 

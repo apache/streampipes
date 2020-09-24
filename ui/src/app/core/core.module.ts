@@ -16,22 +16,55 @@
  *
  */
 
-import * as angular from 'angular';
-import 'angular-material-icons';
-import 'angular-material';
-import 'angular-loading-bar';
+import {NgModule} from '@angular/core';
+import {MatGridListModule} from '@angular/material/grid-list';
+import {MatIconModule} from '@angular/material/icon';
+import {FlexLayoutModule} from '@angular/flex-layout';
+import {CommonModule} from '@angular/common';
+import {StreampipesComponent} from "./components/streampipes/streampipes.component";
+import {FeedbackComponent} from "./components/feedback/feedback.component";
+import {MatButtonModule} from "@angular/material/button";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {MatInputModule} from "@angular/material/input";
+import {FormsModule} from "@angular/forms";
+import {RouterModule} from "@angular/router";
+import {ToolbarComponent} from "./components/toolbar/toolbar.component";
+import {MatToolbarModule} from "@angular/material/toolbar";
+import {MatTooltipModule} from "@angular/material/tooltip";
+import {IconbarComponent} from "./components/iconbar/iconbar.component";
+import {MatDividerModule} from '@angular/material/divider';
+import {MatListModule} from "@angular/material/list";
+import {MatMenuModule} from "@angular/material/menu";
+import {MatBadgeModule} from "@angular/material/badge";
 
-import stateConfig from './state.config'
-import iconProviderConfig from './icon-provider.config'
-import httpProviderConfig from './http-provider.config'
-import nagPrism from './prism/nag-prism.directive'
-
-export default angular.module('sp.core', ['ui.router', 'ui.router.upgrade', 'ngMaterial', 'ngMdIcons', 'angular-loading-bar'])
-    .config(stateConfig)
-    .config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
-        cfpLoadingBarProvider.latencyThreshold = 500;
-    }])
-    .config(iconProviderConfig)
-    .config(httpProviderConfig)
-    .directive('nagPrism', nagPrism)
-    .name;
+@NgModule({
+  imports: [
+    CommonModule,
+    FlexLayoutModule,
+    MatGridListModule,
+    MatDividerModule,
+    MatListModule,
+    MatIconModule,
+    MatMenuModule,
+    MatBadgeModule,
+    MatButtonModule,
+    MatTooltipModule,
+    MatProgressSpinnerModule,
+    MatInputModule,
+    MatToolbarModule,
+    FormsModule,
+    RouterModule
+  ],
+  declarations: [
+    StreampipesComponent,
+    FeedbackComponent,
+    IconbarComponent,
+    ToolbarComponent
+  ],
+  providers: [],
+  entryComponents: [
+    StreampipesComponent
+  ]
+})
+export class CoreModule {
+}

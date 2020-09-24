@@ -18,7 +18,6 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DatalakeRestService } from '../../../core-services/datalake/datalake-rest.service';
-import { TsonLdSerializerService } from '../../../platform-services/tsonld-serializer.service';
 import { ColorService } from '../services/color.service';
 
 
@@ -47,8 +46,7 @@ export class ImageCategorizeComponent implements OnInit, AfterViewInit {
   private setImagesIndexToFirst = false;
   private setImagesIndexToLast = false;
 
-  constructor(private restService: DatalakeRestService, public colorService: ColorService, private snackBar: MatSnackBar,
-              private tsonLdSerializerService: TsonLdSerializerService) { }
+  constructor(private restService: DatalakeRestService, public colorService: ColorService, private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     // TODO: Load labels for images
@@ -57,10 +55,7 @@ export class ImageCategorizeComponent implements OnInit, AfterViewInit {
     // TODO: Get Labels
     this.labels = this.restService.getLabels();
 
-    this.restService.getAllInfos().map(data => {
-      return this.tsonLdSerializerService.fromJsonLdContainer(data, 'sp:DataLakeMeasure');
-    }).subscribe(
-      res => {
+    this.restService.getAllInfos().subscribe(res => {
         this.eventSchema = res.find(elem => elem.measureName === this.measureName).eventSchema;
         const properties = this.eventSchema.eventProperties;
         for (const prop of properties) {

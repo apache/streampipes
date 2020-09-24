@@ -15,30 +15,17 @@
 # limitations under the License.
 #
 """contains relevant base classes"""
+import abc
 import json
 import logging
-from abc import ABC, abstractmethod
+import threading
 from confluent_kafka.admin import AdminClient
-
-from streampipes.api import API
-from streampipes.configuration import banner, kafka_consumer_thread
-from streampipes.helper import threaded
 from confluent_kafka import Producer, Consumer
 
 
-class StandaloneSubmitter(ABC):
-    @classmethod
-    def init(cls):
-        cls._load_banner()
-        cls.api = API()
-        cls.api.run()
+class EventProcessor(object):
+    __metaclass__ = abc.ABC
 
-    @classmethod
-    def _load_banner(cls):
-        print(banner)
-
-
-class EventProcessor(ABC):
     _DEFAULT_KAFKA_CONSUMER_CONFIG = {
         'bootstrap.servers': 'kafka:9092',
         'enable.auto.commit': True,
@@ -82,7 +69,9 @@ class EventProcessor(ABC):
 
     def init(self):
         self.logger.info('start processor {}'.format(self.invocation_id))
-        self._threads[kafka_consumer_thread] = self._consume(self._input_topics)
+        thread = threading.Thread(target=self._consume, name=self.invocation_id)
+        thread.start()
+        self._threads['kafka'] = thread
 
     def active_threads(self):
         return self._threads
@@ -94,16 +83,16 @@ class EventProcessor(ABC):
     def __del__(self):
         pass
 
-    @abstractmethod
+    @abc.abstractmethod
     def on_invocation(self):
         """ on_invocation is called when processor is started """
 
-    @abstractmethod
+    @abc.abstractmethod
     def on_event(self, event):
         """ on_event receives kafka consumer messages """
         pass
 
-    @abstractmethod
+    @abc.abstractmethod
     def on_detach(self):
         """ on_detach is called when processor is stopped """
         pass
@@ -114,10 +103,9 @@ class EventProcessor(ABC):
         if result is not None:
             self._produce(result)
 
-    @threaded
-    def _consume(self, topics):
+    def _consume(self):
         """ retrieve events from kafka """
-        self._consumer.subscribe(topics=[topics])
+        self._consumer.subscribe(topics=[self._input_topics])
         self._running = True
 
         while self._running:

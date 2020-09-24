@@ -162,6 +162,7 @@ public class StreamPipes {
   public static final String KAFKA_BATCH_SIZE = NS + "kafkaBatchSize";
   public static final String KAFKA_OFFSET = NS + "kafkaOffset";
   public static final String KAFKA_GROUP_ID = NS + "kafkaGroupId";
+  public static final String KAFKA_MAX_REQUEST_SIZE = NS + "kafkaMaxRequestSize";
 
   public static final String ERROR_TOPIC = NS + "errorTopic";
   public static final String STATS_TOPIC = NS + "statsTopic";
@@ -228,6 +229,7 @@ public class StreamPipes {
   public static final String MAPS_TO = NS + "mapsTo";
   public static final String MULTI_LINE = NS + "multiLine";
   public static final String HTML_ALLOWED = NS + "htmlAllowed";
+  public static final String HTML_FONT_FORMAT = NS + "htmlFontFormat";
   public static final String PLACEHOLDERS_SUPPORTED = NS + "placeholdersSupported";
 
   public static final String HAS_ENDPOINT_URL = NS + "endpointUrl";
@@ -410,4 +412,8 @@ public class StreamPipes {
   public static final String HAS_CODE_INPUT = NS + "hasCodeInput";
   public static final String HAS_CODE_TEMPLATE = NS + "hasCodeTemplate";
   public static final String USER_DEFINED_OUTPUT_STRATEGY = NS + "UserDefinedOutputStrategy";
+  public static final String PE_CONFIGURED = NS + "isPeConfigured" ;
+
+  public static final String HAS_REQUIRED_FILETYPES = NS + "hasRequiredFiletypes" ;
+
 }

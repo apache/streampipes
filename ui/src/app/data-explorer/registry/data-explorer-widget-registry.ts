@@ -16,9 +16,7 @@
  *
  */
 
-import { DashboardWidgetSettings } from '../../core-model/dashboard/DashboardWidgetSettings';
-import { WidgetConfig } from '../components/widgets/base/base-config';
-import { TableConfig } from '../components/widgets/table/table-config';
+import {IWidget} from "../models/dataview-dashboard.model";
 
 export class DataExplorerWidgetRegistry {
 
@@ -32,12 +30,14 @@ export class DataExplorerWidgetRegistry {
     //     return widgetTemplates;
     // }
 
-    private static availableWidgets: string[] = [
-        'table', 'line-chart', 'image'
+    private static availableWidgets: IWidget[] = [
+        {id: 'table', label: 'Table'},
+        {id: 'line-chart', label: 'Line Chart'},
+        {id: 'image', label: 'Image'}
     ];
 
-    static getAvailableWidgetTemplates(): string[] {
-        const widgetTemplates = new Array<string>();
+    static getAvailableWidgetTemplates(): IWidget[] {
+        const widgetTemplates = new Array<IWidget>();
         this.availableWidgets.forEach(widget => widgetTemplates.push(widget));
         return widgetTemplates;
     }

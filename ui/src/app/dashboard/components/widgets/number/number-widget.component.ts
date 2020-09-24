@@ -22,9 +22,8 @@ import {BaseStreamPipesWidget} from "../base/base-widget";
 import {StaticPropertyExtractor} from "../../../sdk/extractor/static-property-extractor";
 import {NumberConfig} from "./number-config";
 import {ResizeService} from "../../../services/resize.service";
-import {EventProperty} from "../../../../connect/schema-editor/model/EventProperty";
-import {EventPropertyPrimitive} from "../../../../connect/schema-editor/model/EventPropertyPrimitive";
 import {DashboardService} from "../../../services/dashboard.service";
+import {EventPropertyPrimitive} from "../../../../core-model/gen/streampipes-model";
 
 @Component({
     selector: 'number-widget',

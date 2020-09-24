@@ -59,6 +59,7 @@ public class WelcomePageGeneratorImpl extends WelcomePageGenerator<Declarer> {
         // TODO remove after full internationalization support has been implemented
         updateLabel(declarer.declareModel(), desc);
         desc.setType(getType(declarer));
+        desc.setAppId(declarer.declareModel().getAppId());
         String uri = baseUri;
         if (declarer instanceof SemanticEventConsumerDeclarer) {
             uri += "sec/";
@@ -80,14 +81,11 @@ public class WelcomePageGeneratorImpl extends WelcomePageGenerator<Declarer> {
         List<Description> streams = new ArrayList<>();
         DataSourceDescriptionHtml desc = new DataSourceDescriptionHtml();
         updateLabel(declarer.declareModel(), desc);
-//        desc.setName(declarer.declareModel().getName());
-//        desc.setDescription(declarer.declareModel().getDescription());
         desc.setUri(URI.create(baseUri + "sep/" + declarer.declareModel().getUri()));
         desc.setType("source");
+        desc.setAppId(declarer.declareModel().getAppId());
         for (DataStreamDeclarer streamDeclarer : declarer.getEventStreams()) {
             Description ad = new Description();
-//            ad.setDescription(streamDeclarer.declareModel(declarer.declareModel()).getDescription());
-//            ad.setName(streamDeclarer.declareModel(declarer.declareModel()).getName());
             updateLabel(streamDeclarer.declareModel(declarer.declareModel()), ad);
             ad.setUri(URI.create(baseUri +"stream/" + streamDeclarer.declareModel(declarer.declareModel()).getUri()));
             ad.setType("stream");

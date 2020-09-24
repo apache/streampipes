@@ -16,13 +16,14 @@
  *
  */
 
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { DateRange } from '../../../core-model/datalake/DateRange';
+import {Component, EventEmitter, OnInit, Output, ViewEncapsulation} from '@angular/core';
+import {DateRange} from '../../../core-model/datalake/DateRange';
 
 @Component({
   selector: 'sp-time-range-selector',
   templateUrl: 'timeRangeSelector.component.html',
-  styleUrls: ['./timeRangeSelector.component.css']
+  styleUrls: ['./timeRangeSelector.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class TimeRangeSelectorComponent implements OnInit {
 
@@ -61,6 +62,15 @@ export class TimeRangeSelectorComponent implements OnInit {
 
   decreaseTime() {
     this.changeTimeByInterval((a, b) => a - b);
+  }
+
+  refreshData() {
+    const difference = this.dateRange.endDate.getTime() - this.dateRange.startDate.getTime();
+
+    const current = new Date();
+    this.dateRange = new DateRange(new Date(current.getTime() - difference), current);
+
+    this.reloadData();
   }
 
   private  changeTimeByInterval(func) {

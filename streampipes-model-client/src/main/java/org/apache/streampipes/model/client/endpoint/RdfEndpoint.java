@@ -27,6 +27,10 @@ public class RdfEndpoint {
 
     private String endpointUrl;
 
+    public RdfEndpoint() {
+
+    }
+
     public RdfEndpoint(String endpointUrl) {
         this.endpointUrl = endpointUrl;
     }

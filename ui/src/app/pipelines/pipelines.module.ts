@@ -16,25 +16,61 @@
  *
  */
 
-import * as angular from 'angular';
-
-import 'npm/angular-datatables';
-import 'npm/angular-sanitize';
-
-import spServices from '../services/services.module';
-
-import {PipelineCtrl} from './pipelines.controller';
-import {PipelineDetailsComponent} from './components/pipeline-details/pipeline-details.component';
-import {PipelineCategoryFilter} from './pipeline-category.filter';
-import {CategoryAlreadyInPipelineFilter} from './category-already-in-pipeline.filter';
+import {CategoryAlreadyInPipelinePipe} from './category-already-in-pipeline.filter';
 import {PipelineOperationsService} from "./services/pipeline-operations.service";
+import {PipelinesComponent} from "./pipelines.component";
+import {NgModule} from "@angular/core";
+import {FlexLayoutModule} from "@angular/flex-layout";
+import {MatTabsModule} from "@angular/material/tabs";
+import {MatButtonModule} from "@angular/material/button";
+import {CustomMaterialModule} from "../CustomMaterial/custom-material.module";
+import {CommonModule} from "@angular/common";
+import {PipelineOverviewComponent} from "./components/pipeline-overview/pipeline-overview.component";
+import {PipelineStatusDialogComponent} from "./dialog/pipeline-status/pipeline-status-dialog.component";
+import {DeletePipelineDialogComponent} from "./dialog/delete-pipeline/delete-pipeline-dialog.component";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {ImportPipelineDialogComponent} from "./dialog/import-pipeline/import-pipeline-dialog.component";
+import {StartAllPipelinesDialogComponent} from "./dialog/start-all-pipelines/start-all-pipelines-dialog.component";
+import {PipelineCategoriesDialogComponent} from "./dialog/pipeline-categories/pipeline-categories-dialog.component";
+import {FormsModule} from "@angular/forms";
+import {PipelineInCategoryPipe} from "./pipeline-category.filter";
 
-import ngFileUpload from 'ng-file-upload';
+@NgModule({
+  imports: [
+    FlexLayoutModule,
+    FormsModule,
+    MatTabsModule,
+    MatButtonModule,
+    CustomMaterialModule,
+    CommonModule,
+    MatProgressSpinnerModule
+  ],
+  declarations: [
+    DeletePipelineDialogComponent,
+    ImportPipelineDialogComponent,
+    PipelinesComponent,
+    PipelineCategoriesDialogComponent,
+    PipelineOverviewComponent,
+    PipelineStatusDialogComponent,
+    StartAllPipelinesDialogComponent,
+    PipelineInCategoryPipe,
+    CategoryAlreadyInPipelinePipe,
+  ],
+  providers: [
+    PipelineOperationsService,
+    CategoryAlreadyInPipelinePipe,
+    PipelineInCategoryPipe
+  ],
+  exports: [
+    PipelinesComponent
+  ],
+  entryComponents: [
+    PipelinesComponent
+  ]
+})
+export class PipelinesModule {
 
-export default angular.module('sp.pipeline', [spServices, ngFileUpload, 'ngSanitize', 'datatables'])
-	.controller('PipelineCtrl', PipelineCtrl)
-	.component('pipelineDetails', PipelineDetailsComponent)
-	.filter('pipelineCategoryFilter', PipelineCategoryFilter)
-	.filter('categoryAlreadyInPipelineFilter', CategoryAlreadyInPipelineFilter)
-	.service('PipelineOperationsService', PipelineOperationsService)
-	.name;
+  constructor() {
+  }
+
+}

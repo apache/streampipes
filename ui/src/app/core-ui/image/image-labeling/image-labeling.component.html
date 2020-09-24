@@ -38,19 +38,19 @@
                     <button mat-button matTooltip="Create Brush Annotation"
                             (click)="labelingMode.setBrushMode()" [style.background-color]="labelingMode.isBrushMode() ? 'lightgrey' : 'white'"> <mat-icon>blur_circular</mat-icon></button>
                     <mat-slider [min]="1"  [max]="50" [step]="1" [thumbLabel]="true" [(ngModel)]="brushSize"></mat-slider>
-                    <button mat-button (click)="save()" style="position: absolute; right: 0px;"> <mat-icon>save</mat-icon></button>
+                    <button mat-button (click)="save(this.imagesIndex)" style="position: absolute; right: 0px;"> <mat-icon>save</mat-icon></button>
                     <button mat-button matTooltip="Description" [matMenuTriggerFor]="aboveMenu">
                             <span class="material-icons">
                         info
                     </span></button>
                         <mat-menu #aboveMenu="matMenu" yPosition="above">
-                                <p><em>{{imageDescription}}</em></p>
+                                <p><em>The Description of the selected image</em></p>
                         </mat-menu>
-                    
+
                 </div>
 
                 <sp-image-container
-                        [imageSrc]="imagesSrcs[imagesIndex]"
+                        [imageSrc]="_imagesRoutes[imagesIndex]"
                         (childRedraw)="handleChildRedraw($event[0], $event[1])"
                         (mouseDownLeft)="handleMouseDownLeft($event[0], $event[1], $event[2])"
                         (mouseMove)="handleMouseMove($event[0], $event[1], $event[2])"
@@ -64,21 +64,19 @@
             </div>
 
             <sp-image-annotations style="width: 270px"
-                    [annotations]="this.cocoFiles[this.imagesIndex]?.annotations"
+                    [annotations]="this.cocoFile?.annotations"
                     [labels]="labels"
                     (changeAnnotationLabel)="handleChangeAnnotationLabel($event)"
                     (deleteAnnotation)="handleDeleteAnnotation($event)">
             </sp-image-annotations>
         </div>
         <br />
-        <div fxLayout="row" fxLayoutAlign="center center"><div>{{pageIndex + 1}} / {{pageSum}}</div></div>
-        <sp-image-bar style="width: 100%"
-                [imagesSrcs]="imagesSrcs"
-                [selectedIndex]="imagesIndex"
-                [enableShortCuts]="isHoverComponent"
-                (indexChange)="handleImageIndexChange($event)"
-                (pageUp)="handleImagePageUp($event)"
-                (pageDown)="handleImagePageDown($event)">
-        </sp-image-bar>
+
+            <sp-image-bar style="width: 100%"
+                          [imagesRoutes]="_imagesRoutes"
+                          [selectedIndex]="imagesIndex"
+                          [enableShortCuts]="true"
+                          (indexChange)="handleImageIndexChange($event)">
+            </sp-image-bar>
     </div>
 </div>

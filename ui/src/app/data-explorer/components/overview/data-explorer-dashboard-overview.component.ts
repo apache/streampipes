@@ -26,7 +26,7 @@ import { DataViewDataExplorerService } from '../../services/data-view-data-explo
 @Component({
     selector: 'sp-data-explorer-dashboard-overview',
     templateUrl: './data-explorer-dashboard-overview.component.html',
-    styleUrls: ['./data-explorer-dashboard-overview.component.css']
+    styleUrls: ['./data-explorer-dashboard-overview.component.scss']
 })
 export class DataExplorerDashboardOverviewComponent implements OnInit {
 
@@ -35,7 +35,7 @@ export class DataExplorerDashboardOverviewComponent implements OnInit {
     @Output() selectDashboardEmitter = new EventEmitter<IDataViewDashboard>();
 
     dataSource = new MatTableDataSource<IDataViewDashboard>();
-    displayedColumns: string[] = ['name', 'open', 'openWindow', 'edit', 'delete'];
+    displayedColumns: string[] = ['name', 'open', 'delete'];
 
     constructor(private dashboardService: DataViewDataExplorerService,
                 public dialog: MatDialog) {
@@ -79,10 +79,6 @@ export class DataExplorerDashboardOverviewComponent implements OnInit {
 
     showDashboard(dashboard: IDataViewDashboard) {
         this.selectDashboardEmitter.emit(dashboard);
-    }
-
-    openExternalDashboard(dashboard: IDataViewDashboard) {
-
     }
 
 }

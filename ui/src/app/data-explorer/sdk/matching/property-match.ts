@@ -16,13 +16,15 @@
  *
  */
 
-import {EventProperty} from "../../../connect/schema-editor/model/EventProperty";
-import {EventPropertyPrimitive} from "../../../connect/schema-editor/model/EventPropertyPrimitive";
 import {PrimitivePropertyMatch} from "./primitive-property-match";
+import {
+    EventPropertyPrimitive,
+    EventPropertyUnion
+} from "../../../core-model/gen/streampipes-model";
 
 export class PropertyMatch {
 
-    match(requirement: EventProperty, offer: EventProperty): boolean {
+    match(requirement: EventPropertyUnion, offer: EventPropertyUnion): boolean {
         if (requirement instanceof EventPropertyPrimitive && offer instanceof EventPropertyPrimitive) {
             return new PrimitivePropertyMatch().match(requirement, offer);
         } else {

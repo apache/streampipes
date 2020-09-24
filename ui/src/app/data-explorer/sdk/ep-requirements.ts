@@ -16,51 +16,51 @@
  *
  */
 
-import {EventProperty} from "../../connect/schema-editor/model/EventProperty";
-import {EventPropertyPrimitive} from "../../connect/schema-editor/model/EventPropertyPrimitive";
 import {Datatypes} from "./model/datatypes";
+import {EventPropertyPrimitive, EventPropertyUnion} from "../../core-model/gen/streampipes-model";
 
 export class EpRequirements {
 
     private static ep(): EventPropertyPrimitive {
-        let ep = new EventPropertyPrimitive(undefined, undefined);
+        let ep = new EventPropertyPrimitive();
+        ep["@class"] = "org.apache.streampipes.model.schema.EventPropertyPrimitive";
         return ep;
     }
 
-    static anyProperty(): EventProperty {
+    static anyProperty(): EventPropertyUnion {
         return EpRequirements.ep();
     }
 
-    static imageReq(): EventProperty {
+    static imageReq(): EventPropertyUnion {
         return EpRequirements.domainPropertyReq("https://image.com");
     }
 
-    static timestampReq(): EventProperty {
+    static timestampReq(): EventPropertyUnion {
         return EpRequirements.domainPropertyReq("http://schema.org/DateTime");
     }
 
-    static numberReq(): EventProperty {
+    static numberReq(): EventPropertyUnion {
         return EpRequirements.datatypeReq(Datatypes.Number);
     }
 
-    static stringReq(): EventProperty {
+    static stringReq(): EventPropertyUnion {
         return EpRequirements.datatypeReq(Datatypes.String);
     }
 
-    static integerReq(): EventProperty {
+    static integerReq(): EventPropertyUnion {
         return EpRequirements.datatypeReq(Datatypes.Integer);
     }
 
     static domainPropertyReq(domainProperty: string): EventPropertyPrimitive {
         let eventProperty = EpRequirements.ep();
-        eventProperty.setDomainProperty(domainProperty);
+        eventProperty.domainProperties = [domainProperty];
         return eventProperty;
 
     }
 
     static datatypeReq(datatype: Datatypes): EventPropertyPrimitive {
         let eventProperty = EpRequirements.ep();
-        eventProperty.setRuntimeType(datatype.toUri());
+        eventProperty.runtimeType = datatype.toUri();
         return eventProperty;
 }
 

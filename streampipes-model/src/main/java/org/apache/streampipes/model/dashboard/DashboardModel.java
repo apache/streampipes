@@ -18,21 +18,26 @@
 
 package org.apache.streampipes.model.dashboard;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
-import org.apache.streampipes.vocabulary.StreamPipes;
 import io.fogsy.empire.annotations.RdfsClass;
-
-import java.util.List;
+import org.apache.streampipes.model.shared.annotation.TsModel;
+import org.apache.streampipes.vocabulary.StreamPipes;
 
 import javax.persistence.Entity;
 import javax.persistence.MappedSuperclass;
+import java.util.List;
 
 @RdfsClass(StreamPipes.DASHBOARD_MODEL)
 @MappedSuperclass
 @Entity
+@TsModel
 public class DashboardModel {
 
+  @JsonProperty("_id")
   private @SerializedName("_id") String couchDbId;
+
+  @JsonProperty("_rev")
   private @SerializedName("_rev") String couchDbRev;
 
   private String id;

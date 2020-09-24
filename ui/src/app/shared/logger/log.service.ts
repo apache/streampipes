@@ -21,9 +21,11 @@ declare var console: any;
 
 // Import the application components and services.
 import {ILogger} from "./default-log.service";
+import { Injectable } from "@angular/core";
 
 
 // I log values to the ambient console object.
+@Injectable()
 export class ConsoleLogService implements ILogger {
 
     public assert( ...args: any[] ) : void {

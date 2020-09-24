@@ -18,6 +18,7 @@
 import { AfterViewInit, Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import Konva from 'konva';
 import { ICoordinates } from '../../model/coordinates';
+import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
 
 @Component({
   selector: 'sp-image-container',
@@ -30,6 +31,12 @@ export class ImageContainerComponent implements OnInit, AfterViewInit {
   set imageSrc(src) {
     this.loadImage(src);
   }
+
+  @Input()
+  public canvasHeight = 500;
+
+  @Input()
+  public canvasWidth = 800;
 
   @Output()
   childRedraw: EventEmitter<[Konva.Layer, ICoordinates]> = new EventEmitter<[Konva.Layer, ICoordinates]>();
@@ -72,7 +79,7 @@ export class ImageContainerComponent implements OnInit, AfterViewInit {
 
   public isDrawingVar: boolean;
 
-  constructor() { }
+  constructor(private restService: DatalakeRestService) { }
 
   ngOnInit(): void {
     this.scale = 1;
@@ -94,11 +101,19 @@ export class ImageContainerComponent implements OnInit, AfterViewInit {
     // TODO fit to parent
     this.mainCanvasStage = new Konva.Stage({
       container: 'canvas-container',
-      width: 800,
-      height: 500
+      width: this.canvasWidth,
+      height: this.canvasHeight
     });
     this.registerEventHandler();
+    window.addEventListener('resize', this.fitStageIntoParentContainer);
 
+  }
+
+  fitStageIntoParentContainer() {
+    this.mainCanvasStage.width(500);
+    this.mainCanvasStage.height(500 * this.scale);
+    this.mainCanvasStage.scale({ x: this.scale, y: this.scale });
+    this.mainCanvasStage.draw();
   }
 
   loadImage(src) {
@@ -112,7 +127,7 @@ export class ImageContainerComponent implements OnInit, AfterViewInit {
       this.initLayers();
       this.redrawAll();
     };
-    this.image.src = src;
+    this.image.src = this.restService.getImageUrl(src);
   }
 
   getShift() {

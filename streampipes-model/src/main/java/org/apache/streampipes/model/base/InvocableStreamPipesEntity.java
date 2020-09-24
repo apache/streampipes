@@ -28,12 +28,11 @@ import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
-import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import java.util.List;
 
 public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity {
 
@@ -57,6 +56,9 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
   @RdfProperty(StreamPipes.STATUS_INFO_SETTINGS)
   private ElementStatusInfoSettings statusInfoSettings;
 
+  @OneToOne(fetch = FetchType.EAGER,
+          cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  @RdfProperty(StreamPipes.SUPPORTED_GROUNDING)
   private EventGrounding supportedGrounding;
 
   @RdfProperty(StreamPipes.CORRESPONDING_PIPELINE)
@@ -64,6 +66,11 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
 
   @RdfProperty(StreamPipes.CORRESPONDING_USER)
   private String correspondingUser;
+
+  @OneToMany(fetch = FetchType.EAGER,
+          cascade = {CascadeType.ALL})
+  @RdfProperty(StreamPipes.REQUIRES_STREAM)
+  private List<SpDataStream> streamRequirements;
 
   @RdfProperty(StreamPipes.ELEMENT_ENDPOINT_HOSTNAME)
   private String elementEndpointHostname;
@@ -86,9 +93,10 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
   @RdfProperty(StreamPipes.ELEMENT_ENDPOINT_SERVICE_NAME)
   private String elementEndpointServiceName;
 
-  private List<SpDataStream> streamRequirements;
-
+  //@RdfProperty(StreamPipes.PE_CONFIGURED)
   private boolean configured;
+
+  private boolean uncompleted;
 
   public InvocableStreamPipesEntity() {
     super();
@@ -100,6 +108,7 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
     this.correspondingPipeline = other.getCorrespondingPipeline();
     this.inputStreams = new Cloner().streams(other.getInputStreams());
     this.configured = other.isConfigured();
+    this.uncompleted = other.isUncompleted();
     this.elementEndpointHostname = other.getElementEndpointHostname();
     this.elementEndpointPort = other.getElementEndpointPort();
     this.deploymentTargetNodeHostname = other.getDeploymentTargetNodeHostname();
@@ -120,23 +129,24 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
     }
   }
 
-  public InvocableStreamPipesEntity(ConsumableStreamPipesEntity entityDescription) {
-    super();
-    this.setName(entityDescription.getName());
-    this.setDescription(entityDescription.getDescription());
-    this.setIconUrl(entityDescription.getIconUrl());
-    this.setInputStreams(entityDescription.getSpDataStreams());
-    this.setSupportedGrounding(entityDescription.getSupportedGrounding());
-    this.setStaticProperties(entityDescription.getStaticProperties());
-    this.setBelongsTo(entityDescription.getElementId());
-    this.setStreamRequirements(entityDescription.getSpDataStreams());
-    this.setAppId(entityDescription.getAppId());
-    this.setIncludesAssets(entityDescription.isIncludesAssets());
-
-    this.setElementEndpointHostname(entityDescription.getElementEndpointHostname());
-    this.setElementEndpointPort(entityDescription.getElementEndpointPort());
-    this.setElementEndpointServiceName(entityDescription.getElementEndpointServiceName());
-  }
+//  TODO: delete if not needed after merge
+//  public InvocableStreamPipesEntity(ConsumableStreamPipesEntity entityDescription) {
+//    super();
+//    this.setName(entityDescription.getName());
+//    this.setDescription(entityDescription.getDescription());
+//    this.setIconUrl(entityDescription.getIconUrl());
+//    this.setInputStreams(entityDescription.getSpDataStreams());
+//    this.setSupportedGrounding(entityDescription.getSupportedGrounding());
+//    this.setStaticProperties(entityDescription.getStaticProperties());
+//    this.setBelongsTo(entityDescription.getElementId());
+//    this.setStreamRequirements(entityDescription.getSpDataStreams());
+//    this.setAppId(entityDescription.getAppId());
+//    this.setIncludesAssets(entityDescription.isIncludesAssets());
+//
+//    this.setElementEndpointHostname(entityDescription.getElementEndpointHostname());
+//    this.setElementEndpointPort(entityDescription.getElementEndpointPort());
+//    this.setElementEndpointServiceName(entityDescription.getElementEndpointServiceName());
+//  }
 
   public InvocableStreamPipesEntity(String uri, String name, String description, String iconUrl) {
     super(uri, name, description, iconUrl);
@@ -265,6 +275,14 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
 
   public void setCorrespondingUser(String correspondingUser) {
     this.correspondingUser = correspondingUser;
+  }
+
+  public boolean isUncompleted() {
+    return uncompleted;
+  }
+
+  public void setUncompleted(boolean uncompleted) {
+    this.uncompleted = uncompleted;
   }
 
   //public Logger getLogger(Class clazz, PeConfig peConfig) {

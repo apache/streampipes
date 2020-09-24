@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.manager.verification.messages;
 
-import org.apache.streampipes.model.client.messages.NotificationType;
+import org.apache.streampipes.model.message.NotificationType;
 
 public class VerificationWarning extends VerificationResult {
 

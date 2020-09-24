@@ -16,16 +16,23 @@
  *
  */
 
-import {PipelineElementsController} from "./pipeline-elements.controller";
+import {Component, Input} from "@angular/core";
+import {PipelineElementUnion} from "../../../editor/model/editor.model";
+import {Pipeline} from "../../../core-model/gen/streampipes-model";
 
-declare const require: any;
+@Component({
+  selector: 'pipeline-elements',
+  templateUrl: './pipeline-elements.component.html',
+})
+export class PipelineElementsComponent {
 
-export let PipelineElementsComponent = {
-    template: require('./pipeline-elements.tmpl.html'),
-    bindings: {
-        pipeline: "<",
-        selectedElement: "<"
-    },
-    controller: PipelineElementsController,
-    controllerAs: 'ctrl'
-};
+  @Input()
+  pipeline: Pipeline;
+
+  @Input()
+  selectedElement: PipelineElementUnion
+
+  constructor() {
+
+  }
+}

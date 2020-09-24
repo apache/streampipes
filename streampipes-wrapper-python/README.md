@@ -15,15 +15,37 @@
   ~ limitations under the License.
   ~
   -->
-# [WIP] Apache StreamPipes Wrapper for Python
 
+[![Github Actions](https://img.shields.io/github/workflow/status/apache/incubator-streampipes/build-and-deploy-docker-dev)](https://github.com/apache/incubator-streampipes/actions/)
+[![Docker pulls](https://img.shields.io/docker/pulls/apachestreampipes/backend.svg)](https://hub.docker.com/r/apachestreampipes/backend/)
+[![Maven central](https://img.shields.io/maven-central/v/org.apache.streampipes/streampipes-backend.svg)](https://img.shields.io/maven-central/v/org.apache.streampipes/streampipes-backend.svg)
+[![License](https://img.shields.io/github/license/apache/incubator-streampipes.svg)](http://www.apache.org/licenses/LICENSE-2.0)
+[![Last commit](https://img.shields.io/github/last-commit/apache/incubator-streampipes.svg)]()
+[![Twitter](https://img.shields.io/twitter/follow/StreamPipes.svg?label=Follow&style=social)](https://twitter.com/StreamPipes)
+
+## Apache StreamPipes Wrapper for Python [WIP]
 **NOTE**: 
 
-> The python wrapper is currently under development. Thus, it only works in combination when having Java processor for describing, registration and talking to the backend.
+> The StreamPipes wrapper for python is currently under development. Thus, the processor model description still needs to be implemented externally in Java.
 
-### A minimal example
-#### Define a processor
-```
+## Apache StreamPipes
+Apache StreamPipes (incubating) enables flexible modeling of stream processing pipelines by providing a graphical 
+modeling editor on top of existing stream processing frameworks.
+
+It leverages non-technical users to quickly define and execute processing pipelines based on an easily extensible 
+toolbox of data sources, data processors and data sinks. StreamPipes has an exchangeable runtime execution layer and executes pipelines using one of the provided wrappers, e.g., for Apache Flink or Apache Kafka Streams.
+
+Pipeline elements in StreamPipes can be installed at runtime - the built-in SDK allows to easily implement new 
+pipeline elements according to your needs. Pipeline elements are standalone microservices that can run anywhere - centrally on your server, in a large-scale cluster or close at the edge.
+
+
+## A Speudocode Example
+**NOTE**:
+Only works in combination with Java!
+````
+from streampipes.core import StandaloneModelSubmitter
+from streampipes.manager import Declarer
+from streampipes.model.pipeline_element_config import Config
 from streampipes.core import EventProcessor
 
 
@@ -38,24 +60,51 @@ class HelloWorldProcessor(EventProcessor):
 
     def on_detach(self):
         pass
-```
-This processor received an event `dict` and adds a new `greeting` field including the message `hello world` to it.
-#### Add to processor dict
-````
-from streampipes.core import StandaloneSubmitter
-from streampipes.manager import Declarer
 
 
 def main():
+    # Configurations to be stored in key-value store (consul)
+    config = Config(app_id='pe/org.apache.streampipes.processor.python')
+
+    config.register(type='host',
+                    env_key='SP_HOST',
+                    default='processor-python',
+                    description='processor hostname')
+
+    config.register(type='port',
+                    env_key='SP_PORT',
+                    default=8090,
+                    description='processor port')
+
+    config.register(type='service',
+                    env_key='SP_SERVICE_NAME',
+                    default='Python Processor',
+                    description='processor service name')
+
     processors = {
         'org.apache.streampipes.processors.python.helloworld': HelloWorldProcessor,
     }
 
+    # Declarer
+    # add the dict of processors to the Declarer
+    # This is an abstract class that holds the specified processors
     Declarer.add(processors=processors)
-    StandaloneSubmitter.init()
+
+    # StandaloneModelSubmitter
+    # Initializes the REST api
+    StandaloneModelSubmitter.init(config=config)
 
 
 if __name__ == '__main__':
     main()
 ````
-Add the newly defined `HelloWorldProcessor` to the processors dictionary including a unique id `org.apache.streampipes.processors.python.helloworld`.
+
+### DISCLAIMER (WIP)
+Apache StreamPipes is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the Apache
+Incubator. Incubation is required of all newly accepted projects until a further review indicates that the
+infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+
+Some of the incubating project’s releases may not be fully compliant with ASF policy. For example, releases may have incomplete or un-reviewed licensing conditions. What follows is a list of known issues the project is currently aware of (note that this list, by definition, is likely to be incomplete):
+(currently no issues are known)
+
+If you are planning to incorporate this work into your product/project, please be aware that you will need to conduct a thorough licensing review to determine the overall implications of including this work. For the current status of this project through the Apache Incubator visit: https://incubator.apache.org/projects/streampipes.html

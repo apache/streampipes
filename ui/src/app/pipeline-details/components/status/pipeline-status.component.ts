@@ -16,15 +16,36 @@
  *
  */
 
-import {PipelineStatusController} from "./pipeline-status.controller";
+import {Component, Input, OnInit} from "@angular/core";
+import {PipelineService} from "../../../platform-services/apis/pipeline.service";
+import {Pipeline, PipelineStatusMessage} from "../../../core-model/gen/streampipes-model";
 
-declare const require: any;
+@Component({
+    selector: 'pipeline-status',
+    templateUrl: './pipeline-status.component.html',
+})
+export class PipelineStatusComponent implements OnInit {
 
-export let PipelineStatusComponent = {
-    template: require('./pipeline-status.tmpl.html'),
-    bindings: {
-        pipeline: "<",
-    },
-    controller: PipelineStatusController,
-    controllerAs: 'ctrl'
-};
+    pipelineStatus: PipelineStatusMessage[];
+
+    @Input()
+    pipeline: Pipeline;
+
+    constructor(private pipelineService: PipelineService) {
+        this.pipelineStatus = [];
+    }
+
+    ngOnInit() {
+        this.getPipelineStatus();
+    }
+
+    getPipelineStatus() {
+        this.pipelineService.getPipelineStatusById(this.pipeline._id)
+            .subscribe(msg => {
+                this.pipelineStatus = msg.sort((a, b) => {
+                    return a.timestamp - b.timestamp;
+                });
+            });
+    }
+
+}

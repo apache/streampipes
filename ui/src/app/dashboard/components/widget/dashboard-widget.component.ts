@@ -19,11 +19,14 @@
 import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import {DashboardItem} from "../../models/dashboard.model";
 import {DashboardService} from "../../services/dashboard.service";
-import {DashboardWidget} from "../../../core-model/dashboard/DashboardWidget";
 import {GridsterItem, GridsterItemComponent} from "angular-gridster2";
 import {AddVisualizationDialogComponent} from "../../dialogs/add-widget/add-visualization-dialog.component";
-import {MatDialog} from "@angular/material/dialog";
-import {VisualizablePipeline} from "../../../core-model/dashboard/VisualizablePipeline";
+import {
+    DashboardWidgetModel,
+    VisualizablePipeline
+} from "../../../core-model/gen/streampipes-model";
+import {PanelType} from "../../../core-ui/dialog/base-dialog/base-dialog.model";
+import {DialogService} from "../../../core-ui/dialog/base-dialog/base-dialog.service";
 
 @Component({
     selector: 'dashboard-widget',
@@ -38,22 +41,23 @@ export class DashboardWidgetComponent implements OnInit {
     @Input() gridsterItemComponent: GridsterItemComponent;
 
     @Output() deleteCallback: EventEmitter<DashboardItem> = new EventEmitter<DashboardItem>();
-    @Output() updateCallback: EventEmitter<DashboardWidget> = new EventEmitter<DashboardWidget>();
+    @Output() updateCallback: EventEmitter<DashboardWidgetModel> = new EventEmitter<DashboardWidgetModel>();
 
     widgetLoaded: boolean = false;
-    configuredWidget: DashboardWidget;
+    configuredWidget: DashboardWidgetModel;
     widgetDataConfig: VisualizablePipeline;
 
     pipelineNotRunning: boolean = false;
 
     constructor(private dashboardService: DashboardService,
-                private dialog: MatDialog) {
+                private dialogService: DialogService) {
     }
 
     ngOnInit(): void {
         this.dashboardService.getWidget(this.widget.id).subscribe(response => {
             this.configuredWidget = response;
-            this.dashboardService.getVisualizablePipelineByTopic(this.configuredWidget.visualizablePipelineTopic).subscribe(pipeline => {
+            this.dashboardService.getVisualizablePipelineByPipelineIdAndVisualizationName(this.configuredWidget.pipelineId,
+                this.configuredWidget.visualizationName).subscribe(pipeline => {
                 this.widgetDataConfig = pipeline;
                 this.pipelineNotRunning = false;
                 this.widgetLoaded = true;
@@ -69,13 +73,14 @@ export class DashboardWidgetComponent implements OnInit {
     }
 
     editWidget(): void {
-        const dialogRef = this.dialog.open(AddVisualizationDialogComponent, {
-            width: '70%',
-            height: '500px',
-            panelClass: 'custom-dialog-container',
+        const dialogRef = this.dialogService.open(AddVisualizationDialogComponent,{
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: "Edit widget",
+            width: "50vw",
             data: {
                 "widget": this.configuredWidget,
-                "pipeline": this.widgetDataConfig
+                "pipeline": this.widgetDataConfig,
+                "editMode": true
             }
         });
 

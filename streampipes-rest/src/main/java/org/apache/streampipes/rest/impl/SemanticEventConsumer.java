@@ -19,29 +19,22 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
-import org.apache.streampipes.model.client.messages.Notification;
-import org.apache.streampipes.model.client.messages.NotificationType;
-import org.apache.streampipes.model.client.messages.Notifications;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
+import org.apache.streampipes.model.message.NotificationType;
+import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.api.IPipelineElement;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
+import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.apache.streampipes.rest.shared.util.SpMediaType;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.rdf4j.filter.Filter;
 
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.ws.rs.DELETE;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Path("/v2/users/{username}/actions")
 public class SemanticEventConsumer extends AbstractRestInterface implements IPipelineElement {
@@ -73,8 +66,8 @@ public class SemanticEventConsumer extends AbstractRestInterface implements IPip
   @GET
   @Path("/own")
   @RequiresAuthentication
-  @Produces(MediaType.APPLICATION_JSON)
-  @GsonWithIds
+  @Produces({MediaType.APPLICATION_JSON, SpMediaType.JSONLD})
+  @JacksonSerialized
   @Override
   public Response getOwn(@PathParam("username") String username) {
     List<DataSinkDescription> secs = Filter.byUri(getPipelineElementRdfStorage().getAllDataSinks(),
@@ -112,13 +105,9 @@ public class SemanticEventConsumer extends AbstractRestInterface implements IPip
   @GsonWithIds
   @Override
   public Response removeOwn(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
-    try {
-      IPipelineElementDescriptionStorage requestor = getPipelineElementRdfStorage();
-      getUserService().deleteOwnAction(username, elementUri);
-      requestor.deleteDataSink(requestor.getDataSinkById(elementUri));
-    } catch (URISyntaxException e) {
-      return constructErrorMessage(new Notification(NotificationType.STORAGE_ERROR.title(), NotificationType.STORAGE_ERROR.description(), e.getMessage()));
-    }
+    IPipelineElementDescriptionStorage requestor = getPipelineElementRdfStorage();
+    getUserService().deleteOwnAction(username, elementUri);
+    requestor.deleteDataSink(requestor.getDataSinkById(elementUri));
     return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
   }
 
@@ -127,11 +116,7 @@ public class SemanticEventConsumer extends AbstractRestInterface implements IPip
   @Produces(MediaType.TEXT_PLAIN)
   @Override
   public String getAsJsonLd(@PathParam("elementUri") String elementUri) {
-    try {
-      return toJsonLd(getPipelineElementRdfStorage().getDataSinkById(elementUri));
-    } catch (URISyntaxException e) {
-      return toJson(constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage())));
-    }
+    return toJsonLd(getPipelineElementRdfStorage().getDataSinkById(elementUri));
   }
 
   @Path("/{elementUri}")
@@ -140,12 +125,6 @@ public class SemanticEventConsumer extends AbstractRestInterface implements IPip
   @GsonWithIds
   @Override
   public Response getElement(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
-    try {
-      return ok(new DataSinkInvocation(new DataSinkInvocation(getPipelineElementRdfStorage().getDataSinkById(elementUri))));
-    } catch (URISyntaxException e) {
-      return statusMessage(Notifications.error(NotificationType.UNKNOWN_ERROR, e.getMessage()));
-    }
+    return ok(new DataSinkInvocation(new DataSinkInvocation(getPipelineElementRdfStorage().getDataSinkById(elementUri))));
   }
-
-
 }

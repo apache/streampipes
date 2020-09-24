@@ -18,15 +18,31 @@
 
 package org.apache.streampipes.sdk;
 
+import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.model.staticproperty.*;
+import org.apache.streampipes.sdk.helpers.Filetypes;
 import org.apache.streampipes.sdk.helpers.Label;
+import org.apache.streampipes.sdk.helpers.RequirementsSelector;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class StaticProperties {
+
+  public static MappingPropertyUnary mappingPropertyUnary(Label label, RequirementsSelector requirementsSelector, PropertyScope propertyScope) {
+    MappingPropertyUnary mp = new MappingPropertyUnary(label.getInternalId(), label
+            .getInternalId(),
+            label.getLabel(),
+            label.getDescription());
+
+    mp.setRequirementSelector(requirementsSelector.toSelector(label.getInternalId()));
+    mp.setPropertyScope(propertyScope.name());
+
+    return mp;
+  }
 
   public static FreeTextStaticProperty stringFreeTextProperty(Label label) {
     return freeTextProperty(label, Datatypes.String);
@@ -51,6 +67,20 @@ public class StaticProperties {
     FileStaticProperty fp = new FileStaticProperty(label.getInternalId(), label.getLabel(), label
             .getDescription());
 
+    return fp;
+  }
+
+  public static FileStaticProperty fileProperty(Label label, Filetypes... requiredFiletypes) {
+    FileStaticProperty fp = fileProperty(label);
+    List<String> collectedFiletypes = new ArrayList<>();
+    Arrays.stream(requiredFiletypes).forEach(rf -> collectedFiletypes.addAll(rf.getFileExtensions()));
+    fp.setRequiredFiletypes(collectedFiletypes);
+    return fp;
+  }
+
+  public static FileStaticProperty fileProperty(Label label, String... requiredFiletypes) {
+    FileStaticProperty fp = fileProperty(label);
+    fp.setRequiredFiletypes(Arrays.asList(requiredFiletypes.clone()));
     return fp;
   }
 
@@ -100,6 +130,13 @@ public class StaticProperties {
             label.getDescription(), staticProperties);
   }
 
+  public static StaticPropertyGroup group(Label label, Boolean showLabels, StaticProperty... sp) {
+    StaticPropertyGroup group = group(label, sp);
+    group.setShowLabel(showLabels);
+
+    return group;
+  }
+
   public static OneOfStaticProperty singleValueSelection(Label label, List<Option> options) {
     OneOfStaticProperty osp = new OneOfStaticProperty(label.getInternalId(), label.getLabel(),
             label.getDescription());
@@ -118,7 +155,7 @@ public class StaticProperties {
       setHorizontalRendering(staticProperty);
     }
 
-    if (sp.length > 0) {
+    if (sp.length > 1) {
       StaticPropertyGroup group = StaticProperties.group(label);
       group.setHorizontalRendering(true);
       group.setStaticProperties(Arrays.asList(sp));

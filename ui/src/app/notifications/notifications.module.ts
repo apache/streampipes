@@ -26,45 +26,37 @@ import {NotificationsComponent} from "./notifications.component";
 import {NotificationItemComponent} from "./components/notification-item.component";
 import {NotificationsService} from "./service/notifications.service";
 import {InjectableRxStompConfig, RxStompService, rxStompServiceFactory} from "@stomp/ng2-stompjs";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 @NgModule({
-	imports: [
-		CommonModule,
-		MatTabsModule,
-		FlexLayoutModule,
-		CommonModule,
-		FlexLayoutModule,
-		CustomMaterialModule,
-		FormsModule
-	],
-	declarations: [
-		NotificationsComponent,
-		NotificationItemComponent
-	],
-	providers: [
-		NotificationsService,
-		{
-			provide: 'RestApi',
-			useFactory: ($injector: any) => $injector.get('RestApi'),
-			deps: ['$injector'],
-		},
-		{
-			provide: RxStompService,
-			useFactory: rxStompServiceFactory,
-			deps: [InjectableRxStompConfig]
-		}
-	],
-	exports: [
-		NotificationsComponent
-	],
-	entryComponents: [
-		NotificationsComponent,
-	]
+  imports: [
+    CommonModule,
+    MatProgressSpinnerModule,
+    MatTabsModule,
+    FlexLayoutModule,
+    CommonModule,
+    FlexLayoutModule,
+    CustomMaterialModule,
+    FormsModule
+  ],
+  declarations: [
+    NotificationsComponent,
+    NotificationItemComponent
+  ],
+  providers: [
+    NotificationsService
+  ],
+  exports: [
+    NotificationsComponent
+  ],
+  entryComponents: [
+    NotificationsComponent,
+  ]
 })
 export class NotificationModule {
 
-	constructor() {
-	}
+  constructor() {
+  }
 
 }
 

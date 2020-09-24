@@ -47,11 +47,6 @@ import { AppOverviewComponent } from './app-overview.component';
         AppOverviewComponent,
     ],
     providers: [
-        {
-            provide: 'RestApi',
-            useFactory: ($injector: any) => $injector.get('RestApi'),
-            deps: ['$injector'],
-        }
     ],
     entryComponents: [
         AppOverviewComponent

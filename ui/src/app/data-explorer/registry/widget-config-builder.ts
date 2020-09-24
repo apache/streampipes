@@ -16,11 +16,12 @@
  *
  */
 
-import { ColorPickerStaticProperty } from '../../connect/model/ColorPickerStaticProperty';
-import { FreeTextStaticProperty } from '../../connect/model/FreeTextStaticProperty';
-import { DashboardWidgetSettings } from '../../core-model/dashboard/DashboardWidgetSettings';
-import { CollectedSchemaRequirements } from '../sdk/collected-schema-requirements';
-import { Datatypes } from '../sdk/model/datatypes';
+import {CollectedSchemaRequirements} from '../sdk/collected-schema-requirements';
+import {Datatypes} from '../sdk/model/datatypes';
+import {
+    ColorPickerStaticProperty, DashboardWidgetSettings,
+    FreeTextStaticProperty
+} from "../../core-model/gen/streampipes-model";
 
 export class WidgetConfigBuilder {
 
@@ -71,6 +72,7 @@ export class WidgetConfigBuilder {
 
     requiredColorParameter(id: string, label: string, description: string, defaultColor?: string): WidgetConfigBuilder {
         const csp = new ColorPickerStaticProperty();
+        csp["@class"] = "org.apache.streampipes.model.staticproperty.ColorPickerStaticProperty";
         csp.internalName = id;
         csp.label = label;
         csp.description = description;
@@ -107,6 +109,7 @@ export class WidgetConfigBuilder {
         fst.label = label;
         fst.description = description;
         fst.requiredDatatype = datatype;
+        fst["@class"] = "org.apache.streampipes.model.staticproperty.FreeTextStaticProperty";
 
         return fst;
     }

@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.streampipes.model.client.pipeline.PipelineStatusMessage;
+import org.apache.streampipes.model.message.PipelineStatusMessage;
 
 public class PipelineStatusManager {
 

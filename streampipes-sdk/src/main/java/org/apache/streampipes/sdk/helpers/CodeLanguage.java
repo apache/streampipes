@@ -22,7 +22,9 @@ public enum CodeLanguage {
   Javascript("function process(event) {\n" +
           "    // do processing here.\n" +
           "    // return processed event.\n" +
-          "    return {id: event.id, tempInCelsius: (event.tempInKelvin - 273.15)};\n" +
+          "   // Type 'event' and press Ctrl+Space to see available fields.\n" +
+          "   // Example: \n" +
+          "    return {timestamp: event.timestamp, tempInCelsius: (event.tempInKelvin - 273.15)};\n" +
           "}");
 
   private String defaultSkeleton;

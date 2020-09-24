@@ -21,7 +21,7 @@
     <parent>
         <artifactId>streampipes-parent</artifactId>
         <groupId>org.apache.streampipes</groupId>
-        <version>0.67.0-SNAPSHOT</version>
+        <version>0.68.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -32,17 +32,17 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-connect-container</artifactId>
-            <version>0.67.0-SNAPSHOT</version>
+            <version>0.68.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-storage-couchdb</artifactId>
-            <version>0.67.0-SNAPSHOT</version>
+            <version>0.68.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-user-management</artifactId>
-            <version>0.67.0-SNAPSHOT</version>
+            <version>0.68.0-SNAPSHOT</version>
         </dependency>
 
         <!-- External dependencies -->
@@ -85,10 +85,19 @@
                             <goal>repackage</goal>
                         </goals>
                         <configuration>
-                            <mainClass>org.apache.streampipes.connect.container.master.init.AdapterMasterContainer</mainClass>
+                            <mainClass>org.apache.streampipes.connect.container.master.init.AdapterMasterContainer
+                            </mainClass>
                         </configuration>
                     </execution>
                 </executions>
+                <configuration>
+                    <environmentVariables>
+                        <SP_BACKEND_HOST>localhost</SP_BACKEND_HOST>
+                        <SP_KAFKA_HOST>localhost</SP_KAFKA_HOST>
+                        <SP_CONNECT_CONTAINER_HOST>localhost</SP_CONNECT_CONTAINER_HOST>
+                        <SP_COUCHDB_HOST>localhost</SP_COUCHDB_HOST>
+                    </environmentVariables>
+                </configuration>
             </plugin>
         </plugins>
         <finalName>streampipes-connect-container-master</finalName>

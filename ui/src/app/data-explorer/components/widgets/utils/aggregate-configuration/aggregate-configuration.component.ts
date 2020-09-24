@@ -16,8 +16,7 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { EventProperty } from '../../../../../connect/schema-editor/model/EventProperty';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
 @Component({
   selector: 'sp-aggregate-configuration',

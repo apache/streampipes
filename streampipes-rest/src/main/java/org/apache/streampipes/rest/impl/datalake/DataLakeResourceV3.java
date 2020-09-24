@@ -18,26 +18,20 @@
 
 package org.apache.streampipes.rest.impl.datalake;
 
-import org.apache.streampipes.model.client.messages.Notification;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.rest.impl.AbstractRestInterface;
 import org.apache.streampipes.rest.impl.datalake.model.DataResult;
 import org.apache.streampipes.rest.impl.datalake.model.GroupedDataResult;
 import org.apache.streampipes.rest.impl.datalake.model.PageResult;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
-import org.apache.streampipes.rest.shared.annotation.JsonLdSerialized;
-import org.apache.streampipes.rest.shared.util.SpMediaType;
+import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 
+import javax.ws.rs.*;
+import javax.ws.rs.core.*;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
-
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.StreamingOutput;
-import javax.ws.rs.core.UriInfo;
 
 @Path("/v3/users/{username}/datalake")
 public class DataLakeResourceV3 extends AbstractRestInterface {
@@ -78,13 +72,13 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
   }
 
   @GET
-  @JsonLdSerialized
-  @Produces(SpMediaType.JSONLD)
+  @JacksonSerialized
+  @Produces(MediaType.APPLICATION_JSON)
   @Path("/info")
   public Response getAllInfos() {
     List<DataLakeMeasure> result = this.dataLakeManagement.getInfos();
 
-    return ok(asContainer(result));
+    return ok(result);
   }
 
   @Deprecated
@@ -192,6 +186,16 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
     } catch (IllegalArgumentException | ParseException e) {
       return constructErrorMessage(new Notification(e.getMessage(), ""));
     }
+  }
+
+  @DELETE
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("/data/delete/all")
+  public Response removeAllData() {
+
+    boolean result = dataLakeManagement.removeAllDataFromDataLake();
+
+    return Response.ok(result).build();
   }
 
   @GET

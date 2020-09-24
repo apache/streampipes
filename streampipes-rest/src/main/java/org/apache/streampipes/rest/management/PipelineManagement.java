@@ -19,10 +19,10 @@
 package org.apache.streampipes.rest.management;
 
 import org.apache.streampipes.manager.operations.Operations;
-import org.apache.streampipes.model.client.messages.Notification;
-import org.apache.streampipes.model.client.messages.NotificationType;
-import org.apache.streampipes.model.client.pipeline.Pipeline;
-import org.apache.streampipes.model.client.pipeline.PipelineOperationStatus;
+import org.apache.streampipes.model.message.Notification;
+import org.apache.streampipes.model.message.NotificationType;
+import org.apache.streampipes.model.pipeline.Pipeline;
+import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.rest.impl.AbstractRestInterface;
 
 import javax.ws.rs.core.Response;

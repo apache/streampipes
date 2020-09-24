@@ -21,7 +21,7 @@ import com.google.gson.JsonSyntaxException;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
-import org.apache.streampipes.model.client.pipeline.PipelineElementStatus;
+import org.apache.streampipes.model.pipeline.PipelineElementStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

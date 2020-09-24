@@ -20,7 +20,7 @@ package org.apache.streampipes.manager.storage;
 
 import org.lightcouch.CouchDbClient;
 import org.apache.streampipes.commons.exceptions.ElementNotFoundException;
-import org.apache.streampipes.model.client.pipeline.Pipeline;
+import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.client.user.User;
 import org.apache.streampipes.storage.api.INoSqlStorage;
 import org.apache.streampipes.storage.api.IUserStorage;
@@ -37,19 +37,6 @@ public class UserService {
 
   public UserService(IUserStorage userStorage) {
     this.userStorage = userStorage;
-  }
-
-  public List<Pipeline> getPublicPipelines(String username) {
-    List<Pipeline> pipelines = new ArrayList<>();
-    userStorage()
-            .getAllUsers()
-            .stream()
-            .map(u -> u.getPipelines()
-                    .stream()
-                    .filter(p -> p.isPublicElement())
-                    .collect(Collectors.toList()))
-            .forEach(pipelines::addAll);
-    return pipelines;
   }
 
   public List<Pipeline> getOwnPipelines(String email) {
@@ -111,21 +98,6 @@ public class UserService {
     User user = userStorage.getUser(username);
     user.addOwnSepa(elementId, publicElement);
     userStorage.updateUser(user);
-  }
-
-  /**
-   * Remove pipeline reference from user.
-   *
-   * @param username
-   * @param pipelineId
-   */
-
-  public void deleteOwnPipeline(String username, String pipelineId) {
-    if (checkUser(username)) {
-      User user = userStorage.getUser(username);
-      user.deletePipeline(pipelineId);
-      userStorage.updateUser(user);
-    }
   }
 
   public void deleteOwnAction(String username, String actionId) {

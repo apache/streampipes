@@ -21,7 +21,16 @@
 #
 
 
-version: "2.4"
+version: "3.8"
+
+# global logging
+x-logging:
+  &default-logging
+  options:
+    max-size: '12m'
+    max-file: '5'
+  driver: json-file
+
 services:
 
   #### apache/incubator-streampipes
@@ -31,9 +40,11 @@ services:
       dockerfile: Dockerfile
       args:
         BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine-slim
+    image: incubator-streampipes_backend:release-validation
     depends_on:
       - consul
       - couchdb
+    logging: *default-logging
     networks:
       spnet:
 
@@ -43,6 +54,7 @@ services:
       dockerfile: Dockerfile
       args:
         BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine-slim
+    image: incubator-streampipes_connect-master:release-validation
     depends_on:
       - consul
       - couchdb
@@ -50,15 +62,17 @@ services:
       - EXECUTION_MODE=MASTER
       - SP_CONNECT_CONTAINER_HOST=connect-master
       - SP_CONNECT_CONTAINER_WORKER=connect-worker
+    logging: *default-logging
     networks:
       spnet:
 
-  nginx:
+  ui:
     build:
       context: ./ui
       dockerfile: Dockerfile
       args:
         BASE_IMAGE: nginx
+    image: incubator-streampipes_ui:release-validation
     ports:
       - "80:80"
     depends_on:
@@ -67,12 +81,14 @@ services:
       - consul
       - connect-master
       - backend
+    logging: *default-logging
     networks:
       spnet:
 
   #### Mandatory external services
   activemq:
     image: fogsyio/activemq:5.15.9
+    logging: *default-logging
     networks:
       spnet:
 
@@ -93,12 +109,14 @@ services:
       - -client=0.0.0.0
       - -enable-script-checks=true
       - -ui
+    logging: *default-logging
     networks:
       spnet:
         ipv4_address: 172.31.0.9
 
   couchdb:
     image: fogsyio/couchdb:2.3.1
+    logging: *default-logging
     networks:
       spnet:
 
@@ -117,11 +135,13 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    logging: *default-logging
     networks:
       spnet:
 
   zookeeper:
     image: fogsyio/zookeeper:3.4.13
+    logging: *default-logging
     networks:
       spnet:
 
@@ -131,14 +151,14 @@ services:
       - INFLUXDB_DATA_ENGINE=tsm1
       - INFLUXDB_REPORTING_DISABLED=false
       - INFLUXDB_ADMIN_ENABLED=true
+    logging: *default-logging
     networks:
       spnet:
 
 networks:
   spnet:
+    name: spnet
     driver: bridge
-    name: streampipes_network
     ipam:
       config:
         - subnet: 172.31.0.0/16
-          gateway: 172.31.0.1

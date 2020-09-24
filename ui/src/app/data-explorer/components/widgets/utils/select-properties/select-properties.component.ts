@@ -17,7 +17,7 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { EventProperty } from '../../../../../connect/schema-editor/model/EventProperty';
+import {EventPropertyUnion} from "../../../../../core-model/gen/streampipes-model";
 
 @Component({
   selector: 'sp-select-properties',
@@ -27,13 +27,13 @@ import { EventProperty } from '../../../../../connect/schema-editor/model/EventP
 export class SelectPropertiesComponent implements OnInit {
 
   @Output()
-  changeSelectedProperties: EventEmitter<EventProperty[]> = new EventEmitter();
+  changeSelectedProperties: EventEmitter<EventPropertyUnion[]> = new EventEmitter();
 
   @Input()
-  availableProperties: EventProperty[];
+  availableProperties: EventPropertyUnion[];
 
   @Input()
-  selectedProperties: EventProperty[];
+  selectedProperties: EventPropertyUnion[];
 
   @Input()
   label: string;
@@ -46,7 +46,7 @@ export class SelectPropertiesComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  triggerSelectedProperties(properties: EventProperty[]) {
+  triggerSelectedProperties(properties: EventPropertyUnion[]) {
     this.changeSelectedProperties.emit(properties);
   }
 

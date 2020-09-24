@@ -1,0 +1,74 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div fxLayout="column" class="page-container">
+    <div fxLayout="row" class="border" style="padding:0px;background-color:#f6f6f6;">
+        <div fxFlex="100" style="line-height:24px;border-bottom:1px solid #ccc">
+            <div fxFlex="100" fxLayout="row">
+                <button mat-button mat-flat-button color="primary" (click)="showPipelineCategoriesDialog()">Manage Categories</button>
+                <div fxFlex fxLayoutAlign="start center" [attr.id]="'peType'">
+                    <mat-tab-group [selectedIndex]="selectedCategoryIndex" (selectedIndexChange)="setSelectedTab($event)">
+                        <mat-tab label="All pipelines"></mat-tab>
+                        <mat-tab *ngFor="let category of pipelineCategories" label="{{category.categoryName}}"></mat-tab>
+                    </mat-tab-group>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100">
+        <div fxLayout="row">
+            <button class="mr-10" mat-button mat-raised-button color="primary" (click)="startAllPipelines(true)"
+                       [disabled]="checkCurrentSelectionStatus(false)">Start all pipelines
+            </button>
+            <button mat-button mat-raised-button color="primary" (click)="startAllPipelines(false)"
+                       [disabled]="checkCurrentSelectionStatus(true)">Stop all pipelines
+            </button>
+        </div>
+        <div class="assemblyOptions sp-blue-bg mt-20" style="padding:5px;">
+            <div fxLayout="row" fxLayoutAlign="start center">
+                <h4>My pipelines</h4>
+                <span fxFlex></span>
+                <button mat-button mat-icon-button matTooltip="Export pipelines" matTooltipPosition="above"
+                        (click)="exportPipelines()">
+                    <i class="material-icons">
+                        cloud_download
+                    </i>
+                </button>
+                <button mat-button mat-icon-button matTooltip="Import pipelines" matTooltipPosition="above"
+                        (click)="openImportPipelinesDialog()">
+                    <i class="material-icons">
+                        cloud_upload
+                    </i>
+                </button>
+            </div>
+        </div>
+        <div class="sp-blue-border">
+            <pipeline-overview [activeCategoryId]="activeCategoryId" [pipelines]="pipelines" [pipelineToStart]="pipelineToStart"
+                              (refreshPipelinesEmitter)="refreshPipelines()" *ngIf="pipelinesReady"></pipeline-overview>
+        </div>
+        <div style="margin-top:20px;margin-bottom:20px;"></div>
+        <div class="assemblyOptions sp-blue-bg">
+            <h4>System-generated pipelines</h4>
+        </div>
+        <div class="sp-blue-border">
+            <pipeline-overview [activeCategoryId]="activeCategoryId" [pipelines]="systemPipelines" [pipelineToStart]="systemPipelineToStart"
+                              (refreshPipelinesEmitter)="refreshPipelines()" *ngIf="pipelinesReady"></pipeline-overview>
+        </div>
+    </div>
+</div>
+

@@ -16,16 +16,53 @@
  *
  */
 
-import {PipelineActionsController} from "./pipeline-actions.controller";
+import {Component, EventEmitter, Inject, Input, OnInit, Output} from "@angular/core";
+import {PipelineOperationsService} from "../../../pipelines/services/pipeline-operations.service";
+import {Pipeline} from "../../../core-model/gen/streampipes-model";
+import {Router} from "@angular/router";
 
-declare const require: any;
+@Component({
+    selector: 'pipeline-actions',
+    templateUrl: './pipeline-actions.component.html',
+})
+export class PipelineActionsComponent implements OnInit {
 
-export let PipelineActionsComponent = {
-    template: require('./pipeline-actions.tmpl.html'),
-    bindings: {
-        pipeline: "=",
-        loadPipeline: "&"
-    },
-    controller: PipelineActionsController,
-    controllerAs: 'ctrl'
-};
+    starting: boolean = false;
+    stopping: boolean = false;
+
+    @Input()
+    pipeline: Pipeline;
+
+    @Output()
+    reloadPipelineEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+    constructor(public pipelineOperationsService: PipelineOperationsService,
+                private Router: Router) {
+    }
+
+    ngOnInit() {
+        this.toggleRunningOperation = this.toggleRunningOperation.bind(this);
+        this.switchToPipelineView = this.switchToPipelineView.bind(this);
+    }
+
+    toggleRunningOperation(currentOperation) {
+        if (currentOperation === 'starting') {
+            this.starting = !(this.starting);
+        } else {
+            this.stopping = !(this.stopping);
+        }
+    }
+
+    switchToPipelineView() {
+        this.Router.navigate(["pipelines"]);
+    }
+
+    startPipeline() {
+        this.pipelineOperationsService.startPipeline(this.pipeline._id, this.toggleRunningOperation, this.reloadPipelineEmitter)
+    }
+
+    stopPipeline() {
+        this.pipelineOperationsService.stopPipeline(this.pipeline._id, this.toggleRunningOperation, this.reloadPipelineEmitter)
+    }
+
+}

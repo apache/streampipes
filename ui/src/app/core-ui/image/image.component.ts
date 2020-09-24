@@ -16,7 +16,8 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+import {DataResult} from "../../core-model/datalake/DataResult";
 
 @Component({
   selector: 'sp-image',
@@ -25,6 +26,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ImageComponent implements OnInit {
 
+  @Input()
+  availableImageData: DataResult;
 
   constructor() {
 

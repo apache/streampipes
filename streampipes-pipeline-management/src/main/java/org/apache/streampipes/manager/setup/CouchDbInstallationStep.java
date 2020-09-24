@@ -19,8 +19,8 @@
 package org.apache.streampipes.manager.setup;
 
 import org.apache.streampipes.model.client.endpoint.RdfEndpoint;
-import org.apache.streampipes.model.client.messages.Message;
-import org.apache.streampipes.model.client.messages.Notifications;
+import org.apache.streampipes.model.message.Message;
+import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.storage.couchdb.impl.RdfEndpointStorageImpl;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 import org.lightcouch.DesignDocument;

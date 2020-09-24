@@ -25,7 +25,7 @@ import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
 import org.apache.streampipes.commons.Utils;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
-import org.apache.streampipes.model.client.pipeline.PipelineElementStatus;
+import org.apache.streampipes.model.pipeline.PipelineElementStatus;
 import org.apache.streampipes.serializers.jsonld.JsonLdTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

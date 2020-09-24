@@ -18,8 +18,7 @@
 
 package org.apache.streampipes.container.api;
 
-import org.eclipse.rdf4j.repository.RepositoryException;
-import org.eclipse.rdf4j.rio.RDFParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.container.declarer.Declarer;
 import org.apache.streampipes.container.declarer.InvocableDeclarer;
@@ -34,18 +33,15 @@ import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.sdk.extractor.AbstractParameterExtractor;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.serializers.json.GsonSerializer;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.rio.RDFParseException;
 
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 
 public abstract class InvocableElement<I extends InvocableStreamPipesEntity, D extends Declarer,
         P extends AbstractParameterExtractor<I>> extends Element<D> {
@@ -112,19 +108,17 @@ public abstract class InvocableElement<I extends InvocableStreamPipesEntity, D e
     @POST
     @Path("{elementId}/output")
     public String fetchOutputStrategy(@PathParam("elementId") String elementId, String payload) {
-
-        I runtimeOptionsRequest = GsonSerializer.getGsonWithIds().fromJson(payload, clazz);
-        ResolvesContainerProvidedOutputStrategy<I, P> resolvesOutput =
-                (ResolvesContainerProvidedOutputStrategy<I, P>)
-                getDeclarerById
-                (elementId);
-
         try {
-            return GsonSerializer.getGsonWithIds().toJson(resolvesOutput.resolveOutputStrategy
+            I runtimeOptionsRequest = JacksonSerializer.getObjectMapper().readValue(payload, clazz);
+            ResolvesContainerProvidedOutputStrategy<I, P> resolvesOutput =
+                    (ResolvesContainerProvidedOutputStrategy<I, P>)
+                            getDeclarerById
+                                    (elementId);
+            return JacksonSerializer.getObjectMapper().writeValueAsString(resolvesOutput.resolveOutputStrategy
                     (runtimeOptionsRequest, getExtractor(runtimeOptionsRequest)));
-        } catch (SpRuntimeException e) {
+        } catch (SpRuntimeException | JsonProcessingException e) {
             e.printStackTrace();
-            return Util.toResponseString(runtimeOptionsRequest.getElementId(), false);
+            return Util.toResponseString(elementId, false);
         }
     }
 

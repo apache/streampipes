@@ -18,21 +18,23 @@
 
 package org.apache.streampipes.model.grounding;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 import io.fogsy.empire.annotations.RdfProperty;
 import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 @RdfsClass(StreamPipes.TRANSPORT_PROTOCOL)
 @Entity
 @MappedSuperclass
+@JsonSubTypes({
+				@JsonSubTypes.Type(JmsTransportProtocol.class),
+				@JsonSubTypes.Type(KafkaTransportProtocol.class),
+				@JsonSubTypes.Type(MqttTransportProtocol.class),
+})
 public abstract class TransportProtocol extends UnnamedStreamPipesEntity {
 	
 	private static final long serialVersionUID = 7625791395504335184L;
@@ -78,19 +80,5 @@ public abstract class TransportProtocol extends UnnamedStreamPipesEntity {
 	public void setTopicDefinition(TopicDefinition topicDefinition) {
 		this.topicDefinition = topicDefinition;
 	}
-
-//	// TODO only kept for backwards compatibility, remove later
-//	@Deprecated
-//	public String getTopicName() {
-//		return topicDefinition.getActualTopicName();
-//	}
-//
-//	@Deprecated
-//	public void setTopicName(String topicName) {
-//		if (this.topicDefinition == null) {
-//			this.topicDefinition = new SimpleTopicDefinition();
-//		}
-//		this.topicDefinition.setActualTopicName(topicName);
-//	}
 
 }

@@ -16,31 +16,32 @@
  *
  */
 
-import {NgModule} from '@angular/core';
-import {MatButtonModule} from '@angular/material/button';
-import {MatCheckboxModule} from '@angular/material/checkbox';
-import {MatGridListModule} from '@angular/material/grid-list';
-import {MatIconModule} from '@angular/material/icon';
-import {MatInputModule} from '@angular/material/input';
-import {MatTooltipModule} from '@angular/material/tooltip';
-import {FlexLayoutModule} from '@angular/flex-layout';
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
+import { NgModule } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
-import {ConfigurationComponent} from './configuration.component';
-import {ConfigurationService} from './shared/configuration.service';
-import {ConsulServiceComponent} from './consul-service/consul-service.component';
-import {ConsulConfigsComponent} from './consul-configs/consul-configs.component';
-import {ConsulConfigsTextComponent} from './consul-configs-text/consul-configs-text.component';
-import {ConsulConfigsPasswordComponent} from './consul-configs-password/consul-configs-password.component';
-import {ConsulConfigsBooleanComponent} from './consul-configs-boolean/consul-configs-boolean.component';
-import {ConsulConfigsNumberComponent} from './consul-configs-number/consul-configs-number.component';
-import {CustomMaterialModule} from "../CustomMaterial/custom-material.module";
-import {PipelineElementConfigurationComponent} from "./pipeline-element-configuration/pipeline-element-configuration.component";
-import {MessagingConfigurationComponent} from "./messaging-configuration/messaging-configuration.component";
-import {DragDropModule} from "@angular/cdk/drag-drop";
-import {EdgeConfigurationComponent} from "./edge-configuration/edge-configuration.component";
-import {MatChipsModule} from "@angular/material/chips";
+import { ConfigurationComponent } from './configuration.component';
+import { ConfigurationService } from './shared/configuration.service';
+import { ConsulServiceComponent } from './consul-service/consul-service.component';
+import { ConsulConfigsComponent } from './consul-configs/consul-configs.component';
+import { ConsulConfigsTextComponent } from './consul-configs-text/consul-configs-text.component';
+import { ConsulConfigsPasswordComponent } from './consul-configs-password/consul-configs-password.component';
+import { ConsulConfigsBooleanComponent } from './consul-configs-boolean/consul-configs-boolean.component';
+import { ConsulConfigsNumberComponent } from './consul-configs-number/consul-configs-number.component';
+import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
+import { PipelineElementConfigurationComponent } from './pipeline-element-configuration/pipeline-element-configuration.component';
+import { MessagingConfigurationComponent } from './messaging-configuration/messaging-configuration.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { DatalakeConfigurationComponent } from './datalake-configuration/datalake-configuration.component';
+import { DatalakeRestService } from '../core-services/datalake/datalake-rest.service';
+import { EdgeConfigurationComponent } from "./edge-configuration/edge-configuration.component";
 
 @NgModule({
     imports: [
@@ -66,9 +67,14 @@ import {MatChipsModule} from "@angular/material/chips";
         ConsulConfigsNumberComponent,
         PipelineElementConfigurationComponent,
         MessagingConfigurationComponent,
-        EdgeConfigurationComponent
+        EdgeConfigurationComponent,
+        MessagingConfigurationComponent,
+        DatalakeConfigurationComponent
     ],
-    providers: [ConfigurationService],
+    providers: [
+      ConfigurationService,
+      DatalakeRestService
+    ],
     entryComponents: [ConfigurationComponent],
 })
 export class ConfigurationModule {

@@ -16,18 +16,15 @@
  *
  */
 
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { from, Observable } from 'rxjs';
-import 'rxjs-compat/add/observable/of';
-import { map } from 'rxjs/operators';
-import { DataExplorerWidgetModel } from '../../core-model/datalake/DataExplorerWidgetModel';
-import { DataLakeMeasure } from '../../core-model/datalake/DataLakeMeasure';
-import { DatalakeRestService } from '../../core-services/datalake/datalake-rest.service';
-import { SharedDatalakeRestService } from '../../core-services/shared/shared-dashboard.service';
-import { TsonLdSerializerService } from '../../platform-services/tsonld-serializer.service';
-import { AuthStatusService } from '../../services/auth-status.service';
-import { IDataViewDashboard } from '../models/dataview-dashboard.model';
+import {HttpClient} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
+import {DatalakeRestService} from '../../core-services/datalake/datalake-rest.service';
+import {SharedDatalakeRestService} from '../../core-services/shared/shared-dashboard.service';
+import {AuthStatusService} from '../../services/auth-status.service';
+import {IDataViewDashboard} from '../models/dataview-dashboard.model';
+import {DataExplorerWidgetModel, DataLakeMeasure} from "../../core-model/gen/streampipes-model";
 
 
 @Injectable()
@@ -37,15 +34,15 @@ export class DataViewDataExplorerService {
 
   constructor(private http: HttpClient,
               private authStatusService: AuthStatusService,
-              private tsonLdSerializerService: TsonLdSerializerService,
               private dataLakeRestService: DatalakeRestService,
               private sharedDatalakeRestService: SharedDatalakeRestService) {
   }
 
   getVisualizableData(): Observable<DataLakeMeasure[]> {
-    return this.dataLakeRestService.getAllInfos().map(data => {
-      return this.tsonLdSerializerService.fromJsonLdContainer(data, 'sp:DataLakeMeasure');
-    });
+
+    return this.dataLakeRestService.getAllInfos().pipe(map(data => {
+      return (data as any[]).map(d => DataLakeMeasure.fromData(d as DataLakeMeasure));
+    }));
   }
 
   getDataViews(): Observable<IDataViewDashboard[]> {
@@ -77,31 +74,15 @@ export class DataViewDataExplorerService {
   }
 
   getWidget(widgetId: string): Observable<DataExplorerWidgetModel> {
-    const promise = new Promise<DataExplorerWidgetModel>((resolve, reject) => {
-      this.http.get(this.getDashboardWidgetUrl() + '/' + widgetId).subscribe(response => {
-        this.tsonLdSerializerService.jsonLdToFlattenJsonLd(response).subscribe(res => {
-          const dashboardWidget: DataExplorerWidgetModel =
-            this.tsonLdSerializerService.fromJsonLd(res, 'sp:DataExplorerWidgetModel');
-          resolve(dashboardWidget);
-        });
-      });
-    });
-    return from(promise);
+    return this.http.get(this.getDashboardWidgetUrl() + '/' + widgetId).pipe(map(response => {
+      return DataExplorerWidgetModel.fromData(response as DataExplorerWidgetModel);
+    }));
   }
 
   saveWidget(widget: DataExplorerWidgetModel): Observable<DataExplorerWidgetModel> {
-    const promise = new Promise<DataExplorerWidgetModel>((resolve, reject) => {
-      this.tsonLdSerializerService.toJsonLd(widget).subscribe(serialized => {
-        this.http.post(this.getDashboardWidgetUrl(), serialized, this.jsonLdHeaders()).pipe(map(response => {
-
-          this.tsonLdSerializerService.jsonLdToFlattenJsonLd(response).subscribe(res => {
-            resolve(this.tsonLdSerializerService.fromJsonLd(res, 'sp:DataExplorerWidgetModel'));
-          });
-
-        })).subscribe();
-      });
-    });
-    return from(promise);
+    return this.http.post(this.getDashboardWidgetUrl(), widget).pipe(map(response => {
+      return DataExplorerWidgetModel.fromData(response as DataExplorerWidgetModel);
+    }));
   }
 
   deleteWidget(widgetId: string): Observable<any> {
@@ -109,21 +90,6 @@ export class DataViewDataExplorerService {
   }
 
   updateWidget(widget: DataExplorerWidgetModel): Observable<any> {
-    const promise = new Promise<DataExplorerWidgetModel>((resolve, reject) => {
-      this.tsonLdSerializerService.toJsonLd(widget).subscribe(serialized => {
-        this.http.put(this.getDashboardWidgetUrl() + '/' + widget._id, serialized, this.jsonLdHeaders()).subscribe(result => {
-          resolve();
-        });
-      });
-    });
-    return from(promise);
-  }
-
-  jsonLdHeaders(): any {
-    return {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/ld+json',
-      }),
-    };
+        return this.http.put(this.getDashboardWidgetUrl() + '/' + widget._id, widget);
   }
 }

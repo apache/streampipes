@@ -16,10 +16,9 @@
  *
  */
 
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import {AfterViewInit, Component, OnInit, Renderer2} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PlotlyService } from 'angular-plotly.js';
-import { EventProperty } from '../../../../connect/schema-editor/model/EventProperty';
 import { DataResult } from '../../../../core-model/datalake/DataResult';
 import { GroupedDataResult } from '../../../../core-model/datalake/GroupedDataResult';
 import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
@@ -27,6 +26,8 @@ import { ChangeChartmodeDialog } from '../../../../core-ui/linechart/labeling-to
 import { LabelingDialog } from '../../../../core-ui/linechart/labeling-tool/dialogs/labeling/labeling.dialog';
 import { ColorService } from '../../../../core-ui/linechart/labeling-tool/services/color.service';
 import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
+import {EventPropertyUnion} from "../../../../core-model/gen/streampipes-model";
+import {ResizeService} from "../../../services/resize.service";
 
 @Component({
   selector: 'sp-data-explorer-line-chart-widget',
@@ -37,11 +38,11 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
 
   data: any[] = undefined;
   labels: any[] = undefined;
-  availableColumns: EventProperty[] = [];
-  availableNonNumericColumns: EventProperty[] = [];
-  selectedColumns: EventProperty[] = [];
-  selectedNonNumericColumn: EventProperty = undefined;
-  dimensionProperties: EventProperty[] = [];
+  availableColumns: EventPropertyUnion[] = [];
+  availableNonNumericColumns: EventPropertyUnion[] = [];
+  selectedColumns: EventPropertyUnion[] = [];
+  selectedNonNumericColumn: EventPropertyUnion = undefined;
+  dimensionProperties: EventPropertyUnion[] = [];
 
   yKeys: string[] = [];
   xKey: string;
@@ -62,8 +63,12 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
   showCountValue = false;
 
 
-  constructor(public dialog: MatDialog, public plotlyService: PlotlyService, public colorService: ColorService,
-              public renderer: Renderer2, protected dataLakeRestService: DatalakeRestService) {
+  constructor(public dialog: MatDialog,
+              public plotlyService: PlotlyService,
+              public colorService: ColorService,
+              public renderer: Renderer2,
+              protected dataLakeRestService: DatalakeRestService,
+              private resizeService: ResizeService) {
     super(dataLakeRestService, dialog);
   }
 
@@ -109,8 +114,8 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
   graph = {
     layout: {
       autosize: true,
-      plot_bgcolor: '#fafafa',
-      paper_bgcolor: '#fafafa',
+      plot_bgcolor: '#fff',
+      paper_bgcolor: '#fff',
       xaxis: {
         type: 'date',
       },
@@ -141,7 +146,6 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
 
 
   ngOnInit(): void {
-
     this.availableColumns = this.getNumericProperty(this.dataExplorerWidget.dataLakeMeasure.eventSchema);
     this.dimensionProperties = this.getDimensionProperties(this.dataExplorerWidget.dataLakeMeasure.eventSchema);
     this.availableNonNumericColumns = this.getNonNumericProperties(this.dataExplorerWidget.dataLakeMeasure.eventSchema);
@@ -149,12 +153,21 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
     // Reduce selected columns when more then 6
     this.selectedColumns = this.availableColumns.length > 6 ? this.availableColumns.slice(0, 5) : this.availableColumns;
     if (this.availableNonNumericColumns.length > 0) {
-      this.selectedNonNumericColumn = this.availableNonNumericColumns[0];
+      // this.selectedNonNumericColumn = this.availableNonNumericColumns[0];
     }
     this.xKey = this.getTimestampProperty(this.dataExplorerWidget.dataLakeMeasure.eventSchema).runtimeName;
     this.yKeys = this.getRuntimeNames(this.selectedColumns);
-    this.nonNumericKey = this.selectedNonNumericColumn.runtimeName;
+    //this.nonNumericKey = this.selectedNonNumericColumn.runtimeName;
     this.updateData();
+    this.resizeService.resizeSubject.subscribe(info => {
+      if (info.gridsterItem.id === this.gridsterItem.id) {
+        setTimeout(() => {
+          this.graph.layout.autosize = false;
+          (this.graph.layout as any).width = (info.gridsterItemComponent.width - 10);
+          (this.graph.layout as any).height = (info.gridsterItemComponent.height - 80);
+        }, 100)
+      }
+    });
   }
 
   updateData() {
@@ -362,13 +375,13 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
     return data;
   }
 
-  setSelectedColumn(selectedColumns: EventProperty[]) {
+  setSelectedColumn(selectedColumns: EventPropertyUnion[]) {
     this.selectedColumns = selectedColumns;
     this.yKeys = this.getRuntimeNames(selectedColumns);
     this.updateData();
   }
 
-  setSelectedLabelColumn(selectedLabelColumn: EventProperty) {
+  setSelectedLabelColumn(selectedLabelColumn: EventPropertyUnion) {
     this.selectedNonNumericColumn = selectedLabelColumn;
     this.nonNumericKey = selectedLabelColumn.runtimeName;
     this.updateData();
@@ -553,6 +566,10 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
   private saveLabelsInDatabase(label, start_X, end_X) {
     const startdate = new Date(start_X).getTime() - 1;
     const enddate = new Date(end_X).getTime() + 1;
+    if (this.nonNumericKey === undefined) {
+      this.nonNumericKey = 'sp_internal_label';
+    }
+
     this.dataLakeRestService.saveLabelsInDatabase(this.data['measureName'], this.nonNumericKey, startdate, enddate, label).subscribe(
             res => {
               // console.log('Successfully wrote label ' + currentLabel + ' into database.');
