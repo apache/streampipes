@@ -16,27 +16,10 @@
  *
  */
 
-import {NgModule} from '@angular/core';
-import {PipelineElementService} from "./apis/pipeline-element.service";
-import {PipelineService} from "./apis/pipeline.service";
-import {PlatformServicesCommons} from "./apis/commons.service";
-import {PipelineElementEndpointService} from "./apis/pipeline-element-endpoint.service";
-import {FilesService} from "./apis/files.service";
-import {PipelineMonitoringService} from "./apis/pipeline-monitoring.service";
+.mb-10 {
+  margin-bottom: 10px;
+}
 
-@NgModule({
-  imports: [],
-  declarations: [],
-  providers: [
-    FilesService,
-    PlatformServicesCommons,
-    PipelineElementEndpointService,
-    //PipelineTemplateService,
-    PipelineElementService,
-    PipelineMonitoringService,
-    PipelineService
-  ],
-  entryComponents: []
-})
-export class PlatformServicesModule {
+.mt--10 {
+  margin-top: -10px;
 }

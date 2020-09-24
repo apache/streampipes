@@ -1,0 +1,41 @@
+<div fxFlex="100" fxLayout="column">
+    <div fxLayout="column" class="fixed-height add-options">
+        <div class="add-options-item" fxLayoutAlign="start center" fxLayout="row" style="padding-right:10px;">
+            <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
+                <mat-slide-toggle [(ngModel)]="autoRefresh" color="primary">Auto refresh</mat-slide-toggle>
+            </div>
+        </div>
+    </div>
+    <div fxFlex="100" fxLayout="column" class="page-container-padding-inner">
+        <pipeline-preview [jspcanvas]="'assembly-quickedit'" [pipeline]="pipeline"
+                          (selectedElementEmitter)="selectElement($event)"
+                          style="margin-bottom:15px;"></pipeline-preview>
+
+        <div fxFlex="100" *ngIf="pipelineMonitoringInfoAvailable">
+            <div *ngFor="let pipelineElement of allElements" fxLayout="column" class="mb-10">
+                <div class="assembly-options-preview sp-blue-bg">
+                    <div fxLayout="row" fxLayoutAlign="start center">
+                        <h4>{{pipelineElement.name}}</h4>
+                    </div>
+                </div>
+                <div class="sp-blue-border pipeline-element-statistics-panel">
+                    <div fxFlex="100" fxLayout="row">
+                        <div fxFlex="20" fxLayoutAlign="start start">
+                            <pipeline-elements-row style="width: 100%;"
+                                                   [showDescription]="false"
+                                                   [pipeline]="pipeline"
+                                                   [element]="pipelineElement"></pipeline-elements-row>
+                        </div>
+                        <div fxFlex="80" fxLayoutAlign="start center">
+                            <pipeline-element-statistics
+                                    [pipeline]="pipeline"
+                                    [pipelineElement]="pipelineElement"
+                                    [pipelineElementMonitoringInfo]="pipelineElementMonitoringInfo.get(pipelineElement.elementId)">
+                            </pipeline-element-statistics>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

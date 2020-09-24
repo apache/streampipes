@@ -26,7 +26,7 @@ import java.util.UUID;
 public class ConsumerConfigFactory extends AbstractConfigFactory {
 
   private static final String ENABLE_AUTO_COMMIT_CONFIG_DEFAULT = "true";
-  private static final String AUTO_COMMIT_INTERVAL_MS_CONFIG_DEFAULT = "10000";
+  private static final String AUTO_COMMIT_INTERVAL_MS_CONFIG_DEFAULT = "5000";
   private static final String SESSION_TIMEOUT_MS_CONFIG_DEFAULT = "30000";
   private static final Integer FETCH_MAX_BYTES_CONFIG_DEFAULT = 5000012;
   private static final String KEY_DESERIALIZER_CLASS_CONFIG_DEFAULT = "org.apache.kafka.common" +

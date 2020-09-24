@@ -15,28 +15,11 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.rest.api;
 
-import {NgModule} from '@angular/core';
-import {PipelineElementService} from "./apis/pipeline-element.service";
-import {PipelineService} from "./apis/pipeline.service";
-import {PlatformServicesCommons} from "./apis/commons.service";
-import {PipelineElementEndpointService} from "./apis/pipeline-element-endpoint.service";
-import {FilesService} from "./apis/files.service";
-import {PipelineMonitoringService} from "./apis/pipeline-monitoring.service";
+import javax.ws.rs.core.Response;
 
-@NgModule({
-  imports: [],
-  declarations: [],
-  providers: [
-    FilesService,
-    PlatformServicesCommons,
-    PipelineElementEndpointService,
-    //PipelineTemplateService,
-    PipelineElementService,
-    PipelineMonitoringService,
-    PipelineService
-  ],
-  entryComponents: []
-})
-export class PlatformServicesModule {
+public interface IPipelineMonitoring {
+  
+  Response getPipelineMonitoringInfo(String pipelineId);
 }

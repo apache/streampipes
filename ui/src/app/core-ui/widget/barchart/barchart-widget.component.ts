@@ -16,27 +16,37 @@
  *
  */
 
-import {NgModule} from '@angular/core';
-import {PipelineElementService} from "./apis/pipeline-element.service";
-import {PipelineService} from "./apis/pipeline.service";
-import {PlatformServicesCommons} from "./apis/commons.service";
-import {PipelineElementEndpointService} from "./apis/pipeline-element-endpoint.service";
-import {FilesService} from "./apis/files.service";
-import {PipelineMonitoringService} from "./apis/pipeline-monitoring.service";
+import {Component, Input, OnInit} from '@angular/core';
 
-@NgModule({
-  imports: [],
-  declarations: [],
-  providers: [
-    FilesService,
-    PlatformServicesCommons,
-    PipelineElementEndpointService,
-    //PipelineTemplateService,
-    PipelineElementService,
-    PipelineMonitoringService,
-    PipelineService
-  ],
-  entryComponents: []
+@Component({
+  selector: 'sp-barchart-widget',
+  templateUrl: './barchart-widget.component.html',
+  styleUrls: ['./barchart-widget.component.scss']
 })
-export class PlatformServicesModule {
+export class BarchartWidgetComponent implements OnInit {
+
+  _data = [];
+
+  @Input()
+  backgroundColor = "#cccccc";
+
+  @Input()
+  textColor = "#1b1464";
+
+  colorScheme = {
+    domain: ['#1b1464']
+  };
+
+  ngOnInit(): void {
+    this.colorScheme.domain = [this.textColor];
+  }
+
+  @Input()
+  set data(data) {
+    this._data = data;
+  }
+
+  get data() {
+    return this._data;
+  }
 }

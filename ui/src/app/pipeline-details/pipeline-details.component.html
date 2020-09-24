@@ -22,7 +22,7 @@
             <div fxFlex="100" fxLayout="row">
                 <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="setSelectedIndex($event)">
                     <mat-tab label="Overview"></mat-tab>
-                    <mat-tab label="Statistics"></mat-tab>
+                    <mat-tab label="Monitoring"></mat-tab>
                     <mat-tab label="Errors"></mat-tab>
                     <mat-tab label="Quick Edit" [disabled]="pipelineAvailable && pipeline.running"></mat-tab>
                 </mat-tab-group>
@@ -47,6 +47,9 @@
                 <pipeline-status [pipeline]="pipeline"></pipeline-status>
             </div>
         </div>
+    </div>
+    <div fxFlex fxLayout="column" fxLayoutAlign="start top" *ngIf="pipelineAvailable && selectedIndex == 1">
+        <pipeline-monitoring [pipeline]="pipeline"></pipeline-monitoring>
     </div>
     <div fxFlex fxLayout="row" fxLayoutAlign="start top" *ngIf="pipelineAvailable && selectedIndex == 3">
         <div fxFlex="100" class="md-padding">

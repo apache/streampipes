@@ -16,16 +16,19 @@
  *
  */
 
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
-    selector: 'dashboard-status-filled',
-    templateUrl: './dashboard-status-filled.component.html',
-    styleUrls: ['./dashboard-status-filled.component.css']
+    selector: 'sp-status-widget',
+    templateUrl: './status-widget.component.html',
+    styleUrls: ['./status-widget.component.css']
 })
-export class DashboardStatusFilledComponent {
+export class StatusWidgetComponent implements OnInit {
 
     @Input() color: string = "rgb(156, 156, 156)";
+    @Input() bandColor: string = "rgb(27, 20, 100)";
+    @Input() textColor: string = "rgb(96,96,96)";
+
     _label: string;
     _statusValue: string;
 

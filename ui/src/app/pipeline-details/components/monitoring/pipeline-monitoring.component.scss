@@ -16,27 +16,26 @@
  *
  */
 
-import {NgModule} from '@angular/core';
-import {PipelineElementService} from "./apis/pipeline-element.service";
-import {PipelineService} from "./apis/pipeline.service";
-import {PlatformServicesCommons} from "./apis/commons.service";
-import {PipelineElementEndpointService} from "./apis/pipeline-element-endpoint.service";
-import {FilesService} from "./apis/files.service";
-import {PipelineMonitoringService} from "./apis/pipeline-monitoring.service";
+.add-options {
+  background-color:#f6f6f6;
+  border-bottom: 1px solid #cccccc;
+  padding-top:10px;
+  padding-bottom:10px;
+}
 
-@NgModule({
-  imports: [],
-  declarations: [],
-  providers: [
-    FilesService,
-    PlatformServicesCommons,
-    PipelineElementEndpointService,
-    //PipelineTemplateService,
-    PipelineElementService,
-    PipelineMonitoringService,
-    PipelineService
-  ],
-  entryComponents: []
-})
-export class PlatformServicesModule {
+.fixed-height {
+  width:100%;
+  height: 50px;
+}
+
+.page-container-padding-inner {
+  margin: 10px;
+}
+
+.pipeline-element-statistics-panel {
+  padding: 10px;
+}
+
+.mb-10 {
+  margin-bottom: 10px;
 }

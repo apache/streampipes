@@ -16,27 +16,27 @@
  *
  */
 
-import {NgModule} from '@angular/core';
-import {PipelineElementService} from "./apis/pipeline-element.service";
-import {PipelineService} from "./apis/pipeline.service";
-import {PlatformServicesCommons} from "./apis/commons.service";
-import {PipelineElementEndpointService} from "./apis/pipeline-element-endpoint.service";
-import {FilesService} from "./apis/files.service";
-import {PipelineMonitoringService} from "./apis/pipeline-monitoring.service";
+import {Injectable} from "@angular/core";
+import {HttpClient} from "@angular/common/http";
+import {Observable} from "rxjs";
+import {
+  PipelineMonitoringInfo
+} from "../../core-model/gen/streampipes-model";
+import {PlatformServicesCommons} from "./commons.service";
+import {map} from "rxjs/operators";
 
-@NgModule({
-  imports: [],
-  declarations: [],
-  providers: [
-    FilesService,
-    PlatformServicesCommons,
-    PipelineElementEndpointService,
-    //PipelineTemplateService,
-    PipelineElementService,
-    PipelineMonitoringService,
-    PipelineService
-  ],
-  entryComponents: []
-})
-export class PlatformServicesModule {
+@Injectable()
+export class PipelineMonitoringService {
+
+  constructor(private http: HttpClient,
+              private platformServicesCommons: PlatformServicesCommons) {
+  }
+
+  getPipelineMonitoringInfo(pipelineId: string): Observable<PipelineMonitoringInfo> {
+    return this.http.get(this.platformServicesCommons.authUserBasePath()
+        + "/pipeline-monitoring/"
+        + pipelineId)
+        .pipe(map(response => PipelineMonitoringInfo.fromData(response as any)));
+  }
+
 }

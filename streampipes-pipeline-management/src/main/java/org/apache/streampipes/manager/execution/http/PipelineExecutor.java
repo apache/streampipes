@@ -18,28 +18,26 @@
 
 package org.apache.streampipes.manager.execution.http;
 
-import org.lightcouch.DocumentConflictException;
 import org.apache.streampipes.manager.execution.status.PipelineStatusManager;
 import org.apache.streampipes.manager.execution.status.SepMonitoringManager;
 import org.apache.streampipes.manager.util.TemporaryGraphStorage;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
-import org.apache.streampipes.model.pipeline.Pipeline;
-import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
-import org.apache.streampipes.model.message.PipelineStatusMessage;
-import org.apache.streampipes.model.message.PipelineStatusMessageType;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
+import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
+import org.apache.streampipes.model.message.PipelineStatusMessage;
+import org.apache.streampipes.model.message.PipelineStatusMessageType;
+import org.apache.streampipes.model.pipeline.Pipeline;
+import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.model.staticproperty.SecretStaticProperty;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.encryption.CredentialsManager;
+import org.lightcouch.DocumentConflictException;
 
 import java.security.GeneralSecurityException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class PipelineExecutor {
@@ -59,8 +57,12 @@ public class PipelineExecutor {
 
   public PipelineOperationStatus startPipeline() {
 
+    pipeline.getSepas().forEach(this::updateGroupIds);
+    pipeline.getActions().forEach(this::updateGroupIds);
+
     List<DataProcessorInvocation> sepas = pipeline.getSepas();
     List<DataSinkInvocation> secs = pipeline.getActions();
+
     List<SpDataSet> dataSets = pipeline.getStreams().stream().filter(s -> s instanceof SpDataSet).map(s -> new
             SpDataSet((SpDataSet) s)).collect(Collectors.toList());
 
@@ -74,7 +76,7 @@ public class PipelineExecutor {
 
     List<InvocableStreamPipesEntity> decryptedGraphs = decryptSecrets(graphs);
 
-    graphs.forEach(g -> g.setStreamRequirements(Arrays.asList()));
+    graphs.forEach(g -> g.setStreamRequirements(Collections.emptyList()));
 
     PipelineOperationStatus status = new GraphSubmitter(pipeline.getPipelineId(),
             pipeline.getName(), decryptedGraphs, dataSets)
@@ -95,6 +97,15 @@ public class PipelineExecutor {
       }
     }
     return status;
+  }
+
+  private void updateGroupIds(InvocableStreamPipesEntity entity) {
+    entity.getInputStreams()
+            .stream()
+            .filter(is -> is.getEventGrounding().getTransportProtocol() instanceof KafkaTransportProtocol)
+            .map(is -> is.getEventGrounding().getTransportProtocol())
+            .map(KafkaTransportProtocol.class::cast)
+            .forEach(tp -> tp.setGroupId(UUID.randomUUID().toString()));
   }
 
   private List<InvocableStreamPipesEntity> decryptSecrets(List<InvocableStreamPipesEntity> graphs) {
