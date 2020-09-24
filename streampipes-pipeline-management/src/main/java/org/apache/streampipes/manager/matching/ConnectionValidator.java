@@ -44,7 +44,7 @@ public class ConnectionValidator {
     this.verifier = new ElementVerification();
   }
 
-  public void validateConnection() throws InvalidConnectionException {
+  public List<InvocableStreamPipesEntity> validateConnection() throws InvalidConnectionException {
     boolean verified = true;
     InvocableStreamPipesEntity rightElement = rootPipelineElement;
     List<String> connectedTo = rootPipelineElement.getConnectedTo();
@@ -66,6 +66,8 @@ public class ConnectionValidator {
     if (!verified) {
       throw new InvalidConnectionException(verifier.getErrorLog());
     }
+
+    return invocationGraphs;
   }
 
   private DataProcessorInvocation findInvocationGraph(List<InvocableStreamPipesEntity> graphs, String domId) {

@@ -22,8 +22,8 @@
             [style]="recommendedElement.layoutSettings.skewStyle">
             <a [style]="recommendedElement.layoutSettings.unskewStyle" [ngClass]="recommendedElement.layoutSettings.type" (click)="create(recommendedElement)" *ngIf="recommendedElement.name">
             </a>
-            <div (click)="create(recommendedElement)" [style]="recommendedElement.layoutSettings.unskewStyleLabel | safeCss"
-                 class="{{recommendedElement.layoutSettings.type}}">
+            <div (click)="create(recommendedElement)" [style]="recommendedElement.layoutSettings.unskewStyleLabel"
+                 [ngClass]="recommendedElement.layoutSettings.type">
                 <pipeline-element [iconSize]="'small'" [pipelineElement]="recommendedElement" *ngIf="recommendedElement.name">
                 </pipeline-element>
             </div>
