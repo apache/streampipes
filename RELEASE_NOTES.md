@@ -28,6 +28,101 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Bug Fixes
 
+## [0.67.0]
+
+## Sub-task
+* [STREAMPIPES-133](https://issues.apache.org/jira/browse/STREAMPIPES-133) - Add StaticProperty for entering code
+* [STREAMPIPES-134](https://issues.apache.org/jira/browse/STREAMPIPES-134) - Add UserDefinedOutputStrategy
+* [STREAMPIPES-238](https://issues.apache.org/jira/browse/STREAMPIPES-238) - Harmonize file upload for Connect & pipeline elements
+
+## Bug
+* [STREAMPIPES-8](https://issues.apache.org/jira/browse/STREAMPIPES-8) - Static Property Group not working when only one child is present
+* [STREAMPIPES-99](https://issues.apache.org/jira/browse/STREAMPIPES-99) - Upload Adapter Template
+* [STREAMPIPES-119](https://issues.apache.org/jira/browse/STREAMPIPES-119) - Redirect to pipeline overview when modifying pipeline not working
+* [STREAMPIPES-123](https://issues.apache.org/jira/browse/STREAMPIPES-123) - using specific runtame name leads to exception during extraction
+* [STREAMPIPES-142](https://issues.apache.org/jira/browse/STREAMPIPES-142) - Handle non-primitive and primitive event data returned from Siddhi
+* [STREAMPIPES-143](https://issues.apache.org/jira/browse/STREAMPIPES-143) - Numerical Filter in Siddhi not working
+* [STREAMPIPES-152](https://issues.apache.org/jira/browse/STREAMPIPES-152) - Error when decoding secret properties
+* [STREAMPIPES-153](https://issues.apache.org/jira/browse/STREAMPIPES-153) - DateTime is not supported in MySQL adapter
+* [STREAMPIPES-154](https://issues.apache.org/jira/browse/STREAMPIPES-154) - Dashboard does not show data
+* [STREAMPIPES-155](https://issues.apache.org/jira/browse/STREAMPIPES-155) - SplitArray controller produces wrong output schema
+* [STREAMPIPES-158](https://issues.apache.org/jira/browse/STREAMPIPES-158) - AppId is empty in Connect adapters
+* [STREAMPIPES-165](https://issues.apache.org/jira/browse/STREAMPIPES-165) - S7 adpater does not work
+* [STREAMPIPES-170](https://issues.apache.org/jira/browse/STREAMPIPES-170) - NullPointer in JS Evaluator if no event is returned
+* [STREAMPIPES-172](https://issues.apache.org/jira/browse/STREAMPIPES-172) - Default colors of line chart are not readable
+* [STREAMPIPES-186](https://issues.apache.org/jira/browse/STREAMPIPES-186) - Remove environment variable to Kafka Rest
+* [STREAMPIPES-188](https://issues.apache.org/jira/browse/STREAMPIPES-188) - Cannot import pre-exported pipeline description
+* [STREAMPIPES-189](https://issues.apache.org/jira/browse/STREAMPIPES-189) - System error while guess the schema of the data
+* [STREAMPIPES-195](https://issues.apache.org/jira/browse/STREAMPIPES-195) - "Do not show again" button in StreamPipes tour not working
+* [STREAMPIPES-201](https://issues.apache.org/jira/browse/STREAMPIPES-201) - Initial Installation Setup renders elements besides each other
+* [STREAMPIPES-202](https://issues.apache.org/jira/browse/STREAMPIPES-202) - Docs toggle and slide out in PE configuration is behaving oddly 
+* [STREAMPIPES-205](https://issues.apache.org/jira/browse/STREAMPIPES-205) - Search function in pipeline editor not working properly
+* [STREAMPIPES-207](https://issues.apache.org/jira/browse/STREAMPIPES-207) - Fix image widget in data explorer
+* [STREAMPIPES-210](https://issues.apache.org/jira/browse/STREAMPIPES-210) - Map visualization in Dashboard is not working anymore
+* [STREAMPIPES-214](https://issues.apache.org/jira/browse/STREAMPIPES-214) - CSV Metadata Enricher does not appear in lite version
+* [STREAMPIPES-215](https://issues.apache.org/jira/browse/STREAMPIPES-215) - Data Set adapters are shown Data Stream Tab
+* [STREAMPIPES-218](https://issues.apache.org/jira/browse/STREAMPIPES-218) - Pipeline element configuration dialog closes when clicking on editor canvas
+* [STREAMPIPES-219](https://issues.apache.org/jira/browse/STREAMPIPES-219) - Refresh button in Data Explorer is not working
+* [STREAMPIPES-227](https://issues.apache.org/jira/browse/STREAMPIPES-227) - Missing label in Boolean Counter configuration
+* [STREAMPIPES-230](https://issues.apache.org/jira/browse/STREAMPIPES-230) - Large images are not transmitted
+* [STREAMPIPES-231](https://issues.apache.org/jira/browse/STREAMPIPES-231) - Images are not shown in Data Explorer
+* [STREAMPIPES-233](https://issues.apache.org/jira/browse/STREAMPIPES-233) - Modifying a pipeline breaks existing visualizations
+* [STREAMPIPES-240](https://issues.apache.org/jira/browse/STREAMPIPES-240) - NullPointer Exception in processor image enricher
+* [STREAMPIPES-241](https://issues.apache.org/jira/browse/STREAMPIPES-241) - CustomTransformOutputStrategy of Processor SplitArray not working
+* [STREAMPIPES-242](https://issues.apache.org/jira/browse/STREAMPIPES-242) - Mqtt adapter next button can not be clicked when using authentication
+* [STREAMPIPES-244](https://issues.apache.org/jira/browse/STREAMPIPES-244) - JS Evalutor is not working in docker
+
+## New Feature
+* [STREAMPIPES-114](https://issues.apache.org/jira/browse/STREAMPIPES-114) - New sink to  support writing data to MQTT.
+* [STREAMPIPES-115](https://issues.apache.org/jira/browse/STREAMPIPES-115) - New sink to support writing data to MySQL
+* [STREAMPIPES-132](https://issues.apache.org/jira/browse/STREAMPIPES-132) - Add data processor to evaluate JavaScript
+* [STREAMPIPES-149](https://issues.apache.org/jira/browse/STREAMPIPES-149) - Processor: State Buffer
+* [STREAMPIPES-159](https://issues.apache.org/jira/browse/STREAMPIPES-159) - Processor: Detect Signal Edge
+* [STREAMPIPES-160](https://issues.apache.org/jira/browse/STREAMPIPES-160) - Adapter: Flic Button
+* [STREAMPIPES-166](https://issues.apache.org/jira/browse/STREAMPIPES-166) - Add ColorPicker static property to SDK
+* [STREAMPIPES-208](https://issues.apache.org/jira/browse/STREAMPIPES-208) - Use mapping properties in collections
+* [STREAMPIPES-213](https://issues.apache.org/jira/browse/STREAMPIPES-213) - Enable user to delete data in data lake
+* [STREAMPIPES-217](https://issues.apache.org/jira/browse/STREAMPIPES-217) - File Management View
+
+## Improvement
+* [STREAMPIPES-11](https://issues.apache.org/jira/browse/STREAMPIPES-11) - Cleanup POM files
+* [STREAMPIPES-117](https://issues.apache.org/jira/browse/STREAMPIPES-117) - Share IntelliJ run configuration in version control
+* [STREAMPIPES-118](https://issues.apache.org/jira/browse/STREAMPIPES-118) - Add configuration file to S7 adapter
+* [STREAMPIPES-128](https://issues.apache.org/jira/browse/STREAMPIPES-128) - Upload Excel Option for PLC4x (S7) Adapter
+* [STREAMPIPES-129](https://issues.apache.org/jira/browse/STREAMPIPES-129) - Upload Excel Option for PLC4x (S7) Adapter
+* [STREAMPIPES-130](https://issues.apache.org/jira/browse/STREAMPIPES-130) - Image upload adapter
+* [STREAMPIPES-131](https://issues.apache.org/jira/browse/STREAMPIPES-131) - Increase Accuracy of the Geo Distance Calculation 
+* [STREAMPIPES-136](https://issues.apache.org/jira/browse/STREAMPIPES-136) - Limit container size in cli and installer
+* [STREAMPIPES-141](https://issues.apache.org/jira/browse/STREAMPIPES-141) - Refactor all adapter implementations to use assets
+* [STREAMPIPES-145](https://issues.apache.org/jira/browse/STREAMPIPES-145) - Migrate pipeline editor module from AngularJS to Angular
+* [STREAMPIPES-146](https://issues.apache.org/jira/browse/STREAMPIPES-146) - Support CustomOutputStrategy in SiddhiEventEngine
+* [STREAMPIPES-156](https://issues.apache.org/jira/browse/STREAMPIPES-156) - Processor: State Labeler
+* [STREAMPIPES-167](https://issues.apache.org/jira/browse/STREAMPIPES-167) - IntelliJ Configurations for Extension as Project Files
+* [STREAMPIPES-177](https://issues.apache.org/jira/browse/STREAMPIPES-177) - Migrate pipeline details view from AngularJS to Angular
+* [STREAMPIPES-178](https://issues.apache.org/jira/browse/STREAMPIPES-178) - Migrate pipeline view to Angular
+* [STREAMPIPES-190](https://issues.apache.org/jira/browse/STREAMPIPES-190) - Migrate pipeline element installation from AngularJS to Angular
+* [STREAMPIPES-191](https://issues.apache.org/jira/browse/STREAMPIPES-191) - Remove MyElements view
+* [STREAMPIPES-193](https://issues.apache.org/jira/browse/STREAMPIPES-193) - Remove AngularJS dependencies from core modules
+* [STREAMPIPES-194](https://issues.apache.org/jira/browse/STREAMPIPES-194) - Remove icon description from widgets description in dashboard
+* [STREAMPIPES-196](https://issues.apache.org/jira/browse/STREAMPIPES-196) - Refactor existing installer
+* [STREAMPIPES-198](https://issues.apache.org/jira/browse/STREAMPIPES-198) - Fix progress bar background on startup
+* [STREAMPIPES-199](https://issues.apache.org/jira/browse/STREAMPIPES-199) - Remove advanced settings from setup
+* [STREAMPIPES-203](https://issues.apache.org/jira/browse/STREAMPIPES-203) - Add more options to install pipeline elements page
+* [STREAMPIPES-206](https://issues.apache.org/jira/browse/STREAMPIPES-206) - Remove tson-ld and deprecated UI models
+* [STREAMPIPES-211](https://issues.apache.org/jira/browse/STREAMPIPES-211) - Add Polling interval for PLC4X S7 adaptrer
+* [STREAMPIPES-216](https://issues.apache.org/jira/browse/STREAMPIPES-216) - Move watertank simulator source to StreamPipes Connect
+* [STREAMPIPES-221](https://issues.apache.org/jira/browse/STREAMPIPES-221) - Update maven archetypes for pipeline elements
+* [STREAMPIPES-222](https://issues.apache.org/jira/browse/STREAMPIPES-222) - Upgrade Spring version
+* [STREAMPIPES-225](https://issues.apache.org/jira/browse/STREAMPIPES-225) - Bundle all Flink pipeline elements
+* [STREAMPIPES-232](https://issues.apache.org/jira/browse/STREAMPIPES-232) - Trigger Github Actions to push to Dockerhub on release preparation branches
+* [STREAMPIPES-235](https://issues.apache.org/jira/browse/STREAMPIPES-235) - Add html font format only option as freetext static property
+* [STREAMPIPES-236](https://issues.apache.org/jira/browse/STREAMPIPES-236) - Fix Telegram sink using html font format option in request
+* [STREAMPIPES-239](https://issues.apache.org/jira/browse/STREAMPIPES-239) - Multi-arch docker image for Flink
+
+## Task
+* [STREAMPIPES-140](https://issues.apache.org/jira/browse/STREAMPIPES-140) - Add streampipes-maven-plugin to core
+
+
 ## [0.66.0]
 ## New Features
 * New live dashboard
