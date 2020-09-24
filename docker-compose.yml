@@ -55,6 +55,8 @@ services:
       args:
         BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine-slim
     image: incubator-streampipes_pipeline-elements-all-jvm:release-validation
+    volumes:
+    - files:/spImages
     logging: *default-logging
     networks:
       spnet:
@@ -91,6 +93,9 @@ services:
     logging: *default-logging
     networks:
       spnet:
+
+volumes:
+  files:
 
 networks:
   spnet:
