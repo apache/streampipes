@@ -24,6 +24,12 @@ import org.apache.streampipes.serializers.json.GsonSerializer;
 
 public class Utils {
 
+  public static CouchDbClient getCouchDbLabelClient() {
+    CouchDbClient dbClient = new CouchDbClient(props("label"));
+    dbClient.setGsonBuilder(GsonSerializer.getGsonBuilder());
+    return dbClient;
+  }
+
   public static CouchDbClient getCouchDbConnectWorkerContainerClient() {
     CouchDbClient dbClient = new CouchDbClient(props("connectworkercontainer"));
     dbClient.setGsonBuilder(GsonSerializer.getGsonBuilder());
