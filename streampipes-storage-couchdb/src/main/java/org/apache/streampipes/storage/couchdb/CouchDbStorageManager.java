@@ -25,6 +25,9 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   INSTANCE;
 
   @Override
+  public ILabelStorage getLabelStorageAPI() { return new LabelStorageImpl(); }
+
+  @Override
   public IPipelineStorage getPipelineStorageAPI() {
     return new PipelineStorageImpl();
   }
