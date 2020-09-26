@@ -837,7 +837,6 @@
         <module>archetypes/streampipes-archetype-pe-processors-jvm</module>
         <module>archetypes/streampipes-archetype-pe-sinks-flink</module>
         <module>archetypes/streampipes-archetype-pe-processors-flink</module>
-        <module>streampipes-app-file-export</module>
         <module>streampipes-backend</module>
         <module>streampipes-code-generation</module>
         <module>streampipes-commons</module>
