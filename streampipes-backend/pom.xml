@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.apache.streampipes</groupId>
         <artifactId>streampipes-parent</artifactId>
-        <version>0.67.1-SNAPSHOT</version>
+        <version>0.67.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>streampipes-backend</artifactId>
@@ -33,12 +33,12 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-app-file-export</artifactId>
-            <version>0.67.1-SNAPSHOT</version>
+            <version>0.67.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-container-base</artifactId>
-            <version>0.67.1-SNAPSHOT</version>
+            <version>0.67.0-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>
@@ -49,17 +49,17 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-config</artifactId>
-            <version>0.67.1-SNAPSHOT</version>
+            <version>0.67.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-messaging-kafka</artifactId>
-            <version>0.67.1-SNAPSHOT</version>
+            <version>0.67.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-rest</artifactId>
-            <version>0.67.1-SNAPSHOT</version>
+            <version>0.67.0-SNAPSHOT</version>
         </dependency>
 
         <!-- External dependencies -->
