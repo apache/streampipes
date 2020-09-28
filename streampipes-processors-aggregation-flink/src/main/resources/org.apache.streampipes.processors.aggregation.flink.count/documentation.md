@@ -29,22 +29,32 @@
 Performs an aggregation based on a given field and outputs the number of occurrences.
 Example: Count the number of vehicle positions per vehicleId.
 The Count aggregation requires a time window, used to perform the count aggregation and a field used to aggregate
- values.
+values.
 
 ***
 
 ## Required input
-
+There is no specific input required.
 
 ***
 
 ## Configuration
+### FieldToCount    
+Specifies the field containing the values that should be counted.
 
-Describe the configuration parameters here
+### TimeWindowSize  
+Specifies the size of the time window and consequently the number of values that are aggregated each time. 
 
-### 1st parameter
-
-
-### 2nd parameter
+### Time Window Scale
+Specifies the scale/unit of the time window. There are three different time scales to choose from: seconds, minutes or hours.
 
 ## Output
+The output event is composed of two fields. The field "value" specifies the value to count.
+The second field "count" returns the number of occurrences.
+Example:
+```
+{
+  'value': 'vehicleId', 
+  'count': 12
+}
+```
