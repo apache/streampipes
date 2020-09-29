@@ -17,8 +17,11 @@
  */
 package org.apache.streampipes.model.node;
 
+import org.apache.streampipes.model.shared.annotation.TsModel;
+
 import java.util.List;
 
+@TsModel
 public class NodeInfo {
 
     private String nodeControllerId;

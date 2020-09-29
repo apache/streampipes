@@ -17,6 +17,9 @@
  */
 package org.apache.streampipes.model.node;
 
+import org.apache.streampipes.model.shared.annotation.TsModel;
+
+@TsModel
 public class NodeBrokerInfo {
 
     private String host;

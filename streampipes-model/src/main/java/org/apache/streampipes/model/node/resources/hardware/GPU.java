@@ -16,6 +16,9 @@ package org.apache.streampipes.model.node.resources.hardware;/*
  *
  */
 
+import org.apache.streampipes.model.shared.annotation.TsModel;
+
+@TsModel
 public class GPU {
     public boolean hasGPU;
     public int cudaCores;

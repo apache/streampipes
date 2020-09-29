@@ -43,46 +43,45 @@
                     </mat-form-field>
                 </div>
                 </form>
-                <mat-checkbox (click)="triggerTutorial()" color="primary" [(ngModel)]="startPipelineAfterStorage">
+                <mat-slide-toggle (click)="triggerTutorial()" color="primary" [(ngModel)]="startPipelineAfterStorage">
                     Start pipeline immediately
-                </mat-checkbox>
-                <md-checkbox ng-disabled="false" aria-label="Start Pipeline"
-                             [(ng-model)]="advancedSettings">
-                    Deployment settings
-                </md-checkbox>
-                <div *ng-if="advancedSettings">
-                    <h4>Nodes</h4>
-                    <div ng-repeat="pipelineElement in pipeline.sepas">
-                        <div flex="100" layout="row">
-                            <div flex="50" layout="row" layout-align="start center">
-                                <span>{{pipelineElement.name}}</span>
-                            </div>
-                            <div flex="50" layout="row" layout-align="start center">
-                                <md-select ng-model="pipelineElement.deploymentTargetNodeId" style="margin: 0;">
-                                    <md-option
-                                            ng-value="node.nodeControllerId" ng-repeat="node in deploymentOptions[pipelineElement.appId]">
-                                        <em>{{node.nodeMetadata.nodeAddress}}
-                                        </em>
-                                    </md-option>
-                                </md-select>
+                </mat-slide-toggle>
+                <mat-slide-toggle color="primary" [(ngModel)]="advancedSettings">
+                    Choose deployment options
+                </mat-slide-toggle>
+                <mat-divider style="margin: 2em 0 2em 0;"></mat-divider>
+                <div *ngIf="advancedSettings">
+                    <b>Node selection</b>
+                    <div *ngFor="let processors of pipeline.sepas">
+                        <div fxFlex="100" fxLayout="row">
+                            <div fxFlex="50" fxLayout="row" fxLayoutAlign="center center">
+                                <span>{{processors.name}}</span>
                             </div>
                         </div>
+                        <div fxFlex="50" fxLayout="row" fxLayoutAlign="start center">
+                            <mat-form-field appearance="outline">
+                            <mat-select [(ngModel)]="processors.deploymentTargetNodeId" style="margin: 0;height: 20px;">
+                                <mat-option [value]="node.nodeControllerId" *ngFor="let node of deploymentOptions[processors.appId]">
+                                    <em>{{node.nodeMetadata.nodeAddress}}</em>
+                                </mat-option>
+                            </mat-select>
+                            </mat-form-field>
+                        </div>
                     </div>
-                    <div ng-repeat="pipelineElement in pipeline.actions">
-                        <div flex="100" layout="row">
-                            <div flex="50" layout="row" layout-align="start center">
-                                <span>{{pipelineElement.name}}</span>
+                    <div *ngFor="let sinks of pipeline.actions">
+                        <div fxFlex="100" fxLayout="row">
+                            <div fxFlex="50" fxLayout="row" fxLayoutAlign="center center">
+                                <span>{{sinks.name}}</span>
                             </div>
-                            <div flex="50" layout="row" layout-align="start center">
-                                <md-select ng-model="pipelineElement.deploymentTargetNodeId" style="margin: 0;">
-                                    <md-option
-                                            ng-value = "node.nodeControllerId" ng-repeat="node in
-                                            deploymentOptions[pipelineElement.appId]">
-                                        <em>{{node.nodeMetadata.nodeAddress}}
-                                        </em>
-                                    </md-option>
-                                </md-select>
-                            </div>
+                        </div>
+                        <div fxFlex="50" fxLayout="row" fxLayoutAlign="start center">
+                            <mat-form-field appearance="outline">
+                                <mat-select [(ngModel)]="sinks.deploymentTargetNodeId" style="margin: 0; height: 20px;">
+                                    <mat-option [value]="node.nodeControllerId" *ngFor="let node of deploymentOptions[sinks.appId]">
+                                        <em>{{node.nodeMetadata.nodeAddress}}</em>
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
                         </div>
                     </div>
                 </div>

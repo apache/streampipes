@@ -55,7 +55,7 @@ export class SavePipelineComponent implements OnInit {
   storageError: boolean = false;
   errorMessage: string = '';
 
-  edgeNodes: NodeInfo[]
+  edgeNodes: NodeInfo[];
   advancedSettings: boolean = false;
   deploymentOptions: Array<any> = new Array<any>();
 
@@ -71,6 +71,7 @@ export class SavePipelineComponent implements OnInit {
 
   ngOnInit() {
     this.getPipelineCategories();
+    this.loadAndPrepareEdgeNodes();
     this.submitPipelineForm.addControl("pipelineName", new FormControl(this.pipeline.name,
         [Validators.required,
           Validators.maxLength(40)]))
@@ -137,6 +138,28 @@ export class SavePipelineComponent implements OnInit {
     return nodeInfo;
   }
 
+  modifyPipelineElementsDeployments(pipelineElements) {
+    pipelineElements.forEach(p => {
+      let selectedTargetNodeId = p.deploymentTargetNodeId
+      console.log(selectedTargetNodeId);
+      if(selectedTargetNodeId != "default") {
+        let selectedNode = this.edgeNodes
+            .filter(node => node.nodeControllerId === selectedTargetNodeId)
+
+        p.deploymentTargetNodeHostname = selectedNode
+            .map(node => node.nodeMetadata.nodeAddress)[0]
+
+        p.deploymentTargetNodePort = selectedNode
+            .map(node => node.nodeControllerPort)[0]
+      }
+      else {
+        console.log('null');
+        p.deploymentTargetNodeHostname = null
+        p.deploymentTargetNodePort = null
+      }
+    })
+  }
+
   savePipeline(switchTab) {
     if (this.pipeline.name == "") {
       //this.showToast("error", "Please enter a name for your pipeline");
@@ -146,9 +169,13 @@ export class SavePipelineComponent implements OnInit {
     let storageRequest;
 
     if (this.currentModifiedPipelineId && this.updateMode === 'update') {
+      this.modifyPipelineElementsDeployments(this.pipeline.sepas)
+      this.modifyPipelineElementsDeployments(this.pipeline.actions)
       storageRequest = this.pipelineService.updatePipeline(this.pipeline);
     } else {
       this.pipeline._id = undefined;
+      this.modifyPipelineElementsDeployments(this.pipeline.sepas)
+      this.modifyPipelineElementsDeployments(this.pipeline.actions)
       storageRequest = this.pipelineService.storePipeline(this.pipeline);
     }
 

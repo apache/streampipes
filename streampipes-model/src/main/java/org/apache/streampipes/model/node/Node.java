@@ -16,6 +16,9 @@ package org.apache.streampipes.model.node;/*
  *
  */
 
+import org.apache.streampipes.model.shared.annotation.TsModel;
+
+@TsModel
 public class Node {
 
     public NodeInfo nodeInfo;

@@ -16,7 +16,9 @@ package org.apache.streampipes.model.node.resources.interfaces;/*
  *
  */
 
+import org.apache.streampipes.model.shared.annotation.TsModel;
 
+@TsModel
 public class AccessibleSensorActuatorResource {
     public String name;
     public String type;

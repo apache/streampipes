@@ -19,9 +19,11 @@ package org.apache.streampipes.model.node;/*
 import org.apache.streampipes.model.node.resources.hardware.HardwareResource;
 import org.apache.streampipes.model.node.resources.interfaces.AccessibleSensorActuatorResource;
 import org.apache.streampipes.model.node.resources.software.SoftwareResource;
+import org.apache.streampipes.model.shared.annotation.TsModel;
 
 import java.util.List;
 
+@TsModel
 public class NodeResources {
     public HardwareResource hardwareResource;
     public SoftwareResource softwareResource;

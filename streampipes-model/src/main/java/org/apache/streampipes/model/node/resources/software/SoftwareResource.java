@@ -16,6 +16,9 @@ package org.apache.streampipes.model.node.resources.software;/*
  *
  */
 
+import org.apache.streampipes.model.shared.annotation.TsModel;
+
+@TsModel
 public class SoftwareResource {
     public String os;
     public String kernelVersion;

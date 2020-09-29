@@ -49,10 +49,11 @@ export class ConfigurationService {
 
     getAvailableEdgeNodes(): Observable<Array<NodeInfo>> {
         return this.http.get(this.getServerUrl() + '/api/v2/users/' + this.authStatusService.email + "/nodes")
-            .map(data => {
-            return data as NodeInfo[];
-        });
-
+            .pipe(
+                map(response => {
+                    return response as NodeInfo[];
+                })
+            )
     }
 
     getConsulServices(): Observable<StreampipesPeContainer[]> {
