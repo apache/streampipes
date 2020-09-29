@@ -95,6 +95,17 @@ services:
       - "CONSUL_HTTP_ADDR=0.0.0.0"
     volumes:
       - consul:/consul/data
+    entrypoint:
+      - consul
+      - agent
+      - -server
+      - -bootstrap-expect=1
+      - -data-dir=/consul/data
+      - -node=consul-one
+      - -bind={{ GetInterfaceIP "eth0" }}
+      - -client=0.0.0.0
+      - -enable-script-checks=true
+      - -ui
     logging: *default-logging
     networks:
       spnet:
