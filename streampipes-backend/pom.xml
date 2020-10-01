@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.apache.streampipes</groupId>
         <artifactId>streampipes-parent</artifactId>
-        <version>0.68.0-SNAPSHOT</version>
+        <version>0.67.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>streampipes-backend</artifactId>
@@ -32,8 +32,13 @@
         <!-- StreamPipes dependencies -->
         <dependency>
             <groupId>org.apache.streampipes</groupId>
+            <artifactId>streampipes-app-file-export</artifactId>
+            <version>0.67.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-container-base</artifactId>
-            <version>0.68.0-SNAPSHOT</version>
+            <version>0.67.1-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>
@@ -44,17 +49,17 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-config</artifactId>
-            <version>0.68.0-SNAPSHOT</version>
+            <version>0.67.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-messaging-kafka</artifactId>
-            <version>0.68.0-SNAPSHOT</version>
+            <version>0.67.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-rest</artifactId>
-            <version>0.68.0-SNAPSHOT</version>
+            <version>0.67.1-SNAPSHOT</version>
         </dependency>
 
         <!-- External dependencies -->
@@ -78,22 +83,8 @@
                         <goals>
                             <goal>repackage</goal>
                         </goals>
-                        <configuration>
-                            <mainClass>org.apache.streampipes.backend.StreamPipesBackendApplication
-                            </mainClass>
-                        </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                    <environmentVariables>
-                        <SP_COUCHDB_HOST>localhost</SP_COUCHDB_HOST>
-                        <SP_BACKEND_HOST>localhost</SP_BACKEND_HOST>
-                        <SP_INFLUX_HOST>localhost</SP_INFLUX_HOST>
-                        <SP_INFLUX_PORT>8086</SP_INFLUX_PORT>
-                        <SP_JMS_HOST>localhost</SP_JMS_HOST>
-                        <SP_DEBUG>true</SP_DEBUG>
-                    </environmentVariables>
-                </configuration>
             </plugin>
         </plugins>
         <finalName>streampipes-backend</finalName>
