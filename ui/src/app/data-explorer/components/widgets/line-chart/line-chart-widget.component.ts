@@ -22,7 +22,6 @@ import { PlotlyService } from 'angular-plotly.js';
 import { DataResult } from '../../../../core-model/datalake/DataResult';
 import { GroupedDataResult } from '../../../../core-model/datalake/GroupedDataResult';
 import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
-import { LabelingDialog } from './dialogs/labeling/labeling.dialog';
 import { ColorService } from './services/color.service';
 import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
 import { EventPropertyUnion } from '../../../../core-model/gen/streampipes-model';

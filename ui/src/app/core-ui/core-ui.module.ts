@@ -73,6 +73,7 @@ import { ColorPickerModule } from 'ngx-color-picker';
 import { QuillModule } from 'ngx-quill';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { ConfigureLabelsComponent } from './labels/components/configure-labels/configure-labels.component';
 
 @NgModule({
     imports: [
@@ -97,6 +98,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
         QuillModule.forRoot()
     ],
     declarations: [
+        ConfigureLabelsComponent,
         ConfirmDialogComponent,
         DisplayRecommendedPipe,
         ImageComponent,
@@ -141,6 +143,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     entryComponents: [
     ],
   exports: [
+    ConfigureLabelsComponent,
     ImageComponent,
     ImageLabelingComponent,
     SelectLabelComponent,

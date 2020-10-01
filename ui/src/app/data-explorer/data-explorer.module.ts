@@ -66,8 +66,6 @@ import { ResizeService } from './services/resize.service';
 import { GroupConfigurationComponent } from './components/widgets/utils/group-configuration/group-configuration.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { PointSelectionInfoComponent } from './components/widgets/line-chart/components/point-selection-info/point-selection-info.component';
-import { LabelSelectionComponent } from './components/widgets/line-chart/components/label-selection/label-selection.component';
-import { LabelingDialog } from './components/widgets/line-chart/dialogs/labeling/labeling.dialog';
 import { ColorService } from './components/widgets/line-chart/services/color.service';
 
 const dashboardWidgets = [];
@@ -130,9 +128,7 @@ export const MY_NATIVE_FORMATS = {
     NoDataInDateRangeComponent,
     LoadDataSpinnerComponent,
     DataDownloadDialog,
-    LabelingDialog,
     SelectPropertiesComponent,
-    LabelSelectionComponent ,
     PointSelectionInfoComponent,
     AggregateConfigurationComponent,
     GroupConfigurationComponent
@@ -157,7 +153,6 @@ export const MY_NATIVE_FORMATS = {
     DataExplorerComponent,
     DataExplorerAddVisualizationDialogComponent,
     DataDownloadDialog,
-    LabelingDialog,
     DataExplorerEditDataViewDialogComponent
   ]
 })
