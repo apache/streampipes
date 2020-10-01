@@ -206,7 +206,7 @@ export class ImageLabelingComponent implements OnInit {
     this.isDrawing = bool;
   }
 
-  /* sp-image-labels handler */
+  /* sp-select-label handler */
   handleLabelChange(label: {category, label}) {
     this.selectedLabel = label;
   }

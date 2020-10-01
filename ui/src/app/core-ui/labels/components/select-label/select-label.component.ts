@@ -17,14 +17,14 @@
  */
 
 import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
-import { ColorService } from '../../services/color.service';
+import { ColorService } from '../../../image/services/color.service';
 
 @Component({
-  selector: 'sp-image-labels',
-  templateUrl: './image-labels.component.html',
-  styleUrls: ['./image-labels.component.css']
+  selector: 'sp-select-label',
+  templateUrl: './select-label.component.html',
+  styleUrls: ['./select-label.component.css']
 })
-export class ImageLabelsComponent implements OnInit {
+export class SelectLabelComponent implements OnInit {
 
   @Input()
   set labels(labels) {

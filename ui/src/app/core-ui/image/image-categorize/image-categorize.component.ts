@@ -116,7 +116,7 @@ export class ImageCategorizeComponent implements OnInit, AfterViewInit {
   /* sp-image-view handler */
 
 
-  /* sp-image-labels handler */
+  /* sp-select-label handler */
   handleLabelChange(label: {category, label}) {
     this.selectedLabels.push(label);
   }

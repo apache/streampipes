@@ -70,11 +70,11 @@
         <sp-no-data-in-date-range *ngIf="showNoDataInDateRange" [viewDateRange]="viewDateRange"></sp-no-data-in-date-range>
 
 
-        <sp-image-labels *ngIf="labelingModeOn"
+        <sp-select-label *ngIf="labelingModeOn"
                          [labels]="possibleLabels"
                          [enableShortCuts]="true"
                          (labelChange)="handleLabelChange($event)">
-        </sp-image-labels>
+        </sp-select-label>
 
         <plotly-plot *ngIf="data !== undefined && !showNoDataInDateRange && !showIsLoadingData"
                      class="plotly-container"
