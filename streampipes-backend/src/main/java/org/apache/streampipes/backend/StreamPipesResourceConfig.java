@@ -56,6 +56,7 @@ public class StreamPipesResourceConfig extends ResourceConfig {
     register(Deployment.class);
     register(FileServingResource.class);
     register(InternalPipelineTemplates.class);
+    register(LabelResource.class);
     register(MeasurementUnitResource.class);
     register(Notification.class);
     register(OntologyContext.class);
