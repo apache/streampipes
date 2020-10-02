@@ -44,6 +44,9 @@ services:
     depends_on:
       - consul
       - couchdb
+    volumes:
+      - backend:/root/.streampipes
+      - files:/spImages
     logging: *default-logging
     networks:
       spnet:
@@ -110,6 +113,8 @@ services:
       - -enable-script-checks=true
       - -ui
     logging: *default-logging
+    volumes:
+      - consul:/consul/data
     networks:
       spnet:
         ipv4_address: 172.31.0.9
@@ -117,6 +122,8 @@ services:
   couchdb:
     image: fogsyio/couchdb:2.3.1
     logging: *default-logging
+    volumes:
+      - couchdb:/opt/couchdb/data
     networks:
       spnet:
 
@@ -134,6 +141,7 @@ services:
       KAFKA_ADVERTISED_HOST_NAME: kafka
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
     volumes:
+      - kafka:/kafka
       - /var/run/docker.sock:/var/run/docker.sock
     logging: *default-logging
     networks:
@@ -142,6 +150,8 @@ services:
   zookeeper:
     image: fogsyio/zookeeper:3.4.13
     logging: *default-logging
+    volumes:
+      - zookeeper:/opt/zookeeper-3.4.13
     networks:
       spnet:
 
@@ -151,9 +161,20 @@ services:
       - INFLUXDB_DATA_ENGINE=tsm1
       - INFLUXDB_REPORTING_DISABLED=false
       - INFLUXDB_ADMIN_ENABLED=true
+    volumes:
+      - influxdb:/var/lib/influxdb
     logging: *default-logging
     networks:
       spnet:
+
+volumes:
+  kafka:
+  files:
+  consul:
+  couchdb:
+  zookeeper:
+  influxdb:
+  backend:
 
 networks:
   spnet:
