@@ -3,7 +3,9 @@ package org.apache.streampipes.model.labeling;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
 import io.fogsy.empire.annotations.RdfProperty;
+import org.apache.streampipes.model.shared.annotation.TsModel;
 
+@TsModel
 public class Label {
     private String name;
     private String color;

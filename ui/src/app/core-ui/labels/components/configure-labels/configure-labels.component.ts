@@ -1,6 +1,7 @@
 import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { ColorService } from '../../../image/services/color.service';
 import { LabelService } from '../../services/label.service';
+import { Label } from '../../../../core-model/gen/streampipes-model';
 
 @Component({
   selector: 'sp-configure-labels',
@@ -36,4 +37,12 @@ export class ConfigureLabelsComponent implements OnInit {
     this.labelChange.emit(this._selectedLabel);
   }
 
+  addCategory() {
+  }
+
+  addLabel() {
+    const label = new Label();
+    label.name = 'test';
+
+  }
 }

@@ -2,9 +2,11 @@ package org.apache.streampipes.model.labeling;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
+import org.apache.streampipes.model.shared.annotation.TsModel;
 
 import java.util.List;
 
+@TsModel
 public class Category {
     private String name;
     private String internalName;
