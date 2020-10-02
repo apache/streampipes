@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
+import { Category, Label } from '../../../core-model/gen/streampipes-model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LabelService {
+  private categories = [];
 
   constructor() { }
 
@@ -23,4 +25,42 @@ export class LabelService {
     };
   }
 
+  getCategories(): Category[] {
+
+    const c1 = new Category();
+    c1.name = 'boxes';
+
+    c1.labels = [];
+    c1.labels.push(this.getLabel('blue', '#0000ff'));
+    c1.labels.push(this.getLabel('red', '#ff0000'));
+
+    const c2 = new Category();
+    c2.name = 'furniture';
+
+    c2.labels = [];
+    c2.labels.push(this.getLabel('chair', '#7dff24'));
+    c2.labels.push(this.getLabel('couch', '#ff6ef7'));
+
+    this.categories.push(c1);
+    this.categories.push(c2);
+
+    return this.categories;
+  }
+
+
+  addCategory(c: Category) {
+   this.categories.push(c);
+  }
+
+  updateCategory(c: Category) {
+    this.categories.push(c);
+  }
+
+
+  private getLabel(name, color): Label {
+    const label1 = new Label();
+    label1.name = name;
+    label1.color = color;
+    return label1;
+  }
 }

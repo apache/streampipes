@@ -1,6 +1,6 @@
 <div fxLayout="column" fxLayoutAlign="space-around center">
 
-    <h2>Labels</h2>
+    <h2>Categories</h2>
     <div fxFlex>
         <button mat-button mat-flat-button (click)="addCategory()">
             <mat-icon class="icon">add</mat-icon><span>Add new Category</span>
@@ -10,18 +10,29 @@
         <mat-form-field style="margin-top: -15px; margin-bottom: -10px">
             <mat-select [(value)]="selectedCategory">
                 <mat-option *ngFor="let category of categories" [value]="category">
-                    {{category}}
+                    {{category.name}}
                 </mat-option>
             </mat-select>
         </mat-form-field>
     </div>
     <mat-list>
-        <mat-list-item *ngFor="let label of _labels[selectedCategory]; index as i"
-                       [style.background-color]="_selectedLabel.label == label ? 'lightgrey' : 'white'"
-                       style="height: 30px; padding-top: 5px; padding-buttom: 5px; border-radius: 50px; margin-bottom: 5px"
-                       (click)="selectLabel({category: labelCategory, label: label})">
-            <mat-icon matListIcon [style.color]="colorService.getColor(label)" style="margin-top: -8px;">color_lens</mat-icon>
-            <h4 style="margin-top: -3px;"> {{label}} <label *ngIf="i < 10"> #{{i+1}}</label> </h4>
+        <mat-list-item *ngFor="let label of selectedCategory.labels;"
+                       style="height: 30px; padding-top: 5px; padding-buttom: 5px; border-radius: 50px; margin-bottom: 5px">
+            <input matInput
+                   style="margin-top: -8px; margin-right: 10px; width: 20px;"
+                   autocomplete="off"
+                   [(colorPicker)]="label.color"
+                   (colorPickerChange)="label.color = $event"
+                   [cpPosition]="'bottom'"
+                   [style.background]="label.color" required
+            />
+<!--                   (blur)="emitUpdate()" -->
+<!--                   [cpPresetColors] = "presetColors"/>-->
+
+<!--            <mat-icon-->
+<!--                    matListIcon [style.color]="label.color" style="margin-top: -8px;">color_lens</mat-icon>-->
+            <h4 style="margin-top: -3px;"> {{label.name}} </h4>
+            <mat-icon  style="margin-left: 20px; margin-top: -8px;">delete</mat-icon>
         </mat-list-item>
     </mat-list>
     <div fxFlex>

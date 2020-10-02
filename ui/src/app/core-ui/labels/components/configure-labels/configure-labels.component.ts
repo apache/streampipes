@@ -1,7 +1,7 @@
 import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { ColorService } from '../../../image/services/color.service';
 import { LabelService } from '../../services/label.service';
-import { Label } from '../../../../core-model/gen/streampipes-model';
+import { Category, Label } from '../../../../core-model/gen/streampipes-model';
 
 @Component({
   selector: 'sp-configure-labels',
@@ -10,31 +10,18 @@ import { Label } from '../../../../core-model/gen/streampipes-model';
 })
 export class ConfigureLabelsComponent implements OnInit {
 
-  @Input() enableShortCuts: boolean;
-  @Output() labelChange: EventEmitter<{category, label}> = new EventEmitter<{category, label}>();
-
-  public _labels;
-  public _selectedLabel: {category, label};
-  public categories;
-  public selectedCategory;
+  public categories: Category[];
+  public selectedCategory: Category;
 
   constructor(public colorService: ColorService, public labelService: LabelService) { }
 
   ngOnInit(): void {
-    this._labels = this.labelService.getLabels();
+    this.categories = this.labelService.getCategories();
     this.update();
   }
 
   update() {
-    this.categories = Object.keys(this._labels);
     this.selectedCategory = this.categories[0];
-    this._selectedLabel = {category: this.selectedCategory, label: this._labels[this.selectedCategory][0]};
-    this.labelChange.emit(this._selectedLabel);
-  }
-
-  selectLabel(e: {category, label}) {
-    this._selectedLabel = e;
-    this.labelChange.emit(this._selectedLabel);
   }
 
   addCategory() {
