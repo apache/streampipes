@@ -74,6 +74,7 @@ import { QuillModule } from 'ngx-quill';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ConfigureLabelsComponent } from './labels/components/configure-labels/configure-labels.component';
+import { LabelListItemComponent } from './labels/components/label-list-item/label-list-item.component';
 
 @NgModule({
     imports: [
@@ -126,6 +127,7 @@ import { ConfigureLabelsComponent } from './labels/components/configure-labels/c
         StaticOneOfInputComponent,
         StaticRuntimeResolvableAnyInputComponent,
         StaticRuntimeResolvableOneOfInputComponent,
+        LabelListItemComponent,
     ],
     providers: [
         MatDatepickerModule,
