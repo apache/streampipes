@@ -38,7 +38,6 @@ export class StaticAlternativesComponent
     }
 
     ngOnInit(): void {
-        this.staticProperty.alternatives.forEach( alternative => alternative.selected = false);
     }
 
     radioSelectionChange(event) {
