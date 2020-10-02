@@ -13,18 +13,34 @@ export class ConfigureLabelsComponent implements OnInit {
   public categories: Category[];
   public selectedCategory: Category;
 
+  public editCategory: boolean;
+
   constructor(public colorService: ColorService, public labelService: LabelService) { }
 
   ngOnInit(): void {
+    this.editCategory = false;
     this.categories = this.labelService.getCategories();
-    this.update();
   }
 
-  update() {
-    this.selectedCategory = this.categories[0];
+  startEditCategory(value) {
+    if ('internal_placeholder' !== value.value) {
+      this.editCategory = true;
+    }
+  }
+
+  endEditCategory() {
+    this.selectedCategory = null;
+    this.editCategory = false;
   }
 
   addCategory() {
+    const c1 = new Category();
+    c1.name = '';
+    c1.labels = [];
+
+    this.categories.push(c1);
+    this.selectedCategory = c1;
+    this.editCategory = true;
   }
 
   addLabel() {

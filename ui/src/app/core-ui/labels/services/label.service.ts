@@ -28,11 +28,11 @@ export class LabelService {
   getCategories(): Category[] {
 
     const c1 = new Category();
-    c1.name = 'boxes';
+    c1.name = 'Straßenschild';
 
     c1.labels = [];
-    c1.labels.push(this.getLabel('blue', '#0000ff'));
-    c1.labels.push(this.getLabel('red', '#ff0000'));
+    c1.labels.push(this.getLabel('Stop', '#0000ff'));
+    c1.labels.push(this.getLabel('50', '#ff0000'));
 
     const c2 = new Category();
     c2.name = 'furniture';
