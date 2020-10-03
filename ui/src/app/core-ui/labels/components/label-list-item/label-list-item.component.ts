@@ -8,7 +8,7 @@ import { Label } from '../../../../core-model/gen/streampipes-model';
 })
 export class LabelListItemComponent implements OnInit {
 
-  @Input
+  @Input()
   label: Label;
 
   @Output() removeLabel = new EventEmitter<Label>();

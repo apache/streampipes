@@ -26,9 +26,7 @@
                 <mat-label>Category Name</mat-label>
                 <input matInput type="text" [(ngModel)]="selectedCategory.name">
             </mat-form-field>
-            <button mat-button mat-flat-button color="warn" (click)="addCategory()">
-                <mat-icon class="icon">delete</mat-icon>
-            </button>
+            <mat-icon  style="cursor: pointer;" matTooltip="Delete label category" (click)="deleteCategory()" class="icon">delete</mat-icon>
         </div>
         <div fxLayout="column" fxLayoutAlign="center stretch">
             <sp-label-list-item

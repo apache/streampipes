@@ -43,6 +43,11 @@ export class ConfigureLabelsComponent implements OnInit {
     this.editCategory = true;
   }
 
+  deleteCategory() {
+    this.categories = this.categories.filter(obj => obj !== this.selectedCategory);
+    this.endEditCategory();
+  }
+
   addLabel() {
     const label = new Label();
     label.name = '';
