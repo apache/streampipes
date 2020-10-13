@@ -11,7 +11,6 @@ public class Category {
     private String name;
     private String internalName;
     private Label superLabel;
-    private List<Label> labels;
 
     @JsonProperty("_id")
     private @SerializedName("_id") String id;
@@ -35,9 +34,6 @@ public class Category {
 
     public Label getSuperLabel() { return superLabel; }
     public void setSuperLabel(Label superLabel) { this.superLabel = superLabel; }
-
-    public List<Label> getLabels() { return labels; }
-    public void setLabels(List<Label> labels) { this.labels = labels; }
 
     public String getId() {
         return id;
