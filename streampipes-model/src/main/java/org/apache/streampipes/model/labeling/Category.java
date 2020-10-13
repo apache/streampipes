@@ -10,7 +10,7 @@ import java.util.List;
 public class Category {
     private String name;
     private String internalName;
-    private Label superLabel;
+    private String superLabelId;
 
     @JsonProperty("_id")
     private @SerializedName("_id") String id;
@@ -32,8 +32,8 @@ public class Category {
         this.internalName = internalName;
     }
 
-    public Label getSuperLabel() { return superLabel; }
-    public void setSuperLabel(Label superLabel) { this.superLabel = superLabel; }
+    public String getSuperLabelId() { return superLabelId; }
+    public void setSuperLabel(String superLabelId) { this.superLabelId = superLabelId; }
 
     public String getId() {
         return id;

@@ -22,16 +22,13 @@ public class LabelResource extends AbstractRestInterface implements ILabel {
     @JacksonSerialized
     @Override
     public Response getAllLabels() {
-        return ok(
-                StorageDispatcher.INSTANCE
+        return ok(StorageDispatcher.INSTANCE
                 .getNoSqlStore()
                 .getLabelStorageAPI()
-                .getAllLabels()
-        );
+                .getAllLabels());
     }
 
     @POST
-    @Path("/add")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JacksonSerialized
@@ -54,13 +51,31 @@ public class LabelResource extends AbstractRestInterface implements ILabel {
         return ok();
     }
 
-    @POST
-    @Path("/update")
+    @GET
+    @Path("/{labelId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @JacksonSerialized
+    @Override
+    public Response getLabel(@PathParam("labelId") String labelId) {
+        return ok(StorageDispatcher.INSTANCE
+                .getNoSqlStore()
+                .getLabelStorageAPI()
+                .getLabel(labelId));
+    }
+
+    @PUT
+    @Path("/{labelId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JacksonSerialized
     @Override
-    public Response updateLabel(Label label) {
+    public Response updateLabel(@PathParam("labelId") String labelId, Label label) {
+        if (labelId != label.getId()) {
+            String resString = "LabelId not the same as in message body";
+            Map<String, Object> errorDetails = new HashMap<>();
+            errorDetails.put("message", resString);
+            return badRequest(errorDetails);
+        }
         Category categoryForLabel = StorageDispatcher.INSTANCE
                 .getNoSqlStore()
                 .getCategoryStorageAPI()
@@ -78,8 +93,8 @@ public class LabelResource extends AbstractRestInterface implements ILabel {
         return ok();
     }
 
-    @POST
-    @Path("/delete/{labelId}")
+    @DELETE
+    @Path("/{labelId}")
     @Produces(MediaType.APPLICATION_JSON)
     @JacksonSerialized
     @Override
@@ -97,11 +112,9 @@ public class LabelResource extends AbstractRestInterface implements ILabel {
     @JacksonSerialized
     @Override
     public Response getLabelsForCategory(@PathParam("categoryId") String categoryId) {
-        return ok(
-                StorageDispatcher.INSTANCE
+        return ok(StorageDispatcher.INSTANCE
                 .getNoSqlStore()
                 .getLabelStorageAPI()
-                .getAllForCategory(categoryId)
-        );
+                .getAllForCategory(categoryId));
     }
 }
