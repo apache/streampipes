@@ -15,12 +15,30 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.wrapper.siddhi.engine;
+package org.apache.streampipes.wrapper.siddhi.model;
 
+public class EventType {
 
-import io.siddhi.core.event.Event;
+  private Integer streamIdentifier;
+  private String eventTypeName;
+  private String eventType;
 
-public interface SiddhiDebugCallback {
+  public EventType(Integer streamIdentifier, String eventTypeName, String eventType) {
+    this.streamIdentifier = streamIdentifier;
+    this.eventTypeName = eventTypeName;
+    this.eventType = eventType;
+  }
 
-  void onEvent(Event event);
+  public Integer getStreamIdentifier() {
+    return streamIdentifier;
+  }
+
+  public String getEventTypeName() {
+    return eventTypeName;
+  }
+
+  public String getEventType() {
+    return eventType;
+  }
+
 }

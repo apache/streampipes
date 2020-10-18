@@ -17,290 +17,97 @@
  */
 package org.apache.streampipes.wrapper.siddhi.engine;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.model.runtime.EventFactory;
-import org.apache.streampipes.model.runtime.SchemaInfo;
-import org.apache.streampipes.model.runtime.SourceInfo;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
-import org.apache.streampipes.wrapper.siddhi.manager.SpSiddhiManager;
-import io.siddhi.core.SiddhiAppRuntime;
-import io.siddhi.core.SiddhiManager;
-import io.siddhi.core.event.Event;
-import io.siddhi.core.stream.input.InputHandler;
-import io.siddhi.core.stream.output.StreamCallback;
+import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
+import org.apache.streampipes.wrapper.siddhi.engine.callback.SiddhiDebugCallback;
+import org.apache.streampipes.wrapper.siddhi.engine.generator.InputStreamNameGenerator;
+import org.apache.streampipes.wrapper.siddhi.utils.SiddhiUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> implements
-        EventProcessor<B> {
-
-  private StringBuilder siddhiAppString;
-
-  private SiddhiAppRuntime siddhiAppRuntime;
-  private Map<String, InputHandler> siddhiInputHandlers;
-  private List<String> inputStreamNames;
-
-  private Map<String, List> listOfEventKeys;
-  private List<String> outputEventKeys;
-
-  private Boolean debugMode;
-  private SiddhiDebugCallback debugCallback;
-
-  private String timestampField;
+        EventProcessor<B>, SiddhiStatementGenerator<B> {
 
   private static final Logger LOG = LoggerFactory.getLogger(SiddhiEventEngine.class);
 
+  private SiddhiEngine siddhiEngine;
+  private SiddhiInvocationConfig<B> siddhiConfig;
+  private List<String> outputEventKeys = new ArrayList<>();
+
   public SiddhiEventEngine() {
-    this.siddhiAppString = new StringBuilder();
-    this.siddhiInputHandlers = new HashMap<>();
-    this.inputStreamNames = new ArrayList<>();
-    listOfEventKeys = new HashMap<>();
-    outputEventKeys = new ArrayList<>();
-    this.debugMode = false;
+    this.siddhiEngine = new SiddhiEngine();
   }
 
   public SiddhiEventEngine(SiddhiDebugCallback debugCallback) {
-    this();
-    this.debugCallback = debugCallback;
-    this.debugMode = true;
+    this.siddhiEngine = new SiddhiEngine(debugCallback);
   }
 
   @Override
   public void onInvocation(B parameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
-    if (parameters.getInEventTypes().size() != parameters.getGraph().getInputStreams().size()) {
-      throw new IllegalArgumentException("Input parameters do not match!");
-    }
-
-    SiddhiManager siddhiManager = SpSiddhiManager.INSTANCE.getSiddhiManager();
-
-    this.timestampField = removeStreamIdFromTimestamp(setTimestamp(parameters));
-
-    LOG.info("Configuring event types for graph " + parameters.getGraph().getName());
-    parameters.getInEventTypes().forEach((key, value) -> {
-      // TODO why is the prefix not in the parameters.getInEventType
-      registerEventTypeIfNotExists(key, value);
-      this.inputStreamNames.add(prepareName(key));
-    });
-
-    LOG.info("Configuring output event keys for graph " + parameters.getGraph().getName());
-    //System.out.println("output key: " + key);
-    outputEventKeys.addAll(parameters.getOutEventType().keySet());
-
+    List<String> inputStreamNames = new InputStreamNameGenerator<>(parameters).generateInputStreamNames();
+    this.outputEventKeys = new ArrayList<>(parameters.getOutEventType().keySet());
     String fromStatement = fromStatement(inputStreamNames, parameters);
-    String selectStatement = selectStatement(parameters);
-    registerStatements(fromStatement, selectStatement, getOutputTopicName(parameters));
-
-    siddhiAppRuntime = siddhiManager.createSiddhiAppRuntime(siddhiAppString.toString());
-    parameters
-            .getInEventTypes()
-            .forEach((key, value) -> siddhiInputHandlers.put(key, siddhiAppRuntime.getInputHandler(prepareName(key))));
-
-    if (!debugMode) {
-      siddhiAppRuntime.addCallback(prepareName(getOutputTopicName(parameters)), new StreamCallback() {
-        @Override
-        public void receive(Event[] events) {
-          if (events.length > 0) {
-            Event lastEvent = events[events.length - 1];
-            spOutputCollector.collect(toSpEvent(lastEvent, parameters,
-                    runtimeContext.getOutputSchemaInfo
-                    (), runtimeContext.getOutputSourceInfo()));
-          }
-        }
-      });
-    } else {
-      siddhiAppRuntime.addCallback(prepareName(getOutputTopicName(parameters)), new StreamCallback() {
-        @Override
-        public void receive(Event[] events) {
-          LOG.info("Siddhi is firing");
-          if (events.length > 0) {
-            SiddhiEventEngine.this.debugCallback.onEvent(events[events.length - 1]);
-          }
-        }
-      });
-    }
-
-    siddhiAppRuntime.start();
-
-  }
-
-  private String removeStreamIdFromTimestamp(String timestampField) {
-    return timestampField !=null ? timestampField.replaceAll("s0::", "") : null;
-  }
-
-  private String getOutputTopicName(B parameters) {
-    return parameters
-            .getGraph()
-            .getOutputStream()
-            .getEventGrounding()
-            .getTransportProtocol()
-            .getTopicDefinition()
-            .getActualTopicName();
-  }
-
-  private org.apache.streampipes.model.runtime.Event toSpEvent(Event event, B parameters, SchemaInfo
-          schemaInfo, SourceInfo sourceInfo) {
-    Map<String, Object> outMap = new HashMap<>();
-    for (int i = 0; i < outputEventKeys.size(); i++) {
-
-      if (event.getData(i) instanceof LinkedList) {
-        List<Object> tmp = (List<Object>) event.getData(i);
-        outMap.put(outputEventKeys.get(i), tmp.get(0));
-      }
-      else {
-        outMap.put(outputEventKeys.get(i), event.getData(i));
-      }
-
-    }
-    return EventFactory.fromMap(outMap, sourceInfo, schemaInfo);
-  }
-
-
-  private void registerEventTypeIfNotExists(String eventTypeName, Map<String, Object> typeMap) {
-    String defineStreamPrefix = "define stream " + prepareName(eventTypeName);
-    StringJoiner joiner = new StringJoiner(",");
-    int currentNoOfStreams = this.listOfEventKeys.size();
-
-    List<String> sortedEventKeys = new ArrayList<>();
-    for (String key : typeMap.keySet()) {
-      sortedEventKeys.add(key);
-      Collections.sort(sortedEventKeys);
-    }
-
-    listOfEventKeys.put(eventTypeName, sortedEventKeys);
-
-    for (String key : sortedEventKeys) {
-      // TODO: get timestamp field from user params
-      if(key.equalsIgnoreCase(this.timestampField)) {
-        joiner.add("s" + currentNoOfStreams + key + " LONG");
-      }
-      else {
-        joiner.add("s" + currentNoOfStreams + key + " " + toType((Class<?>) typeMap.get(key)));
-      }
-    }
-
-    this.siddhiAppString.append(defineStreamPrefix);
-    this.siddhiAppString.append("(");
-    this.siddhiAppString.append(joiner.toString());
-    this.siddhiAppString.append(");\n");
-  }
-
-  private String toType(Class<?> o) {
-    if (o.equals(Long.class)) {
-      return "LONG";
-    } else if (o.equals(Integer.class)) {
-      return "INT";
-    } else if (o.equals(Double.class)) {
-      return "DOUBLE";
-    } else if (o.equals(Float.class)) {
-      return "DOUBLE";
-    } else if (o.equals(Boolean.class)) {
-      return "BOOL";
-    } else {
-      return "STRING";
-    }
-  }
-
-  private void registerStatements(String fromStatement, String selectStatement, String outputStream) {
-    this.siddhiAppString.append(fromStatement)
-            .append("\n")
-            .append(selectStatement)
-            .append("\n")
-            .append("insert into ")
-            .append(prepareName(outputStream))
-            .append(";");
-
-    LOG.info("Registering statement: \n" + this.siddhiAppString.toString());
-
+    String selectStatement = selectStatement(outputEventKeys, parameters);
+    this.siddhiConfig = new SiddhiInvocationConfig<>(parameters, fromStatement, selectStatement, inputStreamNames);
+    this.siddhiEngine.initializeEngine(this.siddhiConfig, spOutputCollector, runtimeContext);
   }
 
   @Override
   public void onEvent(org.apache.streampipes.model.runtime.Event event, SpOutputCollector collector) {
-    try {
-      String sourceId = event.getSourceInfo().getSourceId();
-      InputHandler inputHandler = siddhiInputHandlers.get(sourceId);
-      List<String> eventKeys = listOfEventKeys.get(sourceId);
-
-      inputHandler.send(toObjArr(eventKeys, event.getRaw()));
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
-  }
-
-  private Object[] toObjArr(List<String> eventKeys, Map<String, Object> event) {
-    Object[] result = new Object[eventKeys.size()];
-    for (int i = 0; i < eventKeys.size(); i++) {
-      result[i] = event.get(eventKeys.get(i));
-    }
-
-    return result;
+    this.siddhiEngine.processEvent(event);
   }
 
   @Override
   public void onDetach() {
-    this.siddhiAppRuntime.shutdown();
+    this.siddhiEngine.shutdownEngine();
   }
 
-  protected abstract String fromStatement(List<String> inputStreamNames, final B bindingParameters);
-
-  protected abstract String selectStatement(final B bindingParameters);
-
-  protected String setTimestamp(final B bindingparameters) {
-    return null;
+  public SiddhiInvocationConfig<B> getSiddhiConfig() {
+    return this.siddhiConfig;
   }
 
-  protected String prepareName(String eventName) {
-    return eventName
-            .replaceAll("\\.", "")
-            .replaceAll("-", "")
-            .replaceAll("::", "");
+  public String prepareName(String name) {
+    return SiddhiUtils.prepareName(name);
   }
 
-
-
-  protected String getCustomOutputSelectStatement(DataProcessorInvocation invocation,
-                                                  String eventName) {
+  public String getCustomOutputSelectStatement(DataProcessorInvocation invocation) {
     StringBuilder selectString = new StringBuilder();
-    selectString.append("select ");
-
-    if (outputEventKeys.size() > 0) {
-      for (int i = 0; i < outputEventKeys.size() - 1; i++) {
-        selectString.append(eventName + ".s0" + outputEventKeys.get(i) + ",");
-      }
-      selectString.append(eventName + ".s0" + outputEventKeys.get(outputEventKeys.size() - 1));
-
-    }
-
-    return selectString.toString();
-  }
-
-//  protected String getCustomOutputSelectStatement(DataProcessorInvocation invocation) {
-//    return getCustomOutputSelectStatement(invocation, "e1");
-//  }
-
-  protected String getCustomOutputSelectStatement(DataProcessorInvocation invocation) {
-    StringBuilder selectString = new StringBuilder();
-    selectString.append("select ");
+    selectString.append(SiddhiConstants.SELECT).append(" ");
 
     if (outputEventKeys.size() > 0) {
       for (int i=0; i<outputEventKeys.size() - 1; i++) {
-        selectString.append("s0" + outputEventKeys.get(i) + ",");
+        selectString
+                .append(SiddhiConstants.FIRST_STREAM_PREFIX)
+                .append(outputEventKeys.get(i))
+                .append(",");
       }
-      selectString.append("s0" + outputEventKeys.get(outputEventKeys.size() - 1));
+      selectString
+              .append(SiddhiConstants.FIRST_STREAM_PREFIX)
+              .append(outputEventKeys.get(outputEventKeys.size() - 1));
     }
     return selectString.toString();
   }
 
-  public void setSortedEventKeys(List<String> sortedEventKeys) {
-    String streamId = (String) this.listOfEventKeys.keySet().toArray()[0];    // only reliable if there is only one stream, else use changeEventKeys() to respective streamId
-    changeEventKeys(streamId, sortedEventKeys);
-  }
+  public String getCustomOutputSelectStatement(DataProcessorInvocation invocation,
+                                               String eventName) {
+    StringBuilder selectString = new StringBuilder();
+    selectString.append(SiddhiConstants.SELECT).append(" ");
 
-  public void changeEventKeys(String streamId, List<String> newEventKeys) {
-    this.listOfEventKeys.put(streamId, newEventKeys);
+    if (outputEventKeys.size() > 0) {
+      for (int i = 0; i < outputEventKeys.size() - 1; i++) {
+        selectString.append(eventName).append(".s0").append(outputEventKeys.get(i)).append(",");
+      }
+      selectString.append(eventName).append(".s0").append(outputEventKeys.get(outputEventKeys.size() - 1));
+
+    }
+
+    return selectString.toString();
   }
 }
