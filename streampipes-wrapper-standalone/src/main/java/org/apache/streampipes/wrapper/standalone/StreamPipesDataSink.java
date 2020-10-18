@@ -16,5 +16,19 @@
  *
  */
 package org.apache.streampipes.wrapper.standalone;
-public class StreamPipesDataSink {
+
+import org.apache.streampipes.model.graph.DataSinkInvocation;
+import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
+import org.apache.streampipes.wrapper.runtime.EventSink;
+import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
+
+import java.util.function.Supplier;
+
+public abstract class StreamPipesDataSink extends StandaloneEventSinkDeclarer<SinkParams> implements EventSink<SinkParams> {
+
+  @Override
+  public ConfiguredEventSink<SinkParams> onInvocation(DataSinkInvocation graph, DataSinkParameterExtractor extractor) {
+    Supplier<EventSink<SinkParams>> supplier = () -> this;
+    return new ConfiguredEventSink<>(new SinkParams(graph), supplier);
+  }
 }

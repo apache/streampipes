@@ -16,5 +16,21 @@
  *
  */
 package org.apache.streampipes.wrapper.standalone;
-public class SinkParams {
+
+import org.apache.streampipes.model.graph.DataSinkInvocation;
+import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
+import org.apache.streampipes.wrapper.params.binding.EventSinkBindingParams;
+
+public class SinkParams extends EventSinkBindingParams {
+
+  private DataSinkParameterExtractor extractor;
+
+  public SinkParams(DataSinkInvocation graph) {
+    super(graph);
+    this.extractor = DataSinkParameterExtractor.from(graph);
+  }
+
+  public DataSinkParameterExtractor extractor() {
+    return this.extractor;
+  }
 }
