@@ -1,0 +1,8 @@
+org.apache.streampipes.processors.siddhi.listcollector.title=List Collector
+org.apache.streampipes.processors.siddhi.listcollector.description=Filters a field from an input event that represents a list for the presence of a given value.
+
+list-field.title=Value to Observe
+list-field.description=Specifies the value that should be monitored.
+
+time-window-size.title=Time Window Size
+time-window-size.description=The time window size in seconds

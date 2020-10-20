@@ -18,23 +18,26 @@
 package org.apache.streampipes.processors.siddhi.sequence;
 
 import org.apache.streampipes.wrapper.siddhi.engine.SiddhiEventEngine;
-
-import java.util.List;
+import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
 
 public class Sequence extends SiddhiEventEngine<SequenceParameters> {
 
   @Override
-  protected String fromStatement(List<String> inputStreamNames, SequenceParameters params) {
+  public String fromStatement(SiddhiProcessorParams<SequenceParameters> siddhiParams) {
 
 //    from every (e1=MaterialSupplyStream) -> e2=MaterialConsumptionStream within 10 min
 
 //      return "from every(e1=" + inputStreamNames.get(0) + ") -> not e2=" + inputStreamNames.get(0) + " for " + params.getDuration() + " sec";
 //    return "define stream Test(timestamp LONG,message STRING);\n" +
-            return "from every not " + inputStreamNames.get(0) + " for " + params.getDuration() + " sec";
+            return "from every not "
+                    + siddhiParams.getInputStreamNames().get(0)
+                    + " for "
+                    + siddhiParams.getParams().getDuration()
+                    + " sec";
   }
 
   @Override
-  protected String selectStatement(SequenceParameters params) {
+  public String selectStatement(SiddhiProcessorParams<SequenceParameters> siddhiParams) {
 //    return getCustomOutputSelectStatement(params.getGraph());
     return "select *";
 //    return "select currentTimeMillis() as s0timestamp, 'Customer has not arrived' as message";

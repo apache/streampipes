@@ -17,10 +17,9 @@
  */
 package org.apache.streampipes.processors.siddhi.filter;
 
-import org.apache.streampipes.wrapper.siddhi.engine.SiddhiDebugCallback;
 import org.apache.streampipes.wrapper.siddhi.engine.SiddhiEventEngine;
-
-import java.util.List;
+import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
+import org.apache.streampipes.wrapper.siddhi.engine.callback.SiddhiDebugCallback;
 
 public class NumericalFilter extends SiddhiEventEngine<NumericalFilterParameters> {
 
@@ -33,32 +32,34 @@ public class NumericalFilter extends SiddhiEventEngine<NumericalFilterParameters
   }
 
   @Override
-  protected String fromStatement(List<String> inputStreamNames, NumericalFilterParameters params) {
-    String filterProperty = prepareName(params.getFilterProperty());
+  public String fromStatement(SiddhiProcessorParams<NumericalFilterParameters> siddhiParams) {
+    NumericalFilterParameters filterParameters = siddhiParams.getParams();
+    String filterProperty = prepareName(filterParameters.getFilterProperty());
     String filterOperator = "";
 
-    if (params.getFilterOperator() == FilterOperator.EQ) {
+    if (filterParameters.getFilterOperator() == FilterOperator.EQ) {
       filterOperator = "==";
-    } else if (params.getFilterOperator() == FilterOperator.GE) {
+    } else if (filterParameters.getFilterOperator() == FilterOperator.GE) {
       filterOperator = ">=";
-    } else if (params.getFilterOperator() == FilterOperator.GT) {
+    } else if (filterParameters.getFilterOperator() == FilterOperator.GT) {
       filterOperator = ">";
-    } else if (params.getFilterOperator() == FilterOperator.LE) {
+    } else if (filterParameters.getFilterOperator() == FilterOperator.LE) {
       filterOperator = "<=";
-    } else if (params.getFilterOperator() == FilterOperator.LT) {
+    } else if (filterParameters.getFilterOperator() == FilterOperator.LT) {
       filterOperator = "<";
-    } else if (params.getFilterOperator() == FilterOperator.IE) {
+    } else if (filterParameters.getFilterOperator() == FilterOperator.IE) {
       filterOperator = "!=";
     }
 
     // e.g. Filter for numberField value less than 10 and output all fields
     //
     // Siddhi query: from inputstreamname[numberField<10]
-    return "from " + inputStreamNames.get(0) +"[" + filterProperty + filterOperator + params.getThreshold() +"]";
+    return "from " + siddhiParams.getInputStreamNames().get(0) +"[" + filterProperty + filterOperator + filterParameters.getThreshold() +"]";
   }
 
   @Override
-  protected String selectStatement(NumericalFilterParameters params) {
-    return getCustomOutputSelectStatement(params.getGraph());
+  public String selectStatement(SiddhiProcessorParams<NumericalFilterParameters> siddhiParams) {
+    return siddhiParams.getCustomOutputSelectStatement(siddhiParams.getParams().getGraph());
   }
+
 }

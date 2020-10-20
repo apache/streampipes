@@ -17,10 +17,9 @@
  */
 package org.apache.streampipes.processors.siddhi.trend;
 
-import org.apache.streampipes.wrapper.siddhi.engine.SiddhiDebugCallback;
 import org.apache.streampipes.wrapper.siddhi.engine.SiddhiEventEngine;
-
-import java.util.List;
+import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
+import org.apache.streampipes.wrapper.siddhi.engine.callback.SiddhiDebugCallback;
 
 public class Trend extends SiddhiEventEngine<TrendParameters> {
 
@@ -33,37 +32,38 @@ public class Trend extends SiddhiEventEngine<TrendParameters> {
   }
 
   @Override
-  protected String fromStatement(List<String> inputStreamNames, TrendParameters params) {
-      String mappingProperty = prepareName(params.getMapping());
-      int duration = params.getDuration();
-      String inequaloperator;
-      String operator;
+  public String fromStatement(SiddhiProcessorParams<TrendParameters> siddhiParams) {
+    TrendParameters trendParameters = siddhiParams.getParams();
+    String mappingProperty = prepareName(trendParameters.getMapping());
+    int duration = trendParameters.getDuration();
+    String inequaloperator;
+    String operator;
 
-      double increase = Double.valueOf(params.getIncrease());
-      increase = (increase / 100) + 1;
+    double increase = trendParameters.getIncrease();
+    increase = (increase / 100) + 1;
 
-      if (params.getOperation() == TrendOperator.INCREASE) {
-          inequaloperator = "<=";
-          operator = "/";
+    if (trendParameters.getOperation() == TrendOperator.INCREASE) {
+      inequaloperator = "<=";
+      operator = "/";
 
-      } else {
-          inequaloperator = ">=";
-          operator = "*";
-      }
+    } else {
+      inequaloperator = ">=";
+      operator = "*";
+    }
 
-      String s = "from every(e1="
-              + inputStreamNames.get(0)
-              +") -> e2="
-              +inputStreamNames.get(0)
-              + "[e1." + mappingProperty
-              + inequaloperator
-              + "("
-              + mappingProperty
-              + operator
-              + increase
-              +")"
-              + "]<1>"
-              + " within " + duration + " sec";
+    String s = "from every(e1="
+            + siddhiParams.getInputStreamNames().get(0)
+            + ") -> e2="
+            + siddhiParams.getInputStreamNames().get(0)
+            + "[e1." + mappingProperty
+            + inequaloperator
+            + "("
+            + mappingProperty
+            + operator
+            + increase
+            + ")"
+            + "]<1>"
+            + " within " + duration + " sec";
 
     //String s = "from e1="+inputStreamNames.get(0) + "[e1.s0randomValue > 5]";
 
@@ -71,8 +71,8 @@ public class Trend extends SiddhiEventEngine<TrendParameters> {
   }
 
   @Override
-  protected String selectStatement(TrendParameters params) {
-      return getCustomOutputSelectStatement(params.getGraph(), "e2");
+  public String selectStatement(SiddhiProcessorParams<TrendParameters> siddhiParams) {
+    return siddhiParams.getCustomOutputSelectStatement(siddhiParams.getParams().getGraph(), "e2");
   }
 
 }

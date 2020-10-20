@@ -14,5 +14,5 @@
 # limitations under the License.
 
 SP_PORT=6060
-SP_HOST=host.docker.internal
+SP_HOST=localhost
 SP_DEBUG=true

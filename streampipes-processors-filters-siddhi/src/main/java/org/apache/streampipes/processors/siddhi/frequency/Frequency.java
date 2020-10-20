@@ -18,18 +18,20 @@
 package org.apache.streampipes.processors.siddhi.frequency;
 
 import org.apache.streampipes.wrapper.siddhi.engine.SiddhiEventEngine;
-
-import java.util.List;
+import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
 
 public class Frequency extends SiddhiEventEngine<FrequencyParameters> {
 
   @Override
-  protected String fromStatement(List<String> inputStreamNames, FrequencyParameters params) {
-            return "from every not " + inputStreamNames.get(0) + " for " + params.getDuration() + " sec";
+  public String fromStatement(SiddhiProcessorParams<FrequencyParameters> siddhiParams) {
+            return "from every not "
+                    + siddhiParams.getInputStreamNames().get(0)
+                    + " for "
+                    + siddhiParams.getParams().getDuration() + " sec";
   }
 
   @Override
-  protected String selectStatement(FrequencyParameters params) {
+  public String selectStatement(SiddhiProcessorParams<FrequencyParameters> siddhiParams) {
     return "select *";
   }
 

@@ -18,9 +18,7 @@
 package org.apache.streampipes.processors.siddhi.stop;
 
 import org.apache.streampipes.wrapper.siddhi.engine.SiddhiEventEngine;
-
-import java.util.Arrays;
-import java.util.List;
+import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
 
 public class StreamStop extends SiddhiEventEngine<StreamStopParameters> {
 
@@ -29,13 +27,16 @@ public class StreamStop extends SiddhiEventEngine<StreamStopParameters> {
   }
 
   @Override
-  protected String fromStatement(List<String> inputStreamNames, StreamStopParameters params) {
+  public String fromStatement(SiddhiProcessorParams<StreamStopParameters> siddhiParams) {
     return "define stream Test(timestamp LONG,message STRING);\n" +
-            "from every not " + inputStreamNames.get(0) + " for " + params.getDuration() + " sec";
+            "from every not "
+            + siddhiParams.getInputStreamNames().get(0)
+            + " for " + siddhiParams.getParams().getDuration()
+            + " sec";
   }
 
   @Override
-  protected String selectStatement(StreamStopParameters params) {
+  public String selectStatement(SiddhiProcessorParams<StreamStopParameters> siddhiParams) {
       //setSortedEventKeys(Arrays.asList("timestamp", "message"));
     return "select currentTimeMillis() as timestamp, 'Event stream has stopped' as message";
   }
