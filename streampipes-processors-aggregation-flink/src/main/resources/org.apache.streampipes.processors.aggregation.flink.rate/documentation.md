@@ -25,20 +25,24 @@
 ***
 
 ## Description
-
 Computes the current event rate. Output is a number representing events per second.
 
 ***
 
 ## Required input
-
 The event rate processor works with any stream and does not have any specific requirements.
 
 ***
 
 ## Configuration
 
+
 ### Time Baseline
-Time window size used for calculating the rate in seconds, also defines the output rate
+Specifies the size of the window used used for calculating the rate in seconds. This parameters also determines the output rate.
 
 ## Output
+```
+{
+  'rate': 0.8
+}
+```

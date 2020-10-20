@@ -27,22 +27,22 @@
 ## Description
 
 The Field Hasher uses an algorithm to encode values in a field. The Field Hasher can use MD5, SHA1 or SHA2 to hash field values.
-Add a detailed description here
 
 ***
 
 ## Required input
-Any field of type string
+This processor requires at least one field of type string.
 
 ***
 
 ## Configuration
 
-Describe the configuration parameters here
+### Field
+Specifies the string field that will be encoded.
 
-### 1st parameter
-
-
-### 2nd parameter
+### Hash Algorithm
+Specifies the algorithm used to encode the string field. The following algorithms
+are available: SHA2, MD5 or SHA1.
 
 ## Output
+The encoded string field.
