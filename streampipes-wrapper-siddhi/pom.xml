@@ -52,6 +52,12 @@
             <groupId>io.siddhi</groupId>
             <artifactId>siddhi-query-compiler</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.siddhi.extension.execution.list</groupId>
+            <artifactId>siddhi-execution-list</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+
     </dependencies>
 
     <repositories>

@@ -21,14 +21,17 @@ import io.siddhi.core.SiddhiAppRuntime;
 import io.siddhi.core.SiddhiManager;
 import io.siddhi.core.stream.input.InputHandler;
 import io.siddhi.core.stream.output.StreamCallback;
+import io.siddhi.query.api.definition.Attribute;
+import io.siddhi.query.api.definition.StreamDefinition;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.siddhi.engine.callback.SiddhiDebugCallback;
 import org.apache.streampipes.wrapper.siddhi.engine.callback.SiddhiOutputStreamCallback;
 import org.apache.streampipes.wrapper.siddhi.engine.callback.SiddhiOutputStreamDebugCallback;
-import org.apache.streampipes.wrapper.siddhi.model.EventType;
+import org.apache.streampipes.wrapper.siddhi.engine.generator.SiddhiInvocationConfigGenerator;
 import org.apache.streampipes.wrapper.siddhi.manager.SpSiddhiManager;
+import org.apache.streampipes.wrapper.siddhi.model.EventType;
 import org.apache.streampipes.wrapper.siddhi.utils.SiddhiUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,18 +63,18 @@ public class SiddhiEngine {
     this.debugMode = true;
   }
 
-  public void initializeEngine(SiddhiInvocationConfig<? extends EventProcessorBindingParams> settings,
+  public void initializeEngine(SiddhiInvocationConfigGenerator<? extends EventProcessorBindingParams> settings,
                                SpOutputCollector spOutputCollector,
                                EventProcessorRuntimeContext runtimeContext) {
 
-    EventProcessorBindingParams params = settings.getParams();
-    this.typeInfo = settings.getEventTypeInfo();
+    EventProcessorBindingParams params = settings.getSiddhiProcessorParams().getParams();
+    this.typeInfo = settings.getSiddhiProcessorParams().getEventTypeInfo();
     SiddhiManager siddhiManager = SpSiddhiManager.INSTANCE.getSiddhiManager();
 
     //this.timestampField = removeStreamIdFromTimestamp(setTimestamp(parameters));
 
     siddhiAppRuntime = siddhiManager.createSiddhiAppRuntime(settings.getSiddhiAppString());
-    settings.getParams()
+    settings.getSiddhiProcessorParams().getParams()
             .getInEventTypes()
             .forEach((key, value) -> {
               String preparedKey = SiddhiUtils.prepareName(key);
@@ -79,14 +82,16 @@ public class SiddhiEngine {
             });
 
     StreamCallback callback;
-
+    Map<String, StreamDefinition> streamDef = siddhiAppRuntime.getStreamDefinitionMap();
+    String outputKey = SiddhiUtils.getPreparedOutputTopicName(params);
+    List<Attribute> streamAttributes = streamDef.get(outputKey).getAttributeList();
     if (!debugMode) {
-      callback = new SiddhiOutputStreamCallback(spOutputCollector, settings.getOutputEventKeys(), runtimeContext);
+      callback = new SiddhiOutputStreamCallback(spOutputCollector, runtimeContext, streamAttributes);
     } else {
       callback = new SiddhiOutputStreamDebugCallback(debugCallback);
     }
 
-    siddhiAppRuntime.addCallback(SiddhiUtils.prepareName(SiddhiUtils.getOutputTopicName(params)), callback);
+    siddhiAppRuntime.addCallback(SiddhiUtils.getPreparedOutputTopicName(params), callback);
     siddhiAppRuntime.start();
   }
 
@@ -97,7 +102,7 @@ public class SiddhiEngine {
       List<String> eventKeys = this.typeInfo
               .get(sourceId)
               .stream()
-              .map(EventType::getEventTypeName)
+              .map(EventType::getFieldName)
               .collect(Collectors.toList());
 
       inputHandler.send(SiddhiUtils.toObjArr(eventKeys, event.getRaw()));

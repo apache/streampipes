@@ -17,20 +17,15 @@
  */
 package org.apache.streampipes.wrapper.siddhi.engine;
 
-import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
-import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
 import org.apache.streampipes.wrapper.siddhi.engine.callback.SiddhiDebugCallback;
-import org.apache.streampipes.wrapper.siddhi.engine.generator.InputStreamNameGenerator;
+import org.apache.streampipes.wrapper.siddhi.engine.generator.SiddhiInvocationConfigGenerator;
 import org.apache.streampipes.wrapper.siddhi.utils.SiddhiUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> implements
         EventProcessor<B>, SiddhiStatementGenerator<B> {
@@ -38,8 +33,6 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
   private static final Logger LOG = LoggerFactory.getLogger(SiddhiEventEngine.class);
 
   private SiddhiEngine siddhiEngine;
-  private SiddhiInvocationConfig<B> siddhiConfig;
-  private List<String> outputEventKeys = new ArrayList<>();
 
   public SiddhiEventEngine() {
     this.siddhiEngine = new SiddhiEngine();
@@ -51,12 +44,9 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
 
   @Override
   public void onInvocation(B parameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
-    List<String> inputStreamNames = new InputStreamNameGenerator<>(parameters).generateInputStreamNames();
-    this.outputEventKeys = new ArrayList<>(parameters.getOutEventType().keySet());
-    String fromStatement = fromStatement(inputStreamNames, parameters);
-    String selectStatement = selectStatement(outputEventKeys, parameters);
-    this.siddhiConfig = new SiddhiInvocationConfig<>(parameters, fromStatement, selectStatement, inputStreamNames);
-    this.siddhiEngine.initializeEngine(this.siddhiConfig, spOutputCollector, runtimeContext);
+    SiddhiInvocationConfigGenerator<B> siddhiConfigGenerator = new SiddhiInvocationConfigGenerator<>(parameters,
+            this::fromStatement, this::selectStatement);
+    this.siddhiEngine.initializeEngine(siddhiConfigGenerator, spOutputCollector, runtimeContext);
   }
 
   @Override
@@ -69,45 +59,8 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
     this.siddhiEngine.shutdownEngine();
   }
 
-  public SiddhiInvocationConfig<B> getSiddhiConfig() {
-    return this.siddhiConfig;
-  }
-
   public String prepareName(String name) {
     return SiddhiUtils.prepareName(name);
   }
 
-  public String getCustomOutputSelectStatement(DataProcessorInvocation invocation) {
-    StringBuilder selectString = new StringBuilder();
-    selectString.append(SiddhiConstants.SELECT).append(" ");
-
-    if (outputEventKeys.size() > 0) {
-      for (int i=0; i<outputEventKeys.size() - 1; i++) {
-        selectString
-                .append(SiddhiConstants.FIRST_STREAM_PREFIX)
-                .append(outputEventKeys.get(i))
-                .append(",");
-      }
-      selectString
-              .append(SiddhiConstants.FIRST_STREAM_PREFIX)
-              .append(outputEventKeys.get(outputEventKeys.size() - 1));
-    }
-    return selectString.toString();
-  }
-
-  public String getCustomOutputSelectStatement(DataProcessorInvocation invocation,
-                                               String eventName) {
-    StringBuilder selectString = new StringBuilder();
-    selectString.append(SiddhiConstants.SELECT).append(" ");
-
-    if (outputEventKeys.size() > 0) {
-      for (int i = 0; i < outputEventKeys.size() - 1; i++) {
-        selectString.append(eventName).append(".s0").append(outputEventKeys.get(i)).append(",");
-      }
-      selectString.append(eventName).append(".s0").append(outputEventKeys.get(outputEventKeys.size() - 1));
-
-    }
-
-    return selectString.toString();
-  }
 }

@@ -19,26 +19,25 @@ package org.apache.streampipes.wrapper.siddhi.model;
 
 public class EventType {
 
-  private Integer streamIdentifier;
-  private String eventTypeName;
-  private String eventType;
+  private String selectorPrefix;
+  private String fieldName;
+  private String fieldType;
 
-  public EventType(Integer streamIdentifier, String eventTypeName, String eventType) {
-    this.streamIdentifier = streamIdentifier;
-    this.eventTypeName = eventTypeName;
-    this.eventType = eventType;
+  public EventType(String selectorPrefix, String fieldName, String fieldType) {
+    this.selectorPrefix = selectorPrefix;
+    this.fieldName = fieldName;
+    this.fieldType = fieldType;
   }
 
-  public Integer getStreamIdentifier() {
-    return streamIdentifier;
+  public String getSelectorPrefix() {
+    return selectorPrefix;
   }
 
-  public String getEventTypeName() {
-    return eventTypeName;
+  public String getFieldName() {
+    return fieldName;
   }
 
-  public String getEventType() {
-    return eventType;
+  public String getFieldType() {
+    return fieldType;
   }
-
 }

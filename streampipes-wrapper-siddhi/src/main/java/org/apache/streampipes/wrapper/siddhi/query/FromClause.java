@@ -15,22 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.wrapper.siddhi.constants;
+package org.apache.streampipes.wrapper.siddhi.query;
 
-public class SiddhiConstants {
-
-  public static final String SELECT = "select";
-  public static final String INSERT = "insert";
-  public static final String WHITESPACE = " ";
-  public static final String ASTERISK = "*";
-
-  public static final String FIRST_STREAM_PREFIX = "s0";
-  public static final String SECOND_STREAM_PREFIX = "s1";
-
-  public static final String SIDDHI_LONG_TYPE = "LONG";
-  public static final String SIDDHI_INT_TYPE = "INT";
-  public static final String SIDDHI_DOUBLE_TYPE = "DOUBLE";
-  public static final String SIDDHI_BOOLEAN_TYPE = "BOOL";
-  public static final String SIDDHI_STRING_TYPE = "STRING";
-  public static final String SIDDHI_OBJECT_TYPE = "OBJECT";
+public class FromClause extends AbstractQueryGenerator {
 }

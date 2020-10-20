@@ -18,10 +18,12 @@
 package org.apache.streampipes.wrapper.siddhi.utils;
 
 import io.siddhi.core.event.Event;
+import io.siddhi.query.api.definition.Attribute;
 import org.apache.streampipes.model.runtime.EventFactory;
 import org.apache.streampipes.model.runtime.SchemaInfo;
 import org.apache.streampipes.model.runtime.SourceInfo;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
+import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
 
 import java.util.HashMap;
 import java.util.List;
@@ -29,18 +31,19 @@ import java.util.Map;
 
 public class SiddhiUtils {
 
-  public static org.apache.streampipes.model.runtime.Event toSpEvent(Event event, List<String> outputEventKeys, SchemaInfo
-          schemaInfo, SourceInfo sourceInfo) {
+  public static org.apache.streampipes.model.runtime.Event toSpEvent(Event event,
+                                                                     SchemaInfo schemaInfo,
+                                                                     SourceInfo sourceInfo,
+                                                                     List<Attribute> streamAttributes) {
     Map<String, Object> outMap = new HashMap<>();
 
-    for (int i = 0; i < outputEventKeys.size(); i++) {
-      if (event.getData(i) instanceof List) {
-        List<Object> tmp = (List<Object>) event.getData(i);
-        outMap.put(outputEventKeys.get(i), tmp.get(0));
+    for (int i = 0; i < streamAttributes.size(); i++) {
+      String outputKey = streamAttributes.get(i).getName();
+      if (outputKey.startsWith(SiddhiConstants.FIRST_STREAM_PREFIX) ||
+              outputKey.startsWith(SiddhiConstants.SECOND_STREAM_PREFIX)) {
+        outputKey = outputKey.substring(2);
       }
-      else {
-        outMap.put(outputEventKeys.get(i), event.getData(i));
-      }
+        outMap.put(outputKey, event.getData(i));
     }
     return EventFactory.fromMap(outMap, sourceInfo, schemaInfo);
   }
@@ -52,6 +55,10 @@ public class SiddhiUtils {
     }
 
     return result;
+  }
+
+  public static String getPreparedOutputTopicName(EventProcessorBindingParams params) {
+    return prepareName(getOutputTopicName(params));
   }
 
   public static String getOutputTopicName(EventProcessorBindingParams parameters) {

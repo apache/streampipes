@@ -40,7 +40,7 @@ public class EventTypeGenerator<B extends EventProcessorBindingParams> {
       List<EventType> sortedEventKeys = new ArrayList<>();
       for (String propertyKey : value.keySet()) {
         sortedEventKeys.add(makeEventType(currentStreamIndex.get(), propertyKey, value.get(propertyKey)));
-        sortedEventKeys.sort(Comparator.comparing(EventType::getEventTypeName));
+        sortedEventKeys.sort(Comparator.comparing(EventType::getFieldName));
       }
       listOfEventKeys.put(key, sortedEventKeys);
       currentStreamIndex.getAndSet(currentStreamIndex.get() + 1);
@@ -50,7 +50,7 @@ public class EventTypeGenerator<B extends EventProcessorBindingParams> {
   }
 
   private EventType makeEventType(Integer currentStreamIndex, String propertyName, Object propertyType) {
-    return new EventType(currentStreamIndex, propertyName, toType((Class<?>) propertyType));
+    return new EventType(toSelectorPrefix(currentStreamIndex), propertyName, toType((Class<?>) propertyType));
   }
 
   private String toType(Class<?> o) {
@@ -69,5 +69,9 @@ public class EventTypeGenerator<B extends EventProcessorBindingParams> {
     } else {
       return SiddhiConstants.SIDDHI_OBJECT_TYPE;
     }
+  }
+
+  private String toSelectorPrefix(Integer currentStreamIndex) {
+    return currentStreamIndex == 0 ? SiddhiConstants.FIRST_STREAM_PREFIX : SiddhiConstants.SECOND_STREAM_PREFIX;
   }
 }

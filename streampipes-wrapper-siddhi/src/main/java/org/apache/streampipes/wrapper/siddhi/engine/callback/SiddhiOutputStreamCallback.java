@@ -19,6 +19,7 @@ package org.apache.streampipes.wrapper.siddhi.engine.callback;
 
 import io.siddhi.core.event.Event;
 import io.siddhi.core.stream.output.StreamCallback;
+import io.siddhi.query.api.definition.Attribute;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.siddhi.utils.SiddhiUtils;
@@ -28,24 +29,26 @@ import java.util.List;
 public class SiddhiOutputStreamCallback extends StreamCallback {
 
   private SpOutputCollector collector;
-  private List<String> outputEventKeys;
   private EventProcessorRuntimeContext runtimeContext;
 
+  private List<Attribute> streamAttributes;
+
   public SiddhiOutputStreamCallback(SpOutputCollector collector,
-                                    List<String> outputEventKeys,
-                                    EventProcessorRuntimeContext runtimeContext) {
+                                    EventProcessorRuntimeContext runtimeContext,
+                                    List<Attribute> streamAttributes) {
     this.collector = collector;
-    this.outputEventKeys = outputEventKeys;
     this.runtimeContext = runtimeContext;
+    this.streamAttributes = streamAttributes;
   }
 
   @Override
   public void receive(Event[] events) {
     if (events.length > 0) {
       Event lastEvent = events[events.length - 1];
-      collector.collect(SiddhiUtils.toSpEvent(lastEvent, outputEventKeys,
-              runtimeContext.getOutputSchemaInfo
-                      (), runtimeContext.getOutputSourceInfo()));
+      collector.collect(SiddhiUtils.toSpEvent(lastEvent,
+              runtimeContext.getOutputSchemaInfo(),
+              runtimeContext.getOutputSourceInfo(),
+              streamAttributes));
     }
   }
 }

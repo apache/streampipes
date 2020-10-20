@@ -18,13 +18,12 @@
 package org.apache.streampipes.wrapper.siddhi.engine;
 
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
-
-import java.util.List;
+import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
 
 public interface SiddhiStatementGenerator<B extends EventProcessorBindingParams> {
 
-  String fromStatement(List<String> inputStreamNames, final B bindingParameters);
+  String fromStatement(SiddhiProcessorParams<B> siddhiParams);
 
-  String selectStatement(List<String> outputEventKeys, final B bindingParameters);
+  String selectStatement(SiddhiProcessorParams<B> siddhiParams);
 
 }

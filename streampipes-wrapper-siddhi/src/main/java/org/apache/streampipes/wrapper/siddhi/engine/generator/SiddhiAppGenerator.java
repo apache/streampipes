@@ -18,45 +18,39 @@
 package org.apache.streampipes.wrapper.siddhi.engine.generator;
 
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
+import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
 import org.apache.streampipes.wrapper.siddhi.model.EventType;
 import org.apache.streampipes.wrapper.siddhi.utils.SiddhiUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.Map;
 import java.util.StringJoiner;
 
 public class SiddhiAppGenerator<B extends EventProcessorBindingParams> {
 
   private static final Logger LOG = LoggerFactory.getLogger(SiddhiAppGenerator.class);
 
-  private B params;
-  private List<String> inputStreamNames;
-  private Map<String, List<EventType>> eventTypes;
+  private final SiddhiProcessorParams<B> siddhiParams;
   private final String fromStatement;
   private final String selectStatement;
 
   private final StringBuilder siddhiAppString;
 
-  public SiddhiAppGenerator(B params,
-                            List<String> inputStreamNames,
-                            Map<String, List<EventType>> eventTypes,
+  public SiddhiAppGenerator(SiddhiProcessorParams<B> siddhiParams,
                             String fromStatement,
                             String selectStatement) {
-    this.params = params;
-    this.inputStreamNames = inputStreamNames;
-    this.eventTypes = eventTypes;
+    this.siddhiParams = siddhiParams;
     this.fromStatement = fromStatement;
     this.selectStatement = selectStatement;
     this.siddhiAppString = new StringBuilder();
   }
 
   public String generateSiddhiApp() {
-    LOG.info("Configuring event types for graph " + params.getGraph().getName());
+    LOG.info("Configuring event types for graph " + this.siddhiParams.getParams().getGraph().getName());
 
-    this.eventTypes.forEach(this::registerEventType);
-    registerStatements(fromStatement, selectStatement, SiddhiUtils.getOutputTopicName(params));
+    this.siddhiParams.getEventTypeInfo().forEach(this::registerEventType);
+    registerStatements(fromStatement, selectStatement, SiddhiUtils.getOutputTopicName(this.siddhiParams.getParams()));
 
     return this.siddhiAppString.toString();
   }
@@ -66,7 +60,7 @@ public class SiddhiAppGenerator<B extends EventProcessorBindingParams> {
     StringJoiner joiner = new StringJoiner(",");
 
     eventSchema.forEach(typeInfo -> {
-        joiner.add("s" + typeInfo.getStreamIdentifier() + typeInfo.getEventTypeName() + " " + typeInfo.getEventType());
+      joiner.add(typeInfo.getSelectorPrefix() + typeInfo.getFieldName() + " " + typeInfo.getFieldType());
     });
 
     this.siddhiAppString
