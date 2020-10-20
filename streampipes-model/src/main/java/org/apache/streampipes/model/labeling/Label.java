@@ -10,6 +10,7 @@ public class Label {
     private String name;
     private String color;
     private String internalName;
+    private String categoryId;
 
     @JsonProperty("_id")
     private @SerializedName("_id") String id;
@@ -48,4 +49,7 @@ public class Label {
     public void setRev(String rev) {
         this.rev = rev;
     }
+
+    public String getCategoryId() { return categoryId; };
+    public void setCategoryId(String categoryId) { this.categoryId = categoryId; }
 }
