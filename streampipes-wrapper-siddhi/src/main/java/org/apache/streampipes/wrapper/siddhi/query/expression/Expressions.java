@@ -17,14 +17,25 @@
  */
 package org.apache.streampipes.wrapper.siddhi.query.expression;
 
+import org.apache.streampipes.wrapper.siddhi.constants.SiddhiStreamSelector;
+import org.apache.streampipes.wrapper.siddhi.model.EventPropertyDef;
+
 public class Expressions {
 
-  public static Expression property(String propertyName) {
+  public static PropertyExpression property(String propertyName) {
     //return new PropertyExpression(propertyName);
     return null;
   }
 
-  public static Expression property(String propertyName, String targetName) {
+  public static PropertyExpression property(SiddhiStreamSelector selector, String propertyName) {
+    return null;
+  }
+
+  public static PropertyExpression property(EventPropertyDef propertyDef) {
+    return null;
+  }
+
+  public static Expression as(Expression property, String targetName) {
     return null;
   }
 }

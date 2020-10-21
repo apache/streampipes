@@ -19,7 +19,7 @@ package org.apache.streampipes.wrapper.siddhi.engine.generator;
 
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
-import org.apache.streampipes.wrapper.siddhi.model.EventType;
+import org.apache.streampipes.wrapper.siddhi.model.EventPropertyDef;
 import org.apache.streampipes.wrapper.siddhi.utils.SiddhiUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +55,7 @@ public class SiddhiAppGenerator<B extends EventProcessorBindingParams> {
     return this.siddhiAppString.toString();
   }
 
-  private void registerEventType(String eventTypeName, List<EventType> eventSchema) {
+  private void registerEventType(String eventTypeName, List<EventPropertyDef> eventSchema) {
     String defineStreamPrefix = "define stream " + SiddhiUtils.prepareName(eventTypeName);
     StringJoiner joiner = new StringJoiner(",");
 

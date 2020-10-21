@@ -19,7 +19,7 @@ package org.apache.streampipes.wrapper.siddhi.engine.generator;
 
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
-import org.apache.streampipes.wrapper.siddhi.model.EventType;
+import org.apache.streampipes.wrapper.siddhi.model.EventPropertyDef;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +38,7 @@ public class SiddhiInvocationConfigGenerator<B extends EventProcessorBindingPara
                                          Function<SiddhiProcessorParams<B>, String> fromStatementFunction,
                                          Function<SiddhiProcessorParams<B>, String> selectStatementFunction) {
     List<String> inputStreamNames = new InputStreamNameGenerator<>(params).generateInputStreamNames();
-    Map<String, List<EventType>> eventTypeInfo = new EventTypeGenerator<>(params).generateEventTypes();
+    Map<String, List<EventPropertyDef>> eventTypeInfo = new EventTypeGenerator<>(params).generateEventTypes();
     List<String> outputEventKeys = new ArrayList<>(params.getOutEventType().keySet());
     this.siddhiProcessorParams = new SiddhiProcessorParams<>(params, inputStreamNames, eventTypeInfo, outputEventKeys);
     this.fromStatement = fromStatementFunction.apply(this.siddhiProcessorParams);

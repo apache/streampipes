@@ -31,7 +31,7 @@ import org.apache.streampipes.wrapper.siddhi.engine.callback.SiddhiOutputStreamC
 import org.apache.streampipes.wrapper.siddhi.engine.callback.SiddhiOutputStreamDebugCallback;
 import org.apache.streampipes.wrapper.siddhi.engine.generator.SiddhiInvocationConfigGenerator;
 import org.apache.streampipes.wrapper.siddhi.manager.SpSiddhiManager;
-import org.apache.streampipes.wrapper.siddhi.model.EventType;
+import org.apache.streampipes.wrapper.siddhi.model.EventPropertyDef;
 import org.apache.streampipes.wrapper.siddhi.utils.SiddhiUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +47,7 @@ public class SiddhiEngine {
 
   private SiddhiAppRuntime siddhiAppRuntime;
   private final Map<String, InputHandler> siddhiInputHandlers;
-  private Map<String, List<EventType>> typeInfo;
+  private Map<String, List<EventPropertyDef>> typeInfo;
 
   private Boolean debugMode;
   private SiddhiDebugCallback debugCallback;
@@ -102,7 +102,7 @@ public class SiddhiEngine {
       List<String> eventKeys = this.typeInfo
               .get(sourceId)
               .stream()
-              .map(EventType::getFieldName)
+              .map(EventPropertyDef::getFieldName)
               .collect(Collectors.toList());
 
       inputHandler.send(SiddhiUtils.toObjArr(eventKeys, event.getRaw()));

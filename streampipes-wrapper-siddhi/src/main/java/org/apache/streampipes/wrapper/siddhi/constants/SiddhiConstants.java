@@ -21,7 +21,10 @@ public class SiddhiConstants {
 
   public static final String SELECT = "select";
   public static final String INSERT = "insert";
+
   public static final String WHITESPACE = " ";
+  public static final String COMMA = ", ";
+
   public static final String ASTERISK = "*";
 
   public static final String FIRST_STREAM_PREFIX = "s0";

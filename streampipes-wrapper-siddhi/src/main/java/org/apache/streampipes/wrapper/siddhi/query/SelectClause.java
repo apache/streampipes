@@ -20,15 +20,59 @@ package org.apache.streampipes.wrapper.siddhi.query;
 import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
 import org.apache.streampipes.wrapper.siddhi.query.expression.Expression;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class SelectClause extends AbstractQueryGenerator {
+public class SelectClause extends Expression {
 
-  public static String createWildcard() {
-    return join(SiddhiConstants.SELECT, SiddhiConstants.ASTERISK);
+  private boolean wildcard;
+  private List<Expression> outputProperties;
+
+  private SelectClause(boolean wildcard) {
+    this.wildcard = wildcard;
+    this.outputProperties = new ArrayList<>();
   }
 
-  public static String create(List<Expression> outputEventProperties) {
-    return null;
+  private SelectClause(List<Expression> outputProperties) {
+    this.wildcard = false;
+    this.outputProperties = outputProperties;
+  }
+
+  public static SelectClause create() {
+    return new SelectClause(false);
+  }
+
+  public static SelectClause createWildcard() {
+    return new SelectClause(true);
+  }
+
+  public static SelectClause create(List<Expression> outputProperties) {
+    return new SelectClause(outputProperties);
+  }
+
+  public static SelectClause create(Expression... outputProperties) {
+    return new SelectClause(Arrays.asList(outputProperties));
+  }
+
+  public void addProperty(Expression property) {
+    this.outputProperties.add(property);
+  }
+
+  private String toWildcardStatement() {
+    return join(SiddhiConstants.WHITESPACE, SiddhiConstants.SELECT, SiddhiConstants.ASTERISK);
+  }
+
+  private String toPropertyExpressionStatement() {
+    String properties = join(SiddhiConstants.COMMA,
+            this.outputProperties.stream().map(Expression::toSiddhiEpl).collect(Collectors.toList()));
+
+    return join(SiddhiConstants.WHITESPACE, properties);
+  }
+
+  @Override
+  public String toSiddhiEpl() {
+    return wildcard ? toWildcardStatement() : toPropertyExpressionStatement();
   }
 }

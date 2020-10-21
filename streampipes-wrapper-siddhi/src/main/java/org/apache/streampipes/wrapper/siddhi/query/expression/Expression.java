@@ -17,16 +17,19 @@
  */
 package org.apache.streampipes.wrapper.siddhi.query.expression;
 
-import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
-
 import java.util.Arrays;
+import java.util.List;
 import java.util.StringJoiner;
 
 public abstract class Expression {
 
-  public String join(String... substrings) {
-    StringJoiner joiner = new StringJoiner(SiddhiConstants.WHITESPACE);
-    Arrays.stream(substrings).forEach(joiner::add);
+  protected String join(String delimiter, String... substrings) {
+    return join(delimiter, Arrays.asList(substrings));
+  }
+
+  protected String join(String delimiter, List<String> substrings) {
+    StringJoiner joiner = new StringJoiner(delimiter);
+    substrings.forEach(joiner::add);
 
     return joiner.toString();
   }

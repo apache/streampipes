@@ -15,29 +15,20 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.wrapper.siddhi.model;
+package org.apache.streampipes.wrapper.siddhi.constants;
 
-public class EventType {
+public enum SiddhiStreamSelector {
 
-  private String selectorPrefix;
-  private String fieldName;
-  private String fieldType;
+  FIRST_INPUT_STREAM(SiddhiConstants.FIRST_STREAM_PREFIX),
+  SECOND_INPUT_STREAM(SiddhiConstants.SECOND_STREAM_PREFIX);
 
-  public EventType(String selectorPrefix, String fieldName, String fieldType) {
-    this.selectorPrefix = selectorPrefix;
-    this.fieldName = fieldName;
-    this.fieldType = fieldType;
+  private String prefix;
+
+  SiddhiStreamSelector(String prefix) {
+    this.prefix = prefix;
   }
 
-  public String getSelectorPrefix() {
-    return selectorPrefix;
-  }
-
-  public String getFieldName() {
-    return fieldName;
-  }
-
-  public String getFieldType() {
-    return fieldType;
+  public String getPrefix() {
+    return prefix;
   }
 }

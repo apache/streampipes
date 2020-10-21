@@ -15,22 +15,29 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.wrapper.siddhi.query.expression;
+package org.apache.streampipes.wrapper.siddhi.model;
 
-import org.apache.streampipes.wrapper.siddhi.model.EventPropertyDef;
+public class EventPropertyDef {
 
-public class PropertyExpression extends Expression {
+  private String selectorPrefix;
+  private String fieldName;
+  private String fieldType;
 
-  public PropertyExpression(String property) {
-
+  public EventPropertyDef(String selectorPrefix, String fieldName, String fieldType) {
+    this.selectorPrefix = selectorPrefix;
+    this.fieldName = fieldName;
+    this.fieldType = fieldType;
   }
 
-  public PropertyExpression(EventPropertyDef propertyDef) {
-
+  public String getSelectorPrefix() {
+    return selectorPrefix;
   }
 
-  @Override
-  public String toSiddhiEpl() {
-    return null;
+  public String getFieldName() {
+    return fieldName;
+  }
+
+  public String getFieldType() {
+    return fieldType;
   }
 }

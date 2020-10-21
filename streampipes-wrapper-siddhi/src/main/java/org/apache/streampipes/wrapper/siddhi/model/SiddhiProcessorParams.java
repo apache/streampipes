@@ -18,8 +18,10 @@
 package org.apache.streampipes.wrapper.siddhi.model;
 
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.sdk.helpers.Tuple2;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
+import org.apache.streampipes.wrapper.siddhi.constants.SiddhiStreamSelector;
 
 import java.util.List;
 import java.util.Map;
@@ -28,12 +30,12 @@ public class SiddhiProcessorParams<B extends EventProcessorBindingParams> {
 
   private final B params;
   private final List<String> inputStreamNames;
-  private final Map<String, List<EventType>> eventTypeInfo;
+  private final Map<String, List<EventPropertyDef>> eventTypeInfo;
   private final List<String> outputEventKeys;
 
   public SiddhiProcessorParams(B params,
                                List<String> inputStreamNames,
-                               Map<String, List<EventType>> eventTypeInfo,
+                               Map<String, List<EventPropertyDef>> eventTypeInfo,
                                List<String> outputEventKeys) {
     this.params = params;
     this.inputStreamNames = inputStreamNames;
@@ -49,12 +51,17 @@ public class SiddhiProcessorParams<B extends EventProcessorBindingParams> {
     return inputStreamNames;
   }
 
-  public Map<String, List<EventType>> getEventTypeInfo() {
+  public Map<String, List<EventPropertyDef>> getEventTypeInfo() {
     return eventTypeInfo;
   }
 
   public List<String> getOutputEventKeys() {
     return outputEventKeys;
+  }
+
+  public List<Tuple2<SiddhiStreamSelector, String>> getAllInputFieldNames() {
+    //return this.params.getInEventTypes()
+    return null;
   }
 
   public String getCustomOutputSelectStatement(DataProcessorInvocation invocation) {

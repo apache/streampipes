@@ -19,7 +19,7 @@ package org.apache.streampipes.wrapper.siddhi.engine.generator;
 
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
-import org.apache.streampipes.wrapper.siddhi.model.EventType;
+import org.apache.streampipes.wrapper.siddhi.model.EventPropertyDef;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -32,15 +32,15 @@ public class EventTypeGenerator<B extends EventProcessorBindingParams> {
     this.params = params;
   }
 
-  public Map<String, List<EventType>> generateEventTypes() {
-    Map<String, List<EventType>> listOfEventKeys = new HashMap<>();
+  public Map<String, List<EventPropertyDef>> generateEventTypes() {
+    Map<String, List<EventPropertyDef>> listOfEventKeys = new HashMap<>();
     AtomicReference<Integer> currentStreamIndex = new AtomicReference<>(0);
 
     params.getInEventTypes().forEach((key, value) -> {
-      List<EventType> sortedEventKeys = new ArrayList<>();
+      List<EventPropertyDef> sortedEventKeys = new ArrayList<>();
       for (String propertyKey : value.keySet()) {
         sortedEventKeys.add(makeEventType(currentStreamIndex.get(), propertyKey, value.get(propertyKey)));
-        sortedEventKeys.sort(Comparator.comparing(EventType::getFieldName));
+        sortedEventKeys.sort(Comparator.comparing(EventPropertyDef::getFieldName));
       }
       listOfEventKeys.put(key, sortedEventKeys);
       currentStreamIndex.getAndSet(currentStreamIndex.get() + 1);
@@ -49,8 +49,8 @@ public class EventTypeGenerator<B extends EventProcessorBindingParams> {
     return listOfEventKeys;
   }
 
-  private EventType makeEventType(Integer currentStreamIndex, String propertyName, Object propertyType) {
-    return new EventType(toSelectorPrefix(currentStreamIndex), propertyName, toType((Class<?>) propertyType));
+  private EventPropertyDef makeEventType(Integer currentStreamIndex, String propertyName, Object propertyType) {
+    return new EventPropertyDef(toSelectorPrefix(currentStreamIndex), propertyName, toType((Class<?>) propertyType));
   }
 
   private String toType(Class<?> o) {
