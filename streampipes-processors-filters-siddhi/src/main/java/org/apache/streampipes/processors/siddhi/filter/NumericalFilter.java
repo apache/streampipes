@@ -17,9 +17,12 @@
  */
 package org.apache.streampipes.processors.siddhi.filter;
 
+import org.apache.streampipes.wrapper.siddhi.constants.SiddhiStreamSelector;
 import org.apache.streampipes.wrapper.siddhi.engine.SiddhiEventEngine;
 import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
 import org.apache.streampipes.wrapper.siddhi.engine.callback.SiddhiDebugCallback;
+import org.apache.streampipes.wrapper.siddhi.query.SelectClause;
+import org.apache.streampipes.wrapper.siddhi.query.expression.Expressions;
 
 public class NumericalFilter extends SiddhiEventEngine<NumericalFilterParameters> {
 
@@ -59,7 +62,14 @@ public class NumericalFilter extends SiddhiEventEngine<NumericalFilterParameters
 
   @Override
   public String selectStatement(SiddhiProcessorParams<NumericalFilterParameters> siddhiParams) {
-    return siddhiParams.getCustomOutputSelectStatement(siddhiParams.getParams().getGraph());
+    SelectClause selectClause = SelectClause.create();
+    siddhiParams
+            .getOutputEventKeys()
+            .forEach(fieldName -> selectClause.addProperty(Expressions
+                    .property(SiddhiStreamSelector.FIRST_INPUT_STREAM, fieldName)));
+
+    return selectClause.toSiddhiEpl();
+    //return siddhiParams.getCustomOutputSelectStatement(siddhiParams.getParams().getGraph());
   }
 
 }
