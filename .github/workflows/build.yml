@@ -66,9 +66,9 @@ jobs:
           IMG_NAME_ARM32V7: ${{ env.DOCKERHUB_APACHE_REPO }}/backend:arm32v7-${{ env.MVN_VERSION }}
           IMG_NAME_ARM64V8: ${{ env.DOCKERHUB_APACHE_REPO }}/backend:arm64v8-${{ env.MVN_VERSION }}
         run: |
-          docker build --pull --build-arg BASE_IMG=$BASE_IMG_JRE_DEFAULT -t $IMG_NAME_DEFAULT -t $IMG_NAME_AMD64 -f Dockerfile .
-          docker build --pull --build-arg BASE_IMG=$BASE_IMG_JRE_ARM32V7 -t $IMG_NAME_ARM32V7 -f arm.Dockerfile .
-          docker build --pull --build-arg BASE_IMG=$BASE_IMG_JRE_ARM64V8 -t $IMG_NAME_ARM64V8 -f aarch64.Dockerfile .
+          docker build --pull --build-arg BASE_IMAGE=$BASE_IMG_JRE_DEFAULT -t $IMG_NAME_DEFAULT -t $IMG_NAME_AMD64 -f Dockerfile .
+          docker build --pull --build-arg BASE_IMAGE=$BASE_IMG_JRE_ARM32V7 -t $IMG_NAME_ARM32V7 -f arm.Dockerfile .
+          docker build --pull --build-arg BASE_IMAGE=$BASE_IMG_JRE_ARM64V8 -t $IMG_NAME_ARM64V8 -f aarch64.Dockerfile .
           docker push $IMG_NAME_DEFAULT
           docker push $IMG_NAME_AMD64
           docker push $IMG_NAME_ARM32V7
@@ -85,9 +85,9 @@ jobs:
           IMG_NAME_ARM32V7: ${{ env.DOCKERHUB_APACHE_REPO }}/streampipes-connect-container:arm32v7-${{ env.MVN_VERSION }}
           IMG_NAME_ARM64V8: ${{ env.DOCKERHUB_APACHE_REPO }}/streampipes-connect-container:arm64v8-${{ env.MVN_VERSION }}
         run: |
-          docker build --pull --build-arg BASE_IMG=$BASE_IMG_JRE_DEFAULT -t $IMG_NAME_DEFAULT -t $IMG_NAME_AMD64 -f Dockerfile .
-          docker build --pull --build-arg BASE_IMG=$BASE_IMG_JRE_ARM32V7 -t $IMG_NAME_ARM32V7 -f arm.Dockerfile .
-          docker build --pull --build-arg BASE_IMG=$BASE_IMG_JRE_ARM64V8 -t $IMG_NAME_ARM64V8 -f aarch64.Dockerfile .
+          docker build --pull --build-arg BASE_IMAGE=$BASE_IMG_JRE_DEFAULT -t $IMG_NAME_DEFAULT -t $IMG_NAME_AMD64 -f Dockerfile .
+          docker build --pull --build-arg BASE_IMAGE=$BASE_IMG_JRE_ARM32V7 -t $IMG_NAME_ARM32V7 -f arm.Dockerfile .
+          docker build --pull --build-arg BASE_IMAGE=$BASE_IMG_JRE_ARM64V8 -t $IMG_NAME_ARM64V8 -f aarch64.Dockerfile .
           docker push $IMG_NAME_DEFAULT
           docker push $IMG_NAME_AMD64
           docker push $IMG_NAME_ARM32V7
@@ -111,9 +111,9 @@ jobs:
           IMG_NAME_ARM32V7: ${{ env.DOCKERHUB_APACHE_REPO }}/ui:arm32v7-${{ env.MVN_VERSION }}
           IMG_NAME_ARM64V8: ${{ env.DOCKERHUB_APACHE_REPO }}/ui:arm64v8-${{ env.MVN_VERSION }}
         run: |
-          docker build --no-cache --pull --build-arg BASE_IMG=$BASE_IMG_NGINX_DEFAULT -t $IMG_NAME_DEFAULT -t $IMG_NAME_AMD64 -f Dockerfile .
-          docker build --no-cache --pull --build-arg BASE_IMG=$BASE_IMG_NGINX_ARM32V7 -t $IMG_NAME_ARM32V7 -f arm.Dockerfile .
-          docker build --no-cache --pull --build-arg BASE_IMG=$BASE_IMG_NGINX_ARM64V8 -t $IMG_NAME_ARM64V8 -f aarch64.Dockerfile .
+          docker build --no-cache --pull --build-arg BASE_IMAGE=$BASE_IMG_NGINX_DEFAULT -t $IMG_NAME_DEFAULT -t $IMG_NAME_AMD64 -f Dockerfile .
+          docker build --no-cache --pull --build-arg BASE_IMAGE=$BASE_IMG_NGINX_ARM32V7 -t $IMG_NAME_ARM32V7 -f arm.Dockerfile .
+          docker build --no-cache --pull --build-arg BASE_IMAGE=$BASE_IMG_NGINX_ARM64V8 -t $IMG_NAME_ARM64V8 -f aarch64.Dockerfile .
           docker push $IMG_NAME_DEFAULT
           docker push $IMG_NAME_AMD64
           docker push $IMG_NAME_ARM32V7
