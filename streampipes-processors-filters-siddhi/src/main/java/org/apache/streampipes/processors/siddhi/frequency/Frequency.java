@@ -19,6 +19,7 @@ package org.apache.streampipes.processors.siddhi.frequency;
 
 import org.apache.streampipes.wrapper.siddhi.engine.SiddhiEventEngine;
 import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
+import org.apache.streampipes.wrapper.siddhi.query.SelectClause;
 
 public class Frequency extends SiddhiEventEngine<FrequencyParameters> {
 
@@ -32,7 +33,7 @@ public class Frequency extends SiddhiEventEngine<FrequencyParameters> {
 
   @Override
   public String selectStatement(SiddhiProcessorParams<FrequencyParameters> siddhiParams) {
-    return "select *";
+    return SelectClause.createWildcard().toSiddhiEpl();
   }
 
 }

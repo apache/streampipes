@@ -19,21 +19,22 @@ package org.apache.streampipes.processors.siddhi.frequencychange;
 
 import org.apache.streampipes.wrapper.siddhi.engine.SiddhiEventEngine;
 import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
+import org.apache.streampipes.wrapper.siddhi.query.SelectClause;
 
 public class FrequencyChange extends SiddhiEventEngine<FrequencyChangeParameters> {
 
   @Override
   public String fromStatement(SiddhiProcessorParams<FrequencyChangeParameters> siddhiParams) {
-            return "from every not "
-                    + siddhiParams.getInputStreamNames().get(0)
-                    + " for "
-                    + siddhiParams.getParams().getDuration()
-                    + " sec";
+    return "from every not "
+            + siddhiParams.getInputStreamNames().get(0)
+            + " for "
+            + siddhiParams.getParams().getDuration()
+            + " sec";
   }
 
   @Override
   public String selectStatement(SiddhiProcessorParams<FrequencyChangeParameters> siddhiParams) {
-    return "select *";
+    return SelectClause.createWildcard().toSiddhiEpl();
   }
 
 }

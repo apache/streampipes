@@ -18,8 +18,12 @@
 package org.apache.streampipes.processors.siddhi.trend;
 
 import org.apache.streampipes.wrapper.siddhi.engine.SiddhiEventEngine;
-import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
 import org.apache.streampipes.wrapper.siddhi.engine.callback.SiddhiDebugCallback;
+import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
+import org.apache.streampipes.wrapper.siddhi.query.SelectClause;
+import org.apache.streampipes.wrapper.siddhi.query.expression.Expressions;
+
+import java.util.List;
 
 public class Trend extends SiddhiEventEngine<TrendParameters> {
 
@@ -72,7 +76,14 @@ public class Trend extends SiddhiEventEngine<TrendParameters> {
 
   @Override
   public String selectStatement(SiddhiProcessorParams<TrendParameters> siddhiParams) {
-    return siddhiParams.getCustomOutputSelectStatement(siddhiParams.getParams().getGraph(), "e2");
+    SelectClause selectClause = SelectClause.create();
+    List<String> outputFieldSelectors = siddhiParams.getParams().getOutputFieldSelectors();
+    outputFieldSelectors
+            .forEach(outputFieldSelector -> selectClause
+                     .addProperty(Expressions.property("e2", outputFieldSelector)));
+
+    return selectClause.toSiddhiEpl();
+    //return siddhiParams.getCustomOutputSelectStatement(siddhiParams.getParams().getGraph(), "e2");
   }
 
 }

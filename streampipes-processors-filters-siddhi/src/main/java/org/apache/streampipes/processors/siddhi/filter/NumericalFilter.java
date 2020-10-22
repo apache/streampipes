@@ -19,9 +19,10 @@ package org.apache.streampipes.processors.siddhi.filter;
 
 import org.apache.streampipes.wrapper.siddhi.constants.SiddhiStreamSelector;
 import org.apache.streampipes.wrapper.siddhi.engine.SiddhiEventEngine;
-import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
 import org.apache.streampipes.wrapper.siddhi.engine.callback.SiddhiDebugCallback;
+import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
 import org.apache.streampipes.wrapper.siddhi.query.SelectClause;
+import org.apache.streampipes.wrapper.siddhi.query.expression.Expression;
 import org.apache.streampipes.wrapper.siddhi.query.expression.Expressions;
 
 public class NumericalFilter extends SiddhiEventEngine<NumericalFilterParameters> {
@@ -65,11 +66,13 @@ public class NumericalFilter extends SiddhiEventEngine<NumericalFilterParameters
     SelectClause selectClause = SelectClause.create();
     siddhiParams
             .getOutputEventKeys()
-            .forEach(fieldName -> selectClause.addProperty(Expressions
-                    .property(SiddhiStreamSelector.FIRST_INPUT_STREAM, fieldName)));
+            .forEach(fieldName -> selectClause.addProperty(makeProperty(fieldName)));
 
     return selectClause.toSiddhiEpl();
-    //return siddhiParams.getCustomOutputSelectStatement(siddhiParams.getParams().getGraph());
+  }
+
+  private Expression makeProperty(String fieldName) {
+    return Expressions.property(SiddhiStreamSelector.FIRST_INPUT_STREAM, fieldName);
   }
 
 }
