@@ -22,20 +22,23 @@ import org.apache.streampipes.wrapper.siddhi.model.EventPropertyDef;
 
 public class Expressions {
 
+  public static PropertyExpression property(String streamName, String propertyName) {
+    return new PropertyExpression(streamName, propertyName);
+  }
+
   public static PropertyExpression property(String propertyName) {
-    //return new PropertyExpression(propertyName);
-    return null;
+    return new PropertyExpression(propertyName);
   }
 
   public static PropertyExpression property(SiddhiStreamSelector selector, String propertyName) {
-    return null;
+    return new PropertyExpression(selector, propertyName);
   }
 
   public static PropertyExpression property(EventPropertyDef propertyDef) {
-    return null;
+    return new PropertyExpression(propertyDef);
   }
 
-  public static Expression as(Expression property, String targetName) {
+  public static Expression as(PropertyExpression property, String targetName) {
     return null;
   }
 }

@@ -17,6 +17,8 @@
  */
 package org.apache.streampipes.wrapper.siddhi.query.expression;
 
+import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.StringJoiner;
@@ -25,6 +27,13 @@ public abstract class Expression {
 
   protected String join(String delimiter, String... substrings) {
     return join(delimiter, Arrays.asList(substrings));
+  }
+
+  protected String joinWithParenthesis(String delimiter, String... substrings) {
+    return join(SiddhiConstants.EMPTY,
+            SiddhiConstants.PARENTHESIS_OPEN,
+            join(delimiter, substrings),
+            SiddhiConstants.PARENTHESIS_CLOSE);
   }
 
   protected String join(String delimiter, List<String> substrings) {

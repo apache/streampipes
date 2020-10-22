@@ -68,7 +68,7 @@ public class SelectClause extends Expression {
     String properties = join(SiddhiConstants.COMMA,
             this.outputProperties.stream().map(Expression::toSiddhiEpl).collect(Collectors.toList()));
 
-    return join(SiddhiConstants.WHITESPACE, properties);
+    return join(SiddhiConstants.WHITESPACE, SiddhiConstants.SELECT, properties);
   }
 
   @Override

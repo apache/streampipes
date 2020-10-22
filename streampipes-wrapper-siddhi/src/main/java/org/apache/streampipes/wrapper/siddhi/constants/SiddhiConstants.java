@@ -24,6 +24,10 @@ public class SiddhiConstants {
 
   public static final String WHITESPACE = " ";
   public static final String COMMA = ", ";
+  public static final String EMPTY = "";
+  public static final String PARENTHESIS_OPEN = "(";
+  public static final String PARENTHESIS_CLOSE = ")";
+  public static final String AS = "as";
 
   public static final String ASTERISK = "*";
 

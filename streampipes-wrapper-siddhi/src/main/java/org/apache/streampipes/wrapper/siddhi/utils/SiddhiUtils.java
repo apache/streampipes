@@ -77,4 +77,8 @@ public class SiddhiUtils {
             .replaceAll("-", "")
             .replaceAll("::", "");
   }
+
+  public static String prepareProperty(String propertyName) {
+    return propertyName.replaceAll("::", "");
+  }
 }

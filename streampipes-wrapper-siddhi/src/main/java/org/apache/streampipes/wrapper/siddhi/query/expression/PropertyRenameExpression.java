@@ -17,32 +17,23 @@
  */
 package org.apache.streampipes.wrapper.siddhi.query.expression;
 
-import org.apache.streampipes.wrapper.siddhi.constants.SiddhiStreamSelector;
-import org.apache.streampipes.wrapper.siddhi.model.EventPropertyDef;
-import org.apache.streampipes.wrapper.siddhi.utils.SiddhiUtils;
+import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
 
-public class PropertyExpression extends Expression {
+public class PropertyRenameExpression extends Expression {
 
-  private String siddhiPropertyName;
+  private PropertyExpression propertyExpression;
+  private String newPropertyName;
 
-  public PropertyExpression(String streamName, String property) {
-    this.siddhiPropertyName = join(".", streamName, property);
-  }
-
-  public PropertyExpression(String property) {
-    this.siddhiPropertyName = property;
-  }
-
-  public PropertyExpression(EventPropertyDef propertyDef) {
-    this.siddhiPropertyName = propertyDef.getSelectorPrefix() + propertyDef.getFieldName();
-  }
-
-  public PropertyExpression(SiddhiStreamSelector selector, String propertyName) {
-    this.siddhiPropertyName = selector.getPrefix() + propertyName;
+  public PropertyRenameExpression(PropertyExpression property, String newPropertyName) {
+    this.propertyExpression = property;
+    this.newPropertyName = newPropertyName;
   }
 
   @Override
   public String toSiddhiEpl() {
-    return SiddhiUtils.prepareProperty(siddhiPropertyName);
+    return joinWithParenthesis(SiddhiConstants.WHITESPACE,
+            propertyExpression.toSiddhiEpl(),
+            SiddhiConstants.AS,
+            newPropertyName);
   }
 }
