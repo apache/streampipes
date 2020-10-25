@@ -12,6 +12,7 @@ export class ConfigureLabelsComponent implements OnInit {
 
   public categories: Category[];
   public selectedCategory: Category;
+  public categoryLabels: Label[];
 
   public editCategory: boolean;
 
@@ -19,13 +20,19 @@ export class ConfigureLabelsComponent implements OnInit {
 
   ngOnInit(): void {
     this.editCategory = false;
-    this.categories = this.labelService.getCategories();
+    this.labelService.getCategories().subscribe(res => {
+      this.categories = res;
+    });
   }
 
   startEditCategory(value) {
     if ('internal_placeholder' !== value.value) {
       this.editCategory = true;
     }
+
+    this.labelService.getLabelsOfCategory(this.selectedCategory).subscribe((res: Label[]) => {
+      this.categoryLabels = res;
+    });
   }
 
   endEditCategory() {
@@ -36,14 +43,26 @@ export class ConfigureLabelsComponent implements OnInit {
   addCategory() {
     const c1 = new Category();
     c1.name = '';
-    c1.labels = [];
 
-    this.categories.push(c1);
-    this.selectedCategory = c1;
-    this.editCategory = true;
+    this.labelService.addCategory(c1).subscribe((res: Category) => {
+      this.selectedCategory = res;
+      this.editCategory = true;
+      this.categories.push(res);
+    });
+
+    this.categoryLabels = [];
+  }
+
+  updateCategory(newCategoryName) {
+    this.selectedCategory.name = newCategoryName;
+
+    this.labelService.updateCategory(this.selectedCategory).subscribe((res: Category) => {
+      this.selectedCategory = res;
+    });
   }
 
   deleteCategory() {
+    this.labelService.deleteCategory(this.selectedCategory).subscribe();
     this.categories = this.categories.filter(obj => obj !== this.selectedCategory);
     this.endEditCategory();
   }
@@ -51,12 +70,17 @@ export class ConfigureLabelsComponent implements OnInit {
   addLabel() {
     const label = new Label();
     label.name = '';
+    // tslint:disable-next-line:no-bitwise
     label.color = '#' + (Math.random() * 0xFFFFFF << 0).toString(16).padStart(6, '0');
+    label.categoryId = this.selectedCategory._id;
 
-    this.selectedCategory.labels.push(label);
+    this.labelService.addLabel(label).subscribe((res: Label) => {
+      this.categoryLabels.push(res);
+    });
   }
 
   removeLabel(label) {
-    this.selectedCategory.labels = this.selectedCategory.labels.filter(obj => obj !== label);
+    this.labelService.deleteLabel(label).subscribe();
+    this.categoryLabels = this.categoryLabels.filter(obj => obj !== label);
   }
 }

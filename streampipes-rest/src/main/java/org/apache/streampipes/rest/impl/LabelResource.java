@@ -44,11 +44,15 @@ public class LabelResource extends AbstractRestInterface implements ILabel {
             errorDetails.put("message", resString);
             return badRequest(errorDetails);
         }
-        StorageDispatcher.INSTANCE
+        String labelId = StorageDispatcher.INSTANCE
                 .getNoSqlStore()
                 .getLabelStorageAPI()
                 .storeLabel(label);
-        return ok();
+
+        return ok(StorageDispatcher.INSTANCE
+                .getNoSqlStore()
+                .getLabelStorageAPI()
+                .getLabel(labelId));
     }
 
     @GET
@@ -70,7 +74,7 @@ public class LabelResource extends AbstractRestInterface implements ILabel {
     @JacksonSerialized
     @Override
     public Response updateLabel(@PathParam("labelId") String labelId, Label label) {
-        if (labelId != label.getId()) {
+        if (!labelId.equals(label.getId())) {
             String resString = "LabelId not the same as in message body";
             Map<String, Object> errorDetails = new HashMap<>();
             errorDetails.put("message", resString);
@@ -90,7 +94,11 @@ public class LabelResource extends AbstractRestInterface implements ILabel {
                 .getNoSqlStore()
                 .getLabelStorageAPI()
                 .updateLabel(label);
-        return ok();
+
+        return ok(StorageDispatcher.INSTANCE
+                .getNoSqlStore()
+                .getLabelStorageAPI()
+                .getLabel(labelId));
     }
 
     @DELETE

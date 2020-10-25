@@ -9,7 +9,7 @@ public interface ICategoryStorage {
 
     List<Category>getAllCategories();
 
-    void storeCategory(Category category);
+    String storeCategory(Category category);
 
     void updateCategory(Category category);
 

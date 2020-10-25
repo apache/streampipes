@@ -35,11 +35,14 @@ public class CategoryResource extends AbstractRestInterface implements ICategory
     @JacksonSerialized
     @Override
     public Response add(Category category) {
-        StorageDispatcher.INSTANCE
+        String categoryId = StorageDispatcher.INSTANCE
                 .getNoSqlStore()
                 .getCategoryStorageAPI()
                 .storeCategory(category);
-        return ok();
+
+        return ok(StorageDispatcher.INSTANCE
+                .getNoSqlStore()
+                .getCategoryStorageAPI().getCategory(categoryId));
     }
 
     @GET
@@ -61,7 +64,7 @@ public class CategoryResource extends AbstractRestInterface implements ICategory
     @JacksonSerialized
     @Override
     public Response update(@PathParam("categoryId") String categoryId, Category category) {
-        if (categoryId != category.getId()) {
+        if (!categoryId.equals(category.getId())) {
             String resString = "CategoryId not the same as in message body";
             Map<String, Object> errorDetails = new HashMap<>();
             errorDetails.put("message", resString);
@@ -71,7 +74,10 @@ public class CategoryResource extends AbstractRestInterface implements ICategory
                 .getNoSqlStore()
                 .getCategoryStorageAPI()
                 .updateCategory(category);
-        return ok();
+
+        return ok(StorageDispatcher.INSTANCE
+                .getNoSqlStore()
+                .getCategoryStorageAPI().getCategory(categoryId));
     }
 
     @DELETE

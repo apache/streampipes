@@ -13,7 +13,7 @@ public interface ILabelStorage {
 
     void deleteAllForCategory(String categoryId);
 
-    void storeLabel(Label label);
+    String storeLabel(Label label);
 
     Label getLabel(String labelId);
 

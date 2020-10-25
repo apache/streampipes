@@ -24,13 +24,13 @@
         <div fxLayout="row" fxLayoutAlign="space-between center">
             <mat-form-field>
                 <mat-label>Category Name</mat-label>
-                <input matInput type="text" [(ngModel)]="selectedCategory.name">
+                <input matInput (ngModelChange)="updateCategory($event)" type="text" [(ngModel)]="selectedCategory.name">
             </mat-form-field>
             <mat-icon  style="cursor: pointer;" matTooltip="Delete label category" (click)="deleteCategory()" class="icon">delete</mat-icon>
         </div>
         <div fxLayout="column" fxLayoutAlign="center stretch">
             <sp-label-list-item
-                    *ngFor="let label of selectedCategory.labels;"
+                    *ngFor="let label of categoryLabels;"
                     (removeLabel)="removeLabel($event)"
                     [label]="label">
             </sp-label-list-item>
