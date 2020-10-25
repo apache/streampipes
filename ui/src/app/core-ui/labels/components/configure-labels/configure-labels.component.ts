@@ -2,6 +2,10 @@ import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@a
 import { ColorService } from '../../../image/services/color.service';
 import { LabelService } from '../../services/label.service';
 import { Category, Label } from '../../../../core-model/gen/streampipes-model';
+import { fromEvent, interval, timer } from 'rxjs';
+import { debounce, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { ajax } from 'rxjs/ajax';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'sp-configure-labels',
@@ -10,13 +14,13 @@ import { Category, Label } from '../../../../core-model/gen/streampipes-model';
 })
 export class ConfigureLabelsComponent implements OnInit {
 
+  constructor(private formBuilder: FormBuilder, public colorService: ColorService, public labelService: LabelService) { }
+
   public categories: Category[];
   public selectedCategory: Category;
   public categoryLabels: Label[];
 
   public editCategory: boolean;
-
-  constructor(public colorService: ColorService, public labelService: LabelService) { }
 
   ngOnInit(): void {
     this.editCategory = false;
@@ -24,6 +28,7 @@ export class ConfigureLabelsComponent implements OnInit {
       this.categories = res;
     });
   }
+
 
   startEditCategory(value) {
     if ('internal_placeholder' !== value.value) {
@@ -56,7 +61,10 @@ export class ConfigureLabelsComponent implements OnInit {
   updateCategory(newCategoryName) {
     this.selectedCategory.name = newCategoryName;
 
-    this.labelService.updateCategory(this.selectedCategory).subscribe((res: Category) => {
+    this.labelService.updateCategory(this.selectedCategory)
+      .subscribe((res: Category) => {
+      this.categories = this.categories.filter(obj => obj !== this.selectedCategory);
+      this.categories.push(res);
       this.selectedCategory = res;
     });
   }
