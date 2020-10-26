@@ -14,7 +14,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 })
 export class ConfigureLabelsComponent implements OnInit {
 
-  constructor(private formBuilder: FormBuilder, public colorService: ColorService, public labelService: LabelService) { }
+  constructor(public colorService: ColorService, public labelService: LabelService) { }
 
   public categories: Category[];
   public selectedCategory: Category;

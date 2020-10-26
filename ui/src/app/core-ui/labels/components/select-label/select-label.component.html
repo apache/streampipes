@@ -20,20 +20,21 @@
     <h2>Labels</h2>
     <div style="padding-left: 5px; padding-right: 5px; border-radius: 50px; font-size: 20px;">
         <mat-form-field style="margin-top: -15px; margin-bottom: -10px">
-            <mat-select [(value)]="selectedCategory">
+            <mat-select (selectionChange)="changeCategory($event)" [(value)]="selectedCategory">
                 <mat-option *ngFor="let category of categories" [value]="category">
-                    {{category}}
+                    {{category.name}}
                 </mat-option>
             </mat-select>
         </mat-form-field>
     </div>
     <mat-list>
-        <mat-list-item *ngFor="let label of _labels[selectedCategory]; index as i"
-                       [style.background-color]="_selectedLabel.label == label ? 'lightgrey' : 'white'"
+        <mat-list-item *ngFor="let label of labels; index as i"
+                       [style.background-color]="selectedLabel.name == label.name ? 'lightgrey' : 'white'"
                        style="height: 30px; padding-top: 5px; padding-buttom: 5px; border-radius: 50px; margin-bottom: 5px"
-                       (click)="selectLabel({category: labelCategory, label: label})">
-            <mat-icon matListIcon [style.color]="colorService.getColor(label)" style="margin-top: -8px;">color_lens</mat-icon>
-            <h4 style="margin-top: -3px;"> {{label}} <label *ngIf="i < 10"> #{{i+1}}</label> </h4>
+                       (click)="selectLabel(label)">
+
+            <mat-icon matListIcon [style.color]="label.color" style="margin-top: -8px;">color_lens</mat-icon>
+            <h4 style="margin-top: -3px;"> {{label.name}} <label *ngIf="i < 10"> #{{i+1}}</label> </h4>
         </mat-list-item>
     </mat-list>
 </div>

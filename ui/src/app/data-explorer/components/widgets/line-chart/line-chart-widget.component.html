@@ -30,12 +30,12 @@
                 </sp-select-properties>
 
                 <sp-select-properties
-                        label="Select Label Column"
+                        label="Select String Property"
                         multiple = false
                         style="margin-right: 10px;"
                         *ngIf="showLabelColumnSelection"
                         (changeSelectedProperties)="setSelectedLabelColumn($event)"
-                        [availableProperties]="availableNonNumericColumns"
+                        [availableProperties]="availableNoneNumericColumns"
                         [selectedProperties]="selectedNonNumericColumn">
                 </sp-select-properties>
                 <sp-aggregate-configuration
@@ -69,9 +69,7 @@
         <sp-load-data-spinner *ngIf="showIsLoadingData"></sp-load-data-spinner>
         <sp-no-data-in-date-range *ngIf="showNoDataInDateRange" [viewDateRange]="viewDateRange"></sp-no-data-in-date-range>
 
-
         <sp-select-label *ngIf="labelingModeOn"
-                         [labels]="possibleLabels"
                          [enableShortCuts]="true"
                          (labelChange)="handleLabelChange($event)">
         </sp-select-label>

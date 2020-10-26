@@ -18,6 +18,8 @@
 
 import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { ColorService } from '../../../image/services/color.service';
+import { Category, Label } from '../../../../core-model/gen/streampipes-model';
+import { LabelService } from '../../services/label.service';
 
 @Component({
   selector: 'sp-select-label',
@@ -26,35 +28,33 @@ import { ColorService } from '../../../image/services/color.service';
 })
 export class SelectLabelComponent implements OnInit {
 
-  @Input()
-  set labels(labels) {
-    this._labels = labels;
-    this.update();
-  }
+  public categories: Category[];
+  public selectedCategory: Category;
+
   @Input() enableShortCuts: boolean;
-  @Output() labelChange: EventEmitter<{category, label}> = new EventEmitter<{category, label}>();
+  @Output() labelChange: EventEmitter<Label> = new EventEmitter<Label>();
 
-  public _labels;
-  public _selectedLabel: {category, label};
-  public categories;
-  public selectedCategory;
+  public labels: Label[];
+  public selectedLabel: Label;
 
-  constructor(public colorService: ColorService) { }
+  constructor(public labelService: LabelService, public colorService: ColorService) { }
 
   ngOnInit(): void {
-
+    this.labelService.getCategories().subscribe(res => {
+      this.categories = res;
+    });
   }
 
-  update() {
-    this.categories = Object.keys(this._labels);
-    this.selectedCategory = this.categories[0];
-    this._selectedLabel = {category: this.selectedCategory, label: this._labels[this.selectedCategory][0]};
-    this.labelChange.emit(this._selectedLabel);
+  changeCategory(c) {
+    this.labelService.getLabelsOfCategory(c.value).subscribe(res => {
+      this.labels = res;
+      this.selectedLabel = this.labels[0];
+    });
   }
 
-  selectLabel(e: {category, label}) {
-    this._selectedLabel = e;
-    this.labelChange.emit(this._selectedLabel);
+  selectLabel(e: Label) {
+    this.selectedLabel = e;
+    this.labelChange.emit(this.selectedLabel);
   }
 
   @HostListener('document:keydown', ['$event'])
@@ -63,8 +63,8 @@ export class SelectLabelComponent implements OnInit {
       if (event.code.toLowerCase().includes('digit')) {
         // Number
         const value = Number(event.key);
-        if (value !== 0 && value <= this._labels[this.selectedCategory].length) {
-          this.selectLabel({category: this.selectedCategory, label: this._labels[this.selectedCategory][value - 1]});
+        if (value !== 0 && value <= this.labels.length) {
+          this.selectLabel(this.labels[value - 1]);
         }
       }
     }
