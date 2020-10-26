@@ -15,34 +15,40 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.wrapper.siddhi.query;
+package org.apache.streampipes.wrapper.siddhi.query.expression.pattern;
 
 import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
 import org.apache.streampipes.wrapper.siddhi.query.expression.Expression;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+public class PatternCountExpression extends Expression {
 
-public class FromClause extends Expression {
+  private String countString;
 
-  private List<Expression> fromExpressions;
+  public PatternCountExpression(Integer count, PatternCountOperator operator) {
+    String countValue = "";
+    if (operator == PatternCountOperator.EXACTLY_N) {
+      countValue = String.valueOf(count);
+    } else if (operator == PatternCountOperator.MIN_N) {
+      countValue = count + SiddhiConstants.COLON;
+    } else if (operator == PatternCountOperator.MAX_N) {
+      countValue = SiddhiConstants.COLON + count;
+    }
 
-  private FromClause() {
-    this.fromExpressions = new ArrayList<>();
+    this.countString = SiddhiConstants.ANGLE_BRACKET_OPEN
+            + countValue
+            + SiddhiConstants.ANGLE_BRACKET_CLOSE;
   }
 
-  public static FromClause create() {
-    return new FromClause();
-  }
-
-  public void add(Expression expression) {
-    this.fromExpressions.add(expression);
+  public PatternCountExpression(Integer minCount, Integer maxCount) {
+    this.countString = SiddhiConstants.ANGLE_BRACKET_OPEN
+            + minCount
+            + SiddhiConstants.COLON
+            + maxCount
+            + SiddhiConstants.ANGLE_BRACKET_CLOSE;
   }
 
   @Override
   public String toSiddhiEpl() {
-    List<String> fromExpressions = this.fromExpressions.stream().map(Expression::toSiddhiEpl).collect(Collectors.toList());
-    return join(SiddhiConstants.WHITESPACE, SiddhiConstants.FROM, join(SiddhiConstants.COMMA, fromExpressions));
+    return this.countString;
   }
 }

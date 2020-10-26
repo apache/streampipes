@@ -15,34 +15,21 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.wrapper.siddhi.query;
+package org.apache.streampipes.wrapper.siddhi.query.expression;
 
 import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
-import org.apache.streampipes.wrapper.siddhi.query.expression.Expression;
+import org.apache.streampipes.wrapper.siddhi.query.expression.pattern.PatternExpression;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-public class FromClause extends Expression {
+public class SequenceExpression extends PatternExpression {
 
-  private List<Expression> fromExpressions;
-
-  private FromClause() {
-    this.fromExpressions = new ArrayList<>();
+  public SequenceExpression(List<StreamExpression> streamExpressions) {
+    super(SiddhiConstants.SEQUENCE, streamExpressions);
   }
 
-  public static FromClause create() {
-    return new FromClause();
+  public SequenceExpression(List<StreamExpression> streamExpressions, WithinExpression withinExpression) {
+    super(SiddhiConstants.SEQUENCE, streamExpressions, withinExpression);
   }
 
-  public void add(Expression expression) {
-    this.fromExpressions.add(expression);
-  }
-
-  @Override
-  public String toSiddhiEpl() {
-    List<String> fromExpressions = this.fromExpressions.stream().map(Expression::toSiddhiEpl).collect(Collectors.toList());
-    return join(SiddhiConstants.WHITESPACE, SiddhiConstants.FROM, join(SiddhiConstants.COMMA, fromExpressions));
-  }
 }

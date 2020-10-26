@@ -15,34 +15,27 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.wrapper.siddhi.query;
+package org.apache.streampipes.wrapper.siddhi.query.expression.window;
 
 import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
 import org.apache.streampipes.wrapper.siddhi.query.expression.Expression;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+public abstract class WindowExpression extends Expression {
 
-public class FromClause extends Expression {
+  protected Integer windowValue;
 
-  private List<Expression> fromExpressions;
-
-  private FromClause() {
-    this.fromExpressions = new ArrayList<>();
+  public WindowExpression(Integer windowValue) {
+    this.windowValue = windowValue;
   }
 
-  public static FromClause create() {
-    return new FromClause();
+  protected String windowExpression() {
+    return join(SiddhiConstants.EMPTY, SiddhiConstants.HASH, "window", SiddhiConstants.DOT);
   }
 
-  public void add(Expression expression) {
-    this.fromExpressions.add(expression);
-  }
-
-  @Override
-  public String toSiddhiEpl() {
-    List<String> fromExpressions = this.fromExpressions.stream().map(Expression::toSiddhiEpl).collect(Collectors.toList());
-    return join(SiddhiConstants.WHITESPACE, SiddhiConstants.FROM, join(SiddhiConstants.COMMA, fromExpressions));
+  protected String windowValue(String value) {
+    return join(SiddhiConstants.EMPTY,
+            SiddhiConstants.PARENTHESIS_OPEN,
+            value,
+            SiddhiConstants.PARENTHESIS_CLOSE);
   }
 }

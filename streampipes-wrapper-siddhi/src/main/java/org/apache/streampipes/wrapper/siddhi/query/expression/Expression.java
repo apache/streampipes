@@ -30,11 +30,27 @@ public abstract class Expression {
   }
 
   protected String joinWithParenthesis(String delimiter, String... substrings) {
-    return join(SiddhiConstants.EMPTY,
+    return joinWithParenthesis(delimiter, Arrays.asList(substrings));
+  }
+
+  protected String joinWithParenthesis(String delimiter, List<String> substrings) {
+    return join(delimiter,
             SiddhiConstants.PARENTHESIS_OPEN,
             join(delimiter, substrings),
             SiddhiConstants.PARENTHESIS_CLOSE);
   }
+
+  protected String joinWithSquareBracket(String delimiter, String... substrings) {
+    return joinWithSquareBracket(delimiter, Arrays.asList(substrings));
+  }
+
+  protected String joinWithSquareBracket(String delimiter, List<String> substrings) {
+    return join(delimiter,
+            SiddhiConstants.SQUARE_BRACKET_OPEN,
+            join(delimiter, substrings),
+            SiddhiConstants.SQUARE_BRACKED_CLOSE);
+  }
+
 
   protected String join(String delimiter, List<String> substrings) {
     StringJoiner joiner = new StringJoiner(delimiter);

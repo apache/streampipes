@@ -15,34 +15,30 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.wrapper.siddhi.query;
+package org.apache.streampipes.wrapper.siddhi.query.expression.math;
 
 import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
-import org.apache.streampipes.wrapper.siddhi.query.expression.Expression;
+import org.apache.streampipes.wrapper.siddhi.query.expression.PropertyExpressionBase;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+public class MathExpression extends PropertyExpressionBase {
 
-public class FromClause extends Expression {
+  private MathOperator operator;
+  private PropertyExpressionBase op1;
+  private PropertyExpressionBase op2;
 
-  private List<Expression> fromExpressions;
-
-  private FromClause() {
-    this.fromExpressions = new ArrayList<>();
-  }
-
-  public static FromClause create() {
-    return new FromClause();
-  }
-
-  public void add(Expression expression) {
-    this.fromExpressions.add(expression);
+  public MathExpression(MathOperator operator,
+                        PropertyExpressionBase op1,
+                        PropertyExpressionBase op2) {
+    this.operator = operator;
+    this.op1 = op1;
+    this.op2 = op2;
   }
 
   @Override
   public String toSiddhiEpl() {
-    List<String> fromExpressions = this.fromExpressions.stream().map(Expression::toSiddhiEpl).collect(Collectors.toList());
-    return join(SiddhiConstants.WHITESPACE, SiddhiConstants.FROM, join(SiddhiConstants.COMMA, fromExpressions));
+    return joinWithParenthesis(SiddhiConstants.WHITESPACE,
+            op1.toSiddhiEpl(),
+            operator.toOperatorString(),
+            op2.toSiddhiEpl());
   }
 }

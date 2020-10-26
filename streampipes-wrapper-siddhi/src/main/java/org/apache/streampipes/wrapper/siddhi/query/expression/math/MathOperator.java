@@ -15,27 +15,22 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.wrapper.siddhi.query.expression;
+package org.apache.streampipes.wrapper.siddhi.query.expression.math;
 
-import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
+public enum MathOperator {
 
-import static org.apache.streampipes.wrapper.siddhi.utils.SiddhiUtils.prepareProperty;
+  ADD("+"),
+  SUBTRACT("-"),
+  MULTIPLY("*"),
+  DIVIDE("/");
 
-public class PropertyRenameExpression extends Expression {
+  private String operator;
 
-  private PropertyExpressionBase propertyExpression;
-  private String newPropertyName;
-
-  public PropertyRenameExpression(PropertyExpressionBase property, String newPropertyName) {
-    this.propertyExpression = property;
-    this.newPropertyName = newPropertyName;
+  MathOperator(String operator) {
+    this.operator = operator;
   }
 
-  @Override
-  public String toSiddhiEpl() {
-    return join(SiddhiConstants.WHITESPACE,
-            propertyExpression.toSiddhiEpl(),
-            SiddhiConstants.AS,
-            prepareProperty(newPropertyName));
+  public String toOperatorString() {
+    return operator;
   }
 }

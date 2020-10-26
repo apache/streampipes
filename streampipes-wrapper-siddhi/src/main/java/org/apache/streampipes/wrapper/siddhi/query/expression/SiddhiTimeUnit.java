@@ -17,25 +17,19 @@
  */
 package org.apache.streampipes.wrapper.siddhi.query.expression;
 
-import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
+public enum SiddhiTimeUnit {
 
-import static org.apache.streampipes.wrapper.siddhi.utils.SiddhiUtils.prepareProperty;
+  SECONDS("sec"),
+  MINUTES("minute"),
+  HOURS("hour");
 
-public class PropertyRenameExpression extends Expression {
+  String timeUnitString;
 
-  private PropertyExpressionBase propertyExpression;
-  private String newPropertyName;
-
-  public PropertyRenameExpression(PropertyExpressionBase property, String newPropertyName) {
-    this.propertyExpression = property;
-    this.newPropertyName = newPropertyName;
+  SiddhiTimeUnit(String timeUnitString) {
+    this.timeUnitString = timeUnitString;
   }
 
-  @Override
-  public String toSiddhiEpl() {
-    return join(SiddhiConstants.WHITESPACE,
-            propertyExpression.toSiddhiEpl(),
-            SiddhiConstants.AS,
-            prepareProperty(newPropertyName));
+  public String toTimeUnitString() {
+    return this.timeUnitString;
   }
 }

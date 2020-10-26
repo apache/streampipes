@@ -17,25 +17,23 @@
  */
 package org.apache.streampipes.wrapper.siddhi.query.expression;
 
-import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
+public enum RelationalOperator {
 
-import static org.apache.streampipes.wrapper.siddhi.utils.SiddhiUtils.prepareProperty;
+  EQUALS("="),
+  GREATER_THAN(">"),
+  GREATER_EQUALS(">="),
+  LESSER_THAN("<"),
+  LESSER_EQUALS("<="),
+  NOT_EQUALS("!=");
 
-public class PropertyRenameExpression extends Expression {
+  private String operator;
 
-  private PropertyExpressionBase propertyExpression;
-  private String newPropertyName;
-
-  public PropertyRenameExpression(PropertyExpressionBase property, String newPropertyName) {
-    this.propertyExpression = property;
-    this.newPropertyName = newPropertyName;
+  RelationalOperator(String operator) {
+    this.operator = operator;
   }
 
-  @Override
-  public String toSiddhiEpl() {
-    return join(SiddhiConstants.WHITESPACE,
-            propertyExpression.toSiddhiEpl(),
-            SiddhiConstants.AS,
-            prepareProperty(newPropertyName));
+  public String toOperatorString() {
+    return operator;
   }
+
 }

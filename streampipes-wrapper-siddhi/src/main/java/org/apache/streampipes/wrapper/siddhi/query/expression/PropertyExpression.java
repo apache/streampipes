@@ -21,7 +21,7 @@ import org.apache.streampipes.wrapper.siddhi.constants.SiddhiStreamSelector;
 import org.apache.streampipes.wrapper.siddhi.model.EventPropertyDef;
 import org.apache.streampipes.wrapper.siddhi.utils.SiddhiUtils;
 
-public class PropertyExpression extends Expression {
+public class PropertyExpression extends PropertyExpressionBase {
 
   private String siddhiPropertyName;
 

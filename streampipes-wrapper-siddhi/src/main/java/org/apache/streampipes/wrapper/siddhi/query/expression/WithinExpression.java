@@ -15,34 +15,26 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.wrapper.siddhi.query;
+package org.apache.streampipes.wrapper.siddhi.query.expression;
 
 import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
-import org.apache.streampipes.wrapper.siddhi.query.expression.Expression;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+public class WithinExpression extends Expression {
 
-public class FromClause extends Expression {
+  private SiddhiTimeUnit timeUnit;
+  private Integer duration;
 
-  private List<Expression> fromExpressions;
-
-  private FromClause() {
-    this.fromExpressions = new ArrayList<>();
-  }
-
-  public static FromClause create() {
-    return new FromClause();
-  }
-
-  public void add(Expression expression) {
-    this.fromExpressions.add(expression);
+  public WithinExpression(Integer duration, SiddhiTimeUnit timeUnit) {
+    this.duration = duration;
+    this.timeUnit = timeUnit;
   }
 
   @Override
   public String toSiddhiEpl() {
-    List<String> fromExpressions = this.fromExpressions.stream().map(Expression::toSiddhiEpl).collect(Collectors.toList());
-    return join(SiddhiConstants.WHITESPACE, SiddhiConstants.FROM, join(SiddhiConstants.COMMA, fromExpressions));
+    return join(SiddhiConstants.WHITESPACE,
+            SiddhiConstants.WITHIN,
+            String.valueOf(this.duration),
+            this.timeUnit.toTimeUnitString());
   }
+
 }

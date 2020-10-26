@@ -15,34 +15,24 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.wrapper.siddhi.query;
+package org.apache.streampipes.wrapper.siddhi.query.expression.window;
 
 import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
-import org.apache.streampipes.wrapper.siddhi.query.expression.Expression;
+import org.apache.streampipes.wrapper.siddhi.query.expression.SiddhiTimeUnit;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+public class TimeWindowExpression extends WindowExpression {
 
-public class FromClause extends Expression {
+  private SiddhiTimeUnit timeUnit;
 
-  private List<Expression> fromExpressions;
-
-  private FromClause() {
-    this.fromExpressions = new ArrayList<>();
-  }
-
-  public static FromClause create() {
-    return new FromClause();
-  }
-
-  public void add(Expression expression) {
-    this.fromExpressions.add(expression);
+  public TimeWindowExpression(Integer timeWindowSize, SiddhiTimeUnit timeUnit) {
+    super(timeWindowSize);
+    this.timeUnit = timeUnit;
   }
 
   @Override
   public String toSiddhiEpl() {
-    List<String> fromExpressions = this.fromExpressions.stream().map(Expression::toSiddhiEpl).collect(Collectors.toList());
-    return join(SiddhiConstants.WHITESPACE, SiddhiConstants.FROM, join(SiddhiConstants.COMMA, fromExpressions));
+    return join(SiddhiConstants.EMPTY,
+            windowExpression(),
+            windowValue(windowValue + SiddhiConstants.WHITESPACE + timeUnit.toTimeUnitString()));
   }
 }

@@ -18,24 +18,41 @@
 package org.apache.streampipes.wrapper.siddhi.query.expression;
 
 import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
+import org.apache.streampipes.wrapper.siddhi.query.expression.window.WindowExpression;
 
-import static org.apache.streampipes.wrapper.siddhi.utils.SiddhiUtils.prepareProperty;
+public class StreamExpression extends Expression {
 
-public class PropertyRenameExpression extends Expression {
+  private String streamName;
+  private String streamAlias;
+  private WindowExpression windowExpression;
 
-  private PropertyExpressionBase propertyExpression;
-  private String newPropertyName;
+  public StreamExpression() {
 
-  public PropertyRenameExpression(PropertyExpressionBase property, String newPropertyName) {
-    this.propertyExpression = property;
-    this.newPropertyName = newPropertyName;
+  }
+
+  public StreamExpression(String streamName) {
+    this.streamName = streamName;
+  }
+
+  public StreamExpression(String streamName, WindowExpression windowExpression) {
+    this.streamName = streamName;
+    this.windowExpression = windowExpression;
+  }
+
+  public StreamExpression(String streamAlias, String streamName) {
+    this(streamName);
+    this.streamAlias = streamAlias;
   }
 
   @Override
   public String toSiddhiEpl() {
-    return join(SiddhiConstants.WHITESPACE,
-            propertyExpression.toSiddhiEpl(),
-            SiddhiConstants.AS,
-            prepareProperty(newPropertyName));
+    String streamName = this.streamAlias == null ? this.streamName :
+            join(SiddhiConstants.EMPTY, this.streamAlias, SiddhiConstants.EQUALS, this.streamName);
+
+    if (this.windowExpression != null) {
+      streamName = join(SiddhiConstants.EMPTY, streamName, this.windowExpression.toSiddhiEpl());
+    }
+
+    return streamName;
   }
 }

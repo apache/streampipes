@@ -15,34 +15,31 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.wrapper.siddhi.query;
+package org.apache.streampipes.wrapper.siddhi.query.expression;
 
 import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
-import org.apache.streampipes.wrapper.siddhi.query.expression.Expression;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+public class RelationalOperatorExpression extends Expression {
 
-public class FromClause extends Expression {
+  private PropertyExpressionBase exp1;
+  private PropertyExpressionBase exp2;
 
-  private List<Expression> fromExpressions;
+  private RelationalOperator operator;
 
-  private FromClause() {
-    this.fromExpressions = new ArrayList<>();
+  public RelationalOperatorExpression(RelationalOperator operator,
+                                      PropertyExpressionBase exp1,
+                                      PropertyExpressionBase exp2) {
+    this.operator = operator;
+    this.exp1 = exp1;
+    this.exp2 = exp2;
   }
 
-  public static FromClause create() {
-    return new FromClause();
-  }
-
-  public void add(Expression expression) {
-    this.fromExpressions.add(expression);
-  }
 
   @Override
   public String toSiddhiEpl() {
-    List<String> fromExpressions = this.fromExpressions.stream().map(Expression::toSiddhiEpl).collect(Collectors.toList());
-    return join(SiddhiConstants.WHITESPACE, SiddhiConstants.FROM, join(SiddhiConstants.COMMA, fromExpressions));
+    return joinWithParenthesis(SiddhiConstants.EMPTY,
+            exp1.toSiddhiEpl(),
+            operator.toOperatorString(),
+            exp2.toSiddhiEpl());
   }
 }

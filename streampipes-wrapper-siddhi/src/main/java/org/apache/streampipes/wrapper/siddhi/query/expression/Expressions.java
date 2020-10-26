@@ -19,8 +19,83 @@ package org.apache.streampipes.wrapper.siddhi.query.expression;
 
 import org.apache.streampipes.wrapper.siddhi.constants.SiddhiStreamSelector;
 import org.apache.streampipes.wrapper.siddhi.model.EventPropertyDef;
+import org.apache.streampipes.wrapper.siddhi.query.expression.list.CollectListExpression;
+import org.apache.streampipes.wrapper.siddhi.query.expression.list.ContainsListExpression;
+import org.apache.streampipes.wrapper.siddhi.query.expression.math.MathDivideExpression;
+import org.apache.streampipes.wrapper.siddhi.query.expression.math.MathMultiplyExpression;
+import org.apache.streampipes.wrapper.siddhi.query.expression.pattern.EveryExpression;
+import org.apache.streampipes.wrapper.siddhi.query.expression.pattern.PatternCountExpression;
+import org.apache.streampipes.wrapper.siddhi.query.expression.pattern.PatternCountOperator;
+import org.apache.streampipes.wrapper.siddhi.query.expression.window.BatchWindowExpression;
+import org.apache.streampipes.wrapper.siddhi.query.expression.window.WindowExpression;
+
+import java.util.Arrays;
 
 public class Expressions {
+
+  public static Expression as(PropertyExpressionBase property, String targetName) {
+    return new PropertyRenameExpression(property, targetName);
+  }
+
+  public static WindowExpression batchWindow(Integer windowSize) {
+    return new BatchWindowExpression(windowSize);
+  }
+
+  public static PropertyExpressionBase collectList(PropertyExpression propertyExp) {
+    return new CollectListExpression(propertyExp);
+  }
+
+  public static PropertyExpressionBase containsListItem(PropertyExpression listProperty, Object value) {
+    return new ContainsListExpression(listProperty, value);
+  }
+
+  public static PropertyExpressionBase divide(PropertyExpressionBase op1, PropertyExpressionBase op2) {
+    return new MathDivideExpression(op1, op2);
+  }
+
+  public static StreamExpression every(StreamExpression streamExpression) {
+    return new EveryExpression(streamExpression);
+  }
+
+  public static RelationalOperatorExpression eq(PropertyExpressionBase exp1, PropertyExpressionBase exp2) {
+    return new EqualsExpression(exp1, exp2);
+  }
+
+  public static StreamFilterExpression filter(StreamExpression streamExpression, Expression... filterExpressions) {
+    return new StreamFilterExpression(streamExpression, Arrays.asList(filterExpressions));
+  }
+
+  public static StreamFilterExpression filter(StreamExpression streamExpression,
+                                              PatternCountExpression patternCountExpression,
+                                              Expression... filterExpressions) {
+    return new StreamFilterExpression(streamExpression,
+            Arrays.asList(filterExpressions),
+            patternCountExpression);
+  }
+
+  public static RelationalOperatorExpression ge(PropertyExpressionBase exp1, PropertyExpressionBase exp2) {
+    return new GreaterEqualsExpression(exp1, exp2);
+  }
+
+  public static RelationalOperatorExpression gt(PropertyExpressionBase exp1, PropertyExpressionBase exp2) {
+    return new GreaterThanExpression(exp1, exp2);
+  }
+
+  public static RelationalOperatorExpression le(PropertyExpressionBase exp1, PropertyExpressionBase exp2) {
+    return new LesserEqualsExpression(exp1, exp2);
+  }
+
+  public static RelationalOperatorExpression lt(PropertyExpressionBase exp1, PropertyExpressionBase exp2) {
+    return new LesserThanExpression(exp1, exp2);
+  }
+
+  public static PropertyExpressionBase multiply(PropertyExpressionBase op1, PropertyExpressionBase op2) {
+    return new MathMultiplyExpression(op1, op2);
+  }
+
+  public static PatternCountExpression patternCount(Integer value, PatternCountOperator op) {
+    return new PatternCountExpression(value, op);
+  }
 
   public static PropertyExpression property(String streamName, String propertyName) {
     return new PropertyExpression(streamName, propertyName);
@@ -38,7 +113,45 @@ public class Expressions {
     return new PropertyExpression(propertyDef);
   }
 
-  public static Expression as(PropertyExpression property, String targetName) {
-    return null;
+  public static Expression sequence(StreamExpression expression1, StreamExpression expression2) {
+    return new SequenceExpression(Arrays.asList(expression1, expression2));
+  }
+
+  public static Expression sequence(StreamExpression expression1,
+                                    StreamExpression expression2,
+                                    WithinExpression withinExpression) {
+    return new SequenceExpression(Arrays.asList(expression1, expression2), withinExpression);
+  }
+
+  public static PropertyExpression staticValue(Number staticValue) {
+    return new PropertyExpression(String.valueOf(staticValue));
+  }
+
+  public static PropertyRenameExpression staticValue(Number staticValue, String propertyName) {
+    return new PropertyRenameExpression(Expressions.property(String.valueOf(staticValue)), propertyName);
+  }
+
+  public static PropertyRenameExpression staticValue(String staticValue, String propertyName) {
+    return new PropertyRenameExpression(Expressions.property(makeStaticString(staticValue)), propertyName);
+  }
+
+  public static StreamExpression stream(String streamName) {
+    return new StreamExpression(streamName);
+  }
+
+  public static StreamExpression stream(String streamName, WindowExpression windowExpression) {
+    return new StreamExpression(streamName, windowExpression);
+  }
+
+  public static StreamExpression stream(String streamName, String streamAlias) {
+    return new StreamExpression(streamName, streamAlias);
+  }
+
+  private static String makeStaticString(String staticValue) {
+    return "'" + staticValue + "'";
+  }
+
+  public static WithinExpression within(int duration, SiddhiTimeUnit timeUnit) {
+    return new WithinExpression(duration, timeUnit);
   }
 }

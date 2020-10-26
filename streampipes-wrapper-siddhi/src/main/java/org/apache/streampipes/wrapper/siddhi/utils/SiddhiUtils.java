@@ -81,4 +81,5 @@ public class SiddhiUtils {
   public static String prepareProperty(String propertyName) {
     return propertyName.replaceAll("::", "");
   }
+
 }

@@ -21,13 +21,25 @@ public class SiddhiConstants {
 
   public static final String SELECT = "select";
   public static final String INSERT = "insert";
+  public static final String FROM = "from";
 
   public static final String WHITESPACE = " ";
-  public static final String COMMA = ", ";
+  public static final String COMMA = ",";
+  public static final String COLON = ":";
+  public static final String DOT = ".";
   public static final String EMPTY = "";
+  public static final String HASH = "#";
   public static final String PARENTHESIS_OPEN = "(";
   public static final String PARENTHESIS_CLOSE = ")";
+  public static final String SQUARE_BRACKET_OPEN = "[";
+  public static final String SQUARE_BRACKED_CLOSE = "]";
+  public static final String ANGLE_BRACKET_OPEN = "<";
+  public static final String ANGLE_BRACKET_CLOSE = ">";
   public static final String AS = "as";
+  public static final String EQUALS = "=";
+  public static final String EVERY = "every";
+  public static final String SEQUENCE = "->";
+  public static final String WITHIN = "within";
 
   public static final String ASTERISK = "*";
 
