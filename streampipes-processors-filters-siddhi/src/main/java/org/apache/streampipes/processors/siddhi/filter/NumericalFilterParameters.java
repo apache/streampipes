@@ -20,14 +20,15 @@ package org.apache.streampipes.processors.siddhi.filter;
 
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
+import org.apache.streampipes.wrapper.siddhi.query.expression.RelationalOperator;
 
 public class NumericalFilterParameters extends EventProcessorBindingParams {
 
   private double threshold;
-  private FilterOperator filterOperator;
+  private RelationalOperator filterOperator;
   private String filterProperty;
 
-  public NumericalFilterParameters(DataProcessorInvocation graph, Double threshold, FilterOperator
+  public NumericalFilterParameters(DataProcessorInvocation graph, Double threshold, RelationalOperator
           filterOperator, String filterProperty) {
     super(graph);
     this.threshold = threshold;
@@ -39,7 +40,7 @@ public class NumericalFilterParameters extends EventProcessorBindingParams {
     return threshold;
   }
 
-  public FilterOperator getFilterOperator() {
+  public RelationalOperator getFilterOperator() {
     return filterOperator;
   }
 

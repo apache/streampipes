@@ -1,8 +1,8 @@
 org.apache.streampipes.processors.siddhi.listcollector.title=List Collector
-org.apache.streampipes.processors.siddhi.listcollector.description=Filters a field from an input event that represents a list for the presence of a given value.
+org.apache.streampipes.processors.siddhi.listcollector.description=Collects all values from a field within a specified batch window into a list.
 
-list-field.title=Value to Observe
-list-field.description=Specifies the value that should be monitored.
+list-key.title=Field
+list-key.description=The field where values should be collected into a list.
 
-time-window-size.title=Time Window Size
-time-window-size.description=The time window size in seconds
+window-size.title=Batch Window Size
+window-size.description=The batch window size.

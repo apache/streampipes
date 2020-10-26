@@ -107,7 +107,7 @@ public class TestTrendProcessor {
 
     graph.getOutputStream().getEventGrounding().getTransportProtocol().getTopicDefinition().setActualTopicName("output-topic");
     TrendParameters params = new TrendParameters(graph, trendOperator, increase, timeWindow, "s0" +
-            "::randomValue", Collections.emptyList());
+            "::randomValue", Arrays.asList("s0::randomValue"));
 
     Trend trend = new Trend(event -> actualMatchCount[0]++);
     trend.onInvocation(params, null, null);

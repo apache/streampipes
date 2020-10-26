@@ -19,16 +19,23 @@ package org.apache.streampipes.processors.siddhi.listfilter;
 
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
+import org.apache.streampipes.model.schema.EventPropertyList;
+import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
 import org.apache.streampipes.wrapper.siddhi.engine.StreamPipesSiddhiProcessor;
+import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
+import org.apache.streampipes.wrapper.siddhi.query.FromClause;
+import org.apache.streampipes.wrapper.siddhi.query.SelectClause;
+import org.apache.streampipes.wrapper.siddhi.query.expression.Expression;
+import org.apache.streampipes.wrapper.siddhi.query.expression.Expressions;
 import org.apache.streampipes.wrapper.standalone.ProcessorParams;
 
 public class ListFilter extends StreamPipesSiddhiProcessor {
@@ -51,14 +58,25 @@ public class ListFilter extends StreamPipesSiddhiProcessor {
             .build();
   }
 
-
   @Override
   public String fromStatement(SiddhiProcessorParams<ProcessorParams> siddhiParams) {
-    return null;
+    String filteredFieldSelector = siddhiParams.getParams().extractor().mappingPropertyValue(LIST_KEY);
+    Object filterValue = extractFilterValue(filteredFieldSelector, siddhiParams.getParams().extractor());
+    FromClause fromClause = FromClause.create();
+
+    Expression containsExp = Expressions.containsListItem(Expressions.property(filteredFieldSelector), filterValue);
+    fromClause.add(Expressions.filter(Expressions.stream(siddhiParams.getInputStreamNames().get(0)), containsExp));
+
+    return fromClause.toSiddhiEpl();
   }
 
   @Override
   public String selectStatement(SiddhiProcessorParams<ProcessorParams> siddhiParams) {
-    return null;
+    return SelectClause.createWildcard().toSiddhiEpl();
+  }
+
+  private Object extractFilterValue(String selector, ProcessingElementParameterExtractor extractor) {
+    EventPropertyList prop = (EventPropertyList) extractor.getEventPropertyBySelector(selector);
+    return extractor.singleValueParameter((EventPropertyPrimitive) prop.getEventProperty(), REQUIRED_VALUE_KEY);
   }
 }

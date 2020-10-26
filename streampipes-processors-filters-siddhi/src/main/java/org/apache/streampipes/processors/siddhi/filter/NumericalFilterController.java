@@ -26,6 +26,7 @@ import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.sdk.helpers.*;
 import org.apache.streampipes.sdk.utils.Assets;
+import org.apache.streampipes.wrapper.siddhi.query.expression.RelationalOperator;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
@@ -59,25 +60,26 @@ public class NumericalFilterController extends StandaloneEventProcessingDeclarer
     Double threshold = extractor.singleValueParameter(VALUE, Double.class);
     String stringOperation = extractor.selectedSingleValue(OPERATION, String.class);
 
-    String operation = "GT";
+    RelationalOperator operator = RelationalOperator.GREATER_THAN;
 
     if (stringOperation.equals("<=")) {
-      operation = "LT";
+      operator = RelationalOperator.LESSER_EQUALS;
     } else if (stringOperation.equals("<")) {
-      operation = "LE";
+      operator = RelationalOperator.LESSER_THAN;
     } else if (stringOperation.equals(">=")) {
-      operation = "GE";
+      operator = RelationalOperator.GREATER_EQUALS;
     } else if (stringOperation.equals("==")) {
-      operation = "EQ";
+      operator = RelationalOperator.EQUALS;
     } else if (stringOperation.equals("!=")) {
-      operation = "IE";
+      operator = RelationalOperator.NOT_EQUALS;
     }
 
     String filterProperty = extractor.mappingPropertyValue(NUMBER_MAPPING);
 
-    NumericalFilterParameters staticParam = new NumericalFilterParameters(graph, threshold, FilterOperator.valueOf
-            (operation)
-            , filterProperty);
+    NumericalFilterParameters staticParam = new NumericalFilterParameters(graph,
+            threshold,
+            operator,
+            filterProperty);
 
     return new ConfiguredEventProcessor<>(staticParam, NumericalFilter::new);
   }

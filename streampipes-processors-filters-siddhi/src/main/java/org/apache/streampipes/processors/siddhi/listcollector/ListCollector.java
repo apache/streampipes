@@ -29,21 +29,22 @@ import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.sdk.helpers.*;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.sdk.utils.Datatypes;
-import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
+import org.apache.streampipes.wrapper.siddhi.constants.SiddhiStreamSelector;
 import org.apache.streampipes.wrapper.siddhi.engine.StreamPipesSiddhiProcessor;
+import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
+import org.apache.streampipes.wrapper.siddhi.query.FromClause;
+import org.apache.streampipes.wrapper.siddhi.query.SelectClause;
+import org.apache.streampipes.wrapper.siddhi.query.expression.Expressions;
 import org.apache.streampipes.wrapper.standalone.ProcessorParams;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.StringJoiner;
-
-import static org.apache.streampipes.wrapper.siddhi.utils.SiddhiUtils.prepareName;
 
 public class ListCollector extends StreamPipesSiddhiProcessor
         implements ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
 
   private static final String LIST_KEY = "list-key";
-  private static final String TIME_WINDOW_SIZE = "time-window-size";
+  private static final String WINDOW_SIZE = "window-size";
 
   @Override
   public DataProcessorDescription declareModel() {
@@ -55,7 +56,7 @@ public class ListCollector extends StreamPipesSiddhiProcessor
                     .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(), Labels.withId
                             (LIST_KEY), PropertyScope.MEASUREMENT_PROPERTY)
                     .build())
-            .requiredIntegerParameter(Labels.withId(TIME_WINDOW_SIZE))
+            .requiredIntegerParameter(Labels.withId(WINDOW_SIZE))
             .outputStrategy(OutputStrategies.customTransformation())
             .build();
 
@@ -63,16 +64,29 @@ public class ListCollector extends StreamPipesSiddhiProcessor
 
   @Override
   public String fromStatement(SiddhiProcessorParams<ProcessorParams> siddhiParams) {
-    return "from " +siddhiParams.getInputStreamNames().get(0) + "#window.lengthBatch(10)";
+
+    Integer batchWindowSize = siddhiParams.getParams().extractor().singleValueParameter(WINDOW_SIZE, Integer.class);
+
+    FromClause fromClause = FromClause.create();
+    fromClause.add(Expressions.stream(siddhiParams.getInputStreamNames().get(0), Expressions.batchWindow(batchWindowSize)));
+
+    return fromClause.toSiddhiEpl();
   }
 
   @Override
   public String selectStatement(SiddhiProcessorParams<ProcessorParams> siddhiParams) {
-    String propertySelector = siddhiParams.getParams().extractor().mappingPropertyValue(LIST_KEY);
-    StringJoiner joiner = new StringJoiner(",");
-    siddhiParams.getEventTypeInfo().forEach((key, value) -> value.forEach(field -> joiner.add(field.getSelectorPrefix() + field.getFieldName())));
-    return "select " +joiner.toString() +", list:collect(" + prepareName(propertySelector) +") as " + prepareName(propertySelector) + "_list";
 
+    String propertySelector = siddhiParams.getParams().extractor().mappingPropertyValue(LIST_KEY);
+
+    SelectClause selectClause = SelectClause.create();
+    siddhiParams
+            .getEventTypeInfo()
+            .forEach((key, value) -> value
+                    .forEach(field -> selectClause.addProperty(Expressions.property(SiddhiStreamSelector.FIRST_INPUT_STREAM, field.getFieldName()))));
+
+    selectClause.addProperty(Expressions.as(Expressions.collectList(Expressions.property(propertySelector)), propertySelector + "_list"));
+
+    return selectClause.toSiddhiEpl();
   }
 
   @Override
