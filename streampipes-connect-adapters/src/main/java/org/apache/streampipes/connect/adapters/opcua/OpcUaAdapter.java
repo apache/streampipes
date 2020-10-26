@@ -65,7 +65,7 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
     private boolean selectedURL;
 
     private Map<String, Object> event;
-
+    private List<OpcNode> allNodes;
     private OpcUa opcUa;
 
     private int numberProperties;
@@ -113,7 +113,12 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
 
         String key = getRuntimeNameOfNode(item.getReadValueId().getNodeId());
 
-        event.put(key, value.getValue().getValue());
+        OpcNode currNode = this.allNodes.stream()
+                .filter(node -> key.equals(node.getNodeId().getIdentifier().toString()))
+                .findFirst()
+                .orElse(null);
+
+        event.put(currNode.getLabel(), value.getValue().getValue());
 
         // ensure that event is complete and all opc ua subscriptions transmitted at least one value
         if (event.keySet().size() >= this.numberProperties) {
@@ -138,10 +143,10 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
         try {
             this.opcUa.connect();
 
-            List<OpcNode> allNodes = this.opcUa.browseNode();
+            this.allNodes = this.opcUa.browseNode();
             List<NodeId> nodeIds = new ArrayList<>();
 
-            for (OpcNode rd : allNodes) {
+            for (OpcNode rd : this.allNodes) {
                 nodeIds.add(rd.nodeId);
             }
 
@@ -190,7 +195,7 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
 
                     String runtimeName = getRuntimeNameOfNode(opcNode.getNodeId());
                     allProperties.add(PrimitivePropertyBuilder
-                            .create(opcNode.getType(), runtimeName)
+                            .create(opcNode.getType(), opcNode.getLabel())
                             .label(opcNode.getLabel())
                             .build());
                 }
