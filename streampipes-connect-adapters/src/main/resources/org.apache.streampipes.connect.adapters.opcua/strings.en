@@ -8,7 +8,7 @@ OPC_HOST_OR_URL.description=
 OPC_URL.title=URL
 OPC_URL.description=
 
-OPC_HOST.title=Host/PPort
+OPC_HOST.title=Host/Port
 OPC_HOST.description=
 
 OPC_SERVER_URL.title=URL
