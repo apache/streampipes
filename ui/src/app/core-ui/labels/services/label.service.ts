@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import { Category, Label } from '../../../core-model/gen/streampipes-model';
 import { PlatformServicesCommons } from '../../../platform-services/apis/commons.service';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, ReplaySubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LabelService {
-  private categories = [];
+  private bufferedLabels = [];
 
   urlBase() {
     return this.platformServicesCommons.authUserBasePath();
@@ -36,6 +36,30 @@ export class LabelService {
 
   deleteCategory(c: Category) {
     return this.$http.delete(this.urlBase() + '/labeling/category/' + c._id);
+  }
+
+  getAllLabels() {
+    return this.$http.get(this.urlBase() + '/labeling/label/');
+  }
+
+  getLabel(labelId: string) {
+    return this.$http.get(this.urlBase() + '/labeling/label/' + labelId);
+  }
+
+  getBufferedLabel(labelId: string) {
+    // this.bufferedLabels
+    const result = new ReplaySubject(1);
+
+    if (this.bufferedLabels[labelId] !== undefined) {
+     result.next(this.bufferedLabels[labelId]);
+    } else {
+      this.getLabel(labelId).subscribe(label => {
+        this.bufferedLabels.push({labelId: label});
+        result.next(label);
+      });
+    }
+
+    return result;
   }
 
   addLabel(l: Label) {

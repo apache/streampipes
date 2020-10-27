@@ -24,19 +24,19 @@
                         label="Select Properties"
                         multiple = true
                         style="margin-right: 10px;"
-                        (changeSelectedProperties)="setSelectedColumn($event)"
-                        [availableProperties]="availableColumns"
-                        [selectedProperties]="selectedColumns">
+                        (changeSelectedProperties)="setSelectedProperties($event)"
+                        [availableProperties]="availableProperties"
+                        [selectedProperties]="selectedLineChartProperties">
                 </sp-select-properties>
 
                 <sp-select-properties
-                        label="Select String Property"
+                        label="Select Background Color"
                         multiple = false
                         style="margin-right: 10px;"
-                        *ngIf="showLabelColumnSelection"
-                        (changeSelectedProperties)="setSelectedLabelColumn($event)"
+                        *ngIf="showBackgroundColorProperty"
+                        (changeSelectedProperties)="setSelectedBackgroundColorProperty($event)"
                         [availableProperties]="availableNoneNumericColumns"
-                        [selectedProperties]="selectedNonNumericColumn">
+                        [selectedProperties]="selectedBackgroundColorProperty">
                 </sp-select-properties>
                 <sp-aggregate-configuration
                         *ngIf="advancedSettingsActive"

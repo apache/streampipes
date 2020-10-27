@@ -75,7 +75,6 @@ import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ConfigureLabelsComponent } from './labels/components/configure-labels/configure-labels.component';
 import { LabelListItemComponent } from './labels/components/label-list-item/label-list-item.component';
-import { LabelsComponent } from './labels/components/labels/labels.component';
 
 @NgModule({
     imports: [
@@ -129,7 +128,6 @@ import { LabelsComponent } from './labels/components/labels/labels.component';
         StaticRuntimeResolvableAnyInputComponent,
         StaticRuntimeResolvableOneOfInputComponent,
         LabelListItemComponent,
-        LabelsComponent,
     ],
     providers: [
         MatDatepickerModule,
@@ -169,8 +167,7 @@ import { LabelsComponent } from './labels/components/labels/labels.component';
     StaticOneOfInputComponent,
     StaticRuntimeResolvableAnyInputComponent,
     StaticRuntimeResolvableOneOfInputComponent,
-    ImageViewerComponent,
-    LabelsComponent
+    ImageViewerComponent
   ]
 })
 export class CoreUiModule {

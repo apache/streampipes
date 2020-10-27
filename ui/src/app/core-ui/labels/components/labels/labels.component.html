@@ -1,9 +1,0 @@
-<sp-configure-labels *ngIf="editLabels"></sp-configure-labels>
-
-<sp-select-label
-        *ngIf="!editLabels"
-                 [labels]="possibleLabels"
-                 [enableShortCuts]="true"
-                 (labelChange)="handleLabelChange($event)">
-</sp-select-label>
-

@@ -2,7 +2,7 @@
 
     <div *ngIf="!editCategory">
         <h2>Categories</h2>
-        <mat-form-field style="margin-top: -15px; margin-bottom: -10px">
+        <mat-form-field *ngIf="!noCategoriesAvailable" style="margin-top: -15px; margin-bottom: -10px">
             <mat-label>Select Label Category</mat-label>
             <mat-select [(value)]="selectedCategory" (selectionChange)="startEditCategory($event)">
                 <mat-option value="internal_placeholder"></mat-option>

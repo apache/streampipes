@@ -22,10 +22,13 @@ export class ConfigureLabelsComponent implements OnInit {
 
   public editCategory: boolean;
 
+  public noCategoriesAvailable = true;
+
   ngOnInit(): void {
     this.editCategory = false;
     this.labelService.getCategories().subscribe(res => {
       this.categories = res;
+      this.setCategoryAvailable();
     });
   }
 
@@ -53,9 +56,18 @@ export class ConfigureLabelsComponent implements OnInit {
       this.selectedCategory = res;
       this.editCategory = true;
       this.categories.push(res);
+      this.setCategoryAvailable();
     });
 
     this.categoryLabels = [];
+  }
+
+  setCategoryAvailable() {
+    if (this.categories.length > 0) {
+      this.noCategoriesAvailable = false;
+    } else {
+      this.noCategoriesAvailable = true;
+    }
   }
 
   updateCategory(newCategoryName) {

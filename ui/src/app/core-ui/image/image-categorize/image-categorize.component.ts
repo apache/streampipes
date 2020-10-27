@@ -49,7 +49,7 @@ export class ImageCategorizeComponent implements OnInit, AfterViewInit {
   constructor(private restService: DatalakeRestService, public colorService: ColorService, private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
-    // TODO: Load labels for images
+    // TODO: Load colorPropertyStringValues for images
     this.selectedLabels = [];
 
     // TODO: Get Labels

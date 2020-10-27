@@ -23,8 +23,9 @@ import { GroupedDataResult } from '../../../../core-model/datalake/GroupedDataRe
 import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
 import { ColorService } from './services/color.service';
 import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
-import { EventPropertyUnion } from '../../../../core-model/gen/streampipes-model';
+import { EventPropertyUnion, Label } from '../../../../core-model/gen/streampipes-model';
 import { ResizeService } from '../../../services/resize.service';
+import { LabelService } from '../../../../core-ui/labels/services/label.service';
 
 @Component({
   selector: 'sp-data-explorer-line-chart-widget',
@@ -34,19 +35,19 @@ import { ResizeService } from '../../../services/resize.service';
 export class LineChartWidgetComponent extends BaseDataExplorerWidget implements OnInit {
 
   data: any[] = undefined;
-  labels: any[] = undefined;
-  availableColumns: EventPropertyUnion[] = [];
+  colorPropertyStringValues: any[] = undefined;
+  availableProperties: EventPropertyUnion[] = [];
   availableNoneNumericColumns: EventPropertyUnion[] = [];
-  selectedColumns: EventPropertyUnion[] = [];
-  selectedNonNumericColumn: EventPropertyUnion = undefined;
+  selectedLineChartProperties: EventPropertyUnion[] = [];
+  selectedBackgroundColorProperty: EventPropertyUnion = undefined;
   dimensionProperties: EventPropertyUnion[] = [];
 
   yKeys: string[] = [];
   xKey: string;
-  private nonNumericKey: string = undefined;
+  private backgroundColorPropertyKey: string = undefined;
 
   advancedSettingsActive = false;
-  showLabelColumnSelection  = true;
+  showBackgroundColorProperty  = true;
 
   selectedStartX = undefined;
   selectedEndX = undefined;
@@ -67,7 +68,8 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
               public colorService: ColorService,
               public renderer: Renderer2,
               protected dataLakeRestService: DatalakeRestService,
-              private resizeService: ResizeService) {
+              private resizeService: ResizeService,
+              public labelService: LabelService ) {
     super(dataLakeRestService, dialog);
   }
 
@@ -139,14 +141,14 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
 
 
   ngOnInit(): void {
-    this.availableColumns = this.getNumericProperty(this.dataExplorerWidget.dataLakeMeasure.eventSchema);
+    this.availableProperties = this.getNumericProperty(this.dataExplorerWidget.dataLakeMeasure.eventSchema);
     this.dimensionProperties = this.getDimensionProperties(this.dataExplorerWidget.dataLakeMeasure.eventSchema);
-    this.availableNoneNumericColumns = this.getNonNumericProperties(this.dataExplorerWidget.dataLakeMeasure.eventSchema);
+    this.availableNoneNumericColumns = this.getNoneNumericProperties(this.dataExplorerWidget.dataLakeMeasure.eventSchema);
 
     // Reduce selected columns when more then 6
-    this.selectedColumns = this.availableColumns.length > 6 ? this.availableColumns.slice(0, 5) : this.availableColumns;
+    this.selectedLineChartProperties = this.availableProperties.length > 6 ? this.availableProperties.slice(0, 5) : this.availableProperties;
     this.xKey = this.getTimestampProperty(this.dataExplorerWidget.dataLakeMeasure.eventSchema).runtimeName;
-    this.yKeys = this.getRuntimeNames(this.selectedColumns);
+    this.yKeys = this.getRuntimeNames(this.selectedLineChartProperties);
     this.updateData();
     this.resizeService.resizeSubject.subscribe(info => {
       if (info.gridsterItem.id === this.gridsterItem.id) {
@@ -166,8 +168,8 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
       this.dataLakeRestService.getDataAutoAggregation(
         this.dataExplorerWidget.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime())
         .subscribe((res: DataResult) => {
-            this.processNoneGroupedData(res);
-          });
+          this.processNoneGroupedData(res);
+        });
     } else {
       if (this.groupValue === 'None') {
         this.setShownComponents(false, false, true);
@@ -175,15 +177,15 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
           this.dataExplorerWidget.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime()
           , this.aggregationTimeUnit, this.aggregationValue)
           .subscribe((res: DataResult) => {
-              this.processNoneGroupedData(res);
-            });
+            this.processNoneGroupedData(res);
+          });
       } else {
         this.dataLakeRestService.getGroupedData(
           this.dataExplorerWidget.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime(),
           this.aggregationTimeUnit, this.aggregationValue, this.groupValue)
           .subscribe((res: GroupedDataResult) => {
             this.processGroupedData(res);
-           });
+          });
       }
     }
   }
@@ -195,8 +197,12 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
       res.measureName = this.dataExplorerWidget.dataLakeMeasure.measureName;
       const tmp = this.transformData(res, this.xKey);
       this.data = this.displayData(tmp, this.yKeys);
-      this.labels = this.loadLabels(tmp, this.nonNumericKey);
-      this.addLabelsToGraph(this.data, this.labels);
+
+      if (this.labelingModeOn) {
+        this.backgroundColorPropertyKey = 'sp_internal_label';
+      }
+      this.colorPropertyStringValues = this.loadBackgroundColor(tmp, this.backgroundColorPropertyKey);
+      this.addBackgroundColorToGraph(this.data, this.colorPropertyStringValues, this.backgroundColorPropertyKey);
       this.data['measureName'] = tmp.measureName;
 
       this.setShownComponents(false, true, false);
@@ -210,8 +216,9 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
       const tmp = this.transformGroupedData(res, this.xKey);
       this.data = this.displayGroupedData(tmp);
 
-      if (this.data !== undefined && this.data['labels'] !== undefined && this.data['labels'].length > 0) {
-        this.addInitialColouredShapesToGraph();
+      if (this.data !== undefined &&
+        this.data['colorPropertyStringValues'] !== undefined && this.data['colorPropertyStringValues'].length > 0) {
+        this.addInitialColouredShapesToGraph(this.colorPropertyStringValues, this.colorService.getColor);
       }
 
       this.setShownComponents(false, true, false);
@@ -236,11 +243,11 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
     }
   }
 
-  loadLabels(transformedData: DataResult, labelKey: string) {
+  loadBackgroundColor(transformedData: DataResult, backgroundColorKey: string) {
     let labels;
-    if (labelKey !== undefined) {
+    if (backgroundColorKey !== undefined) {
       transformedData.rows.forEach(serie => {
-        if (serie.name === labelKey) {
+        if (serie.name === backgroundColorKey) {
           labels = serie.y;
         }
       });
@@ -248,19 +255,64 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
     return labels;
   }
 
-  addLabelsToGraph(data, labels) {
-    data.forEach(serie => {
-      // adding customdata property in order to store labels in graph
-      if (labels !== undefined && labels.length !== 0) {
-        serie['customdata'] = labels;
-        this.addInitialColouredShapesToGraph();
-      } else {
-        serie['customdata'] = Array(serie['x'].length).fill('');
+  addBackgroundColorToGraph(data, colorPropertyStringValues, backgroundColorPropertyKey) {
+
+    // the all labels function is required to get the correct color and internal name for labeled data
+    this.labelService.getAllLabels().subscribe((res: Label[]) => {
+      // holds all labels
+      const bufferedLabels = {};
+
+      for (const l of res) {
+        bufferedLabels[l._id] = l;
       }
-      // adding custom hovertemplate in order to display labels in graph
-      serie['hovertemplate'] = 'y: %{y}<br>' + 'x: %{x}<br>' + this.nonNumericKey + ': %{customdata}';
+
+      const newColorPropertyStringValues = [];
+      if (colorPropertyStringValues !== undefined && colorPropertyStringValues.length !== 0) {
+        for (const c of colorPropertyStringValues) {
+          if (this.labelingModeOn) {
+            if (c === '') {
+              newColorPropertyStringValues.push(c);
+            } else {
+              newColorPropertyStringValues.push(bufferedLabels[c].name);
+            }
+          } else {
+            newColorPropertyStringValues.push(c);
+          }
+        }
+      }
+
+      // define the function that defines the colors
+      let colorFunction;
+      if (this.labelingModeOn) {
+        colorFunction = ((id) => {
+          if (id === '') {
+            return '#FFFFFF';
+          } else {
+            return bufferedLabels[id].color;
+          }
+        });
+      } else {
+        colorFunction = this.colorService.getColor;
+      }
+
+        // Add labes and colors for each series of the line chart
+        data.forEach(serie => {
+        // add custom data property in order to store colorPropertyStringValues in graph
+        if (newColorPropertyStringValues !== undefined && newColorPropertyStringValues.length !== 0) {
+          serie['customdata'] = newColorPropertyStringValues;
+          // TODO fix this and continue here
+
+          serie['hovertemplate'] = 'y: %{y}<br>' + 'x: %{x}<br>' + backgroundColorPropertyKey + ': %{customdata}';
+          this.addInitialColouredShapesToGraph(colorPropertyStringValues, colorFunction);
+        } else {
+          serie['customdata'] = Array(serie['x'].length).fill('');
+          serie['hovertemplate'] = 'y: %{y}<br>' + 'x: %{x}';
+        }
+        // adding custom hovertemplate in order to display colorPropertyStringValues in graph
+      });
+      this.data = data;
+
     });
-    this.data = data;
   }
 
   displayGroupedData(transformedData: GroupedDataResult) {
@@ -353,15 +405,20 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
     return data;
   }
 
-  setSelectedColumn(selectedColumns: EventPropertyUnion[]) {
-    this.selectedColumns = selectedColumns;
+  setSelectedProperties(selectedColumns: EventPropertyUnion[]) {
+    this.selectedLineChartProperties = selectedColumns;
     this.yKeys = this.getRuntimeNames(selectedColumns);
     this.updateData();
   }
 
-  setSelectedLabelColumn(selectedLabelColumn: EventPropertyUnion) {
-    this.selectedNonNumericColumn = selectedLabelColumn;
-    this.nonNumericKey = selectedLabelColumn.runtimeName;
+  setSelectedBackgroundColorProperty(selectedBackgroundColorProperty: EventPropertyUnion) {
+    if (selectedBackgroundColorProperty.runtimeName === '') {
+      this.selectedBackgroundColorProperty = undefined;
+      this.backgroundColorPropertyKey = undefined;
+    } else {
+      this.selectedBackgroundColorProperty = selectedBackgroundColorProperty;
+      this.backgroundColorPropertyKey = selectedBackgroundColorProperty.runtimeName;
+    }
     this.updateData();
   }
 
@@ -390,7 +447,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
 
     this.selectedEndX = allData.x[searchIndex - 1];
 
-    this.saveLabelsInDatabase(this.selectedLabel.name, this.selectedStartX, this.selectedEndX);
+    this.saveLabelsInDatabase(this.selectedLabel._id, this.selectedStartX, this.selectedEndX);
 
     // adding coloured shape (based on selected label) to graph (equals selected time interval)
     this.addShapeToGraph(this.selectedStartX, this.selectedEndX, this.selectedLabel.color);
@@ -420,16 +477,14 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
       // updating related global variable
       this.setNSelectedPoints(selected_points);
 
-      // opening Labeling-Dialog
-
       for (const series of this.data) {
         for (const point of series['selectedpoints']) {
-          series['customdata'][point] = this.selectedLabel.name;
+          series['customdata'][point] = this.selectedLabel._id;
         }
       }
-      this.labels = this.data[0]['customdata'];
-      // saving labels persistently
-      this.saveLabelsInDatabase(this.selectedLabel.name, this.selectedStartX, this.selectedEndX);
+      this.colorPropertyStringValues = this.data[0]['customdata'];
+      // saving colorPropertyStringValues persistently
+      this.saveLabelsInDatabase(this.selectedLabel._id, this.selectedStartX, this.selectedEndX);
 
       // adding coloured shape (based on selected label) to graph (equals selected time interval)
       this.addShapeToGraph(this.selectedStartX, this.selectedEndX, this.selectedLabel.color);
@@ -437,12 +492,11 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
     }
   }
 
-  handleLabelChange(label: {category, label}) {
+  handleLabelChange(label: Label) {
     this.selectedLabel = label;
   }
 
   toggleLabelingMode() {
-    // only allowing to activate labeling mode if current graph mode does not equal 'lines'
     if (this.labelingModeOn) {
       for (let i = 0; i < this.data.length; i++) {
         this.data[i]['mode'] = 'lines+markers';
@@ -458,6 +512,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
 
   private activateLabelingMode() {
     const modeBarButtons = document.getElementsByClassName('modebar-btn');
+    this.showBackgroundColorProperty = false;
 
     for (let i = 0; i < modeBarButtons.length; i++) {
       if (modeBarButtons[i].getAttribute('data-title') === 'Labeling') {
@@ -473,6 +528,9 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
         this.renderer.setStyle(path, 'fill', '#39B54A');
       }
     }
+
+
+    this.updateData();
 
     // changing dragmode to 'select'
     this.graph.layout.dragmode = 'select';
@@ -498,17 +556,15 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
 
     // changing dragmode to 'zoom'
     this.graph.layout.dragmode = 'zoom';
+    this.showBackgroundColorProperty = true;
 
   }
 
   private saveLabelsInDatabase(label, start_X, end_X) {
     const startdate = new Date(start_X).getTime() - 1;
     const enddate = new Date(end_X).getTime() + 1;
-    if (this.nonNumericKey === undefined) {
-      this.nonNumericKey = 'sp_internal_label';
-    }
 
-    this.dataLakeRestService.saveLabelsInDatabase(this.data['measureName'], this.nonNumericKey, startdate, enddate, label, this.xKey).subscribe(
+    this.dataLakeRestService.saveLabelsInDatabase(this.data['measureName'], 'sp_internal_label', startdate, enddate, label, this.xKey).subscribe(
       res => {
         // TODO add pop up similar to images
         // console.log('Successfully wrote label ' + currentLabel + ' into database.');
@@ -516,24 +572,27 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
     );
   }
 
-  // TODO change here to change shape color
-  private addInitialColouredShapesToGraph() {
+  private addInitialColouredShapesToGraph(newColorPropertyStringValues, getColor) {
     let selectedLabel = '';
     let indices = [];
-    for (let label = 0; label < this.labels.length; label++) {
-      if (selectedLabel !== this.labels[label] && indices.length > 0) {
-        const startdate = new Date(this.data[0]['x'][indices[0]]).getTime();
-        const enddate = new Date(this.data[0]['x'][indices[indices.length - 1]]).getTime();
+    if (newColorPropertyStringValues !== undefined) {
 
-        this.addShapeToGraph(startdate, enddate, this.colorService.getColor(this.labels[label]), true);
+      for (let label = 0; label < newColorPropertyStringValues.length; label++) {
+        if (selectedLabel !== newColorPropertyStringValues[label] && indices.length > 0) {
+          const startdate = new Date(this.data[0]['x'][indices[0]]).getTime();
+          const enddate = new Date(this.data[0]['x'][indices[indices.length - 1]]).getTime();
 
-        selectedLabel = undefined;
-        indices = [];
-        indices.push(label);
-      } else {
-        indices.push(label);
+          // TODO get color of label and text
+          this.addShapeToGraph(startdate, enddate, getColor(newColorPropertyStringValues[label - 1]), true);
+
+          selectedLabel = undefined;
+          indices = [];
+          indices.push(label);
+        } else {
+          indices.push(label);
+        }
+        selectedLabel = this.colorPropertyStringValues[label];
       }
-      selectedLabel = this.labels[label];
     }
   }
 
@@ -609,7 +668,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
   }
 
   handlingAdvancedToggleChange() {
-    this.showLabelColumnSelection = !this.showLabelColumnSelection;
+    this.showBackgroundColorProperty = !this.showBackgroundColorProperty;
     this.updateData();
   }
 

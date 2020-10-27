@@ -105,7 +105,7 @@ export class DatalakeRestService {
     }
 
     get_timeseries_labels() {
-        // mocked labels
+        // mocked colorPropertyStringValues
         const labels = {
           coffee: ['coffee', 'coffee special', 'espresso', '2x espresso', 'hot water', 'undefined'],
           state: ['online', 'offline', 'active', 'inactive'],

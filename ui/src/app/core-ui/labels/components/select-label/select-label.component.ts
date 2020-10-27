@@ -37,18 +37,26 @@ export class SelectLabelComponent implements OnInit {
   public labels: Label[];
   public selectedLabel: Label;
 
+  public noCategories = true;
+
   constructor(public labelService: LabelService, public colorService: ColorService) { }
 
   ngOnInit(): void {
     this.labelService.getCategories().subscribe(res => {
+
       this.categories = res;
+      if (this.categories.length > 0) {
+        this.noCategories = false;
+        this.selectedCategory = res[0];
+        this.changeCategory(this.selectedCategory);
+      }
     });
   }
 
   changeCategory(c) {
-    this.labelService.getLabelsOfCategory(c.value).subscribe(res => {
+    this.labelService.getLabelsOfCategory(c).subscribe(res => {
       this.labels = res;
-      this.selectedLabel = this.labels[0];
+      this.selectLabel(this.labels[0]);
     });
   }
 
