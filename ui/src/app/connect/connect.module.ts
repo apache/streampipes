@@ -23,82 +23,56 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import {BrowserModule} from '@angular/platform-browser';
 
 import {ConnectComponent} from './connect.component';
-import {NewAdapterComponent} from './new-adapter/new-adapter.component';
+import {NewAdapterComponent} from './components/new-adapter/new-adapter.component';
 
-import {FormatFormComponent} from './format-form/format-form.component';
-import {SelectProtocolComponent} from './select-protocol-component/select-protocol.component';
+import {FormatFormComponent} from './components/format-form/format-form.component';
 
-import {EventPropertyPrimitiveComponent} from './schema-editor/event-property-primitive/event-property-primitive.component';
-import {EventPropertyComponent} from './schema-editor/event-property/event-property.component';
-import {EventSchemaComponent} from './schema-editor/event-schema/event-schema.component';
-
-import {StaticPropertyComponent} from './static-properties/static-property.component';
+import {EditEventPropertyPrimitiveComponent} from './dialog/edit-event-property/components/edit-event-property-primitive/edit-event-property-primitive.component';
+import {EventSchemaComponent} from './components/schema-editor/event-schema/event-schema.component';
 
 import {CustomMaterialModule} from '../CustomMaterial/custom-material.module';
 
-import {RestService} from './rest.service';
+import {RestService} from './services/rest.service';
 
 import {MatInputModule} from '@angular/material/input';
 import {DragulaModule} from 'ng2-dragula';
-import {AdapterStartedDialog} from './new-adapter/component/adapter-started-dialog.component';
-import {DataTypesService} from './schema-editor/data-type.service';
-import {StaticFreeInputComponent} from './static-properties/static-free-input/static-free-input.component';
-import {StaticNumberInputComponent} from './static-properties/static-number-input/static-number-input.component';
-import {StaticPropertyUtilService} from './static-properties/static-property-util.service';
-import {StaticTextInputComponent} from './static-properties/static-text-input/static-text-input.component';
-import {StaticUrlInputComponent} from './static-properties/static-url-input/static-url-input.component';
-import {TransformationRuleService} from './transformation-rule.service';
-import {StaticSecretInputComponent} from "./static-properties/static-secret-input/static-secret-input.component";
-
-import {ProtocolComponent} from './protocol-component/protocol.component';
-
-import {ShepherdService} from '../services/tour/shepherd.service';
-import {ConnectService} from './connect.service';
-import {AdapterDescriptionComponent} from './data-marketplace/adapter-description/adapter-description.component';
-import {DataMarketplaceComponent} from './data-marketplace/data-marketplace.component';
-import {DataMarketplaceService} from './data-marketplace/data-marketplace.service';
-import {FormatComponent} from './format-component/format.component';
-import {FormatListComponent} from './format-list-component/format-list.component';
-import {ProtocolListComponent} from './protocol-list-component/protocol-list.component';
-import {UnitProviderService} from './schema-editor/unit-provider.service';
-import {SelectStaticPropertiesComponent} from './select-static-properties-component/select-static-properties.component';
-import {StaticAnyInput} from './static-properties/static-any-input/static-any-input.component';
-import {StaticOneOfInputComponent} from './static-properties/static-one-of-input/static-one-of-input.component';
-import {IconService} from './new-adapter/icon.service';
-import {StaticFileInputComponent} from './static-properties/static-file-input/static-file-input.component';
-import {StaticFileRestService} from './static-properties/static-file-input/static-file-rest.service';
-import {FileManagementComponent} from './file-management/file-management.component';
-import {FileRestService} from './file-management/service/filerest.service';
-import {StaticRuntimeResolvableAnyInputComponent} from "./static-properties/static-runtime-resolvable-any-input/static-runtime-resolvable-any-input.component";
-import {StaticRuntimeResolvableOneOfInputComponent} from "./static-properties/static-runtime-resolvable-oneof-input/static-runtime-resolvable-oneof-input.component";
-import {StaticGroupComponent} from './static-properties/static-group/static-group.component';
-import {StaticAlternativesComponent} from './static-properties/static-alternatives/static-alternatives.component';
-import {StaticCollectionComponent} from './static-properties/static-collection/static-collection.component';
+import {AdapterStartedDialog} from './dialog/adapter-started/adapter-started-dialog.component';
+import {DataTypesService} from './services/data-type.service';
+import {StaticPropertyUtilService} from '../core-ui/static-properties/static-property-util.service';
+import {TransformationRuleService} from './services/transformation-rule.service';
+import {ConnectService} from './services/connect.service';
+import {AdapterDescriptionComponent} from './components/data-marketplace/adapter-description/adapter-description.component';
+import {DataMarketplaceComponent} from './components/data-marketplace/data-marketplace.component';
+import {DataMarketplaceService} from './services/data-marketplace.service';
+import {FormatComponent} from './components/format-component/format.component';
+import {FormatListComponent} from './components/format-list-component/format-list.component';
+import {IconService} from './services/icon.service';
+import {UnitProviderService} from './services/unit-provider.service';
 
 
-import {FilterPipe} from '../connect/data-marketplace/filter.pipe';
-import {AdapterExportDialog} from './data-marketplace/adapter-export/adapter-export-dialog.component';
-import {AdapterUploadDialog} from './data-marketplace/adapter-upload/adapter-upload-dialog.component';
-import {EventPropertyListComponent} from './schema-editor/event-property-list/event-property-list.component';
-import {StaticMappingNaryComponent} from './static-properties/static-mapping-nary/static-mapping-nary.component';
-import {StaticMappingUnaryComponent} from './static-properties/static-mapping-unary/static-mapping-unary.component';
+import {FilterPipe} from './filter/filter.pipe';
+import {AdapterExportDialog} from './dialog/adapter-export/adapter-export-dialog.component';
+import {AdapterUploadDialog} from './dialog/adapter-upload/adapter-upload-dialog.component';
+import {EditEventPropertyListComponent} from './dialog/edit-event-property/components/edit-event-property-list/edit-event-property-list.component';
 import {TimestampPipe} from './filter/timestamp.pipe';
-import {PlatformServicesModule} from '../platform-services/platform.module';
-
+import {MatChipsModule} from '@angular/material/chips';
+import {MatSliderModule} from '@angular/material/slider';
 import {TreeModule} from 'angular-tree-component';
-import {EventSchemaPreviewComponent} from './schema-editor/event-schema-preview/event-schema-preview.component';
-import {EventPropertyRowComponent} from "./schema-editor/event-property-row/event-property-row.component";
-import {PropertySelectorService} from "../services/property-selector.service";
-import {StaticColorPickerComponent} from "./static-properties/static-color-picker/static-color-picker.component";
-import {ColorPickerModule} from "ngx-color-picker";
-
+import {xsService} from '../NS/XS.service';
+import {EditDataTypeComponent} from './dialog/edit-event-property/components/edit-data-type/edit-data-type.component';
+import {EditTimestampPropertyComponent} from './dialog/edit-event-property/components/edit-timestamp-property/edit-timestamp-property.component';
+import {EditUnitTransformationComponent} from './dialog/edit-event-property/components/edit-unit-transformation/edit-unit-transformation.component';
+import {EditEventPropertyComponent} from './dialog/edit-event-property/edit-event-property.component';
+import {PipelineElementRuntimeInfoComponent} from './components/runtime-info/pipeline-element-runtime-info.component';
+import {EventPropertyRowComponent} from './components/schema-editor/event-property-row/event-property-row.component';
+import {EventSchemaPreviewComponent} from './components/schema-editor/event-schema-preview/event-schema-preview.component';
+import {CoreUiModule} from "../core-ui/core-ui.module";
 
 @NgModule({
     imports: [
-        BrowserModule,
+        CoreUiModule,
         FormsModule,
         ReactiveFormsModule,
         CommonModule,
@@ -107,57 +81,38 @@ import {ColorPickerModule} from "ngx-color-picker";
         CustomMaterialModule,
         DragulaModule,
         MatProgressSpinnerModule,
+        MatChipsModule,
         MatInputModule,
         MatFormFieldModule,
-        PlatformServicesModule,
+        MatSliderModule,
         TreeModule.forRoot(),
-        ColorPickerModule
     ],
     exports: [
-        StaticPropertyComponent,
-        SelectStaticPropertiesComponent
+        PipelineElementRuntimeInfoComponent
     ],
     declarations: [
-        NewAdapterComponent,
-        SelectProtocolComponent,
-        FormatFormComponent,
-        EventSchemaComponent,
-        EventPropertyPrimitiveComponent,
-        EventPropertyComponent,
-        EventPropertyRowComponent,
-        EventPropertyListComponent,
-        StaticPropertyComponent,
-        AdapterStartedDialog,
-        AdapterExportDialog,
-        AdapterUploadDialog,
-        StaticNumberInputComponent,
-        StaticUrlInputComponent,
-        StaticTextInputComponent,
-        StaticFreeInputComponent,
-        StaticSecretInputComponent,
-        StaticFileInputComponent,
-        StaticMappingNaryComponent,
-        StaticMappingUnaryComponent,
-        TimestampPipe,
-        StaticAnyInput,
-        ProtocolComponent,
-        ProtocolListComponent,
-        FormatListComponent,
-        FormatComponent,
-        DataMarketplaceComponent,
         AdapterDescriptionComponent,
+        AdapterExportDialog,
+        AdapterStartedDialog,
+        AdapterUploadDialog,
         ConnectComponent,
-        SelectStaticPropertiesComponent,
-        StaticOneOfInputComponent,
-        StaticRuntimeResolvableAnyInputComponent,
-        StaticRuntimeResolvableOneOfInputComponent,
-        FileManagementComponent,
-        FilterPipe,
+        DataMarketplaceComponent,
+        EventSchemaComponent,
+        EditEventPropertyPrimitiveComponent,
+        EditEventPropertyComponent,
+        EventPropertyRowComponent,
+        EditEventPropertyListComponent,
+        EditUnitTransformationComponent,
+        EditTimestampPropertyComponent,
+        EditDataTypeComponent,
         EventSchemaPreviewComponent,
-        StaticGroupComponent,
-        StaticAlternativesComponent,
-        StaticCollectionComponent,
-        StaticColorPickerComponent
+        FilterPipe,
+        FormatComponent,
+        FormatFormComponent,
+        FormatListComponent,
+        NewAdapterComponent,
+        PipelineElementRuntimeInfoComponent,
+        TimestampPipe
     ],
     providers: [
         RestService,
@@ -167,28 +122,10 @@ import {ColorPickerModule} from "ngx-color-picker";
         StaticPropertyUtilService,
         DataMarketplaceService,
         IconService,
-        ShepherdService,
         UnitProviderService,
         TimestampPipe,
-        FileRestService,
-        StaticFileRestService,
-        PropertySelectorService,
-        {
-            provide: '$state',
-            useFactory: ($injector: any) => $injector.get('$state'),
-            deps: ['$injector'],
-        },
-        {
-            provide: '$timeout',
-            useFactory: ($injector: any) => $injector.get('$timeout'),
-            deps: ['$injector'],
-        },
-        {
-            provide: 'TourProviderService',
-            useFactory: ($injector: any) => $injector.get('TourProviderService'),
-            deps: ['$injector'],
-        },
+        xsService,
     ],
-    entryComponents: [ConnectComponent, AdapterStartedDialog, AdapterExportDialog, AdapterUploadDialog, EventPropertyComponent],
+    entryComponents: [ConnectComponent, AdapterStartedDialog, AdapterExportDialog, AdapterUploadDialog, EditEventPropertyComponent],
 })
 export class ConnectModule { }

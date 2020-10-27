@@ -228,5 +228,4 @@ public enum BackendConfig {
     return config.getString(BackendConfigKeys.ENCRYPTION_KEY);
   }
 
-
 }

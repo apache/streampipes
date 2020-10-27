@@ -33,7 +33,7 @@ import {ResizeService} from "../../services/resize.service";
 import {GridsterItemComponent, GridType} from "angular-gridster2";
 import {DashboardService} from "../../services/dashboard.service";
 import {RefreshDashboardService} from "../../services/refresh-dashboard.service";
-import {DashboardWidget} from "../../../core-model/dashboard/DashboardWidget";
+import {DashboardWidgetModel} from "../../../core-model/gen/streampipes-model";
 
 @Component({
     selector: 'dashboard-grid',
@@ -46,7 +46,7 @@ export class DashboardGridComponent implements OnInit, OnChanges {
     @Input() dashboard: Dashboard;
 
     @Output() deleteCallback: EventEmitter<DashboardItem> = new EventEmitter<DashboardItem>();
-    @Output() updateCallback: EventEmitter<DashboardWidget> = new EventEmitter<DashboardWidget>();
+    @Output() updateCallback: EventEmitter<DashboardWidgetModel> = new EventEmitter<DashboardWidgetModel>();
 
     options: DashboardConfig;
     loaded: boolean = false;
@@ -92,7 +92,7 @@ export class DashboardGridComponent implements OnInit, OnChanges {
         this.deleteCallback.emit(widget);
     }
 
-    propagateItemUpdate(dashboardWidget: DashboardWidget) {
+    propagateItemUpdate(dashboardWidget: DashboardWidgetModel) {
         this.updateCallback.emit(dashboardWidget);
     }
 

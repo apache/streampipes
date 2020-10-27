@@ -19,8 +19,8 @@ package org.apache.streampipes.manager.template;
 
 import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
-import org.apache.streampipes.model.client.pipeline.Pipeline;
-import org.apache.streampipes.model.client.pipeline.PipelineOperationStatus;
+import org.apache.streampipes.model.pipeline.Pipeline;
+import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.template.PipelineTemplateDescription;
 import org.apache.streampipes.model.template.PipelineTemplateInvocation;

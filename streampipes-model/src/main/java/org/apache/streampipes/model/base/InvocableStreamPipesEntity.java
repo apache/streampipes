@@ -28,12 +28,11 @@ import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
-import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import java.util.List;
 
 public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity {
 
@@ -57,6 +56,9 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
   @RdfProperty(StreamPipes.STATUS_INFO_SETTINGS)
   private ElementStatusInfoSettings statusInfoSettings;
 
+  @OneToOne(fetch = FetchType.EAGER,
+          cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  @RdfProperty(StreamPipes.SUPPORTED_GROUNDING)
   private EventGrounding supportedGrounding;
 
   @RdfProperty(StreamPipes.CORRESPONDING_PIPELINE)
@@ -65,9 +67,15 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
   @RdfProperty(StreamPipes.CORRESPONDING_USER)
   private String correspondingUser;
 
+  @OneToMany(fetch = FetchType.EAGER,
+          cascade = {CascadeType.ALL})
+  @RdfProperty(StreamPipes.REQUIRES_STREAM)
   private List<SpDataStream> streamRequirements;
 
+  //@RdfProperty(StreamPipes.PE_CONFIGURED)
   private boolean configured;
+
+  private boolean uncompleted;
 
   public InvocableStreamPipesEntity() {
     super();
@@ -79,6 +87,7 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
     this.correspondingPipeline = other.getCorrespondingPipeline();
     this.inputStreams = new Cloner().streams(other.getInputStreams());
     this.configured = other.isConfigured();
+    this.uncompleted = other.isUncompleted();
     this.correspondingUser = other.getCorrespondingUser();
     if (other.getStreamRequirements() != null) {
       this.streamRequirements = new Cloner().streams(other.getStreamRequirements());
@@ -171,6 +180,14 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
 
   public void setCorrespondingUser(String correspondingUser) {
     this.correspondingUser = correspondingUser;
+  }
+
+  public boolean isUncompleted() {
+    return uncompleted;
+  }
+
+  public void setUncompleted(boolean uncompleted) {
+    this.uncompleted = uncompleted;
   }
 
   //public Logger getLogger(Class clazz, PeConfig peConfig) {

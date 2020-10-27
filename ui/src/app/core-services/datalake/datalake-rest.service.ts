@@ -16,13 +16,15 @@
  *
  */
 
-import {HttpClient, HttpRequest} from '@angular/common/http';
-import {InfoResult} from '../../core-model/datalake/InfoResult';
-import {AuthStatusService} from '../../services/auth-status.service';
-import {Injectable} from '@angular/core';
-import {PageResult} from '../../core-model/datalake/PageResult';
-import {DataResult} from '../../core-model/datalake/DataResult';
-import {GroupedDataResult} from '../../core-model/datalake/GroupedDataResult';
+import { HttpClient, HttpRequest } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { DataResult } from '../../core-model/datalake/DataResult';
+import { GroupedDataResult } from '../../core-model/datalake/GroupedDataResult';
+import { PageResult } from '../../core-model/datalake/PageResult';
+import { AuthStatusService } from '../../services/auth-status.service';
+import {DataLakeMeasure} from "../../core-model/gen/streampipes-model";
+import {map} from "rxjs/operators";
 
 @Injectable()
 export class DatalakeRestService {
@@ -36,12 +38,13 @@ export class DatalakeRestService {
     }
 
     private get dataLakeUrlV3() {
-        return this.baseUrl + '/api/v3/users/' + this.authStatusService.email + '/datalake'
+        return this.baseUrl + '/api/v3/users/' + this.authStatusService.email + '/datalake';
     }
 
-
-    getAllInfos() {
-        return this.http.get<InfoResult[]>(this.dataLakeUrlV3 + "/info");
+    getAllInfos(): Observable<DataLakeMeasure[]> {
+        return this.http.get(this.dataLakeUrlV3 + '/info').pipe(map(response => {
+          return (response as any[]).map(p => DataLakeMeasure.fromData(p));
+        }));
     }
 
     getDataPage(index, itemsPerPage, page) {
@@ -52,15 +55,7 @@ export class DatalakeRestService {
         return this.http.get<PageResult>(this.dataLakeUrlV3 + '/data/' + index + '/paging?itemsPerPage=' + itemsPerPage);
     }
 
-    getLastData(index, timeunit, value, aggregationTimeUnit, aggregationValue) {
-        return this.http.get<DataResult>(this.dataLakeUrlV3 + '/data/' + index + '/last/' + value + '/' + timeunit + '?aggregationUnit=' + aggregationTimeUnit + '&aggregationValue=' + aggregationValue);
-    }
-
-    getLastDataAutoAggregation(index, timeunit, value) {
-        return this.http.get<DataResult>(this.dataLakeUrlV3 + '/data/' + index + '/last/' + value + '/' + timeunit);
-    }
-
-    getData(index, startDate, endDate, aggregationTimeUnit, aggregationValue) {
+    getData(index, startDate, endDate, aggregationTimeUnit, aggregationValue): Observable<DataResult> {
         return this.http.get<DataResult>(this.dataLakeUrlV3 + '/data/' + index + '/' + startDate + '/' + endDate + '?aggregationUnit=' + aggregationTimeUnit + '&aggregationValue=' + aggregationValue);
     }
 
@@ -68,41 +63,80 @@ export class DatalakeRestService {
         return this.http.get<GroupedDataResult>(this.dataLakeUrlV3 + '/data/' + index + '/' + startDate + '/' + endDate + '/grouping/' + groupingTag + '?aggregationUnit=' + aggregationTimeUnit + '&aggregationValue=' + aggregationValue);
     }
 
-    getDataAutoAggergation(index, startDate, endDate) {
+    getDataAutoAggregation(index, startDate, endDate) {
         return this.http.get<DataResult>(this.dataLakeUrlV3 + '/data/' + index + '/' + startDate + '/' + endDate);
     }
 
     getGroupedDataAutoAggergation(index, startDate, endDate, groupingTag) {
-            return this.http.get<GroupedDataResult>(this.dataLakeUrlV3 + '/data/' + index + '/' + startDate + '/' + endDate + '/grouping/' + groupingTag);
-    }
-
-
-    /*
-        @deprecate
-     */
-    getFile(index, format) {
-        const request = new HttpRequest('GET', this.dataLakeUrlV3 + '/data/' + index + "?format=" + format,  {
-            reportProgress: true,
-            responseType: 'text'
-        });
-        return this.http.request(request)
+      return this.http.get<GroupedDataResult>(this.dataLakeUrlV3 + '/data/' + index + '/' + startDate + '/' + endDate + '/grouping/' + groupingTag);
     }
 
     downloadRowData(index, format) {
-        const request = new HttpRequest('GET', this.dataLakeUrlV3 + '/data/' + index + "/download?format=" + format,  {
+        const request = new HttpRequest('GET', this.dataLakeUrlV3 + '/data/' + index + '/download?format=' + format,  {
             reportProgress: true,
             responseType: 'text'
         });
-        return this.http.request(request)
+        return this.http.request(request);
     }
 
     downloadRowDataTimeInterval(index, format, startDate, endDate) {
-        const request = new HttpRequest('GET', this.dataLakeUrlV3 + '/data/' + index + '/' + startDate + '/' + endDate + "/download" +
-            "?format=" + format, {
+        const request = new HttpRequest('GET', this.dataLakeUrlV3 + '/data/' + index + '/' + startDate + '/' + endDate + '/download' +
+            '?format=' + format, {
             reportProgress: true,
             responseType: 'text'
         });
-        return this.http.request(request)
+        return this.http.request(request);
+    }
+
+    getLabels() {
+        return {
+          'boxes': ['blue', 'red'],
+          'sign': ['trafficsign'],
+          'person': ['person', 'Child'],
+          'vehicle': ['bicycle', 'car', 'motorcycle', 'airplane', 'bus', 'train', 'truck', 'boat'],
+          'outdoor': ['traffic light', 'fire hydrant', 'stop sign', 'parking meter', 'bench'],
+          'animal': ['bird', 'cat', 'dog'],
+          'accessory': ['backpack', 'umbrella', 'handbag', 'suitcase'],
+          'sports': ['frisbee', 'sports ball', 'skis', 'frisbee', 'baseball bat'],
+          'kitchen': ['bottle', 'cup', 'fork', 'knife', 'spoon'],
+          'furniture': ['chair', 'couch', 'bed', 'table'],
+          'electronic': ['tv', 'laptop', 'mouse', 'keyboard']
+        };
+    }
+
+    get_timeseries_labels() {
+        // mocked labels
+        const labels = {
+          coffee: ['coffee', 'coffee special', 'espresso', '2x espresso', 'hot water', 'undefined'],
+          state: ['online', 'offline', 'active', 'inactive'],
+          trend: ['increasing', 'decreasing'],
+          daytime: ['day', 'night']};
+        return labels;
+    }
+
+    getImageUrl(imageRoute) {
+      return this.dataLakeUrlV3 + '/data/image/' + imageRoute + '/file';
+    }
+
+    getCocoFileForImage(imageRoute) {
+      return this.http.get(this.dataLakeUrlV3 + '/data/image/' + imageRoute + '/coco');
+    }
+
+    saveCocoFileForImage(imageRoute, data) {
+      return this.http.post(this.dataLakeUrlV3 + '/data/image/' + imageRoute + '/coco', data);
+    }
+
+    removeAllData() {
+      return this.http.delete(this.dataLakeUrlV3 + '/data/delete/all');
+    }
+
+    saveLabelsInDatabase(index, labelColumn, startDate, endDate, label) {
+        const request = new HttpRequest('POST', this.dataLakeUrlV3 + '/data/' + index + '/' + startDate + '/' +
+            endDate + '/labeling/' + labelColumn + '?label=' + label,  {}, {
+            reportProgress: true,
+            responseType: 'text'
+        });
+        return this.http.request(request);
     }
 
 }

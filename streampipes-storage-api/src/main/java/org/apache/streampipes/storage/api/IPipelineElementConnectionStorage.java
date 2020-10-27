@@ -19,7 +19,7 @@
 package org.apache.streampipes.storage.api;
 
 import org.apache.streampipes.model.client.connection.Connection;
-import org.apache.streampipes.model.client.pipeline.PipelineElementRecommendation;
+import org.apache.streampipes.model.pipeline.PipelineElementRecommendation;
 
 import java.util.List;
 

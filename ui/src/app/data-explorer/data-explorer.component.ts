@@ -16,63 +16,97 @@
  *
  */
 
-import {Component, OnInit} from '@angular/core';
-import {DatalakeRestService} from '../core-services/datalake/datalake-rest.service';
-import {InfoResult} from '../core-model/datalake/InfoResult';
-import {Observable} from 'rxjs/Observable';
-import {FormControl} from '@angular/forms';
-import {map, startWith} from 'rxjs/operators';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import { IDataViewDashboard } from './models/dataview-dashboard.model';
+import { DataViewDataExplorerService } from './services/data-view-data-explorer.service';
+import { RefreshDashboardService } from './services/refresh-dashboard.service';
+import {DataExplorerDashboardPanelComponent} from "./components/panel/data-explorer-dashboard-panel.component";
+import {DateRange} from "../core-model/datalake/DateRange";
 
 @Component({
     selector: 'sp-data-explorer',
     templateUrl: './data-explorer.component.html',
-    styleUrls: ['./data-explorer.css']
+    styleUrls: ['./data-explorer.component.css']
 })
 export class DataExplorerComponent implements OnInit {
 
-    myControl = new FormControl();
-    infoResult: InfoResult[];
-    filteredIndexInfos: Observable<InfoResult[]>;
+    selectedDataViewDashboard: IDataViewDashboard;
+    selectedIndex = 0;
+    dashboardsLoaded = false;
+    dashboardTabSelected = false;
 
-    page: number = 0;
-    //selectedIndex: string = '';
-    selectedInfoResult: InfoResult = undefined;
+    editMode = true;
+    gridVisible: boolean = true;
 
-    downloadFormat: string = 'csv';
-    isDownloading: boolean = false;
+    dataViewDashboards: IDataViewDashboard[];
 
-    constructor(private restService: DatalakeRestService, private snackBar: MatSnackBar) {
+  @ViewChild('dashboardPanel') dashboardPanel: DataExplorerDashboardPanelComponent;
 
-    }
+  /**
+   * This is the date range (start, end) to view the data
+   */
+  viewDateRange: DateRange;
 
-    ngOnInit(): void {
-        this.restService.getAllInfos().subscribe(res => {
-                this.infoResult = res;
-                this.filteredIndexInfos = this.myControl.valueChanges
-                    .pipe(
-                        startWith(''),
-                        map(value => this._filter(value))
-                    );
-            }
-        );
-    }
+    constructor(private dataViewService: DataViewDataExplorerService,
+                private refreshDashboardService: RefreshDashboardService) {}
 
-    selectIndex(index: string) {
-        this.selectedInfoResult = this._filter(index)[0]
 
-      //  this.selectedIndex = index;
-    }
-
-    _filter(value: string): InfoResult[] {
-        const filterValue = value.toLowerCase();
-
-        return this.infoResult.filter(option => option.measureName.toLowerCase().includes(filterValue));
-    }
-
-    openSnackBar(message: string) {
-        this.snackBar.open(message, 'Close', {
-            duration: 2000,
+    public ngOnInit() {
+        this.getDashboards();
+        const currentTime = new Date();
+        this.viewDateRange = new DateRange(new Date(currentTime.getTime() - 100000 * 60000), currentTime);
+        this.refreshDashboardService.refreshSubject.subscribe(currentDashboardId => {
+            this.getDashboards(currentDashboardId);
         });
+
+    }
+
+    openDashboard(dashboard: IDataViewDashboard) {
+        const index = this.dataViewDashboards.indexOf(dashboard);
+        this.selectDashboard((index + 1));
+    }
+
+    selectDashboard(index: number) {
+        this.selectedIndex = index;
+        if (index === 0) {
+            this.dashboardTabSelected = false;
+        } else {
+            this.dashboardTabSelected = true;
+            this.selectedDataViewDashboard = this.dataViewDashboards[(index - 1)];
+        }
+    }
+
+    protected getDashboards(currentDashboardId?: string) {
+        this.dashboardsLoaded = false;
+        this.dataViewService.getDataViews().subscribe(data => {
+            this.dataViewDashboards = data;
+            if (currentDashboardId) {
+                const currentDashboard = this.dataViewDashboards.find(d => d._id === currentDashboardId);
+                this.selectDashboard(this.dataViewDashboards.indexOf(currentDashboard) + 1);
+            } else {
+                this.selectedIndex = 0;
+            }
+            this.dashboardsLoaded = true;
+        });
+    }
+
+    toggleEditMode() {
+        this.editMode = ! (this.editMode);
+    }
+
+    updateDateRange(dateRange: DateRange) {
+      this.viewDateRange = dateRange;
+    }
+
+    saveDashboard() {
+     this.dashboardPanel.updateDashboard(false);
+    }
+
+    addVisualization() {
+      this.dashboardPanel.addWidget();
+    }
+
+    toggleGrid() {
+      this.dashboardPanel.toggleGrid(this.gridVisible);
     }
 }

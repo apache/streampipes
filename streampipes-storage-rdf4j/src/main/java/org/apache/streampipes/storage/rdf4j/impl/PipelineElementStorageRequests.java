@@ -18,9 +18,6 @@
 
 package org.apache.streampipes.storage.rdf4j.impl;
 
-import org.eclipse.rdf4j.repository.RepositoryException;
-import org.eclipse.rdf4j.rio.RDFParseException;
-import org.eclipse.rdf4j.rio.UnsupportedRDFormatException;
 import io.fogsy.empire.core.empire.impl.RdfQuery;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
@@ -32,14 +29,15 @@ import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.rdf4j.sparql.QueryBuilder;
 import org.apache.streampipes.storage.rdf4j.util.Transformer;
-
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.rio.RDFParseException;
+import org.eclipse.rdf4j.rio.UnsupportedRDFormatException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import java.io.IOException;
+import java.net.URI;
+import java.util.List;
 
 public class PipelineElementStorageRequests implements IPipelineElementDescriptionStorage {
 
@@ -121,8 +119,8 @@ public class PipelineElementStorageRequests implements IPipelineElementDescripti
   }
 
   @Override
-  public DataSourceDescription getDataSourceById(String rdfId) throws URISyntaxException {
-    return getDataSourceById(new URI(rdfId));
+  public DataSourceDescription getDataSourceById(String rdfId) {
+    return getDataSourceById(URI.create(rdfId));
   }
 
   @SuppressWarnings("unchecked")
@@ -190,8 +188,8 @@ public class PipelineElementStorageRequests implements IPipelineElementDescripti
   }
 
   @Override
-  public DataProcessorDescription getDataProcessorById(String rdfId) throws URISyntaxException {
-    return getDataProcessorById(new URI(rdfId));
+  public DataProcessorDescription getDataProcessorById(String rdfId) {
+    return getDataProcessorById(URI.create(rdfId));
   }
 
   @Override
@@ -205,8 +203,8 @@ public class PipelineElementStorageRequests implements IPipelineElementDescripti
   }
 
   @Override
-  public DataSinkDescription getDataSinkById(String rdfId) throws URISyntaxException {
-    return getDataSinkById(new URI(rdfId));
+  public DataSinkDescription getDataSinkById(String rdfId) {
+    return getDataSinkById(URI.create(rdfId));
   }
 
   @Override

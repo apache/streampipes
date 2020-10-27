@@ -1,0 +1,22 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="sinks-internal-jvm" type="Application" factoryName="Application">
+    <envs>
+      <env name="SP_PORT" value="7020" />
+      <env name="SP_HOST" value="host.docker.internal" />
+      <env name="SP_DEBUG" value="true" />
+      <env name="SP_COUCHDB_HOST" value="localhost" />
+      <env name="SP_JMS_HOST" value="localhost" />
+      <env name="SP_JMS_PORT" value="61616" />
+      <env name="SP_DATA_LAKE_HOST" value="localhost" />
+      <env name="SP_DATA_LAKE_PORT" value="8086" />
+      <env name="SP_BACKEND_HOST" value="localhost" />
+      <env name="SP_BACKEND_PORT" value="8030" />
+      <env name="SP_IMAGE_STORAGE_LOCATION" value="" />
+    </envs>
+    <option name="MAIN_CLASS_NAME" value="org.apache.streampipes.sinks.internal.jvm.SinksInternalJvmInit" />
+    <module name="streampipes-sinks-internal-jvm" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

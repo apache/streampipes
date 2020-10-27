@@ -19,7 +19,7 @@
 package org.apache.streampipes.rest.api;
 
 
-import org.apache.streampipes.model.client.pipeline.Pipeline;
+import org.apache.streampipes.model.pipeline.Pipeline;
 
 import javax.ws.rs.core.Response;
 

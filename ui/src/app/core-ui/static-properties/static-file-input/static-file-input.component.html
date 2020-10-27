@@ -1,0 +1,77 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div fxFlex="100" fxLayout="column">
+    <div fxFlex="100" fxLayout="column">
+        <div fxFlex="row">
+            <mat-radio-group [(ngModel)]="chooseExistingFile" color="primary">
+                <mat-radio-button style="margin-right:10px;" [value]="true">Choose existing file</mat-radio-button>
+                <mat-radio-button [value]="false">Upload new file</mat-radio-button>
+            </mat-radio-group>
+        </div>
+        <div *ngIf="chooseExistingFile && filesLoaded">
+            <mat-form-field>
+                <input type="text"
+                       placeholder="Select file"
+                       [(ngModel)]="selectedFile"
+                       matInput
+                       [matAutocomplete]="auto">
+                <button mat-button *ngIf="selectedFile" matSuffix mat-icon-button aria-label="Clear" (click)="selectedFile={}">
+                    <mat-icon>close</mat-icon>
+                </button>
+                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectOption($event.option.value)" [displayWith]="displayFn">
+                    <mat-option *ngFor="let fileMetadata of fileMetadata" [value]="fileMetadata">
+                        {{fileMetadata.originalFilename}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+        <div *ngIf="!chooseExistingFile">
+            <mat-form-field style="width: 95%" (click)="fileInput.click();" *ngIf="!chooseExistingFile">
+                <input matInput placeholder="{{staticProperty.label}}" disabled (value)="fileName">
+                <input #fileInput type="file" style="display:none;"
+                       (change)="handleFileInput($event.target.files)">
+                <div>
+                    {{fileName}}
+                    <mat-progress-bar mode="determinate" value="{{uploadStatus}}"
+                                      *ngIf="uploadStatus > 0"></mat-progress-bar>
+                </div>
+
+
+                <button color="primary" matSuffix
+                        mat-button style="min-width: 0px">
+                    <mat-icon *ngIf="uploadStatus < 99">insert_drive_file</mat-icon>
+                    <mat-icon *ngIf="uploadStatus == 100" class="green-icon">check_circle</mat-icon>
+                </button>
+
+                <mat-error *ngIf="!hasInput">
+                    {{errorMessage}}
+                </mat-error>
+
+            </mat-form-field>
+            <!--<div fxLayoutAlign="center none">-->
+            <div>
+                <button color="primary" mat-raised-button (click)="upload()" [disabled]="!fileName">
+                    Upload
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+</div>

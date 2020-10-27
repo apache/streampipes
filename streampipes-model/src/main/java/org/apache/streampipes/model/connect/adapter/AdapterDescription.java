@@ -18,39 +18,50 @@
 
 package org.apache.streampipes.model.connect.adapter;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.google.gson.annotations.SerializedName;
 import io.fogsy.empire.annotations.Namespaces;
 import io.fogsy.empire.annotations.RdfProperty;
 import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
-import org.apache.streampipes.model.connect.rules.Schema.SchemaTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.Stream.StreamTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.schema.SchemaTransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.stream.StreamTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.ValueTransformationRuleDescription;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
 import org.apache.streampipes.model.grounding.TransportProtocol;
+import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.vocabulary.StreamPipes;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 
 @Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
 @RdfsClass("sp:AdapterDescription")
 @Entity
+@JsonSubTypes({
+        @JsonSubTypes.Type(GenericAdapterSetDescription.class),
+        @JsonSubTypes.Type(GenericAdapterStreamDescription.class),
+        @JsonSubTypes.Type(SpecificAdapterStreamDescription.class),
+        @JsonSubTypes.Type(SpecificAdapterSetDescription.class)
+})
+@TsModel
 public abstract class AdapterDescription extends NamedStreamPipesEntity {
 
     @RdfProperty("sp:couchDBId")
+    @JsonProperty("couchDBId")
     private @SerializedName("_id") String id;
 
+    @JsonProperty("_rev")
     private @SerializedName("_rev") String rev;
 
     @RdfProperty("sp:adapterId")

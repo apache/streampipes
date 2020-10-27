@@ -20,9 +20,11 @@ package org.apache.streampipes.rest.impl;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.model.SpDataStream;
-import org.apache.streampipes.model.client.messages.Notifications;
+import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.api.IPipelineElementRuntimeInfo;
+import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -35,7 +37,9 @@ public class PipelineElementRuntimeInfo extends AbstractRestInterface implements
 
   @Override
   @POST
+  @JacksonSerialized
   @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
   public Response getRuntimeInfo(SpDataStream spDataStream) {
     // TODO currently only supported for data streams. For data sets, a dummy pipeline needs to be generated to get runtime values.
     try {

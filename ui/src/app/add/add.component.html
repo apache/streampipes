@@ -1,0 +1,114 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div fxLayout="column" class="page-container">
+    <div fxLayout="row" class="border" style="padding:0px;background-color:#f6f6f6;">
+        <div fxFlex="100" style="line-height:24px;border-bottom:1px solid #ccc">
+            <div fxFlex="100" fxLayout="row">
+                <button mat-button mat-flat-button color="primary" (click)="showManageRdfEndpointsDialog()">Manage
+                    Endpoints
+                </button>
+                <div fxFlex fxLayoutAlign="start center" [attr.id]="'peType'">
+                    <mat-tab-group [selectedIndex]="selectedCategoryIndex"
+                                   (selectedIndexChange)="setSelectedTab($event)">
+                        <mat-tab label="All"></mat-tab>
+                        <mat-tab label="Data Sources"></mat-tab>
+                        <mat-tab label="Data Processors"></mat-tab>
+                        <mat-tab label="Data Sinks"></mat-tab>
+                    </mat-tab-group>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div fxLayout="row" class="fixed-height add-options">
+        <div class="add-options-item" fxLayoutAlign="start center" fxLayout="row" style="padding-left:5px;">
+            <div fxFlex="100" fxLayout="row">
+                <button mat-button mat-raised-button color="primary"
+                        [disabled]="selectedEndpointItems.length === 0"
+                        (click)="installSelected()" class="mr-10">
+                    <i class="material-icons">cloud_download</i>
+                    &nbsp;Install selected
+                </button>
+                <button mat-button mat-raised-button color="primary"
+                        [disabled]="selectedEndpointItems.length === 0"
+                        (click)="uninstallSelected()" class="mr-10">
+                    <i class="material-icons">delete</i>
+                    &nbsp;Uninstall selected
+                </button>
+                <button mat-button mat-icon-button color="primary" class="mr-10" (click)="selectAll(true)"
+                        matTooltip="Select all" matTooltipPosition="above">
+                    <i class="material-icons">queue</i>
+                </button>
+                <button mat-button mat-icon-button color="primary" class="mr-10" (click)="selectAll(false)"
+                        matTooltip="Select none" matTooltipPosition="above">
+                    <i class="material-icons">filter_none</i>
+                </button>
+            </div>
+        </div>
+        <span fxFlex></span>
+        <div class="add-options-item" fxLayoutAlign="start center" fxLayout="row" style="padding-left:5px;">
+            <mat-icon>search</mat-icon>
+
+            <mat-form-field class="form-style">
+                <input matInput placeholder="Find Element" value="" [(ngModel)]="filterTerm"
+                       name="something">
+            </mat-form-field>
+        </div>
+        <div class="add-options-item" fxLayoutAlign="start center" fxLayout="row">
+            <mat-form-field>
+                <mat-select [(value)]="selectedInstallationStatus">
+                    <mat-option [value]="'all'">
+                        Available & Installed
+                    </mat-option>
+                    <mat-option [value]="'installed'">
+                        Installed
+                    </mat-option>
+                    <mat-option [value]="'available'">
+                        Available
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="add-options-item" fxLayoutAlign="start center" fxLayout="row">
+            <button mat-button mat-icon-button color="primary" (click)="getEndpointItems()"
+                    matTooltip="Reload items" matTooltipPosition="above">
+                <mat-icon>refresh</mat-icon>
+            </button>
+        </div>
+    </div>
+
+    <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start" class="page-container-padding-inner"
+         *ngIf="endpointItemsLoadingComplete">
+        <div fxLayoutAlign="start start" fxLayout="column">
+
+        </div>
+        <div fxLayout="row wrap" style="width: 100%;">
+            <endpoint-item fxFlex="33"
+                           [itemSelected]="endpointItem.selected"
+                           [item]="endpointItem"
+                           (triggerInstallation)="triggerInstallation($event)"
+                           *ngFor="let endpointItem of endpointItems | pipelineElementTypeFilter: selectedTab | pipelineElementNameFilter: filterTerm | pipelineElementInstallationStatusFilter: selectedInstallationStatus | orderBy: 'asc':'name'"
+                           class="p-15"
+                           (click)="toggleSelected(endpointItem)"></endpoint-item>
+        </div>
+    </div>
+    <div fxFlex="100" fxLayout="row" fxLayoutAlign="center center" *ngIf="!endpointItemsLoadingComplete">
+        <mat-spinner [mode]="'indeterminate'" [diameter]="20"></mat-spinner>
+        <h4>&nbsp;&nbsp;Searching for available pipeline elements, please wait...</h4>
+    </div>
+</div>

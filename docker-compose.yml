@@ -21,7 +21,16 @@
 #
 
 
-version: "2.4"
+version: "3.8"
+
+# global logging
+x-logging:
+  &default-logging
+  options:
+    max-size: '12m'
+    max-file: '5'
+  driver: json-file
+
 services:
 
   #### apache/incubator-streampipes
@@ -31,9 +40,14 @@ services:
       dockerfile: Dockerfile
       args:
         BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine-slim
+    image: incubator-streampipes_backend:release-validation
     depends_on:
       - consul
       - couchdb
+    volumes:
+      - backend:/root/.streampipes
+      - files:/spImages
+    logging: *default-logging
     networks:
       spnet:
 
@@ -43,6 +57,7 @@ services:
       dockerfile: Dockerfile
       args:
         BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine-slim
+    image: incubator-streampipes_connect-master:release-validation
     depends_on:
       - consul
       - couchdb
@@ -50,15 +65,17 @@ services:
       - EXECUTION_MODE=MASTER
       - SP_CONNECT_CONTAINER_HOST=connect-master
       - SP_CONNECT_CONTAINER_WORKER=connect-worker
+    logging: *default-logging
     networks:
       spnet:
 
-  nginx:
+  ui:
     build:
       context: ./ui
       dockerfile: Dockerfile
       args:
         BASE_IMAGE: nginx
+    image: incubator-streampipes_ui:release-validation
     ports:
       - "80:80"
     depends_on:
@@ -67,12 +84,14 @@ services:
       - consul
       - connect-master
       - backend
+    logging: *default-logging
     networks:
       spnet:
 
   #### Mandatory external services
   activemq:
     image: fogsyio/activemq:5.15.9
+    logging: *default-logging
     networks:
       spnet:
 
@@ -93,12 +112,18 @@ services:
       - -client=0.0.0.0
       - -enable-script-checks=true
       - -ui
+    logging: *default-logging
+    volumes:
+      - consul:/consul/data
     networks:
       spnet:
         ipv4_address: 172.31.0.9
 
   couchdb:
     image: fogsyio/couchdb:2.3.1
+    logging: *default-logging
+    volumes:
+      - couchdb:/opt/couchdb/data
     networks:
       spnet:
 
@@ -115,13 +140,21 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_ADVERTISED_HOST_NAME: kafka
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_MESSAGE_MAX_BYTES: 5000012
+      KAFKA_FETCH_MESSAGE_MAX_BYTES: 5000012
+      KAFKA_REPLICA_FETCH_MAX_BYTES: 10000000
     volumes:
+      - kafka:/kafka
       - /var/run/docker.sock:/var/run/docker.sock
+    logging: *default-logging
     networks:
       spnet:
 
   zookeeper:
     image: fogsyio/zookeeper:3.4.13
+    logging: *default-logging
+    volumes:
+      - zookeeper:/opt/zookeeper-3.4.13
     networks:
       spnet:
 
@@ -131,14 +164,25 @@ services:
       - INFLUXDB_DATA_ENGINE=tsm1
       - INFLUXDB_REPORTING_DISABLED=false
       - INFLUXDB_ADMIN_ENABLED=true
+    volumes:
+      - influxdb:/var/lib/influxdb
+    logging: *default-logging
     networks:
       spnet:
 
+volumes:
+  kafka:
+  files:
+  consul:
+  couchdb:
+  zookeeper:
+  influxdb:
+  backend:
+
 networks:
   spnet:
+    name: spnet
     driver: bridge
-    name: streampipes_network
     ipam:
       config:
         - subnet: 172.31.0.0/16
-          gateway: 172.31.0.1

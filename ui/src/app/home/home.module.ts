@@ -25,36 +25,26 @@ import {FlexLayoutModule} from '@angular/flex-layout';
 import {CommonModule} from '@angular/common';
 import {StatusComponent} from "./components/status.component";
 import {RestApi} from "../services/rest-api.service";
+import {MatDividerModule} from "@angular/material/divider";
+import {MatButtonModule} from "@angular/material/button";
+import {MatListModule} from "@angular/material/list";
 
 @NgModule({
     imports: [
         CommonModule,
         FlexLayoutModule,
+        MatButtonModule,
         MatGridListModule,
-        MatIconModule
+        MatIconModule,
+        MatDividerModule,
+        MatListModule
     ],
     declarations: [
         HomeComponent,
         StatusComponent
     ],
     providers: [
-        HomeService,
-        RestApi,
-        {
-            provide: '$http',
-            useFactory: ($injector: any) => $injector.get('$http'),
-            deps: ['$injector'],
-        },
-        {
-            provide: 'apiConstants',
-            useFactory: ($injector: any) => $injector.get('apiConstants'),
-            deps: ['$injector'],
-        },
-        {
-            provide: 'AuthStatusService',
-            useFactory: ($injector: any) => $injector.get('AuthStatusService'),
-            deps: ['$injector'],
-        },
+        HomeService
     ],
     entryComponents: [
         HomeComponent

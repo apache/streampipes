@@ -15,14 +15,15 @@
   ~ limitations under the License.
   ~
   -->
-<mat-form-field style="width: 100%">
+<mat-form-field style="width: 100%; margin-top: 3px" appearance="none">
+    <mat-label>label selection</mat-label>
     <mat-select [(value)]="_selectedCategory" placeholder="selected category">
         <mat-option *ngFor="let category of _categories" [value]="category">
             {{category}}
         </mat-option>
     </mat-select>
 </mat-form-field>
-<mat-chip-list>
+<mat-chip-list style="margin-bottom: 20px">
     <mat-chip *ngFor="let label of _labels[_selectedCategory]" [selectable]="selectable"
               [removable]="removable" [style.color]="colorService.getColor(label)" (click)="selectLabel({category: _selectedCategory, name: label})">
         <!--<mat-icon matListIcon [style.color]="getColor(label)" style="margin-top: 7px; margin-right: 0px; font-size: 16px">speaker_notes</mat-icon>-->

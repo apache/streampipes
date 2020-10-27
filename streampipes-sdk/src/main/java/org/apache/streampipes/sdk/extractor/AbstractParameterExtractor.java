@@ -25,34 +25,12 @@ import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.constants.PropertySelectorConstants;
-import org.apache.streampipes.model.schema.EventProperty;
-import org.apache.streampipes.model.schema.EventPropertyList;
-import org.apache.streampipes.model.schema.EventPropertyNested;
-import org.apache.streampipes.model.schema.EventPropertyPrimitive;
-import org.apache.streampipes.model.schema.PropertyScope;
-import org.apache.streampipes.model.staticproperty.AnyStaticProperty;
-import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
-import org.apache.streampipes.model.staticproperty.DomainStaticProperty;
-import org.apache.streampipes.model.staticproperty.FileStaticProperty;
-import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
-import org.apache.streampipes.model.staticproperty.MappingPropertyNary;
-import org.apache.streampipes.model.staticproperty.MappingPropertyUnary;
-import org.apache.streampipes.model.staticproperty.OneOfStaticProperty;
-import org.apache.streampipes.model.staticproperty.Option;
-import org.apache.streampipes.model.staticproperty.SecretStaticProperty;
-import org.apache.streampipes.model.staticproperty.SelectionStaticProperty;
-import org.apache.streampipes.model.staticproperty.StaticProperty;
-import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
-import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
-import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
-import org.apache.streampipes.model.staticproperty.StaticPropertyType;
-import org.apache.streampipes.model.staticproperty.SupportedProperty;
+import org.apache.streampipes.model.schema.*;
+import org.apache.streampipes.model.staticproperty.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.io.InputStream;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesEntity> {
@@ -104,16 +82,35 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
             .getValue());
   }
 
+  public String codeblockValue(String internalName) {
+    return getStaticPropertyByName(internalName,CodeInputStaticProperty.class).getValue();
+  }
+
+  public String selectedColor(String internalName) {
+    return getStaticPropertyByName(internalName, ColorPickerStaticProperty.class).getSelectedColor();
+  }
+
   public String fileContentsAsString(String internalName) throws IOException {
-    String filename =
-            getStaticPropertyByName(internalName, FileStaticProperty.class).getLocationPath();
+    String filename = selectedFilename(internalName);
     return Request.Get(makeFileRequestPath(filename)).execute().returnContent().asString();
   }
 
   public byte[] fileContentsAsByteArray(String internalName) throws IOException {
-    String filename =
-            getStaticPropertyByName(internalName, FileStaticProperty.class).getLocationPath();
+    String filename = selectedFilename(internalName);
     return Request.Get(makeFileRequestPath(filename)).execute().returnContent().asBytes();
+  }
+
+  public InputStream fileContentsAsStream(String internalName) throws IOException {
+    String filename = selectedFilename(internalName);
+    return Request.Get(makeFileRequestPath(filename)).execute().returnContent().asStream();
+  }
+
+  public String selectedFilename(String internalName) {
+    return getStaticPropertyByName(internalName, FileStaticProperty.class).getLocationPath();
+  }
+
+  public String selectedFileFetchUrl(String internalName) {
+    return makeFileRequestPath(selectedFilename(internalName));
   }
 
   private String makeFileRequestPath(String filename) {
@@ -156,11 +153,25 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
             .getInternalName(), targetClass);
   }
 
+  public List<StaticPropertyGroup> collectionMembersAsGroup(String internalName) {
+    return getStaticPropertyByName(internalName, CollectionStaticProperty.class)
+            .getMembers()
+            .stream()
+            .map(sp -> (StaticPropertyGroup) sp)
+            .sorted(Comparator.comparingInt(StaticProperty::getIndex))
+            .collect(Collectors.toList());
+  }
+
+  public StaticProperty extractGroupMember(String internalName, StaticPropertyGroup group) {
+    return getStaticPropertyByName(group.getStaticProperties(), internalName);
+  }
+
   public <V> List<V> singleValueParameterFromCollection(String internalName, Class<V> targetClass) {
     CollectionStaticProperty collection = getStaticPropertyByName(internalName, CollectionStaticProperty.class);
     return collection
             .getMembers()
             .stream()
+            .sorted(Comparator.comparingInt(StaticProperty::getIndex))
             .map(sp -> (FreeTextStaticProperty) sp)
             .map(FreeTextStaticProperty::getValue)
             .map(v -> typeParser.parse(v, targetClass))
@@ -182,7 +193,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
     return spType.cast(getStaticPropertyByName(internalName));
   }
 
-  private StaticProperty getStaticPropertyByName(String name) {
+  public StaticProperty getStaticPropertyByName(String name) {
     return getStaticPropertyByName(sepaElement.getStaticProperties(), name);
   }
 
@@ -217,6 +228,17 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
 
   public String mappingPropertyValue(String staticPropertyName) {
     return getPropertySelectorFromUnaryMapping(staticPropertyName);
+  }
+
+  public List<String> getUnaryMappingsFromCollection(String collectionStaticPropertyName) {
+    CollectionStaticProperty collection = getStaticPropertyByName(collectionStaticPropertyName, CollectionStaticProperty.class);
+    return collection
+            .getMembers()
+            .stream()
+            .sorted(Comparator.comparingInt(StaticProperty::getIndex))
+            .map(sp -> (MappingPropertyUnary) sp)
+            .map(MappingPropertyUnary::getSelectedProperty)
+            .collect(Collectors.toList());
   }
 
   public List<String> mappingPropertyValues(String staticPropertyName) {

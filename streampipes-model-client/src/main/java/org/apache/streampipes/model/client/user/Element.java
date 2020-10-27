@@ -22,7 +22,10 @@ public class Element {
 
 	private String elementId;
 	private boolean publicElement;
-	
+
+	public Element() {
+	}
+
 	public Element(String elementId, boolean publicElement)
 	{
 		this.elementId = elementId;

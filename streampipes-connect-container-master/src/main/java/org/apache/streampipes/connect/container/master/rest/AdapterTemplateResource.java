@@ -18,25 +18,17 @@
 
 package org.apache.streampipes.connect.container.master.rest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
-import org.apache.streampipes.connect.management.AdapterDeserializer;
 import org.apache.streampipes.connect.container.master.management.AdapterTemplateMasterManagement;
 import org.apache.streampipes.connect.rest.AbstractContainerResource;
-import org.apache.streampipes.model.client.messages.Notifications;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterDescriptionList;
-import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
-import org.apache.streampipes.rest.shared.annotation.JsonLdSerialized;
-import org.apache.streampipes.rest.shared.util.SpMediaType;
+import org.apache.streampipes.model.message.Notifications;
+import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -54,21 +46,9 @@ public class AdapterTemplateResource extends AbstractContainerResource {
     }
 
     @POST
-//    @JsonLdSerialized
-    @Path("/")
-    @GsonWithIds
+    @JacksonSerialized
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addAdapterTemplate(String s, @PathParam("username") String userName) {
-
-        AdapterDescription adapterDescription = null;
-
-        try {
-            adapterDescription = AdapterDeserializer.getAdapterDescription(s);
-        } catch (AdapterException e) {
-            logger.error("Could not deserialize AdapterDescription: " + s, e);
-            e.printStackTrace();
-        }
-
+    public Response addAdapterTemplate(AdapterDescription adapterDescription, @PathParam("username") String userName) {
         try {
             String adapterTemplateId = adapterTemplateMasterManagement.addAdapterTemplate(adapterDescription);
             logger.info("User: " + userName + " added adapter as adapter template");
@@ -78,15 +58,13 @@ public class AdapterTemplateResource extends AbstractContainerResource {
             logger.error("Error while storing the adapter template", e);
             return ok(Notifications.error(e.getMessage()));
         }
-
-
     }
 
     @GET
-    @JsonLdSerialized
+    @JacksonSerialized
     @Path("/all")
-    @Produces(SpMediaType.JSONLD)
-    public Response getAllAdapterTemplates(String id, @PathParam("username") String userName) {
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllAdapterTemplates(@PathParam("username") String userName) {
         try {
             AdapterDescriptionList result = adapterTemplateMasterManagement.getAllAdapterTemplates();
 
@@ -98,9 +76,8 @@ public class AdapterTemplateResource extends AbstractContainerResource {
 
     }
 
-
     @DELETE
-    @JsonLdSerialized
+    @JacksonSerialized
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteAdapter(@PathParam("id") String id, @PathParam("username") String userName) {

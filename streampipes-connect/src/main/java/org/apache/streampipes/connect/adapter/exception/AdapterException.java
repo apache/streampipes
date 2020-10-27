@@ -25,4 +25,8 @@ public class AdapterException extends Exception {
     {
         super(message);
     }
+
+    public AdapterException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

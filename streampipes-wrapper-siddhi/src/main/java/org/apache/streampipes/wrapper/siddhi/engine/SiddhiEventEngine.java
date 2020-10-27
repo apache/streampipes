@@ -34,12 +34,7 @@ import io.siddhi.core.event.Event;
 import io.siddhi.core.stream.input.InputHandler;
 import io.siddhi.core.stream.output.StreamCallback;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.StringJoiner;
+import java.util.*;
 
 public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> implements
         EventProcessor<B> {
@@ -50,10 +45,13 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
   private Map<String, InputHandler> siddhiInputHandlers;
   private List<String> inputStreamNames;
 
-  private List<String> sortedEventKeys;
+  private Map<String, List> listOfEventKeys;
+  private List<String> outputEventKeys;
 
   private Boolean debugMode;
   private SiddhiDebugCallback debugCallback;
+
+  private String timestampField;
 
   private static final Logger LOG = LoggerFactory.getLogger(SiddhiEventEngine.class);
 
@@ -61,7 +59,8 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
     this.siddhiAppString = new StringBuilder();
     this.siddhiInputHandlers = new HashMap<>();
     this.inputStreamNames = new ArrayList<>();
-    sortedEventKeys = new ArrayList<>();
+    listOfEventKeys = new HashMap<>();
+    outputEventKeys = new ArrayList<>();
     this.debugMode = false;
   }
 
@@ -79,6 +78,7 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
 
     SiddhiManager siddhiManager = SpSiddhiManager.INSTANCE.getSiddhiManager();
 
+    this.timestampField = removeStreamIdFromTimestamp(setTimestamp(parameters));
 
     LOG.info("Configuring event types for graph " + parameters.getGraph().getName());
     parameters.getInEventTypes().forEach((key, value) -> {
@@ -86,6 +86,10 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
       registerEventTypeIfNotExists(key, value);
       this.inputStreamNames.add(prepareName(key));
     });
+
+    LOG.info("Configuring output event keys for graph " + parameters.getGraph().getName());
+    //System.out.println("output key: " + key);
+    outputEventKeys.addAll(parameters.getOutEventType().keySet());
 
     String fromStatement = fromStatement(inputStreamNames, parameters);
     String selectStatement = selectStatement(parameters);
@@ -124,6 +128,10 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
 
   }
 
+  private String removeStreamIdFromTimestamp(String timestampField) {
+    return timestampField !=null ? timestampField.replaceAll("s0::", "") : null;
+  }
+
   private String getOutputTopicName(B parameters) {
     return parameters
             .getGraph()
@@ -137,9 +145,16 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
   private org.apache.streampipes.model.runtime.Event toSpEvent(Event event, B parameters, SchemaInfo
           schemaInfo, SourceInfo sourceInfo) {
     Map<String, Object> outMap = new HashMap<>();
-    for (int i = 0; i < sortedEventKeys.size(); i++) {
+    for (int i = 0; i < outputEventKeys.size(); i++) {
+
+      if (event.getData(i) instanceof LinkedList) {
         List<Object> tmp = (List<Object>) event.getData(i);
-      outMap.put(sortedEventKeys.get(i), tmp.get(0));
+        outMap.put(outputEventKeys.get(i), tmp.get(0));
+      }
+      else {
+        outMap.put(outputEventKeys.get(i), event.getData(i));
+      }
+
     }
     return EventFactory.fromMap(outMap, sourceInfo, schemaInfo);
   }
@@ -148,14 +163,24 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
   private void registerEventTypeIfNotExists(String eventTypeName, Map<String, Object> typeMap) {
     String defineStreamPrefix = "define stream " + prepareName(eventTypeName);
     StringJoiner joiner = new StringJoiner(",");
+    int currentNoOfStreams = this.listOfEventKeys.size();
 
+    List<String> sortedEventKeys = new ArrayList<>();
     for (String key : typeMap.keySet()) {
       sortedEventKeys.add(key);
       Collections.sort(sortedEventKeys);
     }
 
+    listOfEventKeys.put(eventTypeName, sortedEventKeys);
+
     for (String key : sortedEventKeys) {
-      joiner.add("s0" + key + " " + toType((Class<?>) typeMap.get(key)));
+      // TODO: get timestamp field from user params
+      if(key.equalsIgnoreCase(this.timestampField)) {
+        joiner.add("s" + currentNoOfStreams + key + " LONG");
+      }
+      else {
+        joiner.add("s" + currentNoOfStreams + key + " " + toType((Class<?>) typeMap.get(key)));
+      }
     }
 
     this.siddhiAppString.append(defineStreamPrefix);
@@ -196,16 +221,20 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
   @Override
   public void onEvent(org.apache.streampipes.model.runtime.Event event, SpOutputCollector collector) {
     try {
-      siddhiInputHandlers.get(event.getSourceInfo().getSourceId()).send(toObjArr(event.getRaw()));
+      String sourceId = event.getSourceInfo().getSourceId();
+      InputHandler inputHandler = siddhiInputHandlers.get(sourceId);
+      List<String> eventKeys = listOfEventKeys.get(sourceId);
+
+      inputHandler.send(toObjArr(eventKeys, event.getRaw()));
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
   }
 
-  private Object[] toObjArr(Map<String, Object> event) {
-    Object[] result = new Object[sortedEventKeys.size()];
-    for (int i = 0; i < sortedEventKeys.size(); i++) {
-      result[i] = event.get(sortedEventKeys.get(i));
+  private Object[] toObjArr(List<String> eventKeys, Map<String, Object> event) {
+    Object[] result = new Object[eventKeys.size()];
+    for (int i = 0; i < eventKeys.size(); i++) {
+      result[i] = event.get(eventKeys.get(i));
     }
 
     return result;
@@ -220,6 +249,10 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
 
   protected abstract String selectStatement(final B bindingParameters);
 
+  protected String setTimestamp(final B bindingparameters) {
+    return null;
+  }
+
   protected String prepareName(String eventName) {
     return eventName
             .replaceAll("\\.", "")
@@ -228,27 +261,46 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
   }
 
 
+
   protected String getCustomOutputSelectStatement(DataProcessorInvocation invocation,
                                                   String eventName) {
     StringBuilder selectString = new StringBuilder();
     selectString.append("select ");
 
-    if (sortedEventKeys.size() > 0) {
-      for (int i = 0; i < sortedEventKeys.size() - 1; i++) {
-        selectString.append(eventName + ".s0" + sortedEventKeys.get(i) + ",");
+    if (outputEventKeys.size() > 0) {
+      for (int i = 0; i < outputEventKeys.size() - 1; i++) {
+        selectString.append(eventName + ".s0" + outputEventKeys.get(i) + ",");
       }
-      selectString.append(eventName + ".s0" + sortedEventKeys.get(sortedEventKeys.size() - 1));
+      selectString.append(eventName + ".s0" + outputEventKeys.get(outputEventKeys.size() - 1));
 
     }
 
     return selectString.toString();
   }
 
+//  protected String getCustomOutputSelectStatement(DataProcessorInvocation invocation) {
+//    return getCustomOutputSelectStatement(invocation, "e1");
+//  }
+
   protected String getCustomOutputSelectStatement(DataProcessorInvocation invocation) {
-    return getCustomOutputSelectStatement(invocation, "e1");
+    StringBuilder selectString = new StringBuilder();
+    selectString.append("select ");
+
+    if (outputEventKeys.size() > 0) {
+      for (int i=0; i<outputEventKeys.size() - 1; i++) {
+        selectString.append("s0" + outputEventKeys.get(i) + ",");
+      }
+      selectString.append("s0" + outputEventKeys.get(outputEventKeys.size() - 1));
+    }
+    return selectString.toString();
   }
 
   public void setSortedEventKeys(List<String> sortedEventKeys) {
-    this.sortedEventKeys = sortedEventKeys;
+    String streamId = (String) this.listOfEventKeys.keySet().toArray()[0];    // only reliable if there is only one stream, else use changeEventKeys() to respective streamId
+    changeEventKeys(streamId, sortedEventKeys);
+  }
+
+  public void changeEventKeys(String streamId, List<String> newEventKeys) {
+    this.listOfEventKeys.put(streamId, newEventKeys);
   }
 }

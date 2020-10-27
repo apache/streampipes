@@ -1,0 +1,92 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div class="sp-dialog-container">
+    <div class="sp-dialog-content">
+        <div fxFlex="100" fxLayout="column">
+            <div style="border-bottom:1px solid #ccc;padding:10px;background-color:#f6f6f6">
+                <div fxFlex="100" fxLayout="row" fxLayoutAlign="end end">
+                    <mat-slide-toggle [(ngModel)]="showDocumentation"
+                                      color="primary"
+                                      [disabled]="!pipelineElement.payload.includesAssets">
+                        Show documentation
+                    </mat-slide-toggle>
+                    <span>&nbsp;</span>
+                    <mat-slide-toggle [(ngModel)]="displayRecommended" color="primary">
+                        Show only recommended settings
+                    </mat-slide-toggle>
+                </div>
+            </div>
+            <div fxFlex="100" fxLayout="row">
+                <div fxFlex="{{_showDocumentation ? 50: 100}}">
+                    <div fxLayout="column">
+                        <div fxLayout="row" *ngIf="restrictedEditMode">
+                            <div fxLayout="column">
+                                <div fxLayout="column" class="customize-item-main-help" style="border: 2px solid #ffc400">
+                                    <div class="customize-item-title-help" style="background: #ffc400;" fxFlex="100"
+                                         fxLayout="row">
+                                        You can only modify things that don't affect your pipeline structure. To fully
+                                        modify this element, make sure that it doesn't connect to any successors (remove
+                                        outgoing connectors).
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div fxFlex="100" fxLayout="column" class="customize-section p-15">
+                            <form [formGroup]="parentForm" fxFlex="100">
+                                <app-static-property *ngFor="let config of cachedPipelineElement.staticProperties"
+                                                     [staticProperty]="config"
+                                                     [pipelineElement] = "cachedPipelineElement"
+                                                     [displayRecommended]="displayRecommended"
+                                                     [staticProperties]="cachedPipelineElement.staticProperties"
+                                                     [eventSchemas]="eventSchemas"
+                                                     [parentForm]="parentForm"
+                                                     [fieldName]="config.internalName"
+                                                     [completedStaticProperty]="completedStaticProperty"
+                                                     (updateEmitter)="triggerUpdate($event)"
+                                                     (validateEmitter)="validConfiguration($event)">
+                                </app-static-property>
+                                <div *ngIf="isDataProcessor">
+                                    <output-strategy *ngFor="let outputStrategy of cachedPipelineElement.outputStrategies"
+                                                     [parentForm]="parentForm"
+                                                     [outputStrategy]="outputStrategy"
+                                                     [selectedElement]="cachedPipelineElement"
+                                                     [restrictedEditMode]="restrictedEditMode">
+                                    </output-strategy>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div fxFlex="50" *ngIf="showDocumentation" style="padding-left:10px;border-left: 2px solid rgb(204, 204, 204);">
+                    <pipeline-element-documentation [useStyling]="false" [appId]="pipelineElement.payload.appId"></pipeline-element-documentation>
+                </div>
+            </div>
+        </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="sp-dialog-actions">
+        <button mat-button mat-raised-button color="primary" (click)="save()" style="margin-right:10px;"
+                [disabled]="!(formValid)">
+            Save
+        </button>
+        <button mat-button mat-raised-button class="mat-basic" (click)="close()">
+            Cancel
+        </button>
+    </div>
+</div>

@@ -23,19 +23,11 @@ public class InitialSettings {
 
 	private String adminEmail;
 	private String adminPassword;
-	private String couchDbHost;
-	private String kafkaHost;
-	private String zookeeperHost;
-	private String jmsHost;
 	private Boolean installPipelineElements;
 
-	public InitialSettings(String adminEmail, String adminPassword, String couchDbHost, String kafkaHost, String zookeeperHost, String jmsHost, Boolean installPipelineElements) {
+	public InitialSettings(String adminEmail, String adminPassword, Boolean installPipelineElements) {
 		this.adminEmail = adminEmail;
 		this.adminPassword = adminPassword;
-		this.couchDbHost = couchDbHost;
-		this.kafkaHost = kafkaHost;
-		this.zookeeperHost = zookeeperHost;
-		this.jmsHost = jmsHost;
 		this.installPipelineElements = installPipelineElements;
 	}
 
@@ -56,38 +48,6 @@ public class InitialSettings {
 
 	public void setAdminEmail(String adminEmail) {
 		this.adminEmail = adminEmail;
-	}
-
-	public String getCouchDbHost() {
-		return couchDbHost;
-	}
-
-	public void setCouchDbHost(String couchDbHost) {
-		this.couchDbHost = couchDbHost;
-    }
-
-	public String getKafkaHost() {
-		return kafkaHost;
-	}
-
-	public void setKafkaHost(String kafkaHost) {
-		this.kafkaHost = kafkaHost;
-	}
-
-	public String getZookeeperHost() {
-		return zookeeperHost;
-	}
-
-	public void setZookeeperHost(String zookeeperHost) {
-		this.zookeeperHost = zookeeperHost;
-	}
-
-	public String getJmsHost() {
-		return jmsHost;
-	}
-
-	public void setJmsHost(String jmsHost) {
-		this.jmsHost = jmsHost;
 	}
 
 	public Boolean getInstallPipelineElements() {

@@ -20,7 +20,7 @@ package org.apache.streampipes.manager.data;
 
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
-import org.apache.streampipes.model.client.pipeline.Pipeline;
+import org.apache.streampipes.model.pipeline.Pipeline;
 
 import java.util.ArrayList;
 import java.util.List;

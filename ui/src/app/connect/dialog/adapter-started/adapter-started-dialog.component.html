@@ -1,0 +1,65 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div class="sp-dialog-container">
+    <div class="sp-dialog-content p-15">
+        <div fxLayout="column" *ngIf="!adapterInstalled">
+            <div fxLayoutAlign="center" >
+                <mat-spinner fxLayoutAlign="center" style="margin: 10px 0 5px 0" >Loading</mat-spinner>
+            </div>
+            <div fxLayoutAlign="center">
+                <h3>Please wait while your new adapter is being generated!</h3>
+            </div>
+        </div>
+        <div fxLayout="column" *ngIf="adapterInstalled">
+
+            <div *ngIf="adapterStatus.success">
+                The adapter was created successfully. You can now switch to the pipeline editor to create a pipeline based on your new element!
+
+                <div *ngIf="isSetAdapter">
+                    <div fxLayout="column">
+                        <div fxLayoutAlign="center" >
+                            <h3>Data Set adapter created. Data will be streamed once a pipeline is started!</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngIf="isTemplate">
+                    <div fxLayout="column">
+                        <div fxLayoutAlign="center" >
+                            <h3>Template created. You or other users can now create adapters based on this template!</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngIf="!isSetAdapter && !isTemplate">
+                    <pipeline-element-runtime-info [streamDescription]="streamDescription" [pollingActive]="pollingActive"></pipeline-element-runtime-info>
+                </div>
+
+            </div>
+            <div *ngIf="!adapterStatus.success">
+                Something went wrong during the adapter installation.
+            </div>
+        </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="sp-dialog-actions actions-align-right">
+        <button id="confirm_adapter_started_button" class="mat-basic" mat-raised-button (click)="onCloseConfirm()">Close
+        </button>
+    </div>
+</div>

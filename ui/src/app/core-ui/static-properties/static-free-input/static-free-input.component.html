@@ -1,0 +1,56 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div [formGroup]="parentForm" fxFlex="100" fxLayout="column">
+    <div fxFlex fxLayout="row" *ngIf="!staticProperty.valueSpecification && !staticProperty.multiLine">
+        <mat-form-field fxFlex>
+            <input formControlName="{{fieldName}}" fxFlex
+                   matInput
+                   [placeholder]="staticProperty.label"
+                   required (blur)="emitUpdate()">
+            <mat-hint>{{staticProperty.description}}</mat-hint>
+
+            <mat-error *ngIf="!fieldValid">
+                {{errorMessage}}
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <div *ngIf="staticProperty.valueSpecification">
+        <div fxLayout="column" fxFlex="100">
+            <mat-slider thumbLabel formControlName="{{fieldName}}"
+                    [max]="staticProperty.valueSpecification.maxValue"
+                    [min]="staticProperty.valueSpecification.minValue"
+                    [step]="staticProperty.valueSpecification.step">
+            </mat-slider>
+        </div>
+    </div>
+    <div *ngIf="!staticProperty.valueSpecification && !staticProperty.mapsTo" fxFlex="100" fxLayout="column">
+        <div fxFlex="100" fxLayout="column" *ngIf="staticProperty.placeholdersSupported">
+            <h5>Possible placeholders: </h5>
+            <div fxFlex="100" fxLayout="row" style="background:white;">
+                <mat-chip-list style="margin-bottom:10px;">
+                    <mat-chip (click)="applyPlaceholder(property.runtimeName)" color="primary" *ngFor="let property of eventSchemas[0].eventProperties">#{{property.runtimeName}}#</mat-chip>
+                </mat-chip-list>
+            </div>
+        </div>
+        <div fxFlex="100" *ngIf="staticProperty.multiLine">
+            <quill-editor *ngIf="staticProperty.htmlFontFormat" #textEditor formControlName="{{fieldName}}" [modules]="quillModulesFontFormat"></quill-editor>
+            <quill-editor *ngIf="!staticProperty.htmlFontFormat" #textEditor formControlName="{{fieldName}}" [modules]="quillModules"></quill-editor>
+        </div>
+    </div>
+</div>

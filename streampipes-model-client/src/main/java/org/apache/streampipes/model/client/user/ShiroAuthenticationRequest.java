@@ -22,6 +22,10 @@ public class ShiroAuthenticationRequest {
 
 	private String username;
 	private String password;
+
+	public ShiroAuthenticationRequest() {
+
+	}
 	
 	public ShiroAuthenticationRequest(String username, String password) {
 		super();

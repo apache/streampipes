@@ -21,35 +21,27 @@ package org.apache.streampipes.rest.impl.dashboard;
 import org.apache.streampipes.model.dashboard.DashboardWidgetModel;
 import org.apache.streampipes.rest.api.dashboard.IDashboardWidget;
 import org.apache.streampipes.rest.impl.AbstractRestInterface;
-import org.apache.streampipes.rest.shared.annotation.JsonLdSerialized;
-import org.apache.streampipes.rest.shared.util.SpMediaType;
+import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.storage.api.IDashboardWidgetStorage;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/v2/users/{username}/ld/widgets")
+@Path("/v2/users/{username}/dashboard/widgets")
 public class DashboardWidget extends AbstractRestInterface implements IDashboardWidget {
 
   @GET
-  @JsonLdSerialized
+  @JacksonSerialized
   @Produces(MediaType.APPLICATION_JSON)
   @Override
   public Response getAllDashboardWidgets() {
-    return ok(asContainer(getDashboardWidgetStorage().getAllDashboardWidgets()));
+    return ok(getDashboardWidgetStorage().getAllDashboardWidgets());
   }
 
   @GET
-  @JsonLdSerialized
-  @Produces(SpMediaType.JSONLD)
+  @JacksonSerialized
+  @Produces(MediaType.APPLICATION_JSON)
   @Path("/{widgetId}")
   @Override
   public Response getDashboardWidget(@PathParam("widgetId") String widgetId) {
@@ -57,8 +49,8 @@ public class DashboardWidget extends AbstractRestInterface implements IDashboard
   }
 
   @PUT
-  @JsonLdSerialized
-  @Consumes(SpMediaType.JSONLD)
+  @JacksonSerialized
+  @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/{widgetId}")
   @Override
@@ -68,6 +60,7 @@ public class DashboardWidget extends AbstractRestInterface implements IDashboard
   }
 
   @DELETE
+  @JacksonSerialized
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/{widgetId}")
   @Override
@@ -77,9 +70,9 @@ public class DashboardWidget extends AbstractRestInterface implements IDashboard
   }
 
   @POST
-  @JsonLdSerialized
-  @Produces(SpMediaType.JSONLD)
-  @Consumes(SpMediaType.JSONLD)
+  @JacksonSerialized
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
   @Override
   public Response createDashboardWidget(DashboardWidgetModel dashboardWidgetModel) {
     String widgetId = getDashboardWidgetStorage().storeDashboardWidget(dashboardWidgetModel);

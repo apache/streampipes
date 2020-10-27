@@ -27,7 +27,9 @@ import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.model.schema.QuantitativeValue;
 import org.apache.streampipes.sdk.utils.Datatypes;
+import org.apache.streampipes.vocabulary.SPSensor;
 import org.apache.streampipes.vocabulary.XSD;
+import org.eclipse.rdf4j.model.vocabulary.SP;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -73,6 +75,19 @@ public class EpProperties {
     EventPropertyPrimitive ep = ep(Labels.from("", "Timestamp", "The current timestamp value"),
             XSD._long.toString(), runtimeName, "http://schema.org/DateTime");
     ep.setPropertyScope(PropertyScope.HEADER_PROPERTY.name());
+    return ep;
+  }
+
+  /**
+   * Creates a new primitive property of type image (with data type string and domain property image
+   *
+   * @param runtimeName The field identifier of the event property at runtime.
+   * @return {@link org.apache.streampipes.model.schema.EventPropertyPrimitive}
+   */
+  public static EventPropertyPrimitive imageProperty(String runtimeName) {
+    EventPropertyPrimitive ep = ep(Labels.from("", "Image", ""),
+            XSD._string.toString(), runtimeName, SPSensor.IMAGE);
+    ep.setPropertyScope(PropertyScope.MEASUREMENT_PROPERTY.name());
     return ep;
   }
 
@@ -216,6 +231,22 @@ public class EpProperties {
    */
   public static EventPropertyPrimitive stringEp(Label label, String runtimeName, String domainProperty) {
     return ep(label, XSD._string.toString(), runtimeName, domainProperty);
+  }
+
+  /**
+   * Creates a new primitive property of type string and the provided domain property.
+   *
+   * @param runtimeName    The field identifier of the event property at runtime.
+   * @param domainProperty The semantics of the list property as a String. The string should correspond to a URI
+   *                       provided by a vocabulary. Use one of the vocabularies provided in
+   *                       {@link org.apache.streampipes.vocabulary} or create your own domain-specific vocabulary.
+   * @param propertyScope  The scope for the property, whether it is a HEADER, MEASUREMENT, od DIMENSION property
+   * @return {@link org.apache.streampipes.model.schema.EventPropertyPrimitive}
+   */
+  public static EventPropertyPrimitive stringEp(Label label, String runtimeName, String domainProperty, PropertyScope propertyScope) {
+    EventPropertyPrimitive ep = ep(label, XSD._string.toString(), runtimeName, domainProperty);
+    ep.setPropertyScope(propertyScope.name());
+    return ep;
   }
 
   /**

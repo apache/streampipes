@@ -23,6 +23,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {DashboardService} from "../../services/dashboard.service";
 import {EditDashboardDialogComponent} from "../../dialogs/edit-dashboard/edit-dashboard-dialog.component";
 import {Tuple2} from "../../../core-model/base/Tuple2";
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'dashboard-overview',
@@ -38,9 +39,9 @@ export class DashboardOverviewComponent implements OnInit {
     dataSource = new MatTableDataSource<Dashboard>();
     displayedColumns: string[] = ['name', 'open', 'openWindow', 'settings', 'edit', 'delete'];
 
-    constructor(@Inject('$state') private $state: any,
-                private dashboardService: DashboardService,
-                public dialog: MatDialog) {
+    constructor(private dashboardService: DashboardService,
+                public dialog: MatDialog,
+                private Router: Router) {
 
     }
 
@@ -87,8 +88,9 @@ export class DashboardOverviewComponent implements OnInit {
     }
 
     openExternalDashboard(dashboard: Dashboard) {
-        let href = this.$state.href('standalone', {dashboardId: dashboard._id});
-        window.open(href, "_blank");
+        let href = this.Router.createUrlTree(['standalone', dashboard._id]);
+        // TODO fixes bug that hashing strategy is ignored by createUrlTree
+        window.open("#" + href.toString(), "_blank");
     }
 
 }

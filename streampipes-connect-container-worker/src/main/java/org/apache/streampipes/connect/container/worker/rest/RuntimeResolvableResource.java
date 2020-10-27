@@ -24,49 +24,36 @@ import org.apache.streampipes.container.api.ResolvesContainerProvidedOptions;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.apache.streampipes.model.staticproperty.Option;
-import org.apache.streampipes.rest.shared.annotation.JsonLdSerialized;
-import org.apache.streampipes.rest.shared.util.SpMediaType;
+import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
-import org.apache.streampipes.serializers.jsonld.JsonLdTransformer;
 
-import java.io.IOException;
-import java.util.List;
-
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 @Path("/api/v1/{username}/worker/resolvable")
 public class RuntimeResolvableResource extends AbstractContainerResource {
 
     @POST
     @Path("{id}/configurations")
-    @JsonLdSerialized
-    @Produces(SpMediaType.JSONLD)
+    @JacksonSerialized
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response fetchConfigurations(@PathParam("id") String elementId,
-                                        String payload) {
+                                        RuntimeOptionsRequest runtimeOptionsRequest) {
 
-        try {
-            RuntimeOptionsRequest runtimeOptionsRequest = new JsonLdTransformer().fromJsonLd(payload,
-                    RuntimeOptionsRequest.class);
+        ResolvesContainerProvidedOptions adapterClass =
+                RuntimeResovable.getRuntimeResolvableAdapter(elementId);
 
-            ResolvesContainerProvidedOptions adapterClass =
-                    RuntimeResovable.getRuntimeResolvableAdapter(elementId);
+        List<Option> availableOptions =
+                adapterClass.resolveOptions(runtimeOptionsRequest.getRequestId(),
+                        StaticPropertyExtractor.from(runtimeOptionsRequest.getStaticProperties(),
+                                runtimeOptionsRequest.getInputStreams(),
+                                runtimeOptionsRequest.getAppId()));
 
-            List<Option> availableOptions =
-                    adapterClass.resolveOptions(runtimeOptionsRequest.getRequestId(),
-                            StaticPropertyExtractor.from(runtimeOptionsRequest.getStaticProperties(),
-                                    runtimeOptionsRequest.getInputStreams(),
-                                    runtimeOptionsRequest.getAppId()));
-
-            return ok(new RuntimeOptionsResponse(runtimeOptionsRequest,
-                    availableOptions));
-        } catch (IOException e) {
-            e.printStackTrace();
-            return fail();
-        }
+        return ok(new RuntimeOptionsResponse(runtimeOptionsRequest,
+                availableOptions));
     }
 
 }

@@ -16,16 +16,11 @@
  */
 package org.apache.streampipes.connect.container.worker.init;
 
+import org.apache.streampipes.connect.container.worker.rest.*;
+import org.apache.streampipes.connect.init.AdapterContainerConfig;
+import org.apache.streampipes.rest.shared.serializer.JacksonSerializationProvider;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.springframework.stereotype.Component;
-import org.apache.streampipes.connect.container.worker.rest.FileResource;
-import org.apache.streampipes.connect.container.worker.rest.GuessResource;
-import org.apache.streampipes.connect.container.worker.rest.RuntimeResolvableResource;
-import org.apache.streampipes.connect.container.worker.rest.WelcomePageWorker;
-import org.apache.streampipes.connect.container.worker.rest.WorkerResource;
-import org.apache.streampipes.connect.init.AdapterContainerConfig;
-import org.apache.streampipes.connect.container.worker.rest.AdapterResource;
-import org.apache.streampipes.connect.container.worker.rest.ProtocolResource;
 
 @Component
 public class AdapterWorkerContainerResourceConfig extends AdapterContainerConfig {
@@ -36,9 +31,10 @@ public class AdapterWorkerContainerResourceConfig extends AdapterContainerConfig
     register(GuessResource.class);
     register(RuntimeResolvableResource.class);
     register(WorkerResource.class);
-    register(FileResource.class);
     register(MultiPartFeature.class);
     register(AdapterResource.class);
     register(ProtocolResource.class);
+
+    register(JacksonSerializationProvider.class);
   }
 }

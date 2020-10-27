@@ -17,6 +17,10 @@
             "main": "src/main.ts",
             "tsConfig": "src/tsconfig.app.json",
             "polyfills": "src/polyfills.ts",
+            "allowedCommonJsDependencies": [
+              "lodash",
+              "codemirror"
+            ],
             "assets": [
               "src/assets",
               {
@@ -37,11 +41,17 @@
               "node_modules/jquery.panzoom/dist/jquery.panzoom.js",
               "node_modules/jquery-ui-dist/jquery-ui.js",
               "node_modules/jsplumb/dist/js/jsPlumb-2.1.3-min.js",
-              "node_modules/trix/dist/trix.js"
+              "node_modules/quill/dist/quill.js"
             ]
           },
           "configurations": {
             "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
               "budgets": [
                 {
                   "type": "anyComponentStyle",
@@ -80,6 +90,20 @@
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
             "browserTarget": "app:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "src/test.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "tsconfig.spec.json",
+            "karmaConfig": "karma.conf.js",
+            "assets": [
+              "src/assets"
+            ],
+            "scripts": [
+            ]
           }
         },
         "lint": {

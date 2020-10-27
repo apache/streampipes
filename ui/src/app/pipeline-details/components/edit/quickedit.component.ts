@@ -16,16 +16,135 @@
  *
  */
 
-import {QuickEditController} from "./quickedit.controller";
+import {
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output
+} from "@angular/core";
+import {PipelineService} from "../../../platform-services/apis/pipeline.service";
+import {
+    DataProcessorInvocation,
+    DataSinkInvocation,
+    EventSchema,
+    Pipeline
+} from "../../../core-model/gen/streampipes-model";
+import {PipelineElementUnion} from "../../../editor/model/editor.model";
+import {FormBuilder, FormGroup} from "@angular/forms";
 
-declare const require: any;
+@Component({
+    selector: 'quick-edit',
+    templateUrl: './quickedit.component.html',
+})
+export class QuickEditComponent implements OnInit, AfterViewInit{
 
-export let QuickEditComponent = {
-    template: require('./quickedit.tmpl.html'),
-    bindings: {
-        pipeline: "<",
-        selectedElement: "<"
-    },
-    controller: QuickEditController,
-    controllerAs: 'ctrl'
-};
+    @Input()
+    pipeline: Pipeline;
+
+    @Output()
+    reloadPipelineEmitter: EventEmitter<void> = new EventEmitter<void>();
+
+    _selectedElement: PipelineElementUnion;
+
+    eventSchemas: EventSchema[];
+
+    parentForm: FormGroup;
+    formValid: boolean;
+    viewInitialized: boolean = false;
+
+    isInvocable: boolean = false;
+    isDataProcessor: boolean = false;
+
+    pipelineUpdating: boolean = false;
+
+    constructor(private pipelineService: PipelineService,
+                private fb: FormBuilder,
+                private changeDetectorRef: ChangeDetectorRef) {
+
+    }
+
+    ngOnInit() {
+        this.parentForm = this.fb.group({
+        });
+
+        this.parentForm.statusChanges.subscribe((status)=>{
+            this.formValid = this.viewInitialized && this.parentForm.valid;
+        })
+    }
+
+    ngAfterViewInit(): void {
+        this.viewInitialized = true;
+        this.formValid = this.viewInitialized && this.parentForm.valid;
+        this.changeDetectorRef.detectChanges();
+    }
+
+    updatePipeline() {
+        this.pipelineUpdating = true;
+        this.updatePipelineElement();
+        this.pipelineService.updatePipeline(this.pipeline).subscribe(data => {
+            this.reloadPipelineEmitter.emit();
+            this.pipelineUpdating = false;
+        });
+    }
+
+    updatePipelineElement() {
+        if (this._selectedElement instanceof DataProcessorInvocation) {
+            this.updateDataProcessor();
+        } else if (this._selectedElement instanceof DataSinkInvocation) {
+            this.updateDataSink();
+        }
+    }
+
+    updateDataProcessor() {
+        let dataProcessors: DataProcessorInvocation[] = [];
+        this.pipeline.sepas.forEach(p => {
+           if (p.dom === this._selectedElement.dom) {
+               dataProcessors.push(this._selectedElement as DataProcessorInvocation);
+           } else {
+                dataProcessors.push(p);
+           }
+        });
+        this.pipeline.sepas = dataProcessors;
+    }
+
+    updateDataSink() {
+        let dataSinks: DataSinkInvocation[] = [];
+        this.pipeline.actions.forEach(p => {
+            if (p.dom === this._selectedElement.dom) {
+                dataSinks.push(this._selectedElement as DataSinkInvocation);
+            } else {
+                dataSinks.push(p);
+            }
+        });
+        this.pipeline.actions = dataSinks;
+    }
+
+    get selectedElement() {
+        return this._selectedElement;
+    }
+
+    @Input()
+    set selectedElement(selectedElement: PipelineElementUnion) {
+        if (this._selectedElement) {
+            this.updatePipelineElement();
+        }
+        this._selectedElement = selectedElement;
+        this.eventSchemas = [];
+        if (this._selectedElement instanceof DataProcessorInvocation || this._selectedElement instanceof DataSinkInvocation) {
+            (this._selectedElement as any).inputStreams.forEach(is => {
+                this.eventSchemas = this.eventSchemas.concat(is.eventSchema);
+            });
+        }
+        this.updateTypeInfo();
+    }
+
+    updateTypeInfo() {
+        this.isDataProcessor = this._selectedElement instanceof DataProcessorInvocation;
+        this.isInvocable = this._selectedElement instanceof DataProcessorInvocation ||
+            this._selectedElement instanceof DataSinkInvocation;
+    }
+}
+

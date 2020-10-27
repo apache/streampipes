@@ -19,11 +19,12 @@
 import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import {Dashboard, DashboardItem} from "../../models/dashboard.model";
 import {forkJoin, Observable, Subscription} from "rxjs";
-import {MatDialog} from "@angular/material/dialog";
 import {AddVisualizationDialogComponent} from "../../dialogs/add-widget/add-visualization-dialog.component";
-import {DashboardWidget} from "../../../core-model/dashboard/DashboardWidget";
 import {DashboardService} from "../../services/dashboard.service";
 import {RefreshDashboardService} from "../../services/refresh-dashboard.service";
+import {DashboardWidgetModel} from "../../../core-model/gen/streampipes-model";
+import {PanelType} from "../../../core-ui/dialog/base-dialog/base-dialog.model";
+import {DialogService} from "../../../core-ui/dialog/base-dialog/base-dialog.service";
 
 @Component({
     selector: 'dashboard-panel',
@@ -41,10 +42,10 @@ export class DashboardPanelComponent implements OnInit {
     protected subscription: Subscription;
 
     widgetIdsToRemove: Array<string> = [];
-    widgetsToUpdate: Map<string, DashboardWidget> = new Map<string, DashboardWidget>();
+    widgetsToUpdate: Map<string, DashboardWidgetModel> = new Map<string, DashboardWidgetModel>();
 
     constructor(private dashboardService: DashboardService,
-                public dialog: MatDialog,
+                private dialogService: DialogService,
                 private refreshDashboardService: RefreshDashboardService) {
     }
 
@@ -53,10 +54,10 @@ export class DashboardPanelComponent implements OnInit {
     }
 
     addWidget(): void {
-        const dialogRef = this.dialog.open(AddVisualizationDialogComponent, {
-            width: '70%',
-            height: '500px',
-            panelClass: 'custom-dialog-container'
+        const dialogRef = this.dialogService.open(AddVisualizationDialogComponent,{
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: "Add widget",
+            width: "50vw",
         });
 
         dialogRef.afterClosed().subscribe(widget => {
@@ -66,7 +67,7 @@ export class DashboardPanelComponent implements OnInit {
         });
     }
 
-    addWidgetToDashboard(widget: DashboardWidget) {
+    addWidgetToDashboard(widget: DashboardWidgetModel) {
         let dashboardItem = {} as DashboardItem;
         dashboardItem.widgetId = widget._id;
         dashboardItem.id = widget._id;
@@ -116,7 +117,7 @@ export class DashboardPanelComponent implements OnInit {
         this.widgetIdsToRemove.push(widget.id);
     }
 
-    updateAndQueueItemForDeletion(dashboardWidget: DashboardWidget) {
+    updateAndQueueItemForDeletion(dashboardWidget: DashboardWidgetModel) {
         this.widgetsToUpdate.set(dashboardWidget._id, dashboardWidget);
     }
 

@@ -20,6 +20,7 @@ package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.manager.endpoint.EndpointFetcher;
 import org.apache.streampipes.manager.operations.Operations;
+import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.client.endpoint.RdfEndpointItem;
 import org.apache.streampipes.rest.api.IRdfEndpoint;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
@@ -30,6 +31,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Path("/v2/users/{username}/rdfendpoints")
 public class RdfEndpoint extends AbstractRestInterface implements IRdfEndpoint {
@@ -58,6 +60,7 @@ public class RdfEndpoint extends AbstractRestInterface implements IRdfEndpoint {
   @DELETE
   @Path("/{rdfEndpointId}")
   @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
   @GsonWithIds
   @Override
   public Response removeRdfEndpoint(@PathParam("rdfEndpointId") String rdfEndpointId) {
@@ -77,6 +80,12 @@ public class RdfEndpoint extends AbstractRestInterface implements IRdfEndpoint {
 
     List<RdfEndpointItem> items = Operations.getEndpointUriContents(endpoints);
     items.forEach(item -> item.setInstalled(isInstalled(item.getUri(), username)));
+
+    // also add installed elements that are currently not running or available
+    items.addAll(getAllDataSourceEndpoints(username, items));
+    items.addAll(getAllDataProcessorEndpoints(username, items));
+    items.addAll(getAllDataSinkEndpoints(username, items));
+
     return ok(items);
 
   }
@@ -93,10 +102,64 @@ public class RdfEndpoint extends AbstractRestInterface implements IRdfEndpoint {
 
   private List<String> getAllUserElements(String username) {
     List<String> elementUris = new ArrayList<>();
-    elementUris.addAll(getUserService().getOwnSourceUris(username));
-    elementUris.addAll(getUserService().getOwnActionUris(username));
-    elementUris.addAll(getUserService().getOwnSepaUris(username));
+    elementUris.addAll(getAllDataSourceUris(username));
+    elementUris.addAll(getAllDataProcessorUris(username));
+    elementUris.addAll(getAllDataSinkUris(username));
     return elementUris;
+  }
+
+  private List<RdfEndpointItem> getAllDataSourceEndpoints(String username, List<RdfEndpointItem> existingItems) {
+    return getAllDataSourceUris(username)
+            .stream()
+            .filter(s -> existingItems.stream().noneMatch(item -> item.getUri().equals(s)))
+            .map(s -> getTripleStorage().getPipelineElementStorage().getDataSourceById(s))
+            .map(source -> {
+              RdfEndpointItem sourceItem = makeItem(source, "source");
+              sourceItem.setStreams(source.getSpDataStreams().stream().map(stream -> makeItem(stream, "stream")).collect(Collectors.toList()));
+              return sourceItem;
+            })
+            .collect(Collectors.toList());
+  }
+
+  private List<RdfEndpointItem> getAllDataProcessorEndpoints(String username, List<RdfEndpointItem> existingItems) {
+    return getAllDataProcessorUris(username)
+            .stream()
+            .filter(s -> existingItems.stream().noneMatch(item -> item.getUri().equals(s)))
+            .map(s -> getTripleStorage().getPipelineElementStorage().getDataProcessorById(s))
+            .map(source -> makeItem(source, "sepa"))
+            .collect(Collectors.toList());
+  }
+
+  private List<RdfEndpointItem> getAllDataSinkEndpoints(String username, List<RdfEndpointItem> existingItems) {
+    return getAllDataSinkUris(username)
+            .stream()
+            .filter(s -> existingItems.stream().noneMatch(item -> item.getUri().equals(s)))
+            .map(s -> getTripleStorage().getPipelineElementStorage().getDataSinkById(s))
+            .map(source -> makeItem(source, "action"))
+            .collect(Collectors.toList());
+  }
+
+  private RdfEndpointItem makeItem(NamedStreamPipesEntity entity, String type) {
+    RdfEndpointItem endpoint = new RdfEndpointItem();
+    endpoint.setInstalled(true);
+    endpoint.setDescription(entity.getDescription());
+    endpoint.setName(entity.getName());
+    endpoint.setAppId(entity.getAppId());
+    endpoint.setType(type);
+    endpoint.setUri(entity.getElementId());
+    return endpoint;
+  }
+
+  private List<String> getAllDataSourceUris(String username) {
+    return getUserService().getOwnSourceUris(username);
+  }
+
+  private List<String> getAllDataProcessorUris(String username) {
+    return getUserService().getOwnSepaUris(username);
+  }
+
+  private List<String> getAllDataSinkUris(String username) {
+    return getUserService().getOwnActionUris(username);
   }
 
   private IRdfEndpointStorage getRdfEndpointStorage() {

@@ -18,6 +18,9 @@
 
 package org.apache.streampipes.model.client.matching;
 
+import org.apache.streampipes.model.shared.annotation.TsModel;
+
+@TsModel
 public class MatchingResultMessage {
 
 	private boolean matchingSuccessful;

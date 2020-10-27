@@ -18,29 +18,20 @@
 
 package org.apache.streampipes.rest.impl.datalake;
 
-import com.google.gson.Gson;
-import org.apache.streampipes.model.client.messages.Notification;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.rest.impl.AbstractRestInterface;
 import org.apache.streampipes.rest.impl.datalake.model.DataResult;
 import org.apache.streampipes.rest.impl.datalake.model.GroupedDataResult;
 import org.apache.streampipes.rest.impl.datalake.model.PageResult;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
+import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 
+import javax.ws.rs.*;
+import javax.ws.rs.core.*;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
-
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.StreamingOutput;
-import javax.ws.rs.core.UriInfo;
 
 @Path("/v3/users/{username}/datalake")
 public class DataLakeResourceV3 extends AbstractRestInterface {
@@ -81,13 +72,13 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
   }
 
   @GET
+  @JacksonSerialized
   @Produces(MediaType.APPLICATION_JSON)
-  @GsonWithIds
   @Path("/info")
   public Response getAllInfos() {
     List<DataLakeMeasure> result = this.dataLakeManagement.getInfos();
 
-    return Response.ok(new Gson().toJson(result)).build();
+    return ok(result);
   }
 
   @Deprecated
@@ -156,6 +147,7 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
     String aggregationValue = info.getQueryParameters().getFirst("aggregationValue");
 
     DataResult result;
+
     try {
       if (aggregationUnit != null && aggregationValue != null) {
           result = dataLakeManagement.getEvents(index, startdate, enddate, aggregationUnit,
@@ -196,6 +188,16 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
     }
   }
 
+  @DELETE
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("/data/delete/all")
+  public Response removeAllData() {
+
+    boolean result = dataLakeManagement.removeAllDataFromDataLake();
+
+    return Response.ok(result).build();
+  }
+
   @GET
   @Produces(MediaType.APPLICATION_OCTET_STREAM)
   @Path("/data/{index}/{startdate}/{enddate}/download")
@@ -207,5 +209,41 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
             header("Content-Disposition", "attachment; filename=\"datalake." + format + "\"")
             .build();
   }
+
+  @GET
+  @Path("/data/image/{route}/file")
+  @Produces("image/png")
+  public Response getImage(@PathParam("route") String fileRoute) throws IOException {
+    return ok(dataLakeManagement.getImage(fileRoute));
+  }
+
+  @POST
+  @Path("/data/image/{route}/coco")
+  public void saveImageCoco(@PathParam("route") String fileRoute, String data) throws IOException {
+    dataLakeManagement.saveImageCoco(fileRoute, data);
+  }
+
+  @GET
+  @Path("/data/image/{route}/coco")
+  @Produces("application/json")
+  public Response getImageCoco(@PathParam("route") String fileRoute) throws IOException {
+    return ok(dataLakeManagement.getImageCoco(fileRoute));
+  }
+
+  @POST
+  @Produces(MediaType.TEXT_PLAIN)
+  @Path("/data/{index}/{startdate}/{enddate}/labeling/{column}")
+    public Response labelData(@Context UriInfo info,
+                              @PathParam("index") String index,
+                              @PathParam("startdate") long startdate,
+                              @PathParam("enddate") long enddate,
+                              @PathParam("column") String column) {
+
+        String label = info.getQueryParameters().getFirst("label");
+        this.dataLakeManagement.updateLabels(index, column, startdate, enddate, label);
+
+        return Response.ok("Successfully updated database.", MediaType.TEXT_PLAIN).build();
+  }
+
 
 }

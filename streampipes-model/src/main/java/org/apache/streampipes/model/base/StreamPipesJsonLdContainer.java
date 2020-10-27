@@ -18,15 +18,14 @@
 
 package org.apache.streampipes.model.base;
 
-import org.apache.streampipes.vocabulary.StreamPipes;
 import io.fogsy.empire.annotations.RdfProperty;
 import io.fogsy.empire.annotations.RdfsClass;
-
-import java.util.List;
+import org.apache.streampipes.vocabulary.StreamPipes;
 
 import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import java.util.List;
 
 @RdfsClass(StreamPipes.ENTITY_CONTAINER)
 public class StreamPipesJsonLdContainer extends UnnamedStreamPipesEntity {
@@ -43,6 +42,11 @@ public class StreamPipesJsonLdContainer extends UnnamedStreamPipesEntity {
   public StreamPipesJsonLdContainer(List<? extends AbstractStreamPipesEntity> containedElements) {
     super();
     this.containedElements = containedElements;
+  }
+
+  public StreamPipesJsonLdContainer(StreamPipesJsonLdContainer other) {
+    super(other);
+    this.containedElements = other.getContainedElements();
   }
 
   public List<? extends AbstractStreamPipesEntity> getContainedElements() {

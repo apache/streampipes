@@ -65,11 +65,6 @@ import {streamPipesStompConfig} from "../dashboard/services/websocket.config";
         RestService,
         ShapeService,
         {
-            provide: 'RestApi',
-            useFactory: ($injector: any) => $injector.get('RestApi'),
-            deps: ['$injector'],
-        },
-        {
             provide: InjectableRxStompConfig,
             useValue: streamPipesStompConfig
         },
