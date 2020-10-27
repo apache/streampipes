@@ -27,6 +27,7 @@ import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.constants.PropertySelectorConstants;
 import org.apache.streampipes.model.schema.*;
 import org.apache.streampipes.model.staticproperty.*;
+import org.apache.streampipes.sdk.utils.Datatypes;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -66,6 +67,22 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
             .getTransportProtocol()
             .getTopicDefinition()
             .getActualTopicName();
+  }
+
+  public Object singleValueParameter(EventPropertyPrimitive targetType, String internalName) {
+    String value = singleValueParameter(internalName, String.class);
+
+    if (comparePropertyRuntimeType(targetType, Datatypes.Integer)) {
+      return typeParser.parse(value, Integer.class);
+    } else if (comparePropertyRuntimeType(targetType, Datatypes.Float)) {
+      return typeParser.parse(value, Float.class);
+    } else if (comparePropertyRuntimeType(targetType, Datatypes.Double)) {
+      return typeParser.parse(value, Double.class);
+    } else if (comparePropertyRuntimeType(targetType, Datatypes.Boolean)) {
+      return typeParser.parse(value, Boolean.class);
+    } else {
+      return value;
+    }
   }
 
   public <V> V singleValueParameter(String internalName, Class<V> targetClass) {
@@ -160,6 +177,28 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
             .map(sp -> (StaticPropertyGroup) sp)
             .sorted(Comparator.comparingInt(StaticProperty::getIndex))
             .collect(Collectors.toList());
+  }
+
+  public Boolean comparePropertyRuntimeType(EventProperty eventProperty,
+                                            Datatypes datatype) {
+    return comparePropertyRuntimeType(eventProperty, datatype, false);
+  }
+
+  public Boolean comparePropertyRuntimeType(EventProperty eventProperty,
+                                                   Datatypes datatype,
+                                                   boolean ignoreListElements) {
+    EventPropertyPrimitive testProperty = null;
+    if (eventProperty instanceof EventPropertyList && !ignoreListElements) {
+      testProperty = (EventPropertyPrimitive) ((EventPropertyList) eventProperty).getEventProperty();
+    } else if (eventProperty instanceof EventPropertyPrimitive) {
+      testProperty = (EventPropertyPrimitive) eventProperty;
+    }
+
+    if (testProperty != null) {
+      return testProperty.getRuntimeType().equals(datatype.toString());
+    } else {
+      return false;
+    }
   }
 
   public StaticProperty extractGroupMember(String internalName, StaticPropertyGroup group) {

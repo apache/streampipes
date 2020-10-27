@@ -38,8 +38,7 @@ export class PipelineElementRecommendationComponent implements OnInit, AfterView
   @Input()
   pipelineElementDomId: string;
 
-  @Input()
-  recommendedElements: any;
+  _recommendedElements: any;
 
   recommendationsPrepared: boolean = false;
 
@@ -49,9 +48,6 @@ export class PipelineElementRecommendationComponent implements OnInit, AfterView
   }
 
   ngOnInit() {
-    this.fillRemainingItems();
-    this.prepareStyles(this.recommendedElements);
-    this.recommendationsPrepared = true;
   }
 
   ngAfterViewInit(): void {
@@ -136,12 +132,24 @@ export class PipelineElementRecommendationComponent implements OnInit, AfterView
     return (360 / recommendedElements.length);
   }
 
-  fillRemainingItems() {
-    if (this.recommendedElements.length < 6) {
-      for (var i = this.recommendedElements.length; i < 6; i++) {
+  fillRemainingItems(recommendedElements) {
+    if (recommendedElements.length < 6) {
+      for (var i = recommendedElements.length; i < 6; i++) {
         let element = {fakeElement: true, weight: 0};
-        this.recommendedElements.push(element);
+        recommendedElements.push(element);
       }
     }
+  }
+
+  get recommendedElements() {
+    return this._recommendedElements;
+  }
+
+  @Input()
+  set recommendedElements(recommendedElements: any) {
+    this.fillRemainingItems(recommendedElements);
+    this.prepareStyles(recommendedElements);
+    this._recommendedElements = recommendedElements;
+    this.recommendationsPrepared = true;
   }
 }

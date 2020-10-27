@@ -22,6 +22,7 @@ import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.vocabulary.XSD;
 
 import java.net.URI;
+import java.util.Arrays;
 
 public enum Datatypes {
 
@@ -42,5 +43,12 @@ public enum Datatypes {
 
     public String toString() {
         return uri.toString();
+    }
+
+    public static Datatypes fromDatatypeString(String datatype) {
+        return Arrays.stream(Datatypes.values())
+                .filter(d -> d.uri.toString().equals(datatype))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Could not find datatype with URI " +datatype));
     }
 }
