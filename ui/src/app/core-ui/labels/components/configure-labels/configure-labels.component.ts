@@ -1,11 +1,7 @@
-import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ColorService } from '../../../image/services/color.service';
 import { LabelService } from '../../services/label.service';
 import { Category, Label } from '../../../../core-model/gen/streampipes-model';
-import { fromEvent, interval, timer } from 'rxjs';
-import { debounce, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
-import { ajax } from 'rxjs/ajax';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'sp-configure-labels',

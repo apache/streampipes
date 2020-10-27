@@ -31,6 +31,7 @@ export class Annotation {
   isSelected = false;
   isHovered = false;
   category_name: string;
+  color: string;
 
   constructor() {
     this.segmentation = undefined;

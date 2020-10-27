@@ -23,19 +23,20 @@
                        style="height: 40px; padding-top: 5px; padding-buttom: 5px; border-radius: 50px; margin-bottom: 5px"
                        [style.background-color]="annotation.isHovered || annotation.isSelected ? 'lightgrey' : 'white'">
             <mat-form-field>
-                <mat-select [value]="annotation.category_name">
+<!--                <mat-select [value]="annotation.category_name">-->
+                    <mat-select >
 
                     <mat-select-trigger>
-                        <mat-icon [style.color]="colorService.getColor(annotation.category_name)">color_lens</mat-icon>
+                        <mat-icon [style.color]="annotation.color">color_lens</mat-icon>
                         {{annotation.category_name}}
                     </mat-select-trigger>
 
-                    <mat-optgroup *ngFor="let category of categories" [label]="category">
-                        <mat-option *ngFor="let label of _labels[category]" [value]="label" (click)="changeLabel(annotation, label, category)">
-                            <mat-icon [style.color]="colorService.getColor(label)">color_lens</mat-icon>
-                            {{label}}
+<!--                    <mat-optgroup *ngFor="let category of categories" [label]="category">-->
+                        <mat-option *ngFor="let label of labels" [value]="label" (click)="changeLabel(annotation, label)">
+                            <mat-icon [style.color]="label.color">color_lens</mat-icon>
+                            {{label.name}}
                         </mat-option>
-                    </mat-optgroup>
+<!--                    </mat-optgroup>-->
                 </mat-select>
             </mat-form-field>
             <button mat-icon-button (click)="delete(annotation)" style="margin-top: -10px; margin-left: -5px"> <mat-icon>delete_forever</mat-icon></button>

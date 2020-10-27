@@ -55,7 +55,7 @@ export class CocoFormatService {
     return category.id;
   }
 
-  addReactAnnotationToFirstImage(coco: CocoFormat, cords, size, supercategory, category): Annotation {
+  addReactAnnotationToFirstImage(coco: CocoFormat, cords, size, supercategory, category, color): Annotation {
     const annotation = new Annotation();
     annotation.id = coco.annotations.length + 1;
     annotation.iscrowd = 0;
@@ -64,6 +64,7 @@ export class CocoFormatService {
     annotation.area = size.x * size.y
     annotation.category_id = CocoFormatService.getLabelId(coco, supercategory, category);
     annotation.category_name = category;
+    annotation.color = color;
     coco.annotations.push(annotation);
     return annotation;
   }
