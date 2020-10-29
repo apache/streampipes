@@ -26,23 +26,23 @@
 
 ## Description
 
-Converts a string value to a number data type
-Add a detailed description here
+Converts a string value to a number data type. 
+
 
 ***
 
 ## Required input
-
+This processor requires an event that contains at least one string valued field.
 
 ***
 
 ## Configuration
 
-Describe the configuration parameters here
+### Field
+Specifies the string field that is converted.
 
-### 1st parameter
-
-
-### 2nd parameter
+### Datatype
+Specifies the target datatype depending on the previously specified string field.
 
 ## Output
+Output event in the specified target datatype.

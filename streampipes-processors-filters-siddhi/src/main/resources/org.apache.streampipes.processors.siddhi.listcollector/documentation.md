@@ -16,7 +16,7 @@
   ~
   -->
 
-## Field Hasher
+## List Collector
 
 <p align="center"> 
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
@@ -26,23 +26,23 @@
 
 ## Description
 
-The Field Hasher uses an algorithm to encode values in a field. The Field Hasher can use MD5, SHA1 or SHA2 to hash field values.
+Detects the increase of a numerical field over a customizable time window. Example: A temperature value increases by 10 percent within 5 minutes.
+Add a detailed description here
 
 ***
 
 ## Required input
-This processor requires at least one field of type string.
+
 
 ***
 
 ## Configuration
 
-### Field
-Specifies the string field that will be encoded.
+Describe the configuration parameters here
 
-### Hash Algorithm
-Specifies the algorithm used to encode the string field. The following algorithms
-are available: SHA2, MD5 or SHA1.
+### 1st parameter
+
+
+### 2nd parameter
 
 ## Output
-The encoded string field.

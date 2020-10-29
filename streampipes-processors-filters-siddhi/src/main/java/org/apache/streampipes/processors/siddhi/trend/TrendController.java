@@ -24,14 +24,12 @@ import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.helpers.EpRequirements;
-import org.apache.streampipes.sdk.helpers.Labels;
-import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.sdk.helpers.Options;
-import org.apache.streampipes.sdk.helpers.OutputStrategies;
+import org.apache.streampipes.sdk.helpers.*;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
+
+import java.util.List;
 
 public class TrendController extends StandaloneEventProcessingDeclarer<TrendParameters> {
 
@@ -65,7 +63,13 @@ public class TrendController extends StandaloneEventProcessingDeclarer<TrendPara
         int increase = extractor.singleValueParameter(Increase, Integer.class);
         int duration = extractor.singleValueParameter(Duration, Integer.class);
         String mapping = extractor.mappingPropertyValue(Mapping);
-        TrendParameters params = new TrendParameters(invocationGraph, getOperation(operation), increase, duration, mapping);
+        List<String> outputFieldSelectors = extractor.outputKeySelectors();
+        TrendParameters params = new TrendParameters(invocationGraph,
+                getOperation(operation),
+                increase,
+                duration,
+                mapping,
+                outputFieldSelectors);
 
         return new ConfiguredEventProcessor<>(params, Trend::new);
     }
