@@ -132,6 +132,9 @@ public class PipelineVerificationHandler {
     } else if (property instanceof StaticPropertyGroup) {
       updateStaticProperties(inputStreams, property.as(StaticPropertyGroup.class).getStaticProperties());
     } else if (property instanceof StaticPropertyAlternatives) {
+      ((StaticPropertyAlternatives) property)
+              .getAlternatives()
+              .forEach(al -> updateStaticProperty(inputStreams, al.getStaticProperty()));
       // TODO
     } else if (property instanceof CollectionStaticProperty) {
       CollectionStaticProperty collection = property.as(CollectionStaticProperty.class);
