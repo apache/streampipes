@@ -33,7 +33,6 @@ import { PolygonLabelingService } from '../services/PolygonLabeling.service';
 import { ReactLabelingService } from '../services/ReactLabeling.service';
 import { Label } from '../../../core-model/gen/streampipes-model';
 import { LabelService } from '../../labels/services/label.service';
-import { unwrapConstructorDependencies } from '@angular/compiler-cli/src/ngtsc/annotations/src/util';
 
 @Component({
   selector: 'sp-image-labeling',
@@ -145,7 +144,7 @@ export class ImageLabelingComponent implements OnInit {
           if (result !== undefined) {
             const coco = this.cocoFile;
             const annotation = this.cocoFormatService.addReactAnnotationToFirstImage(coco, result[0], result[1],
-            this.selectedLabel.categoryId, this.selectedLabel.name, this.selectedLabel.color);
+              this.selectedLabel.categoryId, this.selectedLabel._id, this.selectedLabel.color, this.selectedLabel.name);
             this.reactLabelingService.draw(annotationLayer, shift, annotation, this.imageView, this.selectedLabel.color);
           }
         }
@@ -158,7 +157,7 @@ export class ImageLabelingComponent implements OnInit {
           const result = this.brushLabelingService.endLabeling(position);
           const coco = this.cocoFile;
           const annotation = this.cocoFormatService.addBrushAnnotationFirstImage(coco, result[0], result[1],
-            this.selectedLabel.categoryId, this.selectedLabel.name);
+            this.selectedLabel.categoryId, this.selectedLabel.name, this.selectedLabel.name);
           this.brushLabelingService.draw(annotationLayer, shift, annotation, this.imageView);
         }
       }
@@ -224,7 +223,7 @@ export class ImageLabelingComponent implements OnInit {
   handleChangeAnnotationLabel(change: [Annotation, Label]) {
     if (!this.isDrawing) {
       const coco = this.cocoFile;
-      const categoryId = this.cocoFormatService.getLabelId(coco, change[0].category_id, change[1].name);
+      const categoryId = this.cocoFormatService.getLabelId(coco, change[0].category_id, change[1].name, change[1].name);
       change[0].category_id = categoryId;
       change[0].category_name = change[1].categoryId;
       this.imageView.redrawAll();
