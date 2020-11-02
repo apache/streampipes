@@ -45,18 +45,15 @@ while [[ "$#" -gt 0 ]]; do
     esac
 done
 
-if is_streampipes_running; then
-  project_name=$(sed -n 's/^COMPOSE_PROJECT_NAME=//p' $STREAMPIPES_WORKDIR/.env)
-  if [ "$list_stopped_containers" = true ]; then
-    docker ps \
-        --filter "name=${project_name}_*" \
-        --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}' \
-        --all
-  else
-    docker ps \
+project_name=$(sed -n 's/^COMPOSE_PROJECT_NAME=//p' $STREAMPIPES_WORKDIR/.env)
+
+if [ "$list_stopped_containers" = true ]; then
+  docker ps \
       --filter "name=${project_name}_*" \
-      --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}'
-  fi
+      --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}' \
+      --all
 else
-  info "No StreamPipes environment running"
+  docker ps \
+    --filter "name=${project_name}_*" \
+    --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}'
 fi
