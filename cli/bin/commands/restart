@@ -16,18 +16,16 @@
 set -e
 . "$STREAMPIPES_WORKDIR/bin/common"
 
+remove_container=false
+
 cli_help_restart() {
   cat <<EOF
-Restart StreamPipes environment or individual services
+Restart running StreamPipes containers
 
-Usage: streampipes restart [SERVICE...]
+Usage: streampipes restart [OPTIONS] [SERVICE...]
 
-Example:
-# Restart complete StreamPipes environment
-streampipes restart
-
-# Restart individual services in StreamPipes environment
-streampipes restart backend consul
+Options:
+  -f, --force-create   Remove container before restarting
 EOF
 
   exit 1
@@ -35,21 +33,45 @@ EOF
 
 [ "$1" == '--help' ] || [ "$1" == '-h' ] && cli_help_restart
 
-if is_streampipes_running; then
+if [ -z "$1" ]; then
+    fatal "Argument missing, see 'streampipes ${0##*/} --help'"
+fi
 
-  if [ -z "$1" ]; then
-    get_curr_environment
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        -f|--force-create) 
+          if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
+            remove_container=true
+            svc=$2
+            shift 2
+          else
+            fatal "Argument for $1 is missing" >&2
+          fi
+          ;;
+        -*|--*=) fatal "Unsupported flag $1, see 'streampipes ${0##*/} --help'" >&2 ;;
+        *) svc+=("$1"); shift ;;
+    esac
+done
+
+remove_and_restart() {
+    info "Removing and restarting ${svc[*]}"
     concatenate_compose_files
-    info "Restarting all services in environment: '$curr_environment'"
-    run "$docker_compose_files restart"
-  else
-    for svc in "$@"
-    do
-      info "Restarting $svc"
-      concatenate_compose_files
-      run "$docker_compose_files restart $svc"
-    done
-  fi
+    run "$docker_compose_files rm --stop -f ${svc[*]}"
+    run "$docker_compose_files up -d ${svc[*]}"
+}
+
+restart() {
+    info "Restarting ${svc[*]}"
+    concatenate_compose_files
+    run "$docker_compose_files restart ${svc[*]}"  
+}
+
+if is_streampipes_running; then
+    if [ "$remove_container" = true ]; then
+      remove_and_restart
+    else
+      restart
+    fi
 else
   info "No StreamPipes environment running"
 fi

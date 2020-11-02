@@ -71,7 +71,9 @@ Commands:
   logs        Get container logs for specific container
   ps          List all StreamPipes container for running environment
   pull        Download latest images from Dockerhub
-  restart     Restart StreamPipes environment
+  restart     Restart StreamPipes container
+  start       Start StreamPipes container
+  stop        Stop StreamPipes container
   up          Create and start StreamPipes container environment
 
 Run 'streampipes COMMAND --help' for more info on a command.
@@ -130,6 +132,13 @@ streampipes up -d kafka consul
 streampipes env
 ```
 
+**List containers** of environment.
+```bash
+streampipes ps
+# include also stopped container
+streampieps ps --all
+```
+
 **Get logs** of specific service and use optional `--follow` flag to stay attached to the logs.
 ```bash
 streampipes logs --follow backend
@@ -140,11 +149,22 @@ streampipes logs --follow backend
 streampipes pull
 ```
 
-**Restart** all services of current environment or specific services
+**Stop** existing StreamPipes containers
 ```bash
-streampipes restart
-# restart backend & consul
-# streampipes restart backend consul
+streampipes stop pipeline-elements-all-jvm
+```
+
+**Start** existing StreamPipes containers
+```bash
+streampipes start pipeline-elements-all-jvm
+```
+
+**Restart** existing services
+```bash
+# restart backend consul container
+streampipes restart backend consul
+# restart existing services by removing and recreating container instance
+streampipes restart --force-create pipeline-elements-all-jvm
 ```
 
 **Clean** your system and remove created StreamPipes Docker volumes, StreamPipes docker network and dangling StreamPipes images of old image layers.

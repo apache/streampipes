@@ -36,7 +36,9 @@ Commands:
   logs        Get container logs for specific container
   ps          List all StreamPipes container for running environment
   pull        Download latest images from Dockerhub
-  restart     Restart StreamPipes environment
+  restart     Restart StreamPipes container
+  start       Start StreamPipes container
+  stop        Stop StreamPipes container
   up          Create and start StreamPipes container environment
 
 Run '$cli_name COMMAND --help' for more info on a command.
@@ -65,13 +67,19 @@ case "$1" in
   #   "$STREAMPIPES_WORKDIR/bin/commands/deploy" "$2"
   #   ;;
   ps)
-    "$STREAMPIPES_WORKDIR/bin/commands/ps" "$2"
+    "$STREAMPIPES_WORKDIR/bin/commands/ps" "${@:2}"
     ;;
   pull)
     "$STREAMPIPES_WORKDIR/bin/commands/pull" "$2"
     ;;
   restart)
     "$STREAMPIPES_WORKDIR/bin/commands/restart" "${@:2}"
+    ;;
+  start)
+    "$STREAMPIPES_WORKDIR/bin/commands/start" "${@:2}"
+    ;;
+  stop)
+    "$STREAMPIPES_WORKDIR/bin/commands/stop" "${@:2}"
     ;;
   up)
     "$STREAMPIPES_WORKDIR/bin/commands/up" "${@:2}"
