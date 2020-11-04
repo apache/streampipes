@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.config.backend;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,10 +32,29 @@ public class MessagingSettings {
   private List<SpProtocol> prioritizedProtocols;
 
   public static MessagingSettings fromDefault() {
+    List<SpProtocol> protocolList;
+    if (System.getenv(BackendConfigKeys.PRIORITIZED_PROTOCOL) != null) {
+      switch (System.getenv(BackendConfigKeys.PRIORITIZED_PROTOCOL).toLowerCase()) {
+        case "mqtt":
+          protocolList = Arrays.asList(SpProtocol.MQTT, SpProtocol.KAFKA, SpProtocol.JMS);
+          break;
+        case "kafka":
+          protocolList = Arrays.asList(SpProtocol.KAFKA, SpProtocol.MQTT, SpProtocol.JMS);
+          break;
+        case "jms":
+          protocolList = Arrays.asList(SpProtocol.JMS, SpProtocol.KAFKA, SpProtocol.MQTT);
+          break;
+        default:
+          protocolList = Arrays.asList(SpProtocol.KAFKA, SpProtocol.MQTT, SpProtocol.JMS);
+      }
+    } else {
+      protocolList = Arrays.asList(SpProtocol.KAFKA, SpProtocol.MQTT, SpProtocol.JMS);
+    }
+
     return new MessagingSettings(
             1638400, 5000012, 20, 2,
             Arrays.asList(SpDataFormat.JSON, SpDataFormat.CBOR, SpDataFormat.FST, SpDataFormat.SMILE),
-            Arrays.asList(SpProtocol.KAFKA, SpProtocol.MQTT, SpProtocol.JMS));
+            protocolList);
   }
 
   public MessagingSettings(Integer batchSize, Integer messageMaxBytes, Integer lingerMs,
