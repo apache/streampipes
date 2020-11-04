@@ -22,6 +22,6 @@ import java.util.Map;
 
 public interface AdapterPipelineElement {
 
-    public Map<String, Object> process(Map<String, Object> event);
+    Map<String, Object> process(Map<String, Object> event);
 
 }

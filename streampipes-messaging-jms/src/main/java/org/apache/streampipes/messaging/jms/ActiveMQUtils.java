@@ -1,5 +1,4 @@
-
-/*
+package org.apache.streampipes.messaging.jms;/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -17,12 +16,14 @@
  *
  */
 
-export interface MessagingSettings {
-    batchSize: number;
-    messageMaxBytes: number;
-    lingerMs: number;
-    acks: number;
+import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 
-   prioritizedFormats: [string];
-   prioritizedProtocols: [string];
+public class ActiveMQUtils {
+
+    private static final String TCP_PROTOCOL = "tcp://";
+    private static final String COLON = ":";
+
+    public static String makeActiveMqUrl(JmsTransportProtocol protocol) {
+        return TCP_PROTOCOL + protocol.getBrokerHostname() + COLON + protocol.getPort();
+    }
 }

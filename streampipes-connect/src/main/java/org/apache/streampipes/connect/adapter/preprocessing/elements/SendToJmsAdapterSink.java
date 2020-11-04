@@ -17,22 +17,20 @@
  */
 package org.apache.streampipes.connect.adapter.preprocessing.elements;
 
-import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipelineElement;
-import org.apache.streampipes.messaging.kafka.SpKafkaProducer;
+import org.apache.streampipes.messaging.jms.ActiveMQPublisher;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
+import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 
-public class SendToKafkaAdapterSink extends SendToBrokerAdapterSink<KafkaTransportProtocol>
-        implements AdapterPipelineElement  {
+public class SendToJmsAdapterSink extends SendToBrokerAdapterSink<JmsTransportProtocol>
+        implements AdapterPipelineElement {
 
-    public SendToKafkaAdapterSink(AdapterDescription adapterDescription) {
-        super(adapterDescription, SpKafkaProducer::new, KafkaTransportProtocol.class);
+    public SendToJmsAdapterSink(AdapterDescription adapterDescription) {
+        super(adapterDescription, ActiveMQPublisher::new, JmsTransportProtocol.class);
     }
 
     @Override
     public void modifyProtocolForDebugging() {
         this.protocol.setBrokerHostname("localhost");
-        this.protocol.setKafkaPort(9094);
     }
 }

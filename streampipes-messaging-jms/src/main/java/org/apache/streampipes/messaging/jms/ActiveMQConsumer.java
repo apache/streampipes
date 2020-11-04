@@ -59,7 +59,8 @@ public class ActiveMQConsumer extends ActiveMQConnectionProvider implements
   @Override
   public void connect(JmsTransportProtocol protocolSettings, InternalEventProcessor<byte[]>
           eventProcessor) throws SpRuntimeException {
-    String url = protocolSettings.getBrokerHostname() + ":" + protocolSettings.getPort();
+    String url = ActiveMQUtils.makeActiveMqUrl(protocolSettings);
+
     try {
       this.eventProcessor = eventProcessor;
       session = startJmsConnection(url).createSession(false, Session.AUTO_ACKNOWLEDGE);
