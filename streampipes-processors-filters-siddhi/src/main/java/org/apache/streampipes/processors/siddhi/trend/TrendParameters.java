@@ -21,6 +21,8 @@ package org.apache.streampipes.processors.siddhi.trend;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
+import java.util.List;
+
 public class TrendParameters extends EventProcessorBindingParams {
 
     private TrendOperator operation;
@@ -28,36 +30,37 @@ public class TrendParameters extends EventProcessorBindingParams {
     private int duration;
 
     private String mapping;
+    private List<String> outputFieldSelectors;
 
 
     public TrendParameters(DataProcessorInvocation invocationGraph,
                               TrendOperator operation, int increase, int duration,
-                              String mapping) {
+                              String mapping, List<String> outputFieldSelectors) {
         super(invocationGraph);
         this.operation = operation;
         this.increase = increase;
         this.duration = duration;
         this.mapping = mapping;
+        this.outputFieldSelectors = outputFieldSelectors;
     }
-
 
     public TrendOperator getOperation() {
         return operation;
     }
 
-
     public int getIncrease() {
         return increase;
     }
-
 
     public int getDuration() {
         return duration;
     }
 
-
     public String getMapping() {
         return mapping;
     }
 
+    public List<String> getOutputFieldSelectors() {
+        return outputFieldSelectors;
+    }
 }

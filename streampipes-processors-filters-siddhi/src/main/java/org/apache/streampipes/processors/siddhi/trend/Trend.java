@@ -17,8 +17,13 @@
  */
 package org.apache.streampipes.processors.siddhi.trend;
 
-import org.apache.streampipes.wrapper.siddhi.engine.SiddhiDebugCallback;
 import org.apache.streampipes.wrapper.siddhi.engine.SiddhiEventEngine;
+import org.apache.streampipes.wrapper.siddhi.engine.callback.SiddhiDebugCallback;
+import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
+import org.apache.streampipes.wrapper.siddhi.query.FromClause;
+import org.apache.streampipes.wrapper.siddhi.query.SelectClause;
+import org.apache.streampipes.wrapper.siddhi.query.expression.*;
+import org.apache.streampipes.wrapper.siddhi.query.expression.pattern.PatternCountOperator;
 
 import java.util.List;
 
@@ -33,46 +38,48 @@ public class Trend extends SiddhiEventEngine<TrendParameters> {
   }
 
   @Override
-  protected String fromStatement(List<String> inputStreamNames, TrendParameters params) {
-      String mappingProperty = prepareName(params.getMapping());
-      int duration = params.getDuration();
-      String inequaloperator;
-      String operator;
+  public String fromStatement(SiddhiProcessorParams<TrendParameters> siddhiParams) {
+    TrendParameters trendParameters = siddhiParams.getParams();
 
-      double increase = Double.valueOf(params.getIncrease());
-      increase = (increase / 100) + 1;
+    String mappingProperty = prepareName(trendParameters.getMapping());
+    int duration = trendParameters.getDuration();
+    double increase = trendParameters.getIncrease();
+    increase = (increase / 100) + 1;
 
-      if (params.getOperation() == TrendOperator.INCREASE) {
-          inequaloperator = "<=";
-          operator = "/";
+    FromClause fromClause = FromClause.create();
+    StreamExpression exp1 = Expressions.every(
+            Expressions.stream("e1", siddhiParams.getInputStreamNames().get(0)));
+    StreamExpression exp2 = Expressions.stream("e2", siddhiParams.getInputStreamNames().get(0));
 
-      } else {
-          inequaloperator = ">=";
-          operator = "*";
-      }
+    PropertyExpressionBase mathExp = trendParameters.getOperation() == TrendOperator.INCREASE ?
+            Expressions.divide(Expressions.property(mappingProperty), Expressions.staticValue(increase)) :
+            Expressions.multiply(Expressions.property(mappingProperty), Expressions.staticValue(increase));
 
-      String s = "from every(e1="
-              + inputStreamNames.get(0)
-              +") -> e2="
-              +inputStreamNames.get(0)
-              + "[e1." + mappingProperty
-              + inequaloperator
-              + "("
-              + mappingProperty
-              + operator
-              + increase
-              +")"
-              + "]<1>"
-              + " within " + duration + " sec";
+    RelationalOperatorExpression opExp = trendParameters.getOperation() == TrendOperator.INCREASE ?
+            Expressions.le(Expressions.property("e1", mappingProperty), mathExp) :
+            Expressions.ge(Expressions.property("e1", mappingProperty), mathExp);
 
-    //String s = "from e1="+inputStreamNames.get(0) + "[e1.s0randomValue > 5]";
+    StreamFilterExpression filterExp = Expressions
+            .filter(exp2, Expressions.patternCount(1, PatternCountOperator.EXACTLY_N), opExp);
 
-    return s;
+    Expression sequence = (Expressions.sequence(exp1,
+            filterExp,
+            Expressions.within(duration, SiddhiTimeUnit.SECONDS)));
+
+    fromClause.add(sequence);
+
+    return fromClause.toSiddhiEpl();
   }
 
   @Override
-  protected String selectStatement(TrendParameters params) {
-      return getCustomOutputSelectStatement(params.getGraph(), "e2");
+  public String selectStatement(SiddhiProcessorParams<TrendParameters> siddhiParams) {
+    SelectClause selectClause = SelectClause.create();
+    List<String> outputFieldSelectors = siddhiParams.getParams().getOutputFieldSelectors();
+    outputFieldSelectors
+            .forEach(outputFieldSelector -> selectClause
+                    .addProperty(Expressions.property("e2", outputFieldSelector)));
+
+    return selectClause.toSiddhiEpl();
   }
 
 }

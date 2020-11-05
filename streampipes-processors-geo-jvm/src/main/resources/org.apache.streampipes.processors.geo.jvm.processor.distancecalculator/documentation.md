@@ -25,23 +25,30 @@
 ***
 
 ## Description
-
 Calculates the distance between two latitude/longitude pairs in a single event.
 
 ***
 
 ## Required input
-
+Requires a position of point on the Earth's surface specified by the two geographic coordinates: the longitude and latitude of the point.
 
 ***
 
 ## Configuration
 
-Describe the configuration parameters here
+### First Longitude
+This is the first geographic coordinate that specifies the east-west position of a point on the Earth's surface.
 
-### 1st parameter
+### First Latitude
+This is the second geographic coordinate that specifies the north-south position of a point on the Earth's surface.
 
+### First Longitude
+This is the first geographic coordinate that specifies the east-west position of a point on the Earth's surface.
 
-### 2nd parameter
+### Second Longitude
+This is the second geographic coordinate that specifies the east-west position of a point on the Earth's surface.
 
 ## Output
+{
+  'distance': 12.2
+}

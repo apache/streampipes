@@ -17,10 +17,16 @@
  */
 package org.apache.streampipes.processors.siddhi.filter;
 
-import org.apache.streampipes.wrapper.siddhi.engine.SiddhiDebugCallback;
+import org.apache.streampipes.wrapper.siddhi.constants.SiddhiStreamSelector;
 import org.apache.streampipes.wrapper.siddhi.engine.SiddhiEventEngine;
-
-import java.util.List;
+import org.apache.streampipes.wrapper.siddhi.engine.callback.SiddhiDebugCallback;
+import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
+import org.apache.streampipes.wrapper.siddhi.query.FromClause;
+import org.apache.streampipes.wrapper.siddhi.query.SelectClause;
+import org.apache.streampipes.wrapper.siddhi.query.expression.Expression;
+import org.apache.streampipes.wrapper.siddhi.query.expression.Expressions;
+import org.apache.streampipes.wrapper.siddhi.query.expression.RelationalOperator;
+import org.apache.streampipes.wrapper.siddhi.query.expression.RelationalOperatorExpression;
 
 public class NumericalFilter extends SiddhiEventEngine<NumericalFilterParameters> {
 
@@ -33,32 +39,37 @@ public class NumericalFilter extends SiddhiEventEngine<NumericalFilterParameters
   }
 
   @Override
-  protected String fromStatement(List<String> inputStreamNames, NumericalFilterParameters params) {
-    String filterProperty = prepareName(params.getFilterProperty());
-    String filterOperator = "";
+  public String fromStatement(SiddhiProcessorParams<NumericalFilterParameters> siddhiParams) {
+    NumericalFilterParameters filterParameters = siddhiParams.getParams();
+    String filterProperty = filterParameters.getFilterProperty();
+    RelationalOperator operator = filterParameters.getFilterOperator();
+    Double threshold = filterParameters.getThreshold();
 
-    if (params.getFilterOperator() == FilterOperator.EQ) {
-      filterOperator = "==";
-    } else if (params.getFilterOperator() == FilterOperator.GE) {
-      filterOperator = ">=";
-    } else if (params.getFilterOperator() == FilterOperator.GT) {
-      filterOperator = ">";
-    } else if (params.getFilterOperator() == FilterOperator.LE) {
-      filterOperator = "<=";
-    } else if (params.getFilterOperator() == FilterOperator.LT) {
-      filterOperator = "<";
-    } else if (params.getFilterOperator() == FilterOperator.IE) {
-      filterOperator = "!=";
-    }
+    FromClause fromClause = FromClause.create();
+    Expression filter = new RelationalOperatorExpression(operator, Expressions.property(filterProperty), Expressions.staticValue(threshold));
+    Expression stream = Expressions.filter(Expressions.stream(siddhiParams.getInputStreamNames().get(0)), filter);
 
+    fromClause.add(stream);
+
+    return fromClause.toSiddhiEpl();
     // e.g. Filter for numberField value less than 10 and output all fields
     //
     // Siddhi query: from inputstreamname[numberField<10]
-    return "from " + inputStreamNames.get(0) +"[" + filterProperty + filterOperator + params.getThreshold() +"]";
+    //return "from " + siddhiParams.getInputStreamNames().get(0) +"[" + filterProperty + filterOperator + filterParameters.getThreshold() +"]";
   }
 
   @Override
-  protected String selectStatement(NumericalFilterParameters params) {
-    return getCustomOutputSelectStatement(params.getGraph());
+  public String selectStatement(SiddhiProcessorParams<NumericalFilterParameters> siddhiParams) {
+    SelectClause selectClause = SelectClause.create();
+    siddhiParams
+            .getOutputEventKeys()
+            .forEach(fieldName -> selectClause.addProperty(makeProperty(fieldName)));
+
+    return selectClause.toSiddhiEpl();
   }
+
+  private Expression makeProperty(String fieldName) {
+    return Expressions.property(SiddhiStreamSelector.FIRST_INPUT_STREAM, fieldName);
+  }
+
 }

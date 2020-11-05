@@ -26,23 +26,37 @@
 
 ## Description
 
-Replaces the runtime name of an event property with a custom defined name. Useful for data ingestion purposes where a specific event schema is needed.
-Add a detailed description here
+Replaces the runtime name of an event property with a custom defined name. Useful for data ingestion purposes where a specific event schema is required.
+
 
 ***
 
 ## Required input
-
+There is no specific input required.
 
 ***
 
 ## Configuration
 
-Describe the configuration parameters here
+### Field   
+Specifies the field to rename.
 
-### 1st parameter
-
-
-### 2nd parameter
+### NewFieldName
+Specifies the new runtime name of the field.
 
 ## Output
+Example:
+
+Old Output:
+```
+{
+  'timestamp': 16003000, 
+}
+```
+
+New Ouput:
+```
+{
+  'time': 16003000, 
+}
+```

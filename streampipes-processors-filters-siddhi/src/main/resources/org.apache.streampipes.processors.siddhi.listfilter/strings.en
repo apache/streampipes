@@ -1,0 +1,8 @@
+org.apache.streampipes.processors.siddhi.listfilter.title=List Filter
+org.apache.streampipes.processors.siddhi.listfilter.description=Filters a field from an input event that represents a list for the presence of a given value.
+
+list-key.title=Value to Observe
+list-key.description=Specifies the value that should be monitored.
+
+required-value.title=Required value
+required-value.description=The value (a primitive data type such as a number or text) that should be part of the list.
