@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.sinks.brokers.jvm.kafka;
 
+import com.fasterxml.jackson.databind.JsonSerializer;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.wrapper.params.binding.EventSinkBindingParams;
 
@@ -26,12 +27,19 @@ public class KafkaParameters extends EventSinkBindingParams {
   private String kafkaHost;
   private Integer kafkaPort;
   private String topic;
+  private String authentication;
+  private String username;
+  private String password;
 
-  public KafkaParameters(DataSinkInvocation graph, String kafkaHost, Integer kafkaPort, String topic) {
+  public KafkaParameters(DataSinkInvocation graph, String kafkaHost, Integer kafkaPort, String topic,
+                         String authentication, String username, String password) {
     super(graph);
     this.kafkaHost = kafkaHost;
     this.kafkaPort = kafkaPort;
     this.topic = topic;
+    this.authentication = authentication;
+    this.username = username;
+    this.password = password;
   }
 
   public String getKafkaHost() {
@@ -45,4 +53,10 @@ public class KafkaParameters extends EventSinkBindingParams {
   public String getTopic() {
     return topic;
   }
+
+  public String getUsername() { return username; }
+
+  public String getPassword() { return password; }
+
+  public String getAuthentication() { return authentication; }
 }
