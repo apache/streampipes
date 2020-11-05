@@ -76,8 +76,8 @@ public class KafkaController extends StandaloneEventSinkDeclarer<KafkaParameters
       params = new KafkaParameters(graph, kafkaHost, kafkaPort, topic, authentication, null, null);
     }
     else {
-      String password = extractor.singleValueParameter(PASSWORD_KEY, String.class);
       String username = extractor.singleValueParameter(USERNAME_KEY, String.class);
+      String password = extractor.secretValue(PASSWORD_KEY);
       params = new KafkaParameters(graph, kafkaHost, kafkaPort, topic, authentication, username, password);
     }
 
@@ -93,12 +93,8 @@ public class KafkaController extends StandaloneEventSinkDeclarer<KafkaParameters
     return Alternatives.from(Labels.withId(USERNAME_ACCESS),
             StaticProperties.group(Labels.withId(USERNAME_GROUP),
                     StaticProperties.stringFreeTextProperty(Labels.withId(USERNAME_KEY)),
-                    StaticProperties.stringFreeTextProperty(Labels.withId(PASSWORD_KEY))));
+                    StaticProperties.secretValue(Labels.withId(PASSWORD_KEY))));
 
-  }
-
-  public static String getAnonymousAccessKey() {
-    return ANONYMOUS_ACCESS;
   }
 
   public static  String getSaslAccessKey() {
