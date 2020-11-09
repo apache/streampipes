@@ -54,6 +54,7 @@ export class DataExplorerDashboardWidgetComponent implements OnInit {
   @Output() deleteCallback: EventEmitter<IDataViewDashboardItem> = new EventEmitter<IDataViewDashboardItem>();
   @Output() updateCallback: EventEmitter<DataExplorerWidgetModel> = new EventEmitter<DataExplorerWidgetModel>();
 
+  title = '';
   widgetLoaded = false;
   configuredWidget: DataExplorerWidgetModel;
 
@@ -65,6 +66,7 @@ export class DataExplorerDashboardWidgetComponent implements OnInit {
     this.dataViewDataExplorerService.getWidget(this.widget.id).subscribe(response => {
       this.configuredWidget = response;
       this.widgetLoaded = true;
+      this.title = this.configuredWidget.dataLakeMeasure.measureName;
     });
   }
 

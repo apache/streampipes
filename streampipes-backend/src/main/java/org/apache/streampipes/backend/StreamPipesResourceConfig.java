@@ -45,6 +45,7 @@ public class StreamPipesResourceConfig extends ResourceConfig {
     register(ApplicationLink.class);
     register(AssetDashboard.class);
     register(AutoComplete.class);
+    register(CategoryResource.class);
     register(ConsulConfig.class);
     register(ContainerProvidedOptions.class);
     register(Couchdb.class);
@@ -56,6 +57,7 @@ public class StreamPipesResourceConfig extends ResourceConfig {
     register(Deployment.class);
     register(FileServingResource.class);
     register(InternalPipelineTemplates.class);
+    register(LabelResource.class);
     register(MeasurementUnitResource.class);
     register(Notification.class);
     register(OntologyContext.class);

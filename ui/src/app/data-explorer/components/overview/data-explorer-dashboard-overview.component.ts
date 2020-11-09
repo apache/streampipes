@@ -37,6 +37,8 @@ export class DataExplorerDashboardOverviewComponent implements OnInit {
     dataSource = new MatTableDataSource<IDataViewDashboard>();
     displayedColumns: string[] = ['name', 'open', 'delete'];
 
+    editLabels: boolean;
+
     constructor(private dashboardService: DataViewDataExplorerService,
                 public dialog: MatDialog) {
 
@@ -44,6 +46,7 @@ export class DataExplorerDashboardOverviewComponent implements OnInit {
 
     ngOnInit(): void {
         this.dataSource.data = this.dataViewDashboards;
+        this.editLabels = false;
     }
 
     openNewDataViewDialog() {
@@ -51,6 +54,10 @@ export class DataExplorerDashboardOverviewComponent implements OnInit {
         dataViewDashboard.widgets = [];
 
         this.openDataViewModificationDialog(true, dataViewDashboard);
+    }
+
+    openEditLabelView() {
+       this.editLabels = true;
     }
 
     openDataViewModificationDialog(createMode: boolean, dashboard: IDataViewDashboard) {

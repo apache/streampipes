@@ -18,7 +18,7 @@
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Annotation } from '../../../../core-model/coco/Annotation';
-import { ColorService } from '../../services/color.service';
+import { Label } from '../../../../core-model/gen/streampipes-model';
 
 @Component({
   selector: 'sp-image-annotations',
@@ -28,24 +28,20 @@ import { ColorService } from '../../services/color.service';
 export class ImageAnnotationsComponent implements OnInit {
 
   @Input() annotations: Annotation[];
+
   @Input()
-  set labels(labels) {
-    this._labels = labels;
-    this.categories = Object.keys(this._labels);
-  }
-  @Output() changeAnnotationLabel: EventEmitter<[Annotation, string, string]> = new EventEmitter<[Annotation, string, string]>();
+  public labels: Label[];
+
+  @Output() changeAnnotationLabel: EventEmitter<[Annotation, Label]> = new EventEmitter<[Annotation, Label]>();
   @Output() deleteAnnotation: EventEmitter<Annotation> = new EventEmitter<Annotation>();
 
-  private _labels;
-  private categories;
-
-  constructor(public colorService: ColorService) { }
+ constructor() {}
 
   ngOnInit(): void {
   }
 
-  changeLabel(annotation, label, category) {
-    this.changeAnnotationLabel.emit([annotation, category, label]);
+  changeLabel(change: [Annotation, Label]) {
+    this.changeAnnotationLabel.emit([change[0], change[1]]);
   }
 
   delete(annotation) {
@@ -59,5 +55,6 @@ export class ImageAnnotationsComponent implements OnInit {
   leaveAnnotation(annotation) {
     annotation.isHovered = false;
   }
+
 
 }
