@@ -176,7 +176,7 @@ export class ImageLabelingComponent implements OnInit {
           const points = this.polygonLabelingService.endLabeling(position);
           const coco = this.cocoFile;
           const annotation = this.cocoFormatService.addPolygonAnnotationFirstImage(coco, points,
-            this.selectedLabel.categoryId, this.selectedLabel.name);
+            this.selectedLabel.categoryId, this.selectedLabel.name, this.selectedLabel.name);
           this.polygonLabelingService.draw(layer, shift, annotation, this.imageView);
       }
     }
