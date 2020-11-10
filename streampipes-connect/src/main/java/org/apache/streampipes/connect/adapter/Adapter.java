@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.connect.adapter;
 
+import org.apache.streampipes.connect.adapter.preprocessing.elements.*;
+import org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,13 +28,6 @@ import org.apache.streampipes.connect.adapter.exception.ParseException;
 import org.apache.streampipes.connect.adapter.model.Connector;
 import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
 import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipelineElement;
-import org.apache.streampipes.connect.adapter.preprocessing.elements.AddTimestampPipelineElement;
-import org.apache.streampipes.connect.adapter.preprocessing.elements.AddValuePipelineElement;
-import org.apache.streampipes.connect.adapter.preprocessing.elements.DuplicateFilterPipelineElement;
-import org.apache.streampipes.connect.adapter.preprocessing.elements.SendToKafkaAdapterSink;
-import org.apache.streampipes.connect.adapter.preprocessing.elements.TransformSchemaAdapterPipelineElement;
-import org.apache.streampipes.connect.adapter.preprocessing.elements.TransformStreamAdapterElement;
-import org.apache.streampipes.connect.adapter.preprocessing.elements.TransformValueAdapterPipelineElement;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription;
@@ -104,14 +99,16 @@ public abstract class Adapter<T extends AdapterDescription> implements Connector
         // Must be before the schema transformations to ensure that user can move this event property
         AddTimestampRuleDescription timestampTransformationRuleDescription = getTimestampRule(adapterDescription);
         if (timestampTransformationRuleDescription != null) {
-            pipelineElements.add(new AddTimestampPipelineElement(timestampTransformationRuleDescription.getRuntimeKey()));
+            pipelineElements.add(new AddTimestampPipelineElement(
+                    timestampTransformationRuleDescription.getRuntimeKey()));
         }
 
         AddValueTransformationRuleDescription valueTransformationRuleDescription = getAddValueRule(adapterDescription);
         if (valueTransformationRuleDescription != null) {
-            pipelineElements.add(new AddValuePipelineElement(valueTransformationRuleDescription.getRuntimeKey(), valueTransformationRuleDescription.getStaticValue()));
+            pipelineElements.add(new AddValuePipelineElement(
+                    valueTransformationRuleDescription.getRuntimeKey(),
+                    valueTransformationRuleDescription.getStaticValue()));
         }
-
 
         // first transform schema before transforming vales
         // value rules should use unique keys for of new schema
@@ -156,6 +153,9 @@ public abstract class Adapter<T extends AdapterDescription> implements Connector
         return getRule(adapterDescription, AddValueTransformationRuleDescription.class);
     }
 
+    private CorrectionValueTransformationRuleDescription getCorrectionValueRule(T adapterDescription) {
+        return getRule(adapterDescription, CorrectionValueTransformationRuleDescription.class);
+    }
 
     private <G extends TransformationRuleDescription> G getRule(T adapterDescription, Class<G> type) {
 

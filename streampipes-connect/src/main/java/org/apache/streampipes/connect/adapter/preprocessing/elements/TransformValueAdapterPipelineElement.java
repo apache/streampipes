@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.connect.adapter.preprocessing.elements;
 
+import org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipelineElement;
@@ -46,7 +47,7 @@ public class TransformValueAdapterPipelineElement implements AdapterPipelineElem
                 UnitTransformRuleDescription tmp = (UnitTransformRuleDescription) ruleDescription;
                 rules.add(new UnitTransformationRule(Util.toKeyArray(tmp.getRuntimeKey()),
                         tmp.getFromUnitRessourceURL(), tmp.getToUnitRessourceURL()));
-            } if(ruleDescription instanceof TimestampTranfsformationRuleDescription) {
+            } else if(ruleDescription instanceof TimestampTranfsformationRuleDescription) {
                 TimestampTranfsformationRuleDescription tmp = (TimestampTranfsformationRuleDescription) ruleDescription;
                 TimestampTranformationRuleMode mode = null;
                 switch (tmp.getMode()) {
@@ -56,6 +57,10 @@ public class TransformValueAdapterPipelineElement implements AdapterPipelineElem
                 }
                 rules.add(new TimestampTranformationRule(Util.toKeyArray(tmp.getRuntimeKey()), mode,
                         tmp.getFormatString(), tmp.getMultiplier()));
+            }
+            else if(ruleDescription instanceof CorrectionValueTransformationRuleDescription) {
+                CorrectionValueTransformationRuleDescription tmp = (CorrectionValueTransformationRuleDescription) ruleDescription;
+                rules.add(new CorrectionValueTransformationRule(Util.toKeyArray(tmp.getRuntimeKey()), tmp.getCorrectionValue(), tmp.getOperator()));
             }
 
             else {
