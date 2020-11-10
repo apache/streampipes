@@ -111,19 +111,21 @@ export abstract class BaseDataExplorerWidget implements OnChanges {
     return result;
   }
 
-  getNonNumericProperties(eventSchema: EventSchema) {
+  getNoneNumericProperties(eventSchema: EventSchema) {
     const result: EventPropertyUnion[] = [];
+    const b = new EventPropertyPrimitive();
+    b["@class"] = "org.apache.streampipes.model.schema.EventPropertyPrimitive";
+    b.runtimeType = 'https://www.w3.org/2001/XMLSchema#string';
+    b.runtimeName = '';
+
+    result.push(b);
+
     eventSchema.eventProperties.forEach(p => {
       if (!(p.domainProperties.some(dp => dp === 'http://schema.org/DateTime')) && !this.isNumber(p)) {
         result.push(p);
       }
     });
 
-    const b = new EventPropertyPrimitive();
-    b["@class"] = "org.apache.streampipes.model.schema.EventPropertyPrimitive";
-    b.runtimeType = 'https://www.w3.org/2001/XMLSchema#string';
-    b.runtimeName = 'sp_internal_label';
-    result.push(b);
 
     return result;
   }

@@ -16,18 +16,26 @@
  *
  */
 
-export class Category {
+package org.apache.streampipes.storage.api;
 
+import org.apache.streampipes.model.labeling.Label;
 
-  constructor(id: number, name: string, supercategory: string, label_name: string) {
-    this.id = id;
-    this.name = name;
-    this.supercategory = supercategory;
-    this.label_name = label_name;
-  }
+import java.util.List;
 
-  id: number;
-  name: string;
-  supercategory: string;
-  label_name: string;
+public interface ILabelStorage {
+
+    List<Label> getAllLabels();
+
+    List<Label> getAllForCategory(String categoryId);
+
+    void deleteAllForCategory(String categoryId);
+
+    String storeLabel(Label label);
+
+    Label getLabel(String labelId);
+
+    void deleteLabel(String labelId);
+
+    void updateLabel(Label label);
+
 }

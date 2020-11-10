@@ -17,44 +17,43 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Annotation } from '../../../../core-model/coco/Annotation';
 import { Label } from '../../../../core-model/gen/streampipes-model';
+import { LabelService } from '../../services/label.service';
 
 @Component({
-  selector: 'sp-image-annotations',
-  templateUrl: './image-annotations.component.html',
-  styleUrls: ['./image-annotations.component.css']
+  selector: 'sp-label-list-item',
+  templateUrl: './label-list-item.component.html',
+  styleUrls: ['./label-list-item.component.css']
 })
-export class ImageAnnotationsComponent implements OnInit {
-
-  @Input() annotations: Annotation[];
+export class LabelListItemComponent implements OnInit {
 
   @Input()
-  public labels: Label[];
+  label: Label;
 
-  @Output() changeAnnotationLabel: EventEmitter<[Annotation, Label]> = new EventEmitter<[Annotation, Label]>();
-  @Output() deleteAnnotation: EventEmitter<Annotation> = new EventEmitter<Annotation>();
+  @Output() removeLabel = new EventEmitter<Label>();
 
- constructor() {}
+  constructor(public labelService: LabelService) { }
 
   ngOnInit(): void {
   }
 
-  changeLabel(change: [Annotation, Label]) {
-    this.changeAnnotationLabel.emit([change[0], change[1]]);
+  public clickRemoveLabel() {
+    this.removeLabel.emit(this.label);
   }
 
-  delete(annotation) {
-    this.deleteAnnotation.emit(annotation);
+  public updateLabelName(newLabelName) {
+    this.label.name = newLabelName;
+    this.updateLabel();
   }
 
-  enterAnnotation(annotation) {
-    annotation.isHovered = true;
+  public updateLabelColor(newLabelColor) {
+    this.label.color = newLabelColor;
+    this.updateLabel();
   }
 
-  leaveAnnotation(annotation) {
-    annotation.isHovered = false;
+  private updateLabel() {
+    this.labelService.updateLabel(this.label).subscribe((res: Label) => {
+      this.label = res;
+    });
   }
-
-
 }
