@@ -5,7 +5,7 @@ number-mapping.title=Data Stream
 number-mapping.description=Specifies the monitored data stream.
 
 param-k.title=Parameter k
-param-k.description=The standard deviation that is considered noise.
+param-k.description=The sensitivity parameter. High value indicates low sensitivity. Unit: Standard deviations
 
 param-h.title=Parameter h
-param-h.description=The threshold in standard deviations above which the cumulative sum is considered noise.
+param-h.description=The threshold above which a change is detected. Unit: Standard deviations
