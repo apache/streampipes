@@ -48,7 +48,7 @@ public class CorrectionValueTransformationRule implements ValueTransformationRul
 
         if (eventKey.size() == 1) {
             try {
-                double oldValue = (Double) event.get(eventKey.get(0));
+                double oldValue = Double.valueOf(String.valueOf(event.get(eventKey.get(0))));
                 double newValue;
 
                 switch (operator) {
