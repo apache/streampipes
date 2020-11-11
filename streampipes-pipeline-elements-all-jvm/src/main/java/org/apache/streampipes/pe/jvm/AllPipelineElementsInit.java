@@ -26,6 +26,7 @@ import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.pe.jvm.config.AllPipelineElementsConfig;
+import org.apache.streampipes.processors.changedetection.jvm.cusum.CusumController;
 import org.apache.streampipes.processors.enricher.jvm.processor.jseval.JSEvalController;
 import org.apache.streampipes.processors.enricher.jvm.processor.sizemeasure.SizeMeasureController;
 import org.apache.streampipes.processors.filters.jvm.processor.compose.ComposeController;
@@ -107,6 +108,7 @@ public class AllPipelineElementsInit extends StandaloneModelSubmitter {
   public static void main(String[] args) {
     DeclarersSingleton
             .getInstance()
+            .add(new CusumController())
             // streampipes-processors-enricher-jvm
             .add(new SizeMeasureController())
             .add(new JSEvalController())
