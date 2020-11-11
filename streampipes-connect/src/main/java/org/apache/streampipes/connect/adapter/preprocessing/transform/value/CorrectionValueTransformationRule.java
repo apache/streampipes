@@ -48,25 +48,29 @@ public class CorrectionValueTransformationRule implements ValueTransformationRul
 
         if (eventKey.size() == 1) {
             try {
-                double oldValue = Double.valueOf(String.valueOf(event.get(eventKey.get(0))));
-                double newValue;
+                Object obj = event.get(eventKey.get(0));
+                double old = 0d;
+                if (obj instanceof Number) {
+                    old = ((Number) obj).doubleValue();
+                }
 
+                double corrected = 0d;
                 switch (operator) {
                     case "MULTIPLY":
-                        newValue = oldValue * correctionValue;
+                        corrected = old * correctionValue;
                         break;
                     case "ADD":
-                        newValue = oldValue + correctionValue;
+                        corrected = old + correctionValue;
                         break;
                     case "SUBSTRACT":
-                        newValue = oldValue - correctionValue;
+                        corrected = old - correctionValue;
                         break;
                     default:
-                        newValue = oldValue;
+                        corrected = old;
                         break;
                 }
 
-                event.put(eventKey.get(0), newValue);
+                event.put(eventKey.get(0), corrected);
             } catch (ClassCastException e) {
                 logger.error(e.toString());
             }
