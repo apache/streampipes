@@ -15,12 +15,23 @@
   ~ limitations under the License.
   ~
   -->
-<h1 mat-dialog-title>Info</h1>
-<div mat-dialog-content>
-    <p></p>
-    <p><b>Labeling</b> is not available in 'line'-mode.</p>
-    Please switch to 'dots'-mode or 'dots + lines'-mode.
-</div>
-<div mat-dialog-actions style="float: right">
-    <button mat-button (click)="onOKClick()" cdkFocusInitial>OK</button>
+
+<div fxLayout="row" fxLayoutAlign="start center">
+    <div>
+        <input matInput
+               style="margin-right: 10px; width: 20px;"
+               autocomplete="off"
+               [(colorPicker)]="label.color"
+               (colorPickerChange)="updateLabelColor($event)"
+               [cpPosition]="'bottom'"
+               [style.background]="label.color" required
+        />
+    </div>
+        <mat-form-field>
+            <input matInput type="text" [(ngModel)]="label.name"
+            (ngModelChange)="updateLabelName($event)">
+        </mat-form-field>
+    <div>
+        <mat-icon style="margin-left: 20px; margin-top: 5px; cursor: pointer;" (click)="clickRemoveLabel()">remove</mat-icon>
+    </div>
 </div>

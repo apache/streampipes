@@ -20,6 +20,7 @@ import {Injectable} from '@angular/core';
 import {
     AddTimestampRuleDescription,
     AddValueTransformationRuleDescription,
+    CorrectionValueTransformationRuleDescription,
     CreateNestedRuleDescription,
     DeleteRuleDescription,
     EventProperty,
@@ -79,6 +80,10 @@ export class TransformationRuleService {
                 rule.staticValue = (ep as any).staticValue;
                 transformationRuleDescription.push(rule);
             }
+
+            // Scale
+            transformationRuleDescription = transformationRuleDescription.concat(this.getCorrectionValueRules(
+                this.newEventSchema.eventProperties, this.oldEventSchema, this.newEventSchema));
 
             // Rename
             transformationRuleDescription = transformationRuleDescription.concat(this.getRenameRules(
@@ -450,5 +455,41 @@ export class TransformationRuleService {
 
     isTimestampProperty(property: EventPropertyPrimitive) {
         return property.domainProperties.some(dp => dp === "http://schema.org/DateTime");
+    }
+
+    private getCorrectionValueRules(eventProperties: EventPropertyUnion[],
+                                oldEventSchema: EventSchema,
+                                newEventSchema: EventSchema) {
+
+        var result: CorrectionValueTransformationRuleDescription[] = [];
+
+        for (let eventProperty of eventProperties) {
+            if (eventProperty instanceof EventPropertyPrimitive) {
+
+                const eventPropertyPrimitive = eventProperty as EventPropertyPrimitive;
+                const keyNew = this.getCompleteRuntimeNameKey(newEventSchema.eventProperties, eventPropertyPrimitive.elementId);
+
+                const rule: CorrectionValueTransformationRuleDescription = new CorrectionValueTransformationRuleDescription();
+                rule['@class'] = 'org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription';
+                rule.runtimeKey = keyNew;
+                rule.correctionValue = (eventPropertyPrimitive as any).correctionValue;
+                rule.operator = (eventPropertyPrimitive as any).operator
+
+                result.push(rule);
+            } else if (eventProperty instanceof EventPropertyNested) {
+                const tmpResults: CorrectionValueTransformationRuleDescription[] =
+                    this.getCorrectionValueRules((<EventPropertyNested> eventProperty).eventProperties,  oldEventSchema, newEventSchema);
+                result = result.concat(tmpResults);
+            }
+        }
+
+        var filteredResult: CorrectionValueTransformationRuleDescription[] = [];
+        for (let res of result) {
+            if (res.correctionValue) {
+                filteredResult.push(res);
+            }
+        }
+
+        return filteredResult;
     }
 }

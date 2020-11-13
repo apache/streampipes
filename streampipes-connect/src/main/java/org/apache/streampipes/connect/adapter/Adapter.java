@@ -18,9 +18,10 @@
 
 package org.apache.streampipes.connect.adapter;
 
+import org.apache.streampipes.connect.adapter.preprocessing.elements.*;
+import org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription;
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.config.backend.SpProtocol;
-import org.apache.streampipes.connect.adapter.preprocessing.elements.*;
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
@@ -118,12 +119,15 @@ public abstract class Adapter<T extends AdapterDescription> implements Connector
         // Must be before the schema transformations to ensure that user can move this event property
         AddTimestampRuleDescription timestampTransformationRuleDescription = getTimestampRule(adapterDescription);
         if (timestampTransformationRuleDescription != null) {
-            pipelineElements.add(new AddTimestampPipelineElement(timestampTransformationRuleDescription.getRuntimeKey()));
+            pipelineElements.add(new AddTimestampPipelineElement(
+                    timestampTransformationRuleDescription.getRuntimeKey()));
         }
 
         AddValueTransformationRuleDescription valueTransformationRuleDescription = getAddValueRule(adapterDescription);
         if (valueTransformationRuleDescription != null) {
-            pipelineElements.add(new AddValuePipelineElement(valueTransformationRuleDescription.getRuntimeKey(), valueTransformationRuleDescription.getStaticValue()));
+            pipelineElements.add(new AddValuePipelineElement(
+                    valueTransformationRuleDescription.getRuntimeKey(),
+                    valueTransformationRuleDescription.getStaticValue()));
         }
 
 
@@ -185,6 +189,9 @@ public abstract class Adapter<T extends AdapterDescription> implements Connector
         return getRule(adapterDescription, AddValueTransformationRuleDescription.class);
     }
 
+    private CorrectionValueTransformationRuleDescription getCorrectionValueRule(T adapterDescription) {
+        return getRule(adapterDescription, CorrectionValueTransformationRuleDescription.class);
+    }
 
     private <G extends TransformationRuleDescription> G getRule(T adapterDescription, Class<G> type) {
 

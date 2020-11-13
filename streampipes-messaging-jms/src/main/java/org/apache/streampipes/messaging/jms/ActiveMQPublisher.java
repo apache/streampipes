@@ -50,17 +50,17 @@ public class ActiveMQPublisher implements EventProducer<JmsTransportProtocol> {
   }
 
   @Deprecated
-//  public ActiveMQPublisher(String url, String topic) {
-//    JmsTransportProtocol protocol = new JmsTransportProtocol();
-//    protocol.setBrokerHostname(url.substring(0, url.lastIndexOf(":")));
-//    protocol.setPort(Integer.parseInt(url.substring(url.lastIndexOf(":") + 1, url.length())));
-//    protocol.setTopicDefinition(new SimpleTopicDefinition(topic));
-//    try {
-//      connect(protocol);
-//    } catch (SpRuntimeException e) {
-//      e.printStackTrace();
-//    }
-//  }
+  public ActiveMQPublisher(String url, String topic) {
+    JmsTransportProtocol protocol = new JmsTransportProtocol();
+    protocol.setBrokerHostname(url.substring(0, url.lastIndexOf(":")));
+    protocol.setPort(Integer.parseInt(url.substring(url.lastIndexOf(":") + 1, url.length())));
+    protocol.setTopicDefinition(new SimpleTopicDefinition(topic));
+    try {
+      connect(protocol);
+    } catch (SpRuntimeException e) {
+      e.printStackTrace();
+    }
+  }
 
   public ActiveMQPublisher(String host, int port, String topic) {
     JmsTransportProtocol protocol = new JmsTransportProtocol();

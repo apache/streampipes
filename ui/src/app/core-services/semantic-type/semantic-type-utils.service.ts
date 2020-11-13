@@ -24,6 +24,7 @@ export class SemanticTypeUtilsService {
 
     public TIMESTAMP = 'http://schema.org/DateTime';
     public IMAGE = 'https://image.com';
+    public NUMBER = 'http://schema.org/Number';
 
     constructor() {
     }
@@ -42,5 +43,9 @@ export class SemanticTypeUtilsService {
 
     public is(property: EventProperty, uri: string): boolean {
         return property.domainProperties.includes(uri);
+    }
+
+    public isNumeric(property: EventProperty): boolean {
+        return property.domainProperties.includes(this.NUMBER);
     }
 }

@@ -11,6 +11,7 @@
       <env name="SP_DATA_LAKE_PORT" value="8086" />
       <env name="SP_BACKEND_HOST" value="localhost" />
       <env name="SP_BACKEND_PORT" value="8030" />
+      <env name="SP_IMAGE_STORAGE_LOCATION" value=".streampipes/spImages/" />
     </envs>
     <option name="MAIN_CLASS_NAME" value="org.apache.streampipes.pe.jvm.AllPipelineElementsInit" />
     <module name="streampipes-pipeline-elements-all-jvm" />

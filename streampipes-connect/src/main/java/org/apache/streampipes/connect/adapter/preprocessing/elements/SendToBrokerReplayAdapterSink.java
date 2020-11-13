@@ -20,23 +20,25 @@ package org.apache.streampipes.connect.adapter.preprocessing.elements;
 
 import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipelineElement;
 import org.apache.streampipes.connect.adapter.preprocessing.Util;
-
+import org.apache.streampipes.messaging.EventProducer;
+import org.apache.streampipes.model.grounding.TransportProtocol;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
-public class SendToKafkaReplayAdapterSink implements AdapterPipelineElement {
+public class SendToBrokerReplayAdapterSink implements AdapterPipelineElement {
 
-    private SendToKafkaAdapterSink sendToKafkaAdapterSink;
+    private final SendToBrokerAdapterSink sendToBrokerAdapterSink;
     private long lastEventTimestamp;
-    private List<String> timestampKeys;
-    private boolean replaceTimestamp;
-    private float speedUp;
+    private final List<String> timestampKeys;
+    private final boolean replaceTimestamp;
+    private final float speedUp;
 
 
-    public SendToKafkaReplayAdapterSink(SendToKafkaAdapterSink sendToKafkaAdapterSink,
-                                        String timestampKey, boolean replaceTimestamp, float speedUp) {
-        this.sendToKafkaAdapterSink = sendToKafkaAdapterSink;
+    public SendToBrokerReplayAdapterSink(SendToBrokerAdapterSink sendToBrokerAdapterSink,
+                                         String timestampKey, boolean replaceTimestamp, float speedUp) {
+        this.sendToBrokerAdapterSink = sendToBrokerAdapterSink;
         this.lastEventTimestamp = -1;
         this.timestampKeys = Util.toKeyArray(timestampKey);
         this.replaceTimestamp = replaceTimestamp;
@@ -65,7 +67,7 @@ public class SendToKafkaReplayAdapterSink implements AdapterPipelineElement {
                 setTimestampInEvent(event, System.currentTimeMillis());
             }
         }
-        return sendToKafkaAdapterSink.process(event);
+        return sendToBrokerAdapterSink.process(event);
     }
 
     private long getTimestampInEvent(Map<String, Object> event) {

@@ -298,6 +298,8 @@ public class StreamPipes {
   public static final String FILTER_TIME_WINDOW = NS + "filterTimeWindow";
   public static final String AGGREGATION_TIME_WINDOW = NS + "aggregationTimeWindow";
   public static final String AGGREGATION_TYPE = NS + "aggregationType";
+  public static final String CORRECTION_VALUE = NS + "correctionValue";
+  public static final String OPERATOR = NS + "operator";
 
   //Class
 
@@ -314,6 +316,7 @@ public class StreamPipes {
   public static final String TIMESTAMP_TRANSFORMATION_RULE_DESCRIPTION = NS + "TimestampTransformationRuleDescription";
   public static final String ADD_TIMESTAMP_RULE_DESCRIPTION = NS + "AddTimestampRuleDescription";
   public static final String ADD_VALUE_TRANSFORMATION_RULE_DESCRIPTION = NS + "AddValueTransformationRuleDescription";
+  public static final String CORRECTION_VALUE_TRANSFORM_RULE_DESCRIPTION = NS + "CorrectionValueTransformRuleDescription";
   public static final String HAS_RENAME_RULE = NS + "hasRenameRule";
   public static final String RENAME_RULE = NS + "RenameRule";
   public static final String HAS_NEW_RUNTIME_NAME = NS + "hasNewRuntimeName";
@@ -400,5 +403,4 @@ public class StreamPipes {
   public static final String PE_CONFIGURED = NS + "isPeConfigured" ;
 
   public static final String HAS_REQUIRED_FILETYPES = NS + "hasRequiredFiletypes" ;
-
 }

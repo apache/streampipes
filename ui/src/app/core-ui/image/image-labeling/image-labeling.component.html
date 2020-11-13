@@ -21,11 +21,10 @@
     <div fxLayout="column" fxLayoutAlign="space-between " >
         <div  fxLayout="row" fxLayoutAlign="space-around start">
 
-            <sp-image-labels style="width: 270px"
-                    [labels]="labels"
+            <sp-select-label style="width: 270px"
                     [enableShortCuts]="isHoverComponent"
                     (labelChange)="handleLabelChange($event)">
-            </sp-image-labels>
+            </sp-select-label>
 
             <div fxLayout="column" fxLayoutAlign="space-between " >
                 <div style="display: flex; position: relative">

@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM adoptopenjdk/openjdk8-openj9:alpine-slim
+FROM adoptopenjdk/openjdk8-openj9:alpine
 
 ENV CONSUL_LOCATION consul
 EXPOSE 8090

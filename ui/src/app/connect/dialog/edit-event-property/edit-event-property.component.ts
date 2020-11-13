@@ -27,7 +27,7 @@ import {
 } from '../../../core-model/gen/streampipes-model';
 import {SemanticTypeUtilsService} from '../../../core-services/semantic-type/semantic-type-utils.service';
 import {DataTypesService} from '../../services/data-type.service';
-
+import {MatSlideToggleChange} from "@angular/material/slide-toggle";
 
 @Component({
     selector: 'sp-edit-event-property',
@@ -48,6 +48,8 @@ export class EditEventPropertyComponent implements OnInit {
     isEventPropertyPrimitive: boolean;
     isEventPropertyNested: boolean;
     isEventPropertyList: boolean;
+    isNumericProperty: boolean;
+    isSaveBtnEnabled: boolean;
 
     private propertyForm: FormGroup;
 
@@ -69,6 +71,8 @@ export class EditEventPropertyComponent implements OnInit {
         this.isEventPropertyList = this.property instanceof EventPropertyList;
         this.isEventPropertyPrimitive = this.property instanceof EventPropertyPrimitive;
         this.isEventPropertyNested = this.property instanceof EventPropertyNested;
+        this.isNumericProperty = this.semanticTypeUtilsService.isNumeric(this.cachedProperty) ||
+            this.dataTypeService.isNumeric(this.cachedProperty.runtimeType);
         this.createForm();
     }
 
@@ -86,6 +90,10 @@ export class EditEventPropertyComponent implements OnInit {
             (result as any).timestampTransformationMultiplier = (ep as any).timestampTransformationMultiplier;
 
             (result as any).staticValue = (ep as any).staticValue;
+
+            (result as any).correctionValue = (ep as any).correctionValue;
+            (result as any).operator = (ep as any).operator;
+
             return result;
         } else if (ep instanceof EventPropertyNested) {
             return EventPropertyNested.fromData(ep as EventPropertyNested, new EventPropertyNested());
@@ -112,8 +120,10 @@ export class EditEventPropertyComponent implements OnInit {
         if (checked) {
             this.isTimestampProperty = true;
             this.cachedProperty.domainProperties = [this.soTimestamp];
+            this.cachedProperty.propertyScope = 'HEADER_PROPERTY';
         } else {
             this.cachedProperty.domainProperties = [];
+            this.cachedProperty.propertyScope = 'MEASUREMENT_PROPERTY';
             this.isTimestampProperty = false;
         }
     }
@@ -123,6 +133,7 @@ export class EditEventPropertyComponent implements OnInit {
         this.property.description = this.cachedProperty.description;
         this.property.domainProperties = this.cachedProperty.domainProperties;
         this.property.runtimeName = this.cachedProperty.runtimeName;
+        this.property.propertyScope = this.cachedProperty.propertyScope;
 
         if (this.property instanceof EventPropertyList) {
             // @ts-ignore
@@ -143,7 +154,23 @@ export class EditEventPropertyComponent implements OnInit {
             (this.property as any).timestampTransformationMultiplier = (this.cachedProperty as any).timestampTransformationMultiplier;
 
             (this.property as any).staticValue = (this.cachedProperty as any).staticValue;
+
+            (this.property as any).correctionValue = (this.cachedProperty as any).correctionValue;
+            (this.property as any).operator = (this.cachedProperty as any).operator;
         }
         this.dialogRef.close({ data: this.property});
+    }
+
+    enableSaveBtn($event: boolean) {
+        this.isSaveBtnEnabled = $event;
+    }
+
+    isNumericDataType($event: boolean) {
+        if(!$event) {
+            // clear cache when changing to non-numeric data type
+            this.cachedProperty.operator = undefined;
+            this.cachedProperty.correctionValue = undefined;
+        }
+        this.isNumericProperty = $event;
     }
 }

@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.connect.adapter.preprocessing.elements;
 
-import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipelineElement;
 import org.apache.streampipes.messaging.kafka.SpKafkaProducer;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;

@@ -31,6 +31,8 @@ import { CocoFormatService } from '../services/CocoFormat.service';
 import { LabelingModeService } from '../services/LabelingMode.service';
 import { PolygonLabelingService } from '../services/PolygonLabeling.service';
 import { ReactLabelingService } from '../services/ReactLabeling.service';
+import { Label } from '../../../core-model/gen/streampipes-model';
+import { LabelService } from '../../labels/services/label.service';
 
 @Component({
   selector: 'sp-image-labeling',
@@ -41,7 +43,7 @@ export class ImageLabelingComponent implements OnInit {
 
   // label
   public labels;
-  public selectedLabel: {category, label};
+  public selectedLabel: Label;
 
   public _imagesRoutes
   @Input()
@@ -63,13 +65,16 @@ export class ImageLabelingComponent implements OnInit {
 
   constructor(private restService: DatalakeRestService, private reactLabelingService: ReactLabelingService,
               private polygonLabelingService: PolygonLabelingService, private brushLabelingService: BrushLabelingService,
-              private snackBar: MatSnackBar, private cocoFormatService: CocoFormatService,
+              private snackBar: MatSnackBar, private cocoFormatService: CocoFormatService, private labelService: LabelService,
               public labelingMode: LabelingModeService) { }
 
   ngOnInit(): void {
     this.isHoverComponent = false;
     this.brushSize = 5;
-    this.labels = this.restService.getLabels();
+    this.labelService.getAllLabels().subscribe(res => {
+       this.labels = res;
+    });
+    // this.labels = this.restService.getLabels();
   }
 
   handleImageIndexChange(index) {
@@ -110,7 +115,7 @@ export class ImageLabelingComponent implements OnInit {
     switch (this.labelingMode.getMode()) {
       case LabelingMode.PolygonLabeling: {
         this.polygonLabelingService.executeLabeling(position);
-        this.polygonLabelingService.tempDraw(layer, shift, this.selectedLabel.label);
+        this.polygonLabelingService.tempDraw(layer, shift, this.selectedLabel);
       }
     }
   }
@@ -120,12 +125,12 @@ export class ImageLabelingComponent implements OnInit {
       switch (this.labelingMode.getMode()) {
         case LabelingMode.ReactLabeling: {
           this.reactLabelingService.executeLabeling(position);
-          this.reactLabelingService.tempDraw(layer, shift, this.selectedLabel.label);
+          this.reactLabelingService.tempDraw(layer, shift, this.selectedLabel);
         }
           break;
         case  LabelingMode.BrushLabeling: {
           this.brushLabelingService.executeLabeling(position);
-          this.brushLabelingService.tempDraw(layer, shift, this.selectedLabel.label);
+          this.brushLabelingService.tempDraw(layer, shift, this.selectedLabel);
         }
       }
     }
@@ -136,21 +141,23 @@ export class ImageLabelingComponent implements OnInit {
       switch (this.labelingMode.getMode()) {
         case LabelingMode.ReactLabeling: {
           const result = this.reactLabelingService.endLabeling(position);
-          const coco = this.cocoFile;
-          const annotation = this.cocoFormatService.addReactAnnotationToFirstImage(coco, result[0], result[1],
-            this.selectedLabel.category, this.selectedLabel.label);
-          this.reactLabelingService.draw(annotationLayer, shift, annotation, this.imageView);
+          if (result !== undefined) {
+            const coco = this.cocoFile;
+            const annotation = this.cocoFormatService.addReactAnnotationToFirstImage(coco, result[0], result[1],
+              this.selectedLabel.categoryId, this.selectedLabel._id, this.selectedLabel.color, this.selectedLabel.name);
+            this.reactLabelingService.draw(annotationLayer, shift, annotation, this.imageView, this.selectedLabel.color);
+          }
         }
           break;
         case LabelingMode.PolygonLabeling: {
-          this.polygonLabelingService.tempDraw(drawLayer, shift, this.selectedLabel.label);
+          this.polygonLabelingService.tempDraw(drawLayer, shift, this.selectedLabel);
         }
           break;
         case LabelingMode.BrushLabeling: {
           const result = this.brushLabelingService.endLabeling(position);
           const coco = this.cocoFile;
           const annotation = this.cocoFormatService.addBrushAnnotationFirstImage(coco, result[0], result[1],
-            this.selectedLabel.category, this.selectedLabel.label);
+            this.selectedLabel.categoryId, this.selectedLabel.name, this.selectedLabel.name);
           this.brushLabelingService.draw(annotationLayer, shift, annotation, this.imageView);
         }
       }
@@ -169,7 +176,7 @@ export class ImageLabelingComponent implements OnInit {
           const points = this.polygonLabelingService.endLabeling(position);
           const coco = this.cocoFile;
           const annotation = this.cocoFormatService.addPolygonAnnotationFirstImage(coco, points,
-            this.selectedLabel.category, this.selectedLabel.label);
+            this.selectedLabel.categoryId, this.selectedLabel.name, this.selectedLabel.name);
           this.polygonLabelingService.draw(layer, shift, annotation, this.imageView);
       }
     }
@@ -182,7 +189,7 @@ export class ImageLabelingComponent implements OnInit {
         annotation.isHovered = false;
         annotation.isSelected = false;
         if (this.cocoFormatService.isBoxAnnonation(annotation)) {
-          this.reactLabelingService.draw(layer, shift, annotation, this.imageView);
+          this.reactLabelingService.draw(layer, shift, annotation, this.imageView, annotation.color);
         } else if (this.cocoFormatService.isPolygonAnnonation(annotation) && !this.cocoFormatService.isBrushAnnonation(annotation)) {
           this.polygonLabelingService.draw(layer, shift, annotation, this.imageView);
         } else if (this.cocoFormatService.isBrushAnnonation(annotation)) {
@@ -206,19 +213,19 @@ export class ImageLabelingComponent implements OnInit {
     this.isDrawing = bool;
   }
 
-  /* sp-image-labels handler */
-  handleLabelChange(label: {category, label}) {
+  /* sp-select-label handler */
+  handleLabelChange(label: Label) {
     this.selectedLabel = label;
   }
 
 
   /* sp-image-annotations handlers */
-  handleChangeAnnotationLabel(change: [Annotation, string, string]) {
+  handleChangeAnnotationLabel(change: [Annotation, Label]) {
     if (!this.isDrawing) {
       const coco = this.cocoFile;
-      const categoryId = this.cocoFormatService.getLabelId(coco, change[1], change[2]);
+      const categoryId = this.cocoFormatService.getLabelId(coco, change[0].category_id, change[1].name, change[1].name);
       change[0].category_id = categoryId;
-      change[0].category_name = change[2];
+      change[0].category_name = change[1].categoryId;
       this.imageView.redrawAll();
     }
   }

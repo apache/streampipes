@@ -24,11 +24,11 @@ import { Image } from '../../../core-model/coco/Image';
 @Injectable()
 export class CocoFormatService {
 
-  static getLabelId(coco: CocoFormat, supercategory, name): number {
+  static getLabelId(coco: CocoFormat, supercategory, name, labelName): number {
     // TODO: Find  better solution instead of copy same code
     let category = coco.categories.find(elem => elem.name === name && elem.supercategory === supercategory);
     if (category === undefined) {
-      category = new Category(coco.categories.length + 1, name, supercategory);
+      category = new Category(coco.categories.length + 1, name, supercategory, labelName);
       coco.categories.push(category);
     }
     return category.id;
@@ -46,48 +46,50 @@ export class CocoFormatService {
     return coco.categories.find(elem => elem.id === id).name;
   }
 
-  getLabelId(coco: CocoFormat, supercategory, name): number {
+  getLabelId(coco: CocoFormat, supercategory, name, labelName): number {
     let category = coco.categories.find(elem => elem.name === name && elem.supercategory === supercategory);
     if (category === undefined) {
-      category = new Category(coco.categories.length + 1, name, supercategory);
+      category = new Category(coco.categories.length + 1, name, supercategory, labelName);
       coco.categories.push(category);
     }
     return category.id;
   }
 
-  addReactAnnotationToFirstImage(coco: CocoFormat, cords, size, supercategory, category): Annotation {
+  addReactAnnotationToFirstImage(coco: CocoFormat, cords, size, supercategory, category, color, labelName): Annotation {
     const annotation = new Annotation();
     annotation.id = coco.annotations.length + 1;
     annotation.iscrowd = 0;
     annotation.image_id = 1;
     annotation.bbox = [cords.x, cords.y, size.x, size.y];
     annotation.area = size.x * size.y
-    annotation.category_id = CocoFormatService.getLabelId(coco, supercategory, category);
+    annotation.category_id = CocoFormatService.getLabelId(coco, supercategory, category, labelName);
     annotation.category_name = category;
+    annotation.color = color;
+    annotation.label_name = labelName;
     coco.annotations.push(annotation);
     return annotation;
   }
 
-  addPolygonAnnotationFirstImage(coco: CocoFormat, points, supercategory, category): Annotation {
+  addPolygonAnnotationFirstImage(coco: CocoFormat, points, supercategory, category, labelName): Annotation {
     const annotation = new Annotation();
     annotation.id = coco.annotations.length + 1;
     annotation.iscrowd = 0;
     annotation.image_id = 1;
     annotation.segmentation = [points];
-    annotation.category_id = CocoFormatService.getLabelId(coco, supercategory, category);
+    annotation.category_id = CocoFormatService.getLabelId(coco, supercategory, category, labelName);
     annotation.category_name = category;
     coco.annotations.push(annotation);
     return annotation;
   }
 
-  addBrushAnnotationFirstImage(coco: CocoFormat, points, brushSize, supercategory, category): Annotation {
+  addBrushAnnotationFirstImage(coco: CocoFormat, points, brushSize, supercategory, category, labelName): Annotation {
     const annotation = new Annotation();
     annotation.id = coco.annotations.length + 1;
     annotation.iscrowd = 0;
     annotation.image_id = 1;
     annotation.segmentation = [points];
     annotation.brushSize = brushSize;
-    annotation.category_id = this.getLabelId(coco, supercategory, category);
+    annotation.category_id = this.getLabelId(coco, supercategory, category, labelName);
     annotation.category_name = category;
     coco.annotations.push(annotation);
     return annotation;

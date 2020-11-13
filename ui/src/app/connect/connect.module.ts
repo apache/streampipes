@@ -69,6 +69,7 @@ import {PipelineElementRuntimeInfoComponent} from './components/runtime-info/pip
 import {EventPropertyRowComponent} from './components/schema-editor/event-property-row/event-property-row.component';
 import {EventSchemaPreviewComponent} from './components/schema-editor/event-schema-preview/event-schema-preview.component';
 import {CoreUiModule} from "../core-ui/core-ui.module";
+import {EditCorrectionValueComponent} from './dialog/edit-event-property/components/edit-correction-value/edit-correction-value.component';
 
 @NgModule({
     imports: [
@@ -112,7 +113,8 @@ import {CoreUiModule} from "../core-ui/core-ui.module";
         FormatListComponent,
         NewAdapterComponent,
         PipelineElementRuntimeInfoComponent,
-        TimestampPipe
+        TimestampPipe,
+        EditCorrectionValueComponent
     ],
     providers: [
         RestService,

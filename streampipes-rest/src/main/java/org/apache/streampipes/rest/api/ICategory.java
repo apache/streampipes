@@ -6,46 +6,33 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
 
-import { Component, Input, OnInit} from '@angular/core';
+package org.apache.streampipes.rest.api;
 
-@Component({
-    selector: 'sp-point-selection-info',
-    templateUrl: './point-selection-info.component.html',
-    styleUrls: ['./point-selection-info.component.css']
-})
-export class PointSelectionInfoComponent implements OnInit {
+import org.apache.streampipes.model.labeling.Category;
 
-    @Input()
-    set startX(startX) {
-        this._startX = startX;
-    }
+import javax.ws.rs.PathParam;
+import javax.ws.rs.core.Response;
 
-    @Input()
-    set endX(endX) {
-        this._endX = endX;
-    }
+public interface ICategory {
 
-    @Input()
-    set n_selected_points(n_selected_points) {
-        this._n_selected_points = n_selected_points;
-    }
+    Response getAll();
 
-    public _startX: string;
-    public _endX: string;
-    public _n_selected_points: number;
+    Response getCategory(String categoryId);
 
-    constructor() {
-    }
+    Response add(Category category);
 
-    ngOnInit(): void {
-    }
+    Response delete(String key);
+
+    Response update(String categoryId, Category category);
+
 }

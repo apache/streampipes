@@ -39,7 +39,7 @@ services:
       context: ./streampipes-backend
       dockerfile: Dockerfile
       args:
-        BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine-slim
+        BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine
     image: incubator-streampipes_backend:release-validation
     depends_on:
       - consul
@@ -56,7 +56,7 @@ services:
       context: ./streampipes-connect-container-master
       dockerfile: Dockerfile
       args:
-        BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine-slim
+        BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine
     image: incubator-streampipes_connect-master:release-validation
     depends_on:
       - consul
