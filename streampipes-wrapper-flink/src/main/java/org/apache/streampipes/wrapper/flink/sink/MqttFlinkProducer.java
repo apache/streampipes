@@ -21,25 +21,27 @@ package org.apache.streampipes.wrapper.flink.sink;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
 import org.apache.streampipes.messaging.jms.ActiveMQPublisher;
+import org.apache.streampipes.messaging.mqtt.MqttPublisher;
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
+import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 import org.apache.streampipes.wrapper.flink.serializer.ByteArraySerializer;
 
 import java.util.Map;
 
 
-public class FlinkJmsProducer extends RichSinkFunction<Map<String, Object>> {
+public class MqttFlinkProducer extends RichSinkFunction<Map<String, Object>> {
 
   /**
    *
    */
   private static final long serialVersionUID = 1L;
-  private JmsTransportProtocol protocol;
+  private MqttTransportProtocol protocol;
 
   private ByteArraySerializer serializationSchema;
 
-  private ActiveMQPublisher publisher;
+  private MqttPublisher publisher;
 
-  public FlinkJmsProducer(JmsTransportProtocol protocol, ByteArraySerializer
+  public MqttFlinkProducer(MqttTransportProtocol protocol, ByteArraySerializer
           serializationSchema) {
     this.protocol = protocol;
     this.serializationSchema = serializationSchema;
@@ -48,7 +50,7 @@ public class FlinkJmsProducer extends RichSinkFunction<Map<String, Object>> {
   @Override
   public void open(Configuration configuration) throws Exception {
     try {
-      publisher = new ActiveMQPublisher();
+      publisher = new MqttPublisher();
       publisher.connect(protocol);
     } catch (Exception e) {
       throw new Exception("Failed to open Jms connection: " + e.getMessage(), e);

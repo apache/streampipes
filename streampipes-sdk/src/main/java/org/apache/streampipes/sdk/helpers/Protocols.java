@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.sdk.helpers;
 
-import org.apache.streampipes.model.grounding.JmsTransportProtocol;
-import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
-import org.apache.streampipes.model.grounding.WildcardTopicDefinition;
+import org.apache.streampipes.config.backend.BackendConfig;
+import org.apache.streampipes.config.backend.SpProtocol;
+import org.apache.streampipes.model.grounding.*;
 
 public class Protocols {
 
@@ -53,14 +53,59 @@ public class Protocols {
   }
 
   /**
-   * Defines the transport protocol Kafka used by a data stream at runtime.
+   * Defines the transport protocol JMS used by a data stream at runtime.
    * @param jmsHost The hostname of any JMS broker
    * @param jmsPort The port of any JMS broker
    * @param topic The topic identifier
-   * @return The {@link org.apache.streampipes.model.grounding.KafkaTransportProtocol} containing URL and topic where data
+   * @return The {@link org.apache.streampipes.model.grounding.JmsTransportProtocol} containing URL and topic where data
    * arrives.
    */
   public static JmsTransportProtocol jms(String jmsHost, Integer jmsPort, String topic) {
     return new JmsTransportProtocol(jmsHost, jmsPort, topic);
+  }
+
+  /**
+   * Defines the transport protocol MQTT used by a data stream at runtime.
+   * @param mqttHost The hostname of any MQTT broker
+   * @param mqttPort The port of any MQTT broker
+   * @param topic The topic identifier
+   * @return The {@link org.apache.streampipes.model.grounding.MqttTransportProtocol} containing URL and topic where data
+   * arrives.
+   */
+  public static MqttTransportProtocol mqtt(String mqttHost, Integer mqttPort, String topic) {
+    return new MqttTransportProtocol(mqttHost, mqttPort, topic);
+  }
+
+  /**
+   * Defines the prioritized transport protocol used by a data stream at runtime.
+   * @param topic The topic identifier
+   * @return The {@link org.apache.streampipes.model.grounding.TransportProtocol} containing URL and topic where data
+   * arrives.
+   */
+  public static TransportProtocol prioritizedProtocol(String topic) {
+    SpProtocol prioritizedProtocol =
+            BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedProtocols().get(0);
+
+    TransportProtocol tp = null;
+
+    if (prioritizedProtocol.getProtocolClass().equals(JmsTransportProtocol.class.getCanonicalName())) {
+      tp = new JmsTransportProtocol(
+              BackendConfig.INSTANCE.getJmsHost(),
+              BackendConfig.INSTANCE.getJmsPort(),
+              topic);
+    }
+    else if (prioritizedProtocol.getProtocolClass().equals(KafkaTransportProtocol.class.getCanonicalName())) {
+      tp = new KafkaTransportProtocol(
+              BackendConfig.INSTANCE.getKafkaHost(),
+              BackendConfig.INSTANCE.getKafkaPort(),
+              topic);
+    }
+    else if (prioritizedProtocol.getProtocolClass().equals(MqttTransportProtocol.class.getCanonicalName())) {
+      tp = new MqttTransportProtocol(
+              BackendConfig.INSTANCE.getMqttHost(),
+              BackendConfig.INSTANCE.getMqttPort(),
+              topic);
+    }
+    return tp;
   }
 }

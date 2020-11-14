@@ -24,7 +24,11 @@ import org.fusesource.mqtt.client.Message;
 import org.fusesource.mqtt.client.QoS;
 import org.fusesource.mqtt.client.Topic;
 
-public class MqttConsumer extends AbstractMqttConnector implements EventConsumer<MqttTransportProtocol> {
+import java.io.Serializable;
+
+public class MqttConsumer extends AbstractMqttConnector implements
+        EventConsumer<MqttTransportProtocol>,
+        AutoCloseable, Serializable {
 
   @Override
   public void connect(MqttTransportProtocol protocolSettings, InternalEventProcessor<byte[]> eventProcessor) throws SpRuntimeException {
@@ -76,5 +80,10 @@ public class MqttConsumer extends AbstractMqttConnector implements EventConsumer
   @Override
   public Boolean isConnected() {
     return this.connected;
+  }
+
+  @Override
+  public void close() throws Exception {
+    disconnect();
   }
 }

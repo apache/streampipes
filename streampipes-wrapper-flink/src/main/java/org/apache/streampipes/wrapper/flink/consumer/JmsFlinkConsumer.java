@@ -31,9 +31,9 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class JmsConsumer implements SourceFunction<Map<String, Object>>, Serializable {
+public class JmsFlinkConsumer implements SourceFunction<Map<String, Object>>, Serializable {
 
-  private static final Logger LOG = LoggerFactory.getLogger(JmsConsumer.class);
+  private static final Logger LOG = LoggerFactory.getLogger(JmsFlinkConsumer.class);
 
   private JmsTransportProtocol protocol;
   private ActiveMQConsumer activeMQConsumer;
@@ -41,7 +41,7 @@ public class JmsConsumer implements SourceFunction<Map<String, Object>>, Seriali
   private Boolean isRunning;
   private Queue<byte[]> queue;
 
-  public JmsConsumer(JmsTransportProtocol protocol, SpDataFormatDefinition spDataFormatDefinition) {
+  public JmsFlinkConsumer(JmsTransportProtocol protocol, SpDataFormatDefinition spDataFormatDefinition) {
     this.protocol = protocol;
     this.activeMQConsumer = new ActiveMQConsumer();
     this.spDataFormatDefinition = spDataFormatDefinition;
