@@ -26,6 +26,7 @@ import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
 import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
+import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.processors.enricher.jvm.config.EnricherJvmConfig;
 import org.apache.streampipes.processors.enricher.jvm.processor.jseval.JSEvalController;
 import org.apache.streampipes.processors.enricher.jvm.processor.sizemeasure.SizeMeasureController;
@@ -41,13 +42,12 @@ public class EnricherJvmInit extends StandaloneModelSubmitter {
             new JsonDataFormatFactory(),
             new CborDataFormatFactory(),
             new SmileDataFormatFactory(),
-            new FstDataFormatFactory()
-    );
+            new FstDataFormatFactory());
 
     DeclarersSingleton.getInstance().registerProtocols(
             new SpKafkaProtocolFactory(),
-            new SpJmsProtocolFactory()
-    );
+            new SpMqttProtocolFactory(),
+            new SpJmsProtocolFactory());
 
     new EnricherJvmInit().init(EnricherJvmConfig.INSTANCE);
   }

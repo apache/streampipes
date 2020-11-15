@@ -70,9 +70,6 @@ public class LatLngToGeoController extends StandaloneEventProcessingDeclarer<Lat
                     .domainProperty("http://www.opengis.net/ont/geosparql#Geometry")
                     .build())
         )
-
-        .supportedFormats(SupportedFormats.jsonFormat())
-        .supportedProtocols(SupportedProtocols.kafka())
         .build();
   }
 

@@ -57,8 +57,6 @@ public class TransformToBooleanController
                                 PropertyScope.NONE)
                         .build())
                 .outputStrategy(OutputStrategies.customTransformation())
-                .supportedFormats(SupportedFormats.jsonFormat())
-                .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
                 .build();
     }
 

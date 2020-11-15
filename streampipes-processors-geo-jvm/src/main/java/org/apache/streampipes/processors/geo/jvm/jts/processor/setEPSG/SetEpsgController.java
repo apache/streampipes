@@ -58,8 +58,6 @@ public class SetEpsgController extends StandaloneEventProcessingDeclarer<SetEpsg
                 .domainProperty("http://data.ign.fr/def/ignf#CartesianCS")
                 .build())
         )
-        .supportedFormats(SupportedFormats.jsonFormat())
-        .supportedProtocols(SupportedProtocols.kafka())
         .build();
   }
 

@@ -25,6 +25,7 @@ import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
 import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
+import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.pe.flink.config.Config;
 import org.apache.streampipes.processor.geo.flink.processor.gridenricher.SpatialGridEnrichmentController;
 import org.apache.streampipes.processors.aggregation.flink.processor.aggregation.AggregationController;
@@ -90,12 +91,15 @@ public class AllFlinkPipelineElementsInit extends StandaloneModelSubmitter {
             .add(new ElasticSearchController());
 
 
-    DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),
+    DeclarersSingleton.getInstance().registerDataFormats(
+            new JsonDataFormatFactory(),
             new CborDataFormatFactory(),
             new SmileDataFormatFactory(),
             new FstDataFormatFactory());
 
-    DeclarersSingleton.getInstance().registerProtocols(new SpKafkaProtocolFactory(),
+    DeclarersSingleton.getInstance().registerProtocols(
+            new SpKafkaProtocolFactory(),
+            new SpMqttProtocolFactory(),
             new SpJmsProtocolFactory());
 
     new AllFlinkPipelineElementsInit().init(Config.INSTANCE);
