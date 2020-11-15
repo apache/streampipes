@@ -45,7 +45,7 @@ jobs:
         uses: actions/checkout@v1
       - name: Build Extensions with Maven
         working-directory: ./
-        run: mvn clean package javadoc:aggregate -U
+        run: mvn clean package javadoc:aggregate
       - name: Set env variables for Docker builds
         run: |
           echo "DOCKER_CLI_EXPERIMENTAL=enabled" >> $GITHUB_ENV
