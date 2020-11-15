@@ -386,6 +386,11 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.streampipes</groupId>
+                <artifactId>streampipes-messaging-mqtt</artifactId>
+                <version>${streampipes.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.streampipes</groupId>
                 <artifactId>streampipes-sdk</artifactId>
                 <version>${streampipes.version}</version>
             </dependency>

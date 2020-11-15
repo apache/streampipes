@@ -39,7 +39,7 @@ services:
       context: ./streampipes-connect-adapters
       dockerfile: Dockerfile
       args:
-        BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine-slim
+        BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine
     image: incubator-streampipes_connect-worker-main:release-validation
     environment:
       - SP_CONNECT_CONTAINER_HOST=connect-master
@@ -53,7 +53,7 @@ services:
       context: ./streampipes-pipeline-elements-all-jvm
       dockerfile: Dockerfile
       args:
-        BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine-slim
+        BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine
     image: incubator-streampipes_pipeline-elements-all-jvm:release-validation
     volumes:
     - files:/spImages
@@ -66,7 +66,7 @@ services:
       context: ./streampipes-pipeline-elements-all-flink
       dockerfile: Dockerfile
       args:
-        BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine-slim
+        BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine
     image: incubator-streampipes_pipeline-elements-all-flink:release-validation
     logging: *default-logging
     networks:
@@ -77,7 +77,7 @@ services:
       context: ./streampipes-sources-watertank-simulator
       dockerfile: Dockerfile
       args:
-        BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine-slim
+        BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine
     image: incubator-streampipes_sources-watertank-simulator:release-validation
     logging: *default-logging
     networks:
@@ -88,7 +88,7 @@ services:
       context: ./streampipes-sources-vehicle-simulator
       dockerfile: Dockerfile
       args:
-        BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine-slim
+        BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine
     image: incubator-streampipes_sources-vehicle-simulator:release-validation
     logging: *default-logging
     networks:

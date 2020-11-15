@@ -26,6 +26,7 @@ import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
 import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
+import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.sinks.brokers.jvm.bufferrest.BufferRestController;
 import org.apache.streampipes.sinks.brokers.jvm.config.BrokersJvmConfig;
 import org.apache.streampipes.sinks.brokers.jvm.jms.JmsController;
@@ -38,8 +39,7 @@ import org.apache.streampipes.sinks.brokers.jvm.rest.RestController;
 public class BrokersJvmInit extends StandaloneModelSubmitter {
 
   public static void main(String[] args) {
-    DeclarersSingleton
-            .getInstance()
+    DeclarersSingleton.getInstance()
             .add(new KafkaController())
             .add(new JmsController())
             .add(new RestController())
@@ -48,12 +48,15 @@ public class BrokersJvmInit extends StandaloneModelSubmitter {
             .add(new MqttController())
             .add(new PulsarController());
 
-    DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),
+    DeclarersSingleton.getInstance().registerDataFormats(
+            new JsonDataFormatFactory(),
             new CborDataFormatFactory(),
             new SmileDataFormatFactory(),
             new FstDataFormatFactory());
 
-    DeclarersSingleton.getInstance().registerProtocols(new SpKafkaProtocolFactory(),
+    DeclarersSingleton.getInstance().registerProtocols(
+            new SpKafkaProtocolFactory(),
+            new SpMqttProtocolFactory(),
             new SpJmsProtocolFactory());
 
     new BrokersJvmInit().init(BrokersJvmConfig.INSTANCE);

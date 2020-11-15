@@ -26,7 +26,7 @@ jobs:
     steps:
       - name: Set Branch env variable
         run: |
-          echo "::set-env name=GITHUB_BRANCH::${GITHUB_REF#refs/*/}"
+          echo "GITHUB_BRANCH=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
           echo ${{ env.GITHUB_BRANCH }}
       - name: Checkout incubator-streampipes project
         uses: actions/checkout@v2
@@ -45,15 +45,15 @@ jobs:
         uses: actions/checkout@v1
       - name: Build Extensions with Maven
         working-directory: ./
-        run: mvn clean package javadoc:aggregate -U
+        run: mvn clean package javadoc:aggregate
       - name: Set env variables for Docker builds
         run: |
-          echo "::set-env name=DOCKER_CLI_EXPERIMENTAL::enabled"
-          echo "::set-env name=MVN_VERSION::$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
-          echo "::set-env name=DOCKERHUB_APACHE_REPO::apachestreampipes"
-          echo "::set-env name=BASE_IMG_JRE_DEFAULT::adoptopenjdk/openjdk8-openj9:alpine"
-          echo "::set-env name=BASE_IMG_JRE_ARM32V7::arm32v7/openjdk:11-jre-slim"
-          echo "::set-env name=BASE_IMG_JRE_ARM64V8::arm64v8/openjdk:11-jre-slim"
+          echo "DOCKER_CLI_EXPERIMENTAL=enabled" >> $GITHUB_ENV
+          echo "MVN_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
+          echo "DOCKERHUB_APACHE_REPO=apachestreampipes" >> $GITHUB_ENV
+          echo "BASE_IMG_JRE_DEFAULT=adoptopenjdk/openjdk8-openj9:alpine" >> $GITHUB_ENV
+          echo "BASE_IMG_JRE_ARM32V7=arm32v7/openjdk:11-jre-slim" >> $GITHUB_ENV
+          echo "BASE_IMG_JRE_ARM64V8=arm64v8/openjdk:11-jre-slim" >> $GITHUB_ENV
       - name: Install qemu-user-static for multi-arch builds
         run: |
           sudo apt-get update

@@ -90,9 +90,6 @@ public class CreateTrajectoryFromPointsController extends StandaloneEventProcess
                 "http://www.opengis.net/ont/geosparql#Geometry")
             )
         )
-
-        .supportedFormats(SupportedFormats.jsonFormat())
-        .supportedProtocols(SupportedProtocols.kafka())
         .build();
   }
 

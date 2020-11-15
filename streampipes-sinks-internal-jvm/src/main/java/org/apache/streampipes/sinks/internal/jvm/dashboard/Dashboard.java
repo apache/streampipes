@@ -55,7 +55,10 @@ public class Dashboard implements EventSink<DashboardParameters> {
         if (!saveToCouchDB(parameters.getGraph(), parameters)) {
             throw new SpRuntimeException("The schema couldn't be stored in the couchDB");
         }
-        this.publisher = new ActiveMQPublisher(SinksInternalJvmConfig.INSTANCE.getJmsUrl(), parameters.getElementId());
+        this.publisher = new ActiveMQPublisher(
+                SinksInternalJvmConfig.INSTANCE.getJmsHost(),
+                SinksInternalJvmConfig.INSTANCE.getJmsPort(),
+                parameters.getElementId());
         this.pipelineId = parameters.getPipelineId();
     }
 

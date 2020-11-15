@@ -26,6 +26,7 @@ import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
 import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
+import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.sinks.databases.flink.config.DatabasesFlinkConfig;
 import org.apache.streampipes.sinks.databases.flink.elasticsearch.ElasticSearchController;
 
@@ -35,15 +36,17 @@ public class DatabasesFlinkInit extends StandaloneModelSubmitter {
     DeclarersSingleton.getInstance()
             .add(new ElasticSearchController());
 
-    DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),
+    DeclarersSingleton.getInstance().registerDataFormats(
+            new JsonDataFormatFactory(),
             new CborDataFormatFactory(),
             new SmileDataFormatFactory(),
             new FstDataFormatFactory());
 
-    DeclarersSingleton.getInstance().registerProtocols(new SpKafkaProtocolFactory(),
+    DeclarersSingleton.getInstance().registerProtocols(
+            new SpKafkaProtocolFactory(),
+            new SpMqttProtocolFactory(),
             new SpJmsProtocolFactory());
     
     new DatabasesFlinkInit().init(DatabasesFlinkConfig.INSTANCE);
   }
-
 }
