@@ -53,7 +53,7 @@ public class MqttFlinkProducer extends RichSinkFunction<Map<String, Object>> {
       publisher = new MqttPublisher();
       publisher.connect(protocol);
     } catch (Exception e) {
-      throw new Exception("Failed to open Jms connection: " + e.getMessage(), e);
+      throw new Exception("Failed to open Mqtt connection: " + e.getMessage(), e);
     }
   }
 
