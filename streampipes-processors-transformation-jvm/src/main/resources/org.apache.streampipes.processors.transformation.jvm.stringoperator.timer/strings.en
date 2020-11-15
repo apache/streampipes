@@ -13,5 +13,6 @@ fieldValue.description = The corresponding field value
 outputUnit.title= Output Unit
 outputUnit.description = The output unit of the measured time
 
-
+outputFrequency.title = Output Frequency
+outputFrequency.description = Define when the processor should emmit an output event.
 

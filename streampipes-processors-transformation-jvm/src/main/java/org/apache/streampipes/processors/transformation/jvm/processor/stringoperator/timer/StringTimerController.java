@@ -40,6 +40,10 @@ public class StringTimerController extends StandaloneEventProcessingDeclarer<Str
   private static final String SECONDS = "Seconds";
   private static final String MINUTES = "Minutes";
 
+  public static final String OUTPUT_FREQUENCY = "outputFrequency";
+  private static final String ON_INPUT_EVENT = "On Input Event";
+  private static final String ON_STRING_VALUE_CHANGE = "When String Value Changes";
+
   public static final String MEASURED_TIME_FIELD_RUNTIME_NAME = "measured_time";
   public static final String FIELD_VALUE_RUNTIME_NAME = "field_value";
 
@@ -56,6 +60,7 @@ public class StringTimerController extends StandaloneEventProcessingDeclarer<Str
                             PropertyScope.NONE)
                     .build())
             .requiredSingleValueSelection(Labels.withId(OUTPUT_UNIT_ID), Options.from(MILLISECONDS, SECONDS, MINUTES))
+            .requiredSingleValueSelection(Labels.withId(OUTPUT_FREQUENCY), Options.from(ON_INPUT_EVENT, ON_STRING_VALUE_CHANGE))
             .outputStrategy(OutputStrategies.append(
                     EpProperties.numberEp(Labels.withId(MEASURED_TIME_ID), MEASURED_TIME_FIELD_RUNTIME_NAME, "http://schema.org/Number"),
                     EpProperties.stringEp(Labels.withId(FIELD_VALUE_ID), FIELD_VALUE_RUNTIME_NAME, "http://schema.org/String")
@@ -68,6 +73,7 @@ public class StringTimerController extends StandaloneEventProcessingDeclarer<Str
 
     String selectedFieldName = extractor.mappingPropertyValue(FIELD_ID);
     String outputUnit = extractor.selectedSingleValue(OUTPUT_UNIT_ID, String.class);
+    String outputFrequency = extractor.selectedSingleValue(OUTPUT_FREQUENCY, String.class);
 
     double outputDivisor= 1.0;
     if (outputUnit.equals(SECONDS)) {
@@ -76,7 +82,12 @@ public class StringTimerController extends StandaloneEventProcessingDeclarer<Str
       outputDivisor = 60000.0;
     }
 
-    StringTimerParameters params = new StringTimerParameters(graph, selectedFieldName, outputDivisor);
+    boolean useInputFrequencyForOutputFrequency = false;
+    if (ON_INPUT_EVENT.equals(outputFrequency)) {
+      useInputFrequencyForOutputFrequency = true;
+    }
+
+    StringTimerParameters params = new StringTimerParameters(graph, selectedFieldName, outputDivisor, useInputFrequencyForOutputFrequency);
 
     return new ConfiguredEventProcessor<>(params, StringTimer::new);
   }
