@@ -13,31 +13,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-version: "3.4"
-services:
-  backend:
-    image: ${SP_DOCKER_REGISTRY}backend:${SP_VERSION}
-    depends_on:
-      - consul
-      - couchdb
-    volumes:
-      - backend:/root/.streampipes
-      - files:/spImages
-    environment:
-      - SP_PRIORITIZED_PROTOCOL=${SP_PRIORITIZED_PROTOCOL:-kafka}
-      - SP_MQTT_HOST=${SP_MQTT_HOST:-activemq}
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "1m"
-        max-file: "1"
-    networks:
-      spnet:
-
-volumes:
-  backend:
-  files:
-
-networks:
-  spnet:
-    external: true
+[environment:minimal]
+ui
+backend
+connect-master
+connect-worker-main
+activemq
+consul
+couchdb
+influxdb
+mosquitto
+pipeline-elements-all-jvm
