@@ -1,11 +1,11 @@
 org.apache.streampipes.processors.changedetection.jvm.cusum.title=Cusum
 org.apache.streampipes.processors.changedetection.jvm.cusum.description=
 
-number-mapping.title=Data Stream
-number-mapping.description=Specifies the monitored data stream.
+number-mapping.title=Value to observe
+number-mapping.description=Specifies the monitored dimension.
 
 param-k.title=Parameter k
-param-k.description=The standard deviation that is considered noise.
+param-k.description=The sensitivity parameter. High value indicates low sensitivity. Unit: Standard deviations
 
 param-h.title=Parameter h
-param-h.description=The threshold in standard deviations above which the cumulative sum is considered noise.
+param-h.description=The threshold above which a change is detected. Unit: Standard deviations

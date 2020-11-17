@@ -11,7 +11,6 @@ public class Cusum implements EventProcessor<CusumParameters> {
     private String selectedNumberMapping;
     private Double k;
     private Double h;
-    private Double previousNumber;
     private Double cusumLow;
     private Double cusumHigh;
     private WelfordAggregate welfordAggregate;
@@ -29,11 +28,10 @@ public class Cusum implements EventProcessor<CusumParameters> {
     @Override
     public void onEvent(Event event, SpOutputCollector collector) throws SpRuntimeException {
         Double number = event.getFieldBySelector(selectedNumberMapping).getAsPrimitive().getAsDouble();
+        welfordAggregate.update(number);  // update mean and standard deviation
+        Double normalized = getZScoreNormalizedValue(number);
+        updateStatistics(normalized);
 
-        Double diff = previousNumber != null ? number - previousNumber : 0.0;
-        welfordAggregate.update(diff);  // update mean and standard deviation
-        Double normalizedDiff = getZScoreNormalizedValue(diff);
-        updateStatistics(normalizedDiff);
 
         Boolean isChangeHigh = getTestResult(cusumHigh, h);
         Boolean isChangeLow = getTestResult(cusumLow, h);
@@ -44,14 +42,12 @@ public class Cusum implements EventProcessor<CusumParameters> {
         if (isChangeHigh || isChangeLow) {
             resetAfterChange();
         }
-        previousNumber = number;
     }
 
     @Override
     public void onDetach() throws SpRuntimeException {
         cusumLow = 0.0;
         cusumHigh = 0.0;
-        previousNumber = null;
     }
 
     private void resetAfterChange() {
