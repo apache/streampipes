@@ -17,9 +17,16 @@
  */
 package org.apache.streampipes.messaging.kafka.config;
 
+import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.config.SaslConfigs;
+import org.apache.kafka.common.config.SslConfigs;
+import org.apache.kafka.common.security.auth.SecurityProtocol;
+import org.apache.kafka.common.security.authenticator.SaslClientAuthenticator;
+import org.apache.kafka.common.security.scram.internals.ScramMechanism;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 
+import javax.management.monitor.CounterMonitor;
 import java.util.Properties;
 
 public class ProducerConfigFactory extends AbstractConfigFactory {
@@ -54,6 +61,16 @@ public class ProducerConfigFactory extends AbstractConfigFactory {
     props.put(ProducerConfig.BUFFER_MEMORY_CONFIG, BUFFER_MEMORY_CONFIG_DEFAULT);
     props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, KEY_SERIALIZER_DEFAULT);
     props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, VALUE_SERIALIZER_DEFAULT);
+    return props;
+  }
+
+  @Override
+  public Properties makePropertiesSaslPlain(String username, String password) {
+    Properties props = makeProperties();
+    props.put(SaslConfigs.SASL_MECHANISM, "PLAIN");
+    props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, SecurityProtocol.SASL_PLAINTEXT.toString());
+    String SASL_JAAS_CONFIG = "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"" + username + "\" password=\"" + password + "\";";
+    props.put(SaslConfigs.SASL_JAAS_CONFIG, SASL_JAAS_CONFIG);
     return props;
   }
 }

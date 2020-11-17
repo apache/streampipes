@@ -15,31 +15,29 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.sdk.helpers;
 
-import * as angular from 'angular';
+import java.util.Arrays;
+import java.util.List;
 
-export class OneOfController {
+public enum Filetypes {
 
-    staticProperty: any;
+  CSV("csv"),
+  JPG("jpg", "jpeg"),
+  JSON("json"),
+  XLS("xls"),
+  XLSX("xlsx"),
+  XML("xml"),
+  JKS("jks"),
+  ZIP("zip");
 
-    constructor() { }
+  private List<String> fileExtensions;
 
-    $onInit() {
-        this.staticProperty.properties.options.forEach(o => {
-           if (o.selected) {
-               this.staticProperty.properties.currentSelection = o;
-           }
-        });
-    }
+  Filetypes(String... fileExtensions) {
+    this.fileExtensions = Arrays.asList(fileExtensions);
+  }
 
-    change(option) {
-        angular.forEach(this.staticProperty.properties.options, function (o) {
-            if (o.elementId == option.elementId) {
-                o.selected = true;
-            } else {
-                o.selected = false;
-            }
-        });
-    }
-
+  public List<String> getFileExtensions() {
+    return fileExtensions;
+  }
 }
