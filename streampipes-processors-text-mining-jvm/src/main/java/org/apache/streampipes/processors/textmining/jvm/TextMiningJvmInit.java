@@ -26,6 +26,7 @@ import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
 import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
+import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.processors.textmining.jvm.config.TextMiningJvmConfig;
 import org.apache.streampipes.processors.textmining.jvm.processor.chunker.ChunkerController;
 import org.apache.streampipes.processors.textmining.jvm.processor.language.LanguageDetectionController;
@@ -36,8 +37,7 @@ import org.apache.streampipes.processors.textmining.jvm.processor.tokenizer.Toke
 
 public class TextMiningJvmInit extends StandaloneModelSubmitter {
     public static void main(String[] args) {
-        DeclarersSingleton
-                .getInstance()
+        DeclarersSingleton.getInstance()
                 .add(new LanguageDetectionController())
                 .add(new TokenizerController())
                 .add(new PartOfSpeechController())
@@ -45,12 +45,15 @@ public class TextMiningJvmInit extends StandaloneModelSubmitter {
                 .add(new NameFinderController())
                 .add(new SentenceDetectionController());
 
-        DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),
+        DeclarersSingleton.getInstance().registerDataFormats(
+                new JsonDataFormatFactory(),
                 new CborDataFormatFactory(),
                 new SmileDataFormatFactory(),
                 new FstDataFormatFactory());
 
-        DeclarersSingleton.getInstance().registerProtocols(new SpKafkaProtocolFactory(),
+        DeclarersSingleton.getInstance().registerProtocols(
+                new SpKafkaProtocolFactory(),
+                new SpMqttProtocolFactory(),
                 new SpJmsProtocolFactory());
 
         new TextMiningJvmInit().init(TextMiningJvmConfig.INSTANCE);

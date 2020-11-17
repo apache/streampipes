@@ -39,11 +39,14 @@ A string field is required in the data stream.
 
 The string field which is monitored for any value changes.
 
+
 ***
 
 ## Configuration
 
-(no further configuration required)
+### Output Frequency 
+
+Define when an event should be emitted, either on each input event or just when the string value changes.
 
 ## Output
 The following two fields are appended to the event:

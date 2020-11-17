@@ -32,6 +32,7 @@ public class StringTimer implements EventProcessor<StringTimerParameters> {
   private Long timestamp;
   private double outputDivisor;
   private String fieldValueOfLastEvent;
+  private boolean useInputFrequencyForOutputFrequency;
 
   @Override
   public void onInvocation(StringTimerParameters stringTimerParameters,
@@ -40,6 +41,7 @@ public class StringTimer implements EventProcessor<StringTimerParameters> {
     LOG = stringTimerParameters.getGraph().getLogger(StringTimer.class);
     this.selectedFieldName = stringTimerParameters.getSelectedFieldName();
     this.outputDivisor = stringTimerParameters.getOutputDivisor();
+    this.useInputFrequencyForOutputFrequency = stringTimerParameters.isUseInputFrequencyForOutputFrequency();
 
   }
 
@@ -52,16 +54,21 @@ public class StringTimer implements EventProcessor<StringTimerParameters> {
       if (this.fieldValueOfLastEvent == null) {
           this.timestamp = currentTime;
       } else {
-          if (!this.fieldValueOfLastEvent.equals(value)) {
+          // Define if result event should be emitted or not
+          if (this.useInputFrequencyForOutputFrequency || !this.fieldValueOfLastEvent.equals(value)) {
               Long difference = currentTime - this.timestamp;
               double result = difference / this.outputDivisor;
 
               inputEvent.addField(StringTimerController.MEASURED_TIME_FIELD_RUNTIME_NAME, result);
               inputEvent.addField(StringTimerController.FIELD_VALUE_RUNTIME_NAME, this.fieldValueOfLastEvent);
               out.collect(inputEvent);
+          }
 
+          // if state changes reset timestamp
+          if (!this.fieldValueOfLastEvent.equals(value)) {
               timestamp = currentTime;
           }
+
       }
       this.fieldValueOfLastEvent = value;
   }

@@ -48,8 +48,6 @@ public class BufferRestController extends StandaloneEventSinkDeclarer<BufferRest
 								.requiredPropertyWithNaryMapping(EpRequirements.anyProperty(), Labels.withId(
 										KEY + FIELDS), PropertyScope.NONE)
 								.build())
-						.supportedFormats(SupportedFormats.jsonFormat())
-						.supportedProtocols(SupportedProtocols.kafka())
  						.requiredTextParameter(Labels.from(KEY + URI, "REST Endpoint URI", "REST Endpoint URI"))
 						.requiredIntegerParameter(Labels.from(KEY + COUNT, "Buffered Event Count",
 								"Number (1 <= x <= 1000000) of incoming events before sending data on to the given REST endpoint"),

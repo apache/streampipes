@@ -52,7 +52,9 @@ public class NotificationProducer implements EventSink<NotificationParameters> {
     this.content = parameters.getContent();
     this.correspondingPipelineId = parameters.getGraph().getCorrespondingPipeline();
     this.correspondingUser = parameters.getGraph().getCorrespondingUser();
-    this.publisher = new ActiveMQPublisher(SinksInternalJvmConfig.INSTANCE.getJmsHost() + ":" + SinksInternalJvmConfig.INSTANCE.getJmsPort(),
+    this.publisher = new ActiveMQPublisher(
+            SinksInternalJvmConfig.INSTANCE.getJmsHost(),
+            SinksInternalJvmConfig.INSTANCE.getJmsPort(),
             "org.apache.streampipes.notifications." + this.correspondingUser);
   }
 

@@ -51,8 +51,6 @@ public class UpcUaController extends StandaloneEventSinkDeclarer<OpcUaParameters
                     .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(),
                             Labels.withId(MAPPING_PROPERTY_KEY),
                             PropertyScope.NONE).build())
-            .supportedFormats(SupportedFormats.jsonFormat())
-            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .requiredTextParameter(Labels.withId(OPC_SERVER_KEY))
             .requiredIntegerParameter(Labels.withId(OPC_PORT_KEY))
             .requiredIntegerParameter(Labels.withId(OPC_NAMESPACE_INDEX_KEY))

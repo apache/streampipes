@@ -26,6 +26,7 @@ import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
 import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
+import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.processors.enricher.flink.config.EnricherFlinkConfig;
 import org.apache.streampipes.processors.enricher.flink.processor.math.mathop.MathOpController;
 import org.apache.streampipes.processors.enricher.flink.processor.math.staticmathop.StaticMathOpController;
@@ -43,12 +44,15 @@ public class EnricherFlinkInit extends StandaloneModelSubmitter {
             .add(new UrlDereferencingController())
             .add(new TrigonometryController());
 
-    DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),
+    DeclarersSingleton.getInstance().registerDataFormats(
+            new JsonDataFormatFactory(),
             new CborDataFormatFactory(),
             new SmileDataFormatFactory(),
             new FstDataFormatFactory());
 
-    DeclarersSingleton.getInstance().registerProtocols(new SpKafkaProtocolFactory(),
+    DeclarersSingleton.getInstance().registerProtocols(
+            new SpKafkaProtocolFactory(),
+            new SpMqttProtocolFactory(),
             new SpJmsProtocolFactory());
 
     new EnricherFlinkInit().init(EnricherFlinkConfig.INSTANCE);

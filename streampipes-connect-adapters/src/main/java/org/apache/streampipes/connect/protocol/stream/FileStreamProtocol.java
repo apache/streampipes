@@ -26,11 +26,11 @@ import org.apache.streampipes.connect.adapter.model.generic.Format;
 import org.apache.streampipes.connect.adapter.model.generic.Parser;
 import org.apache.streampipes.connect.adapter.model.generic.Protocol;
 import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
-import org.apache.streampipes.connect.adapter.preprocessing.elements.SendToKafkaAdapterSink;
-import org.apache.streampipes.connect.adapter.preprocessing.elements.SendToKafkaReplayAdapterSink;
+import org.apache.streampipes.connect.adapter.preprocessing.elements.*;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 import org.apache.streampipes.model.schema.*;
 import org.apache.streampipes.sdk.builder.adapter.ProtocolDescriptionBuilder;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
@@ -78,16 +78,36 @@ public class FileStreamProtocol extends Protocol {
   @Override
   public void run(AdapterPipeline adapterPipeline) {
     String timestampKey = getTimestampKey(eventSchema.getEventProperties(), "");
-    SendToKafkaAdapterSink adapterPipelineSink = (SendToKafkaAdapterSink) adapterPipeline.getPipelineSink();
+
+    // exchange adapter pipeline sink with special purpose replay sink for file replay
+    if (adapterPipeline.getPipelineSink() instanceof SendToKafkaAdapterSink) {
+        adapterPipeline.changePipelineSink(new SendToBrokerReplayAdapterSink(
+                (SendToKafkaAdapterSink) adapterPipeline.getPipelineSink(),
+                timestampKey,
+                replaceTimestamp,
+                speedUp));
+
+    } else if (adapterPipeline.getPipelineSink() instanceof SendToMqttAdapterSink) {
+        adapterPipeline.changePipelineSink(new SendToBrokerReplayAdapterSink(
+                (SendToMqttAdapterSink) adapterPipeline.getPipelineSink(),
+                timestampKey,
+                replaceTimestamp,
+                speedUp));
+
+    } else if (adapterPipeline.getPipelineSink() instanceof SendToJmsAdapterSink) {
+        adapterPipeline.changePipelineSink(new SendToBrokerReplayAdapterSink(
+                (SendToJmsAdapterSink) adapterPipeline.getPipelineSink(),
+                timestampKey,
+                replaceTimestamp,
+                speedUp));
+    }
 
     running = true;
-
     task = new Thread() {
         @Override
         public void run() {
           while (running) {
-            adapterPipeline.changePipelineSink(new SendToKafkaReplayAdapterSink(adapterPipelineSink, timestampKey,
-                    replaceTimestamp, speedUp));
+
             format.reset();
             SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
             InputStream dataInputStream = getDataFromEndpoint();

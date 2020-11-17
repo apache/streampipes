@@ -100,7 +100,9 @@ public class MachineDataSimulator implements Runnable {
                     }
             }
 
-            adapterPipeline.process(event);
+            if (event.keySet().size() > 0) {
+                adapterPipeline.process(event);
+            }
 
             try {
                 Thread.sleep(waitTimeMs);
