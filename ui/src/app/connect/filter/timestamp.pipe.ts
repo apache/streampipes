@@ -17,16 +17,16 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {EventProperty} from '../schema-editor/model/EventProperty';
+import {EventPropertyUnion} from "../../core-model/gen/streampipes-model";
 
 @Pipe({
     name: 'timestampFilter',
     pure: false
 })
 export class TimestampPipe implements PipeTransform {
-    transform(items: EventProperty[], filter: Object): any {
+    transform(items: EventPropertyUnion[], filter: Object): any {
         return items.filter(item => {
-            if ("http://schema.org/DateTime" == item.domainProperty) {
+            if (item.domainProperties.some(dp => dp === "http://schema.org/DateTime")) {
                 return true;
             } else {
                 return false;

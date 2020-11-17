@@ -69,11 +69,6 @@ import {NgxChartsModule} from '@swimlane/ngx-charts';
     providers: [
         AppTransportMonitoringRestService,
         TimestampConverterService,
-        {
-            provide: 'RestApi',
-            useFactory: ($injector: any) => $injector.get('RestApi'),
-            deps: ['$injector'],
-        }
     ],
     entryComponents: [
         AppTransportMonitoringComponent

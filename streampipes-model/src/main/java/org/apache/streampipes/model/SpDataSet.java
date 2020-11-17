@@ -24,12 +24,11 @@ import org.apache.streampipes.model.quality.EventStreamQualityDefinition;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
-import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToOne;
+import java.util.List;
 
 @RdfsClass(StreamPipes.DATA_SET)
 @Entity

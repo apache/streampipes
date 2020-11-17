@@ -36,6 +36,7 @@ public class ProducerConfigFactory extends AbstractConfigFactory {
   private static final Integer BATCH_SIZE_CONFIG_DEFAULT = 1638400;
   private static final Integer LINGER_MS_DEFAULT = 20;
   private static final Integer BUFFER_MEMORY_CONFIG_DEFAULT = 33554432;
+  private static final Integer MAX_REQUEST_SIZE_CONFIG_DEFAULT = 5000012;
 
   private static final String KEY_SERIALIZER_DEFAULT = "org.apache.kafka.common.serialization" +
           ".StringSerializer";
@@ -58,6 +59,8 @@ public class ProducerConfigFactory extends AbstractConfigFactory {
             getConfigOrDefault(protocol::getBatchSize, BATCH_SIZE_CONFIG_DEFAULT));
     props.put(ProducerConfig.LINGER_MS_CONFIG,
             getConfigOrDefault(protocol::getLingerMs, LINGER_MS_DEFAULT));
+    props.put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, getConfigOrDefault(protocol::getMaxRequestSize,
+            MAX_REQUEST_SIZE_CONFIG_DEFAULT));
     props.put(ProducerConfig.BUFFER_MEMORY_CONFIG, BUFFER_MEMORY_CONFIG_DEFAULT);
     props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, KEY_SERIALIZER_DEFAULT);
     props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, VALUE_SERIALIZER_DEFAULT);

@@ -1,0 +1,79 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<h2 mat-dialog-title>Edit field {{property.runtimeName}}</h2>
+<mat-dialog-content>
+  <form #propertyForm="ngForm">
+    <div fxLayout="row" fxLayoutAlign="start">
+      <div class="form-group" fxFlexAlign="center">
+        <mat-form-field class="example-full-width" style="margin-right: 10px">
+          <input matInput placeholder="Label" name="label" id="label" [(ngModel)]="cachedProperty.label">
+        </mat-form-field>
+      </div>
+      <div attr.id="input-runtime-name-{{cachedProperty.label}}" class="form-group" fxFlexAlign="center">
+        <mat-form-field class="example-full-width">
+          <input matInput placeholder="RuntimeName" name="runtimename" id="runtimename"
+            [(ngModel)]="cachedProperty.runtimeName">
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <mat-form-field class="doubleWidth">
+        <textarea matInput name="description" placeholder="Description" id="description"
+          [(ngModel)]="cachedProperty.description" cols="20" rows="2"></textarea>
+      </mat-form-field>
+    </div>
+
+    <sp-edit-correction-value
+            *ngIf="isNumericProperty && !isTimestampProperty"
+            [cachedProperty]="cachedProperty"
+            (correctionValueChanged)="enableSaveBtn($event)">
+    </sp-edit-correction-value>
+
+    <div class="form-group">
+      <mat-form-field class="doubleWidth">
+        <input matInput placeholder="Domain Property" class="dmainProperty" name="domainproperty" id="domainproperty"
+               [(ngModel)]="cachedProperty.domainProperties[0]">
+      </mat-form-field>
+      <div *ngIf="!isEventPropertyNested">
+        <mat-checkbox name="timestampCheckbox"
+                      (change)="editTimestampDomainProperty($event.checked)" [checked]="isTimestampProperty">
+          Mark as timestamp
+        </mat-checkbox>
+      </div>
+    </div>
+  </form>
+
+  <sp-edit-event-property-primitive
+          *ngIf="isEventPropertyPrimitive"
+          [isTimestampProperty]="isTimestampProperty"
+          [cachedProperty]="cachedProperty"
+          (isNumericDataType)="isNumericDataType($event)">
+  </sp-edit-event-property-primitive>
+  <sp-edit-event-property-list
+          *ngIf="isEventPropertyList"
+          [cachedProperty]="cachedProperty">
+  </sp-edit-event-property-list>
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button mat-raised-button class="mat-basic" mat-dialog-close>Close</button>
+  <button mat-button mat-raised-button color="primary" [disabled]="isSaveBtnEnabled" (click)="save(); isSaveBtnEnabled = false">Save</button>
+</mat-dialog-actions>

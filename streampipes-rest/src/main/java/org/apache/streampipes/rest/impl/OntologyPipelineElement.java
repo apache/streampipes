@@ -18,30 +18,21 @@
 
 package org.apache.streampipes.rest.impl;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import org.apache.streampipes.model.client.messages.Notifications;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.graph.DataSourceDescription;
 import org.apache.streampipes.rest.api.IOntologyPipelineElement;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
-import org.apache.streampipes.serializers.json.GsonSerializer;
 import org.apache.streampipes.storage.management.StorageManager;
 
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.List;
 
 @Path("/v2/ontology")
 public class OntologyPipelineElement extends AbstractRestInterface implements IOntologyPipelineElement {
@@ -67,12 +58,8 @@ public class OntologyPipelineElement extends AbstractRestInterface implements IO
   @Produces(MediaType.APPLICATION_JSON)
   public Response getSourceDetails(@PathParam("sourceId") String sepaId, @QueryParam("keepIds") boolean keepIds) {
 
-    try {
-      DataSourceDescription sepaDescription = new DataSourceDescription(StorageManager.INSTANCE.getPipelineElementStorage().getDataSourceById(sepaId));
-      return ok(sepaDescription);
-    } catch (URISyntaxException e) {
-      return ok(Notifications.error("Error"));
-    }
+    DataSourceDescription sepaDescription = new DataSourceDescription(StorageManager.INSTANCE.getPipelineElementStorage().getDataSourceById(sepaId));
+    return ok(sepaDescription);
   }
 
   @Override
@@ -118,12 +105,8 @@ public class OntologyPipelineElement extends AbstractRestInterface implements IO
   @Override
   public Response getSepa(@PathParam("sepaId") String sepaId, @QueryParam("keepIds") boolean keepIds) {
 
-    try {
-      DataProcessorDescription dataProcessorDescription = new DataProcessorDescription(StorageManager.INSTANCE.getPipelineElementStorage().getDataProcessorById(sepaId));
-      return ok(dataProcessorDescription);
-    } catch (URISyntaxException e) {
-      return ok(Notifications.error("Error"));
-    }
+    DataProcessorDescription dataProcessorDescription = new DataProcessorDescription(StorageManager.INSTANCE.getPipelineElementStorage().getDataProcessorById(sepaId));
+    return ok(dataProcessorDescription);
   }
 
   @Path("/actions/{actionId}")
@@ -131,12 +114,8 @@ public class OntologyPipelineElement extends AbstractRestInterface implements IO
   @Produces(MediaType.APPLICATION_JSON)
   @Override
   public Response getAction(@PathParam("actionId") String actionId, @QueryParam("keepIds") boolean keepIds) {
-    try {
-      DataSinkDescription dataSinkDescription = new DataSinkDescription(StorageManager.INSTANCE.getPipelineElementStorage().getDataSinkById(actionId));
-      return ok(dataSinkDescription);
-    } catch (URISyntaxException e) {
-      return ok(Notifications.error("Error"));
-    }
+    DataSinkDescription dataSinkDescription = new DataSinkDescription(StorageManager.INSTANCE.getPipelineElementStorage().getDataSinkById(actionId));
+    return ok(dataSinkDescription);
   }
 
   private JsonObject getHeader(String uri, String name) {
@@ -146,14 +125,4 @@ public class OntologyPipelineElement extends AbstractRestInterface implements IO
 
     return jsonObj;
   }
-
-  private Gson getGson(boolean keepIds) {
-    if (keepIds) {
-      return GsonSerializer.getGsonWithIds();
-    } else {
-      return GsonSerializer.getGsonWithoutIds();
-    }
-  }
-
-
 }

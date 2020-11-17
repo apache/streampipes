@@ -27,6 +27,7 @@ import {RxStompService} from "@stomp/ng2-stompjs";
 import {AuthStatusService} from "../services/auth-status.service";
 import {NotificationUtils} from "./utils/notifications.utils";
 import {NotificationCountService} from "../services/notification-count-service";
+import {FreeTextStaticProperty, Pipeline} from "../core-model/gen/streampipes-model";
 
 @Component({
     selector: 'notifications',
@@ -48,6 +49,8 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     currentlySelectedNotificationId: string;
 
     pipelinesWithNotificationsPresent: boolean = false;
+    notificationsLoading: boolean = false;
+
     currentOffset: number = 0;
     liveOffset: number = 0;
     previousScrollHeight: number;
@@ -72,6 +75,9 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.getPipelinesWithNotifications();
+    }
+
+    createSubscription() {
         this.subscription = this.rxStompService.watch("/topic/" +this.notificationTopic).subscribe((message: Message) => {
             let scrollToBottom = false;
             if ((this.notificationContainer.nativeElement.scrollHeight - this.notificationContainer.nativeElement.scrollTop) <= (this.notificationContainer.nativeElement.clientHeight + 10) &&
@@ -103,23 +109,26 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     }
 
     getPipelinesWithNotifications() {
-        this.RestApi.getOwnPipelines().then(pipelines => {
-            this.filterForNotifications(pipelines.data);
+        this.notificationsLoading = true;
+        this.RestApi.getOwnPipelines().subscribe(pipelines => {
+            this.filterForNotifications(pipelines);
+            this.notificationsLoading = false;
             if (this.existingNotifications.length > 0) {
                 this.pipelinesWithNotificationsPresent = true;
                 this.selectNotification(this.existingNotifications[0]);
+                this.createSubscription();
             }
         });
     }
 
-    filterForNotifications(pipelines: any) {
+    filterForNotifications(pipelines: Pipeline[]) {
         pipelines.forEach(pipeline => {
            let notificationActions = pipeline.actions.filter(sink => sink.appId === NotificationsComponent.NOTIFICATIONS_APP_ID);
              notificationActions.forEach(notificationAction => {
                 let notificationName = notificationAction
                     .staticProperties
-                    .filter(sp => sp.properties.internalName === NotificationsComponent.NOTIFICATION_TITLE_KEY)
-                    .map(sp => sp.properties.value)[0];
+                    .filter(sp => sp.internalName === NotificationsComponent.NOTIFICATION_TITLE_KEY)
+                    .map(sp => (sp as FreeTextStaticProperty).value)[0];
                 let pipelineName = pipeline.name;
                 this.existingNotifications.push({notificationTitle: notificationName,
                     pipelineName: pipelineName, pipelineId: pipeline._id, notificationId: NotificationUtils.makeNotificationId(pipeline._id, notificationName)});
@@ -171,7 +180,9 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.subscription.unsubscribe();
+        if (this.subscription) {
+            this.subscription.unsubscribe();
+        }
         this.NotificationCountService.unlockIncreaseUpdate();
     }
 };

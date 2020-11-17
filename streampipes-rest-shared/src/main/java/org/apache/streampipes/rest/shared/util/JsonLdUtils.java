@@ -18,14 +18,18 @@
 
 package org.apache.streampipes.rest.shared.util;
 
+import io.fogsy.empire.core.empire.annotation.InvalidRdfException;
+import org.apache.streampipes.commons.Utils;
+import org.apache.streampipes.model.base.AbstractStreamPipesEntity;
+import org.apache.streampipes.model.base.StreamPipesJsonLdContainer;
+import org.apache.streampipes.serializers.jsonld.JsonLdTransformer;
+import org.eclipse.rdf4j.model.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.streampipes.commons.Utils;
-import io.fogsy.empire.core.empire.annotation.InvalidRdfException;
-import org.apache.streampipes.serializers.jsonld.JsonLdTransformer;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 public class JsonLdUtils {
 
@@ -33,14 +37,23 @@ public class JsonLdUtils {
 
     public static String toJsonLD(Object o) {
         JsonLdTransformer jsonLdTransformer = new JsonLdTransformer();
-        String result = null;
         try {
-            result = Utils.asString(jsonLdTransformer.toJsonLd(o));
+            if (o instanceof List) {
+                return Utils.asString(createJsonLdContainer(jsonLdTransformer,
+                        (List<? extends AbstractStreamPipesEntity>) o));
+            } else {
+                return Utils.asString(jsonLdTransformer.toJsonLd(o));
+            }
         } catch (IllegalAccessException | InvocationTargetException | InvalidRdfException | ClassNotFoundException e) {
             logger.error("Could not serialize JsonLd", e);
         }
+        return null;
+    }
 
-        return result;
+    private static Model createJsonLdContainer(JsonLdTransformer jsonLdTransformer, List<? extends AbstractStreamPipesEntity> o)
+            throws InvocationTargetException, ClassNotFoundException, InvalidRdfException, IllegalAccessException {
+
+        return jsonLdTransformer.toJsonLd(new StreamPipesJsonLdContainer(o));
     }
 
     public static <T> T fromJsonLd(String json, Class<T> clazz) {

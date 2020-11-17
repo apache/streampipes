@@ -16,13 +16,10 @@
  *
  */
 
-import './app.module';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { UpgradeModule } from '@angular/upgrade/static';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { UIRouterUpgradeModule } from '@uirouter/angular-hybrid';
 import { HttpClientModule } from '@angular/common/http';
 import { MatIconModule } from '@angular/material/icon';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -31,11 +28,17 @@ import { FormsModule } from '@angular/forms';
 import { CustomMaterialModule } from './CustomMaterial/custom-material.module';
 import { AuthStatusService } from './services/auth-status.service';
 
+import { CoreModule } from './core/core.module';
+import { LoginModule } from './login/login.module';
 import { HomeModule } from './home/home.module';
 import { InfoModule } from './info/info.module';
-import { AppAssetMonitoringModule } from "./app-asset-monitoring/app-asset-monitoring.module";
-import { AppTransportMonitoringModule } from "./app-transport-monitoring/app-transport-monitoring.module";
+import { PipelineDetailsModule } from './pipeline-details/pipeline-details.module';
 import { NotificationCountService } from "./services/notification-count-service";
+import { AuthService } from "./services/auth.service";
+import { LoadingBarHttpClientModule } from '@ngx-loading-bar/http-client';
+import { LOADING_BAR_CONFIG } from '@ngx-loading-bar/core';
+
+import {InjectableRxStompConfig, RxStompService, rxStompServiceFactory} from "@stomp/ng2-stompjs";
 
 {{#modulesActive}}
 {{#ng5}}
@@ -43,31 +46,40 @@ import { {{{ng5_moduleName}}} } from '{{{path}}}';
 {{/ng5}}
 {{/modulesActive}}
 
-import {ConsoleLogService} from './shared/logger/log.service';
-import {Logger} from './shared/logger/default-log.service';
-import { AppContainerModule } from './app-container/app-container.module';
+import { ConsoleLogService } from './shared/logger/log.service';
+import { Logger } from './shared/logger/default-log.service';
 import { NotificationModule } from './notifications/notifications.module';
 
+import { AppComponent } from './app.component';
+import { AppRoutingModule } from './app-routing.module';
+import { PlatformServicesModule } from "./platform-services/platform.module";
+import { ServicesModule } from "./services/services.module";
+
+import * as $ from 'jquery';
 
 @NgModule({
+    declarations: [
+        AppComponent
+    ],
     imports: [
+        AppRoutingModule,
         BrowserModule,
         BrowserAnimationsModule,
-        UpgradeModule,
+        CoreModule,
         CustomMaterialModule,
         MatGridListModule,
         MatIconModule,
         FlexLayoutModule,
         HttpClientModule,
         FormsModule,
-        UIRouterUpgradeModule.forRoot(),
+        LoginModule,
+        LoadingBarHttpClientModule,
         HomeModule,
-        ConfigurationModule,
         InfoModule,
-        AppAssetMonitoringModule,
-        AppTransportMonitoringModule,
-        AppContainerModule,
         NotificationModule,
+        PlatformServicesModule,
+        PipelineDetailsModule,
+        ServicesModule,
         {{#modulesActive}}
         {{#ng5}}
         {{{ng5_moduleName}}},
@@ -76,16 +88,18 @@ import { NotificationModule } from './notifications/notifications.module';
     ],
     providers: [
         AuthStatusService,
+        AuthService,
         NotificationCountService,
-        {provide: Logger, useClass: ConsoleLogService}
-    ]
+        { provide: Logger, useClass: ConsoleLogService },
+        { provide: LOADING_BAR_CONFIG, useValue: { latencyThreshold: 100 }},
+        {
+        			provide: RxStompService,
+        			useFactory: rxStompServiceFactory,
+        			deps: [InjectableRxStompConfig]
+        }
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule {
 
-    constructor(private upgrade: UpgradeModule) {
-    }
-
-    ngDoBootstrap() {
-        this.upgrade.bootstrap(document.body, ['streamPipesApp'], {strictDi: true});
-    }
 }

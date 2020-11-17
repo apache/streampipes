@@ -22,6 +22,7 @@ export interface DashboardConfig extends GridsterConfig {}
 
 export interface DashboardItem extends GridsterItem {
     widgetId: string;
+    widgetType: string;
     id: string;
 }
 

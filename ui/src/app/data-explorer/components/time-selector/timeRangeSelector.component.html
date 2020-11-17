@@ -1,0 +1,60 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div fxLayout="row" fxLayoutAlign="start center">
+    <div class="time-range-wrapper" fxFlex fxLayoutAlign="center center">
+    <button mat-button mat-raised-button
+            *ngFor="let item of possibleTimeButtons"
+            [color]="selectedTimeButton.value === item.value ? 'primary' : ''"
+            class="button-margin smaller-button-font-size"
+            (click)="this.setCurrentDateRange(item)">{{item.value}}</button>
+    </div>
+    <div class="time-wrapper" fxFlex fxLayoutAlign="center center">
+        <button mat-button style="margin-right: -15px" class="button-icon icon-button-font-size">
+            <mat-icon (click)="decreaseTime()">navigate_before</mat-icon>
+        </button>
+        <mat-form-field appearance="standard" class="start-date form-field-margin form-field-size-smaller">
+            <mat-label>From</mat-label>
+            <input matInput
+                   [owlDateTime]="dt1"
+                   [owlDateTimeTrigger]="dt1"
+                   [(ngModel)]="dateRange.startDate"
+                   (dateTimeChange)="changeCustomDateRange()">
+            <owl-date-time #dt1></owl-date-time>
+        </mat-form-field>
+        <mat-form-field appearance="standard" class="end-date form-field-margin form-field-size-smaller">
+            <mat-label>To</mat-label>
+            <input matInput
+                   [owlDateTime]="dt2"
+                   [owlDateTimeTrigger]="dt2"
+                   [(ngModel)]="dateRange.endDate"
+                   (dateTimeChange)="changeCustomDateRange()">
+            <owl-date-time #dt2></owl-date-time>
+        </mat-form-field>
+        <button mat-button style="margin-left: -15px" class="button-icon icon-button-font-size" color="primary">
+            <mat-icon (click)="increaseTime()">navigate_next</mat-icon>
+        </button>
+    </div>
+    <div class="time-range-wrapper" fxFlex fxLayoutAlign="center center">
+        <button mat-button mat-raised-button color="primary"
+                class="button-margin smaller-button-font-size"
+                matTooltip="Reload" matTooltipPosition="above">
+            <mat-icon (click)="refreshData()">autorenew</mat-icon>
+        </button>
+    </div>
+</div>

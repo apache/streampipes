@@ -18,14 +18,7 @@
 
 package org.apache.streampipes.sdk.helpers;
 
-import org.apache.streampipes.model.output.AppendOutputStrategy;
-import org.apache.streampipes.model.output.CustomOutputStrategy;
-import org.apache.streampipes.model.output.CustomTransformOutputStrategy;
-import org.apache.streampipes.model.output.FixedOutputStrategy;
-import org.apache.streampipes.model.output.KeepOutputStrategy;
-import org.apache.streampipes.model.output.ListOutputStrategy;
-import org.apache.streampipes.model.output.TransformOperation;
-import org.apache.streampipes.model.output.TransformOutputStrategy;
+import org.apache.streampipes.model.output.*;
 import org.apache.streampipes.model.schema.EventProperty;
 
 import java.util.Arrays;
@@ -89,6 +82,15 @@ public class OutputStrategies {
      */
     public static KeepOutputStrategy keep() {
         return new KeepOutputStrategy();
+    }
+
+    /**
+     * Creates a {@link org.apache.streampipes.model.output.UserDefinedOutputStrategy}. User-defined output strategies are
+     * fully flexible output strategies which are created by users at pipeline development time.
+     * @return UserDefinedOutputStrategy
+     */
+    public static UserDefinedOutputStrategy userDefined() {
+        return new UserDefinedOutputStrategy();
     }
 
     public static KeepOutputStrategy keep(boolean mergeInputStreams) {

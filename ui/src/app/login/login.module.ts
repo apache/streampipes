@@ -16,18 +16,58 @@
  *
  */
 
-import * as angular from 'angular';
+import {NgModule} from '@angular/core';
+import {MatGridListModule} from '@angular/material/grid-list';
+import {MatIconModule} from '@angular/material/icon';
+import {FlexLayoutModule} from '@angular/flex-layout';
+import {CommonModule} from '@angular/common';
+import {LoginComponent} from "./components/login/login.component";
+import {SetupComponent} from "./components/setup/setup.component";
+import {MatCardModule} from "@angular/material/card";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {MatButtonModule} from "@angular/material/button";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {MatInputModule} from "@angular/material/input";
+import {StartupComponent} from './components/startup/startup.component';
+import {MatDividerModule} from "@angular/material/divider";
+import {MatProgressBarModule} from "@angular/material/progress-bar";
+import {LoginService} from "./services/login.service";
+import {AuthStatusService} from "../services/auth-status.service";
+import {RestApi} from "../services/rest-api.service";
 
-import spServices from '../services/services.module'
-
-import {RegisterCtrl} from './register.controller'
-import {LoginCtrl} from './login.controller'
-import {SetupCtrl} from './setup.controller'
-import {StartupCtrl} from "./startup/startup.controller";
-
-export default angular.module('sp.login', [spServices])
-	.controller('RegisterCtrl', RegisterCtrl)
-	.controller('LoginCtrl', LoginCtrl)
-	.controller('SetupCtrl', SetupCtrl)
-	.controller('StartupCtrl', StartupCtrl)
-	.name;
+@NgModule({
+  imports: [
+    CommonModule,
+    FlexLayoutModule,
+    FormsModule,
+    MatButtonModule,
+    MatCardModule,
+    MatDividerModule,
+    MatGridListModule,
+    MatIconModule,
+    MatInputModule,
+    MatProgressSpinnerModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    MatProgressBarModule,
+  ],
+  declarations: [
+    LoginComponent,
+    SetupComponent,
+    StartupComponent,
+  ],
+  providers: [
+    LoginService,
+    AuthStatusService,
+  ],
+  entryComponents: [
+    LoginComponent,
+    SetupComponent,
+    StartupComponent
+  ]
+})
+export class LoginModule {
+}

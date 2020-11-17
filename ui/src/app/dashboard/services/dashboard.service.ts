@@ -16,84 +16,88 @@
  *
  */
 
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {HttpClient} from "@angular/common/http";
 import {Injectable} from "@angular/core";
 import {map} from "rxjs/operators";
-import {from, Observable} from "rxjs";
+import {Observable} from "rxjs";
 import {AuthStatusService} from "../../services/auth-status.service";
 import {Dashboard} from "../models/dashboard.model";
-import {TsonLdSerializerService} from "../../platform-services/tsonld-serializer.service";
-import {DashboardWidget} from "../../core-model/dashboard/DashboardWidget";
-import {VisualizablePipeline} from "../../core-model/dashboard/VisualizablePipeline";
 import {MeasurementUnit} from "../../core-model/measurement-unit/MeasurementUnit";
+import {
+    DashboardWidgetModel,
+    Pipeline,
+    VisualizablePipeline
+} from "../../core-model/gen/streampipes-model";
 
 @Injectable()
 export class DashboardService {
 
 
     constructor(private http: HttpClient, 
-                private authStatusService: AuthStatusService,
-                private tsonLdSerializerService: TsonLdSerializerService) {
+                private authStatusService: AuthStatusService) {
     }
 
-    getPipelines(): Observable<Array<any>> {
-        return this.http.get(this.pipelinesUrl + "/own").map(data => {
-           return data as any[];
-        })
-    }
 
-    getPipelineById(id: string): Observable<any> {
-        return this.http.get(this.pipelinesUrl + "/" +id).map(data => {
-            return data as any;
-        })
+    getPipelineById(id: string): Observable<Pipeline> {
+        return this.http.get(this.pipelinesUrl + "/" +id).pipe(map(data => {
+            return Pipeline.fromData(data as any);
+        }));
     }
 
     getVisualizablePipelines(): Observable<Array<VisualizablePipeline>> {
         return this.http
             .get(this.visualizablePipelineUrl)
-            .map(data => {
-                return this.tsonLdSerializerService.fromJsonLdContainer(data, 'sp:VisualizablePipeline')
-            });
+            .pipe(map(data => {
+                return (data as []).map(p => VisualizablePipeline.fromData(p as VisualizablePipeline));
+            }));
     }
 
     getVisualizablePipelineById(id: string): Observable<VisualizablePipeline> {
         return this.http
             .get(this.visualizablePipelineUrl + "/" + id)
-            .map(data => {
-                return this.tsonLdSerializerService.fromJsonLd(data, 'sp:VisualizablePipeline')
-            });
+            .pipe(map(data => {
+                return VisualizablePipeline.fromData(data as VisualizablePipeline);
+            }));
     }
 
     getVisualizablePipelineByTopic(topic: string): Observable<VisualizablePipeline> {
         return this.http
             .get(this.visualizablePipelineUrl + "/topic/" + topic)
-            .map(data => {
-                return this.tsonLdSerializerService.fromJsonLd(data, 'sp:VisualizablePipeline')
-            });
+            .pipe(map(data => {
+                return VisualizablePipeline.fromData(data as VisualizablePipeline);
+            }));
+    }
+
+    getVisualizablePipelineByPipelineIdAndVisualizationName(pipelineId: string, visualizationName: string): Observable<VisualizablePipeline> {
+        return this.http
+            .get(this.visualizablePipelineUrl + "/" + pipelineId + "/" + visualizationName)
+            .pipe(map(data => {
+                return VisualizablePipeline.fromData(data as VisualizablePipeline);
+            }));
     }
 
     getDashboards(): Observable<Array<Dashboard>> {
-        return this.http.get(this.dashboardUrl).map(data => {
+        return this.http.get(this.dashboardUrl).pipe(map(data => {
            return data as Dashboard[];
-        });
+        }));
     }
 
     getDashboard(dashboardId: string): Observable<Dashboard> {
-        return this.http.get(this.dashboardUrl + "/" +dashboardId).map(data => {
+        return this.http.get(this.dashboardUrl + "/" +dashboardId).pipe(map(data => {
             return data as Dashboard;
-        })
+        }));
     }
 
     getMeasurementUnitInfo(measurementUnitResource: string): Observable<MeasurementUnit> {
-        return this.http.get(this.measurementUnitsUrl  + "/" + encodeURIComponent(measurementUnitResource)).map(data => {
+        return this.http.get(this.measurementUnitsUrl  + "/" + encodeURIComponent(measurementUnitResource)).pipe(map(data => {
             return data as MeasurementUnit
-        });
+        }));
     }
 
     updateDashboard(dashboard: Dashboard): Observable<Dashboard> {
-        return this.http.put(this.dashboardUrl + "/" +dashboard._id, dashboard).map(data => {
+        return this.http.put(this.dashboardUrl + "/" +dashboard._id, dashboard).pipe(map(data => {
             return data as Dashboard;
-        });
+        }));
     }
 
     deleteDashboard(dashboard: Dashboard): Observable<any> {
@@ -113,7 +117,7 @@ export class DashboardService {
     }
 
     private get dashboardUrl() {
-        return this.baseUrl + '/api/v2/users/' + this.authStatusService.email + '/ld/dashboards'
+        return this.baseUrl + '/api/v2/users/' + this.authStatusService.email + '/dashboard/dashboards'
     }
 
     private get pipelinesUrl() {
@@ -121,61 +125,30 @@ export class DashboardService {
     }
 
     private get dashboardWidgetUrl() {
-        return this.baseUrl + '/api/v2/users/' + this.authStatusService.email + '/ld/widgets'
+        return this.baseUrl + '/api/v2/users/' + this.authStatusService.email + '/dashboard/widgets'
     }
 
     private get visualizablePipelineUrl() {
-        return this.baseUrl + '/api/v2/users/' + this.authStatusService.email + '/ld/pipelines'
+        return this.baseUrl + '/api/v2/users/' + this.authStatusService.email + '/dashboard/pipelines'
     }
 
-    getWidget(widgetId: string): Observable<DashboardWidget> {
-        let promise = new Promise<DashboardWidget>((resolve, reject) => {
-            this.http.get(this.dashboardWidgetUrl + "/" +widgetId).subscribe(response => {
-                let dashboardWidget: DashboardWidget = this.tsonLdSerializerService.fromJsonLd(response, "sp:DashboardWidgetModel");
-                dashboardWidget.dashboardWidgetSettings.config.sort((a, b) => {
-                    return a.index - b.index;
-                });
-                resolve(dashboardWidget);
-            });
-        });
-        return from(promise);
+    getWidget(widgetId: string): Observable<DashboardWidgetModel> {
+        return this.http.get(this.dashboardWidgetUrl + "/" +widgetId).pipe(map(d => {
+            return DashboardWidgetModel.fromData(d as DashboardWidgetModel)
+        }));
     }
 
-    saveWidget(widget: DashboardWidget): Observable<DashboardWidget> {
-        return this.serializeAndPost(this.dashboardWidgetUrl, widget);
+    saveWidget(widget: DashboardWidgetModel): Observable<DashboardWidgetModel> {
+        return this.http.post(this.dashboardWidgetUrl, widget).pipe(map(response => {
+            return DashboardWidgetModel.fromData(response as DashboardWidgetModel);
+        }));
     }
 
     deleteWidget(widgetId: string): Observable<any> {
         return this.http.delete(this.dashboardWidgetUrl + "/" +widgetId);
     }
 
-    updateWidget(widget: DashboardWidget): Observable<any> {
-        let promise = new Promise<DashboardWidget>((resolve, reject) => {
-            this.tsonLdSerializerService.toJsonLd(widget).subscribe(serialized => {
-                this.http.put(this.dashboardWidgetUrl + "/" +widget._id, serialized, this.jsonLdHeaders()).subscribe(result => {
-                    resolve();
-                })
-            });
-        });
-        return from(promise);
-    }
-
-    serializeAndPost(url: string, object: any): Observable<DashboardWidget> {
-        let promise = new Promise<DashboardWidget>((resolve, reject) => {
-            this.tsonLdSerializerService.toJsonLd(object).subscribe(serialized => {
-                this.http.post(url, serialized, this.jsonLdHeaders()).pipe(map(response => {
-                    resolve(this.tsonLdSerializerService.fromJsonLd(response, "sp:DashboardWidgetModel"));
-                })).subscribe();
-            });
-        });
-        return from(promise);
-    }
-
-    jsonLdHeaders(): any {
-        return {
-            headers: new HttpHeaders({
-                'Content-Type': 'application/ld+json',
-            }),
-        };
+    updateWidget(widget: DashboardWidgetModel): Observable<any> {
+        return this.http.put(this.dashboardWidgetUrl + "/" +widget._id, widget);
     }
 }

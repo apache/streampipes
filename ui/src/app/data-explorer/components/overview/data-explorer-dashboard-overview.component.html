@@ -1,0 +1,81 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+
+<div fxFlex="100" fxLayout="column" class="m-20">
+    <div fxLayout="row wrap">
+        <button mat-button mat-raised-button color="primary" (click)="openNewDataViewDialog()">
+            New Data View
+        </button>
+        <button mat-button mat-raised-button color="primary" (click)="openEditLabelView()">
+            Edit Labels
+        </button>
+    </div>
+    <div *ngIf="!editLabels" fxFlex="100" fxLayout="row wrap" fxLayoutAlign="start stretch">
+        <div fxFlex="100" class="assemblyOptions sp-blue-bg" style="padding:5px;">
+            <div fxLayout="row" fxLayoutAlign="start center" fxFlex="100">
+                <h4>My Data Views</h4>
+                <span flex></span>
+            </div>
+        </div>
+        <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start" class="sp-blue-border">
+            <div fxFlex="100" fxLayout="column" class="w-100 p-2">
+                <table mat-table [dataSource]="dataSource" multiTemplateDataRows>
+
+                    <ng-container matColumnDef="name">
+                        <th fxFlex="80" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Data View </th>
+                        <td fxFlex="80" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
+                            {{element.name}}<br/>
+                            {{element.description}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="open">
+                        <th fxFlex="10" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Show</th>
+                        <td fxFlex="10" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
+                            <div fxLayout="row">
+                                <button mat-button mat-icon-button color="primary"
+                                        (click)="showDashboard(element)">
+                                    <i class="material-icons">visibility</i>
+                                </button>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="delete">
+                        <th fxFlex="10" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Delete</th>
+                        <td fxFlex="10" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
+                            <div fxLayout="row">
+                                <button mat-button mat-icon-button color="primary"
+                                        (click)="openDeleteDashboardDialog(element)">
+                                    <i class="material-icons">delete</i>
+                                </button>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <sp-configure-labels *ngIf="editLabels"></sp-configure-labels>
+</div>

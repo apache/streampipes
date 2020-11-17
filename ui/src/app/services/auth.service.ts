@@ -18,52 +18,42 @@
 
 import {RestApi} from "./rest-api.service";
 import {AuthStatusService} from "./auth-status.service";
+import {Inject, Injectable} from "@angular/core";
+import {Observable} from "rxjs";
 
+@Injectable()
 export class AuthService {
 
-    AuthStatusService: AuthStatusService;
-    $rootScope: any;
-    $location: any;
-    $state: any;
-    RestApi: RestApi;
-
-    constructor($rootScope, $location, $state, RestApi, AuthStatusService) {
-        this.AuthStatusService = AuthStatusService;
-        this.$rootScope = $rootScope;
-        this.$location = $location;
-        this.$state = $state;
-        this.RestApi = RestApi;
+    constructor(private RestApi: RestApi,
+                private AuthStatusService: AuthStatusService) {
     }
 
-    checkConfiguration() {
-        return this.RestApi.configured().then(response => {
-            if (response.data.configured) {
+    checkConfiguration(): Observable<boolean> {
+        return Observable.create((observer) => this.RestApi.configured().subscribe(response => {
+            if (response.configured) {
                 this.AuthStatusService.configured = true;
-
-                this.$rootScope.appConfig = response.data.appConfig;
+                // TODO
+                //this.$rootScope.appConfig = response.data.appConfig;
+                observer.next(true);
             } else {
                 this.AuthStatusService.configured = false;
+                observer.next(false);
             }
-        });
+        }, error => {
+            observer.error();
+        }));
     }
 
     checkAuthentication() {
-        return this.RestApi.getAuthc().then(response => {
-            if (response.data.success) {
-                this.AuthStatusService.username = response.data.info.authc.principal.username;
-                this.AuthStatusService.email = response.data.info.authc.principal.email;
+        return this.RestApi.getAuthc().subscribe(response => {
+            if (response.success) {
+                this.AuthStatusService.username = response.info.authc.principal.username;
+                this.AuthStatusService.email = response.info.authc.principal.email;
                 this.AuthStatusService.authenticated = true;
-                this.AuthStatusService.token = response.data.token;
-
-                // this.RestApi.getNotifications()
-                //     .then(notifications => {
-                //         this.$rootScope.unreadNotifications = notifications.data;
-                //     });
+                this.AuthStatusService.token = response.token;
             } else {
                 this.AuthStatusService.authenticated = false;
             }
         })
     }
 }
-
-AuthService.$inject = ['$rootScope', '$location', '$state', 'RestApi', 'AuthStatusService'];

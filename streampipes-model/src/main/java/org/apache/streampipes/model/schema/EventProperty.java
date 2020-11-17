@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.model.schema;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 import io.fogsy.empire.annotations.RdfProperty;
 import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
@@ -27,21 +28,20 @@ import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.vocabulary.RDFS;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
+import javax.persistence.*;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-
 @RdfsClass(StreamPipes.EVENT_PROPERTY)
 @MappedSuperclass
 @Entity
+@JsonSubTypes({
+        @JsonSubTypes.Type(EventPropertyList.class),
+        @JsonSubTypes.Type(EventPropertyNested.class),
+        @JsonSubTypes.Type(EventPropertyPrimitive.class)
+})
 public abstract class EventProperty extends UnnamedStreamPipesEntity {
 
   private static final long serialVersionUID = 7079045979946059387L;
@@ -89,6 +89,7 @@ public abstract class EventProperty extends UnnamedStreamPipesEntity {
     super(prefix + UUID.randomUUID().toString());
     this.requiresEventPropertyQualities = new ArrayList<>();
     this.eventPropertyQualities = new ArrayList<>();
+    this.domainProperties = new ArrayList<>();
   }
 
   public EventProperty(EventProperty other) {

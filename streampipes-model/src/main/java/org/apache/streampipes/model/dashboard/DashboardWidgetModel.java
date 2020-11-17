@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.model.dashboard;
 
+import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.vocabulary.StreamPipes;
 import io.fogsy.empire.annotations.RdfProperty;
 import io.fogsy.empire.annotations.RdfsClass;
@@ -29,10 +30,14 @@ import javax.persistence.OneToOne;
 
 @RdfsClass(StreamPipes.DASHBOARD_WIDGET_MODEL)
 @Entity
+@TsModel
 public class DashboardWidgetModel extends DashboardEntity {
 
   @RdfProperty(StreamPipes.HAS_DASHBOARD_WIDGET_ID)
   private String widgetId;
+
+  @RdfProperty(StreamPipes.HAS_DASHBOARD_WIDGET_TYPE)
+  private String  widgetType;
 
   @OneToOne(fetch = FetchType.EAGER,
           cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -44,6 +49,9 @@ public class DashboardWidgetModel extends DashboardEntity {
 
   @RdfProperty(StreamPipes.HAS_TOPIC)
   private String visualizablePipelineTopic;
+
+  private String visualizationName;
+  private String pipelineId;
 
   public DashboardWidgetModel() {
     super();
@@ -79,5 +87,21 @@ public class DashboardWidgetModel extends DashboardEntity {
 
   public void setVisualizablePipelineTopic(String visualizablePipelineTopic) {
     this.visualizablePipelineTopic = visualizablePipelineTopic;
+  }
+
+  public String getVisualizationName() {
+    return visualizationName;
+  }
+
+  public void setVisualizationName(String visualizationName) {
+    this.visualizationName = visualizationName;
+  }
+
+  public String getPipelineId() {
+    return pipelineId;
+  }
+
+  public void setPipelineId(String pipelineId) {
+    this.pipelineId = pipelineId;
   }
 }

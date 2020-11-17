@@ -26,6 +26,7 @@ public class Description {
 	private String description;
 	private URI uri;
 	private String type;
+	private String appId;
 
 	public Description(String name, String description, URI uri)
 	{
@@ -67,6 +68,14 @@ public class Description {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getAppId() {
+		return appId;
+	}
+
+	public void setAppId(String appId) {
+		this.appId = appId;
 	}
 
 	@Override

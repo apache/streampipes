@@ -23,6 +23,8 @@ import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
 import javax.persistence.Entity;
+import java.util.ArrayList;
+import java.util.List;
 
 @RdfsClass(StreamPipes.FILE_STATIC_PROPERTY)
 @Entity
@@ -36,18 +38,24 @@ public class FileStaticProperty extends StaticProperty {
   @RdfProperty(StreamPipes.HAS_LOCATION_PATH)
   private String locationPath;
 
+  @RdfProperty(StreamPipes.HAS_REQUIRED_FILETYPES)
+  private List<String> requiredFiletypes;
+
   public FileStaticProperty() {
     super(StaticPropertyType.FileStaticProperty);
+    this.requiredFiletypes = new ArrayList<>();
   }
 
   public FileStaticProperty(FileStaticProperty other) {
     super(other);
     this.endpointUrl = other.getEndpointUrl();
     this.locationPath = other.getLocationPath();
+    this.requiredFiletypes = other.getRequiredFiletypes();
   }
 
   public FileStaticProperty(String internalName, String label, String description) {
     super(StaticPropertyType.FileStaticProperty, internalName, label, description);
+    this.requiredFiletypes = new ArrayList<>();
   }
 
   public String getEndpointUrl() {
@@ -64,5 +72,13 @@ public class FileStaticProperty extends StaticProperty {
 
   public void setLocationPath(String locationPath) {
     this.locationPath = locationPath;
+  }
+
+  public List<String> getRequiredFiletypes() {
+    return requiredFiletypes;
+  }
+
+  public void setRequiredFiletypes(List<String> requiredFiletypes) {
+    this.requiredFiletypes = requiredFiletypes;
   }
 }

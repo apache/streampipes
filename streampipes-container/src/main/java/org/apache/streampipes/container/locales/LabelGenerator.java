@@ -96,9 +96,17 @@ public class LabelGenerator {
     sp.setLabel(getTitle(props, sp.getInternalName()));
     sp.setDescription(getDescription(props, sp.getInternalName()));
     if (sp instanceof CollectionStaticProperty) {
-      ((CollectionStaticProperty) sp).getMembers().forEach(a -> {
-        generateLabels(props, a);
-      });
+
+      if  (((CollectionStaticProperty) sp).getMembers() != null) {
+        ((CollectionStaticProperty) sp).getMembers().forEach(a -> {
+          generateLabels(props, a);
+        });
+      } else {
+        ((StaticPropertyGroup) ((CollectionStaticProperty) sp).getStaticPropertyTemplate()).getStaticProperties().forEach(a -> {
+          generateLabels(props, a);
+        });
+      }
+
     } else if (sp instanceof StaticPropertyGroup) {
       ((StaticPropertyGroup) sp).getStaticProperties().forEach(g -> {
         g.setLabel(getTitle(props, g.getInternalName()));

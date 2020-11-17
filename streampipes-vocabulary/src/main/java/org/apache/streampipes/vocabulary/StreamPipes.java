@@ -162,6 +162,7 @@ public class StreamPipes {
   public static final String KAFKA_BATCH_SIZE = NS + "kafkaBatchSize";
   public static final String KAFKA_OFFSET = NS + "kafkaOffset";
   public static final String KAFKA_GROUP_ID = NS + "kafkaGroupId";
+  public static final String KAFKA_MAX_REQUEST_SIZE = NS + "kafkaMaxRequestSize";
 
   public static final String ERROR_TOPIC = NS + "errorTopic";
   public static final String STATS_TOPIC = NS + "statsTopic";
@@ -228,6 +229,7 @@ public class StreamPipes {
   public static final String MAPS_TO = NS + "mapsTo";
   public static final String MULTI_LINE = NS + "multiLine";
   public static final String HTML_ALLOWED = NS + "htmlAllowed";
+  public static final String HTML_FONT_FORMAT = NS + "htmlFontFormat";
   public static final String PLACEHOLDERS_SUPPORTED = NS + "placeholdersSupported";
 
   public static final String HAS_ENDPOINT_URL = NS + "endpointUrl";
@@ -296,6 +298,8 @@ public class StreamPipes {
   public static final String FILTER_TIME_WINDOW = NS + "filterTimeWindow";
   public static final String AGGREGATION_TIME_WINDOW = NS + "aggregationTimeWindow";
   public static final String AGGREGATION_TYPE = NS + "aggregationType";
+  public static final String CORRECTION_VALUE = NS + "correctionValue";
+  public static final String OPERATOR = NS + "operator";
 
   //Class
 
@@ -312,6 +316,7 @@ public class StreamPipes {
   public static final String TIMESTAMP_TRANSFORMATION_RULE_DESCRIPTION = NS + "TimestampTransformationRuleDescription";
   public static final String ADD_TIMESTAMP_RULE_DESCRIPTION = NS + "AddTimestampRuleDescription";
   public static final String ADD_VALUE_TRANSFORMATION_RULE_DESCRIPTION = NS + "AddValueTransformationRuleDescription";
+  public static final String CORRECTION_VALUE_TRANSFORM_RULE_DESCRIPTION = NS + "CorrectionValueTransformRuleDescription";
   public static final String HAS_RENAME_RULE = NS + "hasRenameRule";
   public static final String RENAME_RULE = NS + "RenameRule";
   public static final String HAS_NEW_RUNTIME_NAME = NS + "hasNewRuntimeName";
@@ -375,10 +380,27 @@ public class StreamPipes {
   public static final String ENTITY_CONTAINER = NS + "EntityContainer";
   public static final String CONTAINS_ELEMENTS = NS + "containsElement";
   public static final String HAS_DASHBOARD_WIDGET_ID = NS + "hasDashboardWidgetId";
+  public static final String HAS_DASHBOARD_WIDGET_TYPE = NS + "hasDashboardWidgetType";
   public static final String DASHBOARD_WIDGET_DATA_CONFIG = NS + "DashboardWidgetDataConfig" ;
   public static final String COLOR_PICKER_STATIC_PROPERTY = NS + "ColorPickerStaticProperty";
   public static final String SELECTED_COLOR = NS + "hasSelectedColor";
+
+  public static final String DATA_EXPLORER_WIDGET_MODEL = NS + "DataExplorerWidgetModel";
+  public static final String DATA_LAKE_MEASURE = NS + "DataLakeMeasure";
+  public static final String HAS_DATA_LAKE_MEASURE = NS + "hasDataLakeMeasure";
+  public static final String HAS_MEASUREMENT_NAME = NS + "hasMeasurementName";
+  public static final String HAS_EVENT_SCHEMA = NS + "hasEventSchema";
   public static final String HAS_WIDGET_ICON_NAME = NS + "hasWidgetIconName";
   public static final String HAS_WIDGET_DESCRIPTION = NS + "hasWidgetDescription";
+  public static final String HAS_SELECTED_KEYS = NS + "hasSelectedKeys";
   public static final String CORRESPONDING_USER = NS + "hasCorrespondingUser";
+
+  public static final String CODE_INPUT_STATIC_PROPERTY = NS + "CodeInputStaticProperty";
+  public static final String HAS_LANGUAGE = NS + "hasLanguage";
+  public static final String HAS_CODE_INPUT = NS + "hasCodeInput";
+  public static final String HAS_CODE_TEMPLATE = NS + "hasCodeTemplate";
+  public static final String USER_DEFINED_OUTPUT_STRATEGY = NS + "UserDefinedOutputStrategy";
+  public static final String PE_CONFIGURED = NS + "isPeConfigured" ;
+
+  public static final String HAS_REQUIRED_FILETYPES = NS + "hasRequiredFiletypes" ;
 }

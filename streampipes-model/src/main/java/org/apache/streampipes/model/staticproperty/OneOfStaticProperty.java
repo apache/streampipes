@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.model.staticproperty;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
@@ -25,6 +26,9 @@ import javax.persistence.Entity;
 
 @RdfsClass(StreamPipes.ONE_OF_STATIC_PROPERTY)
 @Entity
+@JsonSubTypes({
+        @JsonSubTypes.Type(RuntimeResolvableOneOfStaticProperty.class),
+})
 public class OneOfStaticProperty extends SelectionStaticProperty {
 
   private static final long serialVersionUID = 3483290363677184344L;

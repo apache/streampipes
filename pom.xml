@@ -28,12 +28,13 @@
 
     <groupId>org.apache.streampipes</groupId>
     <artifactId>streampipes-parent</artifactId>
-    <version>0.66.0</version>
+    <version>0.68.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <dependency.locations.enabled>false</dependency.locations.enabled>
+        <maven.version>3.3.9</maven.version>
         <owasp.check.skip>true</owasp.check.skip>
 
         <activemq-client.version>5.15.9</activemq-client.version>
@@ -54,6 +55,7 @@
         <fst.version>2.56</fst.version>
         <geojson-jackson.version>1.8</geojson-jackson.version>
         <guava.version>27.1-jre</guava.version>
+        <hibernate-validator.version>6.1.5.Final</hibernate-validator.version>
         <httpclient.version>4.5.10</httpclient.version>
         <httpcore.version>4.4.9</httpcore.version>
         <httpcore-osgi.version>4.4.9</httpcore-osgi.version>
@@ -71,7 +73,7 @@
         <javassist.version>3.19.0-GA</javassist.version>
         <jaxb-api.version>2.3.1</jaxb-api.version>
         <jboss-logging.version>3.4.0.Final</jboss-logging.version>
-        <jersey.version>2.29.1</jersey.version>
+        <jersey.version>2.30.1</jersey.version>
         <jetty.version>9.4.19.v20190610</jetty.version>
         <jgrapht.version>1.3.1</jgrapht.version>
         <json-path.version>3.1.0</json-path.version>
@@ -85,18 +87,23 @@
         <objenesis.version>2.5.1</objenesis.version>
         <okio.version>1.16.0</okio.version>
         <okhttp.version>3.12.2</okhttp.version>
+        <plexus-component-annotations.version>1.6</plexus-component-annotations.version>
+        <plexus-utils.version>3.0.22</plexus-utils.version>
         <rdf4j.version>3.1.0</rdf4j.version>
         <rendersnake.version>1.8</rendersnake.version>
         <retrofit.version>2.5.0</retrofit.version>
         <shiro.version>1.2.3</shiro.version>
         <siddhi.version>5.1.12</siddhi.version>
         <slf4j.version>1.7.25</slf4j.version>
+        <snakeyaml.version>1.26</snakeyaml.version>
         <snappy-java.version>1.1.7.2</snappy-java.version>
         <spark.version>2.1.2</spark.version>
-        <spring.version>5.2.0.RELEASE</spring.version>
-        <spring-boot.version>2.2.0.RELEASE</spring-boot.version>
+        <spring.version>5.2.8.RELEASE</spring.version>
+        <spring-boot.version>2.3.3.RELEASE</spring-boot.version>
         <type-parser.version>0.6.0</type-parser.version>
         <underscore.version>1.47</underscore.version>
+        <wildfly-common.version>1.5.2.Final</wildfly-common.version>
+        <hawtbuf.version>1.11</hawtbuf.version>
 
         <!-- Test dependencies -->
         <junit.version>4.12</junit.version>
@@ -358,6 +365,26 @@
                 <version>${kafka.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-plugin-api</artifactId>
+                <version>${maven.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-core</artifactId>
+                <version>${maven.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-artifact</artifactId>
+                <version>${maven.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-compat</artifactId>
+                <version>${maven.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.activemq</groupId>
                 <artifactId>activemq-client</artifactId>
                 <version>${activemq-client.version}</version>
@@ -406,6 +433,16 @@
                 <groupId>org.apache.spark</groupId>
                 <artifactId>spark-streaming-kafka-0-10_2.11</artifactId>
                 <version>${spark.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.plexus</groupId>
+                <artifactId>plexus-component-annotations</artifactId>
+                <version>${plexus-component-annotations.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.plexus</groupId>
+                <artifactId>plexus-utils</artifactId>
+                <version>${plexus-utils.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
@@ -523,6 +560,11 @@
                 <version>${mqtt-client.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.fusesource.hawtbuf</groupId>
+                <artifactId>hawtbuf</artifactId>
+                <version>${hawtbuf.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.jboss.logging</groupId>
                 <artifactId>jboss-logging</artifactId>
                 <version>${jboss-logging.version}</version>
@@ -586,6 +628,11 @@
                 <groupId>org.glassfish.jersey.media</groupId>
                 <artifactId>jersey-media-sse</artifactId>
                 <version>${jersey.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate.validator</groupId>
+                <artifactId>hibernate-validator</artifactId>
+                <version>${hibernate-validator.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.influxdb</groupId>
@@ -671,6 +718,16 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-web</artifactId>
                 <version>${spring-boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wildfly.common</groupId>
+                <artifactId>wildfly-common</artifactId>
+                <version>${wildfly-common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.yaml</groupId>
+                <artifactId>snakeyaml</artifactId>
+                <version>1.26</version>
             </dependency>
             <dependency>
                 <groupId>io.fogsy</groupId>
@@ -786,7 +843,6 @@
         <module>archetypes/streampipes-archetype-pe-processors-jvm</module>
         <module>archetypes/streampipes-archetype-pe-sinks-flink</module>
         <module>archetypes/streampipes-archetype-pe-processors-flink</module>
-        <module>streampipes-app-file-export</module>
         <module>streampipes-backend</module>
         <module>streampipes-code-generation</module>
         <module>streampipes-commons</module>
@@ -826,6 +882,7 @@
         <module>streampipes-wrapper-distributed</module>
         <module>streampipes-wrapper-flink</module>
         <module>streampipes-wrapper-kafka-streams</module>
+        <module>streampipes-wrapper-python</module>
         <module>streampipes-wrapper-siddhi</module>
         <module>streampipes-wrapper-spark</module>
         <module>streampipes-wrapper-standalone</module>
@@ -833,6 +890,8 @@
         <module>streampipes-connect-container-worker</module>
         <module>streampipes-container-base</module>
         <module>streampipes-messaging-mqtt</module>
+        <module>streampipes-maven-plugin</module>
+        <module>streampipes-model-shared</module>
     </modules>
 
     <profiles>
@@ -1189,7 +1248,7 @@
         <developerConnection>scm:git:ssh://git@github.com/apache/incubator-streampipes.git</developerConnection>
         <connection>scm:git:ssh://git@github.com/apache/incubator-streampipes.git</connection>
         <url>https://github.com/apache/incubator-streampipes</url>
-      <tag>release/0.66.0</tag>
+      <tag>HEAD</tag>
   </scm>
 
     <issueManagement>

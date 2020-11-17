@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.model.connect.rules.value;
 
+
 public class TimestampTransformationRuleMode {
 
     public static final String FORMAT_STRING = "formatString";

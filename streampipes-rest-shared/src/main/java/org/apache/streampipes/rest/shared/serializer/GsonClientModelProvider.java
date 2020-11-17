@@ -26,6 +26,8 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
+import java.lang.annotation.Annotation;
+import java.util.Arrays;
 
 @Provider
 @GsonClientModel
@@ -36,5 +38,10 @@ public class GsonClientModelProvider extends GsonJerseyProvider {
     @Override
     protected Gson getGsonSerializer() {
         return Utils.getGson();
+    }
+
+    @Override
+    protected boolean requiredAnnotationsPresent(Annotation[] annotations) {
+        return Arrays.stream(annotations).anyMatch(a -> a.annotationType().equals(GsonClientModel.class));
     }
 }

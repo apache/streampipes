@@ -16,15 +16,14 @@
  *
  */
 
-import {FreeTextStaticProperty} from "../../connect/model/FreeTextStaticProperty";
 import {CollectedSchemaRequirements} from "../sdk/collected-schema-requirements";
-import {DashboardWidgetSettings} from "../../core-model/dashboard/DashboardWidgetSettings";
 import {Datatypes} from "../sdk/model/datatypes";
-import {ColorPickerStaticProperty} from "../../connect/model/ColorPickerStaticProperty";
-import {OneOfStaticProperty} from "../../connect/model/OneOfStaticProperty";
-import {StaticProperty} from "../../connect/model/StaticProperty";
-import {Option} from "../../connect/model/Option";
 import {Tuple2} from "../../core-model/base/Tuple2";
+import {
+    ColorPickerStaticProperty,
+    DashboardWidgetSettings,
+    FreeTextStaticProperty, OneOfStaticProperty, StaticProperty, Option
+} from "../../core-model/gen/streampipes-model";
 
 export class WidgetConfigBuilder {
 
@@ -51,7 +50,7 @@ export class WidgetConfigBuilder {
                 " primary text color", "#FFFFFF");
         this.requiredColorParameter(WidgetConfigBuilder.SECONDARY_TEXT_COLOR_KEY, "Secondary text color", "The" +
             " secondary text" +
-            " color", "#bebebe")
+            " color", "#39B54A");
         }
     }
 
@@ -85,6 +84,7 @@ export class WidgetConfigBuilder {
 
     requiredColorParameter(id: string, label: string, description: string, defaultColor?: string): WidgetConfigBuilder {
         let csp = new ColorPickerStaticProperty();
+        csp["@class"] = "org.apache.streampipes.model.staticproperty.ColorPickerStaticProperty";
         csp.internalName = id;
         csp.label = label;
         csp.description = description;
@@ -104,11 +104,13 @@ export class WidgetConfigBuilder {
 
     requiredSingleValueSelection(id: string, label: string, description: string, options: Array<Tuple2<string, string>>): WidgetConfigBuilder {
         let osp: OneOfStaticProperty = new OneOfStaticProperty();
-        this.prepareStaticProperty(id, label, description, osp);
+        this.prepareStaticProperty(id, label, description, osp,
+            "org.apache.streampipes.model.staticproperty.OneOfStaticProperty");
 
         osp.options = [];
         options.forEach(o => {
             let option = new Option();
+            option["@class"] = "org.apache.streampipes.model.staticproperty.Option";
             option.name = o.a;
             option.internalName = o.b;
             osp.options.push(option);
@@ -130,15 +132,20 @@ export class WidgetConfigBuilder {
         return this;
     }
 
-    prepareStaticProperty(id: string, label: string, description: string, sp: StaticProperty) {
+    prepareStaticProperty(id: string,
+                          label: string,
+                          description: string,
+                          sp: StaticProperty,
+                          targetClass: any) {
         sp.internalName = id;
         sp.label = label;
         sp.description = description;
+        sp["@class"] = targetClass;
     }
 
     prepareFreeTextStaticProperty(id: string, label: string, description: string, datatype: string) {
         let fst: FreeTextStaticProperty = new FreeTextStaticProperty();
-        this.prepareStaticProperty(id, label, description, fst);
+        this.prepareStaticProperty(id, label, description, fst, "org.apache.streampipes.model.staticproperty.FreeTextStaticProperty");
         fst.requiredDatatype = datatype;
 
         return fst;

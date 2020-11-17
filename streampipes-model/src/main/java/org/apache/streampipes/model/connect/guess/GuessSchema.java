@@ -23,6 +23,7 @@ import io.fogsy.empire.annotations.RdfProperty;
 import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.schema.EventSchema;
+import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
 import javax.persistence.CascadeType;
@@ -35,6 +36,7 @@ import java.util.List;
 @Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
 @RdfsClass(StreamPipes.GUESS_SCHEMA)
 @Entity
+@TsModel
 public class GuessSchema extends UnnamedStreamPipesEntity {
 
     @RdfProperty("sp:hasEventSchema")

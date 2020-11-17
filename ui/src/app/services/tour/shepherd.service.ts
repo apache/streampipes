@@ -19,21 +19,18 @@
 import Shepherd from 'shepherd.js';
 //import "shepherd.js/dist/css/shepherd-theme-arrows.css";
 import {Inject, Injectable} from "@angular/core";
+import {Router} from "@angular/router";
+import {TourProviderService} from "./tour-provider.service";
 
 @Injectable()
 export class ShepherdService {
 
-    $timeout: any;
-    $state: any;
-    TourProviderService: any;
     currentTour: any;
     currentTourSettings: any;
     timeWaitMillis: number;
 
-    constructor(@Inject('$timeout') $timeout, @Inject('$state') $state, @Inject('TourProviderService') TourProviderService) {
-        this.$timeout = $timeout;
-        this.$state = $state;
-        this.TourProviderService = TourProviderService;
+    constructor(private Router: Router,
+                private TourProviderService: TourProviderService) {
         this.timeWaitMillis = TourProviderService.getTime();
     }
 
@@ -132,7 +129,7 @@ export class ShepherdService {
     trigger(actionId) {
         if (Shepherd.activeTour) {
             if (this.shouldTrigger(actionId, this.currentTour.getCurrentStep().id)) {
-                 this.$timeout(() => this.currentTour.next(), this.TourProviderService.getTime());
+                 setTimeout(() => this.currentTour.next(), this.TourProviderService.getTime());
             }
         }
     }
@@ -144,7 +141,7 @@ export class ShepherdService {
     }
 
     isTourActive() {
-        return Shepherd.activeTour !== undefined;
+        return Shepherd.activeTour;
     }
 
     hideCurrentStep() {
@@ -152,7 +149,7 @@ export class ShepherdService {
     }
 
     switchAndStartDashboardTour() {
-        this.$state.go("streampipes.dashboard");
+        this.Router.navigateByUrl("dashboard");
     }
 
     startCreatePipelineTour() {
@@ -183,5 +180,3 @@ export class ShepherdService {
        return this.TourProviderService.getTime();
     }
 }
-
-ShepherdService.$inject = ['$timeout', '$state', 'TourProviderService'];

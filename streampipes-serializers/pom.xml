@@ -21,7 +21,7 @@
     <parent>
         <artifactId>streampipes-parent</artifactId>
         <groupId>org.apache.streampipes</groupId>
-        <version>0.66.0</version>
+        <version>0.68.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -31,18 +31,22 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-model</artifactId>
-            <version>0.66.0</version>
+            <version>0.68.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-model-client</artifactId>
-            <version>0.66.0</version>
+            <version>0.68.0-SNAPSHOT</version>
         </dependency>
 
         <!-- External dependencies -->
         <dependency>
             <groupId>io.fogsy</groupId>
             <artifactId>empire-pinto</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
         </dependency>
     </dependencies>
 

@@ -20,11 +20,10 @@ package org.apache.streampipes.rest.impl.datalake;
 
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.rest.impl.AbstractRestInterface;
-import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
+import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/v3/noauth/datalake")
@@ -36,12 +35,10 @@ public class DataLakeNoUserResourceV3 extends AbstractRestInterface {
         this.dataLakeManagement = new DataLakeNoUserManagementV3();
     }
 
-    public DataLakeNoUserResourceV3(DataLakeNoUserManagementV3 dataLakeManagement) {
-        this.dataLakeManagement = dataLakeManagement;
-    }
-
     @POST
-    @GsonWithIds
+    @JacksonSerialized
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{measure}")
     public Response addDataLake(@PathParam("measure") String measure, EventSchema eventSchema) {
         if (this.dataLakeManagement.addDataLake(measure, eventSchema)) {

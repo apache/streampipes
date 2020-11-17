@@ -25,7 +25,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.apache.http.client.fluent.Request;
 import org.apache.streampipes.model.client.connection.Connection;
-import org.apache.streampipes.model.client.pipeline.PipelineElementRecommendation;
+import org.apache.streampipes.model.pipeline.PipelineElementRecommendation;
 import org.apache.streampipes.storage.api.IPipelineElementConnectionStorage;
 import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
 import org.apache.streampipes.storage.couchdb.utils.Utils;

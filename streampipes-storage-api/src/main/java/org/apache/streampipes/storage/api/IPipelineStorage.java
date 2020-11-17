@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.storage.api;
 
-import org.apache.streampipes.model.client.VirtualSensor;
-import org.apache.streampipes.model.client.pipeline.Pipeline;
+import org.apache.streampipes.model.VirtualSensor;
+import org.apache.streampipes.model.pipeline.Pipeline;
 
 import java.util.List;
 

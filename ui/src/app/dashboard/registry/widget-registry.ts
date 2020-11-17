@@ -16,25 +16,26 @@
  *
  */
 
-import {NumberConfig} from "../components/widgets/number/number-config";
-import {DashboardWidgetSettings} from "../../core-model/dashboard/DashboardWidgetSettings";
-import {WidgetConfig} from "../components/widgets/base/base-config";
-import {LineConfig} from "../components/widgets/line/line-config";
-import {TableConfig} from "../components/widgets/table/table-config";
-import {GaugeConfig} from "../components/widgets/gauge/gauge-config";
-import {ImageConfig} from "../components/widgets/image/image-config";
-import {AreaConfig} from "../components/widgets/area/area-config";
-import {MapConfig} from "../components/widgets/map/map-config";
-import {RawConfig} from "../components/widgets/raw/raw-config";
-import {HtmlConfig} from "../components/widgets/html/html-config";
-import {TrafficLightConfig} from "../components/widgets/trafficlight/traffic-light-config";
-import {VisualizablePipeline} from "../../core-model/dashboard/VisualizablePipeline";
-import {EventSchema} from "../../connect/schema-editor/model/EventSchema";
-import {SchemaMatch} from "../sdk/matching/schema-match";
+import { AreaConfig } from '../components/widgets/area/area-config';
+import { WidgetConfig } from '../components/widgets/base/base-config';
+import { GaugeConfig } from '../components/widgets/gauge/gauge-config';
+import { HtmlConfig } from '../components/widgets/html/html-config';
+import { ImageConfig } from '../components/widgets/image/image-config';
+import { LineConfig } from '../components/widgets/line/line-config';
+import { MapConfig } from '../components/widgets/map/map-config';
+import { NumberConfig } from '../components/widgets/number/number-config';
+import { RawConfig } from '../components/widgets/raw/raw-config';
+import { TableConfig } from '../components/widgets/table/table-config';
+import { TrafficLightConfig } from '../components/widgets/trafficlight/traffic-light-config';
+import { SchemaMatch } from '../sdk/matching/schema-match';
+import {
+    DashboardWidgetSettings, EventSchema,
+    VisualizablePipeline
+} from '../../core-model/gen/streampipes-model';
 
 export class WidgetRegistry {
 
-    private static availableWidgets: Array<WidgetConfig> = [
+    private static availableWidgets: WidgetConfig[] = [
         new NumberConfig(),
         new LineConfig(),
         new TableConfig(),
@@ -47,14 +48,14 @@ export class WidgetRegistry {
         new TrafficLightConfig()
     ];
 
-    static getAvailableWidgetTemplates(): Array<DashboardWidgetSettings> {
-        let widgetTemplates = new Array<DashboardWidgetSettings>();
+    static getAvailableWidgetTemplates(): DashboardWidgetSettings[] {
+        const widgetTemplates = new Array<DashboardWidgetSettings>();
         this.availableWidgets.forEach(widget => widgetTemplates.push(widget.getConfig()));
         return widgetTemplates;
     }
 
     static getCompatibleWidgetTemplates(pipeline: VisualizablePipeline) {
-        let inputSchema: EventSchema = pipeline.schema;
+        const inputSchema: EventSchema = pipeline.schema;
         return this.getAvailableWidgetTemplates().filter(widget => WidgetRegistry.isCompatible(widget, inputSchema));
     }
 

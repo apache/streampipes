@@ -20,9 +20,9 @@ package org.apache.streampipes.model.connect.adapter;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.apache.streampipes.model.connect.rules.Schema.CreateNestedRuleDescription;
-import org.apache.streampipes.model.connect.rules.Schema.DeleteRuleDescription;
-import org.apache.streampipes.model.connect.rules.Schema.MoveRuleDescription;
+import org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription;
+import org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription;
+import org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
 
 import java.util.ArrayList;

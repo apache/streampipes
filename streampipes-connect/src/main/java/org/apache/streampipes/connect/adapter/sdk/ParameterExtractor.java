@@ -24,6 +24,7 @@ import org.apache.streampipes.model.staticproperty.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Deprecated
 public class ParameterExtractor {
     private List<StaticProperty> list;
     private TypeParser typeParser;

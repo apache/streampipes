@@ -24,4 +24,5 @@ export interface MessagingSettings {
     acks: number;
 
    prioritizedFormats: [string];
+   prioritizedProtocols: [string];
 }

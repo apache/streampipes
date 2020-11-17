@@ -16,21 +16,36 @@
  *
  */
 
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
+import { EventProperty } from '../../core-model/gen/streampipes-model';
 
 @Injectable()
 export class SemanticTypeUtilsService {
 
-    private IMAGE_TYPE: string = 'http://schema.org/DateTime';
+    public TIMESTAMP = 'http://schema.org/DateTime';
+    public IMAGE = 'https://image.com';
+    public NUMBER = 'http://schema.org/Number';
 
     constructor() {
     }
 
     public getValue(inputValue, semanticType) {
-        if (semanticType === this.IMAGE_TYPE) {
+        if (semanticType === this.TIMESTAMP) {
             return new Date(inputValue).toLocaleString() ;
         } else {
             return inputValue;
         }
+    }
+
+    public isTimestamp(property: EventProperty): boolean {
+       return property.domainProperties.includes(this.TIMESTAMP);
+    }
+
+    public is(property: EventProperty, uri: string): boolean {
+        return property.domainProperties.includes(uri);
+    }
+
+    public isNumeric(property: EventProperty): boolean {
+        return property.domainProperties.includes(this.NUMBER);
     }
 }

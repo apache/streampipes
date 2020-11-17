@@ -21,8 +21,8 @@
     height:150px;
     width:80%;
     color:white;
-    margin:1%;
     border-radius: 5px;
+    margin-bottom: 20px;
 }
 
 .status-container.pipelines {
@@ -33,6 +33,10 @@
     background: rgb(59, 92, 149);
 }
 
+.status-container.notifications {
+    background: rgb(88, 114, 146);
+}
+
 .status-container.pipeline-elements-installed {
     background: rgb(156, 156, 156);
 }
@@ -41,6 +45,15 @@
     font-size:46pt;
 }
 
+.status-container:hover {
+    cursor: pointer;
+    opacity: 0.8;
+}
+
 .status-container-text {
     font-size:16pt;
+}
+
+.mr-20 {
+    margin-right: 20px;
 }

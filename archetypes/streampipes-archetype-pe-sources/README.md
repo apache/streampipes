@@ -20,14 +20,16 @@
 
 ### Usage
 
-mvn archetype:generate                                  \
-			-DarchetypeGroupId=org.apache.streampipes                \
-			-DarchetypeArtifactId=streampipes-archetype-pe-sources         \
-			-DarchetypeVersion=0.66.0                \
-			-DgroupId=my.groupId \
-			-DartifactId=my-source
-			-DclassNamePrefix=MySource
-			-DpackageName=mypackagename
+```bash
+mvn archetype:generate \
+ -DarchetypeGroupId=org.apache.streampipes \
+ -DarchetypeArtifactId=streampipes-archetype-pe-sources\
+ -DarchetypeVersion=<VERSION> \
+ -DgroupId=org.myorga \
+ -DclassNamePrefix=MyJVMSource \
+ -DartifactId=my-jvm-source \
+ -Dversion=<VERSION>
+```
 			
 ### Variables
 

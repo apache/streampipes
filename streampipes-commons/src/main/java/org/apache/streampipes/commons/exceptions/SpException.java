@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.commons.exceptions;
 
-public class SpException extends Exception {
+public class SpException extends RuntimeException {
 
   private static final long serialVersionUID = 193141189399279147L;
 

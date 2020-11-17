@@ -21,6 +21,7 @@ import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class StaticPropertyExtractor extends AbstractParameterExtractor<DataSinkInvocation> {
@@ -40,6 +41,10 @@ public class StaticPropertyExtractor extends AbstractParameterExtractor<DataSink
                                              List<SpDataStream> inputStreams) {
     DataSinkInvocation dataSinkInvocation = makeGraph(staticProperties, inputStreams);
     return new StaticPropertyExtractor(dataSinkInvocation);
+  }
+
+  public static StaticPropertyExtractor from(List<StaticProperty> staticProperties) {
+    return from(staticProperties, new ArrayList<>());
   }
 
   private static DataSinkInvocation makeGraph(List<StaticProperty> staticProperties,

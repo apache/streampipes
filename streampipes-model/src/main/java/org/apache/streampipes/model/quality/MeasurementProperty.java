@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.model.quality;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.vocabulary.SSN;
@@ -26,7 +27,11 @@ import javax.persistence.Entity;
 
 @RdfsClass(SSN.MEASUREMENT_PROPERTY)
 @Entity
-public class MeasurementProperty extends UnnamedStreamPipesEntity {
+@JsonSubTypes({
+				@JsonSubTypes.Type(EventPropertyQualityDefinition.class),
+				@JsonSubTypes.Type(EventStreamQualityDefinition.class)
+})
+public abstract class MeasurementProperty extends UnnamedStreamPipesEntity {
 
 	private static final long serialVersionUID = 8527800469513813552L;
 

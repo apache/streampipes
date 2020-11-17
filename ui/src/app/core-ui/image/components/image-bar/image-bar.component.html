@@ -1,0 +1,49 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div fxLayout="row" fxLayoutAlign="center center"><div>{{selectedIndex + 1}} / {{maxImages}}</div></div>
+
+<div fxLayout="row" fxLayoutAlign="space-around center" >
+    <button mat-icon-button (click)="goToStart()"> <mat-icon>skip_previous</mat-icon></button>
+    <button mat-icon-button (click)="nextImage()"> <mat-icon>keyboard_arrow_left</mat-icon></button>
+
+    <div fxLayout="row" fxLayoutAlign="center center"  class="imageBar">
+        <div fxFlex="40" fxLayoutAlign="end center">
+            <img class="imagePreview" [style.height.px]="imagePreviewHeight" *ngIf="selectedIndex >= 2" src="{{this.restService.getImageUrl(_imageRoutes[selectedIndex - 2])}}" (click)="changeImage(selectedIndex - 2)">
+            <img class="imagePreview" [style.height.px]="imagePreviewHeight" *ngIf="selectedIndex >= 1" src="{{this.restService.getImageUrl(_imageRoutes[selectedIndex - 1])}}" (click)="changeImage(selectedIndex - 1)">
+        </div>
+
+        <div fxFlex="20">
+            <div fxLayout="row" fxLayoutAlign="center">
+            <img class="imagePreview imageFocus" [style.height.px]="imagePreviewHeight" src="{{this.restService.getImageUrl(_imageRoutes[selectedIndex])}}" (click)="changeImage(selectedIndex)">
+            </div>
+        </div>
+
+        <div fxFlex="40">
+            <div fxLayout="row" fxLayoutAlign="start center">
+                <img class="imagePreview" [style.height.px]="imagePreviewHeight" *ngIf="selectedIndex < maxImages - 1" src="{{this.restService.getImageUrl(_imageRoutes[selectedIndex + 1])}}" (click)="changeImage(selectedIndex + 1)">
+                <img class="imagePreview" [style.height.px]="imagePreviewHeight" *ngIf="selectedIndex < maxImages - 2" src="{{this.restService.getImageUrl(_imageRoutes[selectedIndex + 2])}}" (click)="changeImage(selectedIndex + 2)">
+            </div>
+        </div>
+    </div>
+
+
+    <button mat-icon-button (click)="previousImage()"> <mat-icon>keyboard_arrow_right</mat-icon></button>
+    <button mat-icon-button (click)="goToEnd()"> <mat-icon>skip_next</mat-icon></button>
+
+</div>

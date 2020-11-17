@@ -17,8 +17,8 @@
 
 import {WidgetConfigBuilder} from "../../../registry/widget-config-builder";
 import {SchemaRequirementsBuilder} from "../../../sdk/schema-requirements-builder";
-import {DashboardWidgetSettings} from "../../../../core-model/dashboard/DashboardWidgetSettings";
 import {WidgetConfig} from "../base/base-config";
+import {DashboardWidgetSettings} from "../../../../core-model/gen/streampipes-model";
 
 export class RawConfig extends WidgetConfig {
 

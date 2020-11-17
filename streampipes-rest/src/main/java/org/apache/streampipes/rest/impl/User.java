@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.rest.impl;
 
-import org.apache.streampipes.model.client.messages.Notifications;
+import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.api.IUser;
 
 import javax.ws.rs.Consumes;
@@ -55,6 +55,7 @@ public class User extends AbstractRestInterface implements IUser {
         if (user != null) {
             org.apache.streampipes.model.client.user.User existingUser = getUser(user.getEmail());
             user.setPassword(existingUser.getPassword());
+            user.setRev(existingUser.getRev());
             getUserStorage().updateUser(user);
             return ok(Notifications.success("User updated"));
         } else {

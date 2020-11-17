@@ -20,7 +20,7 @@ package org.apache.streampipes.storage.api;
 
 import java.util.List;
 
-import org.apache.streampipes.model.client.pipeline.PipelineCategory;
+import org.apache.streampipes.model.pipeline.PipelineCategory;
 
 public interface IPipelineCategoryStorage {
 

@@ -19,6 +19,7 @@
 package org.apache.streampipes.model.dashboard;
 
 import org.apache.streampipes.model.schema.EventSchema;
+import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.vocabulary.StreamPipes;
 import io.fogsy.empire.annotations.RdfProperty;
 import io.fogsy.empire.annotations.RdfsClass;
@@ -28,6 +29,7 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToOne;
 
 @RdfsClass(StreamPipes.VISUALIZABLE_PIPELINE)
+@TsModel
 public class VisualizablePipeline extends DashboardEntity {
 
   @RdfProperty(StreamPipes.HAS_PIPELINE_ID)
@@ -43,6 +45,8 @@ public class VisualizablePipeline extends DashboardEntity {
 
   @RdfProperty(StreamPipes.HAS_TOPIC)
   private String topic;
+
+  private String pipelineName;
 
   public VisualizablePipeline() {
     super();
@@ -78,5 +82,13 @@ public class VisualizablePipeline extends DashboardEntity {
 
   public void setTopic(String topic) {
     this.topic = topic;
+  }
+
+  public String getPipelineName() {
+    return pipelineName;
+  }
+
+  public void setPipelineName(String pipelineName) {
+    this.pipelineName = pipelineName;
   }
 }

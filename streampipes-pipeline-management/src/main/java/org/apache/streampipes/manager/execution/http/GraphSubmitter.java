@@ -22,8 +22,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
-import org.apache.streampipes.model.client.pipeline.PipelineElementStatus;
-import org.apache.streampipes.model.client.pipeline.PipelineOperationStatus;
+import org.apache.streampipes.model.pipeline.PipelineElementStatus;
+import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 
 import java.util.List;
 import java.util.Optional;
@@ -65,7 +65,7 @@ public class GraphSubmitter {
     } else {
       LOG.info("Could not start pipeline, initializing rollback...");
       rollbackInvokedPipelineElements(status);
-      status.setTitle("Could not start pipeline" + pipelineName + ".");
+      status.setTitle("Could not start pipeline " + pipelineName + ".");
     }
     return status;
   }

@@ -18,20 +18,10 @@
 package org.apache.streampipes.sdk.builder;
 
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
-import org.apache.streampipes.model.staticproperty.AnyStaticProperty;
-import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
-import org.apache.streampipes.model.staticproperty.DomainStaticProperty;
-import org.apache.streampipes.model.staticproperty.FileStaticProperty;
-import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
-import org.apache.streampipes.model.staticproperty.OneOfStaticProperty;
-import org.apache.streampipes.model.staticproperty.Option;
-import org.apache.streampipes.model.staticproperty.PropertyValueSpecification;
-import org.apache.streampipes.model.staticproperty.SecretStaticProperty;
-import org.apache.streampipes.model.staticproperty.StaticProperty;
-import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
-import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
-import org.apache.streampipes.model.staticproperty.SupportedProperty;
+import org.apache.streampipes.model.staticproperty.*;
 import org.apache.streampipes.sdk.StaticProperties;
+import org.apache.streampipes.sdk.helpers.CodeLanguage;
+import org.apache.streampipes.sdk.helpers.Filetypes;
 import org.apache.streampipes.sdk.helpers.Label;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.vocabulary.XSD;
@@ -148,6 +138,24 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
     return me();
   }
 
+  /**
+   * Assigns a new code block parameter which is required
+   * by the processing element.
+   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
+   *              user-friendly manner.
+   * @param codeLanguage The {@link org.apache.streampipes.sdk.helpers.CodeLanguage} code language the code block is built for.
+   * @return this
+   */
+  public BU requiredCodeblock(Label label, CodeLanguage codeLanguage) {
+    CodeInputStaticProperty codeInputStaticProperty = new CodeInputStaticProperty(label.getInternalId(),
+            label.getLabel(), label.getDescription());
+    codeInputStaticProperty.setLanguage(codeLanguage.name());
+    codeInputStaticProperty.setCodeTemplate(codeLanguage.getDefaultSkeleton());
+    this.staticProperties.add(codeInputStaticProperty);
+
+    return me();
+  }
+
 
   /**
    * Assigns a new text-based configuration parameter (a string) which is required by the pipeline
@@ -162,6 +170,36 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
     return me();
   }
 
+  /**
+   * Assigns a new color picker parameter which is required by the pipeline
+   * element.
+   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
+   *              user-friendly manner.
+   *
+   * @return
+   */
+  public BU requiredColorParameter(Label label) {
+    ColorPickerStaticProperty csp = new ColorPickerStaticProperty(label.getInternalId(), label.getLabel(), label.getDescription());
+    this.staticProperties.add(csp);
+
+    return me();
+  }
+
+  /**
+   * Assigns a new color picker parameter which is required by the pipeline
+   * element.
+   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
+   *              user-friendly manner.
+   * @param defaultColor The default color, encoded as an HTML color code
+   * @return
+   */
+  public BU requiredColorParameter(Label label, String defaultColor) {
+    ColorPickerStaticProperty csp = new ColorPickerStaticProperty(label.getInternalId(), label.getLabel(), label.getDescription());
+    csp.setSelectedColor(defaultColor);
+    this.staticProperties.add(csp);
+
+    return me();
+  }
 
   /**
    * @deprecated Use {@link #requiredTextParameter(Label, String)}
@@ -234,6 +272,32 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
     }
     if (placeholdersSupported) {
       fsp.setPlaceholdersSupported(true);
+    }
+    this.staticProperties.add(fsp);
+
+    return me();
+  }
+
+  /**
+   * Defines a text-based configuration parameter provided by pipeline developers at pipeline authoring time.
+   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
+   *              user-friendly manner.
+   * @param multiLine Defines whether the input dialog allows multiple lines.
+   * @param placeholdersSupported Defines whether placeholders are supported, i.e., event property field names that
+   *                              are replaced with the actual value at pipeline execution time.
+   * @param htmlFontFormat Defines to only use bold, italic, striked in dialog.
+   * @return this
+   */
+  public BU requiredTextParameter(Label label, boolean multiLine, boolean placeholdersSupported, boolean htmlFontFormat) {
+    FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label, XSD._string.toString());
+    if (multiLine) {
+      fsp.setMultiLine(true);
+    }
+    if (placeholdersSupported) {
+      fsp.setPlaceholdersSupported(true);
+    }
+    if (htmlFontFormat) {
+      fsp.setHtmlFontFormat(true);
     }
     this.staticProperties.add(fsp);
 
@@ -451,6 +515,70 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   }
 
   /**
+   * @deprecated Use {@link #requiredFloatParameter(Label, Float, Float, Float)} instead.
+   * Defines a number-based configuration parameter of type float provided by preprocessing developers at preprocessing
+   * authoring time. In addition, an allowed value range of the expected input can be assigned.
+   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
+   *              user-friendly manner.
+   * @param min The minimum value of the allowed value range.
+   * @param max The maximum value of the allowed value range.
+   * @param step The granularity
+   * @return this
+   */
+  public BU requiredFloatParameter(String internalId, String label, String description, Float min, Float max, Float step) {
+    FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(internalId,
+            label,
+            description,
+            XSD._double.toString());
+
+    PropertyValueSpecification valueSpecification = new PropertyValueSpecification(min, max, step);
+    fsp.setValueSpecification(valueSpecification);
+    this.staticProperties.add(fsp);
+
+    return me();
+  }
+
+  /**
+   * Defines a number-based configuration parameter of type float provided by preprocessing developers at preprocessing
+   * authoring time. In addition, an allowed value range of the expected input can be assigned.
+   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
+   *              user-friendly manner.
+   * @param min The minimum value of the allowed value range.
+   * @param max The maximum value of the allowed value range.
+   * @param step The granularity
+   * @return this
+   */
+  public BU requiredFloatParameter(Label label, Float min, Float max, Float step) {
+    FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label, XSD._double.toString());
+    PropertyValueSpecification valueSpecification = new PropertyValueSpecification(min, max, step);
+    fsp.setValueSpecification(valueSpecification);
+    this.staticProperties.add(fsp);
+
+    return me();
+  }
+
+  /**
+   * Defines a number-based configuration parameter of type float provided by preprocessing developers at preprocessing
+   * authoring time. In addition, an allowed value range of the expected input can be assigned.
+   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
+   *              user-friendly manner.
+   * @param defaultValue The default float value.
+   * @param min The minimum value of the allowed value range.
+   * @param max The maximum value of the allowed value range.
+   * @param step The granularity
+   * @return this
+   */
+  public BU requiredFloatParameter(Label label, Float defaultValue, Float min, Float max, Float step) {
+    FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label, XSD._double.toString());
+    fsp.setValue(String.valueOf(defaultValue));
+    PropertyValueSpecification valueSpecification = new PropertyValueSpecification(min, max, step);
+    fsp.setValueSpecification(valueSpecification);
+    this.staticProperties.add(fsp);
+
+    return me();
+  }
+
+  /**
    * @deprecated Use {@link #requiredSingleValueSelection(Label, Option...)} instead.
    * @param options An arbitrary number of {@link org.apache.streampipes.model.staticproperty.Option} elements. Use
    * {@link org.apache.streampipes.sdk.helpers.Options} to create option elements from string values.
@@ -594,29 +722,6 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   }
 
   /**
-   * Defines a number-based configuration parameter of type float provided by preprocessing developers at preprocessing
-   * authoring time. In addition, an allowed value range of the expected input can be assigned.
-   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
-   *              user-friendly manner.
-   * @param min The minimum value of the allowed value range.
-   * @param max The maximum value of the allowed value range.
-   * @param step The granularity
-   * @return this
-   */
-  public BU requiredFloatParameter(String internalId, String label, String description, Float min, Float max, Float step) {
-    FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(internalId,
-            label,
-            description,
-            XSD._double.toString());
-
-    PropertyValueSpecification valueSpecification = new PropertyValueSpecification(min, max, step);
-    fsp.setValueSpecification(valueSpecification);
-    this.staticProperties.add(fsp);
-
-    return me();
-  }
-
-  /**
    *
    * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
    *    user-friendly manner.
@@ -626,6 +731,39 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
     FileStaticProperty fp =  new FileStaticProperty(label.getInternalId(), label.getLabel(), label
             .getDescription());
 
+    this.staticProperties.add(fp);
+
+    return me();
+
+  }
+
+  /**
+   *
+   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
+   *    user-friendly manner.
+   * @param requiredFiletypes A list of {@link org.apache.streampipes.sdk.helpers.Filetypes} required filetypes the element supports.
+   * @return this
+   */
+  public BU requiredFile(Label label, Filetypes... requiredFiletypes) {
+    List<String> collectedFiletypes = new ArrayList<>();
+    Arrays.stream(requiredFiletypes).forEach(rf -> collectedFiletypes.addAll(rf.getFileExtensions()));
+
+    return requiredFile(label, collectedFiletypes.toArray(new String[0]));
+  }
+
+  /**
+   *
+   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
+   *    user-friendly manner.
+   * @param requiredFiletypes A list of required filetypes (a string marking the file extension) the element supports.
+   * @return this
+   */
+  public BU requiredFile(Label label, String... requiredFiletypes) {
+    FileStaticProperty fp =  new FileStaticProperty(label.getInternalId(), label.getLabel(), label
+            .getDescription());
+
+    List<String> collectedFiletypes = Arrays.asList(requiredFiletypes);
+    fp.setRequiredFiletypes(collectedFiletypes);
     this.staticProperties.add(fp);
 
     return me();

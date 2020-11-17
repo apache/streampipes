@@ -34,7 +34,7 @@ export default {
                 stepId: "step-2",
                 title: "Pipeline Element Selection",
                 text: "<p>Let's start!</p> <p>This is the <b>Pipeline Element Selection</b> panel. Here you can select pipeline element types. The current panel, data streams, shows a list of currently available streams.</p>",
-                attachToElement: "#pe-type>md-tabs-wrapper>md-tabs-canvas>md-pagination-wrapper md-tab-item:nth-child(2)",
+                attachToElement: "#peType>mat-tab-group>mat-tab-header>div.mat-tab-label-container>div>div>div:nth-child(2)",
                 attachPosition: "bottom",
                 buttons: [
                     "cancel",
@@ -55,7 +55,7 @@ export default {
                 stepId: "step-4",
                 title: "Creating pipelines",
                 text: "<p>Cool!</p> <p>Dragging and dropping elements is the basic principle you need to know to create pipelines. You only need to select a pipeline element and drop it to the assembly area.</p><p>Click <b>Next</b> to continue.</p>",
-                attachToElement: "#assembly>pipeline>div>span:nth-child(1)",
+                attachToElement: "#assembly>pipeline .stream:nth-child(1)",
                 attachPosition: "left",
                 buttons: [
                     "cancel",
@@ -66,7 +66,7 @@ export default {
                 stepId: "step-5",
                 title: "Switching between pipeline element types",
                 text: "No we will add a data processor. Select the data processor tab to see a list of currently available processors.",
-                attachToElement: "#pe-type>md-tabs-wrapper>md-tabs-canvas>md-pagination-wrapper md-tab-item:nth-child(3)",
+                attachToElement: "#peType>mat-tab-group>mat-tab-header>div.mat-tab-label-container>div>div>div:nth-child(3)",
                 attachPosition: "bottom",
                 buttons: [
                     "cancel"
@@ -96,8 +96,8 @@ export default {
                 stepId: "step-8",
                 title: "Customize elements",
                 text: "<p>Most pipeline elements can be customized according to your needs. Whenever you connect two elements with each other, a configuration dialog pops up.</p><p>Select <b>Mass Flow</b> as the field to filter, select <b>greater than (>) </b> as operation, select <b>2</b> as the threshold value and click <b>Save</b>.</p>",
-                attachToElement: "#tutorial-placeholder",
-                attachPosition: "top",
+                attachToElement: "div .dialog-panel-content",
+                attachPosition: "right",
                 buttons: [
                     "cancel"
                 ]
@@ -106,7 +106,7 @@ export default {
                 stepId: "step-9",
                 title: "Selecting data sinks",
                 text: "<p>What's missing?</p><p>Every pipeline needs a data sink. Sinks define what to do with the output of your pipeline and can be visualizations, notifications, or can trigger third party components or even actuators.</p><p>Click the tab above to see available data sinks.</p>",
-                attachToElement: "#pe-type>md-tabs-wrapper>md-tabs-canvas>md-pagination-wrapper md-tab-item:nth-child(4)",
+                attachToElement: "#peType>mat-tab-group>mat-tab-header>div.mat-tab-label-container>div>div>div:nth-child(4)",
                 attachPosition: "bottom",
                 buttons: [
                     "cancel"
@@ -136,8 +136,8 @@ export default {
                 stepId: "step-12",
                 title: "Enter pipeline name",
                 text: "<p>Enter a name and an optional description of your pipeline.</p><p>Afterwards, make sure that <b>Start pipeline immediately</b> is checked.</p>",
-                attachToElement: '[name^="pipelineName"]',
-                attachPosition: "left",
+                attachToElement: 'div .dialog-panel-content',
+                attachPosition: "right",
                 buttons: [
                     "cancel"
                 ]
@@ -146,8 +146,8 @@ export default {
                 stepId: "step-13",
                 title: "Save Pipeline Dialog",
                 text: "<p>Click on <b>Save and go to pipeline view</b> to start the pipeline.</p>",
-                attachToElement: "md-dialog>md-dialog-actions>button:nth-of-type(3)",
-                attachPosition: "bottom",
+                attachToElement: "save-pipeline .sp-dialog-actions>button:nth-of-type(2)",
+                attachPosition: "top",
                 buttons: [
                     "cancel"
                 ]

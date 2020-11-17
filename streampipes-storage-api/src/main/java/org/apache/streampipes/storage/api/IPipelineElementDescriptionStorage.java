@@ -26,7 +26,6 @@ import org.apache.streampipes.model.graph.DataSourceDescription;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 
 public interface IPipelineElementDescriptionStorage {
@@ -45,15 +44,15 @@ public interface IPipelineElementDescriptionStorage {
 
 	DataSourceDescription getDataSourceByAppId(String appId);
 
-	DataSourceDescription getDataSourceById(String rdfId) throws URISyntaxException;
+	DataSourceDescription getDataSourceById(String rdfId);
 	
-	DataProcessorDescription getDataProcessorById(String rdfId) throws URISyntaxException;
+	DataProcessorDescription getDataProcessorById(String rdfId);
 	
 	DataProcessorDescription getDataProcessorById(URI rdfId);
 
 	DataProcessorDescription getDataProcessorByAppId(String appId);
 	
-	DataSinkDescription getDataSinkById(String rdfId) throws URISyntaxException;
+	DataSinkDescription getDataSinkById(String rdfId);
 	
 	DataSinkDescription getDataSinkById(URI rdfId);
 

@@ -16,18 +16,140 @@
  *
  */
 
-import {PipelineElementRecommendationController} from "./pipeline-element-recommendation.controller";
+import {JsplumbService} from "../../services/jsplumb.service";
+import {AfterViewInit, ChangeDetectorRef, Component, Input, OnInit} from "@angular/core";
+import {PipelineElementConfig} from "../../model/editor.model";
+import {DataProcessorInvocation} from "../../../core-model/gen/streampipes-model";
+import {SafeCss} from "../../utils/style-sanitizer";
 
-declare const require: any;
+@Component({
+  selector: 'pipeline-element-recommendation',
+  templateUrl: './pipeline-element-recommendation.component.html',
+  styleUrls: ['./pipeline-element-recommendation.component.scss']
+})
+export class PipelineElementRecommendationComponent implements OnInit, AfterViewInit {
 
-export let PipelineElementRecommendationComponent = {
-    template: require('./pipeline-element-recommendation.tmpl.html'),
-    bindings: {
-        recommendedElements: "<",
-        recommendationsShown: "<",
-        rawPipelineModel: "=",
-        pipelineElementDomId: "<"
-    },
-    controller: PipelineElementRecommendationController,
-    controllerAs: 'ctrl'
-};
+  @Input()
+  recommendationsShown: boolean;
+
+  @Input()
+  rawPipelineModel: PipelineElementConfig[];
+
+  @Input()
+  pipelineElementDomId: string;
+
+  _recommendedElements: any;
+
+  recommendationsPrepared: boolean = false;
+
+  constructor(private JsplumbService: JsplumbService,
+              public safeCss: SafeCss) {
+
+  }
+
+  ngOnInit() {
+  }
+
+  ngAfterViewInit(): void {
+
+  }
+
+  prepareStyles(recommendedElements) {
+    recommendedElements.forEach((element, index) => {
+      this.setLayoutSettings(element, index, recommendedElements);
+    });
+  }
+
+  setLayoutSettings(element, index, recommendedElements) {
+    element.layoutSettings = {
+      skewStyle: element.name ? this.getSkewStyle(index, recommendedElements) : {'opacity': 0},
+      unskewStyle: this.getUnskewStyle(element, index,recommendedElements),
+      unskewStyleLabel: this.getUnskewStyleLabel(index, recommendedElements),
+      type: element instanceof DataProcessorInvocation ? "sepa" : "action"
+    };
+  }
+
+  create(recommendedElement) {
+    this.recommendationsShown = false;
+    this.JsplumbService.createElement(this.rawPipelineModel, recommendedElement, this.pipelineElementDomId);
+  }
+
+  getUnskewStyle(recommendedElement, index, recommendedElements) {
+    var unskew = -(this.getSkew(recommendedElements));
+    var rotate = -(90 - (this.getSkew(recommendedElements) / 2));
+
+    return "transform: skew(" + unskew + "deg)" + " rotate(" + rotate + "deg)" + " scale(1);"
+       +"background-color: " +this.getBackgroundColor(recommendedElement, index);
+  }
+
+  getBackgroundColor(recommendedElement, index) {
+    var alpha = (recommendedElement.weight < 0.2 ? 0.2 : (recommendedElement.weight - 0.2));
+    alpha = Math.round((alpha * 10)) / 10;
+    var rgb = recommendedElement instanceof DataProcessorInvocation ? this.getSepaColor(index) : this.getActionColor(index);
+    return "rgba(" +rgb +"," +alpha +")";
+  }
+
+  getSepaColor(index) {
+    return (index % 2 === 0) ? "0, 150, 136" : "0, 164, 150";
+  }
+
+  getActionColor(index) {
+    return (index % 2 === 0) ? "63, 81, 181" : "79, 101, 230";
+  }
+
+  getSkewStyle(index, recommendedElements) {
+    // transform: rotate(72deg) skew(18deg);
+    var skew = this.getSkew(recommendedElements);
+    var rotate = (index + 1) * this.getAngle(recommendedElements);
+
+    return "transform: rotate(" + rotate + "deg) skew(" + skew + "deg);";
+  }
+
+  getUnskewStyleLabel(index, recommendedElements) {
+    var unskew = -(this.getSkew(recommendedElements));
+    var rotate =  (index + 1) * this.getAngle(recommendedElements);
+    var unrotate = -360 + (rotate*-1);
+
+    return "transform: skew(" + unskew + "deg)" + " rotate(" + unrotate + "deg)" + " scale(1);"
+      +"z-index: -1;"
+      +"margin-left: 50%;"
+      +"margin-top: 50%;"
+      +"position: absolute;"
+      +"background: white;"
+      +"height: 50px;"
+      +"width: 50px;"
+      +"font-size: 16px;"
+      +"text-align: center;"
+      +"line-height: 50px;"
+      +"top: 0px;";
+  }
+
+  getSkew(recommendedElements) {
+    return (90 - this.getAngle(recommendedElements));
+  }
+
+  getAngle(recommendedElements) {
+    return (360 / recommendedElements.length);
+  }
+
+  fillRemainingItems(recommendedElements) {
+    if (recommendedElements.length < 6) {
+      for (var i = recommendedElements.length; i < 6; i++) {
+        let element = {fakeElement: true, weight: 0};
+        recommendedElements.push(element);
+      }
+    }
+  }
+
+  get recommendedElements() {
+    return this._recommendedElements;
+  }
+
+  @Input()
+  set recommendedElements(recommendedElements: any) {
+    this.fillRemainingItems(recommendedElements);
+    this.prepareStyles(recommendedElements);
+    this._recommendedElements = recommendedElements;
+    this.recommendationsPrepared = true;
+  }
+}

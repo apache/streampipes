@@ -21,7 +21,7 @@ package org.apache.streampipes.manager.pipeline;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import org.apache.streampipes.manager.operations.Operations;
-import org.apache.streampipes.model.client.pipeline.Pipeline;
+import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.serializers.json.Utils;
 
 import java.io.IOException;

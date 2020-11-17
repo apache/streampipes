@@ -24,6 +24,18 @@ import org.apache.streampipes.serializers.json.GsonSerializer;
 
 public class Utils {
 
+  public static CouchDbClient getCouchDbCategoryClient() {
+    CouchDbClient dbClient = new CouchDbClient(props("category"));
+    dbClient.setGsonBuilder(GsonSerializer.getGsonBuilder());
+    return dbClient;
+  }
+
+  public static CouchDbClient getCouchDbLabelClient() {
+    CouchDbClient dbClient = new CouchDbClient(props("label"));
+    dbClient.setGsonBuilder(GsonSerializer.getGsonBuilder());
+    return dbClient;
+  }
+
   public static CouchDbClient getCouchDbConnectWorkerContainerClient() {
     CouchDbClient dbClient = new CouchDbClient(props("connectworkercontainer"));
     dbClient.setGsonBuilder(GsonSerializer.getGsonBuilder());
@@ -87,6 +99,20 @@ public class Utils {
     dbClient.setGsonBuilder(GsonSerializer.getGsonBuilder());
     return dbClient;
   }
+
+  public static CouchDbClient getCouchDbDataExplorerDashboardClient() {
+    CouchDbClient dbClient = new CouchDbClient(props("dataexplorerdashboard"));
+    dbClient.setGsonBuilder(GsonSerializer.getGsonBuilder());
+    return dbClient;
+  }
+
+
+  public static CouchDbClient getCouchDbDataExplorerWidgetClient() {
+    CouchDbClient dbClient = new CouchDbClient(props("dataexplorerwidget"));
+    dbClient.setGsonBuilder(GsonSerializer.getGsonBuilder());
+    return dbClient;
+  }
+
 
   public static CouchDbClient getCouchDbDashboardClient() {
     CouchDbClient dbClient = new CouchDbClient(props("dashboard"));

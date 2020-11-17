@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.storage.couchdb.impl;
 
-import org.apache.streampipes.model.client.pipeline.PipelineCategory;
+import org.apache.streampipes.model.pipeline.PipelineCategory;
 import org.apache.streampipes.storage.api.IPipelineCategoryStorage;
 import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
 import org.apache.streampipes.storage.couchdb.utils.Utils;

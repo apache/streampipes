@@ -1,0 +1,59 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div fxLayout="column" class="page-container">
+    <div fxLayout="row" class="border" style="padding:0px;background-color:#f6f6f6;">
+        <div fxFlex="100" style="line-height:24px;border-bottom:1px solid #ccc">
+            <div fxFlex="100" fxLayout="row">
+                <div fxFlex fxLayoutAlign="start center" [attr.id]="'peType'">
+                    <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectPipelineElements($event)">
+                        <mat-tab *ngFor="let tab of tabs" label="{{tab.title}}"></mat-tab>
+                    </mat-tab-group>
+                </div>
+                <div fxFlex="30" fxLayout="row" fxLayoutAlign="end center"
+                     style="padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
+                    <button mat-button class="md-icon-button" (click)="startCreatePipelineTour()" [matTooltip]="'Tutorial'">
+                        <i class="material-icons text-color">
+                            school
+                        </i>
+                    </button>
+                    <button mat-button class="md-icon-button" *ngIf="!minimizedEditorStand"
+                               (click)="toggleEditorStand()" [matTooltip]="'Hide'">
+                        <i class="material-icons text-color">arrow_drop_up</i>
+                    </button>
+                    <button mat-button class="md-icon-button" *ngIf="minimizedEditorStand"
+                               (click)="toggleEditorStand()" [matTooltip]="'Show'">
+                        <i class="material-icons text-color">arrow_drop_down</i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100">
+        <div id="shepherd-test"
+             style="background-color:#f6f6f6;padding:0px;border-bottom:1px solid #ffffff" [hidden]="minimizedEditorStand">
+            <pipeline-element-icon-stand [activeType]="activeType"
+                                         [currentElements]="currentElements"
+                                         *ngIf="allElementsLoaded">
+            </pipeline-element-icon-stand>
+        </div>
+        <pipeline-assembly [rawPipelineModel]="rawPipelineModel" [allElements]="allElements"
+                           [currentModifiedPipelineId]="currentModifiedPipelineId"></pipeline-assembly>
+    </div>
+</div>

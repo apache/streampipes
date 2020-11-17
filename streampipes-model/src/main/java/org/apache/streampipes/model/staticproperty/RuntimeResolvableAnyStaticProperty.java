@@ -21,12 +21,11 @@ import io.fogsy.empire.annotations.RdfProperty;
 import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
-import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import java.util.List;
 
 @RdfsClass(StreamPipes.RUNTIME_RESOLVABLE_ANY_STATIC_PROPERTY)
 @Entity
