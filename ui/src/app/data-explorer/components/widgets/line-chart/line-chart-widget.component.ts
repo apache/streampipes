@@ -16,18 +16,16 @@
  *
  */
 
-import {AfterViewInit, Component, OnInit, Renderer2} from '@angular/core';
+import {  Component, OnInit, Renderer2 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { PlotlyService } from 'angular-plotly.js';
 import { DataResult } from '../../../../core-model/datalake/DataResult';
 import { GroupedDataResult } from '../../../../core-model/datalake/GroupedDataResult';
 import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
-import { ChangeChartmodeDialog } from '../../../../core-ui/linechart/labeling-tool/dialogs/change-chartmode/change-chartmode.dialog';
-import { LabelingDialog } from '../../../../core-ui/linechart/labeling-tool/dialogs/labeling/labeling.dialog';
-import { ColorService } from '../../../../core-ui/linechart/labeling-tool/services/color.service';
+import { ColorService } from './services/color.service';
 import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
-import {EventPropertyUnion} from "../../../../core-model/gen/streampipes-model";
-import {ResizeService} from "../../../services/resize.service";
+import { EventPropertyUnion, Label } from '../../../../core-model/gen/streampipes-model';
+import { ResizeService } from '../../../services/resize.service';
+import { LabelService } from '../../../../core-ui/labels/services/label.service';
 
 @Component({
   selector: 'sp-data-explorer-line-chart-widget',
@@ -37,45 +35,46 @@ import {ResizeService} from "../../../services/resize.service";
 export class LineChartWidgetComponent extends BaseDataExplorerWidget implements OnInit {
 
   data: any[] = undefined;
-  labels: any[] = undefined;
-  availableColumns: EventPropertyUnion[] = [];
-  availableNonNumericColumns: EventPropertyUnion[] = [];
-  selectedColumns: EventPropertyUnion[] = [];
-  selectedNonNumericColumn: EventPropertyUnion = undefined;
+  colorPropertyStringValues: any[] = undefined;
+  availableProperties: EventPropertyUnion[] = [];
+  availableNoneNumericColumns: EventPropertyUnion[] = [];
+  selectedLineChartProperties: EventPropertyUnion[] = [];
+  selectedBackgroundColorProperty: EventPropertyUnion = undefined;
   dimensionProperties: EventPropertyUnion[] = [];
 
   yKeys: string[] = [];
   xKey: string;
-  private nonNumericKey: string = undefined;
+  private backgroundColorPropertyKey: string = undefined;
 
   advancedSettingsActive = false;
-  showLabelColumnSelection  = true;
+  showBackgroundColorProperty  = true;
 
   selectedStartX = undefined;
   selectedEndX = undefined;
   n_selected_points = undefined;
 
-
+  selectedLabel;
 
   aggregationValue = 1;
   aggregationTimeUnit = 's';
   groupValue = 'None';
   showCountValue = false;
 
+  // this can be set to scale the line chart according to the layout
+  offsetRightLineChart = 10;
+
 
   constructor(public dialog: MatDialog,
-              public plotlyService: PlotlyService,
               public colorService: ColorService,
               public renderer: Renderer2,
               protected dataLakeRestService: DatalakeRestService,
-              private resizeService: ResizeService) {
+              private resizeService: ResizeService,
+              public labelService: LabelService ) {
     super(dataLakeRestService, dialog);
   }
 
   // indicator variable if labeling mode is activated
-  private labelingModeOn = false;
-
-  private dialogReference = undefined;
+  labelingModeOn = false;
 
   updatemenus = [
     {
@@ -135,37 +134,29 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
       dragmode: 'zoom'
     },
     config: {
-      // removing lasso-selection, box-selecting, toggling-spikelines and exporting-to-image buttons
       modeBarButtonsToRemove: ['lasso2d', 'select2d', 'toggleSpikelines', 'toImage'],
-      // adding custom button: labeling
-      modeBarButtonsToAdd: [this.createLabelingModeBarButton()],
-      // removing plotly-icon from graph
       displaylogo: false
     }
   };
 
 
   ngOnInit(): void {
-    this.availableColumns = this.getNumericProperty(this.dataExplorerWidget.dataLakeMeasure.eventSchema);
+    this.availableProperties = this.getNumericProperty(this.dataExplorerWidget.dataLakeMeasure.eventSchema);
     this.dimensionProperties = this.getDimensionProperties(this.dataExplorerWidget.dataLakeMeasure.eventSchema);
-    this.availableNonNumericColumns = this.getNonNumericProperties(this.dataExplorerWidget.dataLakeMeasure.eventSchema);
+    this.availableNoneNumericColumns = this.getNoneNumericProperties(this.dataExplorerWidget.dataLakeMeasure.eventSchema);
 
     // Reduce selected columns when more then 6
-    this.selectedColumns = this.availableColumns.length > 6 ? this.availableColumns.slice(0, 5) : this.availableColumns;
-    if (this.availableNonNumericColumns.length > 0) {
-      // this.selectedNonNumericColumn = this.availableNonNumericColumns[0];
-    }
+    this.selectedLineChartProperties = this.availableProperties.length > 6 ? this.availableProperties.slice(0, 5) : this.availableProperties;
     this.xKey = this.getTimestampProperty(this.dataExplorerWidget.dataLakeMeasure.eventSchema).runtimeName;
-    this.yKeys = this.getRuntimeNames(this.selectedColumns);
-    //this.nonNumericKey = this.selectedNonNumericColumn.runtimeName;
+    this.yKeys = this.getRuntimeNames(this.selectedLineChartProperties);
     this.updateData();
     this.resizeService.resizeSubject.subscribe(info => {
       if (info.gridsterItem.id === this.gridsterItem.id) {
         setTimeout(() => {
           this.graph.layout.autosize = false;
-          (this.graph.layout as any).width = (info.gridsterItemComponent.width - 10);
+          (this.graph.layout as any).width = (info.gridsterItemComponent.width - this.offsetRightLineChart);
           (this.graph.layout as any).height = (info.gridsterItemComponent.height - 80);
-        }, 100)
+        }, 100);
       }
     });
   }
@@ -177,20 +168,8 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
       this.dataLakeRestService.getDataAutoAggregation(
         this.dataExplorerWidget.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime())
         .subscribe((res: DataResult) => {
-            if (res.total === 0) {
-              this.setShownComponents(true, false, false);
-            } else {
-              res.measureName = this.dataExplorerWidget.dataLakeMeasure.measureName;
-              const tmp = this.transformData(res, this.xKey);
-              this.data = this.displayData(tmp, this.yKeys);
-              this.labels = this.loadLabels(tmp, this.nonNumericKey);
-              this.addLabelsToGraph(this.data, this.labels);
-              this.data['measureName'] = tmp.measureName;
-
-              this.setShownComponents(false, true, false);
-            }
-          }
-        );
+          this.processNoneGroupedData(res);
+        });
     } else {
       if (this.groupValue === 'None') {
         this.setShownComponents(false, false, true);
@@ -198,44 +177,51 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
           this.dataExplorerWidget.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime()
           , this.aggregationTimeUnit, this.aggregationValue)
           .subscribe((res: DataResult) => {
-                if (res.total === 0) {
-                  this.setShownComponents(true, false, false);
-                } else {
-                  res.measureName = this.dataExplorerWidget.dataLakeMeasure.measureName;
-                  const tmp = this.transformData(res, this.xKey);
-                  this.data = this.displayData(tmp, this.yKeys);
-                  this.labels = this.loadLabels(tmp, this.nonNumericKey);
-                  this.addLabelsToGraph(this.data, this.labels);
-                  this.data['measureName'] = tmp.measureName;
-
-                  this.setShownComponents(false, true, false);
-                }
-              }
-          );
+            this.processNoneGroupedData(res);
+          });
       } else {
         this.dataLakeRestService.getGroupedData(
           this.dataExplorerWidget.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime(),
           this.aggregationTimeUnit, this.aggregationValue, this.groupValue)
           .subscribe((res: GroupedDataResult) => {
-              if (res.total === 0) {
-                this.setShownComponents(true, false, false);
-              } else {
-                // res.measureName = this.dataExplorerWidget.dataLakeMeasure.measureName;
-                const tmp = this.transformGroupedData(res, this.xKey);
-                this.data = this.displayGroupedData(tmp, this.yKeys);
-                // this.data['measureName'] = tmp.measureName;
-                // this.data['labels'] = tmp.labels;
-
-                if (this.data !== undefined && this.data['labels'] !== undefined && this.data['labels'].length > 0) {
-                  this.addInitialColouredShapesToGraph();
-                }
-
-                this.setShownComponents(false, true, false);
-              }
-
-            }
-          );
+            this.processGroupedData(res);
+          });
       }
+    }
+  }
+
+  private processNoneGroupedData(res: DataResult) {
+    if (res.total === 0) {
+      this.setShownComponents(true, false, false);
+    } else {
+      res.measureName = this.dataExplorerWidget.dataLakeMeasure.measureName;
+      const tmp = this.transformData(res, this.xKey);
+      this.data = this.displayData(tmp, this.yKeys);
+
+      if (this.labelingModeOn) {
+        this.backgroundColorPropertyKey = 'sp_internal_label';
+      }
+      this.colorPropertyStringValues = this.loadBackgroundColor(tmp, this.backgroundColorPropertyKey);
+      this.addBackgroundColorToGraph(this.data, this.colorPropertyStringValues, this.backgroundColorPropertyKey);
+      this.data['measureName'] = tmp.measureName;
+
+      this.setShownComponents(false, true, false);
+    }
+  }
+
+  private processGroupedData(res: GroupedDataResult) {
+    if (res.total === 0) {
+      this.setShownComponents(true, false, false);
+    } else {
+      const tmp = this.transformGroupedData(res, this.xKey);
+      this.data = this.displayGroupedData(tmp);
+
+      if (this.data !== undefined &&
+        this.data['colorPropertyStringValues'] !== undefined && this.data['colorPropertyStringValues'].length > 0) {
+        this.addInitialColouredShapesToGraph(this.colorPropertyStringValues, this.colorService.getColor);
+      }
+
+      this.setShownComponents(false, true, false);
     }
   }
 
@@ -257,11 +243,11 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
     }
   }
 
-  loadLabels(transformedData: DataResult, labelKey: string) {
-    let labels = undefined;
-    if (labelKey !== undefined) {
+  loadBackgroundColor(transformedData: DataResult, backgroundColorKey: string) {
+    let labels;
+    if (backgroundColorKey !== undefined) {
       transformedData.rows.forEach(serie => {
-        if (serie.name === labelKey) {
+        if (serie.name === backgroundColorKey) {
           labels = serie.y;
         }
       });
@@ -269,100 +255,144 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
     return labels;
   }
 
-  addLabelsToGraph(data, labels) {
-    data.forEach(serie => {
-      // adding customdata property in order to store labels in graph
-      if (labels !== undefined && labels.length !== 0) {
-        serie['customdata'] = labels;
-        this.addInitialColouredShapesToGraph();
-      } else {
-        serie['customdata'] = Array(serie['x'].length).fill('');
+  addBackgroundColorToGraph(data, colorPropertyStringValues, backgroundColorPropertyKey) {
+
+    // the all labels function is required to get the correct color and internal name for labeled data
+    this.labelService.getAllLabels().subscribe((res: Label[]) => {
+      // holds all labels
+      const bufferedLabels = {};
+
+      for (const l of res) {
+        bufferedLabels[l._id] = l;
       }
-      // adding custom hovertemplate in order to display labels in graph
-      serie['hovertemplate'] = 'y: %{y}<br>' + 'x: %{x}<br>' + this.nonNumericKey + ': %{customdata}';
-    });
-    this.data = data;
-  }
 
-  displayGroupedData(transformedData: GroupedDataResult, yKeys: string[]) {
-    // if (this.yKeys.length > 0) {
-
-    console.log('count value ' + this.showCountValue);
-      const tmp = [];
-
-      const groupNames = Object.keys(transformedData.dataResults);
-      for (const groupName of groupNames) {
-        const value = transformedData.dataResults[groupName];
-        this.yKeys.forEach(key => {
-          value.rows.forEach(serie => {
-            if (serie.name === key) {
-              serie.name = groupName + ' ' + serie.name;
-              tmp.push(serie);
+      const newColorPropertyStringValues = [];
+      if (colorPropertyStringValues !== undefined && colorPropertyStringValues.length !== 0) {
+        for (const c of colorPropertyStringValues) {
+          if (this.labelingModeOn) {
+            if (c === '') {
+              newColorPropertyStringValues.push(c);
+            } else {
+              newColorPropertyStringValues.push(bufferedLabels[c].name);
             }
-          });
-        });
-
-        if (this.showCountValue) {
-          let containsCount = false;
-          value.rows.forEach(serie => {
-            if (serie.name.startsWith('count') && !containsCount) {
-              serie.name = groupName + ' count';
-              tmp.push(serie);
-              containsCount = true;
-            }
-          });
+          } else {
+            newColorPropertyStringValues.push(c);
+          }
         }
       }
-      return tmp;
 
-    // } else {
-    //   return undefined;
-    // }
+      // define the function that defines the colors
+      let colorFunction;
+      if (this.labelingModeOn) {
+        colorFunction = ((id) => {
+          if (id === '') {
+            return '#FFFFFF';
+          } else {
+            return bufferedLabels[id].color;
+          }
+        });
+      } else {
+        colorFunction = this.colorService.getColor;
+      }
+
+        // Add labes and colors for each series of the line chart
+        data.forEach(serie => {
+        // add custom data property in order to store colorPropertyStringValues in graph
+        if (newColorPropertyStringValues !== undefined && newColorPropertyStringValues.length !== 0) {
+          serie['customdata'] = newColorPropertyStringValues;
+          // TODO fix this and continue here
+
+          serie['hovertemplate'] = 'y: %{y}<br>' + 'x: %{x}<br>' + backgroundColorPropertyKey + ': %{customdata}';
+          this.addInitialColouredShapesToGraph(colorPropertyStringValues, colorFunction);
+        } else {
+          serie['customdata'] = Array(serie['x'].length).fill('');
+          serie['hovertemplate'] = 'y: %{y}<br>' + 'x: %{x}';
+        }
+        // adding custom hovertemplate in order to display colorPropertyStringValues in graph
+      });
+      this.data = data;
+
+    });
+  }
+
+  displayGroupedData(transformedData: GroupedDataResult) {
+    const tmp = [];
+
+    const groupNames = Object.keys(transformedData.dataResults);
+    for (const groupName of groupNames) {
+      const value = transformedData.dataResults[groupName];
+      this.yKeys.forEach(key => {
+        value.rows.forEach(serie => {
+          if (serie.name === key) {
+            serie.name = groupName + ' ' + serie.name;
+            tmp.push(serie);
+          }
+        });
+      });
+
+      if (this.showCountValue) {
+        let containsCount = false;
+        value.rows.forEach(serie => {
+          if (serie.name.startsWith('count') && !containsCount) {
+            serie.name = groupName + ' count';
+            tmp.push(serie);
+            containsCount = true;
+          }
+        });
+      }
+    }
+    return tmp;
   }
 
   transformData(data: DataResult, xKey: string): DataResult {
-    const tmp: any[] = [];
 
-    const dataKeys = [];
-    const label_columns = [];
+    const columnsContainingNumbers = [];
+    const columnsContainingStrings = [];
 
+    // Check column type
     data.rows.forEach(row => {
       data.headers.forEach((headerName, index) => {
-        if (!dataKeys.includes(index) && typeof row[index] === 'number') {
-          dataKeys.push(index);
-        } else if (!label_columns.includes(index) && typeof row[index] === 'string') {
-          label_columns.push(index);
+        if (!columnsContainingNumbers.includes(index) && typeof row[index] === 'number') {
+          columnsContainingNumbers.push(index);
+        } else if (!columnsContainingStrings.includes(index) && typeof row[index] === 'string') {
+          columnsContainingStrings.push(index);
         }
       });
     });
 
+    // Get key of timestamp column for x axis
     const indexXkey = data.headers.findIndex(headerName => headerName === this.xKey);
 
-    dataKeys.forEach(key => {
+
+    const tmpLineChartTraces: any[] = [];
+
+    // create line chart traces according to column type
+    columnsContainingNumbers.forEach(key => {
       const headerName = data.headers[key];
-      tmp[key] = {
+      tmpLineChartTraces[key] = {
         type: 'scatter', mode: 'lines', name: headerName, connectgaps: false, x: [], y: []};
     });
 
-    label_columns.forEach(key => {
+    columnsContainingStrings.forEach(key => {
       const headerName = data.headers[key];
-      tmp[key] = {
+      tmpLineChartTraces[key] = {
         name: headerName, x: [], y: []};
     });
 
+    // fill line chart traces with data
     data.rows.forEach(row => {
       data.headers.forEach((headerName, index) => {
-        if (dataKeys.includes(index) || label_columns.includes(index)) {
-          tmp[index].x.push(new Date(row[indexXkey]));
+        if (columnsContainingNumbers.includes(index) || columnsContainingStrings.includes(index)) {
+          tmpLineChartTraces[index].x.push(new Date(row[indexXkey]));
           if ((row[index]) !== undefined) {
-            tmp[index].y.push(row[index]);
+            tmpLineChartTraces[index].y.push(row[index]);
           } else {
-            tmp[index].y.push(null);
+            tmpLineChartTraces[index].y.push(null);
           }
         }
       });
     });
-    data.rows = tmp;
+    data.rows = tmpLineChartTraces;
     return data;
   }
 
@@ -375,158 +405,121 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
     return data;
   }
 
-  setSelectedColumn(selectedColumns: EventPropertyUnion[]) {
-    this.selectedColumns = selectedColumns;
+  setSelectedProperties(selectedColumns: EventPropertyUnion[]) {
+    this.selectedLineChartProperties = selectedColumns;
     this.yKeys = this.getRuntimeNames(selectedColumns);
     this.updateData();
   }
 
-  setSelectedLabelColumn(selectedLabelColumn: EventPropertyUnion) {
-    this.selectedNonNumericColumn = selectedLabelColumn;
-    this.nonNumericKey = selectedLabelColumn.runtimeName;
+  setSelectedBackgroundColorProperty(selectedBackgroundColorProperty: EventPropertyUnion) {
+    if (selectedBackgroundColorProperty.runtimeName === '') {
+      this.selectedBackgroundColorProperty = undefined;
+      this.backgroundColorPropertyKey = undefined;
+    } else {
+      this.selectedBackgroundColorProperty = selectedBackgroundColorProperty;
+      this.backgroundColorPropertyKey = selectedBackgroundColorProperty.runtimeName;
+    }
     this.updateData();
   }
 
-  handleDefaultModeBarButtonClicks($event) {
-    if (!('xaxis.autorange' in $event) && !('hovermode' in $event)) {
-      if ($event.dragmode !== 'select') {
-        this.deactivateLabelingMode();
-        this.labelingModeOn = false;
-      }
-    } else if (($event['xaxis.autorange'] === true || $event['hovermode'] === true) && this.labelingModeOn) {
-      this.activateLabelingMode();
+  changeLabelOfArea($event) {
+    const selected = $event.points[0];
+    const allData = selected.fullData;
+
+    const labelOfSelected = selected.customdata;
+    const dateOfSelected = new Date(selected.x);
+    const indexOfSelected = allData.x.map(Number).indexOf(+dateOfSelected);
+
+    // got to left to get class change
+    let searchIndex = indexOfSelected;
+
+    while (labelOfSelected === allData.customdata[searchIndex]) {
+      searchIndex = searchIndex - 1;
     }
+
+    this.selectedStartX = allData.x[searchIndex + 1];
+
+    searchIndex = indexOfSelected;
+
+    while (labelOfSelected === allData.customdata[searchIndex]) {
+      searchIndex = searchIndex + 1;
+    }
+
+    this.selectedEndX = allData.x[searchIndex - 1];
+
+    this.saveLabelsInDatabase(this.selectedLabel._id, this.selectedStartX, this.selectedEndX);
+
+    // adding coloured shape (based on selected label) to graph (equals selected time interval)
+    this.addShapeToGraph(this.selectedStartX, this.selectedEndX, this.selectedLabel.color);
+
+
   }
 
   selectDataPoints($event) {
-    // getting selected time interval
-    const xStart = $event['range']['x'][0];
-    const xEnd = $event['range']['x'][1];
 
-    // updating related global time interval properties
-    this.setStartX(xStart);
-    this.setEndX(xEnd);
+    if ($event !== undefined) {
+      // getting selected time interval
+      const xStart = $event['range']['x'][0];
+      const xEnd = $event['range']['x'][1];
 
-    // getting number of selected data points
-    let selected_points = 0;
-    for (const series of this.data) {
-      if (series['selectedpoints'] !== undefined) {
-        selected_points = selected_points + series['selectedpoints'].length;
-      }
-    }
+      // updating related global time interval properties
+      this.setStartX(xStart);
+      this.setEndX(xEnd);
 
-    // updating related global variable
-    this.setNSelectedPoints(selected_points);
-
-    // opening Labeling-Dialog
-    this.openLabelingDialog();
-    this.dialogReference.componentInstance.data = {labels: this.dataLakeRestService.get_timeseries_labels(), selected_label: '',
-      startX: this.selectedStartX, endX: this.selectedEndX, n_selected_points: this.n_selected_points};
-  }
-
-  private openLabelingDialog() {
-    if (this.dialog.openDialogs.length === 0) {
-
-      // displaying Info-Dialog 'Change Chart-Mode' if current graph mode is 'lines'
-      if (this.data[0]['mode'] === 'lines') {
-
-        // deactivating labeling mode
-        this.labelingModeOn = false;
-        this.deactivateLabelingMode();
-
-        const dialogRef = this.dialog.open(ChangeChartmodeDialog,
-            {
-              width: '400px',
-              position: {top: '150px'}
-            });
-
-        this.dialogReference = dialogRef;
-
-        // displaying Labeling-Dialog, obtaining selected label and drawing coloured shape
-      } else {
-        const dialogRef = this.dialog.open(LabelingDialog,
-            {
-              width: '400px',
-              height: 'auto',
-              position: {top: '75px'},
-              data: {labels: this.dataLakeRestService.get_timeseries_labels(), selected_label: '', startX: this.selectedStartX, endX:
-                this.selectedEndX, n_selected_points: this.n_selected_points}
-            });
-
-        this.dialogReference = dialogRef;
-
-        // after closing Labeling-Dialog
-        dialogRef.afterClosed().subscribe(result => {
-
-          // adding selected label to displayed data points
-          if (result !== undefined) {
-            for (const series of this.data) {
-              for (const point of series['selectedpoints']) {
-                series['customdata'][point] = result;
-              }
-            }
-            this.labels = this.data[0]['customdata'];
-            // saving labels persistently
-            this.saveLabelsInDatabase(result, this.selectedStartX, this.selectedEndX);
-
-            // adding coloured shape (based on selected label) to graph (equals selected time interval)
-            this.addShapeToGraph(this.selectedStartX, this.selectedEndX, this.colorService.getColor(result));
-
-            // remain in selection dragmode if labeling mode is still activated
-            if (this.labelingModeOn) {
-              this.graph.layout.dragmode = 'select';
-            } else {
-              this.graph.layout.dragmode = 'zoom';
-            }
-          }
-        });
-      }
-    }
-  }
-
-  private createLabelingModeBarButton() {
-    const labelingModeBarButton = {
-      name: 'Labeling',
-      icon: this.plotlyService.getPlotly().Icons.pencil,
-      direction: 'up',
-      click: (gd) => {
-
-        // only allowing to activate labeling mode if current graph mode does not equal 'lines'
-        if (this.data[0]['mode'] !== 'lines') {
-          this.labelingModeOn = !this.labelingModeOn;
-
-          // activating labeling mode
-          if (this.labelingModeOn) {
-            this.activateLabelingMode();
-
-            // deactivating labeling mode
-          } else {
-            this.deactivateLabelingMode();
-          }
-
-          // otherwise displaying 'Change Chart Mode Dialog' or deactivating labeling mode
-        } else {
-          if (this.labelingModeOn) {
-            this.labelingModeOn = !this.labelingModeOn;
-            this.deactivateLabelingMode();
-          } else {
-            this.openLabelingDialog();
-          }
+      // getting number of selected data points
+      let selected_points = 0;
+      for (const series of this.data) {
+        if (series['selectedpoints'] !== undefined) {
+          selected_points = selected_points + series['selectedpoints'].length;
         }
       }
-    };
-    return labelingModeBarButton;
+
+      // updating related global variable
+      this.setNSelectedPoints(selected_points);
+
+      for (const series of this.data) {
+        for (const point of series['selectedpoints']) {
+          series['customdata'][point] = this.selectedLabel._id;
+        }
+      }
+      this.colorPropertyStringValues = this.data[0]['customdata'];
+      // saving colorPropertyStringValues persistently
+      this.saveLabelsInDatabase(this.selectedLabel._id, this.selectedStartX, this.selectedEndX);
+
+      // adding coloured shape (based on selected label) to graph (equals selected time interval)
+      this.addShapeToGraph(this.selectedStartX, this.selectedEndX, this.selectedLabel.color);
+
+    }
+  }
+
+  handleLabelChange(label: Label) {
+    this.selectedLabel = label;
+  }
+
+  toggleLabelingMode() {
+    if (this.labelingModeOn) {
+      for (let i = 0; i < this.data.length; i++) {
+        this.data[i]['mode'] = 'lines+markers';
+      }
+      this.activateLabelingMode();
+      this.offsetRightLineChart = 150;
+    } else {
+      this.labelingModeOn = false;
+      this.offsetRightLineChart = 10;
+      this.deactivateLabelingMode();
+    }
   }
 
   private activateLabelingMode() {
     const modeBarButtons = document.getElementsByClassName('modebar-btn');
+    this.showBackgroundColorProperty = false;
 
     for (let i = 0; i < modeBarButtons.length; i++) {
       if (modeBarButtons[i].getAttribute('data-title') === 'Labeling') {
 
         // fetching path of labeling button icon
         const path = modeBarButtons[i].getElementsByClassName('icon').item(0)
-            .getElementsByTagName('path').item(0);
+          .getElementsByTagName('path').item(0);
 
         // adding 'clicked' to class list
         modeBarButtons[i].classList.add('clicked');
@@ -535,6 +528,9 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
         this.renderer.setStyle(path, 'fill', '#39B54A');
       }
     }
+
+
+    this.updateData();
 
     // changing dragmode to 'select'
     this.graph.layout.dragmode = 'select';
@@ -548,7 +544,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
 
         // fetching path of labeling button icon
         const path = modeBarButtons[i].getElementsByClassName('icon').item(0)
-            .getElementsByTagName('path').item(0);
+          .getElementsByTagName('path').item(0);
 
         // removing 'clicked' from class list
         modeBarButtons[i].classList.remove('clicked');
@@ -560,41 +556,43 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
 
     // changing dragmode to 'zoom'
     this.graph.layout.dragmode = 'zoom';
+    this.showBackgroundColorProperty = true;
 
   }
 
   private saveLabelsInDatabase(label, start_X, end_X) {
     const startdate = new Date(start_X).getTime() - 1;
     const enddate = new Date(end_X).getTime() + 1;
-    if (this.nonNumericKey === undefined) {
-      this.nonNumericKey = 'sp_internal_label';
-    }
 
-    this.dataLakeRestService.saveLabelsInDatabase(this.data['measureName'], this.nonNumericKey, startdate, enddate, label).subscribe(
-            res => {
-              // console.log('Successfully wrote label ' + currentLabel + ' into database.');
-            }
-            );
+    this.dataLakeRestService.saveLabelsInDatabase(this.data['measureName'], 'sp_internal_label', startdate, enddate, label, this.xKey).subscribe(
+      res => {
+        // TODO add pop up similar to images
+        // console.log('Successfully wrote label ' + currentLabel + ' into database.');
+      }
+    );
   }
 
-  private addInitialColouredShapesToGraph() {
+  private addInitialColouredShapesToGraph(newColorPropertyStringValues, getColor) {
     let selectedLabel = '';
     let indices = [];
-    for (let label = 0; label <= this.labels.length; label++) {
-      if (selectedLabel !== this.labels[label] && indices.length > 0) {
-        const startdate = new Date(this.data[0]['x'][indices[0]]).getTime();
-        const enddate = new Date(this.data[0]['x'][indices[indices.length - 1]]).getTime();
-        const color = this.colorService.getColor(selectedLabel);
+    if (newColorPropertyStringValues !== undefined) {
 
-        this.addShapeToGraph(startdate, enddate, color, true);
+      for (let label = 0; label < newColorPropertyStringValues.length; label++) {
+        if (selectedLabel !== newColorPropertyStringValues[label] && indices.length > 0) {
+          const startdate = new Date(this.data[0]['x'][indices[0]]).getTime();
+          const enddate = new Date(this.data[0]['x'][indices[indices.length - 1]]).getTime();
 
-        selectedLabel = undefined;
-        indices = [];
-        indices.push(label);
-      } else {
-        indices.push(label);
+          // TODO get color of label and text
+          this.addShapeToGraph(startdate, enddate, getColor(newColorPropertyStringValues[label - 1]), true);
+
+          selectedLabel = undefined;
+          indices = [];
+          indices.push(label);
+        } else {
+          indices.push(label);
+        }
+        selectedLabel = this.colorPropertyStringValues[label];
       }
-      selectedLabel = this.labels[label];
     }
   }
 
@@ -640,37 +638,37 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
 
   private createShape(start, end, color) {
     const shape = {
-    // shape: rectangle
-    type: 'rect',
+      // shape: rectangle
+      type: 'rect',
 
-    // x-reference is assigned to the x-values
-    xref: 'x',
+      // x-reference is assigned to the x-values
+      xref: 'x',
 
-    // y-reference is assigned to the plot paper [0,1]
-    yref: 'paper',
-    y0: 0,
-    y1: 1,
+      // y-reference is assigned to the plot paper [0,1]
+      yref: 'paper',
+      y0: 0,
+      y1: 1,
 
-    // start x: left side of selected time interval
-    x0: start,
-    // end x: right side of selected time interval
-    x1: end,
+      // start x: left side of selected time interval
+      x0: start,
+      // end x: right side of selected time interval
+      x1: end,
 
-    // adding color
-    fillcolor: color,
+      // adding color
+      fillcolor: color,
 
-    // opacity of 20%
-    opacity: 0.2,
+      // opacity of 20%
+      opacity: 0.2,
 
-    line: {
-      width: 0
-    }
-  };
-  return shape;
+      line: {
+        width: 0
+      }
+    };
+    return shape;
   }
 
   handlingAdvancedToggleChange() {
-    this.showLabelColumnSelection = !this.showLabelColumnSelection;
+    this.showBackgroundColorProperty = !this.showBackgroundColorProperty;
     this.updateData();
   }
 

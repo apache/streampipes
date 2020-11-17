@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.manager.setup;
 
+import org.apache.streampipes.container.util.Util;
 import org.apache.streampipes.model.client.endpoint.RdfEndpoint;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notifications;
@@ -76,6 +77,8 @@ public class CouchDbInstallationStep implements InstallationStep {
             Utils.getCouchDbDashboardClient();
             Utils.getCouchDbVisualizablePipelineClient();
             Utils.getCouchDbDashboardWidgetClient();
+            Utils.getCouchDbLabelClient();
+            Utils.getCouchDbCategoryClient();
 
             return Collections.singletonList(Notifications.success(getTitle()));
         } catch (Exception e) {
@@ -88,6 +91,7 @@ public class CouchDbInstallationStep implements InstallationStep {
         result.add(addUserView());
         result.add(addConnectionView());
         result.add(addNotificationView());
+        result.add(addLabelView());
         return result;
     }
 
@@ -155,6 +159,26 @@ public class CouchDbInstallationStep implements InstallationStep {
 
             userDocument.setViews(views);
             Response resp = Utils.getCouchDbUserClient().design().synchronizeWithDb(userDocument);
+
+            if (resp.getError() != null) return Notifications.error(PREPARING_USERS_TEXT);
+            else return Notifications.success(PREPARING_USERS_TEXT);
+        } catch (Exception e) {
+            return Notifications.error(PREPARING_USERS_TEXT);
+        }
+    }
+
+    private Message addLabelView() {
+        try {
+            DesignDocument labelDocument = prepareDocument("_design/categoryId");
+            Map<String, MapReduce> views = new HashMap<>();
+
+            MapReduce categoryIdFunction = new MapReduce();
+            categoryIdFunction.setMap("function(doc) { if(doc.categoryId) { emit(doc.categoryId, doc); } }");
+
+            views.put("categoryId", categoryIdFunction);
+
+            labelDocument.setViews(views);
+            Response resp = Utils.getCouchDbLabelClient().design().synchronizeWithDb(labelDocument);
 
             if (resp.getError() != null) return Notifications.error(PREPARING_USERS_TEXT);
             else return Notifications.success(PREPARING_USERS_TEXT);

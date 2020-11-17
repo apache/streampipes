@@ -19,12 +19,12 @@ package org.apache.streampipes.config.backend;
 
 public enum SpProtocol {
 
-  Kafka("Kafka", "org.apache.streampipes.model.grounding.KafkaTransportProtocol"),
-  Jms("JMS", "org.apache.streampipes.model.grounding.JmsTransportProtocol"),
-  Mqtt("MQTT", "org.apache.streampipes.model.grounding.MqttTransportProtocol");
+  KAFKA("Kafka", "org.apache.streampipes.model.grounding.KafkaTransportProtocol"),
+  JMS("JMS", "org.apache.streampipes.model.grounding.JmsTransportProtocol"),
+  MQTT("MQTT", "org.apache.streampipes.model.grounding.MqttTransportProtocol");
 
-  private String name;
-  private String protocolClass;
+  private final String name;
+  private final String protocolClass;
 
   SpProtocol(String name, String protocolClass) {
     this.name = name;

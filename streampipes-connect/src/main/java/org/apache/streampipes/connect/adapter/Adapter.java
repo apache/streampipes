@@ -18,23 +18,20 @@
 
 package org.apache.streampipes.connect.adapter;
 
+import org.apache.streampipes.connect.adapter.preprocessing.elements.*;
+import org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription;
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.config.backend.SpProtocol;
+import org.apache.streampipes.model.grounding.JmsTransportProtocol;
+import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
+import org.apache.streampipes.model.grounding.MqttTransportProtocol;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
 import org.apache.streampipes.connect.adapter.exception.ParseException;
 import org.apache.streampipes.connect.adapter.model.Connector;
 import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
 import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipelineElement;
-import org.apache.streampipes.connect.adapter.preprocessing.elements.AddTimestampPipelineElement;
-import org.apache.streampipes.connect.adapter.preprocessing.elements.AddValuePipelineElement;
-import org.apache.streampipes.connect.adapter.preprocessing.elements.DuplicateFilterPipelineElement;
-import org.apache.streampipes.connect.adapter.preprocessing.elements.SendToBrokerAdapterSink;
-import org.apache.streampipes.connect.adapter.preprocessing.elements.SendToJmsAdapterSink;
-import org.apache.streampipes.connect.adapter.preprocessing.elements.SendToKafkaAdapterSink;
-import org.apache.streampipes.connect.adapter.preprocessing.elements.SendToMqttAdapterSink;
-import org.apache.streampipes.connect.adapter.preprocessing.elements.TransformSchemaAdapterPipelineElement;
-import org.apache.streampipes.connect.adapter.preprocessing.elements.TransformStreamAdapterElement;
-import org.apache.streampipes.connect.adapter.preprocessing.elements.TransformValueAdapterPipelineElement;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription;
@@ -42,11 +39,7 @@ import org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransfo
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription;
-import org.apache.streampipes.model.grounding.JmsTransportProtocol;
-import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.TransportProtocol;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,20 +85,30 @@ public abstract class Adapter<T extends AdapterDescription> implements Connector
     public abstract String getId();
 
     public void changeEventGrounding(TransportProtocol transportProtocol) {
-        List<AdapterPipelineElement> pipelineElements =  this.adapterPipeline.getPipelineElements();
 
-        if ("true".equals(System.getenv(GroundingService.SP_NODE_BROKER_ENV))) {
+        if (transportProtocol instanceof JmsTransportProtocol) {
             SendToJmsAdapterSink sink = (SendToJmsAdapterSink) this.adapterPipeline.getPipelineSink();
+            if ("true".equals(System.getenv("SP_DEBUG"))) {
+                transportProtocol.setBrokerHostname("localhost");
+                //((JmsTransportProtocol) transportProtocol).setPort(61616);
+            }
             sink.changeTransportProtocol((JmsTransportProtocol) transportProtocol);
         }
-        else {
+        else if (transportProtocol instanceof KafkaTransportProtocol) {
             SendToKafkaAdapterSink sink = (SendToKafkaAdapterSink) this.adapterPipeline.getPipelineSink();
-
             if ("true".equals(System.getenv("SP_DEBUG"))) {
                 transportProtocol.setBrokerHostname("localhost");
                 ((KafkaTransportProtocol) transportProtocol).setKafkaPort(9094);
             }
             sink.changeTransportProtocol((KafkaTransportProtocol) transportProtocol);
+        }
+        else if (transportProtocol instanceof MqttTransportProtocol) {
+            SendToMqttAdapterSink sink = (SendToMqttAdapterSink) this.adapterPipeline.getPipelineSink();
+            if ("true".equals(System.getenv("SP_DEBUG"))) {
+                transportProtocol.setBrokerHostname("localhost");
+                //((MqttTransportProtocol) transportProtocol).setPort(1883);
+            }
+            sink.changeTransportProtocol((MqttTransportProtocol) transportProtocol);
         }
     }
 
@@ -116,12 +119,15 @@ public abstract class Adapter<T extends AdapterDescription> implements Connector
         // Must be before the schema transformations to ensure that user can move this event property
         AddTimestampRuleDescription timestampTransformationRuleDescription = getTimestampRule(adapterDescription);
         if (timestampTransformationRuleDescription != null) {
-            pipelineElements.add(new AddTimestampPipelineElement(timestampTransformationRuleDescription.getRuntimeKey()));
+            pipelineElements.add(new AddTimestampPipelineElement(
+                    timestampTransformationRuleDescription.getRuntimeKey()));
         }
 
         AddValueTransformationRuleDescription valueTransformationRuleDescription = getAddValueRule(adapterDescription);
         if (valueTransformationRuleDescription != null) {
-            pipelineElements.add(new AddValuePipelineElement(valueTransformationRuleDescription.getRuntimeKey(), valueTransformationRuleDescription.getStaticValue()));
+            pipelineElements.add(new AddValuePipelineElement(
+                    valueTransformationRuleDescription.getRuntimeKey(),
+                    valueTransformationRuleDescription.getStaticValue()));
         }
 
 
@@ -156,14 +162,13 @@ public abstract class Adapter<T extends AdapterDescription> implements Connector
         SpProtocol prioritizedProtocol =
                 BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedProtocols().get(0);
 
-        if ("true".equals(System.getenv(GroundingService.SP_NODE_BROKER_ENV))) {
-          return new SendToJmsAdapterSink(adapterDescription);
-        } else if (GroundingService.isPrioritized(prioritizedProtocol, JmsTransportProtocol.class)) {
+        if (GroundingService.isPrioritized(prioritizedProtocol, JmsTransportProtocol.class)) {
             return new SendToJmsAdapterSink(adapterDescription);
-        } else if (GroundingService.isPrioritized(prioritizedProtocol,
-                KafkaTransportProtocol.class)) {
+        }
+        else if (GroundingService.isPrioritized(prioritizedProtocol, KafkaTransportProtocol.class)) {
             return new SendToKafkaAdapterSink(adapterDescription);
-        } else {
+        }
+        else {
             return new SendToMqttAdapterSink(adapterDescription);
         }
     }
@@ -184,6 +189,9 @@ public abstract class Adapter<T extends AdapterDescription> implements Connector
         return getRule(adapterDescription, AddValueTransformationRuleDescription.class);
     }
 
+    private CorrectionValueTransformationRuleDescription getCorrectionValueRule(T adapterDescription) {
+        return getRule(adapterDescription, CorrectionValueTransformationRuleDescription.class);
+    }
 
     private <G extends TransformationRuleDescription> G getRule(T adapterDescription, Class<G> type) {
 

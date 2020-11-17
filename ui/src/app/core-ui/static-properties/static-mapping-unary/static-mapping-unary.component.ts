@@ -43,9 +43,7 @@ export class StaticMappingUnaryComponent extends StaticMappingComponent<MappingP
         this.availableProperties = this.extractPossibleSelections();
         this.availableProperties
             .forEach(ep => ep.propertySelector = this.firstStreamPropertySelector + ep.runtimeName);
-        console.log(this.staticProperty.selectedProperty);
         if (!(this.staticProperty.selectedProperty)) {
-            console.log("setting property");
             this.staticProperty.selectedProperty = this.availableProperties[0].propertySelector;
             this.emitUpdate(true);
         }

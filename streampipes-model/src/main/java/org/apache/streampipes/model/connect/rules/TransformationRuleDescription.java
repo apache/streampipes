@@ -28,10 +28,7 @@ import org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription;
 import org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
+import org.apache.streampipes.model.connect.rules.value.*;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
@@ -52,10 +49,7 @@ import javax.persistence.Entity;
         @JsonSubTypes.Type(DeleteRuleDescription.class),
         @JsonSubTypes.Type(RenameRuleDescription.class),
         @JsonSubTypes.Type(MoveRuleDescription.class),
-        @JsonSubTypes.Type(CreateNestedRuleDescription.class),
-        @JsonSubTypes.Type(DeleteRuleDescription.class),
-        @JsonSubTypes.Type(RenameRuleDescription.class),
-        @JsonSubTypes.Type(MoveRuleDescription.class),
+        @JsonSubTypes.Type(CorrectionValueTransformationRuleDescription.class),
 })
 public abstract class TransformationRuleDescription extends UnnamedStreamPipesEntity {
 

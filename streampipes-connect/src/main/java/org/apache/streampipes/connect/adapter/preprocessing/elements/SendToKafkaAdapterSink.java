@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.adapter.preprocessing.elements;
 
 import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipelineElement;
@@ -23,8 +22,8 @@ import org.apache.streampipes.messaging.kafka.SpKafkaProducer;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 
-public class SendToKafkaAdapterSink extends SendToBrokerAdapterSink<KafkaTransportProtocol> implements AdapterPipelineElement  {
-
+public class SendToKafkaAdapterSink extends SendToBrokerAdapterSink<KafkaTransportProtocol>
+        implements AdapterPipelineElement  {
 
     public SendToKafkaAdapterSink(AdapterDescription adapterDescription) {
         super(adapterDescription, SpKafkaProducer::new, KafkaTransportProtocol.class);
@@ -35,5 +34,4 @@ public class SendToKafkaAdapterSink extends SendToBrokerAdapterSink<KafkaTranspo
         this.protocol.setBrokerHostname("localhost");
         this.protocol.setKafkaPort(9094);
     }
-
 }

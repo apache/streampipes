@@ -18,6 +18,11 @@
 package org.apache.streampipes.storage.api;
 
 public interface INoSqlStorage {
+
+  ICategoryStorage getCategoryStorageAPI();
+
+  ILabelStorage getLabelStorageAPI();
+
   IPipelineStorage getPipelineStorageAPI();
 
   IPipelineElementConnectionStorage getConnectionStorageApi();

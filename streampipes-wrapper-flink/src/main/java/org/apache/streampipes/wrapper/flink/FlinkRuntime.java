@@ -31,15 +31,12 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataformat.SpDataFormatDefinition;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
-import org.apache.streampipes.model.grounding.JmsTransportProtocol;
-import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
-import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
-import org.apache.streampipes.model.grounding.TransportFormat;
-import org.apache.streampipes.model.grounding.TransportProtocol;
+import org.apache.streampipes.model.grounding.*;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.wrapper.context.RuntimeContext;
 import org.apache.streampipes.wrapper.distributed.runtime.DistributedRuntime;
-import org.apache.streampipes.wrapper.flink.consumer.JmsConsumer;
+import org.apache.streampipes.wrapper.flink.consumer.JmsFlinkConsumer;
+import org.apache.streampipes.wrapper.flink.consumer.MqttFlinkConsumer;
 import org.apache.streampipes.wrapper.flink.converter.MapToEventConverter;
 import org.apache.streampipes.wrapper.flink.logger.StatisticLogger;
 import org.apache.streampipes.wrapper.flink.serializer.ByteArrayDeserializer;
@@ -137,8 +134,12 @@ public abstract class FlinkRuntime<RP extends RuntimeParams<B, I, RC>, B extends
         SpDataFormatDefinition dataFormatDefinition = getDataFormatDefinition(format);
         if (protocol instanceof KafkaTransportProtocol) {
           return getKafkaConsumer((KafkaTransportProtocol) protocol, dataFormatDefinition);
-        } else {
+        } else if (protocol instanceof JmsTransportProtocol) {
           return getJmsConsumer((JmsTransportProtocol) protocol, dataFormatDefinition);
+        } else if (protocol instanceof MqttTransportProtocol) {
+          return getMqttConsumer((MqttTransportProtocol) protocol, dataFormatDefinition);
+        } else {
+          return null;
         }
       } else {
         return null;
@@ -150,7 +151,12 @@ public abstract class FlinkRuntime<RP extends RuntimeParams<B, I, RC>, B extends
 
   private SourceFunction<Map<String, Object>> getJmsConsumer(JmsTransportProtocol protocol,
                                                 SpDataFormatDefinition spDataFormatDefinition) {
-    return new JmsConsumer(protocol, spDataFormatDefinition);
+    return new JmsFlinkConsumer(protocol, spDataFormatDefinition);
+  }
+
+  private SourceFunction<Map<String, Object>> getMqttConsumer(MqttTransportProtocol protocol,
+                                                              SpDataFormatDefinition spDataFormatDefinition) {
+    return new MqttFlinkConsumer(protocol, spDataFormatDefinition);
   }
 
   private SourceFunction<Map<String, Object>> getKafkaConsumer(KafkaTransportProtocol protocol,

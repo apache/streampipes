@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.model.util;
 
+import org.apache.streampipes.model.grounding.*;
 import org.apache.streampipes.model.output.*;
 import org.apache.streampipes.model.staticproperty.*;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
@@ -36,14 +37,6 @@ import org.apache.streampipes.model.connect.adapter.SpecificAdapterSetDescriptio
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataSinkDescription;
-import org.apache.streampipes.model.grounding.JmsTransportProtocol;
-import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
-import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
-import org.apache.streampipes.model.grounding.TopicDefinition;
-import org.apache.streampipes.model.grounding.TransportFormat;
-import org.apache.streampipes.model.grounding.TransportProtocol;
-import org.apache.streampipes.model.grounding.WildcardTopicDefinition;
-import org.apache.streampipes.model.grounding.WildcardTopicMapping;
 import org.apache.streampipes.model.quality.Accuracy;
 import org.apache.streampipes.model.quality.EventPropertyQualityDefinition;
 import org.apache.streampipes.model.quality.EventPropertyQualityRequirement;

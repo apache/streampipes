@@ -232,15 +232,16 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
 
   @POST
   @Produces(MediaType.TEXT_PLAIN)
-  @Path("/data/{index}/{startdate}/{enddate}/labeling/{column}")
+  @Path("/data/{index}/{startdate}/{enddate}/labeling/{column}/{timestampColumn}")
     public Response labelData(@Context UriInfo info,
                               @PathParam("index") String index,
                               @PathParam("startdate") long startdate,
                               @PathParam("enddate") long enddate,
-                              @PathParam("column") String column) {
+                              @PathParam("column") String column,
+                              @PathParam("timestampColumn") String timestampColumn) {
 
-        String label = info.getQueryParameters().getFirst("label");
-        this.dataLakeManagement.updateLabels(index, column, startdate, enddate, label);
+      String label = info.getQueryParameters().getFirst("label");
+    this.dataLakeManagement.updateLabels(index, column, startdate, enddate, label, timestampColumn);
 
         return Response.ok("Successfully updated database.", MediaType.TEXT_PLAIN).build();
   }

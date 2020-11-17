@@ -23,6 +23,7 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.streampipes.model.*;
+import org.apache.streampipes.model.connect.rules.value.*;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.connect.adapter.*;
 import org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription;
@@ -32,10 +33,6 @@ import org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription;
 import org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
 import org.apache.streampipes.model.grounding.TopicDefinition;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.model.output.OutputStrategy;
@@ -100,7 +97,8 @@ public class GsonSerializer {
             .registerSubtype(AddValueTransformationRuleDescription.class, "org.apache.streampipes.model.AddValueTransformationRuleDescription")
             .registerSubtype(UnitTransformRuleDescription.class, "org.apache.streampipes.model.UnitTransformRuleDescription")
             .registerSubtype(TimestampTranfsformationRuleDescription.class, "org.apache.streampipes.model.TimestampTranfsformationRuleDescription")
-            .registerSubtype(EventRateTransformationRuleDescription.class, "org.apache.streampipes.model.EventRateTransformationRuleDescription"));
+            .registerSubtype(EventRateTransformationRuleDescription.class, "org.apache.streampipes.model.EventRateTransformationRuleDescription")
+            .registerSubtype(CorrectionValueTransformationRuleDescription.class, "org.apache.streampipes.model.CorrectionValueTransformationRuleDescription"));
 
     builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(AdapterDescription.class, "type")
             .registerSubtype(SpecificAdapterSetDescription.class, "org.apache.streampipes.model.connect.adapter.SpecificAdapterSetDescription")

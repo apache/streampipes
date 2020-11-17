@@ -104,6 +104,7 @@
         <type-parser.version>0.6.0</type-parser.version>
         <underscore.version>1.47</underscore.version>
         <wildfly-common.version>1.5.2.Final</wildfly-common.version>
+        <hawtbuf.version>1.11</hawtbuf.version>
 
         <!-- Test dependencies -->
         <junit.version>4.12</junit.version>

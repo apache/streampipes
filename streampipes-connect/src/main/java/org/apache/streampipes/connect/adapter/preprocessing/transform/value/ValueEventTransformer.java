@@ -27,17 +27,21 @@ import java.util.Map;
 public class ValueEventTransformer implements ValueTransformationRule {
 
     private List<UnitTransformationRule> unitTransformationRules;
-    private List<TimestampTranformationRule> timestampTranformationRules;
+    private List<TimestampTranformationRule> timestampTransformationRules;
+    private List<CorrectionValueTransformationRule> correctionValueTransformationRules;
 
     public ValueEventTransformer(List<ValueTransformationRule> rules) {
         this.unitTransformationRules = new ArrayList<>();
-        timestampTranformationRules = new ArrayList<>();
+        this.timestampTransformationRules = new ArrayList<>();
+        this.correctionValueTransformationRules = new ArrayList<>();
 
         for (TransformationRule rule : rules) {
             if (rule instanceof UnitTransformationRule) {
                 this.unitTransformationRules.add((UnitTransformationRule) rule);
             } else if (rule instanceof TimestampTranformationRule) {
-                this.timestampTranformationRules.add((TimestampTranformationRule) rule);
+                this.timestampTransformationRules.add((TimestampTranformationRule) rule);
+            } else if (rule instanceof CorrectionValueTransformationRule) {
+                this.correctionValueTransformationRules.add((CorrectionValueTransformationRule) rule);
             }
         }
     }
@@ -51,12 +55,16 @@ public class ValueEventTransformer implements ValueTransformationRule {
     @Override
     public Map<String, Object> transform(Map<String, Object> event) {
 
-        for (UnitTransformationRule unitRule : unitTransformationRules) {
-            event = unitRule.transform(event);
+        for (UnitTransformationRule rule : unitTransformationRules) {
+            event = rule.transform(event);
         }
 
-        for (TimestampTranformationRule unitRule : timestampTranformationRules) {
-            event = unitRule.transform(event);
+        for (TimestampTranformationRule rule : timestampTransformationRules) {
+            event = rule.transform(event);
+        }
+
+        for (CorrectionValueTransformationRule rule : correctionValueTransformationRules) {
+            event = rule.transform(event);
         }
 
 
@@ -72,11 +80,19 @@ public class ValueEventTransformer implements ValueTransformationRule {
         this.unitTransformationRules = unitTransformationRules;
     }
 
-    public List<TimestampTranformationRule> getTimestampTranformationRules() {
-        return timestampTranformationRules;
+    public List<TimestampTranformationRule> getTimestampTransformationRules() {
+        return timestampTransformationRules;
     }
 
-    public void setTimestampTranformationRules(List<TimestampTranformationRule> timestampTranformationRules) {
-        this.timestampTranformationRules = timestampTranformationRules;
+    public void setTimestampTransformationRules(List<TimestampTranformationRule> timestampTransformationRules) {
+        this.timestampTransformationRules = timestampTransformationRules;
+    }
+
+    public List<CorrectionValueTransformationRule> getCorrectionValueTransformationRules() {
+        return correctionValueTransformationRules;
+    }
+
+    public void setCorrectionValueTransformationRules(List<CorrectionValueTransformationRule> correctionValueTransformationRules) {
+        this.correctionValueTransformationRules = correctionValueTransformationRules;
     }
 }

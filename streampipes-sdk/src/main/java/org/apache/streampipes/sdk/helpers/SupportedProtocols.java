@@ -20,6 +20,7 @@ package org.apache.streampipes.sdk.helpers;
 
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
+import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 
 public class SupportedProtocols {
 
@@ -39,6 +40,15 @@ public class SupportedProtocols {
    */
   public static JmsTransportProtocol jms() {
     return new JmsTransportProtocol();
+  }
+
+  /**
+   * Defines that a pipeline element (data processor or data sink) supports processing messages arriving from a
+   * Mqtt broker.
+   * @return The {@link org.apache.streampipes.model.grounding.MqttTransportProtocol}.
+   */
+  public static MqttTransportProtocol mqtt() {
+    return new MqttTransportProtocol();
   }
 
 }

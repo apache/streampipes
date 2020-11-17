@@ -29,7 +29,8 @@ import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.flink.converter.EventToMapConverter;
 import org.apache.streampipes.wrapper.flink.serializer.ByteArraySerializer;
-import org.apache.streampipes.wrapper.flink.sink.FlinkJmsProducer;
+import org.apache.streampipes.wrapper.flink.sink.JmsFlinkProducer;
+import org.apache.streampipes.wrapper.flink.sink.MqttFlinkProducer;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 import org.apache.streampipes.wrapper.params.runtime.EventProcessorRuntimeParams;
 
@@ -78,9 +79,12 @@ public abstract class FlinkDataProcessorRuntime<B extends EventProcessorBindingP
               .addSink(new FlinkKafkaProducer<>(getTopic(getOutputStream()),
                       serializer,
                       getProducerProperties((KafkaTransportProtocol) outputGrounding.getTransportProtocol())));
-    } else {
+    } else if (isJmsProtocol(getOutputStream())) {
       applicationLogic
-              .addSink(new FlinkJmsProducer(getJmsProtocol(getOutputStream()), serializer));
+              .addSink(new JmsFlinkProducer(getJmsProtocol(getOutputStream()), serializer));
+    } else if (isMqttProtocol(getOutputStream())) {
+      applicationLogic
+              .addSink(new MqttFlinkProducer(getMqttProtocol(getOutputStream()), serializer));
     }
 
   }

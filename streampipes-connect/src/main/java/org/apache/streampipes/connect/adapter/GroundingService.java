@@ -43,13 +43,18 @@ public class GroundingService {
     public static String extractBroker(AdapterDescription adapterDescription) {
         EventGrounding eventGrounding = getEventGrounding(adapterDescription);
 
+        SpProtocol prioritizedProtocol =
+                BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedProtocols().get(0);
+
         String host = eventGrounding.getTransportProtocol().getBrokerHostname();
         int port = 0;
-        if ("true".equals(System.getenv(SP_NODE_BROKER_ENV))) {
+
+        if (isPrioritized(prioritizedProtocol, JmsTransportProtocol.class)) {
             port = ((JmsTransportProtocol) eventGrounding.getTransportProtocol()).getPort();
-        }
-        else {
+        } else if (isPrioritized(prioritizedProtocol, KafkaTransportProtocol.class)){
             port = ((KafkaTransportProtocol) eventGrounding.getTransportProtocol()).getKafkaPort();
+        } else if (isPrioritized(prioritizedProtocol, MqttTransportProtocol.class)) {
+            port = ((MqttTransportProtocol) eventGrounding.getTransportProtocol()).getPort();
         }
 
         return host + ":" + port;
@@ -83,17 +88,24 @@ public class GroundingService {
         SpProtocol prioritizedProtocol =
                 BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedProtocols().get(0);
 
-        if ("true".equals(System.getenv(SP_NODE_BROKER_ENV))) {
-            eventGrounding.setTransportProtocol(makeJmsTransportProtocol("localhost", 61616
-                    , topicDefinition));
-        } else if (isPrioritized(prioritizedProtocol, JmsTransportProtocol.class)) {
-            eventGrounding.setTransportProtocol(makeJmsTransportProtocol(BackendConfig.INSTANCE.getJmsHost(), BackendConfig.INSTANCE.getJmsPort(),
-                    topicDefinition));
+        if (isPrioritized(prioritizedProtocol, JmsTransportProtocol.class)) {
+            eventGrounding.setTransportProtocol(
+                    makeJmsTransportProtocol(
+                            BackendConfig.INSTANCE.getJmsHost(),
+                            BackendConfig.INSTANCE.getJmsPort(),
+                            topicDefinition));
         } else if (isPrioritized(prioritizedProtocol, KafkaTransportProtocol.class)){
-            eventGrounding.setTransportProtocol(makeKafkaTransportProtocol(BackendConfig.INSTANCE.getKafkaHost(), BackendConfig.INSTANCE.getKafkaPort(), topicDefinition));
+            eventGrounding.setTransportProtocol(
+                    makeKafkaTransportProtocol(
+                            BackendConfig.INSTANCE.getKafkaHost(),
+                            BackendConfig.INSTANCE.getKafkaPort(),
+                            topicDefinition));
         } else if (isPrioritized(prioritizedProtocol, MqttTransportProtocol.class)) {
-            eventGrounding.setTransportProtocol(makeMqttTransportProtocol(BackendConfig.INSTANCE.getMqttHost(), BackendConfig.INSTANCE.getMqttPort(),
-                    topicDefinition));
+            eventGrounding.setTransportProtocol(
+                    makeMqttTransportProtocol(
+                            BackendConfig.INSTANCE.getMqttHost(),
+                            BackendConfig.INSTANCE.getMqttPort(),
+                            topicDefinition));
         }
 
         eventGrounding.setTransportFormats(Collections

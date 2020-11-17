@@ -1,4 +1,4 @@
-package org.apache.streampipes.connect.adapter.preprocessing.elements;/*
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -15,16 +15,22 @@ package org.apache.streampipes.connect.adapter.preprocessing.elements;/*
  * limitations under the License.
  *
  */
+package org.apache.streampipes.connect.adapter.preprocessing.elements;
 
 import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipelineElement;
 import org.apache.streampipes.messaging.jms.ActiveMQPublisher;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 
-public class SendToJmsAdapterSink extends SendToBrokerAdapterSink<JmsTransportProtocol> implements AdapterPipelineElement {
+public class SendToJmsAdapterSink extends SendToBrokerAdapterSink<JmsTransportProtocol>
+        implements AdapterPipelineElement {
 
     public SendToJmsAdapterSink(AdapterDescription adapterDescription) {
         super(adapterDescription, ActiveMQPublisher::new, JmsTransportProtocol.class);
     }
 
+    @Override
+    public void modifyProtocolForDebugging() {
+        this.protocol.setBrokerHostname("localhost");
+    }
 }

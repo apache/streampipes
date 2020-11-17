@@ -20,7 +20,7 @@ variables:
   GIT_REPO_ORIGIN: $GIT_REPO_ORIGIN
   GIT_STRATEGY: clone
   DOCKER_CLI_EXPERIMENTAL: enabled
-  BASE_IMAGE_AMD64: adoptopenjdk/openjdk8-openj9:alpine-slim
+  BASE_IMAGE_AMD64: adoptopenjdk/openjdk8-openj9:alpine
   BASE_IMAGE_ARM32v7: arm32v7/openjdk:11-jre-slim
   BASE_IMAGE_ARM64v8: arm64v8/openjdk:11-jre-slim
   BASE_NGINX_AMD64: nginx

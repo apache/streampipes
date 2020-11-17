@@ -26,6 +26,7 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 
+import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -33,10 +34,8 @@ public abstract class SendToBrokerAdapterSink<T extends TransportProtocol> imple
 
   protected AdapterDescription adapterDescription;
   protected SpDataFormatDefinition dataFormatDefinition;
-
   protected T protocol;
   private Class<T> protocolClass;
-
   private EventProducer<T> producer;
 
   public SendToBrokerAdapterSink(AdapterDescription adapterDescription,
@@ -44,7 +43,6 @@ public abstract class SendToBrokerAdapterSink<T extends TransportProtocol> imple
                                  Class<T> protocolClass) {
     this.adapterDescription = adapterDescription;
     this.producer = producerSupplier.get();
-
     this.protocol = protocolClass.cast(adapterDescription
             .getEventGrounding()
             .getTransportProtocol());

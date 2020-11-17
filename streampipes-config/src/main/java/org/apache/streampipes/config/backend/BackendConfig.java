@@ -41,7 +41,7 @@ public enum BackendConfig {
 
     config.register(BackendConfigKeys.JMS_HOST, "activemq", "Hostname for backend service for active mq");
     config.register(BackendConfigKeys.JMS_PORT, 61616, "Port for backend service for active mq");
-    config.register(BackendConfigKeys.MQTT_HOST, "mqtt", "Hostname of mqtt service ");
+    config.register(BackendConfigKeys.MQTT_HOST, "activemq", "Hostname of mqtt service");
     config.register(BackendConfigKeys.MQTT_PORT, 1883, "Port of mqtt service");
     config.register(BackendConfigKeys.KAFKA_HOST, "kafka", "Hostname for backend service for kafka");
     config.register(BackendConfigKeys.KAFKA_PORT, 9092, "Port for backend service for kafka");
@@ -52,9 +52,6 @@ public enum BackendConfig {
     config.register(BackendConfigKeys.ELASTICSEARCH_PROTOCOL, "http", "Protocol the elasticsearch service");
     config.register(BackendConfigKeys.IS_CONFIGURED, false, "Boolean that indicates whether streampipes is " +
             "already configured or not");
-    config.register(BackendConfigKeys.KAFKA_REST_HOST, "kafka-rest", "The hostname of the kafka-rest module");
-    config.register(BackendConfigKeys.KAFKA_REST_PORT, 8082, "The port of the kafka-rest module");
-    config.register(BackendConfigKeys.KAFKA_REST_HOST, "kafka-rest", "The hostname of the kafka-rest module");
     config.register(BackendConfigKeys.ASSETS_DIR, makeAssetLocation(), "The directory where " +
             "pipeline element assets are stored.");
     config.register(BackendConfigKeys.FILES_DIR, makeFileLocation(), "The directory where " +

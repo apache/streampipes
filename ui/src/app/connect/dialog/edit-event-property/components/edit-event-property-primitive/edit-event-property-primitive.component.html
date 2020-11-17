@@ -30,6 +30,7 @@
     </sp-edit-data-type>
 
     <sp-edit-unit-transformation
+            *ngIf="!isTimestampProperty"
             [cachedProperty]= "cachedProperty"
             [showUnitTransformation]="!hideUnitTransformation">
     </sp-edit-unit-transformation>

@@ -105,7 +105,7 @@ export class DatalakeRestService {
     }
 
     get_timeseries_labels() {
-        // mocked labels
+        // mocked colorPropertyStringValues
         const labels = {
           coffee: ['coffee', 'coffee special', 'espresso', '2x espresso', 'hot water', 'undefined'],
           state: ['online', 'offline', 'active', 'inactive'],
@@ -130,9 +130,9 @@ export class DatalakeRestService {
       return this.http.delete(this.dataLakeUrlV3 + '/data/delete/all');
     }
 
-    saveLabelsInDatabase(index, labelColumn, startDate, endDate, label) {
+    saveLabelsInDatabase(index, labelColumn, startDate, endDate, label, timestampColumn) {
         const request = new HttpRequest('POST', this.dataLakeUrlV3 + '/data/' + index + '/' + startDate + '/' +
-            endDate + '/labeling/' + labelColumn + '?label=' + label,  {}, {
+            endDate + '/labeling/' + labelColumn + '/' + timestampColumn + '?label=' + label ,  {}, {
             reportProgress: true,
             responseType: 'text'
         });

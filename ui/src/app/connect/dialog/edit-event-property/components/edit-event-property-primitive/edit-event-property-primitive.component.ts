@@ -16,7 +16,7 @@
  *
  */
 
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {DataTypesService} from '../../../../services/data-type.service';
 
 @Component({
@@ -29,6 +29,7 @@ export class EditEventPropertyPrimitiveComponent implements OnInit {
   @Input() cachedProperty: any;
   @Input() index: number;
   @Input() isTimestampProperty: boolean;
+  @Output() isNumericDataType = new EventEmitter<boolean>();
 
   hideUnitTransformation: boolean;
 
@@ -46,6 +47,12 @@ export class EditEventPropertyPrimitiveComponent implements OnInit {
   setShowUnitTransformation() {
     this.hideUnitTransformation = this.isTimestampProperty ||
       !this.dataTypesService.isNumeric(this.cachedProperty.runtimeType);
+
+    if(this.dataTypesService.isNumeric(this.cachedProperty.runtimeType)) {
+      this.isNumericDataType.emit(true);
+    } else {
+      this.isNumericDataType.emit(false);
+    }
   }
 
   staticValueAddedByUser() {

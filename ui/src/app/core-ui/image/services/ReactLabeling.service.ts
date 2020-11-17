@@ -21,6 +21,7 @@ import { Annotation } from '../../../core-model/coco/Annotation';
 import { ICoordinates } from '../model/coordinates';
 import { ColorService } from './color.service';
 import { LabelingModeService } from './LabelingMode.service';
+import { Label } from '../../../core-model/gen/streampipes-model';
 
 @Injectable()
 export class ReactLabelingService {
@@ -53,14 +54,14 @@ export class ReactLabelingService {
     }
   }
 
-  tempDraw(layer: Konva.Layer, shift: ICoordinates, label: string) {
+  tempDraw(layer: Konva.Layer, shift: ICoordinates, label: Label) {
     if (this.isLabeling && (this.reactSize.x > 0 || this.reactSize.y > 0)) {
       const box = new Konva.Rect({
         x: this.lastPosition.x + shift.x,
         y: this.lastPosition.y + shift.y,
         width: this.reactSize.x,
         height: this.reactSize.y,
-        fill: this.colorService.getColor(label),
+        fill: label.color,
         opacity: 0.5,
         stroke: 'black',
         strokeWidth: 4,
@@ -70,13 +71,13 @@ export class ReactLabelingService {
     }
   }
 
-  draw(layer: Konva.Layer, shift: ICoordinates, annotation: Annotation, imageView) {
+  draw(layer: Konva.Layer, shift: ICoordinates, annotation: Annotation, imageView, color: string) {
     const rect = new Konva.Rect({
       x: annotation.bbox[0] + shift.x,
       y: annotation.bbox[1] + shift.y,
       width: annotation.bbox[2],
       height: annotation.bbox[3],
-      fill: this.colorService.getColor(annotation.category_name),
+      fill: color,
       opacity: 0.5,
       stroke: 'black',
       strokeWidth: 4,

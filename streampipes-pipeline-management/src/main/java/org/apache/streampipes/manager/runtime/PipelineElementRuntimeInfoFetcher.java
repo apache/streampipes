@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.manager.runtime;
 
-import com.google.inject.internal.cglib.core.$LocalVariablesSorter;
 import org.apache.streampipes.messaging.kafka.SpKafkaConsumer;
 import org.apache.streampipes.messaging.mqtt.MqttConsumer;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
@@ -39,8 +38,8 @@ public enum PipelineElementRuntimeInfoFetcher {
 
   Logger logger = LoggerFactory.getLogger(PipelineElementRuntimeInfoFetcher.class);
 
-  private int FETCH_INTERVAL_MS = 300;
-  private Map<String, SpDataFormatConverter> converterMap;
+  private final int FETCH_INTERVAL_MS = 300;
+  private final Map<String, SpDataFormatConverter> converterMap;
 
   PipelineElementRuntimeInfoFetcher() {
     this.converterMap = new HashMap<>();
@@ -72,17 +71,24 @@ public enum PipelineElementRuntimeInfoFetcher {
 
   private String getLatestEventFromJms(SpDataStream spDataStream) throws SpRuntimeException {
     final String[] result = {null};
-    final String topic = getOutputTopic(spDataStream);
-    if (!converterMap.containsKey(topic)) {
-      this.converterMap.put(topic,
+    String jmsTopic = getOutputTopic(spDataStream);
+    JmsTransportProtocol protocol = (JmsTransportProtocol) spDataStream.getEventGrounding().getTransportProtocol();
+
+    // Change jms config when running in development mode
+    if ("true".equals(System.getenv("SP_DEBUG"))) {
+      protocol.setBrokerHostname("localhost");
+    }
+    if (!converterMap.containsKey(jmsTopic)) {
+      this.converterMap.put(jmsTopic,
               new SpDataFormatConverterGenerator(getTransportFormat(spDataStream)).makeConverter());
     }
+
     ActiveMQConsumer consumer = new ActiveMQConsumer();
     consumer.connect((JmsTransportProtocol) spDataStream.getEventGrounding().getTransportProtocol(), new InternalEventProcessor<byte[]>() {
       @Override
       public void onEvent(byte[] event) {
         try {
-          result[0] = converterMap.get(topic).convert(event);
+          result[0] = converterMap.get(jmsTopic).convert(event);
           consumer.disconnect();
         } catch (SpRuntimeException e) {
           e.printStackTrace();
@@ -106,8 +112,14 @@ public enum PipelineElementRuntimeInfoFetcher {
     String mqttTopic = getOutputTopic(spDataStream);
     MqttTransportProtocol protocol = (MqttTransportProtocol) spDataStream.getEventGrounding().getTransportProtocol();
 
+    // Change mqtt config when running in development mode
+    if ("true".equals(System.getenv("SP_DEBUG"))) {
+      protocol.setBrokerHostname("localhost");
+    }
+
     if (!converterMap.containsKey(mqttTopic)){
-      this.converterMap.put(mqttTopic, new SpDataFormatConverterGenerator(getTransportFormat(spDataStream)).makeConverter());
+      this.converterMap.put(mqttTopic,
+              new SpDataFormatConverterGenerator(getTransportFormat(spDataStream)).makeConverter());
     }
     MqttConsumer mqttConsumer = new MqttConsumer();
     mqttConsumer.connect(protocol, new InternalEventProcessor<byte[]>() {

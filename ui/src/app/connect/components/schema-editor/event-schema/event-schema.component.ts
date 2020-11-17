@@ -170,8 +170,9 @@ export class EventSchemaComponent implements OnChanges {
 
     eventProperty.runtimeName = 'timestamp';
     eventProperty.label = 'Timestamp';
+    eventProperty.description = 'The current timestamp value';
     eventProperty.domainProperties = ['http://schema.org/DateTime'];
-    eventProperty.propertyScope = 'Header'
+    eventProperty.propertyScope = 'HEADER_PROPERTY';
     eventProperty.runtimeType = this.dataTypesService.getNumberTypeUrl();
 
     this.eventSchema.eventProperties.push(eventProperty);

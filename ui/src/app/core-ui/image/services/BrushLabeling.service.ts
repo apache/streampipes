@@ -21,6 +21,7 @@ import { Annotation } from '../../../core-model/coco/Annotation';
 import { ICoordinates } from '../model/coordinates';
 import { ColorService } from './color.service';
 import { LabelingModeService } from './LabelingMode.service';
+import { Label } from '../../../core-model/gen/streampipes-model';
 
 @Injectable()
 export class BrushLabelingService {
@@ -54,7 +55,7 @@ export class BrushLabelingService {
     return [this.points, this.brushsize];
   }
 
-  tempDraw(layer: Konva.Layer, shift: ICoordinates, label: string) {
+  tempDraw(layer: Konva.Layer, shift: ICoordinates, label: Label) {
     if (this.isLabeling) {
       const tmp = [];
       for (let i = 0; i < this.points.length; i += 2) {
@@ -64,7 +65,7 @@ export class BrushLabelingService {
 
       const line = new Konva.Line({
         points: tmp,
-        stroke: this.colorService.getColor(label),
+        stroke: label.color,
         opacity: 0.8,
         strokeWidth: this.brushsize,
         closed: false
