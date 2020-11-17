@@ -145,16 +145,24 @@ export class DataMarketplaceComponent implements OnInit {
         this.newAdapterFromDescription.name = "";
         this.newAdapterFromDescription.description = "";
         if (this.newAdapterFromDescription instanceof AdapterStreamDescription) {
-            this.newAdapterFromDescription.dataStream = new SpDataStream();
-            this.newAdapterFromDescription.dataStream["@class"] = "org.apache.streampipes.model.SpDataStream";
-            this.newAdapterFromDescription.dataStream.eventSchema = new EventSchema();
-            this.newAdapterFromDescription.dataStream.eventSchema["@class"] = "org.apache.streampipes.model.schema.EventSchema";
+
+            // Create new SpDataStream and EventSchema if not already exists, e.g. in adapter template
+            if (this.newAdapterFromDescription.dataStream == undefined) {
+                this.newAdapterFromDescription.dataStream = new SpDataStream();
+                this.newAdapterFromDescription.dataStream["@class"] = "org.apache.streampipes.model.SpDataStream";
+                this.newAdapterFromDescription.dataStream.eventSchema = new EventSchema();
+                this.newAdapterFromDescription.dataStream.eventSchema["@class"] = "org.apache.streampipes.model.schema.EventSchema";
+            }
         }
         if (this.newAdapterFromDescription instanceof AdapterSetDescription) {
-            this.newAdapterFromDescription.dataSet = new SpDataSet();
-            this.newAdapterFromDescription.dataSet["@class"] = "org.apache.streampipes.model.SpDataSet";
-            this.newAdapterFromDescription.dataSet.eventSchema = new EventSchema();
-            this.newAdapterFromDescription.dataSet.eventSchema["@class"] = "org.apache.streampipes.model.schema.EventSchema";
+
+            // Create new SpDataSet and EventSchema if not already exists, e.g. in adapter template
+            if (this.newAdapterFromDescription.dataSet == undefined) {
+                this.newAdapterFromDescription.dataSet = new SpDataSet();
+                this.newAdapterFromDescription.dataSet["@class"] = "org.apache.streampipes.model.SpDataSet";
+                this.newAdapterFromDescription.dataSet.eventSchema = new EventSchema();
+                this.newAdapterFromDescription.dataSet.eventSchema["@class"] = "org.apache.streampipes.model.schema.EventSchema";
+            }
         }
         this.ShepherdService.trigger("select-adapter");
     }
