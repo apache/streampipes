@@ -213,8 +213,7 @@ public class Plc4xS7Adapter extends PullAdapter {
     protected void pullData() {
 
         // Create PLC read request
-        try {
-            PlcConnection plcConnection = this.driverManager.getConnection("s7://" + this.ip);
+        try (PlcConnection plcConnection = this.driverManager.getConnection("s7://" + this.ip)) {
 
             PlcReadRequest.Builder builder = plcConnection.readRequestBuilder();
             for (Map<String, String> node : this.nodes) {
@@ -242,11 +241,18 @@ public class Plc4xS7Adapter extends PullAdapter {
 
                 // publish the final event
                 adapterPipeline.process(event);
+
+                plcConnection.close();
             } catch (InterruptedException | ExecutionException e) {
                 LOG.error(e.getMessage());
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (PlcConnectionException e) {
+        } catch (Exception e) {
+            System.out.println("Could not establish connection to S7 with ip " + this.ip);
             this.LOG.error("Could not establish connection to S7 with ip " + this.ip, e);
+            e.printStackTrace();
         }
 
 
