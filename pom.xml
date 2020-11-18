@@ -280,6 +280,11 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.plc4x</groupId>
+                <artifactId>plc4j-connection-pool</artifactId>
+                <version>${plc4x.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.plc4x</groupId>
                 <artifactId>plc4j-driver-s7</artifactId>
                 <version>${plc4x.version}</version>
                 <scope>runtime</scope>

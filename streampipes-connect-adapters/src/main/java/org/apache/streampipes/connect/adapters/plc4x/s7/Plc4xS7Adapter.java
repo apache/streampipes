@@ -30,6 +30,7 @@ import org.apache.plc4x.java.api.exceptions.PlcConnectionException;
 import org.apache.plc4x.java.api.messages.PlcReadRequest;
 import org.apache.plc4x.java.api.messages.PlcReadResponse;
 import org.apache.plc4x.java.api.types.PlcResponseCode;
+import org.apache.plc4x.java.utils.connectionpool.PooledPlcDriverManager;
 import org.apache.streampipes.connect.adapter.Adapter;
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
 import org.apache.streampipes.connect.adapter.util.PollingSettings;
@@ -97,7 +98,8 @@ public class Plc4xS7Adapter extends PullAdapter {
     /**
      * Connection to the PLC
      */
-    private PlcConnection plcConnection;
+//    private PlcConnection plcConnection;
+    private PlcDriverManager driverManager;
 
     /**
      * Empty constructor and a constructor with SpecificAdapterStreamDescription are mandatory
@@ -190,10 +192,11 @@ public class Plc4xS7Adapter extends PullAdapter {
         // Extract user input
         getConfigurations(adapterDescription);
 
+        this.driverManager = new PooledPlcDriverManager();
         try {
-            this.plcConnection = new PlcDriverManager().getConnection("s7://" + this.ip);
+            PlcConnection plcConnection =  this.driverManager.getConnection("s7://" + this.ip);
 
-            if (!this.plcConnection.getMetadata().canRead()) {
+            if (!plcConnection.getMetadata().canRead()) {
                 throw new AdapterException("The S7 on IP: " + this.ip + " does not support reading data");
             }
 
@@ -210,6 +213,14 @@ public class Plc4xS7Adapter extends PullAdapter {
     protected void pullData() {
 
         // Create PLC read request
+
+        PlcConnection plcConnection = null;
+        try {
+            plcConnection = this.driverManager.getConnection("s7://" + this.ip);
+        } catch (PlcConnectionException e) {
+            this.LOG.error("Could not establish connection to S7 with ip " + this.ip, e);
+        }
+
         PlcReadRequest.Builder builder = plcConnection.readRequestBuilder();
         for (Map<String, String> node : this.nodes) {
             builder.addItem(node.get(PLC_NODE_NAME), node.get(PLC_NODE_NAME) + ":" + node.get(PLC_NODE_TYPE).toUpperCase());
