@@ -213,43 +213,43 @@ public class Plc4xS7Adapter extends PullAdapter {
     protected void pullData() {
 
         // Create PLC read request
-
-        PlcConnection plcConnection = null;
         try {
-            plcConnection = this.driverManager.getConnection("s7://" + this.ip);
+            PlcConnection plcConnection = this.driverManager.getConnection("s7://" + this.ip);
+
+            PlcReadRequest.Builder builder = plcConnection.readRequestBuilder();
+            for (Map<String, String> node : this.nodes) {
+                builder.addItem(node.get(PLC_NODE_NAME), node.get(PLC_NODE_NAME) + ":" + node.get(PLC_NODE_TYPE).toUpperCase());
+            }
+            PlcReadRequest readRequest = builder.build();
+
+            // Execute the request
+            PlcReadResponse response = null;
+            try {
+                response = readRequest.execute().get();
+
+                // Create an event containing the value of the PLC
+                Map<String, Object> event = new HashMap<>();
+                for (Map<String, String> node : this.nodes) {
+                    if(response.getResponseCode(node.get(PLC_NODE_NAME)) == PlcResponseCode.OK) {
+                        event.put(node.get(PLC_NODE_RUNTIME_NAME), response.getObject(node.get(PLC_NODE_NAME)));
+                    }
+
+                    else {
+                        logger.error("Error[" + node.get(PLC_NODE_NAME) + "]: " +
+                                response.getResponseCode(node.get(PLC_NODE_NAME)).name());
+                    }
+                }
+
+                // publish the final event
+                adapterPipeline.process(event);
+            } catch (InterruptedException | ExecutionException e) {
+                LOG.error(e.getMessage());
+            }
         } catch (PlcConnectionException e) {
             this.LOG.error("Could not establish connection to S7 with ip " + this.ip, e);
         }
 
-        PlcReadRequest.Builder builder = plcConnection.readRequestBuilder();
-        for (Map<String, String> node : this.nodes) {
-            builder.addItem(node.get(PLC_NODE_NAME), node.get(PLC_NODE_NAME) + ":" + node.get(PLC_NODE_TYPE).toUpperCase());
-        }
-        PlcReadRequest readRequest = builder.build();
 
-        // Execute the request
-        PlcReadResponse response = null;
-        try {
-            response = readRequest.execute().get();
-
-            // Create an event containing the value of the PLC
-            Map<String, Object> event = new HashMap<>();
-            for (Map<String, String> node : this.nodes) {
-                if(response.getResponseCode(node.get(PLC_NODE_NAME)) == PlcResponseCode.OK) {
-                    event.put(node.get(PLC_NODE_RUNTIME_NAME), response.getObject(node.get(PLC_NODE_NAME)));
-                }
-
-                else {
-                    logger.error("Error[" + node.get(PLC_NODE_NAME) + "]: " +
-                            response.getResponseCode(node.get(PLC_NODE_NAME)).name());
-                }
-            }
-
-            // publish the final event
-            adapterPipeline.process(event);
-        } catch (InterruptedException | ExecutionException e) {
-            LOG.error(e.getMessage());
-        }
     }
 
     /**
