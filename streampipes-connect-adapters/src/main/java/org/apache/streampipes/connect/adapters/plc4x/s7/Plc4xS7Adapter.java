@@ -193,15 +193,15 @@ public class Plc4xS7Adapter extends PullAdapter {
         getConfigurations(adapterDescription);
 
         this.driverManager = new PooledPlcDriverManager();
-        try {
-            PlcConnection plcConnection =  this.driverManager.getConnection("s7://" + this.ip);
+        try (PlcConnection plcConnection = this.driverManager.getConnection("s7://" + this.ip)) {
 
             if (!plcConnection.getMetadata().canRead()) {
                 throw new AdapterException("The S7 on IP: " + this.ip + " does not support reading data");
             }
-
         } catch (PlcConnectionException e) {
             throw new AdapterException("Could not establish connection to S7 with ip " + this.ip, e);
+        } catch (Exception e) {
+            throw new AdapterException("Could not close connection to S7 with ip " + this.ip, e);
         }
     }
 
@@ -213,8 +213,7 @@ public class Plc4xS7Adapter extends PullAdapter {
     protected void pullData() {
 
         // Create PLC read request
-        try  {
-            PlcConnection plcConnection = this.driverManager.getConnection("s7://" + this.ip);
+        try (PlcConnection plcConnection = this.driverManager.getConnection("s7://" + this.ip)) {
             PlcReadRequest.Builder builder = plcConnection.readRequestBuilder();
             for (Map<String, String> node : this.nodes) {
                 builder.addItem(node.get(PLC_NODE_NAME), node.get(PLC_NODE_NAME) + ":" + node.get(PLC_NODE_TYPE).toUpperCase());
@@ -240,8 +239,7 @@ public class Plc4xS7Adapter extends PullAdapter {
 
                 // publish the final event
                 adapterPipeline.process(event);
-                plcConnection.close();
-            } catch (InterruptedException | ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
                 LOG.error(e.getMessage());
                 e.printStackTrace();
             } catch (Exception e) {
