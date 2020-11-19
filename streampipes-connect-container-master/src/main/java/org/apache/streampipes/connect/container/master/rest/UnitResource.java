@@ -32,7 +32,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/api/v1/{username}/master/unit")
+@Path("/connect/v1/{username}/master/unit")
 public class UnitResource extends AbstractContainerResource {
 
     private static final Logger logger = LoggerFactory.getLogger(UnitResource.class);

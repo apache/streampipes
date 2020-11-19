@@ -43,24 +43,17 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/api/v1/{username}/master/sources")
+@Path("/connect/v1/{username}/master/sources")
 public class SourcesResource extends AbstractContainerResource {
 
     private Logger logger = LoggerFactory.getLogger(SourcesResource.class);
 
-    private String connectContainerBaseUrl;
 
     private SourcesManagement sourcesManagement;
 
     public SourcesResource() {
-        this.connectContainerBaseUrl = ConnectContainerConfig.INSTANCE.getConnectContainerMasterUrl();
         this.sourcesManagement = new SourcesManagement();
     }
-
-    public SourcesResource(String connectContainerBaseUrl) {
-        this.connectContainerBaseUrl = connectContainerBaseUrl;
-    }
-
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

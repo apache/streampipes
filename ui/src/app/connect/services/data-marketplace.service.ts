@@ -39,7 +39,7 @@ import {Observable, zip} from "rxjs";
 
 @Injectable()
 export class DataMarketplaceService {
-  private host = '/streampipes-connect/';
+  private host = '/streampipes-backend/api/connect';
 
   constructor(
       private http: HttpClient,
@@ -66,7 +66,6 @@ export class DataMarketplaceService {
     return this.http
         .get(
             this.host +
-            'api/v1/' +
             this.authStatusService.email +
             path
         )

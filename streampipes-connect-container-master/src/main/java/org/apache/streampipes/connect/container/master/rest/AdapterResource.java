@@ -35,7 +35,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-@Path("/api/v1/{username}/master/adapters")
+@Path("/connect/v1/{username}/master/adapters")
 public class AdapterResource extends AbstractContainerResource {
 
     private Logger LOG = LoggerFactory.getLogger(AdapterResource.class);

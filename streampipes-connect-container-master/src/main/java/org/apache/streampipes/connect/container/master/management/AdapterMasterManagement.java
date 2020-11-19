@@ -75,7 +75,8 @@ public class AdapterMasterManagement {
 
     String uuid = UUID.randomUUID().toString();
 
-    String newId = ConnectContainerConfig.INSTANCE.getConnectContainerMasterUrl() + "api/v1/" + username + "/master/sources/" + uuid;
+//    String newId = ConnectContainerConfig.INSTANCE.getConnectContainerMasterUrl() + "api/v1/" + username + "/master/sources/" + uuid;
+    String newId = ConnectContainerConfig.INSTANCE.getBackendApiUrl() + "api/v1/" + username + "/master/sources/" + uuid;
 
     ad.setElementId(newId);
 

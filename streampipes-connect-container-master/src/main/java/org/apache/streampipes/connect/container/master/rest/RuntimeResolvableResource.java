@@ -30,7 +30,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/api/v1/{username}/master/resolvable")
+@Path("/connect/v1/{username}/master/resolvable")
 public class RuntimeResolvableResource extends AbstractContainerResource {
 
     private static final String SP_NS =  "https://streampipes.org/vocabulary/v1/";

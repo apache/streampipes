@@ -37,12 +37,12 @@ public class AdapterMasterContainer {
 
   public static void main(String... args) {
 
-    Integer masterPort = ConnectContainerConfig.INSTANCE.getConnectContainerMasterPort();
+//    Integer masterPort = ConnectContainerConfig.INSTANCE.getConnectContainerMasterPort();
 
     LOG.info("Started StreamPipes Connect Resource in MASTER mode");
 
     SpringApplication app = new SpringApplication(AdapterMasterContainer.class);
-    app.setDefaultProperties(Collections.singletonMap("server.port", masterPort));
-    app.run();
+//    app.setDefaultProperties(Collections.singletonMap("server.port", masterPort));
+//    app.run();
   }
 }
