@@ -214,7 +214,7 @@ public class Plc4xS7Adapter extends PullAdapter {
 
         // Create PLC read request
         try  {
-            PlcConnection plcConnection = this.driverManager.getConnection("s7://" + this.ip)
+            PlcConnection plcConnection = this.driverManager.getConnection("s7://" + this.ip);
             PlcReadRequest.Builder builder = plcConnection.readRequestBuilder();
             for (Map<String, String> node : this.nodes) {
                 builder.addItem(node.get(PLC_NODE_NAME), node.get(PLC_NODE_NAME) + ":" + node.get(PLC_NODE_TYPE).toUpperCase());
