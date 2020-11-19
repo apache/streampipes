@@ -60,6 +60,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -221,32 +222,36 @@ public class Plc4xS7Adapter extends PullAdapter {
             PlcReadRequest readRequest = builder.build();
 
             // Execute the request
-            PlcReadResponse response = null;
-                response = readRequest.execute().get();
+            CompletableFuture<? extends PlcReadResponse> asyncResponse = readRequest.execute();
 
+            asyncResponse.whenComplete((response, throwable) -> {
                 // Create an event containing the value of the PLC
-                Map<String, Object> event = new HashMap<>();
-                for (Map<String, String> node : this.nodes) {
-                    if(response.getResponseCode(node.get(PLC_NODE_NAME)) == PlcResponseCode.OK) {
-                        event.put(node.get(PLC_NODE_RUNTIME_NAME), response.getObject(node.get(PLC_NODE_NAME)));
+                if (throwable != null) {
+                    throwable.printStackTrace();
+                    this.LOG.error(throwable.getMessage());
+                } else {
+                    Map<String, Object> event = new HashMap<>();
+                    for (Map<String, String> node : this.nodes) {
+                        if (response.getResponseCode(node.get(PLC_NODE_NAME)) == PlcResponseCode.OK) {
+                            event.put(node.get(PLC_NODE_RUNTIME_NAME), response.getObject(node.get(PLC_NODE_NAME)));
+                        } else {
+                            logger.error("Error[" + node.get(PLC_NODE_NAME) + "]: " +
+                                    response.getResponseCode(node.get(PLC_NODE_NAME)).name());
+                        }
                     }
 
-                    else {
-                        logger.error("Error[" + node.get(PLC_NODE_NAME) + "]: " +
-                                response.getResponseCode(node.get(PLC_NODE_NAME)).name());
-                    }
+                    // publish the final event
+                    adapterPipeline.process(event);
                 }
+            });
 
-                // publish the final event
-                adapterPipeline.process(event);
         } catch (InterruptedException | ExecutionException e) {
-                LOG.error(e.getMessage());
-                e.printStackTrace();
-            } catch (Exception e) {
-                System.out.println("Could not establish connection to S7 with ip " + this.ip);
-                this.LOG.error("Could not establish connection to S7 with ip " + this.ip, e);
-                e.printStackTrace();
-            }
+            this.LOG.error(e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) {
+            this.LOG.error("Could not establish connection to S7 with ip " + this.ip, e);
+            e.printStackTrace();
+        }
 
     }
 
