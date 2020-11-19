@@ -241,8 +241,6 @@ public class Plc4xS7Adapter extends PullAdapter {
 
                 // publish the final event
                 adapterPipeline.process(event);
-
-                plcConnection.close();
             } catch (InterruptedException | ExecutionException e) {
                 LOG.error(e.getMessage());
                 e.printStackTrace();
