@@ -1,4 +1,3 @@
-package org.apache.streampipes.node.controller.container.api;
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -16,35 +15,47 @@ package org.apache.streampipes.node.controller.container.api;
  * limitations under the License.
  *
  */
-import org.apache.streampipes.node.controller.container.management.info.NodeInfoStorage;
-import org.apache.streampipes.node.controller.container.management.resource.ResourceManager;
+package org.apache.streampipes.node.controller.container.rest;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+import org.apache.streampipes.model.message.Message;
+import sun.security.provider.certpath.OCSPResponse;
+
 import javax.ws.rs.core.Response;
 
-@Path("/node")
-public class NodeInfoStatusResource {
+public abstract class AbstractNodeContainerResource {
 
-    @GET
-    @Path("/info")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getInfo() {
+    protected <T> Response ok(T entity) {
         return Response
                 .ok()
-                .entity(NodeInfoStorage.getInstance().retrieveNodeInfo())
+                .entity(entity)
                 .build();
     }
 
-    @GET
-    @Path("/status")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getStatus() {
+    protected <T> Response ok() {
         return Response
                 .ok()
-                .entity(ResourceManager.getInstance().retrieveNodeResources())
+                .build();
+    }
+
+    protected <T> Response error(T entity) {
+        return Response
+                .status(500)
+                .entity(entity)
+                .build();
+    }
+
+    protected Response statusMessage(Message message) {
+        return ok(message);
+    }
+
+    protected Response fail() {
+        return Response.serverError().build();
+    }
+
+    protected <T> Response fail(T entity) {
+        return Response
+                .serverError()
+                .entity(entity)
                 .build();
     }
 }

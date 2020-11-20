@@ -49,7 +49,18 @@
                 <mat-slide-toggle color="primary" [(ngModel)]="advancedSettings">
                     Choose deployment options
                 </mat-slide-toggle>
-                <mat-divider style="margin: 2em 0 2em 0;"></mat-divider>
+                <mat-divider *ngIf="advancedSettings" style="margin: 2em 0 2em 0;"></mat-divider>
+<!--                <div *ngIf="advancedSettings">-->
+<!--                    <div fxFlex="100" fxLayout="row">-->
+<!--                        <div fxFlex="50" fxLayout="row" fxLayoutAlign="center center">-->
+<!--                            Event strategy-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div fxFlex="50" fxLayout="row" fxLayoutAlign="start center">-->
+<!--                        <mat-slider></mat-slider>-->
+<!--                    </div>-->
+<!--                </div>-->
+                <mat-divider *ngIf="advancedSettings" style="margin: 2em 0 2em 0;"></mat-divider>
                 <div *ngIf="advancedSettings">
                     <b>Node selection</b>
                     <div *ngFor="let processors of pipeline.sepas">

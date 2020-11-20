@@ -15,36 +15,22 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.node.controller.container.rest;
 
-@import '../../../../scss/sp/sp-dialog.scss';
+import org.apache.streampipes.node.controller.container.config.NodeControllerConfig;
 
-.customize-section {
-  display:flex;
-  flex: 1 1 auto;
-  padding: 20px;
-}
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
-.padding-20 {
-  padding: 20px;
-}
+@Path("/")
+public class HealthCheckResource extends AbstractNodeContainerResource{
 
-.mb-10 {
-  margin-bottom: 10px;
-}
-
-::ng-deep .pipeline-radio-group .mat-radio-label {
-  padding: 0;
-}
-
-.status-text {
-  font-size: 14pt;
-  margin-top:10px;
-}
-
-.status-subtext {
-  font-size: 12pt;
-}
-
-mat-slider {
-  width: 300px;
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getHealth() {
+        return ok(String.format("hello from node controller: %s", NodeControllerConfig.INSTANCE.getNodeControllerId()));
+    }
 }

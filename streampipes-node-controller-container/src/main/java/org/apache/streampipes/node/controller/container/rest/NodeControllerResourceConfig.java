@@ -1,4 +1,4 @@
-package org.apache.streampipes.node.controller.container.init;
+package org.apache.streampipes.node.controller.container.rest;
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -17,18 +17,18 @@ package org.apache.streampipes.node.controller.container.init;
  *
  */
 
-import org.apache.streampipes.node.controller.container.api.NodeControllerResource;
-import org.apache.streampipes.node.controller.container.api.NodeInfoStatusResource;
-import org.apache.streampipes.node.controller.container.api.NodeResource;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.stereotype.Component;
 
 @Component
-public class NodeControllerContainerResourceConfig extends ResourceConfig {
+public class NodeControllerResourceConfig extends ResourceConfig {
 
-    public NodeControllerContainerResourceConfig() {
-        register(NodeResource.class);
-        register(NodeInfoStatusResource.class);
-        register(NodeControllerResource.class);
+    public NodeControllerResourceConfig() {
+        register(HealthCheckResource.class);
+        register(InfoStatusResource.class);
+        register(PELifeCycleResource.class);
+
+        // TODO remove later - only for local relay tests
+        register(DebugRelayResource.class);
     }
 }

@@ -59,6 +59,7 @@ import {CustomOutputStrategyComponent} from "./components/output-strategy/custom
 import {PropertySelectionComponent} from "./components/output-strategy/property-selection/property-selection.component";
 import {UserDefinedOutputStrategyComponent} from "./components/output-strategy/user-defined-output/user-defined-output.component";
 import {ConnectModule} from "../connect/connect.module";
+import {MatSliderModule} from "@angular/material/slider";
 
 @NgModule({
     imports: [
@@ -75,7 +76,8 @@ import {ConnectModule} from "../connect/connect.module";
         FormsModule,
         MatProgressSpinnerModule,
         ShowdownModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        MatSliderModule
     ],
     declarations: [
         CompatibleElementsComponent,

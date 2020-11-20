@@ -210,7 +210,7 @@ public class NodeInfoStorage {
     }
 
     private static Long getDiskUsage(FileSystem fs) {
-        OSFileStore[] fsArray = fs.getFileStores();
+        List<OSFileStore> fsArray = fs.getFileStores();
         long diskTotal = 0L;
         for(OSFileStore f : fsArray) {
             // has SATA disk

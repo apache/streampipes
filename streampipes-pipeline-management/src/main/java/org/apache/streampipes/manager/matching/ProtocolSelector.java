@@ -34,14 +34,15 @@ import java.util.Set;
 
 public class ProtocolSelector extends GroundingSelector {
 
-    private String outputTopic;
-    private List<SpProtocol> prioritizedProtocols;
+    private final String outputTopic;
+    private final List<SpProtocol> prioritizedProtocols;
 
     public ProtocolSelector(NamedStreamPipesEntity source, Set<InvocableStreamPipesEntity> targets) {
         super(source, targets);
         this.outputTopic = TopicGenerator.generateRandomTopic();
-        this.prioritizedProtocols =
-                BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedProtocols();
+        this.prioritizedProtocols = BackendConfig.INSTANCE
+                .getMessagingSettings()
+                .getPrioritizedProtocols();
     }
 
     public TransportProtocol getPreferredProtocol() {
@@ -50,36 +51,34 @@ public class ProtocolSelector extends GroundingSelector {
                     .getEventGrounding()
                     .getTransportProtocol();
         } else {
-            for(SpProtocol prioritizedProtocol: prioritizedProtocols) {
-                if (prioritizedProtocol.getProtocolClass().equals(KafkaTransportProtocol.class.getCanonicalName()) &&
-                        supportsProtocol(KafkaTransportProtocol.class)) {
-                    return kafkaTopic();
-                }
-                else if (prioritizedProtocol.getProtocolClass().equals(JmsTransportProtocol.class.getCanonicalName()) &&
-                        supportsProtocol(JmsTransportProtocol.class)) {
-                    return jmsTopic();
-                } else if (prioritizedProtocol.getProtocolClass().equals(MqttTransportProtocol.class.getCanonicalName()) &&
-                        supportsProtocol(MqttTransportProtocol.class)) {
-                    return mqttTopic();
+            for(SpProtocol p: prioritizedProtocols) {
+                if (matches(p, KafkaTransportProtocol.class) && supportsProtocol(KafkaTransportProtocol.class)) {
+                    return kafkaTransportProtocol();
+                } else if (matches(p, JmsTransportProtocol.class) && supportsProtocol(JmsTransportProtocol.class)) {
+                    return jmsTransportProtocol();
+                } else if (matches(p, MqttTransportProtocol.class) && supportsProtocol(MqttTransportProtocol.class)) {
+                    return mqttTransportProtocol();
+                } else {
+                    throw new IllegalArgumentException("Transport protocol not found: " + p.getProtocolClass());
                 }
             }
         }
-        return kafkaTopic();
+        throw new IllegalArgumentException("Could not get preferred transport protocol");
     }
 
-    private TransportProtocol mqttTopic() {
+    private TransportProtocol mqttTransportProtocol() {
         return new MqttTransportProtocol(BackendConfig.INSTANCE.getMqttHost(),
                 BackendConfig.INSTANCE.getMqttPort(),
                 outputTopic);
     }
 
-    private TransportProtocol jmsTopic() {
+    private TransportProtocol jmsTransportProtocol() {
         return new JmsTransportProtocol(BackendConfig.INSTANCE.getJmsHost(),
                 BackendConfig.INSTANCE.getJmsPort(),
                 outputTopic);
     }
 
-    private TransportProtocol kafkaTopic() {
+    private TransportProtocol kafkaTransportProtocol() {
         return new KafkaTransportProtocol(BackendConfig.INSTANCE.getKafkaHost(),
                 BackendConfig.INSTANCE.getKafkaPort(),
                 outputTopic,
@@ -87,10 +86,12 @@ public class ProtocolSelector extends GroundingSelector {
                 BackendConfig.INSTANCE.getZookeeperPort());
     }
 
+    private <T extends TransportProtocol> boolean matches(SpProtocol p, Class<T> clazz) {
+        return p.getProtocolClass().equals(clazz.getCanonicalName());
+    }
 
-    public <T extends TransportProtocol> boolean supportsProtocol(Class<T> protocol) {
+    private <T extends TransportProtocol> boolean supportsProtocol(Class<T> protocol) {
         List<InvocableStreamPipesEntity> elements = buildInvocables();
-
         return elements
                 .stream()
                 .allMatch(e -> e
@@ -98,6 +99,5 @@ public class ProtocolSelector extends GroundingSelector {
                         .getTransportProtocols()
                         .stream()
                         .anyMatch(protocol::isInstance));
-
     }
 }

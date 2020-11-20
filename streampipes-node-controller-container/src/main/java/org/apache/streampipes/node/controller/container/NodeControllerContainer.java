@@ -1,4 +1,4 @@
-package org.apache.streampipes.node.controller.container.init;
+package org.apache.streampipes.node.controller.container;
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -18,6 +18,7 @@ package org.apache.streampipes.node.controller.container.init;
  */
 
 import org.apache.streampipes.container.util.ConsulUtil;
+import org.apache.streampipes.node.controller.container.rest.NodeControllerResourceConfig;
 import org.apache.streampipes.node.controller.container.config.NodeControllerConfig;
 import org.apache.streampipes.node.controller.container.management.info.NodeInfoStorage;
 import org.apache.streampipes.node.controller.container.management.node.NodeJanitorManager;
@@ -34,7 +35,7 @@ import java.util.Collections;
 
 @Configuration
 @EnableAutoConfiguration
-@Import({ NodeControllerContainerResourceConfig.class })
+@Import({ NodeControllerResourceConfig.class })
 public class NodeControllerContainer {
 
     private static final Logger LOG =

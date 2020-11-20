@@ -93,8 +93,8 @@ public class InvocableEntityUrlGenerator extends EndpointUrlGenerator<InvocableS
                         + pipelineElement.getDeploymentTargetNodeId()
                         + SLASH;
 
-                String host = ConsulUtil.getElementEndpointHostname(route + PE_HOST_KEY);
-                int port = ConsulUtil.getElementEndpointPort(route + PE_PORT_KEY);
+                String host = ConsulUtil.getStringValue(route + PE_HOST_KEY);
+                int port = ConsulUtil.getIntValue(route + PE_PORT_KEY);
 
                 // Necessary because secondary pipeline element description is not stored in backend
                 // It uses information from primary pipeline element. Node controller will locally forward

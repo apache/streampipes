@@ -170,8 +170,8 @@ public class ConsulUtil {
   }
 
 
-  public static int getElementEndpointPort(String route) {
-    String value = ConsulUtil.getKeyValue(route)
+  public static int getIntValue(String route) {
+    String value = getKeyValue(route)
             .values()
             .stream()
             .findFirst()
@@ -188,8 +188,8 @@ public class ConsulUtil {
     return Integer.parseInt(new Gson().fromJson(value, ConfigItem.class).getValue());
   }
 
-  public static String getElementEndpointHostname(String route) {
-    String value = ConsulUtil.getKeyValue(route)
+  public static String getStringValue(String route) {
+    String value = getKeyValue(route)
             .values()
             .stream()
             .findFirst()
@@ -241,7 +241,7 @@ public class ConsulUtil {
     for (ServiceHealth node : nodes) {
       if (node.getService().getTags().containsAll(filterByTags)) {
         String endpoint = node.getService().getAddress() + ":" + node.getService().getPort();
-        LOG.info("Active" + serviceGroup + " endpoint:" + endpoint);
+        LOG.info("Active " + serviceGroup + " endpoint: " + endpoint);
         endpoints.add(endpoint);
       }
     }

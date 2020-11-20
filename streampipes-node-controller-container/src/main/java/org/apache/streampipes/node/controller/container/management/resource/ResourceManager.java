@@ -65,7 +65,7 @@ public class ResourceManager {
         new Thread(getCurrentResources, "rm").start();
     }
 
-    private Runnable getCurrentResources = () -> {
+    private final Runnable getCurrentResources = () -> {
 
         while(true) {
             try {
@@ -94,12 +94,12 @@ public class ResourceManager {
                 nodeResources.put("cpuLoadInPercent", cpuLoad);
                 nodeResources.put("cpuTemperature", String.format("%.2f°C", cpuTemperature));
                 nodeResources.put("cpuTemperatureCelcius", cpuTemperature);
-                nodeResources.put("freeMemory", freeMemory);
-                nodeResources.put("usedMemory", usedMemory);
-                nodeResources.put("totalMemory", totalMemory);
+                nodeResources.put("freeMemoryInBytes", freeMemory);
+                nodeResources.put("usedMemoryInBytes", usedMemory);
+                nodeResources.put("totalMemoryInBytes", totalMemory);
 
                 for (Map.Entry<String, Map<String, Long>> k : diskUsage.entrySet()) {
-                    nodeResources.put("availableDisk", k.getValue().get("available"));
+                    nodeResources.put("freeDiskSpaceInBytes", k.getValue().get("usableDiskSpace"));
                 }
 
             } catch (InterruptedException e) {
@@ -118,67 +118,67 @@ public class ResourceManager {
     }
 
     private Map<String, Map<String,Long>>  getDiskUsage(FileSystem fs) {
-        OSFileStore[] fsArray = fs.getFileStores();
+        List<OSFileStore> fsArray = fs.getFileStores();
         Map<String, Map<String, Long>> m = new HashMap<>();
         for(OSFileStore f : fsArray) {
             Map<String, Long> i = new HashMap<>();
             // has SATA disk
             if (f.getVolume().contains("/dev/sda")){
-                i.put("available", f.getUsableSpace());
-                i.put("total", f.getTotalSpace());
+                i.put("usableDiskSpace", f.getUsableSpace());
+                i.put("totalDiskSpace", f.getTotalSpace());
                 m.put(f.getVolume(), i);
             }
             else if (f.getVolume().contains("/dev/nvme")){
-                i.put("available", f.getUsableSpace());
-                i.put("total", f.getTotalSpace());
+                i.put("usableDiskSpace", f.getUsableSpace());
+                i.put("totalDiskSpace", f.getTotalSpace());
                 m.put(f.getVolume(), i);
             }
             else if (f.getVolume().contains("/dev/disk")){
-                i.put("available", f.getUsableSpace());
-                i.put("total", f.getTotalSpace());
+                i.put("usableDiskSpace", f.getUsableSpace());
+                i.put("totalDiskSpace", f.getTotalSpace());
                 m.put(f.getVolume(), i);
             }
             // Docker in RPi
             else if (f.getVolume().contains("/dev/root")){
-                i.put("available", f.getUsableSpace());
-                i.put("total", f.getTotalSpace());
+                i.put("usableDiskSpace", f.getUsableSpace());
+                i.put("totalDiskSpace", f.getTotalSpace());
                 m.put(f.getVolume(), i);
             }
             // Docker in Jetson Nano
             else if (f.getVolume().contains("/dev/mmcblk0p1")){
-                i.put("available", f.getUsableSpace());
-                i.put("total", f.getTotalSpace());
+                i.put("usableDiskSpace", f.getUsableSpace());
+                i.put("totalDiskSpace", f.getTotalSpace());
                 m.put(f.getVolume(), i);
             }
 //            // has SATA disk
 //            if (f.getVolume().contains("/dev/sda") && ( f.getMount().equals("/") || f.getMount().equals("/home"))){
-//                i.put("available", f.getUsableSpace());
-//                i.put("total", f.getTotalSpace());
+//                i.put("usableDiskSpace", f.getUsableSpace());
+//                i.put("totalDiskSpace", f.getTotalSpace());
 //                m.put(f.getVolume(), i);
 //            }
 //            // has overlay disk (container setup)
 //            else if (f.getVolume().equals("overlay") && ( f.getMount().equals("/") || f.getMount().equals("/home"))){
-//                    i.put("available", f.getUsableSpace());
-//                    i.put("total", f.getTotalSpace());
+//                    i.put("usableDiskSpace", f.getUsableSpace());
+//                    i.put("totalDiskSpace", f.getTotalSpace());
 //                    m.put(f.getVolume(), i);
 //            }
 //            // has NVME disk
 //            else if(f.getVolume().contains("/dev/nvme") && ( f.getMount().equals("/") || f.getMount().equals("/home"))) {
-//                i.put("available", f.getUsableSpace());
-//                i.put("total", f.getTotalSpace());
+//                i.put("usableDiskSpace", f.getUsableSpace());
+//                i.put("totalDiskSpace", f.getTotalSpace());
 //                m.put(f.getVolume(), i);
 //            }
 //            // disk on macOS
 //            else if (f.getVolume().contains("/dev/disk") && f.getMount().equals("/")) {
-//                i.put("available", f.getUsableSpace());
-//                i.put("total", f.getTotalSpace());
+//                i.put("usableDiskSpace", f.getUsableSpace());
+//                i.put("totalDiskSpace", f.getTotalSpace());
 //                m.put(f.getVolume(), i);
 //            }
         }
         if (m.isEmpty()) {
             Map<String, Long> i = new HashMap<>();
-            i.put("available", 0L);
-            i.put("total", 0L);
+            i.put("usableDiskSpace", 0L);
+            i.put("totalDiskSpace", 0L);
             m.put("n/a", i);
         }
         return m;

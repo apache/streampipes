@@ -1,4 +1,4 @@
-package org.apache.streampipes.node.controller.container.api;
+package org.apache.streampipes.node.controller.container.rest;
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -16,6 +16,8 @@ package org.apache.streampipes.node.controller.container.api;
  * limitations under the License.
  *
  */
+import org.apache.streampipes.node.controller.container.management.info.NodeInfoStorage;
+import org.apache.streampipes.node.controller.container.management.resource.ResourceManager;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -23,15 +25,20 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/")
-public class NodeResource {
+@Path("/node")
+public class InfoStatusResource extends AbstractNodeContainerResource{
 
     @GET
+    @Path("/info")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getHealth() {
-        return Response
-                .ok()
-                .status(Response.Status.OK)
-                .build();
+    public Response getInfo() {
+        return ok(NodeInfoStorage.getInstance().retrieveNodeInfo());
+    }
+
+    @GET
+    @Path("/status")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getStatus() {
+        return ok(ResourceManager.getInstance().retrieveNodeResources());
     }
 }

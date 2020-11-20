@@ -1,4 +1,4 @@
-package org.apache.streampipes.node.controller.container.api;/*
+package org.apache.streampipes.node.controller.container.rest;/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -17,8 +17,6 @@ package org.apache.streampipes.node.controller.container.api;/*
  */
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.container.declarer.InvocableDeclarer;
-import org.apache.streampipes.container.init.RunningInstances;
 import org.apache.streampipes.container.transform.Transformer;
 import org.apache.streampipes.container.util.Util;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
@@ -29,7 +27,6 @@ import org.apache.streampipes.node.controller.container.management.container.Doc
 import org.apache.streampipes.node.controller.container.management.pe.PipelineElementManager;
 import org.apache.streampipes.node.controller.container.management.relay.EventRelayManager;
 import org.apache.streampipes.node.controller.container.management.relay.RunningRelayInstances;
-import org.eclipse.paho.client.mqttv3.MqttException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,33 +36,41 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 
 @Path("/node/container")
-public class NodeControllerResource<I extends InvocableStreamPipesEntity> {
+public class PELifeCycleResource<I extends InvocableStreamPipesEntity> extends AbstractNodeContainerResource{
     private static final Logger LOG =
-            LoggerFactory.getLogger(NodeControllerResource.class.getCanonicalName());
-
+            LoggerFactory.getLogger(PELifeCycleResource.class.getCanonicalName());
 
     private static final String COLON = ":";
 
+    /**
+     *
+     * @return a list of currently running Docker Containers
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getPipelineElementContainer(){
-        return Response
-                .ok()
-                .entity(DockerOrchestratorManager.getInstance().list())
-                .build();
+        return ok(DockerOrchestratorManager.getInstance().list());
     }
 
+    /**
+     * Deploys a new Docker Container
+     *
+     * @param container to be deployed
+     * @return deployment status
+     */
     @POST
     @Path("/deploy")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response deployPipelineElementContainer(PipelineElementDockerContainer container) {
-        return Response
-                .ok()
-                .entity(DockerOrchestratorManager.getInstance().deploy(container))
-                .build();
+        return ok(DockerOrchestratorManager.getInstance().deploy(container));
     }
 
+    /**
+     * Register pipeline elements in consul
+     * @param message
+     * @return
+     */
     @POST
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -81,10 +86,7 @@ public class NodeControllerResource<I extends InvocableStreamPipesEntity> {
 //                .build();
 //        client.execute(request);
 
-        return Response
-                .ok()
-                .status(Response.Status.OK)
-                .build();
+        return ok();
     }
 
     @POST
@@ -117,9 +119,7 @@ public class NodeControllerResource<I extends InvocableStreamPipesEntity> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return Response
-                .ok()
-                .build();
+        return ok();
     }
 
     // TODO move endpoint to /elementId/instances/runningInstanceId
@@ -144,9 +144,7 @@ public class NodeControllerResource<I extends InvocableStreamPipesEntity> {
         EventRelayManager relay = RunningRelayInstances.INSTANCE.removeRelay(appId);
         relay.stop();
 
-        return Response
-                .ok()
-                .build();
+        return ok();
     }
 
     @DELETE
@@ -154,38 +152,7 @@ public class NodeControllerResource<I extends InvocableStreamPipesEntity> {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response removePipelineElementContainer(PipelineElementDockerContainer container) {
-        return Response
-                .ok(DockerOrchestratorManager.getInstance().remove(container))
-                .build();
+        return ok(DockerOrchestratorManager.getInstance().remove(container));
     }
 
-    // TODO: Debug-only.
-    @POST
-    @Path("/relay/start")
-    public Response debugRelayEventStream(String msg) throws SpRuntimeException {
-        // TODO implement
-
-        System.out.println(msg);
-        EventRelayManager eventRelayManager = new EventRelayManager();
-        eventRelayManager.start();
-        RunningRelayInstances.INSTANCE.addRelay(eventRelayManager.getRelayedTopic(), eventRelayManager);
-
-        return Response
-                .ok()
-                .build();
-    }
-
-    @POST
-    @Path("/relay/stop")
-    public Response debugStopRelayEventStream(String msg) throws SpRuntimeException {
-        // TODO implement
-
-        System.out.println(msg);
-        EventRelayManager eventRelayManager = RunningRelayInstances.INSTANCE.get("org.apache.streampipes.flowrate01");
-        eventRelayManager.stop();
-
-        return Response
-                .ok()
-                .build();
-    }
 }
