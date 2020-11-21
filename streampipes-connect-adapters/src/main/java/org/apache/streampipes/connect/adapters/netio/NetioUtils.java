@@ -106,7 +106,7 @@ public class NetioUtils {
                 PrimitivePropertyBuilder
                         .create(Datatypes.Float, TOTAL_CURRENT_KEY)
                         .label("Total Current")
-                        .description("Instantaneous totoal current for all power outputs")
+                        .description("Instantaneous total current for all power outputs")
                         .build());
         allProperties.add(
                 PrimitivePropertyBuilder
