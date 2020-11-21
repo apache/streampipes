@@ -103,7 +103,8 @@ public class ConnectAdapterInit extends AdapterWorkerContainer {
     Integer workerPort = ConnectWorkerConfig.INSTANCE.getConnectContainerWorkerPort();
 
     // TODO
-    new ConnectAdapterInit().init(workerUrl, "http://localhost:8030/streampipes-backend/api/connect", workerPort);
+    new ConnectAdapterInit().init(workerUrl, "http://localhost:8030/streampipes-backend/api/v2/connect", workerPort);
+
 
   }
 }
