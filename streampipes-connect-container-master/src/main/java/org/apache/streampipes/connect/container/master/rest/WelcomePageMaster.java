@@ -38,7 +38,7 @@ import java.io.IOException;
 import java.util.List;
 
 
-@Path("/connect")
+@Path("/v2/connect")
 public class WelcomePageMaster extends AbstractContainerResource {
 
 	private Logger logger = LoggerFactory.getLogger(WelcomePageMaster.class);

@@ -32,7 +32,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/connect/v1/{username}/master/administration")
+@Path("v2/connect/{username}/master/administration")
 public class WorkerAdministrationResource extends AbstractContainerResource {
 
     private Logger LOG = LoggerFactory.getLogger(WorkerAdministrationResource.class);

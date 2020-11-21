@@ -39,7 +39,7 @@ import {Observable, zip} from "rxjs";
 
 @Injectable()
 export class DataMarketplaceService {
-  private host = '/streampipes-backend/api/connect';
+  private host = '/streampipes-backend/api/v2/connect/';
 
   constructor(
       private http: HttpClient,
@@ -97,15 +97,12 @@ export class DataMarketplaceService {
   getAdapterCategories(): Observable<Object> {
     return this.http.get(
         this.baseUrl +
-        '/api/v2' +
-        "/categories/adapter"
-    )
+        '/categories/adapter');
   }
 
   private deleteRequest(adapter: AdapterDescription, url: String) {
     return this.http.delete(
         this.host +
-        'api/v1/' +
         this.authStatusService.email +
         url +
         adapter.couchDBId
@@ -116,7 +113,6 @@ export class DataMarketplaceService {
     return this.http
         .get(
             this.host +
-            'api/v1/' +
             this.authStatusService.email +
             '/master/description/protocols'
         )
@@ -204,7 +200,7 @@ export class DataMarketplaceService {
   }
 
   getAssetUrl(appId) {
-    return this.host + 'api/v1/' + this.authStatusService.email + "/master/description/" + appId + "/assets"
+    return this.host + this.authStatusService.email + "/master/description/" + appId + "/assets"
   }
 
   private get baseUrl() {

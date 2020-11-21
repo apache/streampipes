@@ -37,7 +37,7 @@ import {
 
 @Injectable()
 export class RestService {
-    private host = '/streampipes-backend/';
+    private host = '/streampipes-backend/api/v2/connect/';
 
     constructor(
         private http: HttpClient,
@@ -51,17 +51,17 @@ export class RestService {
         return this.addAdapterDescription(adapter, '/master/adapters/template');
     }
 
-    addAdapterDescription(adapter: AdapterDescription, url: String): Observable<Message> {
+    addAdapterDescription(adapter: AdapterDescription, url: string): Observable<Message> {
         adapter.userName = this.authStatusService.email;
 
-        let promise = new Promise<Message>((resolve, reject) => {
+        const promise = new Promise<Message>((resolve, reject) => {
             this.http
                 .post(
-                    '/streampipes-connect/api/v1/' + this.authStatusService.email + url,
+                    this.host + this.authStatusService.email + url,
                     adapter,
                 )
                 .pipe(map(response => {
-                    var statusMessage = response as Message;
+                    const statusMessage = response as Message;
                     resolve(statusMessage);
                 }))
                 .subscribe();
@@ -72,28 +72,28 @@ export class RestService {
 
     getGuessSchema(adapter: AdapterDescription): Observable<GuessSchema> {
         return this.http
-            .post('/streampipes-connect/api/v1/' + this.authStatusService.email + '/master/guess/schema', adapter)
+            .post(this.host + this.authStatusService.email + '/master/guess/schema', adapter)
             .pipe(map(response => {
                 return GuessSchema.fromData(response as GuessSchema);
-        }))
+        }));
 
     }
 
     getSourceDetails(sourceElementId): Observable<DataSourceDescription> {
         return this.http
-            .get(this.makeUserDependentBaseUrl() + "/sources/" + encodeURIComponent(sourceElementId)).pipe(map(response => {
+            .get(this.makeUserDependentBaseUrl() + '/sources/' + encodeURIComponent(sourceElementId)).pipe(map(response => {
                 return DataSourceDescription.fromData(response as DataSourceDescription);
             }));
     }
 
     getRuntimeInfo(sourceDescription): Observable<any> {
-        return this.http.post(this.makeUserDependentBaseUrl() + "/pipeline-element/runtime", sourceDescription, {
+        return this.http.post(this.makeUserDependentBaseUrl() + '/pipeline-element/runtime', sourceDescription, {
             headers: { ignoreLoadingBar: '' }
         });
     }
 
     makeUserDependentBaseUrl() {
-        return this.host + 'api/v2/users/' + this.authStatusService.email;
+        return '/streampipes-backend/api/v2/users/' + this.authStatusService.email;
     }
 
 
@@ -101,7 +101,7 @@ export class RestService {
         var self = this;
         return this.http
             .get(
-                '/streampipes-connect/api/v1/riemer@fzi.de/master/description/formats'
+                '/streampipes-connect/api/v2/connect/riemer@fzi.de/master/description/formats'
             )
             .pipe(map(response => {
                 return FormatDescriptionList.fromData(response as FormatDescriptionList);
@@ -110,7 +110,7 @@ export class RestService {
 
     getProtocols(): Observable<ProtocolDescriptionList> {
         return this.http
-            .get(this.host + 'api/v2/adapter/allProtocols')
+            .get(this.baseRoute + 'adapter/allProtocols')
             .pipe(map(response => {
                 return response as ProtocolDescriptionList;
             }));

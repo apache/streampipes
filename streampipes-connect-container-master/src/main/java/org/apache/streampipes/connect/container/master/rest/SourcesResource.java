@@ -43,7 +43,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/connect/v1/{username}/master/sources")
+@Path("/v2/connect/{username}/master/sources")
 public class SourcesResource extends AbstractContainerResource {
 
     private Logger logger = LoggerFactory.getLogger(SourcesResource.class);

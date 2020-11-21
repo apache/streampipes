@@ -38,7 +38,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Optional;
 
-@Path("/connect/v1/{username}/master/description")
+@Path("/v2/connect/{username}/master/description")
 public class DescriptionResource extends AbstractContainerResource {
 
     private Logger logger = LoggerFactory.getLogger(DescriptionResource.class);
