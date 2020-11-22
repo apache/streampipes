@@ -76,7 +76,7 @@ public class AdapterMasterManagement {
     String uuid = UUID.randomUUID().toString();
 
 //    String newId = ConnectContainerConfig.INSTANCE.getConnectContainerMasterUrl() + "api/v1/" + username + "/master/sources/" + uuid;
-    String newId = ConnectContainerConfig.INSTANCE.getBackendApiUrl() + "api/v1/" + username + "/master/sources/" + uuid;
+    String newId = ConnectContainerConfig.INSTANCE.getBackendApiUrl() + "api/v2/connect/" + username + "/master/sources/" + uuid;
 
     ad.setElementId(newId);
 
@@ -95,7 +95,7 @@ public class AdapterMasterManagement {
     }
 
     // backend url is used to install data source in streampipes
-    String backendBaseUrl = "http://" + ConnectContainerConfig.INSTANCE.getBackendApiUrl() + "api/v2/";
+    String backendBaseUrl = ConnectContainerConfig.INSTANCE.getBackendApiUrl() + "api/v2/";
     String requestUrl = backendBaseUrl + "noauth/users/" + username + "/element";
 
     LOG.info("Install source (source URL: " + newId + " in backend over URL: " + requestUrl);

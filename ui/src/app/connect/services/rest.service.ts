@@ -98,7 +98,7 @@ export class RestService {
 
 
     getFormats(): Observable<FormatDescriptionList> {
-        var self = this;
+        const self = this;
         return this.http
             .get(
                 '/streampipes-connect/api/v2/connect/riemer@fzi.de/master/description/formats'
@@ -110,7 +110,7 @@ export class RestService {
 
     getProtocols(): Observable<ProtocolDescriptionList> {
         return this.http
-            .get(this.baseRoute + 'adapter/allProtocols')
+            .get(this.host + 'adapter/allProtocols')
             .pipe(map(response => {
                 return response as ProtocolDescriptionList;
             }));
