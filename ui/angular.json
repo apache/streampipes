@@ -30,8 +30,7 @@
               }
             ],
             "styles": [
-              "src/scss/main.scss",
-              "src/assets/fonts/Roboto-Regular.css"
+              "src/scss/main.scss"
             ],
             "scripts": [
               "node_modules/systemjs/dist/system.js",
