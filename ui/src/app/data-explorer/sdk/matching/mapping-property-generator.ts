@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.sdk.helpers;
 
 import {PropertyMatch} from "./property-match";
 import {EventPropertyUnion} from "../../../core-model/gen/streampipes-model";
