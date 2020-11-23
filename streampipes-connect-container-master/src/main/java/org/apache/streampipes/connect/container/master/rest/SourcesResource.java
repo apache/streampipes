@@ -89,8 +89,6 @@ public class SourcesResource extends AbstractContainerResource {
 
 
     @POST
-//    @JsonLdSerialized
-//    @Consumes(SpMediaType.JSONLD)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{streamId}/streams")
     @Produces(MediaType.APPLICATION_JSON)
@@ -100,9 +98,6 @@ public class SourcesResource extends AbstractContainerResource {
 
         String responseMessage = "Instance of data set " + dataSet.getUri() + " successfully started";
 
-//        String workerUrl = new Utils().getWorkerUrlById(dataSet.getElementId());
-//
-//        String newUrl = Utils.addUserNameToApi(workerUrl, username);
         try {
             this.sourcesManagement.addAdapter(elementId,  dataSet, username);
         } catch (AdapterException e) {

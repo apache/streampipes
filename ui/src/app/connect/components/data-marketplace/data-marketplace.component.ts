@@ -157,7 +157,7 @@ export class DataMarketplaceComponent implements OnInit {
         if (this.newAdapterFromDescription instanceof AdapterSetDescription) {
 
             // Create new SpDataSet and EventSchema if not already exists, e.g. in adapter template
-            if (this.newAdapterFromDescription.dataSet == undefined) {
+            if (this.newAdapterFromDescription.dataSet == undefined || this.newAdapterFromDescription.dataSet["@class"] == undefined    ) {
                 this.newAdapterFromDescription.dataSet = new SpDataSet();
                 this.newAdapterFromDescription.dataSet["@class"] = "org.apache.streampipes.model.SpDataSet";
                 this.newAdapterFromDescription.dataSet.eventSchema = new EventSchema();

@@ -97,7 +97,7 @@ export class DataMarketplaceService {
   getAdapterCategories(): Observable<Object> {
     return this.http.get(
         this.baseUrl +
-        '/categories/adapter');
+        '/api/v2/categories/adapter');
   }
 
   private deleteRequest(adapter: AdapterDescription, url: String) {

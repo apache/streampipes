@@ -154,7 +154,7 @@ public class AdapterMasterManagement {
 
     adapterStorage.deleteAdapter(id);
 
-    String backendBaseUrl = "http://" + ConnectContainerConfig.INSTANCE.getBackendApiUrl() + "api/v2/noauth/users/" + username + "/element/delete";
+    String backendBaseUrl = ConnectContainerConfig.INSTANCE.getBackendApiUrl() + "api/v2/noauth/users/" + username + "/element/delete";
 
     String elementUrl = ad.getUri();
 

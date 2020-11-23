@@ -101,7 +101,7 @@ export class RestService {
         const self = this;
         return this.http
             .get(
-                '/streampipes-connect/api/v2/connect/riemer@fzi.de/master/description/formats'
+              this.host + this.authStatusService.email + '/master/description/formats'
             )
             .pipe(map(response => {
                 return FormatDescriptionList.fromData(response as FormatDescriptionList);
@@ -118,7 +118,7 @@ export class RestService {
 
     getFittingUnits(unitDescription: UnitDescription): Observable<UnitDescription[]> {
         return this.http
-            .post<UnitDescription[]>('/streampipes-connect/api/v1/' + this.authStatusService.email + '/master/unit', unitDescription)
+            .post<UnitDescription[]>(this.host + this.authStatusService.email + '/master/unit', unitDescription)
             .pipe(map(response => {
                 const descriptions = response as UnitDescription[];
                 return descriptions.filter(entry => entry.resource != unitDescription.resource)
