@@ -1,0 +1,34 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="node-controller-edge-01" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" folderName="edge-extensions">
+    <module name="streampipes-node-controller-container" />
+    <extension name="net.ashald.envfile">
+      <option name="IS_ENABLED" value="true" />
+      <option name="IS_SUBST" value="false" />
+      <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+      <option name="IS_IGNORE_MISSING_FILES" value="false" />
+      <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+      <ENTRIES>
+        <ENTRY IS_ENABLED="true" PARSER="runconfig" />
+        <ENTRY IS_ENABLED="true" PARSER="env" PATH="$PROJECT_DIR$/../incubator-streampipes/streampipes-node-controller-container/development/env" />
+      </ENTRIES>
+    </extension>
+    <option name="SPRING_BOOT_MAIN_CLASS" value="org.apache.streampipes.node.controller.container.NodeControllerContainerInit" />
+    <option name="ALTERNATIVE_JRE_PATH" />
+    <envs>
+      <env name="SP_BACKEND_HOST" value="host.docker.internal" />
+      <env name="CONSUL_LOCATION" value="host.docker.internal" />
+      <env name="SP_NODE_CONTROLLER_ID" value="edge-01.node-controller" />
+      <env name="SP_NODE_CONTROLLER_PORT" value="7077" />
+      <env name="SP_NODE_HOST" value="edge-01.fzi.de" />
+      <env name="SP_NODE_TYPE" value="edge" />
+      <env name="SP_NODE_ACCESSIBLE_SENSOR_ACTUATOR_ROS" value="ros;universalrobot;ipe-k3s-pi1.fzi.de;network" />
+      <env name="SP_NODE_HAS_GPU" value="false" />
+      <env name="SP_NODE_LOCATION_BUILDING" value="holl" />
+      <env name="SP_NODE_LOCATION_MACHINE" value="UR" />
+      <env name="SP_DEBUG" value="true" />
+    </envs>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

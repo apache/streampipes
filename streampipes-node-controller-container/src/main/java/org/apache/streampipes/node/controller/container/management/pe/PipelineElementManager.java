@@ -16,24 +16,29 @@ package org.apache.streampipes.node.controller.container.management.pe;/*
  *
  */
 
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
-import org.apache.streampipes.model.pipeline.PipelineElementStatus;
+import org.apache.http.entity.StringEntity;
+import org.apache.streampipes.container.model.node.InvocableRegistration;
+import org.apache.streampipes.node.controller.container.management.info.NodeInfoStorage;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Collections;
 
 public class PipelineElementManager {
 
     private static final Logger LOG =
             LoggerFactory.getLogger(PipelineElementManager.class.getCanonicalName());
 
+    private static final String PROTOCOL = "http://";
+    private static final String COLON = ":";
+    private static final String SLASH = "/";
+    private static final String ENV_CONSUL_LOCATION = "CONSUL_LOCATION";
     private static final Integer CONNECT_TIMEOUT = 10000;
-
     private static PipelineElementManager instance = null;
 
     private PipelineElementManager() {}
@@ -49,11 +54,34 @@ public class PipelineElementManager {
     }
 
     /**
-     * registeration of newly started pipeline element runtime container
+     * Register pipeline element container
+     *
+     * @param invocableRegistration
      */
+    public void registerPipelineElements(InvocableRegistration invocableRegistration) {
+        try {
+            Request.Put(makeConsulRegistrationEndpoint())
+                    .addHeader("accept", "application/json")
+                    .body(new StringEntity(JacksonSerializer
+                            .getObjectMapper()
+                            .writeValueAsString(invocableRegistration.getConsulServiceRegistrationBody())))
+                    .execute();
+
+            // TODO: persistent storage to survive failures
+            NodeInfoStorage.getInstance()
+                    .retrieveNodeInfo()
+                    .setSupportedPipelineElementAppIds(invocableRegistration.getSupportedPipelineElementAppIds());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
-     * invokes pipeline elements when pipeline is started
+     * Invoke pipeline elements when pipeline is started
+     *
+     * @param pipelineElementEndpoint
+     * @param payload
+     * @return
      */
     public String invokePipelineElement(String pipelineElementEndpoint, String payload) {
         LOG.info("Invoking element: {}", pipelineElementEndpoint);
@@ -76,6 +104,30 @@ public class PipelineElementManager {
     // TODO: implement detach pe logic
     public void detachPipelineElement() {
 
+    }
+
+    public void unregisterPipelineElements(){
+        NodeInfoStorage.getInstance()
+                .retrieveNodeInfo()
+                .setSupportedPipelineElementAppIds(Collections.emptyList());
+    }
+
+    private String makeConsulRegistrationEndpoint() {
+        if (System.getenv(ENV_CONSUL_LOCATION) != null) {
+            return PROTOCOL
+                    + System.getenv(ENV_CONSUL_LOCATION)
+                    + COLON
+                    + "8500"
+                    + SLASH
+                    + "v1/agent/service/register";
+        } else {
+            return PROTOCOL
+                    + "localhost"
+                    + COLON
+                    + "8500"
+                    + SLASH
+                    + "v1/agent/service/register";
+        }
     }
 
 }

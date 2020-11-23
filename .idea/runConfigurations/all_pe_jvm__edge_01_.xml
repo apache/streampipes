@@ -1,0 +1,35 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="all-pe-jvm (edge-01)" type="Application" factoryName="Application" folderName="edge-extensions">
+    <envs>
+      <env name="SP_PORT" value="7024" />
+      <env name="SP_HOST" value="edge-01.fzi.de" />
+      <env name="SP_DEBUG" value="true" />
+      <env name="SP_COUCHDB_HOST" value="localhost" />
+      <env name="SP_JMS_HOST" value="localhost" />
+      <env name="SP_JMS_PORT" value="61616" />
+      <env name="SP_DATA_LAKE_HOST" value="localhost" />
+      <env name="SP_DATA_LAKE_PORT" value="8086" />
+      <env name="SP_BACKEND_HOST" value="localhost" />
+      <env name="SP_BACKEND_PORT" value="8030" />
+      <env name="SP_NODE_ID" value="edge-01.node-controller" />
+      <env name="SP_NODE_CONTROLLER_HOST" value="edge-01.fzi.de" />
+      <env name="SP_NODE_CONTROLLER_PORT" value="7077" />
+    </envs>
+    <option name="MAIN_CLASS_NAME" value="org.apache.streampipes.pe.jvm.AllPipelineElementsInit" />
+    <module name="streampipes-pipeline-elements-all-jvm" />
+    <extension name="net.ashald.envfile">
+      <option name="IS_ENABLED" value="true" />
+      <option name="IS_SUBST" value="false" />
+      <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+      <option name="IS_IGNORE_MISSING_FILES" value="false" />
+      <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+      <ENTRIES>
+        <ENTRY IS_ENABLED="true" PARSER="runconfig" />
+        <ENTRY IS_ENABLED="true" PARSER="env" PATH="streampipes-pipeline-elements-all-jvm/development/env.secondary" />
+      </ENTRIES>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

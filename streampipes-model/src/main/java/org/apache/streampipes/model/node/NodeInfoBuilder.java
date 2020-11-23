@@ -60,6 +60,11 @@ public class NodeInfoBuilder {
         return this;
     }
 
+    public NodeInfoBuilder withNodeType(String nodeType) {
+        this.nodeMetadata.setNodeType(nodeType);
+        return this;
+    }
+
     public NodeInfoBuilder withNodeLocation(List<String> nodeLocationTags) {
         this.nodeMetadata.setNodeLocationTags(nodeLocationTags);
         return this;

@@ -1,4 +1,4 @@
-package org.apache.streampipes.node.controller.container.management.relay;/*
+package org.apache.streampipes.node.controller.container.management.orchestrator;/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,20 +16,20 @@ package org.apache.streampipes.node.controller.container.management.relay;/*
  *
  */
 
+import org.apache.streampipes.model.node.PipelineElementDockerContainer;
 import org.apache.streampipes.node.controller.container.management.IRunningInstances;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public enum RunningRelayInstances implements IRunningInstances<EventRelayManager> {
+public enum RunningContainerInstances implements IRunningInstances<PipelineElementDockerContainer> {
     INSTANCE;
 
-    private final Map<String, EventRelayManager> runningInstances = new HashMap<>();
+    private final Map<String, PipelineElementDockerContainer> runningInstances = new HashMap<>();
 
-    // TODO: persist active relays to support failure handling
     @Override
-    public void add(String id, EventRelayManager eventRelayManager) {
-        runningInstances.put(id, eventRelayManager);
+    public void add(String id, PipelineElementDockerContainer container) {
+        runningInstances.put(id, container);
     }
 
     @Override
@@ -38,7 +38,7 @@ public enum RunningRelayInstances implements IRunningInstances<EventRelayManager
     }
 
     @Override
-    public EventRelayManager get(String id) {
+    public PipelineElementDockerContainer get(String id) {
         return isRunning(id) ? runningInstances.get(id) : null;
     }
 

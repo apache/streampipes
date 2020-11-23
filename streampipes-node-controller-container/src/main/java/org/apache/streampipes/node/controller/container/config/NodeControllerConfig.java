@@ -28,87 +28,69 @@ public enum NodeControllerConfig {
     private SpConfig config;
 
     private static final String SLASH = "/";
-    private static final String DOT = ".";
-    private static final String DEFAULT_NODE_BROKER_NAME_SUFFIX = "broker";
-    private static final String node_service_id = "node/org.apache.streampipes.node.controller";
+    private static final String NODE_SERVICE_ID = "node/org.apache.streampipes.node.controller";
 
     private static final String DEFAULT_NODE_CONTROLLER_ID = "node-controller";
     private static final int DEFAULT_NODE_CONTROLLER_PORT = 7077;
+    private static final String DEFAULT_NODE_TYPE = "edge";
     private static final String DEFAULT_NODE_BROKER_HOST = "node-broker";
     private static final int DEFAULT_NODE_BROKER_PORT = 1883;
     private static final String DEFAULT_NODE_HOST_NAME = "host.docker.internal";
 
     // Node controller configs
-    private static final int DEFAULT_DOCKER_PRUNING_FREQ_SECS = 60;
+    private static final int DEFAULT_DOCKER_PRUNING_FREQ_SECS = 3600;
     private static final int DEFAULT_NODE_RESOURCE_UPDATE_FREQ_SECS = 30;
     private static final int DEFAULT_EVENT_BUFFER_SIZE = 1000;
 
     NodeControllerConfig() {
-        config = SpConfig.getSpConfig(node_service_id + SLASH + getNodeHostName());
+        config = SpConfig.getSpConfig(NODE_SERVICE_ID + SLASH + getNodeHostName());
 
         config.register(ConfigKeys.NODE_CONTROLLER_ID_KEY, DEFAULT_NODE_CONTROLLER_ID, "node controller id");
-        config.register(ConfigKeys.NODE_CONTROLLER_PORT_KEY,DEFAULT_NODE_CONTROLLER_PORT, "node controller port");
-        config.register(ConfigKeys.NODE_HOST_KEY, "host.docker.internal", "node host name");
-        config.register(ConfigKeys.NODE_LOCATION_KEY, "", "node location");
+        config.register(ConfigKeys.NODE_CONTROLLER_PORT_KEY, DEFAULT_NODE_CONTROLLER_PORT, "node controller port");
+        config.register(ConfigKeys.NODE_HOST_NAME_KEY, "host.docker.internal", "node host name");
+        config.register(ConfigKeys.NODE_TYPE, "edge", "node type");
         config.register(ConfigKeys.NODE_BROKER_HOST_KEY, DEFAULT_NODE_BROKER_HOST, "node broker host");
         config.register(ConfigKeys.NODE_BROKER_PORT_KEY, DEFAULT_NODE_BROKER_PORT, "node broker port");
-
     }
 
     public String getNodeServiceId() {
-        return node_service_id;
+        return NODE_SERVICE_ID;
     }
 
-    /**
-     *
-     * @return node host name (physical DNS name or IP)
-     */
     public String getNodeHostName(){
-        return envExist(ConfigKeys.NODE_HOST_KEY) ? getEnvAsString(ConfigKeys.NODE_HOST_KEY) :
-                DEFAULT_NODE_HOST_NAME;
+        return getEnvOrDefault(ConfigKeys.NODE_HOST_NAME_KEY,
+                DEFAULT_NODE_HOST_NAME,
+                String.class);
     }
 
-    /**
-     *
-     * @return node-controller id
-     */
     public String getNodeControllerId() {
-        return envExist(ConfigKeys.NODE_CONTROLLER_ID_KEY) ? getEnvAsString(ConfigKeys.NODE_CONTROLLER_ID_KEY) :
-                DEFAULT_NODE_BROKER_HOST;
+        return getEnvOrDefault(ConfigKeys.NODE_CONTROLLER_ID_KEY,
+                DEFAULT_NODE_CONTROLLER_ID,
+                String.class);
     }
 
-    /**
-     *
-     * @return node-controller port
-     */
     public int getNodeControllerPort(){
-        return envExist(ConfigKeys.NODE_CONTROLLER_PORT_KEY) ? getEnvAsInteger(ConfigKeys.NODE_CONTROLLER_PORT_KEY) :
-                DEFAULT_NODE_CONTROLLER_PORT;
+        return getEnvOrDefault(
+                ConfigKeys.NODE_CONTROLLER_PORT_KEY,
+                DEFAULT_NODE_CONTROLLER_PORT,
+                Integer.class);
     }
 
-    /**
-     *
-     * @return node broker host
-     */
     public String getNodeBrokerHost() {
-        return envExist(ConfigKeys.NODE_BROKER_HOST_KEY) ? getEnvAsString(ConfigKeys.NODE_BROKER_HOST_KEY) :
-                DEFAULT_NODE_BROKER_HOST;
+        return getEnvOrDefault(
+                ConfigKeys.NODE_BROKER_HOST_KEY,
+                DEFAULT_NODE_BROKER_HOST,
+                String.class);
     }
 
-    /**
-     *
-     * @return node broker port
-     */
     // TODO: should be flexibly set due to node broker technology used
     public int getNodeBrokerPort() {
-        return envExist(ConfigKeys.NODE_BROKER_PORT_KEY) ? getEnvAsInteger(ConfigKeys.NODE_BROKER_PORT_KEY) :
-                DEFAULT_NODE_BROKER_PORT;
+        return getEnvOrDefault(
+                ConfigKeys.NODE_BROKER_PORT_KEY,
+                DEFAULT_NODE_BROKER_PORT,
+                Integer.class);
     }
 
-    /**
-     *
-     * @return node location tags
-     */
     public List<String> getNodeLocations() {
         return System.getenv()
                 .entrySet()
@@ -118,10 +100,6 @@ public enum NodeControllerConfig {
                 .collect(Collectors.toList());
     }
 
-    /**
-     *
-     * @return supported pipeline elements that can run on this node
-     */
     // TODO: get supported PE programmatically instead of environment variables
     public List<String> getSupportedPipelineElements() {
         return System.getenv()
@@ -132,10 +110,6 @@ public enum NodeControllerConfig {
                 .collect(Collectors.toList());
     }
 
-    /**
-     *
-     * @return return sensors/actuators that are accessible
-     */
     public List<AccessibleSensorActuatorResource> getAccessibleSensorActuator(){
         return System.getenv()
                 .entrySet()
@@ -152,71 +126,62 @@ public enum NodeControllerConfig {
                 .collect(Collectors.toList());
     }
 
-    /**
-     *
-     * @return true if node has cuda capable GPU
-     */
     public boolean hasNodeGpu(){
-        return envExist(ConfigKeys.NODE_HAS_GPU_KEY) ? getEnvAsBoolean(ConfigKeys.NODE_HAS_GPU_KEY) : false;
+        return getEnvOrDefault(
+                ConfigKeys.NODE_HAS_GPU_KEY,
+                false,
+                Boolean.class);
     }
 
-    /**
-     *
-     * @return number of cuda cores
-     */
     public int getGpuCores() {
-        return envExist(ConfigKeys.NODE_GPU_CUDA_CORES_KEY) ? getEnvAsInteger(ConfigKeys.NODE_GPU_CUDA_CORES_KEY) : 0;
+        return getEnvOrDefault(
+                ConfigKeys.NODE_GPU_CUDA_CORES_KEY,
+                0,
+                Integer.class);
     }
 
-    /**
-     *
-     * @return specific node GPU type
-     */
     public String getGpuType() {
-        return envExist(ConfigKeys.NODE_GPU_TYPE_KEY) ? getEnvAsString(ConfigKeys.NODE_GPU_TYPE_KEY) : "n/a";
+        return getEnvOrDefault(
+                ConfigKeys.NODE_GPU_TYPE_KEY,
+                "n/a",
+                String.class);
     }
 
-    /**
-     *
-     * @return docker pruning frequency
-     */
     public int getPruningFreq() {
-        return envExist(ConfigKeys.DOCKER_PRUNING_FREQ_SECS_KEY) ? getEnvAsInteger(ConfigKeys.DOCKER_PRUNING_FREQ_SECS_KEY) :
-                DEFAULT_DOCKER_PRUNING_FREQ_SECS;
+        return getEnvOrDefault(
+                ConfigKeys.DOCKER_PRUNING_FREQ_SECS_KEY,
+                DEFAULT_DOCKER_PRUNING_FREQ_SECS,
+                Integer.class);
     }
 
-    /**
-     *
-     * @return node resource update frequency
-     */
     public int getNodeResourceUpdateFreqSecs() {
-        return envExist(ConfigKeys.NODE_RESOURCE_UPDATE_FREQ_SECS_KEY) ? getEnvAsInteger(ConfigKeys.NODE_RESOURCE_UPDATE_FREQ_SECS_KEY) :
-                DEFAULT_NODE_RESOURCE_UPDATE_FREQ_SECS;
+        return getEnvOrDefault(
+                ConfigKeys.NODE_RESOURCE_UPDATE_FREQ_SECS_KEY,
+                DEFAULT_NODE_RESOURCE_UPDATE_FREQ_SECS,
+                Integer.class);
     }
 
     public int getEventBufferSize() {
-        return envExist(ConfigKeys.NODE_EVENT_BUFFER_SIZE) ? getEnvAsInteger(ConfigKeys.NODE_EVENT_BUFFER_SIZE) :
-                DEFAULT_EVENT_BUFFER_SIZE;
+        return getEnvOrDefault(
+                ConfigKeys.NODE_EVENT_BUFFER_SIZE,
+                DEFAULT_EVENT_BUFFER_SIZE,
+                Integer.class);
     }
 
-    private boolean envExist(String key) {
-        return System.getenv(key) != null;
+    public String getNodeType() {
+        return getEnvOrDefault(
+                ConfigKeys.NODE_TYPE,
+                DEFAULT_NODE_TYPE,
+                String.class);
     }
 
-    private String getEnv(String key) {
-        return System.getenv(key);
+    private <T> T getEnvOrDefault(String k, T defaultValue, Class<T> type) {
+        if(type.equals(Integer.class)) {
+            return System.getenv(k) != null ? (T) Integer.valueOf(System.getenv(k)) : defaultValue;
+        } else if(type.equals(Boolean.class)) {
+            return System.getenv(k) != null ? (T) Boolean.valueOf(System.getenv(k)) : defaultValue;
+        } else {
+            return System.getenv(k) != null ? type.cast(System.getenv(k)) : defaultValue;
+        }
     }
-
-    private String getEnvAsString(String key) {
-        return String.valueOf(getEnv(key));
-    }
-
-    private int getEnvAsInteger(String key) {
-        return Integer.parseInt(getEnv(key));
-    }
-
-    private boolean getEnvAsBoolean(String key) {
-        return Boolean.parseBoolean(getEnv(key));
-    }
-
 }

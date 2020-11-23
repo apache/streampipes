@@ -18,7 +18,6 @@ package org.apache.streampipes.node.controller.container.management.resource;/*
 
 import com.google.gson.Gson;
 import org.apache.streampipes.node.controller.container.config.NodeControllerConfig;
-import org.apache.streampipes.node.controller.container.management.container.DockerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import oshi.SystemInfo;

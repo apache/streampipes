@@ -26,15 +26,25 @@ public class NodeMetadata {
 
     private String nodeAddress;
     private String nodeModel;
+    private String nodeType;
     private List<String> nodeLocationTags;
 
     public NodeMetadata() {
     }
 
-    public NodeMetadata(String nodeAddress, String nodeModel, List<String> nodeLocationTags) {
+    public NodeMetadata(String nodeAddress, String nodeModel, String nodeType, List<String> nodeLocationTags) {
         this.nodeAddress = nodeAddress;
         this.nodeModel = nodeModel;
+        this.nodeType = nodeType;
         this.nodeLocationTags = nodeLocationTags;
+    }
+
+    public String getNodeType() {
+        return nodeType;
+    }
+
+    public void setNodeType(String nodeType) {
+        this.nodeType = nodeType;
     }
 
     public String getNodeAddress() {

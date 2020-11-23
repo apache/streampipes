@@ -1,4 +1,3 @@
-package org.apache.streampipes.node.controller.container.rest;
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -16,19 +15,18 @@ package org.apache.streampipes.node.controller.container.rest;
  * limitations under the License.
  *
  */
+package org.apache.streampipes.node.controller.container.management.orchestrator;
 
-import org.glassfish.jersey.server.ResourceConfig;
-import org.springframework.stereotype.Component;
+import org.apache.streampipes.model.node.PipelineElementDockerContainer;
 
-@Component
-public class NodeControllerResourceConfig extends ResourceConfig {
+public interface ContainerOrchestrator {
 
-    public NodeControllerResourceConfig() {
-        register(HealthCheckResource.class);
-        register(InfoStatusResource.class);
-        register(InvocableManagementResource.class);
+   void init();
 
-        // TODO remove later - only for local relay tests
-        register(DebugRelayResource.class);
-    }
+   String deploy(PipelineElementDockerContainer p);
+
+   String remove(PipelineElementDockerContainer p);
+
+   String list();
+
 }

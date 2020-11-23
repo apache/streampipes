@@ -122,7 +122,9 @@ export class SavePipelineComponent implements OnInit {
       this.deploymentOptions[pipelineElement.appId] = [];
       this.deploymentOptions[pipelineElement.appId].push(this.makeDefaultNodeInfo());
       edgeNodes.forEach(nodeInfo => {
-        if (nodeInfo.supportedPipelineElementAppIds.some(appId => appId === pipelineElement.appId)) {
+        // only show nodes that actually have supported pipeline elements registered
+        if (nodeInfo.supportedPipelineElementAppIds.length != 0 &&
+            nodeInfo.supportedPipelineElementAppIds.some(appId => appId === pipelineElement.appId)) {
           this.deploymentOptions[pipelineElement.appId].push(nodeInfo);
         }
       })

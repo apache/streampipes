@@ -1,4 +1,3 @@
-package org.apache.streampipes.node.controller.container.config;
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -16,20 +15,22 @@ package org.apache.streampipes.node.controller.container.config;
  * limitations under the License.
  *
  */
+package org.apache.streampipes.node.controller.container.config;
 
 public class ConfigKeys {
-    final static String NODE_CONTROLLER_ID_KEY = "SP_NODE_CONTROLLER_ID";
-    final static String NODE_CONTROLLER_PORT_KEY = "SP_NODE_CONTROLLER_PORT";
-    final static String NODE_HOST_KEY = "SP_NODE_HOST";
-    final static String NODE_BROKER_HOST_KEY = "SP_NODE_BROKER_HOST";
-    final static String NODE_BROKER_PORT_KEY = "SP_NODE_BROKER_PORT";
-    final static String NODE_LOCATION_KEY = "SP_NODE_LOCATION";
-    final static String NODE_HAS_GPU_KEY = "SP_NODE_HAS_GPU";
-    final static String NODE_GPU_CUDA_CORES_KEY = "SP_NODE_GPU_CUDA_CORES";
-    final static String NODE_GPU_TYPE_KEY = "SP_NODE_GPU_TYPE";
-    final static String NODE_ACCESSIBLE_SENSOR_ACTUATOR_KEY = "SP_NODE_ACCESSIBLE_SENSOR_ACTUATOR";
-    final static String NODE_SUPPORTED_PE_APP_ID_KEY = "SP_NODE_SUPPORTED_PE_APP_ID";
-    final static String DOCKER_PRUNING_FREQ_SECS_KEY = "SP_DOCKER_PRUNING_FREQ_SECS";
-    final static String NODE_RESOURCE_UPDATE_FREQ_SECS_KEY = "SP_NODE_RESOURCE_UPDATE_FREQ_SECS";
-    final static String NODE_EVENT_BUFFER_SIZE = "SP_NODE_EVENT_BUFFER_SIZE";
+    public static final String NODE_TYPE = "SP_NODE_TYPE";
+    public static final String NODE_CONTROLLER_ID_KEY = "SP_NODE_CONTROLLER_ID";
+    public static final String NODE_CONTROLLER_PORT_KEY = "SP_NODE_CONTROLLER_PORT";
+    public static final String NODE_HOST_NAME_KEY = "SP_NODE_HOST";
+    public static final String NODE_BROKER_HOST_KEY = "SP_NODE_BROKER_HOST";
+    public static final String NODE_BROKER_PORT_KEY = "SP_NODE_BROKER_PORT";
+    public static final String NODE_LOCATION_KEY = "SP_NODE_LOCATION";
+    public static final String NODE_HAS_GPU_KEY = "SP_NODE_HAS_GPU";
+    public static final String NODE_GPU_CUDA_CORES_KEY = "SP_NODE_GPU_CUDA_CORES";
+    public static final String NODE_GPU_TYPE_KEY = "SP_NODE_GPU_TYPE";
+    public static final String NODE_ACCESSIBLE_SENSOR_ACTUATOR_KEY = "SP_NODE_ACCESSIBLE_SENSOR_ACTUATOR";
+    public static final String NODE_SUPPORTED_PE_APP_ID_KEY = "SP_NODE_SUPPORTED_PE_APP_ID";
+    public static final String DOCKER_PRUNING_FREQ_SECS_KEY = "SP_DOCKER_PRUNING_FREQ_SECS";
+    public static final String NODE_RESOURCE_UPDATE_FREQ_SECS_KEY = "SP_NODE_RESOURCE_UPDATE_FREQ_SECS";
+    public static final String NODE_EVENT_BUFFER_SIZE = "SP_NODE_EVENT_BUFFER_SIZE";
 }

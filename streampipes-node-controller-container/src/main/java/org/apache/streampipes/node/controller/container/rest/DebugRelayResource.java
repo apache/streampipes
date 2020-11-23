@@ -35,7 +35,7 @@ public class DebugRelayResource extends AbstractNodeContainerResource {
         System.out.println(msg);
         EventRelayManager eventRelayManager = new EventRelayManager();
         eventRelayManager.start();
-        RunningRelayInstances.INSTANCE.addRelay(eventRelayManager.getRelayedTopic(), eventRelayManager);
+        RunningRelayInstances.INSTANCE.add(eventRelayManager.getRelayedTopic(), eventRelayManager);
 
         return ok();
     }

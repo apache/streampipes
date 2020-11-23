@@ -1,4 +1,4 @@
-package org.apache.streampipes.node.controller.container.management.container;/*
+package org.apache.streampipes.node.controller.container.management.orchestrator.docker;/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,8 +16,6 @@ package org.apache.streampipes.node.controller.container.management.container;/*
  *
  */
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.spotify.docker.client.DefaultDockerClient;
@@ -37,15 +35,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class DockerUtils {
-
-    private static final Logger LOG =
-            LoggerFactory.getLogger(DockerUtils.class.getCanonicalName());
+    private static final Logger LOG = LoggerFactory.getLogger(DockerUtils.class.getCanonicalName());
 
     private static final String SP_NETWORK = "spnet";
     private static final String SP_CONTAINER_PREFIX = "streampipes_";
     private static final String DOCKER_UNIX_SOCK = "/var/run/docker.sock";
     private static final String BLANK_SPACE = " ";
-
     private static DockerUtils instance;
     private static DockerClient docker;
 
@@ -108,10 +103,10 @@ public class DockerUtils {
     private String getContainerIdByName(String containerName) {
         LOG.info("Get containerId by container name");
         try {
-            List<Container> containerList = docker.listContainers();
-            return containerList.stream()
+            return docker.listContainers()
+                    .stream()
                     .findAny()
-                    .filter(c -> c.names().get(0).contains(containerName))
+                    .filter(c -> c.names().get(0).contains(verifyContainerName(containerName)))
                     .get()
                     .id();
         } catch (DockerException | InterruptedException e) {
@@ -123,14 +118,17 @@ public class DockerUtils {
 
     public String createContainer(PipelineElementDockerContainer p) {
         LOG.info("Create pipeline element container {}", p.getContainerName());
-        ContainerCreation creation;
         try {
-            creation = docker.createContainer(getContainerConfig(p), SP_CONTAINER_PREFIX + p.getContainerName());
-            return creation.id();
+            return docker.createContainer(getContainerConfig(p), verifyContainerName(p.getContainerName())).id();
         } catch (DockerException | InterruptedException e) {
             LOG.error("Pipeline element container could not be created. {}", e.toString());
         }
         return "";
+    }
+
+    private String verifyContainerName(String containerName) {
+        return containerName.startsWith(SP_CONTAINER_PREFIX) ?
+                containerName : SP_CONTAINER_PREFIX + containerName;
     }
 
     private ContainerConfig getContainerConfig(PipelineElementDockerContainer p) {
@@ -146,10 +144,9 @@ public class DockerUtils {
     }
 
     public Optional<Container> getContainer(String containerName) {
-        LOG.info("Get container: {}", containerName);
-        List<Container> containers = getContainerList();
-        return containers.stream()
-                .filter(c -> c.names().get(0).contains(containerName))
+        return getContainerList()
+                .stream()
+                .filter(c -> c.names().get(0).contains(verifyContainerName(containerName)))
                 .findAny();
     }
 

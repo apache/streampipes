@@ -1,4 +1,4 @@
-package org.apache.streampipes.node.controller.container.management.container;/*
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -15,13 +15,12 @@ package org.apache.streampipes.node.controller.container.management.container;/*
  * limitations under the License.
  *
  */
+package org.apache.streampipes.node.controller.container.management.orchestrator;
 
-import org.apache.streampipes.model.node.PipelineElementDockerContainer;
-
-public interface ContainerOrchestrator {
-
-   String deploy(PipelineElementDockerContainer p);
-
-   String remove(PipelineElementDockerContainer p);
-
+public enum ContainerStatus {
+    DEPLOYED,
+    RUNNING,
+    STOPPED,
+    REMOVED,
+    UNKNOWN
 }

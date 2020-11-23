@@ -1,4 +1,4 @@
-package org.apache.streampipes.model.node;/*
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -15,10 +15,12 @@ package org.apache.streampipes.model.node;/*
  * limitations under the License.
  *
  */
+package org.apache.streampipes.model.node;
 
 import io.fogsy.empire.annotations.RdfProperty;
 import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
+import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
 import javax.persistence.Entity;
@@ -28,6 +30,7 @@ import java.util.Map;
 
 @RdfsClass(StreamPipes.PE_DOCKER_CONTAINER)
 @Entity
+@TsModel
 public class PipelineElementDockerContainer extends UnnamedStreamPipesEntity {
 
     @RdfProperty(StreamPipes.PE_DOCKER_CONTAINER_IMAGE_URI)
@@ -68,12 +71,12 @@ public class PipelineElementDockerContainer extends UnnamedStreamPipesEntity {
 
     public PipelineElementDockerContainer(PipelineElementDockerContainer other) {
         super(other);
-        this.imageURI = imageURI;
-        this.containerName = containerName;
-        this.serviceId = serviceId;
-        this.containerPorts = containerPorts;
-        this.envVars = envVars;
-        this.labels = labels;
+        this.imageURI = other.getImageURI();
+        this.containerName = other.getContainerName();
+        this.serviceId = other.getServiceId();
+        this.containerPorts = other.getContainerPorts();
+        this.envVars = other.getEnvVars();
+        this.labels = other.getLabels();
     }
 
     public String getImageURI() {

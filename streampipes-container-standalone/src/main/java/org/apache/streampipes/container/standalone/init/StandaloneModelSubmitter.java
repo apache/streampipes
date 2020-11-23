@@ -19,6 +19,7 @@
 package org.apache.streampipes.container.standalone.init;
 
 
+import org.apache.streampipes.container.util.NodeControllerUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -56,17 +57,22 @@ public abstract class StandaloneModelSubmitter extends ModelSubmitter {
         app.setDefaultProperties(Collections.singletonMap("server.port", peConfig.getPort()));
         app.run();
 
-        ConsulUtil.registerPeService(
-                peConfig.getId(),
-                peConfig.getHost(),
-                peConfig.getPort()
-        );
-
-//        NodeUtil.registerPeService(
-//                peConfig.getId(),
-//                peConfig.getHost(),
-//                peConfig.getPort()
-//        );
+        // check wether pipeline element is managed by node controller
+        if (System.getenv("SP_NODE_ID") != null) {
+            // secondary
+            // register pipeline element service via node controller
+            NodeControllerUtil.register(
+                    peConfig.getId(),
+                    peConfig.getHost(),
+                    peConfig.getPort(),
+                    DeclarersSingleton.getInstance().getEpaDeclarers());
+        } else {
+            // primary
+            ConsulUtil.registerPeService(
+                    peConfig.getId(),
+                    peConfig.getHost(),
+                    peConfig.getPort());
+        }
     }
 
     @PreDestroy

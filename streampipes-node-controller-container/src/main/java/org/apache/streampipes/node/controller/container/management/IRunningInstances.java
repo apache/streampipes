@@ -1,4 +1,4 @@
-package org.apache.streampipes.node.controller.container.management.container;/*
+package org.apache.streampipes.node.controller.container.management;/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,10 +16,13 @@ package org.apache.streampipes.node.controller.container.management.container;/*
  *
  */
 
-public enum ContainerStatus {
-    DEPLOYED,
-    RUNNING,
-    STOPPED,
-    REMOVED,
-    UNKNOWN
+public interface IRunningInstances<T> {
+
+    void add(String id, T value);
+
+    boolean isRunning(String id);
+
+    T get(String id);
+
+    void remove(String id);
 }

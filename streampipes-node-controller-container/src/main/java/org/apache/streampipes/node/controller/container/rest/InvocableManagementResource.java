@@ -1,4 +1,4 @@
-package org.apache.streampipes.node.controller.container.rest;/*
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -15,18 +15,21 @@ package org.apache.streampipes.node.controller.container.rest;/*
  * limitations under the License.
  *
  */
+package org.apache.streampipes.node.controller.container.rest;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.container.model.node.InvocableRegistration;
 import org.apache.streampipes.container.transform.Transformer;
 import org.apache.streampipes.container.util.Util;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.node.PipelineElementDockerContainer;
-import org.apache.streampipes.node.controller.container.management.container.DockerOrchestratorManager;
+import org.apache.streampipes.node.controller.container.management.orchestrator.docker.DockerContainerOrchestrator;
 import org.apache.streampipes.node.controller.container.management.pe.PipelineElementManager;
 import org.apache.streampipes.node.controller.container.management.relay.EventRelayManager;
 import org.apache.streampipes.node.controller.container.management.relay.RunningRelayInstances;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,64 +39,44 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 
 @Path("/node/container")
-public class PELifeCycleResource<I extends InvocableStreamPipesEntity> extends AbstractNodeContainerResource{
-    private static final Logger LOG =
-            LoggerFactory.getLogger(PELifeCycleResource.class.getCanonicalName());
+public class InvocableManagementResource<I extends InvocableStreamPipesEntity> extends AbstractNodeContainerResource{
+    private static final Logger LOG = LoggerFactory.getLogger(InvocableManagementResource.class.getCanonicalName());
 
-    private static final String COLON = ":";
-
-    /**
-     *
-     * @return a list of currently running Docker Containers
-     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getPipelineElementContainer(){
-        return ok(DockerOrchestratorManager.getInstance().list());
+        return ok(DockerContainerOrchestrator.getInstance().list());
     }
 
-    /**
-     * Deploys a new Docker Container
-     *
-     * @param container to be deployed
-     * @return deployment status
-     */
     @POST
     @Path("/deploy")
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     public Response deployPipelineElementContainer(PipelineElementDockerContainer container) {
-        return ok(DockerOrchestratorManager.getInstance().deploy(container));
+        return ok(DockerContainerOrchestrator.getInstance().deploy(container));
     }
 
-    /**
-     * Register pipeline elements in consul
-     * @param message
-     * @return
-     */
     @POST
     @Path("/register")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response registerPipelineElementInConsul(String message) {
-        // TODO implement
+    public void register(String body) {
+        try {
+            InvocableRegistration invocableRegistration = JacksonSerializer
+                    .getObjectMapper()
+                    .readValue(body, InvocableRegistration.class);
 
-//        HttpClient client = HttpClients.custom().build();
-//        HttpUriRequest request = RequestBuilder.put()
-//                .setUri("http://localhost:8500/v1/agent/service/register")
-//                .setEntity(new StringEntity(message))
-//                .setHeader(HttpHeaders.CONTENT_TYPE, "application/json")
-//                .build();
-//        client.execute(request);
+            // register pipeline elements at consul and node controller
+            PipelineElementManager.getInstance().registerPipelineElements(invocableRegistration);
+            LOG.info("Sucessfully registered pipeline element container");
 
-        return ok();
+        } catch (IOException e) {
+            LOG.error("Could not register pipeline element container - " + e.toString());
+        }
     }
 
     @POST
     @Path("/invoke/{identifier}/{elementId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response invokePipelineElement(@PathParam("identifier") String identifier, @PathParam("elementId") String elementId, String payload) {
+    public Response invoke(@PathParam("identifier") String identifier, @PathParam("elementId") String elementId, String payload) {
 
         // TODO implement
         String pipelineElementEndpoint;
@@ -105,7 +88,7 @@ public class PELifeCycleResource<I extends InvocableStreamPipesEntity> extends A
                 // TODO: start event relay to remote broker
 //                EventRelayManager eventRelayManager = new EventRelayManager(graph);
 //                eventRelayManager.start();
-//                RunningRelayInstances.INSTANCE.addRelay(eventRelayManager.getRelayedTopic(), eventRelayManager);
+//                RunningRelayInstances.INSTANCE.add(eventRelayManager.getRelayedTopic(), eventRelayManager);
 
                 PipelineElementManager.getInstance().invokePipelineElement(graph.getBelongsTo(), payload);
             }
@@ -141,8 +124,10 @@ public class PELifeCycleResource<I extends InvocableStreamPipesEntity> extends A
         // TODO implement
 
         // TODO: stop event relay to remote broker
-        EventRelayManager relay = RunningRelayInstances.INSTANCE.removeRelay(appId);
+        EventRelayManager relay = RunningRelayInstances.INSTANCE.get(appId);
+        assert relay != null;
         relay.stop();
+        RunningRelayInstances.INSTANCE.remove(appId);
 
         return ok();
     }
@@ -150,9 +135,9 @@ public class PELifeCycleResource<I extends InvocableStreamPipesEntity> extends A
     @DELETE
     @Path("/remove")
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     public Response removePipelineElementContainer(PipelineElementDockerContainer container) {
-        return ok(DockerOrchestratorManager.getInstance().remove(container));
+        PipelineElementManager.getInstance().unregisterPipelineElements();
+        return ok(DockerContainerOrchestrator.getInstance().remove(container));
     }
 
 }

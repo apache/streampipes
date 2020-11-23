@@ -119,9 +119,9 @@ public class InvocationGraphBuilder {
             }
           }
         } else {
-          t.getInputStreams()
-                  .get(getIndex(source.getDOM(), t))
-                  .setEventGrounding(inputGrounding);
+            t.getInputStreams()
+                    .get(getIndex(source.getDOM(), t))
+                    .setEventGrounding(inputGrounding);
         }
       } else {
         t.getInputStreams()

@@ -18,6 +18,9 @@ package org.apache.streampipes.node.controller.container;
  */
 
 import org.apache.streampipes.container.util.ConsulUtil;
+import org.apache.streampipes.model.node.PipelineElementDockerContainer;
+import org.apache.streampipes.node.controller.container.management.orchestrator.docker.DockerContainerOrchestrator;
+import org.apache.streampipes.node.controller.container.management.pe.PipelineElementManager;
 import org.apache.streampipes.node.controller.container.rest.NodeControllerResourceConfig;
 import org.apache.streampipes.node.controller.container.config.NodeControllerConfig;
 import org.apache.streampipes.node.controller.container.management.info.NodeInfoStorage;
@@ -36,16 +39,16 @@ import java.util.Collections;
 @Configuration
 @EnableAutoConfiguration
 @Import({ NodeControllerResourceConfig.class })
-public class NodeControllerContainer {
+public class NodeControllerContainerInit {
 
     private static final Logger LOG =
-            LoggerFactory.getLogger(NodeControllerContainer.class.getCanonicalName());
+            LoggerFactory.getLogger(NodeControllerContainerInit.class.getCanonicalName());
 
     public static void main(String [] args) {
 
         NodeControllerConfig nodeConfig = NodeControllerConfig.INSTANCE;
 
-        SpringApplication app = new SpringApplication(NodeControllerContainer.class);
+        SpringApplication app = new SpringApplication(NodeControllerContainerInit.class);
         app.setDefaultProperties(Collections.singletonMap("server.port", nodeConfig.getNodeControllerPort()));
         app.run();
 
@@ -58,13 +61,17 @@ public class NodeControllerContainer {
         LOG.info("Start Node Resource manager");
         ResourceManager.getInstance().run();
 
+        if (!"true".equals(System.getenv("SP_DEBUG"))) {
+            LOG.info("Auto-deploy StreamPipes node container");
+            DockerContainerOrchestrator.getInstance().init();
+        }
+
         // registration with consul here
         ConsulUtil.registerNodeControllerService(
                 nodeConfig.getNodeServiceId(),
                 nodeConfig.getNodeHostName(),
                 nodeConfig.getNodeControllerPort()
         );
-
     }
 
     @PreDestroy

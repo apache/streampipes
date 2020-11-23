@@ -1,4 +1,4 @@
-package org.apache.streampipes.node.controller.container.management.container;/*
+package org.apache.streampipes.node.controller.container.management.orchestrator.docker;/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -18,44 +18,48 @@ package org.apache.streampipes.node.controller.container.management.container;/*
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.exceptions.NotFoundException;
 import com.spotify.docker.client.messages.Container;
 import org.apache.commons.lang.StringUtils;
 import org.apache.streampipes.container.util.ConsulUtil;
 import org.apache.streampipes.model.node.PipelineElementDockerContainer;
+import org.apache.streampipes.node.controller.container.management.orchestrator.ContainerOrchestrator;
+import org.apache.streampipes.node.controller.container.management.orchestrator.ContainerStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.*;
 
-public class DockerOrchestratorManager implements ContainerOrchestrator {
+public class DockerContainerOrchestrator implements ContainerOrchestrator {
 
     private static final Logger LOG =
-            LoggerFactory.getLogger(DockerOrchestratorManager.class.getCanonicalName());
+            LoggerFactory.getLogger(DockerContainerOrchestrator.class.getCanonicalName());
 
-    private DockerUtils docker = DockerUtils.getInstance();
+    private final DockerUtils docker = DockerUtils.getInstance();
+    private static DockerContainerOrchestrator instance = null;
 
-    private static DockerOrchestratorManager instance = null;
+    private DockerContainerOrchestrator() {}
 
-    private DockerOrchestratorManager() {}
-
-    public static DockerOrchestratorManager getInstance() {
+    public static DockerContainerOrchestrator getInstance() {
         if (instance == null) {
-            synchronized (DockerOrchestratorManager.class) {
+            synchronized (DockerContainerOrchestrator.class) {
                 if (instance == null)
-                    instance = new DockerOrchestratorManager();
+                    instance = new DockerContainerOrchestrator();
             }
         }
         return instance;
     }
 
+    @Override
+    public void init() {
+        DockerNodeContainer.INSTANCE.get().forEach(this::deploy);
+    }
 
     @Override
     public String deploy(PipelineElementDockerContainer p) {
-        LOG.info("Pull image and deploy pipeline element container {}", p.getContainerName());
+        LOG.info("Pull image and deploy pipeline element container {}", p.getImageURI());
 
         Optional<Container> containerOptional = docker.getContainer(p.getContainerName());
         if (!containerOptional.isPresent()) {
@@ -84,7 +88,7 @@ public class DockerOrchestratorManager implements ContainerOrchestrator {
 
     @Override
     public String remove(PipelineElementDockerContainer p) {
-        LOG.info("Remove pipeline element container: {}", p.getContainerName());
+        LOG.info("Remove pipeline element container: {}", p.getImageURI());
 
         Optional<Container> containerOptional = docker.getContainer(p.getContainerName());
         if(containerOptional.isPresent()) {
@@ -110,19 +114,23 @@ public class DockerOrchestratorManager implements ContainerOrchestrator {
         return new Gson().toJson(m);
     }
 
+    @Override
     public String list() {
         LOG.info("List running pipeline element container");
 
         List<Container> containerList = docker.getRunningPipelineElementContainer();
-
+        HashMap<String, Object> m = new HashMap<>();
         if (containerList.size() > 0) {
-            List<String> l = new ArrayList<>();
             for (Container c: containerList) {
-                l.add(StringUtils.remove(c.names().get(0), "/"));
+                m.put("containerName", StringUtils.remove(c.names().get(0), "/"));
+                m.put("containerId", c.id());
+                m.put("image", c.image());
+                m.put("state", c.state());
+                m.put("status", c.status());
+                m.put("labels", c.labels());
             }
-            return new Gson().toJson(l);
         }
-        return new Gson().toJson(new JsonArray());
+        return new Gson().toJson(m);
     }
 
     private String deployPipelineElementContainer(PipelineElementDockerContainer p) throws Exception {

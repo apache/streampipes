@@ -26,8 +26,8 @@ import org.apache.streampipes.model.node.resources.interfaces.AccessibleSensorAc
 import org.apache.streampipes.model.node.resources.software.SoftwareResource;
 import org.apache.streampipes.model.node.resources.software.Docker;
 import org.apache.streampipes.node.controller.container.config.NodeControllerConfig;
-import org.apache.streampipes.node.controller.container.management.container.DockerInfo;
-import org.apache.streampipes.node.controller.container.management.container.DockerUtils;
+import org.apache.streampipes.node.controller.container.management.orchestrator.docker.DockerInfo;
+import org.apache.streampipes.node.controller.container.management.orchestrator.docker.DockerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import oshi.SystemInfo;
@@ -74,6 +74,7 @@ public class NodeInfoStorage {
 
         NodeInfo nodeInfo = NodeInfoBuilder.create(getNodeControllerId())
                 .withNodeControllerPort(getNodeControllerPort())
+                .withNodeType(getNodeType())
                 .withNodeHost(getNodeHost())
                 .withNodeLocation(getNodeLocation())
                 .withNodeModel(getNodeModel())
@@ -83,6 +84,10 @@ public class NodeInfoStorage {
                 .build();
 
         NodeInfoStorage.getInstance().add(nodeInfo);
+    }
+
+    private static String getNodeType() {
+        return NodeControllerConfig.INSTANCE.getNodeType();
     }
 
     private static String getNodeControllerId(){

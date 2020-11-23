@@ -16,105 +16,117 @@ package org.apache.streampipes.container.util;/*
  *
  */
 
-import com.google.gson.Gson;
-import org.apache.http.HttpHeaders;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClients;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.apache.http.client.fluent.Request;
+import org.apache.http.entity.ContentType;
+import org.apache.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
+import org.apache.streampipes.container.model.node.InvocableRegistration;
 import org.apache.streampipes.container.model.consul.ConsulServiceRegistrationBody;
 import org.apache.streampipes.container.model.consul.HealthCheckConfiguration;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class NodeControllerUtil {
     static Logger LOG = LoggerFactory.getLogger(NodeControllerUtil.class);
 
     private static final String PROTOCOL = "http://";
-
+    private static final String COLON = ":";
+    private static final String SLASH = "/";
     private static final String HEALTH_CHECK_INTERVAL = "10s";
     private static final String PE_SERVICE_NAME = "pe";
-    private static final String PRIMARY_PE_IDENTIFIER = "primary";
-    private static final String SECONDARY_PE_IDENTIFIER = "secondary";
-    private static final String NODE_ID_IDENTIFIER = "SP_NODE_ID";
-    private static final String SLASH = "/";
+    private static final String PE_SECONDARY_TAG = "secondary";
+    private static final String NODE_CONTROLLER_REGISTER_SVC_URL = "node/container/register";
 
-    private static final String NODE_CONTROLLER_LOCATION = "SP_NODE_ID";
-    private static final String NODE_CONTROLLER_REGISTER_URL = "node/pe/container/register";
-
-    // dummy class to route consul registration request to node controller instead of consul
-
-    public static void registerPeService(String serviceID, String url, int port) {
-        String serviceLocationTag = System.getenv(NODE_ID_IDENTIFIER) == null ? PRIMARY_PE_IDENTIFIER : SECONDARY_PE_IDENTIFIER;
-        String uniquePEServiceId = url + SLASH + serviceID;
-        registerService(PE_SERVICE_NAME, uniquePEServiceId, url, port, Arrays.asList("pe", serviceLocationTag));
+    public static void register(String serviceID, String host, int port,
+                                Map<String, SemanticEventProcessingAgentDeclarer> epaDeclarers) {
+        register(PE_SERVICE_NAME, makeSvcId(host, serviceID), host, port,
+                Arrays.asList(PE_SERVICE_NAME, PE_SECONDARY_TAG), epaDeclarers);
     }
 
-    public static void registerService(String serviceName, String serviceID, String url, int port, List<String> tag) {
-        String body = createServiceRegisterBody(serviceName, serviceID, url, port, tag);
+    public static void register(String svcName, String svcId, String url, int port, List<String> tag,
+                                Map<String, SemanticEventProcessingAgentDeclarer> epaDeclarers) {
+
+        boolean connected = false;
+
+        while (!connected) {
+            LOG.info("Trying to register pipeline element container at node controller: " + makeRegistrationEndpoint());
+            String body = createSvcBody(svcName, svcId, url, port, tag, epaDeclarers);
+            connected = registerSvcHttpClient(body);
+
+            if (!connected) {
+                LOG.info("Retrying in 5 seconds");
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        LOG.info("Successfully registered pipeline element container: " + svcId);
+    }
+
+    private static boolean registerSvcHttpClient(String body) {
+        String endpoint = makeRegistrationEndpoint();
         try {
-            registerServiceHttpClient(body);
-            LOG.info("Register service " + serviceID +" successful");
+            Request.Post(makeRegistrationEndpoint())
+                    .bodyString(body, ContentType.APPLICATION_JSON)
+                    .connectTimeout(1000)
+                    .socketTimeout(100000)
+                    .execute();
+            return true;
         } catch (IOException e) {
-            LOG.error("Register service: " + serviceID, " - " + e.toString());
+            LOG.error("Could not register at " + endpoint);
         }
+        return false;
     }
 
-    private static void registerServiceHttpClient(String body) throws IOException {
-//        return Request.Post("http://localhost:7077/node/pe/container/register")
-//                .addHeader("accept", "application/json")
-//                .body(new StringEntity(body))
-//                .execute()
-//                .returnResponse()
-//                .getStatusLine().getStatusCode();
-        HttpClient client = HttpClients.custom().build();
-        HttpUriRequest request = RequestBuilder.post()
-                .setUri(nodeControllerURL().toString() + SLASH + NODE_CONTROLLER_REGISTER_URL)
-                .setEntity(new StringEntity(body))
-                .setHeader(HttpHeaders.CONTENT_TYPE, "application/json")
-                .build();
-        client.execute(request);
+    private static String createSvcBody(String name, String id, String url, int port, List<String> tags,
+                                        Map<String, SemanticEventProcessingAgentDeclarer> epaDeclarers) {
+        try {
+            ConsulServiceRegistrationBody body = new ConsulServiceRegistrationBody();
+            String healthCheckURL = PROTOCOL + url + COLON + port;
+            body.setID(id);
+            body.setName(name);
+            body.setTags(tags);
+            body.setAddress(PROTOCOL + url);
+            body.setPort(port);
+            body.setEnableTagOverride(true);
+            body.setCheck(new HealthCheckConfiguration("GET", healthCheckURL, HEALTH_CHECK_INTERVAL));
+
+            InvocableRegistration svcBody = new InvocableRegistration();
+            svcBody.setConsulServiceRegistrationBody(body);
+            svcBody.setSupportedPipelineElementAppIds(new ArrayList<>(epaDeclarers.keySet()));
+
+            return JacksonSerializer.getObjectMapper().writeValueAsString(svcBody);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        throw new IllegalArgumentException("Failure");
     }
 
-    private static String createServiceRegisterBody(String name, String id, String url, int port, List<String> tags) {
-        String healthCheckURL = PROTOCOL + url + ":" + port;
-        ConsulServiceRegistrationBody body = new ConsulServiceRegistrationBody();
-        body.setID(id);
-        body.setName(name);
-        body.setTags(tags);
-        body.setAddress(PROTOCOL + url);
-        body.setPort(port);
-        body.setEnableTagOverride(true);
-        body.setCheck(new HealthCheckConfiguration("GET", healthCheckURL, HEALTH_CHECK_INTERVAL));
-
-        return new Gson().toJson(body);
-    }
-
-    private static URL nodeControllerURL() {
-        Map<String, String> env = System.getenv();
-        URL url = null;
-
-        if (env.containsKey(NODE_CONTROLLER_LOCATION)) {
-            try {
-                url = new URL("http", env.get(NODE_CONTROLLER_LOCATION), 7077, "");
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
+    private static String makeRegistrationEndpoint() {
+        if (System.getenv("SP_NODE_CONTROLLER_HOST") != null) {
+            return PROTOCOL
+                    + System.getenv("SP_NODE_CONTROLLER_HOST")
+                    + COLON
+                    + System.getenv("SP_NODE_CONTROLLER_PORT")
+                    + SLASH
+                    + NODE_CONTROLLER_REGISTER_SVC_URL;
         } else {
-            try {
-                url = new URL("http", "localhost", 7077, "");
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
+            return PROTOCOL
+                    + "localhost"
+                    + COLON
+                    + "7077"
+                    + SLASH
+                    + NODE_CONTROLLER_REGISTER_SVC_URL;
         }
-        return url;
+    }
+
+    private static String makeSvcId(String host, String serviceID) {
+        return host + SLASH + serviceID;
     }
 }

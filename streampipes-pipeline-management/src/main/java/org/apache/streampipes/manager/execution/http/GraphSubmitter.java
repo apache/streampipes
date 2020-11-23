@@ -54,9 +54,9 @@ public class GraphSubmitter {
 
     graphs.forEach(g -> status.addPipelineElementStatus(new HttpRequestBuilder(g, g.getBelongsTo()).invoke()));
     if (status.getElementStatus().stream().allMatch(PipelineElementStatus::isSuccess)) {
-      dataSets.forEach(dataSet ->
+        dataSets.forEach(dataSet ->
               status.addPipelineElementStatus
-                      (new HttpRequestBuilder(dataSet, dataSet.getUri()).invoke()));
+                      (new HttpRequestBuilder(dataSet, dataSet.getElementId()).invoke()));
     }
     status.setSuccess(status.getElementStatus().stream().allMatch(PipelineElementStatus::isSuccess));
 
@@ -91,8 +91,8 @@ public class GraphSubmitter {
     status.setPipelineId(pipelineId);
     status.setPipelineName(pipelineName);
 
-    graphs.forEach(g -> status.addPipelineElementStatus(new HttpRequestBuilder(g, g.getUri()).detach()));
-    dataSets.forEach(dataSet -> status.addPipelineElementStatus(new HttpRequestBuilder(dataSet, dataSet.getUri() +
+    graphs.forEach(g -> status.addPipelineElementStatus(new HttpRequestBuilder(g, g.getElementId()).detach()));
+    dataSets.forEach(dataSet -> status.addPipelineElementStatus(new HttpRequestBuilder(dataSet, dataSet.getElementId() +
             "/" +dataSet.getDatasetInvocationId())
             .detach()));
     status.setSuccess(status.getElementStatus().stream().allMatch(PipelineElementStatus::isSuccess));
