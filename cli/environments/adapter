@@ -17,7 +17,6 @@
 activemq
 backend
 consul
-connect-master
 couchdb
 kafka
 ui

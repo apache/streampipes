@@ -37,21 +37,6 @@ services:
     networks:
       spnet:
 
-  connect-master:
-    image: "${SP_DOCKER_REGISTRY}/streampipes-connect-container:${SP_VERSION}"
-    depends_on:
-      - consul
-      - couchdb
-    environment:
-      - EXECUTION_MODE=MASTER
-      - SP_CONNECT_CONTAINER_HOST=connect-master
-      - SP_CONNECT_CONTAINER_WORKER=connect-worker
-    volumes:
-      - connect:/data/
-    logging: *default-logging
-    networks:
-      spnet:
-
   connect-worker-main:
     image: "${SP_DOCKER_REGISTRY}/connect-worker:${SP_VERSION}"
     depends_on:

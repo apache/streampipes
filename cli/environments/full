@@ -16,7 +16,6 @@
 [environment:full]
 ui
 backend
-connect-master
 connect-worker-main
 activemq
 consul

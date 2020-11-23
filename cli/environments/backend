@@ -20,7 +20,6 @@ consul
 zookeeper
 couchdb
 influxdb
-connect-master
 connect-worker-main
 pipeline-elements-all-jvm
 ui
