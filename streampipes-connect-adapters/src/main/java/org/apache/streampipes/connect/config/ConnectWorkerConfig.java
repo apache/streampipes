@@ -20,7 +20,6 @@ package org.apache.streampipes.connect.config;
 
 
 import org.apache.streampipes.config.SpConfig;
-import org.apache.streampipes.connect.init.Config;
 
 public enum ConnectWorkerConfig {
   INSTANCE;
@@ -35,11 +34,11 @@ public enum ConnectWorkerConfig {
     config.register(ConfigKeys.KAFKA_HOST, "kafka", "Hostname for backend service for kafka");
     config.register(ConfigKeys.KAFKA_PORT, 9092, "Port for backend service for kafka");
 
-    config.register(ConfigKeys.CONNECT_CONTAINER_WORKER_PORT, Config.WORKER_PORT, "The port of the connect container");
+    config.register(ConfigKeys.CONNECT_CONTAINER_WORKER_PORT, 8098, "The port of the connect container");
     config.register(ConfigKeys.CONNECT_CONTAINER_WORKER_HOST, name, "The hostname of the connect container");
 
-    config.register(ConfigKeys.CONNECT_CONTAINER_MASTER_PORT, Config.MASTER_PORT, "The port of the connect container");
-    config.register(ConfigKeys.CONNECT_CONTAINER_MASTER_HOST, Config.MASTER_HOST, "The hostname of the connect container");
+//    config.register(ConfigKeys.CONNECT_CONTAINER_MASTER_PORT, Config.MASTER_PORT, "The port of the connect container");
+//    config.register(ConfigKeys.CONNECT_CONTAINER_MASTER_HOST, Config.MASTER_HOST, "The hostname of the connect container");
 
   }
 
@@ -47,9 +46,9 @@ public enum ConnectWorkerConfig {
     return "http://" + config.getString(ConfigKeys.CONNECT_CONTAINER_WORKER_HOST) + ":" + config.getInteger(ConfigKeys.CONNECT_CONTAINER_WORKER_PORT) + "/";
   }
 
-  public String getConnectContainerMasterUrl() {
-    return "http://" + config.getString(ConfigKeys.CONNECT_CONTAINER_MASTER_HOST) + ":" + config.getInteger(ConfigKeys.CONNECT_CONTAINER_MASTER_PORT) + "/";
-  }
+//  public String getConnectContainerMasterUrl() {
+//    return "http://" + config.getString(ConfigKeys.CONNECT_CONTAINER_MASTER_HOST) + ":" + config.getInteger(ConfigKeys.CONNECT_CONTAINER_MASTER_PORT) + "/";
+//  }
 
   public String getKafkaHost() {
     return config.getString(ConfigKeys.KAFKA_HOST);
@@ -74,15 +73,6 @@ public enum ConnectWorkerConfig {
 
   public Integer getConnectContainerWorkerPort() {
     return config.getInteger(ConfigKeys.CONNECT_CONTAINER_WORKER_PORT);
-  }
-
-
-  public String getConnectContainerMasterHost() {
-    return config.getString(ConfigKeys.CONNECT_CONTAINER_MASTER_HOST);
-  }
-
-  public Integer getConnectContainerMasterPort() {
-    return config.getInteger(ConfigKeys.CONNECT_CONTAINER_MASTER_PORT);
   }
 
 }
