@@ -45,8 +45,8 @@ spec:
           image: {{ .Values.streampipes.registry }}/connect-worker:{{ .Values.streampipes.version }}
           imagePullPolicy: {{ .Values.pullPolicy }}
           env:
-            - name: SP_CONNECT_CONTAINER_MASTER_HOST
-              value: connect-master
+            - name: SP_BACKEND_HOST
+              value: backend 
             - name: SP_CONNECT_CONTAINER_WORKER_HOST
               value: connect-worker
             - name: SP_KAFKA_HOST
