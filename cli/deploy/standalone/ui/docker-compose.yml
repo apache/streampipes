@@ -23,7 +23,6 @@ services:
       - couchdb
       - activemq
       - consul
-      - connect-master
     logging:
       driver: "json-file"
       options:

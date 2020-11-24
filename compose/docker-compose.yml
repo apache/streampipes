@@ -43,7 +43,7 @@ services:
       - consul
       - couchdb
     environment:
-      - SP_CONNECT_CONTAINER_HOST=connect-master
+      - SP_BACKEND_HOST=backend
       - SP_CONNECT_CONTAINER_WORKER=connect-worker-main
     volumes:
       - connect:/data/
@@ -59,7 +59,6 @@ services:
       - couchdb
       - activemq
       - consul
-      - connect-master
       - backend
     logging: *default-logging
     networks:

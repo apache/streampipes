@@ -21,7 +21,7 @@ services:
       - consul
       - couchdb
     environment:
-      - SP_CONNECT_CONTAINER_MASTER_HOST=connect-master
+      - SP_BACKEND_HOST=backend
       - SP_CONNECT_CONTAINER_WORKER_HOST=connect-worker-main
     volumes:
       - connect:/data/
