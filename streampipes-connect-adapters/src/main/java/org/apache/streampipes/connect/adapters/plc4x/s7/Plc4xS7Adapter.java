@@ -112,8 +112,6 @@ public class Plc4xS7Adapter extends PullAdapter {
         super(adapterDescription);
     }
 
-
-
     /**
      * Describe the adapter adapter and define what user inputs are required. Currently users can just select one node, this will be extended in the future
      * @return
