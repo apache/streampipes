@@ -33,7 +33,7 @@ public class MasterRestClient {
 
     public static boolean register(String baseUrl, ConnectWorkerContainer connectWorkerContainer) {
 
-        String url = baseUrl + "admin@streampipes.org/master/administration";
+        String url = baseUrl + "/api/v2/connect/admin@streampipes.org/master/administration";
 
         try {
             String adapterDescription = JacksonSerializer.getObjectMapper().writeValueAsString(connectWorkerContainer);
