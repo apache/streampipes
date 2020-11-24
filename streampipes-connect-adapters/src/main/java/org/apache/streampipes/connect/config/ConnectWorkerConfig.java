@@ -37,8 +37,8 @@ public enum ConnectWorkerConfig {
     config.register(ConfigKeys.CONNECT_CONTAINER_WORKER_PORT, 8098, "The port of the connect container");
     config.register(ConfigKeys.CONNECT_CONTAINER_WORKER_HOST, name, "The hostname of the connect container");
 
-//    config.register(ConfigKeys.CONNECT_CONTAINER_MASTER_PORT, Config.MASTER_PORT, "The port of the connect container");
-//    config.register(ConfigKeys.CONNECT_CONTAINER_MASTER_HOST, Config.MASTER_HOST, "The hostname of the connect container");
+    config.register(ConfigKeys.BACKEND_HOST, "backend", "The host of the backend to register the worker");
+    config.register(ConfigKeys.BACKEND_PORT, 8030, "The port of the backend to register the worker");
 
   }
 
@@ -46,9 +46,9 @@ public enum ConnectWorkerConfig {
     return "http://" + config.getString(ConfigKeys.CONNECT_CONTAINER_WORKER_HOST) + ":" + config.getInteger(ConfigKeys.CONNECT_CONTAINER_WORKER_PORT) + "/";
   }
 
-//  public String getConnectContainerMasterUrl() {
-//    return "http://" + config.getString(ConfigKeys.CONNECT_CONTAINER_MASTER_HOST) + ":" + config.getInteger(ConfigKeys.CONNECT_CONTAINER_MASTER_PORT) + "/";
-//  }
+  public String getBackendUrl() {
+    return "http://" + config.getString(ConfigKeys.BACKEND_HOST) + ":" + config.getInteger(ConfigKeys.BACKEND_PORT) + "/";
+  }
 
   public String getKafkaHost() {
     return config.getString(ConfigKeys.KAFKA_HOST);

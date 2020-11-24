@@ -99,12 +99,10 @@ public class ConnectAdapterInit extends AdapterWorkerContainer {
             .add(new FlicMQTTAdapter());
 
     String workerUrl = ConnectWorkerConfig.INSTANCE.getConnectContainerWorkerUrl();
-//    String masterUrl = ConnectWorkerConfig.INSTANCE.getConnectContainerMasterUrl();
+    String backendUrl = ConnectWorkerConfig.INSTANCE.getBackendUrl();
     Integer workerPort = ConnectWorkerConfig.INSTANCE.getConnectContainerWorkerPort();
 
-    // TODO
-    new ConnectAdapterInit().init(workerUrl, "http://localhost:8030/streampipes-backend/api/v2/connect", workerPort);
-
+    new ConnectAdapterInit().init(workerUrl, backendUrl, workerPort);
 
   }
 }
