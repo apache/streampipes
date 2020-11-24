@@ -47,7 +47,7 @@ public enum ConnectWorkerConfig {
   }
 
   public String getBackendUrl() {
-    return "http://" + config.getString(ConfigKeys.BACKEND_HOST) + ":" + config.getInteger(ConfigKeys.BACKEND_PORT) + "/";
+    return "http://" + config.getString(ConfigKeys.BACKEND_HOST) + ":" + config.getInteger(ConfigKeys.BACKEND_PORT) + "/streampipes-backend";
   }
 
   public String getKafkaHost() {
