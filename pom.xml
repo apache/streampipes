@@ -128,7 +128,7 @@
         <netty.version>4.1.39.Final</netty.version>
         <nimbus-jose-jwt.version>4.41.1</nimbus-jose-jwt.version>
         <opencsv.version>4.6</opencsv.version>
-        <plc4x.version>0.7.0</plc4x.version>
+        <plc4x.version>0.8.0-SNAPSHOT</plc4x.version>
         <protobuf.version>3.6.1</protobuf.version>
         <pulsar.version>2.5.1</pulsar.version>
         <slack.version>1.2.0</slack.version>
