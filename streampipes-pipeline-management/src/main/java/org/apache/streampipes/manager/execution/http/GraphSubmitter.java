@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.manager.execution.http;
 
+import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.streampipes.model.SpDataSet;
@@ -30,13 +31,12 @@ import java.util.Optional;
 
 public class GraphSubmitter {
 
-  private List<InvocableStreamPipesEntity> graphs;
-  private List<SpDataSet> dataSets;
-
-  private String pipelineId;
-  private String pipelineName;
-
   private final static Logger LOG = LoggerFactory.getLogger(GraphSubmitter.class);
+
+  private final List<InvocableStreamPipesEntity> graphs;
+  private final List<SpDataSet> dataSets;
+  private final String pipelineId;
+  private final String pipelineName;
 
   public GraphSubmitter(String pipelineId, String pipelineName, List<InvocableStreamPipesEntity> graphs,
                         List<SpDataSet> dataSets) {
@@ -47,62 +47,98 @@ public class GraphSubmitter {
   }
 
   public PipelineOperationStatus invokeGraphs() {
-    PipelineOperationStatus status = new PipelineOperationStatus();
-    status.setPipelineId(pipelineId);
-    status.setPipelineName(pipelineName);
+    PipelineOperationStatus status = initPipelineOperationStatus();
 
-
-    graphs.forEach(g -> status.addPipelineElementStatus(new HttpRequestBuilder(g, g.getBelongsTo()).invoke()));
-    if (status.getElementStatus().stream().allMatch(PipelineElementStatus::isSuccess)) {
-        dataSets.forEach(dataSet ->
-              status.addPipelineElementStatus
-                      (new HttpRequestBuilder(dataSet, dataSet.getElementId()).invoke()));
+    graphs.forEach(graph -> invoke(new InvocableEntityUrlGenerator(graph), graph, status));
+    // only invoke datasets when following pipeline elements are started
+    if (allInvocableEntitiesRunning(status)) {
+        dataSets.forEach(dataset -> invoke(new DataSetEntityUrlGenerator(dataset), dataset, status));
     }
+
+    return verifyPipelineOperationStatus(
+            status,
+            "Successfully started pipeline " + pipelineName,
+            "Could not start pipeline" + pipelineName,
+            true);
+  }
+
+  public PipelineOperationStatus detachGraphs() {
+    PipelineOperationStatus status = initPipelineOperationStatus();
+
+    graphs.forEach(graph -> detach(new InvocableEntityUrlGenerator(graph), graph, status));
+    dataSets.forEach(dataset -> detach(new DataSetEntityUrlGenerator(dataset), dataset, status));
+
+    return verifyPipelineOperationStatus(
+            status,
+            "Successfully stopped pipeline " + pipelineName,
+            "Could not stop all pipeline elements of pipeline " + pipelineName,
+            false);
+  }
+
+  private PipelineOperationStatus verifyPipelineOperationStatus(PipelineOperationStatus status, String successMessage,
+                                             String errorMessage, boolean rollbackIfFailed) {
     status.setSuccess(status.getElementStatus().stream().allMatch(PipelineElementStatus::isSuccess));
 
     if (status.isSuccess()) {
-      status.setTitle("Pipeline " + pipelineName + " successfully started");
+      status.setTitle(successMessage);
     } else {
-      LOG.info("Could not start pipeline, initializing rollback...");
-      rollbackInvokedPipelineElements(status);
-      status.setTitle("Could not start pipeline " + pipelineName + ".");
+      if (rollbackIfFailed) {
+        LOG.info("Could not start pipeline, initializing rollback...");
+        rollbackInvokedEntities(status);
+      }
+      status.setTitle(errorMessage);
     }
     return status;
   }
 
-  private void rollbackInvokedPipelineElements(PipelineOperationStatus status) {
+  private void rollbackInvokedEntities(PipelineOperationStatus status) {
     for (PipelineElementStatus s : status.getElementStatus()) {
       if (s.isSuccess()) {
-        Optional<InvocableStreamPipesEntity> graph = findGraph(s.getElementId());
-        graph.ifPresent(g -> {
-          LOG.info("Rolling back element " + g.getElementId());
-          new HttpRequestBuilder(g, g.getBelongsTo()).detach();
+        Optional<InvocableStreamPipesEntity> graphs = findGraphs(s.getElementId());
+        graphs.ifPresent(graph -> {
+          LOG.info("Rolling back element " + graph.getElementId());
+          makeHttpRequest(new InvocableEntityUrlGenerator(graph), graph, "detach");
         });
       }
     }
   }
 
-  private Optional<InvocableStreamPipesEntity> findGraph(String elementId) {
-    return graphs.stream().filter(g -> g.getBelongsTo().equals(elementId)).findFirst();
+  private void invoke(EndpointUrlGenerator<?> urlGenerator,
+                      NamedStreamPipesEntity namedEntity, PipelineOperationStatus status) {
+    status.addPipelineElementStatus(makeHttpRequest(urlGenerator, namedEntity, "invoke"));
   }
 
-  public PipelineOperationStatus detachGraphs() {
+  private void detach(EndpointUrlGenerator<?> urlGenerator,
+                      NamedStreamPipesEntity namedEntity, PipelineOperationStatus status) {
+    status.addPipelineElementStatus(makeHttpRequest(urlGenerator, namedEntity, "detach"));
+  }
+
+  // Helper methods
+
+  private PipelineOperationStatus initPipelineOperationStatus() {
     PipelineOperationStatus status = new PipelineOperationStatus();
     status.setPipelineId(pipelineId);
     status.setPipelineName(pipelineName);
-
-    graphs.forEach(g -> status.addPipelineElementStatus(new HttpRequestBuilder(g, g.getElementId()).detach()));
-    dataSets.forEach(dataSet -> status.addPipelineElementStatus(new HttpRequestBuilder(dataSet, dataSet.getElementId() +
-            "/" +dataSet.getDatasetInvocationId())
-            .detach()));
-    status.setSuccess(status.getElementStatus().stream().allMatch(PipelineElementStatus::isSuccess));
-
-    if (status.isSuccess()) {
-      status.setTitle("Pipeline " + pipelineName + " successfully stopped");
-    } else {
-      status.setTitle("Could not stop all pipeline elements of pipeline " + pipelineName + ".");
-    }
-
     return status;
+  }
+
+  private PipelineElementStatus makeHttpRequest(EndpointUrlGenerator<?> urlGenerator,
+                                                NamedStreamPipesEntity namedEntity, String type) {
+    switch (type) {
+      case "invoke":
+        return new HttpRequestBuilder(namedEntity, urlGenerator.generateInvokeEndpoint()).invoke();
+      case "detach":
+        return new HttpRequestBuilder(namedEntity, urlGenerator.generateDetachEndpoint()).detach();
+      default:
+        throw new IllegalArgumentException("Type not known: " + type);
+    }
+  }
+
+  private Optional<InvocableStreamPipesEntity> findGraphs(String elementId) {
+    return graphs.stream().filter(i -> i.getBelongsTo().equals(elementId)).findFirst();
+  }
+
+  private boolean allInvocableEntitiesRunning(PipelineOperationStatus status) {
+    return status.getElementStatus().stream().allMatch(PipelineElementStatus::isSuccess);
   }
 }

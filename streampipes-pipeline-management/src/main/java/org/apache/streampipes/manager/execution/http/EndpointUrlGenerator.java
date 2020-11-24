@@ -30,8 +30,8 @@ public abstract class EndpointUrlGenerator<T extends NamedStreamPipesEntity> {
         this.pipelineElement = pipelineElement;
     }
 
-    public abstract String generateStartPipelineEndpointUrl();
+    public abstract String generateInvokeEndpoint();
 
-    public abstract String generateStopPipelineEndpointUrl();
+    public abstract String generateDetachEndpoint();
 
 }

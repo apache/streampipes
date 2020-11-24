@@ -26,13 +26,13 @@ public class DataSetEntityUrlGenerator extends EndpointUrlGenerator<SpDataSet> {
     }
 
     @Override
-    public String generateStartPipelineEndpointUrl() {
-        return pipelineElement.getUri();
+    public String generateInvokeEndpoint() {
+        return pipelineElement.getElementId();
     }
 
     @Override
-    public String generateStopPipelineEndpointUrl() {
-        return pipelineElement.getUri()
+    public String generateDetachEndpoint() {
+        return pipelineElement.getElementId()
                 + SLASH
                 + pipelineElement.getDatasetInvocationId() ;
     }

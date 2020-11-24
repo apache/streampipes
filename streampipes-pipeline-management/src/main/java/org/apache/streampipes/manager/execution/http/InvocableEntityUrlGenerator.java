@@ -43,16 +43,17 @@ public class InvocableEntityUrlGenerator extends EndpointUrlGenerator<InvocableS
     }
 
     @Override
-    public String generateStartPipelineEndpointUrl() {
+    public String generateInvokeEndpoint() {
         if (pipelineElement.getDeploymentTargetNodeId() == null ||
                 pipelineElement.getDeploymentTargetNodeId().equals(DEFAULT_NODE_ID)) {
             // default deployments to primary pipeline element
-            return URLPREFIX
-                    + getHost()
-                    + SLASH
-                    + getIdentifier()
-                    + SLASH
-                    + pipelineElement.getAppId();
+//            return URLPREFIX
+//                    + getHost()
+//                    + SLASH
+//                    + getIdentifier()
+//                    + SLASH
+//                    + pipelineElement.getAppId();
+            return defaultHost();
         } else {
             // edge deployments to secondary pipeline element
             return URLPREFIX
@@ -68,9 +69,9 @@ public class InvocableEntityUrlGenerator extends EndpointUrlGenerator<InvocableS
     }
 
     @Override
-    public String generateStopPipelineEndpointUrl() {
+    public String generateDetachEndpoint() {
         // TODO: handle stop requests
-        return generateStartPipelineEndpointUrl()
+        return generateInvokeEndpoint()
                 + SLASH
                 + pipelineElement.getDeploymentRunningInstanceId();
     }
@@ -115,9 +116,10 @@ public class InvocableEntityUrlGenerator extends EndpointUrlGenerator<InvocableS
     }
 
     private String defaultHost() {
-        return pipelineElement.getElementEndpointHostname()
-                + COLON
-                + pipelineElement.getElementEndpointPort();
+//        return pipelineElement.getElementEndpointHostname()
+//                + COLON
+//                + pipelineElement.getElementEndpointPort();
+        return pipelineElement.getBelongsTo();
     }
 
     private String getIdentifier() {

@@ -32,7 +32,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/api/v1/{username}/master/adapters/template")
+@Path("/v2/connect/{username}/master/adapters/template")
 public class AdapterTemplateResource extends AbstractContainerResource {
 
     private Logger logger = LoggerFactory.getLogger(AdapterTemplateResource.class);

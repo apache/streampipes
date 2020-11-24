@@ -43,24 +43,17 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/api/v1/{username}/master/sources")
+@Path("/v2/connect/{username}/master/sources")
 public class SourcesResource extends AbstractContainerResource {
 
     private Logger logger = LoggerFactory.getLogger(SourcesResource.class);
 
-    private String connectContainerBaseUrl;
 
     private SourcesManagement sourcesManagement;
 
     public SourcesResource() {
-        this.connectContainerBaseUrl = ConnectContainerConfig.INSTANCE.getConnectContainerMasterUrl();
         this.sourcesManagement = new SourcesManagement();
     }
-
-    public SourcesResource(String connectContainerBaseUrl) {
-        this.connectContainerBaseUrl = connectContainerBaseUrl;
-    }
-
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -96,8 +89,6 @@ public class SourcesResource extends AbstractContainerResource {
 
 
     @POST
-//    @JsonLdSerialized
-//    @Consumes(SpMediaType.JSONLD)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{streamId}/streams")
     @Produces(MediaType.APPLICATION_JSON)
@@ -107,9 +98,6 @@ public class SourcesResource extends AbstractContainerResource {
 
         String responseMessage = "Instance of data set " + dataSet.getUri() + " successfully started";
 
-//        String workerUrl = new Utils().getWorkerUrlById(dataSet.getElementId());
-//
-//        String newUrl = Utils.addUserNameToApi(workerUrl, username);
         try {
             this.sourcesManagement.addAdapter(elementId,  dataSet, username);
         } catch (AdapterException e) {
