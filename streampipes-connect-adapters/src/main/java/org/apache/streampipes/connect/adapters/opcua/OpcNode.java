@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.connect.adapters.opcua;
 
-import org.eclipse.milo.opcua.stack.core.types.builtin.ExpandedNodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
@@ -26,11 +25,20 @@ public class OpcNode {
     String label;
     Datatypes type;
     NodeId nodeId;
+    int opcUnitId;
 
     public OpcNode(String label, Datatypes type, NodeId nodeId) {
         this.label = label;
         this.type = type;
         this.nodeId = nodeId;
+        this.opcUnitId = 0;
+    }
+
+    public OpcNode(String label, Datatypes type, NodeId nodeId, Integer opcUnitId){
+        this.label = label;
+        this.type = type;
+        this.nodeId = nodeId;
+        this.opcUnitId = opcUnitId;
     }
 
     public String getLabel() {

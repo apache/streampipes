@@ -28,6 +28,9 @@ import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescrip
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
+import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
+import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
@@ -35,11 +38,13 @@ import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaMonitoredItem;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -69,7 +74,6 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
     private OpcUa opcUa;
 
     private int numberProperties;
-
 
     public OpcUaAdapter() {
         this.event = new HashMap<>();
@@ -194,10 +198,18 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
                 for (OpcNode opcNode : res) {
 
                     String runtimeName = getRuntimeNameOfNode(opcNode.getNodeId());
-                    allProperties.add(PrimitivePropertyBuilder
-                            .create(opcNode.getType(), opcNode.getLabel())
-                            .label(opcNode.getLabel())
-                            .build());
+                    if (opcNode.opcUnitId == 0) {
+                        allProperties.add(PrimitivePropertyBuilder
+                                .create(opcNode.getType(), opcNode.getLabel())
+                                .label(opcNode.getLabel())
+                                .build());
+                    } else {
+                        allProperties.add(PrimitivePropertyBuilder
+                                .create(opcNode.getType(), opcNode.getLabel())
+                                .label(opcNode.getLabel())
+                                .measurementUnit(new URI(OpcUa.mapUnitIdToQudt(opcNode.opcUnitId)))
+                                .build());
+                    }
                 }
             }
 
