@@ -33,28 +33,27 @@ import java.util.*;
 public class NodeControllerUtil {
     static Logger LOG = LoggerFactory.getLogger(NodeControllerUtil.class);
 
-    private static final String PROTOCOL = "http://";
+    private static final String HTTP_PROTOCOL = "http://";
     private static final String COLON = ":";
     private static final String SLASH = "/";
     private static final String HEALTH_CHECK_INTERVAL = "10s";
-    private static final String PE_SERVICE_NAME = "pe";
-    private static final String PE_SECONDARY_TAG = "secondary";
-    private static final String NODE_CONTROLLER_REGISTER_SVC_URL = "node/container/register";
+    private static final String PE_TAG = "pe";
+    private static final String SECONDARY_PE_IDENTIFIER_TAG = "secondary";
+    private static final String NODE_CONTROLLER_REGISTER_SVC_URL = "api/v2/node/container/register";
 
     public static void register(String serviceID, String host, int port,
                                 Map<String, SemanticEventProcessingAgentDeclarer> epaDeclarers) {
-        register(PE_SERVICE_NAME, makeSvcId(host, serviceID), host, port,
-                Arrays.asList(PE_SERVICE_NAME, PE_SECONDARY_TAG), epaDeclarers);
+        register(PE_TAG, makeSvcId(host, serviceID), host, port,
+                Arrays.asList(PE_TAG, SECONDARY_PE_IDENTIFIER_TAG), epaDeclarers);
     }
 
-    public static void register(String svcName, String svcId, String url, int port, List<String> tag,
+    public static void register(String svcName, String svcId, String host, int port, List<String> tag,
                                 Map<String, SemanticEventProcessingAgentDeclarer> epaDeclarers) {
-
         boolean connected = false;
 
         while (!connected) {
             LOG.info("Trying to register pipeline element container at node controller: " + makeRegistrationEndpoint());
-            String body = createSvcBody(svcName, svcId, url, port, tag, epaDeclarers);
+            String body = createSvcBody(svcName, svcId, host, port, tag, epaDeclarers);
             connected = registerSvcHttpClient(body);
 
             if (!connected) {
@@ -84,15 +83,15 @@ public class NodeControllerUtil {
         return false;
     }
 
-    private static String createSvcBody(String name, String id, String url, int port, List<String> tags,
+    private static String createSvcBody(String name, String id, String host, int port, List<String> tags,
                                         Map<String, SemanticEventProcessingAgentDeclarer> epaDeclarers) {
         try {
             ConsulServiceRegistrationBody body = new ConsulServiceRegistrationBody();
-            String healthCheckURL = PROTOCOL + url + COLON + port;
+            String healthCheckURL = HTTP_PROTOCOL + host + COLON + port;
             body.setID(id);
             body.setName(name);
             body.setTags(tags);
-            body.setAddress(PROTOCOL + url);
+            body.setAddress(HTTP_PROTOCOL + host);
             body.setPort(port);
             body.setEnableTagOverride(true);
             body.setCheck(new HealthCheckConfiguration("GET", healthCheckURL, HEALTH_CHECK_INTERVAL));
@@ -110,14 +109,14 @@ public class NodeControllerUtil {
 
     private static String makeRegistrationEndpoint() {
         if (System.getenv("SP_NODE_CONTROLLER_HOST") != null) {
-            return PROTOCOL
+            return HTTP_PROTOCOL
                     + System.getenv("SP_NODE_CONTROLLER_HOST")
                     + COLON
                     + System.getenv("SP_NODE_CONTROLLER_PORT")
                     + SLASH
                     + NODE_CONTROLLER_REGISTER_SVC_URL;
         } else {
-            return PROTOCOL
+            return HTTP_PROTOCOL
                     + "localhost"
                     + COLON
                     + "7077"

@@ -18,8 +18,7 @@
 
 package org.apache.streampipes.container.util;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.orbitz.consul.AgentClient;
 import com.orbitz.consul.Consul;
 import com.orbitz.consul.HealthClient;
@@ -31,11 +30,12 @@ import com.orbitz.consul.model.health.ServiceHealth;
 import com.orbitz.consul.model.kv.Value;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.StringEntity;
-import org.apache.streampipes.config.consul.ConsulSpConfig;
 import org.apache.streampipes.config.model.ConfigItem;
+import org.apache.streampipes.container.model.PeConfig;
 import org.apache.streampipes.container.model.consul.ConsulServiceRegistrationBody;
 import org.apache.streampipes.container.model.consul.HealthCheckConfiguration;
 import org.apache.streampipes.sdk.helpers.Tuple2;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,104 +49,201 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class ConsulUtil {
 
-  private static final String PROTOCOL = "http://";
+  private static final Logger LOG = LoggerFactory.getLogger(ConsulUtil.class);
 
-  private static final String HEALTH_CHECK_INTERVAL = "10s";
-  //private static final String HEALTH_CHECK_TTL = "15s";
-  //private static final String CONSUL_DEREGISTER_SERIVER_AFTER = "10s";
-  private static final String PE_SERVICE_NAME = "pe";
-  private static final String NODE_SERVICE_NAME = "node";
-
-  private static final String CONSUL_ENV_LOCATION = "CONSUL_LOCATION";
-  private static final String CONSUL_URL_REGISTER_SERVICE = "v1/agent/service/register";
-
-  private static final String PRIMARY_PE_IDENTIFIER = "primary";
-  private static final String SECONDARY_PE_IDENTIFIER = "secondary";
-  private static final String NODE_ID_IDENTIFIER = "SP_NODE_ID";
+  private static final String HTTP_PROTOCOL = "http://";
+  private static final String COLON = ":";
   private static final String SLASH = "/";
-
-  static Logger LOG = LoggerFactory.getLogger(ConsulUtil.class);
+  private static final String HEALTH_CHECK_INTERVAL = "10s";
+  private static final String PE_SVC_TAG = "pe";
+  private static final String NODE_SVC_TAG = "node";
+  private static final String CONSUL_ENV_LOCATION = "CONSUL_LOCATION";
+  private static final int CONSUL_DEFAULT_PORT = 8500;
+  private static final String CONSUL_NAMESPACE = "/sp/v1/";
+  private static final String CONSUL_URL_REGISTER_SERVICE = "v1/agent/service/register";
+  private static final String PRIMARY_PE_IDENTIFIER_TAG = "primary";
+  private static final String SECONDARY_PE_IDENTIFIER_TAG = "secondary";
+  private static final String ENV_NODE_CONTROLLER_ID_KEY = "SP_NODE_CONTROLLER_ID";
 
   public static Consul consulInstance() {
     return Consul.builder().withUrl(consulURL()).build();
   }
 
-  public static void registerPeService(String serviceID, String url, int port) {
-    String serviceLocationTag = System.getenv(NODE_ID_IDENTIFIER) == null ? PRIMARY_PE_IDENTIFIER : SECONDARY_PE_IDENTIFIER;
-    String uniquePEServiceId = url + SLASH + serviceID;
-    registerService(PE_SERVICE_NAME, uniquePEServiceId, url, port, Arrays.asList("pe", serviceLocationTag));
+  /**
+   * Method called by {@link org.apache.streampipes.container.standalone.init.StandaloneModelSubmitter} to register
+   * new pipeline element service endpoint.
+   *
+   * @param svcId unique service id
+   * @param host  host address of pipeline element service endpoint
+   * @param port  port of pipeline element service endpoint
+   */
+  public static void registerPeService(String svcId, String host, int port) {
+    registerService(PE_SVC_TAG, makeUniqueSvcId(host, svcId), host, port, makeSvcTags());
   }
 
-  public static void registerService(String serviceName, String serviceID, String url, int port, String tag) {
-    registerService(serviceName, serviceID, url, port, Collections.singletonList(tag));
+  /**
+   * Method called by {@link org.apache.streampipes.node.controller.container.NodeControllerContainerInit} to
+   * register new node controller service endpoint.
+   *
+   * @param svcId unique service id
+   * @param host  host address of node controller service endpoint
+   * @param port  port of node controller service endpoint
+   */
+  public static void registerNodeService(String svcId, String host, int port) {
+    registerService(NODE_SVC_TAG, makeUniqueSvcId(host, svcId), host, port, Collections.singletonList(NODE_SVC_TAG));
   }
 
-  public static void registerService(String serviceName, String serviceID, String url, int port, List<String> tag) {
-    String body = createServiceRegisterBody(serviceName, serviceID, url, port, tag);
+  /**
+   * Register service at Consul.
+   *
+   * @param svcGroup  service group for registered service
+   * @param svcId     unique service id
+   * @param host      host address of service endpoint
+   * @param port      port of service endpoint
+   * @param tags      tags of service
+   */
+  public static void registerService(String svcGroup, String svcId, String host, int port, List<String> tags) {
+    boolean connected = false;
+
+    while (!connected) {
+      LOG.info("Trying to register service at Consul: " + svcId);
+      ConsulServiceRegistrationBody svcRegistration = createRegistrationBody(svcGroup, svcId, host, port, tags);
+      connected = registerServiceHttpClient(svcRegistration);
+
+      if (!connected) {
+        LOG.info("Retrying in 1 second");
+        try {
+          Thread.sleep(1000);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+    LOG.info("Successfully registered service at Consul: " + svcId);
+  }
+
+  /**
+   * PUT REST call to Consul API to register new service.
+   *
+   * @param svcRegistration   service registration object used to register service endpoint
+   * @return                  success or failure of service registration
+   */
+  private static boolean registerServiceHttpClient(ConsulServiceRegistrationBody svcRegistration) {
     try {
-      registerServiceHttpClient(body);
-      LOG.info("Register service " + serviceID +" successful");
+      String endpoint = makeConsulEndpoint();
+      String body = JacksonSerializer.getObjectMapper().writeValueAsString(svcRegistration);
+
+      Request.Put(endpoint)
+              .addHeader("accept", "application/json")
+              .body(new StringEntity(body))
+              .execute();
+
+      return true;
     } catch (IOException e) {
-      LOG.error("Register service: " + serviceID, " - " + e.toString());
+      LOG.error("Could not register service at Consul");
     }
+    return false;
   }
 
-  public static void registerNodeControllerService(String serviceID, String url, int port) {
-    String uniqueNodeServiceId = url + SLASH + serviceID;
-    registerService(NODE_SERVICE_NAME, uniqueNodeServiceId, url, port, "node");
-  }
+  // GET methods
 
-  //NOT TESTED
- /*   public static void subcribeHealthService() {
-        Consul consul = consulInstance();
-        HealthClient healthClient = consul.healthClient();
-        Agent agent = consul.agentClient().getAgent();
-
-
-        ServiceHealthCache svHealth = ServiceHealthCache.newCache(healthClient, PE_SERVICE_NAME);
-
-        svHealth.addListener(new ConsulCache.Listener<ServiceHealthKey, ServiceHealth>() {
-            @Override
-            public void notify(Map<ServiceHealthKey, ServiceHealth> map) {
-                System.out.println("ad");
-            }
-        });
-    }
-    */
-
-  public static Map<String, Tuple2<String, String>> getPEServices() {
-    LOG.info("Load PE service status");
+  /**
+   * Get all pipeline element service endpoints
+   *
+   * @return list of pipline element service endpoints
+   */
+  public static Map<String, Tuple2<String, String>> getPeServices() {
+    LOG.info("Load pipeline element service status");
     Consul consul = consulInstance();
     AgentClient agent = consul.agentClient();
 
     Map<String, Service> services = consul.agentClient().getServices();
     Map<String, HealthCheck> checks = agent.getChecks();
 
-    Map<String, Tuple2<String,String>> peServices = new HashMap<>();
+    Map<String, Tuple2<String,String>> peSvcs = new HashMap<>();
 
     for (Map.Entry<String, Service> entry : services.entrySet()) {
-      if (entry.getValue().getTags().contains(PE_SERVICE_NAME)) {
-        String serviceId = entry.getValue().getId();
-        String serviceStatus = "critical";
-        String serviceTag = "primary";
+      if (entry.getValue().getTags().contains(PE_SVC_TAG)) {
+        String svcId = entry.getValue().getId();
+
+        String svcStatus = "critical";
+        String svcTag = PRIMARY_PE_IDENTIFIER_TAG;
+
         if (checks.containsKey("service:" + entry.getKey())) {
-          serviceStatus = checks.get("service:" + entry.getKey()).getStatus();
-          if (checks.get("service:" + entry.getKey()).getServiceTags().stream().noneMatch(e -> e.contains("primary"))) {
-            serviceTag = "secondary";
+          svcStatus = checks.get("service:" + entry.getKey()).getStatus();
+          if (checks.get("service:" + entry.getKey())
+                  .getServiceTags().stream().noneMatch(e -> e.contains(PRIMARY_PE_IDENTIFIER_TAG))) {
+            svcTag = SECONDARY_PE_IDENTIFIER_TAG;
           }
         }
 
-        LOG.info("Service id: " + serviceId + " service status: " + serviceStatus + " service tag: " + serviceTag);
-        peServices.put(serviceId, new Tuple2(serviceStatus, serviceTag));
+        LOG.info("Service id: " + svcId + " service status: " + svcStatus + " service tag: " + svcTag);
+        peSvcs.put(svcId, new Tuple2<>(svcStatus, svcTag));
       }
     }
-    return peServices;
+    return peSvcs;
   }
 
+  /**
+   * Get active pipeline element service endpoints
+   *
+   * @return list of pipeline element endpoints
+   */
+  public static List<String> getActivePeEndpoints() {
+    LOG.info("Load active pipeline element service endpoints");
+    return getServiceEndpoints(PE_SVC_TAG, true, Collections.singletonList(PRIMARY_PE_IDENTIFIER_TAG));
+  }
+
+  /**
+   * Get active node controller service endpoints
+   *
+   * @return list of active node controller endpoints
+   */
+  public static List<String> getActiveNodeEndpoints() {
+    LOG.info("Load active node service endpoints");
+    return getServiceEndpoints(NODE_SVC_TAG, true, new ArrayList<>());
+  }
+
+
+  /**
+   * Get service endpoints
+   *
+   * @param svcGroup            service group for registered service
+   * @param restrictToHealthy   retrieve healthy or all registered services for a service group
+   * @param filterByTags        filter param to filter list of registered services
+   * @return                    list of services
+   */
+  public static List<String> getServiceEndpoints(String svcGroup, boolean restrictToHealthy,
+                                                 List<String> filterByTags) {
+    Consul consul = consulInstance();
+    HealthClient healthClient = consul.healthClient();
+    List<String> endpoints = new LinkedList<>();
+    List<ServiceHealth> nodes;
+
+    if (!restrictToHealthy) {
+      nodes = healthClient.getAllServiceInstances(svcGroup).getResponse();
+    } else {
+      nodes = healthClient.getHealthyServiceInstances(svcGroup).getResponse();
+    }
+    for (ServiceHealth node : nodes) {
+      if (node.getService().getTags().containsAll(filterByTags)) {
+        String endpoint = node.getService().getAddress() + ":" + node.getService().getPort();
+        LOG.info("Active " + svcGroup + " endpoint: " + endpoint);
+        endpoints.add(endpoint);
+      }
+    }
+    return endpoints;
+  }
+
+  /**
+   * Get key-value entries for a given route
+   *
+   * @param route route to retrieve key-value entries in Consul
+   * @return      key-value entries
+   */
   public static Map<String, String> getKeyValue(String route) {
     Consul consul = consulInstance();
     KeyValueClient keyValueClient = consul.keyValueClient();
@@ -162,147 +259,80 @@ public class ConsulUtil {
         if (value.getValueAsString().isPresent()) {
           v = value.getValueAsString().get();
         }
-        LOG.info("Load key: " + route + " value: " + v);
         keyValues.put(key, v);
       }
     }
     return keyValues;
   }
 
+  /**
+   * Get specific value for a key in route
+   *
+   * @param route   route to retrieve value
+   * @param type    data type of return value, e.g. Integer.class, String.class
+   * @return        value for key
+   */
+  public static <T> T getValueForRoute(String route, Class<T> type) {
+    try {
+      String entry = getKeyValue(route)
+              .values()
+              .stream()
+              .findFirst()
+              .orElse(null);
 
-  public static int getIntValue(String route) {
-    String value = getKeyValue(route)
-            .values()
-            .stream()
-            .findFirst()
-            .get();
-
-//    List<String> list = ConsulUtil.getKeyValue(route)
-//            .entrySet()
-//            .stream()
-//            .map(m -> {
-//              return new Gson().fromJson(m.getValue(), ConfigItem.class).getValue();
-//            })
-//            .collect(Collectors.toList());
-
-    return Integer.parseInt(new Gson().fromJson(value, ConfigItem.class).getValue());
+      if (type.equals(Integer.class)) {
+        return (T) Integer.valueOf(JacksonSerializer.getObjectMapper().readValue(entry, ConfigItem.class).getValue());
+      } else if (type.equals(Boolean.class)) {
+        return (T) Boolean.valueOf(JacksonSerializer.getObjectMapper().readValue(entry, ConfigItem.class).getValue());
+      } else {
+        return type.cast(JacksonSerializer.getObjectMapper().readValue(entry, ConfigItem.class).getValue());
+      }
+    } catch (JsonProcessingException e) {
+      e.printStackTrace();
+    }
+    throw new IllegalArgumentException("Cannot get entry from Consul");
   }
 
-  public static String getStringValue(String route) {
-    String value = getKeyValue(route)
-            .values()
-            .stream()
-            .findFirst()
-            .get();
+  // Update
 
-    return new Gson().fromJson(value, ConfigItem.class).getValue();
-  }
-
+  /**
+   * Update key-value config in Consul
+   *
+   * @param key       key to be updated
+   * @param entry     new entry
+   * @param password  wether value is a password, here only non-sensitive values are updated
+   */
   public static void updateConfig(String key, String entry, boolean password) {
     Consul consul = consulInstance();
-    KeyValueClient keyValueClient = consul.keyValueClient();
-
     if (!password) {
-      keyValueClient.putValue(key, entry);
+      LOG.info("Updated config - key:" + key + " value: " + entry);
+      consul.keyValueClient().putValue(key, entry);
     }
-
-//        keyValueClient.putValue(key + "_description", description);
-//        keyValueClient.putValue(key + "_type", valueType);
-    LOG.info("Updated config - key:" + key +
-            " value: " + entry);
-//        +
-//                " description: " + description +
-//                " type: " + valueType);
   }
 
-  public static List<String> getActivePEServicesEndPoints() {
-    LOG.info("Load active PE service endpoints");
-    return getServiceEndpoints(PE_SERVICE_NAME, true, Collections.singletonList(PRIMARY_PE_IDENTIFIER));
-  }
-
-  public static List<String> getActiveNodeEndpoints() {
-    LOG.info("Load active node service endpoints");
-    // TODO set restrictToHealthy to true, this is just for debugging
-    return getServiceEndpoints(NODE_SERVICE_NAME, false, new ArrayList<>());
-  }
-
-  public static List<String> getServiceEndpoints(String serviceGroup, boolean restrictToHealthy,
-                                                 List<String> filterByTags) {
+  /**
+   * Deregister registered service endpoint in Consul
+   *
+   * @param svcId     service id of endpoint to be deregistered
+   */
+  public static void deregisterService(String svcId) {
     Consul consul = consulInstance();
-    HealthClient healthClient = consul.healthClient();
-    List<String> endpoints = new LinkedList<>();
-
-    List<ServiceHealth> nodes;
-    if (!restrictToHealthy) {
-      nodes = healthClient.getAllServiceInstances(serviceGroup).getResponse();
-    } else {
-      nodes = healthClient.getHealthyServiceInstances(serviceGroup).getResponse();
-    }
-    for (ServiceHealth node : nodes) {
-      if (node.getService().getTags().containsAll(filterByTags)) {
-        String endpoint = node.getService().getAddress() + ":" + node.getService().getPort();
-        LOG.info("Active " + serviceGroup + " endpoint: " + endpoint);
-        endpoints.add(endpoint);
-      }
-    }
-    return endpoints;
+    LOG.info("Deregister service: " + svcId);
+    consul.agentClient().deregister(svcId);
   }
 
-  public static void deregisterService(String serviceId) {
+  /**
+   * Delete config in Consul
+   *
+   * @param key     key to be deleted
+   */
+  public static void deleteConfig(String key) {
     Consul consul = consulInstance();
-
-    LOG.info("Deregister Service: " + serviceId);
-    consul.agentClient().deregister(serviceId);
+    LOG.info("Delete config: {}", key);
+    consul.keyValueClient().deleteKeys(CONSUL_NAMESPACE + key);
   }
 
-  public static void deleteKeys(String serviceId) {
-    Consul consul = consulInstance();
-
-    LOG.info("Delete keys: {}", serviceId);
-    // TODO: namespace should not be hardcoded
-    consul.keyValueClient().deleteKeys("/sp/v1/" + serviceId);
-  }
-
-  private static int registerServiceHttpClient(String body) throws IOException {
-    return Request.Put(consulURL().toString() + "/" + CONSUL_URL_REGISTER_SERVICE)
-            .addHeader("accept", "application/json")
-            .body(new StringEntity(body))
-            .execute()
-            .returnResponse()
-            .getStatusLine().getStatusCode();
-  }
-
-  private static String createServiceRegisterBody(String name, String id, String url, int port, List<String> tags) {
-    String healthCheckURL = PROTOCOL + url + ":" + port;
-    ConsulServiceRegistrationBody body = new ConsulServiceRegistrationBody();
-    body.setID(id);
-    body.setName(name);
-    body.setTags(tags);
-    body.setAddress(PROTOCOL + url);
-    body.setPort(port);
-    body.setEnableTagOverride(true);
-    body.setCheck(new HealthCheckConfiguration("GET", healthCheckURL, HEALTH_CHECK_INTERVAL));
-
-    return new Gson().toJson(body);
-
-//    return "{" +
-//            "\"ID\": \"" + id + "\"," +
-//            "\"Name\": \"" + name + "\"," +
-//            "\"Tags\": [" +
-//            "    \"" + tag + "\"" + ",\"urlprefix-/" + id + " strip=/" + id + "\"" +
-//            " ]," +
-//            " \"Address\": \"" + PROTOCOL + url + "\"," +
-//            " \"Port\":" + port + "," +
-//            " \"EnableTagOverride\": true" + "," +
-//            "\"Check\": {" +
-//            " \"Method\": \"GET\"" + "," +
-//            " \"http\":" + "\"" + healthCheckURL + "\"," +
-//            //  " \"DeregisterCriticalServiceAfter\":" +  "\"" + CONSUL_DEREGISTER_SERIVER_AFTER + "\"," +
-//            " \"interval\":" + "\"" + HEALTH_CHECK_INTERVAL + "\"" + //"," +
-//            //" \"TTL\":" + "\"" + HEALTH_CHECK_TTL + "\"" +
-//            " }" +
-//            "}";
-  }
+  // Helper methods
 
   private static URL consulURL() {
     Map<String, String> env = System.getenv();
@@ -310,17 +340,45 @@ public class ConsulUtil {
 
     if (env.containsKey(CONSUL_ENV_LOCATION)) {
       try {
-        url = new URL("http", env.get(CONSUL_ENV_LOCATION), 8500, "");
+        url = new URL("http", env.get(CONSUL_ENV_LOCATION), CONSUL_DEFAULT_PORT, "");
       } catch (MalformedURLException e) {
         e.printStackTrace();
       }
     } else {
       try {
-        url = new URL("http", "localhost", 8500, "");
+        url = new URL("http", "localhost", CONSUL_DEFAULT_PORT, "");
       } catch (MalformedURLException e) {
         e.printStackTrace();
       }
     }
     return url;
+  }
+
+  private static ConsulServiceRegistrationBody createRegistrationBody(String svcGroup, String id, String host,
+                                                                      int port, List<String> tags) {
+    ConsulServiceRegistrationBody body = new ConsulServiceRegistrationBody();
+    body.setID(id);
+    body.setName(svcGroup);
+    body.setTags(tags);
+    body.setAddress(HTTP_PROTOCOL + host);
+    body.setPort(port);
+    body.setEnableTagOverride(true);
+    body.setCheck(new HealthCheckConfiguration("GET",
+            (HTTP_PROTOCOL + host + COLON + port), HEALTH_CHECK_INTERVAL));
+
+    return body;
+  }
+
+  private static String makeUniqueSvcId(String host, String serviceID) {
+    return host + SLASH + serviceID;
+  }
+
+  private static List<String> makeSvcTags() {
+    return Arrays.asList(PE_SVC_TAG, System.getenv(ENV_NODE_CONTROLLER_ID_KEY) == null ?
+            PRIMARY_PE_IDENTIFIER_TAG : SECONDARY_PE_IDENTIFIER_TAG);
+  }
+
+  private static String makeConsulEndpoint() {
+    return consulURL().toString() + "/" + CONSUL_URL_REGISTER_SERVICE;
   }
 }

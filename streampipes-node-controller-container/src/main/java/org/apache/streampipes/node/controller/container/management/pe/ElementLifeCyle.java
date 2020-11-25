@@ -15,37 +15,18 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.node.controller.container.management.relay.model;
+package org.apache.streampipes.node.controller.container.management.pe;
 
-public class Metrics {
+import org.apache.streampipes.container.model.node.InvocableRegistration;
 
-    private final long timeStarted;
-    private final String id;
-    private long numRelayedEvents = 0;
-    private long numDroppedEvents = 0;
+public interface ElementLifeCyle {
 
-    public Metrics(String id) {
-        this.timeStarted = System.currentTimeMillis();
-        this.id = id;
-    }
+    void register(InvocableRegistration registration);
 
-    public long getNumRelayedEvents() {
-        return numRelayedEvents;
-    }
+    String invoke(String endpoint, String payload);
 
-    public void increaseNumRelayedEvents() {
-        this.numRelayedEvents++;
-    }
+    String detach(String runningInstanceId);
 
-    public long getNumDroppedEvents() {
-        return numDroppedEvents;
-    }
+    void unregister();
 
-    public void increaseNumDroppedEvents() {
-        this.numDroppedEvents++;
-    }
-
-    public void clearNumDroppedEvents() {
-        this.numDroppedEvents = 0;
-    }
 }

@@ -1,4 +1,4 @@
-package org.apache.streampipes.node.controller.container.management.orchestrator.docker;/*
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -15,6 +15,7 @@ package org.apache.streampipes.node.controller.container.management.orchestrator
  * limitations under the License.
  *
  */
+package org.apache.streampipes.node.controller.container.management.orchestrator.docker;
 
 import org.apache.streampipes.model.node.PipelineElementDockerContainer;
 import org.apache.streampipes.model.node.PipelineElementDockerContainerBuilder;
@@ -39,8 +40,8 @@ public enum DockerNodeContainer {
                         .withName("streampipes_pipeline-elements-all-jvm")
                         .withExposedPorts(new String[]{"7023"})
                         .withEnvironmentVariables(Arrays.asList(
-                                "SP_NODE_ID=" + NodeControllerConfig.INSTANCE.getNodeBrokerHost(),
-                                "SP_NODE_CONTROLLER_HOST=" + NodeControllerConfig.INSTANCE.getNodeControllerId(),
+                                "SP_NODE_CONTROLLER_ID=" + NodeControllerConfig.INSTANCE.getNodeControllerId(),
+                                "SP_NODE_CONTROLLER_HOST=" + NodeControllerConfig.INSTANCE.getNodeHostName(),
                                 "SP_NODE_CONTROLLER_PORT=" + NodeControllerConfig.INSTANCE.getNodeControllerPort()
                         ))
                         .withLabels(new HashMap<String,String>(){{

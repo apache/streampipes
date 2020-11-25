@@ -15,36 +15,36 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.node.controller.container.management.orchestrator;
+package org.apache.streampipes.node.controller.container.management.pe;
 
-import org.apache.streampipes.model.node.PipelineElementDockerContainer;
+import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.node.controller.container.management.IRunningInstances;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public enum RunningContainerInstances implements IRunningInstances<PipelineElementDockerContainer> {
+public enum RunningInvocableInstances implements IRunningInstances<InvocableStreamPipesEntity> {
     INSTANCE;
 
-    private final Map<String, PipelineElementDockerContainer> runningInstances = new HashMap<>();
+    private final Map<String, InvocableStreamPipesEntity> runningInvocableInstances = new HashMap<>();
 
     @Override
-    public void add(String id, PipelineElementDockerContainer container) {
-        runningInstances.put(id, container);
+    public void add(String id, InvocableStreamPipesEntity value) {
+        runningInvocableInstances.put(id, value);
     }
 
     @Override
     public boolean isRunning(String id) {
-        return runningInstances.get(id) != null;
+        return runningInvocableInstances.get(id) != null;
     }
 
     @Override
-    public PipelineElementDockerContainer get(String id) {
-        return isRunning(id) ? runningInstances.get(id) : null;
+    public InvocableStreamPipesEntity get(String id) {
+        return runningInvocableInstances.get(id);
     }
 
     @Override
     public void remove(String id) {
-        runningInstances.remove(id);
+        runningInvocableInstances.remove(id);
     }
 }

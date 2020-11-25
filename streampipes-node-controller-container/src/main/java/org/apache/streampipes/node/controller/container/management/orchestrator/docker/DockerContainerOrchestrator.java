@@ -1,4 +1,4 @@
-package org.apache.streampipes.node.controller.container.management.orchestrator.docker;/*
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -15,6 +15,7 @@ package org.apache.streampipes.node.controller.container.management.orchestrator
  * limitations under the License.
  *
  */
+package org.apache.streampipes.node.controller.container.management.orchestrator.docker;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
@@ -97,7 +98,7 @@ public class DockerContainerOrchestrator implements ContainerOrchestrator {
 
             // deregister and delete kv pair in service in consul
             ConsulUtil.deregisterService(p.getServiceId());
-            ConsulUtil.deleteKeys(p.getServiceId());
+            ConsulUtil.deleteConfig(p.getServiceId());
 
             ImmutableMap<String, ? extends Serializable> m = ImmutableMap.of(
                     "message",

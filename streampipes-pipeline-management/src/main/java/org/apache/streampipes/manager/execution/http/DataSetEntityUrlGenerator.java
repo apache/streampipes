@@ -21,19 +21,19 @@ import org.apache.streampipes.model.SpDataSet;
 
 public class DataSetEntityUrlGenerator extends EndpointUrlGenerator<SpDataSet> {
 
-    public DataSetEntityUrlGenerator(SpDataSet pipelineElement) {
-        super(pipelineElement);
+    public DataSetEntityUrlGenerator(SpDataSet graph) {
+        super(graph);
     }
 
     @Override
     public String generateInvokeEndpoint() {
-        return pipelineElement.getElementId();
+        return graph.getElementId();
     }
 
     @Override
     public String generateDetachEndpoint() {
-        return pipelineElement.getElementId()
+        return graph.getElementId()
                 + SLASH
-                + pipelineElement.getDatasetInvocationId() ;
+                + graph.getDatasetInvocationId() ;
     }
 }

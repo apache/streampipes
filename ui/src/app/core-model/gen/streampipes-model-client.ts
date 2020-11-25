@@ -19,7 +19,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 2.24.612 on 2020-11-17 20:41:04.
+// Generated using typescript-generator version 2.24.612 on 2020-11-25 23:55:36.
 
 export class FileMetadata {
     createdAt: number;

@@ -1,4 +1,4 @@
-package org.apache.streampipes.node.controller.container.config;/*
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -15,6 +15,7 @@ package org.apache.streampipes.node.controller.container.config;/*
  * limitations under the License.
  *
  */
+package org.apache.streampipes.node.controller.container.config;
 
 import org.apache.streampipes.config.SpConfig;
 import org.apache.streampipes.model.node.resources.interfaces.AccessibleSensorActuatorResource;
@@ -29,7 +30,6 @@ public enum NodeControllerConfig {
 
     private static final String SLASH = "/";
     private static final String NODE_SERVICE_ID = "node/org.apache.streampipes.node.controller";
-
     private static final String DEFAULT_NODE_CONTROLLER_ID = "node-controller";
     private static final int DEFAULT_NODE_CONTROLLER_PORT = 7077;
     private static final String DEFAULT_NODE_TYPE = "edge";

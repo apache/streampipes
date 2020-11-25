@@ -17,16 +17,15 @@
  */
 package org.apache.streampipes.node.controller.container.rest;
 
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.container.model.node.InvocableRegistration;
 import org.apache.streampipes.container.transform.Transformer;
-import org.apache.streampipes.container.util.Util;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.node.PipelineElementDockerContainer;
 import org.apache.streampipes.node.controller.container.management.orchestrator.docker.DockerContainerOrchestrator;
-import org.apache.streampipes.node.controller.container.management.pe.PipelineElementManager;
+import org.apache.streampipes.node.controller.container.management.pe.InvocableElementManager;
+import org.apache.streampipes.node.controller.container.management.pe.RunningInvocableInstances;
 import org.apache.streampipes.node.controller.container.management.relay.EventRelayManager;
 import org.apache.streampipes.node.controller.container.management.relay.RunningRelayInstances;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
@@ -38,9 +37,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 
-@Path("/node/container")
-public class InvocableManagementResource<I extends InvocableStreamPipesEntity> extends AbstractNodeContainerResource{
-    private static final Logger LOG = LoggerFactory.getLogger(InvocableManagementResource.class.getCanonicalName());
+@Path("/api/v2/node/container")
+public class InvocableEntityResource<I extends InvocableStreamPipesEntity> extends AbstractNodeContainerResource{
+    private static final Logger LOG = LoggerFactory.getLogger(InvocableEntityResource.class.getCanonicalName());
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -64,7 +63,7 @@ public class InvocableManagementResource<I extends InvocableStreamPipesEntity> e
                     .readValue(body, InvocableRegistration.class);
 
             // register pipeline elements at consul and node controller
-            PipelineElementManager.getInstance().registerPipelineElements(invocableRegistration);
+            InvocableElementManager.getInstance().register(invocableRegistration);
             LOG.info("Sucessfully registered pipeline element container");
 
         } catch (IOException e) {
@@ -76,67 +75,68 @@ public class InvocableManagementResource<I extends InvocableStreamPipesEntity> e
     @Path("/invoke/{identifier}/{elementId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response invoke(@PathParam("identifier") String identifier, @PathParam("elementId") String elementId, String payload) {
+    public String invoke(@PathParam("identifier") String identifier,
+                           @PathParam("elementId") String elementId, String payload) {
 
         // TODO implement
-        String pipelineElementEndpoint;
+        String endpoint;
         InvocableStreamPipesEntity graph;
         try {
             if (identifier.equals("sepa")) {
                 graph = Transformer.fromJsonLd(DataProcessorInvocation.class, payload);
+                endpoint = graph.getBelongsTo();
 
                 // TODO: start event relay to remote broker
 //                EventRelayManager eventRelayManager = new EventRelayManager(graph);
 //                eventRelayManager.start();
 //                RunningRelayInstances.INSTANCE.add(eventRelayManager.getRelayedTopic(), eventRelayManager);
 
-                PipelineElementManager.getInstance().invokePipelineElement(graph.getBelongsTo(), payload);
-            }
-            else if (identifier.equals("sec")) {
+                RunningInvocableInstances.INSTANCE.add(graph.getDeploymentRunningInstanceId(), graph);
+
+                String resp = InvocableElementManager.getInstance().invoke(endpoint, payload);
+                return resp;
+
+            } else if (identifier.equals("sec")) {
                 graph = Transformer.fromJsonLd(DataSinkInvocation.class, payload);
-                pipelineElementEndpoint = graph.getBelongsTo();
-                PipelineElementManager.getInstance().invokePipelineElement(pipelineElementEndpoint, payload);
+                endpoint = graph.getBelongsTo();
+
+                InvocableElementManager.getInstance().invoke(endpoint, payload);
 
             }
-            //pipelineElementEndpoint = graph.getElementEndpointHostname() + COLON + graph.getElementEndpointPort() + "/" + identifier + "/" + elementId;
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return ok();
+        return "";
     }
 
-    // TODO move endpoint to /elementId/instances/runningInstanceId
     @DELETE
-    @Path("{elementId}/{runningInstanceId}")
+    @Path("/detach/{identifier}/{elementId}/{runningInstanceId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String detach(@PathParam("elementId") String elementId, @PathParam("runningInstanceId") String runningInstanceId) {
+    public String detach(@PathParam("identifier") String identifier, @PathParam("elementId") String elementId,
+                         @PathParam("runningInstanceId") String runningInstanceId) {
 
         LOG.info("receive stop request elementId={}, runningInstanceId={}", elementId, runningInstanceId);
 
-        return Util.toResponseString(elementId, false, "Could not find the running instance with id: " + runningInstanceId);
-    }
+        // TODO store host and port locally to retrieve by runningInstanceId
 
-    @POST
-    @Path("/detach")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response detachPipelineElement(String appId) throws SpRuntimeException {
-        // TODO implement
+        String endpoint = RunningInvocableInstances.INSTANCE.get(runningInstanceId).getBelongsTo();
+
+        String resp = InvocableElementManager.getInstance().detach(endpoint + "/" + runningInstanceId);
+        RunningInvocableInstances.INSTANCE.remove(runningInstanceId);
+        return resp;
 
         // TODO: stop event relay to remote broker
-        EventRelayManager relay = RunningRelayInstances.INSTANCE.get(appId);
-        assert relay != null;
-        relay.stop();
-        RunningRelayInstances.INSTANCE.remove(appId);
-
-        return ok();
+//        EventRelayManager relay = RunningRelayInstances.INSTANCE.get(elementId);
+//        assert relay != null;
+//        relay.stop();
+//        RunningRelayInstances.INSTANCE.remove(elementId);
     }
 
     @DELETE
     @Path("/remove")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response removePipelineElementContainer(PipelineElementDockerContainer container) {
-        PipelineElementManager.getInstance().unregisterPipelineElements();
+        InvocableElementManager.getInstance().unregister();
         return ok(DockerContainerOrchestrator.getInstance().remove(container));
     }
 

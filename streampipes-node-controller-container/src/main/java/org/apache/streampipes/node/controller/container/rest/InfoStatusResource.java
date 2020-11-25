@@ -1,4 +1,3 @@
-package org.apache.streampipes.node.controller.container.rest;
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -16,8 +15,10 @@ package org.apache.streampipes.node.controller.container.rest;
  * limitations under the License.
  *
  */
+package org.apache.streampipes.node.controller.container.rest;
+
 import org.apache.streampipes.node.controller.container.management.info.NodeInfoStorage;
-import org.apache.streampipes.node.controller.container.management.resource.ResourceManager;
+import org.apache.streampipes.node.controller.container.management.resources.ResourceManager;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -25,7 +26,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/node")
+@Path("/api/v2/node")
 public class InfoStatusResource extends AbstractNodeContainerResource{
 
     @GET

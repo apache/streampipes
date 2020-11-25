@@ -111,7 +111,7 @@ public class InvocationGraphBuilder {
               // TODO: set event relay to true
               // TODO: add target edge node broker to List<EventRelays>
 
-              String broker = getEdgeBroker(t);
+              //String broker = getEdgeBroker(t);
 
               t.getInputStreams()
                       .get(getIndex(source.getDOM(), t))
@@ -185,10 +185,11 @@ public class InvocationGraphBuilder {
   }
 
   private String getEdgeBroker(InvocableStreamPipesEntity target) {
-    return ConsulUtil.getStringValue(
+    // TODO: no hardcoded route - only for testing
+    return ConsulUtil.getValueForRoute(
             "sp/v1/node/org.apache.streampipes.node.controller/"
-                    + target.getDeploymentTargetNodeId()
-                    + "/config/SP_NODE_BROKER_HOST");
+                    + target.getDeploymentTargetNodeHostname()
+                    + "/config/SP_NODE_BROKER_HOST", String.class);
   }
 
 
