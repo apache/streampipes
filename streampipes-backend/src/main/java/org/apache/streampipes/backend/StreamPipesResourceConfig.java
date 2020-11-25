@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.backend;
 
+import org.apache.streampipes.connect.container.master.rest.*;
 import org.apache.streampipes.rest.impl.*;
 import org.apache.streampipes.rest.impl.dashboard.Dashboard;
 import org.apache.streampipes.rest.impl.dashboard.DashboardWidget;
@@ -103,6 +104,19 @@ public class StreamPipesResourceConfig extends ResourceConfig {
     register(JsonLdProvider.class);
     register(JacksonSerializationProvider.class);
     register(MultiPartFeature.class);
+
+
+    // Connect Master
+    register(WelcomePageMaster.class);
+    register(AdapterResource.class);
+    register(AdapterTemplateResource.class);
+    register(DescriptionResource.class);
+    register(SourcesResource.class);
+    register(GuessResource.class);
+//    register(MultiPartFeature.class);
+    register(UnitResource.class);
+    register(WorkerAdministrationResource.class);
+    register(RuntimeResolvableResource.class);
   }
 
 }

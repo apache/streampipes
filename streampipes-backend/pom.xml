@@ -56,7 +56,11 @@
             <artifactId>streampipes-rest</artifactId>
             <version>0.68.0-SNAPSHOT</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.streampipes</groupId>
+            <artifactId>streampipes-connect-container-master</artifactId>
+            <version>0.68.0-SNAPSHOT</version>
+        </dependency>
         <!-- External dependencies -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -66,6 +70,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+
     </dependencies>
 
     <build>

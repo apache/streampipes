@@ -51,7 +51,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install qemu-user-static
-          echo "./streampipes-backend/ ./streampipes-connect-container-master/ ./ui/" | xargs -n 1 cp -v /usr/bin/qemu-*
+          echo "./streampipes-backend/ ./ui/" | xargs -n 1 cp -v /usr/bin/qemu-*
       - name: Login to Docker Hub
         run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USER }} --password-stdin
       - name: Enable Docker experimental feature for multi-arch builds
@@ -65,25 +65,6 @@ jobs:
           IMG_NAME_AMD64: ${{ env.DOCKERHUB_APACHE_REPO }}/backend:amd64-${{ env.MVN_VERSION }}
           IMG_NAME_ARM32V7: ${{ env.DOCKERHUB_APACHE_REPO }}/backend:arm32v7-${{ env.MVN_VERSION }}
           IMG_NAME_ARM64V8: ${{ env.DOCKERHUB_APACHE_REPO }}/backend:arm64v8-${{ env.MVN_VERSION }}
-        run: |
-          docker build --pull --build-arg BASE_IMAGE=$BASE_IMG_JRE_DEFAULT -t $IMG_NAME_DEFAULT -t $IMG_NAME_AMD64 -f Dockerfile .
-          docker build --pull --build-arg BASE_IMAGE=$BASE_IMG_JRE_ARM32V7 -t $IMG_NAME_ARM32V7 -f arm.Dockerfile .
-          docker build --pull --build-arg BASE_IMAGE=$BASE_IMG_JRE_ARM64V8 -t $IMG_NAME_ARM64V8 -f aarch64.Dockerfile .
-          docker push $IMG_NAME_DEFAULT
-          docker push $IMG_NAME_AMD64
-          docker push $IMG_NAME_ARM32V7
-          docker push $IMG_NAME_ARM64V8
-          docker manifest create $IMG_NAME_DEFAULT $IMG_NAME_AMD64 $IMG_NAME_ARM32V7 $IMG_NAME_ARM64V8
-          docker manifest annotate $IMG_NAME_DEFAULT $IMG_NAME_ARM32V7 --os linux --arch arm
-          docker manifest annotate $IMG_NAME_DEFAULT $IMG_NAME_ARM64V8 --os linux --arch arm64
-          docker manifest push $IMG_NAME_DEFAULT
-      - name: Build and Push Docker Connect Image
-        working-directory: ./streampipes-connect-container-master
-        env:
-          IMG_NAME_DEFAULT: ${{ env.DOCKERHUB_APACHE_REPO }}/streampipes-connect-container:${{ env.MVN_VERSION }}
-          IMG_NAME_AMD64: ${{ env.DOCKERHUB_APACHE_REPO }}/streampipes-connect-container:amd64-${{ env.MVN_VERSION }}
-          IMG_NAME_ARM32V7: ${{ env.DOCKERHUB_APACHE_REPO }}/streampipes-connect-container:arm32v7-${{ env.MVN_VERSION }}
-          IMG_NAME_ARM64V8: ${{ env.DOCKERHUB_APACHE_REPO }}/streampipes-connect-container:arm64v8-${{ env.MVN_VERSION }}
         run: |
           docker build --pull --build-arg BASE_IMAGE=$BASE_IMG_JRE_DEFAULT -t $IMG_NAME_DEFAULT -t $IMG_NAME_AMD64 -f Dockerfile .
           docker build --pull --build-arg BASE_IMAGE=$BASE_IMG_JRE_ARM32V7 -t $IMG_NAME_ARM32V7 -f arm.Dockerfile .
