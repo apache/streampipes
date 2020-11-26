@@ -37,7 +37,7 @@ export class RuntimeResolvableService {
   }
 
   fetchRemoteOptionsForAdapter(resolvableOptionsParameterRequest: RuntimeOptionsRequest, adapterId: string): Observable<RuntimeOptionsResponse> {
-    let url: string = "/streampipes-connect/api/v1/"
+    let url: string = "/streampipes-backend/api/v2/connect/"
         + this.authStatusService.email
         + "/master/resolvable/"
         + encodeURIComponent(adapterId)
