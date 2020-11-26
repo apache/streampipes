@@ -53,7 +53,6 @@ public class KafkaPublisher implements EventSink<KafkaParameters> {
 
   @Override
   public void onEvent(Event inputEvent) {
-    System.out.println("Test");
     try {
       Map<String, Object> event = inputEvent.getRaw();
       producer.publish(dataFormatDefinition.fromMap(event));
