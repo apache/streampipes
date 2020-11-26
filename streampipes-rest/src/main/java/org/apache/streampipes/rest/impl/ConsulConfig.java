@@ -58,7 +58,7 @@ public class ConsulConfig extends AbstractRestInterface implements IConsulConfig
   @Override
   public Response getAllServiceConfigs() {
     LOG.info("Request for all service configs");
-    Map<String, String> peServices = ConsulUtil.getPEServices();
+    Map<String, String> peServices = ConsulUtil.getPeServices();
 
     List<PeConfig> peConfigs = new LinkedList<>();
 
