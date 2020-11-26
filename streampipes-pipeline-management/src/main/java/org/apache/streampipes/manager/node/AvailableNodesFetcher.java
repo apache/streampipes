@@ -54,7 +54,7 @@ public class AvailableNodesFetcher {
 
     private NodeInfo fetchNodeInfo(String activeNode) throws IOException {
         String response = Request
-                .Get(activeNode + "/node/info")
+                .Get(activeNode + "/api/v2/node/info")
                 .addHeader("Accept", MediaType.APPLICATION_JSON)
                 .execute()
                 .returnContent()

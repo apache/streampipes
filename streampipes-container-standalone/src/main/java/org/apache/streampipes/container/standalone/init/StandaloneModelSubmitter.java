@@ -58,7 +58,7 @@ public abstract class StandaloneModelSubmitter extends ModelSubmitter {
         app.run();
 
         // check wether pipeline element is managed by node controller
-        if (System.getenv("SP_NODE_ID") != null) {
+        if (System.getenv("SP_NODE_CONTROLLER_ID") != null) {
             // secondary
             // register pipeline element service via node controller
             NodeControllerUtil.register(

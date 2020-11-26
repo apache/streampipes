@@ -1,4 +1,4 @@
-package org.apache.streampipes.node.controller.container.management.info;/*
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -15,6 +15,7 @@ package org.apache.streampipes.node.controller.container.management.info;/*
  * limitations under the License.
  *
  */
+package org.apache.streampipes.node.controller.container.management.info;
 
 import org.apache.streampipes.model.node.*;
 import org.apache.streampipes.model.node.resources.hardware.HardwareResource;
@@ -46,7 +47,7 @@ public class NodeInfoStorage {
 
     private NodeInfo nodeInfo = new NodeInfo();
 
-    private static DockerInfo DockerInfo = DockerUtils.getInstance().getDockerInfo();
+    private static final DockerInfo DockerInfo = DockerUtils.getInstance().getDockerInfo();
     // OSHI to retreive system information
     private static SystemInfo si = new SystemInfo();
     private static HardwareAbstractionLayer hal = si.getHardware();

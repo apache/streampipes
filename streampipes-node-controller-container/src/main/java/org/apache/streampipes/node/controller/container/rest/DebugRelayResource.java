@@ -1,4 +1,4 @@
-package org.apache.streampipes.node.controller.container.rest;/*
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -15,6 +15,7 @@ package org.apache.streampipes.node.controller.container.rest;/*
  * limitations under the License.
  *
  */
+package org.apache.streampipes.node.controller.container.rest;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.node.controller.container.management.relay.EventRelayManager;
@@ -24,11 +25,12 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
+@Path("/api/v2/relay")
 public class DebugRelayResource extends AbstractNodeContainerResource {
 
     // TODO: Debug-only.
     @POST
-    @Path("/relay/start")
+    @Path("/start")
     public Response debugRelayEventStream(String msg) throws SpRuntimeException {
         // TODO implement
 
@@ -41,7 +43,7 @@ public class DebugRelayResource extends AbstractNodeContainerResource {
     }
 
     @POST
-    @Path("/relay/stop")
+    @Path("/stop")
     public Response debugStopRelayEventStream(String msg) throws SpRuntimeException {
         // TODO implement
 

@@ -1,4 +1,3 @@
-package org.apache.streampipes.node.controller.container;
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -16,16 +15,15 @@ package org.apache.streampipes.node.controller.container;
  * limitations under the License.
  *
  */
+package org.apache.streampipes.node.controller.container;
 
 import org.apache.streampipes.container.util.ConsulUtil;
-import org.apache.streampipes.model.node.PipelineElementDockerContainer;
 import org.apache.streampipes.node.controller.container.management.orchestrator.docker.DockerContainerOrchestrator;
-import org.apache.streampipes.node.controller.container.management.pe.PipelineElementManager;
 import org.apache.streampipes.node.controller.container.rest.NodeControllerResourceConfig;
 import org.apache.streampipes.node.controller.container.config.NodeControllerConfig;
 import org.apache.streampipes.node.controller.container.management.info.NodeInfoStorage;
-import org.apache.streampipes.node.controller.container.management.node.NodeJanitorManager;
-import org.apache.streampipes.node.controller.container.management.resource.ResourceManager;
+import org.apache.streampipes.node.controller.container.management.janitor.NodeJanitorManager;
+import org.apache.streampipes.node.controller.container.management.resources.ResourceManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -67,7 +65,7 @@ public class NodeControllerContainerInit {
         }
 
         // registration with consul here
-        ConsulUtil.registerNodeControllerService(
+        ConsulUtil.registerNodeService(
                 nodeConfig.getNodeServiceId(),
                 nodeConfig.getNodeHostName(),
                 nodeConfig.getNodeControllerPort()

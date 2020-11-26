@@ -15,11 +15,18 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.node.controller.container.management.pe;
 
-package org.apache.streampipes.connect.init;
+import org.apache.streampipes.container.model.node.InvocableRegistration;
 
-public class Config {
-    public static int MASTER_PORT = 8099;
-    public static String MASTER_HOST = "connect-master";
-    public static int WORKER_PORT = 8098;
+public interface ElementLifeCyle {
+
+    void register(InvocableRegistration registration);
+
+    String invoke(String endpoint, String payload);
+
+    String detach(String runningInstanceId);
+
+    void unregister();
+
 }

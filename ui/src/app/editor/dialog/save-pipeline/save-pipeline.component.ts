@@ -143,7 +143,6 @@ export class SavePipelineComponent implements OnInit {
   modifyPipelineElementsDeployments(pipelineElements) {
     pipelineElements.forEach(p => {
       let selectedTargetNodeId = p.deploymentTargetNodeId
-      console.log(selectedTargetNodeId);
       if(selectedTargetNodeId != "default") {
         let selectedNode = this.edgeNodes
             .filter(node => node.nodeControllerId === selectedTargetNodeId)
@@ -155,7 +154,6 @@ export class SavePipelineComponent implements OnInit {
             .map(node => node.nodeControllerPort)[0]
       }
       else {
-        console.log('null');
         p.deploymentTargetNodeHostname = null
         p.deploymentTargetNodePort = null
       }

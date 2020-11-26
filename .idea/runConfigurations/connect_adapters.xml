@@ -3,7 +3,7 @@
     <envs>
       <env name="SP_CONNECT_CONTAINER_WORKER_HOST" value="host.docker.internal" />
       <env name="SP_CONNECT_CONTAINER_HOST" value="host.docker.internal" />
-      <env name="SP_CONNECT_CONTAINER_MASTER_HOST" value="localhost" />
+      <env name="SP_BACKEND_HOST" value="localhost" />
       <env name="SP_DATA_LOCATION" value="./test_data/" />
       <env name="SP_DEBUG" value="true" />
       <env name="SP_DEBUG_CONNECT" value="false" />

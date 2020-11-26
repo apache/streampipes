@@ -1,4 +1,3 @@
-package org.apache.streampipes.node.controller.container.rest;
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -16,6 +15,7 @@ package org.apache.streampipes.node.controller.container.rest;
  * limitations under the License.
  *
  */
+package org.apache.streampipes.node.controller.container.rest;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.stereotype.Component;
@@ -26,7 +26,7 @@ public class NodeControllerResourceConfig extends ResourceConfig {
     public NodeControllerResourceConfig() {
         register(HealthCheckResource.class);
         register(InfoStatusResource.class);
-        register(InvocableManagementResource.class);
+        register(InvocableEntityResource.class);
 
         // TODO remove later - only for local relay tests
         register(DebugRelayResource.class);

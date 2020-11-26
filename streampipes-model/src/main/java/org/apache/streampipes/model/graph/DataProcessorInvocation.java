@@ -71,6 +71,9 @@ public class DataProcessorInvocation extends InvocableStreamPipesEntity implemen
     this.setAppId(sepa.getAppId());
     this.setIncludesAssets(sepa.isIncludesAssets());
     this.setElementId(RdfIdGenerator.makeRdfId(this));
+    this.setElementEndpointServiceName(sepa.getElementEndpointServiceName());
+    this.setElementEndpointHostname(sepa.getElementEndpointHostname());
+    this.setElementEndpointPort(sepa.getElementEndpointPort());
     //this.setUri(belongsTo +"/" +getElementId());
   }
 

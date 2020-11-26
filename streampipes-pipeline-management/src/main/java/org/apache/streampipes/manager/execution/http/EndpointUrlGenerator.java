@@ -21,17 +21,18 @@ import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 
 public abstract class EndpointUrlGenerator<T extends NamedStreamPipesEntity> {
 
+    protected static final String HTTP_PROTOCOL = "http://";
+    protected static final String COLON = ":";
     protected static final String SLASH = "/";
-    protected static final String URLPREFIX = "http://";
 
-    protected T pipelineElement;
+    protected T graph;
 
-    public EndpointUrlGenerator(T pipelineElement) {
-        this.pipelineElement = pipelineElement;
+    public EndpointUrlGenerator(T graph) {
+        this.graph = graph;
     }
 
-    public abstract String generateStartPipelineEndpointUrl();
+    public abstract String generateInvokeEndpoint();
 
-    public abstract String generateStopPipelineEndpointUrl();
+    public abstract String generateDetachEndpoint();
 
 }

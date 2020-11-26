@@ -129,25 +129,6 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
     }
   }
 
-//  TODO: delete if not needed after merge
-//  public InvocableStreamPipesEntity(ConsumableStreamPipesEntity entityDescription) {
-//    super();
-//    this.setName(entityDescription.getName());
-//    this.setDescription(entityDescription.getDescription());
-//    this.setIconUrl(entityDescription.getIconUrl());
-//    this.setInputStreams(entityDescription.getSpDataStreams());
-//    this.setSupportedGrounding(entityDescription.getSupportedGrounding());
-//    this.setStaticProperties(entityDescription.getStaticProperties());
-//    this.setBelongsTo(entityDescription.getElementId());
-//    this.setStreamRequirements(entityDescription.getSpDataStreams());
-//    this.setAppId(entityDescription.getAppId());
-//    this.setIncludesAssets(entityDescription.isIncludesAssets());
-//
-//    this.setElementEndpointHostname(entityDescription.getElementEndpointHostname());
-//    this.setElementEndpointPort(entityDescription.getElementEndpointPort());
-//    this.setElementEndpointServiceName(entityDescription.getElementEndpointServiceName());
-//  }
-
   public InvocableStreamPipesEntity(String uri, String name, String description, String iconUrl) {
     super(uri, name, description, iconUrl);
     this.configured = false;

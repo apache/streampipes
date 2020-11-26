@@ -1,4 +1,4 @@
-package org.apache.streampipes.node.controller.container.management.relay;/*
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -15,6 +15,7 @@ package org.apache.streampipes.node.controller.container.management.relay;/*
  * limitations under the License.
  *
  */
+package org.apache.streampipes.node.controller.container.management.relay;
 
 import com.google.gson.Gson;
 import org.apache.streampipes.messaging.kafka.SpKafkaProducer;

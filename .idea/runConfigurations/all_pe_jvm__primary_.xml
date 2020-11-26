@@ -1,7 +1,5 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="all-pe-jvm (primary)" type="Application" factoryName="Application" folderName="edge-extensions">
-    <option name="MAIN_CLASS_NAME" value="org.apache.streampipes.pe.jvm.AllPipelineElementsInit" />
-    <module name="streampipes-pipeline-elements-all-jvm" />
     <envs>
       <env name="SP_PORT" value="7023" />
       <env name="SP_HOST" value="host.docker.internal" />
@@ -14,6 +12,8 @@
       <env name="SP_BACKEND_HOST" value="localhost" />
       <env name="SP_BACKEND_PORT" value="8030" />
     </envs>
+    <option name="MAIN_CLASS_NAME" value="org.apache.streampipes.pe.jvm.AllPipelineElementsInit" />
+    <module name="streampipes-pipeline-elements-all-jvm" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
