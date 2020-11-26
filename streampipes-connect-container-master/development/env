@@ -14,8 +14,8 @@
 # limitations under the License.
 
 # Those parameters are used by IntelliJ to set the default consul parameters for development
-SP_BACKEND_HOST=localhost
-SP_KAFKA_HOST=localhost
-SP_CONNECT_CONTAINER_HOST=localhost
-SP_COUCHDB_HOST=localhost
+SP_BACKEND_HOST=ubuntu
+SP_KAFKA_HOST=ubuntu
+SP_CONNECT_CONTAINER_HOST=ubuntu
+SP_COUCHDB_HOST=ubuntu
 #SP_NODE_BROKER=true
