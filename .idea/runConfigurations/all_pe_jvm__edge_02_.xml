@@ -2,7 +2,7 @@
   <configuration default="false" name="all-pe-jvm (edge-02)" type="Application" factoryName="Application" folderName="edge-extensions">
     <envs>
       <env name="SP_PORT" value="7025" />
-      <env name="SP_HOST" value="edge-02.fzi.de" />
+      <env name="SP_HOST" value="edge02.example.de" />
       <env name="SP_DEBUG" value="true" />
       <env name="SP_COUCHDB_HOST" value="localhost" />
       <env name="SP_JMS_HOST" value="localhost" />
@@ -12,7 +12,7 @@
       <env name="SP_BACKEND_HOST" value="localhost" />
       <env name="SP_BACKEND_PORT" value="8030" />
       <env name="SP_NODE_CONTROLLER_ID" value="edge-02.node-controller" />
-      <env name="SP_NODE_CONTROLLER_HOST" value="edge-02.fzi.de" />
+      <env name="SP_NODE_CONTROLLER_HOST" value="edge02.example.de" />
       <env name="SP_NODE_CONTROLLER_PORT" value="7078" />
     </envs>
     <option name="MAIN_CLASS_NAME" value="org.apache.streampipes.pe.jvm.AllPipelineElementsInit" />
