@@ -107,9 +107,6 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
         tpJms.setTopicDefinition(new SimpleTopicDefinition("cc"));
         tpMqtt.setTopicDefinition(new SimpleTopicDefinition("dd"));
         this.eventGrounding.setTransportProtocols(Arrays.asList(tpKafka,tpJms,tpMqtt));
-//        this.eventGrounding.setTransportFormats(Arrays.asList(Formats.jsonFormat()));
-
-
     }
 
     public AdapterDescription(String uri, String name, String description) {
