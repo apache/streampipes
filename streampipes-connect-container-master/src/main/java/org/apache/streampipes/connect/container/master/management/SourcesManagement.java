@@ -159,7 +159,8 @@ public class SourcesManagement {
         if (adapterDescription instanceof AdapterSetDescription) {
             ds = ((AdapterSetDescription) adapterDescription).getDataSet();
             EventGrounding eg = new EventGrounding();
-            eg.setTransportProtocol(SupportedProtocols.kafka());
+            eg.setTransportProtocols(Arrays.asList(SupportedProtocols.kafka(), SupportedProtocols.jms(),
+                    SupportedProtocols.mqtt()));
             eg.setTransportFormats(Arrays.asList(TransportFormatGenerator.getTransportFormat()));
             ((SpDataSet) ds).setSupportedGrounding(eg);
         } else {

@@ -107,9 +107,11 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
         // TODO move to another place
         TransportProtocol tpKafka = new KafkaTransportProtocol();
         TransportProtocol tpJms = new JmsTransportProtocol();
+        TransportProtocol tpMqtt = new MqttTransportProtocol();
         tpKafka.setTopicDefinition(new SimpleTopicDefinition("bb"));
         tpJms.setTopicDefinition(new SimpleTopicDefinition("cc"));
-        this.eventGrounding.setTransportProtocols(Arrays.asList(tpKafka,tpJms));
+        tpMqtt.setTopicDefinition(new SimpleTopicDefinition("dd"));
+        this.eventGrounding.setTransportProtocols(Arrays.asList(tpKafka,tpJms,tpMqtt));
 //        this.eventGrounding.setTransportFormats(Arrays.asList(Formats.jsonFormat()));
 
 
