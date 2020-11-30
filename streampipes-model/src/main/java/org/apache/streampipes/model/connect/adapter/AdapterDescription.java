@@ -29,10 +29,7 @@ import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.SchemaTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.stream.StreamTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.ValueTransformationRuleDescription;
-import org.apache.streampipes.model.grounding.EventGrounding;
-import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
-import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
-import org.apache.streampipes.model.grounding.TransportProtocol;
+import org.apache.streampipes.model.grounding.*;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.util.Cloner;
@@ -43,6 +40,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
@@ -102,12 +100,13 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
         this.category = new ArrayList<>();
 
         // TODO move to another place
-        TransportProtocol tp = new KafkaTransportProtocol();
-        tp.setTopicDefinition(new SimpleTopicDefinition("bb"));
-        this.eventGrounding.setTransportProtocol(tp);
-//        this.eventGrounding.setTransportFormats(Arrays.asList(Formats.jsonFormat()));
-
-
+        TransportProtocol tpKafka = new KafkaTransportProtocol();
+        TransportProtocol tpJms = new JmsTransportProtocol();
+        TransportProtocol tpMqtt = new MqttTransportProtocol();
+        tpKafka.setTopicDefinition(new SimpleTopicDefinition("bb"));
+        tpJms.setTopicDefinition(new SimpleTopicDefinition("cc"));
+        tpMqtt.setTopicDefinition(new SimpleTopicDefinition("dd"));
+        this.eventGrounding.setTransportProtocols(Arrays.asList(tpKafka,tpJms,tpMqtt));
     }
 
     public AdapterDescription(String uri, String name, String description) {

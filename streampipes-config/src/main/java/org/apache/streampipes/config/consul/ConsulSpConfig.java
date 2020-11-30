@@ -26,17 +26,25 @@ import org.apache.streampipes.config.SpConfig;
 import org.apache.streampipes.config.SpConfigChangeCallback;
 import org.apache.streampipes.config.model.ConfigItem;
 import org.apache.streampipes.config.model.ConfigurationScope;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
+import java.net.Socket;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 public class ConsulSpConfig extends SpConfig implements Runnable {
+    private static final Logger LOG = LoggerFactory.getLogger(ConsulSpConfig.class.getCanonicalName());
 
+    private static final String SLASH = "/";
     private static final String CONSUL_ENV_LOCATION = "CONSUL_LOCATION";
+    private static final int CONSUL_DEFAULT_PORT = 8500;
     public static final String SERVICE_ROUTE_PREFIX = "sp/v1/";
+
     private String serviceName;
     private  KeyValueClient kvClient;
 
@@ -47,24 +55,8 @@ public class ConsulSpConfig extends SpConfig implements Runnable {
 
     public ConsulSpConfig(String serviceName) {
         super(serviceName);
-        //TDOO use consul adress from an environment variable
-        Map<String, String> env = System.getenv();
-        Consul consul;
-        if (env.containsKey(CONSUL_ENV_LOCATION)) {
-            URL url = null;
-            try {
-                url = new URL("http", env.get(CONSUL_ENV_LOCATION), 8500, "");
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-            consul = Consul.builder().withUrl(url).build(); // connect to Consul on localhost
-        } else {
-            consul = Consul.builder().build();
-        }
-
-//        Consul consul = Consul.builder().build(); // connect to Consul on localhost
-        kvClient = consul.keyValueClient();
-
+        Consul consul = consulInstance();
+        this.kvClient = consul.keyValueClient();
         this.serviceName = serviceName;
     }
 
@@ -73,6 +65,59 @@ public class ConsulSpConfig extends SpConfig implements Runnable {
         this.callback = callback;
         this.configProps = new HashMap<>();
         new Thread(this).start();
+    }
+
+    private static Consul consulInstance() {
+        boolean connected = false;
+        URL consulUrl = consulURL();
+
+        while (!connected) {
+            LOG.info("Trying to connect to Consul to register config items");
+            connected = isReady(consulUrl.getHost(), consulUrl.getPort());
+
+            if (!connected) {
+                LOG.info("Retrying in 1 second");
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        LOG.info("Successfully connected to Consul");
+        return Consul.builder().withUrl(consulURL()).build();
+    }
+
+    private static URL consulURL() {
+        Map<String, String> env = System.getenv();
+        URL url = null;
+
+        if (env.containsKey(CONSUL_ENV_LOCATION)) {
+            try {
+                url = new URL("http", env.get(CONSUL_ENV_LOCATION), CONSUL_DEFAULT_PORT, "");
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                url = new URL("http", "localhost", CONSUL_DEFAULT_PORT, "");
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+        }
+        return url;
+    }
+
+    public static boolean isReady(String host, int port) {
+        try {
+            InetSocketAddress sa = new InetSocketAddress(host, port);
+            Socket ss = new Socket();
+            ss.connect(sa, 1000);
+            ss.close();
+        } catch(Exception e) {
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -235,7 +280,7 @@ public class ConsulSpConfig extends SpConfig implements Runnable {
     }
 
     private String addSn(String key) {
-       return SERVICE_ROUTE_PREFIX + serviceName + "/" + key;
+       return SERVICE_ROUTE_PREFIX + serviceName + SLASH + key;
     }
 
     private ConfigItem fromJson(String content) {
