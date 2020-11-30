@@ -1,6 +1,5 @@
-org.apache.streampipes.processors.filters.jvm.enrich.title=Merge By Enrich
-org.apache.streampipes.processors.filters.jvm.enrich.description=Merges two event streams by adding properties of one stream to the other
+org.apache.streampipes.processors.filters.jvm.enrich.title=Merge Two Streams
+org.apache.streampipes.processors.filters.jvm.enrich.description=One data stream is enriched by the values of the other
 
-
-select-stream.title=Stream to enrich
-select-stream.description=Which stream should be enriched. Output frequency will be the same as selected stream.
+select-stream.title=Select Output Frequency
+select-stream.description=The output frequency of the selected stream is maintained

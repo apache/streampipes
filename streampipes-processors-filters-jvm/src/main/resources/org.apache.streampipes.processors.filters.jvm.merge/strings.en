@@ -1,5 +1,5 @@
-org.apache.streampipes.processors.filters.jvm.merge.title=Merge By Time
-org.apache.streampipes.processors.filters.jvm.merge.description=Merges two event streams by timestamp
+org.apache.streampipes.processors.filters.jvm.merge.title=Synchronize Two Streams
+org.apache.streampipes.processors.filters.jvm.merge.description=Event streams are merged when events occur at the same time
 
 timestamp_mapping_stream_1.title=Timestamp Field Stream 1
 timestamp_mapping_stream_1.description=The value which contains a timestamp
