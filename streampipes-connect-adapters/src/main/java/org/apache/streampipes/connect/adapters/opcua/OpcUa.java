@@ -32,31 +32,20 @@ import org.eclipse.milo.opcua.stack.client.DiscoveryClient;
 import org.eclipse.milo.opcua.stack.core.AttributeId;
 import org.eclipse.milo.opcua.stack.core.Identifiers;
 import org.eclipse.milo.opcua.stack.core.security.SecurityPolicy;
-import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
-import org.eclipse.milo.opcua.stack.core.types.builtin.LocalizedText;
-import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
-import org.eclipse.milo.opcua.stack.core.types.builtin.QualifiedName;
+import org.eclipse.milo.opcua.stack.core.types.builtin.*;
 import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.BrowseDirection;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.BrowseResultMask;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.MonitoringMode;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.NodeClass;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.TimestampsToReturn;
-import org.eclipse.milo.opcua.stack.core.types.structured.BrowseDescription;
-import org.eclipse.milo.opcua.stack.core.types.structured.BrowseResult;
-import org.eclipse.milo.opcua.stack.core.types.structured.EndpointDescription;
-import org.eclipse.milo.opcua.stack.core.types.structured.MonitoredItemCreateRequest;
-import org.eclipse.milo.opcua.stack.core.types.structured.MonitoringParameters;
-import org.eclipse.milo.opcua.stack.core.types.structured.ReadValueId;
-import org.eclipse.milo.opcua.stack.core.types.structured.ReferenceDescription;
+import org.eclipse.milo.opcua.stack.core.types.structured.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicLong;
@@ -69,6 +58,7 @@ public class OpcUa {
     private NodeId node;
     private String opcServerURL;
     private OpcUaClient client;
+    private List<Map<String, Integer>> unitIDs = new ArrayList<>();
 
     private static final AtomicLong clientHandles = new AtomicLong(1L);
 
@@ -163,9 +153,29 @@ public class OpcUa {
         try {
 //            VariableNode resultNode = client.getAddressSpace().getVariableNode(browseRoot).get();
             String label = client.getAddressSpace().getVariableNode(browseRoot).get().getDisplayName().get().getText();
+            int opcDataTypeId = ((UInteger) client.getAddressSpace().getVariableNode(browseRoot).get().getDataType().get().getIdentifier()).intValue();
             Datatypes type = OpcUaTypes.getType((UInteger)client.getAddressSpace().getVariableNode(browseRoot).get().getDataType().get().getIdentifier());
             NodeId nodeId = client.getAddressSpace().getVariableNode(browseRoot).get().getNodeId().get();
-            result.add(new OpcNode(label, type, nodeId));
+
+            // if rootNote is of type Property or EUInformation it does not deliver any data value,
+            // therefore return an empty list
+            if (opcDataTypeId == OpcUaNodeVariants.Property.getId() || opcDataTypeId == OpcUaNodeVariants.EUInformation.getId()){
+                return result;
+            }
+
+            // check whether a unitID is detected for this node
+            Integer unitID = null;
+            for (Map<String, Integer> unit: this.unitIDs) {
+                if (unit.get(nodeId) != null) {
+                    unitID = unit.get(nodeId);
+                }
+            }
+
+            if (unitID != null){
+                result.add(new OpcNode(label,type, nodeId, unitID));
+            } else {
+                result.add(new OpcNode(label, type, nodeId));
+            }
 
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -201,17 +211,54 @@ public class OpcUa {
             for (ReferenceDescription rd : references) {
                 if (rd.getNodeClass() == NodeClass.Variable) {
 
-                    OpcNode opcNode = new OpcNode( rd.getBrowseName().getName(), OpcUaTypes.getType((UInteger) rd.getTypeDefinition().getIdentifier()), rd.getNodeId().local().get());
-                    rd.getNodeId();
+                    EUInformation eu;
 
-                    result.add(opcNode);
-                    rd.getNodeId().local().ifPresent(nodeId -> {
-                        try {
-                            browseNode(nodeId);
-                        } catch (AdapterException e) {
-                            e.printStackTrace();
+                    // check for whether the Node is of type Property
+                    if (OpcUaNodeVariants.Property.getId() == ((UInteger) rd.getTypeDefinition().getIdentifier()).intValue()) {
+
+                        ExpandedNodeId property = rd.getNodeId();
+
+                        NodeId propertyNode = property.local().orElseThrow(AdapterException::new);
+
+                        // check node for EU Information
+                       if (OpcUaNodeVariants.EUInformation.getId() == ((UInteger) client.getAddressSpace().getVariableNode(propertyNode).get().getDataType().get().getIdentifier()).intValue()){
+
+                           ExtensionObject euExtension = (ExtensionObject) client.readValue(0, TimestampsToReturn.Both, propertyNode).get().getValue().getValue();
+
+                           // save information about EngineeringUnit in list
+                           eu = (EUInformation) euExtension.decode();
+                           Map map = new HashMap();
+                           map.put(browseRoot, eu.getUnitId());
+                           this.unitIDs.add(map);
+
+                       }
+
+                    } else {
+
+                        // check whether there exists an unitID for this node
+                        Integer unitID = null;
+                        for (Map<String, Integer> unit: this.unitIDs){
+                            if (unit.get(browseRoot) != null){
+                                unitID = unit.get(browseRoot);
+                            }
                         }
-                    });
+                        OpcNode opcNode;
+                        if (unitID != null){
+                            opcNode = new OpcNode(rd.getBrowseName().getName(), OpcUaTypes.getType((UInteger) rd.getTypeDefinition().getIdentifier()), rd.getNodeId().local().get(), unitID);
+                        } else {
+                            opcNode = new OpcNode(rd.getBrowseName().getName(), OpcUaTypes.getType((UInteger) rd.getTypeDefinition().getIdentifier()), rd.getNodeId().local().get());
+                        }
+                        rd.getNodeId();
+
+                        result.add(opcNode);
+                        rd.getNodeId().local().ifPresent(nodeId -> {
+                            try {
+                                browseNode(nodeId);
+                            } catch (AdapterException e) {
+                                e.printStackTrace();
+                            }
+                        });
+                    }
                 }
             }
         } catch (InterruptedException | ExecutionException e) {
@@ -298,6 +345,20 @@ public class OpcUa {
         }
         // only got here if we didn't return false
         return true;
+    }
+
+    // utility function for mapping UPC Unit Ids to QUDT entities
+    // has to be maintained manually
+    // information about OPC Unit IDs can be found under: opcfoundation.org/UA/EngineeringUnits/UNECE/UNECE_to_OPCUA.csv
+    public static String mapUnitIdToQudt(int unitId){
+        switch (unitId){
+            case 17476:
+                return "http://qudt.org/vocab/unit#DEG";
+            case 4408652:
+                return "http://qudt.org/vocab/unit#DegreeCelsius";
+            default:
+                return "";
+        }
     }
 
 
