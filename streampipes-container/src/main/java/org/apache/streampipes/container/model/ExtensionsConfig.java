@@ -16,10 +16,15 @@
  *
  */
 
-package org.apache.streampipes.container.init;
+package org.apache.streampipes.container.model;
 
-public abstract class ModelSubmitter<T> {
+public interface ExtensionsConfig {
 
-    public abstract void init(T conf);
+    String getId();
+    String getHost();
+    int getPort();
+    String getName();
+    String getBackendHost();
+    int getBackendPort();
 
 }

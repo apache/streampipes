@@ -892,6 +892,7 @@
         <module>streampipes-messaging-mqtt</module>
         <module>streampipes-maven-plugin</module>
         <module>streampipes-model-shared</module>
+        <module>streampipes-container-extensions</module>
     </modules>
 
     <profiles>
