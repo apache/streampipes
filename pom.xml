@@ -57,6 +57,7 @@
         <module>streampipes-pipeline-elements-data-simulator</module>
         <module>streampipes-connect-adapters</module>
         <module>streampipes-pipeline-elements-all-flink</module>
+        <module>streampipes-processors-change-detection-jvm</module>
     </modules>
 
     <properties>

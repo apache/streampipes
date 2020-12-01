@@ -39,7 +39,7 @@ The aggregation processor requires a data stream that has at least one field con
 ## Configuration
 
 ### Group by
-The aaggregation function can be calculated separately (partitioned) by the selected field value. 
+The aggregation function can be calculated separately (partitioned) by the selected field value. 
 
 ### Output every
 The frequency in which aggregated values are sent in seconds.

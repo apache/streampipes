@@ -1,13 +1,29 @@
 org.apache.streampipes.connect.protocol.stream.kafka.title=Apache Kafka
 org.apache.streampipes.connect.protocol.stream.kafka.description=Consumes messages from an Apache Kafka broker
 
-broker_url.title=Broker Hostname
-broker_url.description=Example: test.server.com (No protocol)
+host.title=Broker Hostname
+host.description=Example: test.server.com (No protocol)
 
-broker_port.title=Broker Port
-broker_port.description=9092
+port.title=Broker Port
+port.description=9092
 
 topic.title=Topic
 topic.description=Example: test.topic
 
+access-mode.title=Access Mode
+access-mode.description=
 
+anonymous-alternative.title=Unauthenticated
+anonymous-alternative.description=
+
+username-alternative.title=Username/Password
+username-alternative.description=
+
+username-group.title=User Group
+username-group.description=
+
+username.title=Username
+username.description=
+
+password.title=Password
+password.description=
