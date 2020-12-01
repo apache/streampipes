@@ -52,9 +52,7 @@ public class SpKafkaProducer implements EventProducer<KafkaTransportProtocol>, S
 
   private static final Logger LOG = LoggerFactory.getLogger(SpKafkaProducer.class);
 
-  public SpKafkaProducer() {
-
-  }
+  public SpKafkaProducer() { }
 
   // TODO backwards compatibility, remove later
   public SpKafkaProducer(String url, String topic) {
@@ -64,6 +62,16 @@ public class SpKafkaProducer implements EventProducer<KafkaTransportProtocol>, S
     this.brokerUrl = url;
     this.topic = topic;
     this.producer = new KafkaProducer<>(makeProperties(protocol));
+  }
+
+  // TODO backwards compatibility, remove later
+  public SpKafkaProducer(String url, String topic, String username, String password) {
+    String[] urlParts = url.split(COLON);
+    KafkaTransportProtocol protocol = new KafkaTransportProtocol(urlParts[0],
+            Integer.parseInt(urlParts[1]), topic);
+    this.brokerUrl = url;
+    this.topic = topic;
+    this.producer = new KafkaProducer<>(makePropertiesSaslPlain(protocol, username, password));
   }
 
   public void publish(String message) {
@@ -76,6 +84,10 @@ public class SpKafkaProducer implements EventProducer<KafkaTransportProtocol>, S
 
   private Properties makeProperties(KafkaTransportProtocol protocol) {
     return new ProducerConfigFactory(protocol).makeProperties();
+  }
+
+  private Properties makePropertiesSaslPlain(KafkaTransportProtocol protocol, String username, String password) {
+    return new ProducerConfigFactory(protocol).makePropertiesSaslPlain(username, password);
   }
 
   @Override

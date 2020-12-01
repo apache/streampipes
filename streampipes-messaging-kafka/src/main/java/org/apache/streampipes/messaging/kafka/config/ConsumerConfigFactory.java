@@ -17,7 +17,11 @@
  */
 package org.apache.streampipes.messaging.kafka.config;
 
+import org.apache.kafka.clients.CommonClientConfigs;
+import org.apache.kafka.clients.KafkaClient;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.common.config.SaslConfigs;
+import org.apache.kafka.common.security.auth.SecurityProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 
 import java.util.Properties;
@@ -33,6 +37,7 @@ public class ConsumerConfigFactory extends AbstractConfigFactory {
           ".serialization.StringDeserializer";
   private static final String VALUE_DESERIALIZER_CLASS_CONFIG_DEFAULT = "org.apache.kafka.common" +
           ".serialization.ByteArrayDeserializer";
+  private static final String SASL_MECHANISM = "PLAIN";
 
   public ConsumerConfigFactory(KafkaTransportProtocol protocol) {
     super(protocol);
@@ -41,7 +46,6 @@ public class ConsumerConfigFactory extends AbstractConfigFactory {
   @Override
   public Properties makeProperties() {
     Properties props = new Properties();
-
     props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, getBrokerUrl());
     props.put(ConsumerConfig.GROUP_ID_CONFIG, getConfigOrDefault(protocol::getGroupId,
             UUID.randomUUID().toString()));
@@ -54,6 +58,17 @@ public class ConsumerConfigFactory extends AbstractConfigFactory {
     props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, KEY_DESERIALIZER_CLASS_CONFIG_DEFAULT);
     props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, VALUE_DESERIALIZER_CLASS_CONFIG_DEFAULT);
     props.put(ConsumerConfig.CLIENT_ID_CONFIG, UUID.randomUUID().toString());
+
+    return props;
+  }
+
+  @Override
+  public Properties makePropertiesSaslPlain(String username, String password) {
+    Properties props = makeProperties();
+    props.put(SaslConfigs.SASL_MECHANISM, "PLAIN");
+    props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, SecurityProtocol.SASL_PLAINTEXT.toString());
+    String SASL_JAAS_CONFIG = "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"" + username + "\" password=\"" + password + "\";";
+    props.put(SaslConfigs.SASL_JAAS_CONFIG, SASL_JAAS_CONFIG);
     return props;
   }
 }
