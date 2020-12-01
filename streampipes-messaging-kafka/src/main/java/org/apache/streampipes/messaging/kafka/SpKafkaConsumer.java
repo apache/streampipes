@@ -18,10 +18,7 @@
 
 package org.apache.streampipes.messaging.kafka;
 
-import org.apache.kafka.clients.consumer.ConsumerRebalanceListener;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.common.TopicPartition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +42,8 @@ public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, R
   private String topic;
   private InternalEventProcessor<byte[]> eventProcessor;
   private KafkaTransportProtocol protocol;
+  private String username;
+  private String password;
   private volatile boolean isRunning;
   private Boolean patternTopic = false;
 
@@ -56,9 +55,22 @@ public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, R
 
   public SpKafkaConsumer(KafkaTransportProtocol protocol, String topic, InternalEventProcessor<byte[]> eventProcessor) {
       this.protocol = protocol;
+      this.username = null;
+      this.password = null;
       this.topic = topic;
       this.eventProcessor = eventProcessor;
       this.isRunning = true;
+  }
+
+
+  public SpKafkaConsumer(KafkaTransportProtocol protocol, String topic, InternalEventProcessor<byte[]> eventProcessor,
+                         String username, String password) {
+    this.protocol = protocol;
+    this.topic = topic;
+    this.eventProcessor = eventProcessor;
+    this.isRunning = true;
+    this.username = username;
+    this.password = password;
   }
 
 
@@ -78,12 +90,19 @@ public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, R
 
   @Override
   public void run() {
-    KafkaConsumer<String, byte[]> kafkaConsumer = new KafkaConsumer<>(getProperties());
+    Properties props;
+    if (username != null && password != null) {
+      props = makePropertiesSaslPlain(protocol, username, password);
+    }
+    else {
+      props = makeProperties(protocol);
+    }
+    KafkaConsumer<String, byte[]> consumer = new KafkaConsumer<>(props);
     if (!patternTopic) {
-      kafkaConsumer.subscribe(Collections.singletonList(topic));
+      consumer.subscribe(Collections.singletonList(topic));
     } else {
       topic = replaceWildcardWithPatternFormat(topic);
-      kafkaConsumer.subscribe(Pattern.compile(topic), new ConsumerRebalanceListener() {
+      consumer.subscribe(Pattern.compile(topic), new ConsumerRebalanceListener() {
         @Override
         public void onPartitionsRevoked(Collection<TopicPartition> partitions) {
           // TODO
@@ -96,13 +115,13 @@ public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, R
       });
     }
     while (isRunning) {
-      ConsumerRecords<String, byte[]> records = kafkaConsumer.poll(100);
+      ConsumerRecords<String, byte[]> records = consumer.poll(100);
       for (ConsumerRecord<String, byte[]> record : records) {
         eventProcessor.onEvent(record.value());
       }
     }
     LOG.info("Closing Kafka Consumer.");
-    kafkaConsumer.close();
+    consumer.close();
   }
 
   private String replaceWildcardWithPatternFormat(String topic) {
@@ -110,8 +129,12 @@ public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, R
     return topic.replaceAll("\\*", ".*");
   }
 
-  private Properties getProperties() {
+  private Properties makeProperties(KafkaTransportProtocol protocol) {
     return new ConsumerConfigFactory(protocol).makeProperties();
+  }
+
+  private Properties makePropertiesSaslPlain(KafkaTransportProtocol protocol, String username, String password) {
+    return new ConsumerConfigFactory(protocol).makePropertiesSaslPlain(username, password);
   }
 
   @Override
