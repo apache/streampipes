@@ -57,6 +57,7 @@
         <module>streampipes-pipeline-elements-data-simulator</module>
         <module>streampipes-connect-adapters</module>
         <module>streampipes-pipeline-elements-all-flink</module>
+        <module>streampipes-extensions-all-jvm</module>
     </modules>
 
     <properties>
@@ -73,6 +74,7 @@
         <commons-math3.version>3.6.1</commons-math3.version>
         <commons-compress.version>1.18</commons-compress.version>
         <commons-text.version>1.4</commons-text.version>
+        <commons-pool2.version>2.9.0</commons-pool2.version>
         <ditto-client.version>1.0.0</ditto-client.version>
         <data-generator.version>1.4.1</data-generator.version>
         <ddogleg.version>0.16</ddogleg.version>
@@ -485,6 +487,11 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-math3</artifactId>
                 <version>${commons-math3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-pool2</artifactId>
+                <version>${commons-pool2.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.flink</groupId>
