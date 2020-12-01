@@ -69,7 +69,6 @@ public class Cusum implements EventProcessor<CusumParameters> {
     }
 
     private void resetAfterChange() {
-        System.out.println("Reset after change");
         cusumHigh = 0.0;
         cusumLow = 0.0;
         welfordAggregate = new WelfordAggregate();
