@@ -21,6 +21,6 @@ ENV CONSUL_LOCATION consul
 EXPOSE 8090
 
 COPY qemu-aarch64-static /usr/bin
-COPY target/streampipes-processors-all-jvm.jar  /streampipes-extensions-all-jvm.jar
+COPY target/streampipes-extensions-all-jvm.jar  /streampipes-extensions-all-jvm.jar
 
 ENTRYPOINT ["java", "-jar", "/streampipes-extensions-all-jvm.jar"]
