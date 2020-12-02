@@ -96,6 +96,7 @@ public abstract class ExtensionsModelSubmitter extends ModelSubmitter<Extensions
                 }
             }
         }
+        LOG.info("Successfully registered adapter at master in backend: " + backendUrl);
 
         ConsulUtil.registerPeService(
                 conf.getId(),
