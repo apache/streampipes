@@ -19,5 +19,5 @@ package org.apache.streampipes.storage.rdf4j.config;
 
 public class ConfigKeys {
     public static final String BACKGROUND_KNOWLEDGE_DIR = "SP_BACKGROUND_KNOWLEDGE_DIR";
-    public static final String PE_KNOWLEDGE_DIR = "SP_PE_DESCRIPTION_DIR";
+    public static final String PIPELINE_ELEMENT_KNOWLEDGE_DIR = "SP_PIPELINE_ELEMENT_KNOWLEDGE_DIR";
 }

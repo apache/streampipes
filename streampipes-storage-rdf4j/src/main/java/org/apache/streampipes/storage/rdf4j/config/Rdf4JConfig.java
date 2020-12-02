@@ -33,7 +33,7 @@ public enum Rdf4JConfig {
 
     config.register(ConfigKeys.BACKGROUND_KNOWLEDGE_DIR, makeBackgroundStorageLocation(), "Directory of " +
             "the RDF4J native store directory (background knowledge)");
-    config.register(ConfigKeys.PE_KNOWLEDGE_DIR, makePipelineElementStorageLocation(), "Directory of " +
+    config.register(ConfigKeys.PIPELINE_ELEMENT_KNOWLEDGE_DIR, makePipelineElementStorageLocation(), "Directory of " +
             "the RDF4J native store directory (pipeline element knowledge)");
   }
 
@@ -61,7 +61,7 @@ public enum Rdf4JConfig {
   }
 
   public String getPipelineElementStorageLocation() {
-      return config.getString(ConfigKeys.PE_KNOWLEDGE_DIR);
+      return config.getString(ConfigKeys.PIPELINE_ELEMENT_KNOWLEDGE_DIR);
   }
 
 
