@@ -39,7 +39,7 @@ import javax.annotation.PreDestroy;
 @Configuration
 @EnableAutoConfiguration
 @Import({ PipelineElementContainerResourceConfig.class })
-public abstract class StandaloneModelSubmitter extends ModelSubmitter {
+public abstract class StandaloneModelSubmitter extends ModelSubmitter<PeConfig> {
 
     private static final Logger LOG =
             LoggerFactory.getLogger(StandaloneModelSubmitter.class.getCanonicalName());
