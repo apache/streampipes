@@ -28,16 +28,13 @@ public enum Rdf4JConfig {
 
   private SpConfig config;
 
-  private static final String BACKGROUND_KNOWLEDGE_STORAGE = "backgroundknowledge";
-  private static final String PIPELINE_ELEMENT_STORAGE = "pipelineelements";
-
   Rdf4JConfig() {
     config = SpConfig.getSpConfig("storage/rdf4j");
 
-    config.register(BACKGROUND_KNOWLEDGE_STORAGE, makeBackgroundStorageLocation(), "Directory of " +
+    config.register(ConfigKeys.BACKGROUND_KNOWLEDGE_DIR, makeBackgroundStorageLocation(), "Directory of " +
             "the RDF4J native store directory (background knowledge)");
-      config.register(PIPELINE_ELEMENT_STORAGE, makePipelineElementStorageLocation(), "Directory of " +
-              "the RDF4J native store directory (pipeline element knowledge)");
+    config.register(ConfigKeys.PE_KNOWLEDGE_DIR, makePipelineElementStorageLocation(), "Directory of " +
+            "the RDF4J native store directory (pipeline element knowledge)");
   }
 
   private String makeBackgroundStorageLocation() {
@@ -60,11 +57,11 @@ public enum Rdf4JConfig {
   }
 
   public String getBackgroundKnowledgeStorageLocation() {
-      return config.getString(BACKGROUND_KNOWLEDGE_STORAGE);
+      return config.getString(ConfigKeys.BACKGROUND_KNOWLEDGE_DIR);
   }
 
   public String getPipelineElementStorageLocation() {
-      return config.getString(PIPELINE_ELEMENT_STORAGE);
+      return config.getString(ConfigKeys.PE_KNOWLEDGE_DIR);
   }
 
 
