@@ -1,0 +1,25 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="extensions-all-jvm" type="Application" factoryName="Application">
+    <envs>
+      <env name="SP_CONNECT_CONTAINER_WORKER_HOST" value="host.docker.internal" />
+      <env name="SP_CONNECT_CONTAINER_HOST" value="host.docker.internal" />
+      <env name="SP_BACKEND_HOST" value="host.docker.internal" />
+      <env name="SP_DATA_LOCATION" value="./test_data/" />
+      <env name="SP_DEBUG" value="true" />
+      <env name="SP_DEBUG_CONNECT" value="false" />
+      <env name="SP_PORT" value="7020" />
+      <env name="SP_HOST" value="host.docker.internal" />
+      <env name="SP_COUCHDB_HOST" value="localhost" />
+      <env name="SP_JMS_HOST" value="localhost" />
+      <env name="SP_JMS_PORT" value="61616" />
+      <env name="SP_DATA_LAKE_HOST" value="localhost" />
+      <env name="SP_DATA_LAKE_PORT" value="8086" />
+      <env name="SP_BACKEND_PORT" value="8030" />
+    </envs>
+    <option name="MAIN_CLASS_NAME" value="org.apache.streampipes.extensions.all.jvm.AllExtensionsInit" />
+    <module name="streampipes-extensions-all-jvm" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

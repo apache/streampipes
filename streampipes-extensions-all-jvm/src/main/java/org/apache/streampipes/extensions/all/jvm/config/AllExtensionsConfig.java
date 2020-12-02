@@ -25,9 +25,9 @@ public enum AllExtensionsConfig implements ExtensionsConfig {
 
     private final SpConfig peConfig;
     private final SpConfig adapterConfig;
-    private final static String PE_ID = "pe/org.apache.streampipes.extensions.bundle";
-    private final static String SERVICE_NAME = "StreamPipes Extensions (Bundle)";
-    private final static String SERVICE_CONTAINER_NAME = "extensions";
+    private final static String PE_ID = "pe/org.apache.streampipes.extensions.all.jvm";
+    private final static String SERVICE_NAME = "StreamPipes Extensions (JVM)";
+    private final static String SERVICE_CONTAINER_NAME = "extensions-all-jvm";
 
     AllExtensionsConfig() {
         // TODO: harmonize config
