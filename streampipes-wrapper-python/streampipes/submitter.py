@@ -38,3 +38,14 @@ class StandaloneModelSubmitter(object):
         # register pipeline element config and service
         ConsulUtils().register_configs(config=config)
         ConsulUtils().register_service(app_id=config.app_id, host=config.host, port=int(config.port))
+
+    # TODO: delete later
+    @classmethod
+    def init_debug(cls, config: Config):
+        # print banner
+        print(banner)
+        # add host to declarer singleton
+        DeclarerSingleton().host = config.host
+        DeclarerSingleton().port = config.port
+        # start api
+        PipelineElementApi().run(port=config.port)
