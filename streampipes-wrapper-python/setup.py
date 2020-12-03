@@ -26,8 +26,8 @@ with io.open(os.path.join(this_directory, 'README.md'), 'r', encoding='utf-8') a
     long_description = f.read()
 
 setup(
-    name='apache-streampipes',
-    version='0.67.0.dev1',
+    name='apache-streampipes-python',
+    version='0.68.0.dev1',
     packages=find_packages(),
     package_data={'streampipes': ['api/templates/*']},
     url='https://github.com/apache/incubator-streampipes',
