@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.model.util;
 
+import org.apache.streampipes.model.SpDataStreamRelay;
 import org.apache.streampipes.model.grounding.*;
 import org.apache.streampipes.model.output.*;
 import org.apache.streampipes.model.staticproperty.*;
@@ -186,6 +187,10 @@ public class Cloner {
 
   public List<SpDataStream> streams(List<SpDataStream> spDataStreams) {
     return spDataStreams.stream().map(s -> new SpDataStream(s)).collect(Collectors.toList());
+  }
+
+  public List<SpDataStreamRelay> relays(List<SpDataStreamRelay> spDataStreamRelays) {
+    return spDataStreamRelays.stream().map(s -> new SpDataStreamRelay(s)).collect(Collectors.toList());
   }
 
   public SpDataStream mapSequence(SpDataStream seq) {

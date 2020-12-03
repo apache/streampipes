@@ -105,6 +105,7 @@ public class StreamPipes {
   public static final String EVENT_SCHEMA = NS + "EventSchema";
   public static final String DATA_SOURCE = NS + "DataSource";
   public static final String DATA_STREAM = NS + "DataStream";
+  public static final String DATA_STREAM_RELAY = NS + "DataStreamRelay";
   public static final String DATA_SET = NS + "DataSet";
   public static final String DATA_SEQUENCE = NS + "DataSequence";
   public static final String DATA_SET_INVOCATION_ID = NS + "DataSetInvocationId";
@@ -418,5 +419,5 @@ public class StreamPipes {
   public static final String PE_CONFIGURED = NS + "isPeConfigured" ;
 
   public static final String HAS_REQUIRED_FILETYPES = NS + "hasRequiredFiletypes" ;
-  public static final String HAS_EVENT_STREAM_RELAYS = NS + "hasEventStreamRelays";
+  public static final String HAS_EVENT_RELAY = NS + "hasEventRelay";
 }
