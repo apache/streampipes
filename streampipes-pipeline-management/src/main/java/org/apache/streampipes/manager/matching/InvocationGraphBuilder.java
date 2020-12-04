@@ -25,6 +25,7 @@ import org.apache.streampipes.manager.data.PipelineGraphHelpers;
 import org.apache.streampipes.manager.matching.output.OutputSchemaFactory;
 import org.apache.streampipes.manager.matching.output.OutputSchemaGenerator;
 import org.apache.streampipes.model.SpDataStream;
+import org.apache.streampipes.model.SpDataStreamRelay;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -34,10 +35,7 @@ import org.apache.streampipes.model.output.OutputStrategy;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.sdk.helpers.Tuple2;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class InvocationGraphBuilder {
@@ -102,6 +100,25 @@ public class InvocationGraphBuilder {
               // target runs on cloud node: use central cloud broker, e.g. kafka
               // TODO: set event relay to true
               // TODO: add cloud broker to List<EventRelays>
+
+
+              if (source instanceof DataProcessorInvocation) {
+                EventGrounding relayEventGrounding = new EventGrounding();
+
+                relayEventGrounding.setTransportProtocol(
+                        new KafkaTransportProtocol(
+                                BackendConfig.INSTANCE.getKafkaHost(),
+                                BackendConfig.INSTANCE.getKafkaPort(),
+                                inputGrounding.getTransportProtocol().getTopicDefinition().getActualTopicName(),
+                                BackendConfig.INSTANCE.getZookeeperHost(),
+                                BackendConfig.INSTANCE.getZookeeperPort()));
+
+                relayEventGrounding.setTransportFormats(inputGrounding.getTransportFormats());
+
+                ((DataProcessorInvocation) source)
+                        .addOutputStreamRelay(new SpDataStreamRelay(relayEventGrounding));
+              }
+
               t.getInputStreams()
                       .get(getIndex(source.getDOM(), t))
                       .setEventGrounding(inputGrounding);

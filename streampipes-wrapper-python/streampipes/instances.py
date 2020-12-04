@@ -14,3 +14,33 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+import abc
+
+
+class NamedStreamPipesEntity:
+    __metaclass__ = abc.ABC
+
+    def get_description(self):
+        pass
+
+
+class RunningInstances:
+    __metaclass__ = abc.ABC
+
+    _running_instances = {}
+
+    def add(self, instance_id, description, invocation):
+        self._running_instances[instance_id] = [description, invocation]
+
+    def get_invocation(self, instance_id):
+        invocation = self._running_instances.get(instance_id)[1]
+        return invocation if invocation is not None else None
+
+    def get_description(self, instance_id):
+        return self._running_instances.get(instance_id)[0]
+
+    def remove(self, instance_id):
+        self._running_instances.pop(instance_id)
+
+    def get_running_instances_count(self):
+        return len(self._running_instances)

@@ -34,6 +34,8 @@ public abstract class AbstractConfigFactory {
 
   public abstract Properties makeProperties();
 
+  public abstract Properties makePropertiesSaslPlain(String username, String password);
+
   protected <T> T getConfigOrDefault(Supplier<T> function,
                                       T defaultValue) {
     return function.get() != null ? function.get() : defaultValue;

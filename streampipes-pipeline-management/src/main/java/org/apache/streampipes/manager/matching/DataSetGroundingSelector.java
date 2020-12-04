@@ -72,18 +72,6 @@ public class DataSetGroundingSelector {
     outputGrounding.setTransportFormats(Collections
             .singletonList(spDataSet.getSupportedGrounding().getTransportFormats().get(0)));
 
-//    // TODO grounding negotiation
-//    TransportProtocol protocol = new KafkaTransportProtocol(BackendConfig.INSTANCE.getKafkaHost(),
-//            BackendConfig.INSTANCE.getKafkaPort(),
-//            TopicGenerator.generateRandomTopic(),
-//            BackendConfig.INSTANCE.getZookeeperHost(),
-//            BackendConfig.INSTANCE.getZookeeperPort());
-//    TransportFormat format = spDataSet.getSupportedGrounding().getTransportFormats().get(0);
-//
-//    EventGrounding outputGrounding = new EventGrounding();
-//    outputGrounding.setTransportProtocol(protocol);
-//    outputGrounding.setTransportFormats(Arrays.asList(format));
-
     return new DataSetModificationMessage(outputGrounding,RandomStringUtils.randomAlphanumeric(10));
   }
 

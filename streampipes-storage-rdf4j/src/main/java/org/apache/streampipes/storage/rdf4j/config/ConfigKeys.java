@@ -15,11 +15,9 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.storage.rdf4j.config;
 
-package org.apache.streampipes.container.init;
-
-public abstract class ModelSubmitter<T> {
-
-    public abstract void init(T conf);
-
+public class ConfigKeys {
+    public static final String BACKGROUND_KNOWLEDGE_DIR = "SP_BACKGROUND_KNOWLEDGE_DIR";
+    public static final String PIPELINE_ELEMENT_KNOWLEDGE_DIR = "SP_PIPELINE_ELEMENT_KNOWLEDGE_DIR";
 }

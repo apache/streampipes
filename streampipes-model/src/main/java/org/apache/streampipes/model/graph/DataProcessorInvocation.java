@@ -21,6 +21,7 @@ package org.apache.streampipes.model.graph;
 import io.fogsy.empire.annotations.RdfProperty;
 import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.SpDataStream;
+import org.apache.streampipes.model.SpDataStreamRelay;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.output.OutputStrategy;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
@@ -49,6 +50,11 @@ public class DataProcessorInvocation extends InvocableStreamPipesEntity implemen
   @RdfProperty(StreamPipes.HAS_OUTPUT_STRATEGY)
   private List<OutputStrategy> outputStrategies;
 
+  @OneToOne(fetch = FetchType.EAGER,
+          cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  @RdfProperty(StreamPipes.HAS_EVENT_RELAY)
+  private List<SpDataStreamRelay> outputStreamRelays;
+
   private String pathName;
 
   @OneToMany(fetch = FetchType.EAGER,
@@ -74,6 +80,9 @@ public class DataProcessorInvocation extends InvocableStreamPipesEntity implemen
     this.setElementEndpointServiceName(sepa.getElementEndpointServiceName());
     this.setElementEndpointHostname(sepa.getElementEndpointHostname());
     this.setElementEndpointPort(sepa.getElementEndpointPort());
+
+    this.setOutputStreamRelays(sepa.getOutputStreamRelays());
+
     //this.setUri(belongsTo +"/" +getElementId());
   }
 
@@ -82,6 +91,9 @@ public class DataProcessorInvocation extends InvocableStreamPipesEntity implemen
     this.outputStrategies = new Cloner().strategies(other.getOutputStrategies());
     if (other.getOutputStream() != null) {
       this.outputStream = new Cloner().stream(other.getOutputStream());
+    }
+    if (other.getOutputStreamRelays() != null) {
+      this.outputStreamRelays = new Cloner().relays(other.getOutputStreamRelays());
     }
     this.pathName = other.getPathName();
     this.category = new Cloner().epaTypes(other.getCategory());
@@ -95,13 +107,17 @@ public class DataProcessorInvocation extends InvocableStreamPipesEntity implemen
   public DataProcessorInvocation() {
     super();
     inputStreams = new ArrayList<>();
+    outputStreamRelays = new ArrayList<>();
   }
 
-  public DataProcessorInvocation(String uri, String name, String description, String iconUrl, String pathName, List<SpDataStream> spDataStreams, List<StaticProperty> staticProperties) {
+  public DataProcessorInvocation(String uri, String name, String description, String iconUrl, String pathName,
+                                 List<SpDataStream> spDataStreams, List<StaticProperty> staticProperties,
+                                 List<SpDataStreamRelay> spDataStreamRelays) {
     super(uri, name, description, iconUrl);
     this.pathName = pathName;
     this.inputStreams = spDataStreams;
     this.staticProperties = staticProperties;
+    this.outputStreamRelays = spDataStreamRelays;
   }
 
   public DataProcessorInvocation(String uri, String name, String description, String iconUrl, String pathName) {
@@ -109,6 +125,7 @@ public class DataProcessorInvocation extends InvocableStreamPipesEntity implemen
     this.pathName = pathName;
     inputStreams = new ArrayList<>();
     staticProperties = new ArrayList<>();
+    outputStreamRelays = new ArrayList<>();
   }
 
   public boolean addInputStream(SpDataStream spDataStream) {
@@ -148,4 +165,13 @@ public class DataProcessorInvocation extends InvocableStreamPipesEntity implemen
     this.category = category;
   }
 
+  public boolean addOutputStreamRelay(SpDataStreamRelay spDataStreamRelay) { return outputStreamRelays.add(spDataStreamRelay); }
+
+  public List<SpDataStreamRelay> getOutputStreamRelays() {
+    return outputStreamRelays;
+  }
+
+  public void setOutputStreamRelays(List<SpDataStreamRelay> outputStreamRelays) {
+    this.outputStreamRelays = outputStreamRelays;
+  }
 }

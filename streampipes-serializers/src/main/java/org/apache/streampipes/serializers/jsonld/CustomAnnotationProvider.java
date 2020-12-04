@@ -19,10 +19,7 @@
 package org.apache.streampipes.serializers.jsonld;
 
 import io.fogsy.empire.core.empire.util.EmpireAnnotationProvider;
-import org.apache.streampipes.model.ApplicationLink;
-import org.apache.streampipes.model.SpDataSet;
-import org.apache.streampipes.model.SpDataStream;
-import org.apache.streampipes.model.SpDataStreamContainer;
+import org.apache.streampipes.model.*;
 import org.apache.streampipes.model.base.StreamPipesJsonLdContainer;
 import org.apache.streampipes.model.connect.adapter.*;
 import org.apache.streampipes.model.connect.grounding.FormatDescription;
@@ -186,7 +183,8 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             VisualizablePipeline.class,
             DataExplorerWidgetModel.class,
             StreamPipesJsonLdContainer.class,
-            DataLakeMeasure.class
+            DataLakeMeasure.class,
+            SpDataStreamRelay.class
     );
   }
 }
