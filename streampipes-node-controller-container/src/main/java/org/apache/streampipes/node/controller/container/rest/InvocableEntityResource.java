@@ -22,6 +22,7 @@ import org.apache.streampipes.container.transform.Transformer;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
+import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.node.PipelineElementDockerContainer;
 import org.apache.streampipes.node.controller.container.management.orchestrator.docker.DockerContainerOrchestrator;
 import org.apache.streampipes.node.controller.container.management.pe.InvocableElementManager;
@@ -84,6 +85,10 @@ public class InvocableEntityResource<I extends InvocableStreamPipesEntity> exten
         try {
             if (identifier.equals("sepa")) {
                 graph = Transformer.fromJsonLd(DataProcessorInvocation.class, payload);
+
+                //((DataProcessorInvocation) graph).getOutputStreamRelays();
+                //EventGrounding source = ((DataProcessorInvocation) graph).getOutputStream().getEventGrounding();
+
                 endpoint = graph.getBelongsTo();
 
                 // TODO: start event relay to remote broker

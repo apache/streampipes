@@ -53,15 +53,15 @@ public class NodeControllerContainerInit {
         LOG.info("Load static node metadata");
         NodeInfoStorage.init();
 
-        LOG.info("Start Node Janitor manager");
-        NodeJanitorManager.getInstance().run();
-
         LOG.info("Start Node Resource manager");
         ResourceManager.getInstance().run();
 
         if (!"true".equals(System.getenv("SP_DEBUG"))) {
             LOG.info("Auto-deploy StreamPipes node container");
             DockerContainerOrchestrator.getInstance().init();
+
+            LOG.info("Start Node Janitor manager");
+            NodeJanitorManager.getInstance().run();
         }
 
         // registration with consul here
