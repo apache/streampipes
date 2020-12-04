@@ -49,7 +49,7 @@ module.exports = merge(baseConfig, {
                 secure: false,
             },
             '/streampipes/ws': {
-                target: 'ws://localhost:61614',
+                target: 'ws://[::1]:61614',
                 ws: true,
                 secure: false,
             },
