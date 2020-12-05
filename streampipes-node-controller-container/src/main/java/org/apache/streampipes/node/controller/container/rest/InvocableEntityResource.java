@@ -19,6 +19,7 @@ package org.apache.streampipes.node.controller.container.rest;
 
 import org.apache.streampipes.container.model.node.InvocableRegistration;
 import org.apache.streampipes.container.transform.Transformer;
+import org.apache.streampipes.model.SpDataStreamRelay;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
@@ -37,6 +38,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.util.List;
 
 @Path("/api/v2/node/container")
 public class InvocableEntityResource<I extends InvocableStreamPipesEntity> extends AbstractNodeContainerResource{
@@ -92,9 +94,18 @@ public class InvocableEntityResource<I extends InvocableStreamPipesEntity> exten
                 endpoint = graph.getBelongsTo();
 
                 // TODO: start event relay to remote broker
-//                EventRelayManager eventRelayManager = new EventRelayManager(graph);
-//                eventRelayManager.start();
-//                RunningRelayInstances.INSTANCE.add(eventRelayManager.getRelayedTopic(), eventRelayManager);
+
+                List<SpDataStreamRelay> relays = ((DataProcessorInvocation) graph).getOutputStreamRelays();
+
+                relays.forEach(r -> {
+                    EventRelayManager eventRelayManager = new EventRelayManager(r);
+                    eventRelayManager.start();
+                    RunningRelayInstances.INSTANCE.add(eventRelayManager.getRelayedTopic(), eventRelayManager);
+                });
+
+ //               EventRelayManager eventRelayManager = new EventRelayManager(graph);
+ //               eventRelayManager.start();
+ //               RunningRelayInstances.INSTANCE.add(eventRelayManager.getRelayedTopic(), eventRelayManager);
 
                 RunningInvocableInstances.INSTANCE.add(graph.getDeploymentRunningInstanceId(), graph);
 

@@ -18,11 +18,18 @@
 package org.apache.streampipes.node.controller.container.management.relay;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.model.SpDataStream;
+import org.apache.streampipes.model.SpDataStreamContainer;
+import org.apache.streampipes.model.SpDataStreamRelay;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.grounding.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EventRelayManager {
     private final static Logger LOG = LoggerFactory.getLogger(EventRelayManager.class);
@@ -44,6 +51,12 @@ public class EventRelayManager {
 
         // TODO: only for debugging
         createDebugTransportProtocol();
+    }
+
+    public EventRelayManager(SpDataStreamRelay relay){
+        this.relayedTopic = relay.getEventGrounding().getTransportProtocol().getTopicDefinition().getActualTopicName();
+        this.mqttKafkaBridge = new MqttKafkaBridge();
+        createTransportProtocol();
     }
 
     public EventRelayManager() {
@@ -81,6 +94,12 @@ public class EventRelayManager {
         });
     }
 
+    private void createTransportProtocol() {
+        createDebugTransportProtocol();
+        //TODO: Implement - currently only for debugging
+    }
+
+
     public void stop() throws SpRuntimeException{
         LOG.info("Stop event relay for topic: {}", relayedTopic);
         mqttKafkaBridge.disconnect();
@@ -110,5 +129,9 @@ public class EventRelayManager {
 
     private static String extractTopic(InvocableStreamPipesEntity graph) {
         return graph.getSupportedGrounding().getTransportProtocol().getTopicDefinition().getActualTopicName();
+    }
+
+    private List<SpDataStreamRelay> extractRelays(InvocableStreamPipesEntity graph){
+        return ((DataProcessorInvocation) graph).getOutputStreamRelays();
     }
 }

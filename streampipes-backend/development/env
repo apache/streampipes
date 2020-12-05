@@ -13,9 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-SP_COUCHDB_HOST=localhost
-SP_BACKEND_HOST=localhost
-SP_INFLUX_HOST=localhost
+SP_COUCHDB_HOST=ubuntu
+SP_BACKEND_HOST=ubuntu
+SP_INFLUX_HOST=ubuntu
 SP_INFLUX_PORT=8086
-SP_JMS_HOST=localhost
+SP_JMS_HOST=ubuntu
 SP_DEBUG=true

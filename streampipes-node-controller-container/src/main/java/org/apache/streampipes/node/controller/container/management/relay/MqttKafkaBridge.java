@@ -66,7 +66,7 @@ public class MqttKafkaBridge extends AbstractMqttKafkaConnector implements Event
                 }
             }
             else {
-                // TODO: send buffered event should run independant of callback
+                // TODO: send buffered event should run independent of callback
                 // send buffered events & clear buffer
                 LOG.info("Connection re-established. Send events from temporary buffer for " +
                         "topic={} (send={}, dropped={})", relay.getTopic(), eventBuffer.size(), metrics.getNumDroppedEvents());

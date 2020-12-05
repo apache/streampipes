@@ -68,11 +68,11 @@ public class InvocationGraphBuilder {
     if (source instanceof InvocableStreamPipesEntity) {
       if (source instanceof DataProcessorInvocation && ((DataProcessorInvocation) source).isConfigured()) {
 
-        DataProcessorInvocation sourceInvokation = (DataProcessorInvocation) source;
+        DataProcessorInvocation sourceInvocation = (DataProcessorInvocation) source;
 
-        Tuple2<EventSchema, ? extends OutputStrategy> outputSettings = getOutputSettings(sourceInvokation);
-        sourceInvokation.setOutputStrategies(Collections.singletonList(outputSettings.b));
-        sourceInvokation.setOutputStream(makeOutputStream(inputGrounding, outputSettings));
+        Tuple2<EventSchema, ? extends OutputStrategy> outputSettings = getOutputSettings(sourceInvocation);
+        sourceInvocation.setOutputStrategies(Collections.singletonList(outputSettings.b));
+        sourceInvocation.setOutputStream(makeOutputStream(inputGrounding, outputSettings));
       }
       if (!graphExists(source.getDOM())) {
         graphs.add((InvocableStreamPipesEntity) source);
@@ -127,6 +127,21 @@ public class InvocationGraphBuilder {
               // target runs on edge node: use target edge node broker
               // TODO: set event relay to true
               // TODO: add target edge node broker to List<EventRelays>
+
+              EventGrounding relayEventGrounding = new EventGrounding();
+
+              relayEventGrounding.setTransportProtocol(
+                      new MqttTransportProtocol(
+                              BackendConfig.INSTANCE.getMqttHost(),
+                              BackendConfig.INSTANCE.getMqttPort(),
+                              inputGrounding.getTransportProtocol().getTopicDefinition().getActualTopicName()
+                              ));
+
+              relayEventGrounding.setTransportFormats(inputGrounding.getTransportFormats());
+
+              ((DataProcessorInvocation) source)
+                      .addOutputStreamRelay(new SpDataStreamRelay(relayEventGrounding));
+
 
               //String broker = getEdgeBroker(t);
 
