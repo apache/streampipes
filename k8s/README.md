@@ -85,29 +85,6 @@ We retain the created persistent volume. You need to manually delete it:
 rm -rf ${HOME}/streampipes-k8s
 ```
 
-## Cluster Deployment
-
-We recommend to adapt the templates according to your k8s cluster setup. Especially in terms of your storage drivers for managing persistent volumes. You'll find configuration about persistent volumes and persistent volume claims in the subfolders for the various components, e.g. our `backend`:
-
-```yaml
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: backend-pv
-spec:
-  storageClassName: local-storage-backend
-  capacity:
-    storage: 50Mi
-  accessModes:
-    - {{ .Values.persistentVolumeAccessModes }}
-  persistentVolumeReclaimPolicy: {{ .Values.persistentVolumeReclaimPolicy }}
-  hostPath:
-    path: {{ .Values.hostPath }}/backend
-```
-
-For **cluster users**:
-Just open your browser and visit any of the k8s cluster nodes on `http://<NODE_IP>` to finish the installation.
-
 ## Bugs and Feature Requests
 
 If you've found a bug or have a feature that you'd love to see in StreamPipes, feel free to create an issue in our Jira:
