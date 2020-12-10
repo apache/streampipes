@@ -26,30 +26,10 @@ spec:
     metadata:
       labels:
         app: connect-worker
-    spec:
-      initContainers:
-        - name: init-wait-consul
-          image: alpine
-          command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 consul 8600 && exit 0 || sleep 3; done; exit 1"]
-        - name: init-wait-couchdb
-          image: alpine
-          command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 couchdb 5984 && exit 0 || sleep 3; done; exit 1"]
-        - name: init-wait-connect-worker
-          image: alpine
-          command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 connect-master 8099 && exit 0 || sleep 3; done; exit 1"]
-        - name: init-wait-kafka
-          image: alpine
-          command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 kafka 9092 && exit 0 || sleep 3; done; exit 1"]            
+    spec:         
       containers:
         - name: connect-worker
           image: {{ .Values.streampipes.registry }}/connect-worker:{{ .Values.streampipes.version }}
           imagePullPolicy: {{ .Values.pullPolicy }}
-          env:
-            - name: SP_BACKEND_HOST
-              value: backend 
-            - name: SP_CONNECT_CONTAINER_WORKER_HOST
-              value: connect-worker
-            - name: SP_KAFKA_HOST
-              value: kafka
           ports:
             - containerPort: 8098

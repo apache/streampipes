@@ -13,13 +13,32 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+{{- if (eq .Values.deployment "full") }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: zookeeper-pv
+spec:
+  storageClassName: local-storage-zookeeper
+  capacity:
+    storage: 20M
+  accessModes:
+    - {{ .Values.persistentVolumeAccessModes }}
+  persistentVolumeReclaimPolicy: {{ .Values.persistentVolumeReclaimPolicy }}
+  hostPath:
+    path: {{ .Values.hostPath }}/zookeeper
+---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  labels:
+    app: zookeeper
   name: zookeeper-pvc
 spec:
+  storageClassName: local-storage-zookeeper
   accessModes:
-    - ReadWriteOnce
+    - {{ .Values.persistentVolumeAccessModes }}
   resources:
     requests:
-      storage: 1Gi
+      storage: 20M
+{{- end }}

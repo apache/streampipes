@@ -14,16 +14,29 @@
 # limitations under the License.
 
 apiVersion: v1
-kind: Service
+kind: PersistentVolume
 metadata:
-  name: sources-watertank-simulator
-  labels:
-    name: sources-watertank-simulator
+  name: consul-pv
 spec:
-  selector:
-    app: sources-watertank-simulator
-  ports:
-    - name: main
-      protocol: TCP
-      port: 8090
-      targetPort: 8090
+  storageClassName: local-storage-consul
+  capacity:
+    storage: 20M
+  accessModes:
+    - {{ .Values.persistentVolumeAccessModes }}
+  persistentVolumeReclaimPolicy: {{ .Values.persistentVolumeReclaimPolicy }}
+  hostPath:
+    path: {{ .Values.hostPath }}/consul
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app: consul
+  name: consul-pvc
+spec:
+  storageClassName: local-storage-consul
+  accessModes:
+    - {{ .Values.persistentVolumeAccessModes }}
+  resources:
+    requests:
+      storage: 20M

@@ -13,17 +13,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-{{- if eq .Values.deployment "full" }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: taskmanager
+  name: ui
 spec:
   selector:
-    app: taskmanager
+    app: ui
+  type: NodePort
   ports:
     - name: main
       protocol: TCP
-      port: 8099
-      targetPort: 8099
-{{- end }}
+      port: 80
+      targetPort: 80

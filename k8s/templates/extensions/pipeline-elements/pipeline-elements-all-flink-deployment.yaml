@@ -28,13 +28,6 @@ spec:
       labels:
         app: pipeline-elements-all-flink
     spec:
-      initContainers:
-        - name: init-wait-consul
-          image: alpine
-          command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 consul 8600 && exit 0 || sleep 3; done; exit 1"]
-        - name: init-wait-jobmanager
-          image: alpine
-          command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 jobmanager 8081 && exit 0 || sleep 3; done; exit 1"]
       containers:
         - name: pipeline-elements-all-flink
           image: {{ .Values.streampipes.registry }}/pipeline-elements-all-flink:{{ .Values.streampipes.version }}

@@ -29,9 +29,6 @@ spec:
         app: sources-vehicle-simulator
     spec:
       initContainers:
-        - name: init-wait-consul
-          image: alpine
-          command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 consul 8600 && exit 0 || sleep 3; done; exit 1"]
         - name: init-wait-kafka
           image: alpine
           command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 kafka 9092 && exit 0 || sleep 3; done; exit 1"]            

@@ -27,28 +27,32 @@ spec:
       labels:
         app: backend
     spec:
-      initContainers:
-        - name: init-wait-consul
-          image: alpine
-          command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 consul 8600 && exit 0 || sleep 3; done; exit 1"]
-        - name: init-wait-couchdb
-          image: alpine
-          command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 couchdb 5984 && exit 0 || sleep 3; done; exit 1"]
+      hostAliases:
+      - ip: "127.0.0.1"
+        hostnames:
+        - "backend"
       volumes:
         - name: backend-pv
           persistentVolumeClaim:
             claimName: backend-pvc
-        - name: files-pv
-          persistentVolumeClaim:
-            claimName: files-pvc        
+        # - name: files-pv
+        #   persistentVolumeClaim:
+        #     claimName: files-pvc        
       containers:
         - name: backend
           image: {{ .Values.streampipes.registry }}/backend:{{ .Values.streampipes.version }}
           imagePullPolicy: {{ .Values.pullPolicy }}
+          env:
+            - name: SP_PRIORITIZED_PROTOCOL
+              {{ if (eq .Values.deployment "lite") }}
+              value: "mqtt"
+              {{ else }}
+              value: "kafka"
+              {{ end }}
           ports:
             - containerPort: 8030
           volumeMounts:
             - mountPath: "/root/.streampipes"
               name: backend-pv
-            - mountPath: "/spImages"
-              name: files-pv
+            # - mountPath: "/spImages"
+            #   name: files-pv

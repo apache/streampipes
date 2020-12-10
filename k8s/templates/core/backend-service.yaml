@@ -14,12 +14,14 @@
 # limitations under the License.
 
 apiVersion: v1
-kind: PersistentVolumeClaim
+kind: Service
 metadata:
-  name: consul-pvc
+  name: backend
 spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
+  selector:
+    app: backend
+  ports:
+    - name: main
+      protocol: TCP
+      port: 8030
+      targetPort: 8030

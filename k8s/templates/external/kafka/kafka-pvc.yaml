@@ -13,13 +13,32 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+{{- if (eq .Values.deployment "full") }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: kafka-pv
+spec:
+  storageClassName: local-storage-kafka
+  capacity:
+    storage: 50M
+  accessModes:
+     - {{ .Values.persistentVolumeAccessModes }}
+  persistentVolumeReclaimPolicy: {{ .Values.persistentVolumeReclaimPolicy }}
+  hostPath:
+    path: {{ .Values.hostPath }}/kafka
+---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  labels:
+    app: kafka
   name: kafka-pvc
 spec:
+  storageClassName: local-storage-kafka
   accessModes:
-    - ReadWriteOnce
+    - {{ .Values.persistentVolumeAccessModes }}
   resources:
     requests:
-      storage: 5Gi
+      storage: 50M
+{{- end }}

@@ -35,6 +35,26 @@ spec:
         - name: consul
           image: fogsyio/consul:{{ .Values.external.consulVersion }}
           imagePullPolicy: {{ .Values.pullPolicy }}
+          command:
+            - "/bin/sh"
+            - "-ec"
+            - |
+              exec /bin/consul agent \
+                -server \
+                -bind=0.0.0.0 \
+                -bootstrap-expect=1 \
+                -data-dir=/consul/data \
+                -node=consule-one \
+                -client=0.0.0.0 \
+                -enable-script-checks=true \
+                -ui
+          env:
+            - name: CONSUL_BIND_INTERFACE
+              value: "eth0"
+            - name: CONSUL_HTTP_ADDR
+              value: "0.0.0.0"
+            - name: CONSUL_LOCAL_CONFIG
+              value: "{\"disable_update_check\": true}"
           ports:
             - containerPort: 8500
             - containerPort: 8600

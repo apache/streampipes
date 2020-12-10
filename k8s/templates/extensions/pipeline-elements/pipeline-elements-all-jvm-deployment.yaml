@@ -27,11 +27,6 @@ spec:
       labels:
         app: pipeline-elements-all-jvm
     spec:
-      initContainers:
-        - name: init-wait-consul
-          image: alpine
-          command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 consul 8600 && exit 0 || sleep 3; done; exit 1"]
-    spec:
       volumes:
         - name: files-pv
           persistentVolumeClaim:

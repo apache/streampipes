@@ -13,15 +13,33 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-apiVersion: v1
-kind: Service
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: backend
+  name: ui
 spec:
   selector:
-    app: backend
-  ports:
-    - name: main
-      protocol: TCP
-      port: 8030
-      targetPort: 8030
+    matchLabels:
+      app: ui
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ui
+    spec:
+      containers:
+        - name: ui
+          image: {{ .Values.streampipes.registry }}/ui:{{ .Values.streampipes.version }}
+          imagePullPolicy: {{ .Values.pullPolicy }}
+          ports:
+            - containerPort: 80
+        # This is necessary because a custom dns resolver is set in nginx default conf
+        - name: dnsmasq
+          image: fogsyio/go-dnsmasq:1.0.7
+          args:
+            - --listen
+            - "127.0.0.11:53"
+            - --default-resolver
+            - --append-search-domains
+            - --hostsfile=/etc/hosts
+            - --verbose

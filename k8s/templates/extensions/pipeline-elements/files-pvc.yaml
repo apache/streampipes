@@ -13,14 +13,30 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: files-pv
+spec:
+  storageClassName: local-storage-files
+  capacity:
+    storage: 250Mi
+  accessModes:
+    - {{ .Values.persistentVolumeAccessModes }}
+  persistentVolumeReclaimPolicy: {{ .Values.persistentVolumeReclaimPolicy }}
+  hostPath:
+    path: {{ .Values.hostPath }}/files
+---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  labels:
+    app: pipeline-elements-all-jvm
   name: files-pvc
 spec:
+  storageClassName: local-storage-files
   accessModes:
-    - ReadWriteOnce
+    - {{ .Values.persistentVolumeAccessModes }}
   resources:
     requests:
-      storage: 256Mi
+      storage: 250Mi

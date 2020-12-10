@@ -13,6 +13,32 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: activemq
+spec:
+  selector:
+    app: activemq
+  ports:
+    - name: main
+      protocol: TCP
+      port: 61616
+      targetPort: 61616
+    - name: websocket
+      protocol: TCP
+      port: 61614
+      targetPort: 61614
+    - name: ui
+      protocol: TCP
+      port: 8161
+      targetPort: 8161
+    - name: mqtt
+      protocol: TCP
+      port: 1883
+      targetPort: 1883
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
