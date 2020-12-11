@@ -44,9 +44,9 @@ public class ImageCropperController extends StandaloneEventProcessingDeclarer<Im
             .withLocales(Locales.EN)
             .category(DataProcessorType.FILTER)
             .requiredStream(RequiredBoxStream.getBoxStream())
-            .outputStrategy(OutputStrategies.fixed(
-                    EpProperties.stringEp(Labels.empty(), "image", "https://image.com")
-
+            .outputStrategy(OutputStrategies.append(
+                    EpProperties.integerEp(Labels.empty(), "classesindex", "https://streampipes.org/Label"),
+                    EpProperties.doubleEp(Labels.empty(), "score", "https://streampipes.org/Label")
             ))
             .build();
   }
