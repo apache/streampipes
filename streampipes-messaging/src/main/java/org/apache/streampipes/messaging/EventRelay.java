@@ -21,15 +21,15 @@ import org.apache.streampipes.model.grounding.TransportProtocol;
 
 import java.io.Serializable;
 
-public interface EventRelay<TP1, TP2 extends TransportProtocol> extends Serializable {
+public interface EventRelay extends Serializable {
 
-    void subscribe(TP1 sourceProtocol, TP2 targetProtocol) throws SpRuntimeException;
+    void start() throws SpRuntimeException;
 
     void publish(byte[] event);
 
-    void disconnect() throws SpRuntimeException;
+    void stop() throws SpRuntimeException;
 
-    Boolean isSourceConnected();
+    Boolean sourceConnected();
 
-    Boolean isTargetConnected();
+    Boolean targetConnected();
 }

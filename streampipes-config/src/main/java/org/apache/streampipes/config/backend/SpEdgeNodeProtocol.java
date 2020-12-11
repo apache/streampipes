@@ -15,19 +15,26 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.node.controller.container.management.pe;
+package org.apache.streampipes.config.backend;
 
-import org.apache.streampipes.container.model.node.InvocableRegistration;
-import org.apache.streampipes.model.Response;
+public enum SpEdgeNodeProtocol {
 
-public interface ElementLifeCyle {
+    MQTT("MQTT", "org.apache.streampipes.model.grounding.MqttTransportProtocol");
 
-    void register(InvocableRegistration registration);
+    private final String name;
+    private final String protocolClass;
 
-    Response invoke(String endpoint, String payload);
+    SpEdgeNodeProtocol(String name, String protocolClass) {
+        this.name = name;
+        this.protocolClass = protocolClass;
+    }
 
-    String detach(String runningInstanceId);
+    public String getName() {
+        return name;
+    }
 
-    void unregister();
+    public String getProtocolClass() {
+        return protocolClass;
+    }
 
 }

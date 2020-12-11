@@ -37,7 +37,7 @@ import java.util.UUID;
 
 public class GroundingService {
 
-    public static final String SP_NODE_BROKER_ENV = "SP_NODE_BROKER";
+    private static final String ENV_NODE_CONTROLLER_ID_KEY = "SP_NODE_CONTROLLER_ID";
     private static final String TOPIC_PREFIX = "org.apache.streampipes.connect.";
 
     public static String extractBroker(AdapterDescription adapterDescription) {
@@ -80,33 +80,42 @@ public class GroundingService {
     }
 
     public static EventGrounding createEventGrounding() {
+
         EventGrounding eventGrounding = new EventGrounding();
 
         String topic = TOPIC_PREFIX + UUID.randomUUID().toString();
         TopicDefinition topicDefinition = new SimpleTopicDefinition(topic);
 
-        SpProtocol prioritizedProtocol =
-                BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedProtocols().get(0);
+//        if (System.getenv(ENV_NODE_CONTROLLER_ID_KEY) != null ){
+        // TODO: get information about worker type from adapter description use node broker
+        eventGrounding.setTransportProtocol(
+                // TODO: replace hostname with actual node broker container name
+                //makeMqttTransportProtocol("node-broker", 1883, topicDefinition));
+                makeMqttTransportProtocol("localhost", 1884, topicDefinition));
 
-        if (isPrioritized(prioritizedProtocol, JmsTransportProtocol.class)) {
-            eventGrounding.setTransportProtocol(
-                    makeJmsTransportProtocol(
-                            BackendConfig.INSTANCE.getJmsHost(),
-                            BackendConfig.INSTANCE.getJmsPort(),
-                            topicDefinition));
-        } else if (isPrioritized(prioritizedProtocol, KafkaTransportProtocol.class)){
-            eventGrounding.setTransportProtocol(
-                    makeKafkaTransportProtocol(
-                            BackendConfig.INSTANCE.getKafkaHost(),
-                            BackendConfig.INSTANCE.getKafkaPort(),
-                            topicDefinition));
-        } else if (isPrioritized(prioritizedProtocol, MqttTransportProtocol.class)) {
-            eventGrounding.setTransportProtocol(
-                    makeMqttTransportProtocol(
-                            BackendConfig.INSTANCE.getMqttHost(),
-                            BackendConfig.INSTANCE.getMqttPort(),
-                            topicDefinition));
-        }
+
+//        SpProtocol prioritizedProtocol =
+//                BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedProtocols().get(0);
+//
+//        if (isPrioritized(prioritizedProtocol, JmsTransportProtocol.class)) {
+//            eventGrounding.setTransportProtocol(
+//                    makeJmsTransportProtocol(
+//                            BackendConfig.INSTANCE.getJmsHost(),
+//                            BackendConfig.INSTANCE.getJmsPort(),
+//                            topicDefinition));
+//        } else if (isPrioritized(prioritizedProtocol, KafkaTransportProtocol.class)){
+//            eventGrounding.setTransportProtocol(
+//                    makeKafkaTransportProtocol(
+//                            BackendConfig.INSTANCE.getKafkaHost(),
+//                            BackendConfig.INSTANCE.getKafkaPort(),
+//                            topicDefinition));
+//        } else if (isPrioritized(prioritizedProtocol, MqttTransportProtocol.class)) {
+//            eventGrounding.setTransportProtocol(
+//                    makeMqttTransportProtocol(
+//                            BackendConfig.INSTANCE.getMqttHost(),
+//                            BackendConfig.INSTANCE.getMqttPort(),
+//                            topicDefinition));
+//        }
 
         eventGrounding.setTransportFormats(Collections
                 .singletonList(TransportFormatGenerator.getTransportFormat()));

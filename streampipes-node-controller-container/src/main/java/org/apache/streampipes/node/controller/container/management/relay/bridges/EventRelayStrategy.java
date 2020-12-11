@@ -15,19 +15,8 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.node.controller.container.management.pe;
+package org.apache.streampipes.node.controller.container.management.relay.bridges;
 
-import org.apache.streampipes.container.model.node.InvocableRegistration;
-import org.apache.streampipes.model.Response;
-
-public interface ElementLifeCyle {
-
-    void register(InvocableRegistration registration);
-
-    Response invoke(String endpoint, String payload);
-
-    String detach(String runningInstanceId);
-
-    void unregister();
-
+public enum EventRelayStrategy {
+    BUFFER, PURGE
 }

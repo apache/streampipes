@@ -57,6 +57,9 @@ public class DataProcessorInvocation extends InvocableStreamPipesEntity implemen
 
   private String pathName;
 
+  @RdfProperty(StreamPipes.HAS_EVENT_RELAY_STRATEGY)
+  private String eventRelayStrategy;
+
   @OneToMany(fetch = FetchType.EAGER,
           cascade = {CascadeType.ALL})
   @RdfProperty(StreamPipes.HAS_EPA_TYPE)
@@ -82,6 +85,7 @@ public class DataProcessorInvocation extends InvocableStreamPipesEntity implemen
     this.setElementEndpointPort(sepa.getElementEndpointPort());
 
     this.setOutputStreamRelays(sepa.getOutputStreamRelays());
+    this.setEventRelayStrategy(sepa.getEventRelayStrategy());
 
     //this.setUri(belongsTo +"/" +getElementId());
   }
@@ -96,6 +100,7 @@ public class DataProcessorInvocation extends InvocableStreamPipesEntity implemen
       this.outputStreamRelays = new Cloner().relays(other.getOutputStreamRelays());
     }
     this.pathName = other.getPathName();
+    this.eventRelayStrategy = other.getEventRelayStrategy();
     this.category = new Cloner().epaTypes(other.getCategory());
   }
 
@@ -111,18 +116,21 @@ public class DataProcessorInvocation extends InvocableStreamPipesEntity implemen
   }
 
   public DataProcessorInvocation(String uri, String name, String description, String iconUrl, String pathName,
-                                 List<SpDataStream> spDataStreams, List<StaticProperty> staticProperties,
-                                 List<SpDataStreamRelay> spDataStreamRelays) {
+                                 String eventRelayStrategy, List<SpDataStream> spDataStreams,
+                                 List<StaticProperty> staticProperties, List<SpDataStreamRelay> spDataStreamRelays) {
     super(uri, name, description, iconUrl);
     this.pathName = pathName;
+    this.eventRelayStrategy = eventRelayStrategy;
     this.inputStreams = spDataStreams;
     this.staticProperties = staticProperties;
     this.outputStreamRelays = spDataStreamRelays;
   }
 
-  public DataProcessorInvocation(String uri, String name, String description, String iconUrl, String pathName) {
+  public DataProcessorInvocation(String uri, String name, String description, String iconUrl, String pathName,
+                                 String eventRelayStrategy) {
     super(uri, name, description, iconUrl);
     this.pathName = pathName;
+    this.eventRelayStrategy = eventRelayStrategy;
     inputStreams = new ArrayList<>();
     staticProperties = new ArrayList<>();
     outputStreamRelays = new ArrayList<>();
@@ -131,7 +139,6 @@ public class DataProcessorInvocation extends InvocableStreamPipesEntity implemen
   public boolean addInputStream(SpDataStream spDataStream) {
     return inputStreams.add(spDataStream);
   }
-
 
   public String getPathName() {
     return pathName;
@@ -173,5 +180,13 @@ public class DataProcessorInvocation extends InvocableStreamPipesEntity implemen
 
   public void setOutputStreamRelays(List<SpDataStreamRelay> outputStreamRelays) {
     this.outputStreamRelays = outputStreamRelays;
+  }
+
+  public String getEventRelayStrategy() {
+    return eventRelayStrategy;
+  }
+
+  public void setEventRelayStrategy(String eventRelayStrategy) {
+    this.eventRelayStrategy = eventRelayStrategy;
   }
 }

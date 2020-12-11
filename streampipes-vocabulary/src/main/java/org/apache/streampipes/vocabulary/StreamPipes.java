@@ -420,4 +420,5 @@ public class StreamPipes {
 
   public static final String HAS_REQUIRED_FILETYPES = NS + "hasRequiredFiletypes" ;
   public static final String HAS_EVENT_RELAY = NS + "hasEventRelay";
+  public static final String HAS_EVENT_RELAY_STRATEGY = NS + "hasEventRelayStrategy";
 }

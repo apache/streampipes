@@ -19,11 +19,13 @@ package org.apache.streampipes.node.controller.container.rest;
 
 import org.apache.streampipes.container.model.node.InvocableRegistration;
 import org.apache.streampipes.container.transform.Transformer;
+import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.SpDataStreamRelay;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.grounding.EventGrounding;
+import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.model.node.PipelineElementDockerContainer;
 import org.apache.streampipes.node.controller.container.management.orchestrator.docker.DockerContainerOrchestrator;
 import org.apache.streampipes.node.controller.container.management.pe.InvocableElementManager;
@@ -88,31 +90,36 @@ public class InvocableEntityResource<I extends InvocableStreamPipesEntity> exten
             if (identifier.equals("sepa")) {
                 graph = Transformer.fromJsonLd(DataProcessorInvocation.class, payload);
 
-                //((DataProcessorInvocation) graph).getOutputStreamRelays();
-                //EventGrounding source = ((DataProcessorInvocation) graph).getOutputStream().getEventGrounding();
-
                 endpoint = graph.getBelongsTo();
 
-                // TODO: start event relay to remote broker
+                TransportProtocol source = ((DataProcessorInvocation) graph)
+                        .getOutputStream()
+                        .getEventGrounding()
+                        .getTransportProtocol();
 
-                List<SpDataStreamRelay> relays = ((DataProcessorInvocation) graph).getOutputStreamRelays();
+                String relayStrategy = ((DataProcessorInvocation) graph).getEventRelayStrategy();
 
-                relays.forEach(r -> {
-                    EventRelayManager eventRelayManager = new EventRelayManager(r);
-                    eventRelayManager.start();
-                    RunningRelayInstances.INSTANCE.add(eventRelayManager.getRelayedTopic(), eventRelayManager);
+                ((DataProcessorInvocation) graph).getOutputStreamRelays().forEach(r -> {
+                    TransportProtocol target = r.getEventGrounding().getTransportProtocol();
+                    EventRelayManager relayManager = new EventRelayManager(source, target, relayStrategy);
+                    relayManager.start();
+
+                    RunningRelayInstances.INSTANCE.add(graph.getDeploymentRunningInstanceId(),
+                            relayManager);
                 });
 
- //               EventRelayManager eventRelayManager = new EventRelayManager(graph);
- //               eventRelayManager.start();
- //               RunningRelayInstances.INSTANCE.add(eventRelayManager.getRelayedTopic(), eventRelayManager);
+                org.apache.streampipes.model.Response resp = InvocableElementManager.getInstance().invoke(endpoint,
+                        payload);
 
-                RunningInvocableInstances.INSTANCE.add(graph.getDeploymentRunningInstanceId(), graph);
+                if (resp.isSuccess()) {
+                    RunningInvocableInstances.INSTANCE.add(graph.getDeploymentRunningInstanceId(), graph);
+                }
 
-                String resp = InvocableElementManager.getInstance().invoke(endpoint, payload);
-                return resp;
+                return resp.toString();
 
-            } else if (identifier.equals("sec")) {
+            }
+            // Currently no data sinks are registered
+            else if (identifier.equals("sec")) {
                 graph = Transformer.fromJsonLd(DataSinkInvocation.class, payload);
                 endpoint = graph.getBelongsTo();
 
@@ -136,16 +143,19 @@ public class InvocableEntityResource<I extends InvocableStreamPipesEntity> exten
         // TODO store host and port locally to retrieve by runningInstanceId
 
         String endpoint = RunningInvocableInstances.INSTANCE.get(runningInstanceId).getBelongsTo();
-
         String resp = InvocableElementManager.getInstance().detach(endpoint + "/" + runningInstanceId);
-        RunningInvocableInstances.INSTANCE.remove(runningInstanceId);
-        return resp;
 
-        // TODO: stop event relay to remote broker
-//        EventRelayManager relay = RunningRelayInstances.INSTANCE.get(elementId);
-//        assert relay != null;
-//        relay.stop();
-//        RunningRelayInstances.INSTANCE.remove(elementId);
+        // Stop relay for invocable if existing
+        // TODO: maybe use unique identifier for retrieving relay
+        EventRelayManager relay = RunningRelayInstances.INSTANCE.get(runningInstanceId);
+        if (relay != null) {
+            relay.stop();
+        }
+
+        RunningInvocableInstances.INSTANCE.remove(runningInstanceId);
+        RunningRelayInstances.INSTANCE.remove(runningInstanceId);
+
+        return resp;
     }
 
     @DELETE

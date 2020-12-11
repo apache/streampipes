@@ -34,10 +34,10 @@ public class DebugRelayResource extends AbstractNodeContainerResource {
     public Response debugRelayEventStream(String msg) throws SpRuntimeException {
         // TODO implement
 
-        System.out.println(msg);
-        EventRelayManager eventRelayManager = new EventRelayManager();
-        eventRelayManager.start();
-        RunningRelayInstances.INSTANCE.add(eventRelayManager.getRelayedTopic(), eventRelayManager);
+//        System.out.println(msg);
+//        EventRelayManager eventRelayManager = new EventRelayManager();
+//        eventRelayManager.start();
+//        RunningRelayInstances.INSTANCE.add(eventRelayManager.getRelayTopic(), eventRelayManager);
 
         return ok();
     }
@@ -47,10 +47,10 @@ public class DebugRelayResource extends AbstractNodeContainerResource {
     public Response debugStopRelayEventStream(String msg) throws SpRuntimeException {
         // TODO implement
 
-        System.out.println(msg);
-        EventRelayManager eventRelayManager = RunningRelayInstances.INSTANCE.get("org.apache.streampipes.flowrate01");
-        assert eventRelayManager != null;
-        eventRelayManager.stop();
+//        System.out.println(msg);
+//        EventRelayManager eventRelayManager = RunningRelayInstances.INSTANCE.get("org.apache.streampipes.flowrate01");
+//        assert eventRelayManager != null;
+//        eventRelayManager.stop();
 
         return ok();
     }

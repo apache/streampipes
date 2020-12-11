@@ -82,7 +82,8 @@
           "options": {
             "browserTarget": "app:build:development"
           },
-          "configurations": {}
+          "configurations": {
+          }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
@@ -100,7 +101,8 @@
             "assets": [
               "src/assets"
             ],
-            "scripts": []
+            "scripts": [
+            ]
           }
         },
         "lint": {
@@ -118,8 +120,5 @@
       "projectType": "application"
     }
   },
-  "defaultProject": "app",
-  "cli": {
-    "analytics": "881975f2-3517-40bd-a33f-9bcd72213c08"
-  }
+  "defaultProject": "app"
 }

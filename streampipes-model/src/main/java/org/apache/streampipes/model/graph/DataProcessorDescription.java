@@ -50,6 +50,9 @@ public class DataProcessorDescription extends ConsumableStreamPipesEntity {
 
   private String pathName;
 
+  @RdfProperty(StreamPipes.HAS_EVENT_RELAY_STRATEGY)
+  private String eventRelayStrategy;
+
   @OneToMany(fetch = FetchType.EAGER,
           cascade = {CascadeType.ALL})
   @RdfProperty(StreamPipes.HAS_EPA_TYPE)
@@ -59,6 +62,7 @@ public class DataProcessorDescription extends ConsumableStreamPipesEntity {
     super(other);
     this.outputStrategies = new Cloner().strategies(other.getOutputStrategies());
     this.pathName = other.getPathName();
+    this.eventRelayStrategy = other.getEventRelayStrategy();
     this.category = new Cloner().epaTypes(other.getCategory());
     this.outputStreamRelays = new Cloner().relays(other.getOutputStreamRelays());
   }
@@ -71,27 +75,32 @@ public class DataProcessorDescription extends ConsumableStreamPipesEntity {
   }
 
   public DataProcessorDescription(String uri, String name, String description, String iconUrl,
-                                  List<SpDataStream> spDataStreams, List<StaticProperty> staticProperties,
-                                  List<OutputStrategy> outputStrategies, List<SpDataStreamRelay> outputStreamRelays) {
+                                  String eventRelayStrategy, List<SpDataStream> spDataStreams,
+                                  List<StaticProperty> staticProperties, List<OutputStrategy> outputStrategies,
+                                  List<SpDataStreamRelay> outputStreamRelays) {
     super(uri, name, description, iconUrl);
     this.pathName = uri;
+    this.eventRelayStrategy = eventRelayStrategy;
     this.spDataStreams = spDataStreams;
     this.staticProperties = staticProperties;
     this.outputStrategies = outputStrategies;
     this.outputStreamRelays = outputStreamRelays;
   }
 
-  public DataProcessorDescription(String pathName, String name, String description, String iconUrl) {
+  public DataProcessorDescription(String pathName, String name, String description, String iconUrl,
+                                  String eventRelayStrategy) {
     super(pathName, name, description, iconUrl);
     this.pathName = pathName;
+    this.eventRelayStrategy = eventRelayStrategy;
     spDataStreams = new ArrayList<>();
     staticProperties = new ArrayList<>();
     outputStreamRelays = new ArrayList<>();
   }
 
-  public DataProcessorDescription(String pathName, String name, String description) {
+  public DataProcessorDescription(String pathName, String name, String description, String eventRelayStrategy) {
     super(pathName, name, description, "");
     this.pathName = pathName;
+    this.eventRelayStrategy = eventRelayStrategy;
     spDataStreams = new ArrayList<>();
     staticProperties = new ArrayList<>();
     outputStreamRelays = new ArrayList<>();
@@ -128,5 +137,13 @@ public class DataProcessorDescription extends ConsumableStreamPipesEntity {
 
   public void setOutputStreamRelays(List<SpDataStreamRelay> outputStreamRelays) {
     this.outputStreamRelays = outputStreamRelays;
+  }
+
+  public String getEventRelayStrategy() {
+    return eventRelayStrategy;
+  }
+
+  public void setEventRelayStrategy(String eventRelayStrategy) {
+    this.eventRelayStrategy = eventRelayStrategy;
   }
 }

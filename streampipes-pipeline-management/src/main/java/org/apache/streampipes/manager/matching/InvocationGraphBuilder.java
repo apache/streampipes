@@ -19,6 +19,7 @@
 package org.apache.streampipes.manager.matching;
 
 import org.apache.streampipes.config.backend.BackendConfig;
+import org.apache.streampipes.config.backend.SpProtocol;
 import org.apache.streampipes.container.util.ConsulUtil;
 import org.apache.streampipes.manager.data.PipelineGraph;
 import org.apache.streampipes.manager.data.PipelineGraphHelpers;
@@ -87,8 +88,7 @@ public class InvocationGraphBuilder {
                 t.getDeploymentTargetNodeId() != null) {
 
           if (matchingDeploymentTarget((InvocableStreamPipesEntity) source, t)) {
-            // shared grounding
-            // TODO: set event relay to false
+            // both PE on same node - share grounding
             t.getInputStreams()
                     .get(getIndex(source.getDOM(), t))
                     .setEventGrounding(inputGrounding);
@@ -96,58 +96,94 @@ public class InvocationGraphBuilder {
           } else {
             // check if target runs on cloud or edge node
             if (t.getDeploymentTargetNodeId().equals("default")) {
-
               // target runs on cloud node: use central cloud broker, e.g. kafka
               // TODO: set event relay to true
               // TODO: add cloud broker to List<EventRelays>
-
-
               if (source instanceof DataProcessorInvocation) {
-                EventGrounding relayEventGrounding = new EventGrounding();
 
-                relayEventGrounding.setTransportProtocol(
-                        new KafkaTransportProtocol(
-                                BackendConfig.INSTANCE.getKafkaHost(),
-                                BackendConfig.INSTANCE.getKafkaPort(),
-                                inputGrounding.getTransportProtocol().getTopicDefinition().getActualTopicName(),
-                                BackendConfig.INSTANCE.getZookeeperHost(),
-                                BackendConfig.INSTANCE.getZookeeperPort()));
+                String relayTopic = inputGrounding.getTransportProtocol().getTopicDefinition().getActualTopicName();
 
-                relayEventGrounding.setTransportFormats(inputGrounding.getTransportFormats());
+                if (relayNotExists(relayTopic, source)) {
+                  // TODO: use prioritized cloud transport protocol instead of kafka
+                  SpProtocol prioritizedProtocol =
+                          BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedProtocols().get(0);
 
-                ((DataProcessorInvocation) source)
-                        .addOutputStreamRelay(new SpDataStreamRelay(relayEventGrounding));
+                  EventGrounding relayEventGrounding = new EventGrounding();
+
+                  if (isPrioritized(prioritizedProtocol, JmsTransportProtocol.class)) {
+                    JmsTransportProtocol tp = new JmsTransportProtocol(
+                            BackendConfig.INSTANCE.getJmsHost(),
+                            BackendConfig.INSTANCE.getJmsPort(),
+                            relayTopic);
+                    relayEventGrounding.setTransportProtocol(tp);
+                  }
+                  else if (isPrioritized(prioritizedProtocol, KafkaTransportProtocol.class)) {
+                    KafkaTransportProtocol tp = new KafkaTransportProtocol(
+                            BackendConfig.INSTANCE.getKafkaHost(),
+                            BackendConfig.INSTANCE.getKafkaPort(),
+                            relayTopic,
+                            BackendConfig.INSTANCE.getZookeeperHost(),
+                            BackendConfig.INSTANCE.getZookeeperPort());
+                    relayEventGrounding.setTransportProtocol(tp);
+                  }
+                  else if (isPrioritized(prioritizedProtocol, MqttTransportProtocol.class)){
+                    MqttTransportProtocol tp = new MqttTransportProtocol(
+                            BackendConfig.INSTANCE.getMqttHost(),
+                            BackendConfig.INSTANCE.getMqttPort(),
+                            relayTopic);
+                    relayEventGrounding.setTransportProtocol(tp);
+                  }
+
+                  relayEventGrounding.setTransportFormats(inputGrounding.getTransportFormats());
+
+                  // TODO: when modifying pipelines new relay are added to old ones. Should initialize new ArrayList
+                  ((DataProcessorInvocation) source)
+                          .addOutputStreamRelay(new SpDataStreamRelay(relayEventGrounding));
+                }
               }
 
               t.getInputStreams()
                       .get(getIndex(source.getDOM(), t))
-                      .setEventGrounding(inputGrounding);
+                      .getEventGrounding()
+                      .getTransportProtocol()
+                      .setTopicDefinition(inputGrounding.getTransportProtocol().getTopicDefinition());
 
             } else {
               // target runs on edge node: use target edge node broker
               // TODO: set event relay to true
               // TODO: add target edge node broker to List<EventRelays>
 
-              EventGrounding relayEventGrounding = new EventGrounding();
+              String relayTopic = inputGrounding.getTransportProtocol().getTopicDefinition().getActualTopicName();
 
-              relayEventGrounding.setTransportProtocol(
-                      new MqttTransportProtocol(
-                              BackendConfig.INSTANCE.getMqttHost(),
-                              BackendConfig.INSTANCE.getMqttPort(),
-                              inputGrounding.getTransportProtocol().getTopicDefinition().getActualTopicName()
-                              ));
+              if (relayNotExists(relayTopic, source)) {
 
-              relayEventGrounding.setTransportFormats(inputGrounding.getTransportFormats());
+                EventGrounding relayEventGrounding = new EventGrounding();
 
-              ((DataProcessorInvocation) source)
-                      .addOutputStreamRelay(new SpDataStreamRelay(relayEventGrounding));
+                relayEventGrounding.setTransportProtocol(
+                        new MqttTransportProtocol(
+                                getTargetNodeBrokerHost(t),
+                                getTargetNodeBrokerPort(t),
+                                relayTopic
+                        ));
 
+                relayEventGrounding.setTransportFormats(inputGrounding.getTransportFormats());
 
-              //String broker = getEdgeBroker(t);
+                // TODO: when modifying pipelines new relay are added to old ones. Should initialize new ArrayList
+                ((DataProcessorInvocation) source)
+                        .addOutputStreamRelay(new SpDataStreamRelay(relayEventGrounding));
 
-              t.getInputStreams()
-                      .get(getIndex(source.getDOM(), t))
-                      .setEventGrounding(inputGrounding);
+                t.getInputStreams()
+                        .get(getIndex(source.getDOM(), t))
+                        .setEventGrounding(relayEventGrounding);
+
+              } else {
+                t.getInputStreams()
+                        .get(getIndex(source.getDOM(), t))
+                        .setEventGrounding(((DataProcessorInvocation) source)
+                                .getOutputStreamRelays()
+                                .get(getIndex(source.getDOM(), t))
+                                .getEventGrounding());
+              }
             }
           }
         } else {
@@ -156,6 +192,11 @@ public class InvocationGraphBuilder {
                     .setEventGrounding(inputGrounding);
         }
       } else {
+
+        // TODO: Handle following edge situation:
+        //  data stream -> invocable (processor, sink) in edge deployments that do not reside on same node
+        // idea: trigger corresponding node controller to relay topic to adjecent broker (either node broker or
+        // global cloud broker)
         t.getInputStreams()
                 .get(getIndex(source.getDOM(), t))
                 .setEventGrounding(inputGrounding);
@@ -183,6 +224,16 @@ public class InvocationGraphBuilder {
       configure(t, getConnections(t));
 
     });
+  }
+
+  private boolean relayNotExists(String relayTopic, NamedStreamPipesEntity source) {
+    return ((DataProcessorInvocation) source)
+            .getOutputStreamRelays()
+            .stream()
+            .noneMatch(r -> r.getEventGrounding()
+                    .getTransportProtocol()
+                    .getTopicDefinition()
+                    .getActualTopicName().equals(relayTopic));
   }
 
   private Tuple2<EventSchema,? extends OutputStrategy> getOutputSettings(DataProcessorInvocation dataProcessorInvocation) {
@@ -216,12 +267,20 @@ public class InvocationGraphBuilder {
     return outputStream;
   }
 
-  private String getEdgeBroker(InvocableStreamPipesEntity target) {
+  private String getTargetNodeBrokerHost(InvocableStreamPipesEntity t) {
     // TODO: no hardcoded route - only for testing
     return ConsulUtil.getValueForRoute(
             "sp/v1/node/org.apache.streampipes.node.controller/"
-                    + target.getDeploymentTargetNodeHostname()
+                    + t.getDeploymentTargetNodeHostname()
                     + "/config/SP_NODE_BROKER_HOST", String.class);
+  }
+
+  private int getTargetNodeBrokerPort(InvocableStreamPipesEntity t) {
+    // TODO: no hardcoded route - only for testing
+    return ConsulUtil.getValueForRoute(
+            "sp/v1/node/org.apache.streampipes.node.controller/"
+                    + t.getDeploymentTargetNodeHostname()
+                    + "/config/SP_NODE_BROKER_PORT", Integer.class);
   }
 
 
@@ -293,5 +352,10 @@ public class InvocationGraphBuilder {
             .filter(g -> g.getDOM().equals(domId))
             .findFirst()
             .get();
+  }
+
+  public static Boolean isPrioritized(SpProtocol prioritizedProtocol,
+                                      Class<?> protocolClass) {
+    return prioritizedProtocol.getProtocolClass().equals(protocolClass.getCanonicalName());
   }
 }

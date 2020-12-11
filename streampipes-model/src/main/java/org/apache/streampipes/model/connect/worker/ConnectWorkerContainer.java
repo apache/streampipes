@@ -44,6 +44,7 @@ public class ConnectWorkerContainer extends UnnamedStreamPipesEntity {
 
     private @SerializedName("_rev") String rev;
 
+
     public ConnectWorkerContainer() {
         super();
         this.adapters = new ArrayList<>();

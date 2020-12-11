@@ -18,7 +18,12 @@
 
 import {Component, Input, OnInit} from "@angular/core";
 import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
-import {Message, Pipeline} from "../../../core-model/gen/streampipes-model";
+import {
+  DataProcessorInvocation,
+  Message,
+  Pipeline,
+  SpDataStreamRelay
+} from "../../../core-model/gen/streampipes-model";
 import {ObjectProvider} from "../../services/object-provider.service";
 import {EditorService} from "../../services/editor.service";
 import {PipelineService} from "../../../platform-services/apis/pipeline.service";
@@ -59,6 +64,8 @@ export class SavePipelineComponent implements OnInit {
   advancedSettings: boolean = false;
   deploymentOptions: Array<any> = new Array<any>();
 
+  selectedRelayStrategyVal: string;
+
   constructor(private editorService: EditorService,
               private dialogRef: DialogRef<SavePipelineComponent>,
               private objectProvider: ObjectProvider,
@@ -90,6 +97,8 @@ export class SavePipelineComponent implements OnInit {
       this.ShepherdService.trigger("enter-pipeline-name");
     }
 
+    this.selectedRelayStrategyVal = "buffer";
+
   }
 
   triggerTutorial() {
@@ -108,6 +117,10 @@ export class SavePipelineComponent implements OnInit {
       this.pipelineCategories = pipelineCategories;
     });
   };
+
+  public onSelectedRelayStrategyChange(val: string) {
+    this.selectedRelayStrategyVal = val;
+  }
 
   loadAndPrepareEdgeNodes() {
     this.pipelineService.getAvailableEdgeNodes().subscribe(response => {
@@ -143,6 +156,12 @@ export class SavePipelineComponent implements OnInit {
   modifyPipelineElementsDeployments(pipelineElements) {
     pipelineElements.forEach(p => {
       let selectedTargetNodeId = p.deploymentTargetNodeId
+
+      // Currently relay only for data processors
+      if (p instanceof DataProcessorInvocation) {
+        p.eventRelayStrategy = this.selectedRelayStrategyVal;
+      }
+
       if(selectedTargetNodeId != "default") {
         let selectedNode = this.edgeNodes
             .filter(node => node.nodeControllerId === selectedTargetNodeId)

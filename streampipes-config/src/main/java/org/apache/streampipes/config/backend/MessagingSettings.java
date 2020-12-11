@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.config.backend;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,42 +29,44 @@ public class MessagingSettings {
 
   private List<SpDataFormat> prioritizedFormats;
   private List<SpProtocol> prioritizedProtocols;
+  private SpEdgeNodeProtocol edgeNodeProtocol;
 
   public static MessagingSettings fromDefault() {
-    List<SpProtocol> protocolList;
+    List<SpProtocol> prioritzedProtocolList;
     if (System.getenv(BackendConfigKeys.PRIORITIZED_PROTOCOL) != null) {
       switch (System.getenv(BackendConfigKeys.PRIORITIZED_PROTOCOL).toLowerCase()) {
         case "mqtt":
-          protocolList = Arrays.asList(SpProtocol.MQTT, SpProtocol.KAFKA, SpProtocol.JMS);
+          prioritzedProtocolList = Arrays.asList(SpProtocol.MQTT, SpProtocol.KAFKA, SpProtocol.JMS);
           break;
         case "kafka":
-          protocolList = Arrays.asList(SpProtocol.KAFKA, SpProtocol.MQTT, SpProtocol.JMS);
+          prioritzedProtocolList = Arrays.asList(SpProtocol.KAFKA, SpProtocol.MQTT, SpProtocol.JMS);
           break;
         case "jms":
-          protocolList = Arrays.asList(SpProtocol.JMS, SpProtocol.KAFKA, SpProtocol.MQTT);
+          prioritzedProtocolList = Arrays.asList(SpProtocol.JMS, SpProtocol.KAFKA, SpProtocol.MQTT);
           break;
         default:
-          protocolList = Arrays.asList(SpProtocol.KAFKA, SpProtocol.MQTT, SpProtocol.JMS);
+          prioritzedProtocolList = Arrays.asList(SpProtocol.KAFKA, SpProtocol.MQTT, SpProtocol.JMS);
       }
     } else {
-      protocolList = Arrays.asList(SpProtocol.KAFKA, SpProtocol.MQTT, SpProtocol.JMS);
+      prioritzedProtocolList = Arrays.asList(SpProtocol.KAFKA, SpProtocol.MQTT, SpProtocol.JMS);
     }
 
     return new MessagingSettings(
             1638400, 5000012, 20, 2,
             Arrays.asList(SpDataFormat.JSON, SpDataFormat.CBOR, SpDataFormat.FST, SpDataFormat.SMILE),
-            protocolList);
+            prioritzedProtocolList, SpEdgeNodeProtocol.MQTT);
   }
 
   public MessagingSettings(Integer batchSize, Integer messageMaxBytes, Integer lingerMs,
                            Integer acks, List<SpDataFormat> prioritizedFormats,
-                           List<SpProtocol> prioritizedProtocols) {
+                           List<SpProtocol> prioritizedProtocols, SpEdgeNodeProtocol edgeNodeProtocol) {
     this.batchSize = batchSize;
     this.messageMaxBytes = messageMaxBytes;
     this.lingerMs = lingerMs;
     this.acks = acks;
     this.prioritizedFormats = prioritizedFormats;
     this.prioritizedProtocols = prioritizedProtocols;
+    this.edgeNodeProtocol = edgeNodeProtocol;
   }
 
   public MessagingSettings() {
@@ -118,5 +119,13 @@ public class MessagingSettings {
 
   public void setPrioritizedProtocols(List<SpProtocol> prioritizedProtocols) {
     this.prioritizedProtocols = prioritizedProtocols;
+  }
+
+  public SpEdgeNodeProtocol getEdgeNodeProtocol() {
+    return edgeNodeProtocol;
+  }
+
+  public void setEdgeNodeProtocol(SpEdgeNodeProtocol edgeNodeProtocol) {
+    this.edgeNodeProtocol = edgeNodeProtocol;
   }
 }

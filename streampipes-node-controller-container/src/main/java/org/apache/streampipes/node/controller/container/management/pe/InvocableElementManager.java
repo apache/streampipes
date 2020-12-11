@@ -75,7 +75,7 @@ public class InvocableElementManager implements ElementLifeCyle {
     }
 
     @Override
-    public String invoke(String endpoint, String payload) {
+    public org.apache.streampipes.model.Response invoke(String endpoint, String payload) {
         LOG.info("Invoke pipeline element: {}", endpoint);
         try {
             Response httpResp = Request
@@ -84,15 +84,13 @@ public class InvocableElementManager implements ElementLifeCyle {
                     .connectTimeout(CONNECT_TIMEOUT)
                     .execute();
 
-            String resp = httpResp.returnContent().asString();
-            org.apache.streampipes.model.Response streamPipesResp = new Gson().fromJson(resp,
+            return new Gson().fromJson(httpResp.returnContent().asString(),
                     org.apache.streampipes.model.Response.class);
 
-            return streamPipesResp.toString();
         } catch (Exception e) {
             LOG.error(e.getMessage());
         }
-        throw new IllegalArgumentException("Failed to invoke pipeline element: " + endpoint);
+        throw new RuntimeException("Failed to invoke pipeline element: " + endpoint);
     }
 
     @Override

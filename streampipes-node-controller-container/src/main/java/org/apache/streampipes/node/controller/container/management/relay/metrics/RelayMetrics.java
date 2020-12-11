@@ -15,18 +15,47 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.node.controller.container.management.relay.model;
+package org.apache.streampipes.node.controller.container.management.relay.metrics;
 
-public class Metrics {
+import org.apache.streampipes.model.grounding.TransportProtocol;
 
-    private final long timeStarted;
-    private final String id;
+public class RelayMetrics {
+
+    private final long createdAt;
+    private final String topic;
+    private final TransportProtocol sourceTpProtocol;
+    private final TransportProtocol targetTpProtocol;
+    private final String strategy;
     private long numRelayedEvents = 0;
     private long numDroppedEvents = 0;
 
-    public Metrics(String id) {
-        this.timeStarted = System.currentTimeMillis();
-        this.id = id;
+    public RelayMetrics(String topic, TransportProtocol sourceTpProtocol,
+                        TransportProtocol targetTpProtocol, String strategy) {
+        this.createdAt = System.currentTimeMillis();
+        this.topic = topic;
+        this.sourceTpProtocol = sourceTpProtocol;
+        this.targetTpProtocol = targetTpProtocol;
+        this.strategy = strategy;
+    }
+
+    public long getCreatedAt() {
+        return createdAt;
+    }
+
+    public TransportProtocol getSourceTpProtocol() {
+        return sourceTpProtocol;
+    }
+
+    public TransportProtocol getTargetTpProtocol() {
+        return targetTpProtocol;
+    }
+
+    public String getStrategy() {
+        return strategy;
+    }
+
+    public String getTopic() {
+        return topic;
     }
 
     public long getNumRelayedEvents() {
@@ -48,4 +77,5 @@ public class Metrics {
     public void clearNumDroppedEvents() {
         this.numDroppedEvents = 0;
     }
+
 }

@@ -19,8 +19,11 @@ package org.apache.streampipes.node.controller.container.management.relay;
 
 import org.apache.streampipes.node.controller.container.management.IRunningInstances;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public enum RunningRelayInstances implements IRunningInstances<EventRelayManager> {
     INSTANCE;
@@ -46,5 +49,9 @@ public enum RunningRelayInstances implements IRunningInstances<EventRelayManager
     @Override
     public void remove(String id) {
         runningInstances.remove(id);
+    }
+
+    public List<EventRelayManager> getRunningInstances() {
+        return new ArrayList<>(runningInstances.values());
     }
 }

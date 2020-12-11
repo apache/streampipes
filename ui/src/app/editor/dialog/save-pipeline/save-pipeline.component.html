@@ -49,23 +49,34 @@
                 <mat-slide-toggle color="primary" [(ngModel)]="advancedSettings">
                     Choose deployment options
                 </mat-slide-toggle>
-<!--                <mat-divider *ngIf="advancedSettings" style="margin: 2em 0 2em 0;"></mat-divider>-->
-<!--                <div *ngIf="advancedSettings">-->
-<!--                    <div fxFlex="100" fxLayout="row">-->
-<!--                        <div fxFlex="50" fxLayout="row" fxLayoutAlign="center center">-->
-<!--                            Event strategy-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div fxFlex="50" fxLayout="row" fxLayoutAlign="start center">-->
-<!--                        <mat-slider></mat-slider>-->
-<!--                    </div>-->
-<!--                </div>-->
+                <mat-divider *ngIf="advancedSettings" style="margin: 2em 0 2em 0;"></mat-divider>
+                <div *ngIf="advancedSettings">
+
+                    <b>Relay options</b>
+
+                    <div>
+                        <div fxFlex="100" fxLayout="row">
+                            <div fxFlex="75" fxLayout="row" fxLayoutAlign="left center">
+                                <span>Offline broker-to-broker event relay strategy</span>
+                            </div>
+                        </div>
+                        <div fxFlex="50" fxLayout="row" fxLayoutAlign="start center">
+                            <mat-button-toggle-group #relayGroup="matButtonToggleGroup" aria-label="Relay strategy"
+                                                     [value]="selectedRelayStrategyVal"
+                                                     (change)="onSelectedRelayStrategyChange(relayGroup.value)">
+                                <mat-button-toggle value="purge">purge</mat-button-toggle>
+                                <mat-button-toggle value="buffer">buffer</mat-button-toggle>
+                            </mat-button-toggle-group>
+                        </div>
+                    </div>
+
+                </div>
                 <mat-divider *ngIf="advancedSettings" style="margin: 2em 0 2em 0;"></mat-divider>
                 <div *ngIf="advancedSettings">
                     <b>Node selection</b>
                     <div *ngFor="let processors of pipeline.sepas">
                         <div fxFlex="100" fxLayout="row">
-                            <div fxFlex="50" fxLayout="row" fxLayoutAlign="center center">
+                            <div fxFlex="50" fxLayout="row" fxLayoutAlign="left center">
                                 <span>{{processors.name}}</span>
                             </div>
                         </div>
@@ -81,7 +92,7 @@
                     </div>
                     <div *ngFor="let sinks of pipeline.actions">
                         <div fxFlex="100" fxLayout="row">
-                            <div fxFlex="50" fxLayout="row" fxLayoutAlign="center center">
+                            <div fxFlex="50" fxLayout="row" fxLayoutAlign="left center">
                                 <span>{{sinks.name}}</span>
                             </div>
                         </div>
