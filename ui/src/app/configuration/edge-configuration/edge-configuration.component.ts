@@ -18,7 +18,7 @@
 
 import {Component} from "@angular/core";
 import {ConfigurationService} from "../shared/configuration.service";
-import {NodeInfo} from "../model/NodeInfo.model";
+import {NodeInfo} from "../../core-model/gen/streampipes-model";
 
 @Component({
     selector: 'edge-configuration',
@@ -28,7 +28,7 @@ import {NodeInfo} from "../model/NodeInfo.model";
 export class EdgeConfigurationComponent {
 
     loadingCompleted: boolean = false;
-    availableEdgeNodes: Array<NodeInfo>;
+    availableEdgeNodes: NodeInfo[];
 
     constructor(private configurationService: ConfigurationService) {
 

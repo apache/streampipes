@@ -81,6 +81,15 @@ public class SpDataStream extends NamedStreamPipesEntity {
 
   protected List<String> category;
 
+  @RdfProperty(StreamPipes.DEPLOYMENT_TARGET_NODE_ID)
+  private String deploymentTargetNodeId;
+
+  @RdfProperty(StreamPipes.DEPLOYMENT_TARGET_NODE_HOSTNAME)
+  private String deploymentTargetNodeHostname;
+
+  @RdfProperty(StreamPipes.DEPLOYMENT_TARGET_NODE_PORT)
+  private Integer deploymentTargetNodePort;
+
   public SpDataStream(String uri, String name, String description, String iconUrl, List<EventStreamQualityDefinition> hasEventStreamQualities,
                       EventGrounding eventGrounding,
                       EventSchema eventSchema) {
@@ -121,6 +130,9 @@ public class SpDataStream extends NamedStreamPipesEntity {
     if (other.getMeasurementObject() != null) {
       this.measurementObject = new Cloner().mo(other.getMeasurementObject());
     }
+    this.deploymentTargetNodeId = other.getDeploymentTargetNodeId();
+    this.deploymentTargetNodeHostname = other.getDeploymentTargetNodeHostname();
+    this.deploymentTargetNodePort = other.getDeploymentTargetNodePort();
   }
 
   public List<EventStreamQualityDefinition> getHasEventStreamQualities() {
@@ -189,5 +201,29 @@ public class SpDataStream extends NamedStreamPipesEntity {
 
   public void setIndex(int index) {
     this.index = index;
+  }
+
+  public String getDeploymentTargetNodeId() {
+    return deploymentTargetNodeId;
+  }
+
+  public void setDeploymentTargetNodeId(String deploymentTargetNodeId) {
+    this.deploymentTargetNodeId = deploymentTargetNodeId;
+  }
+
+  public String getDeploymentTargetNodeHostname() {
+    return deploymentTargetNodeHostname;
+  }
+
+  public void setDeploymentTargetNodeHostname(String deploymentTargetNodeHostname) {
+    this.deploymentTargetNodeHostname = deploymentTargetNodeHostname;
+  }
+
+  public Integer getDeploymentTargetNodePort() {
+    return deploymentTargetNodePort;
+  }
+
+  public void setDeploymentTargetNodePort(Integer deploymentTargetNodePort) {
+    this.deploymentTargetNodePort = deploymentTargetNodePort;
   }
 }

@@ -56,6 +56,15 @@ public class ProtocolDescription extends NamedStreamPipesEntity {
     @RdfProperty(StreamPipes.HAS_ADAPTER_TYPE)
     private List<String> category;
 
+    @RdfProperty(StreamPipes.DEPLOYMENT_TARGET_NODE_ID)
+    private String deploymentTargetNodeId;
+
+    @RdfProperty(StreamPipes.DEPLOYMENT_TARGET_NODE_HOSTNAME)
+    private String deploymentTargetNodeHostname;
+
+    @RdfProperty(StreamPipes.DEPLOYMENT_TARGET_NODE_PORT)
+    private Integer deploymentTargetNodePort;
+
     public ProtocolDescription() {
     }
 
@@ -63,12 +72,18 @@ public class ProtocolDescription extends NamedStreamPipesEntity {
         super(uri, name, description);
         this.config = new ArrayList<>();
         this.category = new ArrayList<>();
+        this.deploymentTargetNodeId = "";
+        this.deploymentTargetNodeHostname = "";
+        this.deploymentTargetNodePort = 0;
     }
 
     public ProtocolDescription(String uri, String name, String description, List<StaticProperty> config) {
         super(uri, name, description);
         this.config = config;
         this.category = new ArrayList<>();
+        this.deploymentTargetNodeId = "";
+        this.deploymentTargetNodeHostname = "";
+        this.deploymentTargetNodePort = 0;
     }
 
     public ProtocolDescription(ProtocolDescription other) {
@@ -106,5 +121,29 @@ public class ProtocolDescription extends NamedStreamPipesEntity {
 
     public void setCategory(List<String> category) {
         this.category = category;
+    }
+
+    public String getDeploymentTargetNodeId() {
+        return deploymentTargetNodeId;
+    }
+
+    public void setDeploymentTargetNodeId(String deploymentTargetNodeId) {
+        this.deploymentTargetNodeId = deploymentTargetNodeId;
+    }
+
+    public String getDeploymentTargetNodeHostname() {
+        return deploymentTargetNodeHostname;
+    }
+
+    public void setDeploymentTargetNodeHostname(String deploymentTargetNodeHostname) {
+        this.deploymentTargetNodeHostname = deploymentTargetNodeHostname;
+    }
+
+    public Integer getDeploymentTargetNodePort() {
+        return deploymentTargetNodePort;
+    }
+
+    public void setDeploymentTargetNodePort(Integer deploymentTargetNodePort) {
+        this.deploymentTargetNodePort = deploymentTargetNodePort;
     }
 }

@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.connect.adapter;
 
+import org.apache.streampipes.config.backend.SpEdgeNodeProtocol;
 import org.apache.streampipes.connect.adapter.preprocessing.elements.*;
 import org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription;
 import org.apache.streampipes.config.backend.BackendConfig;
@@ -152,24 +153,43 @@ public abstract class Adapter<T extends AdapterDescription> implements Connector
         // Needed when adapter is (
         if (adapterDescription.getEventGrounding() != null && adapterDescription.getEventGrounding().getTransportProtocol() != null
                 && adapterDescription.getEventGrounding().getTransportProtocol().getBrokerHostname() != null) {
-            return new AdapterPipeline(pipelineElements, getAdapterSink(adapterDescription));
+            try {
+                return new AdapterPipeline(pipelineElements, getAdapterSink(adapterDescription));
+            } catch (AdapterException e) {
+                e.printStackTrace();
+            }
         }
 
         return new AdapterPipeline(pipelineElements);
     }
 
-    private SendToBrokerAdapterSink<?> getAdapterSink(AdapterDescription adapterDescription) {
-        SpProtocol prioritizedProtocol =
-                BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedProtocols().get(0);
+    private SendToBrokerAdapterSink<?> getAdapterSink(AdapterDescription adapterDescription) throws AdapterException {
 
-        if (GroundingService.isPrioritized(prioritizedProtocol, JmsTransportProtocol.class)) {
-            return new SendToJmsAdapterSink(adapterDescription);
-        }
-        else if (GroundingService.isPrioritized(prioritizedProtocol, KafkaTransportProtocol.class)) {
-            return new SendToKafkaAdapterSink(adapterDescription);
-        }
-        else {
-            return new SendToMqttAdapterSink(adapterDescription);
+        if (adapterDescription.getDeploymentTargetNodeId() != null) {
+            // use edge protocol
+            SpEdgeNodeProtocol edgeNodeProtocol = BackendConfig.INSTANCE
+                    .getMessagingSettings()
+                    .getEdgeNodeProtocol();
+
+            if (GroundingService.isEdgeProtocol(edgeNodeProtocol, MqttTransportProtocol.class)) {
+                return new SendToMqttAdapterSink(adapterDescription);
+            }
+
+            throw new AdapterException("Edge node protocol not supported. " + edgeNodeProtocol);
+
+        } else {
+            SpProtocol prioritizedProtocol =
+                    BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedProtocols().get(0);
+
+            if (GroundingService.isPrioritized(prioritizedProtocol, JmsTransportProtocol.class)) {
+                return new SendToJmsAdapterSink(adapterDescription);
+            }
+            else if (GroundingService.isPrioritized(prioritizedProtocol, KafkaTransportProtocol.class)) {
+                return new SendToKafkaAdapterSink(adapterDescription);
+            }
+            else {
+                return new SendToMqttAdapterSink(adapterDescription);
+            }
         }
     }
 

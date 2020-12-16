@@ -19,18 +19,20 @@ package org.apache.streampipes.node.controller.container.config;
 
 public class ConfigKeys {
     public static final String NODE_TYPE = "SP_NODE_TYPE";
-    public static final String NODE_CONTROLLER_ID_KEY = "SP_NODE_CONTROLLER_ID";
-    public static final String NODE_CONTROLLER_PORT_KEY = "SP_NODE_CONTROLLER_PORT";
-    public static final String NODE_HOST_NAME_KEY = "SP_NODE_HOST";
-    public static final String NODE_BROKER_HOST_KEY = "SP_NODE_BROKER_HOST";
-    public static final String NODE_BROKER_PORT_KEY = "SP_NODE_BROKER_PORT";
-    public static final String NODE_LOCATION_KEY = "SP_NODE_LOCATION";
-    public static final String NODE_HAS_GPU_KEY = "SP_NODE_HAS_GPU";
-    public static final String NODE_GPU_CUDA_CORES_KEY = "SP_NODE_GPU_CUDA_CORES";
-    public static final String NODE_GPU_TYPE_KEY = "SP_NODE_GPU_TYPE";
-    public static final String NODE_ACCESSIBLE_SENSOR_ACTUATOR_KEY = "SP_NODE_ACCESSIBLE_SENSOR_ACTUATOR";
-    public static final String NODE_SUPPORTED_PE_APP_ID_KEY = "SP_NODE_SUPPORTED_PE_APP_ID";
-    public static final String DOCKER_PRUNING_FREQ_SECS_KEY = "SP_DOCKER_PRUNING_FREQ_SECS";
-    public static final String NODE_RESOURCE_UPDATE_FREQ_SECS_KEY = "SP_NODE_RESOURCE_UPDATE_FREQ_SECS";
-    public static final String NODE_EVENT_BUFFER_SIZE = "SP_NODE_EVENT_BUFFER_SIZE";
+    public static final String NODE_HOST = "SP_NODE_HOST";
+    public static final String NODE_CONTROLLER_ID = "SP_NODE_CONTROLLER_ID";
+    public static final String NODE_CONTROLLER_CONTAINER_HOST = "SP_NODE_CONTROLLER_CONTAINER_HOST";
+    public static final String NODE_CONTROLLER_CONTAINER_PORT = "SP_NODE_CONTROLLER_CONTAINER_PORT";
+    public static final String NODE_BROKER_CONTAINER_HOST = "SP_NODE_BROKER_CONTAINER_HOST";
+    public static final String NODE_BROKER_CONTAINER_PORT = "SP_NODE_BROKER_CONTAINER_PORT";
+    public static final String NODE_LOCATION = "SP_NODE_LOCATION";
+    public static final String NODE_HAS_GPU = "SP_NODE_HAS_GPU";
+    public static final String NODE_GPU_CUDA_CORES = "SP_NODE_GPU_CUDA_CORES";
+    public static final String NODE_GPU_TYPE = "SP_NODE_GPU_TYPE";
+    public static final String NODE_ACCESSIBLE_SENSOR_ACTUATOR = "SP_NODE_ACCESSIBLE_SENSOR_ACTUATOR";
+    public static final String NODE_SUPPORTED_PE_APP_ID = "SP_NODE_SUPPORTED_PE_APP_ID";
+    public static final String DOCKER_PRUNING_FREQ_SECS = "SP_DOCKER_PRUNING_FREQ_SECS";
+    public static final String RESOURCE_UPDATE_FREQ_SECS = "SP_NODE_RESOURCE_UPDATE_FREQ_SECS";
+    public static final String EVENT_BUFFER_SIZE = "SP_NODE_EVENT_BUFFER_SIZE";
+    public static final String SP_VERSION = "SP_VERSION";
 }

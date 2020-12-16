@@ -92,6 +92,15 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
     @RdfProperty(StreamPipes.HAS_ADAPTER_TYPE)
     private List<String> category;
 
+    @RdfProperty(StreamPipes.DEPLOYMENT_TARGET_NODE_ID)
+    private String deploymentTargetNodeId;
+
+    @RdfProperty(StreamPipes.DEPLOYMENT_TARGET_NODE_HOSTNAME)
+    private String deploymentTargetNodeHostname;
+
+    @RdfProperty(StreamPipes.DEPLOYMENT_TARGET_NODE_PORT)
+    private Integer deploymentTargetNodePort;
+
     public AdapterDescription() {
         super();
         this.rules = new ArrayList<>();
@@ -115,7 +124,6 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
         this.category = new ArrayList<>();
     }
 
-
     public AdapterDescription(AdapterDescription other) {
         super(other);
         this.adapterId = other.getAdapterId();
@@ -125,10 +133,11 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
         this.adapterType = other.getAdapterType();
         this.icon = other.getIcon();
         this.category = new Cloner().epaTypes(other.getCategory());
+        this.deploymentTargetNodeId = other.getDeploymentTargetNodeId();
+        this.deploymentTargetNodeHostname = other.getDeploymentTargetNodeHostname();
+        this.deploymentTargetNodePort = other.getDeploymentTargetNodePort();
         if (other.getEventGrounding() != null) this.eventGrounding = new EventGrounding(other.getEventGrounding());
     }
-
-
 
     public String getId() {
         return id;
@@ -196,6 +205,30 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
 
     public void setAdapterType(String adapterType) {
         this.adapterType = adapterType;
+    }
+
+    public String getDeploymentTargetNodeId() {
+        return deploymentTargetNodeId;
+    }
+
+    public void setDeploymentTargetNodeId(String deploymentTargetNodeId) {
+        this.deploymentTargetNodeId = deploymentTargetNodeId;
+    }
+
+    public String getDeploymentTargetNodeHostname() {
+        return deploymentTargetNodeHostname;
+    }
+
+    public void setDeploymentTargetNodeHostname(String deploymentTargetNodeHostname) {
+        this.deploymentTargetNodeHostname = deploymentTargetNodeHostname;
+    }
+
+    public Integer getDeploymentTargetNodePort() {
+        return deploymentTargetNodePort;
+    }
+
+    public void setDeploymentTargetNodePort(Integer deploymentTargetNodePort) {
+        this.deploymentTargetNodePort = deploymentTargetNodePort;
     }
 
     public List getValueRules() {

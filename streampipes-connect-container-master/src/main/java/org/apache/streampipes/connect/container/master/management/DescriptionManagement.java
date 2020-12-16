@@ -29,6 +29,7 @@ import org.apache.streampipes.model.connect.grounding.ProtocolDescriptionList;
 import org.apache.streampipes.model.connect.worker.ConnectWorkerContainer;
 import org.apache.streampipes.storage.couchdb.impl.ConnectionWorkerContainerStorageImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -41,10 +42,23 @@ public class DescriptionManagement {
         List<ConnectWorkerContainer> allWorkerContainter = connectionWorkerContainerStorage.getAllConnectWorkerContainers();
 
         ProtocolDescriptionList result = new ProtocolDescriptionList();
+        //ArrayList<String> deploymentTargetNodeIds = new ArrayList<>();
+        //ArrayList<String> deploymentTargetHostnames = new ArrayList<>();
 
         for (ConnectWorkerContainer connectWorkerContainer : allWorkerContainter) {
+            // only add unique appIds
+//            if (result.getList().stream().noneMatch(a -> connectWorkerContainer.getProtocols()
+//                    .stream()
+//                    .anyMatch(c -> c.getAppId().equals(a.getAppId())))) {
+//                result.getList().addAll(connectWorkerContainer.getProtocols());;
+//            }
             result.getList().addAll(connectWorkerContainer.getProtocols());
+            //deploymentTargetNodeIds.add(connectWorkerContainer.getDeploymentTargetNodeId());
+            //deploymentTargetHostnames.add(connectWorkerContainer.getDeploymentTargetNodeHostname());
         }
+
+        //result.setDeploymentTargetNodeIds(deploymentTargetNodeIds);
+        //result.setDeploymentTargetNodeHostname(deploymentTargetHostnames);
 
         return result;
     }
@@ -69,8 +83,19 @@ public class DescriptionManagement {
         AdapterDescriptionList result = new AdapterDescriptionList();
 
         for (ConnectWorkerContainer connectWorkerContainer : allWorkerContainter) {
-           result.getList().addAll(connectWorkerContainer.getAdapters());
+            // only add unique entry
+//            if (result.getList().stream().noneMatch(a -> connectWorkerContainer.getAdapters()
+//                    .stream()
+//                    .anyMatch(c -> c.getAppId().equals(a.getAppId())))) {
+//                result.getList().addAll(connectWorkerContainer.getAdapters());
+//            }
+            //deploymentTargetNodeIds.add(connectWorkerContainer.getDeploymentTargetNodeId());
+            result.getList().addAll(connectWorkerContainer.getAdapters());
+            //deploymentTargetHostnames.add(connectWorkerContainer.getDeploymentTargetNodeHostname());
         }
+
+        //result.setDeploymentTargetNodeIds(deploymentTargetNodeIds);
+        //result.setDeploymentTargetNodeHostname(deploymentTargetHostnames);
 
         return result;
     }

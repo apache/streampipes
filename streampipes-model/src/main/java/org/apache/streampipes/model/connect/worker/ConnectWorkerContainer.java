@@ -44,13 +44,6 @@ public class ConnectWorkerContainer extends UnnamedStreamPipesEntity {
 
     private @SerializedName("_rev") String rev;
 
-
-    public ConnectWorkerContainer() {
-        super();
-        this.adapters = new ArrayList<>();
-        this.protocols = new ArrayList<>();
-    }
-
     @RdfProperty("sp:endpointUrl")
     private String endpointUrl;
 
@@ -64,10 +57,37 @@ public class ConnectWorkerContainer extends UnnamedStreamPipesEntity {
     @RdfProperty("sp:list")
     private List<AdapterDescription> adapters;
 
-    public ConnectWorkerContainer(String endpointUrl, List<ProtocolDescription> protocols, List<AdapterDescription> adapters) {
+    @RdfProperty(StreamPipes.DEPLOYMENT_TARGET_NODE_ID)
+    private String deploymentTargetNodeId;
+
+    @RdfProperty(StreamPipes.DEPLOYMENT_TARGET_NODE_HOSTNAME)
+    private String deploymentTargetNodeHostname;
+
+    @RdfProperty(StreamPipes.DEPLOYMENT_TARGET_NODE_PORT)
+    private Integer deploymentTargetNodePort;
+
+    public ConnectWorkerContainer() {
+        super();
+        this.adapters = new ArrayList<>();
+        this.protocols = new ArrayList<>();
+    }
+
+    public ConnectWorkerContainer(String endpointUrl, List<ProtocolDescription> protocols,
+                                  List<AdapterDescription> adapters) {
         this.endpointUrl = endpointUrl;
         this.protocols = protocols;
         this.adapters = adapters;
+    }
+
+    public ConnectWorkerContainer(String endpointUrl, List<ProtocolDescription> protocols,
+                                  List<AdapterDescription> adapters, String deploymentTargetNodeId,
+                                  String deploymentTargetNodeHostname, int deploymentTargetNodePort) {
+        this.endpointUrl = endpointUrl;
+        this.protocols = protocols;
+        this.adapters = adapters;
+        this.deploymentTargetNodeId = deploymentTargetNodeId;
+        this.deploymentTargetNodeHostname = deploymentTargetNodeHostname;
+        this.deploymentTargetNodePort = deploymentTargetNodePort;
     }
 
     public String getEndpointUrl() {
@@ -108,5 +128,29 @@ public class ConnectWorkerContainer extends UnnamedStreamPipesEntity {
 
     public void setRev(String rev) {
         this.rev = rev;
+    }
+
+    public String getDeploymentTargetNodeId() {
+        return deploymentTargetNodeId;
+    }
+
+    public void setDeploymentTargetNodeId(String deploymentTargetNodeId) {
+        this.deploymentTargetNodeId = deploymentTargetNodeId;
+    }
+
+    public String getDeploymentTargetNodeHostname() {
+        return deploymentTargetNodeHostname;
+    }
+
+    public void setDeploymentTargetNodeHostname(String deploymentTargetNodeHostname) {
+        this.deploymentTargetNodeHostname = deploymentTargetNodeHostname;
+    }
+
+    public Integer getDeploymentTargetNodePort() {
+        return deploymentTargetNodePort;
+    }
+
+    public void setDeploymentTargetNodePort(Integer deploymentTargetNodePort) {
+        this.deploymentTargetNodePort = deploymentTargetNodePort;
     }
 }

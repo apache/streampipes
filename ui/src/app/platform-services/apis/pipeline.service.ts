@@ -21,13 +21,12 @@ import {HttpClient} from "@angular/common/http";
 import {PlatformServicesCommons} from "./commons.service";
 import {Observable} from "rxjs";
 import {
-  Message,
+  Message, NodeInfo,
   Pipeline,
   PipelineCategory, PipelineElementStatus,
   PipelineOperationStatus, PipelineStatusMessage
 } from "../../core-model/gen/streampipes-model";
 import {map} from "rxjs/operators";
-import {NodeInfo} from "../../configuration/model/NodeInfo.model";
 
 @Injectable()
 export class PipelineService {

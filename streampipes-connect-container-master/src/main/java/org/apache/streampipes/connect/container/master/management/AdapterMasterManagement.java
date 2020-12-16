@@ -70,7 +70,7 @@ public class AdapterMasterManagement {
           throws AdapterException {
 
     // Add EventGrounding to AdapterDescription
-    EventGrounding eventGrounding = GroundingService.createEventGrounding();
+    EventGrounding eventGrounding = GroundingService.createEventGrounding(ad);
     ad.setEventGrounding(eventGrounding);
 
     String uuid = UUID.randomUUID().toString();

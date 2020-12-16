@@ -137,16 +137,34 @@ public class InvocationGraphBuilder {
                   relayEventGrounding.setTransportFormats(inputGrounding.getTransportFormats());
 
                   // TODO: when modifying pipelines new relay are added to old ones. Should initialize new ArrayList
-                  ((DataProcessorInvocation) source)
-                          .addOutputStreamRelay(new SpDataStreamRelay(relayEventGrounding));
-                }
-              }
+                  // graphExists()
+                  if(!graphExists(t.getDOM())) {
+                    ((DataProcessorInvocation) source)
+                            .addOutputStreamRelay(new SpDataStreamRelay(relayEventGrounding));
+                  } else {
+                    ((DataProcessorInvocation) source)
+                            .getOutputStreamRelays()
+                            .get(getIndex(source.getDOM(), t))
+                            .getEventGrounding()
+                            .getTransportProtocol()
+                            .setTopicDefinition(inputGrounding.getTransportProtocol().getTopicDefinition());
+                  }
 
-              t.getInputStreams()
+                  t.getInputStreams()
+                          .get(getIndex(source.getDOM(), t))
+                          .getEventGrounding()
+                          .getTransportProtocol()
+                          .setTopicDefinition(inputGrounding.getTransportProtocol().getTopicDefinition());
+
+                } else {
+                  // split in the end
+                  t.getInputStreams()
                       .get(getIndex(source.getDOM(), t))
                       .getEventGrounding()
                       .getTransportProtocol()
                       .setTopicDefinition(inputGrounding.getTransportProtocol().getTopicDefinition());
+                }
+              }
 
             } else {
               // target runs on edge node: use target edge node broker
@@ -169,21 +187,30 @@ public class InvocationGraphBuilder {
                 relayEventGrounding.setTransportFormats(inputGrounding.getTransportFormats());
 
                 // TODO: when modifying pipelines new relay are added to old ones. Should initialize new ArrayList
-                ((DataProcessorInvocation) source)
-                        .addOutputStreamRelay(new SpDataStreamRelay(relayEventGrounding));
+                if(!graphExists(t.getDOM())) {
+                  ((DataProcessorInvocation) source)
+                          .addOutputStreamRelay(new SpDataStreamRelay(relayEventGrounding));
+                } else {
+                  t.getInputStreams()
+                          .get(getIndex(source.getDOM(), t))
+                          .setEventGrounding(relayEventGrounding);
+                }
 
-                t.getInputStreams()
-                        .get(getIndex(source.getDOM(), t))
-                        .setEventGrounding(relayEventGrounding);
-
-              } else {
                 t.getInputStreams()
                         .get(getIndex(source.getDOM(), t))
                         .setEventGrounding(((DataProcessorInvocation) source)
                                 .getOutputStreamRelays()
                                 .get(getIndex(source.getDOM(), t))
                                 .getEventGrounding());
+
               }
+//                t.getInputStreams()
+//                        .get(getIndex(source.getDOM(), t))
+//                        .setEventGrounding(((DataProcessorInvocation) source)
+//                                .getOutputStreamRelays()
+//                                .get(getIndex(source.getDOM(), t))
+//                                .getEventGrounding());
+
             }
           }
         } else {
@@ -272,7 +299,7 @@ public class InvocationGraphBuilder {
     return ConsulUtil.getValueForRoute(
             "sp/v1/node/org.apache.streampipes.node.controller/"
                     + t.getDeploymentTargetNodeHostname()
-                    + "/config/SP_NODE_BROKER_HOST", String.class);
+                    + "/config/SP_NODE_BROKER_CONTAINER_HOST", String.class);
   }
 
   private int getTargetNodeBrokerPort(InvocableStreamPipesEntity t) {
@@ -280,17 +307,15 @@ public class InvocationGraphBuilder {
     return ConsulUtil.getValueForRoute(
             "sp/v1/node/org.apache.streampipes.node.controller/"
                     + t.getDeploymentTargetNodeHostname()
-                    + "/config/SP_NODE_BROKER_PORT", Integer.class);
+                    + "/config/SP_NODE_BROKER_CONTAINER_PORT", Integer.class);
   }
 
 
   private boolean matchingDeploymentTarget(InvocableStreamPipesEntity source, InvocableStreamPipesEntity target) {
     if (source instanceof DataProcessorInvocation && target instanceof DataProcessorInvocation) {
       if (source.getDeploymentTargetNodeId().equals(target.getDeploymentTargetNodeId())) {
-        System.out.println("same node - no relay");
         return true;
       }
-      return false;
     }
     return false;
   }

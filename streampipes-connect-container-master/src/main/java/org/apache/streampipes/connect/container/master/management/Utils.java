@@ -35,24 +35,32 @@ public class Utils {
 
     public String getWorkerUrl(AdapterDescription adapterDescription) {
         String id = "";
+        String deploymentTargetNodeId;
 
         if (adapterDescription instanceof GenericAdapterDescription) {
             id = ((GenericAdapterDescription) (adapterDescription)).getProtocolDescription().getAppId();
+            deploymentTargetNodeId =
+                    ((GenericAdapterDescription) (adapterDescription)).getProtocolDescription().getDeploymentTargetNodeId();
         } else {
             id = adapterDescription.getAppId();
+            deploymentTargetNodeId = adapterDescription.getDeploymentTargetNodeId();
         }
 
-        return this.workerAdministrationManagement.getWorkerUrl(id);
+        return this.workerAdministrationManagement.getWorkerUrl(id, deploymentTargetNodeId);
     }
 
     public String getWorkerUrl(ProtocolDescription protocolDescription) {
         String id =  protocolDescription.getAppId();
 
-        return this.workerAdministrationManagement.getWorkerUrl(id);
+        return this.workerAdministrationManagement.getWorkerUrl(id, protocolDescription.getDeploymentTargetNodeId());
     }
 
 
     public String getWorkerUrlById(String id) {
         return this.workerAdministrationManagement.getWorkerUrl(id);
+    }
+
+    public String getWorkerUrlById(String id, String deploymentTargetNodeId) {
+        return this.workerAdministrationManagement.getWorkerUrl(id, deploymentTargetNodeId);
     }
 }

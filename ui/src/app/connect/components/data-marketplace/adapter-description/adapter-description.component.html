@@ -32,6 +32,8 @@
             <img *ngIf="adapter.icon" [src]="adapter.icon" style="min-height: 50px;" class="iconImg"/>
         </div>
         <h3>{{adapter.name}}</h3>
+        <b *ngIf="isSpecificDescription()">{{adapter.deploymentTargetNodeHostname}}</b>
+        <b *ngIf="isGenericDescription()">{{adapter.protocolDescription.deploymentTargetNodeHostname}}</b>
     </div>
     <div fxLayout="row">
         <div fxFlex="70" class="description" fxLayoutAlign="start start">

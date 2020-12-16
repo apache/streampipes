@@ -27,6 +27,7 @@ import org.apache.streampipes.container.init.RunningInstances;
 import org.apache.streampipes.container.locales.LabelGenerator;
 import org.apache.streampipes.container.model.ExtensionsConfig;
 import org.apache.streampipes.container.util.ConsulUtil;
+import org.apache.streampipes.container.util.NodeControllerUtil;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
@@ -59,6 +60,10 @@ public abstract class ExtensionsModelSubmitter extends ModelSubmitter<Extensions
     private static final Logger LOG =
             LoggerFactory.getLogger(ExtensionsModelSubmitter.class.getCanonicalName());
 
+    private static final String PROTOCOL = "http://";
+    private static final String SLASH = "/";
+    private static final String COLON = ":";
+
     public void init(ExtensionsConfig conf) {
         DeclarersSingleton.getInstance().setHostName(conf.getHost());
         DeclarersSingleton.getInstance().setPort(conf.getPort());
@@ -79,47 +84,100 @@ public abstract class ExtensionsModelSubmitter extends ModelSubmitter<Extensions
         app.setDefaultProperties(Collections.singletonMap("server.port", conf.getPort()));
         app.run();
 
-        String backendUrl = "http://" + conf.getBackendHost() + ":" + conf.getBackendPort() + "/streampipes-backend";
-        String adapterUrl = "http://" + conf.getHost() + ":" + conf.getPort() + "/";
+        // TODO: register at node controller first instead of backend directly
+        String backendUrl = PROTOCOL + conf.getBackendHost() + COLON + conf.getBackendPort() + "/streampipes-backend";
+        String adapterUrl = PROTOCOL + conf.getHost() + COLON + conf.getPort() + SLASH;
 
-        boolean connected = false;
-        while (!connected) {
-            LOG.info("Trying to connect to master in backend: " + backendUrl);
-            connected = MasterRestClient.register(backendUrl, getContainerDescription(adapterUrl));
+        // check wether pipeline element is managed by node controller
+        if (System.getenv("SP_NODE_CONTROLLER_ID") != null) {
+            // secondary
+            // register pipeline element service via node controller
+            NodeControllerUtil.register(
+                    conf.getId(),
+                    conf.getHost(),
+                    conf.getPort(),
+                    DeclarersSingleton.getInstance().getEpaDeclarers());
 
-            if (!connected) {
-                LOG.info("Retrying in 5 seconds");
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            boolean connected = false;
+            while (!connected) {
+                LOG.info("Trying to connect to the backend: " + backendUrl);
+                connected = MasterRestClient.register(backendUrl, getContainerDescription(adapterUrl, true));
+
+                if (!connected) {
+                    LOG.info("Retrying in 5 seconds");
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-        }
-        LOG.info("Successfully registered adapter at master in backend: " + backendUrl);
+            LOG.info("Successfully registered connect worker at the backend: " + backendUrl);
 
-        ConsulUtil.registerPeService(
-                conf.getId(),
-                conf.getHost(),
-                conf.getPort()
-        );
+        } else {
+            // primary
+            ConsulUtil.registerPeService(
+                    conf.getId(),
+                    conf.getHost(),
+                    conf.getPort());
+
+            boolean connected = false;
+            while (!connected) {
+                LOG.info("Trying to connect to master in backend: " + backendUrl);
+                connected = MasterRestClient.register(backendUrl, getContainerDescription(adapterUrl, false));
+
+                if (!connected) {
+                    LOG.info("Retrying in 5 seconds");
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            LOG.info("Successfully registered adapter at master in backend: " + backendUrl);
+        }
     }
 
-    private ConnectWorkerContainer getContainerDescription(String endpointUrl) {
-        List<AdapterDescription> adapters = new ArrayList<>();
-        for (Adapter a : AdapterDeclarerSingleton.getInstance().getAllAdapters()) {
-            AdapterDescription desc = (AdapterDescription) rewrite(a.declareModel(), endpointUrl);
-            adapters.add(desc);
-        }
+    private ConnectWorkerContainer getContainerDescription(String endpointUrl, boolean runsOnEdgeNode) {
 
-        List<ProtocolDescription> protocols = new ArrayList<>();
-        for (Protocol p : AdapterDeclarerSingleton.getInstance().getAllProtocols()) {
-            ProtocolDescription desc = (ProtocolDescription) rewrite(p.declareModel(), endpointUrl);
-            protocols.add(desc);
-        }
+        if (runsOnEdgeNode) {
+            String deploymentTargetNodeId = System.getenv("SP_NODE_CONTROLLER_ID");
+            String deploymentTargetNodeHostname = System.getenv("SP_NODE_CONTROLLER_CONTAINER_HOST");
+            int deploymentTargetNodePort = Integer.parseInt(System.getenv("SP_NODE_CONTROLLER_CONTAINER_PORT"));
 
-        ConnectWorkerContainer result = new ConnectWorkerContainer(endpointUrl, protocols, adapters);
-        return result;
+            List<AdapterDescription> adapters = new ArrayList<>();
+            for (Adapter a : AdapterDeclarerSingleton.getInstance().getAllAdapters()) {
+                AdapterDescription desc = (AdapterDescription) rewrite(a.declareModel(), endpointUrl,
+                        deploymentTargetNodeId, deploymentTargetNodeHostname, deploymentTargetNodePort);
+                adapters.add(desc);
+            }
+
+            List<ProtocolDescription> protocols = new ArrayList<>();
+            for (Protocol p : AdapterDeclarerSingleton.getInstance().getAllProtocols()) {
+                ProtocolDescription desc = (ProtocolDescription) rewrite(p.declareModel(), endpointUrl,
+                        deploymentTargetNodeId, deploymentTargetNodeHostname, deploymentTargetNodePort);
+                protocols.add(desc);
+            }
+
+            return new ConnectWorkerContainer(endpointUrl, protocols, adapters, deploymentTargetNodeId,
+                    deploymentTargetNodeHostname, deploymentTargetNodePort);
+        } else {
+
+            List<AdapterDescription> adapters = new ArrayList<>();
+            for (Adapter a : AdapterDeclarerSingleton.getInstance().getAllAdapters()) {
+                AdapterDescription desc = (AdapterDescription) rewrite(a.declareModel(), endpointUrl);
+                adapters.add(desc);
+            }
+
+            List<ProtocolDescription> protocols = new ArrayList<>();
+            for (Protocol p : AdapterDeclarerSingleton.getInstance().getAllProtocols()) {
+                ProtocolDescription desc = (ProtocolDescription) rewrite(p.declareModel(), endpointUrl);
+                protocols.add(desc);
+            }
+
+            return new ConnectWorkerContainer(endpointUrl, protocols, adapters);
+        }
     }
 
     private NamedStreamPipesEntity rewrite(NamedStreamPipesEntity entity, String endpointUrl) {
@@ -128,6 +186,35 @@ public abstract class ExtensionsModelSubmitter extends ModelSubmitter<Extensions
                 entity.setElementId(endpointUrl +  "protocol/" + entity.getElementId());
             } else if (entity instanceof  AdapterDescription) {
                 entity.setElementId(endpointUrl + "adapter/" + entity.getElementId());
+            }
+        }
+
+        // TODO remove after full internationalization support has been implemented
+        if (entity.isIncludesLocales()) {
+            LabelGenerator lg = new LabelGenerator(entity);
+            try {
+                entity = lg.generateLabels();
+            } catch (IOException e) {
+                LOG.error("Could not load labels for: " + entity.getAppId());
+            }
+        }
+        return entity;
+    }
+
+    private NamedStreamPipesEntity rewrite(NamedStreamPipesEntity entity, String endpointUrl,
+                                           String deploymentTargetNodeId, String deploymentTargetNodeHostname,
+                                           int deploymentTargetNodePort) {
+        if (!(entity instanceof GenericAdapterDescription)) {
+            if (entity instanceof  ProtocolDescription) {
+                entity.setElementId(endpointUrl +  "protocol/" + entity.getElementId());
+                ((ProtocolDescription) entity).setDeploymentTargetNodeId(deploymentTargetNodeId);
+                ((ProtocolDescription) entity).setDeploymentTargetNodeHostname(deploymentTargetNodeHostname);
+                ((ProtocolDescription) entity).setDeploymentTargetNodePort(deploymentTargetNodePort);
+            } else if (entity instanceof  AdapterDescription) {
+                entity.setElementId(endpointUrl + "adapter/" + entity.getElementId());
+                ((AdapterDescription) entity).setDeploymentTargetNodeId(deploymentTargetNodeId);
+                ((AdapterDescription) entity).setDeploymentTargetNodeHostname(deploymentTargetNodeHostname);
+                ((AdapterDescription) entity).setDeploymentTargetNodePort(deploymentTargetNodePort);
             }
         }
 

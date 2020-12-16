@@ -120,6 +120,8 @@ export class DataMarketplaceService {
           let adapterDescriptions: AdapterDescriptionUnion[] = [];
           let protocols: ProtocolDescription[] = (ProtocolDescriptionList.fromData(response as ProtocolDescriptionList)).list;
 
+          //console.log(response);
+
           for (let protocol of protocols) {
             let newAdapterDescription: AdapterDescriptionUnion;
             if (protocol.sourceType === 'SET') {

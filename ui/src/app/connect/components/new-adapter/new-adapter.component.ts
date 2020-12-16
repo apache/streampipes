@@ -30,18 +30,18 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MatDialog} from '@angular/material/dialog';
 import {MatStepper} from '@angular/material/stepper';
 import {
-  AdapterDescription,
-  AdapterDescriptionUnion,
-  EventProperty,
-  EventRateTransformationRuleDescription,
-  EventSchema,
-  FormatDescription,
-  GenericAdapterSetDescription,
-  GenericAdapterStreamDescription,
-  RemoveDuplicatesTransformationRuleDescription,
-  SpecificAdapterSetDescription,
-  SpecificAdapterStreamDescription,
-  TransformationRuleDescriptionUnion
+    AdapterDescription,
+    AdapterDescriptionUnion, AdapterStreamDescription,
+    EventProperty,
+    EventRateTransformationRuleDescription,
+    EventSchema,
+    FormatDescription,
+    GenericAdapterSetDescription,
+    GenericAdapterStreamDescription,
+    RemoveDuplicatesTransformationRuleDescription,
+    SpecificAdapterSetDescription,
+    SpecificAdapterStreamDescription,
+    TransformationRuleDescriptionUnion
 } from '../../../core-model/gen/streampipes-model';
 import {ShepherdService} from '../../../services/tour/shepherd.service';
 import {Logger} from '../../../shared/logger/default-log.service';
@@ -234,6 +234,11 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
             eventRate.aggregationType = this.eventRateMode;
             this.adapter.rules.push(eventRate);
         }
+
+        (this.adapter as AdapterStreamDescription).dataStream.deploymentTargetNodeId = this.adapter.deploymentTargetNodeId;
+        (this.adapter as AdapterStreamDescription).dataStream.deploymentTargetNodeHostname = this.adapter.deploymentTargetNodeHostname;
+        (this.adapter as AdapterStreamDescription).dataStream.deploymentTargetNodePort = this.adapter.deploymentTargetNodePort;
+
 
         let dialogRef = this.dialogService.open(AdapterStartedDialog,{
             panelType: PanelType.STANDARD_PANEL,

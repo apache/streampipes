@@ -18,6 +18,10 @@
 
 @import '../../../../scss/sp/sp-dialog.scss';
 
+//.sp-dialog-container {
+//  width: 520px;
+//}
+
 .customize-section {
   display:flex;
   flex: 1 1 auto;
@@ -47,4 +51,48 @@
 
 mat-slider {
   width: 300px;
+}
+
+.execution-policy-radio-group {
+  display: flex;
+  flex-direction: column;
+  //margin: 15px 0;
+}
+
+.execution-policy-radio-button {
+  margin: 5px;
+}
+
+
+.execution-policy-action-buttons {
+  padding-bottom: 20px;
+}
+
+.example-headers-align .mat-expansion-panel-header-title,
+.example-headers-align .mat-expansion-panel-header-description {
+  flex-basis: 0;
+}
+
+.example-headers-align .mat-expansion-panel-header-description {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.example-headers-align .mat-form-field + .mat-form-field {
+  margin-left: 8px;
+}
+
+.mat-form-field[dense] {
+  .mat-form-field-flex > .mat-form-field-infix {
+    padding: 0.4em 0px !important;
+  }
+  .mat-form-field-label-wrapper {
+    top: -1.5em;
+  }
+  &.mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
+    transform: translateY(-1.1em) scale(.75);
+  }
+  .mat-form-field-wrapper{
+    padding-bottom: 0;
+  }
 }

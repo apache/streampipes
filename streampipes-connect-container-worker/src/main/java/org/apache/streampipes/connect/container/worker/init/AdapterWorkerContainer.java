@@ -18,7 +18,10 @@
 
 package org.apache.streampipes.connect.container.worker.init;
 
+import org.apache.streampipes.connect.config.ConnectContainerConfig;
+import org.apache.streampipes.container.init.ModelSubmitter;
 import org.apache.streampipes.container.locales.LabelGenerator;
+import org.apache.streampipes.container.model.ExtensionsConfig;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterDescription;
 import org.slf4j.Logger;
@@ -43,23 +46,25 @@ import java.util.List;
 @Configuration
 @EnableAutoConfiguration
 @Import({ AdapterWorkerContainerResourceConfig.class })
-public abstract class AdapterWorkerContainer {
+public abstract class AdapterWorkerContainer extends ModelSubmitter<ExtensionsConfig> {
 
   private static final Logger LOG = LoggerFactory.getLogger(AdapterWorkerContainer.class);
 
-  public void init(String workerUrl, String masterUrl, Integer workerPort) {
+  public void init(ExtensionsConfig conf) {
 
     LOG.info("Started StreamPipes Connect Resource in WORKER mode");
 
     SpringApplication app = new SpringApplication(AdapterWorkerContainer.class);
-    app.setDefaultProperties(Collections.singletonMap("server.port", workerPort));
+    app.setDefaultProperties(Collections.singletonMap("server.port", conf.getPort()));
     app.run();
 
-    boolean connected = false;
+    String backendUrl = "http://" + conf.getBackendHost() + ":" + conf.getBackendPort() + "/streampipes-backend";
+    String adapterUrl = "http://" + conf.getHost() + ":" + conf.getPort() + "/";
 
+    boolean connected = false;
     while (!connected) {
-      LOG.info("Trying to connect to master: " + masterUrl);
-      connected = MasterRestClient.register(masterUrl, getContainerDescription(workerUrl));
+      LOG.info("Trying to connect to master: " + backendUrl);
+      connected = MasterRestClient.register(backendUrl, getContainerDescription(adapterUrl));
 
       if (!connected) {
         LOG.info("Retrying in 5 seconds");
@@ -72,7 +77,7 @@ public abstract class AdapterWorkerContainer {
 
     }
 
-    LOG.info("Successfully connected to master: " + masterUrl + " Worker is now running.");
+    LOG.info("Successfully connected to master: " + backendUrl + " Worker is now running.");
   }
 
   private ConnectWorkerContainer getContainerDescription(String endpointUrl) {

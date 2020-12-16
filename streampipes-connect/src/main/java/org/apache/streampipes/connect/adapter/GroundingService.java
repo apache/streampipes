@@ -19,11 +19,13 @@
 package org.apache.streampipes.connect.adapter;
 
 import org.apache.streampipes.config.backend.BackendConfig;
+import org.apache.streampipes.config.backend.SpEdgeNodeProtocol;
 import org.apache.streampipes.config.backend.SpProtocol;
 import org.apache.streampipes.connect.adapter.util.TransportFormatGenerator;
-import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription;
-import org.apache.streampipes.model.connect.adapter.SpecificAdapterSetDescription;
+import org.apache.streampipes.container.util.ConsulUtil;
+import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+import org.apache.streampipes.model.connect.adapter.*;
+import org.apache.streampipes.model.connect.worker.ConnectWorkerContainer;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
@@ -79,43 +81,63 @@ public class GroundingService {
         return eventGrounding;
     }
 
-    public static EventGrounding createEventGrounding() {
+    public static EventGrounding createEventGrounding(AdapterDescription adapterDescription) {
 
         EventGrounding eventGrounding = new EventGrounding();
 
         String topic = TOPIC_PREFIX + UUID.randomUUID().toString();
         TopicDefinition topicDefinition = new SimpleTopicDefinition(topic);
 
-//        if (System.getenv(ENV_NODE_CONTROLLER_ID_KEY) != null ){
-        // TODO: get information about worker type from adapter description use node broker
-        eventGrounding.setTransportProtocol(
-                // TODO: replace hostname with actual node broker container name
-                //makeMqttTransportProtocol("node-broker", 1883, topicDefinition));
-                makeMqttTransportProtocol("localhost", 1884, topicDefinition));
+        if (adapterDescription.getDeploymentTargetNodeId() != null) {
+            SpEdgeNodeProtocol edgeNodeProtocol = BackendConfig.INSTANCE.getMessagingSettings().getEdgeNodeProtocol();
 
+            if (isEdgeProtocol(edgeNodeProtocol, MqttTransportProtocol.class)) {
 
-//        SpProtocol prioritizedProtocol =
-//                BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedProtocols().get(0);
-//
-//        if (isPrioritized(prioritizedProtocol, JmsTransportProtocol.class)) {
-//            eventGrounding.setTransportProtocol(
-//                    makeJmsTransportProtocol(
-//                            BackendConfig.INSTANCE.getJmsHost(),
-//                            BackendConfig.INSTANCE.getJmsPort(),
-//                            topicDefinition));
-//        } else if (isPrioritized(prioritizedProtocol, KafkaTransportProtocol.class)){
-//            eventGrounding.setTransportProtocol(
-//                    makeKafkaTransportProtocol(
-//                            BackendConfig.INSTANCE.getKafkaHost(),
-//                            BackendConfig.INSTANCE.getKafkaPort(),
-//                            topicDefinition));
-//        } else if (isPrioritized(prioritizedProtocol, MqttTransportProtocol.class)) {
-//            eventGrounding.setTransportProtocol(
-//                    makeMqttTransportProtocol(
-//                            BackendConfig.INSTANCE.getMqttHost(),
-//                            BackendConfig.INSTANCE.getMqttPort(),
-//                            topicDefinition));
-//        }
+                if (adapterDescription instanceof GenericAdapterDescription) {
+                    String deploymentTargetNodeHostname = ((GenericAdapterDescription) adapterDescription)
+                            .getProtocolDescription()
+                            .getDeploymentTargetNodeHostname();
+
+                    eventGrounding.setTransportProtocol(
+                            makeMqttTransportProtocol(
+                                    getTargetNodeBrokerHost(deploymentTargetNodeHostname),
+                                    getTargetNodeBrokerPort(deploymentTargetNodeHostname),
+                                    topicDefinition));
+                } else {
+                    String deploymentTargetNodeHostname = adapterDescription.getDeploymentTargetNodeHostname();
+
+                    eventGrounding.setTransportProtocol(
+                            makeMqttTransportProtocol(
+                                    getTargetNodeBrokerHost(deploymentTargetNodeHostname),
+                                    getTargetNodeBrokerPort(deploymentTargetNodeHostname),
+                                    topicDefinition));
+                }
+            }
+
+        } else {
+            SpProtocol prioritizedProtocol =
+                BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedProtocols().get(0);
+
+            if (isPrioritized(prioritizedProtocol, JmsTransportProtocol.class)) {
+                eventGrounding.setTransportProtocol(
+                        makeJmsTransportProtocol(
+                                BackendConfig.INSTANCE.getJmsHost(),
+                                BackendConfig.INSTANCE.getJmsPort(),
+                                topicDefinition));
+            } else if (isPrioritized(prioritizedProtocol, KafkaTransportProtocol.class)){
+                eventGrounding.setTransportProtocol(
+                        makeKafkaTransportProtocol(
+                                BackendConfig.INSTANCE.getKafkaHost(),
+                                BackendConfig.INSTANCE.getKafkaPort(),
+                                topicDefinition));
+            } else if (isPrioritized(prioritizedProtocol, MqttTransportProtocol.class)) {
+                eventGrounding.setTransportProtocol(
+                        makeMqttTransportProtocol(
+                                BackendConfig.INSTANCE.getMqttHost(),
+                                BackendConfig.INSTANCE.getMqttPort(),
+                                topicDefinition));
+            }
+        }
 
         eventGrounding.setTransportFormats(Collections
                 .singletonList(TransportFormatGenerator.getTransportFormat()));
@@ -126,6 +148,11 @@ public class GroundingService {
     public static Boolean isPrioritized(SpProtocol prioritizedProtocol,
                                          Class<?> protocolClass) {
         return prioritizedProtocol.getProtocolClass().equals(protocolClass.getCanonicalName());
+    }
+
+    public static Boolean isEdgeProtocol(SpEdgeNodeProtocol edgeNodeProtocol,
+                                        Class<?> protocolClass) {
+        return edgeNodeProtocol.getProtocolClass().equals(protocolClass.getCanonicalName());
     }
 
     private static JmsTransportProtocol makeJmsTransportProtocol(String hostname, Integer port,
@@ -159,5 +186,21 @@ public class GroundingService {
                                        TopicDefinition topicDefinition) {
         protocol.setBrokerHostname(hostname);
         protocol.setTopicDefinition(topicDefinition);
+    }
+
+    private static String getTargetNodeBrokerHost(String deploymentTargetNodeHostname) {
+        // TODO: no hardcoded route - only for testing
+        return ConsulUtil.getValueForRoute(
+                "sp/v1/node/org.apache.streampipes.node.controller/"
+                        + deploymentTargetNodeHostname
+                        + "/config/SP_NODE_BROKER_CONTAINER_HOST", String.class);
+    }
+
+    private static int getTargetNodeBrokerPort(String deploymentTargetNodeHostname) {
+        // TODO: no hardcoded route - only for testing
+        return ConsulUtil.getValueForRoute(
+                "sp/v1/node/org.apache.streampipes.node.controller/"
+                        + deploymentTargetNodeHostname
+                        + "/config/SP_NODE_BROKER_CONTAINER_PORT", Integer.class);
     }
 }

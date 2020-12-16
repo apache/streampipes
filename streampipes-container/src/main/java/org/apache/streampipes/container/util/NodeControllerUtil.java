@@ -41,6 +41,9 @@ public class NodeControllerUtil {
     private static final String SECONDARY_PE_IDENTIFIER_TAG = "secondary";
     private static final String NODE_CONTROLLER_REGISTER_SVC_URL = "api/v2/node/container/register";
 
+    private static final String NODE_CONTROLLER_CONTAINER_HOST = "SP_NODE_CONTROLLER_CONTAINER_HOST";
+    private static final String NODE_CONTROLLER_CONTAINER_PORT = "SP_NODE_CONTROLLER_CONTAINER_PORT";
+
     public static void register(String serviceID, String host, int port,
                                 Map<String, SemanticEventProcessingAgentDeclarer> epaDeclarers) {
         register(PE_TAG, makeSvcId(host, serviceID), host, port,
@@ -108,11 +111,11 @@ public class NodeControllerUtil {
     }
 
     private static String makeRegistrationEndpoint() {
-        if (System.getenv("SP_NODE_CONTROLLER_HOST") != null) {
+        if (System.getenv(NODE_CONTROLLER_CONTAINER_HOST) != null) {
             return HTTP_PROTOCOL
-                    + System.getenv("SP_NODE_CONTROLLER_HOST")
+                    + System.getenv(NODE_CONTROLLER_CONTAINER_HOST)
                     + COLON
-                    + System.getenv("SP_NODE_CONTROLLER_PORT")
+                    + System.getenv(NODE_CONTROLLER_CONTAINER_PORT)
                     + SLASH
                     + NODE_CONTROLLER_REGISTER_SVC_URL;
         } else {

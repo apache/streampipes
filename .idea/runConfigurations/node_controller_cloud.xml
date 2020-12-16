@@ -6,13 +6,17 @@
     <envs>
       <env name="SP_BACKEND_HOST" value="host.docker.internal" />
       <env name="CONSUL_LOCATION" value="host.docker.internal" />
-      <env name="SP_NODE_CONTROLLER_ID" value="cloud.node-controller" />
-      <env name="SP_NODE_CONTROLLER_PORT" value="7080" />
       <env name="SP_NODE_HOST" value="cloud.example.de" />
       <env name="SP_NODE_TYPE" value="cloud" />
+      <env name="SP_NODE_CONTROLLER_ID" value="cloud.node-controller" />
+      <env name="SP_NODE_CONTROLLER_CONTAINER_HOST" value="cloud.example.de" />
+      <env name="SP_NODE_CONTROLLER_CONTAINER_PORT" value="7080" />
+      <env name="SP_NODE_BROKER_CONTAINER_HOST" value="localhost" />
+      <env name="SP_NODE_BROKER_CONTAINER_PORT" value="1888" />
       <env name="SP_NODE_HAS_GPU" value="true" />
       <env name="SP_NODE_LOCATION_CLOUD" value="aws" />
       <env name="SP_DEBUG" value="true" />
+      <env name="SP_VERSION" value="0.68.0-SNAPSHOT" />
     </envs>
     <method v="2">
       <option name="Make" enabled="true" />

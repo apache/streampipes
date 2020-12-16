@@ -59,21 +59,14 @@ public class ProtocolSelector extends GroundingSelector {
         } else {
             if(sourceInvocableOnEdgeNode()) {
                 // use edge node protocol
-                if (matchesEdgeProtocol(edgeNodeProtocol, MqttTransportProtocol.class) && supportsProtocol(MqttTransportProtocol.class)) {
-                    // TODO: get broker information from target node
+                if (matches(edgeNodeProtocol, MqttTransportProtocol.class) && supportsProtocol(MqttTransportProtocol.class)) {
                     if(matchesDeploymentTargets()) {
-                       return new MqttTransportProtocol(
-                               getTargetNodeBrokerHost(),
-                               getTargetNodeBrokerPort(),
-                               outputTopic
-                       );
+                       return new MqttTransportProtocol(getTargetNodeBrokerHost(), getTargetNodeBrokerPort(),
+                               outputTopic);
                     } else {
                         MqttTransportProtocol tp = (MqttTransportProtocol)
                                 ((InvocableStreamPipesEntity) source).getInputStreams().get(0).getEventGrounding().getTransportProtocol();
-                        return new MqttTransportProtocol(
-                                tp.getBrokerHostname(),
-                                tp.getPort(),
-                                outputTopic);
+                        return new MqttTransportProtocol(tp.getBrokerHostname(), tp.getPort(), outputTopic);
                     }
                 }
             } else {
@@ -90,7 +83,7 @@ public class ProtocolSelector extends GroundingSelector {
                 }
             }
             throw new IllegalArgumentException("Could not get preferred transport protocol");
-            }
+        }
     }
 
     private boolean sourceInvocableOnEdgeNode() {
@@ -99,17 +92,6 @@ public class ProtocolSelector extends GroundingSelector {
     }
 
     private TransportProtocol mqttTransportProtocol() {
-//        if (matchesDeploymentTargets()) {
-//            return new MqttTransportProtocol(BackendConfig.INSTANCE.getMqttHost(),
-//                    BackendConfig.INSTANCE.getMqttPort(),
-//                    outputTopic);
-//        } else {
-//            return new MqttTransportProtocol(
-//                    "localhost",
-//                    1884,
-//                    outputTopic
-//            );
-//        }
         if (matchesDeploymentTargets()) {
             MqttTransportProtocol tp = (MqttTransportProtocol)
                     ((InvocableStreamPipesEntity) source).getInputStreams().get(0).getEventGrounding().getTransportProtocol();
@@ -117,12 +99,9 @@ public class ProtocolSelector extends GroundingSelector {
                     tp.getBrokerHostname(),
                     tp.getPort(),
                     outputTopic);
-//            return new MqttTransportProtocol(
-//                    "localhost",
-//                    1884,
-//                    outputTopic);
         } else {
-            return new MqttTransportProtocol(BackendConfig.INSTANCE.getMqttHost(),
+            return new MqttTransportProtocol(
+                    BackendConfig.INSTANCE.getMqttHost(),
                     BackendConfig.INSTANCE.getMqttPort(),
                     outputTopic);
         }
@@ -135,26 +114,18 @@ public class ProtocolSelector extends GroundingSelector {
     }
 
     private TransportProtocol kafkaTransportProtocol() {
-        if (matchesDeploymentTargets()) {
-            return new KafkaTransportProtocol(BackendConfig.INSTANCE.getKafkaHost(),
-                    BackendConfig.INSTANCE.getKafkaPort(),
-                    outputTopic,
-                    BackendConfig.INSTANCE.getZookeeperHost(),
-                    BackendConfig.INSTANCE.getZookeeperPort());
-        } else {
-            return new MqttTransportProtocol(
-                    getTargetNodeBrokerHost(),
-                    getTargetNodeBrokerPort(),
-                    outputTopic
-            );
-        }
+        return new KafkaTransportProtocol(BackendConfig.INSTANCE.getKafkaHost(),
+                BackendConfig.INSTANCE.getKafkaPort(),
+                outputTopic,
+                BackendConfig.INSTANCE.getZookeeperHost(),
+                BackendConfig.INSTANCE.getZookeeperPort());
     }
 
     private <T extends TransportProtocol> boolean matches(SpProtocol p, Class<T> clazz) {
         return p.getProtocolClass().equals(clazz.getCanonicalName());
     }
 
-    private <T extends TransportProtocol> boolean matchesEdgeProtocol(SpEdgeNodeProtocol p, Class<T> clazz) {
+    private <T extends TransportProtocol> boolean matches(SpEdgeNodeProtocol p, Class<T> clazz) {
         return p.getProtocolClass().equals(clazz.getCanonicalName());
     }
 
@@ -173,6 +144,7 @@ public class ProtocolSelector extends GroundingSelector {
         if(((InvocableStreamPipesEntity) source).getDeploymentTargetNodeId() != null) {
             return targets
                     .stream()
+                    .filter(t -> t.getDeploymentTargetNodeId() != null)
                     .allMatch(t -> t
                             .getDeploymentTargetNodeId().equals(
                                     ((InvocableStreamPipesEntity) source).getDeploymentTargetNodeId()));
@@ -186,7 +158,7 @@ public class ProtocolSelector extends GroundingSelector {
         return ConsulUtil.getValueForRoute(
                 "sp/v1/node/org.apache.streampipes.node.controller/"
                         + ((InvocableStreamPipesEntity) source).getDeploymentTargetNodeHostname()
-                        + "/config/SP_NODE_BROKER_HOST", String.class);
+                        + "/config/SP_NODE_BROKER_CONTAINER_HOST", String.class);
     }
 
     private int getTargetNodeBrokerPort() {
@@ -194,6 +166,6 @@ public class ProtocolSelector extends GroundingSelector {
         return ConsulUtil.getValueForRoute(
                 "sp/v1/node/org.apache.streampipes.node.controller/"
                         + ((InvocableStreamPipesEntity) source).getDeploymentTargetNodeHostname()
-                        + "/config/SP_NODE_BROKER_PORT", Integer.class);
+                        + "/config/SP_NODE_BROKER_CONTAINER_PORT", Integer.class);
     }
 }

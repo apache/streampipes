@@ -99,7 +99,7 @@ public class AdapterResource extends AbstractContainerResource {
 
             AdapterDescription adapterDescription = adapterMasterManagement.getAdapter(id, new AdapterStorageImpl());
 
-            String workerUrl = new Utils().getWorkerUrlById(adapterDescription.getAppId());
+            String workerUrl = new Utils().getWorkerUrl(adapterDescription);
             String newUrl = Utils.addUserNameToApi(workerUrl, userName);
             adapterMasterManagement.deleteAdapter(id, newUrl);
             return ok(true);

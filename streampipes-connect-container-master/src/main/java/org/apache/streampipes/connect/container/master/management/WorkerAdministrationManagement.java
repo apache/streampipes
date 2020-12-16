@@ -100,4 +100,22 @@ public class WorkerAdministrationManagement {
 
         return workerUrl;
     }
+
+    public String getWorkerUrl(String id, String deploymentTargetNodeId) {
+        String workerUrl = "";
+
+        List<ConnectWorkerContainer> allConnectWorkerContainer = this.connectionWorkerContainerStorage.getAllConnectWorkerContainers();
+
+        for (ConnectWorkerContainer connectWorkerContainer : allConnectWorkerContainer) {
+            if (connectWorkerContainer.getProtocols().stream().anyMatch(p -> p.getAppId().equals(id))
+                    && connectWorkerContainer.getDeploymentTargetNodeId().equals(deploymentTargetNodeId)) {
+                workerUrl = connectWorkerContainer.getEndpointUrl();
+            } else if (connectWorkerContainer.getAdapters().stream().anyMatch(a -> a.getAppId().equals(id))
+                    && connectWorkerContainer.getDeploymentTargetNodeId().equals(deploymentTargetNodeId)) {
+                workerUrl = connectWorkerContainer.getEndpointUrl();
+            }
+        }
+
+        return workerUrl;
+    }
 }

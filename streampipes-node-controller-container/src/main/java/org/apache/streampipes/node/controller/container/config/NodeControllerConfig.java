@@ -19,6 +19,7 @@ package org.apache.streampipes.node.controller.container.config;
 
 import org.apache.streampipes.config.SpConfig;
 import org.apache.streampipes.model.node.resources.interfaces.AccessibleSensorActuatorResource;
+import sun.security.krb5.Config;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,40 +46,45 @@ public enum NodeControllerConfig {
     NodeControllerConfig() {
         config = SpConfig.getSpConfig(NODE_SERVICE_ID + SLASH + getNodeHostName());
 
-        config.register(ConfigKeys.NODE_CONTROLLER_ID_KEY, DEFAULT_NODE_CONTROLLER_ID, "node controller id");
-        config.register(ConfigKeys.NODE_CONTROLLER_PORT_KEY, DEFAULT_NODE_CONTROLLER_PORT, "node controller port");
-        config.register(ConfigKeys.NODE_HOST_NAME_KEY, "host.docker.internal", "node host name");
+        config.register(ConfigKeys.NODE_HOST, "host.docker.internal", "node host name");
         config.register(ConfigKeys.NODE_TYPE, "edge", "node type");
-        config.register(ConfigKeys.NODE_BROKER_HOST_KEY, DEFAULT_NODE_BROKER_HOST, "node broker host");
-        config.register(ConfigKeys.NODE_BROKER_PORT_KEY, DEFAULT_NODE_BROKER_PORT, "node broker port");
+        config.register(ConfigKeys.NODE_CONTROLLER_ID, DEFAULT_NODE_CONTROLLER_ID, "node controller id");
+        config.register(ConfigKeys.NODE_CONTROLLER_CONTAINER_HOST, "node-controller", "node controller container host");
+        config.register(ConfigKeys.NODE_CONTROLLER_CONTAINER_PORT, DEFAULT_NODE_CONTROLLER_PORT, "node controller port");
+        config.register(ConfigKeys.NODE_BROKER_CONTAINER_HOST, DEFAULT_NODE_BROKER_HOST, "node broker host");
+        config.register(ConfigKeys.NODE_BROKER_CONTAINER_PORT, DEFAULT_NODE_BROKER_PORT, "node broker port");
     }
 
     public String getNodeServiceId() {
         return NODE_SERVICE_ID;
     }
 
+    public String getSpVersion() {
+        return getEnvOrDefault(ConfigKeys.SP_VERSION, "", String.class);
+    }
+
     public String getNodeHostName(){
-        return getEnvOrDefault(ConfigKeys.NODE_HOST_NAME_KEY,
+        return getEnvOrDefault(ConfigKeys.NODE_HOST,
                 DEFAULT_NODE_HOST_NAME,
                 String.class);
     }
 
     public String getNodeControllerId() {
-        return getEnvOrDefault(ConfigKeys.NODE_CONTROLLER_ID_KEY,
+        return getEnvOrDefault(ConfigKeys.NODE_CONTROLLER_ID,
                 DEFAULT_NODE_CONTROLLER_ID,
                 String.class);
     }
 
     public int getNodeControllerPort(){
         return getEnvOrDefault(
-                ConfigKeys.NODE_CONTROLLER_PORT_KEY,
+                ConfigKeys.NODE_CONTROLLER_CONTAINER_PORT,
                 DEFAULT_NODE_CONTROLLER_PORT,
                 Integer.class);
     }
 
     public String getNodeBrokerHost() {
         return getEnvOrDefault(
-                ConfigKeys.NODE_BROKER_HOST_KEY,
+                ConfigKeys.NODE_BROKER_CONTAINER_HOST,
                 DEFAULT_NODE_BROKER_HOST,
                 String.class);
     }
@@ -86,7 +92,7 @@ public enum NodeControllerConfig {
     // TODO: should be flexibly set due to node broker technology used
     public int getNodeBrokerPort() {
         return getEnvOrDefault(
-                ConfigKeys.NODE_BROKER_PORT_KEY,
+                ConfigKeys.NODE_BROKER_CONTAINER_PORT,
                 DEFAULT_NODE_BROKER_PORT,
                 Integer.class);
     }
@@ -95,8 +101,8 @@ public enum NodeControllerConfig {
         return System.getenv()
                 .entrySet()
                 .stream()
-                .filter(e -> (e.getKey().contains(ConfigKeys.NODE_LOCATION_KEY)))
-                .map(x ->  x.getKey().replace(ConfigKeys.NODE_LOCATION_KEY + "_", "").toLowerCase() + "=" + x.getValue())
+                .filter(e -> (e.getKey().contains(ConfigKeys.NODE_LOCATION)))
+                .map(x ->  x.getKey().replace(ConfigKeys.NODE_LOCATION + "_", "").toLowerCase() + "=" + x.getValue())
                 .collect(Collectors.toList());
     }
 
@@ -105,7 +111,7 @@ public enum NodeControllerConfig {
         return System.getenv()
                 .entrySet()
                 .stream()
-                .filter(e -> (e.getKey().contains(ConfigKeys.NODE_SUPPORTED_PE_APP_ID_KEY)))
+                .filter(e -> (e.getKey().contains(ConfigKeys.NODE_SUPPORTED_PE_APP_ID)))
                 .map(x -> x.getValue())
                 .collect(Collectors.toList());
     }
@@ -114,7 +120,7 @@ public enum NodeControllerConfig {
         return System.getenv()
                 .entrySet()
                 .stream()
-                .filter(e -> (e.getKey().contains(ConfigKeys.NODE_ACCESSIBLE_SENSOR_ACTUATOR_KEY)))
+                .filter(e -> (e.getKey().contains(ConfigKeys.NODE_ACCESSIBLE_SENSOR_ACTUATOR)))
                 .map(x -> {
                     AccessibleSensorActuatorResource a = new AccessibleSensorActuatorResource();
                     a.setName(x.getValue().split(";")[0]);
@@ -128,42 +134,42 @@ public enum NodeControllerConfig {
 
     public boolean hasNodeGpu(){
         return getEnvOrDefault(
-                ConfigKeys.NODE_HAS_GPU_KEY,
+                ConfigKeys.NODE_HAS_GPU,
                 false,
                 Boolean.class);
     }
 
     public int getGpuCores() {
         return getEnvOrDefault(
-                ConfigKeys.NODE_GPU_CUDA_CORES_KEY,
+                ConfigKeys.NODE_GPU_CUDA_CORES,
                 0,
                 Integer.class);
     }
 
     public String getGpuType() {
         return getEnvOrDefault(
-                ConfigKeys.NODE_GPU_TYPE_KEY,
+                ConfigKeys.NODE_GPU_TYPE,
                 "n/a",
                 String.class);
     }
 
     public int getPruningFreq() {
         return getEnvOrDefault(
-                ConfigKeys.DOCKER_PRUNING_FREQ_SECS_KEY,
+                ConfigKeys.DOCKER_PRUNING_FREQ_SECS,
                 DEFAULT_DOCKER_PRUNING_FREQ_SECS,
                 Integer.class);
     }
 
     public int getNodeResourceUpdateFreqSecs() {
         return getEnvOrDefault(
-                ConfigKeys.NODE_RESOURCE_UPDATE_FREQ_SECS_KEY,
+                ConfigKeys.RESOURCE_UPDATE_FREQ_SECS,
                 DEFAULT_NODE_RESOURCE_UPDATE_FREQ_SECS,
                 Integer.class);
     }
 
     public int getEventBufferSize() {
         return getEnvOrDefault(
-                ConfigKeys.NODE_EVENT_BUFFER_SIZE,
+                ConfigKeys.EVENT_BUFFER_SIZE,
                 DEFAULT_EVENT_BUFFER_SIZE,
                 Integer.class);
     }

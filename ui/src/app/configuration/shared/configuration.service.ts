@@ -24,7 +24,7 @@ import {map} from 'rxjs/operators';
 import {StreampipesPeContainer} from './streampipes-pe-container.model';
 import {MessagingSettings} from './messaging-settings.model';
 import {AuthStatusService} from "../../services/auth-status.service";
-import {NodeInfo} from "../model/NodeInfo.model";
+import {NodeInfo} from "../../core-model/gen/streampipes-model";
 
 @Injectable()
 export class ConfigurationService {
@@ -47,7 +47,7 @@ export class ConfigurationService {
             )
     }
 
-    getAvailableEdgeNodes(): Observable<Array<NodeInfo>> {
+    getAvailableEdgeNodes(): Observable<NodeInfo[]> {
         return this.http.get(this.getServerUrl() + '/api/v2/users/' + this.authStatusService.email + "/nodes")
             .pipe(
                 map(response => {

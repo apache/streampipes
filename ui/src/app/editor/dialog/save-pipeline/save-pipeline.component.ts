@@ -22,7 +22,9 @@ import {
   DataProcessorInvocation,
   Message,
   Pipeline,
-  SpDataStreamRelay
+  NodeInfo,
+  NodeMetadata,
+  SpDataStreamRelay, DataSinkInvocation, SpDataStream
 } from "../../../core-model/gen/streampipes-model";
 import {ObjectProvider} from "../../services/object-provider.service";
 import {EditorService} from "../../services/editor.service";
@@ -30,7 +32,7 @@ import {PipelineService} from "../../../platform-services/apis/pipeline.service"
 import {ShepherdService} from "../../../services/tour/shepherd.service";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
-import {NodeInfo, NodeMetadata} from "../../../configuration/model/NodeInfo.model";
+import {deepClone} from "fast-json-patch/lib/core";
 
 @Component({
   selector: 'save-pipeline',
@@ -42,8 +44,21 @@ export class SavePipelineComponent implements OnInit {
   pipelineCategories: any;
   startPipelineAfterStorage: any;
   updateMode: any;
-
   submitPipelineForm: FormGroup = new FormGroup({});
+  saving: boolean = false;
+  saved: boolean = false;
+  storageError: boolean = false;
+  errorMessage: string = '';
+  edgeNodes: NodeInfo[];
+  advancedSettings: boolean = false;
+  deploymentOptions: Array<any> = new Array<any>();
+  selectedRelayStrategyVal: string;
+  selectedPipelineExecutionPolicy: string;
+  disableNodeSelection = new FormControl(true);
+  tmpPipeline: Pipeline;
+  panelOpenState: boolean;
+
+  pipelineExecutionPolicies: string[] = ['default', 'locality-aware', 'custom'];
 
   @Input()
   pipeline: Pipeline;
@@ -53,18 +68,6 @@ export class SavePipelineComponent implements OnInit {
 
   @Input()
   currentModifiedPipelineId: string;
-
-  saving: boolean = false;
-  saved: boolean = false;
-
-  storageError: boolean = false;
-  errorMessage: string = '';
-
-  edgeNodes: NodeInfo[];
-  advancedSettings: boolean = false;
-  deploymentOptions: Array<any> = new Array<any>();
-
-  selectedRelayStrategyVal: string;
 
   constructor(private editorService: EditorService,
               private dialogRef: DialogRef<SavePipelineComponent>,
@@ -77,20 +80,23 @@ export class SavePipelineComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.tmpPipeline = this.deepCopy(this.pipeline);
+
     this.getPipelineCategories();
     this.loadAndPrepareEdgeNodes();
-    this.submitPipelineForm.addControl("pipelineName", new FormControl(this.pipeline.name,
+
+    this.submitPipelineForm.addControl("pipelineName", new FormControl(this.tmpPipeline.name,
         [Validators.required,
           Validators.maxLength(40)]))
-    this.submitPipelineForm.addControl("pipelineDescription", new FormControl(this.pipeline.description,
+    this.submitPipelineForm.addControl("pipelineDescription", new FormControl(this.tmpPipeline.description,
         [Validators.maxLength(80)]))
 
     this.submitPipelineForm.controls["pipelineName"].valueChanges.subscribe(value => {
-      this.pipeline.name = value;
+      this.tmpPipeline.name = value;
     });
 
     this.submitPipelineForm.controls["pipelineDescription"].valueChanges.subscribe(value => {
-      this.pipeline.description = value;
+      this.tmpPipeline.description = value;
     });
 
     if (this.ShepherdService.isTourActive()) {
@@ -98,7 +104,23 @@ export class SavePipelineComponent implements OnInit {
     }
 
     this.selectedRelayStrategyVal = "buffer";
+    this.selectedPipelineExecutionPolicy = "locality-aware";
 
+    this.applyLocalityAwarePolicy(this.tmpPipeline.streams, this.tmpPipeline.sepas);
+  }
+
+  deepCopy<T>(source: T): T {
+    return Array.isArray(source)
+        ? source.map(item => this.deepCopy(item))
+        : source instanceof Date
+            ? new Date(source.getTime())
+            : source && typeof source === 'object'
+                ? Object.getOwnPropertyNames(source).reduce((o, prop) => {
+                  Object.defineProperty(o, prop, Object.getOwnPropertyDescriptor(source, prop));
+                  o[prop] = this.deepCopy(source[prop]);
+                  return o;
+                }, Object.create(Object.getPrototypeOf(source)))
+                : source as T;
   }
 
   triggerTutorial() {
@@ -118,27 +140,54 @@ export class SavePipelineComponent implements OnInit {
     });
   };
 
-  public onSelectedRelayStrategyChange(val: string) {
-    this.selectedRelayStrategyVal = val;
+  applyLocalityAwarePolicy(streams, pipelineElements) {
+    streams.forEach(s => {
+      //let processors: DataProcessorInvocation[];
+      //processors = this.pipeline.sepas.filter(p => p.connectedTo.some(entry => entry == s.dom));
+      pipelineElements.forEach(p => {
+        p.deploymentTargetNodeId = s.deploymentTargetNodeId;
+        p.deploymentTargetNodeHostname = s.deploymentTargetNodeHostname;
+        p.deploymentTargetNodePort = s.deploymentTargetNodePort;
+      });
+    });
+  }
+
+  private applyDefaultPolicy(pipelineElements) {
+    pipelineElements.forEach(p => {
+      p.deploymentTargetNodeId = "default";
+      // this.deploymentOptions[p.appId].push(this.makeDefaultNodeInfo());
+    });
   }
 
   loadAndPrepareEdgeNodes() {
     this.pipelineService.getAvailableEdgeNodes().subscribe(response => {
       this.edgeNodes = response;
-      this.addAppIds(this.pipeline.sepas, this.edgeNodes);
-      this.addAppIds(this.pipeline.actions, this.edgeNodes);
+      this.addAppIds(this.tmpPipeline.sepas, this.edgeNodes);
+      this.addAppIds(this.tmpPipeline.actions, this.edgeNodes);
     });
   }
 
   addAppIds(pipelineElements, edgeNodes: Array<NodeInfo>) {
-    pipelineElements.forEach(pipelineElement => {
-      this.deploymentOptions[pipelineElement.appId] = [];
-      this.deploymentOptions[pipelineElement.appId].push(this.makeDefaultNodeInfo());
+    pipelineElements.forEach(p => {
+      this.deploymentOptions[p.appId] = [];
+
+      // if (p instanceof DataSinkInvocation) {
+      //   if (p.deploymentTargetNodeId == null) {
+      //     p.deploymentTargetNodeId = "default";
+      //   }
+      //   this.deploymentOptions[p.appId].push(this.makeDefaultNodeInfo());
+      // }
+
+      if (p.deploymentTargetNodeId == null) {
+        p.deploymentTargetNodeId = "default";
+      }
+      this.deploymentOptions[p.appId].push(this.makeDefaultNodeInfo());
+
       edgeNodes.forEach(nodeInfo => {
         // only show nodes that actually have supported pipeline elements registered
         if (nodeInfo.supportedPipelineElementAppIds.length != 0 &&
-            nodeInfo.supportedPipelineElementAppIds.some(appId => appId === pipelineElement.appId)) {
-          this.deploymentOptions[pipelineElement.appId].push(nodeInfo);
+            nodeInfo.supportedPipelineElementAppIds.some(appId => appId === p.appId)) {
+          this.deploymentOptions[p.appId].push(nodeInfo);
         }
       })
     });
@@ -148,6 +197,7 @@ export class SavePipelineComponent implements OnInit {
     let nodeInfo = {} as NodeInfo;
     nodeInfo.nodeControllerId = "default";
     nodeInfo.nodeMetadata = {} as NodeMetadata;
+    nodeInfo.nodeMetadata.nodeType = "default";
     nodeInfo.nodeMetadata.nodeAddress = "default";
     nodeInfo.nodeMetadata.nodeModel = "Default Node";
     return nodeInfo;
@@ -180,7 +230,7 @@ export class SavePipelineComponent implements OnInit {
   }
 
   savePipeline(switchTab) {
-    if (this.pipeline.name == "") {
+    if (this.tmpPipeline.name == "") {
       //this.showToast("error", "Please enter a name for your pipeline");
       return false;
     }
@@ -188,13 +238,15 @@ export class SavePipelineComponent implements OnInit {
     let storageRequest;
 
     if (this.currentModifiedPipelineId && this.updateMode === 'update') {
-      this.modifyPipelineElementsDeployments(this.pipeline.sepas)
-      this.modifyPipelineElementsDeployments(this.pipeline.actions)
+      this.modifyPipelineElementsDeployments(this.tmpPipeline.sepas)
+      this.modifyPipelineElementsDeployments(this.tmpPipeline.actions)
+      this.pipeline = this.tmpPipeline;
       storageRequest = this.pipelineService.updatePipeline(this.pipeline);
     } else {
       this.pipeline._id = undefined;
-      this.modifyPipelineElementsDeployments(this.pipeline.sepas)
-      this.modifyPipelineElementsDeployments(this.pipeline.actions)
+      this.modifyPipelineElementsDeployments(this.tmpPipeline.sepas)
+      this.modifyPipelineElementsDeployments(this.tmpPipeline.actions)
+      this.pipeline = this.tmpPipeline;
       storageRequest = this.pipelineService.storePipeline(this.pipeline);
     }
 
@@ -229,4 +281,27 @@ export class SavePipelineComponent implements OnInit {
   hide() {
     this.dialogRef.close();
   };
+
+  onSelectedRelayStrategyChange(value: string) {
+    this.selectedRelayStrategyVal = value;
+  }
+
+  onExecutionPolicyChange(value: any) {
+    this.selectedPipelineExecutionPolicy = value;
+
+    if (value == "custom") {
+      this.panelOpenState = true;
+      this.disableNodeSelection.setValue(false);
+    } else if (value == "locality-aware") {
+      this.panelOpenState = false;
+      this.disableNodeSelection.setValue(true);
+      this.applyLocalityAwarePolicy(this.tmpPipeline.streams, this.tmpPipeline.sepas)
+    } else if (value == "default") {
+      this.panelOpenState = false;
+      this.disableNodeSelection.setValue(true);
+      this.applyDefaultPolicy(this.tmpPipeline.sepas);
+    }
+  }
+
+
 }

@@ -183,8 +183,12 @@ public class SourcesManagement {
 
         ds.setUri(url + "/streams");
 
+//        ds.setDeploymentTargetNodeId(adapterDescription.getDeploymentTargetNodeId());
+//        ds.setDeploymentTargetNodeHostname(adapterDescription.getDeploymentTargetNodeHostname());
+//        ds.setDeploymentTargetNodePort(adapterDescription.getDeploymentTargetNodePort());
+
         DataSourceDescription dataSourceDescription = new DataSourceDescription(
-                url, "Adaper Data Source",
+                url, "Adapter Data Source",
                 "This data source contains one data stream from the adapters");
 
         dataSourceDescription.addEventStream(ds);
