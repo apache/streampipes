@@ -154,52 +154,6 @@
                     </div>
 
                 </div>
-<!--                <mat-divider *ngIf="advancedSettings" style="margin: 1em 0 1em 0;"></mat-divider>-->
-<!--                <div *ngIf="advancedSettings">-->
-<!--                    <b>Node Selection</b>-->
-<!--                    <div *ngFor="let processors of pipeline.sepas">-->
-<!--                        <div fxFlex="100" fxLayout="row">-->
-<!--                            <div fxFlex="50" fxLayout="row" fxLayoutAlign="left center">-->
-<!--                                <span>{{processors.name}}</span>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <div fxFlex="50" fxLayout="row" fxLayoutAlign="start center">-->
-<!--                            <mat-form-field appearance="outline">-->
-<!--                            <mat-select [(ngModel)]="processors.deploymentTargetNodeId"-->
-<!--                                        [disabled]="disableNodeSelection.value"-->
-<!--                                        style="margin: 0;height: 20px;"-->
-<!--                                        placeholder="select execution node"-->
-<!--                                        required>-->
-<!--                                <mat-option [value]="nodeInfo.nodeControllerId"-->
-<!--                                            *ngFor="let nodeInfo of deploymentOptions[processors.appId]">-->
-<!--                                    <em>{{nodeInfo.nodeMetadata.nodeAddress}}</em>-->
-<!--                                </mat-option>-->
-<!--                            </mat-select>-->
-<!--                            </mat-form-field>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div *ngFor="let sinks of pipeline.actions">-->
-<!--                        <div fxFlex="100" fxLayout="row">-->
-<!--                            <div fxFlex="50" fxLayout="row" fxLayoutAlign="left center">-->
-<!--                                <span>{{sinks.name}}</span>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <div fxFlex="50" fxLayout="row" fxLayoutAlign="start center">-->
-<!--                            <mat-form-field appearance="outline">-->
-<!--                                <mat-select [(ngModel)]="sinks.deploymentTargetNodeId"-->
-<!--                                            [disabled]="disableNodeSelection.value"-->
-<!--                                            style="margin: 0; height: 20px;"-->
-<!--                                            placeholder="select execution node"-->
-<!--                                            required>-->
-<!--                                    <mat-option [value]="nodeInfo.nodeControllerId" *ngFor="let nodeInfo of-->
-<!--                                    deploymentOptions[sinks.appId]">-->
-<!--                                        <em>{{nodeInfo.nodeMetadata.nodeAddress}}</em>-->
-<!--                                    </mat-option>-->
-<!--                                </mat-select>-->
-<!--                            </mat-form-field>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
             </div>
             <div fxFlex="100" fxLayout="column" fxLayoutAlign="center center" *ngIf="saving">
                 <mat-spinner [mode]="'indeterminate'" [diameter]="50"></mat-spinner>

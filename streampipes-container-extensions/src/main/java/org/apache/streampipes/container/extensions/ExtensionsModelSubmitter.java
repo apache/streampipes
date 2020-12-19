@@ -64,6 +64,10 @@ public abstract class ExtensionsModelSubmitter extends ModelSubmitter<Extensions
     private static final String SLASH = "/";
     private static final String COLON = ":";
 
+    private static final String NODE_CONTROLLER_ID = "SP_NODE_CONTROLLER_ID";
+    private static final String NODE_CONTROLLER_CONTAINER_HOST = "SP_NODE_CONTROLLER_CONTAINER_HOST";
+    private static final String NODE_CONTROLLER_CONTAINER_PORT = "SP_NODE_CONTROLLER_CONTAINER_PORT";
+
     public void init(ExtensionsConfig conf) {
         DeclarersSingleton.getInstance().setHostName(conf.getHost());
         DeclarersSingleton.getInstance().setPort(conf.getPort());
@@ -89,7 +93,7 @@ public abstract class ExtensionsModelSubmitter extends ModelSubmitter<Extensions
         String adapterUrl = PROTOCOL + conf.getHost() + COLON + conf.getPort() + SLASH;
 
         // check wether pipeline element is managed by node controller
-        if (System.getenv("SP_NODE_CONTROLLER_ID") != null) {
+        if (System.getenv(NODE_CONTROLLER_ID) != null) {
             // secondary
             // register pipeline element service via node controller
             NodeControllerUtil.register(
@@ -142,9 +146,9 @@ public abstract class ExtensionsModelSubmitter extends ModelSubmitter<Extensions
     private ConnectWorkerContainer getContainerDescription(String endpointUrl, boolean runsOnEdgeNode) {
 
         if (runsOnEdgeNode) {
-            String deploymentTargetNodeId = System.getenv("SP_NODE_CONTROLLER_ID");
-            String deploymentTargetNodeHostname = System.getenv("SP_NODE_CONTROLLER_CONTAINER_HOST");
-            int deploymentTargetNodePort = Integer.parseInt(System.getenv("SP_NODE_CONTROLLER_CONTAINER_PORT"));
+            String deploymentTargetNodeId = System.getenv(NODE_CONTROLLER_ID);
+            String deploymentTargetNodeHostname = System.getenv(NODE_CONTROLLER_CONTAINER_HOST);
+            int deploymentTargetNodePort = Integer.parseInt(System.getenv(NODE_CONTROLLER_CONTAINER_PORT));
 
             List<AdapterDescription> adapters = new ArrayList<>();
             for (Adapter a : AdapterDeclarerSingleton.getInstance().getAllAdapters()) {

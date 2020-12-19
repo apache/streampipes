@@ -240,12 +240,14 @@ export class SavePipelineComponent implements OnInit {
     if (this.currentModifiedPipelineId && this.updateMode === 'update') {
       this.modifyPipelineElementsDeployments(this.tmpPipeline.sepas)
       this.modifyPipelineElementsDeployments(this.tmpPipeline.actions)
+      this.tmpPipeline.eventRelayStrategy = this.selectedRelayStrategyVal;
       this.pipeline = this.tmpPipeline;
       storageRequest = this.pipelineService.updatePipeline(this.pipeline);
     } else {
       this.pipeline._id = undefined;
       this.modifyPipelineElementsDeployments(this.tmpPipeline.sepas)
       this.modifyPipelineElementsDeployments(this.tmpPipeline.actions)
+      this.tmpPipeline.eventRelayStrategy = this.selectedRelayStrategyVal;
       this.pipeline = this.tmpPipeline;
       storageRequest = this.pipelineService.storePipeline(this.pipeline);
     }

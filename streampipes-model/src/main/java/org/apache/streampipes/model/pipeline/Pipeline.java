@@ -44,6 +44,7 @@ public class Pipeline extends ElementComposition {
   private boolean publicElement;
 
   private String createdByUser;
+  private String eventRelayStrategy;
 
   private List<String> pipelineCategories;
 
@@ -133,6 +134,14 @@ public class Pipeline extends ElementComposition {
     this.createdAt = createdAt;
   }
 
+  public String getEventRelayStrategy() {
+    return eventRelayStrategy;
+  }
+
+  public void setEventRelayStrategy(String eventRelayStrategy) {
+    this.eventRelayStrategy = eventRelayStrategy;
+  }
+
   public Pipeline clone() {
     Pipeline pipeline = new Pipeline();
     pipeline.setName(name);
@@ -145,6 +154,7 @@ public class Pipeline extends ElementComposition {
     pipeline.setCreatedAt(createdAt);
     pipeline.setPipelineId(pipelineId);
     pipeline.setRev(rev);
+    pipeline.setEventRelayStrategy(eventRelayStrategy);
     return pipeline;
   }
 

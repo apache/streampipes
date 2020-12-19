@@ -27,8 +27,6 @@ public class NodeControllerResourceConfig extends ResourceConfig {
         register(HealthCheckResource.class);
         register(InfoStatusResource.class);
         register(InvocableEntityResource.class);
-
-        // TODO remove later - only for local relay tests
-        register(DebugRelayResource.class);
+        register(DataStreamRelayResource.class);
     }
 }

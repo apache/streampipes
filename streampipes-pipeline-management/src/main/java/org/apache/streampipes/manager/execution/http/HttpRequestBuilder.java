@@ -18,14 +18,17 @@
 
 package org.apache.streampipes.manager.execution.http;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
 import org.apache.streampipes.commons.Utils;
+import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.pipeline.PipelineElementStatus;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.serializers.jsonld.JsonLdTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,12 +50,18 @@ public class HttpRequestBuilder {
   }
 
   public PipelineElementStatus invoke() {
-    LOG.info("Invoking element: " + endpointUrl);
     try {
-      String jsonLd = jsonLd();
+      String json;
+      if (payload instanceof InvocableStreamPipesEntity) {
+        LOG.info("Invoking pipeline element: " + endpointUrl);
+        json = jsonLd();
+      } else {
+        LOG.info("Invoking data stream relay: " + endpointUrl);
+        json = jackson();
+      }
       Response httpResp = Request
               .Post(endpointUrl)
-              .bodyString(jsonLd, ContentType.APPLICATION_JSON)
+              .bodyString(json, ContentType.APPLICATION_JSON)
               .connectTimeout(CONNECT_TIMEOUT)
               .execute();
       return handleResponse(httpResp);
@@ -63,6 +72,12 @@ public class HttpRequestBuilder {
   }
 
   public PipelineElementStatus detach() {
+    if (payload instanceof InvocableStreamPipesEntity) {
+      LOG.info("Detaching pipeline element: " + endpointUrl);
+    } else {
+      LOG.info("Detaching data stream relay: " + endpointUrl);
+    }
+
     try {
       Response httpResp = Request
               .Delete(endpointUrl)
@@ -87,5 +102,9 @@ public class HttpRequestBuilder {
 
   private PipelineElementStatus convert(org.apache.streampipes.model.Response response) {
     return new PipelineElementStatus(endpointUrl, payload.getName(), response.isSuccess(), response.getOptionalMessage());
+  }
+
+  private String jackson() throws JsonProcessingException {
+    return JacksonSerializer.getObjectMapper().writeValueAsString(payload);
   }
 }

@@ -18,7 +18,9 @@
 
 package org.apache.streampipes.manager.matching;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.config.backend.BackendConfig;
+import org.apache.streampipes.config.backend.SpEdgeNodeProtocol;
 import org.apache.streampipes.config.backend.SpProtocol;
 import org.apache.streampipes.container.util.ConsulUtil;
 import org.apache.streampipes.manager.data.PipelineGraph;
@@ -30,6 +32,7 @@ import org.apache.streampipes.model.SpDataStreamRelay;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.grounding.*;
 import org.apache.streampipes.model.monitoring.ElementStatusInfoSettings;
 import org.apache.streampipes.model.output.OutputStrategy;
@@ -41,6 +44,7 @@ import java.util.stream.Collectors;
 
 public class InvocationGraphBuilder {
 
+  private static final String DEFAULT_TAG = "default";
   private final PipelineGraph pipelineGraph;
   private final String pipelineId;
   private Integer uniquePeIndex = 0;
@@ -62,7 +66,6 @@ public class InvocationGraphBuilder {
   }
 
   private void configure(NamedStreamPipesEntity source, Set<InvocableStreamPipesEntity> targets) {
-
     EventGrounding inputGrounding = new GroundingBuilder(source, targets).getEventGrounding();
 
     // set output stream event grounding for source data processors
@@ -83,163 +86,117 @@ public class InvocationGraphBuilder {
     // set input stream event grounding for target element data processors and sinks
     targets.forEach(t -> {
       // check if source and target share same node
-      if (source instanceof InvocableStreamPipesEntity) {
-        if (((InvocableStreamPipesEntity) source).getDeploymentTargetNodeId() != null ||
-                t.getDeploymentTargetNodeId() != null) {
+      if (source instanceof InvocableStreamPipesEntity && deploymentTargetNotNull(source, t)) {
 
-          if (matchingDeploymentTarget((InvocableStreamPipesEntity) source, t)) {
-            // both PE on same node - share grounding
+          if (matchingDeploymentTargets(source, t)) {
+            // both processor on same node - share grounding
             t.getInputStreams()
                     .get(getIndex(source.getDOM(), t))
                     .setEventGrounding(inputGrounding);
 
-          } else {
-            // check if target runs on cloud or edge node
-            if (t.getDeploymentTargetNodeId().equals("default")) {
-              // target runs on cloud node: use central cloud broker, e.g. kafka
-              // TODO: set event relay to true
-              // TODO: add cloud broker to List<EventRelays>
-              if (source instanceof DataProcessorInvocation) {
+          }
+          else if (defaultDeploymentTarget(t) && source instanceof DataProcessorInvocation) {
+            // target runs on cloud node: use central cloud broker, e.g. kafka
 
-                String relayTopic = inputGrounding.getTransportProtocol().getTopicDefinition().getActualTopicName();
+            if (!eventRelayExists(source, t)) {
 
-                if (relayNotExists(relayTopic, source)) {
-                  // TODO: use prioritized cloud transport protocol instead of kafka
-                  SpProtocol prioritizedProtocol =
-                          BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedProtocols().get(0);
-
-                  EventGrounding relayEventGrounding = new EventGrounding();
-
-                  if (isPrioritized(prioritizedProtocol, JmsTransportProtocol.class)) {
-                    JmsTransportProtocol tp = new JmsTransportProtocol(
-                            BackendConfig.INSTANCE.getJmsHost(),
-                            BackendConfig.INSTANCE.getJmsPort(),
-                            relayTopic);
-                    relayEventGrounding.setTransportProtocol(tp);
-                  }
-                  else if (isPrioritized(prioritizedProtocol, KafkaTransportProtocol.class)) {
-                    KafkaTransportProtocol tp = new KafkaTransportProtocol(
-                            BackendConfig.INSTANCE.getKafkaHost(),
-                            BackendConfig.INSTANCE.getKafkaPort(),
-                            relayTopic,
-                            BackendConfig.INSTANCE.getZookeeperHost(),
-                            BackendConfig.INSTANCE.getZookeeperPort());
-                    relayEventGrounding.setTransportProtocol(tp);
-                  }
-                  else if (isPrioritized(prioritizedProtocol, MqttTransportProtocol.class)){
-                    MqttTransportProtocol tp = new MqttTransportProtocol(
-                            BackendConfig.INSTANCE.getMqttHost(),
-                            BackendConfig.INSTANCE.getMqttPort(),
-                            relayTopic);
-                    relayEventGrounding.setTransportProtocol(tp);
-                  }
-
-                  relayEventGrounding.setTransportFormats(inputGrounding.getTransportFormats());
-
-                  // TODO: when modifying pipelines new relay are added to old ones. Should initialize new ArrayList
-                  // graphExists()
-                  if(!graphExists(t.getDOM())) {
-                    ((DataProcessorInvocation) source)
-                            .addOutputStreamRelay(new SpDataStreamRelay(relayEventGrounding));
-                  } else {
-                    ((DataProcessorInvocation) source)
-                            .getOutputStreamRelays()
-                            .get(getIndex(source.getDOM(), t))
-                            .getEventGrounding()
-                            .getTransportProtocol()
-                            .setTopicDefinition(inputGrounding.getTransportProtocol().getTopicDefinition());
-                  }
-
-                  t.getInputStreams()
-                          .get(getIndex(source.getDOM(), t))
-                          .getEventGrounding()
-                          .getTransportProtocol()
-                          .setTopicDefinition(inputGrounding.getTransportProtocol().getTopicDefinition());
-
-                } else {
-                  // split in the end
-                  t.getInputStreams()
-                      .get(getIndex(source.getDOM(), t))
-                      .getEventGrounding()
-                      .getTransportProtocol()
-                      .setTopicDefinition(inputGrounding.getTransportProtocol().getTopicDefinition());
-                }
+              if(!graphExists(t.getDOM())) {
+                // add initial relay grounding to source processor
+                ((DataProcessorInvocation) source).addOutputStreamRelay(
+                        new SpDataStreamRelay(generateRelayGrounding(inputGrounding,false)));
+              } else {
+                // modify relay topic of existing relay grounding
+                modifyTopicForEventRelay(source, t, extractTopic(inputGrounding));
               }
-
+              modifyTopicForTargetInputStream(source, t, extractTopic(inputGrounding));
             } else {
-              // target runs on edge node: use target edge node broker
-              // TODO: set event relay to true
-              // TODO: add target edge node broker to List<EventRelays>
 
-              String relayTopic = inputGrounding.getTransportProtocol().getTopicDefinition().getActualTopicName();
-
-              if (relayNotExists(relayTopic, source)) {
-
-                EventGrounding relayEventGrounding = new EventGrounding();
-
-                relayEventGrounding.setTransportProtocol(
-                        new MqttTransportProtocol(
-                                getTargetNodeBrokerHost(t),
-                                getTargetNodeBrokerPort(t),
-                                relayTopic
-                        ));
-
-                relayEventGrounding.setTransportFormats(inputGrounding.getTransportFormats());
-
-                // TODO: when modifying pipelines new relay are added to old ones. Should initialize new ArrayList
-                if(!graphExists(t.getDOM())) {
-                  ((DataProcessorInvocation) source)
-                          .addOutputStreamRelay(new SpDataStreamRelay(relayEventGrounding));
-                } else {
-                  t.getInputStreams()
-                          .get(getIndex(source.getDOM(), t))
-                          .setEventGrounding(relayEventGrounding);
-                }
-
-                t.getInputStreams()
-                        .get(getIndex(source.getDOM(), t))
-                        .setEventGrounding(((DataProcessorInvocation) source)
-                                .getOutputStreamRelays()
-                                .get(getIndex(source.getDOM(), t))
-                                .getEventGrounding());
-
-              }
-//                t.getInputStreams()
-//                        .get(getIndex(source.getDOM(), t))
-//                        .setEventGrounding(((DataProcessorInvocation) source)
-//                                .getOutputStreamRelays()
-//                                .get(getIndex(source.getDOM(), t))
-//                                .getEventGrounding());
-
+              EventGrounding updatedRelayGrounding = generateRelayGrounding(inputGrounding, false);
+              removeExistingStreamRelay(source, t);
+              ((DataProcessorInvocation) source).addOutputStreamRelay(new SpDataStreamRelay(updatedRelayGrounding));
+              modifyTopicForTargetInputStream(source, t, extractTopic(inputGrounding));
             }
           }
+          else {
+            // target runs on other edge node: use target edge node broker
+            //if (!eventRelayExists(inputGrounding, source)) {
+            if (!eventRelayExists(source ,t)) {
+
+              EventGrounding relayGrounding = generateRelayGrounding(inputGrounding, t,true);
+              if(!graphExists(t.getDOM())) {
+                ((DataProcessorInvocation) source).addOutputStreamRelay(new SpDataStreamRelay(relayGrounding));
+              } else {
+                t.getInputStreams()
+                        .get(getIndex(source.getDOM(), t))
+                        .setEventGrounding(relayGrounding);
+              }
+
+              t.getInputStreams()
+                      .get(getIndex(source.getDOM(), t))
+                      .setEventGrounding(((DataProcessorInvocation) source)
+                              .getOutputStreamRelays()
+                              .get(getIndex(source.getDOM(), t))
+                              .getEventGrounding());
+            } else {
+              EventGrounding updatedRelayGrounding = generateRelayGrounding(inputGrounding, t,true);
+              removeExistingStreamRelay(source, t);
+              ((DataProcessorInvocation) source).addOutputStreamRelay(new SpDataStreamRelay(updatedRelayGrounding));
+
+              t.getInputStreams()
+                      .get(getIndex(source.getDOM(), t))
+                      .setEventGrounding(updatedRelayGrounding);
+            }
+          }
+//            t.getInputStreams()
+//                    .get(getIndex(source.getDOM(), t))
+//                    .setEventGrounding(inputGrounding);
         } else {
-            t.getInputStreams()
-                    .get(getIndex(source.getDOM(), t))
-                    .setEventGrounding(inputGrounding);
-        }
-      } else {
 
         // TODO: Handle following edge situation:
         //  data stream -> invocable (processor, sink) in edge deployments that do not reside on same node
         // idea: trigger corresponding node controller to relay topic to adjecent broker (either node broker or
         // global cloud broker)
-        t.getInputStreams()
-                .get(getIndex(source.getDOM(), t))
-                .setEventGrounding(inputGrounding);
+
+          if (matchingDeploymentTargets(source, t)) {
+            t.getInputStreams()
+                    .get(getIndex(source.getDOM(), t))
+                    .setEventGrounding(inputGrounding);
+
+          } else if (defaultDeploymentTarget(t)) {
+            // target runs on cloud node: use central cloud broker, e.g. kafka
+            EventGrounding eg = generateRelayGrounding(inputGrounding,false);
+            // TODO: make topic unique for target in case we have multiple source stream relays to the target
+            String oldTopic = eg.getTransportProtocol().getTopicDefinition().getActualTopicName();
+            eg.getTransportProtocol().getTopicDefinition().setActualTopicName(oldTopic + "."
+                    + this.pipelineId);
+            t.getInputStreams()
+                    .get(getIndex(source.getDOM(),t))
+                    .setEventGrounding(eg);
+          } else if (targetInvocableOnEdgeNode(t)) {
+            // case 2: target on other edge node -> relay + target node broker
+            // TODO: make topic unique for target in case we have multiple source stream relays to the target
+            EventGrounding eg = generateRelayGrounding(inputGrounding,t,true);
+            String oldTopic = eg.getTransportProtocol().getTopicDefinition().getActualTopicName();
+            eg.getTransportProtocol().getTopicDefinition().setActualTopicName(oldTopic + "."
+                    + this.pipelineId);
+            t.getInputStreams()
+                    .get(getIndex(source.getDOM(), t))
+                    .setEventGrounding(eg);
+          } else {
+            // default case while modelling. no deployment target known
+            t.getInputStreams()
+                    .get(getIndex(source.getDOM(), t))
+                    .setEventGrounding(inputGrounding);
+          }
       }
 
-      // old
-//      t.getInputStreams()
-//              .get(getIndex(source.getDOM(), t))
-//              .setEventGrounding(inputGrounding);
 
       t.getInputStreams()
               .get(getIndex(source.getDOM(), t))
               .setEventSchema(getInputSchema(source));
 
-      String elementIdentifier = makeElementIdentifier(pipelineId, inputGrounding
-              .getTransportProtocol().getTopicDefinition().getActualTopicName(), t.getName());
+      String elementIdentifier = makeElementIdentifier(pipelineId,
+              inputGrounding.getTransportProtocol().getTopicDefinition().getActualTopicName(), t.getName());
 
       t.setElementId(t.getBelongsTo() + "/" + elementIdentifier);
       t.setDeploymentRunningInstanceId(elementIdentifier);
@@ -253,14 +210,71 @@ public class InvocationGraphBuilder {
     });
   }
 
-  private boolean relayNotExists(String relayTopic, NamedStreamPipesEntity source) {
-    return ((DataProcessorInvocation) source)
+  private void removeExistingStreamRelay(NamedStreamPipesEntity source, InvocableStreamPipesEntity t) {
+    ((DataProcessorInvocation) source).removeOutputStreamRelay(
+            ((DataProcessorInvocation) source)
+                    .getOutputStreamRelays()
+                    .get(getIndex(source.getDOM(), t)));
+  }
+
+  private boolean targetInvocableOnEdgeNode(InvocableStreamPipesEntity t) {
+    return t.getDeploymentTargetNodeId() != null && !t.getDeploymentTargetNodeId().equals(DEFAULT_TAG);
+  }
+
+  private boolean defaultDeploymentTarget(InvocableStreamPipesEntity t) {
+    return t.getDeploymentTargetNodeId() != null && t.getDeploymentTargetNodeId().equals(DEFAULT_TAG);
+  }
+
+  private void modifyTopicForTargetInputStream(NamedStreamPipesEntity s, InvocableStreamPipesEntity t,
+                                               String topic) {
+    t.getInputStreams()
+            .get(getIndex(s.getDOM(), t))
+            .getEventGrounding()
+            .getTransportProtocol()
+            .getTopicDefinition()
+            .setActualTopicName(topic);
+  }
+
+  private void modifyTopicForEventRelay(NamedStreamPipesEntity s, InvocableStreamPipesEntity t,
+                                        String topic) {
+    ((DataProcessorInvocation) s)
+            .getOutputStreamRelays()
+            .get(getIndex(s.getDOM(), t))
+            .getEventGrounding()
+            .getTransportProtocol()
+            .getTopicDefinition()
+            .setActualTopicName(topic);
+  }
+
+  private boolean deploymentTargetNotNull(NamedStreamPipesEntity s, InvocableStreamPipesEntity t) {
+    if (s instanceof SpDataStream) {
+      return ((SpDataStream) s).getDeploymentTargetNodeId() != null && t.getDeploymentTargetNodeId() != null;
+    } else {
+      return ((InvocableStreamPipesEntity) s).getDeploymentTargetNodeId() != null &&
+              t.getDeploymentTargetNodeId() != null;
+    }
+  }
+
+  private String extractTopic(EventGrounding eg) {
+    return eg.getTransportProtocol().getTopicDefinition().getActualTopicName();
+  }
+
+  private boolean eventRelayExists(EventGrounding eg, NamedStreamPipesEntity s) {
+    return ((DataProcessorInvocation) s)
             .getOutputStreamRelays()
             .stream()
-            .noneMatch(r -> r.getEventGrounding()
+            .anyMatch(r -> r.getEventGrounding()
                     .getTransportProtocol()
                     .getTopicDefinition()
-                    .getActualTopicName().equals(relayTopic));
+                    .getActualTopicName().equals(extractTopic(eg)));
+  }
+
+  private boolean eventRelayExists(NamedStreamPipesEntity s, InvocableStreamPipesEntity t) {
+    int idx = getIndex(s.getDOM(), t);
+    return ((DataProcessorInvocation) s).getOutputStreamRelays()
+            .stream()
+            .anyMatch(i -> extractTopic(i.getEventGrounding()).equals(
+                    extractTopic(t.getInputStreams().get(idx).getEventGrounding())));
   }
 
   private Tuple2<EventSchema,? extends OutputStrategy> getOutputSettings(DataProcessorInvocation dataProcessorInvocation) {
@@ -311,11 +325,17 @@ public class InvocationGraphBuilder {
   }
 
 
-  private boolean matchingDeploymentTarget(InvocableStreamPipesEntity source, InvocableStreamPipesEntity target) {
-    if (source instanceof DataProcessorInvocation && target instanceof DataProcessorInvocation) {
-      if (source.getDeploymentTargetNodeId().equals(target.getDeploymentTargetNodeId())) {
-        return true;
-      }
+  private boolean matchingDeploymentTargets(NamedStreamPipesEntity s, InvocableStreamPipesEntity t) {
+    if (s instanceof DataProcessorInvocation &&
+            (t instanceof DataProcessorInvocation || t instanceof DataSinkInvocation) && deploymentTargetNotNull(s,t)) {
+        return ((DataProcessorInvocation) s)
+                .getDeploymentTargetNodeId()
+                .equals(t.getDeploymentTargetNodeId());
+    } else if (s instanceof SpDataStream &&
+            (t instanceof DataProcessorInvocation || t instanceof DataSinkInvocation) && deploymentTargetNotNull(s,t)) {
+        return ((SpDataStream) s)
+                .getDeploymentTargetNodeId()
+                .equals(t.getDeploymentTargetNodeId());
     }
     return false;
   }
@@ -379,8 +399,83 @@ public class InvocationGraphBuilder {
             .get();
   }
 
-  public static Boolean isPrioritized(SpProtocol prioritizedProtocol,
-                                      Class<?> protocolClass) {
-    return prioritizedProtocol.getProtocolClass().equals(protocolClass.getCanonicalName());
+  private EventGrounding generateRelayGrounding(EventGrounding sourceInvocableOutputGrounding,
+                                                boolean edgeToEdgeRelay) {
+    return generateRelayGrounding(sourceInvocableOutputGrounding, null, edgeToEdgeRelay);
+  }
+
+  private EventGrounding generateRelayGrounding(EventGrounding sourceInvocableOutputGrounding,
+                                                InvocableStreamPipesEntity target, boolean edgeToEdgeRelay) {
+    EventGrounding eg = new EventGrounding();
+    String topic = extractTopic(sourceInvocableOutputGrounding);
+    if (edgeToEdgeRelay) {
+      eg.setTransportProtocol(getTargetNodeProtocol(
+              BackendConfig.INSTANCE.getMessagingSettings().getEdgeNodeProtocol(), topic, target));
+    } else {
+      eg.setTransportProtocol(getPrioritizedGlobalProtocol(
+              BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedProtocols().get(0), topic));
+    }
+    eg.setTransportFormats(sourceInvocableOutputGrounding.getTransportFormats());
+    return eg;
+  }
+
+  private TransportProtocol getPrioritizedGlobalProtocol(SpProtocol p, String topic) {
+    if (matches(p, JmsTransportProtocol.class)) {
+      return jmsTransportProtocol(topic);
+    } else if (matches(p, KafkaTransportProtocol.class)) {
+      return kafkaTransportProtocol(topic);
+    } else if (matches(p, MqttTransportProtocol.class)){
+      return mqttTransportProtocol(topic);
+    }
+    throw new SpRuntimeException("Could not retrieve prioritized transport protocol");
+  }
+
+  private TransportProtocol getTargetNodeProtocol(SpEdgeNodeProtocol p, String topic,
+                                                  InvocableStreamPipesEntity target) {
+    if (matches(p, MqttTransportProtocol.class)){
+      return mqttTransportProtocol(topic, target);
+    }
+    throw new SpRuntimeException("Could not retrieve prioritized transport protocol");
+  }
+
+  private JmsTransportProtocol jmsTransportProtocol(String topic) {
+    return new JmsTransportProtocol(
+            BackendConfig.INSTANCE.getJmsHost(),
+            BackendConfig.INSTANCE.getJmsPort(),
+            topic);
+  }
+
+  private KafkaTransportProtocol kafkaTransportProtocol(String topic) {
+    return new KafkaTransportProtocol(
+            BackendConfig.INSTANCE.getKafkaHost(),
+            BackendConfig.INSTANCE.getKafkaPort(),
+            topic,
+            BackendConfig.INSTANCE.getZookeeperHost(),
+            BackendConfig.INSTANCE.getZookeeperPort());
+  }
+
+  private MqttTransportProtocol mqttTransportProtocol(String topic) {
+    return mqttTransportProtocol(topic, null);
+  }
+
+  private MqttTransportProtocol mqttTransportProtocol(String topic, InvocableStreamPipesEntity target) {
+    if (target != null) {
+      return new MqttTransportProtocol(
+              getTargetNodeBrokerHost(target),
+              getTargetNodeBrokerPort(target),
+              topic);
+    }
+    return new MqttTransportProtocol(
+            BackendConfig.INSTANCE.getMqttHost(),
+            BackendConfig.INSTANCE.getMqttPort(),
+            topic);
+  }
+
+  private <T extends TransportProtocol> boolean matches(SpProtocol p, Class<T> clazz) {
+    return p.getProtocolClass().equals(clazz.getCanonicalName());
+  }
+
+  private <T extends TransportProtocol> boolean matches(SpEdgeNodeProtocol p, Class<T> clazz) {
+    return p.getProtocolClass().equals(clazz.getCanonicalName());
   }
 }

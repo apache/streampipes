@@ -19,20 +19,17 @@ package org.apache.streampipes.node.controller.container.rest;
 
 import org.apache.streampipes.container.model.node.InvocableRegistration;
 import org.apache.streampipes.container.transform.Transformer;
-import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.SpDataStreamRelay;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
-import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.model.node.PipelineElementDockerContainer;
 import org.apache.streampipes.node.controller.container.management.orchestrator.docker.DockerContainerOrchestrator;
 import org.apache.streampipes.node.controller.container.management.pe.InvocableElementManager;
 import org.apache.streampipes.node.controller.container.management.pe.RunningInvocableInstances;
-import org.apache.streampipes.node.controller.container.management.relay.EventRelayManager;
+import org.apache.streampipes.node.controller.container.management.relay.EventRelay;
 import org.apache.streampipes.node.controller.container.management.relay.RunningRelayInstances;
-import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,10 +37,12 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Path("/api/v2/node/container")
-public class InvocableEntityResource<I extends InvocableStreamPipesEntity> extends AbstractNodeContainerResource{
+public class InvocableEntityResource extends AbstractNodeContainerResource {
     private static final Logger LOG = LoggerFactory.getLogger(InvocableEntityResource.class.getCanonicalName());
 
     @GET
@@ -61,19 +60,8 @@ public class InvocableEntityResource<I extends InvocableStreamPipesEntity> exten
 
     @POST
     @Path("/register")
-    public void register(String body) {
-        try {
-            InvocableRegistration invocableRegistration = JacksonSerializer
-                    .getObjectMapper()
-                    .readValue(body, InvocableRegistration.class);
-
-            // register pipeline elements at consul and node controller
-            InvocableElementManager.getInstance().register(invocableRegistration);
-            LOG.info("Sucessfully registered pipeline element container");
-
-        } catch (IOException e) {
-            LOG.error("Could not register pipeline element container - " + e.toString());
-        }
+    public void register(InvocableRegistration registration) {
+        InvocableElementManager.getInstance().register(registration);
     }
 
     @POST
@@ -83,30 +71,29 @@ public class InvocableEntityResource<I extends InvocableStreamPipesEntity> exten
     public String invoke(@PathParam("identifier") String identifier,
                            @PathParam("elementId") String elementId, String payload) {
 
-        // TODO implement
         String endpoint;
         InvocableStreamPipesEntity graph;
         try {
             if (identifier.equals("sepa")) {
                 graph = Transformer.fromJsonLd(DataProcessorInvocation.class, payload);
-
                 endpoint = graph.getBelongsTo();
-
                 TransportProtocol source = ((DataProcessorInvocation) graph)
                         .getOutputStream()
                         .getEventGrounding()
                         .getTransportProtocol();
 
-                String relayStrategy = ((DataProcessorInvocation) graph).getEventRelayStrategy();
+                String strategy = ((DataProcessorInvocation) graph).getEventRelayStrategy();
+                List<SpDataStreamRelay> dataStreamRelays = ((DataProcessorInvocation) graph).getOutputStreamRelays();
 
-                ((DataProcessorInvocation) graph).getOutputStreamRelays().forEach(r -> {
+                Map<String, EventRelay> eventRelayMap = new HashMap<>();
+                dataStreamRelays.forEach(r -> {
                     TransportProtocol target = r.getEventGrounding().getTransportProtocol();
-                    EventRelayManager relayManager = new EventRelayManager(source, target, relayStrategy);
-                    relayManager.start();
 
-                    RunningRelayInstances.INSTANCE.add(graph.getDeploymentRunningInstanceId(),
-                            relayManager);
+                    EventRelay eventRelay = new EventRelay(source, target, strategy);
+                    eventRelay.start();
+                    eventRelayMap.put(r.getElementId(), eventRelay);
                 });
+                RunningRelayInstances.INSTANCE.add(graph.getDeploymentRunningInstanceId(), eventRelayMap);
 
                 org.apache.streampipes.model.Response resp = InvocableElementManager.getInstance().invoke(endpoint,
                         payload);
@@ -123,7 +110,14 @@ public class InvocableEntityResource<I extends InvocableStreamPipesEntity> exten
                 graph = Transformer.fromJsonLd(DataSinkInvocation.class, payload);
                 endpoint = graph.getBelongsTo();
 
-                InvocableElementManager.getInstance().invoke(endpoint, payload);
+                org.apache.streampipes.model.Response resp = InvocableElementManager.getInstance()
+                        .invoke(endpoint, payload);
+
+                if (resp.isSuccess()) {
+                    RunningInvocableInstances.INSTANCE.add(graph.getDeploymentRunningInstanceId(), graph);
+                }
+
+                return resp.toString();
 
             }
         } catch (IOException e) {
@@ -141,15 +135,13 @@ public class InvocableEntityResource<I extends InvocableStreamPipesEntity> exten
         LOG.info("receive stop request elementId={}, runningInstanceId={}", elementId, runningInstanceId);
 
         // TODO store host and port locally to retrieve by runningInstanceId
-
         String endpoint = RunningInvocableInstances.INSTANCE.get(runningInstanceId).getBelongsTo();
         String resp = InvocableElementManager.getInstance().detach(endpoint + "/" + runningInstanceId);
 
         // Stop relay for invocable if existing
-        // TODO: maybe use unique identifier for retrieving relay
-        EventRelayManager relay = RunningRelayInstances.INSTANCE.get(runningInstanceId);
+        Map<String, EventRelay> relay = RunningRelayInstances.INSTANCE.get(runningInstanceId);
         if (relay != null) {
-            relay.stop();
+            relay.values().forEach(EventRelay::stop);
         }
 
         RunningInvocableInstances.INSTANCE.remove(runningInstanceId);
@@ -165,5 +157,4 @@ public class InvocableEntityResource<I extends InvocableStreamPipesEntity> exten
         InvocableElementManager.getInstance().unregister();
         return ok(DockerContainerOrchestrator.getInstance().remove(container));
     }
-
 }

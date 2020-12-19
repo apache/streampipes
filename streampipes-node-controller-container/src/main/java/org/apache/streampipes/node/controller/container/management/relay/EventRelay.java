@@ -21,15 +21,15 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.grounding.*;
 import org.apache.streampipes.node.controller.container.management.relay.metrics.RelayMetrics;
 
-public class EventRelayManager extends BaseEventRelay {
+public class EventRelay extends BaseEventRelay {
 
     private static final String DEFAULT_EVENT_RELAY_STRATEGY = "buffer";
 
-    public EventRelayManager(TransportProtocol source, TransportProtocol target) {
+    public EventRelay(TransportProtocol source, TransportProtocol target) {
         super(source, target, DEFAULT_EVENT_RELAY_STRATEGY);
     }
 
-    public EventRelayManager(TransportProtocol source, TransportProtocol target, String relayStrategy) {
+    public EventRelay(TransportProtocol source, TransportProtocol target, String relayStrategy) {
         super(source, target, relayStrategy);
     }
 

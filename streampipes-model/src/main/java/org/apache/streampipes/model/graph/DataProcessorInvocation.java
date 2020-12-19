@@ -174,6 +174,8 @@ public class DataProcessorInvocation extends InvocableStreamPipesEntity implemen
 
   public boolean addOutputStreamRelay(SpDataStreamRelay spDataStreamRelay) { return outputStreamRelays.add(spDataStreamRelay); }
 
+  public boolean removeOutputStreamRelay(SpDataStreamRelay spDataStreamRelay) { return outputStreamRelays.remove(spDataStreamRelay); }
+
   public List<SpDataStreamRelay> getOutputStreamRelays() {
     return outputStreamRelays;
   }

@@ -69,6 +69,8 @@ public class InvocableElementManager implements ElementLifeCyle {
             NodeInfoStorage.getInstance()
                     .retrieveNodeInfo()
                     .setSupportedPipelineElementAppIds(registration.getSupportedPipelineElementAppIds());
+
+            LOG.info("Successfully registered pipeline element container");
         } catch (IOException e) {
             e.printStackTrace();
         }

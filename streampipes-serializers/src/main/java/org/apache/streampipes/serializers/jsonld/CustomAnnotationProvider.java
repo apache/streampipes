@@ -184,7 +184,8 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             DataExplorerWidgetModel.class,
             StreamPipesJsonLdContainer.class,
             DataLakeMeasure.class,
-            SpDataStreamRelay.class
+            SpDataStreamRelay.class,
+            SpDataStreamRelayContainer.class
     );
   }
 }

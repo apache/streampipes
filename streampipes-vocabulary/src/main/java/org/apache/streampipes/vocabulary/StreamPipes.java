@@ -421,4 +421,6 @@ public class StreamPipes {
   public static final String HAS_REQUIRED_FILETYPES = NS + "hasRequiredFiletypes" ;
   public static final String HAS_EVENT_RELAY = NS + "hasEventRelay";
   public static final String HAS_EVENT_RELAY_STRATEGY = NS + "hasEventRelayStrategy";
+  public static final String DATA_STREAM_RELAY_CONTAINER = NS + "DataStreamRelayContainer" ;
+  public static final String DATA_STREAM_RELAY_RUNNING_INSTANCE_ID = NS + "hasDataStreamRelayRunningInstanceId";
 }

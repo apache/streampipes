@@ -19,7 +19,7 @@ package org.apache.streampipes.node.controller.container.rest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.streampipes.node.controller.container.management.info.NodeInfoStorage;
-import org.apache.streampipes.node.controller.container.management.relay.EventRelayManager;
+import org.apache.streampipes.node.controller.container.management.relay.EventRelay;
 import org.apache.streampipes.node.controller.container.management.relay.RunningRelayInstances;
 import org.apache.streampipes.node.controller.container.management.relay.metrics.RelayMetrics;
 import org.apache.streampipes.node.controller.container.management.resources.ResourceManager;
@@ -57,7 +57,7 @@ public class InfoStatusResource extends AbstractNodeContainerResource{
 
         List<RelayMetrics> metricsList = RunningRelayInstances.INSTANCE.getRunningInstances()
                 .stream()
-                .map(EventRelayManager::getRelayMetrics)
+                .map(EventRelay::getRelayMetrics)
                 .collect(Collectors.toList());
 
         try {

@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.manager.execution.http;
 
+import org.apache.streampipes.model.SpDataStreamRelayContainer;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,7 @@ import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class GraphSubmitter {
 
@@ -37,18 +39,23 @@ public class GraphSubmitter {
   private final List<SpDataSet> dataSets;
   private final String pipelineId;
   private final String pipelineName;
+  private final List<SpDataStreamRelayContainer> streamRelays;
 
   public GraphSubmitter(String pipelineId, String pipelineName, List<InvocableStreamPipesEntity> graphs,
-                        List<SpDataSet> dataSets) {
+                        List<SpDataSet> dataSets, List<SpDataStreamRelayContainer> streamRelays) {
     this.graphs = graphs;
     this.pipelineId = pipelineId;
     this.pipelineName = pipelineName;
     this.dataSets = dataSets;
+    this.streamRelays = streamRelays;
   }
 
   public PipelineOperationStatus invokeGraphs() {
     PipelineOperationStatus status = initPipelineOperationStatus();
 
+    if (streamRelays.stream().anyMatch(s -> s.getOutputStreamRelays().size() > 0)) {
+      streamRelays.forEach(streamRelay -> invoke(new StreamRelayEndpointUrlGenerator(streamRelay), streamRelay, status));
+    }
     graphs.forEach(graph -> invoke(new InvocableEntityUrlGenerator(graph), graph, status));
     // only invoke datasets when following pipeline elements are started
     if (allInvocableEntitiesRunning(status)) {
@@ -67,6 +74,9 @@ public class GraphSubmitter {
 
     graphs.forEach(graph -> detach(new InvocableEntityUrlGenerator(graph), graph, status));
     dataSets.forEach(dataset -> detach(new DataSetEntityUrlGenerator(dataset), dataset, status));
+    if (streamRelays.stream().anyMatch(s -> s.getOutputStreamRelays().size() > 0)) {
+      streamRelays.forEach(streamRelay -> detach(new StreamRelayEndpointUrlGenerator(streamRelay), streamRelay, status));
+    }
 
     return verifyPipelineOperationStatus(
             status,

@@ -19,21 +19,18 @@ package org.apache.streampipes.node.controller.container.management.relay;
 
 import org.apache.streampipes.node.controller.container.management.IRunningInstances;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
-public enum RunningRelayInstances implements IRunningInstances<EventRelayManager> {
+public enum RunningRelayInstances implements IRunningInstances<Map<String,EventRelay>> {
     INSTANCE;
 
-    private final Map<String, EventRelayManager> runningInstances = new HashMap<>();
+    private final Map<String, Map<String, EventRelay>> runningInstances = new HashMap<>();
 
     // TODO: persist active relays to support failure handling
     @Override
-    public void add(String id, EventRelayManager eventRelayManager) {
-        runningInstances.put(id, eventRelayManager);
+    public void add(String id, Map<String,EventRelay> eventRelayMap) {
+        runningInstances.put(id, eventRelayMap);
     }
 
     @Override
@@ -42,7 +39,7 @@ public enum RunningRelayInstances implements IRunningInstances<EventRelayManager
     }
 
     @Override
-    public EventRelayManager get(String id) {
+    public Map<String,EventRelay> get(String id) {
         return isRunning(id) ? runningInstances.get(id) : null;
     }
 
@@ -51,7 +48,11 @@ public enum RunningRelayInstances implements IRunningInstances<EventRelayManager
         runningInstances.remove(id);
     }
 
-    public List<EventRelayManager> getRunningInstances() {
-        return new ArrayList<>(runningInstances.values());
+    public List<EventRelay> getRunningInstances() {
+        return runningInstances.values().stream()
+                .map(Map::values)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+        //return new ArrayList<>(runningInstances.values().forEach(e -> e.values()));
     }
 }

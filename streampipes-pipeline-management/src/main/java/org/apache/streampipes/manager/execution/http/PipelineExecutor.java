@@ -18,6 +18,10 @@
 
 package org.apache.streampipes.manager.execution.http;
 
+import org.apache.streampipes.model.SpDataStream;
+import org.apache.streampipes.model.SpDataStreamRelay;
+import org.apache.streampipes.model.SpDataStreamRelayContainer;
+import org.apache.streampipes.model.grounding.EventGrounding;
 import org.lightcouch.DocumentConflictException;
 import org.apache.streampipes.manager.execution.status.PipelineStatusManager;
 import org.apache.streampipes.manager.execution.status.SepMonitoringManager;
@@ -36,10 +40,7 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.encryption.CredentialsManager;
 
 import java.security.GeneralSecurityException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class PipelineExecutor {
@@ -76,15 +77,24 @@ public class PipelineExecutor {
 
     graphs.forEach(g -> g.setStreamRequirements(Arrays.asList()));
 
-    PipelineOperationStatus status = new GraphSubmitter(pipeline.getPipelineId(),
-            pipeline.getName(), decryptedGraphs, dataSets)
-            .invokeGraphs();
+    List<SpDataStreamRelayContainer> dataStreamRelayContainers = generateDataStreamRelays(decryptedGraphs);
+
+    PipelineOperationStatus status = new GraphSubmitter(
+            pipeline.getPipelineId(),
+            pipeline.getName(),
+            decryptedGraphs,
+            dataSets,
+            dataStreamRelayContainers).invokeGraphs();
 
     if (status.isSuccess()) {
       storeInvocationGraphs(pipeline.getPipelineId(), graphs, dataSets);
 
-      PipelineStatusManager.addPipelineStatus(pipeline.getPipelineId(),
-              new PipelineStatusMessage(pipeline.getPipelineId(), System.currentTimeMillis(), PipelineStatusMessageType.PIPELINE_STARTED.title(), PipelineStatusMessageType.PIPELINE_STARTED.description()));
+      PipelineStatusManager.addPipelineStatus(
+              pipeline.getPipelineId(),
+              new PipelineStatusMessage(pipeline.getPipelineId(),
+                      System.currentTimeMillis(),
+                      PipelineStatusMessageType.PIPELINE_STARTED.title(),
+                      PipelineStatusMessageType.PIPELINE_STARTED.description()));
 
       if (monitor) {
         SepMonitoringManager.addObserver(pipeline.getPipelineId());
@@ -95,6 +105,94 @@ public class PipelineExecutor {
       }
     }
     return status;
+  }
+
+  public PipelineOperationStatus stopPipeline() {
+    List<InvocableStreamPipesEntity> graphs = TemporaryGraphStorage.graphStorage.get(pipeline.getPipelineId());
+    List<SpDataSet> dataSets = TemporaryGraphStorage.datasetStorage.get(pipeline.getPipelineId());
+
+    List<SpDataStreamRelayContainer> dataStreamRelayContainers = generateDataStreamRelays(graphs);
+
+    PipelineOperationStatus status = new GraphSubmitter(
+            pipeline.getPipelineId(),
+            pipeline.getName(),
+            graphs,
+            dataSets,
+            dataStreamRelayContainers).detachGraphs();
+
+    if (status.isSuccess()) {
+      if (visualize) {
+        StorageDispatcher
+                .INSTANCE
+                .getNoSqlStore()
+                .getVisualizationStorageApi()
+                .deleteVisualization(pipeline.getPipelineId());
+      }
+      if (storeStatus) {
+        setPipelineStopped(pipeline);
+      }
+
+      PipelineStatusManager.addPipelineStatus(pipeline.getPipelineId(),
+              new PipelineStatusMessage(pipeline.getPipelineId(),
+                      System.currentTimeMillis(),
+                      PipelineStatusMessageType.PIPELINE_STOPPED.title(),
+                      PipelineStatusMessageType.PIPELINE_STOPPED.description()));
+
+      if (monitor) {
+        SepMonitoringManager.removeObserver(pipeline.getPipelineId());
+      }
+
+    }
+    return status;
+  }
+
+  private String extractTopic(EventGrounding eg) {
+    return eg.getTransportProtocol().getTopicDefinition().getActualTopicName();
+  }
+
+  private List<SpDataStreamRelayContainer> generateDataStreamRelays(List<InvocableStreamPipesEntity> graphs) {
+    Set<String> topicSet = new HashSet<>();
+    List<SpDataStreamRelayContainer> dsRelayContainers = new ArrayList<>();
+    SpDataStreamRelayContainer dsRelayContainer = new SpDataStreamRelayContainer();
+    List<SpDataStreamRelay> dataStreamRelays = new ArrayList<>();
+
+    graphs.stream()
+            .filter(g -> pipeline.getStreams().stream()
+                    .filter(ds -> topicSet.add(extractTopic(ds.getEventGrounding())))
+                    .anyMatch(ds -> (!matchingDeploymentTargets(ds, g) && connected(ds, g))))
+            .forEach(g -> pipeline.getStreams()
+                    .forEach(ds -> {
+                      dsRelayContainer.setRunningStreamRelayInstanceId(pipeline.getPipelineId());
+                      // TODO: retrieve relay strategy from somewhere, e.g. make it accessible on pipeline level
+                      dsRelayContainer.setEventRelayStrategy(pipeline.getEventRelayStrategy());
+                      dsRelayContainer.setName(ds.getName() + " (Data Stream Relay)");
+                      dsRelayContainer.setInputGrounding(new EventGrounding(ds.getEventGrounding()));
+                      dsRelayContainer.setDeploymentTargetNodeId(ds.getDeploymentTargetNodeId());
+                      dsRelayContainer.setDeploymentTargetNodeHostname(ds.getDeploymentTargetNodeHostname());
+                      dsRelayContainer.setDeploymentTargetNodePort(ds.getDeploymentTargetNodePort());
+
+                      dataStreamRelays.add(new SpDataStreamRelay(new EventGrounding(g.getInputStreams()
+                              .get(getIndex(ds.getDOM(), g))
+                              .getEventGrounding())));
+                    })
+            );
+
+    dsRelayContainer.setOutputStreamRelays(dataStreamRelays);
+    dsRelayContainers.add(dsRelayContainer);
+
+    return dsRelayContainers;
+  }
+
+  private boolean matchingDeploymentTargets(SpDataStream source, InvocableStreamPipesEntity target) {
+    return source.getDeploymentTargetNodeId().equals(target.getDeploymentTargetNodeId());
+  }
+
+  private boolean connected(SpDataStream source, InvocableStreamPipesEntity target) {
+    int index = getIndex(source.getDOM(), target);
+    if (index != -1) {
+      return target.getConnectedTo().get(index).equals(source.getDOM());
+    }
+    return false;
   }
 
   private List<InvocableStreamPipesEntity> decryptSecrets(List<InvocableStreamPipesEntity> graphs) {
@@ -124,40 +222,6 @@ public class PipelineExecutor {
     return decryptedGraphs;
   }
 
-  public PipelineOperationStatus stopPipeline() {
-    List<InvocableStreamPipesEntity> graphs = TemporaryGraphStorage.graphStorage.get(pipeline.getPipelineId());
-    List<SpDataSet> dataSets = TemporaryGraphStorage.datasetStorage.get(pipeline.getPipelineId());
-
-    PipelineOperationStatus status = new GraphSubmitter(pipeline.getPipelineId(),
-            pipeline.getName(),  graphs, dataSets)
-            .detachGraphs();
-
-    if (status.isSuccess()) {
-      if (visualize) {
-        StorageDispatcher
-                .INSTANCE
-                .getNoSqlStore()
-                .getVisualizationStorageApi()
-                .deleteVisualization(pipeline.getPipelineId());
-      }
-      if (storeStatus) {
-        setPipelineStopped(pipeline);
-      }
-
-      PipelineStatusManager.addPipelineStatus(pipeline.getPipelineId(),
-              new PipelineStatusMessage(pipeline.getPipelineId(),
-                      System.currentTimeMillis(),
-                      PipelineStatusMessageType.PIPELINE_STOPPED.title(),
-                      PipelineStatusMessageType.PIPELINE_STOPPED.description()));
-
-      if (monitor) {
-        SepMonitoringManager.removeObserver(pipeline.getPipelineId());
-      }
-
-    }
-    return status;
-  }
-
   private void setPipelineStarted(Pipeline pipeline) {
     pipeline.setRunning(true);
     pipeline.setStartedAt(new Date().getTime());
@@ -181,6 +245,10 @@ public class PipelineExecutor {
 
   private IPipelineStorage getPipelineStorageApi() {
     return StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI();
+  }
+
+  private Integer getIndex(String sourceDomId, InvocableStreamPipesEntity targetElement) {
+    return targetElement.getConnectedTo().indexOf(sourceDomId);
   }
 
 }

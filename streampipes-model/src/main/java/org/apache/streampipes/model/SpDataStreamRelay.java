@@ -59,6 +59,7 @@ public class SpDataStreamRelay extends NamedStreamPipesEntity {
     }
 
     public SpDataStreamRelay(EventGrounding eventGrounding) {
+        super(prefix + RandomStringUtils.randomAlphabetic(6));
         this.eventGrounding = eventGrounding;
     }
 
