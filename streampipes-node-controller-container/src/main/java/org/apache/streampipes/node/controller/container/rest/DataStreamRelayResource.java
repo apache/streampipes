@@ -17,14 +17,13 @@
  */
 package org.apache.streampipes.node.controller.container.rest;
 
-import org.apache.streampipes.container.transform.Transformer;
 import org.apache.streampipes.container.util.Util;
 import org.apache.streampipes.model.Response;
 import org.apache.streampipes.model.SpDataStreamRelayContainer;
 import org.apache.streampipes.model.grounding.TransportProtocol;
-import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.node.controller.container.management.relay.EventRelay;
 import org.apache.streampipes.node.controller.container.management.relay.RunningRelayInstances;
+import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,10 +33,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Path("/api/v2/node/stream/relay")
-public class DataStreamRelayResource extends AbstractNodeContainerResource {
+public class DataStreamRelayResource extends AbstractResource {
     private static final Logger LOG = LoggerFactory.getLogger(DataStreamRelayResource.class.getCanonicalName());
 
     @POST
+    @JacksonSerialized
     @Path("/invoke")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

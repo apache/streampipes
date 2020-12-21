@@ -18,7 +18,7 @@
 package org.apache.streampipes.node.controller.container.management.janitor;
 
 import org.apache.streampipes.node.controller.container.config.NodeControllerConfig;
-import org.apache.streampipes.node.controller.container.management.orchestrator.docker.DockerUtils;
+import org.apache.streampipes.node.controller.container.management.orchestrator.docker.utils.DockerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

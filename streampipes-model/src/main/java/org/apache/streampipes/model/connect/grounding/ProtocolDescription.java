@@ -65,6 +65,12 @@ public class ProtocolDescription extends NamedStreamPipesEntity {
     @RdfProperty(StreamPipes.DEPLOYMENT_TARGET_NODE_PORT)
     private Integer deploymentTargetNodePort;
 
+    @RdfProperty(StreamPipes.ELEMENT_ENDPOINT_HOSTNAME)
+    private String elementEndpointHostname;
+
+    @RdfProperty(StreamPipes.ELEMENT_ENDPOINT_PORT)
+    private Integer elementEndpointPort;
+
     public ProtocolDescription() {
     }
 
@@ -145,5 +151,21 @@ public class ProtocolDescription extends NamedStreamPipesEntity {
 
     public void setDeploymentTargetNodePort(Integer deploymentTargetNodePort) {
         this.deploymentTargetNodePort = deploymentTargetNodePort;
+    }
+
+    public String getElementEndpointHostname() {
+        return elementEndpointHostname;
+    }
+
+    public void setElementEndpointHostname(String elementEndpointHostname) {
+        this.elementEndpointHostname = elementEndpointHostname;
+    }
+
+    public Integer getElementEndpointPort() {
+        return elementEndpointPort;
+    }
+
+    public void setElementEndpointPort(Integer elementEndpointPort) {
+        this.elementEndpointPort = elementEndpointPort;
     }
 }

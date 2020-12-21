@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.node.controller.container.management.orchestrator.docker;
+package org.apache.streampipes.node.controller.container.management.orchestrator.docker.utils;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -25,7 +25,8 @@ import com.spotify.docker.client.exceptions.DockerCertificateException;
 import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.*;
 import com.spotify.docker.client.shaded.com.google.common.collect.ImmutableList;
-import org.apache.streampipes.model.node.PipelineElementDockerContainer;
+import org.apache.streampipes.model.node.DockerContainer;
+import org.apache.streampipes.node.controller.container.management.orchestrator.docker.DockerInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -117,7 +118,7 @@ public class DockerUtils {
     }
 
 
-    public String createContainer(PipelineElementDockerContainer p) {
+    public String createContainer(DockerContainer p) {
         LOG.info("Create pipeline element container {}", p.getContainerName());
         try {
             return docker.createContainer(getContainerConfig(p), verifyContainerName(p.getContainerName())).id();
@@ -132,7 +133,7 @@ public class DockerUtils {
                 containerName : SP_CONTAINER_PREFIX + containerName;
     }
 
-    private ContainerConfig getContainerConfig(PipelineElementDockerContainer p) {
+    private ContainerConfig getContainerConfig(DockerContainer p) {
         return ContainerConfig.builder()
                 .hostname(p.getContainerName())
                 .tty(true)

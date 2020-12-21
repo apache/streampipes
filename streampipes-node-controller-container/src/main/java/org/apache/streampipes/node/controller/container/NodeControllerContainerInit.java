@@ -21,9 +21,9 @@ import org.apache.streampipes.container.util.ConsulUtil;
 import org.apache.streampipes.node.controller.container.management.orchestrator.docker.DockerContainerOrchestrator;
 import org.apache.streampipes.node.controller.container.rest.NodeControllerResourceConfig;
 import org.apache.streampipes.node.controller.container.config.NodeControllerConfig;
-import org.apache.streampipes.node.controller.container.management.info.NodeInfoStorage;
+import org.apache.streampipes.node.controller.container.management.node.NodeManager;
 import org.apache.streampipes.node.controller.container.management.janitor.NodeJanitorManager;
-import org.apache.streampipes.node.controller.container.management.resources.ResourceManager;
+import org.apache.streampipes.node.controller.container.management.resource.ResourceManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -51,7 +51,7 @@ public class NodeControllerContainerInit {
         app.run();
 
         LOG.info("Load static node metadata");
-        NodeInfoStorage.init();
+        NodeManager.init();
 
         LOG.info("Start Node Resource manager");
         ResourceManager.getInstance().run();

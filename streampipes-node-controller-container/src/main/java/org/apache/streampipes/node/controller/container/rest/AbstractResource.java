@@ -21,7 +21,8 @@ import org.apache.streampipes.model.message.Message;
 
 import javax.ws.rs.core.Response;
 
-public abstract class AbstractNodeContainerResource {
+
+public abstract class AbstractResource {
 
     protected <T> Response ok(T entity) {
         return Response

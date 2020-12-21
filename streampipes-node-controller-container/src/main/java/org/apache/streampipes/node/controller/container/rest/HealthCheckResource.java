@@ -26,7 +26,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/")
-public class HealthCheckResource extends AbstractNodeContainerResource{
+public class HealthCheckResource extends AbstractResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

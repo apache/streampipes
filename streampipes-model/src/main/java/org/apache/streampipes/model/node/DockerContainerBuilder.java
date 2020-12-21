@@ -17,9 +17,9 @@ package org.apache.streampipes.model.node;/*
  */
 import java.util.*;
 
-public class PipelineElementDockerContainerBuilder {
+public class DockerContainerBuilder {
 
-    private PipelineElementDockerContainer pipelineElementDockerContainer;
+    private DockerContainer dockerContainer;
     private String imageURI;
     private String containerName;
     private String serviceId;
@@ -27,9 +27,9 @@ public class PipelineElementDockerContainerBuilder {
     private List<String> envVars;
     private Map<String, String> labels;
 
-    public PipelineElementDockerContainerBuilder(String id) {
-        this.pipelineElementDockerContainer = new PipelineElementDockerContainer();
-        this.pipelineElementDockerContainer.setServiceId(id);
+    public DockerContainerBuilder(String id) {
+        this.dockerContainer = new DockerContainer();
+        this.dockerContainer.setServiceId(id);
         this.imageURI = "";
         this.containerName = "";
         this.containerPorts = new String[]{};
@@ -37,37 +37,37 @@ public class PipelineElementDockerContainerBuilder {
         this.labels = new HashMap<>();
     }
 
-    public static PipelineElementDockerContainerBuilder create(String id) {
-        return new PipelineElementDockerContainerBuilder(id);
+    public static DockerContainerBuilder create(String id) {
+        return new DockerContainerBuilder(id);
     }
 
-    public PipelineElementDockerContainerBuilder withImage(String imageUri) {
-        this.pipelineElementDockerContainer.setImageURI(imageUri);
+    public DockerContainerBuilder withImage(String imageUri) {
+        this.dockerContainer.setImageURI(imageUri);
         return this;
     }
 
-    public PipelineElementDockerContainerBuilder withName(String name) {
-        this.pipelineElementDockerContainer.setContainerName(name);
+    public DockerContainerBuilder withName(String name) {
+        this.dockerContainer.setContainerName(name);
         return this;
     }
 
-    public PipelineElementDockerContainerBuilder withExposedPorts(String[] ports) {
-        this.pipelineElementDockerContainer.setContainerPorts(ports);
+    public DockerContainerBuilder withExposedPorts(String[] ports) {
+        this.dockerContainer.setContainerPorts(ports);
         return this;
     }
 
-    public PipelineElementDockerContainerBuilder withEnvironmentVariables(List<String> envs) {
-        this.pipelineElementDockerContainer.setEnvVars(envs);
+    public DockerContainerBuilder withEnvironmentVariables(List<String> envs) {
+        this.dockerContainer.setEnvVars(envs);
         return this;
     }
 
-    public PipelineElementDockerContainerBuilder withLabels(Map<String, String> labels) {
-        this.pipelineElementDockerContainer.setLabels(labels);
+    public DockerContainerBuilder withLabels(Map<String, String> labels) {
+        this.dockerContainer.setLabels(labels);
         return this;
     }
 
-    public PipelineElementDockerContainer build() {
-        return pipelineElementDockerContainer;
+    public DockerContainer build() {
+        return dockerContainer;
     }
 
 }

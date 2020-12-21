@@ -54,11 +54,22 @@ public class AdapterMasterManagement {
                 new AdapterEncryptionService(new Cloner().adapterDescription(ad)).decrypt();
         String wUrl = new Utils().getWorkerUrl(decryptedAdapterDescription);
 
-        if (wUrl.equals(connectWorkerContainer.getEndpointUrl())) {
-          String url = Utils.addUserNameToApi(connectWorkerContainer.getEndpointUrl(),
-                  decryptedAdapterDescription.getUserName());
+        if (connectWorkerContainer.getDeploymentTargetNodeId() != null) {
+          String cwEndpoint =
+                  "http://" + connectWorkerContainer.getDeploymentTargetNodeHostname() + ":" + connectWorkerContainer.getDeploymentTargetNodePort() + "/";
+          if (wUrl.equals(cwEndpoint)) {
+            String url = Utils.addUserNameToApi(cwEndpoint,
+                    decryptedAdapterDescription.getUserName());
 
-          WorkerRestClient.invokeStreamAdapter(url, (AdapterStreamDescription) decryptedAdapterDescription);
+            WorkerRestClient.invokeStreamAdapter(url, (AdapterStreamDescription) decryptedAdapterDescription);
+          }
+        } else {
+          if (wUrl.equals(connectWorkerContainer.getEndpointUrl())) {
+            String url = Utils.addUserNameToApi(connectWorkerContainer.getEndpointUrl(),
+                    decryptedAdapterDescription.getUserName());
+
+            WorkerRestClient.invokeStreamAdapter(url, (AdapterStreamDescription) decryptedAdapterDescription);
+          }
         }
 
       }

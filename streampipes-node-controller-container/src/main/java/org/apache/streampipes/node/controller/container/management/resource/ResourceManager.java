@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.node.controller.container.management.resources;
+package org.apache.streampipes.node.controller.container.management.resource;
 
 import com.google.gson.Gson;
 import org.apache.streampipes.node.controller.container.config.NodeControllerConfig;

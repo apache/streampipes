@@ -109,13 +109,19 @@ public class WorkerAdministrationManagement {
         for (ConnectWorkerContainer connectWorkerContainer : allConnectWorkerContainer) {
             if (connectWorkerContainer.getProtocols().stream().anyMatch(p -> p.getAppId().equals(id))
                     && connectWorkerContainer.getDeploymentTargetNodeId().equals(deploymentTargetNodeId)) {
-                workerUrl = connectWorkerContainer.getEndpointUrl();
+                workerUrl = makeDeploymentTargetEndpoint(connectWorkerContainer);
             } else if (connectWorkerContainer.getAdapters().stream().anyMatch(a -> a.getAppId().equals(id))
                     && connectWorkerContainer.getDeploymentTargetNodeId().equals(deploymentTargetNodeId)) {
-                workerUrl = connectWorkerContainer.getEndpointUrl();
+                workerUrl = makeDeploymentTargetEndpoint(connectWorkerContainer);
             }
         }
 
         return workerUrl;
     }
+
+    private String makeDeploymentTargetEndpoint(ConnectWorkerContainer cw) {
+        return "http://" + cw.getDeploymentTargetNodeHostname() + ":" + cw.getDeploymentTargetNodePort() + "/";
+    }
+
+
 }

@@ -17,19 +17,19 @@
  */
 package org.apache.streampipes.node.controller.container.management.orchestrator;
 
-import org.apache.streampipes.model.node.PipelineElementDockerContainer;
+import org.apache.streampipes.model.node.DockerContainer;
 import org.apache.streampipes.node.controller.container.management.IRunningInstances;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public enum RunningContainerInstances implements IRunningInstances<PipelineElementDockerContainer> {
+public enum RunningContainerInstances implements IRunningInstances<DockerContainer> {
     INSTANCE;
 
-    private final Map<String, PipelineElementDockerContainer> runningInstances = new HashMap<>();
+    private final Map<String, DockerContainer> runningInstances = new HashMap<>();
 
     @Override
-    public void add(String id, PipelineElementDockerContainer container) {
+    public void add(String id, DockerContainer container) {
         runningInstances.put(id, container);
     }
 
@@ -39,7 +39,7 @@ public enum RunningContainerInstances implements IRunningInstances<PipelineEleme
     }
 
     @Override
-    public PipelineElementDockerContainer get(String id) {
+    public DockerContainer get(String id) {
         return isRunning(id) ? runningInstances.get(id) : null;
     }
 

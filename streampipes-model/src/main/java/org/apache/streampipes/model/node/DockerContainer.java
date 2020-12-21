@@ -31,7 +31,7 @@ import java.util.Map;
 @RdfsClass(StreamPipes.PE_DOCKER_CONTAINER)
 @Entity
 @TsModel
-public class PipelineElementDockerContainer extends UnnamedStreamPipesEntity {
+public class DockerContainer extends UnnamedStreamPipesEntity {
 
     @RdfProperty(StreamPipes.PE_DOCKER_CONTAINER_IMAGE_URI)
     private String imageURI;
@@ -51,16 +51,16 @@ public class PipelineElementDockerContainer extends UnnamedStreamPipesEntity {
     @RdfProperty(StreamPipes.PE_DOCKER_CONTAINER_LABELS)
     private Map<String, String> labels;
 
-    public PipelineElementDockerContainer() {
+    public DockerContainer() {
         super();
     }
 
-    public PipelineElementDockerContainer(String elementId) {
+    public DockerContainer(String elementId) {
         super(elementId);
     }
 
-    public PipelineElementDockerContainer(String imageURI, String containerName, String serviceId, String [] containerPorts,
-                                          List<String> envVars, Map<String, String> labels) {
+    public DockerContainer(String imageURI, String containerName, String serviceId, String [] containerPorts,
+                           List<String> envVars, Map<String, String> labels) {
         this.imageURI = imageURI;
         this.containerName = containerName;
         this.serviceId = serviceId;
@@ -69,7 +69,7 @@ public class PipelineElementDockerContainer extends UnnamedStreamPipesEntity {
         this.labels = labels;
     }
 
-    public PipelineElementDockerContainer(PipelineElementDockerContainer other) {
+    public DockerContainer(DockerContainer other) {
         super(other);
         this.imageURI = other.getImageURI();
         this.containerName = other.getContainerName();

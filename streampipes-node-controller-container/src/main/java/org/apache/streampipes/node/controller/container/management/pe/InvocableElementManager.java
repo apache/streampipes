@@ -23,7 +23,7 @@ import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.streampipes.container.model.node.InvocableRegistration;
-import org.apache.streampipes.node.controller.container.management.info.NodeInfoStorage;
+import org.apache.streampipes.node.controller.container.management.node.NodeManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.Collections;
 
-public class InvocableElementManager implements ElementLifeCyle {
+public class InvocableElementManager implements InvocableLifeCycle {
 
     private static final Logger LOG =
             LoggerFactory.getLogger(InvocableElementManager.class.getCanonicalName());
@@ -66,7 +66,7 @@ public class InvocableElementManager implements ElementLifeCyle {
                     .execute();
 
             // TODO: persistent storage to survive failures
-            NodeInfoStorage.getInstance()
+            NodeManager.getInstance()
                     .retrieveNodeInfo()
                     .setSupportedPipelineElementAppIds(registration.getSupportedPipelineElementAppIds());
 
@@ -118,7 +118,7 @@ public class InvocableElementManager implements ElementLifeCyle {
     @Override
     public void unregister(){
         // TODO: unregister element from Consul and
-        NodeInfoStorage.getInstance()
+        NodeManager.getInstance()
                 .retrieveNodeInfo()
                 .setSupportedPipelineElementAppIds(Collections.emptyList());
     }

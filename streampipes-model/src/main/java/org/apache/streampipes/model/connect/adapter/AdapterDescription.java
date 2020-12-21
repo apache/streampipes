@@ -101,6 +101,12 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
     @RdfProperty(StreamPipes.DEPLOYMENT_TARGET_NODE_PORT)
     private Integer deploymentTargetNodePort;
 
+    @RdfProperty(StreamPipes.ELEMENT_ENDPOINT_HOSTNAME)
+    private String elementEndpointHostname;
+
+    @RdfProperty(StreamPipes.ELEMENT_ENDPOINT_PORT)
+    private Integer elementEndpointPort;
+
     public AdapterDescription() {
         super();
         this.rules = new ArrayList<>();
@@ -136,6 +142,8 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
         this.deploymentTargetNodeId = other.getDeploymentTargetNodeId();
         this.deploymentTargetNodeHostname = other.getDeploymentTargetNodeHostname();
         this.deploymentTargetNodePort = other.getDeploymentTargetNodePort();
+        this.elementEndpointHostname = other.getElementEndpointHostname();
+        this.elementEndpointPort = other.getElementEndpointPort();
         if (other.getEventGrounding() != null) this.eventGrounding = new EventGrounding(other.getEventGrounding());
     }
 
@@ -229,6 +237,22 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
 
     public void setDeploymentTargetNodePort(Integer deploymentTargetNodePort) {
         this.deploymentTargetNodePort = deploymentTargetNodePort;
+    }
+
+    public String getElementEndpointHostname() {
+        return elementEndpointHostname;
+    }
+
+    public void setElementEndpointHostname(String elementEndpointHostname) {
+        this.elementEndpointHostname = elementEndpointHostname;
+    }
+
+    public Integer getElementEndpointPort() {
+        return elementEndpointPort;
+    }
+
+    public void setElementEndpointPort(Integer elementEndpointPort) {
+        this.elementEndpointPort = elementEndpointPort;
     }
 
     public List getValueRules() {

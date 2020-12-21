@@ -18,21 +18,19 @@
 package org.apache.streampipes.node.controller.container.management.orchestrator.docker;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.model.node.Node;
-import org.apache.streampipes.model.node.PipelineElementDockerContainer;
-import org.apache.streampipes.model.node.PipelineElementDockerContainerBuilder;
-import org.apache.streampipes.node.controller.container.NodeControllerContainerInit;
+import org.apache.streampipes.model.node.DockerContainer;
+import org.apache.streampipes.model.node.DockerContainerBuilder;
 import org.apache.streampipes.node.controller.container.config.ConfigKeys;
 import org.apache.streampipes.node.controller.container.config.NodeControllerConfig;
 
 import java.util.*;
 
-public enum DockerNodeContainer {
+public enum StreamPipesNodeContainer {
     INSTANCE;
 
     private static final String LABEL_CONTAINER_TYPE_KEY = "org.apache.streampipes.container.type";
     private static final String LABEL_CONTAINER_TYPE_EXTENSIONS_VALUE = "pipeline-element";
-    private static final String LABEL_CONTAINER_TYPE_BROKER_VALUE = "broker";
+    private static final String LABEL_CONTAINER_TYPE_BROKER_VALUE = "node-broker";
     private static final String LABEL_NODE_TYPE_KEY = "org.apache.streampipes.node.type";
     private static final String LABEL_NODE_TYPE_VALUE = NodeControllerConfig.INSTANCE.getNodeType();
 
@@ -41,13 +39,12 @@ public enum DockerNodeContainer {
     private static final String SP_VERSION = NodeControllerConfig.INSTANCE.getSpVersion();
     private static final String SP_CONTAINER_NAME_PREFIX = "streampipes_";
 
-    public List<PipelineElementDockerContainer> get() {
+    public List<DockerContainer> get() {
         //NodeInfoStorage.getInstance().retrieveNodeInfo().getNodeResources().getHardwareResource().getCpu().getArch();
-        List<PipelineElementDockerContainer> nodeContainers = new ArrayList<>();
+        List<DockerContainer> nodeContainers = new ArrayList<>();
 
         // Extensions container
-        PipelineElementDockerContainer extensions =
-                PipelineElementDockerContainerBuilder.create("pe/org.apache.streampipes.extensions.all.jvm")
+        DockerContainer extensions = DockerContainerBuilder.create("pe/org.apache.streampipes.extensions.all.jvm")
                         .withImage(SP_DOCKER_REPOSITORY + "/" + "extensions-all-jvm" + ":" + SP_VERSION)
                         .withName(SP_CONTAINER_NAME_PREFIX + "extensions-all-jvm")
                         .withExposedPorts(new String[]{"7023"})
@@ -56,8 +53,7 @@ public enum DockerNodeContainer {
                         .build();
 
         // Node broker container
-        PipelineElementDockerContainer nodeBroker =
-                PipelineElementDockerContainerBuilder.create("pe/org.apache.streampipes.node.broker")
+        DockerContainer nodeBroker = DockerContainerBuilder.create("pe/org.apache.streampipes.node.broker")
                         .withImage("eclipse-mosquitto:1.6.12")
                         .withName(SP_CONTAINER_NAME_PREFIX + "node-broker")
                         .withExposedPorts(new String[]{"1883"})
@@ -92,6 +88,7 @@ public enum DockerNodeContainer {
                 ConfigKeys.NODE_CONTROLLER_ID + "=" + NodeControllerConfig.INSTANCE.getNodeControllerId(),
                 ConfigKeys.NODE_CONTROLLER_CONTAINER_HOST +  "=" + NodeControllerConfig.INSTANCE.getNodeHostName(),
                 ConfigKeys.NODE_CONTROLLER_CONTAINER_PORT + "=" + NodeControllerConfig.INSTANCE.getNodeControllerPort(),
+                ConfigKeys.NODE_BROKER_CONTAINER_HOST + "=" + NodeControllerConfig.INSTANCE.getNodeBrokerHost(),
                 ConfigKeys.NODE_BROKER_CONTAINER_PORT + "=" + NodeControllerConfig.INSTANCE.getNodeControllerPort()
         );
     }

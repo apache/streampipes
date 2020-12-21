@@ -80,7 +80,7 @@ public class NodeInfoBuilder {
         return this;
     }
 
-    public NodeInfoBuilder withJmsTransportProtocol(String brokerHost, Integer brokerPort) {
+    public NodeInfoBuilder withNodeBroker(String brokerHost, Integer brokerPort) {
         //this.nodeBrokerInfo.setTransportProtocol(makeJmsTransportProtocol(brokerHost, brokerPort));
         this.nodeBrokerInfo.setHost(brokerHost);
         this.nodeBrokerInfo.setPort(brokerPort);

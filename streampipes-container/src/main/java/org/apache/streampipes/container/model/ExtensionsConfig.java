@@ -26,5 +26,4 @@ public interface ExtensionsConfig {
     String getName();
     String getBackendHost();
     int getBackendPort();
-
 }

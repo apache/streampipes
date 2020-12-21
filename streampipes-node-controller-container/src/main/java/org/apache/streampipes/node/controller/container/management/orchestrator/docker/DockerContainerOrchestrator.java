@@ -24,9 +24,10 @@ import com.spotify.docker.client.exceptions.NotFoundException;
 import com.spotify.docker.client.messages.Container;
 import org.apache.commons.lang.StringUtils;
 import org.apache.streampipes.container.util.ConsulUtil;
-import org.apache.streampipes.model.node.PipelineElementDockerContainer;
+import org.apache.streampipes.model.node.DockerContainer;
 import org.apache.streampipes.node.controller.container.management.orchestrator.ContainerOrchestrator;
 import org.apache.streampipes.node.controller.container.management.orchestrator.ContainerStatus;
+import org.apache.streampipes.node.controller.container.management.orchestrator.docker.utils.DockerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,11 +56,11 @@ public class DockerContainerOrchestrator implements ContainerOrchestrator {
 
     @Override
     public void init() {
-        DockerNodeContainer.INSTANCE.get().forEach(this::deploy);
+        StreamPipesNodeContainer.INSTANCE.get().forEach(this::deploy);
     }
 
     @Override
-    public String deploy(PipelineElementDockerContainer p) {
+    public String deploy(DockerContainer p) {
         LOG.info("Pull image and deploy pipeline element container {}", p.getImageURI());
 
         Optional<Container> containerOptional = docker.getContainer(p.getContainerName());
@@ -88,7 +89,7 @@ public class DockerContainerOrchestrator implements ContainerOrchestrator {
     }
 
     @Override
-    public String remove(PipelineElementDockerContainer p) {
+    public String remove(DockerContainer p) {
         LOG.info("Remove pipeline element container: {}", p.getImageURI());
 
         Optional<Container> containerOptional = docker.getContainer(p.getContainerName());
@@ -134,11 +135,11 @@ public class DockerContainerOrchestrator implements ContainerOrchestrator {
         return new Gson().toJson(m);
     }
 
-    private String deployPipelineElementContainer(PipelineElementDockerContainer p) throws Exception {
+    private String deployPipelineElementContainer(DockerContainer p) throws Exception {
         return deployPipelineElementContainer(p, true);
     }
 
-    private String deployPipelineElementContainer(PipelineElementDockerContainer p, boolean pullImage) throws Exception {
+    private String deployPipelineElementContainer(DockerContainer p, boolean pullImage) throws Exception {
         if (pullImage) {
             try {
                 docker.pullImage(p.getImageURI(), false);

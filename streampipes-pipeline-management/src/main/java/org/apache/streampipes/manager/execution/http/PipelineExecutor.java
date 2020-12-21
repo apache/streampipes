@@ -163,9 +163,8 @@ public class PipelineExecutor {
             .forEach(g -> pipeline.getStreams()
                     .forEach(ds -> {
                       dsRelayContainer.setRunningStreamRelayInstanceId(pipeline.getPipelineId());
-                      // TODO: retrieve relay strategy from somewhere, e.g. make it accessible on pipeline level
                       dsRelayContainer.setEventRelayStrategy(pipeline.getEventRelayStrategy());
-                      dsRelayContainer.setName(ds.getName() + " (Data Stream Relay)");
+                      dsRelayContainer.setName(ds.getName() + " (Stream Relay)");
                       dsRelayContainer.setInputGrounding(new EventGrounding(ds.getEventGrounding()));
                       dsRelayContainer.setDeploymentTargetNodeId(ds.getDeploymentTargetNodeId());
                       dsRelayContainer.setDeploymentTargetNodeHostname(ds.getDeploymentTargetNodeHostname());

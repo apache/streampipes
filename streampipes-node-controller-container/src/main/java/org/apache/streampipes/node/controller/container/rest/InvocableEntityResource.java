@@ -24,7 +24,7 @@ import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.grounding.TransportProtocol;
-import org.apache.streampipes.model.node.PipelineElementDockerContainer;
+import org.apache.streampipes.model.node.DockerContainer;
 import org.apache.streampipes.node.controller.container.management.orchestrator.docker.DockerContainerOrchestrator;
 import org.apache.streampipes.node.controller.container.management.pe.InvocableElementManager;
 import org.apache.streampipes.node.controller.container.management.pe.RunningInvocableInstances;
@@ -42,7 +42,7 @@ import java.util.List;
 import java.util.Map;
 
 @Path("/api/v2/node/container")
-public class InvocableEntityResource extends AbstractNodeContainerResource {
+public class InvocableEntityResource extends AbstractResource {
     private static final Logger LOG = LoggerFactory.getLogger(InvocableEntityResource.class.getCanonicalName());
 
     @GET
@@ -54,7 +54,7 @@ public class InvocableEntityResource extends AbstractNodeContainerResource {
     @POST
     @Path("/deploy")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response deployPipelineElementContainer(PipelineElementDockerContainer container) {
+    public Response deployPipelineElementContainer(DockerContainer container) {
         return ok(DockerContainerOrchestrator.getInstance().deploy(container));
     }
 
@@ -105,7 +105,8 @@ public class InvocableEntityResource extends AbstractNodeContainerResource {
                 return resp.toString();
 
             }
-            // Currently no data sinks are registered
+            // Currently no data sinks are registered at node controller. If we, at some point, want to also run data
+            // sinks on edge nodes we need to register there Declarer at the node controller one startup.
             else if (identifier.equals("sec")) {
                 graph = Transformer.fromJsonLd(DataSinkInvocation.class, payload);
                 endpoint = graph.getBelongsTo();
@@ -134,7 +135,6 @@ public class InvocableEntityResource extends AbstractNodeContainerResource {
 
         LOG.info("receive stop request elementId={}, runningInstanceId={}", elementId, runningInstanceId);
 
-        // TODO store host and port locally to retrieve by runningInstanceId
         String endpoint = RunningInvocableInstances.INSTANCE.get(runningInstanceId).getBelongsTo();
         String resp = InvocableElementManager.getInstance().detach(endpoint + "/" + runningInstanceId);
 
@@ -153,7 +153,7 @@ public class InvocableEntityResource extends AbstractNodeContainerResource {
     @DELETE
     @Path("/remove")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response removePipelineElementContainer(PipelineElementDockerContainer container) {
+    public Response removePipelineElementContainer(DockerContainer container) {
         InvocableElementManager.getInstance().unregister();
         return ok(DockerContainerOrchestrator.getInstance().remove(container));
     }

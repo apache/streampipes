@@ -15,18 +15,18 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.node.controller.container.management.orchestrator;
 
-import org.apache.streampipes.model.node.DockerContainer;
+package org.apache.streampipes.container.model;
 
-public interface ContainerOrchestrator {
+public interface EdgeExtensionsConfig {
 
-   void init();
-
-   String deploy(DockerContainer p);
-
-   String remove(DockerContainer p);
-
-   String list();
-
+    String getId();
+    String getHost();
+    int getPort();
+    String getName();
+    // TODO: del when working
+    String getBackendHost();
+    int getBackendPort();
+    String getNodeControllerHost();
+    int getNodeControllerPort();
 }

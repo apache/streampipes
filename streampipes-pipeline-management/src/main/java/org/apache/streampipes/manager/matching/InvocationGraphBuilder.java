@@ -40,10 +40,15 @@ import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.sdk.helpers.Tuple2;
 
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class InvocationGraphBuilder {
 
+  private static final String CONSUL_NODE_CONTROLLER_ROUTE = "sp/v1/node/org.apache.streampipes.node.controller";
+  private static final String NODE_BROKER_CONTAINER_HOST = "SP_NODE_BROKER_CONTAINER_HOST";
+  private static final String NODE_BROKER_CONTAINER_PORT = "SP_NODE_BROKER_CONTAINER_PORT";
+  private static final String SLASH ="/";
   private static final String DEFAULT_TAG = "default";
   private final PipelineGraph pipelineGraph;
   private final String pipelineId;
@@ -106,7 +111,7 @@ public class InvocationGraphBuilder {
                         new SpDataStreamRelay(generateRelayGrounding(inputGrounding,false)));
               } else {
                 // modify relay topic of existing relay grounding
-                modifyTopicForEventRelay(source, t, extractTopic(inputGrounding));
+                modifyTopicForDataStreamRelay(source, t, extractTopic(inputGrounding));
               }
               modifyTopicForTargetInputStream(source, t, extractTopic(inputGrounding));
             } else {
@@ -119,7 +124,6 @@ public class InvocationGraphBuilder {
           }
           else {
             // target runs on other edge node: use target edge node broker
-            //if (!eventRelayExists(inputGrounding, source)) {
             if (!eventRelayExists(source ,t)) {
 
               EventGrounding relayGrounding = generateRelayGrounding(inputGrounding, t,true);
@@ -147,9 +151,7 @@ public class InvocationGraphBuilder {
                       .setEventGrounding(updatedRelayGrounding);
             }
           }
-//            t.getInputStreams()
-//                    .get(getIndex(source.getDOM(), t))
-//                    .setEventGrounding(inputGrounding);
+
         } else {
 
         // TODO: Handle following edge situation:
@@ -165,8 +167,8 @@ public class InvocationGraphBuilder {
           } else if (defaultDeploymentTarget(t)) {
             // target runs on cloud node: use central cloud broker, e.g. kafka
             EventGrounding eg = generateRelayGrounding(inputGrounding,false);
-            // TODO: make topic unique for target in case we have multiple source stream relays to the target
-            String oldTopic = eg.getTransportProtocol().getTopicDefinition().getActualTopicName();
+            // use unique topic for target in case we have multiple source stream relays to the target
+            String oldTopic = extractTopic(eg);
             eg.getTransportProtocol().getTopicDefinition().setActualTopicName(oldTopic + "."
                     + this.pipelineId);
             t.getInputStreams()
@@ -174,9 +176,9 @@ public class InvocationGraphBuilder {
                     .setEventGrounding(eg);
           } else if (targetInvocableOnEdgeNode(t)) {
             // case 2: target on other edge node -> relay + target node broker
-            // TODO: make topic unique for target in case we have multiple source stream relays to the target
+            // use unique topic for target in case we have multiple source stream relays to the target
             EventGrounding eg = generateRelayGrounding(inputGrounding,t,true);
-            String oldTopic = eg.getTransportProtocol().getTopicDefinition().getActualTopicName();
+            String oldTopic = extractTopic(eg);
             eg.getTransportProtocol().getTopicDefinition().setActualTopicName(oldTopic + "."
                     + this.pipelineId);
             t.getInputStreams()
@@ -189,7 +191,6 @@ public class InvocationGraphBuilder {
                     .setEventGrounding(inputGrounding);
           }
       }
-
 
       t.getInputStreams()
               .get(getIndex(source.getDOM(), t))
@@ -235,8 +236,8 @@ public class InvocationGraphBuilder {
             .setActualTopicName(topic);
   }
 
-  private void modifyTopicForEventRelay(NamedStreamPipesEntity s, InvocableStreamPipesEntity t,
-                                        String topic) {
+  private void modifyTopicForDataStreamRelay(NamedStreamPipesEntity s, InvocableStreamPipesEntity t,
+                                             String topic) {
     ((DataProcessorInvocation) s)
             .getOutputStreamRelays()
             .get(getIndex(s.getDOM(), t))
@@ -257,16 +258,6 @@ public class InvocationGraphBuilder {
 
   private String extractTopic(EventGrounding eg) {
     return eg.getTransportProtocol().getTopicDefinition().getActualTopicName();
-  }
-
-  private boolean eventRelayExists(EventGrounding eg, NamedStreamPipesEntity s) {
-    return ((DataProcessorInvocation) s)
-            .getOutputStreamRelays()
-            .stream()
-            .anyMatch(r -> r.getEventGrounding()
-                    .getTransportProtocol()
-                    .getTopicDefinition()
-                    .getActualTopicName().equals(extractTopic(eg)));
   }
 
   private boolean eventRelayExists(NamedStreamPipesEntity s, InvocableStreamPipesEntity t) {
@@ -309,21 +300,23 @@ public class InvocationGraphBuilder {
   }
 
   private String getTargetNodeBrokerHost(InvocableStreamPipesEntity t) {
-    // TODO: no hardcoded route - only for testing
     return ConsulUtil.getValueForRoute(
-            "sp/v1/node/org.apache.streampipes.node.controller/"
-                    + t.getDeploymentTargetNodeHostname()
-                    + "/config/SP_NODE_BROKER_CONTAINER_HOST", String.class);
+            makeNodeControllerConfigRoute(t) + NODE_BROKER_CONTAINER_HOST, String.class);
   }
 
   private int getTargetNodeBrokerPort(InvocableStreamPipesEntity t) {
-    // TODO: no hardcoded route - only for testing
     return ConsulUtil.getValueForRoute(
-            "sp/v1/node/org.apache.streampipes.node.controller/"
-                    + t.getDeploymentTargetNodeHostname()
-                    + "/config/SP_NODE_BROKER_CONTAINER_PORT", Integer.class);
+            makeNodeControllerConfigRoute(t) + NODE_BROKER_CONTAINER_PORT, Integer.class);
   }
 
+  private String makeNodeControllerConfigRoute(InvocableStreamPipesEntity t) {
+    return CONSUL_NODE_CONTROLLER_ROUTE
+            + SLASH
+            + t.getDeploymentTargetNodeHostname()
+            + SLASH
+            + "config"
+            + SLASH;
+  }
 
   private boolean matchingDeploymentTargets(NamedStreamPipesEntity s, InvocableStreamPipesEntity t) {
     if (s instanceof DataProcessorInvocation &&

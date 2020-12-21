@@ -20,11 +20,13 @@ package org.apache.streampipes.container.extensions;
 import org.apache.streampipes.connect.adapter.Adapter;
 import org.apache.streampipes.connect.adapter.model.generic.Protocol;
 import org.apache.streampipes.connect.container.worker.management.MasterRestClient;
+import org.apache.streampipes.connect.container.worker.management.NodeControllerRestClient;
 import org.apache.streampipes.connect.init.AdapterDeclarerSingleton;
 import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.container.init.ModelSubmitter;
 import org.apache.streampipes.container.init.RunningInstances;
 import org.apache.streampipes.container.locales.LabelGenerator;
+import org.apache.streampipes.container.model.EdgeExtensionsConfig;
 import org.apache.streampipes.container.model.ExtensionsConfig;
 import org.apache.streampipes.container.util.ConsulUtil;
 import org.apache.streampipes.container.util.NodeControllerUtil;
@@ -56,7 +58,7 @@ import java.util.List;
 @Configuration
 @EnableAutoConfiguration
 @Import({ ExtensionsResourceConfig.class })
-public abstract class ExtensionsModelSubmitter extends ModelSubmitter<ExtensionsConfig> {
+public abstract class ExtensionsModelSubmitter extends ModelSubmitter<EdgeExtensionsConfig> {
     private static final Logger LOG =
             LoggerFactory.getLogger(ExtensionsModelSubmitter.class.getCanonicalName());
 
@@ -68,7 +70,7 @@ public abstract class ExtensionsModelSubmitter extends ModelSubmitter<Extensions
     private static final String NODE_CONTROLLER_CONTAINER_HOST = "SP_NODE_CONTROLLER_CONTAINER_HOST";
     private static final String NODE_CONTROLLER_CONTAINER_PORT = "SP_NODE_CONTROLLER_CONTAINER_PORT";
 
-    public void init(ExtensionsConfig conf) {
+    public void init(EdgeExtensionsConfig conf) {
         DeclarersSingleton.getInstance().setHostName(conf.getHost());
         DeclarersSingleton.getInstance().setPort(conf.getPort());
 
@@ -88,10 +90,6 @@ public abstract class ExtensionsModelSubmitter extends ModelSubmitter<Extensions
         app.setDefaultProperties(Collections.singletonMap("server.port", conf.getPort()));
         app.run();
 
-        // TODO: register at node controller first instead of backend directly
-        String backendUrl = PROTOCOL + conf.getBackendHost() + COLON + conf.getBackendPort() + "/streampipes-backend";
-        String adapterUrl = PROTOCOL + conf.getHost() + COLON + conf.getPort() + SLASH;
-
         // check wether pipeline element is managed by node controller
         if (System.getenv(NODE_CONTROLLER_ID) != null) {
             // secondary
@@ -102,10 +100,15 @@ public abstract class ExtensionsModelSubmitter extends ModelSubmitter<Extensions
                     conf.getPort(),
                     DeclarersSingleton.getInstance().getEpaDeclarers());
 
+            String nodeControllerUrl = PROTOCOL + conf.getNodeControllerHost() + COLON + conf.getNodeControllerPort();
+            String connectUrl = PROTOCOL + conf.getHost() + COLON + conf.getPort() + SLASH;
+
             boolean connected = false;
             while (!connected) {
-                LOG.info("Trying to connect to the backend: " + backendUrl);
-                connected = MasterRestClient.register(backendUrl, getContainerDescription(adapterUrl, true));
+                LOG.info("Trying to connect to the node controller: " + nodeControllerUrl);
+                connected = NodeControllerRestClient.register(
+                        nodeControllerUrl,
+                        getContainerDescription(conf.getHost(), conf.getPort(), true));
 
                 if (!connected) {
                     LOG.info("Retrying in 5 seconds");
@@ -116,7 +119,7 @@ public abstract class ExtensionsModelSubmitter extends ModelSubmitter<Extensions
                     }
                 }
             }
-            LOG.info("Successfully registered connect worker at the backend: " + backendUrl);
+            LOG.info("Successfully registered connect worker at the backend via node controller: " + nodeControllerUrl);
 
         } else {
             // primary
@@ -125,10 +128,13 @@ public abstract class ExtensionsModelSubmitter extends ModelSubmitter<Extensions
                     conf.getHost(),
                     conf.getPort());
 
+            String backendUrl = PROTOCOL + conf.getBackendHost() + COLON + conf.getBackendPort() + "/streampipes-backend";
+
             boolean connected = false;
             while (!connected) {
                 LOG.info("Trying to connect to master in backend: " + backendUrl);
-                connected = MasterRestClient.register(backendUrl, getContainerDescription(adapterUrl, false));
+                connected = MasterRestClient.register(backendUrl, getContainerDescription(conf.getHost(),
+                        conf.getPort(),  false));
 
                 if (!connected) {
                     LOG.info("Retrying in 5 seconds");
@@ -143,7 +149,10 @@ public abstract class ExtensionsModelSubmitter extends ModelSubmitter<Extensions
         }
     }
 
-    private ConnectWorkerContainer getContainerDescription(String endpointUrl, boolean runsOnEdgeNode) {
+    private ConnectWorkerContainer getContainerDescription(String connectWorkerHost, int connectWorkerPort,
+                                                           boolean runsOnEdgeNode) {
+
+        String endpointUrl = PROTOCOL + connectWorkerHost + COLON + connectWorkerPort + SLASH;
 
         if (runsOnEdgeNode) {
             String deploymentTargetNodeId = System.getenv(NODE_CONTROLLER_ID);
@@ -153,14 +162,16 @@ public abstract class ExtensionsModelSubmitter extends ModelSubmitter<Extensions
             List<AdapterDescription> adapters = new ArrayList<>();
             for (Adapter a : AdapterDeclarerSingleton.getInstance().getAllAdapters()) {
                 AdapterDescription desc = (AdapterDescription) rewrite(a.declareModel(), endpointUrl,
-                        deploymentTargetNodeId, deploymentTargetNodeHostname, deploymentTargetNodePort);
+                        deploymentTargetNodeId, deploymentTargetNodeHostname, deploymentTargetNodePort,
+                        connectWorkerHost, connectWorkerPort);
                 adapters.add(desc);
             }
 
             List<ProtocolDescription> protocols = new ArrayList<>();
             for (Protocol p : AdapterDeclarerSingleton.getInstance().getAllProtocols()) {
                 ProtocolDescription desc = (ProtocolDescription) rewrite(p.declareModel(), endpointUrl,
-                        deploymentTargetNodeId, deploymentTargetNodeHostname, deploymentTargetNodePort);
+                        deploymentTargetNodeId, deploymentTargetNodeHostname, deploymentTargetNodePort,
+                        connectWorkerHost, connectWorkerPort);
                 protocols.add(desc);
             }
 
@@ -207,18 +218,23 @@ public abstract class ExtensionsModelSubmitter extends ModelSubmitter<Extensions
 
     private NamedStreamPipesEntity rewrite(NamedStreamPipesEntity entity, String endpointUrl,
                                            String deploymentTargetNodeId, String deploymentTargetNodeHostname,
-                                           int deploymentTargetNodePort) {
+                                           int deploymentTargetNodePort, String connectWorkerHost,
+                                           int connectWorkerPort) {
         if (!(entity instanceof GenericAdapterDescription)) {
             if (entity instanceof  ProtocolDescription) {
                 entity.setElementId(endpointUrl +  "protocol/" + entity.getElementId());
                 ((ProtocolDescription) entity).setDeploymentTargetNodeId(deploymentTargetNodeId);
                 ((ProtocolDescription) entity).setDeploymentTargetNodeHostname(deploymentTargetNodeHostname);
                 ((ProtocolDescription) entity).setDeploymentTargetNodePort(deploymentTargetNodePort);
+                ((ProtocolDescription) entity).setElementEndpointHostname(connectWorkerHost);
+                ((ProtocolDescription) entity).setElementEndpointPort(connectWorkerPort);
             } else if (entity instanceof  AdapterDescription) {
                 entity.setElementId(endpointUrl + "adapter/" + entity.getElementId());
                 ((AdapterDescription) entity).setDeploymentTargetNodeId(deploymentTargetNodeId);
                 ((AdapterDescription) entity).setDeploymentTargetNodeHostname(deploymentTargetNodeHostname);
                 ((AdapterDescription) entity).setDeploymentTargetNodePort(deploymentTargetNodePort);
+                ((AdapterDescription) entity).setElementEndpointHostname(connectWorkerHost);
+                ((AdapterDescription) entity).setElementEndpointPort(connectWorkerPort);
             }
         }
 

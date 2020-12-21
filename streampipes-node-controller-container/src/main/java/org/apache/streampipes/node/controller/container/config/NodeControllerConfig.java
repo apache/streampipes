@@ -37,6 +37,8 @@ public enum NodeControllerConfig {
     private static final String DEFAULT_NODE_BROKER_HOST = "node-broker";
     private static final int DEFAULT_NODE_BROKER_PORT = 1883;
     private static final String DEFAULT_NODE_HOST_NAME = "host.docker.internal";
+    private static final String DEFAULT_BACKEND_HOST = "host.docker.internal";
+    private static final int DEFAULT_BACKEND_PORT = 8030;
 
     // Node controller configs
     private static final int DEFAULT_DOCKER_PRUNING_FREQ_SECS = 3600;
@@ -46,13 +48,16 @@ public enum NodeControllerConfig {
     NodeControllerConfig() {
         config = SpConfig.getSpConfig(NODE_SERVICE_ID + SLASH + getNodeHostName());
 
-        config.register(ConfigKeys.NODE_HOST, "host.docker.internal", "node host name");
-        config.register(ConfigKeys.NODE_TYPE, "edge", "node type");
+        config.register(ConfigKeys.NODE_HOST, DEFAULT_NODE_HOST_NAME, "node host name");
+        config.register(ConfigKeys.NODE_TYPE, DEFAULT_NODE_TYPE, "node type");
         config.register(ConfigKeys.NODE_CONTROLLER_ID, DEFAULT_NODE_CONTROLLER_ID, "node controller id");
-        config.register(ConfigKeys.NODE_CONTROLLER_CONTAINER_HOST, "node-controller", "node controller container host");
+        config.register(ConfigKeys.NODE_CONTROLLER_CONTAINER_HOST, DEFAULT_NODE_CONTROLLER_ID, "node controller container host");
         config.register(ConfigKeys.NODE_CONTROLLER_CONTAINER_PORT, DEFAULT_NODE_CONTROLLER_PORT, "node controller port");
         config.register(ConfigKeys.NODE_BROKER_CONTAINER_HOST, DEFAULT_NODE_BROKER_HOST, "node broker host");
         config.register(ConfigKeys.NODE_BROKER_CONTAINER_PORT, DEFAULT_NODE_BROKER_PORT, "node broker port");
+        // currently used for connect adapter registration
+        config.register(ConfigKeys.BACKEND_HOST, DEFAULT_BACKEND_HOST, "backend host");
+        config.register(ConfigKeys.BACKEND_PORT, DEFAULT_BACKEND_PORT, "backend port");
     }
 
     public String getNodeServiceId() {
@@ -179,6 +184,20 @@ public enum NodeControllerConfig {
                 ConfigKeys.NODE_TYPE,
                 DEFAULT_NODE_TYPE,
                 String.class);
+    }
+
+    public String getBackendHost() {
+        return getEnvOrDefault(
+                ConfigKeys.BACKEND_HOST,
+                DEFAULT_BACKEND_HOST,
+                String.class);
+    }
+
+    public int getBackendPort(){
+        return getEnvOrDefault(
+                ConfigKeys.BACKEND_PORT,
+                DEFAULT_BACKEND_PORT,
+                Integer.class);
     }
 
     private <T> T getEnvOrDefault(String k, T defaultValue, Class<T> type) {

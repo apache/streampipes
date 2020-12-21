@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.node.controller.container.management.info;
+package org.apache.streampipes.node.controller.container.management.node;
 
 import org.apache.streampipes.model.node.*;
 import org.apache.streampipes.model.node.resources.hardware.HardwareResource;
@@ -28,7 +28,7 @@ import org.apache.streampipes.model.node.resources.software.SoftwareResource;
 import org.apache.streampipes.model.node.resources.software.Docker;
 import org.apache.streampipes.node.controller.container.config.NodeControllerConfig;
 import org.apache.streampipes.node.controller.container.management.orchestrator.docker.DockerInfo;
-import org.apache.streampipes.node.controller.container.management.orchestrator.docker.DockerUtils;
+import org.apache.streampipes.node.controller.container.management.orchestrator.docker.utils.DockerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import oshi.SystemInfo;
@@ -40,10 +40,10 @@ import oshi.software.os.OperatingSystem;
 
 import java.util.*;
 
-public class NodeInfoStorage {
+public class NodeManager {
 
     private static final Logger LOG =
-            LoggerFactory.getLogger(NodeInfoStorage.class.getCanonicalName());
+            LoggerFactory.getLogger(NodeManager.class.getCanonicalName());
 
     private NodeInfo nodeInfo = new NodeInfo();
 
@@ -53,13 +53,13 @@ public class NodeInfoStorage {
     private static HardwareAbstractionLayer hal = si.getHardware();
     private static OperatingSystem os = si.getOperatingSystem();
 
-    private static NodeInfoStorage instance = null;
+    private static NodeManager instance = null;
 
-    private NodeInfoStorage() {}
+    private NodeManager() {}
 
-    public static NodeInfoStorage getInstance() {
+    public static NodeManager getInstance() {
         if (instance == null)
-            instance = new NodeInfoStorage();
+            instance = new NodeManager();
         return instance;
     }
 
@@ -80,11 +80,11 @@ public class NodeInfoStorage {
                 .withNodeLocation(getNodeLocation())
                 .withNodeModel(getNodeModel())
                 .withNodeResources(getNodeResources())
-                .withJmsTransportProtocol(getNodeBrokerHost(), getNodeBrokerPort())
+                .withNodeBroker(getNodeBrokerHost(), getNodeBrokerPort())
                 .withSupportedPipelineElements(getSupportedPipelineElements())
                 .build();
 
-        NodeInfoStorage.getInstance().add(nodeInfo);
+        NodeManager.getInstance().add(nodeInfo);
     }
 
     private static String getNodeType() {

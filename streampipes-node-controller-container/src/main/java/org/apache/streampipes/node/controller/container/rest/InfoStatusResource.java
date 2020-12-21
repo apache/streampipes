@@ -18,11 +18,11 @@
 package org.apache.streampipes.node.controller.container.rest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.apache.streampipes.node.controller.container.management.info.NodeInfoStorage;
+import org.apache.streampipes.node.controller.container.management.node.NodeManager;
 import org.apache.streampipes.node.controller.container.management.relay.EventRelay;
 import org.apache.streampipes.node.controller.container.management.relay.RunningRelayInstances;
 import org.apache.streampipes.node.controller.container.management.relay.metrics.RelayMetrics;
-import org.apache.streampipes.node.controller.container.management.resources.ResourceManager;
+import org.apache.streampipes.node.controller.container.management.resource.ResourceManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import javax.ws.rs.GET;
@@ -34,13 +34,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Path("/api/v2/node")
-public class InfoStatusResource extends AbstractNodeContainerResource{
+public class InfoStatusResource extends AbstractResource {
 
     @GET
     @Path("/info")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getInfo() {
-        return ok(NodeInfoStorage.getInstance().retrieveNodeInfo());
+        return ok(NodeManager.getInstance().retrieveNodeInfo());
     }
 
     @GET
@@ -54,16 +54,15 @@ public class InfoStatusResource extends AbstractNodeContainerResource{
     @Path("/metrics")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getMetrics() {
-
-        List<RelayMetrics> metricsList = RunningRelayInstances.INSTANCE.getRunningInstances()
-                .stream()
-                .map(EventRelay::getRelayMetrics)
-                .collect(Collectors.toList());
-
         try {
-            return ok(JacksonSerializer
-                    .getObjectMapper()
-                    .writeValueAsString(metricsList));
+            List<RelayMetrics> metrics = RunningRelayInstances.INSTANCE.getRunningInstances()
+                    .stream()
+                    .map(EventRelay::getRelayMetrics)
+                    .collect(Collectors.toList());
+
+            String metricsList = JacksonSerializer.getObjectMapper().writeValueAsString(metrics);
+
+            return ok(metricsList);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
