@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.node.controller.container.management.node;
 
+import com.spotify.docker.client.messages.Container;
 import org.apache.streampipes.model.node.*;
 import org.apache.streampipes.model.node.resources.hardware.HardwareResource;
 import org.apache.streampipes.model.node.resources.hardware.CPU;
@@ -39,6 +40,8 @@ import oshi.software.os.OSFileStore;
 import oshi.software.os.OperatingSystem;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class NodeManager {
 
@@ -71,7 +74,7 @@ public class NodeManager {
         return nodeInfo;
     }
 
-    public static void init() {
+    public void init() {
 
         NodeInfo nodeInfo = NodeInfoBuilder.create(getNodeControllerId())
                 .withNodeControllerPort(getNodeControllerPort())
@@ -81,10 +84,34 @@ public class NodeManager {
                 .withNodeModel(getNodeModel())
                 .withNodeResources(getNodeResources())
                 .withNodeBroker(getNodeBrokerHost(), getNodeBrokerPort())
+                .withRegisteredDockerContainer(getRegisteredDockerContainer())
                 .withSupportedPipelineElements(getSupportedPipelineElements())
                 .build();
 
         NodeManager.getInstance().add(nodeInfo);
+    }
+
+    private static List<DockerContainer> getRegisteredDockerContainer() {
+        List<DockerContainer> containers = new ArrayList<>();
+        DockerUtils.getInstance().getRunningStreamPipesContainer()
+                .forEach(rc -> {
+                    DockerContainer c = new DockerContainer();
+                    c.setContainerName(rc.names().get(0));
+                    c.setImageURI(rc.image());
+
+                    Optional<String> serviceId = rc.labels().entrySet().stream()
+                            .filter(l -> l.getKey().contains("org.apache.streampipes.service.id"))
+                            .map(Map.Entry::getValue)
+                            .findFirst();
+
+                    serviceId.ifPresent(c::setServiceId);
+
+                    c.setLabels(rc.labels().entrySet().stream()
+                            .filter(l -> l.getKey().contains("org.apache.streampipes"))
+                            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
+                    containers.add(c);
+                });
+        return containers;
     }
 
     private static String getNodeType() {
@@ -201,7 +228,6 @@ public class NodeManager {
     }
 
     private static Docker getDocker() {
-
         Docker docker = new Docker();
         docker.setHasDocker(true);
         docker.setHasNvidiaRuntime(DockerInfo.isHasNvidiaRuntime());

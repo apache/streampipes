@@ -30,6 +30,7 @@ public class NodeInfoBuilder {
     private NodeMetadata nodeMetadata;
     private NodeResources nodeResources;
     private List<String> supportedPipelineElementAppIds;
+    private List<DockerContainer> registeredDockerContainer;
     private NodeBrokerInfo nodeBrokerInfo;
 
     private NodeInfoBuilder(String nodeId) {
@@ -38,6 +39,7 @@ public class NodeInfoBuilder {
         this.nodeMetadata = new NodeMetadata();
         this.nodeResources = new NodeResources();
         this.supportedPipelineElementAppIds = new ArrayList<>();
+        this.registeredDockerContainer = new ArrayList<>();
         this.nodeBrokerInfo = new NodeBrokerInfo();
     }
 
@@ -99,6 +101,12 @@ public class NodeInfoBuilder {
         return this;
     }
 
+
+    public NodeInfoBuilder withRegisteredDockerContainer(List<DockerContainer> registeredDockerContainer) {
+        this.registeredDockerContainer = registeredDockerContainer;
+        return this;
+    }
+
     private JmsTransportProtocol makeJmsTransportProtocol(String brokerHost, Integer brokerPort) {
         return new JmsTransportProtocol(brokerHost, brokerPort);
     }
@@ -109,6 +117,7 @@ public class NodeInfoBuilder {
         nodeInfo.setNodeResources(nodeResources);
         nodeInfo.setNodeBrokerInfo(nodeBrokerInfo);
         nodeInfo.setSupportedPipelineElementAppIds(supportedPipelineElementAppIds);
+        nodeInfo.setRegisteredDockerContainer(registeredDockerContainer);
         return nodeInfo;
     }
 }

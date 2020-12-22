@@ -34,7 +34,7 @@ public enum NodeControllerConfig {
     private static final String DEFAULT_NODE_CONTROLLER_ID = "node-controller";
     private static final int DEFAULT_NODE_CONTROLLER_PORT = 7077;
     private static final String DEFAULT_NODE_TYPE = "edge";
-    private static final String DEFAULT_NODE_BROKER_HOST = "node-broker";
+    private static final String DEFAULT_NODE_BROKER_HOST = "broker";
     private static final int DEFAULT_NODE_BROKER_PORT = 1883;
     private static final String DEFAULT_NODE_HOST_NAME = "host.docker.internal";
     private static final String DEFAULT_BACKEND_HOST = "host.docker.internal";

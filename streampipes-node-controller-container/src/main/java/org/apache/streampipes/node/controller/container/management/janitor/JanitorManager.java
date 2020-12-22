@@ -26,22 +26,20 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class NodeJanitorManager {
+public class JanitorManager {
 
     private static final Logger LOG =
-            LoggerFactory.getLogger(NodeJanitorManager.class.getCanonicalName());
+            LoggerFactory.getLogger(JanitorManager.class.getCanonicalName());
 
-    private ScheduledExecutorService scheduledExecutorService = null;
+    private static JanitorManager instance = null;
 
-    private static NodeJanitorManager instance = null;
+    private JanitorManager() {}
 
-    private NodeJanitorManager() {}
-
-    public static NodeJanitorManager getInstance() {
+    public static JanitorManager getInstance() {
         if (instance == null) {
-            synchronized (NodeJanitorManager.class) {
+            synchronized (JanitorManager.class) {
                 if (instance == null)
-                    instance = new NodeJanitorManager();
+                    instance = new JanitorManager();
             }
         }
         return instance;
@@ -51,8 +49,9 @@ public class NodeJanitorManager {
     public void run() {
         LOG.debug("Create Janitor scheduler");
 
-        scheduledExecutorService =  Executors.newScheduledThreadPool(1);
-        scheduledExecutorService.scheduleAtFixedRate(pruneDocker, 30, NodeControllerConfig.INSTANCE.getPruningFreq(), TimeUnit.MINUTES);
+        ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
+        scheduledExecutorService.scheduleAtFixedRate(pruneDocker, 30,
+                NodeControllerConfig.INSTANCE.getPruningFreq(), TimeUnit.MINUTES);
     }
 
     private final Runnable pruneDocker = () -> {

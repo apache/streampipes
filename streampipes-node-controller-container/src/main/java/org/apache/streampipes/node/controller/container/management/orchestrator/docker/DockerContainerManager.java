@@ -26,7 +26,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.streampipes.container.util.ConsulUtil;
 import org.apache.streampipes.model.node.DockerContainer;
 import org.apache.streampipes.node.controller.container.management.orchestrator.ContainerOrchestrator;
-import org.apache.streampipes.node.controller.container.management.orchestrator.ContainerStatus;
 import org.apache.streampipes.node.controller.container.management.orchestrator.docker.utils.DockerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,21 +33,21 @@ import org.slf4j.LoggerFactory;
 import java.io.Serializable;
 import java.util.*;
 
-public class DockerContainerOrchestrator implements ContainerOrchestrator {
+public class DockerContainerManager implements ContainerOrchestrator {
 
     private static final Logger LOG =
-            LoggerFactory.getLogger(DockerContainerOrchestrator.class.getCanonicalName());
+            LoggerFactory.getLogger(DockerContainerManager.class.getCanonicalName());
 
     private final DockerUtils docker = DockerUtils.getInstance();
-    private static DockerContainerOrchestrator instance = null;
+    private static DockerContainerManager instance = null;
 
-    private DockerContainerOrchestrator() {}
+    private DockerContainerManager() {}
 
-    public static DockerContainerOrchestrator getInstance() {
+    public static DockerContainerManager getInstance() {
         if (instance == null) {
-            synchronized (DockerContainerOrchestrator.class) {
+            synchronized (DockerContainerManager.class) {
                 if (instance == null)
-                    instance = new DockerContainerOrchestrator();
+                    instance = new DockerContainerManager();
             }
         }
         return instance;
@@ -56,7 +55,7 @@ public class DockerContainerOrchestrator implements ContainerOrchestrator {
 
     @Override
     public void init() {
-        StreamPipesNodeContainer.INSTANCE.get().forEach(this::deploy);
+        DockerConstants.NodeContainer.INSTANCE.getAllStreamPipesContainer().forEach(this::deploy);
     }
 
     @Override
@@ -76,14 +75,14 @@ public class DockerContainerOrchestrator implements ContainerOrchestrator {
             ImmutableMap<String, ? extends Serializable> m = ImmutableMap.of(
                     "pipelineElementContainer", p.getContainerName(),
                     "containerId", containerId,
-                    "status", ContainerStatus.DEPLOYED
+                    "status", DockerConstants.ContainerStatus.DEPLOYED
             );
             return new Gson().toJson(m);
         }
         LOG.info("Container already running {}", p.getContainerName());
         ImmutableMap<String, ? extends Serializable> m = ImmutableMap.of(
                 "message", "Pipeline element container already running",
-                "status", ContainerStatus.RUNNING
+                "status", DockerConstants.ContainerStatus.RUNNING
         );
         return new Gson().toJson(m);
     }
@@ -92,7 +91,7 @@ public class DockerContainerOrchestrator implements ContainerOrchestrator {
     public String remove(DockerContainer p) {
         LOG.info("Remove pipeline element container: {}", p.getImageURI());
 
-        Optional<Container> containerOptional = docker.getContainer(p.getContainerName());
+        Optional<com.spotify.docker.client.messages.Container> containerOptional = docker.getContainer(p.getContainerName());
         if(containerOptional.isPresent()) {
 
             docker.forceRemove(p.getContainerName());
@@ -104,14 +103,14 @@ public class DockerContainerOrchestrator implements ContainerOrchestrator {
             ImmutableMap<String, ? extends Serializable> m = ImmutableMap.of(
                     "message",
                     "Pipeline element container removed",
-                    "status", ContainerStatus.REMOVED
+                    "status", DockerConstants.ContainerStatus.REMOVED
             );
             return new Gson().toJson(m);
         }
         ImmutableMap<String, ? extends Serializable> m = ImmutableMap.of(
                 "message",
                 "Pipeline element container does not exist",
-                "status", ContainerStatus.UNKNOWN
+                "status", DockerConstants.ContainerStatus.UNKNOWN
         );
         return new Gson().toJson(m);
     }
@@ -120,7 +119,7 @@ public class DockerContainerOrchestrator implements ContainerOrchestrator {
     public String list() {
         LOG.info("List running pipeline element container");
 
-        List<Container> containerList = docker.getRunningPipelineElementContainer();
+        List<Container> containerList = docker.getRunningStreamPipesContainer();
         HashMap<String, Object> m = new HashMap<>();
         if (containerList.size() > 0) {
             for (Container c: containerList) {

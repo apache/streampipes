@@ -19,13 +19,13 @@ import java.util.*;
 
 public class DockerContainerBuilder {
 
-    private DockerContainer dockerContainer;
-    private String imageURI;
-    private String containerName;
+    private final DockerContainer dockerContainer;
+    private final String imageURI;
+    private final String containerName;
     private String serviceId;
     private final String [] containerPorts;
-    private List<String> envVars;
-    private Map<String, String> labels;
+    private final List<String> envVars;
+    private final Map<String, String> labels;
 
     public DockerContainerBuilder(String id) {
         this.dockerContainer = new DockerContainer();

@@ -25,7 +25,7 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.model.node.DockerContainer;
-import org.apache.streampipes.node.controller.container.management.orchestrator.docker.DockerContainerOrchestrator;
+import org.apache.streampipes.node.controller.container.management.orchestrator.docker.DockerContainerManager;
 import org.apache.streampipes.node.controller.container.management.pe.InvocableElementManager;
 import org.apache.streampipes.node.controller.container.management.pe.RunningInvocableInstances;
 import org.apache.streampipes.node.controller.container.management.relay.EventRelay;
@@ -48,14 +48,14 @@ public class InvocableEntityResource extends AbstractResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getPipelineElementContainer(){
-        return ok(DockerContainerOrchestrator.getInstance().list());
+        return ok(DockerContainerManager.getInstance().list());
     }
 
     @POST
     @Path("/deploy")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response deployPipelineElementContainer(DockerContainer container) {
-        return ok(DockerContainerOrchestrator.getInstance().deploy(container));
+        return ok(DockerContainerManager.getInstance().deploy(container));
     }
 
     @POST
@@ -155,6 +155,6 @@ public class InvocableEntityResource extends AbstractResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response removePipelineElementContainer(DockerContainer container) {
         InvocableElementManager.getInstance().unregister();
-        return ok(DockerContainerOrchestrator.getInstance().remove(container));
+        return ok(DockerContainerManager.getInstance().remove(container));
     }
 }

@@ -30,6 +30,7 @@ public class NodeInfo {
     private NodeBrokerInfo nodeBrokerInfo;
     private NodeResources nodeResources;
     private List<String> supportedPipelineElementAppIds;
+    private List<DockerContainer> registeredDockerContainer;
 
     public NodeInfo() {
 
@@ -81,5 +82,13 @@ public class NodeInfo {
 
     public void setNodeBrokerInfo(NodeBrokerInfo nodeBrokerInfo) {
         this.nodeBrokerInfo = nodeBrokerInfo;
+    }
+
+    public List<DockerContainer> getRegisteredDockerContainer() {
+        return registeredDockerContainer;
+    }
+
+    public void setRegisteredDockerContainer(List<DockerContainer> registeredDockerContainer) {
+        this.registeredDockerContainer = registeredDockerContainer;
     }
 }

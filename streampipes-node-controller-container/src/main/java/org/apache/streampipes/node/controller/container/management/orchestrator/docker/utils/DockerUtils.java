@@ -26,6 +26,7 @@ import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.*;
 import com.spotify.docker.client.shaded.com.google.common.collect.ImmutableList;
 import org.apache.streampipes.model.node.DockerContainer;
+import org.apache.streampipes.node.controller.container.management.orchestrator.docker.DockerConstants;
 import org.apache.streampipes.node.controller.container.management.orchestrator.docker.DockerInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,10 +40,8 @@ import java.util.stream.Collectors;
 public class DockerUtils {
     private static final Logger LOG = LoggerFactory.getLogger(DockerUtils.class.getCanonicalName());
 
-    private static final String SP_NETWORK = "spnet";
-    private static final String SP_CONTAINER_PREFIX = "streampipes_";
-    private static final String DOCKER_UNIX_SOCK = "/var/run/docker.sock";
     private static final String BLANK_SPACE = " ";
+    private static final String DOCKER_UNIX_SOCK = "/var/run/docker.sock";
     private static DockerUtils instance;
     private static DockerClient docker;
 
@@ -129,8 +128,8 @@ public class DockerUtils {
     }
 
     private String verifyContainerName(String containerName) {
-        return containerName.startsWith(SP_CONTAINER_PREFIX) ?
-                containerName : SP_CONTAINER_PREFIX + containerName;
+        return containerName.startsWith(DockerConstants.SP_DOCKER_CONTAINER_NAME_PREFIX) ?
+                containerName : DockerConstants.SP_DOCKER_CONTAINER_NAME_PREFIX + containerName;
     }
 
     private ContainerConfig getContainerConfig(DockerContainer p) {
@@ -140,8 +139,8 @@ public class DockerUtils {
                 .image(p.getImageURI())
                 .labels(p.getLabels())
                 .env(p.getEnvVars())
-                .hostConfig(getHostConfig(SP_NETWORK, p.getContainerPorts()))
-                .networkingConfig(getNetworkingConfig(SP_NETWORK, p.getContainerName()))
+                .hostConfig(getHostConfig(DockerConstants.SP_DOCKER_NETWORK_NAME, p.getContainerPorts()))
+                .networkingConfig(getNetworkingConfig(DockerConstants.SP_DOCKER_NETWORK_NAME, p.getContainerName()))
                 .build();
     }
 
@@ -207,7 +206,7 @@ public class DockerUtils {
     }
 
     public static void prune() {
-        //List<String> o = Arrays.asList("images", "containers", "volumes", "networks");
+        //List<String> pruneItems = Arrays.asList("images", "containers", "volumes", "networks");
         List<String> pruneItems = Collections.singletonList("images");
 
         for (String i: pruneItems) {
@@ -219,7 +218,7 @@ public class DockerUtils {
                                 + BLANK_SPACE
                                 + DOCKER_UNIX_SOCK
                                 + BLANK_SPACE
-                                + "http:/v" + getApiVersion() + "/" + i + "/prune");
+                                + "http:/v" + apiVersion() + "/" + i + "/prune");
 
                 BufferedReader stdInput = new BufferedReader(new
                         InputStreamReader(p.getInputStream()));
@@ -257,7 +256,7 @@ public class DockerUtils {
         return dockerInfo;
     }
 
-    private static String getApiVersion() {
+    private static String apiVersion() {
         String version = "";
         try {
             version = docker.version().apiVersion();
@@ -279,10 +278,19 @@ public class DockerUtils {
                 .isPresent();
     }
 
-    public List<Container> getRunningPipelineElementContainer() {
+    public List<Container> getRunningStreamPipesContainer() {
+
+        Map<String,String> allContainerLabels = new HashMap<>();
+        allContainerLabels.putAll(DockerConstants.SP_DOCKER_CONTAINER_EXTENSIONS_LABELS);
+        allContainerLabels.putAll(DockerConstants.SP_DOCKER_CONTAINER_BROKER_LABELS);
+
         return getContainerList()
                 .stream()
-                .filter(c -> c.labels().containsValue("pipeline-element"))
+                .filter(c -> c.labels().values().stream()
+                        .anyMatch(v -> allContainerLabels.values().stream()
+                                .anyMatch(cl -> cl.equals(v))
+                        )
+                )
                 .collect(Collectors.toList());
     }
 
@@ -294,7 +302,7 @@ public class DockerUtils {
                             + BLANK_SPACE
                             + DOCKER_UNIX_SOCK
                             + BLANK_SPACE
-                            + "http:/v" + getApiVersion() + "/info");
+                            + "http:/v" + apiVersion() + "/info");
 
             BufferedReader stdInput = new BufferedReader(new
                     InputStreamReader(p.getInputStream()));

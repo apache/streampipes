@@ -18,11 +18,11 @@
 package org.apache.streampipes.node.controller.container;
 
 import org.apache.streampipes.container.util.ConsulUtil;
-import org.apache.streampipes.node.controller.container.management.orchestrator.docker.DockerContainerOrchestrator;
+import org.apache.streampipes.node.controller.container.management.orchestrator.docker.DockerContainerManager;
 import org.apache.streampipes.node.controller.container.rest.NodeControllerResourceConfig;
 import org.apache.streampipes.node.controller.container.config.NodeControllerConfig;
 import org.apache.streampipes.node.controller.container.management.node.NodeManager;
-import org.apache.streampipes.node.controller.container.management.janitor.NodeJanitorManager;
+import org.apache.streampipes.node.controller.container.management.janitor.JanitorManager;
 import org.apache.streampipes.node.controller.container.management.resource.ResourceManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,38 +37,38 @@ import java.util.Collections;
 @Configuration
 @EnableAutoConfiguration
 @Import({ NodeControllerResourceConfig.class })
-public class NodeControllerContainerInit {
+public class NodeControllerInit {
 
     private static final Logger LOG =
-            LoggerFactory.getLogger(NodeControllerContainerInit.class.getCanonicalName());
+            LoggerFactory.getLogger(NodeControllerInit.class.getCanonicalName());
 
     public static void main(String [] args) {
 
-        NodeControllerConfig nodeConfig = NodeControllerConfig.INSTANCE;
+        NodeControllerConfig conf = NodeControllerConfig.INSTANCE;
 
-        SpringApplication app = new SpringApplication(NodeControllerContainerInit.class);
-        app.setDefaultProperties(Collections.singletonMap("server.port", nodeConfig.getNodeControllerPort()));
+        SpringApplication app = new SpringApplication(NodeControllerInit.class);
+        app.setDefaultProperties(Collections.singletonMap("server.port", conf.getNodeControllerPort()));
         app.run();
 
-        LOG.info("Load static node metadata");
-        NodeManager.init();
+        LOG.info("Load node info");
+        NodeManager.getInstance().init();
 
-        LOG.info("Start Node Resource manager");
+        LOG.info("Start Node resource manager");
         ResourceManager.getInstance().run();
 
         if (!"true".equals(System.getenv("SP_DEBUG"))) {
             LOG.info("Auto-deploy StreamPipes node container");
-            DockerContainerOrchestrator.getInstance().init();
+            DockerContainerManager.getInstance().init();
 
-            LOG.info("Start Node Janitor manager");
-            NodeJanitorManager.getInstance().run();
+            LOG.info("Start Janitor manager");
+            JanitorManager.getInstance().run();
         }
 
         // registration with consul here
         ConsulUtil.registerNodeService(
-                nodeConfig.getNodeServiceId(),
-                nodeConfig.getNodeHostName(),
-                nodeConfig.getNodeControllerPort()
+                conf.getNodeServiceId(),
+                conf.getNodeHostName(),
+                conf.getNodeControllerPort()
         );
     }
 
