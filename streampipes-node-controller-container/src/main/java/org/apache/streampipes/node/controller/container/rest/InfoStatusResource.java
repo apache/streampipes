@@ -23,6 +23,7 @@ import org.apache.streampipes.node.controller.container.management.relay.EventRe
 import org.apache.streampipes.node.controller.container.management.relay.RunningRelayInstances;
 import org.apache.streampipes.node.controller.container.management.relay.metrics.RelayMetrics;
 import org.apache.streampipes.node.controller.container.management.resource.ResourceManager;
+import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import javax.ws.rs.GET;
@@ -40,7 +41,7 @@ public class InfoStatusResource extends AbstractResource {
     @Path("/info")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getInfo() {
-        return ok(NodeManager.getInstance().retrieveNodeInfo());
+        return ok(NodeManager.getInstance().retrieveNodeInfoDescription());
     }
 
     @GET

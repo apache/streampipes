@@ -16,15 +16,49 @@ package org.apache.streampipes.model.node.resources.hardware;/*
  *
  */
 
+import io.fogsy.empire.annotations.RdfProperty;
+import io.fogsy.empire.annotations.RdfsClass;
+import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.shared.annotation.TsModel;
+import org.apache.streampipes.vocabulary.StreamPipes;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToOne;
+
+@RdfsClass(StreamPipes.NODE_HARDWARE_RESOURCE)
+@Entity
 @TsModel
-public class HardwareResource {
+public class HardwareResource extends UnnamedStreamPipesEntity {
 
-    public CPU cpu;
-    public MEM memory;
-    public DISK disk;
-    public GPU gpu;
+    @OneToOne(fetch = FetchType.EAGER,
+            cascade = {CascadeType.ALL})
+    @RdfProperty(StreamPipes.HAS_CPU)
+    private CPU cpu;
+
+    @OneToOne(fetch = FetchType.EAGER,
+            cascade = {CascadeType.ALL})
+    @RdfProperty(StreamPipes.HAS_MEMORY)
+    private MEM memory;
+
+    @OneToOne(fetch = FetchType.EAGER,
+            cascade = {CascadeType.ALL})
+    @RdfProperty(StreamPipes.HAS_DISK)
+    private DISK disk;
+
+    @OneToOne(fetch = FetchType.EAGER,
+            cascade = {CascadeType.ALL})
+    @RdfProperty(StreamPipes.HAS_GPU)
+    private GPU gpu;
+
+    public HardwareResource() {
+        super();
+    }
+
+    public HardwareResource(HardwareResource other) {
+        super(other);
+    }
 
     public CPU getCpu() {
         return cpu;

@@ -24,7 +24,7 @@ import com.spotify.docker.client.exceptions.NotFoundException;
 import com.spotify.docker.client.messages.Container;
 import org.apache.commons.lang.StringUtils;
 import org.apache.streampipes.container.util.ConsulUtil;
-import org.apache.streampipes.model.node.DockerContainer;
+import org.apache.streampipes.model.node.container.DockerContainer;
 import org.apache.streampipes.node.controller.container.management.orchestrator.ContainerOrchestrator;
 import org.apache.streampipes.node.controller.container.management.orchestrator.docker.utils.DockerUtils;
 import org.slf4j.Logger;
@@ -60,11 +60,11 @@ public class DockerContainerManager implements ContainerOrchestrator {
 
     @Override
     public String deploy(DockerContainer p) {
-        LOG.info("Pull image and deploy pipeline element container {}", p.getImageURI());
+        LOG.info("Pull image and deploy pipeline element container {}", p.getImageUri());
 
         Optional<Container> containerOptional = docker.getContainer(p.getContainerName());
         if (!containerOptional.isPresent()) {
-            LOG.info("Deploy pipeline element container \"" + p.getImageURI() + "\"");
+            LOG.info("Deploy pipeline element container \"" + p.getImageUri() + "\"");
             String containerId = "";
             try {
                 containerId = deployPipelineElementContainer(p);
@@ -89,7 +89,7 @@ public class DockerContainerManager implements ContainerOrchestrator {
 
     @Override
     public String remove(DockerContainer p) {
-        LOG.info("Remove pipeline element container: {}", p.getImageURI());
+        LOG.info("Remove pipeline element container: {}", p.getImageUri());
 
         Optional<com.spotify.docker.client.messages.Container> containerOptional = docker.getContainer(p.getContainerName());
         if(containerOptional.isPresent()) {
@@ -141,13 +141,13 @@ public class DockerContainerManager implements ContainerOrchestrator {
     private String deployPipelineElementContainer(DockerContainer p, boolean pullImage) throws Exception {
         if (pullImage) {
             try {
-                docker.pullImage(p.getImageURI(), false);
+                docker.pullImage(p.getImageUri(), false);
             } catch (DockerException | InterruptedException e) {
                 LOG.error("unable to pull pipeline element container image {}", e.toString());
                 deployPipelineElementContainer(p, false);
             }
         }
-        if (!pullImage && !docker.findLocalImage(p.getImageURI())) {
+        if (!pullImage && !docker.findLocalImage(p.getImageUri())) {
             throw new NotFoundException("Image not found locally");
         }
         String containerId = docker.createContainer(p);

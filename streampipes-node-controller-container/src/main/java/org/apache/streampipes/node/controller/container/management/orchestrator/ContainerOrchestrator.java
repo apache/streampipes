@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.node.controller.container.management.orchestrator;
 
-import org.apache.streampipes.model.node.DockerContainer;
+import org.apache.streampipes.model.node.container.DockerContainer;
 
 public interface ContainerOrchestrator {
 

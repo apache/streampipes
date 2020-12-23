@@ -25,7 +25,7 @@ import com.spotify.docker.client.exceptions.DockerCertificateException;
 import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.*;
 import com.spotify.docker.client.shaded.com.google.common.collect.ImmutableList;
-import org.apache.streampipes.model.node.DockerContainer;
+import org.apache.streampipes.model.node.container.DockerContainer;
 import org.apache.streampipes.node.controller.container.management.orchestrator.docker.DockerConstants;
 import org.apache.streampipes.node.controller.container.management.orchestrator.docker.DockerInfo;
 import org.slf4j.Logger;
@@ -136,7 +136,7 @@ public class DockerUtils {
         return ContainerConfig.builder()
                 .hostname(p.getContainerName())
                 .tty(true)
-                .image(p.getImageURI())
+                .image(p.getImageUri())
                 .labels(p.getLabels())
                 .env(p.getEnvVars())
                 .hostConfig(getHostConfig(DockerConstants.SP_DOCKER_NETWORK_NAME, p.getContainerPorts()))
@@ -233,7 +233,7 @@ public class DockerUtils {
         }
     }
 
-        public static DockerInfo getDockerInfo() {
+        public DockerInfo getDockerInfo() {
         DockerInfo dockerInfo = new DockerInfo();
         try {
             Info info = docker.info();

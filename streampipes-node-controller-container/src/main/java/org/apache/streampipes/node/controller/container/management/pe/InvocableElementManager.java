@@ -67,8 +67,8 @@ public class InvocableElementManager implements InvocableLifeCycle {
 
             // TODO: persistent storage to survive failures
             NodeManager.getInstance()
-                    .retrieveNodeInfo()
-                    .setSupportedPipelineElementAppIds(registration.getSupportedPipelineElementAppIds());
+                    .retrieveNodeInfoDescription()
+                    .setSupportedElements(registration.getSupportedPipelineElementAppIds());
 
             LOG.info("Successfully registered pipeline element container");
         } catch (IOException e) {
@@ -119,8 +119,8 @@ public class InvocableElementManager implements InvocableLifeCycle {
     public void unregister(){
         // TODO: unregister element from Consul and
         NodeManager.getInstance()
-                .retrieveNodeInfo()
-                .setSupportedPipelineElementAppIds(Collections.emptyList());
+                .retrieveNodeInfoDescription()
+                .setSupportedElements(Collections.emptyList());
     }
 
     private String makeConsulRegistrationEndpoint() {

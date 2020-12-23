@@ -101,7 +101,6 @@ public abstract class ExtensionsModelSubmitter extends ModelSubmitter<EdgeExtens
                     DeclarersSingleton.getInstance().getEpaDeclarers());
 
             String nodeControllerUrl = PROTOCOL + conf.getNodeControllerHost() + COLON + conf.getNodeControllerPort();
-            String connectUrl = PROTOCOL + conf.getHost() + COLON + conf.getPort() + SLASH;
 
             boolean connected = false;
             while (!connected) {

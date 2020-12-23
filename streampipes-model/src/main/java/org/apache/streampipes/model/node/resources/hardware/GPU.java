@@ -16,28 +16,37 @@ package org.apache.streampipes.model.node.resources.hardware;/*
  *
  */
 
+import io.fogsy.empire.annotations.RdfProperty;
+import io.fogsy.empire.annotations.RdfsClass;
+import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.shared.annotation.TsModel;
+import org.apache.streampipes.vocabulary.StreamPipes;
 
+@RdfsClass(StreamPipes.NODE_HARDWARE_RESOURCE_GPU)
 @TsModel
-public class GPU {
-    public boolean hasGPU;
-    public int cudaCores;
-    public String type;
+public class GPU extends UnnamedStreamPipesEntity {
 
-    public boolean hasGPU() {
-        return hasGPU;
+    @RdfProperty(StreamPipes.HAS_GPU_TYPE)
+    private String type;
+
+    @RdfProperty(StreamPipes.HAS_GPU_CORES)
+    private int cores;
+
+    public GPU() {
+        super();
     }
 
-    public void setHasGPU(boolean hasGPU) {
-        this.hasGPU = hasGPU;
+    public GPU(int cores, String type) {
+        this.cores = cores;
+        this.type = type;
     }
 
-    public int getCudaCores() {
-        return cudaCores;
+    public int getCores() {
+        return cores;
     }
 
-    public void setCudaCores(int cudaCores) {
-        this.cudaCores = cudaCores;
+    public void setCores(int cores) {
+        this.cores = cores;
     }
 
     public String getType() {

@@ -16,30 +16,42 @@ package org.apache.streampipes.model.node.resources.software;/*
  *
  */
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import io.fogsy.empire.annotations.RdfProperty;
+import io.fogsy.empire.annotations.RdfsClass;
+import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.shared.annotation.TsModel;
+import org.apache.streampipes.vocabulary.StreamPipes;
 
+import javax.persistence.Entity;
+
+@RdfsClass(StreamPipes.CONTAINER_RUNTIME)
+@Entity
+@JsonSubTypes({
+        @JsonSubTypes.Type(DockerContainerRuntime.class),
+        @JsonSubTypes.Type(NvidiaContainerRuntime.class)
+})
 @TsModel
-public class Docker {
+public abstract class ContainerRuntime extends UnnamedStreamPipesEntity {
 
-    public boolean hasDocker;
-    public boolean hasNvidiaRuntime;
+    @RdfProperty(StreamPipes.HAS_CONTAINER_RUNTIME_SERVER_VERSION)
     public String serverVersion;
+
+    @RdfProperty(StreamPipes.HAS_CONTAINER_RUNTIME_API_VERSION)
     public String apiVersion;
 
-    public boolean hasDocker() {
-        return hasDocker;
+    public ContainerRuntime() {
+        super();
     }
 
-    public void setHasDocker(boolean hasDocker) {
-        this.hasDocker = hasDocker;
+    public ContainerRuntime(ContainerRuntime other) {
+        super(other);
     }
 
-    public boolean hasNvidiaRuntime() {
-        return hasNvidiaRuntime;
-    }
-
-    public void setHasNvidiaRuntime(boolean hasNvidiaRuntime) {
-        this.hasNvidiaRuntime = hasNvidiaRuntime;
+    public ContainerRuntime(String serverVersion, String apiVersion) {
+        super();
+        this.serverVersion = serverVersion;
+        this.apiVersion = apiVersion;
     }
 
     public String getServerVersion() {

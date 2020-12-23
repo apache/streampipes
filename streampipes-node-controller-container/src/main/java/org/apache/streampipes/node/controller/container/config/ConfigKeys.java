@@ -29,7 +29,7 @@ public class ConfigKeys {
     public static final String NODE_HAS_GPU = "SP_NODE_HAS_GPU";
     public static final String NODE_GPU_CUDA_CORES = "SP_NODE_GPU_CUDA_CORES";
     public static final String NODE_GPU_TYPE = "SP_NODE_GPU_TYPE";
-    public static final String NODE_ACCESSIBLE_SENSOR_ACTUATOR = "SP_NODE_ACCESSIBLE_SENSOR_ACTUATOR";
+    public static final String NODE_ACCESSIBLE_FIELD_DEVICE = "SP_NODE_ACCESSIBLE_FIELD_DEVICE";
     public static final String NODE_SUPPORTED_PE_APP_ID = "SP_NODE_SUPPORTED_PE_APP_ID";
     public static final String DOCKER_PRUNING_FREQ_SECS = "SP_DOCKER_PRUNING_FREQ_SECS";
     public static final String RESOURCE_UPDATE_FREQ_SECS = "SP_NODE_RESOURCE_UPDATE_FREQ_SECS";

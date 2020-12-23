@@ -15,8 +15,9 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.model.node;
+package org.apache.streampipes.model.node.container;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 import io.fogsy.empire.annotations.RdfProperty;
 import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
@@ -24,44 +25,49 @@ import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
 import javax.persistence.Entity;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-@RdfsClass(StreamPipes.PE_DOCKER_CONTAINER)
+@RdfsClass(StreamPipes.DEPLOYMENT_CONTAINER)
 @Entity
+@JsonSubTypes({
+        @JsonSubTypes.Type(DockerContainer.class)
+})
 @TsModel
-public class DockerContainer extends UnnamedStreamPipesEntity {
+public abstract class DeploymentContainer extends UnnamedStreamPipesEntity {
 
-    @RdfProperty(StreamPipes.PE_DOCKER_CONTAINER_IMAGE_URI)
-    private String imageURI;
+    @RdfProperty(StreamPipes.DEPLOYMENT_CONTAINER_IMAGE_URI)
+    private String imageUri;
 
-    @RdfProperty(StreamPipes.PE_DOCKER_CONTAINER_NAME)
+    @RdfProperty(StreamPipes.DEPLOYMENT_CONTAINER_NAME)
     private String containerName;
 
-    @RdfProperty(StreamPipes.PE_DOCKER_CONTAINER_SERVICE_ID)
+    @RdfProperty(StreamPipes.DEPLOYMENT_CONTAINER_SERVICE_ID)
     private String serviceId;
 
-    @RdfProperty(StreamPipes.PE_DOCKER_CONTAINER_PORTS)
-    private String [] containerPorts;
+    @RdfProperty(StreamPipes.DEPLOYMENT_CONTAINER_PORTS)
+    private String[] containerPorts;
 
-    @RdfProperty(StreamPipes.PE_DOCKER_CONTAINER_ENV_VARS)
+    @RdfProperty(StreamPipes.DEPLOYMENT_CONTAINER_ENV_VARS)
     private List<String> envVars;
 
-    @RdfProperty(StreamPipes.PE_DOCKER_CONTAINER_LABELS)
+    @RdfProperty(StreamPipes.DEPLOYMENT_CONTAINER_LABELS)
     private Map<String, String> labels;
 
-    public DockerContainer() {
-        super();
+    public DeploymentContainer() {
     }
 
-    public DockerContainer(String elementId) {
+    public DeploymentContainer(String elementId) {
         super(elementId);
     }
 
-    public DockerContainer(String imageURI, String containerName, String serviceId, String [] containerPorts,
-                           List<String> envVars, Map<String, String> labels) {
-        this.imageURI = imageURI;
+    public DeploymentContainer(DeploymentContainer other) {
+        super(other);
+    }
+
+    public DeploymentContainer(String imageUri, String containerName, String serviceId, String[] containerPorts,
+                               List<String> envVars, Map<String, String> labels) {
+        this.imageUri = imageUri;
         this.containerName = containerName;
         this.serviceId = serviceId;
         this.containerPorts = containerPorts;
@@ -69,22 +75,11 @@ public class DockerContainer extends UnnamedStreamPipesEntity {
         this.labels = labels;
     }
 
-    public DockerContainer(DockerContainer other) {
-        super(other);
-        this.imageURI = other.getImageURI();
-        this.containerName = other.getContainerName();
-        this.serviceId = other.getServiceId();
-        this.containerPorts = other.getContainerPorts();
-        this.envVars = other.getEnvVars();
-        this.labels = other.getLabels();
+    public String getImageUri() {
+        return imageUri;
     }
-
-    public String getImageURI() {
-        return imageURI;
-    }
-
-    public void setImageURI(String imageURI) {
-        this.imageURI = imageURI;
+    public void setImageUri(String imageUri) {
+        this.imageUri = imageUri;
     }
 
     public String getContainerName() {
@@ -125,17 +120,5 @@ public class DockerContainer extends UnnamedStreamPipesEntity {
 
     public void setLabels(Map<String, String> labels) {
         this.labels = labels;
-    }
-
-    @Override
-    public String toString() {
-        return "PipelineElementDockerContainer{" +
-                "imageURI='" + imageURI + '\'' +
-                ", containerName='" + containerName + '\'' +
-                ", serviceId='" + serviceId + '\'' +
-                ", containerPorts=" + Arrays.toString(containerPorts) +
-                ", envVars=" + envVars +
-                ", labels=" + labels +
-                '}';
     }
 }

@@ -34,26 +34,36 @@
                         <mat-card-header>
                             <div mat-card-avatar class="node-header-avatar"><i class="fas fa-server fa-3x"></i></div>
                             <mat-card-title>{{node.nodeControllerId}}</mat-card-title>
-                            <mat-card-subtitle>{{node.nodeMetadata.nodeAddress}} | <b>{{node.nodeResources.softwareResource.os}}</b></mat-card-subtitle>
+                            <mat-card-subtitle>{{node.hostname}} |
+                                <b>{{node.nodeResources.softwareResource.os}}</b></mat-card-subtitle>
                         </mat-card-header>
                         <mat-card-content>
-                            <div class="div-node-tag" *ngFor="let tag of node.nodeMetadata.nodeLocationTags">
+                            <div class="div-node-tag" *ngFor="let tag of node.staticNodeMedata.locationTags">
                                 <span class="span-node-tag">{{tag}}</span>&nbsp;
                             </div>
-                            <div class="div-sa-tag" *ngFor="let element of node.nodeResources.accessibleSensorActuatorResource">
-                                <span class="span-sa-tag">{{element.name}}</span>&nbsp;
+                            <div class="div-sa-tag" *ngFor="let device of node.nodeResources.fieldDeviceAccessResourceList">
+                                <span class="span-sa-tag">{{device.deviceName}}</span>&nbsp;
                             </div>
                             <hr/>
                             <div>
                                 <ul class="ft-foot">
-                                    <li><span class="inclusion" style="color: darkgray"><i class="fas fa-microchip"></i></span><b>{{node.nodeResources.hardwareResource.cpu.cores}}</b> cores</li>
-                                    <li><span class="inclusion" style="color: darkgray"><i class="fas fa-memory"></i></span><b>{{node.nodeResources.hardwareResource.memory.memTotal}}</b> GiB</li>
-                                    <li><span class="inclusion" style="color: darkgray"><i class="fas fa-hdd"></i></span><b>{{node.nodeResources.hardwareResource.disk.diskTotal}}</b> GiB</li>
+                                    <li><span class="inclusion" style="color: darkgray"><i
+                                            class="fas fa-microchip"></i></span><b>{{node.nodeResources.hardwareResource.cpu.cores}}</b> cores
+                                    </li>
+                                    <li><span class="inclusion"
+                                              style="color: darkgray"><i class="fas fa-memory"></i></span><b>{{node.nodeResources.hardwareResource.memory.memTotal}}</b> GiB</li>
+                                    <li><span class="inclusion"
+                                              style="color: darkgray"><i class="fas fa-hdd"></i></span><b>{{node.nodeResources.hardwareResource.disk.diskTotal}}</b>
+                                        GiB</li>
                                 </ul>
                                 <ul class="ft-foot">
-                                    <li><span class="inclusion" style="color: darkgray"><i class="fas fa-cube"></i></span>{{node.nodeResources.hardwareResource.cpu.arch}}</li>
-                                    <li><span class="inclusion" style="color: darkgray"><i class="fab fa-docker"></i></span>{{node.nodeResources.softwareResource.docker.serverVersion}}</li>
-                                    <li><span class="inclusion" style="color: darkgray"><i class="fas fa-meteor"></i></span>GPU <b>{{node.nodeResources.softwareResource.docker.hasNvidiaRuntime}}</b></li>
+                                    <li><span class="inclusion"
+                                              style="color: darkgray"><i class="fas fa-cube"></i></span>{{node.nodeResources.hardwareResource.cpu.arch}}</li>
+                                    <li><span class="inclusion"
+                                              style="color: darkgray"><i class="fab fa-docker"></i></span>{{node.nodeResources.softwareResource.containerRuntime.serverVersion}}</li>
+                                    <li><span class="inclusion"
+                                              style="color: darkgray"><i class="fas fa-meteor"></i></span>GPU
+                                        <b>{{nvidiaRuntime(node)}}</b></li>
                                 </ul>
                             </div>
                         </mat-card-content>

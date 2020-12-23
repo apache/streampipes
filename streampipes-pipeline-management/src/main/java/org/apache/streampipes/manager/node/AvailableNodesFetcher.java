@@ -17,10 +17,10 @@
  */
 package org.apache.streampipes.manager.node;
 
-import com.google.gson.Gson;
 import org.apache.http.client.fluent.Request;
 import org.apache.streampipes.container.util.ConsulUtil;
-import org.apache.streampipes.model.node.NodeInfo;
+import org.apache.streampipes.model.node.NodeInfoDescription;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,9 +34,9 @@ public class AvailableNodesFetcher {
 
     }
 
-    public List<NodeInfo> fetchNodes() {
+    public List<NodeInfoDescription> fetchNodes() {
         List<String> activeNodes = getActiveNodesFromConsul();
-        List<NodeInfo> nodeInfos = new ArrayList<>();
+        List<NodeInfoDescription> nodeInfos = new ArrayList<>();
         activeNodes.forEach(activeNode -> {
             try {
                 nodeInfos.add(fetchNodeInfo(activeNode));
@@ -52,7 +52,7 @@ public class AvailableNodesFetcher {
         return ConsulUtil.getActiveNodeEndpoints();
     }
 
-    private NodeInfo fetchNodeInfo(String activeNode) throws IOException {
+    private NodeInfoDescription fetchNodeInfo(String activeNode) throws IOException {
         String response = Request
                 .Get(activeNode + "/api/v2/node/info")
                 .addHeader("Accept", MediaType.APPLICATION_JSON)
@@ -60,6 +60,6 @@ public class AvailableNodesFetcher {
                 .returnContent()
                 .asString();
 
-        return new Gson().fromJson(response, NodeInfo.class);
+        return JacksonSerializer.getObjectMapper().readValue(response, NodeInfoDescription.class);
     }
 }

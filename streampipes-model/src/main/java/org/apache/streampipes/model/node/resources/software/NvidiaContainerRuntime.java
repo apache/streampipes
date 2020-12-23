@@ -1,4 +1,4 @@
-package org.apache.streampipes.model.node.resources.software;/*
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -15,22 +15,31 @@ package org.apache.streampipes.model.node.resources.software;/*
  * limitations under the License.
  *
  */
+package org.apache.streampipes.model.node.resources.software;
 
-import org.apache.streampipes.model.shared.annotation.TsModel;
+import io.fogsy.empire.annotations.RdfProperty;
+import io.fogsy.empire.annotations.RdfsClass;
+import org.apache.streampipes.vocabulary.StreamPipes;
 
-@TsModel
-public class Cuda {
+@RdfsClass(StreamPipes.NVIDIA_CONTAINER_RUNTIME)
+public class NvidiaContainerRuntime extends ContainerRuntime {
 
-    private boolean hasCuda;
+    @RdfProperty(StreamPipes.HAS_CUDA_DRIVER_VERSION)
     private String cudaDriverVersion;
+
+    @RdfProperty(StreamPipes.HAS_CUDA_RUNTIME_VERSION)
     private String cudaRuntimeVersion;
 
-    public boolean hasCuda() {
-        return hasCuda;
+    public NvidiaContainerRuntime() {
+        super();
     }
 
-    public void setHasCuda(boolean hasCuda) {
-        this.hasCuda = hasCuda;
+    public NvidiaContainerRuntime(NvidiaContainerRuntime other) {
+        super(other);
+    }
+
+    public NvidiaContainerRuntime(String serverVersion, String apiVersion) {
+        super(serverVersion, apiVersion);
     }
 
     public String getCudaDriverVersion() {

@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="node-controller-edge-01" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" folderName="edge-extensions">
     <module name="streampipes-node-controller-container" />
-    <option name="SPRING_BOOT_MAIN_CLASS" value="org.apache.streampipes.node.controller.container.NodeControllerContainerInit" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="org.apache.streampipes.node.controller.container.NodeControllerInit" />
     <option name="ALTERNATIVE_JRE_PATH" />
     <envs>
       <env name="SP_BACKEND_HOST" value="host.docker.internal" />
@@ -13,12 +13,13 @@
       <env name="SP_NODE_CONTROLLER_CONTAINER_PORT" value="7077" />
       <env name="SP_NODE_BROKER_CONTAINER_HOST" value="localhost" />
       <env name="SP_NODE_BROKER_CONTAINER_PORT" value="1884" />
-      <env name="SP_NODE_ACCESSIBLE_SENSOR_ACTUATOR_ROS" value="ros;universalrobot;k3s-pi1.example.de;network" />
+      <env name="SP_NODE_ACCESSIBLE_FIELD_DEVICE_ROS" value="ros;universalrobot;network;192.168.0.90:9090" />
       <env name="SP_NODE_HAS_GPU" value="false" />
       <env name="SP_NODE_LOCATION_BUILDING" value="holl" />
       <env name="SP_NODE_LOCATION_MACHINE" value="UR" />
       <env name="SP_DEBUG" value="true" />
       <env name="SP_VERSION" value="0.68.0-SNAPSHOT" />
+      <env name="SP_NODE_ACCESSIBLE_FIELD_DEVICE_ZED" value="zed;camera;usb;/dev/video1" />
     </envs>
     <method v="2">
       <option name="Make" enabled="true" />

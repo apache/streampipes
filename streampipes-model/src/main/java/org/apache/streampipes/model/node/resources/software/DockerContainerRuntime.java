@@ -1,4 +1,4 @@
-package org.apache.streampipes.model.node;/*
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -15,19 +15,23 @@ package org.apache.streampipes.model.node;/*
  * limitations under the License.
  *
  */
+package org.apache.streampipes.model.node.resources.software;
 
-import org.apache.streampipes.model.shared.annotation.TsModel;
+import io.fogsy.empire.annotations.RdfsClass;
+import org.apache.streampipes.vocabulary.StreamPipes;
 
-@TsModel
-public class Node {
+@RdfsClass(StreamPipes.DOCKER_CONTAINER_RUNTIME)
+public class DockerContainerRuntime extends ContainerRuntime {
 
-    public NodeInfo nodeInfo;
-
-    public NodeInfo getNodeInfo() {
-        return nodeInfo;
+    public DockerContainerRuntime() {
+        super();
     }
 
-    public void setNodeInfo(NodeInfo nodeInfo) {
-        this.nodeInfo = nodeInfo;
+    public DockerContainerRuntime(DockerContainerRuntime other) {
+        super(other);
+    }
+
+    public DockerContainerRuntime(String serverVersion, String apiVersion) {
+        super(serverVersion, apiVersion);
     }
 }

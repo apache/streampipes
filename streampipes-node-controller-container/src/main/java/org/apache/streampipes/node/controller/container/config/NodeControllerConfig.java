@@ -18,8 +18,7 @@
 package org.apache.streampipes.node.controller.container.config;
 
 import org.apache.streampipes.config.SpConfig;
-import org.apache.streampipes.model.node.resources.interfaces.AccessibleSensorActuatorResource;
-import sun.security.krb5.Config;
+import org.apache.streampipes.model.node.resources.fielddevice.FieldDeviceAccessResource;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -121,17 +120,17 @@ public enum NodeControllerConfig {
                 .collect(Collectors.toList());
     }
 
-    public List<AccessibleSensorActuatorResource> getAccessibleSensorActuator(){
+    public List<FieldDeviceAccessResource> getFieldDeviceAccessResources(){
         return System.getenv()
                 .entrySet()
                 .stream()
-                .filter(e -> (e.getKey().contains(ConfigKeys.NODE_ACCESSIBLE_SENSOR_ACTUATOR)))
+                .filter(e -> (e.getKey().contains(ConfigKeys.NODE_ACCESSIBLE_FIELD_DEVICE)))
                 .map(x -> {
-                    AccessibleSensorActuatorResource a = new AccessibleSensorActuatorResource();
-                    a.setName(x.getValue().split(";")[0]);
-                    a.setType(x.getValue().split(";")[1]);
-                    a.setConnectionInfo(x.getValue().split(";")[2]);
-                    a.setConnectionType(x.getValue().split(";")[3]);
+                    FieldDeviceAccessResource a = new FieldDeviceAccessResource();
+                    a.setDeviceName(x.getValue().split(";")[0]);
+                    a.setDeviceType(x.getValue().split(";")[1]);
+                    a.setConnectionType(x.getValue().split(";")[2]);
+                    a.setConnectionString(x.getValue().split(";")[3]);
                     return a;
                 })
                 .collect(Collectors.toList());

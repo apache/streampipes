@@ -17,8 +17,8 @@
  */
 package org.apache.streampipes.node.controller.container.management.orchestrator.docker;
 
-import org.apache.streampipes.model.node.DockerContainer;
-import org.apache.streampipes.model.node.DockerContainerBuilder;
+import org.apache.streampipes.model.node.container.DockerContainer;
+import org.apache.streampipes.model.node.container.DockerContainerBuilder;
 import org.apache.streampipes.node.controller.container.config.ConfigKeys;
 import org.apache.streampipes.node.controller.container.config.NodeControllerConfig;
 

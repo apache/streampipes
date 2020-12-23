@@ -121,7 +121,7 @@
                                                             required>
                                                     <mat-option [value]="nodeInfo.nodeControllerId"
                                                                 *ngFor="let nodeInfo of deploymentOptions[processors.appId]">
-                                                        <em>{{nodeInfo.nodeMetadata.nodeAddress}}</em>
+                                                        <em>{{nodeInfo.hostname}}</em>
                                                     </mat-option>
                                                 </mat-select>
                                             </mat-form-field>
@@ -140,7 +140,7 @@
                                                             required>
                                                     <mat-option [value]="nodeInfo.nodeControllerId"
                                                                 *ngFor="let nodeInfo of deploymentOptions[sinks.appId]">
-                                                        <em>{{nodeInfo.nodeMetadata.nodeAddress}}</em>
+                                                        <em>{{nodeInfo.hostname}}</em>
                                                     </mat-option>
                                                 </mat-select>
                                             </mat-form-field>

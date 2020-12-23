@@ -16,12 +16,30 @@ package org.apache.streampipes.model.node.resources.hardware;/*
  *
  */
 
+import io.fogsy.empire.annotations.RdfProperty;
+import io.fogsy.empire.annotations.RdfsClass;
+import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.shared.annotation.TsModel;
+import org.apache.streampipes.vocabulary.StreamPipes;
 
+@RdfsClass(StreamPipes.NODE_HARDWARE_RESOURCE_CPU)
 @TsModel
-public class CPU {
-    public int cores;
-    public String arch;
+public class CPU extends UnnamedStreamPipesEntity {
+
+    @RdfProperty(StreamPipes.HAS_CPU_CORES)
+    private int cores;
+
+    @RdfProperty(StreamPipes.HAS_CPU_ARCH)
+    private String arch;
+
+    public CPU() {
+        super();
+    }
+
+    public CPU(int cores, String arch) {
+        this.cores = cores;
+        this.arch = arch;
+    }
 
     public int getCores() {
         return cores;

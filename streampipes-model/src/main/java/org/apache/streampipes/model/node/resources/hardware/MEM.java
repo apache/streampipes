@@ -16,11 +16,26 @@ package org.apache.streampipes.model.node.resources.hardware;/*
  *
  */
 
+import io.fogsy.empire.annotations.RdfProperty;
+import io.fogsy.empire.annotations.RdfsClass;
+import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.shared.annotation.TsModel;
+import org.apache.streampipes.vocabulary.StreamPipes;
 
+@RdfsClass(StreamPipes.NODE_HARDWARE_RESOURCE_MEM)
 @TsModel
-public class MEM {
-    public Long memTotal;
+public class MEM extends UnnamedStreamPipesEntity {
+
+    @RdfProperty(StreamPipes.HAS_MEMORY_TOTAL)
+    private Long memTotal;
+
+    public MEM() {
+        super();
+    }
+
+    public MEM(Long memTotal) {
+        this.memTotal = memTotal;
+    }
 
     public Long getMemTotal() {
         return memTotal;

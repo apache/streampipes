@@ -1,4 +1,4 @@
-package org.apache.streampipes.model.node.resources.hardware;/*
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -15,33 +15,48 @@ package org.apache.streampipes.model.node.resources.hardware;/*
  * limitations under the License.
  *
  */
+package org.apache.streampipes.model.node;
 
 import io.fogsy.empire.annotations.RdfProperty;
 import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
+import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
-@RdfsClass(StreamPipes.NODE_HARDWARE_RESOURCE_DISK)
+import javax.persistence.Entity;
+
+@RdfsClass(StreamPipes.NODE_BROKER_DESCRIPTION)
+@Entity
 @TsModel
-public class DISK extends UnnamedStreamPipesEntity {
+public class NodeBrokerDescription extends UnnamedStreamPipesEntity {
 
-    @RdfProperty(StreamPipes.HAS_DISK_TOTAL)
-    private long diskTotal;
+    @RdfProperty(StreamPipes.HAS_TRANSPORT_PROTOCOL)
+    private TransportProtocol nodeTransportProtocol;
 
-    public DISK() {
+    public NodeBrokerDescription() {
         super();
     }
 
-    public DISK(long diskTotal) {
-        this.diskTotal = diskTotal;
+    public NodeBrokerDescription(String elementId) {
+        super(elementId);
     }
 
-    public long getDiskTotal() {
-        return diskTotal;
+    public NodeBrokerDescription(TransportProtocol nodeTransportProtocol) {
+        this.nodeTransportProtocol = nodeTransportProtocol;
     }
 
-    public void setDiskTotal(long diskTotal) {
-        this.diskTotal = diskTotal;
+    public NodeBrokerDescription(NodeBrokerDescription other, TransportProtocol nodeTransportProtocol) {
+        super(other);
+        this.nodeTransportProtocol = nodeTransportProtocol;
     }
+
+    public TransportProtocol getNodeTransportProtocol() {
+        return nodeTransportProtocol;
+    }
+
+    public void setNodeTransportProtocol(TransportProtocol nodeTransportProtocol) {
+        this.nodeTransportProtocol = nodeTransportProtocol;
+    }
+
 }

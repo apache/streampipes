@@ -116,4 +116,8 @@ export class PipelineOperationsService {
   showLogs(id) {
     //this.$state.go("streampipes.pipelinelogs", {pipeline: id});
   }
+
+    migrateProcessors(pipeline: Pipeline) {
+        console.log(pipeline);
+    }
 }

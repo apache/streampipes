@@ -16,14 +16,43 @@ package org.apache.streampipes.model.node.resources.software;/*
  *
  */
 
+import io.fogsy.empire.annotations.RdfProperty;
+import io.fogsy.empire.annotations.RdfsClass;
+import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.shared.annotation.TsModel;
+import org.apache.streampipes.vocabulary.StreamPipes;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToOne;
+
+@RdfsClass(StreamPipes.NODE_SOFTWARE_RESOURCE)
+@Entity
 @TsModel
-public class SoftwareResource {
-    public String os;
-    public String kernelVersion;
-//    private Cuda cuda;
-    public Docker docker;
+public class SoftwareResource extends UnnamedStreamPipesEntity {
+
+    @RdfProperty(StreamPipes.HAS_OPERATING_SYSTEM)
+    private String os;
+
+    @RdfProperty(StreamPipes.HAS_KERNEL_VERSION)
+    private String kernelVersion;
+
+    @OneToOne(fetch = FetchType.EAGER,
+            cascade = {CascadeType.ALL})
+    @RdfProperty(StreamPipes.HAS_CONTAINER_RUNTIME)
+    public ContainerRuntime containerRuntime;
+
+    public SoftwareResource() {
+        super();
+    }
+
+    public SoftwareResource(SoftwareResource other) {
+        super(other);
+        this.os = other.getOs();
+        this.kernelVersion = other.getKernelVersion();
+        this.containerRuntime = other.getContainerRuntime();
+    }
 
     public String getOs() {
         return os;
@@ -33,12 +62,12 @@ public class SoftwareResource {
         this.os = os;
     }
 
-    public Docker getDocker() {
-        return docker;
+    public ContainerRuntime getContainerRuntime() {
+        return containerRuntime;
     }
 
-    public void setDocker(Docker docker) {
-        this.docker = docker;
+    public void setContainerRuntime(ContainerRuntime containerRuntime) {
+        this.containerRuntime = containerRuntime;
     }
 
     public String getKernelVersion() {
@@ -49,11 +78,4 @@ public class SoftwareResource {
         this.kernelVersion = kernelVersion;
     }
 
-    //    public Cuda getCuda() {
-//        return cuda;
-//    }
-//
-//    public void setCuda(Cuda cuda) {
-//        this.cuda = cuda;
-//    }
 }

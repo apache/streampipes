@@ -21,7 +21,7 @@ import {HttpClient} from "@angular/common/http";
 import {PlatformServicesCommons} from "./commons.service";
 import {Observable} from "rxjs";
 import {
-  Message, NodeInfo,
+  Message, NodeInfoDescription,
   Pipeline,
   PipelineCategory, PipelineElementStatus,
   PipelineOperationStatus, PipelineStatusMessage
@@ -104,10 +104,10 @@ export class PipelineService {
         }));
   }
 
-  getAvailableEdgeNodes(): Observable<NodeInfo[]> {
+  getAvailableEdgeNodes(): Observable<NodeInfoDescription[]> {
     return this.http.get(this.platformServicesCommons.authUserBasePath() + "/nodes")
         .pipe(map(response => {
-          return response as NodeInfo[];
+          return response as NodeInfoDescription[];
     }));
   }
 

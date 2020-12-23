@@ -15,48 +15,30 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.model.node;
+package org.apache.streampipes.model.node.container;
 
+import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.shared.annotation.TsModel;
+import org.apache.streampipes.vocabulary.StreamPipes;
 
+import javax.persistence.Entity;
+import java.util.List;
+import java.util.Map;
+
+@RdfsClass(StreamPipes.DEPLOYMENT_DOCKER_CONTAINER)
+@Entity
 @TsModel
-public class NodeBrokerInfo {
+public class DockerContainer extends DeploymentContainer {
 
-    private String host;
-    private int port;
-
-    //private JmsTransportProtocol transportProtocol;
-
-    public NodeBrokerInfo() {
+    public DockerContainer(String elementId) {
+        super(elementId);
     }
 
-    public String getHost() {
-        return host;
+    public DockerContainer() {
     }
 
-    public void setHost(String host) {
-        this.host = host;
+    public DockerContainer(String imageURI, String containerName, String serviceId, String[] containerPorts,
+                           List<String> envVars, Map<String, String> labels) {
+        super(imageURI, containerName, serviceId, containerPorts, envVars, labels);
     }
-
-    public int getPort() {
-        return port;
-    }
-
-    public void setPort(int port) {
-        this.port = port;
-    }
-
-
-    /*public NodeBrokerInfo(JmsTransportProtocol transportProtocol) {
-        this.transportProtocol = transportProtocol;
-    }
-     */
-
-//    public TransportProtocol getTransportProtocol() {
-//        return transportProtocol;
-//    }
-//
-//    public void setTransportProtocol(JmsTransportProtocol transportProtocol) {
-//        this.transportProtocol = transportProtocol;
-//    }
 }

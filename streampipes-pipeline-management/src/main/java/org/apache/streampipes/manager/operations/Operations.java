@@ -42,12 +42,12 @@ import org.apache.streampipes.model.client.endpoint.RdfEndpointItem;
 import org.apache.streampipes.model.message.DataSetModificationMessage;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.PipelineModificationMessage;
+import org.apache.streampipes.model.node.NodeInfoDescription;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineElementRecommendationMessage;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
-import org.apache.streampipes.model.node.NodeInfo;
 import org.apache.streampipes.model.template.PipelineTemplateDescription;
 import org.apache.streampipes.model.template.PipelineTemplateInvocation;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -186,7 +186,7 @@ public class Operations {
     return PipelineElementRuntimeInfoFetcher.INSTANCE.getCurrentData(spDataStream);
   }
 
-  public static List<NodeInfo> getAvailableNodes() {
+  public static List<NodeInfoDescription> getAvailableNodes() {
     return new AvailableNodesFetcher().fetchNodes();
   }
 }

@@ -22,9 +22,8 @@ import {
   DataProcessorInvocation,
   Message,
   Pipeline,
-  NodeInfo,
-  NodeMetadata,
-  SpDataStreamRelay, DataSinkInvocation, SpDataStream
+  NodeInfoDescription,
+  StaticNodeMedata
 } from "../../../core-model/gen/streampipes-model";
 import {ObjectProvider} from "../../services/object-provider.service";
 import {EditorService} from "../../services/editor.service";
@@ -32,7 +31,6 @@ import {PipelineService} from "../../../platform-services/apis/pipeline.service"
 import {ShepherdService} from "../../../services/tour/shepherd.service";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
-import {deepClone} from "fast-json-patch/lib/core";
 
 @Component({
   selector: 'save-pipeline',
@@ -49,7 +47,7 @@ export class SavePipelineComponent implements OnInit {
   saved: boolean = false;
   storageError: boolean = false;
   errorMessage: string = '';
-  edgeNodes: NodeInfo[];
+  edgeNodes: NodeInfoDescription[];
   advancedSettings: boolean = false;
   deploymentOptions: Array<any> = new Array<any>();
   selectedRelayStrategyVal: string;
@@ -167,7 +165,7 @@ export class SavePipelineComponent implements OnInit {
     });
   }
 
-  addAppIds(pipelineElements, edgeNodes: Array<NodeInfo>) {
+  addAppIds(pipelineElements, edgeNodes: Array<NodeInfoDescription>) {
     pipelineElements.forEach(p => {
       this.deploymentOptions[p.appId] = [];
 
@@ -185,8 +183,8 @@ export class SavePipelineComponent implements OnInit {
 
       edgeNodes.forEach(nodeInfo => {
         // only show nodes that actually have supported pipeline elements registered
-        if (nodeInfo.supportedPipelineElementAppIds.length != 0 &&
-            nodeInfo.supportedPipelineElementAppIds.some(appId => appId === p.appId)) {
+        if (nodeInfo.supportedElements.length != 0 &&
+            nodeInfo.supportedElements.some(appId => appId === p.appId)) {
           this.deploymentOptions[p.appId].push(nodeInfo);
         }
       })
@@ -194,12 +192,12 @@ export class SavePipelineComponent implements OnInit {
   }
 
   makeDefaultNodeInfo() {
-    let nodeInfo = {} as NodeInfo;
+    let nodeInfo = {} as NodeInfoDescription;
     nodeInfo.nodeControllerId = "default";
-    nodeInfo.nodeMetadata = {} as NodeMetadata;
-    nodeInfo.nodeMetadata.nodeType = "default";
-    nodeInfo.nodeMetadata.nodeAddress = "default";
-    nodeInfo.nodeMetadata.nodeModel = "Default Node";
+    nodeInfo.hostname = "default";
+    nodeInfo.staticNodeMedata = {} as StaticNodeMedata;
+    nodeInfo.staticNodeMedata.type = "default";
+    nodeInfo.staticNodeMedata.model = "Default Node";
     return nodeInfo;
   }
 
@@ -217,10 +215,10 @@ export class SavePipelineComponent implements OnInit {
             .filter(node => node.nodeControllerId === selectedTargetNodeId)
 
         p.deploymentTargetNodeHostname = selectedNode
-            .map(node => node.nodeMetadata.nodeAddress)[0]
+            .map(node => node.hostname)[0]
 
         p.deploymentTargetNodePort = selectedNode
-            .map(node => node.nodeControllerPort)[0]
+            .map(node => node.port)[0]
       }
       else {
         p.deploymentTargetNodeHostname = null

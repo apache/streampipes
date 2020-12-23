@@ -1,4 +1,4 @@
-package org.apache.streampipes.model.node;/*
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -15,21 +15,45 @@ package org.apache.streampipes.model.node;/*
  * limitations under the License.
  *
  */
+package org.apache.streampipes.model.node.resources;
 
+import io.fogsy.empire.annotations.RdfProperty;
+import io.fogsy.empire.annotations.RdfsClass;
+import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
+import org.apache.streampipes.model.node.resources.fielddevice.FieldDeviceAccessResource;
 import org.apache.streampipes.model.node.resources.hardware.HardwareResource;
-import org.apache.streampipes.model.node.resources.interfaces.AccessibleSensorActuatorResource;
 import org.apache.streampipes.model.node.resources.software.SoftwareResource;
 import org.apache.streampipes.model.shared.annotation.TsModel;
+import org.apache.streampipes.vocabulary.StreamPipes;
 
+import javax.persistence.*;
 import java.util.List;
 
+@RdfsClass(StreamPipes.NODE_RESOURCE)
+@Entity
 @TsModel
-public class NodeResources {
-    public HardwareResource hardwareResource;
-    public SoftwareResource softwareResource;
-    public List<AccessibleSensorActuatorResource> accessibleSensorActuatorResource;
+public class NodeResource extends UnnamedStreamPipesEntity {
 
-    public NodeResources() {
+    @OneToOne(fetch = FetchType.EAGER,
+            cascade = {CascadeType.ALL})
+    @RdfProperty(StreamPipes.HAS_HARDWARE_RESOURCES)
+    private HardwareResource hardwareResource;
+
+    @OneToOne(fetch = FetchType.EAGER,
+            cascade = {CascadeType.ALL})
+    @RdfProperty(StreamPipes.HAS_SOFTWARE_RESOURCES)
+    private SoftwareResource softwareResource;
+
+    @OneToMany(fetch = FetchType.EAGER,
+            cascade = {CascadeType.ALL})
+    @RdfProperty(StreamPipes.HAS_FIELD_DEVICE_ACCESS_RESOURCES)
+    private List<FieldDeviceAccessResource> fieldDeviceAccessResourceList;
+
+    public NodeResource() {
+    }
+
+    public NodeResource(NodeResource other) {
+        super(other);
     }
 
     public HardwareResource getHardwareResource() {
@@ -48,11 +72,11 @@ public class NodeResources {
         this.softwareResource = softwareResource;
     }
 
-    public List<AccessibleSensorActuatorResource> getAccessibleSensorActuatorResource() {
-        return accessibleSensorActuatorResource;
+    public List<FieldDeviceAccessResource> getFieldDeviceAccessResourceList() {
+        return fieldDeviceAccessResourceList;
     }
 
-    public void setAccessibleSensorActuatorResource(List<AccessibleSensorActuatorResource> accessibleSensorActuatorResource) {
-        this.accessibleSensorActuatorResource = accessibleSensorActuatorResource;
+    public void setFieldDeviceAccessResourceList(List<FieldDeviceAccessResource> fieldDeviceAccessResourceList) {
+        this.fieldDeviceAccessResourceList = fieldDeviceAccessResourceList;
     }
 }

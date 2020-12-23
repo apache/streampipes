@@ -42,7 +42,7 @@ export class PipelineOverviewComponent implements OnInit {
   @Output()
   refreshPipelinesEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  displayedColumns: string[] = ['start', 'name', 'lastModified', 'action'];
+  displayedColumns: string[] = ['start', 'name', 'lastModified', 'startedAt', 'action'];
 
   dataSource: MatTableDataSource<Pipeline>;
 

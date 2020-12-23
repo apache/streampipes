@@ -1,4 +1,4 @@
-package org.apache.streampipes.model.node;/*
+package org.apache.streampipes.model.node.container;/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -20,21 +20,21 @@ import java.util.*;
 public class DockerContainerBuilder {
 
     private final DockerContainer dockerContainer;
-    private final String imageURI;
-    private final String containerName;
+    private String imageURI;
+    private String containerName;
     private String serviceId;
-    private final String [] containerPorts;
-    private final List<String> envVars;
-    private final Map<String, String> labels;
+    private String [] containerPorts;
+    private List<String> envVars;
+    private Map<String, String> labels;
 
     public DockerContainerBuilder(String id) {
         this.dockerContainer = new DockerContainer();
         this.dockerContainer.setServiceId(id);
-        this.imageURI = "";
-        this.containerName = "";
-        this.containerPorts = new String[]{};
-        this.envVars = new ArrayList<>();
-        this.labels = new HashMap<>();
+//        this.imageURI = "";
+//        this.containerName = "";
+//        this.containerPorts = new String[]{};
+//        this.envVars = new ArrayList<>();
+//        this.labels = new HashMap<>();
     }
 
     public static DockerContainerBuilder create(String id) {
@@ -42,7 +42,7 @@ public class DockerContainerBuilder {
     }
 
     public DockerContainerBuilder withImage(String imageUri) {
-        this.dockerContainer.setImageURI(imageUri);
+        this.dockerContainer.setImageUri(imageUri);
         return this;
     }
 

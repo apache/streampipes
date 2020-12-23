@@ -361,13 +361,13 @@ public class StreamPipes {
   public static final String SECRET_STATIC_PROPERTY = NS + "SecretStaticProperty";
   public static final String IS_ENCRYPTED = NS + "isEncrypted";
 
-  public static final String PE_DOCKER_CONTAINER = NS + "pipelineElementDockerContainer";
-  public static final String PE_DOCKER_CONTAINER_IMAGE_URI = NS + "dockerContainerImageUri";
-  public static final String PE_DOCKER_CONTAINER_NAME = NS + "dockerContainerName";
-  public static final String PE_DOCKER_CONTAINER_SERVICE_ID = NS + "dockerContainerServiceId";
-  public static final String PE_DOCKER_CONTAINER_PORTS = NS + "dockerContainerPorts";
-  public static final String PE_DOCKER_CONTAINER_ENV_VARS = NS + "dockerContainerEnvVars";
-  public static final String PE_DOCKER_CONTAINER_LABELS = NS + "dockerContainerLabels";
+  public static final String DEPLOYMENT_DOCKER_CONTAINER = NS + "pipelineElementDockerContainer";
+  public static final String DEPLOYMENT_CONTAINER_IMAGE_URI = NS + "dockerContainerImageUri";
+  public static final String DEPLOYMENT_CONTAINER_NAME = NS + "dockerContainerName";
+  public static final String DEPLOYMENT_CONTAINER_SERVICE_ID = NS + "dockerContainerServiceId";
+  public static final String DEPLOYMENT_CONTAINER_PORTS = NS + "dockerContainerPorts";
+  public static final String DEPLOYMENT_CONTAINER_ENV_VARS = NS + "dockerContainerEnvVars";
+  public static final String DEPLOYMENT_CONTAINER_LABELS = NS + "dockerContainerLabels";
 
   // UI Rendering
 
@@ -423,4 +423,65 @@ public class StreamPipes {
   public static final String HAS_EVENT_RELAY_STRATEGY = NS + "hasEventRelayStrategy";
   public static final String DATA_STREAM_RELAY_CONTAINER = NS + "DataStreamRelayContainer" ;
   public static final String DATA_STREAM_RELAY_RUNNING_INSTANCE_ID = NS + "hasDataStreamRelayRunningInstanceId";
+
+  public static final String STATIC_NODE_METADATA = NS + "StaticNodeMetadata";
+  public static final String HAS_GEO_LOCATION = NS + "hasGeoLocation";
+  public static final String HAS_NODE_TAGS = NS + "hasNodeTags";
+  public static final String NODE_TYPE = NS + "isNodeType";
+  public static final String NODE_MODEL = NS + "isNodeModel";
+  public static final String GEO_LOCATION = NS + "geoLocation";
+  public static final String GEO_LOCATION_LATITUDE = NS + "hasLatitude";
+  public static final String GEO_LOCATION_LONGITUDE = NS + "hasLongitude";
+  public static final String NODE_INFO_DESCRIPTION = NS + "NodeInfoDescription";
+  public static final String HAS_STATIC_NODE_METADATA = NS + "hasStaticNodeMetadata";
+  public static final String HAS_NODE_RESOURCES = NS + "hasNodeResources";
+
+  public static final String HAS_CONTAINER = NS + "hasContainer";
+  public static final String DEPLOYMENT_CONTAINER = NS + "DeploymentContainer";
+  public static final String NODE_RESOURCE = NS + "NodeResource";
+  public static final String NODE_HARDWARE_RESOURCE = NS + "NodeHardwareResource";
+  public static final String NODE_SOFTWARE_RESOURCE =  NS + "NodeSoftwareResource";
+  public static final String CONTAINER_RUNTIME = NS + "ContainerRuntime";
+  public static final String DOCKER_CONTAINER_RUNTIME = NS + "DockerContainerRuntime";
+  public static final String HAS_OPERATING_SYSTEM = NS + "hasOperatingSystem";
+
+  public static final String HAS_KERNEL_VERSION = NS + "hasKernelVersion";
+  public static final String HAS_CONTAINER_RUNTIME = NS + "hasContainerRuntime";
+  public static final String NODE_FIELD_DEVICE_ACCESS_RESOURCE = NS + "FieldDeviceAccessResource";
+  public static final String FIELD_DEVICE_NAME = NS + "hasFieldDeviceName";
+  public static final String FIELD_DEVICE_TYPE = NS + "hasFieldDeviceType";
+
+  public static final String FIELD_DEVICE_CONNECTION_TYPE = NS + "hasFieldDeviceConnectionType";
+  public static final String FIELD_DEVICE_CONNECTION_STRING = NS + "hasFieldDeviceConnectionString";
+  public static final String HAS_CPU = NS + "hasCPU";
+
+  public static final String HAS_MEMORY = NS + "hasMemory";
+
+  public static final String HAS_DISK = NS + "hasDisk";
+
+  public static final String HAS_GPU = NS + "hasGpu";
+  public static final String NODE_HARDWARE_RESOURCE_CPU = NS + "CpuResource";
+
+  public static final String HAS_CPU_CORES = NS + "hasCpuCores";
+  public static final String HAS_CPU_ARCH = NS + "hasCpuArch";
+  public static final String NODE_HARDWARE_RESOURCE_MEM = NS + "MemResource";
+  public static final String HAS_MEMORY_TOTAL = NS + "hasMemoryTotal";
+  public static final String NODE_HARDWARE_RESOURCE_DISK = NS + "DiskResource";
+  public static final String HAS_DISK_TOTAL = NS + "hasDiskTotal";
+  public static final String NODE_HARDWARE_RESOURCE_GPU = NS + "GpuResource";
+  public static final String HAS_GPU_TYPE = NS + "hasGpuType";
+  public static final String HAS_GPU_CORES = NS + "hasGpuCores";
+  public static final String HAS_SUPPORTED_ELEMENTS = NS + "hasSupportedElements" ;
+  public static final String HAS_NODE_BROKER = NS + "hasNodeBroker";
+  public static final String NODE_BROKER_DESCRIPTION = NS + "NodeBrokerDescription" ;
+  public static final String NVIDIA_CONTAINER_RUNTIME = NS + "NvidiaContainerRuntime" ;
+  public static final String HAS_CUDA_DRIVER_VERSION = NS + "hasCudaDriverVersion";
+
+  public static final String HAS_CUDA_RUNTIME_VERSION = NS + "hasCudaRuntimeVersion";
+  public static final String HAS_FIELD_DEVICE_ACCESS_RESOURCES = NS + "hasFieldDeviceAcessResources";
+  public static final String HAS_SOFTWARE_RESOURCES = NS + "hasSoftwareResources";
+
+  public static final String HAS_HARDWARE_RESOURCES = NS + "hasHardwareResources";
+  public static final String HAS_CONTAINER_RUNTIME_SERVER_VERSION = NS + "hasContainerRuntimeServerVersion";
+  public static final String HAS_CONTAINER_RUNTIME_API_VERSION = NS + "hasContainerRuntimeApiVersion";
 }

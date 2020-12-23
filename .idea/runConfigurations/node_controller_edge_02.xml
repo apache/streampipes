@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="node-controller-edge-02" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" folderName="edge-extensions">
     <module name="streampipes-node-controller-container" />
-    <option name="SPRING_BOOT_MAIN_CLASS" value="org.apache.streampipes.node.controller.container.NodeControllerContainerInit" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="org.apache.streampipes.node.controller.container.NodeControllerInit" />
     <option name="ALTERNATIVE_JRE_PATH" />
     <envs>
       <env name="SP_BACKEND_HOST" value="host.docker.internal" />
@@ -13,7 +13,7 @@
       <env name="SP_NODE_CONTROLLER_CONTAINER_PORT" value="7078" />
       <env name="SP_NODE_BROKER_CONTAINER_HOST" value="localhost" />
       <env name="SP_NODE_BROKER_CONTAINER_PORT" value="1887" />
-      <env name="SP_NODE_ACCESSIBLE_SENSOR_ACTUATOR_ZED" value="zed;sensor;/dev/video1;usb" />
+      <env name="SP_NODE_ACCESSIBLE_FIELD_DEVICE_ZED" value="zed;camera;usb;/dev/video0" />
       <env name="SP_NODE_HAS_GPU" value="true" />
       <env name="SP_NODE_LOCATION_BUILDING" value="holl" />
       <env name="SP_DEBUG" value="true" />

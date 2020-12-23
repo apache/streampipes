@@ -18,7 +18,10 @@
 
 import {Component} from "@angular/core";
 import {ConfigurationService} from "../shared/configuration.service";
-import {NodeInfo} from "../../core-model/gen/streampipes-model";
+import {
+    FieldDeviceAccessResource,
+    NodeInfoDescription, NvidiaContainerRuntime
+} from "../../core-model/gen/streampipes-model";
 
 @Component({
     selector: 'edge-configuration',
@@ -28,7 +31,19 @@ import {NodeInfo} from "../../core-model/gen/streampipes-model";
 export class EdgeConfigurationComponent {
 
     loadingCompleted: boolean = false;
-    availableEdgeNodes: NodeInfo[];
+    availableEdgeNodes: NodeInfoDescription[];
+
+    os: String;
+    serverVersion: String;
+    availableGPU: boolean = false;
+    cpuCores: number;
+    cpuArch: string;
+    memTotal: number;
+    diskTotal: number;
+    gpuCores: number;
+    gpuType: string;
+    locationTags: String[];
+    fieldDevices: FieldDeviceAccessResource[];
 
     constructor(private configurationService: ConfigurationService) {
 
@@ -43,15 +58,18 @@ export class EdgeConfigurationComponent {
             this.availableEdgeNodes = response;
             this.availableEdgeNodes.forEach(x => {
                 // Raspbian is too long -> shorten it
-                if (x.nodeResources.softwareResource.os.includes('Raspbian')) {
-                    if (x.nodeResources.softwareResource.os.includes('buster')) {
-                        if (x.nodeResources.softwareResource.os.includes('10')) {
+                let os = x.nodeResources.softwareResource.os;
+                if (os.includes('Raspbian')) {
+                    if (os.includes('buster')) {
+                        if (os.includes('10')) {
                             x.nodeResources.softwareResource.os = 'Raspbian 10 (buster)'
                         }
                     }
                 }
-                x.nodeResources.hardwareResource.memory.memTotal = this.bytesToGB(x.nodeResources.hardwareResource.memory.memTotal);
-                x.nodeResources.hardwareResource.disk.diskTotal = this.bytesToGB(x.nodeResources.hardwareResource.disk.diskTotal)
+                let memTotal = x.nodeResources.hardwareResource.memory.memTotal;
+                let diskTotal = x.nodeResources.hardwareResource.disk.diskTotal;
+                x.nodeResources.hardwareResource.memory.memTotal = this.bytesToGB(memTotal);
+                x.nodeResources.hardwareResource.disk.diskTotal = this.bytesToGB(diskTotal)
             });
         })
     }
@@ -64,4 +82,11 @@ export class EdgeConfigurationComponent {
         return (Math.round((bytes / gb) * 100) / 100);
     };
 
+    nvidiaRuntime(node: NodeInfoDescription) {
+        let nvidiaRuntime = false;
+        if (node.nodeResources.softwareResource.containerRuntime instanceof NvidiaContainerRuntime) {
+            nvidiaRuntime = true;
+        }
+        return nvidiaRuntime;
+    }
 }

@@ -20,6 +20,7 @@ package org.apache.streampipes.model.util;
 
 import org.apache.streampipes.model.SpDataStreamRelay;
 import org.apache.streampipes.model.grounding.*;
+import org.apache.streampipes.model.node.NodeBrokerDescription;
 import org.apache.streampipes.model.output.*;
 import org.apache.streampipes.model.staticproperty.*;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;

@@ -24,7 +24,7 @@ import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.grounding.TransportProtocol;
-import org.apache.streampipes.model.node.DockerContainer;
+import org.apache.streampipes.model.node.container.DockerContainer;
 import org.apache.streampipes.node.controller.container.management.orchestrator.docker.DockerContainerManager;
 import org.apache.streampipes.node.controller.container.management.pe.InvocableElementManager;
 import org.apache.streampipes.node.controller.container.management.pe.RunningInvocableInstances;
