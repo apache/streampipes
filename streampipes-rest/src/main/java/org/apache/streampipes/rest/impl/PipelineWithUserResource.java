@@ -248,4 +248,23 @@ public class PipelineWithUserResource extends AbstractRestInterface implements I
         return statusMessage(Notifications.success("Pipeline modified"));
     }
 
+    @POST
+    @Path("/migrate/{pipelineId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @GsonWithIds
+    @Override
+    public Response migratePipelineProcessors(@PathParam("username") String username,
+                                              @PathParam("pipelineId") String pipelineId,
+                                              Pipeline pipeline) {
+        Pipeline storedPipeline = getPipelineStorage().getPipeline(pipelineId);
+
+//        storedPipeline.setActions(pipeline.getActions());
+//        storedPipeline.setSepas(pipeline.getSepas());
+//        storedPipeline.setActions(pipeline.getActions());
+//        storedPipeline.setCreatedAt(System.currentTimeMillis());
+//        storedPipeline.setPipelineCategories(pipeline.getPipelineCategories());
+//        Operations.updatePipeline(storedPipeline);
+        return statusMessage(Notifications.success("Pipeline processors migrated"));
+    }
+
 }

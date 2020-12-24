@@ -60,6 +60,7 @@ import {PropertySelectionComponent} from "./components/output-strategy/property-
 import {UserDefinedOutputStrategyComponent} from "./components/output-strategy/user-defined-output/user-defined-output.component";
 import {ConnectModule} from "../connect/connect.module";
 import {MatSliderModule} from "@angular/material/slider";
+import { MigratePipelineProcessorsComponent } from './dialog/migrate-pipeline-processors/migrate-pipeline-processors.component';
 
 @NgModule({
     imports: [
@@ -99,7 +100,8 @@ import {MatSliderModule} from "@angular/material/slider";
         PropertySelectionComponent,
         SavePipelineComponent,
         SafeCss,
-        WelcomeTourComponent
+        WelcomeTourComponent,
+        MigratePipelineProcessorsComponent
     ],
     providers: [
         EditorService,

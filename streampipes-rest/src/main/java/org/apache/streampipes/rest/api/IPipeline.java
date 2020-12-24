@@ -40,4 +40,6 @@ public interface IPipeline extends IPipelineElement {
   Response overwritePipeline(String username, String pipelineId, Pipeline pipeline);
 
   Response getPipelineStatus(String username, String pipelineId);
+
+  Response migratePipelineProcessors(String username, String pipelineId, Pipeline pipeline);
 }

@@ -26,6 +26,7 @@ import {Pipeline, PipelineOperationStatus} from "../../core-model/gen/streampipe
 import {DeletePipelineDialogComponent} from "../dialog/delete-pipeline/delete-pipeline-dialog.component";
 import {DialogRef} from "../../core-ui/dialog/base-dialog/dialog-ref";
 import {Router} from "@angular/router";
+import {MigratePipelineProcessorsComponent} from "../../editor/dialog/migrate-pipeline-processors/migrate-pipeline-processors.component";
 
 declare const require: any;
 
@@ -117,7 +118,13 @@ export class PipelineOperationsService {
     //this.$state.go("streampipes.pipelinelogs", {pipeline: id});
   }
 
-    migrateProcessors(pipeline: Pipeline) {
-        console.log(pipeline);
-    }
+  migratePipelineProcessors(pipeline: Pipeline) {
+    this.DialogService.open(MigratePipelineProcessorsComponent,{
+      panelType: PanelType.SLIDE_IN_PANEL,
+      title: "Live-Migrate pipeline processors",
+      data: {
+        "pipeline": pipeline
+      }
+    });
+  }
 }

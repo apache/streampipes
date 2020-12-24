@@ -1,0 +1,172 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div class="sp-dialog-container">
+    <div class="sp-dialog-content padding-20">
+        <div fxFlex="100" fxLayout="column">
+            <div fxFlex="100" fxLayout="column" *ngIf="!saved && !saving && !storageError">
+                <form [formGroup]="submitPipelineForm">
+                    <div fxFlex="100" fxLayout="column" *ngIf="!currentModifiedPipelineId || updateMode=='clone'">
+                        <mat-form-field fxFlex><mat-label>Pipeline Name</mat-label>
+                            <input [formControlName]="'pipelineName'" matInput name="pipelineName" readonly/>
+                        </mat-form-field>
+                        <mat-form-field fxFlex><mat-label>Description</mat-label>
+                            <input [formControlName]="'pipelineDescription'" matInput readonly/>
+                        </mat-form-field>
+                    </div>
+                </form>
+                <mat-slide-toggle color="primary" [(ngModel)]="advancedSettings">
+                    Configure deployment options
+                </mat-slide-toggle>
+                <mat-divider *ngIf="advancedSettings" style="margin: 1em 0 1em 0;"></mat-divider>
+                <div *ngIf="advancedSettings">
+                    <div>
+                        <b>Pipeline Operation Policies</b>
+                    </div>
+
+                    <div style="margin-top: 2em">
+                        <div fxFlex="100" fxLayout="row">
+                            <div fxFlex="50" fxLayout="row" fxLayoutAlign="left top">
+                                <span>Relay Policy</span>
+                            </div>
+                        </div>
+                        <div fxFlex="50" fxLayout="row" fxLayoutAlign="start center">
+                            <mat-button-toggle-group #relayGroup="matButtonToggleGroup" aria-label="Relay strategy"
+                                                     [disabled]="true"
+                                                     [value]="selectedRelayStrategyVal"
+                                                     (change)="onSelectedRelayStrategyChange(relayGroup.value)">
+                                <mat-button-toggle value="purge">purge</mat-button-toggle>
+                                <mat-button-toggle value="buffer">buffer</mat-button-toggle>
+                            </mat-button-toggle-group>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 1em">
+                        <div fxFlex="100" fxLayout="row">
+                            <div fxFlex="50" fxLayout="row" fxLayoutAlign="left top">
+                                <span>Execution Policy</span>
+                            </div>
+                        </div>
+                        <div fxFlex="50" fxLayout="row" fxLayoutAlign="start center">
+                            <mat-radio-group
+                                    aria-labelledby="execution-policy-radio-group-label"
+                                    class="execution-policy-radio-group"
+                                    [(ngModel)]="selectedPipelineExecutionPolicy"
+                                    (change)="onExecutionPolicyChange($event.value)">
+                                <mat-radio-button class="execution-policy-radio-button"
+                                                  *ngFor="let policy of pipelineExecutionPolicies"
+                                                  [disabled]="isExecutinoPolicyDisabled()"
+                                                  [value]="policy">{{policy}}
+                                </mat-radio-button>
+                            </mat-radio-group>
+                        </div>
+                    </div>
+
+                    <div style="margin: 1em 0 1em 0;">
+                        <div>
+                            <b>Node Execution Targets</b>
+                        </div>
+                        <div style="margin-top: 2em">
+                            <mat-accordion class="example-headers-align">
+
+                                <mat-expansion-panel (opened)="panelOpenState = true"
+                                                     (closed)="panelOpenState = false"
+                                                     [expanded]="panelOpenState">
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-description>
+                                            Modify deployment targets: <b>{{selectedPipelineExecutionPolicy}}</b>
+                                            <mat-icon>storage</mat-icon>
+                                        </mat-panel-description>
+                                    </mat-expansion-panel-header>
+
+                                    <div *ngFor="let processors of tmpPipeline.sepas">
+                                        <div fxFlex="100" fxLayout="row">
+                                            <div fxFlex="50" fxLayout="row" fxLayoutAlign="left center">
+                                                <span>{{processors.name}}</span>
+                                            </div>
+                                        </div>
+
+                                        <div fxFlex="50" fxLayout="row" fxLayoutAlign="start center">
+                                            <mat-form-field dense>
+                                                <mat-select [(ngModel)]="processors.deploymentTargetNodeId"
+                                                            [disabled]="disableNodeSelectionForProcessors.value"
+                                                            required>
+                                                    <mat-option [value]="nodeInfo.nodeControllerId"
+                                                                *ngFor="let nodeInfo of deploymentOptions[processors.appId]">
+                                                        <em>{{nodeInfo.hostname}}</em>
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+
+                                    </div>
+                                    <div *ngFor="let sinks of tmpPipeline.actions">
+                                        <div fxFlex="100" fxLayout="row">
+                                            <div fxFlex="50" fxLayout="row" fxLayoutAlign="left center">
+                                                <span>{{sinks.name}}</span>
+                                            </div>
+                                        </div>
+
+                                        <div fxFlex="50" fxLayout="row" fxLayoutAlign="start center">
+                                            <mat-form-field dense>
+                                                <mat-select [(ngModel)]="sinks.deploymentTargetNodeId"
+                                                            [disabled]="disableNodeSelectionForSinks.value"
+                                                            required>
+                                                    <mat-option [value]="nodeInfo.nodeControllerId"
+                                                                *ngFor="let nodeInfo of deploymentOptions[sinks.appId]">
+                                                        <em>{{nodeInfo.hostname}}</em>
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+
+                                </mat-expansion-panel>
+                            </mat-accordion>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <div fxFlex="100" fxLayout="column" fxLayoutAlign="center center" *ngIf="saving">
+                <mat-spinner [mode]="'indeterminate'" [diameter]="50"></mat-spinner>
+                <span class="status-text">Saving pipeline...</span>
+            </div>
+            <div fxFlex="100" fxLayout="column" fxLayoutAlign="center center" *ngIf="saved">
+                <mat-icon color="primary" style="font-size:50pt;height:60px;width:60px;">check_circle</mat-icon>
+                <span class="status-text">Pipeline successfully stored.</span>
+            </div>
+            <div fxFlex="100" fxLayout="column" fxLayoutAlign="center center" *ngIf="storageError">
+                <mat-icon color="primary" style="font-size:50pt;height:60px;width:60px;">error</mat-icon>
+                <span class="status-text">Your pipeline could not be stored.</span>
+                <span class="status-subtext">{{errorMessage}}</span>
+            </div>
+        </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="sp-dialog-actions" fxLayoutAlign="left center">
+        <button [disabled]="!submitPipelineForm.valid || saving || saved" mat-button mat-raised-button
+                color="primary" (click)="migratePipelineProccesors()" style="margin-right:10px;">
+            Start Migration
+        </button>
+        <button mat-button mat-raised-button class="mat-basic" (click)="hide()">
+            {{saved ? 'Close' : 'Cancel'}}
+        </button>
+    </div>
+</div>

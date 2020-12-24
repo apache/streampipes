@@ -22,6 +22,7 @@ import {PipelineOperationsService} from "../../services/pipeline-operations.serv
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
+import {DialogService} from "../../../core-ui/dialog/base-dialog/base-dialog.service";
 
 
 @Component({

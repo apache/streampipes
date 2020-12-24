@@ -81,6 +81,14 @@ export class PipelineService {
         }));
   }
 
+  migratePipeline(pipeline: Pipeline): Observable<Message> {
+    var pipelineId = pipeline._id;
+    return this.http.post(this.platformServicesCommons.authUserBasePath() + "/pipelines/migrate/" + pipelineId, pipeline)
+        .pipe(map(response => {
+          return Message.fromData(response as Message);
+        }));
+  }
+
   getOwnPipelines(): Observable<Pipeline[]> {
     return this.http.get(this.platformServicesCommons.authUserBasePath() + "/pipelines/own").pipe(map(response => {
       return (response as any[]).map(p => Pipeline.fromData(p));
