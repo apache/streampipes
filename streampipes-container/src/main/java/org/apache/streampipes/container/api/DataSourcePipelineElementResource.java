@@ -24,13 +24,12 @@ import org.apache.streampipes.container.declarer.DataStreamDeclarer;
 import org.apache.streampipes.container.declarer.SemanticEventProducerDeclarer;
 import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.container.init.RunningDatasetInstances;
-import org.apache.streampipes.container.transform.Transformer;
 import org.apache.streampipes.model.Response;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.graph.DataSourceDescription;
 import org.apache.streampipes.rest.shared.util.SpMediaType;
-import org.apache.streampipes.vocabulary.StreamPipes;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.rio.RDFParseException;
 
@@ -83,8 +82,8 @@ public class DataSourcePipelineElementResource extends AbstractPipelineElementRe
 
   @POST
   @Path("{sourceId}/{streamId}")
-  @Produces({MediaType.APPLICATION_JSON, SpMediaType.JSONLD})
-  @Consumes({MediaType.APPLICATION_JSON, SpMediaType.JSONLD})
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
   public javax.ws.rs.core.Response invokeRuntime(@PathParam("sourceId") String sourceId, @PathParam("streamId") String streamId, String
           payload) {
     SemanticEventProducerDeclarer declarer = getDeclarerById(sourceId);
@@ -100,7 +99,7 @@ public class DataSourcePipelineElementResource extends AbstractPipelineElementRe
 
     if (streamDeclarer.isPresent()) {
       try {
-        SpDataSet dataSet = Transformer.fromJsonLd(SpDataSet.class, payload, StreamPipes.DATA_SET);
+        SpDataSet dataSet = JacksonSerializer.getObjectMapper().readValue(payload, SpDataSet.class);
         String runningInstanceId = dataSet.getDatasetInvocationId();
         RunningDatasetInstances.INSTANCE.add(runningInstanceId, dataSet, (DataSetDeclarer) streamDeclarer.get().getClass().newInstance());
         RunningDatasetInstances.INSTANCE.getInvocation(runningInstanceId).invokeRuntime(dataSet, ()

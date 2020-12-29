@@ -870,7 +870,6 @@
         <module>streampipes-rest</module>
         <module>streampipes-rest-shared</module>
         <module>streampipes-sdk</module>
-        <module>streampipes-serializers</module>
         <module>streampipes-storage-api</module>
         <module>streampipes-storage-management</module>
         <module>streampipes-storage-couchdb</module>
@@ -893,6 +892,8 @@
         <module>streampipes-maven-plugin</module>
         <module>streampipes-model-shared</module>
         <module>streampipes-container-extensions</module>
+        <module>streampipes-serializers-jsonld</module>
+        <module>streampipes-serializers-json</module>
     </modules>
 
     <profiles>

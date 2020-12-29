@@ -27,7 +27,6 @@ import org.apache.streampipes.manager.endpoint.HttpJsonParser;
 import org.apache.streampipes.manager.storage.UserManagementService;
 import org.apache.streampipes.manager.storage.UserService;
 import org.apache.streampipes.model.base.AbstractStreamPipesEntity;
-import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.base.StreamPipesJsonLdContainer;
 import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.model.message.*;
@@ -36,11 +35,7 @@ import org.apache.streampipes.serializers.jsonld.JsonLdTransformer;
 import org.apache.streampipes.storage.api.*;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.storage.management.StorageManager;
-import org.apache.streampipes.storage.rdf4j.util.Transformer;
-import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.rio.RDFHandlerException;
-import org.eclipse.rdf4j.rio.RDFParseException;
-import org.eclipse.rdf4j.rio.UnsupportedRDFormatException;
 
 import javax.ws.rs.core.Response;
 import java.io.IOException;
@@ -123,11 +118,6 @@ public abstract class AbstractRestInterface {
           ClientProtocolException, IOException {
     URI uri = new URI(payload);
     return HttpJsonParser.getContentFromUrl(uri, mediaType);
-  }
-
-  protected <T extends NamedStreamPipesEntity> T parseObjectContent(Class<T> clazz, String payload)
-          throws RDFParseException, UnsupportedRDFormatException, RepositoryException, IOException {
-    return Transformer.fromJsonLd(clazz, payload);
   }
 
   protected Response constructSuccessMessage(Notification... notifications) {
