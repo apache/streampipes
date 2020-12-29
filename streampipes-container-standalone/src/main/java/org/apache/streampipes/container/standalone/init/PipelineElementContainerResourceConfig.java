@@ -19,7 +19,6 @@ package org.apache.streampipes.container.standalone.init;
 
 import org.apache.streampipes.container.api.*;
 import org.apache.streampipes.rest.shared.serializer.JacksonSerializationProvider;
-import org.apache.streampipes.rest.shared.serializer.JsonLdProvider;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.stereotype.Component;
 
@@ -33,7 +32,6 @@ public class PipelineElementContainerResourceConfig extends ResourceConfig {
     register(WelcomePage.class);
     register(PipelineElementTemplateResource.class);
 
-    register(JsonLdProvider.class);
     register(JacksonSerializationProvider.class);
   }
 }

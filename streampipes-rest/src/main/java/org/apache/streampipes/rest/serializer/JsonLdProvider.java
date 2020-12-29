@@ -15,10 +15,10 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.rest.shared.serializer;
+package org.apache.streampipes.rest.serializer;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.streampipes.rest.shared.util.JsonLdUtils;
+import org.apache.streampipes.rest.util.JsonLdUtils;
 import org.apache.streampipes.rest.shared.util.SpMediaType;
 import org.apache.streampipes.serializers.jsonld.JsonLdTransformer;
 

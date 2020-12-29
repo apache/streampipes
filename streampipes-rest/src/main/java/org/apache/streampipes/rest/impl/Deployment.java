@@ -18,36 +18,30 @@
 
 package org.apache.streampipes.rest.impl;
 
-import org.eclipse.rdf4j.rio.RDFHandlerException;
-import org.glassfish.jersey.media.multipart.FormDataParam;
-import org.apache.streampipes.codegeneration.api.CodeGenerator;
-import org.apache.streampipes.commons.Utils;
-import org.apache.streampipes.commons.exceptions.SepaParseException;
 import io.fogsy.empire.core.empire.annotation.InvalidRdfException;
+import org.apache.streampipes.codegeneration.api.CodeGenerator;
+import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.client.deployment.DeploymentConfiguration;
 import org.apache.streampipes.model.client.deployment.ElementType;
-import org.apache.streampipes.model.message.Message;
-import org.apache.streampipes.model.message.Notifications;
+import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.graph.DataSourceDescription;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
-import org.apache.streampipes.serializers.jsonld.JsonLdTransformer;
+import org.apache.streampipes.model.message.Message;
+import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.serializers.json.GsonSerializer;
+import org.apache.streampipes.serializers.jsonld.JsonLdTransformer;
+import org.apache.streampipes.serializers.jsonld.JsonLdUtils;
 import org.apache.streampipes.storage.management.StorageManager;
+import org.eclipse.rdf4j.rio.RDFHandlerException;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 
-import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 
 
 @Path("/v2/users/{username}/deploy")
@@ -99,7 +93,7 @@ public class Deployment extends AbstractRestInterface {
         DataSourceDescription sep = new DataSourceDescription(GsonSerializer.getGsonWithIds().fromJson(model, DataSourceDescription.class));
         try {
             Message message =
-                    Operations.verifyAndAddElement(Utils.asString(new JsonLdTransformer().toJsonLd(sep)), username, true, true);
+                    Operations.verifyAndAddElement(JsonLdUtils.asString(new JsonLdTransformer().toJsonLd(sep)), username, true, true);
             return ok(message);
         } catch (RDFHandlerException | IllegalAccessException
                 | IllegalArgumentException | InvocationTargetException
@@ -166,7 +160,7 @@ public class Deployment extends AbstractRestInterface {
         NamedStreamPipesEntity element = getElement(deploymentConfig, model);
 
         try {
-            return Response.ok(Utils.asString(new JsonLdTransformer().toJsonLd(element))).build();
+            return Response.ok(JsonLdUtils.asString(new JsonLdTransformer().toJsonLd(element))).build();
         } catch (RDFHandlerException | IllegalAccessException
                 | IllegalArgumentException | InvocationTargetException
                 | SecurityException | ClassNotFoundException

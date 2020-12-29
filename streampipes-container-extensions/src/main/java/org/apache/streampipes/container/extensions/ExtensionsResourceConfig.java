@@ -43,7 +43,6 @@ public class ExtensionsResourceConfig extends ResourceConfig {
         register(GsonWithIdProvider.class);
         register(GsonWithoutIdProvider.class);
         register(GsonClientModelProvider.class);
-        register(JsonLdProvider.class);
         register(JacksonSerializationProvider.class);
     }
 }

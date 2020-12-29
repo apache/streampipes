@@ -20,8 +20,6 @@ package org.apache.streampipes.connect.container.master.management;
 
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.streampipes.connect.adapter.GroundingService;
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
 import org.apache.streampipes.connect.config.ConnectContainerConfig;
@@ -32,8 +30,9 @@ import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.apache.streampipes.model.connect.worker.ConnectWorkerContainer;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.util.Cloner;
-import org.apache.streampipes.rest.shared.util.JsonLdUtils;
 import org.apache.streampipes.storage.couchdb.impl.AdapterStorageImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
@@ -205,14 +204,4 @@ public class AdapterMasterManagement {
     return ad instanceof AdapterStreamDescription;
   }
 
-  private static <T> String toJsonLd(T object) {
-    JsonLdUtils.toJsonLD(object);
-    String s = JsonLdUtils.toJsonLD(object);
-
-    if (s == null) {
-      LOG.error("Could not serialize Object " + object + " into json ld");
-    }
-
-    return s;
-  }
 }

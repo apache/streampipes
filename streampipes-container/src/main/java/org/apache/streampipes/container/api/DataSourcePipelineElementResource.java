@@ -28,7 +28,6 @@ import org.apache.streampipes.model.Response;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.graph.DataSourceDescription;
-import org.apache.streampipes.rest.shared.util.SpMediaType;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.rio.RDFParseException;
@@ -49,7 +48,7 @@ public class DataSourcePipelineElementResource extends AbstractPipelineElementRe
 
   @GET
   @Path("{sourceId}/{streamId}")
-  @Produces({MediaType.APPLICATION_JSON, SpMediaType.JSONLD})
+  @Produces(MediaType.APPLICATION_JSON)
   public javax.ws.rs.core.Response getDescription(@PathParam("sourceId") String sourceId, @PathParam("streamId") String streamId) {
     Optional<SpDataStream> stream = getStreamBySourceId(sourceId, streamId);
     if (stream.isPresent()) {

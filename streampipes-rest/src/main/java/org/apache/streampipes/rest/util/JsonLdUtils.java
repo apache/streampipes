@@ -16,10 +16,9 @@
  *
  */
 
-package org.apache.streampipes.rest.shared.util;
+package org.apache.streampipes.rest.util;
 
 import io.fogsy.empire.core.empire.annotation.InvalidRdfException;
-import org.apache.streampipes.commons.Utils;
 import org.apache.streampipes.model.base.AbstractStreamPipesEntity;
 import org.apache.streampipes.model.base.StreamPipesJsonLdContainer;
 import org.apache.streampipes.serializers.jsonld.JsonLdTransformer;
@@ -39,10 +38,10 @@ public class JsonLdUtils {
         JsonLdTransformer jsonLdTransformer = new JsonLdTransformer();
         try {
             if (o instanceof List) {
-                return Utils.asString(createJsonLdContainer(jsonLdTransformer,
+                return org.apache.streampipes.serializers.jsonld.JsonLdUtils.asString(createJsonLdContainer(jsonLdTransformer,
                         (List<? extends AbstractStreamPipesEntity>) o));
             } else {
-                return Utils.asString(jsonLdTransformer.toJsonLd(o));
+                return org.apache.streampipes.serializers.jsonld.JsonLdUtils.asString(jsonLdTransformer.toJsonLd(o));
             }
         } catch (IllegalAccessException | InvocationTargetException | InvalidRdfException | ClassNotFoundException e) {
             logger.error("Could not serialize JsonLd", e);

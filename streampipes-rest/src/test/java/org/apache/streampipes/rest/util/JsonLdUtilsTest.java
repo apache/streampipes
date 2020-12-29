@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.rest.shared.util;
+package org.apache.streampipes.rest.util;
 
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticProperty;

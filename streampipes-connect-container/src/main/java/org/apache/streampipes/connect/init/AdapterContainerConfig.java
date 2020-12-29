@@ -18,11 +18,10 @@
 
 package org.apache.streampipes.connect.init;
 
-import org.glassfish.jersey.server.ResourceConfig;
 import org.apache.streampipes.rest.shared.serializer.GsonClientModelProvider;
 import org.apache.streampipes.rest.shared.serializer.GsonWithIdProvider;
 import org.apache.streampipes.rest.shared.serializer.GsonWithoutIdProvider;
-import org.apache.streampipes.rest.shared.serializer.JsonLdProvider;
+import org.glassfish.jersey.server.ResourceConfig;
 
 public abstract class AdapterContainerConfig extends ResourceConfig {
 
@@ -30,6 +29,5 @@ public abstract class AdapterContainerConfig extends ResourceConfig {
     register(GsonWithIdProvider.class);
     register(GsonWithoutIdProvider.class);
     register(GsonClientModelProvider.class);
-    register(JsonLdProvider.class);
   }
 }
