@@ -27,11 +27,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class ExtensionsResourceConfig extends ResourceConfig {
     public ExtensionsResourceConfig() {
-        register(SecElement.class);
-        register(SepaElement.class);
-        register(SepElement.class);
+        register(DataSinkPipelineElementResource.class);
+        register(DataProcessorPipelineElementResource.class);
+        register(DataSourcePipelineElementResource.class);
         register(WelcomePage.class);
-        register(PipelineTemplateElement.class);
+        register(PipelineElementTemplateResource.class);
 
         //register(WelcomePageWorker.class);
         register(GuessResource.class);

@@ -27,15 +27,14 @@ import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 
+import javax.ws.rs.Path;
 import java.util.Map;
 
-import javax.ws.rs.Path;
-
 @Path("/sepa")
-public class SepaElement extends InvocableElement<DataProcessorInvocation,
+public class DataProcessorPipelineElementResource extends InvocablePipelineElementResource<DataProcessorInvocation,
         SemanticEventProcessingAgentDeclarer, ProcessingElementParameterExtractor> {
 
-    public SepaElement() {
+    public DataProcessorPipelineElementResource() {
 
         super(DataProcessorInvocation.class);
     }
@@ -47,7 +46,7 @@ public class SepaElement extends InvocableElement<DataProcessorInvocation,
 
     @Override
     protected String getInstanceId(String uri, String elementId) {
-        return Util.getInstanceId(uri, "sepa", elementId);
+        return Util.getInstanceId(uri, DATA_PROCESSOR_PREFIX, elementId);
     }
 
     @Override
@@ -59,7 +58,6 @@ public class SepaElement extends InvocableElement<DataProcessorInvocation,
     protected DataProcessorInvocation createGroundingDebugInformation(DataProcessorInvocation graph) {
         graph.getInputStreams().forEach(is -> {
            modifyGrounding(is.getEventGrounding());
-
         });
 
         modifyGrounding(graph.getOutputStream().getEventGrounding());

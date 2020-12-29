@@ -18,9 +18,7 @@
 
 package org.apache.streampipes.manager.verification;
 
-import org.eclipse.rdf4j.repository.RepositoryException;
-import org.eclipse.rdf4j.rio.RDFParseException;
-import org.eclipse.rdf4j.rio.UnsupportedRDFormatException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.manager.storage.UserManagementService;
 import org.apache.streampipes.manager.storage.UserService;
@@ -29,14 +27,13 @@ import org.apache.streampipes.manager.verification.messages.VerificationResult;
 import org.apache.streampipes.manager.verification.structure.GeneralVerifier;
 import org.apache.streampipes.manager.verification.structure.Verifier;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
-import org.apache.streampipes.model.message.ErrorMessage;
-import org.apache.streampipes.model.message.Message;
-import org.apache.streampipes.model.message.Notification;
-import org.apache.streampipes.model.message.NotificationType;
-import org.apache.streampipes.model.message.SuccessMessage;
-import org.apache.streampipes.serializers.jsonld.JsonLdTransformer;
+import org.apache.streampipes.model.message.*;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorageCache;
 import org.apache.streampipes.storage.management.StorageManager;
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.rio.RDFParseException;
+import org.eclipse.rdf4j.rio.UnsupportedRDFormatException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -110,8 +107,7 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
   public Message verifyAndUpdate(String username) throws SepaParseException {
     try {
       this.elementDescription = transform();
-    } catch (RDFParseException | UnsupportedRDFormatException
-            | RepositoryException | IOException e) {
+    } catch (JsonProcessingException e) {
       return new ErrorMessage(NotificationType.UNKNOWN_ERROR.uiNotification());
     }
     verify();
@@ -165,7 +161,7 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
     return !validationResults.stream().anyMatch(validator -> (validator instanceof VerificationError));
   }
 
-  protected T transform() throws RDFParseException, UnsupportedRDFormatException, RepositoryException, IOException {
-    return new JsonLdTransformer().fromJsonLd(graphData, elementClass);
+  protected T transform() throws JsonProcessingException {
+    return JacksonSerializer.getObjectMapper().readValue(graphData, elementClass);
   }
 }

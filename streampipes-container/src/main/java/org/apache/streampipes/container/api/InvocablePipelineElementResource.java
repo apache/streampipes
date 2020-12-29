@@ -23,8 +23,6 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.container.declarer.Declarer;
 import org.apache.streampipes.container.declarer.InvocableDeclarer;
 import org.apache.streampipes.container.init.RunningInstances;
-import org.apache.streampipes.container.transform.Transformer;
-import org.apache.streampipes.container.util.Util;
 import org.apache.streampipes.model.Response;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
@@ -32,38 +30,34 @@ import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.sdk.extractor.AbstractParameterExtractor;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
-import org.apache.streampipes.serializers.json.GsonSerializer;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.rio.RDFParseException;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-public abstract class InvocableElement<I extends InvocableStreamPipesEntity, D extends Declarer,
-        P extends AbstractParameterExtractor<I>> extends Element<D> {
+public abstract class InvocablePipelineElementResource<I extends InvocableStreamPipesEntity, D extends Declarer<?>,
+        P extends AbstractParameterExtractor<I>> extends AbstractPipelineElementResource<D> {
 
     protected abstract Map<String, D> getElementDeclarers();
     protected abstract String getInstanceId(String uri, String elementId);
 
     protected Class<I> clazz;
 
-    public InvocableElement(Class<I> clazz) {
+    public InvocablePipelineElementResource(Class<I> clazz) {
         this.clazz = clazz;
     }
 
     @POST
     @Path("{elementId}")
-    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String invokeRuntime(@PathParam("elementId") String elementId, String payload) {
+    @Consumes(MediaType.APPLICATION_JSON)
+    public javax.ws.rs.core.Response invokeRuntime(@PathParam("elementId") String elementId, I graph) {
 
         try {
-            I graph = Transformer.fromJsonLd(clazz, payload);
-
             if (isDebug()) {
               graph = createGroundingDebugInformation(graph);
             }
@@ -74,22 +68,23 @@ public abstract class InvocableElement<I extends InvocableStreamPipesEntity, D e
                 String runningInstanceId = getInstanceId(graph.getElementId(), elementId);
                 RunningInstances.INSTANCE.add(runningInstanceId, graph, declarer.getClass().newInstance());
                 Response resp = RunningInstances.INSTANCE.getInvocation(runningInstanceId).invokeRuntime(graph);
-                return Util.toResponseString(resp);
+                return ok(resp);
             }
-        } catch (RDFParseException | IOException | RepositoryException | InstantiationException | IllegalAccessException e) {
+        } catch (RDFParseException | RepositoryException | InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
-            return Util.toResponseString(new Response(elementId, false, e.getMessage()));
+            return ok(new Response(elementId, false, e.getMessage()));
         }
 
-        return Util.toResponseString(elementId, false, "Could not find the element with id: " + elementId);
+        return ok(new Response(elementId, false, "Could not find the element with id: " + elementId));
     }
 
     @POST
     @Path("{elementId}/configurations")
-    public String fetchConfigurations(@PathParam("elementId") String elementId, String payload) {
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public javax.ws.rs.core.Response fetchConfigurations(@PathParam("elementId") String elementId,
+                                                         RuntimeOptionsRequest runtimeOptionsRequest) {
 
-        RuntimeOptionsRequest runtimeOptionsRequest = GsonSerializer.getGsonWithIds().fromJson(payload,
-                RuntimeOptionsRequest.class);
         ResolvesContainerProvidedOptions resolvesOptions = (ResolvesContainerProvidedOptions) getDeclarerById(elementId);
 
         List<Option> availableOptions =
@@ -100,24 +95,23 @@ public abstract class InvocableElement<I extends InvocableStreamPipesEntity, D e
                         runtimeOptionsRequest.getAppId()
                 ));
 
-        return GsonSerializer.getGsonWithIds().toJson(new RuntimeOptionsResponse(runtimeOptionsRequest,
-                availableOptions));
+        return ok(new RuntimeOptionsResponse(runtimeOptionsRequest, availableOptions));
     }
 
     @POST
     @Path("{elementId}/output")
-    public String fetchOutputStrategy(@PathParam("elementId") String elementId, String payload) {
+    public javax.ws.rs.core.Response fetchOutputStrategy(@PathParam("elementId") String elementId, String payload) {
         try {
             I runtimeOptionsRequest = JacksonSerializer.getObjectMapper().readValue(payload, clazz);
             ResolvesContainerProvidedOutputStrategy<I, P> resolvesOutput =
                     (ResolvesContainerProvidedOutputStrategy<I, P>)
                             getDeclarerById
                                     (elementId);
-            return JacksonSerializer.getObjectMapper().writeValueAsString(resolvesOutput.resolveOutputStrategy
+            return ok(resolvesOutput.resolveOutputStrategy
                     (runtimeOptionsRequest, getExtractor(runtimeOptionsRequest)));
         } catch (SpRuntimeException | JsonProcessingException e) {
             e.printStackTrace();
-            return Util.toResponseString(elementId, false);
+            return ok(new Response(elementId, false));
         }
     }
 
@@ -126,7 +120,7 @@ public abstract class InvocableElement<I extends InvocableStreamPipesEntity, D e
     @DELETE
     @Path("{elementId}/{runningInstanceId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String detach(@PathParam("elementId") String elementId, @PathParam("runningInstanceId") String runningInstanceId) {
+    public javax.ws.rs.core.Response detach(@PathParam("elementId") String elementId, @PathParam("runningInstanceId") String runningInstanceId) {
 
         InvocableDeclarer runningInstance = RunningInstances.INSTANCE.getInvocation(runningInstanceId);
 
@@ -137,10 +131,10 @@ public abstract class InvocableElement<I extends InvocableStreamPipesEntity, D e
                 RunningInstances.INSTANCE.remove(runningInstanceId);
             }
 
-            return Util.toResponseString(resp);
+            return ok(resp);
         }
 
-        return Util.toResponseString(elementId, false, "Could not find the running instance with id: " + runningInstanceId);
+        return ok(new Response(elementId, false, "Could not find the running instance with id: " + runningInstanceId));
     }
 
     protected abstract P getExtractor(I graph);

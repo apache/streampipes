@@ -18,8 +18,6 @@
 
 package org.apache.streampipes.container.api;
 
-import org.eclipse.rdf4j.repository.RepositoryException;
-import org.eclipse.rdf4j.rio.RDFParseException;
 import org.apache.streampipes.container.assets.AssetZipGenerator;
 import org.apache.streampipes.container.declarer.DataSetDeclarer;
 import org.apache.streampipes.container.declarer.DataStreamDeclarer;
@@ -27,28 +25,23 @@ import org.apache.streampipes.container.declarer.SemanticEventProducerDeclarer;
 import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.container.init.RunningDatasetInstances;
 import org.apache.streampipes.container.transform.Transformer;
-import org.apache.streampipes.container.util.Util;
 import org.apache.streampipes.model.Response;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.graph.DataSourceDescription;
+import org.apache.streampipes.rest.shared.util.SpMediaType;
 import org.apache.streampipes.vocabulary.StreamPipes;
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.rio.RDFParseException;
 
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
 @Path("/sep")
-public class SepElement extends Element<SemanticEventProducerDeclarer> {
+public class DataSourcePipelineElementResource extends AbstractPipelineElementResource<SemanticEventProducerDeclarer> {
 
   @Override
   protected Map<String, SemanticEventProducerDeclarer> getElementDeclarers() {
@@ -57,14 +50,13 @@ public class SepElement extends Element<SemanticEventProducerDeclarer> {
 
   @GET
   @Path("{sourceId}/{streamId}")
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Produces(MediaType.APPLICATION_JSON)
-  public String getDescription(@PathParam("sourceId") String sourceId, @PathParam("streamId") String streamId) {
+  @Produces({MediaType.APPLICATION_JSON, SpMediaType.JSONLD})
+  public javax.ws.rs.core.Response getDescription(@PathParam("sourceId") String sourceId, @PathParam("streamId") String streamId) {
     Optional<SpDataStream> stream = getStreamBySourceId(sourceId, streamId);
     if (stream.isPresent()) {
-      return getJsonLd(stream.get(), getById(sourceId).getUri());
+      return ok(prepareElement(stream.get(), getById(sourceId).getUri()));
     } else {
-      return "{}";
+      return clientError();
     }
   }
 
@@ -74,12 +66,9 @@ public class SepElement extends Element<SemanticEventProducerDeclarer> {
   public javax.ws.rs.core.Response getAssets(@PathParam("sourceId") String sourceId, @PathParam
           ("streamId") String streamId) {
     try {
-      return javax.ws.rs.core.Response
-              .ok()
-              .entity(new AssetZipGenerator(streamId,
+      return ok(new AssetZipGenerator(streamId,
                       getStreamBySourceId(sourceId, streamId).get()
-                      .getIncludedAssets()).makeZip())
-              .build();
+                      .getIncludedAssets()).makeZip());
     } catch (IOException e) {
       e.printStackTrace();
       return javax.ws.rs.core.Response.status(500).build();
@@ -94,9 +83,9 @@ public class SepElement extends Element<SemanticEventProducerDeclarer> {
 
   @POST
   @Path("{sourceId}/{streamId}")
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Produces(MediaType.APPLICATION_JSON)
-  public String invokeRuntime(@PathParam("sourceId") String sourceId, @PathParam("streamId") String streamId, String
+  @Produces({MediaType.APPLICATION_JSON, SpMediaType.JSONLD})
+  @Consumes({MediaType.APPLICATION_JSON, SpMediaType.JSONLD})
+  public javax.ws.rs.core.Response invokeRuntime(@PathParam("sourceId") String sourceId, @PathParam("streamId") String streamId, String
           payload) {
     SemanticEventProducerDeclarer declarer = getDeclarerById(sourceId);
 
@@ -118,21 +107,21 @@ public class SepElement extends Element<SemanticEventProducerDeclarer> {
                 -> {
           // TODO notify
         });
-        return Util.toResponseString(new Response(runningInstanceId, true));
+        return ok(new Response(runningInstanceId, true));
       } catch (RDFParseException | RepositoryException | IOException | InstantiationException |
               IllegalAccessException e) {
         e.printStackTrace();
-        return Util.toResponseString(new Response("", false, e.getMessage()));
+        return ok(new Response("", false, e.getMessage()));
       }
     }
-    return Util.toResponseString("", false, "Could not find the element with id: " + "");
+    return ok(new Response("", false, "Could not find the element with id: " + ""));
 
   }
 
   @DELETE
   @Path("{sourceId}/{streamId}/{runningInstanceId}")
   @Produces(MediaType.APPLICATION_JSON)
-  public String detach(@PathParam("runningInstanceId") String runningInstanceId) {
+  public javax.ws.rs.core.Response detach(@PathParam("runningInstanceId") String runningInstanceId) {
 
     DataSetDeclarer runningInstance = RunningDatasetInstances.INSTANCE.getInvocation(runningInstanceId);
 
@@ -143,9 +132,9 @@ public class SepElement extends Element<SemanticEventProducerDeclarer> {
         RunningDatasetInstances.INSTANCE.remove(runningInstanceId);
       }
 
-      return Util.toResponseString(resp);
+      return ok(resp);
     }
 
-    return Util.toResponseString(runningInstanceId, false, "Could not find the running instance with id: " + runningInstanceId);
+    return ok(new Response(runningInstanceId, false, "Could not find the running instance with id: " + runningInstanceId));
   }
 }

@@ -20,12 +20,11 @@ package org.apache.streampipes.container.api;
 import org.apache.streampipes.container.declarer.PipelineTemplateDeclarer;
 import org.apache.streampipes.container.init.DeclarersSingleton;
 
+import javax.ws.rs.Path;
 import java.util.Map;
 
-import javax.ws.rs.Path;
-
 @Path("/template")
-public class PipelineTemplateElement extends Element<PipelineTemplateDeclarer> {
+public class PipelineElementTemplateResource extends AbstractPipelineElementResource<PipelineTemplateDeclarer> {
 
   @Override
   protected Map<String, PipelineTemplateDeclarer> getElementDeclarers() {

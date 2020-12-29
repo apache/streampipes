@@ -17,23 +17,23 @@
  */
 package org.apache.streampipes.manager.endpoint;
 
+import org.apache.http.client.fluent.Request;
 import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.message.Notifications;
 
+import javax.ws.rs.core.MediaType;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URLDecoder;
 
 public class EndpointItemParser {
 
-  public Message parseAndAddEndpointItem(String uri, String username, boolean publicElement,
+  public Message parseAndAddEndpointItem(String url, String username, boolean publicElement,
                                          boolean refreshCache) {
     try {
-      uri = URLDecoder.decode(uri, "UTF-8");
-      String payload = parseURIContent(uri, null);
+      url = URLDecoder.decode(url, "UTF-8");
+      String payload = parseURIContent(url);
       return Operations.verifyAndAddElement(payload, username, publicElement, refreshCache);
     } catch (Exception e) {
       e.printStackTrace();
@@ -42,8 +42,12 @@ public class EndpointItemParser {
     }
   }
 
-  private String parseURIContent(String payload, String mediaType) throws URISyntaxException, IOException {
-    URI uri = new URI(payload);
-    return HttpJsonParser.getContentFromUrl(uri, mediaType);
+  private String parseURIContent(String url) throws IOException {
+    return Request
+            .Get(url)
+            .addHeader("Accept", MediaType.APPLICATION_JSON)
+            .execute()
+            .returnContent()
+            .asString();
   }
 }
