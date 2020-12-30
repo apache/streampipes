@@ -18,6 +18,7 @@
 package org.apache.streampipes.serializers.jsonld;
 
 import org.eclipse.rdf4j.model.Model;
+import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFHandlerException;
 import org.eclipse.rdf4j.rio.RDFWriter;
@@ -35,19 +36,25 @@ public class JsonLdUtils {
     OutputStream stream = new ByteArrayOutputStream();
 
     RDFWriter writer = getRioWriter(stream);
-
-    Rio.write(model, writer);
-    return stream.toString();
-  }
-
-  private static RDFWriter getRioWriter(OutputStream stream) throws RDFHandlerException {
-    RDFWriter writer = Rio.createWriter(RDFFormat.JSONLD, stream);
+    writer.startRDF();
 
     writer.handleNamespace("sp", "https://streampipes.org/vocabulary/v1/");
     writer.handleNamespace("ssn", "http://purl.oclc.org/NET/ssnx/ssn#");
     writer.handleNamespace("xsd", "http://www.w3.org/2001/XMLSchema#");
     writer.handleNamespace("empire", "urn:clarkparsia.com:empire:");
     writer.handleNamespace("spi", "urn:streampipes.org:spi:");
+
+    for(Statement st : model) {
+      writer.handleStatement(st);
+    }
+
+    writer.endRDF();
+
+    return stream.toString();
+  }
+
+  private static RDFWriter getRioWriter(OutputStream stream) throws RDFHandlerException {
+    RDFWriter writer = Rio.createWriter(RDFFormat.JSONLD, stream);
 
     writer.getWriterConfig().set(JSONLDSettings.JSONLD_MODE, JSONLDMode.COMPACT);
     writer.getWriterConfig().set(JSONLDSettings.OPTIMIZE, true);

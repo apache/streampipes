@@ -20,7 +20,6 @@ package org.apache.streampipes.container.api;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
-import io.fogsy.empire.core.empire.SupportsRdfId;
 import org.apache.streampipes.commons.constants.GlobalStreamPipesConstants;
 import org.apache.streampipes.container.assets.AssetZipGenerator;
 import org.apache.streampipes.container.declarer.DataStreamDeclarer;
@@ -46,7 +45,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -150,7 +148,7 @@ public abstract class AbstractPipelineElementResource<D extends Declarer<?>> {
       String originalId = desc.getElementId();
       String uri = DeclarersSingleton.getInstance().getBaseUri() + type + desc.getElementId();
       desc.setElementId(uri);
-      desc.setRdfId(new SupportsRdfId.URIKey(URI.create(uri)));
+      desc.setElementId(uri);
 
       // TODO remove after full internationalization support has been implemented
       if (desc.isIncludesLocales()) {
@@ -169,7 +167,7 @@ public abstract class AbstractPipelineElementResource<D extends Declarer<?>> {
                   + SLASH
                   + stream.getElementId();
           stream.setElementId(baseUri);
-          stream.setRdfId(new SupportsRdfId.URIKey(URI.create(baseUri)));
+          stream.setElementId(baseUri);
           // TODO remove after full internationalization support has been implemented
           if (stream.isIncludesLocales()) {
             try {

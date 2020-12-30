@@ -15,28 +15,32 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.storage.couchdb.dao;
+package org.apache.streampipes.model;
 
-import org.apache.streampipes.model.Tuple2;
-import org.lightcouch.CouchDbClient;
-import org.lightcouch.Response;
+public class Tuple2<A, B> {
 
-import java.util.function.Supplier;
+  public final A a;
+  public final B b;
 
-public class PersistCommand<T> extends DbCommand<Tuple2<Boolean, String>, T> {
-
-  private T objectToPersist;
-
-  public PersistCommand(Supplier<CouchDbClient> couchDbClient, T objectToPersist, Class<T> clazz) {
-    super(couchDbClient, clazz);
-    this.objectToPersist = objectToPersist;
+  public Tuple2(A a, B b) {
+    this.a = a;
+    this.b = b;
   }
 
   @Override
-  protected Tuple2<Boolean, String> executeCommand(CouchDbClient couchDbClient) {
-    Response response = couchDbClient.save(objectToPersist);
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
 
-    return new Tuple2<>(response.getError() == null, response.getId());
+    Tuple2<?, ?> tuple = (Tuple2<?, ?>) o;
+    if (!a.equals(tuple.a)) return false;
+    return b.equals(tuple.b);
+  }
 
+  @Override
+  public int hashCode() {
+    int result = a.hashCode();
+    result = 31 * result + b.hashCode();
+    return result;
   }
 }

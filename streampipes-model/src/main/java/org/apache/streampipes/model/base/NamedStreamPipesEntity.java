@@ -19,7 +19,6 @@
 package org.apache.streampipes.model.base;
 
 
-import io.fogsy.empire.annotations.RdfId;
 import io.fogsy.empire.annotations.RdfProperty;
 import org.apache.streampipes.model.ApplicationLink;
 import org.apache.streampipes.model.util.Cloner;
@@ -47,10 +46,6 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
 
   @RdfProperty(StreamPipes.ICON_URL)
   private String iconUrl;
-
-  @RdfProperty(StreamPipes.HAS_URI)
-  @RdfId
-  protected String elementId;
 
   @RdfProperty(StreamPipes.HAS_APP_ID)
   private String appId;
@@ -163,14 +158,6 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
     this.elementId = uri;
   }
 
-  public String getElementId() {
-    return elementId;
-  }
-
-  public void setElementId(String elementId) {
-    this.elementId = elementId;
-  }
-
   public void setDOM(String DOM) {
     this.DOM = DOM;
   }
@@ -235,8 +222,4 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
     this.includedLocales = includedLocales;
   }
 
-  @Deprecated
-  public void changeElementId(String elementId) {
-    this.elementId = elementId;
-  }
 }

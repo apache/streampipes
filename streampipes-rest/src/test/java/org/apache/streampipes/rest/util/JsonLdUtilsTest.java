@@ -88,7 +88,7 @@ public class JsonLdUtilsTest {
     }
 
     @Test
-    public void jsonldSeriaulizing() {
+    public void jsonldSerializing() {
         StaticPropertyGroup group = new StaticPropertyGroup();
         group.setElementId("http://test");
         List<StaticProperty> staticProperties = new ArrayList<>();

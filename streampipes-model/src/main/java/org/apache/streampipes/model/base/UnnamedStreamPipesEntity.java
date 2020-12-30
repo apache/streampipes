@@ -19,11 +19,7 @@
 package org.apache.streampipes.model.base;
 
 
-import io.fogsy.empire.annotations.RdfId;
-import io.fogsy.empire.annotations.RdfProperty;
-import org.apache.streampipes.model.shared.annotation.TsIgnore;
 import org.apache.streampipes.model.util.RdfIdGenerator;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
 /**
  * unnamed SEPA elements (that do not require any readable identifier)
@@ -31,12 +27,6 @@ import org.apache.streampipes.vocabulary.StreamPipes;
 public abstract class UnnamedStreamPipesEntity extends AbstractStreamPipesEntity {
 
   private static final long serialVersionUID = 8051137255998890188L;
-
-  @RdfId
-  @RdfProperty(StreamPipes.HAS_ELEMENT_NAME)
-  @TsIgnore
-  private String elementId;
-
 
   public UnnamedStreamPipesEntity() {
     super();
@@ -52,11 +42,4 @@ public abstract class UnnamedStreamPipesEntity extends AbstractStreamPipesEntity
     this.elementId = elementId;
   }
 
-  public String getElementId() {
-    return elementId;
-  }
-
-  public void setElementId(String elementId) {
-    this.elementId = elementId;
-  }
 }

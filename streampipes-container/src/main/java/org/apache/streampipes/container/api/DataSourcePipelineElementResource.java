@@ -29,8 +29,6 @@ import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.graph.DataSourceDescription;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
-import org.eclipse.rdf4j.repository.RepositoryException;
-import org.eclipse.rdf4j.rio.RDFParseException;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -106,7 +104,7 @@ public class DataSourcePipelineElementResource extends AbstractPipelineElementRe
           // TODO notify
         });
         return ok(new Response(runningInstanceId, true));
-      } catch (RDFParseException | RepositoryException | IOException | InstantiationException |
+      } catch (IOException | InstantiationException |
               IllegalAccessException e) {
         e.printStackTrace();
         return ok(new Response("", false, e.getMessage()));

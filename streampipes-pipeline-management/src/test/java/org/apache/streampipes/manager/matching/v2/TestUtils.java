@@ -21,19 +21,17 @@ package org.apache.streampipes.manager.matching.v2;
 import org.apache.streampipes.container.declarer.EventStreamDeclarer;
 import org.apache.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
 import org.apache.streampipes.container.declarer.SemanticEventProducerDeclarer;
-import io.fogsy.empire.core.empire.SupportsRdfId;
-import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.SpDataStream;
+import org.apache.streampipes.model.graph.DataProcessorDescription;
+import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.graph.DataSourceDescription;
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
-import org.apache.streampipes.model.graph.DataSourceDescription;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
-import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.vocabulary.MessageFormat;
 
-import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -58,11 +56,11 @@ public class TestUtils {
 	
 	public static Pipeline makePipeline(SemanticEventProducerDeclarer producer, EventStreamDeclarer stream, SemanticEventProcessingAgentDeclarer agent) {
 		DataSourceDescription dataSourceDescription = new DataSourceDescription(producer.declareModel());
-		dataSourceDescription.setRdfId(new SupportsRdfId.URIKey(URI.create("http://www.schema.org/test1")));
+		dataSourceDescription.setElementId("http://www.schema.org/test1");
 		SpDataStream offer = stream.declareModel(dataSourceDescription);
-		offer.setRdfId(new SupportsRdfId.URIKey(URI.create("http://www.schema.org/test2")));
+		offer.setElementId("http://www.schema.org/test2");
 		DataProcessorDescription requirement = (agent.declareModel());
-		requirement.setRdfId(new SupportsRdfId.URIKey(URI.create("http://www.schema.org/test3")));
+		requirement.setElementId("http://www.schema.org/test3");
 		Pipeline pipeline = new Pipeline();
 		SpDataStream offeredClientModel = offer;
 		offeredClientModel.setDOM("A");

@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.container.api;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.container.declarer.Declarer;
 import org.apache.streampipes.container.declarer.InvocableDeclarer;
@@ -30,9 +29,6 @@ import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.sdk.extractor.AbstractParameterExtractor;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
-import org.apache.streampipes.serializers.json.JacksonSerializer;
-import org.eclipse.rdf4j.repository.RepositoryException;
-import org.eclipse.rdf4j.rio.RDFParseException;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -70,7 +66,7 @@ public abstract class InvocablePipelineElementResource<I extends InvocableStream
                 Response resp = RunningInstances.INSTANCE.getInvocation(runningInstanceId).invokeRuntime(graph);
                 return ok(resp);
             }
-        } catch (RDFParseException | RepositoryException | InstantiationException | IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
             return ok(new Response(elementId, false, e.getMessage()));
         }
@@ -100,16 +96,18 @@ public abstract class InvocablePipelineElementResource<I extends InvocableStream
 
     @POST
     @Path("{elementId}/output")
-    public javax.ws.rs.core.Response fetchOutputStrategy(@PathParam("elementId") String elementId, String payload) {
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public javax.ws.rs.core.Response fetchOutputStrategy(@PathParam("elementId") String elementId, I runtimeOptionsRequest) {
         try {
-            I runtimeOptionsRequest = JacksonSerializer.getObjectMapper().readValue(payload, clazz);
+            //I runtimeOptionsRequest = JacksonSerializer.getObjectMapper().readValue(payload, clazz);
             ResolvesContainerProvidedOutputStrategy<I, P> resolvesOutput =
                     (ResolvesContainerProvidedOutputStrategy<I, P>)
                             getDeclarerById
                                     (elementId);
             return ok(resolvesOutput.resolveOutputStrategy
                     (runtimeOptionsRequest, getExtractor(runtimeOptionsRequest)));
-        } catch (SpRuntimeException | JsonProcessingException e) {
+        } catch (SpRuntimeException e) {
             e.printStackTrace();
             return ok(new Response(elementId, false));
         }
