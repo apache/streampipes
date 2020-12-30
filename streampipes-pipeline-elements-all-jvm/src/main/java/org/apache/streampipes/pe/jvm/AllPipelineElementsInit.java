@@ -53,6 +53,8 @@ import org.apache.streampipes.processors.imageprocessing.jvm.processor.imageenri
 import org.apache.streampipes.processors.imageprocessing.jvm.processor.qrreader.QrCodeReaderController;
 import org.apache.streampipes.processors.siddhi.frequency.FrequencyController;
 import org.apache.streampipes.processors.siddhi.frequencychange.FrequencyChangeController;
+import org.apache.streampipes.processors.siddhi.listcollector.ListCollector;
+import org.apache.streampipes.processors.siddhi.listfilter.ListFilter;
 import org.apache.streampipes.processors.siddhi.stop.StreamStopController;
 import org.apache.streampipes.processors.siddhi.trend.TrendController;
 import org.apache.streampipes.processors.textmining.jvm.processor.chunker.ChunkerController;
@@ -124,6 +126,8 @@ public class AllPipelineElementsInit extends StandaloneModelSubmitter {
             .add(new ComposeController())
             .add(new NumericalTextFilterController())
             // streampipes-processors-filers-siddhi
+            .add(new ListCollector())
+            .add(new ListFilter())
             .add(new TrendController())
             .add(new StreamStopController())
             .add(new FrequencyController())
