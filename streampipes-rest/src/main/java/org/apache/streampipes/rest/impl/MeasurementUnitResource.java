@@ -18,6 +18,7 @@ package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.rest.api.IMeasurementUnitResource;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
+import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.units.UnitProvider;
 
 import javax.ws.rs.GET;
@@ -29,6 +30,14 @@ import javax.ws.rs.core.Response;
 
 @Path("/v2/users/{username}/measurement-units")
 public class MeasurementUnitResource extends AbstractRestInterface implements IMeasurementUnitResource {
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @JacksonSerialized
+  @Override
+  public Response getAllMeasurementUnits() {
+    return ok(UnitProvider.INSTANCE.getAvailableUnits());
+  }
 
   @GET
   @Path("/{measurementResourceUri}")
