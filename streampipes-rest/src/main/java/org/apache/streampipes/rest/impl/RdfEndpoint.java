@@ -20,6 +20,7 @@ package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.manager.endpoint.EndpointFetcher;
 import org.apache.streampipes.manager.operations.Operations;
+import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.client.endpoint.RdfEndpointItem;
 import org.apache.streampipes.rest.api.IRdfEndpoint;
@@ -82,7 +83,7 @@ public class RdfEndpoint extends AbstractRestInterface implements IRdfEndpoint {
     items.forEach(item -> item.setInstalled(isInstalled(item.getUri(), username)));
 
     // also add installed elements that are currently not running or available
-    items.addAll(getAllDataSourceEndpoints(username, items));
+    items.addAll(getAllDataStreamEndpoints(username, items));
     items.addAll(getAllDataProcessorEndpoints(username, items));
     items.addAll(getAllDataSinkEndpoints(username, items));
 
@@ -102,22 +103,18 @@ public class RdfEndpoint extends AbstractRestInterface implements IRdfEndpoint {
 
   private List<String> getAllUserElements(String username) {
     List<String> elementUris = new ArrayList<>();
-    elementUris.addAll(getAllDataSourceUris(username));
+    elementUris.addAll(getAllDataStreamUris(username));
     elementUris.addAll(getAllDataProcessorUris(username));
     elementUris.addAll(getAllDataSinkUris(username));
     return elementUris;
   }
 
-  private List<RdfEndpointItem> getAllDataSourceEndpoints(String username, List<RdfEndpointItem> existingItems) {
-    return getAllDataSourceUris(username)
+  private List<RdfEndpointItem> getAllDataStreamEndpoints(String username, List<RdfEndpointItem> existingItems) {
+    return getAllDataStreamUris(username)
             .stream()
             .filter(s -> existingItems.stream().noneMatch(item -> item.getUri().equals(s)))
-            .map(s -> getTripleStorage().getPipelineElementStorage().getDataSourceById(s))
-            .map(source -> {
-              RdfEndpointItem sourceItem = makeItem(source, "source");
-              sourceItem.setStreams(source.getSpDataStreams().stream().map(stream -> makeItem(stream, "stream")).collect(Collectors.toList()));
-              return sourceItem;
-            })
+            .map(s -> getTripleStorage().getPipelineElementStorage().getDataStreamById(s))
+            .map(stream -> makeItem(stream, stream instanceof SpDataSet ? "set" : "stream"))
             .collect(Collectors.toList());
   }
 
@@ -147,10 +144,11 @@ public class RdfEndpoint extends AbstractRestInterface implements IRdfEndpoint {
     endpoint.setAppId(entity.getAppId());
     endpoint.setType(type);
     endpoint.setUri(entity.getElementId());
+    endpoint.setEditable(!(entity.isInternallyManaged()));
     return endpoint;
   }
 
-  private List<String> getAllDataSourceUris(String username) {
+  private List<String> getAllDataStreamUris(String username) {
     return getUserService().getOwnSourceUris(username);
   }
 

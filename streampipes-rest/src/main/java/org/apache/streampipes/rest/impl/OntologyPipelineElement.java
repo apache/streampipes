@@ -21,9 +21,9 @@ package org.apache.streampipes.rest.impl;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataSinkDescription;
-import org.apache.streampipes.model.graph.DataSourceDescription;
 import org.apache.streampipes.rest.api.IOntologyPipelineElement;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
 import org.apache.streampipes.storage.management.StorageManager;
@@ -43,11 +43,11 @@ public class OntologyPipelineElement extends AbstractRestInterface implements IO
   @GsonWithIds
   @Produces(MediaType.APPLICATION_JSON)
   public Response getStreams() {
-    List<DataSourceDescription> result = new ArrayList<>();
-    List<DataSourceDescription> sesameSeps = StorageManager.INSTANCE.getPipelineElementStorage().getAllDataSources();
+    List<SpDataStream> result = new ArrayList<>();
+    List<SpDataStream> sesameSeps = StorageManager.INSTANCE.getPipelineElementStorage().getAllDataStreams();
 
-    for (DataSourceDescription sep : sesameSeps) {
-      result.add(new DataSourceDescription(sep));
+    for (SpDataStream sep : sesameSeps) {
+      result.add(new SpDataStream(sep));
     }
     return ok(result);
   }
@@ -58,7 +58,7 @@ public class OntologyPipelineElement extends AbstractRestInterface implements IO
   @Produces(MediaType.APPLICATION_JSON)
   public Response getSourceDetails(@PathParam("sourceId") String sepaId, @QueryParam("keepIds") boolean keepIds) {
 
-    DataSourceDescription sepaDescription = new DataSourceDescription(StorageManager.INSTANCE.getPipelineElementStorage().getDataSourceById(sepaId));
+    SpDataStream sepaDescription = new SpDataStream(StorageManager.INSTANCE.getPipelineElementStorage().getDataStreamById(sepaId));
     return ok(sepaDescription);
   }
 

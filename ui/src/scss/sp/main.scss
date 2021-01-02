@@ -798,8 +798,13 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
   padding: 2px 5px;
 }
 
-.source-label {
+.stream-label {
   background: $sp-color-stream;
+  color: black;
+}
+
+.set-label {
+  background: $sp-color-set;
   color: black;
 }
 

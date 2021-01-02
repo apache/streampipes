@@ -90,7 +90,7 @@
             <plugin>
                 <groupId>cz.habarta.typescript-generator</groupId>
                 <artifactId>typescript-generator-maven-plugin</artifactId>
-                <version>2.24.612</version>
+                <version>2.27.744</version>
                 <executions>
                     <execution>
                         <id>generate</id>
@@ -109,7 +109,7 @@
                         <annotation>org.apache.streampipes.model.shared.annotation.TsIgnore</annotation>
                     </excludePropertyAnnotations>
                     <excludeClasses>
-                        <class>io.fogsy.empire.core.empire.SupportsRdfId</class>
+                        <class>io.fogsy.empire.api.SupportsRdfId</class>
                         <class>java.io.Serializable</class>
                     </excludeClasses>
                     <customTypeMappings>

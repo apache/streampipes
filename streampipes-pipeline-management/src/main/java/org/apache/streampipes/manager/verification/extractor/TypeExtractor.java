@@ -21,13 +21,13 @@ package org.apache.streampipes.manager.verification.extractor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.streampipes.commons.exceptions.SepaParseException;
+import org.apache.streampipes.manager.verification.DataProcessorVerifier;
+import org.apache.streampipes.manager.verification.DataSinkVerifier;
+import org.apache.streampipes.manager.verification.DataStreamVerifier;
 import org.apache.streampipes.manager.verification.ElementVerifier;
-import org.apache.streampipes.manager.verification.SecVerifier;
-import org.apache.streampipes.manager.verification.SepVerifier;
-import org.apache.streampipes.manager.verification.SepaVerifier;
+import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataSinkDescription;
-import org.apache.streampipes.model.graph.DataSourceDescription;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import java.util.logging.Logger;
@@ -57,16 +57,16 @@ public class TypeExtractor {
 		if (jsonClassName == null) {
 			throw new SepaParseException();
 		} else {
-			if (jsonClassName.equals(ep())) { logger.info("Detected type sep"); return new SepVerifier(pipelineElementDescription); }
-			else if (jsonClassName.equals(epa())) { logger.info("Detected type sepa"); return new SepaVerifier(pipelineElementDescription); }
-			else if (jsonClassName.equals(ec())) { logger.info("Detected type sec"); return new SecVerifier(pipelineElementDescription); }
+			if (jsonClassName.equals(ep())) { logger.info("Detected type data stream"); return new DataStreamVerifier(pipelineElementDescription); }
+			else if (jsonClassName.equals(epa())) { logger.info("Detected type data processor"); return new DataProcessorVerifier(pipelineElementDescription); }
+			else if (jsonClassName.equals(ec())) { logger.info("Detected type data sink"); return new DataSinkVerifier(pipelineElementDescription); }
 			else throw new SepaParseException();
 		}
 	}
 	
 	private static final String ep()
 	{
-		return DataSourceDescription.class.getCanonicalName();
+		return SpDataStream.class.getCanonicalName();
 	}
 	
 	private static final String epa()

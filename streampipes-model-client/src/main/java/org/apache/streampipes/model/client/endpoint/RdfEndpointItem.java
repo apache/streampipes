@@ -26,8 +26,10 @@ public class RdfEndpointItem {
     private String description;
     private String uri;
     private String type;
-    private boolean installed;
     private String appId;
+
+    private boolean installed;
+    private boolean editable;
 
     private List<RdfEndpointItem> streams;
 
@@ -89,5 +91,13 @@ public class RdfEndpointItem {
 
     public void setAppId(String appId) {
         this.appId = appId;
+    }
+
+    public boolean isEditable() {
+        return editable;
+    }
+
+    public void setEditable(boolean editable) {
+        this.editable = editable;
     }
 }

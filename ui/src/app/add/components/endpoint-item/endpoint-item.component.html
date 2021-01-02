@@ -26,17 +26,19 @@
             <div fxFlex fxLayoutAlign="end start">
                 <span class="{{itemTypeStyle}}">{{itemTypeTitle}}</span>
             </div>
+            <div class="ml-5"><small *ngIf="!(item.editable)">Internally managed by StreamPipes</small></div>
             <div fxFlex fxLayoutAlign="start end" class="ml-5">
-                <button class="small-button-add" mat-button mat-raised-button color="primary"
+                <button class="small-button-add" mat-button mat-raised-button color="primary" [disabled]="!(item.editable)"
                         (click)="installSingleElement($event, item)" *ngIf="!item.installed">
                     <span>&nbsp;Install</span>
                 </button>
-                <button class="small-button-add-inverted" mat-button mat-raised-button
+                <button class="small-button-add-inverted" mat-button mat-raised-button [disabled]="!(item.editable)"
                         (click)="uninstallSingleElement($event, item)" *ngIf="item.installed">
                     <span>&nbsp;Uninstall</span>
                 </button>
                 <div *ngIf="item.installed" style="margin-left:5px;">
-                    <button class="small-button-add mat-basic no-min-width" mat-raised-button mat-button [matMenuTriggerFor]="menu"><span style="font-size:12px;">...</span></button>
+                    <button class="small-button-add mat-basic no-min-width" [disabled]="!(item.editable)"
+                            mat-raised-button mat-button [matMenuTriggerFor]="menu"><span style="font-size:12px;">...</span></button>
                     <mat-menu #menu="matMenu">
                         <button mat-menu-item (click)="refresh(item.uri)">
                             <mat-icon>refresh</mat-icon>
@@ -52,19 +54,6 @@
             <div fxFlex fxLayout="column">
                 <h3><b>{{item.name}}</b></h3>
                 <p>{{item.description}}</p>
-                <div fxFlex fxLayout="column" *ngIf="item.type=='source'">
-                    <div fxLayout="row" fxLayoutAlign="start center" *ngFor="let stream of item.streams">
-                        <div style="min-height:60px;">
-                            <div class="draggable-icon-preview stream" style="margin-right:10px;">
-                                {{iconText(stream.name)}}
-                            </div>
-                        </div>
-                        <div style="min-height:60px;margin-left:10px;">
-                            <h5><b>{{stream.name}}</b></h5>
-                            <p>{{stream.description}}</p>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>

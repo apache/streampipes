@@ -22,9 +22,7 @@ import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import org.apache.streampipes.commons.constants.GlobalStreamPipesConstants;
 import org.apache.streampipes.container.assets.AssetZipGenerator;
-import org.apache.streampipes.container.declarer.DataStreamDeclarer;
 import org.apache.streampipes.container.declarer.Declarer;
-import org.apache.streampipes.container.declarer.SemanticEventProducerDeclarer;
 import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.container.locales.LabelGenerator;
 import org.apache.streampipes.model.SpDataStream;
@@ -32,10 +30,10 @@ import org.apache.streampipes.model.base.ConsumableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataSinkDescription;
-import org.apache.streampipes.model.graph.DataSourceDescription;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
+import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.rest.shared.util.SpMediaType;
 
 import javax.ws.rs.GET;
@@ -55,12 +53,13 @@ public abstract class AbstractPipelineElementResource<D extends Declarer<?>> {
 
   protected final String DATA_PROCESSOR_PREFIX = "sepa";
   protected final String DATA_SINK_PREFIX = "sec";
-  protected final String DATA_SOURCE_PREFIX = "sep";
+  protected final String DATA_STREAM_PREFIX = "stream";
   private static final String SLASH = "/";
 
   @GET
   @Path("{id}")
   @Produces(MediaType.APPLICATION_JSON)
+  @JacksonSerialized
   public NamedStreamPipesEntity getDescription(@PathParam("id") String elementId) {
     return prepareElement(elementId);
   }
@@ -98,8 +97,8 @@ public abstract class AbstractPipelineElementResource<D extends Declarer<?>> {
     return rewrite(getById(id));
   }
 
-  protected NamedStreamPipesEntity prepareElement(NamedStreamPipesEntity desc, String appendix) {
-    return rewrite(desc, appendix);
+  protected NamedStreamPipesEntity prepareElement(NamedStreamPipesEntity desc) {
+    return rewrite(desc);
   }
 
   protected D getDeclarerById(String id) {
@@ -107,29 +106,11 @@ public abstract class AbstractPipelineElementResource<D extends Declarer<?>> {
   }
 
   protected NamedStreamPipesEntity getById(String id) {
-    NamedStreamPipesEntity desc = null;
-    Declarer declarer = getElementDeclarers().get(id);
-    //TODO find a better solution to add the event streams to the SepDescription
-    if (declarer instanceof SemanticEventProducerDeclarer) {
-      DataSourceDescription secDesc = ((SemanticEventProducerDeclarer) declarer).declareModel();
-      List<DataStreamDeclarer> eventStreamDeclarers = ((SemanticEventProducerDeclarer) declarer).getEventStreams();
-      for (DataStreamDeclarer esd : eventStreamDeclarers) {
-        secDesc.addEventStream(esd.declareModel(secDesc));
-      }
-
-      desc = secDesc;
-    } else {
-      desc = declarer.declareModel();
-    }
-
-    return desc;
+    Declarer<?> declarer = getElementDeclarers().get(id);
+    return declarer.declareModel();
   }
 
   protected NamedStreamPipesEntity rewrite(NamedStreamPipesEntity desc) {
-    return rewrite(desc, "");
-  }
-
-  protected NamedStreamPipesEntity rewrite(NamedStreamPipesEntity desc, String appendix) {
 
     //TODO remove this and find a better solution
     if (desc != null) {
@@ -137,17 +118,13 @@ public abstract class AbstractPipelineElementResource<D extends Declarer<?>> {
 
       if (desc instanceof DataProcessorDescription) {
         type = DATA_PROCESSOR_PREFIX + SLASH;
-      } else if (desc instanceof DataSourceDescription) {
-        type = DATA_SOURCE_PREFIX + SLASH;
       } else if (desc instanceof DataSinkDescription) {
         type = DATA_SINK_PREFIX + SLASH;
       } else if (desc instanceof SpDataStream) {
-        type = DATA_SOURCE_PREFIX + SLASH + appendix + SLASH;
+        type = DATA_STREAM_PREFIX + SLASH;
       }
 
-      String originalId = desc.getElementId();
       String uri = DeclarersSingleton.getInstance().getBaseUri() + type + desc.getElementId();
-      desc.setElementId(uri);
       desc.setElementId(uri);
 
       // TODO remove after full internationalization support has been implemented
@@ -159,27 +136,7 @@ public abstract class AbstractPipelineElementResource<D extends Declarer<?>> {
         }
       }
 
-      if (desc instanceof DataSourceDescription) {
-        for (SpDataStream stream : ((DataSourceDescription) desc).getSpDataStreams()) {
-          String baseUri = DeclarersSingleton.getInstance().getBaseUri()
-                  + type
-                  + originalId
-                  + SLASH
-                  + stream.getElementId();
-          stream.setElementId(baseUri);
-          stream.setElementId(baseUri);
-          // TODO remove after full internationalization support has been implemented
-          if (stream.isIncludesLocales()) {
-            try {
-              LabelGenerator lg = new LabelGenerator(stream);
-              stream.setName(lg.getElementTitle());
-              stream.setDescription(lg.getElementDescription());
-            } catch (IOException e) {
-              e.printStackTrace();
-            }
-          }
-        }
-      } else if (desc instanceof ConsumableStreamPipesEntity) {
+      if (desc instanceof ConsumableStreamPipesEntity) {
         Collection<TransportProtocol> supportedProtocols =
                 DeclarersSingleton.getInstance().getSupportedProtocols();
         Collection<TransportFormat> supportedFormats =

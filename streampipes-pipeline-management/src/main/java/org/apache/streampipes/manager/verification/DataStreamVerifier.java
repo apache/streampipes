@@ -18,18 +18,19 @@
 
 package org.apache.streampipes.manager.verification;
 
-import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.manager.assets.AssetManager;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
+import org.apache.streampipes.model.SpDataStream;
 
 import java.io.IOException;
 
-public class SepaVerifier extends ElementVerifier<DataProcessorDescription> {
+public class DataStreamVerifier extends ElementVerifier<SpDataStream> {
 
-  public SepaVerifier(String graphData)
-          throws SepaParseException {
-    super(graphData, DataProcessorDescription.class);
-    // TODO Auto-generated constructor stub
+  public DataStreamVerifier(String graphData) {
+    super(graphData, SpDataStream.class);
+  }
+
+  public DataStreamVerifier(SpDataStream stream) {
+    super(stream);
   }
 
   @Override
@@ -40,17 +41,22 @@ public class SepaVerifier extends ElementVerifier<DataProcessorDescription> {
   @Override
   protected StorageState store(String username, boolean publicElement, boolean refreshCache) {
     StorageState storageState = StorageState.STORED;
-
+		/*
+		if (SecurityUtils.getSubject().isAuthenticated()) {
+			String username = SecurityUtils.getSubject().getPrincipal().toString();
+			StorageManager.INSTANCE.getUserStorageAPI().addSource(username, elementDescription.getElementId());
+		}
+*/
     if (!storageApi.exists(elementDescription)) {
-      storageApi.storeDataProcessor(elementDescription);
+      storageApi.storeDataStream(elementDescription);
       if (refreshCache) {
-        storageApi.refreshDataProcessorCache();
+        storageApi.refreshDataSourceCache();
       }
     } else {
       storageState = StorageState.ALREADY_IN_SESAME;
     }
-    if (!(userService.getOwnSepaUris(username).contains(elementDescription.getUri()))) {
-      userService.addOwnSepa(username, elementDescription.getUri(), publicElement);
+    if (!(userService.getOwnSourceUris(username).contains(elementDescription.getUri()))) {
+      userService.addOwnSource(username, elementDescription.getUri(), publicElement);
     } else {
       storageState = StorageState.ALREADY_IN_SESAME_AND_USER_DB;
     }
@@ -60,7 +66,7 @@ public class SepaVerifier extends ElementVerifier<DataProcessorDescription> {
   @Override
   protected void update(String username) {
     storageApi.update(elementDescription);
-    storageApi.refreshDataProcessorCache();
+    storageApi.refreshDataSourceCache();
   }
 
   @Override
@@ -77,5 +83,4 @@ public class SepaVerifier extends ElementVerifier<DataProcessorDescription> {
       storeAssets();
     }
   }
-
 }

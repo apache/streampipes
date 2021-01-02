@@ -20,10 +20,13 @@ package org.apache.streampipes.connect.container.master.management;
 
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
+import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.connect.adapter.GroundingService;
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
 import org.apache.streampipes.connect.config.ConnectContainerConfig;
 import org.apache.streampipes.connect.container.master.util.AdapterEncryptionService;
+import org.apache.streampipes.manager.verification.DataStreamVerifier;
+import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterSetDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
@@ -90,7 +93,6 @@ public class AdapterMasterManagement {
       // TODO
       WorkerRestClient.invokeStreamAdapter(baseUrl, (AdapterStreamDescription) ad);
       LOG.info("Start adapter");
-//            SpConnect.startStreamAdapter((AdapterStreamDescription) ad, baseUrl);
     }
 
     // backend url is used to install data source in streampipes
@@ -98,31 +100,19 @@ public class AdapterMasterManagement {
     String requestUrl = backendBaseUrl + "noauth/users/" + username + "/element";
 
     LOG.info("Install source (source URL: " + newId + " in backend over URL: " + requestUrl);
+    SpDataStream storedDescription = new SourcesManagement().getAdapterDataStream(newId);
+    installDataSource(storedDescription, username);
 
-    installDataSource(requestUrl, newId);
-
-    return new SourcesManagement().getAdapterDataSource(newId).getElementId();
+    return storedDescription.getElementId();
   }
 
-  public boolean installDataSource(String requestUrl, String elementIdUrl) throws AdapterException {
-
+  public void installDataSource(SpDataStream stream, String username) throws AdapterException {
     try {
-      String responseString = Request.Post(requestUrl)
-              .bodyForm(
-                      Form.form()
-                              .add("uri", elementIdUrl)
-                              .add("publicElement", "true").build())
-              .connectTimeout(1000)
-              .socketTimeout(100000)
-              .execute().returnContent().asString();
-
-      LOG.info(responseString);
-    } catch (IOException e) {
-      LOG.error("Error while installing data source: " + requestUrl, e);
+      new DataStreamVerifier(stream).verifyAndAdd(username, true, true);
+    } catch (SepaParseException e) {
+      LOG.error("Error while installing data source: " + stream.getElementId(), e);
       throw new AdapterException();
     }
-
-    return true;
   }
 
   public AdapterDescription getAdapter(String id, AdapterStorageImpl adapterStorage) throws AdapterException {

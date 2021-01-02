@@ -20,7 +20,6 @@ package org.apache.streampipes.manager.execution.http;
 
 import org.lightcouch.DocumentConflictException;
 import org.apache.streampipes.manager.execution.status.PipelineStatusManager;
-import org.apache.streampipes.manager.execution.status.SepMonitoringManager;
 import org.apache.streampipes.manager.util.TemporaryGraphStorage;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
@@ -86,10 +85,6 @@ public class PipelineExecutor {
       PipelineStatusManager.addPipelineStatus(pipeline.getPipelineId(),
               new PipelineStatusMessage(pipeline.getPipelineId(), System.currentTimeMillis(), PipelineStatusMessageType.PIPELINE_STARTED.title(), PipelineStatusMessageType.PIPELINE_STARTED.description()));
 
-      if (monitor) {
-        SepMonitoringManager.addObserver(pipeline.getPipelineId());
-      }
-
       if (storeStatus) {
         setPipelineStarted(pipeline);
       }
@@ -149,10 +144,6 @@ public class PipelineExecutor {
                       System.currentTimeMillis(),
                       PipelineStatusMessageType.PIPELINE_STOPPED.title(),
                       PipelineStatusMessageType.PIPELINE_STOPPED.description()));
-
-      if (monitor) {
-        SepMonitoringManager.removeObserver(pipeline.getPipelineId());
-      }
 
     }
     return status;

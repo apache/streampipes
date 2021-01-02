@@ -21,8 +21,8 @@ package org.apache.streampipes.rest.impl;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.DataSinkType;
+import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.client.Category;
-import org.apache.streampipes.model.graph.DataSourceDescription;
 import org.apache.streampipes.rest.api.IPipelineElementCategory;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.storage.management.StorageManager;
@@ -44,7 +44,7 @@ public class PipelineElementCategory extends AbstractRestInterface implements IP
 	@JacksonSerialized
 	@Override
 	public Response getEps() {
-		return ok(makeCategories(StorageManager.INSTANCE.getPipelineElementStorage().getAllDataSources()));
+		return ok(makeCategories(StorageManager.INSTANCE.getPipelineElementStorage().getAllDataStreams()));
 	}
 
 	@GET
@@ -74,8 +74,8 @@ public class PipelineElementCategory extends AbstractRestInterface implements IP
 		return ok(DataSinkType.values());
 	}
 	
-	private List<Category> makeCategories(List<DataSourceDescription> producers) {
-		return producers
+	private List<Category> makeCategories(List<SpDataStream> streams) {
+		return streams
 				.stream()
 				.map(p -> new Category(p.getElementId(), p.getName(), p.getDescription()))
 				.collect(Collectors.toList());

@@ -24,10 +24,10 @@ import org.apache.streampipes.model.graph.DataSinkDescription;
 
 import java.io.IOException;
 
-public class SecVerifier extends ElementVerifier<DataSinkDescription> {
+public class DataSinkVerifier extends ElementVerifier<DataSinkDescription> {
 
 	
-	public SecVerifier(String graphData)
+	public DataSinkVerifier(String graphData)
 			throws SepaParseException {
 		super(graphData, DataSinkDescription.class);
 	}
