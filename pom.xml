@@ -859,13 +859,18 @@
         <module>archetypes/streampipes-archetype-pe-sinks-flink</module>
         <module>archetypes/streampipes-archetype-pe-processors-flink</module>
         <module>streampipes-backend</module>
+        <module>streampipes-client</module>
         <module>streampipes-code-generation</module>
         <module>streampipes-commons</module>
         <module>streampipes-config</module>
         <module>streampipes-connect</module>
         <module>streampipes-connect-container</module>
+        <module>streampipes-connect-container-master</module>
+        <module>streampipes-connect-container-worker</module>
         <module>streampipes-container</module>
+        <module>streampipes-container-base</module>
         <module>streampipes-container-embedded</module>
+        <module>streampipes-container-extensions</module>
         <module>streampipes-container-standalone</module>
         <module>streampipes-dataformat</module>
         <module>streampipes-dataformat-cbor</module>
@@ -873,18 +878,24 @@
         <module>streampipes-dataformat-json</module>
         <module>streampipes-dataformat-smile</module>
         <module>streampipes-logging</module>
+        <module>streampipes-maven-plugin</module>
         <module>streampipes-measurement-units</module>
         <module>streampipes-messaging-kafka</module>
         <module>streampipes-messaging</module>
         <module>streampipes-messaging-jms</module>
+        <module>streampipes-messaging-mqtt</module>
         <module>streampipes-model</module>
         <module>streampipes-model-client</module>
+        <module>streampipes-model-shared</module>
         <module>streampipes-performance-tests</module>
+        <module>streampipes-platform-services</module>
         <module>streampipes-pipeline-management</module>
         <module>streampipes-sources</module>
         <module>streampipes-rest</module>
         <module>streampipes-rest-shared</module>
         <module>streampipes-sdk</module>
+        <module>streampipes-serializers-jsonld</module>
+        <module>streampipes-serializers-json</module>
         <module>streampipes-storage-api</module>
         <module>streampipes-storage-management</module>
         <module>streampipes-storage-couchdb</module>
@@ -900,15 +911,6 @@
         <module>streampipes-wrapper-siddhi</module>
         <module>streampipes-wrapper-spark</module>
         <module>streampipes-wrapper-standalone</module>
-        <module>streampipes-connect-container-master</module>
-        <module>streampipes-connect-container-worker</module>
-        <module>streampipes-container-base</module>
-        <module>streampipes-messaging-mqtt</module>
-        <module>streampipes-maven-plugin</module>
-        <module>streampipes-model-shared</module>
-        <module>streampipes-container-extensions</module>
-        <module>streampipes-serializers-jsonld</module>
-        <module>streampipes-serializers-json</module>
     </modules>
 
     <profiles>
