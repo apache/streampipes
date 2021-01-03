@@ -108,6 +108,11 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
 
   }
 
+  @Override
+  public void visit(RemoteOneOfStaticProperty remoteOneOfStaticProperty) {
+
+  }
+
   private Object getValue(String internalName) {
     return configs.get(internalName);
   }

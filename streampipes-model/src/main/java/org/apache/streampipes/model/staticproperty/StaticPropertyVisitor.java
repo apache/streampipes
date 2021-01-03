@@ -48,4 +48,6 @@ public interface StaticPropertyVisitor {
   void visit(StaticPropertyAlternatives staticPropertyAlternatives);
 
   void visit(StaticPropertyGroup staticPropertyGroup);
+
+  void visit(RemoteOneOfStaticProperty remoteOneOfStaticProperty);
 }
