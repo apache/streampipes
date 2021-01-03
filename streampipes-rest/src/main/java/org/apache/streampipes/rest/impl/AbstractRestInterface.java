@@ -29,7 +29,7 @@ import org.apache.streampipes.model.base.AbstractStreamPipesEntity;
 import org.apache.streampipes.model.base.StreamPipesJsonLdContainer;
 import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.model.message.*;
-import org.apache.streampipes.serializers.json.GsonSerializer;
+import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
 import org.apache.streampipes.serializers.jsonld.JsonLdTransformer;
 import org.apache.streampipes.serializers.jsonld.JsonLdUtils;
 import org.apache.streampipes.storage.api.*;
@@ -45,7 +45,7 @@ import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.util.List;
 
-public abstract class AbstractRestInterface {
+public abstract class AbstractRestInterface extends AbstractSharedRestInterface {
 
   protected <T> String toJsonLd(T object) {
     try {
@@ -161,40 +161,8 @@ public abstract class AbstractRestInterface {
             .build();
   }
 
-  protected <T> Response ok(T entity) {
-    return Response
-            .ok(entity)
-            .build();
-  }
-
-  protected <T> Response badRequest(T entity) {
-    return Response
-            .status(400)
-            .entity(entity)
-            .build();
-  }
-
-  protected <T> Response serverError(T entity) {
-    return Response
-            .status(500)
-            .entity(entity)
-            .build();
-  }
-
   protected StreamPipesJsonLdContainer asContainer(List<? extends AbstractStreamPipesEntity> elements) {
     return new StreamPipesJsonLdContainer(elements);
-  }
-
-  protected Response ok() {
-    return Response.ok().build();
-  }
-
-  protected Response fail() {
-    return Response.serverError().build();
-  }
-
-  protected <T> String toJson(T element) {
-    return GsonSerializer.getGson().toJson(element);
   }
 
 }

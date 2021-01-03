@@ -15,29 +15,19 @@
  * limitations under the License.
  *
  */
-
-package org.apache.streampipes.rest.api;
-
-
-import org.apache.streampipes.model.pipeline.Pipeline;
+package org.apache.streampipes.rest.shared.api;
 
 import javax.ws.rs.core.Response;
 
-public interface IPipeline extends IPipelineElement {
+public interface CRUDResource<ID, T> {
 
-  Response addPipeline(String username, Pipeline pipeline);
+    Response getAll();
 
-  Response getSystemPipelines();
+    Response getById(ID id);
 
-  Response start(String username, String pipelineId);
+    Response create(T entity);
 
-  Response stop(String username, String pipelineId);
+    Response update(ID id, T entity);
 
-  Response recommend(String email, Pipeline pipeline);
-
-  Response update(Pipeline pipeline, String username);
-
-  Response overwritePipeline(String username, String pipelineId, Pipeline pipeline);
-
-  Response getPipelineStatus(String username, String pipelineId);
+    void delete(ID id);
 }

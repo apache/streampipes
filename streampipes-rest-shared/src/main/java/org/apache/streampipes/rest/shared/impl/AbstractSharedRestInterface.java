@@ -15,15 +15,43 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.rest.shared.impl;
 
-package org.apache.streampipes.rest.api;
-
+import org.apache.streampipes.serializers.json.GsonSerializer;
 
 import javax.ws.rs.core.Response;
 
-public interface IVirtualSensor {
+public abstract class AbstractSharedRestInterface {
 
-  Response getVirtualSensors(String username);
+  protected <T> Response ok(T entity) {
+    return Response
+            .ok(entity)
+            .build();
+  }
 
-  Response addVirtualSensor(String username, String virtualSensorDescription);
+  protected <T> Response badRequest(T entity) {
+    return Response
+            .status(400)
+            .entity(entity)
+            .build();
+  }
+
+  protected <T> Response serverError(T entity) {
+    return Response
+            .status(500)
+            .entity(entity)
+            .build();
+  }
+
+  protected Response ok() {
+    return Response.ok().build();
+  }
+
+  protected Response fail() {
+    return Response.serverError().build();
+  }
+
+  protected <T> String toJson(T element) {
+    return GsonSerializer.getGson().toJson(element);
+  }
 }

@@ -17,12 +17,9 @@
  */
 package org.apache.streampipes.rest.impl;
 
+import org.apache.streampipes.manager.assets.AssetManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.streampipes.manager.assets.AssetManager;
-import org.apache.streampipes.rest.api.IPipelineElementAsset;
-
-import java.io.IOException;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -30,9 +27,10 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 
 @Path("/v2/pe")
-public class PipelineElementAsset extends AbstractRestInterface implements IPipelineElementAsset {
+public class PipelineElementAsset extends AbstractRestInterface {
 
   private static final Logger LOG = LoggerFactory.getLogger(PipelineElementAsset.class);
 
@@ -58,7 +56,6 @@ public class PipelineElementAsset extends AbstractRestInterface implements IPipe
     }
   }
 
-  @Override
   @GET
   @Path("{appId}/assets/{assetName}")
   @Produces("image/png")

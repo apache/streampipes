@@ -25,7 +25,6 @@ import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.model.template.PipelineTemplateDescription;
 import org.apache.streampipes.model.template.PipelineTemplateInvocation;
-import org.apache.streampipes.rest.api.InternalPipelineTemplate;
 import org.apache.streampipes.sdk.builder.BoundPipelineElementBuilder;
 import org.apache.streampipes.sdk.builder.PipelineTemplateBuilder;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
@@ -43,7 +42,7 @@ import java.util.List;
 import java.util.Map;
 
 @Path("/v2/users/{username}/internal-pipelines")
-public class InternalPipelineTemplates extends AbstractRestInterface implements InternalPipelineTemplate {
+public class InternalPipelineTemplates extends AbstractRestInterface {
 
     private static final Logger LOG = LoggerFactory.getLogger(InternalPipelineTemplates.class);
     private Map<String, Template> templates;

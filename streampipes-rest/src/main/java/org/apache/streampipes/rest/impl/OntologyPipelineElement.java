@@ -24,7 +24,6 @@ import com.google.gson.JsonPrimitive;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataSinkDescription;
-import org.apache.streampipes.rest.api.IOntologyPipelineElement;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
 import org.apache.streampipes.storage.management.StorageManager;
 
@@ -35,9 +34,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Path("/v2/ontology")
-public class OntologyPipelineElement extends AbstractRestInterface implements IOntologyPipelineElement {
+public class OntologyPipelineElement extends AbstractRestInterface{
 
-  @Override
   @Path("/sources")
   @GET
   @GsonWithIds
@@ -62,7 +60,6 @@ public class OntologyPipelineElement extends AbstractRestInterface implements IO
     return ok(sepaDescription);
   }
 
-  @Override
   @Path("/sepas")
   @GsonWithIds
   @GET
@@ -78,7 +75,6 @@ public class OntologyPipelineElement extends AbstractRestInterface implements IO
 
   }
 
-  @Override
   @Path("/actions")
   @GET
   @GsonWithIds
@@ -93,7 +89,6 @@ public class OntologyPipelineElement extends AbstractRestInterface implements IO
     return ok(result);
   }
 
-  @Override
   public Response getStream(String streamId, @QueryParam("keepIds") boolean keepIds) {
     // TODO Auto-generated method stub
     return null;
@@ -102,7 +97,6 @@ public class OntologyPipelineElement extends AbstractRestInterface implements IO
   @Path("/sepas/{sepaId}")
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Override
   public Response getSepa(@PathParam("sepaId") String sepaId, @QueryParam("keepIds") boolean keepIds) {
 
     DataProcessorDescription dataProcessorDescription = new DataProcessorDescription(StorageManager.INSTANCE.getPipelineElementStorage().getDataProcessorById(sepaId));
@@ -112,7 +106,6 @@ public class OntologyPipelineElement extends AbstractRestInterface implements IO
   @Path("/actions/{actionId}")
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Override
   public Response getAction(@PathParam("actionId") String actionId, @QueryParam("keepIds") boolean keepIds) {
     DataSinkDescription dataSinkDescription = new DataSinkDescription(StorageManager.INSTANCE.getPipelineElementStorage().getDataSinkById(actionId));
     return ok(dataSinkDescription);

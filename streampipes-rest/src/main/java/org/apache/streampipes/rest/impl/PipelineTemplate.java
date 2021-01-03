@@ -25,7 +25,6 @@ import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.model.template.PipelineTemplateDescription;
 import org.apache.streampipes.model.template.PipelineTemplateDescriptionContainer;
 import org.apache.streampipes.model.template.PipelineTemplateInvocation;
-import org.apache.streampipes.rest.api.IPipelineTemplate;
 import org.apache.streampipes.rest.shared.util.SpMediaType;
 import org.apache.streampipes.serializers.jsonld.JsonLdTransformer;
 import org.apache.streampipes.vocabulary.StreamPipes;
@@ -38,12 +37,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Path("/v2/users/{username}/pipeline-templates")
-public class PipelineTemplate extends AbstractRestInterface implements IPipelineTemplate {
+public class PipelineTemplate extends AbstractRestInterface {
 
   @GET
   @Path("/streams")
   @Produces(MediaType.APPLICATION_JSON)
-  @Override
   public Response getAvailableDataStreams() {
     List<SpDataStream> sources = getPipelineElementRdfStorage().getAllDataStreams();
     List<SpDataStream> datasets = new ArrayList<>();
@@ -59,7 +57,6 @@ public class PipelineTemplate extends AbstractRestInterface implements IPipeline
   @GET
   @Path("/sets")
   @Produces(MediaType.APPLICATION_JSON)
-  @Override
   public Response getAvailableDataSets() {
 
     List<SpDataStream> sources = getPipelineElementRdfStorage().getAllDataStreams();
@@ -76,7 +73,6 @@ public class PipelineTemplate extends AbstractRestInterface implements IPipeline
 
   @GET
   @Produces(SpMediaType.JSONLD)
-  @Override
   public Response getPipelineTemplates(@QueryParam("streamId") String streamId) {
     if (streamId != null) {
       return ok(new PipelineTemplateDescriptionContainer(Operations.getCompatiblePipelineTemplates(streamId)));
@@ -89,7 +85,6 @@ public class PipelineTemplate extends AbstractRestInterface implements IPipeline
   @GET
   @Path("/invocation")
   @Produces(MediaType.APPLICATION_JSON)
-  @Override
   public Response getPipelineTemplateInvocation(@QueryParam("streamId") String streamId,
                                                 @QueryParam("templateId") String pipelineTemplateId) {
     if (pipelineTemplateId != null) {
@@ -102,6 +97,27 @@ public class PipelineTemplate extends AbstractRestInterface implements IPipeline
       return fail();
     }
   }
+
+  @POST
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response generatePipeline(@PathParam("username") String username,
+                                   String pipelineTemplateInvocationString) {
+    try {
+      PipelineTemplateInvocation pipelineTemplateInvocation =
+              new JsonLdTransformer(StreamPipes.PIPELINE_TEMPLATE_INVOCATION)
+                      .fromJsonLd(pipelineTemplateInvocationString, PipelineTemplateInvocation.class);
+
+      PipelineOperationStatus status = Operations
+              .handlePipelineTemplateInvocation(username, pipelineTemplateInvocation);
+
+      return ok(status);
+
+    } catch (IOException e) {
+      e.printStackTrace();
+      return fail();
+    }
+  }
+
 
   private PipelineTemplateDescription getPipelineTemplateDescription(String pipelineTemplateId) {
     return Operations
@@ -122,26 +138,5 @@ public class PipelineTemplate extends AbstractRestInterface implements IPipeline
             .filter(sp -> sp.getElementId().equals(streamId))
             .findFirst()
             .get();
-  }
-
-  @POST
-  @Produces(MediaType.APPLICATION_JSON)
-  @Override
-  public Response generatePipeline(@PathParam("username") String username,
-                                   String pipelineTemplateInvocationString) {
-    try {
-      PipelineTemplateInvocation pipelineTemplateInvocation =
-              new JsonLdTransformer(StreamPipes.PIPELINE_TEMPLATE_INVOCATION)
-                      .fromJsonLd(pipelineTemplateInvocationString, PipelineTemplateInvocation.class);
-
-      PipelineOperationStatus status = Operations
-              .handlePipelineTemplateInvocation(username, pipelineTemplateInvocation);
-
-      return ok(status);
-
-    } catch (IOException e) {
-      e.printStackTrace();
-      return fail();
-    }
   }
 }

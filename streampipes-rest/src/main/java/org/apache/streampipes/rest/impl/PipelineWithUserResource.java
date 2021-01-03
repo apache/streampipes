@@ -30,7 +30,6 @@ import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
-import org.apache.streampipes.rest.api.IPipeline;
 import org.apache.streampipes.rest.management.PipelineManagement;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
@@ -44,18 +43,15 @@ import java.util.Date;
 import java.util.UUID;
 
 @Path("/v2/users/{username}/pipelines")
-public class PipelineWithUserResource extends AbstractRestInterface implements IPipeline {
+public class PipelineWithUserResource extends AbstractRestInterface {
 
     private static final Logger logger = LoggerFactory.getLogger(PipelineWithUserResource.class);
 
-    @Override
     public Response getAvailable(String username) {
         // TODO Auto-generated method stub
         return null;
     }
 
-
-    @Override
     public Response getFavorites(String username) {
         // TODO Auto-generated method stub
         return null;
@@ -65,7 +61,6 @@ public class PipelineWithUserResource extends AbstractRestInterface implements I
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/own")
     @JacksonSerialized
-    @Override
     public Response getOwn(@PathParam("username") String username) {
         return ok(getUserService()
                 .getOwnPipelines(username));
@@ -75,18 +70,15 @@ public class PipelineWithUserResource extends AbstractRestInterface implements I
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/system")
     @JacksonSerialized
-    @Override
     public Response getSystemPipelines() {
         return ok(getPipelineStorage().getSystemPipelines());
     }
 
-    @Override
     public Response addFavorite(String username, String elementUri) {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
     public Response removeFavorite(String username, String elementUri) {
         // TODO Auto-generated method stub
         return null;
@@ -96,7 +88,6 @@ public class PipelineWithUserResource extends AbstractRestInterface implements I
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{pipelineId}/status")
     @GsonWithIds
-    @Override
     public Response getPipelineStatus(@PathParam("username") String username, @PathParam("pipelineId") String pipelineId) {
         return ok(PipelineStatusManager.getPipelineStatus(pipelineId, 5));
     }
@@ -110,7 +101,6 @@ public class PipelineWithUserResource extends AbstractRestInterface implements I
         return statusMessage(Notifications.success("Pipeline deleted"));
     }
 
-    @Override
     public String getAsJsonLd(String elementUri) {
         return null;
     }
@@ -119,7 +109,6 @@ public class PipelineWithUserResource extends AbstractRestInterface implements I
     @Path("/{pipelineId}")
     @Produces(MediaType.APPLICATION_JSON)
     @JacksonSerialized
-    @Override
     public Response getElement(@PathParam("username") String username, @PathParam("pipelineId") String pipelineId) {
         return ok(getPipelineStorage().getPipeline(pipelineId));
     }
@@ -234,7 +223,6 @@ public class PipelineWithUserResource extends AbstractRestInterface implements I
     @Path("/{pipelineId}")
     @Produces(MediaType.APPLICATION_JSON)
     @GsonWithIds
-    @Override
     public Response overwritePipeline(@PathParam("username") String username,
                                       @PathParam("pipelineId") String pipelineId,
                                       Pipeline pipeline) {

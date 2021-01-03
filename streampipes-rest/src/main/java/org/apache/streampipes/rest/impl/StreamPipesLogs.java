@@ -20,6 +20,10 @@ package org.apache.streampipes.rest.impl;
 
 import com.google.gson.Gson;
 import org.apache.http.HttpHost;
+import org.apache.streampipes.config.backend.BackendConfig;
+import org.apache.streampipes.logging.model.Log;
+import org.apache.streampipes.logging.model.LogRequest;
+import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
 import org.elasticsearch.action.search.ClearScrollRequest;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
@@ -34,13 +38,11 @@ import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.streampipes.config.backend.BackendConfig;
-import org.apache.streampipes.logging.model.Log;
-import org.apache.streampipes.logging.model.LogRequest;
-import org.apache.streampipes.rest.api.ILogs;
-import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
 
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
@@ -51,12 +53,10 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.Map;
 
-import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
-import static org.elasticsearch.index.query.QueryBuilders.matchPhraseQuery;
-import static org.elasticsearch.index.query.QueryBuilders.rangeQuery;
+import static org.elasticsearch.index.query.QueryBuilders.*;
 
 @Path("/v2/logs")
-public class StreamPipesLogs extends AbstractRestInterface implements ILogs {
+public class StreamPipesLogs extends AbstractRestInterface {
 
     static Logger LOG = LoggerFactory.getLogger(StreamPipesLogs.class);
 
@@ -66,7 +66,6 @@ public class StreamPipesLogs extends AbstractRestInterface implements ILogs {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @GsonWithIds
-    @Override
     public Response getLogs(LogRequest logRequest) {
         LinkedList logs = new LinkedList();
 

@@ -21,10 +21,9 @@ package org.apache.streampipes.rest.impl;
 import com.google.gson.JsonObject;
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.manager.setup.Installer;
+import org.apache.streampipes.model.client.setup.InitialSettings;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.message.SetupStatusMessage;
-import org.apache.streampipes.model.client.setup.InitialSettings;
-import org.apache.streampipes.rest.api.ISetup;
 import org.apache.streampipes.rest.notifications.NotificationListener;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
@@ -34,12 +33,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/v2/setup")
-public class Setup extends AbstractRestInterface implements ISetup {
+public class Setup extends AbstractRestInterface {
 
   @GET
   @Path("/configured")
   @Produces(MediaType.APPLICATION_JSON)
-  @Override
   public Response isConfigured() {
     JsonObject obj = new JsonObject();
     if (BackendConfig.INSTANCE.isConfigured()) {
@@ -56,7 +54,6 @@ public class Setup extends AbstractRestInterface implements ISetup {
   @JacksonSerialized
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  @Override
   public Response configure(InitialSettings settings, @PathParam("currentInstallationStep") Integer currentInstallationStep) {
     SetupStatusMessage message = new Installer(settings).install(currentInstallationStep);
     if (currentInstallationStep == (message.getInstallationStepCount() - 1)) {
@@ -69,7 +66,6 @@ public class Setup extends AbstractRestInterface implements ISetup {
   @Path("/configuration")
   @GsonWithIds
   @Produces(MediaType.APPLICATION_JSON)
-  @Override
   public Response updateConfiguration(InitialSettings settings) {
     try {
       // TODO implement update consul configs
@@ -83,22 +79,6 @@ public class Setup extends AbstractRestInterface implements ISetup {
       e.printStackTrace();
       return ok(Notifications.error("Error"));
     }
-  }
-
-  @GET
-  @Path("/configuration")
-  @Produces(MediaType.APPLICATION_JSON)
-  @GsonWithIds
-  @Override
-  @Deprecated
-  // NOT sure if we need this method
-  public Response getConfiguration() {
-//        InitialSettings is = new InitialSettings();
-//        is.setCouchDBHost(CouchDbConfig.INSTANCE.getHost());
-//        is.setSesameUrl(SesameConfig.INSTANCE.getUri());
-
-//         TODO return here the initial configurations
-    return ok(true);
   }
 
 }

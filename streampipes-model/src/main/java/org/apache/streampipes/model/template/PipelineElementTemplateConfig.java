@@ -15,22 +15,45 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.model.template;
 
-package org.apache.streampipes.rest.api.dataexplorer;
+public class PipelineElementTemplateConfig {
 
-import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
+  private boolean editable;
+  private boolean displayed;
 
-import javax.ws.rs.core.Response;
+  private Object value;
 
-public interface IDataExplorerWidget {
+  public PipelineElementTemplateConfig(boolean editable, boolean displayed, Object value) {
+    this.editable = editable;
+    this.displayed = displayed;
+    this.value = value;
+  }
 
-  Response getAllDataExplorerWidgets();
+  public PipelineElementTemplateConfig() {
+  }
 
-  Response getDataExplorerWidget(String widgetId);
+  public boolean isEditable() {
+    return editable;
+  }
 
-  Response modifyDataExplorerWidget(DataExplorerWidgetModel dataExplorerWidgetModel);
+  public void setEditable(boolean editable) {
+    this.editable = editable;
+  }
 
-  Response deleteDataExplorerWidget(String widgetId);
+  public boolean isDisplayed() {
+    return displayed;
+  }
 
-  Response createDataExplorerWidget(DataExplorerWidgetModel dataExplorerWidgetModel);
+  public void setDisplayed(boolean displayed) {
+    this.displayed = displayed;
+  }
+
+  public Object getValue() {
+    return value;
+  }
+
+  public void setValue(Object value) {
+    this.value = value;
+  }
 }

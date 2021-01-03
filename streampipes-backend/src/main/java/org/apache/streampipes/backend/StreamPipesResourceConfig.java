@@ -19,6 +19,7 @@
 package org.apache.streampipes.backend;
 
 import org.apache.streampipes.connect.container.master.rest.*;
+import org.apache.streampipes.container.api.PipelineElementTemplateResource;
 import org.apache.streampipes.rest.impl.*;
 import org.apache.streampipes.rest.impl.dashboard.Dashboard;
 import org.apache.streampipes.rest.impl.dashboard.DashboardWidget;
@@ -104,6 +105,9 @@ public class StreamPipesResourceConfig extends ResourceConfig {
     register(JsonLdProvider.class);
     register(JacksonSerializationProvider.class);
     register(MultiPartFeature.class);
+    
+    // Platform Services
+    register(PipelineElementTemplateResource.class);
 
 
     // Connect Master

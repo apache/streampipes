@@ -19,23 +19,16 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.model.message.Notifications;
-import org.apache.streampipes.rest.api.IUser;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/v2/users/{email}")
-public class User extends AbstractRestInterface implements IUser {
+public class User extends AbstractRestInterface {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Override
     public Response getUserDetails(@PathParam("email") String email) {
         org.apache.streampipes.model.client.user.User user = getUser(email);
         user.setPassword("");
@@ -50,7 +43,6 @@ public class User extends AbstractRestInterface implements IUser {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Override
     public Response updateUserDetails(org.apache.streampipes.model.client.user.User user) {
         if (user != null) {
             org.apache.streampipes.model.client.user.User existingUser = getUser(user.getEmail());

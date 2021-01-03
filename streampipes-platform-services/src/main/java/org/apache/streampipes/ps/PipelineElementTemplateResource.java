@@ -15,23 +15,37 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.ps;
 
-package org.apache.streampipes.rest.api;
-
-import org.apache.streampipes.config.backend.MessagingSettings;
-import org.apache.streampipes.config.model.PeConfig;
+import org.apache.streampipes.model.template.PipelineElementTemplate;
+import org.apache.streampipes.rest.shared.api.CRUDResource;
 
 import javax.ws.rs.core.Response;
 
-public interface IConsulConfig {
+public class PipelineElementTemplateResource implements CRUDResource<String, PipelineElementTemplate> {
 
-    Response getAllServiceConfigs();
+  @Override
+  public Response getAll() {
+    return null;
+  }
 
-    Response saveServiceConfig(PeConfig peConfig);
+  @Override
+  public Response getById(String s) {
+    return null;
+  }
 
-    Response deleteService(String serviceName);
+  @Override
+  public Response create(PipelineElementTemplate entity) {
+    return null;
+  }
 
-    Response getMessagingSettings();
+  @Override
+  public Response update(String s, PipelineElementTemplate entity) {
+    return null;
+  }
 
-    Response updateMessagingSettings(MessagingSettings messagingSettings);
+  @Override
+  public void delete(String s) {
+
+  }
 }

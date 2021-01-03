@@ -24,39 +24,28 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.manager.storage.UserManagementService;
+import org.apache.streampipes.model.client.user.*;
 import org.apache.streampipes.model.message.ErrorMessage;
 import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.message.SuccessMessage;
-import org.apache.streampipes.model.client.user.RegistrationData;
-import org.apache.streampipes.model.client.user.Role;
-import org.apache.streampipes.model.client.user.ShiroAuthenticationRequest;
-import org.apache.streampipes.model.client.user.ShiroAuthenticationResponse;
-import org.apache.streampipes.model.client.user.ShiroAuthenticationResponseFactory;
-import org.apache.streampipes.rest.api.IAuthentication;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.HashSet;
+import java.util.Set;
 
 @Path("/v2/admin")
-public class Authentication extends AbstractRestInterface implements IAuthentication {
+public class Authentication extends AbstractRestInterface {
 
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @GsonWithIds
   @POST
-  @Override
   @Path("/login")
   public Response doLogin(ShiroAuthenticationRequest token) {
     try {
@@ -71,7 +60,6 @@ public class Authentication extends AbstractRestInterface implements IAuthentica
   @Path("/logout")
   @GET
   @GsonWithIds
-  @Override
   public Response doLogout() {
     Subject subject = SecurityUtils.getSubject();
     subject.logout();
@@ -84,7 +72,6 @@ public class Authentication extends AbstractRestInterface implements IAuthentica
   @GsonWithIds
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
-  @Override
   public Response doRegister(RegistrationData data) {
 
     Set<Role> roles = new HashSet<>();
@@ -100,7 +87,6 @@ public class Authentication extends AbstractRestInterface implements IAuthentica
   @GET
   @GsonWithIds
   @Path("/authc")
-  @Override
   public Response userAuthenticated(@Context HttpServletRequest req) {
 
     if (BackendConfig.INSTANCE.isConfigured()) {

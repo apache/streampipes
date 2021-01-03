@@ -15,23 +15,22 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.serializers.json;
 
-package org.apache.streampipes.rest.api;
+import org.apache.streampipes.model.template.PipelineElementTemplate;
+import org.apache.streampipes.serializers.utils.PipelineElementTemplateHelpers;
+import org.junit.Test;
 
-import org.apache.streampipes.model.client.user.RegistrationData;
-import org.apache.streampipes.model.client.user.ShiroAuthenticationRequest;
+import static org.junit.Assert.assertEquals;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.Response;
+public class TestGsonSerializer {
+  @Test
+  public void testPipelineElementTemplateSerialization() {
+    PipelineElementTemplate template = PipelineElementTemplateHelpers.makePipelineElementTemplate();
 
-public interface IAuthentication {
-
-	Response doLogin(ShiroAuthenticationRequest token);
-
-	Response doLogout();
-	
-	Response doRegister(RegistrationData registrationData);
-
-	Response userAuthenticated(HttpServletRequest req);
-	
+    String json = GsonSerializer.getGsonWithIds().toJson(template);
+    PipelineElementTemplate template2 = GsonSerializer.getGsonWithIds().fromJson(json, PipelineElementTemplate.class);
+    PipelineElementTemplateHelpers.assertions(template2);
+    assertEquals(2.0, template2.getTemplateConfigs().get("test-key-2").getValue());
+  }
 }

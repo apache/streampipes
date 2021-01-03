@@ -23,7 +23,6 @@ import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.client.endpoint.RdfEndpointItem;
-import org.apache.streampipes.rest.api.IRdfEndpoint;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
 import org.apache.streampipes.storage.api.IRdfEndpointStorage;
 
@@ -35,12 +34,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Path("/v2/users/{username}/rdfendpoints")
-public class RdfEndpoint extends AbstractRestInterface implements IRdfEndpoint {
+public class RdfEndpoint extends AbstractRestInterface {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @GsonWithIds
-  @Override
   public Response getAllEndpoints() {
     //TODO: return the endpoint of passing services
     return ok(getEndpoints());
@@ -49,7 +47,6 @@ public class RdfEndpoint extends AbstractRestInterface implements IRdfEndpoint {
   @POST
   @Produces(MediaType.APPLICATION_JSON)
   @GsonWithIds
-  @Override
   public Response addRdfEndpoint(org.apache.streampipes.model.client.endpoint.RdfEndpoint rdfEndpoint) {
     getRdfEndpointStorage()
             .addRdfEndpoint(rdfEndpoint);
@@ -63,7 +60,6 @@ public class RdfEndpoint extends AbstractRestInterface implements IRdfEndpoint {
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @GsonWithIds
-  @Override
   public Response removeRdfEndpoint(@PathParam("rdfEndpointId") String rdfEndpointId) {
     getRdfEndpointStorage()
             .removeRdfEndpoint(rdfEndpointId);
@@ -75,7 +71,6 @@ public class RdfEndpoint extends AbstractRestInterface implements IRdfEndpoint {
   @Path("/items")
   @Produces(MediaType.APPLICATION_JSON)
   @GsonWithIds
-  @Override
   public Response getEndpointContents(@PathParam("username") String username) {
     List<org.apache.streampipes.model.client.endpoint.RdfEndpoint> endpoints = getEndpoints();
 
