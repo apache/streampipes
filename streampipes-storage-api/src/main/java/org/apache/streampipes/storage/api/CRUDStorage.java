@@ -15,19 +15,19 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.rest.shared.api;
+package org.apache.streampipes.storage.api;
 
-import javax.ws.rs.core.Response;
+import java.util.List;
 
-public interface CRUDResource<ID, T> {
+public interface CRUDStorage<ID, T> {
 
-    Response getAll();
+  List<T> getAll();
 
-    Response getById(ID id);
+  void createElement(T element);
 
-    Response create(T entity);
+  T getElementById(ID id);
 
-    Response update(ID id, T entity);
+  T updateElement(T element);
 
-    Response delete(ID id);
+  void deleteElement(T element);
 }

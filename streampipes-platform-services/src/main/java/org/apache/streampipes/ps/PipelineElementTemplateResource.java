@@ -17,35 +17,103 @@
  */
 package org.apache.streampipes.ps;
 
+import org.apache.streampipes.manager.template.DataProcessorTemplateHandler;
+import org.apache.streampipes.manager.template.DataSinkTemplateHandler;
+import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.template.PipelineElementTemplate;
-import org.apache.streampipes.rest.shared.api.CRUDResource;
+import org.apache.streampipes.rest.impl.AbstractRestInterface;
+import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import retrofit2.http.Query;
 
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-public class PipelineElementTemplateResource implements CRUDResource<String, PipelineElementTemplate> {
+@Path("/v2/users/{username}/pipeline-element-templates")
+public class PipelineElementTemplateResource extends AbstractRestInterface {
 
-  @Override
-  public Response getAll() {
-    return null;
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @JacksonSerialized
+  public Response getAll(@QueryParam("appId") String appId) {
+    if (appId != null) {
+      return ok(getPipelineElementTemplateStorage().getAll());
+    } else {
+      return ok(getPipelineElementTemplateStorage().getPipelineElementTemplatesforAppId(appId));
+    }
   }
 
-  @Override
-  public Response getById(String s) {
-    return null;
+  @GET
+  @Path("{id}")
+  @Produces(MediaType.APPLICATION_JSON)
+  @JacksonSerialized
+  public Response getById(@PathParam("id") String s) {
+    try {
+      return ok(getPipelineElementTemplateStorage().getElementById(s));
+    } catch (RuntimeException e) {
+      return badRequest();
+    }
   }
 
-  @Override
+  @GET
+  @Consumes(MediaType.APPLICATION_JSON)
+  @JacksonSerialized
   public Response create(PipelineElementTemplate entity) {
-    return null;
+    getPipelineElementTemplateStorage().createElement(entity);
+    return ok();
   }
 
-  @Override
-  public Response update(String s, PipelineElementTemplate entity) {
-    return null;
+  @PUT
+  @Path("{id}")
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  @JacksonSerialized
+  public Response update(@PathParam("id") String id, PipelineElementTemplate entity) {
+    try {
+      if (id.equals(entity.getCouchDbId())) {
+        return ok(getPipelineElementTemplateStorage().updateElement(entity));
+      } else {
+        return badRequest();
+      }
+    } catch (RuntimeException e) {
+      return badRequest();
+    }
   }
 
-  @Override
-  public void delete(String s) {
-
+  @DELETE
+  @Path("{id}")
+  public Response delete(@PathParam("id") String s) {
+    PipelineElementTemplate template = getPipelineElementTemplateStorage().getElementById(s);
+    getPipelineElementTemplateStorage().deleteElement(template);
+    return ok();
   }
+
+  @POST
+  @Path("{id}/sink")
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  @JacksonSerialized
+  public Response getPipelineElementForTemplate(@PathParam("id") String id,
+                                                @QueryParam("overwriteNames") boolean overwriteNameAndDescription,
+                                                DataSinkInvocation invocation) {
+    PipelineElementTemplate template = getPipelineElementTemplateStorage().getElementById(id);
+    return ok(new DataSinkTemplateHandler(template, invocation, overwriteNameAndDescription)
+            .applyTemplateOnPipelineElement());
+  }
+
+  @POST
+  @Path("{id}/sink")
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  @JacksonSerialized
+  public Response getPipelineElementForTemplate(@PathParam("id") String id,
+                                                @Query("overwriteNames") boolean overwriteNameAndDescription,
+                                                DataProcessorInvocation invocation) {
+    PipelineElementTemplate template = getPipelineElementTemplateStorage().getElementById(id);
+    return ok(new DataProcessorTemplateHandler(template, invocation, overwriteNameAndDescription)
+            .applyTemplateOnPipelineElement());
+  }
+
+
 }

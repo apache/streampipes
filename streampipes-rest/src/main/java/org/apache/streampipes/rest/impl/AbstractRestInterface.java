@@ -97,6 +97,10 @@ public abstract class AbstractRestInterface extends AbstractSharedRestInterface 
     return getNoSqlStorage().getDataLakeStorage();
   }
 
+  protected IPipelineElementTemplateStorage getPipelineElementTemplateStorage() {
+    return getNoSqlStorage().getPipelineElementTemplateStorage();
+  }
+
   protected INoSqlStorage getNoSqlStorage() {
     return StorageDispatcher.INSTANCE.getNoSqlStore();
   }

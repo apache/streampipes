@@ -23,12 +23,11 @@ import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
-import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import java.util.List;
 
 @RdfsClass(StreamPipes.DOMAIN_STATIC_PROPERTY)
 @Entity
@@ -78,6 +77,11 @@ public class DomainStaticProperty extends StaticProperty {
 
   public void setSupportedProperties(List<SupportedProperty> supportedProperties) {
     this.supportedProperties = supportedProperties;
+  }
+
+  @Override
+  public void accept(StaticPropertyVisitor visitor) {
+    visitor.visit(this);
   }
 
 }

@@ -15,19 +15,16 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.rest.shared.api;
+package org.apache.streampipes.manager.template;
 
-import javax.ws.rs.core.Response;
+import org.apache.streampipes.model.graph.DataSinkInvocation;
+import org.apache.streampipes.model.template.PipelineElementTemplate;
 
-public interface CRUDResource<ID, T> {
+public class DataSinkTemplateHandler extends PipelineElementTemplateHandler<DataSinkInvocation> {
 
-    Response getAll();
-
-    Response getById(ID id);
-
-    Response create(T entity);
-
-    Response update(ID id, T entity);
-
-    Response delete(ID id);
+  public DataSinkTemplateHandler(PipelineElementTemplate template,
+                                 DataSinkInvocation pipelineElement,
+                                 boolean overwriteNameAndDescription) {
+    super(template, pipelineElement, overwriteNameAndDescription);
+  }
 }

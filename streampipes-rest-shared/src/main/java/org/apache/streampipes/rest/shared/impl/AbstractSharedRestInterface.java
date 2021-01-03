@@ -43,6 +43,10 @@ public abstract class AbstractSharedRestInterface {
             .build();
   }
 
+  protected Response badRequest() {
+    return Response.status(400).build();
+  }
+
   protected Response ok() {
     return Response.ok().build();
   }

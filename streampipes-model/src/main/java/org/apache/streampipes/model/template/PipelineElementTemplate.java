@@ -17,12 +17,20 @@
  */
 package org.apache.streampipes.model.template;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
 import java.util.Map;
 
 @TsModel
 public class PipelineElementTemplate {
+
+  @JsonProperty("_id")
+  private @SerializedName("_id") String couchDbId;
+
+  @JsonProperty("_rev")
+  private @SerializedName("_rev") String couchDbRev;
 
   private String templateName;
   private String templateDescription;
@@ -71,6 +79,22 @@ public class PipelineElementTemplate {
 
   public void setBasePipelineElementAppId(String basePipelineElementAppId) {
     this.basePipelineElementAppId = basePipelineElementAppId;
+  }
+
+  public String getCouchDbId() {
+    return couchDbId;
+  }
+
+  public void setCouchDbId(String couchDbId) {
+    this.couchDbId = couchDbId;
+  }
+
+  public String getCouchDbRev() {
+    return couchDbRev;
+  }
+
+  public void setCouchDbRev(String couchDbRev) {
+    this.couchDbRev = couchDbRev;
   }
 }
 

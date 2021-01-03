@@ -15,19 +15,13 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.rest.shared.api;
+package org.apache.streampipes.storage.api;
 
-import javax.ws.rs.core.Response;
+import org.apache.streampipes.model.template.PipelineElementTemplate;
 
-public interface CRUDResource<ID, T> {
+import java.util.List;
 
-    Response getAll();
+public interface IPipelineElementTemplateStorage extends CRUDStorage<String, PipelineElementTemplate> {
 
-    Response getById(ID id);
-
-    Response create(T entity);
-
-    Response update(ID id, T entity);
-
-    Response delete(ID id);
+  List<PipelineElementTemplate> getPipelineElementTemplatesforAppId(String appId);
 }
