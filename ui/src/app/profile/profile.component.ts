@@ -16,18 +16,22 @@
  *
  */
 
+import {Component, OnInit} from "@angular/core";
 
-::ng-deep .cdk-overlay-pane .feedback-menu-content{
-  min-width:500px;
-}
+@Component({
+  selector: 'profile',
+  templateUrl: './profile.component.html',
+  styleUrls: ['./profile.component.scss']
+})
+export class ProfileComponent implements OnInit {
 
-.current-user {
-  display: block;
-  line-height: 48px;
-  height: 48px;
-  padding: 0 16px;
-  text-align: left;
-  text-decoration: none;
-  max-width: 100%;
-  position: relative;
+  selectedIndex: number = 0;
+
+  ngOnInit(): void {
+  }
+
+  selectedIndexChange(index: number) {
+    this.selectedIndex = index;
+  }
+
 }

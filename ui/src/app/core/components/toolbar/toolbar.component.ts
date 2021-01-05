@@ -35,6 +35,7 @@ export class ToolbarComponent extends BaseNavigationComponent implements OnInit 
   @ViewChild('accountMenuOpen') accountMenuOpen: MatMenuTrigger;
 
   versionInfo: VersionInfo;
+  userEmail;
 
   constructor(Router: Router,
               private RestApi: RestApi,
@@ -43,8 +44,9 @@ export class ToolbarComponent extends BaseNavigationComponent implements OnInit 
   }
 
   ngOnInit(): void {
+    this.userEmail = this.AuthStatusService.email;
     super.onInit();
-    this.getVersion()
+    this.getVersion();
   }
 
   closeFeedbackWindow() {
@@ -59,6 +61,11 @@ export class ToolbarComponent extends BaseNavigationComponent implements OnInit 
   openInfo() {
     this.Router.navigate(["info"]);
     this.activePage = "Info";
+  }
+
+  openProfile() {
+    this.Router.navigate(["profile"]);
+    this.activePage = "Profile";
   }
 
   logout() {

@@ -16,18 +16,60 @@
  *
  */
 
-
-::ng-deep .cdk-overlay-pane .feedback-menu-content{
-  min-width:500px;
+.settings-title {
+  font-weight: bold;
+  font-size: 16pt;
 }
 
-.current-user {
-  display: block;
-  line-height: 48px;
-  height: 48px;
-  padding: 0 16px;
-  text-align: left;
-  text-decoration: none;
-  max-width: 100%;
-  position: relative;
+.settings-description {
+  font-size: 12pt;
+}
+
+.profile-section {
+  border-right: 2px solid gray;
+  margin-right: 15px;
+}
+
+.title-section {
+  width: 300px;
+}
+
+.subsection-title {
+  font-size: 12pt;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.subsection {
+  margin-bottom: 15px;
+}
+
+.mt-10 {
+  margin-top: 10px;
+}
+
+.divider {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.new-token {
+
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.token-name {
+  margin-right: 10px;
+  font-weight: bold;
+  padding: 10px;
+}
+
+.displayed-token {
+  background: #f6f6f6;
+  border: 1px solid #cccccc;
+  padding: 10px;
+  color: black;
+  margin-left: 10px;
+  margin-right: 10px;
 }

@@ -31,6 +31,7 @@ import {AlreadyConfiguredCanActivateGuard} from "./_guards/already-configured.ca
 import {LoggedInCanActivateGuard} from "./_guards/logged-in.can-activate.guard";
 import {InfoComponent} from "./info/info.component";
 import {NotificationsComponent} from "./notifications/notifications.component";
+import {ProfileComponent} from "./profile/profile.component";
 
 {{#modulesActive}}
 {{#ng5}}
@@ -53,7 +54,8 @@ const routes: Routes = [
       {{/modulesActive}}
       { path: 'notifications', component: NotificationsComponent },
       { path: 'info', component: InfoComponent },
-      { path: 'pipeline-details', component: PipelineDetailsComponent }
+      { path: 'pipeline-details', component: PipelineDetailsComponent },
+      { path: 'profile', component: ProfileComponent},
     ], canActivateChild: [AuthCanActivateChildrenGuard] }
 ];
 

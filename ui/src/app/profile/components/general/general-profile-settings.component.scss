@@ -16,18 +16,20 @@
  *
  */
 
-
-::ng-deep .cdk-overlay-pane .feedback-menu-content{
-  min-width:500px;
+.settings-title {
+  font-weight: bold;
+  font-size: 16pt;
 }
 
-.current-user {
-  display: block;
-  line-height: 48px;
-  height: 48px;
-  padding: 0 16px;
-  text-align: left;
-  text-decoration: none;
-  max-width: 100%;
-  position: relative;
+.settings-description {
+  font-size: 12pt;
+}
+
+.profile-section {
+  border-right: 2px solid gray;
+  margin-right: 15px;
+}
+
+.title-section {
+  width: 300px;
 }

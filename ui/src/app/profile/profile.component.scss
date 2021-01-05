@@ -16,18 +16,6 @@
  *
  */
 
-
-::ng-deep .cdk-overlay-pane .feedback-menu-content{
-  min-width:500px;
-}
-
-.current-user {
-  display: block;
-  line-height: 48px;
-  height: 48px;
-  padding: 0 16px;
-  text-align: left;
-  text-decoration: none;
-  max-width: 100%;
-  position: relative;
+.page-container-padding-inner {
+  padding: 10px;
 }

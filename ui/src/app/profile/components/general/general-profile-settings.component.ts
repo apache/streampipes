@@ -16,18 +16,27 @@
  *
  */
 
+import {Component, OnInit} from "@angular/core";
+import {ProfileService} from "../../profile.service";
+import {User} from "../../../core-model/gen/streampipes-model-client";
+import {BasicProfileSettings} from "../basic-profile-settings";
 
-::ng-deep .cdk-overlay-pane .feedback-menu-content{
-  min-width:500px;
-}
+@Component({
+  selector: 'general-profile-settings',
+  templateUrl: './general-profile-settings.component.html',
+  styleUrls: ['./general-profile-settings.component.scss']
+})
+export class GeneralProfileSettingsComponent extends BasicProfileSettings implements OnInit {
 
-.current-user {
-  display: block;
-  line-height: 48px;
-  height: 48px;
-  padding: 0 16px;
-  text-align: left;
-  text-decoration: none;
-  max-width: 100%;
-  position: relative;
+  constructor(profileService: ProfileService) {
+    super(profileService);
+  }
+
+  ngOnInit(): void {
+    this.receiveUserData();
+  }
+
+  onUserDataReceived() {
+  }
+
 }
