@@ -21,4 +21,6 @@ import javax.ws.rs.core.Response;
 public interface IMeasurementUnitResource {
 
   Response getMeasurementUnitInfo(String measurementResourceUri);
+
+  Response getAllMeasurementUnits();
 }

@@ -19,7 +19,7 @@ package org.apache.streampipes.node.controller.container;
 
 import org.apache.streampipes.container.util.ConsulUtil;
 import org.apache.streampipes.node.controller.container.management.orchestrator.docker.DockerContainerManager;
-import org.apache.streampipes.node.controller.container.rest.NodeControllerResourceConfig;
+import org.apache.streampipes.node.controller.container.api.NodeControllerResourceConfig;
 import org.apache.streampipes.node.controller.container.config.NodeControllerConfig;
 import org.apache.streampipes.node.controller.container.management.node.NodeManager;
 import org.apache.streampipes.node.controller.container.management.janitor.JanitorManager;

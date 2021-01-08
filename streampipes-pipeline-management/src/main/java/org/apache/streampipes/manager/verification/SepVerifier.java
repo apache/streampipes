@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.manager.verification;
 
-import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.manager.assets.AssetManager;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.graph.DataSourceDescription;
@@ -27,10 +26,8 @@ import java.io.IOException;
 
 public class SepVerifier extends ElementVerifier<DataSourceDescription> {
 
-  public SepVerifier(String graphData)
-          throws SepaParseException {
+  public SepVerifier(String graphData) {
     super(graphData, DataSourceDescription.class);
-    // TODO Auto-generated constructor stub
   }
 
   @Override

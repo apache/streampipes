@@ -18,13 +18,7 @@
 
 package org.apache.streampipes.container.init;
 
-import org.eclipse.rdf4j.model.vocabulary.RDFS;
-import org.apache.streampipes.container.declarer.DataStreamDeclarer;
-import org.apache.streampipes.container.declarer.Declarer;
-import org.apache.streampipes.container.declarer.PipelineTemplateDeclarer;
-import org.apache.streampipes.container.declarer.SemanticEventConsumerDeclarer;
-import org.apache.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
-import org.apache.streampipes.container.declarer.SemanticEventProducerDeclarer;
+import org.apache.streampipes.container.declarer.*;
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
 import org.apache.streampipes.dataformat.SpDataFormatManager;
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
@@ -35,11 +29,7 @@ import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
 import java.net.URI;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class DeclarersSingleton {
@@ -127,7 +117,7 @@ public class DeclarersSingleton {
             .getRdfType()
             .stream()
             .map(URI::toString)
-            .filter(t -> !t.equals(RDFS.RESOURCE.stringValue()))
+            .filter(t -> !t.equals("http://www.w3.org/2000/01/rdf-schema#"))
             .filter(t -> !t.equals(StreamPipes.TRANSPORT_FORMAT))
             .findFirst()
             .get();

@@ -26,16 +26,12 @@ public class Util {
 
     private static final String Slash = "/";
 
-    public static String getInstanceId(String url, String type, String elemntId) {
+    public static String getInstanceId(String url, String type, String elementId) {
         return url.replace(DeclarersSingleton.getInstance().getBaseUri()
                 + type
                 + Slash
-                + elemntId
+                + elementId
                 + Slash, "");
-    }
-
-    public static String toResponseString(String elementId, boolean success) {
-        return toResponseString(elementId, success, "");
     }
 
     public static Response fromResponseString(String s) {
@@ -48,14 +44,5 @@ public class Util {
             return result;
         }
 
-    }
-
-    public static String toResponseString(String elementId, boolean success, String optionalMessage) {
-        return new Response(elementId, success, optionalMessage).toString();
-    }
-
-    public static String toResponseString(Response response) {
-        Gson gson = new Gson();
-        return gson.toJson(response);
     }
 }

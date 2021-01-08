@@ -39,7 +39,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 public class ConnectManager {
-
     private static final Logger LOG =
             LoggerFactory.getLogger(ConnectManager.class.getCanonicalName());
 

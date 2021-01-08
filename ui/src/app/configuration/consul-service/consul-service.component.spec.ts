@@ -16,7 +16,7 @@
  *
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import {CommonModule} from '@angular/common';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {ConsulServiceComponent} from './consul-service.component';
@@ -38,7 +38,7 @@ describe('ConsulServiceComponent', () => {
     let fixture: ComponentFixture<TestComponentWrapper>;
     let consulServiceComponent: ConsulServiceComponent;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 CommonModule,
@@ -62,34 +62,34 @@ describe('ConsulServiceComponent', () => {
         consulServiceComponent = fixture.debugElement.children[0].componentInstance;
     }));
 
-    it('should create the component', async(() => {
+    it('should create the component', waitForAsync(() => {
         expect(consulServiceComponent).toBeTruthy();
     }));
-    it('should set header to test1', async(() => {
+    it('should set header to test1', waitForAsync(() => {
         expect(fixture.nativeElement.querySelector('h4').innerText).toBe('test1');
     }));
-    it('should set icon to passing', async(() => {
+    it('should set icon to passing', waitForAsync(() => {
         expect(fixture.nativeElement.querySelector('mat-icon').classList).toContain('service-icon-passing');
     }));
-    it('should not show form before toggled', async(() => {
+    it('should not show form before toggled', waitForAsync(() => {
         expect(fixture.nativeElement.querySelector('form')).toBeFalsy();
     }));
-    it('should show form after toggled', async(() => {
+    it('should show form after toggled', waitForAsync(() => {
         consulServiceComponent.toggleConfiguration();
         fixture.detectChanges();
         expect(fixture.nativeElement.querySelector('form')).toBeTruthy();
     }));
-    it('should set type of first input to number', async(() => {
+    it('should set type of first input to number', waitForAsync(() => {
         consulServiceComponent.toggleConfiguration();
         fixture.detectChanges();
         expect(fixture.nativeElement.querySelectorAll('input')[0].type).toBe('number');
     }));
-    it('should set type of second input to text', async(() => {
+    it('should set type of second input to text', waitForAsync(() => {
         consulServiceComponent.toggleConfiguration();
         fixture.detectChanges();
         expect(fixture.nativeElement.querySelectorAll('input')[1].type).toBe('text');
     }));
-    it('should set type of third input to checkbox', async(() => {
+    it('should set type of third input to checkbox', waitForAsync(() => {
         consulServiceComponent.toggleConfiguration();
         fixture.detectChanges();
         expect(fixture.nativeElement.querySelectorAll('input')[2].type).toBe('checkbox');

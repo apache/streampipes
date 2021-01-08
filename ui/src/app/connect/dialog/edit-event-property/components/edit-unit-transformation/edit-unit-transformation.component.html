@@ -21,7 +21,7 @@
         <mat-form-field *ngIf="!hadMeasurementUnit" class="example-full-width" style="width: 155px">
             <input matInput placeholder="Unit" [matAutocomplete]="auto" [formControl]="stateCtrl"
                    [attr.disabled]="transformUnitEnable ? '' : null">
-            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" [panelWidth]="'300px'">
                 <mat-option *ngFor="let unit of filteredUnits | async" [value]="unit.label">
                     {{unit.label}}
                 </mat-option>

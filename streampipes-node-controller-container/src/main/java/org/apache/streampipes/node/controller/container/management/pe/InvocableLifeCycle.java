@@ -26,7 +26,7 @@ public interface InvocableLifeCycle {
 
     Response invoke(String endpoint, String payload);
 
-    String detach(String runningInstanceId);
+    Response detach(String runningInstanceId);
 
     void unregister();
 

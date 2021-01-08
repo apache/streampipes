@@ -18,20 +18,19 @@
 
 package org.apache.streampipes.manager.endpoint;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.message.BasicHeader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.streampipes.model.client.endpoint.RdfEndpoint;
 import org.apache.streampipes.model.client.endpoint.RdfEndpointItem;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.ws.rs.core.MediaType;
 
 public class EndpointItemFetcher {
     Logger logger = LoggerFactory.getLogger(EndpointItemFetcher.class);
@@ -52,11 +51,12 @@ public class EndpointItemFetcher {
         try {
             String result = Request.Get(e.getEndpointUrl())
                     .addHeader(new BasicHeader("Accept", MediaType.APPLICATION_JSON))
+                    .connectTimeout(1000)
                     .execute()
                     .returnContent()
                     .asString();
 
-            return new Gson().fromJson(result, new TypeToken<List<RdfEndpointItem>>(){}.getType());
+            return JacksonSerializer.getObjectMapper().readValue(result, new TypeReference<List<RdfEndpointItem>>() {});
         } catch (IOException e1) {
             logger.warn("Processing Element Descriptions could not be fetched from RDF endpoint: " + e.getEndpointUrl());
             return new ArrayList<>();

@@ -17,14 +17,12 @@
  */
 package org.apache.streampipes.node.controller.container.management.pe;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.google.gson.Gson;
-import org.apache.http.client.ClientProtocolException;
+import com.google.gson.JsonSyntaxException;
 import org.apache.http.client.fluent.Request;
-import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.streampipes.container.model.node.InvocableRegistration;
+import org.apache.streampipes.model.Response;
 import org.apache.streampipes.node.controller.container.config.NodeControllerConfig;
 import org.apache.streampipes.node.controller.container.management.node.NodeManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
@@ -98,18 +96,15 @@ public class InvocableElementManager implements InvocableLifeCycle {
     }
 
     @Override
-    public org.apache.streampipes.model.Response invoke(String endpoint, String payload) {
+    public Response invoke(String endpoint, String payload) {
         LOG.info("Invoke pipeline element: {}", endpoint);
         try {
-            Response httpResp = Request
+            org.apache.http.client.fluent.Response httpResp = Request
                     .Post(endpoint)
                     .bodyString(payload, ContentType.APPLICATION_JSON)
                     .connectTimeout(CONNECT_TIMEOUT)
                     .execute();
-
-            return new Gson().fromJson(httpResp.returnContent().asString(),
-                    org.apache.streampipes.model.Response.class);
-
+            return handleResponse(httpResp);
         } catch (Exception e) {
             LOG.error(e.getMessage());
         }
@@ -117,19 +112,14 @@ public class InvocableElementManager implements InvocableLifeCycle {
     }
 
     @Override
-    public String detach(String endpoint) {
+    public Response detach(String endpoint) {
         LOG.info("Detach pipeline element: {}", endpoint);
         try {
-            Response httpResp = Request
+            org.apache.http.client.fluent.Response httpResp = Request
                     .Delete(endpoint)
                     .connectTimeout(CONNECT_TIMEOUT)
                     .execute();
-
-            String resp = httpResp.returnContent().asString();
-            org.apache.streampipes.model.Response streamPipesResp = new Gson().fromJson(resp,
-                    org.apache.streampipes.model.Response.class);
-
-            return streamPipesResp.toString();
+            return handleResponse(httpResp);
         } catch (Exception e) {
             LOG.error(e.getMessage());
         }
@@ -165,6 +155,14 @@ public class InvocableElementManager implements InvocableLifeCycle {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private Response handleResponse(org.apache.http.client.fluent.Response httpResp) throws JsonSyntaxException,
+            IOException {
+        String resp = httpResp.returnContent().asString();
+        return JacksonSerializer
+                .getObjectMapper()
+                .readValue(resp, Response.class);
     }
 
     private String makeConsulRegistrationEndpoint() {

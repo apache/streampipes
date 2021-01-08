@@ -18,72 +18,65 @@
 
 package org.apache.streampipes.manager.verification.extractor;
 
-import org.eclipse.rdf4j.model.Model;
-import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.manager.verification.ElementVerifier;
 import org.apache.streampipes.manager.verification.SecVerifier;
 import org.apache.streampipes.manager.verification.SepVerifier;
 import org.apache.streampipes.manager.verification.SepaVerifier;
-import org.apache.streampipes.vocabulary.StreamPipes;
+import org.apache.streampipes.model.graph.DataProcessorDescription;
+import org.apache.streampipes.model.graph.DataSinkDescription;
+import org.apache.streampipes.model.graph.DataSourceDescription;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 public class TypeExtractor {
 
 	private static final Logger logger = Logger.getAnonymousLogger();
 
-	private String graphData;
+	private String pipelineElementDescription;
 	
-	public TypeExtractor(String graphData)
-	{
-		this.graphData = graphData;
+	public TypeExtractor(String pipelineElementDescription) {
+		this.pipelineElementDescription = pipelineElementDescription;
+
 	}
 	
-	public ElementVerifier<?> getTypeVerifier() throws SepaParseException
-	{
-		List<Statement> typeDefinitions = getModel().stream().filter(stmt -> stmt.getPredicate().equals(RDF.TYPE)).collect(Collectors.toList());
-		typeDefinitions.forEach(typeDef -> typeDef.getObject());
-		return getTypeDef(typeDefinitions.stream().filter(stmt -> 
-			((stmt.getObject().toString().equals(ec())) || 
-			(stmt.getObject().toString().equals(epa())) ||
-			(stmt.getObject().toString().equals(ep())))).findFirst());
+	public ElementVerifier<?> getTypeVerifier() throws SepaParseException {
+		try {
+			ObjectNode jsonNode = JacksonSerializer.getObjectMapper().readValue(this.pipelineElementDescription, ObjectNode.class);
+			String jsonClassName = jsonNode.get("@class").asText();
+			return getTypeDef(jsonClassName);
+		} catch (JsonProcessingException e) {
+			throw new SepaParseException();
+		}
 	}
 
-	private ElementVerifier<?> getTypeDef(Optional<Statement> typeStatement) throws SepaParseException {
-		if (!typeStatement.isPresent()) throw new SepaParseException();
-		else 
-		{
-			Statement stmt = typeStatement.get();
-			if (stmt.getObject().toString().equals(ep())) { logger.info("Detected type sep"); return new SepVerifier(graphData); }
-			else if (stmt.getObject().toString().equals(epa())) { logger.info("Detected type sepa"); return new SepaVerifier(graphData); }
-			else if (stmt.getObject().toString().equals(ec())) { logger.info("Detected type sec"); return new SecVerifier(graphData); }
+	private ElementVerifier<?> getTypeDef(String jsonClassName) throws SepaParseException {
+		if (jsonClassName == null) {
+			throw new SepaParseException();
+		} else {
+			if (jsonClassName.equals(ep())) { logger.info("Detected type sep"); return new SepVerifier(pipelineElementDescription); }
+			else if (jsonClassName.equals(epa())) { logger.info("Detected type sepa"); return new SepaVerifier(pipelineElementDescription); }
+			else if (jsonClassName.equals(ec())) { logger.info("Detected type sec"); return new SecVerifier(pipelineElementDescription); }
 			else throw new SepaParseException();
 		}
 	}
 	
-	private Model getModel() throws SepaParseException
-	{
-		return StatementBuilder.extractStatements(graphData);
-	}
-	
 	private static final String ep()
 	{
-		return StreamPipes.DATA_SOURCE_DESCRIPTION;
+		return DataSourceDescription.class.getCanonicalName();
 	}
 	
 	private static final String epa()
 	{
-		return StreamPipes.DATA_PROCESSOR_DESCRIPTION;
+		return DataProcessorDescription.class.getCanonicalName();
 	}
 	
 	private static final String ec()
 	{
-		return StreamPipes.DATA_SINK_DESCRIPTION;
+		return DataSinkDescription.class.getCanonicalName();
 	}
 	
 }

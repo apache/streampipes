@@ -24,9 +24,10 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 
 public class InvocableEntityUrlGenerator extends EndpointUrlGenerator<InvocableStreamPipesEntity> {
 
+    private static final String DATA_PROCESSOR_PREFIX = "sepa";
+    private static final String DATA_SINK_PREFIX = "sec";
     private static final String DEFAULT_TARGET_NODE_ID = "default";
-    private static final String INVOKE_ROUTE = "api/v2/node/container/invoke";
-    private static final String DETACH_ROUTE = "api/v2/node/container/detach";
+    private static final String ELEMENT_ROUTE = "api/v2/node/element";
 
     public InvocableEntityUrlGenerator(InvocableStreamPipesEntity graph) {
         super(graph);
@@ -39,7 +40,7 @@ public class InvocableEntityUrlGenerator extends EndpointUrlGenerator<InvocableS
             return getDefaultEndpoint();
         } else {
             // edge deployments to secondary pipeline element
-            return getDeploymentTargetEndpoint(INVOKE_ROUTE);
+            return getDeploymentTargetEndpoint(ELEMENT_ROUTE);
         }
     }
 
@@ -50,7 +51,7 @@ public class InvocableEntityUrlGenerator extends EndpointUrlGenerator<InvocableS
             return getDefaultEndpoint() + SLASH + graph.getDeploymentRunningInstanceId();
         } else {
             // detach edge deployments to secondary pipeline element
-            return getDeploymentTargetEndpoint(DETACH_ROUTE) + SLASH + graph.getDeploymentRunningInstanceId();
+            return getDeploymentTargetEndpoint(ELEMENT_ROUTE) + SLASH + graph.getDeploymentRunningInstanceId();
         }
     }
 
@@ -99,7 +100,7 @@ public class InvocableEntityUrlGenerator extends EndpointUrlGenerator<InvocableS
     }
 
     private String getIdentifier() {
-        return graph instanceof DataProcessorInvocation ? "sepa" : "sec";
+        return graph instanceof DataProcessorInvocation ? DATA_PROCESSOR_PREFIX : DATA_SINK_PREFIX;
     }
 
 }

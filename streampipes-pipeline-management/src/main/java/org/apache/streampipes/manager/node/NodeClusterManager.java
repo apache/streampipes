@@ -65,7 +65,7 @@ public enum NodeClusterManager {
     }
 
     private String makeNodeControllerEndpoint(NodeInfoDescription desc) {
-        return "http://" + desc.getHostname() + ":" + desc.getPort() + "/api/v2/node/update";
+        return "http://" + desc.getHostname() + ":" + desc.getPort() + "/api/v2/node/info";
     }
 
     private boolean put(String url, String body) {

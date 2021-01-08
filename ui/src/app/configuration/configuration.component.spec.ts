@@ -16,7 +16,7 @@
  *
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import {ConfigurationComponent} from './configuration.component';
 import {CommonModule} from '@angular/common';
 import {FlexLayoutModule} from '@angular/flex-layout';
@@ -29,7 +29,7 @@ describe('ConfigurationComponent', () => {
     let fixture: ComponentFixture<ConfigurationComponent>;
     let configurationComponent: ConfigurationComponent;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 CommonModule,
@@ -50,11 +50,11 @@ describe('ConfigurationComponent', () => {
         configurationComponent = fixture.componentInstance;
     }));
 
-    it('should create the component', async(() => {
+    it('should create the component', waitForAsync(() => {
         expect(configurationComponent).toBeTruthy();
     }));
 
-    it('should get two ConsulServices from service', async(() => {
+    it('should get two ConsulServices from service', waitForAsync(() => {
         expect(configurationComponent.consulServices.length).toBe(2);
     }));
 

@@ -21,8 +21,10 @@ import org.apache.shiro.web.env.EnvironmentLoaderListener;
 import org.apache.shiro.web.servlet.OncePerRequestFilter;
 import org.apache.shiro.web.servlet.ShiroFilter;
 import org.apache.streampipes.manager.operations.Operations;
+import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.rest.notifications.NotificationListener;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -33,13 +35,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.servlet.ServletContextListener;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Configuration
 @EnableAutoConfiguration
-@Import({ StreamPipesResourceConfig.class, WelcomePageController.class })
+@Import({StreamPipesResourceConfig.class, WelcomePageController.class})
 public class StreamPipesBackendApplication {
 
   private static final Logger LOG = LoggerFactory.getLogger(StreamPipesBackendApplication.class.getCanonicalName());
@@ -49,9 +55,26 @@ public class StreamPipesBackendApplication {
     SpringApplication.run(StreamPipesBackendApplication.class, args);
   }
 
+  @PostConstruct
+  public void init() {
+    ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+
+    executorService.schedule(this::startAllPreviouslyStoppedPipelines, 5, TimeUnit.SECONDS);
+  }
+
   @PreDestroy
   public void onExit() {
-   LOG.info("Shutting down StreamPipes...");
+    LOG.info("Shutting down StreamPipes...");
+    LOG.info("Flagging currently running pipelines for restart...");
+    getAllPipelines()
+            .stream()
+            .filter(Pipeline::isRunning)
+            .forEach(pipeline -> {
+              pipeline.setRestartOnSystemReboot(true);
+              StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updatePipeline(pipeline);
+            });
+
+    LOG.info("Gracefully stopping all running pipelines...");
     List<PipelineOperationStatus> status = Operations.stopAllPipelines();
     status.forEach(s -> {
       if (s.isSuccess()) {
@@ -60,6 +83,33 @@ public class StreamPipesBackendApplication {
         LOG.error("Pipeline {} could not be stopped", s.getPipelineName());
       }
     });
+
+    LOG.info("Thanks for using Apache StreamPipes - see you next time!");
+  }
+
+  private void startAllPreviouslyStoppedPipelines() {
+    LOG.info("Checking for pipelines to be started...");
+
+    getAllPipelines()
+            .stream()
+            .filter(Pipeline::isRestartOnSystemReboot)
+            .forEach(pipeline -> {
+              PipelineOperationStatus status = Operations.startPipeline(pipeline);
+              if (status.isSuccess()) {
+                LOG.info("Pipeline {} successfully restarted", status.getPipelineName());
+              } else {
+                LOG.error("Pipeline {} could not be restarted - are all pipeline element containers running?", status.getPipelineName());
+              }
+              pipeline.setRestartOnSystemReboot(false);
+              StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updatePipeline(pipeline);
+            });
+  }
+
+  private List<Pipeline> getAllPipelines() {
+    return StorageDispatcher.INSTANCE
+            .getNoSqlStore()
+            .getPipelineStorageAPI()
+            .getAllPipelines();
   }
 
   @Bean

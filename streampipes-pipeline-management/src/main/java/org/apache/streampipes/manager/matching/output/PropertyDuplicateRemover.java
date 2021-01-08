@@ -18,12 +18,10 @@
 
 package org.apache.streampipes.manager.matching.output;
 
-import io.fogsy.empire.core.empire.SupportsRdfId;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyNested;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +46,7 @@ public class PropertyDuplicateRemover {
         if (newProperty instanceof EventPropertyPrimitive) {
           EventPropertyPrimitive primitive = (EventPropertyPrimitive) newProperty;
           newProperty = new EventPropertyPrimitive(primitive.getRuntimeType(), primitive.getRuntimeName() + i, "", primitive.getDomainProperties());
-          newProperty.setRdfId(new SupportsRdfId.URIKey(URI.create(primitive.getElementId() + i)));
+          newProperty.setElementId(primitive.getElementId() + i);
         }
         if (newProperty instanceof EventPropertyNested) {
           EventPropertyNested nested = (EventPropertyNested) newProperty;
@@ -61,7 +59,7 @@ public class PropertyDuplicateRemover {
               EventPropertyPrimitive thisPrimitive = (EventPropertyPrimitive) np;
               EventProperty newNested = new EventPropertyPrimitive(thisPrimitive.getRuntimeType(), thisPrimitive.getRuntimeName(), "", thisPrimitive.getDomainProperties());
               //newNested.setRdfId(new URIKey(URI.create("urn:fzi.de:sepa:" +UUID.randomUUID().toString())));
-              newNested.setRdfId(new SupportsRdfId.URIKey(URI.create(thisPrimitive.getElementId())));
+              newNested.setElementId(thisPrimitive.getElementId());
               nestedProperties.add(newNested);
             }
 
@@ -69,7 +67,7 @@ public class PropertyDuplicateRemover {
           newProperty = new EventPropertyNested(nested.getRuntimeName() + i, nestedProperties);
           //newProperty = new EventPropertyNested(nested.getPropertyName() +i, nested.getEventProperties());
           //newProperty.setRdfId(new URIKey(URI.create("urn:fzi.de:sepa:" +UUID.randomUUID().toString())));
-          newProperty.setRdfId(new SupportsRdfId.URIKey(URI.create(nested.getElementId() + i)));
+          newProperty.setElementId(nested.getElementId() + i);
         }
         i++;
       }

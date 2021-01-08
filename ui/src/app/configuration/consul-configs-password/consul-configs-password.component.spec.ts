@@ -17,7 +17,7 @@
  */
 
 import {DebugElement} from '@angular/core';
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {ConsulConfigsPasswordComponent} from './consul-configs-password.component';
 import {ConfigurationService} from '../shared/configuration.service'
@@ -46,7 +46,7 @@ describe('ConsulConfigsPasswordComponent', () =>{
     
     let configurationServcie: ConfigurationService;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         
         configurationServiceStub = {
              
@@ -89,15 +89,15 @@ describe('ConsulConfigsPasswordComponent', () =>{
 
     }));
 
-    it(`should create`, async(() => {
+    it(`should create`, waitForAsync(() => {
           expect(component).toBeTruthy();
       }));
     
-      it('should show pw', async(() => {
+      it('should show pw', waitForAsync(() => {
           expect(component.password).toBe("*****");
       }));
 
-      it(`should click button`, async(() => {
+      it(`should click button`, waitForAsync(() => {
             spyOn(component, 'changePw');
 
             let input = fixture.debugElement.nativeElement.querySelector('input');

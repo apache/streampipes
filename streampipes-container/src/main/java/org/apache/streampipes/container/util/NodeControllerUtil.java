@@ -39,7 +39,7 @@ public class NodeControllerUtil {
     private static final String HEALTH_CHECK_INTERVAL = "10s";
     private static final String PE_TAG = "pe";
     private static final String SECONDARY_PE_IDENTIFIER_TAG = "secondary";
-    private static final String NODE_CONTROLLER_REGISTER_SVC_URL = "api/v2/node/container/register";
+    private static final String NODE_CONTROLLER_REGISTER_SVC_URL = "api/v2/node/element/register";
 
     private static final String NODE_CONTROLLER_CONTAINER_HOST = "SP_NODE_CONTROLLER_CONTAINER_HOST";
     private static final String NODE_CONTROLLER_CONTAINER_PORT = "SP_NODE_CONTROLLER_CONTAINER_PORT";
