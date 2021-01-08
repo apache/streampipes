@@ -127,7 +127,7 @@
                         <annotation>org.apache.streampipes.model.shared.annotation.TsIgnore</annotation>
                     </excludePropertyAnnotations>
                     <excludeClasses>
-                        <class>io.fogsy.empire.core.empire.SupportsRdfId</class>
+                        <class>io.fogsy.empire.api.SupportsRdfId</class>
                         <class>java.io.Serializable</class>
                     </excludeClasses>
                     <customTypeMappings>
