@@ -17,11 +17,13 @@
  */
 package org.apache.streampipes.model.node;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 import io.fogsy.empire.annotations.RdfProperty;
 import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.node.container.DeploymentContainer;
-import org.apache.streampipes.model.node.meta.StaticNodeMedata;
+import org.apache.streampipes.model.node.meta.StaticNodeMetadata;
 import org.apache.streampipes.model.node.resources.NodeResource;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.vocabulary.StreamPipes;
@@ -33,6 +35,15 @@ import java.util.List;
 @Entity
 @TsModel
 public class NodeInfoDescription extends UnnamedStreamPipesEntity {
+
+    @JsonProperty("_id")
+    private @SerializedName("_id") String id;
+
+    @JsonProperty("_rev")
+    private @SerializedName("_rev") String rev;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private boolean active;
 
     @RdfProperty(StreamPipes.DEPLOYMENT_TARGET_NODE_ID)
     private String nodeControllerId;
@@ -51,7 +62,7 @@ public class NodeInfoDescription extends UnnamedStreamPipesEntity {
     @OneToOne(fetch = FetchType.EAGER,
             cascade = {CascadeType.ALL})
     @RdfProperty(StreamPipes.HAS_STATIC_NODE_METADATA)
-    private StaticNodeMedata staticNodeMedata;
+    private StaticNodeMetadata staticNodeMetadata;
 
     @OneToOne(fetch = FetchType.EAGER,
             cascade = {CascadeType.ALL})
@@ -75,6 +86,30 @@ public class NodeInfoDescription extends UnnamedStreamPipesEntity {
         this.nodeControllerId = elementId;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getRev() {
+        return rev;
+    }
+
+    public void setRev(String rev) {
+        this.rev = rev;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     public NodeBrokerDescription getNodeBroker() {
         return nodeBroker;
     }
@@ -83,19 +118,19 @@ public class NodeInfoDescription extends UnnamedStreamPipesEntity {
         this.nodeBroker = nodeBroker;
     }
 
-    public StaticNodeMedata getStaticNodeMedata() {
-        return staticNodeMedata;
+    public StaticNodeMetadata getStaticNodeMetadata() {
+        return staticNodeMetadata;
     }
 
-    public void setStaticNodeMedata(StaticNodeMedata staticNodeMedata) {
-        this.staticNodeMedata = staticNodeMedata;
+    public void setStaticNodeMetadata(StaticNodeMetadata staticNodeMetadata) {
+        this.staticNodeMetadata = staticNodeMetadata;
     }
 
-    public NodeResource getNodeResource() {
+    public NodeResource getNodeResources() {
         return nodeResources;
     }
 
-    public void setNodeResource(NodeResource nodeResources) {
+    public void setNodeResources(NodeResource nodeResources) {
         this.nodeResources = nodeResources;
     }
 

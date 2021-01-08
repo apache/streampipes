@@ -44,6 +44,10 @@ public abstract class ContainerRuntime extends UnnamedStreamPipesEntity {
         super();
     }
 
+    public ContainerRuntime(String elementId) {
+        super(elementId);
+    }
+
     public ContainerRuntime(ContainerRuntime other) {
         super(other);
     }

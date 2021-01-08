@@ -24,7 +24,7 @@ import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.Entity;
+import javax.persistence.*;
 import java.util.List;
 import java.util.Map;
 
@@ -48,9 +48,13 @@ public abstract class DeploymentContainer extends UnnamedStreamPipesEntity {
     @RdfProperty(StreamPipes.DEPLOYMENT_CONTAINER_PORTS)
     private String[] containerPorts;
 
+    @OneToMany(fetch = FetchType.EAGER,
+            cascade = {CascadeType.ALL})
     @RdfProperty(StreamPipes.DEPLOYMENT_CONTAINER_ENV_VARS)
     private List<String> envVars;
 
+    @OneToMany(fetch = FetchType.EAGER,
+            cascade = {CascadeType.ALL})
     @RdfProperty(StreamPipes.DEPLOYMENT_CONTAINER_LABELS)
     private Map<String, String> labels;
 

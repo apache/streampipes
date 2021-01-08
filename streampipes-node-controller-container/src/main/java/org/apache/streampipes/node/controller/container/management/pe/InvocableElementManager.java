@@ -17,12 +17,15 @@
  */
 package org.apache.streampipes.node.controller.container.management.pe;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.streampipes.container.model.node.InvocableRegistration;
+import org.apache.streampipes.node.controller.container.config.NodeControllerConfig;
 import org.apache.streampipes.node.controller.container.management.node.NodeManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.slf4j.Logger;
@@ -69,6 +72,24 @@ public class InvocableElementManager implements InvocableLifeCycle {
             NodeManager.getInstance()
                     .retrieveNodeInfoDescription()
                     .setSupportedElements(registration.getSupportedPipelineElementAppIds());
+
+            String url = "http://"
+                            + NodeControllerConfig.INSTANCE.getBackendHost()
+                            + ":"
+                            + NodeControllerConfig.INSTANCE.getBackendPort()
+                            + "/"
+                            + "streampipes-backend/api/v2/users/admin@streampipes.org/nodes"
+                            + "/"
+                            + NodeControllerConfig.INSTANCE.getNodeControllerId();
+
+            String desc = JacksonSerializer.getObjectMapper()
+                    .writeValueAsString(NodeManager.getInstance().retrieveNodeInfoDescription());
+
+            Request.Put(url)
+                    .bodyString(desc, ContentType.APPLICATION_JSON)
+//                    .connectTimeout(1000)
+//                    .socketTimeout(100000)
+                    .execute();
 
             LOG.info("Successfully registered pipeline element container");
         } catch (IOException e) {
@@ -121,6 +142,29 @@ public class InvocableElementManager implements InvocableLifeCycle {
         NodeManager.getInstance()
                 .retrieveNodeInfoDescription()
                 .setSupportedElements(Collections.emptyList());
+
+        String url = "http://"
+                + NodeControllerConfig.INSTANCE.getBackendHost()
+                + ":"
+                + NodeControllerConfig.INSTANCE.getBackendPort()
+                + "/"
+                + "streampipes-backend/api/v2/users/admin@streampipes.org/nodes"
+                + "/"
+                + NodeControllerConfig.INSTANCE.getNodeControllerId();
+
+        try {
+            String desc = JacksonSerializer.getObjectMapper()
+                    .writeValueAsString(NodeManager.getInstance().retrieveNodeInfoDescription());
+
+            Request.Put(url)
+                    .bodyString(desc, ContentType.APPLICATION_JSON)
+                    .connectTimeout(1000)
+                    .socketTimeout(100000)
+                    .execute();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private String makeConsulRegistrationEndpoint() {

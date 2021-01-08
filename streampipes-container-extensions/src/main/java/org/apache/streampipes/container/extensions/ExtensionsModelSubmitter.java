@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.container.extensions;
 
+import io.undertow.server.handlers.proxy.mod_cluster.NodeConfig;
 import org.apache.streampipes.connect.adapter.Adapter;
 import org.apache.streampipes.connect.adapter.model.generic.Protocol;
 import org.apache.streampipes.connect.container.worker.management.MasterRestClient;

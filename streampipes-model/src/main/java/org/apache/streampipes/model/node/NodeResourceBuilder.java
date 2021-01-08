@@ -21,6 +21,8 @@ import org.apache.streampipes.model.node.resources.*;
 import org.apache.streampipes.model.node.resources.fielddevice.FieldDeviceAccessResource;
 import org.apache.streampipes.model.node.resources.hardware.*;
 import org.apache.streampipes.model.node.resources.software.ContainerRuntime;
+import org.apache.streampipes.model.node.resources.software.DockerContainerRuntime;
+import org.apache.streampipes.model.node.resources.software.NvidiaContainerRuntime;
 import org.apache.streampipes.model.node.resources.software.SoftwareResource;
 
 import java.util.ArrayList;
@@ -53,7 +55,14 @@ public class NodeResourceBuilder {
                                                 ContainerRuntime containerRuntime) {
         this.softwareResource.setOs(os);
         this.softwareResource.setKernelVersion(kernelVersion);
-        this.softwareResource.setContainerRuntime(containerRuntime);
+        if (containerRuntime instanceof DockerContainerRuntime) {
+            DockerContainerRuntime dcr = (DockerContainerRuntime) containerRuntime;
+            this.softwareResource.setContainerRuntime(dcr);
+        } else if (containerRuntime instanceof NvidiaContainerRuntime) {
+            NvidiaContainerRuntime ncr = (NvidiaContainerRuntime) containerRuntime;
+            this.softwareResource.setContainerRuntime(ncr);
+        }
+
         return this;
     }
 

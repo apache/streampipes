@@ -31,6 +31,7 @@ import {ConfirmDialogComponent} from "../../../core-ui/dialog/confirm-dialog/con
 import {MatDialog} from "@angular/material/dialog";
 import {EditorService} from "../../services/editor.service";
 import {PipelineService} from "../../../platform-services/apis/pipeline.service";
+import {pipe} from "rxjs";
 
 
 @Component({
@@ -51,6 +52,7 @@ export class PipelineAssemblyComponent implements OnInit {
     selectMode: any;
     currentPipelineName: any;
     currentPipelineDescription: any;
+    currentEventRelayStrategy: any;
 
     @Input()
     currentModifiedPipelineId: any;
@@ -188,6 +190,7 @@ export class PipelineAssemblyComponent implements OnInit {
 
         pipeline.name = this.currentPipelineName;
         pipeline.description = this.currentPipelineDescription;
+        pipeline.eventRelayStrategy = this.currentEventRelayStrategy;
         if (this.currentModifiedPipelineId) {
             pipeline._id = this.currentModifiedPipelineId;
         }
@@ -217,6 +220,7 @@ export class PipelineAssemblyComponent implements OnInit {
                 let pipeline = msg;
                 this.currentPipelineName = pipeline.name;
                 this.currentPipelineDescription = pipeline.description;
+                this.currentEventRelayStrategy = pipeline.eventRelayStrategy;
                 this.rawPipelineModel = this.JsplumbService.makeRawPipeline(pipeline, false);
                 this.displayPipelineInEditor(true);
             });

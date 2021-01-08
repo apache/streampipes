@@ -40,6 +40,7 @@ export class ObjectProvider {
         var pipeline = new Pipeline();
         pipeline.name = "";
         pipeline.description = "";
+        pipeline.eventRelayStrategy = "";
         pipeline.streams = [];
         pipeline.sepas = [];
         pipeline.actions = [];

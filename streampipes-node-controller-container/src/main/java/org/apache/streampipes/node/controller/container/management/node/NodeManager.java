@@ -17,10 +17,16 @@
  */
 package org.apache.streampipes.node.controller.container.management.node;
 
+import org.apache.http.client.fluent.Request;
+import org.apache.http.entity.ContentType;
 import org.apache.streampipes.model.node.*;
 import org.apache.streampipes.model.node.meta.GeoLocation;
+import org.apache.streampipes.node.controller.container.config.NodeControllerConfig;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 public class NodeManager {
     private static final Logger LOG = LoggerFactory.getLogger(NodeManager.class.getCanonicalName());
@@ -58,8 +64,7 @@ public class NodeManager {
                                 NodeConstants.NODE_LOCATION_TAGS)
                         .withSupportedElements(NodeConstants.SUPPORTED_PIPELINE_ELEMENTS)
                         .withRegisteredContainers(NodeConstants.REGISTERED_DOCKER_CONTAINER)
-                        .withNodeResources(NodeResourceBuilder
-                                .create()
+                        .withNodeResources(NodeResourceBuilder.create()
                                 .hardwareResource(
                                         NodeConstants.NODE_CPU,
                                         NodeConstants.NODE_MEMORY,
@@ -74,5 +79,37 @@ public class NodeManager {
                         .build();
 
         NodeManager.getInstance().add(nodeInfoDescription);
+
+        register(nodeInfoDescription);
+    }
+
+    private void register(NodeInfoDescription desc) {
+
+        String url =
+                "http://"
+                + NodeControllerConfig.INSTANCE.getBackendHost()
+                + ":"
+                + NodeControllerConfig.INSTANCE.getBackendPort()
+                + "/"
+                + "streampipes-backend/api/v2/users/admin@streampipes.org/nodes";
+
+        try {
+            String nodeInfoDescription = JacksonSerializer.getObjectMapper().writeValueAsString(desc);
+
+            Request.Post(url)
+                    .bodyString(nodeInfoDescription, ContentType.APPLICATION_JSON)
+                    .connectTimeout(1000)
+                    .socketTimeout(100000)
+                    .execute().returnContent().asString();
+
+        } catch (IOException e) {
+            LOG.info("Could not connect to " + url);
+        }
+    }
+
+    public boolean updateNodeInfoDescription(NodeInfoDescription desc) {
+        LOG.info("Update node description for node controller: {}", desc.getNodeControllerId());
+        this.nodeInfo = desc;
+        return true;
     }
 }

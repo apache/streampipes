@@ -22,6 +22,7 @@ import {PipelineService} from "./apis/pipeline.service";
 import {PlatformServicesCommons} from "./apis/commons.service";
 import {PipelineElementEndpointService} from "./apis/pipeline-element-endpoint.service";
 import {FilesService} from "./apis/files.service";
+import {NodeService} from "./apis/node.service";
 
 @NgModule({
   imports: [],
@@ -32,7 +33,8 @@ import {FilesService} from "./apis/files.service";
     PipelineElementEndpointService,
     //PipelineTemplateService,
     PipelineElementService,
-    PipelineService
+    PipelineService,
+    NodeService,
   ],
   entryComponents: []
 })

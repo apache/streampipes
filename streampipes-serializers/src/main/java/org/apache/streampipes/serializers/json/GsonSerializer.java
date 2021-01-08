@@ -35,6 +35,16 @@ import org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransfo
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
 import org.apache.streampipes.model.grounding.TopicDefinition;
 import org.apache.streampipes.model.grounding.TransportProtocol;
+import org.apache.streampipes.model.node.NodeBrokerDescription;
+import org.apache.streampipes.model.node.NodeInfoDescription;
+import org.apache.streampipes.model.node.container.DeploymentContainer;
+import org.apache.streampipes.model.node.container.DockerContainer;
+import org.apache.streampipes.model.node.meta.GeoLocation;
+import org.apache.streampipes.model.node.meta.StaticNodeMetadata;
+import org.apache.streampipes.model.node.resources.NodeResource;
+import org.apache.streampipes.model.node.resources.software.ContainerRuntime;
+import org.apache.streampipes.model.node.resources.software.DockerContainerRuntime;
+import org.apache.streampipes.model.node.resources.software.NvidiaContainerRuntime;
 import org.apache.streampipes.model.output.OutputStrategy;
 import org.apache.streampipes.model.quality.EventPropertyQualityDefinition;
 import org.apache.streampipes.model.quality.EventStreamQualityDefinition;
@@ -105,6 +115,9 @@ public class GsonSerializer {
             .registerSubtype(SpecificAdapterStreamDescription.class, "org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription")
             .registerSubtype(GenericAdapterSetDescription.class, "org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription")
             .registerSubtype(GenericAdapterStreamDescription.class, "org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription"));
+
+    builder.registerTypeAdapter(ContainerRuntime.class, new JsonLdSerializer<ContainerRuntime>());
+    builder.registerTypeAdapter(DeploymentContainer.class, new JsonLdSerializer<DeploymentContainer>());
 
     builder.setPrettyPrinting();
     return builder;

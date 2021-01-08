@@ -35,6 +35,7 @@ public class DockerContainer extends DeploymentContainer {
     }
 
     public DockerContainer() {
+        super();
     }
 
     public DockerContainer(String imageURI, String containerName, String serviceId, String[] containerPorts,

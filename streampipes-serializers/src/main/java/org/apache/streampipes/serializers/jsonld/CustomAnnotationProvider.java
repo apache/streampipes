@@ -44,6 +44,17 @@ import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.graph.*;
 import org.apache.streampipes.model.grounding.*;
 import org.apache.streampipes.model.monitoring.ElementStatusInfoSettings;
+import org.apache.streampipes.model.node.NodeBrokerDescription;
+import org.apache.streampipes.model.node.NodeInfoDescription;
+import org.apache.streampipes.model.node.container.DockerContainer;
+import org.apache.streampipes.model.node.meta.GeoLocation;
+import org.apache.streampipes.model.node.meta.StaticNodeMetadata;
+import org.apache.streampipes.model.node.resources.NodeResource;
+import org.apache.streampipes.model.node.resources.fielddevice.FieldDeviceAccessResource;
+import org.apache.streampipes.model.node.resources.hardware.*;
+import org.apache.streampipes.model.node.resources.software.DockerContainerRuntime;
+import org.apache.streampipes.model.node.resources.software.NvidiaContainerRuntime;
+import org.apache.streampipes.model.node.resources.software.SoftwareResource;
 import org.apache.streampipes.model.output.*;
 import org.apache.streampipes.model.quality.*;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
@@ -185,7 +196,22 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             StreamPipesJsonLdContainer.class,
             DataLakeMeasure.class,
             SpDataStreamRelay.class,
-            SpDataStreamRelayContainer.class
+            SpDataStreamRelayContainer.class,
+            NodeInfoDescription.class,
+            NodeResource.class,
+            DockerContainerRuntime.class,
+            NvidiaContainerRuntime.class,
+            DockerContainer.class,
+            StaticNodeMetadata.class,
+            NodeBrokerDescription.class,
+            GeoLocation.class,
+            HardwareResource.class,
+            CPU.class,
+            MEM.class,
+            DISK.class,
+            GPU.class,
+            SoftwareResource.class,
+            FieldDeviceAccessResource.class
     );
   }
 }

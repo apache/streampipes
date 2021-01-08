@@ -41,7 +41,9 @@ import { MessagingConfigurationComponent } from './messaging-configuration/messa
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { DatalakeConfigurationComponent } from './datalake-configuration/datalake-configuration.component';
 import { DatalakeRestService } from '../core-services/datalake/datalake-rest.service';
-import { EdgeConfigurationComponent } from "./edge-configuration/edge-configuration.component";
+import { NodeConfigurationComponent } from "./node-configuration/node-configuration.component";
+import { NodeConfigurationDetailsComponent } from './node-configuration/node-configuration-details/node-configuration-details.component';
+import {MatChipsModule} from "@angular/material/chips";
 
 @NgModule({
     imports: [
@@ -55,7 +57,8 @@ import { EdgeConfigurationComponent } from "./edge-configuration/edge-configurat
         MatCheckboxModule,
         MatTooltipModule,
         FormsModule,
-        DragDropModule
+        DragDropModule,
+        MatChipsModule
     ],
     declarations: [
         ConfigurationComponent,
@@ -67,9 +70,10 @@ import { EdgeConfigurationComponent } from "./edge-configuration/edge-configurat
         ConsulConfigsNumberComponent,
         PipelineElementConfigurationComponent,
         MessagingConfigurationComponent,
-        EdgeConfigurationComponent,
+        NodeConfigurationComponent,
         MessagingConfigurationComponent,
-        DatalakeConfigurationComponent
+        DatalakeConfigurationComponent,
+        NodeConfigurationDetailsComponent
     ],
     providers: [
       ConfigurationService,

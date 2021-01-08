@@ -17,9 +17,19 @@
  */
 package org.apache.streampipes.rest.api;
 
+import org.apache.streampipes.model.node.NodeInfoDescription;
+
 import javax.ws.rs.core.Response;
 
 public interface INode {
 
+    Response addNode(String username, NodeInfoDescription desc);
+
+    Response updateNode(String username, String nodeControllerId, NodeInfoDescription desc);
+
+    Response deleteNode(String username, String nodeControllerId);
+
     Response getAvailableNodes();
+
+    Response getNodes();
 }

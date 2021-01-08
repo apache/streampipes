@@ -3,13 +3,14 @@ import {
   DataProcessorInvocation, Message,
   NodeInfoDescription,
   Pipeline,
-  StaticNodeMedata
+  StaticNodeMetadata
 } from "../../../core-model/gen/streampipes-model";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {EditorService} from "../../services/editor.service";
 import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
 import {ObjectProvider} from "../../services/object-provider.service";
 import {PipelineService} from "../../../platform-services/apis/pipeline.service";
+import {NodeService} from "../../../platform-services/apis/node.service";
 
 @Component({
   selector: 'migrate-pipeline-processors',
@@ -40,7 +41,8 @@ export class MigratePipelineProcessorsComponent implements OnInit {
   constructor(private editorService: EditorService,
               private dialogRef: DialogRef<MigratePipelineProcessorsComponent>,
               private objectProvider: ObjectProvider,
-              private pipelineService: PipelineService) {
+              private pipelineService: PipelineService,
+              private nodeService: NodeService) {
 
     this.advancedSettings = true;
     this.panelOpenState = true;
@@ -90,7 +92,7 @@ export class MigratePipelineProcessorsComponent implements OnInit {
   }
 
   loadAndPrepareEdgeNodes() {
-    this.pipelineService.getAvailableEdgeNodes().subscribe(response => {
+    this.nodeService.getAvailableNodes().subscribe(response => {
       this.edgeNodes = response;
       this.addAppIds(this.tmpPipeline.sepas, this.edgeNodes);
       this.addAppIds(this.tmpPipeline.actions, this.edgeNodes);
@@ -120,9 +122,9 @@ export class MigratePipelineProcessorsComponent implements OnInit {
     let nodeInfo = {} as NodeInfoDescription;
     nodeInfo.nodeControllerId = "default";
     nodeInfo.hostname = "default";
-    nodeInfo.staticNodeMedata = {} as StaticNodeMedata;
-    nodeInfo.staticNodeMedata.type = "default";
-    nodeInfo.staticNodeMedata.model = "Default Node";
+    nodeInfo.staticNodeMetadata = {} as StaticNodeMetadata;
+    nodeInfo.staticNodeMetadata.type = "default";
+    nodeInfo.staticNodeMetadata.model = "Default Node";
     return nodeInfo;
   }
 

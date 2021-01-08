@@ -93,6 +93,10 @@ public abstract class AbstractProcessingElementBuilder<BU extends
     return me();
   }
 
+  public BU requiredResource() {
+    return me();
+  }
+
   private List<MappingProperty> rewrite(List<MappingProperty> mappingProperties, int index) {
     mappingProperties.forEach(mp -> mp.setRequirementSelector
             (getIndex(index) + PropertySelectorConstants.PROPERTY_DELIMITER + mp

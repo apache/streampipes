@@ -27,6 +27,7 @@ import org.apache.streampipes.manager.execution.http.PipelineStorageService;
 import org.apache.streampipes.manager.matching.DataSetGroundingSelector;
 import org.apache.streampipes.manager.matching.PipelineVerificationHandler;
 import org.apache.streampipes.manager.node.AvailableNodesFetcher;
+import org.apache.streampipes.manager.node.NodeClusterManager;
 import org.apache.streampipes.manager.recommender.ElementRecommender;
 import org.apache.streampipes.manager.remote.ContainerProvidedOptionsHandler;
 import org.apache.streampipes.manager.runtime.PipelineElementRuntimeInfoFetcher;
@@ -39,8 +40,10 @@ import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.client.endpoint.RdfEndpoint;
 import org.apache.streampipes.model.client.endpoint.RdfEndpointItem;
+import org.apache.streampipes.model.connect.worker.ConnectWorkerContainer;
 import org.apache.streampipes.model.message.DataSetModificationMessage;
 import org.apache.streampipes.model.message.Message;
+import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.message.PipelineModificationMessage;
 import org.apache.streampipes.model.node.NodeInfoDescription;
 import org.apache.streampipes.model.pipeline.Pipeline;
@@ -187,6 +190,39 @@ public class Operations {
   }
 
   public static List<NodeInfoDescription> getAvailableNodes() {
-    return new AvailableNodesFetcher().fetchNodes();
+    //return new AvailableNodesFetcher().fetchNodes();
+    return StorageDispatcher.INSTANCE.getNoSqlStore().getNodeStorage().getAllActiveNodes();
+  }
+
+  public static List<NodeInfoDescription> getAllNodes() {
+    //return new AvailableNodesFetcher().fetchNodes();
+    return StorageDispatcher.INSTANCE.getNoSqlStore().getNodeStorage().getAllNodes();
+  }
+
+
+  public static Message updateNode(NodeInfoDescription desc) {
+    boolean successfullyUpdated = NodeClusterManager.INSTANCE.updateNodeInfoDescription(desc);
+    if (successfullyUpdated) {
+      StorageDispatcher.INSTANCE.getNoSqlStore().getNodeStorage().updateNode(desc);
+      return Notifications.success("Node modified");
+    }
+    return Notifications.error("Could not modify node");
+  }
+
+  public static void addNode(NodeInfoDescription desc) {
+
+    List<NodeInfoDescription> allNodes =
+            StorageDispatcher.INSTANCE.getNoSqlStore().getNodeStorage().getAllNodes();
+
+    boolean alreadyRegistered = allNodes.stream()
+            .anyMatch(n -> n.getNodeControllerId().equals(desc.getNodeControllerId()));
+
+    if (!alreadyRegistered) {
+      StorageDispatcher.INSTANCE.getNoSqlStore().getNodeStorage().storeNode(desc);
+    }
+  }
+
+  public static void deleteNode(String nodeControllerId) {
+    StorageDispatcher.INSTANCE.getNoSqlStore().getNodeStorage().deleteNode(nodeControllerId);
   }
 }

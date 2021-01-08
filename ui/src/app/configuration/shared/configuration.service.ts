@@ -47,15 +47,6 @@ export class ConfigurationService {
             )
     }
 
-    getAvailableEdgeNodes(): Observable<NodeInfoDescription[]> {
-        return this.http.get(this.getServerUrl() + '/api/v2/users/' + this.authStatusService.email + "/nodes")
-            .pipe(
-                map(response => {
-                    return response as NodeInfoDescription[];
-                })
-            )
-    }
-
     getConsulServices(): Observable<StreampipesPeContainer[]> {
         return this.http.get(this.getServerUrl() + '/api/v2/consul')
             .pipe(

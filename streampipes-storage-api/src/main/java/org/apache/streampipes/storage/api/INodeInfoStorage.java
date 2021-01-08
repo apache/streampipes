@@ -16,11 +16,24 @@
  *
  */
 
-.node-card {
-    max-width: 400px;
-}
+package org.apache.streampipes.storage.api;
 
-mat-card {
-    box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
-    margin: 10px;
+import org.apache.streampipes.model.node.NodeInfoDescription;
+
+import java.util.List;
+import java.util.Optional;
+
+public interface INodeInfoStorage {
+
+    List<NodeInfoDescription> getAllNodes();
+
+    List<NodeInfoDescription> getAllActiveNodes();
+
+    void storeNode(NodeInfoDescription desc);
+
+    void updateNode(NodeInfoDescription desc);
+
+    Optional<NodeInfoDescription> getNode(String nodeControllerId);
+
+    void deleteNode(String nodeControllerId);
 }

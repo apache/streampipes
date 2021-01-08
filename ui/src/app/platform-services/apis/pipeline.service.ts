@@ -111,12 +111,4 @@ export class PipelineService {
           return (response as any[]).map(r => PipelineStatusMessage.fromData(r));
         }));
   }
-
-  getAvailableEdgeNodes(): Observable<NodeInfoDescription[]> {
-    return this.http.get(this.platformServicesCommons.authUserBasePath() + "/nodes")
-        .pipe(map(response => {
-          return response as NodeInfoDescription[];
-    }));
-  }
-
 }

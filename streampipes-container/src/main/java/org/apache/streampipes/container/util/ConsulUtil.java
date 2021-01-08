@@ -85,7 +85,7 @@ public class ConsulUtil {
   }
 
   /**
-   * Method called by {@link org.apache.streampipes.node.controller.container.NodeControllerContainerInit} to
+   * Method called by {@link org.apache.streampipes.node.controller.container.NodeControllerInit} to
    * register new node controller service endpoint.
    *
    * @param svcId unique service id

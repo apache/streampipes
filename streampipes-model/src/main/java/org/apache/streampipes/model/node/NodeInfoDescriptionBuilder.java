@@ -21,7 +21,7 @@ import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.model.node.container.DeploymentContainer;
 import org.apache.streampipes.model.node.meta.GeoLocation;
-import org.apache.streampipes.model.node.meta.StaticNodeMedata;
+import org.apache.streampipes.model.node.meta.StaticNodeMetadata;
 import org.apache.streampipes.model.node.resources.NodeResource;
 
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ public class NodeInfoDescriptionBuilder {
 
     private final NodeInfoDescription nodeInfoDescription;
     private final NodeBrokerDescription nodeBroker;
-    private final StaticNodeMedata staticNodeMetadata;
+    private final StaticNodeMetadata staticNodeMetadata;
     private NodeResource nodeResources;
     private List<DeploymentContainer> registeredContainers;
     private final List<String> supportedElements;
@@ -39,7 +39,7 @@ public class NodeInfoDescriptionBuilder {
     public NodeInfoDescriptionBuilder(String id) {
         this.nodeInfoDescription = new NodeInfoDescription(id);
         this.nodeBroker = new NodeBrokerDescription();
-        this.staticNodeMetadata = new StaticNodeMedata();
+        this.staticNodeMetadata = new StaticNodeMetadata();
         this.nodeResources = new NodeResource();
         this.registeredContainers = new ArrayList<>();
         this.supportedElements = new ArrayList<>();
@@ -117,11 +117,12 @@ public class NodeInfoDescriptionBuilder {
     }
 
     public NodeInfoDescription build() {
-        nodeInfoDescription.setStaticNodeMedata(staticNodeMetadata);
+        nodeInfoDescription.setStaticNodeMetadata(staticNodeMetadata);
         nodeInfoDescription.setNodeBroker(nodeBroker);
         nodeInfoDescription.setRegisteredContainers(registeredContainers);
-        nodeInfoDescription.setNodeResource(nodeResources);
+        nodeInfoDescription.setNodeResources(nodeResources);
         nodeInfoDescription.setSupportedElements(supportedElements);
+        nodeInfoDescription.setActive(true);
         return nodeInfoDescription;
     }
 }

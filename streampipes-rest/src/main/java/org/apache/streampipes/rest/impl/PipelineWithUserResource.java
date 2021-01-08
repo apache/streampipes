@@ -244,6 +244,7 @@ public class PipelineWithUserResource extends AbstractRestInterface implements I
         storedPipeline.setActions(pipeline.getActions());
         storedPipeline.setCreatedAt(System.currentTimeMillis());
         storedPipeline.setPipelineCategories(pipeline.getPipelineCategories());
+        storedPipeline.setEventRelayStrategy(pipeline.getEventRelayStrategy());
         Operations.updatePipeline(storedPipeline);
         return statusMessage(Notifications.success("Pipeline modified"));
     }
@@ -263,6 +264,7 @@ public class PipelineWithUserResource extends AbstractRestInterface implements I
 //        storedPipeline.setActions(pipeline.getActions());
 //        storedPipeline.setCreatedAt(System.currentTimeMillis());
 //        storedPipeline.setPipelineCategories(pipeline.getPipelineCategories());
+//        storedPipeline.setEventRelayStrategy(pipeline.getEventRelayStrategy());
 //        Operations.updatePipeline(storedPipeline);
         return statusMessage(Notifications.success("Pipeline processors migrated"));
     }

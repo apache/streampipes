@@ -24,13 +24,15 @@ import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.Entity;
+import javax.persistence.*;
 
 @RdfsClass(StreamPipes.NODE_BROKER_DESCRIPTION)
 @Entity
 @TsModel
 public class NodeBrokerDescription extends UnnamedStreamPipesEntity {
 
+    @OneToOne(fetch = FetchType.EAGER,
+            cascade = {CascadeType.ALL})
     @RdfProperty(StreamPipes.HAS_TRANSPORT_PROTOCOL)
     private TransportProtocol nodeTransportProtocol;
 

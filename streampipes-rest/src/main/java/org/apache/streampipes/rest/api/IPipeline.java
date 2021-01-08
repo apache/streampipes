@@ -27,6 +27,8 @@ public interface IPipeline extends IPipelineElement {
 
   Response addPipeline(String username, Pipeline pipeline);
 
+  Response getOwn(String username);
+
   Response getSystemPipelines();
 
   Response start(String username, String pipelineId);

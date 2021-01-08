@@ -23,7 +23,7 @@ import {
   Message,
   Pipeline,
   NodeInfoDescription,
-  StaticNodeMedata
+  StaticNodeMetadata
 } from "../../../core-model/gen/streampipes-model";
 import {ObjectProvider} from "../../services/object-provider.service";
 import {EditorService} from "../../services/editor.service";
@@ -31,6 +31,7 @@ import {PipelineService} from "../../../platform-services/apis/pipeline.service"
 import {ShepherdService} from "../../../services/tour/shepherd.service";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
+import {NodeService} from "../../../platform-services/apis/node.service";
 
 @Component({
   selector: 'save-pipeline',
@@ -71,6 +72,7 @@ export class SavePipelineComponent implements OnInit {
               private dialogRef: DialogRef<SavePipelineComponent>,
               private objectProvider: ObjectProvider,
               private pipelineService: PipelineService,
+              private nodeService: NodeService,
               private Router: Router,
               private ShepherdService: ShepherdService) {
     this.pipelineCategories = [];
@@ -101,10 +103,16 @@ export class SavePipelineComponent implements OnInit {
       this.ShepherdService.trigger("enter-pipeline-name");
     }
 
-    this.selectedRelayStrategyVal = "buffer";
-    this.selectedPipelineExecutionPolicy = "locality-aware";
-
-    this.applyLocalityAwarePolicy(this.tmpPipeline.streams, this.tmpPipeline.sepas);
+    if (this.currentModifiedPipelineId && this.updateMode === 'update') {
+      this.selectedRelayStrategyVal = this.tmpPipeline.eventRelayStrategy;
+      this.selectedPipelineExecutionPolicy = "custom";
+      this.panelOpenState = true;
+      this.disableNodeSelection.setValue(false);
+    } else {
+      this.selectedRelayStrategyVal = "buffer";
+      this.selectedPipelineExecutionPolicy = "locality-aware";
+      this.applyLocalityAwarePolicy(this.tmpPipeline.streams, this.tmpPipeline.sepas);
+    }
   }
 
   deepCopy<T>(source: T): T {
@@ -158,7 +166,7 @@ export class SavePipelineComponent implements OnInit {
   }
 
   loadAndPrepareEdgeNodes() {
-    this.pipelineService.getAvailableEdgeNodes().subscribe(response => {
+    this.nodeService.getAvailableNodes().subscribe(response => {
       this.edgeNodes = response;
       this.addAppIds(this.tmpPipeline.sepas, this.edgeNodes);
       this.addAppIds(this.tmpPipeline.actions, this.edgeNodes);
@@ -195,9 +203,9 @@ export class SavePipelineComponent implements OnInit {
     let nodeInfo = {} as NodeInfoDescription;
     nodeInfo.nodeControllerId = "default";
     nodeInfo.hostname = "default";
-    nodeInfo.staticNodeMedata = {} as StaticNodeMedata;
-    nodeInfo.staticNodeMedata.type = "default";
-    nodeInfo.staticNodeMedata.model = "Default Node";
+    nodeInfo.staticNodeMetadata = {} as StaticNodeMetadata;
+    nodeInfo.staticNodeMetadata.type = "default";
+    nodeInfo.staticNodeMetadata.model = "Default Node";
     return nodeInfo;
   }
 
@@ -236,15 +244,15 @@ export class SavePipelineComponent implements OnInit {
     let storageRequest;
 
     if (this.currentModifiedPipelineId && this.updateMode === 'update') {
-      this.modifyPipelineElementsDeployments(this.tmpPipeline.sepas)
-      this.modifyPipelineElementsDeployments(this.tmpPipeline.actions)
+      this.modifyPipelineElementsDeployments(this.tmpPipeline.sepas);
+      this.modifyPipelineElementsDeployments(this.tmpPipeline.actions);
       this.tmpPipeline.eventRelayStrategy = this.selectedRelayStrategyVal;
       this.pipeline = this.tmpPipeline;
       storageRequest = this.pipelineService.updatePipeline(this.pipeline);
     } else {
       this.pipeline._id = undefined;
-      this.modifyPipelineElementsDeployments(this.tmpPipeline.sepas)
-      this.modifyPipelineElementsDeployments(this.tmpPipeline.actions)
+      this.modifyPipelineElementsDeployments(this.tmpPipeline.sepas);
+      this.modifyPipelineElementsDeployments(this.tmpPipeline.actions);
       this.tmpPipeline.eventRelayStrategy = this.selectedRelayStrategyVal;
       this.pipeline = this.tmpPipeline;
       storageRequest = this.pipelineService.storePipeline(this.pipeline);

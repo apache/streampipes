@@ -23,14 +23,14 @@ import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.Entity;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @RdfsClass(StreamPipes.STATIC_NODE_METADATA)
 @Entity
 @TsModel
-public class StaticNodeMedata extends UnnamedStreamPipesEntity {
+public class StaticNodeMetadata extends UnnamedStreamPipesEntity {
 
     @RdfProperty(StreamPipes.NODE_TYPE)
     private String type;
@@ -38,18 +38,22 @@ public class StaticNodeMedata extends UnnamedStreamPipesEntity {
     @RdfProperty(StreamPipes.NODE_MODEL)
     private String model;
 
+    @OneToOne(fetch = FetchType.EAGER,
+            cascade = {CascadeType.ALL})
     @RdfProperty(StreamPipes.HAS_GEO_LOCATION)
     private GeoLocation geoLocation;
 
+    @OneToMany(fetch = FetchType.EAGER,
+            cascade = {CascadeType.ALL})
     @RdfProperty(StreamPipes.HAS_NODE_TAGS)
     private List<String> locationTags;
 
-    public StaticNodeMedata() {
+    public StaticNodeMetadata() {
         super();
         this.locationTags = new ArrayList<>();
     }
 
-    public StaticNodeMedata(String type, String model, GeoLocation geoLocation, List<String> locationTags) {
+    public StaticNodeMetadata(String type, String model, GeoLocation geoLocation, List<String> locationTags) {
         super();
         this.type = type;
         this.model = model;

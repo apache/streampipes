@@ -55,4 +55,5 @@ public interface INoSqlStorage {
 
   IVisualizablePipelineStorage getVisualizablePipelineStorage();
 
+  INodeInfoStorage getNodeStorage();
 }
