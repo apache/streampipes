@@ -74,7 +74,6 @@
                                     </mat-icon>
                                 </button>
                             </div>
-<!--                            <div mat-card-avatar class="node-header-avatar"><i class="fas fa-server fa-2x"></i></div>-->
                             <div mat-card-avatar class="node-header-avatar">
                                 <button mat-icon-button class="node-mat-icon-button" disabled>
                                     <mat-icon [ngClass]="'node-inactive'">
@@ -84,8 +83,12 @@
                             </div>
                             <mat-card-title
                                     style="font-size: 12pt">{{node.nodeControllerId}}</mat-card-title>
-                            <mat-card-subtitle style="font-size: 10pt">{{node.hostname}} |
-                                <b>{{node.nodeResources.softwareResource.os}}</b></mat-card-subtitle>
+                            <mat-card-subtitle style="font-size: 10pt">
+                                {{node.hostname}} | <b>{{node.nodeResources.softwareResource.os}}</b>
+                                <div style="color: lightgrey;">
+                                    last contact: {{currentTimestamp}}
+                                </div>
+                            </mat-card-subtitle>
                         </mat-card-header>
                         <mat-card-content>
                             <div class="div-node-tag" *ngFor="let tag of node.staticNodeMetadata.locationTags">

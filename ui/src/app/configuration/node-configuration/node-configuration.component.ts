@@ -53,6 +53,7 @@ export class NodeConfigurationComponent implements OnInit{
     gpuType: string;
     locationTags: String[];
     fieldDevices: FieldDeviceAccessResource[];
+    currentTimestamp: string;
 
     constructor(private nodeService: NodeService,
                 private dataMarketplaceService: DataMarketplaceService,
@@ -62,6 +63,7 @@ export class NodeConfigurationComponent implements OnInit{
 
     ngOnInit() {
         this.getNodes();
+        this.getDate();
     }
 
     getNodes() {
@@ -165,5 +167,10 @@ export class NodeConfigurationComponent implements OnInit{
                 "node": node
             }
         });
+    }
+
+    getDate() {
+        this.currentTimestamp = new Date().toLocaleTimeString(['en-US'],
+            { hour: '2-digit', minute: "2-digit", second: "2-digit" });
     }
 }
