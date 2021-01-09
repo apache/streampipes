@@ -32,7 +32,7 @@ import java.util.*;
 
 public class CouchDbInstallationStep implements InstallationStep {
 
-    private static List<String> initRdfEndpointPorts =
+    private static final List<String> initRdfEndpointPorts =
             Collections.singletonList("8099/api/v1/admin@streampipes.org/master/sources/");
     private static final String initRdfEndpointHost = "http://localhost:";
 
@@ -79,6 +79,7 @@ public class CouchDbInstallationStep implements InstallationStep {
             Utils.getCouchDbDashboardWidgetClient();
             Utils.getCouchDbLabelClient();
             Utils.getCouchDbCategoryClient();
+            Utils.getCouchDbNodeClient();
 
             return Collections.singletonList(Notifications.success(getTitle()));
         } catch (Exception e) {

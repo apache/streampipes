@@ -57,6 +57,7 @@ import org.apache.streampipes.model.node.resources.software.NvidiaContainerRunti
 import org.apache.streampipes.model.node.resources.software.SoftwareResource;
 import org.apache.streampipes.model.output.*;
 import org.apache.streampipes.model.quality.*;
+import org.apache.streampipes.model.resource.Hardware;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.apache.streampipes.model.schema.*;
@@ -211,7 +212,8 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             DISK.class,
             GPU.class,
             SoftwareResource.class,
-            FieldDeviceAccessResource.class
+            FieldDeviceAccessResource.class,
+            Hardware.class
     );
   }
 }

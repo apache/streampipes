@@ -24,6 +24,7 @@ import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.monitoring.ElementStatusInfoSettings;
+import org.apache.streampipes.model.resource.NodeResourceRequirement;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.vocabulary.StreamPipes;
@@ -71,6 +72,11 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
           cascade = {CascadeType.ALL})
   @RdfProperty(StreamPipes.REQUIRES_STREAM)
   private List<SpDataStream> streamRequirements;
+
+  @OneToMany(fetch = FetchType.EAGER,
+          cascade = {CascadeType.ALL})
+  @RdfProperty(StreamPipes.REQUIRES_RESOURCES)
+  protected List<NodeResourceRequirement> resourceRequirements;
 
   @RdfProperty(StreamPipes.ELEMENT_ENDPOINT_HOSTNAME)
   private String elementEndpointHostname;
@@ -126,6 +132,9 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
     this.DOM = other.getDOM();
     if (other.getSupportedGrounding() != null) {
       this.supportedGrounding = new EventGrounding(other.getSupportedGrounding());
+    }
+    if (other.getResourceRequirements() != null) {
+      this.resourceRequirements = new Cloner().resourceRequirements(other.getResourceRequirements());
     }
   }
 
@@ -278,5 +287,13 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
 
   public void setElementEndpointServiceName(String elementEndpointServiceName) {
     this.elementEndpointServiceName = elementEndpointServiceName;
+  }
+
+  public List<NodeResourceRequirement> getResourceRequirements() {
+    return resourceRequirements;
+  }
+
+  public void setResourceRequirements(List<NodeResourceRequirement> resourceRequirements) {
+    this.resourceRequirements = resourceRequirements;
   }
 }

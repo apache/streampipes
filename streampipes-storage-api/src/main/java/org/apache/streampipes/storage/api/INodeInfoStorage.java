@@ -31,6 +31,10 @@ public interface INodeInfoStorage {
 
     void storeNode(NodeInfoDescription desc);
 
+    void deactivateNode(String nodeControllerId);
+
+    void activateNode(String nodeControllerId);
+
     void updateNode(NodeInfoDescription desc);
 
     Optional<NodeInfoDescription> getNode(String nodeControllerId);

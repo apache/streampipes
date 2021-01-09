@@ -21,10 +21,10 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 
 import javax.ws.rs.Path;
 
-@Path("/api/v2/node/element/sepa")
-public class DataProcessorPipelineElementResource extends InvocableEntityResource<DataProcessorInvocation> {
-
-    public DataProcessorPipelineElementResource() {
-        super(DataProcessorInvocation.class);
-    }
-}
+//@Path("/api/v2/node/element/sepa")
+//public class DataProcessorPipelineElementResource extends InvocableEntityResource<DataProcessorInvocation> {
+//
+//    public DataProcessorPipelineElementResource() {
+//        super(DataProcessorInvocation.class);
+//    }
+//}

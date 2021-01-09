@@ -18,7 +18,12 @@
 package org.apache.streampipes.node.controller.container.management.node;
 
 import org.apache.http.client.fluent.Request;
+import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
+import org.apache.streampipes.model.message.Message;
+import org.apache.streampipes.model.message.NotificationType;
+import org.apache.streampipes.model.message.Notifications;
+import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.model.node.*;
 import org.apache.streampipes.model.node.meta.GeoLocation;
 import org.apache.streampipes.node.controller.container.config.NodeControllerConfig;
@@ -30,6 +35,14 @@ import java.io.IOException;
 
 public class NodeManager {
     private static final Logger LOG = LoggerFactory.getLogger(NodeManager.class.getCanonicalName());
+
+    private static final String PROTOCOL = "http://";
+    private static final String SLASH = "/";
+    private static final String COLON = ":";
+    private static final String BACKEND_BASE_ROUTE = "/streampipes-backend";
+    private static final String NODE_REGISTRATION_ROUTE = "/api/v2/users/admin@streampipes.org/nodes";
+    private static final long RETRY_INTERVAL_MS = 5000;
+    private static final int CONNECT_TIMEOUT_MS = 10000;
 
     private NodeInfoDescription nodeInfo = new NodeInfoDescription();
 
@@ -78,38 +91,76 @@ public class NodeManager {
                                 .build())
                         .build();
 
-        NodeManager.getInstance().add(nodeInfoDescription);
-
-        register(nodeInfoDescription);
+        add(nodeInfoDescription);
     }
 
-    private void register(NodeInfoDescription desc) {
-
-        String url =
-                "http://"
-                + NodeControllerConfig.INSTANCE.getBackendHost()
-                + ":"
-                + NodeControllerConfig.INSTANCE.getBackendPort()
-                + "/"
-                + "streampipes-backend/api/v2/users/admin@streampipes.org/nodes";
-
+    public boolean register() {
+        boolean connected = false;
         try {
-            String nodeInfoDescription = JacksonSerializer.getObjectMapper().writeValueAsString(desc);
+            String body = JacksonSerializer.getObjectMapper().writeValueAsString(this.nodeInfo);
+            String endpoint = generateEndpoint();
 
-            Request.Post(url)
-                    .bodyString(nodeInfoDescription, ContentType.APPLICATION_JSON)
-                    .connectTimeout(1000)
-                    .socketTimeout(100000)
-                    .execute().returnContent().asString();
+            LOG.info("Trying to register node at backend: " + endpoint);
 
+            while (!connected) {
+                connected = post(endpoint, body);
+                if (!connected) {
+                    LOG.info("Retrying in {} seconds", (RETRY_INTERVAL_MS / 1000));
+                    try {
+                        Thread.sleep(RETRY_INTERVAL_MS);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            LOG.info("Successfully registered node at backend");
         } catch (IOException e) {
-            LOG.info("Could not connect to " + url);
+            e.printStackTrace();
         }
+        return connected;
     }
 
-    public boolean updateNodeInfoDescription(NodeInfoDescription desc) {
+    public Message updateNodeInfoDescription(NodeInfoDescription desc) {
         LOG.info("Update node description for node controller: {}", desc.getNodeControllerId());
         this.nodeInfo = desc;
-        return true;
+        return Notifications.success(NotificationType.OPERATION_SUCCESS);
+    }
+
+    public Message activate() {
+        LOG.info("Deactivate node controller");
+        this.nodeInfo.setActive(true);
+        return Notifications.success(NotificationType.OPERATION_SUCCESS);
+    }
+
+    public Message deactivate() {
+        LOG.info("Activate node controller");
+        this.nodeInfo.setActive(false);
+        return Notifications.success(NotificationType.OPERATION_SUCCESS);
+    }
+
+    private boolean post(String endpoint, String body) throws IOException {
+        Response response = Request.Post(endpoint)
+                .bodyString(body, ContentType.APPLICATION_JSON)
+                .connectTimeout(CONNECT_TIMEOUT_MS)
+                .execute();
+        return handleResponse(response);
+    }
+
+    private boolean handleResponse(Response response) throws IOException {
+        String resp = response.returnContent().asString();
+        SuccessMessage message = JacksonSerializer
+                .getObjectMapper()
+                .readValue(resp, SuccessMessage.class);
+        return message.isSuccess();
+    }
+
+    private String generateEndpoint() {
+        return  PROTOCOL
+                + NodeControllerConfig.INSTANCE.getBackendHost()
+                + COLON
+                + NodeControllerConfig.INSTANCE.getBackendPort()
+                + SLASH
+                + BACKEND_BASE_ROUTE
+                + NODE_REGISTRATION_ROUTE;
     }
 }

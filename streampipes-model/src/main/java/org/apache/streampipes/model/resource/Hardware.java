@@ -15,51 +15,43 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.model.node.meta;
+package org.apache.streampipes.model.resource;
+
 
 import io.fogsy.empire.annotations.RdfProperty;
 import io.fogsy.empire.annotations.RdfsClass;
-import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.shared.annotation.TsModel;
-import org.apache.streampipes.vocabulary.Geo;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
 import javax.persistence.Entity;
 
-
-@RdfsClass(StreamPipes.GEO_LOCATION)
+@RdfsClass(StreamPipes.HARDWARE_REQUIREMENT)
 @Entity
 @TsModel
-public class GeoLocation extends UnnamedStreamPipesEntity {
+public class Hardware extends NodeResourceRequirement {
 
-    @RdfProperty(StreamPipes.GEO_LOCATION_LATITUDE)
-    private double latitude;
+    @RdfProperty(StreamPipes.HAS_GPU_REQUIREMENT)
+    private boolean gpu;
 
-    @RdfProperty(StreamPipes.GEO_LOCATION_LONGITUDE)
-    private double longitude;
-
-    public GeoLocation() {
+    public Hardware() {
         super();
     }
 
-    public GeoLocation(double latitude, double longitude) {
-        this.latitude = latitude;
-        this.longitude = longitude;
+    public Hardware(Hardware other) {
+        super(other);
+        this.gpu = other.isGpu();
     }
 
-    public double getLatitude() {
-        return latitude;
+    public Hardware(Hardware other, boolean gpu) {
+        super(other);
+        this.gpu = gpu;
     }
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
+    public boolean isGpu() {
+        return gpu;
     }
 
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
+    public void setGpu(boolean gpu) {
+        this.gpu = gpu;
     }
 }

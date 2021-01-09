@@ -52,4 +52,18 @@ export class NodeService {
                 return Message.fromData(response as Message);
             }));
     }
+
+    activateNode(nodeControllerId: string): Observable<Message> {
+        return this.http.post(this.platformServicesCommons.authUserBasePath() + '/nodes/activate/' + nodeControllerId, {})
+            .pipe(map(response => {
+                return Message.fromData(response as Message);
+            }));
+    }
+
+    deactivateNode(nodeControllerId: string): Observable<Message> {
+        return this.http.post(this.platformServicesCommons.authUserBasePath() + '/nodes/deactivate/' + nodeControllerId, {})
+            .pipe(map(response => {
+                return Message.fromData(response as Message);
+            }));
+    }
 }

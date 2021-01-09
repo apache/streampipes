@@ -30,6 +30,9 @@ import javax.ws.rs.core.Response;
 @Path("/api/v2/node/info")
 public class InfoStatusResource extends AbstractResource {
 
+    private static final String ACTIVATE = "activate";
+    private static final String DEACTIVATE = "deactivate";
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getNodeInfo() {
@@ -41,6 +44,19 @@ public class InfoStatusResource extends AbstractResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateNodeInfo(NodeInfoDescription desc) {
         return ok(NodeManager.getInstance().updateNodeInfoDescription(desc));
+    }
+
+    @POST
+    @Path("{action}")
+    @JacksonSerialized
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response activateNode(@PathParam("action") String action) {
+        if (action.equals(ACTIVATE)) {
+            return ok(NodeManager.getInstance().activate());
+        } else if (action.equals(DEACTIVATE)) {
+            return ok(NodeManager.getInstance().deactivate());
+        } else return fail();
     }
 
     @GET

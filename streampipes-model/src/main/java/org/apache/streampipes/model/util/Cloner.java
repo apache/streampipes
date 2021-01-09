@@ -20,8 +20,9 @@ package org.apache.streampipes.model.util;
 
 import org.apache.streampipes.model.SpDataStreamRelay;
 import org.apache.streampipes.model.grounding.*;
-import org.apache.streampipes.model.node.NodeBrokerDescription;
 import org.apache.streampipes.model.output.*;
+import org.apache.streampipes.model.resource.Hardware;
+import org.apache.streampipes.model.resource.NodeResourceRequirement;
 import org.apache.streampipes.model.staticproperty.*;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 import org.slf4j.Logger;
@@ -333,5 +334,20 @@ public class Cloner {
       LOG.error("Could not clone adapter description of type: " +ad.getClass().getCanonicalName());
       return ad;
     }
+  }
+
+  public NodeResourceRequirement cloneResourceRequirements(NodeResourceRequirement o) {
+    if (o instanceof Hardware) {
+      return new Hardware((Hardware) o);
+    } else {
+      LOG.error("Could not clone node resource requirement of type: " + o.getClass().getCanonicalName());
+      return o;
+    }
+  }
+
+  public List<NodeResourceRequirement> resourceRequirements(List<NodeResourceRequirement> nrp) {
+    return nrp.stream()
+            .map(this::cloneResourceRequirements)
+            .collect(Collectors.toList());
   }
 }

@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.Collections;
 
-public class InvocableElementManager implements InvocableLifeCycle {
+public class InvocableElementManager implements PipelineElementLifeCycle {
 
     private static final Logger LOG =
             LoggerFactory.getLogger(InvocableElementManager.class.getCanonicalName());

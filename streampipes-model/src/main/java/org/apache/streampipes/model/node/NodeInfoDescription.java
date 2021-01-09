@@ -30,11 +30,15 @@ import org.apache.streampipes.vocabulary.StreamPipes;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.UUID;
 
 @RdfsClass(StreamPipes.NODE_INFO_DESCRIPTION)
 @Entity
 @TsModel
 public class NodeInfoDescription extends UnnamedStreamPipesEntity {
+
+    private static final long serialVersionUID = 4294360613297596807L;
+    protected static final String prefix = "urn:streampipes.org:nid:";
 
     @JsonProperty("_id")
     private @SerializedName("_id") String id;
@@ -78,7 +82,7 @@ public class NodeInfoDescription extends UnnamedStreamPipesEntity {
     private List<String> supportedElements;
 
     public NodeInfoDescription() {
-        super();
+        super(prefix + UUID.randomUUID().toString());
     }
 
     public NodeInfoDescription(String elementId) {

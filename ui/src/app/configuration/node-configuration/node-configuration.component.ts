@@ -110,7 +110,13 @@ export class NodeConfigurationComponent implements OnInit{
                     // No adapters detected on this node. This means that no adapter was created on this host. Thus
                     // we can safely proceed setting a new state, i.e. active = (true || false) this node
                     node.active = desiredState;
-                    this.nodeService.updateNodeState(node).subscribe(statusMessage => {
+                    let stateService;
+                    if (desiredState) {
+                        stateService = this.nodeService.activateNode(node.nodeControllerId);
+                    } else {
+                        stateService = this.nodeService.deactivateNode(node.nodeControllerId);
+                    }
+                    stateService.subscribe(statusMessage => {
                         if(statusMessage.success) {
                             this.openSnackBar("Node successfully " + (desiredState ? "activated" : "deactivated"))
                         }

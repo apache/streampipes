@@ -20,7 +20,7 @@ package org.apache.streampipes.node.controller.container.management.pe;
 import org.apache.streampipes.container.model.node.InvocableRegistration;
 import org.apache.streampipes.model.Response;
 
-public interface InvocableLifeCycle {
+public interface PipelineElementLifeCycle {
 
     void register(InvocableRegistration registration);
 

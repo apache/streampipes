@@ -50,9 +50,33 @@ public class NodeInfoStorageImpl extends AbstractDao<NodeInfoDescription> implem
 
     @Override
     public void storeNode(NodeInfoDescription desc) {
-        LOG.info("Store new node description with node id={}, url={}", desc.getNodeControllerId(),
-                desc.getHostname() + ":" + desc.getPort());
         persist(desc);
+    }
+
+    @Override
+    public void deactivateNode(String nodeControllerId) {
+        Optional<NodeInfoDescription> storedNode = getNode(nodeControllerId);
+        if (storedNode.isPresent()) {
+            LOG.info("Deactivate node controller={} at url=http://{}:{}",
+                    storedNode.get().getNodeControllerId(),
+                    storedNode.get().getHostname(),
+                    storedNode.get().getPort());
+            storedNode.get().setActive(false);
+            update(storedNode.get());
+        }
+    }
+
+    @Override
+    public void activateNode(String nodeControllerId) {
+        Optional<NodeInfoDescription> storedNode = getNode(nodeControllerId);
+        if (storedNode.isPresent()) {
+            LOG.info("Activate node controller={} at url=http://{}:{}",
+                    storedNode.get().getNodeControllerId(),
+                    storedNode.get().getHostname(),
+                    storedNode.get().getPort());
+            storedNode.get().setActive(true);
+            update(storedNode.get());
+        }
     }
 
     @Override

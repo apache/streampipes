@@ -39,6 +39,15 @@ public class PipelineElementContainer extends NamedStreamPipesEntity {
   @RdfProperty(StreamPipes.HAS_PIPELINE_ELEMENTS)
   private List<NamedStreamPipesEntity> pipelineElementDescriptions;
 
+  @RdfProperty(StreamPipes.DEPLOYMENT_TARGET_NODE_ID)
+  private String deploymentTargetNodeId;
+
+  @RdfProperty(StreamPipes.DEPLOYMENT_TARGET_NODE_HOSTNAME)
+  private String deploymentTargetNodeHostname;
+
+  @RdfProperty(StreamPipes.DEPLOYMENT_TARGET_NODE_PORT)
+  private Integer deploymentTargetNodePort;
+
   public PipelineElementContainer(PipelineElementContainer other) {
     super(other);
     if (other.getPipelineElementDescriptions() != null) {

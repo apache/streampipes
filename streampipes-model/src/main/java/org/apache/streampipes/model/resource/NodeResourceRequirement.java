@@ -15,51 +15,35 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.model.node.meta;
+package org.apache.streampipes.model.resource;
 
-import io.fogsy.empire.annotations.RdfProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.shared.annotation.TsModel;
-import org.apache.streampipes.vocabulary.Geo;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
+
 import javax.persistence.Entity;
+import javax.persistence.MappedSuperclass;
+import java.util.UUID;
 
-
-@RdfsClass(StreamPipes.GEO_LOCATION)
+@RdfsClass(StreamPipes.NODE_RESOURCE_REQUIREMENT)
 @Entity
 @TsModel
-public class GeoLocation extends UnnamedStreamPipesEntity {
+@JsonSubTypes({
+        @JsonSubTypes.Type(Hardware.class)
+})
+public abstract class NodeResourceRequirement extends UnnamedStreamPipesEntity {
 
-    @RdfProperty(StreamPipes.GEO_LOCATION_LATITUDE)
-    private double latitude;
+    private static final long serialVersionUID = -8700750792058131323L;
+    protected static final String prefix = "urn:streampipes.org:nrr:";
 
-    @RdfProperty(StreamPipes.GEO_LOCATION_LONGITUDE)
-    private double longitude;
-
-    public GeoLocation() {
-        super();
+    public NodeResourceRequirement() {
+        super(prefix + UUID.randomUUID().toString());
     }
 
-    public GeoLocation(double latitude, double longitude) {
-        this.latitude = latitude;
-        this.longitude = longitude;
-    }
-
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
+    public NodeResourceRequirement(NodeResourceRequirement other) {
+        super(other);
     }
 }

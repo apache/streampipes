@@ -102,6 +102,7 @@ public class ProcessingElementBuilder extends AbstractProcessingElementBuilder<P
   public void prepareBuild() {
     super.prepareBuild();
     this.elementDescription.setOutputStrategies(outputStrategies);
+    this.elementDescription.setResourceRequirements(resourceRequirements);
   }
 
   @Override

@@ -15,30 +15,33 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.sdk.helpers;
+package org.apache.streampipes.sdk.builder;
+
 
 import org.apache.streampipes.model.resource.NodeResourceRequirement;
+import org.apache.streampipes.sdk.helpers.CollectedResourceRequirements;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CollectedResourceRequirements {
+public class ResourceRequirementsBuilder {
 
-    private List<NodeResourceRequirement> resourceRequirements;
+    private final List<NodeResourceRequirement> resourceRequirements;
 
-    public CollectedResourceRequirements(List<NodeResourceRequirement> resourceRequirements) {
-        this.resourceRequirements = resourceRequirements;
+    public static ResourceRequirementsBuilder create() {
+        return new ResourceRequirementsBuilder();
     }
 
-    public CollectedResourceRequirements() {
+    public ResourceRequirementsBuilder() {
         this.resourceRequirements = new ArrayList<>();
     }
 
-    public List<NodeResourceRequirement> getResourceRequirements() {
-        return resourceRequirements;
+    public ResourceRequirementsBuilder requiredProperty(NodeResourceRequirement nrp) {
+        this.resourceRequirements.add(nrp);
+        return this;
     }
 
-    public void setResourceRequirements(List<NodeResourceRequirement> resourceRequirements) {
-        this.resourceRequirements = resourceRequirements;
+    public CollectedResourceRequirements build() {
+        return new CollectedResourceRequirements(this.resourceRequirements);
     }
 }

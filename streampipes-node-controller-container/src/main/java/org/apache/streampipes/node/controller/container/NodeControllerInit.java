@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.node.controller.container;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.container.util.ConsulUtil;
 import org.apache.streampipes.node.controller.container.management.orchestrator.docker.DockerContainerManager;
 import org.apache.streampipes.node.controller.container.api.NodeControllerResourceConfig;
@@ -50,26 +51,31 @@ public class NodeControllerInit {
         app.setDefaultProperties(Collections.singletonMap("server.port", conf.getNodeControllerPort()));
         app.run();
 
-        LOG.info("Load node info");
+        LOG.info("Load node info description");
         NodeManager.getInstance().init();
 
-        LOG.info("Start Node resource manager");
-        ResourceManager.getInstance().run();
+        LOG.info("Register node controller at backend");
+        boolean success = NodeManager.getInstance().register();
 
-        if (!"true".equals(System.getenv("SP_DEBUG"))) {
-            LOG.info("Auto-deploy StreamPipes node container");
-            DockerContainerManager.getInstance().init();
+        if (success) {
+            LOG.info("Start resource manager");
+            ResourceManager.getInstance().run();
 
-            LOG.info("Start Janitor manager");
-            JanitorManager.getInstance().run();
-        }
+            if (!"true".equals(System.getenv("SP_DEBUG"))) {
+                LOG.info("Auto-deploy extensions container");
+                DockerContainerManager.getInstance().init();
 
-        // registration with consul here
-        ConsulUtil.registerNodeService(
-                conf.getNodeServiceId(),
-                conf.getNodeHostName(),
-                conf.getNodeControllerPort()
-        );
+                LOG.info("Start janitor manager");
+                JanitorManager.getInstance().run();
+            }
+
+            // registration with consul here
+            ConsulUtil.registerNodeService(
+                    conf.getNodeServiceId(),
+                    conf.getNodeHostName(),
+                    conf.getNodeControllerPort()
+            );
+        } else throw new SpRuntimeException("Could not register node controller at backend");
     }
 
     @PreDestroy

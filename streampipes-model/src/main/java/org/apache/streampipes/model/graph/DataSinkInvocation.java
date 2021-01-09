@@ -65,6 +65,7 @@ public class DataSinkInvocation extends InvocableStreamPipesEntity {
     this.setElementEndpointServiceName(sec.getElementEndpointServiceName());
     this.setElementEndpointHostname(sec.getElementEndpointHostname());
     this.setElementEndpointPort(sec.getElementEndpointPort());
+    this.setResourceRequirements(sec.getResourceRequirements());
     //this.setUri(belongsTo +"/" +getElementId());
   }
 

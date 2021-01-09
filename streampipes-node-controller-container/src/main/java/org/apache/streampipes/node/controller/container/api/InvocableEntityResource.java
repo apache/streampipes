@@ -23,10 +23,10 @@ import org.apache.streampipes.container.model.node.InvocableRegistration;
 import org.apache.streampipes.model.Response;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.node.controller.container.management.pe.InvocableElementManager;
 import org.apache.streampipes.node.controller.container.management.pe.RunningInvocableInstances;
 import org.apache.streampipes.node.controller.container.management.relay.DataStreamRelayManager;
+import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,31 +34,30 @@ import org.slf4j.LoggerFactory;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
-public abstract class InvocableEntityResource<I extends InvocableStreamPipesEntity> extends AbstractResource {
+@Path("/api/v2/node/element")
+public class InvocableEntityResource extends AbstractResource {
     private static final Logger LOG = LoggerFactory.getLogger(InvocableEntityResource.class.getCanonicalName());
-
     private static final String SLASH = "/";
-
-    protected Class<I> clazz;
-
-    public InvocableEntityResource(Class<I> clazz) {
-        this.clazz = clazz;
-    }
+    private static final String DATA_PROCESSOR_PREFIX = "sepa";
+    private static final String DATA_SINK_PREFIX = "sec";
 
     @POST
     @Path("/register")
+    @JacksonSerialized
+    @Consumes(MediaType.APPLICATION_JSON)
     public void register(InvocableRegistration registration) {
         InvocableElementManager.getInstance().register(registration);
     }
 
     @POST
-    @Path("{elementId}")
+    @Path("{identifier}/{elementId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public javax.ws.rs.core.Response invoke(@PathParam("elementId") String elementId, I graph) {
+    public javax.ws.rs.core.Response invoke(@PathParam("identifier") String identifier,
+                                            @PathParam("elementId") String elementId, InvocableStreamPipesEntity graph) {
         String endpoint;
 
-        if (graph instanceof DataProcessorInvocation) {
+        if (identifier.equals(DATA_PROCESSOR_PREFIX)) {
             endpoint = graph.getBelongsTo();
             DataStreamRelayManager.getInstance().startPipelineElementDataStreamRelay((DataProcessorInvocation) graph);
             Response resp = InvocableElementManager.getInstance().invoke(endpoint, toJson(graph));
@@ -69,7 +68,7 @@ public abstract class InvocableEntityResource<I extends InvocableStreamPipesEnti
         }
         // Currently no data sinks are registered at node controller. If we, at some point, want to also run data
         // sinks on edge nodes we need to register there Declarer at the node controller one startup.
-        else if (graph instanceof DataSinkInvocation) {
+        else if (identifier.equals(DATA_SINK_PREFIX)) {
             endpoint = graph.getBelongsTo();
             Response resp = InvocableElementManager.getInstance().invoke(endpoint, toJson(graph));
             if (resp.isSuccess()) {
@@ -82,12 +81,11 @@ public abstract class InvocableEntityResource<I extends InvocableStreamPipesEnti
     }
 
     @DELETE
-    @Path("{elementId}/{runningInstanceId}")
+    @Path("{identifier}/{elementId}/{runningInstanceId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public javax.ws.rs.core.Response detach(@PathParam("elementId") String elementId,
-                         @PathParam("runningInstanceId") String runningInstanceId) {
-        LOG.info("receive stop request elementId={}, runningInstanceId={}", elementId, runningInstanceId);
-
+    public javax.ws.rs.core.Response detach(@PathParam("identifier") String identifier,
+                                            @PathParam("elementId") String elementId,
+                                            @PathParam("runningInstanceId") String runningInstanceId) {
         String endpoint = RunningInvocableInstances.INSTANCE.get(runningInstanceId).getBelongsTo();
         Response resp = InvocableElementManager.getInstance().detach(endpoint + SLASH + runningInstanceId);
         RunningInvocableInstances.INSTANCE.remove(runningInstanceId);
@@ -96,7 +94,7 @@ public abstract class InvocableEntityResource<I extends InvocableStreamPipesEnti
         return ok(resp);
     }
 
-    private String toJson(I graph) {
+    private String toJson(InvocableStreamPipesEntity graph) {
         try {
             return JacksonSerializer.getObjectMapper().writeValueAsString(graph);
         } catch (JsonProcessingException e) {

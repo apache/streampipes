@@ -17,14 +17,12 @@
  */
 package org.apache.streampipes.rest.impl;
 
-import org.apache.streampipes.manager.operations.Operations;
+import org.apache.streampipes.manager.node.NodeClusterManager;
+import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.node.NodeInfoDescription;
 import org.apache.streampipes.rest.api.INode;
-import org.apache.streampipes.rest.shared.annotation.GsonClientModel;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -32,17 +30,19 @@ import javax.ws.rs.core.Response;
 
 @Path("/v2/users/{username}/nodes")
 public class Node extends AbstractRestInterface implements INode {
-    private static final Logger LOG = LoggerFactory.getLogger(Node.class.getCanonicalName());
+
+    private static final String ACTIVATE = "activate";
+    private static final String DEACTIVATE = "deactivate";
 
     @POST
     @JacksonSerialized
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     @Override
     public Response addNode(@PathParam("username") String username, NodeInfoDescription desc) {
-        Operations.addNode(desc);
-        return statusMessage(Notifications.success("Node added"));
+        NodeClusterManager.addNode(desc);
+        return statusMessage(Notifications.success(NotificationType.STORAGE_SUCCESS));
     }
-
 
     @PUT
     @JacksonSerialized
@@ -52,7 +52,29 @@ public class Node extends AbstractRestInterface implements INode {
     @Override
     public Response updateNode(@PathParam("username") String username,
                                @PathParam("nodeControllerId") String nodeControllerId, NodeInfoDescription desc) {
-        return statusMessage(Operations.updateNode(desc));
+        return statusMessage(NodeClusterManager.updateNode(desc));
+    }
+
+    @POST
+    @JacksonSerialized
+    @Path("/{action}/{nodeControllerId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Override
+    public Response changeNodeState(@PathParam("action") String action,
+                                    @PathParam("username") String username,
+                                    @PathParam("nodeControllerId") String nodeControllerId) {
+        boolean success = false;
+        if (action.equals(ACTIVATE)) {
+            success = NodeClusterManager.activateNode(nodeControllerId);
+        } else if (action.equals(DEACTIVATE)) {
+            success = NodeClusterManager.deactivateNode(nodeControllerId);
+        }
+        if (success) {
+            return statusMessage(Notifications.success(NotificationType.OPERATION_SUCCESS));
+        } else {
+            return statusMessage(Notifications.error(NotificationType.NODE_STATE_UPDATE_ERROR));
+        }
     }
 
     @DELETE
@@ -60,8 +82,8 @@ public class Node extends AbstractRestInterface implements INode {
     @Override
     public Response deleteNode(@PathParam("username") String username,
                                @PathParam("nodeControllerId") String nodeControllerId) {
-        Operations.deleteNode(nodeControllerId);
-        return statusMessage(Notifications.success("Node deleted"));
+        NodeClusterManager.deleteNode(nodeControllerId);
+        return statusMessage(Notifications.success(NotificationType.REMOVED_NODE));
     }
 
     @GET
@@ -70,8 +92,7 @@ public class Node extends AbstractRestInterface implements INode {
     @Produces(MediaType.APPLICATION_JSON)
     @Override
     public Response getAvailableNodes() {
-        // TODO: get from couchdb not from consul
-        return ok(Operations.getAvailableNodes());
+        return ok(NodeClusterManager.getAvailableNodes());
     }
 
     @GET
@@ -79,6 +100,6 @@ public class Node extends AbstractRestInterface implements INode {
     @Produces(MediaType.APPLICATION_JSON)
     @Override
     public Response getNodes() {
-        return ok(Operations.getAllNodes());
+        return ok(NodeClusterManager.getAllNodes());
     }
 }

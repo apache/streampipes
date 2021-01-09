@@ -29,23 +29,28 @@ import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.graph.DataSourceDescription;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
+import org.slf4j.LoggerFactory;
 
 import java.util.logging.Logger;
 
 public class TypeExtractor {
+	private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(TypeExtractor.class.getCanonicalName());
 
-	private static final Logger logger = Logger.getAnonymousLogger();
+	private static final String DATA_PROCESSOR_PREFIX = "sepa";
+	private static final String DATA_SINK_PREFIX = "sec";
+	private static final String DATA_SOURCE_PREFIX = "sep";
 
-	private String pipelineElementDescription;
+	private final String pipelineElementDescription;
 	
 	public TypeExtractor(String pipelineElementDescription) {
 		this.pipelineElementDescription = pipelineElementDescription;
-
 	}
 	
 	public ElementVerifier<?> getTypeVerifier() throws SepaParseException {
 		try {
-			ObjectNode jsonNode = JacksonSerializer.getObjectMapper().readValue(this.pipelineElementDescription, ObjectNode.class);
+			ObjectNode jsonNode = JacksonSerializer
+					.getObjectMapper()
+					.readValue(this.pipelineElementDescription, ObjectNode.class);
 			String jsonClassName = jsonNode.get("@class").asText();
 			return getTypeDef(jsonClassName);
 		} catch (JsonProcessingException e) {
@@ -57,24 +62,30 @@ public class TypeExtractor {
 		if (jsonClassName == null) {
 			throw new SepaParseException();
 		} else {
-			if (jsonClassName.equals(ep())) { logger.info("Detected type sep"); return new SepVerifier(pipelineElementDescription); }
-			else if (jsonClassName.equals(epa())) { logger.info("Detected type sepa"); return new SepaVerifier(pipelineElementDescription); }
-			else if (jsonClassName.equals(ec())) { logger.info("Detected type sec"); return new SecVerifier(pipelineElementDescription); }
-			else throw new SepaParseException();
+			if (jsonClassName.equals(ep())) {
+				LOG.debug("Detected active pipeline element type {}", DATA_SOURCE_PREFIX);
+				return new SepVerifier(pipelineElementDescription);
+			} else if (jsonClassName.equals(epa())) {
+				LOG.info("Detected active pipeline element type {}", DATA_PROCESSOR_PREFIX);
+				return new SepaVerifier(pipelineElementDescription);
+			} else if (jsonClassName.equals(ec())) {
+				LOG.info("Detected active pipeline element type {}", DATA_SINK_PREFIX);
+				return new SecVerifier(pipelineElementDescription);
+			} else throw new SepaParseException();
 		}
 	}
 	
-	private static final String ep()
+	private static String ep()
 	{
 		return DataSourceDescription.class.getCanonicalName();
 	}
 	
-	private static final String epa()
+	private static String epa()
 	{
 		return DataProcessorDescription.class.getCanonicalName();
 	}
 	
-	private static final String ec()
+	private static String ec()
 	{
 		return DataSinkDescription.class.getCanonicalName();
 	}

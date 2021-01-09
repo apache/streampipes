@@ -15,23 +15,15 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.rest.api;
+package org.apache.streampipes.sdk.helpers;
 
-import org.apache.streampipes.model.node.NodeInfoDescription;
+import org.apache.streampipes.model.resource.Hardware;
 
-import javax.ws.rs.core.Response;
+public class NodeResourceRequirements {
 
-public interface INode {
-
-    Response addNode(String username, NodeInfoDescription desc);
-
-    Response updateNode(String username, String nodeControllerId, NodeInfoDescription desc);
-
-    Response deleteNode(String username, String nodeControllerId);
-
-    Response changeNodeState(String action, String username, String nodeControllerId);
-
-    Response getAvailableNodes();
-
-    Response getNodes();
+    public static Hardware gpu() {
+        Hardware rp = new Hardware();
+        rp.setGpu(true);
+        return rp;
+    }
 }

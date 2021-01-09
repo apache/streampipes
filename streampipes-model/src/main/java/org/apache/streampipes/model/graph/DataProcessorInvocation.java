@@ -86,6 +86,7 @@ public class DataProcessorInvocation extends InvocableStreamPipesEntity implemen
 
     this.setOutputStreamRelays(sepa.getOutputStreamRelays());
     this.setEventRelayStrategy(sepa.getEventRelayStrategy());
+    this.setResourceRequirements(sepa.getResourceRequirements());
 
     //this.setUri(belongsTo +"/" +getElementId());
   }
@@ -102,6 +103,9 @@ public class DataProcessorInvocation extends InvocableStreamPipesEntity implemen
     this.pathName = other.getPathName();
     this.eventRelayStrategy = other.getEventRelayStrategy();
     this.category = new Cloner().epaTypes(other.getCategory());
+    if (other.getResourceRequirements() != null) {
+      this.resourceRequirements = new Cloner().resourceRequirements(other.getResourceRequirements());
+    }
   }
 
   public DataProcessorInvocation(DataProcessorDescription sepa, String domId) {

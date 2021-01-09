@@ -49,6 +49,7 @@ import org.apache.streampipes.model.output.OutputStrategy;
 import org.apache.streampipes.model.quality.EventPropertyQualityDefinition;
 import org.apache.streampipes.model.quality.EventStreamQualityDefinition;
 import org.apache.streampipes.model.quality.Frequency;
+import org.apache.streampipes.model.resource.NodeResourceRequirement;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.ValueSpecification;
 import org.apache.streampipes.model.staticproperty.MappingProperty;
@@ -118,6 +119,7 @@ public class GsonSerializer {
 
     builder.registerTypeAdapter(ContainerRuntime.class, new JsonLdSerializer<ContainerRuntime>());
     builder.registerTypeAdapter(DeploymentContainer.class, new JsonLdSerializer<DeploymentContainer>());
+    builder.registerTypeAdapter(NodeResourceRequirement.class, new JsonLdSerializer<NodeResourceRequirement>());
 
     builder.setPrettyPrinting();
     return builder;

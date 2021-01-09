@@ -60,6 +60,9 @@ public enum NotificationType {
 	REMOVED_ACTION("Action removed", ""),
 	REMOVED_SOURCE("Source removed", ""),
 	REMOVED_SEPA("Sepa removed", ""),
+	REMOVED_NODE("Node removed", ""),
+
+	NODE_STATE_UPDATE_ERROR("Node state update error", "Node state could not be changed."),
 
 	ADDED_CONFIGURATION("Configuration added", ""), 
 	INSTALLATION_SUCCESSFUL("Installation successful", ""), 

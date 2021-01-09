@@ -42,7 +42,7 @@ public class PipelineElementImportNoUser extends AbstractRestInterface {
   @Context
   UriInfo uri;
 
-  @Path("/")
+//  @Path("/")
   @POST
   @Produces(MediaType.APPLICATION_JSON)
   public Response addElement(@PathParam("username") String username, @FormParam("uri") String uri, @FormParam("publicElement") boolean publicElement) {

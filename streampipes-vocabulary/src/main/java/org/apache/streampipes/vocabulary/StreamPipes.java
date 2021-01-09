@@ -484,4 +484,9 @@ public class StreamPipes {
   public static final String HAS_HARDWARE_RESOURCES = NS + "hasHardwareResources";
   public static final String HAS_CONTAINER_RUNTIME_SERVER_VERSION = NS + "hasContainerRuntimeServerVersion";
   public static final String HAS_CONTAINER_RUNTIME_API_VERSION = NS + "hasContainerRuntimeApiVersion";
+  public static final String HARDWARE_REQUIREMENT = NS + "HardwareRequirement";
+  public static final String HAS_GPU_REQUIREMENT = NS + "hasGpuRequirement";
+  public static final String HAS_NODE_RESOURCE_PROPERTY = NS + "hasNodeResourceProperty";
+  public static final String NODE_RESOURCE_REQUIREMENT = NS + "NodeResourceRequirement";
+  public static final String REQUIRES_RESOURCES = NS + "requiresResources";
 }

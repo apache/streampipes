@@ -21,6 +21,7 @@ package org.apache.streampipes.model.base;
 import io.fogsy.empire.annotations.RdfProperty;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.grounding.EventGrounding;
+import org.apache.streampipes.model.resource.NodeResourceRequirement;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.vocabulary.StreamPipes;
@@ -46,6 +47,11 @@ public abstract class ConsumableStreamPipesEntity extends NamedStreamPipesEntity
   @RdfProperty(StreamPipes.HAS_STATIC_PROPERTY)
   protected List<StaticProperty> staticProperties;
 
+  @OneToMany(fetch = FetchType.EAGER,
+          cascade = {CascadeType.ALL})
+  @RdfProperty(StreamPipes.HAS_NODE_RESOURCE_PROPERTY)
+  protected List<NodeResourceRequirement> resourceRequirements;
+
   @OneToOne(fetch = FetchType.EAGER,
           cascade = {CascadeType.ALL})
   @RdfProperty(StreamPipes.SUPPORTED_GROUNDING)
@@ -64,12 +70,14 @@ public abstract class ConsumableStreamPipesEntity extends NamedStreamPipesEntity
     super();
     this.spDataStreams = new ArrayList<>();
     this.staticProperties = new ArrayList<>();
+    this.resourceRequirements = new ArrayList<>();
   }
 
   public ConsumableStreamPipesEntity(String uri, String name, String description, String iconUrl) {
     super(uri, name, description, iconUrl);
     this.spDataStreams = new ArrayList<>();
     this.staticProperties = new ArrayList<>();
+    this.resourceRequirements = new ArrayList<>();
   }
 
   public ConsumableStreamPipesEntity(ConsumableStreamPipesEntity other) {
@@ -83,6 +91,9 @@ public abstract class ConsumableStreamPipesEntity extends NamedStreamPipesEntity
     this.staticProperties = new Cloner().staticProperties(other.getStaticProperties());
     if (other.getSupportedGrounding() != null) {
       this.supportedGrounding = new EventGrounding(other.getSupportedGrounding());
+    }
+    if (other.getResourceRequirements() != null) {
+      this.resourceRequirements = new Cloner().resourceRequirements(other.getResourceRequirements());
     }
   }
 
@@ -136,5 +147,13 @@ public abstract class ConsumableStreamPipesEntity extends NamedStreamPipesEntity
 
   public void setElementEndpointServiceName(String elementEndpointServiceName) {
     this.elementEndpointServiceName = elementEndpointServiceName;
+  }
+
+  public List<NodeResourceRequirement> getResourceRequirements() {
+    return resourceRequirements;
+  }
+
+  public void setResourceRequirements(List<NodeResourceRequirement> resourceRequirements) {
+    this.resourceRequirements = resourceRequirements;
   }
 }

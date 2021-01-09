@@ -24,12 +24,14 @@ import org.apache.streampipes.model.constants.PropertySelectorConstants;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
+import org.apache.streampipes.model.resource.NodeResourceRequirement;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.model.staticproperty.MappingProperty;
 import org.apache.streampipes.model.staticproperty.MappingPropertyNary;
 import org.apache.streampipes.model.staticproperty.MappingPropertyUnary;
+import org.apache.streampipes.sdk.helpers.CollectedResourceRequirements;
 import org.apache.streampipes.sdk.helpers.CollectedStreamRequirements;
 import org.apache.streampipes.sdk.helpers.Label;
 
@@ -42,6 +44,8 @@ public abstract class AbstractProcessingElementBuilder<BU extends
         AbstractConfigurablePipelineElementBuilder<BU, T> {
 
   protected List<SpDataStream> streamRequirements;
+
+  protected List<NodeResourceRequirement> resourceRequirements;
 
   protected List<EventProperty> stream1Properties;
   protected List<EventProperty> stream2Properties;
@@ -57,6 +61,7 @@ public abstract class AbstractProcessingElementBuilder<BU extends
     this.streamRequirements = new ArrayList<>();
     this.stream1Properties = new ArrayList<>();
     this.stream2Properties = new ArrayList<>();
+    this.resourceRequirements = new ArrayList<>();
     this.supportedGrounding = new EventGrounding();
   }
 
@@ -65,6 +70,7 @@ public abstract class AbstractProcessingElementBuilder<BU extends
     this.streamRequirements = new ArrayList<>();
     this.stream1Properties = new ArrayList<>();
     this.stream2Properties = new ArrayList<>();
+    this.resourceRequirements = new ArrayList<>();
     this.supportedGrounding = new EventGrounding();
   }
 
@@ -93,7 +99,15 @@ public abstract class AbstractProcessingElementBuilder<BU extends
     return me();
   }
 
-  public BU requiredResource() {
+  /**
+   * Set a new resource requirement by adding restrictions on node. Use
+   * {@link ResourceRequirementsBuilder} to create requirements.
+   *
+   * @param resourceRequirements: A bundle of collected {@link CollectedResourceRequirements}
+   * @return this
+   */
+  public BU requiredResource(CollectedResourceRequirements resourceRequirements) {
+    this.resourceRequirements.addAll(resourceRequirements.getResourceRequirements());
     return me();
   }
 
@@ -279,6 +293,9 @@ public abstract class AbstractProcessingElementBuilder<BU extends
 
     this.elementDescription.setSpDataStreams(streamRequirements);
 
+    if (this.resourceRequirements.size() > 0) {
+      this.elementDescription.setResourceRequirements(resourceRequirements);
+    }
   }
 
   private SpDataStream buildStream(List<EventProperty> streamProperties) {

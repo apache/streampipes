@@ -21,10 +21,10 @@ import org.apache.streampipes.model.graph.DataSinkInvocation;
 
 import javax.ws.rs.Path;
 
-@Path("/api/v2/node/element/sec")
-public class DataSinkPipelineElementResource extends InvocableEntityResource<DataSinkInvocation> {
-
-    public DataSinkPipelineElementResource() {
-        super(DataSinkInvocation.class);
-    }
-}
+//@Path("/api/v2/node/element/sec")
+//public class DataSinkPipelineElementResource extends InvocableEntityResource<DataSinkInvocation> {
+//
+//    public DataSinkPipelineElementResource() {
+//        super(DataSinkInvocation.class);
+//    }
+//}

@@ -148,7 +148,6 @@ public abstract class AbstractPipelineElementResource<D extends Declarer<?>> {
       String originalId = desc.getElementId();
       String uri = DeclarersSingleton.getInstance().getBaseUri() + type + desc.getElementId();
       desc.setElementId(uri);
-      desc.setElementId(uri);
 
       // TODO remove after full internationalization support has been implemented
       if (desc.isIncludesLocales()) {

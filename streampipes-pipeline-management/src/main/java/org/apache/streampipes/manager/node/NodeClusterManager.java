@@ -17,68 +17,81 @@
  */
 package org.apache.streampipes.manager.node;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.fluent.Request;
-import org.apache.http.entity.ContentType;
+import org.apache.streampipes.model.message.Message;
+import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.node.NodeInfoDescription;
-import org.apache.streampipes.serializers.json.JacksonSerializer;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 
-public enum NodeClusterManager {
-    INSTANCE;
+public class NodeClusterManager extends AbstractClusterManager {
 
+    private static final Logger LOG = LoggerFactory.getLogger(NodeClusterManager.class.getCanonicalName());
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(NodeClusterManager.class.getCanonicalName());
-
-
-    public boolean updateNodeInfoDescription(NodeInfoDescription desc) {
-        boolean successfullyUpdated = false;
-        try {
-            String body = JacksonSerializer.getObjectMapper().writeValueAsString(desc);
-            String url = makeNodeControllerEndpoint(desc);
-
-            LOG.info("Trying to update description for node controller: " + url);
-
-            boolean connected = false;
-            while (!connected) {
-                connected = put(url, body);
-
-                if (!connected) {
-                    LOG.info("Retrying in 5 seconds");
-                    try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-            successfullyUpdated = true;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return successfullyUpdated;
+    public static List<NodeInfoDescription> getAvailableNodes() {
+        //return new AvailableNodesFetcher().fetchNodes();
+        return StorageDispatcher.INSTANCE.getNoSqlStore().getNodeStorage().getAllActiveNodes();
     }
 
-    private String makeNodeControllerEndpoint(NodeInfoDescription desc) {
-        return "http://" + desc.getHostname() + ":" + desc.getPort() + "/api/v2/node/info";
+    public static List<NodeInfoDescription> getAllNodes() {
+        //return new AvailableNodesFetcher().fetchNodes();
+        return StorageDispatcher.INSTANCE.getNoSqlStore().getNodeStorage().getAllNodes();
     }
 
-    private boolean put(String url, String body) {
-        try {
-            Request.Put(url)
-                    .bodyString(body, ContentType.APPLICATION_JSON)
-                    .connectTimeout(1000)
-                    .socketTimeout(100000)
-                    .execute();
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
+    public static Message updateNode(NodeInfoDescription desc) {
+        boolean successfullyUpdated = syncWithRemoteNodeController(desc);
+        if (successfullyUpdated) {
+            StorageDispatcher.INSTANCE.getNoSqlStore().getNodeStorage().updateNode(desc);
+            return Notifications.success("Node updated");
         }
-        return false;
+        return Notifications.error("Could not update node");
+    }
+
+    public static boolean deactivateNode(String nodeControllerId) {
+        Optional<NodeInfoDescription> storedNode =
+                StorageDispatcher.INSTANCE.getNoSqlStore().getNodeStorage().getNode(nodeControllerId);
+        boolean status = false;
+        if (storedNode.isPresent()) {
+            StorageDispatcher.INSTANCE.getNoSqlStore().getNodeStorage().deactivateNode(nodeControllerId);
+            status = syncStateUpdateWithRemoteNodeController(storedNode.get(), false);
+        }
+        return status;
+    }
+
+    public static boolean activateNode(String nodeControllerId) {
+        Optional<NodeInfoDescription> storedNode =
+                StorageDispatcher.INSTANCE.getNoSqlStore().getNodeStorage().getNode(nodeControllerId);
+        boolean status = false;
+        if (storedNode.isPresent()) {
+            StorageDispatcher.INSTANCE.getNoSqlStore().getNodeStorage().activateNode(nodeControllerId);
+            status = syncStateUpdateWithRemoteNodeController(storedNode.get(), true);
+        }
+        return status;
+    }
+
+    public static void addNode(NodeInfoDescription desc) {
+        List<NodeInfoDescription> allNodes =
+                StorageDispatcher.INSTANCE.getNoSqlStore().getNodeStorage().getAllNodes();
+
+        boolean alreadyRegistered = false;
+        if (allNodes.size() > 0) {
+            alreadyRegistered = allNodes.stream()
+                    .anyMatch(n -> n.getNodeControllerId().equals(desc.getNodeControllerId()));
+        }
+
+        if (!alreadyRegistered) {
+            LOG.info("New cluster node join registration request on from http://{}:{}", desc.getHostname(), desc.getPort());
+            StorageDispatcher.INSTANCE.getNoSqlStore().getNodeStorage().storeNode(desc);
+            LOG.info("New cluster node successfully joined http://{}:{}", desc.getHostname(), desc.getPort());
+        } else {
+            LOG.info("Re-joined cluster node from http://{}:{}", desc.getHostname(), desc.getPort());
+        }
+    }
+
+    public static void deleteNode(String nodeControllerId) {
+        StorageDispatcher.INSTANCE.getNoSqlStore().getNodeStorage().deleteNode(nodeControllerId);
     }
 }

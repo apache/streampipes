@@ -23,7 +23,7 @@ import {
   Message,
   Pipeline,
   NodeInfoDescription,
-  StaticNodeMetadata
+  StaticNodeMetadata, NvidiaContainerRuntime, DockerContainerRuntime, ContainerRuntime, DataSinkInvocation
 } from "../../../core-model/gen/streampipes-model";
 import {ObjectProvider} from "../../services/object-provider.service";
 import {EditorService} from "../../services/editor.service";
@@ -310,6 +310,4 @@ export class SavePipelineComponent implements OnInit {
       this.applyDefaultPolicy(this.tmpPipeline.sepas);
     }
   }
-
-
 }
