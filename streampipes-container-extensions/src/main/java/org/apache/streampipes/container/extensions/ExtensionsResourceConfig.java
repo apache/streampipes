@@ -31,7 +31,7 @@ public class ExtensionsResourceConfig extends ResourceConfig {
         register(DataProcessorPipelineElementResource.class);
         register(DataStreamPipelineElementResource.class);
         register(WelcomePage.class);
-        register(PipelineElementTemplateResource.class);
+        register(PipelineTemplateResource.class);
 
         //register(WelcomePageWorker.class);
         register(GuessResource.class);

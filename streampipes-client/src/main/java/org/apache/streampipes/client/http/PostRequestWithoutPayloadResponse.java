@@ -15,23 +15,22 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.container.standalone.init;
+package org.apache.streampipes.client.http;
 
-import org.apache.streampipes.container.api.*;
-import org.apache.streampipes.rest.shared.serializer.JacksonSerializationProvider;
-import org.glassfish.jersey.server.ResourceConfig;
-import org.springframework.stereotype.Component;
+import org.apache.streampipes.client.model.StreamPipesClientConfig;
+import org.apache.streampipes.client.util.StreamPipesApiPath;
 
-@Component
-public class PipelineElementContainerResourceConfig extends ResourceConfig {
+public class PostRequestWithoutPayloadResponse<T> extends PostRequest<T, Void> {
 
-  public PipelineElementContainerResourceConfig() {
-    register(DataSinkPipelineElementResource.class);
-    register(DataProcessorPipelineElementResource.class);
-    register(DataStreamPipelineElementResource.class);
-    register(WelcomePage.class);
-    register(PipelineTemplateResource.class);
+  public PostRequestWithoutPayloadResponse(StreamPipesClientConfig clientConfig,
+                                           StreamPipesApiPath apiPath,
+                                           T element) {
+    super(clientConfig, apiPath, element);
+  }
 
-    register(JacksonSerializationProvider.class);
+  @Override
+  public Void postItem() {
+    executeRequest();
+    return null;
   }
 }

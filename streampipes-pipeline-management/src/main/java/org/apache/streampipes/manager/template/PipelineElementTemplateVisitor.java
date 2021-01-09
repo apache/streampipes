@@ -114,7 +114,7 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
   }
 
   private Object getValue(String internalName) {
-    return configs.get(internalName);
+    return configs.get(internalName).getValue();
   }
 
   private boolean hasKey(String internalName) {

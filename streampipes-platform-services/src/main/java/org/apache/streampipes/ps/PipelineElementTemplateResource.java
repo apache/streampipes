@@ -24,7 +24,6 @@ import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.template.PipelineElementTemplate;
 import org.apache.streampipes.rest.impl.AbstractRestInterface;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
-import retrofit2.http.Query;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -37,7 +36,7 @@ public class PipelineElementTemplateResource extends AbstractRestInterface {
   @Produces(MediaType.APPLICATION_JSON)
   @JacksonSerialized
   public Response getAll(@QueryParam("appId") String appId) {
-    if (appId != null) {
+    if (appId == null) {
       return ok(getPipelineElementTemplateStorage().getAll());
     } else {
       return ok(getPipelineElementTemplateStorage().getPipelineElementTemplatesforAppId(appId));
@@ -56,7 +55,7 @@ public class PipelineElementTemplateResource extends AbstractRestInterface {
     }
   }
 
-  @GET
+  @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @JacksonSerialized
   public Response create(PipelineElementTemplate entity) {
@@ -95,23 +94,23 @@ public class PipelineElementTemplateResource extends AbstractRestInterface {
   @Consumes(MediaType.APPLICATION_JSON)
   @JacksonSerialized
   public Response getPipelineElementForTemplate(@PathParam("id") String id,
-                                                @QueryParam("overwriteNames") boolean overwriteNameAndDescription,
+                                                @QueryParam("overwriteNames") String overwriteNameAndDescription,
                                                 DataSinkInvocation invocation) {
     PipelineElementTemplate template = getPipelineElementTemplateStorage().getElementById(id);
-    return ok(new DataSinkTemplateHandler(template, invocation, overwriteNameAndDescription)
+    return ok(new DataSinkTemplateHandler(template, invocation, Boolean.parseBoolean(overwriteNameAndDescription))
             .applyTemplateOnPipelineElement());
   }
 
   @POST
-  @Path("{id}/sink")
+  @Path("{id}/processor")
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @JacksonSerialized
   public Response getPipelineElementForTemplate(@PathParam("id") String id,
-                                                @Query("overwriteNames") boolean overwriteNameAndDescription,
+                                                @QueryParam("overwriteNames") String overwriteNameAndDescription,
                                                 DataProcessorInvocation invocation) {
     PipelineElementTemplate template = getPipelineElementTemplateStorage().getElementById(id);
-    return ok(new DataProcessorTemplateHandler(template, invocation, overwriteNameAndDescription)
+    return ok(new DataProcessorTemplateHandler(template, invocation, Boolean.parseBoolean(overwriteNameAndDescription))
             .applyTemplateOnPipelineElement());
   }
 

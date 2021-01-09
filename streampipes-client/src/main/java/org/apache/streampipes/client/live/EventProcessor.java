@@ -15,23 +15,11 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.container.standalone.init;
+package org.apache.streampipes.client.live;
 
-import org.apache.streampipes.container.api.*;
-import org.apache.streampipes.rest.shared.serializer.JacksonSerializationProvider;
-import org.glassfish.jersey.server.ResourceConfig;
-import org.springframework.stereotype.Component;
+import org.apache.streampipes.model.runtime.Event;
 
-@Component
-public class PipelineElementContainerResourceConfig extends ResourceConfig {
+public interface EventProcessor {
 
-  public PipelineElementContainerResourceConfig() {
-    register(DataSinkPipelineElementResource.class);
-    register(DataProcessorPipelineElementResource.class);
-    register(DataStreamPipelineElementResource.class);
-    register(WelcomePage.class);
-    register(PipelineTemplateResource.class);
-
-    register(JacksonSerializationProvider.class);
-  }
+  void onEvent(Event event);
 }

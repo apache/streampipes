@@ -15,23 +15,19 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.container.standalone.init;
+package org.apache.streampipes.client.api;
 
-import org.apache.streampipes.container.api.*;
-import org.apache.streampipes.rest.shared.serializer.JacksonSerializationProvider;
-import org.glassfish.jersey.server.ResourceConfig;
-import org.springframework.stereotype.Component;
+import java.util.List;
 
-@Component
-public class PipelineElementContainerResourceConfig extends ResourceConfig {
+public interface CRUDApi<ID, T> {
 
-  public PipelineElementContainerResourceConfig() {
-    register(DataSinkPipelineElementResource.class);
-    register(DataProcessorPipelineElementResource.class);
-    register(DataStreamPipelineElementResource.class);
-    register(WelcomePage.class);
-    register(PipelineTemplateResource.class);
+  T get(ID id);
 
-    register(JacksonSerializationProvider.class);
-  }
+  List<T> all();
+
+  void create(T element);
+
+  void delete(ID id);
+
+  void update(T element);
 }

@@ -24,7 +24,7 @@ import javax.ws.rs.Path;
 import java.util.Map;
 
 @Path("/template")
-public class PipelineElementTemplateResource extends AbstractPipelineElementResource<PipelineTemplateDeclarer> {
+public class PipelineTemplateResource extends AbstractPipelineElementResource<PipelineTemplateDeclarer> {
 
   @Override
   protected Map<String, PipelineTemplateDeclarer> getElementDeclarers() {

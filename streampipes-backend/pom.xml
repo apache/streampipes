@@ -61,6 +61,11 @@
             <artifactId>streampipes-connect-container-master</artifactId>
             <version>0.68.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.streampipes</groupId>
+            <artifactId>streampipes-platform-services</artifactId>
+            <version>0.68.0-SNAPSHOT</version>
+        </dependency>
         <!-- External dependencies -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>

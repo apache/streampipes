@@ -15,23 +15,27 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.container.standalone.init;
+package org.apache.streampipes.client;
 
-import org.apache.streampipes.container.api.*;
-import org.apache.streampipes.rest.shared.serializer.JacksonSerializationProvider;
-import org.glassfish.jersey.server.ResourceConfig;
-import org.springframework.stereotype.Component;
+public class StreamPipesCredentials {
 
-@Component
-public class PipelineElementContainerResourceConfig extends ResourceConfig {
+  private String username;
+  private String apiKey;
 
-  public PipelineElementContainerResourceConfig() {
-    register(DataSinkPipelineElementResource.class);
-    register(DataProcessorPipelineElementResource.class);
-    register(DataStreamPipelineElementResource.class);
-    register(WelcomePage.class);
-    register(PipelineTemplateResource.class);
+  public static StreamPipesCredentials from(String username, String apiKey) {
+    return new StreamPipesCredentials(username, apiKey);
+  }
 
-    register(JacksonSerializationProvider.class);
+  private StreamPipesCredentials(String username, String apiKey) {
+    this.username = username;
+    this.apiKey = apiKey;
+  }
+
+  public String getUsername() {
+    return username;
+  }
+
+  public String getApiKey() {
+    return apiKey;
   }
 }

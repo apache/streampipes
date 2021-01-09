@@ -19,7 +19,7 @@
 package org.apache.streampipes.backend;
 
 import org.apache.streampipes.connect.container.master.rest.*;
-import org.apache.streampipes.container.api.PipelineElementTemplateResource;
+import org.apache.streampipes.ps.PipelineElementTemplateResource;
 import org.apache.streampipes.rest.impl.*;
 import org.apache.streampipes.rest.impl.dashboard.Dashboard;
 import org.apache.streampipes.rest.impl.dashboard.DashboardWidget;
@@ -32,7 +32,10 @@ import org.apache.streampipes.rest.impl.nouser.FileServingResource;
 import org.apache.streampipes.rest.impl.nouser.PipelineElementImportNoUser;
 import org.apache.streampipes.rest.impl.nouser.PipelineNoUserResource;
 import org.apache.streampipes.rest.serializer.JsonLdProvider;
-import org.apache.streampipes.rest.shared.serializer.*;
+import org.apache.streampipes.rest.shared.serializer.GsonClientModelProvider;
+import org.apache.streampipes.rest.shared.serializer.GsonWithIdProvider;
+import org.apache.streampipes.rest.shared.serializer.GsonWithoutIdProvider;
+import org.apache.streampipes.rest.shared.serializer.JacksonSerializationProvider;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.context.annotation.Configuration;

@@ -22,6 +22,7 @@ import com.google.gson.annotations.SerializedName;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
 import java.util.Map;
+import java.util.UUID;
 
 @TsModel
 public class PipelineElementTemplate {
@@ -47,6 +48,7 @@ public class PipelineElementTemplate {
   }
 
   public PipelineElementTemplate() {
+    this.couchDbId = UUID.randomUUID().toString();
   }
 
   public String getTemplateName() {
