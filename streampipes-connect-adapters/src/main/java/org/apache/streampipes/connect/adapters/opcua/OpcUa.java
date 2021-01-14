@@ -59,6 +59,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class OpcUa {
 
@@ -67,6 +69,9 @@ public class OpcUa {
     private NodeId node;
     private String opcServerURL;
     private OpcUaClient client;
+    private boolean unauthenticated;
+    private String user;
+    private String password;
     private List<Map<String, Integer>> unitIDs = new ArrayList<>();
 
     private static final AtomicLong clientHandles = new AtomicLong(1L);
@@ -79,6 +84,7 @@ public class OpcUa {
     public OpcUa(String opcServerURL, int namespaceIndex, String nodeId) {
 
         this.opcServerURL = opcServerURL;
+        this.unauthenticated = true;
 
         if (isInteger(nodeId)) {
             int integerNodeId = Integer.parseInt(nodeId);
@@ -90,6 +96,20 @@ public class OpcUa {
 
     public OpcUa(String opcServer, int opcServerPort, int namespaceIndex, String nodeId) {
         this("opc.tcp://" + opcServer + ":" + opcServerPort, namespaceIndex, nodeId);
+    }
+
+    public OpcUa(String opcServerURL, int namespaceIndex, String nodeId, String username, String password) {
+        this(opcServerURL, namespaceIndex, nodeId);
+        this.unauthenticated = false;
+        this.user = username;
+        this.password = password;
+    }
+
+    public OpcUa(String opcServer, int opcServerPort, int namespaceIndex, String nodeId, String username, String password) {
+        this (opcServer, opcServerPort, namespaceIndex, nodeId);
+        this.unauthenticated = false;
+        this.user = username;
+        this.password = password;
     }
 
     public void connect() throws Exception {
@@ -111,12 +131,21 @@ public class OpcUa {
                 .filter(e -> e.getSecurityPolicyUri().equals(SecurityPolicy.None.getUri()))
                 .findFirst().orElseThrow(() -> new Exception("no desired endpoints returned"));
 
-        OpcUaClientConfig config = OpcUaClientConfig.builder()
-                .setApplicationName(LocalizedText.english("eclipse milo opc-ua client"))
-                .setApplicationUri("urn:eclipse:milo:examples:client")
-                .setEndpoint(endpoint)
-                .build();
-
+        OpcUaClientConfig config;
+        if (this.unauthenticated) {
+            config = OpcUaClientConfig.builder()
+                    .setApplicationName(LocalizedText.english("eclipse milo opc-ua client"))
+                    .setApplicationUri("urn:eclipse:milo:examples:client")
+                    .setEndpoint(endpoint)
+                    .build();
+        } else {
+            config = OpcUaClientConfig.builder()
+                    .setIdentityProvider(new UsernameProvider(this.user, this.password))
+                    .setApplicationName(LocalizedText.english("eclipse milo opc-ua client"))
+                    .setApplicationUri("urn:eclipse:milo:examples:client")
+                    .setEndpoint(endpoint)
+                    .build();
+        }
         this.client = OpcUaClient.create(config);
         client.connect().get();
     }
@@ -290,7 +319,7 @@ public class OpcUa {
                     }
                 }
             }
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (InterruptedException | ExecutionException | UaException e) {
             throw new AdapterException("Browsing nodeId=" + browse + " failed: " + e.getMessage());
         }
 
