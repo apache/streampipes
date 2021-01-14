@@ -113,7 +113,7 @@
 
         <!-- Connect Dependencies-->
         <animal-sniffer-annotations.version>1.17</animal-sniffer-annotations.version>
-        <bcprov.version>1.61</bcprov.version>
+        <bcprov.version>1.68</bcprov.version>
         <checker-qual.version>2.5.2</checker-qual.version>
         <commons-collections4.version>4.4</commons-collections4.version>
         <commons-compress.version>1.18</commons-compress.version>
@@ -125,7 +125,7 @@
         <jsrosbridge.version>0.2.0</jsrosbridge.version>
         <influxdb.java.version>2.14</influxdb.java.version>
         <hadoop.version>3.2.1</hadoop.version>
-        <eclipse.milo.version>0.4.3</eclipse.milo.version>
+        <eclipse.milo.version>0.5.3</eclipse.milo.version>
         <mysql-binlog-connector.version>0.18.1</mysql-binlog-connector.version>
         <mysql-connector-java.version>8.0.15</mysql-connector-java.version>
         <netty.version>4.1.39.Final</netty.version>
@@ -149,7 +149,7 @@
             </dependency>
             <dependency>
                 <groupId>org.bouncycastle</groupId>
-                <artifactId>bcprov-jdk15on</artifactId>
+                <artifactId>bcprov-jdk14</artifactId>
                 <version>${bcprov.version}</version>
             </dependency>
             <dependency>

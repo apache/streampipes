@@ -22,16 +22,25 @@ package org.apache.streampipes.connect.adapters.opcua;
 import static org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.Unsigned.uint;
 import static org.eclipse.milo.opcua.stack.core.util.ConversionUtil.toList;
 
+import com.google.inject.internal.cglib.reflect.$FastMethod;
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
 import org.apache.streampipes.sdk.utils.Datatypes;
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfig;
+import org.eclipse.milo.opcua.sdk.client.api.identity.AnonymousProvider;
+import org.eclipse.milo.opcua.sdk.client.api.identity.UsernameProvider;
 import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaMonitoredItem;
 import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaSubscription;
 import org.eclipse.milo.opcua.stack.client.DiscoveryClient;
+import org.eclipse.milo.opcua.stack.client.security.ClientCertificateValidator;
 import org.eclipse.milo.opcua.stack.core.AttributeId;
 import org.eclipse.milo.opcua.stack.core.Identifiers;
+import org.eclipse.milo.opcua.stack.core.NamespaceTable;
+import org.eclipse.milo.opcua.stack.core.UaException;
 import org.eclipse.milo.opcua.stack.core.security.SecurityPolicy;
+import org.eclipse.milo.opcua.stack.core.serialization.EncodingLimits;
+import org.eclipse.milo.opcua.stack.core.serialization.SerializationContext;
+import org.eclipse.milo.opcua.stack.core.types.DataTypeManager;
 import org.eclipse.milo.opcua.stack.core.types.builtin.*;
 import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.BrowseDirection;
@@ -61,6 +70,10 @@ public class OpcUa {
     private List<Map<String, Integer>> unitIDs = new ArrayList<>();
 
     private static final AtomicLong clientHandles = new AtomicLong(1L);
+
+    public OpcUaClient getClient() {
+        return this.client;
+    }
 
 
     public OpcUa(String opcServerURL, int namespaceIndex, String nodeId) {
@@ -152,10 +165,10 @@ public class OpcUa {
 
         try {
 //            VariableNode resultNode = client.getAddressSpace().getVariableNode(browseRoot).get();
-            String label = client.getAddressSpace().getVariableNode(browseRoot).get().getDisplayName().get().getText();
-            int opcDataTypeId = ((UInteger) client.getAddressSpace().getVariableNode(browseRoot).get().getDataType().get().getIdentifier()).intValue();
-            Datatypes type = OpcUaTypes.getType((UInteger)client.getAddressSpace().getVariableNode(browseRoot).get().getDataType().get().getIdentifier());
-            NodeId nodeId = client.getAddressSpace().getVariableNode(browseRoot).get().getNodeId().get();
+            String label = client.getAddressSpace().getVariableNode(browseRoot).getDisplayName().getText();
+            int opcDataTypeId = ((UInteger) client.getAddressSpace().getVariableNode(browseRoot).getDataType().getIdentifier()).intValue();
+            Datatypes type = OpcUaTypes.getType((UInteger)client.getAddressSpace().getVariableNode(browseRoot).getDataType().getIdentifier());
+            NodeId nodeId = client.getAddressSpace().getVariableNode(browseRoot).getNodeId();
 
             // if rootNote is of type Property or EUInformation it does not deliver any data value,
             // therefore return an empty list
@@ -177,9 +190,7 @@ public class OpcUa {
                 result.add(new OpcNode(label, type, nodeId));
             }
 
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (UaException e) {
             e.printStackTrace();
         }
 
@@ -208,6 +219,24 @@ public class OpcUa {
 
             List<ReferenceDescription> references = toList(browseResult.getReferences());
 
+            for (ReferenceDescription ref: references){
+                if (ref.getNodeClass().name().equals("Object")) {
+                    NodeId brwRoot =  ref.getNodeId().toNodeId(client.getNamespaceTable()).orElseThrow(AdapterException::new);
+
+                    BrowseDescription brw = new BrowseDescription(
+                            brwRoot,
+                            BrowseDirection.Both,
+                            Identifiers.HasComponent,
+                            true,
+                            uint(NodeClass.Object.getValue() | NodeClass.Variable.getValue()),
+                            uint(BrowseResultMask.All.getValue())
+                    );
+                    List<ReferenceDescription> subReferences = toList(client.browse(brw).get().getReferences());
+                    references = Stream.concat(references.stream(), subReferences.stream()).collect(Collectors.toList());
+                }
+
+            }
+
             for (ReferenceDescription rd : references) {
                 if (rd.getNodeClass() == NodeClass.Variable) {
 
@@ -217,16 +246,16 @@ public class OpcUa {
                     if (OpcUaNodeVariants.Property.getId() == ((UInteger) rd.getTypeDefinition().getIdentifier()).intValue()) {
 
                         ExpandedNodeId property = rd.getNodeId();
-
-                        NodeId propertyNode = property.local().orElseThrow(AdapterException::new);
+                        NodeId propertyNode = property.toNodeId(client.getNamespaceTable()).orElseThrow(AdapterException::new);
 
                         // check node for EU Information
-                       if (OpcUaNodeVariants.EUInformation.getId() == ((UInteger) client.getAddressSpace().getVariableNode(propertyNode).get().getDataType().get().getIdentifier()).intValue()){
+
+                       if (OpcUaNodeVariants.EUInformation.getId() == ((UInteger) client.getAddressSpace().getVariableNode(propertyNode).getDataType().getIdentifier()).intValue()){
 
                            ExtensionObject euExtension = (ExtensionObject) client.readValue(0, TimestampsToReturn.Both, propertyNode).get().getValue().getValue();
 
                            // save information about EngineeringUnit in list
-                           eu = (EUInformation) euExtension.decode();
+                           eu = (EUInformation) euExtension.decode(client.getSerializationContext());
                            Map map = new HashMap();
                            map.put(browseRoot, eu.getUnitId());
                            this.unitIDs.add(map);
@@ -244,14 +273,14 @@ public class OpcUa {
                         }
                         OpcNode opcNode;
                         if (unitID != null){
-                            opcNode = new OpcNode(rd.getBrowseName().getName(), OpcUaTypes.getType((UInteger) rd.getTypeDefinition().getIdentifier()), rd.getNodeId().local().get(), unitID);
+                            opcNode = new OpcNode(rd.getBrowseName().getName(), OpcUaTypes.getType((UInteger) rd.getTypeDefinition().getIdentifier()), rd.getNodeId().toNodeId(client.getNamespaceTable()).orElseThrow(AdapterException::new), unitID);
                         } else {
-                            opcNode = new OpcNode(rd.getBrowseName().getName(), OpcUaTypes.getType((UInteger) rd.getTypeDefinition().getIdentifier()), rd.getNodeId().local().get());
+                            opcNode = new OpcNode(rd.getBrowseName().getName(), OpcUaTypes.getType((UInteger) rd.getTypeDefinition().getIdentifier()), rd.getNodeId().toNodeId(client.getNamespaceTable()).orElseThrow(AdapterException::new));
                         }
                         rd.getNodeId();
 
                         result.add(opcNode);
-                        rd.getNodeId().local().ifPresent(nodeId -> {
+                        rd.getNodeId().toNodeId(client.getNamespaceTable()).ifPresent(nodeId -> {
                             try {
                                 browseNode(nodeId);
                             } catch (AdapterException e) {
