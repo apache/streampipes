@@ -26,3 +26,18 @@ NAMESPACE.INDEX.description=Example: 2
 NODE_ID.title=Node ID
 NODE_ID.description=Id of the Node to read the values from
 
+
+ACCESS_MODE.title=Access Mode
+ACCESS_MODE.description=
+
+USERNAME_GROUP.title=Username/Password
+USERNAME_GROUP.description=
+
+UNAUTHENTICATED.title=Unauthenticated
+UNAUTHENTICATED.description=
+
+USERNAME.title=Username
+USERNAME.description=
+
+PASSWORD.title=Password
+PASSWORD.description=

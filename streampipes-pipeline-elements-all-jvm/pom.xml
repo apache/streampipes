@@ -94,6 +94,12 @@
             <version>${streampipes.version}</version>
             <classifier>embed</classifier>
         </dependency>
+        <dependency>
+            <groupId>org.apache.streampipes</groupId>
+            <artifactId>streampipes-processors-change-detection-jvm</artifactId>
+            <version>${streampipes.version}</version>
+            <classifier>embed</classifier>
+        </dependency>
 
         <!-- 3rd party dependencies to avoid convergence errors -->
         <dependency>
@@ -108,6 +114,21 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <phase>package</phase>
+                        <configuration>
+                            <classifier>embed</classifier>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

@@ -20,9 +20,6 @@ package org.apache.streampipes.processors.transformation.jvm.processor.boolopera
 
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
-import org.eclipse.rdf4j.query.algebra.In;
-
-import java.util.List;
 
 public class SignalEdgeFilterParameters extends EventProcessorBindingParams {
     private String booleanSignalField;

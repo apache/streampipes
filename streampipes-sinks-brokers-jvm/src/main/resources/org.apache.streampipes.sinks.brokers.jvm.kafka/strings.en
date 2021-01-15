@@ -13,3 +13,19 @@ host.description=IP address or hostname of Kafka broker
 port.title=Port
 port.description=Port of the Kafka broker. Default port 9092
 
+username.title=Username
+username.description=The username to authenticate with the broker
+
+password.title=Password
+password.description=The password to authenticate with the broker
+
+access-mode.title=Access Mode
+access-mode.description=Unauthenticated or SASL/PLAIN
+
+anonymous-alternative.title=Unauthenticated
+anonymous-alternative.description=No authentication and plaintext
+
+username-alternative.title=SASL/PLAIN
+username-alternative.description=Username and password, no encryption
+
+username-group.title=Username and password

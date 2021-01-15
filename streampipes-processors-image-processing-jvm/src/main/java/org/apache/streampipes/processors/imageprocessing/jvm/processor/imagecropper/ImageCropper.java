@@ -59,6 +59,8 @@ public class ImageCropper implements EventProcessor<ImageCropperParameters> {
         if (finalImage.isPresent()) {
           Event outEvent = new Event();
           outEvent.addField("image", Base64.getEncoder().encodeToString(finalImage.get()));
+          outEvent.addField("classesindex", box.get("classesindex"));
+          outEvent.addField("score", box.get("score"));
           out.collect(outEvent);
         }
       }

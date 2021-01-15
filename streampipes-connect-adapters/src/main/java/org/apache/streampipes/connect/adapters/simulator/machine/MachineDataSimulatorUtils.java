@@ -141,10 +141,10 @@ public class MachineDataSimulatorUtils {
                         .scope(PropertyScope.MEASUREMENT_PROPERTY)
                         .build())
                 .property(PrimitivePropertyBuilder
-                        .create(Datatypes.Float, "sensor_fault_flags")
+                        .create(Datatypes.Boolean, "sensor_fault_flags")
                         .label("Sensor Fault Flags")
                         .description("Any fault flags of the sensors")
-                        .domainProperty(SO.Number)
+                        .domainProperty(SO.Boolean)
                         .scope(PropertyScope.MEASUREMENT_PROPERTY)
                         .build())
                 .build();

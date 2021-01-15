@@ -38,8 +38,17 @@ public class KafkaPublisher implements EventSink<KafkaParameters> {
 
   @Override
   public void onInvocation(KafkaParameters parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
-    this.producer = new SpKafkaProducer(parameters.getKafkaHost() + ":" + parameters.getKafkaPort(), parameters
-            .getTopic());
+    boolean useAuthentication = parameters.getAuthentication().equals(KafkaController.getSaslAccessKey());
+    if (useAuthentication) {
+      this.producer = new SpKafkaProducer(parameters.getKafkaHost() + ":" + parameters.getKafkaPort(),
+              parameters.getTopic(),
+              parameters.getUsername(),
+              parameters.getPassword());
+    }
+    else {
+      this.producer = new SpKafkaProducer(parameters.getKafkaHost() + ":" + parameters.getKafkaPort(),
+              parameters.getTopic());
+    }
   }
 
   @Override
