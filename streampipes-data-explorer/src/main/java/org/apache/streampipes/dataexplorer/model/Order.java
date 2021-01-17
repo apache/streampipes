@@ -15,19 +15,20 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.dataexplorer.model;
 
-package org.apache.streampipes.rest.impl.datalake;
+public enum Order {
 
+  ASC("asc"),
+  DESC("desc");
 
-import org.apache.streampipes.rest.impl.dashboard.AbstractDashboardResource;
-import org.apache.streampipes.storage.api.IDashboardStorage;
+  private String value;
 
-import javax.ws.rs.Path;
+  Order(String value) {
+    this.value = value;
+  }
 
-@Path("/v3/users/{username}/datalake/dashboard")
-public class DataLakeDashboard extends AbstractDashboardResource {
-
-    protected IDashboardStorage getDashboardStorage() {
-        return getNoSqlStorage().getDataExplorerDashboardStorage();
-    }
+  public String toValue() {
+    return value;
+  }
 }

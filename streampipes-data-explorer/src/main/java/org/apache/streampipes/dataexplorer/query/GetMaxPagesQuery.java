@@ -15,39 +15,27 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.dataexplorer.query;
 
-package org.apache.streampipes.rest.impl.datalake.model;
+import org.apache.streampipes.dataexplorer.param.PagingQueryParams;
+import org.apache.streampipes.dataexplorer.template.QueryTemplates;
+import org.influxdb.dto.QueryResult;
 
-import java.util.HashMap;
-import java.util.Map;
+public class GetMaxPagesQuery extends ParameterizedDataExplorerQuery<PagingQueryParams, Integer> {
 
-public class GroupedDataResult {
+  public GetMaxPagesQuery(PagingQueryParams queryParams) {
+    super(queryParams);
+  }
 
-    private int total;
-    private Map<String, DataResult> dataResults;
+  @Override
+  protected void getQuery(DataExplorerQueryBuilder queryBuilder) {
+    queryBuilder.add(QueryTemplates.selectCountFrom(params.getIndex()));
+  }
 
-    public GroupedDataResult() {
-        this.total = 0;
-    }
+  @Override
+  protected Integer postQuery(QueryResult result) {
+    int size = ((Double) result.getResults().get(0).getSeries().get(0).getValues().get(0).get(1)).intValue();
 
-    public GroupedDataResult(int total, Map<String, DataResult> dataResults) {
-        this.total = total;
-        this.dataResults = dataResults;
-    }
-
-    public int getTotal() {
-        return total;
-    }
-
-    public Map<String, DataResult> getDataResults() {
-        return dataResults;
-    }
-
-    public void addDataResult(String index, DataResult dataResult) {
-        if (dataResults == null) {
-            dataResults = new HashMap<>();
-        }
-        dataResults.put(index, dataResult);
-        this.total += 1;
-    }
+    return (size / params.getItemsPerPage());
+  }
 }

@@ -15,37 +15,28 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.dataexplorer.param;
 
-package org.apache.streampipes.rest.impl.datalake.model;
+public class GroupedQueryParams extends TimeBoundQueryParams {
 
-import java.util.List;
-import java.util.Map;
+  private final String groupingTag;
 
-public class PageResult extends DataResult {
+  public static GroupedQueryParams from(String index,
+                                        long startDate,
+                                        long endDate,
+                                        String groupingTag) {
+    return new GroupedQueryParams(index, startDate, endDate, groupingTag);
+  }
 
-    private int page;
+  protected GroupedQueryParams(String index,
+                               long startDate,
+                               long endDate,
+                               String groupingTag) {
+    super(index, startDate, endDate);
+    this.groupingTag = groupingTag;
+  }
 
-    private int pageSum;
-
-    public PageResult(int total, List<String> headers, List<List<Object>> rows, int page, int pageSum) {
-        super(total, headers, rows);
-        this.page = page;
-        this.pageSum = pageSum;
-    }
-
-    public int getPage() {
-        return page;
-    }
-
-    public void setPage(int page) {
-        this.page = page;
-    }
-
-    public int getPageSum() {
-        return pageSum;
-    }
-
-    public void setPageSum(int pageSum) {
-        this.pageSum = pageSum;
-    }
+  public String getGroupingTag() {
+    return groupingTag;
+  }
 }

@@ -16,21 +16,22 @@
  *
  */
 
-package org.apache.streampipes.rest.impl.datalake;
+package org.apache.streampipes.ps;
 
+import org.apache.streampipes.dataexplorer.DataLakeManagementV3;
+import org.apache.streampipes.dataexplorer.utils.DataExplorerUtils;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DataResult;
+import org.apache.streampipes.model.datalake.GroupedDataResult;
+import org.apache.streampipes.model.datalake.PageResult;
 import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.rest.impl.AbstractRestInterface;
-import org.apache.streampipes.rest.impl.datalake.model.DataResult;
-import org.apache.streampipes.rest.impl.datalake.model.GroupedDataResult;
-import org.apache.streampipes.rest.impl.datalake.model.PageResult;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.List;
 
 @Path("/v3/users/{username}/datalake")
@@ -57,7 +58,6 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
     String page = info.getQueryParameters().getFirst("page");
 
     try {
-
       if (page != null) {
         result = this.dataLakeManagement.getEvents(index, itemsPerPage, Integer.parseInt(page));
       } else {
@@ -76,8 +76,7 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/info")
   public Response getAllInfos() {
-    List<DataLakeMeasure> result = this.dataLakeManagement.getInfos();
-
+    List<DataLakeMeasure> result = DataExplorerUtils.getInfos();
     return ok(result);
   }
 
@@ -87,7 +86,7 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
   @Path("/data/{index}")
   public Response getAllData(@PathParam("index") String index,
                              @QueryParam("format") String format) {
-    StreamingOutput streamingOutput = dataLakeManagement.getAllEvents(index, format);
+    StreamingOutput streamingOutput = output -> dataLakeManagement.getAllEvents(index, format, output);
 
     return Response.ok(streamingOutput, MediaType.APPLICATION_OCTET_STREAM).
             header("Content-Disposition", "attachment; filename=\"datalake." + format + "\"")
@@ -99,7 +98,7 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
   @Path("/data/{index}/download")
   public Response downloadData(@PathParam("index") String index,
                                @QueryParam("format") String format) {
-    StreamingOutput streamingOutput = dataLakeManagement.getAllEvents(index, format);
+    StreamingOutput streamingOutput = output -> dataLakeManagement.getAllEvents(index, format, output);
 
     return Response.ok(streamingOutput, MediaType.APPLICATION_OCTET_STREAM).
             header("Content-Disposition", "attachment; filename=\"datalake." + format + "\"")
@@ -127,12 +126,9 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
         result = dataLakeManagement.getEventsFromNowAutoAggregation(index, unit, value);
       }
       return Response.ok(result).build();
-    } catch (IllegalArgumentException e) {
-      return constructErrorMessage(new Notification(e.getMessage(), ""));
-    } catch (ParseException e) {
+    } catch (RuntimeException e) {
       return constructErrorMessage(new Notification(e.getMessage(), ""));
     }
-
   }
 
   @GET
@@ -150,14 +146,14 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
 
     try {
       if (aggregationUnit != null && aggregationValue != null) {
-          result = dataLakeManagement.getEvents(index, startdate, enddate, aggregationUnit,
-                  Integer.parseInt(aggregationValue));
+        result = dataLakeManagement.getEvents(index, startdate, enddate, aggregationUnit,
+                Integer.parseInt(aggregationValue));
 
       } else {
-          result = dataLakeManagement.getEventsAutoAggregation(index, startdate, enddate);
+        result = dataLakeManagement.getEventsAutoAggregation(index, startdate, enddate);
       }
       return Response.ok(result).build();
-    } catch (IllegalArgumentException | ParseException e) {
+    } catch (RuntimeException e) {
       return constructErrorMessage(new Notification(e.getMessage(), ""));
     }
   }
@@ -166,10 +162,10 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/data/{index}/{startdate}/{enddate}/grouping/{groupingTag}")
   public Response getAllDataGrouping(@Context UriInfo info,
-                             @PathParam("index") String index,
-                             @PathParam("startdate") long startdate,
-                             @PathParam("enddate") long enddate,
-                             @PathParam("groupingTag") String groupingTag) {
+                                     @PathParam("index") String index,
+                                     @PathParam("startdate") long startdate,
+                                     @PathParam("enddate") long enddate,
+                                     @PathParam("groupingTag") String groupingTag) {
 
     String aggregationUnit = info.getQueryParameters().getFirst("aggregationUnit");
     String aggregationValue = info.getQueryParameters().getFirst("aggregationValue");
@@ -177,13 +173,13 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
     GroupedDataResult result;
     try {
       if (aggregationUnit != null && aggregationValue != null) {
-          result = dataLakeManagement.getEvents(index, startdate, enddate, aggregationUnit,
-                  Integer.parseInt(aggregationValue), groupingTag);
+        result = dataLakeManagement.getEvents(index, startdate, enddate, aggregationUnit,
+                Integer.parseInt(aggregationValue), groupingTag);
       } else {
-          result = dataLakeManagement.getEventsAutoAggregation(index, startdate, enddate, groupingTag);
+        result = dataLakeManagement.getEventsAutoAggregation(index, startdate, enddate, groupingTag);
       }
       return Response.ok(result).build();
-    } catch (IllegalArgumentException | ParseException e) {
+    } catch (RuntimeException e) {
       return constructErrorMessage(new Notification(e.getMessage(), ""));
     }
   }
@@ -203,7 +199,7 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
   @Path("/data/{index}/{startdate}/{enddate}/download")
   public Response downloadData(@PathParam("index") String index, @QueryParam("format") String format,
                                @PathParam("startdate") long start, @PathParam("enddate") long end) {
-    StreamingOutput streamingOutput = dataLakeManagement.getAllEvents(index, format, start, end);
+    StreamingOutput streamingOutput = output -> dataLakeManagement.getAllEvents(index, format, start, end, output);
 
     return Response.ok(streamingOutput, MediaType.APPLICATION_OCTET_STREAM).
             header("Content-Disposition", "attachment; filename=\"datalake." + format + "\"")
@@ -233,18 +229,16 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
   @POST
   @Produces(MediaType.TEXT_PLAIN)
   @Path("/data/{index}/{startdate}/{enddate}/labeling/{column}/{timestampColumn}")
-    public Response labelData(@Context UriInfo info,
-                              @PathParam("index") String index,
-                              @PathParam("startdate") long startdate,
-                              @PathParam("enddate") long enddate,
-                              @PathParam("column") String column,
-                              @PathParam("timestampColumn") String timestampColumn) {
+  public Response labelData(@Context UriInfo info,
+                            @PathParam("index") String index,
+                            @PathParam("startdate") long startdate,
+                            @PathParam("enddate") long enddate,
+                            @PathParam("column") String column,
+                            @PathParam("timestampColumn") String timestampColumn) {
 
-      String label = info.getQueryParameters().getFirst("label");
+    String label = info.getQueryParameters().getFirst("label");
     this.dataLakeManagement.updateLabels(index, column, startdate, enddate, label, timestampColumn);
 
-        return Response.ok("Successfully updated database.", MediaType.TEXT_PLAIN).build();
+    return Response.ok("Successfully updated database.", MediaType.TEXT_PLAIN).build();
   }
-
-
 }

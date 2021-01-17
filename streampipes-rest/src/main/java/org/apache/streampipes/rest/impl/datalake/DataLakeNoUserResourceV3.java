@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.rest.impl.datalake;
 
+import org.apache.streampipes.dataexplorer.DataLakeNoUserManagementV3;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.rest.impl.AbstractRestInterface;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;

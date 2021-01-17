@@ -15,38 +15,26 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.dataexplorer.template;
 
-package org.apache.streampipes.rest.impl.datalake.model;
+public class QueryTemplates {
 
-import java.util.List;
+  public static String selectWildcardFrom(String index) {
+    return "SELECT * FROM " + index;
+  }
 
-public class DataResult {
+  public static String selectMeanFrom(String index) {
+    return "SELECT mean(*) FROM " + index;
+  }
 
-    private int total;
-    private List<String> headers;
-    private List<List<Object>> rows;
+  public static String selectCountFrom(String index) {
+    return "SELECT count(*) FROM " + index;
+  }
 
-    public DataResult() {
-        this.total = 0;
-    }
-
-    public DataResult(int total, List<String> headers, List<List<Object>> rows) {
-        this.total = total;
-        this.headers = headers;
-        this.rows = rows;
-    }
-
-    public int getTotal() {
-        return total;
-    }
-
-    public List<String> getHeaders() {
-        return headers;
-    }
-
-
-    public List<List<Object>> getRows() {
-        return rows;
-    }
-
+  public static String whereTimeWithin(long startDate, long endDate) {
+    return "WHERE time > "
+            + startDate * 1000000
+            + " AND time < "
+            + endDate * 1000000;
+  }
 }

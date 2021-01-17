@@ -911,6 +911,7 @@
         <module>streampipes-wrapper-siddhi</module>
         <module>streampipes-wrapper-spark</module>
         <module>streampipes-wrapper-standalone</module>
+        <module>streampipes-data-explorer</module>
     </modules>
 
     <profiles>

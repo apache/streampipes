@@ -9,12 +9,12 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>streampipes-platform-services</artifactId>
+    <artifactId>streampipes-data-explorer</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-data-explorer</artifactId>
+            <artifactId>streampipes-config</artifactId>
             <version>0.68.0-SNAPSHOT</version>
         </dependency>
         <dependency>
@@ -24,19 +24,15 @@
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-rest-shared</artifactId>
+            <artifactId>streampipes-storage-management</artifactId>
             <version>0.68.0-SNAPSHOT</version>
         </dependency>
+
         <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-storage-api</artifactId>
-            <version>0.68.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-rest</artifactId>
-            <version>0.68.0-SNAPSHOT</version>
+            <groupId>org.influxdb</groupId>
+            <artifactId>influxdb-java</artifactId>
         </dependency>
     </dependencies>
+
 
 </project>

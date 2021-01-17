@@ -16,22 +16,19 @@
  *
  */
 
-package org.apache.streampipes.rest.impl.datalake;
+package org.apache.streampipes.dataexplorer;
 
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.model.schema.EventProperty;
-import org.apache.streampipes.model.schema.EventPropertyList;
-import org.apache.streampipes.model.schema.EventPropertyNested;
-import org.apache.streampipes.model.schema.EventPropertyPrimitive;
-import org.apache.streampipes.model.schema.EventSchema;
-import org.apache.streampipes.rest.impl.AbstractRestInterface;
+import org.apache.streampipes.model.schema.*;
+import org.apache.streampipes.storage.api.IDataLakeStorage;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 
-public class DataLakeNoUserManagementV3 extends AbstractRestInterface {
+public class DataLakeNoUserManagementV3 {
 
   public boolean addDataLake(String measure, EventSchema eventSchema) {
     List<DataLakeMeasure> dataLakeMeasureList = getDataLakeStorage().getAllDataLakeMeasures();
@@ -80,5 +77,9 @@ public class DataLakeNoUserManagementV3 extends AbstractRestInterface {
       return false;
 
     });
+  }
+
+  private IDataLakeStorage getDataLakeStorage() {
+    return StorageDispatcher.INSTANCE.getNoSqlStore().getDataLakeStorage();
   }
 }
