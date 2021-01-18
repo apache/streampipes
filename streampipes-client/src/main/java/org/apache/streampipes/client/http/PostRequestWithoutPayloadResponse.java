@@ -17,20 +17,31 @@
  */
 package org.apache.streampipes.client.http;
 
+import org.apache.http.HttpEntity;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
+import org.apache.streampipes.client.serializer.Serializer;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
 
-public class PostRequestWithoutPayloadResponse<T> extends PostRequest<T, Void> {
+import java.io.IOException;
+
+public class PostRequestWithoutPayloadResponse<SO, DSO> extends PostRequest<SO, DSO, Void> {
 
   public PostRequestWithoutPayloadResponse(StreamPipesClientConfig clientConfig,
                                            StreamPipesApiPath apiPath,
-                                           T element) {
-    super(clientConfig, apiPath, element);
+                                           Serializer<SO, DSO, Void> serializer,
+                                           SO body) {
+    super(clientConfig, apiPath, serializer, body);
   }
 
+  public PostRequestWithoutPayloadResponse(StreamPipesClientConfig clientConfig,
+                     StreamPipesApiPath apiPath,
+                     Serializer<SO, DSO, Void> serializer) {
+    super(clientConfig, apiPath, serializer);
+  }
+
+
   @Override
-  public Void postItem() {
-    executeRequest();
+  protected Void afterRequest(Serializer<SO, DSO, Void> serializer, HttpEntity entity) throws IOException {
     return null;
   }
 }

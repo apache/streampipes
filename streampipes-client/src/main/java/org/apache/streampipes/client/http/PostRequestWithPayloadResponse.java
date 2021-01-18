@@ -17,35 +17,36 @@
  */
 package org.apache.streampipes.client.http;
 
+import org.apache.http.HttpEntity;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
+import org.apache.streampipes.client.serializer.Serializer;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 
 import java.io.IOException;
 
-public class PostRequestWithPayloadResponse<T, O> extends PostRequest<T, O> {
+public class PostRequestWithPayloadResponse<SO, DSO, DT> extends PostRequest<SO, DSO, DT> {
 
-  private Class<O> responseClass;
+  private Class<DSO> responseClass;
 
   public PostRequestWithPayloadResponse(StreamPipesClientConfig clientConfig,
                                         StreamPipesApiPath apiPath,
-                                        T element,
-                                        Class<O> responseClass) {
-    super(clientConfig, apiPath, element);
+                                        Serializer<SO, DSO, DT> serializer,
+                                        SO body,
+                                        Class<DSO> responseClass) {
+    super(clientConfig, apiPath, serializer, body);
     this.responseClass = responseClass;
   }
 
-  public O postItem() throws SpRuntimeException {
-    return deserialize(executeAndReturnContent(), responseClass);
+  public PostRequestWithPayloadResponse(StreamPipesClientConfig clientConfig,
+                                        StreamPipesApiPath apiPath,
+                                        Serializer<SO, DSO, DT> serializer,
+                                        Class<DSO> responseClass) {
+    super(clientConfig, apiPath, serializer);
+    this.responseClass = responseClass;
   }
 
-  private String executeAndReturnContent() {
-    try {
-      return executeRequest().returnContent().asString();
-    } catch (IOException e) {
-      throw new SpRuntimeException(e.getMessage());
-    }
+  @Override
+  protected DT afterRequest(Serializer<SO, DSO, DT> serializer, HttpEntity entity) throws IOException {
+    return serializer.deserialize(entityAsString(entity), responseClass);
   }
-
-
 }

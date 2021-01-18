@@ -21,27 +21,60 @@ import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.pipeline.Pipeline;
+import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 
 import java.util.List;
 
-public class PipelineApi extends AbstractClientApi<Pipeline> {
+public class PipelineApi extends AbstractClientApi<Pipeline> implements CRUDApi<String, Pipeline> {
 
   public PipelineApi(StreamPipesClientConfig clientConfig) {
     super(clientConfig, Pipeline.class);
   }
 
-  public List<Pipeline> all() {
-      return getAll(getBaseResourcePath());
+  @Override
+  public Pipeline get(String pipelineId) {
+    return getSingle(getBaseResourcePath().addToPath(pipelineId));
   }
 
-  public Message start(String pipelineId) {
-    return null;
+  @Override
+  public List<Pipeline> all() {
+      return getAll(getBaseResourcePath().addToPath("own"));
+  }
+
+  @Override
+  public void create(Pipeline element) {
+
+  }
+
+  @Override
+  public void delete(String pipelineId) {
+    delete(getBaseResourcePath().addToPath(pipelineId), Message.class);
+  }
+
+  @Override
+  public void update(Pipeline element) {
+
+  }
+
+  public PipelineOperationStatus start(String pipelineId) {
+    return getSingle(getBaseResourcePath().addToPath(pipelineId).addToPath("start"), PipelineOperationStatus.class);
+  }
+
+  public PipelineOperationStatus start(Pipeline pipeline) {
+    return start(pipeline.getPipelineId());
+  }
+
+  public PipelineOperationStatus stop(Pipeline pipeline) {
+    return stop(pipeline.getPipelineId());
+  }
+
+  public PipelineOperationStatus stop(String pipelineId) {
+    return getSingle(getBaseResourcePath().addToPath(pipelineId).addToPath("stop"), PipelineOperationStatus.class);
   }
 
   @Override
   protected StreamPipesApiPath getBaseResourcePath() {
     return StreamPipesApiPath.fromUserApiPath(clientConfig.getCredentials())
-            .addToPath("pipelines")
-            .addToPath("own");
+            .addToPath("pipelines");
   }
 }

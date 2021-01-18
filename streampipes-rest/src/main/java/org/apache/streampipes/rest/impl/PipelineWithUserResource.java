@@ -87,7 +87,7 @@ public class PipelineWithUserResource extends AbstractRestInterface {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{pipelineId}/status")
-    @GsonWithIds
+    @JacksonSerialized
     public Response getPipelineStatus(@PathParam("username") String username, @PathParam("pipelineId") String pipelineId) {
         return ok(PipelineStatusManager.getPipelineStatus(pipelineId, 5));
     }
@@ -95,14 +95,10 @@ public class PipelineWithUserResource extends AbstractRestInterface {
     @DELETE
     @Path("/{pipelineId}")
     @Produces(MediaType.APPLICATION_JSON)
-    @GsonWithIds
+    @JacksonSerialized
     public Response removeOwn(@PathParam("username") String username, @PathParam("pipelineId") String elementUri) {
         getPipelineStorage().deletePipeline(elementUri);
         return statusMessage(Notifications.success("Pipeline deleted"));
-    }
-
-    public String getAsJsonLd(String elementUri) {
-        return null;
     }
 
     @GET

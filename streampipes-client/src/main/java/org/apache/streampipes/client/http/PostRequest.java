@@ -18,40 +18,47 @@
 package org.apache.streampipes.client.http;
 
 import org.apache.http.client.fluent.Request;
-import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
+import org.apache.streampipes.client.serializer.Serializer;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 
-import java.io.IOException;
+public abstract class PostRequest<SO, DSO, DT> extends HttpRequest<SO, DSO, DT> {
 
-public abstract class PostRequest<T, O> extends HttpRequest {
-
-  protected T element;
+  private SO body;
+  private boolean withBody;
 
   public PostRequest(StreamPipesClientConfig clientConfig,
                      StreamPipesApiPath apiPath,
-                     T element) {
-    super(clientConfig, apiPath);
-    this.element = element;
+                     Serializer<SO, DSO, DT> serializer,
+                     SO body) {
+    super(clientConfig, apiPath, serializer);
+    this.body = body;
+    this.withBody = true;
   }
 
-  public abstract O postItem();
+  public PostRequest(StreamPipesClientConfig clientConfig,
+                     StreamPipesApiPath apiPath,
+                     Serializer<SO, DSO, DT> serializer) {
+    super(clientConfig, apiPath, serializer);
+    this.withBody = false;
+  }
 
-  protected Response executeRequest() throws SpRuntimeException {
-    try {
-      return Request
-              .Post(makeUrl())
-              .setHeaders(standardPostHeaders())
-              .bodyString(serialize(element), ContentType.APPLICATION_JSON)
-              .execute();
-    } catch (IOException e) {
-      throw new RuntimeException(e.getMessage());
+  @Override
+  protected Request makeRequest(Serializer<SO, DSO, DT> serializer) {
+    Request request = Request
+            .Post(makeUrl())
+            .setHeaders(standardPostHeaders());
+
+    if (withBody) {
+      addBody(request, serializer);
     }
+
+    return request;
   }
 
-
-
+  protected void addBody(Request request, Serializer<SO, DSO, DT> serializer) {
+    request.bodyString(serializer.serialize(body), ContentType.APPLICATION_JSON);
+  }
 
 }

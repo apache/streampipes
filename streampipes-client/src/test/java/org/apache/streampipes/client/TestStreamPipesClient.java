@@ -22,6 +22,7 @@ import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
+import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.model.template.PipelineElementTemplate;
 import org.apache.streampipes.model.template.PipelineElementTemplateConfig;
 
@@ -39,6 +40,8 @@ public class TestStreamPipesClient {
             .create("localhost", 8082, credentials, true);
 
     List<Pipeline> pipelines = client.pipelines().all();
+
+    PipelineOperationStatus message = client.pipelines().start(pipelines.get(0));
 
     pipelines.forEach(pipeline -> System.out.println(pipeline.getName()));
 

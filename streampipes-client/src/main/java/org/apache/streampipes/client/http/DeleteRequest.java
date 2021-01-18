@@ -25,27 +25,27 @@ import org.apache.streampipes.client.util.StreamPipesApiPath;
 
 import java.io.IOException;
 
-public class GetRequest<DSO, DT> extends HttpRequest<Void, DSO, DT> {
+public class DeleteRequest<DSO, DT> extends HttpRequest<Void, DSO, DT> {
 
-  private Class<DSO> targetClass;
+  private Class<DSO> responseClass;
 
-  public GetRequest(StreamPipesClientConfig clientConfig,
-                    StreamPipesApiPath apiPath,
-                    Class<DSO> targetClass,
-                    Serializer<Void, DSO, DT> serializer) {
+  public DeleteRequest(StreamPipesClientConfig clientConfig,
+                       StreamPipesApiPath apiPath,
+                       Class<DSO> responseClass,
+                       Serializer<Void, DSO, DT> serializer) {
     super(clientConfig, apiPath, serializer);
-    this.targetClass = targetClass;
+    this.responseClass = responseClass;
   }
 
   @Override
   protected Request makeRequest(Serializer<Void, DSO, DT> serializer) {
     return Request
-            .Get(makeUrl())
+            .Delete(makeUrl())
             .setHeaders(standardHeaders());
   }
 
   @Override
   protected DT afterRequest(Serializer<Void, DSO, DT> serializer, HttpEntity entity) throws IOException {
-    return serializer.deserialize(entityAsString(entity), targetClass);
+    return serializer.deserialize(entityAsString(entity), responseClass);
   }
 }
