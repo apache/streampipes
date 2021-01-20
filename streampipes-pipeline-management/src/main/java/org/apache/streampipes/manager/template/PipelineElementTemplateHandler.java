@@ -25,16 +25,24 @@ public abstract class PipelineElementTemplateHandler<T extends InvocableStreamPi
   protected T pipelineElement;
   protected PipelineElementTemplate template;
 
+  private boolean overwriteNameAndDescription;
+
   public PipelineElementTemplateHandler(PipelineElementTemplate template,
                                         T pipelineElement,
                                         boolean overwriteNameAndDescription) {
     this.template = template;
     this.pipelineElement = pipelineElement;
+    this.overwriteNameAndDescription = overwriteNameAndDescription;
   }
 
   public T applyTemplateOnPipelineElement() {
       PipelineElementTemplateVisitor visitor = new PipelineElementTemplateVisitor(template);
       pipelineElement.getStaticProperties().forEach(config -> config.accept(visitor));
+
+      if (overwriteNameAndDescription) {
+        pipelineElement.setName(template.getTemplateName());
+        pipelineElement.setDescription(template.getTemplateDescription());
+      }
 
       return pipelineElement;
   }

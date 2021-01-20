@@ -21,6 +21,7 @@ import org.apache.streampipes.model.staticproperty.*;
 import org.apache.streampipes.model.template.PipelineElementTemplate;
 import org.apache.streampipes.model.template.PipelineElementTemplateConfig;
 
+import java.util.List;
 import java.util.Map;
 
 public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
@@ -33,7 +34,12 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
 
   @Override
   public void visit(AnyStaticProperty property) {
-
+    if (hasKey(property)) {
+      List<String> value = (List<String>) getValue(property);
+      property.getOptions().forEach(option -> {
+        option.setSelected(value.stream().anyMatch(v -> v.equals(option.getName())));
+      });
+    }
   }
 
   @Override
@@ -48,7 +54,9 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
 
   @Override
   public void visit(ColorPickerStaticProperty colorPickerStaticProperty) {
-
+    if (hasKey(colorPickerStaticProperty)) {
+      colorPickerStaticProperty.setSelectedColor(getStringValue(colorPickerStaticProperty));
+    }
   }
 
   @Override
@@ -58,34 +66,41 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
 
   @Override
   public void visit(FileStaticProperty fileStaticProperty) {
-
+    if (hasKey(fileStaticProperty)) {
+      fileStaticProperty.setLocationPath(getStringValue(fileStaticProperty));
+    }
   }
 
   @Override
   public void visit(FreeTextStaticProperty freeTextStaticProperty) {
-    if (hasKey(freeTextStaticProperty.getInternalName())) {
-      freeTextStaticProperty.setValue(String.valueOf(getValue(freeTextStaticProperty.getInternalName())));
+    if (hasKey(freeTextStaticProperty)) {
+      freeTextStaticProperty.setValue(getStringValue(freeTextStaticProperty));
     }
   }
 
   @Override
   public void visit(MappingPropertyNary mappingPropertyNary) {
-
+    // Do nothing, not supported by pipeline element templates
   }
 
   @Override
   public void visit(MappingPropertyUnary mappingPropertyUnary) {
-
+    // Do nothing, not supported by pipeline element templates
   }
 
   @Override
   public void visit(MatchingStaticProperty matchingStaticProperty) {
-
+    // Do nothing, not supported by pipeline element templates
   }
 
   @Override
   public void visit(OneOfStaticProperty oneOfStaticProperty) {
-
+    if (hasKey(oneOfStaticProperty)) {
+      String value = getStringValue(oneOfStaticProperty);
+      oneOfStaticProperty.getOptions().forEach(option -> {
+        option.setSelected(option.getName().equals(value));
+      });
+    }
   }
 
   @Override
@@ -113,11 +128,15 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
 
   }
 
-  private Object getValue(String internalName) {
-    return configs.get(internalName).getValue();
+  private String getStringValue(StaticProperty sp) {
+    return String.valueOf(getValue(sp));
   }
 
-  private boolean hasKey(String internalName) {
-    return configs.containsKey(internalName);
+  private Object getValue(StaticProperty sp) {
+    return configs.get(sp.getInternalName()).getValue();
+  }
+
+  private boolean hasKey(StaticProperty sp) {
+    return configs.containsKey(sp.getInternalName());
   }
 }

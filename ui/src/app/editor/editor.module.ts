@@ -59,6 +59,7 @@ import {CustomOutputStrategyComponent} from "./components/output-strategy/custom
 import {PropertySelectionComponent} from "./components/output-strategy/property-selection/property-selection.component";
 import {UserDefinedOutputStrategyComponent} from "./components/output-strategy/user-defined-output/user-defined-output.component";
 import {ConnectModule} from "../connect/connect.module";
+import {PipelineElementTemplateConfigComponent} from "./components/pipeline-element-template-config/pipeline-element-template-config.component";
 
 @NgModule({
     imports: [
@@ -93,6 +94,7 @@ import {ConnectModule} from "../connect/connect.module";
         PipelineElementIconStandComponent,
         PipelineElementOptionsComponent,
         PipelineElementRecommendationComponent,
+        PipelineElementTemplateConfigComponent,
         PipelineComponent,
         PropertySelectionComponent,
         SavePipelineComponent,

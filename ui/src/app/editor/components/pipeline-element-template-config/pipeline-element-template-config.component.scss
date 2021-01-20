@@ -18,13 +18,17 @@
 
 @import '../../../../scss/sp/sp-dialog.scss';
 
-.form-field .mat-form-field-wrapper {
-  margin-bottom: -1.25em;
+.divider {
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
-
-.form-field .mat-form-field-infix {
-  border-top: 0;
+.static-property-panel {
+  padding-left: 10px;
+  margin-bottom: 10px;
+  margin-top: 10px;
 }
 
-
+.static-property-panel-border {
+  border-left:5px solid gray;
+}
