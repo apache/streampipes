@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.connect.adapters.opcua;
 
-import com.github.jsonldjava.utils.Obj;
 import org.apache.streampipes.connect.adapter.Adapter;
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
 import org.apache.streampipes.connect.adapter.exception.ParseException;
@@ -28,17 +27,11 @@ import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescrip
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
-import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
-import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
-import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
-import org.apache.streampipes.sdk.helpers.Alternatives;
-import org.apache.streampipes.sdk.helpers.Labels;
-import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.sdk.helpers.Options;
+import org.apache.streampipes.sdk.helpers.*;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaMonitoredItem;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
@@ -62,12 +55,20 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
     private static final String OPC_SERVER_PORT = "OPC_SERVER_PORT";
     private static final String NAMESPACE_INDEX = "NAMESPACE_INDEX";
     private static final String NODE_ID = "NODE_ID";
+    private static final String ACCESS_MODE = "ACCESS_MODE";
+    private static final String USERNAME_GROUP = "USERNAME_GROUP";
+    private static final String USERNAME = "USERNAME";
+    private static final String PASSWORD = "PASSWORD";
+    private static final String UNAUTHENTICATED = "UNAUTHENTICATED";
 
     private String opcUaServer;
     private String namespaceIndex;
     private String nodeId;
     private String port;
     private boolean selectedURL;
+    private boolean unauthenticated;
+    private String username;
+    private String password;
 
     private Map<String, Object> event;
     private List<OpcNode> allNodes;
@@ -96,6 +97,12 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
                 .withAssets(Assets.DOCUMENTATION, Assets.ICON)
                 .withLocales(Locales.EN)
                 .category(AdapterType.Generic, AdapterType.Manufacturing)
+                .requiredAlternatives(Labels.withId(ACCESS_MODE),
+                        Alternatives.from(Labels.withId(UNAUTHENTICATED)),
+                        Alternatives.from(Labels.withId(USERNAME_GROUP),
+                                StaticProperties.group(Labels.withId(USERNAME_GROUP),
+                                StaticProperties.stringFreeTextProperty(Labels.withId(USERNAME)),
+                                StaticProperties.secretValue(Labels.withId(PASSWORD)))))
                 .requiredAlternatives(Labels.withId(OPC_HOST_OR_URL),
                         Alternatives.from(Labels.withId(OPC_URL),
                                 StaticProperties.stringFreeTextProperty(Labels.withId(OPC_SERVER_URL))
@@ -138,10 +145,14 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
 
     @Override
     public void startAdapter() throws AdapterException {
-        if (this.selectedURL) {
+        if (this.selectedURL && this.unauthenticated) {
             this.opcUa = new OpcUa(opcUaServer, Integer.parseInt(namespaceIndex), nodeId);
-        } else {
+        } else if (!this.selectedURL && this.unauthenticated){
             this.opcUa = new OpcUa(opcUaServer, Integer.parseInt(port), Integer.parseInt(namespaceIndex), nodeId);
+        } else if (this.selectedURL) {
+            this.opcUa = new OpcUa(opcUaServer, Integer.parseInt(namespaceIndex), nodeId, username, password);
+        } else {
+            this.opcUa = new OpcUa(opcUaServer, Integer.parseInt(port), Integer.parseInt(namespaceIndex), nodeId, username, password);
         }
 
         try {
@@ -183,10 +194,14 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
 
         getConfigurations(adapterDescription);
         OpcUa opc;
-        if (this.selectedURL) {
+        if (this.selectedURL && this.unauthenticated) {
             opc = new OpcUa(opcUaServer, Integer.parseInt(namespaceIndex), nodeId);
-        } else {
+        } else if (!this.selectedURL && this.unauthenticated){
             opc = new OpcUa(opcUaServer, Integer.parseInt(port), Integer.parseInt(namespaceIndex), nodeId);
+        } else if (this.selectedURL) {
+            opc = new OpcUa(opcUaServer, Integer.parseInt(namespaceIndex), nodeId, username, password);
+        } else {
+            opc = new OpcUa(opcUaServer, Integer.parseInt(port), Integer.parseInt(namespaceIndex), nodeId, username, password);
         }
 
         try {
@@ -196,8 +211,6 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
 
             if (res.size() > 0) {
                 for (OpcNode opcNode : res) {
-
-                    String runtimeName = getRuntimeNameOfNode(opcNode.getNodeId());
                     if (opcNode.opcUnitId == 0) {
                         allProperties.add(PrimitivePropertyBuilder
                                 .create(opcNode.getType(), opcNode.getLabel())
@@ -235,15 +248,21 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
         StaticPropertyExtractor extractor =
                 StaticPropertyExtractor.from(adapterDescription.getConfig(), new ArrayList<>());
 
-        String selectedAlternative = extractor.selectedAlternativeInternalId(OPC_HOST_OR_URL);
+        String selectedAlternativeConnection = extractor.selectedAlternativeInternalId(OPC_HOST_OR_URL);
+        String selectedAlternativeAuthentication = extractor.selectedAlternativeInternalId(ACCESS_MODE);
 
-        if (selectedAlternative.equals(OPC_URL)) {
+        if (selectedAlternativeConnection.equals(OPC_URL)) {
             this.opcUaServer = extractor.singleValueParameter(OPC_SERVER_URL, String.class);
             this.selectedURL = true;
         } else {
             this.opcUaServer = extractor.singleValueParameter(OPC_SERVER_HOST, String.class);
             this.port = extractor.singleValueParameter(OPC_SERVER_PORT, String.class);
             this.selectedURL = false;
+        }
+        this.unauthenticated = selectedAlternativeAuthentication.equals(UNAUTHENTICATED);
+        if (!this.unauthenticated) {
+            this.username = extractor.singleValueParameter(USERNAME, String.class);
+            this.password = extractor.secretValue(PASSWORD);
         }
 
         this.namespaceIndex = extractor.singleValueParameter(NAMESPACE_INDEX, String.class);
