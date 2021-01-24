@@ -23,9 +23,9 @@ import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams
 
 public class NameFinderParameters extends EventProcessorBindingParams {
     private String tokens;
-    private String model;
+    private byte[] model;
 
-    public NameFinderParameters(DataProcessorInvocation graph, String tokens, String model)
+    public NameFinderParameters(DataProcessorInvocation graph, String tokens, byte[] model)
     {
         super(graph);
         this.tokens = tokens;
@@ -35,7 +35,7 @@ public class NameFinderParameters extends EventProcessorBindingParams {
     public String getTokens() {
         return tokens;
     }
-    public String getModel() {
+    public byte[] getModel() {
         return model;
     }
 
