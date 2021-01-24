@@ -34,15 +34,18 @@ public class SiddhiAppGenerator<B extends EventProcessorBindingParams> {
   private final SiddhiProcessorParams<B> siddhiParams;
   private final String fromStatement;
   private final String selectStatement;
+  private final String groupByStatement;
 
   private final StringBuilder siddhiAppString;
 
   public SiddhiAppGenerator(SiddhiProcessorParams<B> siddhiParams,
                             String fromStatement,
-                            String selectStatement) {
+                            String selectStatement,
+                            String groupByStatement) {
     this.siddhiParams = siddhiParams;
     this.fromStatement = fromStatement;
     this.selectStatement = selectStatement;
+    this.groupByStatement = groupByStatement;
     this.siddhiAppString = new StringBuilder();
   }
 
@@ -50,7 +53,10 @@ public class SiddhiAppGenerator<B extends EventProcessorBindingParams> {
     LOG.info("Configuring event types for graph " + this.siddhiParams.getParams().getGraph().getName());
 
     this.siddhiParams.getEventTypeInfo().forEach(this::registerEventType);
-    registerStatements(fromStatement, selectStatement, SiddhiUtils.getOutputTopicName(this.siddhiParams.getParams()));
+    registerStatements(fromStatement,
+            selectStatement,
+            groupByStatement,
+            SiddhiUtils.getOutputTopicName(this.siddhiParams.getParams()));
 
     return this.siddhiAppString.toString();
   }
@@ -70,11 +76,16 @@ public class SiddhiAppGenerator<B extends EventProcessorBindingParams> {
             .append(");\n");
   }
 
-  private void registerStatements(String fromStatement, String selectStatement, String outputStream) {
+  private void registerStatements(String fromStatement,
+                                  String selectStatement,
+                                  String groupByStatement,
+                                  String outputStream) {
     this.siddhiAppString
             .append(fromStatement)
             .append("\n")
             .append(selectStatement)
+            .append("\n")
+            .append(groupByStatement)
             .append("\n")
             .append("insert into ")
             .append(SiddhiUtils.prepareName(outputStream))

@@ -15,17 +15,26 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.wrapper.siddhi.engine;
+package org.apache.streampipes.wrapper.siddhi.query.expression.aggregation;
 
-import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
-import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
+import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
+import org.apache.streampipes.wrapper.siddhi.query.expression.PropertyExpression;
+import org.apache.streampipes.wrapper.siddhi.query.expression.PropertyExpressionBase;
 
-public interface SiddhiStatementGenerator<B extends EventProcessorBindingParams> {
+public class CountExpression extends PropertyExpressionBase {
 
-  String fromStatement(SiddhiProcessorParams<B> siddhiParams);
+  private PropertyExpression propertyExpression;
 
-  String selectStatement(SiddhiProcessorParams<B> siddhiParams);
+  public CountExpression(PropertyExpression property) {
+    this.propertyExpression = property;
+  }
 
-  String groupByStatement(SiddhiProcessorParams<B> siddhiParams);
-
+  @Override
+  public String toSiddhiEpl() {
+    return join(SiddhiConstants.EMPTY,
+            "count",
+            SiddhiConstants.PARENTHESIS_OPEN,
+            propertyExpression.toSiddhiEpl(),
+            SiddhiConstants.PARENTHESIS_CLOSE);
+  }
 }

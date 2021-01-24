@@ -19,6 +19,7 @@ package org.apache.streampipes.wrapper.siddhi.query.expression;
 
 import org.apache.streampipes.wrapper.siddhi.constants.SiddhiStreamSelector;
 import org.apache.streampipes.wrapper.siddhi.model.EventPropertyDef;
+import org.apache.streampipes.wrapper.siddhi.query.expression.aggregation.CountExpression;
 import org.apache.streampipes.wrapper.siddhi.query.expression.list.CollectListExpression;
 import org.apache.streampipes.wrapper.siddhi.query.expression.list.ContainsListExpression;
 import org.apache.streampipes.wrapper.siddhi.query.expression.math.MathDivideExpression;
@@ -27,6 +28,7 @@ import org.apache.streampipes.wrapper.siddhi.query.expression.pattern.EveryExpre
 import org.apache.streampipes.wrapper.siddhi.query.expression.pattern.PatternCountExpression;
 import org.apache.streampipes.wrapper.siddhi.query.expression.pattern.PatternCountOperator;
 import org.apache.streampipes.wrapper.siddhi.query.expression.window.BatchWindowExpression;
+import org.apache.streampipes.wrapper.siddhi.query.expression.window.TimeWindowExpression;
 import org.apache.streampipes.wrapper.siddhi.query.expression.window.WindowExpression;
 
 import java.util.Arrays;
@@ -47,6 +49,10 @@ public class Expressions {
 
   public static PropertyExpressionBase containsListItem(PropertyExpression listProperty, Object value) {
     return new ContainsListExpression(listProperty, value);
+  }
+
+  public static PropertyExpressionBase count(PropertyExpression property) {
+    return new CountExpression(property);
   }
 
   public static PropertyExpressionBase divide(PropertyExpressionBase op1, PropertyExpressionBase op2) {
@@ -145,6 +151,10 @@ public class Expressions {
 
   public static StreamExpression stream(String streamName, String streamAlias) {
     return new StreamExpression(streamName, streamAlias);
+  }
+
+  public static WindowExpression timeWindow(Integer windowSize, SiddhiTimeUnit timeUnit) {
+    return new TimeWindowExpression(windowSize, timeUnit);
   }
 
   private static String makeStaticString(String staticValue) {

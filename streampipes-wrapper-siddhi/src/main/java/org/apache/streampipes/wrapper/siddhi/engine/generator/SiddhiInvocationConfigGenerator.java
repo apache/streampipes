@@ -31,19 +31,22 @@ public class SiddhiInvocationConfigGenerator<B extends EventProcessorBindingPara
   private final String siddhiAppString;
   private final String fromStatement;
   private final String selectStatement;
+  private final String groupByStatement;
 
   private final SiddhiProcessorParams<B> siddhiProcessorParams;
 
   public SiddhiInvocationConfigGenerator(B params,
                                          Function<SiddhiProcessorParams<B>, String> fromStatementFunction,
-                                         Function<SiddhiProcessorParams<B>, String> selectStatementFunction) {
+                                         Function<SiddhiProcessorParams<B>, String> selectStatementFunction,
+                                         Function<SiddhiProcessorParams<B>, String> groupByStatementFunction) {
     List<String> inputStreamNames = new InputStreamNameGenerator<>(params).generateInputStreamNames();
     Map<String, List<EventPropertyDef>> eventTypeInfo = new EventTypeGenerator<>(params).generateEventTypes();
     List<String> outputEventKeys = new ArrayList<>(params.getOutEventType().keySet());
     this.siddhiProcessorParams = new SiddhiProcessorParams<>(params, inputStreamNames, eventTypeInfo, outputEventKeys);
     this.fromStatement = fromStatementFunction.apply(this.siddhiProcessorParams);
     this.selectStatement = selectStatementFunction.apply(this.siddhiProcessorParams);
-    this.siddhiAppString = new SiddhiAppGenerator<>(siddhiProcessorParams, fromStatement, selectStatement)
+    this.groupByStatement = groupByStatementFunction.apply(this.siddhiProcessorParams);
+    this.siddhiAppString = new SiddhiAppGenerator<>(siddhiProcessorParams, fromStatement, selectStatement, groupByStatement)
             .generateSiddhiApp();
   }
 
@@ -61,5 +64,9 @@ public class SiddhiInvocationConfigGenerator<B extends EventProcessorBindingPara
 
   public String getSelectStatement() {
     return selectStatement;
+  }
+
+  public String getGroupByStatement() {
+    return groupByStatement;
   }
 }
