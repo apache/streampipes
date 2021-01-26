@@ -1,8 +1,8 @@
 org.apache.streampipes.sinks.databases.jvm.opcua.title=OPC-UA
 org.apache.streampipes.sinks.databases.jvm.opcua.description=Writes values in an OPC-UA server
 
-opc_host.title=Hostname
-opc_host.description=The hostname of the OPC-UA server (Example: opc-ua-server.com, no leading opc.tcp://)
+opc_host.title=Host Address
+opc_host.description=The host address of the OPC-UA server (Example: opc-ua-server.com, opc.tcp://opc-ua-server.com)
 
 opc_port.title=Port
 opc_port.description=The port of the OPC-UA server (Example: 4840)

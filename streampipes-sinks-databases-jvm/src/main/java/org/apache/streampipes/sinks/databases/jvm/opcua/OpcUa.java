@@ -32,7 +32,6 @@ import org.apache.streampipes.vocabulary.XSD;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.runtime.EventSink;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -51,7 +50,12 @@ public class OpcUa implements EventSink<OpcUaParameters> {
 			SpRuntimeException {
 		LOG = parameters.getGraph().getLogger(OpcUa.class);
 
-		serverUrl = "opc.tcp://" + parameters.getHostName() + ":" + parameters.getPort();
+		if (!parameters.getHostName().startsWith("opc.tcp://")){
+			serverUrl= "opc.tcp://" + parameters.getHostName() + ":" + parameters.getPort();
+		}
+		else {
+			serverUrl = parameters.getHostName() + ":" + parameters.getPort();
+		}
     if (isInteger(parameters.getNodeId())) {
 			int integerNodeId = Integer.parseInt(parameters.getNodeId());
 			node = new NodeId(parameters.getNameSpaceIndex(), integerNodeId);
@@ -65,7 +69,7 @@ public class OpcUa implements EventSink<OpcUaParameters> {
 		List<EndpointDescription> endpoints;
 
 		try {
-//			endpoints = UaTcpStackClient.getEndpoints(serverUrl).get();
+
 			endpoints = DiscoveryClient.getEndpoints(serverUrl).get();
 
 			EndpointDescription endpoint = endpoints

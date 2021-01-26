@@ -88,7 +88,7 @@ public class OpcUa {
     }
 
     public OpcUa(String opcServer, int opcServerPort, int namespaceIndex, String nodeId) {
-        this("opc.tcp://" + opcServer + ":" + opcServerPort, namespaceIndex, nodeId);
+        this( opcServer + ":" + opcServerPort, namespaceIndex, nodeId);
     }
 
     public OpcUa(String opcServerURL, int namespaceIndex, String nodeId, String username, String password) {

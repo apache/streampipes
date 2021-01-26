@@ -251,11 +251,17 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
         String selectedAlternativeConnection = extractor.selectedAlternativeInternalId(OPC_HOST_OR_URL);
         String selectedAlternativeAuthentication = extractor.selectedAlternativeInternalId(ACCESS_MODE);
 
+        String serverAddress = extractor.singleValueParameter(OPC_SERVER_URL, String.class);
+        if (!serverAddress.startsWith("opc.tcp://")) {
+            serverAddress = "opc.tcp://" + serverAddress;
+        };
+
         if (selectedAlternativeConnection.equals(OPC_URL)) {
-            this.opcUaServer = extractor.singleValueParameter(OPC_SERVER_URL, String.class);
+
+            this.opcUaServer = serverAddress;
             this.selectedURL = true;
         } else {
-            this.opcUaServer = extractor.singleValueParameter(OPC_SERVER_HOST, String.class);
+            this.opcUaServer = serverAddress;
             this.port = extractor.singleValueParameter(OPC_SERVER_PORT, String.class);
             this.selectedURL = false;
         }
