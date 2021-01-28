@@ -256,46 +256,7 @@ public class PipelineWithUserResource extends AbstractRestInterface implements I
     @Override
     public Response migratePipelineProcessors(@PathParam("username") String username,
                                               @PathParam("pipelineId") String pipelineId,
-                                              Pipeline pipeline) {
-        //Pipeline storedPipeline = getPipelineStorage().getPipeline(pipelineId);
-
-//        storedPipeline.setActions(pipeline.getActions());
-//        storedPipeline.setSepas(pipeline.getSepas());
-//        storedPipeline.setActions(pipeline.getActions());
-//        storedPipeline.setCreatedAt(System.currentTimeMillis());
-//        storedPipeline.setPipelineCategories(pipeline.getPipelineCategories());
-//        storedPipeline.setEventRelayStrategy(pipeline.getEventRelayStrategy());
-//        Operations.updatePipeline(storedPipeline);
-        //return statusMessage(Notifications.success("Pipeline processors migrated"));
-
-        return migratePartial(username, pipelineId, pipeline);
-    }
-
-    /*@Path("/{pipelineId}/migrate")
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @JacksonSerialized*/
-    public Response migrate(String username, String pipelineId, Pipeline pipelineNew) {
-        //stop pipeline
-        //change description
-        //start pipeline again
-        try {
-            stop(username, pipelineId);
-            overwritePipeline(username, pipelineId, pipelineNew);
-            return start(username, pipelineId);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return statusMessage(Notifications.error(NotificationType.UNKNOWN_ERROR));
-        }
-    }
-
-    /*@Path("/{pipelineId}/migratePartial")
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @JacksonSerialized*/
-    public Response migratePartial(String username, String pipelineId, Pipeline pipelineNew) {
+                                              Pipeline pipelineNew) {
         try {
             Pipeline pipelineOld = getPipelineStorage()
                     .getPipeline(pipelineId);
