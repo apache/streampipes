@@ -35,4 +35,8 @@ public abstract class EndpointUrlGenerator<T extends NamedStreamPipesEntity> {
 
     public abstract String generateDetachEndpoint();
 
+    public String generateRelayEndpoint(){
+        return generateDetachEndpoint() + "/relay";
+    }
+
 }

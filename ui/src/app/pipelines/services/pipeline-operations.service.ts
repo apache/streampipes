@@ -118,13 +118,15 @@ export class PipelineOperationsService {
     //this.$state.go("streampipes.pipelinelogs", {pipeline: id});
   }
 
-  migratePipelineProcessors(pipeline: Pipeline) {
-    this.DialogService.open(MigratePipelineProcessorsComponent,{
-      panelType: PanelType.SLIDE_IN_PANEL,
-      title: "Live-Migrate pipeline processors",
-      data: {
-        "pipeline": pipeline
-      }
-    });
+  migratePipelineProcessors(pipelineId: string) {
+    this.PipelineService.getPipelineById(pipelineId).subscribe(pipeline => {
+      this.DialogService.open(MigratePipelineProcessorsComponent,{
+        panelType: PanelType.SLIDE_IN_PANEL,
+        title: "Live-Migrate pipeline processors",
+        data: {
+          "pipeline": pipeline
+        }
+      });
+    })
   }
 }

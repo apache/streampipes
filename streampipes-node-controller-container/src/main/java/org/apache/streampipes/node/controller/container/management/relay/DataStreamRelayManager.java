@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.node.controller.container.management.relay;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.streampipes.model.Response;
 import org.apache.streampipes.model.SpDataStreamRelay;
 import org.apache.streampipes.model.SpDataStreamRelayContainer;
@@ -64,6 +63,27 @@ public class DataStreamRelayManager {
     }
 
     public Response stopAdapterDataStreamRelay(String id) {
+        return stopDataStreamRelay(id);
+    }
+
+
+    public Response startDataStreamRelay(SpDataStreamRelayContainer desc, String id) {
+        String strategy = desc.getEventRelayStrategy();
+        TransportProtocol source = desc.getInputGrounding().getTransportProtocol();
+
+        Map<String, EventRelay> eventRelayMap = new HashMap<>();
+
+        desc.getOutputStreamRelays().forEach(r -> {
+            TransportProtocol target = r.getEventGrounding().getTransportProtocol();
+            EventRelay eventRelay = new EventRelay(source, target, strategy);
+            eventRelay.start();
+            eventRelayMap.put(r.getElementId(), eventRelay);
+        });
+        RunningRelayInstances.INSTANCE.add(id, eventRelayMap);
+        return new Response(id,true,"");
+    }
+
+    public Response stopDataStreamRelay(String id) {
         Map<String, EventRelay> relay = RunningRelayInstances.INSTANCE.get(id);
         if (relay != null) {
             relay.values().forEach(EventRelay::stop);
@@ -92,12 +112,7 @@ public class DataStreamRelayManager {
     }
 
     public void stopPipelineElementDataStreamRelay(String id) {
-        // Stop relay for invocable if existing
-        Map<String, EventRelay> relay = RunningRelayInstances.INSTANCE.get(id);
-        if (relay != null) {
-            relay.values().forEach(EventRelay::stop);
-        }
-        RunningRelayInstances.INSTANCE.remove(id);
+        stopDataStreamRelay(id);
     }
 
     public List<RelayMetrics> getAllRelays() {

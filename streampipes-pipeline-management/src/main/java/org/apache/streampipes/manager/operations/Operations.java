@@ -38,6 +38,7 @@ import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.client.endpoint.RdfEndpoint;
 import org.apache.streampipes.model.client.endpoint.RdfEndpointItem;
+import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.message.DataSetModificationMessage;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.PipelineModificationMessage;
@@ -48,6 +49,7 @@ import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.apache.streampipes.model.template.PipelineTemplateDescription;
 import org.apache.streampipes.model.template.PipelineTemplateInvocation;
+import org.apache.streampipes.sdk.helpers.Tuple2;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.ArrayList;
@@ -111,6 +113,10 @@ public class Operations {
 
   public static void updatePipeline(Pipeline pipeline) {
     new PipelineStorageService(pipeline).updatePipeline();
+  }
+
+  public static void overwritePipeline(Pipeline pipeline) {
+    new PipelineStorageService(pipeline).overwritePipeline();
   }
 
   public static PipelineOperationStatus startPipeline(
@@ -182,5 +188,11 @@ public class Operations {
 
   public static String getRuntimeInfo(SpDataStream spDataStream) throws SpRuntimeException {
     return PipelineElementRuntimeInfoFetcher.INSTANCE.getCurrentData(spDataStream);
+  }
+
+  public static PipelineOperationStatus updatePipelineDeploymentPartial(Pipeline pipelineOld, Pipeline pipelineNew, boolean visualize, boolean storeStatus,
+                                                     boolean monitor){
+    return new PipelineExecutor(pipelineNew, visualize, storeStatus, monitor)
+            .updatePipelineDeploymentPartial(pipelineOld);
   }
 }

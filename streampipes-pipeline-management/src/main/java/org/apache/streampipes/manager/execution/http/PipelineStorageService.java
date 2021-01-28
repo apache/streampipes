@@ -46,6 +46,10 @@ public class PipelineStorageService {
      StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updatePipeline(pipeline);
     }
 
+    public void overwritePipeline(){
+        StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updatePipeline(pipeline);
+    }
+
     public void addPipeline() {
         preparePipeline();
         StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().store(pipeline);

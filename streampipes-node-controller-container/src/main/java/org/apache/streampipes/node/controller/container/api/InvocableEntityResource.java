@@ -21,6 +21,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.container.model.node.InvocableRegistration;
 import org.apache.streampipes.model.Response;
+import org.apache.streampipes.model.SpDataStreamRelayContainer;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.node.controller.container.management.pe.InvocableElementManager;
@@ -32,7 +33,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.*;
+import java.lang.annotation.Annotation;
+import java.net.URI;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 @Path("/api/v2/node/element")
 public class InvocableEntityResource extends AbstractResource {
@@ -92,6 +99,26 @@ public class InvocableEntityResource extends AbstractResource {
         DataStreamRelayManager.getInstance().stopPipelineElementDataStreamRelay(runningInstanceId);
 
         return ok(resp);
+    }
+
+
+    @DELETE
+    @Path("{identifier}/{elementId}/{runningInstanceId}/relay")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response detachRelay(@PathParam("identifier") String identifier,
+                                            @PathParam("elementId") String elementId,
+                                            @PathParam("runningInstanceId") String runningInstanceId) {
+        return DataStreamRelayManager.getInstance().stopDataStreamRelay(runningInstanceId);
+    }
+
+    @POST
+    @Path("{identifier}/{elementId}/{runningInstanceId}/relay")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response invokeRelay(@PathParam("identifier") String identifier,
+                                @PathParam("elementId") String elementId,
+                                @PathParam("runningInstanceId") String runningInstanceId,
+                                SpDataStreamRelayContainer relay) {
+        return DataStreamRelayManager.getInstance().startDataStreamRelay(relay, runningInstanceId);
     }
 
     private String toJson(InvocableStreamPipesEntity graph) {
