@@ -256,17 +256,16 @@ public class PipelineWithUserResource extends AbstractRestInterface implements I
     @Override
     public Response migratePipelineProcessors(@PathParam("username") String username,
                                               @PathParam("pipelineId") String pipelineId,
-                                              Pipeline pipeline) {
-        Pipeline storedPipeline = getPipelineStorage().getPipeline(pipelineId);
-
-//        storedPipeline.setActions(pipeline.getActions());
-//        storedPipeline.setSepas(pipeline.getSepas());
-//        storedPipeline.setActions(pipeline.getActions());
-//        storedPipeline.setCreatedAt(System.currentTimeMillis());
-//        storedPipeline.setPipelineCategories(pipeline.getPipelineCategories());
-//        storedPipeline.setEventRelayStrategy(pipeline.getEventRelayStrategy());
-//        Operations.updatePipeline(storedPipeline);
-        return statusMessage(Notifications.success("Pipeline processors migrated"));
+                                              Pipeline pipelineNew) {
+        try {
+            Pipeline pipelineOld = getPipelineStorage()
+                    .getPipeline(pipelineId);
+            PipelineOperationStatus status = Operations.updatePipelineDeploymentPartial(pipelineOld, pipelineNew, true, true, true);
+            Operations.overwritePipeline(pipelineNew);
+            return ok(status);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return statusMessage(Notifications.error(NotificationType.UNKNOWN_ERROR));
+        }
     }
-
 }

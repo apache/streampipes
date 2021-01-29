@@ -18,10 +18,17 @@
 
 package org.apache.streampipes.manager.execution.http;
 
+import org.apache.streampipes.manager.data.PipelineGraph;
+import org.apache.streampipes.manager.data.PipelineGraphBuilder;
+import org.apache.streampipes.manager.data.PipelineGraphHelpers;
+import org.apache.streampipes.manager.matching.InvocationGraphBuilder;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.SpDataStreamRelay;
 import org.apache.streampipes.model.SpDataStreamRelayContainer;
+import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.grounding.EventGrounding;
+import org.apache.streampipes.model.pipeline.PipelineElementStatus;
+import org.apache.streampipes.sdk.helpers.Tuple2;
 import org.lightcouch.DocumentConflictException;
 import org.apache.streampipes.manager.execution.status.PipelineStatusManager;
 import org.apache.streampipes.manager.execution.status.SepMonitoringManager;
@@ -41,6 +48,7 @@ import org.apache.streampipes.user.management.encryption.CredentialsManager;
 
 import java.security.GeneralSecurityException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 public class PipelineExecutor {
@@ -142,6 +150,245 @@ public class PipelineExecutor {
         SepMonitoringManager.removeObserver(pipeline.getPipelineId());
       }
 
+    }
+    return status;
+  }
+
+  public PipelineOperationStatus updatePipelineDeploymentPartial(Pipeline pipelineOld){
+    PipelineOperationStatus status = initPipelineOperationStatus(pipeline.getPipelineId(), pipeline.getName());
+    //Adjust Relays in Description using existing configure Method in InvocationGraphBuilder
+    pipeline.getSepas().forEach(s -> s.setOutputStreamRelays(new ArrayList<>()));
+
+    PipelineGraph oldPipelineGraph = new PipelineGraphBuilder(pipelineOld).buildGraph();
+    PipelineGraph newPipelineGraph = new PipelineGraphBuilder(pipeline).buildGraph();
+    new InvocationGraphBuilder(newPipelineGraph, pipeline.getPipelineId()).buildGraphs();
+
+    getDelta(this.pipeline, pipelineOld).forEach(t -> {
+      List<NamedStreamPipesEntity> predecessors = new ArrayList<>();
+
+      PipelineGraphHelpers
+              .findStreams(newPipelineGraph)
+              .forEach(source -> predecessors.addAll(getPredecessors(source, t.a, newPipelineGraph, new ArrayList<>())));
+      List<Tuple2<NamedStreamPipesEntity, NamedStreamPipesEntity>> matchingPredecessors = new ArrayList<>();
+      for(NamedStreamPipesEntity e : predecessors){
+        matchingPredecessors.add(new Tuple2<>(e, findMatching(e, oldPipelineGraph)));
+      }
+      List<NamedStreamPipesEntity> predecessorsOld = new ArrayList<>();
+      for(Tuple2<NamedStreamPipesEntity, NamedStreamPipesEntity> pred : matchingPredecessors){
+        predecessorsOld.add(pred.b);
+      }
+
+      PipelineOperationStatus statusStartTarget = startPipelineElement(Collections.singletonList(t.a));
+      statusStartTarget.getElementStatus().forEach(status::addPipelineElementStatus);
+
+      //Stop relay to origin
+      PipelineOperationStatus statusStopRelays = stopRelays(predecessorsOld, t.b);
+      statusStopRelays.getElementStatus().forEach(status::addPipelineElementStatus);
+      //start Relay to target
+      PipelineOperationStatus statusStartRelays = startRelays(predecessors, t.a);
+      statusStartRelays.getElementStatus().forEach(status::addPipelineElementStatus);
+      //Stop origin and associated relay
+      PipelineOperationStatus stopOrigin = stopPipelineElements(Collections.singletonList(t.b));
+      stopOrigin.getElementStatus().forEach(status::addPipelineElementStatus);
+
+      //Remove if unnecessary
+      List<InvocableStreamPipesEntity> graphs = new ArrayList<>();
+      graphs.addAll(pipeline.getActions());
+      graphs.addAll(pipeline.getSepas());
+      List<SpDataSet> dataSets = pipeline.getStreams().stream().filter(s -> s instanceof SpDataSet).map(s -> new
+              SpDataSet((SpDataSet) s)).collect(Collectors.toList());
+      storeInvocationGraphs(pipeline.getPipelineId(), graphs, dataSets);
+
+    });
+    return verifyPipelineOperationStatus(status,
+            "Successfully migrated Pipeline Elements in Pipeline " + pipeline.getName(),
+            "Could not migrate all Pipeline Elements in Pipeline " + pipeline.getName());
+  }
+
+  private PipelineOperationStatus stopPipelineElements(List<NamedStreamPipesEntity> graphs){
+    List<InvocableStreamPipesEntity> invocations = new ArrayList<>();
+    graphs.stream().filter(i -> i instanceof InvocableStreamPipesEntity).forEach(i -> invocations.add((InvocableStreamPipesEntity) i));
+
+    if (invocations.isEmpty()) {
+      PipelineOperationStatus ret = initPipelineOperationStatus(pipeline.getPipelineId(), pipeline.getName());
+      ret.setSuccess(true);
+      return ret;
+    }
+    List<SpDataStreamRelayContainer> dataStreamRelayContainers = generateDataStreamRelays(invocations);
+    return new GraphSubmitter(pipeline.getPipelineId(),
+            pipeline.getName(),  invocations, new ArrayList<>(), dataStreamRelayContainers)
+            .detachGraphs();
+  }
+
+  private PipelineOperationStatus startPipelineElement(List<NamedStreamPipesEntity> graphs){
+    List<InvocableStreamPipesEntity> invocations = new ArrayList<>();
+    graphs.stream().filter(i -> i instanceof InvocableStreamPipesEntity).forEach(i -> invocations.add((InvocableStreamPipesEntity) i));
+
+    if (invocations.isEmpty()) {
+      PipelineOperationStatus ret = initPipelineOperationStatus(pipeline.getPipelineId(), pipeline.getName());
+      ret.setSuccess(true);
+      return ret;
+    }
+    List<InvocableStreamPipesEntity> decryptedGraphs = decryptSecrets(invocations);
+    List<SpDataStreamRelayContainer> dataStreamRelayContainers = generateDataStreamRelays(invocations);
+    return new GraphSubmitter(pipeline.getPipelineId(),
+            pipeline.getName(), decryptedGraphs, new ArrayList<>(), dataStreamRelayContainers)
+            .invokeGraphs();
+  }
+
+  private PipelineOperationStatus stopRelays(List<NamedStreamPipesEntity> predecessors, InvocableStreamPipesEntity target){
+    Map<NamedStreamPipesEntity, SpDataStreamRelayContainer> relays = new HashMap<>();
+
+    findRelays(relays, predecessors, target);
+
+    if (relays.isEmpty()) {
+      PipelineOperationStatus ret = initPipelineOperationStatus(pipeline.getPipelineId(), pipeline.getName());
+      ret.setSuccess(true);
+      return ret;
+    }
+    return new GraphSubmitter(pipeline.getPipelineId(),
+            pipeline.getName(),  new ArrayList<>(), new ArrayList<>(), new ArrayList<>()).detachRelays(relays);
+  }
+
+  private PipelineOperationStatus startRelays(List<NamedStreamPipesEntity> predecessors, InvocableStreamPipesEntity target){
+    Map<NamedStreamPipesEntity, SpDataStreamRelayContainer> relays = new HashMap<>();
+    findRelays(relays, predecessors, target);
+
+    if (relays.isEmpty()) {
+      PipelineOperationStatus ret = initPipelineOperationStatus(pipeline.getPipelineId(), pipeline.getName());
+      ret.setSuccess(true);
+      return ret;
+    }
+    return new GraphSubmitter(pipeline.getPipelineId(),
+            pipeline.getName(),  new ArrayList<>(), new ArrayList<>(), new ArrayList<>()).invokeRelays(relays);
+  }
+
+  private void findRelays(Map<NamedStreamPipesEntity, SpDataStreamRelayContainer> relays,
+                          List<NamedStreamPipesEntity> predecessors, InvocableStreamPipesEntity target){
+
+    predecessors.forEach(pred -> {
+      List<SpDataStreamRelay> dataStreamRelays = new ArrayList<>();
+      SpDataStreamRelayContainer dsRelayContainer = new SpDataStreamRelayContainer();
+
+      if (pred instanceof DataProcessorInvocation){
+        //Data Processor
+        DataProcessorInvocation processorInvocation = (DataProcessorInvocation) pred;
+        dataStreamRelays.addAll(processorInvocation.getOutputStreamRelays().stream().
+                filter(r ->
+                        target.getInputStreams().stream().map(s ->
+                                s.getEventGrounding().getTransportProtocol().getTopicDefinition().getActualTopicName())
+                                .collect(Collectors.toSet()).contains(r.getEventGrounding().getTransportProtocol()
+                                .getTopicDefinition().getActualTopicName()))
+                .collect(Collectors.toList()));
+        dsRelayContainer.setRunningStreamRelayInstanceId(pipeline.getPipelineId());
+        dsRelayContainer.setEventRelayStrategy(pipeline.getEventRelayStrategy());
+        dsRelayContainer.setName(processorInvocation.getName() + " (Stream Relay)");
+        dsRelayContainer.setInputGrounding(new EventGrounding(processorInvocation.getOutputStream().getEventGrounding()));
+        dsRelayContainer.setDeploymentTargetNodeId(processorInvocation.getDeploymentTargetNodeId());
+        dsRelayContainer.setDeploymentTargetNodeHostname(processorInvocation.getDeploymentTargetNodeHostname());
+        dsRelayContainer.setDeploymentTargetNodePort(processorInvocation.getDeploymentTargetNodePort());
+        dsRelayContainer.setOutputStreamRelays(dataStreamRelays);
+        relays.put(pred, dsRelayContainer);
+      } else if (pred instanceof SpDataStream){
+        //DataStream
+        SpDataStream dataStream = (SpDataStream) pred;
+        if (!matchingDeploymentTargets(dataStream, target)){
+          //There is a relay that needs to be removed
+          dataStreamRelays.add(new SpDataStreamRelay(new EventGrounding(target.getInputStreams()
+                  .get(getIndex(pred.getDOM(), target))
+                  .getEventGrounding())));
+
+          dsRelayContainer.setRunningStreamRelayInstanceId(pipeline.getPipelineId());
+          dsRelayContainer.setEventRelayStrategy(pipeline.getEventRelayStrategy());
+          dsRelayContainer.setName(dataStream.getName() + " (Stream Relay)");
+          dsRelayContainer.setInputGrounding(new EventGrounding(dataStream.getEventGrounding()));
+          dsRelayContainer.setDeploymentTargetNodeId(dataStream.getDeploymentTargetNodeId());
+          dsRelayContainer.setDeploymentTargetNodeHostname(dataStream.getDeploymentTargetNodeHostname());
+          dsRelayContainer.setDeploymentTargetNodePort(dataStream.getDeploymentTargetNodePort());
+          dsRelayContainer.setOutputStreamRelays(dataStreamRelays);
+          relays.put(pred, dsRelayContainer);
+        }
+      }
+    });
+
+  }
+
+  private List<Tuple2<DataProcessorInvocation, DataProcessorInvocation>> getDelta(Pipeline pipelineX, Pipeline pipelineY){
+    List<Tuple2<DataProcessorInvocation, DataProcessorInvocation>> delta = new ArrayList<>();
+    pipelineX.getSepas().forEach(iX -> {
+      if (pipelineY.getSepas().stream().filter(iY -> iY.getElementId().equals(iX.getElementId())).
+              filter(iY -> iY.getDeploymentTargetNodeId().equals(iX.getDeploymentTargetNodeId())).count() == 0){
+        Optional<DataProcessorInvocation> invocationY = pipelineY.getSepas().stream().
+                filter(iY -> iY.getDeploymentRunningInstanceId().equals(iX.getDeploymentRunningInstanceId())).findFirst();
+        invocationY.ifPresent(dataProcessorInvocation -> delta.add(new Tuple2<>(iX, dataProcessorInvocation)));
+      }
+    });
+    return delta;
+  }
+
+  private List<NamedStreamPipesEntity> getPredecessors(NamedStreamPipesEntity source,
+                                                           InvocableStreamPipesEntity target, PipelineGraph pipelineGraph,
+                                                           List<NamedStreamPipesEntity> foundPredecessors){
+    //TODO: Check if this works for all graph topologies
+    if (pipelineGraph.outgoingEdgesOf(source)
+            .stream()
+            .map(pipelineGraph::getEdgeTarget)
+            .map(g -> (InvocableStreamPipesEntity) g)
+            .collect(Collectors.toSet()).contains(target)){
+      foundPredecessors.add(source);
+    } else{
+      List<NamedStreamPipesEntity> successors = pipelineGraph.outgoingEdgesOf(source)
+              .stream()
+              .map(pipelineGraph::getEdgeTarget)
+              .map(g -> (InvocableStreamPipesEntity) g)
+              .collect(Collectors.toList());
+      if (successors.isEmpty()) return foundPredecessors;
+      successors.forEach(successor -> getPredecessors(successor, target, pipelineGraph, foundPredecessors));
+    }
+    return foundPredecessors;
+  }
+
+  private NamedStreamPipesEntity findMatching(NamedStreamPipesEntity entity, PipelineGraph pipelineGraph){
+    AtomicReference<NamedStreamPipesEntity> match = new AtomicReference<>();
+    PipelineGraphHelpers.findStreams(pipelineGraph).forEach(ds -> {
+    NamedStreamPipesEntity foundEntity = compareGraphs(ds, entity, pipelineGraph, new ArrayList<>());
+    if (foundEntity != null) match.set(foundEntity);
+    });
+    return match.get();
+  }
+
+  private NamedStreamPipesEntity compareGraphs(NamedStreamPipesEntity source, NamedStreamPipesEntity searchedEntity, PipelineGraph pipelineGraph, List<NamedStreamPipesEntity> successors){
+    if(source.getDOM().equals(searchedEntity.getDOM())) return source;
+    else if (successors.isEmpty())
+      successors = pipelineGraph.outgoingEdgesOf(source)
+            .stream()
+            .map(pipelineGraph::getEdgeTarget)
+            .map(g -> (InvocableStreamPipesEntity) g)
+            .collect(Collectors.toList());
+    Optional<NamedStreamPipesEntity> successor= successors.stream().findFirst();
+    if (successor.isPresent()) {
+      successors.remove(successor.get());
+      return compareGraphs(successor.get(), searchedEntity, pipelineGraph, successors);
+    }
+    return null;
+  }
+
+  private PipelineOperationStatus initPipelineOperationStatus(String pipelineId, String pipelineName) {
+    //Duplicate from method in GraphSubmitter
+    PipelineOperationStatus status = new PipelineOperationStatus();
+    status.setPipelineId(pipelineId);
+    status.setPipelineName(pipelineName);
+    return status;
+  }
+
+  private PipelineOperationStatus verifyPipelineOperationStatus(PipelineOperationStatus status, String successMessage,
+                                                                String errorMessage) {
+    //Duplicate from method in GraphSubmitter
+    status.setSuccess(status.getElementStatus().stream().allMatch(PipelineElementStatus::isSuccess));
+    if (status.isSuccess()) {
+      status.setTitle(successMessage);
+    } else {
+      status.setTitle(errorMessage);
     }
     return status;
   }

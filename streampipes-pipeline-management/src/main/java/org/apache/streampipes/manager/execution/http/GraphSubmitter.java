@@ -20,6 +20,7 @@ package org.apache.streampipes.manager.execution.http;
 
 import org.apache.streampipes.model.SpDataStreamRelayContainer;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
+import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.streampipes.model.SpDataSet;
@@ -28,8 +29,8 @@ import org.apache.streampipes.model.pipeline.PipelineElementStatus;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class GraphSubmitter {
 
@@ -48,6 +49,45 @@ public class GraphSubmitter {
     this.pipelineName = pipelineName;
     this.dataSets = dataSets;
     this.streamRelays = streamRelays;
+  }
+
+
+  public PipelineOperationStatus invokeRelays(Map<NamedStreamPipesEntity, SpDataStreamRelayContainer> relays) {
+    PipelineOperationStatus status = initPipelineOperationStatus();
+
+    relays.entrySet().forEach(e -> {
+      if(e.getValue().getOutputStreamRelays().size() > 0){
+          if(e.getKey() instanceof DataProcessorInvocation)
+            status.addPipelineElementStatus(makeHttpRequest(new InvocableEntityUrlGenerator((DataProcessorInvocation) e.getKey()), e.getValue(), "invokeRelay"));
+          else
+            status.addPipelineElementStatus(makeHttpRequest(new StreamRelayEndpointUrlGenerator(e.getValue()), e.getValue(), "invoke"));
+      }
+    });
+
+    return verifyPipelineOperationStatus(
+            status,
+            "Successfully started relays in pipeline " + pipelineName,
+            "Could not start relays in pipeline" + pipelineName,
+            true);
+  }
+
+  public PipelineOperationStatus detachRelays(Map<NamedStreamPipesEntity, SpDataStreamRelayContainer> relays) {
+    PipelineOperationStatus status = initPipelineOperationStatus();
+
+    relays.entrySet().forEach(e -> {
+      if(e.getValue().getOutputStreamRelays().size() > 0){
+        if(e.getKey() instanceof DataProcessorInvocation)
+          status.addPipelineElementStatus(makeHttpRequest(new InvocableEntityUrlGenerator((DataProcessorInvocation) e.getKey()), e.getValue(), "detachRelay"));
+        else
+          status.addPipelineElementStatus(makeHttpRequest(new StreamRelayEndpointUrlGenerator(e.getValue()), e.getValue(), "detach"));
+      }
+    });
+
+    return verifyPipelineOperationStatus(
+            status,
+            "Successfully stopped relays in pipeline " + pipelineName,
+            "Could not stop all relays in pipeline " + pipelineName,
+            false);
   }
 
   public PipelineOperationStatus invokeGraphs() {
@@ -139,6 +179,10 @@ public class GraphSubmitter {
         return new HttpRequestBuilder(namedEntity, urlGenerator.generateInvokeEndpoint()).invoke();
       case "detach":
         return new HttpRequestBuilder(namedEntity, urlGenerator.generateDetachEndpoint()).detach();
+      case "invokeRelay":
+        return new HttpRequestBuilder(namedEntity, urlGenerator.generateRelayEndpoint()).invoke();
+      case "detachRelay":
+        return new HttpRequestBuilder(namedEntity, urlGenerator.generateRelayEndpoint()).detach();
       default:
         throw new IllegalArgumentException("Type not known: " + type);
     }

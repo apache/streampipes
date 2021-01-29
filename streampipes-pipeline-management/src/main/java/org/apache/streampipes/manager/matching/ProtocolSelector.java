@@ -26,6 +26,7 @@ import org.apache.streampipes.manager.util.TopicGenerator;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.SpDataStream;
+import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
@@ -42,7 +43,20 @@ public class ProtocolSelector extends GroundingSelector {
 
     public ProtocolSelector(NamedStreamPipesEntity source, Set<InvocableStreamPipesEntity> targets) {
         super(source, targets);
-        this.outputTopic = TopicGenerator.generateRandomTopic();
+        if ((source instanceof DataProcessorInvocation
+                && ((DataProcessorInvocation)source).getOutputStream() != null
+                && ((DataProcessorInvocation)source).getOutputStream().getEventGrounding().getTransportProtocol()
+                .getTopicDefinition().getActualTopicName() != null)){
+            this.outputTopic = ((DataProcessorInvocation)source).getOutputStream().getEventGrounding().getTransportProtocol()
+                    .getTopicDefinition().getActualTopicName();
+        }else if ((source instanceof SpDataStream
+                && ((SpDataStream)source).getEventGrounding() != null
+                && ((SpDataStream)source).getEventGrounding().getTransportProtocol().getTopicDefinition().getActualTopicName() != null)){
+            this.outputTopic = ((SpDataStream)source).getEventGrounding().getTransportProtocol().getTopicDefinition().getActualTopicName();
+        }else{
+            this.outputTopic = TopicGenerator.generateRandomTopic();
+        }
+        //this.outputTopic = TopicGenerator.generateRandomTopic();
         this.prioritizedProtocols = BackendConfig.INSTANCE
                 .getMessagingSettings()
                 .getPrioritizedProtocols();
