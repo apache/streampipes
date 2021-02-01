@@ -16,21 +16,17 @@
  *
  */
 
-import {PrimitivePropertyMatch} from "./primitive-property-match";
+
 import {
-    EventPropertyList,
-    EventPropertyPrimitive,
-    EventPropertyUnion
+  EventPropertyList,
+  EventPropertyPrimitive,
+  EventPropertyUnion
 } from "../../../core-model/gen/streampipes-model";
-import {ListPropertyMatch} from "./list-property-match";
+import {PrimitivePropertyMatch} from "./primitive-property-match";
 
-export class PropertyMatch {
+export class ListPropertyMatch {
 
-    match(requirement: EventPropertyUnion, offer: EventPropertyUnion): boolean {
-        if (requirement instanceof EventPropertyPrimitive && offer instanceof EventPropertyPrimitive) {
-            return new PrimitivePropertyMatch().match(requirement, offer);
-        } else if (requirement instanceof EventPropertyList && offer instanceof EventPropertyList) {
-            return new ListPropertyMatch().match(requirement, offer);
-        }
-    }
+  match(requirement: EventPropertyList, offer: EventPropertyList): boolean {
+    return new PrimitivePropertyMatch().match(requirement.eventProperty as EventPropertyPrimitive, offer.eventProperty as EventPropertyPrimitive);
+  }
 }

@@ -53,9 +53,19 @@ import { HtmlWidgetComponent } from './components/widgets/html/html-widget.compo
 import { TrafficLightWidgetComponent } from './components/widgets/trafficlight/traffic-light-widget.component';
 import { StandaloneDashboardComponent } from './components/standalone/standalone-dashboard.component';
 import { CoreUiModule } from '../core-ui/core-ui.module';
+import {WordcloudWidgetComponent} from "./components/widgets/wordcloud/wordcloud-widget.component";
+import {NgxEchartsModule} from "ngx-echarts";
 
 @NgModule({
     imports: [
+        NgxEchartsModule.forRoot({
+            /**
+             * This will import all modules from echarts.
+             * If you only need custom modules,
+             * please refer to [Custom Build] section.
+             */
+            echarts: () => import('echarts'), // or import('./path-to-my-custom-echarts')
+        }),
         CommonModule,
         CoreUiModule,
         MatTabsModule,
@@ -87,6 +97,7 @@ import { CoreUiModule } from '../core-ui/core-ui.module';
         RawWidgetComponent,
         HtmlWidgetComponent,
         TrafficLightWidgetComponent,
+        WordcloudWidgetComponent,
         StandaloneDashboardComponent
     ],
     providers: [

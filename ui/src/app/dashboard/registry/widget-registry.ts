@@ -16,22 +16,24 @@
  *
  */
 
-import { AreaConfig } from '../components/widgets/area/area-config';
-import { WidgetConfig } from '../components/widgets/base/base-config';
-import { GaugeConfig } from '../components/widgets/gauge/gauge-config';
-import { HtmlConfig } from '../components/widgets/html/html-config';
-import { ImageConfig } from '../components/widgets/image/image-config';
-import { LineConfig } from '../components/widgets/line/line-config';
-import { MapConfig } from '../components/widgets/map/map-config';
-import { NumberConfig } from '../components/widgets/number/number-config';
-import { RawConfig } from '../components/widgets/raw/raw-config';
-import { TableConfig } from '../components/widgets/table/table-config';
-import { TrafficLightConfig } from '../components/widgets/trafficlight/traffic-light-config';
-import { SchemaMatch } from '../sdk/matching/schema-match';
+import {AreaConfig} from '../components/widgets/area/area-config';
+import {WidgetConfig} from '../components/widgets/base/base-config';
+import {GaugeConfig} from '../components/widgets/gauge/gauge-config';
+import {HtmlConfig} from '../components/widgets/html/html-config';
+import {ImageConfig} from '../components/widgets/image/image-config';
+import {LineConfig} from '../components/widgets/line/line-config';
+import {MapConfig} from '../components/widgets/map/map-config';
+import {NumberConfig} from '../components/widgets/number/number-config';
+import {RawConfig} from '../components/widgets/raw/raw-config';
+import {TableConfig} from '../components/widgets/table/table-config';
+import {TrafficLightConfig} from '../components/widgets/trafficlight/traffic-light-config';
+import {SchemaMatch} from '../sdk/matching/schema-match';
 import {
-    DashboardWidgetSettings, EventSchema,
+    DashboardWidgetSettings,
+    EventSchema,
     VisualizablePipeline
 } from '../../core-model/gen/streampipes-model';
+import {WordCloudConfig} from "../components/widgets/wordcloud/wordcloud-config";
 
 export class WidgetRegistry {
 
@@ -45,7 +47,8 @@ export class WidgetRegistry {
         new MapConfig(),
         new RawConfig(),
         new HtmlConfig(),
-        new TrafficLightConfig()
+        new TrafficLightConfig(),
+        new WordCloudConfig()
     ];
 
     static getAvailableWidgetTemplates(): DashboardWidgetSettings[] {

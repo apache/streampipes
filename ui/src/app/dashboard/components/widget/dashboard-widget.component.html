@@ -100,6 +100,12 @@
                                  [widgetConfig]="configuredWidget"
                                  [widgetDataConfig]="widgetDataConfig" class="h-100"></sp-pallet>
                 </div>
+                <div *ngIf="widget.widgetType === 'wordcloud'" class="h-100 p-0">
+                    <wordcloud-widget [gridsterItemComponent]="gridsterItemComponent"
+                                [gridsterItem]="item" [widget]="widget" [editMode]="editMode"
+                                [widgetConfig]="configuredWidget"
+                                [widgetDataConfig]="widgetDataConfig" class="h-100"></wordcloud-widget>
+                </div>
             </div>
         </div>
     </div>

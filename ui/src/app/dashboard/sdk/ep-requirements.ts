@@ -19,63 +19,97 @@
 import {Datatypes} from "./model/datatypes";
 import {Vocabulary} from "./model/vocabulary";
 import {
-    EventPropertyPrimitive,
-    EventPropertyUnion
+  EventPropertyList, EventPropertyNested,
+  EventPropertyPrimitive,
+  EventPropertyUnion
 } from "../../core-model/gen/streampipes-model";
 
 export class EpRequirements {
 
-    private static ep(): EventPropertyPrimitive {
-        // TODO factories for properties
-        let ep = new EventPropertyPrimitive();
-        ep["@class"] = "org.apache.streampipes.model.schema.EventPropertyPrimitive";
-        return ep;
-    }
+  private static ep(): EventPropertyPrimitive {
+    // TODO factories for properties
+    let ep = new EventPropertyPrimitive();
+    ep["@class"] = "org.apache.streampipes.model.schema.EventPropertyPrimitive";
+    return ep;
+  }
 
-    static anyProperty(): EventPropertyUnion {
-        return EpRequirements.ep();
-    }
+  private static listEp(): EventPropertyList {
+    let ep = new EventPropertyList();
+    ep["@class"] = "org.apache.streampipes.model.schema.EventPropertyList";
+    return ep;
+  }
 
-    static imageReq(): EventPropertyUnion {
-        return EpRequirements.domainPropertyReq("https://image.com");
-    }
+  private static nestedEp(): EventPropertyNested {
+    let ep = new EventPropertyNested();
+    ep["@class"] = "org.apache.streampipes.model.schema.EventPropertyNested";
+    return ep;
+  }
 
-    static latitudeReq(): EventPropertyUnion {
-        return EpRequirements.domainPropertyReq(Vocabulary.GEO + "lat");
-    }
+  static anyProperty(): EventPropertyUnion {
+    return EpRequirements.ep();
+  }
 
-    static longitudeReq(): EventPropertyUnion {
-        return EpRequirements.domainPropertyReq(Vocabulary.GEO + "long")
-    }
+  static imageReq(): EventPropertyUnion {
+    return EpRequirements.domainPropertyReq("https://image.com");
+  }
 
-    static timestampReq(): EventPropertyUnion {
-        return EpRequirements.domainPropertyReq("http://schema.org/DateTime");
-    }
+  static latitudeReq(): EventPropertyUnion {
+    return EpRequirements.domainPropertyReq(Vocabulary.GEO + "lat");
+  }
 
-    static numberReq(): EventPropertyUnion {
-        return EpRequirements.datatypeReq(Datatypes.Number);
-    }
+  static longitudeReq(): EventPropertyUnion {
+    return EpRequirements.domainPropertyReq(Vocabulary.GEO + "long")
+  }
 
-    static stringReq(): EventPropertyUnion {
-        return EpRequirements.datatypeReq(Datatypes.String);
-    }
+  static timestampReq(): EventPropertyUnion {
+    return EpRequirements.domainPropertyReq("http://schema.org/DateTime");
+  }
 
-    static integerReq(): EventPropertyUnion {
-        return EpRequirements.datatypeReq(Datatypes.Integer);
-    }
+  static numberReq(): EventPropertyUnion {
+    return EpRequirements.datatypeReq(Datatypes.Number);
+  }
 
-    static domainPropertyReq(domainProperty: string): EventPropertyPrimitive {
-        let eventProperty = EpRequirements.ep();
-        eventProperty.domainProperties = [domainProperty];
-        return eventProperty;
+  static stringReq(): EventPropertyUnion {
+    return EpRequirements.datatypeReq(Datatypes.String);
+  }
 
-    }
+  static integerReq(): EventPropertyUnion {
+    return EpRequirements.datatypeReq(Datatypes.Integer);
+  }
 
-    static datatypeReq(datatype: Datatypes): EventPropertyPrimitive {
-        let eventProperty = EpRequirements.ep();
-        eventProperty.runtimeType = datatype.toUri();
-        return eventProperty;
-    }
+  static listReq(): EventPropertyList {
+    return EpRequirements.listEp();
+  }
+
+  static nestedReq(propertyRequirement: EventPropertyUnion): EventPropertyNested {
+    let nestedEp: EventPropertyNested = this.nestedEp();
+
+    nestedEp.eventProperties = [propertyRequirement];
+
+    return nestedEp;
+  }
+
+  static nestedListReq(propertyRequirement: EventPropertyUnion): EventPropertyList {
+    let nestedEp: EventPropertyNested = this.nestedReq(propertyRequirement);
+
+    let listEp: EventPropertyList = this.listReq();
+    listEp.eventProperty = nestedEp;
+
+    return listEp;
+  }
+
+  static domainPropertyReq(domainProperty: string): EventPropertyPrimitive {
+    let eventProperty = EpRequirements.ep();
+    eventProperty.domainProperties = [domainProperty];
+    return eventProperty;
+
+  }
+
+  static datatypeReq(datatype: Datatypes): EventPropertyPrimitive {
+    let eventProperty = EpRequirements.ep();
+    eventProperty.runtimeType = datatype.toUri();
+    return eventProperty;
+  }
 
 
 }

@@ -16,21 +16,35 @@
  *
  */
 
-import {PrimitivePropertyMatch} from "./primitive-property-match";
-import {
-    EventPropertyList,
-    EventPropertyPrimitive,
-    EventPropertyUnion
-} from "../../../core-model/gen/streampipes-model";
-import {ListPropertyMatch} from "./list-property-match";
+.circleNumber {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  left: 50%;
+  display: inline-grid;
+  align-content: start;
+}
 
-export class PropertyMatch {
+.title-panel {
+  font-size: 20px;
+}
 
-    match(requirement: EventPropertyUnion, offer: EventPropertyUnion): boolean {
-        if (requirement instanceof EventPropertyPrimitive && offer instanceof EventPropertyPrimitive) {
-            return new PrimitivePropertyMatch().match(requirement, offer);
-        } else if (requirement instanceof EventPropertyList && offer instanceof EventPropertyList) {
-            return new ListPropertyMatch().match(requirement, offer);
-        }
-    }
+.value-panel {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+}
+
+.wordcloud {
+  height: 100%;
+  width: 100%;
+}
+
+.demo-chart {
+  width: 400px;
+  height: 400px;
 }
