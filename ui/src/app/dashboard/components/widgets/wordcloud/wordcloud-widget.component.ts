@@ -39,10 +39,15 @@ export class WordcloudWidgetComponent extends BaseStreamPipesWidget implements O
 
   countProperty: string;
   nameProperty: string;
+  windowSize: number;
   eventProperty: EventPropertyList;
 
-  canvasDimensions: any;
-  words: Array<string> = new Array<string>();
+  words: Array<any> = new Array<any>();
+
+  currentWidth: number;
+  currentHeight: number;
+
+  configReady: boolean = false;
 
   eChartsInstance: ECharts;
   dynamicData: EChartsOption;
@@ -57,20 +62,17 @@ export class WordcloudWidgetComponent extends BaseStreamPipesWidget implements O
       height: '100%',
       right: null,
       bottom: null,
-      sizeRange: [12, 60],
+      sizeRange: [8, 50],
       rotationRange: [-90, 90],
       rotationStep: 45,
       gridSize: 8,
       drawOutOfBound: false,
       layoutAnimation: true,
 
-      // Global text style
       textStyle: {
         fontFamily: 'sans-serif',
         fontWeight: 'bold',
-        // Color can be a callback function or a color string
         color: function () {
-          // Random color
           return 'rgb(' + [
             Math.round(Math.random() * 160),
             Math.round(Math.random() * 160),
@@ -86,15 +88,7 @@ export class WordcloudWidgetComponent extends BaseStreamPipesWidget implements O
           shadowColor: '#333'
         }
       },
-
-      // Data is an array. Each array item must have name and value property.
-      data: [{
-        name: 'Farrah Abraham',
-        value: 366,
-        // Style of single text
-        textStyle: {
-        }
-      }]
+      data: []
     }]
   };
 
@@ -105,36 +99,40 @@ export class WordcloudWidgetComponent extends BaseStreamPipesWidget implements O
   protected extractConfig(extractor: StaticPropertyExtractor) {
     this.countProperty = extractor.mappingPropertyValue(WordCloudConfig.COUNT_PROPERTY_KEY);
     this.nameProperty = extractor.mappingPropertyValue(WordCloudConfig.NAME_PROPERTY_KEY);
+    this.windowSize = extractor.integerParameter(WordCloudConfig.WINDOW_SIZE_KEY);
   }
 
   protected onEvent(event: any) {
-    this.words = event[this.countProperty];
+    let value = event[this.countProperty];
+    let name = event[this.nameProperty];
     this.dynamicData = this.chartOption;
-    if (this.words.length > 0) {
-      this.dynamicData.series[0].data.push({name: this.words[0], value: 366, textStyle: {}});
+    if (this.dynamicData.series[0].data.some(d => d.name == name)) {
+      this.dynamicData.series[0].data.find(d => d.name == name).value = value;
+    } else {
+      this.dynamicData.series[0].data.push({name: name, value: value});
+    }
+    if (this.dynamicData.series[0].data.length > this.windowSize) {
+      this.dynamicData.series[0].data.shift();
     }
     this.eChartsInstance.setOption(this.dynamicData);
   }
 
   protected onSizeChanged(width: number, height: number) {
-    this.canvasDimensions = {
-      //gridSize: Math.round(width),
-      weightFactor: function (size) {
-        return Math.pow(size, 2.3) * width / 1024;
-      },
-      fontFamily: 'Times, serif',
-      color: function (word, weight) {
-        return (weight === 12) ? '#f02222' : '#c09292';
-      },
-      rotateRatio: 0.5,
-      rotationSteps: 2,
-      backgroundColor: '#ffe0e0'
-    }
+    this.currentWidth = width;
+    this.currentHeight = height;
+    this.configReady = true;
+    this.applySize(width, height);
   }
 
   onChartInit(ec) {
-    console.log(ec);
     this.eChartsInstance = ec;
+    this.applySize(this.currentWidth, this.currentHeight);
+  }
+
+  applySize(width: number, height: number) {
+    if (this.eChartsInstance) {
+      this.eChartsInstance.resize({width: width, height: height});
+    }
   }
 
 }

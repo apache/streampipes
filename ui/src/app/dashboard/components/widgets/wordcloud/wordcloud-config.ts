@@ -27,6 +27,7 @@ export class WordCloudConfig extends WidgetConfig {
   static readonly TITLE_KEY: string = "title-key";
   static readonly COUNT_PROPERTY_KEY: string = "count-property-key";
   static readonly NAME_PROPERTY_KEY: string = "name-property-key";
+  static readonly WINDOW_SIZE_KEY: string = "window-size-key";
 
   constructor() {
     super();
@@ -38,9 +39,10 @@ export class WordCloudConfig extends WidgetConfig {
         .withDescription("A wordcloud visualization")
         .requiredSchema(SchemaRequirementsBuilder
             .create()
-            .requiredPropertyWithUnaryMapping(WordCloudConfig.COUNT_PROPERTY_KEY, "Count field", "", EpRequirements.nestedListReq(EpRequirements.integerReq()))
-            .requiredPropertyWithUnaryMapping(WordCloudConfig.NAME_PROPERTY_KEY, "Name field", "", EpRequirements.nestedListReq(EpRequirements.stringReq()))
+            .requiredPropertyWithUnaryMapping(WordCloudConfig.COUNT_PROPERTY_KEY, "Count field", "", EpRequirements.integerReq())
+            .requiredPropertyWithUnaryMapping(WordCloudConfig.NAME_PROPERTY_KEY, "Name field", "", EpRequirements.stringReq())
             .build())
+        .requiredIntegerParameter(WordCloudConfig.WINDOW_SIZE_KEY, "Window size", "The maximum number of events")
         .build();
   }
 }

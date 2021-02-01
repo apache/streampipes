@@ -16,20 +16,14 @@
   ~
   -->
 
-<div class="circleNumber" [ngStyle]="{'background-color': selectedBackgroundColor, 'color': selectedPrimaryTextColor}">
+<div class="wordcloud-panel" [ngStyle]="{'background-color': selectedBackgroundColor, 'color': selectedPrimaryTextColor}">
     <div class="title-panel mt-20" *ngIf="hasTitlePanelSettings">
         {{selectedTitle}}
     </div>
     <div class="value-panel">
-        <div echarts [options]="chartOption" class="demo-chart" (chartInit)="onChartInit($event)" [merge]= "dynamicData" ></div>
-<!--        <div *ngFor="let word of words">-->
-<!--            <span>{{word}}</span>-->
-<!--        </div>-->
+        <div echarts [options]="chartOption" [ngStyle]="{'width': '100%', 'height': currentHeight}"
+             (chartInit)="onChartInit($event)" [merge]= "dynamicData" *ngIf="configReady">
 
-<!--            <div *ngIf="isNumber(item)">{{item}}</div>-->
-<!--            <div *ngIf="!isNumber(item)">{{item}}</div>-->
-<!--        <div class="measurementUnitItem" *ngIf="measurementUnitAbbrev">-->
-<!--            {{measurementUnitAbbrev}}-->
-<!--        </div>-->
+        </div>
     </div>
 </div>
