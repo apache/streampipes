@@ -106,7 +106,7 @@ public class SemanticEventProducer extends AbstractRestInterface implements IPip
 	@Override
 	public Response removeOwn(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
 		getUserService().deleteOwnSource(username, elementUri);
-		getPipelineElementRdfStorage().deleteDataSink(getPipelineElementRdfStorage().getDataSinkById(elementUri));
+		getPipelineElementRdfStorage().deleteDataStream(getPipelineElementRdfStorage().getDataStreamById(elementUri));
 		return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
 	}
 
