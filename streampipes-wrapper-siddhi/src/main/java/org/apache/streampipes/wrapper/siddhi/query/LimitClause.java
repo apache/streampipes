@@ -18,35 +18,21 @@
 package org.apache.streampipes.wrapper.siddhi.query;
 
 import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
-import org.apache.streampipes.wrapper.siddhi.query.expression.PropertyExpression;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+public class LimitClause extends SiddhiStatement {
 
-public class GroupByClause extends SiddhiStatement {
+  private Integer limit;
 
-  private List<PropertyExpression> propertyExpressions;
-
-  public static GroupByClause create(List<PropertyExpression> groupByProperties) {
-    return new GroupByClause(groupByProperties);
+  public static LimitClause create(Integer limit) {
+    return new LimitClause(limit);
   }
 
-  public static GroupByClause create(PropertyExpression... outputProperties) {
-    return new GroupByClause(Arrays.asList(outputProperties));
-  }
-
-  private GroupByClause(List<PropertyExpression> groupByProperties) {
-    this.propertyExpressions = groupByProperties;
+  public LimitClause(Integer limit) {
+    this.limit = limit;
   }
 
   @Override
   public String toSiddhiEpl() {
-    return join(SiddhiConstants.WHITESPACE, "group by", join(SiddhiConstants.COMMA,
-            propertyExpressions
-                    .stream()
-                    .map(PropertyExpression::toSiddhiEpl)
-                    .collect(Collectors.toList())));
+    return join(SiddhiConstants.WHITESPACE, "limit", String.valueOf(limit));
   }
-
 }

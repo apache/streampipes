@@ -18,35 +18,31 @@
 package org.apache.streampipes.wrapper.siddhi.query;
 
 import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
-import org.apache.streampipes.wrapper.siddhi.query.expression.PropertyExpression;
+import org.apache.streampipes.wrapper.siddhi.query.expression.orderby.OrderByExpression;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class GroupByClause extends SiddhiStatement {
+public class OrderByClause extends SiddhiStatement {
 
-  private List<PropertyExpression> propertyExpressions;
+  private final List<OrderByExpression> orderByExpressions;
 
-  public static GroupByClause create(List<PropertyExpression> groupByProperties) {
-    return new GroupByClause(groupByProperties);
+  public static OrderByClause create(OrderByExpression... orderByExpressions) {
+    return new OrderByClause(Arrays.asList(orderByExpressions));
   }
 
-  public static GroupByClause create(PropertyExpression... outputProperties) {
-    return new GroupByClause(Arrays.asList(outputProperties));
-  }
-
-  private GroupByClause(List<PropertyExpression> groupByProperties) {
-    this.propertyExpressions = groupByProperties;
+  private OrderByClause(List<OrderByExpression> orderByExpressions) {
+    this.orderByExpressions = orderByExpressions;
   }
 
   @Override
   public String toSiddhiEpl() {
-    return join(SiddhiConstants.WHITESPACE, "group by", join(SiddhiConstants.COMMA,
-            propertyExpressions
+    return join(SiddhiConstants.WHITESPACE,
+            "order by",
+            join(SiddhiConstants.COMMA, orderByExpressions
                     .stream()
-                    .map(PropertyExpression::toSiddhiEpl)
+                    .map(OrderByExpression::toSiddhiEpl)
                     .collect(Collectors.toList())));
   }
-
 }

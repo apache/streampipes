@@ -23,7 +23,6 @@ import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
 import org.apache.streampipes.wrapper.siddhi.engine.callback.SiddhiDebugCallback;
 import org.apache.streampipes.wrapper.siddhi.engine.generator.SiddhiInvocationConfigGenerator;
-import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
 import org.apache.streampipes.wrapper.siddhi.utils.SiddhiUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +45,7 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
   @Override
   public void onInvocation(B parameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
     SiddhiInvocationConfigGenerator<B> siddhiConfigGenerator = new SiddhiInvocationConfigGenerator<>(parameters,
-            this::fromStatement, this::selectStatement, this::groupByStatement);
+           this::makeStatements);
     this.siddhiEngine.initializeEngine(siddhiConfigGenerator, spOutputCollector, runtimeContext);
   }
 
@@ -62,11 +61,6 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
 
   public String prepareName(String name) {
     return SiddhiUtils.prepareName(name);
-  }
-
-  @Override
-  public String groupByStatement(SiddhiProcessorParams<B> siddhiParams) {
-    return "";
   }
 
 }

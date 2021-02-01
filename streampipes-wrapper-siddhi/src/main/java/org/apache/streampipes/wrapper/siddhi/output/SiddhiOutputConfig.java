@@ -15,16 +15,24 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.wrapper.siddhi.engine.callback;
+package org.apache.streampipes.wrapper.siddhi.output;
 
+public abstract class SiddhiOutputConfig {
 
-import io.siddhi.core.event.Event;
+  private SiddhiOutputType siddhiOutputType;
+  private boolean outputAllEvents;
 
-import java.util.List;
+  public SiddhiOutputConfig(SiddhiOutputType siddhiOutputType,
+                            boolean outputAllEvents) {
+    this.siddhiOutputType = siddhiOutputType;
+    this.outputAllEvents = outputAllEvents;
+  }
 
-public interface SiddhiDebugCallback {
+  public SiddhiOutputType getSiddhiOutputType() {
+    return siddhiOutputType;
+  }
 
-  void onEvent(Event event);
-
-  void onEvent(List<Event> events);
+  public boolean isOutputAllEvents() {
+    return outputAllEvents;
+  }
 }

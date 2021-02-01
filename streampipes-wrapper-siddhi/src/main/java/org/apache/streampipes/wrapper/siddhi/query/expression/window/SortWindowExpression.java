@@ -15,38 +15,30 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.wrapper.siddhi.query;
+package org.apache.streampipes.wrapper.siddhi.query.expression.window;
 
+import io.siddhi.query.api.execution.query.selection.OrderByAttribute;
 import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
 import org.apache.streampipes.wrapper.siddhi.query.expression.PropertyExpression;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+public class SortWindowExpression extends WindowExpression {
 
-public class GroupByClause extends SiddhiStatement {
+  private PropertyExpression property;
+  private OrderByAttribute.Order order;
 
-  private List<PropertyExpression> propertyExpressions;
-
-  public static GroupByClause create(List<PropertyExpression> groupByProperties) {
-    return new GroupByClause(groupByProperties);
+  public SortWindowExpression(Integer number, PropertyExpression property, OrderByAttribute.Order order) {
+    super(number);
+    this.property = property;
+    this.order = order;
   }
-
-  public static GroupByClause create(PropertyExpression... outputProperties) {
-    return new GroupByClause(Arrays.asList(outputProperties));
-  }
-
-  private GroupByClause(List<PropertyExpression> groupByProperties) {
-    this.propertyExpressions = groupByProperties;
-  }
-
   @Override
   public String toSiddhiEpl() {
-    return join(SiddhiConstants.WHITESPACE, "group by", join(SiddhiConstants.COMMA,
-            propertyExpressions
-                    .stream()
-                    .map(PropertyExpression::toSiddhiEpl)
-                    .collect(Collectors.toList())));
+    return join(SiddhiConstants.EMPTY,
+            windowExpression(),
+            "sort",
+            windowValue(join(SiddhiConstants.COMMA,
+                    String.valueOf(windowValue),
+                    property.toSiddhiEpl(),
+                    join(SiddhiConstants.EMPTY, "'", order.toString().toLowerCase(), "'"))));
   }
-
 }

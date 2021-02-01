@@ -18,35 +18,29 @@
 package org.apache.streampipes.wrapper.siddhi.query;
 
 import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
-import org.apache.streampipes.wrapper.siddhi.query.expression.PropertyExpression;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+public class InsertIntoClause extends SiddhiStatement {
 
-public class GroupByClause extends SiddhiStatement {
+  private boolean insertAllEvents;
+  private String streamName;
 
-  private List<PropertyExpression> propertyExpressions;
-
-  public static GroupByClause create(List<PropertyExpression> groupByProperties) {
-    return new GroupByClause(groupByProperties);
+  public static InsertIntoClause create(String streamName) {
+    return new InsertIntoClause(streamName, false);
   }
 
-  public static GroupByClause create(PropertyExpression... outputProperties) {
-    return new GroupByClause(Arrays.asList(outputProperties));
+  public static InsertIntoClause create(String streamName, boolean insertAllEvents) {
+    return new InsertIntoClause(streamName, insertAllEvents);
   }
 
-  private GroupByClause(List<PropertyExpression> groupByProperties) {
-    this.propertyExpressions = groupByProperties;
+  public InsertIntoClause(String streamName,
+                          boolean insertAllEvents) {
+    this.streamName = streamName;
+    this.insertAllEvents = insertAllEvents;
   }
 
   @Override
   public String toSiddhiEpl() {
-    return join(SiddhiConstants.WHITESPACE, "group by", join(SiddhiConstants.COMMA,
-            propertyExpressions
-                    .stream()
-                    .map(PropertyExpression::toSiddhiEpl)
-                    .collect(Collectors.toList())));
+    return join(SiddhiConstants.WHITESPACE, this.insertAllEvents ?
+            "insert all events into" : "insert into", streamName);
   }
-
 }

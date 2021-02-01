@@ -15,16 +15,11 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.wrapper.siddhi.engine.callback;
+package org.apache.streampipes.wrapper.siddhi.output;
 
+public class SiddhiFirstOutputConfig extends SiddhiOutputConfig {
 
-import io.siddhi.core.event.Event;
-
-import java.util.List;
-
-public interface SiddhiDebugCallback {
-
-  void onEvent(Event event);
-
-  void onEvent(List<Event> events);
+  public SiddhiFirstOutputConfig() {
+    super(SiddhiOutputType.FIRST, false);
+  }
 }

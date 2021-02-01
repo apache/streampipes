@@ -23,7 +23,6 @@ import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.siddhi.engine.callback.SiddhiDebugCallback;
 import org.apache.streampipes.wrapper.siddhi.engine.generator.SiddhiInvocationConfigGenerator;
-import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
 import org.apache.streampipes.wrapper.standalone.ProcessorParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
@@ -42,7 +41,7 @@ public abstract class StreamPipesSiddhiProcessor extends StreamPipesDataProcesso
   @Override
   public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     SiddhiInvocationConfigGenerator<ProcessorParams> siddhiConfigGenerator = new SiddhiInvocationConfigGenerator<>(parameters,
-            this::fromStatement, this::selectStatement, this::groupByStatement);
+            this::makeStatements);
     this.siddhiEngine.initializeEngine(siddhiConfigGenerator, spOutputCollector, runtimeContext);
   }
 
@@ -56,8 +55,5 @@ public abstract class StreamPipesSiddhiProcessor extends StreamPipesDataProcesso
     this.siddhiEngine.shutdownEngine();
   }
 
-  @Override
-  public String groupByStatement(SiddhiProcessorParams<ProcessorParams> siddhiParams) {
-    return "";
-  }
+
 }

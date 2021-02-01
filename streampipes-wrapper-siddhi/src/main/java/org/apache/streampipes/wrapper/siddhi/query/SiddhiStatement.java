@@ -17,25 +17,9 @@
  */
 package org.apache.streampipes.wrapper.siddhi.query;
 
-public class SiddhiStatement {
+import org.apache.streampipes.wrapper.siddhi.query.expression.Expression;
 
-  private FromClause fromClause;
-  private SelectClause selectClause;
+public abstract class SiddhiStatement extends Expression {
 
-  private SiddhiStatement(FromClause fromClause, SelectClause selectClause) {
-    this.fromClause = fromClause;
-    this.selectClause = selectClause;
-  }
 
-  public static SiddhiStatement from(FromClause fromClause, SelectClause selectClause) {
-    return new SiddhiStatement(fromClause, selectClause);
-  }
-
-  public FromClause getFromClause() {
-    return fromClause;
-  }
-
-  public SelectClause getSelectClause() {
-    return selectClause;
-  }
 }

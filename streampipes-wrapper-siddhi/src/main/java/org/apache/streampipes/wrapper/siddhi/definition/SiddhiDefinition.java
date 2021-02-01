@@ -15,16 +15,10 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.wrapper.siddhi.engine.callback;
+package org.apache.streampipes.wrapper.siddhi.definition;
 
+import org.apache.streampipes.wrapper.siddhi.query.SiddhiStatement;
 
-import io.siddhi.core.event.Event;
+public abstract class SiddhiDefinition extends SiddhiStatement {
 
-import java.util.List;
-
-public interface SiddhiDebugCallback {
-
-  void onEvent(Event event);
-
-  void onEvent(List<Event> events);
 }

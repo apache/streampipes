@@ -15,16 +15,12 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.wrapper.siddhi.engine.callback;
+package org.apache.streampipes.wrapper.siddhi.definition;
 
+public class WindowDefinition extends SiddhiDefinition {
 
-import io.siddhi.core.event.Event;
-
-import java.util.List;
-
-public interface SiddhiDebugCallback {
-
-  void onEvent(Event event);
-
-  void onEvent(List<Event> events);
+  @Override
+  public String toSiddhiEpl() {
+    return null;
+  }
 }
