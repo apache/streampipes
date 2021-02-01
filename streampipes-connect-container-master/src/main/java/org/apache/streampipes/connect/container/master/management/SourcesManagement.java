@@ -183,7 +183,7 @@ public class SourcesManagement {
         ds.setCorrespondingAdapterId(adapterDescription.getAdapterId());
         ds.setInternallyManaged(true);
 
-        ds.setUri(url + "/streams");
+        ds.setUri(url);
 
         return ds;
     }

@@ -18,13 +18,12 @@
 
 package org.apache.streampipes.connect.container.master.management;
 
-import org.apache.http.client.fluent.Form;
-import org.apache.http.client.fluent.Request;
 import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.connect.adapter.GroundingService;
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
 import org.apache.streampipes.connect.config.ConnectContainerConfig;
 import org.apache.streampipes.connect.container.master.util.AdapterEncryptionService;
+import org.apache.streampipes.manager.storage.UserService;
 import org.apache.streampipes.manager.verification.DataStreamVerifier;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -33,13 +32,16 @@ import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.apache.streampipes.model.connect.worker.ConnectWorkerContainer;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.util.Cloner;
+import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorageCache;
 import org.apache.streampipes.storage.couchdb.impl.AdapterStorageImpl;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
+
+import static org.apache.streampipes.manager.storage.UserManagementService.getUserService;
 
 
 public class AdapterMasterManagement {
@@ -143,25 +145,14 @@ public class AdapterMasterManagement {
 
     adapterStorage.deleteAdapter(id);
 
-    String backendBaseUrl = ConnectContainerConfig.INSTANCE.getBackendApiUrl() + "api/v2/noauth/users/" + username + "/element/delete";
+    UserService userService = getUserService();
+    IPipelineElementDescriptionStorageCache requestor = StorageDispatcher.INSTANCE.getTripleStore().getPipelineElementStorage();
 
-    String elementUrl = ad.getUri();
-
-    String responseString = null;
-    LOG.info("Delete data source in backend with request URL: " + backendBaseUrl);
-    try {
-      responseString = Request.Post(backendBaseUrl)
-              .connectTimeout(1000)
-              .socketTimeout(100000)
-              .bodyForm(Form.form()
-                      .add("uri", elementUrl).build())
-              .execute().returnContent().asString();
-    } catch (IOException e) {
-      e.printStackTrace();
-      responseString = e.toString();
+    if (requestor.getDataStreamById(ad.getElementId()) != null) {
+      requestor.deleteDataStream(requestor.getDataStreamById(ad.getElementId()));
+      userService.deleteOwnSource(username, ad.getElementId());
+      requestor.refreshDataSourceCache();
     }
-
-    LOG.info("Response of the deletion request" + responseString);
   }
 
   public List<AdapterDescription> getAllAdapters(AdapterStorageImpl adapterStorage) throws AdapterException {

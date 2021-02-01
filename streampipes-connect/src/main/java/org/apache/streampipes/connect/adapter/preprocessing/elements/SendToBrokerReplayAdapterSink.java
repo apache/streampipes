@@ -20,12 +20,9 @@ package org.apache.streampipes.connect.adapter.preprocessing.elements;
 
 import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipelineElement;
 import org.apache.streampipes.connect.adapter.preprocessing.Util;
-import org.apache.streampipes.messaging.EventProducer;
-import org.apache.streampipes.model.grounding.TransportProtocol;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 
 public class SendToBrokerReplayAdapterSink implements AdapterPipelineElement {
 
@@ -72,7 +69,11 @@ public class SendToBrokerReplayAdapterSink implements AdapterPipelineElement {
 
     private long getTimestampInEvent(Map<String, Object> event) {
         if (timestampKeys.size() == 1) {
-            return (long) event.get(timestampKeys.get(0));
+            try {
+                return (long) event.get(timestampKeys.get(0));
+            } catch (ClassCastException e) {
+                return lastEventTimestamp;
+            }
         }
         Map<String, Object> subEvent = event;
         for (int i = 0; i < timestampKeys.size() - 1; i++) {
