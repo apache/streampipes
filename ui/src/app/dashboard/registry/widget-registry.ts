@@ -35,10 +35,12 @@ import {
 } from '../../core-model/gen/streampipes-model';
 import {WordCloudConfig} from "../components/widgets/wordcloud/wordcloud-config";
 import {StatusWidgetConfig} from "../components/widgets/status/status-config";
+import {BarRaceConfig} from "../components/widgets/bar-race/bar-race-config";
 
 export class WidgetRegistry {
 
     private static availableWidgets: WidgetConfig[] = [
+        new BarRaceConfig(),
         new NumberConfig(),
         new LineConfig(),
         new TableConfig(),

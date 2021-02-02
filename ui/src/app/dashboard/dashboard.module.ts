@@ -56,6 +56,7 @@ import { CoreUiModule } from '../core-ui/core-ui.module';
 import {WordcloudWidgetComponent} from "./components/widgets/wordcloud/wordcloud-widget.component";
 import {NgxEchartsModule} from "ngx-echarts";
 import {StatusWidgetComponent} from "./components/widgets/status/status-widget.component";
+import {BarRaceWidgetComponent} from "./components/widgets/bar-race/bar-race-widget.component";
 
 @NgModule({
     imports: [
@@ -81,6 +82,7 @@ import {StatusWidgetComponent} from "./components/widgets/status/status-widget.c
         LeafletModule
     ],
     declarations: [
+        BarRaceWidgetComponent,
         DashboardComponent,
         DashboardGridComponent,
         DashboardOverviewComponent,
