@@ -106,6 +106,12 @@
                                 [widgetConfig]="configuredWidget"
                                 [widgetDataConfig]="widgetDataConfig" class="h-100"></wordcloud-widget>
                 </div>
+                <div *ngIf="widget.widgetType === 'status'" class="h-100 p-0">
+                    <status-widget [gridsterItemComponent]="gridsterItemComponent"
+                                      [gridsterItem]="item" [widget]="widget" [editMode]="editMode"
+                                      [widgetConfig]="configuredWidget"
+                                      [widgetDataConfig]="widgetDataConfig" class="h-100"></status-widget>
+                </div>
             </div>
         </div>
     </div>

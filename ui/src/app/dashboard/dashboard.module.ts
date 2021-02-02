@@ -55,6 +55,7 @@ import { StandaloneDashboardComponent } from './components/standalone/standalone
 import { CoreUiModule } from '../core-ui/core-ui.module';
 import {WordcloudWidgetComponent} from "./components/widgets/wordcloud/wordcloud-widget.component";
 import {NgxEchartsModule} from "ngx-echarts";
+import {StatusWidgetComponent} from "./components/widgets/status/status-widget.component";
 
 @NgModule({
     imports: [
@@ -64,7 +65,7 @@ import {NgxEchartsModule} from "ngx-echarts";
              * If you only need custom modules,
              * please refer to [Custom Build] section.
              */
-            echarts: () => import('echarts'), // or import('./path-to-my-custom-echarts')
+            echarts: () => import('echarts'),
         }),
         CommonModule,
         CoreUiModule,
@@ -96,6 +97,7 @@ import {NgxEchartsModule} from "ngx-echarts";
         MapWidgetComponent,
         RawWidgetComponent,
         HtmlWidgetComponent,
+        StatusWidgetComponent,
         TrafficLightWidgetComponent,
         WordcloudWidgetComponent,
         StandaloneDashboardComponent

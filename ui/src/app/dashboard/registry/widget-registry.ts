@@ -34,6 +34,7 @@ import {
     VisualizablePipeline
 } from '../../core-model/gen/streampipes-model';
 import {WordCloudConfig} from "../components/widgets/wordcloud/wordcloud-config";
+import {StatusWidgetConfig} from "../components/widgets/status/status-config";
 
 export class WidgetRegistry {
 
@@ -47,6 +48,7 @@ export class WidgetRegistry {
         new MapConfig(),
         new RawConfig(),
         new HtmlConfig(),
+        new StatusWidgetConfig(),
         new TrafficLightConfig(),
         new WordCloudConfig()
     ];
