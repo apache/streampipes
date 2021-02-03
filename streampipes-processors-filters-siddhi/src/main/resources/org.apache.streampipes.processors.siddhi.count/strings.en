@@ -1,0 +1,11 @@
+org.apache.streampipes.processors.siddhi.count.title=Count Aggregation
+org.apache.streampipes.processors.siddhi.count.description=Performs an aggregation based on a given event property and outputs the number of occurrences.
+
+count-mapping.title=Field to count
+count-mapping.description=The field that contains the values which should be counted
+
+time-window.title=Time Window Size
+time-window.description=Size of the time window
+
+scale.title=Time Window Scale
+scale.description=

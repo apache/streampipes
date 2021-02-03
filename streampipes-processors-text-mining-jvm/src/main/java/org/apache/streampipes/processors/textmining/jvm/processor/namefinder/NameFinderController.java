@@ -18,29 +18,22 @@
 
 package org.apache.streampipes.processors.textmining.jvm.processor.namefinder;
 
-import org.apache.streampipes.container.api.ResolvesContainerProvidedOptions;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.schema.PropertyScope;
-import org.apache.streampipes.model.staticproperty.Option;
-import org.apache.streampipes.processors.textmining.jvm.config.TextMiningJvmConfig;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.*;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.sdk.utils.Datatypes;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
-public class NameFinderController extends StandaloneEventProcessingDeclarer<NameFinderParameters> implements ResolvesContainerProvidedOptions {
+public class NameFinderController extends StandaloneEventProcessingDeclarer<NameFinderParameters> {
 
   private static final String MODEL = "model";
   private static final String TOKENS_FIELD_KEY = "tokensField";
@@ -59,7 +52,7 @@ public class NameFinderController extends StandaloneEventProcessingDeclarer<Name
                             Labels.withId(TOKENS_FIELD_KEY),
                             PropertyScope.NONE)
                     .build())
-            .requiredSingleValueSelectionFromContainer(Labels.withId(MODEL))
+            .requiredFile(Labels.withId(MODEL))
             .outputStrategy(OutputStrategies.append(
                     EpProperties.listStringEp(
                             Labels.withId(FOUND_NAME_FIELD_KEY),
@@ -72,25 +65,31 @@ public class NameFinderController extends StandaloneEventProcessingDeclarer<Name
   public ConfiguredEventProcessor<NameFinderParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 
     String tokens = extractor.mappingPropertyValue(TOKENS_FIELD_KEY);
-    String model = extractor.selectedSingleValue(MODEL, String.class);
 
-    NameFinderParameters params = new NameFinderParameters(graph, tokens, model);
+    byte[] fileContent = null;
+    try {
+      fileContent = extractor.fileContentsAsByteArray(MODEL);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    NameFinderParameters params = new NameFinderParameters(graph, tokens, fileContent);
     return new ConfiguredEventProcessor<>(params, NameFinder::new);
   }
 
-  @Override
-  public List<Option> resolveOptions(String requestId, StaticPropertyExtractor parameterExtractor) {
-    String directoryPath = TextMiningJvmConfig.INSTANCE.getModelDirectory();
-
-    List<Option> result = new ArrayList<>();
-
-    File folder = new File(directoryPath);
-    File[] listOfFiles = folder.listFiles();
-
-    for (File file : listOfFiles) {
-      result.add(new Option(file.getName()));
-    }
-
-    return result;
-  }
+//  @Override
+//  public List<Option> resolveOptions(String requestId, StaticPropertyExtractor parameterExtractor) {
+//    String directoryPath = TextMiningJvmConfig.INSTANCE.getModelDirectory();
+//
+//    List<Option> result = new ArrayList<>();
+//
+//    File folder = new File(directoryPath);
+//    File[] listOfFiles = folder.listFiles();
+//
+//    for (File file : listOfFiles) {
+//      result.add(new Option(file.getName()));
+//    }
+//
+//    return result;
+//  }
 }

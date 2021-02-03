@@ -25,13 +25,12 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.field.ListField;
-import org.apache.streampipes.processors.textmining.jvm.config.TextMiningJvmConfig;
 import org.apache.streampipes.processors.textmining.jvm.processor.TextMiningUtil;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
 
-import java.io.FileInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -53,8 +52,7 @@ public class NameFinder implements EventProcessor<NameFinderParameters> {
                            EventProcessorRuntimeContext runtimeContext) {
     LOG = nameFinderParameters.getGraph().getLogger(NameFinder.class);
 
-    String modelPath = TextMiningJvmConfig.INSTANCE.getModelDirectory() + nameFinderParameters.getModel();
-    loadModel(modelPath);
+    loadModel(nameFinderParameters.getModel());
 
     this.tokens = nameFinderParameters.getTokens();
   }
@@ -79,8 +77,8 @@ public class NameFinder implements EventProcessor<NameFinderParameters> {
   public void onDetach() {
   }
 
-  private void loadModel(String modelFile) {
-    try (InputStream modelIn = new FileInputStream(modelFile)) {
+  private void loadModel(byte[] modelContent) {
+    try (InputStream modelIn = new ByteArrayInputStream(modelContent)) {
       TokenNameFinderModel model = new TokenNameFinderModel(modelIn);
       nameFinder = new NameFinderME(model);
     } catch (IOException e) {
