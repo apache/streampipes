@@ -36,6 +36,7 @@ import {
 import {WordCloudConfig} from "../components/widgets/wordcloud/wordcloud-config";
 import {StatusWidgetConfig} from "../components/widgets/status/status-config";
 import {BarRaceConfig} from "../components/widgets/bar-race/bar-race-config";
+import {StackedLineChartConfig} from "../components/widgets/stacked-line-chart/stacked-line-chart-config";
 
 export class WidgetRegistry {
 
@@ -49,6 +50,7 @@ export class WidgetRegistry {
         new AreaConfig(),
         new MapConfig(),
         new RawConfig(),
+        new StackedLineChartConfig(),
         new HtmlConfig(),
         new StatusWidgetConfig(),
         new TrafficLightConfig(),

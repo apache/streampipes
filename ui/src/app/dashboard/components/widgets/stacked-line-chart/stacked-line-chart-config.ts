@@ -22,23 +22,23 @@ import {SchemaRequirementsBuilder} from "../../../sdk/schema-requirements-builde
 import {EpRequirements} from "../../../sdk/ep-requirements";
 import {DashboardWidgetSettings} from "../../../../core-model/gen/streampipes-model";
 
-export class BarRaceConfig extends WidgetConfig {
+export class StackedLineChartConfig extends WidgetConfig {
 
-  static readonly PARTITION_KEY: string = "partition-key";
   static readonly VALUE_KEY: string = "value-key";
+  static readonly TIMESTAMP_KEY: string = "timestamp-key";
 
   constructor() {
     super();
   }
 
   getConfig(): DashboardWidgetSettings {
-    return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel("bar-race", "Bar Race Chart")
-        .withIcon("fas fa-chart-bar")
-        .withDescription("Renders ordered, separate bar charts based on a partition field (e.g., device id).")
+    return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel("stacked-line-chart", "Stacked Line Chart")
+        .withIcon("fas fa-chart-line")
+        .withDescription("Shows a stacked line chart based on multiple measurements.")
         .requiredSchema(SchemaRequirementsBuilder
             .create()
-            .requiredPropertyWithUnaryMapping(BarRaceConfig.PARTITION_KEY, "Partition field", "", EpRequirements.stringReq())
-            .requiredPropertyWithUnaryMapping(BarRaceConfig.VALUE_KEY, "Value field", "", EpRequirements.numberReq())
+            .requiredPropertyWithUnaryMapping(StackedLineChartConfig.TIMESTAMP_KEY, "Timestamp field", "", EpRequirements.timestampReq())
+            .requiredPropertyWithNaryMapping(StackedLineChartConfig.VALUE_KEY, "Measurement fields", "", EpRequirements.numberReq())
             .build())
         .build();
   }

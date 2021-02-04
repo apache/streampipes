@@ -57,6 +57,7 @@ import {WordcloudWidgetComponent} from "./components/widgets/wordcloud/wordcloud
 import {NgxEchartsModule} from "ngx-echarts";
 import {StatusWidgetComponent} from "./components/widgets/status/status-widget.component";
 import {BarRaceWidgetComponent} from "./components/widgets/bar-race/bar-race-widget.component";
+import {StackedLineChartWidgetComponent} from "./components/widgets/stacked-line-chart/stacked-line-chart-widget.component";
 
 @NgModule({
     imports: [
@@ -98,6 +99,7 @@ import {BarRaceWidgetComponent} from "./components/widgets/bar-race/bar-race-wid
         ImageWidgetComponent,
         MapWidgetComponent,
         RawWidgetComponent,
+        StackedLineChartWidgetComponent,
         HtmlWidgetComponent,
         StatusWidgetComponent,
         TrafficLightWidgetComponent,

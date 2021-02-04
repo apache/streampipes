@@ -118,6 +118,12 @@
                                    [widgetConfig]="configuredWidget"
                                    [widgetDataConfig]="widgetDataConfig" class="h-100"></bar-race-widget>
                 </div>
+                <div *ngIf="widget.widgetType === 'stacked-line-chart'" class="h-100 p-0">
+                    <stacked-line-chart-widget [gridsterItemComponent]="gridsterItemComponent"
+                                     [gridsterItem]="item" [widget]="widget" [editMode]="editMode"
+                                     [widgetConfig]="configuredWidget"
+                                     [widgetDataConfig]="widgetDataConfig" class="h-100"></stacked-line-chart-widget>
+                </div>
             </div>
         </div>
     </div>

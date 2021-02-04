@@ -25,7 +25,6 @@ import {ResizeService} from "../../../services/resize.service";
 import {ECharts} from "echarts/core";
 import {EChartsOption} from "echarts";
 import {BarRaceConfig} from "./bar-race-config";
-import {partition} from "rxjs";
 
 
 @Component({
