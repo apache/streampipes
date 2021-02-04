@@ -66,6 +66,7 @@ public class OpcUa implements EventSink<OpcUaParameters> {
 		compatibleDataTypes.put(Float.class, new Class[] {Double.class, String.class});
 		compatibleDataTypes.put(Integer.class, new Class[]{Double.class, Float.class, String.class});
 		compatibleDataTypes.put(Boolean.class, new Class[]{String.class});
+		compatibleDataTypes.put(String.class, new Class[]{String.class});
 	}
 
 	@Override
