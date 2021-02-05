@@ -59,6 +59,11 @@ export class BarRaceWidgetComponent extends BaseStreamPipesWidget implements OnI
           return Math.round(n);
         },
       },
+      axisLabel: {
+        textStyle: {
+          color: "#FFFFFF"
+        }
+      }
     },
     dataset: {
       source: [],
@@ -73,6 +78,9 @@ export class BarRaceWidgetComponent extends BaseStreamPipesWidget implements OnI
         formatter: value => {
           return value;
         },
+        textStyle: {
+          color: "#FFFFFF"
+        }
       },
       animationDuration: 300,
       animationDurationUpdate: 300
@@ -117,6 +125,8 @@ export class BarRaceWidgetComponent extends BaseStreamPipesWidget implements OnI
   protected extractConfig(extractor: StaticPropertyExtractor) {
     this.partitionField = extractor.mappingPropertyValue(BarRaceConfig.PARTITION_KEY);
     this.valueField = extractor.mappingPropertyValue(BarRaceConfig.VALUE_KEY);
+    this.chartOption.xAxis.axisLabel.textStyle.color = this.selectedPrimaryTextColor;
+    this.chartOption.yAxis.axisLabel.textStyle.color = this.selectedPrimaryTextColor;
   }
 
   protected onEvent(event: any) {

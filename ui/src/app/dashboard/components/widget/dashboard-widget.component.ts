@@ -37,6 +37,7 @@ export class DashboardWidgetComponent implements OnInit {
 
     @Input() widget: DashboardItem;
     @Input() editMode: boolean;
+    @Input() headerVisible: boolean = false;
     @Input() item: GridsterItem;
     @Input() gridsterItemComponent: GridsterItemComponent;
 

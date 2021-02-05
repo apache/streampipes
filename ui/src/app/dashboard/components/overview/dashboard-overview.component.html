@@ -16,13 +16,18 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column" class="m-20">
-    <div fxLayout="row wrap">
-        <button mat-button mat-raised-button color="primary" (click)="openNewDashboardDialog()">
-            New dashboard
-        </button>
+<div fxFlex="100" fxLayout="column">
+    <div fxFlex="100" fxLayout="column">
+        <div fxLayout="row" class="fixed-height options-bar">
+            <div class="options-bar-item" fxLayoutAlign="start center" fxLayout="row" style="padding-left:10px;">
+                <button mat-button mat-raised-button color="primary" (click)="openNewDashboardDialog()">
+                    <i class="material-icons">add</i>
+                   <span> New dashboard</span>
+                </button>
+            </div>
+        </div>
     </div>
-    <div fxFlex="100" fxLayout="row wrap" fxLayoutAlign="start stretch">
+    <div fxFlex="100" fxLayout="row wrap" fxLayoutAlign="start stretch" class="m-20">
         <div fxFlex="100" class="assemblyOptions sp-blue-bg" style="padding:5px;">
             <div fxLayout="row" fxLayoutAlign="start center" fxFlex="100">
                 <h4>My dashboards</h4>
