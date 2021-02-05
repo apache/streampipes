@@ -20,11 +20,15 @@ package org.apache.streampipes.client;
 import org.apache.streampipes.client.api.*;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
+import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
+import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
+import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
 
 public class StreamPipesClient implements SupportsPipelineApi,
         SupportsPipelineElementTemplateApi,
         SupportsDataSinkApi,
-        SupportsDataStreamApi {
+        SupportsDataStreamApi,
+        SupportsDataProcessorApi {
 
   private static final Integer SP_DEFAULT_PORT = 80;
 
@@ -65,6 +69,9 @@ public class StreamPipesClient implements SupportsPipelineApi,
     this.streamPipesHost = streamPipesHost;
     this.streamPipesPort = streamPipesPort;
     this.config = new StreamPipesClientConfig(credentials, streamPipesHost, streamPipesPort, httpsDisabled);
+    this.registerDataFormat(new JsonDataFormatFactory());
+    this.registerDataFormat(new FstDataFormatFactory());
+    this.registerDataFormat(new CborDataFormatFactory());
   }
 
   public void registerDataFormat(SpDataFormatFactory spDataFormatFactory) {
@@ -101,5 +108,10 @@ public class StreamPipesClient implements SupportsPipelineApi,
   @Override
   public DataStreamApi streams() {
     return new DataStreamApi(config);
+  }
+
+  @Override
+  public DataProcessorApi processors() {
+    return new DataProcessorApi(config);
   }
 }

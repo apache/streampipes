@@ -22,51 +22,49 @@ import org.apache.streampipes.client.live.SubscriptionManager;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
 import org.apache.streampipes.messaging.kafka.SpKafkaConsumer;
-import org.apache.streampipes.model.SpDataStream;
-import org.apache.streampipes.model.message.Message;
+import org.apache.streampipes.model.graph.DataProcessorInvocation;
 
-import java.net.URLEncoder;
 import java.util.List;
 
-public class DataStreamApi extends AbstractClientApi<SpDataStream> implements CRUDApi<String, SpDataStream> {
+public class DataProcessorApi extends AbstractClientApi<DataProcessorInvocation> implements CRUDApi<String, DataProcessorInvocation>{
 
-  public DataStreamApi(StreamPipesClientConfig clientConfig) {
-    super(clientConfig, SpDataStream.class);
-  }
-
-  @Override
-  public SpDataStream get(String s) {
-    return null;
-  }
-
-  @Override
-  public List<SpDataStream> all() {
-    return getAll(getBaseResourcePath());
-  }
-
-  @Override
-  public void create(SpDataStream element) {
-
-  }
-
-  @Override
-  public void delete(String s) {
-    delete(getBaseResourcePath().addToPath(URLEncoder.encode(s)), Message.class);
-  }
-
-  @Override
-  public void update(SpDataStream element) {
-
-  }
-
-  public SpKafkaConsumer subscribe(SpDataStream stream, EventProcessor callback) {
-    return new SubscriptionManager(clientConfig, stream.getEventGrounding(), callback).subscribe();
+  public DataProcessorApi(StreamPipesClientConfig clientConfig) {
+    super(clientConfig, DataProcessorInvocation.class);
   }
 
   @Override
   protected StreamPipesApiPath getBaseResourcePath() {
     return StreamPipesApiPath.fromUserApiPath(clientConfig.getCredentials())
-            .addToPath("streams")
+            .addToPath("sepas")
             .addToPath("own");
+  }
+
+  @Override
+  public DataProcessorInvocation get(String s) {
+    return null;
+  }
+
+  @Override
+  public List<DataProcessorInvocation> all() {
+    return getAll(getBaseResourcePath());
+  }
+
+  @Override
+  public void create(DataProcessorInvocation element) {
+
+  }
+
+  @Override
+  public void delete(String s) {
+
+  }
+
+  @Override
+  public void update(DataProcessorInvocation element) {
+
+  }
+
+  public SpKafkaConsumer subscribe(DataProcessorInvocation processor, EventProcessor callback) {
+    return new SubscriptionManager(clientConfig, processor.getOutputStream().getEventGrounding(), callback).subscribe();
   }
 }

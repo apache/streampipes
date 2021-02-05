@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.StringJoiner;
 
 public abstract class HttpRequest<SO, DSO, DT> {
 
@@ -62,11 +63,19 @@ public abstract class HttpRequest<SO, DSO, DT> {
   }
 
   protected String makeUrl() {
-    return makeProtocol() + clientConfig.getStreamPipesHost()
+    return makeUrl(true);
+  }
+
+  protected String makeUrl(boolean includePath) {
+    StringJoiner joiner = new StringJoiner("");
+    joiner.add(makeProtocol() + clientConfig.getStreamPipesHost()
             + ":"
-            + clientConfig.getStreamPipesPort()
-            + "/"
-            + apiPath.toString();
+            + clientConfig.getStreamPipesPort());
+    if (includePath) {
+      joiner.add("/" + apiPath.toString());
+    }
+
+    return joiner.toString();
   }
 
   public DT executeRequest() throws SpRuntimeException {
@@ -77,10 +86,16 @@ public abstract class HttpRequest<SO, DSO, DT> {
       if (status.getStatusCode() == HttpStatus.SC_OK) {
         return afterRequest(serializer, response.getEntity());
       } else {
-        throw new SpRuntimeException("Status: " + status.getStatusCode());
+        if (status.getStatusCode() == 401) {
+          throw new SpRuntimeException(" 401 - Access to this resource is forbidden - did you provide a poper API key?");
+        } else {
+          throw new SpRuntimeException(status.getStatusCode() + " - " + status.getReasonPhrase());
+        }
       }
+    } catch (NoHttpResponseException e) {
+      throw new SpRuntimeException("Could not connect to the StreamPipes API - please check that StreamPipes is available at " + makeUrl(false));
     } catch (IOException e) {
-      throw new SpRuntimeException(e.getCause());
+      throw new SpRuntimeException(e.getMessage());
     }
   }
 
