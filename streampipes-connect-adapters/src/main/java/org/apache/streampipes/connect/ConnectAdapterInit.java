@@ -48,11 +48,7 @@ import org.apache.streampipes.connect.config.ConnectWorkerConfig;
 import org.apache.streampipes.connect.container.worker.init.AdapterWorkerContainer;
 import org.apache.streampipes.connect.init.AdapterDeclarerSingleton;
 import org.apache.streampipes.connect.protocol.set.FileProtocol;
-import org.apache.streampipes.connect.protocol.stream.FileStreamProtocol;
-import org.apache.streampipes.connect.protocol.stream.HDFSProtocol;
-import org.apache.streampipes.connect.protocol.stream.HttpStreamProtocol;
-import org.apache.streampipes.connect.protocol.stream.KafkaProtocol;
-import org.apache.streampipes.connect.protocol.stream.MqttProtocol;
+import org.apache.streampipes.connect.protocol.stream.*;
 import org.apache.streampipes.connect.protocol.stream.pulsar.PulsarProtocol;
 
 public class ConnectAdapterInit extends AdapterWorkerContainer {
@@ -70,6 +66,7 @@ public class ConnectAdapterInit extends AdapterWorkerContainer {
             .add(new MqttProtocol())
             .add(new HttpStreamProtocol())
             .add(new PulsarProtocol())
+            .add(new HttpServerProtocol())
 //
 //          // Specific Adapters
             .add(new GdeltAdapter())
