@@ -27,6 +27,7 @@ import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.apache.streampipes.model.staticproperty.Option;
+import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.sdk.extractor.AbstractParameterExtractor;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 
@@ -51,6 +52,7 @@ public abstract class InvocablePipelineElementResource<I extends InvocableStream
     @Path("{elementId}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
+    @JacksonSerialized
     public javax.ws.rs.core.Response invokeRuntime(@PathParam("elementId") String elementId, I graph) {
 
         try {
@@ -78,6 +80,7 @@ public abstract class InvocablePipelineElementResource<I extends InvocableStream
     @Path("{elementId}/configurations")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
+    @JacksonSerialized
     public javax.ws.rs.core.Response fetchConfigurations(@PathParam("elementId") String elementId,
                                                          RuntimeOptionsRequest runtimeOptionsRequest) {
 
@@ -98,6 +101,7 @@ public abstract class InvocablePipelineElementResource<I extends InvocableStream
     @Path("{elementId}/output")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
+    @JacksonSerialized
     public javax.ws.rs.core.Response fetchOutputStrategy(@PathParam("elementId") String elementId, I runtimeOptionsRequest) {
         try {
             //I runtimeOptionsRequest = JacksonSerializer.getObjectMapper().readValue(payload, clazz);
