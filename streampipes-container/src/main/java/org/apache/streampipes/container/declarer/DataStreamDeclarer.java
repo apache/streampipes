@@ -18,11 +18,10 @@
 package org.apache.streampipes.container.declarer;
 
 import org.apache.streampipes.model.SpDataStream;
-import org.apache.streampipes.model.graph.DataSourceDescription;
 
-public interface DataStreamDeclarer {
+public interface DataStreamDeclarer extends Declarer<SpDataStream> {
 
-  SpDataStream declareModel(DataSourceDescription sep);
+  SpDataStream declareModel();
 
   void executeStream();
 

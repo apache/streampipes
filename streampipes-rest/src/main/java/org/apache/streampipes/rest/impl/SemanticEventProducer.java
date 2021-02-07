@@ -19,10 +19,10 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
-import org.apache.streampipes.model.graph.DataSourceDescription;
-import org.apache.streampipes.model.message.Notification;
+import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.message.Notifications;
+import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.rest.api.IPipelineElement;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
@@ -35,24 +35,9 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Path("/v2/users/{username}/sources")
+@Path("/v2/users/{username}/streams")
 public class SemanticEventProducer extends AbstractRestInterface implements IPipelineElement {
 
-	@Path("/{sourceId}/streams")
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@GsonWithIds
-	public Response getStreamsBySource(@PathParam("username") String username, @PathParam("sourceId") String sourceId)
-	{
-		try {
-			return ok(new DataSourceDescription(getPipelineElementRdfStorage().getDataSourceById(sourceId)));
-		} catch (Exception e) {
-			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(),
-					NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
-		}
-		
-	}
-	
 	@GET
 	@Path("/available")
 	@RequiresAuthentication
@@ -60,7 +45,7 @@ public class SemanticEventProducer extends AbstractRestInterface implements IPip
 	@GsonWithIds
 	@Override
 	public Response getAvailable(@PathParam("username") String username) {
-		List<DataSourceDescription> seps = Filter.byUri(getPipelineElementRdfStorage().getAllDataSources(),
+		List<SpDataStream> seps = Filter.byUri(getPipelineElementRdfStorage().getAllDataStreams(),
 				getUserService().getAvailableSourceUris(username));
 		return ok(seps);
 	}
@@ -72,7 +57,7 @@ public class SemanticEventProducer extends AbstractRestInterface implements IPip
 	@GsonWithIds
 	@Override
 	public Response getFavorites(@PathParam("username") String username) {
-		List<DataSourceDescription> seps = Filter.byUri(getPipelineElementRdfStorage().getAllDataSources(),
+		List<SpDataStream> seps = Filter.byUri(getPipelineElementRdfStorage().getAllDataStreams(),
 				getUserService().getFavoriteSourceUris(username));
 		return ok(seps);
 	}
@@ -84,9 +69,9 @@ public class SemanticEventProducer extends AbstractRestInterface implements IPip
 	@JacksonSerialized
 	@Override
 	public Response getOwn(@PathParam("username") String username) {
-		List<DataSourceDescription> seps = Filter.byUri(getPipelineElementRdfStorage().getAllDataSources(),
+		List<SpDataStream> seps = Filter.byUri(getPipelineElementRdfStorage().getAllDataStreams(),
 				getUserService().getOwnSourceUris(username));
-		List<DataSourceDescription> si = seps.stream().map(s -> new DataSourceDescription(s)).collect(Collectors.toList());
+		List<SpDataStream> si = seps.stream().map(s -> new Cloner().mapSequence(s)).collect(Collectors.toList());
 
 		return ok(si);
 	}
@@ -121,7 +106,7 @@ public class SemanticEventProducer extends AbstractRestInterface implements IPip
 	@Override
 	public Response removeOwn(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
 		getUserService().deleteOwnSource(username, elementUri);
-		getPipelineElementRdfStorage().deleteDataSink(getPipelineElementRdfStorage().getDataSinkById(elementUri));
+		getPipelineElementRdfStorage().deleteDataStream(getPipelineElementRdfStorage().getDataStreamById(elementUri));
 		return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
 	}
 
@@ -141,7 +126,7 @@ public class SemanticEventProducer extends AbstractRestInterface implements IPip
 	@Override
 	public Response getElement(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
 		// TODO Access rights
-		return ok(new DataSourceDescription(getPipelineElementRdfStorage().getDataSourceById(elementUri)));
+		return ok(new Cloner().mapSequence(getPipelineElementRdfStorage().getDataStreamById(elementUri)));
 	}
 
 }

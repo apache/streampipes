@@ -22,25 +22,20 @@ import io.fogsy.empire.core.empire.annotation.InvalidRdfException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
-import org.apache.streampipes.commons.Utils;
 import org.apache.streampipes.manager.endpoint.HttpJsonParser;
 import org.apache.streampipes.manager.storage.UserManagementService;
 import org.apache.streampipes.manager.storage.UserService;
 import org.apache.streampipes.model.base.AbstractStreamPipesEntity;
-import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.base.StreamPipesJsonLdContainer;
 import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.model.message.*;
-import org.apache.streampipes.serializers.json.GsonSerializer;
+import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
 import org.apache.streampipes.serializers.jsonld.JsonLdTransformer;
+import org.apache.streampipes.serializers.jsonld.JsonLdUtils;
 import org.apache.streampipes.storage.api.*;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.storage.management.StorageManager;
-import org.apache.streampipes.storage.rdf4j.util.Transformer;
-import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.rio.RDFHandlerException;
-import org.eclipse.rdf4j.rio.RDFParseException;
-import org.eclipse.rdf4j.rio.UnsupportedRDFormatException;
 
 import javax.ws.rs.core.Response;
 import java.io.IOException;
@@ -50,11 +45,11 @@ import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.util.List;
 
-public abstract class AbstractRestInterface {
+public abstract class AbstractRestInterface extends AbstractSharedRestInterface {
 
   protected <T> String toJsonLd(T object) {
     try {
-      return Utils.asString(new JsonLdTransformer().toJsonLd(object));
+      return JsonLdUtils.asString(new JsonLdTransformer().toJsonLd(object));
     } catch (RDFHandlerException | IllegalArgumentException
             | IllegalAccessException | SecurityException | InvocationTargetException
             | ClassNotFoundException | InvalidRdfException e) {
@@ -66,7 +61,7 @@ public abstract class AbstractRestInterface {
 
   protected <T> String toJsonLd(String rootElementUri, T object) {
     try {
-      return Utils.asString(new JsonLdTransformer(rootElementUri).toJsonLd(object));
+      return JsonLdUtils.asString(new JsonLdTransformer(rootElementUri).toJsonLd(object));
     } catch (IllegalAccessException | InvocationTargetException | InvalidRdfException | ClassNotFoundException e) {
       return toJson(constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(),
               NotificationType.UNKNOWN_ERROR.description(),
@@ -102,6 +97,10 @@ public abstract class AbstractRestInterface {
     return getNoSqlStorage().getDataLakeStorage();
   }
 
+  protected IPipelineElementTemplateStorage getPipelineElementTemplateStorage() {
+    return getNoSqlStorage().getPipelineElementTemplateStorage();
+  }
+
   protected INoSqlStorage getNoSqlStorage() {
     return StorageDispatcher.INSTANCE.getNoSqlStore();
   }
@@ -123,11 +122,6 @@ public abstract class AbstractRestInterface {
           ClientProtocolException, IOException {
     URI uri = new URI(payload);
     return HttpJsonParser.getContentFromUrl(uri, mediaType);
-  }
-
-  protected <T extends NamedStreamPipesEntity> T parseObjectContent(Class<T> clazz, String payload)
-          throws RDFParseException, UnsupportedRDFormatException, RepositoryException, IOException {
-    return Transformer.fromJsonLd(clazz, payload);
   }
 
   protected Response constructSuccessMessage(Notification... notifications) {
@@ -171,40 +165,8 @@ public abstract class AbstractRestInterface {
             .build();
   }
 
-  protected <T> Response ok(T entity) {
-    return Response
-            .ok(entity)
-            .build();
-  }
-
-  protected <T> Response badRequest(T entity) {
-    return Response
-            .status(400)
-            .entity(entity)
-            .build();
-  }
-
-  protected <T> Response serverError(T entity) {
-    return Response
-            .status(500)
-            .entity(entity)
-            .build();
-  }
-
   protected StreamPipesJsonLdContainer asContainer(List<? extends AbstractStreamPipesEntity> elements) {
     return new StreamPipesJsonLdContainer(elements);
-  }
-
-  protected Response ok() {
-    return Response.ok().build();
-  }
-
-  protected Response fail() {
-    return Response.serverError().build();
-  }
-
-  protected <T> String toJson(T element) {
-    return GsonSerializer.getGson().toJson(element);
   }
 
 }

@@ -32,6 +32,7 @@ import { CoreModule } from './core/core.module';
 import { LoginModule } from './login/login.module';
 import { HomeModule } from './home/home.module';
 import { InfoModule } from './info/info.module';
+import {ProfileModule} from "./profile/profile.module";
 import { PipelineDetailsModule } from './pipeline-details/pipeline-details.module';
 import { NotificationCountService } from "./services/notification-count-service";
 import { AuthService } from "./services/auth.service";
@@ -54,6 +55,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { PlatformServicesModule } from "./platform-services/platform.module";
 import { ServicesModule } from "./services/services.module";
+import { ApidocsModule } from "./apidocs/apidocs.module";
 
 import * as $ from 'jquery';
 
@@ -62,6 +64,7 @@ import * as $ from 'jquery';
         AppComponent
     ],
     imports: [
+        ApidocsModule,
         AppRoutingModule,
         BrowserModule,
         BrowserAnimationsModule,
@@ -80,6 +83,7 @@ import * as $ from 'jquery';
         PlatformServicesModule,
         PipelineDetailsModule,
         ServicesModule,
+        ProfileModule,
         {{#modulesActive}}
         {{#ng5}}
         {{{ng5_moduleName}}},

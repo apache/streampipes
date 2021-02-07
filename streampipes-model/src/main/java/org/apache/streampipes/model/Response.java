@@ -18,15 +18,15 @@
 
 package org.apache.streampipes.model;
 
-import com.google.gson.Gson;
-
 public class Response {
 
 	private Boolean success;
-	
 	private String elementId;
-	
 	private String optionalMessage;
+
+	public Response() {
+
+	}
 	
 	public Response(String elementId, boolean success)
 	{
@@ -50,6 +50,18 @@ public class Response {
 
 	public String getOptionalMessage() {
 		return optionalMessage;
+	}
+
+	public void setSuccess(Boolean success) {
+		this.success = success;
+	}
+
+	public void setElementId(String elementId) {
+		this.elementId = elementId;
+	}
+
+	public void setOptionalMessage(String optionalMessage) {
+		this.optionalMessage = optionalMessage;
 	}
 
 	@Override
@@ -81,15 +93,7 @@ public class Response {
 				return false;
 		} else if (!optionalMessage.equals(other.optionalMessage))
 			return false;
-		if (success != other.success)
-			return false;
-		return true;
+		return success == other.success;
 	}
 
-
-	@Override
-	public String toString() {
-		Gson gson = new Gson();
-		return gson.toJson(this);
-	}
 }

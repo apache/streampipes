@@ -16,138 +16,145 @@
  *
  */
 
-import {CommonModule} from '@angular/common';
-import {NgModule} from '@angular/core';
-import {FlexLayoutModule} from '@angular/flex-layout';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
-import {CdkTableModule} from '@angular/cdk/table';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatNativeDateModule} from '@angular/material/core';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import {MatSnackBarModule} from '@angular/material/snack-bar';
-import {CustomMaterialModule} from '../CustomMaterial/custom-material.module';
+import { CdkTableModule } from '@angular/cdk/table';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 
-import {MatChipsModule} from '@angular/material/chips';
-import {MatSliderModule} from '@angular/material/slider';
-import {PlotlyViaWindowModule} from 'angular-plotly.js';
-import {ImageAnnotationsComponent} from './image/components/image-annotations/image-annotations.component';
-import {ImageBarComponent} from './image/components/image-bar/image-bar.component';
-import {ImageContainerComponent} from './image/components/image-container/image-container.component';
-import {ImageLabelsComponent} from './image/components/image-labels/image-labels.component';
-import {ImageCategorizeComponent} from './image/image-categorize/image-categorize.component';
-import {ImageLabelingComponent} from './image/image-labeling/image-labeling.component';
-import {ImageViewerComponent} from './image/image-viewer/image-viewer.component';
-import {ImageComponent} from './image/image.component';
-import {BrushLabelingService} from './image/services/BrushLabeling.service';
-import {ColorService} from './image/services/color.service';
-import {PolygonLabelingService} from './image/services/PolygonLabeling.service';
-import {ReactLabelingService} from './image/services/ReactLabeling.service';
-import {CocoFormatService} from "./image/services/CocoFormat.service";
-import {LabelingModeService} from "./image/services/LabelingMode.service";
-import {StandardDialogComponent} from "./dialog/standard-dialog/standard-dialog.component";
-import {PanelDialogComponent} from "./dialog/panel-dialog/panel-dialog.component";
-import {DialogService} from "./dialog/base-dialog/base-dialog.service";
-import {PortalModule} from "@angular/cdk/portal";
-import {OverlayModule} from "@angular/cdk/overlay";
-import {ConfirmDialogComponent} from "./dialog/confirm-dialog/confirm-dialog.component";
-import {StaticAnyInput} from "./static-properties/static-any-input/static-any-input.component";
-import {StaticPropertyComponent} from "./static-properties/static-property.component";
-import {StaticFreeInputComponent} from "./static-properties/static-free-input/static-free-input.component";
-import {StaticSecretInputComponent} from "./static-properties/static-secret-input/static-secret-input.component";
-import {StaticFileInputComponent} from "./static-properties/static-file-input/static-file-input.component";
-import {StaticMappingNaryComponent} from "./static-properties/static-mapping-nary/static-mapping-nary.component";
-import {StaticMappingUnaryComponent} from "./static-properties/static-mapping-unary/static-mapping-unary.component";
-import {StaticGroupComponent} from "./static-properties/static-group/static-group.component";
-import {StaticAlternativesComponent} from "./static-properties/static-alternatives/static-alternatives.component";
-import {StaticCollectionComponent} from "./static-properties/static-collection/static-collection.component";
-import {StaticColorPickerComponent} from "./static-properties/static-color-picker/static-color-picker.component";
-import {StaticCodeInputComponent} from "./static-properties/static-code-input/static-code-input.component";
-import {StaticOneOfInputComponent} from "./static-properties/static-one-of-input/static-one-of-input.component";
-import {StaticRuntimeResolvableAnyInputComponent} from "./static-properties/static-runtime-resolvable-any-input/static-runtime-resolvable-any-input.component";
-import {StaticRuntimeResolvableOneOfInputComponent} from "./static-properties/static-runtime-resolvable-oneof-input/static-runtime-resolvable-oneof-input.component";
-import {RuntimeResolvableService} from "./static-properties/static-runtime-resolvable-input/runtime-resolvable.service";
-import {StaticFileRestService} from "./static-properties/static-file-input/static-file-rest.service";
-import {DisplayRecommendedPipe} from "./static-properties/filter/display-recommended.pipe";
-import {ColorPickerModule} from "ngx-color-picker";
-import {QuillModule} from "ngx-quill";
-import {CodemirrorModule} from "@ctrl/ngx-codemirror";
-import {MatAutocompleteModule} from "@angular/material/autocomplete";
-import {StatusWidgetComponent} from "./widget/status/status-widget.component";
-import {NgxChartsModule} from "@swimlane/ngx-charts";
-import {BarchartWidgetComponent} from "./widget/barchart/barchart-widget.component";
+import { MatChipsModule } from '@angular/material/chips';
+import { MatSliderModule } from '@angular/material/slider';
+import { PlotlyViaWindowModule } from 'angular-plotly.js';
+import { ImageAnnotationsComponent } from './image/components/image-annotations/image-annotations.component';
+import { ImageBarComponent } from './image/components/image-bar/image-bar.component';
+import { ImageContainerComponent } from './image/components/image-container/image-container.component';
+import { SelectLabelComponent } from './labels/components/select-label/select-label.component';
+import { ImageCategorizeComponent } from './image/image-categorize/image-categorize.component';
+import { ImageLabelingComponent } from './image/image-labeling/image-labeling.component';
+import { ImageViewerComponent } from './image/image-viewer/image-viewer.component';
+import { ImageComponent } from './image/image.component';
+import { BrushLabelingService } from './image/services/BrushLabeling.service';
+import { ColorService } from './image/services/color.service';
+import { PolygonLabelingService } from './image/services/PolygonLabeling.service';
+import { ReactLabelingService } from './image/services/ReactLabeling.service';
+import { CocoFormatService } from './image/services/CocoFormat.service';
+import { LabelingModeService } from './image/services/LabelingMode.service';
+import { StandardDialogComponent } from './dialog/standard-dialog/standard-dialog.component';
+import { PanelDialogComponent } from './dialog/panel-dialog/panel-dialog.component';
+import { DialogService } from './dialog/base-dialog/base-dialog.service';
+import { PortalModule } from '@angular/cdk/portal';
+import { OverlayModule } from '@angular/cdk/overlay';
+import { ConfirmDialogComponent } from './dialog/confirm-dialog/confirm-dialog.component';
+import { StaticAnyInput } from './static-properties/static-any-input/static-any-input.component';
+import { StaticPropertyComponent } from './static-properties/static-property.component';
+import { StaticFreeInputComponent } from './static-properties/static-free-input/static-free-input.component';
+import { StaticSecretInputComponent } from './static-properties/static-secret-input/static-secret-input.component';
+import { StaticFileInputComponent } from './static-properties/static-file-input/static-file-input.component';
+import { StaticMappingNaryComponent } from './static-properties/static-mapping-nary/static-mapping-nary.component';
+import { StaticMappingUnaryComponent } from './static-properties/static-mapping-unary/static-mapping-unary.component';
+import { StaticGroupComponent } from './static-properties/static-group/static-group.component';
+import { StaticAlternativesComponent } from './static-properties/static-alternatives/static-alternatives.component';
+import { StaticCollectionComponent } from './static-properties/static-collection/static-collection.component';
+import { StaticColorPickerComponent } from './static-properties/static-color-picker/static-color-picker.component';
+import { StaticCodeInputComponent } from './static-properties/static-code-input/static-code-input.component';
+import { StaticOneOfInputComponent } from './static-properties/static-one-of-input/static-one-of-input.component';
+import { StaticRuntimeResolvableAnyInputComponent } from './static-properties/static-runtime-resolvable-any-input/static-runtime-resolvable-any-input.component';
+import { StaticRuntimeResolvableOneOfInputComponent } from './static-properties/static-runtime-resolvable-oneof-input/static-runtime-resolvable-oneof-input.component';
+import { RuntimeResolvableService } from './static-properties/static-runtime-resolvable-input/runtime-resolvable.service';
+import { StaticFileRestService } from './static-properties/static-file-input/static-file-rest.service';
+import { DisplayRecommendedPipe } from './static-properties/filter/display-recommended.pipe';
+import { ColorPickerModule } from 'ngx-color-picker';
+import { QuillModule } from 'ngx-quill';
+import { CodemirrorModule } from '@ctrl/ngx-codemirror';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { ConfigureLabelsComponent } from './labels/components/configure-labels/configure-labels.component';
+import { LabelListItemComponent } from './labels/components/label-list-item/label-list-item.component';
+import { StatusWidgetComponent } from "./widget/status/status-widget.component";
+import { NgxChartsModule } from "@swimlane/ngx-charts";
+import { BarchartWidgetComponent } from "./widget/barchart/barchart-widget.component";
 
 @NgModule({
-  imports: [
-    CommonModule,
-    ColorPickerModule,
-    FlexLayoutModule,
-    CodemirrorModule,
-    CustomMaterialModule,
-    ReactiveFormsModule,
-    FormsModule,
-    CdkTableModule,
-    MatAutocompleteModule,
-    MatSnackBarModule,
-    MatProgressSpinnerModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    NgxChartsModule,
-    PlotlyViaWindowModule,
-    MatSliderModule,
-    MatChipsModule,
-    PortalModule,
-    OverlayModule,
-    QuillModule.forRoot()
-  ],
-  declarations: [
-    BarchartWidgetComponent,
-    ConfirmDialogComponent,
-    DisplayRecommendedPipe,
-    ImageComponent,
-    ImageContainerComponent,
-    ImageLabelingComponent,
-    ImageLabelsComponent,
-    ImageBarComponent,
-    ImageAnnotationsComponent,
-    ImageCategorizeComponent,
-    ImageViewerComponent,
-    StandardDialogComponent,
-    PanelDialogComponent,
-    StaticAnyInput,
-    StaticPropertyComponent,
-    StaticFreeInputComponent,
-    StaticSecretInputComponent,
-    StaticFileInputComponent,
-    StaticMappingNaryComponent,
-    StaticMappingUnaryComponent,
-    StaticGroupComponent,
-    StaticAlternativesComponent,
-    StaticCollectionComponent,
-    StaticColorPickerComponent,
-    StaticCodeInputComponent,
-    StaticOneOfInputComponent,
-    StaticRuntimeResolvableAnyInputComponent,
-    StaticRuntimeResolvableOneOfInputComponent,
-    StatusWidgetComponent,
-  ],
-  providers: [
-    MatDatepickerModule,
-    ColorService,
-    DisplayRecommendedPipe,
-    ReactLabelingService,
-    PolygonLabelingService,
-    BrushLabelingService,
-    CocoFormatService,
-    LabelingModeService,
-    DialogService,
-    RuntimeResolvableService,
-    StaticFileRestService,
-  ],
-  entryComponents: [],
+    imports: [
+        CommonModule,
+        ColorPickerModule,
+        FlexLayoutModule,
+        CodemirrorModule,
+        CustomMaterialModule,
+        ReactiveFormsModule,
+        FormsModule,
+        CdkTableModule,
+        MatAutocompleteModule,
+        MatSnackBarModule,
+        MatProgressSpinnerModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        NgxChartsModule,
+        PlotlyViaWindowModule,
+        MatSliderModule,
+        MatChipsModule,
+        PortalModule,
+        OverlayModule,
+        QuillModule.forRoot()
+    ],
+    declarations: [
+        BarchartWidgetComponent,
+        ConfigureLabelsComponent,
+        ConfirmDialogComponent,
+        DisplayRecommendedPipe,
+        ImageComponent,
+        ImageContainerComponent,
+        ImageLabelingComponent,
+        SelectLabelComponent,
+        ImageBarComponent,
+        ImageAnnotationsComponent,
+        ImageCategorizeComponent,
+        ImageViewerComponent,
+        StandardDialogComponent,
+        PanelDialogComponent,
+        StaticAnyInput,
+        StaticPropertyComponent,
+        StaticFreeInputComponent,
+        StaticSecretInputComponent,
+        StaticFileInputComponent,
+        StaticMappingNaryComponent,
+        StaticMappingUnaryComponent,
+        StaticGroupComponent,
+        StaticAlternativesComponent,
+        StaticCollectionComponent,
+        StaticColorPickerComponent,
+        StaticCodeInputComponent,
+        StaticOneOfInputComponent,
+        StaticRuntimeResolvableAnyInputComponent,
+        StaticRuntimeResolvableOneOfInputComponent,
+        StatusWidgetComponent,
+        LabelListItemComponent
+    ],
+    providers: [
+        MatDatepickerModule,
+        ColorService,
+        DisplayRecommendedPipe,
+        ReactLabelingService,
+        PolygonLabelingService,
+        BrushLabelingService,
+        CocoFormatService,
+        LabelingModeService,
+        DialogService,
+        RuntimeResolvableService,
+        StaticFileRestService,
+    ],
+    entryComponents: [
+    ],
   exports: [
+    ConfigureLabelsComponent,
     ImageComponent,
     ImageLabelingComponent,
+    SelectLabelComponent,
     StandardDialogComponent,
     PanelDialogComponent,
     ConfirmDialogComponent,

@@ -69,4 +69,9 @@ public class MappingPropertyNary extends MappingProperty {
     this.selectedProperties = selectedProperties;
   }
 
+  @Override
+  public void accept(StaticPropertyVisitor visitor) {
+    visitor.visit(this);
+  }
+
 }

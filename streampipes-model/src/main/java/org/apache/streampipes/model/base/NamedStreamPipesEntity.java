@@ -19,7 +19,6 @@
 package org.apache.streampipes.model.base;
 
 
-import io.fogsy.empire.annotations.RdfId;
 import io.fogsy.empire.annotations.RdfProperty;
 import org.apache.streampipes.model.ApplicationLink;
 import org.apache.streampipes.model.util.Cloner;
@@ -48,10 +47,6 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
   @RdfProperty(StreamPipes.ICON_URL)
   private String iconUrl;
 
-  @RdfProperty(StreamPipes.HAS_URI)
-  @RdfId
-  protected String elementId;
-
   @RdfProperty(StreamPipes.HAS_APP_ID)
   private String appId;
 
@@ -75,6 +70,9 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
           cascade = {CascadeType.ALL})
   @RdfProperty(StreamPipes.HAS_APPLICATION_LINK)
   private List<ApplicationLink> applicationLinks;
+
+  @RdfProperty(StreamPipes.IS_INTERNALLY_MANAGED)
+  private boolean internallyManaged;
 
   protected String DOM;
   protected List<String> connectedTo;
@@ -114,6 +112,7 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
     this.iconUrl = other.getIconUrl();
     this.elementId = other.getElementId();
     this.DOM = other.getDOM();
+    this.internallyManaged = other.isInternallyManaged();
     this.connectedTo = other.getConnectedTo();
     if (other.getApplicationLinks() != null) {
       this.applicationLinks = new Cloner().al(other.getApplicationLinks());
@@ -161,14 +160,6 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
   @Deprecated
   public void setUri(String uri) {
     this.elementId = uri;
-  }
-
-  public String getElementId() {
-    return elementId;
-  }
-
-  public void setElementId(String elementId) {
-    this.elementId = elementId;
   }
 
   public void setDOM(String DOM) {
@@ -235,8 +226,11 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
     this.includedLocales = includedLocales;
   }
 
-  @Deprecated
-  public void changeElementId(String elementId) {
-    this.elementId = elementId;
+  public boolean isInternallyManaged() {
+    return internallyManaged;
+  }
+
+  public void setInternallyManaged(boolean internallyManaged) {
+    this.internallyManaged = internallyManaged;
   }
 }

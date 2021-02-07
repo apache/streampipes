@@ -200,12 +200,12 @@ public class TopicInfoCollector {
 
   private Tuple2<String, Long> makeTopicInfo(KafkaTransportProtocol protocol) throws ExecutionException, InterruptedException {
     Long offset = kafkaAdminClient.listConsumerGroupOffsets(protocol.getGroupId())
-              .partitionsToOffsetAndMetadata()
-              .get()
-              .values()
-              .stream()
-              .map(OffsetAndMetadata::offset)
-              .reduce(0L, Long::sum);
+            .partitionsToOffsetAndMetadata()
+            .get()
+            .values()
+            .stream()
+            .map(OffsetAndMetadata::offset)
+            .reduce(0L, Long::sum);
 
     return new Tuple2<>(protocol.getGroupId(), offset);
   }

@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.model.util;
 
+import org.apache.streampipes.model.grounding.*;
 import org.apache.streampipes.model.output.*;
 import org.apache.streampipes.model.staticproperty.*;
 import org.slf4j.Logger;
@@ -35,14 +36,6 @@ import org.apache.streampipes.model.connect.adapter.SpecificAdapterSetDescriptio
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataSinkDescription;
-import org.apache.streampipes.model.grounding.JmsTransportProtocol;
-import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
-import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
-import org.apache.streampipes.model.grounding.TopicDefinition;
-import org.apache.streampipes.model.grounding.TransportFormat;
-import org.apache.streampipes.model.grounding.TransportProtocol;
-import org.apache.streampipes.model.grounding.WildcardTopicDefinition;
-import org.apache.streampipes.model.grounding.WildcardTopicMapping;
 import org.apache.streampipes.model.quality.Accuracy;
 import org.apache.streampipes.model.quality.EventPropertyQualityDefinition;
 import org.apache.streampipes.model.quality.EventPropertyQualityRequirement;
@@ -137,6 +130,8 @@ public class Cloner {
       return new KafkaTransportProtocol((KafkaTransportProtocol) protocol);
     } else if (protocol instanceof JmsTransportProtocol){
       return new JmsTransportProtocol((JmsTransportProtocol) protocol);
+    } else if (protocol instanceof MqttTransportProtocol) {
+      return new MqttTransportProtocol((MqttTransportProtocol) protocol);
     } else {
       LOG.error("Could not clone protocol of type {}", protocol.getClass().getCanonicalName());
       return protocol;
@@ -185,11 +180,11 @@ public class Cloner {
   }
 
   public List<SpDataStream> seq(List<SpDataStream> spDataStreams) {
-    return spDataStreams.stream().map(s -> mapSequence(s)).collect(Collectors.toList());
+    return spDataStreams.stream().map(this::mapSequence).collect(Collectors.toList());
   }
 
   public List<SpDataStream> streams(List<SpDataStream> spDataStreams) {
-    return spDataStreams.stream().map(s -> new SpDataStream(s)).collect(Collectors.toList());
+    return spDataStreams.stream().map(this::mapSequence).collect(Collectors.toList());
   }
 
   public SpDataStream mapSequence(SpDataStream seq) {
@@ -206,7 +201,7 @@ public class Cloner {
 
   public List<OutputStrategy> strategies(List<OutputStrategy> outputStrategies) {
     if (outputStrategies != null) {
-      return outputStrategies.stream().map(o -> outputStrategy(o)).collect(Collectors.toList());
+      return outputStrategies.stream().map(this::outputStrategy).collect(Collectors.toList());
     } else {
       return new ArrayList<>();
     }

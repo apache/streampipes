@@ -18,43 +18,14 @@
 
 package org.apache.streampipes.connect.container.worker.utils;
 
-import io.fogsy.empire.core.empire.annotation.InvalidRdfException;
-import org.apache.streampipes.model.connect.adapter.*;
-import org.apache.streampipes.serializers.jsonld.JsonLdTransformer;
-import org.apache.streampipes.vocabulary.StreamPipes;
+import org.apache.streampipes.model.connect.adapter.AdapterSetDescription;
+import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
+import org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription;
+import org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 public class Utils {
-
-    public static String getMinimalStreamAdapterJsonLD() {
-        return getMinimalAdapterJsonLD(new GenericAdapterStreamDescription(), StreamPipes.GENERIC_ADAPTER_SET_DESCRIPTION);
-    }
-
-    public static String getMinimalSetAdapterJsonLD() {
-        return getMinimalAdapterJsonLD(new GenericAdapterSetDescription(), StreamPipes.GENERIC_ADAPTER_SET_DESCRIPTION);
-    }
-
-    private static String getMinimalAdapterJsonLD(AdapterDescription asd, String rootElement) {
-        String id = "http://t.de/";
-        asd.setUri(id);
-        asd.setId(id);
-
-        JsonLdTransformer jsonLdTransformer = new JsonLdTransformer(rootElement);
-
-        try {
-            return org.apache.streampipes.commons.Utils.asString(jsonLdTransformer.toJsonLd(asd));
-        } catch (IllegalAccessException | InvocationTargetException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        catch (InvalidRdfException e) {
-            e.printStackTrace();
-        }
-
-        return "";
-    }
-
 
     public static AdapterStreamDescription getMinimalStreamAdapter() {
         AdapterStreamDescription result = new GenericAdapterStreamDescription();
@@ -74,5 +45,4 @@ public class Utils {
 
         return result;
     }
-
 }

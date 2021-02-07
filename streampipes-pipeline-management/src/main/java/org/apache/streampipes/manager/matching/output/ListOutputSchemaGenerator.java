@@ -19,7 +19,6 @@
 package org.apache.streampipes.manager.matching.output;
 
 import org.apache.streampipes.commons.Utils;
-import io.fogsy.empire.core.empire.SupportsRdfId;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.output.ListOutputStrategy;
 import org.apache.streampipes.model.output.OutputStrategy;
@@ -28,7 +27,6 @@ import org.apache.streampipes.model.schema.EventPropertyList;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.sdk.helpers.Tuple2;
 
-import java.net.URI;
 import java.util.List;
 
 public class ListOutputSchemaGenerator extends OutputSchemaGenerator<ListOutputStrategy> {
@@ -60,7 +58,7 @@ public class ListOutputSchemaGenerator extends OutputSchemaGenerator<ListOutputS
     EventPropertyList list = new EventPropertyList();
     //list.setEventProperties(schemaProperties);
     list.setRuntimeName(propertyName);
-    list.setRdfId(new SupportsRdfId.URIKey(URI.create(schemaProperties.get(0).getRdfId() + "-list")));
+    list.setElementId(schemaProperties.get(0).getElementId() + "-list");
     EventSchema schema = new EventSchema();
     schema.setEventProperties(Utils.createList(list));
     return schema;

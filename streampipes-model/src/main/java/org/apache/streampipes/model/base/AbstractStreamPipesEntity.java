@@ -22,12 +22,15 @@ package org.apache.streampipes.model.base;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.fogsy.empire.annotations.Namespaces;
-import io.fogsy.empire.core.empire.SupportsRdfId;
-import io.fogsy.empire.core.empire.annotation.SupportsRdfIdImpl;
+import io.fogsy.empire.annotations.RdfId;
+import io.fogsy.empire.annotations.RdfProperty;
+import io.fogsy.empire.api.SupportsRdfId;
+import org.apache.streampipes.model.shared.annotation.TsIgnore;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.vocabulary.*;
 
 import java.io.Serializable;
+import java.net.URI;
 
 
 /**
@@ -43,25 +46,36 @@ public class AbstractStreamPipesEntity implements SupportsRdfId, Serializable {
 
 	private static final long serialVersionUID = -8593749314663582071L;
 
-	private transient SupportsRdfIdImpl myId;
-	
+	@RdfProperty(StreamPipes.HAS_URI)
+	@RdfId
+	protected String elementId;
+
 	AbstractStreamPipesEntity() {
-		myId = new SupportsRdfIdImpl();
+
 	}
 
 	@SuppressWarnings("rawtypes")
 	@Override
 	@JsonIgnore
+	@TsIgnore
 	public RdfKey getRdfId() {
-		return myId.getRdfId();
+		return new URIKey(URI.create(getElementId()));
 	}
-
 
 	@SuppressWarnings("rawtypes")
 	@Override
 	@JsonIgnore
+	@TsIgnore
 	public void setRdfId(RdfKey arg0) {
-		myId.setRdfId(arg0);	
+		this.elementId = arg0.toString();
+	}
+
+	public String getElementId() {
+		return elementId;
+	}
+
+	public void setElementId(String elementId) {
+		this.elementId = elementId;
 	}
 
 }

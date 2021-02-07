@@ -20,6 +20,7 @@ import {Component} from "@angular/core";
 import {RestApi} from "../../services/rest-api.service";
 import {Router} from "@angular/router";
 import {NotificationCountService} from "../../services/notification-count-service";
+import {PipelineElementService} from "../../platform-services/apis/pipeline-element.service";
 
 @Component({
     selector: 'status',
@@ -32,7 +33,8 @@ export class StatusComponent {
     runningPipelines: number = 0;
     installedPipelineElements: number = 0;
 
-    constructor(private RestApi: RestApi,
+    constructor(private pipelineElementService: PipelineElementService,
+                private RestApi: RestApi,
                 private Router: Router,
                 public NotificationCountService: NotificationCountService) {
 
@@ -53,12 +55,9 @@ export class StatusComponent {
     }
 
     getStreams() {
-        this.RestApi.getOwnSources()
-            .subscribe((sources) => {
-                sources.forEach((source, i, sources) => {
-                    this.installedPipelineElements += source.spDataStreams.length;
-                });
-            });
+        this.pipelineElementService.getDataStreams().subscribe(streams => {
+            this.addPipelineElementList(streams);
+        });
     };
 
     getProcessors() {

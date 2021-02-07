@@ -18,10 +18,8 @@
 
 package org.apache.streampipes.container.init;
 
-import org.apache.streampipes.container.model.PeConfig;
+public abstract class ModelSubmitter<T> {
 
-public abstract class ModelSubmitter {
-
-    public abstract void init(PeConfig peConfig);
+    public abstract void init(T conf);
 
 }

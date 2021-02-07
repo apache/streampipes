@@ -24,3 +24,16 @@ table {
 .m-20 {
     margin: 20px;
 }
+
+.options-bar {
+    padding:0px;
+    background-color:#f6f6f6;
+    border-bottom: 1px solid #cccccc;
+    margin-bottom: 10px;
+    height: 50px;
+}
+
+.options-bar-item {
+    display: inline;
+    margin-right: 10px;
+}

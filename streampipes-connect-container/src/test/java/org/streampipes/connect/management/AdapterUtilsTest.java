@@ -43,7 +43,7 @@ public class AdapterUtilsTest {
                         .withBody(expected)));
 
 
-        String result = AdapterUtils.stopPipeline(Mock.HOST + ":" + Mock.PORT + "/");
+        String result = AdapterUtils.stopPipeline(Mock.HOST + "/");
 
         assertEquals(expected, result);
 

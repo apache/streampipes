@@ -22,7 +22,7 @@ import {Observable} from "rxjs";
 import {
   DataProcessorInvocation,
   DataSinkInvocation,
-  DataSourceDescription
+  DataSourceDescription, SpDataSet, SpDataStream
 } from "../../core-model/gen/streampipes-model";
 import {PlatformServicesCommons} from "./commons.service";
 import {map} from "rxjs/operators";
@@ -46,9 +46,15 @@ export class PipelineElementService {
     }));
   }
 
-  getDataSources(): Observable<Array<DataSourceDescription>> {
-    return this.http.get(this.dataSourcesUrl + "/own").pipe(map(data => {
-      return (data as []).map(dpi => DataSourceDescription.fromData(dpi));
+  getDataStreams(): Observable<Array<SpDataStream>> {
+    return this.http.get(this.dataStreamsUrl + "/own").pipe(map(data => {
+      return (data as []).map(dpi => {
+        if (dpi["@class"] == "org.apache.streampipes.model.SpDataSet") {
+          return SpDataSet.fromData(dpi)
+        } else {
+          return SpDataStream.fromData(dpi);
+        }
+      });
     }));
   }
 
@@ -63,8 +69,8 @@ export class PipelineElementService {
     return this.platformServicesCommons.authUserBasePath() + '/sepas'
   }
 
-  private get dataSourcesUrl(): string {
-    return this.platformServicesCommons.authUserBasePath() + '/sources'
+  private get dataStreamsUrl(): string {
+    return this.platformServicesCommons.authUserBasePath() + '/streams'
   }
 
   private get dataSinksUrl(): string {

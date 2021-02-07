@@ -57,6 +57,7 @@ export abstract class StaticMappingComponent<T extends MappingProperty>
                 .filter(ep => this.isInSelection(ep))
                 .map(ep => this.cloneEp(ep)));
         });
+        console.log(properties);
         return properties;
     }
 

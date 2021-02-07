@@ -65,8 +65,8 @@ public class PipelineElementImportNoUser extends AbstractRestInterface {
 
     logger.info("User " + username + " deletes element with URI: " + uri + " from triplestore");
 
-    if (requestor.getDataSourceById(uri) != null) {
-      requestor.deleteDataSource(requestor.getDataSourceById(uri));
+    if (requestor.getDataStreamById(uri) != null) {
+      requestor.deleteDataStream(requestor.getDataStreamById(uri));
       userService.deleteOwnSource(username, uri);
       requestor.refreshDataSourceCache();
     } else {

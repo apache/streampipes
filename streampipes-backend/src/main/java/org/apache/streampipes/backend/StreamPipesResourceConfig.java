@@ -18,18 +18,25 @@
 
 package org.apache.streampipes.backend;
 
+import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource;
+import org.apache.streampipes.connect.container.master.rest.*;
+import org.apache.streampipes.ps.PipelineElementTemplateResource;
 import org.apache.streampipes.rest.impl.*;
 import org.apache.streampipes.rest.impl.dashboard.Dashboard;
 import org.apache.streampipes.rest.impl.dashboard.DashboardWidget;
 import org.apache.streampipes.rest.impl.dashboard.VisualizablePipeline;
-import org.apache.streampipes.rest.impl.datalake.DataLakeDashboard;
+import org.apache.streampipes.rest.impl.datalake.DataLakeDashboardResource;
 import org.apache.streampipes.rest.impl.datalake.DataLakeNoUserResourceV3;
-import org.apache.streampipes.rest.impl.datalake.DataLakeResourceV3;
+import org.apache.streampipes.ps.DataLakeResourceV3;
 import org.apache.streampipes.rest.impl.datalake.DataLakeWidgetResource;
 import org.apache.streampipes.rest.impl.nouser.FileServingResource;
 import org.apache.streampipes.rest.impl.nouser.PipelineElementImportNoUser;
 import org.apache.streampipes.rest.impl.nouser.PipelineNoUserResource;
-import org.apache.streampipes.rest.shared.serializer.*;
+import org.apache.streampipes.rest.serializer.JsonLdProvider;
+import org.apache.streampipes.rest.shared.serializer.GsonClientModelProvider;
+import org.apache.streampipes.rest.shared.serializer.GsonWithIdProvider;
+import org.apache.streampipes.rest.shared.serializer.GsonWithoutIdProvider;
+import org.apache.streampipes.rest.shared.serializer.JacksonSerializationProvider;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.context.annotation.Configuration;
@@ -42,9 +49,9 @@ public class StreamPipesResourceConfig extends ResourceConfig {
 
   public StreamPipesResourceConfig() {
     register(Authentication.class);
-    register(ApplicationLink.class);
     register(AssetDashboard.class);
     register(AutoComplete.class);
+    register(CategoryResource.class);
     register(ConsulConfig.class);
     register(ContainerProvidedOptions.class);
     register(Couchdb.class);
@@ -56,6 +63,7 @@ public class StreamPipesResourceConfig extends ResourceConfig {
     register(Deployment.class);
     register(FileServingResource.class);
     register(InternalPipelineTemplates.class);
+    register(LabelResource.class);
     register(MeasurementUnitResource.class);
     register(Notification.class);
     register(OntologyContext.class);
@@ -79,11 +87,10 @@ public class StreamPipesResourceConfig extends ResourceConfig {
     register(SemanticEventProcessingAgent.class);
     register(SemanticEventProducer.class);
     register(Setup.class);
-    register(StreamPipesLogs.class);
     register(User.class);
     register(Version.class);
     register(PipelineElementAsset.class);
-    register(DataLakeDashboard.class);
+    register(DataLakeDashboardResource.class);
     register(DataLakeWidgetResource.class);
     register(DataLakeResourceV3.class);
     register(DataLakeNoUserResourceV3.class);
@@ -102,6 +109,24 @@ public class StreamPipesResourceConfig extends ResourceConfig {
     register(JsonLdProvider.class);
     register(JacksonSerializationProvider.class);
     register(MultiPartFeature.class);
+    
+    // Platform Services
+    register(PipelineElementTemplateResource.class);
+
+    register(OpenApiResource.class);
+
+
+    // Connect Master
+    register(WelcomePageMaster.class);
+    register(AdapterResource.class);
+    register(AdapterTemplateResource.class);
+    register(DescriptionResource.class);
+    register(SourcesResource.class);
+    register(GuessResource.class);
+//    register(MultiPartFeature.class);
+    register(UnitResource.class);
+    register(WorkerAdministrationResource.class);
+    register(RuntimeResolvableResource.class);
   }
 
 }

@@ -30,7 +30,7 @@ export class DisplayRecommendedPipe implements PipeTransform {
         return properties;
       } else {
         properties.forEach(property => {
-          if (property.propertyScope === undefined || property.propertyScope === propertyScope) {
+          if (!(property.propertyScope) || property.propertyScope === propertyScope) {
             result.push(property);
           }
         });

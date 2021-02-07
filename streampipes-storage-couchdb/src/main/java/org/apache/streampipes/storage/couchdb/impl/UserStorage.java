@@ -18,16 +18,16 @@
 
 package org.apache.streampipes.storage.couchdb.impl;
 
-import org.lightcouch.CouchDbClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.streampipes.model.client.user.User;
 import org.apache.streampipes.storage.api.IUserStorage;
 import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
+import org.lightcouch.CouchDbClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * User Storage.
@@ -42,12 +42,12 @@ public class UserStorage extends AbstractDao<User> implements IUserStorage {
     public UserStorage() {
         super(Utils::getCouchDbUserClient, User.class);
     }
-    
+
     @Override
     public List<User> getAllUsers()
     {
-        List<User> users = findAll();
-    	return users.stream().collect(Collectors.toList());
+      List<User> users = findAll();
+    	return new ArrayList<>(users);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class UserStorage extends AbstractDao<User> implements IUserStorage {
     public void updateUser(User user) {
         update(user);
     }
-    
+
     @Override
     public boolean emailExists(String email)
     {

@@ -32,3 +32,6 @@
     align-self:start;
     height: calc(100% - 40px);
 }
+.labeling-active {
+    width: 85%;
+}

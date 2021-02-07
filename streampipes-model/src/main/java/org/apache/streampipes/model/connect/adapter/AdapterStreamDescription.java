@@ -49,7 +49,9 @@ public abstract class AdapterStreamDescription extends AdapterDescription {
 
     public AdapterStreamDescription(AdapterStreamDescription other) {
         super(other);
-        if (other.getDataStream() != null) this.setDataStream(new SpDataStream(other.getDataStream()));
+        if (other.getDataStream() != null) {
+            this.dataStream = new SpDataStream(other.getDataStream());
+        }
     }
 
     public SpDataStream getDataStream() {

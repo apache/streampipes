@@ -24,8 +24,8 @@ module.exports = merge(baseConfig, {
         port: 8082,
         proxy: {
             '/streampipes-connect': {
-                target: 'http://localhost:8099',
-                pathRewrite: { '^/streampipes-connect': '' },
+                target: 'http://localhost:8030',
+                // pathRewrite: { '^/streampipes-connect': '' },
                 secure: false,
             },
             '/streampipes-backend': {

@@ -17,27 +17,18 @@
  */
 package org.apache.streampipes.rest.impl;
 
-import org.apache.streampipes.rest.api.IPipelineCache;
-
-import java.util.concurrent.ConcurrentHashMap;
-
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Path("/v2/users/{username}/pipeline-cache")
-public class PipelineCache extends AbstractRestInterface implements IPipelineCache {
+public class PipelineCache extends AbstractRestInterface {
 
   private static ConcurrentHashMap<String, String> cachedPipelines = new ConcurrentHashMap<>();
 
   @POST
   @Produces(MediaType.APPLICATION_JSON)
-  @Override
   public Response updateCachedPipeline(@PathParam("username") String user,
                                        String rawPipelineModel) {
     cachedPipelines.put(user, rawPipelineModel);
@@ -46,7 +37,6 @@ public class PipelineCache extends AbstractRestInterface implements IPipelineCac
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Override
   public Response getCachedPipeline(@PathParam("username") String user) {
     if (cachedPipelines.containsKey(user)) {
       return ok(cachedPipelines.get(user));
@@ -57,7 +47,6 @@ public class PipelineCache extends AbstractRestInterface implements IPipelineCac
 
   @DELETE
   @Produces(MediaType.APPLICATION_JSON)
-  @Override
   public Response removePipelineFromCache(@PathParam("username") String user) {
     cachedPipelines.remove(user);
     return ok();

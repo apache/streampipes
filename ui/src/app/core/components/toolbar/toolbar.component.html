@@ -60,6 +60,14 @@
                 </div>
             </div>
             <mat-menu #menu="matMenu" id="account">
+                <div class="current-user">
+                    {{userEmail}}
+                </div>
+                <mat-divider></mat-divider>
+                <button mat-menu-item (click)="openProfile()" style="min-width:0px;">
+                    <mat-icon aria-label="Info">perm_identity</mat-icon>
+                    Profile
+                </button>
                 <button mat-menu-item (click)="openInfo()" style="min-width:0px;">
                     <mat-icon aria-label="Info">help</mat-icon>
                     Info
@@ -69,7 +77,7 @@
                     <mat-icon aria-label="Documentation">description</mat-icon>
                     Documentation
                 </button>
-                <mat-menu-divider></mat-menu-divider>
+                <mat-divider></mat-divider>
                 <button mat-menu-item id="sp_logout" (click)="logout()"
                            style="min-width:0px;">
                     <mat-icon aria-label="Logout">exit_to_app</mat-icon>

@@ -75,4 +75,9 @@ public class MatchingStaticProperty extends StaticProperty{
 	public void setMatchRight(URI matchRight) {
 		this.matchRight = matchRight;
 	}
+
+	@Override
+	public void accept(StaticPropertyVisitor visitor) {
+		visitor.visit(this);
+	}
 }

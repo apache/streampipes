@@ -19,17 +19,7 @@
 package org.apache.streampipes.commons;
 
 import org.apache.commons.lang.RandomStringUtils;
-import org.eclipse.rdf4j.model.Model;
-import org.eclipse.rdf4j.rio.RDFFormat;
-import org.eclipse.rdf4j.rio.RDFHandlerException;
-import org.eclipse.rdf4j.rio.RDFWriter;
-import org.eclipse.rdf4j.rio.Rio;
-import org.eclipse.rdf4j.rio.helpers.BasicWriterSettings;
-import org.eclipse.rdf4j.rio.helpers.JSONLDMode;
-import org.eclipse.rdf4j.rio.helpers.JSONLDSettings;
 
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,32 +44,6 @@ public class Utils {
 
   public static String getRandomString() {
     return RandomStringUtils.randomAlphabetic(10);
-  }
-
-  public static String asString(Model model) throws RDFHandlerException {
-    OutputStream stream = new ByteArrayOutputStream();
-
-    RDFWriter writer = Utils.getRioWriter(stream);
-
-    Rio.write(model, writer);
-    return stream.toString();
-  }
-
-
-  private static RDFWriter getRioWriter(OutputStream stream) throws RDFHandlerException {
-    RDFWriter writer = Rio.createWriter(RDFFormat.JSONLD, stream);
-
-    writer.handleNamespace("sp", "https://streampipes.org/vocabulary/v1/");
-    writer.handleNamespace("ssn", "http://purl.oclc.org/NET/ssnx/ssn#");
-    writer.handleNamespace("xsd", "http://www.w3.org/2001/XMLSchema#");
-    writer.handleNamespace("empire", "urn:clarkparsia.com:empire:");
-    writer.handleNamespace("spi", "urn:streampipes.org:spi:");
-
-    writer.getWriterConfig().set(JSONLDSettings.JSONLD_MODE, JSONLDMode.COMPACT);
-    writer.getWriterConfig().set(JSONLDSettings.OPTIMIZE, true);
-    writer.getWriterConfig().set(BasicWriterSettings.PRETTY_PRINT, true);
-
-    return writer;
   }
 
 }

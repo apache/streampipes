@@ -48,6 +48,7 @@ public class Init extends StandaloneModelSubmitter {
 
     DeclarersSingleton.getInstance().registerProtocols(
             new SpKafkaProtocolFactory(),
+            new SpMqttProtocolFactory(),
             new SpJmsProtocolFactory());
 
     new Init().init(Config.INSTANCE);

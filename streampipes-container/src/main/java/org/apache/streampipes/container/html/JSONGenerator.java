@@ -59,6 +59,7 @@ public class JSONGenerator {
     obj.add("name", new JsonPrimitive(d.getName()));
     obj.add("description", new JsonPrimitive(d.getDescription()));
     obj.add("type", new JsonPrimitive(d.getType()));
+    obj.add("editable", new JsonPrimitive(d.isEditable()));
     return obj;
   }
 }

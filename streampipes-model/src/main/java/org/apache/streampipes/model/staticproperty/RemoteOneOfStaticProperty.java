@@ -24,13 +24,12 @@ import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 
 @Deprecated
 @RdfsClass(StreamPipes.REMOTE_ONE_OF_STATIC_PROPERTY)
@@ -128,5 +127,10 @@ public class RemoteOneOfStaticProperty extends StaticProperty {
 
   public void setOptions(List<Option> options) {
     this.options = options;
+  }
+
+  @Override
+  public void accept(StaticPropertyVisitor visitor) {
+    visitor.visit(this);
   }
 }

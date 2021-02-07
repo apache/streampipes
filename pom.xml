@@ -37,7 +37,7 @@
         <maven.version>3.3.9</maven.version>
         <owasp.check.skip>true</owasp.check.skip>
 
-        <activemq-client.version>5.15.9</activemq-client.version>
+        <activemq-client.version>5.16.0</activemq-client.version>
         <asm.version>7.0</asm.version>
         <byte-buddy.version>1.9.7</byte-buddy.version>
         <cloning.version>1.9.12</cloning.version>
@@ -49,18 +49,18 @@
         <commons-logging.version>1.2</commons-logging.version>
         <consul-client.version>1.3.9</consul-client.version>
         <elasticsearch.version>6.6.2</elasticsearch.version>
-        <empire-rdf4j.version>1.9.13</empire-rdf4j.version>
+        <empire-rdf4j.version>1.9.14</empire-rdf4j.version>
         <flink.version>1.9.1</flink.version>
         <fogsy-qudt.version>1.0</fogsy-qudt.version>
         <fst.version>2.56</fst.version>
         <geojson-jackson.version>1.8</geojson-jackson.version>
         <guava.version>27.1-jre</guava.version>
         <hibernate-validator.version>6.1.5.Final</hibernate-validator.version>
-        <httpclient.version>4.5.10</httpclient.version>
+        <httpclient.version>4.5.13</httpclient.version>
         <httpcore.version>4.4.9</httpcore.version>
         <httpcore-osgi.version>4.4.9</httpcore-osgi.version>
-        <influxdb.version>2.16</influxdb.version>
-        <jackson.version>2.10.0</jackson.version>
+        <influxdb.version>2.21</influxdb.version>
+        <jackson.version>2.12.1</jackson.version>
         <jakarta-annotation.version>1.3.5</jakarta-annotation.version>
         <jakarta-validation.version>2.0.2</jakarta-validation.version>
         <javapoet.version>1.6.1</javapoet.version>
@@ -73,12 +73,12 @@
         <javassist.version>3.19.0-GA</javassist.version>
         <jaxb-api.version>2.3.1</jaxb-api.version>
         <jboss-logging.version>3.4.0.Final</jboss-logging.version>
-        <jersey.version>2.30.1</jersey.version>
+        <jersey.version>2.33</jersey.version>
         <jetty.version>9.4.19.v20190610</jetty.version>
         <jgrapht.version>1.3.1</jgrapht.version>
         <json-path.version>3.1.0</json-path.version>
         <jsr305.version>3.0.2</jsr305.version>
-        <kafka.version>2.6.0</kafka.version>
+        <kafka.version>2.7.0</kafka.version>
         <lightcouch.version>0.2.0</lightcouch.version>
         <log4j.version>2.12.1</log4j.version>
         <logback-classic.version>1.2.3</logback-classic.version>
@@ -89,20 +89,22 @@
         <okhttp.version>3.12.2</okhttp.version>
         <plexus-component-annotations.version>1.6</plexus-component-annotations.version>
         <plexus-utils.version>3.0.22</plexus-utils.version>
-        <rdf4j.version>3.1.0</rdf4j.version>
+        <rdf4j.version>3.5.0</rdf4j.version>
         <rendersnake.version>1.8</rendersnake.version>
         <retrofit.version>2.5.0</retrofit.version>
-        <shiro.version>1.2.3</shiro.version>
-        <siddhi.version>5.1.12</siddhi.version>
-        <slf4j.version>1.7.25</slf4j.version>
+        <shiro.version>1.7.0</shiro.version>
+        <siddhi.version>5.1.16</siddhi.version>
+        <slf4j.version>1.7.30</slf4j.version>
         <snakeyaml.version>1.26</snakeyaml.version>
-        <snappy-java.version>1.1.7.2</snappy-java.version>
+        <snappy-java.version>1.1.7.7</snappy-java.version>
         <spark.version>2.1.2</spark.version>
-        <spring.version>5.2.8.RELEASE</spring.version>
-        <spring-boot.version>2.3.3.RELEASE</spring-boot.version>
+        <spring.version>5.3.2</spring.version>
+        <spring-boot.version>2.4.1</spring-boot.version>
+        <swagger.version>2.1.6</swagger.version>
         <type-parser.version>0.6.0</type-parser.version>
         <underscore.version>1.47</underscore.version>
         <wildfly-common.version>1.5.2.Final</wildfly-common.version>
+        <hawtbuf.version>1.11</hawtbuf.version>
 
         <!-- Test dependencies -->
         <junit.version>4.12</junit.version>
@@ -164,8 +166,23 @@
                 <version>${jackson.version}</version>
             </dependency>
             <dependency>
+                <groupId>com.fasterxml.jackson.dataformat</groupId>
+                <artifactId>jackson-dataformat-yaml</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.fasterxml.jackson.datatype</groupId>
                 <artifactId>jackson-datatype-jdk8</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-jsr310</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.module</groupId>
+                <artifactId>jackson-module-jaxb-annotations</artifactId>
                 <version>${jackson.version}</version>
             </dependency>
             <dependency>
@@ -262,6 +279,16 @@
                 <groupId>io.rest-assured</groupId>
                 <artifactId>json-path</artifactId>
                 <version>${json-path.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger.core.v3</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>${swagger.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger.core.v3</groupId>
+                <artifactId>swagger-jaxrs2</artifactId>
+                <version>${swagger.version}</version>
             </dependency>
             <dependency>
                 <groupId>jakarta.annotation</groupId>
@@ -475,6 +502,11 @@
             </dependency>
             <dependency>
                 <groupId>org.eclipse.rdf4j</groupId>
+                <artifactId>rdf4j-query</artifactId>
+                <version>${rdf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.rdf4j</groupId>
                 <artifactId>rdf4j-queryresultio-api</artifactId>
                 <version>${rdf4j.version}</version>
             </dependency>
@@ -486,6 +518,11 @@
             <dependency>
                 <groupId>org.eclipse.rdf4j</groupId>
                 <artifactId>rdf4j-repository-http</artifactId>
+                <version>${rdf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.rdf4j</groupId>
+                <artifactId>rdf4j-repository-api</artifactId>
                 <version>${rdf4j.version}</version>
             </dependency>
             <dependency>
@@ -557,6 +594,11 @@
                 <groupId>org.fusesource.mqtt-client</groupId>
                 <artifactId>mqtt-client</artifactId>
                 <version>${mqtt-client.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.fusesource.hawtbuf</groupId>
+                <artifactId>hawtbuf</artifactId>
+                <version>${hawtbuf.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.logging</groupId>
@@ -730,6 +772,11 @@
             </dependency>
             <dependency>
                 <groupId>io.fogsy</groupId>
+                <artifactId>empire-api</artifactId>
+                <version>${empire-rdf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.fogsy</groupId>
                 <artifactId>empire-core</artifactId>
                 <version>${empire-rdf4j.version}</version>
             </dependency>
@@ -837,15 +884,19 @@
         <module>archetypes/streampipes-archetype-pe-processors-jvm</module>
         <module>archetypes/streampipes-archetype-pe-sinks-flink</module>
         <module>archetypes/streampipes-archetype-pe-processors-flink</module>
-        <module>streampipes-app-file-export</module>
         <module>streampipes-backend</module>
+        <module>streampipes-client</module>
         <module>streampipes-code-generation</module>
         <module>streampipes-commons</module>
         <module>streampipes-config</module>
         <module>streampipes-connect</module>
         <module>streampipes-connect-container</module>
+        <module>streampipes-connect-container-master</module>
+        <module>streampipes-connect-container-worker</module>
         <module>streampipes-container</module>
+        <module>streampipes-container-base</module>
         <module>streampipes-container-embedded</module>
+        <module>streampipes-container-extensions</module>
         <module>streampipes-container-standalone</module>
         <module>streampipes-dataformat</module>
         <module>streampipes-dataformat-cbor</module>
@@ -853,19 +904,24 @@
         <module>streampipes-dataformat-json</module>
         <module>streampipes-dataformat-smile</module>
         <module>streampipes-logging</module>
+        <module>streampipes-maven-plugin</module>
         <module>streampipes-measurement-units</module>
         <module>streampipes-messaging-kafka</module>
         <module>streampipes-messaging</module>
         <module>streampipes-messaging-jms</module>
+        <module>streampipes-messaging-mqtt</module>
         <module>streampipes-model</module>
         <module>streampipes-model-client</module>
+        <module>streampipes-model-shared</module>
         <module>streampipes-performance-tests</module>
+        <module>streampipes-platform-services</module>
         <module>streampipes-pipeline-management</module>
         <module>streampipes-sources</module>
         <module>streampipes-rest</module>
         <module>streampipes-rest-shared</module>
         <module>streampipes-sdk</module>
-        <module>streampipes-serializers</module>
+        <module>streampipes-serializers-jsonld</module>
+        <module>streampipes-serializers-json</module>
         <module>streampipes-storage-api</module>
         <module>streampipes-storage-management</module>
         <module>streampipes-storage-couchdb</module>
@@ -881,12 +937,7 @@
         <module>streampipes-wrapper-siddhi</module>
         <module>streampipes-wrapper-spark</module>
         <module>streampipes-wrapper-standalone</module>
-        <module>streampipes-connect-container-master</module>
-        <module>streampipes-connect-container-worker</module>
-        <module>streampipes-container-base</module>
-        <module>streampipes-messaging-mqtt</module>
-        <module>streampipes-maven-plugin</module>
-        <module>streampipes-model-shared</module>
+        <module>streampipes-data-explorer</module>
     </modules>
 
     <profiles>

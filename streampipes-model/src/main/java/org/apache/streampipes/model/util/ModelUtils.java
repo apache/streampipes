@@ -18,13 +18,6 @@
 
 package org.apache.streampipes.model.util;
 
-import org.eclipse.rdf4j.model.Model;
-import org.eclipse.rdf4j.rio.RDFFormat;
-import org.eclipse.rdf4j.rio.RDFHandlerException;
-import org.eclipse.rdf4j.rio.Rio;
-
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -53,13 +46,6 @@ public class ModelUtils {
 		else if (propertyType.equals(xmlBaseURI+"boolean") )return Boolean[].class;
 		else if (propertyType.equals(xmlBaseURI+"float")) return Float[].class;
 		else return null;
-	}
-	
-	public static String asString(Model model) throws RDFHandlerException
-	{
-		OutputStream stream = new ByteArrayOutputStream();
-		Rio.write(model, stream, RDFFormat.JSONLD);
-		return stream.toString();
 	}
 	
 	public static List<Map<String, Object>> asList(Map<String, Object> map)

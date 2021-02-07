@@ -63,4 +63,9 @@ public class StaticPropertyAlternatives extends StaticProperty {
   public void setAlternatives(List<StaticPropertyAlternative> alternatives) {
     this.alternatives = alternatives;
   }
+
+  @Override
+  public void accept(StaticPropertyVisitor visitor) {
+    visitor.visit(this);
+  }
 }

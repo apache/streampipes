@@ -76,6 +76,8 @@ public class CouchDbInstallationStep implements InstallationStep {
             Utils.getCouchDbDashboardClient();
             Utils.getCouchDbVisualizablePipelineClient();
             Utils.getCouchDbDashboardWidgetClient();
+            Utils.getCouchDbLabelClient();
+            Utils.getCouchDbCategoryClient();
 
             return Collections.singletonList(Notifications.success(getTitle()));
         } catch (Exception e) {
@@ -88,6 +90,7 @@ public class CouchDbInstallationStep implements InstallationStep {
         result.add(addUserView());
         result.add(addConnectionView());
         result.add(addNotificationView());
+        result.add(addLabelView());
         return result;
     }
 
@@ -150,11 +153,35 @@ public class CouchDbInstallationStep implements InstallationStep {
             MapReduce usernameFunction = new MapReduce();
             usernameFunction.setMap("function(doc) { if(doc.email) { emit(doc.email, doc); } }");
 
+            MapReduce tokenFunction = new MapReduce();
+            tokenFunction.setMap("function(doc) { if (doc.userApiTokens) { doc.userApiTokens.forEach(function(token) { emit(token.hashedToken, doc.email); });}}");
+
             views.put("password", passwordFunction);
             views.put("username", usernameFunction);
+            views.put("token", tokenFunction);
 
             userDocument.setViews(views);
             Response resp = Utils.getCouchDbUserClient().design().synchronizeWithDb(userDocument);
+
+            if (resp.getError() != null) return Notifications.error(PREPARING_USERS_TEXT);
+            else return Notifications.success(PREPARING_USERS_TEXT);
+        } catch (Exception e) {
+            return Notifications.error(PREPARING_USERS_TEXT);
+        }
+    }
+
+    private Message addLabelView() {
+        try {
+            DesignDocument labelDocument = prepareDocument("_design/categoryId");
+            Map<String, MapReduce> views = new HashMap<>();
+
+            MapReduce categoryIdFunction = new MapReduce();
+            categoryIdFunction.setMap("function(doc) { if(doc.categoryId) { emit(doc.categoryId, doc); } }");
+
+            views.put("categoryId", categoryIdFunction);
+
+            labelDocument.setViews(views);
+            Response resp = Utils.getCouchDbLabelClient().design().synchronizeWithDb(labelDocument);
 
             if (resp.getError() != null) return Notifications.error(PREPARING_USERS_TEXT);
             else return Notifications.success(PREPARING_USERS_TEXT);

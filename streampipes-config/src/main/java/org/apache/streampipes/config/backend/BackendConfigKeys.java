@@ -23,6 +23,8 @@ public class BackendConfigKeys {
   public static final String BACKEND_PORT = "SP_BACKEND_PORT";
   public static final String JMS_HOST = "SP_JMS_HOST";
   public static final String JMS_PORT = "SP_JMS_PORT";
+  public static final String MQTT_HOST = "SP_MQTT_HOST";
+  public static final String MQTT_PORT = "SP_MQTT_PORT";
   public static final String KAFKA_HOST = "SP_KAFKA_HOST";
   public static final String KAFKA_PORT = "SP_KAFKA_PORT";
   public static final String ZOOKEEPER_HOST = "SP_ZOOKEEPER_HOST";
@@ -47,4 +49,6 @@ public class BackendConfigKeys {
 
 
   public static final String SERVICE_NAME = "SP_SERVICE_NAME";
+
+  public static final String PRIORITIZED_PROTOCOL = "SP_PRIORITIZED_PROTOCOL";
 }

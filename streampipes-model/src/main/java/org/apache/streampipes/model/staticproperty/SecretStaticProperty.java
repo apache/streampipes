@@ -62,4 +62,9 @@ public class SecretStaticProperty extends StaticProperty {
   public void setEncrypted(Boolean encrypted) {
     this.encrypted = encrypted;
   }
+
+  @Override
+  public void accept(StaticPropertyVisitor visitor) {
+    visitor.visit(this);
+  }
 }

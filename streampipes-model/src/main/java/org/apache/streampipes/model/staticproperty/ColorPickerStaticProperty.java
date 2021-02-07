@@ -50,4 +50,9 @@ public class ColorPickerStaticProperty extends StaticProperty {
   public void setSelectedColor(String selectedColor) {
     this.selectedColor = selectedColor;
   }
+
+  @Override
+  public void accept(StaticPropertyVisitor visitor) {
+    visitor.visit(this);
+  }
 }

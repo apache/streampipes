@@ -29,7 +29,6 @@ import org.apache.streampipes.model.schema.QuantitativeValue;
 import org.apache.streampipes.sdk.utils.Datatypes;
 import org.apache.streampipes.vocabulary.SPSensor;
 import org.apache.streampipes.vocabulary.XSD;
-import org.eclipse.rdf4j.model.vocabulary.SP;
 
 import java.net.URI;
 import java.util.ArrayList;

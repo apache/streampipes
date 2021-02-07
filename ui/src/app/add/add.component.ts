@@ -37,7 +37,7 @@ export class AddComponent implements OnInit {
     endpointItems: any[];
     endpointItemsLoadingComplete: boolean;
     selectedTab: string;
-    availableTypes: Array<string> = ["all", "source", "sepa", "action"];
+    availableTypes: Array<string> = ["all", "set", "stream", "sepa", "action"];
 
     selectedCategoryIndex: number = 0;
 

@@ -18,47 +18,39 @@
 
 package org.apache.streampipes.rest.impl;
 
-import static org.apache.streampipes.container.util.ConsulUtil.updateConfig;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.config.backend.MessagingSettings;
 import org.apache.streampipes.config.consul.ConsulSpConfig;
 import org.apache.streampipes.config.model.ConfigItem;
 import org.apache.streampipes.config.model.PeConfig;
 import org.apache.streampipes.container.util.ConsulUtil;
-import org.apache.streampipes.rest.api.IConsulConfig;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import static org.apache.streampipes.container.util.ConsulUtil.updateConfig;
 
 @Path("/v2/consul")
-public class ConsulConfig extends AbstractRestInterface implements IConsulConfig {
+public class ConsulConfig extends AbstractRestInterface {
 
   private static Logger LOG = LoggerFactory.getLogger(ConsulConfig.class);
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @GsonWithIds
-  @Override
   public Response getAllServiceConfigs() {
     LOG.info("Request for all service configs");
-    Map<String, String> peServices = ConsulUtil.getPEServices();
+    Map<String, String> peServices = ConsulUtil.getPeServices();
 
     List<PeConfig> peConfigs = new LinkedList<>();
 
@@ -95,7 +87,6 @@ public class ConsulConfig extends AbstractRestInterface implements IConsulConfig
   @POST
   @Produces(MediaType.APPLICATION_JSON)
   @GsonWithIds
-  @Override
   public Response saveServiceConfig(PeConfig peConfig) {
     LOG.info("Request to update a service config");
     for (ConfigItem configItem : peConfig.getConfigs()) {
@@ -149,7 +140,6 @@ public class ConsulConfig extends AbstractRestInterface implements IConsulConfig
   @DELETE
   @Produces(MediaType.APPLICATION_JSON)
   @GsonWithIds
-  @Override
   public Response deleteService(String serviceName) {
     LOG.info("Request to delete a service config");
     ConsulUtil.deregisterService(serviceName);
@@ -160,7 +150,6 @@ public class ConsulConfig extends AbstractRestInterface implements IConsulConfig
   @Produces(MediaType.APPLICATION_JSON)
   @GsonWithIds
   @Path("/messaging")
-  @Override
   public Response getMessagingSettings() {
     return ok(BackendConfig.INSTANCE.getMessagingSettings());
   }
@@ -170,7 +159,6 @@ public class ConsulConfig extends AbstractRestInterface implements IConsulConfig
   @Consumes(MediaType.APPLICATION_JSON)
   @GsonWithIds
   @Path("messaging")
-  @Override
   public Response updateMessagingSettings(MessagingSettings messagingSettings) {
     BackendConfig.INSTANCE.setMessagingSettings(messagingSettings);
     return ok();

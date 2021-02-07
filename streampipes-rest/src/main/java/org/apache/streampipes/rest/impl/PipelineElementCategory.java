@@ -21,9 +21,8 @@ package org.apache.streampipes.rest.impl;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.DataSinkType;
+import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.client.Category;
-import org.apache.streampipes.model.graph.DataSourceDescription;
-import org.apache.streampipes.rest.api.IPipelineElementCategory;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.storage.management.StorageManager;
 
@@ -36,22 +35,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Path("/v2/categories")
-public class PipelineElementCategory extends AbstractRestInterface implements IPipelineElementCategory {
+public class PipelineElementCategory extends AbstractRestInterface {
 
 	@GET
 	@Path("/ep")
 	@Produces(MediaType.APPLICATION_JSON)
 	@JacksonSerialized
-	@Override
 	public Response getEps() {
-		return ok(makeCategories(StorageManager.INSTANCE.getPipelineElementStorage().getAllDataSources()));
+		return ok(makeCategories(StorageManager.INSTANCE.getPipelineElementStorage().getAllDataStreams()));
 	}
 
 	@GET
 	@Path("/epa")
 	@Produces(MediaType.APPLICATION_JSON)
 	@JacksonSerialized
-	@Override
 	public Response getEpaCategories() {
 		return ok(DataProcessorType.values());
 	}
@@ -60,7 +57,6 @@ public class PipelineElementCategory extends AbstractRestInterface implements IP
 	@Path("/adapter")
 	@Produces(MediaType.APPLICATION_JSON)
 	@JacksonSerialized
-	@Override
 	public Response getAdapterCategories() {
 		return ok(AdapterType.values());
 	}
@@ -69,13 +65,12 @@ public class PipelineElementCategory extends AbstractRestInterface implements IP
 	@Path("/ec")
 	@Produces(MediaType.APPLICATION_JSON)
 	@JacksonSerialized
-	@Override
 	public Response getEcCategories() {
 		return ok(DataSinkType.values());
 	}
 	
-	private List<Category> makeCategories(List<DataSourceDescription> producers) {
-		return producers
+	private List<Category> makeCategories(List<SpDataStream> streams) {
+		return streams
 				.stream()
 				.map(p -> new Category(p.getElementId(), p.getName(), p.getDescription()))
 				.collect(Collectors.toList());

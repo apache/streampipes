@@ -79,6 +79,9 @@ public class SpDataStream extends NamedStreamPipesEntity {
   @RdfProperty(StreamPipes.INDEX)
   private int index;
 
+  @RdfProperty(StreamPipes.HAS_CORRESPONDING_ADAPTER_ID)
+  private String correspondingAdapterId;
+
   protected List<String> category;
 
   public SpDataStream(String uri, String name, String description, String iconUrl, List<EventStreamQualityDefinition> hasEventStreamQualities,
@@ -103,6 +106,7 @@ public class SpDataStream extends NamedStreamPipesEntity {
   public SpDataStream(SpDataStream other) {
     super(other);
     this.index = other.getIndex();
+    this.correspondingAdapterId = other.getCorrespondingAdapterId();
     if (other.getEventGrounding() != null) {
       this.eventGrounding = new EventGrounding(other.getEventGrounding());
     }
@@ -189,5 +193,13 @@ public class SpDataStream extends NamedStreamPipesEntity {
 
   public void setIndex(int index) {
     this.index = index;
+  }
+
+  public String getCorrespondingAdapterId() {
+    return correspondingAdapterId;
+  }
+
+  public void setCorrespondingAdapterId(String correspondingAdapterId) {
+    this.correspondingAdapterId = correspondingAdapterId;
   }
 }

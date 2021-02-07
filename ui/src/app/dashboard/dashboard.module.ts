@@ -53,9 +53,22 @@ import { HtmlWidgetComponent } from './components/widgets/html/html-widget.compo
 import { TrafficLightWidgetComponent } from './components/widgets/trafficlight/traffic-light-widget.component';
 import { StandaloneDashboardComponent } from './components/standalone/standalone-dashboard.component';
 import { CoreUiModule } from '../core-ui/core-ui.module';
+import {WordcloudWidgetComponent} from "./components/widgets/wordcloud/wordcloud-widget.component";
+import {NgxEchartsModule} from "ngx-echarts";
+import {StatusWidgetComponent} from "./components/widgets/status/status-widget.component";
+import {BarRaceWidgetComponent} from "./components/widgets/bar-race/bar-race-widget.component";
+import {StackedLineChartWidgetComponent} from "./components/widgets/stacked-line-chart/stacked-line-chart-widget.component";
 
 @NgModule({
     imports: [
+        NgxEchartsModule.forRoot({
+            /**
+             * This will import all modules from echarts.
+             * If you only need custom modules,
+             * please refer to [Custom Build] section.
+             */
+            echarts: () => import('echarts'),
+        }),
         CommonModule,
         CoreUiModule,
         MatTabsModule,
@@ -70,6 +83,7 @@ import { CoreUiModule } from '../core-ui/core-ui.module';
         LeafletModule
     ],
     declarations: [
+        BarRaceWidgetComponent,
         DashboardComponent,
         DashboardGridComponent,
         DashboardOverviewComponent,
@@ -85,8 +99,11 @@ import { CoreUiModule } from '../core-ui/core-ui.module';
         ImageWidgetComponent,
         MapWidgetComponent,
         RawWidgetComponent,
+        StackedLineChartWidgetComponent,
         HtmlWidgetComponent,
+        StatusWidgetComponent,
         TrafficLightWidgetComponent,
+        WordcloudWidgetComponent,
         StandaloneDashboardComponent
     ],
     providers: [

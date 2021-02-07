@@ -31,6 +31,8 @@ import {AlreadyConfiguredCanActivateGuard} from "./_guards/already-configured.ca
 import {LoggedInCanActivateGuard} from "./_guards/logged-in.can-activate.guard";
 import {InfoComponent} from "./info/info.component";
 import {NotificationsComponent} from "./notifications/notifications.component";
+import {ProfileComponent} from "./profile/profile.component";
+import {ApidocsComponent} from "./apidocs/apidocs.component";
 
 import { EditorComponent } from './editor/editor.component';
 import { PipelinesComponent } from './pipelines/pipelines.component';
@@ -43,6 +45,7 @@ import { FilesComponent } from './files/files.component';
 import { ConfigurationComponent } from './configuration/configuration.component';
 
 const routes: Routes = [
+  { path: 'apidocs', component: ApidocsComponent, canActivate: [ConfiguredCanActivateGuard]},
   { path: 'login', component: LoginComponent, canActivate: [ConfiguredCanActivateGuard, LoggedInCanActivateGuard],
   data: {animation: 'LoginPage'}},
   { path: 'setup', component: SetupComponent, canActivate: [AlreadyConfiguredCanActivateGuard] },
@@ -61,7 +64,8 @@ const routes: Routes = [
       { path: 'configuration', component: ConfigurationComponent },
       { path: 'notifications', component: NotificationsComponent },
       { path: 'info', component: InfoComponent },
-      { path: 'pipeline-details', component: PipelineDetailsComponent }
+      { path: 'pipeline-details', component: PipelineDetailsComponent },
+      { path: 'profile', component: ProfileComponent},
     ], canActivateChild: [AuthCanActivateChildrenGuard] }
 ];
 

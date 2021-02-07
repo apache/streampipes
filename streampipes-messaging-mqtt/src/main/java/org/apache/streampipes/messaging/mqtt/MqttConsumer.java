@@ -24,23 +24,45 @@ import org.fusesource.mqtt.client.Message;
 import org.fusesource.mqtt.client.QoS;
 import org.fusesource.mqtt.client.Topic;
 
-public class MqttConsumer extends AbstractMqttConnector implements EventConsumer<MqttTransportProtocol> {
+import java.io.Serializable;
+
+public class MqttConsumer extends AbstractMqttConnector implements
+        EventConsumer<MqttTransportProtocol>,
+        AutoCloseable, Serializable {
 
   @Override
   public void connect(MqttTransportProtocol protocolSettings, InternalEventProcessor<byte[]> eventProcessor) throws SpRuntimeException {
     try {
       this.createBrokerConnection(protocolSettings);
       Topic[] topics = {new Topic(protocolSettings.getTopicDefinition().getActualTopicName(), QoS.AT_LEAST_ONCE)};
-      byte[] qoses = connection.subscribe(topics);
+      connection.subscribe(topics);
+      new Thread(new ConsumerThread(eventProcessor)).start();
 
-      while (connected) {
-        Message message = connection.receive();
-        byte[] payload = message.getPayload();
-        eventProcessor.onEvent(payload);
-        message.ack();
-      }
     } catch (Exception e) {
       throw new SpRuntimeException(e);
+    }
+  }
+
+  private class ConsumerThread implements Runnable {
+
+    private final InternalEventProcessor<byte[]> eventProcessor;
+
+    public ConsumerThread(InternalEventProcessor<byte[]> eventProcessor) {
+      this.eventProcessor = eventProcessor;
+    }
+
+    @Override
+    public void run() {
+      try {
+        while (connected) {
+          Message message = connection.receive();
+          byte[] payload = message.getPayload();
+          eventProcessor.onEvent(payload);
+          message.ack();
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
     }
   }
 
@@ -58,5 +80,10 @@ public class MqttConsumer extends AbstractMqttConnector implements EventConsumer
   @Override
   public Boolean isConnected() {
     return this.connected;
+  }
+
+  @Override
+  public void close() throws Exception {
+    disconnect();
   }
 }

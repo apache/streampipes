@@ -18,13 +18,7 @@
 
 package org.apache.streampipes.container.init;
 
-import org.eclipse.rdf4j.model.vocabulary.RDFS;
-import org.apache.streampipes.container.declarer.DataStreamDeclarer;
-import org.apache.streampipes.container.declarer.Declarer;
-import org.apache.streampipes.container.declarer.PipelineTemplateDeclarer;
-import org.apache.streampipes.container.declarer.SemanticEventConsumerDeclarer;
-import org.apache.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
-import org.apache.streampipes.container.declarer.SemanticEventProducerDeclarer;
+import org.apache.streampipes.container.declarer.*;
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
 import org.apache.streampipes.dataformat.SpDataFormatManager;
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
@@ -35,11 +29,7 @@ import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
 import java.net.URI;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class DeclarersSingleton {
@@ -51,7 +41,6 @@ public class DeclarersSingleton {
   private static final String Slash = "/";
 
   private Map<String, SemanticEventProcessingAgentDeclarer> epaDeclarers;
-  private Map<String, SemanticEventProducerDeclarer> producerDeclarers;
   private Map<String, SemanticEventConsumerDeclarer> consumerDeclarers;
   private Map<String, PipelineTemplateDeclarer> pipelineTemplateDeclarers;
   private Map<String, DataStreamDeclarer> streamDeclarers;
@@ -66,7 +55,6 @@ public class DeclarersSingleton {
 
   private DeclarersSingleton() {
     this.epaDeclarers = new HashMap<>();
-    this.producerDeclarers = new HashMap<>();
     this.consumerDeclarers = new HashMap<>();
     this.streamDeclarers = new HashMap<>();
     this.pipelineTemplateDeclarers = new HashMap<>();
@@ -91,8 +79,8 @@ public class DeclarersSingleton {
   public DeclarersSingleton add(Declarer d) {
     if (d instanceof SemanticEventProcessingAgentDeclarer) {
       addEpaDeclarer((SemanticEventProcessingAgentDeclarer) d);
-    } else if (d instanceof SemanticEventProducerDeclarer) {
-      addProducerDeclarer((SemanticEventProducerDeclarer) d);
+    } else if (d instanceof DataStreamDeclarer) {
+      addStreamDeclarer((DataStreamDeclarer) d);
     } else if (d instanceof SemanticEventConsumerDeclarer) {
       addConsumerDeclarer((SemanticEventConsumerDeclarer) d);
     } else if (d instanceof PipelineTemplateDeclarer) {
@@ -102,10 +90,10 @@ public class DeclarersSingleton {
     return getInstance();
   }
 
-  public Map<String, Declarer> getDeclarers() {
-    Map<String, Declarer> result = new HashMap<>();
+  public Map<String, Declarer<?>> getDeclarers() {
+    Map<String, Declarer<?>> result = new HashMap<>();
     result.putAll(epaDeclarers);
-    result.putAll(producerDeclarers);
+    result.putAll(streamDeclarers);
     result.putAll(consumerDeclarers);
     result.putAll(pipelineTemplateDeclarers);
     return result;
@@ -126,7 +114,7 @@ public class DeclarersSingleton {
             .getRdfType()
             .stream()
             .map(URI::toString)
-            .filter(t -> !t.equals(RDFS.RESOURCE.stringValue()))
+            .filter(t -> !t.equals("http://www.w3.org/2000/01/rdf-schema#"))
             .filter(t -> !t.equals(StreamPipes.TRANSPORT_FORMAT))
             .findFirst()
             .get();
@@ -156,11 +144,9 @@ public class DeclarersSingleton {
     epaDeclarers.put(epaDeclarer.declareModel().getAppId(), epaDeclarer);
   }
 
-  private void addProducerDeclarer(SemanticEventProducerDeclarer sourceDeclarer) {
-    checkAndStartExecutableStreams(sourceDeclarer);
-    producerDeclarers.put(sourceDeclarer.declareModel().getAppId(), sourceDeclarer);
-    sourceDeclarer.getEventStreams().forEach(sd ->
-            streamDeclarers.put(sd.declareModel(sourceDeclarer.declareModel()).getAppId(), sd));
+  private void addStreamDeclarer(DataStreamDeclarer streamDeclarer) {
+    streamDeclarers.put(streamDeclarer.declareModel().getAppId(), streamDeclarer);
+    checkAndStartExecutableStreams(streamDeclarer);
   }
 
   private void addConsumerDeclarer(SemanticEventConsumerDeclarer consumerDeclarer) {
@@ -176,8 +162,8 @@ public class DeclarersSingleton {
     return epaDeclarers;
   }
 
-  public Map<String, SemanticEventProducerDeclarer> getProducerDeclarers() {
-    return producerDeclarers;
+  public Map<String, DataStreamDeclarer> getStreamDeclarers() {
+    return streamDeclarers;
   }
 
   public Map<String, SemanticEventConsumerDeclarer> getConsumerDeclarers() {
@@ -203,10 +189,6 @@ public class DeclarersSingleton {
             .collect(Collectors.toList());
   }
 
-  public Map<String, DataStreamDeclarer> getStreamDeclarers() {
-    return streamDeclarers;
-  }
-
   public void setPort(int port) {
     this.port = port;
   }
@@ -223,13 +205,9 @@ public class DeclarersSingleton {
     return Http + hostName + Colon + port + route;
   }
 
-  private void checkAndStartExecutableStreams(SemanticEventProducerDeclarer sourceDeclarer) {
-    sourceDeclarer.getEventStreams()
-            .stream()
-            .filter(DataStreamDeclarer::isExecutable)
-            .forEach(es -> {
-              es.declareModel(sourceDeclarer.declareModel());
-              es.executeStream();
-            });
+  private void checkAndStartExecutableStreams(DataStreamDeclarer declarer) {
+    if (declarer.isExecutable()) {
+      declarer.executeStream();
+    }
   }
 }

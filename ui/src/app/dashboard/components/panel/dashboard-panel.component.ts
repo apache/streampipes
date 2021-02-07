@@ -44,6 +44,8 @@ export class DashboardPanelComponent implements OnInit {
     widgetIdsToRemove: Array<string> = [];
     widgetsToUpdate: Map<string, DashboardWidgetModel> = new Map<string, DashboardWidgetModel>();
 
+    headerVisible: boolean = true;
+
     constructor(private dashboardService: DashboardService,
                 private dialogService: DialogService,
                 private refreshDashboardService: RefreshDashboardService) {

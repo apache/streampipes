@@ -22,6 +22,8 @@ import {PipelineService} from "./apis/pipeline.service";
 import {PlatformServicesCommons} from "./apis/commons.service";
 import {PipelineElementEndpointService} from "./apis/pipeline-element-endpoint.service";
 import {FilesService} from "./apis/files.service";
+import {MeasurementUnitsService} from "./apis/measurement-units.service";
+import {PipelineElementTemplateService} from "./apis/pipeline-element-template.service";
 import {PipelineMonitoringService} from "./apis/pipeline-monitoring.service";
 
 @NgModule({
@@ -29,8 +31,10 @@ import {PipelineMonitoringService} from "./apis/pipeline-monitoring.service";
   declarations: [],
   providers: [
     FilesService,
+    MeasurementUnitsService,
     PlatformServicesCommons,
     PipelineElementEndpointService,
+    PipelineElementTemplateService,
     //PipelineTemplateService,
     PipelineElementService,
     PipelineMonitoringService,

@@ -19,7 +19,6 @@
 package org.apache.streampipes.connect.config;
 
 import org.apache.streampipes.config.SpConfig;
-import org.apache.streampipes.connect.init.Config;
 
 public enum ConnectContainerConfig {
   INSTANCE;
@@ -35,19 +34,15 @@ public enum ConnectContainerConfig {
     config.register(ConfigKeys.BACKEND_HOST, "backend", "Hostname for backend");
     config.register(ConfigKeys.BACKEND_PORT, 8030, "Port for backend");
 
-    config.register(ConfigKeys.CONNECT_CONTAINER_MASTER_PORT, Config.MASTER_PORT, "The port of the connect container");
-    config.register(ConfigKeys.CONNECT_CONTAINER_MASTER_HOST, "connect-master", "The hostname of the connect container");
+//    config.register(ConfigKeys.CONNECT_CONTAINER_MASTER_PORT, Config.MASTER_PORT, "The port of the connect container");
+//    config.register(ConfigKeys.CONNECT_CONTAINER_MASTER_HOST, "connect-master", "The hostname of the connect container");
 
     config.register(ConfigKeys.DATA_LOCATION,"/data/", "Folder that stores all the uploaded data");
 
   }
 
   public String getBackendApiUrl() {
-    return config.getString(ConfigKeys.BACKEND_HOST) + ":" + config.getInteger(ConfigKeys.BACKEND_PORT) + "/streampipes-backend/";
-  }
-
-  public String getConnectContainerMasterUrl() {
-    return "http://" + getConnectContainerMasterHost() + ":" + getConnectContainerMasterPort() + "/";
+    return "http://" + config.getString( ConfigKeys.BACKEND_HOST) + ":" + config.getInteger(ConfigKeys.BACKEND_PORT) + "/streampipes-backend/";
   }
 
   public String getBackendHost() {
@@ -56,14 +51,6 @@ public enum ConnectContainerConfig {
 
   public int getBackendPort() {
     return config.getInteger(ConfigKeys.BACKEND_PORT);
-  }
-
-  public String getConnectContainerMasterHost() {
-    return config.getString(ConfigKeys.CONNECT_CONTAINER_MASTER_HOST);
-  }
-
-  public Integer getConnectContainerMasterPort() {
-    return config.getInteger(ConfigKeys.CONNECT_CONTAINER_MASTER_PORT);
   }
 
   public String getDataLocation() {

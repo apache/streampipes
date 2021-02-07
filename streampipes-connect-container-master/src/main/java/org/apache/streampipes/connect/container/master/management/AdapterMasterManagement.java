@@ -18,26 +18,30 @@
 
 package org.apache.streampipes.connect.container.master.management;
 
-import org.apache.http.client.fluent.Form;
-import org.apache.http.client.fluent.Request;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.connect.adapter.GroundingService;
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
 import org.apache.streampipes.connect.config.ConnectContainerConfig;
 import org.apache.streampipes.connect.container.master.util.AdapterEncryptionService;
+import org.apache.streampipes.manager.storage.UserService;
+import org.apache.streampipes.manager.verification.DataStreamVerifier;
+import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterSetDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.apache.streampipes.model.connect.worker.ConnectWorkerContainer;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.util.Cloner;
-import org.apache.streampipes.rest.shared.util.JsonLdUtils;
+import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorageCache;
 import org.apache.streampipes.storage.couchdb.impl.AdapterStorageImpl;
+import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
+
+import static org.apache.streampipes.manager.storage.UserManagementService.getUserService;
 
 
 public class AdapterMasterManagement {
@@ -70,13 +74,13 @@ public class AdapterMasterManagement {
           throws AdapterException {
 
     // Add EventGrounding to AdapterDescription
-    EventGrounding eventGrounding = GroundingService.createEventGrounding(
-            ConnectContainerConfig.INSTANCE.getKafkaHost(), ConnectContainerConfig.INSTANCE.getKafkaPort(), null);
+    EventGrounding eventGrounding = GroundingService.createEventGrounding();
     ad.setEventGrounding(eventGrounding);
 
     String uuid = UUID.randomUUID().toString();
 
-    String newId = ConnectContainerConfig.INSTANCE.getConnectContainerMasterUrl() + "api/v1/" + username + "/master/sources/" + uuid;
+//    String newId = ConnectContainerConfig.INSTANCE.getConnectContainerMasterUrl() + "api/v1/" + username + "/master/sources/" + uuid;
+    String newId = ConnectContainerConfig.INSTANCE.getBackendApiUrl() + "api/v2/connect/" + username + "/master/sources/" + uuid;
 
     ad.setElementId(newId);
 
@@ -91,39 +95,26 @@ public class AdapterMasterManagement {
       // TODO
       WorkerRestClient.invokeStreamAdapter(baseUrl, (AdapterStreamDescription) ad);
       LOG.info("Start adapter");
-//            SpConnect.startStreamAdapter((AdapterStreamDescription) ad, baseUrl);
     }
 
     // backend url is used to install data source in streampipes
-    String backendBaseUrl = "http://" + ConnectContainerConfig.INSTANCE.getBackendApiUrl() + "api/v2/";
+    String backendBaseUrl = ConnectContainerConfig.INSTANCE.getBackendApiUrl() + "api/v2/";
     String requestUrl = backendBaseUrl + "noauth/users/" + username + "/element";
 
     LOG.info("Install source (source URL: " + newId + " in backend over URL: " + requestUrl);
+    SpDataStream storedDescription = new SourcesManagement().getAdapterDataStream(newId);
+    installDataSource(storedDescription, username);
 
-    installDataSource(requestUrl, newId);
-
-    return new SourcesManagement().getAdapterDataSource(newId).getElementId();
+    return storedDescription.getElementId();
   }
 
-  public boolean installDataSource(String requestUrl, String elementIdUrl) throws AdapterException {
-
+  public void installDataSource(SpDataStream stream, String username) throws AdapterException {
     try {
-      String responseString = Request.Post(requestUrl)
-              .bodyForm(
-                      Form.form()
-                              .add("uri", elementIdUrl)
-                              .add("publicElement", "true").build())
-              .connectTimeout(1000)
-              .socketTimeout(100000)
-              .execute().returnContent().asString();
-
-      LOG.info(responseString);
-    } catch (IOException e) {
-      LOG.error("Error while installing data source: " + requestUrl, e);
+      new DataStreamVerifier(stream).verifyAndAdd(username, true, true);
+    } catch (SepaParseException e) {
+      LOG.error("Error while installing data source: " + stream.getElementId(), e);
       throw new AdapterException();
     }
-
-    return true;
   }
 
   public AdapterDescription getAdapter(String id, AdapterStorageImpl adapterStorage) throws AdapterException {
@@ -154,25 +145,14 @@ public class AdapterMasterManagement {
 
     adapterStorage.deleteAdapter(id);
 
-    String backendBaseUrl = "http://" + ConnectContainerConfig.INSTANCE.getBackendApiUrl() + "api/v2/noauth/users/" + username + "/element/delete";
+    UserService userService = getUserService();
+    IPipelineElementDescriptionStorageCache requestor = StorageDispatcher.INSTANCE.getTripleStore().getPipelineElementStorage();
 
-    String elementUrl = ad.getUri();
-
-    String responseString = null;
-    LOG.info("Delete data source in backend with request URL: " + backendBaseUrl);
-    try {
-      responseString = Request.Post(backendBaseUrl)
-              .connectTimeout(1000)
-              .socketTimeout(100000)
-              .bodyForm(Form.form()
-                      .add("uri", elementUrl).build())
-              .execute().returnContent().asString();
-    } catch (IOException e) {
-      e.printStackTrace();
-      responseString = e.toString();
+    if (requestor.getDataStreamById(ad.getElementId()) != null) {
+      requestor.deleteDataStream(requestor.getDataStreamById(ad.getElementId()));
+      userService.deleteOwnSource(username, ad.getElementId());
+      requestor.refreshDataSourceCache();
     }
-
-    LOG.info("Response of the deletion request" + responseString);
   }
 
   public List<AdapterDescription> getAllAdapters(AdapterStorageImpl adapterStorage) throws AdapterException {
@@ -205,14 +185,4 @@ public class AdapterMasterManagement {
     return ad instanceof AdapterStreamDescription;
   }
 
-  private static <T> String toJsonLd(T object) {
-    JsonLdUtils.toJsonLD(object);
-    String s = JsonLdUtils.toJsonLD(object);
-
-    if (s == null) {
-      LOG.error("Could not serialize Object " + object + " into json ld");
-    }
-
-    return s;
-  }
 }

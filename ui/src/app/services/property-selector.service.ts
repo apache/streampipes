@@ -32,13 +32,12 @@ export class PropertySelectorService {
 
     makeProperties(eventProperties: Array<any>, availablePropertyKeys: Array<string>, currentPointer) {
         let outputProperties = [];
-
         eventProperties.forEach(ep => {
             availablePropertyKeys.forEach(apk => {
                 if (this.isInSelection(ep, apk, currentPointer)) {
                     ep.runtimeId = this.makeSelector(currentPointer, ep.runtimeName);
                     if (this.isNested(ep)) {
-                        ep.eventProperties = this.makeProperties(ep.eventProperties, availablePropertyKeys, this.makeSelector(currentPointer, ep.properties.runtimeName));
+                        ep.eventProperties = this.makeProperties(ep.eventProperties, availablePropertyKeys, this.makeSelector(currentPointer, ep.runtimeName));
                     }
                     outputProperties.push(ep);
                 }

@@ -20,7 +20,7 @@
     <div class="box">
         <div class="assemblyOptions sp-blue-bg m-0 row header h-40" *ngIf="editMode">
             <div fxFlex="100" layout="row" fxLayoutAlign="start center">
-               {{this.configuredWidget.dataLakeMeasure.measureName}}
+               {{ title }}
             </div>
             <div fxFlex="100" layout="row" fxLayoutAlign="end center">
                 <button mat-icon-button matTooltip="Download data" class="icon" (click)="downloadDataAsFile()" color="white">

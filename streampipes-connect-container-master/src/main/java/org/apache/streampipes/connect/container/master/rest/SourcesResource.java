@@ -18,49 +18,31 @@
 
 package org.apache.streampipes.connect.container.master.rest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
-import org.apache.streampipes.connect.config.ConnectContainerConfig;
 import org.apache.streampipes.connect.container.master.management.SourcesManagement;
 import org.apache.streampipes.connect.rest.AbstractContainerResource;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.message.Notifications;
-import org.apache.streampipes.model.graph.DataSourceDescription;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
-import org.apache.streampipes.rest.shared.annotation.JsonLdSerialized;
-import org.apache.streampipes.rest.shared.util.JsonLdUtils;
-import org.apache.streampipes.rest.shared.util.SpMediaType;
-import org.apache.streampipes.vocabulary.StreamPipes;
+import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/api/v1/{username}/master/sources")
+@Path("/v2/connect/{username}/master/sources")
 public class SourcesResource extends AbstractContainerResource {
 
     private Logger logger = LoggerFactory.getLogger(SourcesResource.class);
 
-    private String connectContainerBaseUrl;
 
     private SourcesManagement sourcesManagement;
 
     public SourcesResource() {
-        this.connectContainerBaseUrl = ConnectContainerConfig.INSTANCE.getConnectContainerMasterUrl();
         this.sourcesManagement = new SourcesManagement();
     }
-
-    public SourcesResource(String connectContainerBaseUrl) {
-        this.connectContainerBaseUrl = connectContainerBaseUrl;
-    }
-
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -80,43 +62,33 @@ public class SourcesResource extends AbstractContainerResource {
 
     @GET
     @Path("/{id}")
-    @JsonLdSerialized
-    @Produces(SpMediaType.JSONLD)
+    @JacksonSerialized
+    @Produces(MediaType.APPLICATION_JSON)
     public Response getAdapterDataSource(@PathParam("id") String id) {
-
         try {
-            DataSourceDescription result = this.sourcesManagement.getAdapterDataSource(id);
-            return ok(result);
+            return ok(this.sourcesManagement.getAdapterDataStream(id));
         } catch (AdapterException e) {
             logger.error("Error while retrieving DataSourceDescription with id: " + id);
             return fail();
         }
     }
 
-
-
     @POST
-//    @JsonLdSerialized
-//    @Consumes(SpMediaType.JSONLD)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{streamId}/streams")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addAdapter(@PathParam("streamId") String elementId, String dataSetSet, @PathParam("username") String username) {
-
-        SpDataSet dataSet = JsonLdUtils.fromJsonLd(dataSetSet, SpDataSet.class, StreamPipes.DATA_SET);
+    public Response addAdapter(@PathParam("streamId") String elementId,
+                               @PathParam("username") String username,
+                               SpDataSet dataSet) {
 
         String responseMessage = "Instance of data set " + dataSet.getUri() + " successfully started";
 
-//        String workerUrl = new Utils().getWorkerUrlById(dataSet.getElementId());
-//
-//        String newUrl = Utils.addUserNameToApi(workerUrl, username);
         try {
             this.sourcesManagement.addAdapter(elementId,  dataSet, username);
         } catch (AdapterException e) {
             logger.error("Could not set data set instance: " + dataSet.getUri(), e);
             return ok(Notifications.error("Could not set data set instance: " + dataSet.getUri()));
         }
-
 
         return ok(Notifications.success(responseMessage));
     }

@@ -30,7 +30,7 @@ import java.util.stream.Stream;
 public class EndpointFetcher {
 
   public List<RdfEndpoint> getEndpoints() {
-    List<String> endpoints = ConsulUtil.getActivePEServicesEndPoints();
+    List<String> endpoints = ConsulUtil.getActivePeEndpoints();
     List<RdfEndpoint> servicerdRdfEndpoints = new LinkedList<>();
 
     for (String endpoint : endpoints) {

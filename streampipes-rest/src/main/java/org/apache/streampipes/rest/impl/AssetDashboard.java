@@ -18,11 +18,13 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.streampipes.model.client.assetdashboard.AssetDashboardConfig;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
-import org.apache.streampipes.model.client.assetdashboard.AssetDashboardConfig;
-import org.apache.streampipes.rest.api.IAssetDashboard;
 
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,38 +33,26 @@ import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
 @Path("/v2/users/{username}/asset-dashboards")
-public class AssetDashboard extends AbstractRestInterface implements IAssetDashboard {
+public class AssetDashboard extends AbstractRestInterface {
 
   private static final String APP_ID = "org.apache.streampipes.apps.assetdashboard";
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/{dashboardId}")
-  @Override
   public Response getAssetDashboard(@PathParam("dashboardId") String dashboardId) {
     return ok(getNoSqlStorage().getAssetDashboardStorage().getAssetDashboard(dashboardId));
   }
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Override
   public Response getAllDashboards() {
     return ok(getNoSqlStorage().getAssetDashboardStorage().getAllAssetDashboards());
   }
 
   @POST
   @Produces(MediaType.APPLICATION_JSON)
-  @Override
   public Response storeAssetDashboard(AssetDashboardConfig dashboardConfig) {
     getNoSqlStorage().getAssetDashboardStorage().storeAssetDashboard(dashboardConfig);
     return ok();
@@ -71,7 +61,6 @@ public class AssetDashboard extends AbstractRestInterface implements IAssetDashb
   @DELETE
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/{dashboardId}")
-  @Override
   public Response deleteAssetDashboard(@PathParam("dashboardId") String dashboardId) {
     getNoSqlStorage().getAssetDashboardStorage().deleteAssetDashboard(dashboardId);
     return ok();
@@ -79,7 +68,6 @@ public class AssetDashboard extends AbstractRestInterface implements IAssetDashb
 
   @GET
   @Path("/images/{imageName}")
-  @Override
   public Response getDashboardImage(@PathParam("imageName") String imageName) {
     try {
       java.nio.file.Path path = Paths.get(getTargetFile(imageName));
@@ -97,7 +85,6 @@ public class AssetDashboard extends AbstractRestInterface implements IAssetDashb
   @POST
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/images")
-  @Override
   public Response storeDashboardImage(@FormDataParam("file_upload") InputStream uploadedInputStream,
                                       @FormDataParam("file_upload") FormDataContentDisposition fileDetail) {
     File targetDirectory = new File(getTargetDirectory());

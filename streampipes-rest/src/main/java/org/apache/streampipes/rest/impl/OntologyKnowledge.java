@@ -18,36 +18,23 @@
 
 package org.apache.streampipes.rest.impl;
 
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
+import org.apache.streampipes.model.client.ontology.*;
+import org.apache.streampipes.model.message.Notifications;
+import org.apache.streampipes.storage.management.StorageManager;
 import org.eclipse.rdf4j.query.MalformedQueryException;
 import org.eclipse.rdf4j.query.QueryEvaluationException;
 import org.eclipse.rdf4j.repository.RepositoryException;
 
-import org.apache.streampipes.model.message.Notifications;
-import org.apache.streampipes.model.client.ontology.Concept;
-import org.apache.streampipes.model.client.ontology.Instance;
-import org.apache.streampipes.model.client.ontology.Namespace;
-import org.apache.streampipes.model.client.ontology.Property;
-import org.apache.streampipes.model.client.ontology.Resource;
-import org.apache.streampipes.rest.api.IOntologyKnowledge;
-import org.apache.streampipes.storage.management.StorageManager;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 @Path("/v2/ontology")
-public class OntologyKnowledge extends AbstractRestInterface implements IOntologyKnowledge {
+public class OntologyKnowledge extends AbstractRestInterface {
 
 	@Path("/types")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Override
 	public Response getTypeHiearchy() {
 		try {
 			return ok(StorageManager.INSTANCE.getBackgroundKnowledgeStorage().getClassHierarchy());
@@ -61,7 +48,6 @@ public class OntologyKnowledge extends AbstractRestInterface implements IOntolog
 	@Path("/properties")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Override
 	public Response getPropertyHierarchy() {
 		try {
 			return ok(StorageManager.INSTANCE.getBackgroundKnowledgeStorage().getPropertyHierarchy());
@@ -76,7 +62,6 @@ public class OntologyKnowledge extends AbstractRestInterface implements IOntolog
 	@Path("/properties/{propertyId}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Override
 	public Response getProperty(@PathParam("propertyId") String propertyId) {
 		try {
 			return ok(StorageManager.INSTANCE.getBackgroundKnowledgeStorage().getProperty(propertyId));
@@ -89,7 +74,6 @@ public class OntologyKnowledge extends AbstractRestInterface implements IOntolog
 	@Path("/types/{typeId}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Override
 	public Response getType(@PathParam("typeId") String typeId) {
 		try {
 			return ok(StorageManager.INSTANCE.getBackgroundKnowledgeStorage().getConcept(typeId));
@@ -101,7 +85,6 @@ public class OntologyKnowledge extends AbstractRestInterface implements IOntolog
 		return ok(typeId);
 	}
 
-	@Override
 	@Path("/namespaces")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -116,8 +99,7 @@ public class OntologyKnowledge extends AbstractRestInterface implements IOntolog
 			return ok(Notifications.error("Could not connect to Sesame storage"));
 		}
 	}
-	
-	@Override
+
 	@Path("/namespaces")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
@@ -134,7 +116,6 @@ public class OntologyKnowledge extends AbstractRestInterface implements IOntolog
 		}
 	}
 
-	@Override
 	@Path("/namespaces/{prefix}")
 	@DELETE
 	@Produces(MediaType.APPLICATION_JSON)
@@ -151,7 +132,6 @@ public class OntologyKnowledge extends AbstractRestInterface implements IOntolog
 		}
 	}
 
-	@Override
 	@Path("/properties")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
@@ -168,7 +148,6 @@ public class OntologyKnowledge extends AbstractRestInterface implements IOntolog
 		}
 	}
 
-	@Override
 	@Path("/types")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
@@ -185,7 +164,6 @@ public class OntologyKnowledge extends AbstractRestInterface implements IOntolog
 		}
 	}
 
-	@Override
 	@Path("/instances")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
@@ -202,7 +180,6 @@ public class OntologyKnowledge extends AbstractRestInterface implements IOntolog
 		}
 	}
 
-	@Override
 	@Path("/properties/{propertyId}")
 	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
@@ -220,7 +197,6 @@ public class OntologyKnowledge extends AbstractRestInterface implements IOntolog
 		
 	}
 
-	@Override
 	@Path("/types/{typeId}")
 	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
@@ -240,7 +216,6 @@ public class OntologyKnowledge extends AbstractRestInterface implements IOntolog
 	@Path("/instances/{instanceId}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Override
 	public Response getInstance(@PathParam("instanceId") String instanceId) {
 		try {
 			return ok(StorageManager
@@ -253,7 +228,6 @@ public class OntologyKnowledge extends AbstractRestInterface implements IOntolog
 		}
 	}
 
-	@Override
 	@Path("/instances/{instanceId}")
 	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
@@ -266,7 +240,6 @@ public class OntologyKnowledge extends AbstractRestInterface implements IOntolog
 		else return ok(Notifications.error("Could not update instance. "));
 	}
 
-	@Override
 	@Path("/properties/{propertyId}")
 	@DELETE
 	@Produces(MediaType.APPLICATION_JSON)
@@ -276,7 +249,6 @@ public class OntologyKnowledge extends AbstractRestInterface implements IOntolog
 		else return ok(Notifications.error("Could not delete property. "));
 	}
 
-	@Override
 	@Path("/types/{typeId}")
 	@DELETE
 	@Produces(MediaType.APPLICATION_JSON)
@@ -286,7 +258,6 @@ public class OntologyKnowledge extends AbstractRestInterface implements IOntolog
 		else return ok(Notifications.error("Could not delete concept. "));
 	}
 
-	@Override
 	@Path("/instances/{instanceId}")
 	@DELETE
 	@Produces(MediaType.APPLICATION_JSON)

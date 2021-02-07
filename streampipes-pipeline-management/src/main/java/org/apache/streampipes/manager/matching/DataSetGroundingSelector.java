@@ -19,15 +19,13 @@ package org.apache.streampipes.manager.matching;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.streampipes.config.backend.BackendConfig;
+import org.apache.streampipes.config.backend.SpProtocol;
 import org.apache.streampipes.manager.util.TopicGenerator;
 import org.apache.streampipes.model.SpDataSet;
+import org.apache.streampipes.model.grounding.*;
 import org.apache.streampipes.model.message.DataSetModificationMessage;
-import org.apache.streampipes.model.grounding.EventGrounding;
-import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
-import org.apache.streampipes.model.grounding.TransportFormat;
-import org.apache.streampipes.model.grounding.TransportProtocol;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 public class DataSetGroundingSelector {
 
@@ -38,18 +36,73 @@ public class DataSetGroundingSelector {
   }
 
   public DataSetModificationMessage selectGrounding() {
-    // TODO grounding negotiation
-    TransportProtocol protocol = new KafkaTransportProtocol(BackendConfig.INSTANCE.getKafkaHost(),
-            BackendConfig.INSTANCE.getKafkaPort(),
-            TopicGenerator.generateRandomTopic(),
-            BackendConfig.INSTANCE.getZookeeperHost(),
-            BackendConfig.INSTANCE.getZookeeperPort());
-    TransportFormat format = spDataSet.getSupportedGrounding().getTransportFormats().get(0);
-
     EventGrounding outputGrounding = new EventGrounding();
-    outputGrounding.setTransportProtocol(protocol);
-    outputGrounding.setTransportFormats(Arrays.asList(format));
+
+    String topic = TopicGenerator.generateRandomTopic();
+    TopicDefinition topicDefinition = new SimpleTopicDefinition(topic);
+
+    SpProtocol prioritizedProtocol =
+            BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedProtocols().get(0);
+
+    if (isPrioritized(prioritizedProtocol, JmsTransportProtocol.class)) {
+      outputGrounding.setTransportProtocol(makeTransportProtocol(
+              BackendConfig.INSTANCE.getJmsHost(),
+              BackendConfig.INSTANCE.getJmsPort(),
+              topicDefinition,
+              JmsTransportProtocol.class
+      ));
+    } else if (isPrioritized(prioritizedProtocol, KafkaTransportProtocol.class)){
+      outputGrounding.setTransportProtocol(makeTransportProtocol(
+              BackendConfig.INSTANCE.getKafkaHost(),
+              BackendConfig.INSTANCE.getKafkaPort(),
+              topicDefinition,
+              KafkaTransportProtocol.class
+      ));
+    } else if (isPrioritized(prioritizedProtocol, MqttTransportProtocol.class)) {
+      outputGrounding.setTransportProtocol(makeTransportProtocol(
+              BackendConfig.INSTANCE.getMqttHost(),
+              BackendConfig.INSTANCE.getMqttPort(),
+              topicDefinition,
+              MqttTransportProtocol.class
+      ));
+    }
+
+    outputGrounding.setTransportFormats(Collections
+            .singletonList(spDataSet.getSupportedGrounding().getTransportFormats().get(0)));
 
     return new DataSetModificationMessage(outputGrounding,RandomStringUtils.randomAlphanumeric(10));
+  }
+
+  public static Boolean isPrioritized(SpProtocol prioritizedProtocol,
+                                      Class<?> protocolClass) {
+    return prioritizedProtocol.getProtocolClass().equals(protocolClass.getCanonicalName());
+  }
+
+  private static <T>T makeTransportProtocol(String hostname, int port, TopicDefinition topicDefinition,
+                                            Class<?> protocolClass) {
+    T tpOut = null;
+    if (protocolClass.equals(KafkaTransportProtocol.class)) {
+      KafkaTransportProtocol tp = new KafkaTransportProtocol();
+      tp.setKafkaPort(port);
+      fillTransportProtocol(tp, hostname, topicDefinition);
+      tpOut = (T) tp;
+    } else if (protocolClass.equals(JmsTransportProtocol.class)) {
+      JmsTransportProtocol tp = new JmsTransportProtocol();
+      tp.setPort(port);
+      fillTransportProtocol(tp, hostname, topicDefinition);
+      tpOut = (T) tp;
+    } else if (protocolClass.equals(MqttTransportProtocol.class)) {
+      MqttTransportProtocol tp = new MqttTransportProtocol();
+      tp.setPort(port);
+      fillTransportProtocol(tp, hostname, topicDefinition);
+      tpOut = (T) tp;
+    }
+    return tpOut;
+  }
+
+  private static void fillTransportProtocol(TransportProtocol protocol, String hostname,
+                                            TopicDefinition topicDefinition) {
+    protocol.setBrokerHostname(hostname);
+    protocol.setTopicDefinition(topicDefinition);
   }
 }

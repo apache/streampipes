@@ -38,6 +38,8 @@ public class Pipeline extends ElementComposition {
 
   @OneToOne(cascade = CascadeType.ALL)
   private boolean running;
+  private boolean restartOnSystemReboot;
+
   private long startedAt;
   private long createdAt;
 
@@ -131,6 +133,14 @@ public class Pipeline extends ElementComposition {
 
   public void setCreatedAt(long createdAt) {
     this.createdAt = createdAt;
+  }
+
+  public boolean isRestartOnSystemReboot() {
+    return restartOnSystemReboot;
+  }
+
+  public void setRestartOnSystemReboot(boolean restartOnSystemReboot) {
+    this.restartOnSystemReboot = restartOnSystemReboot;
   }
 
   public Pipeline clone() {
