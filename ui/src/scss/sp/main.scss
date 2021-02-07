@@ -35,6 +35,11 @@ body {
   width: 100%;
 }
 
+pre.version {
+  background-color: inherit;
+  border: 0;
+}
+
 .md-toolbar-tools {
   width: 100%;
   align-items: center;
@@ -776,21 +781,6 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
   box-shadow: 1px 1px 2px #555;
   text-align: center;
   z-index:200;
-}
-
-.block {
-  display: inline-block;
-  vertical-align: top;
-  cursor: pointer;
-  height: 180px;
-  width: 150px;
-  background-color: white;
-  border-radius: 5px;
-  margin-left: 4%;
-  margin-top: 5px;
-  box-shadow: 1px 1px 2px #555;
-  /*border: 1px solid #555;*/
-  text-align: center;
 }
 
 .pe-label {

@@ -30,6 +30,7 @@ import 'echarts-wordcloud';
 import {ECharts} from "echarts/core";
 
 
+
 @Component({
   selector: 'wordcloud-widget',
   templateUrl: './wordcloud-widget.component.html',
@@ -52,7 +53,7 @@ export class WordcloudWidgetComponent extends BaseStreamPipesWidget implements O
   eChartsInstance: ECharts;
   dynamicData: EChartsOption;
   // @ts-ignore
-  chartOption: EChartsOption = {
+  chartOption: any = {
     series: [{
       type: 'wordCloud',
       shape: 'circle',

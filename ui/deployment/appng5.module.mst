@@ -55,6 +55,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { PlatformServicesModule } from "./platform-services/platform.module";
 import { ServicesModule } from "./services/services.module";
+import { ApidocsModule } from "./apidocs/apidocs.module";
 
 import * as $ from 'jquery';
 
@@ -63,6 +64,7 @@ import * as $ from 'jquery';
         AppComponent
     ],
     imports: [
+        ApidocsModule,
         AppRoutingModule,
         BrowserModule,
         BrowserAnimationsModule,

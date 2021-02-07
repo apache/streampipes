@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.backend;
 
+import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource;
 import org.apache.streampipes.connect.container.master.rest.*;
 import org.apache.streampipes.ps.PipelineElementTemplateResource;
 import org.apache.streampipes.rest.impl.*;
@@ -111,6 +112,8 @@ public class StreamPipesResourceConfig extends ResourceConfig {
     
     // Platform Services
     register(PipelineElementTemplateResource.class);
+
+    register(OpenApiResource.class);
 
 
     // Connect Master

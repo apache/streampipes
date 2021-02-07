@@ -26,7 +26,7 @@
 
     <artifactId>streampipes-backend</artifactId>
     <packaging>jar</packaging>
-    <name>StreamPipes CE Backend</name>
+    <name>StreamPipes Core</name>
 
     <dependencies>
         <!-- StreamPipes dependencies -->
@@ -75,7 +75,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-jaxrs2</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

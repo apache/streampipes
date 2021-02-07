@@ -100,6 +100,7 @@
         <spark.version>2.1.2</spark.version>
         <spring.version>5.3.2</spring.version>
         <spring-boot.version>2.4.1</spring-boot.version>
+        <swagger.version>2.1.6</swagger.version>
         <type-parser.version>0.6.0</type-parser.version>
         <underscore.version>1.47</underscore.version>
         <wildfly-common.version>1.5.2.Final</wildfly-common.version>
@@ -263,6 +264,16 @@
                 <groupId>io.rest-assured</groupId>
                 <artifactId>json-path</artifactId>
                 <version>${json-path.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger.core.v3</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>${swagger.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger.core.v3</groupId>
+                <artifactId>swagger-jaxrs2</artifactId>
+                <version>${swagger.version}</version>
             </dependency>
             <dependency>
                 <groupId>jakarta.annotation</groupId>
