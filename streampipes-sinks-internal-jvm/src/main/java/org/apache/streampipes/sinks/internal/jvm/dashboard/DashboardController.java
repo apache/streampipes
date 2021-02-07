@@ -24,7 +24,6 @@ import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
-import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
@@ -41,10 +40,7 @@ public class DashboardController extends StandaloneEventSinkDeclarer<DashboardPa
             .withLocales(Locales.EN)
             .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .category(DataSinkType.VISUALIZATION_CHART)
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredProperty(EpRequirements.anyProperty())
-                    .build())
+            .requiredStream(StreamRequirementsBuilder.any())
             .requiredTextParameter(Labels.withId(VISUALIZATION_NAME_KEY))
             .build();
   }
