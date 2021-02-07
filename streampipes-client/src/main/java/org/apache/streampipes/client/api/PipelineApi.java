@@ -36,6 +36,10 @@ public class PipelineApi extends AbstractClientApi<Pipeline> implements CRUDApi<
     return getSingle(getBaseResourcePath().addToPath(pipelineId));
   }
 
+  /**
+   * Receives all pipelines owned by the current user
+   * @return (list) {@link org.apache.streampipes.model.pipeline.Pipeline} a list of all pipelines
+   */
   @Override
   public List<Pipeline> all() {
       return getAll(getBaseResourcePath().addToPath("own"));
@@ -46,6 +50,10 @@ public class PipelineApi extends AbstractClientApi<Pipeline> implements CRUDApi<
 
   }
 
+  /**
+   * Deletes the pipeline with a given id
+   * @param pipelineId The id of the pipeline
+   */
   @Override
   public void delete(String pipelineId) {
     delete(getBaseResourcePath().addToPath(pipelineId), Message.class);
@@ -56,18 +64,38 @@ public class PipelineApi extends AbstractClientApi<Pipeline> implements CRUDApi<
 
   }
 
+  /**
+   * Starts a pipeline by given id
+   * @param pipelineId The id of the pipeline
+   * @return {@link org.apache.streampipes.model.pipeline.PipelineOperationStatus} the status message after invocation
+   */
   public PipelineOperationStatus start(String pipelineId) {
     return getSingle(getBaseResourcePath().addToPath(pipelineId).addToPath("start"), PipelineOperationStatus.class);
   }
 
+  /**
+   * Starts a pipeline by given id
+   * @param pipeline The pipeline
+   * @return {@link org.apache.streampipes.model.pipeline.PipelineOperationStatus} the status message after invocation
+   */
   public PipelineOperationStatus start(Pipeline pipeline) {
     return start(pipeline.getPipelineId());
   }
 
+  /**
+   * Stops a pipeline by given id
+   * @param pipeline The pipeline
+   * @return {@link org.apache.streampipes.model.pipeline.PipelineOperationStatus} the status message after detach
+   */
   public PipelineOperationStatus stop(Pipeline pipeline) {
     return stop(pipeline.getPipelineId());
   }
 
+  /**
+   * Stops a pipeline by given id
+   * @param pipelineId The id of the pipeline
+   * @return {@link org.apache.streampipes.model.pipeline.PipelineOperationStatus} the status message after detach
+   */
   public PipelineOperationStatus stop(String pipelineId) {
     return getSingle(getBaseResourcePath().addToPath(pipelineId).addToPath("stop"), PipelineOperationStatus.class);
   }

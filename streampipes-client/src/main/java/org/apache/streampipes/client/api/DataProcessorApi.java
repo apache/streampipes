@@ -17,7 +17,9 @@
  */
 package org.apache.streampipes.client.api;
 
+import org.apache.streampipes.client.annotation.NotYetImplemented;
 import org.apache.streampipes.client.live.EventProcessor;
+import org.apache.streampipes.client.live.KafkaConfig;
 import org.apache.streampipes.client.live.SubscriptionManager;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
@@ -41,7 +43,7 @@ public class DataProcessorApi extends AbstractClientApi<DataProcessorInvocation>
 
   @Override
   public DataProcessorInvocation get(String s) {
-    return null;
+    return getSingle(getBaseResourcePath().addToPath(s));
   }
 
   @Override
@@ -50,21 +52,32 @@ public class DataProcessorApi extends AbstractClientApi<DataProcessorInvocation>
   }
 
   @Override
+  @NotYetImplemented
   public void create(DataProcessorInvocation element) {
 
   }
 
   @Override
+  @NotYetImplemented
   public void delete(String s) {
 
   }
 
   @Override
+  @NotYetImplemented
   public void update(DataProcessorInvocation element) {
 
   }
 
-  public SpKafkaConsumer subscribe(DataProcessorInvocation processor, EventProcessor callback) {
+  public SpKafkaConsumer subscribe(DataProcessorInvocation processor,
+                                   EventProcessor callback) {
     return new SubscriptionManager(clientConfig, processor.getOutputStream().getEventGrounding(), callback).subscribe();
+  }
+
+  public SpKafkaConsumer subscribe(DataProcessorInvocation processor,
+                                   KafkaConfig kafkaConfig,
+                                   EventProcessor callback) {
+    return new SubscriptionManager(clientConfig, kafkaConfig, processor.getOutputStream().getEventGrounding(), callback)
+            .subscribe();
   }
 }

@@ -35,12 +35,24 @@ public class SubscriptionManager {
   private final EventProcessor callback;
   private final StreamPipesClientConfig clientConfig;
 
+  private KafkaConfig kafkaConfig;
+  private boolean overrideKafkaSettings = false;
+
   public SubscriptionManager(StreamPipesClientConfig clientConfig,
                              EventGrounding grounding,
                              EventProcessor callback) {
     this.grounding = grounding;
     this.callback = callback;
     this.clientConfig = clientConfig;
+  }
+
+  public SubscriptionManager(StreamPipesClientConfig clientConfig,
+                             KafkaConfig kafkaConfig,
+                             EventGrounding grounding,
+                             EventProcessor callback) {
+    this(clientConfig, grounding, callback);
+    this.kafkaConfig = kafkaConfig;
+    this.overrideKafkaSettings = true;
   }
 
   public SpKafkaConsumer subscribe() {
@@ -58,7 +70,9 @@ public class SubscriptionManager {
 
     if (formatConverterOpt.isPresent()) {
       final SpDataFormatDefinition converter = formatConverterOpt.get().createInstance();
-      SpKafkaConsumer kafkaConsumer = new SpKafkaConsumer(getKafkaProtocol(), getOutputTopic(), event -> {
+
+      KafkaTransportProtocol protocol = overrideKafkaSettings ? overrideHostname(getKafkaProtocol()) : getKafkaProtocol();
+      SpKafkaConsumer kafkaConsumer = new SpKafkaConsumer(protocol, getOutputTopic(), event -> {
         try {
           Event spEvent = EventFactory.fromMap(converter.toMap(event));
           callback.onEvent(spEvent);
@@ -72,6 +86,12 @@ public class SubscriptionManager {
     } else {
       throw new SpRuntimeException("No converter found for data format - did you add a format factory (client.registerDataFormat)?");
     }
+  }
+
+  private KafkaTransportProtocol overrideHostname(KafkaTransportProtocol protocol) {
+    protocol.setBrokerHostname(kafkaConfig.getKafkaHost());
+    protocol.setKafkaPort(kafkaConfig.getKafkaPort());
+    return protocol;
   }
 
   private KafkaTransportProtocol getKafkaProtocol() {

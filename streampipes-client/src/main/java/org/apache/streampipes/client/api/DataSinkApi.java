@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.client.api;
 
+import org.apache.streampipes.client.annotation.NotYetImplemented;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
@@ -31,7 +32,7 @@ public class DataSinkApi extends AbstractClientApi<DataSinkInvocation> implement
 
   @Override
   public DataSinkInvocation get(String s) {
-    return null;
+    return getSingle(getBaseResourcePath().addToPath(s));
   }
 
   @Override
@@ -40,11 +41,13 @@ public class DataSinkApi extends AbstractClientApi<DataSinkInvocation> implement
   }
 
   @Override
+  @NotYetImplemented
   public void create(DataSinkInvocation element) {
 
   }
 
   @Override
+  @NotYetImplemented
   public void delete(String s) {
 
   }

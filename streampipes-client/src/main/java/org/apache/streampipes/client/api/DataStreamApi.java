@@ -18,6 +18,7 @@
 package org.apache.streampipes.client.api;
 
 import org.apache.streampipes.client.live.EventProcessor;
+import org.apache.streampipes.client.live.KafkaConfig;
 import org.apache.streampipes.client.live.SubscriptionManager;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
@@ -35,10 +36,14 @@ public class DataStreamApi extends AbstractClientApi<SpDataStream> implements CR
   }
 
   @Override
-  public SpDataStream get(String s) {
-    return null;
+  public SpDataStream get(String streamId) {
+    return getSingle(getBaseResourcePath().addToPath(streamId));
   }
 
+  /**
+   * Get all available data streams
+   * @return {@link org.apache.streampipes.model.SpDataStream} A list of all data streams owned by the user.
+   */
   @Override
   public List<SpDataStream> all() {
     return getAll(getBaseResourcePath());
@@ -49,9 +54,13 @@ public class DataStreamApi extends AbstractClientApi<SpDataStream> implements CR
 
   }
 
+  /**
+   * Delete a data stream
+   * @param streamId The elementId of the stream
+   */
   @Override
-  public void delete(String s) {
-    delete(getBaseResourcePath().addToPath(URLEncoder.encode(s)), Message.class);
+  public void delete(String streamId) {
+    delete(getBaseResourcePath().addToPath(URLEncoder.encode(streamId)), Message.class);
   }
 
   @Override
@@ -59,8 +68,26 @@ public class DataStreamApi extends AbstractClientApi<SpDataStream> implements CR
 
   }
 
-  public SpKafkaConsumer subscribe(SpDataStream stream, EventProcessor callback) {
+  /**
+   * Subscribe to a data stream
+   * @param stream The data stream to subscribe to
+   * @param callback The callback where events will be received
+   */
+  public SpKafkaConsumer subscribe(SpDataStream stream,
+                                   EventProcessor callback) {
     return new SubscriptionManager(clientConfig, stream.getEventGrounding(), callback).subscribe();
+  }
+
+  /**
+   * Subscribe to a data stream
+   * @param stream The data stream to subscribe to
+   * @param kafkaConfig Additional kafka settings which will override the default value (see docs)
+   * @param callback The callback where events will be received
+   */
+  public SpKafkaConsumer subscribe(SpDataStream stream,
+                                   KafkaConfig kafkaConfig,
+                                   EventProcessor callback) {
+    return new SubscriptionManager(clientConfig, kafkaConfig, stream.getEventGrounding(), callback).subscribe();
   }
 
   @Override
