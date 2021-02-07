@@ -1,0 +1,17 @@
+org.apache.streampipes.processors.siddhi.topk.title=Top k
+org.apache.streampipes.processors.siddhi.topk.description=Collects incoming events in a batch window of configurable size and outputs the top-k events of a given count value.
+
+list-key.title=Field
+list-key.description=The field where values should be collected into a list.
+
+window-size.title=Batch Window Size
+window-size.description=The batch window size.
+
+scale.title=Time Window Scale
+scale.description=
+
+limit.title=Limit
+limit.description=The maximum size of the list items that are forwarded
+
+order.title=Order
+order.description=The order direction (top-k or bottom-k)

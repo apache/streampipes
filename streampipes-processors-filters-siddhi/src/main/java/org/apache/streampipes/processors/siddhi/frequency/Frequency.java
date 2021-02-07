@@ -17,23 +17,38 @@
  */
 package org.apache.streampipes.processors.siddhi.frequency;
 
+import org.apache.streampipes.wrapper.siddhi.SiddhiAppConfig;
+import org.apache.streampipes.wrapper.siddhi.SiddhiAppConfigBuilder;
+import org.apache.streampipes.wrapper.siddhi.SiddhiQueryBuilder;
 import org.apache.streampipes.wrapper.siddhi.engine.SiddhiEventEngine;
 import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
+import org.apache.streampipes.wrapper.siddhi.query.InsertIntoClause;
 import org.apache.streampipes.wrapper.siddhi.query.SelectClause;
 
 public class Frequency extends SiddhiEventEngine<FrequencyParameters> {
 
-  @Override
-  public String fromStatement(SiddhiProcessorParams<FrequencyParameters> siddhiParams) {
-            return "from every not "
-                    + siddhiParams.getInputStreamNames().get(0)
-                    + " for "
-                    + siddhiParams.getParams().getDuration() + " sec";
+  private String fromStatement(SiddhiProcessorParams<FrequencyParameters> siddhiParams) {
+    return "from every not "
+            + siddhiParams.getInputStreamNames().get(0)
+            + " for "
+            + siddhiParams.getParams().getDuration() + " sec";
+  }
+
+  private SelectClause selectStatement(SiddhiProcessorParams<FrequencyParameters> siddhiParams) {
+    return SelectClause.createWildcard();
   }
 
   @Override
-  public String selectStatement(SiddhiProcessorParams<FrequencyParameters> siddhiParams) {
-    return SelectClause.createWildcard().toSiddhiEpl();
-  }
+  public SiddhiAppConfig makeStatements(SiddhiProcessorParams<FrequencyParameters> siddhiParams,
+                                        String finalInsertIntoStreamName) {
 
+    InsertIntoClause insertIntoClause = InsertIntoClause.create(finalInsertIntoStreamName);
+    return SiddhiAppConfigBuilder
+            .create()
+            .addQuery(SiddhiQueryBuilder
+                    .create(fromStatement(siddhiParams), insertIntoClause)
+                    .withSelectClause(selectStatement(siddhiParams))
+                    .build())
+            .build();
+  }
 }
