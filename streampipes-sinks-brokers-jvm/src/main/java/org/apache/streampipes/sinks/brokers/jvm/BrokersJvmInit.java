@@ -35,6 +35,7 @@ import org.apache.streampipes.sinks.brokers.jvm.mqtt.MqttController;
 import org.apache.streampipes.sinks.brokers.jvm.pulsar.PulsarController;
 import org.apache.streampipes.sinks.brokers.jvm.rabbitmq.RabbitMqController;
 import org.apache.streampipes.sinks.brokers.jvm.rest.RestController;
+import org.apache.streampipes.sinks.brokers.jvm.websocket.WebsocketServerSink;
 
 public class BrokersJvmInit extends StandaloneModelSubmitter {
 
@@ -46,6 +47,7 @@ public class BrokersJvmInit extends StandaloneModelSubmitter {
             .add(new BufferRestController())
             .add(new RabbitMqController())
             .add(new MqttController())
+            .add(new WebsocketServerSink())
             .add(new PulsarController());
 
     DeclarersSingleton.getInstance().registerDataFormats(
