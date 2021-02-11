@@ -27,8 +27,9 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.TransportProtocol;
+import org.apache.streampipes.model.monitoring.ConsumedMessagesInfo;
 import org.apache.streampipes.model.monitoring.PipelineElementMonitoringInfo;
-import org.apache.streampipes.model.monitoring.PipelineElementTopicInfo;
+import org.apache.streampipes.model.monitoring.ProducedMessagesInfo;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.sdk.helpers.Tuple2;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -42,14 +43,14 @@ import java.util.stream.Collectors;
 public class TopicInfoCollector {
 
 
-  private Pipeline pipeline;
-  private AdminClient kafkaAdminClient;
+  private final Pipeline pipeline;
+  private final AdminClient kafkaAdminClient;
 
-  private Map<String, Long> latestTopicOffsets;
-  private Map<String, Long> topicOffsetAtPipelineStart;
-  private Map<String, Long> currentConsumerGroupOffsets;
+  private final Map<String, Long> latestTopicOffsets;
+  private final Map<String, Long> topicOffsetAtPipelineStart;
+  private final Map<String, Long> currentConsumerGroupOffsets;
 
-  private List<PipelineElementMonitoringInfo> monitoringInfo;
+  private final List<PipelineElementMonitoringInfo> monitoringInfo;
 
   public TopicInfoCollector(Pipeline pipeline) {
     this.pipeline = pipeline;
@@ -99,7 +100,7 @@ public class TopicInfoCollector {
   private PipelineElementMonitoringInfo makeStreamMonitoringInfo(SpDataStream stream) {
     PipelineElementMonitoringInfo info = prepare(stream.getElementId(), stream.getName(), false, true);
     KafkaTransportProtocol protocol = (KafkaTransportProtocol) stream.getEventGrounding().getTransportProtocol();
-    info.setOutputTopicInfo(makeOutputTopicInfoForPipelineElement(protocol));
+    info.setProducedMessagesInfo(makeOutputTopicInfoForPipelineElement(protocol));
 
     return info;
   }
@@ -107,44 +108,63 @@ public class TopicInfoCollector {
   private PipelineElementMonitoringInfo makeProcessorMonitoringInfo(DataProcessorInvocation processor) {
     PipelineElementMonitoringInfo info = prepare(processor.getElementId(), processor.getName(), true, true);
     KafkaTransportProtocol outputProtocol = (KafkaTransportProtocol) processor.getOutputStream().getEventGrounding().getTransportProtocol();
-    PipelineElementTopicInfo outputTopicInfo = makeOutputTopicInfoForPipelineElement(outputProtocol);
-    List<PipelineElementTopicInfo> inputTopicInfo = makeInputTopicInfoForPipelineElement(processor.getInputStreams());
+    ProducedMessagesInfo outputTopicInfo = makeOutputTopicInfoForPipelineElement(outputProtocol);
+    List<ConsumedMessagesInfo> inputTopicInfo = makeInputTopicInfoForPipelineElement(processor.getInputStreams());
 
-    info.setOutputTopicInfo(outputTopicInfo);
-    info.setInputTopicInfo(inputTopicInfo);
-
+    info.setProducedMessagesInfo(outputTopicInfo);
+    info.setConsumedMessagesInfos(inputTopicInfo);
+    printStatistics(info);
     return info;
+  }
+
+  private void printStatistics(PipelineElementMonitoringInfo info) {
+    System.out.println("Pipeline Element: " + info.getPipelineElementName());
+    info.getConsumedMessagesInfos().forEach(input -> {
+      System.out.println("Consumed messages since pipeline start: " + input.getConsumedMessagesSincePipelineStart());
+      System.out.println("Total messages since pipeline start: " + (input.getTotalMessagesSincePipelineStart()));
+      System.out.println("Lag: " + input.getLag());
+    });
+    //System.out.println("Produced messages: " + (info.getOutputTopicInfo().getCurrentOffset() - info.getOutputTopicInfo().getOffsetAtPipelineStart()));
   }
 
   private PipelineElementMonitoringInfo makeSinkMonitoringInfo(DataSinkInvocation sink) {
     PipelineElementMonitoringInfo info = prepare(sink.getElementId(), sink.getName(), true, false);
-    info.setInputTopicInfo(makeInputTopicInfoForPipelineElement(sink.getInputStreams()));
+    info.setConsumedMessagesInfos(makeInputTopicInfoForPipelineElement(sink.getInputStreams()));
     return info;
   }
 
-  private List<PipelineElementTopicInfo> makeInputTopicInfoForPipelineElement(List<SpDataStream> inputStreams) {
-    List<PipelineElementTopicInfo> topicInfos = new ArrayList<>();
+  private List<ConsumedMessagesInfo> makeInputTopicInfoForPipelineElement(List<SpDataStream> inputStreams) {
+    List<ConsumedMessagesInfo> infos = new ArrayList<>();
     inputStreams.stream().map(is -> is.getEventGrounding().getTransportProtocol()).forEach(protocol -> {
-      PipelineElementTopicInfo topicInfo = new PipelineElementTopicInfo();
       String topic = getTopic((KafkaTransportProtocol) protocol);
-      topicInfo.setTopicName(topic);
-      topicInfo.setLatestOffset(latestTopicOffsets.get(topic));
-      topicInfo.setOffsetAtPipelineStart(topicOffsetAtPipelineStart.get(topic));
-      topicInfo.setCurrentOffset(currentConsumerGroupOffsets.get(((KafkaTransportProtocol) protocol).getGroupId()));
-      topicInfos.add(topicInfo);
+      String groupId = ((KafkaTransportProtocol) protocol).getGroupId();
+      ConsumedMessagesInfo info = new ConsumedMessagesInfo(topic, groupId);
+      long consumedMessagesSincePipelineStart = (getCurrentConsumerGroupOffset(groupId) - topicOffsetAtPipelineStart.get(topic));
+      long totalMessagesSincePipelineStart = (latestTopicOffsets.get(topic) - topicOffsetAtPipelineStart.get(topic));
+      long lag = totalMessagesSincePipelineStart - consumedMessagesSincePipelineStart;
+
+      info.setTotalMessagesSincePipelineStart(totalMessagesSincePipelineStart);
+      info.setConsumedMessagesSincePipelineStart(consumedMessagesSincePipelineStart);
+      info.setLag(lag);
+
+      infos.add(info);
     });
 
-    return topicInfos;
+    return infos;
   }
 
-  private PipelineElementTopicInfo makeOutputTopicInfoForPipelineElement(KafkaTransportProtocol protocol) {
-    PipelineElementTopicInfo topicInfo = new PipelineElementTopicInfo();
-    String topic = getTopic(protocol);
-    topicInfo.setTopicName(topic);
-    topicInfo.setOffsetAtPipelineStart(this.topicOffsetAtPipelineStart.get(topic));
-    topicInfo.setLatestOffset(this.latestTopicOffsets.get(topic));
+  private long getCurrentConsumerGroupOffset(String groupId) {
+    return currentConsumerGroupOffsets.get(groupId);
+  }
 
-    return topicInfo;
+  private ProducedMessagesInfo makeOutputTopicInfoForPipelineElement(KafkaTransportProtocol protocol) {
+    String topic = getTopic(protocol);
+    ProducedMessagesInfo info = new ProducedMessagesInfo(topic);
+
+    info.setTotalProducedMessages(this.latestTopicOffsets.get(topic));
+    info.setTotalProducedMessagesSincePipelineStart(info.getTotalProducedMessages() - this.topicOffsetAtPipelineStart.get(topic));
+
+    return info;
   }
 
   private String getTopic(KafkaTransportProtocol protocol) {
@@ -155,8 +175,8 @@ public class TopicInfoCollector {
     PipelineElementMonitoringInfo info = new PipelineElementMonitoringInfo();
     info.setPipelineElementName(name);
     info.setPipelineElementId(elementId);
-    info.setInputTopicInfoExists(inputTopics);
-    info.setOutputTopicInfoExists(outputTopics);
+    info.setConsumedMessageInfoExists(inputTopics);
+    info.setProducedMessageInfoExists(outputTopics);
     return info;
   }
 
@@ -175,6 +195,9 @@ public class TopicInfoCollector {
 
   private String getBrokerUrl() {
     String env = System.getenv("SP_DEBUG");
+    if (env == null) {
+      env = "true";
+    }
     System.out.println(System.getenv("SP_DEBUG"));
     if ("true".equals(env.replaceAll(" ", ""))) {
       return "localhost:9094";
@@ -222,7 +245,14 @@ public class TopicInfoCollector {
     List<Pipeline> pipelines = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getAllPipelines();
     Pipeline testPipeline = pipelines.get(0);
 
-    List<PipelineElementMonitoringInfo> monitoringInfo = new TopicInfoCollector(testPipeline).makeMonitoringInfo();
-    System.out.println(monitoringInfo.size());
+    for(int i = 0; i < 50; i++) {
+      List<PipelineElementMonitoringInfo> monitoringInfo = new TopicInfoCollector(testPipeline).makeMonitoringInfo();
+      System.out.println(monitoringInfo.size());
+      try {
+        Thread.sleep(5000);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+    }
   }
 }

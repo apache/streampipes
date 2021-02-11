@@ -15,34 +15,38 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.model.monitoring;
 
-.add-options {
-  background-color:#f6f6f6;
-  border-bottom: 1px solid #cccccc;
-  padding-top:10px;
-  padding-bottom:10px;
-}
+public abstract class MessagesInfo {
 
-.fixed-height {
-  width:100%;
-  height: 50px;
-}
+  protected String topicName;
+  protected String groupId;
 
-.page-container-padding-inner {
-  margin: 10px;
-}
+  public MessagesInfo() {
+  }
 
-.pipeline-element-statistics-panel {
-  padding: 10px;
-}
+  public MessagesInfo(String topicName) {
+    this.topicName = topicName;
+  }
 
-.mb-10 {
-  margin-bottom: 10px;
-}
+  public MessagesInfo(String topicName, String groupId) {
+    this.topicName = topicName;
+    this.groupId = groupId;
+  }
 
-.error-message {
-  font-weight: bold;
-  margin-top:15px;
-  margin-bottom: 15px;
-  font-size: 12pt;
+  public String getTopicName() {
+    return topicName;
+  }
+
+  public void setTopicName(String topicName) {
+    this.topicName = topicName;
+  }
+
+  public String getGroupId() {
+    return groupId;
+  }
+
+  public void setGroupId(String groupId) {
+    this.groupId = groupId;
+  }
 }

@@ -58,11 +58,11 @@ export class PipelineActionsComponent implements OnInit {
     }
 
     startPipeline() {
-        this.pipelineOperationsService.startPipeline(this.pipeline._id, this.toggleRunningOperation, this.reloadPipelineEmitter)
+        this.pipelineOperationsService.startPipeline(this.pipeline._id, this.reloadPipelineEmitter, this.toggleRunningOperation)
     }
 
     stopPipeline() {
-        this.pipelineOperationsService.stopPipeline(this.pipeline._id, this.toggleRunningOperation, this.reloadPipelineEmitter)
+        this.pipelineOperationsService.stopPipeline(this.pipeline._id, this.reloadPipelineEmitter, this.toggleRunningOperation)
     }
 
 }

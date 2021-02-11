@@ -25,14 +25,14 @@ public class PipelineElementMonitoringInfo {
   private String pipelineElementId;
   private String pipelineElementName;
 
-  private boolean inputTopicInfoExists;
-  private boolean outputTopicInfoExists;
+  private boolean consumedMessageInfoExists;
+  private boolean producedMessageInfoExists;
 
-  private List<PipelineElementTopicInfo> inputTopicInfo;
-  private PipelineElementTopicInfo outputTopicInfo;
+  private List<ConsumedMessagesInfo> consumedMessagesInfos;
+  private ProducedMessagesInfo producedMessagesInfo;
 
   public PipelineElementMonitoringInfo() {
-    this.inputTopicInfo = new ArrayList<>();
+    this.consumedMessagesInfos = new ArrayList<>();
   }
 
   public String getPipelineElementId() {
@@ -51,35 +51,36 @@ public class PipelineElementMonitoringInfo {
     this.pipelineElementName = pipelineElementName;
   }
 
-  public List<PipelineElementTopicInfo> getInputTopicInfo() {
-    return inputTopicInfo;
+  public List<ConsumedMessagesInfo> getConsumedMessagesInfos() {
+    return consumedMessagesInfos;
   }
 
-  public void setInputTopicInfo(List<PipelineElementTopicInfo> inputTopicInfo) {
-    this.inputTopicInfo = inputTopicInfo;
+  public void setConsumedMessagesInfos(List<ConsumedMessagesInfo> consumedMessagesInfos) {
+    this.consumedMessagesInfos = consumedMessagesInfos;
   }
 
-  public PipelineElementTopicInfo getOutputTopicInfo() {
-    return outputTopicInfo;
+  public ProducedMessagesInfo getProducedMessagesInfo() {
+    return producedMessagesInfo;
   }
 
-  public void setOutputTopicInfo(PipelineElementTopicInfo outputTopicInfo) {
-    this.outputTopicInfo = outputTopicInfo;
+  public void setProducedMessagesInfo(ProducedMessagesInfo producedMessagesInfo) {
+    this.producedMessagesInfo = producedMessagesInfo;
   }
 
-  public boolean isInputTopicInfoExists() {
-    return inputTopicInfoExists;
+  public boolean isConsumedMessageInfoExists() {
+    return consumedMessageInfoExists;
   }
 
-  public void setInputTopicInfoExists(boolean inputTopicInfoExists) {
-    this.inputTopicInfoExists = inputTopicInfoExists;
+  public void setConsumedMessageInfoExists(boolean consumedMessageInfoExists) {
+    this.consumedMessageInfoExists = consumedMessageInfoExists;
   }
 
-  public boolean isOutputTopicInfoExists() {
-    return outputTopicInfoExists;
+  public boolean isProducedMessageInfoExists() {
+    return producedMessageInfoExists;
   }
 
-  public void setOutputTopicInfoExists(boolean outputTopicInfoExists) {
-    this.outputTopicInfoExists = outputTopicInfoExists;
+  public void setProducedMessageInfoExists(boolean producedMessageInfoExists) {
+    this.producedMessageInfoExists = producedMessageInfoExists;
   }
+
 }

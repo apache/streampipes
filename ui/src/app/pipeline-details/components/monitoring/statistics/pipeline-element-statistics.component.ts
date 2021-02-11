@@ -78,24 +78,21 @@ export class PipelineElementStatisticsComponent implements OnInit {
   }
 
   updateMonitoringInfo() {
-    if (this.pipelineElementMonitoringInfo.inputTopicInfoExists) {
-      let consumedMessages = this.pipelineElementMonitoringInfo.inputTopicInfo.map(info => {
-        return {"count": (info.currentOffset - info.offsetAtPipelineStart),
-          "lag": info.latestOffset - info.currentOffset,
-          "currentOffset": info.currentOffset};
-      });
-      this.consumedMessagesFirstInputStream = consumedMessages[0].count + " / " + consumedMessages[0].lag;
-      this.consumedMessagesSecondInputStream = consumedMessages.length > 1 ? consumedMessages[1].count + " / " + consumedMessages[1].lag : this.notAvailable;
+    if (this.pipelineElementMonitoringInfo.consumedMessageInfoExists) {
+      let consumedMessages = this.pipelineElementMonitoringInfo.consumedMessagesInfos;
+      this.consumedMessagesFirstInputStream = consumedMessages[0].consumedMessagesSincePipelineStart + " / " + consumedMessages[0].lag;
+      this.consumedMessagesSecondInputStream = consumedMessages.length > 1 ? consumedMessages[1].consumedMessagesSincePipelineStart + " / " + consumedMessages[1].lag : this.notAvailable;
       this.consumedMessagesFirstStreamBandColor = consumedMessages[0].lag > 10 ? this.warningBandColor : this.okBandColor;
       this.consumedMessagesSecondStreamBandColor = (consumedMessages.length > 1 ? (consumedMessages[1].lag > 10 ? this.warningBandColor : this.okBandColor) : this.deactivatedBandColor);
 
-      this.makeHistoricData(consumedMessages[0], this.consumedMessagesFirstStreamLastValue, this.historicFirstConsumedInputValues);
-      this.consumedMessagesFirstStreamLastValue = consumedMessages[0].count;
+      let consumedMessage = {"count": consumedMessages[0].consumedMessagesSincePipelineStart};
+      this.makeHistoricData(consumedMessage, this.consumedMessagesFirstStreamLastValue, this.historicFirstConsumedInputValues);
+      this.consumedMessagesFirstStreamLastValue = consumedMessages[0].consumedMessagesSincePipelineStart;
       this.historicFirstConsumedInputValues = [].concat(this.historicFirstConsumedInputValues);
 
       if (consumedMessages.length > 1) {
         this.makeHistoricData(consumedMessages[1], this.consumedMessagesSecondStreamLastValue, this.historicSecondConsumedInputValues);
-        this.consumedMessagesSecondStreamLastValue = consumedMessages[1].count;
+        this.consumedMessagesSecondStreamLastValue = consumedMessages[1].consumedMessagesSincePipelineStart;
         this.historicSecondConsumedInputValues = [].concat(this.historicSecondConsumedInputValues);
       }
     } else {
@@ -104,8 +101,8 @@ export class PipelineElementStatisticsComponent implements OnInit {
       this.consumedMessagesSecondInputStream = this.notAvailable;
       this.consumedMessagesSecondStreamBandColor = this.deactivatedBandColor;
     }
-    if (this.pipelineElementMonitoringInfo.outputTopicInfoExists) {
-      this.producedMessages = this.pipelineElementMonitoringInfo.outputTopicInfo.latestOffset - this.pipelineElementMonitoringInfo.outputTopicInfo.offsetAtPipelineStart;
+    if (this.pipelineElementMonitoringInfo.producedMessageInfoExists) {
+      this.producedMessages = this.pipelineElementMonitoringInfo.producedMessagesInfo.totalProducedMessagesSincePipelineStart;
       let producedMessage = {"count": this.producedMessages};
       this.makeHistoricData(producedMessage, this.producedMessageOutputLastValue, this.historicProducedOutputValues);
       this.producedMessageOutputLastValue = producedMessage.count;
@@ -116,7 +113,6 @@ export class PipelineElementStatisticsComponent implements OnInit {
   }
 
   makeHistoricData(consumedMessage: any, lastValue: number, historicData: HistoricalMonitoringData[]) {
-    console.log(consumedMessage);
     if (lastValue > -1) {
       let entry: HistoricalMonitoringData = {"name": new Date().toLocaleTimeString(), value: (consumedMessage.count - lastValue)};
       historicData.push(entry);

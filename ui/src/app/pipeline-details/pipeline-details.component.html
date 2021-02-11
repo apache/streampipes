@@ -49,7 +49,7 @@
         </div>
     </div>
     <div fxFlex fxLayout="column" fxLayoutAlign="start top" *ngIf="pipelineAvailable && selectedIndex == 1">
-        <pipeline-monitoring [pipeline]="pipeline"></pipeline-monitoring>
+        <pipeline-monitoring [pipeline]="pipeline" (reloadPipelineEmitter)="loadPipeline()"></pipeline-monitoring>
     </div>
     <div fxFlex fxLayout="row" fxLayoutAlign="start top" *ngIf="pipelineAvailable && selectedIndex == 3">
         <div fxFlex="100" class="md-padding">

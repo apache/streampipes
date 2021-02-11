@@ -17,16 +17,17 @@
  */
 package org.apache.streampipes.model.monitoring;
 
-public class PipelineElementTopicInfo {
+public class MessagesMetaInfo {
 
   private String topicName;
+  private String groupId;
 
-  private Long currentOffset;
-  private Long latestOffset;
-  private Long offsetAtPipelineStart;
+  public MessagesMetaInfo(String topicName, String groupId) {
+    this.topicName = topicName;
+    this.groupId = groupId;
+  }
 
-  public PipelineElementTopicInfo() {
-
+  public MessagesMetaInfo() {
   }
 
   public String getTopicName() {
@@ -37,27 +38,11 @@ public class PipelineElementTopicInfo {
     this.topicName = topicName;
   }
 
-  public Long getCurrentOffset() {
-    return currentOffset;
+  public String getGroupId() {
+    return groupId;
   }
 
-  public void setCurrentOffset(Long currentOffset) {
-    this.currentOffset = currentOffset;
-  }
-
-  public Long getLatestOffset() {
-    return latestOffset;
-  }
-
-  public void setLatestOffset(Long latestOffset) {
-    this.latestOffset = latestOffset;
-  }
-
-  public Long getOffsetAtPipelineStart() {
-    return offsetAtPipelineStart;
-  }
-
-  public void setOffsetAtPipelineStart(Long offsetAtPipelineStart) {
-    this.offsetAtPipelineStart = offsetAtPipelineStart;
+  public void setGroupId(String groupId) {
+    this.groupId = groupId;
   }
 }

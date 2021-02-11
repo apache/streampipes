@@ -16,7 +16,7 @@
  *
  */
 
-import {Component, Input, OnDestroy, OnInit} from "@angular/core";
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from "@angular/core";
 import {
   DataProcessorInvocation, DataSinkInvocation,
   Pipeline, PipelineElementMonitoringInfo,
@@ -24,6 +24,7 @@ import {
   SpDataSet, SpDataStream
 } from "../../../core-model/gen/streampipes-model";
 import {PipelineMonitoringService} from "../../../platform-services/apis/pipeline-monitoring.service";
+import {PipelineOperationsService} from "../../../pipelines/services/pipeline-operations.service";
 
 @Component({
   selector: 'pipeline-monitoring',
@@ -32,8 +33,10 @@ import {PipelineMonitoringService} from "../../../platform-services/apis/pipelin
 })
 export class PipelineMonitoringComponent implements OnInit, OnDestroy {
 
-  @Input()
-  pipeline: Pipeline;
+  _pipeline: Pipeline;
+
+  @Output()
+  reloadPipelineEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   pipelineMonitoringInfo: PipelineMonitoringInfo;
   pipelineMonitoringInfoAvailable: boolean = false;
@@ -44,13 +47,19 @@ export class PipelineMonitoringComponent implements OnInit, OnDestroy {
 
   pipelineElementMonitoringInfo: Map<string, PipelineElementMonitoringInfo>;
 
-  constructor(private pipelineMonitoringService: PipelineMonitoringService) {
+  constructor(private pipelineMonitoringService: PipelineMonitoringService,
+              private pipelineOperationsService: PipelineOperationsService) {
   }
 
   ngOnInit(): void {
     this.collectAllElements();
-    console.log(this.allElements);
-    this.refreshMonitoringInfo();
+    this.checkMonitoringInfoCollection();
+  }
+
+  checkMonitoringInfoCollection() {
+    if (this.pipeline.running) {
+      this.refreshMonitoringInfo();
+    }
   }
 
   collectAllElements() {
@@ -79,11 +88,25 @@ export class PipelineMonitoringComponent implements OnInit, OnDestroy {
   }
 
   selectElement(pipelineElement) {
-    console.log(pipelineElement);
+    document.getElementById(pipelineElement.elementId).scrollIntoView();
   }
 
   ngOnDestroy(): void {
     this.autoRefresh = false;
+  }
+
+  startPipeline() {
+    this.pipelineOperationsService.startPipeline(this.pipeline._id, this.reloadPipelineEmitter);
+  }
+
+  @Input()
+  set pipeline(pipeline: Pipeline) {
+    this._pipeline = pipeline;
+    this.checkMonitoringInfoCollection();
+  }
+
+  get pipeline() {
+    return this._pipeline;
   }
 
 }

@@ -11,9 +11,18 @@
                           (selectedElementEmitter)="selectElement($event)"
                           style="margin-bottom:15px;"></pipeline-preview>
 
-        <div fxFlex="100" *ngIf="pipelineMonitoringInfoAvailable">
+        <div fxFlex="100" *ngIf="!pipeline.running" fxLayout="column" fxLayoutAlign="center center">
+            <div class="error-message">(monitoring info is only available for running pipelines)</div>
+            <button mat-button mat-raised-button color="primary"
+                    matTooltip="Start Pipeline" matTooltipPosition="above"
+                    (click)="startPipeline()">
+                <mat-icon>play_arrow</mat-icon>
+                <span>&nbsp;Start pipeline</span>
+            </button>
+        </div>
+        <div fxFlex="100" *ngIf="pipeline.running && pipelineMonitoringInfoAvailable">
             <div *ngFor="let pipelineElement of allElements" fxLayout="column" class="mb-10">
-                <div class="assembly-options-preview sp-blue-bg">
+                <div class="assembly-options-preview sp-blue-bg" [id]="pipelineElement.elementId">
                     <div fxLayout="row" fxLayoutAlign="start center">
                         <h4>{{pipelineElement.name}}</h4>
                     </div>
