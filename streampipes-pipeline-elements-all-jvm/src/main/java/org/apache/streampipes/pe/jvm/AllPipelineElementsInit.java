@@ -90,6 +90,7 @@ import org.apache.streampipes.sinks.brokers.jvm.mqtt.MqttController;
 import org.apache.streampipes.sinks.brokers.jvm.pulsar.PulsarController;
 import org.apache.streampipes.sinks.brokers.jvm.rabbitmq.RabbitMqController;
 import org.apache.streampipes.sinks.brokers.jvm.rest.RestController;
+import org.apache.streampipes.sinks.brokers.jvm.websocket.WebsocketServerSink;
 import org.apache.streampipes.sinks.databases.jvm.couchdb.CouchDbController;
 import org.apache.streampipes.sinks.databases.jvm.ditto.DittoController;
 import org.apache.streampipes.sinks.databases.jvm.influxdb.InfluxDbController;
@@ -183,6 +184,7 @@ public class AllPipelineElementsInit extends StandaloneModelSubmitter {
             .add(new RabbitMqController())
             .add(new PulsarController())
             .add(new MqttController())
+            .add(new WebsocketServerSink())
             // streampipes-sinks-databases-jvm
             .add(new CouchDbController())
             .add(new InfluxDbController())
