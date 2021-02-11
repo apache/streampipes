@@ -118,10 +118,6 @@
             <groupId>com.google.j2objc</groupId>
             <artifactId>j2objc-annotations</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.java-websocket</groupId>
-            <artifactId>Java-WebSocket</artifactId>
-        </dependency>
     </dependencies>
 
     <build>
