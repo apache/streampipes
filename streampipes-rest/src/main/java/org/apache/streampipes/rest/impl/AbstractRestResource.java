@@ -45,7 +45,7 @@ import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.util.List;
 
-public abstract class AbstractRestInterface extends AbstractSharedRestInterface {
+public abstract class AbstractRestResource extends AbstractSharedRestInterface {
 
   protected <T> String toJsonLd(T object) {
     try {

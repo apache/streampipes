@@ -29,7 +29,7 @@ import javax.ws.rs.core.Response;
 import java.util.stream.Collectors;
 
 @Path("/v2/users/{email}")
-public class User extends AbstractRestInterface {
+public class User extends AbstractRestResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

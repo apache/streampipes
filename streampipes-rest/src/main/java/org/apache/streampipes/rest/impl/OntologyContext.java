@@ -29,7 +29,7 @@ import javax.ws.rs.core.Response;
 import java.io.InputStream;
 
 @Path("/v2/contexts")
-public class OntologyContext extends AbstractRestInterface {
+public class OntologyContext extends AbstractRestResource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)

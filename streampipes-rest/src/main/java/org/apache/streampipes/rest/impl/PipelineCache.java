@@ -23,7 +23,7 @@ import javax.ws.rs.core.Response;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Path("/v2/users/{username}/pipeline-cache")
-public class PipelineCache extends AbstractRestInterface {
+public class PipelineCache extends AbstractRestResource {
 
   private static ConcurrentHashMap<String, String> cachedPipelines = new ConcurrentHashMap<>();
 

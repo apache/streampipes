@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Path("/v2/users/{username}/labeling/category")
-public class CategoryResource extends AbstractRestInterface {
+public class CategoryResource extends AbstractRestResource {
 
 
     @GET

@@ -42,7 +42,7 @@ import java.util.List;
 import java.util.Map;
 
 @Path("/v2/users/{username}/internal-pipelines")
-public class InternalPipelineTemplates extends AbstractRestInterface {
+public class InternalPipelineTemplates extends AbstractRestResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(InternalPipelineTemplates.class);
     private Map<String, Template> templates;

@@ -44,7 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Path("/v2/users/{username}/element")
-public class PipelineElementImport extends AbstractRestInterface {
+public class PipelineElementImport extends AbstractRestResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(PipelineElementImport.class);
 

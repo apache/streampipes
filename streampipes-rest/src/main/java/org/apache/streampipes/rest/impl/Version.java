@@ -27,7 +27,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/v2/info")
-public class Version extends AbstractRestInterface {
+public class Version extends AbstractRestResource {
 
   @GET
   @Path("/versions")

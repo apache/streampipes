@@ -23,11 +23,11 @@ import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
-import org.apache.streampipes.rest.impl.AbstractRestInterface;
+import org.apache.streampipes.rest.impl.AbstractRestResource;
 
 import javax.ws.rs.core.Response;
 
-public class PipelineManagement extends AbstractRestInterface {
+public class PipelineManagement extends AbstractRestResource {
 
     public Response stopPipeline(String pipelineId) {
         try {

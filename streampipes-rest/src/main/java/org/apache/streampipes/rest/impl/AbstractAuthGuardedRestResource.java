@@ -17,5 +17,25 @@
  */
 package org.apache.streampipes.rest.impl;
 
-public class AuthenticatedAbstractRestInterface extends AbstractRestInterface {
+import org.apache.streampipes.model.client.user.User;
+
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.SecurityContext;
+
+public class AbstractAuthGuardedRestResource extends AbstractRestResource {
+
+  @Context
+  protected SecurityContext securityContext;
+
+  protected boolean isAuthenticated() {
+    return this.securityContext.getUserPrincipal() != null;
+  }
+
+  protected String getAuthenticatedUsername() {
+    return this.securityContext.getUserPrincipal().getName();
+  }
+
+  protected User getAuthenticatedUser() {
+    return getUserStorage().getUser(getAuthenticatedUsername());
+  }
 }

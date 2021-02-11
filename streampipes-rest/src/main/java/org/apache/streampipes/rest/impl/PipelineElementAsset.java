@@ -30,7 +30,7 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 
 @Path("/v2/pe")
-public class PipelineElementAsset extends AbstractRestInterface {
+public class PipelineElementAsset extends AbstractRestResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(PipelineElementAsset.class);
 

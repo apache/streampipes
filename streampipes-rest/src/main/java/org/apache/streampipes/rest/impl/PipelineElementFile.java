@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Path("/v2/users/{username}/files")
-public class PipelineElementFile extends AbstractRestInterface {
+public class PipelineElementFile extends AbstractRestResource {
 
   @POST
   @Consumes(MediaType.MULTIPART_FORM_DATA)

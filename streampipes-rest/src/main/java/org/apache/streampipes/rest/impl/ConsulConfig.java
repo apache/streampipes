@@ -41,7 +41,7 @@ import java.util.Map;
 import static org.apache.streampipes.container.util.ConsulUtil.updateConfig;
 
 @Path("/v2/consul")
-public class ConsulConfig extends AbstractRestInterface {
+public class ConsulConfig extends AbstractRestResource {
 
   private static Logger LOG = LoggerFactory.getLogger(ConsulConfig.class);
 

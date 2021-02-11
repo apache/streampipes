@@ -20,7 +20,7 @@ package org.apache.streampipes.rest.impl.nouser;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.streampipes.rest.impl.AbstractRestInterface;
+import org.apache.streampipes.rest.impl.AbstractRestResource;
 import org.apache.streampipes.rest.management.PipelineManagement;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
 import org.apache.streampipes.rest.shared.annotation.NoAuthenticationRequired;
@@ -33,7 +33,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/v2/pipelines")
-public class PipelineNoUserResource extends AbstractRestInterface {
+public class PipelineNoUserResource extends AbstractRestResource {
 
     private static final Logger logger = LoggerFactory.getLogger(PipelineNoUserResource.class);
 

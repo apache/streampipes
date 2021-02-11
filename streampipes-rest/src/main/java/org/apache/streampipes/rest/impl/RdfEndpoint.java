@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Path("/v2/users/{username}/rdfendpoints")
-public class RdfEndpoint extends AbstractRestInterface {
+public class RdfEndpoint extends AbstractRestResource {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)

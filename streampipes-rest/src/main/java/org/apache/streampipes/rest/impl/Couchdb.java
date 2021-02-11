@@ -33,7 +33,7 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Path("/v2/couchdb/{table}")
-public class Couchdb extends AbstractRestInterface {
+public class Couchdb extends AbstractRestResource {
 
 
     @GET
