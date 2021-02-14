@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Path("/v2/users/{username}/actions")
-public class SemanticEventConsumer extends AbstractRestInterface implements IPipelineElement {
+public class SemanticEventConsumer extends AbstractRestResource implements IPipelineElement {
 
   @GET
   @Path("/available")

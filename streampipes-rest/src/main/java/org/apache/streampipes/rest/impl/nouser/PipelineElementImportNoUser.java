@@ -23,7 +23,7 @@ import org.apache.streampipes.manager.storage.UserService;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.model.message.NotificationType;
-import org.apache.streampipes.rest.impl.AbstractRestInterface;
+import org.apache.streampipes.rest.impl.AbstractRestResource;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorageCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +35,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 @Path("/v2/noauth/users/{username}/element")
-public class PipelineElementImportNoUser extends AbstractRestInterface {
+public class PipelineElementImportNoUser extends AbstractRestResource {
 
   private static final Logger logger = LoggerFactory.getLogger(PipelineElementImportNoUser.class);
 

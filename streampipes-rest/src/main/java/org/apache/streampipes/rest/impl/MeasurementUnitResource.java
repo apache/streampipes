@@ -28,7 +28,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/v2/users/{username}/measurement-units")
-public class MeasurementUnitResource extends AbstractRestInterface {
+public class MeasurementUnitResource extends AbstractRestResource {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)

@@ -28,7 +28,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/v2/units")
-public class OntologyMeasurementUnit extends AbstractRestInterface {
+public class OntologyMeasurementUnit extends AbstractRestResource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)

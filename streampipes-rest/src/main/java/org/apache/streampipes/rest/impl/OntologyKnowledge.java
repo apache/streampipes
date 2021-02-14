@@ -30,7 +30,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/v2/ontology")
-public class OntologyKnowledge extends AbstractRestInterface {
+public class OntologyKnowledge extends AbstractRestResource {
 
 	@Path("/types")
 	@GET

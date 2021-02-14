@@ -40,7 +40,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Path("/v2/admin")
-public class Authentication extends AbstractRestInterface {
+public class Authentication extends AbstractRestResource {
 
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)

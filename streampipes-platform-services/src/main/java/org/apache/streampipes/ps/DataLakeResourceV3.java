@@ -25,7 +25,7 @@ import org.apache.streampipes.model.datalake.DataResult;
 import org.apache.streampipes.model.datalake.GroupedDataResult;
 import org.apache.streampipes.model.datalake.PageResult;
 import org.apache.streampipes.model.message.Notification;
-import org.apache.streampipes.rest.impl.AbstractRestInterface;
+import org.apache.streampipes.rest.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 
@@ -35,7 +35,7 @@ import java.io.IOException;
 import java.util.List;
 
 @Path("/v3/users/{username}/datalake")
-public class DataLakeResourceV3 extends AbstractRestInterface {
+public class DataLakeResourceV3 extends AbstractRestResource {
   private DataLakeManagementV3 dataLakeManagement;
 
   public DataLakeResourceV3() {

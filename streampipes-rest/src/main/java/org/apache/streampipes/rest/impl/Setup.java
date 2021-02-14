@@ -33,7 +33,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/v2/setup")
-public class Setup extends AbstractRestInterface {
+public class Setup extends AbstractRestResource {
 
   @GET
   @Path("/configured")

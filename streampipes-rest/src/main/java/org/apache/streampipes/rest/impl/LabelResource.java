@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Path("/v2/users/{username}/labeling/label")
-public class LabelResource extends AbstractRestInterface {
+public class LabelResource extends AbstractRestResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

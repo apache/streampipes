@@ -19,14 +19,14 @@
 package org.apache.streampipes.rest.impl.dashboard;
 
 import org.apache.streampipes.model.dashboard.DashboardModel;
-import org.apache.streampipes.rest.impl.AbstractRestInterface;
+import org.apache.streampipes.rest.impl.AbstractRestResource;
 import org.apache.streampipes.storage.api.IDashboardStorage;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-public abstract class AbstractDashboardResource extends AbstractRestInterface {
+public abstract class AbstractDashboardResource extends AbstractRestResource {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)

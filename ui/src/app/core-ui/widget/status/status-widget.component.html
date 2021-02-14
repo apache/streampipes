@@ -17,10 +17,13 @@
   -->
 
 <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
-    <ngx-charts-number-card
+    <ngx-charts-number-card style="width:300px;"
+            [view]="[300,150]"
             [results]="chartData"
             [scheme]="'cool'"
             [cardColor]="color"
-    [bandColor]="'rgb(27, 20, 100)'" class="fix-margin">
+            [animations]="false"
+            [bandColor]="bandColor"
+            [textColor]="textColor">
     </ngx-charts-number-card>
 </div>

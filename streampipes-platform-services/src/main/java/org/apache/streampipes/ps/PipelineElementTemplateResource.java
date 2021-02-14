@@ -29,7 +29,7 @@ import org.apache.streampipes.manager.template.DataSinkTemplateHandler;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.template.PipelineElementTemplate;
-import org.apache.streampipes.rest.impl.AbstractRestInterface;
+import org.apache.streampipes.rest.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 
 import javax.ws.rs.*;
@@ -37,7 +37,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/v2/users/{username}/pipeline-element-templates")
-public class PipelineElementTemplateResource extends AbstractRestInterface {
+public class PipelineElementTemplateResource extends AbstractRestResource {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)

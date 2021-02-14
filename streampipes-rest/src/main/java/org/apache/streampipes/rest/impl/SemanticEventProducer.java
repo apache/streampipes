@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Path("/v2/users/{username}/streams")
-public class SemanticEventProducer extends AbstractRestInterface implements IPipelineElement {
+public class SemanticEventProducer extends AbstractRestResource implements IPipelineElement {
 
 	@GET
 	@Path("/available")

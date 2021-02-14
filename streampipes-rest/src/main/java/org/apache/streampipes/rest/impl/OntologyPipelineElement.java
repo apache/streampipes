@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Path("/v2/ontology")
-public class OntologyPipelineElement extends AbstractRestInterface{
+public class OntologyPipelineElement extends AbstractRestResource {
 
   @Path("/sources")
   @GET

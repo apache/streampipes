@@ -32,6 +32,9 @@ export class PipelineElementsRowComponent implements OnInit {
     @Input()
     pipeline: Pipeline;
 
+    @Input()
+    showDescription: boolean = true;
+
     _element: PipelineElementUnion;
 
     constructor() {

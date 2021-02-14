@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Path("/v2/categories")
-public class PipelineElementCategory extends AbstractRestInterface {
+public class PipelineElementCategory extends AbstractRestResource {
 
 	@GET
 	@Path("/ep")

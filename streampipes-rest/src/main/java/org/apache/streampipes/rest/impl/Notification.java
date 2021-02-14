@@ -26,7 +26,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/v2/users/{username}/notifications")
-public class Notification extends AbstractRestInterface {
+public class Notification extends AbstractRestResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

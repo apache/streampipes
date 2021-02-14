@@ -19,7 +19,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 2.27.744 on 2021-01-19 20:45:10.
+// Generated using typescript-generator version 2.27.744 on 2021-02-08 23:06:08.
 
 export class AbstractStreamPipesEntity {
     "@class": "org.apache.streampipes.model.base.AbstractStreamPipesEntity" | "org.apache.streampipes.model.base.NamedStreamPipesEntity" | "org.apache.streampipes.model.connect.adapter.AdapterDescription" | "org.apache.streampipes.model.connect.adapter.AdapterSetDescription" | "org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription" | "org.apache.streampipes.model.connect.adapter.SpecificAdapterSetDescription" | "org.apache.streampipes.model.connect.adapter.AdapterStreamDescription" | "org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription" | "org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription" | "org.apache.streampipes.model.connect.adapter.AdapterDescriptionList" | "org.apache.streampipes.model.connect.grounding.FormatDescriptionList" | "org.apache.streampipes.model.connect.grounding.ProtocolDescription" | "org.apache.streampipes.model.connect.grounding.ProtocolDescriptionList" | "org.apache.streampipes.model.graph.DataSourceDescription" | "org.apache.streampipes.model.connect.grounding.FormatDescription" | "org.apache.streampipes.model.SpDataStream" | "org.apache.streampipes.model.SpDataSet" | "org.apache.streampipes.model.base.InvocableStreamPipesEntity" | "org.apache.streampipes.model.graph.DataProcessorInvocation" | "org.apache.streampipes.model.graph.DataSinkInvocation" | "org.apache.streampipes.model.base.UnnamedStreamPipesEntity" | "org.apache.streampipes.model.connect.guess.GuessSchema" | "org.apache.streampipes.model.connect.rules.TransformationRuleDescription" | "org.apache.streampipes.model.connect.rules.value.ValueTransformationRuleDescription" | "org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription" | "org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription" | "org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription" | "org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription" | "org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription" | "org.apache.streampipes.model.connect.rules.stream.StreamTransformationRuleDescription" | "org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription" | "org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription" | "org.apache.streampipes.model.connect.rules.schema.SchemaTransformationRuleDescription" | "org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription" | "org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription" | "org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription" | "org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription" | "org.apache.streampipes.model.dashboard.DashboardWidgetSettings" | "org.apache.streampipes.model.runtime.RuntimeOptionsRequest" | "org.apache.streampipes.model.runtime.RuntimeOptionsResponse" | "org.apache.streampipes.model.staticproperty.StaticProperty" | "org.apache.streampipes.model.staticproperty.CodeInputStaticProperty" | "org.apache.streampipes.model.staticproperty.CollectionStaticProperty" | "org.apache.streampipes.model.staticproperty.ColorPickerStaticProperty" | "org.apache.streampipes.model.staticproperty.DomainStaticProperty" | "org.apache.streampipes.model.staticproperty.FileStaticProperty" | "org.apache.streampipes.model.staticproperty.FreeTextStaticProperty" | "org.apache.streampipes.model.staticproperty.MatchingStaticProperty" | "org.apache.streampipes.model.staticproperty.SecretStaticProperty" | "org.apache.streampipes.model.staticproperty.StaticPropertyAlternative" | "org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives" | "org.apache.streampipes.model.staticproperty.StaticPropertyGroup" | "org.apache.streampipes.model.staticproperty.SelectionStaticProperty" | "org.apache.streampipes.model.staticproperty.AnyStaticProperty" | "org.apache.streampipes.model.staticproperty.RuntimeResolvableAnyStaticProperty" | "org.apache.streampipes.model.staticproperty.OneOfStaticProperty" | "org.apache.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty" | "org.apache.streampipes.model.staticproperty.MappingProperty" | "org.apache.streampipes.model.staticproperty.MappingPropertyUnary" | "org.apache.streampipes.model.staticproperty.MappingPropertyNary" | "org.apache.streampipes.model.ApplicationLink" | "org.apache.streampipes.model.grounding.EventGrounding" | "org.apache.streampipes.model.schema.EventSchema" | "org.apache.streampipes.model.connect.guess.DomainPropertyProbabilityList" | "org.apache.streampipes.model.dashboard.DashboardEntity" | "org.apache.streampipes.model.dashboard.DashboardWidgetModel" | "org.apache.streampipes.model.dashboard.VisualizablePipeline" | "org.apache.streampipes.model.datalake.DataExplorerWidgetModel" | "org.apache.streampipes.model.staticproperty.Option" | "org.apache.streampipes.model.grounding.TransportProtocol" | "org.apache.streampipes.model.grounding.JmsTransportProtocol" | "org.apache.streampipes.model.grounding.KafkaTransportProtocol" | "org.apache.streampipes.model.grounding.MqttTransportProtocol" | "org.apache.streampipes.model.grounding.TransportFormat" | "org.apache.streampipes.model.quality.EventStreamQualityRequirement" | "org.apache.streampipes.model.quality.MeasurementCapability" | "org.apache.streampipes.model.quality.MeasurementObject" | "org.apache.streampipes.model.schema.EventProperty" | "org.apache.streampipes.model.schema.EventPropertyList" | "org.apache.streampipes.model.schema.EventPropertyNested" | "org.apache.streampipes.model.schema.EventPropertyPrimitive" | "org.apache.streampipes.model.connect.guess.DomainPropertyProbability" | "org.apache.streampipes.model.output.OutputStrategy" | "org.apache.streampipes.model.output.AppendOutputStrategy" | "org.apache.streampipes.model.output.CustomOutputStrategy" | "org.apache.streampipes.model.output.CustomTransformOutputStrategy" | "org.apache.streampipes.model.output.FixedOutputStrategy" | "org.apache.streampipes.model.output.KeepOutputStrategy" | "org.apache.streampipes.model.output.ListOutputStrategy" | "org.apache.streampipes.model.output.TransformOutputStrategy" | "org.apache.streampipes.model.output.UserDefinedOutputStrategy" | "org.apache.streampipes.model.monitoring.ElementStatusInfoSettings" | "org.apache.streampipes.model.staticproperty.SupportedProperty" | "org.apache.streampipes.model.staticproperty.PropertyValueSpecification" | "org.apache.streampipes.model.grounding.TopicDefinition" | "org.apache.streampipes.model.grounding.SimpleTopicDefinition" | "org.apache.streampipes.model.grounding.WildcardTopicDefinition" | "org.apache.streampipes.model.quality.MeasurementProperty" | "org.apache.streampipes.model.quality.EventStreamQualityDefinition" | "org.apache.streampipes.model.quality.Frequency" | "org.apache.streampipes.model.quality.Latency" | "org.apache.streampipes.model.quality.EventPropertyQualityDefinition" | "org.apache.streampipes.model.quality.Accuracy" | "org.apache.streampipes.model.quality.MeasurementRange" | "org.apache.streampipes.model.quality.Precision" | "org.apache.streampipes.model.quality.Resolution" | "org.apache.streampipes.model.quality.EventPropertyQualityRequirement" | "org.apache.streampipes.model.datalake.DataLakeMeasure" | "org.apache.streampipes.model.output.PropertyRenameRule" | "org.apache.streampipes.model.schema.ValueSpecification" | "org.apache.streampipes.model.schema.QuantitativeValue" | "org.apache.streampipes.model.schema.Enumeration" | "org.apache.streampipes.model.output.TransformOperation" | "org.apache.streampipes.model.grounding.WildcardTopicMapping";
@@ -188,8 +188,8 @@ export class AdapterDescription extends NamedStreamPipesEntity {
         instance.rules = __getCopyArrayFn(TransformationRuleDescription.fromDataUnion)(data.rules);
         instance.category = __getCopyArrayFn(__identity<string>())(data.category);
         instance.schemaRules = __getCopyArrayFn(__identity<any>())(data.schemaRules);
-        instance.valueRules = __getCopyArrayFn(__identity<any>())(data.valueRules);
         instance.streamRules = __getCopyArrayFn(__identity<any>())(data.streamRules);
+        instance.valueRules = __getCopyArrayFn(__identity<any>())(data.valueRules);
         instance.couchDBId = data.couchDBId;
         instance._rev = data._rev;
         return instance;
@@ -668,6 +668,39 @@ export class ColorPickerStaticProperty extends StaticProperty {
         const instance = target || new ColorPickerStaticProperty();
         super.fromData(data, instance);
         instance.selectedColor = data.selectedColor;
+        return instance;
+    }
+}
+
+export class MessagesInfo {
+    groupId: string;
+    topicName: string;
+
+    static fromData(data: MessagesInfo, target?: MessagesInfo): MessagesInfo {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new MessagesInfo();
+        instance.topicName = data.topicName;
+        instance.groupId = data.groupId;
+        return instance;
+    }
+}
+
+export class ConsumedMessagesInfo extends MessagesInfo {
+    consumedMessagesSincePipelineStart: number;
+    lag: number;
+    totalMessagesSincePipelineStart: number;
+
+    static fromData(data: ConsumedMessagesInfo, target?: ConsumedMessagesInfo): ConsumedMessagesInfo {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new ConsumedMessagesInfo();
+        super.fromData(data, instance);
+        instance.totalMessagesSincePipelineStart = data.totalMessagesSincePipelineStart;
+        instance.consumedMessagesSincePipelineStart = data.consumedMessagesSincePipelineStart;
+        instance.lag = data.lag;
         return instance;
     }
 }
@@ -1601,9 +1634,9 @@ export class GenericAdapterSetDescription extends AdapterSetDescription implemen
         }
         const instance = target || new GenericAdapterSetDescription();
         super.fromData(data, instance);
+        instance.eventSchema = EventSchema.fromData(data.eventSchema);
         instance.protocolDescription = ProtocolDescription.fromData(data.protocolDescription);
         instance.formatDescription = FormatDescription.fromData(data.formatDescription);
-        instance.eventSchema = EventSchema.fromData(data.eventSchema);
         return instance;
     }
 }
@@ -1620,9 +1653,9 @@ export class GenericAdapterStreamDescription extends AdapterStreamDescription im
         }
         const instance = target || new GenericAdapterStreamDescription();
         super.fromData(data, instance);
+        instance.eventSchema = EventSchema.fromData(data.eventSchema);
         instance.protocolDescription = ProtocolDescription.fromData(data.protocolDescription);
         instance.formatDescription = FormatDescription.fromData(data.formatDescription);
-        instance.eventSchema = EventSchema.fromData(data.eventSchema);
         return instance;
     }
 }
@@ -2060,6 +2093,29 @@ export class PipelineCategory {
     }
 }
 
+export class PipelineElementMonitoringInfo {
+    consumedMessageInfoExists: boolean;
+    consumedMessagesInfos: ConsumedMessagesInfo[];
+    pipelineElementId: string;
+    pipelineElementName: string;
+    producedMessageInfoExists: boolean;
+    producedMessagesInfo: ProducedMessagesInfo;
+
+    static fromData(data: PipelineElementMonitoringInfo, target?: PipelineElementMonitoringInfo): PipelineElementMonitoringInfo {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new PipelineElementMonitoringInfo();
+        instance.pipelineElementId = data.pipelineElementId;
+        instance.pipelineElementName = data.pipelineElementName;
+        instance.consumedMessageInfoExists = data.consumedMessageInfoExists;
+        instance.producedMessageInfoExists = data.producedMessageInfoExists;
+        instance.consumedMessagesInfos = __getCopyArrayFn(ConsumedMessagesInfo.fromData)(data.consumedMessagesInfos);
+        instance.producedMessagesInfo = ProducedMessagesInfo.fromData(data.producedMessagesInfo);
+        return instance;
+    }
+}
+
 export class PipelineElementRecommendation {
     count: number;
     description: string;
@@ -2192,6 +2248,25 @@ export class PipelineModificationMessage extends Message {
     }
 }
 
+export class PipelineMonitoringInfo {
+    createdAt: number;
+    pipelineElementMonitoringInfo: PipelineElementMonitoringInfo[];
+    pipelineId: string;
+    startedAt: number;
+
+    static fromData(data: PipelineMonitoringInfo, target?: PipelineMonitoringInfo): PipelineMonitoringInfo {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new PipelineMonitoringInfo();
+        instance.pipelineId = data.pipelineId;
+        instance.createdAt = data.createdAt;
+        instance.startedAt = data.startedAt;
+        instance.pipelineElementMonitoringInfo = __getCopyArrayFn(PipelineElementMonitoringInfo.fromData)(data.pipelineElementMonitoringInfo);
+        return instance;
+    }
+}
+
 export class PipelineOperationStatus {
     elementStatus: PipelineElementStatus[];
     pipelineId: string;
@@ -2243,6 +2318,22 @@ export class Precision extends EventPropertyQualityDefinition {
         const instance = target || new Precision();
         super.fromData(data, instance);
         instance.quantityValue = data.quantityValue;
+        return instance;
+    }
+}
+
+export class ProducedMessagesInfo extends MessagesInfo {
+    totalProducedMessages: number;
+    totalProducedMessagesSincePipelineStart: number;
+
+    static fromData(data: ProducedMessagesInfo, target?: ProducedMessagesInfo): ProducedMessagesInfo {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new ProducedMessagesInfo();
+        super.fromData(data, instance);
+        instance.totalProducedMessages = data.totalProducedMessages;
+        instance.totalProducedMessagesSincePipelineStart = data.totalProducedMessagesSincePipelineStart;
         return instance;
     }
 }

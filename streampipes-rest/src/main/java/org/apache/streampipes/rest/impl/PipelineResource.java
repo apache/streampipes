@@ -48,9 +48,9 @@ import java.util.Date;
 import java.util.UUID;
 
 @Path("/v2/users/{username}/pipelines")
-public class PipelineWithUserResource extends AbstractRestInterface {
+public class PipelineResource extends AbstractAuthGuardedRestResource {
 
-  private static final Logger logger = LoggerFactory.getLogger(PipelineWithUserResource.class);
+  private static final Logger logger = LoggerFactory.getLogger(PipelineResource.class);
 
   public Response getAvailable(String username) {
     // TODO Auto-generated method stub

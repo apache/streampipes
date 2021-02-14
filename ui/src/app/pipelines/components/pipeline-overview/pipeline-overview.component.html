@@ -22,12 +22,12 @@
             <th mat-header-cell *matHeaderCellDef> Start</th>
             <td mat-cell *matCellDef="let pipeline">
                 <button color="primary" mat-button mat-icon-button matTooltip="Start pipeline" matTooltipPosition="above"
-                        (click)="pipelineOperationsService.startPipeline(pipeline._id, toggleRunningOperation, refreshPipelinesEmitter)"
+                        (click)="pipelineOperationsService.startPipeline(pipeline._id, refreshPipelinesEmitter, toggleRunningOperation)"
                         [disabled]="starting" *ngIf="!pipeline.running">
                     <i class="material-icons">play_arrow</i>
                 </button>
                 <button color="primary" mat-button mat-icon-button matTooltip="Stop pipeline" matTooltipPosition="above"
-                        (click)="pipelineOperationsService.stopPipeline(pipeline._id, toggleRunningOperation, refreshPipelinesEmitter)"
+                        (click)="pipelineOperationsService.stopPipeline(pipeline._id, refreshPipelinesEmitter, toggleRunningOperation)"
                         [disabled]="stopping" *ngIf="pipeline.running">
                     <i class="material-icons">stop</i>
                 </button>
