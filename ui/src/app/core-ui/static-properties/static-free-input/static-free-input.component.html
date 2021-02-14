@@ -23,7 +23,6 @@
                    matInput
                    [placeholder]="staticProperty.label"
                    required (blur)="emitUpdate()">
-            <mat-hint>{{staticProperty.description}}</mat-hint>
 
             <mat-error *ngIf="!fieldValid">
                 {{errorMessage}}

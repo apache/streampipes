@@ -31,9 +31,6 @@ export class StaticAnyInput extends AbstractStaticPropertyRenderer<AnyStaticProp
 
 
   ngOnInit() {
-    for (let option of this.staticProperty.options) {
-      option.selected = false;
-    }
     this.inputEmitter.emit(true);
   }
 
