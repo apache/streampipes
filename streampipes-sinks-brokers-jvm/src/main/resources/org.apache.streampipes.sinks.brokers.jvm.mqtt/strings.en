@@ -1,15 +1,72 @@
-org.apache.streampipes.sinks.brokers.jvm.mqtt.title = MQTT Publisher
-org.apache.streampipes.sinks.brokers.jvm.mqtt.description = Publishes events to a MQTT topic
+org.apache.streampipes.sinks.brokers.jvm.mqtt.title=MQTT Publisher
+org.apache.streampipes.sinks.brokers.jvm.mqtt.description=Publishes events to a MQTT topic
 
-topic.title= MQTT Topic
-topic.description=Select a MQTT topic
-
-broker-settings.title=MQTT broker settings (use prefix tcp://)
-broker-settings.description=Provide settings of the MQTT broker to connect with.
-
-host.title=MQTT Broker
-host.description=IP address or hostname of MQTT broker. (use prefix tcp://)
+host.title=Host
+host.description=IP address or DNS of MQTT broker
 
 port.title=Port
-port.description=Port of the MQTT broker. Default port 1883
+port.description=Port of MQTT broker (default 1883)
 
+topic.title=Topic
+topic.description=Enter MQTT topic
+
+username.title=Username
+username.description=The username to authenticate with the broker
+
+password.title=Password
+password.description=The password to authenticate with the broker
+
+auth-mode.title=Authentication
+auth-mode.description=Unauthenticated or basic auth
+
+no-auth-alternative.title=Unauthenticated
+no-auth-alternative.description=No authentication
+
+basic-auth-alternative.title=Basic auth
+basic-auth-alternative.description=Username and password
+
+username-group.title=Username and password
+
+qos-level.title=QoS
+qos-level.description=Quality of Service level (default: at-least-once)
+
+clean-session.title=Clean session?
+clean-session.description=Deselect to persist topic subscriptions & ack positions across client sessions (default: Yes)
+
+will-retain.title=Retain will message?
+will-retain.description=Select if you want the Will to be published with the retain option (default: No)
+
+encryption-mode.title=Encryption
+encryption-mode.description=Select protocol. TCP (plaintext), SSL/TLS (encrypted, not yet supported!)
+
+reconnect-period.title=Reconnect period (seconds)
+reconnect-period.description=Amount of time to wait between reconnect attempts (default: 30s)
+
+lwt-mode.title=Last will and testament
+lwt-mode.description=Last will notifies other clients in case of ungraceful disconnects
+
+no-lwt-alternative.title=No last will
+no-lwt-alternative.description=No last will and testament
+
+lwt-alternative.title=Last will
+lwt-alternative.description=Use last will and testament
+
+lwt-group.title=Last will and testament
+
+lwt-topic.title=Last will topic
+lwt-topic.description=Enter last will topic
+
+lwt-message.title=Last will message
+lwt-message.description=Enter last will message
+
+lwt-qos-level.title=Last will QoS
+lwt-qos-level.description=Quality of Service level for last will (default: at-most-once)
+
+retain.title=Retain messages?
+retain.description=Retain message at broker when no subscribers are present to avoid event discard (default: No)
+
+keep-alive.title=Keep alive (seconds)
+keep-alive.description=Amount of time that the broker and client may not communicate (default: 30s)
+
+mqtt-version-compliant.title=MQTT Broker is MQTT v3.1.1 compliant?
+mqtt-version-compliant.description=Set to "3.1.1" to use MQTT version 3.1.1, otherwise it uses the 3.1 protocol (default: "3.1.1")

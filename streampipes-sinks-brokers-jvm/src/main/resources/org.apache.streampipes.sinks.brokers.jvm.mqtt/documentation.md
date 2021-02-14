@@ -42,7 +42,7 @@ This sink does not have any requirements and works with any incoming event type.
 
 The basic settings to connect to the broker. 
 The MQTT broker URL indicates the URL of the broker (e.g., localhost), the port indicates the port of the broker
-(e.g., 9092)
+(e.g., 1883)
 
 
 ### MQTT Topic

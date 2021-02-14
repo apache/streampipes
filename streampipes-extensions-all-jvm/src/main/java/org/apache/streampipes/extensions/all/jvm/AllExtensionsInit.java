@@ -106,8 +106,8 @@ import org.apache.streampipes.processors.transformation.jvm.processor.value.dura
 import org.apache.streampipes.sinks.brokers.jvm.bufferrest.BufferRestController;
 import org.apache.streampipes.sinks.brokers.jvm.jms.JmsController;
 import org.apache.streampipes.sinks.brokers.jvm.kafka.KafkaController;
+import org.apache.streampipes.sinks.brokers.jvm.mqtt.MqttPublisherSink;
 import org.apache.streampipes.sinks.brokers.jvm.websocket.WebsocketServerSink;
-import org.apache.streampipes.sinks.brokers.jvm.mqtt.MqttController;
 import org.apache.streampipes.sinks.brokers.jvm.pulsar.PulsarController;
 import org.apache.streampipes.sinks.brokers.jvm.rabbitmq.RabbitMqController;
 import org.apache.streampipes.sinks.brokers.jvm.rest.RestController;
@@ -201,7 +201,7 @@ public class AllExtensionsInit extends ExtensionsModelSubmitter {
                 .add(new BufferRestController())
                 .add(new RabbitMqController())
                 .add(new PulsarController())
-                .add(new MqttController())
+                .add(new MqttPublisherSink())
                 // streampipes-sinks-databases-jvm
                 .add(new CouchDbController())
                 .add(new InfluxDbController())
