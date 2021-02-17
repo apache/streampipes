@@ -19,7 +19,6 @@ package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.manager.file.FileManager;
 import org.apache.streampipes.model.client.file.FileMetadata;
-import org.apache.streampipes.rest.api.IPipelineElementFile;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -32,7 +31,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Path("/v2/users/{username}/files")
-public class PipelineElementFile extends AbstractRestInterface implements IPipelineElementFile {
+public class PipelineElementFile extends AbstractRestResource {
 
   @POST
   @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -56,7 +55,6 @@ public class PipelineElementFile extends AbstractRestInterface implements IPipel
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Override
   public Response getFileInfo(@QueryParam("filetypes") String filetypes) {
     List<FileMetadata> allFiles = getFileMetadataStorage().getAllFileMetadataDescriptions();
     return filetypes != null ? ok(filterFiletypes(allFiles, filetypes)) : ok(allFiles);

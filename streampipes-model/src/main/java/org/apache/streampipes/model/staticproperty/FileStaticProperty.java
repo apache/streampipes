@@ -81,4 +81,9 @@ public class FileStaticProperty extends StaticProperty {
   public void setRequiredFiletypes(List<String> requiredFiletypes) {
     this.requiredFiletypes = requiredFiletypes;
   }
+
+  @Override
+  public void accept(StaticPropertyVisitor visitor) {
+    visitor.visit(this);
+  }
 }

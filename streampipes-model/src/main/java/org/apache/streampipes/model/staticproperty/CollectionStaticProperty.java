@@ -100,4 +100,9 @@ public class CollectionStaticProperty extends StaticProperty {
   public void setStaticPropertyTemplate(StaticProperty staticPropertyTemplate) {
     this.staticPropertyTemplate = staticPropertyTemplate;
   }
+
+  @Override
+  public void accept(StaticPropertyVisitor visitor) {
+    visitor.visit(this);
+  }
 }

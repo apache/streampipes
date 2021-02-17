@@ -20,10 +20,9 @@ package org.apache.streampipes.rest.impl;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import org.lightcouch.CouchDbClient;
-import org.apache.streampipes.rest.api.ICouchdb;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
+import org.lightcouch.CouchDbClient;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -34,13 +33,12 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Path("/v2/couchdb/{table}")
-public class Couchdb extends AbstractRestInterface implements ICouchdb {
+public class Couchdb extends AbstractRestResource {
 
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @GsonWithIds
-    @Override
     public Response getAllData(@PathParam("table") String table) {
         CouchDbClient couchDbClient = Utils.getCoucbDbClient(table);
 

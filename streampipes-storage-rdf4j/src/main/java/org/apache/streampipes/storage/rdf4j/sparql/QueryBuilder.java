@@ -51,11 +51,12 @@ public class QueryBuilder {
   public static final String SO_DOMAIN_INCLUDES = "http://schema.org/domainIncludes";
   public static final String SO_RANGE_INCLUDES = "http://schema.org/rangeIncludes";
 
-  public static String buildListSEPQuery() {
-    StringBuilder builder = new StringBuilder();
-    builder.append("where { ?result rdf:type sp:DataSourceDescription. }");
+  public static String buildListDataStreamQuery() {
+    return "where { ?result rdf:type sp:DataStream. }";
+  }
 
-    return builder.toString();
+  public static String buildListDataSetQuery() {
+    return "where { ?result rdf:type sp:DataSet. }";
   }
 
   private static String getPrefix() {
@@ -77,22 +78,6 @@ public class QueryBuilder {
   public static String getAllStatements() {
     StringBuilder builder = new StringBuilder();
     builder.append(getPrefix()).append("select ?a where { ?a ?b ?c }");
-
-    return builder.toString();
-  }
-
-  public static String buildSEPByDomainQuery(String domain) {
-    StringBuilder builder = new StringBuilder();
-    builder.append("where { ?result rdf:type sp:DataSourceDescription. ?result sp:hasDomain '"
-            + domain + "'^^xsd:string }");
-
-    return builder.toString();
-  }
-
-  public static String buildSEPAByDomainQuery(String domain) {
-    StringBuilder builder = new StringBuilder();
-    builder.append("where { ?result rdf:type sp:DataProcessorDescription. ?result sp:hasDomain '"
-            + domain + "'^^xsd:string }");
 
     return builder.toString();
   }

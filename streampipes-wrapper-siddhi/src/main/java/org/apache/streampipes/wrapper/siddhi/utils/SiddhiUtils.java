@@ -25,16 +25,38 @@ import org.apache.streampipes.model.runtime.SourceInfo;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class SiddhiUtils {
 
+  public static org.apache.streampipes.model.runtime.Event toSpEvent(List<Event> events,
+                                                                    String listFieldName,
+                                                                    SchemaInfo schemaInfo,
+                                                                    SourceInfo sourceInfo,
+                                                                    List<Attribute> streamAttributes) {
+    List<Map<String, Object>> allEvents = new ArrayList<>();
+
+    events.forEach(event -> allEvents.add(toMap(event, streamAttributes)));
+
+    Map<String, Object> outMap = new HashMap<>();
+    outMap.put(listFieldName, allEvents);
+
+    return EventFactory.fromMap(outMap, sourceInfo, schemaInfo);
+  }
+
   public static org.apache.streampipes.model.runtime.Event toSpEvent(Event event,
                                                                      SchemaInfo schemaInfo,
                                                                      SourceInfo sourceInfo,
                                                                      List<Attribute> streamAttributes) {
+    Map<String, Object> outMap = toMap(event, streamAttributes);
+    return EventFactory.fromMap(outMap, sourceInfo, schemaInfo);
+  }
+
+  public static Map<String, Object> toMap(Event event,
+                                          List<Attribute> streamAttributes) {
     Map<String, Object> outMap = new HashMap<>();
 
     for (int i = 0; i < streamAttributes.size(); i++) {
@@ -43,9 +65,10 @@ public class SiddhiUtils {
               outputKey.startsWith(SiddhiConstants.SECOND_STREAM_PREFIX)) {
         outputKey = outputKey.substring(2);
       }
-        outMap.put(outputKey, event.getData(i));
+      outMap.put(outputKey, event.getData(i));
     }
-    return EventFactory.fromMap(outMap, sourceInfo, schemaInfo);
+
+    return outMap;
   }
 
   public static Object[] toObjArr(List<String> eventKeys, Map<String, Object> event) {

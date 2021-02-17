@@ -45,7 +45,7 @@ import java.lang.reflect.InvocationTargetException;
 
 
 @Path("/v2/users/{username}/deploy")
-public class Deployment extends AbstractRestInterface {
+public class Deployment extends AbstractRestResource {
 
     @POST
     @Path("/implementation")

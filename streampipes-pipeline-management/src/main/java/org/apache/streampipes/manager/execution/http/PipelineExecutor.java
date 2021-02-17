@@ -29,22 +29,22 @@ import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.pipeline.PipelineElementStatus;
 import org.apache.streampipes.sdk.helpers.Tuple2;
-import org.lightcouch.DocumentConflictException;
 import org.apache.streampipes.manager.execution.status.PipelineStatusManager;
-import org.apache.streampipes.manager.execution.status.SepMonitoringManager;
 import org.apache.streampipes.manager.util.TemporaryGraphStorage;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
-import org.apache.streampipes.model.pipeline.Pipeline;
-import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
-import org.apache.streampipes.model.message.PipelineStatusMessage;
-import org.apache.streampipes.model.message.PipelineStatusMessageType;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
+import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
+import org.apache.streampipes.model.message.PipelineStatusMessage;
+import org.apache.streampipes.model.message.PipelineStatusMessageType;
+import org.apache.streampipes.model.pipeline.Pipeline;
+import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.model.staticproperty.SecretStaticProperty;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.encryption.CredentialsManager;
+import org.lightcouch.DocumentConflictException;
 
 import java.security.GeneralSecurityException;
 import java.util.*;
@@ -68,8 +68,12 @@ public class PipelineExecutor {
 
   public PipelineOperationStatus startPipeline() {
 
+    pipeline.getSepas().forEach(this::updateGroupIds);
+    pipeline.getActions().forEach(this::updateGroupIds);
+
     List<DataProcessorInvocation> sepas = pipeline.getSepas();
     List<DataSinkInvocation> secs = pipeline.getActions();
+
     List<SpDataSet> dataSets = pipeline.getStreams().stream().filter(s -> s instanceof SpDataSet).map(s -> new
             SpDataSet((SpDataSet) s)).collect(Collectors.toList());
 
@@ -83,7 +87,7 @@ public class PipelineExecutor {
 
     List<InvocableStreamPipesEntity> decryptedGraphs = decryptSecrets(graphs);
 
-    graphs.forEach(g -> g.setStreamRequirements(Arrays.asList()));
+    graphs.forEach(g -> g.setStreamRequirements(Collections.emptyList()));
 
     List<SpDataStreamRelayContainer> dataStreamRelayContainers = generateDataStreamRelays(decryptedGraphs);
 
@@ -103,10 +107,6 @@ public class PipelineExecutor {
                       System.currentTimeMillis(),
                       PipelineStatusMessageType.PIPELINE_STARTED.title(),
                       PipelineStatusMessageType.PIPELINE_STARTED.description()));
-
-      if (monitor) {
-        SepMonitoringManager.addObserver(pipeline.getPipelineId());
-      }
 
       if (storeStatus) {
         setPipelineStarted(pipeline);
@@ -145,10 +145,6 @@ public class PipelineExecutor {
                       System.currentTimeMillis(),
                       PipelineStatusMessageType.PIPELINE_STOPPED.title(),
                       PipelineStatusMessageType.PIPELINE_STOPPED.description()));
-
-      if (monitor) {
-        SepMonitoringManager.removeObserver(pipeline.getPipelineId());
-      }
 
     }
     return status;
@@ -439,6 +435,15 @@ public class PipelineExecutor {
       return target.getConnectedTo().get(index).equals(source.getDOM());
     }
     return false;
+  }
+
+  private void updateGroupIds(InvocableStreamPipesEntity entity) {
+    entity.getInputStreams()
+            .stream()
+            .filter(is -> is.getEventGrounding().getTransportProtocol() instanceof KafkaTransportProtocol)
+            .map(is -> is.getEventGrounding().getTransportProtocol())
+            .map(KafkaTransportProtocol.class::cast)
+            .forEach(tp -> tp.setGroupId(UUID.randomUUID().toString()));
   }
 
   private List<InvocableStreamPipesEntity> decryptSecrets(List<InvocableStreamPipesEntity> graphs) {

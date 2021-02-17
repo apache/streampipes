@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class FromClause extends Expression {
+public class FromClause extends SiddhiStatement {
 
   private List<Expression> fromExpressions;
 

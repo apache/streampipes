@@ -169,4 +169,6 @@ public abstract class StaticProperty extends UnnamedStreamPipesEntity {
     return targetClass.cast(this);
   }
 
+  public abstract void accept(StaticPropertyVisitor visitor);
+
 }

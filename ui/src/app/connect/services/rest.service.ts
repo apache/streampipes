@@ -81,7 +81,7 @@ export class RestService {
 
     getSourceDetails(sourceElementId): Observable<DataSourceDescription> {
         return this.http
-            .get(this.makeUserDependentBaseUrl() + '/sources/' + encodeURIComponent(sourceElementId)).pipe(map(response => {
+            .get(this.makeUserDependentBaseUrl() + '/streams/' + encodeURIComponent(sourceElementId)).pipe(map(response => {
                 return DataSourceDescription.fromData(response as DataSourceDescription);
             }));
     }

@@ -46,6 +46,8 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
 
   private String graphData;
   private Class<T> elementClass;
+  private boolean shouldTransform;
+
   protected T elementDescription;
 
   protected List<VerificationResult> validationResults;
@@ -58,6 +60,14 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
   public ElementVerifier(String graphData, Class<T> elementClass) {
     this.elementClass = elementClass;
     this.graphData = graphData;
+    this.shouldTransform = true;
+    this.validators = new ArrayList<>();
+    this.validationResults = new ArrayList<>();
+  }
+
+  public ElementVerifier(T elementDescription) {
+    this.elementDescription = elementDescription;
+    this.shouldTransform = false;
     this.validators = new ArrayList<>();
     this.validationResults = new ArrayList<>();
   }
@@ -77,11 +87,13 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
   }
 
   public Message verifyAndAdd(String username, boolean publicElement, boolean refreshCache) throws SepaParseException {
-    try {
-      this.elementDescription = transform();
-    } catch (RDFParseException | UnsupportedRDFormatException
-            | RepositoryException | IOException e) {
-      return new ErrorMessage(NotificationType.UNKNOWN_ERROR.uiNotification());
+    if (shouldTransform) {
+      try {
+        this.elementDescription = transform();
+      } catch (RDFParseException | UnsupportedRDFormatException
+              | RepositoryException | IOException e) {
+        return new ErrorMessage(NotificationType.UNKNOWN_ERROR.uiNotification());
+      }
     }
     verify();
     if (isVerifiedSuccessfully()) {
@@ -158,7 +170,7 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
   }
 
   private boolean isVerifiedSuccessfully() {
-    return !validationResults.stream().anyMatch(validator -> (validator instanceof VerificationError));
+    return validationResults.stream().noneMatch(validator -> (validator instanceof VerificationError));
   }
 
   protected T transform() throws JsonProcessingException {

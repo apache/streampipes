@@ -44,7 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Path("/v2/users/{username}/element")
-public class PipelineElementImport extends AbstractRestInterface {
+public class PipelineElementImport extends AbstractRestResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(PipelineElementImport.class);
 
@@ -116,9 +116,9 @@ public class PipelineElementImport extends AbstractRestInterface {
         requestor.deleteDataProcessor(requestor.getDataProcessorById(elementId));
         userService.deleteOwnSepa(username, elementId);
         requestor.refreshDataProcessorCache();
-      } else if (requestor.existsDataSource(elementId)) {
-        appId = requestor.getDataSourceById(elementId).getAppId();
-        requestor.deleteDataSource(requestor.getDataSourceById(elementId));
+      } else if (requestor.existsDataStream(elementId)) {
+        appId = requestor.getDataStreamById(elementId).getAppId();
+        requestor.deleteDataStream(requestor.getDataStreamById(elementId));
         userService.deleteOwnSource(username, elementId);
         requestor.refreshDataSourceCache();
       } else if (requestor.existsDataSink(elementId)) {
@@ -146,8 +146,8 @@ public class PipelineElementImport extends AbstractRestInterface {
     elementId = decode(elementId);
     if (requestor.getDataProcessorById(elementId) != null) {
       return ok(toJsonLd(requestor.getDataProcessorById(elementId)));
-    } else if (requestor.getDataSourceById(elementId) != null) {
-      return ok(toJsonLd(requestor.getDataSourceById(elementId)));
+    } else if (requestor.getDataStreamById(elementId) != null) {
+      return ok(toJsonLd(requestor.getDataStreamById(elementId)));
     } else if (requestor.getDataSinkById(elementId) != null) {
       return ok(toJsonLd(requestor.getDataSinkById(elementId)));
     } else {

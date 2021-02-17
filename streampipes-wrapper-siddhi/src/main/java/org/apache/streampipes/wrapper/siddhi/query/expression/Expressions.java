@@ -17,17 +17,19 @@
  */
 package org.apache.streampipes.wrapper.siddhi.query.expression;
 
+import io.siddhi.query.api.execution.query.selection.OrderByAttribute;
 import org.apache.streampipes.wrapper.siddhi.constants.SiddhiStreamSelector;
 import org.apache.streampipes.wrapper.siddhi.model.EventPropertyDef;
+import org.apache.streampipes.wrapper.siddhi.query.expression.aggregation.CountExpression;
 import org.apache.streampipes.wrapper.siddhi.query.expression.list.CollectListExpression;
 import org.apache.streampipes.wrapper.siddhi.query.expression.list.ContainsListExpression;
 import org.apache.streampipes.wrapper.siddhi.query.expression.math.MathDivideExpression;
 import org.apache.streampipes.wrapper.siddhi.query.expression.math.MathMultiplyExpression;
+import org.apache.streampipes.wrapper.siddhi.query.expression.orderby.OrderByExpression;
 import org.apache.streampipes.wrapper.siddhi.query.expression.pattern.EveryExpression;
 import org.apache.streampipes.wrapper.siddhi.query.expression.pattern.PatternCountExpression;
 import org.apache.streampipes.wrapper.siddhi.query.expression.pattern.PatternCountOperator;
-import org.apache.streampipes.wrapper.siddhi.query.expression.window.BatchWindowExpression;
-import org.apache.streampipes.wrapper.siddhi.query.expression.window.WindowExpression;
+import org.apache.streampipes.wrapper.siddhi.query.expression.window.*;
 
 import java.util.Arrays;
 
@@ -47,6 +49,10 @@ public class Expressions {
 
   public static PropertyExpressionBase containsListItem(PropertyExpression listProperty, Object value) {
     return new ContainsListExpression(listProperty, value);
+  }
+
+  public static PropertyExpressionBase count(PropertyExpression property) {
+    return new CountExpression(property);
   }
 
   public static PropertyExpressionBase divide(PropertyExpressionBase op1, PropertyExpressionBase op2) {
@@ -93,6 +99,10 @@ public class Expressions {
     return new MathMultiplyExpression(op1, op2);
   }
 
+  public static OrderByExpression orderBy(PropertyExpression property, OrderByAttribute.Order order) {
+    return new OrderByExpression(property, order);
+  }
+
   public static PatternCountExpression patternCount(Integer value, PatternCountOperator op) {
     return new PatternCountExpression(value, op);
   }
@@ -123,6 +133,10 @@ public class Expressions {
     return new SequenceExpression(Arrays.asList(expression1, expression2), withinExpression);
   }
 
+  public static WindowExpression sort(Integer number, PropertyExpression sortBy, OrderByAttribute.Order order) {
+    return new SortWindowExpression(number, sortBy, order);
+  }
+
   public static PropertyExpression staticValue(Number staticValue) {
     return new PropertyExpression(String.valueOf(staticValue));
   }
@@ -145,6 +159,14 @@ public class Expressions {
 
   public static StreamExpression stream(String streamName, String streamAlias) {
     return new StreamExpression(streamName, streamAlias);
+  }
+
+  public static WindowExpression timeBatch(Integer windowSize, SiddhiTimeUnit timeUnit) {
+    return new TimeBatchWindowExpression(windowSize, timeUnit);
+  }
+
+  public static WindowExpression timeWindow(Integer windowSize, SiddhiTimeUnit timeUnit) {
+    return new TimeWindowExpression(windowSize, timeUnit);
   }
 
   private static String makeStaticString(String staticValue) {

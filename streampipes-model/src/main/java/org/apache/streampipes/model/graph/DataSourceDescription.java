@@ -40,6 +40,7 @@ import java.util.List;
 @RdfsClass(StreamPipes.DATA_SOURCE_DESCRIPTION)
 @Entity
 @TsModel
+@Deprecated
 public class DataSourceDescription extends NamedStreamPipesEntity {
 
   private static final long serialVersionUID = 5607030219013954697L;

@@ -174,4 +174,9 @@ public class FreeTextStaticProperty extends StaticProperty {
   public void setMapsTo(String mapsTo) {
     this.mapsTo = mapsTo;
   }
+
+  @Override
+  public void accept(StaticPropertyVisitor visitor) {
+    visitor.visit(this);
+  }
 }

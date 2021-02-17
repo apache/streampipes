@@ -19,12 +19,12 @@
 package org.apache.streampipes.storage.rdf4j.impl;
 
 import io.fogsy.empire.core.empire.impl.RdfQuery;
+import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataSinkDescription;
-import org.apache.streampipes.model.graph.DataSourceDescription;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.rdf4j.sparql.QueryBuilder;
@@ -50,7 +50,7 @@ public class PipelineElementStorageRequests implements IPipelineElementDescripti
   //TODO: exception handling
 
   @Override
-  public boolean storeDataSource(DataSourceDescription sep) {
+  public boolean storeDataStream(SpDataStream sep) {
     if (exists(sep)) {
       return false;
     }
@@ -59,11 +59,11 @@ public class PipelineElementStorageRequests implements IPipelineElementDescripti
   }
 
   @Override
-  public boolean storeDataSource(String jsonld) {
-    DataSourceDescription sep;
+  public boolean storeDataStream(String jsonld) {
+    SpDataStream sep;
     try {
-      sep = Transformer.fromJsonLd(DataSourceDescription.class, jsonld);
-      return storeDataSource(sep);
+      sep = Transformer.fromJsonLd(SpDataStream.class, jsonld);
+      return storeDataStream(sep);
     } catch (RDFParseException | IOException | RepositoryException | UnsupportedRDFormatException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -86,8 +86,8 @@ public class PipelineElementStorageRequests implements IPipelineElementDescripti
   }
 
   @Override
-  public boolean existsDataSource(String rdfId) {
-    return entityManager.find(DataSourceDescription.class, rdfId) != null;
+  public boolean existsDataStream(String rdfId) {
+    return entityManager.find(SpDataStream.class, rdfId) != null;
   }
 
   @Override
@@ -109,25 +109,33 @@ public class PipelineElementStorageRequests implements IPipelineElementDescripti
   }
 
   @Override
-  public DataSourceDescription getDataSourceById(URI rdfId) {
-    return entityManager.find(DataSourceDescription.class, rdfId);
+  public SpDataStream getDataStreamById(URI rdfId) {
+    return entityManager.find(SpDataStream.class, rdfId);
   }
 
   @Override
-  public DataSourceDescription getDataSourceByAppId(String appId) {
-    return getByAppId(getAllDataSources(), appId);
+  public SpDataStream getDataStreamByAppId(String appId) {
+    return getByAppId(getAllDataStreams(), appId);
   }
 
   @Override
-  public DataSourceDescription getDataSourceById(String rdfId) {
-    return getDataSourceById(URI.create(rdfId));
+  public SpDataStream getDataStreamById(String rdfId) {
+    return getDataStreamById(URI.create(rdfId));
   }
 
   @SuppressWarnings("unchecked")
   @Override
-  public List<DataSourceDescription> getAllDataSources() {
-    Query query = entityManager.createQuery(QueryBuilder.buildListSEPQuery());
-    query.setHint(RdfQuery.HINT_ENTITY_CLASS, DataSourceDescription.class);
+  public List<SpDataStream> getAllDataStreams() {
+    Query query = entityManager.createQuery(QueryBuilder.buildListDataStreamQuery());
+    query.setHint(RdfQuery.HINT_ENTITY_CLASS, SpDataStream.class);
+    List<SpDataStream> allStreams = query.getResultList();
+    allStreams.addAll(getAllDataSets());
+    return allStreams;
+  }
+
+  private List<SpDataSet> getAllDataSets() {
+    Query query = entityManager.createQuery(QueryBuilder.buildListDataSetQuery());
+    query.setHint(RdfQuery.HINT_ENTITY_CLASS, SpDataSet.class);
     return query.getResultList();
   }
 
@@ -140,14 +148,14 @@ public class PipelineElementStorageRequests implements IPipelineElementDescripti
   }
 
   @Override
-  public boolean deleteDataSource(DataSourceDescription sep) {
-    deleteDataSource(sep.getElementId());
+  public boolean deleteDataStream(SpDataStream stream) {
+    deleteDataStream(stream.getElementId());
     return true;
   }
 
   @Override
-  public boolean deleteDataSource(String rdfId) {
-    DataSourceDescription sep = entityManager.find(DataSourceDescription.class, rdfId);
+  public boolean deleteDataStream(String rdfId) {
+    SpDataStream sep = entityManager.find(SpDataStream.class, rdfId);
     entityManager.remove(sep);
     return true;
   }
@@ -166,8 +174,8 @@ public class PipelineElementStorageRequests implements IPipelineElementDescripti
   }
 
   @Override
-  public boolean exists(DataSourceDescription sep) {
-    DataSourceDescription storedSEP = entityManager.find(DataSourceDescription.class, sep.getElementId());
+  public boolean exists(SpDataStream sep) {
+    SpDataStream storedSEP = entityManager.find(SpDataStream.class, sep.getElementId());
     return storedSEP != null;
   }
 
@@ -178,8 +186,8 @@ public class PipelineElementStorageRequests implements IPipelineElementDescripti
   }
 
   @Override
-  public boolean update(DataSourceDescription sep) {
-    return deleteDataSource(sep) && storeDataSource(sep);
+  public boolean update(SpDataStream sep) {
+    return deleteDataStream(sep) && storeDataStream(sep);
   }
 
   @Override

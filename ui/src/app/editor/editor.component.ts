@@ -117,10 +117,10 @@ export class EditorComponent implements OnInit {
             this.allElements = this.allElements.concat(processors);
             this.afterPipelineElementLoaded(0);
         });
-        this.pipelineElementService.getDataSources().subscribe(sources => {
-            let allStreams = this.collectStreams(sources);
-            this.availableDataStreams = allStreams.filter(s => !(s instanceof SpDataSet));
-            this.availableDataSets = allStreams
+        this.pipelineElementService.getDataStreams().subscribe(streams => {
+            //let allStreams = this.collectStreams(sources);
+            this.availableDataStreams = streams.filter(s => !(s instanceof SpDataSet));
+            this.availableDataSets = streams
                 .filter(s => s instanceof SpDataSet)
                 .map(s => s as SpDataSet);
             this.allElements = this.allElements.concat(this.availableDataStreams);

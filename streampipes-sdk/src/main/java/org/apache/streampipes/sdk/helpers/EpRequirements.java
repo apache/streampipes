@@ -27,6 +27,8 @@ import org.apache.streampipes.sdk.utils.Datatypes;
 import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.vocabulary.XSD;
 
+import java.util.Arrays;
+
 public class EpRequirements {
 
   public static EventPropertyList listRequirement() {
@@ -41,6 +43,22 @@ public class EpRequirements {
   public static EventPropertyList nestedListRequirement() {
     EventPropertyList listEp = new EventPropertyList();
     listEp.setEventProperty(new EventPropertyNested());
+    return listEp;
+  }
+
+  public static EventPropertyList nestedListRequirement(EventPropertyNested nestedRequirement) {
+    EventPropertyList listEp = nestedListRequirement();
+    listEp.setEventProperty(nestedRequirement);
+
+    return listEp;
+  }
+
+  public static EventPropertyList nestedListRequirement(EventProperty... requiredProperties) {
+    EventPropertyList listEp = nestedListRequirement();
+    EventPropertyNested nested = new EventPropertyNested();
+    nested.setEventProperties(Arrays.asList(requiredProperties));
+    listEp.setEventProperty(nested);
+
     return listEp;
   }
 

@@ -33,6 +33,9 @@ import {PipelineElementsComponent} from "./components/elements/pipeline-elements
 import {PipelineElementsRowComponent} from "./components/elements/pipeline-elements-row.component";
 import {QuickEditComponent} from "./components/edit/quickedit.component";
 import {CoreUiModule} from "../core-ui/core-ui.module";
+import {PipelineMonitoringComponent} from "./components/monitoring/pipeline-monitoring.component";
+import {PipelineElementStatisticsComponent} from "./components/monitoring/statistics/pipeline-element-statistics.component";
+import {NgxChartsModule} from "@swimlane/ngx-charts";
 
 @NgModule({
   imports: [
@@ -44,6 +47,7 @@ import {CoreUiModule} from "../core-ui/core-ui.module";
     CustomMaterialModule,
     CommonModule,
     MatProgressSpinnerModule,
+    NgxChartsModule,
     EditorModule,
     FormsModule,
     ReactiveFormsModule
@@ -52,7 +56,9 @@ import {CoreUiModule} from "../core-ui/core-ui.module";
     PipelineActionsComponent,
     PipelineElementsComponent,
     PipelineElementsRowComponent,
+    PipelineElementStatisticsComponent,
     PipelineDetailsComponent,
+    PipelineMonitoringComponent,
     PipelineStatusComponent,
     PipelinePreviewComponent,
     QuickEditComponent

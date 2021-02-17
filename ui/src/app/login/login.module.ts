@@ -36,9 +36,11 @@ import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {LoginService} from "./services/login.service";
 import {AuthStatusService} from "../services/auth-status.service";
 import {RestApi} from "../services/rest-api.service";
+import {AppRoutingModule} from "../app-routing.module";
 
 @NgModule({
   imports: [
+    AppRoutingModule,
     CommonModule,
     FlexLayoutModule,
     FormsModule,

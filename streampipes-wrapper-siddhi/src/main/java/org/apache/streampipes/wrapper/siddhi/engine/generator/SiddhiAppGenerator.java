@@ -18,6 +18,7 @@
 package org.apache.streampipes.wrapper.siddhi.engine.generator;
 
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
+import org.apache.streampipes.wrapper.siddhi.SiddhiAppConfig;
 import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
 import org.apache.streampipes.wrapper.siddhi.model.EventPropertyDef;
 import org.apache.streampipes.wrapper.siddhi.utils.SiddhiUtils;
@@ -32,17 +33,13 @@ public class SiddhiAppGenerator<B extends EventProcessorBindingParams> {
   private static final Logger LOG = LoggerFactory.getLogger(SiddhiAppGenerator.class);
 
   private final SiddhiProcessorParams<B> siddhiParams;
-  private final String fromStatement;
-  private final String selectStatement;
-
+  private final SiddhiAppConfig siddhiAppConfig;
   private final StringBuilder siddhiAppString;
 
   public SiddhiAppGenerator(SiddhiProcessorParams<B> siddhiParams,
-                            String fromStatement,
-                            String selectStatement) {
+                            SiddhiAppConfig siddhiAppConfig) {
     this.siddhiParams = siddhiParams;
-    this.fromStatement = fromStatement;
-    this.selectStatement = selectStatement;
+    this.siddhiAppConfig = siddhiAppConfig;
     this.siddhiAppString = new StringBuilder();
   }
 
@@ -50,7 +47,7 @@ public class SiddhiAppGenerator<B extends EventProcessorBindingParams> {
     LOG.info("Configuring event types for graph " + this.siddhiParams.getParams().getGraph().getName());
 
     this.siddhiParams.getEventTypeInfo().forEach(this::registerEventType);
-    registerStatements(fromStatement, selectStatement, SiddhiUtils.getOutputTopicName(this.siddhiParams.getParams()));
+    registerStatements(siddhiAppConfig);
 
     return this.siddhiAppString.toString();
   }
@@ -67,18 +64,23 @@ public class SiddhiAppGenerator<B extends EventProcessorBindingParams> {
             .append(defineStreamPrefix)
             .append("(")
             .append(joiner.toString())
-            .append(");\n");
+            .append(") ;\n");
   }
 
-  private void registerStatements(String fromStatement, String selectStatement, String outputStream) {
-    this.siddhiAppString
-            .append(fromStatement)
-            .append("\n")
-            .append(selectStatement)
-            .append("\n")
-            .append("insert into ")
-            .append(SiddhiUtils.prepareName(outputStream))
-            .append(";");
+  private void registerStatements(SiddhiAppConfig siddhiAppConfig) {
+
+    siddhiAppConfig
+            .getDefinitions()
+            .forEach(definition -> this.siddhiAppString.append(definition).append("\n"));
+
+    siddhiAppConfig
+            .getQueries()
+            .forEach(query -> this.siddhiAppString.append(query).append("\n"));
+
+//    this.siddhiAppString.append(siddhiAppConfig.getOutputConfig().isOutputAllEvents() ?
+//            "insert all events into " : "insert into ")
+//            .append(SiddhiUtils.prepareName(outputStream))
+//            .append(";");
 
     LOG.info("Registering statement: \n" + this.siddhiAppString.toString());
 

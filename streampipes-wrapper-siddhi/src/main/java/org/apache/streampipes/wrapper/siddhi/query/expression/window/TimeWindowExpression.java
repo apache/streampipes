@@ -33,6 +33,7 @@ public class TimeWindowExpression extends WindowExpression {
   public String toSiddhiEpl() {
     return join(SiddhiConstants.EMPTY,
             windowExpression(),
+            "time",
             windowValue(windowValue + SiddhiConstants.WHITESPACE + timeUnit.toTimeUnitString()));
   }
 }

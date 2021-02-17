@@ -19,24 +19,36 @@ package org.apache.streampipes.wrapper.siddhi.engine.callback;
 
 import io.siddhi.core.event.Event;
 import io.siddhi.core.stream.output.StreamCallback;
+import org.apache.streampipes.wrapper.siddhi.output.SiddhiOutputConfig;
+import org.apache.streampipes.wrapper.siddhi.output.SiddhiOutputType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Arrays;
 
 public class SiddhiOutputStreamDebugCallback extends StreamCallback {
 
   private static final Logger LOG = LoggerFactory.getLogger(SiddhiOutputStreamDebugCallback.class);
 
   private SiddhiDebugCallback callback;
+  private SiddhiOutputConfig outputConfig;
 
-  public SiddhiOutputStreamDebugCallback(SiddhiDebugCallback callback) {
+  public SiddhiOutputStreamDebugCallback(SiddhiDebugCallback callback,
+                                         SiddhiOutputConfig outputConfig) {
     this.callback = callback;
+    this.outputConfig = outputConfig;
   }
 
   @Override
-  public void receive(Event[] events) {
+  public void receive(Event[] inEvents) {
     LOG.info("Siddhi is firing");
-    if (events.length > 0) {
-      this.callback.onEvent(events[events.length - 1]);
+    if (inEvents.length > 0) {
+      if (this.outputConfig.getSiddhiOutputType() == SiddhiOutputType.FIRST) {
+        this.callback.onEvent(inEvents[inEvents.length - 1]);
+      } else if (this.outputConfig.getSiddhiOutputType() == SiddhiOutputType.LIST) {
+        this.callback.onEvent(Arrays.asList(inEvents));
+      }
+
     }
   }
 }

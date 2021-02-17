@@ -18,7 +18,7 @@
 package org.apache.streampipes.rest.impl.nouser;
 
 import org.apache.streampipes.manager.file.FileManager;
-import org.apache.streampipes.rest.impl.AbstractRestInterface;
+import org.apache.streampipes.rest.impl.AbstractRestResource;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -28,7 +28,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/v2/noauth/files")
-public class FileServingResource extends AbstractRestInterface {
+public class FileServingResource extends AbstractRestResource {
 
   @GET
   @Path("/{filename}")

@@ -15,21 +15,38 @@
   ~ limitations under the License.
   ~
   -->
-
 <div fxFlex="100" fxLayout="column">
-    <div fxLayout="row wrap" class="m-20" style="margin-bottom:20px;" *ngIf="editMode">
-        <button mat-button mat-raised-button color="primary" (click)="updateDashboardAndCloseEditMode()"
-                style="margin-right:10px;">Save
-        </button>
-        <button mat-button mat-raised-button class="mat-basic" (click)="discardChanges()"
-                style="margin-right:10px;">Discard
-        </button>
-        <button mat-button mat-raised-button color="primary" (click)="addWidget()" [disabled]="!editMode">Add
-            visualization</button>
+    <div fxLayout="row" class="fixed-height options-bar" *ngIf="editMode">
+        <div class="options-bar-item" fxLayoutAlign="start center" fxLayout="row" style="padding-left:10px;">
+            <button mat-button mat-raised-button color="primary" (click)="updateDashboardAndCloseEditMode()"
+                    style="margin-right:10px;">
+                <i class="material-icons">save</i>
+                <span> Save</span>
+            </button>
+            <button mat-button mat-raised-button class="mat-basic" (click)="discardChanges()"
+                    style="margin-right:10px;">
+                <i class="material-icons">clear</i>
+                <span> Discard</span>
+            </button>
+            <button mat-button mat-raised-button color="primary" (click)="addWidget()" [disabled]="!editMode">
+                <i class="material-icons">add</i>
+                <span> Add visualization</span>
+            </button>
+        </div>
+        <span fxFlex></span>
+        <div class="options-bar-item" fxLayoutAlign="start center" fxLayout="row" >
+            <mat-slide-toggle
+                    color="primary"
+                    [(ngModel)]="headerVisible">
+                Show widget controls
+            </mat-slide-toggle>
+        </div>
     </div>
 
     <dashboard-grid [editMode]="editMode" [dashboard]="dashboard"
+                    [headerVisible]="headerVisible"
                     (updateCallback)="updateAndQueueItemForDeletion($event)"
                     (deleteCallback)="removeAndQueueItemForDeletion($event)"
                     class="h-100 dashboard-grid"></dashboard-grid>
 </div>
+

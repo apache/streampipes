@@ -18,24 +18,21 @@
 
 package org.apache.streampipes.rest.impl;
 
+import org.apache.streampipes.model.client.user.RawUserApiToken;
 import org.apache.streampipes.model.message.Notifications;
-import org.apache.streampipes.rest.api.IUser;
+import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.apache.streampipes.user.management.service.TokenService;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.stream.Collectors;
 
 @Path("/v2/users/{email}")
-public class User extends AbstractRestInterface implements IUser {
+public class User extends AbstractRestResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Override
     public Response getUserDetails(@PathParam("email") String email) {
         org.apache.streampipes.model.client.user.User user = getUser(email);
         user.setPassword("");
@@ -50,11 +47,19 @@ public class User extends AbstractRestInterface implements IUser {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Override
     public Response updateUserDetails(org.apache.streampipes.model.client.user.User user) {
         if (user != null) {
             org.apache.streampipes.model.client.user.User existingUser = getUser(user.getEmail());
             user.setPassword(existingUser.getPassword());
+            user.setUserApiTokens(existingUser
+                    .getUserApiTokens()
+                    .stream()
+                    .filter(existingToken -> user.getUserApiTokens()
+                            .stream()
+                            .anyMatch(updatedToken -> existingToken
+                                    .getTokenId()
+                                    .equals(updatedToken.getTokenId())))
+                    .collect(Collectors.toList()));
             user.setRev(existingUser.getRev());
             getUserStorage().updateUser(user);
             return ok(Notifications.success("User updated"));
@@ -65,5 +70,15 @@ public class User extends AbstractRestInterface implements IUser {
 
     private org.apache.streampipes.model.client.user.User getUser(String email) {
         return getUserStorage().getUser(email);
+    }
+
+    @POST
+    @Path("tokens")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @JacksonSerialized
+    public Response createNewApiToken(@PathParam("email") String email, RawUserApiToken rawToken) {
+        RawUserApiToken generatedToken = new TokenService().createAndStoreNewToken(email, rawToken);
+        return ok(generatedToken);
     }
 }

@@ -71,6 +71,9 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
   @RdfProperty(StreamPipes.HAS_APPLICATION_LINK)
   private List<ApplicationLink> applicationLinks;
 
+  @RdfProperty(StreamPipes.IS_INTERNALLY_MANAGED)
+  private boolean internallyManaged;
+
   protected String DOM;
   protected List<String> connectedTo;
 
@@ -109,6 +112,7 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
     this.iconUrl = other.getIconUrl();
     this.elementId = other.getElementId();
     this.DOM = other.getDOM();
+    this.internallyManaged = other.isInternallyManaged();
     this.connectedTo = other.getConnectedTo();
     if (other.getApplicationLinks() != null) {
       this.applicationLinks = new Cloner().al(other.getApplicationLinks());
@@ -222,4 +226,11 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
     this.includedLocales = includedLocales;
   }
 
+  public boolean isInternallyManaged() {
+    return internallyManaged;
+  }
+
+  public void setInternallyManaged(boolean internallyManaged) {
+    this.internallyManaged = internallyManaged;
+  }
 }

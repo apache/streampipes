@@ -20,7 +20,11 @@ package org.apache.streampipes.wrapper.siddhi.engine.callback;
 
 import io.siddhi.core.event.Event;
 
+import java.util.List;
+
 public interface SiddhiDebugCallback {
 
   void onEvent(Event event);
+
+  void onEvent(List<Event> events);
 }

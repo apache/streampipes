@@ -19,16 +19,21 @@
 package org.apache.streampipes.model.client.user;
 
 import com.google.gson.annotations.SerializedName;
+import org.apache.streampipes.model.shared.annotation.TsModel;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+@TsModel
 public class User {
 
 	private @SerializedName("_id") String userId;
 	protected @SerializedName("_rev") String rev;
 	protected String email;
+
+	private String username;
+	private String fullName;
 	private String password;
 	
 	private List<Element> ownSources;
@@ -39,12 +44,15 @@ public class User {
 	private List<String> preferredSepas;
 	private List<String> preferredActions;
 
+	private List<UserApiToken> userApiTokens;
+
 	private boolean hideTutorial;
 
 	private Set<Role> roles;	
 
 	public User() {
 		this.hideTutorial = false;
+		this.userApiTokens = new ArrayList<>();
 	}
 	
 	public User(String email, String password, Set<Role> roles, List<Element> ownSources, List<Element> ownSepas, List<Element> ownActions) {
@@ -200,6 +208,30 @@ public class User {
 	public void removePreferredAction(String elementId)
 	{
 		this.preferredActions.remove(elementId);
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getFullName() {
+		return fullName;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
+
+	public List<UserApiToken> getUserApiTokens() {
+		return userApiTokens;
+	}
+
+	public void setUserApiTokens(List<UserApiToken> userApiTokens) {
+		this.userApiTokens = userApiTokens;
 	}
 
 	private Element find(String elementId, List<Element> source)

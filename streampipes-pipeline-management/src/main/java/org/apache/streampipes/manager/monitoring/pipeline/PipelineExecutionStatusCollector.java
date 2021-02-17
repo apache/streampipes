@@ -18,7 +18,44 @@
 
 package org.apache.streampipes.manager.monitoring.pipeline;
 
+import org.apache.streampipes.model.monitoring.PipelineElementMonitoringInfo;
+import org.apache.streampipes.model.monitoring.PipelineMonitoringInfo;
+import org.apache.streampipes.model.pipeline.Pipeline;
+import org.apache.streampipes.storage.management.StorageDispatcher;
+
+import java.util.List;
+
 public class PipelineExecutionStatusCollector {
 
+  private String pipelineId;
 
+  public PipelineExecutionStatusCollector(String pipelineId) {
+    this.pipelineId = pipelineId;
+  }
+
+  public PipelineMonitoringInfo makePipelineMonitoringInfo() {
+    Pipeline pipeline = getPipeline();
+
+    PipelineMonitoringInfo monitoringInfo = new PipelineMonitoringInfo();
+    monitoringInfo.setCreatedAt(pipeline.getCreatedAt());
+    monitoringInfo.setStartedAt(pipeline.getStartedAt());
+    monitoringInfo.setPipelineId(pipelineId);
+
+    monitoringInfo.setPipelineElementMonitoringInfo(makePipelineElementMonitoringInfo(pipeline));
+
+    return monitoringInfo;
+  }
+
+  private List<PipelineElementMonitoringInfo> makePipelineElementMonitoringInfo(Pipeline pipeline) {
+    return new TopicInfoCollector(pipeline).makeMonitoringInfo();
+
+  }
+
+  private Pipeline getPipeline() {
+    return StorageDispatcher
+            .INSTANCE
+            .getNoSqlStore()
+            .getPipelineStorageAPI()
+            .getPipeline(this.pipelineId);
+  }
 }

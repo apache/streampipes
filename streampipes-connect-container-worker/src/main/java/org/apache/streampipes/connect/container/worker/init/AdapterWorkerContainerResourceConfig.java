@@ -34,6 +34,7 @@ public class AdapterWorkerContainerResourceConfig extends AdapterContainerConfig
     register(MultiPartFeature.class);
     register(AdapterResource.class);
     register(ProtocolResource.class);
+    register(HttpServerAdapterResource.class);
 
     register(JacksonSerializationProvider.class);
   }

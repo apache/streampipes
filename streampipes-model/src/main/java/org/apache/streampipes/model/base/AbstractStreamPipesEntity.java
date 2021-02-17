@@ -25,6 +25,7 @@ import io.fogsy.empire.annotations.Namespaces;
 import io.fogsy.empire.annotations.RdfId;
 import io.fogsy.empire.annotations.RdfProperty;
 import io.fogsy.empire.api.SupportsRdfId;
+import org.apache.streampipes.model.shared.annotation.TsIgnore;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.vocabulary.*;
 
@@ -56,6 +57,7 @@ public class AbstractStreamPipesEntity implements SupportsRdfId, Serializable {
 	@SuppressWarnings("rawtypes")
 	@Override
 	@JsonIgnore
+	@TsIgnore
 	public RdfKey getRdfId() {
 		return new URIKey(URI.create(getElementId()));
 	}
@@ -63,6 +65,7 @@ public class AbstractStreamPipesEntity implements SupportsRdfId, Serializable {
 	@SuppressWarnings("rawtypes")
 	@Override
 	@JsonIgnore
+	@TsIgnore
 	public void setRdfId(RdfKey arg0) {
 		this.elementId = arg0.toString();
 	}

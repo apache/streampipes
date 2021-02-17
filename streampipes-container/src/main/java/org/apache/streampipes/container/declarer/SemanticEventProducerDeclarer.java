@@ -22,6 +22,7 @@ import org.apache.streampipes.model.graph.DataSourceDescription;
 
 import java.util.List;
 
+@Deprecated
 public interface SemanticEventProducerDeclarer extends Declarer<DataSourceDescription> {
 	List<DataStreamDeclarer> getEventStreams();
 }

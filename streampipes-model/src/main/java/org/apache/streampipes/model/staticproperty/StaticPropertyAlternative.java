@@ -73,4 +73,9 @@ public class StaticPropertyAlternative extends StaticProperty {
   public void setStaticProperty(StaticProperty staticProperty) {
     this.staticProperty = staticProperty;
   }
+
+  @Override
+  public void accept(StaticPropertyVisitor visitor) {
+    visitor.visit(this);
+  }
 }

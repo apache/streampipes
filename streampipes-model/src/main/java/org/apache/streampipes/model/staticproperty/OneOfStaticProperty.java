@@ -63,5 +63,10 @@ public class OneOfStaticProperty extends SelectionStaticProperty {
     super(StaticPropertyType.OneOfStaticProperty, internalName, label, description, horizontalRendering);
   }
 
+  @Override
+  public void accept(StaticPropertyVisitor visitor) {
+    visitor.visit(this);
+  }
+
 
 }

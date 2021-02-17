@@ -19,9 +19,10 @@
 package org.apache.streampipes.container.html.page;
 
 import org.apache.streampipes.container.declarer.*;
-import org.apache.streampipes.container.html.model.DataSourceDescriptionHtml;
 import org.apache.streampipes.container.html.model.Description;
 import org.apache.streampipes.container.locales.LabelGenerator;
+import org.apache.streampipes.model.SpDataSet;
+import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 
@@ -31,82 +32,74 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class WelcomePageGeneratorImpl extends WelcomePageGenerator<Declarer> {
+public class WelcomePageGeneratorImpl extends WelcomePageGenerator<Declarer<?>> {
 
 
-    public WelcomePageGeneratorImpl(String baseUri, Collection<Declarer> declarers) {
-        super(baseUri, declarers);
+  public WelcomePageGeneratorImpl(String baseUri, Collection<Declarer<?>> declarers) {
+    super(baseUri, declarers);
+  }
+
+  @Override
+  public List<Description> buildUris() {
+    List<Description> descriptions = new ArrayList<>();
+
+    for (Declarer<?> declarer : declarers) {
+      if (declarer instanceof InvocableDeclarer) {
+        descriptions.add(getDescription(declarer));
+      } else if (declarer instanceof DataStreamDeclarer) {
+        descriptions.add(getDescription(declarer));
+      } else if (declarer instanceof PipelineTemplateDeclarer) {
+        descriptions.add(getDescription(declarer));
+      }
     }
+    return descriptions;
+  }
 
-    @Override
-    public List<Description> buildUris() {
-        List<Description> descriptions = new ArrayList<>();
-
-        for (Declarer declarer : declarers) {
-            if (declarer instanceof InvocableDeclarer) {
-                descriptions.add(getDescription((InvocableDeclarer) declarer));
-            } else if (declarer instanceof SemanticEventProducerDeclarer) {
-                descriptions.add(getDescription((SemanticEventProducerDeclarer) declarer));
-            } else if (declarer instanceof PipelineTemplateDeclarer) {
-                descriptions.add(getDescription(declarer));
-            }
-        }
-        return descriptions;
+  private Description getDescription(Declarer<?> declarer) {
+    Description desc = new Description();
+    // TODO remove after full internationalization support has been implemented
+    updateLabel(declarer.declareModel(), desc);
+    desc.setType(getType(declarer));
+    desc.setAppId(declarer.declareModel().getAppId());
+    desc.setEditable(!(declarer.declareModel().isInternallyManaged()));
+    String uri = baseUri;
+    if (declarer instanceof SemanticEventConsumerDeclarer) {
+      uri += "sec/";
+    } else if (declarer instanceof SemanticEventProcessingAgentDeclarer) {
+      uri += "sepa/";
+    } else if (declarer instanceof DataStreamDeclarer) {
+      uri += "stream/";
+    } else if (declarer instanceof PipelineTemplateDeclarer) {
+      uri += "template/";
     }
+    desc.setUri(URI.create(uri + declarer.declareModel().getUri().replaceFirst("[a-zA-Z]{4}://[a-zA-Z\\.]+:\\d+/", "")));
+    return desc;
+  }
 
-    private Description getDescription(Declarer declarer) {
-        Description desc = new Description();
-        // TODO remove after full internationalization support has been implemented
-        updateLabel(declarer.declareModel(), desc);
-        desc.setType(getType(declarer));
-        desc.setAppId(declarer.declareModel().getAppId());
-        String uri = baseUri;
-        if (declarer instanceof SemanticEventConsumerDeclarer) {
-            uri += "sec/";
-        } else if (declarer instanceof SemanticEventProcessingAgentDeclarer) {
-            uri += "sepa/";
-        } else if (declarer instanceof PipelineTemplateDeclarer) {
-            uri += "template/";
-        }
-        desc.setUri(URI.create(uri +declarer.declareModel().getUri().replaceFirst("[a-zA-Z]{4}://[a-zA-Z\\.]+:\\d+/", "")));
-        return desc;
+  private String getType(Declarer<?> declarer) {
+    if (declarer.declareModel() instanceof DataSinkDescription) {
+      return "action";
+    } else if (declarer.declareModel() instanceof SpDataSet) {
+      return "set";
+    } else if (declarer.declareModel() instanceof SpDataStream) {
+      return "stream";
+    } else {
+      return "sepa";
     }
+  }
 
-    private String getType(Declarer declarer) {
-        if (declarer.declareModel() instanceof DataSinkDescription) return "action";
-        else return "sepa";
+  private void updateLabel(NamedStreamPipesEntity entity, Description desc) {
+    if (!entity.isIncludesLocales()) {
+      desc.setName(entity.getName());
+      desc.setDescription(entity.getDescription());
+    } else {
+      LabelGenerator lg = new LabelGenerator(entity);
+      try {
+        desc.setName(lg.getElementTitle());
+        desc.setDescription(lg.getElementDescription());
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
-
-    private Description getDescription(SemanticEventProducerDeclarer declarer) {
-        List<Description> streams = new ArrayList<>();
-        DataSourceDescriptionHtml desc = new DataSourceDescriptionHtml();
-        updateLabel(declarer.declareModel(), desc);
-        desc.setUri(URI.create(baseUri + "sep/" + declarer.declareModel().getUri()));
-        desc.setType("source");
-        desc.setAppId(declarer.declareModel().getAppId());
-        for (DataStreamDeclarer streamDeclarer : declarer.getEventStreams()) {
-            Description ad = new Description();
-            updateLabel(streamDeclarer.declareModel(declarer.declareModel()), ad);
-            ad.setUri(URI.create(baseUri +"stream/" + streamDeclarer.declareModel(declarer.declareModel()).getUri()));
-            ad.setType("stream");
-            streams.add(ad);
-        }
-        desc.setStreams(streams);
-        return desc;
-    }
-
-    private void updateLabel(NamedStreamPipesEntity entity, Description desc) {
-        if (!entity.isIncludesLocales()) {
-            desc.setName(entity.getName());
-            desc.setDescription(entity.getDescription());
-        } else {
-            LabelGenerator lg = new LabelGenerator(entity);
-            try {
-                desc.setName(lg.getElementTitle());
-                desc.setDescription(lg.getElementDescription());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+  }
 }

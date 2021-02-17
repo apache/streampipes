@@ -34,16 +34,17 @@ import {DashboardItemComponent} from "./components/dashboard-item/dashboard-item
 import {DashboardImageComponent} from "./components/dashboard-image/dashboard-image.component";
 import {TransportSelectionComponent} from "./components/transport-selection/transport-selection.component";
 import {AppTransportMonitoringRestService} from "./services/app-transport-monitoring-rest.service";
-import {DashboardStatusFilledComponent} from "./components/dashboard-status-filled/dashboard-status-filled.component";
 import {TransportSummaryComponent} from "./components/transport-summary/transport-summary.component";
 import {SlideshowModule} from "ng-simple-slideshow";
 import {TransportActivityGraphComponent} from "./components/transport-activity-graph/transport-activity-graph.component";
 import {TimestampConverterService} from "./services/timestamp-converter.service";
 import {NgxChartsModule} from '@swimlane/ngx-charts';
+import {CoreUiModule} from "../core-ui/core-ui.module";
 
 @NgModule({
     imports: [
         CommonModule,
+        CoreUiModule,
         FlexLayoutModule,
         CustomMaterialModule,
         MatGridListModule,
@@ -62,7 +63,6 @@ import {NgxChartsModule} from '@swimlane/ngx-charts';
         DashboardItemComponent,
         DashboardStatusComponent,
         TransportSelectionComponent,
-        DashboardStatusFilledComponent,
         TransportSummaryComponent,
         TransportActivityGraphComponent
     ],

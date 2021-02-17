@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.rest.impl.datalake;
 
+import org.apache.streampipes.dataexplorer.DataLakeNoUserManagementV3;
 import org.junit.Before;
 import org.junit.Test;
 import org.apache.streampipes.model.schema.EventProperty;

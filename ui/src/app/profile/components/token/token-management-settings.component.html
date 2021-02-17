@@ -1,0 +1,90 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div fxLayout="row" class="page-container-padding">
+    <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start" *ngIf="profileLoaded">
+        <div fxLayout="row" fxFlex="100">
+            <div fxFlex="300px" fxLayout="column" class="profile-section">
+                <div class="settings-title">API Keys</div>
+                <div class="settings-description">Manage your API keys for third-party application access to
+                    StreamPipes.
+                </div>
+            </div>
+            <div fxFill fxLayout="column">
+                <div fxLayout="column" class="subsection">
+                    <div class="subsection-title">New API key</div>
+                    <mat-form-field fxFlex>
+                        <mat-label>Name</mat-label>
+                        <input [(ngModel)]="newTokenName" matInput/>
+                    </mat-form-field>
+                    <div>
+                        <button mat-button mat-raised-button color="primary"
+                                (click)="requestNewKey()">
+                            Create new API key
+                        </button>
+                    </div>
+                </div>
+                <div fxLayout="column" class="subsection mt-10" *ngIf="newTokenCreated">
+                    <div class="subsection-title">Key created</div>
+                    <div class="subsection-small">Your new API key has been created. Please copy the key now - you won't be able to see the key again.</div>
+                    <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center" class="new-token">
+                        <div class="token-name">{{newlyCreatedToken.tokenName}}</div>
+                        <div class="displayed-token">
+                            {{newlyCreatedToken.rawToken}}
+                        </div>
+                        <button mat-button mat-raised-button color="primary"
+                                [cdkCopyToClipboard]="newlyCreatedToken.rawToken">
+                            Copy
+                        </button>
+                    </div>
+                </div>
+                <mat-divider class="divider"></mat-divider>
+                <div fxLayout="column" class="subsection mt-10">
+                    <div class="subsection-title">Existing API keys</div>
+                    <div *ngIf="userData.userApiTokens.length == 0">(no keys available)</div>
+                    <table mat-table [dataSource]="apiKeyDataSource" class="mat-elevation-z0" *ngIf="userData.userApiTokens.length > 0">
+                        <ng-container matColumnDef="name">
+                            <th mat-header-cell *matHeaderCellDef> Name</th>
+                            <td mat-cell *matCellDef="let element"> {{element.tokenName}} </td>
+                        </ng-container>
+
+                        <!-- Name Column -->
+                        <ng-container matColumnDef="action">
+                            <th mat-header-cell *matHeaderCellDef> Action</th>
+                            <td mat-cell *matCellDef="let element">
+                                <div fxLayout="end end">
+                                <button mat-button mat-raised-button color="warn"
+                                        (click)="revokeApiKey(element)">
+                                    Revoke
+                                </button>
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                </div>
+            </div>
+            <div fxFill fxLayout="column">
+            </div>
+        </div>
+        <mat-divider></mat-divider>
+    </div>
+
+</div>

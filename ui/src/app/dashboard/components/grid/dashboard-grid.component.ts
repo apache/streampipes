@@ -43,6 +43,7 @@ import {DashboardWidgetModel} from "../../../core-model/gen/streampipes-model";
 export class DashboardGridComponent implements OnInit, OnChanges {
 
     @Input() editMode: boolean;
+    @Input() headerVisible: boolean;
     @Input() dashboard: Dashboard;
 
     @Output() deleteCallback: EventEmitter<DashboardItem> = new EventEmitter<DashboardItem>();
@@ -64,11 +65,12 @@ export class DashboardGridComponent implements OnInit, OnChanges {
             disablePushOnDrag: true,
             draggable: { enabled: this.editMode },
             gridType: GridType.VerticalFixed,
-            minCols: 8,
-            maxCols: 8,
+            minCols: 12,
+            maxCols: 12,
             minRows: 4,
-            fixedRowHeight: 100,
-            fixedColWidth: 100,
+            fixedRowHeight: 50,
+            fixedColWidth: 50,
+            margin: 5,
             resizable: { enabled: this.editMode },
             itemResizeCallback: ((item, itemComponent) => {
                 this.resizeService.notify({gridsterItem: item, gridsterItemComponent: itemComponent} as GridsterInfo);

@@ -19,26 +19,18 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.model.message.Notifications;
-import org.apache.streampipes.rest.api.INotification;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
 
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/v2/users/{username}/notifications")
-public class Notification extends AbstractRestInterface implements INotification {
+public class Notification extends AbstractRestResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @GsonWithIds
-    @Override
     public Response getNotifications(@QueryParam("notificationType") String notificationTypeId,
                                      @QueryParam("offset") Integer offset,
                                      @QueryParam("count") Integer count) {
@@ -49,7 +41,6 @@ public class Notification extends AbstractRestInterface implements INotification
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/count")
-    @Override
     public Response getUnreadNotificationsCount(@PathParam("username") String username) {
         return ok(getNotificationStorage()
                 .getUnreadNotificationsCount(username));
@@ -58,7 +49,6 @@ public class Notification extends AbstractRestInterface implements INotification
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/unread")
-    @Override
     public Response getUnreadNotifications() {
         return ok(getNotificationStorage()
                 .getUnreadNotifications());
@@ -67,7 +57,6 @@ public class Notification extends AbstractRestInterface implements INotification
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{notificationId}")
-    @Override
     public Response deleteNotification(@PathParam("notificationId") String notificationId) {
         boolean success = getNotificationStorage()
                 .deleteNotification(notificationId);
@@ -82,7 +71,6 @@ public class Notification extends AbstractRestInterface implements INotification
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{notificationId}")
-    @Override
     public Response modifyNotificationStatus(@PathParam("notificationId") String notificationId) {
         boolean success = getNotificationStorage()
                 .changeNotificationStatus(notificationId);

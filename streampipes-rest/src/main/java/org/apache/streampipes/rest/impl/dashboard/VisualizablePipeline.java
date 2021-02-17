@@ -18,8 +18,7 @@
 
 package org.apache.streampipes.rest.impl.dashboard;
 
-import org.apache.streampipes.rest.api.dashboard.IVisualizablePipeline;
-import org.apache.streampipes.rest.impl.AbstractRestInterface;
+import org.apache.streampipes.rest.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.storage.api.IVisualizablePipelineStorage;
 
@@ -33,12 +32,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Path("/v2/users/{username}/dashboard/pipelines")
-public class VisualizablePipeline extends AbstractRestInterface implements IVisualizablePipeline {
+public class VisualizablePipeline extends AbstractRestResource {
 
   @GET
   @JacksonSerialized
   @Produces(MediaType.APPLICATION_JSON)
-  @Override
   public Response getVisualizablePipelines() {
     return ok(getVisualizablePipelineStorage().getAllVisualizablePipelines());
   }
@@ -47,7 +45,6 @@ public class VisualizablePipeline extends AbstractRestInterface implements IVisu
   @JacksonSerialized
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/{id}")
-  @Override
   public Response getVisualizablePipeline(@PathParam("id") String id) {
     org.apache.streampipes.model.dashboard.VisualizablePipeline pipeline = getVisualizablePipelineStorage().getVisualizablePipeline(id);
    return pipeline != null ? ok(pipeline) : fail();
@@ -57,7 +54,6 @@ public class VisualizablePipeline extends AbstractRestInterface implements IVisu
   @JacksonSerialized
   @Produces(MediaType.APPLICATION_JSON)
   @Path("topic/{topic}")
-  @Override
   public Response getVisualizablePipelineByTopic(@PathParam("topic") String topic) {
     List<org.apache.streampipes.model.dashboard.VisualizablePipeline> pipelines =
             getVisualizablePipelineStorage().getAllVisualizablePipelines();
@@ -72,7 +68,6 @@ public class VisualizablePipeline extends AbstractRestInterface implements IVisu
   @JacksonSerialized
   @Produces(MediaType.APPLICATION_JSON)
   @Path("{pipelineId}/{visualizationName}")
-  @Override
   public Response getVisualizablePipelineByPipelineIdAndVisualizationName(@PathParam("pipelineId") String pipelineId,
                                                                           @PathParam("visualizationName") String visualizationName) {
     List<org.apache.streampipes.model.dashboard.VisualizablePipeline> pipelines =
