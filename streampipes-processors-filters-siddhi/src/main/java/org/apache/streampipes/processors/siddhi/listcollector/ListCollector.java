@@ -29,10 +29,14 @@ import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.sdk.helpers.*;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.sdk.utils.Datatypes;
+import org.apache.streampipes.wrapper.siddhi.SiddhiAppConfig;
+import org.apache.streampipes.wrapper.siddhi.SiddhiAppConfigBuilder;
+import org.apache.streampipes.wrapper.siddhi.SiddhiQueryBuilder;
 import org.apache.streampipes.wrapper.siddhi.constants.SiddhiStreamSelector;
 import org.apache.streampipes.wrapper.siddhi.engine.StreamPipesSiddhiProcessor;
 import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
 import org.apache.streampipes.wrapper.siddhi.query.FromClause;
+import org.apache.streampipes.wrapper.siddhi.query.InsertIntoClause;
 import org.apache.streampipes.wrapper.siddhi.query.SelectClause;
 import org.apache.streampipes.wrapper.siddhi.query.expression.Expressions;
 import org.apache.streampipes.wrapper.standalone.ProcessorParams;
@@ -63,33 +67,6 @@ public class ListCollector extends StreamPipesSiddhiProcessor
   }
 
   @Override
-  public String fromStatement(SiddhiProcessorParams<ProcessorParams> siddhiParams) {
-
-    Integer batchWindowSize = siddhiParams.getParams().extractor().singleValueParameter(WINDOW_SIZE, Integer.class);
-
-    FromClause fromClause = FromClause.create();
-    fromClause.add(Expressions.stream(siddhiParams.getInputStreamNames().get(0), Expressions.batchWindow(batchWindowSize)));
-
-    return fromClause.toSiddhiEpl();
-  }
-
-  @Override
-  public String selectStatement(SiddhiProcessorParams<ProcessorParams> siddhiParams) {
-
-    String propertySelector = siddhiParams.getParams().extractor().mappingPropertyValue(LIST_KEY);
-
-    SelectClause selectClause = SelectClause.create();
-    siddhiParams
-            .getEventTypeInfo()
-            .forEach((key, value) -> value
-                    .forEach(field -> selectClause.addProperty(Expressions.property(SiddhiStreamSelector.FIRST_INPUT_STREAM, field.getFieldName()))));
-
-    selectClause.addProperty(Expressions.as(Expressions.collectList(Expressions.property(propertySelector)), propertySelector + "_list"));
-
-    return selectClause.toSiddhiEpl();
-  }
-
-  @Override
   public EventSchema resolveOutputStrategy(DataProcessorInvocation processingElement, ProcessingElementParameterExtractor extractor) throws SpRuntimeException {
     String propertySelector = extractor.mappingPropertyValue(LIST_KEY);
     EventSchema inputSchema = processingElement.getInputStreams().get(0).getEventSchema();
@@ -112,5 +89,32 @@ public class ListCollector extends StreamPipesSiddhiProcessor
     }
 
     return inputSchema;
+  }
+
+  @Override
+  public SiddhiAppConfig makeStatements(SiddhiProcessorParams<ProcessorParams> siddhiParams,
+                                        String finalInsertIntoStreamName) {
+    Integer batchWindowSize = siddhiParams.getParams().extractor().singleValueParameter(WINDOW_SIZE, Integer.class);
+    String propertySelector = siddhiParams.getParams().extractor().mappingPropertyValue(LIST_KEY);
+
+    FromClause fromClause = FromClause.create();
+    fromClause.add(Expressions.stream(siddhiParams.getInputStreamNames().get(0), Expressions.batchWindow(batchWindowSize)));
+
+    SelectClause selectClause = SelectClause.create();
+    siddhiParams
+            .getEventTypeInfo()
+            .forEach((key, value) -> value
+                    .forEach(field -> selectClause.addProperty(Expressions.property(SiddhiStreamSelector.FIRST_INPUT_STREAM, field.getFieldName()))));
+
+    selectClause.addProperty(Expressions.as(Expressions.collectList(Expressions.property(propertySelector)), propertySelector + "_list"));
+
+    InsertIntoClause insertIntoClause = InsertIntoClause.create(finalInsertIntoStreamName);
+    return SiddhiAppConfigBuilder
+            .create()
+            .addQuery(SiddhiQueryBuilder
+                    .create(fromClause, insertIntoClause)
+                    .withSelectClause(selectClause)
+                    .build())
+            .build();
   }
 }

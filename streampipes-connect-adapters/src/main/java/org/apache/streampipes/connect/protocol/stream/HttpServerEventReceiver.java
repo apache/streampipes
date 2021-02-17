@@ -15,34 +15,22 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.connect.protocol.stream;
 
-package org.apache.streampipes.sinks.brokers.jvm.mqtt;
+import org.apache.streampipes.connect.SendToPipeline;
+import org.apache.streampipes.messaging.InternalEventProcessor;
 
-import org.apache.streampipes.model.graph.DataSinkInvocation;
-import org.apache.streampipes.wrapper.params.binding.EventSinkBindingParams;
+public class HttpServerEventReceiver implements InternalEventProcessor<byte[]> {
 
-public class MqttParameters extends EventSinkBindingParams {
+  private SendToPipeline pipeline;
 
-    private String mqttHost;
-    private Integer mqttPort;
-    private String topic;
+  public HttpServerEventReceiver(SendToPipeline adapterPipeline) {
+    this.pipeline = adapterPipeline;
+  }
 
-    public MqttParameters(DataSinkInvocation graph, String mqttHost, Integer mqttPort, String topic) {
-        super(graph);
-        this.mqttHost = mqttHost;
-        this.mqttPort = mqttPort;
-        this.topic = topic;
-    }
-
-    public String getMqttHost() {
-        return mqttHost;
-    }
-
-    public Integer getMqttPort() {
-        return mqttPort;
-    }
-
-    public String getTopic() {
-        return topic;
-    }
+  @Override
+  public void onEvent(byte[] event) {
+    System.out.println(new String(event).toString());
+    this.pipeline.emit(event);
+  }
 }

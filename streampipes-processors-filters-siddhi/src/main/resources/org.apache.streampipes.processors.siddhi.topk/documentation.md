@@ -16,7 +16,7 @@
   ~
   -->
 
-## MQTT Publisher
+## List Collector
 
 <p align="center"> 
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
@@ -26,30 +26,23 @@
 
 ## Description
 
-Publishes events to MQTT.
+Detects the increase of a numerical field over a customizable time window. Example: A temperature value increases by 10 percent within 5 minutes.
+Add a detailed description here
 
 ***
 
 ## Required input
 
-This sink does not have any requirements and works with any incoming event type.
 
 ***
 
 ## Configuration
 
-### MQTT Broker Settings
+Describe the configuration parameters here
 
-The basic settings to connect to the broker. 
-The MQTT broker URL indicates the URL of the broker (e.g., localhost), the port indicates the port of the broker
-(e.g., 1883)
+### 1st parameter
 
 
-### MQTT Topic
-
-The topic where events should be sent to.
-
+### 2nd parameter
 
 ## Output
-
-(not applicable for data sinks)

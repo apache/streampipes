@@ -1,0 +1,30 @@
+org.apache.streampipes.connect.protocol.stream.httpserver.title=HTTP Server
+org.apache.streampipes.connect.protocol.stream.httpserver.description=Receives events from an external application and forwards them to StreamPipes.
+
+endpoint-name.title=Endpoint Appendix
+endpoint-name.description=HTTP endpoint will be available on /endpoints/{endpointName}
+
+configure.title=Configuration
+configure.description=
+
+manually.title=Enter manually
+manually.description=
+
+ep-config.title=Fields
+ep-config.description=Define the fields of the input event
+
+ep-runtime-name.title=Runtime Name
+ep-runtime-name.description=The name of the field
+
+ep-runtime-type.title=Runtime Type
+ep-runtime-type.description=The type of the field
+
+ep-domain-property.title=Semantic Type
+ep-domain-property.description=The semantic type of the field (e.g., https://schema.org/temperature)
+
+file-import.title=Import from file
+file-import.description=
+
+file.title=File
+file.description=
+

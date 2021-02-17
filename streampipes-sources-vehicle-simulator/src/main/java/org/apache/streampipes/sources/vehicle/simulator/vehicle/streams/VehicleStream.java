@@ -20,7 +20,6 @@ package org.apache.streampipes.sources.vehicle.simulator.vehicle.streams;
 
 
 import org.apache.streampipes.model.SpDataStream;
-import org.apache.streampipes.model.graph.DataSourceDescription;
 import org.apache.streampipes.sdk.builder.DataStreamBuilder;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.helpers.Formats;
@@ -34,7 +33,7 @@ import org.apache.streampipes.vocabulary.Geo;
 public class VehicleStream extends AbstractAdapterIncludedStream {
 
   @Override
-  public SpDataStream declareModel(DataSourceDescription sep) {
+  public SpDataStream declareModel() {
     return DataStreamBuilder.create("vehicle-position", "Vehicle Position", "An event stream " +
             "that produces current vehicle positions")
             .property(EpProperties.timestampProperty("timestamp"))

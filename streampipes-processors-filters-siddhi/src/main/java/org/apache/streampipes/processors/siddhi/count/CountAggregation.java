@@ -24,10 +24,14 @@ import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.helpers.*;
 import org.apache.streampipes.sdk.utils.Assets;
+import org.apache.streampipes.wrapper.siddhi.SiddhiAppConfig;
+import org.apache.streampipes.wrapper.siddhi.SiddhiAppConfigBuilder;
+import org.apache.streampipes.wrapper.siddhi.SiddhiQueryBuilder;
 import org.apache.streampipes.wrapper.siddhi.engine.StreamPipesSiddhiProcessor;
 import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
 import org.apache.streampipes.wrapper.siddhi.query.FromClause;
 import org.apache.streampipes.wrapper.siddhi.query.GroupByClause;
+import org.apache.streampipes.wrapper.siddhi.query.InsertIntoClause;
 import org.apache.streampipes.wrapper.siddhi.query.SelectClause;
 import org.apache.streampipes.wrapper.siddhi.query.expression.Expressions;
 import org.apache.streampipes.wrapper.siddhi.query.expression.SiddhiTimeUnit;
@@ -66,31 +70,33 @@ public class CountAggregation extends StreamPipesSiddhiProcessor {
   }
 
   @Override
-  public String fromStatement(SiddhiProcessorParams<ProcessorParams> siddhiParams) {
+  public SiddhiAppConfig makeStatements(SiddhiProcessorParams<ProcessorParams> siddhiParams,
+                                        String finalInsertIntoStreamName) {
     Integer timeWindowSize = siddhiParams.getParams().extractor().singleValueParameter(TIME_WINDOW_KEY, Integer.class);
     String scale = siddhiParams.getParams().extractor().selectedSingleValueInternalName(SCALE_KEY, String.class);
+    String fieldToCount = siddhiParams.getParams().extractor().mappingPropertyValue(COUNT_MAPPING);
 
     FromClause fromClause = FromClause.create();
     fromClause.add(Expressions.stream(siddhiParams.getInputStreamNames().get(0), Expressions.timeWindow(timeWindowSize, toTimeUnit(scale))));
 
-    return fromClause.toSiddhiEpl();
+    SelectClause selectClause = SelectClause.create(Expressions.as(Expressions.property(fieldToCount), "value"),
+            Expressions.as(Expressions.count(Expressions.property(fieldToCount)), "count"));
+
+    GroupByClause groupByClause = GroupByClause.create(Expressions.property(fieldToCount));
+    InsertIntoClause insertIntoClause = InsertIntoClause.create(finalInsertIntoStreamName);
+
+    return SiddhiAppConfigBuilder.create()
+            .addQuery(SiddhiQueryBuilder
+                    .create(fromClause, insertIntoClause)
+                    .withSelectClause(selectClause)
+                    .withGroupByClause(groupByClause)
+                    .build())
+            .build();
+
   }
 
   private SiddhiTimeUnit toTimeUnit(String scale) {
     return SiddhiTimeUnit.valueOf(scale);
   }
 
-  @Override
-  public String selectStatement(SiddhiProcessorParams<ProcessorParams> siddhiParams) {
-    String fieldToCount = siddhiParams.getParams().extractor().mappingPropertyValue(COUNT_MAPPING);
-    return SelectClause.create(Expressions.as(Expressions.property(fieldToCount), "value"),
-            Expressions.as(Expressions.count(Expressions.property(fieldToCount)), "count"))
-            .toSiddhiEpl();
-  }
-
-  @Override
-  public String groupByStatement(SiddhiProcessorParams<ProcessorParams> siddhiParams) {
-    String fieldToCount = siddhiParams.getParams().extractor().mappingPropertyValue(COUNT_MAPPING);
-    return GroupByClause.create(Expressions.property(fieldToCount)).toSiddhiEpl();
-  }
 }

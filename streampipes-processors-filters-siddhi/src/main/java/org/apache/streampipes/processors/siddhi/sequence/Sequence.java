@@ -17,30 +17,45 @@
  */
 package org.apache.streampipes.processors.siddhi.sequence;
 
+import org.apache.streampipes.wrapper.siddhi.SiddhiAppConfig;
+import org.apache.streampipes.wrapper.siddhi.SiddhiAppConfigBuilder;
+import org.apache.streampipes.wrapper.siddhi.SiddhiQueryBuilder;
 import org.apache.streampipes.wrapper.siddhi.engine.SiddhiEventEngine;
 import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
+import org.apache.streampipes.wrapper.siddhi.query.InsertIntoClause;
 
 public class Sequence extends SiddhiEventEngine<SequenceParameters> {
 
-  @Override
-  public String fromStatement(SiddhiProcessorParams<SequenceParameters> siddhiParams) {
+  private String fromStatement(SiddhiProcessorParams<SequenceParameters> siddhiParams) {
 
 //    from every (e1=MaterialSupplyStream) -> e2=MaterialConsumptionStream within 10 min
 
 //      return "from every(e1=" + inputStreamNames.get(0) + ") -> not e2=" + inputStreamNames.get(0) + " for " + params.getDuration() + " sec";
 //    return "define stream Test(timestamp LONG,message STRING);\n" +
-            return "from every not "
-                    + siddhiParams.getInputStreamNames().get(0)
-                    + " for "
-                    + siddhiParams.getParams().getDuration()
-                    + " sec";
+    return "from every not "
+            + siddhiParams.getInputStreamNames().get(0)
+            + " for "
+            + siddhiParams.getParams().getDuration()
+            + " sec";
   }
 
-  @Override
-  public String selectStatement(SiddhiProcessorParams<SequenceParameters> siddhiParams) {
+  private String selectStatement(SiddhiProcessorParams<SequenceParameters> siddhiParams) {
 //    return getCustomOutputSelectStatement(params.getGraph());
     return "select *";
 //    return "select currentTimeMillis() as s0timestamp, 'Customer has not arrived' as message";
   }
 
+  @Override
+  public SiddhiAppConfig makeStatements(SiddhiProcessorParams<SequenceParameters> siddhiParams,
+                                        String finalInsertIntoStreamName) {
+
+    InsertIntoClause insertIntoClause = InsertIntoClause.create(finalInsertIntoStreamName);
+    return SiddhiAppConfigBuilder
+            .create()
+            .addQuery(SiddhiQueryBuilder
+                    .create(fromStatement(siddhiParams), insertIntoClause)
+                    .withSelectClause(selectStatement(siddhiParams))
+                    .build())
+            .build();
+  }
 }

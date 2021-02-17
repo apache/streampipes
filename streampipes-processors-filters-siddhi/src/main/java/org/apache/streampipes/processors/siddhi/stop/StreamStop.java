@@ -17,8 +17,12 @@
  */
 package org.apache.streampipes.processors.siddhi.stop;
 
+import org.apache.streampipes.wrapper.siddhi.SiddhiAppConfig;
+import org.apache.streampipes.wrapper.siddhi.SiddhiAppConfigBuilder;
+import org.apache.streampipes.wrapper.siddhi.SiddhiQueryBuilder;
 import org.apache.streampipes.wrapper.siddhi.engine.SiddhiEventEngine;
 import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
+import org.apache.streampipes.wrapper.siddhi.query.InsertIntoClause;
 
 public class StreamStop extends SiddhiEventEngine<StreamStopParameters> {
 
@@ -26,8 +30,7 @@ public class StreamStop extends SiddhiEventEngine<StreamStopParameters> {
     super();
   }
 
-  @Override
-  public String fromStatement(SiddhiProcessorParams<StreamStopParameters> siddhiParams) {
+  private String fromStatement(SiddhiProcessorParams<StreamStopParameters> siddhiParams) {
     return "define stream Test(timestamp LONG,message STRING);\n" +
             "from every not "
             + siddhiParams.getInputStreamNames().get(0)
@@ -35,9 +38,23 @@ public class StreamStop extends SiddhiEventEngine<StreamStopParameters> {
             + " sec";
   }
 
-  @Override
-  public String selectStatement(SiddhiProcessorParams<StreamStopParameters> siddhiParams) {
-      //setSortedEventKeys(Arrays.asList("timestamp", "message"));
+  private String selectStatement(SiddhiProcessorParams<StreamStopParameters> siddhiParams) {
+    //setSortedEventKeys(Arrays.asList("timestamp", "message"));
     return "select currentTimeMillis() as timestamp, 'Event stream has stopped' as message";
+  }
+
+  @Override
+  public SiddhiAppConfig makeStatements(SiddhiProcessorParams<StreamStopParameters> siddhiParams,
+                                        String finalInsertIntoStreamName) {
+
+    InsertIntoClause insertIntoClause = InsertIntoClause.create(finalInsertIntoStreamName);
+
+    return SiddhiAppConfigBuilder
+            .create()
+            .addQuery(SiddhiQueryBuilder
+                    .create(fromStatement(siddhiParams), insertIntoClause)
+                    .withSelectClause(selectStatement(siddhiParams))
+                    .build())
+            .build();
   }
 }

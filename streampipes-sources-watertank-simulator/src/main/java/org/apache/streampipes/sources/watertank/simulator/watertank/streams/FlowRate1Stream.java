@@ -19,7 +19,6 @@
 package org.apache.streampipes.sources.watertank.simulator.watertank.streams;
 
 import org.apache.streampipes.model.SpDataStream;
-import org.apache.streampipes.model.graph.DataSourceDescription;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.DataStreamBuilder;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
@@ -39,7 +38,7 @@ import java.net.URI;
 public class FlowRate1Stream extends AbstractAdapterIncludedStream {
 
   @Override
-  public SpDataStream declareModel(DataSourceDescription sep) {
+  public SpDataStream declareModel() {
     return DataStreamBuilder.create("org.apache.streampipes.sources.simulator.flowrate1")
             .withLocales(Locales.EN)
             .withAssets(Assets.DOCUMENTATION, Assets.ICON)

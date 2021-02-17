@@ -15,18 +15,13 @@
   ~ limitations under the License.
   ~
   -->
-
-## MQTT Publisher
-
-<p align="center"> 
-    <img src="icon.png" width="150px;" class="pe-image-documentation"/>
-</p>
+## REST Publisher
 
 ***
 
 ## Description
 
-Publishes events to MQTT.
+Send a message to a connected websocket client
 
 ***
 
@@ -38,17 +33,9 @@ This sink does not have any requirements and works with any incoming event type.
 
 ## Configuration
 
-### MQTT Broker Settings
+### Port
 
-The basic settings to connect to the broker. 
-The MQTT broker URL indicates the URL of the broker (e.g., localhost), the port indicates the port of the broker
-(e.g., 1883)
-
-
-### MQTT Topic
-
-The topic where events should be sent to.
-
+The port on which the websocket listens for connections
 
 ## Output
 

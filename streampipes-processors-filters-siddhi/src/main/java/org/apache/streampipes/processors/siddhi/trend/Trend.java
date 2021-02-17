@@ -17,10 +17,14 @@
  */
 package org.apache.streampipes.processors.siddhi.trend;
 
+import org.apache.streampipes.wrapper.siddhi.SiddhiAppConfig;
+import org.apache.streampipes.wrapper.siddhi.SiddhiAppConfigBuilder;
+import org.apache.streampipes.wrapper.siddhi.SiddhiQueryBuilder;
 import org.apache.streampipes.wrapper.siddhi.engine.SiddhiEventEngine;
 import org.apache.streampipes.wrapper.siddhi.engine.callback.SiddhiDebugCallback;
 import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
 import org.apache.streampipes.wrapper.siddhi.query.FromClause;
+import org.apache.streampipes.wrapper.siddhi.query.InsertIntoClause;
 import org.apache.streampipes.wrapper.siddhi.query.SelectClause;
 import org.apache.streampipes.wrapper.siddhi.query.expression.*;
 import org.apache.streampipes.wrapper.siddhi.query.expression.pattern.PatternCountOperator;
@@ -37,8 +41,7 @@ public class Trend extends SiddhiEventEngine<TrendParameters> {
     super(callback);
   }
 
-  @Override
-  public String fromStatement(SiddhiProcessorParams<TrendParameters> siddhiParams) {
+  public FromClause fromStatement(SiddhiProcessorParams<TrendParameters> siddhiParams) {
     TrendParameters trendParameters = siddhiParams.getParams();
 
     String mappingProperty = prepareName(trendParameters.getMapping());
@@ -68,18 +71,31 @@ public class Trend extends SiddhiEventEngine<TrendParameters> {
 
     fromClause.add(sequence);
 
-    return fromClause.toSiddhiEpl();
+    return fromClause;
   }
 
-  @Override
-  public String selectStatement(SiddhiProcessorParams<TrendParameters> siddhiParams) {
+  private SelectClause selectStatement(SiddhiProcessorParams<TrendParameters> siddhiParams) {
     SelectClause selectClause = SelectClause.create();
     List<String> outputFieldSelectors = siddhiParams.getParams().getOutputFieldSelectors();
     outputFieldSelectors
             .forEach(outputFieldSelector -> selectClause
                     .addProperty(Expressions.property("e2", outputFieldSelector)));
 
-    return selectClause.toSiddhiEpl();
+    return selectClause;
   }
 
+  @Override
+  public SiddhiAppConfig makeStatements(SiddhiProcessorParams<TrendParameters> siddhiParams,
+                                        String finalInsertIntoStreamName) {
+
+    InsertIntoClause insertIntoClause = InsertIntoClause.create(finalInsertIntoStreamName);
+
+    return SiddhiAppConfigBuilder
+            .create()
+            .addQuery(SiddhiQueryBuilder
+                    .create(fromStatement(siddhiParams), insertIntoClause)
+                    .withSelectClause(selectStatement(siddhiParams))
+                    .build())
+            .build();
+  }
 }

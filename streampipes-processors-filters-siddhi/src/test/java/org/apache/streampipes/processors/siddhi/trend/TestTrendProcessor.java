@@ -27,6 +27,7 @@ import org.apache.streampipes.sdk.helpers.Tuple2;
 import org.apache.streampipes.test.generator.EventStreamGenerator;
 import org.apache.streampipes.test.generator.InvocationGraphGenerator;
 import org.apache.streampipes.test.generator.grounding.EventGroundingGenerator;
+import org.apache.streampipes.wrapper.siddhi.engine.callback.SiddhiDebugCallback;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -109,7 +110,19 @@ public class TestTrendProcessor {
     TrendParameters params = new TrendParameters(graph, trendOperator, increase, timeWindow, "s0" +
             "::randomValue", Arrays.asList("s0::randomValue"));
 
-    Trend trend = new Trend(event -> actualMatchCount[0]++);
+    SiddhiDebugCallback callback = new SiddhiDebugCallback() {
+      @Override
+      public void onEvent(io.siddhi.core.event.Event event) {
+        actualMatchCount[0]++;
+      }
+
+      @Override
+      public void onEvent(List<io.siddhi.core.event.Event> events) {
+
+      }
+    };
+
+    Trend trend = new Trend(callback);
     trend.onInvocation(params, null, null);
 
     sendEvents(trend);

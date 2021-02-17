@@ -30,9 +30,13 @@ import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
+import org.apache.streampipes.wrapper.siddhi.SiddhiAppConfig;
+import org.apache.streampipes.wrapper.siddhi.SiddhiAppConfigBuilder;
+import org.apache.streampipes.wrapper.siddhi.SiddhiQueryBuilder;
 import org.apache.streampipes.wrapper.siddhi.engine.StreamPipesSiddhiProcessor;
 import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
 import org.apache.streampipes.wrapper.siddhi.query.FromClause;
+import org.apache.streampipes.wrapper.siddhi.query.InsertIntoClause;
 import org.apache.streampipes.wrapper.siddhi.query.SelectClause;
 import org.apache.streampipes.wrapper.siddhi.query.expression.Expression;
 import org.apache.streampipes.wrapper.siddhi.query.expression.Expressions;
@@ -58,8 +62,14 @@ public class ListFilter extends StreamPipesSiddhiProcessor {
             .build();
   }
 
+  private Object extractFilterValue(String selector, ProcessingElementParameterExtractor extractor) {
+    EventPropertyList prop = (EventPropertyList) extractor.getEventPropertyBySelector(selector);
+    return extractor.singleValueParameter((EventPropertyPrimitive) prop.getEventProperty(), REQUIRED_VALUE_KEY);
+  }
+
   @Override
-  public String fromStatement(SiddhiProcessorParams<ProcessorParams> siddhiParams) {
+  public SiddhiAppConfig makeStatements(SiddhiProcessorParams<ProcessorParams> siddhiParams,
+                                        String finalInsertIntoStreamName) {
     String filteredFieldSelector = siddhiParams.getParams().extractor().mappingPropertyValue(LIST_KEY);
     Object filterValue = extractFilterValue(filteredFieldSelector, siddhiParams.getParams().extractor());
     FromClause fromClause = FromClause.create();
@@ -67,16 +77,16 @@ public class ListFilter extends StreamPipesSiddhiProcessor {
     Expression containsExp = Expressions.containsListItem(Expressions.property(filteredFieldSelector), filterValue);
     fromClause.add(Expressions.filter(Expressions.stream(siddhiParams.getInputStreamNames().get(0)), containsExp));
 
-    return fromClause.toSiddhiEpl();
-  }
+    SelectClause selectClause = SelectClause.createWildcard();
 
-  @Override
-  public String selectStatement(SiddhiProcessorParams<ProcessorParams> siddhiParams) {
-    return SelectClause.createWildcard().toSiddhiEpl();
-  }
+    InsertIntoClause insertIntoClause = InsertIntoClause.create(finalInsertIntoStreamName);
 
-  private Object extractFilterValue(String selector, ProcessingElementParameterExtractor extractor) {
-    EventPropertyList prop = (EventPropertyList) extractor.getEventPropertyBySelector(selector);
-    return extractor.singleValueParameter((EventPropertyPrimitive) prop.getEventProperty(), REQUIRED_VALUE_KEY);
+    return SiddhiAppConfigBuilder
+            .create()
+            .addQuery(SiddhiQueryBuilder
+                    .create(fromClause, insertIntoClause)
+                    .withSelectClause(selectClause)
+                    .build())
+            .build();
   }
 }

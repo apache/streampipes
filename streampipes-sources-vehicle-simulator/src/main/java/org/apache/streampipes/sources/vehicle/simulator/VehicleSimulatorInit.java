@@ -21,12 +21,12 @@ package org.apache.streampipes.sources.vehicle.simulator;
 import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import org.apache.streampipes.sources.vehicle.simulator.config.VehicleSimulatorConfig;
-import org.apache.streampipes.sources.vehicle.simulator.vehicle.VehicleSource;
+import org.apache.streampipes.sources.vehicle.simulator.vehicle.streams.VehicleStream;
 
 public class VehicleSimulatorInit extends StandaloneModelSubmitter {
 
   public static void main(String[] args) {
-    DeclarersSingleton.getInstance().add(new VehicleSource());
+    DeclarersSingleton.getInstance().add(new VehicleStream());
 
     new VehicleSimulatorInit().init(VehicleSimulatorConfig.INSTANCE);
   }

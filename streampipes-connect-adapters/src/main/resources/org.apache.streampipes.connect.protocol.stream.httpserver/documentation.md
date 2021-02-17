@@ -16,7 +16,7 @@
   ~
   -->
 
-## MQTT Publisher
+## HTTP (Stream)
 
 <p align="center"> 
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
@@ -26,30 +26,7 @@
 
 ## Description
 
-Publishes events to MQTT.
+Continuously fetched events from an HTTP REST endpoint.
 
 ***
 
-## Required input
-
-This sink does not have any requirements and works with any incoming event type.
-
-***
-
-## Configuration
-
-### MQTT Broker Settings
-
-The basic settings to connect to the broker. 
-The MQTT broker URL indicates the URL of the broker (e.g., localhost), the port indicates the port of the broker
-(e.g., 1883)
-
-
-### MQTT Topic
-
-The topic where events should be sent to.
-
-
-## Output
-
-(not applicable for data sinks)

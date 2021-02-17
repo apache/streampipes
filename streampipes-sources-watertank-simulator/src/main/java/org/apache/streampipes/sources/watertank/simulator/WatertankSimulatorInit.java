@@ -21,13 +21,17 @@ package org.apache.streampipes.sources.watertank.simulator;
 import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import org.apache.streampipes.sources.watertank.simulator.config.WatertankSimulatorConfig;
-import org.apache.streampipes.sources.watertank.simulator.watertank.WaterTankSource;
+import org.apache.streampipes.sources.watertank.simulator.watertank.streams.*;
 
 public class WatertankSimulatorInit extends StandaloneModelSubmitter {
 
   public static void main(String[] args) {
     DeclarersSingleton.getInstance()
-            .add(new WaterTankSource());
+            .add(new FlowRate1Stream())
+            .add(new FlowRate2Stream())
+            .add(new PressureTankStream())
+            .add(new WaterLevel1Stream())
+            .add(new WaterLevel2Stream());
 
     new WatertankSimulatorInit().init(WatertankSimulatorConfig.INSTANCE);
   }
