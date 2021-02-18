@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.connect.adapters.opcua;
+package org.apache.streampipes.connect.adapters.opcua.utils;
 
 
 import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
