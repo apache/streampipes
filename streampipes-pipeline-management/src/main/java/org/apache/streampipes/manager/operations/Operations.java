@@ -18,10 +18,12 @@
 
 package org.apache.streampipes.manager.operations;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.streampipes.commons.exceptions.NoSuitableSepasAvailableException;
 import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.manager.endpoint.EndpointItemFetcher;
+import org.apache.streampipes.manager.execution.http.MigrationHelpers;
 import org.apache.streampipes.manager.execution.http.PipelineExecutor;
 import org.apache.streampipes.manager.execution.http.PipelineStorageService;
 import org.apache.streampipes.manager.matching.DataSetGroundingSelector;
@@ -36,6 +38,7 @@ import org.apache.streampipes.manager.topic.WildcardTopicGenerator;
 import org.apache.streampipes.manager.verification.extractor.TypeExtractor;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
+import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.client.endpoint.RdfEndpoint;
 import org.apache.streampipes.model.client.endpoint.RdfEndpointItem;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -44,6 +47,7 @@ import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.PipelineModificationMessage;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineElementRecommendationMessage;
+import org.apache.streampipes.model.pipeline.PipelineElementStatus;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
@@ -54,6 +58,8 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 /**
@@ -190,9 +196,35 @@ public class Operations {
     return PipelineElementRuntimeInfoFetcher.INSTANCE.getCurrentData(spDataStream);
   }
 
-  public static PipelineOperationStatus updatePipelineDeploymentPartial(Pipeline pipelineOld, Pipeline pipelineNew, boolean visualize, boolean storeStatus,
-                                                     boolean monitor){
-    return new PipelineExecutor(pipelineNew, visualize, storeStatus, monitor)
-            .updatePipelineDeploymentPartial(pipelineOld);
+  public static PipelineOperationStatus migratePipelineProcessors(Pipeline newPipeline, boolean visualize, boolean storeStatus,
+                                                                  boolean monitor) throws SpRuntimeException{
+
+
+    Pipeline currentPipeline = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getPipeline(newPipeline.getPipelineId());
+    Pipeline migrationPipeline = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getPipeline(newPipeline.getPipelineId());
+    PipelineOperationStatus status = new PipelineOperationStatus();
+
+    for(Tuple2<DataProcessorInvocation, DataProcessorInvocation> t : MigrationHelpers.getDelta(newPipeline, migrationPipeline)){
+      MigrationHelpers.exchangePipelineElement(migrationPipeline, t);
+
+      PipelineOperationStatus migrationStatus = new PipelineExecutor(migrationPipeline, visualize, storeStatus, monitor)
+              .migratePipelineElement(currentPipeline, t);
+      migrationStatus.getElementStatus().forEach(status::addPipelineElementStatus);
+      if (migrationStatus.isSuccess()) {
+        try {
+          currentPipeline = MigrationHelpers.deepCopyPipeline(migrationPipeline);
+        } catch (JsonProcessingException e) {
+          throw new SpRuntimeException(e);
+        }
+      } else {
+        Tuple2<DataProcessorInvocation, DataProcessorInvocation> failedMigration = new Tuple2<>(t.b, t.a);
+        MigrationHelpers.exchangePipelineElement(migrationPipeline, failedMigration);
+      }
+    }
+
+    overwritePipeline(migrationPipeline);
+    return MigrationHelpers.verifyPipelineOperationStatus(status,
+            "Successfully migrated Pipeline Elements in Pipeline " + newPipeline.getName(),
+            "Could not migrate all Pipeline Elements in Pipeline " + newPipeline.getName());
   }
 }

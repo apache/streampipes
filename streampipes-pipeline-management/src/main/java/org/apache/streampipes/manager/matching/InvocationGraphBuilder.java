@@ -52,7 +52,6 @@ public class InvocationGraphBuilder {
   private static final String DEFAULT_TAG = "default";
   private final PipelineGraph pipelineGraph;
   private final String pipelineId;
-  private Integer uniquePeIndex = 0;
   private final List<InvocableStreamPipesEntity> graphs;
 
   public InvocationGraphBuilder(PipelineGraph pipelineGraph, String pipelineId) {
@@ -102,62 +101,14 @@ public class InvocationGraphBuilder {
           }
           else if (defaultDeploymentTarget(t) && source instanceof DataProcessorInvocation) {
             // target runs on cloud node: use central cloud broker, e.g. kafka
-
-            if (!eventRelayExists(source, t)) {
-
-              if(!graphExists(t.getDOM())) {
-                // add initial relay grounding to source processor
-                ((DataProcessorInvocation) source).addOutputStreamRelay(
-                        new SpDataStreamRelay(generateRelayGrounding(inputGrounding,false)));
-              } else {
-                // modify relay topic of existing relay grounding
-                modifyTopicForDataStreamRelay(source, t, extractTopic(inputGrounding));
-              }
-              modifyTopicForTargetInputStream(source, t, extractTopic(inputGrounding));
-            } else {
-
-              EventGrounding updatedRelayGrounding = generateRelayGrounding(inputGrounding, false);
-              removeExistingStreamRelay(source, t);
-              ((DataProcessorInvocation) source).addOutputStreamRelay(new SpDataStreamRelay(updatedRelayGrounding));
-              modifyTopicForTargetInputStream(source, t, extractTopic(inputGrounding));
-            }
+            connectSourceToTarget((DataProcessorInvocation) source, t, inputGrounding, false);
           }
           else {
             // target runs on other edge node: use target edge node broker
-            if (!eventRelayExists(source ,t)) {
-
-              EventGrounding relayGrounding = generateRelayGrounding(inputGrounding, t,true);
-              if(!graphExists(t.getDOM())) {
-                ((DataProcessorInvocation) source).addOutputStreamRelay(new SpDataStreamRelay(relayGrounding));
-              } else {
-                t.getInputStreams()
-                        .get(getIndex(source.getDOM(), t))
-                        .setEventGrounding(relayGrounding);
-              }
-
-              t.getInputStreams()
-                      .get(getIndex(source.getDOM(), t))
-                      .setEventGrounding(((DataProcessorInvocation) source)
-                              .getOutputStreamRelays()
-                              .get(getIndex(source.getDOM(), t))
-                              .getEventGrounding());
-            } else {
-              EventGrounding updatedRelayGrounding = generateRelayGrounding(inputGrounding, t,true);
-              removeExistingStreamRelay(source, t);
-              ((DataProcessorInvocation) source).addOutputStreamRelay(new SpDataStreamRelay(updatedRelayGrounding));
-
-              t.getInputStreams()
-                      .get(getIndex(source.getDOM(), t))
-                      .setEventGrounding(updatedRelayGrounding);
-            }
+            connectSourceToTarget((DataProcessorInvocation) source, t, inputGrounding, true);
           }
 
         } else {
-
-        // TODO: Handle following edge situation:
-        //  data stream -> invocable (processor, sink) in edge deployments that do not reside on same node
-        // idea: trigger corresponding node controller to relay topic to adjecent broker (either node broker or
-        // global cloud broker)
 
           if (matchingDeploymentTargets(source, t)) {
             t.getInputStreams()
@@ -197,15 +148,12 @@ public class InvocationGraphBuilder {
               .setEventSchema(getInputSchema(source));
 
       String elementIdentifier = makeElementIdentifier(pipelineId,
-              inputGrounding.getTransportProtocol().getTopicDefinition().getActualTopicName(), t.getName());
+              inputGrounding.getTransportProtocol().getTopicDefinition().getActualTopicName(), t.getName(), t.getDOM());
 
       t.setElementId(t.getBelongsTo() + "/" + elementIdentifier);
       t.setDeploymentRunningInstanceId(elementIdentifier);
       t.setCorrespondingPipeline(pipelineId);
       t.setStatusInfoSettings(makeStatusInfoSettings(elementIdentifier));
-
-      uniquePeIndex++;
-
       configure(t, getConnections(t));
 
     });
@@ -215,7 +163,7 @@ public class InvocationGraphBuilder {
     ((DataProcessorInvocation) source).removeOutputStreamRelay(
             ((DataProcessorInvocation) source)
                     .getOutputStreamRelays()
-                    .get(getIndex(source.getDOM(), t)));
+                    .get(getRelayIndex((DataProcessorInvocation) source, t)));
   }
 
   private boolean targetInvocableOnEdgeNode(InvocableStreamPipesEntity t) {
@@ -226,26 +174,35 @@ public class InvocationGraphBuilder {
     return t.getDeploymentTargetNodeId() != null && t.getDeploymentTargetNodeId().equals(DEFAULT_TAG);
   }
 
-  private void modifyTopicForTargetInputStream(NamedStreamPipesEntity s, InvocableStreamPipesEntity t,
-                                               String topic) {
-    t.getInputStreams()
-            .get(getIndex(s.getDOM(), t))
-            .getEventGrounding()
-            .getTransportProtocol()
-            .getTopicDefinition()
-            .setActualTopicName(topic);
+  private void connectSourceToTarget(DataProcessorInvocation source, InvocableStreamPipesEntity target, EventGrounding inputGrounding, boolean edgeToEdgeRelay){
+    EventGrounding relayGrounding = edgeToEdgeRelay ?
+            generateRelayGrounding(inputGrounding, target, true) : generateRelayGrounding(inputGrounding, false);
+    if (!eventRelayExists(source, target)) {
+      modifyTargetInputStream(source, target, relayGrounding, edgeToEdgeRelay);
+        // add initial relay grounding to source processor
+        source.addOutputStreamRelay(new SpDataStreamRelay(relayGrounding));
+    } else {
+      removeExistingStreamRelay(source, target);
+      modifyTargetInputStream(source, target, relayGrounding, edgeToEdgeRelay);
+      source.addOutputStreamRelay(new SpDataStreamRelay(relayGrounding));
+    }
   }
 
-  private void modifyTopicForDataStreamRelay(NamedStreamPipesEntity s, InvocableStreamPipesEntity t,
-                                             String topic) {
-    ((DataProcessorInvocation) s)
-            .getOutputStreamRelays()
-            .get(getIndex(s.getDOM(), t))
-            .getEventGrounding()
-            .getTransportProtocol()
-            .getTopicDefinition()
-            .setActualTopicName(topic);
+  private void modifyTargetInputStream(NamedStreamPipesEntity s, InvocableStreamPipesEntity t,
+                                               EventGrounding grounding, boolean edgeToEdgeRelay) {
+    SpDataStream inputStream = t.getInputStreams()
+            .get(getIndex(s.getDOM(),t));     //Is this correct?
+    if(edgeToEdgeRelay){
+      inputStream.setEventGrounding(grounding);
+    }else{
+      inputStream.getEventGrounding()
+              .getTransportProtocol()
+              .getTopicDefinition()
+              .setActualTopicName(extractTopic(grounding));
+      inputStream.getEventGrounding().setElementId(grounding.getElementId());
+    }
   }
+
 
   private boolean deploymentTargetNotNull(NamedStreamPipesEntity s, InvocableStreamPipesEntity t) {
     if (s instanceof SpDataStream) {
@@ -261,11 +218,11 @@ public class InvocationGraphBuilder {
   }
 
   private boolean eventRelayExists(NamedStreamPipesEntity s, InvocableStreamPipesEntity t) {
-    int idx = getIndex(s.getDOM(), t);
-    return ((DataProcessorInvocation) s).getOutputStreamRelays()
+    SpDataStream targetInput = t.getInputStreams().get(getIndex(s.getDOM(), t));
+    return ((DataProcessorInvocation)s).getOutputStreamRelays()
             .stream()
-            .anyMatch(i -> extractTopic(i.getEventGrounding()).equals(
-                    extractTopic(t.getInputStreams().get(idx).getEventGrounding())));
+            .anyMatch(i -> i.getEventGrounding().getElementId().equals(
+                    targetInput.getEventGrounding().getElementId()));
   }
 
   private Tuple2<EventSchema,? extends OutputStrategy> getOutputSettings(DataProcessorInvocation dataProcessorInvocation) {
@@ -344,14 +301,14 @@ public class InvocationGraphBuilder {
     return statusSettings;
   }
 
-  private String makeElementIdentifier(String pipelineId, String topic, String elementName) {
+  private String makeElementIdentifier(String pipelineId, String topic, String elementName, String dom) {
     return pipelineId
             + "-"
             + topic
             + "-"
             + elementName.replaceAll(" ", "").toLowerCase()
             + "-"
-            + uniquePeIndex;
+            + dom.split("_")[dom.split("_").length-1];
   }
 
   private EventSchema getInputSchema(NamedStreamPipesEntity source) {
@@ -376,6 +333,21 @@ public class InvocationGraphBuilder {
 
   private Integer getIndex(String sourceDomId, InvocableStreamPipesEntity targetElement) {
     return targetElement.getConnectedTo().indexOf(sourceDomId);
+  }
+
+  private Integer getRelayIndex(DataProcessorInvocation source, InvocableStreamPipesEntity target) throws SpRuntimeException {
+    Optional<SpDataStreamRelay> relay = source.getOutputStreamRelays().stream().filter(r ->
+            target.getInputStreams().stream().map(s ->
+                    s.getEventGrounding()
+                            .getElementId())
+                    .collect(Collectors.toList())
+                    .contains(r.getEventGrounding()
+                            .getElementId())).findFirst();
+    if(relay.isPresent()){
+      return source.getOutputStreamRelays().indexOf(relay.get());
+    }else {
+      throw new SpRuntimeException("Index for relay not available");
+    }
   }
 
   private boolean graphExists(String domId) {
@@ -409,6 +381,7 @@ public class InvocationGraphBuilder {
               BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedProtocols().get(0), topic));
     }
     eg.setTransportFormats(sourceInvocableOutputGrounding.getTransportFormats());
+    eg.setElementId(sourceInvocableOutputGrounding.getElementId());
     return eg;
   }
 

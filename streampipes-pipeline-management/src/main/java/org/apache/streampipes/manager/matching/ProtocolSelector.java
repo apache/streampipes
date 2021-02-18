@@ -79,7 +79,9 @@ public class ProtocolSelector extends GroundingSelector {
                                outputTopic);
                     } else {
                         MqttTransportProtocol tp = (MqttTransportProtocol)
-                                ((InvocableStreamPipesEntity) source).getInputStreams().get(0).getEventGrounding().getTransportProtocol();
+                                ((InvocableStreamPipesEntity) source).getInputStreams().stream()
+                                        .filter(s -> (s.getEventGrounding().getTransportProtocol() instanceof MqttTransportProtocol))
+                                        .findFirst().get().getEventGrounding().getTransportProtocol();
                         return new MqttTransportProtocol(tp.getBrokerHostname(), tp.getPort(), outputTopic);
                     }
                 }

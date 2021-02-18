@@ -2,7 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {
   DataProcessorInvocation, Message,
   NodeInfoDescription,
-  Pipeline,
+  Pipeline, PipelineOperationStatus,
   StaticNodeMetadata
 } from "../../../core-model/gen/streampipes-model";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
@@ -11,6 +11,10 @@ import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
 import {ObjectProvider} from "../../services/object-provider.service";
 import {PipelineService} from "../../../platform-services/apis/pipeline.service";
 import {NodeService} from "../../../platform-services/apis/node.service";
+import {DialogService} from "../../../core-ui/dialog/base-dialog/base-dialog.service";
+import {PipelineStatusDialogComponent} from "../../../pipelines/dialog/pipeline-status/pipeline-status-dialog.component";
+import {PanelType} from "../../../core-ui/dialog/base-dialog/base-dialog.model";
+import {map} from "rxjs/operators";
 
 @Component({
   selector: 'migrate-pipeline-processors',
@@ -42,7 +46,8 @@ export class MigratePipelineProcessorsComponent implements OnInit {
               private dialogRef: DialogRef<MigratePipelineProcessorsComponent>,
               private objectProvider: ObjectProvider,
               private pipelineService: PipelineService,
-              private nodeService: NodeService) {
+              private nodeService: NodeService,
+              private dialogService: DialogService) {
 
     this.advancedSettings = true;
     this.panelOpenState = true;
@@ -86,9 +91,10 @@ export class MigratePipelineProcessorsComponent implements OnInit {
                 : source as T;
   }
 
-  displayErrors(data?: string) {
+  displayErrors(statusMessage?: PipelineOperationStatus) {
     this.storageError = true;
-    this.errorMessage = data;
+    this.errorMessage = statusMessage.title;
+    this.showDialog(statusMessage);
   }
 
   loadAndPrepareEdgeNodes() {
@@ -154,7 +160,7 @@ export class MigratePipelineProcessorsComponent implements OnInit {
     })
   }
 
-  migratePipelineProccesors() {
+  migratePipelineProcessors() {
     if (this.tmpPipeline.name == "") {
       //this.showToast("error", "Please enter a name for your pipeline");
       return false;
@@ -174,18 +180,29 @@ export class MigratePipelineProcessorsComponent implements OnInit {
           if (statusMessage.success) {
             this.afterMigration(statusMessage, this.pipeline._id);
           } else {
-            this.displayErrors(statusMessage.notifications[0]);
+            this.displayErrors(statusMessage);
           }
         }, data => {
           this.displayErrors();
         });
   };
 
-  afterMigration(statusMessage: Message, pipelineId?: string) {
+  afterMigration(statusMessage: PipelineOperationStatus, pipelineId?: string) {
     this.hide();
-    // TODO: show dialog with statusMessagge
+    this.showDialog(statusMessage);
     // this.editorService.removePipelineFromCache().subscribe();
   }
+
+  showDialog(data: PipelineOperationStatus) {
+    this.dialogService.open(PipelineStatusDialogComponent, {
+      panelType: PanelType.STANDARD_PANEL,
+      title: "Pipeline Status",
+      width: "70vw",
+      data: {
+        "pipelineOperationStatus": data
+      }
+    });
+  };
 
   hide() {
     this.dialogRef.close();

@@ -258,10 +258,7 @@ public class PipelineWithUserResource extends AbstractRestInterface implements I
                                               @PathParam("pipelineId") String pipelineId,
                                               Pipeline pipelineNew) {
         try {
-            Pipeline pipelineOld = getPipelineStorage()
-                    .getPipeline(pipelineId);
-            PipelineOperationStatus status = Operations.updatePipelineDeploymentPartial(pipelineOld, pipelineNew, true, true, true);
-            Operations.overwritePipeline(pipelineNew);
+            PipelineOperationStatus status = Operations.migratePipelineProcessors(pipelineNew, true, true, true);
             return ok(status);
         } catch (Exception e) {
             e.printStackTrace();
