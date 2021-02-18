@@ -25,9 +25,7 @@ import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.grounding.*;
 import org.apache.streampipes.model.message.DataSetModificationMessage;
 
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.UUID;
 
 public class DataSetGroundingSelector {
 

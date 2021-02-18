@@ -40,7 +40,7 @@ import org.apache.streampipes.storage.rdf4j.ontology.QueryExecutor;
 import org.apache.streampipes.storage.rdf4j.sparql.QueryBuilder;
 
 @Path("/v2/autocomplete")
-public class AutoComplete extends AbstractRestInterface {
+public class AutoComplete extends AbstractRestResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

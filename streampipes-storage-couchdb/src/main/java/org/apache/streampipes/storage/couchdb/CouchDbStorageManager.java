@@ -111,6 +111,11 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   }
 
   @Override
+  public IPipelineElementTemplateStorage getPipelineElementTemplateStorage() {
+    return new PipelineElementTemplateStorageImpl();
+  }
+
+  @Override
   public INodeInfoStorage getNodeStorage() {
     return new NodeInfoStorageImpl();
   }

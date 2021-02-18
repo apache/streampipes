@@ -20,7 +20,6 @@ package org.apache.streampipes.rest.impl;
 
 
 import org.apache.streampipes.model.labeling.Category;
-import org.apache.streampipes.rest.api.ICategory;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -31,13 +30,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Path("/v2/users/{username}/labeling/category")
-public class CategoryResource extends AbstractRestInterface implements ICategory {
+public class CategoryResource extends AbstractRestResource {
 
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @JacksonSerialized
-    @Override
     public Response getAll() {
         return ok(StorageDispatcher.INSTANCE
                 .getNoSqlStore()
@@ -50,7 +48,6 @@ public class CategoryResource extends AbstractRestInterface implements ICategory
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JacksonSerialized
-    @Override
     public Response add(Category category) {
         String categoryId = StorageDispatcher.INSTANCE
                 .getNoSqlStore()
@@ -66,7 +63,6 @@ public class CategoryResource extends AbstractRestInterface implements ICategory
     @Path("/{categoryId}")
     @Produces(MediaType.APPLICATION_JSON)
     @JacksonSerialized
-    @Override
     public Response getCategory(@PathParam("categoryId") String categoryId) {
         return ok(StorageDispatcher.INSTANCE
                 .getNoSqlStore()
@@ -79,7 +75,6 @@ public class CategoryResource extends AbstractRestInterface implements ICategory
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JacksonSerialized
-    @Override
     public Response update(@PathParam("categoryId") String categoryId, Category category) {
         if (!categoryId.equals(category.getId())) {
             String resString = "CategoryId not the same as in message body";
@@ -101,7 +96,6 @@ public class CategoryResource extends AbstractRestInterface implements ICategory
     @Path("/{categoryId}")
     @Produces(MediaType.APPLICATION_JSON)
     @JacksonSerialized
-    @Override
     public Response delete(@PathParam("categoryId") String key) {
         StorageDispatcher.INSTANCE
                 .getNoSqlStore()

@@ -184,11 +184,11 @@ public class Cloner {
   }
 
   public List<SpDataStream> seq(List<SpDataStream> spDataStreams) {
-    return spDataStreams.stream().map(s -> mapSequence(s)).collect(Collectors.toList());
+    return spDataStreams.stream().map(this::mapSequence).collect(Collectors.toList());
   }
 
   public List<SpDataStream> streams(List<SpDataStream> spDataStreams) {
-    return spDataStreams.stream().map(s -> new SpDataStream(s)).collect(Collectors.toList());
+    return spDataStreams.stream().map(this::mapSequence).collect(Collectors.toList());
   }
 
   public List<SpDataStreamRelay> relays(List<SpDataStreamRelay> spDataStreamRelays) {
@@ -209,7 +209,7 @@ public class Cloner {
 
   public List<OutputStrategy> strategies(List<OutputStrategy> outputStrategies) {
     if (outputStrategies != null) {
-      return outputStrategies.stream().map(o -> outputStrategy(o)).collect(Collectors.toList());
+      return outputStrategies.stream().map(this::outputStrategy).collect(Collectors.toList());
     } else {
       return new ArrayList<>();
     }

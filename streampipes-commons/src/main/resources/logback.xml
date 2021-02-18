@@ -27,6 +27,7 @@
 
     <logger name="org.apache.streampipes" level="INFO"/>
     <logger name="org.lightcouch" level="ERROR"/>
+    <logger name="org.apache.kafka" level="ERROR"/>
 
 
     <root level="info">

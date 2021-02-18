@@ -25,7 +25,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class SelectClause extends Expression {
+public class SelectClause extends SiddhiStatement {
 
   private boolean wildcard;
   private List<Expression> outputProperties;

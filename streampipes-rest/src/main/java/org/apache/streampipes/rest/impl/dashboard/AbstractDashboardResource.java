@@ -19,25 +19,17 @@
 package org.apache.streampipes.rest.impl.dashboard;
 
 import org.apache.streampipes.model.dashboard.DashboardModel;
-import org.apache.streampipes.rest.api.dashboard.IDashboard;
-import org.apache.streampipes.rest.impl.AbstractRestInterface;
+import org.apache.streampipes.rest.impl.AbstractRestResource;
 import org.apache.streampipes.storage.api.IDashboardStorage;
 
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-public abstract class AbstractDashboardResource extends AbstractRestInterface implements IDashboard {
+public abstract class AbstractDashboardResource extends AbstractRestResource {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Override
   public Response getAllDashboards() {
     return ok(getDashboardStorage().getAllDashboards());
   }
@@ -45,7 +37,6 @@ public abstract class AbstractDashboardResource extends AbstractRestInterface im
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/{dashboardId}")
-  @Override
   public Response getDashboard(@PathParam("dashboardId") String dashboardId) {
     return ok(getDashboardStorage().getDashboard(dashboardId));
   }
@@ -53,7 +44,6 @@ public abstract class AbstractDashboardResource extends AbstractRestInterface im
   @PUT
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/{dashboardId}")
-  @Override
   public Response modifyDashboard(DashboardModel dashboardModel) {
     getDashboardStorage().updateDashboard(dashboardModel);
     return ok(getDashboardStorage().getDashboard(dashboardModel.getCouchDbId()));
@@ -62,7 +52,6 @@ public abstract class AbstractDashboardResource extends AbstractRestInterface im
   @DELETE
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/{dashboardId}")
-  @Override
   public Response deleteDashboard(@PathParam("dashboardId") String dashboardId) {
     getDashboardStorage().deleteDashboard(dashboardId);
     return ok();
@@ -70,7 +59,6 @@ public abstract class AbstractDashboardResource extends AbstractRestInterface im
 
   @POST
   @Produces(MediaType.APPLICATION_JSON)
-  @Override
   public Response createDashboard(DashboardModel dashboardModel) {
     getDashboardStorage().storeDashboard(dashboardModel);
     return ok();

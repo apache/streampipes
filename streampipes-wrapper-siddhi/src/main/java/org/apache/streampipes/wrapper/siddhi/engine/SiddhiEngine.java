@@ -86,11 +86,14 @@ public class SiddhiEngine {
     String outputKey = SiddhiUtils.getPreparedOutputTopicName(params);
     List<Attribute> streamAttributes = streamDef.get(outputKey).getAttributeList();
     if (!debugMode) {
-      callback = new SiddhiOutputStreamCallback(spOutputCollector, runtimeContext, streamAttributes);
+      callback = new SiddhiOutputStreamCallback(spOutputCollector,
+              runtimeContext,
+              streamAttributes,
+              settings.getSiddhiAppConfig().getOutputConfig());
     } else {
-      callback = new SiddhiOutputStreamDebugCallback(debugCallback);
+      callback = new SiddhiOutputStreamDebugCallback(debugCallback, settings.getSiddhiAppConfig().getOutputConfig());
     }
-
+    System.out.println(SiddhiUtils.getPreparedOutputTopicName(params));
     siddhiAppRuntime.addCallback(SiddhiUtils.getPreparedOutputTopicName(params), callback);
     siddhiAppRuntime.start();
   }

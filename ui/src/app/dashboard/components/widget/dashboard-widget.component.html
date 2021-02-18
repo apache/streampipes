@@ -18,7 +18,7 @@
 
 <div style="height:100%;">
     <div class="box">
-        <div class="assemblyOptions sp-blue-bg m-0 row header h-40" *ngIf="editMode">
+        <div class="assemblyOptions sp-blue-bg m-0 row header h-40" *ngIf="editMode && headerVisible">
             <div fxFlex="100" layout="row" fxLayoutAlign="end center">
                 <button mat-button mat-icon-button color="white" (click)="editWidget()">
                     <i class="material-icons">settings</i>
@@ -99,6 +99,30 @@
                                  [gridsterItem]="item" [widget]="widget" [editMode]="editMode"
                                  [widgetConfig]="configuredWidget"
                                  [widgetDataConfig]="widgetDataConfig" class="h-100"></sp-pallet>
+                </div>
+                <div *ngIf="widget.widgetType === 'wordcloud'" class="h-100 p-0">
+                    <wordcloud-widget [gridsterItemComponent]="gridsterItemComponent"
+                                [gridsterItem]="item" [widget]="widget" [editMode]="editMode"
+                                [widgetConfig]="configuredWidget"
+                                [widgetDataConfig]="widgetDataConfig" class="h-100"></wordcloud-widget>
+                </div>
+                <div *ngIf="widget.widgetType === 'status'" class="h-100 p-0">
+                    <status-widget [gridsterItemComponent]="gridsterItemComponent"
+                                      [gridsterItem]="item" [widget]="widget" [editMode]="editMode"
+                                      [widgetConfig]="configuredWidget"
+                                      [widgetDataConfig]="widgetDataConfig" class="h-100"></status-widget>
+                </div>
+                <div *ngIf="widget.widgetType === 'bar-race'" class="h-100 p-0">
+                    <bar-race-widget [gridsterItemComponent]="gridsterItemComponent"
+                                   [gridsterItem]="item" [widget]="widget" [editMode]="editMode"
+                                   [widgetConfig]="configuredWidget"
+                                   [widgetDataConfig]="widgetDataConfig" class="h-100"></bar-race-widget>
+                </div>
+                <div *ngIf="widget.widgetType === 'stacked-line-chart'" class="h-100 p-0">
+                    <stacked-line-chart-widget [gridsterItemComponent]="gridsterItemComponent"
+                                     [gridsterItem]="item" [widget]="widget" [editMode]="editMode"
+                                     [widgetConfig]="configuredWidget"
+                                     [widgetDataConfig]="widgetDataConfig" class="h-100"></stacked-line-chart-widget>
                 </div>
             </div>
         </div>

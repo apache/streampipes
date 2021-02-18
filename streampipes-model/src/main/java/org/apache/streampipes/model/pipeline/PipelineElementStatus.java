@@ -25,7 +25,10 @@ public class PipelineElementStatus {
 	private String optionalMessage;
 	
 	private boolean success;
-	
+
+	public PipelineElementStatus() {
+	}
+
 	public PipelineElementStatus(String elementId, String elementName, boolean success, String optionalMessage)
 	{
 		this.elementId = elementId;
@@ -49,6 +52,20 @@ public class PipelineElementStatus {
 	public String getElementName() {
 		return elementName;
 	}
-	
-	
+
+	public void setElementId(String elementId) {
+		this.elementId = elementId;
+	}
+
+	public void setElementName(String elementName) {
+		this.elementName = elementName;
+	}
+
+	public void setOptionalMessage(String optionalMessage) {
+		this.optionalMessage = optionalMessage;
+	}
+
+	public void setSuccess(boolean success) {
+		this.success = success;
+	}
 }

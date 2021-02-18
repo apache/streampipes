@@ -22,33 +22,56 @@ import io.siddhi.core.stream.output.StreamCallback;
 import io.siddhi.query.api.definition.Attribute;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
+import org.apache.streampipes.wrapper.siddhi.output.SiddhiListOutputConfig;
+import org.apache.streampipes.wrapper.siddhi.output.SiddhiOutputConfig;
+import org.apache.streampipes.wrapper.siddhi.output.SiddhiOutputType;
 import org.apache.streampipes.wrapper.siddhi.utils.SiddhiUtils;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class SiddhiOutputStreamCallback extends StreamCallback {
 
   private SpOutputCollector collector;
   private EventProcessorRuntimeContext runtimeContext;
+  private SiddhiOutputConfig outputConfig;
 
   private List<Attribute> streamAttributes;
 
   public SiddhiOutputStreamCallback(SpOutputCollector collector,
                                     EventProcessorRuntimeContext runtimeContext,
-                                    List<Attribute> streamAttributes) {
+                                    List<Attribute> streamAttributes,
+                                    SiddhiOutputConfig outputConfig) {
     this.collector = collector;
     this.runtimeContext = runtimeContext;
     this.streamAttributes = streamAttributes;
+    this.outputConfig = outputConfig;
+  }
+
+  private void sendEvents(List<Event> events) {
+    collector.collect(SiddhiUtils.toSpEvent(events,
+            ((SiddhiListOutputConfig) outputConfig).getListFieldName(),
+            runtimeContext.getOutputSchemaInfo(),
+            runtimeContext.getOutputSourceInfo(),
+            streamAttributes));
+  }
+
+  private void sendEvent(Event event) {
+    collector.collect(SiddhiUtils.toSpEvent(event,
+            runtimeContext.getOutputSchemaInfo(),
+            runtimeContext.getOutputSourceInfo(),
+            streamAttributes));
   }
 
   @Override
-  public void receive(Event[] events) {
-    if (events.length > 0) {
-      Event lastEvent = events[events.length - 1];
-      collector.collect(SiddhiUtils.toSpEvent(lastEvent,
-              runtimeContext.getOutputSchemaInfo(),
-              runtimeContext.getOutputSourceInfo(),
-              streamAttributes));
+  public void receive(Event[] inEvents) {
+    if (inEvents.length > 0) {
+      if (this.outputConfig.getSiddhiOutputType() == SiddhiOutputType.FIRST) {
+        Event lastEvent = inEvents[inEvents.length - 1];
+        sendEvent(lastEvent);
+      } else if (this.outputConfig.getSiddhiOutputType() == SiddhiOutputType.LIST) {
+        sendEvents(Arrays.asList(inEvents));
+      }
     }
   }
 }

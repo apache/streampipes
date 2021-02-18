@@ -18,17 +18,19 @@
 
 import {PrimitivePropertyMatch} from "./primitive-property-match";
 import {
+    EventPropertyList,
     EventPropertyPrimitive,
     EventPropertyUnion
 } from "../../../core-model/gen/streampipes-model";
+import {ListPropertyMatch} from "./list-property-match";
 
 export class PropertyMatch {
 
     match(requirement: EventPropertyUnion, offer: EventPropertyUnion): boolean {
         if (requirement instanceof EventPropertyPrimitive && offer instanceof EventPropertyPrimitive) {
             return new PrimitivePropertyMatch().match(requirement, offer);
-        } else {
-            return false;
+        } else if (requirement instanceof EventPropertyList && offer instanceof EventPropertyList) {
+            return new ListPropertyMatch().match(requirement, offer);
         }
     }
 }

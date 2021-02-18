@@ -19,8 +19,19 @@
 <div class="sp-dialog-container">
     <div class="sp-dialog-content">
         <div fxFlex="100" fxLayout="column">
-            <div style="border-bottom:1px solid #ccc;padding:10px;background-color:#f6f6f6">
-                <div fxFlex="100" fxLayout="row" fxLayoutAlign="end end">
+            <div style="border-bottom:1px solid #ccc;padding:10px;background-color:#f6f6f6" fxLayout="row">
+                <div fxFlex fxLayoutAlign="start center" *ngIf="availableTemplates && availableTemplates.length > 0">
+                    <mat-form-field class="form-field" floatLabel="never">
+                        <mat-label>Use template</mat-label>
+                        <mat-select (selectionChange)="loadTemplate($event)" [(value)]="selectedTemplate">
+                            <mat-option>--</mat-option>
+                            <mat-option [value]="template" *ngFor="let template of availableTemplates">
+                                {{template.templateName}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div fxFlex fxLayout="row" fxLayoutAlign="end center">
                     <mat-slide-toggle [(ngModel)]="showDocumentation"
                                       color="primary"
                                       [disabled]="!pipelineElement.payload.includesAssets">
@@ -34,10 +45,11 @@
             </div>
             <div fxFlex="100" fxLayout="row">
                 <div fxFlex="{{_showDocumentation ? 50: 100}}">
-                    <div fxLayout="column">
+                    <div fxLayout="column" *ngIf="!templateMode">
                         <div fxLayout="row" *ngIf="restrictedEditMode">
                             <div fxLayout="column">
-                                <div fxLayout="column" class="customize-item-main-help" style="border: 2px solid #ffc400">
+                                <div fxLayout="column" class="customize-item-main-help"
+                                     style="border: 2px solid #ffc400">
                                     <div class="customize-item-title-help" style="background: #ffc400;" fxFlex="100"
                                          fxLayout="row">
                                         You can only modify things that don't affect your pipeline structure. To fully
@@ -51,7 +63,7 @@
                             <form [formGroup]="parentForm" fxFlex="100">
                                 <app-static-property *ngFor="let config of cachedPipelineElement.staticProperties"
                                                      [staticProperty]="config"
-                                                     [pipelineElement] = "cachedPipelineElement"
+                                                     [pipelineElement]="cachedPipelineElement"
                                                      [displayRecommended]="displayRecommended"
                                                      [staticProperties]="cachedPipelineElement.staticProperties"
                                                      [eventSchemas]="eventSchemas"
@@ -62,31 +74,55 @@
                                                      (validateEmitter)="validConfiguration($event)">
                                 </app-static-property>
                                 <div *ngIf="isDataProcessor">
-                                    <output-strategy *ngFor="let outputStrategy of cachedPipelineElement.outputStrategies"
-                                                     [parentForm]="parentForm"
-                                                     [outputStrategy]="outputStrategy"
-                                                     [selectedElement]="cachedPipelineElement"
-                                                     [restrictedEditMode]="restrictedEditMode">
+                                    <output-strategy
+                                            *ngFor="let outputStrategy of cachedPipelineElement.outputStrategies"
+                                            [parentForm]="parentForm"
+                                            [outputStrategy]="outputStrategy"
+                                            [selectedElement]="cachedPipelineElement"
+                                            [restrictedEditMode]="restrictedEditMode">
                                     </output-strategy>
                                 </div>
                             </form>
                         </div>
                     </div>
+                    <div fxLayout="column" *ngIf="templateMode">
+                        <pipeline-element-template-config [cachedPipelineElement]="cachedPipelineElement"
+                        [template]="template" [templateConfigs]="templateConfigs">
+                        </pipeline-element-template-config>
+                    </div>
                 </div>
-                <div fxFlex="50" *ngIf="showDocumentation" style="padding-left:10px;border-left: 2px solid rgb(204, 204, 204);">
-                    <pipeline-element-documentation [useStyling]="false" [appId]="pipelineElement.payload.appId"></pipeline-element-documentation>
+                <div fxFlex="50" *ngIf="showDocumentation"
+                     style="padding-left:10px;border-left: 2px solid rgb(204, 204, 204);">
+                    <pipeline-element-documentation [useStyling]="false"
+                                                    [appId]="pipelineElement.payload.appId"></pipeline-element-documentation>
                 </div>
             </div>
         </div>
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions">
-        <button mat-button mat-raised-button color="primary" (click)="save()" style="margin-right:10px;"
-                [disabled]="!(formValid)">
-            Save
-        </button>
-        <button mat-button mat-raised-button class="mat-basic" (click)="close()">
-            Cancel
-        </button>
+        <div fxLayout="row" *ngIf="!templateMode">
+            <button mat-button mat-raised-button color="primary" (click)="save()" style="margin-right:10px;"
+                    [disabled]="!(formValid)">
+                <i class="material-icons">save</i><span>&nbsp;Save</span>
+            </button>
+            <button mat-button mat-raised-button class="mat-basic" (click)="close()">
+                Cancel
+            </button>
+            <div fxFlex></div>
+            <button mat-button mat-raised-button color="primary" [disabled]="!(formValid)"
+                    (click)="triggerTemplateMode()">
+                <i class="material-icons">add_circle_outline</i><span>&nbsp;Create template</span>
+            </button>
+        </div>
+        <div fxLayout="row" *ngIf="templateMode">
+            <button mat-button mat-raised-button color="primary" (click)="saveTemplate()" style="margin-right:10px;"
+                    [disabled]="!(formValid)">
+                <i class="material-icons">save</i><span>&nbsp;Save template</span>
+            </button>
+            <button mat-button mat-raised-button class="mat-basic" (click)="cancelTemplateMode()">
+                Cancel
+            </button>
+        </div>
     </div>
 </div>

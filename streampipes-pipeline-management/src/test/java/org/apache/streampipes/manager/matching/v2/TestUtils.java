@@ -57,7 +57,7 @@ public class TestUtils {
 	public static Pipeline makePipeline(SemanticEventProducerDeclarer producer, EventStreamDeclarer stream, SemanticEventProcessingAgentDeclarer agent) {
 		DataSourceDescription dataSourceDescription = new DataSourceDescription(producer.declareModel());
 		dataSourceDescription.setElementId("http://www.schema.org/test1");
-		SpDataStream offer = stream.declareModel(dataSourceDescription);
+		SpDataStream offer = stream.declareModel();
 		offer.setElementId("http://www.schema.org/test2");
 		DataProcessorDescription requirement = (agent.declareModel());
 		requirement.setElementId("http://www.schema.org/test3");
@@ -93,7 +93,7 @@ public class TestUtils {
     }
 
     public static SpDataStream makeStream(SemanticEventProducerDeclarer declarer, EventStreamDeclarer streamDec, String domId) {
-        SpDataStream stream = new SpDataStream(streamDec.declareModel(declarer.declareModel()));
+        SpDataStream stream = new SpDataStream(streamDec.declareModel());
         stream.setDOM(domId);
         return stream;
     }

@@ -18,30 +18,21 @@
 
 package org.apache.streampipes.rest.impl;
 
-import org.glassfish.jersey.media.multipart.FormDataParam;
-import org.apache.streampipes.storage.management.StorageManager;
-import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.client.ontology.Context;
-import org.apache.streampipes.rest.api.IOntologyContext;
+import org.apache.streampipes.model.message.Notifications;
+import org.apache.streampipes.storage.management.StorageManager;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 
-import java.io.InputStream;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.InputStream;
 
 @Path("/v2/contexts")
-public class OntologyContext extends AbstractRestInterface implements IOntologyContext {
+public class OntologyContext extends AbstractRestResource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Override
 	public Response getAvailableContexts() {
 		return ok(StorageManager
 				.INSTANCE
@@ -52,7 +43,6 @@ public class OntologyContext extends AbstractRestInterface implements IOntologyC
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	@Override
 	public Response addContext(@FormDataParam("file") InputStream inputFile, @FormDataParam("context") Context contextInfo) {
 		
 		contextInfo.setInputStream(inputFile);
@@ -72,7 +62,6 @@ public class OntologyContext extends AbstractRestInterface implements IOntologyC
 	@DELETE
 	@Path("/{contextId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	@Override
 	public Response deleteContext(@PathParam("contextId") String contextId) {
 		boolean success = StorageManager.INSTANCE.getContextStorage().deleteContext(contextId);
 		if (success) {

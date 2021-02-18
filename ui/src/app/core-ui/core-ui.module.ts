@@ -75,6 +75,9 @@ import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ConfigureLabelsComponent } from './labels/components/configure-labels/configure-labels.component';
 import { LabelListItemComponent } from './labels/components/label-list-item/label-list-item.component';
+import { StatusWidgetComponent } from "./widget/status/status-widget.component";
+import { NgxChartsModule } from "@swimlane/ngx-charts";
+import { BarchartWidgetComponent } from "./widget/barchart/barchart-widget.component";
 
 @NgModule({
     imports: [
@@ -91,6 +94,7 @@ import { LabelListItemComponent } from './labels/components/label-list-item/labe
         MatProgressSpinnerModule,
         MatDatepickerModule,
         MatNativeDateModule,
+        NgxChartsModule,
         PlotlyViaWindowModule,
         MatSliderModule,
         MatChipsModule,
@@ -99,6 +103,7 @@ import { LabelListItemComponent } from './labels/components/label-list-item/labe
         QuillModule.forRoot()
     ],
     declarations: [
+        BarchartWidgetComponent,
         ConfigureLabelsComponent,
         ConfirmDialogComponent,
         DisplayRecommendedPipe,
@@ -127,7 +132,8 @@ import { LabelListItemComponent } from './labels/components/label-list-item/labe
         StaticOneOfInputComponent,
         StaticRuntimeResolvableAnyInputComponent,
         StaticRuntimeResolvableOneOfInputComponent,
-        LabelListItemComponent,
+        StatusWidgetComponent,
+        LabelListItemComponent
     ],
     providers: [
         MatDatepickerModule,
@@ -167,7 +173,9 @@ import { LabelListItemComponent } from './labels/components/label-list-item/labe
     StaticOneOfInputComponent,
     StaticRuntimeResolvableAnyInputComponent,
     StaticRuntimeResolvableOneOfInputComponent,
-    ImageViewerComponent
+    ImageViewerComponent,
+    StatusWidgetComponent,
+    BarchartWidgetComponent,
   ]
 })
 export class CoreUiModule {

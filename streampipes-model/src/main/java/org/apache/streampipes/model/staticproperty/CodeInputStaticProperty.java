@@ -75,4 +75,9 @@ public class CodeInputStaticProperty extends StaticProperty {
   public void setCodeTemplate(String codeTemplate) {
     this.codeTemplate = codeTemplate;
   }
+
+  @Override
+  public void accept(StaticPropertyVisitor visitor) {
+    visitor.visit(this);
+  }
 }

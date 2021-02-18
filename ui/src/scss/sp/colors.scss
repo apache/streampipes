@@ -58,6 +58,10 @@
     background: #FAFAFA;
 }
 
+.sp-border-left-accent-light {
+    border-left: 2px solid $sp-color-accent-light;
+}
+
 .sp-blue-border-nopadding {
     border: 3px solid $sp-color-accent-light;
 }

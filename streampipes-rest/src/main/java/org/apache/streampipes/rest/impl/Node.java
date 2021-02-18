@@ -29,7 +29,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/v2/users/{username}/nodes")
-public class Node extends AbstractRestInterface implements INode {
+public class Node extends AbstractRestResource implements INode {
 
     private static final String ACTIVATE = "activate";
     private static final String DEACTIVATE = "deactivate";

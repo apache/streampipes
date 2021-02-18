@@ -22,7 +22,6 @@ import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataSinkDescription;
-import org.apache.streampipes.model.graph.DataSourceDescription;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 
 import java.net.URI;
@@ -32,19 +31,19 @@ public interface IPipelineElementDescriptionStorage {
 	
 	boolean storeInvocablePipelineElement(InvocableStreamPipesEntity element);
 
-	boolean storeDataSource(DataSourceDescription sep);
+	boolean storeDataStream(SpDataStream stream);
 	
-	boolean storeDataSource(String jsonld);
+	boolean storeDataStream(String jsonld);
 	
-	boolean storeDataProcessor(DataProcessorDescription sepa);
+	boolean storeDataProcessor(DataProcessorDescription processorDescription);
 	
 	boolean storeDataProcessor(String jsonld);
 	
-	DataSourceDescription getDataSourceById(URI rdfId);
+	SpDataStream getDataStreamById(URI rdfId);
 
-	DataSourceDescription getDataSourceByAppId(String appId);
+	SpDataStream getDataStreamByAppId(String appId);
 
-	DataSourceDescription getDataSourceById(String rdfId);
+	SpDataStream getDataStreamById(String rdfId);
 	
 	DataProcessorDescription getDataProcessorById(String rdfId);
 	
@@ -58,31 +57,31 @@ public interface IPipelineElementDescriptionStorage {
 
 	DataSinkDescription getDataSinkByAppId(String appId);
 	
-	List<DataSourceDescription> getAllDataSources();
+	List<SpDataStream> getAllDataStreams();
 	
 	List<DataProcessorDescription> getAllDataProcessors();
 	
-	boolean deleteDataSource(DataSourceDescription sep);
+	boolean deleteDataStream(SpDataStream sep);
 	
-	boolean deleteDataSource(String rdfId);
+	boolean deleteDataStream(String rdfId);
 	
-	boolean deleteDataProcessor(DataProcessorDescription sepa);
+	boolean deleteDataProcessor(DataProcessorDescription processorDescription);
 	
 	boolean deleteDataProcessor(String rdfId);
 	
-	boolean exists(DataSourceDescription sep);
+	boolean exists(SpDataStream stream);
 	
-	boolean exists(DataProcessorDescription sepa);
+	boolean exists(DataProcessorDescription processorDescription);
 
 	boolean existsDataProcessor(String elementId);
 
-	boolean existsDataSource(String elementId);
+	boolean existsDataStream(String elementId);
 
 	boolean existsDataSink(String elementId);
 	
-	boolean update(DataSourceDescription sep);
+	boolean update(SpDataStream stream);
 	
-	boolean update(DataProcessorDescription sepa);
+	boolean update(DataProcessorDescription processorDescription);
 
 	boolean exists(DataSinkDescription sec);
 

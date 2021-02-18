@@ -100,6 +100,7 @@ export class DataMarketplaceComponent implements OnInit {
                 this.filteredAdapterDescriptions = this.adapterDescriptions;
                 this.adaptersLoading = false;
             }, error => {
+                console.log(error);
                 this.adaptersLoading = false;
                 this.adapterLoadingError = true;
             });

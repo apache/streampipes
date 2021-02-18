@@ -37,6 +37,14 @@ public class StreamRequirementsBuilder {
   private List<MappingProperty> mappingProperties;
 
   /**
+   * Creates a new stream requirement without any further property requirements.
+   * @return {@link CollectedStreamRequirements}
+   */
+  public static CollectedStreamRequirements any() {
+    return StreamRequirementsBuilder.create().build();
+  }
+
+  /**
    * Creates new requirements for a data processor or a data sink.
    * @return {@link StreamRequirementsBuilder}
    */

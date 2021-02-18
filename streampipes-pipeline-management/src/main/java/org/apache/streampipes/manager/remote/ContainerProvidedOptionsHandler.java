@@ -23,7 +23,7 @@ import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
-import org.apache.streampipes.serializers.json.GsonSerializer;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import java.io.IOException;
 
@@ -38,10 +38,9 @@ public class ContainerProvidedOptionsHandler {
 //    request.setStaticProperties(parameterRequest.getStaticProperties());
 //    request.setAppId(parameterRequest.getAppId());
 
-    String httpRequestBody = GsonSerializer.getGsonWithIds()
-            .toJson(request);
 
     try {
+      String httpRequestBody = JacksonSerializer.getObjectMapper().writeValueAsString(request);
       Response httpResp = Request.Post(request.getBelongsTo() + "/configurations").bodyString(httpRequestBody, ContentType.APPLICATION_JSON).execute();
       return handleResponse(httpResp);
     } catch (Exception e) {
@@ -52,8 +51,6 @@ public class ContainerProvidedOptionsHandler {
 
   private RuntimeOptionsResponse handleResponse(Response httpResp) throws JsonSyntaxException, IOException {
     String resp = httpResp.returnContent().asString();
-    return GsonSerializer
-            .getGsonWithIds()
-            .fromJson(resp, RuntimeOptionsResponse.class);
+    return JacksonSerializer.getObjectMapper().readValue(resp, RuntimeOptionsResponse.class);
   }
 }

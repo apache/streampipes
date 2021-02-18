@@ -22,7 +22,6 @@ import org.apache.streampipes.connect.adapter.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.management.SourcesManagement;
 import org.apache.streampipes.connect.rest.AbstractContainerResource;
 import org.apache.streampipes.model.SpDataSet;
-import org.apache.streampipes.model.graph.DataSourceDescription;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
@@ -66,17 +65,13 @@ public class SourcesResource extends AbstractContainerResource {
     @JacksonSerialized
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAdapterDataSource(@PathParam("id") String id) {
-
         try {
-            DataSourceDescription result = this.sourcesManagement.getAdapterDataSource(id);
-            return ok(result);
+            return ok(this.sourcesManagement.getAdapterDataStream(id));
         } catch (AdapterException e) {
             logger.error("Error while retrieving DataSourceDescription with id: " + id);
             return fail();
         }
     }
-
-
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)

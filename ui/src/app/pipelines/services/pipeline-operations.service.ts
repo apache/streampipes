@@ -44,12 +44,16 @@ export class PipelineOperationsService {
   }
 
   startPipeline(pipelineId: string,
-                toggleRunningOperation,
-                refreshPipelinesEmitter: EventEmitter<boolean>) {
-    toggleRunningOperation('starting');
+                refreshPipelinesEmitter: EventEmitter<boolean>,
+                toggleRunningOperation?,) {
+    if (toggleRunningOperation) {
+      toggleRunningOperation('starting');
+    }
     this.PipelineService.startPipeline(pipelineId).subscribe(msg => {
       refreshPipelinesEmitter.emit(true);
-      toggleRunningOperation('starting');
+      if (toggleRunningOperation) {
+        toggleRunningOperation('starting');
+      }
       if (this.ShepherdService.isTourActive()) {
         this.ShepherdService.trigger("pipeline-started");
       }
@@ -59,7 +63,7 @@ export class PipelineOperationsService {
     });
   };
 
-  stopPipeline(pipelineId: string, toggleRunningOperation, refreshPipelinesEmitter: EventEmitter<boolean>) {
+  stopPipeline(pipelineId: string, refreshPipelinesEmitter: EventEmitter<boolean>, toggleRunningOperation?) {
     toggleRunningOperation('stopping');
     this.PipelineService.stopPipeline(pipelineId).subscribe(msg => {
       refreshPipelinesEmitter.emit(true);

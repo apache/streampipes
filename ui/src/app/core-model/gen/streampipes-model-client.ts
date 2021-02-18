@@ -19,7 +19,22 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 2.24.612 on 2020-11-25 23:55:36.
+// Generated using typescript-generator version 2.27.744 on 2021-02-17 10:58:52.
+
+export class Element {
+    elementId: string;
+    publicElement: boolean;
+
+    static fromData(data: Element, target?: Element): Element {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new Element();
+        instance.elementId = data.elementId;
+        instance.publicElement = data.publicElement;
+        return instance;
+    }
+}
 
 export class FileMetadata {
     createdAt: number;
@@ -71,6 +86,83 @@ export class MatchingResultMessage {
     }
 }
 
+export class RawUserApiToken {
+    hashedToken: string;
+    rawToken: string;
+    tokenId: string;
+    tokenName: string;
+
+    static fromData(data: RawUserApiToken, target?: RawUserApiToken): RawUserApiToken {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new RawUserApiToken();
+        instance.rawToken = data.rawToken;
+        instance.hashedToken = data.hashedToken;
+        instance.tokenName = data.tokenName;
+        instance.tokenId = data.tokenId;
+        return instance;
+    }
+}
+
+export class User {
+    email: string;
+    fullName: string;
+    hideTutorial: boolean;
+    ownActions: Element[];
+    ownSepas: Element[];
+    ownSources: Element[];
+    password: string;
+    preferredActions: string[];
+    preferredSepas: string[];
+    preferredSources: string[];
+    rev: string;
+    roles: Role[];
+    userApiTokens: UserApiToken[];
+    userId: string;
+    username: string;
+
+    static fromData(data: User, target?: User): User {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new User();
+        instance.userId = data.userId;
+        instance.rev = data.rev;
+        instance.email = data.email;
+        instance.username = data.username;
+        instance.fullName = data.fullName;
+        instance.password = data.password;
+        instance.ownSources = __getCopyArrayFn(Element.fromData)(data.ownSources);
+        instance.ownSepas = __getCopyArrayFn(Element.fromData)(data.ownSepas);
+        instance.ownActions = __getCopyArrayFn(Element.fromData)(data.ownActions);
+        instance.preferredSources = __getCopyArrayFn(__identity<string>())(data.preferredSources);
+        instance.preferredSepas = __getCopyArrayFn(__identity<string>())(data.preferredSepas);
+        instance.preferredActions = __getCopyArrayFn(__identity<string>())(data.preferredActions);
+        instance.userApiTokens = __getCopyArrayFn(UserApiToken.fromData)(data.userApiTokens);
+        instance.hideTutorial = data.hideTutorial;
+        instance.roles = __getCopyArrayFn(__identity<Role>())(data.roles);
+        return instance;
+    }
+}
+
+export class UserApiToken {
+    tokenId: string;
+    tokenName: string;
+
+    static fromData(data: UserApiToken, target?: UserApiToken): UserApiToken {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new UserApiToken();
+        instance.tokenId = data.tokenId;
+        instance.tokenName = data.tokenName;
+        return instance;
+    }
+}
+
+export type Role = "SYSTEM_ADMINISTRATOR" | "MANAGER" | "OPERATOR" | "DIMENSION_OPERATOR" | "USER_DEMO" | "BUSINESS_ANALYST";
+
 function __getCopyArrayFn<T>(itemCopyFn: (item: T) => T): (array: T[]) => T[] {
     return (array: T[]) => __copyArray(array, itemCopyFn);
 }
@@ -100,3 +192,4 @@ function __copyObject<T>(object: { [index: string]: T }, itemCopyFn: (item: T) =
 function __identity<T>(): (value: T) => T {
     return value => value;
 }
+

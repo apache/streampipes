@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.rest.impl;
 
+import org.apache.streampipes.units.UnitProvider;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -25,15 +27,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.apache.streampipes.rest.api.IOntologyMeasurementUnit;
-import org.apache.streampipes.units.UnitProvider;
-
 @Path("/v2/units")
-public class OntologyMeasurementUnit extends AbstractRestInterface implements IOntologyMeasurementUnit {
+public class OntologyMeasurementUnit extends AbstractRestResource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Override
 	@Path("/instances")
 	public Response getAllUnits() {
 		return ok(UnitProvider
@@ -43,7 +41,6 @@ public class OntologyMeasurementUnit extends AbstractRestInterface implements IO
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Override
 	@Path("/types")
 	public Response getAllUnitTypes() {
 		return ok(UnitProvider
@@ -54,7 +51,6 @@ public class OntologyMeasurementUnit extends AbstractRestInterface implements IO
 	@GET
 	@Path("/instances/{resourceId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	@Override
 	public Response getUnit(@PathParam("resourceId") String resourceUri) {
 		return ok(UnitProvider
 				.INSTANCE

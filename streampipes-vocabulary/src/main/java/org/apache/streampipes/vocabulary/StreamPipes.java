@@ -418,7 +418,6 @@ public class StreamPipes {
   public static final String USER_DEFINED_OUTPUT_STRATEGY = NS + "UserDefinedOutputStrategy";
   public static final String PE_CONFIGURED = NS + "isPeConfigured" ;
 
-  public static final String HAS_REQUIRED_FILETYPES = NS + "hasRequiredFiletypes" ;
   public static final String HAS_EVENT_RELAY = NS + "hasEventRelay";
   public static final String HAS_EVENT_RELAY_STRATEGY = NS + "hasEventRelayStrategy";
   public static final String DATA_STREAM_RELAY_CONTAINER = NS + "DataStreamRelayContainer" ;
@@ -489,4 +488,8 @@ public class StreamPipes {
   public static final String HAS_NODE_RESOURCE_PROPERTY = NS + "hasNodeResourceProperty";
   public static final String NODE_RESOURCE_REQUIREMENT = NS + "NodeResourceRequirement";
   public static final String REQUIRES_RESOURCES = NS + "requiresResources";
+
+  public static final String HAS_REQUIRED_FILETYPES = NS + "hasRequiredFiletypes";
+  public static final String IS_INTERNALLY_MANAGED = NS + "isInternallyManaged";
+  public static final String HAS_CORRESPONDING_ADAPTER_ID = NS + "hasCorrespondingAdapterId";
 }

@@ -27,6 +27,7 @@ public class Description {
 	private URI uri;
 	private String type;
 	private String appId;
+	private boolean editable;
 
 	public Description(String name, String description, URI uri)
 	{
@@ -76,6 +77,14 @@ public class Description {
 
 	public void setAppId(String appId) {
 		this.appId = appId;
+	}
+
+	public boolean isEditable() {
+		return editable;
+	}
+
+	public void setEditable(boolean editable) {
+		this.editable = editable;
 	}
 
 	@Override

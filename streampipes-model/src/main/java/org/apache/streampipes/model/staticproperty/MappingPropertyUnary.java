@@ -58,4 +58,9 @@ public class MappingPropertyUnary extends MappingProperty {
   public void setSelectedProperty(String selectedProperty) {
     this.selectedProperty = selectedProperty;
   }
+
+  @Override
+  public void accept(StaticPropertyVisitor visitor) {
+    visitor.visit(this);
+  }
 }

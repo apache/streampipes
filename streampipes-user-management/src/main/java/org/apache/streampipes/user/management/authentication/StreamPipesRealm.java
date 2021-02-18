@@ -19,17 +19,16 @@
 package org.apache.streampipes.user.management.authentication;
 
 
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.SimpleAuthenticationInfo;
-import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authc.*;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.subject.SimplePrincipalCollection;
+import org.apache.streampipes.model.client.user.User;
+import org.apache.streampipes.user.management.service.TokenService;
+import org.apache.streampipes.user.management.service.UserService;
+import org.apache.streampipes.user.management.util.TokenUtil;
 import org.lightcouch.CouchDbException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.streampipes.user.management.service.UserService;
 
 
 /**
@@ -57,7 +56,7 @@ public class StreamPipesRealm implements Realm {
    * So far we only support UsernamePasswordToken.
    */
   public boolean supports(AuthenticationToken authenticationToken) {
-    return authenticationToken instanceof UsernamePasswordToken;
+    return authenticationToken instanceof UsernamePasswordToken || authenticationToken instanceof BearerToken;
   }
 
   @Override
@@ -72,12 +71,7 @@ public class StreamPipesRealm implements Realm {
         String email = ((UsernamePasswordToken) authenticationToken).getUsername();
         UserService userService = new UserService(email);
 
-        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo();
-        SimplePrincipalCollection principals = new SimplePrincipalCollection();
-        principals.add(email, this.getName());
-
-        LOG.info(principals.toString());
-        info.setPrincipals(principals);
+        SimpleAuthenticationInfo info = makeInfo(email);
         info.setCredentials(userService.getPassword());
 
         if (credentialsMatcher.doCredentialsMatch(authenticationToken, info)) {
@@ -90,8 +84,26 @@ public class StreamPipesRealm implements Realm {
       } catch (CouchDbException | NullPointerException e) {
         e.printStackTrace();
       }
+    } else if (authenticationToken instanceof BearerToken) {
+      BearerToken token = (BearerToken) authenticationToken;
+      String hashedToken = TokenUtil.hashToken(token.getToken());
+      User user = new TokenService().findUserForToken(hashedToken);
+      SimpleAuthenticationInfo info = makeInfo(user.getEmail());
+
+      return info;
     }
 
     return null;
+  }
+
+  private SimpleAuthenticationInfo makeInfo(String email) {
+    SimpleAuthenticationInfo info = new SimpleAuthenticationInfo();
+    SimplePrincipalCollection principals = new SimplePrincipalCollection();
+    principals.add(email, this.getName());
+
+    LOG.info(principals.toString());
+    info.setPrincipals(principals);
+
+    return info;
   }
 }

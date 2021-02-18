@@ -24,46 +24,39 @@ import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataSinkDescription;
-import org.apache.streampipes.model.graph.DataSourceDescription;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
+import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorageCache;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class PipelineElementInMemoryStorage implements IPipelineElementDescriptionStorageCache {
 
   private Map<String, DataSinkDescription> inMemoryDataSinkStorage;
-  private Map<String, DataSourceDescription> inMemoryDataSourceStorage;
   private Map<String, DataProcessorDescription> inMemoryDataProcessorStorage;
-  private Map<String, SpDataStream> inMemoryEventStreamStorage;
+  private Map<String, SpDataStream> inMemoryDataStreamStorage;
   private IPipelineElementDescriptionStorage sesameStorage;
 
 
   public PipelineElementInMemoryStorage(IPipelineElementDescriptionStorage sesameStorage) {
     this.inMemoryDataSinkStorage = new HashMap<>();
     this.inMemoryDataProcessorStorage = new HashMap<>();
-    this.inMemoryDataSourceStorage = new HashMap<>();
-    this.inMemoryEventStreamStorage = new HashMap<>();
+    this.inMemoryDataStreamStorage = new HashMap<>();
     this.sesameStorage = sesameStorage;
     init();
   }
 
   private void init() {
-    initializeSECStorage();
-    initializeSEPAStorage();
-    initializeSEPStorage();
+    initializeDataSinkStorage();
+    initializeDataProcessorStorage();
+    initializeDataStreamStorage();
   }
 
-  private void initializeSECStorage() {
+  private void initializeDataSinkStorage() {
     inMemoryDataSinkStorage.clear();
     List<DataSinkDescription> secs = sort(sesameStorage
             .getAllDataSinks()
@@ -73,7 +66,7 @@ public class PipelineElementInMemoryStorage implements IPipelineElementDescripti
     secs.forEach(sec -> inMemoryDataSinkStorage.put(sec.getElementId(), sec));
   }
 
-  private void initializeSEPAStorage() {
+  private void initializeDataProcessorStorage() {
     inMemoryDataProcessorStorage.clear();
     List<DataProcessorDescription> sepas = sort(sesameStorage
             .getAllDataProcessors()
@@ -83,17 +76,14 @@ public class PipelineElementInMemoryStorage implements IPipelineElementDescripti
     sepas.forEach(sepa -> inMemoryDataProcessorStorage.put(sepa.getElementId(), sepa));
   }
 
-  private void initializeSEPStorage() {
-    inMemoryDataSourceStorage.clear();
-    List<DataSourceDescription> seps = sesameStorage.getAllDataSources();
-    seps.forEach(sep ->
-            sep.getSpDataStreams().forEach(es ->
-                    es.getEventSchema()
+  private void initializeDataStreamStorage() {
+    inMemoryDataStreamStorage.clear();
+    List<SpDataStream> streams = sesameStorage.getAllDataStreams();
+    streams.forEach(stream ->
+                    stream.getEventSchema()
                             .getEventProperties()
-                            .sort(Comparator.comparingInt(EventProperty::getIndex))));
-    seps.forEach(sep -> inMemoryDataSourceStorage.put(sep.getElementId(), sep));
-    seps.forEach(sep -> sep.getSpDataStreams().forEach(eventStream -> inMemoryEventStreamStorage.put(eventStream.getElementId(),
-            eventStream)));
+                            .sort(Comparator.comparingInt(EventProperty::getIndex)));
+    streams.forEach(stream -> inMemoryDataStreamStorage.put(stream.getElementId(), stream));
   }
 
   private <T extends ConsumableStreamPipesEntity> List<T> sort(List<T> processingElements) {
@@ -110,13 +100,13 @@ public class PipelineElementInMemoryStorage implements IPipelineElementDescripti
   }
 
   @Override
-  public boolean storeDataSource(DataSourceDescription sep) {
-    return sesameStorage.storeDataSource(sep);
+  public boolean storeDataStream(SpDataStream stream) {
+    return sesameStorage.storeDataStream(stream);
   }
 
   @Override
-  public boolean storeDataSource(String jsonld) {
-    return sesameStorage.storeDataSource(jsonld);
+  public boolean storeDataStream(String jsonld) {
+    return sesameStorage.storeDataStream(jsonld);
   }
 
   @Override
@@ -126,22 +116,22 @@ public class PipelineElementInMemoryStorage implements IPipelineElementDescripti
 
   @Override
   public boolean storeDataProcessor(String jsonld) {
-    return sesameStorage.storeDataSource(jsonld);
+    return sesameStorage.storeDataProcessor(jsonld);
   }
 
   @Override
-  public DataSourceDescription getDataSourceById(URI rdfId) {
-    return new DataSourceDescription(inMemoryDataSourceStorage.get(rdfId.toString()));
+  public SpDataStream getDataStreamById(URI rdfId) {
+    return new Cloner().mapSequence(inMemoryDataStreamStorage.get(rdfId.toString()));
   }
 
   @Override
-  public DataSourceDescription getDataSourceByAppId(String appId) {
-    return new DataSourceDescription(getByAppId(inMemoryDataSourceStorage, appId));
+  public SpDataStream getDataStreamByAppId(String appId) {
+    return new Cloner().mapSequence(getByAppId(inMemoryDataStreamStorage, appId));
   }
 
   @Override
-  public DataSourceDescription getDataSourceById(String rdfId) {
-    return new DataSourceDescription(inMemoryDataSourceStorage.get(rdfId));
+  public SpDataStream getDataStreamById(String rdfId) {
+    return new Cloner().mapSequence(inMemoryDataStreamStorage.get(rdfId));
   }
 
   @Override
@@ -186,8 +176,8 @@ public class PipelineElementInMemoryStorage implements IPipelineElementDescripti
   }
 
   @Override
-  public List<DataSourceDescription> getAllDataSources() {
-    return new ArrayList<>(inMemoryDataSourceStorage.values());
+  public List<SpDataStream> getAllDataStreams() {
+    return new ArrayList<>(inMemoryDataStreamStorage.values());
   }
 
   @Override
@@ -196,43 +186,43 @@ public class PipelineElementInMemoryStorage implements IPipelineElementDescripti
   }
 
   @Override
-  public boolean deleteDataSource(DataSourceDescription sep) {
-    boolean success = sesameStorage.deleteDataSource(sep);
-    initializeSEPStorage();
+  public boolean deleteDataStream(SpDataStream sep) {
+    boolean success = sesameStorage.deleteDataStream(sep);
+    initializeDataStreamStorage();
     return success;
   }
 
   @Override
-  public boolean deleteDataSource(String rdfId) {
-    boolean success = sesameStorage.deleteDataSource(rdfId);
-    initializeSEPStorage();
+  public boolean deleteDataStream(String rdfId) {
+    boolean success = sesameStorage.deleteDataStream(rdfId);
+    initializeDataStreamStorage();
     return success;
   }
 
   @Override
   public boolean deleteDataSink(String rdfId) {
     boolean success = sesameStorage.deleteDataSink(rdfId);
-    initializeSECStorage();
+    initializeDataSinkStorage();
     return success;
   }
 
   @Override
   public boolean deleteDataProcessor(DataProcessorDescription sepa) {
     boolean success = sesameStorage.deleteDataProcessor(sepa);
-    initializeSEPAStorage();
+    initializeDataProcessorStorage();
     return success;
   }
 
   @Override
   public boolean deleteDataProcessor(String rdfId) {
-    boolean success = sesameStorage.deleteDataSource(rdfId);
-    initializeSEPAStorage();
+    boolean success = sesameStorage.deleteDataProcessor(rdfId);
+    initializeDataProcessorStorage();
     return success;
   }
 
   @Override
-  public boolean exists(DataSourceDescription sep) {
-    return inMemoryDataSourceStorage.containsKey(sep.getElementId());
+  public boolean exists(SpDataStream stream) {
+    return inMemoryDataStreamStorage.containsKey(stream.getElementId());
   }
 
   @Override
@@ -246,8 +236,8 @@ public class PipelineElementInMemoryStorage implements IPipelineElementDescripti
   }
 
   @Override
-  public boolean existsDataSource(String elementId) {
-    return inMemoryDataSourceStorage.containsKey(elementId);
+  public boolean existsDataStream(String elementId) {
+    return inMemoryDataStreamStorage.containsKey(elementId);
   }
 
   @Override
@@ -256,16 +246,16 @@ public class PipelineElementInMemoryStorage implements IPipelineElementDescripti
   }
 
   @Override
-  public boolean update(DataSourceDescription sep) {
+  public boolean update(SpDataStream sep) {
     boolean success = sesameStorage.update(sep);
-    initializeSEPStorage();
+    initializeDataStreamStorage();
     return success;
   }
 
   @Override
   public boolean update(DataProcessorDescription sepa) {
     boolean success = sesameStorage.update(sepa);
-    initializeSEPAStorage();
+    initializeDataProcessorStorage();
     return success;
   }
 
@@ -277,14 +267,14 @@ public class PipelineElementInMemoryStorage implements IPipelineElementDescripti
   @Override
   public boolean update(DataSinkDescription sec) {
     boolean success = sesameStorage.update(sec);
-    initializeSECStorage();
+    initializeDataSinkStorage();
     return success;
   }
 
   @Override
   public boolean deleteDataSink(DataSinkDescription sec) {
     boolean success = sesameStorage.deleteDataSink(sec);
-    initializeSECStorage();
+    initializeDataSinkStorage();
     return success;
   }
 
@@ -305,21 +295,21 @@ public class PipelineElementInMemoryStorage implements IPipelineElementDescripti
 
   @Override
   public SpDataStream getEventStreamById(String rdfId) {
-    return inMemoryEventStreamStorage.get(rdfId);
+    return inMemoryDataStreamStorage.get(rdfId);
   }
 
   @Override
   public void refreshDataProcessorCache() {
-    this.initializeSEPAStorage();
+    this.initializeDataProcessorStorage();
   }
 
   @Override
   public void refreshDataSinkCache() {
-    this.initializeSECStorage();
+    this.initializeDataSinkStorage();
   }
 
   @Override
   public void refreshDataSourceCache() {
-    this.initializeSEPStorage();
+    this.initializeDataStreamStorage();
   }
 }

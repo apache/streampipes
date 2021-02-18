@@ -28,7 +28,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/v2/users/{username}/streams")
-public class DataStream extends AbstractRestInterface {
+public class DataStream extends AbstractRestResource {
 
   @Path("/update")
   @POST

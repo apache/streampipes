@@ -92,4 +92,9 @@ public class StaticPropertyGroup extends StaticProperty {
   public boolean isHorizontalRendering() {
     return horizontalRendering;
   }
+
+  @Override
+  public void accept(StaticPropertyVisitor visitor) {
+    visitor.visit(this);
+  }
 }

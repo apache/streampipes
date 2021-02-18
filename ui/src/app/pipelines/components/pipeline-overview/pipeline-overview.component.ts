@@ -65,7 +65,7 @@ export class PipelineOverviewComponent implements OnInit {
 
     if (this.pipelineToStart) {
       if (!(this.pipelineToStart.running)) {
-        this.pipelineOperationsService.startPipeline(this.pipelineToStart._id, this.toggleRunningOperation, this.refreshPipelinesEmitter);
+        this.pipelineOperationsService.startPipeline(this.pipelineToStart._id, this.refreshPipelinesEmitter, this.toggleRunningOperation);
       }
     }
   }

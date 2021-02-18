@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.manager.setup;
 
-import org.apache.streampipes.container.util.Util;
 import org.apache.streampipes.model.client.endpoint.RdfEndpoint;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notifications;
@@ -155,8 +154,12 @@ public class CouchDbInstallationStep implements InstallationStep {
             MapReduce usernameFunction = new MapReduce();
             usernameFunction.setMap("function(doc) { if(doc.email) { emit(doc.email, doc); } }");
 
+            MapReduce tokenFunction = new MapReduce();
+            tokenFunction.setMap("function(doc) { if (doc.userApiTokens) { doc.userApiTokens.forEach(function(token) { emit(token.hashedToken, doc.email); });}}");
+
             views.put("password", passwordFunction);
             views.put("username", usernameFunction);
+            views.put("token", tokenFunction);
 
             userDocument.setViews(views);
             Response resp = Utils.getCouchDbUserClient().design().synchronizeWithDb(userDocument);

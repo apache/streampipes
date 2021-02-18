@@ -45,7 +45,7 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
   @Override
   public void onInvocation(B parameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
     SiddhiInvocationConfigGenerator<B> siddhiConfigGenerator = new SiddhiInvocationConfigGenerator<>(parameters,
-            this::fromStatement, this::selectStatement);
+           this::makeStatements);
     this.siddhiEngine.initializeEngine(siddhiConfigGenerator, spOutputCollector, runtimeContext);
   }
 

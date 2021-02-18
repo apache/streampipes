@@ -28,9 +28,9 @@ public class PipelineElementContainerResourceConfig extends ResourceConfig {
   public PipelineElementContainerResourceConfig() {
     register(DataSinkPipelineElementResource.class);
     register(DataProcessorPipelineElementResource.class);
-    register(DataSourcePipelineElementResource.class);
+    register(DataStreamPipelineElementResource.class);
     register(WelcomePage.class);
-    register(PipelineElementTemplateResource.class);
+    register(PipelineTemplateResource.class);
 
     register(JacksonSerializationProvider.class);
   }

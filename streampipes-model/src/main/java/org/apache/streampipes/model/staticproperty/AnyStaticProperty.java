@@ -59,4 +59,9 @@ public class AnyStaticProperty extends SelectionStaticProperty {
     super(StaticPropertyType.AnyStaticProperty, internalName, label, description, horizontalRendering);
   }
 
+  @Override
+  public void accept(StaticPropertyVisitor visitor) {
+    visitor.visit(this);
+  }
+
 }

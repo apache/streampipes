@@ -17,13 +17,13 @@
   -->
 
 <div flex="100" fxLayout="row">
-    <dashboard-status-filled fxFlex="25" [label]="'Shipped'" [statusValue]="shippedTime"
-                             [color]="'rgb(156, 156, 156)'"></dashboard-status-filled>
-    <dashboard-status-filled fxFlex="25" [label]="'Delivered'" [statusValue]="deliveredTime"
-                             [color]="'rgb(156, 156, 156)'"></dashboard-status-filled>
-    <dashboard-status-filled fxFlex="25" [label]="'Took'" [statusValue]="tookTime"
-                             [color]="'rgb(156, 156, 156)'"></dashboard-status-filled>
-    <dashboard-status-filled fxFlex="25" [label]="'Status'" [statusValue]="errorCode" [color]="statusColor"></dashboard-status-filled>
+    <sp-status-widget fxFlex="25" [label]="'Shipped'" [statusValue]="shippedTime"
+                             [color]="'rgb(156, 156, 156)'"></sp-status-widget>
+    <sp-status-widget fxFlex="25" [label]="'Delivered'" [statusValue]="deliveredTime"
+                             [color]="'rgb(156, 156, 156)'"></sp-status-widget>
+    <sp-status-widget fxFlex="25" [label]="'Took'" [statusValue]="tookTime"
+                             [color]="'rgb(156, 156, 156)'"></sp-status-widget>
+    <sp-status-widget fxFlex="25" [label]="'Status'" [statusValue]="errorCode" [color]="statusColor"></sp-status-widget>
 </div>
 <div *ngFor="let statusMessage of statusMessages">
     <h4>{{statusMessage}}</h4>

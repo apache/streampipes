@@ -61,6 +61,7 @@ import {UserDefinedOutputStrategyComponent} from "./components/output-strategy/u
 import {ConnectModule} from "../connect/connect.module";
 import {MatSliderModule} from "@angular/material/slider";
 import { MigratePipelineProcessorsComponent } from './dialog/migrate-pipeline-processors/migrate-pipeline-processors.component';
+import {PipelineElementTemplateConfigComponent} from "./components/pipeline-element-template-config/pipeline-element-template-config.component";
 
 @NgModule({
     imports: [
@@ -96,6 +97,7 @@ import { MigratePipelineProcessorsComponent } from './dialog/migrate-pipeline-pr
         PipelineElementIconStandComponent,
         PipelineElementOptionsComponent,
         PipelineElementRecommendationComponent,
+        PipelineElementTemplateConfigComponent,
         PipelineComponent,
         PropertySelectionComponent,
         SavePipelineComponent,

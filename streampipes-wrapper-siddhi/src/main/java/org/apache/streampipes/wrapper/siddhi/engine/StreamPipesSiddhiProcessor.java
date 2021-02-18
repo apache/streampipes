@@ -41,7 +41,7 @@ public abstract class StreamPipesSiddhiProcessor extends StreamPipesDataProcesso
   @Override
   public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     SiddhiInvocationConfigGenerator<ProcessorParams> siddhiConfigGenerator = new SiddhiInvocationConfigGenerator<>(parameters,
-            this::fromStatement, this::selectStatement);
+            this::makeStatements);
     this.siddhiEngine.initializeEngine(siddhiConfigGenerator, spOutputCollector, runtimeContext);
   }
 
@@ -54,4 +54,6 @@ public abstract class StreamPipesSiddhiProcessor extends StreamPipesDataProcesso
   public void onDetach() throws SpRuntimeException {
     this.siddhiEngine.shutdownEngine();
   }
+
+
 }
