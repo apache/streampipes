@@ -159,7 +159,6 @@ public class NodeManager {
                 + NodeControllerConfig.INSTANCE.getBackendHost()
                 + COLON
                 + NodeControllerConfig.INSTANCE.getBackendPort()
-                + SLASH
                 + BACKEND_BASE_ROUTE
                 + NODE_REGISTRATION_ROUTE;
     }

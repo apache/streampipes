@@ -175,23 +175,21 @@ public class InvocationGraphBuilder {
   }
 
   private void connectSourceToTarget(DataProcessorInvocation source, InvocableStreamPipesEntity target, EventGrounding inputGrounding, boolean edgeToEdgeRelay){
+    //connect a source entity with a target entity through an appropriate relay
     EventGrounding relayGrounding = edgeToEdgeRelay ?
             generateRelayGrounding(inputGrounding, target, true) : generateRelayGrounding(inputGrounding, false);
-    if (!eventRelayExists(source, target)) {
-      modifyTargetInputStream(source, target, relayGrounding, edgeToEdgeRelay);
-        // add initial relay grounding to source processor
-        source.addOutputStreamRelay(new SpDataStreamRelay(relayGrounding));
-    } else {
+    if (eventRelayExists(source, target)) {
       removeExistingStreamRelay(source, target);
-      modifyTargetInputStream(source, target, relayGrounding, edgeToEdgeRelay);
-      source.addOutputStreamRelay(new SpDataStreamRelay(relayGrounding));
     }
+    modifyTargetInputStream(source, target, relayGrounding, edgeToEdgeRelay);
+    source.addOutputStreamRelay(new SpDataStreamRelay(relayGrounding));
   }
 
   private void modifyTargetInputStream(NamedStreamPipesEntity s, InvocableStreamPipesEntity t,
                                                EventGrounding grounding, boolean edgeToEdgeRelay) {
+    //modify the grounding of the InputStream of the target entity so that it matches the relay grounding
     SpDataStream inputStream = t.getInputStreams()
-            .get(getIndex(s.getDOM(),t));     //Is this correct?
+            .get(getIndex(s.getDOM(),t));
     if(edgeToEdgeRelay){
       inputStream.setEventGrounding(grounding);
     }else{
