@@ -15,7 +15,7 @@
   ~ limitations under the License.
   ~
   -->
-## REST Publisher
+## Websocket API
 
 ***
 
