@@ -18,18 +18,18 @@
 package org.apache.streampipes.manager.template;
 
 import org.apache.streampipes.model.staticproperty.*;
-import org.apache.streampipes.model.template.PipelineElementTemplate;
-import org.apache.streampipes.model.template.PipelineElementTemplateConfig;
+import org.apache.streampipes.model.util.Cloner;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
 
-  private Map<String, PipelineElementTemplateConfig> configs;
+  private final Map<String, Object> configs;
 
-  public PipelineElementTemplateVisitor(PipelineElementTemplate template) {
-    this.configs = template.getTemplateConfigs();
+  public PipelineElementTemplateVisitor(Map<String, Object> configs) {
+    this.configs = configs;
   }
 
   @Override
@@ -44,37 +44,48 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
 
   @Override
   public void visit(CodeInputStaticProperty codeInputStaticProperty) {
-
+    if (hasKey(codeInputStaticProperty)) {
+      codeInputStaticProperty.setValue(getAsString(codeInputStaticProperty));
+    }
   }
 
   @Override
   public void visit(CollectionStaticProperty collectionStaticProperty) {
-
+    if (hasKey(collectionStaticProperty)) {
+      List<Map<String, Object>> values = getAsList(collectionStaticProperty, "members");
+      collectionStaticProperty.setMembers(new ArrayList<>());
+      values.forEach(v -> {
+        StaticProperty sp = new Cloner().staticProperty(collectionStaticProperty.getStaticPropertyTemplate());
+        PipelineElementTemplateVisitor visitor = new PipelineElementTemplateVisitor(v);
+        sp.accept(visitor);
+        collectionStaticProperty.getMembers().add(sp);
+      });
+    }
   }
 
   @Override
   public void visit(ColorPickerStaticProperty colorPickerStaticProperty) {
     if (hasKey(colorPickerStaticProperty)) {
-      colorPickerStaticProperty.setSelectedColor(getStringValue(colorPickerStaticProperty));
+      colorPickerStaticProperty.setSelectedColor(getAsString(colorPickerStaticProperty));
     }
   }
 
   @Override
   public void visit(DomainStaticProperty domainStaticProperty) {
-
+    // TODO - not used anywhere anymore
   }
 
   @Override
   public void visit(FileStaticProperty fileStaticProperty) {
     if (hasKey(fileStaticProperty)) {
-      fileStaticProperty.setLocationPath(getStringValue(fileStaticProperty));
+      fileStaticProperty.setLocationPath(getAsString(fileStaticProperty));
     }
   }
 
   @Override
   public void visit(FreeTextStaticProperty freeTextStaticProperty) {
     if (hasKey(freeTextStaticProperty)) {
-      freeTextStaticProperty.setValue(getStringValue(freeTextStaticProperty));
+      freeTextStaticProperty.setValue(getAsString(freeTextStaticProperty));
     }
   }
 
@@ -96,31 +107,51 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
   @Override
   public void visit(OneOfStaticProperty oneOfStaticProperty) {
     if (hasKey(oneOfStaticProperty)) {
-      String value = getStringValue(oneOfStaticProperty);
-      oneOfStaticProperty.getOptions().forEach(option -> {
-        option.setSelected(option.getName().equals(value));
-      });
+      String value = getAsString(oneOfStaticProperty);
+      oneOfStaticProperty.getOptions().forEach(option ->
+              option.setSelected(option.getName().equals(value)));
     }
   }
 
   @Override
   public void visit(SecretStaticProperty secretStaticProperty) {
-
+    if (hasKey(secretStaticProperty)) {
+      secretStaticProperty.setEncrypted(true);
+      secretStaticProperty.setValue(getAsString(secretStaticProperty));
+    }
   }
 
   @Override
   public void visit(StaticPropertyAlternative staticPropertyAlternative) {
-
+    if (hasKey(staticPropertyAlternative)) {
+      Map<String, Object> values = getAsMap(staticPropertyAlternative);
+      StaticProperty property = staticPropertyAlternative.getStaticProperty();
+      staticPropertyAlternative.setSelected(Boolean.parseBoolean(String.valueOf(values.get("selected"))));
+      PipelineElementTemplateVisitor visitor = new PipelineElementTemplateVisitor(getAsMap(values, "staticProperty"));
+      property.accept(visitor);
+    }
   }
 
   @Override
   public void visit(StaticPropertyAlternatives staticPropertyAlternatives) {
-
+    if (hasKey(staticPropertyAlternatives)) {
+      Map<String, Object> values = getAsMap(staticPropertyAlternatives, "alternatives");
+      staticPropertyAlternatives.getAlternatives().forEach((alternative) -> {
+        PipelineElementTemplateVisitor visitor = new PipelineElementTemplateVisitor(values);
+        alternative.accept(visitor);
+      });
+    }
   }
 
   @Override
   public void visit(StaticPropertyGroup staticPropertyGroup) {
-
+    if (hasKey(staticPropertyGroup)) {
+      Map<String, Object> values = getAsMap(staticPropertyGroup);
+      staticPropertyGroup.getStaticProperties().forEach((group) -> {
+        PipelineElementTemplateVisitor visitor = new PipelineElementTemplateVisitor(getAsMap(values, "staticProperties"));
+        group.accept(visitor);
+      });
+    }
   }
 
   @Override
@@ -128,15 +159,31 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
 
   }
 
-  private String getStringValue(StaticProperty sp) {
-    return String.valueOf(getValue(sp));
-  }
-
   private Object getValue(StaticProperty sp) {
-    return configs.get(sp.getInternalName()).getValue();
+    return ((Map<String, Object>) configs.get(sp.getInternalName())).get("value");
   }
 
   private boolean hasKey(StaticProperty sp) {
     return configs.containsKey(sp.getInternalName());
+  }
+
+  private String getAsString(StaticProperty sp) {
+    return configs.get(sp.getInternalName()).toString();
+  }
+
+  private Map<String, Object> getAsMap(StaticProperty sp) {
+    return (Map<String, Object>) configs.get(sp.getInternalName());
+  }
+
+  private Map<String, Object> getAsMap(StaticProperty sp, String subkey) {
+    return (Map<String, Object>) getAsMap(sp).get(subkey);
+  }
+
+  private Map<String, Object> getAsMap(Map<String, Object> map, String key) {
+    return (Map<String, Object>) map.get(key);
+  }
+
+  private List<Map<String, Object>> getAsList(StaticProperty sp, String key) {
+    return (List<Map<String, Object>>) getAsMap(sp).get(key);
   }
 }

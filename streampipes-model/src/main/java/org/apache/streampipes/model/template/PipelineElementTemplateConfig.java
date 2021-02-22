@@ -30,7 +30,15 @@ public class PipelineElementTemplateConfig {
     this.value = value;
   }
 
+  public static PipelineElementTemplateConfig from(Object value) {
+    return new PipelineElementTemplateConfig(value);
+  }
+
   public PipelineElementTemplateConfig() {
+  }
+
+  private PipelineElementTemplateConfig(Object value) {
+    this.value = value;
   }
 
   public boolean isEditable() {

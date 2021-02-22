@@ -20,6 +20,9 @@ package org.apache.streampipes.manager.template;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.template.PipelineElementTemplate;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public abstract class PipelineElementTemplateHandler<T extends InvocableStreamPipesEntity> {
 
   protected T pipelineElement;
@@ -36,7 +39,9 @@ public abstract class PipelineElementTemplateHandler<T extends InvocableStreamPi
   }
 
   public T applyTemplateOnPipelineElement() {
-      PipelineElementTemplateVisitor visitor = new PipelineElementTemplateVisitor(template);
+      Map<String, Object> configs = new HashMap<>();
+      template.getTemplateConfigs().forEach((key, value) -> configs.put(key, value.getValue()));
+      PipelineElementTemplateVisitor visitor = new PipelineElementTemplateVisitor(configs);
       pipelineElement.getStaticProperties().forEach(config -> config.accept(visitor));
 
       if (overwriteNameAndDescription) {
