@@ -19,6 +19,10 @@
 
 ***
 
+<p align="center"> 
+    <img src="icon.png" width="266" class="pe-image-documentation"/>
+</p>
+
 ## Description
 
 Send a message to a connected websocket client
