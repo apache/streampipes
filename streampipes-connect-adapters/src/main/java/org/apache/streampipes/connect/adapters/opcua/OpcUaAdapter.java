@@ -61,14 +61,6 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter implements ResolvesC
     private static final String UNAUTHENTICATED = "UNAUTHENTICATED";
     private static final String AVAILABLE_NODES = "AVAILABLE_NODES";
 
-    private String opcUaServer;
-    private String namespaceIndex;
-    private String nodeId;
-    private String port;
-    private boolean selectedURL;
-    private boolean unauthenticated;
-    private String username;
-    private String password;
 
     private Map<String, Object> event;
     private List<OpcNode> allNodes;
@@ -84,7 +76,7 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter implements ResolvesC
     public OpcUaAdapter(SpecificAdapterStreamDescription adapterDescription) {
         super(adapterDescription);
 
-        getConfigurations(adapterDescription);
+        this.opcUa = OpcUa.from(this.adapterDescription);
 
         this.event = new HashMap<>();
         this.numberProperties = 0;
@@ -146,15 +138,8 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter implements ResolvesC
 
     @Override
     public void startAdapter() throws AdapterException {
-        if (this.selectedURL && this.unauthenticated) {
-            this.opcUa = new OpcUa(opcUaServer, Integer.parseInt(namespaceIndex), nodeId);
-        } else if (!this.selectedURL && this.unauthenticated){
-            this.opcUa = new OpcUa(opcUaServer, Integer.parseInt(port), Integer.parseInt(namespaceIndex), nodeId);
-        } else if (this.selectedURL) {
-            this.opcUa = new OpcUa(opcUaServer, Integer.parseInt(namespaceIndex), nodeId, username, password);
-        } else {
-            this.opcUa = new OpcUa(opcUaServer, Integer.parseInt(port), Integer.parseInt(namespaceIndex), nodeId, username, password);
-        }
+
+        this.opcUa = OpcUa.from(this.adapterDescription);
 
         try {
             this.opcUa.connect();
@@ -170,8 +155,7 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter implements ResolvesC
             this.numberProperties = nodeIds.size();
             this.opcUa.createListSubscription(nodeIds, this);
         } catch (Exception e) {
-            throw new AdapterException("Could not connect to OPC-UA server! Server: " + opcUaServer + " Port: " + port +
-                    " NamespaceIndex: " + namespaceIndex + " NodeId: " + nodeId);
+            throw new AdapterException("Could not connect to OPC-UA server! Server: " + this.opcUa.getOpcServerURL());
         }
     }
 
@@ -193,18 +177,7 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter implements ResolvesC
         EventSchema eventSchema = new EventSchema();
         List<EventProperty> allProperties = new ArrayList<>();
 
-
-        getConfigurations(adapterDescription);
-        OpcUa opc;
-        if (this.selectedURL && this.unauthenticated) {
-            opc = new OpcUa(opcUaServer, Integer.parseInt(namespaceIndex), nodeId);
-        } else if (!this.selectedURL && this.unauthenticated){
-            opc = new OpcUa(opcUaServer, Integer.parseInt(port), Integer.parseInt(namespaceIndex), nodeId);
-        } else if (this.selectedURL) {
-            opc = new OpcUa(opcUaServer, Integer.parseInt(namespaceIndex), nodeId, username, password);
-        } else {
-            opc = new OpcUa(opcUaServer, Integer.parseInt(port), Integer.parseInt(namespaceIndex), nodeId, username, password);
-        }
+        OpcUa opc = OpcUa.from(this.adapterDescription);
 
         try {
             opc.connect();
@@ -245,48 +218,6 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter implements ResolvesC
         return ID;
     }
 
-    private void getConfigurations(SpecificAdapterStreamDescription adapterDescription) {
-        StaticPropertyExtractor extractor =
-                StaticPropertyExtractor.from(adapterDescription.getConfig(), new ArrayList<>());
-
-        String selectedAlternativeConnection = extractor.selectedAlternativeInternalId(OPC_HOST_OR_URL);
-        String selectedAlternativeAuthentication = extractor.selectedAlternativeInternalId(ACCESS_MODE);
-
-
-
-        if (selectedAlternativeConnection.equals(OPC_URL)) {
-
-            String serverAddress = extractor.singleValueParameter(OPC_SERVER_URL, String.class);
-
-            if (!serverAddress.startsWith("opc.tcp://")) {
-                serverAddress = "opc.tcp://" + serverAddress;
-            }
-
-            this.opcUaServer = serverAddress;
-            this.selectedURL = true;
-        } else {
-
-            String serverAddress = extractor.singleValueParameter(OPC_SERVER_HOST, String.class);
-
-            if (!serverAddress.startsWith("opc.tcp://")) {
-                serverAddress = "opc.tcp://" + serverAddress;
-            }
-
-            this.opcUaServer = serverAddress;
-            this.port = extractor.singleValueParameter(OPC_SERVER_PORT, String.class);
-            this.selectedURL = false;
-        }
-        this.unauthenticated = selectedAlternativeAuthentication.equals(UNAUTHENTICATED);
-        if (!this.unauthenticated) {
-            this.username = extractor.singleValueParameter(USERNAME, String.class);
-            this.password = extractor.secretValue(PASSWORD);
-        }
-
-        this.namespaceIndex = extractor.singleValueParameter(NAMESPACE_INDEX, String.class);
-        this.nodeId = extractor.singleValueParameter(NODE_ID, String.class);
-    }
-
-
     @Override
     public List<Option> resolveOptions(String requestId, StaticPropertyExtractor parameterExtractor) {
 
@@ -314,8 +245,6 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter implements ResolvesC
 
         return nodes;
     }
-
-
 
     private String getRuntimeNameOfNode(NodeId nodeId) {
         String[] keys = nodeId.getIdentifier().toString().split("\\.");
