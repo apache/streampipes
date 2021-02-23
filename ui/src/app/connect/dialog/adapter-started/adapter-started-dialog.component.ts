@@ -86,7 +86,7 @@ export class AdapterStartedDialog {
                         this.isSetAdapter = true;
                     } else {
                         this.restService.getSourceDetails(x.notifications[0].title).subscribe(x => {
-                            this.streamDescription = x.spDataStreams[0];
+                            this.streamDescription = x;
                             this.pollingActive = true;
                         });
                     }
