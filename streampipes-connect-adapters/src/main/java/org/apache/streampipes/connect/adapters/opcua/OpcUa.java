@@ -74,10 +74,11 @@ public class OpcUa {
     }
 
 
-    public OpcUa(String opcServerURL, int namespaceIndex, String nodeId) {
+    public OpcUa(String opcServerURL, int namespaceIndex, String nodeId, List<String> selectedNodeNames) {
 
         this.opcServerURL = opcServerURL;
         this.unauthenticated = true;
+        this.selectedNodeNames = selectedNodeNames;
 
         if (isInteger(nodeId)) {
             int integerNodeId = Integer.parseInt(nodeId);
@@ -87,19 +88,19 @@ public class OpcUa {
         }
     }
 
-    public OpcUa(String opcServer, int opcServerPort, int namespaceIndex, String nodeId) {
-        this( opcServer + ":" + opcServerPort, namespaceIndex, nodeId);
+    public OpcUa(String opcServer, int opcServerPort, int namespaceIndex, String nodeId, List<String> selectedNodeNames) {
+        this( opcServer + ":" + opcServerPort, namespaceIndex, nodeId, selectedNodeNames);
     }
 
-    public OpcUa(String opcServerURL, int namespaceIndex, String nodeId, String username, String password) {
-        this(opcServerURL, namespaceIndex, nodeId);
+    public OpcUa(String opcServerURL, int namespaceIndex, String nodeId, String username, String password, List<String> selectedNodeNames) {
+        this(opcServerURL, namespaceIndex, nodeId, selectedNodeNames);
         this.unauthenticated = false;
         this.user = username;
         this.password = password;
     }
 
-    public OpcUa(String opcServer, int opcServerPort, int namespaceIndex, String nodeId, String username, String password) {
-        this (opcServer, opcServerPort, namespaceIndex, nodeId);
+    public OpcUa(String opcServer, int opcServerPort, int namespaceIndex, String nodeId, String username, String password, List<String> selectedNodeNames) {
+        this (opcServer, opcServerPort, namespaceIndex, nodeId, selectedNodeNames);
         this.unauthenticated = false;
         this.user = username;
         this.password = password;
@@ -172,8 +173,8 @@ public class OpcUa {
         );
     }
 
-    public List<OpcNode> browseNode() throws AdapterException {
-        List<OpcNode> referenceDescriptions = browseNode(node);
+    public List<OpcNode> browseNode(boolean selectNodes) throws AdapterException {
+        List<OpcNode> referenceDescriptions = browseNode(node, selectNodes);
 
         if (referenceDescriptions.size() == 0) {
             referenceDescriptions = getRootNote(node);
@@ -219,9 +220,8 @@ public class OpcUa {
         return result;
     }
 
-    private List<OpcNode> browseNode(NodeId browseRoot) throws AdapterException {
+    private List<OpcNode> browseNode(NodeId browseRoot, boolean selectNodes) throws AdapterException {
         List<OpcNode> result = new ArrayList<>();
-
 
         BrowseDescription browse = new BrowseDescription(
                 browseRoot,
@@ -304,7 +304,7 @@ public class OpcUa {
                         result.add(opcNode);
                         rd.getNodeId().toNodeId(client.getNamespaceTable()).ifPresent(nodeId -> {
                             try {
-                                browseNode(nodeId);
+                                browseNode(nodeId, selectNodes);
                             } catch (AdapterException e) {
                                 e.printStackTrace();
                             }
@@ -314,6 +314,12 @@ public class OpcUa {
             }
         } catch (InterruptedException | ExecutionException | UaException e) {
             throw new AdapterException("Browsing nodeId=" + browse + " failed: " + e.getMessage());
+        }
+
+        if (selectNodes) {
+            // filter for nodes that were selected by the user during configuration
+            result = result.stream().filter(node -> this.getSelectedNodeNames().contains(node.getLabel()))
+                    .collect(Collectors.toList());
         }
 
         return result;
@@ -413,4 +419,11 @@ public class OpcUa {
     }
 
 
+    public List<String> getSelectedNodeNames() {
+        return selectedNodeNames;
+    }
+
+    public String getOpcServerURL() {
+        return opcServerURL;
+    }
 }

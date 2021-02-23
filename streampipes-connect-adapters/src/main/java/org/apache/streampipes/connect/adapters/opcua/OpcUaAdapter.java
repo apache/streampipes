@@ -22,11 +22,13 @@ import org.apache.streampipes.connect.adapter.Adapter;
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
 import org.apache.streampipes.connect.adapter.exception.ParseException;
 import org.apache.streampipes.connect.adapter.model.specific.SpecificDataStreamAdapter;
+import org.apache.streampipes.container.api.ResolvesContainerProvidedOptions;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
+import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
@@ -38,12 +40,9 @@ import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class OpcUaAdapter extends SpecificDataStreamAdapter {
+public class OpcUaAdapter extends SpecificDataStreamAdapter implements ResolvesContainerProvidedOptions {
 
     public static final String ID = "org.apache.streampipes.connect.adapters.opcua";
 
@@ -60,6 +59,7 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
     private static final String USERNAME = "USERNAME";
     private static final String PASSWORD = "PASSWORD";
     private static final String UNAUTHENTICATED = "UNAUTHENTICATED";
+    private static final String AVAILABLE_NODES = "AVAILABLE_NODES";
 
     private String opcUaServer;
     private String namespaceIndex;
@@ -113,6 +113,7 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
                                         StaticProperties.stringFreeTextProperty(Labels.withId(OPC_SERVER_PORT)))))
                 .requiredTextParameter(Labels.withId(NAMESPACE_INDEX))
                 .requiredTextParameter(Labels.withId(NODE_ID))
+                .requiredMultiValueSelectionFromContainer(Labels.withId(AVAILABLE_NODES), Arrays.asList(NAMESPACE_INDEX, NODE_ID))
                 .build();
         description.setAppId(ID);
 
@@ -158,7 +159,8 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
         try {
             this.opcUa.connect();
 
-            this.allNodes = this.opcUa.browseNode();
+            this.allNodes = this.opcUa.browseNode(true);
+
             List<NodeId> nodeIds = new ArrayList<>();
 
             for (OpcNode rd : this.allNodes) {
@@ -206,8 +208,7 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
 
         try {
             opc.connect();
-            List<OpcNode> res =  opc.browseNode();
-
+            List<OpcNode> res =  opc.browseNode(true);
 
             if (res.size() > 0) {
                 for (OpcNode opcNode : res) {
@@ -285,24 +286,35 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
         this.nodeId = extractor.singleValueParameter(NODE_ID, String.class);
     }
 
-//    @Override
-//    public List<Option> resolveOptions(String requestId, StaticPropertyExtractor parameterExtractor) {
-//        String opcUaServer = parameterExtractor.singleValueParameter(OPC_SERVER_HOST, String.class);
-//        int port = parameterExtractor.singleValueParameter(OPC_SERVER_PORT, Integer.class);
-//        int namespaceIndex = parameterExtractor.singleValueParameter(NAMESPACE_INDEX, Integer.class);
-//
-//        OpcUa opc = new OpcUa(opcUaServer, port, namespaceIndex, Identifiers.RootFolder);
-//
-//        try {
-//            opc.connect();
-//            List<OpcNode> res =  opc.browseNode();
-//            System.out.println(res);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//        return new ArrayList<>();
-//    }
+
+    @Override
+    public List<Option> resolveOptions(String requestId, StaticPropertyExtractor parameterExtractor) {
+
+        try {
+            parameterExtractor.selectedAlternativeInternalId(OPC_HOST_OR_URL);
+            parameterExtractor.selectedAlternativeInternalId(ACCESS_MODE);
+        } catch (NullPointerException npe){
+            return new ArrayList<>();
+        }
+
+        OpcUa opc = OpcUa.from(parameterExtractor);
+
+        List<Option> nodes = new ArrayList<>();
+        try {
+            opc.connect();
+            this.allNodes =  opc.browseNode(false);
+
+            for (OpcNode opcNode: this.allNodes) {
+                nodes.add(new Option(opcNode.getLabel(), opcNode.nodeId.getIdentifier().toString()));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return nodes;
+    }
+
 
 
     private String getRuntimeNameOfNode(NodeId nodeId) {
