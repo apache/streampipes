@@ -16,12 +16,12 @@
   ~
   -->
 
-<div fxLayout="column" fxFlex="100" [ngStyle]="{'background-color': selectedBackgroundColor, 'color':
+<div class="main-panel" fxLayout="column" fxFlex="100" [ngStyle]="{'background-color': selectedBackgroundColor, 'color':
 selectedPrimaryTextColor}">
     <div class="title-panel mt-20" *ngIf="hasTitlePanelSettings">
         {{selectedTitle}}
     </div>
-    <table fxFlex="100" mat-table [dataSource]="dataSource" [ngStyle]="{'background': selectedBackgroundColor}">
+    <table mat-table [dataSource]="dataSource" [ngStyle]="{'background': selectedBackgroundColor}">
 
         <ng-container *ngFor="let element of selectedProperties" [cdkColumnDef]="element">
             <th mat-header-cell [ngStyle]="{'color': selectedPrimaryTextColor}"
