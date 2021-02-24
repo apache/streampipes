@@ -110,7 +110,7 @@
         <hawtbuf.version>1.11</hawtbuf.version>
         <mysql-connector-java.version>8.0.15</mysql-connector-java.version>
 
-        <maven-shade-plugin.version>3.0.0</maven-shade-plugin.version>
+        <maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
 
         <!-- Connect Dependencies-->
         <animal-sniffer-annotations.version>1.17</animal-sniffer-annotations.version>
