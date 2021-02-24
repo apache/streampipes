@@ -16,18 +16,24 @@
  *
  */
 
-package org.apache.streampipes.vocabulary;
+import {Injectable} from "@angular/core";
+import {HttpClient} from "@angular/common/http";
+import {PlatformServicesCommons} from "./commons.service";
+import {map} from "rxjs/operators";
+import {Observable} from "rxjs";
 
-import java.util.Arrays;
-import java.util.List;
+@Injectable()
+export class SemanticTypesService {
 
-public class Geo {
+  constructor(private http: HttpClient,
+              private platformServicesCommons: PlatformServicesCommons) {
 
-	public static final String lat = "http://www.w3.org/2003/01/geo/wgs84_pos#lat";
-	public static final String lng = "http://www.w3.org/2003/01/geo/wgs84_pos#long";
-	public static final String alt = "http://www.w3.org/2003/01/geo/wgs84_pos#alt";
+  }
 
-	public static List<String> getAll() {
-		return Arrays.asList(lat, lng, alt);
-	}
+  getSemanticTypes(text: string): Observable<Array<string>> {
+    return this.http.get(this.platformServicesCommons.unauthenticatedBasePath + "/autocomplete/semantic-type?text=" + text).pipe(map(response => {
+      return response as Array<string>;
+    }));
+  }
+
 }

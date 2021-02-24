@@ -20,6 +20,9 @@
 package org.apache.streampipes.vocabulary;
 
 
+import java.util.Arrays;
+import java.util.List;
+
 public class Geonames {
 
     public static String AlternateName = "http://www.geonames.org/ontology#alternateName";
@@ -29,5 +32,15 @@ public class Geonames {
     public static String Population = "http://www.geonames.org/ontology#population";
     public static String PostalCode = "http://www.geonames.org/ontology#postalCode";
     public static String ShortName = "http://www.geonames.org/ontology#shortName";
+
+    public static List<String> getAll() {
+        return Arrays.asList(AlternateName,
+                CountryCode,
+                Name,
+                OfficialName,
+                Population,
+                PostalCode,
+                ShortName);
+    }
 
 }

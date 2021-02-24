@@ -15,19 +15,38 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.vocabulary;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class Geo {
+public enum SemanticTypeRegistry {
 
-	public static final String lat = "http://www.w3.org/2003/01/geo/wgs84_pos#lat";
-	public static final String lng = "http://www.w3.org/2003/01/geo/wgs84_pos#long";
-	public static final String alt = "http://www.w3.org/2003/01/geo/wgs84_pos#alt";
+  INSTANCE;
 
-	public static List<String> getAll() {
-		return Arrays.asList(lat, lng, alt);
-	}
+  private List<String> semanticTypes;
+
+  SemanticTypeRegistry() {
+    this.semanticTypes = new ArrayList<>();
+    registerTypes();
+  }
+
+  private void registerTypes() {
+    this.semanticTypes.addAll(SPSensor.getAll());
+    this.semanticTypes.addAll(SO.getAll());
+    this.semanticTypes.addAll(Geo.getAll());
+    this.semanticTypes.addAll(Geonames.getAll());
+  }
+
+  public List<String> getAllSemanticTypes() {
+    return semanticTypes;
+  }
+
+  public List<String> matches(String text) {
+    return this.semanticTypes
+            .stream()
+            .filter(type -> type.contains(text))
+            .collect(Collectors.toList());
+  }
 }
