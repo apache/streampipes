@@ -16,7 +16,7 @@
  *
  */
 
-import {Component, Input, NgZone, OnInit,} from "@angular/core";
+import {Component, EventEmitter, Input, NgZone, OnInit, Output,} from "@angular/core";
 import {JsplumbBridge} from "../../services/jsplumb-bridge.service";
 import {PipelinePositioningService} from "../../services/pipeline-positioning.service";
 import {PipelineValidationService} from "../../services/pipeline-validation.service";
@@ -40,17 +40,8 @@ import {PipelineService} from "../../../platform-services/apis/pipeline.service"
 })
 export class PipelineAssemblyComponent implements OnInit {
 
-    PipelineEditorService: any;
-    DialogBuilder: any;
-    currentMouseOverElement: any;
-    currentZoomLevel: any;
-    preview: any;
-
     @Input()
     rawPipelineModel: PipelineElementConfig[];
-    selectMode: any;
-    currentPipelineName: any;
-    currentPipelineDescription: any;
 
     @Input()
     currentModifiedPipelineId: any;
@@ -58,13 +49,25 @@ export class PipelineAssemblyComponent implements OnInit {
     @Input()
     allElements: PipelineElementUnion[];
 
+    @Output()
+    pipelineCanvasMaximizedEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+    pipelineCanvasMaximized: boolean = false;
+
+    currentMouseOverElement: any;
+    currentZoomLevel: any;
+    preview: any;
+
+    selectMode: any;
+    currentPipelineName: any;
+    currentPipelineDescription: any;
+
     errorMessagesDisplayed: any = false;
 
     pipelineValid: boolean = false;
 
     pipelineCacheRunning: boolean = false;
     pipelineCached: boolean = false;
-
 
     constructor(private JsplumbBridge: JsplumbBridge,
                 private PipelinePositioningService: PipelinePositioningService,
@@ -239,6 +242,11 @@ export class PipelineAssemblyComponent implements OnInit {
 
     isPipelineAssemblyEmpty() {
         return this.rawPipelineModel.length === 0 || this.rawPipelineModel.every(pe => pe.settings.disabled);
+    }
+
+    toggleCanvasMaximized() {
+        this.pipelineCanvasMaximized = !(this.pipelineCanvasMaximized);
+        this.pipelineCanvasMaximizedEmitter.emit(this.pipelineCanvasMaximized);
     }
 
 }

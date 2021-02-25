@@ -16,38 +16,37 @@
   ~
   -->
 
-<div>
-    <div class="assemblyOptions sp-blue-bg">
+<div fxFlex="100" fxLayout="column">
+    <div class="pipeline-assembly-options sp-blue-bg">
         <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
             <button mat-button matTooltip="Save Pipeline" [matTooltipPosition]="'above'"
-                    style="display:flex;align-items:center;" class="settings-bar-icon-button"
+                    style="display:flex;align-items:center;"
                     [disabled]="!PipelineValidationService.pipelineValid"
                     (click)="submit()" type="submit">
                 <mat-icon>save</mat-icon>&nbsp;<span>Save pipeline</span>
             </button>
-            <button mat-button matTooltip="Pan" [matTooltipPosition]="'above'"
-                    class="settings-bar-icon-button"
+            <button mat-button mat-icon-button matTooltip="Pan" [matTooltipPosition]="'above'"
                     [disabled]="!selectMode"
                     (click)="toggleSelectMode()">
                 <i class="material-icons">open_with</i>
             </button>
-            <button mat-button matTooltip="Select" [matTooltipPosition]="'above'"
-                    class="settings-bar-icon-button" [disabled]="selectMode"
+            <button mat-button mat-icon-button matTooltip="Select" [matTooltipPosition]="'above'"
+                    [disabled]="selectMode"
                     (click)="toggleSelectMode()">
                 <i class="material-icons">mode_edit</i>
             </button>
-            <button mat-button matTooltip="Zoom In" [matTooltipPosition]="'above'"
-                    class="settings-bar-icon-button" [disabled]="currentZoomLevel == 1"
+            <button mat-button mat-icon-button matTooltip="Zoom In" [matTooltipPosition]="'above'"
+                    [disabled]="currentZoomLevel == 1"
                     (click)="zoomIn()">
                 <i class="material-icons">zoom_in</i>
             </button>
-            <button mat-button matTooltip="Zoom Out" [matTooltipPosition]="'above'"
-                    class="settings-bar-icon-button" [disabled]="currentZoomLevel == 0.5"
+            <button mat-button mat-icon-button matTooltip="Zoom Out" [matTooltipPosition]="'above'"
+                    [disabled]="currentZoomLevel == 0.5"
                     (click)="zoomOut()">
                 <i class="material-icons">zoom_out</i>
             </button>
-            <button mat-button matTooltip="Auto Layout" [matTooltipPosition]="'above'"
-                    class="settings-bar-icon-button" (click)="autoLayout()">
+            <button mat-button mat-icon-button matTooltip="Auto Layout" [matTooltipPosition]="'above'"
+                    (click)="autoLayout()">
                 <i class="material-icons">settings_overscan</i>
             </button>
             <div fxLayout="column" fxLayoutAlign="start center" class="pipeline-cache-block">
@@ -88,8 +87,17 @@
                     </div>
                 </div>
             </div>
-            <button mat-button matTooltip="Clear Assembly Area" [matTooltipPosition]="'above'" [disabled]="EditorService.pipelineAssemblyEmpty"
-                    class="md-icon-button" (click)="showClearAssemblyConfirmDialog($event)">
+            <button mat-button mat-icon-button
+                    [matTooltip]="pipelineCanvasMaximized ? 'Minimize' : 'Maximize'"
+                    [matTooltipPosition]="'above'"
+                    (click)="toggleCanvasMaximized()">
+                <i class="material-icons" *ngIf="!pipelineCanvasMaximized">open_in_full</i>
+                <i class="material-icons" *ngIf="pipelineCanvasMaximized">close_fullscreen</i>
+            </button>
+            <button mat-button mat-icon-button matTooltip="Clear Assembly Area"
+                    [matTooltipPosition]="'above'"
+                    [disabled]="EditorService.pipelineAssemblyEmpty"
+                    (click)="showClearAssemblyConfirmDialog($event)">
                 <i class="material-icons">clear</i>
             </button>
         </div>

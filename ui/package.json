@@ -65,7 +65,7 @@
     "konva": "3.2.4",
     "leaflet": "1.6.0",
     "lodash": "4.17.20",
-    "material-design-icons": "3.0.1",
+    "material-icons": "^0.5.3",
     "ng-file-upload": "9.0.13",
     "ng-pick-datetime": "7.0.0",
     "ng-prettyjson": "0.1.8",

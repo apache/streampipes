@@ -17,28 +17,21 @@
   -->
 
 <div fxLayout="column" class="page-container">
-    <div fxLayout="row" class="border" style="padding:0px;background-color:#f6f6f6;">
+    <div fxLayout="row" class="border" style="padding:0px;background-color:#f6f6f6;" *ngIf="!pipelineCanvasMaximized">
         <div fxFlex="100" style="line-height:24px;border-bottom:1px solid #ccc">
             <div fxFlex="100" fxLayout="row">
                 <div fxFlex fxLayoutAlign="start center" [attr.id]="'peType'">
-                    <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectPipelineElements($event)">
+                    <mat-tab-group [selectedIndex]="selectedIndex"
+                                   (selectedIndexChange)="selectPipelineElements($event)">
                         <mat-tab *ngFor="let tab of tabs" label="{{tab.title}}"></mat-tab>
                     </mat-tab-group>
                 </div>
-                <div fxFlex="30" fxLayout="row" fxLayoutAlign="end center"
-                     style="padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
-                    <button mat-button class="md-icon-button" (click)="startCreatePipelineTour()" [matTooltip]="'Tutorial'">
+                <div fxFlex="30" fxLayout="row" fxLayoutAlign="end center" style="padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
+                    <button mat-button mat-icon-button (click)="startCreatePipelineTour()"
+                            [matTooltip]="'Tutorial'" style="margin-right: 5px;">
                         <i class="material-icons text-color">
                             school
                         </i>
-                    </button>
-                    <button mat-button class="md-icon-button" *ngIf="!minimizedEditorStand"
-                               (click)="toggleEditorStand()" [matTooltip]="'Hide'">
-                        <i class="material-icons text-color">arrow_drop_up</i>
-                    </button>
-                    <button mat-button class="md-icon-button" *ngIf="minimizedEditorStand"
-                               (click)="toggleEditorStand()" [matTooltip]="'Show'">
-                        <i class="material-icons text-color">arrow_drop_down</i>
                     </button>
                 </div>
             </div>
@@ -47,13 +40,19 @@
 
     <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100">
         <div id="shepherd-test"
-             style="background-color:#f6f6f6;padding:0px;border-bottom:1px solid #ffffff" [hidden]="minimizedEditorStand">
-            <pipeline-element-icon-stand [activeType]="activeType"
-                                         [currentElements]="currentElements"
-                                         *ngIf="allElementsLoaded">
+             style="background-color:#f6f6f6;padding:0px;border-bottom:1px solid #ffffff">
+            <pipeline-element-icon-stand
+                    class="icon-stand-margin"
+                    [activeType]="activeType"
+                    [currentElements]="currentElements"
+                    *ngIf="allElementsLoaded && !pipelineCanvasMaximized">
             </pipeline-element-icon-stand>
         </div>
-        <pipeline-assembly [rawPipelineModel]="rawPipelineModel" [allElements]="allElements"
-                           [currentModifiedPipelineId]="currentModifiedPipelineId"></pipeline-assembly>
+        <pipeline-assembly fxFlex="1"
+                           [rawPipelineModel]="rawPipelineModel"
+                           [allElements]="allElements"
+                           [currentModifiedPipelineId]="currentModifiedPipelineId"
+                           (pipelineCanvasMaximizedEmitter)="togglePipelineCanvasMode($event)">
+        </pipeline-assembly>
     </div>
 </div>

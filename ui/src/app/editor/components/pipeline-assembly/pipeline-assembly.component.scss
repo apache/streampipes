@@ -28,3 +28,38 @@
     height: 100%;
     margin-left:15px;
 }
+
+.outerAssembly {
+    position: relative;
+    left: 0px;
+    top: 0px;
+    overflow: visible;
+    //box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .2), 0 1px 1px 0 rgba(0, 0, 0, .14), 0 2px 1px -1px rgba(0, 0, 0, .12);
+    padding: 5px;
+    height: 100%;
+    flex: 1;
+    width: 100%;
+}
+
+.pipeline-canvas-outer {
+    flex: 1;
+}
+
+.canvas {
+    overflow: visible;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    height: 300%;
+    width: 300%;
+    z-index: 0;
+    margin: -1px;
+
+    background-color: white;
+    background-image: linear-gradient(90deg, rgba(208, 208, 208, .5) 10%, transparent 0%), linear-gradient(rgba(208, 208, 208, .5) 10%, transparent 0%);
+    background-size: 15px 15px;
+}
+
+.pipeline-assembly-options {
+    color: white;
+}
