@@ -15,9 +15,13 @@
   ~ limitations under the License.
   ~
   -->
-## REST Publisher
+## Websocket API
 
 ***
+
+<p align="center"> 
+    <img src="icon.png" width="266" class="pe-image-documentation"/>
+</p>
 
 ## Description
 
