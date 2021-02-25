@@ -22,6 +22,7 @@ import org.apache.streampipes.connect.adapter.Adapter;
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
 import org.apache.streampipes.connect.adapter.exception.ParseException;
 import org.apache.streampipes.connect.adapter.model.specific.SpecificDataStreamAdapter;
+import org.apache.streampipes.connect.adapters.opcua.utils.OpcUaConnect.OpcUaLabels;
 import org.apache.streampipes.container.api.ResolvesContainerProvidedOptions;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
@@ -45,22 +46,6 @@ import java.util.*;
 public class OpcUaAdapter extends SpecificDataStreamAdapter implements ResolvesContainerProvidedOptions {
 
     public static final String ID = "org.apache.streampipes.connect.adapters.opcua";
-
-    private static final String OPC_HOST_OR_URL = "OPC_HOST_OR_URL";
-    private static final String OPC_URL = "OPC_URL";
-    private static final String OPC_HOST = "OPC_HOST";
-    private static final String OPC_SERVER_URL = "OPC_SERVER_URL";
-    private static final String OPC_SERVER_HOST = "OPC_SERVER_HOST";
-    private static final String OPC_SERVER_PORT = "OPC_SERVER_PORT";
-    private static final String NAMESPACE_INDEX = "NAMESPACE_INDEX";
-    private static final String NODE_ID = "NODE_ID";
-    private static final String ACCESS_MODE = "ACCESS_MODE";
-    private static final String USERNAME_GROUP = "USERNAME_GROUP";
-    private static final String USERNAME = "USERNAME";
-    private static final String PASSWORD = "PASSWORD";
-    private static final String UNAUTHENTICATED = "UNAUTHENTICATED";
-    private static final String AVAILABLE_NODES = "AVAILABLE_NODES";
-
 
     private Map<String, Object> event;
     private List<OpcNode> allNodes;
@@ -89,23 +74,26 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter implements ResolvesC
                 .withAssets(Assets.DOCUMENTATION, Assets.ICON)
                 .withLocales(Locales.EN)
                 .category(AdapterType.Generic, AdapterType.Manufacturing)
-                .requiredAlternatives(Labels.withId(ACCESS_MODE),
-                        Alternatives.from(Labels.withId(UNAUTHENTICATED)),
-                        Alternatives.from(Labels.withId(USERNAME_GROUP),
-                                StaticProperties.group(Labels.withId(USERNAME_GROUP),
-                                StaticProperties.stringFreeTextProperty(Labels.withId(USERNAME)),
-                                StaticProperties.secretValue(Labels.withId(PASSWORD)))))
-                .requiredAlternatives(Labels.withId(OPC_HOST_OR_URL),
-                        Alternatives.from(Labels.withId(OPC_URL),
-                                StaticProperties.stringFreeTextProperty(Labels.withId(OPC_SERVER_URL))
+                .requiredAlternatives(Labels.withId(OpcUaLabels.ACCESS_MODE.name()),
+                        Alternatives.from(Labels.withId(OpcUaLabels.UNAUTHENTICATED.name())),
+                        Alternatives.from(Labels.withId(OpcUaLabels.USERNAME_GROUP.name()),
+                                StaticProperties.group(Labels.withId(OpcUaLabels.USERNAME_GROUP.name()),
+                                StaticProperties.stringFreeTextProperty(Labels.withId(OpcUaLabels.USERNAME.name())),
+                                StaticProperties.secretValue(Labels.withId(OpcUaLabels.PASSWORD.name())))))
+                .requiredAlternatives(Labels.withId(OpcUaLabels.OPC_HOST_OR_URL.name()),
+                        Alternatives.from(Labels.withId(OpcUaLabels.OPC_URL.name()),
+                                StaticProperties.stringFreeTextProperty(Labels.withId(OpcUaLabels.OPC_SERVER_URL.name()))
                         ),
-                        Alternatives.from(Labels.withId(OPC_HOST),
+                        Alternatives.from(Labels.withId(OpcUaLabels.OPC_HOST.name()),
                                 StaticProperties.group(Labels.withId("host-port"),
-                                        StaticProperties.stringFreeTextProperty(Labels.withId(OPC_SERVER_HOST)),
-                                        StaticProperties.stringFreeTextProperty(Labels.withId(OPC_SERVER_PORT)))))
-                .requiredTextParameter(Labels.withId(NAMESPACE_INDEX))
-                .requiredTextParameter(Labels.withId(NODE_ID))
-                .requiredMultiValueSelectionFromContainer(Labels.withId(AVAILABLE_NODES), Arrays.asList(NAMESPACE_INDEX, NODE_ID))
+                                        StaticProperties.stringFreeTextProperty(Labels.withId(OpcUaLabels.OPC_SERVER_HOST.name())),
+                                        StaticProperties.stringFreeTextProperty(Labels.withId(OpcUaLabels.OPC_SERVER_PORT.name())))))
+                .requiredTextParameter(Labels.withId(OpcUaLabels.NAMESPACE_INDEX.name()))
+                .requiredTextParameter(Labels.withId(OpcUaLabels.NODE_ID.name()))
+                .requiredMultiValueSelectionFromContainer(
+                        Labels.withId(OpcUaLabels.AVAILABLE_NODES.name()),
+                        Arrays.asList(OpcUaLabels.NAMESPACE_INDEX.name(), OpcUaLabels.NODE_ID.name())
+                )
                 .build();
         description.setAppId(ID);
 
@@ -222,8 +210,8 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter implements ResolvesC
     public List<Option> resolveOptions(String requestId, StaticPropertyExtractor parameterExtractor) {
 
         try {
-            parameterExtractor.selectedAlternativeInternalId(OPC_HOST_OR_URL);
-            parameterExtractor.selectedAlternativeInternalId(ACCESS_MODE);
+            parameterExtractor.selectedAlternativeInternalId(OpcUaLabels.OPC_HOST_OR_URL.name());
+            parameterExtractor.selectedAlternativeInternalId(OpcUaLabels.ACCESS_MODE.name());
         } catch (NullPointerException npe){
             return new ArrayList<>();
         }

@@ -24,6 +24,7 @@ import static org.eclipse.milo.opcua.stack.core.util.ConversionUtil.toList;
 
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
 import org.apache.streampipes.connect.adapters.opcua.utils.OpcUaConnect;
+import org.apache.streampipes.connect.adapters.opcua.utils.OpcUaConnect.OpcUaLabels;
 import org.apache.streampipes.connect.adapters.opcua.utils.OpcUaNodeVariants;
 import org.apache.streampipes.connect.adapters.opcua.utils.OpcUaTypes;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -114,44 +115,44 @@ public class OpcUa {
 
     public static OpcUa from(StaticPropertyExtractor extractor) {
 
-        String selectedAlternativeConnection = extractor.selectedAlternativeInternalId(OpcUaConnect.getOpcHostOrUrl());
-        String selectedAlternativeAuthentication = extractor.selectedAlternativeInternalId(OpcUaConnect.getAccessMode());
+        String selectedAlternativeConnection = extractor.selectedAlternativeInternalId(OpcUaLabels.OPC_HOST_OR_URL.name());
+        String selectedAlternativeAuthentication = extractor.selectedAlternativeInternalId(OpcUaLabels.ACCESS_MODE.name());
 
-        int namespaceIndex = extractor.singleValueParameter(OpcUaConnect.getNamespaceIndex(), int.class);
-        String nodeId = extractor.singleValueParameter(OpcUaConnect.getNodeId(), String.class);
+        int namespaceIndex = extractor.singleValueParameter(OpcUaLabels.NAMESPACE_INDEX.name(), int.class);
+        String nodeId = extractor.singleValueParameter(OpcUaLabels.NODE_ID.name(), String.class);
 
-        boolean useURL = selectedAlternativeConnection.equals(OpcUaConnect.getOpcUrl());
-        boolean unauthenticated =  selectedAlternativeAuthentication.equals(OpcUaConnect.getUnauthenticated());
+        boolean useURL = selectedAlternativeConnection.equals(OpcUaLabels.OPC_URL.name());
+        boolean unauthenticated =  selectedAlternativeAuthentication.equals(OpcUaLabels.UNAUTHENTICATED.name());
 
-        List<String> selectedNodeNames = extractor.selectedMultiValues(OpcUaConnect.getAvailableNodes(), String.class);
+        List<String> selectedNodeNames = extractor.selectedMultiValues(OpcUaLabels.AVAILABLE_NODES.name(), String.class);
 
         if (useURL && unauthenticated){
 
-            String serverAddress = extractor.singleValueParameter(OpcUaConnect.getOpcServerUrl(), String.class);
+            String serverAddress = extractor.singleValueParameter(OpcUaLabels.OPC_SERVER_URL.name(), String.class);
             serverAddress = OpcUaConnect.formatServerAddress(serverAddress);
 
             return new OpcUa(serverAddress, namespaceIndex, nodeId, selectedNodeNames);
 
         } else if(!useURL && unauthenticated){
-            String serverAddress = extractor.singleValueParameter(OpcUaConnect.getOpcServerHost(), String.class);
+            String serverAddress = extractor.singleValueParameter(OpcUaLabels.OPC_SERVER_HOST.name(), String.class);
             serverAddress = OpcUaConnect.formatServerAddress(serverAddress);
-            int port = extractor.singleValueParameter(OpcUaConnect.getOpcServerPort(), int.class);
+            int port = extractor.singleValueParameter(OpcUaLabels.OPC_SERVER_PORT.name(), int.class);
 
             return new OpcUa(serverAddress, port, namespaceIndex, nodeId, selectedNodeNames);
         } else {
 
-            String username = extractor.singleValueParameter(OpcUaConnect.getUsername(), String.class);
-            String password = extractor.secretValue(OpcUaConnect.getPassword());
+            String username = extractor.singleValueParameter(OpcUaLabels.USERNAME.name(), String.class);
+            String password = extractor.secretValue(OpcUaLabels.PASSWORD.name());
 
             if (useURL) {
-                String serverAddress = extractor.singleValueParameter(OpcUaConnect.getOpcServerUrl(), String.class);
+                String serverAddress = extractor.singleValueParameter(OpcUaLabels.OPC_SERVER_URL.name(), String.class);
                 serverAddress = OpcUaConnect.formatServerAddress(serverAddress);
 
                 return new OpcUa(serverAddress, namespaceIndex, nodeId, username, password, selectedNodeNames);
             } else {
-                String serverAddress = extractor.singleValueParameter(OpcUaConnect.getOpcServerHost(), String.class);
+                String serverAddress = extractor.singleValueParameter(OpcUaLabels.OPC_SERVER_HOST.name(), String.class);
                 serverAddress = OpcUaConnect.formatServerAddress(serverAddress);
-                int port = extractor.singleValueParameter(OpcUaConnect.getOpcServerPort(), int.class);
+                int port = extractor.singleValueParameter(OpcUaLabels.OPC_SERVER_PORT.name(), int.class);
 
                 return new OpcUa(serverAddress, port, namespaceIndex, nodeId, username, password, selectedNodeNames);
             }
@@ -456,9 +457,7 @@ public class OpcUa {
     public static boolean isInteger(String s) {
         try {
             Integer.parseInt(s);
-        } catch(NumberFormatException e) {
-            return false;
-        } catch(NullPointerException e) {
+        } catch(NumberFormatException | NullPointerException e) {
             return false;
         }
         // only got here if we didn't return false
