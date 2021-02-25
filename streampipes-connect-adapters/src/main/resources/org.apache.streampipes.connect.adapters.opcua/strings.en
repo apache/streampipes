@@ -41,3 +41,6 @@ USERNAME.description=
 
 PASSWORD.title=Password
 PASSWORD.description=
+
+AVAILABLE_NODES.title=Available Nodes
+AVAILABLE_NODES.description=Select the nodes that are relevant for you. Please ensure to select one option each for access mode and OPC UA server
