@@ -25,6 +25,7 @@ import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
 import org.apache.streampipes.commons.Utils;
+import org.apache.streampipes.model.SpDataStreamRelayContainer;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.pipeline.PipelineElementStatus;
@@ -62,7 +63,7 @@ public class HttpRequestBuilder {
               .bodyString(json, ContentType.APPLICATION_JSON)
               .connectTimeout(CONNECT_TIMEOUT)
               .execute();
-      return handleResponse(httpResp);
+      return handleResponse(httpResp, "invoke");
     } catch (Exception e) {
       LOG.error(e.getMessage());
       return new PipelineElementStatus(endpointUrl, payload.getName(), false, e.getMessage());
@@ -80,23 +81,33 @@ public class HttpRequestBuilder {
               .Delete(endpointUrl)
               .connectTimeout(CONNECT_TIMEOUT)
               .execute();
-      return handleResponse(httpResp);
+      return handleResponse(httpResp, "detach");
     } catch (Exception e) {
       LOG.error("Could not stop pipeline " + endpointUrl, e.getMessage());
       return new PipelineElementStatus(endpointUrl, payload.getName(), false, e.getMessage());
     }
   }
 
-  private PipelineElementStatus handleResponse(Response httpResp) throws JsonSyntaxException, IOException {
+  private PipelineElementStatus handleResponse(Response httpResp, String action) throws JsonSyntaxException, IOException {
     String resp = httpResp.returnContent().asString();
     org.apache.streampipes.model.Response streamPipesResp = JacksonSerializer
             .getObjectMapper()
             .readValue(resp, org.apache.streampipes.model.Response.class);
-    return convert(streamPipesResp);
+    return convert(streamPipesResp, action);
   }
 
-  private PipelineElementStatus convert(org.apache.streampipes.model.Response response) {
-    return new PipelineElementStatus(endpointUrl, payload.getName(), response.isSuccess(), response.getOptionalMessage());
+  private PipelineElementStatus convert(org.apache.streampipes.model.Response response, String action) {
+    PipelineElementStatus status = new PipelineElementStatus(endpointUrl, payload.getName(), response.isSuccess(),
+            response.getOptionalMessage());
+    if(payload instanceof InvocableStreamPipesEntity){
+      status.setElementNode(((InvocableStreamPipesEntity)payload).getDeploymentTargetNodeId());
+      status.setOperation(action);
+    }
+    else if(payload instanceof SpDataStreamRelayContainer){
+      status.setElementNode(((SpDataStreamRelayContainer)payload).getDeploymentTargetNodeId());
+      status.setOperation(action + " relay");
+    }
+    return status;
   }
 
   private String toJson() throws Exception {

@@ -31,19 +31,26 @@
             </button>
 
             <div fxLayout="column" *ngIf="statusDetailsVisible">
-                <div fxFlex="100" fxLayout="column" class="md-whiteframe-z2" *ngFor="let msg of pipelineOperationStatus.elementStatus">
-                    <div fxFlex="100" fxLayout="column" class="md-padding">
-                        <div>
-                            <b>{{msg.elementName}} </b> at URL <b> {{msg.elementId}}</b>
-                            <mat-icon color="accent" *ngIf="msg.success">done</mat-icon>
-                            <mat-icon color="accent" *ngIf="!msg.success">warning</mat-icon>
-                        </div>
-                        <div>
-                            <div fxFlex="100" fxLayout="column" *ngIf="msg.optionalMessage">
-                                <div class="error-message">
-                                    {{msg.optionalMessage}}
+                <div fxFlex="100" fxLayout="column" class="md-whiteframe-z2" *ngFor="let statList of elementStati">
+                    <hr />
+                    <div fxFlex="100" fxLayout="column" class="node-title">
+                        <b>Node: {{statList[0].elementNode}}</b>
+                    </div>
+                    <div *ngFor="let msg of statList">
+                        <div fxFlex="100" fxLayout="column" class="md-padding">
+                            <div>
+                                <b>{{msg.operation}}<br>{{msg.elementName}} </b> at URL <b> {{msg.elementId}}</b>
+                                <mat-icon color="accent" *ngIf="msg.success">done</mat-icon>
+                                <mat-icon color="accent" *ngIf="!msg.success">warning</mat-icon>
+                            </div>
+                            <div>
+                                <div fxFlex="100" fxLayout="column" *ngIf="msg.optionalMessage">
+                                    <div class="error-message">
+                                        {{msg.optionalMessage}}
+                                    </div>
                                 </div>
                             </div>
+                            <div class="operation-separator" *ngIf="statList.indexOf(msg) != statList.length-1"></div>
                         </div>
                     </div>
                 </div>

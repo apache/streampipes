@@ -23,6 +23,8 @@ public class PipelineElementStatus {
 	private String elementId;
 	private String elementName;
 	private String optionalMessage;
+	private String operation;
+	private String elementNode;
 	
 	private boolean success;
 
@@ -67,5 +69,20 @@ public class PipelineElementStatus {
 
 	public void setSuccess(boolean success) {
 		this.success = success;
+	}
+	public String getOperation() {
+		return operation;
+	}
+
+	public void setOperation(String operation) {
+		this.operation = operation;
+	}
+
+	public String getElementNode() {
+		return elementNode;
+	}
+
+	public void setElementNode(String elementNode) {
+		this.elementNode = elementNode;
 	}
 }

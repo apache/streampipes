@@ -17,7 +17,7 @@
  */
 
 import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
-import {PipelineOperationStatus} from "../../../core-model/gen/streampipes-model";
+import {PipelineElementStatus, PipelineOperationStatus} from "../../../core-model/gen/streampipes-model";
 import {Component, Input} from "@angular/core";
 
 
@@ -29,12 +29,37 @@ import {Component, Input} from "@angular/core";
 export class PipelineStatusDialogComponent {
 
     statusDetailsVisible: any;
+    elementStati : [[PipelineElementStatus]];
 
     @Input()
     pipelineOperationStatus: PipelineOperationStatus;
 
     constructor(private DialogRef: DialogRef<PipelineStatusDialogComponent>) {
         this.statusDetailsVisible = false;
+        this.elementStati = [];
+    }
+
+    ngOnInit(){
+        console.log(this.pipelineOperationStatus.elementStatus)
+        let nodes: [String];
+        nodes = [];
+        this.pipelineOperationStatus.elementStatus.forEach(stat => {
+            if (!nodes.includes(stat.elementNode)){
+                nodes.push(stat.elementNode)
+            }
+        })
+        console.log(nodes)
+        nodes.forEach(node =>{
+            let nodeStati : [PipelineElementStatus];
+            nodeStati = [];
+            this.pipelineOperationStatus.elementStatus.forEach(stat =>{
+                if(stat.elementNode == node){
+                    nodeStati.push(stat);
+                }
+            })
+            this.elementStati.push(nodeStati);
+        })
+        console.log(this.elementStati)
     }
 
     close() {

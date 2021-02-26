@@ -29,3 +29,19 @@
   padding: 10px;
   width: 100%;
 }
+
+.node-title{
+  font-size: larger;
+  color: $sp-color-accent;
+}
+
+.operation-separator {
+  width:100%;
+  height:1px;
+  background: $sp-color-accent-light-blue }
+
+hr {
+  width: 100%;
+  height: 2px;
+  background: $sp-color-accent;
+}
