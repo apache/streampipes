@@ -23,6 +23,12 @@ import static org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.Unsigned.
 import static org.eclipse.milo.opcua.stack.core.util.ConversionUtil.toList;
 
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.connect.adapters.opcua.utils.OpcUaConnect;
+import org.apache.streampipes.connect.adapters.opcua.utils.OpcUaConnect.OpcUaLabels;
+import org.apache.streampipes.connect.adapters.opcua.utils.OpcUaNodeVariants;
+import org.apache.streampipes.connect.adapters.opcua.utils.OpcUaTypes;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.utils.Datatypes;
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfig;
@@ -66,6 +72,7 @@ public class OpcUa {
     private String user;
     private String password;
     private List<Map<String, Integer>> unitIDs = new ArrayList<>();
+    private List<String> selectedNodeNames;
 
     private static final AtomicLong clientHandles = new AtomicLong(1L);
 
@@ -74,10 +81,11 @@ public class OpcUa {
     }
 
 
-    public OpcUa(String opcServerURL, int namespaceIndex, String nodeId) {
+    public OpcUa(String opcServerURL, int namespaceIndex, String nodeId, List<String> selectedNodeNames) {
 
         this.opcServerURL = opcServerURL;
         this.unauthenticated = true;
+        this.selectedNodeNames = selectedNodeNames;
 
         if (isInteger(nodeId)) {
             int integerNodeId = Integer.parseInt(nodeId);
@@ -87,22 +95,77 @@ public class OpcUa {
         }
     }
 
-    public OpcUa(String opcServer, int opcServerPort, int namespaceIndex, String nodeId) {
-        this("opc.tcp://" + opcServer + ":" + opcServerPort, namespaceIndex, nodeId);
+    public OpcUa(String opcServer, int opcServerPort, int namespaceIndex, String nodeId, List<String> selectedNodeNames) {
+        this( opcServer + ":" + opcServerPort, namespaceIndex, nodeId, selectedNodeNames);
     }
 
-    public OpcUa(String opcServerURL, int namespaceIndex, String nodeId, String username, String password) {
-        this(opcServerURL, namespaceIndex, nodeId);
+    public OpcUa(String opcServerURL, int namespaceIndex, String nodeId, String username, String password, List<String> selectedNodeNames) {
+        this(opcServerURL, namespaceIndex, nodeId, selectedNodeNames);
         this.unauthenticated = false;
         this.user = username;
         this.password = password;
     }
 
-    public OpcUa(String opcServer, int opcServerPort, int namespaceIndex, String nodeId, String username, String password) {
-        this (opcServer, opcServerPort, namespaceIndex, nodeId);
+    public OpcUa(String opcServer, int opcServerPort, int namespaceIndex, String nodeId, String username, String password, List<String> selectedNodeNames) {
+        this (opcServer, opcServerPort, namespaceIndex, nodeId, selectedNodeNames);
         this.unauthenticated = false;
         this.user = username;
         this.password = password;
+    }
+
+    public static OpcUa from(StaticPropertyExtractor extractor) {
+
+        String selectedAlternativeConnection = extractor.selectedAlternativeInternalId(OpcUaLabels.OPC_HOST_OR_URL.name());
+        String selectedAlternativeAuthentication = extractor.selectedAlternativeInternalId(OpcUaLabels.ACCESS_MODE.name());
+
+        int namespaceIndex = extractor.singleValueParameter(OpcUaLabels.NAMESPACE_INDEX.name(), int.class);
+        String nodeId = extractor.singleValueParameter(OpcUaLabels.NODE_ID.name(), String.class);
+
+        boolean useURL = selectedAlternativeConnection.equals(OpcUaLabels.OPC_URL.name());
+        boolean unauthenticated =  selectedAlternativeAuthentication.equals(OpcUaLabels.UNAUTHENTICATED.name());
+
+        List<String> selectedNodeNames = extractor.selectedMultiValues(OpcUaLabels.AVAILABLE_NODES.name(), String.class);
+
+        if (useURL && unauthenticated){
+
+            String serverAddress = extractor.singleValueParameter(OpcUaLabels.OPC_SERVER_URL.name(), String.class);
+            serverAddress = OpcUaConnect.formatServerAddress(serverAddress);
+
+            return new OpcUa(serverAddress, namespaceIndex, nodeId, selectedNodeNames);
+
+        } else if(!useURL && unauthenticated){
+            String serverAddress = extractor.singleValueParameter(OpcUaLabels.OPC_SERVER_HOST.name(), String.class);
+            serverAddress = OpcUaConnect.formatServerAddress(serverAddress);
+            int port = extractor.singleValueParameter(OpcUaLabels.OPC_SERVER_PORT.name(), int.class);
+
+            return new OpcUa(serverAddress, port, namespaceIndex, nodeId, selectedNodeNames);
+        } else {
+
+            String username = extractor.singleValueParameter(OpcUaLabels.USERNAME.name(), String.class);
+            String password = extractor.secretValue(OpcUaLabels.PASSWORD.name());
+
+            if (useURL) {
+                String serverAddress = extractor.singleValueParameter(OpcUaLabels.OPC_SERVER_URL.name(), String.class);
+                serverAddress = OpcUaConnect.formatServerAddress(serverAddress);
+
+                return new OpcUa(serverAddress, namespaceIndex, nodeId, username, password, selectedNodeNames);
+            } else {
+                String serverAddress = extractor.singleValueParameter(OpcUaLabels.OPC_SERVER_HOST.name(), String.class);
+                serverAddress = OpcUaConnect.formatServerAddress(serverAddress);
+                int port = extractor.singleValueParameter(OpcUaLabels.OPC_SERVER_PORT.name(), int.class);
+
+                return new OpcUa(serverAddress, port, namespaceIndex, nodeId, username, password, selectedNodeNames);
+            }
+        }
+
+    }
+
+    public static OpcUa from(AdapterDescription adapterDescription){
+
+        StaticPropertyExtractor extractor =
+                StaticPropertyExtractor.from(adapterDescription.getConfig(), new ArrayList<>());
+
+        return from(extractor);
     }
 
     public void connect() throws Exception {
@@ -172,8 +235,8 @@ public class OpcUa {
         );
     }
 
-    public List<OpcNode> browseNode() throws AdapterException {
-        List<OpcNode> referenceDescriptions = browseNode(node);
+    public List<OpcNode> browseNode(boolean selectNodes) throws AdapterException {
+        List<OpcNode> referenceDescriptions = browseNode(node, selectNodes);
 
         if (referenceDescriptions.size() == 0) {
             referenceDescriptions = getRootNote(node);
@@ -219,9 +282,8 @@ public class OpcUa {
         return result;
     }
 
-    private List<OpcNode> browseNode(NodeId browseRoot) throws AdapterException {
+    private List<OpcNode> browseNode(NodeId browseRoot, boolean selectNodes) throws AdapterException {
         List<OpcNode> result = new ArrayList<>();
-
 
         BrowseDescription browse = new BrowseDescription(
                 browseRoot,
@@ -304,7 +366,7 @@ public class OpcUa {
                         result.add(opcNode);
                         rd.getNodeId().toNodeId(client.getNamespaceTable()).ifPresent(nodeId -> {
                             try {
-                                browseNode(nodeId);
+                                browseNode(nodeId, selectNodes);
                             } catch (AdapterException e) {
                                 e.printStackTrace();
                             }
@@ -314,6 +376,12 @@ public class OpcUa {
             }
         } catch (InterruptedException | ExecutionException | UaException e) {
             throw new AdapterException("Browsing nodeId=" + browse + " failed: " + e.getMessage());
+        }
+
+        if (selectNodes) {
+            // filter for nodes that were selected by the user during configuration
+            result = result.stream().filter(node -> this.getSelectedNodeNames().contains(node.getLabel()))
+                    .collect(Collectors.toList());
         }
 
         return result;
@@ -389,9 +457,7 @@ public class OpcUa {
     public static boolean isInteger(String s) {
         try {
             Integer.parseInt(s);
-        } catch(NumberFormatException e) {
-            return false;
-        } catch(NullPointerException e) {
+        } catch(NumberFormatException | NullPointerException e) {
             return false;
         }
         // only got here if we didn't return false
@@ -413,4 +479,11 @@ public class OpcUa {
     }
 
 
+    public List<String> getSelectedNodeNames() {
+        return selectedNodeNames;
+    }
+
+    public String getOpcServerURL() {
+        return opcServerURL;
+    }
 }

@@ -110,7 +110,7 @@
         <hawtbuf.version>1.11</hawtbuf.version>
         <mysql-connector-java.version>8.0.15</mysql-connector-java.version>
 
-        <maven-shade-plugin.version>3.0.0</maven-shade-plugin.version>
+        <maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
 
         <!-- Connect Dependencies-->
         <animal-sniffer-annotations.version>1.17</animal-sniffer-annotations.version>
@@ -658,9 +658,9 @@
 
             <!-- dependency convergence -->
             <dependency>
-                <groupId>org.glassfish.jaxb</groupId>
-                <artifactId>jaxb-runtime</artifactId>
-                <version>2.3.3</version>
+                <groupId>jakarta.activation</groupId>
+                <artifactId>jakarta.activation-api</artifactId>
+                <version>1.2.2</version>
             </dependency>
             <dependency>
                 <groupId>jakarta.xml.bind</groupId>
@@ -668,11 +668,15 @@
                 <version>2.3.3</version>
             </dependency>
             <dependency>
+                <groupId>org.glassfish.jaxb</groupId>
+                <artifactId>jaxb-runtime</artifactId>
+                <version>2.3.3</version>
+            </dependency>
+            <dependency>
                 <groupId>jakarta.activation</groupId>
                 <artifactId>jakarta.activation-api</artifactId>
                 <version>1.2.2</version>
             </dependency>
-
         </dependencies>
     </dependencyManagement>
 
