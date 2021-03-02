@@ -125,6 +125,7 @@ public class OpcUaUtil {
         USERNAME,
         PASSWORD,
         UNAUTHENTICATED,
-        AVAILABLE_NODES;
+        AVAILABLE_NODES,
+        POLLING_INTERVAL;
     }
 }

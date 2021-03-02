@@ -389,7 +389,7 @@ public class OpcUa {
     }
 
 
-    public void createListSubscription(List<NodeId> nodes, OpcUaAdapter opcUaAdapter) throws Exception {
+    public void createListSubscription(List<NodeId> nodes, OpcUaSubscriptionAdapter opcUaSubscriptionAdapter) throws Exception {
         /*
          * create a subscription @ 1000ms
          */
@@ -434,7 +434,7 @@ public class OpcUa {
 
         BiConsumer<UaMonitoredItem, Integer> onItemCreated =
                 (item, id) -> {
-                    item.setValueConsumer(opcUaAdapter::onSubscriptionValue);
+                    item.setValueConsumer(opcUaSubscriptionAdapter::onSubscriptionValue);
                 };
 
         List<UaMonitoredItem> items = subscription.createMonitoredItems(
