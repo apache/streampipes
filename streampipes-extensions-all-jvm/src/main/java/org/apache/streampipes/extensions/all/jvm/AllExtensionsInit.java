@@ -31,7 +31,8 @@ import org.apache.streampipes.connect.adapters.mysql.MySqlSetAdapter;
 import org.apache.streampipes.connect.adapters.mysql.MySqlStreamAdapter;
 import org.apache.streampipes.connect.adapters.netio.NetioMQTTAdapter;
 import org.apache.streampipes.connect.adapters.netio.NetioRestAdapter;
-import org.apache.streampipes.connect.adapters.opcua.OpcUaAdapter;
+import org.apache.streampipes.connect.adapters.opcua.OpcUaSubscriptionAdapter;
+import org.apache.streampipes.connect.adapters.opcua.OpcUaPullAdapter;
 import org.apache.streampipes.connect.adapters.plc4x.modbus.Plc4xModbusAdapter;
 import org.apache.streampipes.connect.adapters.plc4x.s7.Plc4xS7Adapter;
 import org.apache.streampipes.connect.adapters.ros.RosBridgeAdapter;
@@ -245,7 +246,8 @@ public class AllExtensionsInit extends ExtensionsModelSubmitter {
                 .add(new WikipediaEditedArticlesAdapter())
                 .add(new WikipediaNewArticlesAdapter())
                 .add(new RosBridgeAdapter())
-                .add(new OpcUaAdapter())
+                .add(new OpcUaSubscriptionAdapter())
+                .add(new OpcUaPullAdapter())
                 .add(new InfluxDbStreamAdapter())
                 .add(new InfluxDbSetAdapter())
                 .add(new TISensorTag())
