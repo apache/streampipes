@@ -40,9 +40,9 @@ import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 
 import java.util.*;
 
-public class OpcUaAdapter extends SpecificDataStreamAdapter implements ResolvesContainerProvidedOptions {
+public class OpcUaSubscriptionAdapter extends SpecificDataStreamAdapter implements ResolvesContainerProvidedOptions {
 
-    public static final String ID = "org.apache.streampipes.connect.adapters.opcua";
+    public static final String ID = "org.apache.streampipes.connect.adapters.opcua.subscription";
 
     private Map<String, Object> event;
     private List<OpcNode> allNodes;
@@ -50,12 +50,12 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter implements ResolvesC
 
     private int numberProperties;
 
-    public OpcUaAdapter() {
+    public OpcUaSubscriptionAdapter() {
         this.event = new HashMap<>();
         this.numberProperties = 0;
     }
 
-    public OpcUaAdapter(SpecificAdapterStreamDescription adapterDescription) {
+    public OpcUaSubscriptionAdapter(SpecificAdapterStreamDescription adapterDescription) {
         super(adapterDescription);
 
         this.opcUa = OpcUa.from(this.adapterDescription);
@@ -152,7 +152,7 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter implements ResolvesC
 
     @Override
     public Adapter getInstance(SpecificAdapterStreamDescription adapterDescription) {
-        return new OpcUaAdapter(adapterDescription);
+        return new OpcUaSubscriptionAdapter(adapterDescription);
     }
 
     @Override

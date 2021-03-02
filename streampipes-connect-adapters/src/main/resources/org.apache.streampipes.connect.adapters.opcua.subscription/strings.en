@@ -1,5 +1,5 @@
-org.apache.streampipes.connect.adapters.opcua.title=OPC UA
-org.apache.streampipes.connect.adapters.opcua.description=Reads values from an OPC-UA server
+org.apache.streampipes.connect.adapters.opcua.subscription.title=OPC UA Subscription
+org.apache.streampipes.connect.adapters.opcua.subscription.description=Reads values from an OPC-UA server only on changes
 
 
 OPC_HOST_OR_URL.title=OPC Server
