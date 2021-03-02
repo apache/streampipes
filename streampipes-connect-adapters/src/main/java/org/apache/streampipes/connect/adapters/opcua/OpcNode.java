@@ -64,4 +64,10 @@ public class OpcNode {
     public void setNodeId(NodeId nodeId) {
         this.nodeId = nodeId;
     }
+
+    public int getOpcUnitId() {return this.opcUnitId;}
+
+    public boolean hasUnitId() {return this.opcUnitId !=0; }
+
+
 }
