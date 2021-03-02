@@ -23,8 +23,8 @@ import static org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.Unsigned.
 import static org.eclipse.milo.opcua.stack.core.util.ConversionUtil.toList;
 
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
-import org.apache.streampipes.connect.adapters.opcua.utils.OpcUaConnect;
-import org.apache.streampipes.connect.adapters.opcua.utils.OpcUaConnect.OpcUaLabels;
+import org.apache.streampipes.connect.adapters.opcua.utils.OpcUaUtil;
+import org.apache.streampipes.connect.adapters.opcua.utils.OpcUaUtil.OpcUaLabels;
 import org.apache.streampipes.connect.adapters.opcua.utils.OpcUaNodeVariants;
 import org.apache.streampipes.connect.adapters.opcua.utils.OpcUaTypes;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -129,13 +129,13 @@ public class OpcUa {
         if (useURL && unauthenticated){
 
             String serverAddress = extractor.singleValueParameter(OpcUaLabels.OPC_SERVER_URL.name(), String.class);
-            serverAddress = OpcUaConnect.formatServerAddress(serverAddress);
+            serverAddress = OpcUaUtil.formatServerAddress(serverAddress);
 
             return new OpcUa(serverAddress, namespaceIndex, nodeId, selectedNodeNames);
 
         } else if(!useURL && unauthenticated){
             String serverAddress = extractor.singleValueParameter(OpcUaLabels.OPC_SERVER_HOST.name(), String.class);
-            serverAddress = OpcUaConnect.formatServerAddress(serverAddress);
+            serverAddress = OpcUaUtil.formatServerAddress(serverAddress);
             int port = extractor.singleValueParameter(OpcUaLabels.OPC_SERVER_PORT.name(), int.class);
 
             return new OpcUa(serverAddress, port, namespaceIndex, nodeId, selectedNodeNames);
@@ -146,12 +146,12 @@ public class OpcUa {
 
             if (useURL) {
                 String serverAddress = extractor.singleValueParameter(OpcUaLabels.OPC_SERVER_URL.name(), String.class);
-                serverAddress = OpcUaConnect.formatServerAddress(serverAddress);
+                serverAddress = OpcUaUtil.formatServerAddress(serverAddress);
 
                 return new OpcUa(serverAddress, namespaceIndex, nodeId, username, password, selectedNodeNames);
             } else {
                 String serverAddress = extractor.singleValueParameter(OpcUaLabels.OPC_SERVER_HOST.name(), String.class);
-                serverAddress = OpcUaConnect.formatServerAddress(serverAddress);
+                serverAddress = OpcUaUtil.formatServerAddress(serverAddress);
                 int port = extractor.singleValueParameter(OpcUaLabels.OPC_SERVER_PORT.name(), int.class);
 
                 return new OpcUa(serverAddress, port, namespaceIndex, nodeId, username, password, selectedNodeNames);

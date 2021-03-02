@@ -22,16 +22,14 @@ import org.apache.streampipes.connect.adapter.Adapter;
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
 import org.apache.streampipes.connect.adapter.exception.ParseException;
 import org.apache.streampipes.connect.adapter.model.specific.SpecificDataStreamAdapter;
-import org.apache.streampipes.connect.adapters.opcua.utils.OpcUaConnect.OpcUaLabels;
+import org.apache.streampipes.connect.adapters.opcua.utils.OpcUaUtil;
+import org.apache.streampipes.connect.adapters.opcua.utils.OpcUaUtil.OpcUaLabels;
 import org.apache.streampipes.container.api.ResolvesContainerProvidedOptions;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.model.schema.EventProperty;
-import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.sdk.StaticProperties;
-import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.*;
@@ -40,7 +38,6 @@ import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaMonitoredItem;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 
-import java.net.URI;
 import java.util.*;
 
 public class OpcUaAdapter extends SpecificDataStreamAdapter implements ResolvesContainerProvidedOptions {
@@ -103,7 +100,7 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter implements ResolvesC
 
     public void onSubscriptionValue(UaMonitoredItem item, DataValue value) {
 
-        String key = getRuntimeNameOfNode(item.getReadValueId().getNodeId());
+        String key = OpcUaUtil.getRuntimeNameOfNode(item.getReadValueId().getNodeId());
 
         OpcNode currNode = this.allNodes.stream()
                 .filter(node -> key.equals(node.getNodeId().getIdentifier().toString()))
@@ -161,44 +158,7 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter implements ResolvesC
     @Override
     public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription) throws AdapterException, ParseException {
 
-        GuessSchema guessSchema = new GuessSchema();
-        EventSchema eventSchema = new EventSchema();
-        List<EventProperty> allProperties = new ArrayList<>();
-
-        OpcUa opc = OpcUa.from(this.adapterDescription);
-
-        try {
-            opc.connect();
-            List<OpcNode> res =  opc.browseNode(true);
-
-            if (res.size() > 0) {
-                for (OpcNode opcNode : res) {
-                    if (opcNode.opcUnitId == 0) {
-                        allProperties.add(PrimitivePropertyBuilder
-                                .create(opcNode.getType(), opcNode.getLabel())
-                                .label(opcNode.getLabel())
-                                .build());
-                    } else {
-                        allProperties.add(PrimitivePropertyBuilder
-                                .create(opcNode.getType(), opcNode.getLabel())
-                                .label(opcNode.getLabel())
-                                .measurementUnit(new URI(OpcUa.mapUnitIdToQudt(opcNode.opcUnitId)))
-                                .build());
-                    }
-                }
-            }
-
-            opc.disconnect();
-        } catch (Exception e) {
-
-            throw new AdapterException("Could not guess schema for opc node! " + e.getMessage());
-
-        }
-
-        eventSchema.setEventProperties(allProperties);
-        guessSchema.setEventSchema(eventSchema);
-
-        return guessSchema;
+        return OpcUaUtil.getSchema(adapterDescription);
     }
 
     @Override
@@ -209,41 +169,6 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter implements ResolvesC
     @Override
     public List<Option> resolveOptions(String requestId, StaticPropertyExtractor parameterExtractor) {
 
-        try {
-            parameterExtractor.selectedAlternativeInternalId(OpcUaLabels.OPC_HOST_OR_URL.name());
-            parameterExtractor.selectedAlternativeInternalId(OpcUaLabels.ACCESS_MODE.name());
-        } catch (NullPointerException npe){
-            return new ArrayList<>();
-        }
-
-        OpcUa opc = OpcUa.from(parameterExtractor);
-
-        List<Option> nodes = new ArrayList<>();
-        try {
-            opc.connect();
-            this.allNodes =  opc.browseNode(false);
-
-            for (OpcNode opcNode: this.allNodes) {
-                nodes.add(new Option(opcNode.getLabel(), opcNode.nodeId.getIdentifier().toString()));
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return nodes;
-    }
-
-    private String getRuntimeNameOfNode(NodeId nodeId) {
-        String[] keys = nodeId.getIdentifier().toString().split("\\.");
-        String key;
-
-        if (keys.length > 0) {
-            key = keys[keys.length - 1];
-        } else {
-            key = nodeId.getIdentifier().toString();
-        }
-
-        return key;
+        return OpcUaUtil.resolveOptions(requestId, parameterExtractor);
     }
 }
