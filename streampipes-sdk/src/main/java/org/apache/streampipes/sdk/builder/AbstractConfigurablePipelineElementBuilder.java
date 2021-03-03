@@ -147,15 +147,29 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
    * @return this
    */
   public BU requiredCodeblock(Label label, CodeLanguage codeLanguage) {
-    CodeInputStaticProperty codeInputStaticProperty = new CodeInputStaticProperty(label.getInternalId(),
-            label.getLabel(), label.getDescription());
-    codeInputStaticProperty.setLanguage(codeLanguage.name());
-    codeInputStaticProperty.setCodeTemplate(codeLanguage.getDefaultSkeleton());
-    this.staticProperties.add(codeInputStaticProperty);
+    this.requiredCodeblock(label, codeLanguage, codeLanguage.getDefaultSkeleton());
 
     return me();
   }
 
+  /**
+   * Assigns a new code block parameter which is required
+   * by the processing element.
+   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
+   *              user-friendly manner.
+   * @param codeLanguage The {@link org.apache.streampipes.sdk.helpers.CodeLanguage} code language the code block is built for.
+   * @param defaultSkeleton The code skeleton that is used as a default value.
+   * @return this
+   */
+  public BU requiredCodeblock(Label label, CodeLanguage codeLanguage, String defaultSkeleton) {
+    CodeInputStaticProperty codeInputStaticProperty = new CodeInputStaticProperty(label.getInternalId(),
+            label.getLabel(), label.getDescription());
+    codeInputStaticProperty.setLanguage(codeLanguage.name());
+    codeInputStaticProperty.setCodeTemplate(defaultSkeleton);
+    this.staticProperties.add(codeInputStaticProperty);
+
+    return me();
+  }
 
   /**
    * Assigns a new text-based configuration parameter (a string) which is required by the pipeline
