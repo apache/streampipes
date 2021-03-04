@@ -17,8 +17,11 @@
  */
 package org.apache.streampipes.manager.node;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.model.eventrelay.SpDataStreamRelayContainer;
 import org.apache.streampipes.model.node.NodeInfoDescription;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.slf4j.Logger;
@@ -30,25 +33,50 @@ public abstract class AbstractClusterManager {
     private static final Logger LOG = LoggerFactory.getLogger(AbstractClusterManager.class.getCanonicalName());
 
     private static final String PROTOCOL = "http://";
-    private static final String SLASH = "/";
     private static final String COLON = ":";
     private static final long RETRY_INTERVAL_MS = 5000;
-    private static final Object BASE_NODE_CONTROLLER_INFO_ROUTE = "/api/v2/node/info";
     private static final int CONNECT_TIMEOUT = 1000;
+    private static final String BASE_NODE_CONTROLLER_INFO_ROUTE = "/api/v2/node/info";
+    private static final String BASE_NODE_CONTROLLER_RELAY_ROUTE = "/api/v2/node/stream/relay";
 
-    protected static boolean syncStateUpdateWithRemoteNodeController(NodeInfoDescription desc, boolean activate) {
-        boolean synced = false;
-        String url;
-        if (activate) {
-            url = generateEndpoint(desc, "/activate");
-        } else {
-            url = generateEndpoint(desc, "/deactivate");
+    public enum RequestOptions {
+        GET,POST,PUT,DELETE
+    }
+
+    protected static <T> boolean syncWithNodeController(T element, NodeSyncOptions sync) {
+        switch (sync) {
+            case ACTIVATE_NODE:
+                return sync(element, "/activate", RequestOptions.POST, false, NodeInfoDescription.class);
+            case DEACTIVATE_NODE:
+                return sync(element, "/deactivate", RequestOptions.POST, false, NodeInfoDescription.class);
+            case UPDATE_NODE:
+                return sync(element, "", RequestOptions.PUT, true, NodeInfoDescription.class);
+            case RESTART_RELAYS:
+                return sync(element, "/invoke", RequestOptions.POST, true, SpDataStreamRelayContainer.class);
+            default:
+                return false;
         }
-        LOG.info("Trying to sync state update with node controller=" + url);
+    }
+
+    private static <T> boolean sync(T element, String subroute, RequestOptions request, boolean withBody, Class<?> type) {
+        boolean synced = false;
+
+        String body = "{}";
+        if (withBody) {
+            body = jackson(element);
+        }
+
+        String url = generateEndpoint(element, subroute, type);
+        LOG.info("Trying to sync with node controller=" + url);
 
         boolean connected = false;
         while (!connected) {
-            connected = post(url);
+            // call node controller REST endpoints
+            switch (request) {
+                case POST: connected = post(url, body);
+                case PUT : connected = put(url, body);
+            }
+
             if (!connected) {
                 LOG.info("Retrying in {} seconds", (RETRY_INTERVAL_MS / 10000));
                 try {
@@ -57,46 +85,43 @@ public abstract class AbstractClusterManager {
                     e.printStackTrace();
                 }
             }
-        }
-        synced = true;
-        return synced;
-    }
-
-    protected static boolean syncWithRemoteNodeController(NodeInfoDescription desc) {
-        boolean synced = false;
-        try {
-            String body = JacksonSerializer.getObjectMapper().writeValueAsString(desc);
-            String url = generateEndpoint(desc);
-            LOG.info("Trying to sync description updates with node controller=" + url);
-
-            boolean connected = false;
-            while (!connected) {
-                connected = put(url, body);
-                if (!connected) {
-                    LOG.info("Retrying in {} seconds", (RETRY_INTERVAL_MS / 10000));
-                    try {
-                        Thread.sleep(RETRY_INTERVAL_MS);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
             synced = true;
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+        LOG.info("Successfully synced with node controller=" + url);
         return synced;
     }
 
-    protected static String generateEndpoint(NodeInfoDescription desc) {
-        return generateEndpoint(desc, "");
+    // Helpers
+
+    private static <T> String generateEndpoint(T desc, String subroute, Class<?> type) {
+        if (type.equals(NodeInfoDescription.class)) {
+            NodeInfoDescription d = (NodeInfoDescription) desc;
+            return PROTOCOL
+                    + d.getHostname()
+                    + COLON
+                    + d.getPort()
+                    + BASE_NODE_CONTROLLER_INFO_ROUTE
+                    + subroute;
+        } else {
+            SpDataStreamRelayContainer d = (SpDataStreamRelayContainer) desc;
+            return PROTOCOL
+                    + d.getDeploymentTargetNodeHostname()
+                    + COLON
+                    + d.getDeploymentTargetNodePort()
+                    + BASE_NODE_CONTROLLER_RELAY_ROUTE
+                    + subroute;
+        }
     }
 
-    protected static String generateEndpoint(NodeInfoDescription desc, String subroute) {
-        return PROTOCOL + desc.getHostname() + COLON + desc.getPort() + BASE_NODE_CONTROLLER_INFO_ROUTE + subroute;
+    private static <T> String jackson(T desc) {
+        try {
+            return JacksonSerializer.getObjectMapper().writeValueAsString(desc);
+        } catch (JsonProcessingException e) {
+            throw new SpRuntimeException("Could not serialize node controller description");
+        }
     }
 
-    protected static boolean put(String url, String body) {
+    private static boolean put(String url, String body) {
         try {
             Request.Put(url)
                     .bodyString(body, ContentType.APPLICATION_JSON)
@@ -109,10 +134,10 @@ public abstract class AbstractClusterManager {
         return false;
     }
 
-    protected static boolean post(String url) {
+    private static boolean post(String url, String body) {
         try {
             Request.Post(url)
-                    .bodyString("{}", ContentType.APPLICATION_JSON)
+                    .bodyString(body, ContentType.APPLICATION_JSON)
                     .connectTimeout(CONNECT_TIMEOUT)
                     .execute();
             return true;
@@ -121,4 +146,5 @@ public abstract class AbstractClusterManager {
         }
         return false;
     }
+
 }

@@ -29,7 +29,7 @@ import {Component, Input} from "@angular/core";
 export class PipelineStatusDialogComponent {
 
     statusDetailsVisible: any;
-    elementStati : [[PipelineElementStatus]];
+    elementStati : Array<Array<PipelineElementStatus>>;
 
     @Input()
     pipelineOperationStatus: PipelineOperationStatus;
@@ -40,18 +40,15 @@ export class PipelineStatusDialogComponent {
     }
 
     ngOnInit(){
-        console.log(this.pipelineOperationStatus.elementStatus)
-        let nodes: [String];
-        nodes = [];
+        let nodes = [];
         this.pipelineOperationStatus.elementStatus.forEach(stat => {
             if (!nodes.includes(stat.elementNode)){
                 nodes.push(stat.elementNode)
             }
         })
-        console.log(nodes)
+
         nodes.forEach(node =>{
-            let nodeStati : [PipelineElementStatus];
-            nodeStati = [];
+            let nodeStati = [];
             this.pipelineOperationStatus.elementStatus.forEach(stat =>{
                 if(stat.elementNode == node){
                     nodeStati.push(stat);
@@ -59,7 +56,6 @@ export class PipelineStatusDialogComponent {
             })
             this.elementStati.push(nodeStati);
         })
-        console.log(this.elementStati)
     }
 
     close() {

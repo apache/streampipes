@@ -68,7 +68,10 @@ public enum NotificationType {
 	INSTALLATION_SUCCESSFUL("Installation successful", ""), 
 	
 	PROPERTY_FILE_WRITTEN("Writing properties file...", ""), 
-	ADMIN_USER_CREATED("Creating admin user...", "");
+	ADMIN_USER_CREATED("Creating admin user...", ""),
+
+	NODE_JOIN_SUCCESS("Success", "Node successfully joined"),
+	NODE_JOIN_ERROR("Error", "Node could not be joined");
 
 
 	private final String title;

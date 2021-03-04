@@ -24,6 +24,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.streampipes.model.*;
 import org.apache.streampipes.model.connect.rules.value.*;
+import org.apache.streampipes.model.eventrelay.SpDataStreamRelay;
+import org.apache.streampipes.model.eventrelay.SpDataStreamRelayContainer;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.connect.adapter.*;
 import org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription;

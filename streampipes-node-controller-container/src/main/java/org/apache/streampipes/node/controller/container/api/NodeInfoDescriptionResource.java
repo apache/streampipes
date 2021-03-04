@@ -28,7 +28,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/api/v2/node/info")
-public class InfoStatusResource extends AbstractResource {
+public class NodeInfoDescriptionResource extends AbstractResource {
 
     private static final String ACTIVATE = "activate";
     private static final String DEACTIVATE = "deactivate";
@@ -70,6 +70,6 @@ public class InfoStatusResource extends AbstractResource {
     @Path("/relays")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllRelays() {
-        return ok(DataStreamRelayManager.getInstance().getAllRelays());
+        return ok(DataStreamRelayManager.getInstance().getAllRelaysMetrics());
     }
 }

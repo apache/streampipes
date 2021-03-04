@@ -19,7 +19,7 @@ package org.apache.streampipes.node.controller.container.management.relay;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.grounding.*;
-import org.apache.streampipes.node.controller.container.management.relay.metrics.RelayMetrics;
+import org.apache.streampipes.model.eventrelay.metrics.RelayMetrics;
 
 public class EventRelay extends BaseEventRelay {
 
@@ -29,11 +29,11 @@ public class EventRelay extends BaseEventRelay {
         super(source, target, DEFAULT_EVENT_RELAY_STRATEGY);
     }
 
-    public EventRelay(TransportProtocol source, TransportProtocol target, String relayStrategy) {
+    public EventRelay(TransportProtocol source, TransportProtocol target, String relayStrategy)  {
         super(source, target, relayStrategy);
     }
 
-    public void start() throws SpRuntimeException{
+    public void start() throws SpRuntimeException {
         this.multiBrokerBridge.start();
     }
 

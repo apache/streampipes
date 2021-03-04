@@ -58,4 +58,6 @@ public interface INoSqlStorage {
   IPipelineElementTemplateStorage getPipelineElementTemplateStorage();
 
   INodeInfoStorage getNodeStorage();
+
+  INodeDataStreamRelay getNodeDataStreamRelayStorage();
 }

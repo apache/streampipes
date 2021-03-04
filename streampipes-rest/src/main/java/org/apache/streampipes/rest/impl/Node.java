@@ -40,8 +40,7 @@ public class Node extends AbstractRestResource implements INode {
     @Produces(MediaType.APPLICATION_JSON)
     @Override
     public Response addNode(@PathParam("username") String username, NodeInfoDescription desc) {
-        NodeClusterManager.addNode(desc);
-        return statusMessage(Notifications.success(NotificationType.STORAGE_SUCCESS));
+        return statusMessage(NodeClusterManager.addOrRejoin(desc));
     }
 
     @PUT
@@ -51,7 +50,8 @@ public class Node extends AbstractRestResource implements INode {
     @Produces(MediaType.APPLICATION_JSON)
     @Override
     public Response updateNode(@PathParam("username") String username,
-                               @PathParam("nodeControllerId") String nodeControllerId, NodeInfoDescription desc) {
+                               @PathParam("nodeControllerId") String nodeControllerId,
+                               NodeInfoDescription desc) {
         return statusMessage(NodeClusterManager.updateNode(desc));
     }
 

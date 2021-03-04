@@ -15,20 +15,17 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.node.controller.container.management.pe;
+package org.apache.streampipes.manager.execution.pipeline.migration;
 
-import org.apache.streampipes.container.model.node.InvocableRegistration;
-import org.apache.streampipes.model.Response;
-import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+public class PipelineElementStartCommand implements Command {
 
-public interface PipelineElementLifeCycle {
+    @Override
+    public void execute() {
 
-    void register(InvocableRegistration registration);
+    }
 
-    Response invoke(InvocableStreamPipesEntity graph);
+    @Override
+    public void rollback() {
 
-    Response detach(String runningInstanceId);
-
-    void unregister();
-
+    }
 }

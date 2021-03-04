@@ -15,12 +15,16 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.model;
+package org.apache.streampipes.model.eventrelay;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 import io.fogsy.empire.annotations.RdfProperty;
 import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.commons.lang.RandomStringUtils;
+import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
+import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
@@ -39,6 +43,13 @@ public class SpDataStreamRelayContainer extends NamedStreamPipesEntity {
     private static final long serialVersionUID = -4675162465357705480L;
 
     private static final String prefix = "urn:apache.org:relaystreamcontainer:";
+    private static final String RELAY_SUFFIX = "(Stream Relay)";
+
+    @JsonProperty("_id")
+    private @SerializedName("_id") String couchDbId;
+
+    @JsonProperty("_rev")
+    private @SerializedName("_rev") String couchDbRev;
 
     @OneToOne(fetch = FetchType.EAGER,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -75,6 +86,31 @@ public class SpDataStreamRelayContainer extends NamedStreamPipesEntity {
         super(elementId);
         this.outputStreamRelays = outputStreamRelays;
         this.eventRelayStrategy = eventRelayStrategy;
+    }
+
+    public SpDataStreamRelayContainer(DataProcessorInvocation desc) {
+        super(desc.getElementId());
+        this.setName(makeRelayName(desc.getName()));
+        this.setEventRelayStrategy(desc.getEventRelayStrategy());
+        this.setRunningStreamRelayInstanceId(desc.getDeploymentRunningInstanceId());
+        this.setInputGrounding(new EventGrounding(desc.getOutputStream().getEventGrounding()));
+        this.setOutputStreamRelays(desc.getOutputStreamRelays());
+        this.setDeploymentTargetNodeHostname(desc.getDeploymentTargetNodeHostname());
+        this.setDeploymentTargetNodePort(desc.getDeploymentTargetNodePort());
+        this.setDeploymentTargetNodeId(desc.getDeploymentTargetNodeId());
+    }
+
+    public SpDataStreamRelayContainer(String runningStreamRelayInstanceId, String eventRelayStrategy, SpDataStream desc,
+                                      List<SpDataStreamRelay> dataStreamRelays) {
+        super(desc.getElementId());
+        this.setRunningStreamRelayInstanceId(runningStreamRelayInstanceId);
+        this.setEventRelayStrategy(eventRelayStrategy);
+        this.setName(makeRelayName(desc.getName()));
+        this.setInputGrounding(new EventGrounding(desc.getEventGrounding()));
+        this.setDeploymentTargetNodeId(desc.getDeploymentTargetNodeId());
+        this.setDeploymentTargetNodeHostname(desc.getDeploymentTargetNodeHostname());
+        this.setDeploymentTargetNodePort(desc.getDeploymentTargetNodePort());
+        this.setOutputStreamRelays(dataStreamRelays);
     }
 
     public SpDataStreamRelayContainer(NamedStreamPipesEntity other) {
@@ -135,5 +171,25 @@ public class SpDataStreamRelayContainer extends NamedStreamPipesEntity {
 
     public void setDeploymentTargetNodePort(Integer deploymentTargetNodePort) {
         this.deploymentTargetNodePort = deploymentTargetNodePort;
+    }
+
+    private String makeRelayName(String name) {
+        return name + " " + RELAY_SUFFIX;
+    }
+
+    public String getCouchDbId() {
+        return couchDbId;
+    }
+
+    public void setCouchDbId(String couchDbId) {
+        this.couchDbId = couchDbId;
+    }
+
+    public String getCouchDbRev() {
+        return couchDbRev;
+    }
+
+    public void setCouchDbRev(String couchDbRev) {
+        this.couchDbRev = couchDbRev;
     }
 }

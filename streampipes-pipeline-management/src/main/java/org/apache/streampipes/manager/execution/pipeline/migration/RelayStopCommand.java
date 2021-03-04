@@ -15,16 +15,16 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.node.controller.container.api;
+package org.apache.streampipes.manager.execution.pipeline.migration;
 
-import org.apache.streampipes.model.graph.DataProcessorInvocation;
+public class RelayStopCommand implements Command {
+    @Override
+    public void execute() {
 
-import javax.ws.rs.Path;
+    }
 
-//@Path("/api/v2/node/element/sepa")
-//public class DataProcessorPipelineElementResource extends InvocableEntityResource<DataProcessorInvocation> {
-//
-//    public DataProcessorPipelineElementResource() {
-//        super(DataProcessorInvocation.class);
-//    }
-//}
+    @Override
+    public void rollback() {
+
+    }
+}

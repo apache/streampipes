@@ -120,5 +120,8 @@ public enum CouchDbStorageManager implements INoSqlStorage {
     return new NodeInfoStorageImpl();
   }
 
-
+  @Override
+  public INodeDataStreamRelay getNodeDataStreamRelayStorage() {
+    return new NodeDataStreamRelayImpl();
+  }
 }

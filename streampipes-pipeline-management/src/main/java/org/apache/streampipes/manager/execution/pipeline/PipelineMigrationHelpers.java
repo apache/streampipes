@@ -15,16 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.node.controller.container.api;
+package org.apache.streampipes.manager.execution.pipeline;
 
-import org.apache.streampipes.model.graph.DataSinkInvocation;
-
-import javax.ws.rs.Path;
-
-//@Path("/api/v2/node/element/sec")
-//public class DataSinkPipelineElementResource extends InvocableEntityResource<DataSinkInvocation> {
-//
-//    public DataSinkPipelineElementResource() {
-//        super(DataSinkInvocation.class);
-//    }
-//}
+public class PipelineMigrationHelpers {
+}

@@ -17,16 +17,17 @@
  */
 package org.apache.streampipes.node.controller.container.management.relay;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.Response;
-import org.apache.streampipes.model.SpDataStreamRelay;
-import org.apache.streampipes.model.SpDataStreamRelayContainer;
+import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+import org.apache.streampipes.model.eventrelay.SpDataStreamRelay;
+import org.apache.streampipes.model.eventrelay.SpDataStreamRelayContainer;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.grounding.TransportProtocol;
-import org.apache.streampipes.node.controller.container.management.relay.metrics.RelayMetrics;
+import org.apache.streampipes.model.eventrelay.metrics.RelayMetrics;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class DataStreamRelayManager {
@@ -45,80 +46,65 @@ public class DataStreamRelayManager {
         return instance;
     }
 
-    public Response startAdapterDataStreamRelay(SpDataStreamRelayContainer desc) {
+    public Response start(InvocableStreamPipesEntity graph) {
+        return start(convert(graph));
+    }
+
+    public Response start(SpDataStreamRelayContainer desc) {
         String strategy = desc.getEventRelayStrategy();
-        String runningInstanceId = desc.getRunningStreamRelayInstanceId();
+        String id = desc.getRunningStreamRelayInstanceId();
         TransportProtocol source = desc.getInputGrounding().getTransportProtocol();
 
         Map<String, EventRelay> eventRelayMap = new HashMap<>();
 
-        desc.getOutputStreamRelays().forEach(r -> {
-            TransportProtocol target = r.getEventGrounding().getTransportProtocol();
-            EventRelay eventRelay = new EventRelay(source, target, strategy);
-            eventRelay.start();
-            eventRelayMap.put(r.getElementId(), eventRelay);
+        // start data stream relay
+        // 1:1 mapping -> remote forward
+        // 1:n mamping -> remote fan-out
+        desc.getOutputStreamRelays().forEach(relay -> {
+            // add new relay if not running
+            if(!runningRelayExists(id, relay)) {
+                TransportProtocol target = relay.getEventGrounding().getTransportProtocol();
+                EventRelay eventRelay = new EventRelay(source, target, strategy);
+                eventRelay.start();
+                eventRelayMap.put(relay.getElementId(), eventRelay);
+            }
         });
         RunningRelayInstances.INSTANCE.add(desc.getRunningStreamRelayInstanceId(), eventRelayMap);
-        return new Response(runningInstanceId,true,"");
-    }
-
-    public Response stopAdapterDataStreamRelay(String id) {
-        return stopDataStreamRelay(id);
-    }
-
-
-    public Response startDataStreamRelay(SpDataStreamRelayContainer desc, String id) {
-        String strategy = desc.getEventRelayStrategy();
-        TransportProtocol source = desc.getInputGrounding().getTransportProtocol();
-
-        Map<String, EventRelay> eventRelayMap = new HashMap<>();
-
-        desc.getOutputStreamRelays().forEach(r -> {
-            TransportProtocol target = r.getEventGrounding().getTransportProtocol();
-            EventRelay eventRelay = new EventRelay(source, target, strategy);
-            eventRelay.start();
-            eventRelayMap.put(r.getElementId(), eventRelay);
-        });
-        RunningRelayInstances.INSTANCE.add(id, eventRelayMap);
         return new Response(id,true,"");
     }
 
-    public Response stopDataStreamRelay(String id) {
-        Map<String, EventRelay> relay = RunningRelayInstances.INSTANCE.get(id);
-        if (relay != null) {
-            relay.values().forEach(EventRelay::stop);
+    public Response stop(String id) {
+        Map<String, EventRelay> relays = RunningRelayInstances.INSTANCE.get(id);
+        if (relays != null) {
+            relays.values().forEach(EventRelay::stop);
         }
         RunningRelayInstances.INSTANCE.remove(id);
         return new Response(id, true, "");
     }
 
-    public void startPipelineElementDataStreamRelay(DataProcessorInvocation graph) {
-        TransportProtocol source = graph
-                .getOutputStream()
-                .getEventGrounding()
-                .getTransportProtocol();
-
-        String strategy = graph.getEventRelayStrategy();
-        Map<String, EventRelay> eventRelayMap = new HashMap<>();
-
-        List<SpDataStreamRelay> dataStreamRelays = graph.getOutputStreamRelays();
-        dataStreamRelays.forEach(r -> {
-            TransportProtocol target = r.getEventGrounding().getTransportProtocol();
-            EventRelay eventRelay = new EventRelay(source, target, strategy);
-            eventRelay.start();
-            eventRelayMap.put(r.getElementId(), eventRelay);
-        });
-        RunningRelayInstances.INSTANCE.add(graph.getDeploymentRunningInstanceId(), eventRelayMap);
-    }
-
-    public void stopPipelineElementDataStreamRelay(String id) {
-        stopDataStreamRelay(id);
-    }
-
-    public List<RelayMetrics> getAllRelays() {
+    public List<RelayMetrics> getAllRelaysMetrics() {
        return RunningRelayInstances.INSTANCE.getRunningInstances()
                     .stream()
                     .map(EventRelay::getRelayMetrics)
                     .collect(Collectors.toList());
+    }
+
+    private boolean runningRelayExists(String id, SpDataStreamRelay relay) {
+        Map<String, EventRelay> relays = RunningRelayInstances.INSTANCE.get(id);
+        if (relays != null) {
+            return relays.keySet().stream()
+                    .anyMatch(eventRelay -> eventRelay.equals(relay.getElementId()));
+        } else {
+            return false;
+        }
+    }
+
+    // Helpers
+
+    private SpDataStreamRelayContainer convert(InvocableStreamPipesEntity graph) {
+        if (graph instanceof DataProcessorInvocation) {
+            return new SpDataStreamRelayContainer((DataProcessorInvocation) graph);
+        }
+        throw new SpRuntimeException("Could not convert pipeline element description to data stream relay");
     }
 }

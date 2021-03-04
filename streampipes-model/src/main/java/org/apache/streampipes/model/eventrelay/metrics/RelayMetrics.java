@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.node.controller.container.management.relay.metrics;
+package org.apache.streampipes.model.eventrelay.metrics;
 
 import org.apache.streampipes.model.grounding.TransportProtocol;
 

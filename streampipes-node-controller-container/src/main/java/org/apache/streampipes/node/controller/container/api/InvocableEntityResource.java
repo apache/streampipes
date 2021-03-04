@@ -21,12 +21,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.container.model.node.InvocableRegistration;
 import org.apache.streampipes.model.Response;
-import org.apache.streampipes.model.SpDataStreamRelayContainer;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
-import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.node.controller.container.management.pe.InvocableElementManager;
 import org.apache.streampipes.node.controller.container.management.pe.RunningInvocableInstances;
-import org.apache.streampipes.node.controller.container.management.relay.DataStreamRelayManager;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.slf4j.Logger;
@@ -34,12 +31,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.lang.annotation.Annotation;
-import java.net.URI;
-import java.util.Date;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
 
 @Path("/api/v2/node/element")
 public class InvocableEntityResource extends AbstractResource {
@@ -62,26 +53,22 @@ public class InvocableEntityResource extends AbstractResource {
     @Produces(MediaType.APPLICATION_JSON)
     public javax.ws.rs.core.Response invoke(@PathParam("identifier") String identifier,
                                             @PathParam("elementId") String elementId, InvocableStreamPipesEntity graph) {
-        String endpoint;
 
         if (identifier.equals(DATA_PROCESSOR_PREFIX)) {
-            endpoint = graph.getBelongsTo();
-            DataStreamRelayManager.getInstance().startPipelineElementDataStreamRelay((DataProcessorInvocation) graph);
-            Response resp = InvocableElementManager.getInstance().invoke(endpoint, toJson(graph));
-            if (resp.isSuccess()) {
+            Response elementResponse = InvocableElementManager.getInstance().invoke(graph);
+            if (elementResponse.isSuccess()) {
                 RunningInvocableInstances.INSTANCE.add(graph.getDeploymentRunningInstanceId(), graph);
             }
-            return ok(resp);
+            return ok(elementResponse);
         }
         // Currently no data sinks are registered at node controller. If we, at some point, want to also run data
         // sinks on edge nodes we need to register there Declarer at the node controller one startup.
         else if (identifier.equals(DATA_SINK_PREFIX)) {
-            endpoint = graph.getBelongsTo();
-            Response resp = InvocableElementManager.getInstance().invoke(endpoint, toJson(graph));
-            if (resp.isSuccess()) {
+            Response elementResponse = InvocableElementManager.getInstance().invoke(graph);
+            if (elementResponse.isSuccess()) {
                 RunningInvocableInstances.INSTANCE.add(graph.getDeploymentRunningInstanceId(), graph);
             }
-            return ok(resp);
+            return ok(elementResponse);
         }
 
         return ok();
@@ -96,37 +83,7 @@ public class InvocableEntityResource extends AbstractResource {
         String endpoint = RunningInvocableInstances.INSTANCE.get(runningInstanceId).getBelongsTo();
         Response resp = InvocableElementManager.getInstance().detach(endpoint + SLASH + runningInstanceId);
         RunningInvocableInstances.INSTANCE.remove(runningInstanceId);
-        DataStreamRelayManager.getInstance().stopPipelineElementDataStreamRelay(runningInstanceId);
 
         return ok(resp);
-    }
-
-
-    @DELETE
-    @Path("{identifier}/{elementId}/{runningInstanceId}/relay")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response detachRelay(@PathParam("identifier") String identifier,
-                                            @PathParam("elementId") String elementId,
-                                            @PathParam("runningInstanceId") String runningInstanceId) {
-        return DataStreamRelayManager.getInstance().stopDataStreamRelay(runningInstanceId);
-    }
-
-    @POST
-    @Path("{identifier}/{elementId}/{runningInstanceId}/relay")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response invokeRelay(@PathParam("identifier") String identifier,
-                                @PathParam("elementId") String elementId,
-                                @PathParam("runningInstanceId") String runningInstanceId,
-                                SpDataStreamRelayContainer relay) {
-        return DataStreamRelayManager.getInstance().startDataStreamRelay(relay, runningInstanceId);
-    }
-
-    private String toJson(InvocableStreamPipesEntity graph) {
-        try {
-            return JacksonSerializer.getObjectMapper().writeValueAsString(graph);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        throw new SpRuntimeException("Could not serialize object: " + graph);
     }
 }

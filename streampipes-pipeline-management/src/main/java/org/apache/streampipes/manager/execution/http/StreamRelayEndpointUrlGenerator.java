@@ -16,7 +16,7 @@
  *
  */
 package org.apache.streampipes.manager.execution.http;
-import org.apache.streampipes.model.SpDataStreamRelayContainer;
+import org.apache.streampipes.model.eventrelay.SpDataStreamRelayContainer;
 
 public class StreamRelayEndpointUrlGenerator extends EndpointUrlGenerator<SpDataStreamRelayContainer> {
 

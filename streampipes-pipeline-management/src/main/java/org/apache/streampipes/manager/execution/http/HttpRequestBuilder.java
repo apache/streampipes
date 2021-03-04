@@ -18,21 +18,20 @@
 
 package org.apache.streampipes.manager.execution.http;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.google.gson.Gson;
+
 import com.google.gson.JsonSyntaxException;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
-import org.apache.streampipes.commons.Utils;
-import org.apache.streampipes.model.SpDataStreamRelayContainer;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
+import org.apache.streampipes.model.eventrelay.SpDataStreamRelayContainer;
+import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.pipeline.PipelineElementStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
-import org.apache.streampipes.serializers.jsonld.JsonLdTransformer;
+
 
 import java.io.IOException;
 

@@ -25,9 +25,9 @@ public class NodeControllerResourceConfig extends ResourceConfig {
 
     public NodeControllerResourceConfig() {
         register(HealthCheckResource.class);
-        register(InfoStatusResource.class);
+        register(NodeInfoDescriptionResource.class);
         register(InvocableEntityResource.class);
-        register(AdapterDataStreamRelayResource.class);
+        register(DataStreamRelayResource.class);
         register(ConnectResource.class);
         register(ContainerResource.class);
     }

@@ -270,11 +270,12 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @JacksonSerialized
   @Operation(summary = "Migrate pipeline elements to new node",
           tags = {"Pipeline"})
-  public Response migratePipelineProcessors(@PathParam("username") String username,
-                                            @PathParam("pipelineId") String pipelineId,
-                                            Pipeline pipelineNew) {
+  public Response migratePipelineElements(@PathParam("username") String username,
+                                          @PathParam("pipelineId") String pipelineId,
+                                          Pipeline desiredPipeline) {
     try {
-      PipelineOperationStatus status = Operations.migratePipelineProcessors(pipelineNew, true, true, true);
+      PipelineOperationStatus status = Operations.handlePipelineElementMigration(desiredPipeline,
+              true, true, true);
       return ok(status);
     } catch (Exception e) {
       e.printStackTrace();

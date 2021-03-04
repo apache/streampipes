@@ -18,88 +18,57 @@
 
 package org.apache.streampipes.manager.execution.http;
 
-import org.apache.streampipes.model.SpDataStreamRelayContainer;
+import org.apache.streampipes.model.eventrelay.SpDataStreamRelayContainer;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
-import org.apache.streampipes.model.pipeline.PipelineElementStatus;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
-public class GraphSubmitter {
+public class GraphSubmitter extends ElementSubmitter {
 
-  private final static Logger LOG = LoggerFactory.getLogger(GraphSubmitter.class);
+  public GraphSubmitter(String pipelineId, String pipelineName) {
+    super(pipelineId, pipelineName, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+  }
 
-  private final List<InvocableStreamPipesEntity> graphs;
-  private final List<SpDataSet> dataSets;
-  private final String pipelineId;
-  private final String pipelineName;
-  private final List<SpDataStreamRelayContainer> streamRelays;
+  public GraphSubmitter(String pipelineId, String pipelineName, List<InvocableStreamPipesEntity> graphs) {
+    super(pipelineId, pipelineName, graphs, new ArrayList<>(), new ArrayList<>());
+  }
 
   public GraphSubmitter(String pipelineId, String pipelineName, List<InvocableStreamPipesEntity> graphs,
-                        List<SpDataSet> dataSets, List<SpDataStreamRelayContainer> streamRelays) {
-    this.graphs = graphs;
-    this.pipelineId = pipelineId;
-    this.pipelineName = pipelineName;
-    this.dataSets = dataSets;
-    this.streamRelays = streamRelays;
+                        List<SpDataSet> dataSets, List<SpDataStreamRelayContainer> relays) {
+    super(pipelineId, pipelineName, graphs, dataSets, relays);
   }
 
-
-  public PipelineOperationStatus invokeRelays(Map<NamedStreamPipesEntity, SpDataStreamRelayContainer> relays) {
+  /**
+   * Called when pipeline is started. This invokes all pipeline elements including relays between adjacent pipeline
+   * element nodes in the pipeline graph. Thereby, we do this along the following procedure:
+   *
+   * - start relays (if any)
+   * - start pipeline elements
+   * - start data sets (only if pipeline elements and relays started)
+   *
+   * We verify the status of this procedure and trigger a graceful rollback in case of any failure. In any case, we
+   * return an appropriate success/error message.
+   *
+   * @return PipelineOperationStatus
+   */
+  @Override
+  public PipelineOperationStatus invokePipelineElementsAndRelays() {
     PipelineOperationStatus status = initPipelineOperationStatus();
 
-    relays.entrySet().forEach(e -> {
-      if(e.getValue().getOutputStreamRelays().size() > 0){
-          if(e.getKey() instanceof DataProcessorInvocation)
-            status.addPipelineElementStatus(makeHttpRequest(new InvocableEntityUrlGenerator((DataProcessorInvocation) e.getKey()), e.getValue(), "invokeRelay"));
-          else
-            status.addPipelineElementStatus(makeHttpRequest(new StreamRelayEndpointUrlGenerator(e.getValue()), e.getValue(), "invoke"));
-      }
-    });
-
-    return verifyPipelineOperationStatus(
-            status,
-            "Successfully started relays in pipeline " + pipelineName,
-            "Could not start relays in pipeline" + pipelineName,
-            true);
-  }
-
-  public PipelineOperationStatus detachRelays(Map<NamedStreamPipesEntity, SpDataStreamRelayContainer> relays) {
-    PipelineOperationStatus status = initPipelineOperationStatus();
-
-    relays.entrySet().forEach(e -> {
-      if(e.getValue().getOutputStreamRelays().size() > 0){
-        if(e.getKey() instanceof DataProcessorInvocation)
-          status.addPipelineElementStatus(makeHttpRequest(new InvocableEntityUrlGenerator((DataProcessorInvocation) e.getKey()), e.getValue(), "detachRelay"));
-        else
-          status.addPipelineElementStatus(makeHttpRequest(new StreamRelayEndpointUrlGenerator(e.getValue()), e.getValue(), "detach"));
-      }
-    });
-
-    return verifyPipelineOperationStatus(
-            status,
-            "Successfully stopped relays in pipeline " + pipelineName,
-            "Could not stop all relays in pipeline " + pipelineName,
-            false);
-  }
-
-  public PipelineOperationStatus invokeGraphs() {
-    PipelineOperationStatus status = initPipelineOperationStatus();
-
-    if (streamRelays.stream().anyMatch(s -> s.getOutputStreamRelays().size() > 0)) {
-      streamRelays.forEach(streamRelay -> invoke(new StreamRelayEndpointUrlGenerator(streamRelay), streamRelay, status));
+    if (relaysExist()) {
+      invokeRelays(status);
     }
-    graphs.forEach(graph -> invoke(new InvocableEntityUrlGenerator(graph), graph, status));
-    // only invoke datasets when following pipeline elements are started
+
+    invokePipelineElements(status);
+
     if (allInvocableEntitiesRunning(status)) {
-        dataSets.forEach(dataset -> invoke(new DataSetEntityUrlGenerator(dataset), dataset, status));
+      invokeDataSets(status);
     }
 
     return verifyPipelineOperationStatus(
@@ -109,13 +78,27 @@ public class GraphSubmitter {
             true);
   }
 
-  public PipelineOperationStatus detachGraphs() {
+  /**
+   * Called when pipeline is stopped. This detaches all pipeline elements including relays between adjacent pipeline
+   * element nodes in the pipeline graph. Thereby, we do this along the following procedure:
+   *
+   * - stop pipeline elements
+   * - stop data sets
+   * - stop relays (if any)
+   *
+   * We verify the status of this procedure and return the success/error message.
+   *
+   * @return PipelineOperationStatus
+   */
+  @Override
+  public PipelineOperationStatus detachPipelineElementsAndRelays() {
     PipelineOperationStatus status = initPipelineOperationStatus();
 
-    graphs.forEach(graph -> detach(new InvocableEntityUrlGenerator(graph), graph, status));
-    dataSets.forEach(dataset -> detach(new DataSetEntityUrlGenerator(dataset), dataset, status));
-    if (streamRelays.stream().anyMatch(s -> s.getOutputStreamRelays().size() > 0)) {
-      streamRelays.forEach(streamRelay -> detach(new StreamRelayEndpointUrlGenerator(streamRelay), streamRelay, status));
+    detachPipelineElements(status);
+    detachDataSets(status);
+
+    if (relaysExist()) {
+      detachRelays(status);
     }
 
     return verifyPipelineOperationStatus(
@@ -125,74 +108,41 @@ public class GraphSubmitter {
             false);
   }
 
-  private PipelineOperationStatus verifyPipelineOperationStatus(PipelineOperationStatus status, String successMessage,
-                                             String errorMessage, boolean rollbackIfFailed) {
-    status.setSuccess(status.getElementStatus().stream().allMatch(PipelineElementStatus::isSuccess));
+  /**
+   * Called when pipeline elements are migrated and new relays need to be invoked between adjacent pipeline elements
+   *
+   * @return PipelineOperationStatus
+   */
+  @Override
+  public PipelineOperationStatus invokeRelaysOnMigration() {
+    PipelineOperationStatus status = initPipelineOperationStatus();
 
-    if (status.isSuccess()) {
-      status.setTitle(successMessage);
-    } else {
-      if (rollbackIfFailed) {
-        LOG.info("Could not start pipeline, initializing rollback...");
-        rollbackInvokedEntities(status);
-      }
-      status.setTitle(errorMessage);
-    }
-    return status;
+    invokeRelays(status);
+
+    return verifyPipelineOperationStatus(
+            status,
+            "Successfully started relays in pipeline " + pipelineName,
+            "Could not start relays in pipeline" + pipelineName,
+            true);
   }
 
-  private void rollbackInvokedEntities(PipelineOperationStatus status) {
-    for (PipelineElementStatus s : status.getElementStatus()) {
-      if (s.isSuccess()) {
-        Optional<InvocableStreamPipesEntity> graphs = findGraphs(s.getElementId());
-        graphs.ifPresent(graph -> {
-          LOG.info("Rolling back element " + graph.getElementId());
-          makeHttpRequest(new InvocableEntityUrlGenerator(graph), graph, "detach");
-        });
-      }
-    }
+  /**
+   * Called when pipeline elements are migrated and new relays need to be detached, e.g. from predecessors to old
+   * pipeline element
+   *
+   * @return PipelineOperationStatus
+   */
+  @Override
+  public PipelineOperationStatus detachRelaysOnMigration() {
+    PipelineOperationStatus status = initPipelineOperationStatus();
+
+    detachRelays(status);
+
+    return verifyPipelineOperationStatus(
+            status,
+            "Successfully stopped relays in pipeline " + pipelineName,
+            "Could not stop all relays in pipeline " + pipelineName,
+            false);
   }
 
-  private void invoke(EndpointUrlGenerator<?> urlGenerator,
-                      NamedStreamPipesEntity namedEntity, PipelineOperationStatus status) {
-    status.addPipelineElementStatus(makeHttpRequest(urlGenerator, namedEntity, "invoke"));
-  }
-
-  private void detach(EndpointUrlGenerator<?> urlGenerator,
-                      NamedStreamPipesEntity namedEntity, PipelineOperationStatus status) {
-    status.addPipelineElementStatus(makeHttpRequest(urlGenerator, namedEntity, "detach"));
-  }
-
-  // Helper methods
-
-  private PipelineOperationStatus initPipelineOperationStatus() {
-    PipelineOperationStatus status = new PipelineOperationStatus();
-    status.setPipelineId(pipelineId);
-    status.setPipelineName(pipelineName);
-    return status;
-  }
-
-  private PipelineElementStatus makeHttpRequest(EndpointUrlGenerator<?> urlGenerator,
-                                                NamedStreamPipesEntity namedEntity, String type) {
-    switch (type) {
-      case "invoke":
-        return new HttpRequestBuilder(namedEntity, urlGenerator.generateInvokeEndpoint()).invoke();
-      case "detach":
-        return new HttpRequestBuilder(namedEntity, urlGenerator.generateDetachEndpoint()).detach();
-      case "invokeRelay":
-        return new HttpRequestBuilder(namedEntity, urlGenerator.generateRelayEndpoint()).invoke();
-      case "detachRelay":
-        return new HttpRequestBuilder(namedEntity, urlGenerator.generateRelayEndpoint()).detach();
-      default:
-        throw new IllegalArgumentException("Type not known: " + type);
-    }
-  }
-
-  private Optional<InvocableStreamPipesEntity> findGraphs(String elementId) {
-    return graphs.stream().filter(i -> i.getBelongsTo().equals(elementId)).findFirst();
-  }
-
-  private boolean allInvocableEntitiesRunning(PipelineOperationStatus status) {
-    return status.getElementStatus().stream().allMatch(PipelineElementStatus::isSuccess);
-  }
 }

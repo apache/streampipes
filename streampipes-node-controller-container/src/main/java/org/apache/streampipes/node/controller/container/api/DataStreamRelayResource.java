@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.node.controller.container.api;
 
-import org.apache.streampipes.model.SpDataStreamRelayContainer;
+import org.apache.streampipes.model.eventrelay.SpDataStreamRelayContainer;
 import org.apache.streampipes.node.controller.container.management.relay.DataStreamRelayManager;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 
@@ -25,7 +25,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 @Path("/api/v2/node/stream/relay")
-public class AdapterDataStreamRelayResource extends AbstractResource {
+public class DataStreamRelayResource extends AbstractResource {
 
     @POST
     @JacksonSerialized
@@ -33,7 +33,7 @@ public class AdapterDataStreamRelayResource extends AbstractResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public javax.ws.rs.core.Response invoke(SpDataStreamRelayContainer graph) {
-        return ok(DataStreamRelayManager.getInstance().startAdapterDataStreamRelay(graph));
+        return ok(DataStreamRelayManager.getInstance().start(graph));
     }
 
     @DELETE
@@ -41,6 +41,6 @@ public class AdapterDataStreamRelayResource extends AbstractResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public javax.ws.rs.core.Response detach(@PathParam("runningInstanceId") String runningInstanceId) {
-        return ok(DataStreamRelayManager.getInstance().stopAdapterDataStreamRelay(runningInstanceId));
+        return ok(DataStreamRelayManager.getInstance().stop(runningInstanceId));
     }
 }

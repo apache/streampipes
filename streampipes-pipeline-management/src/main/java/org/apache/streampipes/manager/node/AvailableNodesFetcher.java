@@ -28,6 +28,7 @@ import java.util.List;
 
 import javax.ws.rs.core.MediaType;
 
+@Deprecated
 public class AvailableNodesFetcher {
 
     public AvailableNodesFetcher() {

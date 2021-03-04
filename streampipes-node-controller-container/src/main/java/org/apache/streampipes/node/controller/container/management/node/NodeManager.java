@@ -127,13 +127,13 @@ public class NodeManager {
     }
 
     public Message activate() {
-        LOG.info("Deactivate node controller");
+        LOG.info("Activate node controller");
         this.nodeInfo.setActive(true);
         return Notifications.success(NotificationType.OPERATION_SUCCESS);
     }
 
     public Message deactivate() {
-        LOG.info("Activate node controller");
+        LOG.info("Deactivate node controller");
         this.nodeInfo.setActive(false);
         return Notifications.success(NotificationType.OPERATION_SUCCESS);
     }
@@ -151,6 +151,7 @@ public class NodeManager {
         SuccessMessage message = JacksonSerializer
                 .getObjectMapper()
                 .readValue(resp, SuccessMessage.class);
+        LOG.info(message.getNotifications().get(0).getDescription());
         return message.isSuccess();
     }
 

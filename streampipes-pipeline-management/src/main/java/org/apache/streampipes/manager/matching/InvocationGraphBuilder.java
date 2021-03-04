@@ -28,7 +28,7 @@ import org.apache.streampipes.manager.data.PipelineGraphHelpers;
 import org.apache.streampipes.manager.matching.output.OutputSchemaFactory;
 import org.apache.streampipes.manager.matching.output.OutputSchemaGenerator;
 import org.apache.streampipes.model.SpDataStream;
-import org.apache.streampipes.model.SpDataStreamRelay;
+import org.apache.streampipes.model.eventrelay.SpDataStreamRelay;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;

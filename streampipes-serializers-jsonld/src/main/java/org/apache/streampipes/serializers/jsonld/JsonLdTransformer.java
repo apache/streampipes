@@ -70,6 +70,7 @@ public class JsonLdTransformer implements RdfTransformer {
           StreamPipes.DASHBOARD_WIDGET_MODEL,
           StreamPipes.DASHBOARD_MODEL,
           StreamPipes.DATA_EXPLORER_WIDGET_MODEL,
+          StreamPipes.DATA_STREAM_RELAY,
           StreamPipes.DATA_STREAM_RELAY_CONTAINER,
           StreamPipes.NODE_INFO_DESCRIPTION,
           StreamPipes.DEPLOYMENT_CONTAINER,

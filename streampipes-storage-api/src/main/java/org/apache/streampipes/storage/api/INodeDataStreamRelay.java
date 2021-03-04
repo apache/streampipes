@@ -15,20 +15,25 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.node.controller.container.management.pe;
+package org.apache.streampipes.storage.api;
 
-import org.apache.streampipes.container.model.node.InvocableRegistration;
-import org.apache.streampipes.model.Response;
-import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 
-public interface PipelineElementLifeCycle {
+import org.apache.streampipes.model.eventrelay.SpDataStreamRelayContainer;
 
-    void register(InvocableRegistration registration);
+import java.util.List;
+import java.util.Optional;
 
-    Response invoke(InvocableStreamPipesEntity graph);
+public interface INodeDataStreamRelay {
 
-    Response detach(String runningInstanceId);
+    List<SpDataStreamRelayContainer> getAll();
 
-    void unregister();
+    List<SpDataStreamRelayContainer> getAllByNodeControllerId(String id);
 
+    void addRelayContainer(SpDataStreamRelayContainer relayContainer);
+
+    Optional<SpDataStreamRelayContainer> getRelayContainerById(String id);
+
+    void updateRelayContainer(SpDataStreamRelayContainer relayContainer);
+
+    void deleteRelayContainer(SpDataStreamRelayContainer relayContainer);
 }

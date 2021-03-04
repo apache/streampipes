@@ -15,20 +15,8 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.node.controller.container.management.pe;
+package org.apache.streampipes.manager.node;
 
-import org.apache.streampipes.container.model.node.InvocableRegistration;
-import org.apache.streampipes.model.Response;
-import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
-
-public interface PipelineElementLifeCycle {
-
-    void register(InvocableRegistration registration);
-
-    Response invoke(InvocableStreamPipesEntity graph);
-
-    Response detach(String runningInstanceId);
-
-    void unregister();
-
+public enum NodeSyncOptions {
+    ACTIVATE_NODE, DEACTIVATE_NODE, UPDATE_NODE,RESTART_RELAYS;
 }

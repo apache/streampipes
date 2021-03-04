@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.model.util;
 
-import org.apache.streampipes.model.SpDataStreamRelay;
+import org.apache.streampipes.model.eventrelay.SpDataStreamRelay;
 import org.apache.streampipes.model.grounding.*;
 import org.apache.streampipes.model.output.*;
 import org.apache.streampipes.model.resource.Hardware;

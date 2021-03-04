@@ -17,12 +17,16 @@
  */
 package org.apache.streampipes.node.controller.container.management.pe;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.JsonSyntaxException;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.container.model.node.InvocableRegistration;
 import org.apache.streampipes.model.Response;
+import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+import org.apache.streampipes.model.node.NodeInfoDescription;
 import org.apache.streampipes.node.controller.container.config.NodeControllerConfig;
 import org.apache.streampipes.node.controller.container.management.node.NodeManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
@@ -31,6 +35,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
 
 public class InvocableElementManager implements PipelineElementLifeCycle {
 
@@ -58,50 +63,19 @@ public class InvocableElementManager implements PipelineElementLifeCycle {
 
     @Override
     public void register(InvocableRegistration registration) {
-        try {
-            Request.Put(makeConsulRegistrationEndpoint())
-                    .addHeader("accept", "application/json")
-                    .body(new StringEntity(JacksonSerializer
-                            .getObjectMapper()
-                            .writeValueAsString(registration.getConsulServiceRegistrationBody())))
-                    .execute();
-
-            // TODO: persistent storage to survive failures
-            NodeManager.getInstance()
-                    .retrieveNodeInfoDescription()
-                    .setSupportedElements(registration.getSupportedPipelineElementAppIds());
-
-            String url = "http://"
-                            + NodeControllerConfig.INSTANCE.getBackendHost()
-                            + ":"
-                            + NodeControllerConfig.INSTANCE.getBackendPort()
-                            + "/"
-                            + "streampipes-backend/api/v2/users/admin@streampipes.org/nodes"
-                            + "/"
-                            + NodeControllerConfig.INSTANCE.getNodeControllerId();
-
-            String desc = JacksonSerializer.getObjectMapper()
-                    .writeValueAsString(NodeManager.getInstance().retrieveNodeInfoDescription());
-
-            Request.Put(url)
-                    .bodyString(desc, ContentType.APPLICATION_JSON)
-//                    .connectTimeout(1000)
-//                    .socketTimeout(100000)
-                    .execute();
-
-            LOG.info("Successfully registered pipeline element container");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        registerAtConsul(registration);
+        updateAndSyncNodeInfoDescription(registration);
+        LOG.info("Successfully registered pipeline element container");
     }
 
     @Override
-    public Response invoke(String endpoint, String payload) {
+    public Response invoke(InvocableStreamPipesEntity graph) {
+        String endpoint = graph.getBelongsTo();
         LOG.info("Invoke pipeline element: {}", endpoint);
         try {
             org.apache.http.client.fluent.Response httpResp = Request
                     .Post(endpoint)
-                    .bodyString(payload, ContentType.APPLICATION_JSON)
+                    .bodyString(toJson(graph), ContentType.APPLICATION_JSON)
                     .connectTimeout(CONNECT_TIMEOUT)
                     .execute();
             return handleResponse(httpResp);
@@ -129,29 +103,58 @@ public class InvocableElementManager implements PipelineElementLifeCycle {
     @Override
     public void unregister(){
         // TODO: unregister element from Consul and
-        NodeManager.getInstance()
-                .retrieveNodeInfoDescription()
-                .setSupportedElements(Collections.emptyList());
-
-        String url = "http://"
-                + NodeControllerConfig.INSTANCE.getBackendHost()
-                + ":"
-                + NodeControllerConfig.INSTANCE.getBackendPort()
-                + "/"
-                + "streampipes-backend/api/v2/users/admin@streampipes.org/nodes"
-                + "/"
-                + NodeControllerConfig.INSTANCE.getNodeControllerId();
-
+        setSupportedPipelineElements(Collections.emptyList());
         try {
-            String desc = JacksonSerializer.getObjectMapper()
-                    .writeValueAsString(NodeManager.getInstance().retrieveNodeInfoDescription());
-
+            String url = generateBackendEndpoint();
+            String desc = toJson(getNodeInfoDescription());
             Request.Put(url)
                     .bodyString(desc, ContentType.APPLICATION_JSON)
-                    .connectTimeout(1000)
-                    .socketTimeout(100000)
                     .execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
+    private void updateAndSyncNodeInfoDescription(InvocableRegistration registration) {
+        setSupportedPipelineElements(registration.getSupportedPipelineElementAppIds());
+        try {
+            String url = generateBackendEndpoint();
+            String desc = toJson(getNodeInfoDescription());
+            Request.Put(url)
+                    .bodyString(desc, ContentType.APPLICATION_JSON)
+                    .execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private NodeInfoDescription getNodeInfoDescription() {
+        return NodeManager.getInstance().retrieveNodeInfoDescription();
+    }
+
+    private void setSupportedPipelineElements(List<String> supportedPipelineElements) {
+        NodeManager.getInstance()
+                .retrieveNodeInfoDescription()
+                .setSupportedElements(supportedPipelineElements);
+    }
+
+    private String generateBackendEndpoint() {
+        return HTTP_PROTOCOL
+                + NodeControllerConfig.INSTANCE.getBackendHost()
+                + COLON
+                + NodeControllerConfig.INSTANCE.getBackendPort()
+                + SLASH
+                + "streampipes-backend/api/v2/users/admin@streampipes.org/nodes"
+                + SLASH
+                + NodeControllerConfig.INSTANCE.getNodeControllerId();
+    }
+
+    private void registerAtConsul(InvocableRegistration registration) {
+        try {
+            Request.Put(makeConsulRegistrationEndpoint())
+                    .addHeader("accept", "application/json")
+                    .body(new StringEntity(toJson(registration.getConsulServiceRegistrationBody())))
+                    .execute();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -180,6 +183,14 @@ public class InvocableElementManager implements PipelineElementLifeCycle {
                     + "8500"
                     + SLASH
                     + "v1/agent/service/register";
+        }
+    }
+
+    private <T> String toJson(T element) {
+        try {
+            return JacksonSerializer.getObjectMapper().writeValueAsString(element);
+        } catch (JsonProcessingException e) {
+            throw new SpRuntimeException("Could not serialize object: " + element, e);
         }
     }
 

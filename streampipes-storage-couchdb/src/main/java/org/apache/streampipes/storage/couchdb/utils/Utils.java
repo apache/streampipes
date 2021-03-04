@@ -144,6 +144,12 @@ public class Utils {
     return dbClient;
   }
 
+  public static CouchDbClient getCouchDbNodeDataStreamRelayClient() {
+    CouchDbClient dbClient = new CouchDbClient(props("relays"));
+    dbClient.setGsonBuilder(GsonSerializer.getGsonBuilder());
+    return dbClient;
+  }
+
   public static CouchDbClient getCouchDbInternalUsersClient() {
     CouchDbClient dbClient = new CouchDbClient(props("_users"));
     return dbClient;
