@@ -27,13 +27,13 @@ NODE_ID.title=Node ID
 NODE_ID.description=Id of the Node to read the values from
 
 
-ACCESS_MODE.title=Access Mode
-ACCESS_MODE.description=
+ACCESS_MODE.title=Security Level
+ACCESS_MODE.description=Select the OPC UA security level for the connection
 
-USERNAME_GROUP.title=Username/Password
+USERNAME_GROUP.title=Sign (username & password)
 USERNAME_GROUP.description=
 
-UNAUTHENTICATED.title=Unauthenticated
+UNAUTHENTICATED.title=None
 UNAUTHENTICATED.description=
 
 USERNAME.title=Username
