@@ -22,15 +22,18 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 import java.util.List;
+import java.util.Map;
 
 public class BooleanToStateParameters extends EventProcessorBindingParams {
     private List<String> stateFields;
     private String defaultState;
+    private Map<String, String> jsonConfiguration;
 
-    public BooleanToStateParameters(DataProcessorInvocation graph, List<String> stateFields, String defaultState) {
+    public BooleanToStateParameters(DataProcessorInvocation graph, List<String> stateFields, String defaultState, Map<String, String> jsonConfiguration) {
         super(graph);
         this.stateFields = stateFields;
         this.defaultState = defaultState;
+        this.jsonConfiguration = jsonConfiguration;
     }
 
     public List<String> getStateFields() {
@@ -47,5 +50,13 @@ public class BooleanToStateParameters extends EventProcessorBindingParams {
 
     public void setDefaultState(String defaultState) {
         this.defaultState = defaultState;
+    }
+
+    public Map<String, String> getJsonConfiguration() {
+        return jsonConfiguration;
+    }
+
+    public void setJsonConfiguration(Map<String, String> jsonConfiguration) {
+        this.jsonConfiguration = jsonConfiguration;
     }
 }

@@ -25,7 +25,9 @@ import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BooleanToState implements EventProcessor<BooleanToStateParameters> {
 
@@ -33,6 +35,7 @@ public class BooleanToState implements EventProcessor<BooleanToStateParameters> 
 
   private List<String> stateFields;
   private String  defaultState;
+  private Map<String, String> jsonConfiguration;
 
   @Override
   public void onInvocation(BooleanToStateParameters booleanInverterParameters,
@@ -41,22 +44,25 @@ public class BooleanToState implements EventProcessor<BooleanToStateParameters> 
     LOG = booleanInverterParameters.getGraph().getLogger(BooleanToState.class);
     this.stateFields = booleanInverterParameters.getStateFields();
     this.defaultState = booleanInverterParameters.getDefaultState();
+    this.jsonConfiguration = booleanInverterParameters.getJsonConfiguration();
   }
 
   @Override
   public void onEvent(Event inputEvent, SpOutputCollector out) {
-    List<String> states = new ArrayList<>();
+    String state = this.defaultState;
 
     for (String stateField : stateFields) {
       if (inputEvent.getFieldBySelector(stateField).getAsPrimitive().getAsBoolean().equals(true)) {
-        states.add(inputEvent.getFieldBySelector(stateField).getFieldNameIn());
+        state = inputEvent.getFieldBySelector(stateField).getFieldNameIn();
       }
     }
 
-    if (states.size() == 0) {
-      states.add(this.defaultState);
+    // replace the state string when user provided a mapping
+    if (this.jsonConfiguration.containsKey(state)) {
+      state = this.jsonConfiguration.get(state);
     }
-    inputEvent.addField(BooleanToStateController.CURRENT_STATE, states.toArray());
+
+    inputEvent.addField(BooleanToStateController.CURRENT_STATE, state);
     out.collect(inputEvent);
   }
 

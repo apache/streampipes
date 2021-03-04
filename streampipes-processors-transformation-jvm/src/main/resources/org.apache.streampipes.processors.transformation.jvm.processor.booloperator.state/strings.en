@@ -11,4 +11,7 @@ default-state-id.title=Default State
 default-state-id.description=Define a default state, when all values are false
 
 boolean_state_field.title=Current State
-boolean_state_field.description=When value is true runtime name is added as state to resulting event
+boolean_state_field.description=When the boolean value is true the runtime name is used for the final state value
+
+json-configuration.title=Mapping Configuration
+json-configuration.description=Define mappings to replace the runtime names with own Strings
