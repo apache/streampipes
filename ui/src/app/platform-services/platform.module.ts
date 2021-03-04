@@ -26,6 +26,7 @@ import {NodeService} from "./apis/node.service";
 import {MeasurementUnitsService} from "./apis/measurement-units.service";
 import {PipelineElementTemplateService} from "./apis/pipeline-element-template.service";
 import {PipelineMonitoringService} from "./apis/pipeline-monitoring.service";
+import {SemanticTypesService} from "./apis/semantic-types.service";
 
 @NgModule({
   imports: [],
@@ -40,7 +41,9 @@ import {PipelineMonitoringService} from "./apis/pipeline-monitoring.service";
     PipelineElementService,
     PipelineMonitoringService,
     PipelineService,
-    NodeService
+    NodeService,
+    PipelineService,
+    SemanticTypesService
   ],
   entryComponents: []
 })

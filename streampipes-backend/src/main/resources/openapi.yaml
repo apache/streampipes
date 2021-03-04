@@ -1,7 +1,7 @@
 scannerClass: io.swagger.v3.oas.integration.GenericOpenApiScanner
 resourceClasses:
   - org.apache.streampipes.ps.PipelineElementTemplateResource
-  - org.apache.streampipes.rest.impl.PipelineWithUserResource
+  - org.apache.streampipes.rest.impl.PipelineResource
 prettyPrint: true
 cacheTTL: 0
 openAPI:

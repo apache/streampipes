@@ -38,6 +38,7 @@ export class TableWidgetComponent extends BaseStreamPipesWidget implements OnIni
     displayedColumns: String[] = [];
     dataSource = new MatTableDataSource();
     semanticTypes: { [key: string]: string; } = {};
+    tableDisplayed: boolean = false;
 
     constructor(rxStompService: RxStompService, dashboardService: DashboardService, resizeService: ResizeService, private semanticTypeUtils: SemanticTypeUtilsService) {
         super(rxStompService, dashboardService, resizeService, false);

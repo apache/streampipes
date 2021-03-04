@@ -75,7 +75,7 @@ public class SourcesResource extends AbstractContainerResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/{streamId}/streams")
+    @Path("/{streamId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response addAdapter(@PathParam("streamId") String elementId,
                                @PathParam("username") String username,
@@ -94,7 +94,7 @@ public class SourcesResource extends AbstractContainerResource {
     }
 
     @DELETE
-    @Path("/{streamId}/streams/{runningInstanceId}")
+    @Path("/{streamId}/{runningInstanceId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response detach(@PathParam("streamId") String elementId, @PathParam("runningInstanceId") String runningInstanceId, @PathParam("username") String username) {
         String responseMessage = "Instance of set id: " + elementId  + " with instance id: "+ runningInstanceId + " successfully started";

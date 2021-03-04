@@ -16,18 +16,24 @@
  *
  */
 
-.title-panel {
-    font-size:20px;
-    text-align:center;
-}
+import {Injectable} from "@angular/core";
+import {HttpClient} from "@angular/common/http";
+import {PlatformServicesCommons} from "./commons.service";
+import {map} from "rxjs/operators";
+import {Observable} from "rxjs";
 
-.mt-20 {
-    margin-top:20px;
-}
+@Injectable()
+export class SemanticTypesService {
 
-.main-panel {
-    width:100%;
-    height: 100%;
-    display:inline-grid;
-    align-content: center;
+  constructor(private http: HttpClient,
+              private platformServicesCommons: PlatformServicesCommons) {
+
+  }
+
+  getSemanticTypes(text: string): Observable<Array<string>> {
+    return this.http.get(this.platformServicesCommons.unauthenticatedBasePath + "/autocomplete/semantic-type?text=" + text).pipe(map(response => {
+      return response as Array<string>;
+    }));
+  }
+
 }
