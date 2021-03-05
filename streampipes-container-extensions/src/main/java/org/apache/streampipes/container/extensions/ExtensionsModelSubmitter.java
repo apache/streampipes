@@ -52,9 +52,8 @@ import org.springframework.context.annotation.Import;
 
 import javax.annotation.PreDestroy;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Configuration
 @EnableAutoConfiguration
@@ -99,7 +98,7 @@ public abstract class ExtensionsModelSubmitter extends ModelSubmitter<EdgeExtens
                     conf.getId(),
                     conf.getHost(),
                     conf.getPort(),
-                    DeclarersSingleton.getInstance().getEpaDeclarers());
+                    generateSupportedAppIds());
 
             String nodeControllerUrl = PROTOCOL + conf.getNodeControllerHost() + COLON + conf.getNodeControllerPort();
 
@@ -147,6 +146,18 @@ public abstract class ExtensionsModelSubmitter extends ModelSubmitter<EdgeExtens
             }
             LOG.info("Successfully registered adapter at master in backend: " + backendUrl);
         }
+    }
+
+    private List<String> generateSupportedAppIds() {
+        List<String> supportedAppIds = new ArrayList<>();
+
+        List<String> dataProcessorsAppIds = new ArrayList<>(DeclarersSingleton.getInstance().getEpaDeclarers().keySet());
+        List<String> dataSinksAppIds = new ArrayList<>(DeclarersSingleton.getInstance().getConsumerDeclarers().keySet());
+
+        supportedAppIds.addAll(dataProcessorsAppIds);
+        supportedAppIds.addAll(dataSinksAppIds);
+
+        return supportedAppIds;
     }
 
     private ConnectWorkerContainer getContainerDescription(String connectWorkerHost, int connectWorkerPort,

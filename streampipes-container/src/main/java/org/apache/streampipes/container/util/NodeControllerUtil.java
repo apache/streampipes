@@ -44,19 +44,18 @@ public class NodeControllerUtil {
     private static final String NODE_CONTROLLER_CONTAINER_HOST = "SP_NODE_CONTROLLER_CONTAINER_HOST";
     private static final String NODE_CONTROLLER_CONTAINER_PORT = "SP_NODE_CONTROLLER_CONTAINER_PORT";
 
-    public static void register(String serviceID, String host, int port,
-                                Map<String, SemanticEventProcessingAgentDeclarer> epaDeclarers) {
+    public static void register(String serviceID, String host, int port, List<String> supportedAppIds) {
         register(PE_TAG, makeSvcId(host, serviceID), host, port,
-                Arrays.asList(PE_TAG, SECONDARY_PE_IDENTIFIER_TAG), epaDeclarers);
+                Arrays.asList(PE_TAG, SECONDARY_PE_IDENTIFIER_TAG), supportedAppIds);
     }
 
     public static void register(String svcName, String svcId, String host, int port, List<String> tag,
-                                Map<String, SemanticEventProcessingAgentDeclarer> epaDeclarers) {
+                                List<String> supportedAppIds) {
         boolean connected = false;
 
         while (!connected) {
             LOG.info("Trying to register pipeline element container at node controller: " + makeRegistrationEndpoint());
-            String body = createSvcBody(svcName, svcId, host, port, tag, epaDeclarers);
+            String body = createSvcBody(svcName, svcId, host, port, tag, supportedAppIds);
             connected = registerSvcHttpClient(body);
 
             if (!connected) {
@@ -87,7 +86,7 @@ public class NodeControllerUtil {
     }
 
     private static String createSvcBody(String name, String id, String host, int port, List<String> tags,
-                                        Map<String, SemanticEventProcessingAgentDeclarer> epaDeclarers) {
+                                        List<String> supportedAppIds) {
         try {
             ConsulServiceRegistrationBody body = new ConsulServiceRegistrationBody();
             String healthCheckURL = HTTP_PROTOCOL + host + COLON + port;
@@ -101,7 +100,7 @@ public class NodeControllerUtil {
 
             InvocableRegistration svcBody = new InvocableRegistration();
             svcBody.setConsulServiceRegistrationBody(body);
-            svcBody.setSupportedPipelineElementAppIds(new ArrayList<>(epaDeclarers.keySet()));
+            svcBody.setSupportedPipelineElementAppIds(supportedAppIds);
 
             return JacksonSerializer.getObjectMapper().writeValueAsString(svcBody);
         } catch (JsonProcessingException e) {

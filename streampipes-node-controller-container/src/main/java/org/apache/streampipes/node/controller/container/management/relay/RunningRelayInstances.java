@@ -17,12 +17,12 @@
  */
 package org.apache.streampipes.node.controller.container.management.relay;
 
-import org.apache.streampipes.node.controller.container.management.IRunningInstances;
+import org.apache.streampipes.node.controller.container.management.RunningInstances;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public enum RunningRelayInstances implements IRunningInstances<Map<String,EventRelay>> {
+public enum RunningRelayInstances implements RunningInstances<Map<String,EventRelay>> {
     INSTANCE;
 
     private final Map<String, Map<String, EventRelay>> runningInstances = new HashMap<>();
@@ -53,6 +53,5 @@ public enum RunningRelayInstances implements IRunningInstances<Map<String,EventR
                 .map(Map::values)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
-        //return new ArrayList<>(runningInstances.values().forEach(e -> e.values()));
     }
 }

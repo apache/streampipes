@@ -74,7 +74,7 @@ public class GraphSubmitter extends ElementSubmitter {
     return verifyPipelineOperationStatus(
             status,
             "Successfully started pipeline " + pipelineName,
-            "Could not start pipeline" + pipelineName,
+            "Could not start pipeline " + pipelineName,
             true);
   }
 

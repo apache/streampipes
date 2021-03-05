@@ -20,8 +20,10 @@ package org.apache.streampipes.node.controller.container.config;
 import org.apache.streampipes.config.SpConfig;
 import org.apache.streampipes.model.node.resources.fielddevice.FieldDeviceAccessResource;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public enum NodeControllerConfig {
     INSTANCE;
@@ -93,7 +95,6 @@ public enum NodeControllerConfig {
                 String.class);
     }
 
-    // TODO: should be flexibly set due to node broker technology used
     public int getNodeBrokerPort() {
         return getEnvOrDefault(
                 ConfigKeys.NODE_BROKER_CONTAINER_PORT,
@@ -102,15 +103,13 @@ public enum NodeControllerConfig {
     }
 
     public List<String> getNodeLocations() {
-        return System.getenv()
-                .entrySet()
-                .stream()
-                .filter(e -> (e.getKey().contains(ConfigKeys.NODE_LOCATION)))
-                .map(x ->  x.getKey().replace(ConfigKeys.NODE_LOCATION + "_", "").toLowerCase() + "=" + x.getValue())
+        return System.getenv().entrySet().stream()
+                .filter(e -> e.getKey().contains(ConfigKeys.NODE_LOCATION))
+                .map(v -> v.getValue().split(";"))
+                .flatMap(Stream::of)
                 .collect(Collectors.toList());
     }
 
-    // TODO: get supported PE programmatically instead of environment variables
     public List<String> getSupportedPipelineElements() {
         return System.getenv()
                 .entrySet()

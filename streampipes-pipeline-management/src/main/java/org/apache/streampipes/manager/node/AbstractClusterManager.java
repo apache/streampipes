@@ -28,6 +28,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 
 public abstract class AbstractClusterManager {
     private static final Logger LOG = LoggerFactory.getLogger(AbstractClusterManager.class.getCanonicalName());
@@ -36,8 +38,6 @@ public abstract class AbstractClusterManager {
     private static final String COLON = ":";
     private static final long RETRY_INTERVAL_MS = 5000;
     private static final int CONNECT_TIMEOUT = 1000;
-    private static final String BASE_NODE_CONTROLLER_INFO_ROUTE = "/api/v2/node/info";
-    private static final String BASE_NODE_CONTROLLER_RELAY_ROUTE = "/api/v2/node/stream/relay";
 
     public enum RequestOptions {
         GET,POST,PUT,DELETE
@@ -46,19 +46,55 @@ public abstract class AbstractClusterManager {
     protected static <T> boolean syncWithNodeController(T element, NodeSyncOptions sync) {
         switch (sync) {
             case ACTIVATE_NODE:
-                return sync(element, "/activate", RequestOptions.POST, false, NodeInfoDescription.class);
+                return sync(element, "/api/v2/node/info/activate", RequestOptions.POST, false);
             case DEACTIVATE_NODE:
-                return sync(element, "/deactivate", RequestOptions.POST, false, NodeInfoDescription.class);
+                return sync(element, "/api/v2/node/info/deactivate", RequestOptions.POST, false);
             case UPDATE_NODE:
-                return sync(element, "", RequestOptions.PUT, true, NodeInfoDescription.class);
+                return sync(element, "/api/v2/node/info", RequestOptions.PUT, true);
             case RESTART_RELAYS:
-                return sync(element, "/invoke", RequestOptions.POST, true, SpDataStreamRelayContainer.class);
+                return sync(element, "/api/v2/node/stream/relay/invoke", RequestOptions.POST, true);
+            case HEALTHY:
+                return healthCheck(element, "/healthy");
             default:
                 return false;
         }
     }
 
-    private static <T> boolean sync(T element, String subroute, RequestOptions request, boolean withBody, Class<?> type) {
+    private static <T> boolean healthCheck(T element, String route) {
+        String url = generateEndpoint(element, route);
+        // call node controller REST endpoints
+        //return get(url).contains("PONG");
+
+        NodeInfoDescription desc = (NodeInfoDescription) element;
+        String nodeCtlId = desc.getNodeControllerId();
+        boolean isAlive = false;
+        String host = desc.getHostname();
+        int port = desc.getPort();
+
+        int retries = 5;
+        for (int i = 0 ; i < retries ; i++) {
+            try {
+                LOG.info("Trying to health check node controller={} ({})", nodeCtlId, i+1 + "/" + retries);
+                InetSocketAddress sa = new InetSocketAddress(host, port);
+                Socket ss = new Socket();
+                ss.connect(sa, 500);
+                ss.close();
+                if (ss.isConnected()) {
+                    isAlive = true;
+                    break;
+                }
+                Thread.sleep(1000);
+            } catch (IOException | InterruptedException e) {
+                continue;
+            }
+            isAlive = true;
+        }
+        LOG.info(isAlive ? "Successfully health check node controller=" + url :
+                "Could not perform health check node with controller=" + url);
+        return isAlive;
+    }
+
+    private static <T> boolean sync(T element, String route, RequestOptions request, boolean withBody) {
         boolean synced = false;
 
         String body = "{}";
@@ -66,7 +102,7 @@ public abstract class AbstractClusterManager {
             body = jackson(element);
         }
 
-        String url = generateEndpoint(element, subroute, type);
+        String url = generateEndpoint(element, route);
         LOG.info("Trying to sync with node controller=" + url);
 
         boolean connected = false;
@@ -93,23 +129,21 @@ public abstract class AbstractClusterManager {
 
     // Helpers
 
-    private static <T> String generateEndpoint(T desc, String subroute, Class<?> type) {
-        if (type.equals(NodeInfoDescription.class)) {
+    private static <T> String generateEndpoint(T desc, String route) {
+        if (desc instanceof NodeInfoDescription) {
             NodeInfoDescription d = (NodeInfoDescription) desc;
             return PROTOCOL
                     + d.getHostname()
                     + COLON
                     + d.getPort()
-                    + BASE_NODE_CONTROLLER_INFO_ROUTE
-                    + subroute;
+                    + route;
         } else {
             SpDataStreamRelayContainer d = (SpDataStreamRelayContainer) desc;
             return PROTOCOL
                     + d.getDeploymentTargetNodeHostname()
                     + COLON
                     + d.getDeploymentTargetNodePort()
-                    + BASE_NODE_CONTROLLER_RELAY_ROUTE
-                    + subroute;
+                    + route;
         }
     }
 
@@ -118,6 +152,16 @@ public abstract class AbstractClusterManager {
             return JacksonSerializer.getObjectMapper().writeValueAsString(desc);
         } catch (JsonProcessingException e) {
             throw new SpRuntimeException("Could not serialize node controller description");
+        }
+    }
+
+    private static String get(String url) {
+        try {
+            return Request.Get(url)
+                    .connectTimeout(CONNECT_TIMEOUT)
+                    .execute().returnContent().toString();
+        } catch (IOException e) {
+            throw new SpRuntimeException("Something went wrong during GET request to node controller", e);
         }
     }
 

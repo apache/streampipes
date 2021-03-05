@@ -18,33 +18,37 @@
 package org.apache.streampipes.node.controller.container.management.pe;
 
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
-import org.apache.streampipes.node.controller.container.management.IRunningInstances;
+import org.apache.streampipes.node.controller.container.storage.MapDBImpl;
+import org.apache.streampipes.node.controller.container.management.RunningInstances;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.File;
 
-public enum RunningInvocableInstances implements IRunningInstances<InvocableStreamPipesEntity> {
+public enum RunningInvocableInstances implements RunningInstances<InvocableStreamPipesEntity> {
     INSTANCE;
 
-    private final Map<String, InvocableStreamPipesEntity> runningInvocableInstances = new HashMap<>();
+    private final MapDBImpl mapDB;
+
+    RunningInvocableInstances() {
+        this.mapDB = new MapDBImpl(new File("invocables.db"));
+    }
 
     @Override
     public void add(String id, InvocableStreamPipesEntity value) {
-        runningInvocableInstances.put(id, value);
+        mapDB.create(id, value);
     }
 
     @Override
     public boolean isRunning(String id) {
-        return runningInvocableInstances.get(id) != null;
+        return mapDB.retrieve(id) != null;
     }
 
     @Override
     public InvocableStreamPipesEntity get(String id) {
-        return runningInvocableInstances.get(id);
+        return mapDB.retrieve(id);
     }
 
     @Override
     public void remove(String id) {
-        runningInvocableInstances.remove(id);
+        mapDB.delete(id);
     }
 }

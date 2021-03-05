@@ -17,11 +17,16 @@
  */
 
 import {Component, Input, OnInit} from '@angular/core';
-import {NodeInfoDescription} from "../../../core-model/gen/streampipes-model";
+import {Message, NodeInfoDescription, PipelineOperationStatus} from "../../../core-model/gen/streampipes-model";
 import {FormGroup} from "@angular/forms";
 import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
 import {MatChipInputEvent} from "@angular/material/chips";
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
+import {NodeService} from "../../../platform-services/apis/node.service";
+import {PipelineStatusDialogComponent} from "../../../pipelines/dialog/pipeline-status/pipeline-status-dialog.component";
+import {PanelType} from "../../../core-ui/dialog/base-dialog/base-dialog.model";
+import {DialogService} from "../../../core-ui/dialog/base-dialog/base-dialog.service";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 export interface Fruit {
   name: string;
@@ -38,7 +43,7 @@ export class NodeConfigurationDetailsComponent implements OnInit {
   saving: boolean = false;
   saved: boolean = false;
   advancedSettings: boolean;
-
+  errorMessage: string = '';
   visible = true;
   selectable = true;
   removable = true;
@@ -49,7 +54,9 @@ export class NodeConfigurationDetailsComponent implements OnInit {
   @Input()
   node: NodeInfoDescription;
 
-  constructor(private dialogRef: DialogRef<NodeConfigurationDetailsComponent>) {
+  constructor(private nodeService: NodeService,
+              private dialogRef: DialogRef<NodeConfigurationDetailsComponent>,
+              private _snackBar: MatSnackBar) {
   }
 
   ngOnInit(): void {
@@ -58,12 +65,31 @@ export class NodeConfigurationDetailsComponent implements OnInit {
   }
 
   updateNodeInfo() {
+    let updateRequest;
+    this.node.staticNodeMetadata.locationTags = this.tmpTags;
+    updateRequest = this.nodeService.updateNodeState(this.node);
 
+    updateRequest
+        .subscribe(statusMessage => {
+          if (statusMessage.success) {
+            this.openSnackBar("Node successfully updated");
+            this.hide();
+          } else {
+            this.openSnackBar("Node not updated")
+          }
+        });
   }
 
   hide() {
     this.dialogRef.close();
   }
+
+  openSnackBar(message: string) {
+    this._snackBar.open(message, "close", {
+      duration: 3000,
+    });
+  }
+
 
   add(event: MatChipInputEvent): void {
     const input = event.input;

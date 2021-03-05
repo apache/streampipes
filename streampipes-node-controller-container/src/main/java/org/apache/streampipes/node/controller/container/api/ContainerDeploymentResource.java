@@ -25,7 +25,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 @Path("/api/v2/node/container")
-public class ContainerResource extends AbstractResource {
+public class ContainerDeploymentResource extends AbstractResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

@@ -18,5 +18,5 @@
 package org.apache.streampipes.manager.node;
 
 public enum NodeSyncOptions {
-    ACTIVATE_NODE, DEACTIVATE_NODE, UPDATE_NODE,RESTART_RELAYS;
+    ACTIVATE_NODE, DEACTIVATE_NODE, UPDATE_NODE,RESTART_RELAYS, HEALTHY;
 }

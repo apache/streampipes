@@ -28,21 +28,25 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class NodeClusterManager extends AbstractClusterManager {
     private static final Logger LOG = LoggerFactory.getLogger(NodeClusterManager.class.getCanonicalName());
 
-
     public static List<NodeInfoDescription> getAvailableNodes() {
-        //return new AvailableNodesFetcher().fetchNodes();
-        return getNodeStorageApi().getAllActiveNodes();
+        List<NodeInfoDescription> availableAndHealthyNodes = new ArrayList<>();
+        getNodeStorageApi().getAllActiveNodes().forEach(node -> {
+            if (syncWithNodeController(node, NodeSyncOptions.HEALTHY)) {
+                availableAndHealthyNodes.add(node);
+            }
+        });
+        return availableAndHealthyNodes;
     }
 
-
     public static List<NodeInfoDescription> getAllNodes() {
-        //return new AvailableNodesFetcher().fetchNodes();
         return getNodeStorageApi().getAllNodes();
     }
 

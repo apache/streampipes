@@ -15,17 +15,16 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.execution.pipeline.migration;
+package org.apache.streampipes.node.controller.container.storage;
 
-public class PipelineElementStartCommand implements Command {
+import java.util.List;
 
-    @Override
-    public void execute() {
+public interface CRUDStorage {
+    <T> void create(String id, T value);
 
-    }
+    <T>T retrieve(String id);
 
-    @Override
-    public void rollback() {
+    <T> void update(String id, T value);
 
-    }
+    void delete(String id);
 }

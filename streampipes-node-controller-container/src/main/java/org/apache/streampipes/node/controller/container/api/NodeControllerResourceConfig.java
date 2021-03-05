@@ -29,6 +29,6 @@ public class NodeControllerResourceConfig extends ResourceConfig {
         register(InvocableEntityResource.class);
         register(DataStreamRelayResource.class);
         register(ConnectResource.class);
-        register(ContainerResource.class);
+        register(ContainerDeploymentResource.class);
     }
 }

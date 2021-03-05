@@ -80,7 +80,6 @@ public class PipelineMigrationExecutor extends AbstractPipelineExecutor {
         this.relaysToBeDeleted = new ArrayList<>();
     }
 
-    // TODO: refactor!
     public PipelineOperationStatus migratePipelineElement() {
 
         PipelineOperationStatus status = initPipelineOperationStatus();
@@ -308,9 +307,17 @@ public class PipelineMigrationExecutor extends AbstractPipelineExecutor {
     }
 
     private void findPredecessorsInMigrationPipeline(PipelineGraph pipelineGraphAfterMigration) {
-        PipelineGraphHelpers.findStreams(pipelineGraphAfterMigration).forEach(stream ->
-                predecessorsAfterMigration.addAll(getPredecessors(stream, migrationEntity.getTargetElement(),
-                        pipelineGraphAfterMigration, new ArrayList<>())));
+        // get unique list of predecessors
+        List<NamedStreamPipesEntity> predecessors = PipelineGraphHelpers.findStreams(pipelineGraphAfterMigration).stream()
+                .map(stream -> getPredecessors(stream, migrationEntity.getTargetElement(),
+                        pipelineGraphAfterMigration, new ArrayList<>()))
+                .flatMap(List::stream)
+                .collect(Collectors.toList())
+                .stream()
+                .distinct()
+                .collect(Collectors.toList());
+
+        predecessorsAfterMigration.addAll(predecessors);
     }
 
     private List<SpDataSet> findDataSets() {

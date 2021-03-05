@@ -15,16 +15,15 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.execution.pipeline.migration;
+package org.apache.streampipes.node.controller.container.management;
 
-public class RelayStopCommand implements Command {
-    @Override
-    public void execute() {
+public interface RunningInstances<T> {
 
-    }
+    void add(String id, T value);
 
-    @Override
-    public void rollback() {
+    boolean isRunning(String id);
 
-    }
+    T get(String id);
+
+    void remove(String id);
 }

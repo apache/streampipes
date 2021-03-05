@@ -18,33 +18,39 @@
 package org.apache.streampipes.node.controller.container.management.orchestrator;
 
 import org.apache.streampipes.model.node.container.DockerContainer;
-import org.apache.streampipes.node.controller.container.management.IRunningInstances;
+import org.apache.streampipes.node.controller.container.management.RunningInstances;
+import org.apache.streampipes.node.controller.container.storage.MapDBImpl;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-public enum RunningContainerInstances implements IRunningInstances<DockerContainer> {
+public enum RunningContainerInstances implements RunningInstances<DockerContainer> {
     INSTANCE;
 
-    private final Map<String, DockerContainer> runningInstances = new HashMap<>();
+    private final MapDBImpl mapDB;
+
+    RunningContainerInstances() {
+        this.mapDB = new MapDBImpl(new File("containers.db"));
+    }
 
     @Override
     public void add(String id, DockerContainer container) {
-        runningInstances.put(id, container);
+        mapDB.create(id, container);
     }
 
     @Override
     public boolean isRunning(String id) {
-        return runningInstances.get(id) != null;
+        return mapDB.retrieve(id) != null;
     }
 
     @Override
     public DockerContainer get(String id) {
-        return isRunning(id) ? runningInstances.get(id) : null;
+        return isRunning(id) ? mapDB.retrieve(id) : null;
     }
 
     @Override
     public void remove(String id) {
-        runningInstances.remove(id);
+        mapDB.delete(id);
     }
 }

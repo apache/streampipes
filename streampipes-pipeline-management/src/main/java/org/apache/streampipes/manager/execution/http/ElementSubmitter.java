@@ -130,10 +130,15 @@ public abstract class ElementSubmitter {
     private void rollbackInvokedEntities(PipelineOperationStatus status) {
         for (PipelineElementStatus s : status.getElementStatus()) {
             if (s.isSuccess()) {
-                Optional<InvocableStreamPipesEntity> graphs = findGraphs(s.getElementId());
+                Optional<InvocableStreamPipesEntity> graphs = compareAndFindGraphs(s.getElementId());
+                Optional<SpDataStreamRelayContainer> relays = compareAndFindRelays(s.getElementId());
                 graphs.ifPresent(graph -> {
-                    LOG.info("Rolling back element " + graph.getElementId());
+                    LOG.info("Rolling back element " + s.getElementId());
                     makeDetachHttpRequest(new InvocableEntityUrlGenerator(graph), graph);
+                });
+                relays.ifPresent(relay -> {
+                    LOG.info("Rolling back element " + s.getElementId());
+                    makeDetachHttpRequest(new StreamRelayEndpointUrlGenerator(relay), relay);
                 });
             }
         }
@@ -148,8 +153,31 @@ public abstract class ElementSubmitter {
         return status;
     }
 
+    // Old: filter not working. leads to comparing endpoint of primary pipeline element with the one of nodectl
+    // because endpoint in PipelineOperationStatus set in @{HttpRequestBuilder} used nodectl endpoint
+    @Deprecated
     private Optional<InvocableStreamPipesEntity> findGraphs(String elementId) {
         return graphs.stream().filter(i -> i.getBelongsTo().equals(elementId)).findFirst();
+    }
+
+    private Optional<InvocableStreamPipesEntity> compareAndFindGraphs(String elementId) {
+        return graphs.stream().filter(graph -> matchingEndpoints(graph, elementId)).findFirst();
+    }
+
+    private Optional<SpDataStreamRelayContainer> compareAndFindRelays(String elementId) {
+        return relays.stream().filter(relay -> matchingEndpoints(relay, elementId)).findFirst();
+    }
+
+    private boolean matchingEndpoints(NamedStreamPipesEntity entity, String endpoint) {
+        boolean matching = false;
+        if (entity instanceof InvocableStreamPipesEntity) {
+            matching = new InvocableEntityUrlGenerator((InvocableStreamPipesEntity) entity)
+                    .generateInvokeEndpoint().equals(endpoint);
+        } else if (entity instanceof SpDataStreamRelayContainer) {
+            matching = new StreamRelayEndpointUrlGenerator((SpDataStreamRelayContainer) entity)
+                    .generateInvokeEndpoint().equals(endpoint);
+        }
+        return matching;
     }
 
     protected boolean allInvocableEntitiesRunning(PipelineOperationStatus status) {

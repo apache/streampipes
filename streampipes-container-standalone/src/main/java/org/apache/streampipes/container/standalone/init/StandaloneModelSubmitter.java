@@ -32,7 +32,9 @@ import org.apache.streampipes.container.init.RunningInstances;
 import org.apache.streampipes.container.model.PeConfig;
 import org.apache.streampipes.container.util.ConsulUtil;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import javax.annotation.PreDestroy;
 
@@ -65,7 +67,7 @@ public abstract class StandaloneModelSubmitter extends ModelSubmitter<PeConfig> 
                     peConfig.getId(),
                     peConfig.getHost(),
                     peConfig.getPort(),
-                    DeclarersSingleton.getInstance().getEpaDeclarers());
+                    generateSupportedAppIds());
         } else {
             // primary
             ConsulUtil.registerPeService(
@@ -73,6 +75,18 @@ public abstract class StandaloneModelSubmitter extends ModelSubmitter<PeConfig> 
                     peConfig.getHost(),
                     peConfig.getPort());
         }
+    }
+
+    private List<String> generateSupportedAppIds() {
+        List<String> supportedAppIds = new ArrayList<>();
+
+        List<String> dataProcessorsAppIds = new ArrayList<>(DeclarersSingleton.getInstance().getEpaDeclarers().keySet());
+        List<String> dataSinksAppIds = new ArrayList<>(DeclarersSingleton.getInstance().getConsumerDeclarers().keySet());
+
+        supportedAppIds.addAll(dataProcessorsAppIds);
+        supportedAppIds.addAll(dataSinksAppIds);
+
+        return supportedAppIds;
     }
 
     @PreDestroy
