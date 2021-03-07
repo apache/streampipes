@@ -16,7 +16,16 @@
  *
  */
 
-import {Component, EventEmitter, Input, NgZone, OnInit, Output,} from "@angular/core";
+import {
+    Component,
+    ElementRef,
+    EventEmitter,
+    Input,
+    NgZone,
+    OnInit,
+    Output,
+    ViewChild,
+} from "@angular/core";
 import {JsplumbBridge} from "../../services/jsplumb-bridge.service";
 import {PipelinePositioningService} from "../../services/pipeline-positioning.service";
 import {PipelineValidationService} from "../../services/pipeline-validation.service";
@@ -31,6 +40,8 @@ import {ConfirmDialogComponent} from "../../../core-ui/dialog/confirm-dialog/con
 import {MatDialog} from "@angular/material/dialog";
 import {EditorService} from "../../services/editor.service";
 import {PipelineService} from "../../../platform-services/apis/pipeline.service";
+import {PipelineCanvasScrollingService} from "../../services/pipeline-canvas-scrolling.service";
+import {JsplumbFactoryService} from "../../services/jsplumb-factory.service";
 
 
 @Component({
@@ -52,6 +63,8 @@ export class PipelineAssemblyComponent implements OnInit {
     @Output()
     pipelineCanvasMaximizedEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
+    JsplumbBridge: JsplumbBridge;
+
     pipelineCanvasMaximized: boolean = false;
 
     currentMouseOverElement: any;
@@ -69,7 +82,10 @@ export class PipelineAssemblyComponent implements OnInit {
     pipelineCacheRunning: boolean = false;
     pipelineCached: boolean = false;
 
-    constructor(private JsplumbBridge: JsplumbBridge,
+    config: any = {};
+    @ViewChild("assembly") pipelineCanvas: ElementRef;
+
+    constructor(private JsPlumbFactoryService: JsplumbFactoryService,
                 private PipelinePositioningService: PipelinePositioningService,
                 private ObjectProvider: ObjectProvider,
                 public EditorService: EditorService,
@@ -79,7 +95,8 @@ export class PipelineAssemblyComponent implements OnInit {
                 private ShepherdService: ShepherdService,
                 private dialogService: DialogService,
                 private dialog: MatDialog,
-                private ngZone: NgZone) {
+                private ngZone: NgZone,
+                private pipelineCanvasScrollingService: PipelineCanvasScrollingService) {
 
         this.selectMode = true;
         this.currentZoomLevel = 1;
@@ -87,11 +104,18 @@ export class PipelineAssemblyComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.JsplumbBridge = this.JsPlumbFactoryService.getJsplumbBridge(false);
         if (this.currentModifiedPipelineId) {
             this.displayPipelineById();
         } else {
             this.checkAndDisplayCachedPipeline();
         }
+        this.pipelineCanvasScrollingService.canvasScrollYSubject.subscribe(position => {
+            console.log("scrolling to" + position);
+            console.log(this.pipelineCanvas.nativeElement.scrollHeight);
+            console.log(this.pipelineCanvas.nativeElement.scrollTop);
+            this.pipelineCanvas.nativeElement.scrollTop = this.pipelineCanvas.nativeElement.scrollHeight;
+        });
     }
 
     ngAfterViewInit() {
@@ -231,7 +255,7 @@ export class PipelineAssemblyComponent implements OnInit {
             this.EditorService.makePipelineAssemblyEmpty(false);
             this.ngZone.run(() => {
                 this.pipelineValid = this.PipelineValidationService
-                    .isValidPipeline(this.rawPipelineModel.filter(pe => !(pe.settings.disabled)));
+                    .isValidPipeline(this.rawPipelineModel.filter(pe => !(pe.settings.disabled)), false);
             });
         });
     }

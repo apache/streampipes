@@ -16,107 +16,130 @@
  *
  */
 
-import {Injectable} from "@angular/core";
+import {jsPlumbInstance} from 'jsplumb'
 
-declare const jsPlumb: any;
-
-@Injectable()
 export class JsplumbBridge {
 
-    constructor() {
+    constructor(private jsPlumbInstance: jsPlumbInstance) {
+    }
+
+    activateEndpoint(endpointId: string, endpointEnabled: boolean) {
+        let endpoint = this.getEndpointById(endpointId);
+        endpoint.setEnabled(endpointEnabled);
+    }
+
+    activateEndpointWithType(endpointId: string, endpointEnabled: boolean, endpointType: string) {
+        this.activateEndpoint(endpointId, endpointEnabled);
+        this.setEndpointType(endpointId, endpointType);
+    }
+
+    setEndpointType(endpointId: string, endpointType: string) {
+        let endpoint = this.getEndpointById(endpointId);
+        // @ts-ignore
+        endpoint.setType(endpointType);
+    }
+
+    getEndpointById(endpointId: string) {
+        return this.jsPlumbInstance.getEndpoint(endpointId);
     }
 
     setZoom(scale) {
-        jsPlumb.setZoom(scale);
+        this.jsPlumbInstance.setZoom(scale);
     }
 
     repaintEverything() {
-        jsPlumb.repaintEverything(true);
+        this.jsPlumbInstance.repaintEverything(true);
     }
 
     deleteEveryEndpoint() {
-        jsPlumb.deleteEveryEndpoint();
+        this.jsPlumbInstance.deleteEveryEndpoint();
     }
 
     setContainer(container) {
-        jsPlumb.setContainer(container);
+        this.jsPlumbInstance.setContainer(container);
     }
 
     unbind(element) {
-        jsPlumb.unbind(element);
+        this.jsPlumbInstance.unbind(element);
     }
 
     bind(event, fn) {
-        return jsPlumb.bind(event, fn);
+        return this.jsPlumbInstance.bind(event, fn);
     }
 
     // TODO: Overloading Functions?
     selectEndpoints(endpoint?) {
         if (endpoint === undefined) {
-            return jsPlumb.selectEndpoints();
+            // @ts-ignore
+            return this.jsPlumbInstance.selectEndpoints();
         }
-        return jsPlumb.selectEndpoints(endpoint);
+        // @ts-ignore
+        return this.jsPlumbInstance.selectEndpoints(endpoint);
     }
 
     selectEndpointsById(id) {
-        return jsPlumb.selectEndpoints({source: id});
+        // @ts-ignore
+        return this.jsPlumbInstance.selectEndpoints({source: id});
     }
 
     getSourceEndpoint(id) {
-        return jsPlumb.selectEndpoints({source: id});
+        // @ts-ignore
+        return this.jsPlumbInstance.selectEndpoints({source: id});
     }
 
     getTargetEndpoint(id) {
-        return jsPlumb.selectEndpoints({target: id});
+        // @ts-ignore
+        return this.jsPlumbInstance.selectEndpoints({target: id});
     }
 
     getEndpointCount(id) {
-        return jsPlumb.selectEndpoints({element: id}).length;
+        // @ts-ignore
+        return this.jsPlumbInstance.selectEndpoints({element: id}).length;
     }
 
     detach(connection) {
-        jsPlumb.detach(connection);
+        this.jsPlumbInstance.deleteConnection(connection);
     }
 
     getConnections(filter) {
-        return jsPlumb.getConnections(filter);
+        return this.jsPlumbInstance.getConnections(filter, {});
     }
 
     addEndpoint(element, options) {
-        return jsPlumb.addEndpoint(element, options);
+        return this.jsPlumbInstance.addEndpoint(element, options);
     }
 
     connect(connection) {
-        jsPlumb.connect(connection);
+        this.jsPlumbInstance.connect(connection);
     }
 
     removeAllEndpoints(element) {
-        jsPlumb.removeAllEndpoints(element);
+        this.jsPlumbInstance.removeAllEndpoints(element);
     }
 
     registerEndpointTypes(typeInfo) {
-        jsPlumb.registerEndpointTypes(typeInfo);
+        this.jsPlumbInstance.registerEndpointTypes(typeInfo);
     }
 
     draggable(element, option) {
-        jsPlumb.draggable(element, option);
+        this.jsPlumbInstance.draggable(element, option);
     }
 
     // TODO: Overloading Functions?
     setSuspendDrawing(bool1, bool2?) {
         if (bool2 === undefined) {
-            jsPlumb.setSuspendDrawing(bool1);
+            this.jsPlumbInstance.setSuspendDrawing(bool1);
         } else {
-            jsPlumb.setSuspendDrawing(bool1, bool2);
+            this.jsPlumbInstance.setSuspendDrawing(bool1, bool2);
         }
     }
 
     getAllConnections() {
-        return jsPlumb.getAllConnections();
+        return this.jsPlumbInstance.getAllConnections();
     }
 
     reset() {
-        jsPlumb.reset();
+        this.jsPlumbInstance.reset();
     }
 }
 

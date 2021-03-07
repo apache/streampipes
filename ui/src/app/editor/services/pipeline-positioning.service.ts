@@ -16,120 +16,118 @@
  *
  */
 
-//import * from 'lodash';
 import * as dagre from "dagre";
 import {JsplumbBridge} from "./jsplumb-bridge.service";
 import {JsplumbConfigService} from "./jsplumb-config.service";
 import {JsplumbService} from "./jsplumb.service";
 import {Injectable} from "@angular/core";
 import {PipelineElementConfig} from "../model/editor.model";
-
-declare const jsPlumb: any;
+import {
+    DataProcessorInvocation,
+    DataSinkInvocation,
+    SpDataStream
+} from "../../core-model/gen/streampipes-model";
+import {JsplumbFactoryService} from "./jsplumb-factory.service";
+import {ObjectProvider} from "./object-provider.service";
 
 @Injectable()
 export class PipelinePositioningService {
 
-
     constructor(private JsplumbService: JsplumbService,
                 private JsplumbConfigService: JsplumbConfigService,
-                private JsplumbBridge: JsplumbBridge) {
+                private JsplumbFactoryService: JsplumbFactoryService,
+                private ObjectProvider: ObjectProvider) {
     }
 
-    displayPipeline(rawPipelineModel: PipelineElementConfig[], targetCanvas, isPreview, autoLayout) {
-        var jsplumbConfig = isPreview ? this.JsplumbConfigService.getPreviewConfig() : this.JsplumbConfigService.getEditorConfig();
-
-        for (var i = 0; i < rawPipelineModel.length; i++) {
-            var currentPe = rawPipelineModel[i];
+    displayPipeline(rawPipelineModel: PipelineElementConfig[],
+                    targetCanvas,
+                    previewConfig: boolean,
+                    autoLayout: boolean) {
+        let jsPlumbBridge = this.JsplumbFactoryService.getJsplumbBridge(previewConfig);
+        let jsplumbConfig = previewConfig ? this.JsplumbConfigService.getPreviewConfig() : this.JsplumbConfigService.getEditorConfig();
+        rawPipelineModel.forEach(currentPe => {
             if (!currentPe.settings.disabled) {
-                if (currentPe.type === "stream") {
-                    this.JsplumbService.streamDropped(currentPe.payload.dom, currentPe.payload, true, isPreview);
+                if (currentPe.type === "stream" || currentPe.type === "set") {
+                    this.JsplumbService.dataStreamDropped(currentPe.payload.dom,
+                        currentPe.payload as SpDataStream,
+                        true,
+                        previewConfig);
                 }
                 if (currentPe.type === "sepa") {
-                    this.JsplumbService.sepaDropped(currentPe.payload.dom, currentPe.payload, true, isPreview);
+                    this.JsplumbService.dataProcessorDropped(currentPe.payload.dom, currentPe.payload as DataProcessorInvocation, true, previewConfig);
                 }
                 if (currentPe.type === "action") {
-                    this.JsplumbService.actionDropped(currentPe.payload.dom, currentPe.payload, true, isPreview);
+                    this.JsplumbService.dataSinkDropped(currentPe.payload.dom, currentPe.payload as DataSinkInvocation, true, previewConfig);
                 }
             }
-        }
+        });
 
-        this.connectPipelineElements(rawPipelineModel, !isPreview, jsplumbConfig);
+        this.connectPipelineElements(rawPipelineModel, previewConfig, jsplumbConfig, jsPlumbBridge);
         if (autoLayout) {
-            this.layoutGraph(targetCanvas, "span[id^='jsplumb']", isPreview ? 75 : 110, isPreview);
+            this.layoutGraph(targetCanvas, "span[id^='jsplumb']", previewConfig ? 75 : 110, previewConfig);
         }
-        this.JsplumbBridge.repaintEverything();
+        jsPlumbBridge.repaintEverything();
     }
 
     layoutGraph(canvas, nodeIdentifier, dimension, isPreview) {
+        let jsPlumbBridge = this.JsplumbFactoryService.getJsplumbBridge(isPreview);
         var g = new dagre.graphlib.Graph();
         g.setGraph({rankdir: "LR", ranksep: isPreview ? "50" : "100"});
         g.setDefaultEdgeLabel(function () {
             return {};
         });
-        var nodes = $(canvas).find(nodeIdentifier).get();
 
-        for (var i = 0; i < nodes.length; i++) {
-            var n = nodes[i];
+        var nodes = $(canvas).find(nodeIdentifier).get();
+        nodes.forEach((n, index) => {
             g.setNode(n.id, {label: n.id, width: dimension, height: dimension});
-        }
-        var edges = this.JsplumbBridge.getAllConnections();
-        for (var i = 0; i < edges.length; i++) {
-            var c = edges[i];
-            g.setEdge(c.source.id, c.target.id);
-        }
+        });
+
+        var edges = jsPlumbBridge.getAllConnections();
+        edges.forEach(edge => {
+            g.setEdge(edge.source.id, edge.target.id);
+        });
+
         dagre.layout(g);
         g.nodes().forEach(v => {
-            $("#" + v).css("left", g.node(v).x + "px");
-            $("#" + v).css("top", g.node(v).y + "px");
+            $(`#${v}`).css("left", g.node(v).x + "px");
+            $(`#${v}`).css("top", g.node(v).y + "px");
         });
     }
 
-    connectPipelineElements(rawPipelineModel: PipelineElementConfig[], detachable, jsplumbConfig) {
+    connectPipelineElements(rawPipelineModel: PipelineElementConfig[],
+                            previewConfig: boolean,
+                            jsplumbConfig: any,
+                            jsPlumbBridge: JsplumbBridge) {
         var source, target;
-
-        this.JsplumbBridge.setSuspendDrawing(true);
+        jsPlumbBridge.setSuspendDrawing(true);
         for (var i = 0; i < rawPipelineModel.length; i++) {
             var pe = rawPipelineModel[i];
 
-            if (pe.type == "sepa") {
-                if (pe.payload.connectedTo) {
-                    for (var j = 0, connection; connection = pe.payload.connectedTo[j]; j++) {
+            if (pe.type == "sepa" || pe.type == "action") {
+                if (!(pe.settings.disabled) && pe.payload.connectedTo) {
+                    pe.payload.connectedTo.forEach((connection, index) => {
                         source = connection;
                         target = pe.payload.dom;
 
-                        var options;
-                        var id = "#" + source;
-                        if ($(id).hasClass("sepa")) {
-                            options = jsplumbConfig.sepaEndpointOptions;
-                        } else {
-                            options = jsplumbConfig.streamEndpointOptions;
+                        let sourceEndpointId = "out-" + connection;
+                        let inTargetEndpointId = "in-" + index + "-" + pe.payload.dom;
+                        jsPlumbBridge.connect(
+                            {
+                                uuids: [sourceEndpointId, inTargetEndpointId],
+                                detachable: !previewConfig
+                            }
+                        );
+                        jsPlumbBridge.activateEndpointWithType(sourceEndpointId, true, "token");
+                        jsPlumbBridge.activateEndpointWithType(inTargetEndpointId, true, "token");
+
+                        if (!(pe.payload instanceof DataSinkInvocation) && !(this.ObjectProvider.hasConnectedPipelineElement(pe.payload.dom, rawPipelineModel))) {
+                            let outTargetEndpointId = "out-" + pe.payload.dom;
+                            jsPlumbBridge.activateEndpointWithType(outTargetEndpointId, true, "token");
                         }
-
-                        let sourceEndpointId = "out-" + connection;
-                        let targetEndpointId = "in-" + j + "-" + pe.payload.dom;
-                        this.JsplumbBridge.connect(
-                            {uuids: [sourceEndpointId, targetEndpointId], detachable: detachable}
-                        );
-                    }
-                }
-            } else if (pe.type == "action") {
-                target = pe.payload.dom;
-
-                if (pe.payload.connectedTo) {
-                    for (var j = 0, connection; connection = pe.payload.connectedTo[j]; j++) {
-                        source = connection;
-                        let sourceEndpointId = "out-" + connection;
-                        let targetEndpointId = "in-" + j + "-" + target;
-                        this.JsplumbBridge.connect(
-                            {uuids: [sourceEndpointId, targetEndpointId], detachable: detachable}
-                        );
-                    }
+                    });
                 }
             }
         }
-        this.JsplumbBridge.setSuspendDrawing(false, true);
+        jsPlumbBridge.setSuspendDrawing(false, true);
     }
-
 }
-
-//PipelinePositioningService.$inject = ['JsplumbService', 'JsplumbConfigService', 'JsplumbBridge'];

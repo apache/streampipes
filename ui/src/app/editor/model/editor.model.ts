@@ -29,6 +29,11 @@ export type PipelineElementHolder = {
   [key: string]: Array<PipelineElementUnion>;
 };
 
+export interface PipelineElementPosition {
+  x: number;
+  y: number;
+}
+
 export interface PipelineElementConfig {
   type: string,
   settings: {

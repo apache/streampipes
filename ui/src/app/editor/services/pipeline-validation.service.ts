@@ -21,6 +21,7 @@ import {JsplumbBridge} from "./jsplumb-bridge.service";
 import {Injectable} from "@angular/core";
 import {PipelineElementConfig} from "../model/editor.model";
 import {DataProcessorInvocation, DataSinkInvocation} from "../../core-model/gen/streampipes-model";
+import {JsplumbFactoryService} from "./jsplumb-factory.service";
 
 @Injectable()
 export class PipelineValidationService {
@@ -36,10 +37,11 @@ export class PipelineValidationService {
         {title: "Did you configure all elements?", content: "There's a pipeline element which is missing some configuration."},
     ];
 
-    constructor(private JsplumbBridge: JsplumbBridge) {
+    constructor(private JsplumbFactoryService: JsplumbFactoryService) {
     }
 
-    isValidPipeline(rawPipelineModel) {
+    isValidPipeline(rawPipelineModel, previewConfig: boolean) {
+        let jsplumbBridge = this.JsplumbFactoryService.getJsplumbBridge(previewConfig);
         let streamInAssembly = this.isStreamInAssembly(rawPipelineModel);
         let sepaInAssembly = this.isSepaInAssembly(rawPipelineModel);
         let actionInAssembly = this.isActionInAssembly(rawPipelineModel);
@@ -48,12 +50,12 @@ export class PipelineValidationService {
         let allElementsConfigured = true;
 
         if (streamInAssembly && (sepaInAssembly || actionInAssembly)) {
-            allElementsConnected = this.allElementsConnected(rawPipelineModel);
+            allElementsConnected = this.allElementsConnected(rawPipelineModel, jsplumbBridge);
             allElementsConfigured = this.allElementsConfigured(rawPipelineModel);
         }
 
         if (streamInAssembly && actionInAssembly && allElementsConnected) {
-            onlyOnePipelineCreated = this.onlyOnePipelineCreated(rawPipelineModel);
+            onlyOnePipelineCreated = this.onlyOnePipelineCreated(rawPipelineModel, jsplumbBridge);
         }
 
         if (!this.isEmptyPipeline(rawPipelineModel)) {
@@ -96,12 +98,12 @@ export class PipelineValidationService {
             .every(config => config.settings.completed);
     }
 
-    allElementsConnected(rawPipelineModel) {
-        let g = this.makeGraph(rawPipelineModel);
-        return g.nodes().every(node => this.isFullyConnected(g, node, rawPipelineModel));
+    allElementsConnected(rawPipelineModel, jsplumbBridge) {
+        let g = this.makeGraph(rawPipelineModel, jsplumbBridge);
+        return g.nodes().every(node => this.isFullyConnected(g, node));
     }
 
-    isFullyConnected(g, node, rawPipelineModel) {
+    isFullyConnected(g, node) {
         var nodeProperty = g.node(node);
         return g.outEdges(node).length >= nodeProperty.endpointCount;
     }
@@ -118,8 +120,8 @@ export class PipelineValidationService {
         return this.isInAssembly(rawPipelineModel, "sepa");
     }
 
-    onlyOnePipelineCreated(rawPipelineModel) {
-        let g = this.makeGraph(rawPipelineModel);
+    onlyOnePipelineCreated(rawPipelineModel, jsplumbBridge: JsplumbBridge) {
+        let g = this.makeGraph(rawPipelineModel, jsplumbBridge);
         let tarjan = dagre.graphlib.alg.tarjan(g);
 
         return tarjan.length == 1;
@@ -135,7 +137,7 @@ export class PipelineValidationService {
         return isElementInAssembly;
     }
 
-    makeGraph(rawPipelineModel: PipelineElementConfig[]) {
+    makeGraph(rawPipelineModel: PipelineElementConfig[], jsplumbBridge: JsplumbBridge) {
         var g = new dagre.graphlib.Graph();
         g.setGraph({rankdir: "LR"});
         g.setDefaultEdgeLabel(function () {
@@ -151,28 +153,20 @@ export class PipelineValidationService {
                     label: n.id,
                     type: elementOptions.type,
                     name: elementOptions.payload.name,
-                    endpointCount: this.JsplumbBridge.getEndpointCount(n.id)
+                    endpointCount: jsplumbBridge.getEndpointCount(n.id)
                 });
             }
         }
-        var edges = this.JsplumbBridge.getAllConnections();
-        for (var i = 0; i < edges.length; i++) {
+        var edges = jsplumbBridge.getAllConnections();
+        edges.forEach((edge, i) => {
             var c = edges[i];
             g.setEdge(c.source.id, c.target.id);
             g.setEdge(c.target.id, c.source.id);
-        }
+        });
         return g;
     }
 
     getElementOptions(id, rawPipelineModel: PipelineElementConfig[]) {
-        var pipelineElement;
-        rawPipelineModel.forEach(pe => {
-           if (pe.payload.dom === id) {
-               pipelineElement = pe;
-           }
-        });
-        return pipelineElement;
+        return rawPipelineModel.find(pe => pe.payload.dom === id);
     }
 }
-
-//PipelineValidationService.$inject=['ObjectProvider', 'JsplumbBridge'];
