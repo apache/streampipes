@@ -99,8 +99,8 @@ export class PipelineComponent implements OnInit, OnDestroy {
   currentZoomLevel: any;
   TransitionService: any;
 
-  canvasWidth: string = "1000%";
-  canvasHeight: string = "1000%";
+  canvasWidth: string = "100%";
+  canvasHeight: string = "100%";
 
   JsplumbBridge: JsplumbBridge;
 

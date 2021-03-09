@@ -16,6 +16,8 @@
  *
  */
 
+@import '../../../../scss/_variables.scss';
+
 .mat-spinner-color::ng-deep svg circle{
     stroke: #FFFFFF !important;
 }
@@ -33,24 +35,27 @@
     //position: relative;
     left: 0px;
     top: 0px;
-    overflow: visible;
+    //overflow: visible;
     //box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .2), 0 1px 1px 0 rgba(0, 0, 0, .14), 0 2px 1px -1px rgba(0, 0, 0, .12);
     //padding: 5px;
-    flex: 1;
-    width: 100%;
+    display: flex;
+    flex: 1 1 0;
+    overflow: hidden;
 }
 
 .pipeline-canvas-outer {
-    flex: 1;
+    position: relative;
+    width: 100%;
+    height: 100%;
 }
 
 .canvas {
-    overflow: auto;
+    //overflow: scroll;
     position: relative;
     left: 0px;
     top: 0px;
-    height: 100%;
-    width: 100%;
+    height: 3000px;
+    width: 3000px;
     z-index: 0;
     margin: -1px;
 
@@ -66,4 +71,79 @@
 .jtk-surface-nopan {
     overflow: scroll !important;
     cursor:default;
+}
+
+.zoom-control {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    width: 40px;
+    height: 80px;
+    z-index: 10;
+    background: white;
+    box-shadow: 0.175em 0.175em 0 0 rgba(15, 28, 63, 0.125);
+    border-radius: 10px;
+
+}
+
+.pan-control {
+    position: absolute;
+    right: 60px;
+    bottom: 10px;
+    width: 80px;
+    height: 80px;
+    background: white;
+    box-shadow: 0.175em 0.175em 0 0 rgba(15, 28, 63, 0.125);
+    border-radius: 50%;
+    z-index: 10;
+}
+
+.pan-zoom-button {
+    position: absolute;
+    cursor: pointer;
+    color: $sp-color-accent;
+}
+
+.pan-zoom-control-buttons {
+    position: relative;
+}
+
+.zoom-divider {
+    top: 40px;
+    position: relative;
+}
+
+.zoom-in {
+    top: 8px;
+    left: 8px;
+}
+
+.zoom-out {
+    top: 48px;
+    left: 8px;
+}
+
+.pan-up {
+    left: 28px;
+    top: 2px;
+}
+
+.pan-down {
+    left: 28px;
+    top: 58px;
+}
+
+.pan-left {
+    left: -3px;
+    top: 30px;
+}
+
+.pan-right {
+    left: 55px;
+    top: 30px;
+}
+
+.pan-home {
+    left: 28px;
+    top: 30px;
 }

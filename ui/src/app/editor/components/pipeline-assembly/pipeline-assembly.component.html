@@ -24,26 +24,17 @@
                     (click)="submit()" type="submit">
                 <i class="material-icons">save</i>&nbsp;<span>Save pipeline</span>
             </button>
-            <button mat-button mat-icon-button matTooltip="Pan" [matTooltipPosition]="'above'"
-                    [disabled]="!selectMode"
-                    (click)="toggleSelectMode()">
-                <i class="material-icons">open_with</i>
-            </button>
-            <button mat-button mat-icon-button matTooltip="Select" [matTooltipPosition]="'above'"
-                    [disabled]="selectMode"
-                    (click)="toggleSelectMode()">
-                <i class="material-icons">mode_edit</i>
-            </button>
-            <button mat-button mat-icon-button matTooltip="Zoom In" [matTooltipPosition]="'above'"
-                    [disabled]="currentZoomLevel == 1"
-                    (click)="zoomIn()">
-                <i class="material-icons">zoom_in</i>
-            </button>
-            <button mat-button mat-icon-button matTooltip="Zoom Out" [matTooltipPosition]="'above'"
-                    [disabled]="currentZoomLevel == 0.5"
-                    (click)="zoomOut()">
-                <i class="material-icons">zoom_out</i>
-            </button>
+            <!-- TODO: Use this once copying of elements is supported -->
+<!--            <button mat-button mat-icon-button matTooltip="Pan" [matTooltipPosition]="'above'"-->
+<!--                    [disabled]="!selectMode"-->
+<!--                    (click)="toggleSelectMode()">-->
+<!--                <i class="material-icons">open_with</i>-->
+<!--            </button>-->
+<!--            <button mat-button mat-icon-button matTooltip="Select" [matTooltipPosition]="'above'"-->
+<!--                    [disabled]="selectMode"-->
+<!--                    (click)="toggleSelectMode()">-->
+<!--                <i class="material-icons">mode_edit</i>-->
+<!--            </button>-->
             <button mat-button mat-icon-button matTooltip="Auto Layout" [matTooltipPosition]="'above'"
                     (click)="autoLayout()">
                 <i class="material-icons">settings_overscan</i>
@@ -102,17 +93,49 @@
         </div>
     </div>
     <div id="outerAssemblyArea" class="outerAssembly sp-blue-border-nopadding">
-        <div id="assembly" class="canvas jtk-surface jtk-surface-no-pan">
-            <pipeline [pipelineValid]="pipelineValid"
-                      [canvasId]="'assembly'"
-                      [rawPipelineModel]="rawPipelineModel"
-                      [allElements]="allElements"
-                      [preview]="false"
-                      [pipelineCached]="pipelineCached"
-                      [pipelineCacheRunning]="pipelineCacheRunning"
-                      (pipelineCachedChanged)="pipelineCached=$event"
-                      (pipelineCacheRunningChanged)="pipelineCacheRunning=$event">
-            </pipeline>
+        <div class="pipeline-canvas-outer">
+            <div class="pan-control">
+                <div class="pan-zoom-control-buttons">
+                    <div class="pan-zoom-button pan-left" (click)="panLeft()">
+                        <i class="material-icons">keyboard_arrow_left</i>
+                    </div>
+                    <div class="pan-zoom-button pan-right" (click)="panRight()">
+                        <i class="material-icons">keyboard_arrow_right</i>
+                    </div>
+                    <div class="pan-zoom-button pan-home" (click)="panHome()">
+                        <i class="material-icons">home</i>
+                    </div>
+                    <div class="pan-zoom-button pan-up" (click)="panUp()">
+                        <i class="material-icons">keyboard_arrow_up</i>
+                    </div>
+                    <div class="pan-zoom-button pan-down" (click)="panDown()">
+                        <i class="material-icons">keyboard_arrow_down</i>
+                    </div>
+                </div>
+            </div>
+            <div class="zoom-control">
+                <div class="pan-zoom-control-buttons">
+                    <div class="pan-zoom-button zoom-in" (click)="zoomIn()">
+                        <i class="material-icons">zoom_in</i>
+                    </div>
+                    <mat-divider class="zoom-divider"></mat-divider>
+                    <div class="pan-zoom-button zoom-out" (click)="zoomOut()">
+                        <i class="material-icons">zoom_out</i>
+                    </div>
+                </div>
+            </div>
+            <div id="assembly" class="canvas">
+                <pipeline [pipelineValid]="pipelineValid"
+                          [canvasId]="'assembly'"
+                          [rawPipelineModel]="rawPipelineModel"
+                          [allElements]="allElements"
+                          [preview]="false"
+                          [pipelineCached]="pipelineCached"
+                          [pipelineCacheRunning]="pipelineCacheRunning"
+                          (pipelineCachedChanged)="pipelineCached=$event"
+                          (pipelineCacheRunningChanged)="pipelineCacheRunning=$event">
+                </pipeline>
+            </div>
         </div>
     </div>
 </div>

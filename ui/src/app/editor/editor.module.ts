@@ -63,7 +63,6 @@ import {PipelineElementTemplateConfigComponent} from "./components/pipeline-elem
 import {EnabledPipelineElementFilter} from "./filter/enabled-pipeline-element.filter";
 import {PipelineElementDraggedService} from "./services/pipeline-element-dragged.service";
 import {PipelineCanvasScrollingService} from "./services/pipeline-canvas-scrolling.service";
-import {PerfectScrollbarModule} from "ngx-perfect-scrollbar";
 import {JsplumbEndpointService} from "./services/jsplumb-endpoint.service";
 import {JsplumbFactoryService} from "./services/jsplumb-factory.service";
 
@@ -83,7 +82,6 @@ import {JsplumbFactoryService} from "./services/jsplumb-factory.service";
         MatProgressSpinnerModule,
         ShowdownModule,
         ReactiveFormsModule,
-        PerfectScrollbarModule
     ],
     declarations: [
         CompatibleElementsComponent,

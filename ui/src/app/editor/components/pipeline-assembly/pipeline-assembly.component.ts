@@ -42,6 +42,7 @@ import {EditorService} from "../../services/editor.service";
 import {PipelineService} from "../../../platform-services/apis/pipeline.service";
 import {PipelineCanvasScrollingService} from "../../services/pipeline-canvas-scrolling.service";
 import {JsplumbFactoryService} from "../../services/jsplumb-factory.service";
+import Panzoom, {PanzoomObject} from "@panzoom/panzoom";
 
 
 @Component({
@@ -84,6 +85,7 @@ export class PipelineAssemblyComponent implements OnInit {
 
     config: any = {};
     @ViewChild("assembly") pipelineCanvas: ElementRef;
+    panzoom: PanzoomObject;
 
     constructor(private JsPlumbFactoryService: JsplumbFactoryService,
                 private PipelinePositioningService: PipelinePositioningService,
@@ -118,20 +120,35 @@ export class PipelineAssemblyComponent implements OnInit {
         });
     }
 
-    ngAfterViewInit() {
-        ($("#assembly") as any).panzoom({
-            disablePan: true,
-            increment: 0.25,
-            minScale: 0.5,
-            maxScale: 1.5,
-            contain: 'invert'
-        });
 
-        $("#assembly").on('panzoomzoom', (e, panzoom, scale) => {
-            this.currentZoomLevel = scale;
-            this.JsplumbBridge.setZoom(scale);
-            this.JsplumbBridge.repaintEverything();
-        });
+    ngAfterViewInit() {
+        const elem = document.getElementById('assembly')
+        this.panzoom = Panzoom(elem, {
+            maxScale: 5,
+            excludeClass: "jtk-draggable",
+            canvas: true,
+            contain: "outside"
+        })
+        //panzoom.pan(10, 10)
+        //panzoom.zoom(2, { animate: true })
+        // ($("#assembly") as any).panzoom({
+        //     disablePan: false,
+        //     increment: 0.25,
+        //     minScale: 0.5,
+        //     maxScale: 1.5,
+        //     contain: 'invert',
+        //     excludeClass: "jtk-managed"
+        // });
+        //
+        // $("#assembly").on('panzoomzoom', (e, panzoom, scale) => {
+        //     this.currentZoomLevel = scale;
+        //     this.JsplumbBridge.setZoom(scale);
+        //     this.JsplumbBridge.repaintEverything();
+        // });
+        //
+        // $("#assembly").on('panzoompan', (e, panzoom, scale) => {
+        //     console.log(e);
+        // });
     }
 
     autoLayout() {
@@ -140,14 +157,6 @@ export class PipelineAssemblyComponent implements OnInit {
     }
 
     toggleSelectMode() {
-        if (this.selectMode) {
-            ($("#assembly") as any).panzoom("option", "disablePan", false);
-            this.selectMode = false;
-        }
-        else {
-            ($("#assembly") as any).panzoom("option", "disablePan", true);
-            this.selectMode = true;
-        }
     }
 
     zoomOut() {
@@ -159,7 +168,10 @@ export class PipelineAssemblyComponent implements OnInit {
     }
 
     doZoom(zoomOut) {
-        ($("#assembly") as any).panzoom("zoom", zoomOut);
+        zoomOut ? this.panzoom.zoomOut() : this.panzoom.zoomIn();
+        this.currentZoomLevel = this.panzoom.getScale();
+        this.JsplumbBridge.setZoom(this.currentZoomLevel);
+        this.JsplumbBridge.repaintEverything();
     }
 
     showClearAssemblyConfirmDialog(event: any) {
@@ -271,6 +283,38 @@ export class PipelineAssemblyComponent implements OnInit {
     toggleCanvasMaximized() {
         this.pipelineCanvasMaximized = !(this.pipelineCanvasMaximized);
         this.pipelineCanvasMaximizedEmitter.emit(this.pipelineCanvasMaximized);
+    }
+
+    panLeft() {
+        this.pan(100, 0);
+    }
+
+    panRight() {
+        console.log("panning right");
+        this.pan(-100, 0);
+    }
+
+    panUp() {
+        this.pan(0, 100);
+    }
+
+    panDown() {
+        this.pan(0, -100);
+    }
+
+    panHome() {
+        this.panAbsolute(0, 0);
+    }
+
+    pan(xOffset: number, yOffset: number) {
+        let currentPan = this.panzoom.getPan();
+        let panX = Math.min(0, currentPan.x + xOffset);
+        let panY = Math.min(0, currentPan.y + yOffset);
+        let values = this.panzoom.pan(panX, panY);
+    }
+
+    panAbsolute(x: number, y: number) {
+        this.panzoom.pan(x, y);
     }
 
 }
