@@ -61,6 +61,10 @@ import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/***
+ * Wrapper class for all OPC UA specific stuff. <br>
+ * Is used both in the {@link OpcUaPullAdapter} and {@link OpcUaSubscriptionAdapter}.
+ */
 public class OpcUa {
 
     static Logger LOG = LoggerFactory.getLogger(OpcUa.class);
@@ -76,11 +80,23 @@ public class OpcUa {
 
     private static final AtomicLong clientHandles = new AtomicLong(1L);
 
+    /***
+     *
+     * @return current {@link org.eclipse.milo.opcua.sdk.client.OpcUaClient}
+     */
     public OpcUaClient getClient() {
         return this.client;
     }
 
 
+    /**
+     * Constructor for security level {@code None} and OPC server given by url
+     *
+     * @param opcServerURL complete OPC UA server url
+     * @param namespaceIndex namespace index of the given node
+     * @param nodeId node identifier
+     * @param selectedNodeNames list of node names provided from {@link OpcUaUtil#resolveOptions(String, StaticPropertyExtractor)}
+     */
     public OpcUa(String opcServerURL, int namespaceIndex, String nodeId, List<String> selectedNodeNames) {
 
         this.opcServerURL = opcServerURL;
@@ -95,10 +111,29 @@ public class OpcUa {
         }
     }
 
+    /**
+     * Constructor for security level {@code None} and OPC server given by hostname and port number
+     *
+     * @param opcServer OPC UA hostname
+     * @param opcServerPort OPC UA port number
+     * @param namespaceIndex namespace index of the given node
+     * @param nodeId node identifier
+     * @param selectedNodeNames list of node names provided from {@link OpcUaUtil#resolveOptions(String, StaticPropertyExtractor)}
+     */
     public OpcUa(String opcServer, int opcServerPort, int namespaceIndex, String nodeId, List<String> selectedNodeNames) {
         this( opcServer + ":" + opcServerPort, namespaceIndex, nodeId, selectedNodeNames);
     }
 
+    /**
+     * Constructor for security level {@code Sign} and OPC server given by url
+     *
+     * @param opcServerURL complete OPC UA server url
+     * @param namespaceIndex namespace index of the given node
+     * @param nodeId node identifier
+     * @param username username to authenticate at the OPC UA server
+     * @param password corresponding password to given user name
+     * @param selectedNodeNames list of node names provided from {@link OpcUaUtil#resolveOptions(String, StaticPropertyExtractor)}
+     */
     public OpcUa(String opcServerURL, int namespaceIndex, String nodeId, String username, String password, List<String> selectedNodeNames) {
         this(opcServerURL, namespaceIndex, nodeId, selectedNodeNames);
         this.unauthenticated = false;
@@ -106,6 +141,17 @@ public class OpcUa {
         this.password = password;
     }
 
+    /**
+     * Constructor for OPC UA security level {@code Sign} and OPC server given by hostname and port number
+     *
+     * @param opcServer OPC UA hostname
+     * @param opcServerPort OPC UA port number
+     * @param namespaceIndex namespace index of the given node
+     * @param nodeId node identifier
+     * @param username username to authenticate at the OPC UA server
+     * @param password corresponding password to given user name
+     * @param selectedNodeNames list of node names provided from {@link OpcUaUtil#resolveOptions(String, StaticPropertyExtractor)}
+     */
     public OpcUa(String opcServer, int opcServerPort, int namespaceIndex, String nodeId, String username, String password, List<String> selectedNodeNames) {
         this (opcServer, opcServerPort, namespaceIndex, nodeId, selectedNodeNames);
         this.unauthenticated = false;
@@ -113,6 +159,11 @@ public class OpcUa {
         this.password = password;
     }
 
+    /**
+     * Creates {@link OpcUa}  instance in accordance with the given {@link org.apache.streampipes.sdk.extractor.StaticPropertyExtractor}.
+     * @param extractor extractor for user inputs
+     * @return {@link OpcUa}  instance based on information from {@code extractor}
+     */
     public static OpcUa from(StaticPropertyExtractor extractor) {
 
         String selectedAlternativeConnection = extractor.selectedAlternativeInternalId(OpcUaLabels.OPC_HOST_OR_URL.name());
@@ -160,6 +211,11 @@ public class OpcUa {
 
     }
 
+    /***
+     * Creates {@link OpcUa}  instance in accordance with the given {@link org.apache.streampipes.model.connect.adapter.AdapterDescription}
+     * @param adapterDescription description of current adapter
+     * @return {@link OpcUa}  instance based on information from {@code adapterDescription}
+     */
     public static OpcUa from(AdapterDescription adapterDescription){
 
         StaticPropertyExtractor extractor =
@@ -168,6 +224,11 @@ public class OpcUa {
         return from(extractor);
     }
 
+    /***
+     * Establishes appropriate connection to OPC UA endpoint depending on the {@link OpcUa} instance
+     *
+     * @throws Exception
+     */
     public void connect() throws Exception {
 
         List<EndpointDescription> endpoints = DiscoveryClient.getEndpoints(this.opcServerURL).get();
@@ -235,6 +296,12 @@ public class OpcUa {
         );
     }
 
+    /***
+     * Search for related nodes relative to {@link OpcUa#node}
+     * @param selectNodes indicates whether only nodes of {@link OpcUa#selectedNodeNames} should be returned
+     * @return List of {@link OpcNode}s related to {@link OpcUa#node}
+     * @throws AdapterException
+     */
     public List<OpcNode> browseNode(boolean selectNodes) throws AdapterException {
         List<OpcNode> referenceDescriptions = browseNode(node, selectNodes);
 
@@ -282,6 +349,12 @@ public class OpcUa {
         return result;
     }
 
+    /***
+     * Search for related nodes relative to {@link OpcUa#node}
+     * @param selectNodes indicates whether only nodes of {@link OpcUa#selectedNodeNames} should be returned
+     * @return List of {@link OpcNode}s related to {@link OpcUa#node}
+     * @throws AdapterException
+     */
     private List<OpcNode> browseNode(NodeId browseRoot, boolean selectNodes) throws AdapterException {
         List<OpcNode> result = new ArrayList<>();
 
@@ -389,6 +462,12 @@ public class OpcUa {
     }
 
 
+    /***
+     * Register subscriptions for given OPC UA nodes
+     * @param nodes List of {@link org.eclipse.milo.opcua.stack.core.types.builtin.NodeId}
+     * @param opcUaSubscriptionAdapter current instance of {@link OpcUaSubscriptionAdapter}
+     * @throws Exception
+     */
     public void createListSubscription(List<NodeId> nodes, OpcUaSubscriptionAdapter opcUaSubscriptionAdapter) throws Exception {
         /*
          * create a subscription @ 1000ms
@@ -462,20 +541,6 @@ public class OpcUa {
         }
         // only got here if we didn't return false
         return true;
-    }
-
-    // utility function for mapping UPC Unit Ids to QUDT entities
-    // has to be maintained manually
-    // information about OPC Unit IDs can be found under: opcfoundation.org/UA/EngineeringUnits/UNECE/UNECE_to_OPCUA.csv
-    public static String mapUnitIdToQudt(int unitId){
-        switch (unitId){
-            case 17476:
-                return "http://qudt.org/vocab/unit#DEG";
-            case 4408652:
-                return "http://qudt.org/vocab/unit#DegreeCelsius";
-            default:
-                return "";
-        }
     }
 
 
