@@ -151,6 +151,9 @@ public class OpcUaUtil {
         PASSWORD,
         UNAUTHENTICATED,
         AVAILABLE_NODES,
-        POLLING_INTERVAL;
+        PULLING_INTERVAL,
+        ADAPTER_TYPE,
+        PULL_MODE,
+        SUBSCRIPTION_MODE;
     }
 }
