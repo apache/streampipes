@@ -85,4 +85,15 @@ public class InvocableEntityResource extends AbstractResource {
 
         return ok(resp);
     }
+
+    // Adaptation
+    @POST
+    @JacksonSerialized
+    @Path("/adapt")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public javax.ws.rs.core.Response adapt() {
+        //TODO: Push adaptation to pipeline element adaptation topic that is received via side-input in on configure.
+        return ok();
+    }
 }
