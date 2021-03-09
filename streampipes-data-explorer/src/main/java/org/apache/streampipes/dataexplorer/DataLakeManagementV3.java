@@ -102,7 +102,7 @@ public class DataLakeManagementV3 {
 
   public void getAllEvents(String index, String outputFormat, @Nullable Long startDate,
                            @Nullable Long endDate, OutputStream outputStream) throws IOException {
-    int itemsPerRequest = 10000;
+    int itemsPerRequest = 500000;
 
     PageResult dataResult;
     //JSON
