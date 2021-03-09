@@ -104,8 +104,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
   JsplumbBridge: JsplumbBridge;
 
-  //@ViewChild('outerCanvas') canvasRef: ElementRef;
-
   constructor(private JsplumbService: JsplumbService,
               private PipelineEditorService: PipelineEditorService,
               private JsplumbFactoryService: JsplumbFactoryService,
@@ -115,9 +113,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
               private PipelineValidationService: PipelineValidationService,
               private dialogService: DialogService,
               private dialog: MatDialog,
-              private ngZone: NgZone,
-              private pipelineElementDraggedService: PipelineElementDraggedService,
-              private pipelineCanvasScrollingService: PipelineCanvasScrollingService) {
+              private ngZone: NgZone) {
     this.plumbReady = false;
     this.currentMouseOverElement = "";
     this.currentPipelineModel = new Pipeline();
@@ -127,19 +123,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // this.pipelineElementDraggedService.pipelineElementMovedSubject.subscribe(position => {
-    //   console.log(position);
-    //   console.log(this.canvasHeight);
-    //   console.log(this.canvasRef.nativeElement.offsetHeight);
-    //   console.log(this.canvasRef.nativeElement.scrollHeight);
-    //   if ((position.y + 200) > this.canvasRef.nativeElement.offsetHeight) {
-    //     this.canvasHeight = this.canvasRef.nativeElement.offsetHeight +10 + "px";
-    //     this.pipelineCanvasScrollingService.canvasScrollYSubject.next(position.y);
-    //   }
-    //   if ((position.x + 200) > this.canvasRef.nativeElement.offsetWidth) {
-    //     this.canvasWidth = this.canvasRef.nativeElement.offsetWidth + 100 + "px";
-    //   }
-    // });
     this.JsplumbBridge = this.JsplumbFactoryService.getJsplumbBridge(this.preview);
     this.JsplumbBridge.setContainer(this.canvasId);
     this.initAssembly();
@@ -159,7 +142,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.JsplumbBridge.deleteEveryEndpoint();
     this.plumbReady = false;
-    //this.pipelineElementDraggedService.pipelineElementMovedSubject.unsubscribe();
   }
 
   updateMouseover(elementId) {

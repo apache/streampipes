@@ -43,6 +43,7 @@ import {PipelineService} from "../../../platform-services/apis/pipeline.service"
 import {PipelineCanvasScrollingService} from "../../services/pipeline-canvas-scrolling.service";
 import {JsplumbFactoryService} from "../../services/jsplumb-factory.service";
 import Panzoom, {PanzoomObject} from "@panzoom/panzoom";
+import {PipelineElementDraggedService} from "../../services/pipeline-element-dragged.service";
 
 
 @Component({
@@ -84,7 +85,7 @@ export class PipelineAssemblyComponent implements OnInit {
     pipelineCached: boolean = false;
 
     config: any = {};
-    @ViewChild("assembly") pipelineCanvas: ElementRef;
+    @ViewChild("outerCanvas") pipelineCanvas: ElementRef;
     panzoom: PanzoomObject;
 
     constructor(private JsPlumbFactoryService: JsplumbFactoryService,
@@ -98,11 +99,10 @@ export class PipelineAssemblyComponent implements OnInit {
                 private dialogService: DialogService,
                 private dialog: MatDialog,
                 private ngZone: NgZone,
-                private pipelineCanvasScrollingService: PipelineCanvasScrollingService) {
+                private pipelineElementDraggedService: PipelineElementDraggedService) {
 
         this.selectMode = true;
         this.currentZoomLevel = 1;
-
     }
 
     ngOnInit(): void {
@@ -112,14 +112,23 @@ export class PipelineAssemblyComponent implements OnInit {
         } else {
             this.checkAndDisplayCachedPipeline();
         }
-        this.pipelineCanvasScrollingService.canvasScrollYSubject.subscribe(position => {
-            console.log("scrolling to" + position);
-            console.log(this.pipelineCanvas.nativeElement.scrollHeight);
-            console.log(this.pipelineCanvas.nativeElement.scrollTop);
-            this.pipelineCanvas.nativeElement.scrollTop = this.pipelineCanvas.nativeElement.scrollHeight;
+        this.pipelineElementDraggedService.pipelineElementMovedSubject.subscribe(position => {
+            let offsetHeight = this.pipelineCanvas.nativeElement.offsetHeight;
+            let offsetWidth = this.pipelineCanvas.nativeElement.offsetWidth;
+            let currentPan = this.panzoom.getPan();
+            let xOffset = 0;
+            let yOffset = 0;
+            if ((position.y + currentPan.y) > (offsetHeight - 100)) {
+              yOffset = -10;
+            }
+            if ((position.x + currentPan.x) > (offsetWidth - 100)) {
+              xOffset = -10;
+            }
+            if (xOffset < 0 || yOffset < 0) {
+              this.pan(xOffset, yOffset);
+            }
         });
     }
-
 
     ngAfterViewInit() {
         const elem = document.getElementById('assembly')
@@ -129,26 +138,6 @@ export class PipelineAssemblyComponent implements OnInit {
             canvas: true,
             contain: "outside"
         })
-        //panzoom.pan(10, 10)
-        //panzoom.zoom(2, { animate: true })
-        // ($("#assembly") as any).panzoom({
-        //     disablePan: false,
-        //     increment: 0.25,
-        //     minScale: 0.5,
-        //     maxScale: 1.5,
-        //     contain: 'invert',
-        //     excludeClass: "jtk-managed"
-        // });
-        //
-        // $("#assembly").on('panzoomzoom', (e, panzoom, scale) => {
-        //     this.currentZoomLevel = scale;
-        //     this.JsplumbBridge.setZoom(scale);
-        //     this.JsplumbBridge.repaintEverything();
-        // });
-        //
-        // $("#assembly").on('panzoompan', (e, panzoom, scale) => {
-        //     console.log(e);
-        // });
     }
 
     autoLayout() {
@@ -231,7 +220,7 @@ export class PipelineAssemblyComponent implements OnInit {
             pipeline._id = this.currentModifiedPipelineId;
         }
 
-        const dialogRef = this.dialogService.open(SavePipelineComponent,{
+        this.dialogService.open(SavePipelineComponent,{
             panelType: PanelType.SLIDE_IN_PANEL,
             title: "Save pipeline",
             data: {
@@ -310,7 +299,7 @@ export class PipelineAssemblyComponent implements OnInit {
         let currentPan = this.panzoom.getPan();
         let panX = Math.min(0, currentPan.x + xOffset);
         let panY = Math.min(0, currentPan.y + yOffset);
-        let values = this.panzoom.pan(panX, panY);
+        this.panzoom.pan(panX, panY);
     }
 
     panAbsolute(x: number, y: number) {

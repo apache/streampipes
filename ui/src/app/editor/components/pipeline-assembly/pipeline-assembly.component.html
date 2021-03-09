@@ -93,7 +93,7 @@
         </div>
     </div>
     <div id="outerAssemblyArea" class="outerAssembly sp-blue-border-nopadding">
-        <div class="pipeline-canvas-outer">
+        <div class="pipeline-canvas-outer" #outerCanvas>
             <div class="pan-control">
                 <div class="pan-zoom-control-buttons">
                     <div class="pan-zoom-button pan-left" (click)="panLeft()">
@@ -124,7 +124,7 @@
                     </div>
                 </div>
             </div>
-            <div id="assembly" class="canvas">
+            <div id="assembly" class="canvas" #assembly>
                 <pipeline [pipelineValid]="pipelineValid"
                           [canvasId]="'assembly'"
                           [rawPipelineModel]="rawPipelineModel"

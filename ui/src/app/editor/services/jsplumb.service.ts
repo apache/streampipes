@@ -191,13 +191,7 @@ export class JsplumbService {
                   preview: boolean) {
         let jsplumbBridge = this.getBridge(preview);
         if (endpoints) {
-            if (!preview) {
-                jsplumbBridge.draggable(pipelineElementDomId, {containment: 'parent',
-                    // drag: (e => {
-                    // this.pipelineElementDraggedService.notify({x: e.pos[0], y: e.pos[1]});
-                    // })
-                });
-            }
+            this.makeDraggableIfNotPreview(pipelineElementDomId, jsplumbBridge, preview);
 
             let endpointOptions = this.jsplumbEndpointService.getStreamEndpoint(preview, pipelineElementDomId);
             jsplumbBridge.addEndpoint(pipelineElementDomId, endpointOptions);
@@ -223,9 +217,7 @@ export class JsplumbService {
                   endpoints: boolean,
                   preview: boolean): string {
         let jsplumbBridge = this.getBridge(preview);
-        if (!preview) {
-            jsplumbBridge.draggable(pipelineElementDomId, {containment: 'parent'});
-        }
+        this.makeDraggableIfNotPreview(pipelineElementDomId, jsplumbBridge, preview);
 
         if (endpoints) {
             if (pipelineElement.inputStreams.length < 2) { //1 InputNode
@@ -245,4 +237,15 @@ export class JsplumbService {
         return this.JsplumbFactory.getJsplumbBridge(previewConfig);
     }
 
+    makeDraggableIfNotPreview(pipelineElementDomId: string,
+                  jsplumbBridge: JsplumbBridge,
+                  previewConfig: boolean) {
+        if (!previewConfig) {
+            jsplumbBridge.draggable(pipelineElementDomId, {containment: 'parent',
+                drag: (e => {
+                    this.pipelineElementDraggedService.notify({x: e.pos[0], y: e.pos[1]});
+                })
+            });
+        }
+    }
 }
