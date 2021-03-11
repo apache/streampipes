@@ -22,7 +22,7 @@ services:
 #      - ./config/pgadmin/data:/root/.pgadmin
     environment:
       PGADMIN_DEFAULT_EMAIL: user1
-      PGADMIN_DEFAULT_PASSWORD: ")d,?C3?G7y[@V6}
+      PGADMIN_DEFAULT_PASSWORD: )d,?C3?G7y[@V6}
     logging:
       driver: "json-file"
       options:
