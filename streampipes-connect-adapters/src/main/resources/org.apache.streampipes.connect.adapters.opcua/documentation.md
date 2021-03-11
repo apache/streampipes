@@ -16,7 +16,7 @@
   ~
   -->
 
-## OPC-UA
+## OPC-UA Pull Adapter
 
 <p align="center"> 
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
@@ -26,7 +26,7 @@
 
 ## Description
 
-Read values from an OPC-UA server
+Reads values from an OPC-UA server repeatedly
 
 ***
 
@@ -35,6 +35,10 @@ Read values from an OPC-UA server
 ***
 
 ## Configuration
+
+### Polling Interval
+
+Duration of the polling interval in seconds
 
 ### Anonymous vs. Username/Password
 

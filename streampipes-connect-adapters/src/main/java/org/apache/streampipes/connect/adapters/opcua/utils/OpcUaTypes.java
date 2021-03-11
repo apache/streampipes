@@ -24,6 +24,11 @@ import org.apache.streampipes.sdk.utils.Datatypes;
 
 public class OpcUaTypes {
 
+    /**
+     * Maps OPC UA data types to internal StreamPipes data types
+     * @param o data type id as UInteger
+     * @return StreamPipes internal data type
+     */
     public static Datatypes getType(UInteger o) {
         if (UInteger.valueOf(4).equals(o) | UInteger.valueOf(6).equals(o) | UInteger.valueOf(8).equals(o) | UInteger.valueOf(27).equals(o)) {
             return Datatypes.Integer;
