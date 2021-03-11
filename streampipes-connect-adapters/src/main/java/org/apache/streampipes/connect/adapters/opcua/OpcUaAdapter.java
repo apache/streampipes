@@ -55,8 +55,6 @@ public class OpcUaAdapter extends PullAdapter implements ResolvesContainerProvid
     @Override
     protected void before() throws AdapterException {
 
-        this.opcUa = OpcUa.from(this.adapterDescription);
-
         this.allNodeIds = new ArrayList<>();
         try {
             this.opcUa.connect();
@@ -82,20 +80,28 @@ public class OpcUaAdapter extends PullAdapter implements ResolvesContainerProvid
 
         @Override
     public void startAdapter() throws AdapterException {
-        this.before();
-        super.startAdapter();
+
+        this.opcUa = OpcUa.from(this.adapterDescription);
+
+        if (this.opcUa.inPullMode()) {
+            super.startAdapter();
+        } else {
+            this.before();
+        }
     }
 
     @Override
     public void stopAdapter() throws AdapterException {
         // close connection
         this.opcUa.disconnect();
+
+        if (this.opcUa.inPullMode()){
+            super.stopAdapter();
+        }
     }
 
     @Override
     protected void pullData() {
-
-        if (opcUa.inPullMode()) {
 
             CompletableFuture<List<DataValue>> response = this.opcUa.getClient().readValues(0, TimestampsToReturn.Both, this.allNodeIds);
             try {
@@ -112,8 +118,6 @@ public class OpcUaAdapter extends PullAdapter implements ResolvesContainerProvid
              }
 
             adapterPipeline.process(this.event);
-
-        }
 
     }
 
