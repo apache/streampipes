@@ -17,9 +17,12 @@
  */
 package org.apache.streampipes.wrapper.standalone.runtime;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.wrapper.context.RuntimeContext;
 import org.apache.streampipes.wrapper.params.binding.BindingParams;
 import org.apache.streampipes.wrapper.params.runtime.RuntimeParams;
@@ -28,6 +31,7 @@ import org.apache.streampipes.wrapper.routing.SpInputCollector;
 import org.apache.streampipes.wrapper.runtime.PipelineElement;
 import org.apache.streampipes.wrapper.runtime.PipelineElementRuntime;
 import org.apache.streampipes.wrapper.standalone.manager.ProtocolManager;
+import org.apache.streampipes.wrapper.standalone.routing.StandaloneReconfigurationSpInputCollector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +69,23 @@ public abstract class StandalonePipelineElementRuntime<B extends BindingParams<I
               params.isSingletonEngine()));
     }
     return inputCollectors;
+  }
+
+  public SpInputCollector getReconfigurationInputCollector() throws SpRuntimeException{
+    ObjectMapper mapper = new ObjectMapper();
+    InvocableStreamPipesEntity graph = params.getBindingParams().getGraph();
+    try {
+      TransportProtocol tp = mapper.readValue(mapper.writeValueAsString(graph.getInputStreams().get(0)
+              .getEventGrounding().getTransportProtocol()), graph.getInputStreams().get(0)
+              .getEventGrounding().getTransportProtocol().getClass());
+      tp.getTopicDefinition().setActualTopicName("org.apache.streampipes.control.event.reconfigure."
+              + graph.getDeploymentRunningInstanceId());
+
+      return ProtocolManager.findReconfigurationInputCollector(tp,
+              graph.getInputStreams().get(0).getEventGrounding().getTransportFormats().get(0), true);
+    } catch (JsonProcessingException e) {
+      throw new SpRuntimeException(e);
+    }
   }
 
   public abstract void bindEngine() throws SpRuntimeException;

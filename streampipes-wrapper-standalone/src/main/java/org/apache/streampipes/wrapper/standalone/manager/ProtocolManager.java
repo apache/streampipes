@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.wrapper.standalone.manager;
 
+import org.apache.streampipes.wrapper.standalone.routing.AbstractStandaloneSpInputCollector;
+import org.apache.streampipes.wrapper.standalone.routing.StandaloneReconfigurationSpInputCollector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -32,6 +34,7 @@ import java.util.Map;
 public class ProtocolManager {
 
   public static Map<String, StandaloneSpInputCollector> consumers = new HashMap<>();
+  public static Map<String, StandaloneReconfigurationSpInputCollector> reconfigurationConsumers = new HashMap<>();
   public static Map<String, StandaloneSpOutputCollector> producers = new HashMap<>();
 
   private static final Logger LOG = LoggerFactory.getLogger(ProtocolManager.class);
@@ -41,38 +44,46 @@ public class ProtocolManager {
   // in empire serializers
 
   public static <T extends TransportProtocol> StandaloneSpInputCollector findInputCollector
-          (T
-                   protocol,
+          (T protocol,
+           TransportFormat format, Boolean singletonEngine)
+          throws
+          SpRuntimeException {
+
+    if (!consumers.containsKey(topicName(protocol))) {
+      consumers.put(topicName(protocol), makeInputCollector(protocol, format, singletonEngine));
+      LOG.info("Adding new consumer to consumer map (size=" + consumers.size() + "): " + topicName(protocol));
+    }
+    return consumers.get(topicName(protocol));
+
+  }
+
+  public static <T extends TransportProtocol> StandaloneReconfigurationSpInputCollector findReconfigurationInputCollector
+          (T protocol,
            TransportFormat format, Boolean
                    singletonEngine)
           throws
           SpRuntimeException {
 
-    if (consumers.containsKey(topicName(protocol))) {
-      return consumers.get(topicName(protocol));
-    } else {
-      consumers.put(topicName(protocol), makeInputCollector(protocol, format, singletonEngine));
-      LOG.info("Adding new consumer to consumer map (size=" +consumers.size() +"): " +topicName(protocol));
-      return consumers.get(topicName(protocol));
+    if (!reconfigurationConsumers.containsKey(topicName(protocol))) {
+      reconfigurationConsumers.put(topicName(protocol), makeReconfigurationInputCollector(protocol, format, singletonEngine));
+      LOG.info("Adding new reconfiguration consumer to reconfiguration consumer map (size=" + consumers.size() + "): " + topicName(protocol));
     }
+    return reconfigurationConsumers.get(topicName(protocol));
 
   }
 
   public static <T extends TransportProtocol> StandaloneSpOutputCollector findOutputCollector
-          (T
-                   protocol,
+          (T protocol,
            TransportFormat format)
           throws
           SpRuntimeException {
 
-    if (producers.containsKey(topicName(protocol))) {
-      return producers.get(topicName(protocol));
-    } else {
+    if (!producers.containsKey(topicName(protocol))) {
       producers.put(topicName(protocol), makeOutputCollector(protocol, format));
-      LOG.info("Adding new producer to producer map (size=" +producers.size() +"): " +topicName
+      LOG.info("Adding new producer to producer map (size=" + producers.size() + "): " + topicName
               (protocol));
-      return producers.get(topicName(protocol));
     }
+    return producers.get(topicName(protocol));
 
   }
 
@@ -82,6 +93,14 @@ public class ProtocolManager {
                    singletonEngine) throws
           SpRuntimeException {
     return new StandaloneSpInputCollector<>(protocol, format, singletonEngine);
+  }
+
+  private static <T extends TransportProtocol> StandaloneReconfigurationSpInputCollector makeReconfigurationInputCollector
+          (T protocol,
+           TransportFormat format, Boolean
+                   singletonEngine) throws
+          SpRuntimeException {
+    return new StandaloneReconfigurationSpInputCollector(protocol, format, singletonEngine);
   }
 
   public static <T extends TransportProtocol> StandaloneSpOutputCollector makeOutputCollector(T

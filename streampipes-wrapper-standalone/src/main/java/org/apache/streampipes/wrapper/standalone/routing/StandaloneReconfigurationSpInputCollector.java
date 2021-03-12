@@ -15,34 +15,30 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.wrapper.standalone.routing;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.wrapper.routing.RawDataProcessor;
 import org.apache.streampipes.wrapper.routing.SpInputCollector;
-import org.apache.streampipes.wrapper.standalone.manager.ProtocolManager;
 
-public class StandaloneSpInputCollector<T extends TransportProtocol> extends
+public class StandaloneReconfigurationSpInputCollector<T extends TransportProtocol> extends
         AbstractStandaloneSpInputCollector<T, RawDataProcessor>
         implements SpInputCollector {
 
 
-  public StandaloneSpInputCollector(T protocol, TransportFormat format,
-                                    Boolean singletonEngine) throws SpRuntimeException {
-    super(protocol, format, singletonEngine);
-  }
-
-  @Override
-  void send(RawDataProcessor rawDataProcessor, byte[] event) {
-    try {
-      rawDataProcessor.process(dataFormatDefinition.toMap(event), getTopic());
-    } catch (SpRuntimeException e) {
-      e.printStackTrace();
+    public StandaloneReconfigurationSpInputCollector(T protocol, TransportFormat format,
+                                                     Boolean singletonEngine) throws SpRuntimeException {
+        super(protocol, format, singletonEngine);
     }
-  }
+
+    void send(RawDataProcessor rawDataProcessor, byte[] event) {
+        try {
+            rawDataProcessor.reconfigure(dataFormatDefinition.toMap(event));
+        } catch (SpRuntimeException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

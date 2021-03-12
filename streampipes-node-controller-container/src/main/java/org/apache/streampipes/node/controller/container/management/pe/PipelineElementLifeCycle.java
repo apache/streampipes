@@ -29,6 +29,8 @@ public interface PipelineElementLifeCycle {
 
     Response detach(String runningInstanceId);
 
+    Response adapt(InvocableStreamPipesEntity graph, String reconfigurationEvent);
+
     void unregister();
 
 }

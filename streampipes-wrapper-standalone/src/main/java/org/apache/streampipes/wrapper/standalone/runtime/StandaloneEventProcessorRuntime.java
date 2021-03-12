@@ -20,12 +20,14 @@ package org.apache.streampipes.wrapper.standalone.runtime;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.runtime.EventFactory;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 import org.apache.streampipes.wrapper.params.runtime.EventProcessorRuntimeParams;
 import org.apache.streampipes.wrapper.routing.SpInputCollector;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
+import org.apache.streampipes.wrapper.runtime.ReconfigurableElement;
 import org.apache.streampipes.wrapper.standalone.manager.ProtocolManager;
 
 import java.util.Map;
@@ -60,10 +62,23 @@ public class StandaloneEventProcessorRuntime<B extends EventProcessorBindingPara
   }
 
   @Override
+  public void reconfigure(Map<String, Object> rawEvent) throws SpRuntimeException {
+    if (getEngine() instanceof ReconfigurableElement){
+      ((ReconfigurableElement) getEngine()).onReconfigurationEvent(EventFactory.fromMap(rawEvent));
+    }
+  }
+
+  @Override
   public void bindRuntime() throws SpRuntimeException {
     bindEngine();
     getInputCollectors().forEach(is -> is.registerConsumer(instanceId, this));
     prepareRuntime();
+
+    if (getEngine() instanceof ReconfigurableElement){
+      SpInputCollector reconfigurationInputCollector = getReconfigurationInputCollector();
+      reconfigurationInputCollector.registerConsumer(instanceId, this);
+      reconfigurationInputCollector.connect();
+    }
   }
 
   @Override
@@ -82,6 +97,11 @@ public class StandaloneEventProcessorRuntime<B extends EventProcessorBindingPara
     }
 
     getOutputCollector().disconnect();
+
+    if(getEngine() instanceof ReconfigurableElement){
+      getReconfigurationInputCollector().unregisterConsumer(instanceId);
+      getReconfigurationInputCollector().disconnect();
+    }
   }
 
   @Override

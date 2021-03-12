@@ -18,10 +18,20 @@
 package org.apache.streampipes.node.controller.container.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.container.model.node.InvocableRegistration;
+import org.apache.streampipes.messaging.EventProducer;
+import org.apache.streampipes.messaging.jms.ActiveMQPublisher;
+import org.apache.streampipes.messaging.kafka.SpKafkaProducer;
+import org.apache.streampipes.messaging.mqtt.MqttPublisher;
 import org.apache.streampipes.model.Response;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+import org.apache.streampipes.model.grounding.JmsTransportProtocol;
+import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
+import org.apache.streampipes.model.grounding.MqttTransportProtocol;
+import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.node.controller.container.management.pe.InvocableElementManager;
 import org.apache.streampipes.node.controller.container.management.pe.RunningInvocableInstances;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
@@ -30,6 +40,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.nio.charset.StandardCharsets;
 
 @Path("/api/v2/node/element")
 public class InvocableEntityResource extends AbstractResource {
@@ -89,11 +100,14 @@ public class InvocableEntityResource extends AbstractResource {
     // Adaptation
     @POST
     @JacksonSerialized
-    @Path("/adapt")
+    @Path("{identifier}/{elementId}/{runningInstanceId}/adapt")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public javax.ws.rs.core.Response adapt() {
-        //TODO: Push adaptation to pipeline element adaptation topic that is received via side-input in on configure.
-        return ok();
+    public javax.ws.rs.core.Response adapt(@PathParam("identifier") String identifier,
+                                           @PathParam("elementId") String elementId,
+                                           @PathParam("runningInstanceId") String runningInstanceId,
+                                           String payload) {
+        InvocableStreamPipesEntity graph = RunningInvocableInstances.INSTANCE.get(runningInstanceId);
+        return ok(InvocableElementManager.getInstance().adapt(graph, payload));
     }
 }

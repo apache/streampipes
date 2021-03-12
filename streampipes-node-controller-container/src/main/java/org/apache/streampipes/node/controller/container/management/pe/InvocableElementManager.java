@@ -18,14 +18,23 @@
 package org.apache.streampipes.node.controller.container.management.pe;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonSyntaxException;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.container.model.node.InvocableRegistration;
+import org.apache.streampipes.messaging.EventProducer;
+import org.apache.streampipes.messaging.jms.ActiveMQPublisher;
+import org.apache.streampipes.messaging.kafka.SpKafkaProducer;
+import org.apache.streampipes.messaging.mqtt.MqttPublisher;
 import org.apache.streampipes.model.Response;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+import org.apache.streampipes.model.grounding.JmsTransportProtocol;
+import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
+import org.apache.streampipes.model.grounding.MqttTransportProtocol;
+import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.model.node.NodeInfoDescription;
 import org.apache.streampipes.node.controller.container.config.NodeControllerConfig;
 import org.apache.streampipes.node.controller.container.management.node.NodeManager;
@@ -34,6 +43,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 
@@ -113,6 +123,38 @@ public class InvocableElementManager implements PipelineElementLifeCycle {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public Response adapt(InvocableStreamPipesEntity graph, String reconfigurationEvent) {
+        ObjectMapper mapper = new ObjectMapper();
+        Response r = new Response();
+        r.setElementId(graph.getElementId());
+        r.setSuccess(false);
+        try{
+            TransportProtocol tp = mapper.readValue(mapper.writeValueAsString(graph.getInputStreams().get(0)
+                    .getEventGrounding().getTransportProtocol()), graph.getInputStreams().get(0)
+                    .getEventGrounding().getTransportProtocol().getClass());
+            tp.getTopicDefinition().setActualTopicName("org.apache.streampipes.control.event.reconfigure."
+                    + graph.getDeploymentRunningInstanceId());
+            EventProducer pub;
+            if(tp instanceof KafkaTransportProtocol){
+                pub = new SpKafkaProducer();
+                pub.connect(tp);
+            }else if (tp instanceof JmsTransportProtocol){
+                pub = new ActiveMQPublisher();
+                pub.connect(tp);
+            } else{
+                pub = new MqttPublisher();
+                pub.connect(tp);
+            }
+            pub.publish(reconfigurationEvent.getBytes(StandardCharsets.UTF_8));
+            pub.disconnect();
+            r.setSuccess(true);
+        } catch (JsonProcessingException e) {
+            r.setOptionalMessage(e.getMessage());
+        }
+        return r;
     }
 
     private void updateAndSyncNodeInfoDescription(InvocableRegistration registration) {

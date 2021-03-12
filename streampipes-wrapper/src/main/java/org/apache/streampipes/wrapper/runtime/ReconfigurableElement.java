@@ -15,15 +15,13 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.wrapper.routing;
+package org.apache.streampipes.wrapper.runtime;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.model.runtime.Event;
 
-import java.util.Map;
+public interface ReconfigurableElement {
 
-public interface RawDataProcessor {
+    void onReconfigurationEvent(Event event) throws SpRuntimeException;
 
-  void process(Map<String, Object> rawEvent, String sourceInfo) throws SpRuntimeException;
-
-  default void reconfigure(Map<String, Object> rawEvent) throws SpRuntimeException {}
 }
