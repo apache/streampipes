@@ -16,7 +16,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: connect-worker
+  name: connect-worker-main
 spec:
   selector:
     app: connect-worker
