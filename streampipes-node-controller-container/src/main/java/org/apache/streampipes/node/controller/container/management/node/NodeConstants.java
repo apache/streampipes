@@ -28,7 +28,7 @@ import org.apache.streampipes.model.node.resources.hardware.DISK;
 import org.apache.streampipes.model.node.resources.hardware.GPU;
 import org.apache.streampipes.model.node.resources.hardware.MEM;
 import org.apache.streampipes.node.controller.container.config.NodeControllerConfig;
-import org.apache.streampipes.node.controller.container.management.orchestrator.docker.DockerInfo;
+import org.apache.streampipes.node.controller.container.management.orchestrator.docker.model.DockerInfo;
 import org.apache.streampipes.node.controller.container.management.orchestrator.docker.utils.DockerUtils;
 import oshi.SystemInfo;
 import oshi.hardware.ComputerSystem;
@@ -54,7 +54,7 @@ public class NodeConstants {
 
     // accessible node constants
     public static final String NODE_CONTROLLER_ID = NodeControllerConfig.INSTANCE.getNodeControllerId();
-    public static final String NODE_HOSTNAME = NodeControllerConfig.INSTANCE.getNodeHostName();
+    public static final String NODE_HOSTNAME = NodeControllerConfig.INSTANCE.getNodeHost();
     public static final int NODE_PORT = NodeControllerConfig.INSTANCE.getNodeControllerPort();
     public static final String NODE_BROKER_HOST = NodeControllerConfig.INSTANCE.getNodeBrokerHost();
     public static final int NODE_BROKER_PORT = NodeControllerConfig.INSTANCE.getNodeBrokerPort();
@@ -74,7 +74,6 @@ public class NodeConstants {
     public static final MEM NODE_MEMORY = getNodeMemory();
     public static final DISK NODE_DISK = getNodeDisk();
     public static final GPU NODE_GPU = getNodeGpu();
-
 
     private static List<DeploymentContainer> getRegisteredDockerContainer() {
         List<DeploymentContainer> containers = new ArrayList<>();

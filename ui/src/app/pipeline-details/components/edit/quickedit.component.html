@@ -28,6 +28,13 @@
                 <mat-icon>save</mat-icon>
                 <span>&nbsp;Update pipeline</span>
             </button>
+            <button color="primary" mat-button mat-raised-button matTooltip="Save Pipeline" matTooltipPosition="above"
+                    style="display:flex;align-items:center;" class="settings-bar-icon-button"
+                    [disabled]="(!formValid || pipelineUpdating)"
+                    (click)="reconfigurePipeline()">
+                <mat-icon>save</mat-icon>
+                <span>&nbsp;Reconfigure pipeline</span>
+            </button>
         </div>
     </div>
     <div class="sp-blue-border">

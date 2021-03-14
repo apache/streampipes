@@ -69,18 +69,17 @@ public class InvocableEntityResource extends AbstractResource {
             if (elementResponse.isSuccess()) {
                 RunningInvocableInstances.INSTANCE.add(graph.getDeploymentRunningInstanceId(), graph);
             }
+
             return ok(elementResponse);
-        }
-        // Currently no data sinks are registered at node controller. If we, at some point, want to also run data
-        // sinks on edge nodes we need to register there Declarer at the node controller one startup.
-        else if (identifier.equals(DATA_SINK_PREFIX)) {
+
+        } else if (identifier.equals(DATA_SINK_PREFIX)) {
             Response elementResponse = InvocableElementManager.getInstance().invoke(graph);
             if (elementResponse.isSuccess()) {
                 RunningInvocableInstances.INSTANCE.add(graph.getDeploymentRunningInstanceId(), graph);
             }
+
             return ok(elementResponse);
         }
-
         return ok();
     }
 

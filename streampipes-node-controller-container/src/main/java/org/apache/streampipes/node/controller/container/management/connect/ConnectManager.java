@@ -32,6 +32,7 @@ import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.connect.worker.ConnectWorkerContainer;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.node.controller.container.config.NodeControllerConfig;
+import org.apache.streampipes.node.controller.container.management.orchestrator.docker.DockerConstants;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,15 +46,15 @@ public class ConnectManager {
     private static final String HTTP_PROTOCOL = "http://";
     private static final String COLON = ":";
     private static final String SLASH = "/";
-    private static final String BACKEND_HOST = NodeControllerConfig.INSTANCE.getBackendHost();
-    private static final int BACKEND_PORT = NodeControllerConfig.INSTANCE.getBackendPort();
+    private static final String BACKEND_HOST = NodeControllerConfig.INSTANCE.backendLocation();
+    private static final int BACKEND_PORT = NodeControllerConfig.INSTANCE.backendPort();
     private static final String BACKEND_ADMINISTRATION_ROUTE = "/streampipes-backend/api/v2/connect/{username}/master" +
             "/administration";
 
     // Connect adapter base route
     // TODO: get from registered extensions or connect adapater config
-    private static final String CONNECT_WORKER_HOST = "localhost";
-    private static final int CONNECT_WORKER_PORT = 7024;
+    private static final String CONNECT_WORKER_HOST = DockerConstants.SP_CONTAINER_EXTENSIONS_NAME;
+    private static final int CONNECT_WORKER_PORT = 8090;
     private static final String CONNECT_WORKER_BASE_ROUTE = "/api/v1/{username}/worker";
     private static final String STREAM_ROUTE = "/stream";
     private static final String SET_ROUTE = "/set";
@@ -62,7 +63,7 @@ public class ConnectManager {
     private static final String GUESS_ROUTE = "/guess/schema";
     private static final String RESOLVABLE_ROUTE = "/resolvable/{id}/configurations";
     private static final String ADAPTER_ROUTE = "/adapters/{id}/assets";
-    private static final String PROCOTOL_ROUTE = "/protocols/{id}/assets";
+    private static final String PROTOCOL_ROUTE = "/protocols/{id}/assets";
 
     private static final Integer CONNECT_TIMEOUT = 10000;
     private static final Integer SOCKET_TIMEOUT = 100000;
@@ -145,9 +146,9 @@ public class ConnectManager {
             }
         } else if ("protocol".equals(assetType)) {
             if (subroute.isEmpty()) {
-                endpoint = endpointFromStringRoute(username, PROCOTOL_ROUTE.replace("{id}", appId));
+                endpoint = endpointFromStringRoute(username, PROTOCOL_ROUTE.replace("{id}", appId));
             } else {
-                endpoint = endpointFromStringRoute(username, (PROCOTOL_ROUTE.replace("{id}", appId) + subroute));
+                endpoint = endpointFromStringRoute(username, (PROTOCOL_ROUTE.replace("{id}", appId) + subroute));
             }
         }
         return get(endpoint);
@@ -215,6 +216,9 @@ public class ConnectManager {
     }
 
     private String workerUrl() {
+        if("true".equals(System.getenv("SP_DEBUG"))) {
+            return HTTP_PROTOCOL + "localhost" + COLON + "7024";
+        }
         return HTTP_PROTOCOL + CONNECT_WORKER_HOST + COLON + CONNECT_WORKER_PORT;
     }
 

@@ -82,9 +82,9 @@
                                 </button>
                             </div>
                             <mat-card-title
-                                    style="font-size: 12pt">{{node.nodeControllerId}}</mat-card-title>
+                                    style="font-size: 12pt">{{node.hostname}}</mat-card-title>
                             <mat-card-subtitle style="font-size: 10pt">
-                                {{node.hostname}} | <b>{{node.nodeResources.softwareResource.os}}</b>
+                                {{node.nodeControllerId}} | <b>{{node.nodeResources.softwareResource.os}}</b>
                                 <div style="color: lightgrey;">
                                     last contact: {{currentTimestamp}}
                                 </div>
@@ -119,9 +119,9 @@
                                         <b>{{nvidiaRuntime(node)}}</b></li>
                                 </ul>
                             </div>
-                            <div *ngFor="let container of node.registeredContainers">
-                                <span>{{container.containerName}}</span>
-                            </div>
+<!--                            <div *ngFor="let container of node.registeredContainers">-->
+<!--                                <span>{{container.containerName}}</span>-->
+<!--                            </div>-->
                         </mat-card-content>
                         <mat-card-actions>
                         </mat-card-actions>

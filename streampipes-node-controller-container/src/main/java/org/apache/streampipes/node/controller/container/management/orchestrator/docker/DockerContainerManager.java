@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.node.controller.container.management.orchestrator.docker;
 
-import com.google.common.collect.ImmutableMap;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
 import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.exceptions.NotFoundException;
@@ -25,12 +25,14 @@ import com.spotify.docker.client.messages.Container;
 import org.apache.commons.lang.StringUtils;
 import org.apache.streampipes.container.util.ConsulUtil;
 import org.apache.streampipes.model.node.container.DockerContainer;
+import org.apache.streampipes.node.controller.container.management.node.NodeManager;
 import org.apache.streampipes.node.controller.container.management.orchestrator.ContainerOrchestrator;
+import org.apache.streampipes.node.controller.container.management.orchestrator.ContainerDeploymentStatus;
 import org.apache.streampipes.node.controller.container.management.orchestrator.docker.utils.DockerUtils;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.Serializable;
 import java.util.*;
 
 public class DockerContainerManager implements ContainerOrchestrator {
@@ -55,64 +57,55 @@ public class DockerContainerManager implements ContainerOrchestrator {
 
     @Override
     public void init() {
-        DockerConstants.NodeContainer.INSTANCE.getAllStreamPipesContainer().forEach(this::deploy);
+        DockerConstants.NodeContainer.INSTANCE.getAllStreamPipesContainer().forEach(container -> {
+            ContainerDeploymentStatus status = deploy(container);
+
+            if (status.getStatus() == DockerConstants.ContainerStatus.DEPLOYED) {
+                NodeManager.getInstance().addToRegisteredContainers(status.getContainer());
+            }
+        });
     }
 
     @Override
-    public String deploy(DockerContainer p) {
-        LOG.info("Pull image and deploy pipeline element container {}", p.getImageUri());
+    public ContainerDeploymentStatus deploy(DockerContainer container) {
 
-        Optional<Container> containerOptional = docker.getContainer(p.getContainerName());
+        LOG.info("Pull image and deploy pipeline element container {}", container.getImageUri());
+        Optional<Container> containerOptional = docker.getContainer(container.getContainerName());
         if (!containerOptional.isPresent()) {
-            LOG.info("Deploy pipeline element container \"" + p.getImageUri() + "\"");
+            LOG.info("Deploy pipeline element container \"" + container.getImageUri() + "\"");
             String containerId = "";
             try {
-                containerId = deployPipelineElementContainer(p);
+                containerId = deployPipelineElementContainer(container);
             } catch (Exception e) {
                 LOG.error("Could not deploy pipeline element. {}", e.toString());
+                return generateContainerStatus(containerId, container, DockerConstants.ContainerStatus.FAILED);
             }
             LOG.info("Finished pull image and deployed pipeline element container");
-            ImmutableMap<String, ? extends Serializable> m = ImmutableMap.of(
-                    "pipelineElementContainer", p.getContainerName(),
-                    "containerId", containerId,
-                    "status", DockerConstants.ContainerStatus.DEPLOYED
-            );
-            return new Gson().toJson(m);
+            return generateContainerStatus(containerId, container, DockerConstants.ContainerStatus.DEPLOYED);
         }
-        LOG.info("Container already running {}", p.getContainerName());
-        ImmutableMap<String, ? extends Serializable> m = ImmutableMap.of(
-                "message", "Pipeline element container already running",
-                "status", DockerConstants.ContainerStatus.RUNNING
-        );
-        return new Gson().toJson(m);
+        LOG.info("Container already running {}", container.getContainerName());
+        return generateContainerStatus(containerOptional.get().id(), container, DockerConstants.ContainerStatus.RUNNING);
     }
 
     @Override
-    public String remove(DockerContainer p) {
-        LOG.info("Remove pipeline element container: {}", p.getImageUri());
+    public ContainerDeploymentStatus remove(DockerContainer container) {
+        LOG.info("Remove pipeline element container: {}", container.getImageUri());
 
-        Optional<com.spotify.docker.client.messages.Container> containerOptional = docker.getContainer(p.getContainerName());
+        Optional<com.spotify.docker.client.messages.Container> containerOptional = docker.getContainer(container.getContainerName());
         if(containerOptional.isPresent()) {
 
-            docker.forceRemove(p.getContainerName());
+            docker.forceRemove(container.getContainerName());
 
             // deregister and delete kv pair in service in consul
-            ConsulUtil.deregisterService(p.getServiceId());
-            ConsulUtil.deleteConfig(p.getServiceId());
+            ConsulUtil.deregisterService(container.getServiceId());
+            ConsulUtil.deleteConfig(container.getServiceId());
 
-            ImmutableMap<String, ? extends Serializable> m = ImmutableMap.of(
-                    "message",
-                    "Pipeline element container removed",
-                    "status", DockerConstants.ContainerStatus.REMOVED
-            );
-            return new Gson().toJson(m);
+            return generateContainerStatus(containerOptional.get().id(), container,
+                    DockerConstants.ContainerStatus.REMOVED);
+
         }
-        ImmutableMap<String, ? extends Serializable> m = ImmutableMap.of(
-                "message",
-                "Pipeline element container does not exist",
-                "status", DockerConstants.ContainerStatus.UNKNOWN
-        );
-        return new Gson().toJson(m);
+        return generateContainerStatus(containerOptional.get().id(), container,
+                DockerConstants.ContainerStatus.UNKNOWN);
     }
 
     @Override
@@ -120,39 +113,55 @@ public class DockerContainerManager implements ContainerOrchestrator {
         LOG.info("List running pipeline element container");
 
         List<Container> containerList = docker.getRunningStreamPipesContainer();
-        HashMap<String, Object> m = new HashMap<>();
+        HashMap<String, Object> containerJson = new HashMap<>();
         if (containerList.size() > 0) {
             for (Container c: containerList) {
-                m.put("containerName", StringUtils.remove(c.names().get(0), "/"));
-                m.put("containerId", c.id());
-                m.put("image", c.image());
-                m.put("state", c.state());
-                m.put("status", c.status());
-                m.put("labels", c.labels());
+                containerJson.put("containerName", StringUtils.remove(c.names().get(0), "/"));
+                containerJson.put("containerId", c.id());
+                containerJson.put("image", c.image());
+                containerJson.put("state", c.state());
+                containerJson.put("status", c.status());
+                containerJson.put("labels", c.labels());
             }
         }
-        return new Gson().toJson(m);
+        try {
+            return JacksonSerializer.getObjectMapper().writeValueAsString(containerJson);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Could not serialize container list to JSON", e);
+        }
     }
 
-    private String deployPipelineElementContainer(DockerContainer p) throws Exception {
-        return deployPipelineElementContainer(p, true);
+    private String deployPipelineElementContainer(DockerContainer container) throws Exception {
+        return deployPipelineElementContainer(container, true);
     }
 
-    private String deployPipelineElementContainer(DockerContainer p, boolean pullImage) throws Exception {
+    private String deployPipelineElementContainer(DockerContainer container, boolean pullImage) throws Exception {
         if (pullImage) {
             try {
-                docker.pullImage(p.getImageUri(), false);
+                docker.pullImage(container.getImageUri(), false);
             } catch (DockerException | InterruptedException e) {
                 LOG.error("unable to pull pipeline element container image {}", e.toString());
-                deployPipelineElementContainer(p, false);
+                deployPipelineElementContainer(container, false);
             }
         }
-        if (!pullImage && !docker.findLocalImage(p.getImageUri())) {
+        if (!pullImage && !docker.findLocalImage(container.getImageUri())) {
             throw new NotFoundException("Image not found locally");
         }
-        String containerId = docker.createContainer(p);
+        String containerId = docker.createContainer(container);
         docker.startContainer(containerId);
 
         return containerId;
+    }
+
+    private ContainerDeploymentStatus generateContainerStatus(String containerId, DockerContainer container,
+                                                              DockerConstants.ContainerStatus containerStatus) {
+        ContainerDeploymentStatus status = new ContainerDeploymentStatus();
+
+        status.setTimestamp(System.currentTimeMillis());
+        status.setContainerId(containerId);
+        status.setContainer(container);
+        status.setStatus(containerStatus);
+
+        return status;
     }
 }

@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.container.extensions;
 
-import io.undertow.server.handlers.proxy.mod_cluster.NodeConfig;
 import org.apache.streampipes.connect.adapter.Adapter;
 import org.apache.streampipes.connect.adapter.model.generic.Protocol;
 import org.apache.streampipes.connect.container.worker.management.MasterRestClient;
@@ -53,7 +52,6 @@ import org.springframework.context.annotation.Import;
 import javax.annotation.PreDestroy;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Configuration
 @EnableAutoConfiguration
@@ -90,24 +88,24 @@ public abstract class ExtensionsModelSubmitter extends ModelSubmitter<EdgeExtens
         app.setDefaultProperties(Collections.singletonMap("server.port", conf.getPort()));
         app.run();
 
+        LOG.info("Using StreamPipes Extensions Environment Variables");
+        System.getenv().entrySet().stream()
+                .filter(e -> e.getKey().startsWith("SP_"))
+                .forEach(System.out::println);
+
         // check wether pipeline element is managed by node controller
         if (System.getenv(NODE_CONTROLLER_ID) != null) {
             // secondary
             // register pipeline element service via node controller
-            NodeControllerUtil.register(
-                    conf.getId(),
-                    conf.getHost(),
-                    conf.getPort(),
-                    generateSupportedAppIds());
+            NodeControllerUtil.register(conf, generateSupportedAppIds());
 
             String nodeControllerUrl = PROTOCOL + conf.getNodeControllerHost() + COLON + conf.getNodeControllerPort();
 
             boolean connected = false;
             while (!connected) {
                 LOG.info("Trying to connect to the node controller: " + nodeControllerUrl);
-                connected = NodeControllerRestClient.register(
-                        nodeControllerUrl,
-                        getContainerDescription(conf.getHost(), conf.getPort(), true));
+                connected = NodeControllerRestClient.register(nodeControllerUrl,
+                        getContainerDescription(conf, true));
 
                 if (!connected) {
                     LOG.info("Retrying in 5 seconds");
@@ -132,8 +130,8 @@ public abstract class ExtensionsModelSubmitter extends ModelSubmitter<EdgeExtens
             boolean connected = false;
             while (!connected) {
                 LOG.info("Trying to connect to master in backend: " + backendUrl);
-                connected = MasterRestClient.register(backendUrl, getContainerDescription(conf.getHost(),
-                        conf.getPort(),  false));
+                connected = MasterRestClient.register(backendUrl,
+                        getContainerDescription(conf,  false));
 
                 if (!connected) {
                     LOG.info("Retrying in 5 seconds");
@@ -160,15 +158,17 @@ public abstract class ExtensionsModelSubmitter extends ModelSubmitter<EdgeExtens
         return supportedAppIds;
     }
 
-    private ConnectWorkerContainer getContainerDescription(String connectWorkerHost, int connectWorkerPort,
-                                                           boolean runsOnEdgeNode) {
+    private ConnectWorkerContainer getContainerDescription(EdgeExtensionsConfig conf, boolean runsOnEdgeNode) {
+
+        String connectWorkerHost = conf.getHost();
+        int connectWorkerPort = conf.getPort();
 
         String endpointUrl = PROTOCOL + connectWorkerHost + COLON + connectWorkerPort + SLASH;
 
         if (runsOnEdgeNode) {
             String deploymentTargetNodeId = System.getenv(NODE_CONTROLLER_ID);
-            String deploymentTargetNodeHostname = System.getenv(NODE_CONTROLLER_CONTAINER_HOST);
-            int deploymentTargetNodePort = Integer.parseInt(System.getenv(NODE_CONTROLLER_CONTAINER_PORT));
+            String deploymentTargetNodeHostname = conf.getNodeControllerHost();
+            int deploymentTargetNodePort = conf.getNodeControllerPort();
 
             List<AdapterDescription> adapters = new ArrayList<>();
             for (Adapter a : AdapterDeclarerSingleton.getInstance().getAllAdapters()) {

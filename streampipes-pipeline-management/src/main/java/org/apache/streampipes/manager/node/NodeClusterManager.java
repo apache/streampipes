@@ -59,6 +59,11 @@ public class NodeClusterManager extends AbstractClusterManager {
         return Notifications.error("Could not update node");
     }
 
+    public static Message syncRemoteNodeUpdateRequest(NodeInfoDescription desc) {
+        getNodeStorageApi().updateNode(desc);
+        return Notifications.success("Node updated");
+    }
+
     public static boolean deactivateNode(String nodeControllerId) {
         Optional<NodeInfoDescription> storedNode = getNodeStorageApi().getNode(nodeControllerId);
         boolean status = false;

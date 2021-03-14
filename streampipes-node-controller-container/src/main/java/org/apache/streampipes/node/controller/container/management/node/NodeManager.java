@@ -20,11 +20,13 @@ package org.apache.streampipes.node.controller.container.management.node;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
+import org.apache.streampipes.model.client.version.VersionInfo;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.model.node.*;
+import org.apache.streampipes.model.node.container.DockerContainer;
 import org.apache.streampipes.model.node.meta.GeoLocation;
 import org.apache.streampipes.node.controller.container.config.NodeControllerConfig;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
@@ -40,7 +42,9 @@ public class NodeManager {
     private static final String SLASH = "/";
     private static final String COLON = ":";
     private static final String BACKEND_BASE_ROUTE = "/streampipes-backend";
+    private static final String BACKEND_VERSION_ROUTE = "/api/v2/info/versions";
     private static final String NODE_REGISTRATION_ROUTE = "/api/v2/users/admin@streampipes.org/nodes";
+    private static final String NODE_SYNC_UPDATE_ROUTE = "/api/v2/users/admin@streampipes.org/nodes/sync";
     private static final long RETRY_INTERVAL_MS = 5000;
     private static final int CONNECT_TIMEOUT_MS = 10000;
 
@@ -94,13 +98,47 @@ public class NodeManager {
         add(nodeInfoDescription);
     }
 
+    public Message updateNodeInfoDescription(NodeInfoDescription desc) {
+        LOG.info("Update node description for node controller: {}", desc.getNodeControllerId());
+        this.nodeInfo = desc;
+        return Notifications.success(NotificationType.OPERATION_SUCCESS);
+    }
+
+    public Message activate() {
+        LOG.info("Activate node controller");
+        this.nodeInfo.setActive(true);
+        return Notifications.success(NotificationType.OPERATION_SUCCESS);
+    }
+
+    public Message deactivate() {
+        LOG.info("Deactivate node controller");
+        this.nodeInfo.setActive(false);
+        return Notifications.success(NotificationType.OPERATION_SUCCESS);
+    }
+
+    public void addToRegisteredContainers(DockerContainer container) {
+        if(!registered(container)) {
+            this.nodeInfo.addRegisteredContainer(container);
+            syncWithNodeClusterManager();
+        }
+    }
+
+    public void removeFromRegisteredContainers(DockerContainer container) {
+        if(registered(container)) {
+            this.nodeInfo.removeRegisteredContainer(container);
+            syncWithNodeClusterManager();
+        }
+    }
+
+    // Interactions with core
+
     public boolean register() {
         boolean connected = false;
         try {
             String body = JacksonSerializer.getObjectMapper().writeValueAsString(this.nodeInfo);
-            String endpoint = generateEndpoint();
+            String endpoint = generateRegistrationEndpoint();
 
-            LOG.info("Trying to register node at backend: " + endpoint);
+            LOG.info("Trying to register node at node management: " + endpoint);
 
             while (!connected) {
                 connected = post(endpoint, body);
@@ -120,47 +158,115 @@ public class NodeManager {
         return connected;
     }
 
-    public Message updateNodeInfoDescription(NodeInfoDescription desc) {
-        LOG.info("Update node description for node controller: {}", desc.getNodeControllerId());
-        this.nodeInfo = desc;
-        return Notifications.success(NotificationType.OPERATION_SUCCESS);
+
+    private boolean syncWithNodeClusterManager() {
+        boolean connected = false;
+        try {
+            String body = JacksonSerializer.getObjectMapper().writeValueAsString(this.nodeInfo);
+            String endpoint = generateSyncronizationEndpoint();
+
+            LOG.info("Trying to sync node updates with node management: " + endpoint);
+
+            while (!connected) {
+                connected = post(endpoint, body);
+                if (!connected) {
+                    LOG.info("Retrying in {} seconds", (RETRY_INTERVAL_MS / 1000));
+                    try {
+                        Thread.sleep(RETRY_INTERVAL_MS);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            LOG.info("Successfully registered node at backend");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return connected;
     }
 
-    public Message activate() {
-        LOG.info("Activate node controller");
-        this.nodeInfo.setActive(true);
-        return Notifications.success(NotificationType.OPERATION_SUCCESS);
+    public String getStreamPipesVersion() {
+        boolean connected = false;
+        VersionInfo versionInfo = new VersionInfo();
+        try {
+            String endpoint = generateVersionEndpoint();
+
+            LOG.info("Trying to fetch StreamPipes version from core: " + endpoint);
+
+            while (!connected) {
+                Response response = get(endpoint);
+                versionInfo = deserialize(response, VersionInfo.class);
+
+                if (versionInfo.getBackendVersion() != null) {
+                    connected = true;
+                }
+
+                if (!connected) {
+                    LOG.info("Retrying in {} seconds", (RETRY_INTERVAL_MS / 1000));
+                    try {
+                        Thread.sleep(RETRY_INTERVAL_MS);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            LOG.info("Successfully registered node at backend");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return versionInfo.getBackendVersion();
     }
 
-    public Message deactivate() {
-        LOG.info("Deactivate node controller");
-        this.nodeInfo.setActive(false);
-        return Notifications.success(NotificationType.OPERATION_SUCCESS);
+    private Response get(String endpoint) throws IOException {
+        return Request.Get(endpoint)
+                .connectTimeout(CONNECT_TIMEOUT_MS)
+                .addHeader("Authorization", "Bearer " + NodeControllerConfig.INSTANCE.getApiKey())
+                .execute();
     }
 
     private boolean post(String endpoint, String body) throws IOException {
         Response response = Request.Post(endpoint)
                 .bodyString(body, ContentType.APPLICATION_JSON)
                 .connectTimeout(CONNECT_TIMEOUT_MS)
+                //.addHeader("Authorization", "Bearer " + NodeControllerConfig.INSTANCE.getApiKey())
                 .execute();
         return handleResponse(response);
     }
 
+    // Helpers
+
+    private boolean registered(DockerContainer container) {
+        return this.nodeInfo.getRegisteredContainers().contains(container);
+    }
+
     private boolean handleResponse(Response response) throws IOException {
-        String resp = response.returnContent().asString();
-        SuccessMessage message = JacksonSerializer
-                .getObjectMapper()
-                .readValue(resp, SuccessMessage.class);
+        SuccessMessage message = deserialize(response, SuccessMessage.class);
         LOG.info(message.getNotifications().get(0).getDescription());
         return message.isSuccess();
     }
 
-    private String generateEndpoint() {
+    private <T> T deserialize(Response response, Class<T> clazz) throws IOException {
+        String resp = response.returnContent().asString();
+        return JacksonSerializer.getObjectMapper().readValue(resp, clazz);
+    }
+
+    private String generateRegistrationEndpoint() {
+        return generateBaseEndpoint() + NODE_REGISTRATION_ROUTE;
+    }
+
+    private String generateSyncronizationEndpoint() {
+        return generateBaseEndpoint() + NODE_SYNC_UPDATE_ROUTE;
+    }
+
+    private String generateVersionEndpoint() {
+        return generateBaseEndpoint() + BACKEND_VERSION_ROUTE;
+    }
+
+    private String generateBaseEndpoint() {
         return  PROTOCOL
-                + NodeControllerConfig.INSTANCE.getBackendHost()
+                + NodeControllerConfig.INSTANCE.backendLocation()
                 + COLON
-                + NodeControllerConfig.INSTANCE.getBackendPort()
-                + BACKEND_BASE_ROUTE
-                + NODE_REGISTRATION_ROUTE;
+                + NodeControllerConfig.INSTANCE.backendPort()
+                + BACKEND_BASE_ROUTE;
     }
 }

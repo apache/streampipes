@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.node.controller.container.management.orchestrator.docker;
+package org.apache.streampipes.node.controller.container.management.orchestrator.docker.model;
 
 public class DockerInfo {
 

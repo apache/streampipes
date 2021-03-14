@@ -27,7 +27,7 @@ import com.spotify.docker.client.messages.*;
 import com.spotify.docker.client.shaded.com.google.common.collect.ImmutableList;
 import org.apache.streampipes.model.node.container.DockerContainer;
 import org.apache.streampipes.node.controller.container.management.orchestrator.docker.DockerConstants;
-import org.apache.streampipes.node.controller.container.management.orchestrator.docker.DockerInfo;
+import org.apache.streampipes.node.controller.container.management.orchestrator.docker.model.DockerInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -128,8 +128,8 @@ public class DockerUtils {
     }
 
     private String verifyContainerName(String containerName) {
-        return containerName.startsWith(DockerConstants.SP_DOCKER_CONTAINER_NAME_PREFIX) ?
-                containerName : DockerConstants.SP_DOCKER_CONTAINER_NAME_PREFIX + containerName;
+        return containerName.startsWith(DockerConstants.SP_CONTAINER_PREFIX) ?
+                containerName : DockerConstants.SP_CONTAINER_PREFIX + containerName;
     }
 
     private ContainerConfig getContainerConfig(DockerContainer p) {
@@ -139,8 +139,8 @@ public class DockerUtils {
                 .image(p.getImageUri())
                 .labels(p.getLabels())
                 .env(p.getEnvVars())
-                .hostConfig(getHostConfig(DockerConstants.SP_DOCKER_NETWORK_NAME, p.getContainerPorts()))
-                .networkingConfig(getNetworkingConfig(DockerConstants.SP_DOCKER_NETWORK_NAME, p.getContainerName()))
+                .hostConfig(getHostConfig(DockerConstants.SP_CONTAINER_NETWORK, p.getContainerPorts()))
+                .networkingConfig(getNetworkingConfig(DockerConstants.SP_CONTAINER_NETWORK, p.getContainerName()))
                 .build();
     }
 
@@ -182,6 +182,7 @@ public class DockerUtils {
         return HostConfig.builder()
                 .portBindings(portBindings)
                 .networkMode(network)
+                .restartPolicy(HostConfig.RestartPolicy.unlessStopped())
                 .build();
     }
 
@@ -279,17 +280,10 @@ public class DockerUtils {
     }
 
     public List<Container> getRunningStreamPipesContainer() {
-
-        Map<String,String> allContainerLabels = new HashMap<>();
-        allContainerLabels.putAll(DockerConstants.SP_DOCKER_CONTAINER_EXTENSIONS_LABELS);
-        allContainerLabels.putAll(DockerConstants.SP_DOCKER_CONTAINER_BROKER_LABELS);
-
         return getContainerList()
                 .stream()
-                .filter(c -> c.labels().values().stream()
-                        .anyMatch(v -> allContainerLabels.values().stream()
-                                .anyMatch(cl -> cl.equals(v))
-                        )
+                .filter(container -> container.labels().keySet().stream()
+                        .anyMatch(key -> key.startsWith("org.apache.streampipes"))
                 )
                 .collect(Collectors.toList());
     }

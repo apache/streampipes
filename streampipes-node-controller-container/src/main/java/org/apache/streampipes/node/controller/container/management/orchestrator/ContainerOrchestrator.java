@@ -23,9 +23,9 @@ public interface ContainerOrchestrator {
 
    void init();
 
-   String deploy(DockerContainer p);
+   ContainerDeploymentStatus deploy(DockerContainer p);
 
-   String remove(DockerContainer p);
+   ContainerDeploymentStatus remove(DockerContainer p);
 
    String list();
 

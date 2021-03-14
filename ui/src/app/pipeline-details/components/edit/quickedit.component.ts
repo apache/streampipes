@@ -146,5 +146,14 @@ export class QuickEditComponent implements OnInit, AfterViewInit{
         this.isInvocable = this._selectedElement instanceof DataProcessorInvocation ||
             this._selectedElement instanceof DataSinkInvocation;
     }
+
+    reconfigurePipeline() {
+        this.pipelineUpdating = true;
+        this.updatePipelineElement();
+        this.pipelineService.reconfigurePipeline(this.pipeline).subscribe(data => {
+            this.reloadPipelineEmitter.emit();
+            this.pipelineUpdating = false;
+        });
+    }
 }
 

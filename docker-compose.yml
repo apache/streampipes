@@ -51,24 +51,6 @@ services:
     networks:
       spnet:
 
-  connect-master:
-    build:
-      context: ./streampipes-connect-container-master
-      dockerfile: Dockerfile
-      args:
-        BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine
-    image: incubator-streampipes_connect-master:release-validation
-    depends_on:
-      - consul
-      - couchdb
-    environment:
-      - EXECUTION_MODE=MASTER
-      - SP_CONNECT_CONTAINER_HOST=connect-master
-      - SP_CONNECT_CONTAINER_WORKER=connect-worker
-    logging: *default-logging
-    networks:
-      spnet:
-
   ui:
     build:
       context: ./ui
@@ -82,7 +64,6 @@ services:
       - couchdb
       - activemq
       - consul
-      - connect-master
       - backend
     logging: *default-logging
     networks:

@@ -264,6 +264,28 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
     return statusMessage(Notifications.success("Pipeline modified"));
   }
 
+  @PUT
+  @Path("/reconfigure/{pipelineId}")
+  @Produces(MediaType.APPLICATION_JSON)
+  @JacksonSerialized
+  @Operation(summary = "Live pipeline element reconfiguration of an existing pipeline",
+          tags = {"Pipeline"})
+  public Response reconfigurePipelineElements(@PathParam("username") String username,
+                                    @PathParam("pipelineId") String pipelineId,
+                                    Pipeline reconfiguredPipeline) {
+    // check which elements got adapted (stored vs new pipeline) for which deployment target
+    // transform modified graphs (graphs = DataProcessorInvokation) to JSON payload (light):
+    // { "id" : "<runningInstanceId"
+    // POST /<runninginstanceid> with payload(JSON per modified graph)
+    // lookup(runninginstanceid) -> pub.connect(broker) -> pub.publish(event)
+    try {
+      return ok(Operations.handlePipelineElementReconfiguration(reconfiguredPipeline, true));
+    } catch (Exception e) {
+      e.printStackTrace();
+      return statusMessage(Notifications.error(NotificationType.UNKNOWN_ERROR));
+    }
+  }
+
   @POST
   @Path("/migrate/{pipelineId}")
   @Produces(MediaType.APPLICATION_JSON)

@@ -109,4 +109,12 @@ export class PipelineService {
           return (response as any[]).map(r => PipelineStatusMessage.fromData(r));
         }));
   }
+
+  reconfigurePipeline(pipeline: Pipeline): Observable<PipelineElementStatus> {
+    var pipelineId = pipeline._id;
+    return this.http.put(this.platformServicesCommons.authUserBasePath() + "/pipelines/reconfigure/" + pipelineId, pipeline)
+        .pipe(map(response => {
+          return PipelineElementStatus.fromData(response as PipelineElementStatus);
+        }));
+  }
 }

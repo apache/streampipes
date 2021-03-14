@@ -16,9 +16,10 @@
 ARG BASE_IMAGE=arm64v8/openjdk:11-jre-slim
 FROM $BASE_IMAGE
 
-ENV CONSUL_LOCATION consul
+MAINTAINER dev@streampipes.apache.org
 
 EXPOSE 7077
+ENV CONSUL_LOCATION consul
 
 COPY qemu-aarch64-static /usr/bin
 RUN set -ex; \

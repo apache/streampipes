@@ -81,7 +81,7 @@ public class ConsulUtil {
    * @param port  port of pipeline element service endpoint
    */
   public static void registerPeService(String svcId, String host, int port) {
-    registerService(PE_SVC_TAG, makeUniqueSvcId(host, svcId), host, port, makeSvcTags());
+    registerService(PE_SVC_TAG, makeUniqueSvcId(host, svcId), host, port, "", makeSvcTags());
   }
 
   /**
@@ -91,9 +91,11 @@ public class ConsulUtil {
    * @param svcId unique service id
    * @param host  host address of node controller service endpoint
    * @param port  port of node controller service endpoint
+   * @param healthCheckEndpoint endpoint to perform healthcheck
    */
-  public static void registerNodeService(String svcId, String host, int port) {
-    registerService(NODE_SVC_TAG, makeUniqueSvcId(host, svcId), host, port, Collections.singletonList(NODE_SVC_TAG));
+  public static void registerNodeService(String svcId, String host, int port, String healthCheckEndpoint) {
+    registerService(NODE_SVC_TAG, makeUniqueSvcId(host, svcId), host, port, healthCheckEndpoint,
+            Collections.singletonList(NODE_SVC_TAG));
   }
 
   /**
@@ -105,12 +107,14 @@ public class ConsulUtil {
    * @param port      port of service endpoint
    * @param tags      tags of service
    */
-  public static void registerService(String svcGroup, String svcId, String host, int port, List<String> tags) {
+  public static void registerService(String svcGroup, String svcId, String host, int port,
+                                     String healthcheckRoute, List<String> tags) {
     boolean connected = false;
 
     while (!connected) {
       LOG.info("Trying to register service at Consul: " + svcId);
-      ConsulServiceRegistrationBody svcRegistration = createRegistrationBody(svcGroup, svcId, host, port, tags);
+      ConsulServiceRegistrationBody svcRegistration = createRegistrationBody(svcGroup, svcId, host, port,
+              healthcheckRoute, tags);
       connected = registerServiceHttpClient(svcRegistration);
 
       if (!connected) {
@@ -355,7 +359,12 @@ public class ConsulUtil {
   }
 
   private static ConsulServiceRegistrationBody createRegistrationBody(String svcGroup, String id, String host,
-                                                                      int port, List<String> tags) {
+                                                                      int port, String healthcheckRoute,
+                                                                      List<String> tags) {
+    String endpoint = HTTP_PROTOCOL + host + COLON + port;
+    if (healthcheckRoute != null) {
+      endpoint = endpoint + healthcheckRoute;
+    }
     ConsulServiceRegistrationBody body = new ConsulServiceRegistrationBody();
     body.setID(id);
     body.setName(svcGroup);
@@ -363,8 +372,7 @@ public class ConsulUtil {
     body.setAddress(HTTP_PROTOCOL + host);
     body.setPort(port);
     body.setEnableTagOverride(true);
-    body.setCheck(new HealthCheckConfiguration("GET",
-            (HTTP_PROTOCOL + host + COLON + port), HEALTH_CHECK_INTERVAL));
+    body.setCheck(new HealthCheckConfiguration("GET", endpoint, HEALTH_CHECK_INTERVAL));
 
     return body;
   }

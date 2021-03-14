@@ -18,13 +18,25 @@
 package org.apache.streampipes.node.controller.container.config;
 
 public class ConfigKeys {
+    // required
+    public static final String SP_URL = "SP_URL";
+    public static final String SP_NODE_CONTROLLER_URL = "SP_NODE_CONTROLLER_URL";
+    public static final String SP_API_KEY = "SP_API_KEY";
+
     public static final String NODE_TYPE = "SP_NODE_TYPE";
     public static final String NODE_HOST = "SP_NODE_HOST";
+
     public static final String NODE_CONTROLLER_ID = "SP_NODE_CONTROLLER_ID";
     public static final String NODE_CONTROLLER_CONTAINER_HOST = "SP_NODE_CONTROLLER_CONTAINER_HOST";
     public static final String NODE_CONTROLLER_CONTAINER_PORT = "SP_NODE_CONTROLLER_CONTAINER_PORT";
+
     public static final String NODE_BROKER_CONTAINER_HOST = "SP_NODE_BROKER_CONTAINER_HOST";
     public static final String NODE_BROKER_CONTAINER_PORT = "SP_NODE_BROKER_CONTAINER_PORT";
+
+    public static final String BACKEND_HOST = "SP_BACKEND_HOST";
+    public static final String BACKEND_PORT = "SP_BACKEND_PORT";
+
+    // optional
     public static final String NODE_LOCATION = "SP_NODE_LOCATION";
     public static final String NODE_HAS_GPU = "SP_NODE_HAS_GPU";
     public static final String NODE_GPU_CUDA_CORES = "SP_NODE_GPU_CUDA_CORES";
@@ -35,6 +47,4 @@ public class ConfigKeys {
     public static final String RESOURCE_UPDATE_FREQ_SECS = "SP_NODE_RESOURCE_UPDATE_FREQ_SECS";
     public static final String EVENT_BUFFER_SIZE = "SP_NODE_EVENT_BUFFER_SIZE";
     public static final String SP_VERSION = "SP_VERSION";
-    public static final String BACKEND_HOST = "SP_BACKEND_HOST";
-    public static final String BACKEND_PORT = "SP_BACKEND_PORT";
 }

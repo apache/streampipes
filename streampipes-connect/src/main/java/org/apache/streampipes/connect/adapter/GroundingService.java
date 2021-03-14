@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.connect.adapter;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.config.backend.SpEdgeNodeProtocol;
 import org.apache.streampipes.config.backend.SpProtocol;
@@ -33,8 +34,11 @@ import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
 import org.apache.streampipes.model.grounding.TopicDefinition;
 import org.apache.streampipes.model.grounding.TransportProtocol;
+import org.apache.streampipes.model.node.NodeInfoDescription;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.Collections;
+import java.util.Optional;
 import java.util.UUID;
 
 public class GroundingService {
@@ -94,23 +98,24 @@ public class GroundingService {
             if (isEdgeProtocol(edgeNodeProtocol, MqttTransportProtocol.class)) {
 
                 if (adapterDescription instanceof GenericAdapterDescription) {
-                    String deploymentTargetNodeHostname = ((GenericAdapterDescription) adapterDescription)
+
+                    String nodeControllerId = ((GenericAdapterDescription) adapterDescription)
                             .getProtocolDescription()
-                            .getDeploymentTargetNodeHostname();
+                            .getDeploymentTargetNodeId();
 
-                    eventGrounding.setTransportProtocol(
-                            makeMqttTransportProtocol(
-                                    getTargetNodeBrokerHost(deploymentTargetNodeHostname),
-                                    getTargetNodeBrokerPort(deploymentTargetNodeHostname),
-                                    topicDefinition));
+                    MqttTransportProtocol brokerTransportProtocol =
+                            (MqttTransportProtocol) getNodeBrokerTransportProtocol(nodeControllerId);
+                    brokerTransportProtocol.setTopicDefinition(topicDefinition);
+
+                    eventGrounding.setTransportProtocol(brokerTransportProtocol);
                 } else {
-                    String deploymentTargetNodeHostname = adapterDescription.getDeploymentTargetNodeHostname();
 
-                    eventGrounding.setTransportProtocol(
-                            makeMqttTransportProtocol(
-                                    getTargetNodeBrokerHost(deploymentTargetNodeHostname),
-                                    getTargetNodeBrokerPort(deploymentTargetNodeHostname),
-                                    topicDefinition));
+                    String nodeControllerId = adapterDescription.getDeploymentTargetNodeId();
+                    MqttTransportProtocol brokerTransportProtocol =
+                            (MqttTransportProtocol) getNodeBrokerTransportProtocol(nodeControllerId);
+                    brokerTransportProtocol.setTopicDefinition(topicDefinition);
+
+                    eventGrounding.setTransportProtocol(brokerTransportProtocol);
                 }
             }
 
@@ -188,19 +193,15 @@ public class GroundingService {
         protocol.setTopicDefinition(topicDefinition);
     }
 
-    private static String getTargetNodeBrokerHost(String deploymentTargetNodeHostname) {
-        // TODO: no hardcoded route - only for testing
-        return ConsulUtil.getValueForRoute(
-                "sp/v1/node/org.apache.streampipes.node.controller/"
-                        + deploymentTargetNodeHostname
-                        + "/config/SP_NODE_BROKER_CONTAINER_HOST", String.class);
+    private static TransportProtocol getNodeBrokerTransportProtocol(String id) {
+        Optional<NodeInfoDescription> nodeInfoDescription = getNodeInfoDescriptionForId(id);
+        if (nodeInfoDescription.isPresent()) {
+            return nodeInfoDescription.get().getNodeBroker().getNodeTransportProtocol();
+        }
+        throw new SpRuntimeException("Could not find node description for id: " + id);
     }
 
-    private static int getTargetNodeBrokerPort(String deploymentTargetNodeHostname) {
-        // TODO: no hardcoded route - only for testing
-        return ConsulUtil.getValueForRoute(
-                "sp/v1/node/org.apache.streampipes.node.controller/"
-                        + deploymentTargetNodeHostname
-                        + "/config/SP_NODE_BROKER_CONTAINER_PORT", Integer.class);
+    private static Optional<NodeInfoDescription> getNodeInfoDescriptionForId(String id){
+        return StorageDispatcher.INSTANCE.getNoSqlStore().getNodeStorage().getNode(id);
     }
 }

@@ -27,6 +27,8 @@ public interface INode {
 
     Response updateNode(String username, String nodeControllerId, NodeInfoDescription desc);
 
+    Response syncRemoteUpdateFromNodeController(String username, NodeInfoDescription desc);
+
     Response deleteNode(String username, String nodeControllerId);
 
     Response changeNodeState(String action, String username, String nodeControllerId);

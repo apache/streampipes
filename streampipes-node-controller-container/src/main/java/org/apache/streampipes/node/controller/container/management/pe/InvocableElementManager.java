@@ -43,9 +43,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class InvocableElementManager implements PipelineElementLifeCycle {
 
@@ -55,7 +58,10 @@ public class InvocableElementManager implements PipelineElementLifeCycle {
     private static final String HTTP_PROTOCOL = "http://";
     private static final String COLON = ":";
     private static final String SLASH = "/";
-    private static final String ENV_CONSUL_LOCATION = "CONSUL_LOCATION";
+    private static final String SP_URL = "SP_URL";
+    private static final String CONSUL_LOCATION = "CONSUL_LOCATION";
+    private static final String CONSUL_REGISTRATION_ROUTE = "v1/agent/service/register";
+    private static final int CONSUL_DEFAULT_PORT = 8500;
     private static final Integer CONNECT_TIMEOUT = 10000;
     private static InvocableElementManager instance = null;
 
@@ -182,9 +188,9 @@ public class InvocableElementManager implements PipelineElementLifeCycle {
 
     private String generateBackendEndpoint() {
         return HTTP_PROTOCOL
-                + NodeControllerConfig.INSTANCE.getBackendHost()
+                + NodeControllerConfig.INSTANCE.backendLocation()
                 + COLON
-                + NodeControllerConfig.INSTANCE.getBackendPort()
+                + NodeControllerConfig.INSTANCE.backendPort()
                 + SLASH
                 + "streampipes-backend/api/v2/users/admin@streampipes.org/nodes"
                 + SLASH
@@ -193,7 +199,8 @@ public class InvocableElementManager implements PipelineElementLifeCycle {
 
     private void registerAtConsul(InvocableRegistration registration) {
         try {
-            Request.Put(makeConsulRegistrationEndpoint())
+            String endpoint = consulURL().toString() + SLASH + CONSUL_REGISTRATION_ROUTE;
+            Request.Put(endpoint)
                     .addHeader("accept", "application/json")
                     .body(new StringEntity(toJson(registration.getConsulServiceRegistrationBody())))
                     .execute();
@@ -210,22 +217,31 @@ public class InvocableElementManager implements PipelineElementLifeCycle {
                 .readValue(resp, Response.class);
     }
 
-    private String makeConsulRegistrationEndpoint() {
-        if (System.getenv(ENV_CONSUL_LOCATION) != null) {
-            return HTTP_PROTOCOL
-                    + System.getenv(ENV_CONSUL_LOCATION)
-                    + COLON
-                    + "8500"
-                    + SLASH
-                    + "v1/agent/service/register";
+    private static URL consulURL() {
+        Map<String, String> env = System.getenv();
+        URL url = null;
+
+        if (env.containsKey(SP_URL)) {
+            try {
+                URL coreServerUrl = new URL(env.get(SP_URL));
+                url = new URL("http", coreServerUrl.getHost(), CONSUL_DEFAULT_PORT, "");
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+        } else if (env.containsKey(CONSUL_LOCATION)) {
+            try {
+                url = new URL("http", env.get(CONSUL_LOCATION), CONSUL_DEFAULT_PORT, "");
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
         } else {
-            return HTTP_PROTOCOL
-                    + "localhost"
-                    + COLON
-                    + "8500"
-                    + SLASH
-                    + "v1/agent/service/register";
+            try {
+                url = new URL("http", "localhost", CONSUL_DEFAULT_PORT, "");
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
         }
+        return url;
     }
 
     private <T> String toJson(T element) {

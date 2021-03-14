@@ -18,7 +18,6 @@
 package org.apache.streampipes.node.controller.container;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.container.util.ConsulUtil;
 import org.apache.streampipes.node.controller.container.management.orchestrator.docker.DockerContainerManager;
 import org.apache.streampipes.node.controller.container.api.NodeControllerResourceConfig;
 import org.apache.streampipes.node.controller.container.config.NodeControllerConfig;
@@ -51,6 +50,11 @@ public class NodeControllerInit {
         app.setDefaultProperties(Collections.singletonMap("server.port", conf.getNodeControllerPort()));
         app.run();
 
+        LOG.info("Configured environment variables");
+        System.getenv().entrySet().stream()
+                .filter(e -> e.getKey().startsWith("SP_"))
+                .forEach(System.out::println);
+
         LOG.info("Load node info description");
         NodeManager.getInstance().init();
 
@@ -68,13 +72,6 @@ public class NodeControllerInit {
                 LOG.info("Start janitor manager");
                 JanitorManager.getInstance().run();
             }
-
-            // registration with consul here
-            ConsulUtil.registerNodeService(
-                    conf.getNodeServiceId(),
-                    conf.getNodeHostName(),
-                    conf.getNodeControllerPort()
-            );
         } else throw new SpRuntimeException("Could not register node controller at backend");
     }
 

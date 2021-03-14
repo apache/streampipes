@@ -21,50 +21,54 @@ import org.apache.streampipes.model.node.container.DockerContainer;
 import org.apache.streampipes.model.node.container.DockerContainerBuilder;
 import org.apache.streampipes.node.controller.container.config.ConfigKeys;
 import org.apache.streampipes.node.controller.container.config.NodeControllerConfig;
+import org.apache.streampipes.node.controller.container.management.node.NodeManager;
 
 import java.util.*;
 
 public class DockerConstants {
 
-    public static final String SP_DOCKER_CONTAINER_REPOSITORY = "apachestreampipes";
-    public static final String SP_VERSION = NodeControllerConfig.INSTANCE.getSpVersion();
-    public static final String SP_DOCKER_CONTAINER_NAME_PREFIX = "streampipes_";
-    public static final String SP_DOCKER_NETWORK_NAME = "spnet";
+    public static final String SP_VERSION =
+            !NodeControllerConfig.INSTANCE.getSpVersion().equals("") ?
+                    NodeControllerConfig.INSTANCE.getSpVersion() :  NodeManager.getInstance().getStreamPipesVersion();
+    public static final String SP_CONTAINER_PREFIX = "streampipes-";
+    public static final String SP_CONTAINER_NETWORK = "spnet";
 
     // extensions container
     public static final String SP_EXTENSIONS_ID = "pe/org.apache.streampipes.extensions.all.jvm";
-    public static final String SP_DOCKER_IMAGE_EXTENSIONS_NAME = "extensions-all-jvm";
-    public static final String SP_DOCKER_CONTAINER_EXTENSIONS_IMG_TAG = SP_DOCKER_CONTAINER_REPOSITORY +
-            "/" + SP_DOCKER_IMAGE_EXTENSIONS_NAME + ":" + SP_VERSION;
-    public static final String SP_DOCKER_CONTAINER_EXTENSIONS_NAME = SP_DOCKER_CONTAINER_NAME_PREFIX + "extensions";
-    public static final String[] SP_DOCKER_CONTAINER_EXTENSIONS_PORT = new String[]{"7025"};
+    public static final String SP_IMG_EXTENSIONS = "apachestreampipes/extensions-all-jvm:" + SP_VERSION;
+    public static final String SP_CONTAINER_EXTENSIONS_NAME = SP_CONTAINER_PREFIX + "extensions";
+    public static final String[] SP_CONTAINER_EXTENSIONS_PORT = new String[]{"8090"};
 
     //broker container
     public static final String SP_BROKER_ID = "pe/org.apache.streampipes.node.broker";
-    public static final String SP_DOCKER_IMAGE_BROKER_NAME = "eclipse-mosquitto";
-    public static final String SP_DOCKER_IMAGE_BROKER_VERSION = "1.6.12";
-    public static final String SP_DOCKER_CONTAINER_BROKER_IMG_TAG =
-            SP_DOCKER_IMAGE_BROKER_NAME + ":" + SP_DOCKER_IMAGE_BROKER_VERSION;
-    public static final String SP_DOCKER_CONTAINER_BROKER_NAME = SP_DOCKER_CONTAINER_NAME_PREFIX + "broker";
-    public static final String[] SP_DOCKER_CONTAINER_BROKER_PORT =
+    public static final String SP_IMG_MOSQUITTO = "eclipse-mosquitto:1.6.12";
+    public static final String SP_CONTAINER_BROKER_NAME = SP_CONTAINER_PREFIX + "node-broker";
+    public static final String[] SP_CONTAINER_BROKER_PORT =
             System.getenv(ConfigKeys.NODE_BROKER_CONTAINER_PORT) != null ?
                     new String[]{System.getenv(ConfigKeys.NODE_BROKER_CONTAINER_PORT)} : new String[]{"1883"};
 
-    public static final List<String> SP_DOCKER_CONTAINER_ENV_VARIABLES = Arrays.asList(
+    // container env variables
+    public static final List<String> SP_CONTAINER_ENV_VARIABLES = Arrays.asList(
             ConfigKeys.NODE_CONTROLLER_ID + "=" + NodeControllerConfig.INSTANCE.getNodeControllerId(),
-            ConfigKeys.NODE_CONTROLLER_CONTAINER_HOST +  "=" + NodeControllerConfig.INSTANCE.getNodeHostName(),
+            ConfigKeys.NODE_CONTROLLER_CONTAINER_HOST +  "=" + NodeControllerConfig.INSTANCE.getNodeHost(),
             ConfigKeys.NODE_CONTROLLER_CONTAINER_PORT + "=" + NodeControllerConfig.INSTANCE.getNodeControllerPort(),
             ConfigKeys.NODE_BROKER_CONTAINER_HOST + "=" + NodeControllerConfig.INSTANCE.getNodeBrokerHost(),
-            ConfigKeys.NODE_BROKER_CONTAINER_PORT + "=" + NodeControllerConfig.INSTANCE.getNodeBrokerPort()
+            ConfigKeys.NODE_BROKER_CONTAINER_PORT + "=" + NodeControllerConfig.INSTANCE.getNodeBrokerPort(),
+            //TODO: remove once PE does not need it for KV registration
+            "CONSUL_LOCATION=" + NodeControllerConfig.INSTANCE.consulLocation(),
+            "SP_HOST=" + NodeControllerConfig.INSTANCE.getNodeHost(),
+            "SP_PORT=8090"
     );
 
-    public static final Map<String, String> SP_DOCKER_CONTAINER_EXTENSIONS_LABELS = new HashMap<String, String>() {{
+    // extension container labels
+    public static final Map<String, String> SP_CONTAINER_EXTENSIONS_LABELS = new HashMap<String, String>() {{
         put("org.apache.streampipes.service.id", SP_EXTENSIONS_ID);
         put("org.apache.streampipes.node.type", NodeControllerConfig.INSTANCE.getNodeType());
         put("org.apache.streampipes.container.type", "extensions");
     }};
 
-    public static final Map<String, String> SP_DOCKER_CONTAINER_BROKER_LABELS = new HashMap<String, String>() {{
+    // mosquitto container labels
+    public static final Map<String, String> SP_CONTAINER_BROKER_LABELS = new HashMap<String, String>() {{
         put("org.apache.streampipes.service.id", SP_BROKER_ID);
         put("org.apache.streampipes.node.type", NodeControllerConfig.INSTANCE.getNodeType());
         put("org.apache.streampipes.container.type", "broker");
@@ -72,7 +76,7 @@ public class DockerConstants {
 
 
     public enum ContainerStatus {
-        DEPLOYED, RUNNING, STOPPED, REMOVED, UNKNOWN
+        DEPLOYED, RUNNING, STOPPED, REMOVED, UNKNOWN, FAILED
     }
 
     public enum ContainerType {
@@ -87,20 +91,20 @@ public class DockerConstants {
 
             // Extensions container
             DockerContainer extensions = DockerContainerBuilder.create(SP_EXTENSIONS_ID)
-                    .withImage(DockerConstants.SP_DOCKER_CONTAINER_EXTENSIONS_IMG_TAG)
-                    .withName(DockerConstants.SP_DOCKER_CONTAINER_EXTENSIONS_NAME)
-                    .withExposedPorts(DockerConstants.SP_DOCKER_CONTAINER_EXTENSIONS_PORT)
-                    .withEnvironmentVariables(SP_DOCKER_CONTAINER_ENV_VARIABLES)
-                    .withLabels(DockerConstants.SP_DOCKER_CONTAINER_EXTENSIONS_LABELS)
+                    .withImage(DockerConstants.SP_IMG_EXTENSIONS)
+                    .withName(DockerConstants.SP_CONTAINER_EXTENSIONS_NAME)
+                    .withExposedPorts(DockerConstants.SP_CONTAINER_EXTENSIONS_PORT)
+                    .withEnvironmentVariables(SP_CONTAINER_ENV_VARIABLES)
+                    .withLabels(DockerConstants.SP_CONTAINER_EXTENSIONS_LABELS)
                     .build();
 
             // Node broker container
             DockerContainer nodeBroker = DockerContainerBuilder.create(SP_BROKER_ID)
-                    .withImage(DockerConstants.SP_DOCKER_CONTAINER_BROKER_IMG_TAG)
-                    .withName(DockerConstants.SP_DOCKER_CONTAINER_BROKER_NAME)
-                    .withExposedPorts(DockerConstants.SP_DOCKER_CONTAINER_BROKER_PORT)
-                    .withEnvironmentVariables(SP_DOCKER_CONTAINER_ENV_VARIABLES)
-                    .withLabels(SP_DOCKER_CONTAINER_BROKER_LABELS)
+                    .withImage(DockerConstants.SP_IMG_MOSQUITTO)
+                    .withName(DockerConstants.SP_CONTAINER_BROKER_NAME)
+                    .withExposedPorts(DockerConstants.SP_CONTAINER_BROKER_PORT)
+                    .withEnvironmentVariables(SP_CONTAINER_ENV_VARIABLES)
+                    .withLabels(SP_CONTAINER_BROKER_LABELS)
                     .build();
 
             nodeContainers.add(extensions);

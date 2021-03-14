@@ -59,6 +59,9 @@ public class FreeTextStaticProperty extends StaticProperty {
   @RdfProperty(StreamPipes.PLACEHOLDERS_SUPPORTED)
   private boolean placeholdersSupported;
 
+  @RdfProperty(StreamPipes.IS_RECONFIGURABLE)
+  private boolean reconfigurable;
+
   @OneToOne(fetch = FetchType.EAGER,
           cascade = {CascadeType.PERSIST, CascadeType.MERGE})
   @RdfProperty(StreamPipes.HAS_VALUE_SPECIFICATION)
@@ -81,6 +84,7 @@ public class FreeTextStaticProperty extends StaticProperty {
     this.multiLine = other.isMultiLine();
     this.placeholdersSupported = other.isPlaceholdersSupported();
     this.mapsTo = other.getMapsTo();
+    this.reconfigurable = other.isReconfigurable();
   }
 
   public FreeTextStaticProperty(String internalName, String label, String description) {
@@ -173,6 +177,14 @@ public class FreeTextStaticProperty extends StaticProperty {
 
   public void setMapsTo(String mapsTo) {
     this.mapsTo = mapsTo;
+  }
+
+  public boolean isReconfigurable() {
+    return reconfigurable;
+  }
+
+  public void setReconfigurable(boolean reconfigurable) {
+    this.reconfigurable = reconfigurable;
   }
 
   @Override

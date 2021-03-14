@@ -348,6 +348,13 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
     return me();
   }
 
+  public BU requiredReconfigurableIntegerParameter(Label label) {
+    FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label, XSD._integer.toString());
+    fsp.setReconfigurable(true);
+    this.staticProperties.add(fsp);
+    return me();
+  }
+
   /**
    * @deprecated use {@link #requiredIntegerParameter(Label, String)} instead
    * @param internalId
@@ -450,6 +457,20 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
     this.staticProperties.add(prepareFreeTextStaticProperty(label,
             XSD._double.toString()));
 
+    return me();
+  }
+
+  /**
+   * Assigns a new number-based configuration parameter (a float) which is required by the pipeline
+   * element. This parameter can be reconfigured by the user at pipeline run-time.
+   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
+   *              user-friendly manner.
+   * @return
+   */
+  public BU requiredReconfigurableFloatParameter(Label label) {
+    FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label, XSD._double.toString());
+    fsp.setReconfigurable(true);
+    this.staticProperties.add(fsp);
     return me();
   }
 

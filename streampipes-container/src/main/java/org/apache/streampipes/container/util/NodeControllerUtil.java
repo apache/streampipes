@@ -19,7 +19,7 @@ package org.apache.streampipes.container.util;/*
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
-import org.apache.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
+import org.apache.streampipes.container.model.EdgeExtensionsConfig;
 import org.apache.streampipes.container.model.node.InvocableRegistration;
 import org.apache.streampipes.container.model.consul.ConsulServiceRegistrationBody;
 import org.apache.streampipes.container.model.consul.HealthCheckConfiguration;
@@ -28,6 +28,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.*;
 
 public class NodeControllerUtil {
@@ -41,22 +43,31 @@ public class NodeControllerUtil {
     private static final String SECONDARY_PE_IDENTIFIER_TAG = "secondary";
     private static final String NODE_CONTROLLER_REGISTER_SVC_URL = "api/v2/node/element/register";
 
-    private static final String NODE_CONTROLLER_CONTAINER_HOST = "SP_NODE_CONTROLLER_CONTAINER_HOST";
-    private static final String NODE_CONTROLLER_CONTAINER_PORT = "SP_NODE_CONTROLLER_CONTAINER_PORT";
+    // StandaloneModelSubmitter for pipeline-elements-all-jvm
+    public static void register(String id, String host, int port, List<String> supportedAppIds) {
+        String body = createSvcBody(PE_TAG, makeSvcId(host, id), host,
+                port, Arrays.asList(PE_TAG, SECONDARY_PE_IDENTIFIER_TAG), supportedAppIds);
+        String endpoint = generateNodeControllerEndpointFromEnv();
 
-    public static void register(String serviceID, String host, int port, List<String> supportedAppIds) {
-        register(PE_TAG, makeSvcId(host, serviceID), host, port,
-                Arrays.asList(PE_TAG, SECONDARY_PE_IDENTIFIER_TAG), supportedAppIds);
+        registerService(endpoint, body);
     }
 
-    public static void register(String svcName, String svcId, String host, int port, List<String> tag,
-                                List<String> supportedAppIds) {
+    // ExtensionsModelSubmitter for extensions-all
+    public static void register(EdgeExtensionsConfig conf, List<String> supportedAppIds) {
+        String body = createSvcBody(PE_TAG, makeSvcId(conf.getHost(), conf.getId()), conf.getHost(),
+                conf.getPort(), Arrays.asList(PE_TAG, SECONDARY_PE_IDENTIFIER_TAG), supportedAppIds);
+        String endpoint = generateNodeControllerEndpointFromConfig(conf);
+
+        registerService(endpoint, body);
+    }
+
+
+    public static void registerService(String endpoint, String body) {
         boolean connected = false;
 
         while (!connected) {
-            LOG.info("Trying to register pipeline element container at node controller: " + makeRegistrationEndpoint());
-            String body = createSvcBody(svcName, svcId, host, port, tag, supportedAppIds);
-            connected = registerSvcHttpClient(body);
+
+            connected = registerSvcHttpClient(endpoint, body);
 
             if (!connected) {
                 LOG.info("Retrying in 5 seconds");
@@ -67,20 +78,20 @@ public class NodeControllerUtil {
                 }
             }
         }
-        LOG.info("Successfully registered pipeline element container: " + svcId);
+        LOG.info("Successfully registered pipeline element container at: {}", endpoint);
     }
 
-    private static boolean registerSvcHttpClient(String body) {
-        String endpoint = makeRegistrationEndpoint();
+    private static boolean registerSvcHttpClient(String endpoint, String body) {
+        LOG.info("Trying to register pipeline element container at node controller: {}", endpoint);
         try {
-            Request.Post(makeRegistrationEndpoint())
+            Request.Post(endpoint)
                     .bodyString(body, ContentType.APPLICATION_JSON)
                     .connectTimeout(1000)
                     .socketTimeout(100000)
                     .execute();
             return true;
         } catch (IOException e) {
-            LOG.error("Could not register at " + endpoint);
+            LOG.error("Could not register at {}", endpoint);
         }
         return false;
     }
@@ -109,22 +120,27 @@ public class NodeControllerUtil {
         throw new IllegalArgumentException("Failure");
     }
 
-    private static String makeRegistrationEndpoint() {
-        if (System.getenv(NODE_CONTROLLER_CONTAINER_HOST) != null) {
-            return HTTP_PROTOCOL
-                    + System.getenv(NODE_CONTROLLER_CONTAINER_HOST)
-                    + COLON
-                    + System.getenv(NODE_CONTROLLER_CONTAINER_PORT)
-                    + SLASH
-                    + NODE_CONTROLLER_REGISTER_SVC_URL;
+    private static String generateNodeControllerEndpointFromConfig(EdgeExtensionsConfig conf) {
+        return HTTP_PROTOCOL
+                + conf.getNodeControllerHost()
+                + COLON
+                + conf.getNodeControllerPort()
+                + SLASH
+                + NODE_CONTROLLER_REGISTER_SVC_URL;
+    }
+
+    private static String generateNodeControllerEndpointFromEnv() {
+        String host = "";
+        if ("true".equals(System.getenv("SP_DEBUG"))) {
+            try {
+                host = InetAddress.getLocalHost().getHostAddress();
+            } catch (UnknownHostException e) {
+                throw new RuntimeException("Could not retrieve host IP", e);
+            }
         } else {
-            return HTTP_PROTOCOL
-                    + "localhost"
-                    + COLON
-                    + "7077"
-                    + SLASH
-                    + NODE_CONTROLLER_REGISTER_SVC_URL;
+            host = "streampipes-node-controller";
         }
+        return HTTP_PROTOCOL + host + COLON + 7077 + SLASH + NODE_CONTROLLER_REGISTER_SVC_URL;
     }
 
     private static String makeSvcId(String host, String serviceID) {

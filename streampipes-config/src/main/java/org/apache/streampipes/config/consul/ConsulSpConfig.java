@@ -45,6 +45,7 @@ public class ConsulSpConfig extends SpConfig implements Runnable {
     private static final String CONSUL_ENV_LOCATION = "CONSUL_LOCATION";
     private static final int CONSUL_DEFAULT_PORT = 8500;
     private static final String ENV_NODE_CONTROLLER_ID_KEY = "SP_NODE_CONTROLLER_ID";
+    private static final String SP_URL = "SP_URL";
 
     public static final String SERVICE_ROUTE_PREFIX = "sp/v1/";
     public static final String BASE_PREFIX = "base";
@@ -82,7 +83,7 @@ public class ConsulSpConfig extends SpConfig implements Runnable {
         URL consulUrl = consulURL();
 
         while (!connected) {
-            LOG.info("Trying to connect to Consul to register config items");
+            LOG.info("Trying to connect to Consul to register config items: {}", consulUrl.toString());
             connected = isReady(consulUrl.getHost(), consulUrl.getPort());
 
             if (!connected) {
@@ -102,7 +103,14 @@ public class ConsulSpConfig extends SpConfig implements Runnable {
         Map<String, String> env = System.getenv();
         URL url = null;
 
-        if (env.containsKey(CONSUL_ENV_LOCATION)) {
+        if (env.containsKey(SP_URL)) {
+            try {
+                URL coreServerUrl = new URL(env.get(SP_URL));
+                url = new URL("http", coreServerUrl.getHost(), CONSUL_DEFAULT_PORT, "");
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+        } else if (env.containsKey(CONSUL_ENV_LOCATION)) {
             try {
                 url = new URL("http", env.get(CONSUL_ENV_LOCATION), CONSUL_DEFAULT_PORT, "");
             } catch (MalformedURLException e) {

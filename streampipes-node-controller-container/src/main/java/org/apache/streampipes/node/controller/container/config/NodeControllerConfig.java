@@ -20,8 +20,10 @@ package org.apache.streampipes.node.controller.container.config;
 import org.apache.streampipes.config.SpConfig;
 import org.apache.streampipes.model.node.resources.fielddevice.FieldDeviceAccessResource;
 
-import java.util.Arrays;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -31,34 +33,66 @@ public enum NodeControllerConfig {
     private SpConfig config;
 
     private static final String SLASH = "/";
+
     private static final String NODE_SERVICE_ID = "node/org.apache.streampipes.node.controller";
-    private static final String DEFAULT_NODE_CONTROLLER_ID = "node-controller";
-    private static final int DEFAULT_NODE_CONTROLLER_PORT = 7077;
-    private static final String DEFAULT_NODE_TYPE = "edge";
-    private static final String DEFAULT_NODE_BROKER_HOST = "broker";
-    private static final int DEFAULT_NODE_BROKER_PORT = 1883;
-    private static final String DEFAULT_NODE_HOST_NAME = "host.docker.internal";
+
+    // Default hosts: accessible host (IP/DNS) for physical host, node controller, core
+    private static final String DEFAULT_NODE_HOST = "host.docker.internal";
+    private static final String DEFAULT_NODE_CONTROLLER_HOST = "streampipes-node-controller";
+    private static final String DEFAULT_NODE_BROKER_HOST = "streampipes-node-broker";
     private static final String DEFAULT_BACKEND_HOST = "host.docker.internal";
+
+    // Default ports: service endpoint ports
+    private static final int DEFAULT_NODE_CONTROLLER_PORT = 7077;
+    private static final int DEFAULT_NODE_BROKER_PORT = 1883;
     private static final int DEFAULT_BACKEND_PORT = 8030;
 
-    // Node controller configs
+    // Default configurations: Node controller configs
     private static final int DEFAULT_DOCKER_PRUNING_FREQ_SECS = 3600;
     private static final int DEFAULT_NODE_RESOURCE_UPDATE_FREQ_SECS = 30;
     private static final int DEFAULT_EVENT_BUFFER_SIZE = 1000;
+    private static final String DEFAULT_NODE_CONTROLLER_ID = "nodectlr";
+    private static final String DEFAULT_NODE_TYPE = "edge";
 
     NodeControllerConfig() {
-        config = SpConfig.getSpConfig(NODE_SERVICE_ID + SLASH + getNodeHostName());
+        config = SpConfig.getSpConfig(makeServiceId());
 
-        config.register(ConfigKeys.NODE_HOST, DEFAULT_NODE_HOST_NAME, "node host name");
-        config.register(ConfigKeys.NODE_TYPE, DEFAULT_NODE_TYPE, "node type");
-        config.register(ConfigKeys.NODE_CONTROLLER_ID, DEFAULT_NODE_CONTROLLER_ID, "node controller id");
-        config.register(ConfigKeys.NODE_CONTROLLER_CONTAINER_HOST, DEFAULT_NODE_CONTROLLER_ID, "node controller container host");
-        config.register(ConfigKeys.NODE_CONTROLLER_CONTAINER_PORT, DEFAULT_NODE_CONTROLLER_PORT, "node controller port");
-        config.register(ConfigKeys.NODE_BROKER_CONTAINER_HOST, DEFAULT_NODE_BROKER_HOST, "node broker host");
-        config.register(ConfigKeys.NODE_BROKER_CONTAINER_PORT, DEFAULT_NODE_BROKER_PORT, "node broker port");
+        config.register(ConfigKeys.NODE_HOST,
+                checkSpNodeControllerUrlOrElseDefault(ConfigKeys.NODE_HOST, DEFAULT_NODE_HOST, String.class),
+                "node host name");
+        config.register(ConfigKeys.NODE_TYPE, DEFAULT_NODE_TYPE,
+                "node type");
+        config.register(ConfigKeys.NODE_CONTROLLER_ID, DEFAULT_NODE_CONTROLLER_ID,
+                "node controller id");
+        config.register(ConfigKeys.NODE_CONTROLLER_CONTAINER_HOST,
+                checkSpNodeControllerUrlOrElseDefault(ConfigKeys.NODE_CONTROLLER_CONTAINER_HOST, DEFAULT_NODE_CONTROLLER_HOST, String.class),
+                "node controller container host");
+        config.register(ConfigKeys.NODE_CONTROLLER_CONTAINER_PORT,
+                checkSpNodeControllerUrlOrElseDefault(ConfigKeys.NODE_CONTROLLER_CONTAINER_PORT, DEFAULT_NODE_CONTROLLER_PORT, Integer.class),
+                "node controller port");
+        config.register(ConfigKeys.NODE_BROKER_CONTAINER_HOST,
+                checkSpNodeControllerUrlOrElseDefault(ConfigKeys.NODE_BROKER_CONTAINER_HOST, DEFAULT_NODE_BROKER_HOST, String.class),
+                "node broker host");
+        config.register(ConfigKeys.NODE_BROKER_CONTAINER_PORT,
+                DEFAULT_NODE_BROKER_PORT,
+                "node broker port");
         // currently used for connect adapter registration
-        config.register(ConfigKeys.BACKEND_HOST, DEFAULT_BACKEND_HOST, "backend host");
-        config.register(ConfigKeys.BACKEND_PORT, DEFAULT_BACKEND_PORT, "backend port");
+        config.register(ConfigKeys.BACKEND_HOST,
+                checkSpUrlOrElseDefault(ConfigKeys.BACKEND_HOST, DEFAULT_BACKEND_HOST, String.class),
+                "backend host");
+        config.register(ConfigKeys.BACKEND_PORT,
+                checkSpUrlOrElseDefault(ConfigKeys.BACKEND_PORT, DEFAULT_BACKEND_PORT, Integer.class),
+                "backend port");
+    }
+
+    private String makeServiceId() {
+        return NODE_SERVICE_ID + SLASH + checkSpNodeControllerUrlOrElseDefault(ConfigKeys.NODE_CONTROLLER_CONTAINER_HOST,
+                DEFAULT_NODE_CONTROLLER_HOST, String.class);
+    }
+
+    private String checkForNodeControllerIdPrefixOrUseDefault() {
+        String prefix = getEnvOrDefault(ConfigKeys.NODE_CONTROLLER_ID, DEFAULT_NODE_CONTROLLER_ID, String.class);
+        return prefix + "-" + generateSixDigitShortUUID();
     }
 
     public String getNodeServiceId() {
@@ -69,37 +103,30 @@ public enum NodeControllerConfig {
         return getEnvOrDefault(ConfigKeys.SP_VERSION, "", String.class);
     }
 
-    public String getNodeHostName(){
-        return getEnvOrDefault(ConfigKeys.NODE_HOST,
-                DEFAULT_NODE_HOST_NAME,
-                String.class);
+    public String getNodeHost(){
+        return checkSpNodeControllerUrlOrElseDefault(ConfigKeys.NODE_HOST, DEFAULT_NODE_HOST, String.class);
     }
 
     public String getNodeControllerId() {
-        return getEnvOrDefault(ConfigKeys.NODE_CONTROLLER_ID,
-                DEFAULT_NODE_CONTROLLER_ID,
-                String.class);
+        return getEnvOrDefault(
+                ConfigKeys.NODE_CONTROLLER_ID,
+                DEFAULT_NODE_CONTROLLER_ID, String.class);
     }
 
     public int getNodeControllerPort(){
-        return getEnvOrDefault(
-                ConfigKeys.NODE_CONTROLLER_CONTAINER_PORT,
-                DEFAULT_NODE_CONTROLLER_PORT,
-                Integer.class);
+        return checkSpNodeControllerUrlOrElseDefault(ConfigKeys.NODE_CONTROLLER_CONTAINER_PORT,
+                DEFAULT_NODE_CONTROLLER_PORT, Integer.class);
     }
 
     public String getNodeBrokerHost() {
-        return getEnvOrDefault(
-                ConfigKeys.NODE_BROKER_CONTAINER_HOST,
-                DEFAULT_NODE_BROKER_HOST,
+        return checkSpNodeControllerUrlOrElseDefault(ConfigKeys.NODE_BROKER_CONTAINER_HOST, DEFAULT_NODE_BROKER_HOST,
                 String.class);
     }
 
     public int getNodeBrokerPort() {
         return getEnvOrDefault(
                 ConfigKeys.NODE_BROKER_CONTAINER_PORT,
-                DEFAULT_NODE_BROKER_PORT,
-                Integer.class);
+                DEFAULT_NODE_BROKER_PORT, Integer.class);
     }
 
     public List<String> getNodeLocations() {
@@ -184,18 +211,57 @@ public enum NodeControllerConfig {
                 String.class);
     }
 
-    public String getBackendHost() {
-        return getEnvOrDefault(
-                ConfigKeys.BACKEND_HOST,
-                DEFAULT_BACKEND_HOST,
+    public String getApiKey() {
+        String apiKey = getEnvOrDefault(
+                ConfigKeys.SP_API_KEY,
+                "",
+                String.class);
+        if (!apiKey.isEmpty()) {
+            return apiKey;
+        }
+        throw new RuntimeException("StreamPipes API key not provided");
+    }
+
+    public String consulLocation() {
+        return checkSpUrlOrElseDefault("CONSUL_LOCATION", "consul",
                 String.class);
     }
 
-    public int getBackendPort(){
-        return getEnvOrDefault(
-                ConfigKeys.BACKEND_PORT,
-                DEFAULT_BACKEND_PORT,
-                Integer.class);
+    public String backendLocation() {
+        return checkSpUrlOrElseDefault(ConfigKeys.BACKEND_HOST, DEFAULT_BACKEND_HOST, String.class);
+    }
+
+    public int backendPort() {
+        return checkSpUrlOrElseDefault(ConfigKeys.BACKEND_PORT, DEFAULT_BACKEND_PORT, Integer.class);
+    }
+
+    // Helpers
+
+    public <T>T checkSpNodeControllerUrlOrElseDefault(String key, T defaultValue, Class<T> type) {
+        return checkEnvOrElseDefault(ConfigKeys.SP_NODE_CONTROLLER_URL, key, defaultValue, type);
+    }
+
+    public <T>T checkSpUrlOrElseDefault(String key, T defaultValue, Class<T> type) {
+        return checkEnvOrElseDefault(ConfigKeys.SP_URL, key, defaultValue, type);
+    }
+
+    private <T>T checkEnvOrElseDefault(String envUrl, String defaultKey, T defaultValue, Class<T> type) {
+        T result = null;
+        if (System.getenv(envUrl) != null) {
+            try {
+                URL url = new URL(System.getenv(envUrl));
+                if (type.equals(String.class)) {
+                    result = (T) url.getHost();
+                } else if (type.equals(Integer.class)) {
+                    result = (T) Integer.valueOf(url.getPort());
+                }
+            } catch (MalformedURLException e) {
+                throw new RuntimeException("Could not parse provide URL:", e);
+            }
+        } else {
+            result = getEnvOrDefault(defaultKey, defaultValue, type);
+        }
+        return result;
     }
 
     private <T> T getEnvOrDefault(String k, T defaultValue, Class<T> type) {
@@ -206,5 +272,10 @@ public enum NodeControllerConfig {
         } else {
             return System.getenv(k) != null ? type.cast(System.getenv(k)) : defaultValue;
         }
+    }
+
+    private String generateSixDigitShortUUID() {
+        String uuid = UUID.randomUUID().toString();
+        return  uuid.substring(uuid.lastIndexOf('-') + 6);
     }
 }

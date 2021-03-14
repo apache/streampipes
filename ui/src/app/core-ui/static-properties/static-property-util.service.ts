@@ -47,6 +47,7 @@ export class StaticPropertyUtilService{
             clone.elementId = id;
             clone.value = val.value;
             clone.requiredDomainProperty = val.requiredDomainProperty;
+            clone.reconfigurable = val.reconfigurable;
         }
         else if (val instanceof FileStaticProperty) {
             clone = new FileStaticProperty();

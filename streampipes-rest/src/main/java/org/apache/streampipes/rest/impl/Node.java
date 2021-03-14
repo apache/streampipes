@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.rest.impl;
 
+import org.apache.streampipes.manager.info.VersionInfoProvider;
 import org.apache.streampipes.manager.node.NodeClusterManager;
 import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.message.Notifications;
@@ -53,6 +54,17 @@ public class Node extends AbstractRestResource implements INode {
                                @PathParam("nodeControllerId") String nodeControllerId,
                                NodeInfoDescription desc) {
         return statusMessage(NodeClusterManager.updateNode(desc));
+    }
+
+    @POST
+    @JacksonSerialized
+    @Path("/sync")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Override
+    public Response syncRemoteUpdateFromNodeController(@PathParam("username") String username,
+                                                       NodeInfoDescription desc) {
+        return statusMessage(NodeClusterManager.syncRemoteNodeUpdateRequest(desc));
     }
 
     @POST

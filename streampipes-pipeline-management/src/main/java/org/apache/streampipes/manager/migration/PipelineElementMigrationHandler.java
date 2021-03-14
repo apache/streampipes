@@ -63,7 +63,7 @@ public class PipelineElementMigrationHandler {
     }
 
     private void migratePipelineElementOrRollback() {
-        List<PipelineElementMigrationEntity> migrationEntityList = getPipelineDelta(desiredPipeline, migrationPipeline);
+        List<PipelineElementMigrationEntity> migrationEntityList = getPipelineDelta();
 
         migrationEntityList.forEach(entity -> {
             swapPipelineElement(migrationPipeline, entity);
@@ -106,12 +106,12 @@ public class PipelineElementMigrationHandler {
         return StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI();
     }
 
-    private List<PipelineElementMigrationEntity> getPipelineDelta(Pipeline pipelineX, Pipeline pipelineY){
+    private List<PipelineElementMigrationEntity> getPipelineDelta(){
         List<PipelineElementMigrationEntity> delta = new ArrayList<>();
-        pipelineX.getSepas().forEach(iX -> {
-            if (pipelineY.getSepas().stream().filter(iY -> iY.getElementId().equals(iX.getElementId()))
+        desiredPipeline.getSepas().forEach(iX -> {
+            if (migrationPipeline.getSepas().stream().filter(iY -> iY.getElementId().equals(iX.getElementId()))
                     .noneMatch(iY -> iY.getDeploymentTargetNodeId().equals(iX.getDeploymentTargetNodeId()))){
-                Optional<DataProcessorInvocation> invocationY = pipelineY.getSepas().stream().
+                Optional<DataProcessorInvocation> invocationY = migrationPipeline.getSepas().stream().
                         filter(iY -> iY.getDeploymentRunningInstanceId().equals(iX.getDeploymentRunningInstanceId())).findFirst();
                 invocationY.ifPresent(dataProcessorInvocation -> delta.add(new PipelineElementMigrationEntity(dataProcessorInvocation, iX)));
             }

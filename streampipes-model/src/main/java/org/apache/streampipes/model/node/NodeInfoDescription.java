@@ -146,6 +146,14 @@ public class NodeInfoDescription extends UnnamedStreamPipesEntity {
         this.registeredContainers = registeredContainers;
     }
 
+    public void addRegisteredContainer(DeploymentContainer registeredContainer) {
+        this.registeredContainers.add(registeredContainer);
+    }
+
+    public void removeRegisteredContainer(DeploymentContainer registeredContainer) {
+        this.registeredContainers.remove(registeredContainer);
+    }
+
     public String getNodeControllerId() {
         return nodeControllerId;
     }

@@ -17,6 +17,8 @@ ARG BASE_IMAGE=adoptopenjdk/openjdk8-openj9:alpine-slim
 #ARG BASE_IMAGE=adoptopenjdk:8-jre-openj9
 FROM $BASE_IMAGE
 
+MAINTAINER dev@streampipes.apache.org
+
 EXPOSE 7077
 ENV CONSUL_LOCATION consul
 

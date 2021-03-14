@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.manager.matching;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.config.backend.SpEdgeNodeProtocol;
 import org.apache.streampipes.config.backend.SpProtocol;
@@ -27,12 +28,12 @@ import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.model.grounding.JmsTransportProtocol;
-import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
-import org.apache.streampipes.model.grounding.MqttTransportProtocol;
-import org.apache.streampipes.model.grounding.TransportProtocol;
+import org.apache.streampipes.model.grounding.*;
+import org.apache.streampipes.model.node.NodeInfoDescription;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public class ProtocolSelector extends GroundingSelector {
@@ -75,8 +76,14 @@ public class ProtocolSelector extends GroundingSelector {
                 // use edge node protocol
                 if (matches(edgeNodeProtocol, MqttTransportProtocol.class) && supportsProtocol(MqttTransportProtocol.class)) {
                     if(matchesDeploymentTargets()) {
-                       return new MqttTransportProtocol(getTargetNodeBrokerHost(), getTargetNodeBrokerPort(),
-                               outputTopic);
+                        // get node transport protocol
+                        String nodeControllerId = ((InvocableStreamPipesEntity) source).getDeploymentTargetNodeId();
+
+                        MqttTransportProtocol nodeTransportProtocol = (MqttTransportProtocol)
+                                getNodeBrokerTransportProtocol(nodeControllerId);
+                        nodeTransportProtocol.setTopicDefinition(new SimpleTopicDefinition(outputTopic));
+
+                       return nodeTransportProtocol;
                     } else {
                         MqttTransportProtocol tp = (MqttTransportProtocol)
                                 ((InvocableStreamPipesEntity) source).getInputStreams().stream()
@@ -168,20 +175,15 @@ public class ProtocolSelector extends GroundingSelector {
         return false;
     }
 
-    private String getTargetNodeBrokerHost() {
-        // TODO: no hardcoded route - only for testing
-
-        return ConsulUtil.getValueForRoute(
-                "sp/v1/node/org.apache.streampipes.node.controller/"
-                        + ((InvocableStreamPipesEntity) source).getDeploymentTargetNodeHostname()
-                        + "/config/SP_NODE_BROKER_CONTAINER_HOST", String.class);
+    private static TransportProtocol getNodeBrokerTransportProtocol(String id) {
+        Optional<NodeInfoDescription> nodeInfoDescription = getNodeInfoDescriptionForId(id);
+        if (nodeInfoDescription.isPresent()) {
+            return nodeInfoDescription.get().getNodeBroker().getNodeTransportProtocol();
+        }
+        throw new SpRuntimeException("Could not find node description for id: " + id);
     }
 
-    private int getTargetNodeBrokerPort() {
-        // TODO: no hardcoded route - only for testing
-        return ConsulUtil.getValueForRoute(
-                "sp/v1/node/org.apache.streampipes.node.controller/"
-                        + ((InvocableStreamPipesEntity) source).getDeploymentTargetNodeHostname()
-                        + "/config/SP_NODE_BROKER_CONTAINER_PORT", Integer.class);
+    private static Optional<NodeInfoDescription> getNodeInfoDescriptionForId(String id){
+        return StorageDispatcher.INSTANCE.getNoSqlStore().getNodeStorage().getNode(id);
     }
 }

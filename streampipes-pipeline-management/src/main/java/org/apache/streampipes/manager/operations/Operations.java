@@ -28,6 +28,7 @@ import org.apache.streampipes.manager.matching.DataSetGroundingSelector;
 import org.apache.streampipes.manager.matching.PipelineVerificationHandler;
 import org.apache.streampipes.manager.migration.PipelineElementMigrationHandler;
 import org.apache.streampipes.manager.recommender.ElementRecommender;
+import org.apache.streampipes.manager.reconfiguration.PipelineElementReconfigurationHandler;
 import org.apache.streampipes.manager.remote.ContainerProvidedOptionsHandler;
 import org.apache.streampipes.manager.runtime.PipelineElementRuntimeInfoFetcher;
 import org.apache.streampipes.manager.template.PipelineTemplateGenerator;
@@ -192,4 +193,8 @@ public class Operations {
     return new PipelineElementMigrationHandler(desiredPipeline, visualize, storeStatus, monitor).handlePipelineMigration();
   }
 
+  public static PipelineOperationStatus handlePipelineElementReconfiguration(Pipeline reconfiguredPipeline,
+                                                                             boolean storeStatus) {
+    return new PipelineElementReconfigurationHandler(reconfiguredPipeline, storeStatus).handleReconfiguration();
+  }
 }
