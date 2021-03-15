@@ -20,6 +20,7 @@ package org.apache.streampipes.node.controller.container.management.pe;
 import org.apache.streampipes.container.model.node.InvocableRegistration;
 import org.apache.streampipes.model.Response;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+import org.apache.streampipes.model.pipeline.PipelineElementReconfigurationEntity;
 
 public interface PipelineElementLifeCycle {
 
@@ -29,7 +30,7 @@ public interface PipelineElementLifeCycle {
 
     Response detach(String runningInstanceId);
 
-    Response adapt(InvocableStreamPipesEntity graph, String reconfigurationEvent);
+    Response adapt(InvocableStreamPipesEntity graph, PipelineElementReconfigurationEntity reconfigurationEvent);
 
     void unregister();
 

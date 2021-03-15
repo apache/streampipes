@@ -25,4 +25,5 @@ export interface MessagingSettings {
 
    prioritizedFormats: [string];
    prioritizedProtocols: [string];
+   edgeNodeProtocol: string;
 }

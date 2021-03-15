@@ -148,6 +148,12 @@ export class DataMarketplaceService {
             newAdapterDescription.includedLocales = protocol.includedLocales;
             newAdapterDescription.includesLocales = protocol.includesLocales;
 
+            newAdapterDescription.deploymentTargetNodeId = protocol.deploymentTargetNodeId;
+            newAdapterDescription.deploymentTargetNodeHostname = protocol.deploymentTargetNodeHostname;
+            newAdapterDescription.deploymentTargetNodePort = protocol.deploymentTargetNodePort;
+            newAdapterDescription.elementEndpointHostname = protocol.elementEndpointHostname;
+            newAdapterDescription.elementEndpointPort = protocol.elementEndpointPort;
+
             if (
                 newAdapterDescription instanceof GenericAdapterSetDescription ||
                 newAdapterDescription instanceof GenericAdapterStreamDescription

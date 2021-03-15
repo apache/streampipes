@@ -77,7 +77,7 @@
     <div fxFlex="100" fxLayout="column" fxLayoutAlign="start stretch" style="margin-top:40px;">
         <div fxFlex="100" class="assemblyOptions sp-blue-bg" style="padding:5px;">
             <div fxLayout="row" fxLayoutAlign="start center" fxFlex="100">
-                <h4>Protocols</h4>
+                <h4>Cloud Protocols</h4>
                 <span flex></span>
             </div>
         </div>
@@ -91,6 +91,26 @@
             <div fxLayoutAlign="end center">
                 <button mat-raised-button color="primary" type="submit" class="md-raised md-primary submit-button" (click)="updateMessagingSettings()">Update
                 </button>
+            </div>
+        </div>
+    </div>
+    <div fxFlex="100" fxLayout="column" fxLayoutAlign="start stretch" style="margin-top:40px;">
+        <div fxFlex="100" class="assemblyOptions sp-blue-bg" style="padding:5px;">
+            <div fxLayout="row" fxLayoutAlign="start center" fxFlex="100">
+                <h4>Edge Protocol</h4>
+                <span flex></span>
+            </div>
+        </div>
+        <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start" class="sp-blue-border page-container-padding-inner">
+            <div cdkDropList class="data-format-list" (cdkDropListDropped)="dropProtocol($event)"
+                 *ngIf="loadingCompleted">
+                <div class="data-format-box"cdkDrag>
+                    {{messagingSettings.edgeNodeProtocol}}
+                </div>
+            </div>
+            <div fxLayoutAlign="end center">
+<!--                <button mat-raised-button color="primary" type="submit" class="md-raised md-primary submit-button" (click)="updateMessagingSettings()">Update-->
+<!--                </button>-->
             </div>
         </div>
 

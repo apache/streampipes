@@ -40,7 +40,9 @@ public class ReconfigurationEndpointUrlGenerator {
                 + COLON
                 + reconfigurationEntity.getDeploymentTargetNodePort()
                 + BASE_ROUTE
-                + RECONFIGURE_ROUTE;
+                + RECONFIGURE_ROUTE
+                + SLASH
+                + reconfigurationEntity.getDeploymentRunningInstanceId();
 
     }
 

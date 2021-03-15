@@ -38,13 +38,11 @@ public class PipelineElementReconfigurationHandler {
     private final PipelineOperationStatus pipelineReconfigurationStatus;
     private final Pipeline reconfiguredPipeline;
     private Pipeline storedPipeline;
-    private final boolean storeStatus;
 
-    public PipelineElementReconfigurationHandler(Pipeline reconfiguredPipeline, boolean storeStatus) {
-        this.pipelineReconfigurationStatus = new PipelineOperationStatus();
+    public PipelineElementReconfigurationHandler(Pipeline reconfiguredPipeline) {
         this.reconfiguredPipeline = reconfiguredPipeline;
         this.storedPipeline = getPipelineById(reconfiguredPipeline.getPipelineId());
-        this.storeStatus = storeStatus;
+        this.pipelineReconfigurationStatus = initPipelineOperationStatus();
     }
 
     public PipelineOperationStatus handleReconfiguration() {
@@ -62,22 +60,12 @@ public class PipelineElementReconfigurationHandler {
 
             entityStatus.getElementStatus().forEach(pipelineReconfigurationStatus::addPipelineElementStatus);
 
-            // TODO needed ?
             if (entityStatus.isSuccess()) {
-                try {
-                    storedPipeline = deepCopyPipeline(reconfiguredPipeline);
-                } catch (JsonProcessingException e) {
-                    throw new SpRuntimeException("Could not deep copy pipeline for reconfiguration: " + e.getMessage(),
-                            e);
-                }
+                Operations.overwritePipeline(reconfiguredPipeline);
             } else {
-                //TODO: what to do when not successful?
+                //TODO: Send old/existing configuration
             }
         });
-
-        if (storeStatus) {
-            Operations.overwritePipeline(reconfiguredPipeline);
-        }
     }
 
     private PipelineOperationStatus reconfigurePipelineElement(PipelineElementReconfigurationEntity entity) {
@@ -87,18 +75,15 @@ public class PipelineElementReconfigurationHandler {
     private List<PipelineElementReconfigurationEntity> comparePipelinesAndGetReconfiguration() {
         List<PipelineElementReconfigurationEntity> delta = new ArrayList<>();
 
-        List<DataProcessorInvocation> reconfiguredGraphs = filterReconfigurableFsp(reconfiguredPipeline);
-        List<DataProcessorInvocation> currentGraphs = filterReconfigurableFsp(storedPipeline);
-
-        reconfiguredGraphs.forEach(reconfiguredProcessor -> currentGraphs.forEach(storedProcessor -> {
+        reconfiguredPipeline.getSepas().forEach(reconfiguredProcessor -> storedPipeline.getSepas().forEach(storedProcessor -> {
             if (matchingElementIds(reconfiguredProcessor, storedProcessor)) {
                 List<StaticProperty> list = new ArrayList<>();
                 getReconfigurableFsp(reconfiguredProcessor).forEach(reconfiguredFsp ->
                         getReconfigurableFsp(storedProcessor).forEach(storedFsp -> {
-                    if (compareForChanges(reconfiguredFsp, storedFsp)) {
-                        list.add(reconfiguredFsp);
-                    }
-                }));
+                            if (compareForChanges(reconfiguredFsp, storedFsp)) {
+                                list.add(reconfiguredFsp);
+                            }
+                        }));
                 PipelineElementReconfigurationEntity entity = reconfigurationEntity(reconfiguredProcessor, list);
                 if (list.size() > 0 && !exists(delta, entity)) {
                     delta.add(entity);
@@ -143,24 +128,6 @@ public class PipelineElementReconfigurationHandler {
         return one.getElementId().equals(two.getElementId());
     }
 
-    private List<DataProcessorInvocation> filterReconfigurableFsp(Pipeline pipeline) {
-        List<DataProcessorInvocation> filtered = new ArrayList<>();
-        pipeline.getSepas().forEach(processor -> {
-            List<StaticProperty> fsp = new ArrayList<>();
-            processor.getStaticProperties().forEach(sp -> {
-                if (sp instanceof FreeTextStaticProperty && ((FreeTextStaticProperty) sp).isReconfigurable()) {
-                    fsp.add(sp);
-                }
-            });
-            processor.setStaticProperties(fsp);
-            filtered.add(processor);
-        });
-
-        return filtered;
-    }
-
-
-
     // Helpers
 
     private PipelineOperationStatus verifyPipelineReconfigurationStatus(PipelineOperationStatus status,
@@ -183,9 +150,11 @@ public class PipelineElementReconfigurationHandler {
         return StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI();
     }
 
-    public static Pipeline deepCopyPipeline(Pipeline object) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readValue(objectMapper.writeValueAsString(object), Pipeline.class);
+    private PipelineOperationStatus initPipelineOperationStatus() {
+        PipelineOperationStatus status = new PipelineOperationStatus();
+        status.setPipelineId(reconfiguredPipeline.getPipelineId());
+        status.setPipelineName(reconfiguredPipeline.getName());
+        return status;
     }
 
 }

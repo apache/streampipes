@@ -30,10 +30,14 @@ import {
     DataProcessorInvocation,
     DataSinkInvocation,
     EventSchema,
-    Pipeline
+    Pipeline, PipelineOperationStatus
 } from "../../../core-model/gen/streampipes-model";
 import {PipelineElementUnion} from "../../../editor/model/editor.model";
 import {FormBuilder, FormGroup} from "@angular/forms";
+import {PipelineStatusDialogComponent} from "../../../pipelines/dialog/pipeline-status/pipeline-status-dialog.component";
+import {PanelType} from "../../../core-ui/dialog/base-dialog/base-dialog.model";
+import {DialogService} from "../../../core-ui/dialog/base-dialog/base-dialog.service";
+import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
 
 @Component({
     selector: 'quick-edit',
@@ -59,10 +63,12 @@ export class QuickEditComponent implements OnInit, AfterViewInit{
     isDataProcessor: boolean = false;
 
     pipelineUpdating: boolean = false;
+    pipelineReconfiguration: boolean = false;
 
     constructor(private pipelineService: PipelineService,
                 private fb: FormBuilder,
-                private changeDetectorRef: ChangeDetectorRef) {
+                private changeDetectorRef: ChangeDetectorRef,
+                private dialogService: DialogService) {
 
     }
 
@@ -148,12 +154,38 @@ export class QuickEditComponent implements OnInit, AfterViewInit{
     }
 
     reconfigurePipeline() {
-        this.pipelineUpdating = true;
+        this.pipelineReconfiguration = true;
         this.updatePipelineElement();
-        this.pipelineService.reconfigurePipeline(this.pipeline).subscribe(data => {
-            this.reloadPipelineEmitter.emit();
-            this.pipelineUpdating = false;
+        this.pipelineService.reconfigurePipeline(this.pipeline).subscribe(statusMessage => {
+            if (statusMessage.success) {
+                this.afterReconfiguration(statusMessage, this.pipeline._id)
+                this.reloadPipelineEmitter.emit();
+                this.pipelineReconfiguration = false;
+            } else {
+                this.displayErrors(statusMessage);
+            }
+        }, data => {
+            this.displayErrors();
         });
+    }
+
+    afterReconfiguration(statusMessage: PipelineOperationStatus, pipelineId?: string) {
+        this.showDialog(statusMessage);
+    }
+
+    showDialog(data: PipelineOperationStatus) {
+        this.dialogService.open(PipelineStatusDialogComponent, {
+            panelType: PanelType.STANDARD_PANEL,
+            title: "Pipeline Status",
+            width: "70vw",
+            data: {
+                "pipelineOperationStatus": data
+            }
+        });
+    };
+
+    displayErrors(statusMessage?: PipelineOperationStatus) {
+        this.showDialog(statusMessage);
     }
 }
 

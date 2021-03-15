@@ -273,13 +273,8 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   public Response reconfigurePipelineElements(@PathParam("username") String username,
                                     @PathParam("pipelineId") String pipelineId,
                                     Pipeline reconfiguredPipeline) {
-    // check which elements got adapted (stored vs new pipeline) for which deployment target
-    // transform modified graphs (graphs = DataProcessorInvokation) to JSON payload (light):
-    // { "id" : "<runningInstanceId"
-    // POST /<runninginstanceid> with payload(JSON per modified graph)
-    // lookup(runninginstanceid) -> pub.connect(broker) -> pub.publish(event)
     try {
-      return ok(Operations.handlePipelineElementReconfiguration(reconfiguredPipeline, true));
+      return ok(Operations.handlePipelineElementReconfiguration(reconfiguredPipeline));
     } catch (Exception e) {
       e.printStackTrace();
       return statusMessage(Notifications.error(NotificationType.UNKNOWN_ERROR));

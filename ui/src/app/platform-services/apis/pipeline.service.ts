@@ -110,11 +110,11 @@ export class PipelineService {
         }));
   }
 
-  reconfigurePipeline(pipeline: Pipeline): Observable<PipelineElementStatus> {
+  reconfigurePipeline(pipeline: Pipeline): Observable<PipelineOperationStatus> {
     var pipelineId = pipeline._id;
     return this.http.put(this.platformServicesCommons.authUserBasePath() + "/pipelines/reconfigure/" + pipelineId, pipeline)
         .pipe(map(response => {
-          return PipelineElementStatus.fromData(response as PipelineElementStatus);
+          return PipelineOperationStatus.fromData(response as PipelineOperationStatus);
         }));
   }
 }

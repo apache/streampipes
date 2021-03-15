@@ -193,8 +193,7 @@ public class Operations {
     return new PipelineElementMigrationHandler(desiredPipeline, visualize, storeStatus, monitor).handlePipelineMigration();
   }
 
-  public static PipelineOperationStatus handlePipelineElementReconfiguration(Pipeline reconfiguredPipeline,
-                                                                             boolean storeStatus) {
-    return new PipelineElementReconfigurationHandler(reconfiguredPipeline, storeStatus).handleReconfiguration();
+  public static PipelineOperationStatus handlePipelineElementReconfiguration(Pipeline reconfiguredPipeline) {
+    return new PipelineElementReconfigurationHandler(reconfiguredPipeline).handleReconfiguration();
   }
 }

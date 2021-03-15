@@ -18,7 +18,6 @@
 package org.apache.streampipes.node.controller.container.management.pe;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonSyntaxException;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
@@ -31,11 +30,10 @@ import org.apache.streampipes.messaging.kafka.SpKafkaProducer;
 import org.apache.streampipes.messaging.mqtt.MqttPublisher;
 import org.apache.streampipes.model.Response;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
-import org.apache.streampipes.model.grounding.JmsTransportProtocol;
-import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
-import org.apache.streampipes.model.grounding.MqttTransportProtocol;
-import org.apache.streampipes.model.grounding.TransportProtocol;
+import org.apache.streampipes.model.grounding.*;
 import org.apache.streampipes.model.node.NodeInfoDescription;
+import org.apache.streampipes.model.pipeline.PipelineElementReconfigurationEntity;
+import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.node.controller.container.config.NodeControllerConfig;
 import org.apache.streampipes.node.controller.container.management.node.NodeManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
@@ -47,6 +45,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -58,9 +57,11 @@ public class InvocableElementManager implements PipelineElementLifeCycle {
     private static final String HTTP_PROTOCOL = "http://";
     private static final String COLON = ":";
     private static final String SLASH = "/";
+    private static final String DOT = ".";
     private static final String SP_URL = "SP_URL";
     private static final String CONSUL_LOCATION = "CONSUL_LOCATION";
     private static final String CONSUL_REGISTRATION_ROUTE = "v1/agent/service/register";
+    private static final String RECONFIGURATION_TOPIC = "org.apache.streampipes.control.event.reconfigure";
     private static final int CONSUL_DEFAULT_PORT = 8500;
     private static final Integer CONNECT_TIMEOUT = 10000;
     private static InvocableElementManager instance = null;
@@ -132,35 +133,47 @@ public class InvocableElementManager implements PipelineElementLifeCycle {
     }
 
     @Override
-    public Response adapt(InvocableStreamPipesEntity graph, String reconfigurationEvent) {
-        ObjectMapper mapper = new ObjectMapper();
-        Response r = new Response();
-        r.setElementId(graph.getElementId());
-        r.setSuccess(false);
-        try{
-            TransportProtocol tp = mapper.readValue(mapper.writeValueAsString(graph.getInputStreams().get(0)
-                    .getEventGrounding().getTransportProtocol()), graph.getInputStreams().get(0)
-                    .getEventGrounding().getTransportProtocol().getClass());
-            tp.getTopicDefinition().setActualTopicName("org.apache.streampipes.control.event.reconfigure."
-                    + graph.getDeploymentRunningInstanceId());
-            EventProducer pub;
-            if(tp instanceof KafkaTransportProtocol){
-                pub = new SpKafkaProducer();
-                pub.connect(tp);
-            }else if (tp instanceof JmsTransportProtocol){
-                pub = new ActiveMQPublisher();
-                pub.connect(tp);
-            } else{
-                pub = new MqttPublisher();
-                pub.connect(tp);
-            }
-            pub.publish(reconfigurationEvent.getBytes(StandardCharsets.UTF_8));
-            pub.disconnect();
-            r.setSuccess(true);
-        } catch (JsonProcessingException e) {
-            r.setOptionalMessage(e.getMessage());
+    public Response adapt(InvocableStreamPipesEntity graph, PipelineElementReconfigurationEntity reconfigurationEntity) {
+
+        Response response = new Response();
+        response.setElementId(graph.getElementId());
+        response.setSuccess(false);
+
+        EventProducer pub = getReconfigurationEventProducerFromInvocable(graph);
+
+        byte [] reconfigurationEvent = reconfigurationToByteArray(reconfigurationEntity);
+        pub.publish(reconfigurationEvent);
+        pub.disconnect();
+
+        response.setSuccess(true);
+        return response;
+    }
+
+    private EventProducer getReconfigurationEventProducerFromInvocable(InvocableStreamPipesEntity graph) {
+        TransportProtocol tp = getReconfigurationTransportProtocol(graph);
+        EventProducer pub;
+        if(tp instanceof KafkaTransportProtocol){
+            pub = new SpKafkaProducer();
+            pub.connect(tp);
+        } else if (tp instanceof JmsTransportProtocol){
+            pub = new ActiveMQPublisher();
+            pub.connect(tp);
+        } else{
+            pub = new MqttPublisher();
+            pub.connect(tp);
         }
-        return r;
+        return pub;
+    }
+
+    private byte[] reconfigurationToByteArray(PipelineElementReconfigurationEntity entity) {
+        Map<String, String> reconfigurationEventMap = new HashMap<>();
+        entity.getReconfiguredStaticProperties().forEach(staticProperty -> {
+            if (staticProperty instanceof FreeTextStaticProperty) {
+                reconfigurationEventMap.put(staticProperty.getInternalName(),
+                        ((FreeTextStaticProperty) staticProperty).getValue());
+            }
+        });
+        return toJson(reconfigurationEventMap).getBytes(StandardCharsets.UTF_8);
     }
 
     private void updateAndSyncNodeInfoDescription(InvocableRegistration registration) {
@@ -184,6 +197,16 @@ public class InvocableElementManager implements PipelineElementLifeCycle {
         NodeManager.getInstance()
                 .retrieveNodeInfoDescription()
                 .setSupportedElements(supportedPipelineElements);
+    }
+
+    private TransportProtocol getReconfigurationTransportProtocol(InvocableStreamPipesEntity graph) {
+        TransportProtocol tp = graph.getInputStreams().get(0).getEventGrounding().getTransportProtocol();
+        tp.setTopicDefinition(makeReconfigurationTopic(graph.getDeploymentRunningInstanceId()));
+        return tp;
+    }
+
+    private TopicDefinition makeReconfigurationTopic(String runningInstanceId) {
+        return new SimpleTopicDefinition( RECONFIGURATION_TOPIC + DOT + runningInstanceId);
     }
 
     private String generateBackendEndpoint() {

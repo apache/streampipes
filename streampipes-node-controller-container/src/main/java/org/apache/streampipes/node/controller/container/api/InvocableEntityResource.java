@@ -32,6 +32,7 @@ import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 import org.apache.streampipes.model.grounding.TransportProtocol;
+import org.apache.streampipes.model.pipeline.PipelineElementReconfigurationEntity;
 import org.apache.streampipes.node.controller.container.management.pe.InvocableElementManager;
 import org.apache.streampipes.node.controller.container.management.pe.RunningInvocableInstances;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
@@ -99,14 +100,12 @@ public class InvocableEntityResource extends AbstractResource {
     // Adaptation
     @POST
     @JacksonSerialized
-    @Path("{identifier}/{elementId}/{runningInstanceId}/adapt")
+    @Path("/adapt/{runningInstanceId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public javax.ws.rs.core.Response adapt(@PathParam("identifier") String identifier,
-                                           @PathParam("elementId") String elementId,
-                                           @PathParam("runningInstanceId") String runningInstanceId,
-                                           String payload) {
+    public javax.ws.rs.core.Response adapt( @PathParam("runningInstanceId") String runningInstanceId,
+                                            PipelineElementReconfigurationEntity reconfigurationEntity) {
         InvocableStreamPipesEntity graph = RunningInvocableInstances.INSTANCE.get(runningInstanceId);
-        return ok(InvocableElementManager.getInstance().adapt(graph, payload));
+        return ok(InvocableElementManager.getInstance().adapt(graph, reconfigurationEntity));
     }
 }
