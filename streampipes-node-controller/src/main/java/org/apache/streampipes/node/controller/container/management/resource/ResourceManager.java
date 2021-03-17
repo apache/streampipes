@@ -17,8 +17,12 @@
  */
 package org.apache.streampipes.node.controller.container.management.resource;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.node.controller.container.config.NodeControllerConfig;
+import org.apache.streampipes.node.controller.container.management.resource.model.ResourceMetrics;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import oshi.SystemInfo;
@@ -39,13 +43,12 @@ public class ResourceManager {
             LoggerFactory.getLogger(ResourceManager.class.getCanonicalName());
 
     // OSHI to retreive system information
-    private SystemInfo si = new SystemInfo();
-    private HardwareAbstractionLayer hal = si.getHardware();
-    private OperatingSystem os = si.getOperatingSystem();
+    private final SystemInfo si = new SystemInfo();
+    private final HardwareAbstractionLayer hal = si.getHardware();
+    private final OperatingSystem os = si.getOperatingSystem();
+    private final Calendar cal = Calendar.getInstance();
 
-    private Calendar cal = Calendar.getInstance();
-
-    private Map<String, Object> nodeResources = new HashMap<>();
+    private final ResourceMetrics resourceMetrics = new ResourceMetrics();
 
     private static ResourceManager instance = null;
 
@@ -78,28 +81,21 @@ public class ResourceManager {
                 /**
                  * Monitors the node resources
                  */
-                String booted = getBooted(this.os);
-                String uptime = getUptime(this.os);
-                float cpuLoad = getCpuLoad(this.hal.getProcessor());
-                double cpuTemperature = getCpuTemperature(this.hal.getSensors());
-                long totalMemory = this.hal.getMemory().getTotal();
-                long freeMemory = getAvailableMemory(this.hal.getMemory());
-                long usedMemory = this.hal.getMemory().getTotal() - freeMemory;
                 Map<String, Map<String, Long>> diskUsage = getDiskUsage(this.os.getFileSystem());
 
-                nodeResources.put("systemTime", dateFormat.format(cal.getTime()));
-                nodeResources.put("booted", booted);
-                nodeResources.put("uptime", uptime);
-                nodeResources.put("cpuLoad", String.format("%.1f%%", cpuLoad));
-                nodeResources.put("cpuLoadInPercent", cpuLoad);
-                nodeResources.put("cpuTemperature", String.format("%.2f°C", cpuTemperature));
-                nodeResources.put("cpuTemperatureCelcius", cpuTemperature);
-                nodeResources.put("freeMemoryInBytes", freeMemory);
-                nodeResources.put("usedMemoryInBytes", usedMemory);
-                nodeResources.put("totalMemoryInBytes", totalMemory);
+                resourceMetrics.setSystemTime(dateFormat.format(cal.getTime()));
+                resourceMetrics.setBooted(getBooted(this.os));
+                resourceMetrics.setUptime(getUptime(this.os));
+                resourceMetrics.setCpuLoad(String.format("%.1f%%", getCpuLoad(this.hal.getProcessor())));
+                resourceMetrics.setCpuLoadInPercent(getCpuLoad(this.hal.getProcessor()));
+                resourceMetrics.setCpuTemperature(String.format("%.2f°C", getCpuTemperature(this.hal.getSensors())));
+                resourceMetrics.setCpuTemperatureCelcius(getCpuTemperature(this.hal.getSensors()));
+                resourceMetrics.setFreeMemoryInBytes(getAvailableMemory(this.hal.getMemory()));
+                resourceMetrics.setUsedMemoryInBytes(this.hal.getMemory().getTotal() - getAvailableMemory(this.hal.getMemory()));
+                resourceMetrics.setTotalMemoryInBytes(this.hal.getMemory().getTotal());
 
                 for (Map.Entry<String, Map<String, Long>> k : diskUsage.entrySet()) {
-                    nodeResources.put("freeDiskSpaceInBytes", k.getValue().get("usableDiskSpace"));
+                    resourceMetrics.setFreeDiskSpaceInBytes(k.getValue().get("usableDiskSpace"));
                 }
 
             } catch (InterruptedException e) {
@@ -109,8 +105,15 @@ public class ResourceManager {
     };
 
     public String retrieveNodeResources() {
-        LOG.debug("Retrieve node resource");
-        return new Gson().toJson(this.nodeResources);
+        try {
+            return JacksonSerializer
+                    .getObjectMapper()
+                    .writerWithDefaultPrettyPrinter()
+                    .writeValueAsString(resourceMetrics);
+        } catch (JsonProcessingException e) {
+            LOG.error("Could not serialize node resources", e);
+        }
+        return "{}";
     }
 
     private double getCpuTemperature(Sensors s) {

@@ -28,6 +28,6 @@ RUN set -ex; \
     apt clean; \
     rm -rf /tmp/apache-* /var/lib/apt/lists/*
 
-COPY target/streampipes-node-controller-container.jar  /streampipes-node-controller.jar
+COPY target/streampipes-node-controller.jar  /streampipes-node-controller.jar
 
 ENTRYPOINT ["java", "-jar", "/streampipes-node-controller.jar"]

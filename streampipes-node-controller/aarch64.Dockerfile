@@ -13,8 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-ARG BASE_IMAGE=adoptopenjdk/openjdk8-openj9:alpine-slim
-#ARG BASE_IMAGE=adoptopenjdk:8-jre-openj9
+ARG BASE_IMAGE=arm64v8/openjdk:11-jre-slim
 FROM $BASE_IMAGE
 
 MAINTAINER dev@streampipes.apache.org
@@ -22,13 +21,13 @@ MAINTAINER dev@streampipes.apache.org
 EXPOSE 7077
 ENV CONSUL_LOCATION consul
 
-# Comment:
-# curl needed to talk to docker.sock for NodeJanitorManager
-# to prune images (docker-spotify does not support pruning)
-RUN set -x; \
-    apk --update add curl eudev-dev; \
-    rm -rf /var/cache/apk/*
+COPY qemu-aarch64-static /usr/bin
+RUN set -ex; \
+    apt -y update; \
+    apt -y --no-install-recommends install curl; \
+    apt clean; \
+    rm -rf /tmp/apache-* /var/lib/apt/lists/*
 
-COPY target/streampipes-node-controller-container.jar  /streampipes-node-controller.jar
+COPY target/streampipes-node-controller.jar  /streampipes-node-controller.jar
 
 ENTRYPOINT ["java", "-jar", "/streampipes-node-controller.jar"]

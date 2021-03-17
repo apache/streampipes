@@ -35,12 +35,8 @@ public class MapDBImpl implements CRUDStorage {
 
     public MapDBImpl(File dbFile) {
         if("true".equals(System.getenv("SP_DEBUG"))) {
-//            db = DBMaker
-//                    .memoryDB()
-//                    .closeOnJvmShutdown()
-//                    .make();
             db = DBMaker
-                    .fileDB(dbFile)
+                    .memoryDB()
                     .closeOnJvmShutdown()
                     .make();
         } else {

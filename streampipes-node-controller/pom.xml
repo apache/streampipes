@@ -25,7 +25,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>streampipes-node-controller-container</artifactId>
+    <artifactId>streampipes-node-controller</artifactId>
 
     <dependencies>
         <!-- StreamPipes dependencies -->
@@ -149,6 +149,6 @@
                 </executions>
             </plugin>
         </plugins>
-        <finalName>streampipes-node-controller-container</finalName>
+        <finalName>streampipes-node-controller</finalName>
     </build>
 </project>
