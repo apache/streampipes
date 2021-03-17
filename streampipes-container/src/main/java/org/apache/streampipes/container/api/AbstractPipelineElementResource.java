@@ -197,5 +197,19 @@ public abstract class AbstractPipelineElementResource<D extends Declarer<?>> {
             .build();
   }
 
+  protected <T> Response notModified(T entity) {
+    return Response
+            .notModified()
+            .entity(entity)
+            .build();
+  }
+
+  protected <T> Response noContent(T entity) {
+    return Response
+            .noContent()
+            .entity(entity)
+            .build();
+  }
+
   protected abstract Map<String, D> getElementDeclarers();
 }

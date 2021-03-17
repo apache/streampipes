@@ -30,6 +30,8 @@ import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.sdk.extractor.AbstractParameterExtractor;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -38,6 +40,8 @@ import java.util.Map;
 
 public abstract class InvocablePipelineElementResource<I extends InvocableStreamPipesEntity, D extends Declarer<?>,
         P extends AbstractParameterExtractor<I>> extends AbstractPipelineElementResource<D> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(InvocablePipelineElementResource.class);
 
     protected abstract Map<String, D> getElementDeclarers();
     protected abstract String getInstanceId(String uri, String elementId);
@@ -55,30 +59,32 @@ public abstract class InvocablePipelineElementResource<I extends InvocableStream
     @JacksonSerialized
     public javax.ws.rs.core.Response invokeRuntime(@PathParam("elementId") String elementId, I graph) {
 
-        // in case element container is still running when backend/node controller crashes
-        if (!alreadyRunning(graph)) {
-            try {
-                if (isDebug()) {
-                    graph = createGroundingDebugInformation(graph);
-                }
+        try {
+            if (isDebug()) {
+              graph = createGroundingDebugInformation(graph);
+            }
 
-                InvocableDeclarer declarer = (InvocableDeclarer) getDeclarerById(elementId);
+            InvocableDeclarer declarer = (InvocableDeclarer) getDeclarerById(elementId);
 
-                if (declarer != null) {
-                    //String runningInstanceId = getInstanceId(graph.getElementId(), elementId);
-                    String runningInstanceId = graph.getDeploymentRunningInstanceId();
+            if (declarer != null) {
+                String runningInstanceId = getInstanceId(graph.getElementId(), elementId);
+                if (!RunningInstances.INSTANCE.exists(runningInstanceId)) {
                     RunningInstances.INSTANCE.add(runningInstanceId, graph, declarer.getClass().newInstance());
                     Response resp = RunningInstances.INSTANCE.getInvocation(runningInstanceId).invokeRuntime(graph);
                     return ok(resp);
+                } else {
+                    LOG.info("Pipeline element {} with id {} seems to be already running, skipping invocation request.", graph.getName(), runningInstanceId);
+                    Response resp = new Response(graph.getElementId(), true, "Pipeline element already running");
+                    return ok(resp);
                 }
-            } catch (InstantiationException | IllegalAccessException e) {
-                e.printStackTrace();
-                return ok(new Response(elementId, false, e.getMessage()));
-            }
 
-            return ok(new Response(elementId, false, "Could not find the element with id: " + elementId));
+            }
+        } catch (InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+            return ok(new Response(elementId, false, e.getMessage()));
         }
-        return ok(new Response(elementId, true, "Already running element with id: " + elementId));
+
+        return ok(new Response(elementId, false, "Could not find the element with id: " + elementId));
     }
 
     @POST
@@ -150,10 +156,6 @@ public abstract class InvocablePipelineElementResource<I extends InvocableStream
 
     private Boolean isDebug() {
         return "true".equals(System.getenv("SP_DEBUG"));
-    }
-
-    private Boolean alreadyRunning(I graph) {
-        return RunningInstances.INSTANCE.getInvocation(graph.getDeploymentRunningInstanceId()) != null;
     }
 }
 

@@ -66,12 +66,12 @@ export class EditorComponent implements OnInit {
     elementsLoaded = [false, false, false];
     allElementsLoaded: boolean = false;
 
-    minimizedEditorStand: boolean = false;
-
     requiredStreamForTutorialAppId: any = "org.apache.streampipes.sources.simulator.flowrate1";
     requiredProcessorForTutorialAppId: any = "org.apache.streampipes.processors.filters.jvm.numericalfilter";
     requiredSinkForTutorialAppId: any = "org.apache.streampipes.sinks.internal.jvm.dashboard";
     missingElementsForTutorial: any = [];
+
+    pipelineCanvasMaximized: boolean = false;
 
     isTutorialOpen: boolean = false;
 
@@ -188,10 +188,6 @@ export class EditorComponent implements OnInit {
         this.shepherdService.trigger("select-" +this.activeShorthand);
     }
 
-    toggleEditorStand() {
-        this.minimizedEditorStand = !this.minimizedEditorStand;
-    }
-
     startCreatePipelineTour() {
         if (this.requiredPipelineElementsForTourPresent()) {
             this.shepherdService.startCreatePipelineTour();
@@ -242,5 +238,9 @@ export class EditorComponent implements OnInit {
         return list && list.some(el => {
             return el.appId === appId;
         });
+    }
+
+    togglePipelineCanvasMode(maximize: boolean) {
+        this.pipelineCanvasMaximized = maximize;
     }
 }

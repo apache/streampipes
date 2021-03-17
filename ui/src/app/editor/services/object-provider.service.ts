@@ -18,17 +18,17 @@
 
 import {Injectable} from "@angular/core";
 import {RestApi} from "../../services/rest-api.service";
-import {JsplumbBridge} from "./jsplumb-bridge.service";
 import {InvocablePipelineElementUnion, PipelineElementConfig} from "../model/editor.model";
-import {Pipeline} from "../../core-model/gen/streampipes-model";
+import {DataSinkInvocation, Pipeline} from "../../core-model/gen/streampipes-model";
 import {EditorService} from "./editor.service";
+import {JsplumbFactoryService} from "./jsplumb-factory.service";
 
 @Injectable()
 export class ObjectProvider {
 
     constructor(private RestApi: RestApi,
-                private JsplumbBridge: JsplumbBridge,
-                private EditorService: EditorService) {
+                private EditorService: EditorService,
+                private JsplumbFactoryService: JsplumbFactoryService) {
     }
 
     prepareElement(pipelineElement: InvocablePipelineElementUnion) {
@@ -58,6 +58,19 @@ export class ObjectProvider {
         return pipeline;
     }
 
+    hasConnectedPipelineElement(pipelineElementDomId: string,
+                                rawPipelineModel: PipelineElementConfig[]) {
+        let pipelineElement = this.findElement(pipelineElementDomId, rawPipelineModel);
+        if (pipelineElement.payload instanceof DataSinkInvocation) {
+            return false;
+        } else {
+            return rawPipelineModel
+                .filter(pe => !pe.settings.disabled && pe.payload.connectedTo)
+                .find(pe => (pe.payload.connectedTo.indexOf(pipelineElementDomId) > -1))
+                != undefined;
+        }
+    }
+
     findElement(elementId, rawPipelineModel: PipelineElementConfig[]): PipelineElementConfig {
         let result = {} as PipelineElementConfig;
         rawPipelineModel.forEach(pe => {
@@ -69,12 +82,13 @@ export class ObjectProvider {
     }
 
     addElementNew(pipeline, currentPipelineElements: PipelineElementConfig[]): Pipeline {
+        let JsplumbBridge = this.JsplumbFactoryService.getJsplumbBridge(false);
         currentPipelineElements.forEach(pe => {
             if (pe.settings.disabled == undefined || !(pe.settings.disabled)) {
                 if (pe.type === 'sepa' || pe.type === 'action') {
                     let payload = pe.payload;
                     payload = this.prepareElement(payload as InvocablePipelineElementUnion);
-                    let connections = this.JsplumbBridge.getConnections({
+                    let connections = JsplumbBridge.getConnections({
                         target: $("#" + payload.dom)
                     });
                     for (let i = 0; i < connections.length; i++) {

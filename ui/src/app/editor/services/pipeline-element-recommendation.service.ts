@@ -20,9 +20,9 @@ import {Injectable} from "@angular/core";
 import {EditorService} from "./editor.service";
 import {PipelineElementUnion} from "../model/editor.model";
 import {
-    InvocableStreamPipesEntity,
-    PipelineElementRecommendation,
-    SpDataStream
+  InvocableStreamPipesEntity,
+  PipelineElementRecommendation,
+  SpDataStream
 } from "../../core-model/gen/streampipes-model";
 
 @Injectable()

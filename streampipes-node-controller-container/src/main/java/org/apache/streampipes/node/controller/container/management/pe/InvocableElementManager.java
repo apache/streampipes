@@ -41,7 +41,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
+import java.net.Socket;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
@@ -63,7 +65,8 @@ public class InvocableElementManager implements PipelineElementLifeCycle {
     private static final String CONSUL_REGISTRATION_ROUTE = "v1/agent/service/register";
     private static final String RECONFIGURATION_TOPIC = "org.apache.streampipes.control.event.reconfigure";
     private static final int CONSUL_DEFAULT_PORT = 8500;
-    private static final Integer CONNECT_TIMEOUT = 10000;
+    private static final Integer CONNECT_TIMEOUT_MS = 10000;
+    private static final long RETRY_INTERVAL_MS = 5000;
     private static InvocableElementManager instance = null;
 
     private InvocableElementManager() {}
@@ -88,19 +91,28 @@ public class InvocableElementManager implements PipelineElementLifeCycle {
 
     @Override
     public Response invoke(InvocableStreamPipesEntity graph) {
+
+        Response response = new Response();
         String endpoint = graph.getBelongsTo();
-        LOG.info("Invoke pipeline element: {}", endpoint);
-        try {
-            org.apache.http.client.fluent.Response httpResp = Request
-                    .Post(endpoint)
-                    .bodyString(toJson(graph), ContentType.APPLICATION_JSON)
-                    .connectTimeout(CONNECT_TIMEOUT)
-                    .execute();
-            return handleResponse(httpResp);
-        } catch (Exception e) {
-            LOG.error(e.getMessage());
+        String body = toJson(graph);
+        LOG.info("Trying to invoke pipeline element: {}", endpoint);
+
+        boolean connected = false;
+        while (!connected) {
+
+            connected = post(endpoint, body, response);
+
+            if (!connected) {
+                LOG.info("Retrying in {} seconds", (RETRY_INTERVAL_MS / 1000));
+                try {
+                    Thread.sleep(RETRY_INTERVAL_MS);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException("Failed to invoke pipeline element: " + endpoint);
+                }
+            }
         }
-        throw new RuntimeException("Failed to invoke pipeline element: " + endpoint);
+        LOG.info("Successfully invoked pipeline element {}", endpoint);
+        return response;
     }
 
     @Override
@@ -109,7 +121,7 @@ public class InvocableElementManager implements PipelineElementLifeCycle {
         try {
             org.apache.http.client.fluent.Response httpResp = Request
                     .Delete(endpoint)
-                    .connectTimeout(CONNECT_TIMEOUT)
+                    .connectTimeout(CONNECT_TIMEOUT_MS)
                     .execute();
             return handleResponse(httpResp);
         } catch (Exception e) {
@@ -148,6 +160,26 @@ public class InvocableElementManager implements PipelineElementLifeCycle {
 
         response.setSuccess(true);
         return response;
+    }
+
+    private boolean post(String endpoint, String body, Response response) {
+        try {
+            org.apache.http.client.fluent.Response httpResp = Request
+                    .Post(endpoint)
+                    .bodyString(body, ContentType.APPLICATION_JSON)
+                    .connectTimeout(CONNECT_TIMEOUT_MS)
+                    .execute();
+            Response resp = handleResponse(httpResp);
+
+            response.setElementId(resp.getElementId());
+            response.setSuccess(resp.isSuccess());
+            response.setOptionalMessage(resp.getOptionalMessage());
+
+            return true;
+        } catch (IOException e) {
+            LOG.error("Could not invoke pipeline element - is the pipeline element container ready?");
+        }
+        return false;
     }
 
     public void invokePipelineElementsOnSystemRebootOrRestart() {

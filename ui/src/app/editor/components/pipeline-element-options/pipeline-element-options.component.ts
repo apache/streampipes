@@ -36,6 +36,7 @@ import {CompatibleElementsComponent} from "../../dialog/compatible-elements/comp
 import {Tuple2} from "../../../core-model/base/Tuple2";
 import { cloneDeep } from "lodash";
 import {Observable, Subscription} from "rxjs";
+import {JsplumbFactoryService} from "../../services/jsplumb-factory.service";
 
 @Component({
   selector: 'pipeline-element-options',
@@ -79,11 +80,13 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
 
   pipelineElementConfiguredObservable: Subscription;
 
+  JsplumbBridge: JsplumbBridge;
+
   constructor(private ObjectProvider: ObjectProvider,
               private PipelineElementRecommendationService: PipelineElementRecommendationService,
               private DialogService: DialogService,
               private EditorService: EditorService,
-              private JsplumbBridge: JsplumbBridge,
+              private JsplumbFactoryService: JsplumbFactoryService,
               private JsplumbService: JsplumbService,
               private PipelineValidationService: PipelineValidationService,
               private RestApi: RestApi) {
@@ -91,6 +94,7 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
     this.possibleElements = [];
     this.recommendedElements = [];
     this.recommendationsShown = false;
+    this.JsplumbBridge = this.JsplumbFactoryService.getJsplumbBridge(false);
   }
 
   ngOnInit() {

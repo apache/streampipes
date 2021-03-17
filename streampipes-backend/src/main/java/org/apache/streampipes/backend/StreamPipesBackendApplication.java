@@ -88,21 +88,37 @@ public class StreamPipesBackendApplication {
   }
 
   private void startAllPreviouslyStoppedPipelines() {
-    LOG.info("Checking for pipelines to be started...");
+    LOG.info("Checking for orphaned pipelines...");
+    getAllPipelines()
+            .stream()
+            .filter(Pipeline::isRunning)
+            .forEach(pipeline -> {
+              LOG.info("Restoring orphaned pipeline {}", pipeline.getName());
+              startPipeline(pipeline);
+            });
+
+    LOG.info("Checking for gracefully shut down pipelines to be restarted...");
 
     getAllPipelines()
             .stream()
+            .filter(p -> ! (p.isRunning()))
             .filter(Pipeline::isRestartOnSystemReboot)
             .forEach(pipeline -> {
-              PipelineOperationStatus status = Operations.startPipeline(pipeline);
-              if (status.isSuccess()) {
-                LOG.info("Pipeline {} successfully restarted", status.getPipelineName());
-              } else {
-                LOG.error("Pipeline {} could not be restarted - are all pipeline element containers running?", status.getPipelineName());
-              }
+              startPipeline(pipeline);
               pipeline.setRestartOnSystemReboot(false);
               StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updatePipeline(pipeline);
             });
+
+    LOG.info("No more pipelines to restore...");
+  }
+
+  private void startPipeline(Pipeline pipeline) {
+    PipelineOperationStatus status = Operations.startPipeline(pipeline);
+    if (status.isSuccess()) {
+      LOG.info("Pipeline {} successfully restarted", status.getPipelineName());
+    } else {
+      LOG.error("Pipeline {} could not be restarted - are all pipeline element containers running?", status.getPipelineName());
+    }
   }
 
   private List<Pipeline> getAllPipelines() {

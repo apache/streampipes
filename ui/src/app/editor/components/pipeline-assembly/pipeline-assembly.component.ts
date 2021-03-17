@@ -16,7 +16,16 @@
  *
  */
 
-import {Component, Input, NgZone, OnInit,} from "@angular/core";
+import {
+    Component,
+    ElementRef,
+    EventEmitter,
+    Input,
+    NgZone,
+    OnInit,
+    Output,
+    ViewChild,
+} from "@angular/core";
 import {JsplumbBridge} from "../../services/jsplumb-bridge.service";
 import {PipelinePositioningService} from "../../services/pipeline-positioning.service";
 import {PipelineValidationService} from "../../services/pipeline-validation.service";
@@ -32,6 +41,10 @@ import {MatDialog} from "@angular/material/dialog";
 import {EditorService} from "../../services/editor.service";
 import {PipelineService} from "../../../platform-services/apis/pipeline.service";
 import {pipe} from "rxjs";
+import {PipelineCanvasScrollingService} from "../../services/pipeline-canvas-scrolling.service";
+import {JsplumbFactoryService} from "../../services/jsplumb-factory.service";
+import Panzoom, {PanzoomObject} from "@panzoom/panzoom";
+import {PipelineElementDraggedService} from "../../services/pipeline-element-dragged.service";
 
 
 @Component({
@@ -41,24 +54,30 @@ import {pipe} from "rxjs";
 })
 export class PipelineAssemblyComponent implements OnInit {
 
-    PipelineEditorService: any;
-    DialogBuilder: any;
-    currentMouseOverElement: any;
-    currentZoomLevel: any;
-    preview: any;
-
     @Input()
     rawPipelineModel: PipelineElementConfig[];
-    selectMode: any;
-    currentPipelineName: any;
-    currentPipelineDescription: any;
-    currentEventRelayStrategy: any;
 
     @Input()
     currentModifiedPipelineId: any;
 
     @Input()
     allElements: PipelineElementUnion[];
+
+    @Output()
+    pipelineCanvasMaximizedEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+    JsplumbBridge: JsplumbBridge;
+
+    pipelineCanvasMaximized: boolean = false;
+
+    currentMouseOverElement: any;
+    currentZoomLevel: any;
+    preview: any;
+
+    selectMode: any;
+    currentPipelineName: any;
+    currentPipelineDescription: any;
+    currentEventRelayStrategy: any;
 
     errorMessagesDisplayed: any = false;
 
@@ -67,8 +86,11 @@ export class PipelineAssemblyComponent implements OnInit {
     pipelineCacheRunning: boolean = false;
     pipelineCached: boolean = false;
 
+    config: any = {};
+    @ViewChild("outerCanvas") pipelineCanvas: ElementRef;
+    panzoom: PanzoomObject;
 
-    constructor(private JsplumbBridge: JsplumbBridge,
+    constructor(private JsPlumbFactoryService: JsplumbFactoryService,
                 private PipelinePositioningService: PipelinePositioningService,
                 private ObjectProvider: ObjectProvider,
                 public EditorService: EditorService,
@@ -78,35 +100,46 @@ export class PipelineAssemblyComponent implements OnInit {
                 private ShepherdService: ShepherdService,
                 private dialogService: DialogService,
                 private dialog: MatDialog,
-                private ngZone: NgZone) {
+                private ngZone: NgZone,
+                private pipelineElementDraggedService: PipelineElementDraggedService) {
 
         this.selectMode = true;
         this.currentZoomLevel = 1;
-
     }
 
     ngOnInit(): void {
+        this.JsplumbBridge = this.JsPlumbFactoryService.getJsplumbBridge(false);
         if (this.currentModifiedPipelineId) {
             this.displayPipelineById();
         } else {
             this.checkAndDisplayCachedPipeline();
         }
+        this.pipelineElementDraggedService.pipelineElementMovedSubject.subscribe(position => {
+            let offsetHeight = this.pipelineCanvas.nativeElement.offsetHeight;
+            let offsetWidth = this.pipelineCanvas.nativeElement.offsetWidth;
+            let currentPan = this.panzoom.getPan();
+            let xOffset = 0;
+            let yOffset = 0;
+            if ((position.y + currentPan.y) > (offsetHeight - 100)) {
+              yOffset = -10;
+            }
+            if ((position.x + currentPan.x) > (offsetWidth - 100)) {
+              xOffset = -10;
+            }
+            if (xOffset < 0 || yOffset < 0) {
+              this.pan(xOffset, yOffset);
+            }
+        });
     }
 
     ngAfterViewInit() {
-        ($("#assembly") as any).panzoom({
-            disablePan: true,
-            increment: 0.25,
-            minScale: 0.5,
-            maxScale: 1.5,
-            contain: 'invert'
-        });
-
-        $("#assembly").on('panzoomzoom', (e, panzoom, scale) => {
-            this.currentZoomLevel = scale;
-            this.JsplumbBridge.setZoom(scale);
-            this.JsplumbBridge.repaintEverything();
-        });
+        const elem = document.getElementById('assembly')
+        this.panzoom = Panzoom(elem, {
+            maxScale: 5,
+            excludeClass: "jtk-draggable",
+            canvas: true,
+            contain: "outside"
+        })
     }
 
     autoLayout() {
@@ -115,14 +148,6 @@ export class PipelineAssemblyComponent implements OnInit {
     }
 
     toggleSelectMode() {
-        if (this.selectMode) {
-            ($("#assembly") as any).panzoom("option", "disablePan", false);
-            this.selectMode = false;
-        }
-        else {
-            ($("#assembly") as any).panzoom("option", "disablePan", true);
-            this.selectMode = true;
-        }
     }
 
     zoomOut() {
@@ -134,7 +159,10 @@ export class PipelineAssemblyComponent implements OnInit {
     }
 
     doZoom(zoomOut) {
-        ($("#assembly") as any).panzoom("zoom", zoomOut);
+        zoomOut ? this.panzoom.zoomOut() : this.panzoom.zoomIn();
+        this.currentZoomLevel = this.panzoom.getScale();
+        this.JsplumbBridge.setZoom(this.currentZoomLevel);
+        this.JsplumbBridge.repaintEverything();
     }
 
     showClearAssemblyConfirmDialog(event: any) {
@@ -195,7 +223,7 @@ export class PipelineAssemblyComponent implements OnInit {
             pipeline._id = this.currentModifiedPipelineId;
         }
 
-        const dialogRef = this.dialogService.open(SavePipelineComponent,{
+        this.dialogService.open(SavePipelineComponent,{
             panelType: PanelType.SLIDE_IN_PANEL,
             title: "Save pipeline",
             data: {
@@ -232,7 +260,7 @@ export class PipelineAssemblyComponent implements OnInit {
             this.EditorService.makePipelineAssemblyEmpty(false);
             this.ngZone.run(() => {
                 this.pipelineValid = this.PipelineValidationService
-                    .isValidPipeline(this.rawPipelineModel.filter(pe => !(pe.settings.disabled)));
+                    .isValidPipeline(this.rawPipelineModel.filter(pe => !(pe.settings.disabled)), false);
             });
         });
     }
@@ -243,6 +271,43 @@ export class PipelineAssemblyComponent implements OnInit {
 
     isPipelineAssemblyEmpty() {
         return this.rawPipelineModel.length === 0 || this.rawPipelineModel.every(pe => pe.settings.disabled);
+    }
+
+    toggleCanvasMaximized() {
+        this.pipelineCanvasMaximized = !(this.pipelineCanvasMaximized);
+        this.pipelineCanvasMaximizedEmitter.emit(this.pipelineCanvasMaximized);
+    }
+
+    panLeft() {
+        this.pan(100, 0);
+    }
+
+    panRight() {
+        console.log("panning right");
+        this.pan(-100, 0);
+    }
+
+    panUp() {
+        this.pan(0, 100);
+    }
+
+    panDown() {
+        this.pan(0, -100);
+    }
+
+    panHome() {
+        this.panAbsolute(0, 0);
+    }
+
+    pan(xOffset: number, yOffset: number) {
+        let currentPan = this.panzoom.getPan();
+        let panX = Math.min(0, currentPan.x + xOffset);
+        let panY = Math.min(0, currentPan.y + yOffset);
+        this.panzoom.pan(panX, panY);
+    }
+
+    panAbsolute(x: number, y: number) {
+        this.panzoom.pan(x, y);
     }
 
 }

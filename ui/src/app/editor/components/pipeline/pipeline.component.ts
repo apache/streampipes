@@ -23,12 +23,12 @@ import {JsplumbBridge} from "../../services/jsplumb-bridge.service";
 import {ShepherdService} from "../../../services/tour/shepherd.service";
 import {
   ChangeDetectorRef,
-  Component,
+  Component, ElementRef,
   EventEmitter,
   Input,
-  NgZone,
+  NgZone, OnDestroy,
   OnInit,
-  Output
+  Output, ViewChild
 } from "@angular/core";
 import {
   InvocablePipelineElementUnion,
@@ -37,9 +37,9 @@ import {
 } from "../../model/editor.model";
 import {
   CustomOutputStrategy,
-  DataProcessorInvocation, ErrorMessage,
-  Pipeline,
-  SpDataStream
+  DataProcessorInvocation, DataSinkInvocation, ErrorMessage,
+  Pipeline, SpDataSet,
+  SpDataStream, SpDataStreamUnion
 } from "../../../core-model/gen/streampipes-model";
 import {ObjectProvider} from "../../services/object-provider.service";
 import {CustomizeComponent} from "../../dialog/customize/customize.component";
@@ -51,13 +51,17 @@ import {MatchingErrorComponent} from "../../dialog/matching-error/matching-error
 import {Tuple2} from "../../../core-model/base/Tuple2";
 import {ConfirmDialogComponent} from "../../../core-ui/dialog/confirm-dialog/confirm-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
+import {Subject} from "rxjs";
+import {PipelineElementDraggedService} from "../../services/pipeline-element-dragged.service";
+import {PipelineCanvasScrollingService} from "../../services/pipeline-canvas-scrolling.service";
+import {JsplumbFactoryService} from "../../services/jsplumb-factory.service";
 
 @Component({
   selector: 'pipeline',
   templateUrl: './pipeline.component.html',
   styleUrls: ['./pipeline.component.css']
 })
-export class PipelineComponent implements OnInit {
+export class PipelineComponent implements OnInit, OnDestroy {
 
   @Input()
   pipelineValid: boolean;
@@ -88,18 +92,21 @@ export class PipelineComponent implements OnInit {
 
   availablePipelineElementCache: PipelineElementUnion[];
 
-  plumbReady: any;
+  plumbReady: boolean;
   currentMouseOverElement: string;
   currentPipelineModel: Pipeline;
   idCounter: any;
   currentZoomLevel: any;
   TransitionService: any;
 
-  // remove later
+  canvasWidth: string = "100%";
+  canvasHeight: string = "100%";
+
+  JsplumbBridge: JsplumbBridge;
 
   constructor(private JsplumbService: JsplumbService,
               private PipelineEditorService: PipelineEditorService,
-              private JsplumbBridge: JsplumbBridge,
+              private JsplumbFactoryService: JsplumbFactoryService,
               private ObjectProvider: ObjectProvider,
               private EditorService: EditorService,
               private ShepherdService: ShepherdService,
@@ -116,15 +123,19 @@ export class PipelineComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.JsplumbBridge = this.JsplumbFactoryService.getJsplumbBridge(this.preview);
     this.JsplumbBridge.setContainer(this.canvasId);
     this.initAssembly();
     this.initPlumb();
   }
 
+  ngAfterViewInit() {
+  }
+
   validatePipeline() {
     this.ngZone.run(() => {
       this.pipelineValid = this.PipelineValidationService
-          .isValidPipeline(this.rawPipelineModel.filter(pe => !(pe.settings.disabled)));
+          .isValidPipeline(this.rawPipelineModel.filter(pe => !(pe.settings.disabled)), this.preview);
     });
   }
 
@@ -203,18 +214,22 @@ export class PipelineComponent implements OnInit {
             this.rawPipelineModel.push(pipelineElementConfig);
             if (ui.draggable.hasClass('set')) {
               setTimeout(() => {
-                this.JsplumbService.setDropped(pipelineElementConfig.payload.dom, pipelineElementConfig.payload, true, false);
+                this.EditorService.updateDataSet(pipelineElementConfig.payload).subscribe(data => {
+                  (pipelineElementConfig.payload as SpDataSet).eventGrounding = data.eventGrounding;
+                  (pipelineElementConfig.payload as SpDataSet).datasetInvocationId = data.invocationId;
+                  this.JsplumbService.dataStreamDropped(pipelineElementConfig.payload.dom, pipelineElementConfig.payload as SpDataSet, true, false);
+                });
               }, 0);
             }
             else if (ui.draggable.hasClass('stream')) {
               this.checkTopicModel(pipelineElementConfig);
             } else if (ui.draggable.hasClass('sepa')) {
                 setTimeout(() => {
-                  this.JsplumbService.sepaDropped(pipelineElementConfig.payload.dom, pipelineElementConfig.payload, true, false);
+                  this.JsplumbService.dataProcessorDropped(pipelineElementConfig.payload.dom, pipelineElementConfig.payload as DataProcessorInvocation, true, false);
                 }, 10);
             } else if (ui.draggable.hasClass('action')) {
                 setTimeout(() => {
-                  this.JsplumbService.actionDropped(pipelineElementConfig.payload.dom, pipelineElementConfig.payload, true, false);
+                  this.JsplumbService.dataSinkDropped(pipelineElementConfig.payload.dom, pipelineElementConfig.payload as DataSinkInvocation, true, false);
                 }, 10);
             }
             if (this.ShepherdService.isTourActive()) {
@@ -232,7 +247,10 @@ export class PipelineComponent implements OnInit {
 
   checkTopicModel(pipelineElementConfig: PipelineElementConfig) {
       setTimeout(() => {
-        this.JsplumbService.streamDropped(pipelineElementConfig.payload.dom, pipelineElementConfig.payload, true, false);
+        this.JsplumbService.dataStreamDropped(pipelineElementConfig.payload.dom,
+            pipelineElementConfig.payload as SpDataStream,
+            true,
+            false);
       }, 10);
 
     var streamDescription = pipelineElementConfig.payload as SpDataStream;
@@ -260,7 +278,7 @@ export class PipelineComponent implements OnInit {
 
   initPlumb() {
 
-    this.JsplumbService.prepareJsplumb();
+    //this.JsplumbService.prepareJsplumb();
 
     this.JsplumbBridge.unbind("connection");
 
@@ -306,8 +324,7 @@ export class PipelineComponent implements OnInit {
               info.targetEndpoint.setType("token");
               this.validatePipeline();
               this.modifyPipeline(pipelineModificationMessage.pipelineModifications);
-              var sourceEndpoint = this.JsplumbBridge.selectEndpoints({element: info.targetEndpoint.elementId});
-              if (this.PipelineEditorService.isFullyConnected(pe)) {
+              if (this.JsplumbService.isFullyConnected(pe, this.preview)) {
                 let payload = pe.payload as InvocablePipelineElementUnion;
                 if ((payload.staticProperties && payload.staticProperties.length > 0) || this.isCustomOutput(pe)) {
                   this.showCustomizeDialog({a: false, b: pe});
@@ -411,7 +428,9 @@ export class PipelineComponent implements OnInit {
       if (c) {
         pipelineElementInfo.b.settings.openCustomize = false;
         (pipelineElementInfo.b.payload as InvocablePipelineElementUnion).configured = true;
-        this.JsplumbService.activateEndpoint(pipelineElementInfo.b.payload.dom, pipelineElementInfo.b.settings.completed);
+        if (!(pipelineElementInfo.b.payload instanceof DataSinkInvocation)) {
+          this.JsplumbBridge.activateEndpoint("out-" + pipelineElementInfo.b.payload.dom, pipelineElementInfo.b.settings.completed);
+        }
         this.JsplumbBridge.getSourceEndpoint(pipelineElementInfo.b.payload.dom).setType("token");
         this.triggerPipelineCacheUpdate();
         this.announceConfiguredElement(pipelineElementInfo.b);

@@ -1,4 +1,4 @@
-/*!
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,16 +16,18 @@
  *
  */
 
-$sp-color-primary: rgb(57, 181, 74);
-$sp-color-primary-light: rgb(59, 205, 76);
-$sp-color-accent: rgb(27, 20, 100);
-$sp-color-accent-light-blue: rgb(59, 92, 149);
-$sp-color-accent-light: rgb(156, 156, 156);
-$sp-color-accent-light-transparent: rgba(156, 156, 156, 0.4);
+import {Pipe, PipeTransform} from "@angular/core";
+import {PipelineElementConfig} from "../model/editor.model";
 
-$sp-color-stream: #FFEB3B;
-$sp-color-set: #ffa23b;
-$sp-color-processor: #009688;
-$sp-color-sink: #3F51B5;
-
-$sp-color-error: #B71C1C;
+@Pipe({
+  name: 'enabledPipelineElement',
+  pure: false
+})
+export class EnabledPipelineElementFilter implements PipeTransform {
+  transform(items: PipelineElementConfig[]): any {
+    if (!items) {
+      return items;
+    }
+    return items.filter(item => item.settings.disabled == undefined || !item.settings.disabled);
+  }
+}
