@@ -31,7 +31,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {MatStepper} from '@angular/material/stepper';
 import {
     AdapterDescription,
-    AdapterDescriptionUnion, AdapterStreamDescription,
+    AdapterDescriptionUnion, AdapterSetDescription, AdapterStreamDescription,
     EventProperty,
     EventRateTransformationRuleDescription,
     EventSchema,
@@ -235,9 +235,17 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
             this.adapter.rules.push(eventRate);
         }
 
-        (this.adapter as AdapterStreamDescription).dataStream.deploymentTargetNodeId = this.adapter.deploymentTargetNodeId;
-        (this.adapter as AdapterStreamDescription).dataStream.deploymentTargetNodeHostname = this.adapter.deploymentTargetNodeHostname;
-        (this.adapter as AdapterStreamDescription).dataStream.deploymentTargetNodePort = this.adapter.deploymentTargetNodePort;
+        if (this.adapter instanceof AdapterSetDescription) {
+            (this.adapter as AdapterSetDescription).dataSet.deploymentTargetNodeId = this.adapter.deploymentTargetNodeId;
+            (this.adapter as AdapterSetDescription).dataSet.deploymentTargetNodeHostname = this.adapter.deploymentTargetNodeHostname;
+            (this.adapter as AdapterSetDescription).dataSet.deploymentTargetNodePort = this.adapter.deploymentTargetNodePort;
+        }
+
+        if (this.adapter instanceof AdapterStreamDescription) {
+            (this.adapter as AdapterStreamDescription).dataStream.deploymentTargetNodeId = this.adapter.deploymentTargetNodeId;
+            (this.adapter as AdapterStreamDescription).dataStream.deploymentTargetNodeHostname = this.adapter.deploymentTargetNodeHostname;
+            (this.adapter as AdapterStreamDescription).dataStream.deploymentTargetNodePort = this.adapter.deploymentTargetNodePort;
+        }
 
 
         let dialogRef = this.dialogService.open(AdapterStartedDialog,{

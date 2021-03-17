@@ -23,16 +23,17 @@ import {ConnectService} from '../../services/connect.service';
 import {FilterPipe} from '../../filter/filter.pipe';
 import {AdapterUploadDialog} from '../../dialog/adapter-upload/adapter-upload-dialog.component';
 import {
-  AdapterDescription,
-  AdapterDescriptionUnion,
-  AdapterSetDescription,
-  AdapterStreamDescription,
-  EventSchema,
-  SpDataSet,
-  SpDataStream
+    AdapterDescription,
+    AdapterDescriptionUnion,
+    AdapterSetDescription,
+    AdapterStreamDescription,
+    EventSchema,
+    SpDataSet,
+    SpDataStream
 } from "../../../core-model/gen/streampipes-model";
 import {PanelType} from "../../../core-ui/dialog/base-dialog/base-dialog.model";
 import {DialogService} from "../../../core-ui/dialog/base-dialog/base-dialog.service";
+import {NodeService} from "../../../platform-services/apis/node.service";
 
 @Component({
     selector: 'sp-data-marketplace',
@@ -65,6 +66,7 @@ export class DataMarketplaceComponent implements OnInit {
     constructor(private dataMarketplaceService: DataMarketplaceService,
                 private ShepherdService: ShepherdService,
                 private connectService: ConnectService,
+                private nodeService: NodeService,
                 private dialogService: DialogService) {
     }
 
@@ -92,12 +94,13 @@ export class DataMarketplaceComponent implements OnInit {
 
         this.dataMarketplaceService
             .getGenericAndSpecificAdapterDescriptions()
-            .subscribe((allAdapters) => {
+            .subscribe(async (allAdapters) => {
                 this.adapterDescriptions = this.adapterDescriptions.concat(allAdapters[0]);
                 this.adapterDescriptions = this.adapterDescriptions.concat(allAdapters[1]);
                 this.adapterDescriptions
                     .sort((a, b) => a.name.localeCompare(b.name));
-                this.filteredAdapterDescriptions = this.adapterDescriptions;
+                //this.filteredAdapterDescriptions = this.adapterDescriptions;
+                this.filteredAdapterDescriptions = await this.filterForActiveNodes(this.adapterDescriptions);
                 this.adaptersLoading = false;
             }, error => {
                 console.log(error);
@@ -240,4 +243,19 @@ export class DataMarketplaceComponent implements OnInit {
         }
     }
 
+    async filterForActiveNodes(adapters: AdapterDescriptionUnion[]) {
+        return new Promise<AdapterDescriptionUnion[]>(resolve => {
+            var activeAdapters: AdapterDescriptionUnion[] = [];
+            this.nodeService.getAvailableNodes().subscribe(activeNodes => {
+                activeNodes.forEach(nodes => {
+                    adapters.forEach(adapter => {
+                        if (nodes.active && nodes.nodeControllerId === adapter.deploymentTargetNodeId) {
+                            activeAdapters.push(adapter);
+                        }
+                    })
+                });
+                resolve(activeAdapters);
+            });
+        })
+    }
 }

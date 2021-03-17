@@ -71,15 +71,13 @@ public class NodeControllerInit {
                 LOG.info("Auto-deploy extensions container");
                 DockerContainerManager.getInstance().init();
 
+//                LOG.info("Checking for pipeline elements to be started ...");
+//                InvocableElementManager.getInstance().invokePipelineElementsOnSystemRebootOrRestart();
+
                 LOG.info("Start janitor manager");
                 JanitorManager.getInstance().run();
             }
         } else throw new SpRuntimeException("Could not register node controller at backend");
-    }
-
-    @PostConstruct
-    public void init() {
-        InvocableElementManager.getInstance().invokePipelineElementsOnSystemRebootOrRestart();
     }
 
     @PreDestroy

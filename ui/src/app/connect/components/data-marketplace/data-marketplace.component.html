@@ -78,6 +78,11 @@
         <div *ngIf="selectedIndex === 0">
 
             <div *ngIf="newAdapterFromDescription===undefined" fxLayout="row wrap" fxLayoutAlign="start stretch" class="adapter-description-container">
+                <div *ngIf="filteredAdapterDescriptions.length == 0">
+                    <div class="content">
+                        <h4>Available adapters could not be loaded. Activate StreamPipes nodes in the configuration settings.</h4>
+                    </div>
+                </div>
                 <sp-adapter-description attr.id="{{adapterDescription.name.replace(' ', '_')}}" class="adapter-description"
                     fxFlex="33" (click)="selectAdapter(adapterDescription)" *ngFor="let adapterDescription of filteredAdapterDescriptions | filter:filterTerm"
                     [adapter]="adapterDescription" (updateAdapterEmitter)="updateDescriptionsAndRunningAdatpers()"></sp-adapter-description>

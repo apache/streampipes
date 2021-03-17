@@ -19,7 +19,6 @@
 package org.apache.streampipes.connect.container.master.management;
 
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.adapter.GenericAdapterDescription;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 
 public class Utils {
@@ -34,27 +33,14 @@ public class Utils {
     }
 
     public String getWorkerUrl(AdapterDescription adapterDescription) {
-        String id = "";
-        String deploymentTargetNodeId;
-
-        if (adapterDescription instanceof GenericAdapterDescription) {
-            id = ((GenericAdapterDescription) (adapterDescription)).getProtocolDescription().getAppId();
-            deploymentTargetNodeId =
-                    ((GenericAdapterDescription) (adapterDescription)).getProtocolDescription().getDeploymentTargetNodeId();
-        } else {
-            id = adapterDescription.getAppId();
-            deploymentTargetNodeId = adapterDescription.getDeploymentTargetNodeId();
-        }
-
-        return this.workerAdministrationManagement.getWorkerUrl(id, deploymentTargetNodeId);
+        return this.workerAdministrationManagement.getWorkerUrl(adapterDescription.getAppId(),
+                adapterDescription.getDeploymentTargetNodeId());
     }
 
     public String getWorkerUrl(ProtocolDescription protocolDescription) {
-        String id =  protocolDescription.getAppId();
-
-        return this.workerAdministrationManagement.getWorkerUrl(id, protocolDescription.getDeploymentTargetNodeId());
+        return this.workerAdministrationManagement.getWorkerUrl(protocolDescription.getAppId(),
+                protocolDescription.getDeploymentTargetNodeId());
     }
-
 
     public String getWorkerUrlById(String id) {
         return this.workerAdministrationManagement.getWorkerUrl(id);

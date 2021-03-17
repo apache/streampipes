@@ -248,7 +248,6 @@ public class NodeManager {
 
     private boolean handleResponse(Response response) throws IOException {
         SuccessMessage message = deserialize(response, SuccessMessage.class);
-        LOG.info(message.getNotifications().get(0).getDescription());
         return message.isSuccess();
     }
 

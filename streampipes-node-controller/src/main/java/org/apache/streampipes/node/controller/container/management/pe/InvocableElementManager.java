@@ -183,7 +183,6 @@ public class InvocableElementManager implements PipelineElementLifeCycle {
     }
 
     public void invokePipelineElementsOnSystemRebootOrRestart() {
-        LOG.info("Checking for pipeline elements to be started ...");
         getAllInvocables()
                 .forEach(graph -> {
                     Response status = InvocableElementManager.getInstance().invoke(graph);
@@ -194,7 +193,7 @@ public class InvocableElementManager implements PipelineElementLifeCycle {
                             LOG.info("Pipeline element already running {}", status.getElementId());
                         }
                     } else {
-                        LOG.error("Pipeline element could not be restarted - are the pipeline element containers " +
+                        LOG.info("Pipeline element could not be restarted - are the pipeline element containers " +
                                 "running? {}", status.getElementId());
                     }
                 });
@@ -285,6 +284,18 @@ public class InvocableElementManager implements PipelineElementLifeCycle {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static boolean isAvailable(String host, int port) {
+        try {
+            InetSocketAddress sa = new InetSocketAddress(host, port);
+            Socket ss = new Socket();
+            ss.connect(sa, 1000);
+            ss.close();
+        } catch(Exception e) {
+            return false;
+        }
+        return true;
     }
 
     private Response handleResponse(org.apache.http.client.fluent.Response httpResp) throws JsonSyntaxException,
