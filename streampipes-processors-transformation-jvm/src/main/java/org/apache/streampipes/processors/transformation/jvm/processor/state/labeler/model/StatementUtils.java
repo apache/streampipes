@@ -128,10 +128,10 @@ public class StatementUtils {
             return calculatedValue <= statement.getValue();
         } else if ("<".equals(statement.getOperator())) {
             return calculatedValue < statement.getValue();
-        } else if ("=".equals(statement.getOperator())) {
+        } else if ("==".equals(statement.getOperator())) {
             return calculatedValue == statement.getValue();
         } else {
-            return true;
+            return false;
         }
     }
 
