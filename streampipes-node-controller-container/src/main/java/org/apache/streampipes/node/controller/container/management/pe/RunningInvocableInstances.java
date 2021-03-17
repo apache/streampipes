@@ -22,6 +22,7 @@ import org.apache.streampipes.node.controller.container.storage.MapDBImpl;
 import org.apache.streampipes.node.controller.container.management.RunningInstances;
 
 import java.io.File;
+import java.util.List;
 
 public enum RunningInvocableInstances implements RunningInstances<InvocableStreamPipesEntity> {
     INSTANCE;
@@ -48,7 +49,13 @@ public enum RunningInvocableInstances implements RunningInstances<InvocableStrea
     }
 
     @Override
+    public List<InvocableStreamPipesEntity> getAll() {
+        return mapDB.retrieveAll();
+    }
+
+    @Override
     public void remove(String id) {
         mapDB.delete(id);
     }
+
 }

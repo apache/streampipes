@@ -44,6 +44,11 @@ public enum RunningRelayInstances implements RunningInstances<Map<String,EventRe
     }
 
     @Override
+    public List<Map<String, EventRelay>> getAll() {
+        return new ArrayList<>(runningInstances.values());
+    }
+
+    @Override
     public void remove(String id) {
         runningInstances.remove(id);
     }

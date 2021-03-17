@@ -23,6 +23,7 @@ import org.apache.streampipes.node.controller.container.api.NodeControllerResour
 import org.apache.streampipes.node.controller.container.config.NodeControllerConfig;
 import org.apache.streampipes.node.controller.container.management.node.NodeManager;
 import org.apache.streampipes.node.controller.container.management.janitor.JanitorManager;
+import org.apache.streampipes.node.controller.container.management.pe.InvocableElementManager;
 import org.apache.streampipes.node.controller.container.management.resource.ResourceManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.util.Collections;
 
@@ -58,7 +60,7 @@ public class NodeControllerInit {
         LOG.info("Load node info description");
         NodeManager.getInstance().init();
 
-        LOG.info("Register node controller at backend");
+        LOG.info("Register node controller at node management");
         boolean success = NodeManager.getInstance().register();
 
         if (success) {
@@ -73,6 +75,11 @@ public class NodeControllerInit {
                 JanitorManager.getInstance().run();
             }
         } else throw new SpRuntimeException("Could not register node controller at backend");
+    }
+
+    @PostConstruct
+    public void init() {
+        InvocableElementManager.getInstance().invokePipelineElementsOnSystemRebootOrRestart();
     }
 
     @PreDestroy

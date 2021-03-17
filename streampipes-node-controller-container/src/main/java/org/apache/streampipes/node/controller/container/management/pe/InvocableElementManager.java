@@ -82,6 +82,7 @@ public class InvocableElementManager implements PipelineElementLifeCycle {
     public void register(InvocableRegistration registration) {
         registerAtConsul(registration);
         updateAndSyncNodeInfoDescription(registration);
+        invokePipelineElementsOnSystemRebootOrRestart();
         LOG.info("Successfully registered pipeline element container");
     }
 
@@ -149,6 +150,24 @@ public class InvocableElementManager implements PipelineElementLifeCycle {
         return response;
     }
 
+    public void invokePipelineElementsOnSystemRebootOrRestart() {
+        LOG.info("Checking for pipeline elements to be started ...");
+        getAllInvocables()
+                .forEach(graph -> {
+                    Response status = InvocableElementManager.getInstance().invoke(graph);
+                    if (status.isSuccess()) {
+                        if (status.getOptionalMessage().isEmpty()) {
+                            LOG.info("Pipeline element successfully restarted {}", status.getElementId());
+                        } else {
+                            LOG.info("Pipeline element already running {}", status.getElementId());
+                        }
+                    } else {
+                        LOG.error("Pipeline element could not be restarted - are the pipeline element containers " +
+                                "running? {}", status.getElementId());
+                    }
+                });
+    }
+
     private EventProducer getReconfigurationEventProducerFromInvocable(InvocableStreamPipesEntity graph) {
         TransportProtocol tp = getReconfigurationTransportProtocol(graph);
         EventProducer pub;
@@ -187,6 +206,10 @@ public class InvocableElementManager implements PipelineElementLifeCycle {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private List<InvocableStreamPipesEntity> getAllInvocables() {
+        return RunningInvocableInstances.INSTANCE.getAll();
     }
 
     private NodeInfoDescription getNodeInfoDescription() {

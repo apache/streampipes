@@ -17,6 +17,8 @@
  */
 package org.apache.streampipes.node.controller.container.management;
 
+import java.util.List;
+
 public interface RunningInstances<T> {
 
     void add(String id, T value);
@@ -24,6 +26,8 @@ public interface RunningInstances<T> {
     boolean isRunning(String id);
 
     T get(String id);
+
+    List<T> getAll();
 
     void remove(String id);
 }

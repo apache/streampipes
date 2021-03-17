@@ -24,6 +24,8 @@ public interface CRUDStorage {
 
     <T>T retrieve(String id);
 
+    <T> List<T> retrieveAll();
+
     <T> void update(String id, T value);
 
     void delete(String id);

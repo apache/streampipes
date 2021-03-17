@@ -55,26 +55,30 @@ public abstract class InvocablePipelineElementResource<I extends InvocableStream
     @JacksonSerialized
     public javax.ws.rs.core.Response invokeRuntime(@PathParam("elementId") String elementId, I graph) {
 
-        try {
-            if (isDebug()) {
-              graph = createGroundingDebugInformation(graph);
+        // in case element container is still running when backend/node controller crashes
+        if (!alreadyRunning(graph)) {
+            try {
+                if (isDebug()) {
+                    graph = createGroundingDebugInformation(graph);
+                }
+
+                InvocableDeclarer declarer = (InvocableDeclarer) getDeclarerById(elementId);
+
+                if (declarer != null) {
+                    //String runningInstanceId = getInstanceId(graph.getElementId(), elementId);
+                    String runningInstanceId = graph.getDeploymentRunningInstanceId();
+                    RunningInstances.INSTANCE.add(runningInstanceId, graph, declarer.getClass().newInstance());
+                    Response resp = RunningInstances.INSTANCE.getInvocation(runningInstanceId).invokeRuntime(graph);
+                    return ok(resp);
+                }
+            } catch (InstantiationException | IllegalAccessException e) {
+                e.printStackTrace();
+                return ok(new Response(elementId, false, e.getMessage()));
             }
 
-            InvocableDeclarer declarer = (InvocableDeclarer) getDeclarerById(elementId);
-
-            if (declarer != null) {
-                //String runningInstanceId = getInstanceId(graph.getElementId(), elementId);
-                String runningInstanceId = graph.getDeploymentRunningInstanceId();
-                RunningInstances.INSTANCE.add(runningInstanceId, graph, declarer.getClass().newInstance());
-                Response resp = RunningInstances.INSTANCE.getInvocation(runningInstanceId).invokeRuntime(graph);
-                return ok(resp);
-            }
-        } catch (InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-            return ok(new Response(elementId, false, e.getMessage()));
+            return ok(new Response(elementId, false, "Could not find the element with id: " + elementId));
         }
-
-        return ok(new Response(elementId, false, "Could not find the element with id: " + elementId));
+        return ok(new Response(elementId, true, "Already running element with id: " + elementId));
     }
 
     @POST
@@ -146,6 +150,10 @@ public abstract class InvocablePipelineElementResource<I extends InvocableStream
 
     private Boolean isDebug() {
         return "true".equals(System.getenv("SP_DEBUG"));
+    }
+
+    private Boolean alreadyRunning(I graph) {
+        return RunningInstances.INSTANCE.getInvocation(graph.getDeploymentRunningInstanceId()) != null;
     }
 }
 

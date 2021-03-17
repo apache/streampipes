@@ -26,14 +26,17 @@ import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.model.node.*;
+import org.apache.streampipes.model.node.container.DeploymentContainer;
 import org.apache.streampipes.model.node.container.DockerContainer;
 import org.apache.streampipes.model.node.meta.GeoLocation;
+import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.node.controller.container.config.NodeControllerConfig;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.List;
 
 public class NodeManager {
     private static final Logger LOG = LoggerFactory.getLogger(NodeManager.class.getCanonicalName());
@@ -130,6 +133,10 @@ public class NodeManager {
         }
     }
 
+    public List<DeploymentContainer> getRegisteredContainer() {
+        return this.nodeInfo.getRegisteredContainers();
+    }
+
     // Interactions with core
 
     public boolean register() {
@@ -138,7 +145,7 @@ public class NodeManager {
             String body = JacksonSerializer.getObjectMapper().writeValueAsString(this.nodeInfo);
             String endpoint = generateRegistrationEndpoint();
 
-            LOG.info("Trying to register node at node management: " + endpoint);
+            LOG.info("Trying to register node controller at node management: " + endpoint);
 
             while (!connected) {
                 connected = post(endpoint, body);
@@ -151,7 +158,7 @@ public class NodeManager {
                     }
                 }
             }
-            LOG.info("Successfully registered node at backend");
+            LOG.info("Successfully registered node controller at node management");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -178,7 +185,7 @@ public class NodeManager {
                     }
                 }
             }
-            LOG.info("Successfully registered node at backend");
+            LOG.info("Successfully synced node controller with node management");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -191,7 +198,7 @@ public class NodeManager {
         try {
             String endpoint = generateVersionEndpoint();
 
-            LOG.info("Trying to fetch StreamPipes version from core: " + endpoint);
+            LOG.info("Trying to retrieve StreamPipes version from backend: " + endpoint);
 
             while (!connected) {
                 Response response = get(endpoint);
@@ -210,7 +217,7 @@ public class NodeManager {
                     }
                 }
             }
-            LOG.info("Successfully registered node at backend");
+            LOG.info("Successfully retrieved StreamPipes version from backend");
         } catch (IOException e) {
             e.printStackTrace();
         }

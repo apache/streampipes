@@ -23,6 +23,7 @@ import org.apache.streampipes.node.controller.container.storage.MapDBImpl;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public enum RunningContainerInstances implements RunningInstances<DockerContainer> {
@@ -47,6 +48,11 @@ public enum RunningContainerInstances implements RunningInstances<DockerContaine
     @Override
     public DockerContainer get(String id) {
         return isRunning(id) ? mapDB.retrieve(id) : null;
+    }
+
+    @Override
+    public List<DockerContainer> getAll() {
+        return mapDB.retrieveAll();
     }
 
     @Override

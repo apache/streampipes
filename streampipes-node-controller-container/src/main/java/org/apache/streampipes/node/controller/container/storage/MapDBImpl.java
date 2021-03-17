@@ -22,7 +22,9 @@ import org.mapdb.DBMaker;
 import org.mapdb.Serializer;
 
 import java.io.File;
+import java.util.List;
 import java.util.concurrent.ConcurrentMap;
+import java.util.stream.Collectors;
 
 public class MapDBImpl implements CRUDStorage {
 
@@ -55,6 +57,11 @@ public class MapDBImpl implements CRUDStorage {
     @Override
     public <T> T retrieve(String id) {
         return (T) map.get(id);
+    }
+
+    @Override
+    public <T> List<T> retrieveAll() {
+        return map.values().stream().map(v -> (T) v).collect(Collectors.toList());
     }
 
     @Override
