@@ -20,6 +20,11 @@ package org.apache.streampipes.connect.adapters.opcua.utils;
 
 import javax.annotation.Nullable;
 
+/**
+ * Enum that maintains different variants of OPC UA nodes. <br>
+ * Not yet completed. <br>
+ *
+ */
 public enum OpcUaNodeVariants {
     Property(68),
     EUInformation(887);

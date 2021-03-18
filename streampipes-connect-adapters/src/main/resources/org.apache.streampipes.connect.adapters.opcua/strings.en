@@ -1,5 +1,5 @@
-org.apache.streampipes.connect.adapters.opcua.pull.title=OPC UA Pull
-org.apache.streampipes.connect.adapters.opcua.pull.description=Reads values from an OPC-UA server repeatedly
+org.apache.streampipes.connect.adapters.opcua.title=OPC UA
+org.apache.streampipes.connect.adapters.opcua.description=Reads values from an OPC-UA server
 
 
 OPC_HOST_OR_URL.title=OPC Server
@@ -27,13 +27,13 @@ NODE_ID.title=Node ID
 NODE_ID.description=Id of the Node to read the values from
 
 
-ACCESS_MODE.title=Access Mode
-ACCESS_MODE.description=
+ACCESS_MODE.title=Security Level
+ACCESS_MODE.description=Select the OPC UA security level for the connection
 
-USERNAME_GROUP.title=Username/Password
+USERNAME_GROUP.title=Sign (username & password)
 USERNAME_GROUP.description=
 
-UNAUTHENTICATED.title=Unauthenticated
+UNAUTHENTICATED.title=None
 UNAUTHENTICATED.description=
 
 USERNAME.title=Username
@@ -45,5 +45,14 @@ PASSWORD.description=
 AVAILABLE_NODES.title=Available Nodes
 AVAILABLE_NODES.description=Select the nodes that are relevant for you. Please ensure to select one option each for access mode and OPC UA server and to specify the polling interval
 
-POLLING_INTERVAL.title=Polling Interval
-POLLING_INTERVAL.description=Timespan between data are polled, in seconds
+PULLING_INTERVAL.title=Pull Interval
+PULLING_INTERVAL.description=Timespan between data are pulled, in seconds
+
+ADAPTER_TYPE.title=Adapter Type
+ADAPTER_TYPE.description=Select whether the adapter pulls data regularly or listens to subscriptions
+
+PULL_MODE.title=Pull mode
+PULL_MODE.description=
+
+SUBSCRIPTION_MODE.title=Subscription mode
+SUBSCRIPTION_MODE.description=

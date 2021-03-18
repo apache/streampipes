@@ -19,7 +19,9 @@ import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
+import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaMonitoredItem;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
+import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.TimestampsToReturn;
 
 import java.util.*;
@@ -27,66 +29,123 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-public class OpcUaPullAdapter extends PullAdapter implements ResolvesContainerProvidedOptions {
+public class OpcUaAdapter extends PullAdapter implements ResolvesContainerProvidedOptions {
 
-    public static final String ID = "org.apache.streampipes.connect.adapters.opcua.pull";
+    public static final String ID = "org.apache.streampipes.connect.adapters.opcua";
 
-    private int pollingIntervalInSeconds;
+    private double pullingIntervalInSeconds;
     private OpcUa opcUa;
     private List<OpcNode> allNodes;
+    private List<NodeId> allNodeIds;
+    private int numberProperties;
+    private Map<String, Object> event;
 
-    public OpcUaPullAdapter() {
+    public OpcUaAdapter() {
         super();
+        this.numberProperties = 0;
+        this.event = new HashMap<>();
     }
 
-    public OpcUaPullAdapter(SpecificAdapterStreamDescription adapterStreamDescription) {
+    public OpcUaAdapter(SpecificAdapterStreamDescription adapterStreamDescription) {
         super(adapterStreamDescription);
+        this.numberProperties = 0;
+        this.event = new HashMap<>();
     }
 
     @Override
     protected void before() throws AdapterException {
 
-        StaticPropertyExtractor extractor =
-                StaticPropertyExtractor.from(this.adapterDescription.getConfig(), new ArrayList<>());
-
-        this.pollingIntervalInSeconds = extractor.singleValueParameter(OpcUaLabels.POLLING_INTERVAL.name(), int.class);
-
-        this.opcUa = OpcUa.from(this.adapterDescription);
-
+        this.allNodeIds = new ArrayList<>();
         try {
             this.opcUa.connect();
             this.allNodes = this.opcUa.browseNode(true);
+
+
+                for (OpcNode node : this.allNodes) {
+                    this.allNodeIds.add(node.nodeId);
+                }
+
+            if (opcUa.inPullMode()) {
+                this.pullingIntervalInSeconds = opcUa.getPullIntervalSeconds();
+            } else {
+                this.numberProperties = this.allNodeIds.size();
+                this.opcUa.createListSubscription(this.allNodeIds, this);
+            }
+
+
         } catch (Exception e) {
             throw new AdapterException("The Connection to the OPC UA server could not be established.");
         }
+    }
 
+        @Override
+    public void startAdapter() throws AdapterException {
+
+        this.opcUa = OpcUa.from(this.adapterDescription);
+
+        if (this.opcUa.inPullMode()) {
+            super.startAdapter();
+        } else {
+            this.before();
+        }
+    }
+
+    @Override
+    public void stopAdapter() throws AdapterException {
+        // close connection
+        this.opcUa.disconnect();
+
+        if (this.opcUa.inPullMode()){
+            super.stopAdapter();
+        }
     }
 
     @Override
     protected void pullData() {
 
-        Map<String, Object> event = new HashMap<>();
-
-        for (OpcNode opcNode : this.allNodes) {
-            CompletableFuture response = this.opcUa.getClient().readValue(0, TimestampsToReturn.Both, opcNode.getNodeId());
+            CompletableFuture<List<DataValue>> response = this.opcUa.getClient().readValues(0, TimestampsToReturn.Both, this.allNodeIds);
             try {
 
-                Object value = ((DataValue) response.get()).getValue().getValue();
+            List<DataValue> returnValues = response.get();
+                for (int i = 0; i<returnValues.size(); i++) {
 
-                event.put(opcNode.getLabel(), value);
+                    Object value = returnValues.get(i).getValue().getValue();
+                    this.event.put(this.allNodes.get(i).getLabel(), value);
 
-            } catch (InterruptedException | ExecutionException ie) {
+                }
+             } catch (InterruptedException | ExecutionException ie) {
                 ie.printStackTrace();
+             }
+
+            adapterPipeline.process(this.event);
+
+    }
+
+    public void onSubscriptionValue(UaMonitoredItem item, DataValue value) {
+
+        String key = OpcUaUtil.getRuntimeNameOfNode(item.getReadValueId().getNodeId());
+
+        OpcNode currNode = this.allNodes.stream()
+                .filter(node -> key.equals(node.getNodeId().getIdentifier().toString()))
+                .findFirst()
+                .orElse(null);
+
+        event.put(currNode.getLabel(), value.getValue().getValue());
+
+        // ensure that event is complete and all opc ua subscriptions transmitted at least one value
+        if (event.keySet().size() >= this.numberProperties) {
+            Map <String, Object> newEvent = new HashMap<>();
+            // deep copy of event to prevent preprocessor error
+            for (String k : event.keySet()) {
+                newEvent.put(k, event.get(k));
             }
+            adapterPipeline.process(newEvent);
         }
-
-        adapterPipeline.process(event);
-
     }
 
     @Override
     protected PollingSettings getPollingInterval() {
-        return PollingSettings.from(TimeUnit.SECONDS, this.pollingIntervalInSeconds);
+        return PollingSettings.from(TimeUnit.MILLISECONDS, (int) this.pullingIntervalInSeconds * 1000);
     }
 
     @Override
@@ -97,7 +156,10 @@ public class OpcUaPullAdapter extends PullAdapter implements ResolvesContainerPr
                 .withAssets(Assets.DOCUMENTATION, Assets.ICON)
                 .withLocales(Locales.EN)
                 .category(AdapterType.Generic, AdapterType.Manufacturing)
-                .requiredIntegerParameter(Labels.withId(OpcUaLabels.POLLING_INTERVAL.name()))
+                .requiredAlternatives(Labels.withId(OpcUaLabels.ADAPTER_TYPE.name()),
+                        Alternatives.from(Labels.withId(OpcUaLabels.PULL_MODE.name()),
+                                StaticProperties.integerFreeTextProperty(Labels.withId(OpcUaLabels.PULLING_INTERVAL.name()))),
+                        Alternatives.from(Labels.withId(OpcUaLabels.SUBSCRIPTION_MODE.name())))
                 .requiredAlternatives(Labels.withId(OpcUaLabels.ACCESS_MODE.name()),
                         Alternatives.from(Labels.withId(OpcUaLabels.UNAUTHENTICATED.name())),
                         Alternatives.from(Labels.withId(OpcUaLabels.USERNAME_GROUP.name()),
@@ -123,7 +185,7 @@ public class OpcUaPullAdapter extends PullAdapter implements ResolvesContainerPr
                 .requiredTextParameter(Labels.withId(OpcUaLabels.NODE_ID.name()))
                 .requiredMultiValueSelectionFromContainer(
                         Labels.withId(OpcUaLabels.AVAILABLE_NODES.name()),
-                        Arrays.asList(OpcUaLabels.POLLING_INTERVAL.name(), OpcUaLabels.NAMESPACE_INDEX.name(), OpcUaLabels.NODE_ID.name())
+                        Arrays.asList(OpcUaLabels.NAMESPACE_INDEX.name(), OpcUaLabels.NODE_ID.name())
                 )
                 .build();
 
@@ -134,7 +196,7 @@ public class OpcUaPullAdapter extends PullAdapter implements ResolvesContainerPr
 
     @Override
     public Adapter getInstance(SpecificAdapterStreamDescription adapterDescription) {
-        return new OpcUaPullAdapter(adapterDescription);
+        return new OpcUaAdapter(adapterDescription);
     }
 
     @Override

@@ -17,8 +17,16 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+/***
+ * Collection of several utility functions in context of OPC UA
+ */
 public class OpcUaUtil {
 
+    /***
+     * Ensures server address starts with {@code opc.tcp://}
+     * @param serverAddress server address as given by user
+     * @return correctly formated server address
+     */
     public static String formatServerAddress(String serverAddress) {
 
         if (!serverAddress.startsWith("opc.tcp://")) {
@@ -28,6 +36,13 @@ public class OpcUaUtil {
         return serverAddress;
     }
 
+    /***
+     * OPC UA specific implementation of {@link org.apache.streampipes.connect.adapter.Adapter}
+     * @param adapterStreamDescription
+     * @return guess schema
+     * @throws AdapterException
+     * @throws ParseException
+     */
     public static GuessSchema getSchema(SpecificAdapterStreamDescription adapterStreamDescription) throws AdapterException, ParseException {
         GuessSchema guessSchema = new GuessSchema();
         EventSchema eventSchema = new EventSchema();
@@ -45,7 +60,7 @@ public class OpcUaUtil {
                         allProperties.add(PrimitivePropertyBuilder
                             .create(opcNode.getType(), opcNode.getLabel())
                             .label(opcNode.getLabel())
-                            .measurementUnit(new URI(OpcUa.mapUnitIdToQudt(opcNode.getOpcUnitId())))
+                            .measurementUnit(new URI(opcNode.getQudtURI()))
                             .build());
                     } else {
                         allProperties.add(PrimitivePropertyBuilder
@@ -71,8 +86,15 @@ public class OpcUaUtil {
     }
 
 
+    /***
+     * OPC UA specific implementation of {@link org.apache.streampipes.container.api.ResolvesContainerProvidedOptions#resolveOptions(String, StaticPropertyExtractor)}.  }
+     * @param requestId
+     * @param parameterExtractor
+     * @return {@code List<Option>} with available node names for the given OPC UA configuration
+     */
     public static List<Option> resolveOptions (String requestId, StaticPropertyExtractor parameterExtractor) {
 
+        // access mode and host/url have to be selected
         try {
             parameterExtractor.selectedAlternativeInternalId(OpcUaLabels.OPC_HOST_OR_URL.name());
             parameterExtractor.selectedAlternativeInternalId(OpcUaLabels.ACCESS_MODE.name());
@@ -111,6 +133,9 @@ public class OpcUaUtil {
         return key;
     }
 
+    /***
+     * Enum for all possible labels in the context of OPC UA adapters
+     */
     public enum OpcUaLabels {
         OPC_HOST_OR_URL,
         OPC_URL,
@@ -126,6 +151,9 @@ public class OpcUaUtil {
         PASSWORD,
         UNAUTHENTICATED,
         AVAILABLE_NODES,
-        POLLING_INTERVAL;
+        PULLING_INTERVAL,
+        ADAPTER_TYPE,
+        PULL_MODE,
+        SUBSCRIPTION_MODE;
     }
 }
