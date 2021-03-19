@@ -47,6 +47,7 @@ public class PostgreSql extends JdbcClient implements EventSink<PostgreSqlParame
             "^[a-zA-Z_][a-zA-Z0-9_]*$",
             "org.postgresql.Driver",
             "postgresql",
+            parameters.isSSLEnabled(),
             LOG);
   }
 

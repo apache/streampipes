@@ -60,6 +60,7 @@ public class Mysql extends JdbcClient implements EventSink<MysqlParameters> {
                 ".*",
                 "com.mysql.cj.jdbc.Driver",
                 "mysql",
+                false,
                 LOG);
     }
 

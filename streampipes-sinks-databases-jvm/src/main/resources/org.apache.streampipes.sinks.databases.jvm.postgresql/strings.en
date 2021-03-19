@@ -19,3 +19,5 @@ db_user.description=The username for the PostgreSQL Server
 db_password.title=Password
 db_password.description=The password for the PostgreSQL Server
 
+ssl_mode.title=SSL Mode
+ssl_mode.description=Should the connection be secured via SSL?

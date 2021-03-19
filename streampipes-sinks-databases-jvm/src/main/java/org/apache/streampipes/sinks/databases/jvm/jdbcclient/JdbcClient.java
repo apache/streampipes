@@ -61,7 +61,7 @@ public class JdbcClient {
      * If no matching type is found, it is interpreted as a String (VARCHAR(255))
      */
     protected enum SqlAttribute {
-        INTEGER("INT"), LONG("BIGINT"), FLOAT("FLOAT"), DOUBLE("DOUBLE"), STRING("VARCHAR(255)"),
+        INTEGER("INT"), LONG("BIGINT"), FLOAT("FLOAT"), DOUBLE("FLOAT"), STRING("VARCHAR(255)"),
         BOOLEAN("BOOLEAN"), DATETIME("DATETIME");
         private final String sqlName;
 
@@ -181,6 +181,7 @@ public class JdbcClient {
                                   String allowedRegEx,
                                   String driver,
                                   String urlName,
+                                  boolean useSSL,
                                   Logger logger) throws SpRuntimeException {
         this.tableName = tableName;
         this.user = user;
@@ -194,7 +195,11 @@ public class JdbcClient {
             throw new SpRuntimeException("Driver '" + driver + "' not found.");
         }
 
-        connect(host, port, urlName, databaseName);
+        if (useSSL) {
+            connectWithSSL(host, port, urlName, databaseName);
+        } else {
+            connect(host, port, urlName, databaseName);
+        }
     }
 
 
@@ -215,6 +220,26 @@ public class JdbcClient {
             throw new SpRuntimeException("Could not establish a connection with the server: " + e.getMessage());
         }
     }
+
+    /**
+     * WIP
+     * @param host
+     * @param port
+     * @param urlName
+     * @param databaseName
+     * @throws SpRuntimeException
+     */
+    private void connectWithSSL(String host, int port, String urlName, String databaseName) throws SpRuntimeException {
+        String url = "jdbc:" + urlName + "://" + host + ":" + port + "/" + databaseName + "?user=" + user + "&password=" + password + "&ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory&sslmode=require" ;
+        try{
+            c = DriverManager.getConnection(url);
+            ensureDatabaseExists(url, databaseName);
+            ensureTableExists(url, "");
+        } catch (SQLException e ) {
+            throw new SpRuntimeException("Could not establish a connection with the server: " + e.getMessage());
+        }
+    }
+
 
 	/**
 	 * If this method returns successfully a database with the given name exists on the server, specified by the url.

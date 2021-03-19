@@ -24,9 +24,7 @@ import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
-import org.apache.streampipes.sdk.helpers.EpRequirements;
-import org.apache.streampipes.sdk.helpers.Labels;
-import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.*;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventSink;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
@@ -39,6 +37,9 @@ public class PostgreSqlController extends StandaloneEventSinkDeclarer<PostgreSql
   private static final String DATABASE_TABLE_KEY = "db_table";
   private static final String DATABASE_USER_KEY = "db_user";
   private static final String DATABASE_PASSWORD_KEY = "db_password";
+  private static final String SSL_MODE = "ssl_mode";
+  private static final String SSL_ENABLED = "ssl_enabled";
+  private static final String SSL_DISABLED = "ssl_disabled";
 
   @Override
   public DataSinkDescription declareModel() {
@@ -55,6 +56,10 @@ public class PostgreSqlController extends StandaloneEventSinkDeclarer<PostgreSql
             .requiredTextParameter(Labels.withId(DATABASE_TABLE_KEY))
             .requiredTextParameter(Labels.withId(DATABASE_USER_KEY))
             .requiredSecret(Labels.withId(DATABASE_PASSWORD_KEY))
+            .requiredSingleValueSelection(Labels.withId(SSL_MODE),
+                    Options.from(
+                      new Tuple2<>("Yes", SSL_ENABLED),
+                      new Tuple2<>("No", SSL_DISABLED)))
             .build();
   }
 
@@ -68,6 +73,7 @@ public class PostgreSqlController extends StandaloneEventSinkDeclarer<PostgreSql
     String tableName = extractor.singleValueParameter(DATABASE_TABLE_KEY, String.class);
     String user = extractor.singleValueParameter(DATABASE_USER_KEY, String.class);
     String password = extractor.secretValue(DATABASE_PASSWORD_KEY);
+    String sslSelection = extractor.selectedSingleValueInternalName(SSL_MODE, String.class);
 
     PostgreSqlParameters params = new PostgreSqlParameters(graph,
             hostname,
@@ -75,7 +81,8 @@ public class PostgreSqlController extends StandaloneEventSinkDeclarer<PostgreSql
             dbName,
             tableName,
             user,
-            password);
+            password,
+            sslSelection.equals(SSL_ENABLED));
 
     return new ConfiguredEventSink<>(params, PostgreSql::new);
   }
