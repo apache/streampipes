@@ -13,6 +13,7 @@ import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.sdk.utils.Datatypes;
@@ -27,8 +28,9 @@ import static org.apache.streampipes.processors.transformation.jvm.processor.boo
 
 public class BooleanOperatorProcessor extends StreamPipesDataProcessor {
 
-    private static final String BOOLEAN_PROCESSOR_INPUT_KEY = "boolean-processor-configs";
     private static final String BOOLEAN_PROCESSOR_OUT_KEY = "boolean-operations-result";
+    private static final String BOOLEAN_OPERATOR_TYPE = "operator";
+    private static final String PROPERTIES_LIST = "properties";
     private BooleanOperationInputConfigs configs;
 
     @Override
@@ -42,7 +44,14 @@ public class BooleanOperatorProcessor extends StreamPipesDataProcessor {
                                 .create()
                                 .requiredProperty(EpRequirements.anyProperty())
                                 .build())
-                .requiredTextParameter(Labels.withId(BOOLEAN_PROCESSOR_INPUT_KEY))
+                .requiredSingleValueSelection(Labels.withId(BOOLEAN_OPERATOR_TYPE), Options.from(
+                        BooleanOperatorType.AND.operator(),
+                        BooleanOperatorType.OR.operator(),
+                        BooleanOperatorType.NOT.operator(),
+                        BooleanOperatorType.XOR.operator(),
+                        BooleanOperatorType.X_NOR.operator(),
+                        BooleanOperatorType.NOR.operator()))
+                .requiredMultiValueSelection(Labels.withId(PROPERTIES_LIST))
                 .outputStrategy(OutputStrategies.append(
                         PrimitivePropertyBuilder.create(
                                 Datatypes.String, BOOLEAN_PROCESSOR_OUT_KEY)
@@ -52,7 +61,9 @@ public class BooleanOperatorProcessor extends StreamPipesDataProcessor {
 
     @Override
     public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
-        BooleanOperationInputConfigs configs = processorParams.extractor().singleValueParameter(BOOLEAN_PROCESSOR_INPUT_KEY, BooleanOperationInputConfigs.class);
+        List<String> properties = processorParams.extractor().selectedMultiValues(PROPERTIES_LIST, String.class);
+        String operator = processorParams.extractor().selectedSingleValue(BOOLEAN_OPERATOR_TYPE, String.class);
+        BooleanOperationInputConfigs configs = new BooleanOperationInputConfigs(properties, BooleanOperatorType.getBooleanOperatorType(operator));
         preChecks(configs);
         this.configs = configs;
     }
@@ -90,10 +101,10 @@ public class BooleanOperatorProcessor extends StreamPipesDataProcessor {
     private void preChecks(BooleanOperationInputConfigs configs) {
         BooleanOperatorType operatorType = configs.getOperator();
         List<String> properties =  configs.getProperties();
-        if (operatorType == NOT) {
-            assert properties.size() == 1 : "NOT operator can operate only on single operand";
-        } else {
-            assert properties.size() >= 2 : "Number of operands are less that 2";
+        if (operatorType == NOT && properties.size() != 1) {
+            throw new SpRuntimeException("NOT operator can operate only on single operand");
+        } else if (operatorType != NOT && properties.size() < 2) {
+            throw new SpRuntimeException("Number of operands are less that 2");
         }
     }
 }
