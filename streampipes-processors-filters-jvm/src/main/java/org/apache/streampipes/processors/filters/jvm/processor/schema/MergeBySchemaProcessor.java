@@ -14,7 +14,6 @@ import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
-import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.apache.streampipes.wrapper.standalone.ProcessorParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
@@ -30,7 +29,6 @@ public class MergeBySchemaProcessor extends StreamPipesDataProcessor {
     private String selectedStream;
 
 
-
     @Override
     public DataProcessorDescription declareModel() {
         return ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.schema")
@@ -38,15 +36,15 @@ public class MergeBySchemaProcessor extends StreamPipesDataProcessor {
                 .withAssets(Assets.DOCUMENTATION, Assets.ICON)
                 .withLocales(Locales.EN)
                 .outputStrategy(OutputStrategies.custom(true))
-        .requiredSingleValueSelection(Labels.withId(SELECT_STREAM),
-                Options.from("Stream 1", "Stream 2"))
+                .requiredSingleValueSelection(Labels.withId(SELECT_STREAM),
+                        Options.from("Stream 1", "Stream 2"))
                 .build();
     }
 
     @Override
     public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
-         this.outputKeySelectors = processorParams.extractor().outputKeySelectors();
-         this.outputSchema=processorParams.getGraph().getOutputStream().getEventSchema();
+        this.outputKeySelectors = processorParams.extractor().outputKeySelectors();
+        this.outputSchema = processorParams.getGraph().getOutputStream().getEventSchema();
         this.streamBufferS0 = new StreamBuffer();
         this.streamBufferS1 = new StreamBuffer();
         if (processorParams.extractor().selectedSingleValue(SELECT_STREAM, String.class).equals("Stream 1")) {
@@ -79,6 +77,7 @@ public class MergeBySchemaProcessor extends StreamPipesDataProcessor {
             }
         }
     }
+
     private Event mergeEvents(Event e1, Event e2) {
         return EventFactory.fromEvents(e1, e2, outputSchema).getSubset(outputKeySelectors);
     }
