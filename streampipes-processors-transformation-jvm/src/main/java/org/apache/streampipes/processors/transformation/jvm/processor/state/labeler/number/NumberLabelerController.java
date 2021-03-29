@@ -18,18 +18,23 @@
 
 package org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.number;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.container.api.ResolvesContainerProvidedOutputStrategy;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.schema.EventProperty;
+import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.model.staticproperty.*;
-import org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.model.Statement;
-import org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.model.StatementUtils;
+import org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.LabelerUtils;
 import org.apache.streampipes.sdk.StaticProperties;
+import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.sdk.helpers.*;
 import org.apache.streampipes.sdk.utils.Assets;
+import org.apache.streampipes.sdk.utils.Datatypes;
 import org.apache.streampipes.vocabulary.SPSensor;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
@@ -37,15 +42,14 @@ import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcess
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class NumberLabelerController extends StandaloneEventProcessingDeclarer<NumberLabelerParameters> {
+public class NumberLabelerController extends StandaloneEventProcessingDeclarer<NumberLabelerParameters> implements ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
 
   public static final String SENSOR_VALUE_ID = "sensorValueId";
   public static final String LABEL_COLLECTION_ID = "labelCollectionId";
   public static final String COMPARATOR_ID = "comparatorId";
   public static final String NUMBER_VALUE_ID = "numberValueId";
   public static final String LABEL_STRING_ID = "labelStringId";
-
-  public static final String LABEL = "label";
+  public static final String LABEL_NAME = "labelName";
 
   @Override
   public DataProcessorDescription declareModel() {
@@ -58,6 +62,7 @@ public class NumberLabelerController extends StandaloneEventProcessingDeclarer<N
                             Labels.withId(SENSOR_VALUE_ID),
                             PropertyScope.NONE)
                     .build())
+            .requiredTextParameter(Labels.withId(LABEL_NAME))
             .requiredCollection(
                     Labels.withId(LABEL_COLLECTION_ID),
                     StaticProperties.group(Labels.from("group", "Group", ""), false,
@@ -68,9 +73,7 @@ public class NumberLabelerController extends StandaloneEventProcessingDeclarer<N
                     )
             )
 
-            .outputStrategy(OutputStrategies.append(
-                    EpProperties.stringEp(Labels.withId(LABEL), LABEL, SPSensor.STATE, PropertyScope.DIMENSION_PROPERTY)
-            ))
+            .outputStrategy(OutputStrategies.customTransformation())
             .build();
   }
 
@@ -78,6 +81,8 @@ public class NumberLabelerController extends StandaloneEventProcessingDeclarer<N
   public ConfiguredEventProcessor<NumberLabelerParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 
     String sensorListValueProperty = extractor.mappingPropertyValue(SENSOR_VALUE_ID);
+
+    String labelName = extractor.textParameter(LABEL_NAME);
 
     List<StaticPropertyGroup> groupItems = extractor.collectionMembersAsGroup(LABEL_COLLECTION_ID);
 
@@ -110,9 +115,16 @@ public class NumberLabelerController extends StandaloneEventProcessingDeclarer<N
             .collect(Collectors.toList());
 
 
-    NumberLabelerParameters params = new NumberLabelerParameters(graph, sensorListValueProperty, numberValues, labelStrings, comparators);
+    NumberLabelerParameters params = new NumberLabelerParameters(graph, sensorListValueProperty, labelName, numberValues, labelStrings, comparators);
 
 
     return new ConfiguredEventProcessor<>(params, NumberLabeler::new);
+  }
+
+  @Override
+  public EventSchema resolveOutputStrategy(DataProcessorInvocation processingElement, ProcessingElementParameterExtractor parameterExtractor) throws SpRuntimeException {
+    String labelName = parameterExtractor.textParameter(LABEL_NAME);
+
+    return LabelerUtils.resolveOutputStrategy(processingElement, labelName);
   }
 }

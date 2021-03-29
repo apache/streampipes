@@ -20,8 +20,16 @@ package org.apache.streampipes.processors.transformation.jvm.processor.state.lab
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.logging.api.Logger;
+import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.model.schema.EventProperty;
+import org.apache.streampipes.model.schema.EventSchema;
+import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.number.NumberLabelerController;
+import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
+import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
+import org.apache.streampipes.sdk.utils.Datatypes;
+import org.apache.streampipes.vocabulary.SPSensor;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,10 +46,10 @@ public class StatementUtils {
      * @return
      * @throws SpRuntimeException
      */
-    public static Event addLabel(Event inputEvent, double value, List<Statement> statements, Logger log) {
+    public static Event addLabel(Event inputEvent, String labelName, double value, List<Statement> statements, Logger log) {
         String label = getLabel(value, statements);
         if (label != null) {
-            inputEvent.addField(NumberLabelerController.LABEL, label);
+            inputEvent.addField(labelName, label);
         } else {
             log.info("No condition of statements was fulfilled, add a default case (*) to the statements");
         }

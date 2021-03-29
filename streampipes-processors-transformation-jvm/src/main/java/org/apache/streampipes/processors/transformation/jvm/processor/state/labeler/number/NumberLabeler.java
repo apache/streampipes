@@ -35,6 +35,7 @@ public class NumberLabeler implements EventProcessor<NumberLabelerParameters> {
 
   private static Logger LOG;
   private String sensorListValueProperty;
+  private String labelName;
   private List<Statement> statements;
 
   @Override
@@ -49,6 +50,8 @@ public class NumberLabeler implements EventProcessor<NumberLabelerParameters> {
             numberLabelerParameters.getComparators());
 
     this.sensorListValueProperty = numberLabelerParameters.getSensorListValueProperty();
+
+    this.labelName = numberLabelerParameters.getLabelName();
   }
 
   @Override
@@ -56,7 +59,7 @@ public class NumberLabeler implements EventProcessor<NumberLabelerParameters> {
 
     Double value = inputEvent.getFieldBySelector(this.sensorListValueProperty).getAsPrimitive().getAsDouble();
 
-    Event resultEvent = StatementUtils.addLabel(inputEvent, value, this.statements, LOG);
+    Event resultEvent = StatementUtils.addLabel(inputEvent, labelName, value, this.statements, LOG);
 
     out.collect(resultEvent);
   }
