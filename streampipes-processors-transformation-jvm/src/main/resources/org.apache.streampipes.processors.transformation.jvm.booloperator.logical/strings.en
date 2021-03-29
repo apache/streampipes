@@ -1,0 +1,9 @@
+org.apache.streampipes.processors.transformation.jvm.booloperator.logical.title=Boolean Logical Operator
+org.apache.streampipes.processors.transformation.jvm.booloperator.logical.description=Performs a logical boolean operation b/w selected fields
+
+operator-field.title=Boolean Operator
+operator-field.description=The boolean operation that needs to be performed
+
+properties-field.title=Properties
+properties-field.description=List of properties(operands) on which operation needs to be performed
+
