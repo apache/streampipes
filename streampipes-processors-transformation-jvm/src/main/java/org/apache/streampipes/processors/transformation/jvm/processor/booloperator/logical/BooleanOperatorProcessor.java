@@ -4,6 +4,7 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.logical.enums.BooleanOperatorType;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.logical.operations.IBoolOperation;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.logical.operations.factory.BoolOperationFactory;
@@ -42,7 +43,8 @@ public class BooleanOperatorProcessor extends StreamPipesDataProcessor {
                 .requiredStream(
                         StreamRequirementsBuilder
                                 .create()
-                                .requiredProperty(EpRequirements.anyProperty())
+                                .requiredPropertyWithUnaryMapping(EpRequirements.booleanReq(),
+                                        Labels.withId(PROPERTIES_LIST), PropertyScope.NONE)
                                 .build())
                 .requiredSingleValueSelection(Labels.withId(BOOLEAN_OPERATOR_TYPE), Options.from(
                         BooleanOperatorType.AND.operator(),
@@ -51,7 +53,6 @@ public class BooleanOperatorProcessor extends StreamPipesDataProcessor {
                         BooleanOperatorType.XOR.operator(),
                         BooleanOperatorType.X_NOR.operator(),
                         BooleanOperatorType.NOR.operator()))
-                .requiredMultiValueSelection(Labels.withId(PROPERTIES_LIST))
                 .outputStrategy(OutputStrategies.append(
                         PrimitivePropertyBuilder.create(
                                 Datatypes.String, BOOLEAN_PROCESSOR_OUT_KEY)
@@ -61,7 +62,7 @@ public class BooleanOperatorProcessor extends StreamPipesDataProcessor {
 
     @Override
     public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
-        List<String> properties = processorParams.extractor().selectedMultiValues(PROPERTIES_LIST, String.class);
+        List<String> properties = processorParams.extractor().getUnaryMappingsFromCollection(PROPERTIES_LIST);
         String operator = processorParams.extractor().selectedSingleValue(BOOLEAN_OPERATOR_TYPE, String.class);
         BooleanOperationInputConfigs configs = new BooleanOperationInputConfigs(properties, BooleanOperatorType.getBooleanOperatorType(operator));
         preChecks(configs);
