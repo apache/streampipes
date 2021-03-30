@@ -16,18 +16,16 @@
  *
  */
 
-.title-panel {
-    font-size:20px;
-    text-align:center;
-}
+import {Injectable} from "@angular/core";
+import {Subject} from "rxjs";
+import {PipelineElementPosition} from "../model/editor.model";
 
-.mt-20 {
-    margin-top:20px;
-}
+@Injectable()
+export class PipelineElementDraggedService {
 
-.main-panel {
-    width:100%;
-    height: 100%;
-    display:inline-grid;
-    align-content: center;
+  public pipelineElementMovedSubject: Subject<PipelineElementPosition> = new Subject<PipelineElementPosition>();
+
+  public notify(position: PipelineElementPosition): void {
+    this.pipelineElementMovedSubject.next(position);
+  }
 }

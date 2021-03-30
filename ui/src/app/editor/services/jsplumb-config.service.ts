@@ -17,6 +17,7 @@
  */
 
 import {Injectable} from "@angular/core";
+import {JsplumbSettings} from "../model/jsplumb.model";
 
 @Injectable()
 export class JsplumbConfigService {
@@ -33,28 +34,33 @@ export class JsplumbConfigService {
     }
 
     makeConfig(settings) {
-        let config = {};
-        config['streamEndpointOptions'] = this.makeStreamEndpointOptions(settings);
-        config['sepaEndpointOptions'] = this.makeSepaEndpointOptions(settings);
-        config['leftTargetPointOptions'] = this.makeLeftTargetPointOptions(settings);
+        let config = {} as any;
+        config.streamEndpointOptions = this.makeStreamEndpointOptions(settings);
+        config.sepaEndpointOptions = this.makeSepaEndpointOptions(settings);
+        config.leftTargetPointOptions = this.makeLeftTargetPointOptions(settings);
         return config;
     }
 
-    makeSettings(dotRadius, lineWidth, arrowWidth, arrowLength, arrowLineWidth, curviness) {
-        let settings = {};
-        settings['dotRadius'] = dotRadius;
-        settings['lineWidth'] = lineWidth;
-        settings['arrowWidth'] = arrowWidth;
-        settings['arrowLength'] = arrowLength;
-        settings['arrowLineWidth'] = arrowLineWidth;
-        settings['curviness'] = curviness;
+    makeSettings(dotRadius: number,
+                 lineWidth: number,
+                 arrowWidth: number,
+                 arrowLength: number,
+                 arrowLineWidth: number,
+                 curviness: number) {
+        let settings = {} as JsplumbSettings;
+        settings.dotRadius = dotRadius;
+        settings.lineWidth = lineWidth;
+        settings.arrowWidth = arrowWidth;
+        settings.arrowLength = arrowLength;
+        settings.arrowLineWidth = arrowLineWidth;
+        settings.curviness = curviness;
         return settings;
     }
 
-    makeStreamEndpointOptions(settings) {
+    makeStreamEndpointOptions(settings: JsplumbSettings) {
         return {
             endpoint: ["Dot", {radius: settings.dotRadius}],
-            connectorStyle: {strokeStyle: "#BDBDBD", outlineColor: "#9E9E9E", lineWidth: settings.lineWidth},
+            connectorStyle: {stroke: "#BDBDBD", outlineStroke: "#BDBDBD", strokeWidth: settings.lineWidth},
             connector: ["Bezier", {curviness: settings.curviness}],
             isSource: true,
             maxConnections: -1,
@@ -64,8 +70,8 @@ export class JsplumbConfigService {
                 ["Arrow", {
                     width: settings.arrowWidth, length: settings.arrowLength, location: 0.5, id: "arrow", paintStyle: {
                         fillStyle: "#BDBDBD",
-                        strokeStyle: "#9E9E9E",
-                        lineWidth: settings.arrowLineWidth
+                        stroke: "#9E9E9E",
+                        strokeWidth: settings.arrowLineWidth
                     }
                 }],
             ]
@@ -76,7 +82,7 @@ export class JsplumbConfigService {
         return {
             endpoint: ["Dot", {radius: settings.dotRadius}],
             connectorStyle: {
-                strokeStyle: "#BDBDBD", outlineColor: "#9E9E9E", lineWidth: settings.lineWidth
+                stroke: "#BDBDBD", outlineStroke: "#9E9E9E", strokeWidth: settings.lineWidth
             },
             connector: ["Bezier", {curviness: settings.curviness}],
             isSource: true,
@@ -86,9 +92,9 @@ export class JsplumbConfigService {
             connectorOverlays: [
                 ["Arrow", {
                     width: settings.arrowWidth, length: settings.arrowLength, location: 0.5, id: "arrow", paintStyle: {
-                        fillStyle: "#BDBDBD",
-                        strokeStyle: "#9E9E9E",
-                        lineWidth: settings.arrowLineWidth
+                        fill: "#BDBDBD",
+                        stroke: "#9E9E9E",
+                        strokeWidth: settings.arrowLineWidth
                     }
                 }],
             ],
@@ -108,5 +114,3 @@ export class JsplumbConfigService {
     }
 
 }
-
-//JsplumbConfigService.$inject = [];

@@ -16,18 +16,20 @@
  *
  */
 
-.title-panel {
-    font-size:20px;
-    text-align:center;
-}
+import {Injectable} from "@angular/core";
+import {Subject} from "rxjs";
 
-.mt-20 {
-    margin-top:20px;
-}
+@Injectable()
+export class PipelineCanvasScrollingService {
 
-.main-panel {
-    width:100%;
-    height: 100%;
-    display:inline-grid;
-    align-content: center;
+  public canvasScrollXSubject: Subject<number> = new Subject<number>();
+  public canvasScrollYSubject: Subject<number> = new Subject<number>();
+
+  public notifyX(position: number): void {
+    this.canvasScrollXSubject.next(position);
+  }
+
+  public notifyY(position: number): void {
+    this.canvasScrollYSubject.next(position);
+  }
 }

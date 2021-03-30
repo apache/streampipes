@@ -24,14 +24,15 @@
 @import '~bootstrap/dist/css/bootstrap.css';
 @import '~@fortawesome/fontawesome-free/css/all.css';
 @import '~angular-ui-tree/dist/angular-ui-tree.min.css';
-@import '~jsplumb/dist/css/jsplumb.css';
+@import '~jsplumb/css/jsplumbtoolkit-defaults.css';
 @import '~ng-prettyjson/dist/ng-prettyjson.min.css';
 @import '~prismjs/themes/prism.css';
 @import '~angular-loading-bar/build/loading-bar.min.css';
 @import '~shepherd.js/dist/css/shepherd-theme-default.css';
 @import "~ng-pick-datetime/assets/style/picker.min.css";
 @import '~leaflet/dist/leaflet.css';
-@import '~material-design-icons/iconfont/material-icons.css';
+@import '~material-icons/iconfont/material-icons.css';
+//@import '~material-design-icons/iconfont/material-icons.css';
 @import '~quill/dist/quill.snow.css';
 @import '~swagger-ui/dist/swagger-ui.css';
 
@@ -59,6 +60,7 @@
 @import './sp/pipeline-assembly.scss';
 @import './sp/widgets.scss';
 @import './sp/progress-bar.scss';
+@import './sp/jsplumb';
 
 @import './sp/input.ng1';
 @import './sp/documentation.ng1';

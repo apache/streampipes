@@ -75,8 +75,8 @@ export class DashboardPanelComponent implements OnInit {
         dashboardItem.id = widget._id;
         // TODO there should be a widget type DashboardWidget
         dashboardItem.widgetType = widget.dashboardWidgetSettings.widgetName;
-        dashboardItem.cols = 2;
-        dashboardItem.rows = 2;
+        dashboardItem.cols = 4;
+        dashboardItem.rows = 4;
         dashboardItem.x = 0;
         dashboardItem.y = 0;
         this.dashboard.widgets.push(dashboardItem);

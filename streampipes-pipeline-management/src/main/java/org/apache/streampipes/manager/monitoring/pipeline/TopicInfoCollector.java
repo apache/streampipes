@@ -195,10 +195,6 @@ public class TopicInfoCollector {
 
   private String getBrokerUrl() {
     String env = System.getenv("SP_DEBUG");
-    if (env == null) {
-      env = "true";
-    }
-    System.out.println(System.getenv("SP_DEBUG"));
     if ("true".equals(env.replaceAll(" ", ""))) {
       return "localhost:9094";
     } else {

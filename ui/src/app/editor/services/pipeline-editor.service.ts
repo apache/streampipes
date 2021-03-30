@@ -17,13 +17,11 @@
  */
 
 import {Injectable} from "@angular/core";
-import {JsplumbBridge} from "./jsplumb-bridge.service";
-import {InvocablePipelineElementUnion, PipelineElementConfig} from "../model/editor.model";
 
 @Injectable()
 export class PipelineEditorService {
 
-    constructor(private JsplumbBridge: JsplumbBridge) {
+    constructor() {
     }
 
     getCoordinates(ui, currentZoomLevel) {
@@ -34,19 +32,6 @@ export class PipelineEditorService {
             'x': newLeft,
             'y': newTop
         };
-    }
-
-    isConnected(element) {
-        if (this.JsplumbBridge.getConnections({source: element}).length < 1 && this.JsplumbBridge.getConnections({target: element}).length < 1) {
-            return false;
-        }
-        return true;
-    }
-
-    isFullyConnected(pipelineElementConfig: PipelineElementConfig) {
-        let payload = pipelineElementConfig.payload as InvocablePipelineElementUnion;
-        return payload.inputStreams == null ||
-            this.JsplumbBridge.getConnections({target: $("#" +payload.dom)}).length == payload.inputStreams.length;
     }
 
     getDropPositionY(helper, currentZoomLevel) {
@@ -66,5 +51,3 @@ export class PipelineEditorService {
     }
 
 }
-
-//PipelineEditorService.$inject = ['JsplumbBridge'];

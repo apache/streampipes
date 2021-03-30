@@ -16,18 +16,18 @@
  *
  */
 
-.title-panel {
-    font-size:20px;
-    text-align:center;
-}
+import {Pipe, PipeTransform} from "@angular/core";
+import {PipelineElementConfig} from "../model/editor.model";
 
-.mt-20 {
-    margin-top:20px;
-}
-
-.main-panel {
-    width:100%;
-    height: 100%;
-    display:inline-grid;
-    align-content: center;
+@Pipe({
+  name: 'enabledPipelineElement',
+  pure: false
+})
+export class EnabledPipelineElementFilter implements PipeTransform {
+  transform(items: PipelineElementConfig[]): any {
+    if (!items) {
+      return items;
+    }
+    return items.filter(item => item.settings.disabled == undefined || !item.settings.disabled);
+  }
 }

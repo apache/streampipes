@@ -32,7 +32,7 @@ import {
     FormatDescriptionList,
     GuessSchema,
     Message,
-    ProtocolDescriptionList
+    ProtocolDescriptionList, SpDataStream
 } from "../../core-model/gen/streampipes-model";
 
 @Injectable()
@@ -79,10 +79,10 @@ export class RestService {
 
     }
 
-    getSourceDetails(sourceElementId): Observable<DataSourceDescription> {
+    getSourceDetails(sourceElementId): Observable<SpDataStream> {
         return this.http
             .get(this.makeUserDependentBaseUrl() + '/streams/' + encodeURIComponent(sourceElementId)).pipe(map(response => {
-                return DataSourceDescription.fromData(response as DataSourceDescription);
+                return SpDataStream.fromData(response as SpDataStream);
             }));
     }
 

@@ -35,6 +35,10 @@ public enum RunningInstances {
         runningInstances.put(id, new ElementInfo<>(description, invocation));
     }
 
+    public boolean exists(String runningInstanceId) {
+        return runningInstances.containsKey(runningInstanceId);
+    }
+
     public InvocableDeclarer getInvocation(String id) {
         ElementInfo<NamedStreamPipesEntity, InvocableDeclarer> result = runningInstances.get(id);
         if (result != null) {

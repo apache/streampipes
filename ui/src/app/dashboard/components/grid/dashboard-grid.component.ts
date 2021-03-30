@@ -72,6 +72,7 @@ export class DashboardGridComponent implements OnInit, OnChanges {
             fixedColWidth: 50,
             margin: 5,
             resizable: { enabled: this.editMode },
+            displayGrid: this.editMode ? 'always' : 'none',
             itemResizeCallback: ((item, itemComponent) => {
                 this.resizeService.notify({gridsterItem: item, gridsterItemComponent: itemComponent} as GridsterInfo);
             }),
@@ -87,6 +88,8 @@ export class DashboardGridComponent implements OnInit, OnChanges {
             this.options.resizable.enabled = this.editMode;
             this.options.displayGrid = this.editMode ? 'always' : 'none';
             this.options.api.optionsChanged();
+            console.log(this.options);
+            console.log(this.editMode);
         }
     }
 

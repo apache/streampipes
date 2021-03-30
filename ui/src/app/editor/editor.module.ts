@@ -60,6 +60,11 @@ import {PropertySelectionComponent} from "./components/output-strategy/property-
 import {UserDefinedOutputStrategyComponent} from "./components/output-strategy/user-defined-output/user-defined-output.component";
 import {ConnectModule} from "../connect/connect.module";
 import {PipelineElementTemplateConfigComponent} from "./components/pipeline-element-template-config/pipeline-element-template-config.component";
+import {EnabledPipelineElementFilter} from "./filter/enabled-pipeline-element.filter";
+import {PipelineElementDraggedService} from "./services/pipeline-element-dragged.service";
+import {PipelineCanvasScrollingService} from "./services/pipeline-canvas-scrolling.service";
+import {JsplumbEndpointService} from "./services/jsplumb-endpoint.service";
+import {JsplumbFactoryService} from "./services/jsplumb-factory.service";
 
 @NgModule({
     imports: [
@@ -76,13 +81,14 @@ import {PipelineElementTemplateConfigComponent} from "./components/pipeline-elem
         FormsModule,
         MatProgressSpinnerModule,
         ShowdownModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
     ],
     declarations: [
         CompatibleElementsComponent,
         CustomizeComponent,
         CustomOutputStrategyComponent,
         EditorComponent,
+        EnabledPipelineElementFilter,
         HelpComponent,
         MatchingErrorComponent,
         MissingElementsForTutorialComponent,
@@ -104,16 +110,19 @@ import {PipelineElementTemplateConfigComponent} from "./components/pipeline-elem
     providers: [
         EditorService,
         SemanticTypeUtilsService,
-        JsplumbBridge,
+        JsplumbFactoryService,
+        JsplumbEndpointService,
         JsplumbService,
         JsplumbConfigService,
         ObjectProvider,
+        PipelineCanvasScrollingService,
+        PipelineElementDraggedService,
         PipelineEditorService,
         PipelinePositioningService,
         PipelineValidationService,
         PipelineElementRecommendationService,
         ImageChecker,
-        SafeCss
+        SafeCss,
     ],
   exports: [
     EditorComponent,

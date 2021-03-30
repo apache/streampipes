@@ -16,18 +16,11 @@
  *
  */
 
-.title-panel {
-    font-size:20px;
-    text-align:center;
-}
-
-.mt-20 {
-    margin-top:20px;
-}
-
-.main-panel {
-    width:100%;
-    height: 100%;
-    display:inline-grid;
-    align-content: center;
+export interface JsplumbSettings {
+  dotRadius: number,
+  lineWidth: number,
+  arrowWidth: number,
+  arrowLength: number,
+  arrowLineWidth: number,
+  curviness: number
 }

@@ -18,8 +18,15 @@
 
 import {
   AnyStaticProperty,
+  CodeInputStaticProperty,
+  CollectionStaticProperty,
   ColorPickerStaticProperty,
-  FreeTextStaticProperty, OneOfStaticProperty, SecretStaticProperty,
+  FileStaticProperty,
+  FreeTextStaticProperty,
+  OneOfStaticProperty, Pipeline,
+  SecretStaticProperty,
+  StaticPropertyAlternative,
+  StaticPropertyAlternatives, StaticPropertyGroup,
   StaticPropertyUnion
 } from "../../../core-model/gen/streampipes-model";
 
@@ -33,13 +40,54 @@ export class PipelineElementTemplateGenerator {
     if (this.sp instanceof FreeTextStaticProperty) {
       return this.sp.value;
     } else if (this.sp instanceof OneOfStaticProperty) {
-      return this.sp.options.find(o => o.selected).name;
+      return this.sp.options.find(o => o.selected) ? this.sp.options.find(o => o.selected).name : "";
     } else if (this.sp instanceof ColorPickerStaticProperty) {
       return this.sp.selectedColor;
     } else if (this.sp instanceof SecretStaticProperty) {
-      return undefined;
+      return {encrypted: this.sp.encrypted, value: this.sp.value};
     } else if (this.sp instanceof AnyStaticProperty) {
       return this.sp.options.filter(o => o.selected).map(o => o.name);
+    } else if (this.sp instanceof CodeInputStaticProperty) {
+      return this.sp.value;
+    } else if (this.sp instanceof CollectionStaticProperty) {
+      return {
+        members: this.addListEntry(this.sp.members)
+      };
+    } else if (this.sp instanceof FileStaticProperty) {
+      return this.sp.locationPath;
+    } else if (this.sp instanceof StaticPropertyAlternatives) {
+      return {
+        alternatives: this.addNestedEntry(this.sp.alternatives)
+      };
+    } else if (this.sp instanceof StaticPropertyAlternative) {
+      return {
+        selected: this.sp.selected,
+        staticProperty: this.addNestedEntry([this.sp.staticProperty])
+      };
+    } else if (this.sp instanceof StaticPropertyGroup) {
+      return { staticProperties: this.addNestedEntry(this.sp.staticProperties)};
     }
+  }
+
+  addEntry(sp: StaticPropertyUnion) {
+    let entry = {};
+    entry[sp.internalName] = new PipelineElementTemplateGenerator(sp).toTemplateValue();
+    return entry;
+  }
+
+  addListEntry(staticProperties: Array<StaticPropertyUnion>) {
+    let values = [];
+    staticProperties.forEach(sp => {
+      values.push(this.addEntry(sp));
+    });
+    return values;
+  }
+
+  addNestedEntry(staticProperties: Array<StaticPropertyUnion>) {
+    let entry = {};
+    staticProperties.forEach(sp => {
+      entry[sp.internalName] = new PipelineElementTemplateGenerator(sp).toTemplateValue();
+    });
+    return entry;
   }
 }

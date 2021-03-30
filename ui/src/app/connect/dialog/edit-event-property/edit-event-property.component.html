@@ -48,8 +48,13 @@
 
     <div class="form-group">
       <mat-form-field class="doubleWidth">
-        <input matInput placeholder="Domain Property" class="dmainProperty" name="domainproperty" id="domainproperty"
-               [(ngModel)]="cachedProperty.domainProperties[0]">
+        <input matInput placeholder="Semantic Type" class="dmainProperty" name="domainproperty" id="domainproperty"
+               [(ngModel)]="cachedProperty.domainProperties[0]" [matAutocomplete]="st" [formControl]="domainPropertyControl">
+      <mat-autocomplete #st="matAutocomplete" [panelWidth]="'300px'">
+        <mat-option *ngFor="let semanticType of semanticTypes | async" [value]="semanticType" style="font-size: 10pt;">
+          {{semanticType}}
+        </mat-option>
+      </mat-autocomplete>
       </mat-form-field>
       <div *ngIf="!isEventPropertyNested">
         <mat-checkbox name="timestampCheckbox"

@@ -17,7 +17,7 @@
  */
 
 import {Component, EventEmitter, Inject, OnInit, Output} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {
   EventPropertyList,
@@ -28,6 +28,9 @@ import {
 import {SemanticTypeUtilsService} from '../../../core-services/semantic-type/semantic-type-utils.service';
 import {DataTypesService} from '../../services/data-type.service';
 import {MatSlideToggleChange} from "@angular/material/slide-toggle";
+import {SemanticTypesService} from "../../../platform-services/apis/semantic-types.service";
+import {Observable} from "rxjs";
+import {debounceTime, distinctUntilChanged, startWith, switchMap} from 'rxjs/operators';
 
 @Component({
     selector: 'sp-edit-event-property',
@@ -51,7 +54,10 @@ export class EditEventPropertyComponent implements OnInit {
     isNumericProperty: boolean;
     isSaveBtnEnabled: boolean;
 
+    semanticTypes: Observable<Array<string>>;
+
     private propertyForm: FormGroup;
+    domainPropertyControl = new FormControl();
 
     private runtimeDataTypes;
 
@@ -59,7 +65,8 @@ export class EditEventPropertyComponent implements OnInit {
                 private dialogRef: MatDialogRef<EditEventPropertyComponent>,
                 private formBuilder: FormBuilder,
                 private dataTypeService: DataTypesService,
-                private semanticTypeUtilsService: SemanticTypeUtilsService) {
+                private semanticTypeUtilsService: SemanticTypeUtilsService,
+                private semanticTypesService: SemanticTypesService) {
     }
 
     ngOnInit(): void {
@@ -74,6 +81,15 @@ export class EditEventPropertyComponent implements OnInit {
         this.isNumericProperty = this.semanticTypeUtilsService.isNumeric(this.cachedProperty) ||
             this.dataTypeService.isNumeric(this.cachedProperty.runtimeType);
         this.createForm();
+        this.semanticTypes = this.domainPropertyControl.valueChanges
+            .pipe(
+                startWith(''),
+                debounceTime(400),
+                distinctUntilChanged(),
+                switchMap(val => {
+                    return val ? this.semanticTypesService.getSemanticTypes(val) : [];
+                })
+            );
     }
 
     copyEp(ep: EventPropertyUnion) {

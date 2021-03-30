@@ -30,6 +30,8 @@ import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.sdk.extractor.AbstractParameterExtractor;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -38,6 +40,8 @@ import java.util.Map;
 
 public abstract class InvocablePipelineElementResource<I extends InvocableStreamPipesEntity, D extends Declarer<?>,
         P extends AbstractParameterExtractor<I>> extends AbstractPipelineElementResource<D> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(InvocablePipelineElementResource.class);
 
     protected abstract Map<String, D> getElementDeclarers();
     protected abstract String getInstanceId(String uri, String elementId);
@@ -64,9 +68,16 @@ public abstract class InvocablePipelineElementResource<I extends InvocableStream
 
             if (declarer != null) {
                 String runningInstanceId = getInstanceId(graph.getElementId(), elementId);
-                RunningInstances.INSTANCE.add(runningInstanceId, graph, declarer.getClass().newInstance());
-                Response resp = RunningInstances.INSTANCE.getInvocation(runningInstanceId).invokeRuntime(graph);
-                return ok(resp);
+                if (!RunningInstances.INSTANCE.exists(runningInstanceId)) {
+                    RunningInstances.INSTANCE.add(runningInstanceId, graph, declarer.getClass().newInstance());
+                    Response resp = RunningInstances.INSTANCE.getInvocation(runningInstanceId).invokeRuntime(graph);
+                    return ok(resp);
+                } else {
+                    LOG.info("Pipeline element {} with id {} seems to be already running, skipping invocation request.", graph.getName(), runningInstanceId);
+                    Response resp = new Response(graph.getElementId(), true);
+                    return ok(resp);
+                }
+
             }
         } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
