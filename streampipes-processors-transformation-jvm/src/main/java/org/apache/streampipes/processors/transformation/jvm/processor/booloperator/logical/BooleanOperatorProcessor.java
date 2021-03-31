@@ -48,20 +48,20 @@ import static org.apache.streampipes.processors.transformation.jvm.processor.boo
 public class BooleanOperatorProcessor extends StreamPipesDataProcessor {
 
     private static final String BOOLEAN_PROCESSOR_OUT_KEY = "boolean-operations-result";
-    private static final String BOOLEAN_OPERATOR_TYPE = "operator";
-    private static final String PROPERTIES_LIST = "properties";
+    private static final String BOOLEAN_OPERATOR_TYPE = "operator-field";
+    private static final String PROPERTIES_LIST = "properties-field";
     private BooleanOperationInputConfigs configs;
 
     @Override
     public DataProcessorDescription declareModel() {
-        return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.processor.booloperator.logical")
+        return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.booloperator.logical")
                 .withAssets(Assets.DOCUMENTATION, Assets.ICON)
                 .withLocales(Locales.EN)
                 .category(DataProcessorType.ENRICH)
                 .requiredStream(
                         StreamRequirementsBuilder
                                 .create()
-                                .requiredPropertyWithUnaryMapping(EpRequirements.booleanReq(),
+                                .requiredPropertyWithNaryMapping(EpRequirements.booleanReq(),
                                         Labels.withId(PROPERTIES_LIST), PropertyScope.NONE)
                                 .build())
                 .requiredSingleValueSelection(Labels.withId(BOOLEAN_OPERATOR_TYPE), Options.from(
@@ -80,7 +80,7 @@ public class BooleanOperatorProcessor extends StreamPipesDataProcessor {
 
     @Override
     public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
-        List<String> properties = processorParams.extractor().getUnaryMappingsFromCollection(PROPERTIES_LIST);
+        List<String> properties = processorParams.extractor().mappingPropertyValues(PROPERTIES_LIST);
         String operator = processorParams.extractor().selectedSingleValue(BOOLEAN_OPERATOR_TYPE, String.class);
         BooleanOperationInputConfigs configs = new BooleanOperationInputConfigs(properties, BooleanOperatorType.getBooleanOperatorType(operator));
         preChecks(configs);
