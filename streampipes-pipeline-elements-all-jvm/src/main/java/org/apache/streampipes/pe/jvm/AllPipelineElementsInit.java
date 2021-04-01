@@ -68,6 +68,7 @@ import org.apache.streampipes.processors.transformation.jvm.processor.array.spli
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.counter.BooleanCounterController;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.edge.SignalEdgeFilterController;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.inverter.BooleanInverterController;
+import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.logical.BooleanOperatorProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.state.BooleanToStateController;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.timekeeping.BooleanTimekeepingController;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.timer.BooleanTimerController;
@@ -164,6 +165,7 @@ public class AllPipelineElementsInit extends StandaloneModelSubmitter {
             .add(new BooleanInverterController())
             .add(new BooleanTimekeepingController())
             .add(new BooleanTimerController())
+            .add(new BooleanOperatorProcessor())
             .add(new StateBufferController())
             .add(new StateBufferLabelerController())
             .add(new StringToStateController())
