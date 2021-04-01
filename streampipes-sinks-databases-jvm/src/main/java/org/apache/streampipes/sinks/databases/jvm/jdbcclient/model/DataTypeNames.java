@@ -1,13 +1,12 @@
 package org.apache.streampipes.sinks.databases.jvm.jdbcclient.model;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.sinks.databases.jvm.jdbcclient.JdbcClient;
 import org.apache.streampipes.vocabulary.XSD;
 
-public class SqlDataTypeNames {
+public class DataTypeNames {
 
 
-    public static String getInteger(SupportedSQLEngines sqlEngine) throws SpRuntimeException {
+    public static String getInteger(SupportedDbEngines sqlEngine) throws SpRuntimeException {
         switch (sqlEngine) {
             case MY_SQL:
             case INFLUX_DB:
@@ -18,7 +17,7 @@ public class SqlDataTypeNames {
         throw new SpRuntimeException("Database engine " + sqlEngine + " does not support integer values.");
     }
 
-    public static String getLong(SupportedSQLEngines sqlEngine) throws SpRuntimeException{
+    public static String getLong(SupportedDbEngines sqlEngine) throws SpRuntimeException{
         switch (sqlEngine) {
             case MY_SQL:
             case POSTGRESQL:
@@ -28,7 +27,7 @@ public class SqlDataTypeNames {
         throw new SpRuntimeException("Database engine " + sqlEngine + " does not support long values.");
     }
 
-    public static String getFloat(SupportedSQLEngines sqlEngine) throws SpRuntimeException{
+    public static String getFloat(SupportedDbEngines sqlEngine) throws SpRuntimeException{
         switch (sqlEngine) {
             case MY_SQL:
             case INFLUX_DB:
@@ -39,7 +38,7 @@ public class SqlDataTypeNames {
         throw new SpRuntimeException("Database engine " + sqlEngine + " does not support float values.");
     }
 
-    public static String getDouble(SupportedSQLEngines sqlEngine) throws SpRuntimeException {
+    public static String getDouble(SupportedDbEngines sqlEngine) throws SpRuntimeException {
         switch (sqlEngine) {
             case MY_SQL:
             case POSTGRESQL:
@@ -50,12 +49,12 @@ public class SqlDataTypeNames {
     }
 
     /**
-     * Returns the SQL data type name for a short string (up to 255 chars) for the given {@link SupportedSQLEngines}
+     * Returns the SQL data type name for a short string (up to 255 chars) for the given {@link SupportedDbEngines}
      * @param sqlEngine
      * @return
      * @throws SpRuntimeException
      */
-    public static String getShortString(SupportedSQLEngines sqlEngine) throws SpRuntimeException {
+    public static String getShortString(SupportedDbEngines sqlEngine) throws SpRuntimeException {
         switch (sqlEngine) {
             case MY_SQL:
             case POSTGRESQL:
@@ -67,12 +66,12 @@ public class SqlDataTypeNames {
     }
 
     /**
-     * Returns the SQL data type name for a long string (more than to 255 chars) for the given {@link SupportedSQLEngines}
+     * Returns the SQL data type name for a long string (more than to 255 chars) for the given {@link SupportedDbEngines}
      * @param sqlEngine
      * @return
      * @throws SpRuntimeException
      */
-    public static String getLongString(SupportedSQLEngines sqlEngine) throws SpRuntimeException {
+    public static String getLongString(SupportedDbEngines sqlEngine) throws SpRuntimeException {
         switch (sqlEngine) {
             case MY_SQL:
             case POSTGRESQL:
@@ -83,7 +82,7 @@ public class SqlDataTypeNames {
         throw new SpRuntimeException("Database engine " + sqlEngine + " does not support long strings.");
     }
 
-    public static String getBoolean(SupportedSQLEngines sqlEngine) throws SpRuntimeException {
+    public static String getBoolean(SupportedDbEngines sqlEngine) throws SpRuntimeException {
         switch (sqlEngine) {
             case MY_SQL:
             case POSTGRESQL:
@@ -94,7 +93,7 @@ public class SqlDataTypeNames {
         throw new SpRuntimeException("Database engine " + sqlEngine + " does not support boolean values.");
     }
 
-    public static String getTimestamp(SupportedSQLEngines sqlEngine) throws SpRuntimeException {
+    public static String getTimestamp(SupportedDbEngines sqlEngine) throws SpRuntimeException {
         switch (sqlEngine) {
             case INFLUX_DB:
             case MY_SQL:
@@ -104,7 +103,7 @@ public class SqlDataTypeNames {
         throw new SpRuntimeException("Database engine " + sqlEngine + " does not support timestamps.");
     }
 
-    public static String getDate(SupportedSQLEngines sqlEngine) throws SpRuntimeException {
+    public static String getDate(SupportedDbEngines sqlEngine) throws SpRuntimeException {
         switch (sqlEngine) {
             case MY_SQL:
             case POSTGRESQL:
@@ -115,7 +114,7 @@ public class SqlDataTypeNames {
         throw new SpRuntimeException("Database engine " + sqlEngine + " does not support dates.");
     }
 
-    public static String getTime(SupportedSQLEngines sqlEngine) throws SpRuntimeException {
+    public static String getTime(SupportedDbEngines sqlEngine) throws SpRuntimeException {
         switch (sqlEngine) {
             case INFLUX_DB:
             case MY_SQL:
@@ -125,7 +124,7 @@ public class SqlDataTypeNames {
         throw new SpRuntimeException("Database engine " + sqlEngine + " does not support time.");
     }
 
-    public static String getDatetime(SupportedSQLEngines sqlEngine) throws SpRuntimeException {
+    public static String getDatetime(SupportedDbEngines sqlEngine) throws SpRuntimeException {
         switch (sqlEngine) {
             case INFLUX_DB:
                 return "TIME";
@@ -136,7 +135,7 @@ public class SqlDataTypeNames {
         throw new SpRuntimeException("Database engine " + sqlEngine + " does not support datetime.");
     }
 
-    public static String getFromObject(final Object o, SupportedSQLEngines sqlEngine) {
+    public static String getFromObject(final Object o, SupportedDbEngines sqlEngine) {
 
         if (o instanceof Integer) {
             return getInteger(sqlEngine);
@@ -153,7 +152,7 @@ public class SqlDataTypeNames {
         }
     }
 
-    public static String getFromUri(final String uri, SupportedSQLEngines sqlEngine) {
+    public static String getFromUri(final String uri, SupportedDbEngines sqlEngine) {
         if (uri.equals(XSD._integer.toString())) {
             return getInteger(sqlEngine);
         } else if (uri.equals(XSD._long.toString())) {
