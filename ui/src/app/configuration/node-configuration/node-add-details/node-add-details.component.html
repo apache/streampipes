@@ -1,0 +1,177 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div class="sp-dialog-container">
+    <div class="sp-dialog-content padding-20">
+        <div fxFlex="100" fxLayout="column">
+
+            <form [formGroup]="nodeMetadataFormGroup">
+                <div fxFlex="100" fxLayout="column">
+                    <mat-form-field>
+                        <mat-label>Backend host (IP/DNS)</mat-label>
+                        <input [formControlName]="'backendHost'" matInput required>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>Node host (IP/DNS)</mat-label>
+                        <input [formControlName]="'nodeHost'" matInput required>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>API token</mat-label>
+                        <input [formControlName]="'token'" matInput required>
+                    </mat-form-field>
+                </div>
+            </form>
+
+            <mat-form-field class="example-chip-list">
+                <mat-label>Node tags</mat-label>
+                <mat-chip-list #chipList aria-label="Node location tag">
+                    <mat-chip *ngFor="let tag of tmpTags" [selectable]="selectable"
+                              [removable]="removable" (removed)="remove(tag)">
+                        {{tag}}
+                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                    </mat-chip>
+                    <input placeholder="New tag..."
+                           [matChipInputFor]="chipList"
+                           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                           [matChipInputAddOnBlur]="addOnBlur"
+                           (matChipInputTokenEnd)="add($event)">
+                </mat-chip-list>
+            </mat-form-field>
+
+            <mat-slide-toggle color="primary" [(ngModel)]="advancedSettings">
+                Configure advanced options
+            </mat-slide-toggle>
+
+            <div style="margin-top: 1em">
+                <mat-accordion class="example-headers-align">
+                    <mat-expansion-panel [expanded]="advancedSettings">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                Settings
+                            </mat-panel-title>
+                            <mat-panel-description>
+                                Configure advanced options
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
+
+                        <div>
+                            <div fxFlex="100" fxLayout="row">
+                                <div fxFlex="50" fxLayout="row" fxLayoutAlign="left center">
+                                    <span>Storage path</span>
+                                </div>
+                            </div>
+                            <div fxFlex="50" fxLayout="row" fxLayoutAlign="start center">
+                                <mat-form-field>
+                                    <mat-label></mat-label>
+                                    <input [disabled]="!advancedSettings" matInput [value]="storagePath">
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div fxFlex="100" fxLayout="row">
+                                <div fxFlex="50" fxLayout="row" fxLayoutAlign="left center">
+                                    <span>Docker pruning interval (sec)</span>
+                                </div>
+                            </div>
+                            <div fxFlex="50" fxLayout="row" fxLayoutAlign="start center">
+                                <mat-form-field>
+                                    <mat-label></mat-label>
+                                    <input [disabled]="!advancedSettings" matInput [value]="dockerNodePruningFreq">
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div fxFlex="100" fxLayout="row">
+                                <div fxFlex="50" fxLayout="row" fxLayoutAlign="left center">
+                                    <span>Resource update interval (sec)</span>
+                                </div>
+                            </div>
+                            <div fxFlex="50" fxLayout="row" fxLayoutAlign="start center">
+                                <mat-form-field>
+                                    <mat-label></mat-label>
+                                    <input [disabled]="!advancedSettings"matInput [value]="resourceUpdateFreq">
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div fxFlex="100" fxLayout="row">
+                                <div fxFlex="50" fxLayout="row" fxLayoutAlign="left center">
+                                    <span>Event buffer size (#events)</span>
+                                </div>
+                            </div>
+                            <div fxFlex="50" fxLayout="row" fxLayoutAlign="start center">
+                                <mat-form-field>
+                                    <mat-label></mat-label>
+                                    <input [disabled]="!advancedSettings" matInput [value]="eventBufferSize">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </mat-expansion-panel>
+                </mat-accordion>
+
+                    <mat-vertical-stepper *ngIf="dockerCommandCreated" #stepper>
+                        <mat-step [stepControl]="firstFormGroup">
+                            <form [formGroup]="firstFormGroup">
+                                <ng-template matStepLabel>Create docker network</ng-template>
+                                <div class="flex-container">
+                                    <div *ngIf="dockerCommandCreated" fxFlex="100" fxLayout="row" fxLayoutAlign="left center"
+                                         class="docker-command-container">
+                                        docker network create spnet
+                                    </div>
+                                </div>
+                                <div>
+                                    <button mat-button matStepperNext>Next</button>
+                                </div>
+                            </form>
+                        </mat-step>
+                        <mat-step [stepControl]="secondFormGroup">
+                            <form [formGroup]="secondFormGroup">
+                                <ng-template matStepLabel>Start node controller container</ng-template>
+                                <div class="flex-container">
+                                    <div *ngIf="dockerCommandCreated" fxFlex="100" fxLayout="row" fxLayoutAlign="left center"
+                                         class="docker-command-container">
+                                        {{dockerRunCommand}}
+                                    </div>
+                                </div>
+                                <div>
+                                    <button mat-button (click)="hide()">Done</button>
+                                </div>
+                            </form>
+                        </mat-step>
+                    </mat-vertical-stepper>
+
+
+            </div>
+        </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="sp-dialog-actions" fxLayoutAlign="left center">
+        <button [disabled]="!nodeMetadataFormGroup.valid || added" mat-button mat-raised-button
+                color="primary" (click)="createDocker()" style="margin-right:10px;">
+            Create Docker Command
+        </button>
+        <button mat-button mat-raised-button class="mat-basic" (click)="hide()">
+            {{added ? 'Close' : 'Cancel'}}
+        </button>
+    </div>
+</div>

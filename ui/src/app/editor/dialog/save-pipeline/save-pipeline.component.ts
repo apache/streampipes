@@ -23,7 +23,13 @@ import {
   Message,
   Pipeline,
   NodeInfoDescription,
-  StaticNodeMetadata, NvidiaContainerRuntime, DockerContainerRuntime, ContainerRuntime, DataSinkInvocation
+  StaticNodeMetadata,
+  NvidiaContainerRuntime,
+  DockerContainerRuntime,
+  ContainerRuntime,
+  DataSinkInvocation,
+  SpDataStream,
+  SpDataStreamUnion
 } from "../../../core-model/gen/streampipes-model";
 import {ObjectProvider} from "../../services/object-provider.service";
 import {EditorService} from "../../services/editor.service";
@@ -56,6 +62,8 @@ export class SavePipelineComponent implements OnInit {
   disableNodeSelection = new FormControl(true);
   tmpPipeline: Pipeline;
   panelOpenState: boolean;
+
+  filteredNodes = new FormControl();
 
   pipelineExecutionPolicies: string[] = ['default', 'locality-aware', 'custom'];
 
@@ -111,7 +119,7 @@ export class SavePipelineComponent implements OnInit {
     } else {
       this.selectedRelayStrategyVal = "buffer";
       this.selectedPipelineExecutionPolicy = "locality-aware";
-      this.applyLocalityAwarePolicy(this.tmpPipeline.streams, this.tmpPipeline.sepas);
+      this.applyLocalityAwarePolicy();
     }
   }
 
@@ -146,23 +154,55 @@ export class SavePipelineComponent implements OnInit {
     });
   };
 
-  applyLocalityAwarePolicy(streams, pipelineElements) {
-    streams.forEach(s => {
+  applyLocalityAwarePolicy() {
+    this.tmpPipeline.streams.forEach(s => {
       //let processors: DataProcessorInvocation[];
       //processors = this.pipeline.sepas.filter(p => p.connectedTo.some(entry => entry == s.dom));
-      pipelineElements.forEach(p => {
-        p.deploymentTargetNodeId = s.deploymentTargetNodeId;
-        p.deploymentTargetNodeHostname = s.deploymentTargetNodeHostname;
-        p.deploymentTargetNodePort = s.deploymentTargetNodePort;
+      this.tmpPipeline.sepas.forEach(processor => {
+        processor.deploymentTargetNodeId = s.deploymentTargetNodeId;
+        processor.deploymentTargetNodeHostname = s.deploymentTargetNodeHostname;
+        processor.deploymentTargetNodePort = s.deploymentTargetNodePort;
       });
+
+    //   this.tmpPipeline.actions.forEach(p => {
+    //     p.deploymentTargetNodeId = s.deploymentTargetNodeId;
+    //     p.deploymentTargetNodeHostname = s.deploymentTargetNodeHostname;
+    //     p.deploymentTargetNodePort = s.deploymentTargetNodePort;
+    //   });
     });
   }
 
-  private applyDefaultPolicy(pipelineElements) {
-    pipelineElements.forEach(p => {
+  private applyTagBasedPolicy(filteredNodes: NodeInfoDescription[]) {
+    if (filteredNodes.length > 0) {
+
+      this.tmpPipeline.sepas.forEach(processor => {
+        this.deploymentOptions[processor.appId] = [];
+
+        filteredNodes.forEach(filteredNode => {
+
+          if (filteredNode.supportedElements.length != 0 &&
+              filteredNode.supportedElements.some(appId => appId === processor.appId)) {
+            this.deploymentOptions[processor.appId].push(filteredNode);
+          }
+        })
+      })
+
+    } else {
+      this.addAppIds(this.tmpPipeline.sepas, this.edgeNodes);
+      this.addAppIds(this.tmpPipeline.actions, this.edgeNodes);
+    }
+  }
+
+  private applyDefaultPolicy() {
+    this.tmpPipeline.sepas.forEach(p => {
       p.deploymentTargetNodeId = "default";
       // this.deploymentOptions[p.appId].push(this.makeDefaultNodeInfo());
     });
+
+    // this.tmpPipeline.actions.forEach(p => {
+    //   p.deploymentTargetNodeId = "default";
+    //   // this.deploymentOptions[p.appId].push(this.makeDefaultNodeInfo());
+    // });
   }
 
   loadAndPrepareEdgeNodes() {
@@ -303,11 +343,24 @@ export class SavePipelineComponent implements OnInit {
     } else if (value == "locality-aware") {
       this.panelOpenState = false;
       this.disableNodeSelection.setValue(true);
-      this.applyLocalityAwarePolicy(this.tmpPipeline.streams, this.tmpPipeline.sepas)
+      this.applyLocalityAwarePolicy()
     } else if (value == "default") {
       this.panelOpenState = false;
       this.disableNodeSelection.setValue(true);
-      this.applyDefaultPolicy(this.tmpPipeline.sepas);
+      this.applyDefaultPolicy();
     }
+    // else if (value == "tag-based") {
+    //   this.panelOpenState = true;
+    //   this.disableNodeSelection.setValue(false);
+    // }
+  }
+
+  nodesFromSelectedTags(filteredNodes: NodeInfoDescription[]) {
+    this.applyTagBasedPolicy(filteredNodes)
+  }
+
+
+  compareFn(c1: any, c2:any): boolean {
+    return c1 && c2 ? c1.id === c2.id : c1 === c2;
   }
 }

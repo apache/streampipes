@@ -55,7 +55,7 @@
                         <b>Pipeline Operation Policies</b>
                     </div>
 
-                    <div style="margin-top: 2em">
+                    <div style="margin-top: 1em">
                         <div fxFlex="100" fxLayout="row">
                             <div fxFlex="50" fxLayout="row" fxLayoutAlign="left top">
                                 <span>Relay Policy</span>
@@ -93,9 +93,13 @@
 
                     <div style="margin: 1em 0 1em 0;">
                         <div>
-                            <b>Node Execution Targets</b>
+                            <b>Deployment Targets</b>
                         </div>
-                        <div style="margin-top: 2em">
+                        <div style="margin: 1em 0 1em 0;"  *ngIf="selectedPipelineExecutionPolicy=='custom'">
+                            <node-tag-selector [nodes]="edgeNodes"
+                                               (createDynamicallySelectedTags)="nodesFromSelectedTags($event)"></node-tag-selector>
+                        </div>
+                        <div style="margin-top: 1em">
                             <mat-accordion class="example-headers-align">
 
                                 <mat-expansion-panel (opened)="panelOpenState = true"
@@ -119,9 +123,10 @@
                                                 <mat-select [(ngModel)]="processors.deploymentTargetNodeId"
                                                             [disabled]="disableNodeSelection.value"
                                                             required>
-                                                    <mat-option [value]="nodeInfo.nodeControllerId"
-                                                                *ngFor="let nodeInfo of deploymentOptions[processors.appId]">
-                                                        <em>{{nodeInfo.hostname}}</em>
+                                                    <mat-option
+                                                            *ngFor="let node of deploymentOptions[processors.appId]"
+                                                            [value]="node.nodeControllerId">
+                                                        <em>{{node.hostname}}</em>
                                                     </mat-option>
                                                 </mat-select>
                                             </mat-form-field>
@@ -138,9 +143,10 @@
                                                 <mat-select [(ngModel)]="sinks.deploymentTargetNodeId"
                                                             [disabled]="disableNodeSelection.value"
                                                             required>
-                                                    <mat-option [value]="nodeInfo.nodeControllerId"
-                                                                *ngFor="let nodeInfo of deploymentOptions[sinks.appId]">
-                                                        <em>{{nodeInfo.hostname}}</em>
+                                                    <mat-option
+                                                            *ngFor="let node of deploymentOptions[sinks.appId]"
+                                                            [value]="node.nodeControllerId">
+                                                        <em>{{node.hostname}}</em>
                                                     </mat-option>
                                                 </mat-select>
                                             </mat-form-field>

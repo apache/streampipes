@@ -45,9 +45,9 @@ export class WidgetConfigBuilder {
         }
         if (withColors) {
         this.requiredColorParameter(WidgetConfigBuilder.BACKGROUND_COLOR_KEY, "Background color", "The background" +
-            " color", "#1B1464");
+            " color", "#F6F6F6");
         this.requiredColorParameter(WidgetConfigBuilder.PRIMARY_TEXT_COLOR_KEY, "Primary text color", "The" +
-                " primary text color", "#FFFFFF");
+                " primary text color", "#333");
         this.requiredColorParameter(WidgetConfigBuilder.SECONDARY_TEXT_COLOR_KEY, "Secondary text color", "The" +
             " secondary text" +
             " color", "#39B54A");

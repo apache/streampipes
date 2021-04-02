@@ -1,0 +1,126 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+@import '../../../../scss/sp/sp-dialog.scss';
+
+.sp-dialog-container {
+  width: 520px;
+}
+
+.customize-section {
+  display:flex;
+  flex: 1 1 auto;
+  padding: 20px;
+}
+
+.padding-20 {
+  padding: 20px;
+}
+
+.mb-10 {
+  margin-bottom: 10px;
+}
+
+::ng-deep .pipeline-radio-group .mat-radio-label {
+  padding: 0;
+}
+
+.status-text {
+  font-size: 14pt;
+  margin-top:10px;
+}
+
+.status-subtext {
+  font-size: 12pt;
+}
+
+mat-slider {
+  width: 300px;
+}
+
+.execution-policy-radio-group {
+  display: flex;
+  flex-direction: column;
+  //margin: 15px 0;
+}
+
+.execution-policy-radio-button {
+  margin: 5px;
+}
+
+
+.execution-policy-action-buttons {
+  padding-bottom: 20px;
+}
+
+.example-headers-align .mat-expansion-panel-header-title,
+.example-headers-align .mat-expansion-panel-header-description {
+  flex-basis: 0;
+}
+
+.example-headers-align .mat-expansion-panel-header-description {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.example-headers-align .mat-form-field + .mat-form-field {
+  margin-left: 8px;
+}
+
+.mat-form-field[dense] {
+  .mat-form-field-flex > .mat-form-field-infix {
+    padding: 0.4em 0px !important;
+  }
+  .mat-form-field-label-wrapper {
+    top: -1.5em;
+  }
+  &.mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
+    transform: translateY(-1.1em) scale(.75);
+  }
+  .mat-form-field-wrapper{
+    padding-bottom: 0;
+  }
+}
+
+.flex-container {
+  margin-top: 1em;
+  width: 100%
+}
+
+.new-docker-command {
+  width: 200px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.docker-tag {
+  margin-right: 10px;
+  font-weight: bold;
+  padding: 10px;
+}
+
+.docker-command-container {
+  background: #f6f6f6;
+  border: 1px solid #cccccc;
+  padding: 10px;
+  color: black;
+  //margin-left: 10px;
+  //margin-right: 10px;
+  overflow-x: auto;
+  white-space: nowrap;
+}

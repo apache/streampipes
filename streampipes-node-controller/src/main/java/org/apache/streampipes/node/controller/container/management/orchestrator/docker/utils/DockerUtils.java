@@ -183,6 +183,7 @@ public class DockerUtils {
                 .portBindings(portBindings)
                 .networkMode(network)
                 .restartPolicy(HostConfig.RestartPolicy.unlessStopped())
+                //.extraHosts()
                 .build();
     }
 

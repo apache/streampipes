@@ -1,3 +1,4 @@
+#!/bin/sh
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -13,25 +14,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-ARG BASE_IMAGE=arm64v8/openjdk:11-jre-slim
+#!/usr/bin/env bash
 
-FROM arm64v8/ubuntu:18.04 as build-dev
-RUN apt -y update; \
-    apt -y --no-install-recommends install qemu-user-static
+repo=apachestreampipes
+version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
 
-FROM $BASE_IMAGE
-MAINTAINER dev@streampipes.apache.org
+docker_build(){
+  docker build --no-cache --pull \
+  -t $repo/$1:$version \
+  -f $2/Dockerfile $2
+}
 
-EXPOSE 7077
-ENV CONSUL_LOCATION consul
-
-COPY --from=build-dev /usr/bin/qemu-aarch64-static /usr/bin
-RUN set -ex; \
-    apt -y update; \
-    apt -y --no-install-recommends install curl; \
-    apt clean; \
-    rm -rf /tmp/apache-* /var/lib/apt/lists/*
-
-COPY target/streampipes-node-controller.jar  /streampipes-node-controller.jar
-
-ENTRYPOINT ["java", "-jar", "/streampipes-node-controller.jar"]
+echo "Start Docker builds ..."
+docker_build backend streampipes-backend
+docker_build node-controller streampipes-node-controller
+docker_build ui ui

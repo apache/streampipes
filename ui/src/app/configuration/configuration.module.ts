@@ -25,7 +25,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 import { ConfigurationComponent } from './configuration.component';
 import { ConfigurationService } from './shared/configuration.service';
@@ -44,6 +44,8 @@ import { DatalakeRestService } from '../core-services/datalake/datalake-rest.ser
 import { NodeConfigurationComponent } from "./node-configuration/node-configuration.component";
 import { NodeConfigurationDetailsComponent } from './node-configuration/node-configuration-details/node-configuration-details.component';
 import {MatChipsModule} from "@angular/material/chips";
+import { NodeAddDetailsComponent } from './node-configuration/node-add-details/node-add-details.component';
+import {MatDatepickerModule} from "@angular/material/datepicker";
 
 @NgModule({
     imports: [
@@ -58,7 +60,9 @@ import {MatChipsModule} from "@angular/material/chips";
         MatTooltipModule,
         FormsModule,
         DragDropModule,
-        MatChipsModule
+        MatChipsModule,
+        ReactiveFormsModule,
+        MatDatepickerModule
     ],
     declarations: [
         ConfigurationComponent,
@@ -73,7 +77,8 @@ import {MatChipsModule} from "@angular/material/chips";
         NodeConfigurationComponent,
         MessagingConfigurationComponent,
         DatalakeConfigurationComponent,
-        NodeConfigurationDetailsComponent
+        NodeConfigurationDetailsComponent,
+        NodeAddDetailsComponent
     ],
     providers: [
       ConfigurationService,

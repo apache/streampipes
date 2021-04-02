@@ -42,6 +42,7 @@ public class MapDBImpl implements CRUDStorage {
         } else {
             db = DBMaker
                     .fileDB(DB_STORAGE_PATH + dbFile)
+                    .transactionEnable()
                     .closeOnJvmShutdown()
                     .make();
         }
@@ -52,6 +53,7 @@ public class MapDBImpl implements CRUDStorage {
     @Override
     public <T> void create(String id, T value) {
         map.put(id, value);
+        db.commit();
     }
 
     @Override
@@ -67,11 +69,13 @@ public class MapDBImpl implements CRUDStorage {
     @Override
     public <T> void update(String id, T value) {
         map.put(id, value);
+        db.commit();
     }
 
     @Override
     public void delete(String id) {
         map.remove(id);
+        db.commit();
     }
 
     public void close() {

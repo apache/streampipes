@@ -69,6 +69,24 @@ li {
     padding: 5px;
 }
 
+.span-node-active{
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+    background: $sp-color-primary;
+    border: 1px solid $sp-color-primary;
+    padding: 2px;
+}
+
+.span-node-inactive{
+    font-size: 12px;
+    font-weight: bold;
+    color: #f1c40f;
+    background: white;
+    border: 1px solid #f1c40f;
+    padding: 2px;
+}
+
 .div-sa-tag{
     display: inline-block;
     margin-bottom: 10px;
@@ -87,14 +105,14 @@ li {
     padding-top: 6px;
 }
 
-.div-icon-node-actions {
+.div-menu {
     margin-left: auto;
     margin-right: 0;
 }
 
 .node-state {
     //float:right;
-    transform: scale(1.3);
+    transform: scale(1);
 }
 
 .node-activated {

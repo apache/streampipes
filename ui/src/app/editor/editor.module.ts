@@ -67,6 +67,8 @@ import {PipelineElementDraggedService} from "./services/pipeline-element-dragged
 import {PipelineCanvasScrollingService} from "./services/pipeline-canvas-scrolling.service";
 import {JsplumbEndpointService} from "./services/jsplumb-endpoint.service";
 import {JsplumbFactoryService} from "./services/jsplumb-factory.service";
+import { NodeTagSelectorComponent } from './dialog/save-pipeline/node-tag-selector/node-tag-selector.component';
+import {MatChipsModule} from "@angular/material/chips";
 
 @NgModule({
     imports: [
@@ -86,6 +88,7 @@ import {JsplumbFactoryService} from "./services/jsplumb-factory.service";
         ReactiveFormsModule,
         MatSliderModule,
         ReactiveFormsModule,
+        MatChipsModule,
     ],
     declarations: [
         CompatibleElementsComponent,
@@ -110,7 +113,8 @@ import {JsplumbFactoryService} from "./services/jsplumb-factory.service";
         SavePipelineComponent,
         SafeCss,
         WelcomeTourComponent,
-        MigratePipelineProcessorsComponent
+        MigratePipelineProcessorsComponent,
+        NodeTagSelectorComponent
     ],
     providers: [
         EditorService,

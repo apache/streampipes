@@ -25,6 +25,15 @@
             </div>
         </div>
         <div fxFlex="100" fxLayoutAlign="start start" class="sp-blue-border page-container-padding-inner">
+            <div fxLayoutAlign="center right">
+                <button class="md-raised md-primary submit-button"
+                        mat-fab color="accent"
+                        type="submit"
+                        matTooltip="add new node"
+                        (click)="addNode()">
+                    <mat-icon>add</mat-icon>
+                </button>
+            </div>
             <mat-grid-list
                     [cols]="3" [rowHeight]="300"
                     [gutterSize]="10" fxFlex="100">
@@ -32,47 +41,56 @@
                 <mat-grid-tile class="gray" *ngFor="let node of nodes">
                     <mat-card class="node-card">
                         <mat-card-header class="header">
-                            <div class="div-icon-node-actions">
-                                <button mat-icon-button class="node-mat-icon-button"
-                                        [disabled]="node.active"
-                                        (click)="changeNodeState(node, true)">
-                                    <mat-icon
-                                            [ngClass]="node.active ? 'node-activated' : 'node-inactive'"
-                                            matTooltip="{{node.active ? 'node alive and running' : 'activate node'}}"
-                                            matTooltipPosition="above">
-                                        play_circle_filled
-                                    </mat-icon>
+                            <div class="div-menu">
+                                <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="node menu">
+                                    <mat-icon>more_vert</mat-icon>
                                 </button>
-                                <button mat-icon-button class="node-mat-icon-button"
-                                        [disabled]="!node.active"
-                                        (click)="changeNodeState(node, false)">
-                                    <mat-icon
-                                            [ngClass]="node.active ? 'node-inactive' : 'node-deactivated'"
-                                            matTooltip="{{!node.active ? 'node deactivated' : 'deactivate node'}}"
-                                            matTooltipPosition="above">
-                                        pause_circle_filled
-                                    </mat-icon>
-                                </button>
-                                <button mat-icon-button class="node-mat-icon-button"
-                                        [disabled]="node.active"
-                                        (click)="evict(node)">
-                                    <mat-icon
-                                            [ngClass]="node.active ? 'node-inactive' : 'node-evict'"
-                                            matTooltip="{{!node.active ? 'evict processors' :
-                                            'evict processors option not available'}}"
-                                            matTooltipPosition="above">
-                                        swap_horizontal_circle_filled
-                                    </mat-icon>
-                                </button>
-                                <button mat-icon-button class="node-mat-icon-button"
-                                        matTooltip="Edit node configuration"
-                                        matTooltipPosition="above"
-                                        (click)="settings(node)">
-                                    <mat-icon
-                                            [ngClass]="'node-inactive'">
-                                        info
-                                    </mat-icon>
-                                </button>
+                                <mat-menu #menu="matMenu" style="font-size: 10pt">
+                                    <button mat-menu-item
+                                            *ngIf="!node.active"
+                                            (click)="changeNodeState(node, true)">
+                                        <mat-icon
+                                                [ngClass]="node.active ? 'node-activated' : 'node-inactive'"
+                                                matTooltip="{{node.active ? 'node alive and running' : 'activate node'}}"
+                                                matTooltipPosition="above">
+                                            play_circle_filled
+                                        </mat-icon>
+                                        <span>activate</span>
+                                    </button>
+                                    <button mat-menu-item
+                                            *ngIf="node.active"
+                                            (click)="changeNodeState(node, false)">
+                                        <mat-icon
+                                                [ngClass]="node.active ? 'node-inactive' : 'node-deactivated'"
+                                                matTooltip="{{!node.active ? 'node deactivated' : 'deactivate node'}}"
+                                                matTooltipPosition="above">
+                                            pause_circle_filled
+                                        </mat-icon>
+                                        <span>deactivate</span>
+                                    </button>
+<!--                                    <button mat-menu-item-->
+<!--                                            [disabled]="node.active"-->
+<!--                                            matTooltip="{{!node.active ? 'evict processors' :-->
+<!--                                            'evict processors option not available'}}"-->
+<!--                                            (click)="evict(node)">-->
+<!--                                        <mat-icon-->
+<!--                                                [ngClass]="node.active ? 'node-inactive' : 'node-evict'"-->
+<!--                                                matTooltipPosition="above">-->
+<!--                                            swap_horizontal_circle_filled-->
+<!--                                        </mat-icon>-->
+<!--                                        <span>evict</span>-->
+<!--                                    </button>-->
+                                    <button mat-menu-item
+                                            matTooltip="Edit node configuration"
+                                            matTooltipPosition="above"
+                                            (click)="settings(node)">
+                                        <mat-icon
+                                                [ngClass]="'node-inactive'">
+                                            sell
+                                        </mat-icon>
+                                        <span>tags</span>
+                                    </button>
+                                </mat-menu>
                             </div>
                             <div mat-card-avatar class="node-header-avatar">
                                 <button mat-icon-button class="node-mat-icon-button" disabled>
@@ -87,6 +105,8 @@
                                 {{node.nodeControllerId}} | <b>{{node.nodeResources.softwareResource.os}}</b>
                                 <div style="color: lightgrey;">
                                     last contact: {{currentTimestamp}}
+                                    <span *ngIf="node.active" class="span-node-active">active</span>
+                                    <span *ngIf="!node.active" class="span-node-inactive">inactive</span>
                                 </div>
                             </mat-card-subtitle>
                         </mat-card-header>
@@ -124,6 +144,16 @@
 <!--                            </div>-->
                         </mat-card-content>
                         <mat-card-actions>
+<!--                            <mat-divider></mat-divider>-->
+<!--                            <div style="margin-top: 1em" fxLayout="row"-->
+<!--                                 fxLayoutAlign="start center" fxFlex="100">-->
+<!--                                <div style="margin: auto; border: 1px solid  rgb(57, 181, 74); color: rgb(57, 181, 74)">-->
+<!--                                    <button mat-button>-->
+<!--                                        <mat-icon>add_circle_outline</mat-icon>-->
+<!--                                        add container-->
+<!--                                    </button>-->
+<!--                                </div>-->
+<!--                            </div>-->
                         </mat-card-actions>
                     </mat-card>
                 </mat-grid-tile>

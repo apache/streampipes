@@ -18,9 +18,10 @@
 
 import {Component, OnInit, ViewEncapsulation} from "@angular/core";
 import {
+    ContainerRuntime, ContainerRuntimeUnion, DockerContainerRuntime,
     FieldDeviceAccessResource,
     NodeInfoDescription,
-    NvidiaContainerRuntime
+    NvidiaContainerRuntime, UnnamedStreamPipesEntity
 } from "../../core-model/gen/streampipes-model";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {zip} from "rxjs";
@@ -30,6 +31,7 @@ import {DataMarketplaceService} from "../../connect/services/data-marketplace.se
 import {NodeService} from "../../platform-services/apis/node.service";
 import {PanelType} from "../../core-ui/dialog/base-dialog/base-dialog.model";
 import {NodeConfigurationDetailsComponent} from "./node-configuration-details/node-configuration-details.component";
+import {NodeAddDetailsComponent} from "./node-add-details/node-add-details.component";
 
 @Component({
     selector: 'node-configuration',
@@ -92,11 +94,12 @@ export class NodeConfigurationComponent implements OnInit{
     };
 
     nvidiaRuntime(node: NodeInfoDescription) {
-        let nvidiaRuntime = false;
-        if (node.nodeResources.softwareResource.containerRuntime instanceof NvidiaContainerRuntime) {
-            nvidiaRuntime = true;
+        const containerRuntime = node.nodeResources.softwareResource.containerRuntime;
+        if(containerRuntime['@class'] === "org.apache.streampipes.model.node.resources.software.NvidiaContainerRuntime"){
+            return true
+        } else {
+            return false
         }
-        return nvidiaRuntime;
     }
 
     async changeNodeState(node: NodeInfoDescription, desiredState: boolean) {
@@ -172,6 +175,14 @@ export class NodeConfigurationComponent implements OnInit{
             data: {
                 "node": node
             }
+        });
+    }
+
+    addNode() {
+        this.DialogService.open(NodeAddDetailsComponent,{
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: "Add new node",
+            data: {}
         });
     }
 
