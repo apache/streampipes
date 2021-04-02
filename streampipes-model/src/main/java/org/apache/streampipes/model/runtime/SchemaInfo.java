@@ -22,6 +22,7 @@ import org.apache.streampipes.model.schema.EventSchema;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 public class SchemaInfo implements Serializable {
 
@@ -39,5 +40,13 @@ public class SchemaInfo implements Serializable {
 
   public List<PropertyRenameRule> getRenameRules() {
     return renameRules;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    SchemaInfo that = (SchemaInfo) o;
+    return Objects.equals(eventSchema, that.eventSchema);
   }
 }

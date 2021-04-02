@@ -73,4 +73,22 @@ public class EventSchema extends UnnamedStreamPipesEntity {
     return eventProperties.add(p);
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    EventSchema that = (EventSchema) o;
+    if(eventProperties.size()!=that.eventProperties.size())
+      return false;
+    List<EventProperty> thatCopyEventProperties=new ArrayList<>(that.eventProperties);
+    thatCopyEventProperties.forEach(copyEventProperty->{
+      this.eventProperties.forEach(thisEventProperty->{
+        if(copyEventProperty.equals(thisEventProperty))
+        {
+          thatCopyEventProperties.remove(copyEventProperty);
+        }
+      });
+    });
+    return thatCopyEventProperties.size()==0;
+  }
 }

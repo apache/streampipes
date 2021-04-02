@@ -32,6 +32,7 @@ import javax.persistence.*;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @RdfsClass(StreamPipes.EVENT_PROPERTY)
@@ -84,6 +85,48 @@ public abstract class EventProperty extends UnnamedStreamPipesEntity {
   private int index = 0;
 
   private String runtimeId;
+
+  private boolean equateLists(List<?> list1, List<?> list2) {
+    list1.forEach(listProperty1 -> {
+      list2.forEach(listProperty2 -> {
+        if (listProperty1.equals(listProperty2)) {
+          list1.remove(listProperty1);
+        }
+      });
+    });
+    return list1.size() == 0;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    EventProperty that = (EventProperty) o;
+    if (domainProperties.size() != that.domainProperties.size())
+      return false;
+    if (eventPropertyQualities.size() != that.eventPropertyQualities.size())
+      return false;
+    if (requiresEventPropertyQualities.size() != that.requiresEventPropertyQualities.size())
+      return false;
+
+
+    List<URI> thatCopyDomainProperties = new ArrayList<>(that.domainProperties);
+    List<EventPropertyQualityDefinition> thatCopyEventPropertyQualities = new ArrayList<>(that.eventPropertyQualities);
+    List<EventPropertyQualityRequirement> thatCopyRequiresEventPropertyQualities = new ArrayList<>(that.requiresEventPropertyQualities);
+
+
+    return required == that.required &&
+            index == that.index &&
+            Objects.equals(label, that.label) &&
+            Objects.equals(description, that.description) &&
+            Objects.equals(runtimeName, that.runtimeName) &&
+            Objects.equals(propertyScope, that.propertyScope) &&
+            Objects.equals(runtimeId, that.runtimeId) &&
+            equateLists(thatCopyDomainProperties, this.domainProperties) &&
+            equateLists(thatCopyEventPropertyQualities, this.eventPropertyQualities) &&
+            equateLists(thatCopyRequiresEventPropertyQualities, this.requiresEventPropertyQualities);
+
+  }
 
   public EventProperty() {
     super(prefix + UUID.randomUUID().toString());
