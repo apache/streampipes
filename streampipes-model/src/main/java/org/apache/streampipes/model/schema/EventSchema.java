@@ -21,6 +21,7 @@ package org.apache.streampipes.model.schema;
 import io.fogsy.empire.annotations.Namespaces;
 import io.fogsy.empire.annotations.RdfProperty;
 import io.fogsy.empire.annotations.RdfsClass;
+import org.apache.commons.collections.ListUtils;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.vocabulary.StreamPipes;
@@ -78,8 +79,6 @@ public class EventSchema extends UnnamedStreamPipesEntity {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     EventSchema that = (EventSchema) o;
-    if(eventProperties.size()!=that.eventProperties.size())
-      return false;
-    return that.eventProperties.equals(this.eventProperties);
+    return ListUtils.isEqualList(this.eventProperties,that.eventProperties);
   }
 }

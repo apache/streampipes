@@ -21,6 +21,7 @@ package org.apache.streampipes.model.schema;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import io.fogsy.empire.annotations.RdfProperty;
 import io.fogsy.empire.annotations.RdfsClass;
+import org.apache.commons.collections.ListUtils;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.quality.EventPropertyQualityDefinition;
 import org.apache.streampipes.model.quality.EventPropertyQualityRequirement;
@@ -30,10 +31,7 @@ import org.apache.streampipes.vocabulary.StreamPipes;
 
 import javax.persistence.*;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @RdfsClass(StreamPipes.EVENT_PROPERTY)
 @MappedSuperclass
@@ -100,11 +98,9 @@ public abstract class EventProperty extends UnnamedStreamPipesEntity {
             Objects.equals(runtimeName, that.runtimeName) &&
             Objects.equals(propertyScope, that.propertyScope) &&
             Objects.equals(runtimeId, that.runtimeId) &&
-            that.domainProperties.equals(this.domainProperties) &&
-            that.eventPropertyQualities.equals(this.eventPropertyQualities) &&
-            that.requiresEventPropertyQualities.equals(this.requiresEventPropertyQualities);
-
-
+            ListUtils.isEqualList(this.domainProperties,that.domainProperties) &&
+            ListUtils.isEqualList(this.eventPropertyQualities,that.eventPropertyQualities)&&
+            ListUtils.isEqualList(this.requiresEventPropertyQualities,that.requiresEventPropertyQualities);
   }
 
   public EventProperty() {
