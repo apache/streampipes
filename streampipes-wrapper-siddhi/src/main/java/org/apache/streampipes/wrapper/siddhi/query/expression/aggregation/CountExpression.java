@@ -32,7 +32,7 @@ public class CountExpression extends PropertyExpressionBase {
   @Override
   public String toSiddhiEpl() {
     return join(SiddhiConstants.EMPTY,
-            "count",
+            AggregationFunction.COUNT.toAggregationFunction(),
             SiddhiConstants.PARENTHESIS_OPEN,
             propertyExpression.toSiddhiEpl(),
             SiddhiConstants.PARENTHESIS_CLOSE);

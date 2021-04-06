@@ -20,7 +20,18 @@ package org.apache.streampipes.wrapper.siddhi.query.expression;
 import io.siddhi.query.api.execution.query.selection.OrderByAttribute;
 import org.apache.streampipes.wrapper.siddhi.constants.SiddhiStreamSelector;
 import org.apache.streampipes.wrapper.siddhi.model.EventPropertyDef;
+import org.apache.streampipes.wrapper.siddhi.query.expression.aggregation.AndExpression;
+import org.apache.streampipes.wrapper.siddhi.query.expression.aggregation.AverageExpression;
 import org.apache.streampipes.wrapper.siddhi.query.expression.aggregation.CountExpression;
+import org.apache.streampipes.wrapper.siddhi.query.expression.aggregation.DistinctCountExpression;
+import org.apache.streampipes.wrapper.siddhi.query.expression.aggregation.MaxExpression;
+import org.apache.streampipes.wrapper.siddhi.query.expression.aggregation.MaxForeverExpression;
+import org.apache.streampipes.wrapper.siddhi.query.expression.aggregation.MinExpression;
+import org.apache.streampipes.wrapper.siddhi.query.expression.aggregation.MinForeverExpression;
+import org.apache.streampipes.wrapper.siddhi.query.expression.aggregation.OrExpression;
+import org.apache.streampipes.wrapper.siddhi.query.expression.aggregation.StandardDeviationExpression;
+import org.apache.streampipes.wrapper.siddhi.query.expression.aggregation.SumExpression;
+import org.apache.streampipes.wrapper.siddhi.query.expression.aggregation.UnionSetExpression;
 import org.apache.streampipes.wrapper.siddhi.query.expression.list.CollectListExpression;
 import org.apache.streampipes.wrapper.siddhi.query.expression.list.ContainsListExpression;
 import org.apache.streampipes.wrapper.siddhi.query.expression.math.MathDivideExpression;
@@ -29,7 +40,11 @@ import org.apache.streampipes.wrapper.siddhi.query.expression.orderby.OrderByExp
 import org.apache.streampipes.wrapper.siddhi.query.expression.pattern.EveryExpression;
 import org.apache.streampipes.wrapper.siddhi.query.expression.pattern.PatternCountExpression;
 import org.apache.streampipes.wrapper.siddhi.query.expression.pattern.PatternCountOperator;
-import org.apache.streampipes.wrapper.siddhi.query.expression.window.*;
+import org.apache.streampipes.wrapper.siddhi.query.expression.window.BatchWindowExpression;
+import org.apache.streampipes.wrapper.siddhi.query.expression.window.SortWindowExpression;
+import org.apache.streampipes.wrapper.siddhi.query.expression.window.TimeBatchWindowExpression;
+import org.apache.streampipes.wrapper.siddhi.query.expression.window.TimeWindowExpression;
+import org.apache.streampipes.wrapper.siddhi.query.expression.window.WindowExpression;
 
 import java.util.Arrays;
 
@@ -53,6 +68,49 @@ public class Expressions {
 
   public static PropertyExpressionBase count(PropertyExpression property) {
     return new CountExpression(property);
+  }
+
+  public static PropertyExpressionBase distinctCount(PropertyExpression property) {
+    return new DistinctCountExpression(property);
+  }
+
+  public static PropertyExpressionBase sum(PropertyExpression property) {
+    return new SumExpression(property);
+  }
+
+  public static PropertyExpressionBase max(PropertyExpression property) {
+    return new MaxExpression(property);
+  }
+
+  public static PropertyExpressionBase maxForever(PropertyExpression property) {
+    return new MaxForeverExpression(property);
+  }
+
+  public static PropertyExpressionBase min(PropertyExpression property) {
+    return new MinExpression(property);
+  }
+
+  public static PropertyExpressionBase minForever(PropertyExpression property) {
+    return new MinForeverExpression(property);
+  }
+
+  public static PropertyExpressionBase avg(PropertyExpression property) {
+    return new AverageExpression(property);
+  }
+
+  public static PropertyExpressionBase or(PropertyExpression property) {
+    return new OrExpression(property);
+  }
+
+  public static PropertyExpressionBase and(PropertyExpression property) {
+    return new AndExpression(property);
+  }
+
+  public static PropertyExpressionBase stdDev(PropertyExpression property) {
+    return new StandardDeviationExpression(property);
+  }
+  public static PropertyExpressionBase unionSet(PropertyExpression property) {
+    return new UnionSetExpression(property);
   }
 
   public static PropertyExpressionBase divide(PropertyExpressionBase op1, PropertyExpressionBase op2) {
