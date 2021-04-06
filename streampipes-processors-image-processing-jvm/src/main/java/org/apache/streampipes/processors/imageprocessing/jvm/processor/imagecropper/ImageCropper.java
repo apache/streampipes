@@ -58,7 +58,7 @@ public class ImageCropper implements EventProcessor<ImageCropperParameters> {
 
         if (finalImage.isPresent()) {
           Event outEvent = new Event();
-          outEvent.addField("timestamp", Long.toString(in.getFieldByRuntimeName("timestamp").getAsPrimitive().getAsLong()));
+          outEvent.addField("timestamp", in.getFieldByRuntimeName("timestamp").getAsPrimitive().getAsLong());
           outEvent.addField("image", Base64.getEncoder().encodeToString(finalImage.get()));
           outEvent.addField("classname", box.get("classname"));
           outEvent.addField("score", box.get("score"));
