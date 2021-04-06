@@ -23,7 +23,11 @@ import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
+import org.apache.streampipes.sdk.utils.Datatypes;
 import org.apache.streampipes.sinks.databases.jvm.jdbcclient.JdbcClient;
+import org.apache.streampipes.sinks.databases.jvm.jdbcclient.model.DbDataTypeFactory;
+import org.apache.streampipes.sinks.databases.jvm.jdbcclient.model.ParameterInformation;
+import org.apache.streampipes.sinks.databases.jvm.jdbcclient.model.SupportedDbEngines;
 import org.apache.streampipes.vocabulary.XSD;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.runtime.EventSink;
@@ -36,6 +40,8 @@ public class IotDb extends JdbcClient implements EventSink<IotDbParameters> {
   private static Logger LOG;
 
   private String timestampField;
+
+  private final SupportedDbEngines dbEngine = SupportedDbEngines.IOT_DB;
 
   @Override
   public void onInvocation(IotDbParameters parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
@@ -53,9 +59,7 @@ public class IotDb extends JdbcClient implements EventSink<IotDbParameters> {
             "root." + parameters.getDbStorageGroup(),
             parameters.getUsername(),
             parameters.getPassword(),
-            ".*",
-            "org.apache.iotdb.jdbc.IoTDBDriver",
-            "iotdb",
+            dbEngine,
             false,
             LOG);
 
@@ -133,7 +137,7 @@ public class IotDb extends JdbcClient implements EventSink<IotDbParameters> {
   @Override
   protected void ensureTableExists(String url, String databaseName) throws SpRuntimeException {
     int index = 1;
-    parameters.put("timestamp", new Parameterinfo(index++, SqlAttribute.LONG));
+    parameters.put("timestamp", new ParameterInformation(index++, DbDataTypeFactory.getLong(dbEngine)));
     for (EventProperty eventProperty : eventProperties) {
       try {
         if (eventProperty.getRuntimeName().equals(timestampField.substring(4))) {
@@ -167,26 +171,27 @@ public class IotDb extends JdbcClient implements EventSink<IotDbParameters> {
 
   private String extractAndAddEventPropertyRuntimeType(EventProperty eventProperty, int index) {
     // Supported datatypes can be found here: https://iotdb.apache.org/#/Documents/0.8.0/chap2/sec2
+    // can partially be replaced with DbDataTypeFactory#fromUri
     String re;
     if (eventProperty instanceof EventPropertyPrimitive) {
       String runtimeType = ((EventPropertyPrimitive)eventProperty).getRuntimeType();
       if (runtimeType.equals(XSD._integer.toString())) {
-        parameters.put(eventProperty.getRuntimeName(), new Parameterinfo(index, SqlAttribute.INTEGER));
+        parameters.put(eventProperty.getRuntimeName(), new ParameterInformation(index, DbDataTypeFactory.getInteger(dbEngine)));
         re = "INT32";
       } else if (runtimeType.equals(XSD._long.toString())) {
-        parameters.put(eventProperty.getRuntimeName(), new Parameterinfo(index, SqlAttribute.LONG));
+        parameters.put(eventProperty.getRuntimeName(), new ParameterInformation(index, DbDataTypeFactory.getLong(dbEngine)));
         re = "INT64";
       } else if (runtimeType.equals(XSD._float.toString())) {
-        parameters.put(eventProperty.getRuntimeName(), new Parameterinfo(index, SqlAttribute.FLOAT));
+        parameters.put(eventProperty.getRuntimeName(), new ParameterInformation(index, DbDataTypeFactory.getFloat(dbEngine)));
         re = "FLOAT";
       } else if (runtimeType.equals(XSD._double.toString())) {
-        parameters.put(eventProperty.getRuntimeName(), new Parameterinfo(index, SqlAttribute.DOUBLE));
+        parameters.put(eventProperty.getRuntimeName(), new ParameterInformation(index, DbDataTypeFactory.getDouble(dbEngine)));
         re = "DOUBLE";
       } else if (runtimeType.equals(XSD._boolean.toString())) {
-        parameters.put(eventProperty.getRuntimeName(), new Parameterinfo(index, SqlAttribute.BOOLEAN));
+        parameters.put(eventProperty.getRuntimeName(), new ParameterInformation(index, DbDataTypeFactory.getBoolean(dbEngine)));
         re = "BOOLEAN";
       } else {
-        parameters.put(eventProperty.getRuntimeName(), new Parameterinfo(index, SqlAttribute.STRING));
+        parameters.put(eventProperty.getRuntimeName(), new ParameterInformation(index, DbDataTypeFactory.getLongString(dbEngine)));
         re = "TEXT";
       }
     } else {

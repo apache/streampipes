@@ -24,6 +24,9 @@ import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.schema.EventPropertyNested;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.sinks.databases.jvm.jdbcclient.JdbcClient;
+import org.apache.streampipes.sinks.databases.jvm.jdbcclient.model.DbDataTypeFactory;
+import org.apache.streampipes.sinks.databases.jvm.jdbcclient.model.DbDataTypes;
+import org.apache.streampipes.sinks.databases.jvm.jdbcclient.model.SupportedDbEngines;
 import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.vocabulary.XSD;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
@@ -41,6 +44,7 @@ public class Mysql extends JdbcClient implements EventSink<MysqlParameters> {
     private static Logger LOG;
     private HashMap<String, Column> tableColumns;
     private List<String> timestampKeys;
+    private final SupportedDbEngines dbEngine = SupportedDbEngines.MY_SQL;
 
     @Override
     public void onInvocation(MysqlParameters params, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
@@ -57,9 +61,7 @@ public class Mysql extends JdbcClient implements EventSink<MysqlParameters> {
                 params.getTable(),
                 params.getUser(),
                 params.getPassword(),
-                ".*",
-                "com.mysql.cj.jdbc.Driver",
-                "mysql",
+                dbEngine,
                 false,
                 LOG);
     }
@@ -252,14 +254,14 @@ public class Mysql extends JdbcClient implements EventSink<MysqlParameters> {
                     // If domain property is a timestamp
                     if (property.getDomainProperties() != null && property.getDomainProperties().stream().anyMatch(x ->
                        SO.DateTime.equals(x.toString()))) {
-                        s.append(SqlAttribute.DATETIME);
+                        s.append(DbDataTypes.DATETIME);
                         this.timestampKeys.add(property.getRuntimeName());
                     } else {
-                        s.append(SqlAttribute.getFromUri(((EventPropertyPrimitive) property).getRuntimeType()));
+                        s.append(DbDataTypeFactory.getFromUri(((EventPropertyPrimitive) property).getRuntimeType(), dbEngine));
                     }
                 } else {
                     // Must be an EventPropertyList then
-                    s.append(SqlAttribute.getFromUri(XSD._string.toString()));
+                    s.append(DbDataTypeFactory.getFromUri(XSD._string.toString(), dbEngine));
                 }
             }
             pre = ", ";

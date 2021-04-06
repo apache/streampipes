@@ -22,6 +22,7 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.sinks.databases.jvm.jdbcclient.JdbcClient;
+import org.apache.streampipes.sinks.databases.jvm.jdbcclient.model.SupportedDbEngines;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.runtime.EventSink;
 
@@ -44,9 +45,7 @@ public class PostgreSql extends JdbcClient implements EventSink<PostgreSqlParame
             parameters.getTableName(),
             parameters.getUsername(),
             parameters.getPassword(),
-            "^[a-zA-Z_][a-zA-Z0-9_]*$",
-            "org.postgresql.Driver",
-            "postgresql",
+            SupportedDbEngines.POSTGRESQL,
             parameters.isSSLEnabled(),
             LOG);
   }
