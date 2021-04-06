@@ -24,6 +24,10 @@ import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyNested;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
+import org.apache.streampipes.sinks.databases.jvm.jdbcclient.model.DbDataTypeFactory;
+import org.apache.streampipes.sinks.databases.jvm.jdbcclient.model.ParameterInformation;
+import org.apache.streampipes.sinks.databases.jvm.jdbcclient.model.SupportedDbEngines;
+import org.apache.streampipes.sinks.databases.jvm.jdbcclient.utils.StatementUtils;
 import org.apache.streampipes.vocabulary.XSD;
 
 import java.sql.*;
@@ -38,6 +42,7 @@ public class JdbcClient {
     protected String tableName;
     protected String user;
     protected String password;
+    protected SupportedDbEngines dbEngine;
 
     protected boolean tableExists = false;
 
@@ -54,118 +59,12 @@ public class JdbcClient {
     /**
      * The parameters in the prepared statement {@code ps} together with their index and data type
      */
-    protected HashMap<String, Parameterinfo> parameters = new HashMap<>();
+    protected HashMap<String, ParameterInformation> parameters = new HashMap<>();
 
     /**
      * A wrapper class for all supported SQL data types (INT, BIGINT, FLOAT, DOUBLE, VARCHAR(255)).
      * If no matching type is found, it is interpreted as a String (VARCHAR(255))
      */
-    protected enum SqlAttribute {
-        INTEGER("INT"), LONG("BIGINT"), FLOAT("FLOAT"), DOUBLE("FLOAT"), STRING("VARCHAR(255)"),
-        BOOLEAN("BOOLEAN"), DATETIME("DATETIME");
-        private final String sqlName;
-
-        SqlAttribute(String s) {
-            sqlName = s;
-        }
-
-        /**
-         * Tries to identify the data type of the object {@code o}. In case it is not supported, it is
-         * interpreted as a String (VARCHAR(255))
-         *
-         * @param o The object which should be identified
-         * @return An {@link SqlAttribute} of the identified type
-         */
-        public static SqlAttribute getFromObject(final Object o) {
-            SqlAttribute r;
-            if (o instanceof Integer) {
-                r = SqlAttribute.INTEGER;
-            } else if (o instanceof Long) {
-                r = SqlAttribute.LONG;
-            } else if (o instanceof Float) {
-                r = SqlAttribute.FLOAT;
-            } else if (o instanceof Double) {
-                r = SqlAttribute.DOUBLE;
-            } else if (o instanceof Boolean) {
-                r = SqlAttribute.BOOLEAN;
-            } else {
-                r = SqlAttribute.STRING;
-            }
-            return r;
-        }
-
-        public static SqlAttribute getFromUri(final String s) {
-            SqlAttribute r;
-            if (s.equals(XSD._integer.toString())) {
-                r = SqlAttribute.INTEGER;
-            } else if (s.equals(XSD._long.toString())) {
-                r = SqlAttribute.LONG;
-            } else if (s.equals(XSD._float.toString())) {
-                r = SqlAttribute.FLOAT;
-            } else if (s.equals(XSD._double.toString())) {
-                r = SqlAttribute.DOUBLE;
-            } else if (s.equals(XSD._boolean.toString())) {
-                r = SqlAttribute.BOOLEAN;
-            } else {
-                r = SqlAttribute.STRING;
-            }
-            return r;
-        }
-
-        /**
-         * Sets the value in the prepardStatement {@code ps}
-         *
-         * @param p     The needed info about the parameter (index and type)
-         * @param value The value of the object, which should be filled in the
-         * @param ps    The prepared statement, which will be filled
-         * @throws SpRuntimeException When the data type in {@code p} is unknown
-         * @throws SQLException       When the setters of the statement throw an
-         *                            exception (e.g. {@code setInt()})
-         */
-        public static void setValue(Parameterinfo p, Object value, PreparedStatement ps)
-                throws SQLException, SpRuntimeException {
-            switch (p.type) {
-                case INTEGER:
-                    ps.setInt(p.index, (Integer) value);
-                    break;
-                case LONG:
-                    ps.setLong(p.index, (Long) value);
-                    break;
-                case FLOAT:
-                    ps.setFloat(p.index, (Float) value);
-                    break;
-                case DOUBLE:
-                    ps.setDouble(p.index, (Double) value);
-                    break;
-                case BOOLEAN:
-                    ps.setBoolean(p.index, (Boolean) value);
-                    break;
-                case STRING:
-                    ps.setString(p.index, value.toString());
-                    break;
-                default:
-                    throw new SpRuntimeException("Unknown SQL datatype");
-            }
-        }
-
-        @Override
-        public String toString() {
-            return sqlName;
-        }
-    }
-
-    /**
-     * Contains all information needed to "fill" a prepared statement (index and the data type)
-     */
-    protected static class Parameterinfo {
-        private int index;
-        private SqlAttribute type;
-
-        public Parameterinfo(final int index, final SqlAttribute type) {
-            this.index = index;
-            this.type = type;
-        }
-    }
 
 
     public JdbcClient() {
@@ -178,27 +77,26 @@ public class JdbcClient {
                                   String tableName,
                                   String user,
                                   String password,
-                                  String allowedRegEx,
-                                  String driver,
-                                  String urlName,
+                                  SupportedDbEngines dbEngine,
                                   boolean useSSL,
                                   Logger logger) throws SpRuntimeException {
         this.tableName = tableName;
         this.user = user;
         this.password = password;
-        this.allowedRegEx = allowedRegEx;
+        this.dbEngine = dbEngine;
+        this.allowedRegEx = dbEngine.getAllowedRegex();
         this.logger = logger;
         this.eventProperties = eventProperties;
         try {
-            Class.forName(driver);
+            Class.forName(this.dbEngine.getDriverName());
         } catch (ClassNotFoundException e) {
-            throw new SpRuntimeException("Driver '" + driver + "' not found.");
+            throw new SpRuntimeException("Driver '" + this.dbEngine.getDriverName() + "' not found.");
         }
 
         if (useSSL) {
-            connectWithSSL(host, port, urlName, databaseName);
+            connectWithSSL(host, port, databaseName);
         } else {
-            connect(host, port, urlName, databaseName);
+            connect(host, port, databaseName);
         }
     }
 
@@ -210,8 +108,8 @@ public class JdbcClient {
      * @throws SpRuntimeException When the connection could not be established (because of a
      *                            wrong identification, missing database etc.)
      */
-    private void connect(String host, int port, String urlName, String databaseName) throws SpRuntimeException {
-		String url = "jdbc:" + urlName + "://" + host + ":" + port + "/";
+    private void connect(String host, int port, String databaseName) throws SpRuntimeException {
+		String url = "jdbc:" + this.dbEngine.getUrlName() + "://" + host + ":" + port + "/";
         try {
             c = DriverManager.getConnection(url, user, password);
             ensureDatabaseExists(url, databaseName);
@@ -225,12 +123,11 @@ public class JdbcClient {
      * WIP
      * @param host
      * @param port
-     * @param urlName
      * @param databaseName
      * @throws SpRuntimeException
      */
-    private void connectWithSSL(String host, int port, String urlName, String databaseName) throws SpRuntimeException {
-        String url = "jdbc:" + urlName + "://" + host + ":" + port + "/" + databaseName + "?user=" + user + "&password=" + password + "&ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory&sslmode=require" ;
+    private void connectWithSSL(String host, int port, String databaseName) throws SpRuntimeException {
+        String url = "jdbc:" + this.dbEngine.getUrlName() + "://" + host + ":" + port + "/" + databaseName + "?user=" + user + "&password=" + password + "&ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory&sslmode=require" ;
         try{
             c = DriverManager.getConnection(url);
             ensureDatabaseExists(url, databaseName);
@@ -298,7 +195,7 @@ public class JdbcClient {
      * @param event Data to be saved in the SQL table
      * @throws SQLException       When the statement cannot be executed
      * @throws SpRuntimeException When the table name is not allowed or it is thrown
-     *                            by {@link SqlAttribute#setValue(Parameterinfo, Object, PreparedStatement)}
+     *                            by {@link org.apache.streampipes.sinks.databases.jvm.jdbcclient.utils.StatementUtils#setValue(ParameterInformation, Object, PreparedStatement)}
      */
     private void executePreparedStatement(final Map<String, Object> event)
             throws SQLException, SpRuntimeException {
@@ -379,8 +276,8 @@ public class JdbcClient {
                     //TODO: start the for loop all over again
                     generatePreparedStatement(event);
                 }
-                Parameterinfo p = parameters.get(newKey);
-                SqlAttribute.setValue(p, pair.getValue(), ps);
+                ParameterInformation p = parameters.get(newKey);
+                StatementUtils.setValue(p, pair.getValue(), ps);
             }
         }
     }
@@ -438,7 +335,7 @@ public class JdbcClient {
                         pair.getKey() + "_", pre);
             } else {
                 checkRegEx(pair.getKey(), "Columnname");
-                parameters.put(pair.getKey(), new Parameterinfo(index, SqlAttribute.getFromObject(pair.getValue())));
+                parameters.put(pair.getKey(), new ParameterInformation(index, DbDataTypeFactory.getFromObject(pair.getValue(), dbEngine)));
                 s1.append(pre).append("\"").append(preProperty).append(pair.getKey()).append("\"");
                 s2.append(pre).append("?");
                 index++;
@@ -479,7 +376,7 @@ public class JdbcClient {
      *
      * @param properties The list of properties which should be included in the query
      * @return A StringBuilder with the query which needs to be executed in order to create the table
-     * @throws SpRuntimeException See {@link JdbcClient#extractEventProperties(List, String)} for details
+     * @throws SpRuntimeException See {@link JdbcClient#extractEventProperties(List)} for details
      */
     private StringBuilder extractEventProperties(List<EventProperty> properties)
             throws SpRuntimeException {
@@ -489,7 +386,7 @@ public class JdbcClient {
     /**
      * Creates a SQL-Query with the given Properties (SQL-Injection safe). For nested properties it
      * recursively extracts the information. EventPropertyList are getting converted to a string (so
-     * in SQL to a VARCHAR(255)). For each type it uses {@link SqlAttribute#getFromUri(String)}
+     * in SQL to a VARCHAR(255)). For each type it uses {@link DbDataTypeFactory#getFromUri(String, SupportedDbEngines)}
      * internally to identify the SQL-type from the runtimeType.
      *
      * @param properties  The list of properties which should be included in the query
@@ -521,10 +418,10 @@ public class JdbcClient {
 
                 // adding the type of the property (e.g. "VARCHAR(255)")
                 if (property instanceof EventPropertyPrimitive) {
-                    s.append(SqlAttribute.getFromUri(((EventPropertyPrimitive) property).getRuntimeType()));
+                    s.append(DbDataTypeFactory.getFromUri(((EventPropertyPrimitive) property).getRuntimeType(), dbEngine));
                 } else {
                     // Must be an EventPropertyList then
-                    s.append(SqlAttribute.getFromUri(XSD._string.toString()));
+                    s.append(DbDataTypeFactory.getFromUri(XSD._string.toString(), dbEngine));
                 }
             }
             pre = ", ";
