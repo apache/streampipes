@@ -73,6 +73,7 @@ import org.apache.streampipes.processors.transformation.jvm.processor.booloperat
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.timekeeping.BooleanTimekeepingController;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.timer.BooleanTimerController;
 import org.apache.streampipes.processors.transformation.jvm.processor.csvmetadata.CsvMetadataEnrichmentController;
+import org.apache.streampipes.processors.transformation.jvm.processor.fieldrename.FiledRenameProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.state.buffer.StateBufferController;
 import org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.buffer.StateBufferLabelerController;
 import org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.number.NumberLabelerController;
@@ -204,7 +205,8 @@ public class AllPipelineElementsInit extends StandaloneModelSubmitter {
             .add(new EmailController())
             .add(new TelegramController())
             .add(new OneSignalController())
-            .add(new SlackNotificationController());
+            .add(new SlackNotificationController())
+            .add(new FiledRenameProcessor());
 
     DeclarersSingleton.getInstance().registerDataFormats(
             new JsonDataFormatFactory(),
