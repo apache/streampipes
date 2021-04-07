@@ -1,0 +1,9 @@
+org.apache.streampipes.processors.filters.jvm.fieldrename.title=Field Renamer
+org.apache.streampipes.processors.filters.jvm.fieldrename.description=Replaces the runtime name of an event property with a custom defined name.
+
+
+convert-property.title=Field
+convert-property.description=The field to rename
+
+field-name.title=The new field name
+field-name.description=The new field name
