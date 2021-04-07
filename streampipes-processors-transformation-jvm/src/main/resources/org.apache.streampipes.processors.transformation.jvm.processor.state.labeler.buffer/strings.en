@@ -27,3 +27,7 @@ comparatorId.description=Select a comparator
 
 numberValueId.title=Numerical Value
 numberValueId.description=Specify the numerical value for the condition
+
+labelName.title=Label Name
+labelName.description=Specify the name of the label (how it can be accessed in following components)
+

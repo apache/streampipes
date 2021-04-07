@@ -33,6 +33,7 @@ import org.apache.streampipes.processors.transformation.jvm.processor.array.spli
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.counter.BooleanCounterController;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.edge.SignalEdgeFilterController;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.inverter.BooleanInverterController;
+import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.logical.BooleanOperatorProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.state.BooleanToStateController;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.timekeeping.BooleanTimekeepingController;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.timer.BooleanTimerController;
@@ -73,7 +74,8 @@ public class TransformationJvmInit extends StandaloneModelSubmitter {
             .add(new StateBufferLabelerController())
             .add(new NumberLabelerController())
             .add(new StringToStateController())
-            .add(new StringCounterController());
+            .add(new StringCounterController())
+            .add(new BooleanOperatorProcessor());
 
     DeclarersSingleton.getInstance().registerDataFormats(
             new JsonDataFormatFactory(),
