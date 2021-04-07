@@ -15,26 +15,26 @@
  * limitations under the License.
  *
  */
+
 package org.apache.streampipes.wrapper.siddhi.query.expression.aggregation;
 
 import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
 import org.apache.streampipes.wrapper.siddhi.query.expression.PropertyExpression;
 import org.apache.streampipes.wrapper.siddhi.query.expression.PropertyExpressionBase;
 
-public class CountExpression extends PropertyExpressionBase {
+public class DistinctCountExpression extends PropertyExpressionBase {
+    private PropertyExpression propertyExpression;
 
-  private PropertyExpression propertyExpression;
+    public DistinctCountExpression(PropertyExpression property) {
+        this.propertyExpression = property;
+    }
 
-  public CountExpression(PropertyExpression property) {
-    this.propertyExpression = property;
-  }
-
-  @Override
-  public String toSiddhiEpl() {
-    return join(SiddhiConstants.EMPTY,
-            AggregationFunction.COUNT.toAggregationFunction(),
-            SiddhiConstants.PARENTHESIS_OPEN,
-            propertyExpression.toSiddhiEpl(),
-            SiddhiConstants.PARENTHESIS_CLOSE);
-  }
+    @Override
+    public String toSiddhiEpl() {
+        return join(SiddhiConstants.EMPTY,
+                AggregationFunction.DISTINCT_COUNT.toAggregationFunction(),
+                SiddhiConstants.PARENTHESIS_OPEN,
+                propertyExpression.toSiddhiEpl(),
+                SiddhiConstants.PARENTHESIS_CLOSE);
+    }
 }
