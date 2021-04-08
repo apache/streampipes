@@ -175,33 +175,39 @@ streampipes clean
 # streampipes clean --volumes
 ```
 
-## Add newly developed StreamPipes Pipeline Elements to catalog
+## Add newly developed StreamPipes Pipeline Elements to service catalog
 As you develop new pipeline elements, e.g., adapters, processors or sinks, you might want to add them to your existing environment. Adding these components requires minimal effort.
-We can simply use `streampipes add` command to populate relevant Docker Compose files under the StreamPipes working directory (`/path/to/cli/deploy/standalone/`).
+We can simply use `streampipes add` command to populate relevant Docker Compose files under the StreamPipes working directory (`deploy/standalone/`).
 
 > **NOTE**: This requires your own pipeline elements to be already containerized and accessible to pull, e.g., from a public Docker repository such as DockerHub. If you use a private
 > repository make sure your local Docker Daemon has access to it.
 
 ```bash
 # check out streampipes add --help for more options
-# add new pipeline element to catalog, here my-processor, optional image=my-processo-image:0.67.0, ports 8090:8090 (external:internal)
-streampipes add my-processor --image my-processor-image:0.67.0 --ports 8090:8090
+# add new pipeline element to catalog, here my-processor
+streampipes add my-processor
 [INFO] Create new directory for: /path/to/cli/deploy/standalone/my-processor
 [INFO] Generate Docker Compose files for my-processor
-[INFO] Add service to current environment: lite ?
-Add [y/n]: y
-[INFO] Added service to .spenv
+
+# add new pipeline element with custom image and ports
+streampipes add my-processor --image myrepo/myprocessor:0.67.0 --ports 8090:8090 --ports 8091:8091
+
+# [Optional] add new pipeline element and persistently store service in environment (here: lite) and activate service in current environment (.spenv)
+[INFO] Create new directory for: /path/to/cli/deploy/standalone/my-processor
+[INFO] Generate Docker Compose files for my-processor
+[INFO] Add my-processor to current environment in .spenv
+[INFO] Store my-processor in environment lite
 ```
 
-This creates necessary Docker Compose files in the local catalog:
+In general, this creates necessary Docker Compose files in the local service catalog:
 ```bash
 cli/deploy/standalone/my-processor
 ├── docker-compose.dev.yml
 └── docker-compose.yml
 ```
-Additionally, you were asked wether you want to add the new service to your current environment file `.spenv` (see `streampipes env`).
 
-You can now directly start you new pipeline element using the following command:
+If you activated the pipeline element while adding via the flag `--activate`, you can directly start you new pipeline element using the following command. Otherwise, you will have to manually add it at a later point.
+> **NOTE**: The service name **must** match the directory name under `deploy/standalone/<service_name>`
 ```bash
 streampipes up -d my-processor
 ```

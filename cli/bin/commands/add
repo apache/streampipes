@@ -16,8 +16,10 @@
 set -e
 . "$STREAMPIPES_WORKDIR/bin/common"
 
+STREAMPIPES_ENVIRONMENTS_PATH=$STREAMPIPES_WORKDIR/environments
 docker_compose_api_version=3.4
 svc_has_ports=false
+activate_svc=false
 
 cli_help_start() {
   cat <<EOF
@@ -26,12 +28,21 @@ Add new StreamPipes service to catalog.
 Usage: streampipes add SERVICE [OPTIONS]
 
 Examples:
+# Create Docker Compose files using default image scheme
 streampipes add my-service
-streampipes add my-service --image apachestreampipes/my-service:0.68.0 --ports 8090:8090 --ports 8091:8091
+
+# Create Docker Compose files with custom image tag and port mappings
+streampipes add my-service --image myrepo/my-service:0.68.0 --ports 8090:8090 --ports 8091:8091
+
+# Create Docker Compose files, persistently store in environment (lite), and add to .spenv 
+streampipes add my-service --store lite --activate
+
 
 Options:
-  -i, --image     Name of image (Default: ${SP_DOCKER_REGISTRY}/my-service:${SP_VERSION})
-  -p, --ports     Port mapping for this service (externalPort:internalPort)
+  -a, --activate  Add service to current working environment .spenv
+  -i, --image     Name of image (default: ${SP_DOCKER_REGISTRY}/my-service:${SP_VERSION})
+  -p, --ports     Port mapping for this service (external:internal)
+  -s, --store     Store service in specific environment (see 'streampipes env --list')
 EOF
 
   exit 1
@@ -45,12 +56,13 @@ fi
 
 while [[ "$#" -gt 0 ]]; do
     case $1 in
+        -a|--activate) activate_svc=true; shift ;;
         -i|--image)
           if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
             svc_img_tag="$2"
             shift 2
           else
-            fatal "StreamPipes service image name for $1 is missing" >&2
+            fatal "Image tag for $1 is missing" >&2
           fi
           ;;
         -p|--ports)
@@ -60,6 +72,14 @@ while [[ "$#" -gt 0 ]]; do
             shift 2
           else
             fatal "Ports for $1 is missing" >&2
+          fi
+          ;;
+        -s|--store)
+          if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
+            set_environment="$2"
+            shift 2
+          else
+            fatal "Environment name for $1 is missing" >&2
           fi
           ;;
         -*|--*=) fatal "Unsupported flag $1, see 'streampipes ${0##*/} --help'" >&2 ; shift ;;
@@ -107,6 +127,8 @@ services:
     depends_on:
       - "consul"
       - "backend"
+    environment:
+      - SP_HOST=${svc_name}
     logging:
       driver: "json-file"
       options:
@@ -160,7 +182,7 @@ create_dir(){
     info "Create new directory for: $1"
   else
     warning "Service already exists $svc_name"
-    read -p 'Continue [y/n]: ' continue
+    read -p 'Would you like to overwrite existing files? [y/n]: ' continue
     if [ "$continue" == "n" ] || [ "$continue" == "n" ]; then
         exit 1
     fi
@@ -170,6 +192,13 @@ create_dir(){
 check_img_or_default(){
   if [ -z "$svc_img_tag" ]; then
       svc_img_tag="\${SP_DOCKER_REGISTRY}/$svc_name:\${SP_VERSION}"
+  fi
+}
+
+check_environment(){
+  template=$STREAMPIPES_ENVIRONMENTS_PATH/$1
+  if [ ! -f "$template" ]; then
+    fatal "Environment not found '$1'. see 'streampipes env --list'"
   fi
 }
 
@@ -185,28 +214,32 @@ create_docker_compose_files(){
   fi
 }
 
-append_to_curr_env(){
-  info "Added service to .spenv"
+append_to_curr_environment(){
+  info "Add $svc_name to current environment in .spenv"
   curr_env_file=$STREAMPIPES_WORKDIR/.spenv
   grep -qxF $svc_name $curr_env_file || echo $svc_name >> $curr_env_file
 }
 
-add_to_current_environment(){
-  get_curr_environment
-  info "Add service to current environment: $curr_environment ?"
-  read -p "Add [y/n]: " add
-  if [ "$add" == "n" ] || [ "$add" == "n" ]; then
-      exit 1
-  else
-    append_to_curr_env
-  fi
+store_in_environment() {
+  check_environment $set_environment
+  info "Store $svc_name in environment $set_environment"
+  template=$STREAMPIPES_ENVIRONMENTS_PATH/$set_environment
+  grep -qxF $svc_name $template || echo $svc_name >> $template
 }
+
 
 add_service() {
   svc_dir=$STREAMPIPES_WORKDIR/deploy/standalone/${svc_name}
   create_dir $svc_dir
   create_docker_compose_files $svc_dir
-  add_to_current_environment
+
+  if $activate_svc; then 
+    append_to_curr_environment
+  fi
+  
+  if [ ! -z "$set_environment" ]; then
+    store_in_environment
+  fi
 }
 
 add_service
