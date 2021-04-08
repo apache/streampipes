@@ -186,17 +186,12 @@ We can simply use `streampipes add` command to populate relevant Docker Compose 
 # check out streampipes add --help for more options
 # add new pipeline element to catalog, here my-processor
 streampipes add my-processor
-[INFO] Create new directory for: /path/to/cli/deploy/standalone/my-processor
-[INFO] Generate Docker Compose files for my-processor
 
 # add new pipeline element with custom image and ports
 streampipes add my-processor --image myrepo/myprocessor:0.67.0 --ports 8090:8090 --ports 8091:8091
 
 # [Optional] add new pipeline element and persistently store service in environment (here: lite) and activate service in current environment (.spenv)
-[INFO] Create new directory for: /path/to/cli/deploy/standalone/my-processor
-[INFO] Generate Docker Compose files for my-processor
-[INFO] Add my-processor to current environment in .spenv
-[INFO] Store my-processor in environment lite
+streampipes add my-processor --store lite --activate
 ```
 
 In general, this creates necessary Docker Compose files in the local service catalog:
