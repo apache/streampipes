@@ -16,7 +16,7 @@
 version: "3.4"
 services:
   sinks-notifications-jvm:
-    image: ${SP_DOCKER_REGISTRY}sinks-notifications-jvm:${SP_VERSION}
+    image: ${SP_DOCKER_REGISTRY}/sinks-notifications-jvm:${SP_VERSION}
     depends_on:
       - "consul"
     logging:

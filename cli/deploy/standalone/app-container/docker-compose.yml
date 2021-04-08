@@ -16,7 +16,7 @@
 version: "3.4"
 services:
   app-container:
-    image: ${SP_DOCKER_REGISTRY}streampipes/app-container/master:latest
+    image: ${SP_DOCKER_REGISTRY}/streampipes/app-container/master:latest
     volumes:
       - app-container:/usr/src/app/public/apps
     logging:

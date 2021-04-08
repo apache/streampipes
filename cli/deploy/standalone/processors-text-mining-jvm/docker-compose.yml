@@ -16,7 +16,7 @@
 version: "3.4"
 services:
   processors-text-mining-jvm:
-    image: ${SP_DOCKER_REGISTRY}processors-text-mining-jvm:${SP_VERSION}
+    image: ${SP_DOCKER_REGISTRY}/processors-text-mining-jvm:${SP_VERSION}
     depends_on:
       - "consul"
     volumes:

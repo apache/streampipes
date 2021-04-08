@@ -16,7 +16,7 @@
 version: "3.4"
 services:
   test-connect-datasources-rest:
-    image: ${SP_DOCKER_REGISTRY}streampipes/streampipes-connect-datasources-for-testing/master
+    image: ${SP_DOCKER_REGISTRY}/streampipes/streampipes-connect-datasources-for-testing/master
     logging:
       driver: "json-file"
       options:

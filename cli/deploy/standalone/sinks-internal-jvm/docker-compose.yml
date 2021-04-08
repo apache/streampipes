@@ -16,7 +16,7 @@
 version: "3.4"
 services:
   sinks-internal-jvm:
-    image: ${SP_DOCKER_REGISTRY}sinks-internal-jvm:${SP_VERSION}
+    image: ${SP_DOCKER_REGISTRY}/sinks-internal-jvm:${SP_VERSION}
     depends_on:
       - "consul"
     volumes:

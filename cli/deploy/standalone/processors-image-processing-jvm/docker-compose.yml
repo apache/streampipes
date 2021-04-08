@@ -16,7 +16,7 @@
 version: "3.4"
 services:
   processors-image-processing-jvm:
-    image: ${SP_DOCKER_REGISTRY}processors-image-processing-jvm:${SP_VERSION}
+    image: ${SP_DOCKER_REGISTRY}/processors-image-processing-jvm:${SP_VERSION}
     depends_on:
       - "consul"
     logging:

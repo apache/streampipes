@@ -16,7 +16,7 @@
 version: "3.4"
 services:
   backend:
-    image: ${SP_DOCKER_REGISTRY}backend:${SP_VERSION}
+    image: ${SP_DOCKER_REGISTRY}/backend:${SP_VERSION}
     depends_on:
       - consul
       - couchdb
