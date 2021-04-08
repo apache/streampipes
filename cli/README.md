@@ -64,6 +64,7 @@ Options:
   --version, -v   show version
 
 Commands:
+  add         Add new StreamPipes service (e.g., adapter, processor, sink)
   clean       Remove StreamPipes data volumes, dangling images and network
   down        Stop and remove StreamPipes containers
   env         Inspect and select StreamPipes environments
@@ -172,6 +173,37 @@ streampipes restart --force-create pipeline-elements-all-jvm
 streampipes clean
 # remove volumes, network and dangling images
 # streampipes clean --volumes
+```
+
+## Add newly developed StreamPipes Pipeline Elements to catalog
+As you develop new pipeline elements, e.g., adapters, processors or sinks, you might want to add them to your existing environment. Adding these components requires minimal effort.
+We can simply use `streampipes add` command to populate relevant Docker Compose files under the StreamPipes working directory (`/path/to/cli/deploy/standalone/`).
+
+> **NOTE**: This requires your own pipeline elements to be already containerized and accessible to pull, e.g., from a public Docker repository such as DockerHub. If you use a private
+> repository make sure your local Docker Daemon has access to it.
+
+```bash
+# check out streampipes add --help for more options
+# add new pipeline element to catalog, here my-processor, optional image=my-processo-image:0.67.0, ports 8090:8090 (external:internal)
+streampipes add my-processor --image my-processor-image:0.67.0 --ports 8090:8090
+[INFO] Create new directory for: /path/to/cli/deploy/standalone/my-processor
+[INFO] Generate Docker Compose files for my-processor
+[INFO] Add service to current environment: lite ?
+Add [y/n]: y
+[INFO] Added service to .spenv
+```
+
+This creates necessary Docker Compose files in the local catalog:
+```bash
+cli/deploy/standalone/my-processor
+├── docker-compose.dev.yml
+└── docker-compose.yml
+```
+Additionally, you were asked wether you want to add the new service to your current environment file `.spenv` (see `streampipes env`).
+
+You can now directly start you new pipeline element using the following command:
+```bash
+streampipes up -d my-processor
 ```
 
 ## Modify/Create an environment template

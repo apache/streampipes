@@ -29,6 +29,7 @@ Options:
   --version, -v   show version
 
 Commands:
+  add         Add new StreamPipes service (e.g., adapter, processor, sink)
   clean       Remove StreamPipes data volumes, dangling images and network
   down        Stop and remove StreamPipes containers
   env         Inspect and select StreamPipes environments
@@ -48,6 +49,9 @@ EOF
 }
 
 case "$1" in
+  add)
+    "$STREAMPIPES_WORKDIR/bin/commands/add" "${@:2}"
+    ;;
   clean)
     "$STREAMPIPES_WORKDIR/bin/commands/clean" "${@:2}"
     ;;
