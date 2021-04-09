@@ -21,7 +21,7 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.manager.data.PipelineGraph;
 import org.apache.streampipes.manager.data.PipelineGraphHelpers;
 import org.apache.streampipes.manager.execution.http.GraphSubmitter;
-import org.apache.streampipes.manager.node.NodeClusterManager;
+import org.apache.streampipes.manager.node.StreamPipesClusterManager;
 import org.apache.streampipes.manager.util.TemporaryGraphStorage;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
@@ -85,15 +85,15 @@ public abstract class AbstractPipelineExecutor {
     }
 
     protected void storeDataStreamRelayContainer(List<SpDataStreamRelayContainer> relays) {
-        relays.forEach(NodeClusterManager::persistDataStreamRelay);
+        relays.forEach(StreamPipesClusterManager::persistDataStreamRelay);
     }
 
     protected void deleteDataStreamRelayContainer(List<SpDataStreamRelayContainer> relays) {
-        relays.forEach(NodeClusterManager::deleteDataStreamRelay);
+        relays.forEach(StreamPipesClusterManager::deleteDataStreamRelay);
     }
 
     protected void updateDataStreamRelayContainer(List<SpDataStreamRelayContainer> relays) {
-        relays.forEach(NodeClusterManager::updateDataStreamRelay);
+        relays.forEach(StreamPipesClusterManager::updateDataStreamRelay);
     }
 
 

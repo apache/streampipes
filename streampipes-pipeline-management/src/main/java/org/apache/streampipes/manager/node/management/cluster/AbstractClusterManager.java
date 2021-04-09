@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.node;
+package org.apache.streampipes.manager.node.management.cluster;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.http.client.fluent.Request;
@@ -53,45 +53,9 @@ public abstract class AbstractClusterManager {
                 return sync(element, "/api/v2/node/info", RequestOptions.PUT, true);
             case RESTART_RELAYS:
                 return sync(element, "/api/v2/node/stream/relay/invoke", RequestOptions.POST, true);
-            case HEALTHY:
-                return healthCheck(element, "/healthy");
             default:
                 return false;
         }
-    }
-
-    private static <T> boolean healthCheck(T element, String route) {
-        String url = generateEndpoint(element, route);
-        // call node controller REST endpoints
-        //return get(url).contains("PONG");
-
-        NodeInfoDescription desc = (NodeInfoDescription) element;
-        String nodeCtlId = desc.getNodeControllerId();
-        boolean isAlive = false;
-        String host = desc.getHostname();
-        int port = desc.getPort();
-
-        int retries = 5;
-        for (int i = 0 ; i < retries ; i++) {
-            try {
-                LOG.info("Trying to health check node controller={} ({})", nodeCtlId, i+1 + "/" + retries);
-                InetSocketAddress sa = new InetSocketAddress(host, port);
-                Socket ss = new Socket();
-                ss.connect(sa, 500);
-                ss.close();
-                if (ss.isConnected()) {
-                    isAlive = true;
-                    break;
-                }
-                Thread.sleep(1000);
-            } catch (IOException | InterruptedException e) {
-                continue;
-            }
-            isAlive = true;
-        }
-        LOG.info(isAlive ? "Successfully health check node controller=" + url :
-                "Could not perform health check node with controller=" + url);
-        return isAlive;
     }
 
     private static <T> boolean sync(T element, String route, RequestOptions request, boolean withBody) {

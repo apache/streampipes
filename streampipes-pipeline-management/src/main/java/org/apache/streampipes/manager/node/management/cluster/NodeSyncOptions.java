@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.node;
+package org.apache.streampipes.manager.node.management.cluster;
 
 public enum NodeSyncOptions {
     ACTIVATE_NODE, DEACTIVATE_NODE, UPDATE_NODE,RESTART_RELAYS, HEALTHY;

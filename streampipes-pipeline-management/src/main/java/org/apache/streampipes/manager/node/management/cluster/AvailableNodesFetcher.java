@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.node;
+package org.apache.streampipes.manager.node.management.cluster;
 
 import org.apache.http.client.fluent.Request;
 import org.apache.streampipes.container.util.ConsulUtil;

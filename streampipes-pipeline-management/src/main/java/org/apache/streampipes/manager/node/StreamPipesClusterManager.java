@@ -17,6 +17,9 @@
  */
 package org.apache.streampipes.manager.node;
 
+import org.apache.streampipes.manager.node.management.cluster.AbstractClusterManager;
+import org.apache.streampipes.manager.node.management.cluster.NodeSyncOptions;
+import org.apache.streampipes.manager.node.management.healthcheck.ClusterHealthCheck;
 import org.apache.streampipes.model.eventrelay.SpDataStreamRelayContainer;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.NotificationType;
@@ -31,15 +34,14 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-public class NodeClusterManager extends AbstractClusterManager {
-    private static final Logger LOG = LoggerFactory.getLogger(NodeClusterManager.class.getCanonicalName());
+public class StreamPipesClusterManager extends AbstractClusterManager {
+    private static final Logger LOG = LoggerFactory.getLogger(StreamPipesClusterManager.class.getCanonicalName());
 
     public static List<NodeInfoDescription> getAvailableNodes() {
         List<NodeInfoDescription> availableAndHealthyNodes = new ArrayList<>();
         getNodeStorageApi().getAllActiveNodes().forEach(node -> {
-            if (syncWithNodeController(node, NodeSyncOptions.HEALTHY)) {
+            if (ClusterHealthCheck.check(node)) {
                 availableAndHealthyNodes.add(node);
             }
         });
