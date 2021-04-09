@@ -158,6 +158,9 @@ public class InvocableElementManager implements PipelineElementLifeCycle {
         pub.publish(reconfigurationEvent);
         pub.disconnect();
 
+        // TODO: update RunningInvocableInstances with new reconfiguration value
+        // remove, then add
+
         response.setSuccess(true);
         return response;
     }
