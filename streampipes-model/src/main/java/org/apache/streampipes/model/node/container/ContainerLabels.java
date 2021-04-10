@@ -17,29 +17,15 @@
  */
 package org.apache.streampipes.model.node.container;
 
-import io.fogsy.empire.annotations.RdfsClass;
-import org.apache.streampipes.model.shared.annotation.TsModel;
-import org.apache.streampipes.vocabulary.StreamPipes;
-
-import javax.persistence.Entity;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
-@RdfsClass(StreamPipes.DEPLOYMENT_DOCKER_CONTAINER)
-@Entity
-@TsModel
-public class DockerContainer extends DeploymentContainer {
-
-    public DockerContainer(String elementId) {
-        super(elementId);
-    }
-
-    public DockerContainer() {
-        super();
-    }
-
-    public DockerContainer(String imageURI, String containerName, String serviceId, String[] containerPorts,
-                           List<String> envVars, Map<String, String> labels, List<String> volumes) {
-        super(imageURI, containerName, serviceId, containerPorts, envVars, labels, volumes);
+public class ContainerLabels {
+    public static Map<String, String> with (String containerId, String nodeType, ContainerType containerType) {
+        return new HashMap<String, String>() {{
+            put("org.apache.streampipes.service.id", containerId);
+            put("org.apache.streampipes.node.type",nodeType);
+            put("org.apache.streampipes.container.type", containerType.name());
+        }};
     }
 }

@@ -17,29 +17,32 @@
  */
 package org.apache.streampipes.model.node.container;
 
-import io.fogsy.empire.annotations.RdfsClass;
-import org.apache.streampipes.model.shared.annotation.TsModel;
-import org.apache.streampipes.vocabulary.StreamPipes;
-
-import javax.persistence.Entity;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-@RdfsClass(StreamPipes.DEPLOYMENT_DOCKER_CONTAINER)
-@Entity
-@TsModel
-public class DockerContainer extends DeploymentContainer {
+public class ContainerEnvBuilder {
 
-    public DockerContainer(String elementId) {
-        super(elementId);
+    private final List<String> envVariables;
+
+    public ContainerEnvBuilder() {
+        this.envVariables = new ArrayList<>();
     }
 
-    public DockerContainer() {
-        super();
+    public static ContainerEnvBuilder create() {
+        return new ContainerEnvBuilder();
     }
 
-    public DockerContainer(String imageURI, String containerName, String serviceId, String[] containerPorts,
-                           List<String> envVars, Map<String, String> labels, List<String> volumes) {
-        super(imageURI, containerName, serviceId, containerPorts, envVars, labels, volumes);
+    public ContainerEnvBuilder addNodeEnvs(List<String> nodeEnvVariables) {
+        this.envVariables.addAll(nodeEnvVariables);
+        return this;
+    }
+
+    public ContainerEnvBuilder add(String key, String value) {
+        this.envVariables.add(String.format("%s=%s", key, value));
+        return this;
+    }
+
+    public List<String> build() {
+        return envVariables;
     }
 }

@@ -20,21 +20,10 @@ import java.util.*;
 public class DockerContainerBuilder {
 
     private final DockerContainer dockerContainer;
-    private String imageURI;
-    private String containerName;
-    private String serviceId;
-    private String [] containerPorts;
-    private List<String> envVars;
-    private Map<String, String> labels;
 
     public DockerContainerBuilder(String id) {
         this.dockerContainer = new DockerContainer();
         this.dockerContainer.setServiceId(id);
-//        this.imageURI = "";
-//        this.containerName = "";
-//        this.containerPorts = new String[]{};
-//        this.envVars = new ArrayList<>();
-//        this.labels = new HashMap<>();
     }
 
     public static DockerContainerBuilder create(String id) {
@@ -63,6 +52,11 @@ public class DockerContainerBuilder {
 
     public DockerContainerBuilder withLabels(Map<String, String> labels) {
         this.dockerContainer.setLabels(labels);
+        return this;
+    }
+
+    public DockerContainerBuilder withVolumes(List<String> volumes) {
+        this.dockerContainer.setVolumes(volumes);
         return this;
     }
 

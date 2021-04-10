@@ -25,6 +25,8 @@ import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -58,11 +60,22 @@ public abstract class DeploymentContainer extends UnnamedStreamPipesEntity {
     @RdfProperty(StreamPipes.DEPLOYMENT_CONTAINER_LABELS)
     private Map<String, String> labels;
 
+    @OneToMany(fetch = FetchType.EAGER,
+            cascade = {CascadeType.ALL})
+    @RdfProperty(StreamPipes.DEPLOYMENT_CONTAINER_VOLUMES)
+    private List<String> volumes;
+
     public DeploymentContainer() {
+        this.envVars = new ArrayList<>();
+        this.labels = new HashMap<>();
+        this.volumes = new ArrayList<>();
     }
 
     public DeploymentContainer(String elementId) {
         super(elementId);
+        this.envVars = new ArrayList<>();
+        this.labels = new HashMap<>();
+        this.volumes = new ArrayList<>();
     }
 
     public DeploymentContainer(DeploymentContainer other) {
@@ -70,13 +83,14 @@ public abstract class DeploymentContainer extends UnnamedStreamPipesEntity {
     }
 
     public DeploymentContainer(String imageUri, String containerName, String serviceId, String[] containerPorts,
-                               List<String> envVars, Map<String, String> labels) {
+                               List<String> envVars, Map<String, String> labels, List<String> volumes) {
         this.imageUri = imageUri;
         this.containerName = containerName;
         this.serviceId = serviceId;
         this.containerPorts = containerPorts;
         this.envVars = envVars;
         this.labels = labels;
+        this.volumes = volumes;
     }
 
     public String getImageUri() {
@@ -124,5 +138,13 @@ public abstract class DeploymentContainer extends UnnamedStreamPipesEntity {
 
     public void setLabels(Map<String, String> labels) {
         this.labels = labels;
+    }
+
+    public List<String> getVolumes() {
+        return volumes;
+    }
+
+    public void setVolumes(List<String> volumes) {
+        this.volumes = volumes;
     }
 }

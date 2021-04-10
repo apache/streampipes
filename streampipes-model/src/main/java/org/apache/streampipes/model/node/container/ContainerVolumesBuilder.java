@@ -17,29 +17,35 @@
  */
 package org.apache.streampipes.model.node.container;
 
-import io.fogsy.empire.annotations.RdfsClass;
-import org.apache.streampipes.model.shared.annotation.TsModel;
-import org.apache.streampipes.vocabulary.StreamPipes;
-
-import javax.persistence.Entity;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-@RdfsClass(StreamPipes.DEPLOYMENT_DOCKER_CONTAINER)
-@Entity
-@TsModel
-public class DockerContainer extends DeploymentContainer {
+public class ContainerVolumesBuilder {
+    private final List<String> volumes;
 
-    public DockerContainer(String elementId) {
-        super(elementId);
+    public ContainerVolumesBuilder() {
+        this.volumes = new ArrayList<>();
     }
 
-    public DockerContainer() {
-        super();
+    public static ContainerVolumesBuilder create() {
+        return new ContainerVolumesBuilder();
     }
 
-    public DockerContainer(String imageURI, String containerName, String serviceId, String[] containerPorts,
-                           List<String> envVars, Map<String, String> labels, List<String> volumes) {
-        super(imageURI, containerName, serviceId, containerPorts, envVars, labels, volumes);
+    public ContainerVolumesBuilder addNodeEnvs(List<String> volumes) {
+        this.volumes.addAll(volumes);
+        return this;
+    }
+
+    public ContainerVolumesBuilder add(String key, String value, boolean readOnly) {
+        if (readOnly) {
+            this.volumes.add(String.format("%s:%s:%s", key, value, "ro"));
+        } else {
+            this.volumes.add(String.format("%s:%s", key, value));
+        }
+        return this;
+    }
+
+    public List<String> build() {
+        return volumes;
     }
 }
