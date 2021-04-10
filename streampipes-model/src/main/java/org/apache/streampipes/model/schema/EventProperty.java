@@ -31,7 +31,10 @@ import org.apache.streampipes.vocabulary.StreamPipes;
 
 import javax.persistence.*;
 import java.net.URI;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 @RdfsClass(StreamPipes.EVENT_PROPERTY)
 @MappedSuperclass
