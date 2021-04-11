@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.container.html.model;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,8 +25,8 @@ public class DataSourceDescriptionHtml extends Description {
 
     private List<Description> streams;
 
-    public DataSourceDescriptionHtml(String name, String description, URI uri, List<Description> streams) {
-        super(name, description, uri);
+    public DataSourceDescriptionHtml(String name, String description, String descriptionUrl, List<Description> streams) {
+        super(name, description, descriptionUrl);
         this.streams = streams;
     }
 

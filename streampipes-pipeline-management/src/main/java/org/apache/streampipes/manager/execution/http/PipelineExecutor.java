@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.manager.execution.http;
 
+import org.apache.streampipes.commons.constants.PipelineElementUrl;
 import org.apache.streampipes.manager.execution.status.PipelineStatusManager;
 import org.apache.streampipes.manager.util.TemporaryGraphStorage;
 import org.apache.streampipes.model.SpDataSet;
@@ -46,7 +47,9 @@ public class PipelineExecutor {
   private boolean storeStatus;
   private boolean monitor;
 
-  public PipelineExecutor(Pipeline pipeline, boolean visualize, boolean storeStatus,
+  public PipelineExecutor(Pipeline pipeline,
+                          boolean visualize,
+                          boolean storeStatus,
                           boolean monitor) {
     this.pipeline = pipeline;
     this.visualize = visualize;
@@ -73,9 +76,12 @@ public class PipelineExecutor {
     graphs.addAll(sepas);
     graphs.addAll(secs);
 
-    List<InvocableStreamPipesEntity> decryptedGraphs = decryptSecrets(graphs);
+    graphs.forEach(g -> g.setSelectedEndpointUrl(new PipelineElementEndpointGenerator(g.getElementId(),
+            g.getAppId(),
+            getPipelineElementType(g))
+            .getEndpointResourceUrl()));
 
-    graphs.forEach(g -> g.setStreamRequirements(Collections.emptyList()));
+    List<InvocableStreamPipesEntity> decryptedGraphs = decryptSecrets(graphs);
 
     PipelineOperationStatus status = new GraphSubmitter(pipeline.getPipelineId(),
             pipeline.getName(), decryptedGraphs, dataSets)
@@ -183,6 +189,10 @@ public class PipelineExecutor {
 
   private IPipelineStorage getPipelineStorageApi() {
     return StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI();
+  }
+
+  private PipelineElementUrl getPipelineElementType(InvocableStreamPipesEntity entity) {
+    return entity instanceof DataProcessorInvocation ? PipelineElementUrl.DATA_PROCESSOR : PipelineElementUrl.DATA_SINK;
   }
 
 }

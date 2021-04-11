@@ -19,6 +19,7 @@
 package org.apache.streampipes.container.init;
 
 import org.apache.streampipes.container.declarer.*;
+import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
 import org.apache.streampipes.dataformat.SpDataFormatManager;
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
@@ -70,13 +71,21 @@ public class DeclarersSingleton {
     return DeclarersSingleton.instance;
   }
 
-  public void addDeclarers(List<Declarer> allDeclarers) {
-    for (Declarer d : allDeclarers) {
+  public void populate(String host, Integer port, SpServiceDefinition serviceDef) {
+    this.setHostName(host);
+    this.setPort(port);
+    this.addDeclarers(serviceDef.getDeclarers());
+    this.registerProtocols(serviceDef.getProtocolDefinitionFactories());
+    this.registerDataFormats(serviceDef.getDataFormatFactories());
+  }
+
+  public void addDeclarers(List<Declarer<?>> allDeclarers) {
+    for (Declarer<?> d : allDeclarers) {
       add(d);
     }
   }
 
-  public DeclarersSingleton add(Declarer d) {
+  public DeclarersSingleton add(Declarer<?> d) {
     if (d instanceof SemanticEventProcessingAgentDeclarer) {
       addEpaDeclarer((SemanticEventProcessingAgentDeclarer) d);
     } else if (d instanceof DataStreamDeclarer) {
@@ -127,7 +136,11 @@ public class DeclarersSingleton {
   }
 
   public void registerProtocols(SpProtocolDefinitionFactory<?>... protocols) {
-    Arrays.asList(protocols).forEach(this::registerProtocol);
+    registerProtocols(Arrays.asList(protocols));
+  }
+
+  public void registerProtocols(List<SpProtocolDefinitionFactory<?>> protocols) {
+    protocols.forEach(this::registerProtocol);
   }
 
   public void registerDataFormat(SpDataFormatFactory dataFormatDefinition) {
@@ -137,7 +150,11 @@ public class DeclarersSingleton {
   }
 
   public void registerDataFormats(SpDataFormatFactory... dataFormatDefinitions) {
-    Arrays.asList(dataFormatDefinitions).forEach(this::registerDataFormat);
+    registerDataFormats(Arrays.asList(dataFormatDefinitions));
+  }
+
+  public void registerDataFormats(List<SpDataFormatFactory> dataFormatDefinitions) {
+    dataFormatDefinitions.forEach(this::registerDataFormat);
   }
 
   private void addEpaDeclarer(SemanticEventProcessingAgentDeclarer epaDeclarer) {

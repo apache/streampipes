@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.container.api;
 
+import org.apache.streampipes.commons.constants.PipelineElementPrefix;
 import org.apache.streampipes.container.assets.AssetZipGenerator;
 import org.apache.streampipes.container.declarer.DataSetDeclarer;
 import org.apache.streampipes.container.declarer.DataStreamDeclarer;
@@ -32,7 +33,7 @@ import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.util.Map;
 
-@Path("/stream")
+@Path(PipelineElementPrefix.DATA_STREAM)
 public class DataStreamPipelineElementResource extends AbstractPipelineElementResource<DataStreamDeclarer> {
 
   @Override

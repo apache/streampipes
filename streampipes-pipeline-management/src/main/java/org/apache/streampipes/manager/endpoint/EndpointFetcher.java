@@ -17,9 +17,9 @@
  */
 package org.apache.streampipes.manager.endpoint;
 
-import org.apache.streampipes.container.util.ConsulUtil;
 import org.apache.streampipes.model.client.endpoint.RdfEndpoint;
 import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -30,7 +30,7 @@ import java.util.stream.Stream;
 public class EndpointFetcher {
 
   public List<RdfEndpoint> getEndpoints() {
-    List<String> endpoints = ConsulUtil.getActivePeEndpoints();
+    List<String> endpoints = SpServiceDiscovery.getServiceDiscovery().getActivePeEndpoints();
     List<RdfEndpoint> servicerdRdfEndpoints = new LinkedList<>();
 
     for (String endpoint : endpoints) {

@@ -20,7 +20,7 @@ package org.apache.streampipes.container.api;
 
 import org.apache.streampipes.container.html.HTMLGenerator;
 import org.apache.streampipes.container.html.JSONGenerator;
-import org.apache.streampipes.container.html.page.WelcomePageGeneratorImpl;
+import org.apache.streampipes.container.html.page.WelcomePageGenerator;
 import org.apache.streampipes.container.init.DeclarersSingleton;
 
 import javax.ws.rs.GET;
@@ -34,12 +34,7 @@ public class WelcomePage {
   @GET
   @Produces(MediaType.TEXT_HTML)
   public String getWelcomePageHtml() {
-    WelcomePageGeneratorImpl welcomePage = new WelcomePageGeneratorImpl(DeclarersSingleton
-            .getInstance()
-            .getBaseUri(), DeclarersSingleton
-            .getInstance()
-            .getDeclarers()
-            .values());
+    WelcomePageGenerator welcomePage = getWelcomePageGenerator();
     HTMLGenerator html = new HTMLGenerator(welcomePage.buildUris());
     return html.buildHtml();
   }
@@ -47,13 +42,17 @@ public class WelcomePage {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public String getWelcomePageJson() {
-    WelcomePageGeneratorImpl welcomePage = new WelcomePageGeneratorImpl(DeclarersSingleton
+    WelcomePageGenerator welcomePage = getWelcomePageGenerator();
+    JSONGenerator json = new JSONGenerator(welcomePage.buildUris());
+    return json.buildJson();
+  }
+
+  private WelcomePageGenerator getWelcomePageGenerator() {
+    return new WelcomePageGenerator(DeclarersSingleton
             .getInstance()
             .getBaseUri(), DeclarersSingleton
             .getInstance()
             .getDeclarers()
             .values());
-    JSONGenerator json = new JSONGenerator(welcomePage.buildUris());
-    return json.buildJson();
   }
 }

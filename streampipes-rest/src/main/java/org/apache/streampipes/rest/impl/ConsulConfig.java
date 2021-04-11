@@ -25,8 +25,8 @@ import org.apache.streampipes.config.backend.MessagingSettings;
 import org.apache.streampipes.config.consul.ConsulSpConfig;
 import org.apache.streampipes.config.model.ConfigItem;
 import org.apache.streampipes.config.model.PeConfig;
-import org.apache.streampipes.container.util.ConsulUtil;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
+import org.apache.streampipes.svcdiscovery.api.ISpKvManagement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,8 +38,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static org.apache.streampipes.container.util.ConsulUtil.updateConfig;
-
 @Path("/v2/consul")
 public class ConsulConfig extends AbstractRestResource {
 
@@ -50,7 +48,7 @@ public class ConsulConfig extends AbstractRestResource {
   @GsonWithIds
   public Response getAllServiceConfigs() {
     LOG.info("Request for all service configs");
-    Map<String, String> peServices = ConsulUtil.getPeServices();
+    Map<String, String> peServices = getServiceDiscovery().getPeServices();
 
     List<PeConfig> peConfigs = new LinkedList<>();
 
@@ -88,6 +86,8 @@ public class ConsulConfig extends AbstractRestResource {
   @Produces(MediaType.APPLICATION_JSON)
   @GsonWithIds
   public Response saveServiceConfig(PeConfig peConfig) {
+
+    ISpKvManagement keyValueStore = getKeyValueStore();
     LOG.info("Request to update a service config");
     for (ConfigItem configItem : peConfig.getConfigs()) {
       String value = configItem.getValue();
@@ -131,7 +131,7 @@ public class ConsulConfig extends AbstractRestResource {
     for (ConfigItem configItem : peConfig.getConfigs()) {
       JsonObject jsonObj = new Gson().toJsonTree(configItem).getAsJsonObject();
       jsonObj.entrySet().removeIf(e -> e.getKey().equals("key"));
-      updateConfig(configItem.getKey(), jsonObj.toString(),
+      keyValueStore.updateConfig(configItem.getKey(), jsonObj.toString(),
               configItem.isPassword());
     }
     return Response.status(Response.Status.OK).build();
@@ -142,7 +142,7 @@ public class ConsulConfig extends AbstractRestResource {
   @GsonWithIds
   public Response deleteService(String serviceName) {
     LOG.info("Request to delete a service config");
-    ConsulUtil.deregisterService(serviceName);
+    getServiceDiscovery().deregisterService(serviceName);
     return Response.status(Response.Status.OK).build();
   }
 
@@ -165,7 +165,7 @@ public class ConsulConfig extends AbstractRestResource {
   }
 
   public List<ConfigItem> getConfigForService(String serviceId) {
-    Map<String, String> keyValues = ConsulUtil.getKeyValue(ConsulSpConfig.SERVICE_ROUTE_PREFIX + serviceId);
+    Map<String, String> keyValues = getKeyValueStore().getKeyValue(ConsulSpConfig.SERVICE_ROUTE_PREFIX + serviceId);
 
     List<ConfigItem> configItems = new LinkedList<>();
 
@@ -177,4 +177,6 @@ public class ConsulConfig extends AbstractRestResource {
     }
     return configItems;
   }
+
+
 }

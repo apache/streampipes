@@ -24,6 +24,7 @@ public class RdfEndpointItem {
 
     private String name;
     private String description;
+    private String elementId;
     private String uri;
     private String type;
     private String appId;
@@ -99,5 +100,13 @@ public class RdfEndpointItem {
 
     public void setEditable(boolean editable) {
         this.editable = editable;
+    }
+
+    public String getElementId() {
+        return elementId;
+    }
+
+    public void setElementId(String elementId) {
+        this.elementId = elementId;
     }
 }

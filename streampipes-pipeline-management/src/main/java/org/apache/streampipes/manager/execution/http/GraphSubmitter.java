@@ -18,12 +18,13 @@
 
 package org.apache.streampipes.manager.execution.http;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.streampipes.commons.constants.InstanceIdExtractor;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.pipeline.PipelineElementStatus;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,7 +39,9 @@ public class GraphSubmitter {
 
   private final static Logger LOG = LoggerFactory.getLogger(GraphSubmitter.class);
 
-  public GraphSubmitter(String pipelineId, String pipelineName, List<InvocableStreamPipesEntity> graphs,
+  public GraphSubmitter(String pipelineId,
+                        String pipelineName,
+                        List<InvocableStreamPipesEntity> graphs,
                         List<SpDataSet> dataSets) {
     this.graphs = graphs;
     this.pipelineId = pipelineId;
@@ -52,7 +55,7 @@ public class GraphSubmitter {
     status.setPipelineName(pipelineName);
 
 
-    graphs.forEach(g -> status.addPipelineElementStatus(new HttpRequestBuilder(g, g.getBelongsTo()).invoke()));
+    graphs.forEach(g -> status.addPipelineElementStatus(performInvocation(g)));
     if (status.getElementStatus().stream().allMatch(PipelineElementStatus::isSuccess)) {
       dataSets.forEach(dataSet ->
               status.addPipelineElementStatus
@@ -76,7 +79,7 @@ public class GraphSubmitter {
         Optional<InvocableStreamPipesEntity> graph = findGraph(s.getElementId());
         graph.ifPresent(g -> {
           LOG.info("Rolling back element " + g.getElementId());
-          new HttpRequestBuilder(g, g.getBelongsTo()).detach();
+          performDetach(g);
         });
       }
     }
@@ -91,7 +94,7 @@ public class GraphSubmitter {
     status.setPipelineId(pipelineId);
     status.setPipelineName(pipelineName);
 
-    graphs.forEach(g -> status.addPipelineElementStatus(new HttpRequestBuilder(g, g.getUri()).detach()));
+    graphs.forEach(g -> status.addPipelineElementStatus(performDetach(g)));
     dataSets.forEach(dataSet -> status.addPipelineElementStatus(new HttpRequestBuilder(dataSet, dataSet.getUri() +
             "/" +dataSet.getDatasetInvocationId())
             .detach()));
@@ -104,5 +107,15 @@ public class GraphSubmitter {
     }
 
     return status;
+  }
+
+  private PipelineElementStatus performInvocation(InvocableStreamPipesEntity entity) {
+    String endpointUrl = entity.getSelectedEndpointUrl();
+    return new HttpRequestBuilder(entity, endpointUrl).invoke();
+  }
+
+  private PipelineElementStatus performDetach(InvocableStreamPipesEntity entity) {
+    String endpointUrl = entity.getSelectedEndpointUrl() + "/" + InstanceIdExtractor.extractId(entity.getElementId());
+    return new HttpRequestBuilder(entity, endpointUrl).detach();
   }
 }

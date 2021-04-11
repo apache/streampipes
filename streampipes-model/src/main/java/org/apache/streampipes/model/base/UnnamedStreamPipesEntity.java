@@ -19,7 +19,7 @@
 package org.apache.streampipes.model.base;
 
 
-import org.apache.streampipes.model.util.RdfIdGenerator;
+import org.apache.streampipes.model.util.ElementIdGenerator;
 
 /**
  * unnamed SEPA elements (that do not require any readable identifier)
@@ -30,7 +30,7 @@ public abstract class UnnamedStreamPipesEntity extends AbstractStreamPipesEntity
 
   public UnnamedStreamPipesEntity() {
     super();
-    this.elementId = RdfIdGenerator.makeRdfId(this);
+    this.elementId = ElementIdGenerator.makeElementId(this);
   }
 
   public UnnamedStreamPipesEntity(UnnamedStreamPipesEntity other) {

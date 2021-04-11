@@ -33,35 +33,35 @@ import java.io.IOException;
 public class HttpRequestBuilder {
 
   private final NamedStreamPipesEntity payload;
-  private final String belongsTo;
+  private final String endpointUrl;
 
   private final static Logger LOG = LoggerFactory.getLogger(HttpRequestBuilder.class);
 
-  public HttpRequestBuilder(NamedStreamPipesEntity payload, String belongsTo) {
+  public HttpRequestBuilder(NamedStreamPipesEntity payload, String endpointUrl) {
     this.payload = payload;
-    this.belongsTo = belongsTo;
+    this.endpointUrl = endpointUrl;
   }
 
   public PipelineElementStatus invoke() {
-    LOG.info("Invoking element: " + belongsTo);
+    LOG.info("Invoking element: " + endpointUrl);
     try {
       String jsonDocument = toJson();
       Response httpResp =
-              Request.Post(belongsTo).bodyString(jsonDocument, ContentType.APPLICATION_JSON).connectTimeout(10000).execute();
+              Request.Post(endpointUrl).bodyString(jsonDocument, ContentType.APPLICATION_JSON).connectTimeout(10000).execute();
       return handleResponse(httpResp);
     } catch (Exception e) {
       LOG.error(e.getMessage());
-      return new PipelineElementStatus(belongsTo, payload.getName(), false, e.getMessage());
+      return new PipelineElementStatus(endpointUrl, payload.getName(), false, e.getMessage());
     }
   }
 
   public PipelineElementStatus detach() {
     try {
-      Response httpResp = Request.Delete(belongsTo).connectTimeout(10000).execute();
+      Response httpResp = Request.Delete(endpointUrl).connectTimeout(10000).execute();
       return handleResponse(httpResp);
     } catch (Exception e) {
-      LOG.error("Could not stop pipeline " + belongsTo, e.getMessage());
-      return new PipelineElementStatus(belongsTo, payload.getName(), false, e.getMessage());
+      LOG.error("Could not stop pipeline " + endpointUrl, e.getMessage());
+      return new PipelineElementStatus(endpointUrl, payload.getName(), false, e.getMessage());
     }
   }
 
@@ -78,6 +78,6 @@ public class HttpRequestBuilder {
   }
 
   private PipelineElementStatus convert(org.apache.streampipes.model.Response response) {
-    return new PipelineElementStatus(belongsTo, payload.getName(), response.isSuccess(), response.getOptionalMessage());
+    return new PipelineElementStatus(endpointUrl, payload.getName(), response.isSuccess(), response.getOptionalMessage());
   }
 }

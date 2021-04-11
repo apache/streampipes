@@ -15,22 +15,19 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.container.util;
 
-package org.apache.streampipes.container.html.model;
+import org.apache.streampipes.container.declarer.Declarer;
 
-import java.net.URI;
+import java.util.List;
+import java.util.stream.Collectors;
 
-@Deprecated
-public class AgentDescription extends Description {
+public class ServiceDefinitionUtil {
 
-	public AgentDescription(String name, String description, URI uri)
-	{
-		super(name, description, uri);
-	}
-	
-	public AgentDescription()
-	{
-		super();
-	}
-		
+  public static List<String> extractAppIds(List<Declarer<?>> declarers) {
+    return declarers
+            .stream()
+            .map(d -> d.declareModel().getAppId())
+            .collect(Collectors.toList());
+  }
 }

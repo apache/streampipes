@@ -22,7 +22,7 @@ import io.fogsy.empire.annotations.RdfProperty;
 import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
-import org.apache.streampipes.model.util.RdfIdGenerator;
+import org.apache.streampipes.model.util.ElementIdGenerator;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
 import javax.persistence.CascadeType;
@@ -61,7 +61,7 @@ public class DataSinkInvocation extends InvocableStreamPipesEntity {
     this.setStreamRequirements(sec.getSpDataStreams());
     this.setAppId(sec.getAppId());
     this.setIncludesAssets(sec.isIncludesAssets());
-    this.setElementId(RdfIdGenerator.makeRdfId(this));
+    this.setElementId(ElementIdGenerator.makeElementId(this));
     //this.setUri(belongsTo +"/" +getElementId());
   }
 

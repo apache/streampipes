@@ -18,28 +18,98 @@
 
 package org.apache.streampipes.container.html.page;
 
+import org.apache.streampipes.container.declarer.*;
 import org.apache.streampipes.container.html.model.Description;
+import org.apache.streampipes.container.locales.LabelGenerator;
+import org.apache.streampipes.model.SpDataSet;
+import org.apache.streampipes.model.SpDataStream;
+import org.apache.streampipes.model.base.NamedStreamPipesEntity;
+import org.apache.streampipes.model.graph.DataSinkDescription;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 
-public abstract class WelcomePageGenerator<T> {
+public class WelcomePageGenerator {
 
   protected List<Description> descriptions;
-  protected Collection<T> declarers;
+  protected Collection<Declarer<?>> declarers;
   protected String baseUri;
 
-  public WelcomePageGenerator(String baseUri, Collection<T> declarers) {
+  public WelcomePageGenerator(String baseUri, Collection<Declarer<?>> declarers) {
     this.declarers = declarers;
     this.baseUri = baseUri;
     this.descriptions = new ArrayList<>();
   }
 
-  public abstract List<Description> buildUris();
-
   public List<Description> getDescriptions() {
     return descriptions;
+  }
+
+  public List<Description> buildUris() {
+    List<Description> descriptions = new ArrayList<>();
+
+    for (Declarer<?> declarer : declarers) {
+      if (declarer instanceof InvocableDeclarer) {
+        descriptions.add(getDescription(declarer));
+      } else if (declarer instanceof DataStreamDeclarer) {
+        descriptions.add(getDescription(declarer));
+      } else if (declarer instanceof PipelineTemplateDeclarer) {
+        descriptions.add(getDescription(declarer));
+      }
+    }
+    return descriptions;
+  }
+
+  private Description getDescription(Declarer<?> declarer) {
+    Description desc = new Description();
+    // TODO remove after full internationalization support has been implemented
+    updateLabel(declarer.declareModel(), desc);
+    desc.setType(getType(declarer));
+    desc.setElementId(declarer.declareModel().getElementId());
+    desc.setAppId(declarer.declareModel().getAppId());
+    desc.setEditable(!(declarer.declareModel().isInternallyManaged()));
+    String uri = baseUri;
+    if (declarer instanceof SemanticEventConsumerDeclarer) {
+      uri += "sec/";
+    } else if (declarer instanceof SemanticEventProcessingAgentDeclarer) {
+      uri += "sepa/";
+    } else if (declarer instanceof DataStreamDeclarer) {
+      uri += "stream/";
+    } else if (declarer instanceof PipelineTemplateDeclarer) {
+      uri += "template/";
+    }
+    desc.setDescriptionUrl(uri + declarer.declareModel().getAppId());
+    //desc.setUri(URI.create(uri + declarer.declareModel().getUri().replaceFirst("[a-zA-Z]{4}://[a-zA-Z\\.]+:\\d+/", "")));
+    return desc;
+  }
+
+  private String getType(Declarer<?> declarer) {
+    if (declarer.declareModel() instanceof DataSinkDescription) {
+      return "action";
+    } else if (declarer.declareModel() instanceof SpDataSet) {
+      return "set";
+    } else if (declarer.declareModel() instanceof SpDataStream) {
+      return "stream";
+    } else {
+      return "sepa";
+    }
+  }
+
+  private void updateLabel(NamedStreamPipesEntity entity, Description desc) {
+    if (!entity.isIncludesLocales()) {
+      desc.setName(entity.getName());
+      desc.setDescription(entity.getDescription());
+    } else {
+      LabelGenerator lg = new LabelGenerator(entity);
+      try {
+        desc.setName(lg.getElementTitle());
+        desc.setDescription(lg.getElementDescription());
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
   }
 }

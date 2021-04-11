@@ -19,21 +19,25 @@
 package org.apache.streampipes.container.standalone.init;
 
 
+import org.apache.streampipes.commons.networking.Networking;
+import org.apache.streampipes.container.init.DeclarersSingleton;
+import org.apache.streampipes.container.init.ModelSubmitter;
+import org.apache.streampipes.container.init.RunningInstances;
+import org.apache.streampipes.container.model.PeConfig;
+import org.apache.streampipes.container.model.SpServiceDefinition;
+import org.apache.streampipes.container.util.ServiceDefinitionUtil;
+import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.apache.streampipes.container.init.DeclarersSingleton;
-import org.apache.streampipes.container.init.ModelSubmitter;
-import org.apache.streampipes.container.init.RunningInstances;
-import org.apache.streampipes.container.model.PeConfig;
-import org.apache.streampipes.container.util.ConsulUtil;
-
-import java.util.Collections;
 
 import javax.annotation.PreDestroy;
+import java.net.UnknownHostException;
+import java.util.Collections;
+import java.util.List;
 
 @Configuration
 @EnableAutoConfiguration
@@ -43,6 +47,25 @@ public abstract class StandaloneModelSubmitter extends ModelSubmitter<PeConfig> 
     private static final Logger LOG =
             LoggerFactory.getLogger(StandaloneModelSubmitter.class.getCanonicalName());
 
+    public void init(SpServiceDefinition serviceDef) {
+        try {
+            String host = Networking.getHostname();
+            Integer port = Networking.getPort(serviceDef.getDefaultPort());
+            List<String> appIds = ServiceDefinitionUtil.extractAppIds(serviceDef.getDeclarers());
+
+            DeclarersSingleton.getInstance().populate(host, port, serviceDef);
+
+            SpServiceDiscovery
+                    .getServiceDiscovery()
+                    .registerPeService("pe/" +serviceDef.getServiceId(), host, port, appIds);
+
+            startService(port);
+        } catch (UnknownHostException e) {
+            LOG.error("Could not auto-resolve host address - please manually provide the hostname using the SP_HOST environment variable");
+        }
+    }
+
+    @Deprecated
     public void init(PeConfig peConfig) {
 
         DeclarersSingleton.getInstance()
@@ -50,15 +73,19 @@ public abstract class StandaloneModelSubmitter extends ModelSubmitter<PeConfig> 
         DeclarersSingleton.getInstance()
                 .setPort(peConfig.getPort());
 
-        SpringApplication app = new SpringApplication(StandaloneModelSubmitter.class);
-        app.setDefaultProperties(Collections.singletonMap("server.port", peConfig.getPort()));
-        app.run();
+        startService(peConfig.getPort());
 
-        ConsulUtil.registerPeService(
+        SpServiceDiscovery.getServiceDiscovery().registerPeService(
                 peConfig.getId(),
                 peConfig.getHost(),
                 peConfig.getPort()
         );
+    }
+
+    private void startService(Integer port) {
+        SpringApplication app = new SpringApplication(StandaloneModelSubmitter.class);
+        app.setDefaultProperties(Collections.singletonMap("server.port", port));
+        app.run();
     }
 
     @PreDestroy

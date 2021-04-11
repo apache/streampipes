@@ -15,18 +15,23 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.model.util;
+package org.apache.streampipes.commons.constants;
 
-import org.apache.commons.lang.RandomStringUtils;
+public class Envs {
 
-public class RdfIdGenerator {
+  public static String SP_HOST = "SP_HOST";
+  public static String SP_PORT = "SP_PORT";
 
-  private static final String prefix = "urn:streampipes.org:spi:";
-
-  public static String makeRdfId(Object obj) {
-    return prefix
-            + obj.getClass().getSimpleName().toLowerCase()
-            + ":"
-            + RandomStringUtils.randomAlphabetic(6);
+  public static boolean existsEnv(String envVariable) {
+    return System.getenv().containsKey(envVariable);
   }
+
+  public static String getEnv(String key) {
+    return System.getenv(key);
+  }
+
+  public static Integer getEnvAsInt(String key) {
+    return Integer.parseInt(getEnv(key));
+  }
+
 }

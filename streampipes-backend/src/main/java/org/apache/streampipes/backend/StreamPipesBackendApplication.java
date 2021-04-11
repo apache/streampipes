@@ -20,11 +20,13 @@ package org.apache.streampipes.backend;
 import org.apache.shiro.web.env.EnvironmentLoaderListener;
 import org.apache.shiro.web.servlet.OncePerRequestFilter;
 import org.apache.shiro.web.servlet.ShiroFilter;
+import org.apache.streampipes.commons.networking.Networking;
 import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.rest.notifications.NotificationListener;
 import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -38,6 +40,8 @@ import org.springframework.context.annotation.Import;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.servlet.ServletContextListener;
+import java.net.UnknownHostException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -52,7 +56,17 @@ public class StreamPipesBackendApplication {
 
   public static void main(String[] args) {
     System.setProperty("org.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH", "true");
-    SpringApplication.run(StreamPipesBackendApplication.class, args);
+    try {
+      String host = Networking.getHostname();
+      Integer port = Networking.getPort(8030);
+      SpServiceDiscovery
+              .getServiceDiscovery()
+              .registerService("core", "core", host, port, Arrays.asList("core", "connect-master"));
+
+      SpringApplication.run(StreamPipesBackendApplication.class, args);
+    } catch (UnknownHostException e) {
+      LOG.error("Could not auto-resolve host address - please manually provide the hostname using the SP_HOST environment variable");
+    }
   }
 
   @PostConstruct

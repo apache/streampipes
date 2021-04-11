@@ -55,7 +55,9 @@ public class JSONGenerator {
 
   private JsonObject makeDescription(Description d) {
     JsonObject obj = new JsonObject();
-    obj.add("uri", new JsonPrimitive(d.getUri().toString()));
+    obj.add("uri", new JsonPrimitive(d.getDescriptionUrl()));
+    obj.add("appId", new JsonPrimitive(d.getAppId()));
+    obj.add("elementId", new JsonPrimitive(d.getElementId()));
     obj.add("name", new JsonPrimitive(d.getName()));
     obj.add("description", new JsonPrimitive(d.getDescription()));
     obj.add("type", new JsonPrimitive(d.getType()));

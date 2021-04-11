@@ -18,9 +18,10 @@
 
 package org.apache.streampipes.container.api;
 
+import org.apache.streampipes.commons.constants.InstanceIdExtractor;
+import org.apache.streampipes.commons.constants.PipelineElementPrefix;
 import org.apache.streampipes.container.declarer.SemanticEventConsumerDeclarer;
 import org.apache.streampipes.container.init.DeclarersSingleton;
-import org.apache.streampipes.container.util.Util;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.TransportProtocol;
@@ -29,7 +30,7 @@ import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import javax.ws.rs.Path;
 import java.util.Map;
 
-@Path("/sec")
+@Path(PipelineElementPrefix.DATA_SINK)
 public class DataSinkPipelineElementResource extends InvocablePipelineElementResource<DataSinkInvocation,
         SemanticEventConsumerDeclarer, DataSinkParameterExtractor> {
 
@@ -44,7 +45,8 @@ public class DataSinkPipelineElementResource extends InvocablePipelineElementRes
 
     @Override
     protected String getInstanceId(String uri, String elementId) {
-        return Util.getInstanceId(uri, DATA_SINK_PREFIX, elementId);
+        //return Util.getInstanceId(uri, PipelineElementPrefix.DATA_SINK, elementId);
+        return InstanceIdExtractor.extractId(uri);
     }
 
     @Override

@@ -25,7 +25,7 @@ import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.output.OutputStrategy;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.util.Cloner;
-import org.apache.streampipes.model.util.RdfIdGenerator;
+import org.apache.streampipes.model.util.ElementIdGenerator;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
 import javax.persistence.*;
@@ -70,7 +70,7 @@ public class DataProcessorInvocation extends InvocableStreamPipesEntity implemen
     this.setStreamRequirements(sepa.getSpDataStreams());
     this.setAppId(sepa.getAppId());
     this.setIncludesAssets(sepa.isIncludesAssets());
-    this.setElementId(RdfIdGenerator.makeRdfId(this));
+    this.setElementId(ElementIdGenerator.makeElementId(this));
     //this.setUri(belongsTo +"/" +getElementId());
   }
 

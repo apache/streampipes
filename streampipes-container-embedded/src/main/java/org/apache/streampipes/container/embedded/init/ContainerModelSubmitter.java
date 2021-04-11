@@ -20,7 +20,6 @@ package org.apache.streampipes.container.embedded.init;
 
 import org.apache.streampipes.container.init.ModelSubmitter;
 import org.apache.streampipes.container.model.PeConfig;
-import org.apache.streampipes.container.util.ConsulUtil;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -35,11 +34,12 @@ public abstract class ContainerModelSubmitter extends ModelSubmitter implements 
     public abstract void init();
 
     public void init(PeConfig peConfig) {
-        ConsulUtil.registerPeService(
-                peConfig.getId(),
-                peConfig.getHost(),
-                peConfig.getPort()
-        );
+        // TODO remove after implementation of STREAMPIPES-319
+//        ConsulUtil.registerPeService(
+//                peConfig.getId(),
+//                peConfig.getHost(),
+//                peConfig.getPort()
+//        );
     }
 
     @Override

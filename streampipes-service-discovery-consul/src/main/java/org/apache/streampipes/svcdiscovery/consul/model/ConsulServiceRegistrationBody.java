@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.container.model.consul;
+package org.apache.streampipes.svcdiscovery.consul.model;
 
 import java.util.List;
 

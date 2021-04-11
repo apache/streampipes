@@ -25,8 +25,6 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.streampipes.manager.endpoint.HttpJsonParser;
 import org.apache.streampipes.manager.storage.UserManagementService;
 import org.apache.streampipes.manager.storage.UserService;
-import org.apache.streampipes.model.base.AbstractStreamPipesEntity;
-import org.apache.streampipes.model.base.StreamPipesJsonLdContainer;
 import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.model.message.*;
 import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
@@ -35,6 +33,9 @@ import org.apache.streampipes.serializers.jsonld.JsonLdUtils;
 import org.apache.streampipes.storage.api.*;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.storage.management.StorageManager;
+import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
+import org.apache.streampipes.svcdiscovery.api.ISpKvManagement;
+import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 import org.eclipse.rdf4j.rio.RDFHandlerException;
 
 import javax.ws.rs.core.Response;
@@ -43,7 +44,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
-import java.util.List;
 
 public abstract class AbstractRestResource extends AbstractSharedRestInterface {
 
@@ -165,8 +165,12 @@ public abstract class AbstractRestResource extends AbstractSharedRestInterface {
             .build();
   }
 
-  protected StreamPipesJsonLdContainer asContainer(List<? extends AbstractStreamPipesEntity> elements) {
-    return new StreamPipesJsonLdContainer(elements);
+  protected ISpKvManagement getKeyValueStore() {
+    return SpServiceDiscovery.getKeyValueStore();
+  }
+
+  protected ISpServiceDiscovery getServiceDiscovery() {
+    return SpServiceDiscovery.getServiceDiscovery();
   }
 
 }

@@ -118,7 +118,7 @@ public class InvocationGraphBuilder {
       String elementIdentifier = makeElementIdentifier(pipelineId, inputGrounding
               .getTransportProtocol().getTopicDefinition().getActualTopicName(), t.getName());
 
-      t.setElementId(t.getBelongsTo() + "/" + elementIdentifier);
+      t.setElementId(t.getBelongsTo() + ":" + elementIdentifier);
       t.setCorrespondingPipeline(pipelineId);
       t.setStatusInfoSettings(makeStatusInfoSettings(elementIdentifier));
 

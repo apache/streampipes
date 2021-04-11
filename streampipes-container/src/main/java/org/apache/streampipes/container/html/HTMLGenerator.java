@@ -18,14 +18,14 @@
 
 package org.apache.streampipes.container.html;
 
-import static org.rendersnake.HtmlAttributesFactory.*;
-
-import org.rendersnake.HtmlCanvas;
 import org.apache.streampipes.container.html.model.DataSourceDescriptionHtml;
 import org.apache.streampipes.container.html.model.Description;
+import org.rendersnake.HtmlCanvas;
 
 import java.io.IOException;
 import java.util.List;
+
+import static org.rendersnake.HtmlAttributesFactory.*;
 
 public class HTMLGenerator {
 
@@ -66,7 +66,7 @@ public class HTMLGenerator {
         html.h3();
         html.write(description.getName());
         html._h3();
-        html.h4().write("URI: ").a(href(description.getUri().toString())).content(description.getUri().toString())._h4();
+        html.h4().write("URI: ").a(href(description.getDescriptionUrl().toString())).content(description.getDescriptionUrl().toString())._h4();
         html.h4().write("Description: ").write(description.getDescription())._h4();
         if (description instanceof DataSourceDescriptionHtml) {
           DataSourceDescriptionHtml semanticEventProducerDescription = (DataSourceDescriptionHtml) description;

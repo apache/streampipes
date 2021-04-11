@@ -18,9 +18,10 @@
 
 package org.apache.streampipes.container.api;
 
+import org.apache.streampipes.commons.constants.InstanceIdExtractor;
+import org.apache.streampipes.commons.constants.PipelineElementPrefix;
 import org.apache.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
 import org.apache.streampipes.container.init.DeclarersSingleton;
-import org.apache.streampipes.container.util.Util;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
@@ -30,7 +31,7 @@ import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import javax.ws.rs.Path;
 import java.util.Map;
 
-@Path("/sepa")
+@Path(PipelineElementPrefix.DATA_PROCESSOR)
 public class DataProcessorPipelineElementResource extends InvocablePipelineElementResource<DataProcessorInvocation,
         SemanticEventProcessingAgentDeclarer, ProcessingElementParameterExtractor> {
 
@@ -46,7 +47,7 @@ public class DataProcessorPipelineElementResource extends InvocablePipelineEleme
 
     @Override
     protected String getInstanceId(String uri, String elementId) {
-        return Util.getInstanceId(uri, DATA_PROCESSOR_PREFIX, elementId);
+        return InstanceIdExtractor.extractId(uri);
     }
 
     @Override

@@ -20,6 +20,7 @@ package org.apache.streampipes.sdk.builder;
 
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
+import org.apache.streampipes.model.util.ElementIdGenerator;
 import org.apache.streampipes.sdk.helpers.Label;
 import org.apache.streampipes.sdk.helpers.Locales;
 
@@ -39,7 +40,7 @@ public abstract class AbstractPipelineElementBuilder<BU extends AbstractPipeline
 
   protected AbstractPipelineElementBuilder(String appId, T element) {
     this.elementDescription = element;
-    this.elementDescription.setElementId(appId);
+    this.elementDescription.setElementId(ElementIdGenerator.makeElementIdFromAppId(appId));
     this.elementDescription.setAppId(appId);
   }
 

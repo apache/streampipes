@@ -75,7 +75,7 @@ public class RdfEndpoint extends AbstractRestResource {
     List<org.apache.streampipes.model.client.endpoint.RdfEndpoint> endpoints = getEndpoints();
 
     List<RdfEndpointItem> items = Operations.getEndpointUriContents(endpoints);
-    items.forEach(item -> item.setInstalled(isInstalled(item.getUri(), username)));
+    items.forEach(item -> item.setInstalled(isInstalled(item.getElementId(), username)));
 
     // also add installed elements that are currently not running or available
     items.addAll(getAllDataStreamEndpoints(username, items));
@@ -90,10 +90,10 @@ public class RdfEndpoint extends AbstractRestResource {
     return new EndpointFetcher().getEndpoints();
   }
 
-  private boolean isInstalled(String elementUri, String username) {
+  private boolean isInstalled(String elementId, String username) {
     return getAllUserElements(username)
             .stream()
-            .anyMatch(e -> e.equals(elementUri));
+            .anyMatch(e -> e.equals(elementId));
   }
 
   private List<String> getAllUserElements(String username) {
@@ -107,7 +107,7 @@ public class RdfEndpoint extends AbstractRestResource {
   private List<RdfEndpointItem> getAllDataStreamEndpoints(String username, List<RdfEndpointItem> existingItems) {
     return getAllDataStreamUris(username)
             .stream()
-            .filter(s -> existingItems.stream().noneMatch(item -> item.getUri().equals(s)))
+            .filter(s -> existingItems.stream().noneMatch(item -> item.getElementId().equals(s)))
             .map(s -> getTripleStorage().getPipelineElementStorage().getDataStreamById(s))
             .map(stream -> makeItem(stream, stream instanceof SpDataSet ? "set" : "stream"))
             .collect(Collectors.toList());
@@ -116,7 +116,7 @@ public class RdfEndpoint extends AbstractRestResource {
   private List<RdfEndpointItem> getAllDataProcessorEndpoints(String username, List<RdfEndpointItem> existingItems) {
     return getAllDataProcessorUris(username)
             .stream()
-            .filter(s -> existingItems.stream().noneMatch(item -> item.getUri().equals(s)))
+            .filter(s -> existingItems.stream().noneMatch(item -> item.getElementId().equals(s)))
             .map(s -> getTripleStorage().getPipelineElementStorage().getDataProcessorById(s))
             .map(source -> makeItem(source, "sepa"))
             .collect(Collectors.toList());
@@ -125,7 +125,7 @@ public class RdfEndpoint extends AbstractRestResource {
   private List<RdfEndpointItem> getAllDataSinkEndpoints(String username, List<RdfEndpointItem> existingItems) {
     return getAllDataSinkUris(username)
             .stream()
-            .filter(s -> existingItems.stream().noneMatch(item -> item.getUri().equals(s)))
+            .filter(s -> existingItems.stream().noneMatch(item -> item.getElementId().equals(s)))
             .map(s -> getTripleStorage().getPipelineElementStorage().getDataSinkById(s))
             .map(source -> makeItem(source, "action"))
             .collect(Collectors.toList());

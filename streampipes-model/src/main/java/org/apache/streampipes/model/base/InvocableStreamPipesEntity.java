@@ -77,6 +77,8 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
 
   private boolean uncompleted;
 
+  private String selectedEndpointUrl;
+
   public InvocableStreamPipesEntity() {
     super();
   }
@@ -89,6 +91,7 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
     this.configured = other.isConfigured();
     this.uncompleted = other.isUncompleted();
     this.correspondingUser = other.getCorrespondingUser();
+    this.selectedEndpointUrl = other.getSelectedEndpointUrl();
     if (other.getStreamRequirements() != null) {
       this.streamRequirements = new Cloner().streams(other.getStreamRequirements());
     }
@@ -188,6 +191,14 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
 
   public void setUncompleted(boolean uncompleted) {
     this.uncompleted = uncompleted;
+  }
+
+  public String getSelectedEndpointUrl() {
+    return selectedEndpointUrl;
+  }
+
+  public void setSelectedEndpointUrl(String selectedEndpointUrl) {
+    this.selectedEndpointUrl = selectedEndpointUrl;
   }
 
   //public Logger getLogger(Class clazz, PeConfig peConfig) {

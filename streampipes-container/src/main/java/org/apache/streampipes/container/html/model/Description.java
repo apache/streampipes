@@ -18,22 +18,21 @@
 
 package org.apache.streampipes.container.html.model;
 
-import java.net.URI;
-
 public class Description {
 
 	private String name;
 	private String description;
-	private URI uri;
+	private String elementId;
+	private String descriptionUrl;
 	private String type;
 	private String appId;
 	private boolean editable;
 
-	public Description(String name, String description, URI uri)
+	public Description(String name, String description, String descriptionUrl)
 	{
 		this.name = name;
 		this.description = description;
-		this.uri = uri;
+		this.descriptionUrl = descriptionUrl;
 	}
 	
 	public Description()
@@ -47,12 +46,13 @@ public class Description {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	public URI getUri() {
-		return uri;
+
+	public String getDescriptionUrl() {
+		return descriptionUrl;
 	}
-	public void setUri(URI uri) {
-		this.uri = uri;
+
+	public void setDescriptionUrl(String descriptionUrl) {
+		this.descriptionUrl = descriptionUrl;
 	}
 
 	public String getDescription() {
@@ -87,6 +87,14 @@ public class Description {
 		this.editable = editable;
 	}
 
+	public String getElementId() {
+		return elementId;
+	}
+
+	public void setElementId(String elementId) {
+		this.elementId = elementId;
+	}
+
 	@Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -96,7 +104,7 @@ public class Description {
 
         if (!name.equals(that.name)) return false;
         if (!description.equals(that.description)) return false;
-        return uri.equals(that.uri);
+        return descriptionUrl.equals(that.descriptionUrl);
 
     }
 
@@ -104,7 +112,7 @@ public class Description {
     public int hashCode() {
         int result = name.hashCode();
         result = 31 * result + description.hashCode();
-        result = 31 * result + uri.hashCode();
+        result = 31 * result + descriptionUrl.hashCode();
         return result;
     }
 }

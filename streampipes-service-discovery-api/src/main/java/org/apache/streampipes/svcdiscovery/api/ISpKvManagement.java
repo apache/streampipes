@@ -15,43 +15,18 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.container.model.consul;
+package org.apache.streampipes.svcdiscovery.api;
 
-public class HealthCheckConfiguration {
-    private String Method;
-    private String http;
-    private String interval;
+import java.util.Map;
 
-    public HealthCheckConfiguration() {
-    }
+public interface ISpKvManagement {
 
-    public HealthCheckConfiguration(String method, String http, String interval) {
-        Method = method;
-        this.http = http;
-        this.interval = interval;
-    }
+  <T> T getValueForRoute(String route, Class<T> type);
 
-    public String getMethod() {
-        return Method;
-    }
+  Map<String, String> getKeyValue(String route);
 
-    public void setMethod(String method) {
-        Method = method;
-    }
+  void updateConfig(String key, String entry, boolean password);
 
-    public String getHttp() {
-        return http;
-    }
+  void deleteConfig(String key);
 
-    public void setHttp(String http) {
-        this.http = http;
-    }
-
-    public String getInterval() {
-        return interval;
-    }
-
-    public void setInterval(String interval) {
-        this.interval = interval;
-    }
 }

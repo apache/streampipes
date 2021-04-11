@@ -26,7 +26,6 @@ import org.apache.streampipes.container.init.ModelSubmitter;
 import org.apache.streampipes.container.init.RunningInstances;
 import org.apache.streampipes.container.locales.LabelGenerator;
 import org.apache.streampipes.container.model.ExtensionsConfig;
-import org.apache.streampipes.container.util.ConsulUtil;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
@@ -97,12 +96,12 @@ public abstract class ExtensionsModelSubmitter extends ModelSubmitter<Extensions
             }
         }
         LOG.info("Successfully registered adapter at master in backend: " + backendUrl);
-
-        ConsulUtil.registerPeService(
-                conf.getId(),
-                conf.getHost(),
-                conf.getPort()
-        );
+        // TODO remove after implementation of STREAMPIPES-319
+//        ConsulUtil.registerPeService(
+//                conf.getId(),
+//                conf.getHost(),
+//                conf.getPort()
+//        );
     }
 
     private ConnectWorkerContainer getContainerDescription(String endpointUrl) {
