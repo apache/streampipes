@@ -34,6 +34,7 @@ import org.apache.streampipes.model.grounding.*;
 import org.apache.streampipes.model.node.NodeInfoDescription;
 import org.apache.streampipes.model.pipeline.PipelineElementReconfigurationEntity;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.node.controller.container.config.NodeControllerConfig;
 import org.apache.streampipes.node.controller.container.management.node.NodeManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
@@ -46,10 +47,7 @@ import java.net.MalformedURLException;
 import java.net.Socket;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class InvocableElementManager implements PipelineElementLifeCycle {
 
@@ -158,11 +156,27 @@ public class InvocableElementManager implements PipelineElementLifeCycle {
         pub.publish(reconfigurationEvent);
         pub.disconnect();
 
-        // TODO: update RunningInvocableInstances with new reconfiguration value
-        // remove, then add
+        adaptPipelineDescription(graph, reconfigurationEntity);
 
         response.setSuccess(true);
         return response;
+    }
+
+    private void adaptPipelineDescription(InvocableStreamPipesEntity graph, PipelineElementReconfigurationEntity reconfigurationEntity){
+        List<StaticProperty> staticProperties = new ArrayList<>();
+        graph.getStaticProperties().forEach(sp -> {
+            int ind = graph.getStaticProperties().indexOf(sp);
+            staticProperties.add(ind, sp);
+            reconfigurationEntity.getReconfiguredStaticProperties().forEach(rp -> {
+                if(sp.getInternalName().equals(rp.getInternalName())){
+                    staticProperties.remove(ind);
+                    staticProperties.add(ind, rp);
+                }
+            });
+        });
+        graph.setStaticProperties(staticProperties);
+        RunningInvocableInstances.INSTANCE.remove(reconfigurationEntity.getDeploymentRunningInstanceId());
+        RunningInvocableInstances.INSTANCE.add(reconfigurationEntity.getDeploymentRunningInstanceId(), graph);
     }
 
     private boolean post(String endpoint, String body, Response response) {
