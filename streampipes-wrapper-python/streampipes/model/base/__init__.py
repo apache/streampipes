@@ -14,23 +14,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-import json
-
-
-class ConfigItem(object):
-    def __init__(self):
-        self.value = None
-        self.value_type = None
-        self.description = None
-        self.configuration_scope = None
-        self.is_password = None
-
-    def to_json(self):
-        d = {}
-        for k,v in self.__dict__.items():
-            elements = k.split('_')
-            camel_case = elements[0] + ''.join(x.title() for x in elements[1:])
-            d[camel_case] = v
-
-        return json.dumps(d)
-        @anushkrishnav
+''' DataProcessor Base '''

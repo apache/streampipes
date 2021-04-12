@@ -14,23 +14,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-import json
+import sys, os
+sys.path.append(os.path.abspath("streampipes-wrapper-python"))
 
+from streampipes.model.base.unnamed_streampipes_entity import UnnamedStreamPipesEntity 
 
-class ConfigItem(object):
-    def __init__(self):
-        self.value = None
-        self.value_type = None
-        self.description = None
-        self.configuration_scope = None
-        self.is_password = None
+class StaticProperty(UnnamedStreamPipesEntity):
+  __serialVersionUID = 2509153122084646025
+  
+  
+  def __init__(self):
+      self.__set_StaticPropertyType(staticPropertyType)
 
-    def to_json(self):
-        d = {}
-        for k,v in self.__dict__.items():
-            elements = k.split('_')
-            camel_case = elements[0] + ''.join(x.title() for x in elements[1:])
-            d[camel_case] = v
+  def get_StaticPropertyType(self):
+    return staticPropertyType
 
-        return json.dumps(d)
-        @anushkrishnav
+  def __set_StaticPropertyType(self, staticPropertyType):
+    self.staticPropertyType = staticPropertyType
+

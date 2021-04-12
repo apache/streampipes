@@ -14,23 +14,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-import json
+import sys, os
+sys.path.append(os.path.abspath("streampipes-wrapper-python"))
 
+from streampipes.model.base.abstract_streampipes_entity import AbstractStreamPipesEntity
+class UnnamedStreamPipesEntity(AbstractStreamPipesEntity):
 
-class ConfigItem(object):
-    def __init__(self):
-        self.value = None
-        self.value_type = None
-        self.description = None
-        self.configuration_scope = None
-        self.is_password = None
-
-    def to_json(self):
-        d = {}
-        for k,v in self.__dict__.items():
-            elements = k.split('_')
-            camel_case = elements[0] + ''.join(x.title() for x in elements[1:])
-            d[camel_case] = v
-
-        return json.dumps(d)
-        @anushkrishnav
+  __serialVersionUID = 8051137255998890188
+  def __init__(self):
+      pass
+  @classmethod
+  def with_elementId(elementId: str):
+    self.elementId = elementId;
