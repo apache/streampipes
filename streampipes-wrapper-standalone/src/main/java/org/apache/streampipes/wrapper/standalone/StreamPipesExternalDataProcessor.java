@@ -36,6 +36,7 @@ public abstract class StreamPipesExternalDataProcessor extends StandaloneExterna
         implements ExternalEventProcessor<ProcessorParams> {
 
     // endpoint of Python processor runs here
+    private static final String HTTP_PROTOCOL = "http://";
     private static final String PYTHON_ENDPOINT = "localhost:5000";
 
     private String invocationId;
@@ -88,7 +89,7 @@ public abstract class StreamPipesExternalDataProcessor extends StandaloneExterna
         String responseString = null;
 
         try {
-            responseString = Request.Post(PYTHON_ENDPOINT + "/" + endpoint)
+            responseString = Request.Post(HTTP_PROTOCOL + PYTHON_ENDPOINT + "/" + endpoint)
                     .bodyString(payload, ContentType.APPLICATION_JSON)
                     .connectTimeout(1000)
                     .socketTimeout(100000)

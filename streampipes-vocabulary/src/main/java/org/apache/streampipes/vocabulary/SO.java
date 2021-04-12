@@ -49,6 +49,7 @@ public class SO {
   public static final String ActivityDuration = "http://schema.org/activityDuration";
   public static final String ActivityFrequency = "http://schema.org/activityFrequency";
   public static final String AdditionalName = "http://schema.org/additionalName";
+  public static final String AdditionalProperty = "http://schema.org/additionalProperty";
   public static final String AdditionalVariable = "http://schema.org/additionalVariable";
   public static final String AddressLocality = "http://schema.org/addressLocality";
   public static final String AddressRegion = "http://schema.org/addressRegion";
@@ -393,6 +394,7 @@ public class SO {
   public static final String SoftwareVersion = "http://schema.org/softwareVersion";
   public static final String SpecialCommitments = "http://schema.org/specialCommitments";
   public static final String StageAsNumber = "http://schema.org/stageAsNumber";
+  public static final String Status = "http://schema.org/status";
   public static final String StartDate = "http://schema.org/startDate";
   public static final String StartTime = "http://schema.org/startTime";
   public static final String Step = "http://schema.org/step";

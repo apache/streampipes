@@ -15,26 +15,29 @@
  * limitations under the License.
  *
  */
+
 package org.apache.streampipes.wrapper.siddhi.query.expression.aggregation;
 
-import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
-import org.apache.streampipes.wrapper.siddhi.query.expression.PropertyExpression;
-import org.apache.streampipes.wrapper.siddhi.query.expression.PropertyExpressionBase;
+public enum AggregationFunction {
+    SUM("sum"),
+    COUNT("count"),
+    DISTINCT_COUNT("distinctCount"),
+    AVERAGE("avg"),
+    MAX("max"),
+    MIN("min"),
+    MAX_FOREVER("maxForever"),
+    MIN_FOREVER("minForever"),
+    STANDARD_DEVIATION("stdDev"),
+    AND("and"),
+    OR("or"),
+    UNION_SET("unionSet");
 
-public class CountExpression extends PropertyExpressionBase {
+    private String aggregationFunction;
+    AggregationFunction(String aggregationFunction) {
+        this.aggregationFunction = aggregationFunction;
+    }
 
-  private PropertyExpression propertyExpression;
-
-  public CountExpression(PropertyExpression property) {
-    this.propertyExpression = property;
-  }
-
-  @Override
-  public String toSiddhiEpl() {
-    return join(SiddhiConstants.EMPTY,
-            AggregationFunction.COUNT.toAggregationFunction(),
-            SiddhiConstants.PARENTHESIS_OPEN,
-            propertyExpression.toSiddhiEpl(),
-            SiddhiConstants.PARENTHESIS_CLOSE);
-  }
+    public String toAggregationFunction() {
+        return this.aggregationFunction;
+    }
 }

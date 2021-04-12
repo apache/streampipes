@@ -235,7 +235,8 @@ public abstract class FlinkRuntime<RP extends RuntimeParams<B, I, RC>, B extends
             Thread.sleep(1000);
             Optional<JobStatusMessage> statusMessageOpt =
                     getJobStatus(bindingParams.getGraph().getElementId());
-            if (statusMessageOpt.isPresent()) {
+            if (statusMessageOpt.isPresent()
+                    && statusMessageOpt.get().getJobState().name().equals("RUNNING")) {
               isDeployed = true;
             }
 
@@ -262,7 +263,12 @@ public abstract class FlinkRuntime<RP extends RuntimeParams<B, I, RC>, B extends
       Optional<JobStatusMessage> jobStatusMessage =
               getJobStatus(bindingParams.getGraph().getElementId());
       if (jobStatusMessage.isPresent()) {
-        restClient.cancel(jobStatusMessage.get().getJobId());
+        String jobStatusStr = jobStatusMessage.get().getJobState().name();
+        // Cancel the job if running
+        if (jobStatusStr.equals("RUNNING")) {
+          restClient.cancel(jobStatusMessage.get().getJobId());
+        }
+        // else ignore, because job is already discarded
       } else {
         throw new SpRuntimeException("Could not stop Flink Job");
       }
@@ -296,9 +302,19 @@ public abstract class FlinkRuntime<RP extends RuntimeParams<B, I, RC>, B extends
     try {
       RestClusterClient<String> restClient = getRestClient();
       CompletableFuture<Collection<JobStatusMessage>> jobs = restClient.listJobs();
+      Collection<JobStatusMessage> jobsFound = jobs.get();
+
+      // First, find a job with Running status
+      Optional<JobStatusMessage> job = jobsFound.stream()
+              .filter(j -> j.getJobName().equals(jobName) && j.getJobState().name().equals("RUNNING")).findFirst();
+      if (job.isPresent()) {
+        return job;
+      }
+
+      // Otherwise return job with any other status
       return jobs.get()
               .stream()
-              .filter(j -> j.getJobName().equals(jobName) && j.getJobState().name().equals("RUNNING")).findFirst();
+              .filter(j -> j.getJobName().equals(jobName)).findFirst();
 
     } catch (Exception e) {
       e.printStackTrace();
