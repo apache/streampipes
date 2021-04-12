@@ -132,37 +132,6 @@ public class DockerUtils {
         return containerName.startsWith(SP_CONTAINER_PREFIX) ? containerName : SP_CONTAINER_PREFIX + containerName;
     }
 
-    public void createVolume() throws DockerException, InterruptedException {
-
-        docker.pull("busybox:latest");
-       LOG.info("Create Docker volume");
-       Volume myVolume = Volume.builder()
-                        .name("my-first-vol")
-                        .build();
-
-       HostConfig.Bind bindUsingVolume = HostConfig.Bind.from(myVolume)
-               .to("/app")
-               .build();
-
-       HostConfig hostConfig = HostConfig.builder()
-                .appendBinds(bindUsingVolume)
-                .build();
-
-       ContainerConfig volumeConfig = ContainerConfig.builder()
-                .image("busybox:latest")
-                .hostConfig(hostConfig)
-                .build();
-
-       //docker.createVolume(myVolume);
-        String id = docker.createContainer(volumeConfig, "my-busybox-container").id();
-        LOG.info("containerId: " + id);
-    }
-
-    public void removeVolume() throws DockerException, InterruptedException {
-        LOG.info("Remove Docker volume");
-        docker.removeVolume("my-first-vol");
-    }
-
     private ContainerConfig getContainerConfig(DockerContainer p) {
         return ContainerConfig.builder()
                 .hostname(p.getContainerName())
