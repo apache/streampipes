@@ -14,14 +14,18 @@
 # limitations under the License.
 
 ARG BASE_IMAGE=arm32v7/openjdk:11-jre-slim
-FROM $BASE_IMAGE
 
+FROM arm32v7/ubuntu:18.04 as build-dev
+RUN apt -y update; \
+    apt -y --no-install-recommends install qemu-user-static
+
+FROM $BASE_IMAGE
 MAINTAINER dev@streampipes.apache.org
 
 EXPOSE 7077
 ENV CONSUL_LOCATION consul
 
-COPY qemu-arm-static /usr/bin
+COPY --from=build-dev /usr/bin/qemu-arm-static /usr/bin
 RUN set -ex; \
     apt -y update; \
     apt -y --no-install-recommends install libjffi-jni curl; \
