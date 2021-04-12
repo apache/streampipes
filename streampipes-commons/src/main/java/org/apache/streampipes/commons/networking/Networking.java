@@ -25,16 +25,16 @@ import java.net.UnknownHostException;
 public class Networking {
 
   public static String getHostname() throws UnknownHostException {
-    if (Envs.existsEnv(Envs.SP_HOST)) {
-      return Envs.getEnv(Envs.SP_HOST);
+    if (Envs.SP_HOST.exists()) {
+      return Envs.SP_HOST.getValue();
     } else {
         return InetAddress.getLocalHost().getHostAddress();
     }
   }
 
   public static Integer getPort(Integer defaultPort) {
-    if (Envs.existsEnv(Envs.SP_PORT)) {
-      return Envs.getEnvAsInt(Envs.SP_PORT);
+    if (Envs.SP_PORT.exists()) {
+      return Envs.SP_PORT.getValueAsInt();
     } else {
       return defaultPort;
     }
