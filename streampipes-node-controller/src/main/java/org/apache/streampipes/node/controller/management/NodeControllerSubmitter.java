@@ -63,7 +63,7 @@ public abstract class NodeControllerSubmitter {
         LOG.info("Load node info description");
         NodeManager.getInstance().init();
 
-        LOG.info("Register node controller at node management");
+        LOG.info("Register node controller at StreamPipes cluster management");
         boolean success = NodeManager.getInstance().register();
 
         if (success) {
@@ -72,14 +72,14 @@ public abstract class NodeControllerSubmitter {
 
             if (!"true".equals(System.getenv("SP_DEBUG"))) {
 
-                LOG.info("Register auto-deploy containers");
+                LOG.info("Register container descriptions");
                 DockerContainerDeclarerSingleton.getInstance()
                         .register(new DockerExtensionsContainer())
                         .register(new DockerMosquittoContainer())
                         .register(new DockerKafkaContainer())
                         .register(new DockerZookeeperContainer());
 
-                LOG.info("Auto-deploy extensions container");
+                LOG.info("Auto-deploy extensions and selected broker container");
                 DockerOrchestratorManager.getInstance().init();
 
                 LOG.info("Start janitor manager");

@@ -57,4 +57,8 @@ export class MessagingConfigurationComponent {
     dropProtocol(event: CdkDragDrop<string[]>) {
         moveItemInArray(this.messagingSettings.prioritizedProtocols, event.previousIndex, event.currentIndex);
     }
+
+    dropEdgeProtocol(event: CdkDragDrop<string[]>) {
+        moveItemInArray(this.messagingSettings.prioritizedEdgeProtocols, event.previousIndex, event.currentIndex);
+    }
 }

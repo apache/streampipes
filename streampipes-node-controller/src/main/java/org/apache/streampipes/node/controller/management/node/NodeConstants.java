@@ -58,6 +58,7 @@ public class NodeConstants {
     public static final int NODE_PORT = NodeControllerConfig.INSTANCE.getNodeControllerPort();
     public static final String NODE_BROKER_HOST = NodeControllerConfig.INSTANCE.getNodeBrokerHost();
     public static final int NODE_BROKER_PORT = NodeControllerConfig.INSTANCE.getNodeBrokerPort();
+    public static final String NODE_BROKER_PROTOCOL = NodeControllerConfig.INSTANCE.getNodeBrokerProtocol();
     public static final String NODE_TYPE = NodeControllerConfig.INSTANCE.getNodeType();
     public static final List<String> NODE_LOCATION_TAGS = NodeControllerConfig.INSTANCE.getNodeLocations();
     public static final List<String> SUPPORTED_PIPELINE_ELEMENTS =

@@ -174,7 +174,8 @@ public class InvocationGraphBuilder {
     return t.getDeploymentTargetNodeId() != null && t.getDeploymentTargetNodeId().equals(DEFAULT_TAG);
   }
 
-  private void connectSourceToTarget(DataProcessorInvocation source, InvocableStreamPipesEntity target, EventGrounding inputGrounding, boolean edgeToEdgeRelay){
+  private void connectSourceToTarget(DataProcessorInvocation source, InvocableStreamPipesEntity target,
+                                     EventGrounding inputGrounding, boolean edgeToEdgeRelay){
     //connect a source entity with a target entity through an appropriate relay
     EventGrounding relayGrounding = edgeToEdgeRelay ?
             generateRelayGrounding(inputGrounding, target, true) : generateRelayGrounding(inputGrounding, false);
@@ -182,7 +183,16 @@ public class InvocationGraphBuilder {
       removeExistingStreamRelay(source, target);
     }
     modifyTargetInputStream(source, target, relayGrounding, edgeToEdgeRelay);
-    source.addOutputStreamRelay(new SpDataStreamRelay(relayGrounding));
+    addOutputStreamRelayIfNoDuplicate(source, relayGrounding);
+  }
+
+  private void addOutputStreamRelayIfNoDuplicate(DataProcessorInvocation source, EventGrounding relayGrounding) {
+    boolean isDuplicate = source.getOutputStreamRelays().stream()
+            .anyMatch(r -> r.getEventGrounding().getElementId().equals(relayGrounding.getElementId()));
+
+    if (!isDuplicate) {
+      source.addOutputStreamRelay(new SpDataStreamRelay(relayGrounding));
+    }
   }
 
   private void modifyTargetInputStream(NamedStreamPipesEntity s, InvocableStreamPipesEntity t,
@@ -200,7 +210,6 @@ public class InvocationGraphBuilder {
       inputStream.getEventGrounding().setElementId(grounding.getElementId());
     }
   }
-
 
   private boolean deploymentTargetNotNull(NamedStreamPipesEntity s, InvocableStreamPipesEntity t) {
     if (s instanceof SpDataStream) {
@@ -372,8 +381,8 @@ public class InvocationGraphBuilder {
     EventGrounding eg = new EventGrounding();
     String topic = extractTopic(sourceInvocableOutputGrounding);
     if (edgeToEdgeRelay) {
-      eg.setTransportProtocol(getTargetNodeProtocol(
-              BackendConfig.INSTANCE.getMessagingSettings().getEdgeNodeProtocol(), topic, target));
+      eg.setTransportProtocol(getPrioritizedEdgeProtocol(
+              BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedEdgeProtocols().get(0), topic, target));
     } else {
       eg.setTransportProtocol(getPrioritizedGlobalProtocol(
               BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedProtocols().get(0), topic));
@@ -394,10 +403,12 @@ public class InvocationGraphBuilder {
     throw new SpRuntimeException("Could not retrieve prioritized transport protocol");
   }
 
-  private TransportProtocol getTargetNodeProtocol(SpEdgeNodeProtocol p, String topic,
-                                                  InvocableStreamPipesEntity target) {
+  private TransportProtocol getPrioritizedEdgeProtocol(SpEdgeNodeProtocol p, String topic,
+                                                       InvocableStreamPipesEntity target) {
     if (matches(p, MqttTransportProtocol.class)){
       return mqttTransportProtocol(topic, target);
+    } else if (matches(p, KafkaTransportProtocol.class)){
+      return kafkaTransportProtocol(topic, target);
     }
     throw new SpRuntimeException("Could not retrieve prioritized transport protocol");
   }
@@ -410,6 +421,18 @@ public class InvocationGraphBuilder {
   }
 
   private KafkaTransportProtocol kafkaTransportProtocol(String topic) {
+    return kafkaTransportProtocol(topic, null);
+  }
+
+  private KafkaTransportProtocol kafkaTransportProtocol(String topic, InvocableStreamPipesEntity target) {
+    if (target != null) {
+      return new KafkaTransportProtocol(
+              getTargetNodeBrokerHost(target),
+              getTargetNodeBrokerPort(target),
+              topic);
+//              getTargetNodeZookeeperHost(target),
+//              getTargetNodeZookeeperPort(target));
+    }
     return new KafkaTransportProtocol(
             BackendConfig.INSTANCE.getKafkaHost(),
             BackendConfig.INSTANCE.getKafkaPort(),

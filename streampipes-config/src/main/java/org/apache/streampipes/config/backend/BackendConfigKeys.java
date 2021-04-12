@@ -51,4 +51,5 @@ public class BackendConfigKeys {
   public static final String SERVICE_NAME = "SP_SERVICE_NAME";
 
   public static final String PRIORITIZED_PROTOCOL = "SP_PRIORITIZED_PROTOCOL";
+  public static final String PRIORITIZED_EDGE_PROTOCOL = "SP_PRIORITIZED_EDGE_PROTOCOL";
 }

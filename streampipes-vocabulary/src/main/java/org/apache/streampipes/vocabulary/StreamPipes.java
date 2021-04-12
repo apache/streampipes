@@ -369,6 +369,7 @@ public class StreamPipes {
   public static final String DEPLOYMENT_CONTAINER_ENV_VARS = NS + "dockerContainerEnvVars";
   public static final String DEPLOYMENT_CONTAINER_LABELS = NS + "dockerContainerLabels";
   public static final String DEPLOYMENT_CONTAINER_VOLUMES = NS + "dockerContainerVolumes";
+  public static final String DEPLOYMENT_CONTAINER_DEPENDENCIES = NS + "dockerContainerDependencies";
 
   // UI Rendering
 

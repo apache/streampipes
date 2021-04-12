@@ -22,19 +22,17 @@ import org.apache.streampipes.node.controller.management.orchestrator.docker.Abs
 
 public class DockerMosquittoContainer extends AbstractStreamPipesDockerContainer {
 
-    private static final String SP_CONTAINER_ID = "svc/org.apache.streampipes.node.broker.mosquitto";
-
     @Override
     public DockerContainer declareDockerContainer() {
-        return DockerContainerBuilder.create(SP_CONTAINER_ID)
+        return DockerContainerBuilder.create(StreamPipesDockerServiceID.SP_SVC_MOSQUITTO_ID)
                 .withImage("eclipse-mosquitto:1.6.12")
-                .withName("streampipes-node-broker")
+                .withContainerName("streampipes-node-broker")
                 .withExposedPorts(Ports.withMapping("1883"))
-                .withEnvironmentVariables(
-                        ContainerEnvBuilder.create()
-                                .addNodeEnvs(generateStreamPipesNodeEnvs())
+                .withEnvironmentVariables(ContainerEnvBuilder.create()
+                        .addNodeEnvs(generateStreamPipesNodeEnvs())
                         .build())
-                .withLabels(ContainerLabels.with(SP_CONTAINER_ID, retrieveNodeType(), ContainerType.BROKER))
+                .withLabels(ContainerLabels.with(StreamPipesDockerServiceID.SP_SVC_MOSQUITTO_ID, retrieveNodeType(),
+                        ContainerType.BROKER))
                 .build();
     }
 

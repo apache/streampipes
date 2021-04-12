@@ -35,8 +35,13 @@ public class DockerContainerBuilder {
         return this;
     }
 
-    public DockerContainerBuilder withName(String name) {
+    public DockerContainerBuilder withContainerName(String name) {
         this.dockerContainer.setContainerName(name);
+        return this;
+    }
+
+    public DockerContainerBuilder dependsOn(String... dependsOnContainers) {
+        this.dockerContainer.setDependsOnContainers(Arrays.asList(dependsOnContainers));
         return this;
     }
 

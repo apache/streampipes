@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.model.node;
 
+import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.model.node.container.DeploymentContainer;
@@ -84,6 +85,21 @@ public class NodeInfoDescriptionBuilder {
         tp.setBrokerHostname(host);
         tp.setPort(port);
         this.nodeBroker.setNodeTransportProtocol(tp);
+        return this;
+    }
+
+    public NodeInfoDescriptionBuilder withNodeBroker(String host, int port, String protocol) {
+        if (protocol.toLowerCase().equals("mqtt")) {
+            MqttTransportProtocol tp = new MqttTransportProtocol();
+            tp.setBrokerHostname(host);
+            tp.setPort(port);
+            this.nodeBroker.setNodeTransportProtocol(tp);
+        } else if (protocol.toLowerCase().equals("kafka")) {
+            KafkaTransportProtocol tp = new KafkaTransportProtocol();
+            tp.setBrokerHostname(host);
+            tp.setKafkaPort(port);
+            this.nodeBroker.setNodeTransportProtocol(tp);
+        }
         return this;
     }
 

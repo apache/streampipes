@@ -22,11 +22,11 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.config.backend.SpEdgeNodeProtocol;
 import org.apache.streampipes.config.backend.SpProtocol;
+import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.connect.adapter.preprocessing.elements.SendToKafkaAdapterSink;
+import org.apache.streampipes.connect.adapter.preprocessing.elements.SendToMqttAdapterSink;
 import org.apache.streampipes.connect.adapter.util.TransportFormatGenerator;
-import org.apache.streampipes.container.util.ConsulUtil;
-import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.connect.adapter.*;
-import org.apache.streampipes.model.connect.worker.ConnectWorkerContainer;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
@@ -85,7 +85,7 @@ public class GroundingService {
         return eventGrounding;
     }
 
-    public static EventGrounding createEventGrounding(AdapterDescription adapterDescription) {
+    public static EventGrounding createEventGrounding(AdapterDescription adapterDescription) throws AdapterException {
 
         EventGrounding eventGrounding = new EventGrounding();
 
@@ -93,30 +93,28 @@ public class GroundingService {
         TopicDefinition topicDefinition = new SimpleTopicDefinition(topic);
 
         if (adapterDescription.getDeploymentTargetNodeId() != null) {
-            SpEdgeNodeProtocol edgeNodeProtocol = BackendConfig.INSTANCE.getMessagingSettings().getEdgeNodeProtocol();
+
+            String nodeControllerId = extractNodeControllerId(adapterDescription);
+            SpEdgeNodeProtocol edgeNodeProtocol = BackendConfig.INSTANCE
+                    .getMessagingSettings()
+                    .getPrioritizedEdgeProtocols()
+                    .get(0);
 
             if (isEdgeProtocol(edgeNodeProtocol, MqttTransportProtocol.class)) {
+                MqttTransportProtocol brokerTransportProtocol =
+                        (MqttTransportProtocol) getNodeBrokerTransportProtocol(nodeControllerId);
+                brokerTransportProtocol.setTopicDefinition(topicDefinition);
 
-                if (adapterDescription instanceof GenericAdapterDescription) {
+                eventGrounding.setTransportProtocol(brokerTransportProtocol);
 
-                    String nodeControllerId = ((GenericAdapterDescription) adapterDescription)
-                            .getProtocolDescription()
-                            .getDeploymentTargetNodeId();
+            } else if (isEdgeProtocol(edgeNodeProtocol, KafkaTransportProtocol.class)) {
+                KafkaTransportProtocol brokerTransportProtocol =
+                        (KafkaTransportProtocol) getNodeBrokerTransportProtocol(nodeControllerId);
+                brokerTransportProtocol.setTopicDefinition(topicDefinition);
 
-                    MqttTransportProtocol brokerTransportProtocol =
-                            (MqttTransportProtocol) getNodeBrokerTransportProtocol(nodeControllerId);
-                    brokerTransportProtocol.setTopicDefinition(topicDefinition);
-
-                    eventGrounding.setTransportProtocol(brokerTransportProtocol);
-                } else {
-
-                    String nodeControllerId = adapterDescription.getDeploymentTargetNodeId();
-                    MqttTransportProtocol brokerTransportProtocol =
-                            (MqttTransportProtocol) getNodeBrokerTransportProtocol(nodeControllerId);
-                    brokerTransportProtocol.setTopicDefinition(topicDefinition);
-
-                    eventGrounding.setTransportProtocol(brokerTransportProtocol);
-                }
+                eventGrounding.setTransportProtocol(brokerTransportProtocol);
+            } else {
+                throw new AdapterException("Edge node protocol not supported. " + edgeNodeProtocol);
             }
 
         } else {
@@ -148,6 +146,16 @@ public class GroundingService {
                 .singletonList(TransportFormatGenerator.getTransportFormat()));
 
         return eventGrounding;
+    }
+
+    private static String extractNodeControllerId(AdapterDescription adapterDescription) {
+        if (adapterDescription instanceof GenericAdapterDescription) {
+            return ((GenericAdapterDescription) adapterDescription)
+                    .getProtocolDescription()
+                    .getDeploymentTargetNodeId();
+        } else {
+            return adapterDescription.getDeploymentTargetNodeId();
+        }
     }
 
     public static Boolean isPrioritized(SpProtocol prioritizedProtocol,

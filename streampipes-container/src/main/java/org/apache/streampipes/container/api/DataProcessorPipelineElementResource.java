@@ -56,19 +56,27 @@ public class DataProcessorPipelineElementResource extends InvocablePipelineEleme
 
     @Override
     protected DataProcessorInvocation createGroundingDebugInformation(DataProcessorInvocation graph) {
+        boolean isDefaultGraph = graph.getDeploymentTargetNodeId().equals("default");
         graph.getInputStreams().forEach(is -> {
-           modifyGrounding(is.getEventGrounding());
+            modifyGrounding(is.getEventGrounding(), isDefaultGraph);
         });
 
-        modifyGrounding(graph.getOutputStream().getEventGrounding());
+        modifyGrounding(graph.getOutputStream().getEventGrounding(), isDefaultGraph);
         return graph;
     }
 
-    private void modifyGrounding(EventGrounding grounding) {
+    private void modifyGrounding(EventGrounding grounding, boolean isCloudBroker) {
         TransportProtocol protocol = grounding.getTransportProtocol();
         protocol.setBrokerHostname("localhost");
-        if (protocol instanceof KafkaTransportProtocol) {
-            ((KafkaTransportProtocol) protocol).setKafkaPort(9094);
+        if (isCloudBroker) {
+            if (protocol instanceof KafkaTransportProtocol) {
+                ((KafkaTransportProtocol) protocol).setKafkaPort(9095);
+            }
+        } else {
+            if (protocol instanceof KafkaTransportProtocol) {
+                ((KafkaTransportProtocol) protocol).setKafkaPort(9094);
+            }
         }
+
     }
 }

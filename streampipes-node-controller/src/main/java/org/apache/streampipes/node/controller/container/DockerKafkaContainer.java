@@ -24,32 +24,30 @@ import org.apache.streampipes.node.controller.management.orchestrator.docker.Abs
 
 public class DockerKafkaContainer extends AbstractStreamPipesDockerContainer {
 
-    private static final String SP_CONTAINER_ID = "svc/org.apache.streampipes.node.broker.kafka";
-
     @Override
     public DockerContainer declareDockerContainer() {
-        return DockerContainerBuilder.create(SP_CONTAINER_ID)
+        return DockerContainerBuilder.create(StreamPipesDockerServiceID.SP_SVC_KAFKA_ID)
                 .withImage("fogsyio/kafka:2.2.0")
-                .withName("streampipes-node-broker")
+                .withContainerName("streampipes-node-broker")
+                .dependsOn("svc/org.apache.streampipes.node.broker.zookeeper")
                 .withExposedPorts(Ports.withMapping("9094"))
-                .withEnvironmentVariables(
-                        ContainerEnvBuilder.create()
-                                .addNodeEnvs(generateStreamPipesNodeEnvs())
-                                .add("KAFKA_LISTENER_SECURITY_PROTOCOL_MAP", "PLAINTEXT:PLAINTEXT,OUTSIDE:PLAINTEXT")
-                                .add("KAFKA_ADVERTISED_LISTENERS",
-                                        "PLAINTEXT://:9092,OUTSIDE://" + NodeControllerConfig.INSTANCE.getNodeHost() + ":9094")
-                                .add("KAFKA_LISTENERS", "PLAINTEXT://:9092,OUTSIDE://:9094")
-                                .add("KAFKA_INTER_BROKER_LISTENER_NAME", "PLAINTEXT")
-                                .add("KAFKA_ADVERTISED_HOST_NAME", "kafka")
-                                .add("KAFKA_ZOOKEEPER_CONNECT", "zookeeper:2181")
-                                .add("KAFKA_MESSAGE_MAX_BYTES", "5000012")
-                                .add("KAFKA_FETCH_MESSAGE_MAX_BYTES", "5000012")
-                                .add("KAFKA_REPLICA_FETCH_MAX_BYTES", "10000000")
+                .withEnvironmentVariables(ContainerEnvBuilder.create()
+                        .addNodeEnvs(generateStreamPipesNodeEnvs())
+                        .add("KAFKA_LISTENER_SECURITY_PROTOCOL_MAP", "PLAINTEXT:PLAINTEXT,OUTSIDE:PLAINTEXT")
+                        .add("KAFKA_ADVERTISED_LISTENERS",
+                                "PLAINTEXT://:9092,OUTSIDE://" + NodeControllerConfig.INSTANCE.getNodeHost() + ":9094")
+                        .add("KAFKA_LISTENERS", "PLAINTEXT://:9092,OUTSIDE://:9094")
+                        .add("KAFKA_INTER_BROKER_LISTENER_NAME", "PLAINTEXT")
+                        .add("KAFKA_ADVERTISED_HOST_NAME", "streampipes-node-broker")
+                        .add("KAFKA_ZOOKEEPER_CONNECT", "streampipes-node-zookeeper:2181")
+                        .add("KAFKA_MESSAGE_MAX_BYTES", "5000012")
+                        .add("KAFKA_FETCH_MESSAGE_MAX_BYTES", "5000012")
+                        .add("KAFKA_REPLICA_FETCH_MAX_BYTES", "10000000")
                         .build())
-                .withLabels(ContainerLabels.with(SP_CONTAINER_ID, retrieveNodeType(), ContainerType.BROKER))
-                .withVolumes(
-                        ContainerVolumesBuilder.create()
-                                .add("/var/lib/streampipes/kafka", "/kafka", false)
+                .withLabels(ContainerLabels.with(StreamPipesDockerServiceID.SP_SVC_KAFKA_ID, retrieveNodeType(),
+                        ContainerType.BROKER))
+                .withVolumes(ContainerVolumesBuilder.create()
+                        .add("streampipes-kafka-vol", "/kafka", false)
                         .build())
                 .build();
     }

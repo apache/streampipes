@@ -35,6 +35,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.util.List;
 
 public class NodeManager {
@@ -75,7 +77,10 @@ public class NodeManager {
                 NodeInfoDescriptionBuilder.create(NodeConstants.NODE_CONTROLLER_ID)
                         .withHostname(NodeConstants.NODE_HOSTNAME)
                         .withPort(NodeConstants.NODE_PORT)
-                        .withNodeBroker(NodeConstants.NODE_BROKER_HOST, NodeConstants.NODE_BROKER_PORT)
+                        .withNodeBroker(
+                                NodeConstants.NODE_BROKER_HOST,
+                                NodeConstants.NODE_BROKER_PORT,
+                                NodeConstants.NODE_BROKER_PROTOCOL)
                         .staticNodeMetadata(
                                 NodeConstants.NODE_TYPE,
                                 NodeConstants.NODE_MODEL,
@@ -140,14 +145,15 @@ public class NodeManager {
 
     public boolean register() {
         boolean connected = false;
+        boolean registered = false;
         try {
             String body = JacksonSerializer.getObjectMapper().writeValueAsString(this.nodeInfo);
             String endpoint = generateRegistrationEndpoint();
 
-            LOG.info("Trying to register node controller at node management: " + endpoint);
-
             while (!connected) {
-                connected = post(endpoint, body);
+                LOG.info("Trying to register node controller at StreamPipes cluster management: " + endpoint);
+                connected = isReady(NodeControllerConfig.INSTANCE.backendLocation(),
+                        NodeControllerConfig.INSTANCE.backendPort());
                 if (!connected) {
                     LOG.info("Retrying in {} seconds", (RETRY_INTERVAL_MS / 1000));
                     try {
@@ -157,11 +163,16 @@ public class NodeManager {
                     }
                 }
             }
-            LOG.info("Successfully registered node controller at node management");
+
+            registered = post(endpoint, body);
+            if (registered) {
+                LOG.info("Successfully registered node controller at StreamPipes cluster management");
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return connected;
+        return registered;
     }
 
 
@@ -171,7 +182,7 @@ public class NodeManager {
             String body = JacksonSerializer.getObjectMapper().writeValueAsString(this.nodeInfo);
             String endpoint = generateSyncronizationEndpoint();
 
-            LOG.info("Trying to sync node updates with node management: " + endpoint);
+            LOG.info("Trying to sync node updates with StreamPipes cluster management: " + endpoint);
 
             while (!connected) {
                 connected = post(endpoint, body);
@@ -184,7 +195,7 @@ public class NodeManager {
                     }
                 }
             }
-            LOG.info("Successfully synced node controller with node management");
+            LOG.info("Successfully synced node controller with StreamPipes cluster management");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -240,6 +251,18 @@ public class NodeManager {
     }
 
     // Helpers
+
+    private static boolean isReady(String host, int port) {
+        try {
+            InetSocketAddress sa = new InetSocketAddress(host, port);
+            Socket ss = new Socket();
+            ss.connect(sa, 1000);
+            ss.close();
+        } catch(Exception e) {
+            return false;
+        }
+        return true;
+    }
 
     private boolean registered(DockerContainer container) {
         return this.nodeInfo.getRegisteredContainers().contains(container);

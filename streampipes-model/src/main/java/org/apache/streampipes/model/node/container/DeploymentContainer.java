@@ -65,10 +65,16 @@ public abstract class DeploymentContainer extends UnnamedStreamPipesEntity {
     @RdfProperty(StreamPipes.DEPLOYMENT_CONTAINER_VOLUMES)
     private List<String> volumes;
 
+    @OneToMany(fetch = FetchType.EAGER,
+            cascade = {CascadeType.ALL})
+    @RdfProperty(StreamPipes.DEPLOYMENT_CONTAINER_DEPENDENCIES)
+    private List<String> dependsOnContainers;
+
     public DeploymentContainer() {
         this.envVars = new ArrayList<>();
         this.labels = new HashMap<>();
         this.volumes = new ArrayList<>();
+        this.dependsOnContainers = new ArrayList<>();
     }
 
     public DeploymentContainer(String elementId) {
@@ -76,6 +82,7 @@ public abstract class DeploymentContainer extends UnnamedStreamPipesEntity {
         this.envVars = new ArrayList<>();
         this.labels = new HashMap<>();
         this.volumes = new ArrayList<>();
+        this.dependsOnContainers = new ArrayList<>();
     }
 
     public DeploymentContainer(DeploymentContainer other) {
@@ -83,7 +90,8 @@ public abstract class DeploymentContainer extends UnnamedStreamPipesEntity {
     }
 
     public DeploymentContainer(String imageUri, String containerName, String serviceId, String[] containerPorts,
-                               List<String> envVars, Map<String, String> labels, List<String> volumes) {
+                               List<String> envVars, Map<String, String> labels, List<String> volumes,
+                               List<String> dependsOnContainers) {
         this.imageUri = imageUri;
         this.containerName = containerName;
         this.serviceId = serviceId;
@@ -91,6 +99,7 @@ public abstract class DeploymentContainer extends UnnamedStreamPipesEntity {
         this.envVars = envVars;
         this.labels = labels;
         this.volumes = volumes;
+        this.dependsOnContainers = dependsOnContainers;
     }
 
     public String getImageUri() {
@@ -146,5 +155,13 @@ public abstract class DeploymentContainer extends UnnamedStreamPipesEntity {
 
     public void setVolumes(List<String> volumes) {
         this.volumes = volumes;
+    }
+
+    public List<String> getDependsOnContainers() {
+        return dependsOnContainers;
+    }
+
+    public void setDependsOnContainers(List<String> dependsOnContainers) {
+        this.dependsOnContainers = dependsOnContainers;
     }
 }

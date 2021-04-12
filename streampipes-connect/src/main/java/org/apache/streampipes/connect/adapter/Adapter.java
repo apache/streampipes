@@ -169,17 +169,22 @@ public abstract class Adapter<T extends AdapterDescription> implements Connector
             // use edge protocol
             SpEdgeNodeProtocol edgeNodeProtocol = BackendConfig.INSTANCE
                     .getMessagingSettings()
-                    .getEdgeNodeProtocol();
+                    .getPrioritizedEdgeProtocols()
+                    .get(0);
 
             if (GroundingService.isEdgeProtocol(edgeNodeProtocol, MqttTransportProtocol.class)) {
                 return new SendToMqttAdapterSink(adapterDescription);
+            } else if (GroundingService.isEdgeProtocol(edgeNodeProtocol, KafkaTransportProtocol.class)) {
+                return new SendToKafkaAdapterSink(adapterDescription);
+            } else {
+                throw new AdapterException("Edge node protocol not supported. " + edgeNodeProtocol);
             }
 
-            throw new AdapterException("Edge node protocol not supported. " + edgeNodeProtocol);
-
         } else {
-            SpProtocol prioritizedProtocol =
-                    BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedProtocols().get(0);
+            SpProtocol prioritizedProtocol = BackendConfig.INSTANCE
+                    .getMessagingSettings()
+                    .getPrioritizedProtocols()
+                    .get(0);
 
             if (GroundingService.isPrioritized(prioritizedProtocol, JmsTransportProtocol.class)) {
                 return new SendToJmsAdapterSink(adapterDescription);

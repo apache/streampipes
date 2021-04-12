@@ -23,22 +23,20 @@ import org.apache.streampipes.node.controller.management.orchestrator.docker.Abs
 
 public class DockerExtensionsContainer extends AbstractStreamPipesDockerContainer {
 
-    private static final String SP_CONTAINER_ID = "svc/org.apache.streampipes.pe.extensions";
-
     @Override
     public DockerContainer declareDockerContainer() {
-        return DockerContainerBuilder.create(SP_CONTAINER_ID)
+        return DockerContainerBuilder.create(StreamPipesDockerServiceID.SP_SVC_EXTENSIONS_ID)
                 .withImage("apachestreampipes/extensions-all-jvm:" + getStreamPipesVersion())
-                .withName("streampipes-extensions")
+                .withContainerName("streampipes-extensions")
                 .withExposedPorts(Ports.withMapping("8090"))
-                .withEnvironmentVariables(
-                        ContainerEnvBuilder.create()
-                                .addNodeEnvs(generateStreamPipesNodeEnvs())
-                                .add("CONSUL_LOCATION", NodeControllerConfig.INSTANCE.consulLocation())
-                                .add("SP_HOST", NodeControllerConfig.INSTANCE.getNodeHost())
-                                .add("SP_PORT", "8090")
+                .withEnvironmentVariables(ContainerEnvBuilder.create()
+                        .addNodeEnvs(generateStreamPipesNodeEnvs())
+                        .add("CONSUL_LOCATION", NodeControllerConfig.INSTANCE.consulLocation())
+                        .add("SP_HOST", NodeControllerConfig.INSTANCE.getNodeHost())
+                        .add("SP_PORT", "8090")
                         .build())
-                .withLabels(ContainerLabels.with(SP_CONTAINER_ID, retrieveNodeType(), ContainerType.EXTENSIONS))
+                .withLabels(ContainerLabels.with(StreamPipesDockerServiceID.SP_SVC_EXTENSIONS_ID, retrieveNodeType(),
+                        ContainerType.EXTENSIONS))
                 .build();
     }
 }

@@ -24,6 +24,8 @@ import com.spotify.docker.client.messages.Container;
 import org.apache.commons.lang.StringUtils;
 import org.apache.streampipes.container.util.ConsulUtil;
 import org.apache.streampipes.model.node.container.DockerContainer;
+import org.apache.streampipes.node.controller.config.ConfigKeys;
+import org.apache.streampipes.node.controller.config.NodeControllerConfig;
 import org.apache.streampipes.node.controller.management.node.NodeManager;
 import org.apache.streampipes.node.controller.management.orchestrator.docker.DockerContainerDeclarerSingleton;
 import org.apache.streampipes.node.controller.management.orchestrator.docker.model.ContainerStatus;
@@ -57,7 +59,7 @@ public class DockerOrchestratorManager implements IContainerOrchestrator {
 
     @Override
     public void init() {
-        DockerContainerDeclarerSingleton.getInstance().getAllDockerContainerAsList().forEach(container -> {
+        DockerContainerDeclarerSingleton.getInstance().getAutoDeploymentDockerContainers().forEach(container -> {
             ContainerDeploymentStatus status = deploy(container);
 
             if (status.getStatus() == ContainerStatus.DEPLOYED) {

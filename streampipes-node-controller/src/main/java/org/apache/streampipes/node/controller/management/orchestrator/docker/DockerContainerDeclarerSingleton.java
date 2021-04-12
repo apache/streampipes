@@ -19,13 +19,12 @@ package org.apache.streampipes.node.controller.management.orchestrator.docker;
 
 
 import org.apache.streampipes.model.node.container.DockerContainer;
+import org.apache.streampipes.node.controller.config.ConfigKeys;
+import org.apache.streampipes.node.controller.container.StreamPipesDockerServiceID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DockerContainerDeclarerSingleton {
     private static final Logger LOG =
@@ -59,5 +58,74 @@ public class DockerContainerDeclarerSingleton {
 
     public List<DockerContainer> getAllDockerContainerAsList() {
         return new ArrayList<>(dockerContainers.values());
+    }
+
+    public List<DockerContainer> getAutoDeploymentDockerContainers() {
+        if ("kafka".equals(System.getenv(ConfigKeys.NODE_BROKER_PROTOCOL))) {
+            remove(StreamPipesDockerServiceID.SP_SVC_MOSQUITTO_ID);
+        } else {
+            remove(StreamPipesDockerServiceID.SP_SVC_KAFKA_ID, StreamPipesDockerServiceID.SP_SVC_ZOOKEEPER_ID);
+        }
+        LinkedHashMap<String, DockerContainer> sorted = sort();
+        return new ArrayList<>(sorted.values());
+    }
+
+    // Helpers
+
+    private LinkedHashMap<String, DockerContainer> sort() {
+        Map<String, List<String>> dependencyGraph = new HashMap<>();
+
+        // initialize
+        dockerContainers.keySet().forEach(k -> dependencyGraph.put(k, new ArrayList<>()));
+
+        // add dependencies
+        dockerContainers.values().forEach(container -> {
+            if (container.getDependsOnContainers().size() > 0) {
+                container.getDependsOnContainers().forEach(d -> {
+                    dependencyGraph.get(d).add(container.getServiceId());
+                });
+            }
+        });
+
+        LinkedHashMap<String, DockerContainer> sortedContainerList = new LinkedHashMap<>();
+        for (String container: topologicalSortBFS(dependencyGraph)) {
+            sortedContainerList.put(container, dockerContainers.get(container));
+        }
+
+        return sortedContainerList;
+    }
+
+    private List<String> topologicalSortBFS(Map<String, List<String>> graph){
+        Map<String, Integer> indegree = new HashMap<>();
+        for(String k : graph.keySet()){
+            if(!indegree.containsKey(k))
+                indegree.put(k, 0);
+            for(String d : graph.get(k))
+                indegree.put(d, 1 + indegree.getOrDefault(d, 0));
+        }
+
+        Queue<String> q = new LinkedList<>();
+
+        for(String v : indegree.keySet()) {
+            if(indegree.get(v)==0)
+                q.add(v);
+        }
+
+        List<String> topologicalSort = new ArrayList<>();
+        while(!q.isEmpty()){
+            String vertex = q.remove();
+            topologicalSort.add(vertex);
+            for(String nextVertex : graph.get(vertex)){
+                indegree.put(nextVertex, indegree.get(nextVertex)-1);
+                if(indegree.get(nextVertex)==0)
+                    q.add(nextVertex);
+            }
+        }
+        return topologicalSort;
+    }
+
+    private void remove(String... keys) {
+        Set<String> filterPredicate = new HashSet<>(Arrays.asList(keys));
+        dockerContainers.keySet().removeAll(filterPredicate);
     }
 }

@@ -222,6 +222,8 @@ public abstract class AbstractPipelineExecutor {
                 .collect(Collectors.toList());
     }
 
+    // TODO: when using kafka as edge protocol it generates duplicate event relays -> check with mqtt as edge
+    //  protocol and fix
     private List<SpDataStreamRelayContainer> generateDataStreamRelays(List<InvocableStreamPipesEntity> graphs) {
         List<SpDataStreamRelayContainer> relays = new ArrayList<>();
 
@@ -242,8 +244,10 @@ public abstract class AbstractPipelineExecutor {
             }
             for (DataProcessorInvocation processor : pipeline.getSepas()) {
                 if (differentDeploymentTargets(processor, graph) && connected(processor, graph)) {
-                    SpDataStreamRelayContainer processorRelay = new SpDataStreamRelayContainer(processor);
-                    relays.add(processorRelay);
+                    if (!relayExists(relays, processor.getDeploymentRunningInstanceId())) {
+                        SpDataStreamRelayContainer processorRelay = new SpDataStreamRelayContainer(processor);
+                        relays.add(processorRelay);
+                    }
                 }
             }
         }
@@ -252,6 +256,18 @@ public abstract class AbstractPipelineExecutor {
 
 
     // Helpers
+
+    /**
+     * Check if relay with deploymentRunningInstanceId of predecessor already exists
+     *
+     * @param relays                        List of existing relays
+     * @param deploymentRunningInstanceId   Id to check
+     * @return boolean
+     */
+    private boolean relayExists(List<SpDataStreamRelayContainer> relays,
+                                String deploymentRunningInstanceId) {
+        return relays.stream().anyMatch(r -> r.getRunningStreamRelayInstanceId().equals(deploymentRunningInstanceId));
+    }
 
     /**
      * Updates group.id for data processor/sink. Note: KafkaTransportProtocol only!!

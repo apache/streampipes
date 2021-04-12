@@ -22,19 +22,17 @@ import org.apache.streampipes.node.controller.management.orchestrator.docker.Abs
 
 public class DockerZookeeperContainer extends AbstractStreamPipesDockerContainer {
 
-    private static final String SP_CONTAINER_ID = "svc/org.apache.streampipes.node.broker.kafka.zookeeper";
-
     @Override
     public DockerContainer declareDockerContainer() {
-        return DockerContainerBuilder.create(SP_CONTAINER_ID)
+        return DockerContainerBuilder.create(StreamPipesDockerServiceID.SP_SVC_ZOOKEEPER_ID)
                 .withImage("fogsyio/zookeeper:3.4.13")
-                .withName("streampipes-node-zookeeper")
+                .withContainerName("streampipes-node-zookeeper")
                 .withExposedPorts(Ports.withMapping("2181"))
-                .withEnvironmentVariables(
-                        ContainerEnvBuilder.create()
-                                .addNodeEnvs(generateStreamPipesNodeEnvs())
+                .withEnvironmentVariables(ContainerEnvBuilder.create()
+                        .addNodeEnvs(generateStreamPipesNodeEnvs())
                         .build())
-                .withLabels(ContainerLabels.with(SP_CONTAINER_ID, retrieveNodeType(), ContainerType.BROKER))
+                .withLabels(ContainerLabels.with(StreamPipesDockerServiceID.SP_SVC_ZOOKEEPER_ID, retrieveNodeType(),
+                        ContainerType.BROKER))
                 .build();
     }
 }

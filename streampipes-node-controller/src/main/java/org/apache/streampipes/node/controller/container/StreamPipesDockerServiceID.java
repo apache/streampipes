@@ -15,27 +15,11 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.config.backend;
+package org.apache.streampipes.node.controller.container;
 
-public enum SpEdgeNodeProtocol {
-
-    MQTT("MQTT", "org.apache.streampipes.model.grounding.MqttTransportProtocol"),
-    KAFKA("KAFKA","org.apache.streampipes.model.grounding.KafkaTransportProtocol");
-
-    private final String name;
-    private final String protocolClass;
-
-    SpEdgeNodeProtocol(String name, String protocolClass) {
-        this.name = name;
-        this.protocolClass = protocolClass;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getProtocolClass() {
-        return protocolClass;
-    }
-
+public class StreamPipesDockerServiceID {
+    public static String SP_SVC_EXTENSIONS_ID = "svc/org.apache.streampipes.pe.extensions";
+    public static String SP_SVC_MOSQUITTO_ID = "svc/org.apache.streampipes.node.broker.mosquitto";
+    public static String SP_SVC_KAFKA_ID = "svc/org.apache.streampipes.node.broker.kafka";
+    public static String SP_SVC_ZOOKEEPER_ID = "svc/org.apache.streampipes.node.broker.zookeeper";
 }

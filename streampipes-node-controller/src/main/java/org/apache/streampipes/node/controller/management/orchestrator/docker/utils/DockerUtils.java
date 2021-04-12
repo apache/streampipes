@@ -25,6 +25,9 @@ import com.spotify.docker.client.exceptions.DockerCertificateException;
 import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.*;
 import com.spotify.docker.client.shaded.com.google.common.collect.ImmutableList;
+import com.spotify.docker.client.shaded.com.google.common.collect.ImmutableMap;
+import com.spotify.docker.client.shaded.com.google.common.collect.Lists;
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.node.container.DockerContainer;
 import org.apache.streampipes.node.controller.management.orchestrator.docker.model.DockerInfo;
 import org.slf4j.Logger;
@@ -112,24 +115,52 @@ public class DockerUtils {
                     .get()
                     .id();
         } catch (DockerException | InterruptedException e) {
-            LOG.error("Unable to list containers {}", e.toString());
+            throw new SpRuntimeException("Unable to list containers. " + e.getMessage(), e);
         }
-        return "";
     }
-
 
     public String createContainer(DockerContainer p) {
         LOG.info("Create pipeline element container {}", p.getContainerName());
         try {
             return docker.createContainer(getContainerConfig(p), verifyContainerName(p.getContainerName())).id();
         } catch (DockerException | InterruptedException e) {
-            LOG.error("Pipeline element container could not be created. {}", e.toString());
+            throw new SpRuntimeException("Pipeline element container could not be created. " + e.getMessage(), e);
         }
-        return "";
     }
 
     private String verifyContainerName(String containerName) {
         return containerName.startsWith(SP_CONTAINER_PREFIX) ? containerName : SP_CONTAINER_PREFIX + containerName;
+    }
+
+    public void createVolume() throws DockerException, InterruptedException {
+
+        docker.pull("busybox:latest");
+       LOG.info("Create Docker volume");
+       Volume myVolume = Volume.builder()
+                        .name("my-first-vol")
+                        .build();
+
+       HostConfig.Bind bindUsingVolume = HostConfig.Bind.from(myVolume)
+               .to("/app")
+               .build();
+
+       HostConfig hostConfig = HostConfig.builder()
+                .appendBinds(bindUsingVolume)
+                .build();
+
+       ContainerConfig volumeConfig = ContainerConfig.builder()
+                .image("busybox:latest")
+                .hostConfig(hostConfig)
+                .build();
+
+       //docker.createVolume(myVolume);
+        String id = docker.createContainer(volumeConfig, "my-busybox-container").id();
+        LOG.info("containerId: " + id);
+    }
+
+    public void removeVolume() throws DockerException, InterruptedException {
+        LOG.info("Remove Docker volume");
+        docker.removeVolume("my-first-vol");
     }
 
     private ContainerConfig getContainerConfig(DockerContainer p) {
@@ -140,6 +171,7 @@ public class DockerUtils {
                 .labels(p.getLabels())
                 .env(p.getEnvVars())
                 .hostConfig(getHostConfig(SP_CONTAINER_NETWORK, p.getContainerPorts(), p.getVolumes()))
+                .exposedPorts(modifyExposedPorts(p.getContainerPorts()))
                 .networkingConfig(getNetworkingConfig(SP_CONTAINER_NETWORK, p.getContainerName()))
                 .build();
     }
@@ -185,16 +217,25 @@ public class DockerUtils {
         Map<String, List<PortBinding>> portBindings = new HashMap<>();
         if (ports != null) {
             for (String port : ports) {
-                portBindings.put(port + "/tcp", Collections.singletonList(PortBinding.of("0.0.0.0", port)));
+                portBindings.put(port + "/tcp", Lists.newArrayList(PortBinding.of("0.0.0.0", port)));
             }
         }
 
-        if (volumes != null) {
+        if (Objects.requireNonNull(volumes).size() > 0) {
+            List<HostConfig.Bind> allVolumeBinds = new ArrayList<>();
+            for (String volume: volumes) {
+                String hostVol = volume.split(":")[0];
+                String toVol = volume.split(":")[1];
+
+                Volume vol = Volume.builder().name(hostVol).build();
+                allVolumeBinds.add(HostConfig.Bind.from(vol).to(toVol).build());
+            }
+
             return HostConfig.builder()
                     .portBindings(portBindings)
                     .networkMode(network)
                     .restartPolicy(HostConfig.RestartPolicy.unlessStopped())
-                    .appendBinds(volumes)
+                    .appendBinds(allVolumeBinds.toArray(new HostConfig.Bind[0]))
                     .build();
         } else {
             return HostConfig.builder()
@@ -210,7 +251,6 @@ public class DockerUtils {
                 .create(new HashMap<String, EndpointConfig>() {{
                     put(network, getEndpointConfig(containerName));}}
                 );
-
     }
 
     private static EndpointConfig getEndpointConfig(String containerName) {
@@ -333,5 +373,13 @@ public class DockerUtils {
         }
 
         return hasNvidiaRuntime;
+    }
+
+    private String[] modifyExposedPorts(String[] containerPorts) {
+        List<String> modifyPorts = new ArrayList<>();
+        for (String port: containerPorts) {
+            modifyPorts.add(port + "/tcp");
+        }
+        return modifyPorts.toArray(new String[0]);
     }
 }

@@ -47,4 +47,5 @@ public class ConfigKeys {
     public static final String RESOURCE_UPDATE_FREQ_SECS = "SP_NODE_RESOURCE_UPDATE_FREQ_SECS";
     public static final String EVENT_BUFFER_SIZE = "SP_NODE_EVENT_BUFFER_SIZE";
     public static final String SP_VERSION = "SP_VERSION";
+    public static final String NODE_BROKER_PROTOCOL = "SP_NODE_BROKER_PROTOCOL";
 }

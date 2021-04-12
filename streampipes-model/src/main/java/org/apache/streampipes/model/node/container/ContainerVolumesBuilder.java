@@ -36,11 +36,11 @@ public class ContainerVolumesBuilder {
         return this;
     }
 
-    public ContainerVolumesBuilder add(String key, String value, boolean readOnly) {
+    public ContainerVolumesBuilder add(String namedVolume, String containerPath, boolean readOnly) {
         if (readOnly) {
-            this.volumes.add(String.format("%s:%s:%s", key, value, "ro"));
+            this.volumes.add(String.format("%s:%s:%s", namedVolume, containerPath, "ro"));
         } else {
-            this.volumes.add(String.format("%s:%s", key, value));
+            this.volumes.add(String.format("%s:%s", namedVolume, containerPath));
         }
         return this;
     }

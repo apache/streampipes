@@ -22,7 +22,6 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.config.backend.SpEdgeNodeProtocol;
 import org.apache.streampipes.config.backend.SpProtocol;
-import org.apache.streampipes.container.util.ConsulUtil;
 import org.apache.streampipes.manager.util.TopicGenerator;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
@@ -40,7 +39,7 @@ public class ProtocolSelector extends GroundingSelector {
 
     private final String outputTopic;
     private final List<SpProtocol> prioritizedProtocols;
-    private final SpEdgeNodeProtocol edgeNodeProtocol;
+    private final List<SpEdgeNodeProtocol> prioritizedEdgeProtocols;
 
     public ProtocolSelector(NamedStreamPipesEntity source, Set<InvocableStreamPipesEntity> targets) {
         super(source, targets);
@@ -61,9 +60,9 @@ public class ProtocolSelector extends GroundingSelector {
         this.prioritizedProtocols = BackendConfig.INSTANCE
                 .getMessagingSettings()
                 .getPrioritizedProtocols();
-        this.edgeNodeProtocol = BackendConfig.INSTANCE
+        this.prioritizedEdgeProtocols = BackendConfig.INSTANCE
                 .getMessagingSettings()
-                .getEdgeNodeProtocol();
+                .getPrioritizedEdgeProtocols();
     }
 
     public TransportProtocol getPreferredProtocol() {
@@ -73,23 +72,12 @@ public class ProtocolSelector extends GroundingSelector {
                     .getTransportProtocol();
         } else {
             if(sourceInvocableOnEdgeNode()) {
-                // use edge node protocol
-                if (matches(edgeNodeProtocol, MqttTransportProtocol.class) && supportsProtocol(MqttTransportProtocol.class)) {
-                    if(matchesDeploymentTargets()) {
-                        // get node transport protocol
-                        String nodeControllerId = ((InvocableStreamPipesEntity) source).getDeploymentTargetNodeId();
-
-                        MqttTransportProtocol nodeTransportProtocol = (MqttTransportProtocol)
-                                getNodeBrokerTransportProtocol(nodeControllerId);
-                        nodeTransportProtocol.setTopicDefinition(new SimpleTopicDefinition(outputTopic));
-
-                       return nodeTransportProtocol;
-                    } else {
-                        MqttTransportProtocol tp = (MqttTransportProtocol)
-                                ((InvocableStreamPipesEntity) source).getInputStreams().stream()
-                                        .filter(s -> (s.getEventGrounding().getTransportProtocol() instanceof MqttTransportProtocol))
-                                        .findFirst().get().getEventGrounding().getTransportProtocol();
-                        return new MqttTransportProtocol(tp.getBrokerHostname(), tp.getPort(), outputTopic);
+                for (SpEdgeNodeProtocol p: prioritizedEdgeProtocols) {
+                    // use edge node protocol
+                    if (matches(p, MqttTransportProtocol.class) && supportsProtocol(MqttTransportProtocol.class)) {
+                        return mqttTransportProtocolForEdge();
+                    } else if (matches(p, KafkaTransportProtocol.class) && supportsProtocol(KafkaTransportProtocol.class)) {
+                        return kafkaTransportProtocolForEdge();
                     }
                 }
             } else {
@@ -106,6 +94,58 @@ public class ProtocolSelector extends GroundingSelector {
                 }
             }
             throw new IllegalArgumentException("Could not get preferred transport protocol");
+        }
+    }
+
+    private TransportProtocol mqttTransportProtocolForEdge() {
+        if(matchesDeploymentTargets()) {
+            return mqttTransportProtocolForEdge(true);
+        } else {
+            return mqttTransportProtocolForEdge(false);
+        }
+    }
+
+    private TransportProtocol mqttTransportProtocolForEdge(boolean matchingDeploymentTarget) {
+        if (matchingDeploymentTarget) {
+            // get node transport protocol
+            String nodeControllerId = ((InvocableStreamPipesEntity) source).getDeploymentTargetNodeId();
+            MqttTransportProtocol nodeTransportProtocol = (MqttTransportProtocol)
+                    getNodeBrokerTransportProtocol(nodeControllerId);
+            nodeTransportProtocol.setTopicDefinition(new SimpleTopicDefinition(outputTopic));
+
+            return nodeTransportProtocol;
+        } else {
+            MqttTransportProtocol tp = (MqttTransportProtocol)
+                    ((InvocableStreamPipesEntity) source).getInputStreams().stream()
+                            .filter(s -> (s.getEventGrounding().getTransportProtocol() instanceof MqttTransportProtocol))
+                            .findFirst().get().getEventGrounding().getTransportProtocol();
+            return new MqttTransportProtocol(tp.getBrokerHostname(), tp.getPort(), outputTopic);
+        }
+    }
+
+    private TransportProtocol kafkaTransportProtocolForEdge() {
+        if(matchesDeploymentTargets()) {
+            return kafkaTransportProtocolForEdge(true);
+        } else {
+            return kafkaTransportProtocolForEdge(false);
+        }
+    }
+
+    private TransportProtocol kafkaTransportProtocolForEdge(boolean matchingDeploymentTarget) {
+        if (matchingDeploymentTarget) {
+            // get node transport protocol
+            String nodeControllerId = ((InvocableStreamPipesEntity) source).getDeploymentTargetNodeId();
+            KafkaTransportProtocol nodeTransportProtocol = (KafkaTransportProtocol)
+                    getNodeBrokerTransportProtocol(nodeControllerId);
+            nodeTransportProtocol.setTopicDefinition(new SimpleTopicDefinition(outputTopic));
+
+            return nodeTransportProtocol;
+        } else {
+            KafkaTransportProtocol tp = (KafkaTransportProtocol)
+                    ((InvocableStreamPipesEntity) source).getInputStreams().stream()
+                            .filter(s -> (s.getEventGrounding().getTransportProtocol() instanceof KafkaTransportProtocol))
+                            .findFirst().get().getEventGrounding().getTransportProtocol();
+            return new KafkaTransportProtocol(tp.getBrokerHostname(), tp.getKafkaPort(), outputTopic);
         }
     }
 

@@ -40,6 +40,7 @@ public enum NodeControllerConfig {
     private static final String DEFAULT_NODE_HOST = "host.docker.internal";
     private static final String DEFAULT_NODE_CONTROLLER_HOST = "streampipes-node-controller";
     private static final String DEFAULT_NODE_BROKER_HOST = "streampipes-node-broker";
+    private static final String DEFAULT_NODE_BROKER_PROTOCOL = "mqtt";
     private static final String DEFAULT_BACKEND_HOST = "host.docker.internal";
 
     // Default ports: service endpoint ports
@@ -209,6 +210,14 @@ public enum NodeControllerConfig {
                 ConfigKeys.NODE_TYPE,
                 DEFAULT_NODE_TYPE,
                 String.class);
+    }
+
+    public String getNodeBrokerProtocol() {
+        return getEnvOrDefault(
+                ConfigKeys.NODE_BROKER_PROTOCOL,
+                DEFAULT_NODE_BROKER_PROTOCOL,
+                String.class
+        );
     }
 
     public String getApiKey() {

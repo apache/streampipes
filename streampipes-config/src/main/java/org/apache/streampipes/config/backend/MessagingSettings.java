@@ -29,7 +29,7 @@ public class MessagingSettings {
 
   private List<SpDataFormat> prioritizedFormats;
   private List<SpProtocol> prioritizedProtocols;
-  private SpEdgeNodeProtocol edgeNodeProtocol;
+  private List<SpEdgeNodeProtocol> prioritizedEdgeProtocols;
 
   public static MessagingSettings fromDefault() {
     List<SpProtocol> prioritzedProtocolList;
@@ -51,22 +51,38 @@ public class MessagingSettings {
       prioritzedProtocolList = Arrays.asList(SpProtocol.KAFKA, SpProtocol.MQTT, SpProtocol.JMS);
     }
 
+    List<SpEdgeNodeProtocol> prioritizedEdgeProtocolList;
+    if (System.getenv(BackendConfigKeys.PRIORITIZED_EDGE_PROTOCOL) != null) {
+      switch (System.getenv(BackendConfigKeys.PRIORITIZED_EDGE_PROTOCOL).toLowerCase()) {
+        case "mqtt":
+          prioritizedEdgeProtocolList = Arrays.asList(SpEdgeNodeProtocol.MQTT, SpEdgeNodeProtocol.KAFKA);
+          break;
+        case "kafka":
+          prioritizedEdgeProtocolList = Arrays.asList(SpEdgeNodeProtocol.KAFKA, SpEdgeNodeProtocol.MQTT);
+          break;
+        default:
+          prioritizedEdgeProtocolList = Arrays.asList(SpEdgeNodeProtocol.MQTT, SpEdgeNodeProtocol.KAFKA);
+      }
+    } else {
+      prioritizedEdgeProtocolList = Arrays.asList(SpEdgeNodeProtocol.MQTT, SpEdgeNodeProtocol.KAFKA);
+    }
+
     return new MessagingSettings(
             1638400, 5000012, 20, 2,
             Arrays.asList(SpDataFormat.JSON, SpDataFormat.CBOR, SpDataFormat.FST, SpDataFormat.SMILE),
-            prioritzedProtocolList, SpEdgeNodeProtocol.MQTT);
+            prioritzedProtocolList, prioritizedEdgeProtocolList);
   }
 
   public MessagingSettings(Integer batchSize, Integer messageMaxBytes, Integer lingerMs,
                            Integer acks, List<SpDataFormat> prioritizedFormats,
-                           List<SpProtocol> prioritizedProtocols, SpEdgeNodeProtocol edgeNodeProtocol) {
+                           List<SpProtocol> prioritizedProtocols, List<SpEdgeNodeProtocol> prioritizedEdgeProtocols) {
     this.batchSize = batchSize;
     this.messageMaxBytes = messageMaxBytes;
     this.lingerMs = lingerMs;
     this.acks = acks;
     this.prioritizedFormats = prioritizedFormats;
     this.prioritizedProtocols = prioritizedProtocols;
-    this.edgeNodeProtocol = edgeNodeProtocol;
+    this.prioritizedEdgeProtocols = prioritizedEdgeProtocols;
   }
 
   public MessagingSettings() {
@@ -121,11 +137,11 @@ public class MessagingSettings {
     this.prioritizedProtocols = prioritizedProtocols;
   }
 
-  public SpEdgeNodeProtocol getEdgeNodeProtocol() {
-    return edgeNodeProtocol;
+  public List<SpEdgeNodeProtocol> getPrioritizedEdgeProtocols() {
+    return prioritizedEdgeProtocols;
   }
 
-  public void setEdgeNodeProtocol(SpEdgeNodeProtocol edgeNodeProtocol) {
-    this.edgeNodeProtocol = edgeNodeProtocol;
+  public void setPrioritizedEdgeProtocols(List<SpEdgeNodeProtocol> prioritizedEdgeProtocols) {
+    this.prioritizedEdgeProtocols = prioritizedEdgeProtocols;
   }
 }
