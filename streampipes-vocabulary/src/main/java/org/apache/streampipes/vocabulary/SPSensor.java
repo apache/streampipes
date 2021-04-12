@@ -31,6 +31,12 @@ public class SPSensor {
   public static final String GYROSCOPE_Y = "http://streampipes.org/hmi/gyroscopeY";
   public static final String GYROSCOPE_Z = "http://streampipes.org/hmi/gyroscopeZ";
 
+  public static final String MAGNETOMETER_X = "http://streampipes.org/hmi/magnetometerX";
+  public static final String MAGNETOMETER_Y = "http://streampipes.org/hmi/magnetometerY";
+  public static final String MAGNETOMETER_Z = "http://streampipes.org/hmi/magnetometerZ";
+
+  public static final String TEMPERATURE = "http://streampipes.org/hmi/temperature";
+
 
   public static final String AMBIENT_LIGHT = "http://streampipes.org/hmi/ambientLight";
 
