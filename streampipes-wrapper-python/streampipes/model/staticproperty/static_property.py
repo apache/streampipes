@@ -31,4 +31,3 @@ class StaticProperty(UnnamedStreamPipesEntity):
 
   def __set_StaticPropertyType(self, staticPropertyType):
     self.staticPropertyType = staticPropertyType
-

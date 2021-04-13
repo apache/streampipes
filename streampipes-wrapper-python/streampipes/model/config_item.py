@@ -33,4 +33,3 @@ class ConfigItem(object):
             d[camel_case] = v
 
         return json.dumps(d)
-        @anushkrishnav
