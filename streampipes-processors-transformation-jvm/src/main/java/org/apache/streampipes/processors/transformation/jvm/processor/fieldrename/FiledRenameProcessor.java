@@ -42,7 +42,7 @@ public class FiledRenameProcessor extends StreamPipesDataProcessor {
     public DataProcessorDescription declareModel() {
         return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.fieldrename")
                 .withLocales(Locales.EN)
-                .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+                .withAssets(Assets.DOCUMENTATION)
                 .requiredStream(StreamRequirementsBuilder
                         .create()
                         .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(), Labels.withId
