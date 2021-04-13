@@ -14,10 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-"""global logging"""
 
-import logging
-
-LOGGING_FORMAT = "%(asctime)s [%(levelname)s] %(name)s — [%(filename)s:%(lineno)s - %(funcName)s()] — %(message)s"
-logging.basicConfig(level=logging.INFO, format=LOGGING_FORMAT)
-logging.getLogger(__name__).addHandler(logging.NullHandler())
+class AbstractStreamPipesEntity:
+    def __init__(self):
+        pass

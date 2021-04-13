@@ -14,10 +14,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-"""global logging"""
+import sys, os
+sys.path.append(os.path.abspath("streampipes-wrapper-python"))
 
-import logging
+from streampipes.model.base.unnamed_streampipes_entity import UnnamedStreamPipesEntity 
 
-LOGGING_FORMAT = "%(asctime)s [%(levelname)s] %(name)s — [%(filename)s:%(lineno)s - %(funcName)s()] — %(message)s"
-logging.basicConfig(level=logging.INFO, format=LOGGING_FORMAT)
-logging.getLogger(__name__).addHandler(logging.NullHandler())
+class StaticProperty(UnnamedStreamPipesEntity):
+  __serialVersionUID = 2509153122084646025
+  
+  
+  def __init__(self):
+      self.__set_StaticPropertyType(staticPropertyType)
+
+  def get_StaticPropertyType(self):
+    return staticPropertyType
+
+  def __set_StaticPropertyType(self, staticPropertyType):
+    self.staticPropertyType = staticPropertyType
