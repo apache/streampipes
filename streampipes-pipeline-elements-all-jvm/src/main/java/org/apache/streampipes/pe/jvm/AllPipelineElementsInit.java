@@ -37,6 +37,7 @@ import org.apache.streampipes.processors.filters.jvm.processor.merge.MergeByTime
 import org.apache.streampipes.processors.filters.jvm.processor.numericalfilter.NumericalFilterController;
 import org.apache.streampipes.processors.filters.jvm.processor.numericaltextfilter.NumericalTextFilterController;
 import org.apache.streampipes.processors.filters.jvm.processor.projection.ProjectionController;
+import org.apache.streampipes.processors.filters.jvm.processor.schema.MergeBySchemaProcessor;
 import org.apache.streampipes.processors.filters.jvm.processor.textfilter.TextFilterController;
 import org.apache.streampipes.processors.filters.jvm.processor.threshold.ThresholdDetectionController;
 import org.apache.streampipes.processors.geo.jvm.jts.processor.latLngToGeo.LatLngToGeoController;
@@ -123,6 +124,7 @@ public class AllPipelineElementsInit extends StandaloneModelSubmitter {
             .add(new ProjectionController())
             .add(new MergeByEnrichController())
             .add(new MergeByTimeController())
+            .add(new MergeBySchemaProcessor())
             .add(new RateLimitController())
             .add(new ComposeController())
             .add(new NumericalTextFilterController())
