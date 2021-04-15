@@ -1,8 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="node-controller-fog" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" folderName="edge-extensions">
-    <module name="streampipes-node-controller-container" />
-    <option name="SPRING_BOOT_MAIN_CLASS" value="org.apache.streampipes.node.controller.container.NodeControllerContainerInit" />
-    <option name="ALTERNATIVE_JRE_PATH" />
+  <configuration default="false" name="node-controller-fog" type="Application" factoryName="Application" folderName="node-controller">
     <envs>
       <env name="SP_BACKEND_HOST" value="host.docker.internal" />
       <env name="CONSUL_LOCATION" value="host.docker.internal" />
@@ -14,10 +11,12 @@
       <env name="SP_NODE_BROKER_CONTAINER_HOST" value="localhost" />
       <env name="SP_NODE_BROKER_CONTAINER_PORT" value="1886" />
       <env name="SP_NODE_HAS_GPU" value="true" />
-      <env name="SP_NODE_LOCATION_BUILDING" value="main" />
+      <env name="SP_NODE_LOCATION" value="factorya;shopfloorb" />
       <env name="SP_DEBUG" value="true" />
       <env name="SP_VERSION" value="0.68.0-SNAPSHOT" />
     </envs>
+    <option name="MAIN_CLASS_NAME" value="org.apache.streampipes.node.controller.NodeControllerInit" />
+    <module name="streampipes-node-controller" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
