@@ -38,14 +38,14 @@ import java.util.Optional;
 public class StreamPipesClusterManager extends AbstractClusterManager {
     private static final Logger LOG = LoggerFactory.getLogger(StreamPipesClusterManager.class.getCanonicalName());
 
-    public static List<NodeInfoDescription> getAvailableNodes() {
-        List<NodeInfoDescription> availableAndHealthyNodes = new ArrayList<>();
+    public static List<NodeInfoDescription> getAllActiveAndHealthyNodes() {
+        List<NodeInfoDescription> activeAndHealthyNodes = new ArrayList<>();
         getNodeStorageApi().getAllActiveNodes().forEach(node -> {
             if (ClusterHealthCheck.check(node)) {
-                availableAndHealthyNodes.add(node);
+                activeAndHealthyNodes.add(node);
             }
         });
-        return availableAndHealthyNodes;
+        return activeAndHealthyNodes;
     }
 
     public static List<NodeInfoDescription> getAllNodes() {

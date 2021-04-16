@@ -19,6 +19,11 @@ package org.apache.streampipes.node.controller.management.resource;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.streampipes.node.controller.config.NodeControllerConfig;
+import org.apache.streampipes.node.controller.management.pe.InvocableElementManager;
+import org.apache.streampipes.node.controller.management.rebalance.MigrationManager;
+import org.apache.streampipes.node.controller.management.rebalance.triggers.Comparator;
+import org.apache.streampipes.node.controller.management.rebalance.triggers.TrendTriggerPolicy;
+import org.apache.streampipes.node.controller.management.rebalance.triggers.TriggerPolicy;
 import org.apache.streampipes.node.controller.management.resource.model.ResourceMetrics;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.slf4j.Logger;
@@ -40,7 +45,7 @@ public class ResourceManager {
     private static final Logger LOG =
             LoggerFactory.getLogger(ResourceManager.class.getCanonicalName());
 
-    // OSHI to retreive system information
+    // OSHI to retrieve system information
     private final SystemInfo si = new SystemInfo();
     private final HardwareAbstractionLayer hal = si.getHardware();
     private final OperatingSystem os = si.getOperatingSystem();
@@ -68,6 +73,8 @@ public class ResourceManager {
 
     private final Runnable getCurrentResources = () -> {
 
+        TriggerPolicy<Float> tp = new TrendTriggerPolicy<>(5, Comparator.GREATER, 99f, 5);
+
         while(true) {
             try {
                 // get current node resource metrics
@@ -94,6 +101,13 @@ public class ResourceManager {
 
                 for (Map.Entry<String, Map<String, Long>> k : diskUsage.entrySet()) {
                     resourceMetrics.setFreeDiskSpaceInBytes(k.getValue().get("usableDiskSpace"));
+                }
+
+                tp.addValue(resourceMetrics.getCpuLoadInPercent());
+                if(tp.isTriggered()){
+                    LOG.info("Auto migration triggered.");
+                    if(MigrationManager.migrateRandomPE())
+                        tp.reset();
                 }
 
             } catch (InterruptedException e) {

@@ -17,10 +17,15 @@
  */
 package org.apache.streampipes.rest.impl;
 
+import org.apache.streampipes.manager.migration.MigrationPipelineGenerator;
 import org.apache.streampipes.manager.node.StreamPipesClusterManager;
+import org.apache.streampipes.manager.operations.Operations;
+import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.node.NodeInfoDescription;
+import org.apache.streampipes.model.pipeline.Pipeline;
+import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.rest.api.INode;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 
@@ -103,7 +108,7 @@ public class Node extends AbstractRestResource implements INode {
     @Produces(MediaType.APPLICATION_JSON)
     @Override
     public Response getAvailableNodes() {
-        return ok(StreamPipesClusterManager.getAvailableNodes());
+        return ok(StreamPipesClusterManager.getAllActiveAndHealthyNodes());
     }
 
     @GET
@@ -112,5 +117,28 @@ public class Node extends AbstractRestResource implements INode {
     @Override
     public Response getNodes() {
         return ok(StreamPipesClusterManager.getAllNodes());
+    }
+
+
+    @POST
+    @Path("/rebalance")
+    @Produces(MediaType.APPLICATION_JSON)
+    @JacksonSerialized
+    public Response migrateProcessorToOtherNode(InvocableStreamPipesEntity elementToMigrate) {
+        Pipeline correspondingPipeline = getPipelineStorage().getPipeline(elementToMigrate.getCorrespondingPipeline());
+        Pipeline desiredPipeline = MigrationPipelineGenerator.generateMigrationPipeline(elementToMigrate,
+                correspondingPipeline);
+        //TODO: Handle this case properly
+        if(desiredPipeline == null)
+            return statusMessage(Notifications.error(NotificationType.UNKNOWN_ERROR));
+
+        try {
+            PipelineOperationStatus status = Operations.handlePipelineElementMigration(desiredPipeline,
+                    true, true, true);
+            return ok(status);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return statusMessage(Notifications.error(NotificationType.UNKNOWN_ERROR));
+        }
     }
 }
