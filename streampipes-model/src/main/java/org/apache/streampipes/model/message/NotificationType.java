@@ -71,10 +71,13 @@ public enum NotificationType {
 	ADMIN_USER_CREATED("Creating admin user...", ""),
 
 	NODE_JOIN_SUCCESS("Success", "Node successfully joined"),
-	NODE_JOIN_ERROR("Error", "Node could not be joined");
+	NODE_JOIN_ERROR("Error", "Node could not be joined"),
+
+	OFFLOADING_SUCCESS("Offloading successful", "Pipeline element successfully offloaded"),
+	OFFLOADING_ERROR("Offloading error", "Could not offload pipeline element");
 
 
-	private final String title;
+    private final String title;
 	private final String description;
 	
 	NotificationType(String title, String description) {

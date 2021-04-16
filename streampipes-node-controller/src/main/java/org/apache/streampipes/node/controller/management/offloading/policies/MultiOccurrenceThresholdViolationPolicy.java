@@ -1,4 +1,21 @@
-package org.apache.streampipes.node.controller.management.rebalance.triggers;
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.apache.streampipes.node.controller.management.offloading.policies;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,23 +23,24 @@ import org.slf4j.LoggerFactory;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 
-public class TrendTriggerPolicy<T extends Number> implements TriggerPolicy<T>{
+public class MultiOccurrenceThresholdViolationPolicy<T extends Number> implements OffloadingPolicy<T> {
+    private static final Logger LOG =
+            LoggerFactory.getLogger(MultiOccurrenceThresholdViolationPolicy.class.getCanonicalName());
 
     private Queue<T> history;
-    private T threshold;
-    private Comparator comparator;
-    private int numberOfThresholdViolations;
-    private static final Logger LOG =
-            LoggerFactory.getLogger(TrendTriggerPolicy.class.getCanonicalName());
+    private final T threshold;
+    private final Comparator comparator;
+    private final int numberOfThresholdViolations;
 
-    public TrendTriggerPolicy(int length, Comparator comparator,T threshold, int numberOfThresholdViolations){
+    public MultiOccurrenceThresholdViolationPolicy(int length, Comparator comparator, T threshold,
+                                                   int numberOfThresholdViolations){
         this.history = new ArrayBlockingQueue<>(length);
         this.comparator = comparator;
         this.threshold = threshold;
         this.numberOfThresholdViolations = numberOfThresholdViolations;
     }
 
-    public TrendTriggerPolicy(int length, Comparator comparator, T threshold){
+    public MultiOccurrenceThresholdViolationPolicy(int length, Comparator comparator, T threshold){
         this(length, comparator, threshold, length);
     }
 
@@ -35,7 +53,7 @@ public class TrendTriggerPolicy<T extends Number> implements TriggerPolicy<T>{
     }
 
     @Override
-    public boolean isTriggered() {
+    public boolean isViolated() {
         int numViolations = 0;
         switch (this.comparator){
             case GREATER:
@@ -56,7 +74,7 @@ public class TrendTriggerPolicy<T extends Number> implements TriggerPolicy<T>{
                 break;
         }
         if(numViolations >= this.numberOfThresholdViolations){
-            LOG.info("Trend above threshold detected.");
+            LOG.info("Threshold violation detected");
             return true;
         }
         return false;

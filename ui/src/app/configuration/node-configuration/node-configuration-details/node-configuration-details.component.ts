@@ -28,10 +28,6 @@ import {PanelType} from "../../../core-ui/dialog/base-dialog/base-dialog.model";
 import {DialogService} from "../../../core-ui/dialog/base-dialog/base-dialog.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
-export interface Fruit {
-  name: string;
-}
-
 @Component({
   selector: 'node-configuration-details',
   templateUrl: './node-configuration-details.component.html',

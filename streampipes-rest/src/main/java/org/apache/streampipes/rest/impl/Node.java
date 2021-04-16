@@ -121,24 +121,10 @@ public class Node extends AbstractRestResource implements INode {
 
 
     @POST
-    @Path("/rebalance")
+    @Path("/offload")
     @Produces(MediaType.APPLICATION_JSON)
     @JacksonSerialized
     public Response migrateProcessorToOtherNode(InvocableStreamPipesEntity elementToMigrate) {
-        Pipeline correspondingPipeline = getPipelineStorage().getPipeline(elementToMigrate.getCorrespondingPipeline());
-        Pipeline desiredPipeline = MigrationPipelineGenerator.generateMigrationPipeline(elementToMigrate,
-                correspondingPipeline);
-        //TODO: Handle this case properly
-        if(desiredPipeline == null)
-            return statusMessage(Notifications.error(NotificationType.UNKNOWN_ERROR));
-
-        try {
-            PipelineOperationStatus status = Operations.handlePipelineElementMigration(desiredPipeline,
-                    true, true, true);
-            return ok(status);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return statusMessage(Notifications.error(NotificationType.UNKNOWN_ERROR));
-        }
+        return statusMessage(StreamPipesClusterManager.handleOffloadRequest(elementToMigrate));
     }
 }

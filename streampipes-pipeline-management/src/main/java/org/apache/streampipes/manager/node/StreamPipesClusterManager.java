@@ -17,16 +17,23 @@
  */
 package org.apache.streampipes.manager.node;
 
+import org.apache.streampipes.manager.migration.MigrationPipelineGenerator;
 import org.apache.streampipes.manager.node.management.cluster.AbstractClusterManager;
 import org.apache.streampipes.manager.node.management.cluster.NodeSyncOptions;
 import org.apache.streampipes.manager.node.management.healthcheck.ClusterHealthCheck;
+import org.apache.streampipes.manager.operations.Operations;
+import org.apache.streampipes.model.Response;
+import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.eventrelay.SpDataStreamRelayContainer;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.node.NodeInfoDescription;
+import org.apache.streampipes.model.pipeline.Pipeline;
+import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.storage.api.INodeDataStreamRelay;
 import org.apache.streampipes.storage.api.INodeInfoStorage;
+import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -161,6 +168,29 @@ public class StreamPipesClusterManager extends AbstractClusterManager {
         getNodeDataStreamRelayStorageApi().deleteRelayContainer(relayContainer);
     }
 
+    public static Message handleOffloadRequest(InvocableStreamPipesEntity elementToMigrate) {
+        Pipeline currentPipeline = getPipelineStorageApi().getPipeline(elementToMigrate.getCorrespondingPipeline());
+        Pipeline offloadPipeline = MigrationPipelineGenerator.generateMigrationPipeline(elementToMigrate,
+                currentPipeline);
+        //TODO: Handle this case properly
+        if(offloadPipeline == null)
+            return Notifications.error(NotificationType.UNKNOWN_ERROR);
+
+        try {
+            PipelineOperationStatus status = Operations.handlePipelineElementMigration(offloadPipeline,
+                    true, true, true);
+            if (status.isSuccess()) {
+                return Notifications.success(NotificationType.OFFLOADING_SUCCESS);
+            } else {
+                return Notifications.success(NotificationType.OFFLOADING_ERROR);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Notifications.error(NotificationType.UNKNOWN_ERROR);
+        }
+    }
+
     // Helpers
 
     private static INodeInfoStorage getNodeStorageApi() {
@@ -169,6 +199,10 @@ public class StreamPipesClusterManager extends AbstractClusterManager {
 
     private static INodeDataStreamRelay getNodeDataStreamRelayStorageApi(){
         return StorageDispatcher.INSTANCE.getNoSqlStore().getNodeDataStreamRelayStorage();
+    }
+
+    private static IPipelineStorage getPipelineStorageApi() {
+        return StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI();
     }
 
 }

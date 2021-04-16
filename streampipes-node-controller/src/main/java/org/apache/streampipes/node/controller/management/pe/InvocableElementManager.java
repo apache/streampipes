@@ -38,7 +38,6 @@ import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.node.controller.config.NodeControllerConfig;
 import org.apache.streampipes.node.controller.management.node.NodeManager;
 import org.apache.streampipes.node.controller.management.pe.storage.RunningInvocableInstances;
-import org.apache.streampipes.node.controller.management.resource.model.ResourceMetrics;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -164,10 +163,10 @@ public class InvocableElementManager implements IPipelineElementLifeCycle {
         return response;
     }
 
-    public void postMigrationRequest(InvocableStreamPipesEntity instanceToMigrate){
+    public void postOffloadRequest(InvocableStreamPipesEntity instanceToOffload){
         try {
-            String url = generateBackendMigrationEndpoint();
-            String desc = toJson(instanceToMigrate);
+            String url = generateBackendOffloadEndpoint();
+            String desc = toJson(instanceToOffload);
             org.apache.http.client.fluent.Response resp = Request.Post(url)
                     .bodyString(desc, ContentType.APPLICATION_JSON)
                     .execute();
@@ -306,13 +305,13 @@ public class InvocableElementManager implements IPipelineElementLifeCycle {
                 + NodeControllerConfig.INSTANCE.getNodeControllerId();
     }
 
-    private String generateBackendMigrationEndpoint() {
+    private String generateBackendOffloadEndpoint() {
         return HTTP_PROTOCOL
                 + NodeControllerConfig.INSTANCE.backendLocation()
                 + COLON
                 + NodeControllerConfig.INSTANCE.backendPort()
                 + SLASH
-                + "streampipes-backend/api/v2/users/admin@streampipes.org/nodes/rebalance";
+                + "streampipes-backend/api/v2/users/admin@streampipes.org/nodes/offload";
     }
 
     private void registerAtConsul(InvocableRegistration registration) {
