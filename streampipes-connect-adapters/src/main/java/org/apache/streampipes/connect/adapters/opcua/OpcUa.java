@@ -19,7 +19,7 @@
 package org.apache.streampipes.connect.adapters.opcua;
 
 
-import static org.apache.streampipes.connect.adapters.opcua.utils.OpcUaUtil.updateDataTypes;
+import static org.apache.streampipes.connect.adapters.opcua.utils.OpcUaUtil.retrieveDataTypesFromServer;
 import static org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.Unsigned.uint;
 import static org.eclipse.milo.opcua.stack.core.util.ConversionUtil.toList;
 
@@ -323,7 +323,7 @@ public class OpcUa {
             /* In case a node with sub-nodes is queried, the data types are not detected appropriately.
                This has to be performed separately.
              */
-            updateDataTypes(client, discoveredNodes);
+            retrieveDataTypesFromServer(client, discoveredNodes);
         }
 
         return discoveredNodes;
