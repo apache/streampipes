@@ -72,7 +72,7 @@ public class OpcUa {
     private String opcServerURL;
     private OpcUaClient client;
     private boolean unauthenticated;
-    private Double pullIntervalSeconds;
+    private Integer pullIntervalMilliSeconds;
     private String user;
     private String password;
     private List<Map<String, Integer>> unitIDs = new ArrayList<>();
@@ -95,14 +95,14 @@ public class OpcUa {
      * @param opcServerURL complete OPC UA server url
      * @param namespaceIndex namespace index of the given node
      * @param nodeId node identifier
-     * @param pullIntervalSeconds duration of pull interval in seconds, {@code null} if in subscription mode
+     * @param pullIntervalMilliSeconds duration of pull interval in milliseconds, {@code null} if in subscription mode
      * @param selectedNodeNames list of node names provided from {@link OpcUaUtil#resolveOptions(String, StaticPropertyExtractor)}
      */
-    public OpcUa(String opcServerURL, int namespaceIndex, String nodeId, Double pullIntervalSeconds, List<String> selectedNodeNames) {
+    public OpcUa(String opcServerURL, int namespaceIndex, String nodeId, int pullIntervalMilliSeconds, List<String> selectedNodeNames) {
 
         this.opcServerURL = opcServerURL;
         this.unauthenticated = true;
-        this.pullIntervalSeconds = pullIntervalSeconds;
+        this.pullIntervalMilliSeconds = pullIntervalMilliSeconds;
         this.selectedNodeNames = selectedNodeNames;
 
         if (isInteger(nodeId)) {
@@ -120,11 +120,11 @@ public class OpcUa {
      * @param opcServerPort OPC UA port number
      * @param namespaceIndex namespace index of the given node
      * @param nodeId node identifier
-     * @param pullIntervalSeconds duration of pull interval in seconds, {@code null} if in subscription mode
+     * @param pullIntervalMilliSeconds duration of pull interval in milliseconds, {@code null} if in subscription mode
      * @param selectedNodeNames list of node names provided from {@link OpcUaUtil#resolveOptions(String, StaticPropertyExtractor)}
      */
-    public OpcUa(String opcServer, int opcServerPort, int namespaceIndex, String nodeId, Double pullIntervalSeconds, List<String> selectedNodeNames) {
-        this( opcServer + ":" + opcServerPort, namespaceIndex, nodeId, pullIntervalSeconds, selectedNodeNames);
+    public OpcUa(String opcServer, int opcServerPort, int namespaceIndex, String nodeId, int pullIntervalMilliSeconds, List<String> selectedNodeNames) {
+        this( opcServer + ":" + opcServerPort, namespaceIndex, nodeId, pullIntervalMilliSeconds, selectedNodeNames);
     }
 
     /**
@@ -135,11 +135,11 @@ public class OpcUa {
      * @param nodeId node identifier
      * @param username username to authenticate at the OPC UA server
      * @param password corresponding password to given user name
-     * @param pullIntervalSeconds duration of pull interval in seconds, {@code null} if in subscription mode
+     * @param pullIntervalMilliSeconds duration of pull interval in milliseconds, {@code null} if in subscription mode
      * @param selectedNodeNames list of node names provided from {@link OpcUaUtil#resolveOptions(String, StaticPropertyExtractor)}
      */
-    public OpcUa(String opcServerURL, int namespaceIndex, String nodeId, String username, String password, Double pullIntervalSeconds, List<String> selectedNodeNames) {
-        this(opcServerURL, namespaceIndex, nodeId, pullIntervalSeconds, selectedNodeNames);
+    public OpcUa(String opcServerURL, int namespaceIndex, String nodeId, String username, String password, int pullIntervalMilliSeconds, List<String> selectedNodeNames) {
+        this(opcServerURL, namespaceIndex, nodeId, pullIntervalMilliSeconds, selectedNodeNames);
         this.unauthenticated = false;
         this.user = username;
         this.password = password;
@@ -154,11 +154,11 @@ public class OpcUa {
      * @param nodeId node identifier
      * @param username username to authenticate at the OPC UA server
      * @param password corresponding password to given user name
-     * @param pullIntervalSeconds duration of pull interval in seconds, {@code null} if in subscription mode
+     * @param pullIntervalMilliSeconds duration of pull interval in milliseconds, {@code null} if in subscription mode
      * @param selectedNodeNames list of node names provided from {@link OpcUaUtil#resolveOptions(String, StaticPropertyExtractor)}
      */
-    public OpcUa(String opcServer, int opcServerPort, int namespaceIndex, String nodeId, String username, String password, Double pullIntervalSeconds, List<String> selectedNodeNames) {
-        this (opcServer, opcServerPort, namespaceIndex, nodeId, pullIntervalSeconds, selectedNodeNames);
+    public OpcUa(String opcServer, int opcServerPort, int namespaceIndex, String nodeId, String username, String password, int pullIntervalMilliSeconds, List<String> selectedNodeNames) {
+        this (opcServer, opcServerPort, namespaceIndex, nodeId, pullIntervalMilliSeconds, selectedNodeNames);
         this.unauthenticated = false;
         this.user = username;
         this.password = password;
@@ -181,9 +181,9 @@ public class OpcUa {
         boolean useURL = selectedAlternativeConnection.equals(OpcUaLabels.OPC_URL.name());
         boolean unauthenticated =  selectedAlternativeAuthentication.equals(OpcUaLabels.UNAUTHENTICATED.name());
 
-        Double pullIntervalSeconds = null;
+        Integer pullIntervalSeconds = null;
         if (usePullMode) {
-            pullIntervalSeconds = extractor.singleValueParameter(OpcUaLabels.PULLING_INTERVAL.name(), Double.class);
+            pullIntervalSeconds = extractor.singleValueParameter(OpcUaLabels.PULLING_INTERVAL.name(), Integer.class);
         }
 
         List<String> selectedNodeNames = extractor.selectedMultiValues(OpcUaLabels.AVAILABLE_NODES.name(), String.class);
@@ -564,10 +564,10 @@ public class OpcUa {
     }
 
     public boolean inPullMode() {
-        return !(this.pullIntervalSeconds == null);
+        return !(this.pullIntervalMilliSeconds == null);
     }
 
-    public double getPullIntervalSeconds() {
-        return this.pullIntervalSeconds;
+    public int getPullIntervalMilliSeconds() {
+        return this.pullIntervalMilliSeconds;
     }
 }
