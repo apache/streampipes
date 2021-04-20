@@ -19,6 +19,7 @@
 package org.apache.streampipes.connect.adapters.opcua;
 
 
+import static org.apache.streampipes.connect.adapters.opcua.utils.OpcUaUtil.updateDataTypes;
 import static org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.Unsigned.uint;
 import static org.eclipse.milo.opcua.stack.core.util.ConversionUtil.toList;
 
@@ -68,7 +69,7 @@ public class OpcUa {
 
     static Logger LOG = LoggerFactory.getLogger(OpcUa.class);
 
-    private NodeId node;
+    private NodeId originNodeId;
     private String opcServerURL;
     private OpcUaClient client;
     private boolean unauthenticated;
@@ -107,9 +108,9 @@ public class OpcUa {
 
         if (isInteger(nodeId)) {
             int integerNodeId = Integer.parseInt(nodeId);
-            this.node  = new NodeId(namespaceIndex, integerNodeId);
+            this.originNodeId = new NodeId(namespaceIndex, integerNodeId);
         } else {
-            this.node  = new NodeId(namespaceIndex, nodeId);
+            this.originNodeId = new NodeId(namespaceIndex, nodeId);
         }
     }
 
@@ -308,19 +309,24 @@ public class OpcUa {
     }
 
     /***
-     * Search for related nodes relative to {@link OpcUa#node}
+     * Search for related nodes relative to {@link OpcUa#originNodeId}
      * @param selectNodes indicates whether only nodes of {@link OpcUa#selectedNodeNames} should be returned
-     * @return List of {@link OpcNode}s related to {@link OpcUa#node}
+     * @return List of {@link OpcNode}s related to {@link OpcUa#originNodeId}
      * @throws AdapterException
      */
     public List<OpcNode> browseNode(boolean selectNodes) throws AdapterException {
-        List<OpcNode> referenceDescriptions = browseNode(node, selectNodes);
+        List<OpcNode> discoveredNodes = browseNode(originNodeId, selectNodes);
 
-        if (referenceDescriptions.size() == 0) {
-            referenceDescriptions = getRootNote(node);
+        if (discoveredNodes.size() == 0) {
+            discoveredNodes =  getRootNote(originNodeId);
+        } else if (selectNodes) { // only required for getSchema where the selectedNodes are already set.
+            /* In case a node with sub-nodes is queried, the data types are not detected appropriately.
+               This has to be performed separately.
+             */
+            updateDataTypes(client, discoveredNodes);
         }
 
-        return referenceDescriptions;
+        return discoveredNodes;
     }
 
     private List<OpcNode> getRootNote(NodeId browseRoot) {
@@ -361,9 +367,9 @@ public class OpcUa {
     }
 
     /***
-     * Search for related nodes relative to {@link OpcUa#node}
+     * Search for related nodes relative to {@link OpcUa#originNodeId}
      * @param selectNodes indicates whether only nodes of {@link OpcUa#selectedNodeNames} should be returned
-     * @return List of {@link OpcNode}s related to {@link OpcUa#node}
+     * @return List of {@link OpcNode}s related to {@link OpcUa#originNodeId}
      * @throws AdapterException
      */
     private List<OpcNode> browseNode(NodeId browseRoot, boolean selectNodes) throws AdapterException {
@@ -448,13 +454,6 @@ public class OpcUa {
                         rd.getNodeId();
 
                         result.add(opcNode);
-                        rd.getNodeId().toNodeId(client.getNamespaceTable()).ifPresent(nodeId -> {
-                            try {
-                                browseNode(nodeId, selectNodes);
-                            } catch (AdapterException e) {
-                                e.printStackTrace();
-                            }
-                        });
                     }
                 }
             }
