@@ -18,36 +18,31 @@
 
 package org.apache.streampipes.config.consul;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.orbitz.consul.Consul;
 import com.orbitz.consul.KeyValueClient;
 import com.orbitz.consul.model.kv.Value;
 import org.apache.streampipes.config.SpConfig;
 import org.apache.streampipes.config.SpConfigChangeCallback;
-import org.apache.streampipes.config.model.ConfigItem;
-import org.apache.streampipes.config.model.ConfigurationScope;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
+import org.apache.streampipes.svcdiscovery.api.model.ConfigItem;
+import org.apache.streampipes.svcdiscovery.api.model.ConfigurationScope;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.InetSocketAddress;
-import java.net.MalformedURLException;
-import java.net.Socket;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 public class ConsulSpConfig extends SpConfig implements Runnable {
-    private static final Logger LOG = LoggerFactory.getLogger(ConsulSpConfig.class.getCanonicalName());
+
+    private static final Logger LOG = LoggerFactory.getLogger(ConsulSpConfig.class);
 
     private static final String SLASH = "/";
-    private static final String CONSUL_ENV_LOCATION = "CONSUL_LOCATION";
-    private static final int CONSUL_DEFAULT_PORT = 8500;
     public static final String SERVICE_ROUTE_PREFIX = "sp/v1/";
 
-    private String serviceName;
-    private  KeyValueClient kvClient;
-
+    private final String serviceName;
+    private final KeyValueClient kvClient;
 
     // TODO Implement mechanism to update the client when some configuration parameters change in Consul
     private SpConfigChangeCallback callback;
@@ -65,59 +60,6 @@ public class ConsulSpConfig extends SpConfig implements Runnable {
         this.callback = callback;
         this.configProps = new HashMap<>();
         new Thread(this).start();
-    }
-
-    private static Consul consulInstance() {
-        boolean connected = false;
-        URL consulUrl = consulURL();
-
-        while (!connected) {
-            LOG.info("Trying to connect to Consul to register config items");
-            connected = isReady(consulUrl.getHost(), consulUrl.getPort());
-
-            if (!connected) {
-                LOG.info("Retrying in 1 second");
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        LOG.info("Successfully connected to Consul");
-        return Consul.builder().withUrl(consulURL()).build();
-    }
-
-    private static URL consulURL() {
-        Map<String, String> env = System.getenv();
-        URL url = null;
-
-        if (env.containsKey(CONSUL_ENV_LOCATION)) {
-            try {
-                url = new URL("http", env.get(CONSUL_ENV_LOCATION), CONSUL_DEFAULT_PORT, "");
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-        } else {
-            try {
-                url = new URL("http", "localhost", CONSUL_DEFAULT_PORT, "");
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-        }
-        return url;
-    }
-
-    public static boolean isReady(String host, int port) {
-        try {
-            InetSocketAddress sa = new InetSocketAddress(host, port);
-            Socket ss = new Socket();
-            ss.connect(sa, 1000);
-            ss.close();
-        } catch(Exception e) {
-            return false;
-        }
-        return true;
     }
 
     @Override
@@ -239,8 +181,12 @@ public class ConsulSpConfig extends SpConfig implements Runnable {
     public <T> T getObject(String key, Class<T> clazz, T defaultValue) {
         Optional<String> os = kvClient.getValueAsString(addSn(key));
         if (os.isPresent()) {
-            Gson gson = new Gson();
-            return gson.fromJson(os.get(), clazz);
+            try {
+                return JacksonSerializer.getObjectMapper().readValue(os.get(), clazz);
+            } catch (JsonProcessingException e) {
+                LOG.info("Could not deserialize object", e);
+                return defaultValue;
+            }
         } else {
             return defaultValue;
         }
@@ -275,8 +221,7 @@ public class ConsulSpConfig extends SpConfig implements Runnable {
 
     @Override
     public void setObject(String key, Object value) {
-        Gson gson = new Gson();
-        kvClient.putValue(addSn(key), gson.toJson(value));
+        kvClient.putValue(addSn(key), toJson(value));
     }
 
     private String addSn(String key) {
@@ -285,7 +230,7 @@ public class ConsulSpConfig extends SpConfig implements Runnable {
 
     private ConfigItem fromJson(String content) {
         try {
-          return new Gson().fromJson(content, ConfigItem.class);
+          return JacksonSerializer.getObjectMapper().readValue(content, ConfigItem.class);
         } catch (Exception e) {
           // if old config is used, this is a fallback
           ConfigItem configItem = new ConfigItem();
@@ -305,6 +250,12 @@ public class ConsulSpConfig extends SpConfig implements Runnable {
     }
 
     private String toJson(Object object) {
-        return new Gson().toJson(object);
+        try {
+            return JacksonSerializer.getObjectMapper().writeValueAsString(object);
+        } catch (JsonProcessingException e) {
+            LOG.info("Could not serialize object to JSON", e);
+            return "";
+        }
     }
+
 }

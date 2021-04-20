@@ -39,6 +39,11 @@
             <artifactId>streampipes-vocabulary</artifactId>
             <version>0.68.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.streampipes</groupId>
+            <artifactId>streampipes-service-discovery</artifactId>
+            <version>0.68.0-SNAPSHOT</version>
+        </dependency>
 
         <!-- External dependencies -->
         <dependency>
@@ -48,10 +53,6 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.orbitz.consul</groupId>
-            <artifactId>consul-client</artifactId>
         </dependency>
     </dependencies>
 </project>

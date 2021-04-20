@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.config.model;
+package org.apache.streampipes.svcdiscovery.api.model;
 
 public class ConfigItem {
 

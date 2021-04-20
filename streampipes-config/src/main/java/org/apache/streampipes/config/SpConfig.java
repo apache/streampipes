@@ -19,11 +19,12 @@
 package org.apache.streampipes.config;
 
 import org.apache.streampipes.config.consul.ConsulSpConfig;
-import org.apache.streampipes.config.model.ConfigItem;
-import org.apache.streampipes.config.model.ConfigurationScope;
+import org.apache.streampipes.svcdiscovery.api.model.ConfigItem;
+import org.apache.streampipes.svcdiscovery.api.model.ConfigurationScope;
+import org.apache.streampipes.svcdiscovery.consul.AbstractConsulService;
 
 
-public abstract class SpConfig {
+public abstract class SpConfig extends AbstractConsulService {
 
 
     public SpConfig(String name) {

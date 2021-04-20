@@ -18,28 +18,51 @@
 package org.apache.streampipes.svcdiscovery.consul;
 
 import com.orbitz.consul.Consul;
+import org.apache.streampipes.commons.constants.Envs;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
+import java.net.Socket;
 import java.net.URL;
-import java.util.Map;
 
 public class ConsulProvider {
 
-  private static final String CONSUL_ENV_LOCATION = "CONSUL_LOCATION";
+  private static final Logger LOG = LoggerFactory.getLogger(ConsulProvider.class);
+
   private static final int CONSUL_DEFAULT_PORT = 8500;
   private static final String CONSUL_URL_REGISTER_SERVICE = "v1/agent/service/register";
 
   public Consul consulInstance() {
+    URL consulUrl = consulURL();
+    boolean connected;
+
+    do {
+      LOG.info("Checking if consul is available...");
+      connected = checkConsulAvailable(consulUrl);
+
+      if (!connected) {
+        LOG.info("Retrying in 1 second");
+        try {
+          Thread.sleep(1000);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+      }
+    } while(!connected);
+
+    LOG.info("Successfully connected to Consul");
     return Consul.builder().withUrl(consulURL()).build();
   }
 
   private URL consulURL() {
-    Map<String, String> env = System.getenv();
     URL url = null;
 
-    if (env.containsKey(CONSUL_ENV_LOCATION)) {
+    if (Envs.SP_CONSUL_LOCATION.exists()) {
       try {
-        url = new URL("http", env.get(CONSUL_ENV_LOCATION), CONSUL_DEFAULT_PORT, "");
+        url = new URL("http", Envs.SP_CONSUL_LOCATION.getValue(), CONSUL_DEFAULT_PORT, "");
       } catch (MalformedURLException e) {
         e.printStackTrace();
       }
@@ -51,6 +74,22 @@ public class ConsulProvider {
       }
     }
     return url;
+  }
+
+  private boolean checkConsulAvailable(URL consulUrl) {
+    try {
+      InetSocketAddress sa = new InetSocketAddress(consulUrl.getHost(), consulUrl.getPort());
+      Socket ss = new Socket();
+      ss.connect(sa, 1000);
+      ss.close();
+
+      return true;
+    } catch (IOException e) {
+      LOG.info("Could not connect to Consul instance...");
+      return false;
+    }
+
+
   }
 
   public String makeConsulEndpoint() {

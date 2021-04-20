@@ -17,32 +17,21 @@
  */
 package org.apache.streampipes.commons.constants;
 
-public enum Envs {
+public class CustomEnvs {
 
-  SP_HOST("SP_HOST"),
-  SP_PORT("SP_PORT"),
-  SP_CONSUL_LOCATION("CONSUL_LOCATION");
-
-  private final String envVariableName;
-
-  Envs(String envVariableName) {
-    this.envVariableName = envVariableName;
+  public static boolean exists(String envVariable) {
+    return System.getenv().containsKey(envVariable);
   }
 
-  public boolean exists() {
-    return CustomEnvs.exists(this.envVariableName);
+  public static String getEnv(String envVariable) {
+    return System.getenv(envVariable);
   }
 
-  public String getValue() {
-    return CustomEnvs.getEnv(this.envVariableName);
+  public static Integer getEnvAsInt(String envVariable) {
+    return Integer.parseInt(getEnv(envVariable));
   }
 
-  public Integer getValueAsInt() {
-    return CustomEnvs.getEnvAsInt(this.envVariableName);
+  public static Boolean getEnvAsBoolean(String envVariable) {
+    return Boolean.parseBoolean(envVariable);
   }
-
-  public Boolean getValueAsBoolean() {
-    return CustomEnvs.getEnvAsBoolean(this.envVariableName);
-  }
-
 }

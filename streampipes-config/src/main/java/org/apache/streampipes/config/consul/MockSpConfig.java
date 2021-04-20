@@ -20,8 +20,8 @@ package org.apache.streampipes.config.consul;
 
 import org.apache.streampipes.config.SpConfig;
 import org.apache.streampipes.config.SpConfigChangeCallback;
-import org.apache.streampipes.config.model.ConfigItem;
-import org.apache.streampipes.config.model.ConfigurationScope;
+import org.apache.streampipes.svcdiscovery.api.model.ConfigItem;
+import org.apache.streampipes.svcdiscovery.api.model.ConfigurationScope;
 
 public class MockSpConfig extends SpConfig {
 

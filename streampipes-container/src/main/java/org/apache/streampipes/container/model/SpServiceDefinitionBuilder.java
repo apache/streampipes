@@ -17,6 +17,8 @@
  */
 package org.apache.streampipes.container.model;
 
+import org.apache.streampipes.config.SpConfig;
+import org.apache.streampipes.config.consul.ConsulSpConfig;
 import org.apache.streampipes.container.declarer.Declarer;
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
@@ -26,6 +28,7 @@ import java.util.Arrays;
 public class SpServiceDefinitionBuilder {
 
   private SpServiceDefinition serviceDefinition;
+  private SpConfig config;
 
   public static SpServiceDefinitionBuilder create(String serviceId,
                                                   String serviceName,
@@ -43,6 +46,7 @@ public class SpServiceDefinitionBuilder {
     this.serviceDefinition.setServiceName(serviceName);
     this.serviceDefinition.setServiceDescription(serviceDescription);
     this.serviceDefinition.setDefaultPort(defaultPort);
+    this.config = new ConsulSpConfig(serviceId);
   }
 
   public SpServiceDefinitionBuilder withHostname(String hostname) {
@@ -50,18 +54,18 @@ public class SpServiceDefinitionBuilder {
     return this;
   }
 
-  public SpServiceDefinitionBuilder addConfig(String key, String value) {
-
+  public SpServiceDefinitionBuilder addConfig(String key, String defaultValue, String description) {
+    this.config.register(key, defaultValue, description);
     return this;
   }
 
-  public SpServiceDefinitionBuilder addConfig(String key, Integer value) {
-
+  public SpServiceDefinitionBuilder addConfig(String key, Integer defaultValue, String description) {
+    this.config.register(key, defaultValue, description);
     return this;
   }
 
-  public SpServiceDefinitionBuilder addConfig(String key, Boolean value) {
-
+  public SpServiceDefinitionBuilder addConfig(String key, Boolean defaultValue, String description) {
+    this.config.register(key, defaultValue, description);
     return this;
   }
 

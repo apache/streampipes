@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.config.model;
+package org.apache.streampipes.svcdiscovery.api.model;
 
 public enum ConfigurationScope {
   CONTAINER_STARTUP_CONFIG,
