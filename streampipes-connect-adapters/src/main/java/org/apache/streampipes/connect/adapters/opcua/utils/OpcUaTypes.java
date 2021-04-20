@@ -30,8 +30,10 @@ public class OpcUaTypes {
      * @return StreamPipes internal data type
      */
     public static Datatypes getType(UInteger o) {
-        if (UInteger.valueOf(4).equals(o) | UInteger.valueOf(6).equals(o) | UInteger.valueOf(8).equals(o) | UInteger.valueOf(27).equals(o)) {
+        if (UInteger.valueOf(4).equals(o) | UInteger.valueOf(6).equals(o) |  UInteger.valueOf(27).equals(o)) {
             return Datatypes.Integer;
+        } else if (UInteger.valueOf(8).equals(o) ) {
+            return Datatypes.Long;
         } else if (UInteger.valueOf(11).equals(o)) {
             return Datatypes.Double;
         } else if (UInteger.valueOf(10).equals(o) | UInteger.valueOf(26).equals(o)) {
