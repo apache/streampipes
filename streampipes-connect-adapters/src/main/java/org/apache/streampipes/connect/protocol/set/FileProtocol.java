@@ -27,6 +27,7 @@ import org.apache.streampipes.connect.adapter.model.generic.Format;
 import org.apache.streampipes.connect.adapter.model.generic.Parser;
 import org.apache.streampipes.connect.adapter.model.generic.Protocol;
 import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
+import org.apache.streampipes.connect.adapters.image.ImageZipUtils;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
@@ -56,6 +57,8 @@ public class FileProtocol extends Protocol {
     public static final String ID = "org.apache.streampipes.protocol.set.file";
 
     private String fileFetchUrl;
+    private static final String INTERVAL_KEY = "interval-key";
+    private int timeBetweenReplay;
 
     public FileProtocol() {
     }
@@ -70,6 +73,7 @@ public class FileProtocol extends Protocol {
         return ProtocolDescriptionBuilder.create(ID)
                 .withAssets(Assets.DOCUMENTATION, Assets.ICON)
                 .withLocales(Locales.EN)
+                .requiredIntegerParameter(Labels.withId(INTERVAL_KEY))
                 .sourceType(AdapterSourceType.SET)
                 .category(AdapterType.Generic)
                 .requiredFile(Labels.withId("filePath"), Filetypes.XML, Filetypes.JSON, Filetypes.CSV)
@@ -79,7 +83,7 @@ public class FileProtocol extends Protocol {
     @Override
     public Protocol getInstance(ProtocolDescription protocolDescription, Parser parser, Format format) {
         StaticPropertyExtractor extractor = StaticPropertyExtractor.from(protocolDescription.getConfig());
-
+        this.timeBetweenReplay = extractor.singleValueParameter(INTERVAL_KEY, Integer.class);
         String fileFetchUrl = extractor.selectedFileFetchUrl("filePath");
         return new FileProtocol(parser, format, fileFetchUrl);
     }
@@ -99,6 +103,11 @@ public class FileProtocol extends Protocol {
         try {
             InputStream in = Request.Get(fileFetchUrl).execute().returnContent().asStream();;
             parser.parse(in, stk);
+            try {
+                Thread.sleep(timeBetweenReplay);
+            } catch (InterruptedException e) {
+                logger.error("Error while waiting for next replay round" + e.getMessage());
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
