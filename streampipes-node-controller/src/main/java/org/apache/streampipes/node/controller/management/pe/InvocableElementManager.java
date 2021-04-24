@@ -35,7 +35,7 @@ import org.apache.streampipes.model.node.NodeInfoDescription;
 import org.apache.streampipes.model.pipeline.PipelineElementReconfigurationEntity;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
-import org.apache.streampipes.node.controller.config.NodeControllerConfig;
+import org.apache.streampipes.node.controller.config.NodeConfiguration;
 import org.apache.streampipes.node.controller.management.node.NodeManager;
 import org.apache.streampipes.node.controller.management.pe.storage.RunningInvocableInstances;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
@@ -296,20 +296,20 @@ public class InvocableElementManager implements IPipelineElementLifeCycle {
 
     private String generateBackendEndpoint() {
         return HTTP_PROTOCOL
-                + NodeControllerConfig.INSTANCE.backendLocation()
+                + NodeConfiguration.getBackendHost()
                 + COLON
-                + NodeControllerConfig.INSTANCE.backendPort()
+                + NodeConfiguration.getBackendPort()
                 + SLASH
                 + "streampipes-backend/api/v2/users/admin@streampipes.org/nodes"
                 + SLASH
-                + NodeControllerConfig.INSTANCE.getNodeControllerId();
+                + NodeConfiguration.getNodeControllerId();
     }
 
     private String generateBackendOffloadEndpoint() {
         return HTTP_PROTOCOL
-                + NodeControllerConfig.INSTANCE.backendLocation()
+                + NodeConfiguration.getBackendHost()
                 + COLON
-                + NodeControllerConfig.INSTANCE.backendPort()
+                + NodeConfiguration.getBackendPort()
                 + SLASH
                 + "streampipes-backend/api/v2/users/admin@streampipes.org/nodes/offload";
     }

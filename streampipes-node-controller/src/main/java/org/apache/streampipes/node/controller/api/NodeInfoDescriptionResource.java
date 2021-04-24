@@ -19,7 +19,7 @@ package org.apache.streampipes.node.controller.api;
 
 import org.apache.streampipes.model.node.NodeInfoDescription;
 import org.apache.streampipes.node.controller.management.node.NodeManager;
-import org.apache.streampipes.node.controller.management.relay.DataStreamRelayManager;;
+import org.apache.streampipes.node.controller.management.relay.DataStreamRelayManager;
 import org.apache.streampipes.node.controller.management.resource.ResourceManager;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 
@@ -42,6 +42,7 @@ public class NodeInfoDescriptionResource extends AbstractResource {
     @PUT
     @JacksonSerialized
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response updateNodeInfo(NodeInfoDescription desc) {
         return ok(NodeManager.getInstance().updateNodeInfoDescription(desc));
     }

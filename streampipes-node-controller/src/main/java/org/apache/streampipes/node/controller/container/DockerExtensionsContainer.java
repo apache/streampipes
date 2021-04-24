@@ -18,7 +18,7 @@
 package org.apache.streampipes.node.controller.container;
 
 import org.apache.streampipes.model.node.container.*;
-import org.apache.streampipes.node.controller.config.NodeControllerConfig;
+import org.apache.streampipes.node.controller.config.NodeConfiguration;
 import org.apache.streampipes.node.controller.management.orchestrator.docker.AbstractStreamPipesDockerContainer;
 
 public class DockerExtensionsContainer extends AbstractStreamPipesDockerContainer {
@@ -31,8 +31,8 @@ public class DockerExtensionsContainer extends AbstractStreamPipesDockerContaine
                 .withExposedPorts(Ports.withMapping("8090"))
                 .withEnvironmentVariables(ContainerEnvBuilder.create()
                         .addNodeEnvs(generateStreamPipesNodeEnvs())
-                        .add("CONSUL_LOCATION", NodeControllerConfig.INSTANCE.consulLocation())
-                        .add("SP_HOST", NodeControllerConfig.INSTANCE.getNodeHost())
+                        .add("CONSUL_LOCATION", NodeConfiguration.getConsulHost())
+                        .add("SP_HOST", NodeConfiguration.getNodeHost())
                         .add("SP_PORT", "8090")
                         .build())
                 .withLabels(ContainerLabels.with(StreamPipesDockerServiceID.SP_SVC_EXTENSIONS_ID, retrieveNodeType(),

@@ -4,7 +4,7 @@
       <env name="SP_NODE_CONTROLLER_ID" value="edge-01.kafka.node-controller" />
       <env name="SP_NODE_BROKER_CONTAINER_PORT" value="9094" />
       <env name="SP_NODE_ACCESSIBLE_FIELD_DEVICE_ROS" value="ros;universalrobot;network;192.168.0.90:9090" />
-      <env name="SP_NODE_LOCATION" value="fzi;holl;UR" />
+      <env name="SP_NODE_TAGS" value="fzi;holl;UR" />
       <env name="SP_DEBUG" value="true" />
       <env name="SP_NODE_ACCESSIBLE_FIELD_DEVICE_ZED" value="zed;camera;usb;/dev/video1" />
       <env name="SP_URL" value="http://host.docker.internal:8030" />

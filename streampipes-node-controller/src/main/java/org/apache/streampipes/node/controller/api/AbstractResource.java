@@ -18,6 +18,8 @@
 package org.apache.streampipes.node.controller.api;
 
 import org.apache.streampipes.model.message.Message;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import javax.ws.rs.core.Response;
 

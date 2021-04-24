@@ -19,7 +19,7 @@ package org.apache.streampipes.node.controller.management;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.node.controller.api.NodeControllerResourceConfig;
-import org.apache.streampipes.node.controller.config.NodeControllerConfig;
+import org.apache.streampipes.node.controller.config.NodeConfiguration;
 import org.apache.streampipes.node.controller.container.DockerExtensionsContainer;
 import org.apache.streampipes.node.controller.container.DockerKafkaContainer;
 import org.apache.streampipes.node.controller.container.DockerMosquittoContainer;
@@ -36,6 +36,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
+
 import javax.annotation.PreDestroy;
 import java.util.Collections;
 
@@ -43,22 +44,16 @@ import java.util.Collections;
 @EnableAutoConfiguration
 @Import({ NodeControllerResourceConfig.class })
 public abstract class NodeControllerSubmitter {
-
-    private static final Logger LOG =
-            LoggerFactory.getLogger(NodeControllerSubmitter.class.getCanonicalName());
+    private static final Logger LOG = LoggerFactory.getLogger(NodeControllerSubmitter.class.getCanonicalName());
 
     public void init() {
 
-        NodeControllerConfig conf = NodeControllerConfig.INSTANCE;
+        LOG.info("Load node controller configuration");
+        NodeConfiguration.loadConfigFromEnvironment();
 
         SpringApplication app = new SpringApplication(NodeControllerSubmitter.class);
-        app.setDefaultProperties(Collections.singletonMap("server.port", conf.getNodeControllerPort()));
+        app.setDefaultProperties(Collections.singletonMap("server.port", NodeConfiguration.getNodeControllerPort()));
         app.run();
-
-        LOG.info("Configured environment variables");
-        System.getenv().entrySet().stream()
-                .filter(e -> e.getKey().startsWith("SP_"))
-                .forEach(System.out::println);
 
         LOG.info("Load node info description");
         NodeManager.getInstance().init();

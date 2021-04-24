@@ -18,7 +18,7 @@
 package org.apache.streampipes.node.controller.container;
 
 import org.apache.streampipes.model.node.container.*;
-import org.apache.streampipes.node.controller.config.NodeControllerConfig;
+import org.apache.streampipes.node.controller.config.NodeConfiguration;
 import org.apache.streampipes.node.controller.management.orchestrator.docker.AbstractStreamPipesDockerContainer;
 
 
@@ -35,7 +35,7 @@ public class DockerKafkaContainer extends AbstractStreamPipesDockerContainer {
                         .addNodeEnvs(generateStreamPipesNodeEnvs())
                         .add("KAFKA_LISTENER_SECURITY_PROTOCOL_MAP", "PLAINTEXT:PLAINTEXT,OUTSIDE:PLAINTEXT")
                         .add("KAFKA_ADVERTISED_LISTENERS",
-                                "PLAINTEXT://:9092,OUTSIDE://" + NodeControllerConfig.INSTANCE.getNodeHost() + ":9094")
+                                "PLAINTEXT://:9092,OUTSIDE://" + NodeConfiguration.getNodeHost() + ":9094")
                         .add("KAFKA_LISTENERS", "PLAINTEXT://:9092,OUTSIDE://:9094")
                         .add("KAFKA_INTER_BROKER_LISTENER_NAME", "PLAINTEXT")
                         .add("KAFKA_ADVERTISED_HOST_NAME", "streampipes-node-broker")

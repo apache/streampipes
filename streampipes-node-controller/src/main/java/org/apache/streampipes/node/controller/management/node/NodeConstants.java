@@ -27,7 +27,7 @@ import org.apache.streampipes.model.node.resources.hardware.CPU;
 import org.apache.streampipes.model.node.resources.hardware.DISK;
 import org.apache.streampipes.model.node.resources.hardware.GPU;
 import org.apache.streampipes.model.node.resources.hardware.MEM;
-import org.apache.streampipes.node.controller.config.NodeControllerConfig;
+import org.apache.streampipes.node.controller.config.NodeConfiguration;
 import org.apache.streampipes.node.controller.management.orchestrator.docker.model.DockerInfo;
 import org.apache.streampipes.node.controller.management.orchestrator.docker.utils.DockerUtils;
 import oshi.SystemInfo;
@@ -53,16 +53,15 @@ public class NodeConstants {
 
 
     // accessible node constants
-    public static final String NODE_CONTROLLER_ID = NodeControllerConfig.INSTANCE.getNodeControllerId();
-    public static final String NODE_HOSTNAME = NodeControllerConfig.INSTANCE.getNodeHost();
-    public static final int NODE_PORT = NodeControllerConfig.INSTANCE.getNodeControllerPort();
-    public static final String NODE_BROKER_HOST = NodeControllerConfig.INSTANCE.getNodeBrokerHost();
-    public static final int NODE_BROKER_PORT = NodeControllerConfig.INSTANCE.getNodeBrokerPort();
-    public static final String NODE_BROKER_PROTOCOL = NodeControllerConfig.INSTANCE.getNodeBrokerProtocol();
-    public static final String NODE_TYPE = NodeControllerConfig.INSTANCE.getNodeType();
-    public static final List<String> NODE_LOCATION_TAGS = NodeControllerConfig.INSTANCE.getNodeLocations();
-    public static final List<String> SUPPORTED_PIPELINE_ELEMENTS =
-            NodeControllerConfig.INSTANCE.getSupportedPipelineElements();
+    public static final String NODE_CONTROLLER_ID = NodeConfiguration.getNodeControllerId();
+    public static final String NODE_HOSTNAME = NodeConfiguration.getNodeHost();
+    public static final int NODE_PORT = NodeConfiguration.getNodeControllerPort();
+    public static final String NODE_BROKER_HOST = NodeConfiguration.getNodeBrokerHost();
+    public static final int NODE_BROKER_PORT = NodeConfiguration.getNodeBrokerPort();
+    public static final String NODE_BROKER_PROTOCOL = NodeConfiguration.getNodeBrokerProtocol();
+    public static final String NODE_TYPE = NodeConfiguration.getNodeType();
+    public static final List<String> NODE_LOCATION_TAGS = NodeConfiguration.getNodeTags();
+    public static final List<String> SUPPORTED_PIPELINE_ELEMENTS = NodeConfiguration.getSupportedPipelineElements();
     public static final String NODE_MODEL = !printComputerSystem(hal.getComputerSystem()).equals("")  ?
             printComputerSystem(hal.getComputerSystem()) : "n/a";
     public static final List<DeploymentContainer> REGISTERED_DOCKER_CONTAINER = getRegisteredDockerContainer();
@@ -70,7 +69,7 @@ public class NodeConstants {
     public static final String NODE_KERNEL_VERSION = docker.getKernelVersion();
     public static final ContainerRuntime NODE_CONTAINER_RUNTIME = getContainerRuntime();
     public static final List<FieldDeviceAccessResource> FIELD_DEVICE_ACCESS_RESOURCE_LIST =
-            NodeControllerConfig.INSTANCE.getFieldDeviceAccessResources();
+            NodeConfiguration.getFieldDeviceAccessResources();
     public static final CPU NODE_CPU = getNodeCpu();
     public static final MEM NODE_MEMORY = getNodeMemory();
     public static final DISK NODE_DISK = getNodeDisk();
@@ -124,12 +123,12 @@ public class NodeConstants {
     // TODO: get node GPU info programmatically
     private static GPU getNodeGpu(){
         GPU gpu = new GPU();
-        if (!NodeControllerConfig.INSTANCE.hasNodeGpu()) {
+        if (!NodeConfiguration.isGpuAccelerated()) {
             gpu.setCores(0);
             gpu.setType(null);
         } else {
-            gpu.setCores(NodeControllerConfig.INSTANCE.getGpuCores());
-            gpu.setType(NodeControllerConfig.INSTANCE.getGpuType());
+            gpu.setCores(NodeConfiguration.getGpuCores());
+            gpu.setType(NodeConfiguration.getGpuType());
         }
         return gpu;
     }

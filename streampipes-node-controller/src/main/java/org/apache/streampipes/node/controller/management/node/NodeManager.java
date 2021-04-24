@@ -29,7 +29,7 @@ import org.apache.streampipes.model.node.*;
 import org.apache.streampipes.model.node.container.DeploymentContainer;
 import org.apache.streampipes.model.node.container.DockerContainer;
 import org.apache.streampipes.model.node.meta.GeoLocation;
-import org.apache.streampipes.node.controller.config.NodeControllerConfig;
+import org.apache.streampipes.node.controller.config.NodeConfiguration;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -152,8 +152,7 @@ public class NodeManager {
 
             while (!connected) {
                 LOG.info("Trying to register node controller at StreamPipes cluster management: " + endpoint);
-                connected = isReady(NodeControllerConfig.INSTANCE.backendLocation(),
-                        NodeControllerConfig.INSTANCE.backendPort());
+                connected = isReady(NodeConfiguration.getBackendHost(), NodeConfiguration.getBackendPort());
                 if (!connected) {
                     LOG.info("Retrying in {} seconds", (RETRY_INTERVAL_MS / 1000));
                     try {
@@ -237,7 +236,7 @@ public class NodeManager {
     private Response get(String endpoint) throws IOException {
         return Request.Get(endpoint)
                 .connectTimeout(CONNECT_TIMEOUT_MS)
-                .addHeader("Authorization", "Bearer " + NodeControllerConfig.INSTANCE.getApiKey())
+                .addHeader("Authorization", "Bearer " + NodeConfiguration.getNodeApiKey())
                 .execute();
     }
 
@@ -292,9 +291,9 @@ public class NodeManager {
 
     private String generateBaseEndpoint() {
         return  PROTOCOL
-                + NodeControllerConfig.INSTANCE.backendLocation()
+                + NodeConfiguration.getBackendHost()
                 + COLON
-                + NodeControllerConfig.INSTANCE.backendPort()
+                + NodeConfiguration.getBackendPort()
                 + BACKEND_BASE_ROUTE;
     }
 }

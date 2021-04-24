@@ -4,10 +4,10 @@
       <env name="SP_NODE_CONTROLLER_ID" value="edge-01.node-controller" />
       <env name="SP_NODE_BROKER_CONTAINER_PORT" value="1884" />
       <env name="SP_NODE_ACCESSIBLE_FIELD_DEVICE_ROS" value="ros;universalrobot;network;192.168.0.90:9090" />
-      <env name="SP_NODE_LOCATION" value="fzi;holl;UR" />
+      <env name="SP_NODE_TAGS" value="fzi;holl;UR" />
       <env name="SP_DEBUG" value="true" />
       <env name="SP_NODE_ACCESSIBLE_FIELD_DEVICE_ZED" value="zed;camera;usb;/dev/video1" />
-      <env name="SP_URL" value="http://host.docker.internal:8030" />
+      <env name="SP_URL" value="http://localhost:8030" />
       <env name="SP_NODE_CONTROLLER_URL" value="http://edge01.example.de:7077" />
     </envs>
     <option name="MAIN_CLASS_NAME" value="org.apache.streampipes.node.controller.NodeControllerInit" />

@@ -19,7 +19,7 @@ package org.apache.streampipes.node.controller.management.resource;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.node.controller.config.NodeControllerConfig;
+import org.apache.streampipes.node.controller.config.NodeConfiguration;
 import org.apache.streampipes.node.controller.management.offloading.AutoOffloadingManager;
 import org.apache.streampipes.node.controller.management.offloading.policies.Comparator;
 import org.apache.streampipes.node.controller.management.offloading.policies.MultiOccurrenceThresholdViolationPolicy;
@@ -72,7 +72,7 @@ public class ResourceManager {
         while(true) {
             try {
                 // get current node resource metrics
-                Thread.sleep( NodeControllerConfig.INSTANCE.getNodeResourceUpdateFreqSecs() * 1000);
+                Thread.sleep( NodeConfiguration.getResourceMonitorFreqSecs() * 1000);
                 retrieveResources();
                 checkOffloadingPolicy();
             } catch (InterruptedException e) {
