@@ -35,7 +35,7 @@ import {ObjectProvider} from "../../services/object-provider.service";
 import {EditorService} from "../../services/editor.service";
 import {PipelineService} from "../../../platform-services/apis/pipeline.service";
 import {ShepherdService} from "../../../services/tour/shepherd.service";
-import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
 import {NodeService} from "../../../platform-services/apis/node.service";
 
@@ -45,6 +45,7 @@ import {NodeService} from "../../../platform-services/apis/node.service";
   styleUrls: ['./save-pipeline.component.scss']
 })
 export class SavePipelineComponent implements OnInit {
+  priorityForm: FormGroup;
 
   pipelineCategories: any;
   startPipelineAfterStorage: any;
@@ -62,10 +63,16 @@ export class SavePipelineComponent implements OnInit {
   disableNodeSelection = new FormControl(true);
   tmpPipeline: Pipeline;
   panelOpenState: boolean;
+  selectedPreemption: boolean;
+  selectedNodeTags: string[];
 
   filteredNodes = new FormControl();
 
   pipelineExecutionPolicies: string[] = ['default', 'locality-aware', 'custom'];
+  pipelinePriorityClasses = [
+    {value: 1, viewValue: 'low'},
+    {value: 5, viewValue: 'medium'},
+    {value: 10, viewValue: 'high'}];
 
   @Input()
   pipeline: Pipeline;
@@ -77,6 +84,7 @@ export class SavePipelineComponent implements OnInit {
   currentModifiedPipelineId: string;
 
   constructor(private editorService: EditorService,
+              private formBuilder: FormBuilder,
               private dialogRef: DialogRef<SavePipelineComponent>,
               private objectProvider: ObjectProvider,
               private pipelineService: PipelineService,
@@ -89,6 +97,12 @@ export class SavePipelineComponent implements OnInit {
 
   ngOnInit() {
     this.tmpPipeline = this.deepCopy(this.pipeline);
+
+    console.log(this.pipeline);
+
+    this.priorityForm = this.formBuilder.group({
+      priorityForm: [null, Validators.required]
+    });
 
     this.getPipelineCategories();
     this.loadAndPrepareEdgeNodes();
@@ -113,12 +127,22 @@ export class SavePipelineComponent implements OnInit {
 
     if (this.currentModifiedPipelineId && this.updateMode === 'update') {
       this.selectedRelayStrategyVal = this.tmpPipeline.eventRelayStrategy;
-      this.selectedPipelineExecutionPolicy = "custom";
-      this.panelOpenState = true;
-      this.disableNodeSelection.setValue(false);
+      this.selectedPreemption = this.tmpPipeline.preemption;
+      this.selectedNodeTags = this.tmpPipeline.nodeTags;
+
+      const selectedPriorityClass = this.pipelinePriorityClasses.find(c => c.value == this.tmpPipeline.priorityScore);
+      this.priorityForm.get('priorityForm').setValue(selectedPriorityClass);
+
+      this.selectedPipelineExecutionPolicy = this.tmpPipeline.executionPolicy;
+      if (this.selectedPipelineExecutionPolicy === "custom"){
+        this.panelOpenState = true;
+        this.disableNodeSelection.setValue(false);
+      }
+
     } else {
       this.selectedRelayStrategyVal = "buffer";
       this.selectedPipelineExecutionPolicy = "locality-aware";
+      this.selectedPreemption = false;
       this.applyLocalityAwarePolicy();
     }
   }
@@ -159,6 +183,20 @@ export class SavePipelineComponent implements OnInit {
       //let processors: DataProcessorInvocation[];
       //processors = this.pipeline.sepas.filter(p => p.connectedTo.some(entry => entry == s.dom));
       this.tmpPipeline.sepas.forEach(processor => {
+        this.deploymentOptions[processor.appId] = [];
+        this.deploymentOptions[processor.appId].push(this.makeDefaultNodeInfo());
+
+        this.nodeService.getAvailableNodes().subscribe((response : NodeInfoDescription []) => {
+          this.edgeNodes = response;
+          this.edgeNodes.forEach(nodeInfo => {
+            // only show nodes that actually have supported pipeline elements registered
+            if (nodeInfo.supportedElements.length != 0 &&
+                nodeInfo.supportedElements.some(appId => appId === processor.appId)) {
+              this.deploymentOptions[processor.appId].push(nodeInfo);
+            }
+          })
+        });
+
         processor.deploymentTargetNodeId = s.deploymentTargetNodeId;
         processor.deploymentTargetNodeHostname = s.deploymentTargetNodeHostname;
         processor.deploymentTargetNodePort = s.deploymentTargetNodePort;
@@ -174,7 +212,6 @@ export class SavePipelineComponent implements OnInit {
 
   private applyTagBasedPolicy(filteredNodes: NodeInfoDescription[]) {
     if (filteredNodes.length > 0) {
-
       this.tmpPipeline.sepas.forEach(processor => {
         this.deploymentOptions[processor.appId] = [];
 
@@ -194,9 +231,11 @@ export class SavePipelineComponent implements OnInit {
   }
 
   private applyDefaultPolicy() {
-    this.tmpPipeline.sepas.forEach(p => {
-      p.deploymentTargetNodeId = "default";
-      // this.deploymentOptions[p.appId].push(this.makeDefaultNodeInfo());
+    this.tmpPipeline.nodeTags = [];
+    this.tmpPipeline.sepas.forEach(processor => {
+      processor.deploymentTargetNodeId = "default";
+      this.deploymentOptions[processor.appId] = []
+      this.deploymentOptions[processor.appId].push(this.makeDefaultNodeInfo());
     });
 
     // this.tmpPipeline.actions.forEach(p => {
@@ -206,7 +245,7 @@ export class SavePipelineComponent implements OnInit {
   }
 
   loadAndPrepareEdgeNodes() {
-    this.nodeService.getAvailableNodes().subscribe(response => {
+    this.nodeService.getAvailableNodes().subscribe((response : NodeInfoDescription []) => {
       this.edgeNodes = response;
       this.addAppIds(this.tmpPipeline.sepas, this.edgeNodes);
       this.addAppIds(this.tmpPipeline.actions, this.edgeNodes);
@@ -287,6 +326,19 @@ export class SavePipelineComponent implements OnInit {
       this.modifyPipelineElementsDeployments(this.tmpPipeline.sepas);
       this.modifyPipelineElementsDeployments(this.tmpPipeline.actions);
       this.tmpPipeline.eventRelayStrategy = this.selectedRelayStrategyVal;
+      this.tmpPipeline.executionPolicy = this.selectedPipelineExecutionPolicy;
+      this.tmpPipeline.preemption = this.selectedPreemption;
+      if (this.selectedPreemption) {
+        this.tmpPipeline.priorityScore = this.priorityForm.get('priorityForm').value.value
+      } else {
+        this.tmpPipeline.priorityScore = 0;
+      }
+      if (this.selectedNodeTags.length > 0 && this.selectedPipelineExecutionPolicy === "custom") {
+        this.tmpPipeline.nodeTags = this.selectedNodeTags;
+      } else {
+        this.tmpPipeline.nodeTags = null;
+      }
+
       this.pipeline = this.tmpPipeline;
       storageRequest = this.pipelineService.updatePipeline(this.pipeline);
     } else {
@@ -294,6 +346,19 @@ export class SavePipelineComponent implements OnInit {
       this.modifyPipelineElementsDeployments(this.tmpPipeline.sepas);
       this.modifyPipelineElementsDeployments(this.tmpPipeline.actions);
       this.tmpPipeline.eventRelayStrategy = this.selectedRelayStrategyVal;
+      this.tmpPipeline.executionPolicy = this.selectedPipelineExecutionPolicy;
+      this.tmpPipeline.preemption = this.selectedPreemption;
+      if (this.selectedPreemption) {
+        this.tmpPipeline.priorityScore = this.priorityForm.get('priorityForm').value.value
+      } else {
+        this.tmpPipeline.priorityScore = 0;
+      }
+      if (this.selectedNodeTags.length > 0 && this.selectedPipelineExecutionPolicy === "custom") {
+        this.tmpPipeline.nodeTags = this.selectedNodeTags;
+      } else {
+        this.tmpPipeline.nodeTags = null;
+      }
+
       this.pipeline = this.tmpPipeline;
       storageRequest = this.pipelineService.storePipeline(this.pipeline);
     }
@@ -340,6 +405,8 @@ export class SavePipelineComponent implements OnInit {
     if (value == "custom") {
       this.panelOpenState = true;
       this.disableNodeSelection.setValue(false);
+      // use same policy for initial mapping
+      this.applyLocalityAwarePolicy()
     } else if (value == "locality-aware") {
       this.panelOpenState = false;
       this.disableNodeSelection.setValue(true);
@@ -349,18 +416,18 @@ export class SavePipelineComponent implements OnInit {
       this.disableNodeSelection.setValue(true);
       this.applyDefaultPolicy();
     }
-    // else if (value == "tag-based") {
-    //   this.panelOpenState = true;
-    //   this.disableNodeSelection.setValue(false);
-    // }
   }
 
   nodesFromSelectedTags(filteredNodes: NodeInfoDescription[]) {
     this.applyTagBasedPolicy(filteredNodes)
   }
 
+  updateNodeTags($event: any) {
+    this.selectedNodeTags = $event;
+  }
 
-  compareFn(c1: any, c2:any): boolean {
-    return c1 && c2 ? c1.id === c2.id : c1 === c2;
+  loadDefaultPreemption() {
+    const selectedPriorityClass = this.pipelinePriorityClasses.find(c => c.value == 1);
+    this.priorityForm.get('priorityForm').setValue(selectedPriorityClass);
   }
 }

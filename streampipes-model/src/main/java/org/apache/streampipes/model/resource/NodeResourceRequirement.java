@@ -32,7 +32,7 @@ import java.util.UUID;
 @Entity
 @TsModel
 @JsonSubTypes({
-        @JsonSubTypes.Type(Hardware.class)
+        @JsonSubTypes.Type(Hardware.class),
 })
 public abstract class NodeResourceRequirement extends UnnamedStreamPipesEntity {
 

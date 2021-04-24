@@ -33,6 +33,15 @@ public class Hardware extends NodeResourceRequirement {
     @RdfProperty(StreamPipes.HAS_GPU_REQUIREMENT)
     private boolean gpu;
 
+    @RdfProperty(StreamPipes.REQUIRES_CPU_CORES)
+    private int cpuCores;
+
+    @RdfProperty(StreamPipes.REQUIRES_MEMORY)
+    private long memory;
+
+    @RdfProperty(StreamPipes.REQUIRES_DISK)
+    private long disk;
+
     public Hardware() {
         super();
     }
@@ -40,11 +49,20 @@ public class Hardware extends NodeResourceRequirement {
     public Hardware(Hardware other) {
         super(other);
         this.gpu = other.isGpu();
+        this.cpuCores = other.getCpuCores();
+        this.memory = other.getMemory();
+        this.disk = other.getDisk();
     }
 
     public Hardware(Hardware other, boolean gpu) {
         super(other);
         this.gpu = gpu;
+    }
+
+    public Hardware(NodeResourceRequirement other, boolean gpu, int cpuCores) {
+        super(other);
+        this.gpu = gpu;
+        this.cpuCores = cpuCores;
     }
 
     public boolean isGpu() {
@@ -53,5 +71,29 @@ public class Hardware extends NodeResourceRequirement {
 
     public void setGpu(boolean gpu) {
         this.gpu = gpu;
+    }
+
+    public int getCpuCores() {
+        return cpuCores;
+    }
+
+    public void setCpuCores(int cpuCores) {
+        this.cpuCores = cpuCores;
+    }
+
+    public long getMemory() {
+        return memory;
+    }
+
+    public void setMemory(long memory) {
+        this.memory = memory;
+    }
+
+    public long getDisk() {
+        return disk;
+    }
+
+    public void setDisk(long disk) {
+        this.disk = disk;
     }
 }

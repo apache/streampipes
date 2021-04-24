@@ -150,15 +150,19 @@ public abstract class AbstractPipelineExecutor {
                 //DataStream
                 SpDataStream stream = (SpDataStream) pred;
                 if (differentDeploymentTargets(stream, target)){
-                    //There is a relay that needs to be removed
-                    dataStreamRelays.add(new SpDataStreamRelay(new EventGrounding(target.getInputStreams()
-                            .get(getIndex(pred.getDOM(), target))
-                            .getEventGrounding())));
 
                     String id = extractUniqueAdpaterId(stream.getElementId());
-                    String relayStrategy = pipeline.getEventRelayStrategy();
+                    Optional<SpDataStreamRelayContainer> existingRelay = getRelayContainerById(id);
 
-                    relays.add(new SpDataStreamRelayContainer(id, relayStrategy, stream, dataStreamRelays));
+                    // only add relay if not existing
+                    if(!existingRelay.isPresent()) {
+                        //There is a relay that needs to be removed
+                        dataStreamRelays.add(new SpDataStreamRelay(new EventGrounding(target.getInputStreams()
+                                .get(getIndex(pred.getDOM(), target))
+                                .getEventGrounding())));
+                        String relayStrategy = pipeline.getEventRelayStrategy();
+                        relays.add(new SpDataStreamRelayContainer(id, relayStrategy, stream, dataStreamRelays));
+                    }
                 }
             }
         });
@@ -239,7 +243,9 @@ public abstract class AbstractPipelineExecutor {
                     String id = extractUniqueAdpaterId(stream.getElementId());
                     String relayStrategy = pipeline.getEventRelayStrategy();
 
-                    relays.add(new SpDataStreamRelayContainer(id, relayStrategy, stream, dataStreamRelays));
+                    if (!relayExists(relays, id)) {
+                        relays.add(new SpDataStreamRelayContainer(id, relayStrategy, stream, dataStreamRelays));
+                    }
                 }
             }
             for (DataProcessorInvocation processor : pipeline.getSepas()) {
@@ -256,6 +262,15 @@ public abstract class AbstractPipelineExecutor {
 
 
     // Helpers
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    private Optional<SpDataStreamRelayContainer> getRelayContainerById(String id) {
+        return StorageDispatcher.INSTANCE.getNoSqlStore().getNodeDataStreamRelayStorage().getRelayContainerById(id);
+    }
 
     /**
      * Check if relay with deploymentRunningInstanceId of predecessor already exists
