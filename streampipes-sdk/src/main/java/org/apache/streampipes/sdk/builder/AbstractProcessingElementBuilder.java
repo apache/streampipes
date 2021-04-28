@@ -106,7 +106,7 @@ public abstract class AbstractProcessingElementBuilder<BU extends
    * @param resourceRequirements: A bundle of collected {@link CollectedResourceRequirements}
    * @return this
    */
-  public BU requiredResource(CollectedResourceRequirements resourceRequirements) {
+  public BU requiredNodeResources(CollectedResourceRequirements resourceRequirements) {
     this.resourceRequirements.addAll(resourceRequirements.getResourceRequirements());
     return me();
   }

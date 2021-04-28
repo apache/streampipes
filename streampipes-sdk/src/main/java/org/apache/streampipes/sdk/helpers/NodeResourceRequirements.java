@@ -26,4 +26,13 @@ public class NodeResourceRequirements {
         rp.setGpu(true);
         return rp;
     }
+
+    public static Hardware hardware(boolean requiresGpu, int cpuCores, long memory, long disk) {
+        Hardware rp = new Hardware();
+        rp.setGpu(requiresGpu);
+        rp.setCpuCores(cpuCores);
+        rp.setMemory(memory);
+        rp.setDisk(disk);
+        return rp;
+    }
 }

@@ -73,8 +73,12 @@ public abstract class AbstractClusterManager {
         while (!connected) {
             // call node controller REST endpoints
             switch (request) {
-                case POST: connected = post(url, body);
-                case PUT : connected = put(url, body);
+                case POST:
+                    connected = post(url, body);
+                    break;
+                case PUT :
+                    connected = put(url, body);
+                    break;
             }
 
             if (!connected) {

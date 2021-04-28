@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.node.controller.management.janitor;
 
-import org.apache.streampipes.node.controller.config.NodeControllerConfig;
+import org.apache.streampipes.node.controller.config.NodeConfiguration;
 import org.apache.streampipes.node.controller.management.orchestrator.docker.utils.DockerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +51,7 @@ public class JanitorManager {
 
         ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
         scheduledExecutorService.scheduleAtFixedRate(pruneDocker, 30,
-                NodeControllerConfig.INSTANCE.getPruningFreq(), TimeUnit.MINUTES);
+                NodeConfiguration.getDockerPruningFreqSecs(), TimeUnit.MINUTES);
     }
 
     private final Runnable pruneDocker = () -> {

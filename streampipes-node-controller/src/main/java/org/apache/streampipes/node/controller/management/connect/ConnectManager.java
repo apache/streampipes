@@ -31,7 +31,7 @@ import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.connect.worker.ConnectWorkerContainer;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
-import org.apache.streampipes.node.controller.config.NodeControllerConfig;
+import org.apache.streampipes.node.controller.config.NodeConfiguration;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,8 +45,6 @@ public class ConnectManager {
     private static final String HTTP_PROTOCOL = "http://";
     private static final String COLON = ":";
     private static final String SLASH = "/";
-    private static final String BACKEND_HOST = NodeControllerConfig.INSTANCE.backendLocation();
-    private static final int BACKEND_PORT = NodeControllerConfig.INSTANCE.backendPort();
     private static final String BACKEND_ADMINISTRATION_ROUTE = "/streampipes-backend/api/v2/connect/{username}/master" +
             "/administration";
 
@@ -84,7 +82,7 @@ public class ConnectManager {
 
     // MasterRestClient
     public String register(String username, ConnectWorkerContainer wc) {
-        String endpoint = (backendUrl() + BACKEND_ADMINISTRATION_ROUTE.replace("{username}", username));
+        String endpoint = (NodeConfiguration.getBackendUrl() + BACKEND_ADMINISTRATION_ROUTE.replace("{username}", username));
         LOG.info("Trying to register connect worker at backend: " + endpoint);
         return post(endpoint , jackson(wc)).toString();
     }
@@ -207,11 +205,6 @@ public class ConnectManager {
 
     private String addUserToBaseRoute(String username) {
         return CONNECT_WORKER_BASE_ROUTE.replace("{username}", username);
-    }
-
-
-    private String backendUrl() {
-        return HTTP_PROTOCOL + BACKEND_HOST + COLON + BACKEND_PORT;
     }
 
     private String workerUrl() {

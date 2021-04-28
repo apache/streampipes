@@ -58,6 +58,42 @@
                     <div style="margin-top: 1em">
                         <div fxFlex="100" fxLayout="row">
                             <div fxFlex="50" fxLayout="row" fxLayoutAlign="left top">
+                                <span>Preemption</span>
+                            </div>
+                        </div>
+                        <div fxFlex="50" fxLayout="row" fxLayoutAlign="start center">
+                            <mat-slide-toggle #preemptionSlideToggle color="accent" [(ngModel)]="selectedPreemption"
+                                              (toggleChange)="loadDefaultPreemption()">
+                                {{preemptionSlideToggle.checked ? 'enabled' : 'disabled'}}
+                            </mat-slide-toggle>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 1em" *ngIf="selectedPreemption">
+                        <div fxFlex="100" fxLayout="row">
+                            <div fxFlex="50" fxLayout="row" fxLayoutAlign="left top">
+                                <span>Priority</span>
+                            </div>
+                        </div>
+                        <div fxFlex="50" fxLayout="row" fxLayoutAlign="start center">
+                            <form [formGroup]="priorityForm">
+                            <mat-form-field appearance="fill" color="accent">
+                                <mat-label>Select priority class</mat-label>
+                                <mat-select formControlName="priorityForm" required>
+                                    <mat-option *ngFor="let priority of pipelinePriorityClasses" [value]="priority">
+                                        {{priority.viewValue}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            </form>
+                        </div>
+                    </div>
+
+
+
+                    <div style="margin-top: 1em">
+                        <div fxFlex="100" fxLayout="row">
+                            <div fxFlex="50" fxLayout="row" fxLayoutAlign="left top">
                                 <span>Relay Policy</span>
                             </div>
                         </div>
@@ -95,9 +131,10 @@
                         <div>
                             <b>Deployment Targets</b>
                         </div>
-                        <div style="margin: 1em 0 1em 0;"  *ngIf="selectedPipelineExecutionPolicy=='custom'">
-                            <node-tag-selector [nodes]="edgeNodes"
-                                               (createDynamicallySelectedTags)="nodesFromSelectedTags($event)"></node-tag-selector>
+                        <div style="margin: 1em 0 1em 0;" *ngIf="selectedPipelineExecutionPolicy=='custom'">
+                            <node-tag-selector [nodes]="edgeNodes" [selectedTagsAfterUpdate]="selectedNodeTags"
+                                               (createDynamicallySelectedTags)="nodesFromSelectedTags($event)"
+                                               (emitSelectedNodeTags)="updateNodeTags($event)"></node-tag-selector>
                         </div>
                         <div style="margin-top: 1em">
                             <mat-accordion class="example-headers-align">

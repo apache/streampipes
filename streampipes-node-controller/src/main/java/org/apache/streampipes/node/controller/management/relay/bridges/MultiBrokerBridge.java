@@ -23,7 +23,7 @@ import org.apache.streampipes.messaging.EventProducer;
 import org.apache.streampipes.messaging.EventRelay;
 import org.apache.streampipes.model.grounding.*;
 import org.apache.streampipes.model.eventrelay.metrics.RelayMetrics;
-import org.apache.streampipes.node.controller.config.NodeControllerConfig;
+import org.apache.streampipes.node.controller.config.NodeConfiguration;
 import org.apache.streampipes.sdk.helpers.Tuple3;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +45,7 @@ public abstract class MultiBrokerBridge<T1 extends TransportProtocol, T2 extends
     private final EventRelayStrategy eventRelayStrategy;
     private final ArrayList<byte[]> eventBuffer = new ArrayList<>();
 
-    private final int EVENT_BUFFER_SIZE = NodeControllerConfig.INSTANCE.getEventBufferSize();
+    private final int EVENT_BUFFER_SIZE = NodeConfiguration.getRelayEventBufferSize();
     private final Tuple3<String, Integer, String> relayInfo;
     private boolean isBuffering = false;
 

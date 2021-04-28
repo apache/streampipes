@@ -33,8 +33,13 @@ export class NodeTagSelectorComponent implements OnInit {
   @Input()
   nodes: NodeInfoDescription[];
 
+  @Input()
+  selectedTagsAfterUpdate: string[];
+
   @Output()
   createDynamicallySelectedTags: EventEmitter<NodeInfoDescription[]> = new EventEmitter<NodeInfoDescription[]>();
+
+  @Output() emitSelectedNodeTags = new EventEmitter();
 
   filteredNodes: NodeInfoDescription[] = [];
   nodeTags: NodeTags[] = [];
@@ -50,6 +55,15 @@ export class NodeTagSelectorComponent implements OnInit {
         }
       }
     })
+    if (this.selectedTagsAfterUpdate && this.selectedTagsAfterUpdate.length > 0) {
+      this.selectedTagsAfterUpdate.forEach(oldTag => {
+        this.nodeTags.forEach(entry => {
+          if (entry.name === oldTag) {
+            entry.selected = true;
+          }
+        })
+      })
+    }
   }
 
   onSelectTag(tag: NodeTags) {
@@ -75,5 +89,6 @@ export class NodeTagSelectorComponent implements OnInit {
       });
     });
     this.createDynamicallySelectedTags.emit(this.filteredNodes);
+    this.emitSelectedNodeTags.emit(this.dynamicallySelectedTags);
   }
 }

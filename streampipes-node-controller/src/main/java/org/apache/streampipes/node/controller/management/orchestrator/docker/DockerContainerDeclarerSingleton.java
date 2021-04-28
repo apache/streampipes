@@ -19,7 +19,7 @@ package org.apache.streampipes.node.controller.management.orchestrator.docker;
 
 
 import org.apache.streampipes.model.node.container.DockerContainer;
-import org.apache.streampipes.node.controller.config.ConfigKeys;
+import org.apache.streampipes.node.controller.config.NodeConfiguration;
 import org.apache.streampipes.node.controller.container.StreamPipesDockerServiceID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,7 +61,7 @@ public class DockerContainerDeclarerSingleton {
     }
 
     public List<DockerContainer> getAutoDeploymentDockerContainers() {
-        if ("kafka".equals(System.getenv(ConfigKeys.NODE_BROKER_PROTOCOL))) {
+        if ("kafka".equals(NodeConfiguration.getNodeBrokerProtocol())) {
             remove(StreamPipesDockerServiceID.SP_SVC_MOSQUITTO_ID);
         } else {
             remove(StreamPipesDockerServiceID.SP_SVC_KAFKA_ID, StreamPipesDockerServiceID.SP_SVC_ZOOKEEPER_ID);

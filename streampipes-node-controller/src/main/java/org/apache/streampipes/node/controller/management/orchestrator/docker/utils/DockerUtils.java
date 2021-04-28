@@ -25,7 +25,6 @@ import com.spotify.docker.client.exceptions.DockerCertificateException;
 import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.*;
 import com.spotify.docker.client.shaded.com.google.common.collect.ImmutableList;
-import com.spotify.docker.client.shaded.com.google.common.collect.ImmutableMap;
 import com.spotify.docker.client.shaded.com.google.common.collect.Lists;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.node.container.DockerContainer;

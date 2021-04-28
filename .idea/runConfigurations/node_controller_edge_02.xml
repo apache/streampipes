@@ -4,7 +4,7 @@
       <env name="SP_NODE_CONTROLLER_ID" value="edge-02.node-controller" />
       <env name="SP_NODE_BROKER_CONTAINER_PORT" value="1887" />
       <env name="SP_NODE_ACCESSIBLE_FIELD_DEVICE_ZED" value="zed;camera;usb;/dev/video0" />
-      <env name="SP_NODE_LOCATION" value="fzi;main" />
+      <env name="SP_NODE_TAGS" value="fzi;main" />
       <env name="SP_DEBUG" value="true" />
       <env name="SP_URL" value="http://host.docker.internal:8030" />
       <env name="SP_NODE_CONTROLLER_URL" value="http://edge02.example.de:7078" />

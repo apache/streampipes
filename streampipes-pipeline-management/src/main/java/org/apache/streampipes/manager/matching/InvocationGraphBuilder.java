@@ -35,9 +35,12 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.grounding.*;
 import org.apache.streampipes.model.monitoring.ElementStatusInfoSettings;
+import org.apache.streampipes.model.node.NodeInfoDescription;
 import org.apache.streampipes.model.output.OutputStrategy;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.sdk.helpers.Tuple2;
+import org.apache.streampipes.storage.api.INodeInfoStorage;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.*;
 import java.util.List;
@@ -264,22 +267,19 @@ public class InvocationGraphBuilder {
   }
 
   private String getTargetNodeBrokerHost(InvocableStreamPipesEntity t) {
-    return ConsulUtil.getValueForRoute(
-            makeNodeControllerConfigRoute(t) + NODE_BROKER_CONTAINER_HOST, String.class);
+    Optional<NodeInfoDescription> targetNode = getNodeStorageApi().getNode(t.getDeploymentTargetNodeId());
+    if (targetNode.isPresent()) {
+      return targetNode.get().getHostname();
+    }
+    throw new SpRuntimeException("Deployment target node not found");
   }
 
   private int getTargetNodeBrokerPort(InvocableStreamPipesEntity t) {
-    return ConsulUtil.getValueForRoute(
-            makeNodeControllerConfigRoute(t) + NODE_BROKER_CONTAINER_PORT, Integer.class);
-  }
-
-  private String makeNodeControllerConfigRoute(InvocableStreamPipesEntity t) {
-    return CONSUL_NODE_CONTROLLER_ROUTE
-            + SLASH
-            + t.getDeploymentTargetNodeHostname()
-            + SLASH
-            + "config"
-            + SLASH;
+    Optional<NodeInfoDescription> targetNode = getNodeStorageApi().getNode(t.getDeploymentTargetNodeId());
+    if (targetNode.isPresent()) {
+      return targetNode.get().getPort();
+    }
+    throw new SpRuntimeException("Deployment target node not found");
   }
 
   private boolean matchingDeploymentTargets(NamedStreamPipesEntity s, InvocableStreamPipesEntity t) {
@@ -464,5 +464,9 @@ public class InvocationGraphBuilder {
 
   private <T extends TransportProtocol> boolean matches(SpEdgeNodeProtocol p, Class<T> clazz) {
     return p.getProtocolClass().equals(clazz.getCanonicalName());
+  }
+
+  private static INodeInfoStorage getNodeStorageApi() {
+    return StorageDispatcher.INSTANCE.getNoSqlStore().getNodeStorage();
   }
 }

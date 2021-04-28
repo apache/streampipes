@@ -11,7 +11,7 @@
       <env name="SP_NODE_BROKER_CONTAINER_HOST" value="localhost" />
       <env name="SP_NODE_BROKER_CONTAINER_PORT" value="1888" />
       <env name="SP_NODE_HAS_GPU" value="true" />
-      <env name="SP_NODE_LOCATION" value="aws" />
+      <env name="SP_NODE_TAGS" value="aws" />
       <env name="SP_DEBUG" value="true" />
       <env name="SP_VERSION" value="0.68.0-SNAPSHOT" />
     </envs>

@@ -47,6 +47,10 @@ public class Pipeline extends ElementComposition {
 
   private String createdByUser;
   private String eventRelayStrategy;
+  private List<String> nodeTags;
+  private String executionPolicy;
+  private int priorityScore;
+  private boolean preemption;
 
   private List<String> pipelineCategories;
 
@@ -144,6 +148,38 @@ public class Pipeline extends ElementComposition {
     this.eventRelayStrategy = eventRelayStrategy;
   }
 
+  public List<String> getNodeTags() {
+    return nodeTags;
+  }
+
+  public void setNodeTags(List<String> nodeTags) {
+    this.nodeTags = nodeTags;
+  }
+
+  public String getExecutionPolicy() {
+    return executionPolicy;
+  }
+
+  public void setExecutionPolicy(String executionPolicy) {
+    this.executionPolicy = executionPolicy;
+  }
+
+  public int getPriorityScore() {
+    return priorityScore;
+  }
+
+  public void setPriorityScore(int priorityScore) {
+    this.priorityScore = priorityScore;
+  }
+
+  public boolean isPreemption() {
+    return preemption;
+  }
+
+  public void setPreemption(boolean preemption) {
+    this.preemption = preemption;
+  }
+
   public boolean isRestartOnSystemReboot() {
     return restartOnSystemReboot;
   }
@@ -165,6 +201,10 @@ public class Pipeline extends ElementComposition {
     pipeline.setPipelineId(pipelineId);
     pipeline.setRev(rev);
     pipeline.setEventRelayStrategy(eventRelayStrategy);
+    pipeline.setExecutionPolicy(executionPolicy);
+    pipeline.setNodeTags(nodeTags);
+    pipeline.setPriorityScore(priorityScore);
+    pipeline.setPreemption(preemption);
     return pipeline;
   }
 

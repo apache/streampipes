@@ -490,6 +490,9 @@ public class StreamPipes {
   public static final String HAS_NODE_RESOURCE_PROPERTY = NS + "hasNodeResourceProperty";
   public static final String NODE_RESOURCE_REQUIREMENT = NS + "NodeResourceRequirement";
   public static final String REQUIRES_RESOURCES = NS + "requiresResources";
+  public static final String REQUIRES_CPU_CORES = NS + "requiresCpuCores";
+  public static final String REQUIRES_MEMORY = NS + "requiresMemory";
+  public static final String REQUIRES_DISK = NS + "requiresDisk";
 
   public static final String HAS_REQUIRED_FILETYPES = NS + "hasRequiredFiletypes";
   public static final String IS_INTERNALLY_MANAGED = NS + "isInternallyManaged";

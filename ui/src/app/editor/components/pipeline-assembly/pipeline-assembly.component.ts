@@ -78,6 +78,10 @@ export class PipelineAssemblyComponent implements OnInit {
     currentPipelineName: any;
     currentPipelineDescription: any;
     currentEventRelayStrategy: any;
+    currentExecutionPolicy: any;
+    currentNodeTags: string[];
+    currentPreemption: boolean;
+    currentPriorityScore: number;
 
     errorMessagesDisplayed: any = false;
 
@@ -219,6 +223,10 @@ export class PipelineAssemblyComponent implements OnInit {
         pipeline.name = this.currentPipelineName;
         pipeline.description = this.currentPipelineDescription;
         pipeline.eventRelayStrategy = this.currentEventRelayStrategy;
+        pipeline.executionPolicy = this.currentExecutionPolicy;
+        pipeline.nodeTags = this.currentNodeTags;
+        pipeline.preemption = this.currentPreemption;
+        pipeline.priorityScore = this.currentPriorityScore;
         if (this.currentModifiedPipelineId) {
             pipeline._id = this.currentModifiedPipelineId;
         }
@@ -249,6 +257,10 @@ export class PipelineAssemblyComponent implements OnInit {
                 this.currentPipelineName = pipeline.name;
                 this.currentPipelineDescription = pipeline.description;
                 this.currentEventRelayStrategy = pipeline.eventRelayStrategy;
+                this.currentExecutionPolicy = pipeline.executionPolicy;
+                this.currentNodeTags = pipeline.nodeTags;
+                this.currentPreemption = pipeline.preemption;
+                this.currentPriorityScore = pipeline.priorityScore;
                 this.rawPipelineModel = this.JsplumbService.makeRawPipeline(pipeline, false);
                 this.displayPipelineInEditor(true);
             });
