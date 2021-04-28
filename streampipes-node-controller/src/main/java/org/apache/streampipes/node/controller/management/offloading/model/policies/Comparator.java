@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.node.controller.management.offloading.policies;
+package org.apache.streampipes.node.controller.management.offloading.model.policies;
 
 public enum Comparator {
     SMALLER,

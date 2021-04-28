@@ -20,10 +20,12 @@ package org.apache.streampipes.node.controller.management.resource;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.node.controller.config.NodeControllerConfig;
-import org.apache.streampipes.node.controller.management.offloading.AutoOffloadingManager;
-import org.apache.streampipes.node.controller.management.offloading.policies.Comparator;
-import org.apache.streampipes.node.controller.management.offloading.policies.MultiOccurrenceThresholdViolationPolicy;
-import org.apache.streampipes.node.controller.management.offloading.policies.OffloadingPolicy;
+import org.apache.streampipes.node.controller.management.offloading.model.OffloadingStrategy;
+import org.apache.streampipes.node.controller.management.offloading.OffloadingPolicyManager;
+import org.apache.streampipes.node.controller.management.offloading.model.policies.Comparator;
+import org.apache.streampipes.node.controller.management.offloading.model.policies.ThresholdViolationOffloadingPolicy;
+import org.apache.streampipes.node.controller.management.offloading.model.property.CPULoadResourceProperty;
+import org.apache.streampipes.node.controller.management.offloading.model.selection.RandomSelectionStrategy;
 import org.apache.streampipes.node.controller.management.resource.model.ResourceMetrics;
 import org.apache.streampipes.node.controller.management.resource.utils.DiskSpace;
 import org.apache.streampipes.node.controller.management.resource.utils.ResourceUtils;
@@ -48,11 +50,13 @@ public class ResourceManager {
     private final OperatingSystem os = si.getOperatingSystem();
     private final Calendar cal = Calendar.getInstance();
     private final ResourceMetrics resourceMetrics = new ResourceMetrics();
-    // Offloading policy
-    private final OffloadingPolicy<Float> multiStepThresholdPolicy = new MultiOccurrenceThresholdViolationPolicy<>(5,
-            Comparator.GREATER,99f, 5);
 
-    private ResourceManager() {}
+    private ResourceManager() {
+        //Offloading Policy
+        OffloadingPolicyManager.getInstance().addOffloadingStrategy(new OffloadingStrategy<Float>(new
+                ThresholdViolationOffloadingPolicy<>(5, Comparator.GREATER,0.6f, 5),
+                new CPULoadResourceProperty(), new RandomSelectionStrategy()));
+    }
 
     public static ResourceManager getInstance() {
         if (instance == null) {
@@ -82,15 +86,7 @@ public class ResourceManager {
     };
 
     private void checkOffloadingPolicy() {
-        multiStepThresholdPolicy.addValue(resourceMetrics.getCpuLoadInPercent());
-        if(multiStepThresholdPolicy.isViolated()){
-            LOG.info("Policy violated. Offloading procedure triggered");
-            if(AutoOffloadingManager.offloadRandom())
-                multiStepThresholdPolicy.reset();
-            else {
-                LOG.info("Offloading procedure aborted - No pipeline element seems to be running");
-            }
-        }
+        OffloadingPolicyManager.getInstance().checkPolicies(resourceMetrics);
     }
 
     private void retrieveResources() {

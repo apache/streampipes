@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.node.controller.management.offloading.policies;
+package org.apache.streampipes.node.controller.management.offloading.model.policies;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,25 +23,29 @@ import org.slf4j.LoggerFactory;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 
-public class MultiOccurrenceThresholdViolationPolicy<T extends Number> implements OffloadingPolicy<T> {
+public class ThresholdViolationOffloadingPolicy<T extends Comparable<T>> implements OffloadingPolicy<T> {
     private static final Logger LOG =
-            LoggerFactory.getLogger(MultiOccurrenceThresholdViolationPolicy.class.getCanonicalName());
+            LoggerFactory.getLogger(ThresholdViolationOffloadingPolicy.class.getCanonicalName());
 
     private Queue<T> history;
     private final T threshold;
     private final Comparator comparator;
     private final int numberOfThresholdViolations;
 
-    public MultiOccurrenceThresholdViolationPolicy(int length, Comparator comparator, T threshold,
-                                                   int numberOfThresholdViolations){
+    public ThresholdViolationOffloadingPolicy(int length, Comparator comparator, T threshold,
+                                              int numberOfThresholdViolations){
         this.history = new ArrayBlockingQueue<>(length);
         this.comparator = comparator;
         this.threshold = threshold;
         this.numberOfThresholdViolations = numberOfThresholdViolations;
     }
 
-    public MultiOccurrenceThresholdViolationPolicy(int length, Comparator comparator, T threshold){
+    public ThresholdViolationOffloadingPolicy(int length, Comparator comparator, T threshold){
         this(length, comparator, threshold, length);
+    }
+
+    public ThresholdViolationOffloadingPolicy(Comparator comparator, T threshold) {
+        this(1, comparator, threshold);
     }
 
     @Override
@@ -58,16 +62,14 @@ public class MultiOccurrenceThresholdViolationPolicy<T extends Number> implement
         switch (this.comparator){
             case GREATER:
                 for(T value : this.history){
-                    //TODO: Replace comparison with sth more robust than conversion into double values (either
-                    // compare double or long values? Or compare BigDecimal values instead?)
-                    if(value.doubleValue() > this.threshold.doubleValue()){
+                    if(value.compareTo(this.threshold) > 0){
                         numViolations++;
                     }
                 }
                 break;
             case SMALLER:
                 for(T value : this.history){
-                    if(value.doubleValue() < this.threshold.doubleValue()){
+                    if(value.compareTo(this.threshold) < 0){
                         numViolations++;
                     }
                 }
