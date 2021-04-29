@@ -54,7 +54,7 @@ public class Mysql extends JdbcClient implements EventSink<MysqlParameters> {
         LOG = params.getGraph().getLogger(Mysql.class);
 
         initializeJdbc(
-                params.getGraph().getInputStreams().get(0).getEventSchema().getEventProperties(),
+                params.getGraph().getInputStreams().get(0).getEventSchema(),
                 params.getHost(),
                 params.getPort(),
                 params.getDB(),
@@ -170,7 +170,7 @@ public class Mysql extends JdbcClient implements EventSink<MysqlParameters> {
 
         StringBuilder statement = new StringBuilder("CREATE TABLE ");
         statement.append(tableName).append(" ( ");
-        statement.append(extractEventProperties(eventProperties)).append(" )");
+        statement.append(extractEventProperties(eventSchema.getEventProperties())).append(" )");
 
         try {
             st.executeUpdate(statement.toString());

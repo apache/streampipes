@@ -24,6 +24,7 @@ import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyNested;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
+import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.sinks.databases.jvm.jdbcclient.model.DbDataTypeFactory;
 import org.apache.streampipes.sinks.databases.jvm.jdbcclient.model.ParameterInformation;
 import org.apache.streampipes.sinks.databases.jvm.jdbcclient.model.SupportedDbEngines;
@@ -55,7 +56,7 @@ public class JdbcClient {
     /**
      * The list of properties extracted from the graph
      */
-    protected List<EventProperty> eventProperties;
+    protected EventSchema eventSchema;
     /**
      * The parameters in the prepared statement {@code ps} together with their index and data type
      */
@@ -70,7 +71,7 @@ public class JdbcClient {
     public JdbcClient() {
     }
 
-    protected void initializeJdbc(List<EventProperty> eventProperties,
+    protected void initializeJdbc(EventSchema eventSchema,
                                   String host,
                                   Integer port,
                                   String databaseName,
@@ -86,7 +87,7 @@ public class JdbcClient {
         this.dbEngine = dbEngine;
         this.allowedRegEx = dbEngine.getAllowedRegex();
         this.logger = logger;
-        this.eventProperties = eventProperties;
+        this.eventSchema = eventSchema;
         try {
             Class.forName(this.dbEngine.getDriverName());
         } catch (ClassNotFoundException e) {
@@ -347,9 +348,9 @@ public class JdbcClient {
 
     /**
      * Creates a table with the name {@link JdbcClient#tableName} and the
-     * properties {@link JdbcClient#eventProperties}. Calls
+     * properties {@link JdbcClient#eventSchema}. Calls
      * {@link JdbcClient#extractEventProperties(List)} internally with the
-     * {@link JdbcClient#eventProperties} to extract all possible columns.
+     * {@link JdbcClient#eventSchema} to extract all possible columns.
      *
      * @throws SpRuntimeException If the {@link JdbcClient#tableName}  is not allowed, if
      *                            executeUpdate throws an SQLException or if {@link JdbcClient#extractEventProperties(List)}
@@ -361,7 +362,7 @@ public class JdbcClient {
 
         StringBuilder statement = new StringBuilder("CREATE TABLE \"");
         statement.append(tableName).append("\" ( ");
-        statement.append(extractEventProperties(eventProperties)).append(" );");
+        statement.append(extractEventProperties(eventSchema.getEventProperties())).append(" );");
 
         try {
             st.executeUpdate(statement.toString());

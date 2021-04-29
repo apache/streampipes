@@ -38,7 +38,7 @@ public class PostgreSql extends JdbcClient implements EventSink<PostgreSqlParame
     // See (https://www.postgresql.org/docs/current/sql-syntax-lexical.html#SQL-SYNTAX-IDENTIFIERS)
     // for allowed postgres identifiers (for the regex)
     initializeJdbc(
-            parameters.getGraph().getInputStreams().get(0).getEventSchema().getEventProperties(),
+            parameters.getGraph().getInputStreams().get(0).getEventSchema(),
             parameters.getPostgreSqlHost(),
             parameters.getPostgreSqlPort(),
             parameters.getDatabaseName(),

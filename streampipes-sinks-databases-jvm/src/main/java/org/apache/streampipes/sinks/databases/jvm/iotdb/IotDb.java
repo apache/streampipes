@@ -52,7 +52,7 @@ public class IotDb extends JdbcClient implements EventSink<IotDbParameters> {
     // time series are written
     //TODO: Add better regular expression
     initializeJdbc(
-            parameters.getGraph().getInputStreams().get(0).getEventSchema().getEventProperties(),
+            parameters.getGraph().getInputStreams().get(0).getEventSchema(),
             parameters.getIotDbHost(),
             parameters.getIotDbPort(),
             "",         // Database does not exist in  IoTDB model
@@ -138,7 +138,7 @@ public class IotDb extends JdbcClient implements EventSink<IotDbParameters> {
   protected void ensureTableExists(String url, String databaseName) throws SpRuntimeException {
     int index = 1;
     parameters.put("timestamp", new ParameterInformation(index++, DbDataTypeFactory.getLong(dbEngine)));
-    for (EventProperty eventProperty : eventProperties) {
+    for (EventProperty eventProperty : eventSchema.getEventProperties()) {
       try {
         if (eventProperty.getRuntimeName().equals(timestampField.substring(4))) {
           continue;
