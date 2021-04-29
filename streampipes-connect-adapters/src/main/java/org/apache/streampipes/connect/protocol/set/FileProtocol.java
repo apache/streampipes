@@ -20,6 +20,7 @@ package org.apache.streampipes.connect.protocol.set;
 
 
 import org.apache.http.client.fluent.Request;
+import org.apache.streampipes.connect.EmitBinaryEvent;
 import org.apache.streampipes.connect.SendToPipeline;
 import org.apache.streampipes.connect.adapter.exception.ParseException;
 import org.apache.streampipes.connect.adapter.guess.SchemaGuesser;
@@ -27,7 +28,6 @@ import org.apache.streampipes.connect.adapter.model.generic.Format;
 import org.apache.streampipes.connect.adapter.model.generic.Parser;
 import org.apache.streampipes.connect.adapter.model.generic.Protocol;
 import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
-import org.apache.streampipes.connect.adapters.image.ImageZipUtils;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
@@ -41,11 +41,12 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -88,6 +89,27 @@ public class FileProtocol extends Protocol {
         return new FileProtocol(parser, format, fileFetchUrl);
     }
 
+    public void parse(InputStream data, EmitBinaryEvent emitBinaryEvent) throws ParseException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(data));
+        boolean result = true;
+        try {
+            while (reader.ready() && result) {
+                String s = reader.readLine();
+                byte[] parseResult = s.getBytes();
+                if (parseResult != null) {
+                    result = emitBinaryEvent.emit(parseResult);
+                }
+                try {
+                    Thread.sleep(timeBetweenReplay);
+                } catch (InterruptedException e) {
+                    logger.error("Error while waiting for next replay round" + e.getMessage());
+                }
+            }
+        } catch (IOException var) {
+            throw new ParseException(var.getMessage());
+        }
+    }
+
     @Override
     public void run(AdapterPipeline adapterPipeline) {
         FileReader fr = null;
@@ -98,16 +120,10 @@ public class FileProtocol extends Protocol {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
         SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
         try {
-            InputStream in = Request.Get(fileFetchUrl).execute().returnContent().asStream();;
-            parser.parse(in, stk);
-            try {
-                Thread.sleep(timeBetweenReplay);
-            } catch (InterruptedException e) {
-                logger.error("Error while waiting for next replay round" + e.getMessage());
-            }
+            InputStream in = Request.Get(fileFetchUrl).execute().returnContent().asStream();
+            parse(in, stk);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
@@ -129,7 +145,7 @@ public class FileProtocol extends Protocol {
 
         List<byte[]> dataByte = parser.parseNEvents(dataInputStream, 20);
 
-        EventSchema eventSchema= parser.getEventSchema(dataByte);
+        EventSchema eventSchema = parser.getEventSchema(dataByte);
 
         GuessSchema result = SchemaGuesser.guessSchma(eventSchema, getNElements(20));
 
