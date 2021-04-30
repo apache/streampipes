@@ -25,8 +25,8 @@ import java.util.List;
 
 public class DataLakeManagementV4 {
 
-    public List<DataLakeMeasure> getAllMeasurementSeries() {
-        List<DataLakeMeasure> dataLakeMeasuresList = DataExplorerUtils.getInfos();
-        return dataLakeMeasuresList;
+    public List<DataLakeMeasure> getAllMeasurements() {
+        List<DataLakeMeasure> allMeasurements = DataExplorerUtils.getInfos();
+        return allMeasurements;
     }
 }

@@ -93,8 +93,8 @@ public class DataLakeResourceV4 extends AbstractRestResource {
             responses = {
                     @ApiResponse(responseCode = "200", description = "array of stored measurement series", content = @Content(array = @ArraySchema(schema = @Schema(implementation = DataLakeMeasure.class))))})
     public Response getAll(@Parameter(in = ParameterIn.PATH, description = "username", required = true) @PathParam("username") String username) {
-        List<DataLakeMeasure> allMeasurementSeries = this.dataLakeManagement.getAllMeasurementSeries();
-        return ok(allMeasurementSeries);
+        List<DataLakeMeasure> allMeasurements = this.dataLakeManagement.getAllMeasurements();
+        return ok(allMeasurements);
     }
 
     @GET
