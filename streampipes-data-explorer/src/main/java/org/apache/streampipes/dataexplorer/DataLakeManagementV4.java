@@ -18,8 +18,10 @@
 
 package org.apache.streampipes.dataexplorer;
 
+import org.apache.streampipes.dataexplorer.query.DeleteDataQuery;
 import org.apache.streampipes.dataexplorer.utils.DataExplorerUtils;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.influxdb.dto.QueryResult;
 
 import java.util.List;
 
@@ -29,4 +31,17 @@ public class DataLakeManagementV4 {
         List<DataLakeMeasure> allMeasurements = DataExplorerUtils.getInfos();
         return allMeasurements;
     }
+
+    public boolean removeAllMeasurements() {
+        List<DataLakeMeasure> allMeasurements = getAllMeasurements();
+
+        for (DataLakeMeasure measure : allMeasurements) {
+            QueryResult queryResult = new DeleteDataQuery(measure).executeQuery();
+            if (queryResult.hasError() || queryResult.getResults().get(0).getError() != null) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
 }

@@ -160,9 +160,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
             responses = {
                     @ApiResponse(responseCode = "200", description = "All measurement series successfully removed")})
     public Response removeAll(@Parameter(in = ParameterIn.PATH, description = "username", required = true) @PathParam("username") String username) {
-        /**
-         * TODO: implementation of method stump
-         */
-        return null;
+        boolean isSuccess = this.dataLakeManagement.removeAllMeasurements();
+        return Response.ok(isSuccess).build();
     }
 }
