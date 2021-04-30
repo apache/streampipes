@@ -14,7 +14,7 @@ import java.util.List;
 
 public class LabelerUtils {
 
-    public static EventSchema resolveOutputStrategy(DataProcessorInvocation processingElement, String labelName) throws SpRuntimeException {
+    public static EventSchema resolveOutputStrategy(DataProcessorInvocation processingElement, String labelName, List<String> labelStrings) throws SpRuntimeException {
 
         List<EventProperty> properties = processingElement
                 .getInputStreams()
@@ -24,6 +24,7 @@ public class LabelerUtils {
 
         properties.add(PrimitivePropertyBuilder
                 .create(Datatypes.String, labelName)
+                .valueSpecification(labelName, "possible label values", labelStrings)
                 .domainProperty(SPSensor.STATE)
                 .scope(PropertyScope.DIMENSION_PROPERTY)
                 .build());
