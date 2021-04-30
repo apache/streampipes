@@ -25,19 +25,35 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.apache.streampipes.dataexplorer.DataLakeManagementV4;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.rest.impl.AbstractRestResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
+
+class Placeholder {
+}
 
 
 @Path("v4/users/{username}/datalake")
-public class DataLakeResourceV4 {
+public class DataLakeResourceV4 extends AbstractRestResource {
 
     private static final Logger logger = LoggerFactory.getLogger(DataLakeResourceV4.class);
+
+    private DataLakeManagementV4 dataLakeManagement;
+
+    public DataLakeResourceV4() {
+        this.dataLakeManagement = new DataLakeManagementV4();
+    }
+
+    public DataLakeResourceV4(DataLakeManagementV4 dataLakeManagement) {
+        this.dataLakeManagement = dataLakeManagement;
+    }
 
 
     @POST
@@ -77,10 +93,8 @@ public class DataLakeResourceV4 {
             responses = {
                     @ApiResponse(responseCode = "200", description = "array of stored measurement series", content = @Content(array = @ArraySchema(schema = @Schema(implementation = DataLakeMeasure.class))))})
     public Response getAll(@Parameter(in = ParameterIn.PATH, description = "username", required = true) @PathParam("username") String username) {
-        /**
-         * TODO: implementation of method stump
-         */
-        return null;
+        List<DataLakeMeasure> allMeasurementSeries = this.dataLakeManagement.getAllMeasurementSeries();
+        return ok(allMeasurementSeries);
     }
 
     @GET
