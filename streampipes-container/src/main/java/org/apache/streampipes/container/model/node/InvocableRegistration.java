@@ -17,21 +17,22 @@ package org.apache.streampipes.container.model.node;/*
  */
 
 import org.apache.streampipes.container.model.consul.ConsulServiceRegistrationBody;
+import org.apache.streampipes.model.base.ConsumableStreamPipesEntity;
 
 import java.util.List;
 
 public class InvocableRegistration {
 
     private ConsulServiceRegistrationBody consulServiceRegistrationBody;
-    private List<String> supportedPipelineElementAppIds;
+    private List<ConsumableStreamPipesEntity> supportedPipelineElements;
 
     public InvocableRegistration() {
     }
 
     public InvocableRegistration(ConsulServiceRegistrationBody consulServiceRegistrationBody,
-                                 List<String> supportedPipelineElementAppIds) {
+                                 List<ConsumableStreamPipesEntity> supportedPipelineElementAppIds) {
         this.consulServiceRegistrationBody = consulServiceRegistrationBody;
-        this.supportedPipelineElementAppIds = supportedPipelineElementAppIds;
+        this.supportedPipelineElements = supportedPipelineElementAppIds;
     }
 
     public ConsulServiceRegistrationBody getConsulServiceRegistrationBody() {
@@ -42,11 +43,11 @@ public class InvocableRegistration {
         this.consulServiceRegistrationBody = consulServiceRegistrationBody;
     }
 
-    public List<String> getSupportedPipelineElementAppIds() {
-        return supportedPipelineElementAppIds;
+    public List<ConsumableStreamPipesEntity> getSupportedPipelineElements() {
+        return supportedPipelineElements;
     }
 
-    public void setSupportedPipelineElementAppIds(List<String> supportedPipelineElementAppIds) {
-        this.supportedPipelineElementAppIds = supportedPipelineElementAppIds;
+    public void setSupportedPipelineElements(List<ConsumableStreamPipesEntity> supportedPipelineElements) {
+        this.supportedPipelineElements = supportedPipelineElements;
     }
 }

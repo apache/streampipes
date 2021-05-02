@@ -29,10 +29,13 @@ import org.apache.streampipes.messaging.jms.ActiveMQPublisher;
 import org.apache.streampipes.messaging.kafka.SpKafkaProducer;
 import org.apache.streampipes.messaging.mqtt.MqttPublisher;
 import org.apache.streampipes.model.Response;
+import org.apache.streampipes.model.base.ConsumableStreamPipesEntity;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.grounding.*;
 import org.apache.streampipes.model.node.NodeInfoDescription;
 import org.apache.streampipes.model.pipeline.PipelineElementReconfigurationEntity;
+import org.apache.streampipes.model.resource.Hardware;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.node.controller.config.NodeConfiguration;
@@ -49,6 +52,7 @@ import java.net.Socket;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class InvocableElementManager implements IPipelineElementLifeCycle {
 
@@ -167,10 +171,9 @@ public class InvocableElementManager implements IPipelineElementLifeCycle {
         try {
             String url = generateBackendOffloadEndpoint();
             String desc = toJson(instanceToOffload);
-            org.apache.http.client.fluent.Response resp = Request.Post(url)
+            Request.Post(url)
                     .bodyString(desc, ContentType.APPLICATION_JSON)
                     .execute();
-            resp.returnContent();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -258,7 +261,8 @@ public class InvocableElementManager implements IPipelineElementLifeCycle {
     }
 
     private void updateAndSyncNodeInfoDescription(InvocableRegistration registration) {
-        setSupportedPipelineElements(registration.getSupportedPipelineElementAppIds());
+        setSupportedPipelineElements(getSupportedEntities(registration).stream()
+                .map(NamedStreamPipesEntity::getAppId).collect(Collectors.toList()));
         try {
             String url = generateBackendEndpoint();
             String desc = toJson(getNodeInfoDescription());
@@ -268,6 +272,17 @@ public class InvocableElementManager implements IPipelineElementLifeCycle {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private List<ConsumableStreamPipesEntity> getSupportedEntities(InvocableRegistration registration){
+        //Check if the node supports the entity (atm checks if it has a GPU) TODO: simplify; check for other Hardware
+        return registration.getSupportedPipelineElements().stream().filter(nse -> (!nse.getResourceRequirements().stream()
+                .filter(req -> req instanceof Hardware).filter(req -> ((Hardware) req).isGpu()).map(req -> ((Hardware) req)
+                        .isGpu()).findFirst().orElse(false) ||
+                nse.getResourceRequirements().stream().filter(req -> req instanceof Hardware)
+                        .filter(req -> ((Hardware) req).isGpu()).map(req -> ((Hardware) req)
+                        .isGpu()).findFirst().orElse(false) == getNodeInfoDescription()
+                .getNodeResources().getHardwareResource().getGpu().getCores()>0)).collect(Collectors.toList());
     }
 
     private List<InvocableStreamPipesEntity> getAllInvocables() {

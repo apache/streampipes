@@ -23,6 +23,9 @@ import org.apache.streampipes.container.model.EdgeExtensionsConfig;
 import org.apache.streampipes.container.model.node.InvocableRegistration;
 import org.apache.streampipes.container.model.consul.ConsulServiceRegistrationBody;
 import org.apache.streampipes.container.model.consul.HealthCheckConfiguration;
+import org.apache.streampipes.model.base.ConsumableStreamPipesEntity;
+import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,18 +47,18 @@ public class NodeControllerUtil {
     private static final String NODE_CONTROLLER_REGISTER_SVC_URL = "api/v2/node/element/register";
 
     // StandaloneModelSubmitter for pipeline-elements-all-jvm
-    public static void register(String id, String host, int port, List<String> supportedAppIds) {
+    public static void register(String id, String host, int port, List<ConsumableStreamPipesEntity> supportedEntities) {
         String body = createSvcBody(PE_TAG, makeSvcId(host, id), host,
-                port, Arrays.asList(PE_TAG, SECONDARY_PE_IDENTIFIER_TAG), supportedAppIds);
+                port, Arrays.asList(PE_TAG, SECONDARY_PE_IDENTIFIER_TAG), supportedEntities);
         String endpoint = generateNodeControllerEndpointFromEnv();
 
         registerService(endpoint, body);
     }
 
     // ExtensionsModelSubmitter for extensions-all
-    public static void register(EdgeExtensionsConfig conf, List<String> supportedAppIds) {
+    public static void register(EdgeExtensionsConfig conf, List<ConsumableStreamPipesEntity> supportedEntities) {
         String body = createSvcBody(PE_TAG, makeSvcId(conf.getHost(), conf.getId()), conf.getHost(),
-                conf.getPort(), Arrays.asList(PE_TAG, SECONDARY_PE_IDENTIFIER_TAG), supportedAppIds);
+                conf.getPort(), Arrays.asList(PE_TAG, SECONDARY_PE_IDENTIFIER_TAG), supportedEntities);
         String endpoint = generateNodeControllerEndpointFromConfig(conf);
 
         registerService(endpoint, body);
@@ -97,7 +100,7 @@ public class NodeControllerUtil {
     }
 
     private static String createSvcBody(String name, String id, String host, int port, List<String> tags,
-                                        List<String> supportedAppIds) {
+                                        List<ConsumableStreamPipesEntity> supportedEntities) {
         try {
             ConsulServiceRegistrationBody body = new ConsulServiceRegistrationBody();
             String healthCheckURL = HTTP_PROTOCOL + host + COLON + port;
@@ -111,7 +114,7 @@ public class NodeControllerUtil {
 
             InvocableRegistration svcBody = new InvocableRegistration();
             svcBody.setConsulServiceRegistrationBody(body);
-            svcBody.setSupportedPipelineElementAppIds(supportedAppIds);
+            svcBody.setSupportedPipelineElements(supportedEntities);
 
             return JacksonSerializer.getObjectMapper().writeValueAsString(svcBody);
         } catch (JsonProcessingException e) {

@@ -22,12 +22,12 @@ import org.apache.streampipes.connect.adapter.model.generic.Protocol;
 import org.apache.streampipes.connect.container.worker.management.MasterRestClient;
 import org.apache.streampipes.connect.container.worker.management.NodeControllerRestClient;
 import org.apache.streampipes.connect.init.AdapterDeclarerSingleton;
+import org.apache.streampipes.container.declarer.Declarer;
 import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.container.init.ModelSubmitter;
 import org.apache.streampipes.container.init.RunningInstances;
 import org.apache.streampipes.container.locales.LabelGenerator;
 import org.apache.streampipes.container.model.EdgeExtensionsConfig;
-import org.apache.streampipes.container.model.ExtensionsConfig;
 import org.apache.streampipes.container.util.ConsulUtil;
 import org.apache.streampipes.container.util.NodeControllerUtil;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
@@ -37,6 +37,8 @@ import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
+import org.apache.streampipes.model.base.ConsumableStreamPipesEntity;
+import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterDescription;
@@ -52,6 +54,7 @@ import org.springframework.context.annotation.Import;
 import javax.annotation.PreDestroy;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Configuration
 @EnableAutoConfiguration
@@ -97,7 +100,7 @@ public abstract class ExtensionsModelSubmitter extends ModelSubmitter<EdgeExtens
         if (System.getenv(NODE_CONTROLLER_ID) != null) {
             // secondary
             // register pipeline element service via node controller
-            NodeControllerUtil.register(conf, generateSupportedAppIds());
+            NodeControllerUtil.register(conf, generateSupportedEntities());
 
             String nodeControllerUrl = PROTOCOL + conf.getNodeControllerHost() + COLON + conf.getNodeControllerPort();
 
@@ -146,16 +149,19 @@ public abstract class ExtensionsModelSubmitter extends ModelSubmitter<EdgeExtens
         }
     }
 
-    private List<String> generateSupportedAppIds() {
-        List<String> supportedAppIds = new ArrayList<>();
+    private List<ConsumableStreamPipesEntity> generateSupportedEntities() {
+        List<ConsumableStreamPipesEntity> supportedEntities = new ArrayList<>();
 
-        List<String> dataProcessorsAppIds = new ArrayList<>(DeclarersSingleton.getInstance().getEpaDeclarers().keySet());
-        List<String> dataSinksAppIds = new ArrayList<>(DeclarersSingleton.getInstance().getConsumerDeclarers().keySet());
+        List<ConsumableStreamPipesEntity> dataProcessors =
+                DeclarersSingleton.getInstance().getEpaDeclarers().values()
+                        .stream().map(Declarer::declareModel).collect(Collectors.toList());
+        List<ConsumableStreamPipesEntity> dataSinks = DeclarersSingleton.getInstance().getConsumerDeclarers().values()
+                .stream().map(Declarer::declareModel).collect(Collectors.toList());
 
-        supportedAppIds.addAll(dataProcessorsAppIds);
-        supportedAppIds.addAll(dataSinksAppIds);
+        supportedEntities.addAll(dataProcessors);
+        supportedEntities.addAll(dataSinks);
 
-        return supportedAppIds;
+        return supportedEntities;
     }
 
     private ConnectWorkerContainer getContainerDescription(EdgeExtensionsConfig conf, boolean runsOnEdgeNode) {

@@ -19,7 +19,10 @@
 package org.apache.streampipes.container.standalone.init;
 
 
+import org.apache.streampipes.container.declarer.Declarer;
 import org.apache.streampipes.container.util.NodeControllerUtil;
+import org.apache.streampipes.model.base.ConsumableStreamPipesEntity;
+import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -35,6 +38,7 @@ import org.apache.streampipes.container.util.ConsulUtil;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.PreDestroy;
 
@@ -59,7 +63,7 @@ public abstract class StandaloneModelSubmitter extends ModelSubmitter<PeConfig> 
         app.setDefaultProperties(Collections.singletonMap("server.port", peConfig.getPort()));
         app.run();
 
-        // check wether pipeline element is managed by node controller
+        // check whether pipeline element is managed by node controller
         if (System.getenv("SP_NODE_CONTROLLER_ID") != null) {
             // secondary
             // register pipeline element service via node controller
@@ -67,7 +71,7 @@ public abstract class StandaloneModelSubmitter extends ModelSubmitter<PeConfig> 
                     peConfig.getId(),
                     peConfig.getHost(),
                     peConfig.getPort(),
-                    generateSupportedAppIds());
+                    generateSupportedEntities());
         } else {
             // primary
             ConsulUtil.registerPeService(
@@ -77,16 +81,19 @@ public abstract class StandaloneModelSubmitter extends ModelSubmitter<PeConfig> 
         }
     }
 
-    private List<String> generateSupportedAppIds() {
-        List<String> supportedAppIds = new ArrayList<>();
+    private List<ConsumableStreamPipesEntity> generateSupportedEntities() {
+        List<ConsumableStreamPipesEntity> supportedEntities = new ArrayList<>();
 
-        List<String> dataProcessorsAppIds = new ArrayList<>(DeclarersSingleton.getInstance().getEpaDeclarers().keySet());
-        List<String> dataSinksAppIds = new ArrayList<>(DeclarersSingleton.getInstance().getConsumerDeclarers().keySet());
+        List<ConsumableStreamPipesEntity> dataProcessors =
+                DeclarersSingleton.getInstance().getEpaDeclarers().values()
+                        .stream().map(Declarer::declareModel).collect(Collectors.toList());
+        List<ConsumableStreamPipesEntity> dataSinks = DeclarersSingleton.getInstance().getConsumerDeclarers().values()
+                .stream().map(Declarer::declareModel).collect(Collectors.toList());
 
-        supportedAppIds.addAll(dataProcessorsAppIds);
-        supportedAppIds.addAll(dataSinksAppIds);
+        supportedEntities.addAll(dataProcessors);
+        supportedEntities.addAll(dataSinks);
 
-        return supportedAppIds;
+        return supportedEntities;
     }
 
     @PreDestroy
