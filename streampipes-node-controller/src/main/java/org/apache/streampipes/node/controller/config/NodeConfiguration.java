@@ -294,6 +294,7 @@ public final class NodeConfiguration {
                     configMap.put(envKey, value);
                     setStreampipesVersion(value);
                     break;
+
                 case API_KEY:
                     if (!"true".equals(System.getenv("SP_DEBUG"))) {
                         if (!value.isEmpty()) {

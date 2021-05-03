@@ -57,7 +57,7 @@ public class NodeInfoStorageImpl extends AbstractDao<NodeInfoDescription> implem
     public void deactivateNode(String nodeControllerId) {
         Optional<NodeInfoDescription> storedNode = getNode(nodeControllerId);
         if (storedNode.isPresent()) {
-            LOG.info("Deactivate node controller={} at url=http://{}:{}",
+            LOG.debug("Deactivate node controller={} at url=http://{}:{}",
                     storedNode.get().getNodeControllerId(),
                     storedNode.get().getHostname(),
                     storedNode.get().getPort());
@@ -70,7 +70,7 @@ public class NodeInfoStorageImpl extends AbstractDao<NodeInfoDescription> implem
     public void activateNode(String nodeControllerId) {
         Optional<NodeInfoDescription> storedNode = getNode(nodeControllerId);
         if (storedNode.isPresent()) {
-            LOG.info("Activate node controller={} at url=http://{}:{}",
+            LOG.debug("Activate node controller={} at url=http://{}:{}",
                     storedNode.get().getNodeControllerId(),
                     storedNode.get().getHostname(),
                     storedNode.get().getPort());
@@ -81,7 +81,7 @@ public class NodeInfoStorageImpl extends AbstractDao<NodeInfoDescription> implem
 
     @Override
     public void updateNode(NodeInfoDescription desc) {
-        LOG.info("Update node description for node id={}, url={}", desc.getNodeControllerId(),
+        LOG.debug("Update node description for node id={}, url={}", desc.getNodeControllerId(),
                 desc.getHostname() + ":" + desc.getPort());
 
         Optional<NodeInfoDescription> storedNode = getNode(desc.getNodeControllerId());
@@ -103,7 +103,7 @@ public class NodeInfoStorageImpl extends AbstractDao<NodeInfoDescription> implem
 
     @Override
     public void deleteNode(String nodeControllerId) {
-        LOG.info("Delete node with node id={}", nodeControllerId);
+        LOG.debug("Delete node with node id={}", nodeControllerId);
         Optional<NodeInfoDescription> storedNode = getNode(nodeControllerId);
 
         storedNode.ifPresent(nodeInfoDescription -> delete(nodeInfoDescription.getId()));

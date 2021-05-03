@@ -21,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
 import io.fogsy.empire.annotations.RdfProperty;
 import io.fogsy.empire.annotations.RdfsClass;
+import org.apache.streampipes.model.NodeHealthStatus;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.node.container.DeploymentContainer;
 import org.apache.streampipes.model.node.meta.StaticNodeMetadata;
@@ -48,6 +49,12 @@ public class NodeInfoDescription extends UnnamedStreamPipesEntity {
 
     @OneToOne(cascade = CascadeType.ALL)
     private boolean active;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private NodeCondition condition;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private long lastHeartBeatTime;
 
     @RdfProperty(StreamPipes.DEPLOYMENT_TARGET_NODE_ID)
     private String nodeControllerId;
@@ -184,5 +191,21 @@ public class NodeInfoDescription extends UnnamedStreamPipesEntity {
 
     public void setSupportedElements(List<String> supportedElements) {
         this.supportedElements = supportedElements;
+    }
+
+    public NodeCondition getCondition() {
+        return condition;
+    }
+
+    public void setCondition(NodeCondition condition) {
+        this.condition = condition;
+    }
+
+    public long getLastHeartBeatTime() {
+        return lastHeartBeatTime;
+    }
+
+    public void setLastHeartBeatTime(long lastHeartBeatTime) {
+        this.lastHeartBeatTime = lastHeartBeatTime;
     }
 }

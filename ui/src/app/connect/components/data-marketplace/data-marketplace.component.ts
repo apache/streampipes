@@ -246,10 +246,10 @@ export class DataMarketplaceComponent implements OnInit {
     async filterForActiveNodes(adapters: AdapterDescriptionUnion[]) {
         return new Promise<AdapterDescriptionUnion[]>(resolve => {
             var activeAdapters: AdapterDescriptionUnion[] = [];
-            this.nodeService.getAvailableNodes().subscribe(activeNodes => {
+            this.nodeService.getOnlineNodes().subscribe(activeNodes => {
                 activeNodes.forEach(nodes => {
                     adapters.forEach(adapter => {
-                        if (nodes.active && nodes.nodeControllerId === adapter.deploymentTargetNodeId) {
+                        if (nodes.condition === 'ONLINE' && nodes.nodeControllerId === adapter.deploymentTargetNodeId) {
                             activeAdapters.push(adapter);
                         }
                     })

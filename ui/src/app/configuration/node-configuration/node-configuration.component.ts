@@ -17,12 +17,7 @@
  */
 
 import {Component, OnInit, ViewEncapsulation} from "@angular/core";
-import {
-    ContainerRuntime, ContainerRuntimeUnion, DockerContainerRuntime,
-    FieldDeviceAccessResource,
-    NodeInfoDescription,
-    NvidiaContainerRuntime, UnnamedStreamPipesEntity
-} from "../../core-model/gen/streampipes-model";
+import {FieldDeviceAccessResource, NodeInfoDescription} from "../../core-model/gen/streampipes-model";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {zip} from "rxjs";
 import {DialogService} from "../../core-ui/dialog/base-dialog/base-dialog.service";
@@ -56,6 +51,7 @@ export class NodeConfigurationComponent implements OnInit{
     locationTags: String[];
     fieldDevices: FieldDeviceAccessResource[];
     currentTimestamp: string;
+    runningPipelines: boolean = false;
 
     constructor(private nodeService: NodeService,
                 private dataMarketplaceService: DataMarketplaceService,
@@ -65,7 +61,6 @@ export class NodeConfigurationComponent implements OnInit{
 
     ngOnInit() {
         this.getNodes();
-        this.getDate();
     }
 
     getNodes() {
@@ -157,6 +152,22 @@ export class NodeConfigurationComponent implements OnInit{
         })
     }
 
+    checkNodeForSinks(nodeControllerId: string) {
+        return new Promise<boolean>(resolve => {
+            var detectedSinks = false;
+            zip(this.pipelineService.getOwnPipelines(),
+                this.pipelineService.getSystemPipelines()).subscribe(allPipelines => {
+                allPipelines.forEach((pipelines, index) => {
+                    pipelines.forEach(pipeline => {
+                        detectedSinks = pipeline.running && pipeline
+                            .actions.some(action => action.deploymentTargetNodeId === nodeControllerId);
+                    })
+                })
+                resolve(detectedSinks);
+            });
+        });
+    }
+
     openSnackBar(message: string) {
         this._snackBar.open(message, "close", {
             duration: 3000,
@@ -188,6 +199,11 @@ export class NodeConfigurationComponent implements OnInit{
 
     getDate() {
         this.currentTimestamp = new Date().toLocaleTimeString(['en-US'],
+            { hour: '2-digit', minute: "2-digit", second: "2-digit" });
+    }
+
+    toHumanReadableDate(heartbeat: number){
+        return new Date(heartbeat).toLocaleTimeString(['en-US'],
             { hour: '2-digit', minute: "2-digit", second: "2-digit" });
     }
 }

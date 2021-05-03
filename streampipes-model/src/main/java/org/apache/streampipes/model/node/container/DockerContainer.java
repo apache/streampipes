@@ -38,9 +38,11 @@ public class DockerContainer extends DeploymentContainer {
         super();
     }
 
-    public DockerContainer(String imageURI, String containerName, String serviceId, String[] containerPorts,
+    public DockerContainer(String imageTag, String containerName, String serviceId, String[] containerPorts,
                            List<String> envVars, Map<String, String> labels, List<String> volumes,
+                           List<String> supportedArchitectures, List<String> supportedOperatingSystemTypes,
                            List<String> dependsOnContainers) {
-        super(imageURI, containerName, serviceId, containerPorts, envVars, labels, volumes, dependsOnContainers);
+        super(imageTag, containerName, serviceId, containerPorts, envVars, labels, volumes, supportedArchitectures,
+                supportedOperatingSystemTypes, dependsOnContainers);
     }
 }

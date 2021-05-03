@@ -28,6 +28,13 @@ public class DockerKafkaContainer extends AbstractStreamPipesDockerContainer {
     public DockerContainer declareDockerContainer() {
         return DockerContainerBuilder.create(StreamPipesDockerServiceID.SP_SVC_KAFKA_ID)
                 .withImage("fogsyio/kafka:2.2.0")
+                .supportedArchitectures(
+                        SupportedArchitectures.amd(),
+                        SupportedArchitectures.arm32v7(),
+                        SupportedArchitectures.arm64v8())
+                .supportedOperatingSystemTypes(
+                        SupportedOsType.linux(),
+                        SupportedOsType.darwin())
                 .withContainerName("streampipes-node-broker")
                 .dependsOn("svc/org.apache.streampipes.node.broker.zookeeper")
                 .withExposedPorts(Ports.withMapping("9094"))

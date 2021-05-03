@@ -128,8 +128,8 @@ public class PipelineMigrationExecutor extends AbstractPipelineExecutor {
 
         // store new pipeline and relays
         storeInvocationGraphs(pipeline.getPipelineId(), graphs, dataSets);
-        storeDataStreamRelayContainer(relaysToBePersisted);
         deleteDataStreamRelayContainer(relaysToBeDeleted);
+        storeDataStreamRelayContainer(relaysToBePersisted);
 
         // set global status
         status.setSuccess(status.getElementStatus().stream().allMatch(PipelineElementStatus::isSuccess));
@@ -243,7 +243,7 @@ public class PipelineMigrationExecutor extends AbstractPipelineExecutor {
     }
 
     private PipelineOperationStatus stopRelaysFromPredecessorsBeforeMigration(PipelineOperationStatus status) {
-        List<SpDataStreamRelayContainer> relays = findRelays(predecessorsBeforeMigration,
+        List<SpDataStreamRelayContainer> relays = findRelaysWhenStopping(predecessorsBeforeMigration,
                 migrationEntity.getSourceElement());
 
         updateRelaysToBeDeleted(relays);
@@ -343,6 +343,11 @@ public class PipelineMigrationExecutor extends AbstractPipelineExecutor {
     private List<SpDataStreamRelayContainer> extractRelaysFromDataProcessor(List<InvocableStreamPipesEntity> graphs) {
         return graphs.stream()
                 .map(DataProcessorInvocation.class::cast)
+//                .map(p -> {
+//                    String modifiedId = p.getDeploymentRunningInstanceId() + "-" + p.getDeploymentTargetNodeId();
+//                    p.setDeploymentRunningInstanceId(modifiedId);
+//                    return p;
+//                })
                 .map(SpDataStreamRelayContainer::new)
                 .collect(Collectors.toList());
     }

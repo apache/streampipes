@@ -15,11 +15,11 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.node.management.resources;
+package org.apache.streampipes.node.management.operation.monitor.resources;
+
 
 import org.apache.streampipes.model.node.NodeInfoDescription;
-import org.apache.streampipes.storage.api.INodeInfoStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.node.management.utils.StorageUtils;
 
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
@@ -27,19 +27,19 @@ import java.net.Socket;
 import java.net.URL;
 import java.util.List;
 
-public class ClusterResourceManager {
+public class ClusterResourceMonitor {
 
     private static final int RESOURCE_RETRIEVE_FREQUENCY_MS = 60000;
     private static final int SOCKET_TIMEOUT_MS = 500;
-    private static ClusterResourceManager instance = null;
+    private static ClusterResourceMonitor instance = null;
 
-    private ClusterResourceManager() {}
+    private ClusterResourceMonitor() {}
 
-    public static ClusterResourceManager getInstance() {
+    public static ClusterResourceMonitor getInstance() {
         if (instance == null) {
-            synchronized (ClusterResourceManager.class) {
+            synchronized (ClusterResourceMonitor.class) {
                 if (instance == null)
-                    instance = new ClusterResourceManager();
+                    instance = new ClusterResourceMonitor();
             }
         }
         return instance;
@@ -52,7 +52,7 @@ public class ClusterResourceManager {
     private final Runnable getNodes = () -> {
         while (true) {
             try {
-                List<NodeInfoDescription> nodes =  getNodeStorageApi().getAllNodes();
+                List<NodeInfoDescription> nodes =  StorageUtils.persistentNodeAPI().getAllNodes();
                 if (nodes.size() > 0) {
                     nodes.forEach(node -> {
                         try {
@@ -86,11 +86,5 @@ public class ClusterResourceManager {
             isAlive = false;
         }
         return isAlive;
-    }
-
-    // Helpers
-
-    private static INodeInfoStorage getNodeStorageApi() {
-        return StorageDispatcher.INSTANCE.getNoSqlStore().getNodeStorage();
     }
 }

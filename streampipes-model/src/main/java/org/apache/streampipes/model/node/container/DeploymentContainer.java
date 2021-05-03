@@ -38,8 +38,8 @@ import java.util.Map;
 @TsModel
 public abstract class DeploymentContainer extends UnnamedStreamPipesEntity {
 
-    @RdfProperty(StreamPipes.DEPLOYMENT_CONTAINER_IMAGE_URI)
-    private String imageUri;
+    @RdfProperty(StreamPipes.DEPLOYMENT_CONTAINER_IMAGE_TAG)
+    private String imageTag;
 
     @RdfProperty(StreamPipes.DEPLOYMENT_CONTAINER_NAME)
     private String containerName;
@@ -67,6 +67,17 @@ public abstract class DeploymentContainer extends UnnamedStreamPipesEntity {
 
     @OneToMany(fetch = FetchType.EAGER,
             cascade = {CascadeType.ALL})
+    @RdfProperty(StreamPipes.DEPLOYMENT_SUPPORTED_ARCHITECTURES)
+    private List<String> supportedArchitectures;
+
+    @OneToMany(fetch = FetchType.EAGER,
+            cascade = {CascadeType.ALL})
+    @RdfProperty(StreamPipes.DEPLOYMENT_SUPPORTED_OS_TYPES)
+    private List<String> supportedOperatingSystemTypes;
+
+
+    @OneToMany(fetch = FetchType.EAGER,
+            cascade = {CascadeType.ALL})
     @RdfProperty(StreamPipes.DEPLOYMENT_CONTAINER_DEPENDENCIES)
     private List<String> dependsOnContainers;
 
@@ -75,6 +86,8 @@ public abstract class DeploymentContainer extends UnnamedStreamPipesEntity {
         this.labels = new HashMap<>();
         this.volumes = new ArrayList<>();
         this.dependsOnContainers = new ArrayList<>();
+        this.supportedArchitectures = new ArrayList<>();
+        this.supportedOperatingSystemTypes = new ArrayList<>();
     }
 
     public DeploymentContainer(String elementId) {
@@ -83,30 +96,35 @@ public abstract class DeploymentContainer extends UnnamedStreamPipesEntity {
         this.labels = new HashMap<>();
         this.volumes = new ArrayList<>();
         this.dependsOnContainers = new ArrayList<>();
+        this.supportedArchitectures = new ArrayList<>();
+        this.supportedOperatingSystemTypes = new ArrayList<>();
     }
 
     public DeploymentContainer(DeploymentContainer other) {
         super(other);
     }
 
-    public DeploymentContainer(String imageUri, String containerName, String serviceId, String[] containerPorts,
+    public DeploymentContainer(String imageTag, String containerName, String serviceId, String[] containerPorts,
                                List<String> envVars, Map<String, String> labels, List<String> volumes,
+                               List<String> supportedArchitectures, List<String> supportedOperatingSystemsTypes,
                                List<String> dependsOnContainers) {
-        this.imageUri = imageUri;
+        this.imageTag = imageTag;
         this.containerName = containerName;
         this.serviceId = serviceId;
         this.containerPorts = containerPorts;
         this.envVars = envVars;
         this.labels = labels;
         this.volumes = volumes;
+        this.supportedArchitectures = supportedArchitectures;
+        this.supportedOperatingSystemTypes = supportedOperatingSystemsTypes;
         this.dependsOnContainers = dependsOnContainers;
     }
 
-    public String getImageUri() {
-        return imageUri;
+    public String getImageTag() {
+        return imageTag;
     }
-    public void setImageUri(String imageUri) {
-        this.imageUri = imageUri;
+    public void setImageTag(String imageTag) {
+        this.imageTag = imageTag;
     }
 
     public String getContainerName() {
@@ -164,4 +182,21 @@ public abstract class DeploymentContainer extends UnnamedStreamPipesEntity {
     public void setDependsOnContainers(List<String> dependsOnContainers) {
         this.dependsOnContainers = dependsOnContainers;
     }
+
+    public List<String> getSupportedArchitectures() {
+        return supportedArchitectures;
+    }
+
+    public void setSupportedArchitectures(List<String> supportedArchitectures) {
+        this.supportedArchitectures = supportedArchitectures;
+    }
+
+    public List<String> getSupportedOperatingSystemTypes() {
+        return supportedOperatingSystemTypes;
+    }
+
+    public void setSupportedOperatingSystemTypes(List<String> supportedOperatingSystemTypes) {
+        this.supportedOperatingSystemTypes = supportedOperatingSystemTypes;
+    }
+
 }

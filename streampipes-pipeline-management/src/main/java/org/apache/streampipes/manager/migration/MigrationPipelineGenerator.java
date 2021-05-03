@@ -18,11 +18,11 @@
 package org.apache.streampipes.manager.migration;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.apache.streampipes.manager.node.StreamPipesClusterManager;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.node.NodeInfoDescription;
 import org.apache.streampipes.model.pipeline.Pipeline;
+import org.apache.streampipes.node.management.NodeManagement;
 
 
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class MigrationPipelineGenerator {
     public static Pipeline generateMigrationPipeline(InvocableStreamPipesEntity entityToMigrate, Pipeline correspondingPipeline){
 
         List<NodeInfoDescription> possibleTargetNodes = new ArrayList<>();
-        List<NodeInfoDescription> nodeInfo = StreamPipesClusterManager.getAllActiveAndHealthyNodes();
+        List<NodeInfoDescription> nodeInfo = NodeManagement.getOnlineNodes();
         nodeInfo.forEach(desc ->{
             if(desc.getSupportedElements().stream().anyMatch(element -> element.equals(entityToMigrate.getAppId()))
                 && !desc.getNodeControllerId().equals(entityToMigrate.getDeploymentTargetNodeId()))

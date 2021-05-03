@@ -26,6 +26,7 @@ import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @RdfsClass(StreamPipes.TRANSPORT_PROTOCOL)
 @Entity

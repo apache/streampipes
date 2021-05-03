@@ -135,7 +135,7 @@ public class DockerUtils {
         return ContainerConfig.builder()
                 .hostname(p.getContainerName())
                 .tty(true)
-                .image(p.getImageUri())
+                .image(p.getImageTag())
                 .labels(p.getLabels())
                 .env(p.getEnvVars())
                 .hostConfig(getHostConfig(SP_CONTAINER_NETWORK, p.getContainerPorts(), p.getVolumes()))

@@ -35,21 +35,21 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-public class DockerOrchestratorManager implements IContainerOrchestrator {
+public class DockerEngineManager implements IContainerEngine {
 
     private static final Logger LOG =
-            LoggerFactory.getLogger(DockerOrchestratorManager.class.getCanonicalName());
+            LoggerFactory.getLogger(DockerEngineManager.class.getCanonicalName());
 
     private final DockerUtils docker = DockerUtils.getInstance();
-    private static DockerOrchestratorManager instance = null;
+    private static DockerEngineManager instance = null;
 
-    private DockerOrchestratorManager() {}
+    private DockerEngineManager() {}
 
-    public static DockerOrchestratorManager getInstance() {
+    public static DockerEngineManager getInstance() {
         if (instance == null) {
-            synchronized (DockerOrchestratorManager.class) {
+            synchronized (DockerEngineManager.class) {
                 if (instance == null)
-                    instance = new DockerOrchestratorManager();
+                    instance = new DockerEngineManager();
             }
         }
         return instance;
@@ -69,10 +69,10 @@ public class DockerOrchestratorManager implements IContainerOrchestrator {
     @Override
     public ContainerDeploymentStatus deploy(DockerContainer container) {
 
-        LOG.info("Pull image and deploy pipeline element container {}", container.getImageUri());
+        LOG.info("Pull image and deploy pipeline element container {}", container.getImageTag());
         Optional<Container> containerOptional = docker.getContainer(container.getContainerName());
         if (!containerOptional.isPresent()) {
-            LOG.info("Deploy pipeline element container \"" + container.getImageUri() + "\"");
+            LOG.info("Deploy pipeline element container \"" + container.getImageTag() + "\"");
             String containerId = "";
             try {
                 containerId = deployPipelineElementContainer(container);
@@ -89,7 +89,7 @@ public class DockerOrchestratorManager implements IContainerOrchestrator {
 
     @Override
     public ContainerDeploymentStatus remove(DockerContainer container) {
-        LOG.info("Remove pipeline element container: {}", container.getImageUri());
+        LOG.info("Remove pipeline element container: {}", container.getImageTag());
 
         Optional<com.spotify.docker.client.messages.Container> containerOptional = docker.getContainer(container.getContainerName());
         if(containerOptional.isPresent()) {
@@ -136,13 +136,13 @@ public class DockerOrchestratorManager implements IContainerOrchestrator {
     private String deployPipelineElementContainer(DockerContainer container, boolean pullImage) throws Exception {
         if (pullImage) {
             try {
-                docker.pullImage(container.getImageUri(), false);
+                docker.pullImage(container.getImageTag(), false);
             } catch (DockerException | InterruptedException e) {
                 LOG.error("unable to pull pipeline element container image {}", e.toString());
                 deployPipelineElementContainer(container, false);
             }
         }
-        if (!pullImage && !docker.findLocalImage(container.getImageUri())) {
+        if (!pullImage && !docker.findLocalImage(container.getImageTag())) {
             throw new NotFoundException("Image not found locally");
         }
         String containerId = docker.createContainer(container);

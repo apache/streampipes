@@ -48,10 +48,6 @@ import java.util.stream.Collectors;
 
 public class InvocationGraphBuilder {
 
-  private static final String CONSUL_NODE_CONTROLLER_ROUTE = "sp/v1/node/org.apache.streampipes.node.controller";
-  private static final String NODE_BROKER_CONTAINER_HOST = "SP_NODE_BROKER_CONTAINER_HOST";
-  private static final String NODE_BROKER_CONTAINER_PORT = "SP_NODE_BROKER_CONTAINER_PORT";
-  private static final String SLASH ="/";
   private static final String DEFAULT_TAG = "default";
   private final PipelineGraph pipelineGraph;
   private final String pipelineId;
@@ -206,11 +202,13 @@ public class InvocationGraphBuilder {
     if(edgeToEdgeRelay){
       inputStream.setEventGrounding(grounding);
     }else{
-      inputStream.getEventGrounding()
-              .getTransportProtocol()
-              .getTopicDefinition()
-              .setActualTopicName(extractTopic(grounding));
-      inputStream.getEventGrounding().setElementId(grounding.getElementId());
+      inputStream.setEventGrounding(grounding);
+
+//      inputStream.getEventGrounding()
+//              .getTransportProtocol()
+//              .getTopicDefinition()
+//              .setActualTopicName(extractTopic(grounding));
+//      inputStream.getEventGrounding().setElementId(grounding.getElementId());
     }
   }
 
@@ -266,18 +264,10 @@ public class InvocationGraphBuilder {
     return outputStream;
   }
 
-  private String getTargetNodeBrokerHost(InvocableStreamPipesEntity t) {
+  private TransportProtocol getTargetNodeTransportProtocol(InvocableStreamPipesEntity t) {
     Optional<NodeInfoDescription> targetNode = getNodeStorageApi().getNode(t.getDeploymentTargetNodeId());
     if (targetNode.isPresent()) {
-      return targetNode.get().getHostname();
-    }
-    throw new SpRuntimeException("Deployment target node not found");
-  }
-
-  private int getTargetNodeBrokerPort(InvocableStreamPipesEntity t) {
-    Optional<NodeInfoDescription> targetNode = getNodeStorageApi().getNode(t.getDeploymentTargetNodeId());
-    if (targetNode.isPresent()) {
-      return targetNode.get().getPort();
+      return targetNode.get().getNodeBroker().getNodeTransportProtocol();
     }
     throw new SpRuntimeException("Deployment target node not found");
   }
@@ -426,12 +416,9 @@ public class InvocationGraphBuilder {
 
   private KafkaTransportProtocol kafkaTransportProtocol(String topic, InvocableStreamPipesEntity target) {
     if (target != null) {
-      return new KafkaTransportProtocol(
-              getTargetNodeBrokerHost(target),
-              getTargetNodeBrokerPort(target),
-              topic);
-//              getTargetNodeZookeeperHost(target),
-//              getTargetNodeZookeeperPort(target));
+      KafkaTransportProtocol ktp = (KafkaTransportProtocol) getTargetNodeTransportProtocol(target);
+      ktp.setTopicDefinition(new SimpleTopicDefinition(topic));
+      return ktp;
     }
     return new KafkaTransportProtocol(
             BackendConfig.INSTANCE.getKafkaHost(),
@@ -447,10 +434,9 @@ public class InvocationGraphBuilder {
 
   private MqttTransportProtocol mqttTransportProtocol(String topic, InvocableStreamPipesEntity target) {
     if (target != null) {
-      return new MqttTransportProtocol(
-              getTargetNodeBrokerHost(target),
-              getTargetNodeBrokerPort(target),
-              topic);
+      MqttTransportProtocol mtp = (MqttTransportProtocol) getTargetNodeTransportProtocol(target);
+      mtp.setTopicDefinition(new SimpleTopicDefinition(topic));
+      return mtp;
     }
     return new MqttTransportProtocol(
             BackendConfig.INSTANCE.getMqttHost(),

@@ -116,7 +116,7 @@ export class MigratePipelineProcessorsComponent implements OnInit {
   }
 
   loadAndPrepareEdgeNodes() {
-    this.nodeService.getAvailableNodes().subscribe(response => {
+    this.nodeService.getOnlineNodes().subscribe(response => {
       this.edgeNodes = response;
       this.addAppIds(this.tmpPipeline.sepas, this.edgeNodes);
       this.addAppIds(this.tmpPipeline.actions, this.edgeNodes);

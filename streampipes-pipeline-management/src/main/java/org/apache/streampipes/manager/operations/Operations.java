@@ -26,7 +26,9 @@ import org.apache.streampipes.manager.execution.pipeline.PipelineExecutor;
 import org.apache.streampipes.manager.execution.pipeline.PipelineStorageService;
 import org.apache.streampipes.manager.matching.DataSetGroundingSelector;
 import org.apache.streampipes.manager.matching.PipelineVerificationHandler;
+import org.apache.streampipes.manager.migration.MigrationPipelineGenerator;
 import org.apache.streampipes.manager.migration.PipelineElementMigrationHandler;
+import org.apache.streampipes.manager.migration.PipelineElementOffloadHandler;
 import org.apache.streampipes.manager.recommender.ElementRecommender;
 import org.apache.streampipes.manager.reconfiguration.PipelineElementReconfigurationHandler;
 import org.apache.streampipes.manager.remote.ContainerProvidedOptionsHandler;
@@ -38,11 +40,10 @@ import org.apache.streampipes.manager.topic.WildcardTopicGenerator;
 import org.apache.streampipes.manager.verification.extractor.TypeExtractor;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
+import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.client.endpoint.RdfEndpoint;
 import org.apache.streampipes.model.client.endpoint.RdfEndpointItem;
-import org.apache.streampipes.model.message.DataSetModificationMessage;
-import org.apache.streampipes.model.message.Message;
-import org.apache.streampipes.model.message.PipelineModificationMessage;
+import org.apache.streampipes.model.message.*;
 import org.apache.streampipes.model.pipeline.*;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
@@ -195,5 +196,9 @@ public class Operations {
 
   public static PipelineOperationStatus handlePipelineElementReconfiguration(Pipeline reconfiguredPipeline) {
     return new PipelineElementReconfigurationHandler(reconfiguredPipeline).handleReconfiguration();
+  }
+
+  public static Message handlePipelineElementOffloadRequest(InvocableStreamPipesEntity elementToOffload) {
+    return new PipelineElementOffloadHandler(elementToOffload).handleOffloading();
   }
 }

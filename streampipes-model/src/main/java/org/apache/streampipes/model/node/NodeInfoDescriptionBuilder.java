@@ -139,6 +139,7 @@ public class NodeInfoDescriptionBuilder {
         nodeInfoDescription.setNodeResources(nodeResources);
         nodeInfoDescription.setSupportedElements(supportedElements);
         nodeInfoDescription.setActive(true);
+        nodeInfoDescription.setCondition(NodeCondition.CREATED);
         return nodeInfoDescription;
     }
 }
