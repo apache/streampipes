@@ -15,13 +15,11 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.node.management.operation.monitor.health;
-
-import org.apache.streampipes.model.NodeHealthStatus;
+package org.apache.streampipes.node.management.operation.monitor;
 
 import java.util.concurrent.Callable;
 
-public interface HealthCheck {
-    Callable<NodeHealthStatus> nodeHealthStatusCallable();
-    NodeHealthStatus execute();
+public interface NodeMonitor<T> {
+    Callable<T> monitoringCallable();
+    T execute();
 }

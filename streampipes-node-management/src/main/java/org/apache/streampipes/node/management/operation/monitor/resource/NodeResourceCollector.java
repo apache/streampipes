@@ -15,50 +15,50 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.node.management.operation.monitor.health;
+package org.apache.streampipes.node.management.operation.monitor.resource;
 
-import org.apache.streampipes.model.NodeHealthStatus;
+import org.apache.streampipes.model.node.monitor.ResourceMetrics;
 import org.apache.streampipes.node.management.operation.monitor.NodeMonitor;
 import org.apache.streampipes.node.management.utils.HttpUtils;
 
 import java.util.concurrent.*;
 
-public class NodeHealthCheck implements NodeMonitor<NodeHealthStatus> {
+public class NodeResourceCollector implements NodeMonitor<ResourceMetrics> {
 
     private static final int FUTURE_TIMEOUT_SECS = 3;
-    private final String healthCheckEndpoint;
+    private final String resourceCollectorEndpoint;
 
-    public NodeHealthCheck(String endpoint) {
-        this.healthCheckEndpoint = endpoint;
+    public NodeResourceCollector(String resourceCollectorEndpoint) {
+        this.resourceCollectorEndpoint = resourceCollectorEndpoint;
     }
 
     @Override
-    public Callable<NodeHealthStatus> monitoringCallable() {
+    public Callable<ResourceMetrics> monitoringCallable() {
         return () -> {
             if (!Thread.currentThread().isInterrupted()) {
-                return HttpUtils.get(healthCheckEndpoint, NodeHealthStatus.class);
+                return HttpUtils.get(resourceCollectorEndpoint, ResourceMetrics.class);
             }
-            return new NodeHealthStatus(false);
+            return new ResourceMetrics();
         };
     }
 
     @Override
-    public NodeHealthStatus execute() {
+    public ResourceMetrics execute() {
         ExecutorService executorService = Executors.newSingleThreadExecutor();
 
-        final Future<NodeHealthStatus> future = executorService.submit(monitoringCallable());
+        final Future<ResourceMetrics> future = executorService.submit(monitoringCallable());
 
-        NodeHealthStatus nodeHealthStatus;
+        ResourceMetrics resourceMetrics;
         try {
             // blocking call until timeout is reached
-            nodeHealthStatus = future.get(FUTURE_TIMEOUT_SECS, TimeUnit.SECONDS);
+            resourceMetrics = future.get(FUTURE_TIMEOUT_SECS, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException e) {
-            nodeHealthStatus = new NodeHealthStatus(false);
+            resourceMetrics = new ResourceMetrics();
         } catch (TimeoutException e) {
             future.cancel(true);
-            nodeHealthStatus = new NodeHealthStatus(false);
+            resourceMetrics = new ResourceMetrics();
         }
         executorService.shutdown();
-        return nodeHealthStatus;
+        return resourceMetrics;
     }
 }

@@ -24,7 +24,7 @@ import org.apache.streampipes.node.controller.management.offloading.AutoOffloadi
 import org.apache.streampipes.node.controller.management.offloading.policies.Comparator;
 import org.apache.streampipes.node.controller.management.offloading.policies.MultiOccurrenceThresholdViolationPolicy;
 import org.apache.streampipes.node.controller.management.offloading.policies.OffloadingPolicy;
-import org.apache.streampipes.node.controller.management.resource.model.ResourceMetrics;
+import org.apache.streampipes.model.node.monitor.ResourceMetrics;
 import org.apache.streampipes.node.controller.management.resource.utils.DiskSpace;
 import org.apache.streampipes.node.controller.management.resource.utils.ResourceUtils;
 import org.apache.streampipes.serializers.json.JacksonSerializer;

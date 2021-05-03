@@ -35,7 +35,7 @@ public class MigrationPipelineGenerator {
     public static Pipeline generateMigrationPipeline(InvocableStreamPipesEntity entityToMigrate, Pipeline correspondingPipeline){
 
         List<NodeInfoDescription> possibleTargetNodes = new ArrayList<>();
-        List<NodeInfoDescription> nodeInfo = NodeManagement.getOnlineNodes();
+        List<NodeInfoDescription> nodeInfo = NodeManagement.getInstance().getOnlineNodes();
         nodeInfo.forEach(desc ->{
             if(desc.getSupportedElements().stream().anyMatch(element -> element.equals(entityToMigrate.getAppId()))
                 && !desc.getNodeControllerId().equals(entityToMigrate.getDeploymentTargetNodeId()))

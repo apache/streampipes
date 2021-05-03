@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.node.controller.api;
 
-import org.apache.streampipes.model.node.NodeCondition;
 import org.apache.streampipes.model.node.NodeInfoDescription;
 import org.apache.streampipes.node.controller.management.node.NodeManager;
 import org.apache.streampipes.node.controller.management.relay.DataStreamRelayManager;

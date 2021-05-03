@@ -162,7 +162,7 @@ public class ClusterHealthCheckMonitor {
 
     private void persistNodeUpdate(NodeInfoDescription node, boolean syncWithNodeController) {
         if (syncWithNodeController) {
-            NodeManagement.updateNode(node);
+            NodeManagement.getInstance().updateNode(node);
         } else {
             StorageUtils.updateNode(node);
         }

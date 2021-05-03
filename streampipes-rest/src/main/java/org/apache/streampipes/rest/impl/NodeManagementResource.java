@@ -39,7 +39,7 @@ public class NodeManagementResource extends AbstractRestResource implements INod
     @Produces(MediaType.APPLICATION_JSON)
     @Override
     public Response addNode(@PathParam("username") String username, NodeInfoDescription desc) {
-        return statusMessage(NodeManagement.addOrRejoin(desc));
+        return statusMessage(NodeManagement.getInstance().addOrRejoin(desc));
     }
 
     @PUT
@@ -51,7 +51,7 @@ public class NodeManagementResource extends AbstractRestResource implements INod
     public Response updateNode(@PathParam("username") String username,
                                @PathParam("nodeControllerId") String nodeControllerId,
                                NodeInfoDescription desc) {
-        return statusMessage(NodeManagement.updateNode(desc));
+        return statusMessage(NodeManagement.getInstance().updateNode(desc));
     }
 
     @POST
@@ -62,7 +62,7 @@ public class NodeManagementResource extends AbstractRestResource implements INod
     @Override
     public Response syncRemoteUpdateFromNodeController(@PathParam("username") String username,
                                                        NodeInfoDescription desc) {
-        return statusMessage(NodeManagement.syncRemoteNodeUpdateRequest(desc));
+        return statusMessage(NodeManagement.getInstance().syncRemoteNodeUpdateRequest(desc));
     }
 
     @POST
@@ -75,7 +75,7 @@ public class NodeManagementResource extends AbstractRestResource implements INod
                                         @PathParam("username") String username,
                                         @PathParam("nodeControllerId") String nodeControllerId) {
         NodeCondition nodeCondition = NodeCondition.valueOf(condition.toUpperCase());
-        boolean success = NodeManagement.updateNodeCondition(nodeControllerId, nodeCondition);
+        boolean success = NodeManagement.getInstance().updateNodeCondition(nodeControllerId, nodeCondition);
         if (success) {
             return statusMessage(Notifications.success(NotificationType.OPERATION_SUCCESS));
         } else {
@@ -88,7 +88,7 @@ public class NodeManagementResource extends AbstractRestResource implements INod
     @Override
     public Response deleteNode(@PathParam("username") String username,
                                @PathParam("nodeControllerId") String nodeControllerId) {
-        NodeManagement.deleteNode(nodeControllerId);
+        NodeManagement.getInstance().deleteNode(nodeControllerId);
         return statusMessage(Notifications.success(NotificationType.REMOVED_NODE));
     }
 
@@ -98,7 +98,7 @@ public class NodeManagementResource extends AbstractRestResource implements INod
     @Produces(MediaType.APPLICATION_JSON)
     @Override
     public Response getOnlineNodes() {
-        return ok(NodeManagement.getOnlineNodes());
+        return ok(NodeManagement.getInstance().getOnlineNodes());
     }
 
     @GET
@@ -106,6 +106,6 @@ public class NodeManagementResource extends AbstractRestResource implements INod
     @Produces(MediaType.APPLICATION_JSON)
     @Override
     public Response getNodes() {
-        return ok(NodeManagement.getAllNodes());
+        return ok(NodeManagement.getInstance().getAllNodes());
     }
 }

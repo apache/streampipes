@@ -25,6 +25,7 @@ import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.node.NodeCondition;
 import org.apache.streampipes.model.node.NodeInfoDescription;
 import org.apache.streampipes.node.management.operation.monitor.health.ClusterHealthCheckMonitor;
+import org.apache.streampipes.node.management.operation.monitor.resource.ClusterResourceMonitor;
 import org.apache.streampipes.node.management.operation.relay.RelayHandler;
 import org.apache.streampipes.node.management.operation.sync.SynchronizationFactory;
 import org.apache.streampipes.node.management.operation.sync.SynchronizationType;
@@ -36,17 +37,41 @@ import java.util.List;
 import java.util.Optional;
 
 public class NodeManagement {
-    private static final Logger LOG = LoggerFactory.getLogger(NodeManagement.class.getCanonicalName());
 
-    public static List<NodeInfoDescription> getOnlineNodes() {
+    private static final Logger LOG = LoggerFactory.getLogger(NodeManagement.class.getCanonicalName());
+    private static NodeManagement instance = null;
+
+    private NodeManagement() {
+    }
+
+    public static NodeManagement getInstance() {
+        if (instance == null) {
+            synchronized (NodeManagement.class) {
+                if (instance == null)
+                    instance = new NodeManagement();
+            }
+        }
+        return instance;
+    }
+
+
+    public void init() {
+        LOG.info("Starting StreamPipes healthcheck monitor...");
+        ClusterHealthCheckMonitor.getInstance().run();
+
+        LOG.info("Starting StreamPipes resource monitor...");
+        ClusterResourceMonitor.getInstance().run();
+    }
+
+    public List<NodeInfoDescription> getOnlineNodes() {
         return ClusterHealthCheckMonitor.getInstance().getAllHealthyNodes();
     }
 
-    public static List<NodeInfoDescription> getAllNodes() {
+    public List<NodeInfoDescription> getAllNodes() {
         return StorageUtils.getAllNodes();
     }
 
-    public static boolean updateNodeCondition(String nodeControllerId, NodeCondition condition) {
+    public boolean updateNodeCondition(String nodeControllerId, NodeCondition condition) {
         Optional<NodeInfoDescription> storedNode = StorageUtils.getNode(nodeControllerId);
         boolean status = false;
 
@@ -69,7 +94,7 @@ public class NodeManagement {
         return status;
     }
 
-    public static Message updateNode(NodeInfoDescription desc) {
+    public Message updateNode(NodeInfoDescription desc) {
         boolean successfullyUpdated = SynchronizationFactory.synchronize(desc, SynchronizationType.UPDATE_NODE);
         if (successfullyUpdated) {
             StorageUtils.updateNode(desc);
@@ -78,16 +103,16 @@ public class NodeManagement {
         return Notifications.error("Could not update node");
     }
 
-    public static void deleteNode(String nodeControllerId) {
+    public void deleteNode(String nodeControllerId) {
         StorageUtils.deleteNode(nodeControllerId);
     }
 
-    public static Message syncRemoteNodeUpdateRequest(NodeInfoDescription desc) {
+    public Message syncRemoteNodeUpdateRequest(NodeInfoDescription desc) {
         StorageUtils.updateNode(desc);
         return Notifications.success("Node updated");
     }
 
-    public static Message addOrRejoin(NodeInfoDescription desc) {
+    public Message addOrRejoin(NodeInfoDescription desc) {
         Optional<NodeInfoDescription> latestDesc = StorageUtils.getLatestNodeOrElseEmpty(desc.getNodeControllerId());
 
         boolean alreadyRegistered = false;
@@ -104,7 +129,7 @@ public class NodeManagement {
         }
     }
 
-    private static Message addNewNode(NodeInfoDescription desc) throws RuntimeException {
+    private Message addNewNode(NodeInfoDescription desc) throws RuntimeException {
         try {
             StorageUtils.storeNode(desc);
             LOG.info("New cluster node successfully joined http://{}:{}", desc.getHostname(), desc.getPort());
@@ -114,7 +139,7 @@ public class NodeManagement {
         }
     }
 
-    private static Message rejoinAndSyncNode(NodeInfoDescription desc) {
+    private Message rejoinAndSyncNode(NodeInfoDescription desc) {
         LOG.info("Sync latest node description to http://{}:{}", desc.getHostname(), desc.getPort());
         boolean success = SynchronizationFactory.synchronize(desc, SynchronizationType.UPDATE_NODE);
         if (success) {
