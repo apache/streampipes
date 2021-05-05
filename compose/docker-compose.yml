@@ -34,6 +34,7 @@ services:
       - backend:/root/.streampipes
       - files:/spImages
     logging: *default-logging
+    restart: unless-stopped
     networks:
       spnet:
 
@@ -48,6 +49,7 @@ services:
     volumes:
       - connect:/data/
     logging: *default-logging
+    restart: unless-stopped
     networks:
       spnet:
 
@@ -61,6 +63,7 @@ services:
       - consul
       - backend
     logging: *default-logging
+    restart: unless-stopped
     networks:
       spnet:
 
@@ -68,6 +71,7 @@ services:
   activemq:
     image: fogsyio/activemq:5.15.9
     logging: *default-logging
+    restart: unless-stopped
     networks:
       spnet:
 
@@ -91,6 +95,7 @@ services:
     volumes:
       - consul:/consul/data
     logging: *default-logging
+    restart: unless-stopped
     networks:
       spnet:
         ipv4_address: ${SP_CONSUL_CONTAINER_IP}
@@ -100,6 +105,7 @@ services:
     volumes:
       - couchdb:/opt/couchdb/data
     logging: *default-logging
+    restart: unless-stopped
     networks:
       spnet:
 
@@ -122,6 +128,7 @@ services:
       - kafka:/kafka
       - /var/run/docker.sock:/var/run/docker.sock
     logging: *default-logging
+    restart: unless-stopped
     networks:
       spnet:
 
@@ -130,6 +137,7 @@ services:
     volumes:
       - zookeeper:/opt/zookeeper-3.4.13
     logging: *default-logging
+    restart: unless-stopped
     networks:
       spnet:
 
@@ -142,6 +150,7 @@ services:
     volumes:
       - influxdb:/var/lib/influxdb
     logging: *default-logging
+    restart: unless-stopped
     networks:
       spnet:
 
@@ -153,6 +162,7 @@ services:
     volumes:
       - files:/spImages
     logging: *default-logging
+    restart: unless-stopped
     networks:
       spnet:
 
@@ -162,6 +172,7 @@ services:
       - consul
       - kafka
     logging: *default-logging
+    restart: unless-stopped
     networks:
       spnet:
 
