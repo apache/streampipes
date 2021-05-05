@@ -26,6 +26,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.apache.streampipes.dataexplorer.DataLakeManagementV4;
+import org.apache.streampipes.model.datalake.DataLakeConfiguration;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.rest.impl.AbstractRestResource;
 import org.slf4j.Logger;
@@ -57,17 +58,14 @@ public class DataLakeResourceV4 extends AbstractRestResource {
 
 
     @POST
-    @Path("/measurements/{measurementID}/configuration")
+    @Path("/configuration")
     @Consumes(MediaType.APPLICATION_JSON)
-    @Operation(summary = "Configure parameters of measurement series with a given id", tags = {"Data Lake"},
+    @Operation(summary = "Configure the parameters of the data lake", tags = {"Data Lake"},
             responses = {@ApiResponse(responseCode = "200", description = "Configuration was successful")})
-    public Response configureMeasurement(@Parameter(in = ParameterIn.PATH, description = "username", required = true) @PathParam("username") String username
-            , @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true) @PathParam("measurementID") String measurementID
-            , @Parameter(in = ParameterIn.DEFAULT, description = "the configuration parameters") Placeholder body) {
-        /**
-         * TODO: implementation of method stump
-         */
-        return null;
+    public Response configureMeasurement(@Parameter(in = ParameterIn.PATH, description = "username", required = true) @PathParam("username") String username,
+                                         @Parameter(in = ParameterIn.QUERY, description = "should any parameter be reset to its default value?") @DefaultValue("false") @QueryParam("resetToDefault") boolean resetToDefault,
+                                         @Parameter(in = ParameterIn.DEFAULT, description = "the configuration parameters") DataLakeConfiguration config) {
+        return ok(this.dataLakeManagement.editMeasurementConfiguration(config, resetToDefault));
     }
 
     @DELETE
@@ -122,18 +120,14 @@ public class DataLakeResourceV4 extends AbstractRestResource {
     }
 
     @GET
-    @Path("/measurements/{measurementID}/configuration")
+    @Path("/configuration")
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(summary = "Get configuration parameters of a measurement series by a given id", tags = {"Data Lake"},
+    @Operation(summary = "Get the configuration parameters of the data lake", tags = {"Data Lake"},
             responses = {
-                    @ApiResponse(responseCode = "200", description = "configuration parameters", content = @Content(schema = @Schema(implementation = Placeholder.class)))})
-    public Response getMeasurementConfiguration(@Parameter(in = ParameterIn.PATH, description = "username", required = true) @PathParam("username") String username
-            , @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true) @PathParam("measurementID") String measurementID
-            , @Parameter(in = ParameterIn.QUERY, description = "the id of a specific configuration parameter") @QueryParam("parameterID") String parameterID) {
-        /**
-         * TODO: implementation of method stump
-         */
-        return null;
+                    @ApiResponse(responseCode = "200", description = "configuration parameters", content = @Content(schema = @Schema(implementation = DataLakeConfiguration.class)))})
+    public Response getMeasurementConfiguration(@Parameter(in = ParameterIn.PATH, description = "username", required = true) @PathParam("username") String username,
+                                                @Parameter(in = ParameterIn.QUERY, description = "the id of a specific configuration parameter") @QueryParam("parameterID") String parameterID) {
+        return ok(this.dataLakeManagement.getDataLakeConfiguration());
     }
 
     @POST
