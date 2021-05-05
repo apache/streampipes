@@ -18,9 +18,14 @@
 
 package org.apache.streampipes.dataexplorer;
 
+import org.apache.streampipes.dataexplorer.param.RetentionPolicyQueryParams;
 import org.apache.streampipes.dataexplorer.query.DeleteDataQuery;
+import org.apache.streampipes.dataexplorer.query.EditRetentionPolicyQuery;
+import org.apache.streampipes.dataexplorer.query.ShowRetentionPolicyQuery;
 import org.apache.streampipes.dataexplorer.utils.DataExplorerUtils;
+import org.apache.streampipes.model.datalake.DataLakeConfiguration;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DataLakeRetentionPolicy;
 import org.influxdb.dto.QueryResult;
 
 import java.util.List;
@@ -43,5 +48,47 @@ public class DataLakeManagementV4 {
         }
         return true;
     }
-}
+
+    public DataLakeConfiguration getDataLakeConfiguration() {
+        List<DataLakeRetentionPolicy> retentionPolicies = getAllExistingRetentionPolicies();
+        return new DataLakeConfiguration(retentionPolicies);
+    }
+
+    public String editMeasurementConfiguration(DataLakeConfiguration config, boolean resetToDefault) {
+
+        List<DataLakeRetentionPolicy> existingRetentionPolicies = getAllExistingRetentionPolicies();
+
+        if (resetToDefault) {
+            if (existingRetentionPolicies.size() > 1) {
+                String drop = new EditRetentionPolicyQuery(RetentionPolicyQueryParams.from("custom", "0s"), "DROP").executeQuery();
+            }
+            String reset = new EditRetentionPolicyQuery(RetentionPolicyQueryParams.from("autogen", "0s"), "DEFAULT").executeQuery();
+            return reset;
+        } else {
+
+            Integer batchSize = config.getBatchSize();
+            Integer flushDuration = config.getFlushDuration();
+
+            /**
+             * TODO:
+             * - Implementation of parameter update for batchSize and flushDuration
+             * - Updating multiple retention policies
+             */
+
+            String operation = "CREATE";
+            if (existingRetentionPolicies.size() > 1) {
+                operation = "ALTER";
+            }
+            String result = new EditRetentionPolicyQuery(RetentionPolicyQueryParams.from("custom", "1d"), operation).executeQuery();
+            return result;
+        }
+    }
+
+    public List<DataLakeRetentionPolicy> getAllExistingRetentionPolicies() {
+        /**
+         * TODO:
+         * - Implementation of parameter return for batchSize and flushDuration
+         */
+        return new ShowRetentionPolicyQuery(RetentionPolicyQueryParams.from("", "0s")).executeQuery();
+    }
 }
