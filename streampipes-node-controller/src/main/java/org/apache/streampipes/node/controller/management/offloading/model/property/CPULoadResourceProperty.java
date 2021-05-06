@@ -18,7 +18,8 @@
 
 package org.apache.streampipes.node.controller.management.offloading.model.property;
 
-import org.apache.streampipes.model.resource.ResourceMetrics;
+
+import org.apache.streampipes.model.node.monitor.ResourceMetrics;
 
 public class CPULoadResourceProperty implements ResourceProperty<Float>{
 

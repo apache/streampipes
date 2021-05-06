@@ -18,15 +18,14 @@
 package org.apache.streampipes.manager.migration;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.apache.streampipes.manager.node.StreamPipesClusterManager;
-import org.apache.streampipes.manager.node.management.resources.ClusterResourceManager;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.node.NodeInfoDescription;
+import org.apache.streampipes.model.node.monitor.ResourceMetrics;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.resource.Hardware;
-import org.apache.streampipes.model.resource.ResourceMetrics;
 import org.apache.streampipes.node.management.NodeManagement;
+import org.apache.streampipes.node.management.operation.monitor.resource.ClusterResourceMonitor;
 
 
 import java.util.*;
@@ -96,7 +95,7 @@ public class MigrationPipelineGenerator {
         //Currently only checking for free disk space and memory
         List<NodeInfoDescription> filteredTargetNodes = new ArrayList<>();
         for(NodeInfoDescription nodeInfo : possibleTargetNodes){
-            Queue<ResourceMetrics> rmHistory = ClusterResourceManager.getResourceMetricsMap()
+            Queue<ResourceMetrics> rmHistory = ClusterResourceMonitor.getResourceMetricsMap()
                     .get(nodeInfo.getNodeControllerId());
             if(rmHistory == null) return null;
             Hardware hardware = entityToMigrate.getResourceRequirements().stream()

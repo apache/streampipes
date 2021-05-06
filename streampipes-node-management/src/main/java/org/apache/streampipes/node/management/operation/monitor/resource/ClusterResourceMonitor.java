@@ -18,12 +18,17 @@
 package org.apache.streampipes.node.management.operation.monitor.resource;
 
 
+import org.apache.streampipes.model.node.NodeInfoDescription;
 import org.apache.streampipes.model.node.monitor.ResourceMetrics;
 import org.apache.streampipes.node.management.operation.monitor.health.ClusterHealthCheckMonitor;
 import org.apache.streampipes.node.management.utils.HttpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -34,6 +39,11 @@ public class ClusterResourceMonitor {
     private static final String RESOURCE_COLLECTOR_ROUTE = "/api/v2/node/info/resources";
     private static final int RESOURCE_COLLECTOR_INTERVAL_SECS = 60;
     private static ClusterResourceMonitor instance = null;
+    private static Map<String, Queue<ResourceMetrics>> resourceMetricsMap = new HashMap<>();
+
+    public static Map<String, Queue<ResourceMetrics>> getResourceMetricsMap(){
+        return resourceMetricsMap;
+    }
 
     private ClusterResourceMonitor() {}
 
@@ -60,6 +70,16 @@ public class ClusterResourceMonitor {
             ResourceMetrics resourceMetrics = new NodeResourceCollector(endpoint).execute();
 
              // TODO: implement
+            addResourceMetrics(node, resourceMetrics);
         });
     };
+
+    private void addResourceMetrics(NodeInfoDescription node, ResourceMetrics rm){
+        if(!resourceMetricsMap.containsKey(node.getNodeControllerId()))
+            resourceMetricsMap.put(node.getNodeControllerId(), new ArrayBlockingQueue<ResourceMetrics>(10));
+        if(!resourceMetricsMap.get(node.getNodeControllerId()).offer(rm)){
+            resourceMetricsMap.get(node.getNodeControllerId()).poll();
+            resourceMetricsMap.get(node.getNodeControllerId()).offer(rm);
+        }
+    }
 }

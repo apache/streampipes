@@ -20,9 +20,9 @@ package org.apache.streampipes.node.controller.management.offloading;
 
 import org.apache.streampipes.model.Response;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+import org.apache.streampipes.model.node.monitor.ResourceMetrics;
 import org.apache.streampipes.node.controller.management.offloading.model.OffloadingStrategy;
 import org.apache.streampipes.node.controller.management.pe.InvocableElementManager;
-import org.apache.streampipes.model.resource.ResourceMetrics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
