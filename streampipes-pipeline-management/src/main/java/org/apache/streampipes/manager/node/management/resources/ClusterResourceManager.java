@@ -17,21 +17,29 @@
  */
 package org.apache.streampipes.manager.node.management.resources;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.fluent.Request;
+import org.apache.http.client.fluent.Response;
 import org.apache.streampipes.model.node.NodeInfoDescription;
+import org.apache.streampipes.model.resource.ResourceMetrics;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.api.INodeInfoStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
-import java.net.InetSocketAddress;
-import java.net.MalformedURLException;
-import java.net.Socket;
-import java.net.URL;
+import java.io.IOException;
+import java.net.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
 
 public class ClusterResourceManager {
 
-    private static final int RESOURCE_RETRIEVE_FREQUENCY_MS = 60000;
-    private static final int SOCKET_TIMEOUT_MS = 500;
+    private static final int SOCKET_TIMEOUT_MS = 1000;
     private static ClusterResourceManager instance = null;
+    private static Map<String, Queue<ResourceMetrics>> resourceMetricsMap = new HashMap<>();
 
     private ClusterResourceManager() {}
 
@@ -45,47 +53,33 @@ public class ClusterResourceManager {
         return instance;
     }
 
-    public void run() {
-        new Thread(getNodes, "nodes").start();
+    public static Map<String, Queue<ResourceMetrics>> getResourceMetricsMap(){
+        return resourceMetricsMap;
     }
 
-    private final Runnable getNodes = () -> {
-        while (true) {
-            try {
-                List<NodeInfoDescription> nodes =  getNodeStorageApi().getAllNodes();
-                if (nodes.size() > 0) {
-                    nodes.forEach(node -> {
-                        try {
-                            URL nodeUrl = generateNodeUrl(node);
-                            // TODO: gather current resources from all active node controller endpoints
-
-                        } catch (MalformedURLException e) {
-                            e.printStackTrace();
-                        }
-                    });
+    public void checkResources(){
+        List<NodeInfoDescription> nodes =  getNodeStorageApi().getAllActiveNodes();
+        if (nodes.size() > 0) {
+            nodes.forEach(node -> {
+                try {
+                    URL nodeUrl = generateNodeUrl(node);
+                    Response resp = Request.Get(nodeUrl.toURI()).socketTimeout(SOCKET_TIMEOUT_MS).execute();
+                    addResourceMetrics(node, extractResourceMetrics(resp.returnContent().asString()));
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (ClientProtocolException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
                 }
-                Thread.sleep(RESOURCE_RETRIEVE_FREQUENCY_MS);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            });
         }
-    };
+    }
 
     private URL generateNodeUrl(NodeInfoDescription desc) throws MalformedURLException {
-        return new URL("http", desc.getHostname(), desc.getPort(), "");
-    }
-
-    private boolean healthCheck(URL url) {
-        boolean isAlive = true;
-        try {
-            InetSocketAddress sa = new InetSocketAddress(url.getHost(), url.getPort());
-            Socket ss = new Socket();
-            ss.connect(sa, SOCKET_TIMEOUT_MS);
-            ss.close();
-        } catch(Exception e) {
-            isAlive = false;
-        }
-        return isAlive;
+        return new URL("http", desc.getHostname(), desc.getPort(), "/api/v2/node/info/resources");
     }
 
     // Helpers
@@ -93,4 +87,23 @@ public class ClusterResourceManager {
     private static INodeInfoStorage getNodeStorageApi() {
         return StorageDispatcher.INSTANCE.getNoSqlStore().getNodeStorage();
     }
+
+    private ResourceMetrics extractResourceMetrics(String rm){
+        try {
+            return JacksonSerializer.getObjectMapper().readValue(rm, ResourceMetrics.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private void addResourceMetrics(NodeInfoDescription node, ResourceMetrics rm){
+        if(!resourceMetricsMap.containsKey(node.getNodeControllerId()))
+            resourceMetricsMap.put(node.getNodeControllerId(), new ArrayBlockingQueue<ResourceMetrics>(10));
+        if(!resourceMetricsMap.get(node.getNodeControllerId()).offer(rm)){
+            resourceMetricsMap.get(node.getNodeControllerId()).poll();
+            resourceMetricsMap.get(node.getNodeControllerId()).offer(rm);
+        }
+    }
+
 }

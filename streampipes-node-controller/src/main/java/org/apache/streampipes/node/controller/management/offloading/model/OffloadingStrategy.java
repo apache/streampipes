@@ -21,17 +21,24 @@ package org.apache.streampipes.node.controller.management.offloading.model;
 import org.apache.streampipes.node.controller.management.offloading.model.policies.OffloadingPolicy;
 import org.apache.streampipes.node.controller.management.offloading.model.property.ResourceProperty;
 import org.apache.streampipes.node.controller.management.offloading.model.selection.SelectionStrategy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OffloadingStrategy<T> {
     private SelectionStrategy selectionStrategy;
     private OffloadingPolicy<T> offloadingPolicy;
     private ResourceProperty<T> resourceProperty;
+    private static final Logger LOG = LoggerFactory.getLogger(OffloadingStrategy.class.getCanonicalName());
 
     public OffloadingStrategy(OffloadingPolicy offloadingPolicy, ResourceProperty resourceProperty,
                               SelectionStrategy selectionStrategy){
         this.offloadingPolicy = offloadingPolicy;
         this.resourceProperty = resourceProperty;
         this.selectionStrategy = selectionStrategy;
+        LOG.info("Registered offloading strategy: "
+                + this.selectionStrategy.getClass().getSimpleName() + " | "
+                + this.resourceProperty.getClass().getSimpleName() + " | "
+                + this.offloadingPolicy.getClass().getSimpleName());
     }
 
     public SelectionStrategy getSelectionStrategy() {

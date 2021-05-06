@@ -18,9 +18,13 @@
 
 package org.apache.streampipes.node.controller.management.offloading;
 
+import org.apache.streampipes.model.Response;
+import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.node.controller.management.offloading.model.OffloadingStrategy;
 import org.apache.streampipes.node.controller.management.pe.InvocableElementManager;
-import org.apache.streampipes.node.controller.management.resource.model.ResourceMetrics;
+import org.apache.streampipes.model.resource.ResourceMetrics;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +33,7 @@ public class OffloadingPolicyManager {
 
     private final List<OffloadingStrategy<?>> offloadingStrategies = new ArrayList<>();
     private static OffloadingPolicyManager instance;
+    private static final Logger LOG = LoggerFactory.getLogger(OffloadingPolicyManager.class.getCanonicalName());
 
     public static OffloadingPolicyManager getInstance(){
         if(instance == null){
@@ -41,7 +46,15 @@ public class OffloadingPolicyManager {
         for(OffloadingStrategy strategy:offloadingStrategies){
             strategy.getOffloadingPolicy().addValue(strategy.getResourceProperty().getProperty(rm));
             if(strategy.getOffloadingPolicy().isViolated()){
-                InvocableElementManager.getInstance().postOffloadRequest(strategy.getSelectionStrategy().selectEntity());
+                InvocableStreamPipesEntity offloadEntity = strategy.getSelectionStrategy().selectEntity();
+                if(offloadEntity != null){
+                    Response resp = InvocableElementManager.getInstance().postOffloadRequest(offloadEntity);
+                    if(resp.isSuccess())
+                        LOG.info("Successfully offloaded: " + offloadEntity.getAppId()
+                                + " from Pipeline: " + offloadEntity.getCorrespondingPipeline());
+                    else LOG.info("Failed to offload: " + offloadEntity.getAppId()
+                            + " from Pipeline: " + offloadEntity.getCorrespondingPipeline());
+                }else LOG.info("No entity to offload found");
             }
         }
     }

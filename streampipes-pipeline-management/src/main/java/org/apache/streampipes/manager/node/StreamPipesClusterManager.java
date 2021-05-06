@@ -170,11 +170,10 @@ public class StreamPipesClusterManager extends AbstractClusterManager {
 
     public static Message handleOffloadRequest(InvocableStreamPipesEntity elementToMigrate) {
         Pipeline currentPipeline = getPipelineStorageApi().getPipeline(elementToMigrate.getCorrespondingPipeline());
-        Pipeline offloadPipeline = MigrationPipelineGenerator.generateMigrationPipeline(elementToMigrate,
-                currentPipeline);
-        //TODO: Handle this case properly
+        Pipeline offloadPipeline = new MigrationPipelineGenerator(elementToMigrate, currentPipeline)
+                .generateMigrationPipeline();
         if(offloadPipeline == null)
-            return Notifications.error(NotificationType.UNKNOWN_ERROR);
+            return Notifications.error(NotificationType.NO_NODE_FOUND);
 
         try {
             PipelineOperationStatus status = Operations.handlePipelineElementMigration(offloadPipeline,

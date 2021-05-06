@@ -33,6 +33,7 @@ public enum NotificationType {
 	NO_MATCHING_PROTOCOL_CONNECTION("Not a valid connection", "No supported input protocol matches provided output protocol"),
 	REMOTE_SERVER_NOT_ACCESSIBLE("Can't connect to remote server", "Please contact the admin of the system"),
 	NO_MATCHING_SCHEME("The JSON from the server is not valid", "The keys in the element description don't map the keys in the JSON response"),
+	NO_NODE_FOUND("No node found", "No node fulfilling the requirements is available"),
 
 	LOGIN_FAILED("Login failed", "Please re-enter your password"),
 	LOGIN_SUCCESS("Login success", ""),

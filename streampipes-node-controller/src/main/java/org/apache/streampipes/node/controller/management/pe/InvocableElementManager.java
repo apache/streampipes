@@ -167,15 +167,13 @@ public class InvocableElementManager implements IPipelineElementLifeCycle {
         return response;
     }
 
-    public void postOffloadRequest(InvocableStreamPipesEntity instanceToOffload){
+    public Response postOffloadRequest(InvocableStreamPipesEntity instanceToOffload){
         try {
             String url = generateBackendOffloadEndpoint();
             String desc = toJson(instanceToOffload);
-            Request.Post(url)
-                    .bodyString(desc, ContentType.APPLICATION_JSON)
-                    .execute();
+            return handleResponse(Request.Post(url).bodyString(desc, ContentType.APPLICATION_JSON).execute());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new SpRuntimeException(e);
         }
     }
 
@@ -275,14 +273,49 @@ public class InvocableElementManager implements IPipelineElementLifeCycle {
     }
 
     private List<ConsumableStreamPipesEntity> getSupportedEntities(InvocableRegistration registration){
-        //Check if the node supports the entity (atm checks if it has a GPU) TODO: simplify; check for other Hardware
-        return registration.getSupportedPipelineElements().stream().filter(nse -> (!nse.getResourceRequirements().stream()
+        //Check if the node supports the entity (atm only hardware requirements; could be expanded to include
+        // software requirements)
+        return registration.getSupportedPipelineElements().stream()
+                .filter(this::checkGpuRequirement)
+                .filter(this::checkCpuRequirement)
+                .filter(this::checkMemoryRequirement)
+                //.filter(this::checkDiskSpaceRequirement) currently does not work (node diskspace is falsely set to 0
+                // in Node Hardware Resources, regardless of actual free diskspace) TODO: fix this issue
+                    .collect(Collectors.toList());
+    }
+
+    private boolean checkGpuRequirement(ConsumableStreamPipesEntity spEntity){
+        boolean entityRequiresGpu = spEntity.getResourceRequirements().stream()
                 .filter(req -> req instanceof Hardware).filter(req -> ((Hardware) req).isGpu()).map(req -> ((Hardware) req)
-                        .isGpu()).findFirst().orElse(false) ||
-                nse.getResourceRequirements().stream().filter(req -> req instanceof Hardware)
-                        .filter(req -> ((Hardware) req).isGpu()).map(req -> ((Hardware) req)
-                        .isGpu()).findFirst().orElse(false) == getNodeInfoDescription()
-                .getNodeResources().getHardwareResource().getGpu().getCores()>0)).collect(Collectors.toList());
+                        .isGpu()).findFirst().orElse(false);
+        boolean nodeHasGPU = (getNodeInfoDescription().getNodeResources().getHardwareResource().getGpu().getCores()>0);
+        return (!entityRequiresGpu || nodeHasGPU);
+    }
+
+    private boolean checkCpuRequirement(ConsumableStreamPipesEntity spEntity){
+        int requiredCPUCores = spEntity.getResourceRequirements().stream()
+                .filter(req -> req instanceof Hardware).filter(req -> ((Hardware) req).isGpu())
+                .map(req -> ((Hardware) req).getCpuCores()).findFirst().orElse(0);
+        int nodeCPUCores = getNodeInfoDescription().getNodeResources().getHardwareResource().getCpu().getCores();
+        return (requiredCPUCores <= nodeCPUCores);
+    }
+
+    private boolean checkMemoryRequirement(ConsumableStreamPipesEntity spEntity){
+        long requiredMemory = spEntity.getResourceRequirements().stream()
+                .filter(req -> req instanceof Hardware).filter(req -> ((Hardware) req).isGpu())
+                .map(req -> ((Hardware) req).getMemory()).findFirst().orElse(0l);
+        //Looks at total memory (could be adjusted to consider currently available Memory)
+        long actualNodeMemory = getNodeInfoDescription().getNodeResources().getHardwareResource().getMemory().getMemTotal();
+        return (requiredMemory <= actualNodeMemory);
+    }
+
+    private boolean checkDiskSpaceRequirement(ConsumableStreamPipesEntity spEntity){
+        long requiredDiskSpace = spEntity.getResourceRequirements().stream()
+                .filter(req -> req instanceof Hardware).filter(req -> ((Hardware) req).isGpu())
+                .map(req -> ((Hardware) req).getDisk()).findFirst().orElse(0l);
+        //Looks at total diskspace (could be adjusted to consider currently available diskspace)
+        long actualNodeDiskSpace = getNodeInfoDescription().getNodeResources().getHardwareResource().getDisk().getDiskTotal();
+        return (requiredDiskSpace <= actualNodeDiskSpace);
     }
 
     private List<InvocableStreamPipesEntity> getAllInvocables() {

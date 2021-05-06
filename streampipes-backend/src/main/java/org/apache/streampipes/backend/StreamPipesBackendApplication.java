@@ -20,6 +20,7 @@ package org.apache.streampipes.backend;
 import org.apache.shiro.web.env.EnvironmentLoaderListener;
 import org.apache.shiro.web.servlet.OncePerRequestFilter;
 import org.apache.shiro.web.servlet.ShiroFilter;
+import org.apache.streampipes.manager.node.management.resources.ClusterResourceManager;
 import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
@@ -60,6 +61,7 @@ public class StreamPipesBackendApplication {
     ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
     executorService.schedule(this::startAllPreviouslyStoppedPipelines, 5, TimeUnit.SECONDS);
+    executorService.scheduleAtFixedRate(ClusterResourceManager.getInstance()::checkResources, 30l, 60l, TimeUnit.SECONDS);
   }
 
   @PreDestroy
