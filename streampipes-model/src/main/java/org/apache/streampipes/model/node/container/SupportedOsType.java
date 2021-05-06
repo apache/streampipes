@@ -15,8 +15,26 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.node.management.cluster;
+package org.apache.streampipes.model.node.container;
 
-public enum NodeSyncOptions {
-    ACTIVATE_NODE, DEACTIVATE_NODE, UPDATE_NODE,RESTART_RELAYS, HEALTHY;
+import org.apache.streampipes.vocabulary.StreamPipes;
+
+public class SupportedOsType {
+
+    private static final String OS_NAMESPACE = StreamPipes.NS + "ostype#";
+    public static final String WINDOWS = OS_NAMESPACE + "windows";
+    public static final String LINUX = OS_NAMESPACE + "linux";
+    public static final String DARWIN = OS_NAMESPACE + "darwin";
+
+    public static String windows(){
+        return WINDOWS;
+    }
+
+    public static String linux(){
+        return LINUX;
+    }
+
+    public static String darwin(){
+        return DARWIN;
+    }
 }

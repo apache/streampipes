@@ -48,6 +48,7 @@
                                 <mat-menu #menu="matMenu" style="font-size: 10pt">
                                     <button mat-menu-item
                                             *ngIf="!node.active"
+                                            [disabled]="node.condition === 'OFFLINE' || node.condition === 'CONNECTING'"
                                             (click)="changeNodeState(node, true)">
                                         <mat-icon
                                                 [ngClass]="node.active ? 'node-activated' : 'node-inactive'"
@@ -59,6 +60,7 @@
                                     </button>
                                     <button mat-menu-item
                                             *ngIf="node.active"
+                                            [disabled]="node.condition === 'OFFLINE' || node.condition === 'CONNECTING'"
                                             (click)="changeNodeState(node, false)">
                                         <mat-icon
                                                 [ngClass]="node.active ? 'node-inactive' : 'node-deactivated'"
@@ -81,6 +83,7 @@
 <!--                                        <span>evict</span>-->
 <!--                                    </button>-->
                                     <button mat-menu-item
+                                            [disabled]="!node.active || node.condition === 'OFFLINE'"
                                             matTooltip="Edit node configuration"
                                             matTooltipPosition="above"
                                             (click)="settings(node)">
@@ -104,9 +107,21 @@
                             <mat-card-subtitle style="font-size: 10pt">
                                 {{node.nodeControllerId}} | <b>{{node.nodeResources.softwareResource.os}}</b>
                                 <div style="color: lightgrey;">
-                                    last contact: {{currentTimestamp}}
-                                    <span *ngIf="node.active" class="span-node-active">active</span>
-                                    <span *ngIf="!node.active" class="span-node-inactive">inactive</span>
+                                    last contact: {{this.toHumanReadableDate(node.lastHeartBeatTime)}}
+                                    <span *ngIf="node.condition === 'CONNECTING' && node.active"
+                                          class="span-node-active">
+                                        connecting</span>
+                                    <span *ngIf="node.condition === 'ONLINE' && node.active" class="span-node-active">
+                                        online</span>
+                                    <span *ngIf="node.condition === 'ONLINE' && !node.active"
+                                          class="span-node-inactive">
+                                        deactivated</span>
+                                    <span *ngIf="node.condition === 'OFFLINE' && node.active"
+                                          class="span-node-inactive">offline
+                                    </span>
+                                    <span *ngIf="node.condition === 'OFFLINE' && !node.active"
+                                          class="span-node-inactive">lost
+                                    </span>
                                 </div>
                             </mat-card-subtitle>
                         </mat-card-header>

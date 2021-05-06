@@ -138,7 +138,7 @@ public class InvocableElementManager implements IPipelineElementLifeCycle {
         // TODO: unregister element from Consul and
         setSupportedPipelineElements(Collections.emptyList());
         try {
-            String url = generateBackendEndpoint();
+            String url = generateNodeManagementUpdateEndpoint();
             String desc = toJson(getNodeInfoDescription());
             Request.Put(url)
                     .bodyString(desc, ContentType.APPLICATION_JSON)
@@ -169,7 +169,7 @@ public class InvocableElementManager implements IPipelineElementLifeCycle {
 
     public Response postOffloadRequest(InvocableStreamPipesEntity instanceToOffload){
         try {
-            String url = generateBackendOffloadEndpoint();
+            String url = generatePipelineManagementOffloadEndpoint();
             String desc = toJson(instanceToOffload);
             return handleResponse(Request.Post(url).bodyString(desc, ContentType.APPLICATION_JSON).execute());
         } catch (IOException e) {
@@ -262,7 +262,7 @@ public class InvocableElementManager implements IPipelineElementLifeCycle {
         setSupportedPipelineElements(getSupportedEntities(registration).stream()
                 .map(NamedStreamPipesEntity::getAppId).collect(Collectors.toList()));
         try {
-            String url = generateBackendEndpoint();
+            String url = generateNodeManagementUpdateEndpoint();
             String desc = toJson(getNodeInfoDescription());
             Request.Put(url)
                     .bodyString(desc, ContentType.APPLICATION_JSON)
@@ -342,7 +342,7 @@ public class InvocableElementManager implements IPipelineElementLifeCycle {
         return new SimpleTopicDefinition( RECONFIGURATION_TOPIC + DOT + runningInstanceId);
     }
 
-    private String generateBackendEndpoint() {
+    private String generateNodeManagementUpdateEndpoint() {
         return HTTP_PROTOCOL
                 + NodeConfiguration.getBackendHost()
                 + COLON
@@ -353,13 +353,13 @@ public class InvocableElementManager implements IPipelineElementLifeCycle {
                 + NodeConfiguration.getNodeControllerId();
     }
 
-    private String generateBackendOffloadEndpoint() {
+    private String generatePipelineManagementOffloadEndpoint() {
         return HTTP_PROTOCOL
                 + NodeConfiguration.getBackendHost()
                 + COLON
                 + NodeConfiguration.getBackendPort()
                 + SLASH
-                + "streampipes-backend/api/v2/users/admin@streampipes.org/nodes/offload";
+                + "streampipes-backend/api/v2/users/admin@streampipes.org/pipelines/offload";
     }
 
     private void registerAtConsul(InvocableRegistration registration) {

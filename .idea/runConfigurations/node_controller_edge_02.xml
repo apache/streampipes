@@ -6,8 +6,8 @@
       <env name="SP_NODE_ACCESSIBLE_FIELD_DEVICE_ZED" value="zed;camera;usb;/dev/video0" />
       <env name="SP_NODE_TAGS" value="fzi;main" />
       <env name="SP_DEBUG" value="true" />
-      <env name="SP_URL" value="http://host.docker.internal:8030" />
       <env name="SP_NODE_CONTROLLER_URL" value="http://edge02.example.de:7078" />
+      <env name="SP_URL" value="http://localhost:8030" />
     </envs>
     <option name="MAIN_CLASS_NAME" value="org.apache.streampipes.node.controller.NodeControllerInit" />
     <module name="streampipes-node-controller" />

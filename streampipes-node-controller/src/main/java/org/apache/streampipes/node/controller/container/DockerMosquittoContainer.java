@@ -26,6 +26,13 @@ public class DockerMosquittoContainer extends AbstractStreamPipesDockerContainer
     public DockerContainer declareDockerContainer() {
         return DockerContainerBuilder.create(StreamPipesDockerServiceID.SP_SVC_MOSQUITTO_ID)
                 .withImage("eclipse-mosquitto:1.6.12")
+                .supportedArchitectures(
+                        SupportedArchitectures.amd(),
+                        SupportedArchitectures.arm32v7(),
+                        SupportedArchitectures.arm64v8())
+                .supportedOperatingSystemTypes(
+                        SupportedOsType.linux(),
+                        SupportedOsType.darwin())
                 .withContainerName("streampipes-node-broker")
                 .withExposedPorts(Ports.withMapping("1883"))
                 .withEnvironmentVariables(ContainerEnvBuilder.create()

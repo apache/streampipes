@@ -30,8 +30,8 @@ public class DockerContainerBuilder {
         return new DockerContainerBuilder(id);
     }
 
-    public DockerContainerBuilder withImage(String imageUri) {
-        this.dockerContainer.setImageUri(imageUri);
+    public DockerContainerBuilder withImage(String imageTag) {
+        this.dockerContainer.setImageTag(imageTag);
         return this;
     }
 
@@ -62,6 +62,21 @@ public class DockerContainerBuilder {
 
     public DockerContainerBuilder withVolumes(List<String> volumes) {
         this.dockerContainer.setVolumes(volumes);
+        return this;
+    }
+
+    public DockerContainerBuilder supportedArchitectures(List<String> supportedArchitectures) {
+        this.dockerContainer.setSupportedArchitectures(supportedArchitectures);
+        return this;
+    }
+
+    public DockerContainerBuilder supportedArchitectures(String ... architectures) {
+        this.dockerContainer.setSupportedArchitectures(Arrays.asList(architectures));
+        return this;
+    }
+
+    public DockerContainerBuilder supportedOperatingSystemTypes(String ... operatingSystems) {
+        this.dockerContainer.setSupportedOperatingSystemTypes(Arrays.asList(operatingSystems));
         return this;
     }
 

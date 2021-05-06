@@ -45,7 +45,7 @@ public class DockerContainerDeclarerSingleton {
     }
 
     public DockerContainerDeclarerSingleton register(AbstractStreamPipesDockerContainer container) {
-        LOG.info("Register container for auto-deploy: " + container.declareDockerContainer().getServiceId());
+        LOG.info("Register container descriptions for auto-deployment: " + container.declareDockerContainer().getServiceId());
         this.dockerContainers.put(
                 container.declareDockerContainer().getServiceId(),
                 container.declareDockerContainer());

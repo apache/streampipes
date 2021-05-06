@@ -81,7 +81,7 @@ public class NodeConstants {
                 .forEach(rc -> {
                     DockerContainer c = new DockerContainer();
                     c.setContainerName(rc.names().get(0).replace("/", ""));
-                    c.setImageUri(rc.image());
+                    c.setImageTag(rc.image());
 
                     Optional<String> serviceId = rc.labels().entrySet().stream()
                             .filter(l -> l.getKey().contains("org.apache.streampipes.service.id"))

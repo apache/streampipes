@@ -19,9 +19,10 @@ package org.apache.streampipes.node.controller.api;
 
 import org.apache.streampipes.model.node.container.DockerContainer;
 import org.apache.streampipes.node.controller.management.node.NodeManager;
+import org.apache.streampipes.node.controller.management.orchestrator.docker.DockerContainerDeclarerSingleton;
 import org.apache.streampipes.node.controller.management.orchestrator.status.ContainerDeploymentStatus;
 import org.apache.streampipes.node.controller.management.orchestrator.docker.model.ContainerStatus;
-import org.apache.streampipes.node.controller.management.orchestrator.DockerOrchestratorManager;
+import org.apache.streampipes.node.controller.management.orchestrator.DockerEngineManager;
 import org.apache.streampipes.node.controller.management.pe.InvocableElementManager;
 
 import javax.ws.rs.*;
@@ -33,14 +34,21 @@ public class ContainerDeploymentResource extends AbstractResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public javax.ws.rs.core.Response getPipelineElementContainer(){
-        return ok(DockerOrchestratorManager.getInstance().list());
+        return ok(DockerEngineManager.getInstance().list());
+    }
+
+    @GET
+    @Path("/registered")
+    @Produces(MediaType.APPLICATION_JSON)
+    public javax.ws.rs.core.Response getAllRegisteredContainer(){
+        return ok(DockerContainerDeclarerSingleton.getInstance().getAllDockerContainerAsList());
     }
 
     @POST
     @Path("/deploy")
     @Consumes(MediaType.APPLICATION_JSON)
     public javax.ws.rs.core.Response deployPipelineElementContainer(DockerContainer container) {
-        ContainerDeploymentStatus status = DockerOrchestratorManager.getInstance().deploy(container);
+        ContainerDeploymentStatus status = DockerEngineManager.getInstance().deploy(container);
 
         if (status.getStatus() == ContainerStatus.DEPLOYED) {
             NodeManager.getInstance().addToRegisteredContainers(status.getContainer());
@@ -52,7 +60,7 @@ public class ContainerDeploymentResource extends AbstractResource {
     @Path("/remove")
     @Consumes(MediaType.APPLICATION_JSON)
     public javax.ws.rs.core.Response removePipelineElementContainer(DockerContainer container) {
-        ContainerDeploymentStatus status = DockerOrchestratorManager.getInstance().remove(container);
+        ContainerDeploymentStatus status = DockerEngineManager.getInstance().remove(container);
 
         if (status.getStatus() == ContainerStatus.REMOVED) {
             InvocableElementManager.getInstance().unregister();

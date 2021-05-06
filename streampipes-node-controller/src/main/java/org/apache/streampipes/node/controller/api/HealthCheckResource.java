@@ -17,7 +17,10 @@
  */
 package org.apache.streampipes.node.controller.api;
 
+import org.apache.streampipes.model.NodeHealthStatus;
 import org.apache.streampipes.node.controller.config.NodeConfiguration;
+import org.apache.streampipes.node.controller.management.node.NodeManager;
+import org.apache.streampipes.node.controller.management.resource.ResourceManager;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -31,6 +34,11 @@ public class HealthCheckResource extends AbstractResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getHealth() {
-        return ok(String.format("PONG: %s", NodeConfiguration.getNodeControllerId()));
+        NodeHealthStatus status = new NodeHealthStatus();
+        status.setNodeControllerId(NodeConfiguration.getNodeControllerId());
+        status.setSuccess(true);
+        status.setTimestamp(System.currentTimeMillis());
+        status.setOptionalMessage("I'm a healthy node");
+        return ok(status);
     }
 }

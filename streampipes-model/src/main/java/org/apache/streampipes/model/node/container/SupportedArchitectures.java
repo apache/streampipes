@@ -15,25 +15,26 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.rest.api;
+package org.apache.streampipes.model.node.container;
 
-import org.apache.streampipes.model.node.NodeInfoDescription;
+import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.ws.rs.core.Response;
+public class SupportedArchitectures {
 
-public interface INode {
+    private static final String ARCHITECTURE_NAMESPACE = StreamPipes.NS + "architecture#";
+    public static final String AMD = ARCHITECTURE_NAMESPACE + "x86_64";
+    public static final String ARM32 = ARCHITECTURE_NAMESPACE + "arm32";
+    public static final String ARM64 = ARCHITECTURE_NAMESPACE + "aarch64";
 
-    Response addNode(String username, NodeInfoDescription desc);
+    public static String amd(){
+        return AMD;
+    }
 
-    Response updateNode(String username, String nodeControllerId, NodeInfoDescription desc);
+    public static String arm32v7(){
+        return ARM32;
+    }
 
-    Response syncRemoteUpdateFromNodeController(String username, NodeInfoDescription desc);
-
-    Response deleteNode(String username, String nodeControllerId);
-
-    Response changeNodeState(String action, String username, String nodeControllerId);
-
-    Response getAvailableNodes();
-
-    Response getNodes();
+    public static String arm64v8(){
+        return ARM64;
+    }
 }

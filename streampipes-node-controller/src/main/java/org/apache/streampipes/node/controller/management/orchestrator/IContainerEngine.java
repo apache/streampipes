@@ -20,7 +20,7 @@ package org.apache.streampipes.node.controller.management.orchestrator;
 import org.apache.streampipes.model.node.container.DockerContainer;
 import org.apache.streampipes.node.controller.management.orchestrator.status.ContainerDeploymentStatus;
 
-public interface IContainerOrchestrator {
+public interface IContainerEngine {
 
    void init();
 

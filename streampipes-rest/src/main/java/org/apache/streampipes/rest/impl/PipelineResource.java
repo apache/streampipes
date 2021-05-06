@@ -29,6 +29,7 @@ import org.apache.streampipes.commons.exceptions.*;
 import org.apache.streampipes.manager.execution.status.PipelineStatusManager;
 import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.model.SpDataSet;
+import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.client.exception.InvalidConnectionException;
 import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.model.message.NotificationType;
@@ -303,6 +304,17 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
       e.printStackTrace();
       return statusMessage(Notifications.error(NotificationType.UNKNOWN_ERROR));
     }
+  }
+
+  @POST
+  @Path("/offload")
+  @Produces(MediaType.APPLICATION_JSON)
+  @JacksonSerialized
+  @Operation(summary = "Offload pipeline elements to new node",
+          tags = {"Pipeline"})
+  public Response offloadRequestFromNodeController(InvocableStreamPipesEntity elementToOffload) {
+    //return statusMessage(StreamPipesClusterManager.handleOffloadRequest(elementToMigrate));
+    return statusMessage(Operations.handlePipelineElementOffloadRequest(elementToOffload));
   }
 
 }

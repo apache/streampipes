@@ -27,6 +27,13 @@ public class DockerExtensionsContainer extends AbstractStreamPipesDockerContaine
     public DockerContainer declareDockerContainer() {
         return DockerContainerBuilder.create(StreamPipesDockerServiceID.SP_SVC_EXTENSIONS_ID)
                 .withImage("apachestreampipes/extensions-all-jvm:" + getStreamPipesVersion())
+                .supportedArchitectures(
+                        SupportedArchitectures.amd(),
+                        SupportedArchitectures.arm32v7(),
+                        SupportedArchitectures.arm64v8())
+                .supportedOperatingSystemTypes(
+                        SupportedOsType.linux(),
+                        SupportedOsType.darwin())
                 .withContainerName("streampipes-extensions")
                 .withExposedPorts(Ports.withMapping("8090"))
                 .withEnvironmentVariables(ContainerEnvBuilder.create()

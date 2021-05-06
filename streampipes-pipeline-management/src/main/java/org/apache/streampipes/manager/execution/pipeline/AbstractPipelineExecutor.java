@@ -21,7 +21,7 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.manager.data.PipelineGraph;
 import org.apache.streampipes.manager.data.PipelineGraphHelpers;
 import org.apache.streampipes.manager.execution.http.GraphSubmitter;
-import org.apache.streampipes.manager.node.StreamPipesClusterManager;
+
 import org.apache.streampipes.manager.util.TemporaryGraphStorage;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
@@ -33,9 +33,11 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
+import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.model.staticproperty.SecretStaticProperty;
+import org.apache.streampipes.storage.api.INodeDataStreamRelay;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.encryption.CredentialsManager;
@@ -85,15 +87,18 @@ public abstract class AbstractPipelineExecutor {
     }
 
     protected void storeDataStreamRelayContainer(List<SpDataStreamRelayContainer> relays) {
-        relays.forEach(StreamPipesClusterManager::persistDataStreamRelay);
+        //relays.forEach(StreamPipesClusterManager::persistDataStreamRelay);
+        relays.forEach(relay -> getDataStreamRelayApi().addRelayContainer(relay));
     }
 
     protected void deleteDataStreamRelayContainer(List<SpDataStreamRelayContainer> relays) {
-        relays.forEach(StreamPipesClusterManager::deleteDataStreamRelay);
+        //relays.forEach(StreamPipesClusterManager::deleteDataStreamRelay);
+        relays.forEach(relay -> getDataStreamRelayApi().deleteRelayContainer(relay));
     }
 
     protected void updateDataStreamRelayContainer(List<SpDataStreamRelayContainer> relays) {
-        relays.forEach(StreamPipesClusterManager::updateDataStreamRelay);
+        //relays.forEach(StreamPipesClusterManager::updateDataStreamRelay);
+        relays.forEach(relay -> getDataStreamRelayApi().updateRelayContainer(relay));
     }
 
 
@@ -125,6 +130,70 @@ public abstract class AbstractPipelineExecutor {
                 relays).detachRelaysOnMigration();
     }
 
+    protected List<SpDataStreamRelayContainer> findRelaysWhenStopping(List<NamedStreamPipesEntity> predecessors,
+                                                          InvocableStreamPipesEntity target){
+
+        List<SpDataStreamRelayContainer> relays = new ArrayList<>();
+
+        predecessors.forEach(pred -> {
+            List<SpDataStreamRelay> dataStreamRelays = new ArrayList<>();
+            SpDataStreamRelayContainer relayContainer = new SpDataStreamRelayContainer();
+
+            if (pred instanceof DataProcessorInvocation){
+                //Data Processor
+                DataProcessorInvocation graph = (DataProcessorInvocation) pred;
+                if (differentDeploymentTargets(pred, target)) {
+
+                    // TODO only add if no other processor or sink depends on relay
+                    String predDOMId = pred.getDOM();
+                    String targetRunningInstanceId = target.getDeploymentRunningInstanceId();
+                    Optional<DataProcessorInvocation> foundProcessor = pipeline.getSepas().stream()
+                            .filter(processor -> processor.getConnectedTo().contains(predDOMId))
+                            .filter(processor -> !processor.getDeploymentRunningInstanceId().equals(targetRunningInstanceId))
+                            .findAny();
+
+                    Optional<DataSinkInvocation> foundSink = pipeline.getActions().stream()
+                            .filter(action -> action.getConnectedTo().contains(predDOMId))
+                            .findAny();
+
+                    boolean foundDependencyOnDifferentTarget = false;
+                    if (foundProcessor.isPresent()) {
+                        foundDependencyOnDifferentTarget =  differentDeploymentTargets(foundProcessor.get(), target);
+                    }
+
+                    if (foundSink.isPresent()) {
+                        foundDependencyOnDifferentTarget =  differentDeploymentTargets(foundSink.get(), target);
+                    }
+
+                    if (foundDependencyOnDifferentTarget) {
+                        dataStreamRelays.addAll(findRelaysWithMatchingTopic(graph, target));
+
+                        relayContainer = new SpDataStreamRelayContainer(graph);
+                        relayContainer.setOutputStreamRelays(dataStreamRelays);
+
+                        relays.add(relayContainer);
+                    }
+
+                }
+            } else if (pred instanceof SpDataStream){
+                //DataStream
+                SpDataStream stream = (SpDataStream) pred;
+                if (differentDeploymentTargets(stream, target)){
+
+                    String id = extractUniqueAdpaterId(stream.getElementId());
+                    //There is a relay that needs to be removed
+                    dataStreamRelays.add(new SpDataStreamRelay(new EventGrounding(target.getInputStreams()
+                            .get(getIndex(pred.getDOM(), target))
+                            .getEventGrounding())));
+                    String relayStrategy = pipeline.getEventRelayStrategy();
+                    relays.add(new SpDataStreamRelayContainer(id, relayStrategy, stream, dataStreamRelays));
+                }
+            }
+        });
+        return relays;
+    }
+
+
     protected List<SpDataStreamRelayContainer> findRelays(List<NamedStreamPipesEntity> predecessors,
                                                           InvocableStreamPipesEntity target){
 
@@ -138,13 +207,23 @@ public abstract class AbstractPipelineExecutor {
                 //Data Processor
                 DataProcessorInvocation graph = (DataProcessorInvocation) pred;
                 if (differentDeploymentTargets(pred, target)) {
-                    dataStreamRelays.addAll(findRelaysWithMatchingTopic(graph, target));
 
-                    //dsRelayContainer.setRunningStreamRelayInstanceId(pipeline.getPipelineId());
-                    relayContainer = new SpDataStreamRelayContainer(graph);
-                    relayContainer.setOutputStreamRelays(dataStreamRelays);
+                    String runningRelayId = ((DataProcessorInvocation) pred).getDeploymentRunningInstanceId();
+                    Optional<SpDataStreamRelayContainer> existingRelay = getRelayContainerById(runningRelayId);
 
-                    relays.add(relayContainer);
+                    // only add relay if not existing - prevent from duplicate relays with same topic to same target
+                    Collection<? extends SpDataStreamRelay> foundRelays = findRelaysWithMatchingTopic(graph, target);
+
+                    if (!existingRelay.isPresent() || missingRelayToTarget(existingRelay.get(), foundRelays)) {
+                        dataStreamRelays.addAll(findRelaysWithMatchingTopic(graph, target));
+
+                        //dsRelayContainer.setRunningStreamRelayInstanceId(pipeline.getPipelineId());
+                        relayContainer = new SpDataStreamRelayContainer(graph);
+                        relayContainer.setOutputStreamRelays(dataStreamRelays);
+
+                        relays.add(relayContainer);
+                    }
+
                 }
             } else if (pred instanceof SpDataStream){
                 //DataStream
@@ -154,7 +233,7 @@ public abstract class AbstractPipelineExecutor {
                     String id = extractUniqueAdpaterId(stream.getElementId());
                     Optional<SpDataStreamRelayContainer> existingRelay = getRelayContainerById(id);
 
-                    // only add relay if not existing
+                    // only add relay if not existing - prevent from duplicate relays with same topic
                     if(!existingRelay.isPresent()) {
                         //There is a relay that needs to be removed
                         dataStreamRelays.add(new SpDataStreamRelay(new EventGrounding(target.getInputStreams()
@@ -162,11 +241,47 @@ public abstract class AbstractPipelineExecutor {
                                 .getEventGrounding())));
                         String relayStrategy = pipeline.getEventRelayStrategy();
                         relays.add(new SpDataStreamRelayContainer(id, relayStrategy, stream, dataStreamRelays));
+                    } else {
+                        // generate relays for adapter streams to remote processors
+                        List<SpDataStreamRelayContainer> generatedRelays =
+                                generateDataStreamRelays(Collections.singletonList(target));
+
+                        relays.addAll(generatedRelays);
                     }
                 }
             }
         });
         return relays;
+    }
+
+    private boolean missingRelayToTarget(SpDataStreamRelayContainer existingRelayContainer,
+                                         Collection<? extends SpDataStreamRelay> foundRelays) {
+
+        List<TransportProtocol> set = foundRelays.stream()
+                .map(SpDataStreamRelay::getEventGrounding)
+                .map(EventGrounding::getTransportProtocol)
+                .collect(Collectors.toList());
+
+        List<TransportProtocol> relay = existingRelayContainer.getOutputStreamRelays().stream()
+                .map(SpDataStreamRelay::getEventGrounding)
+                .map(EventGrounding::getTransportProtocol)
+                .collect(Collectors.toList());
+
+        boolean missing = true;
+        for (TransportProtocol tp: set) {
+            for (TransportProtocol r: relay) {
+                String targetTopic = tp.getTopicDefinition().getActualTopicName();
+                String rTopic = r.getTopicDefinition().getActualTopicName();
+                String targetHost = tp.getBrokerHostname();
+                String rHost = r.getBrokerHostname();
+
+                if (targetHost.equals(rHost) && targetTopic.equals(rTopic)) {
+                    missing = false;
+                }
+            }
+        }
+
+        return missing;
     }
 
     protected List<NamedStreamPipesEntity> getPredecessors(NamedStreamPipesEntity source,
@@ -251,6 +366,9 @@ public abstract class AbstractPipelineExecutor {
             for (DataProcessorInvocation processor : pipeline.getSepas()) {
                 if (differentDeploymentTargets(processor, graph) && connected(processor, graph)) {
                     if (!relayExists(relays, processor.getDeploymentRunningInstanceId())) {
+//                        String previousId = processor.getDeploymentRunningInstanceId();
+//                        String modifiedId = previousId + "-" + processor.getDeploymentTargetNodeId();
+//                        processor.setDeploymentRunningInstanceId(modifiedId);
                         SpDataStreamRelayContainer processorRelay = new SpDataStreamRelayContainer(processor);
                         relays.add(processorRelay);
                     }
@@ -341,6 +459,15 @@ public abstract class AbstractPipelineExecutor {
     }
 
     /**
+     * Get data stream relay storage dispatcher API
+     *
+     * @return INodeDataStreamRelay NoSQL storage interface for data stream relays
+     */
+    private INodeDataStreamRelay getDataStreamRelayApi() {
+        return StorageDispatcher.INSTANCE.getNoSqlStore().getNodeDataStreamRelayStorage();
+    }
+
+    /**
      * Extract topic name
      *
      * @param entity
@@ -363,15 +490,17 @@ public abstract class AbstractPipelineExecutor {
      * Compare deployment targets of two pipeline elements, namely data stream/processor (source) and data
      * processor/sink (target)
      *
-     * @param source    data stream/processor
-     * @param target    data processor/sink
+     * @param e1
+     * @param e2
      * @return boolean value that returns true if source and target share the same deployment target, else false
      */
-    private boolean differentDeploymentTargets(NamedStreamPipesEntity source, InvocableStreamPipesEntity target) {
-        if (source instanceof SpDataStream) {
-            return !((SpDataStream) source).getDeploymentTargetNodeId().equals(target.getDeploymentTargetNodeId());
-        } else if (source instanceof DataProcessorInvocation) {
-            return !((DataProcessorInvocation) source).getDeploymentTargetNodeId().equals(target.getDeploymentTargetNodeId());
+    private boolean differentDeploymentTargets(NamedStreamPipesEntity e1, InvocableStreamPipesEntity e2) {
+        if (e1 instanceof SpDataStream) {
+            return !((SpDataStream) e1).getDeploymentTargetNodeId().equals(e2.getDeploymentTargetNodeId());
+        } else if (e1 instanceof DataProcessorInvocation) {
+            return !((DataProcessorInvocation) e1).getDeploymentTargetNodeId().equals(e2.getDeploymentTargetNodeId());
+        } else if (e1 instanceof DataSinkInvocation) {
+            return !((DataSinkInvocation) e1).getDeploymentTargetNodeId().equals(e2.getDeploymentTargetNodeId());
         }
         throw new SpRuntimeException("Matching deployment targets check failed");
     }

@@ -26,6 +26,13 @@ public class DockerZookeeperContainer extends AbstractStreamPipesDockerContainer
     public DockerContainer declareDockerContainer() {
         return DockerContainerBuilder.create(StreamPipesDockerServiceID.SP_SVC_ZOOKEEPER_ID)
                 .withImage("fogsyio/zookeeper:3.4.13")
+                .supportedArchitectures(
+                        SupportedArchitectures.amd(),
+                        SupportedArchitectures.arm32v7(),
+                        SupportedArchitectures.arm64v8())
+                .supportedOperatingSystemTypes(
+                        SupportedOsType.linux(),
+                        SupportedOsType.darwin())
                 .withContainerName("streampipes-node-zookeeper")
                 .withExposedPorts(Ports.withMapping("2181"))
                 .withEnvironmentVariables(ContainerEnvBuilder.create()

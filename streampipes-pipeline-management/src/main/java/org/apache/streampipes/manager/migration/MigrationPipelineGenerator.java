@@ -26,6 +26,7 @@ import org.apache.streampipes.model.node.NodeInfoDescription;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.resource.Hardware;
 import org.apache.streampipes.model.resource.ResourceMetrics;
+import org.apache.streampipes.node.management.NodeManagement;
 
 
 import java.util.*;
@@ -71,7 +72,7 @@ public class MigrationPipelineGenerator {
 
     private List<NodeInfoDescription> getNodeInfos(){
         List<NodeInfoDescription> possibleTargetNodes = new ArrayList<>();
-        List<NodeInfoDescription> nodeInfo = StreamPipesClusterManager.getAllActiveAndHealthyNodes();
+        List<NodeInfoDescription> nodeInfo = NodeManagement.getInstance().getOnlineNodes();
         nodeInfo.forEach(desc ->{
             if(desc.getSupportedElements().stream().anyMatch(element -> element.equals(entityToMigrate.getAppId()))
                     && !desc.getNodeControllerId().equals(entityToMigrate.getDeploymentTargetNodeId()))

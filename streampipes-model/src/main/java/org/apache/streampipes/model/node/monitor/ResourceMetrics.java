@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.model.resource;
+package org.apache.streampipes.model.node.monitor;
 
 public class ResourceMetrics {
 

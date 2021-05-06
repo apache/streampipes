@@ -9,6 +9,7 @@
       <env name="SP_NODE_ACCESSIBLE_FIELD_DEVICE_ZED" value="zed;camera;usb;/dev/video1" />
       <env name="SP_URL" value="http://localhost:8030" />
       <env name="SP_NODE_CONTROLLER_URL" value="http://edge01.example.de:7077" />
+      <env name="SP_VERSION" value="0.68.0-SNAPSHOT" />
     </envs>
     <option name="MAIN_CLASS_NAME" value="org.apache.streampipes.node.controller.NodeControllerInit" />
     <module name="streampipes-node-controller" />

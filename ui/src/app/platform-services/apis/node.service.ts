@@ -39,8 +39,8 @@ export class NodeService {
             }));
     }
 
-    getAvailableNodes(): Observable<NodeInfoDescription[]> {
-        return this.http.get(this.platformServicesCommons.authUserBasePath() + "/nodes/available")
+    getOnlineNodes(): Observable<NodeInfoDescription[]> {
+        return this.http.get(this.platformServicesCommons.authUserBasePath() + "/nodes/online")
             .pipe(map(response => {
                 return response as NodeInfoDescription[];
             }));
@@ -54,14 +54,14 @@ export class NodeService {
     }
 
     activateNode(nodeControllerId: string): Observable<Message> {
-        return this.http.post(this.platformServicesCommons.authUserBasePath() + '/nodes/activate/' + nodeControllerId, {})
+        return this.http.post(this.platformServicesCommons.authUserBasePath() + '/nodes/active/' + nodeControllerId, {})
             .pipe(map(response => {
                 return Message.fromData(response as Message);
             }));
     }
 
     deactivateNode(nodeControllerId: string): Observable<Message> {
-        return this.http.post(this.platformServicesCommons.authUserBasePath() + '/nodes/deactivate/' + nodeControllerId, {})
+        return this.http.post(this.platformServicesCommons.authUserBasePath() + '/nodes/inactive/' + nodeControllerId, {})
             .pipe(map(response => {
                 return Message.fromData(response as Message);
             }));

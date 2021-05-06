@@ -98,8 +98,6 @@ export class SavePipelineComponent implements OnInit {
   ngOnInit() {
     this.tmpPipeline = this.deepCopy(this.pipeline);
 
-    console.log(this.pipeline);
-
     this.priorityForm = this.formBuilder.group({
       priorityForm: [null, Validators.required]
     });
@@ -186,7 +184,7 @@ export class SavePipelineComponent implements OnInit {
         this.deploymentOptions[processor.appId] = [];
         this.deploymentOptions[processor.appId].push(this.makeDefaultNodeInfo());
 
-        this.nodeService.getAvailableNodes().subscribe((response : NodeInfoDescription []) => {
+        this.nodeService.getOnlineNodes().subscribe((response : NodeInfoDescription []) => {
           this.edgeNodes = response;
           this.edgeNodes.forEach(nodeInfo => {
             // only show nodes that actually have supported pipeline elements registered
@@ -224,6 +222,18 @@ export class SavePipelineComponent implements OnInit {
         })
       })
 
+      // this.tmpPipeline.actions.forEach(actions => {
+      //   this.deploymentOptions[actions.appId] = [];
+      //
+      //   filteredNodes.forEach(filteredNode => {
+      //
+      //     if (filteredNode.supportedElements.length != 0 &&
+      //         filteredNode.supportedElements.some(appId => appId === actions.appId)) {
+      //       this.deploymentOptions[actions.appId].push(filteredNode);
+      //     }
+      //   })
+      // })
+
     } else {
       this.addAppIds(this.tmpPipeline.sepas, this.edgeNodes);
       this.addAppIds(this.tmpPipeline.actions, this.edgeNodes);
@@ -238,14 +248,15 @@ export class SavePipelineComponent implements OnInit {
       this.deploymentOptions[processor.appId].push(this.makeDefaultNodeInfo());
     });
 
-    // this.tmpPipeline.actions.forEach(p => {
-    //   p.deploymentTargetNodeId = "default";
-    //   // this.deploymentOptions[p.appId].push(this.makeDefaultNodeInfo());
-    // });
+    this.tmpPipeline.actions.forEach(action => {
+      action.deploymentTargetNodeId = "default";
+      this.deploymentOptions[action.appId] = []
+      this.deploymentOptions[action.appId].push(this.makeDefaultNodeInfo());
+    });
   }
 
   loadAndPrepareEdgeNodes() {
-    this.nodeService.getAvailableNodes().subscribe((response : NodeInfoDescription []) => {
+    this.nodeService.getOnlineNodes().subscribe((response : NodeInfoDescription []) => {
       this.edgeNodes = response;
       this.addAppIds(this.tmpPipeline.sepas, this.edgeNodes);
       this.addAppIds(this.tmpPipeline.actions, this.edgeNodes);
@@ -256,17 +267,17 @@ export class SavePipelineComponent implements OnInit {
     pipelineElements.forEach(p => {
       this.deploymentOptions[p.appId] = [];
 
-      // if (p instanceof DataSinkInvocation) {
-      //   if (p.deploymentTargetNodeId == null) {
-      //     p.deploymentTargetNodeId = "default";
-      //   }
-      //   this.deploymentOptions[p.appId].push(this.makeDefaultNodeInfo());
-      // }
-
-      if (p.deploymentTargetNodeId == null) {
-        p.deploymentTargetNodeId = "default";
+      if (p instanceof DataSinkInvocation) {
+        if (p.deploymentTargetNodeId == null) {
+          p.deploymentTargetNodeId = "default";
+        }
+        this.deploymentOptions[p.appId].push(this.makeDefaultNodeInfo());
       }
-      this.deploymentOptions[p.appId].push(this.makeDefaultNodeInfo());
+
+      // if (p.deploymentTargetNodeId == null) {
+      //   p.deploymentTargetNodeId = "default";
+      // }
+      // this.deploymentOptions[p.appId].push(this.makeDefaultNodeInfo());
 
       edgeNodes.forEach(nodeInfo => {
         // only show nodes that actually have supported pipeline elements registered
@@ -333,7 +344,7 @@ export class SavePipelineComponent implements OnInit {
       } else {
         this.tmpPipeline.priorityScore = 0;
       }
-      if (this.selectedNodeTags.length > 0 && this.selectedPipelineExecutionPolicy === "custom") {
+      if (this.selectedNodeTags?.length > 0 && this.selectedPipelineExecutionPolicy === "custom") {
         this.tmpPipeline.nodeTags = this.selectedNodeTags;
       } else {
         this.tmpPipeline.nodeTags = null;
@@ -353,7 +364,7 @@ export class SavePipelineComponent implements OnInit {
       } else {
         this.tmpPipeline.priorityScore = 0;
       }
-      if (this.selectedNodeTags.length > 0 && this.selectedPipelineExecutionPolicy === "custom") {
+      if (this.selectedNodeTags?.length > 0 && this.selectedPipelineExecutionPolicy === "custom") {
         this.tmpPipeline.nodeTags = this.selectedNodeTags;
       } else {
         this.tmpPipeline.nodeTags = null;
@@ -405,6 +416,8 @@ export class SavePipelineComponent implements OnInit {
     if (value == "custom") {
       this.panelOpenState = true;
       this.disableNodeSelection.setValue(false);
+      //this.addAppIds(this.tmpPipeline.sepas, this.edgeNodes);
+      //this.addAppIds(this.tmpPipeline.actions, this.edgeNodes);
       // use same policy for initial mapping
       this.applyLocalityAwarePolicy()
     } else if (value == "locality-aware") {

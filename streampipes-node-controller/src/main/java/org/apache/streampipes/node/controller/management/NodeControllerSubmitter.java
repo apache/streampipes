@@ -26,7 +26,7 @@ import org.apache.streampipes.node.controller.container.DockerMosquittoContainer
 import org.apache.streampipes.node.controller.container.DockerZookeeperContainer;
 import org.apache.streampipes.node.controller.management.janitor.JanitorManager;
 import org.apache.streampipes.node.controller.management.node.NodeManager;
-import org.apache.streampipes.node.controller.management.orchestrator.DockerOrchestratorManager;
+import org.apache.streampipes.node.controller.management.orchestrator.DockerEngineManager;
 import org.apache.streampipes.node.controller.management.orchestrator.docker.DockerContainerDeclarerSingleton;
 import org.apache.streampipes.node.controller.management.resource.ResourceManager;
 import org.slf4j.Logger;
@@ -75,7 +75,7 @@ public abstract class NodeControllerSubmitter {
                         .register(new DockerZookeeperContainer());
 
                 LOG.info("Auto-deploy extensions and selected broker container");
-                DockerOrchestratorManager.getInstance().init();
+                DockerEngineManager.getInstance().init();
 
                 LOG.info("Start janitor manager");
                 JanitorManager.getInstance().run();

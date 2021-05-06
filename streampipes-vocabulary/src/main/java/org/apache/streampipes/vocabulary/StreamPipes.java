@@ -362,7 +362,7 @@ public class StreamPipes {
   public static final String IS_ENCRYPTED = NS + "isEncrypted";
 
   public static final String DEPLOYMENT_DOCKER_CONTAINER = NS + "pipelineElementDockerContainer";
-  public static final String DEPLOYMENT_CONTAINER_IMAGE_URI = NS + "dockerContainerImageUri";
+  public static final String DEPLOYMENT_CONTAINER_IMAGE_TAG = NS + "dockerContainerImageTag";
   public static final String DEPLOYMENT_CONTAINER_NAME = NS + "dockerContainerName";
   public static final String DEPLOYMENT_CONTAINER_SERVICE_ID = NS + "dockerContainerServiceId";
   public static final String DEPLOYMENT_CONTAINER_PORTS = NS + "dockerContainerPorts";
@@ -370,6 +370,8 @@ public class StreamPipes {
   public static final String DEPLOYMENT_CONTAINER_LABELS = NS + "dockerContainerLabels";
   public static final String DEPLOYMENT_CONTAINER_VOLUMES = NS + "dockerContainerVolumes";
   public static final String DEPLOYMENT_CONTAINER_DEPENDENCIES = NS + "dockerContainerDependencies";
+  public static final String DEPLOYMENT_SUPPORTED_ARCHITECTURES = NS + "dockerContainerSupportedArchitectures";
+  public static final String DEPLOYMENT_SUPPORTED_OS_TYPES = NS + "dockerContainerSupportedOperatingSystemTypes";
 
   // UI Rendering
 

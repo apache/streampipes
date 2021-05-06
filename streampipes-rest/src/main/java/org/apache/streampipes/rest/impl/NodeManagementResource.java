@@ -17,12 +17,13 @@
  */
 package org.apache.streampipes.rest.impl;
 
-import org.apache.streampipes.manager.node.StreamPipesClusterManager;
-import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+
 import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.message.Notifications;
+import org.apache.streampipes.model.node.NodeCondition;
 import org.apache.streampipes.model.node.NodeInfoDescription;
-import org.apache.streampipes.rest.api.INode;
+import org.apache.streampipes.node.management.NodeManagement;
+import org.apache.streampipes.rest.api.INodeManagement;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 
 import javax.ws.rs.*;
@@ -30,10 +31,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/v2/users/{username}/nodes")
-public class Node extends AbstractRestResource implements INode {
-
-    private static final String ACTIVATE = "activate";
-    private static final String DEACTIVATE = "deactivate";
+public class NodeManagementResource extends AbstractRestResource implements INodeManagement {
 
     @POST
     @JacksonSerialized
@@ -41,7 +39,7 @@ public class Node extends AbstractRestResource implements INode {
     @Produces(MediaType.APPLICATION_JSON)
     @Override
     public Response addNode(@PathParam("username") String username, NodeInfoDescription desc) {
-        return statusMessage(StreamPipesClusterManager.addOrRejoin(desc));
+        return statusMessage(NodeManagement.getInstance().addOrRejoin(desc));
     }
 
     @PUT
@@ -53,7 +51,7 @@ public class Node extends AbstractRestResource implements INode {
     public Response updateNode(@PathParam("username") String username,
                                @PathParam("nodeControllerId") String nodeControllerId,
                                NodeInfoDescription desc) {
-        return statusMessage(StreamPipesClusterManager.updateNode(desc));
+        return statusMessage(NodeManagement.getInstance().updateNode(desc));
     }
 
     @POST
@@ -64,24 +62,20 @@ public class Node extends AbstractRestResource implements INode {
     @Override
     public Response syncRemoteUpdateFromNodeController(@PathParam("username") String username,
                                                        NodeInfoDescription desc) {
-        return statusMessage(StreamPipesClusterManager.syncRemoteNodeUpdateRequest(desc));
+        return statusMessage(NodeManagement.getInstance().syncRemoteNodeUpdateRequest(desc));
     }
 
     @POST
     @JacksonSerialized
-    @Path("/{action}/{nodeControllerId}")
+    @Path("/{condition}/{nodeControllerId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Override
-    public Response changeNodeState(@PathParam("action") String action,
-                                    @PathParam("username") String username,
-                                    @PathParam("nodeControllerId") String nodeControllerId) {
-        boolean success = false;
-        if (action.equals(ACTIVATE)) {
-            success = StreamPipesClusterManager.activateNode(nodeControllerId);
-        } else if (action.equals(DEACTIVATE)) {
-            success = StreamPipesClusterManager.deactivateNode(nodeControllerId);
-        }
+    public Response changeNodeCondition(@PathParam("condition") String condition,
+                                        @PathParam("username") String username,
+                                        @PathParam("nodeControllerId") String nodeControllerId) {
+        NodeCondition nodeCondition = NodeCondition.valueOf(condition.toUpperCase());
+        boolean success = NodeManagement.getInstance().updateNodeCondition(nodeControllerId, nodeCondition);
         if (success) {
             return statusMessage(Notifications.success(NotificationType.OPERATION_SUCCESS));
         } else {
@@ -94,17 +88,17 @@ public class Node extends AbstractRestResource implements INode {
     @Override
     public Response deleteNode(@PathParam("username") String username,
                                @PathParam("nodeControllerId") String nodeControllerId) {
-        StreamPipesClusterManager.deleteNode(nodeControllerId);
+        NodeManagement.getInstance().deleteNode(nodeControllerId);
         return statusMessage(Notifications.success(NotificationType.REMOVED_NODE));
     }
 
     @GET
-    @Path("/available")
+    @Path("/online")
     @JacksonSerialized
     @Produces(MediaType.APPLICATION_JSON)
     @Override
-    public Response getAvailableNodes() {
-        return ok(StreamPipesClusterManager.getAllActiveAndHealthyNodes());
+    public Response getOnlineNodes() {
+        return ok(NodeManagement.getInstance().getOnlineNodes());
     }
 
     @GET
@@ -112,15 +106,6 @@ public class Node extends AbstractRestResource implements INode {
     @Produces(MediaType.APPLICATION_JSON)
     @Override
     public Response getNodes() {
-        return ok(StreamPipesClusterManager.getAllNodes());
-    }
-
-
-    @POST
-    @Path("/offload")
-    @Produces(MediaType.APPLICATION_JSON)
-    @JacksonSerialized
-    public Response migrateProcessorToOtherNode(InvocableStreamPipesEntity elementToMigrate) {
-        return statusMessage(StreamPipesClusterManager.handleOffloadRequest(elementToMigrate));
+        return ok(NodeManagement.getInstance().getAllNodes());
     }
 }
