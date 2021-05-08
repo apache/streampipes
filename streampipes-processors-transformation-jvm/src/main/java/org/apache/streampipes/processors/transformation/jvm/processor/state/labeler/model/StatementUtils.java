@@ -59,7 +59,8 @@ public class StatementUtils {
 
 
 
-    public static List<Statement> getStatements(List<Integer> numberValues, List<String> labelStrings, List<String> comparators) throws SpRuntimeException {
+    public static List<Statement> getStatements(List<Double> numberValues, List<String> labelStrings,
+                                                List<String> comparators) throws SpRuntimeException {
 
         List<Statement> result = new ArrayList<>();
 

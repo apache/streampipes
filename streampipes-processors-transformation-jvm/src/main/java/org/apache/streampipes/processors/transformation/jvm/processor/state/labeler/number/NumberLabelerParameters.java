@@ -28,11 +28,12 @@ public class NumberLabelerParameters extends EventProcessorBindingParams {
     private String sensorListValueProperty;
     private String labelName;
 
-    private List<Integer> numberValues;
+    private List<Double> numberValues;
     private List<String> labelStrings;
     private List<String> comparators;
 
-    public NumberLabelerParameters(DataProcessorInvocation graph, String sensorListValueProperty, String labelName, List<Integer> numberValues, List<String> labelStrings, List<String> comparators) {
+    public NumberLabelerParameters(DataProcessorInvocation graph, String sensorListValueProperty, String labelName,
+                                   List<Double> numberValues, List<String> labelStrings, List<String> comparators) {
         super(graph);
         this.sensorListValueProperty = sensorListValueProperty;
         this.labelName = labelName;
@@ -49,11 +50,11 @@ public class NumberLabelerParameters extends EventProcessorBindingParams {
         this.sensorListValueProperty = sensorListValueProperty;
     }
 
-    public List<Integer> getNumberValues() {
+    public List<Double> getNumberValues() {
         return numberValues;
     }
 
-    public void setNumberValues(List<Integer> numberValues) {
+    public void setNumberValues(List<Double> numberValues) {
         this.numberValues = numberValues;
     }
 
