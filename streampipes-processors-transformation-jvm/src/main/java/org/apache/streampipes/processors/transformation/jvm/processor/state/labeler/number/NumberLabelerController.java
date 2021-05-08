@@ -86,14 +86,14 @@ public class NumberLabelerController extends StandaloneEventProcessingDeclarer<N
 
     List<StaticPropertyGroup> groupItems = extractor.collectionMembersAsGroup(LABEL_COLLECTION_ID);
 
-    List<Integer> numberValues = groupItems
+    List<Double> numberValues = groupItems
             .stream()
             .map(group -> (
                     extractor
                     .extractGroupMember(NUMBER_VALUE_ID, group)
                     .as(FreeTextStaticProperty.class))
                     .getValue())
-            .map(Integer::parseInt)
+            .map(Double::parseDouble)
             .collect(Collectors.toList());
 
     List<String> labelStrings = groupItems
