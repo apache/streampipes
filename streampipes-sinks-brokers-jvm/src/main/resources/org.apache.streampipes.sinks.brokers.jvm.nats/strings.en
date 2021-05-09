@@ -1,0 +1,39 @@
+org.apache.streampipes.sinks.brokers.jvm.nats.title=NATS Publisher
+org.apache.streampipes.sinks.brokers.jvm.nats.description=Publish events to NATS broker
+
+subject.title=NATS Subject
+subject.description=Select a NATS subject to publish events
+
+natsUrls.title=NATS broker URLs
+natsUrls.description=Provide NATS server URLs (can be provided multiple urls separated by commas).
+
+username.title=Username
+username.description=The username to authenticate with the broker
+
+password.title=Password
+password.description=The password to authenticate with the broker
+
+access-mode.title=Access Mode
+access-mode.description=Unauthenticated or SASL/PLAIN
+
+anonymous-alternative.title=Unauthenticated
+anonymous-alternative.description=No authentication and plaintext
+
+username-alternative.title=SASL/PLAIN
+username-alternative.description=Username and password, no encryption
+
+username-group.title=Username and password
+
+properties.title=NATS connection properties
+properties.description=Other possible connection configuration (key-value pairs separated by colons and commas)
+
+connection-properties.title=Client Connection Properties
+connection-properties.description=Optional client connection configuration
+
+none-properties-alternative.title=None
+none-properties-alternative.description=No optional client properties
+
+custom-properties-alternative.title=Custom Properties
+custom-properties-alternative.description=Custom NATS connection properties
+
+connection-group.title=NATS connection optional properties

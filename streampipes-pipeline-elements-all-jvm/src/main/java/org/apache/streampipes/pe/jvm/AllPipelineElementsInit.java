@@ -90,6 +90,7 @@ import org.apache.streampipes.sinks.brokers.jvm.bufferrest.BufferRestController;
 import org.apache.streampipes.sinks.brokers.jvm.jms.JmsController;
 import org.apache.streampipes.sinks.brokers.jvm.kafka.KafkaController;
 import org.apache.streampipes.sinks.brokers.jvm.mqtt.MqttPublisherSink;
+import org.apache.streampipes.sinks.brokers.jvm.nats.NatsController;
 import org.apache.streampipes.sinks.brokers.jvm.pulsar.PulsarController;
 import org.apache.streampipes.sinks.brokers.jvm.rabbitmq.RabbitMqController;
 import org.apache.streampipes.sinks.brokers.jvm.rest.RestController;
@@ -190,6 +191,7 @@ public class AllPipelineElementsInit extends StandaloneModelSubmitter {
             .add(new PulsarController())
             .add(new MqttPublisherSink())
             .add(new WebsocketServerSink())
+            .add(new NatsController())
             // streampipes-sinks-databases-jvm
             .add(new CouchDbController())
             .add(new InfluxDbController())
