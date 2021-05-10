@@ -29,7 +29,8 @@ public class StateBufferLabelerParameters extends EventProcessorBindingParams {
     private String stateProperty;
     private String stateFilter;
     private String selectedOperation;
-    private List<Integer> numberValues;
+    private String labelName;
+    private List<Double> numberValues;
     private List<String> labelStrings;
     private List<String> comparators;
 
@@ -38,7 +39,8 @@ public class StateBufferLabelerParameters extends EventProcessorBindingParams {
                                         String stateProperty,
                                         String stateFilter,
                                         String selectedOperation,
-                                        List<Integer> numberValues,
+                                        String labelName,
+                                        List<Double> numberValues,
                                         List<String> labelStrings,
                                         List<String> comparators) {
         super(graph);
@@ -46,6 +48,7 @@ public class StateBufferLabelerParameters extends EventProcessorBindingParams {
         this.stateProperty = stateProperty;
         this.stateFilter = stateFilter;
         this.selectedOperation = selectedOperation;
+        this.labelName = labelName;
         this.numberValues = numberValues;
         this.labelStrings = labelStrings;
         this.comparators = comparators;
@@ -83,11 +86,11 @@ public class StateBufferLabelerParameters extends EventProcessorBindingParams {
         this.stateProperty = stateProperty;
     }
 
-    public List<Integer> getNumberValues() {
+    public List<Double> getNumberValues() {
         return numberValues;
     }
 
-    public void setNumberValues(List<Integer> numberValues) {
+    public void setNumberValues(List<Double> numberValues) {
         this.numberValues = numberValues;
     }
 
@@ -105,5 +108,9 @@ public class StateBufferLabelerParameters extends EventProcessorBindingParams {
 
     public void setComparators(List<String> comparators) {
         this.comparators = comparators;
+    }
+
+    public String getLabelName() {
+        return labelName;
     }
 }

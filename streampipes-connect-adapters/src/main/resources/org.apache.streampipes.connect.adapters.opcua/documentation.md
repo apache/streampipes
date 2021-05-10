@@ -16,7 +16,7 @@
   ~
   -->
 
-## OPC-UA
+## OPC-UA Pull Adapter
 
 <p align="center"> 
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
@@ -26,8 +26,45 @@
 
 ## Description
 
-Read values from an OPC-UA server
-
+Reads values from an OPC-UA server repeatedly
 
 ***
 
+## Required Input
+
+***
+
+## Configuration
+
+### Polling Interval
+
+Duration of the polling interval in seconds
+
+### Anonymous vs. Username/Password
+
+Choose whether you want to connect anonymously or authenticate using your credentials.
+
+&nbsp;&nbsp;&nbsp;&nbsp; **Anonymous**: No further information required <br>
+&nbsp;&nbsp;&nbsp;&nbsp; **Username/Password**: Insert your `username` and `password` to access the OPC UA server
+
+### OPC UA Server
+
+Where can the OPC UA server be found?
+
+&nbsp;&nbsp;&nbsp;&nbsp; **URL**: Specify the server's full `URL` (including port), can be with our without leading `opc.tcp://`<br>
+&nbsp;&nbsp;&nbsp;&nbsp; **Host/Port**: Insert the `host` address (with or without leading `opc.tcp://`) and the `port`<br>
+
+### Namespace Index
+
+Requires the index of the namespace you want to connect to.
+
+### Node ID
+
+The identifier of the node you want to read from, numbers and strings are both valid.
+
+### Available Nodes
+
+Shows all available nodes once namespace index and node ID are given.
+Select as much as you like to query.
+
+***

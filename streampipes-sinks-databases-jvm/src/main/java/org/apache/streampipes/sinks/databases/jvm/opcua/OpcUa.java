@@ -21,6 +21,7 @@ package org.apache.streampipes.sinks.databases.jvm.opcua;
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfig;
 import org.eclipse.milo.opcua.stack.client.DiscoveryClient;
+import org.eclipse.milo.opcua.stack.core.UaException;
 import org.eclipse.milo.opcua.stack.core.security.SecurityPolicy;
 import org.eclipse.milo.opcua.stack.core.types.builtin.*;
 import org.eclipse.milo.opcua.stack.core.types.structured.EndpointDescription;
@@ -32,8 +33,7 @@ import org.apache.streampipes.vocabulary.XSD;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.runtime.EventSink;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -45,13 +45,41 @@ public class OpcUa implements EventSink<OpcUaParameters> {
 	private OpcUaParameters params;
 	private String serverUrl;
 	private NodeId node;
+	private Class targetDataType;
+	private Class sourceDataType;
+
+	// define a mapping of StreamPipes data types to Java classes
+	private static HashMap<String, Class> XSDMatchings = new HashMap<>();
+	static {
+		XSDMatchings.put(XSD._double.toString(), Double.class);
+		XSDMatchings.put(XSD._integer.toString(), Integer.class);
+		XSDMatchings.put(XSD._int.toString(), Integer.class);
+		XSDMatchings.put(XSD._boolean.toString(), Boolean.class);
+		XSDMatchings.put(XSD._string.toString(), String.class);
+		XSDMatchings.put(XSD._float.toString(), Float.class);
+	}
+
+	// define potential mappings, left can be mapped to right
+	private static HashMap<Class, Class[]> compatibleDataTypes = new HashMap<>();
+	static {
+		compatibleDataTypes.put(Double.class, new Class[] {Float.class, String.class});
+		compatibleDataTypes.put(Float.class, new Class[] {Double.class, String.class});
+		compatibleDataTypes.put(Integer.class, new Class[]{Double.class, Float.class, String.class});
+		compatibleDataTypes.put(Boolean.class, new Class[]{String.class});
+		compatibleDataTypes.put(String.class, new Class[]{String.class});
+	}
 
 	@Override
 	public void onInvocation(OpcUaParameters parameters, EventSinkRuntimeContext runtimeContext) throws
 			SpRuntimeException {
 		LOG = parameters.getGraph().getLogger(OpcUa.class);
 
-		serverUrl = "opc.tcp://" + parameters.getHostName() + ":" + parameters.getPort();
+		if (!parameters.getHostName().startsWith("opc.tcp://")){
+			serverUrl= "opc.tcp://" + parameters.getHostName() + ":" + parameters.getPort();
+		}
+		else {
+			serverUrl = parameters.getHostName() + ":" + parameters.getPort();
+		}
     if (isInteger(parameters.getNodeId())) {
 			int integerNodeId = Integer.parseInt(parameters.getNodeId());
 			node = new NodeId(parameters.getNameSpaceIndex(), integerNodeId);
@@ -65,7 +93,7 @@ public class OpcUa implements EventSink<OpcUaParameters> {
 		List<EndpointDescription> endpoints;
 
 		try {
-//			endpoints = UaTcpStackClient.getEndpoints(serverUrl).get();
+
 			endpoints = DiscoveryClient.getEndpoints(serverUrl).get();
 
 			EndpointDescription endpoint = endpoints
@@ -84,6 +112,20 @@ public class OpcUa implements EventSink<OpcUaParameters> {
 
 		} catch (Exception e) {
 			throw new SpRuntimeException("Could not connect to OPC-UA server: " + serverUrl);
+		}
+
+		// check whether input data type and target data type are compatible
+		try {
+			Variant value = opcUaClient.getAddressSpace().getVariableNode(node).readValue().getValue();
+			targetDataType = value.getValue().getClass();
+			sourceDataType = XSDMatchings.get(params.getMappingPropertyType());
+			if (!sourceDataType.equals(targetDataType)) {
+				if (! Arrays.stream(compatibleDataTypes.get(sourceDataType)).anyMatch(dt -> dt.equals(targetDataType))) {
+					throw new SpRuntimeException("Data Type of event of target node are not compatible");
+				}
+			}
+		} catch (UaException e) {
+			throw new SpRuntimeException("DataType of target node could not be determined: " + node.getIdentifier());
 		}
 
 	}
@@ -125,18 +167,17 @@ public class OpcUa implements EventSink<OpcUaParameters> {
 
 	private Variant getValue(Event inputEvent) {
 		Variant result = null;
-		String mappingType = this.params.getMappingPropertyType();
 		PrimitiveField propertyPrimitive = inputEvent.getFieldBySelector(this.params.getMappingPropertySelector()).getAsPrimitive();
 
-		if (mappingType.equals(XSD._integer.toString())){
+		if (targetDataType.equals(Integer.class)){
 			result = new Variant(propertyPrimitive.getAsInt());
-		} else if (mappingType.equals(XSD._double.toString())){
+		} else if (targetDataType.equals(Double.class)){
 			result = new Variant(propertyPrimitive.getAsDouble());
-		} else if (mappingType.equals(XSD._boolean.toString())){
+		} else if (targetDataType.equals(Boolean.class)){
 			result = new Variant(propertyPrimitive.getAsBoolean());
-		} else if (mappingType.equals(XSD._float.toString())){
+		} else if (targetDataType.equals(Float.class)){
 			result = new Variant(propertyPrimitive.getAsFloat());
-		} else if (mappingType.equals(XSD._string.toString())){
+		} else if (targetDataType.equals(String.class)){
 			result = new Variant(propertyPrimitive.getAsString());
 		}
 

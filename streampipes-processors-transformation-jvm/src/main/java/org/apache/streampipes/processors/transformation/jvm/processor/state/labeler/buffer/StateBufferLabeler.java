@@ -39,6 +39,7 @@ public class StateBufferLabeler implements EventProcessor<StateBufferLabelerPara
   private String stateProperty;
   private String stateFilter;
   private String selectedOperation;
+  private String labelName;
   private List<Statement> statements;
 
   @Override
@@ -51,6 +52,7 @@ public class StateBufferLabeler implements EventProcessor<StateBufferLabelerPara
     this.stateProperty = stateBufferLabelerParameters.getStateProperty();
     this.stateFilter = stateBufferLabelerParameters.getStateFilter();
     this.selectedOperation = stateBufferLabelerParameters.getSelectedOperation();
+    this.labelName = stateBufferLabelerParameters.getLabelName();
 
     this.statements = StatementUtils.getStatements(
             stateBufferLabelerParameters.getNumberValues(),
@@ -75,7 +77,7 @@ public class StateBufferLabeler implements EventProcessor<StateBufferLabelerPara
         calculatedValue = Stats.of(values).mean();
       }
 
-      Event resultEvent = StatementUtils.addLabel(inputEvent, calculatedValue, this.statements, LOG);
+      Event resultEvent = StatementUtils.addLabel(inputEvent, labelName, calculatedValue, this.statements, LOG);
       out.collect(resultEvent);
     }
   }

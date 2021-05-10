@@ -1,0 +1,3 @@
+org.apache.streampipes.processors.filters.jvm.schema.title=Merge stream with same schema
+org.apache.streampipes.processors.filters.jvm.schema.description=Event streams are merged when their schemas are same
+

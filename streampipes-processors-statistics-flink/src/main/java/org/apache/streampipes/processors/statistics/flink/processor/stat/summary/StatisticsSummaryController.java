@@ -94,6 +94,7 @@ public class StatisticsSummaryController extends FlinkDataProcessorDeclarer<Stat
       eventSchema.addEventProperty(EpProperties.doubleEp(Labels.empty(), propertyPrefix + "_" + SUM, Statistics.SUM));
       eventSchema.addEventProperty(EpProperties.doubleEp(Labels.empty(), propertyPrefix + "_" + STDDEV, Statistics.STDDEV));
       eventSchema.addEventProperty(EpProperties.doubleEp(Labels.empty(), propertyPrefix + "_" + VARIANCE, Statistics.VARIANCE));
+      eventSchema.addEventProperty(EpProperties.doubleEp(Labels.empty(), propertyPrefix + "_" + MEAN, Statistics.MEAN));
       eventSchema.addEventProperty(EpProperties.doubleEp(Labels.empty(), propertyPrefix + "_" + N, Statistics.N));
     }
     return eventSchema;

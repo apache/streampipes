@@ -136,6 +136,7 @@
         <protobuf.version>3.6.1</protobuf.version>
         <slack.version>1.2.0</slack.version>
         <poiji.version>2.7.0</poiji.version>
+        <nats.version>2.11.0</nats.version>
 
     </properties>
 
@@ -354,6 +355,11 @@
                         <artifactId>jersey-server</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>io.nats</groupId>
+                <artifactId>jnats</artifactId>
+                <version>${nats.version}</version>
             </dependency>
 
             <!-- StreamPipes dependencies -->
@@ -671,6 +677,11 @@
                 <groupId>org.glassfish.jaxb</groupId>
                 <artifactId>jaxb-runtime</artifactId>
                 <version>2.3.3</version>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.activation</groupId>
+                <artifactId>jakarta.activation-api</artifactId>
+                <version>1.2.2</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

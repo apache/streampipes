@@ -29,8 +29,9 @@ public class PostgreSqlParameters extends EventSinkBindingParams {
   private String tableName;
   private String user;
   private String password;
+  private boolean sslEnabled;
 
-  public PostgreSqlParameters(DataSinkInvocation graph, String PostgreSqlHost, Integer PostgreSqlPort, String databaseName, String tableName, String user, String password) {
+  public PostgreSqlParameters(DataSinkInvocation graph, String PostgreSqlHost, Integer PostgreSqlPort, String databaseName, String tableName, String user, String password, Boolean sslEnabled) {
     super(graph);
     this.PostgreSqlHost = PostgreSqlHost;
     this.PostgreSqlPort = PostgreSqlPort;
@@ -38,6 +39,7 @@ public class PostgreSqlParameters extends EventSinkBindingParams {
     this.tableName = tableName;
     this.user = user;
     this.password = password;
+    this.sslEnabled = sslEnabled;
   }
 
   public String getPostgreSqlHost() {
@@ -62,5 +64,9 @@ public class PostgreSqlParameters extends EventSinkBindingParams {
 
   public String getPassword() {
     return password;
+  }
+
+  public boolean isSSLEnabled() {
+    return sslEnabled;
   }
 }

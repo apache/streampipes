@@ -33,10 +33,12 @@ import org.apache.streampipes.processors.transformation.jvm.processor.array.spli
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.counter.BooleanCounterController;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.edge.SignalEdgeFilterController;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.inverter.BooleanInverterController;
+import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.logical.BooleanOperatorProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.state.BooleanToStateController;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.timekeeping.BooleanTimekeepingController;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.timer.BooleanTimerController;
 import org.apache.streampipes.processors.transformation.jvm.processor.csvmetadata.CsvMetadataEnrichmentController;
+import org.apache.streampipes.processors.transformation.jvm.processor.fieldrename.FiledRenameProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.state.buffer.StateBufferController;
 import org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.buffer.StateBufferLabelerController;
 import org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.number.NumberLabelerController;
@@ -73,7 +75,9 @@ public class TransformationJvmInit extends StandaloneModelSubmitter {
             .add(new StateBufferLabelerController())
             .add(new NumberLabelerController())
             .add(new StringToStateController())
-            .add(new StringCounterController());
+            .add(new StringCounterController())
+            .add(new BooleanOperatorProcessor())
+            .add(new FiledRenameProcessor());
 
     DeclarersSingleton.getInstance().registerDataFormats(
             new JsonDataFormatFactory(),

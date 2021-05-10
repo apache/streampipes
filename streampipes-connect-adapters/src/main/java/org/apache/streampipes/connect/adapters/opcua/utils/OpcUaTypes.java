@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.connect.adapters.opcua;
+package org.apache.streampipes.connect.adapters.opcua.utils;
 
 
 import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
@@ -24,9 +24,16 @@ import org.apache.streampipes.sdk.utils.Datatypes;
 
 public class OpcUaTypes {
 
+    /**
+     * Maps OPC UA data types to internal StreamPipes data types
+     * @param o data type id as UInteger
+     * @return StreamPipes internal data type
+     */
     public static Datatypes getType(UInteger o) {
-        if (UInteger.valueOf(4).equals(o) | UInteger.valueOf(6).equals(o) | UInteger.valueOf(8).equals(o) | UInteger.valueOf(27).equals(o)) {
+        if (UInteger.valueOf(4).equals(o) | UInteger.valueOf(6).equals(o) |  UInteger.valueOf(27).equals(o)) {
             return Datatypes.Integer;
+        } else if (UInteger.valueOf(8).equals(o) ) {
+            return Datatypes.Long;
         } else if (UInteger.valueOf(11).equals(o)) {
             return Datatypes.Double;
         } else if (UInteger.valueOf(10).equals(o) | UInteger.valueOf(26).equals(o)) {

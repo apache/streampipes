@@ -58,6 +58,7 @@ public class WebsocketServerSink extends StreamPipesDataSink {
     public void onInvocation(SinkParams parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
         port = parameters.extractor().singleValueParameter(PORT_KEY, Integer.class);
         server = new SocketServer(port);
+        server.setReuseAddr(true);
         server.start();
     }
 
@@ -70,8 +71,9 @@ public class WebsocketServerSink extends StreamPipesDataSink {
     public void onDetach() throws SpRuntimeException {
         try {
             server.stop();
+            server = null;
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            throw new SpRuntimeException(e.getMessage());
         }
     }
 }

@@ -25,7 +25,14 @@ import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
+import org.apache.streampipes.processors.filters.jvm.processor.compose.ComposeController;
+import org.apache.streampipes.processors.filters.jvm.processor.enrich.MergeByEnrichController;
+import org.apache.streampipes.processors.filters.jvm.processor.limit.RateLimitController;
+import org.apache.streampipes.processors.filters.jvm.processor.merge.MergeByTimeController;
 import org.apache.streampipes.processors.filters.jvm.processor.numericalfilter.NumericalFilterController;
+import org.apache.streampipes.processors.filters.jvm.processor.numericaltextfilter.NumericalTextFilterController;
+import org.apache.streampipes.processors.filters.jvm.processor.projection.ProjectionController;
+import org.apache.streampipes.processors.filters.jvm.processor.schema.MergeBySchemaProcessor;
 import org.apache.streampipes.processors.filters.jvm.processor.textfilter.TextFilterController;
 import org.apache.streampipes.processors.filters.jvm.processor.threshold.ThresholdDetectionController;
 
@@ -41,7 +48,14 @@ public class FiltersJvmInit extends StandaloneModelSubmitter {
 //                        new IssAdapter())
             .registerPipelineElements(new TextFilterController(),
                     new NumericalFilterController(),
-                    new ThresholdDetectionController())
+                    new ThresholdDetectionController(),
+                    new ProjectionController(),
+                    new MergeByEnrichController(),
+                    new MergeByTimeController(),
+                    new MergeBySchemaProcessor(),
+                    new ComposeController(),
+                    new NumericalTextFilterController(),
+                    new RateLimitController())
             .registerMessagingFormats(new JsonDataFormatFactory(), new CborDataFormatFactory())
             .registerMessagingProtocols(new SpKafkaProtocolFactory(), new SpJmsProtocolFactory())
             .build();
