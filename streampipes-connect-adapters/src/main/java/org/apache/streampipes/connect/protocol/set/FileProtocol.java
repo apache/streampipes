@@ -64,9 +64,10 @@ public class FileProtocol extends Protocol {
     public FileProtocol() {
     }
 
-    public FileProtocol(Parser parser, Format format, String fileFetchUrl) {
+    public FileProtocol(Parser parser, Format format, String fileFetchUrl, int timeBetweenReplay) {
         super(parser, format);
         this.fileFetchUrl = fileFetchUrl;
+        this.timeBetweenReplay=timeBetweenReplay;
     }
 
     @Override
@@ -84,9 +85,9 @@ public class FileProtocol extends Protocol {
     @Override
     public Protocol getInstance(ProtocolDescription protocolDescription, Parser parser, Format format) {
         StaticPropertyExtractor extractor = StaticPropertyExtractor.from(protocolDescription.getConfig());
-        this.timeBetweenReplay = extractor.singleValueParameter(INTERVAL_KEY, Integer.class);
+        int timeBetweenReplay = extractor.singleValueParameter(INTERVAL_KEY, Integer.class);
         String fileFetchUrl = extractor.selectedFileFetchUrl("filePath");
-        return new FileProtocol(parser, format, fileFetchUrl);
+        return new FileProtocol(parser, format, fileFetchUrl,timeBetweenReplay);
     }
 
     public void parse(InputStream data, EmitBinaryEvent emitBinaryEvent) throws ParseException {
@@ -100,7 +101,7 @@ public class FileProtocol extends Protocol {
                     result = emitBinaryEvent.emit(parseResult);
                 }
                 try {
-                    Thread.sleep(timeBetweenReplay);
+                    Thread.sleep(this.timeBetweenReplay);
                 } catch (InterruptedException e) {
                     logger.error("Error while waiting for next replay round" + e.getMessage());
                 }
