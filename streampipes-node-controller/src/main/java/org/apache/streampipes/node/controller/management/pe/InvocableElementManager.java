@@ -29,15 +29,19 @@ import org.apache.streampipes.messaging.jms.ActiveMQPublisher;
 import org.apache.streampipes.messaging.kafka.SpKafkaProducer;
 import org.apache.streampipes.messaging.mqtt.MqttPublisher;
 import org.apache.streampipes.model.Response;
+import org.apache.streampipes.model.base.ConsumableStreamPipesEntity;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.grounding.*;
 import org.apache.streampipes.model.node.NodeInfoDescription;
 import org.apache.streampipes.model.pipeline.PipelineElementReconfigurationEntity;
+import org.apache.streampipes.model.resource.Hardware;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.node.controller.config.NodeConfiguration;
 import org.apache.streampipes.node.controller.management.node.NodeManager;
 import org.apache.streampipes.node.controller.management.pe.storage.RunningInvocableInstances;
+import org.apache.streampipes.node.controller.management.resource.utils.ResourceChecker;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +53,7 @@ import java.net.Socket;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class InvocableElementManager implements IPipelineElementLifeCycle {
 
@@ -163,17 +168,10 @@ public class InvocableElementManager implements IPipelineElementLifeCycle {
         return response;
     }
 
-    public void postOffloadRequest(InvocableStreamPipesEntity instanceToOffload){
-        try {
-            String url = generatePipelineManagementOffloadEndpoint();
-            String desc = toJson(instanceToOffload);
-            org.apache.http.client.fluent.Response resp = Request.Post(url)
-                    .bodyString(desc, ContentType.APPLICATION_JSON)
-                    .execute();
-            resp.returnContent();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public Response postOffloadRequest(InvocableStreamPipesEntity instanceToOffload){
+        Response resp = new Response();
+        post(generatePipelineManagementOffloadEndpoint(), toJson(instanceToOffload), resp);
+        return resp;
     }
 
     private void adaptPipelineDescription(InvocableStreamPipesEntity graph, PipelineElementReconfigurationEntity reconfigurationEntity){
@@ -258,7 +256,8 @@ public class InvocableElementManager implements IPipelineElementLifeCycle {
     }
 
     private void updateAndSyncNodeInfoDescription(InvocableRegistration registration) {
-        setSupportedPipelineElements(registration.getSupportedPipelineElementAppIds());
+        setSupportedPipelineElements(getSupportedEntities(registration).stream()
+                .map(NamedStreamPipesEntity::getAppId).collect(Collectors.toList()));
         try {
             String url = generateNodeManagementUpdateEndpoint();
             String desc = toJson(getNodeInfoDescription());
@@ -268,6 +267,14 @@ public class InvocableElementManager implements IPipelineElementLifeCycle {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private List<ConsumableStreamPipesEntity> getSupportedEntities(InvocableRegistration registration){
+        //Check if the node supports the entity (atm only hardware requirements; could be expanded to include
+        // software requirements)
+        ResourceChecker resourceChecker = new ResourceChecker(getNodeInfoDescription());
+        return registration.getSupportedPipelineElements().stream()
+                .filter(resourceChecker::checkResources).collect(Collectors.toList());
     }
 
     private List<InvocableStreamPipesEntity> getAllInvocables() {

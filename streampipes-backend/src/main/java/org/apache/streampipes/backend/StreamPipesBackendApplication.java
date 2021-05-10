@@ -24,7 +24,6 @@ import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.node.management.NodeManagement;
-import org.apache.streampipes.node.management.operation.monitor.health.ClusterHealthCheckMonitor;
 import org.apache.streampipes.rest.notifications.NotificationListener;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.slf4j.Logger;

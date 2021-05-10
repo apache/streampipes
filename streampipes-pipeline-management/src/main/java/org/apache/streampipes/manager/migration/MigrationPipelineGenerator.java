@@ -21,40 +21,101 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.node.NodeInfoDescription;
+import org.apache.streampipes.model.node.monitor.ResourceMetrics;
 import org.apache.streampipes.model.pipeline.Pipeline;
+import org.apache.streampipes.model.resource.Hardware;
 import org.apache.streampipes.node.management.NodeManagement;
+import org.apache.streampipes.node.management.operation.monitor.resource.ClusterResourceMonitor;
 
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class MigrationPipelineGenerator {
 
-    public static Pipeline generateMigrationPipeline(InvocableStreamPipesEntity entityToMigrate, Pipeline correspondingPipeline){
+    private InvocableStreamPipesEntity entityToMigrate;
+    private Pipeline correspondingPipeline;
+    private final float memoryMultiplier = 0.9F;
+    private final float diskSpaceMultiplier = 0.9F;
 
+    public MigrationPipelineGenerator(InvocableStreamPipesEntity entityToMigrate, Pipeline correspondingPipeline){
+        this.entityToMigrate = entityToMigrate;
+        this.correspondingPipeline = correspondingPipeline;
+    }
+
+
+    public Pipeline generateMigrationPipeline(){
+
+        List<NodeInfoDescription> possibleTargetNodes = getNodeInfos();
+
+        switch(correspondingPipeline.getExecutionPolicy()){
+            case "custom": //TODO: Enum class
+                possibleTargetNodes = filterLocationTags(possibleTargetNodes);
+            case "locality-aware":
+                //TODO: incorporate strategy for locality-aware deployment
+            case "default":
+                //TODO: incorporate strategy for default deployment
+        }
+
+        //Check current resource utilization on node
+        possibleTargetNodes = filterResourceUtilization(possibleTargetNodes);
+
+
+        //Different strategies possible (atm cancel offloading)
+        if(possibleTargetNodes == null || possibleTargetNodes.isEmpty())
+            return null;
+
+        //Random Selection of new Node within the remaining possible nodes
+        changeEntityDescriptionToMatchRandomNode(possibleTargetNodes);
+
+        return generateTargetPipeline();
+    }
+
+    private List<NodeInfoDescription> getNodeInfos(){
         List<NodeInfoDescription> possibleTargetNodes = new ArrayList<>();
         List<NodeInfoDescription> nodeInfo = NodeManagement.getInstance().getOnlineNodes();
         nodeInfo.forEach(desc ->{
             if(desc.getSupportedElements().stream().anyMatch(element -> element.equals(entityToMigrate.getAppId()))
-                && !desc.getNodeControllerId().equals(entityToMigrate.getDeploymentTargetNodeId()))
+                    && !desc.getNodeControllerId().equals(entityToMigrate.getDeploymentTargetNodeId()))
                 possibleTargetNodes.add(desc);
         });
+        return possibleTargetNodes;
+    }
 
-        if(possibleTargetNodes.isEmpty())
-            return null;
+    private List<NodeInfoDescription> filterLocationTags(List<NodeInfoDescription> possibleTargetNodes){
+        return possibleTargetNodes.stream()
+                .filter(desc -> nodeTagsContainElementTag(correspondingPipeline.getNodeTags(), desc))
+                .collect(Collectors.toList());
+    }
 
-        //Choose random node; should be adjusted to seek for a proper node to migrate to (e.g. based on user e.g.
-        // selected labels, locality, free resources,...)
-        NodeInfoDescription targetNode = possibleTargetNodes.get(new Random().nextInt(possibleTargetNodes.size()));
+    private boolean nodeTagsContainElementTag(List<String> pipelineNodeTags,
+                                              NodeInfoDescription desc){
+        return desc.getStaticNodeMetadata().getLocationTags().stream().anyMatch(pipelineNodeTags::contains);
+    }
 
-        entityToMigrate.setDeploymentTargetNodeHostname(targetNode.getHostname());
-        entityToMigrate.setDeploymentTargetNodeId(targetNode.getNodeControllerId());
-        entityToMigrate.setDeploymentTargetNodePort(targetNode.getPort());
-        entityToMigrate.setElementEndpointHostname(targetNode.getHostname());
-        entityToMigrate.setElementEndpointPort(targetNode.getPort());
+    private List<NodeInfoDescription> filterResourceUtilization(List<NodeInfoDescription> possibleTargetNodes){
+        //Currently only checking for free disk space and memory
+        List<NodeInfoDescription> filteredTargetNodes = new ArrayList<>();
+        for(NodeInfoDescription nodeInfo : possibleTargetNodes){
+            Queue<ResourceMetrics> rmHistory = ClusterResourceMonitor.getResourceMetricsMap()
+                    .get(nodeInfo.getNodeControllerId());
+            if(rmHistory == null) return null;
+            Hardware hardware = entityToMigrate.getResourceRequirements().stream()
+                            .filter(nodeRR -> nodeRR instanceof Hardware).map(nodeRR -> (Hardware)nodeRR).findFirst().
+                            orElse(null);
+            if(hardware != null){ //TODO: Map CPU load ()
+                //Does produce empty list if no hardware requirements are defined
+                if (rmHistory.peek() != null
+                        && hardware.getDisk() <= diskSpaceMultiplier * rmHistory.peek().getFreeDiskSpaceInBytes()
+                        && hardware.getMemory() <= memoryMultiplier * rmHistory.peek().getFreeMemoryInBytes()) {
+                    filteredTargetNodes.add(nodeInfo);
+                }
+            }
+        }
+        return filteredTargetNodes;
+    }
 
+    private Pipeline generateTargetPipeline(){
         Optional<DataProcessorInvocation> originalInvocation =
                 correspondingPipeline.getSepas().stream().filter(dp ->
                         dp.getDeploymentRunningInstanceId().equals(entityToMigrate.getDeploymentRunningInstanceId()))
@@ -75,4 +136,13 @@ public class MigrationPipelineGenerator {
         return targetPipeline;
     }
 
+    private void changeEntityDescriptionToMatchRandomNode(List<NodeInfoDescription> nodes){
+        NodeInfoDescription targetNode = nodes.get(new Random().nextInt(nodes.size()));
+
+        entityToMigrate.setDeploymentTargetNodeHostname(targetNode.getHostname());
+        entityToMigrate.setDeploymentTargetNodeId(targetNode.getNodeControllerId());
+        entityToMigrate.setDeploymentTargetNodePort(targetNode.getPort());
+        entityToMigrate.setElementEndpointHostname(targetNode.getHostname());
+        entityToMigrate.setElementEndpointPort(targetNode.getPort());
+    }
 }

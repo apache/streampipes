@@ -15,10 +15,16 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.node.controller.management.offloading.policies;
 
-public class SingleOccurrenceThresholdViolationPolicy<T extends Number> extends MultiOccurrenceThresholdViolationPolicy<T> {
-    public SingleOccurrenceThresholdViolationPolicy(Comparator comparator, T threshold) {
-        super(1, comparator, threshold, 1);
+package org.apache.streampipes.node.controller.management.offloading.model.property;
+
+
+import org.apache.streampipes.model.node.monitor.ResourceMetrics;
+
+public class CPULoadResourceProperty implements ResourceProperty<Float>{
+
+    @Override
+    public Float getProperty(ResourceMetrics resourceMetrics) {
+        return resourceMetrics.getCpuLoadInPercent();
     }
 }

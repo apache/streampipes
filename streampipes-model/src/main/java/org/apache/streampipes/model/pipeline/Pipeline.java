@@ -170,6 +170,8 @@ public class Pipeline extends ElementComposition {
 
   public void setPriorityScore(int priorityScore) {
     this.priorityScore = priorityScore;
+    this.getSepas().forEach(processor -> processor.setPriorityScore(priorityScore));
+    this.getActions().forEach(sink -> sink.setPriorityScore(priorityScore));
   }
 
   public boolean isPreemption() {
@@ -178,6 +180,8 @@ public class Pipeline extends ElementComposition {
 
   public void setPreemption(boolean preemption) {
     this.preemption = preemption;
+    this.getSepas().forEach(processor -> processor.setPreemption(preemption));
+    this.getActions().forEach(sink -> sink.setPreemption(preemption));
   }
 
   public boolean isRestartOnSystemReboot() {

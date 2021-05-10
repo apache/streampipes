@@ -15,28 +15,22 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.node.controller.management.offloading;
+
+package org.apache.streampipes.node.controller.management.offloading.model.selection;
 
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
-import org.apache.streampipes.node.controller.management.pe.InvocableElementManager;
 import org.apache.streampipes.node.controller.management.pe.storage.RunningInvocableInstances;
 
 import java.util.List;
 import java.util.Random;
 
-public class AutoOffloadingManager {
+public class RandomSelectionStrategy implements SelectionStrategy{
 
-    public static boolean offloadRandom(){
+    @Override
+    public InvocableStreamPipesEntity selectEntity() {
         List<InvocableStreamPipesEntity> instances = RunningInvocableInstances.INSTANCE.getAll();
         if(instances.size() == 0)
-            return false;
-        InvocableStreamPipesEntity randomlySelectedInstance = instances.get(new Random().nextInt(instances.size()));
-        InvocableElementManager.getInstance().postOffloadRequest(randomlySelectedInstance);
-        return true;
+            return null;
+        return instances.get(new Random().nextInt(instances.size()));
     }
-
-    public static void offloadHeaviest(){
-        //TODO: Migrate the PE with the highest load on CPU (or possibly other resource)
-    }
-
 }

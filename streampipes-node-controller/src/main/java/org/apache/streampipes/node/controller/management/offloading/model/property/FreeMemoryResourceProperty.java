@@ -15,23 +15,15 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.node.controller.management.resource.utils;
 
-public enum FileSystemType {
-    SDA("/dev/sda"),
-    NVME("/dev/nvme"),
-    DISK("/dev/disk"),
-    ROOT("/dev/root"),
-    MMCBLK("/dev/mmcblk0p1"),
-    SDB("/dev/sdb");
+package org.apache.streampipes.node.controller.management.offloading.model.property;
 
-    private final String name;
 
-    FileSystemType(String name) {
-        this.name = name;
-    }
+import org.apache.streampipes.model.node.monitor.ResourceMetrics;
 
-    public String getName() {
-        return name;
+public class FreeMemoryResourceProperty implements ResourceProperty<Long> {
+    @Override
+    public Long getProperty(ResourceMetrics resourceMetrics) {
+        return resourceMetrics.getFreeMemoryInBytes();
     }
 }

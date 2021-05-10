@@ -325,6 +325,13 @@ export class SavePipelineComponent implements OnInit {
     })
   }
 
+  modifyPipelineElementsPreemption(pipelineElements){
+    pipelineElements.forEach(p => {
+      p.preemption = this.selectedPreemption;
+      p.priorityScore = this.tmpPipeline.priorityScore;
+    })
+  }
+
   savePipeline(switchTab) {
     if (this.tmpPipeline.name == "") {
       //this.showToast("error", "Please enter a name for your pipeline");
@@ -344,6 +351,8 @@ export class SavePipelineComponent implements OnInit {
       } else {
         this.tmpPipeline.priorityScore = 0;
       }
+      this.modifyPipelineElementsPreemption(this.tmpPipeline.sepas);
+      this.modifyPipelineElementsPreemption(this.tmpPipeline.actions);
       if (this.selectedNodeTags?.length > 0 && this.selectedPipelineExecutionPolicy === "custom") {
         this.tmpPipeline.nodeTags = this.selectedNodeTags;
       } else {
@@ -364,6 +373,8 @@ export class SavePipelineComponent implements OnInit {
       } else {
         this.tmpPipeline.priorityScore = 0;
       }
+      this.modifyPipelineElementsPreemption(this.tmpPipeline.sepas);
+      this.modifyPipelineElementsPreemption(this.tmpPipeline.actions);
       if (this.selectedNodeTags?.length > 0 && this.selectedPipelineExecutionPolicy === "custom") {
         this.tmpPipeline.nodeTags = this.selectedNodeTags;
       } else {

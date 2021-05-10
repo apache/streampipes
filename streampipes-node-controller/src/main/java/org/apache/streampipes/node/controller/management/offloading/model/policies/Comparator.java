@@ -15,23 +15,9 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.node.controller.management.resource.utils;
+package org.apache.streampipes.node.controller.management.offloading.model.policies;
 
-public enum FileSystemType {
-    SDA("/dev/sda"),
-    NVME("/dev/nvme"),
-    DISK("/dev/disk"),
-    ROOT("/dev/root"),
-    MMCBLK("/dev/mmcblk0p1"),
-    SDB("/dev/sdb");
-
-    private final String name;
-
-    FileSystemType(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
+public enum Comparator {
+    SMALLER,
+    GREATER
 }

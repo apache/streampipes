@@ -37,10 +37,9 @@ public class PipelineElementOffloadHandler {
 
     public Message handleOffloading() {
         Pipeline currentPipeline = getPipelineById(graph.getCorrespondingPipeline());
-        Pipeline offloadPipeline = MigrationPipelineGenerator.generateMigrationPipeline(graph, currentPipeline);
-          //TODO: Handle this case properly
+        Pipeline offloadPipeline = new MigrationPipelineGenerator(graph, currentPipeline).generateMigrationPipeline();
           if(offloadPipeline == null)
-            return Notifications.error(NotificationType.UNKNOWN_ERROR);
+            return Notifications.error(NotificationType.NO_NODE_FOUND);
 
           try {
             PipelineOperationStatus status = Operations.handlePipelineElementMigration(offloadPipeline,
