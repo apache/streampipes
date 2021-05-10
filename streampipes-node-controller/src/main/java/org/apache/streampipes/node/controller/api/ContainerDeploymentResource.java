@@ -51,7 +51,7 @@ public class ContainerDeploymentResource extends AbstractResource {
         ContainerDeploymentStatus status = DockerEngineManager.getInstance().deploy(container);
 
         if (status.getStatus() == ContainerStatus.DEPLOYED) {
-            NodeManager.getInstance().addToRegisteredContainers(status.getContainer());
+            NodeManager.getInstance().registerContainer(status.getContainer());
         }
         return ok(status);
     }
@@ -64,7 +64,7 @@ public class ContainerDeploymentResource extends AbstractResource {
 
         if (status.getStatus() == ContainerStatus.REMOVED) {
             InvocableElementManager.getInstance().unregister();
-            NodeManager.getInstance().removeFromRegisteredContainers(status.getContainer());
+            NodeManager.getInstance().deregisterContainer(status.getContainer());
         }
         return ok(status);
     }

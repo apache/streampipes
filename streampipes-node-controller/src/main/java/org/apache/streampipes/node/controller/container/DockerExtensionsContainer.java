@@ -38,7 +38,6 @@ public class DockerExtensionsContainer extends AbstractStreamPipesDockerContaine
                 .withExposedPorts(Ports.withMapping("8090"))
                 .withEnvironmentVariables(ContainerEnvBuilder.create()
                         .addNodeEnvs(generateStreamPipesNodeEnvs())
-                        .add("CONSUL_LOCATION", NodeConfiguration.getConsulHost())
                         .add("SP_HOST", NodeConfiguration.getNodeHost())
                         .add("SP_PORT", "8090")
                         .build())

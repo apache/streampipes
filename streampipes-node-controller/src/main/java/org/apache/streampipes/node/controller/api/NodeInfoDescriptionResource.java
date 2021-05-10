@@ -36,7 +36,7 @@ public class NodeInfoDescriptionResource extends AbstractResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getNodeInfo() {
-        return ok(NodeManager.getInstance().retrieveNodeInfoDescription());
+        return ok(NodeManager.getInstance().getNode());
     }
 
     @PUT
@@ -44,7 +44,7 @@ public class NodeInfoDescriptionResource extends AbstractResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateNodeInfo(NodeInfoDescription desc) {
-        return ok(NodeManager.getInstance().updateNodeInfoDescription(desc));
+        return ok(NodeManager.getInstance().updateNode(desc));
     }
 
     @POST
@@ -54,9 +54,9 @@ public class NodeInfoDescriptionResource extends AbstractResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response activateNode(@PathParam("action") String action) {
         if (action.equals(ACTIVATE)) {
-            return ok(NodeManager.getInstance().activate());
+            return ok(NodeManager.getInstance().activateNode());
         } else if (action.equals(DEACTIVATE)) {
-            return ok(NodeManager.getInstance().deactivate());
+            return ok(NodeManager.getInstance().deactivateNode());
         } else return fail();
     }
 

@@ -103,12 +103,12 @@ public abstract class ExtensionsModelSubmitter extends ModelSubmitter<EdgeExtens
 
             boolean connected = false;
             while (!connected) {
-                LOG.info("Trying to connect to the node controller: " + nodeControllerUrl);
+                LOG.debug("Trying to connect to the node controller: " + nodeControllerUrl);
                 connected = NodeControllerRestClient.register(nodeControllerUrl,
                         getContainerDescription(conf, true));
 
                 if (!connected) {
-                    LOG.info("Retrying in 5 seconds");
+                    LOG.debug("Retrying in 5 seconds");
                     try {
                         Thread.sleep(5000);
                     } catch (InterruptedException e) {
@@ -129,12 +129,12 @@ public abstract class ExtensionsModelSubmitter extends ModelSubmitter<EdgeExtens
 
             boolean connected = false;
             while (!connected) {
-                LOG.info("Trying to connect to master in backend: " + backendUrl);
+                LOG.debug("Trying to connect to master in backend: " + backendUrl);
                 connected = MasterRestClient.register(backendUrl,
                         getContainerDescription(conf,  false));
 
                 if (!connected) {
-                    LOG.info("Retrying in 5 seconds");
+                    LOG.debug("Retrying in 5 seconds");
                     try {
                         Thread.sleep(5000);
                     } catch (InterruptedException e) {

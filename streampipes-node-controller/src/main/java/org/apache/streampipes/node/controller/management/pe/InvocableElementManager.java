@@ -275,12 +275,12 @@ public class InvocableElementManager implements IPipelineElementLifeCycle {
     }
 
     private NodeInfoDescription getNodeInfoDescription() {
-        return NodeManager.getInstance().retrieveNodeInfoDescription();
+        return NodeManager.getInstance().getNode();
     }
 
     private void setSupportedPipelineElements(List<String> supportedPipelineElements) {
         NodeManager.getInstance()
-                .retrieveNodeInfoDescription()
+                .getNode()
                 .setSupportedElements(supportedPipelineElements);
     }
 

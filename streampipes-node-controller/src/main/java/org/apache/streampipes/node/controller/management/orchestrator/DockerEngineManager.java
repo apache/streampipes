@@ -61,7 +61,7 @@ public class DockerEngineManager implements IContainerEngine {
             ContainerDeploymentStatus status = deploy(container);
 
             if (status.getStatus() == ContainerStatus.DEPLOYED) {
-                NodeManager.getInstance().addToRegisteredContainers(status.getContainer());
+                NodeManager.getInstance().registerContainer(status.getContainer());
             }
         });
     }

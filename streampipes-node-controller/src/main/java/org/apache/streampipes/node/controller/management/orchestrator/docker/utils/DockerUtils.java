@@ -35,6 +35,8 @@ import org.slf4j.LoggerFactory;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -173,21 +175,24 @@ public class DockerUtils {
         return Collections.emptyList();
     }
 
-    private static HostConfig getHostConfig(String network, String[] ports) {
+    private HostConfig getHostConfig(String network, String[] ports) {
         return getHostConfig(network, ports, null);
     }
 
-    private static HostConfig getHostConfig(String network) {
+    private HostConfig getHostConfig(String network) {
         return getHostConfig(network, null, null);
     }
 
-    private static HostConfig getHostConfig(String network, String[] ports, List<String> volumes) {
+    private HostConfig getHostConfig(String network, String[] ports, List<String> volumes) {
         Map<String, List<PortBinding>> portBindings = new HashMap<>();
         if (ports != null) {
             for (String port : ports) {
                 portBindings.put(port + "/tcp", Lists.newArrayList(PortBinding.of("0.0.0.0", port)));
             }
         }
+
+        // find extra hosts in node controller that should also be added to the container
+        ImmutableList<String> configuredExtraHosts = findConfiguredExtraHostsFromNodeController();
 
         if (Objects.requireNonNull(volumes).size() > 0) {
             List<HostConfig.Bind> allVolumeBinds = new ArrayList<>();
@@ -202,6 +207,7 @@ public class DockerUtils {
             return HostConfig.builder()
                     .portBindings(portBindings)
                     .networkMode(network)
+                    .extraHosts(configuredExtraHosts)
                     .restartPolicy(HostConfig.RestartPolicy.unlessStopped())
                     .appendBinds(allVolumeBinds.toArray(new HostConfig.Bind[0]))
                     .build();
@@ -209,6 +215,7 @@ public class DockerUtils {
             return HostConfig.builder()
                     .portBindings(portBindings)
                     .networkMode(network)
+                    .extraHosts(configuredExtraHosts)
                     .restartPolicy(HostConfig.RestartPolicy.unlessStopped())
                     .build();
         }
@@ -255,7 +262,7 @@ public class DockerUtils {
         }
     }
 
-        public DockerInfo getDockerInfo() {
+    public DockerInfo getDockerInfo() {
         DockerInfo dockerInfo = new DockerInfo();
         try {
             Info info = docker.info();
@@ -349,5 +356,31 @@ public class DockerUtils {
             modifyPorts.add(port + "/tcp");
         }
         return modifyPorts.toArray(new String[0]);
+    }
+
+    // TODO: find better option to find specified extra hosts
+    private ImmutableList<String> findConfiguredExtraHostsFromNodeController() {
+        ImmutableList<String> extraHosts = null;
+        try {
+            // currently assumes that node controller container name = hostname
+            String hostname = InetAddress.getLocalHost().getHostName();
+            Optional<Container> container = DockerUtils.getInstance().getContainerList()
+                    .stream()
+                    .filter(c -> c.names().contains("/" + hostname))
+                    .findAny();
+
+            if(container.isPresent()) {
+                String id = container.get().id();
+                extraHosts =  docker
+                        .inspectContainer(id)
+                        .hostConfig()
+                        .extraHosts();
+            }
+
+            return extraHosts;
+
+        } catch (DockerException | InterruptedException | UnknownHostException e) {
+            throw new SpRuntimeException("Failed to find configured extra hosts in node controller");
+        }
     }
 }

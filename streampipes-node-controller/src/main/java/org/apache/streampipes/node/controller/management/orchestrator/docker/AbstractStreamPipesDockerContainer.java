@@ -36,11 +36,18 @@ public abstract class AbstractStreamPipesDockerContainer {
 
     public List<String> generateStreamPipesNodeEnvs() {
         return new ArrayList<>(Arrays.asList(
-                toEnv(EnvConfigParam.NODE_CONTROLLER_ID.getEnvironmentKey(), NodeConfiguration.getNodeControllerId()),
-                toEnv(EnvConfigParam.NODE_CONTROLLER_CONTAINER_HOST.getEnvironmentKey(), NodeConfiguration.getNodeHost()),
-                toEnv( EnvConfigParam.NODE_CONTROLLER_CONTAINER_PORT.getEnvironmentKey(), NodeConfiguration.getNodeControllerPort()),
-                toEnv(EnvConfigParam.NODE_BROKER_CONTAINER_HOST.getEnvironmentKey(), NodeConfiguration.getNodeBrokerHost()),
-                toEnv(EnvConfigParam.NODE_BROKER_CONTAINER_PORT.getEnvironmentKey(), NodeConfiguration.getNodeBrokerPort())
+                toEnv(EnvConfigParam.NODE_CONTROLLER_ID.getEnvironmentKey(),
+                        NodeConfiguration.getNodeControllerId()),
+                toEnv(EnvConfigParam.NODE_CONTROLLER_CONTAINER_HOST.getEnvironmentKey(),
+                        NodeConfiguration.getNodeHost()),
+                toEnv( EnvConfigParam.NODE_CONTROLLER_CONTAINER_PORT.getEnvironmentKey(),
+                        NodeConfiguration.getNodeControllerPort()),
+                toEnv(EnvConfigParam.NODE_BROKER_CONTAINER_HOST.getEnvironmentKey(),
+                        NodeConfiguration.getNodeBrokerHost()),
+                toEnv(EnvConfigParam.NODE_BROKER_CONTAINER_PORT.getEnvironmentKey(),
+                        NodeConfiguration.getNodeBrokerPort()),
+                toEnv(EnvConfigParam.CONSUL_LOCATION.getEnvironmentKey(),
+                        NodeConfiguration.getBackendHost())
         ));
     }
 
