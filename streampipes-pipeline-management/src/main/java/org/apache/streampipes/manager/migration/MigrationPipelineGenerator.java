@@ -35,6 +35,8 @@ public class MigrationPipelineGenerator {
 
     private InvocableStreamPipesEntity entityToMigrate;
     private Pipeline correspondingPipeline;
+    private final float memoryMultiplier = 0.9F;
+    private final float diskSpaceMultiplier = 0.9F;
 
     public MigrationPipelineGenerator(InvocableStreamPipesEntity entityToMigrate, Pipeline correspondingPipeline){
         this.entityToMigrate = entityToMigrate;
@@ -47,7 +49,7 @@ public class MigrationPipelineGenerator {
         List<NodeInfoDescription> possibleTargetNodes = getNodeInfos();
 
         switch(correspondingPipeline.getExecutionPolicy()){
-            case "custom":
+            case "custom": //TODO: Enum class
                 possibleTargetNodes = filterLocationTags(possibleTargetNodes);
             case "locality-aware":
                 //TODO: incorporate strategy for locality-aware deployment
@@ -101,10 +103,11 @@ public class MigrationPipelineGenerator {
             Hardware hardware = entityToMigrate.getResourceRequirements().stream()
                             .filter(nodeRR -> nodeRR instanceof Hardware).map(nodeRR -> (Hardware)nodeRR).findFirst().
                             orElse(null);
-            if(hardware != null){
+            if(hardware != null){ //TODO: Map CPU load ()
+                //Does produce empty list if no hardware requirements are defined
                 if (rmHistory.peek() != null
-                        && hardware.getDisk() <= rmHistory.peek().getFreeDiskSpaceInBytes()
-                        && hardware.getMemory() <= rmHistory.peek().getFreeMemoryInBytes()) {
+                        && hardware.getDisk() <= diskSpaceMultiplier * rmHistory.peek().getFreeDiskSpaceInBytes()
+                        && hardware.getMemory() <= memoryMultiplier * rmHistory.peek().getFreeMemoryInBytes()) {
                     filteredTargetNodes.add(nodeInfo);
                 }
             }

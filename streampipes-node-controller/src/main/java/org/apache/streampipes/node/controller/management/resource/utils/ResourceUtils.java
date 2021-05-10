@@ -55,6 +55,8 @@ public class ResourceUtils {
             } else if (volume.contains(FileSystemType.MMCBLK.getName())){
                 // Docker in Jetson Nano
                 addDiskUsage(diskUsage, f);
+            } else if (volume.contains(FileSystemType.SDB.getName())){
+                addDiskUsage(diskUsage, f);
             }
         }
         return diskUsage.isEmpty() ? defaultDiskUsage() : diskUsage;

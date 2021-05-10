@@ -25,6 +25,7 @@ import org.apache.streampipes.node.controller.management.offloading.model.proper
 import org.apache.streampipes.node.controller.management.offloading.model.property.FreeDiskSpaceResourceProperty;
 import org.apache.streampipes.node.controller.management.offloading.model.property.FreeMemoryResourceProperty;
 import org.apache.streampipes.node.controller.management.offloading.model.selection.CPULoadSelectionStrategy;
+import org.apache.streampipes.node.controller.management.offloading.model.selection.PrioritySelectionStrategy;
 import org.apache.streampipes.node.controller.management.offloading.model.selection.RandomSelectionStrategy;
 import org.apache.streampipes.node.controller.management.offloading.model.selection.SelectionStrategy;
 
@@ -41,8 +42,8 @@ public class OffloadingStrategyFactory {
                             new CPULoadResourceProperty(), new RandomSelectionStrategy());
                 case "debug":
                     return new OffloadingStrategy<Float>(new ThresholdViolationOffloadingPolicy<>(5,
-                            Comparator.GREATER,0.5f, 3),
-                            new CPULoadResourceProperty(), new RandomSelectionStrategy());
+                            Comparator.GREATER,0.5f, 1),
+                            new CPULoadResourceProperty(), new PrioritySelectionStrategy());
                 case "memory":
                     return new OffloadingStrategy<Long>(new ThresholdViolationOffloadingPolicy<>(5, Comparator.SMALLER,
                             549755813888l, 5),

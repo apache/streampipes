@@ -99,6 +99,10 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
   @RdfProperty(StreamPipes.ELEMENT_ENDPOINT_SERVICE_NAME)
   private String elementEndpointServiceName;
 
+  private Integer priorityScore;
+
+  private boolean preemption;
+
   //@RdfProperty(StreamPipes.PE_CONFIGURED)
   private boolean configured;
 
@@ -123,6 +127,8 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
     this.deploymentRunningInstanceId = other.getDeploymentRunningInstanceId();
     this.elementEndpointServiceName = other.getElementEndpointServiceName();
     this.correspondingUser = other.getCorrespondingUser();
+    this.preemption = other.isPreemption();
+    this.priorityScore = other.getPriorityScore();
     if (other.getStreamRequirements() != null) {
       this.streamRequirements = new Cloner().streams(other.getStreamRequirements());
     }
@@ -295,5 +301,21 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
 
   public void setResourceRequirements(List<NodeResourceRequirement> resourceRequirements) {
     this.resourceRequirements = resourceRequirements;
+  }
+
+  public Integer getPriorityScore() {
+    return priorityScore;
+  }
+
+  public void setPriorityScore(Integer priorityScore) {
+    this.priorityScore = priorityScore;
+  }
+
+  public boolean isPreemption() {
+    return preemption;
+  }
+
+  public void setPreemption(boolean preemption) {
+    this.preemption = preemption;
   }
 }

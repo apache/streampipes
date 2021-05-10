@@ -22,7 +22,8 @@ public enum FileSystemType {
     NVME("/dev/nvme"),
     DISK("/dev/disk"),
     ROOT("/dev/root"),
-    MMCBLK("/dev/mmcblk0p1");
+    MMCBLK("/dev/mmcblk0p1"),
+    SDB("/dev/sdb");
 
     private final String name;
 
