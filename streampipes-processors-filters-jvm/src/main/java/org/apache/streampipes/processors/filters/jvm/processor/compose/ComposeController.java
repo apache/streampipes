@@ -20,7 +20,6 @@ package org.apache.streampipes.processors.filters.jvm.processor.compose;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.processors.filters.jvm.config.FiltersJvmConfig;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
@@ -54,8 +53,8 @@ public class ComposeController extends StandaloneEventProcessingDeclarer<Compose
   }
 
   @Override
-  public ConfiguredEventProcessor<ComposeParameters>
-  onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<ComposeParameters> onInvocation(DataProcessorInvocation graph,
+                                                                  ProcessingElementParameterExtractor extractor) {
 
     List<String> outputKeySelectors = extractor.outputKeySelectors();
 

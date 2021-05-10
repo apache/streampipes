@@ -18,7 +18,8 @@
 
 package org.apache.streampipes.processors.textmining.jvm;
 
-import org.apache.streampipes.container.init.DeclarersSingleton;
+import org.apache.streampipes.container.model.SpServiceDefinition;
+import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
@@ -27,7 +28,6 @@ import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
-import org.apache.streampipes.processors.textmining.jvm.config.TextMiningJvmConfig;
 import org.apache.streampipes.processors.textmining.jvm.processor.chunker.ChunkerController;
 import org.apache.streampipes.processors.textmining.jvm.processor.language.LanguageDetectionController;
 import org.apache.streampipes.processors.textmining.jvm.processor.namefinder.NameFinderController;
@@ -36,26 +36,24 @@ import org.apache.streampipes.processors.textmining.jvm.processor.sentencedetect
 import org.apache.streampipes.processors.textmining.jvm.processor.tokenizer.TokenizerController;
 
 public class TextMiningJvmInit extends StandaloneModelSubmitter {
-    public static void main(String[] args) {
-        DeclarersSingleton.getInstance()
-                .add(new LanguageDetectionController())
-                .add(new TokenizerController())
-                .add(new PartOfSpeechController())
-                .add(new ChunkerController())
-                .add(new NameFinderController())
-                .add(new SentenceDetectionController());
+  public static void main(String[] args) {
 
-        DeclarersSingleton.getInstance().registerDataFormats(
-                new JsonDataFormatFactory(),
-                new CborDataFormatFactory(),
-                new SmileDataFormatFactory(),
-                new FstDataFormatFactory());
+    SpServiceDefinition serviceDef = SpServiceDefinitionBuilder.create("org.apache.streampipes.processors.textmining.jvm", "Processors Text Mining JVM", "", 8090)
+            .registerPipelineElements(new LanguageDetectionController(),
+                    new TokenizerController(),
+                    new PartOfSpeechController(),
+                    new ChunkerController(),
+                    new NameFinderController(),
+                    new SentenceDetectionController())
+            .registerMessagingFormats(new JsonDataFormatFactory(),
+                    new CborDataFormatFactory(),
+                    new SmileDataFormatFactory(),
+                    new FstDataFormatFactory())
+            .registerMessagingProtocols(new SpKafkaProtocolFactory(),
+                    new SpJmsProtocolFactory(),
+                    new SpMqttProtocolFactory())
+            .build();
 
-        DeclarersSingleton.getInstance().registerProtocols(
-                new SpKafkaProtocolFactory(),
-                new SpMqttProtocolFactory(),
-                new SpJmsProtocolFactory());
-
-        new TextMiningJvmInit().init(TextMiningJvmConfig.INSTANCE);
-    }
+    new TextMiningJvmInit().init(serviceDef);
+  }
 }

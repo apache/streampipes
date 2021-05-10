@@ -18,16 +18,13 @@
 
 package org.apache.streampipes.sinks.internal.jvm;
 
-import org.apache.streampipes.container.init.DeclarersSingleton;
+import org.apache.streampipes.container.model.SpServiceDefinition;
+import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
-import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
-import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
-import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
-import org.apache.streampipes.sinks.internal.jvm.config.SinksInternalJvmConfig;
 import org.apache.streampipes.sinks.internal.jvm.dashboard.DashboardController;
 import org.apache.streampipes.sinks.internal.jvm.datalake.DataLakeController;
 import org.apache.streampipes.sinks.internal.jvm.notification.NotificationController;
@@ -35,22 +32,30 @@ import org.apache.streampipes.sinks.internal.jvm.notification.NotificationContro
 public class SinksInternalJvmInit extends StandaloneModelSubmitter {
 
   public static void main(String[] args) {
-    DeclarersSingleton.getInstance()
-            .add(new NotificationController())
-            .add(new DataLakeController())
-            .add(new DashboardController());
 
-    DeclarersSingleton.getInstance().registerDataFormats(
-            new JsonDataFormatFactory(),
-            new CborDataFormatFactory(),
-            new SmileDataFormatFactory(),
-            new FstDataFormatFactory());
+    SpServiceDefinition serviceDef = SpServiceDefinitionBuilder.create("org.apache.streampipes.sinks.internal.jvm", "StreamPipes Sinks Internal JVM", "",8090)
+            .registerPipelineElements(new DashboardController(),
+                    new DataLakeController(),
+                    new NotificationController())
+            .registerMessagingFormats(new JsonDataFormatFactory(), new CborDataFormatFactory())
+            .registerMessagingProtocols(new SpKafkaProtocolFactory(), new SpJmsProtocolFactory())
+            .build();
+//    DeclarersSingleton.getInstance()
+//            .add(new NotificationController())
+//            .add(new DataLakeController())
+//            .add(new DashboardController());
+//
+//    DeclarersSingleton.getInstance().registerDataFormats(
+//            new JsonDataFormatFactory(),
+//            new CborDataFormatFactory(),
+//            new SmileDataFormatFactory(),
+//            new FstDataFormatFactory());
+//
+//    DeclarersSingleton.getInstance().registerProtocols(
+//            new SpKafkaProtocolFactory(),
+//            new SpMqttProtocolFactory(),
+//            new SpJmsProtocolFactory());
 
-    DeclarersSingleton.getInstance().registerProtocols(
-            new SpKafkaProtocolFactory(),
-            new SpMqttProtocolFactory(),
-            new SpJmsProtocolFactory());
-
-    new SinksInternalJvmInit().init(SinksInternalJvmConfig.INSTANCE);
+    new SinksInternalJvmInit().init(serviceDef);
   }
 }

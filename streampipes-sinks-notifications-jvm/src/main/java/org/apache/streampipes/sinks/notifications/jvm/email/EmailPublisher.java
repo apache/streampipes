@@ -19,24 +19,19 @@
 package org.apache.streampipes.sinks.notifications.jvm.email;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.config.SpConfig;
 import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.EventConverter;
-import org.apache.streampipes.sinks.notifications.jvm.config.SinksNotificationsJvmConfig;
+import org.apache.streampipes.sinks.notifications.jvm.config.ConfigKeys;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.runtime.EventSink;
 
-import java.util.Map;
-import java.util.Properties;
-
-import javax.mail.Authenticator;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
+import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.util.Map;
+import java.util.Properties;
 
 public class EmailPublisher implements EventSink<EmailParameters> {
 
@@ -49,16 +44,17 @@ public class EmailPublisher implements EventSink<EmailParameters> {
     public void onInvocation(EmailParameters parameters, EventSinkRuntimeContext runtimeContext) {
         LOG = parameters.getGraph().getLogger(EmailPublisher.class);
 
-        String from = SinksNotificationsJvmConfig.INSTANCE.getEmailFrom();
+        SpConfig config = runtimeContext.getConfigStore().getConfig();
+        String from = config.getString(ConfigKeys.EMAIL_FROM);
         String to = parameters.getToEmailAddress();
         String subject = parameters.getSubject();
         this.content = parameters.getContent();
-        String username = SinksNotificationsJvmConfig.INSTANCE.getEmailUsername();
-        String password = SinksNotificationsJvmConfig.INSTANCE.getEmailPassword();
-        String host = SinksNotificationsJvmConfig.INSTANCE.getEmailSmtpHost();
-        int port = SinksNotificationsJvmConfig.INSTANCE.getEmailSmtpPort();
-        boolean starttls = SinksNotificationsJvmConfig.INSTANCE.useEmailStarttls();
-        boolean ssl = SinksNotificationsJvmConfig.INSTANCE.useEmailSll();
+        String username = config.getString(ConfigKeys.EMAIL_USERNAME);
+        String password = config.getString(ConfigKeys.EMAIL_PASSWORD);
+        String host = config.getString(ConfigKeys.EMAIL_SMTP_HOST);
+        int port = config.getInteger(ConfigKeys.EMAIL_SMTP_PORT);
+        boolean starttls = config.getBoolean(ConfigKeys.EMAIL_STARTTLS);
+        boolean ssl = config.getBoolean(ConfigKeys.EMAIL_SLL);
 
         Properties properties = new Properties();
         properties.setProperty("mail.smtp.host", host);

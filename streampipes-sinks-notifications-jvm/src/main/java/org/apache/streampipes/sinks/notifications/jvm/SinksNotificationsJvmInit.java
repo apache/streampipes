@@ -18,7 +18,8 @@
 
 package org.apache.streampipes.sinks.notifications.jvm;
 
-import org.apache.streampipes.container.init.DeclarersSingleton;
+import org.apache.streampipes.container.model.SpServiceDefinition;
+import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
@@ -27,7 +28,7 @@ import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
-import org.apache.streampipes.sinks.notifications.jvm.config.SinksNotificationsJvmConfig;
+import org.apache.streampipes.sinks.notifications.jvm.config.ConfigKeys;
 import org.apache.streampipes.sinks.notifications.jvm.email.EmailController;
 import org.apache.streampipes.sinks.notifications.jvm.onesignal.OneSignalController;
 import org.apache.streampipes.sinks.notifications.jvm.slack.SlackNotificationController;
@@ -36,23 +37,28 @@ import org.apache.streampipes.sinks.notifications.jvm.telegram.TelegramControlle
 public class SinksNotificationsJvmInit extends StandaloneModelSubmitter {
 
   public static void main(String[] args) {
-    DeclarersSingleton.getInstance()
-            .add(new EmailController())
-            .add(new OneSignalController())
-            .add(new SlackNotificationController())
-            .add(new TelegramController());
+    SpServiceDefinition serviceDef = SpServiceDefinitionBuilder.create("org.apache.streampipes.sinks.notifications.jvm", "Sinks Notifications JVM", "", 8096)
+            .registerPipelineElements(new EmailController(),
+                    new OneSignalController(),
+                    new SlackNotificationController(),
+                    new TelegramController())
+            .registerMessagingFormats(new JsonDataFormatFactory(),
+                    new CborDataFormatFactory(),
+                    new SmileDataFormatFactory(),
+                    new FstDataFormatFactory())
+            .registerMessagingProtocols(new SpKafkaProtocolFactory(),
+                    new SpJmsProtocolFactory(),
+                    new SpMqttProtocolFactory())
+            .addConfig(ConfigKeys.WEBSOCKET_PROTOCOL, "ws", "")
+            .addConfig(ConfigKeys.EMAIL_FROM, "", "The sender address of the email")
+            .addConfig(ConfigKeys.EMAIL_USERNAME, "", "The username of the email account")
+            .addConfig(ConfigKeys.EMAIL_PASSWORD, "", "The password of the email account")
+            .addConfig(ConfigKeys.EMAIL_SMTP_HOST, "", "The SMTP Host")
+            .addConfig(ConfigKeys.EMAIL_SMTP_PORT, "", "The SMTP Port")
+            .addConfig(ConfigKeys.EMAIL_STARTTLS, false, "Use startls?")
+            .addConfig(ConfigKeys.EMAIL_SLL, false, "Use SLL?")
+            .build();
 
-    DeclarersSingleton.getInstance().registerDataFormats(
-            new JsonDataFormatFactory(),
-            new CborDataFormatFactory(),
-            new SmileDataFormatFactory(),
-            new FstDataFormatFactory());
-
-    DeclarersSingleton.getInstance().registerProtocols(
-            new SpKafkaProtocolFactory(),
-            new SpMqttProtocolFactory(),
-            new SpJmsProtocolFactory());
-
-    new SinksNotificationsJvmInit().init(SinksNotificationsJvmConfig.INSTANCE);
+    new SinksNotificationsJvmInit().init(serviceDef);
   }
 }
