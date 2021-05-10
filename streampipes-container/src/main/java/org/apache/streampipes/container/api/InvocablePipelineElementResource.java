@@ -21,6 +21,7 @@ package org.apache.streampipes.container.api;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.container.declarer.Declarer;
 import org.apache.streampipes.container.declarer.InvocableDeclarer;
+import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.container.init.RunningInstances;
 import org.apache.streampipes.model.Response;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
@@ -70,7 +71,7 @@ public abstract class InvocablePipelineElementResource<I extends InvocableStream
                 String runningInstanceId = getInstanceId(graph.getElementId(), elementId);
                 if (!RunningInstances.INSTANCE.exists(runningInstanceId)) {
                     RunningInstances.INSTANCE.add(runningInstanceId, graph, declarer.getClass().newInstance());
-                    Response resp = RunningInstances.INSTANCE.getInvocation(runningInstanceId).invokeRuntime(graph);
+                    Response resp = RunningInstances.INSTANCE.getInvocation(runningInstanceId).invokeRuntime(graph, getServiceId());
                     return ok(resp);
                 } else {
                     LOG.info("Pipeline element {} with id {} seems to be already running, skipping invocation request.", graph.getName(), runningInstanceId);
@@ -138,7 +139,7 @@ public abstract class InvocablePipelineElementResource<I extends InvocableStream
         InvocableDeclarer runningInstance = RunningInstances.INSTANCE.getInvocation(runningInstanceId);
 
         if (runningInstance != null) {
-            Response resp = runningInstance.detachRuntime(runningInstanceId);
+            Response resp = runningInstance.detachRuntime(runningInstanceId, getServiceId());
 
             if (resp.isSuccess()) {
                 RunningInstances.INSTANCE.remove(runningInstanceId);
@@ -156,6 +157,10 @@ public abstract class InvocablePipelineElementResource<I extends InvocableStream
 
     private Boolean isDebug() {
         return "true".equals(System.getenv("SP_DEBUG"));
+    }
+
+    private String getServiceId() {
+        return DeclarersSingleton.getInstance().getServiceId();
     }
 }
 

@@ -58,7 +58,8 @@ public abstract class FlinkDataSinkRuntime<B extends EventSinkBindingParams> ext
   public abstract void getSink(DataStream<Event>... convertedStream1);
 
   protected EventSinkRuntimeParams<B> makeRuntimeParams() {
-    return new EventSinkRuntimeParams<>(bindingParams, false);
+    // TODO add support for config extractor & client
+    return new EventSinkRuntimeParams<>(bindingParams, false, null, null);
   }
 
 }

@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.wrapper.params.runtime;
 
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.EventFactory;
@@ -38,14 +40,21 @@ public abstract class RuntimeParams<B extends BindingParams<I>, I extends
 
   protected final B bindingParams;
   protected RC runtimeContext;
+  protected ConfigExtractor configExtractor;
+  protected StreamPipesClient streamPipesClient;
 
   private Map<String, Integer> eventInfoMap = new HashMap<>();
 
   private Boolean singletonEngine;
 
-  public RuntimeParams(B bindingParams, Boolean singletonEngine) {
+  public RuntimeParams(B bindingParams,
+                       Boolean singletonEngine,
+                       ConfigExtractor configExtractor,
+                       StreamPipesClient streamPipesClient) {
     this.bindingParams = bindingParams;
     this.singletonEngine = singletonEngine;
+    this.configExtractor = configExtractor;
+    this.streamPipesClient = streamPipesClient;
     buildEventInfoMap();
     this.runtimeContext = makeRuntimeContext();
   }

@@ -49,6 +49,8 @@ public class DeclarersSingleton {
   private Map<String, TransportProtocol> supportedProtocols;
   private Map<String, TransportFormat> supportedFormats;
 
+  private String serviceId;
+
   private int port;
   private String route;
   private String hostName;
@@ -77,6 +79,7 @@ public class DeclarersSingleton {
     this.addDeclarers(serviceDef.getDeclarers());
     this.registerProtocols(serviceDef.getProtocolDefinitionFactories());
     this.registerDataFormats(serviceDef.getDataFormatFactories());
+    this.serviceId = serviceDef.getServiceId();
   }
 
   public void addDeclarers(List<Declarer<?>> allDeclarers) {
@@ -220,6 +223,10 @@ public class DeclarersSingleton {
 
   public String getBaseUri() {
     return Http + hostName + Colon + port + route;
+  }
+
+  public String getServiceId() {
+    return serviceId;
   }
 
   private void checkAndStartExecutableStreams(DataStreamDeclarer declarer) {

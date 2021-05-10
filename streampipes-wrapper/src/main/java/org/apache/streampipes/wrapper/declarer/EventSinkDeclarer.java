@@ -36,8 +36,8 @@ public abstract class EventSinkDeclarer<B extends EventSinkBindingParams, ES ext
   }
 
   @Override
-  public Response invokeRuntime(DataSinkInvocation graph) {
-    return invokeEPRuntime(graph);
+  public Response invokeRuntime(DataSinkInvocation graph, String serviceId) {
+    return invokeEPRuntime(graph, serviceId);
   }
 
 }

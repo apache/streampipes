@@ -17,6 +17,8 @@
  */
 package org.apache.streampipes.wrapper.context;
 
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.runtime.SchemaInfo;
 import org.apache.streampipes.model.runtime.SourceInfo;
@@ -28,13 +30,19 @@ public class SpRuntimeContext implements RuntimeContext {
   private List<SchemaInfo> inputSchemaInfo;
   private List<SourceInfo> sourceInfo;
   private String correspondingUser;
+  private ConfigExtractor configExtractor;
+  private StreamPipesClient streamPipesClient;
 
   public SpRuntimeContext(List<SourceInfo> sourceInfo,
                           List<SchemaInfo> inputSchemaInfo,
-                          String correspondingUser) {
+                          String correspondingUser,
+                          ConfigExtractor configExtractor,
+                          StreamPipesClient streamPipesClient) {
     this.inputSchemaInfo = inputSchemaInfo;
     this.sourceInfo = sourceInfo;
     this.correspondingUser = correspondingUser;
+    this.configExtractor = configExtractor;
+    this.streamPipesClient = streamPipesClient;
   }
 
   public SpRuntimeContext() {
@@ -60,5 +68,15 @@ public class SpRuntimeContext implements RuntimeContext {
   @Override
   public String getCorrespondingUser() {
     return correspondingUser;
+  }
+
+  @Override
+  public ConfigExtractor getConfigStore() {
+    return this.configExtractor;
+  }
+
+  @Override
+  public StreamPipesClient getStreamPipesClient() {
+    return streamPipesClient;
   }
 }

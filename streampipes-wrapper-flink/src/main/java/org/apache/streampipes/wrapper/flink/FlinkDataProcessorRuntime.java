@@ -107,6 +107,7 @@ public abstract class FlinkDataProcessorRuntime<B extends EventProcessorBindingP
   }
 
   protected EventProcessorRuntimeParams<B> makeRuntimeParams() {
-    return new EventProcessorRuntimeParams<>(bindingParams, false);
+    // TODO add support for config extractor & client
+    return new EventProcessorRuntimeParams<>(bindingParams, false, null, null);
   }
 }

@@ -17,6 +17,8 @@
  */
 package org.apache.streampipes.wrapper.context;
 
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.SchemaInfo;
 import org.apache.streampipes.model.runtime.SourceInfo;
 
@@ -33,8 +35,10 @@ public class SpEventProcessorRuntimeContext extends SpRuntimeContext implements
                                         List<SchemaInfo> inputSchemaInfo,
                                         SourceInfo outputSourceInfo,
                                         SchemaInfo outputSchemaInfo,
-                                        String correspondingUser) {
-    super(inputSourceInfo, inputSchemaInfo, correspondingUser);
+                                        String correspondingUser,
+                                        ConfigExtractor configExtractor,
+                                        StreamPipesClient streamPipesClient) {
+    super(inputSourceInfo, inputSchemaInfo, correspondingUser, configExtractor, streamPipesClient);
     this.outputSchemaInfo = outputSchemaInfo;
     this.outputSourceInfo = outputSourceInfo;
   }
@@ -52,4 +56,5 @@ public class SpEventProcessorRuntimeContext extends SpRuntimeContext implements
   public SourceInfo getOutputSourceInfo() {
     return outputSourceInfo;
   }
+
 }

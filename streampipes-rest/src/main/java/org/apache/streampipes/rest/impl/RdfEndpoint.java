@@ -125,7 +125,7 @@ public class RdfEndpoint extends AbstractRestResource {
   private List<RdfEndpointItem> getAllDataSinkEndpoints(String username, List<RdfEndpointItem> existingItems) {
     return getAllDataSinkUris(username)
             .stream()
-            .filter(s -> existingItems.stream().noneMatch(item -> item.getElementId().equals(s)))
+            .filter(s -> existingItems.stream().noneMatch(item -> s.equals(item.getElementId())))
             .map(s -> getTripleStorage().getPipelineElementStorage().getDataSinkById(s))
             .map(source -> makeItem(source, "action"))
             .collect(Collectors.toList());

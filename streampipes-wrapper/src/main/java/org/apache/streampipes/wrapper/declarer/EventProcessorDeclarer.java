@@ -40,8 +40,8 @@ public abstract class EventProcessorDeclarer<B extends EventProcessorBindingPara
 	}
 
 	@Override
-	public Response invokeRuntime(DataProcessorInvocation graph) {
-		return invokeEPRuntime(graph);
+	public Response invokeRuntime(DataProcessorInvocation graph, String serviceId) {
+		return invokeEPRuntime(graph, serviceId);
 	}
 
 }

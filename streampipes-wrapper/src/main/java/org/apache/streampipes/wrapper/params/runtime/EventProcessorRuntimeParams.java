@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.wrapper.params.runtime;
 
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.context.SpEventProcessorRuntimeContext;
@@ -26,8 +28,11 @@ import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams
 public class EventProcessorRuntimeParams<B extends EventProcessorBindingParams> extends
         RuntimeParams<B, DataProcessorInvocation, EventProcessorRuntimeContext> { // B - Bind Type
 
-  public EventProcessorRuntimeParams(B bindingParams, Boolean singletonEngine) {
-    super(bindingParams, singletonEngine);
+  public EventProcessorRuntimeParams(B bindingParams,
+                                     Boolean singletonEngine,
+                                     ConfigExtractor configExtractor,
+                                     StreamPipesClient streamPipesClient) {
+    super(bindingParams, singletonEngine, configExtractor, streamPipesClient);
   }
 
   @Override
@@ -35,7 +40,7 @@ public class EventProcessorRuntimeParams<B extends EventProcessorBindingParams> 
     return new SpEventProcessorRuntimeContext(getSourceInfo(),
             getSchemaInfo(), bindingParams.getOutputStreamParams()
                     .getSourceInfo(), bindingParams.getOutputStreamParams().getSchemaInfo(),
-            bindingParams.getGraph().getCorrespondingUser());
+            bindingParams.getGraph().getCorrespondingUser(), configExtractor, streamPipesClient);
   }
 
 }

@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.wrapper.declarer;
 
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.Response;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.sdk.extractor.AbstractParameterExtractor;
@@ -31,22 +33,24 @@ public abstract class PipelineElementDeclarer<B extends BindingParams, EPR exten
   protected EPR epRuntime;
   protected String elementId;
 
-  public Response invokeEPRuntime(I graph) {
+  public Response invokeEPRuntime(I graph, String serviceId) {
 
     try {
       elementId = graph.getElementId();
-      // change to getRuntime(graph, extractor)
-      epRuntime = getRuntime(graph, getExtractor(graph));
+      ConfigExtractor configExtractor = makeConfigExtractor(serviceId);
+      // TODO add StreamPipes Client support
+      StreamPipesClient streamPipesClient = null;
+      epRuntime = getRuntime(graph, getExtractor(graph), configExtractor, streamPipesClient);
       epRuntime.bindRuntime();
       return new Response(graph.getElementId(), true);
     } catch (Exception e) {
       e.printStackTrace();
       return new Response(graph.getElementId(), false, e.getMessage());
     }
-
   }
 
-  public Response detachRuntime(String pipelineId) {
+  public Response detachRuntime(String pipelineId,
+                                String serviceId) {
     try {
       epRuntime.discardRuntime();
       return new Response(elementId, true);
@@ -58,9 +62,13 @@ public abstract class PipelineElementDeclarer<B extends BindingParams, EPR exten
 
   protected abstract EX getExtractor(I graph);
 
-  public abstract EPR getRuntime(I graph, EX extractor);
+  public abstract EPR getRuntime(I graph,
+                                 EX extractor,
+                                 ConfigExtractor configExtractor,
+                                 StreamPipesClient streamPipesClient);
 
-
-
+  private ConfigExtractor makeConfigExtractor(String serviceId) {
+    return ConfigExtractor.from(serviceId);
+  }
 
 }

@@ -17,6 +17,8 @@
  */
 package org.apache.streampipes.wrapper.standalone.declarer;
 
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.wrapper.declarer.EventProcessorDeclarer;
@@ -34,10 +36,12 @@ public abstract class StandaloneExternalEventProcessingDeclarer<B extends
 
   @Override
   public StandaloneExternalEventProcessorRuntime<B> getRuntime(DataProcessorInvocation graph,
-                                                       ProcessingElementParameterExtractor extractor) {
+                                                               ProcessingElementParameterExtractor extractor,
+                                                               ConfigExtractor configExtractor,
+                                                               StreamPipesClient streamPipesClient) {
     ConfiguredExternalEventProcessor<B> configuredEngine = onInvocation(graph, extractor);
     EventProcessorRuntimeParams<B> runtimeParams = new EventProcessorRuntimeParams<>
-            (configuredEngine.getBindingParams(), false);
+            (configuredEngine.getBindingParams(), false, configExtractor, streamPipesClient);
 
     return new StandaloneExternalEventProcessorRuntime<>(configuredEngine.getEngineSupplier(),
             runtimeParams);

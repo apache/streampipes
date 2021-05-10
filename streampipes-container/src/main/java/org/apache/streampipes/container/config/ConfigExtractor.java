@@ -15,29 +15,24 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.wrapper.context;
+package org.apache.streampipes.container.config;
 
-import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.container.config.ConfigExtractor;
-import org.apache.streampipes.logging.api.Logger;
-import org.apache.streampipes.model.runtime.SchemaInfo;
-import org.apache.streampipes.model.runtime.SourceInfo;
+import org.apache.streampipes.config.SpConfig;
+import org.apache.streampipes.config.consul.ConsulSpConfig;
 
-import java.util.List;
+public class ConfigExtractor {
 
-public interface RuntimeContext {
+  private SpConfig config;
 
-  Logger getLogger();
+  public static ConfigExtractor from(String serviceId) {
+    return new ConfigExtractor(serviceId);
+  }
 
-  List<SchemaInfo> getInputSchemaInfo();
+  private ConfigExtractor(String serviceId) {
+    this.config = new ConsulSpConfig(serviceId);
+  }
 
-  List<SourceInfo> getInputSourceInfo();
-
-  String getCorrespondingUser();
-
-  ConfigExtractor getConfigStore();
-
-  StreamPipesClient getStreamPipesClient();
-
-
+  public SpConfig getConfig() {
+    return this.config;
+  }
 }

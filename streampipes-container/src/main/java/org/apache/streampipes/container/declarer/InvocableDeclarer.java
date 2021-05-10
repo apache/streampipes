@@ -22,9 +22,10 @@ import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.Response;
 
-public interface InvocableDeclarer<D extends NamedStreamPipesEntity, I extends InvocableStreamPipesEntity> extends Declarer<D> {
+public interface InvocableDeclarer<D extends NamedStreamPipesEntity,
+        I extends InvocableStreamPipesEntity> extends Declarer<D> {
 
-    Response invokeRuntime(I invocationGraph);
+    Response invokeRuntime(I invocationGraph, String serviceId);
 
-    Response detachRuntime(String pipelineId);
+    Response detachRuntime(String pipelineId, String serviceId);
 }
