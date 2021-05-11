@@ -195,12 +195,12 @@ public class Plc4xS7Adapter extends PullAdapter {
         try (PlcConnection plcConnection = this.driverManager.getConnection("s7://" + this.ip)) {
 
             if (!plcConnection.getMetadata().canRead()) {
-                throw new AdapterException("The S7 on IP: " + this.ip + " does not support reading data");
+                this.LOG.error("The S7 on IP: " + this.ip + " does not support reading data");
             }
         } catch (PlcConnectionException e) {
-            throw new AdapterException("Could not establish connection to S7 with ip " + this.ip, e);
+            this.LOG.error("Could not establish connection to S7 with ip " + this.ip, e);
         } catch (Exception e) {
-            throw new AdapterException("Could not close connection to S7 with ip " + this.ip, e);
+            this.LOG.error("Could not close connection to S7 with ip " + this.ip, e);
         }
     }
 
@@ -233,7 +233,7 @@ public class Plc4xS7Adapter extends PullAdapter {
                         if (response.getResponseCode(node.get(PLC_NODE_NAME)) == PlcResponseCode.OK) {
                             event.put(node.get(PLC_NODE_RUNTIME_NAME), response.getObject(node.get(PLC_NODE_NAME)));
                         } else {
-                            logger.error("Error[" + node.get(PLC_NODE_NAME) + "]: " +
+                            this.LOG.error("Error[" + node.get(PLC_NODE_NAME) + "]: " +
                                     response.getResponseCode(node.get(PLC_NODE_NAME)).name());
                         }
                     }
