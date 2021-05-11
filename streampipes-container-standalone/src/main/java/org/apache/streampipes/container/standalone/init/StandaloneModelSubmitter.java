@@ -27,6 +27,7 @@ import org.apache.streampipes.container.model.PeConfig;
 import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.container.util.ServiceDefinitionUtil;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
+import org.apache.streampipes.svcdiscovery.SpServiceTags;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -51,13 +52,14 @@ public abstract class StandaloneModelSubmitter extends ModelSubmitter<PeConfig> 
         try {
             String host = Networking.getHostname();
             Integer port = Networking.getPort(serviceDef.getDefaultPort());
-            List<String> appIds = ServiceDefinitionUtil.extractAppIds(serviceDef.getDeclarers());
+            List<String> serviceTags = ServiceDefinitionUtil.extractAppIds(serviceDef.getDeclarers());
+            serviceTags.add(SpServiceTags.PE);
 
             DeclarersSingleton.getInstance().populate(host, port, serviceDef);
 
             SpServiceDiscovery
                     .getServiceDiscovery()
-                    .registerPeService("pe/" +serviceDef.getServiceId(), host, port, appIds);
+                    .registerPeService("pe/" +serviceDef.getServiceId(), host, port, serviceTags);
 
             startService(port);
         } catch (UnknownHostException e) {

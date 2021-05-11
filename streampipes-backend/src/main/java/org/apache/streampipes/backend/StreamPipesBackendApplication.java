@@ -27,6 +27,7 @@ import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.rest.notifications.NotificationListener;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
+import org.apache.streampipes.svcdiscovery.SpServiceTags;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -61,7 +62,11 @@ public class StreamPipesBackendApplication {
       Integer port = Networking.getPort(8030);
       SpServiceDiscovery
               .getServiceDiscovery()
-              .registerService("core", "core", host, port, Arrays.asList("core", "connect-master"));
+              .registerService("core",
+                      "core",
+                      host,
+                      port,
+                      Arrays.asList(SpServiceTags.CORE, SpServiceTags.CONNECT_MASTER));
 
       SpringApplication.run(StreamPipesBackendApplication.class, args);
     } catch (UnknownHostException e) {
