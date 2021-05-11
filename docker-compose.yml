@@ -64,7 +64,6 @@ services:
       - couchdb
       - activemq
       - consul
-      - connect-master
       - backend
     logging: *default-logging
     networks:

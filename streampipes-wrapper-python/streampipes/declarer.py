@@ -56,5 +56,3 @@ class DeclarerSingleton(metaclass=Singleton):
 
     def get_base_uri(self):
         return 'http://' + self.host + ':' + self.port + self.route
-
-

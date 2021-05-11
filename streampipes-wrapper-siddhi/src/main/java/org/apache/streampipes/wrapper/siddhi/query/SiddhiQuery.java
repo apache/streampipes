@@ -28,12 +28,14 @@ public class SiddhiQuery {
   private String orderByClause;
   private String limitClause;
   private String insertIntoClause;
+  private String offsetClause;
 
   private boolean hasSelectClause;
   private boolean hasGroupByClause;
   private boolean hasHavingClause;
   private boolean hasOrderByClause;
   private boolean hasLimitClause;
+  private boolean hasOffsetClause;
 
   public String getFromClause() {
     return fromClause;
@@ -50,6 +52,15 @@ public class SiddhiQuery {
   public void setSelectClause(String selectClause) {
     this.selectClause = selectClause;
     this.hasSelectClause = true;
+  }
+
+  public String getOffsetClause() {
+    return offsetClause;
+  }
+
+  public void setOffsetClause(String offsetClause) {
+    this.offsetClause = offsetClause;
+    this.hasOffsetClause = true;
   }
 
   public String getGroupByClause() {
@@ -117,6 +128,10 @@ public class SiddhiQuery {
 
     if (hasLimitClause) {
       joiner.add(limitClause);
+    }
+
+    if (hasOffsetClause) {
+      joiner.add(offsetClause);
     }
 
     joiner.add(insertIntoClause);

@@ -90,6 +90,15 @@ public class SiddhiQueryBuilder {
     return this;
   }
 
+  public SiddhiQueryBuilder withOffsetClause(OffsetClause offsetClause) {
+    return this.withOffsetClause(offsetClause.toSiddhiEpl());
+  }
+
+  public SiddhiQueryBuilder withOffsetClause(String offsetClause) {
+    this.siddhiQuery.setOffsetClause(offsetClause);
+    return this;
+  }
+
   public SiddhiQuery build() {
     return this.siddhiQuery;
   }
