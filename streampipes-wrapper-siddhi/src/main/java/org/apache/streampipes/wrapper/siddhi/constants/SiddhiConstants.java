@@ -22,6 +22,7 @@ public class SiddhiConstants {
   public static final String SELECT = "select";
   public static final String INSERT = "insert";
   public static final String FROM = "from";
+  public static final String OFFSET = "offset";
 
   public static final String WHITESPACE = " ";
   public static final String COMMA = ",";

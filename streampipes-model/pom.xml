@@ -84,22 +84,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-model-shared</artifactId>
-            <version>0.68.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-vocabulary</artifactId>
-            <version>0.68.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-model-shared</artifactId>
-            <version>0.68.0-SNAPSHOT</version>
-            <scope>compile</scope>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
         </dependency>
     </dependencies>
 
