@@ -22,19 +22,19 @@ import org.apache.streampipes.vocabulary.StreamPipes;
 public class SupportedArchitectures {
 
     private static final String ARCHITECTURE_NAMESPACE = StreamPipes.NS + "architecture#";
-    public static final String AMD = ARCHITECTURE_NAMESPACE + "x86_64";
+    public static final String AMD64 = ARCHITECTURE_NAMESPACE + "x86_64";
     public static final String ARM32 = ARCHITECTURE_NAMESPACE + "arm32";
-    public static final String ARM64 = ARCHITECTURE_NAMESPACE + "aarch64";
+    public static final String AARCH64 = ARCHITECTURE_NAMESPACE + "aarch64";
 
-    public static String amd(){
-        return AMD;
+    public static String amd64(){
+        return AMD64;
     }
 
-    public static String arm32v7(){
+    public static String arm32(){
         return ARM32;
     }
 
-    public static String arm64v8(){
-        return ARM64;
+    public static String aarch64(){
+        return AARCH64;
     }
 }

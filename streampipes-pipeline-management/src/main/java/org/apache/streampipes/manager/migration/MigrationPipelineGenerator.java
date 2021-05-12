@@ -33,24 +33,24 @@ import java.util.stream.Collectors;
 
 public class MigrationPipelineGenerator {
 
-    private InvocableStreamPipesEntity entityToMigrate;
-    private Pipeline correspondingPipeline;
-    private final float memoryMultiplier = 0.9F;
-    private final float diskSpaceMultiplier = 0.9F;
+    private static final float MEM_MULTIPLICATION_FACTOR = 0.9F;
+    private static final float DISK_MULTIPLICATION_FACTOR = 0.9F;
+
+    private final InvocableStreamPipesEntity entityToMigrate;
+    private final Pipeline correspondingPipeline;
 
     public MigrationPipelineGenerator(InvocableStreamPipesEntity entityToMigrate, Pipeline correspondingPipeline){
         this.entityToMigrate = entityToMigrate;
         this.correspondingPipeline = correspondingPipeline;
     }
 
-
     public Pipeline generateMigrationPipeline(){
 
-        List<NodeInfoDescription> possibleTargetNodes = getNodeInfos();
+        List<NodeInfoDescription> eligibleTargetNodes = findEligibleTargetNodes();
 
         switch(correspondingPipeline.getExecutionPolicy()){
             case "custom": //TODO: Enum class
-                possibleTargetNodes = filterLocationTags(possibleTargetNodes);
+                eligibleTargetNodes = filterLocationTags(eligibleTargetNodes);
             case "locality-aware":
                 //TODO: incorporate strategy for locality-aware deployment
             case "default":
@@ -58,28 +58,37 @@ public class MigrationPipelineGenerator {
         }
 
         //Check current resource utilization on node
-        possibleTargetNodes = filterResourceUtilization(possibleTargetNodes);
-
+        eligibleTargetNodes = filterResourceUtilization(eligibleTargetNodes);
 
         //Different strategies possible (atm cancel offloading)
-        if(possibleTargetNodes == null || possibleTargetNodes.isEmpty())
+        if(eligibleTargetNodes == null || eligibleTargetNodes.isEmpty())
             return null;
 
-        //Random Selection of new Node within the remaining possible nodes
-        changeEntityDescriptionToMatchRandomNode(possibleTargetNodes);
+        //Random Selection of new node within the remaining eligibile nodes
+        randomSelectionAndUpdate(eligibleTargetNodes);
 
         return generateTargetPipeline();
     }
 
-    private List<NodeInfoDescription> getNodeInfos(){
-        List<NodeInfoDescription> possibleTargetNodes = new ArrayList<>();
-        List<NodeInfoDescription> nodeInfo = NodeManagement.getInstance().getOnlineNodes();
-        nodeInfo.forEach(desc ->{
-            if(desc.getSupportedElements().stream().anyMatch(element -> element.equals(entityToMigrate.getAppId()))
-                    && !desc.getNodeControllerId().equals(entityToMigrate.getDeploymentTargetNodeId()))
-                possibleTargetNodes.add(desc);
-        });
-        return possibleTargetNodes;
+    private List<NodeInfoDescription> findEligibleTargetNodes(){
+
+        List<NodeInfoDescription> eligibileTargetNodes = new ArrayList<>();
+        List<NodeInfoDescription> onlineNodes = NodeManagement.getInstance().getOnlineNodes();
+
+        onlineNodes.stream()
+                .filter(this::matchAndVerify)
+                .map(eligibileTargetNodes::add);
+
+        return eligibileTargetNodes;
+    }
+
+    private boolean matchAndVerify(NodeInfoDescription node) {
+        boolean matchingAppIds = node.getSupportedElements().stream()
+                .anyMatch(pipelineElement -> pipelineElement.equals(entityToMigrate.getAppId()));
+
+        boolean dissimilarNodes = !node.getNodeControllerId().equals(entityToMigrate.getDeploymentTargetNodeId());
+
+        return matchingAppIds && dissimilarNodes;
     }
 
     private List<NodeInfoDescription> filterLocationTags(List<NodeInfoDescription> possibleTargetNodes){
@@ -89,25 +98,33 @@ public class MigrationPipelineGenerator {
     }
 
     private boolean nodeTagsContainElementTag(List<String> pipelineNodeTags,
-                                              NodeInfoDescription desc){
-        return desc.getStaticNodeMetadata().getLocationTags().stream().anyMatch(pipelineNodeTags::contains);
+                                              NodeInfoDescription node){
+        return node.getStaticNodeMetadata().getLocationTags().stream().anyMatch(pipelineNodeTags::contains);
     }
 
     private List<NodeInfoDescription> filterResourceUtilization(List<NodeInfoDescription> possibleTargetNodes){
         //Currently only checking for free disk space and memory
         List<NodeInfoDescription> filteredTargetNodes = new ArrayList<>();
+
         for(NodeInfoDescription nodeInfo : possibleTargetNodes){
-            Queue<ResourceMetrics> rmHistory = ClusterResourceMonitor.getResourceMetricsMap()
-                    .get(nodeInfo.getNodeControllerId());
-            if(rmHistory == null) return null;
+
+            String nodeControllerId = nodeInfo.getNodeControllerId();
+            Queue<ResourceMetrics> rmHistory = ClusterResourceMonitor.getNodeResourceMetricsById(nodeControllerId);
+
+            if(rmHistory == null)
+                return null;
+
             Hardware hardware = entityToMigrate.getResourceRequirements().stream()
-                            .filter(nodeRR -> nodeRR instanceof Hardware).map(nodeRR -> (Hardware)nodeRR).findFirst().
-                            orElse(null);
+                    .filter(nodeRR -> nodeRR instanceof Hardware)
+                    .map(nodeRR -> (Hardware)nodeRR)
+                    .findFirst()
+                    .orElse(null);
+
             if(hardware != null){ //TODO: Map CPU load ()
                 //Does produce empty list if no hardware requirements are defined
                 if (rmHistory.peek() != null
-                        && hardware.getDisk() <= diskSpaceMultiplier * rmHistory.peek().getFreeDiskSpaceInBytes()
-                        && hardware.getMemory() <= memoryMultiplier * rmHistory.peek().getFreeMemoryInBytes()) {
+                        && hardware.getDisk() <= DISK_MULTIPLICATION_FACTOR * rmHistory.peek().getFreeDiskSpaceInBytes()
+                        && hardware.getMemory() <= MEM_MULTIPLICATION_FACTOR * rmHistory.peek().getFreeMemoryInBytes()) {
                     filteredTargetNodes.add(nodeInfo);
                 }
             }
@@ -116,10 +133,10 @@ public class MigrationPipelineGenerator {
     }
 
     private Pipeline generateTargetPipeline(){
-        Optional<DataProcessorInvocation> originalInvocation =
-                correspondingPipeline.getSepas().stream().filter(dp ->
-                        dp.getDeploymentRunningInstanceId().equals(entityToMigrate.getDeploymentRunningInstanceId()))
-                        .findFirst();
+        Optional<DataProcessorInvocation> originalInvocation = correspondingPipeline.getSepas().stream()
+                .filter(dp -> dp.getDeploymentRunningInstanceId().equals(entityToMigrate.getDeploymentRunningInstanceId()))
+                .findFirst();
+
         int index = correspondingPipeline.getSepas().indexOf(originalInvocation.get());
 
         Pipeline targetPipeline;
@@ -136,7 +153,7 @@ public class MigrationPipelineGenerator {
         return targetPipeline;
     }
 
-    private void changeEntityDescriptionToMatchRandomNode(List<NodeInfoDescription> nodes){
+    private void randomSelectionAndUpdate(List<NodeInfoDescription> nodes){
         NodeInfoDescription targetNode = nodes.get(new Random().nextInt(nodes.size()));
 
         entityToMigrate.setDeploymentTargetNodeHostname(targetNode.getHostname());

@@ -18,13 +18,11 @@
 package org.apache.streampipes.node.controller.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.model.eventrelay.SpDataStreamRelayContainer;
-import org.apache.streampipes.model.node.NodeInfoDescription;
-import org.apache.streampipes.node.controller.config.NodeConfiguration;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,12 +45,31 @@ public class HttpUtils {
         }
     }
 
-    public static <T>T get(String url, Class<T> clazz) {
+    public static <T> T get(String url, Class<T> clazz) {
+        try {
+            Response response = Request.Get(url)
+                    .connectTimeout(CONNECT_TIMEOUT)
+                    .execute();
+            if (clazz.isInstance(Response.class)) {
+                return (T) response;
+            } else if (clazz.isInstance(String.class)) {
+                return (T) response.returnContent().asString();
+            } else if (clazz.isAssignableFrom(byte[].class)) {
+                return (T) response.returnContent().asBytes();
+            } else {
+                return deserialize(response, clazz);
+            }
+        } catch (IOException e) {
+            throw new SpRuntimeException("Something went wrong during GET request", e);
+        }
+    }
+
+    public static <T>T get(String url, final TypeReference<T> type) {
         try {
             return deserialize(Request.Get(url)
-                            .connectTimeout(CONNECT_TIMEOUT)
-                            .execute()
-                            .returnContent().asString(), clazz);
+                    .connectTimeout(CONNECT_TIMEOUT)
+                    .execute()
+                    .returnContent().asString(), type);
         } catch (IOException e) {
             throw new SpRuntimeException("Something went wrong during GET request", e);
         }
@@ -83,30 +100,112 @@ public class HttpUtils {
         }
     }
 
-    public static boolean post(String url, String body) {
+    public static boolean put(String url) {
         try {
-            Request.Post(url)
-                    .bodyString(body, ContentType.APPLICATION_JSON)
+            Request.Put(url)
                     .connectTimeout(CONNECT_TIMEOUT)
                     .execute();
             return true;
         } catch (IOException e) {
-            LOG.error("Something went wrong during POST request", e);
+            LOG.error("Something went wrong during PUT request", e);
             return false;
         }
     }
 
-    public static <T> boolean post(String url, T object) {
+    public static <T> boolean put(String url, T object) {
         String body = serialize(object);
         try {
-            Request.Post(url)
+            Request.Put(url)
                     .bodyString(body, ContentType.APPLICATION_JSON)
                     .connectTimeout(CONNECT_TIMEOUT)
                     .execute();
             return true;
         } catch (IOException e) {
-            LOG.error("Something went wrong during POST request", e);
+            LOG.error("Something went wrong during PUT request", e);
             return false;
+        }
+    }
+
+    public static String post(String url, String body) {
+        try {
+            return Request.Post(url)
+                    .bodyString(body, ContentType.APPLICATION_JSON)
+                    .connectTimeout(CONNECT_TIMEOUT)
+                    .execute().returnContent().asString();
+        } catch (IOException e) {
+            LOG.error("Something went wrong during POST request", e);
+            return null;
+        }
+    }
+
+    public static <T1, T2> T2 post(String url, T1 object, Class<T2> clazz) {
+        String body = serialize(object);
+        try {
+            Response response = Request.Post(url)
+                    .bodyString(body, ContentType.APPLICATION_JSON)
+                    .connectTimeout(CONNECT_TIMEOUT)
+                    .execute();
+
+            if (clazz.isInstance(Response.class)) {
+                return (T2) response;
+            } else if (clazz.isInstance(String.class)) {
+                return (T2) response.returnContent().asString();
+            } else if (clazz.isAssignableFrom(byte[].class)) {
+                return (T2) response.returnContent().asBytes();
+            } else if (clazz.isAssignableFrom(Boolean.class)) {
+                return (T2) Boolean.TRUE;
+            } else {
+                return deserialize(response, clazz);
+            }
+        } catch (IOException e) {
+            if (clazz.isAssignableFrom(Boolean.class)) {
+                return (T2) Boolean.FALSE;
+            }
+
+            throw new SpRuntimeException("Something went wrong during POST request", e);
+        }
+    }
+
+    public static <T> org.apache.streampipes.model.Response post(String url, T object) {
+        String body = serialize(object);
+        org.apache.streampipes.model.Response response = new org.apache.streampipes.model.Response();
+        response.setSuccess(false);
+        try {
+            response = deserialize(Request.Post(url)
+                    .bodyString(body, ContentType.APPLICATION_JSON)
+                    .connectTimeout(CONNECT_TIMEOUT)
+                    .execute(), org.apache.streampipes.model.Response.class);
+            return response;
+        } catch (IOException e) {
+            LOG.error("Something went wrong during POST request", e);
+            return response;
+        }
+    }
+
+//    public static <T1, T2> T2 post(String url, T1 object, Class<T2> clazz) {
+//        String body = serialize(object);
+//        try {
+//            return deserialize(Request.Post(url)
+//                    .bodyString(body, ContentType.APPLICATION_JSON)
+//                    .connectTimeout(CONNECT_TIMEOUT)
+//                    .execute()
+//                    .returnContent().asString(), clazz);
+//        } catch (IOException e) {
+//            throw new SpRuntimeException("Something went wrong during POST request", e);
+//        }
+//    }
+
+    public static org.apache.streampipes.model.Response delete(String url) {
+        org.apache.streampipes.model.Response response = new org.apache.streampipes.model.Response();
+        response.setSuccess(false);
+        try {
+            response = deserialize(Request.Delete(url)
+                    .connectTimeout(CONNECT_TIMEOUT)
+                    .execute(), org.apache.streampipes.model.Response.class);
+            return response;
+        } catch (Exception e) {
+            LOG.error("Something went wrong during DELETE request", e);
+            return response;
         }
     }
 
@@ -136,6 +235,29 @@ public class HttpUtils {
             return JacksonSerializer
                     .getObjectMapper()
                     .readValue(objectString, clazz);
+        } catch (JsonProcessingException e) {
+            throw new SpRuntimeException("Could not deserialize object", e);
+        }
+    }
+
+    public static <T>T deserialize(Response response, Class<T> clazz) {
+        try {
+            String responseString = response.returnContent().asString();
+            return JacksonSerializer
+                    .getObjectMapper()
+                    .readValue(responseString, clazz);
+        } catch (JsonProcessingException e) {
+            throw new SpRuntimeException("Could not deserialize object", e);
+        } catch (IOException e) {
+            throw new SpRuntimeException("Could not get return content as string", e);
+        }
+    }
+
+    public static <T>T deserialize(String objectString, final TypeReference<T> type) {
+        try {
+            return JacksonSerializer
+                    .getObjectMapper()
+                    .readValue(objectString, type);
         } catch (JsonProcessingException e) {
             throw new SpRuntimeException("Could not deserialize object", e);
         }

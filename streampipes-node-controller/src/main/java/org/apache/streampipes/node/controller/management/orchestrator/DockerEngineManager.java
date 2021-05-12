@@ -29,6 +29,7 @@ import org.apache.streampipes.node.controller.management.orchestrator.docker.Doc
 import org.apache.streampipes.node.controller.management.orchestrator.docker.model.ContainerStatus;
 import org.apache.streampipes.node.controller.management.orchestrator.docker.utils.DockerUtils;
 import org.apache.streampipes.node.controller.management.orchestrator.status.ContainerDeploymentStatus;
+import org.apache.streampipes.node.controller.management.orchestrator.storage.RunningContainerInstances;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,7 +62,8 @@ public class DockerEngineManager implements IContainerEngine {
             ContainerDeploymentStatus status = deploy(container);
 
             if (status.getStatus() == ContainerStatus.DEPLOYED) {
-                NodeManager.getInstance().registerContainer(status.getContainer());
+                NodeManager.getInstance().registerContainerWhenDeployed(status.getContainer());
+                RunningContainerInstances.INSTANCE.add(status.getContainerId(), container);
             }
         });
     }
@@ -69,30 +71,31 @@ public class DockerEngineManager implements IContainerEngine {
     @Override
     public ContainerDeploymentStatus deploy(DockerContainer container) {
 
-        LOG.info("Pull image and deploy pipeline element container {}", container.getImageTag());
-        Optional<Container> containerOptional = docker.getContainer(container.getContainerName());
-        if (!containerOptional.isPresent()) {
-            LOG.info("Deploy pipeline element container \"" + container.getImageTag() + "\"");
-            String containerId = "";
+        Optional<Container> runningContainer = docker.getContainer(container.getContainerName());
+
+        if (!runningContainer.isPresent()) {
+            String containerId;
             try {
+                LOG.info("Deploy container for image={}", container.getImageTag());
                 containerId = deployPipelineElementContainer(container);
+
             } catch (Exception e) {
-                LOG.error("Could not deploy pipeline element. {}", e.toString());
-                return generateContainerStatus(containerId, container, ContainerStatus.FAILED);
+                LOG.error("Failed to deploy container", e);
+                return generateContainerStatus(null, container, ContainerStatus.FAILED);
             }
-            LOG.info("Finished pull image and deployed pipeline element container");
+            LOG.debug("Finished pulling image and deployed container");
             return generateContainerStatus(containerId, container, ContainerStatus.DEPLOYED);
         }
-        LOG.info("Container already running {}", container.getContainerName());
-        return generateContainerStatus(containerOptional.get().id(), container, ContainerStatus.RUNNING);
+        LOG.debug("Container already running {}", container.getContainerName());
+        return generateContainerStatus(runningContainer.get().id(), container, ContainerStatus.RUNNING);
     }
 
     @Override
     public ContainerDeploymentStatus remove(DockerContainer container) {
         LOG.info("Remove pipeline element container: {}", container.getImageTag());
 
-        Optional<com.spotify.docker.client.messages.Container> containerOptional = docker.getContainer(container.getContainerName());
-        if(containerOptional.isPresent()) {
+        Optional<Container> runningContainer = docker.getContainer(container.getContainerName());
+        if(runningContainer.isPresent()) {
 
             docker.forceRemove(container.getContainerName());
 
@@ -100,10 +103,10 @@ public class DockerEngineManager implements IContainerEngine {
             ConsulUtil.deregisterService(container.getServiceId());
             ConsulUtil.deleteConfig(container.getServiceId());
 
-            return generateContainerStatus(containerOptional.get().id(), container, ContainerStatus.REMOVED);
+            return generateContainerStatus(runningContainer.get().id(), container, ContainerStatus.REMOVED);
 
         }
-        return generateContainerStatus(containerOptional.get().id(), container, ContainerStatus.UNKNOWN);
+        return generateContainerStatus(runningContainer.get().id(), container, ContainerStatus.UNKNOWN);
     }
 
     @Override
@@ -133,7 +136,7 @@ public class DockerEngineManager implements IContainerEngine {
         return deployPipelineElementContainer(container, true);
     }
 
-    private String deployPipelineElementContainer(DockerContainer container, boolean pullImage) throws Exception {
+    private String deployPipelineElementContainer(DockerContainer container, boolean pullImage) throws NotFoundException {
         if (pullImage) {
             try {
                 docker.pullImage(container.getImageTag(), false);

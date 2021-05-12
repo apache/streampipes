@@ -21,13 +21,8 @@ import org.apache.streampipes.model.node.container.DockerContainer;
 import org.apache.streampipes.node.controller.management.orchestrator.status.ContainerDeploymentStatus;
 
 public interface IContainerEngine {
-
    void init();
-
    ContainerDeploymentStatus deploy(DockerContainer p);
-
    ContainerDeploymentStatus remove(DockerContainer p);
-
    String list();
-
 }

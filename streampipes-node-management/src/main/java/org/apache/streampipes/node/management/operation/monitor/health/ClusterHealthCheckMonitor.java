@@ -82,13 +82,14 @@ public class ClusterHealthCheckMonitor {
                         if (failedChecks > 0) {
                             LOG.info(String.format("Healthcheck successful - %s is back online", endpoint));
                             nodeLiveness.resetNumFailedLivenessChecks();
+                            persistNodeUpdate(node, true);
+                        } else {
+                            LOG.debug(String.format("Healthcheck successful - %s is still online", endpoint));
+                            // set timestamp from healthcheck
+                            node.setLastHeartBeatTime(healthCheck.getTimestamp());
+                            // update node description in DB
+                            persistNodeUpdate(node, false);
                         }
-
-                        LOG.debug(String.format("Healthcheck successful - %s is still online", endpoint));
-                        // set timestamp from healthcheck
-                        node.setLastHeartBeatTime(healthCheck.getTimestamp());
-                        // update node description in DB
-                        persistNodeUpdate(node, false);
 
                     } else {
                         // node was online and had unsuccessful healthcheck
@@ -171,7 +172,8 @@ public class ClusterHealthCheckMonitor {
     private void addNodeToInMemoryStorage(NodeInfoDescription node) {
         String nodeControllerId = node.getNodeControllerId();
         if (inMemoryNodeLivenessStore.get(nodeControllerId) == null) {
-            inMemoryNodeLivenessStore.put(nodeControllerId, new NodeLiveness(nodeControllerId,  NodeCondition.CREATED,3));
+            inMemoryNodeLivenessStore.put(nodeControllerId, new NodeLiveness(nodeControllerId,
+                    NodeCondition.CREATED, 3));
         }
     }
 

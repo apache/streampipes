@@ -26,7 +26,7 @@ public class ReconfigurationEndpointUrlGenerator {
     protected static final String SLASH = "/";
 
     private static final String BASE_ROUTE = "/api/v2/node/element";
-    private static final String RECONFIGURE_ROUTE = "/adapt";
+    private static final String RECONFIGURE_ROUTE = "/reconfigure";
 
     private final PipelineElementReconfigurationEntity reconfigurationEntity;
 

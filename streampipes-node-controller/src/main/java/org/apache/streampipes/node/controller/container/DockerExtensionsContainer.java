@@ -23,14 +23,16 @@ import org.apache.streampipes.node.controller.management.orchestrator.docker.Abs
 
 public class DockerExtensionsContainer extends AbstractStreamPipesDockerContainer {
 
+    public static String SP_SVC_EXTENSIONS_ID = "svc/org.apache.streampipes.pe.extensions";
+
     @Override
     public DockerContainer declareDockerContainer() {
-        return DockerContainerBuilder.create(StreamPipesDockerServiceID.SP_SVC_EXTENSIONS_ID)
+        return DockerContainerBuilder.create(SP_SVC_EXTENSIONS_ID)
                 .withImage("apachestreampipes/extensions-all-jvm:" + getStreamPipesVersion())
                 .supportedArchitectures(
-                        SupportedArchitectures.amd(),
-                        SupportedArchitectures.arm32v7(),
-                        SupportedArchitectures.arm64v8())
+                        SupportedArchitectures.amd64(),
+                        SupportedArchitectures.arm32(),
+                        SupportedArchitectures.aarch64())
                 .supportedOperatingSystemTypes(
                         SupportedOsType.linux(),
                         SupportedOsType.darwin())
@@ -41,8 +43,7 @@ public class DockerExtensionsContainer extends AbstractStreamPipesDockerContaine
                         .add("SP_HOST", NodeConfiguration.getNodeHost())
                         .add("SP_PORT", "8090")
                         .build())
-                .withLabels(ContainerLabels.with(StreamPipesDockerServiceID.SP_SVC_EXTENSIONS_ID, retrieveNodeType(),
-                        ContainerType.EXTENSIONS))
+                .withLabels(ContainerLabels.with(SP_SVC_EXTENSIONS_ID, retrieveNodeType(), ContainerType.EXTENSIONS))
                 .build();
     }
 }

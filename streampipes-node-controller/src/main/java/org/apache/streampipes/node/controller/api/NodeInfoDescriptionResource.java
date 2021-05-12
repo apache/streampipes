@@ -36,7 +36,7 @@ public class NodeInfoDescriptionResource extends AbstractResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getNodeInfo() {
-        return ok(NodeManager.getInstance().getNode());
+        return ok(NodeManager.getInstance().getNodeInfoDescription());
     }
 
     @PUT

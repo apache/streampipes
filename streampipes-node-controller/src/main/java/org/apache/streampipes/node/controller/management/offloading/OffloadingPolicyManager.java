@@ -18,22 +18,18 @@
 
 package org.apache.streampipes.node.controller.management.offloading;
 
-import org.apache.http.client.fluent.Request;
-import org.apache.http.entity.ContentType;
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.streampipes.model.Response;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.node.NodeInfoDescription;
 import org.apache.streampipes.model.node.monitor.ResourceMetrics;
-import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.node.controller.config.NodeConfiguration;
-import org.apache.streampipes.node.controller.management.offloading.model.OffloadingStrategy;
-import org.apache.streampipes.node.controller.management.pe.InvocableElementManager;
-import org.apache.streampipes.serializers.json.JacksonSerializer;
+import org.apache.streampipes.node.controller.management.offloading.strategies.OffloadingStrategy;
+import org.apache.streampipes.node.controller.management.pe.PipelineElementManager;
+import org.apache.streampipes.node.controller.utils.HttpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +38,8 @@ public class OffloadingPolicyManager {
     private static final String HTTP_PROTOCOL = "http://";
     private static final String COLON = ":";
     private static final String SLASH = "/";
+    private static final String BACKEND_BASE_ROUTE = "streampipes-backend/api/v2/users/admin@streampipes.org";
+    private static final String NODE_MANAGEMENT_ONLINE_ENDPOINT = BACKEND_BASE_ROUTE + "/nodes/online";
 
     private final List<OffloadingStrategy<?>> offloadingStrategies = new ArrayList<>();
     private static OffloadingPolicyManager instance;
@@ -55,18 +53,18 @@ public class OffloadingPolicyManager {
     }
 
     public void checkPolicies(ResourceMetrics rm){
-        for(OffloadingStrategy strategy:offloadingStrategies){
+        for(OffloadingStrategy strategy : offloadingStrategies){
             strategy.getOffloadingPolicy().addValue(strategy.getResourceProperty().getProperty(rm));
             if(strategy.getOffloadingPolicy().isViolated()){
-                InvocableStreamPipesEntity offloadEntity = strategy.getSelectionStrategy().selectEntity();
+                InvocableStreamPipesEntity offloadEntity = strategy.getSelectionStrategy().select();
                 if(offloadEntity != null){
-                    Response resp = InvocableElementManager.getInstance().postOffloadRequest(offloadEntity);
+                    Response resp = PipelineElementManager.getInstance().offload(offloadEntity);
                     if(resp.isSuccess())
                         LOG.info("Successfully offloaded: " + offloadEntity.getAppId()
-                                + " from Pipeline: " + offloadEntity.getCorrespondingPipeline());
+                                + " of pipeline: " + offloadEntity.getCorrespondingPipeline());
                     else LOG.info("Failed to offload: " + offloadEntity.getAppId()
-                            + " from Pipeline: " + offloadEntity.getCorrespondingPipeline());
-                }else LOG.info("No entity to offload found");
+                            + " of pipeline: " + offloadEntity.getCorrespondingPipeline());
+                } else LOG.info("No pipeline element found to offload");
             }
         }
     }
@@ -76,16 +74,8 @@ public class OffloadingPolicyManager {
     }
 
     public List<NodeInfoDescription> getOnlineNodes(){
-        try {
-            String url = generateNodeManagementOnlineNodesEndpoint();
-            org.apache.http.client.fluent.Response resp = Request.Get(url).execute();
-            ArrayList<NodeInfoDescription> onlineNodes =
-                    JacksonSerializer.getObjectMapper().readValue(resp.returnContent().asString(),
-                    ArrayList.class);
-            return onlineNodes;
-        } catch (IOException e) {
-            throw new SpRuntimeException(e);
-        }
+        String endpoint = generateNodeManagementOnlineNodesEndpoint();
+        return HttpUtils.get(endpoint, new TypeReference<List<NodeInfoDescription>>(){});
     }
 
     private String generateNodeManagementOnlineNodesEndpoint() {
@@ -94,7 +84,7 @@ public class OffloadingPolicyManager {
                 + COLON
                 + NodeConfiguration.getBackendPort()
                 + SLASH
-                + "streampipes-backend/api/v2/users/admin@streampipes.org/nodes/online";
+                + NODE_MANAGEMENT_ONLINE_ENDPOINT;
     }
 
 }

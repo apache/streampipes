@@ -21,7 +21,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.node.controller.config.NodeConfiguration;
 import org.apache.streampipes.node.controller.management.offloading.OffloadingPolicyManager;
-import org.apache.streampipes.node.controller.management.offloading.model.OffloadingStrategyFactory;
+import org.apache.streampipes.node.controller.management.offloading.strategies.OffloadingStrategyFactory;
 import org.apache.streampipes.model.node.monitor.ResourceMetrics;
 import org.apache.streampipes.node.controller.management.resource.utils.DiskSpace;
 import org.apache.streampipes.node.controller.management.resource.utils.ResourceUtils;
@@ -45,11 +45,11 @@ public class ResourceManager {
     private final HardwareAbstractionLayer hal = si.getHardware();
     private final OperatingSystem os = si.getOperatingSystem();
     private final Calendar cal = Calendar.getInstance();
-    private final ResourceMetrics resourceMetrics = new ResourceMetrics();
+    private final ResourceMetrics metrics = new ResourceMetrics();
 
     private ResourceManager() {
         //Offloading Policy
-        OffloadingPolicyManager.getInstance().addOffloadingStrategy(new OffloadingStrategyFactory().getFromEnv());
+        OffloadingPolicyManager.getInstance().addOffloadingStrategy(new OffloadingStrategyFactory().select());
     }
 
     public static ResourceManager getInstance() {
@@ -70,9 +70,9 @@ public class ResourceManager {
         while(true) {
             try {
                 // get current node resource metrics
-                Thread.sleep( NodeConfiguration.getResourceMonitorFreqSecs() * 1000);
                 retrieveResources();
                 checkOffloadingPolicy();
+                Thread.sleep( NodeConfiguration.getResourceMonitorFreqSecs() * 1000);
             } catch (InterruptedException e) {
                 LOG.error("Thread interrupted. {}", e.toString());
             }
@@ -80,7 +80,7 @@ public class ResourceManager {
     };
 
     private void checkOffloadingPolicy() {
-        OffloadingPolicyManager.getInstance().checkPolicies(resourceMetrics);
+        OffloadingPolicyManager.getInstance().checkPolicies(metrics);
     }
 
     private void retrieveResources() {
@@ -88,20 +88,19 @@ public class ResourceManager {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
 
         // Monitor node resources
-        resourceMetrics.setSystemTime(dateFormat.format(cal.getTime()));
-        resourceMetrics.setBooted(ResourceUtils.getBooted(this.os));
-        resourceMetrics.setUptime(ResourceUtils.getUptime(this.os));
-        resourceMetrics.setCpuLoad(String.format("%.1f%%", ResourceUtils.getCpuLoad(this.hal.getProcessor())));
-        resourceMetrics.setCpuLoadInPercent(ResourceUtils.getCpuLoad(this.hal.getProcessor()));
-        resourceMetrics.setCpuTemperature(String.format("%.2f°C",
-                ResourceUtils.getCpuTemperature(this.hal.getSensors())));
-        resourceMetrics.setCpuTemperatureCelcius(ResourceUtils.getCpuTemperature(this.hal.getSensors()));
-        resourceMetrics.setFreeMemoryInBytes(ResourceUtils.getAvailableMemory(this.hal.getMemory()));
-        resourceMetrics.setUsedMemoryInBytes(this.hal.getMemory().getTotal() - ResourceUtils.getAvailableMemory(this.hal.getMemory()));
-        resourceMetrics.setTotalMemoryInBytes(this.hal.getMemory().getTotal());
+        metrics.setSystemTime(dateFormat.format(cal.getTime()));
+        metrics.setBooted(ResourceUtils.getBooted(this.os));
+        metrics.setUptime(ResourceUtils.getUptime(this.os));
+        metrics.setCpuLoad(String.format("%.1f%%", ResourceUtils.getCpuLoad(this.hal.getProcessor())));
+        metrics.setCpuLoadInPercent(ResourceUtils.getCpuLoad(this.hal.getProcessor()));
+        metrics.setCpuTemperature(String.format("%.2f°C", ResourceUtils.getCpuTemperature(this.hal.getSensors())));
+        metrics.setCpuTemperatureCelcius(ResourceUtils.getCpuTemperature(this.hal.getSensors()));
+        metrics.setFreeMemoryInBytes(ResourceUtils.getAvailableMemory(this.hal.getMemory()));
+        metrics.setUsedMemoryInBytes(this.hal.getMemory().getTotal() - ResourceUtils.getAvailableMemory(this.hal.getMemory()));
+        metrics.setTotalMemoryInBytes(this.hal.getMemory().getTotal());
 
         ResourceUtils.getDiskUsage(this.os.getFileSystem()).forEach((key, value) -> {
-            resourceMetrics.setFreeDiskSpaceInBytes(value.get(DiskSpace.USABLE.getName()));
+            metrics.setFreeDiskSpaceInBytes(value.get(DiskSpace.USABLE.getName()));
         });
     }
 
@@ -110,7 +109,7 @@ public class ResourceManager {
             return JacksonSerializer
                     .getObjectMapper()
                     .writerWithDefaultPrettyPrinter()
-                    .writeValueAsString(resourceMetrics);
+                    .writeValueAsString(metrics);
         } catch (JsonProcessingException e) {
             throw new SpRuntimeException("Could not serialize node resources " + e.getMessage(), e);
         }

@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.node.controller.management.node;
 
-import org.apache.streampipes.model.client.version.VersionInfo;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.message.Notifications;
@@ -25,29 +24,15 @@ import org.apache.streampipes.model.node.*;
 import org.apache.streampipes.model.node.container.DeploymentContainer;
 import org.apache.streampipes.model.node.container.DockerContainer;
 import org.apache.streampipes.model.node.meta.GeoLocation;
-import org.apache.streampipes.node.controller.config.NodeConfiguration;
-import org.apache.streampipes.node.controller.utils.HttpUtils;
-import org.apache.streampipes.node.controller.utils.SocketUtils;
-import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.util.List;
 
-public class NodeManager {
+public class NodeManager implements INodeManager {
     private static final Logger LOG = LoggerFactory.getLogger(NodeManager.class.getCanonicalName());
 
-    private static final String BACKEND_BASE_ROUTE = "/streampipes-backend/api/v2";
-    private static final String BACKEND_VERSION_ROUTE = BACKEND_BASE_ROUTE + "/info/versions";
-    private static final String NODE_REGISTRATION_ROUTE = BACKEND_BASE_ROUTE + "/users/admin@streampipes.org/nodes";
-    private static final String NODE_SYNC_UPDATE_ROUTE = BACKEND_BASE_ROUTE + "/users/admin@streampipes.org/nodes/sync";
-    private static final long RETRY_INTERVAL_MS = 5000;
-
     private NodeInfoDescription nodeInfo = new NodeInfoDescription();
-
     private static NodeManager instance = null;
 
     private NodeManager() {}
@@ -58,14 +43,7 @@ public class NodeManager {
         return instance;
     }
 
-    public void add(NodeInfoDescription n) {
-        nodeInfo = n;
-    }
-
-    public NodeInfoDescription getNode() {
-        return nodeInfo;
-    }
-
+    @Override
     public void init() {
         NodeInfoDescription nodeInfoDescription =
                 NodeInfoDescriptionBuilder.create(NodeConstants.NODE_CONTROLLER_ID)
@@ -78,6 +56,7 @@ public class NodeManager {
                         .staticNodeMetadata(
                                 NodeConstants.NODE_TYPE,
                                 NodeConstants.NODE_MODEL,
+                                // TODO: get actual geolocation in case of mobile edge node
                                 new GeoLocation(),
                                 NodeConstants.NODE_LOCATION_TAGS)
                         .withSupportedElements(NodeConstants.SUPPORTED_PIPELINE_ELEMENTS)
@@ -96,135 +75,76 @@ public class NodeManager {
                                 .build())
                         .build();
 
-        add(nodeInfoDescription);
+        addNode(nodeInfoDescription);
     }
 
+    @Override
+    public void addNode(NodeInfoDescription node) {
+        nodeInfo = node;
+    }
+
+    @Override
+    public NodeInfoDescription getNodeInfoDescription() {
+        return nodeInfo;
+    }
+
+    @Override
     public Message updateNode(NodeInfoDescription desc) {
         LOG.info("Update node description for node controller: {}", desc.getNodeControllerId());
         this.nodeInfo = desc;
         return Notifications.success(NotificationType.OPERATION_SUCCESS);
     }
 
+    @Override
     public Message activateNode() {
         LOG.info("Activate node controller");
         this.nodeInfo.setActive(true);
         return Notifications.success(NotificationType.OPERATION_SUCCESS);
     }
 
+    @Override
     public Message deactivateNode() {
         LOG.info("Deactivate node controller");
         this.nodeInfo.setActive(false);
         return Notifications.success(NotificationType.OPERATION_SUCCESS);
     }
 
-    public void registerContainer(DockerContainer container) {
+    @Override
+    public void registerContainerWhenDeployed(DockerContainer container) {
         if(!registered(container)) {
             this.nodeInfo.addRegisteredContainer(container);
-            syncWithNodeClusterManager();
+            synchronizeNodeWithNodeManagement();
         }
     }
 
-    public void deregisterContainer(DockerContainer container) {
+    @Override
+    public void unregisterContainerWhenRemoved(DockerContainer container) {
         if(registered(container)) {
             this.nodeInfo.removeRegisteredContainer(container);
-            syncWithNodeClusterManager();
+            synchronizeNodeWithNodeManagement();
         }
-    }
-
-    public List<DeploymentContainer> getRegisteredContainer() {
-        return this.nodeInfo.getRegisteredContainers();
     }
 
     // Interactions with core
 
-    public boolean register() {
-        boolean connected = false;
-        boolean registered;
-        String host = NodeConfiguration.getBackendHost();
-        int port = NodeConfiguration.getBackendPort();
-        String endpoint = HttpUtils.generateEndpoint(host, port, NODE_REGISTRATION_ROUTE);
-
-        while (!connected) {
-            LOG.info("Trying to register node controller at StreamPipes cluster management: " + endpoint);
-            connected = SocketUtils.isReady(NodeConfiguration.getBackendHost(), NodeConfiguration.getBackendPort());
-            if (!connected) {
-                LOG.info("Retrying in {} seconds", (RETRY_INTERVAL_MS / 1000));
-                try {
-                    Thread.sleep(RETRY_INTERVAL_MS);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        registered = HttpUtils.post(endpoint, this.nodeInfo);
-        if (registered) {
-            LOG.info("Successfully registered node controller at StreamPipes cluster management");
-        }
-
-        return registered;
+    @Override
+    public boolean registerNodeAtNodeManagement() {
+        return NodeClientHttpFactory.execute(this.nodeInfo, NodeLifeCycleType.REGISTER);
     }
 
-
-    private boolean syncWithNodeClusterManager() {
-        boolean connected = false;
-        String host = NodeConfiguration.getBackendHost();
-        int port = NodeConfiguration.getBackendPort();
-
-        String endpoint = HttpUtils.generateEndpoint(host, port, NODE_SYNC_UPDATE_ROUTE);
-
-        LOG.info("Trying to sync node updates with StreamPipes cluster management: " + endpoint);
-
-        while (!connected) {
-            connected = HttpUtils.post(endpoint, this.nodeInfo);
-            if (!connected) {
-                LOG.info("Retrying in {} seconds", (RETRY_INTERVAL_MS / 1000));
-                try {
-                    Thread.sleep(RETRY_INTERVAL_MS);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        LOG.info("Successfully synced node controller with StreamPipes cluster management");
-        return connected;
-    }
-
-    public String getStreamPipesVersion() {
-        boolean connected = false;
-        VersionInfo versionInfo = new VersionInfo();
-        String host = NodeConfiguration.getBackendHost();
-        int port = NodeConfiguration.getBackendPort();
-
-        String endpoint = HttpUtils.generateEndpoint(host, port, BACKEND_VERSION_ROUTE);
-        String bearerToken = NodeConfiguration.getNodeApiKey();
-
-        LOG.info("Trying to retrieve StreamPipes version from backend: " + endpoint);
-
-        while (!connected) {
-            versionInfo = HttpUtils.get(endpoint, bearerToken, VersionInfo.class);
-
-            if (versionInfo.getBackendVersion() != null) {
-                connected = true;
-            }
-
-            if (!connected) {
-                LOG.info("Retrying in {} seconds", (RETRY_INTERVAL_MS / 1000));
-                try {
-                    Thread.sleep(RETRY_INTERVAL_MS);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        LOG.info("Successfully retrieved StreamPipes version from backend");
-        return versionInfo.getBackendVersion();
+    @Override
+    public boolean synchronizeNodeWithNodeManagement() {
+        return NodeClientHttpFactory.execute(this.nodeInfo, NodeLifeCycleType.UPDATE);
     }
 
     // Helpers
 
     private boolean registered(DockerContainer container) {
         return this.nodeInfo.getRegisteredContainers().contains(container);
+    }
+
+    public List<DeploymentContainer> getRegisteredContainer() {
+        return this.nodeInfo.getRegisteredContainers();
     }
 
 }

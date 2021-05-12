@@ -22,14 +22,16 @@ import org.apache.streampipes.node.controller.management.orchestrator.docker.Abs
 
 public class DockerZookeeperContainer extends AbstractStreamPipesDockerContainer {
 
+    public static String SP_SVC_ZOOKEEPER_ID = "svc/org.apache.streampipes.node.broker.zookeeper";
+
     @Override
     public DockerContainer declareDockerContainer() {
-        return DockerContainerBuilder.create(StreamPipesDockerServiceID.SP_SVC_ZOOKEEPER_ID)
+        return DockerContainerBuilder.create(SP_SVC_ZOOKEEPER_ID)
                 .withImage("fogsyio/zookeeper:3.4.13")
                 .supportedArchitectures(
-                        SupportedArchitectures.amd(),
-                        SupportedArchitectures.arm32v7(),
-                        SupportedArchitectures.arm64v8())
+                        SupportedArchitectures.amd64(),
+                        SupportedArchitectures.arm32(),
+                        SupportedArchitectures.aarch64())
                 .supportedOperatingSystemTypes(
                         SupportedOsType.linux(),
                         SupportedOsType.darwin())
@@ -38,8 +40,7 @@ public class DockerZookeeperContainer extends AbstractStreamPipesDockerContainer
                 .withEnvironmentVariables(ContainerEnvBuilder.create()
                         .addNodeEnvs(generateStreamPipesNodeEnvs())
                         .build())
-                .withLabels(ContainerLabels.with(StreamPipesDockerServiceID.SP_SVC_ZOOKEEPER_ID, retrieveNodeType(),
-                        ContainerType.BROKER))
+                .withLabels(ContainerLabels.with(SP_SVC_ZOOKEEPER_ID, retrieveNodeType(), ContainerType.BROKER))
                 .build();
     }
 }

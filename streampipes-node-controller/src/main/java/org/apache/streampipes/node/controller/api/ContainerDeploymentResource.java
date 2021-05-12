@@ -23,7 +23,8 @@ import org.apache.streampipes.node.controller.management.orchestrator.docker.Doc
 import org.apache.streampipes.node.controller.management.orchestrator.status.ContainerDeploymentStatus;
 import org.apache.streampipes.node.controller.management.orchestrator.docker.model.ContainerStatus;
 import org.apache.streampipes.node.controller.management.orchestrator.DockerEngineManager;
-import org.apache.streampipes.node.controller.management.pe.InvocableElementManager;
+import org.apache.streampipes.node.controller.management.orchestrator.storage.RunningContainerInstances;
+import org.apache.streampipes.node.controller.management.pe.PipelineElementManager;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -51,7 +52,7 @@ public class ContainerDeploymentResource extends AbstractResource {
         ContainerDeploymentStatus status = DockerEngineManager.getInstance().deploy(container);
 
         if (status.getStatus() == ContainerStatus.DEPLOYED) {
-            NodeManager.getInstance().registerContainer(status.getContainer());
+            NodeManager.getInstance().registerContainerWhenDeployed(status.getContainer());
         }
         return ok(status);
     }
@@ -63,8 +64,9 @@ public class ContainerDeploymentResource extends AbstractResource {
         ContainerDeploymentStatus status = DockerEngineManager.getInstance().remove(container);
 
         if (status.getStatus() == ContainerStatus.REMOVED) {
-            InvocableElementManager.getInstance().unregister();
-            NodeManager.getInstance().deregisterContainer(status.getContainer());
+            PipelineElementManager.getInstance().deregister();
+            NodeManager.getInstance().unregisterContainerWhenRemoved(status.getContainer());
+            RunningContainerInstances.INSTANCE.remove(status.getContainerId());
         }
         return ok(status);
     }

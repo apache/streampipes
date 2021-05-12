@@ -31,7 +31,8 @@ public class DockerInfo {
 
     public DockerInfo(){}
 
-    public DockerInfo(String serverVersion, String apiVersion, Long memTotal, int cpus, String os, String osType, String kernelVersion, String arch, boolean hasNvidiaRuntime) {
+    public DockerInfo(String serverVersion, String apiVersion, Long memTotal, int cpus, String os, String osType,
+                      String kernelVersion, String arch, boolean hasNvidiaRuntime) {
         this.serverVersion = serverVersion;
         this.apiVersion = apiVersion;
         this.memTotal = memTotal;

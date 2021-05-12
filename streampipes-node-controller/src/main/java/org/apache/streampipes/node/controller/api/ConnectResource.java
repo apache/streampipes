@@ -22,7 +22,7 @@ import org.apache.streampipes.model.connect.adapter.AdapterSetDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.apache.streampipes.model.connect.worker.ConnectWorkerContainer;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
-import org.apache.streampipes.node.controller.management.connect.ConnectManager;
+import org.apache.streampipes.node.controller.management.connect.ConnectWorkerManager;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 
 import javax.ws.rs.*;
@@ -40,7 +40,7 @@ public class ConnectResource extends AbstractResource {
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
    public Response register(@PathParam("username") String username, ConnectWorkerContainer cw) {
-       return ok(ConnectManager.getInstance().register(username, cw));
+       return ok(ConnectWorkerManager.getInstance().register(username, cw));
    }
 
     // AdapterResource
@@ -48,22 +48,22 @@ public class ConnectResource extends AbstractResource {
     @Path("/adapters/{id}/assets")
     @Produces("application/zip")
     public Response getAdapterAssets(@PathParam("username") String username, @PathParam("id") String appId) {
-        return ok(ConnectManager.getInstance().assets(username, appId, "adapter", "/"));
+        return ok(ConnectWorkerManager.getInstance().fetchAssets(username, appId, "adapter", "/"));
     }
 
     @GET
     @Path("/adapters/{id}/assets/icon")
     @Produces("image/png")
     public Response getAdapterIconAsset(@PathParam("username") String username, @PathParam("id") String appId) {
-        return ok(ConnectManager.getInstance().assets(username, appId, "adapter", "/icon"));
+        return ok(ConnectWorkerManager.getInstance().fetchAssets(username, appId, "adapter", "/icon"));
     }
 
     @GET
     @Path("/adapters/{id}/assets/documentation")
     @Produces(MediaType.TEXT_PLAIN)
     public String getAdapterDocumentationAsset(@PathParam("username") String username, @PathParam("id") String appId) {
-        return ConnectManager.getInstance()
-                .assets(username, appId, "adapter", "/documentation").toString();
+        return ConnectWorkerManager.getInstance()
+                .fetchAssets(username, appId, "adapter", "/documentation").toString();
     }
 
     // ProtocolResource
@@ -71,14 +71,14 @@ public class ConnectResource extends AbstractResource {
     @Path("/protocols/{id}/assets")
     @Produces("application/zip")
     public Response getProtocolAssets(@PathParam("username") String username, @PathParam("id") String appId) {
-        return ok(ConnectManager.getInstance().assets(username, appId, "protocol", "/"));
+        return ok(ConnectWorkerManager.getInstance().fetchAssets(username, appId, "protocol", "/"));
     }
 
     @GET
     @Path("/protocols/{id}/assets/icon")
     @Produces("image/png")
     public Response getProtocolIconAsset(@PathParam("username") String username, @PathParam("id") String appId) {
-        return ok(ConnectManager.getInstance().assets(username, appId, "protocol", "/icon"));
+        return ok(ConnectWorkerManager.getInstance().fetchAssets(username, appId, "protocol", "/icon"));
     }
 
     @GET
@@ -86,8 +86,8 @@ public class ConnectResource extends AbstractResource {
     @Produces(MediaType.TEXT_PLAIN)
     public String getProtocolDocumentationAsset(@PathParam("username") String username,
                                              @PathParam("id") String appId) {
-        return ConnectManager.getInstance()
-                .assets(username, appId, "protocol", "documentation").toString();
+        return ConnectWorkerManager.getInstance()
+                .fetchAssets(username, appId, "protocol", "documentation").toString();
     }
 
     // WorkerResource
@@ -97,7 +97,7 @@ public class ConnectResource extends AbstractResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response invokeStreamAdapter(@PathParam("username") String username, AdapterStreamDescription ad) {
-        return ok(ConnectManager.getInstance().invoke(username, ad));
+        return ok(ConnectWorkerManager.getInstance().invoke(username, ad));
     }
 
     @POST
@@ -106,7 +106,7 @@ public class ConnectResource extends AbstractResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response stopStreamAdapter(@PathParam("username") String username, AdapterStreamDescription ad) {
-        return ok(ConnectManager.getInstance().stop(username, ad));
+        return ok(ConnectWorkerManager.getInstance().detach(username, ad));
     }
 
     @POST
@@ -115,7 +115,7 @@ public class ConnectResource extends AbstractResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response invokeSetAdapter(@PathParam("username") String username, AdapterSetDescription ad) {
-        return ok(ConnectManager.getInstance().invoke(username, ad));
+        return ok(ConnectWorkerManager.getInstance().invoke(username, ad));
     }
 
     @POST
@@ -124,7 +124,7 @@ public class ConnectResource extends AbstractResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response stopSetAdapter(@PathParam("username") String username, AdapterSetDescription ad){
-        return ok(ConnectManager.getInstance().stop(username, ad));
+        return ok(ConnectWorkerManager.getInstance().detach(username, ad));
     }
 
     @POST
@@ -132,7 +132,7 @@ public class ConnectResource extends AbstractResource {
     @Path("/guess/schema")
     @Produces(MediaType.APPLICATION_JSON)
     public Response guessSchema(@PathParam("username") String username, AdapterDescription ad) {
-       return ok(ConnectManager.getInstance().guess(username, ad));
+       return ok(ConnectWorkerManager.getInstance().guessSchema(username, ad));
     }
 
     // RuntimeResolvableResource
@@ -143,6 +143,6 @@ public class ConnectResource extends AbstractResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response fetchConfigurations(@PathParam("username") String username, @PathParam("id") String appId,
                                         RuntimeOptionsRequest runtimeOptions) {
-       return ok(ConnectManager.getInstance().fetchConfigurations(username, appId, runtimeOptions));
+       return ok(ConnectWorkerManager.getInstance().fetchConfigurations(username, appId, runtimeOptions));
     }
 }

@@ -21,7 +21,7 @@ import org.apache.streampipes.container.model.node.InvocableRegistration;
 import org.apache.streampipes.model.Response;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.pipeline.PipelineElementReconfigurationEntity;
-import org.apache.streampipes.node.controller.management.pe.InvocableElementManager;
+import org.apache.streampipes.node.controller.management.pe.PipelineElementManager;
 import org.apache.streampipes.node.controller.management.pe.storage.RunningInvocableInstances;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.slf4j.Logger;
@@ -42,7 +42,7 @@ public class InvocableEntityResource extends AbstractResource {
     @JacksonSerialized
     @Consumes(MediaType.APPLICATION_JSON)
     public void register(InvocableRegistration registration) {
-        InvocableElementManager.getInstance().register(registration);
+        PipelineElementManager.getInstance().register(registration);
     }
 
     @POST
@@ -53,7 +53,7 @@ public class InvocableEntityResource extends AbstractResource {
                                             @PathParam("elementId") String elementId, InvocableStreamPipesEntity graph) {
 
         if (identifier.equals(DATA_PROCESSOR_PREFIX)) {
-            Response elementResponse = InvocableElementManager.getInstance().invoke(graph);
+            Response elementResponse = PipelineElementManager.getInstance().invoke(graph);
             if (elementResponse.isSuccess()) {
                 RunningInvocableInstances.INSTANCE.add(graph.getDeploymentRunningInstanceId(), graph);
             }
@@ -61,7 +61,7 @@ public class InvocableEntityResource extends AbstractResource {
             return ok(elementResponse);
 
         } else if (identifier.equals(DATA_SINK_PREFIX)) {
-            Response elementResponse = InvocableElementManager.getInstance().invoke(graph);
+            Response elementResponse = PipelineElementManager.getInstance().invoke(graph);
             if (elementResponse.isSuccess()) {
                 RunningInvocableInstances.INSTANCE.add(graph.getDeploymentRunningInstanceId(), graph);
             }
@@ -77,22 +77,22 @@ public class InvocableEntityResource extends AbstractResource {
     public javax.ws.rs.core.Response detach(@PathParam("identifier") String identifier,
                                             @PathParam("elementId") String elementId,
                                             @PathParam("runningInstanceId") String runningInstanceId) {
-        String endpoint = RunningInvocableInstances.INSTANCE.get(runningInstanceId).getBelongsTo();
-        Response resp = InvocableElementManager.getInstance().detach(endpoint + SLASH + runningInstanceId);
+        InvocableStreamPipesEntity graph = RunningInvocableInstances.INSTANCE.get(runningInstanceId);
+        Response resp = PipelineElementManager.getInstance().detach(graph, runningInstanceId);
         RunningInvocableInstances.INSTANCE.remove(runningInstanceId);
 
         return ok(resp);
     }
 
-    // Adaptation
+    // Live-Reconfiguration
     @POST
     @JacksonSerialized
-    @Path("/adapt/{runningInstanceId}")
+    @Path("/reconfigure/{runningInstanceId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public javax.ws.rs.core.Response adapt( @PathParam("runningInstanceId") String runningInstanceId,
                                             PipelineElementReconfigurationEntity reconfigurationEntity) {
         InvocableStreamPipesEntity graph = RunningInvocableInstances.INSTANCE.get(runningInstanceId);
-        return ok(InvocableElementManager.getInstance().adapt(graph, reconfigurationEntity));
+        return ok(PipelineElementManager.getInstance().reconfigure(graph, reconfigurationEntity));
     }
 }

@@ -38,12 +38,9 @@ public class ClusterResourceMonitor {
 
     private static final String RESOURCE_COLLECTOR_ROUTE = "/api/v2/node/info/resources";
     private static final int RESOURCE_COLLECTOR_INTERVAL_SECS = 60;
-    private static ClusterResourceMonitor instance = null;
-    private static Map<String, Queue<ResourceMetrics>> resourceMetricsMap = new HashMap<>();
+    private static final Map<String, Queue<ResourceMetrics>> resourceMetricsMap = new HashMap<>();
 
-    public static Map<String, Queue<ResourceMetrics>> getResourceMetricsMap(){
-        return resourceMetricsMap;
-    }
+    private static ClusterResourceMonitor instance = null;
 
     private ClusterResourceMonitor() {}
 
@@ -69,7 +66,6 @@ public class ClusterResourceMonitor {
             String endpoint = HttpUtils.generateEndpoint(node, RESOURCE_COLLECTOR_ROUTE);
             ResourceMetrics resourceMetrics = new NodeResourceCollector(endpoint).execute();
 
-             // TODO: implement
             addResourceMetrics(node, resourceMetrics);
         });
     };
@@ -81,5 +77,9 @@ public class ClusterResourceMonitor {
             resourceMetricsMap.get(node.getNodeControllerId()).poll();
             resourceMetricsMap.get(node.getNodeControllerId()).offer(rm);
         }
+    }
+
+    public static Queue<ResourceMetrics> getNodeResourceMetricsById(String nodeControllerId){
+        return resourceMetricsMap.get(nodeControllerId);
     }
 }

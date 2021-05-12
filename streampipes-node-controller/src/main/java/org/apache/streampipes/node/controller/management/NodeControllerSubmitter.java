@@ -58,8 +58,8 @@ public abstract class NodeControllerSubmitter {
         LOG.info("Load node info description");
         NodeManager.getInstance().init();
 
-        LOG.info("Register node controller at StreamPipes cluster management");
-        boolean success = NodeManager.getInstance().register();
+        LOG.info("Register node controller at StreamPipes node management");
+        boolean success = NodeManager.getInstance().registerNodeAtNodeManagement();
 
         if (success) {
             LOG.info("Start resource manager");
@@ -80,7 +80,7 @@ public abstract class NodeControllerSubmitter {
                 LOG.info("Start janitor manager");
                 JanitorManager.getInstance().run();
             }
-        } else throw new SpRuntimeException("Could not register node controller at backend");
+        } else throw new SpRuntimeException("Could not register node controller at StreamPipes node management");
     }
 
     @PreDestroy

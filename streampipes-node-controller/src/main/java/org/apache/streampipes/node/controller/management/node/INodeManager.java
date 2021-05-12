@@ -24,11 +24,12 @@ import org.apache.streampipes.model.node.container.DockerContainer;
 public interface INodeManager {
     void init();
     void addNode(NodeInfoDescription node);
-    NodeInfoDescription getNode();
+    NodeInfoDescription getNodeInfoDescription();
     Message updateNode(NodeInfoDescription node);
     Message activateNode();
     Message deactivateNode();
-    boolean registerNode();
-    void registerDeployedContainer(DockerContainer container);
-    void deregisterDeployContainer(DockerContainer container);
+    boolean synchronizeNodeWithNodeManagement();
+    boolean registerNodeAtNodeManagement();
+    void registerContainerWhenDeployed(DockerContainer container);
+    void unregisterContainerWhenRemoved(DockerContainer container);
 }

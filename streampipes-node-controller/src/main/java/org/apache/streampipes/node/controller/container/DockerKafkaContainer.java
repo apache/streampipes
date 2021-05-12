@@ -24,14 +24,16 @@ import org.apache.streampipes.node.controller.management.orchestrator.docker.Abs
 
 public class DockerKafkaContainer extends AbstractStreamPipesDockerContainer {
 
+    public static String SP_SVC_KAFKA_ID = "svc/org.apache.streampipes.node.broker.kafka";
+
     @Override
     public DockerContainer declareDockerContainer() {
-        return DockerContainerBuilder.create(StreamPipesDockerServiceID.SP_SVC_KAFKA_ID)
+        return DockerContainerBuilder.create(SP_SVC_KAFKA_ID)
                 .withImage("fogsyio/kafka:2.2.0")
                 .supportedArchitectures(
-                        SupportedArchitectures.amd(),
-                        SupportedArchitectures.arm32v7(),
-                        SupportedArchitectures.arm64v8())
+                        SupportedArchitectures.amd64(),
+                        SupportedArchitectures.arm32(),
+                        SupportedArchitectures.aarch64())
                 .supportedOperatingSystemTypes(
                         SupportedOsType.linux(),
                         SupportedOsType.darwin())
@@ -51,8 +53,7 @@ public class DockerKafkaContainer extends AbstractStreamPipesDockerContainer {
                         .add("KAFKA_FETCH_MESSAGE_MAX_BYTES", "5000012")
                         .add("KAFKA_REPLICA_FETCH_MAX_BYTES", "10000000")
                         .build())
-                .withLabels(ContainerLabels.with(StreamPipesDockerServiceID.SP_SVC_KAFKA_ID, retrieveNodeType(),
-                        ContainerType.BROKER))
+                .withLabels(ContainerLabels.with(SP_SVC_KAFKA_ID, retrieveNodeType(), ContainerType.BROKER))
                 .withVolumes(ContainerVolumesBuilder.create()
                         .add("streampipes-kafka-vol", "/kafka", false)
                         .build())

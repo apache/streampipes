@@ -28,10 +28,12 @@ public interface IPipelineElementLifeCycle {
 
     Response invoke(InvocableStreamPipesEntity graph);
 
-    Response detach(String runningInstanceId);
+    Response detach(InvocableStreamPipesEntity graph, String runningInstanceId);
 
-    Response adapt(InvocableStreamPipesEntity graph, PipelineElementReconfigurationEntity reconfigurationEvent);
+    Response reconfigure(InvocableStreamPipesEntity graph, PipelineElementReconfigurationEntity reconfigurationEvent);
 
-    void unregister();
+    Response offload(InvocableStreamPipesEntity graph);
+
+    void deregister();
 
 }

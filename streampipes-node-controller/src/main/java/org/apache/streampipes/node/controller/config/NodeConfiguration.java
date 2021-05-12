@@ -20,6 +20,7 @@ package org.apache.streampipes.node.controller.config;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.streampipes.model.node.resources.fielddevice.FieldDeviceAccessResource;
 import org.apache.streampipes.node.controller.config.utils.ConfigUtils;
+import org.apache.streampipes.node.controller.management.offloading.strategies.OffloadingStrategyType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,6 +58,7 @@ public final class NodeConfiguration {
     private static int resourceMonitorFreqSecs;
     private static int relayEventBufferSize;
     private static String consulHost;
+    private static OffloadingStrategyType autoOffloadingStrategy;
 
     private static HashMap<String, String> configMap;
 
@@ -272,6 +274,14 @@ public final class NodeConfiguration {
         NodeConfiguration.supportedPipelineElements.addAll(supportedPipelineElements);
     }
 
+    public static OffloadingStrategyType getAutoOffloadingStrategy() {
+        return autoOffloadingStrategy;
+    }
+
+    public static void setAutoOffloadingStrategy(OffloadingStrategyType autoOffloadingStrategy) {
+        NodeConfiguration.autoOffloadingStrategy = autoOffloadingStrategy;
+    }
+
     public static HashMap<String, String> getConfigMap() {
         return configMap;
     }
@@ -477,6 +487,10 @@ public final class NodeConfiguration {
                     configMap.put(envKey, value);
                     List<String> supportedPipelineElements = Arrays.asList(value.split(";").clone());
                     addSupportedPipelineElements(supportedPipelineElements);
+                    break;
+                case AUTO_OFFLOADING_STRATEGY:
+                    configMap.put(envKey, value);
+                    setAutoOffloadingStrategy(OffloadingStrategyType.fromString(value));
                     break;
                 default:
                     throw new IllegalArgumentException("Invalid environment config param: " + configParam);

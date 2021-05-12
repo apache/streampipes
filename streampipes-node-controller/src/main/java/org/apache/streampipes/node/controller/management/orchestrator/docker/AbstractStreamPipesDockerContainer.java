@@ -21,6 +21,7 @@ import org.apache.streampipes.model.node.container.DockerContainer;
 import org.apache.streampipes.node.controller.config.EnvConfigParam;
 import org.apache.streampipes.node.controller.config.NodeConfiguration;
 import org.apache.streampipes.node.controller.management.node.NodeManager;
+import org.apache.streampipes.node.controller.utils.VersionUtils;
 
 import java.util.*;
 
@@ -31,7 +32,7 @@ public abstract class AbstractStreamPipesDockerContainer {
 
     public static String getStreamPipesVersion() {
         return !NodeConfiguration.getStreampipesVersion().isEmpty() ?
-                NodeConfiguration.getStreampipesVersion() :  NodeManager.getInstance().getStreamPipesVersion();
+                NodeConfiguration.getStreampipesVersion() :  VersionUtils.getStreamPipesVersion();
     }
 
     public List<String> generateStreamPipesNodeEnvs() {
