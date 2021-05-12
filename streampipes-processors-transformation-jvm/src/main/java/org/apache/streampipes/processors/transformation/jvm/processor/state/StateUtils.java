@@ -26,7 +26,7 @@ public class StateUtils {
         return extractor.collectionMembersAsGroup(LABEL_COLLECTION_ID);
     }
 
-    public static List<Integer> getNumberValues(ProcessingElementParameterExtractor extractor) {
+    public static List<Double> getNumberValues(ProcessingElementParameterExtractor extractor) {
         return getGroupItems(extractor)
                 .stream()
                 .map(group -> (
@@ -34,7 +34,7 @@ public class StateUtils {
                                 .extractGroupMember(NUMBER_VALUE_ID, group)
                                 .as(FreeTextStaticProperty.class))
                         .getValue())
-                .map(Integer::parseInt)
+                .map(Double::parseDouble)
                 .collect(Collectors.toList());
     }
 

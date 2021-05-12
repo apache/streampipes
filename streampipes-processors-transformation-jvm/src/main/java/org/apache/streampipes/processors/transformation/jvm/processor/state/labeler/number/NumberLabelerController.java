@@ -75,7 +75,7 @@ public class NumberLabelerController extends StandaloneEventProcessingDeclarer<N
 
     String labelName = getLabelName(extractor);
 
-    List<Integer> numberValues = getNumberValues(extractor);
+    List<Double> numberValues = getNumberValues(extractor);
 
     List<String> labelStrings = getLabelStrings(extractor);
 
