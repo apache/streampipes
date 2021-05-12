@@ -61,10 +61,10 @@ public class MigrationPipelineGenerator {
         eligibleTargetNodes = filterResourceUtilization(eligibleTargetNodes);
 
         //Different strategies possible (atm cancel offloading)
-        if(eligibleTargetNodes == null || eligibleTargetNodes.isEmpty())
+        if(eligibleTargetNodes.isEmpty())
             return null;
 
-        //Random Selection of new node within the remaining eligibile nodes
+        //Random Selection of new node within the remaining eligible nodes
         randomSelectionAndUpdate(eligibleTargetNodes);
 
         return generateTargetPipeline();
@@ -72,14 +72,11 @@ public class MigrationPipelineGenerator {
 
     private List<NodeInfoDescription> findEligibleTargetNodes(){
 
-        List<NodeInfoDescription> eligibileTargetNodes = new ArrayList<>();
         List<NodeInfoDescription> onlineNodes = NodeManagement.getInstance().getOnlineNodes();
 
-        onlineNodes.stream()
+        return onlineNodes.stream()
                 .filter(this::matchAndVerify)
-                .map(eligibileTargetNodes::add);
-
-        return eligibileTargetNodes;
+                .collect(Collectors.toList());
     }
 
     private boolean matchAndVerify(NodeInfoDescription node) {
@@ -111,8 +108,12 @@ public class MigrationPipelineGenerator {
             String nodeControllerId = nodeInfo.getNodeControllerId();
             Queue<ResourceMetrics> rmHistory = ClusterResourceMonitor.getNodeResourceMetricsById(nodeControllerId);
 
-            if(rmHistory == null)
-                return null;
+            if(rmHistory == null){
+                //If no RessourceMetrics history is available (e.g. shorly after Backend start), consider node as
+                // possible target node
+                filteredTargetNodes.add(nodeInfo);
+                continue;
+            }
 
             Hardware hardware = entityToMigrate.getResourceRequirements().stream()
                     .filter(nodeRR -> nodeRR instanceof Hardware)
@@ -127,6 +128,8 @@ public class MigrationPipelineGenerator {
                         && hardware.getMemory() <= MEM_MULTIPLICATION_FACTOR * rmHistory.peek().getFreeMemoryInBytes()) {
                     filteredTargetNodes.add(nodeInfo);
                 }
+            } else{
+                filteredTargetNodes.add(nodeInfo);
             }
         }
         return filteredTargetNodes;

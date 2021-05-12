@@ -41,7 +41,8 @@ public class PipelineElementOffloadingHandler implements IHandler<Response> {
     @Override
     public Response handle() {
         String url = generatePipelineManagementOffloadEndpoint();
-        return HttpUtils.post(url, graph);
+        String bearerToken = NodeConfiguration.getNodeApiKey();
+        return HttpUtils.post(url, bearerToken, graph, Response.class);
     }
 
     private String generatePipelineManagementOffloadEndpoint() {

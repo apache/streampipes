@@ -42,6 +42,7 @@ public class OffloadingPolicyManager {
     private static final String NODE_MANAGEMENT_ONLINE_ENDPOINT = BACKEND_BASE_ROUTE + "/nodes/online";
 
     private final List<OffloadingStrategy<?>> offloadingStrategies = new ArrayList<>();
+    private final List<InvocableStreamPipesEntity> unsuccessfullyTriedEntities = new ArrayList<>();
     private static OffloadingPolicyManager instance;
     private static final Logger LOG = LoggerFactory.getLogger(OffloadingPolicyManager.class.getCanonicalName());
 
@@ -53,24 +54,42 @@ public class OffloadingPolicyManager {
     }
 
     public void checkPolicies(ResourceMetrics rm){
+        List<OffloadingStrategy<?>> violatedPolicies = new ArrayList<>();
         for(OffloadingStrategy strategy : offloadingStrategies){
             strategy.getOffloadingPolicy().addValue(strategy.getResourceProperty().getProperty(rm));
             if(strategy.getOffloadingPolicy().isViolated()){
-                InvocableStreamPipesEntity offloadEntity = strategy.getSelectionStrategy().select();
-                if(offloadEntity != null){
-                    Response resp = PipelineElementManager.getInstance().offload(offloadEntity);
-                    if(resp.isSuccess())
-                        LOG.info("Successfully offloaded: " + offloadEntity.getAppId()
-                                + " of pipeline: " + offloadEntity.getCorrespondingPipeline());
-                    else LOG.info("Failed to offload: " + offloadEntity.getAppId()
-                            + " of pipeline: " + offloadEntity.getCorrespondingPipeline());
-                } else LOG.info("No pipeline element found to offload");
+                violatedPolicies.add(strategy);
             }
         }
+        if(!violatedPolicies.isEmpty())
+            //Currently uses the first violated policy. Could be extended to take the degree of policy violation into
+            // account
+            triggerOffloading(violatedPolicies.get(0));
+        //Blacklist of entities is cleared when no policies were violated.
+        else unsuccessfullyTriedEntities.clear();
+    }
+
+    private void triggerOffloading(OffloadingStrategy strategy){
+        InvocableStreamPipesEntity offloadEntity = strategy.getSelectionStrategy().select(this.unsuccessfullyTriedEntities);
+        if(offloadEntity != null){
+            Response resp = PipelineElementManager.getInstance().offload(offloadEntity);
+            if(resp.isSuccess()){
+                LOG.info("Successfully offloaded: " + offloadEntity.getAppId()
+                        + " of pipeline: " + offloadEntity.getCorrespondingPipeline());
+            } else{
+                LOG.info("Failed to offload: " + offloadEntity.getAppId()
+                        + " of pipeline: " + offloadEntity.getCorrespondingPipeline());
+                unsuccessfullyTriedEntities.add(offloadEntity);
+            }
+        } else LOG.info("No pipeline element found to offload");
     }
 
     public void addOffloadingStrategy(OffloadingStrategy<?> offloadingStrategy){
         this.offloadingStrategies.add(offloadingStrategy);
+    }
+
+    public void addOffloadingStrategies(List<OffloadingStrategy<?>> offloadingStrategies){
+        offloadingStrategies.forEach(this::addOffloadingStrategy);
     }
 
     public List<NodeInfoDescription> getOnlineNodes(){

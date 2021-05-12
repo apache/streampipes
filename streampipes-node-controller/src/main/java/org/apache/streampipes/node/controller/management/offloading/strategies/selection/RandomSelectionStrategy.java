@@ -27,7 +27,7 @@ import java.util.Random;
 public class RandomSelectionStrategy implements SelectionStrategy{
 
     @Override
-    public InvocableStreamPipesEntity select() {
+    public InvocableStreamPipesEntity select(List<InvocableStreamPipesEntity> blacklistedEntities) {
         List<InvocableStreamPipesEntity> instances = RunningInvocableInstances.INSTANCE.getAll();
         if(instances.size() == 0)
             return null;

@@ -32,22 +32,22 @@ import java.util.stream.Collectors;
 public class PrioritySelectionStrategy implements SelectionStrategy{
 
     @Override
-    public InvocableStreamPipesEntity select() {
+    public InvocableStreamPipesEntity select(List<InvocableStreamPipesEntity> blacklistedEntities) {
         List<InvocableStreamPipesEntity> runningPipelineElements = RunningInvocableInstances.INSTANCE.getAll();
 
         //List all other nodes that are online
-        // TODO: this involves request to central backend
-        List<NodeInfoDescription> onlineNodes = getNodeInfos().stream().filter(desc ->
+        // TODO: this involves request to central backend (deactivated; assess if provides meaningful benefit)
+        /*List<NodeInfoDescription> onlineNodes = getNodeInfos().stream().filter(desc ->
                 !desc.getNodeControllerId().equals(NodeConfiguration.getNodeControllerId()))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList());*/
 
         List<InvocableStreamPipesEntity> candidatesForOffloading = runningPipelineElements.stream()
+                        .filter(entity -> isNotBlacklisted(entity, blacklistedEntities))
                         .filter(InvocableStreamPipesEntity::isPreemption)
-                        .filter(entity -> verifyIfSupportedOnOtherNodes(entity, onlineNodes))
+                        //.filter(entity -> verifyIfSupportedOnOtherNodes(entity, onlineNodes))
                         .collect(Collectors.toList());
 
         if (candidatesForOffloading.isEmpty()) {
-            // TODO what to do when null?
             return null;
         } else {
             return selectPipelineElementWithLowestPriorityScore(candidatesForOffloading);
@@ -75,5 +75,10 @@ public class PrioritySelectionStrategy implements SelectionStrategy{
                 candidateNodes.add(nodeInfo);
         }
         return !candidateNodes.isEmpty();
+    }
+
+    private boolean isNotBlacklisted(InvocableStreamPipesEntity entity, List<InvocableStreamPipesEntity> blacklist){
+        return blacklist.stream().noneMatch(blacklistedEntity ->
+                blacklistedEntity.getDeploymentRunningInstanceId().equals(entity.getDeploymentRunningInstanceId()));
     }
 }

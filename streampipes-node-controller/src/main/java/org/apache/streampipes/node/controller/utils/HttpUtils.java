@@ -166,6 +166,35 @@ public class HttpUtils {
         }
     }
 
+    public static <T1, T2> T2 post(String url, String bearerToken, T1 object, Class<T2> clazz) {
+        String body = serialize(object);
+        try {
+            Response response = Request.Post(url)
+                    .bodyString(body, ContentType.APPLICATION_JSON)
+                    .addHeader("Authorization", "Bearer " + bearerToken)
+                    .connectTimeout(CONNECT_TIMEOUT)
+                    .execute();
+
+            if (clazz.isInstance(Response.class)) {
+                return (T2) response;
+            } else if (clazz.isInstance(String.class)) {
+                return (T2) response.returnContent().asString();
+            } else if (clazz.isAssignableFrom(byte[].class)) {
+                return (T2) response.returnContent().asBytes();
+            } else if (clazz.isAssignableFrom(Boolean.class)) {
+                return (T2) Boolean.TRUE;
+            } else {
+                return deserialize(response, clazz);
+            }
+        } catch (IOException e) {
+            if (clazz.isAssignableFrom(Boolean.class)) {
+                return (T2) Boolean.FALSE;
+            }
+
+            throw new SpRuntimeException("Something went wrong during POST request", e);
+        }
+    }
+
     public static <T> org.apache.streampipes.model.Response post(String url, T object) {
         String body = serialize(object);
         org.apache.streampipes.model.Response response = new org.apache.streampipes.model.Response();
@@ -243,6 +272,9 @@ public class HttpUtils {
     public static <T>T deserialize(Response response, Class<T> clazz) {
         try {
             String responseString = response.returnContent().asString();
+            //TODO: Fix issue when starting connect adapters (& remove quick fix)
+            if(clazz.equals(String.class))
+                return (T) responseString;
             return JacksonSerializer
                     .getObjectMapper()
                     .readValue(responseString, clazz);

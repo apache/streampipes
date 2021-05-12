@@ -22,12 +22,12 @@ import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
+import java.util.List;
 
 public class CPULoadSelectionStrategy implements SelectionStrategy{
     @Override
-    public InvocableStreamPipesEntity select() {
+    public InvocableStreamPipesEntity select(List<InvocableStreamPipesEntity> blacklistedEntities) {
         //TODO: Migrate the PE with the highest load on CPU (or possibly other resource)
-        ThreadMXBean bean = ManagementFactory.getThreadMXBean();
         return null;
     }
 }

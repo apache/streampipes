@@ -20,6 +20,8 @@ package org.apache.streampipes.node.controller.management.offloading.strategies.
 
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 
+import java.util.List;
+
 public interface SelectionStrategy {
-    InvocableStreamPipesEntity select();
+    InvocableStreamPipesEntity select(List<InvocableStreamPipesEntity> blacklistedEntities);
 }

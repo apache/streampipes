@@ -19,6 +19,7 @@
 package org.apache.streampipes.node.controller.management.offloading.strategies;
 
 import org.apache.streampipes.node.controller.config.NodeConfiguration;
+import org.apache.streampipes.node.controller.management.node.NodeManager;
 import org.apache.streampipes.node.controller.management.offloading.strategies.policies.Comparator;
 import org.apache.streampipes.node.controller.management.offloading.strategies.policies.ThresholdViolationOffloadingPolicy;
 import org.apache.streampipes.node.controller.management.offloading.strategies.property.CPULoadResourceProperty;
@@ -27,35 +28,63 @@ import org.apache.streampipes.node.controller.management.offloading.strategies.p
 import org.apache.streampipes.node.controller.management.offloading.strategies.selection.PrioritySelectionStrategy;
 import org.apache.streampipes.node.controller.management.offloading.strategies.selection.RandomSelectionStrategy;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class OffloadingStrategyFactory {
 
-    public OffloadingStrategy select(){
+    public List<OffloadingStrategy<?>> select(){
 
         switch (NodeConfiguration.getAutoOffloadingStrategy()) {
             case CPU:
-                return new OffloadingStrategy<Float>(
-                        new ThresholdViolationOffloadingPolicy<>(5, Comparator.GREATER, 90f, 5),
-                        new CPULoadResourceProperty(), new RandomSelectionStrategy());
+                return Collections.singletonList(getDefaultCPUOffloadingPolicy());
             case MEM:
-                return new OffloadingStrategy<Long>(
-                        new ThresholdViolationOffloadingPolicy<>(5, Comparator.SMALLER,
-                                549755813888L, 5),
-                        new FreeMemoryResourceProperty(), new RandomSelectionStrategy());
+                return Collections.singletonList(getDefaultMemoryOffloadingPolicy());
             case DISK:
-                return new OffloadingStrategy<Long>(
-                        new ThresholdViolationOffloadingPolicy<>(5, Comparator.SMALLER,
-                                549755813888L, 5),
-                        new FreeDiskSpaceResourceProperty(), new RandomSelectionStrategy());
+                return Collections.singletonList(getDefaultDiskSpaceOffloadingPolicy());
             case DEBUG:
-                return new OffloadingStrategy<Float>(
+                return Collections.singletonList(new OffloadingStrategy<Float>(
                         new ThresholdViolationOffloadingPolicy<>(5,
                                 Comparator.GREATER, 0.5f, 1),
-                        new CPULoadResourceProperty(), new PrioritySelectionStrategy());
+                        new CPULoadResourceProperty(), new PrioritySelectionStrategy()));
             default:
-                return new OffloadingStrategy<Float>(
-                        new ThresholdViolationOffloadingPolicy<>(5, Comparator.GREATER, 90f, 4),
-                        new CPULoadResourceProperty(), new RandomSelectionStrategy());
+                return getDefaultStrategy();
         }
+    }
+
+    private List<OffloadingStrategy<?>> getDefaultStrategy(){
+        List<OffloadingStrategy<?>> offloadingStrategies = new ArrayList<>();
+        offloadingStrategies.add(getDefaultCPUOffloadingPolicy());
+        offloadingStrategies.add(getDefaultMemoryOffloadingPolicy());
+        offloadingStrategies.add(getDefaultDiskSpaceOffloadingPolicy());
+        return offloadingStrategies;
+    }
+
+    private OffloadingStrategy<Float> getDefaultCPUOffloadingPolicy(){
+        return new OffloadingStrategy<>(
+                new ThresholdViolationOffloadingPolicy<>(5, Comparator.GREATER, 90f, 4),
+                new CPULoadResourceProperty(), new RandomSelectionStrategy());
+    }
+
+    private OffloadingStrategy<Long> getDefaultMemoryOffloadingPolicy(){
+        long totalMemory = NodeManager.getInstance().getNodeInfoDescription()
+                .getNodeResources().getHardwareResource().getMemory().getMemTotal();
+        long threshold = (long) (totalMemory * 0.15);
+        return new OffloadingStrategy<>(
+                new ThresholdViolationOffloadingPolicy<>(5, Comparator.SMALLER,
+                        threshold, 4),
+                new FreeMemoryResourceProperty(), new RandomSelectionStrategy());
+    }
+
+    private OffloadingStrategy<Long> getDefaultDiskSpaceOffloadingPolicy(){
+        long totalDisk = NodeManager.getInstance().getNodeInfoDescription()
+                .getNodeResources().getHardwareResource().getDisk().getDiskTotal();
+        long threshold = (long) (totalDisk * 0.1);
+        return new OffloadingStrategy<>(
+                new ThresholdViolationOffloadingPolicy<>(5, Comparator.SMALLER,
+                        threshold, 4),
+                new FreeMemoryResourceProperty(), new RandomSelectionStrategy());
     }
 
 }

@@ -49,7 +49,7 @@ public class ResourceManager {
 
     private ResourceManager() {
         //Offloading Policy
-        OffloadingPolicyManager.getInstance().addOffloadingStrategy(new OffloadingStrategyFactory().select());
+        OffloadingPolicyManager.getInstance().addOffloadingStrategies(new OffloadingStrategyFactory().select());
     }
 
     public static ResourceManager getInstance() {
