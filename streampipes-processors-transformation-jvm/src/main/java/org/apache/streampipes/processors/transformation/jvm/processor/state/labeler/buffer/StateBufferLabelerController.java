@@ -24,10 +24,6 @@ import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.schema.PropertyScope;
-import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
-import org.apache.streampipes.model.staticproperty.OneOfStaticProperty;
-import org.apache.streampipes.model.staticproperty.Option;
-import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 import org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.LabelerUtils;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
@@ -42,17 +38,14 @@ import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcess
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.apache.streampipes.processors.transformation.jvm.processor.state.StateUtils.*;
+
 public class StateBufferLabelerController extends StandaloneEventProcessingDeclarer<StateBufferLabelerParameters> implements ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
 
   public static final String STATE_FILTER_ID = "stateFilterId";
   public static final String STATE_FIELD_ID = "stateFieldId";
   public static final String OPERATIONS_ID = "operationsId";
   public static final String SENSOR_VALUE_ID = "sensorValueId";
-  public static final String LABEL_COLLECTION_ID = "labelCollectionId";
-  public static final String COMPARATOR_ID = "comparatorId";
-  public static final String NUMBER_VALUE_ID = "numberValueId";
-  public static final String LABEL_STRING_ID = "labelStringId";
-  public static final String LABEL_NAME = "labelName";
 
   public static final String LABEL = "label";
 
@@ -101,36 +94,15 @@ public class StateBufferLabelerController extends StandaloneEventProcessingDecla
     String stateProperty = extractor.mappingPropertyValue(STATE_FIELD_ID);
     String stateFilter = extractor.singleValueParameter(STATE_FILTER_ID, String.class);
     String selectedOperation = extractor.selectedSingleValue(OPERATIONS_ID, String.class);
-    String labelName = extractor.textParameter(LABEL_NAME);
 
-    List<StaticPropertyGroup> groupItems = extractor.collectionMembersAsGroup(LABEL_COLLECTION_ID);
-    List<Integer> numberValues = groupItems
-            .stream()
-            .map(group -> (
-                    extractor
-                            .extractGroupMember(NUMBER_VALUE_ID, group)
-                            .as(FreeTextStaticProperty.class))
-                    .getValue())
-            .map(Integer::parseInt)
-            .collect(Collectors.toList());
+    String labelName = getLabelName(extractor);
 
-    List<String> labelStrings = groupItems
-            .stream()
-            .map(group -> (extractor
-                    .extractGroupMember(LABEL_STRING_ID, group)
-                    .as(FreeTextStaticProperty.class))
-                    .getValue())
-            .collect(Collectors.toList());
+    List<Double> numberValues = getNumberValues(extractor);
 
-    List<String> comparators = groupItems
-            .stream()
-            .map(group -> (extractor
-                    .extractGroupMember(COMPARATOR_ID, group)
-                    .as(OneOfStaticProperty.class))
-                    .getOptions()
-                    .stream()
-                    .filter(Option::isSelected).findFirst().get().getName())
-            .collect(Collectors.toList());
+    List<String> labelStrings = getLabelStrings(extractor);
+
+    List<String> comparators = getComparators(extractor);
+
     StateBufferLabelerParameters params = new StateBufferLabelerParameters(graph, sensorListValueProperty, stateProperty, stateFilter, selectedOperation, labelName, numberValues, labelStrings, comparators);
 
     return new ConfiguredEventProcessor<>(params, StateBufferLabeler::new);
@@ -139,8 +111,10 @@ public class StateBufferLabelerController extends StandaloneEventProcessingDecla
   @Override
   public EventSchema resolveOutputStrategy(DataProcessorInvocation processingElement, ProcessingElementParameterExtractor parameterExtractor) throws SpRuntimeException {
 
-    String labelName = parameterExtractor.textParameter(LABEL_NAME);
+    String labelName = getLabelName(parameterExtractor);
 
-    return LabelerUtils.resolveOutputStrategy(processingElement, labelName);
+    List<String> labelStrings = getLabelStrings(parameterExtractor);
+
+    return LabelerUtils.resolveOutputStrategy(processingElement, labelName, labelStrings);
   }
 }

@@ -123,10 +123,8 @@ public class FileProtocol extends Protocol {
         }
         SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
         try {
-            InputStream in = Request.Get(fileFetchUrl).execute().returnContent().asStream();
+            InputStream in = getDataFromEndpoint();
             parse(in, stk);
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (ParseException e) {
             logger.error("Error while parsing: " + e.getMessage());
         }

@@ -19,6 +19,7 @@
 package org.apache.streampipes.connect.adapters.opcua;
 
 
+import static org.apache.streampipes.connect.adapters.opcua.utils.OpcUaUtil.retrieveDataTypesFromServer;
 import static org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.Unsigned.uint;
 import static org.eclipse.milo.opcua.stack.core.util.ConversionUtil.toList;
 
@@ -68,11 +69,11 @@ public class OpcUa {
 
     static Logger LOG = LoggerFactory.getLogger(OpcUa.class);
 
-    private NodeId node;
+    private NodeId originNodeId;
     private String opcServerURL;
     private OpcUaClient client;
     private boolean unauthenticated;
-    private Double pullIntervalSeconds;
+    private Integer pullIntervalMilliSeconds;
     private String user;
     private String password;
     private List<Map<String, Integer>> unitIDs = new ArrayList<>();
@@ -95,21 +96,21 @@ public class OpcUa {
      * @param opcServerURL complete OPC UA server url
      * @param namespaceIndex namespace index of the given node
      * @param nodeId node identifier
-     * @param pullIntervalSeconds duration of pull interval in seconds, {@code null} if in subscription mode
+     * @param pullIntervalMilliSeconds duration of pull interval in milliseconds, {@code null} if in subscription mode
      * @param selectedNodeNames list of node names provided from {@link OpcUaUtil#resolveOptions(String, StaticPropertyExtractor)}
      */
-    public OpcUa(String opcServerURL, int namespaceIndex, String nodeId, Double pullIntervalSeconds, List<String> selectedNodeNames) {
+    public OpcUa(String opcServerURL, int namespaceIndex, String nodeId, int pullIntervalMilliSeconds, List<String> selectedNodeNames) {
 
         this.opcServerURL = opcServerURL;
         this.unauthenticated = true;
-        this.pullIntervalSeconds = pullIntervalSeconds;
+        this.pullIntervalMilliSeconds = pullIntervalMilliSeconds;
         this.selectedNodeNames = selectedNodeNames;
 
         if (isInteger(nodeId)) {
             int integerNodeId = Integer.parseInt(nodeId);
-            this.node  = new NodeId(namespaceIndex, integerNodeId);
+            this.originNodeId = new NodeId(namespaceIndex, integerNodeId);
         } else {
-            this.node  = new NodeId(namespaceIndex, nodeId);
+            this.originNodeId = new NodeId(namespaceIndex, nodeId);
         }
     }
 
@@ -120,11 +121,11 @@ public class OpcUa {
      * @param opcServerPort OPC UA port number
      * @param namespaceIndex namespace index of the given node
      * @param nodeId node identifier
-     * @param pullIntervalSeconds duration of pull interval in seconds, {@code null} if in subscription mode
+     * @param pullIntervalMilliSeconds duration of pull interval in milliseconds, {@code null} if in subscription mode
      * @param selectedNodeNames list of node names provided from {@link OpcUaUtil#resolveOptions(String, StaticPropertyExtractor)}
      */
-    public OpcUa(String opcServer, int opcServerPort, int namespaceIndex, String nodeId, Double pullIntervalSeconds, List<String> selectedNodeNames) {
-        this( opcServer + ":" + opcServerPort, namespaceIndex, nodeId, pullIntervalSeconds, selectedNodeNames);
+    public OpcUa(String opcServer, int opcServerPort, int namespaceIndex, String nodeId, int pullIntervalMilliSeconds, List<String> selectedNodeNames) {
+        this( opcServer + ":" + opcServerPort, namespaceIndex, nodeId, pullIntervalMilliSeconds, selectedNodeNames);
     }
 
     /**
@@ -135,11 +136,11 @@ public class OpcUa {
      * @param nodeId node identifier
      * @param username username to authenticate at the OPC UA server
      * @param password corresponding password to given user name
-     * @param pullIntervalSeconds duration of pull interval in seconds, {@code null} if in subscription mode
+     * @param pullIntervalMilliSeconds duration of pull interval in milliseconds, {@code null} if in subscription mode
      * @param selectedNodeNames list of node names provided from {@link OpcUaUtil#resolveOptions(String, StaticPropertyExtractor)}
      */
-    public OpcUa(String opcServerURL, int namespaceIndex, String nodeId, String username, String password, Double pullIntervalSeconds, List<String> selectedNodeNames) {
-        this(opcServerURL, namespaceIndex, nodeId, pullIntervalSeconds, selectedNodeNames);
+    public OpcUa(String opcServerURL, int namespaceIndex, String nodeId, String username, String password, int pullIntervalMilliSeconds, List<String> selectedNodeNames) {
+        this(opcServerURL, namespaceIndex, nodeId, pullIntervalMilliSeconds, selectedNodeNames);
         this.unauthenticated = false;
         this.user = username;
         this.password = password;
@@ -154,11 +155,11 @@ public class OpcUa {
      * @param nodeId node identifier
      * @param username username to authenticate at the OPC UA server
      * @param password corresponding password to given user name
-     * @param pullIntervalSeconds duration of pull interval in seconds, {@code null} if in subscription mode
+     * @param pullIntervalMilliSeconds duration of pull interval in milliseconds, {@code null} if in subscription mode
      * @param selectedNodeNames list of node names provided from {@link OpcUaUtil#resolveOptions(String, StaticPropertyExtractor)}
      */
-    public OpcUa(String opcServer, int opcServerPort, int namespaceIndex, String nodeId, String username, String password, Double pullIntervalSeconds, List<String> selectedNodeNames) {
-        this (opcServer, opcServerPort, namespaceIndex, nodeId, pullIntervalSeconds, selectedNodeNames);
+    public OpcUa(String opcServer, int opcServerPort, int namespaceIndex, String nodeId, String username, String password, int pullIntervalMilliSeconds, List<String> selectedNodeNames) {
+        this (opcServer, opcServerPort, namespaceIndex, nodeId, pullIntervalMilliSeconds, selectedNodeNames);
         this.unauthenticated = false;
         this.user = username;
         this.password = password;
@@ -181,9 +182,9 @@ public class OpcUa {
         boolean useURL = selectedAlternativeConnection.equals(OpcUaLabels.OPC_URL.name());
         boolean unauthenticated =  selectedAlternativeAuthentication.equals(OpcUaLabels.UNAUTHENTICATED.name());
 
-        Double pullIntervalSeconds = null;
+        Integer pullIntervalSeconds = null;
         if (usePullMode) {
-            pullIntervalSeconds = extractor.singleValueParameter(OpcUaLabels.PULLING_INTERVAL.name(), Double.class);
+            pullIntervalSeconds = extractor.singleValueParameter(OpcUaLabels.PULLING_INTERVAL.name(), Integer.class);
         }
 
         List<String> selectedNodeNames = extractor.selectedMultiValues(OpcUaLabels.AVAILABLE_NODES.name(), String.class);
@@ -308,19 +309,24 @@ public class OpcUa {
     }
 
     /***
-     * Search for related nodes relative to {@link OpcUa#node}
+     * Search for related nodes relative to {@link OpcUa#originNodeId}
      * @param selectNodes indicates whether only nodes of {@link OpcUa#selectedNodeNames} should be returned
-     * @return List of {@link OpcNode}s related to {@link OpcUa#node}
+     * @return List of {@link OpcNode}s related to {@link OpcUa#originNodeId}
      * @throws AdapterException
      */
     public List<OpcNode> browseNode(boolean selectNodes) throws AdapterException {
-        List<OpcNode> referenceDescriptions = browseNode(node, selectNodes);
+        List<OpcNode> discoveredNodes = browseNode(originNodeId, selectNodes);
 
-        if (referenceDescriptions.size() == 0) {
-            referenceDescriptions = getRootNote(node);
+        if (discoveredNodes.size() == 0) {
+            discoveredNodes =  getRootNote(originNodeId);
+        } else if (selectNodes) { // only required for getSchema where the selectedNodes are already set.
+            /* In case a node with sub-nodes is queried, the data types are not detected appropriately.
+               This has to be performed separately.
+             */
+            retrieveDataTypesFromServer(client, discoveredNodes);
         }
 
-        return referenceDescriptions;
+        return discoveredNodes;
     }
 
     private List<OpcNode> getRootNote(NodeId browseRoot) {
@@ -361,9 +367,9 @@ public class OpcUa {
     }
 
     /***
-     * Search for related nodes relative to {@link OpcUa#node}
+     * Search for related nodes relative to {@link OpcUa#originNodeId}
      * @param selectNodes indicates whether only nodes of {@link OpcUa#selectedNodeNames} should be returned
-     * @return List of {@link OpcNode}s related to {@link OpcUa#node}
+     * @return List of {@link OpcNode}s related to {@link OpcUa#originNodeId}
      * @throws AdapterException
      */
     private List<OpcNode> browseNode(NodeId browseRoot, boolean selectNodes) throws AdapterException {
@@ -448,13 +454,6 @@ public class OpcUa {
                         rd.getNodeId();
 
                         result.add(opcNode);
-                        rd.getNodeId().toNodeId(client.getNamespaceTable()).ifPresent(nodeId -> {
-                            try {
-                                browseNode(nodeId, selectNodes);
-                            } catch (AdapterException e) {
-                                e.printStackTrace();
-                            }
-                        });
                     }
                 }
             }
@@ -564,10 +563,10 @@ public class OpcUa {
     }
 
     public boolean inPullMode() {
-        return !(this.pullIntervalSeconds == null);
+        return !(this.pullIntervalMilliSeconds == null);
     }
 
-    public double getPullIntervalSeconds() {
-        return this.pullIntervalSeconds;
+    public int getPullIntervalMilliSeconds() {
+        return this.pullIntervalMilliSeconds;
     }
 }

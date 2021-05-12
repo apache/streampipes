@@ -33,7 +33,7 @@ public class OpcUaAdapter extends PullAdapter implements ResolvesContainerProvid
 
     public static final String ID = "org.apache.streampipes.connect.adapters.opcua";
 
-    private double pullingIntervalInSeconds;
+    private int pullingIntervalMilliSeconds;
     private OpcUa opcUa;
     private List<OpcNode> allNodes;
     private List<NodeId> allNodeIds;
@@ -66,7 +66,7 @@ public class OpcUaAdapter extends PullAdapter implements ResolvesContainerProvid
                 }
 
             if (opcUa.inPullMode()) {
-                this.pullingIntervalInSeconds = opcUa.getPullIntervalSeconds();
+                this.pullingIntervalMilliSeconds = opcUa.getPullIntervalMilliSeconds();
             } else {
                 this.numberProperties = this.allNodeIds.size();
                 this.opcUa.createListSubscription(this.allNodeIds, this);
@@ -145,7 +145,7 @@ public class OpcUaAdapter extends PullAdapter implements ResolvesContainerProvid
 
     @Override
     protected PollingSettings getPollingInterval() {
-        return PollingSettings.from(TimeUnit.MILLISECONDS, (int) this.pullingIntervalInSeconds * 1000);
+        return PollingSettings.from(TimeUnit.MILLISECONDS, this.pullingIntervalMilliSeconds);
     }
 
     @Override

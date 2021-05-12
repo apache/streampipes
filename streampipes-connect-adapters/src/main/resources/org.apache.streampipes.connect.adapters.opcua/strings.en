@@ -46,7 +46,7 @@ AVAILABLE_NODES.title=Available Nodes
 AVAILABLE_NODES.description=Select the nodes that are relevant for you. Please ensure to select one option each for access mode and OPC UA server and to specify the polling interval
 
 PULLING_INTERVAL.title=Pull Interval
-PULLING_INTERVAL.description=Timespan between data are pulled, in seconds
+PULLING_INTERVAL.description=Timespan between data retrieval, in milliseconds
 
 ADAPTER_TYPE.title=Adapter Type
 ADAPTER_TYPE.description=Select whether the adapter pulls data regularly or listens to subscriptions

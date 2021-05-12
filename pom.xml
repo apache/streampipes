@@ -102,15 +102,15 @@
         <pulsar.version>2.7.0</pulsar.version>
         <scala-lang.version>2.11.12</scala-lang.version>
         <scala-parser-combinators.version>1.1.1</scala-parser-combinators.version>
-        <slack-api.version>0.5.1</slack-api.version>
+        <slack-api.version>1.2.0</slack-api.version>
         <snakeyaml.version>1.25</snakeyaml.version>
         <xerces.version>2.9.1</xerces.version>
         <zstd-jni.version>1.4.3-1</zstd-jni.version>
         <mqtt-client.version>1.12</mqtt-client.version>
         <hawtbuf.version>1.11</hawtbuf.version>
-        <mysql-connector-java.version>8.0.15</mysql-connector-java.version>
 
         <maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
+        <maven.javadoc.plugin.version>3.1.1</maven.javadoc.plugin.version>
 
         <!-- Connect Dependencies-->
         <animal-sniffer-annotations.version>1.17</animal-sniffer-annotations.version>
@@ -134,8 +134,8 @@
         <opencsv.version>4.6</opencsv.version>
         <plc4x.version>0.8.0</plc4x.version>
         <protobuf.version>3.6.1</protobuf.version>
-        <slack.version>1.2.0</slack.version>
         <poiji.version>2.7.0</poiji.version>
+        <nats.version>2.11.0</nats.version>
 
     </properties>
 
@@ -319,16 +319,6 @@
                 <version>${protobuf.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.pulsar</groupId>
-                <artifactId>pulsar-client</artifactId>
-                <version>${pulsar.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.ullink.slack</groupId>
-                <artifactId>simpleslackapi</artifactId>
-                <version>${slack.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>com.google.errorprone</groupId>
                 <artifactId>error_prone_annotations</artifactId>
                 <version>${errorprone-annotations.version}</version>
@@ -354,6 +344,11 @@
                         <artifactId>jersey-server</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>io.nats</groupId>
+                <artifactId>jnats</artifactId>
+                <version>${nats.version}</version>
             </dependency>
 
             <!-- StreamPipes dependencies -->
@@ -619,11 +614,6 @@
                 <artifactId>quartz</artifactId>
                 <version>${quartz.version}</version>
             </dependency>
-            <dependency>
-                <groupId>mysql</groupId>
-                <artifactId>mysql-connector-java</artifactId>
-                <version>${mysql-connector-java.version}</version>
-            </dependency>
 
             <!-- Test dependencies -->
             <dependency>
@@ -671,11 +661,6 @@
                 <groupId>org.glassfish.jaxb</groupId>
                 <artifactId>jaxb-runtime</artifactId>
                 <version>2.3.3</version>
-            </dependency>
-            <dependency>
-                <groupId>jakarta.activation</groupId>
-                <artifactId>jakarta.activation-api</artifactId>
-                <version>1.2.2</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -918,7 +903,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>${maven.javadoc.plugin.version}</version>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>

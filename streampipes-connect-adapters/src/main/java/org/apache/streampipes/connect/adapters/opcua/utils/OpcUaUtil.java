@@ -11,11 +11,13 @@ import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
+import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
+import org.eclipse.milo.opcua.stack.core.UaException;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
+import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /***
  * Collection of several utility functions in context of OPC UA
@@ -131,6 +133,26 @@ public class OpcUaUtil {
         }
 
         return key;
+    }
+
+    /**
+     * connects to each node individually and updates the data type in accordance to the data from the server.
+     * @param opcNodes List of opcNodes where the data type is not determined appropriately
+     */
+    public static void retrieveDataTypesFromServer(OpcUaClient client, List<OpcNode> opcNodes) throws AdapterException {
+
+        for (OpcNode opcNode : opcNodes) {
+            try {
+                UInteger dataTypeId = (UInteger) client.getAddressSpace().getVariableNode(opcNode.getNodeId()).getDataType().getIdentifier();
+                OpcUaTypes.getType(dataTypeId);
+                opcNode.setType(OpcUaTypes.getType(dataTypeId));
+            } catch (UaException e) {
+               throw new AdapterException("Could not guess schema for opc node! " + e.getMessage());
+            }
+        }
+
+
+
     }
 
     /***
