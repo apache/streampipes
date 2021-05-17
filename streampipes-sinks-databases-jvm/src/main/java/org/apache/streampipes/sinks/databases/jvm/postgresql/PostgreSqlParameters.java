@@ -34,7 +34,7 @@ public class PostgreSqlParameters extends JdbcConnectionParameters {
             databaseName,
             user,
             password,
-            databaseName,
+            tableName,
             sslEnabled);
   }
 }
