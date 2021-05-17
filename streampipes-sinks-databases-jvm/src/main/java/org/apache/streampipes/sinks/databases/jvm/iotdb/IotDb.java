@@ -23,7 +23,6 @@ import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
-import org.apache.streampipes.sdk.utils.Datatypes;
 import org.apache.streampipes.sinks.databases.jvm.jdbcclient.JdbcClient;
 import org.apache.streampipes.sinks.databases.jvm.jdbcclient.model.DbDataTypeFactory;
 import org.apache.streampipes.sinks.databases.jvm.jdbcclient.model.ParameterInformation;
@@ -37,6 +36,7 @@ import java.sql.Statement;
 
 public class IotDb extends JdbcClient implements EventSink<IotDbParameters> {
 
+  private IotDbParameters params;
   private static Logger LOG;
 
   private String timestampField;
@@ -45,6 +45,8 @@ public class IotDb extends JdbcClient implements EventSink<IotDbParameters> {
 
   @Override
   public void onInvocation(IotDbParameters parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+
+    this.params = parameters;
     LOG = parameters.getGraph().getLogger(IotDb.class);
     timestampField = parameters.getTimestampField();
 
@@ -53,14 +55,8 @@ public class IotDb extends JdbcClient implements EventSink<IotDbParameters> {
     //TODO: Add better regular expression
     initializeJdbc(
             parameters.getGraph().getInputStreams().get(0).getEventSchema(),
-            parameters.getIotDbHost(),
-            parameters.getIotDbPort(),
-            "",         // Database does not exist in  IoTDB model
-            "root." + parameters.getDbStorageGroup(),
-            parameters.getUsername(),
-            parameters.getPassword(),
+            parameters,
             dbEngine,
-            false,
             LOG);
 
   }
@@ -96,7 +92,7 @@ public class IotDb extends JdbcClient implements EventSink<IotDbParameters> {
       StringBuilder sb2 = new StringBuilder();
       //TODO: Check for SQL-Injection
       // Timestamp must be in the beginning of the values
-      sb1.append("INSERT INTO ").append(tableName).append("(timestamp, ");
+      sb1.append("INSERT INTO ").append(this.params.getDbTable()).append("(timestamp, ");
       sb2.append(" VALUES (").append(timestampValue).append(", ");
       for (String s : event.getRaw().keySet()) {
         sb1.append(s).append(", ");
@@ -117,10 +113,10 @@ public class IotDb extends JdbcClient implements EventSink<IotDbParameters> {
 
   @Override
   protected void ensureDatabaseExists(String url, String databaseName) throws SpRuntimeException {
-    checkRegEx(tableName, "Storage Group name");
+    checkRegEx(this.params.getDbTable(), "Storage Group name");
     try {
       Statement statement = c.createStatement();
-      statement.execute("SET STORAGE GROUP TO " + tableName);
+      statement.execute("SET STORAGE GROUP TO " + this.params.getDbTable());
     } catch (SQLException e) {
       // Storage group already exists
       //TODO: Catch other exceptions
@@ -154,7 +150,7 @@ public class IotDb extends JdbcClient implements EventSink<IotDbParameters> {
         String datatype = extractAndAddEventPropertyRuntimeType(eventProperty, index++);
 
         statement.execute("CREATE TIMESERIES "
-                + tableName
+                + params.getDbTable()
                 + "."
                 + runtimeName
                 + " WITH DATATYPE="

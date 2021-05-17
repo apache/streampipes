@@ -68,7 +68,7 @@ public class MysqlController extends StandaloneEventSinkDeclarer<MysqlParameters
         String table = extractor.singleValueParameter(TABLE_KEY, String.class);
         Integer port = extractor.singleValueParameter(PORT_KEY, Integer.class);
 
-        MysqlParameters params = new MysqlParameters(graph, host, user, password, db, table, port);
+        MysqlParameters params = new MysqlParameters(graph, host, user, password, db, table, port, false);
         return new ConfiguredEventSink<>(params, Mysql::new);
     }
 

@@ -78,6 +78,7 @@ public class IotDbController extends StandaloneEventSinkDeclarer<IotDbParameters
             dbStorageGroup,
             user,
             password,
+            false,
             timestampField);
 
     return new ConfiguredEventSink<>(params, IotDb::new);

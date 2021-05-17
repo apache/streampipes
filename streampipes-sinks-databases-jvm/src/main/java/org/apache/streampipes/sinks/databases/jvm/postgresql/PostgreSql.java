@@ -39,14 +39,8 @@ public class PostgreSql extends JdbcClient implements EventSink<PostgreSqlParame
     // for allowed postgres identifiers (for the regex)
     initializeJdbc(
             parameters.getGraph().getInputStreams().get(0).getEventSchema(),
-            parameters.getPostgreSqlHost(),
-            parameters.getPostgreSqlPort(),
-            parameters.getDatabaseName(),
-            parameters.getTableName(),
-            parameters.getUsername(),
-            parameters.getPassword(),
+            parameters,
             SupportedDbEngines.POSTGRESQL,
-            parameters.isSSLEnabled(),
             LOG);
   }
 

@@ -51,18 +51,12 @@ public class Mysql extends JdbcClient implements EventSink<MysqlParameters> {
 
         this.params = params;
         this.timestampKeys = new ArrayList<>();
-        LOG = params.getGraph().getLogger(Mysql.class);
+        this.LOG = params.getGraph().getLogger(Mysql.class);
 
         initializeJdbc(
                 params.getGraph().getInputStreams().get(0).getEventSchema(),
-                params.getHost(),
-                params.getPort(),
-                params.getDB(),
-                params.getTable(),
-                params.getUser(),
-                params.getPassword(),
+                params,
                 dbEngine,
-                false,
                 LOG);
     }
 
@@ -101,20 +95,13 @@ public class Mysql extends JdbcClient implements EventSink<MysqlParameters> {
         for (EventProperty property : eventProperties) {
             if (this.tableColumns.get(property.getRuntimeName()) != null) {
                 if (property instanceof EventPropertyPrimitive) {
-                    Column col = this.tableColumns.get(property.getRuntimeName());
-                    // Validate SQL-DateTime separately
-                    if (property.getDomainProperties() != null && property.getDomainProperties().stream().anyMatch(x ->
-                            SO.DateTime.equals(x.toString())) && col.getType().toString().equals("http://www.w3.org/2001/XMLSchema#long")) {
-                        this.timestampKeys.add(property.getRuntimeName());
-                        continue;
-                    } else if (((EventPropertyPrimitive) property).getRuntimeType().equals(col.getType().toString())) {
-                        continue;
-                    } else {
-                        throw new SpRuntimeException("Table '" + tableName + "' does not match the EventProperties");
+                    DbDataTypes dataType = this.dataTypesHashMap.get(property.getRuntimeName());
+                    if (!((EventPropertyPrimitive) property).getRuntimeType().equals(DbDataTypeFactory.getDataType(dataType).toString())) {
+                        throw new SpRuntimeException("Table '" + params.getDbTable() + "' does not match the EventProperties");
                     }
                 }
             } else {
-                throw new SpRuntimeException("Table '" + tableName + "' does not match the EventProperties");
+                throw new SpRuntimeException("Table '" + params.getDbTable() + "' does not match the EventProperties");
             }
         }
     }
@@ -127,7 +114,7 @@ public class Mysql extends JdbcClient implements EventSink<MysqlParameters> {
         try {
             Statement statement;
             statement = c.createStatement();
-            StringBuilder sb = new StringBuilder("INSERT INTO " + params.getTable() + " (");
+            StringBuilder sb = new StringBuilder("INSERT INTO " + params.getDbTable() + " (");
             StringBuilder sb2 = new StringBuilder("Values (");
 
             for (String s : event.getRaw().keySet()) {
@@ -161,10 +148,10 @@ public class Mysql extends JdbcClient implements EventSink<MysqlParameters> {
     @Override
     protected void createTable() throws SpRuntimeException {
         checkConnected();
-        checkRegEx(tableName, "Tablename");
+        checkRegEx(params.getDbTable(), "Tablename");
 
         StringBuilder statement = new StringBuilder("CREATE TABLE ");
-        statement.append(tableName).append(" ( ");
+        statement.append(params.getDbTable()).append(" ( ");
         statement.append(extractEventProperties(eventSchema.getEventProperties())).append(" )");
 
         try {
@@ -187,8 +174,8 @@ public class Mysql extends JdbcClient implements EventSink<MysqlParameters> {
         try {
 
             ps = c.prepareStatement(query);
-            ps.setString(1, params.getTable());
-            ps.setString(2, params.getDB());
+            ps.setString(1, params.getDbTable());
+            ps.setString(2, params.getDbName());
 
             resultSet = ps.executeQuery();
 
