@@ -84,17 +84,12 @@ public class Mysql extends JdbcClient implements EventSink<MysqlParameters> {
 
 
     @Override
-    protected void ensureDatabaseExists(String url, String databaseName) throws SpRuntimeException {
-        checkRegEx(databaseName, "databasename");
-        try {
+    protected void ensureDatabaseExists(String databaseName) throws SpRuntimeException {
 
-            st = c.createStatement();
-            st.executeUpdate("CREATE DATABASE IF NOT EXISTS " + databaseName + ";");
+        String createStatement = "CREATE DATABASE IF NOT EXISTS ";
 
-        } catch (SQLException e) {
-            throw new SpRuntimeException(e.getMessage());
-        }
-        closeAll();
+        ensureDatabaseExists(createStatement, databaseName);
+
     }
 
 

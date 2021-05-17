@@ -103,7 +103,7 @@ public class JdbcClient {
 
 
     /**
-     * Connects to the HadoopFileSystem Server and initilizes {@link JdbcClient#c} and
+     * Connects to the HadoopFileSystem Server and initializes {@link JdbcClient#c} and
      * {@link JdbcClient#st}
      *
      * @throws SpRuntimeException When the connection could not be established (because of a
@@ -113,7 +113,7 @@ public class JdbcClient {
 		String url = "jdbc:" + this.dbEngine.getUrlName() + "://" + host + ":" + port + "/";
         try {
             c = DriverManager.getConnection(url, user, password);
-            ensureDatabaseExists(url, databaseName);
+            ensureDatabaseExists(databaseName);
             ensureTableExists(url, databaseName);
         } catch (SQLException e) {
             throw new SpRuntimeException("Could not establish a connection with the server: " + e.getMessage());
@@ -131,7 +131,7 @@ public class JdbcClient {
         String url = "jdbc:" + this.dbEngine.getUrlName() + "://" + host + ":" + port + "/" + databaseName + "?user=" + user + "&password=" + password + "&ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory&sslmode=require" ;
         try{
             c = DriverManager.getConnection(url);
-            ensureDatabaseExists(url, databaseName);
+            ensureDatabaseExists(databaseName);
             ensureTableExists(url, "");
         } catch (SQLException e ) {
             throw new SpRuntimeException("Could not establish a connection with the server: " + e.getMessage());
@@ -142,25 +142,32 @@ public class JdbcClient {
 	/**
 	 * If this method returns successfully a database with the given name exists on the server, specified by the url.
 	 *
-	 * @param url The JDBC url containing the needed information (e.g. "jdbc:iotdb://127.0.0.1:6667/")
 	 * @param databaseName The name of the database that should exist
 	 * @throws SpRuntimeException If the database does not exists and could not be created
 	 */
-	protected void ensureDatabaseExists(String url, String databaseName) throws SpRuntimeException {
-		checkRegEx(databaseName, "databasename");
+	protected void ensureDatabaseExists(String databaseName) throws SpRuntimeException {
 
-		try {
-			// Checks whether the database already exists (using catalogs has not worked with postgres)
-			st = c.createStatement();
-			st.executeUpdate("CREATE DATABASE " + databaseName + ";");
-			logger.info("Created new database '" + databaseName + "'");
-		} catch (SQLException e1) {
-			if (!e1.getSQLState().substring(0, 2).equals("42")) {
-				throw new SpRuntimeException("Error while creating database: " + e1.getMessage());
-			}
-		}
-		closeAll();
+	    String createStatement = "CREATE DATABASE ";
+
+		ensureDatabaseExists(createStatement, databaseName);
 	}
+
+	protected void ensureDatabaseExists(String createStatement, String databaseName) throws SpRuntimeException{
+
+        checkRegEx(databaseName, "databasename");
+
+        try {
+            // Checks whether the database already exists (using catalogs has not worked with postgres)
+            st = c.createStatement();
+            st.executeUpdate(createStatement + databaseName + ";");
+            logger.info("Created new database '" + databaseName + "'");
+        } catch (SQLException e1) {
+            if (!e1.getSQLState().substring(0, 2).equals("42")) {
+                throw new SpRuntimeException("Error while creating database: " + e1.getMessage());
+            }
+        }
+        closeAll();
+    }
 
 	/**
 	 * If this method returns successfully a table with the name in {@link JdbcClient#tableName} exists in the database
