@@ -34,10 +34,12 @@ The following figure shows how the events of the two data streams will be mergrg
 <p align="center"> 
     <img width="300px;" src="merge_description.png" class="pe-image-documentation"/>
 </p>
+
 ***
 
 ## Required input
 Each of the data streams needs a timestamp.
+
 ***
 
 ## Configuration
@@ -46,4 +48,4 @@ Each of the data streams needs a timestamp.
 * The Time Interval describes the maximum value between two events to decide whether they are a match. To be a valid match the following function must be true: | timestamp_stream_1 - timestamp_stream_2 | < interval
 
 ## Output
-The compose processor has a configurable output that can be selected by the user at pipeline modeling time.
+The Compose processor has a configurable output that can be selected by the user at pipeline modeling time.

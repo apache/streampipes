@@ -38,7 +38,29 @@ This sink does not have any requirements and works with any incoming event type.
 
 ## Configuration
 
-(tbd)
+### Fields to send
+
+The fields that should be stored as a property to Ditto endpoint.
+
+### Ditto API endpoint
+
+The endpoint URL of the Ditto instance.
+
+### Username
+
+The username to authenticate the Ditto endpoint. 
+
+### Password
+
+The password to authenticate the Ditto endpoint. 
+
+### Thing ID
+
+The Ditto thing ID.
+
+#### Feature ID
+
+The Ditto feature ID
 
 ## Output
 

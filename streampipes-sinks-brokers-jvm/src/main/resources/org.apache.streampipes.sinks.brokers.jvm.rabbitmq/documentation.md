@@ -27,7 +27,6 @@
 ## Description
 
 Forwards events to a RabbitMQ broker
-Add a detailed description here
 
 ***
 

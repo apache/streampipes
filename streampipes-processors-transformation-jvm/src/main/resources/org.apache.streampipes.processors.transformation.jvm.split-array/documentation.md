@@ -26,8 +26,7 @@
 
 ## Description
 
-This processor takes an array of event properties and creates an event for each of them. Further property of the events can be added to each element
-Add a detailed description here
+This processor takes an array of event properties and creates an event for each of them. Further property of the events can be added to each element.
 
 ***
 

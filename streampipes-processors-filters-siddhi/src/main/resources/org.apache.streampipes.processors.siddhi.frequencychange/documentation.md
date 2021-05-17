@@ -17,31 +17,36 @@
   -->
 ## Frequency Change
 
-<p align="center"> 
-    <img src="icon.png" width="150px;" class="pe-image-documentation"/>
-</p>
+Notifies if there is a frequency change in events.
 
 ***
 
 ## Description
 
-Detects when the frequency of the event stream changes
-Add a detailed description here
+Detects when the frequency of the event stream changes.
 
 ***
 
 ## Required input
 
+Does not have any specific input requirements.
 
 ***
 
 ## Configuration
 
-Describe the configuration parameters here
+### Time Unit
 
-### 1st parameter
+The time unit of the window. e.g, hrs, min and sec
 
+### Percentage of Increase/Decrease
 
-### 2nd parameter
+Specifies the increase in percent (e.g., 100 indicates an increase by 100 percent within the specified time window).
+
+### Time window length 
+
+The time duration of the window in seconds.
 
 ## Output
+
+Outputs event if there is a frequency change according to the provided configuration.

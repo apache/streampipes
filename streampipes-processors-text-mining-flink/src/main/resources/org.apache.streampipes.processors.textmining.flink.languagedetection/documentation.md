@@ -27,7 +27,6 @@
 ## Description
 
 Detects the language of a written text.
-Add a detailed description here
 
 ***
 

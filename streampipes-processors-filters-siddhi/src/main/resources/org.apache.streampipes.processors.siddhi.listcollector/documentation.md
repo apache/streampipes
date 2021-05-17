@@ -18,31 +18,28 @@
 
 ## List Collector
 
-<p align="center"> 
-    <img src="icon.png" width="150px;" class="pe-image-documentation"/>
-</p>
-
 ***
 
 ## Description
 
-Detects the increase of a numerical field over a customizable time window. Example: A temperature value increases by 10 percent within 5 minutes.
-Add a detailed description here
+Collects all values from a field within a specified batch window into a list.
 
 ***
 
 ## Required input
 
+Does not have any specific input requirements.
 
 ***
 
 ## Configuration
 
-Describe the configuration parameters here
+### Field
 
-### 1st parameter
+The field where values should be collected into a list.
 
+### Batch Window Size
 
-### 2nd parameter
+The batch window size.
 
 ## Output

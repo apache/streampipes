@@ -27,22 +27,33 @@
 ## Description
 
 Detects the increase of a numerical field over a customizable time window. Example: A temperature value increases by 10 percent within 5 minutes.
-Add a detailed description here
 
 ***
 
 ## Required input
 
+There should be a number field in the event to observe the trend.
 
 ***
 
 ## Configuration
 
-Describe the configuration parameters here
+### Value to Observe
 
-### 1st parameter
+Specifies the value field that should be monitored.
 
+### Increase/Decrease
 
-### 2nd parameter
+Specifies the type of operation the processor should perform.
+
+### Percentage of Increase/Decrease
+
+Specifies the increase in percent (e.g., 100 indicates an increase by 100 percent within the specified time window).
+
+### Time Window Length (Seconds)
+
+Specifies the size of the time window in seconds.
 
 ## Output
+
+Outputs the events if there is a trend observed according to the configuration defined.

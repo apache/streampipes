@@ -32,12 +32,11 @@ Displays a notification in the UI panel of StreamPipes.
 
 ## Required input
 
+This sink does not have any requirements and works with any incoming event type.
 
 ***
 
 ## Configuration
-
-This sink does not have any requirements and works with any incoming event type.
 
 ### Notification Title
 
