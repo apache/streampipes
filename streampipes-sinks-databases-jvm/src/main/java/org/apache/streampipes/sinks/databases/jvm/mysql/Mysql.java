@@ -42,7 +42,6 @@ public class Mysql extends JdbcClient implements EventSink<MysqlParameters> {
 
     private MysqlParameters params;
     private static Logger LOG;
-    private HashMap<String, Column> tableColumns;
     private List<String> timestampKeys;
     private final SupportedDbEngines dbEngine = SupportedDbEngines.MY_SQL;
 
@@ -85,27 +84,6 @@ public class Mysql extends JdbcClient implements EventSink<MysqlParameters> {
         ensureDatabaseExists(createStatement, databaseName);
 
     }
-
-
-    @Override
-    protected void validateTable() throws SpRuntimeException {
-        checkConnected();
-        extractTableInformation();
-
-        for (EventProperty property : eventProperties) {
-            if (this.tableColumns.get(property.getRuntimeName()) != null) {
-                if (property instanceof EventPropertyPrimitive) {
-                    DbDataTypes dataType = this.dataTypesHashMap.get(property.getRuntimeName());
-                    if (!((EventPropertyPrimitive) property).getRuntimeType().equals(DbDataTypeFactory.getDataType(dataType).toString())) {
-                        throw new SpRuntimeException("Table '" + params.getDbTable() + "' does not match the EventProperties");
-                    }
-                }
-            } else {
-                throw new SpRuntimeException("Table '" + params.getDbTable() + "' does not match the EventProperties");
-            }
-        }
-    }
-
 
     @Override
     protected void save(final Event event) throws SpRuntimeException {
@@ -161,45 +139,16 @@ public class Mysql extends JdbcClient implements EventSink<MysqlParameters> {
         }
     }
 
-
-    private void extractTableInformation() throws SpRuntimeException {
-
-        ResultSet resultSet = null;
-        tableColumns = new HashMap<String, Column>();
+    @Override
+    protected void extractTableInformation() throws SpRuntimeException {
 
         String query = "SELECT COLUMN_NAME, DATA_TYPE, COLUMN_TYPE FROM "
                 + "INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = ? AND TABLE_SCHEMA = ? ORDER BY "
                 + "ORDINAL_POSITION ASC;";
 
-        try {
+        String [] queryParameter= new String[] {params.getDbTable(), params.getDbName()};
 
-            ps = c.prepareStatement(query);
-            ps.setString(1, params.getDbTable());
-            ps.setString(2, params.getDbName());
-
-            resultSet = ps.executeQuery();
-
-            if (resultSet.next()) {
-                do {
-                    String columnName = resultSet.getString("COLUMN_NAME");
-                    String dataType = resultSet.getString("DATA_TYPE");
-                    String columnType = resultSet.getString("COLUMN_TYPE");
-                    tableColumns.put(columnName, new Column(dataType, columnType));
-                } while (resultSet.next());
-            } else {
-                throw new SpRuntimeException("Database or Table does not exist.");
-            }
-
-        } catch (SQLException e) {
-            throw new SpRuntimeException("SqlException: " + e.getMessage()
-                    + ", Error code: " + e.getErrorCode()
-                    + ", SqlState: " + e.getSQLState());
-        } finally {
-            try {
-                resultSet.close();
-            } catch (Exception e) {
-            }
-        }
+        extractTableInformation(query, queryParameter);
     }
 
 

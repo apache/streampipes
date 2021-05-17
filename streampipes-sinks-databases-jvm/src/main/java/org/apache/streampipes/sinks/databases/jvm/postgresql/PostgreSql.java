@@ -28,11 +28,15 @@ import org.apache.streampipes.wrapper.runtime.EventSink;
 
 public class PostgreSql extends JdbcClient implements EventSink<PostgreSqlParameters> {
 
-  private static Logger LOG;
+  private PostgreSqlParameters params;
+
+  private Logger LOG;
 
   @Override
   public void onInvocation(PostgreSqlParameters parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
-    LOG = parameters.getGraph().getLogger(PostgreSql.class);
+
+    this.params = parameters;
+    this.LOG = parameters.getGraph().getLogger(PostgreSql.class);
 
     // get(0) because it is the only input stream of the sink (and not two)
     // See (https://www.postgresql.org/docs/current/sql-syntax-lexical.html#SQL-SYNTAX-IDENTIFIERS)
@@ -41,7 +45,16 @@ public class PostgreSql extends JdbcClient implements EventSink<PostgreSqlParame
             parameters.getGraph().getInputStreams().get(0).getEventSchema(),
             parameters,
             SupportedDbEngines.POSTGRESQL,
-            LOG);
+            this.LOG);
+  }
+  @Override
+  protected void extractTableInformation() {
+
+    String query = "SELECT * FROM information_schema.columns WHERE table_name = ? ;";
+
+    String [] queryParameter= new String[] {params.getDbTable()};
+
+    extractTableInformation(query, queryParameter);
   }
 
   @Override

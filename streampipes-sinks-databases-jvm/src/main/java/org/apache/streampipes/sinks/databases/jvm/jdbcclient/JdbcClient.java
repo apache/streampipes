@@ -42,6 +42,7 @@ public class JdbcClient {
     protected SupportedDbEngines dbEngine;
 
     protected boolean tableExists = false;
+    protected HashMap<String, DbDataTypes> dataTypesHashMap;
 
     protected Logger logger;
 
@@ -438,6 +439,45 @@ public class JdbcClient {
         return s;
     }
 
+    protected void extractTableInformation(){
+        extractTableInformation("", new String[]{});
+    }
+
+    protected void extractTableInformation(String queryString, String[] queryParameter) throws SpRuntimeException{
+
+        ResultSet resultSet = null;
+        this.dataTypesHashMap = new HashMap<String, DbDataTypes>();
+
+        try {
+
+            this.ps = this.c.prepareStatement(queryString);
+
+            for (int i = 1; i <= queryParameter.length; i++) {
+                this.ps.setString(i, queryParameter[i - 1]);
+            }
+
+            resultSet = this.ps.executeQuery();
+
+            if(resultSet.next()) {
+                do {
+                    String columnName = resultSet.getString("COLUMN_NAME");
+                    DbDataTypes dataType = DbDataTypes.valueOf(resultSet.getString("DATA_TYPE").toUpperCase());
+                    this.dataTypesHashMap.put(columnName, dataType);
+                } while (resultSet.next());
+            } else {
+                throw new SpRuntimeException("Database or Table does nit exist.");
+            }
+        } catch (SQLException e) {
+            throw new SpRuntimeException("SqlException: " + e.getMessage() + ", Error code: " + e.getErrorCode() +
+                    ", SqlState: " + e.getSQLState());
+        } finally {
+            try {
+                resultSet.close();
+            } catch (SQLException throwables) {
+            }
+        }
+    }
+
     /**
      * Checks if the input string is allowed (regEx match and length > 0)
      *
@@ -454,9 +494,20 @@ public class JdbcClient {
     }
 
     protected void validateTable() throws SpRuntimeException {
-        //TODO: Add validation of an existing table
-        if (false) {
-            throw new SpRuntimeException("Table '" + tableName + "' does not match the eventproperties");
+        checkConnected();
+        extractTableInformation();
+
+        for (EventProperty property: this.eventSchema.getEventProperties()) {
+            if (this.dataTypesHashMap.get(property.getRuntimeName()) != null) {
+                if (property instanceof EventPropertyPrimitive) {
+                    DbDataTypes dataType = this.dataTypesHashMap.get(property.getRuntimeName());
+                    if (!((EventPropertyPrimitive) property).getRuntimeType().equals(DbDataTypeFactory.getDataType(dataType).toString())) {
+                        throw new SpRuntimeException("Table '" + connectionParameters.getDbTable() + "' does not match the EventProperties");
+                    }
+                }
+            } else {
+                    throw new SpRuntimeException("Table '" + connectionParameters.getDbTable() + "' does not match the EventProperties");
+            }
         }
     }
 
