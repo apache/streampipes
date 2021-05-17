@@ -19,39 +19,31 @@
 package org.apache.streampipes.connect.container.master.rest;
 
 
-import org.rendersnake.HtmlCanvas;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.streampipes.connect.adapter.GroundingService;
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.management.AdapterMasterManagement;
-import org.apache.streampipes.connect.rest.AbstractContainerResource;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.storage.couchdb.impl.AdapterStorageImpl;
 import org.apache.streampipes.storage.couchdb.utils.CouchDbConfig;
+import org.rendersnake.HtmlCanvas;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
-import java.util.List;
 
 
 @Path("/v2/connect")
-public class WelcomePageMaster extends AbstractContainerResource {
+public class WelcomePageMaster extends AbstractAdapterResource<AdapterMasterManagement> {
 
-	private Logger logger = LoggerFactory.getLogger(WelcomePageMaster.class);
-
-	private AdapterMasterManagement adapterMasterManagement;
+	private Logger LOG = LoggerFactory.getLogger(WelcomePageMaster.class);
 
 	public WelcomePageMaster() {
-		this.adapterMasterManagement = new AdapterMasterManagement();
+		super(AdapterMasterManagement::new);
 	}
 
-	public WelcomePageMaster(AdapterMasterManagement adapterMasterManagement) {
-		this.adapterMasterManagement = adapterMasterManagement;
-	}
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	public String getWelcomePageHtml() {
@@ -71,37 +63,27 @@ public class WelcomePageMaster extends AbstractContainerResource {
 					.h2().write("All Running Adapters")._h2()
 					.ol();
 
-			tmp = getAllRunningAdapters(tmp);
+			getAllRunningAdapters(tmp);
 
 			html = tmp._ol()
 					._body();
 		} catch (IOException e) {
-			logger.error("Error in SP Connect Master Container: ", e);
+			LOG.error("Error in SP Connect Master Container: ", e);
 		}
 
 		return html.toHtml();
 	}
 
-	private HtmlCanvas getAllRunningAdapters(HtmlCanvas canvas) throws IOException {
+	private void getAllRunningAdapters(HtmlCanvas canvas) throws IOException {
 
-		List<AdapterDescription> allAdapterDescriptions = null;
 		try {
-			allAdapterDescriptions = this.adapterMasterManagement.getAllAdapters(new AdapterStorageImpl());
+			for (AdapterDescription ad : managementService.getAllAdapters()) {
+				canvas.li().write(ad.getAdapterId())._li();
+				canvas.ul().li().write("Kafka Topic: " + GroundingService.extractTopic(ad))._li()._ul();
+			}
 		} catch (AdapterException e) {
-			logger.error("Could not connect to couchdb on URL: " + CouchDbConfig.INSTANCE.getHost(), e);
+			LOG.error("Could not connect to couchdb on URL: " + CouchDbConfig.INSTANCE.getHost(), e);
 			canvas.li().write("Error while connecting to CouchDB on Host: " + CouchDbConfig.INSTANCE.getHost())._li();
-			return canvas;
 		}
-
-		for (AdapterDescription ad : allAdapterDescriptions) {
-			canvas.li().write(ad.getAdapterId())._li();
-			canvas.ul().li().write("Kafka Topic: " + GroundingService.extractTopic(ad))._li()._ul();
-		}
-
-		return canvas;
-	}
-
-	public void setAdapterMasterManagement(AdapterMasterManagement adapterMasterManagement) {
-		this.adapterMasterManagement = adapterMasterManagement;
 	}
 }

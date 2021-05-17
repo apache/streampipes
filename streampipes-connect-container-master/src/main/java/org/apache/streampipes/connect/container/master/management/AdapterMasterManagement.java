@@ -32,6 +32,7 @@ import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.apache.streampipes.model.connect.worker.ConnectWorkerContainer;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.util.Cloner;
+import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorageCache;
 import org.apache.streampipes.storage.couchdb.impl.AdapterStorageImpl;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -48,8 +49,18 @@ public class AdapterMasterManagement {
 
   private static final Logger LOG = LoggerFactory.getLogger(AdapterMasterManagement.class);
 
-  public static void startAllStreamAdapters(ConnectWorkerContainer connectWorkerContainer) throws AdapterException {
-    AdapterStorageImpl adapterStorage = new AdapterStorageImpl();
+  private IAdapterStorage adapterStorage;
+
+  public AdapterMasterManagement() {
+    this.adapterStorage = getAdapterStorage();
+  }
+
+  public AdapterMasterManagement(IAdapterStorage adapterStorage) {
+    this.adapterStorage = adapterStorage;
+  }
+
+  public void startAllStreamAdapters(ConnectWorkerContainer connectWorkerContainer) throws AdapterException {
+    IAdapterStorage adapterStorage = getAdapterStorage();
     List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
 
     for (AdapterDescription ad : allAdapters) {
@@ -69,8 +80,9 @@ public class AdapterMasterManagement {
     }
   }
 
-  public String addAdapter(AdapterDescription ad, String baseUrl, AdapterStorageImpl
-          adapterStorage, String username)
+  public String addAdapter(AdapterDescription ad,
+                           String baseUrl,
+                           String username)
           throws AdapterException {
 
     // Add EventGrounding to AdapterDescription
@@ -83,17 +95,17 @@ public class AdapterMasterManagement {
     String newId = ConnectContainerConfig.INSTANCE.getBackendApiUrl() + "api/v2/connect/" + username + "/master/sources/" + uuid;
 
     ad.setElementId(newId);
-
+    ad.setCreatedAt(System.currentTimeMillis());
 
     AdapterDescription encryptedAdapterDescription =
             new AdapterEncryptionService(new Cloner().adapterDescription(ad)).encrypt();
     // store in db
-    adapterStorage.storeAdapter(encryptedAdapterDescription);
+    String adapterId = adapterStorage.storeAdapter(encryptedAdapterDescription);
 
     // start when stream adapter
     if (ad instanceof AdapterStreamDescription) {
       // TODO
-      WorkerRestClient.invokeStreamAdapter(baseUrl, (AdapterStreamDescription) ad);
+      WorkerRestClient.invokeStreamAdapter(baseUrl, adapterId);
       LOG.info("Start adapter");
     }
 
@@ -117,8 +129,7 @@ public class AdapterMasterManagement {
     }
   }
 
-  public AdapterDescription getAdapter(String id, AdapterStorageImpl adapterStorage) throws AdapterException {
-
+  public AdapterDescription getAdapter(String id) throws AdapterException {
     List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
 
     if (allAdapters != null && id != null) {
@@ -134,11 +145,10 @@ public class AdapterMasterManagement {
 
   public void deleteAdapter(String id, String baseUrl) throws AdapterException {
     //        // IF Stream adapter delete it
-    AdapterStorageImpl adapterStorage = new AdapterStorageImpl();
-    boolean isStreamAdapter = isStreamAdapter(id, adapterStorage);
+    boolean isStreamAdapter = isStreamAdapter(id);
 
     if (isStreamAdapter) {
-      stopStreamAdapter(id, baseUrl, adapterStorage);
+      stopStreamAdapter(id, baseUrl);
     }
     AdapterDescription ad = adapterStorage.getAdapter(id);
     String username = ad.getUserName();
@@ -155,7 +165,7 @@ public class AdapterMasterManagement {
     }
   }
 
-  public List<AdapterDescription> getAllAdapters(AdapterStorageImpl adapterStorage) throws AdapterException {
+  public List<AdapterDescription> getAllAdapters() throws AdapterException {
 
     List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
 
@@ -166,23 +176,42 @@ public class AdapterMasterManagement {
     return allAdapters;
   }
 
-  public static void stopSetAdapter(String adapterId, String baseUrl, AdapterStorageImpl adapterStorage) throws AdapterException {
+  public void stopSetAdapter(String adapterId, String baseUrl, AdapterStorageImpl adapterStorage) throws AdapterException {
 
     AdapterSetDescription ad = (AdapterSetDescription) adapterStorage.getAdapter(adapterId);
 
     WorkerRestClient.stopSetAdapter(baseUrl, ad);
   }
 
-  public static void stopStreamAdapter(String adapterId, String baseUrl, AdapterStorageImpl adapterStorage) throws AdapterException {
-    AdapterStreamDescription ad = (AdapterStreamDescription) adapterStorage.getAdapter(adapterId);
+  public void stopStreamAdapter(String adapterId, String baseUrl) throws AdapterException {
+    AdapterDescription ad = adapterStorage.getAdapter(adapterId);
 
-    WorkerRestClient.stopStreamAdapter(baseUrl, ad);
+    if (!isStreamAdapter(adapterId)) {
+      throw new AdapterException("Adapter " + adapterId + "is not a stream adapter.");
+    } else {
+      WorkerRestClient.stopStreamAdapter(baseUrl, (AdapterStreamDescription) ad);
+
+    }
   }
 
-  public static boolean isStreamAdapter(String id, AdapterStorageImpl adapterStorage) {
+  public void startStreamAdapter(String adapterId, String baseUrl) throws AdapterException {
+    AdapterDescription ad = adapterStorage.getAdapter(adapterId);
+
+    if (!isStreamAdapter(adapterId)) {
+      throw new AdapterException("Adapter " + adapterId + "is not a stream adapter.");
+    } else {
+      WorkerRestClient.invokeStreamAdapter(baseUrl, (AdapterStreamDescription) ad);
+    }
+  }
+
+  public boolean isStreamAdapter(String id) {
     AdapterDescription ad = adapterStorage.getAdapter(id);
 
     return ad instanceof AdapterStreamDescription;
+  }
+
+  private IAdapterStorage getAdapterStorage() {
+    return new AdapterStorageImpl();
   }
 
 }

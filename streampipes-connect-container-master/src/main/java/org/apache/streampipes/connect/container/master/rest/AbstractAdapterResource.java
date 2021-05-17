@@ -15,22 +15,17 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.connect.container.master.rest;
 
-package org.apache.streampipes.storage.api;
+import org.apache.streampipes.connect.rest.AbstractContainerResource;
 
-import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import java.util.function.Supplier;
 
-import java.util.List;
+public class AbstractAdapterResource<T> extends AbstractContainerResource {
 
-public interface IAdapterStorage {
+  protected T managementService;
 
-    List<AdapterDescription> getAllAdapters();
-
-    String storeAdapter(AdapterDescription adapter);
-
-    void updateAdapter(AdapterDescription adapter);
-
-    AdapterDescription getAdapter(String adapterId);
-
-    void deleteAdapter(String adapterId);
+  public AbstractAdapterResource(Supplier<T> managementServiceSupplier) {
+    this.managementService = managementServiceSupplier.get();
+  }
 }

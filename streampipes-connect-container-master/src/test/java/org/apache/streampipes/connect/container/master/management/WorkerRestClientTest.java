@@ -18,10 +18,9 @@
 
 package org.apache.streampipes.connect.container.master.management;
 
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.times;
-import static org.powermock.api.mockito.PowerMockito.*;
-
+import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription;
+import org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,9 +28,10 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.apache.streampipes.connect.adapter.exception.AdapterException;
-import org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription;
-import org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
+
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.times;
+import static org.powermock.api.mockito.PowerMockito.*;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ WorkerRestClient.class })
@@ -53,7 +53,7 @@ public class WorkerRestClientTest {
         doNothing().when(WorkerRestClient.class, "startAdapter", anyString(), any());
         when(WorkerRestClient.class, "invokeStreamAdapter", anyString(), any()).thenCallRealMethod();
 
-        WorkerRestClient.invokeStreamAdapter("", null);
+        WorkerRestClient.invokeStreamAdapter("", "");
 
         verifyStatic(WorkerRestClient.class, times(1));
         WorkerRestClient.startAdapter(eq("worker/stream/invoke"), any());
@@ -64,7 +64,7 @@ public class WorkerRestClientTest {
         doThrow(new AdapterException()).when(WorkerRestClient.class, "startAdapter", anyString(), any());
         when(WorkerRestClient.class, "invokeStreamAdapter", anyString(), any()).thenCallRealMethod();
 
-        WorkerRestClient.invokeStreamAdapter("", null);
+        WorkerRestClient.invokeStreamAdapter("", "");
     }
 
     @Test

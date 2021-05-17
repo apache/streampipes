@@ -20,7 +20,6 @@ package org.apache.streampipes.connect.container.master.rest;
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.management.DescriptionManagement;
 import org.apache.streampipes.connect.container.master.management.Utils;
-import org.apache.streampipes.connect.rest.AbstractContainerResource;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterDescriptionList;
 import org.apache.streampipes.model.connect.grounding.FormatDescriptionList;
@@ -39,18 +38,12 @@ import javax.ws.rs.core.Response;
 import java.util.Optional;
 
 @Path("/v2/connect/{username}/master/description")
-public class DescriptionResource extends AbstractContainerResource {
+public class DescriptionResource extends AbstractAdapterResource<DescriptionManagement> {
 
-    private Logger logger = LoggerFactory.getLogger(DescriptionResource.class);
-
-    private DescriptionManagement descriptionManagement;
+    private static final Logger LOG = LoggerFactory.getLogger(DescriptionResource.class);
 
     public DescriptionResource() {
-        descriptionManagement = new DescriptionManagement();
-    }
-
-    public DescriptionResource(DescriptionManagement descriptionManagement) {
-        this.descriptionManagement = descriptionManagement;
+        super(DescriptionManagement::new);
     }
 
     @GET
@@ -58,7 +51,7 @@ public class DescriptionResource extends AbstractContainerResource {
     @Path("/formats")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getFormats() {
-        FormatDescriptionList result = descriptionManagement.getFormats();
+        FormatDescriptionList result = managementService.getFormats();
 
         return ok(result);
     }
@@ -68,7 +61,7 @@ public class DescriptionResource extends AbstractContainerResource {
     @Path("/protocols")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getProtocols() {
-        ProtocolDescriptionList result = descriptionManagement.getProtocols();
+        ProtocolDescriptionList result = managementService.getProtocols();
 
         return ok(result);
     }
@@ -78,13 +71,9 @@ public class DescriptionResource extends AbstractContainerResource {
     @Path("/adapters")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAdapters() {
-        AdapterDescriptionList result = descriptionManagement.getAdapters();
+        AdapterDescriptionList result = managementService.getAdapters();
 
         return ok(result);
-    }
-
-    public void setDescriptionManagement(DescriptionManagement descriptionManagement) {
-        this.descriptionManagement = descriptionManagement;
     }
 
     @GET
@@ -94,32 +83,32 @@ public class DescriptionResource extends AbstractContainerResource {
         try {
             String result = null;
 
-            Optional<AdapterDescription> adapterDescriptionOptional = descriptionManagement.getAdapter(id);
+            Optional<AdapterDescription> adapterDescriptionOptional = managementService.getAdapter(id);
             if (adapterDescriptionOptional.isPresent()) {
                 AdapterDescription adapterDescription = adapterDescriptionOptional.get();
                 String workerUrl = new Utils().getWorkerUrl(adapterDescription);
                 String newUrl = Utils.addUserNameToApi(workerUrl, userName);
 
-                result = descriptionManagement.getAdapterAssets(adapterDescription, newUrl);
+                result = managementService.getAdapterAssets(adapterDescription, newUrl);
             }
 
-            Optional<ProtocolDescription> protocolDescriptionOptional  = descriptionManagement.getProtocol(id);
+            Optional<ProtocolDescription> protocolDescriptionOptional  = managementService.getProtocol(id);
             if (protocolDescriptionOptional.isPresent()) {
                 ProtocolDescription protocolDescription = protocolDescriptionOptional.get();
                 String workerUrl = new Utils().getWorkerUrl(protocolDescription);
                 String newUrl = Utils.addUserNameToApi(workerUrl, userName);
 
-                result = descriptionManagement.getProtocolAssets(protocolDescription, newUrl);
+                result = managementService.getProtocolAssets(protocolDescription, newUrl);
             }
 
             if (result == null) {
-                logger.error("Not found adapter with id " + id);
+                LOG.error("Not found adapter with id " + id);
                 return fail();
             } else {
                 return ok(result);
             }
         } catch (AdapterException e) {
-            logger.error("Not found adapter with id " + id, e);
+            LOG.error("Not found adapter with id " + id, e);
             return fail();
         }
     }
@@ -132,32 +121,32 @@ public class DescriptionResource extends AbstractContainerResource {
 
             byte[] result = null;
 
-            Optional<AdapterDescription> adapterDescriptionOptional = descriptionManagement.getAdapter(id);
+            Optional<AdapterDescription> adapterDescriptionOptional = managementService.getAdapter(id);
             if (adapterDescriptionOptional.isPresent()) {
                 AdapterDescription adapterDescription = adapterDescriptionOptional.get();
                 String workerUrl = new Utils().getWorkerUrl(adapterDescription);
                 String newUrl = Utils.addUserNameToApi(workerUrl, userName);
 
-                result = descriptionManagement.getAdapterIconAsset(adapterDescription, newUrl);
+                result = managementService.getAdapterIconAsset(adapterDescription, newUrl);
             }
 
-            Optional<ProtocolDescription> protocolDescriptionOptional  = descriptionManagement.getProtocol(id);
+            Optional<ProtocolDescription> protocolDescriptionOptional  = managementService.getProtocol(id);
             if (protocolDescriptionOptional.isPresent()) {
                 ProtocolDescription protocolDescription = protocolDescriptionOptional.get();
                 String workerUrl = new Utils().getWorkerUrl(protocolDescription);
                 String newUrl = Utils.addUserNameToApi(workerUrl, userName);
 
-                result = descriptionManagement.getProtocolIconAsset(protocolDescription, newUrl);
+                result = managementService.getProtocolIconAsset(protocolDescription, newUrl);
             }
 
             if (result == null) {
-                logger.error("Not found adapter with id " + id);
+                LOG.error("Not found adapter with id " + id);
                 return fail();
             } else {
                 return ok(result);
             }
         } catch (AdapterException e) {
-            logger.error("Not found adapter with id " + id);
+            LOG.error("Not found adapter with id " + id);
             return fail();
         }
     }
@@ -169,32 +158,32 @@ public class DescriptionResource extends AbstractContainerResource {
         try {
             String result = null;
 
-            Optional<AdapterDescription> adapterDescriptionOptional = descriptionManagement.getAdapter(id);
+            Optional<AdapterDescription> adapterDescriptionOptional = managementService.getAdapter(id);
             if (adapterDescriptionOptional.isPresent()) {
                 AdapterDescription adapterDescription = adapterDescriptionOptional.get();
                 String workerUrl = new Utils().getWorkerUrl(adapterDescription);
                 String newUrl = Utils.addUserNameToApi(workerUrl, userName);
 
-                result =  descriptionManagement.getAdapterDocumentationAsset(adapterDescription, newUrl);
+                result =  managementService.getAdapterDocumentationAsset(adapterDescription, newUrl);
             }
 
-            Optional<ProtocolDescription> protocolDescriptionOptional  = descriptionManagement.getProtocol(id);
+            Optional<ProtocolDescription> protocolDescriptionOptional  = managementService.getProtocol(id);
             if (protocolDescriptionOptional.isPresent()) {
                 ProtocolDescription protocolDescription = protocolDescriptionOptional.get();
                 String workerUrl = new Utils().getWorkerUrl(protocolDescription);
                 String newUrl = Utils.addUserNameToApi(workerUrl, userName);
 
-                result =  descriptionManagement.getProtocolDocumentationAsset(protocolDescription, newUrl);
+                result =  managementService.getProtocolDocumentationAsset(protocolDescription, newUrl);
             }
 
             if (result == null) {
-                logger.error("Not found adapter with id " + id);
+                LOG.error("Not found adapter with id " + id);
                 return fail();
             } else {
                 return ok(result);
             }
         } catch (AdapterException e) {
-            logger.error("Not found adapter with id " + id, e);
+            LOG.error("Not found adapter with id " + id, e);
             return fail();
         }
     }

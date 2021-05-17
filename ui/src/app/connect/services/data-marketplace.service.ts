@@ -27,7 +27,7 @@ import {
   AdapterDescriptionUnion,
   EventSchema,
   GenericAdapterSetDescription,
-  GenericAdapterStreamDescription,
+  GenericAdapterStreamDescription, Message,
   ProtocolDescription,
   ProtocolDescriptionList,
   SpDataSet,
@@ -36,6 +36,7 @@ import {
   SpecificAdapterStreamDescription
 } from "../../core-model/gen/streampipes-model";
 import {Observable, zip} from "rxjs";
+import {PlatformServicesCommons} from "../../platform-services/apis/commons.service";
 
 @Injectable()
 export class DataMarketplaceService {
@@ -44,7 +45,8 @@ export class DataMarketplaceService {
   constructor(
       private http: HttpClient,
       private authStatusService: AuthStatusService,
-      private connectService: ConnectService) {
+      private connectService: ConnectService,
+      private platformServicesCommons: PlatformServicesCommons) {
   }
 
 
@@ -72,18 +74,27 @@ export class DataMarketplaceService {
         .pipe(map(response => {
           let adapterDescriptionList: AdapterDescriptionList = AdapterDescriptionList.fromData(response as AdapterDescriptionList);
           return adapterDescriptionList.list;
-          // const res: AdapterDescriptionList = this.tsonLdSerializer.fromJsonLd(
-          //   response,
-          //   'sp:AdapterDescriptionList'
-          // );
-          // res.list.forEach(adapterDescription => {
-          //   adapterDescription.config.sort((a, b) => a.index - b.index);
-          //   adapterDescription.config.forEach(sp => {
-          //     this.sortStaticProperties(sp)
-          //   });
-          // });
-          // return res.list;
         }));
+  }
+
+  stopAdapter(adapter: AdapterDescriptionUnion): Observable<Message> {
+    return this.http.post(this.adapterMasterUrl
+        + adapter.couchDBId
+        + "/stop", {})
+        .pipe(map(response => Message.fromData(response as any)));
+  }
+
+  startAdapter(adapter: AdapterDescriptionUnion): Observable<Message> {
+    return this.http.post(this.adapterMasterUrl
+        + adapter.couchDBId
+        + "/start", {})
+        .pipe(map(response => Message.fromData(response as any)));;
+  }
+
+  get adapterMasterUrl() {
+    return this.host
+        + this.authStatusService.email
+        + "/master/adapters/";
   }
 
   deleteAdapter(adapter: AdapterDescription): Observable<Object> {

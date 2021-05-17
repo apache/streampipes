@@ -18,19 +18,25 @@
 
 package org.apache.streampipes.connect.container.master.management;
 
+import com.google.gson.Gson;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.connect.container.master.util.AdapterEncryptionService;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterSetDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
+import org.apache.streampipes.model.util.Cloner;
+import org.apache.streampipes.serializers.json.GsonSerializer;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
+import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.couchdb.impl.AdapterStorageImpl;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,12 +52,16 @@ public class WorkerRestClient {
 
     private static final Logger logger = LoggerFactory.getLogger(WorkerRestClient.class);
 
+    public static void invokeStreamAdapter(String baseUrl, String adapterId) throws AdapterException {
+        invokeStreamAdapter(baseUrl, (AdapterStreamDescription) getAndDecryptAdapter(adapterId));
+    }
 
     public static void invokeStreamAdapter(String baseUrl, AdapterStreamDescription adapterStreamDescription) throws AdapterException {
 
         String url = baseUrl + "worker/stream/invoke";
 
         startAdapter(url, adapterStreamDescription);
+        updateStreamAdapterStatus(adapterStreamDescription.getId(), true);
     }
 
     public static void stopStreamAdapter(String baseUrl, AdapterStreamDescription adapterStreamDescription) throws AdapterException {
@@ -60,6 +70,7 @@ public class WorkerRestClient {
         AdapterDescription ad = getAdapterDescriptionById(new AdapterStorageImpl(), adapterStreamDescription.getUri());
 
         stopAdapter(adapterStreamDescription.getId(), ad, url);
+        updateStreamAdapterStatus(adapterStreamDescription.getId(), false);
     }
 
     public static void invokeSetAdapter(String baseUrl, AdapterSetDescription adapterSetDescription) throws AdapterException {
@@ -76,7 +87,7 @@ public class WorkerRestClient {
 
     public static void startAdapter(String url, AdapterDescription ad) throws AdapterException {
         try {
-            logger.info("Trying to start adpater on endpoint: " + url);
+            logger.info("Trying to start adapter on endpoint: " + url);
 
             // this ensures that all adapters have a valid uri otherwise the json-ld serializer fails
             if (ad.getUri() == null) {
@@ -168,65 +179,6 @@ public class WorkerRestClient {
         }
     }
 
-    public static InputStream getFileFromWorker(String baseUrl, String fileName) throws AdapterException {
-        String url = baseUrl + "worker/file/" + fileName;
-        logger.info("Trying to get file from endpoint: " + url);
-
-        try {
-            InputStream inputStream = Request.Get(url)
-                    .connectTimeout(1000)
-                    .socketTimeout(100000)
-                    .execute().returnContent().asStream();
-
-            logger.info("Got File from worker successfully from worker");
-            return inputStream;
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new AdapterException("Could not get file from endpoint " + url);
-        }
-    }
-
-    public static List<String> getAllFilePathsFromWorker(java.lang.String baseUrl) throws AdapterException {
-        String url = baseUrl + "worker/file";
-        logger.info("Trying to get file paths from endpoint: " + url);
-
-        try {
-            String stringResponse = Request.Get(url)
-                    .connectTimeout(1000)
-                    .socketTimeout(100000)
-                    .execute().returnContent().asString();
-            List<String> paths = JacksonSerializer.getObjectMapper().readValue(stringResponse, List.class);
-
-            logger.info("Got File paths successfully");
-            return paths;
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new AdapterException("Could not get file from endpoint " + url);
-        }
-    }
-
-    public static void deleteFileFromWorker(String baseUrl, String fileName) throws AdapterException {
-        String url = baseUrl + "worker/file/" + fileName;
-        logger.info("Trying to delete file from endpoint: " + url);
-
-        try {
-            int statusCode = Request.Delete(url)
-                    .connectTimeout(1000)
-                    .socketTimeout(100000)
-                    .execute().returnResponse().getStatusLine().getStatusCode();
-
-            if (statusCode == 200) {
-                logger.info("Deleted File successfully");
-            } else {
-                throw new AdapterException("Could not delete file from endpoint " + url);
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new AdapterException("Could not delete file from endpoint " + url);
-        }
-    }
-
     public static String getAdapterAssets(String baseUrl,  AdapterDescription ad) throws AdapterException {
         return getAssets(baseUrl + "worker/adapters", ad.getAppId());
     }
@@ -240,11 +192,10 @@ public class WorkerRestClient {
         logger.info("Trying to Assets from endpoint: " + url + " for adapter: " + appId);
 
         try {
-            String responseString = Request.Get(url)
+            return Request.Get(url)
                     .connectTimeout(1000)
                     .socketTimeout(100000)
                     .execute().returnContent().asString();
-            return responseString;
         } catch (IOException e) {
             logger.error(e.getMessage());
             throw new AdapterException("Could not get assets endpoint: " + url + " for adapter: " + appId);
@@ -322,8 +273,27 @@ public class WorkerRestClient {
         }
     }
 
+    private static void updateStreamAdapterStatus(String adapterId,
+                                           boolean running) {
+        AdapterStreamDescription adapter = (AdapterStreamDescription) getAndDecryptAdapter(adapterId);
+        adapter.setRunning(running);
+        encryptAndUpdateAdapter(adapter);
+    }
 
+    private static void encryptAndUpdateAdapter(AdapterDescription adapter) {
+        Gson gson = GsonSerializer.getAdapterGsonBuilder().create();
+        System.out.println(gson.toJson(adapter));
+        AdapterDescription encryptedDescription = new AdapterEncryptionService(new Cloner().adapterDescription(adapter)).encrypt();
+        getAdapterStorage().updateAdapter(encryptedDescription);
+    }
 
+    private static AdapterDescription getAndDecryptAdapter(String adapterId) {
+        AdapterDescription adapter = getAdapterStorage().getAdapter(adapterId);
+        return new AdapterEncryptionService(new Cloner().adapterDescription(adapter)).decrypt();
+    }
 
+    private static IAdapterStorage getAdapterStorage() {
+        return StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterStorage();
+    }
 }
 

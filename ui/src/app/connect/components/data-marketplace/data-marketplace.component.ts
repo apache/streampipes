@@ -23,13 +23,13 @@ import {ConnectService} from '../../services/connect.service';
 import {FilterPipe} from '../../filter/filter.pipe';
 import {AdapterUploadDialog} from '../../dialog/adapter-upload/adapter-upload-dialog.component';
 import {
-  AdapterDescription,
-  AdapterDescriptionUnion,
-  AdapterSetDescription,
-  AdapterStreamDescription,
-  EventSchema,
-  SpDataSet,
-  SpDataStream
+    AdapterDescription,
+    AdapterDescriptionUnion,
+    AdapterSetDescription,
+    AdapterStreamDescription,
+    EventSchema,
+    SpDataSet,
+    SpDataStream
 } from "../../../core-model/gen/streampipes-model";
 import {PanelType} from "../../../core-ui/dialog/base-dialog/base-dialog.model";
 import {DialogService} from "../../../core-ui/dialog/base-dialog/base-dialog.service";
@@ -169,6 +169,8 @@ export class DataMarketplaceComponent implements OnInit {
     }
 
     templateFromRunningAdapter(adapter: AdapterDescriptionUnion) {
+        adapter.couchDBId = undefined;
+        adapter._rev = undefined;
         this.selectedIndexChange(0);
         this.selectAdapter(adapter);
 

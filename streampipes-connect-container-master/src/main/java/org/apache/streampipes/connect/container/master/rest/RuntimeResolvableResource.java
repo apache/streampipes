@@ -21,7 +21,6 @@ package org.apache.streampipes.connect.container.master.rest;
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.management.WorkerAdministrationManagement;
 import org.apache.streampipes.connect.container.master.management.WorkerRestClient;
-import org.apache.streampipes.connect.rest.AbstractContainerResource;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
@@ -31,13 +30,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/v2/connect/{username}/master/resolvable")
-public class RuntimeResolvableResource extends AbstractContainerResource {
+public class RuntimeResolvableResource extends AbstractAdapterResource<WorkerAdministrationManagement> {
 
     private static final String SP_NS =  "https://streampipes.org/vocabulary/v1/";
-    private WorkerAdministrationManagement workerAdministrationManagement;
 
     public RuntimeResolvableResource() {
-        this.workerAdministrationManagement = new WorkerAdministrationManagement();
+        super(WorkerAdministrationManagement::new);
     }
 
     @POST
@@ -53,7 +51,7 @@ public class RuntimeResolvableResource extends AbstractContainerResource {
 //        ResolvesContainerProvidedOptions runtimeResolvableOptions = RuntimeResovable.getRuntimeResolvableFormat(elementId);
 
         String id = elementId.replaceAll("sp:", SP_NS);
-        String workerEndpoint = this.workerAdministrationManagement.getWorkerUrl(id);
+        String workerEndpoint = managementService.getWorkerUrl(id);
 
         try {
 

@@ -16,21 +16,4 @@
  *
  */
 
-package org.apache.streampipes.storage.api;
-
-import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-
-import java.util.List;
-
-public interface IAdapterStorage {
-
-    List<AdapterDescription> getAllAdapters();
-
-    String storeAdapter(AdapterDescription adapter);
-
-    void updateAdapter(AdapterDescription adapter);
-
-    AdapterDescription getAdapter(String adapterId);
-
-    void deleteAdapter(String adapterId);
-}
+@import '../../../../scss/sp/sp-dialog.scss';

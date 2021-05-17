@@ -21,32 +21,28 @@ package org.apache.streampipes.connect.container.master.rest;
 import org.apache.streampipes.connect.adapter.exception.ParseException;
 import org.apache.streampipes.connect.adapter.exception.WorkerAdapterException;
 import org.apache.streampipes.connect.container.master.management.GuessManagement;
-import org.apache.streampipes.connect.rest.AbstractContainerResource;
-import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.*;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 
 @Path("/v2/connect/{username}/master/guess")
-public class GuessResource extends AbstractContainerResource {
+public class GuessResource extends AbstractAdapterResource<GuessManagement> {
 
-  private static final Logger logger = LoggerFactory.getLogger(GuessResource.class);
-
-  private GuessManagement guessManagement;
+  private static final Logger LOG = LoggerFactory.getLogger(GuessResource.class);
 
   public GuessResource() {
-    this.guessManagement = new GuessManagement();
-  }
-
-  public GuessResource(GuessManagement guessManagement) {
-    this.guessManagement = guessManagement;
+    super(GuessManagement::new);
   }
 
   @POST
@@ -56,24 +52,18 @@ public class GuessResource extends AbstractContainerResource {
   public Response guessSchema(AdapterDescription adapterDescription, @PathParam("username") String userName) {
 
       try {
-          GuessSchema result = guessManagement.guessSchema(adapterDescription);
+          GuessSchema result = managementService.guessSchema(adapterDescription);
 
           return ok(result);
       } catch (ParseException e) {
-          logger.error("Error while parsing events: ", e);
+          LOG.error("Error while parsing events: ", e);
           return error(Notifications.error(e.getMessage()));
       } catch (WorkerAdapterException e) {
           return error(e.getContent());
       } catch (Exception e) {
-          logger.error("Error while guess schema for AdapterDescription: ", e);
+          LOG.error("Error while guess schema for AdapterDescription: ", e);
           return error(Notifications.error(e.getMessage()));
       }
-
   }
-
-  public void setGuessManagement(GuessManagement guessManagement) {
-    this.guessManagement = guessManagement;
-  }
-
 }
 

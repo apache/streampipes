@@ -46,14 +46,13 @@ public class AdapterStorageImpl extends AbstractDao<AdapterDescription> implemen
     }
 
     @Override
-    public void storeAdapter(AdapterDescription adapter) {
-        persist(adapter);
+    public String storeAdapter(AdapterDescription adapter) {
+        return persist(adapter).b;
     }
 
     @Override
     public void updateAdapter(AdapterDescription adapter) {
-        couchDbClientSupplier.get().
-        update(adapter);
+        couchDbClientSupplier.get().update(adapter);
     }
 
     @Override
