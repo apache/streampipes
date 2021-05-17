@@ -34,10 +34,13 @@ The following figure shows how the events of the two data streams will be mergrg
 <p align="center"> 
     <img width="300px;" src="merge_description.png" class="pe-image-documentation"/>
 </p>
+
 ***
 
 ## Required input
 Each of the data streams needs a timestamp.
+
+***
 
 ## Configuration
 
