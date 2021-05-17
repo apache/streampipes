@@ -37,9 +37,28 @@ Requires a data stream that provides latitude and longitude values.
 
 Describe the configuration parameters here
 
-### 1st parameter
+### Latitude field
 
+The field containing the latitude value.
 
-### 2nd parameter
+### Longitude field
+
+The field containing the longitude value.
+
+### Latitude
+
+The latitude value of the fixed location
+
+### Longitude
+
+The longitude value of the fixed location
 
 ## Output
+
+Outputs a similar event like below.
+
+```
+{
+  'distance': 12.5
+}
+```

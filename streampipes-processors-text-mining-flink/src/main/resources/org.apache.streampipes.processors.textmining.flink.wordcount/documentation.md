@@ -26,8 +26,7 @@
 
 ## Description
 
-Counts words on continuous text-based streams
-Add a detailed description here
+Count words on continuous text-based streams.
 
 ***
 
