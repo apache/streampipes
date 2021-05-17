@@ -55,7 +55,7 @@ We provide two options to get you going:
 docker-compose up -d
 # go to after all services are started http://localhost
 ```
-After all containers are successfully started just got to your browser and visit http://localhost to finish the installation. Once finished, switch to the pipeline editor and start the interactive tour or check the [online tour](https://streampipes.apache.org/docs/docs/user-guide-tour/) to learn how to create your first pipeline!
+After all containers are successfully started just got to your browser and visit http://localhost to finish the installation. Once finished, switch to the pipeline editor and start the interactive tour or check the [documentation](https://streampipes.apache.org/docs/docs/user-guide-introduction.html) to learn more about StreamPipes!
 
 **Stopping** the **default** option is similarly easy:
 ```bash
