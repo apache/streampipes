@@ -18,11 +18,8 @@
 
 package org.apache.streampipes.connect.container.master.management;
 
-import com.google.gson.Gson;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.util.AdapterEncryptionService;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -32,7 +29,6 @@ import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.apache.streampipes.model.util.Cloner;
-import org.apache.streampipes.serializers.json.GsonSerializer;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.couchdb.impl.AdapterStorageImpl;
@@ -41,7 +37,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -156,29 +151,6 @@ public class WorkerRestClient {
 
     }
 
-    public static String saveFileAtWorker(String baseUrl, InputStream inputStream, String fileName) throws AdapterException {
-        String url = baseUrl + "worker/file";
-        logger.info("Trying to start save file on endpoint: " + url);
-
-
-        MultipartEntity httpEntity = new MultipartEntity();
-        httpEntity.addPart("file_upload", new InputStreamBody(inputStream, fileName));
-
-        try {
-            String responseString = Request.Post(url)
-                    .body(httpEntity)
-                    .connectTimeout(1000)
-                    .socketTimeout(100000)
-                    .execute().returnContent().asString();
-
-            logger.info("File saved successfully at worker");
-            return responseString;
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new AdapterException("Could not save file on endpoint " + url);
-        }
-    }
-
     public static String getAdapterAssets(String baseUrl,  AdapterDescription ad) throws AdapterException {
         return getAssets(baseUrl + "worker/adapters", ad.getAppId());
     }
@@ -241,11 +213,10 @@ public class WorkerRestClient {
         logger.info("Trying to documentation from endpoint: " + url);
 
         try {
-            String responseString = Request.Get(url)
+            return Request.Get(url)
                     .connectTimeout(1000)
                     .socketTimeout(100000)
                     .execute().returnContent().asString();
-            return responseString;
         } catch (IOException e) {
             logger.error(e.getMessage());
             throw new AdapterException("Could not get documentation endpoint: " + url + " for adapter: " + appId);
@@ -281,8 +252,6 @@ public class WorkerRestClient {
     }
 
     private static void encryptAndUpdateAdapter(AdapterDescription adapter) {
-        Gson gson = GsonSerializer.getAdapterGsonBuilder().create();
-        System.out.println(gson.toJson(adapter));
         AdapterDescription encryptedDescription = new AdapterEncryptionService(new Cloner().adapterDescription(adapter)).encrypt();
         getAdapterStorage().updateAdapter(encryptedDescription);
     }
