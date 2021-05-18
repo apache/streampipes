@@ -255,13 +255,17 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
                                     @PathParam("pipelineId") String pipelineId,
                                     Pipeline pipeline) {
     Pipeline storedPipeline = getPipelineStorage().getPipeline(pipelineId);
-    storedPipeline.setActions(pipeline.getActions());
-    storedPipeline.setSepas(pipeline.getSepas());
-    storedPipeline.setActions(pipeline.getActions());
-    storedPipeline.setCreatedAt(System.currentTimeMillis());
-    storedPipeline.setPipelineCategories(pipeline.getPipelineCategories());
-    Operations.updatePipeline(storedPipeline);
-    return statusMessage(Notifications.success("Pipeline modified"));
+    if (!storedPipeline.isRunning()) {
+      storedPipeline.setActions(pipeline.getActions());
+      storedPipeline.setSepas(pipeline.getSepas());
+      storedPipeline.setActions(pipeline.getActions());
+      storedPipeline.setCreatedAt(System.currentTimeMillis());
+      storedPipeline.setPipelineCategories(pipeline.getPipelineCategories());
+      Operations.updatePipeline(storedPipeline);
+      return statusMessage(Notifications.success("Pipeline modified"));
+    } else {
+      return statusMessage(Notifications.error("The pipeline must be stopped before it can be updated."));
+    }
   }
 
 }
