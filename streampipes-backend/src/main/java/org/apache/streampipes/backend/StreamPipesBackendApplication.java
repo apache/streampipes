@@ -24,6 +24,7 @@ import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.rest.notifications.NotificationListener;
+import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -141,8 +142,9 @@ public class StreamPipesBackendApplication {
     PipelineOperationStatus status = Operations.startPipeline(pipeline);
     if (status.isSuccess()) {
       LOG.info("Pipeline {} successfully restarted", status.getPipelineName());
-      pipeline.setRestartOnSystemReboot(restartOnReboot);
-      StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updatePipeline(pipeline);
+      Pipeline storedPipeline = getPipelineStorage().getPipeline(pipeline.getPipelineId());
+      storedPipeline.setRestartOnSystemReboot(restartOnReboot);
+      getPipelineStorage().updatePipeline(storedPipeline);
     } else {
       storeFailedRestartAttempt(pipeline);
       int failedAttemptCount = failedPipelines.get(pipeline.getPipelineId());
@@ -172,10 +174,15 @@ public class StreamPipesBackendApplication {
   }
 
   private List<Pipeline> getAllPipelines() {
-    return StorageDispatcher.INSTANCE
-            .getNoSqlStore()
-            .getPipelineStorageAPI()
+    return getPipelineStorage()
             .getAllPipelines();
+  }
+
+  private IPipelineStorage getPipelineStorage() {
+    return StorageDispatcher
+            .INSTANCE
+            .getNoSqlStore()
+            .getPipelineStorageAPI();
   }
 
   @Bean
