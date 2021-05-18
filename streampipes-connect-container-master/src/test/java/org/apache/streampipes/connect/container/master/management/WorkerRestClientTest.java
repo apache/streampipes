@@ -49,25 +49,6 @@ public class WorkerRestClientTest {
     }
 
     @Test
-    public void invokeStreamAdapterSuccess() throws Exception {
-        doNothing().when(WorkerRestClient.class, "startAdapter", anyString(), any());
-        when(WorkerRestClient.class, "invokeStreamAdapter", anyString(), any()).thenCallRealMethod();
-
-        WorkerRestClient.invokeStreamAdapter("", "");
-
-        verifyStatic(WorkerRestClient.class, times(1));
-        WorkerRestClient.startAdapter(eq("worker/stream/invoke"), any());
-    }
-
-    @Test(expected = AdapterException.class)
-    public void invokeStreamAdapterFail() throws Exception {
-        doThrow(new AdapterException()).when(WorkerRestClient.class, "startAdapter", anyString(), any());
-        when(WorkerRestClient.class, "invokeStreamAdapter", anyString(), any()).thenCallRealMethod();
-
-        WorkerRestClient.invokeStreamAdapter("", "");
-    }
-
-    @Test
     public void stopStreamAdapterSuccess() throws Exception {
 
         doNothing().when(WorkerRestClient.class, "stopAdapter", anyString(), any(), anyString());
