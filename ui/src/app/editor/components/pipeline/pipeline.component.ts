@@ -38,7 +38,7 @@ import {
 import {
   CustomOutputStrategy,
   DataProcessorInvocation, DataSinkInvocation, ErrorMessage,
-  Pipeline, SpDataSet,
+  Pipeline, PipelinePreviewModel, SpDataSet,
   SpDataStream, SpDataStreamUnion
 } from "../../../core-model/gen/streampipes-model";
 import {ObjectProvider} from "../../services/object-provider.service";
@@ -104,6 +104,9 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
   JsplumbBridge: JsplumbBridge;
 
+  previewModeActive: boolean = false;
+  pipelinePreview: PipelinePreviewModel;
+
   constructor(private JsplumbService: JsplumbService,
               private PipelineEditorService: PipelineEditorService,
               private JsplumbFactoryService: JsplumbFactoryService,
@@ -113,7 +116,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
               private PipelineValidationService: PipelineValidationService,
               private dialogService: DialogService,
               private dialog: MatDialog,
-              private ngZone: NgZone) {
+              private ngZone: NgZone,) {
     this.plumbReady = false;
     this.currentMouseOverElement = "";
     this.currentPipelineModel = new Pipeline();
@@ -140,6 +143,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.deletePipelineElementPreview(false);
     this.JsplumbBridge.deleteEveryEndpoint();
     this.plumbReady = false;
   }
@@ -220,20 +224,19 @@ export class PipelineComponent implements OnInit, OnDestroy {
                   this.JsplumbService.dataStreamDropped(pipelineElementConfig.payload.dom, pipelineElementConfig.payload as SpDataSet, true, false);
                 });
               }, 0);
-            }
-            else if (ui.draggable.hasClass('stream')) {
+            } else if (ui.draggable.hasClass('stream')) {
               this.checkTopicModel(pipelineElementConfig);
             } else if (ui.draggable.hasClass('sepa')) {
-                setTimeout(() => {
-                  this.JsplumbService.dataProcessorDropped(pipelineElementConfig.payload.dom, pipelineElementConfig.payload as DataProcessorInvocation, true, false);
-                }, 10);
+              setTimeout(() => {
+                this.JsplumbService.dataProcessorDropped(pipelineElementConfig.payload.dom, pipelineElementConfig.payload as DataProcessorInvocation, true, false);
+              }, 10);
             } else if (ui.draggable.hasClass('action')) {
-                setTimeout(() => {
-                  this.JsplumbService.dataSinkDropped(pipelineElementConfig.payload.dom, pipelineElementConfig.payload as DataSinkInvocation, true, false);
-                }, 10);
+              setTimeout(() => {
+                this.JsplumbService.dataSinkDropped(pipelineElementConfig.payload.dom, pipelineElementConfig.payload as DataSinkInvocation, true, false);
+              }, 10);
             }
             if (this.ShepherdService.isTourActive()) {
-              this.ShepherdService.trigger("drop-" +pipelineElementConfig.type);
+              this.ShepherdService.trigger("drop-" + pipelineElementConfig.type);
             }
           }
         }
@@ -246,12 +249,12 @@ export class PipelineComponent implements OnInit, OnDestroy {
   }
 
   checkTopicModel(pipelineElementConfig: PipelineElementConfig) {
-      setTimeout(() => {
-        this.JsplumbService.dataStreamDropped(pipelineElementConfig.payload.dom,
-            pipelineElementConfig.payload as SpDataStream,
-            true,
-            false);
-      }, 10);
+    setTimeout(() => {
+      this.JsplumbService.dataStreamDropped(pipelineElementConfig.payload.dom,
+          pipelineElementConfig.payload as SpDataStream,
+          true,
+          false);
+    }, 10);
 
     var streamDescription = pipelineElementConfig.payload as SpDataStream;
     if (streamDescription
@@ -414,7 +417,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
   }
 
   showCustomizeDialog(pipelineElementInfo: Tuple2<Boolean, PipelineElementConfig>) {
-    const dialogRef = this.dialogService.open(CustomizeComponent,{
+    const dialogRef = this.dialogService.open(CustomizeComponent, {
       panelType: PanelType.SLIDE_IN_PANEL,
       title: "Customize " + pipelineElementInfo.b.payload.name,
       width: "50vw",
@@ -434,6 +437,9 @@ export class PipelineComponent implements OnInit, OnDestroy {
         this.JsplumbBridge.getSourceEndpoint(pipelineElementInfo.b.payload.dom).setType("token");
         this.triggerPipelineCacheUpdate();
         this.announceConfiguredElement(pipelineElementInfo.b);
+        if (this.previewModeActive) {
+          this.deletePipelineElementPreview(true);
+        }
       }
       this.validatePipeline();
     });
@@ -443,5 +449,26 @@ export class PipelineComponent implements OnInit, OnDestroy {
     this.EditorService.announceConfiguredElement(pe.payload.dom);
   }
 
+  initiatePipelineElementPreview() {
+    if (!this.previewModeActive) {
+      let pipeline = this.ObjectProvider.makePipeline(this.rawPipelineModel);
+      this.EditorService.initiatePipelinePreview(pipeline).subscribe(response => {
+        this.pipelinePreview = response;
+        this.previewModeActive = true;
+      });
+    } else {
+      this.deletePipelineElementPreview(false);
+    }
+  }
 
+  deletePipelineElementPreview(resume: boolean) {
+    if (this.previewModeActive) {
+      this.EditorService.deletePipelinePreviewRequest(this.pipelinePreview.previewId).subscribe(response => {
+        this.previewModeActive = false;
+        if (resume) {
+          this.initiatePipelineElementPreview();
+        }
+      });
+    }
+  }
 }

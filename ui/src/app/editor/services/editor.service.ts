@@ -21,9 +21,9 @@ import {HttpClient} from "@angular/common/http";
 import {
   DataProcessorInvocation,
   DataSetModificationMessage,
-  DataSinkInvocation,
+  DataSinkInvocation, Pipeline,
   PipelineElementRecommendationMessage,
-  PipelineModificationMessage,
+  PipelineModificationMessage, PipelinePreviewModel,
   SpDataSet,
   SpDataStream
 } from "../../core-model/gen/streampipes-model";
@@ -141,4 +141,24 @@ export class EditorService {
             }
         });
     }
+
+    initiatePipelinePreview(pipeline: Pipeline): Observable<PipelinePreviewModel> {
+      return this.http.post(this.pipelinePreviewBasePath, pipeline)
+          .pipe(map(response => PipelinePreviewModel.fromData(response as any)));
+    }
+
+  deletePipelinePreviewRequest(previewId: string): Observable<any> {
+      return this.http.delete(this.pipelinePreviewBasePath + "/" + previewId);
+  }
+
+  getPipelinePreviewResult(previewId: string, pipelineElementDomId: string): Observable<any> {
+      return this.http.get(this.pipelinePreviewBasePath
+          + "/"
+          + previewId
+          + "/" + pipelineElementDomId, {headers: { ignoreLoadingBar: '' }});
+  }
+
+  get pipelinePreviewBasePath() {
+      return this.platformServicesCommons.authUserBasePath() + "/pipeline-element-preview";
+  }
 }

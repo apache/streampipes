@@ -38,7 +38,9 @@ public class GraphSubmitter {
 
   private final static Logger LOG = LoggerFactory.getLogger(GraphSubmitter.class);
 
-  public GraphSubmitter(String pipelineId, String pipelineName, List<InvocableStreamPipesEntity> graphs,
+  public GraphSubmitter(String pipelineId,
+                        String pipelineName,
+                        List<InvocableStreamPipesEntity> graphs,
                         List<SpDataSet> dataSets) {
     this.graphs = graphs;
     this.pipelineId = pipelineId;

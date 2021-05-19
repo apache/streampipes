@@ -25,20 +25,24 @@
   width: 40%;
   border-radius: 50%;
   box-shadow: 0 0 3px $sp-color-accent;
-  line-height: 1.6;
   text-align: center;
-  padding: 2px 0;
+  padding: 1px 1px;
   background-color: $sp-color-accent;
   color: rgba(255, 255, 255, 0.75);
 }
 
 .customize-button {
-  left: 5%;
+  left: -20%;
+  top: -10%;
+}
+
+.preview-button {
+  left: 25%;
   top: -10%;
 }
 
 .delete-button {
-  left: 55%;
+  left: 70%;
   top: -10%;
   background-color: darkred;
   box-shadow: 0 0 3px darkred;

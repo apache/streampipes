@@ -42,13 +42,13 @@
         <div id="shepherd-test"
              style="background-color:#f6f6f6;padding:0px;border-bottom:1px solid #ffffff">
             <pipeline-element-icon-stand
-                    class="icon-stand-margin"
                     [activeType]="activeType"
                     [currentElements]="currentElements"
                     *ngIf="allElementsLoaded && !pipelineCanvasMaximized">
             </pipeline-element-icon-stand>
         </div>
         <pipeline-assembly fxFlex="1"
+                           class="pipeline-assembly-margin"
                            [rawPipelineModel]="rawPipelineModel"
                            [allElements]="allElements"
                            [currentModifiedPipelineId]="currentModifiedPipelineId"

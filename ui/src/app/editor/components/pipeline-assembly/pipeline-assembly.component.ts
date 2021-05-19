@@ -44,6 +44,7 @@ import {PipelineCanvasScrollingService} from "../../services/pipeline-canvas-scr
 import {JsplumbFactoryService} from "../../services/jsplumb-factory.service";
 import Panzoom, {PanzoomObject} from "@panzoom/panzoom";
 import {PipelineElementDraggedService} from "../../services/pipeline-element-dragged.service";
+import {PipelineComponent} from "../pipeline/pipeline.component";
 
 
 @Component({
@@ -86,6 +87,10 @@ export class PipelineAssemblyComponent implements OnInit {
 
     config: any = {};
     @ViewChild("outerCanvas") pipelineCanvas: ElementRef;
+
+    @ViewChild("pipelineComponent")
+    pipelineComponent: PipelineComponent;
+
     panzoom: PanzoomObject;
 
     constructor(private JsPlumbFactoryService: JsplumbFactoryService,
@@ -279,7 +284,6 @@ export class PipelineAssemblyComponent implements OnInit {
     }
 
     panRight() {
-        console.log("panning right");
         this.pan(-100, 0);
     }
 
@@ -304,6 +308,10 @@ export class PipelineAssemblyComponent implements OnInit {
 
     panAbsolute(x: number, y: number) {
         this.panzoom.pan(x, y);
+    }
+
+    triggerPipelinePreview() {
+        this.pipelineComponent.initiatePipelineElementPreview();
     }
 
 }

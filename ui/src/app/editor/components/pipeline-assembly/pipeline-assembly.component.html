@@ -22,8 +22,12 @@
             <button mat-button matTooltip="Save Pipeline" [matTooltipPosition]="'above'"
                     [disabled]="!PipelineValidationService.pipelineValid"
                     (click)="submit()" type="submit">
-                <i class="material-icons">save</i>&nbsp;<span>Save pipeline</span>
+                <div fxLayoutAlign="start center" fxLayout="row">
+                    <i class="material-icons">save</i>&nbsp;
+                    <span>&nbsp;Save pipeline</span>
+                </div>
             </button>
+            <span class="assembly-options-divider"></span>
             <!-- TODO: Use this once copying of elements is supported -->
 <!--            <button mat-button mat-icon-button matTooltip="Pan" [matTooltipPosition]="'above'"-->
 <!--                    [disabled]="!selectMode"-->
@@ -35,6 +39,15 @@
 <!--                    (click)="toggleSelectMode()">-->
 <!--                <i class="material-icons">mode_edit</i>-->
 <!--            </button>-->
+            <button mat-button matTooltip="Data Preview" [matTooltipPosition]="'above'"
+                    (click)="triggerPipelinePreview()">
+                <div fxLayoutAlign="start center" fxLayout="row">
+                    <i class="material-icons">visibility</i>
+                    <span *ngIf="!pipelineComponent.previewModeActive">&nbsp;Enable live preview</span>
+                    <span *ngIf="pipelineComponent.previewModeActive">&nbsp;Disable live preview</span>
+                </div>
+            </button>
+            <span class="assembly-options-divider"></span>
             <button mat-button mat-icon-button matTooltip="Auto Layout" [matTooltipPosition]="'above'"
                     (click)="autoLayout()">
                 <i class="material-icons">settings_overscan</i>
@@ -125,7 +138,8 @@
                 </div>
             </div>
             <div id="assembly" class="canvas" #assembly>
-                <pipeline [pipelineValid]="pipelineValid"
+                <pipeline #pipelineComponent
+                          [pipelineValid]="pipelineValid"
                           [canvasId]="'assembly'"
                           [rawPipelineModel]="rawPipelineModel"
                           [allElements]="allElements"

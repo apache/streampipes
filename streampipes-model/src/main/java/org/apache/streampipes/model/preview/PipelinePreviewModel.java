@@ -15,21 +15,35 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.model.preview;
 
-@import '../../scss/variables';
+import org.apache.streampipes.model.shared.annotation.TsModel;
 
-.text-color {
-  color: $sp-color-accent;
-}
+import java.util.List;
 
-.page-container {
-  border: 0;
-}
+@TsModel
+public class PipelinePreviewModel {
 
-.border {
-  border: 1px solid #cccccc;
-}
+  private String previewId;
 
-.pipeline-assembly-margin {
-  margin-top: 10px;
+  private List<String> supportedPipelineElementDomIds;
+
+  public PipelinePreviewModel() {
+  }
+
+  public String getPreviewId() {
+    return previewId;
+  }
+
+  public void setPreviewId(String previewId) {
+    this.previewId = previewId;
+  }
+
+  public List<String> getSupportedPipelineElementDomIds() {
+    return supportedPipelineElementDomIds;
+  }
+
+  public void setSupportedPipelineElementDomIds(List<String> supportedPipelineElementDomIds) {
+    this.supportedPipelineElementDomIds = supportedPipelineElementDomIds;
+  }
 }
