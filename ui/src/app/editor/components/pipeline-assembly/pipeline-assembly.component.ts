@@ -197,13 +197,6 @@ export class PipelineAssemblyComponent implements OnInit {
         //$('#assembly').children().not('#clear, #submit').remove();
         this.JsplumbBridge.deleteEveryEndpoint();
         this.rawPipelineModel = [];
-        ($("#assembly") as any).panzoom("reset", {
-            disablePan: true,
-            increment: 0.25,
-            minScale: 0.5,
-            maxScale: 1.5,
-            contain: 'invert'
-        });
         this.currentZoomLevel = 1;
         this.JsplumbBridge.setZoom(this.currentZoomLevel);
         this.JsplumbBridge.repaintEverything();
