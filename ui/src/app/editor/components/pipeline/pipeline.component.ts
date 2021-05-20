@@ -136,9 +136,11 @@ export class PipelineComponent implements OnInit, OnDestroy {
   }
 
   validatePipeline() {
-    this.ngZone.run(() => {
-      this.pipelineValid = this.PipelineValidationService
-          .isValidPipeline(this.rawPipelineModel.filter(pe => !(pe.settings.disabled)), this.preview);
+    setTimeout(() => {
+      this.ngZone.run(() => {
+        this.pipelineValid = this.PipelineValidationService
+            .isValidPipeline(this.rawPipelineModel.filter(pe => !(pe.settings.disabled)), this.preview);
+      });
     });
   }
 
@@ -281,6 +283,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
       this.EditorService.makePipelineAssemblyEmpty(true);
     }
     this.JsplumbBridge.repaintEverything();
+    this.validatePipeline();
     this.triggerPipelineCacheUpdate();
   }
 
