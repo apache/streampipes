@@ -23,7 +23,7 @@
                     [disabled]="!PipelineValidationService.pipelineValid"
                     (click)="submit()" type="submit">
                 <div fxLayoutAlign="start center" fxLayout="row">
-                    <i class="material-icons">save</i>&nbsp;
+                    <i class="material-icons">save</i>
                     <span>&nbsp;Save pipeline</span>
                 </div>
             </button>
@@ -40,7 +40,7 @@
 <!--                <i class="material-icons">mode_edit</i>-->
 <!--            </button>-->
             <button mat-button matTooltip="Data Preview" [matTooltipPosition]="'above'"
-                    (click)="triggerPipelinePreview()">
+                    (click)="triggerPipelinePreview()" [disabled]="isPipelineAssemblyEmpty()">
                 <div fxLayoutAlign="start center" fxLayout="row">
                     <i class="material-icons">visibility</i>
                     <span *ngIf="!pipelineComponent.previewModeActive">&nbsp;Enable live preview</span>
