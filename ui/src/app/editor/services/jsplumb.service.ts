@@ -137,13 +137,14 @@ export class JsplumbService {
     createNewPipelineElementConfig(pipelineElement: PipelineElementUnion,
                                    coordinates,
                                    isPreview: boolean,
-                                   isCompleted: boolean): PipelineElementConfig {
+                                   isCompleted: boolean,
+                                   newElementId?: string): PipelineElementConfig {
         let displaySettings = isPreview ? 'connectable-preview' : 'connectable-editor';
         let connectable = "connectable";
         let pipelineElementConfig = {} as PipelineElementConfig;
         pipelineElementConfig.type = PipelineElementTypeUtils
             .toCssShortHand(PipelineElementTypeUtils.fromType(pipelineElement))
-        pipelineElementConfig.payload = this.clone(pipelineElement);
+        pipelineElementConfig.payload = this.clone(pipelineElement, newElementId);
         pipelineElementConfig.settings = {connectable: connectable,
             openCustomize: !(pipelineElement as any).configured,
             preview: isPreview,
@@ -163,16 +164,29 @@ export class JsplumbService {
         return pipelineElementConfig;
     }
 
-    clone(pipelineElement: PipelineElementUnion) {
+    clone(pipelineElement: PipelineElementUnion, newElementId?: string) {
         if (pipelineElement instanceof SpDataSet) {
             return SpDataSet.fromData(pipelineElement, new SpDataSet());
         } else if (pipelineElement instanceof SpDataStream) {
             return SpDataStream.fromData(pipelineElement, new SpDataStream());
         } else if (pipelineElement instanceof DataProcessorInvocation) {
-            return DataProcessorInvocation.fromData(pipelineElement, new DataProcessorInvocation());
+            let clonedPe = DataProcessorInvocation.fromData(pipelineElement, new DataProcessorInvocation());
+            if (newElementId) {
+                this.updateElementIds(clonedPe, newElementId)
+            }
+            return clonedPe;
         } else {
-            return DataSinkInvocation.fromData(pipelineElement, new DataSinkInvocation());
+            let clonedPe = DataSinkInvocation.fromData(pipelineElement, new DataSinkInvocation());
+            if (newElementId) {
+                this.updateElementIds(clonedPe, newElementId);
+            }
+            return clonedPe;
         }
+    }
+
+    updateElementIds(pipelineElement: PipelineElementUnion, newElementId: string) {
+        pipelineElement.elementId = newElementId;
+        pipelineElement.uri = newElementId;
     }
 
     makeId(count: number) {

@@ -210,7 +210,12 @@ export class PipelineComponent implements OnInit, OnDestroy {
         let pipelineElement: PipelineElementUnion = this.findPipelineElementByElementId(pipelineElementId);
         if (ui.draggable.hasClass('draggable-icon')) {
           this.EditorService.makePipelineAssemblyEmpty(false);
-          var pipelineElementConfig = this.JsplumbService.createNewPipelineElementConfig(pipelineElement, this.PipelineEditorService.getCoordinates(ui, this.currentZoomLevel), false, false);
+          let newElementId = pipelineElement.elementId + ":" + this.JsplumbService.makeId(5);
+          let pipelineElementConfig = this.JsplumbService.createNewPipelineElementConfig(pipelineElement,
+              this.PipelineEditorService.getCoordinates(ui, this.currentZoomLevel),
+              false,
+              false,
+              newElementId);
           if ((this.isStreamInPipeline() && pipelineElementConfig.type == 'set') ||
               this.isSetInPipeline() && pipelineElementConfig.type == 'stream') {
             this.showMixedStreamAlert();
