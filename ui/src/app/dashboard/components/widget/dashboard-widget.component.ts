@@ -22,99 +22,107 @@ import {DashboardService} from "../../services/dashboard.service";
 import {GridsterItem, GridsterItemComponent} from "angular-gridster2";
 import {AddVisualizationDialogComponent} from "../../dialogs/add-widget/add-visualization-dialog.component";
 import {
-    DashboardWidgetModel, Pipeline,
-    VisualizablePipeline
+  DashboardWidgetModel, Pipeline,
+  VisualizablePipeline
 } from "../../../core-model/gen/streampipes-model";
 import {PanelType} from "../../../core-ui/dialog/base-dialog/base-dialog.model";
 import {DialogService} from "../../../core-ui/dialog/base-dialog/base-dialog.service";
 import {PipelineService} from "../../../platform-services/apis/pipeline.service";
+import {EditModeService} from "../../services/edit-mode.service";
 
 @Component({
-    selector: 'dashboard-widget',
-    templateUrl: './dashboard-widget.component.html',
-    styleUrls: ['./dashboard-widget.component.css']
+  selector: 'dashboard-widget',
+  templateUrl: './dashboard-widget.component.html',
+  styleUrls: ['./dashboard-widget.component.css']
 })
 export class DashboardWidgetComponent implements OnInit {
 
-    @Input() widget: DashboardItem;
-    @Input() editMode: boolean;
-    @Input() headerVisible: boolean = false;
-    @Input() item: GridsterItem;
-    @Input() gridsterItemComponent: GridsterItemComponent;
+  @Input() widget: DashboardItem;
+  @Input() editMode: boolean;
+  @Input() headerVisible: boolean = false;
+  @Input() item: GridsterItem;
+  @Input() gridsterItemComponent: GridsterItemComponent;
 
-    @Output() deleteCallback: EventEmitter<DashboardItem> = new EventEmitter<DashboardItem>();
-    @Output() updateCallback: EventEmitter<DashboardWidgetModel> = new EventEmitter<DashboardWidgetModel>();
+  @Output() deleteCallback: EventEmitter<DashboardItem> = new EventEmitter<DashboardItem>();
+  @Output() updateCallback: EventEmitter<DashboardWidgetModel> = new EventEmitter<DashboardWidgetModel>();
 
-    widgetLoaded: boolean = false;
-    configuredWidget: DashboardWidgetModel;
-    widgetDataConfig: VisualizablePipeline;
-    pipeline: Pipeline;
+  widgetLoaded: boolean = false;
+  configuredWidget: DashboardWidgetModel;
+  widgetDataConfig: VisualizablePipeline;
+  pipeline: Pipeline;
 
-    pipelineRunning: boolean = false;
-    widgetNotAvailable: boolean = false;
+  pipelineRunning: boolean = false;
+  widgetNotAvailable: boolean = false;
 
-    constructor(private dashboardService: DashboardService,
-                private dialogService: DialogService,
-                private pipelineService: PipelineService) {
+  constructor(private dashboardService: DashboardService,
+              private dialogService: DialogService,
+              private pipelineService: PipelineService,
+              private editModeService: EditModeService) {
+  }
+
+  ngOnInit(): void {
+    this.loadWidget();
+  }
+
+  loadWidget() {
+    this.dashboardService.getWidget(this.widget.id).subscribe(response => {
+      this.configuredWidget = response;
+      this.loadVisualizablePipeline();
+    });
+  }
+
+  loadVisualizablePipeline() {
+    this.dashboardService.getVisualizablePipelineByPipelineIdAndVisualizationName(this.configuredWidget.pipelineId,
+        this.configuredWidget.visualizationName).subscribe(vizPipeline => {
+      this.widgetDataConfig = vizPipeline;
+      this.dashboardService.getPipelineById(vizPipeline.pipelineId).subscribe(pipeline => {
+        this.pipeline = pipeline;
+        this.pipelineRunning = pipeline.running;
+        this.widgetNotAvailable = false;
+        this.widgetLoaded = true;
+      });
+    }, err => {
+      this.widgetLoaded = true;
+      this.widgetNotAvailable = true;
+    });
+  }
+
+  removeWidget() {
+    this.deleteCallback.emit(this.widget);
+  }
+
+  startPipeline() {
+    if (!this.pipelineRunning) {
+      this.pipelineService
+          .startPipeline(this.pipeline._id)
+          .subscribe(status => this.loadWidget());
     }
+  }
 
-    ngOnInit(): void {
-        this.loadWidget();
-    }
+  modifyWidget() {
+    this.editModeService.notify(true);
+    this.editWidget();
+  }
 
-    loadWidget() {
-        this.dashboardService.getWidget(this.widget.id).subscribe(response => {
-            this.configuredWidget = response;
-            this.dashboardService.getVisualizablePipelineByPipelineIdAndVisualizationName(this.configuredWidget.pipelineId,
-                this.configuredWidget.visualizationName).subscribe(vizPipeline => {
-                this.widgetDataConfig = vizPipeline;
-                this.dashboardService.getPipelineById(vizPipeline.pipelineId).subscribe(pipeline => {
-                    this.pipeline = pipeline;
-                    this.pipelineRunning = pipeline.running;
-                    this.widgetNotAvailable = false;
-                    this.widgetLoaded = true;
-                });
-            }, err => {
-                this.widgetLoaded = true;
-                this.widgetNotAvailable = true;
-            });
-        });
-    }
+  editWidget(): void {
+    const dialogRef = this.dialogService.open(AddVisualizationDialogComponent, {
+      panelType: PanelType.SLIDE_IN_PANEL,
+      title: "Edit widget",
+      width: "50vw",
+      data: {
+        "widget": this.configuredWidget,
+        "pipeline": this.widgetDataConfig,
+        "editMode": true,
+        "startPage": this.widgetNotAvailable ? "select-pipeline" : "configure-widget"
+      }
+    });
 
-    removeWidget() {
-        this.deleteCallback.emit(this.widget);
-    }
-
-    startPipeline() {
-        if (!this.pipelineRunning) {
-            this.pipelineService
-                .startPipeline(this.pipeline._id)
-                .subscribe(status => this.loadWidget());
-        }
-    }
-
-    modifyWidget() {
-        this.editMode = true;
-        this.editWidget();
-    }
-
-    editWidget(): void {
-        const dialogRef = this.dialogService.open(AddVisualizationDialogComponent,{
-            panelType: PanelType.SLIDE_IN_PANEL,
-            title: "Edit widget",
-            width: "50vw",
-            data: {
-                "widget": this.configuredWidget,
-                "pipeline": this.widgetDataConfig,
-                "editMode": true
-            }
-        });
-
-        dialogRef.afterClosed().subscribe(widget => {
-            if (widget) {
-                this.configuredWidget = widget;
-                this.updateCallback.emit(this.configuredWidget);
-            }
-        });
-    }
+    dialogRef.afterClosed().subscribe(widget => {
+      if (widget) {
+        this.configuredWidget = widget;
+        this.loadVisualizablePipeline();
+        this.updateCallback.emit(this.configuredWidget);
+      }
+    });
+  }
 }

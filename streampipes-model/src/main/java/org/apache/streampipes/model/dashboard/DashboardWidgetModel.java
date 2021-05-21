@@ -67,4 +67,12 @@ public class DashboardWidgetModel extends DashboardEntity {
   public void setVisualizationName(String visualizationName) {
     this.visualizationName = visualizationName;
   }
+
+  public String getWidgetType() {
+    return widgetType;
+  }
+
+  public void setWidgetType(String widgetType) {
+    this.widgetType = widgetType;
+  }
 }

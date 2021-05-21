@@ -83,6 +83,9 @@ export class AddVisualizationDialogComponent implements OnInit, AfterViewInit {
     @Input()
     editMode: boolean;
 
+    @Input()
+    startPage: string;
+
 
     constructor(
         private dialogRef: DialogRef<AddVisualizationDialogComponent>,
@@ -102,10 +105,11 @@ export class AddVisualizationDialogComponent implements OnInit, AfterViewInit {
             this.dialogTitle = 'Add widget';
             this.loadVisualizablePipelines();
         } else {
+            this.loadVisualizablePipelines();
             this.dialogTitle = 'Edit widget';
             this.selectedPipeline = this.pipeline;
             this.selectedWidget = this.widget.dashboardWidgetSettings;
-            this.page = 'configure-widget';
+            this.page = this.startPage;
         }
     }
 
@@ -181,12 +185,16 @@ export class AddVisualizationDialogComponent implements OnInit, AfterViewInit {
         return requiredSchema.eventProperties.find(ep => ep.runtimeName === internalName);
     }
 
+    loadAvailableWidgets() {
+        this.availableWidgets = WidgetRegistry.getCompatibleWidgetTemplates(this.selectedPipeline);
+        this.availableWidgets.sort((a, b) => {
+            return a.widgetLabel < b.widgetLabel ? -1 : 1;
+        });
+    }
+
     next() {
         if (this.page == 'select-pipeline') {
-            this.availableWidgets = WidgetRegistry.getCompatibleWidgetTemplates(this.selectedPipeline);
-            this.availableWidgets.sort((a, b) => {
-                return a.widgetLabel < b.widgetLabel ? -1 : 1;
-            });
+            this.loadAvailableWidgets();
             this.page = 'select-widget';
         } else if (this.page == 'select-widget') {
             this.page = 'configure-widget';
@@ -197,6 +205,7 @@ export class AddVisualizationDialogComponent implements OnInit, AfterViewInit {
             configuredWidget.dashboardWidgetSettings["@class"] = "org.apache.streampipes.model.dashboard.DashboardWidgetSettings";
             configuredWidget.visualizationName = this.selectedPipeline.visualizationName;
             configuredWidget.pipelineId = this.selectedPipeline.pipelineId;
+            configuredWidget.widgetType = configuredWidget.dashboardWidgetSettings.widgetName;
             if (!this.editMode) {
                 this.dashboardService.saveWidget(configuredWidget).subscribe(response => {
                     this.dialogRef.close(response);
@@ -214,6 +223,7 @@ export class AddVisualizationDialogComponent implements OnInit, AfterViewInit {
         if (this.page == 'select-widget') {
             this.page = 'select-pipeline';
         } else if (this.page == 'configure-widget') {
+            this.loadAvailableWidgets();
             this.page = 'select-widget';
         }
     }

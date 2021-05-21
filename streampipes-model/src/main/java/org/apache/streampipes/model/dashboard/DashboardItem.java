@@ -24,7 +24,7 @@ public class DashboardItem {
   private String id;
   private String name;
   private String component;
-  private String widgetType;
+  //private String widgetType;
 
   private List<String> settings;
 
@@ -61,13 +61,13 @@ public class DashboardItem {
     this.component = component;
   }
 
-  public String getWidgetType() {
-    return widgetType;
-  }
-
-  public void setWidgetType(String widgetType) {
-    this.widgetType = widgetType;
-  }
+//  public String getWidgetType() {
+//    return widgetType;
+//  }
+//
+//  public void setWidgetType(String widgetType) {
+//    this.widgetType = widgetType;
+//  }
 
   public List<String> getSettings() {
     return settings;

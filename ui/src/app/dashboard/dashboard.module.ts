@@ -58,6 +58,7 @@ import {NgxEchartsModule} from "ngx-echarts";
 import {StatusWidgetComponent} from "./components/widgets/status/status-widget.component";
 import {BarRaceWidgetComponent} from "./components/widgets/bar-race/bar-race-widget.component";
 import {StackedLineChartWidgetComponent} from "./components/widgets/stacked-line-chart/stacked-line-chart-widget.component";
+import {EditModeService} from "./services/edit-mode.service";
 
 @NgModule({
     imports: [
@@ -108,6 +109,7 @@ import {StackedLineChartWidgetComponent} from "./components/widgets/stacked-line
     ],
     providers: [
         DashboardService,
+        EditModeService,
         ResizeService,
         RefreshDashboardService,
         SemanticTypeUtilsService,

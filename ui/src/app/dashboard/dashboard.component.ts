@@ -21,6 +21,7 @@ import {Dashboard} from "./models/dashboard.model";
 import {DashboardService} from "./services/dashboard.service";
 import {RefreshDashboardService} from "./services/refresh-dashboard.service";
 import {Tuple2} from "../core-model/base/Tuple2";
+import {EditModeService} from "./services/edit-mode.service";
 
 @Component({
     selector: 'dashboard',
@@ -39,13 +40,17 @@ export class DashboardComponent implements OnInit {
     dashboards: Array<Dashboard>;
 
     constructor(private dashboardService: DashboardService,
-                private refreshDashboardService: RefreshDashboardService) {}
+                private refreshDashboardService: RefreshDashboardService,
+                private editModeService: EditModeService) {}
 
-    public ngOnInit() {
+    ngOnInit() {
         this.getDashboards();
         this.refreshDashboardService.refreshSubject.subscribe(currentDashboardId => {
             this.getDashboards(currentDashboardId);
         });
+        this.editModeService.editModeSubject.subscribe(editMode => {
+            this.editMode = editMode;
+        })
 
     }
 
