@@ -33,17 +33,26 @@ This processor automatically downloads the file cities1000.zip from Geonames (ht
 
 ## Required input
 
-
+Input event requires to have latitude and longitude values.
 
 ***
 
 ## Configuration
 
-Describe the configuration parameters here
+### Latitude
 
-### 1st parameter
+The field containing the latitude value.
 
+### Longitude
 
-### 2nd parameter
+The field containing the longitude value.
 
 ## Output
+
+Outputs a similar event like below.
+
+```
+{
+  'place': 'Colombo'
+}
+```

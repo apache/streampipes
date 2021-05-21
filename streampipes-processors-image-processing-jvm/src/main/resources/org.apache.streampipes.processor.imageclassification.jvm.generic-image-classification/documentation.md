@@ -26,12 +26,12 @@
 ## Description
 
 Image  + Classification Description (Generic Model)
-Add a detailed description here
 
 ***
 
 ## Required input
 
+Input events require to have an image field.
 
 ***
 
@@ -39,9 +39,8 @@ Add a detailed description here
 
 Describe the configuration parameters here
 
-### 1st parameter
+### Image field
 
-
-### 2nd parameter
+Field that contains the image.
 
 ## Output

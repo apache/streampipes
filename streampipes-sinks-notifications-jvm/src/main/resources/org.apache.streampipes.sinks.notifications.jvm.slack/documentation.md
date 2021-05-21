@@ -55,7 +55,6 @@ The channel type, should be "User" or "Channel"
 
 The message that should be sent.
 
-### 2nd parameter
 
 ## Output
 

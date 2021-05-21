@@ -42,11 +42,11 @@ This is the first geographic coordinate that specifies the east-west position of
 ### First Latitude
 This is the second geographic coordinate that specifies the north-south position of a point on the Earth's surface.
 
-### First Longitude
-This is the first geographic coordinate that specifies the east-west position of a point on the Earth's surface.
-
 ### Second Longitude
 This is the second geographic coordinate that specifies the east-west position of a point on the Earth's surface.
+
+### Second Latitude
+This is the second geographic coordinate that specifies the north-south position of a point on the Earth's surface.
 
 ## Output
 {

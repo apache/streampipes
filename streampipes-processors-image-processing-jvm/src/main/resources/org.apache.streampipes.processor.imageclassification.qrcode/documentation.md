@@ -27,22 +27,36 @@
 ## Description
 
 QR Code Reader: Detects a QR Code in an image
-Add a detailed description here
 
 ***
 
 ## Required input
 
+Input events require to have an image field.
 
 ***
 
 ## Configuration
 
-Describe the configuration parameters here
+### Image
 
-### 1st parameter
+Image of the QR code
 
+### Send placeholder value if no qr code is detected
 
-### 2nd parameter
+It is a boolean selection.
+
+### Placeholder value
+
+Place holder value
 
 ## Output
+
+Outputs a similar event like below.
+
+```
+{
+  'qrvalue': 'http://githhub.com/',
+  'timestamp': 1621244783151  
+}
+```

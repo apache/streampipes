@@ -33,17 +33,23 @@ This processor computes the latitude and longitude values from a fixed location 
 
 ## Required input
 
-
+Input event requires to have a field which contains the name of a place.
 
 ***
 
 ## Configuration
 
-Describe the configuration parameters here
+### Place
 
-### 1st parameter
-
-
-### 2nd parameter
+The place name that should be converted to a lat/lng combination
 
 ## Output
+
+Outputs a similar event like below.
+
+```
+{
+  'latitude': 6.927079,
+  'longitude': 79.861244  
+}
+```

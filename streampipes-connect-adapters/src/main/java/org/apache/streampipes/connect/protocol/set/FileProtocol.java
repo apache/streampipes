@@ -20,6 +20,7 @@ package org.apache.streampipes.connect.protocol.set;
 
 
 import org.apache.http.client.fluent.Request;
+import org.apache.streampipes.connect.EmitBinaryEvent;
 import org.apache.streampipes.connect.SendToPipeline;
 import org.apache.streampipes.connect.adapter.exception.ParseException;
 import org.apache.streampipes.connect.adapter.guess.SchemaGuesser;
@@ -40,11 +41,12 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -56,13 +58,16 @@ public class FileProtocol extends Protocol {
     public static final String ID = "org.apache.streampipes.protocol.set.file";
 
     private String fileFetchUrl;
+    private static final String INTERVAL_KEY = "interval-key";
+    private int timeBetweenReplay;
 
     public FileProtocol() {
     }
 
-    public FileProtocol(Parser parser, Format format, String fileFetchUrl) {
+    public FileProtocol(Parser parser, Format format, String fileFetchUrl, int timeBetweenReplay) {
         super(parser, format);
         this.fileFetchUrl = fileFetchUrl;
+        this.timeBetweenReplay=timeBetweenReplay;
     }
 
     @Override
@@ -70,6 +75,7 @@ public class FileProtocol extends Protocol {
         return ProtocolDescriptionBuilder.create(ID)
                 .withAssets(Assets.DOCUMENTATION, Assets.ICON)
                 .withLocales(Locales.EN)
+                .requiredIntegerParameter(Labels.withId(INTERVAL_KEY))
                 .sourceType(AdapterSourceType.SET)
                 .category(AdapterType.Generic)
                 .requiredFile(Labels.withId("filePath"), Filetypes.XML, Filetypes.JSON, Filetypes.CSV)
@@ -79,9 +85,30 @@ public class FileProtocol extends Protocol {
     @Override
     public Protocol getInstance(ProtocolDescription protocolDescription, Parser parser, Format format) {
         StaticPropertyExtractor extractor = StaticPropertyExtractor.from(protocolDescription.getConfig());
-
+        int timeBetweenReplay = extractor.singleValueParameter(INTERVAL_KEY, Integer.class);
         String fileFetchUrl = extractor.selectedFileFetchUrl("filePath");
-        return new FileProtocol(parser, format, fileFetchUrl);
+        return new FileProtocol(parser, format, fileFetchUrl,timeBetweenReplay);
+    }
+
+    public void parse(InputStream data, EmitBinaryEvent emitBinaryEvent) throws ParseException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(data));
+        boolean result = true;
+        try {
+            while (reader.ready() && result) {
+                String s = reader.readLine();
+                byte[] parseResult = s.getBytes();
+                if (parseResult != null) {
+                    result = emitBinaryEvent.emit(parseResult);
+                }
+                try {
+                    Thread.sleep(this.timeBetweenReplay);
+                } catch (InterruptedException e) {
+                    logger.error("Error while waiting for next replay round" + e.getMessage());
+                }
+            }
+        } catch (IOException var) {
+            throw new ParseException(var.getMessage());
+        }
     }
 
     @Override
@@ -94,13 +121,10 @@ public class FileProtocol extends Protocol {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
         SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
         try {
-            InputStream in = Request.Get(fileFetchUrl).execute().returnContent().asStream();;
-            parser.parse(in, stk);
-        } catch (IOException e) {
-            e.printStackTrace();
+            InputStream in = getDataFromEndpoint();
+            parse(in, stk);
         } catch (ParseException e) {
             logger.error("Error while parsing: " + e.getMessage());
         }
@@ -120,7 +144,7 @@ public class FileProtocol extends Protocol {
 
         List<byte[]> dataByte = parser.parseNEvents(dataInputStream, 20);
 
-        EventSchema eventSchema= parser.getEventSchema(dataByte);
+        EventSchema eventSchema = parser.getEventSchema(dataByte);
 
         GuessSchema result = SchemaGuesser.guessSchma(eventSchema, getNElements(20));
 
