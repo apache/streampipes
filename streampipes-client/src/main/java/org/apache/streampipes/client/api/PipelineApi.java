@@ -100,6 +100,24 @@ public class PipelineApi extends AbstractClientApi<Pipeline> implements CRUDApi<
     return getSingle(getBaseResourcePath().addToPath(pipelineId).addToPath("stop"), PipelineOperationStatus.class);
   }
 
+  public PipelineOperationStatus migrate(Pipeline pipeline) {
+    return migrate(pipeline.getPipelineId(), pipeline);
+  }
+
+  private PipelineOperationStatus migrate(String pipelineId, Pipeline pipeline) {
+    return  post(getBaseResourcePath().addToPath("migrate").addToPath(pipelineId),
+            pipeline, PipelineOperationStatus.class);
+  }
+
+  public PipelineOperationStatus reconfigure(Pipeline pipeline) {
+    return reconfigure(pipeline.getPipelineId(), pipeline);
+  }
+
+  private PipelineOperationStatus reconfigure(String pipelineId, Pipeline pipeline) {
+    return put(getBaseResourcePath().addToPath("reconfigure").addToPath(pipelineId),
+            pipeline, PipelineOperationStatus.class);
+  }
+
   @Override
   protected StreamPipesApiPath getBaseResourcePath() {
     return StreamPipesApiPath.fromUserApiPath(clientConfig.getCredentials())

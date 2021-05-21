@@ -68,6 +68,12 @@ public abstract class AbstractClientApi<T> {
     new PostRequestWithoutPayloadResponse<>(clientConfig, apiPath, serializer, object).executeRequest();
   }
 
+  protected <O> O put(StreamPipesApiPath apiPath, T object, Class<O> responseClass) {
+    ObjectSerializer<T, O> serializer = new ObjectSerializer<>();
+    return new PutRequestWithPayloadResponse<>(clientConfig, apiPath, serializer, object, responseClass)
+            .executeRequest();
+  }
+
   protected <O> O delete(StreamPipesApiPath apiPath, Class<O> responseClass) {
     Serializer<Void, O, O> serializer = new ObjectSerializer<>();
     return new DeleteRequest<>(clientConfig, apiPath, responseClass, serializer).executeRequest();

@@ -62,6 +62,12 @@ public abstract class HttpRequest<SO, DSO, DT> {
     return headers.toArray(new Header[0]);
   }
 
+  protected Header[] standardPutHeaders() {
+    List<Header> headers = new ArrayList<>(Arrays.asList(standardHeaders()));
+    headers.add(Headers.contentTypeJson());
+    return headers.toArray(new Header[0]);
+  }
+
   protected String makeUrl() {
     return makeUrl(true);
   }
