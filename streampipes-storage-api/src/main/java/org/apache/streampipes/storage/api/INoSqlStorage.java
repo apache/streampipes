@@ -57,8 +57,6 @@ public interface INoSqlStorage {
 
   IDataExplorerWidgetStorage getDataExplorerWidgetStorage();
 
-  IVisualizablePipelineStorage getVisualizablePipelineStorage();
-
   IPipelineElementTemplateStorage getPipelineElementTemplateStorage();
 
 }

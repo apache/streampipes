@@ -35,7 +35,6 @@ import javax.persistence.MappedSuperclass;
 @Entity
 @JsonSubTypes({
         @JsonSubTypes.Type(DashboardWidgetModel.class),
-        @JsonSubTypes.Type(VisualizablePipeline.class),
         @JsonSubTypes.Type(DataExplorerWidgetModel.class)
 })
 public abstract class DashboardEntity extends UnnamedStreamPipesEntity {

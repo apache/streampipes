@@ -78,10 +78,6 @@ public class Utils {
     return dbClient;
   }
 
-  public static CouchDbClient getCouchDbVisualizablePipelineClient() {
-    return getCouchDbGsonClient("visualizablepipeline");
-  }
-
   public static CouchDbClient getCouchDbDataExplorerDashboardClient() {
     return getCouchDbGsonClient("dataexplorerdashboard");
   }

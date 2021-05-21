@@ -30,13 +30,19 @@
         </div>
         <div class="h-100 p-0 row content">
             <!--        <div *ngIf="widget."></div>-->
-            <div *ngIf="widgetLoaded && pipelineNotRunning" class="h-100 pipeline-not-running" fxFlex="100"
+            <div *ngIf="widgetLoaded && widgetNotAvailable" class="h-100 pipeline-not-running" fxFlex="100"
                  fxLayout="column"
                  fxLayoutAlign="center center">
                 <i class="material-icons disconnect-icon">block</i>
-                <h5 style="text-align:center;">corresponding pipeline is not running</h5>
+                <h5 style="text-align:center;">Widget not found, did you modify the pipeline?</h5>
             </div>
-            <div *ngIf="widgetLoaded && !pipelineNotRunning" class="h-100">
+            <div *ngIf="widgetLoaded && !widgetNotAvailable && !pipelineRunning" class="h-100 pipeline-not-running" fxFlex="100"
+                 fxLayout="column"
+                 fxLayoutAlign="center center">
+                <i class="material-icons disconnect-icon">link_off</i>
+                <h5 style="text-align:center;">Underlying pipeline {{pipeline.name}} is not running, did you start the pipeline?</h5>
+            </div>
+            <div *ngIf="widgetLoaded && pipelineRunning" class="h-100">
                 <div *ngIf="widget.widgetType === 'number'" class="h-100 p-0">
                     <number-widget [gridsterItemComponent]="gridsterItemComponent" [gridsterItem]="item"
                                    [widget]="widget" [editMode]="editMode"

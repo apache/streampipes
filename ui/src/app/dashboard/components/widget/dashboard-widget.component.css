@@ -52,7 +52,8 @@
 }
 
 .pipeline-not-running {
-    background: #ef9a9a;
+    background: #e2e2e2;
+    border: 1px solid #f44336;
     padding: 20px;
     display:flex;
     align-items: center;

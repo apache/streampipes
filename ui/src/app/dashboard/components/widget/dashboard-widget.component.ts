@@ -22,7 +22,7 @@ import {DashboardService} from "../../services/dashboard.service";
 import {GridsterItem, GridsterItemComponent} from "angular-gridster2";
 import {AddVisualizationDialogComponent} from "../../dialogs/add-widget/add-visualization-dialog.component";
 import {
-    DashboardWidgetModel,
+    DashboardWidgetModel, Pipeline,
     VisualizablePipeline
 } from "../../../core-model/gen/streampipes-model";
 import {PanelType} from "../../../core-ui/dialog/base-dialog/base-dialog.model";
@@ -47,8 +47,10 @@ export class DashboardWidgetComponent implements OnInit {
     widgetLoaded: boolean = false;
     configuredWidget: DashboardWidgetModel;
     widgetDataConfig: VisualizablePipeline;
+    pipeline: Pipeline;
 
-    pipelineNotRunning: boolean = false;
+    pipelineRunning: boolean = false;
+    widgetNotAvailable: boolean = false;
 
     constructor(private dashboardService: DashboardService,
                 private dialogService: DialogService) {
@@ -58,13 +60,17 @@ export class DashboardWidgetComponent implements OnInit {
         this.dashboardService.getWidget(this.widget.id).subscribe(response => {
             this.configuredWidget = response;
             this.dashboardService.getVisualizablePipelineByPipelineIdAndVisualizationName(this.configuredWidget.pipelineId,
-                this.configuredWidget.visualizationName).subscribe(pipeline => {
-                this.widgetDataConfig = pipeline;
-                this.pipelineNotRunning = false;
-                this.widgetLoaded = true;
+                this.configuredWidget.visualizationName).subscribe(vizPipeline => {
+                this.widgetDataConfig = vizPipeline;
+                this.dashboardService.getPipelineById(vizPipeline.pipelineId).subscribe(pipeline => {
+                    this.pipeline = pipeline;
+                    this.pipelineRunning = pipeline.running;
+                    this.widgetNotAvailable = false;
+                    this.widgetLoaded = true;
+                });
             }, err => {
                 this.widgetLoaded = true;
-                this.pipelineNotRunning = true;
+                this.widgetNotAvailable = true;
             });
         });
     }

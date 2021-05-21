@@ -37,7 +37,6 @@ export class DashboardService {
                 private authStatusService: AuthStatusService) {
     }
 
-
     getPipelineById(id: string): Observable<Pipeline> {
         return this.http.get(this.pipelinesUrl + "/" +id).pipe(map(data => {
             return Pipeline.fromData(data as any);
@@ -49,22 +48,6 @@ export class DashboardService {
             .get(this.visualizablePipelineUrl)
             .pipe(map(data => {
                 return (data as []).map(p => VisualizablePipeline.fromData(p as VisualizablePipeline));
-            }));
-    }
-
-    getVisualizablePipelineById(id: string): Observable<VisualizablePipeline> {
-        return this.http
-            .get(this.visualizablePipelineUrl + "/" + id)
-            .pipe(map(data => {
-                return VisualizablePipeline.fromData(data as VisualizablePipeline);
-            }));
-    }
-
-    getVisualizablePipelineByTopic(topic: string): Observable<VisualizablePipeline> {
-        return this.http
-            .get(this.visualizablePipelineUrl + "/topic/" + topic)
-            .pipe(map(data => {
-                return VisualizablePipeline.fromData(data as VisualizablePipeline);
             }));
     }
 

@@ -191,8 +191,6 @@ export class AddVisualizationDialogComponent implements OnInit, AfterViewInit {
             configuredWidget["@class"] = "org.apache.streampipes.model.dashboard.DashboardWidgetModel";
             configuredWidget.dashboardWidgetSettings = this.selectedWidget;
             configuredWidget.dashboardWidgetSettings["@class"] = "org.apache.streampipes.model.dashboard.DashboardWidgetSettings";
-            configuredWidget.visualizablePipelineId = this.selectedPipeline._id;
-            configuredWidget.visualizablePipelineTopic = this.selectedPipeline.topic;
             configuredWidget.visualizationName = this.selectedPipeline.visualizationName;
             configuredWidget.pipelineId = this.selectedPipeline.pipelineId;
             if (!this.editMode) {
