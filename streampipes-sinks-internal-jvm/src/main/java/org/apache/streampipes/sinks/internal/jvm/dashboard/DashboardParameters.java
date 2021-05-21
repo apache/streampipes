@@ -23,31 +23,15 @@ import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.wrapper.params.binding.EventSinkBindingParams;
 
 public class DashboardParameters extends EventSinkBindingParams {
-    private String pipelineId;
     private String elementId;
     private EventSchema schema;
     private String visualizationName;
 
-    public DashboardParameters(DataSinkInvocation invocationGraph, String visualizationName) {
+    public DashboardParameters(DataSinkInvocation invocationGraph) {
         super(invocationGraph);
-        this.schema = invocationGraph.getInputStreams().get(0).getEventSchema();
-        this.pipelineId = invocationGraph.getCorrespondingPipeline();
-        this.visualizationName = visualizationName;
 
         this.elementId = invocationGraph.getElementId();
         this.elementId = this.elementId.substring(this.elementId.lastIndexOf("/") + 1);
-    }
-
-    public String getPipelineId() {
-        return pipelineId;
-    }
-
-    public EventSchema getSchema() {
-        return schema;
-    }
-
-    public String getVisualizationName() {
-        return visualizationName;
     }
 
     public String getElementId() {

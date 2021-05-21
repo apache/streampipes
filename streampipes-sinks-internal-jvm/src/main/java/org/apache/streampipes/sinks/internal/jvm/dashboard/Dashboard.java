@@ -18,14 +18,10 @@
 
 package org.apache.streampipes.sinks.internal.jvm.dashboard;
 
-import org.lightcouch.CouchDbClient;
-import org.lightcouch.CouchDbProperties;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.apache.streampipes.messaging.jms.ActiveMQPublisher;
-import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.serializers.json.GsonSerializer;
 import org.apache.streampipes.sinks.internal.jvm.config.SinksInternalJvmConfig;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.runtime.EventSink;
@@ -35,31 +31,16 @@ public class Dashboard implements EventSink<DashboardParameters> {
     private ActiveMQPublisher publisher;
     private JsonDataFormatDefinition jsonDataFormatDefinition;
 
-    private static String DB_NAME = "visualizablepipeline";
-    private static int DB_PORT = SinksInternalJvmConfig.INSTANCE.getCouchDbPort();
-    private static String DB_HOST = SinksInternalJvmConfig.INSTANCE.getCouchDbHost();
-    private static String DB_PROTOCOL = "http";
-
-
-    private String visualizationId;
-    private String visualizationRev;
-    private String pipelineId;
-
-
     public Dashboard() {
         this.jsonDataFormatDefinition = new JsonDataFormatDefinition();
     }
 
     @Override
     public void onInvocation(DashboardParameters parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
-        if (!saveToCouchDB(parameters.getGraph(), parameters)) {
-            throw new SpRuntimeException("The schema couldn't be stored in the couchDB");
-        }
         this.publisher = new ActiveMQPublisher(
                 SinksInternalJvmConfig.INSTANCE.getJmsHost(),
                 SinksInternalJvmConfig.INSTANCE.getJmsPort(),
                 parameters.getElementId());
-        this.pipelineId = parameters.getPipelineId();
     }
 
     @Override
@@ -71,31 +52,8 @@ public class Dashboard implements EventSink<DashboardParameters> {
         }
     }
 
-    private boolean saveToCouchDB(DataSinkInvocation invocationGraph, DashboardParameters params) {
-        CouchDbClient dbClient = new CouchDbClient(new CouchDbProperties(DB_NAME, true, DB_PROTOCOL, DB_HOST, DB_PORT, null, null));
-        dbClient.setGsonBuilder(GsonSerializer.getGsonBuilder());
-        org.lightcouch.Response res = dbClient.save(DashboardModel.from(params));
-
-        if (res.getError() == null) {
-            visualizationId = res.getId();
-            visualizationRev = res.getRev();
-        }
-
-        return res.getError() == null;
-    }
-
-    private boolean removeFromCouchDB() {
-        CouchDbClient dbClient = new CouchDbClient(new CouchDbProperties(DB_NAME, true, DB_PROTOCOL, DB_HOST, DB_PORT, null, null));
-        org.lightcouch.Response res = dbClient.remove(visualizationId, visualizationRev);
-
-        return res.getError() == null;
-    }
-
     @Override
     public void onDetach() throws SpRuntimeException {
         this.publisher.disconnect();
-        if (!removeFromCouchDB()) {
-            throw new SpRuntimeException("There was an error while deleting pipeline: '" + pipelineId + "'");
-        }
     }
 }
