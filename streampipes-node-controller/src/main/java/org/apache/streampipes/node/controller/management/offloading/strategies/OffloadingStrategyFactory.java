@@ -84,7 +84,7 @@ public class OffloadingStrategyFactory {
         return new OffloadingStrategy<>(
                 new ThresholdViolationOffloadingPolicy<>(5, Comparator.SMALLER,
                         threshold, 4),
-                new FreeMemoryResourceProperty(), new RandomSelectionStrategy());
+                new FreeDiskSpaceResourceProperty(), new RandomSelectionStrategy());
     }
 
 }

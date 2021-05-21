@@ -73,12 +73,14 @@ public class OffloadingPolicyManager {
         InvocableStreamPipesEntity offloadEntity = strategy.getSelectionStrategy().select(this.unsuccessfullyTriedEntities);
         if(offloadEntity != null){
             Response resp = PipelineElementManager.getInstance().offload(offloadEntity);
+
+            String appId = offloadEntity.getAppId();
+            String pipelineName = offloadEntity.getCorrespondingPipeline();
+
             if(resp.isSuccess()){
-                LOG.info("Successfully offloaded: " + offloadEntity.getAppId()
-                        + " of pipeline: " + offloadEntity.getCorrespondingPipeline());
+                LOG.info("Successfully offloaded: {} of pipeline: {}", appId, pipelineName);
             } else{
-                LOG.info("Failed to offload: " + offloadEntity.getAppId()
-                        + " of pipeline: " + offloadEntity.getCorrespondingPipeline());
+                LOG.warn("Failed to offload: {} of pipeline: {}", appId, pipelineName);
                 unsuccessfullyTriedEntities.add(offloadEntity);
             }
         } else LOG.info("No pipeline element found to offload");
