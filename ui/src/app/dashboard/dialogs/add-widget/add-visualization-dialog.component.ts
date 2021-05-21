@@ -100,16 +100,7 @@ export class AddVisualizationDialogComponent implements OnInit, AfterViewInit {
         });
         if (!this.editMode) {
             this.dialogTitle = 'Add widget';
-            this.dashboardService.getVisualizablePipelines().subscribe(visualizations => {
-                this.visualizablePipelines = [];
-                visualizations.forEach(vis => {
-                    this.pipelineService.getPipelineById(vis.pipelineId).subscribe(pipeline => {
-                        vis.pipelineName = pipeline.name;
-                        this.visualizablePipelines.push(vis);
-                        this.sortPipeline();
-                    });
-                });
-            });
+            this.loadVisualizablePipelines();
         } else {
             this.dialogTitle = 'Edit widget';
             this.selectedPipeline = this.pipeline;
@@ -122,6 +113,19 @@ export class AddVisualizationDialogComponent implements OnInit, AfterViewInit {
         this.viewInitialized = true;
         this.formValid = this.viewInitialized && this.parentForm.valid;
         this.changeDetectorRef.detectChanges();
+    }
+
+    loadVisualizablePipelines() {
+        this.dashboardService.getVisualizablePipelines().subscribe(visualizations => {
+            this.visualizablePipelines = [];
+            visualizations.forEach(vis => {
+                this.pipelineService.getPipelineById(vis.pipelineId).subscribe(pipeline => {
+                    vis.pipelineName = pipeline.name;
+                    this.visualizablePipelines.push(vis);
+                    this.sortPipeline();
+                });
+            });
+        });
     }
 
     sortPipeline() {

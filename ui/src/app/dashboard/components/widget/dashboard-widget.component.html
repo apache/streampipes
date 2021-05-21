@@ -19,7 +19,7 @@
 <div style="height:100%;">
     <div class="box">
         <div class="assemblyOptions sp-blue-bg m-0 row header h-40" *ngIf="editMode && headerVisible">
-            <div fxFlex="100" layout="row" fxLayoutAlign="end center">
+            <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
                 <button mat-button mat-icon-button color="white" (click)="editWidget()">
                     <i class="material-icons">settings</i>
                 </button>
@@ -29,18 +29,23 @@
             </div>
         </div>
         <div class="h-100 p-0 row content">
-            <!--        <div *ngIf="widget."></div>-->
             <div *ngIf="widgetLoaded && widgetNotAvailable" class="h-100 pipeline-not-running" fxFlex="100"
                  fxLayout="column"
                  fxLayoutAlign="center center">
                 <i class="material-icons disconnect-icon">block</i>
                 <h5 style="text-align:center;">Widget not found, did you modify the pipeline?</h5>
+                <button mat-button mat-raised-button color="primary" (click)="modifyWidget()">
+                    <span>Modify widget</span>
+                </button>
             </div>
             <div *ngIf="widgetLoaded && !widgetNotAvailable && !pipelineRunning" class="h-100 pipeline-not-running" fxFlex="100"
                  fxLayout="column"
                  fxLayoutAlign="center center">
                 <i class="material-icons disconnect-icon">link_off</i>
-                <h5 style="text-align:center;">Underlying pipeline {{pipeline.name}} is not running, did you start the pipeline?</h5>
+                <h5 style="text-align:center;">Pipeline <i>{{pipeline.name}}</i> is not running, did you start the pipeline?</h5>
+                <button mat-button mat-raised-button color="primary" (click)="startPipeline()">
+                    <span>Start pipeline</span>
+                </button>
             </div>
             <div *ngIf="widgetLoaded && pipelineRunning" class="h-100">
                 <div *ngIf="widget.widgetType === 'number'" class="h-100 p-0">

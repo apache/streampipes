@@ -27,6 +27,7 @@ import {
 } from "../../../core-model/gen/streampipes-model";
 import {PanelType} from "../../../core-ui/dialog/base-dialog/base-dialog.model";
 import {DialogService} from "../../../core-ui/dialog/base-dialog/base-dialog.service";
+import {PipelineService} from "../../../platform-services/apis/pipeline.service";
 
 @Component({
     selector: 'dashboard-widget',
@@ -53,10 +54,15 @@ export class DashboardWidgetComponent implements OnInit {
     widgetNotAvailable: boolean = false;
 
     constructor(private dashboardService: DashboardService,
-                private dialogService: DialogService) {
+                private dialogService: DialogService,
+                private pipelineService: PipelineService) {
     }
 
     ngOnInit(): void {
+        this.loadWidget();
+    }
+
+    loadWidget() {
         this.dashboardService.getWidget(this.widget.id).subscribe(response => {
             this.configuredWidget = response;
             this.dashboardService.getVisualizablePipelineByPipelineIdAndVisualizationName(this.configuredWidget.pipelineId,
@@ -77,6 +83,19 @@ export class DashboardWidgetComponent implements OnInit {
 
     removeWidget() {
         this.deleteCallback.emit(this.widget);
+    }
+
+    startPipeline() {
+        if (!this.pipelineRunning) {
+            this.pipelineService
+                .startPipeline(this.pipeline._id)
+                .subscribe(status => this.loadWidget());
+        }
+    }
+
+    modifyWidget() {
+        this.editMode = true;
+        this.editWidget();
     }
 
     editWidget(): void {
