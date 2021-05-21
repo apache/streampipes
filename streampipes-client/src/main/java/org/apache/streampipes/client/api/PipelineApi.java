@@ -100,19 +100,39 @@ public class PipelineApi extends AbstractClientApi<Pipeline> implements CRUDApi<
     return getSingle(getBaseResourcePath().addToPath(pipelineId).addToPath("stop"), PipelineOperationStatus.class);
   }
 
+  /**
+   * Migrates pipeline elements at run-time
+   * @param pipeline The pipeline
+   * @return {@link org.apache.streampipes.model.pipeline.PipelineOperationStatus} the status message after migration
+   */
   public PipelineOperationStatus migrate(Pipeline pipeline) {
     return migrate(pipeline.getPipelineId(), pipeline);
   }
 
+  /**
+   * Migrates pipeline elements at run-time
+   * @param pipeline The pipeline
+   * @return {@link org.apache.streampipes.model.pipeline.PipelineOperationStatus} the status message after migration
+   */
   private PipelineOperationStatus migrate(String pipelineId, Pipeline pipeline) {
     return  post(getBaseResourcePath().addToPath("migrate").addToPath(pipelineId),
             pipeline, PipelineOperationStatus.class);
   }
 
+  /**
+   * Reconfigures individual pipeline elements at run-time
+   * @param pipeline The pipeline
+   * @return {@link org.apache.streampipes.model.pipeline.PipelineOperationStatus} the status message after migration
+   */
   public PipelineOperationStatus reconfigure(Pipeline pipeline) {
     return reconfigure(pipeline.getPipelineId(), pipeline);
   }
 
+  /**
+   * Reconfigures individual pipeline elements at run-time
+   * @param pipeline The pipeline
+   * @return {@link org.apache.streampipes.model.pipeline.PipelineOperationStatus} the status message after migration
+   */
   private PipelineOperationStatus reconfigure(String pipelineId, Pipeline pipeline) {
     return put(getBaseResourcePath().addToPath("reconfigure").addToPath(pipelineId),
             pipeline, PipelineOperationStatus.class);
