@@ -59,6 +59,7 @@ import {StatusWidgetComponent} from "./components/widgets/status/status-widget.c
 import {BarRaceWidgetComponent} from "./components/widgets/bar-race/bar-race-widget.component";
 import {StackedLineChartWidgetComponent} from "./components/widgets/stacked-line-chart/stacked-line-chart-widget.component";
 import {EditModeService} from "./services/edit-mode.service";
+import {ReloadPipelineService} from "./services/reload-pipeline.service";
 
 @NgModule({
     imports: [
@@ -110,6 +111,7 @@ import {EditModeService} from "./services/edit-mode.service";
     providers: [
         DashboardService,
         EditModeService,
+        ReloadPipelineService,
         ResizeService,
         RefreshDashboardService,
         SemanticTypeUtilsService,

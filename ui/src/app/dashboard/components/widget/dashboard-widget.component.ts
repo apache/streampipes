@@ -29,6 +29,7 @@ import {PanelType} from "../../../core-ui/dialog/base-dialog/base-dialog.model";
 import {DialogService} from "../../../core-ui/dialog/base-dialog/base-dialog.service";
 import {PipelineService} from "../../../platform-services/apis/pipeline.service";
 import {EditModeService} from "../../services/edit-mode.service";
+import {ReloadPipelineService} from "../../services/reload-pipeline.service";
 
 @Component({
   selector: 'dashboard-widget',
@@ -57,11 +58,15 @@ export class DashboardWidgetComponent implements OnInit {
   constructor(private dashboardService: DashboardService,
               private dialogService: DialogService,
               private pipelineService: PipelineService,
-              private editModeService: EditModeService) {
+              private editModeService: EditModeService,
+              private reloadPipelineService: ReloadPipelineService) {
   }
 
   ngOnInit(): void {
     this.loadWidget();
+    this.reloadPipelineService.reloadPipelineSubject.subscribe(() => {
+      this.loadWidget();
+    })
   }
 
   loadWidget() {
@@ -95,7 +100,10 @@ export class DashboardWidgetComponent implements OnInit {
     if (!this.pipelineRunning) {
       this.pipelineService
           .startPipeline(this.pipeline._id)
-          .subscribe(status => this.loadWidget());
+          .subscribe(status => {
+            //this.loadWidget();
+            this.reloadPipelineService.reloadPipelineSubject.next();
+          });
     }
   }
 

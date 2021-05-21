@@ -16,15 +16,16 @@
  *
  */
 
-import {Injectable} from "@angular/core";
 import {ReplaySubject, Subject} from "rxjs";
+import {Injectable} from "@angular/core";
+import {GridsterInfo} from "../models/gridster-info.model";
 
 @Injectable()
-export class RefreshDashboardService {
+export class ReloadPipelineService {
 
-    public refreshSubject: Subject<string> = new Subject<string>();
+  public reloadPipelineSubject: Subject<void> = new Subject<void>();
 
-    public notify(currentDashboard: string): void {
-        this.refreshSubject.next(currentDashboard);
-    }
+  public notify(): void {
+    this.reloadPipelineSubject.next();
+  }
 }

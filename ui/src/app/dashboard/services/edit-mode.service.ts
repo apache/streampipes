@@ -16,14 +16,14 @@
  *
  */
 
-import {ReplaySubject} from "rxjs";
+import {ReplaySubject, Subject} from "rxjs";
 import {Injectable} from "@angular/core";
 import {GridsterInfo} from "../models/gridster-info.model";
 
 @Injectable()
 export class EditModeService {
 
-  public editModeSubject: ReplaySubject<boolean> = new ReplaySubject<boolean>();
+  public editModeSubject: Subject<boolean> = new Subject<boolean>();
 
   public notify(editMode: boolean): void {
     this.editModeSubject.next(editMode);
