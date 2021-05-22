@@ -122,7 +122,7 @@ export class SavePipelineComponent implements OnInit {
     storageRequest
         .subscribe(statusMessage => {
           if (statusMessage.success) {
-            let pipelineId: string = this.currentModifiedPipelineId || statusMessage.notifications[1].description;
+            let pipelineId: string = statusMessage.notifications[1].description;
             this.afterStorage(statusMessage, switchTab, pipelineId);
           } else {
             this.displayErrors(statusMessage.notifications[0]);
