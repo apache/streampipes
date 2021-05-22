@@ -154,10 +154,12 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @JacksonSerialized
   @Operation(summary = "Stop the pipeline with the given id",
           tags = {"Pipeline"})
-  public Response stop(@PathParam("username") String username, @PathParam("pipelineId") String pipelineId) {
+  public Response stop(@PathParam("username") String username,
+                       @PathParam("pipelineId") String pipelineId,
+                       @QueryParam("forceStop") @DefaultValue("false") boolean forceStop) {
     logger.info("User: " + username + " stopped pipeline: " + pipelineId);
     PipelineManagement pm = new PipelineManagement();
-    return pm.stopPipeline(pipelineId);
+    return pm.stopPipeline(pipelineId, forceStop);
   }
 
   @POST

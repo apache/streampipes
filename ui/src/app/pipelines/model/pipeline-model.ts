@@ -16,18 +16,7 @@
  *
  */
 
-package org.apache.streampipes.manager.pipeline;
-
-import org.apache.streampipes.manager.operations.Operations;
-import org.apache.streampipes.model.pipeline.Pipeline;
-import org.apache.streampipes.storage.management.StorageDispatcher;
-
-public class StopPipeline {
-
-    public static void main(String[] args) {
-        Pipeline pipeline = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getPipeline
-                ("2720e901-73d8-4d9e-8508-6a89551fe6fe");
-
-        Operations.stopPipeline(pipeline);
-    }
+export enum PipelineAction {
+  Start,
+  Stop
 }

@@ -45,13 +45,18 @@ public class PipelineExecutor {
   private boolean visualize;
   private boolean storeStatus;
   private boolean monitor;
+  private boolean forceStop;
 
-  public PipelineExecutor(Pipeline pipeline, boolean visualize, boolean storeStatus,
-                          boolean monitor) {
+  public PipelineExecutor(Pipeline pipeline,
+                          boolean visualize,
+                          boolean storeStatus,
+                          boolean monitor,
+                          boolean forceStop) {
     this.pipeline = pipeline;
     this.visualize = visualize;
     this.storeStatus = storeStatus;
     this.monitor = monitor;
+    this.forceStop = forceStop;
   }
 
   public PipelineOperationStatus startPipeline() {
@@ -146,9 +151,6 @@ public class PipelineExecutor {
                 .getVisualizationStorageApi()
                 .deleteVisualization(pipeline.getPipelineId());
       }
-      if (storeStatus) {
-        setPipelineStopped(pipeline);
-      }
 
       PipelineStatusManager.addPipelineStatus(pipeline.getPipelineId(),
               new PipelineStatusMessage(pipeline.getPipelineId(),
@@ -156,6 +158,12 @@ public class PipelineExecutor {
                       PipelineStatusMessageType.PIPELINE_STOPPED.title(),
                       PipelineStatusMessageType.PIPELINE_STOPPED.description()));
 
+    }
+
+    if (status.isSuccess() || forceStop) {
+      if (storeStatus) {
+        setPipelineStopped(pipeline);
+      }
     }
     return status;
   }

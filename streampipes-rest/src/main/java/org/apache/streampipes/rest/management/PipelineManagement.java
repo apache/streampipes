@@ -29,10 +29,11 @@ import javax.ws.rs.core.Response;
 
 public class PipelineManagement extends AbstractRestResource {
 
-    public Response stopPipeline(String pipelineId) {
+    public Response stopPipeline(String pipelineId,
+                                 boolean forceStop) {
         try {
             Pipeline pipeline = getPipelineStorage().getPipeline(pipelineId);
-            PipelineOperationStatus status = Operations.stopPipeline(pipeline);
+            PipelineOperationStatus status = Operations.stopPipeline(pipeline, forceStop);
             return ok(status);
         } catch
                 (Exception e) {

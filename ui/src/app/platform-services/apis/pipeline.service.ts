@@ -27,6 +27,7 @@ import {
   PipelineOperationStatus, PipelineStatusMessage
 } from "../../core-model/gen/streampipes-model";
 import {map} from "rxjs/operators";
+import {query} from "@angular/animations";
 
 @Injectable()
 export class PipelineService {
@@ -56,8 +57,14 @@ export class PipelineService {
         .pipe(map(result => PipelineOperationStatus.fromData(result as PipelineOperationStatus)));
   }
 
-  stopPipeline(pipelineId): Observable<PipelineOperationStatus> {
-    return this.http.get(this.platformServicesCommons.authUserBasePath() + "/pipelines/" + pipelineId + "/stop")
+  stopPipeline(pipelineId: string, forceStop?: boolean): Observable<PipelineOperationStatus> {
+    let queryAppendix = "";
+    if (forceStop) {
+      queryAppendix = "?forceStop=" + forceStop;
+    }
+    return this.http.get(this.platformServicesCommons.authUserBasePath()
+        + "/pipelines/" + pipelineId
+        + "/stop" + queryAppendix)
         .pipe(map(result => PipelineOperationStatus.fromData(result as PipelineOperationStatus)));
   }
 

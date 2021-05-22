@@ -25,6 +25,7 @@ import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.pipeline.PipelineElementStatus;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,10 +43,10 @@ public class GraphSubmitter {
                         String pipelineName,
                         List<InvocableStreamPipesEntity> graphs,
                         List<SpDataSet> dataSets) {
-    this.graphs = graphs;
+    this.graphs = graphs != null ? graphs : new ArrayList<>();
     this.pipelineId = pipelineId;
     this.pipelineName = pipelineName;
-    this.dataSets = dataSets;
+    this.dataSets = dataSets != null ? dataSets : new ArrayList<>();
   }
 
   public PipelineOperationStatus invokeGraphs() {

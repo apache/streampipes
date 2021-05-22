@@ -45,6 +45,6 @@ public class PipelineNoUserResource extends AbstractRestResource {
     public Response stop(@PathParam("pipelineId") String pipelineId) {
         logger.info("Pipeline: " + pipelineId + " was stopped by the system");
         PipelineManagement pm = new PipelineManagement();
-        return pm.stopPipeline(pipelineId);
+        return pm.stopPipeline(pipelineId, false);
     }
 }

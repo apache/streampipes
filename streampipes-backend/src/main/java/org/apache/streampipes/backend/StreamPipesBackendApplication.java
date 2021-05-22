@@ -95,7 +95,7 @@ public class StreamPipesBackendApplication {
     });
 
     LOG.info("Gracefully stopping all running pipelines...");
-    List<PipelineOperationStatus> status = Operations.stopAllPipelines();
+    List<PipelineOperationStatus> status = Operations.stopAllPipelines(true);
     status.forEach(s -> {
       if (s.isSuccess()) {
         LOG.info("Pipeline {} successfully stopped", s.getPipelineName());
