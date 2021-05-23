@@ -80,7 +80,7 @@ public class VisualizablePipeline extends AbstractRestResource {
                 visualizablePipeline.setPipelineName(pipeline.getName());
                 visualizablePipeline.setVisualizationName(extractVisualizationName(sink));
                 visualizablePipeline.setSchema(sink.getInputStreams().get(0).getEventSchema());
-                visualizablePipeline.setTopic(sink.getElementId().substring(sink.getElementId().lastIndexOf(Slash) + 1));
+                visualizablePipeline.setTopic(makeTopic(sink));
 
                 visualizablePipelines.add(visualizablePipeline);
               });
@@ -88,6 +88,25 @@ public class VisualizablePipeline extends AbstractRestResource {
 
      return visualizablePipelines;
   }
+
+  private String makeTopic(DataSinkInvocation sink) {
+    return extractInputTopic(sink) + "-" + normalize(extractVisualizationName(sink));
+  }
+
+  private String extractInputTopic(DataSinkInvocation sink) {
+    return sink
+            .getInputStreams()
+            .get(0)
+            .getEventGrounding()
+            .getTransportProtocol()
+            .getTopicDefinition()
+            .getActualTopicName();
+  }
+
+  private String normalize(String visualizationName) {
+    return visualizationName.replaceAll(" ", "").toLowerCase();
+  }
+
 
   private String extractVisualizationName(DataSinkInvocation sink) {
     return sink.getStaticProperties()

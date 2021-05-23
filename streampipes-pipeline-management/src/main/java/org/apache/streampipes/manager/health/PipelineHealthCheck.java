@@ -33,8 +33,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.apache.streampipes.manager.operations.Operations.updatePipeline;
-
 public class PipelineHealthCheck implements Runnable {
 
   private static final Logger LOG = LoggerFactory.getLogger(PipelineHealthCheck.class);
@@ -77,7 +75,7 @@ public class PipelineHealthCheck implements Runnable {
                 LOG.info("Successfully restored pipeline element {} of pipeline {}", graph.getName(), pipeline.getName());
               }
               pipeline.setPipelineNotifications(pipelineNotifications);
-              updatePipeline(pipeline);
+              StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updatePipeline(pipeline);
             }
           }
         });

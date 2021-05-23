@@ -33,48 +33,48 @@ import java.util.stream.Collectors;
 
 public class PipelineStorageService {
 
-    private Pipeline pipeline;
+  private Pipeline pipeline;
 
-    public PipelineStorageService(Pipeline pipeline) {
-        this.pipeline = pipeline;
-    }
+  public PipelineStorageService(Pipeline pipeline) {
+    this.pipeline = pipeline;
+  }
 
-    public void updatePipeline() {
-     encryptSecrets(pipeline);
-     StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updatePipeline(pipeline);
-    }
+  public void updatePipeline() {
+    preparePipeline();
+    StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updatePipeline(pipeline);
+  }
 
-    public void addPipeline() {
-        preparePipeline();
-        StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().store(pipeline);
-    }
+  public void addPipeline() {
+    preparePipeline();
+    StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().store(pipeline);
+  }
 
-    private void preparePipeline() {
-        PipelineGraph pipelineGraph = new PipelineGraphBuilder(pipeline).buildGraph();
-        InvocationGraphBuilder builder = new InvocationGraphBuilder(pipelineGraph, pipeline.getPipelineId());
-        List<InvocableStreamPipesEntity> graphs = builder.buildGraphs();
-        encryptSecrets(graphs);
+  private void preparePipeline() {
+    PipelineGraph pipelineGraph = new PipelineGraphBuilder(pipeline).buildGraph();
+    InvocationGraphBuilder builder = new InvocationGraphBuilder(pipelineGraph, pipeline.getPipelineId());
+    List<InvocableStreamPipesEntity> graphs = builder.buildGraphs();
+    encryptSecrets(graphs);
 
-        List<DataSinkInvocation> secs = filter(graphs, DataSinkInvocation.class);
-        List<DataProcessorInvocation> sepas = filter(graphs, DataProcessorInvocation.class);
+    List<DataSinkInvocation> secs = filter(graphs, DataSinkInvocation.class);
+    List<DataProcessorInvocation> sepas = filter(graphs, DataProcessorInvocation.class);
 
-        pipeline.setSepas(sepas);
-        pipeline.setActions(secs);
-    }
+    pipeline.setSepas(sepas);
+    pipeline.setActions(secs);
+  }
 
-    private void encryptSecrets(List<InvocableStreamPipesEntity> graphs) {
-        SecretProvider.getEncryptionService(pipeline.getCreatedByUser()).apply(graphs);
-    }
+  private void encryptSecrets(List<InvocableStreamPipesEntity> graphs) {
+    SecretProvider.getEncryptionService(pipeline.getCreatedByUser()).apply(graphs);
+  }
 
-    private void encryptSecrets(Pipeline pipeline) {
-        SecretProvider.getEncryptionService(pipeline.getCreatedByUser()).apply(pipeline);
-    }
+  private void encryptSecrets(Pipeline pipeline) {
+    SecretProvider.getEncryptionService(pipeline.getCreatedByUser()).apply(pipeline);
+  }
 
-    private <T> List<T> filter(List<InvocableStreamPipesEntity> graphs, Class<T> clazz) {
-        return graphs
-                .stream()
-                .filter(clazz::isInstance)
-                .map(clazz::cast)
-                .collect(Collectors.toList());
-    }
+  private <T> List<T> filter(List<InvocableStreamPipesEntity> graphs, Class<T> clazz) {
+    return graphs
+            .stream()
+            .filter(clazz::isInstance)
+            .map(clazz::cast)
+            .collect(Collectors.toList());
+  }
 }
