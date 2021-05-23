@@ -19,6 +19,7 @@
 package org.apache.streampipes.manager.execution.http;
 
 import org.apache.streampipes.manager.execution.status.PipelineStatusManager;
+import org.apache.streampipes.manager.secret.SecretProvider;
 import org.apache.streampipes.manager.util.TemporaryGraphStorage;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
@@ -30,13 +31,10 @@ import org.apache.streampipes.model.message.PipelineStatusMessageType;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineHealthStatus;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
-import org.apache.streampipes.model.staticproperty.SecretStaticProperty;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
-import org.apache.streampipes.user.management.encryption.CredentialsManager;
 import org.lightcouch.DocumentConflictException;
 
-import java.security.GeneralSecurityException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -79,13 +77,15 @@ public class PipelineExecutor {
     graphs.addAll(sepas);
     graphs.addAll(secs);
 
-    List<InvocableStreamPipesEntity> decryptedGraphs = decryptSecrets(graphs);
+    decryptSecrets(graphs);
 
-    graphs.forEach(g -> g.setStreamRequirements(Collections.emptyList()));
+    //graphs.forEach(g -> g.setStreamRequirements(Collections.emptyList()));
 
     PipelineOperationStatus status = new GraphSubmitter(pipeline.getPipelineId(),
-            pipeline.getName(), decryptedGraphs, dataSets)
+            pipeline.getName(), graphs, dataSets)
             .invokeGraphs();
+
+    encryptSecrets(graphs);
 
     if (status.isSuccess()) {
       storeInvocationGraphs(pipeline.getPipelineId(), graphs, dataSets);
@@ -110,31 +110,12 @@ public class PipelineExecutor {
             .forEach(tp -> tp.setGroupId(UUID.randomUUID().toString()));
   }
 
-  private List<InvocableStreamPipesEntity> decryptSecrets(List<InvocableStreamPipesEntity> graphs) {
-    List<InvocableStreamPipesEntity> decryptedGraphs = new ArrayList<>();
-    graphs.stream().map(g -> {
-      if (g instanceof DataProcessorInvocation) {
-        return new DataProcessorInvocation((DataProcessorInvocation) g);
-      } else {
-        return new DataSinkInvocation((DataSinkInvocation) g);
-      }
-    }).forEach(g -> {
-      g.getStaticProperties()
-              .stream()
-              .filter(SecretStaticProperty.class::isInstance)
-              .forEach(sp -> {
-                try {
-                  String decrypted = CredentialsManager.decrypt(pipeline.getCreatedByUser(),
-                          ((SecretStaticProperty) sp).getValue());
-                  ((SecretStaticProperty) sp).setValue(decrypted);
-                  ((SecretStaticProperty) sp).setEncrypted(false);
-                } catch (GeneralSecurityException e) {
-                  e.printStackTrace();
-                }
-              });
-      decryptedGraphs.add(g);
-    });
-    return decryptedGraphs;
+  private void decryptSecrets(List<InvocableStreamPipesEntity> graphs) {
+    SecretProvider.getDecryptionService(pipeline.getCreatedByUser()).apply(graphs);
+  }
+
+  private void encryptSecrets(List<InvocableStreamPipesEntity> graphs) {
+    SecretProvider.getEncryptionService(pipeline.getCreatedByUser()).apply(graphs);
   }
 
   public PipelineOperationStatus stopPipeline() {
