@@ -21,6 +21,7 @@ package org.apache.streampipes.sinks.internal.jvm.dashboard;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.apache.streampipes.messaging.jms.ActiveMQPublisher;
+import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.sinks.internal.jvm.config.SinksInternalJvmConfig;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
@@ -36,11 +37,22 @@ public class Dashboard implements EventSink<DashboardParameters> {
     }
 
     @Override
-    public void onInvocation(DashboardParameters parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+    public void onInvocation(DashboardParameters parameters,
+                             EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
         this.publisher = new ActiveMQPublisher(
                 SinksInternalJvmConfig.INSTANCE.getJmsHost(),
                 SinksInternalJvmConfig.INSTANCE.getJmsPort(),
-                parameters.getElementId());
+                makeTopic(parameters.getGraph().getInputStreams().get(0), parameters.getVisualizationName()));
+    }
+
+    private String makeTopic(SpDataStream inputStream, String visualizationName) {
+        return extractTopic(inputStream)
+                + "-"
+                + visualizationName.replaceAll(" ", "").toLowerCase();
+    }
+
+    private String extractTopic(SpDataStream inputStream) {
+        return inputStream.getEventGrounding().getTransportProtocol().getTopicDefinition().getActualTopicName();
     }
 
     @Override
