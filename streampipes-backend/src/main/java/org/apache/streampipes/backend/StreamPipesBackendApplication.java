@@ -20,6 +20,7 @@ package org.apache.streampipes.backend;
 import org.apache.shiro.web.env.EnvironmentLoaderListener;
 import org.apache.shiro.web.servlet.OncePerRequestFilter;
 import org.apache.shiro.web.servlet.ShiroFilter;
+import org.apache.streampipes.manager.health.PipelineHealthCheck;
 import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
@@ -57,7 +58,12 @@ public class StreamPipesBackendApplication {
   private static final int MAX_PIPELINE_START_RETRIES = 3;
   private static final int WAIT_TIME_AFTER_FAILURE_IN_SECONDS = 10;
 
+  private static final int HEALTH_CHECK_INTERVAL = 60;
+  private static final TimeUnit HEALTH_CHECK_UNIT = TimeUnit.SECONDS;
+
   private ScheduledExecutorService executorService;
+  private ScheduledExecutorService healthCheckExecutorService;
+
   private Map<String, Integer> failedPipelines = new HashMap<>();
 
   public static void main(String[] args) {
@@ -68,8 +74,14 @@ public class StreamPipesBackendApplication {
   @PostConstruct
   public void init() {
     this.executorService = Executors.newSingleThreadScheduledExecutor();
+    this.healthCheckExecutorService = Executors.newSingleThreadScheduledExecutor();
 
     executorService.schedule(this::startAllPreviouslyStoppedPipelines, 5, TimeUnit.SECONDS);
+    LOG.info("Pipeline health check will run every {} seconds", HEALTH_CHECK_INTERVAL);
+    healthCheckExecutorService.scheduleAtFixedRate(new PipelineHealthCheck(),
+            HEALTH_CHECK_INTERVAL,
+            HEALTH_CHECK_INTERVAL,
+            HEALTH_CHECK_UNIT);
   }
 
   private void schedulePipelineStart(Pipeline pipeline, boolean restartOnReboot) {

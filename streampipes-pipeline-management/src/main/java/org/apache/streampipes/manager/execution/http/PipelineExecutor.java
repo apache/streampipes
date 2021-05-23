@@ -28,6 +28,7 @@ import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.message.PipelineStatusMessage;
 import org.apache.streampipes.model.message.PipelineStatusMessageType;
 import org.apache.streampipes.model.pipeline.Pipeline;
+import org.apache.streampipes.model.pipeline.PipelineHealthStatus;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.model.staticproperty.SecretStaticProperty;
 import org.apache.streampipes.storage.api.IPipelineStorage;
@@ -93,6 +94,7 @@ public class PipelineExecutor {
               new PipelineStatusMessage(pipeline.getPipelineId(), System.currentTimeMillis(), PipelineStatusMessageType.PIPELINE_STARTED.title(), PipelineStatusMessageType.PIPELINE_STARTED.description()));
 
       if (storeStatus) {
+        pipeline.setHealthStatus(PipelineHealthStatus.OK);
         setPipelineStarted(pipeline);
       }
     }

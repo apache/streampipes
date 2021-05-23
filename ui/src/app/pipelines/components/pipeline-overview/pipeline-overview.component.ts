@@ -77,6 +77,11 @@ export class PipelineOverviewComponent implements OnInit {
     }
   }
 
+  openPipelineNotificationsDialog(pipeline: Pipeline) {
+    this.pipelineOperationsService.showPipelineNotificationsDialog(pipeline,
+        this.refreshPipelinesEmitter)
+  }
+
   get pipelines() {
     return this._pipelines;
   }

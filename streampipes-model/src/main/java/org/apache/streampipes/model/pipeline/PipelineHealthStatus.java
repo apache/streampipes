@@ -15,57 +15,10 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.model.pipeline;
 
-
-.mat-table {
-  background: #FAFAFA;
-}
-
-.mat-paginator {
-  border-top: 1px solid rgba(0, 0, 0, .12);
-  background: #FAFAFA;
-}
-
-.mat-row:nth-child(even) {
-  background-color: #FAFAFA;
-}
-
-.mat-row:nth-child(odd) {
-  background-color: #ffffff;
-}
-
-.mat-column-status {
-  width: 100px;
-  max-width: 100px;
-}
-
-.light {
-  background-color:rgba(0, 0, 0, 0.3);
-  border-radius:50%;
-  width: 15px;
-  height: 15px;
-}
-
-.light-red {
-  background-color: red;
-  box-shadow: 0 0 5px 2px red;
-}
-
-.light-yellow {
-  background-color: #dede2d;
-  box-shadow: 0 0 5px 2px #dede2d;
-}
-
-.light-green {
-  background-color: green;
-  box-shadow: 0 0 5px 2px green;
-}
-
-.light-neutral {
-  background-color: #b4b4b4;
-  box-shadow: 0 0 2px 1px #b4b4b4;
-}
-
-.ml-10 {
-  margin-left: 10px;
+public enum PipelineHealthStatus {
+  OK,
+  REQUIRES_ATTENTION,
+  FAILURE
 }

@@ -27,6 +27,7 @@ import {DeletePipelineDialogComponent} from "../dialog/delete-pipeline/delete-pi
 import {DialogRef} from "../../core-ui/dialog/base-dialog/dialog-ref";
 import {Router} from "@angular/router";
 import {PipelineAction} from "../model/pipeline-model";
+import {PipelineNotificationsComponent} from "../dialog/pipeline-notifications/pipeline-notifications.component";
 
 @Injectable()
 export class PipelineOperationsService {
@@ -108,6 +109,22 @@ export class PipelineOperationsService {
       }
     });
   };
+
+  showPipelineNotificationsDialog(pipeline: Pipeline,
+                                  refreshPipelinesEmitter: EventEmitter<boolean>) {
+    let dialogRef: DialogRef<PipelineNotificationsComponent> = this.DialogService.open(PipelineNotificationsComponent, {
+      panelType: PanelType.STANDARD_PANEL,
+      title: "Pipeline Notifications",
+      width: "70vw",
+      data: {
+        "pipeline": pipeline,
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(close => {
+      refreshPipelinesEmitter.emit(true);
+    });
+  }
 
   showPipelineInEditor(id) {
     this.Router.navigate(["editor"], { queryParams: { pipeline: id }});

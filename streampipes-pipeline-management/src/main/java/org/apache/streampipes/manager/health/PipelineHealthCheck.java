@@ -1,0 +1,183 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.apache.streampipes.manager.health;
+
+
+import org.apache.streampipes.manager.execution.http.HttpRequestBuilder;
+import org.apache.streampipes.manager.util.TemporaryGraphStorage;
+import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+import org.apache.streampipes.model.pipeline.Pipeline;
+import org.apache.streampipes.model.pipeline.PipelineHealthStatus;
+import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static org.apache.streampipes.manager.operations.Operations.updatePipeline;
+
+public class PipelineHealthCheck implements Runnable {
+
+  private static final Logger LOG = LoggerFactory.getLogger(PipelineHealthCheck.class);
+  private static final int MAX_FAILED_ATTEMPTS = 3;
+
+  private static final Map<String, Integer> failedRestartAttempts = new HashMap<>();
+
+  public PipelineHealthCheck() {
+
+  }
+
+  public void checkAndRestorePipelineElements() {
+    List<Pipeline> runningPipelines = getRunningPipelines();
+
+    if (runningPipelines.size() > 0) {
+      Map<String, List<InvocableStreamPipesEntity>> endpointMap = generateEndpointMap();
+      List<String> allRunningInstances = findRunningInstances(endpointMap.keySet());
+
+      runningPipelines.forEach(pipeline -> {
+        List<String> pipelineNotifications = new ArrayList<>();
+        List<InvocableStreamPipesEntity> graphs = TemporaryGraphStorage.graphStorage.get(pipeline.getPipelineId());
+        graphs.forEach(graph -> {
+          String instanceId = extractInstanceId(graph);
+          if (allRunningInstances.stream().noneMatch(runningInstanceId -> runningInstanceId.equals(instanceId))) {
+            if (shouldRetry(instanceId)) {
+              boolean success = new HttpRequestBuilder(graph, graph.getBelongsTo()).invoke().isSuccess();
+              if (!success) {
+                pipeline.setHealthStatus(PipelineHealthStatus.FAILURE);
+                addFailedAttemptNotification(pipelineNotifications, graph);
+                increaseFailedAttempt(instanceId);
+                LOG.info("Could not restore pipeline element {} of pipeline {} ({}/{})",
+                        graph.getName(),
+                        pipeline.getName(),
+                        failedRestartAttempts.get(instanceId),
+                        MAX_FAILED_ATTEMPTS);
+              } else {
+                pipeline.setHealthStatus(PipelineHealthStatus.REQUIRES_ATTENTION);
+                addSuccessfulRestoreNotification(pipelineNotifications, graph);
+                resetFailedAttempts(instanceId);
+                LOG.info("Successfully restored pipeline element {} of pipeline {}", graph.getName(), pipeline.getName());
+              }
+              pipeline.setPipelineNotifications(pipelineNotifications);
+              updatePipeline(pipeline);
+            }
+          }
+        });
+      });
+    }
+  }
+
+  private boolean shouldRetry(String instanceId) {
+    if (!failedRestartAttempts.containsKey(instanceId)) {
+      return true;
+    } else {
+      return failedRestartAttempts.get(instanceId) <= MAX_FAILED_ATTEMPTS;
+    }
+  }
+
+  private void resetFailedAttempts(String instanceId) {
+    failedRestartAttempts.put(instanceId, 0);
+  }
+
+  private void increaseFailedAttempt(String instanceId) {
+    if (!failedRestartAttempts.containsKey(instanceId)) {
+      failedRestartAttempts.put(instanceId, 1);
+    } else {
+      Integer currentAttempt = failedRestartAttempts.get(instanceId) + 1;
+      failedRestartAttempts.put(instanceId, currentAttempt);
+    }
+  }
+
+  private void addSuccessfulRestoreNotification(List<String> pipelineNotifications,
+                                                InvocableStreamPipesEntity graph) {
+    pipelineNotifications.add(getCurrentDatetime()
+            + "Pipeline element '"
+            + graph.getName()
+            + "' was not available and was successfully restored.");
+  }
+
+  private void addFailedAttemptNotification(List<String> pipelineNotifications,
+                                            InvocableStreamPipesEntity graph) {
+    pipelineNotifications.add(getCurrentDatetime()
+            + "Pipeline element '"
+            + graph.getName()
+            + "' was not available and could not be restored.");
+  }
+
+  private String getCurrentDatetime() {
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
+    LocalDateTime now = LocalDateTime.now();
+    return "[" +dtf.format(now) + "] ";
+  }
+
+  private String extractInstanceId(InvocableStreamPipesEntity graph) {
+    return graph.getElementId().replace(graph.getBelongsTo() + "/", "");
+  }
+
+
+  private List<String> findRunningInstances(Set<String> endpoints) {
+    List<String> allRunningInstances = new ArrayList<>();
+    endpoints.forEach(endpoint -> {
+      try {
+        allRunningInstances.addAll(new PipelineElementEndpointHealthCheck(endpoint).checkRunningInstances());
+      } catch (IOException e) {
+        LOG.error("Pipeline element endpoint {} is unavailable", endpoint);
+      }
+    });
+
+    return allRunningInstances;
+  }
+
+  private Map<String, List<InvocableStreamPipesEntity>> generateEndpointMap() {
+    Map<String, List<InvocableStreamPipesEntity>> endpointMap = new HashMap<>();
+    TemporaryGraphStorage.graphStorage.forEach((pipelineId, graphs) ->
+            graphs.forEach(graph -> addEndpoint(endpointMap, graph)));
+
+    return endpointMap;
+  }
+
+  private void addEndpoint(Map<String, List<InvocableStreamPipesEntity>> endpointMap,
+                           InvocableStreamPipesEntity graph) {
+    String belongsTo = graph.getBelongsTo();
+    if (!endpointMap.containsKey(belongsTo)) {
+      endpointMap.put(belongsTo, new ArrayList<>());
+    }
+    List<InvocableStreamPipesEntity> existingGraphs = endpointMap.get(belongsTo);
+    existingGraphs.add(graph);
+    endpointMap.put(belongsTo, existingGraphs);
+  }
+
+  @Override
+  public void run() {
+    this.checkAndRestorePipelineElements();
+  }
+
+  private List<Pipeline> getRunningPipelines() {
+    return StorageDispatcher
+            .INSTANCE
+            .getNoSqlStore()
+            .getPipelineStorageAPI()
+            .getAllPipelines()
+            .stream()
+            .filter(Pipeline::isRunning)
+            .collect(Collectors.toList());
+  }
+}
