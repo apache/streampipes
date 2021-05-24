@@ -54,6 +54,8 @@ export class SavePipelineComponent implements OnInit {
   storageError: boolean = false;
   errorMessage: string = '';
 
+ currentPipelineName: string;
+
   constructor(private editorService: EditorService,
               private dialogRef: DialogRef<SavePipelineComponent>,
               private objectProvider: ObjectProvider,
@@ -66,6 +68,10 @@ export class SavePipelineComponent implements OnInit {
 
   ngOnInit() {
     this.getPipelineCategories();
+    if (this.currentModifiedPipelineId) {
+      this.currentPipelineName = this.pipeline.name;
+    }
+
     this.submitPipelineForm.addControl("pipelineName", new FormControl(this.pipeline.name,
         [Validators.required,
           Validators.maxLength(40)]))
@@ -105,11 +111,6 @@ export class SavePipelineComponent implements OnInit {
 
 
   savePipeline(switchTab) {
-    if (this.pipeline.name == "") {
-      //this.showToast("error", "Please enter a name for your pipeline");
-      return false;
-    }
-
     let storageRequest;
 
     if (this.currentModifiedPipelineId && this.updateMode === 'update') {
