@@ -21,6 +21,7 @@ import org.apache.streampipes.client.annotation.NotYetImplemented;
 import org.apache.streampipes.client.live.EventProcessor;
 import org.apache.streampipes.client.live.KafkaConfig;
 import org.apache.streampipes.client.live.SubscriptionManager;
+import org.apache.streampipes.client.model.InputStreamIndex;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
 import org.apache.streampipes.messaging.kafka.SpKafkaConsumer;
@@ -69,15 +70,55 @@ public class DataProcessorApi extends AbstractClientApi<DataProcessorInvocation>
 
   }
 
+  /**
+   * Subscribe to the output stream of the processor
+   * @param processor The data processor to subscribe to
+   * @param callback The callback where events will be received
+   */
   public SpKafkaConsumer subscribe(DataProcessorInvocation processor,
                                    EventProcessor callback) {
     return new SubscriptionManager(clientConfig, processor.getOutputStream().getEventGrounding(), callback).subscribe();
   }
 
+  /**
+   * Subscribe to the output stream of the processor
+   * @param processor The data processor to subscribe to
+   * @param kafkaConfig Additional kafka settings which will override the default value (see docs)
+   * @param callback The callback where events will be received
+   */
   public SpKafkaConsumer subscribe(DataProcessorInvocation processor,
                                    KafkaConfig kafkaConfig,
                                    EventProcessor callback) {
     return new SubscriptionManager(clientConfig, kafkaConfig, processor.getOutputStream().getEventGrounding(), callback)
+            .subscribe();
+  }
+
+  /**
+   * Subscribe to the input stream of the processor
+   * @param processor The data processor to subscribe to
+   * @param index The index of the input stream
+   * @param callback The callback where events will be received
+   */
+  public SpKafkaConsumer subscribe(DataProcessorInvocation processor,
+                                   InputStreamIndex index,
+                                   EventProcessor callback) {
+    return new SubscriptionManager(clientConfig,
+            processor.getInputStreams().get(index.toIndex()).getEventGrounding(), callback).subscribe();
+  }
+
+  /**
+   * Subscribe to the input stream of the sink
+   * @param processor The data processor to subscribe to
+   * @param index The index of the input stream
+   * @param kafkaConfig Additional kafka settings which will override the default value (see docs)
+   * @param callback The callback where events will be received
+   */
+  public SpKafkaConsumer subscribe(DataProcessorInvocation processor,
+                                   InputStreamIndex index,
+                                   KafkaConfig kafkaConfig,
+                                   EventProcessor callback) {
+    return new SubscriptionManager(clientConfig, kafkaConfig,
+           processor.getInputStreams().get(index.toIndex()).getEventGrounding(), callback)
             .subscribe();
   }
 }
