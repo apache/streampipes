@@ -71,6 +71,12 @@ public abstract class InvocablePipelineElementResource<I extends InvocableStream
                 if (!RunningInstances.INSTANCE.exists(runningInstanceId)) {
                     RunningInstances.INSTANCE.add(runningInstanceId, graph, declarer.getClass().newInstance());
                     Response resp = RunningInstances.INSTANCE.getInvocation(runningInstanceId).invokeRuntime(graph);
+                    if (!resp.isSuccess()) {
+                        LOG.error("Could not invoke pipeline element {} due to the following error: {}",
+                                graph.getName(),
+                                resp.getOptionalMessage());
+                        RunningInstances.INSTANCE.remove(runningInstanceId);
+                    }
                     return ok(resp);
                 } else {
                     LOG.info("Pipeline element {} with id {} seems to be already running, skipping invocation request.", graph.getName(), runningInstanceId);
