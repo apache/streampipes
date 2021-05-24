@@ -28,6 +28,10 @@ public class Utils {
     return getCouchDbGsonClient("pipelineelementtemplate");
   }
 
+  public static CouchDbClient getCouchDbPipelineCanvasMetadataClient() {
+    return getCouchDbGsonClient("pipelinecanvasmetadata");
+  }
+
   public static CouchDbClient getCouchDbCategoryClient() {
     return getCouchDbGsonClient("category");
   }

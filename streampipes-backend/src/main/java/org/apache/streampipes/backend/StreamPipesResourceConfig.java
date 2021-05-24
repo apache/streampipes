@@ -70,6 +70,8 @@ public class StreamPipesResourceConfig extends ResourceConfig {
     register(OntologyKnowledge.class);
     register(OntologyMeasurementUnit.class);
     register(OntologyPipelineElement.class);
+    register(PipelineCanvasMetadataCache.class);
+    register(PipelineCanvasMetadataResource.class);
     register(PipelineCache.class);
     register(PipelineCategory.class);
     register(PipelineElementAsset.class);

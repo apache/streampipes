@@ -120,5 +120,8 @@ public enum CouchDbStorageManager implements INoSqlStorage {
     return new PipelineElementTemplateStorageImpl();
   }
 
-
+  @Override
+  public IPipelineCanvasMetadataStorage getPipelineCanvasMetadataStorage() {
+    return new PipelineCanvasMetadataStorageImpl();
+  }
 }

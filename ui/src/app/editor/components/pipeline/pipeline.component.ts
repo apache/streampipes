@@ -21,15 +21,7 @@ import {JsplumbService} from "../../services/jsplumb.service";
 import {PipelineEditorService} from "../../services/pipeline-editor.service";
 import {JsplumbBridge} from "../../services/jsplumb-bridge.service";
 import {ShepherdService} from "../../../services/tour/shepherd.service";
-import {
-  ChangeDetectorRef,
-  Component, ElementRef,
-  EventEmitter,
-  Input,
-  NgZone, OnDestroy,
-  OnInit,
-  Output, ViewChild
-} from "@angular/core";
+import {Component, EventEmitter, Input, NgZone, OnDestroy, OnInit, Output} from "@angular/core";
 import {
   InvocablePipelineElementUnion,
   PipelineElementConfig,
@@ -37,9 +29,13 @@ import {
 } from "../../model/editor.model";
 import {
   CustomOutputStrategy,
-  DataProcessorInvocation, DataSinkInvocation, ErrorMessage,
-  Pipeline, PipelinePreviewModel, SpDataSet,
-  SpDataStream, SpDataStreamUnion
+  DataProcessorInvocation,
+  DataSinkInvocation,
+  Pipeline,
+  PipelineCanvasMetadata,
+  PipelinePreviewModel,
+  SpDataSet,
+  SpDataStream
 } from "../../../core-model/gen/streampipes-model";
 import {ObjectProvider} from "../../services/object-provider.service";
 import {CustomizeComponent} from "../../dialog/customize/customize.component";
@@ -51,10 +47,9 @@ import {MatchingErrorComponent} from "../../dialog/matching-error/matching-error
 import {Tuple2} from "../../../core-model/base/Tuple2";
 import {ConfirmDialogComponent} from "../../../core-ui/dialog/confirm-dialog/confirm-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
-import {Subject} from "rxjs";
-import {PipelineElementDraggedService} from "../../services/pipeline-element-dragged.service";
-import {PipelineCanvasScrollingService} from "../../services/pipeline-canvas-scrolling.service";
+import {forkJoin} from "rxjs";
 import {JsplumbFactoryService} from "../../services/jsplumb-factory.service";
+import {PipelinePositioningService} from "../../services/pipeline-positioning.service";
 
 @Component({
   selector: 'pipeline',
@@ -87,6 +82,9 @@ export class PipelineComponent implements OnInit, OnDestroy {
   @Input()
   pipelineCacheRunning: boolean;
 
+  @Input()
+  pipelineCanvasMetadata: PipelineCanvasMetadata;
+
   @Output()
   pipelineCacheRunningChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
 
@@ -109,6 +107,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
   constructor(private JsplumbService: JsplumbService,
               private PipelineEditorService: PipelineEditorService,
+              private PipelinePositioningService: PipelinePositioningService,
               private JsplumbFactoryService: JsplumbFactoryService,
               private ObjectProvider: ObjectProvider,
               private EditorService: EditorService,
@@ -392,13 +391,18 @@ export class PipelineComponent implements OnInit, OnDestroy {
   }
 
   triggerPipelineCacheUpdate() {
-    this.pipelineCacheRunning = true;
-    this.pipelineCacheRunningChanged.emit(this.pipelineCacheRunning);
-    this.EditorService.updateCachedPipeline(this.rawPipelineModel).subscribe(msg => {
-      this.pipelineCacheRunning = false;
-      this.pipelineCacheRunningChanged.emit(this.pipelineCacheRunning)
-      this.pipelineCached = true;
-      this.pipelineCachedChanged.emit(this.pipelineCached);
+    setTimeout(() => {
+      this.pipelineCacheRunning = true;
+      this.pipelineCacheRunningChanged.emit(this.pipelineCacheRunning);
+      this.PipelinePositioningService.collectPipelineElementPositions(this.pipelineCanvasMetadata, this.rawPipelineModel);
+      let updateCachedPipeline = this.EditorService.updateCachedPipeline(this.rawPipelineModel);
+      let updateCachedCanvasMetadata = this.EditorService.updateCachedCanvasMetadata(this.pipelineCanvasMetadata);
+      forkJoin([updateCachedPipeline, updateCachedCanvasMetadata]).subscribe(msg => {
+        this.pipelineCacheRunning = false;
+        this.pipelineCacheRunningChanged.emit(this.pipelineCacheRunning)
+        this.pipelineCached = true;
+        this.pipelineCachedChanged.emit(this.pipelineCached);
+      });
     });
   }
 

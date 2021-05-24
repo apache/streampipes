@@ -18,13 +18,14 @@
 
 import {Component, Input, OnInit} from "@angular/core";
 import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
-import {Message, Pipeline} from "../../../core-model/gen/streampipes-model";
+import {Message, Pipeline, PipelineCanvasMetadata} from "../../../core-model/gen/streampipes-model";
 import {ObjectProvider} from "../../services/object-provider.service";
 import {EditorService} from "../../services/editor.service";
 import {PipelineService} from "../../../platform-services/apis/pipeline.service";
 import {ShepherdService} from "../../../services/tour/shepherd.service";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
+import {PipelineCanvasMetadataService} from "../../../platform-services/apis/pipeline-canvas-metadata.service";
 
 @Component({
   selector: 'save-pipeline',
@@ -48,20 +49,24 @@ export class SavePipelineComponent implements OnInit {
   @Input()
   currentModifiedPipelineId: string;
 
+  @Input()
+  pipelineCanvasMetadata: PipelineCanvasMetadata;
+
   saving: boolean = false;
   saved: boolean = false;
 
   storageError: boolean = false;
   errorMessage: string = '';
 
- currentPipelineName: string;
+  currentPipelineName: string;
 
   constructor(private editorService: EditorService,
               private dialogRef: DialogRef<SavePipelineComponent>,
               private objectProvider: ObjectProvider,
               private pipelineService: PipelineService,
               private Router: Router,
-              private ShepherdService: ShepherdService) {
+              private ShepherdService: ShepherdService,
+              private pipelineCanvasService: PipelineCanvasMetadataService) {
     this.pipelineCategories = [];
     this.updateMode = "update";
   }
@@ -112,8 +117,9 @@ export class SavePipelineComponent implements OnInit {
 
   savePipeline(switchTab) {
     let storageRequest;
+    let updateMode = this.currentModifiedPipelineId && this.updateMode === 'update';
 
-    if (this.currentModifiedPipelineId && this.updateMode === 'update') {
+    if (updateMode) {
       storageRequest = this.pipelineService.updatePipeline(this.pipeline);
     } else {
       this.pipeline._id = undefined;
@@ -124,6 +130,7 @@ export class SavePipelineComponent implements OnInit {
         .subscribe(statusMessage => {
           if (statusMessage.success) {
             let pipelineId: string = statusMessage.notifications[1].description;
+            this.storePipelineCanvasMetadata(pipelineId, updateMode);
             this.afterStorage(statusMessage, switchTab, pipelineId);
           } else {
             this.displayErrors(statusMessage.notifications[0]);
@@ -132,6 +139,21 @@ export class SavePipelineComponent implements OnInit {
           this.displayErrors();
         });
   };
+
+  storePipelineCanvasMetadata(pipelineId: string,
+                              updateMode: boolean) {
+    let request;
+    this.pipelineCanvasMetadata.pipelineId = pipelineId;
+    if (updateMode) {
+      request = this.pipelineCanvasService.updatePipelineCanvasMetadata(this.pipelineCanvasMetadata);
+    } else {
+      this.pipelineCanvasMetadata._id = undefined;
+      this.pipelineCanvasMetadata._rev = undefined;
+      request = this.pipelineCanvasService.addPipelineCanvasMetadata(this.pipelineCanvasMetadata);
+    }
+
+    request.subscribe();
+  }
 
   afterStorage(statusMessage: Message, switchTab, pipelineId?: string) {
     this.hide();

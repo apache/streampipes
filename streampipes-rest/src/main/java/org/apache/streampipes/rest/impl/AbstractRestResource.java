@@ -59,16 +59,6 @@ public abstract class AbstractRestResource extends AbstractSharedRestInterface {
     }
   }
 
-  protected <T> String toJsonLd(String rootElementUri, T object) {
-    try {
-      return JsonLdUtils.asString(new JsonLdTransformer(rootElementUri).toJsonLd(object));
-    } catch (IllegalAccessException | InvocationTargetException | InvalidRdfException | ClassNotFoundException e) {
-      return toJson(constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(),
-              NotificationType.UNKNOWN_ERROR.description(),
-              e.getMessage())));
-    }
-  }
-
   protected IPipelineElementDescriptionStorageCache getPipelineElementRdfStorage() {
     return StorageManager.INSTANCE.getPipelineElementStorage();
   }
