@@ -16,17 +16,18 @@
  *
  */
 
-import {AfterViewInit, ChangeDetectorRef, Component, Inject, Input, OnInit} from '@angular/core';
-import { ElementIconText } from '../../../services/get-element-icon-text.service';
-import { Dashboard } from '../../models/dashboard.model';
-import { WidgetConfigBuilder } from '../../registry/widget-config-builder';
-import { WidgetRegistry } from '../../registry/widget-registry';
-import { MappingPropertyGenerator } from '../../sdk/matching/mapping-property-generator';
-import { DashboardService } from '../../services/dashboard.service';
+import {AfterViewInit, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import {ElementIconText} from '../../../services/get-element-icon-text.service';
+import {Dashboard} from '../../models/dashboard.model';
+import {WidgetConfigBuilder} from '../../registry/widget-config-builder';
+import {WidgetRegistry} from '../../registry/widget-registry';
+import {MappingPropertyGenerator} from '../../sdk/matching/mapping-property-generator';
+import {DashboardService} from '../../services/dashboard.service';
 import {
     DashboardWidgetModel,
     DashboardWidgetSettings,
-    EventPropertyUnion, EventSchema,
+    EventPropertyUnion,
+    EventSchema,
     FreeTextStaticProperty,
     MappingPropertyNary,
     MappingPropertyUnary,
@@ -121,20 +122,17 @@ export class AddVisualizationDialogComponent implements OnInit, AfterViewInit {
 
     loadVisualizablePipelines() {
         this.dashboardService.getVisualizablePipelines().subscribe(visualizations => {
-            this.visualizablePipelines = [];
-            visualizations.forEach(vis => {
-                this.pipelineService.getPipelineById(vis.pipelineId).subscribe(pipeline => {
-                    vis.pipelineName = pipeline.name;
-                    this.visualizablePipelines.push(vis);
-                    this.sortPipeline();
-                });
-            });
+            this.visualizablePipelines = this.sortPipeline(visualizations);
         });
     }
 
-    sortPipeline() {
-        this.visualizablePipelines.sort((a, b) => {
-            return a.pipelineName < b.pipelineName ? -1 : 1;
+    sortPipeline(visualizations: Array<VisualizablePipeline>): Array<VisualizablePipeline> {
+        return visualizations.sort((a, b) => {
+            if (a.pipelineName === b.pipelineName) {
+                return a.visualizationName.toLowerCase() < b.visualizationName.toLowerCase() ? -1 : 1;
+            } else {
+                return a.pipelineName.toLowerCase() < b.pipelineName.toLowerCase() ? -1 : 1;
+            }
         });
     }
 
