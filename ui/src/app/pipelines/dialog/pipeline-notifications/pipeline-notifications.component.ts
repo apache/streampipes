@@ -43,6 +43,9 @@ export class PipelineNotificationsComponent implements OnInit {
 
   acknowledgeAndClose() {
     this.pipeline.pipelineNotifications = [];
+    if (this.pipeline.healthStatus === "REQUIRES_ATTENTION") {
+      this.pipeline.healthStatus = "OK";
+    }
     this.pipelineService.updatePipeline(this.pipeline).subscribe(msg => {
       this.dialogRef.close();
     });
