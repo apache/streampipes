@@ -46,7 +46,6 @@ public class PipelineHealthCheck implements Runnable {
   }
 
   public void checkAndRestorePipelineElements() {
-    LOG.info("Performing health check...");
     List<Pipeline> runningPipelines = getRunningPipelines();
 
     if (runningPipelines.size() > 0) {
