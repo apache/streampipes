@@ -71,16 +71,6 @@ export class AdapterDescriptionComponent {
     return this.connectService.isSpecificDescription(this.adapter);
   }
 
-  deleteAdapter(adapter: AdapterDescription): void {
-  this.deleting = true;
-      this.adapterToDelete = adapter.couchDBId;
-      this.dataMarketplaceService.deleteAdapter(adapter).subscribe(res => {
-          this.adapterToDelete = undefined;
-          this.updateAdapterEmitter.emit();
-          this.deleting = false;
-      });
-  }
-
   shareAdapterTemplate(adapter: AdapterDescription): void {
     this.dialogService.open(AdapterExportDialog,{
       panelType: PanelType.STANDARD_PANEL,

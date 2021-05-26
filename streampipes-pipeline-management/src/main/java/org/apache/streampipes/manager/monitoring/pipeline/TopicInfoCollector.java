@@ -195,7 +195,10 @@ public class TopicInfoCollector {
 
   private String getBrokerUrl() {
     String env = System.getenv("SP_DEBUG");
-    if ("true".equals(env.replaceAll(" ", ""))) {
+    if (env != null) {
+      env = env.replaceAll(" ", "");
+    }
+    if ("true".equals(env)) {
       return "localhost:9094";
     } else {
       return BackendConfig.INSTANCE.getKafkaUrl();

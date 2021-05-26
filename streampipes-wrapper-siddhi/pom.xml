@@ -57,19 +57,6 @@
             <artifactId>siddhi-execution-list</artifactId>
             <version>1.0.1</version>
         </dependency>
-
     </dependencies>
-
-    <repositories>
-        <repository>
-            <id>wso2.releases</id>
-            <name>WSO2 Repository</name>
-            <url>http://maven.wso2.org/nexus/content/repositories/releases/</url>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy>
-                <checksumPolicy>ignore</checksumPolicy>
-            </releases>
-        </repository>
-    </repositories>
+  
 </project>

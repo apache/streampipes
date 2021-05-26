@@ -70,6 +70,7 @@ import {EventPropertyRowComponent} from './components/schema-editor/event-proper
 import {EventSchemaPreviewComponent} from './components/schema-editor/event-schema-preview/event-schema-preview.component';
 import {CoreUiModule} from "../core-ui/core-ui.module";
 import {EditCorrectionValueComponent} from './dialog/edit-event-property/components/edit-correction-value/edit-correction-value.component';
+import {ExistingAdaptersComponent} from "./components/data-marketplace/existing-adapters/existing-adapters.component";
 
 @NgModule({
     imports: [
@@ -107,6 +108,7 @@ import {EditCorrectionValueComponent} from './dialog/edit-event-property/compone
         EditTimestampPropertyComponent,
         EditDataTypeComponent,
         EventSchemaPreviewComponent,
+        ExistingAdaptersComponent,
         FilterPipe,
         FormatComponent,
         FormatFormComponent,

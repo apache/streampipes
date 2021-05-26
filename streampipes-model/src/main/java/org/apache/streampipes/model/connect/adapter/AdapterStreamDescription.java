@@ -38,6 +38,8 @@ public abstract class AdapterStreamDescription extends AdapterDescription {
     @RdfProperty("sp:hasDataStream")
     private SpDataStream dataStream;
 
+    private boolean running;
+
     public AdapterStreamDescription() {
         super();
     }
@@ -49,6 +51,7 @@ public abstract class AdapterStreamDescription extends AdapterDescription {
 
     public AdapterStreamDescription(AdapterStreamDescription other) {
         super(other);
+        this.running = other.isRunning();
         if (other.getDataStream() != null) {
             this.dataStream = new SpDataStream(other.getDataStream());
         }
@@ -60,5 +63,13 @@ public abstract class AdapterStreamDescription extends AdapterDescription {
 
     public void setDataStream(SpDataStream dataStream) {
         this.dataStream = dataStream;
+    }
+
+    public boolean isRunning() {
+        return running;
+    }
+
+    public void setRunning(boolean running) {
+        this.running = running;
     }
 }

@@ -27,8 +27,10 @@
             <div class="pipeline-element-progress-container sp-fade" *ngIf="pipelineElement.settings.loadingStatus">
                  <mat-spinner [mode]="'indeterminate'" class="pipeline-element-progress" [diameter]="40"></mat-spinner>
             </div>
-            <div class="pipeline-element-loading-container sp-fade-opacity" *ngIf="pipelineElement.settings.loadingStatus"></div>
-            <div class="pipeline-element-configuration-invalid {{pipelineElement.type === 'stream' ? 'pi-stream' : 'pi-processor'}}" *ngIf="!pipelineElement.settings.completed">
+            <div class="pipeline-element-loading-container sp-fade-opacity"
+                 *ngIf="pipelineElement.settings.loadingStatus"></div>
+            <div class="pipeline-element-configuration-invalid {{pipelineElement.type === 'stream' ? 'pi-stream' : 'pi-processor'}}"
+                 *ngIf="!pipelineElement.settings.completed">
                 <i class="material-icons pipeline-element-configuration-invalid-icon">
                 warning
                 </i>
@@ -45,6 +47,11 @@
                                    [pipelineElementId]="pipelineElement.type == 'stream' ? pipelineElement.payload.elementId : pipelineElement.payload.belongsTo"
                                    [internalId]="pipelineElement.payload.dom">
         </pipeline-element-options>
+        <pipeline-element-preview *ngIf="previewModeActive && (pipelinePreview.supportedPipelineElementDomIds.indexOf(pipelineElement.payload.dom) > -1)"
+                                  [previewId]="pipelinePreview.previewId"
+                                  [pipelineElementDomId]="pipelineElement.payload.dom">
+
+        </pipeline-element-preview>
     </span>
 </div>
 

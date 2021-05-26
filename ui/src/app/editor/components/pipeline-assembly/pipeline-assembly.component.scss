@@ -65,7 +65,9 @@
 }
 
 .pipeline-assembly-options {
+    padding-left: 5px;
     color: white;
+    //background: #f6f6f6;
 }
 
 .jtk-surface-nopan {
@@ -146,4 +148,12 @@
 .pan-home {
     left: 28px;
     top: 30px;
+}
+
+.assembly-options-divider {
+    width: 2px;
+    height: 70%;
+    margin-left: 10px;
+    margin-right: 10px;
+    background: #b8b8b8;
 }

@@ -25,6 +25,16 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   INSTANCE;
 
   @Override
+  public IAdapterStorage getAdapterStorage() {
+    return new AdapterStorageImpl();
+  }
+
+  @Override
+  public IAdapterTemplateStorage getAdapterTemplateStorage() {
+    return new AdapterTemplateStorageImpl();
+  }
+
+  @Override
   public ICategoryStorage getCategoryStorageAPI() { return new CategoryStorageImpl(); }
 
   @Override
@@ -106,14 +116,12 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   }
 
   @Override
-  public IVisualizablePipelineStorage getVisualizablePipelineStorage() {
-    return new VisualizablePipelineStorageImpl();
-  }
-
-  @Override
   public IPipelineElementTemplateStorage getPipelineElementTemplateStorage() {
     return new PipelineElementTemplateStorageImpl();
   }
 
-
+  @Override
+  public IPipelineCanvasMetadataStorage getPipelineCanvasMetadataStorage() {
+    return new PipelineCanvasMetadataStorageImpl();
+  }
 }

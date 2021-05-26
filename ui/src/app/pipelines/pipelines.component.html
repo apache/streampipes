@@ -43,6 +43,12 @@
             <div fxLayout="row" fxLayoutAlign="start center">
                 <h4>My pipelines</h4>
                 <span fxFlex></span>
+                <button mat-button mat-icon-button matTooltip="Refresh pipelines" matTooltipPosition="above"
+                        (click)="refreshPipelines()">
+                    <i class="material-icons">
+                        refresh
+                    </i>
+                </button>
                 <button mat-button mat-icon-button matTooltip="Export pipelines" matTooltipPosition="above"
                         (click)="exportPipelines()">
                     <i class="material-icons">

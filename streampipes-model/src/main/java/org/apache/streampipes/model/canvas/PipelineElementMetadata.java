@@ -15,29 +15,29 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.model.canvas;
 
-package org.apache.streampipes.storage.couchdb.impl;
+public class PipelineElementMetadata {
 
-import org.apache.streampipes.model.dashboard.VisualizablePipeline;
-import org.apache.streampipes.storage.api.IVisualizablePipelineStorage;
-import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
+  private CanvasPosition position;
+  private String customName;
 
-import java.util.List;
-
-public class VisualizablePipelineStorageImpl extends AbstractDao<VisualizablePipeline> implements IVisualizablePipelineStorage {
-
-  public VisualizablePipelineStorageImpl() {
-    super(Utils::getCouchDbVisualizablePipelineClient, VisualizablePipeline.class);
+  public PipelineElementMetadata() {
   }
 
-  @Override
-  public List<VisualizablePipeline> getAllVisualizablePipelines() {
-    return findAll();
+  public CanvasPosition getPosition() {
+    return position;
   }
 
-  @Override
-  public VisualizablePipeline getVisualizablePipeline(String id) {
-    return find(id).orElse(null);
+  public void setPosition(CanvasPosition position) {
+    this.position = position;
+  }
+
+  public String getCustomName() {
+    return customName;
+  }
+
+  public void setCustomName(String customName) {
+    this.customName = customName;
   }
 }

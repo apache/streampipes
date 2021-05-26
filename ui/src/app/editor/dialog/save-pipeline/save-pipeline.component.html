@@ -23,7 +23,7 @@
                 <div id="overwriteCheckbox" class="checkbox" *ngIf="currentModifiedPipelineId">
                     <mat-radio-group [(ngModel)]="updateMode" fxLayout="column" color="primary" class="pipeline-radio-group">
                         <mat-radio-button [value]="'update'" class="mb-10" style="padding-left: 0;">
-                            Update pipeline <b>{{pipeline.name}}</b>
+                            Update pipeline <b>{{currentPipelineName}}</b>
                         </mat-radio-button>
                         <mat-radio-button [value]="'clone'" class="mb-10">
                             Create new pipeline

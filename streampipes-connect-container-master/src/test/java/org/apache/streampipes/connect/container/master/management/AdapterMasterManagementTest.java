@@ -16,21 +16,20 @@
  *
  */
 
-package org.apache.streampipes.connect.container.master;
+package org.apache.streampipes.connect.container.master.management;
+
+import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
+import org.apache.streampipes.storage.couchdb.impl.AdapterStorageImpl;
+import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-import org.junit.Test;
-import org.apache.streampipes.connect.adapter.exception.AdapterException;
-import org.apache.streampipes.connect.container.master.management.AdapterMasterManagement;
-import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
-import org.apache.streampipes.storage.couchdb.impl.AdapterStorageImpl;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class AdapterMasterManagementTest {
 
@@ -39,9 +38,9 @@ public class AdapterMasterManagementTest {
         AdapterStorageImpl adapterStorage = mock(AdapterStorageImpl.class);
         when(adapterStorage.getAllAdapters()).thenReturn(null);
 
-        AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement();
+        AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement(adapterStorage);
 
-        adapterMasterManagement.getAdapter("id2", adapterStorage);
+        adapterMasterManagement.getAdapter("id2");
     }
 
     @Test(expected = AdapterException.class)
@@ -51,9 +50,9 @@ public class AdapterMasterManagementTest {
         when(adapterStorage.getAllAdapters()).thenReturn(adapterDescriptions);
 
         String id = "http://t.id";
-        AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement();
+        AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement(adapterStorage);
 
-        adapterMasterManagement.getAdapter("id2", adapterStorage);
+        adapterMasterManagement.getAdapter("id2");
     }
 
     @Test
@@ -62,9 +61,9 @@ public class AdapterMasterManagementTest {
         AdapterStorageImpl adapterStorage = mock(AdapterStorageImpl.class);
         when(adapterStorage.getAllAdapters()).thenReturn(adapterDescriptions);
 
-        AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement();
+        AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement(adapterStorage);
 
-        List<AdapterDescription> result = adapterMasterManagement.getAllAdapters(adapterStorage);
+        List<AdapterDescription> result = adapterMasterManagement.getAllAdapters();
 
         assertEquals(1, result.size());
         assertEquals(GenericAdapterStreamDescription.ID, result.get(0).getUri());
@@ -75,9 +74,9 @@ public class AdapterMasterManagementTest {
         AdapterStorageImpl adapterStorage = mock(AdapterStorageImpl.class);
         when(adapterStorage.getAllAdapters()).thenReturn(null);
 
-        AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement();
+        AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement(adapterStorage);
 
-        adapterMasterManagement.getAllAdapters(adapterStorage);
+        adapterMasterManagement.getAllAdapters();
 
     }
 }

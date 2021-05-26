@@ -48,6 +48,9 @@ public class Pipeline extends ElementComposition {
   private String createdByUser;
 
   private List<String> pipelineCategories;
+  private List<String> pipelineNotifications;
+
+  private PipelineHealthStatus healthStatus;
 
   @JsonProperty("_id")
   private @SerializedName("_id")
@@ -60,6 +63,7 @@ public class Pipeline extends ElementComposition {
   public Pipeline() {
     super();
     this.actions = new ArrayList<>();
+    this.pipelineNotifications = new ArrayList<>();
   }
 
   public List<DataSinkInvocation> getActions() {
@@ -143,6 +147,22 @@ public class Pipeline extends ElementComposition {
     this.restartOnSystemReboot = restartOnSystemReboot;
   }
 
+  public List<String> getPipelineNotifications() {
+    return pipelineNotifications;
+  }
+
+  public void setPipelineNotifications(List<String> pipelineNotifications) {
+    this.pipelineNotifications = pipelineNotifications;
+  }
+
+  public PipelineHealthStatus getHealthStatus() {
+    return healthStatus;
+  }
+
+  public void setHealthStatus(PipelineHealthStatus healthStatus) {
+    this.healthStatus = healthStatus;
+  }
+
   public Pipeline clone() {
     Pipeline pipeline = new Pipeline();
     pipeline.setName(name);
@@ -154,6 +174,8 @@ public class Pipeline extends ElementComposition {
     pipeline.setPipelineCategories(pipelineCategories);
     pipeline.setCreatedAt(createdAt);
     pipeline.setPipelineId(pipelineId);
+    pipeline.setHealthStatus(healthStatus);
+    pipeline.setPipelineNotifications(pipelineNotifications);
     pipeline.setRev(rev);
     return pipeline;
   }

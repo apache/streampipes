@@ -121,31 +121,33 @@ public class Operations {
   public static PipelineOperationStatus startPipeline(
           Pipeline pipeline, boolean visualize, boolean storeStatus,
           boolean monitor) {
-    return new PipelineExecutor(pipeline, visualize, storeStatus, monitor).startPipeline();
+    return new PipelineExecutor(pipeline, visualize, storeStatus, monitor, false).startPipeline();
   }
 
   public static PipelineOperationStatus stopPipeline(
-          Pipeline pipeline) {
-    return stopPipeline(pipeline, true, true, false);
+          Pipeline pipeline, boolean forceStop) {
+    return stopPipeline(pipeline, true, true, false, forceStop);
   }
 
-  public static List<PipelineOperationStatus> stopAllPipelines() {
+  public static List<PipelineOperationStatus> stopAllPipelines(boolean forceStop) {
     List<PipelineOperationStatus> status = new ArrayList<>();
     List<Pipeline> pipelines =
             StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getAllPipelines();
 
     pipelines.forEach(p -> {
       if (p.isRunning()) {
-        status.add(Operations.stopPipeline(p));
+        status.add(Operations.stopPipeline(p, forceStop));
       }
     });
     return status;
   }
 
-  public static PipelineOperationStatus stopPipeline(
-          Pipeline pipeline, boolean visualize, boolean storeStatus,
-          boolean monitor) {
-    return new PipelineExecutor(pipeline, visualize, storeStatus, monitor).stopPipeline();
+  public static PipelineOperationStatus stopPipeline(Pipeline pipeline,
+                                                     boolean visualize,
+                                                     boolean storeStatus,
+                                                     boolean monitor,
+                                                     boolean forceStop) {
+    return new PipelineExecutor(pipeline, visualize, storeStatus, monitor, forceStop).stopPipeline();
   }
 
   public static List<RdfEndpointItem> getEndpointUriContents(List<RdfEndpoint> endpoints) {

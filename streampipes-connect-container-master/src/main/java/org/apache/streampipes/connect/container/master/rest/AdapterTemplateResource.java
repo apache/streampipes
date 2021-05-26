@@ -20,7 +20,6 @@ package org.apache.streampipes.connect.container.master.rest;
 
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.management.AdapterTemplateMasterManagement;
-import org.apache.streampipes.connect.rest.AbstractContainerResource;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterDescriptionList;
 import org.apache.streampipes.model.message.Notifications;
@@ -33,16 +32,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/v2/connect/{username}/master/adapters/template")
-public class AdapterTemplateResource extends AbstractContainerResource {
+public class AdapterTemplateResource extends AbstractAdapterResource<AdapterTemplateMasterManagement> {
 
     private Logger logger = LoggerFactory.getLogger(AdapterTemplateResource.class);
 
-    private AdapterTemplateMasterManagement adapterTemplateMasterManagement;
-
-    private String connectContainerEndpoint;
-
     public AdapterTemplateResource() {
-        this.adapterTemplateMasterManagement = new AdapterTemplateMasterManagement();
+        super(AdapterTemplateMasterManagement::new);
     }
 
     @POST
@@ -50,7 +45,7 @@ public class AdapterTemplateResource extends AbstractContainerResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response addAdapterTemplate(AdapterDescription adapterDescription, @PathParam("username") String userName) {
         try {
-            String adapterTemplateId = adapterTemplateMasterManagement.addAdapterTemplate(adapterDescription);
+            String adapterTemplateId = managementService.addAdapterTemplate(adapterDescription);
             logger.info("User: " + userName + " added adapter as adapter template");
 
             return ok(Notifications.success(adapterTemplateId));
@@ -66,7 +61,7 @@ public class AdapterTemplateResource extends AbstractContainerResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllAdapterTemplates(@PathParam("username") String userName) {
         try {
-            AdapterDescriptionList result = adapterTemplateMasterManagement.getAllAdapterTemplates();
+            AdapterDescriptionList result = managementService.getAllAdapterTemplates();
 
             return ok(result);
         } catch (AdapterException e) {
@@ -83,15 +78,11 @@ public class AdapterTemplateResource extends AbstractContainerResource {
     public Response deleteAdapter(@PathParam("id") String id, @PathParam("username") String userName) {
 
         try {
-            adapterTemplateMasterManagement.deleteAdapterTemplates(id);
+            managementService.deleteAdapterTemplates(id);
             return ok(true);
         } catch (AdapterException e) {
             logger.error("Error while deleting adapter with id " + id, e);
             return fail();
         }
-    }
-
-    public void setAdapterTemplateMasterManagement(AdapterTemplateMasterManagement adapterTemplateMasterManagement) {
-        this.adapterTemplateMasterManagement = adapterTemplateMasterManagement;
     }
 }

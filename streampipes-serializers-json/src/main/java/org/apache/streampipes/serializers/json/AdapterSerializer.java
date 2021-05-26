@@ -32,8 +32,12 @@ public class AdapterSerializer implements JsonSerializer<AdapterDescription>, Js
     String type = jsonObject.get("field_type").getAsString();
     JsonElement element = jsonObject.get("properties");
     JsonObject tmp = element.getAsJsonObject();
-    tmp.addProperty("_id", jsonObject.get("_id").getAsString());
-    tmp.addProperty("_rev", jsonObject.get("_rev").getAsString());
+    if (jsonObject.has("_id")) {
+      tmp.addProperty("_id", jsonObject.get("_id").getAsString());
+    }
+    if (jsonObject.has("_rev")) {
+      tmp.addProperty("_rev", jsonObject.get("_rev").getAsString());
+    }
 
     try {
       return (AdapterDescription) GsonSerializer.getGson().fromJson(element, Class.forName(type));
@@ -50,6 +54,12 @@ public class AdapterSerializer implements JsonSerializer<AdapterDescription>, Js
       result.add("type", new JsonPrimitive(src.getClass().getCanonicalName()));
       result.add("field_type", new JsonPrimitive(src.getClass().getCanonicalName()));
       result.add("properties", GsonSerializer.getGson().toJsonTree(src));
+      if (src.getId() != null) {
+        result.add("_id", new JsonPrimitive(src.getId()));
+      }
+      if (src.getRev() != null) {
+        result.add("_rev", new JsonPrimitive(src.getRev()));
+      }
     } catch (MalformedParameterizedTypeException e) {
       e.printStackTrace();
     }

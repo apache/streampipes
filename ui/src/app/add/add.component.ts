@@ -62,12 +62,14 @@ export class AddComponent implements OnInit {
     }
 
     toggleSelected(endpointItem) {
-        if (this.selectedEndpointItems.some(item => item === endpointItem.uri)) {
-            this.selectedEndpointItems.splice(this.selectedEndpointItems.indexOf(endpointItem.uri), 1);
-        } else {
-            this.selectedEndpointItems.push(endpointItem.uri);
+        if (endpointItem.editable) {
+            if (this.selectedEndpointItems.some(item => item === endpointItem.uri)) {
+                this.selectedEndpointItems.splice(this.selectedEndpointItems.indexOf(endpointItem.uri), 1);
+            } else {
+                this.selectedEndpointItems.push(endpointItem.uri);
+            }
+            endpointItem.selected = !endpointItem.selected;
         }
-        endpointItem.selected = !endpointItem.selected;
     }
 
     setSelectedTab(index: number) {
@@ -83,10 +85,12 @@ export class AddComponent implements OnInit {
     selectAll(selected) {
         this.selectedEndpointItems = [];
         this.endpointItems.forEach(item => {
-            if (item.type === this.selectedTab || this.selectedTab == 'all') {
-                item.selected = selected;
-                if (selected) {
-                    this.selectedEndpointItems.push(item.uri);
+            if (item.editable) {
+                if (item.type === this.selectedTab || this.selectedTab == 'all') {
+                    item.selected = selected;
+                    if (selected) {
+                        this.selectedEndpointItems.push(item.uri);
+                    }
                 }
             }
         });

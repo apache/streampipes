@@ -92,6 +92,8 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
     @RdfProperty(StreamPipes.HAS_ADAPTER_TYPE)
     private List<String> category;
 
+    private long createdAt;
+
     public AdapterDescription() {
         super();
         this.rules = new ArrayList<>();
@@ -119,12 +121,15 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
     public AdapterDescription(AdapterDescription other) {
         super(other);
         this.adapterId = other.getAdapterId();
+        this.id = other.getId();
+        this.rev = other.getRev();
         this.config = new Cloner().staticProperties(other.getConfig());
         this.userName = other.getUserName();
         this.rules = other.getRules();
         this.adapterType = other.getAdapterType();
         this.icon = other.getIcon();
         this.category = new Cloner().epaTypes(other.getCategory());
+        this.createdAt = other.getCreatedAt();
         if (other.getEventGrounding() != null) this.eventGrounding = new EventGrounding(other.getEventGrounding());
     }
 
@@ -249,5 +254,13 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
                 ", elementId='" + elementId + '\'' +
                 ", DOM='" + DOM + '\'' +
                 '}';
+    }
+
+    public long getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(long createdAt) {
+        this.createdAt = createdAt;
     }
 }

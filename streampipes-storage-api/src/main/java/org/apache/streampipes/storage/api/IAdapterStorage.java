@@ -26,7 +26,7 @@ public interface IAdapterStorage {
 
     List<AdapterDescription> getAllAdapters();
 
-    void storeAdapter(AdapterDescription adapter);
+    String storeAdapter(AdapterDescription adapter);
 
     void updateAdapter(AdapterDescription adapter);
 

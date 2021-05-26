@@ -25,7 +25,39 @@
 
 .error-message {
   background-color: black;
+  font: 1.3rem Inconsolata, monospace;
+  text-shadow: 0 0 5px #C8C8C8;
   color: white;
   padding: 10px;
   width: 100%;
+}
+
+.success-message {
+  text-align: center;
+  font-size: 14pt;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.message-small {
+  text-align: center;
+  font-size: 11pt;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.ml-5 {
+  margin-left: 5px;
+}
+
+.mt-10 {
+  margin-top: 10px;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.ml-10 {
+  margin-left: 10px;
 }

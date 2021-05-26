@@ -18,12 +18,11 @@
 
 package org.apache.streampipes.connect.container.master.rest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.management.UnitMasterManagement;
-import org.apache.streampipes.connect.rest.AbstractContainerResource;
 import org.apache.streampipes.model.connect.unit.UnitDescription;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -33,14 +32,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/v2/connect/{username}/master/unit")
-public class UnitResource extends AbstractContainerResource {
+public class UnitResource extends AbstractAdapterResource<UnitMasterManagement> {
 
     private static final Logger logger = LoggerFactory.getLogger(UnitResource.class);
 
-    private UnitMasterManagement unitManagement;
-
     public UnitResource() {
-        unitManagement = new UnitMasterManagement();
+        super(UnitMasterManagement::new);
     }
 
     @POST
@@ -48,16 +45,12 @@ public class UnitResource extends AbstractContainerResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getFittingUnits(UnitDescription unitDescription) {
         try {
-            String resultingJson = this.unitManagement.getFittingUnits(unitDescription);
+            String resultingJson = managementService.getFittingUnits(unitDescription);
             return ok(resultingJson);
         } catch (AdapterException e) {
             logger.error("Error while getting all adapter descriptions", e);
             return fail();
         }
-    }
-
-    public void setUnitMasterManagement(UnitMasterManagement unitMasterManagement) {
-        this.unitManagement = unitMasterManagement;
     }
 
 }

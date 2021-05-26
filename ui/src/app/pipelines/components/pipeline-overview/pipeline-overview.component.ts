@@ -42,7 +42,7 @@ export class PipelineOverviewComponent implements OnInit {
   @Output()
   refreshPipelinesEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  displayedColumns: string[] = ['start', 'name', 'lastModified', 'action'];
+  displayedColumns: string[] = ['status', 'start', 'name', 'lastModified', 'action'];
 
   dataSource: MatTableDataSource<Pipeline>;
 
@@ -75,6 +75,11 @@ export class PipelineOverviewComponent implements OnInit {
     } else {
       this.stopping = !(this.stopping);
     }
+  }
+
+  openPipelineNotificationsDialog(pipeline: Pipeline) {
+    this.pipelineOperationsService.showPipelineNotificationsDialog(pipeline,
+        this.refreshPipelinesEmitter)
   }
 
   get pipelines() {

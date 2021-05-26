@@ -16,15 +16,20 @@
  *
  */
 
-package org.apache.streampipes.storage.api;
+@import '../../../../scss/sp/colors';
+@import '../../../../scss/sp/sp-dialog.scss';
 
-import org.apache.streampipes.model.dashboard.VisualizablePipeline;
+.log-message {
+  background-color: black;
+  font: 1.3rem Inconsolata, monospace;
+  text-shadow: 0 0 5px #C8C8C8;
+  color: white;
+  padding: 10px;
+  width: 100%;
+}
 
-import java.util.List;
-
-public interface IVisualizablePipelineStorage {
-
-  List<VisualizablePipeline> getAllVisualizablePipelines();
-
-  VisualizablePipeline getVisualizablePipeline(String id);
+.info-message {
+  font-size: 1.5rem;
+  margin-top: 10px;
+  margin-bottom: 5px;
 }

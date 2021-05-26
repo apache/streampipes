@@ -33,9 +33,11 @@ public class WorkerAdministrationManagement {
     private static final Logger LOG = LoggerFactory.getLogger(AdapterMasterManagement.class);
 
     private ConnectionWorkerContainerStorageImpl connectionWorkerContainerStorage;
+    private AdapterMasterManagement adapterMasterManagement;
 
     public WorkerAdministrationManagement() {
         this.connectionWorkerContainerStorage = new ConnectionWorkerContainerStorageImpl();
+        this.adapterMasterManagement = new AdapterMasterManagement();
     }
 
     public void register(ConnectWorkerContainer connectWorker) {
@@ -78,7 +80,7 @@ public class WorkerAdministrationManagement {
             LOG.info("Stored new connect worker: " + connectWorker.getEndpointUrl() + " in database");
         } else {
             try {
-                AdapterMasterManagement.startAllStreamAdapters(connectWorker);
+                this.adapterMasterManagement.startAllStreamAdapters(connectWorker);
             } catch (AdapterException e) {
                 LOG.error("Could not start adapters on worker: " + connectWorker.getEndpointUrl());
             }

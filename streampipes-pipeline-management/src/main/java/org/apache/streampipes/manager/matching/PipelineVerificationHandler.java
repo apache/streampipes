@@ -48,8 +48,13 @@ public class PipelineVerificationHandler {
   private final InvocableStreamPipesEntity rootPipelineElement;
 
   public PipelineVerificationHandler(Pipeline pipeline) throws NoSepaInPipelineException {
+    this(pipeline, PipelineVerificationUtils.getRootNode(pipeline));
+  }
+
+  public PipelineVerificationHandler(Pipeline pipeline,
+                                     InvocableStreamPipesEntity rootNode) {
     this.pipeline = pipeline;
-    this.rootPipelineElement = PipelineVerificationUtils.getRootNode(pipeline);
+    this.rootPipelineElement = rootNode;
     this.invocationGraphs = makeInvocationGraphs();
     this.pipelineModificationMessage = new PipelineModificationMessage();
   }
@@ -116,12 +121,12 @@ public class PipelineVerificationHandler {
   private void updateStaticProperties(List<SpDataStream> inputStreams,
                                       List<StaticProperty> staticProperties) {
     staticProperties
-      .stream()
-      .filter(sp -> (sp instanceof CollectionStaticProperty
-              || sp instanceof MappingProperty
-              || sp instanceof StaticPropertyGroup
-              || sp instanceof StaticPropertyAlternatives))
-      .forEach(property -> updateStaticProperty(inputStreams, property));
+            .stream()
+            .filter(sp -> (sp instanceof CollectionStaticProperty
+                    || sp instanceof MappingProperty
+                    || sp instanceof StaticPropertyGroup
+                    || sp instanceof StaticPropertyAlternatives))
+            .forEach(property -> updateStaticProperty(inputStreams, property));
   }
 
   private void updateStaticProperty(List<SpDataStream> inputStreams, StaticProperty property) {

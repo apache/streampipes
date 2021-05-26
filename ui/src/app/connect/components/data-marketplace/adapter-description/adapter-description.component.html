@@ -37,19 +37,6 @@
         <div fxFlex="70" class="description" fxLayoutAlign="start start">
             <p [innerHTML]="adapter.description"></p>
         </div>
-        <div fxFlex="30" fxLayout="row" fxLayoutAlign="end end" *ngIf="isRunningAdapter" class="delete">
-            <button id="{{ 'create-template-' + adapter.name.split(' ').join('_') }}" matTooltip="Create Adapter Template" color="secondary" class="edit" mat-fab (click)="createTemplate(adapter)">
-                <i class="material-icons">
-                    content_copy
-                </i>
-            </button>
-            <button id="{{ 'delete-' + adapterLabel }}" matTooltip="Delete Adapter" color="primary" mat-fab (click)="deleteAdapter(adapter)" [disabled]="deleteInProgress(adapter.couchDBId)">
-                <i class="material-icons" *ngIf="!deleteInProgress(adapter.couchDBId)">
-                    delete
-                </i>
-                <mat-spinner *ngIf="deleteInProgress(adapter.couchDBId)" [diameter]="20" fxLayoutAlign="center"></mat-spinner>
-            </button>
-        </div>
         <div fxFlex="30" fxLayout="row" fxLayoutAlign="end end" *ngIf="$any(adapter).isTemplate" class="delete">
             <button id="{{ 'share-template-' + adapterLabel }}" matTooltip="Share Adapter Template" color="secondary" mat-fab (click)="shareAdapterTemplate(adapter); $event.stopPropagation()">
                 <i class="material-icons" *ngIf="!deleteInProgress(adapter.couchDBId)">
