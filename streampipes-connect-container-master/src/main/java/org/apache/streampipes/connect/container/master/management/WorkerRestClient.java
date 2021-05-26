@@ -186,7 +186,6 @@ public class WorkerRestClient {
 
     private static byte[] getIconAsset(String baseUrl,  String appId) throws AdapterException {
         String url = baseUrl + "/" + appId + "/assets/icon";
-        logger.info("Trying to get icon from endpoint: " + url);
 
         try {
             byte[] responseString = Request.Get(url)
@@ -210,8 +209,7 @@ public class WorkerRestClient {
 
     private static String getDocumentationAsset(String baseUrl,  String appId) throws AdapterException  {
         String url = baseUrl + "/" + appId + "/assets/documentation";
-        logger.info("Trying to documentation from endpoint: " + url);
-
+       
         try {
             return Request.Get(url)
                     .connectTimeout(1000)
