@@ -21,27 +21,18 @@ package org.apache.streampipes.sinks.databases.jvm.mysql;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.logging.api.Logger;
-import org.apache.streampipes.model.schema.EventPropertyNested;
-import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.sinks.databases.jvm.jdbcclient.JdbcClient;
-import org.apache.streampipes.sinks.databases.jvm.jdbcclient.model.DbDataTypeFactory;
-import org.apache.streampipes.sinks.databases.jvm.jdbcclient.model.DbDataTypes;
 import org.apache.streampipes.sinks.databases.jvm.jdbcclient.model.SupportedDbEngines;
-import org.apache.streampipes.vocabulary.SO;
-import org.apache.streampipes.vocabulary.XSD;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.runtime.EventSink;
-import org.apache.streampipes.model.schema.EventProperty;
 
 import java.sql.*;
 import java.util.*;
-import java.util.Objects;
 
 
 public class Mysql extends JdbcClient implements EventSink<MysqlParameters> {
 
     private MysqlParameters params;
-    private static Logger LOG;
     private List<String> timestampKeys;
     private final SupportedDbEngines dbEngine = SupportedDbEngines.MY_SQL;
 
@@ -50,7 +41,7 @@ public class Mysql extends JdbcClient implements EventSink<MysqlParameters> {
 
         this.params = params;
         this.timestampKeys = new ArrayList<>();
-        this.LOG = params.getGraph().getLogger(Mysql.class);
+        Logger LOG = params.getGraph().getLogger(Mysql.class);
 
         initializeJdbc(
                 params.getGraph().getInputStreams().get(0).getEventSchema(),
@@ -122,23 +113,6 @@ public class Mysql extends JdbcClient implements EventSink<MysqlParameters> {
         }
     }
 
-
-    @Override
-    protected void createTable() throws SpRuntimeException {
-        checkConnected();
-        checkRegEx(params.getDbTable(), "Tablename");
-
-        StringBuilder statement = new StringBuilder("CREATE TABLE ");
-        statement.append(params.getDbTable()).append(" ( ");
-        statement.append(extractEventProperties(eventSchema.getEventProperties())).append(" )");
-
-        try {
-            st.executeUpdate(statement.toString());
-        } catch (SQLException e) {
-            throw new SpRuntimeException(e.getMessage());
-        }
-    }
-
     @Override
     protected void extractTableInformation() throws SpRuntimeException {
 
@@ -146,58 +120,12 @@ public class Mysql extends JdbcClient implements EventSink<MysqlParameters> {
                 + "INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = ? AND TABLE_SCHEMA = ? ORDER BY "
                 + "ORDINAL_POSITION ASC;";
 
-        String [] queryParameter= new String[] {params.getDbTable(), params.getDbName()};
+        String[] queryParameter = new String[]{params.getDbTable(), params.getDbName()};
 
         extractTableInformation(query, queryParameter);
     }
 
 
-    private StringBuilder extractEventProperties(List<EventProperty> properties)
-            throws SpRuntimeException {
-        return extractEventProperties(properties, "");
-    }
-
-
-    private StringBuilder extractEventProperties(List<EventProperty> properties, String preProperty)
-            throws SpRuntimeException {
-
-        StringBuilder s = new StringBuilder();
-        String pre = "";
-        for (EventProperty property : properties) {
-
-            // Protection against SQL-Injection
-            checkRegEx(property.getRuntimeName(), "Column name");
-
-            if (property instanceof EventPropertyNested) {
-
-                // If is is a nested property, recursively extract the required properties
-                StringBuilder tmp = extractEventProperties(((EventPropertyNested) property).getEventProperties(),
-                        preProperty + property.getRuntimeName() + "_");
-                if (tmp.length() > 0) {
-                    s.append(pre).append(tmp);
-                }
-            } else {
-                // Adding the name of the property (e.g. "randomString")
-                s.append(pre).append(preProperty).append(property.getRuntimeName()).append(" ");
-
-                // Adding the type of the property (e.g. "VARCHAR(255)")
-                if (property instanceof EventPropertyPrimitive) {
-                    // If domain property is a timestamp
-                    if (property.getDomainProperties() != null && property.getDomainProperties().stream().anyMatch(x ->
-                       SO.DateTime.equals(x.toString()))) {
-                        s.append(DbDataTypes.DATETIME);
-                        this.timestampKeys.add(property.getRuntimeName());
-                    } else {
-                        s.append(DbDataTypeFactory.getFromUri(((EventPropertyPrimitive) property).getRuntimeType(), dbEngine));
-                    }
-                } else {
-                    // Must be an EventPropertyList then
-                    s.append(DbDataTypeFactory.getFromUri(XSD._string.toString(), dbEngine));
-                }
-            }
-            pre = ", ";
-        }
-
-        return s;
-    }
 }
+
+
