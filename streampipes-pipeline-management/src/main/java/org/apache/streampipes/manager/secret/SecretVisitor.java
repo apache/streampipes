@@ -96,7 +96,9 @@ public class SecretVisitor implements StaticPropertyVisitor {
 
   @Override
   public void visit(StaticPropertyAlternative staticPropertyAlternative) {
-    staticPropertyAlternative.getStaticProperty().accept(this);
+    if (staticPropertyAlternative.getSelected() && staticPropertyAlternative.getStaticProperty() != null) {
+      staticPropertyAlternative.getStaticProperty().accept(this);
+    }
   }
 
   @Override
