@@ -34,7 +34,8 @@ public class MysqlParameters extends JdbcConnectionParameters {
                 mySqlPassword,
                 mySqlTable,
                 sslEnabled,
-                null
+                null,
+                false
         );
     }
 }

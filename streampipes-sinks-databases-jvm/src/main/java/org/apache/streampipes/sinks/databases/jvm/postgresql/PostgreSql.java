@@ -57,12 +57,6 @@ public class PostgreSql extends JdbcClient implements EventSink<PostgreSqlParame
     extractTableInformation(query, queryParameter);
   }
 
-  protected void createTable() throws SpRuntimeException {
-    String createStatement = "CREATE TABLE ";
-
-    createTable(createStatement, true);
-  }
-
   @Override
   public void onEvent(Event event) {
     try {

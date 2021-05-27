@@ -42,7 +42,8 @@ public class IotDbParameters extends JdbcConnectionParameters {
             password,
             "root." + dbStorageGroup,
             sslEnabled,
-            null
+            null,
+            false
     );
 
     this.timestampField = timestampField;

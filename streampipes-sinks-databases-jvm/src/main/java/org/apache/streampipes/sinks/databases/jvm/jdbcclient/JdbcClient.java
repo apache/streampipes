@@ -357,26 +357,26 @@ public class JdbcClient {
     protected void createTable() throws SpRuntimeException {
         String createStatement = "CREATE TABLE ";
 
-        createTable(createStatement, false);
+        createTable(createStatement);
     }
 
     /**
      * Creates a table with the name {@link JdbcConnectionParameters#getDbTable()} and the
      * properties {@link JdbcClient#eventSchema}. Calls
-     * {@link JdbcClient#extractEventProperties(List, boolean)} internally with the
+     * {@link JdbcClient#extractEventProperties(List)} internally with the
      * {@link JdbcClient#eventSchema} to extract all possible columns.
      *
      * @throws SpRuntimeException If the {@link JdbcConnectionParameters#getDbTable()}  is not allowed, if
-     *                            executeUpdate throws an SQLException or if {@link JdbcClient#extractEventProperties(List, boolean)}
+     *                            executeUpdate throws an SQLException or if {@link JdbcClient#extractEventProperties(List)}
      *                            throws an exception
      */
-	protected void createTable(String createStatement, boolean quotedColumnNames) throws SpRuntimeException {
+	protected void createTable(String createStatement) throws SpRuntimeException {
         checkConnected();
         checkRegEx(this.connectionParameters.getDbTable(), "Tablename");
 
         StringBuilder statement = new StringBuilder(createStatement);
         statement.append(this.connectionParameters.getDbTable()).append(" ( ");
-        statement.append(extractEventProperties(eventSchema.getEventProperties(), quotedColumnNames)).append(" );");
+        statement.append(extractEventProperties(eventSchema.getEventProperties())).append(" );");
 
         try {
             st.executeUpdate(statement.toString());
@@ -387,16 +387,15 @@ public class JdbcClient {
 
     /**
      * Creates a SQL-Query with the given Properties (SQL-Injection safe). Calls
-     * {@link JdbcClient#extractEventProperties(List, String, boolean)} with an empty string
+     * {@link JdbcClient#extractEventProperties(List, String)} with an empty string
      *
      * @param properties The list of properties which should be included in the query
-     * @param quotedColumnNames Boolean that denotes whether the column names should be surrounded with quote marks or not
      * @return A StringBuilder with the query which needs to be executed in order to create the table
-     * @throws SpRuntimeException See {@link JdbcClient#extractEventProperties(List, boolean)} for details
+     * @throws SpRuntimeException See {@link JdbcClient#extractEventProperties(List)} for details
      */
-    private StringBuilder extractEventProperties(List<EventProperty> properties, boolean quotedColumnNames)
+    private StringBuilder extractEventProperties(List<EventProperty> properties)
             throws SpRuntimeException {
-        return extractEventProperties(properties, "", quotedColumnNames);
+        return extractEventProperties(properties, "");
     }
 
     /**
@@ -407,11 +406,10 @@ public class JdbcClient {
      *
      * @param properties  The list of properties which should be included in the query
      * @param preProperty A string which gets prepended to all property runtimeNames
-*      @param quotedColumnNames Boolean that denotes whether the column names should be surrounded with quote marks or not
      * @return A StringBuilder with the query which needs to be executed in order to create the table
      * @throws SpRuntimeException If the runtimeName of any property is not allowed
      */
-    private StringBuilder extractEventProperties(List<EventProperty> properties, String preProperty, boolean quotedColumnNames)
+    private StringBuilder extractEventProperties(List<EventProperty> properties, String preProperty)
             throws SpRuntimeException {
         // output: "randomString VARCHAR(255), randomValue INT"
         StringBuilder stringBuilder = new StringBuilder();
@@ -424,7 +422,7 @@ public class JdbcClient {
             if (property instanceof EventPropertyNested) {
                 // if it is a nested property, recursively extract the needed properties
                 StringBuilder tmp = extractEventProperties(((EventPropertyNested) property).getEventProperties(),
-                        preProperty + property.getRuntimeName() + "_", quotedColumnNames);
+                        preProperty + property.getRuntimeName() + "_");
                 if (tmp.length() > 0) {
                     stringBuilder.append(separator).append(tmp);
                 }
@@ -433,7 +431,7 @@ public class JdbcClient {
                 // Or for properties in a nested structure: input1_randomValue
                 // "separator" is there for the ", " part
 
-                if (quotedColumnNames) {
+                if (this.connectionParameters.isColumnNameQuoted()) {
                     stringBuilder.append(separator).append("\"").append(preProperty).append(property.getRuntimeName()).append("\" ");
                 } else {
                     stringBuilder.append(separator).append(preProperty).append(property.getRuntimeName()).append(" ");
