@@ -27,9 +27,6 @@ import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.runtime.EventSink;
 
 
-import java.util.*;
-
-
 public class Mysql extends JdbcClient implements EventSink<MysqlParameters> {
 
     private MysqlParameters params;
@@ -83,7 +80,9 @@ public class Mysql extends JdbcClient implements EventSink<MysqlParameters> {
 
         String[] queryParameter = new String[]{params.getDbTable(), params.getDbName()};
 
-        extractTableInformation(query, queryParameter);
+        this.tableDescription.extractTableInformation(
+                this.statementHandler.preparedStatement, this.connection,
+                query, queryParameter);
     }
 
 

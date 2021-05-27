@@ -54,7 +54,7 @@ public class PostgreSql extends JdbcClient implements EventSink<PostgreSqlParame
 
     String [] queryParameter= new String[] {params.getDbTable()};
 
-    extractTableInformation(query, queryParameter);
+    this.tableDescription.extractTableInformation(this.statementHandler.preparedStatement, this.connection, query, queryParameter);
   }
 
   @Override

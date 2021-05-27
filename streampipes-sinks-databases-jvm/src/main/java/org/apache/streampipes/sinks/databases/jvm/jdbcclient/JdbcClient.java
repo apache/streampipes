@@ -36,19 +36,16 @@ import java.util.Map;
 
 
 public class JdbcClient {
-    private String allowedRegEx;
 
-    private JdbcConnectionParameters connectionParameters;
-    protected SupportedDbEngines dbEngine;
+    protected DbDescription dbDescription;
 
-    protected boolean tableExists = false;
-    protected HashMap<String, DbDataTypes> dataTypesHashMap;
+    protected TableDescription tableDescription;
+
+    protected Connection connection = null;
+
+    protected StatementHandler statementHandler;
 
     protected Logger logger;
-
-    protected Connection c = null;
-    protected Statement st = null;
-    protected PreparedStatement ps = null;
 
     /**
      * The list of properties extracted from the graph
@@ -72,46 +69,45 @@ public class JdbcClient {
                                   JdbcConnectionParameters connectionParameters,
                                   SupportedDbEngines dbEngine,
                                   Logger logger) throws SpRuntimeException {
-        this.connectionParameters = connectionParameters;
-        this.dbEngine = dbEngine;
-        this.allowedRegEx = dbEngine.getAllowedRegex();
+        this.dbDescription = new DbDescription(connectionParameters, dbEngine);
+        this.tableDescription = new TableDescription(connectionParameters.getDbTable());
         this.logger = logger;
         this.eventSchema = eventSchema;
         try {
-            Class.forName(this.dbEngine.getDriverName());
+            Class.forName(this.dbDescription.getDriverName());
         } catch (ClassNotFoundException e) {
-            throw new SpRuntimeException("Driver '" + this.dbEngine.getDriverName() + "' not found.");
+            throw new SpRuntimeException("Driver '" + this.dbDescription.getDriverName() + "' not found.");
         }
 
-        if (this.connectionParameters.isSslEnabled()) {
+        if (this.dbDescription.isSslEnabled()) {
             connectWithSSL(
-                    this.connectionParameters.getDbHost(),
-                    this.connectionParameters.getDbPort(),
-                    this.connectionParameters.getDbName()
+                    this.dbDescription.getHost(),
+                    this.dbDescription.getPort(),
+                    this.dbDescription.getName()
             );
         } else {
             connect(
-                    this.connectionParameters.getDbHost(),
-                    this.connectionParameters.getDbPort(),
-                    this.connectionParameters.getDbName()
+                    this.dbDescription.getHost(),
+                    this.dbDescription.getPort(),
+                    this.dbDescription.getName()
             );
         }
     }
 
 
     /**
-     * Connects to the HadoopFileSystem Server and initializes {@link JdbcClient#c} and
-     * {@link JdbcClient#st}
+     * Connects to the SQL database and initializes {@link JdbcClient#connection}
+     *
      *
      * @throws SpRuntimeException When the connection could not be established (because of a
      *                            wrong identification, missing database etc.)
      */
     private void connect(String host, int port, String databaseName) throws SpRuntimeException {
-		String url = "jdbc:" + this.dbEngine.getUrlName() + "://" + host + ":" + port + "/";
+		String url = "jdbc:" + this.dbDescription.getEngine().getUrlName() + "://" + host + ":" + port + "/";
         try {
-            c = DriverManager.getConnection(
-                    url, this.connectionParameters.getUsername(),
-                    this.connectionParameters.getPassword());
+            connection = DriverManager.getConnection(
+                    url, this.dbDescription.getUsername(),
+                    this.dbDescription.getPassword());
             ensureDatabaseExists(databaseName);
             ensureTableExists(url, databaseName);
         } catch (SQLException e) {
@@ -127,11 +123,11 @@ public class JdbcClient {
      * @throws SpRuntimeException
      */
     private void connectWithSSL(String host, int port, String databaseName) throws SpRuntimeException {
-        String url = "jdbc:" + this.dbEngine.getUrlName() + "://" + host + ":" + port + "/" + databaseName + "?user=" +
-                this.connectionParameters.getUsername() + "&password=" + this.connectionParameters.getPassword() +
-                "&ssl=true&sslfactory=" + this.connectionParameters.getSslFactory() + "&sslmode=require";
+        String url = "jdbc:" + this.dbDescription.getEngine().getUrlName() + "://" + host + ":" + port + "/" + databaseName + "?user=" +
+                this.dbDescription.getUsername() + "&password=" + this.dbDescription.getPassword() +
+                "&ssl=true&sslfactory=" + this.dbDescription.getSslFactory() + "&sslmode=require";
         try{
-            c = DriverManager.getConnection(url);
+            connection = DriverManager.getConnection(url);
             ensureDatabaseExists(databaseName);
             ensureTableExists(url, "");
         } catch (SQLException e ) {
@@ -159,8 +155,8 @@ public class JdbcClient {
 
         try {
             // Checks whether the database already exists (using catalogs has not worked with postgres)
-            st = c.createStatement();
-            st.executeUpdate(createStatement + databaseName + ";");
+            this.statementHandler.setStatement(connection.createStatement());
+            this.statementHandler.statement.executeUpdate(createStatement + databaseName + ";");
             logger.info("Created new database '" + databaseName + "'");
         } catch (SQLException e1) {
             if (!e1.getSQLState().substring(0, 2).equals("42")) {
@@ -181,15 +177,15 @@ public class JdbcClient {
 	protected void ensureTableExists(String url, String databaseName) throws SpRuntimeException {
 		try {
 			// Database should exist by now so we can establish a connection
-			c = DriverManager.getConnection(url + databaseName, this.connectionParameters.getUsername(), this.connectionParameters.getPassword());
-			st = c.createStatement();
-			ResultSet rs = c.getMetaData().getTables(null, null, this.connectionParameters.getDbTable(), null);
+			connection = DriverManager.getConnection(url + databaseName, this.dbDescription.getUsername(), this.dbDescription.getPassword());
+			this.statementHandler.setStatement(connection.createStatement());
+			ResultSet rs = connection.getMetaData().getTables(null, null, this.tableDescription.getName(), null);
 			if (rs.next()) {
 				validateTable();
 			} else {
 				createTable();
 			}
-			tableExists = true;
+			this.tableDescription.setTableExists();
 			rs.close();
 		} catch (SQLException e) {
 			closeAll();
@@ -209,11 +205,11 @@ public class JdbcClient {
     private void executePreparedStatement(final Map<String, Object> event)
             throws SQLException, SpRuntimeException {
         checkConnected();
-        if (ps != null) {
-            ps.clearParameters();
+        if (this.statementHandler.getPreparedStatement() != null) {
+            this.statementHandler.preparedStatement.clearParameters();
         }
         fillPreparedStatement(event);
-        ps.executeUpdate();
+        this.statementHandler.preparedStatement.executeUpdate();
     }
 
 	/**
@@ -229,10 +225,10 @@ public class JdbcClient {
 		if (event == null) {
 			throw new SpRuntimeException("event is null");
 		}
-		if (!tableExists) {
+		if (!this.tableDescription.tableExists()) {
 			// Creates the table
 			createTable();
-			tableExists = true;
+			this.tableDescription.setTableExists();
 		}
 		try {
 			executePreparedStatement(eventMap);
@@ -240,10 +236,10 @@ public class JdbcClient {
 			if (e.getSQLState().substring(0, 2).equals("42")) {
 				// If the table does not exists (because it got deleted or something, will cause the error
 				// code "42") we will try to create a new one. Otherwise we do not handle the exception.
-				logger.warn("Table '" + this.connectionParameters.getDbTable() + "' was unexpectedly not found and gets recreated.");
-				tableExists = false;
+				logger.warn("Table '" + this.tableDescription.getName() + "' was unexpectedly not found and gets recreated.");
+				this.tableDescription.setTableMissing();
 				createTable();
-				tableExists = true;
+				this.tableDescription.setTableExists();
 
 				try {
 					executePreparedStatement(eventMap);
@@ -286,13 +282,13 @@ public class JdbcClient {
                     generatePreparedStatement(event);
                 }
                 ParameterInformation p = eventParameterMap.get(newKey);
-                StatementUtils.setValue(p, pair.getValue(), ps);
+                StatementUtils.setValue(p, pair.getValue(), this.statementHandler.getPreparedStatement());
             }
         }
     }
 
     /**
-     * Initializes the variables {@link JdbcClient#eventParameterMap} and {@link JdbcClient#ps}
+     * Initializes the variables {@link JdbcClient#eventParameterMap} and {@link StatementHandler#preparedStatement}
      * according to the parameter event.
      *
      * @param event The event which is getting analyzed
@@ -307,8 +303,8 @@ public class JdbcClient {
         eventParameterMap.clear();
         StringBuilder statement1 = new StringBuilder("INSERT INTO ");
         StringBuilder statement2 = new StringBuilder("VALUES ( ");
-        checkRegEx(this.connectionParameters.getDbTable(), "Tablename");
-        statement1.append(this.connectionParameters.getDbTable()).append(" ( ");
+        checkRegEx(this.tableDescription.getName(), "Tablename");
+        statement1.append(this.tableDescription.getName()).append(" ( ");
 
         // Starts index at 1, since the parameterIndex in the PreparedStatement starts at 1 as well
         extendPreparedStatement(event, statement1, statement2, 1);
@@ -316,7 +312,7 @@ public class JdbcClient {
         statement1.append(" ) ");
         statement2.append(" );");
         String finalStatement = statement1.append(statement2).toString();
-        ps = c.prepareStatement(finalStatement);
+        this.statementHandler.preparedStatement = connection.prepareStatement(finalStatement);
     }
 
     private int extendPreparedStatement(final Map<String, Object> event,
@@ -344,8 +340,8 @@ public class JdbcClient {
                         pair.getKey() + "_", pre);
             } else {
                 checkRegEx(pair.getKey(), "Columnname");
-                eventParameterMap.put(pair.getKey(), new ParameterInformation(index, DbDataTypeFactory.getFromObject(pair.getValue(), dbEngine)));
-                if (this.connectionParameters.isColumnNameQuoted()) {
+                eventParameterMap.put(pair.getKey(), new ParameterInformation(index, DbDataTypeFactory.getFromObject(pair.getValue(), this.dbDescription.getEngine())));
+                if (this.dbDescription.isColumnNameQuoted()) {
                     s1.append(pre).append("\"").append(preProperty).append(pair.getKey()).append("\"");
                 } else {
                     s1.append(pre).append(preProperty).append(pair.getKey());
@@ -376,14 +372,14 @@ public class JdbcClient {
      */
 	protected void createTable(String createStatement) throws SpRuntimeException {
         checkConnected();
-        checkRegEx(this.connectionParameters.getDbTable(), "Tablename");
+        checkRegEx(this.tableDescription.getName(), "Tablename");
 
         StringBuilder statement = new StringBuilder(createStatement);
-        statement.append(this.connectionParameters.getDbTable()).append(" ( ");
+        statement.append(this.tableDescription.getName()).append(" ( ");
         statement.append(extractEventProperties(eventSchema.getEventProperties())).append(" );");
 
         try {
-            st.executeUpdate(statement.toString());
+            this.statementHandler.statement.executeUpdate(statement.toString());
         } catch (SQLException e) {
             throw new SpRuntimeException(e.getMessage());
         }
@@ -435,7 +431,7 @@ public class JdbcClient {
                 // Or for properties in a nested structure: input1_randomValue
                 // "separator" is there for the ", " part
 
-                if (this.connectionParameters.isColumnNameQuoted()) {
+                if (this.dbDescription.isColumnNameQuoted()) {
                     stringBuilder.append(separator).append("\"").append(preProperty).append(property.getRuntimeName()).append("\" ");
                 } else {
                     stringBuilder.append(separator).append(preProperty).append(property.getRuntimeName()).append(" ");
@@ -443,10 +439,10 @@ public class JdbcClient {
 
                 // adding the type of the property (e.g. "VARCHAR(255)")
                 if (property instanceof EventPropertyPrimitive) {
-                    stringBuilder.append(DbDataTypeFactory.getFromUri(((EventPropertyPrimitive) property).getRuntimeType(), dbEngine));
+                    stringBuilder.append(DbDataTypeFactory.getFromUri(((EventPropertyPrimitive) property).getRuntimeType(), this.dbDescription.getEngine()));
                 } else {
                     // Must be an EventPropertyList then
-                    stringBuilder.append(DbDataTypeFactory.getFromUri(XSD._string.toString(), dbEngine));
+                    stringBuilder.append(DbDataTypeFactory.getFromUri(XSD._string.toString(), this.dbDescription.getEngine()));
                 }
             }
             separator = ", ";
@@ -456,56 +452,24 @@ public class JdbcClient {
     }
 
     protected void extractTableInformation(){
-        extractTableInformation("", new String[]{});
+        this.tableDescription.extractTableInformation(
+                this.statementHandler.preparedStatement, connection,
+                "", new String[]{});
     }
 
-    protected void extractTableInformation(String queryString, String[] queryParameter) throws SpRuntimeException{
-
-        ResultSet resultSet = null;
-        this.dataTypesHashMap = new HashMap<String, DbDataTypes>();
-
-        try {
-
-            this.ps = this.c.prepareStatement(queryString);
-
-            for (int i = 1; i <= queryParameter.length; i++) {
-                this.ps.setString(i, queryParameter[i - 1]);
-            }
-
-            resultSet = this.ps.executeQuery();
-
-            if(resultSet.next()) {
-                do {
-                    String columnName = resultSet.getString("COLUMN_NAME");
-                    DbDataTypes dataType = DbDataTypes.valueOf(resultSet.getString("DATA_TYPE").toUpperCase());
-                    this.dataTypesHashMap.put(columnName, dataType);
-                } while (resultSet.next());
-            } else {
-                throw new SpRuntimeException("Database or Table does nit exist.");
-            }
-        } catch (SQLException e) {
-            throw new SpRuntimeException("SqlException: " + e.getMessage() + ", Error code: " + e.getErrorCode() +
-                    ", SqlState: " + e.getSQLState());
-        } finally {
-            try {
-                resultSet.close();
-            } catch (SQLException throwables) {
-            }
-        }
-    }
 
     /**
      * Checks if the input string is allowed (regEx match and length > 0)
      *
      * @param input String which is getting matched with the regEx
      * @param regExIdentifier Information about the use of the input. Gets included in the exception message
-     * @throws SpRuntimeException If {@code input} does not match with {@link JdbcClient#allowedRegEx}
+     * @throws SpRuntimeException If {@code input} does not match with {@link DbDescription#getAllowedRegEx()}
      *                            or if the length of {@code input} is 0
      */
     protected final void checkRegEx(String input, String regExIdentifier) throws SpRuntimeException {
-        if (!input.matches(allowedRegEx) || input.length() == 0) {
+        if (!input.matches(this.dbDescription.getAllowedRegEx()) || input.length() == 0) {
             throw new SpRuntimeException(regExIdentifier + " '" + input
-                    + "' not allowed (allowed: '" + allowedRegEx + "') with a min length of 1");
+                    + "' not allowed (allowed: '" + this.dbDescription.getAllowedRegEx() + "') with a min length of 1");
         }
     }
 
@@ -514,15 +478,15 @@ public class JdbcClient {
         extractTableInformation();
 
         for (EventProperty property: this.eventSchema.getEventProperties()) {
-            if (this.dataTypesHashMap.get(property.getRuntimeName()) != null) {
+            if (this.tableDescription.getDataTypesHashMap().get(property.getRuntimeName()) != null) {
                 if (property instanceof EventPropertyPrimitive) {
-                    DbDataTypes dataType = this.dataTypesHashMap.get(property.getRuntimeName());
+                    DbDataTypes dataType = this.tableDescription.getDataTypesHashMap().get(property.getRuntimeName());
                     if (!((EventPropertyPrimitive) property).getRuntimeType().equals(DbDataTypeFactory.getDataType(dataType).toString())) {
-                        throw new SpRuntimeException("Table '" + connectionParameters.getDbTable() + "' does not match the EventProperties");
+                        throw new SpRuntimeException("Table '" + this.tableDescription.getName() + "' does not match the EventProperties");
                     }
                 }
             } else {
-                    throw new SpRuntimeException("Table '" + connectionParameters.getDbTable() + "' does not match the EventProperties");
+                    throw new SpRuntimeException("Table '" + this.tableDescription.getName() + "' does not match the EventProperties");
             }
         }
     }
@@ -533,27 +497,27 @@ public class JdbcClient {
     protected void closeAll() {
         boolean error = false;
         try {
-            if (st != null) {
-                st.close();
-                st = null;
+            if (this.statementHandler.statement != null) {
+                this.statementHandler.statement .close();
+                this.statementHandler.statement  = null;
             }
         } catch (SQLException e) {
             error = true;
             logger.warn("Exception when closing the statement: " + e.getMessage());
         }
         try {
-            if (c != null) {
-                c.close();
-                c = null;
+            if (connection != null) {
+                connection.close();
+                connection = null;
             }
         } catch (SQLException e) {
             error = true;
             logger.warn("Exception when closing the connection: " + e.getMessage());
         }
         try {
-            if (ps != null) {
-                ps.close();
-                ps = null;
+            if (this.statementHandler.preparedStatement != null) {
+                this.statementHandler.preparedStatement.close();
+                this.statementHandler.preparedStatement = null;
             }
         } catch (SQLException e) {
             error = true;
@@ -565,7 +529,7 @@ public class JdbcClient {
     }
 
     protected void checkConnected() throws SpRuntimeException {
-        if (c == null) {
+        if (connection == null) {
             throw new SpRuntimeException("Connection is not established.");
         }
     }
