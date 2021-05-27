@@ -245,7 +245,6 @@ export class PipelineAssemblyComponent implements OnInit {
             if (results[0] && results[0].length > 0) {
                 this.rawPipelineModel = results[0] as PipelineElementConfig[];
                 this.handleCanvasMetadataResponse(results[1]);
-                this.displayPipelineInEditor(!this.pipelineCanvasMetadataAvailable, this.pipelineCanvasMetadata);
             }
         });
     }
@@ -285,6 +284,7 @@ export class PipelineAssemblyComponent implements OnInit {
             this.ngZone.run(() => {
                 this.pipelineValid = this.PipelineValidationService
                     .isValidPipeline(this.rawPipelineModel.filter(pe => !(pe.settings.disabled)), false);
+                console.log(this.pipelineValid);
             });
         });
     }
