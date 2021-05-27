@@ -196,10 +196,10 @@ public class DbDataTypeFactory {
                 return Datatypes.Double;
             case FLOAT:
             case REAL:
+            case DATETIME:
                 return Datatypes.Float;
             case BIG_INT:
             case INT64:
-            case DATETIME:
                 return Datatypes.Long;
             case INT:
             case INT32:

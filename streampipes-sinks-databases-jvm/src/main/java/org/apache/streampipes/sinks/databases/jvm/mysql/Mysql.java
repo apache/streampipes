@@ -26,21 +26,19 @@ import org.apache.streampipes.sinks.databases.jvm.jdbcclient.model.SupportedDbEn
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.runtime.EventSink;
 
-import java.sql.*;
+
 import java.util.*;
 
 
 public class Mysql extends JdbcClient implements EventSink<MysqlParameters> {
 
     private MysqlParameters params;
-    private List<String> timestampKeys;
     private final SupportedDbEngines dbEngine = SupportedDbEngines.MY_SQL;
 
     @Override
     public void onInvocation(MysqlParameters params, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
 
         this.params = params;
-        this.timestampKeys = new ArrayList<>();
         Logger LOG = params.getGraph().getLogger(Mysql.class);
 
         initializeJdbc(
@@ -74,43 +72,6 @@ public class Mysql extends JdbcClient implements EventSink<MysqlParameters> {
 
         ensureDatabaseExists(createStatement, databaseName);
 
-    }
-
-    @Override
-    protected void save(final Event event) throws SpRuntimeException {
-        checkConnected();
-
-        try {
-            Statement statement;
-            statement = c.createStatement();
-            StringBuilder sb = new StringBuilder("INSERT INTO " + params.getDbTable() + " (");
-            StringBuilder sb2 = new StringBuilder("Values (");
-
-            for (String s : event.getRaw().keySet()) {
-                sb.append(s).append(", ");
-                if (event.getFieldByRuntimeName(s).getRawValue() instanceof String) {
-                    sb2.append("\"").append(event.getFieldByRuntimeName(s).getRawValue().toString()).append("\", ");
-                } else {
-                    //
-                    if (this.timestampKeys.contains(s)) {
-                        java.sql.Timestamp sqlTimestamp = new java.sql.Timestamp(event.getFieldByRuntimeName(s).getAsPrimitive().getAsLong());
-                        sb2.append("\"").append(sqlTimestamp).append("\", ");
-                    } else {
-                        sb2.append(event.getFieldByRuntimeName(s).getRawValue().toString()).append(", ");
-                    }
-
-                }
-            }
-            // Remove last comma
-            sb.setLength(sb.length() - 2);
-            sb2.setLength(sb2.length() - 2);
-
-            sb.append(") ").append(sb2).append(")");
-            statement.execute(sb.toString());
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override

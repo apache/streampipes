@@ -345,7 +345,11 @@ public class JdbcClient {
             } else {
                 checkRegEx(pair.getKey(), "Columnname");
                 eventParameterMap.put(pair.getKey(), new ParameterInformation(index, DbDataTypeFactory.getFromObject(pair.getValue(), dbEngine)));
-                s1.append(pre).append("\"").append(preProperty).append(pair.getKey()).append("\"");
+                if (this.connectionParameters.isColumnNameQuoted()) {
+                    s1.append(pre).append("\"").append(preProperty).append(pair.getKey()).append("\"");
+                } else {
+                    s1.append(pre).append(preProperty).append(pair.getKey());
+                }
                 s2.append(pre).append("?");
                 index++;
             }
