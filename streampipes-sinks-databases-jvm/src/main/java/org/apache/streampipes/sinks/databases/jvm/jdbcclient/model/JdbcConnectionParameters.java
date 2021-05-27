@@ -12,6 +12,7 @@ public class JdbcConnectionParameters extends EventSinkBindingParams {
     private String password;
     private String dbTable;
     private boolean sslEnabled;
+    private String sslFactory;
 
     public JdbcConnectionParameters(DataSinkInvocation graph,
                                     String dbHost,
@@ -20,7 +21,8 @@ public class JdbcConnectionParameters extends EventSinkBindingParams {
                                     String username,
                                     String password,
                                     String dbTable,
-                                    boolean sslEnabled) {
+                                    boolean sslEnabled,
+                                    String sslFactory) {
         super(graph);
         this.dbHost = dbHost;
         this.dbPort = dbPort;
@@ -29,6 +31,7 @@ public class JdbcConnectionParameters extends EventSinkBindingParams {
         this.password = password;
         this.dbTable = dbTable;
         this.sslEnabled = sslEnabled;
+        this.sslFactory = sslFactory;
     }
 
 
@@ -58,5 +61,9 @@ public class JdbcConnectionParameters extends EventSinkBindingParams {
 
     public boolean isSslEnabled() {
         return sslEnabled;
+    }
+
+    public String getSslFactory() {
+        return sslFactory;
     }
 }

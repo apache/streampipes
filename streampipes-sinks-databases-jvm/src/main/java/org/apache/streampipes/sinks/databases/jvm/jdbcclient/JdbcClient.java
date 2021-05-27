@@ -129,7 +129,7 @@ public class JdbcClient {
     private void connectWithSSL(String host, int port, String databaseName) throws SpRuntimeException {
         String url = "jdbc:" + this.dbEngine.getUrlName() + "://" + host + ":" + port + "/" + databaseName + "?user=" +
                 this.connectionParameters.getUsername() + "&password=" + this.connectionParameters.getPassword() +
-                "&ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory&sslmode=require";
+                "&ssl=true&sslfactory=" + this.connectionParameters.getSslFactory() + "&sslmode=require";
         try{
             c = DriverManager.getConnection(url);
             ensureDatabaseExists(databaseName);

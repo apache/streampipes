@@ -35,6 +35,7 @@ public class PostgreSqlParameters extends JdbcConnectionParameters {
             user,
             password,
             tableName,
-            sslEnabled);
+            sslEnabled,
+            "org.postgresql.ssl.NonValidatingFactory");
   }
 }
