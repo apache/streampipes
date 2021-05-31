@@ -78,7 +78,7 @@ public class IotDbController extends StandaloneEventSinkDeclarer<IotDbParameters
             dbStorageGroup,
             user,
             password,
-            false,
+            false, // SSL connection not yet implemented for IoT DB
             timestampField);
 
     return new ConfiguredEventSink<>(params, IotDb::new);

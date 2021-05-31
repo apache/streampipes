@@ -25,9 +25,10 @@ import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.sinks.databases.jvm.jdbcclient.JdbcClient;
 import org.apache.streampipes.sinks.databases.jvm.jdbcclient.model.DbDataTypeFactory;
+import org.apache.streampipes.sinks.databases.jvm.jdbcclient.model.DbDataTypes;
 import org.apache.streampipes.sinks.databases.jvm.jdbcclient.model.ParameterInformation;
 import org.apache.streampipes.sinks.databases.jvm.jdbcclient.model.SupportedDbEngines;
-import org.apache.streampipes.vocabulary.XSD;
+import org.apache.streampipes.sinks.databases.jvm.jdbcclient.utils.SQLStatementUtils;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.runtime.EventSink;
 
@@ -87,7 +88,7 @@ public class IotDb extends JdbcClient implements EventSink<IotDbParameters> {
       Long timestampValue = event.getFieldBySelector(timestampField).getAsPrimitive().getAsLong();
       event.removeFieldBySelector(timestampField);
       Statement statement;
-      statement = c.createStatement();
+      statement = connection.createStatement();
       StringBuilder sb1 = new StringBuilder();
       StringBuilder sb2 = new StringBuilder();
       //TODO: Check for SQL-Injection
@@ -113,9 +114,9 @@ public class IotDb extends JdbcClient implements EventSink<IotDbParameters> {
 
   @Override
   protected void ensureDatabaseExists(String url, String databaseName) throws SpRuntimeException {
-    checkRegEx(this.params.getDbTable(), "Storage Group name");
+    SQLStatementUtils.checkRegEx(this.params.getDbTable(), "Storage Group name", this.dbDescription);
     try {
-      Statement statement = c.createStatement();
+      Statement statement = connection.createStatement();
       statement.execute("SET STORAGE GROUP TO " + this.params.getDbTable());
     } catch (SQLException e) {
       // Storage group already exists
@@ -133,28 +134,28 @@ public class IotDb extends JdbcClient implements EventSink<IotDbParameters> {
   @Override
   protected void ensureTableExists(String url, String databaseName) throws SpRuntimeException {
     int index = 1;
-    parameters.put("timestamp", new ParameterInformation(index++, DbDataTypeFactory.getLong(dbEngine)));
-    for (EventProperty eventProperty : eventSchema.getEventProperties()) {
+    this.statementHandler.putEventParameterMap("timestamp", new ParameterInformation(index++, DbDataTypeFactory.getLong(dbEngine)));
+    for (EventProperty eventProperty : this.tableDescription.getEventSchema().getEventProperties()) {
       try {
         if (eventProperty.getRuntimeName().equals(timestampField.substring(4))) {
           continue;
         }
         Statement statement = null;
-        statement = c.createStatement();
+        statement = connection.createStatement();
         // The identifier cannot be called "value"
         //TODO: Do not simply add a _1 but look instead, if the name is already taken
         String runtimeName = eventProperty.getRuntimeName();
         if (eventProperty.getRuntimeName().equals("value")) {
           runtimeName = "value_1";
         }
-        String datatype = extractAndAddEventPropertyRuntimeType(eventProperty, index++);
+        DbDataTypes datatype = extractAndAddEventPropertyRuntimeType(eventProperty, index++);
 
         statement.execute("CREATE TIMESERIES "
                 + params.getDbTable()
                 + "."
                 + runtimeName
                 + " WITH DATATYPE="
-                + datatype
+                + datatype.toString()
                 + ", ENCODING=PLAIN");
       } catch (SQLException e) {
         // Probably because it already exists
@@ -162,38 +163,17 @@ public class IotDb extends JdbcClient implements EventSink<IotDbParameters> {
         e.printStackTrace();
       }
     }
-    tableExists = true;
+    //tableExists = true;
   }
 
-  private String extractAndAddEventPropertyRuntimeType(EventProperty eventProperty, int index) {
+  private DbDataTypes extractAndAddEventPropertyRuntimeType(EventProperty eventProperty, int index) {
     // Supported datatypes can be found here: https://iotdb.apache.org/#/Documents/0.8.0/chap2/sec2
-    // can partially be replaced with DbDataTypeFactory#fromUri
-    String re;
+    DbDataTypes dataType = DbDataTypes.TEXT;
     if (eventProperty instanceof EventPropertyPrimitive) {
-      String runtimeType = ((EventPropertyPrimitive)eventProperty).getRuntimeType();
-      if (runtimeType.equals(XSD._integer.toString())) {
-        parameters.put(eventProperty.getRuntimeName(), new ParameterInformation(index, DbDataTypeFactory.getInteger(dbEngine)));
-        re = "INT32";
-      } else if (runtimeType.equals(XSD._long.toString())) {
-        parameters.put(eventProperty.getRuntimeName(), new ParameterInformation(index, DbDataTypeFactory.getLong(dbEngine)));
-        re = "INT64";
-      } else if (runtimeType.equals(XSD._float.toString())) {
-        parameters.put(eventProperty.getRuntimeName(), new ParameterInformation(index, DbDataTypeFactory.getFloat(dbEngine)));
-        re = "FLOAT";
-      } else if (runtimeType.equals(XSD._double.toString())) {
-        parameters.put(eventProperty.getRuntimeName(), new ParameterInformation(index, DbDataTypeFactory.getDouble(dbEngine)));
-        re = "DOUBLE";
-      } else if (runtimeType.equals(XSD._boolean.toString())) {
-        parameters.put(eventProperty.getRuntimeName(), new ParameterInformation(index, DbDataTypeFactory.getBoolean(dbEngine)));
-        re = "BOOLEAN";
-      } else {
-        parameters.put(eventProperty.getRuntimeName(), new ParameterInformation(index, DbDataTypeFactory.getLongString(dbEngine)));
-        re = "TEXT";
-      }
-    } else {
-      // TODO: Add listed and nested items
-      re = "TEXT";
+       dataType = DbDataTypeFactory.getFromUri(((EventPropertyPrimitive)eventProperty).getRuntimeType(), SupportedDbEngines.IOT_DB);
+      this.statementHandler.putEventParameterMap(eventProperty.getRuntimeName(), new ParameterInformation(index, dataType));
     }
-    return re;
+
+    return dataType;
   }
 }

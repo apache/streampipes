@@ -31,7 +31,7 @@ public class StatementHandler {
      *
      * @param event The event which is getting analyzed
      * @throws SpRuntimeException When the tablename is not allowed
-     * @throws SQLException       When the prepareStatment cannot be evaluated
+     * @throws SQLException       When the prepareStatement cannot be evaluated
      */
     public void generatePreparedStatement(DbDescription dbDescription, TableDescription tableDescription,
                                           Connection connection, final Map<String, Object> event)
@@ -146,5 +146,13 @@ public class StatementHandler {
 
     public void setStatement(Statement statement) {
         this.statement = statement;
+    }
+
+    public Map getEventParameterMap() {
+        return this.eventParameterMap;
+    }
+
+    public void putEventParameterMap(String parameterName, ParameterInformation parameterInformation){
+        this.eventParameterMap.put(parameterName, parameterInformation);
     }
 }
