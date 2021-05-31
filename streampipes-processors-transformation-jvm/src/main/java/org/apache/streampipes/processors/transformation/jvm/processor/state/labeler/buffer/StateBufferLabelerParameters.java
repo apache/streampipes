@@ -29,7 +29,6 @@ public class StateBufferLabelerParameters extends EventProcessorBindingParams {
     private String stateProperty;
     private String stateFilter;
     private String selectedOperation;
-    private String labelName;
     private List<Integer> numberValues;
     private List<String> labelStrings;
     private List<String> comparators;
@@ -39,7 +38,6 @@ public class StateBufferLabelerParameters extends EventProcessorBindingParams {
                                         String stateProperty,
                                         String stateFilter,
                                         String selectedOperation,
-                                        String labelName,
                                         List<Integer> numberValues,
                                         List<String> labelStrings,
                                         List<String> comparators) {
@@ -48,7 +46,6 @@ public class StateBufferLabelerParameters extends EventProcessorBindingParams {
         this.stateProperty = stateProperty;
         this.stateFilter = stateFilter;
         this.selectedOperation = selectedOperation;
-        this.labelName = labelName;
         this.numberValues = numberValues;
         this.labelStrings = labelStrings;
         this.comparators = comparators;
@@ -108,9 +105,5 @@ public class StateBufferLabelerParameters extends EventProcessorBindingParams {
 
     public void setComparators(List<String> comparators) {
         this.comparators = comparators;
-    }
-
-    public String getLabelName() {
-        return labelName;
     }
 }
