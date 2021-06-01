@@ -23,7 +23,7 @@ import {
   Pipeline, PipelineOperationStatus,
   StaticNodeMetadata
 } from "../../../core-model/gen/streampipes-model";
-import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {EditorService} from "../../services/editor.service";
 import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
 import {ObjectProvider} from "../../services/object-provider.service";
@@ -40,7 +40,7 @@ import {map} from "rxjs/operators";
   styleUrls: ['./migrate-pipeline-processors.component.scss']
 })
 export class MigratePipelineProcessorsComponent implements OnInit {
-
+  priorityForm: FormGroup;
   submitPipelineForm: FormGroup = new FormGroup({});
   saving: boolean = false;
   saved: boolean = false;
@@ -56,11 +56,19 @@ export class MigratePipelineProcessorsComponent implements OnInit {
   tmpPipeline: Pipeline;
   panelOpenState: boolean;
   pipelineExecutionPolicies: string[] = ['default', 'locality-aware', 'custom'];
+  selectedPreemption: boolean;
+  selectedNodeTags: string[];
+
+  pipelinePriorityClasses = [
+    {value: 1, viewValue: 'low'},
+    {value: 5, viewValue: 'medium'},
+    {value: 10, viewValue: 'high'}];
 
   @Input()
   pipeline: Pipeline;
 
   constructor(private editorService: EditorService,
+              private formBuilder: FormBuilder,
               private dialogRef: DialogRef<MigratePipelineProcessorsComponent>,
               private objectProvider: ObjectProvider,
               private pipelineService: PipelineService,
@@ -72,9 +80,13 @@ export class MigratePipelineProcessorsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.loadAndPrepareEdgeNodes();
+
     this.tmpPipeline = this.deepCopy(this.pipeline);
 
-    this.loadAndPrepareEdgeNodes();
+    this.priorityForm = this.formBuilder.group({
+      priorityForm: [null, Validators.required]
+    });
 
     this.submitPipelineForm.addControl("pipelineName", new FormControl(this.tmpPipeline.name,
         [Validators.required,
@@ -90,8 +102,12 @@ export class MigratePipelineProcessorsComponent implements OnInit {
       this.tmpPipeline.description = value;
     });
 
-    this.selectedRelayStrategyVal = "buffer";
-    this.selectedPipelineExecutionPolicy = "custom";
+    this.selectedPipelineExecutionPolicy = 'custom';
+    this.selectedRelayStrategyVal = this.tmpPipeline.eventRelayStrategy;
+    this.selectedPreemption = this.tmpPipeline.preemption;
+
+    const selectedPriorityClass = this.pipelinePriorityClasses.find(c => c.value == this.tmpPipeline.priorityScore);
+    this.priorityForm.get('priorityForm').setValue(selectedPriorityClass);
 
   }
 
@@ -116,7 +132,7 @@ export class MigratePipelineProcessorsComponent implements OnInit {
   }
 
   loadAndPrepareEdgeNodes() {
-    this.nodeService.getOnlineNodes().subscribe(response => {
+    this.nodeService.getOnlineNodes().subscribe((response : NodeInfoDescription[]) => {
       this.edgeNodes = response;
       this.addAppIds(this.tmpPipeline.sepas, this.edgeNodes);
       this.addAppIds(this.tmpPipeline.actions, this.edgeNodes);
@@ -234,7 +250,47 @@ export class MigratePipelineProcessorsComponent implements OnInit {
     this.selectedPipelineExecutionPolicy = value;
   }
 
-  isExecutinoPolicyDisabled() {
-    return true;
+  isExecutionPolicyDisabled() {
+    return false;
+  }
+
+  private applyTagBasedPolicy(filteredNodes: NodeInfoDescription[]) {
+    if (filteredNodes.length > 0) {
+      this.tmpPipeline.sepas.forEach(processor => {
+        this.deploymentOptions[processor.appId] = [];
+
+        filteredNodes.forEach(filteredNode => {
+
+          if (filteredNode.supportedElements.length != 0 &&
+              filteredNode.supportedElements.some(appId => appId === processor.appId)) {
+            this.deploymentOptions[processor.appId].push(filteredNode);
+          }
+        })
+      })
+
+      // this.tmpPipeline.actions.forEach(actions => {
+      //   this.deploymentOptions[actions.appId] = [];
+      //
+      //   filteredNodes.forEach(filteredNode => {
+      //
+      //     if (filteredNode.supportedElements.length != 0 &&
+      //         filteredNode.supportedElements.some(appId => appId === actions.appId)) {
+      //       this.deploymentOptions[actions.appId].push(filteredNode);
+      //     }
+      //   })
+      // })
+
+    } else {
+      this.addAppIds(this.tmpPipeline.sepas, this.edgeNodes);
+      this.addAppIds(this.tmpPipeline.actions, this.edgeNodes);
+    }
+  }
+
+  nodesFromSelectedTags(filteredNodes: NodeInfoDescription[]) {
+    this.applyTagBasedPolicy(filteredNodes)
+  }
+
+  updateNodeTags($event: any) {
+    this.selectedNodeTags = $event;
   }
 }

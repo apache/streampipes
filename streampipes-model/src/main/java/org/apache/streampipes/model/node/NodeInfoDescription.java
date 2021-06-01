@@ -85,6 +85,11 @@ public class NodeInfoDescription extends UnnamedStreamPipesEntity {
     @RdfProperty(StreamPipes.HAS_CONTAINER)
     private List<DeploymentContainer> registeredContainers;
 
+    @OneToMany(fetch = FetchType.EAGER,
+            cascade = {CascadeType.ALL})
+    @RdfProperty(StreamPipes.HAS_DEPLOYMENT_CONTAINER)
+    private List<DeploymentContainer> deploymentContainers;
+
     @RdfProperty(StreamPipes.HAS_SUPPORTED_ELEMENTS)
     private List<String> supportedElements;
 
@@ -207,5 +212,13 @@ public class NodeInfoDescription extends UnnamedStreamPipesEntity {
 
     public void setLastHeartBeatTime(long lastHeartBeatTime) {
         this.lastHeartBeatTime = lastHeartBeatTime;
+    }
+
+    public List<DeploymentContainer> getDeploymentContainers() {
+        return deploymentContainers;
+    }
+
+    public void setDeploymentContainers(List<DeploymentContainer> deploymentContainers) {
+        this.deploymentContainers = deploymentContainers;
     }
 }

@@ -49,7 +49,7 @@ public abstract class ConsumableStreamPipesEntity extends NamedStreamPipesEntity
 
   @OneToMany(fetch = FetchType.EAGER,
           cascade = {CascadeType.ALL})
-  @RdfProperty(StreamPipes.HAS_NODE_RESOURCE_PROPERTY)
+  @RdfProperty(StreamPipes.HAS_NODE_RESOURCE_REQUIREMENT)
   protected List<NodeResourceRequirement> resourceRequirements;
 
   @OneToOne(fetch = FetchType.EAGER,

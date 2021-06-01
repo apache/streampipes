@@ -22,7 +22,7 @@ import java.util.List;
 
 public class ContainerEnvBuilder {
 
-    private final List<String> envVariables;
+    private final List<ContainerEnvVar> envVariables;
 
     public ContainerEnvBuilder() {
         this.envVariables = new ArrayList<>();
@@ -32,17 +32,17 @@ public class ContainerEnvBuilder {
         return new ContainerEnvBuilder();
     }
 
-    public ContainerEnvBuilder addNodeEnvs(List<String> nodeEnvVariables) {
+    public ContainerEnvBuilder addNodeEnvs(List<ContainerEnvVar> nodeEnvVariables) {
         this.envVariables.addAll(nodeEnvVariables);
         return this;
     }
 
     public ContainerEnvBuilder add(String key, String value) {
-        this.envVariables.add(String.format("%s=%s", key, value));
+        this.envVariables.add(new ContainerEnvVar(key,value));
         return this;
     }
 
-    public List<String> build() {
+    public List<ContainerEnvVar> build() {
         return envVariables;
     }
 }

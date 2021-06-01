@@ -47,21 +47,21 @@
                     Start pipeline immediately
                 </mat-slide-toggle>
                 <mat-slide-toggle color="primary" [(ngModel)]="advancedSettings">
-                    Configure deployment options
+                    Advanced deployment settings
                 </mat-slide-toggle>
                 <mat-divider *ngIf="advancedSettings" style="margin: 1em 0 1em 0;"></mat-divider>
                 <div *ngIf="advancedSettings">
                     <div>
-                        <b>Pipeline Operation Policies</b>
+                        <b>Operation Policies</b>
                     </div>
 
                     <div style="margin-top: 1em">
                         <div fxFlex="100" fxLayout="row">
-                            <div fxFlex="50" fxLayout="row" fxLayoutAlign="left top">
+                            <div fxFlex="55" fxLayout="row" fxLayoutAlign="left top">
                                 <span>Preemption</span>
                             </div>
                         </div>
-                        <div fxFlex="50" fxLayout="row" fxLayoutAlign="start center">
+                        <div fxFlex="45" fxLayout="row" fxLayoutAlign="start center">
                             <mat-slide-toggle #preemptionSlideToggle color="accent" [(ngModel)]="selectedPreemption"
                                               (toggleChange)="loadDefaultPreemption()">
                                 {{preemptionSlideToggle.checked ? 'enabled' : 'disabled'}}
@@ -71,11 +71,11 @@
 
                     <div style="margin-top: 1em" *ngIf="selectedPreemption">
                         <div fxFlex="100" fxLayout="row">
-                            <div fxFlex="50" fxLayout="row" fxLayoutAlign="left top">
+                            <div fxFlex="55" fxLayout="row" fxLayoutAlign="left top">
                                 <span>Priority</span>
                             </div>
                         </div>
-                        <div fxFlex="50" fxLayout="row" fxLayoutAlign="start center">
+                        <div fxFlex="45" fxLayout="row" fxLayoutAlign="start center">
                             <form [formGroup]="priorityForm">
                             <mat-form-field appearance="fill" color="accent">
                                 <mat-label>Select priority class</mat-label>
@@ -93,11 +93,11 @@
 
                     <div style="margin-top: 1em">
                         <div fxFlex="100" fxLayout="row">
-                            <div fxFlex="50" fxLayout="row" fxLayoutAlign="left top">
-                                <span>Relay Policy</span>
+                            <div fxFlex="55" fxLayout="row" fxLayoutAlign="left top">
+                                <span>Event Relay</span>
                             </div>
                         </div>
-                        <div fxFlex="50" fxLayout="row" fxLayoutAlign="start center">
+                        <div fxFlex="45" fxLayout="row" fxLayoutAlign="start center">
                             <mat-button-toggle-group #relayGroup="matButtonToggleGroup" aria-label="Relay strategy"
                                                      [value]="selectedRelayStrategyVal"
                                                      (change)="onSelectedRelayStrategyChange(relayGroup.value)">
@@ -109,11 +109,11 @@
 
                     <div style="margin-top: 1em">
                         <div fxFlex="100" fxLayout="row">
-                            <div fxFlex="50" fxLayout="row" fxLayoutAlign="left top">
-                                <span>Execution Policy</span>
+                            <div fxFlex="55" fxLayout="row" fxLayoutAlign="left top">
+                                <b>Deployment Options</b>
                             </div>
                         </div>
-                        <div fxFlex="50" fxLayout="row" fxLayoutAlign="start center">
+                        <div fxFlex="45" fxLayout="row" fxLayoutAlign="start center">
                             <mat-radio-group
                                     aria-labelledby="execution-policy-radio-group-label"
                                     class="execution-policy-radio-group"
@@ -151,11 +151,11 @@
 
                                     <div *ngFor="let processors of tmpPipeline.sepas">
                                         <div fxFlex="100" fxLayout="row">
-                                            <div fxFlex="50" fxLayout="row" fxLayoutAlign="left center">
+                                            <div fxFlex="55" fxLayout="row" fxLayoutAlign="left center">
                                                 <span>{{processors.name}}</span>
                                             </div>
                                         </div>
-                                        <div fxFlex="50" fxLayout="row" fxLayoutAlign="start center">
+                                        <div fxFlex="45" fxLayout="row" fxLayoutAlign="start center">
                                             <mat-form-field dense>
                                                 <mat-select [(ngModel)]="processors.deploymentTargetNodeId"
                                                             [disabled]="disableNodeSelection.value"
@@ -171,11 +171,11 @@
                                     </div>
                                     <div *ngFor="let sinks of tmpPipeline.actions">
                                         <div fxFlex="100" fxLayout="row">
-                                            <div fxFlex="50" fxLayout="row" fxLayoutAlign="left center">
+                                            <div fxFlex="55" fxLayout="row" fxLayoutAlign="left center">
                                                 <span>{{sinks.name}}</span>
                                             </div>
                                         </div>
-                                        <div fxFlex="50" fxLayout="row" fxLayoutAlign="start center">
+                                        <div fxFlex="45" fxLayout="row" fxLayoutAlign="start center">
                                             <mat-form-field dense>
                                                 <mat-select [(ngModel)]="sinks.deploymentTargetNodeId"
                                                             [disabled]="disableNodeSelection.value"

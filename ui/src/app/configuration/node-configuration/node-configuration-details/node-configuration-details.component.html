@@ -20,7 +20,10 @@
     <div class="sp-dialog-content padding-20">
         <div fxFlex="100" fxLayout="column">
             <div fxFlex="100" fxLayout="column">
-                {{node.nodeControllerId}}
+<!--                <div style="margin-bottom: 1em">-->
+<!--                    <b>Node: </b> {{node.hostname}}-->
+<!--                </div>-->
+
 
                 <mat-form-field class="example-chip-list">
                     <mat-label>Node location tag</mat-label>
@@ -37,6 +40,107 @@
                                (matChipInputTokenEnd)="add($event)">
                     </mat-chip-list>
                 </mat-form-field>
+
+
+                <div style="margin-top: 1em" *ngFor="let connectivity of tmpFieldDeviceResource">
+                    <mat-accordion class="example-headers-align">
+                        <mat-expansion-panel [expanded]="false">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    <b>{{connectivity.deviceName}}</b>
+                                </mat-panel-title>
+                                <mat-panel-description>
+                                    Configure connectivity options
+                                </mat-panel-description>
+                            </mat-expansion-panel-header>
+
+                            <div>
+                                <div fxFlex="100" fxLayout="row">
+                                    <div fxFlex="40" fxLayout="row" fxLayoutAlign="left center">
+                                        <span>Device name</span>
+                                    </div>
+                                </div>
+                                <div fxFlex="60" fxLayout="row" fxLayoutAlign="start center">
+                                    <mat-form-field>
+                                        <mat-label></mat-label>
+                                        <input  matInput [(ngModel)]="connectivity.deviceName"
+                                                [value]="connectivity.deviceName">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div fxFlex="100" fxLayout="row">
+                                    <div fxFlex="40" fxLayout="row" fxLayoutAlign="left center">
+                                        <span>Device type</span>
+                                    </div>
+                                </div>
+                                <div fxFlex="60" fxLayout="row" fxLayoutAlign="start center">
+                                    <mat-form-field appearance="fill">
+                                        <mat-label>Device type</mat-label>
+                                        <mat-select [(ngModel)]="connectivity.deviceType">
+                                            <mat-option *ngFor="let deviceType of deviceTypes"
+                                                        [value]="deviceType.value">
+                                                {{deviceType.viewValue}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div fxFlex="100" fxLayout="row">
+                                    <div fxFlex="40" fxLayout="row" fxLayoutAlign="left center">
+                                        <span>Access type</span>
+                                    </div>
+                                </div>
+                                <div fxFlex="60" fxLayout="row" fxLayoutAlign="start center">
+                                    <mat-form-field appearance="fill">
+                                        <mat-label>Acess type</mat-label>
+                                        <mat-select [(ngModel)]="connectivity.connectionType">
+                                            <mat-option *ngFor="let accessType of accessTypes"
+                                                        [value]="accessType.value">
+                                                {{accessType.viewValue}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div fxFlex="100" fxLayout="row">
+                                    <div fxFlex="40" fxLayout="row" fxLayoutAlign="left center">
+                                        <span>Connection</span>
+                                    </div>
+                                </div>
+                                <div fxFlex="60" fxLayout="row" fxLayoutAlign="start center">
+                                    <mat-form-field>
+                                        <mat-label></mat-label>
+                                        <input  matInput [(ngModel)]="connectivity.connectionString"
+                                                [value]="connectivity.connectionString">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <button mat-menu-item
+                                    matTooltip="Delete connectivity option"
+                                    matTooltipPosition="above"
+                                    (click)="delete(connectivity.deviceName)">
+                                <mat-icon>
+                                    delete
+                                </mat-icon>
+                                <span>delete connectivity option</span>
+                            </button>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </div>
+                <div class="sp-dialog-actions" fxLayoutAlign="left center">
+                    <button mat-button mat-raised-button
+                            color="primary" (click)="addConnectivity()" style="margin-right:10px;">
+                        Add
+                    </button>
+                </div>
+
+
 
             </div>
         </div>

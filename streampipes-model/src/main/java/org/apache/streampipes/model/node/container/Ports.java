@@ -17,8 +17,11 @@
  */
 package org.apache.streampipes.model.node.container;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class Ports {
-    public static String[] withMapping(String... port) {
-        return port;
+    public static List<String> withMapping(String... port) {
+        return Arrays.asList(port);
     }
 }

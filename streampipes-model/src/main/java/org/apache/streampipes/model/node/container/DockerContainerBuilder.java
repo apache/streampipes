@@ -45,17 +45,17 @@ public class DockerContainerBuilder {
         return this;
     }
 
-    public DockerContainerBuilder withExposedPorts(String[] ports) {
+    public DockerContainerBuilder withExposedPorts(List<String> ports) {
         this.dockerContainer.setContainerPorts(ports);
         return this;
     }
 
-    public DockerContainerBuilder withEnvironmentVariables(List<String> envs) {
+    public DockerContainerBuilder withEnvironmentVariables(List<ContainerEnvVar> envs) {
         this.dockerContainer.setEnvVars(envs);
         return this;
     }
 
-    public DockerContainerBuilder withLabels(Map<String, String> labels) {
+    public DockerContainerBuilder withLabels(List<ContainerLabel> labels) {
         this.dockerContainer.setLabels(labels);
         return this;
     }

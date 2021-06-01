@@ -27,6 +27,7 @@ import com.spotify.docker.client.messages.*;
 import com.spotify.docker.client.shaded.com.google.common.collect.ImmutableList;
 import com.spotify.docker.client.shaded.com.google.common.collect.Lists;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.model.node.container.ContainerLabel;
 import org.apache.streampipes.model.node.container.DockerContainer;
 import org.apache.streampipes.node.controller.management.orchestrator.docker.model.DockerInfo;
 import org.slf4j.Logger;
@@ -138,8 +139,11 @@ public class DockerUtils {
                 .hostname(p.getContainerName())
                 .tty(true)
                 .image(p.getImageTag())
-                .labels(p.getLabels())
-                .env(p.getEnvVars())
+                .labels(p.getLabels().stream()
+                        .collect(Collectors.toMap(ContainerLabel::getKey, ContainerLabel::getValue)))
+                .env(p.getEnvVars().stream()
+                        .map(e -> String.format("%s=%s", e.getKey(), e.getValue()))
+                        .collect(Collectors.toList()))
                 .hostConfig(getHostConfig(SP_CONTAINER_NETWORK, p.getContainerPorts(), p.getVolumes()))
                 .exposedPorts(modifyExposedPorts(p.getContainerPorts()))
                 .networkingConfig(getNetworkingConfig(SP_CONTAINER_NETWORK, p.getContainerName()))
@@ -175,7 +179,7 @@ public class DockerUtils {
         return Collections.emptyList();
     }
 
-    private HostConfig getHostConfig(String network, String[] ports) {
+    private HostConfig getHostConfig(String network, List<String> ports) {
         return getHostConfig(network, ports, null);
     }
 
@@ -183,7 +187,7 @@ public class DockerUtils {
         return getHostConfig(network, null, null);
     }
 
-    private HostConfig getHostConfig(String network, String[] ports, List<String> volumes) {
+    private HostConfig getHostConfig(String network, List<String> ports, List<String> volumes) {
         Map<String, List<PortBinding>> portBindings = new HashMap<>();
         if (ports != null) {
             for (String port : ports) {
@@ -350,7 +354,7 @@ public class DockerUtils {
         return hasNvidiaRuntime;
     }
 
-    private String[] modifyExposedPorts(String[] containerPorts) {
+    private String[] modifyExposedPorts(List<String> containerPorts) {
         List<String> modifyPorts = new ArrayList<>();
         for (String port: containerPorts) {
             modifyPorts.add(port + "/tcp");

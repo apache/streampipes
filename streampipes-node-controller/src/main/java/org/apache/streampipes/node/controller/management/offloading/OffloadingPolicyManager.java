@@ -58,6 +58,8 @@ public class OffloadingPolicyManager {
         for(OffloadingStrategy strategy : offloadingStrategies){
             strategy.getOffloadingPolicy().addValue(strategy.getResourceProperty().getProperty(rm));
             if(strategy.getOffloadingPolicy().isViolated()){
+                String violatedProperty = strategy.getResourceProperty().getClass().getSimpleName();
+                LOG.info("Violated policy for resource property {}", violatedProperty);
                 violatedPolicies.add(strategy);
             }
         }

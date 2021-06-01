@@ -22,13 +22,12 @@ import io.fogsy.empire.annotations.RdfProperty;
 import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.shared.annotation.TsModel;
+import org.apache.streampipes.vocabulary.RDFS;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RdfsClass(StreamPipes.DEPLOYMENT_CONTAINER)
 @Entity
@@ -38,52 +37,56 @@ import java.util.Map;
 @TsModel
 public abstract class DeploymentContainer extends UnnamedStreamPipesEntity {
 
-    @RdfProperty(StreamPipes.DEPLOYMENT_CONTAINER_IMAGE_TAG)
+    protected static final String prefix = "urn:streampipes.org:spi:";
+
+    @RdfProperty(StreamPipes.HAS_IMAGE_TAG)
     private String imageTag;
 
-    @RdfProperty(StreamPipes.DEPLOYMENT_CONTAINER_NAME)
+    @RdfProperty(StreamPipes.HAS_CONTAINER_NAME)
     private String containerName;
 
-    @RdfProperty(StreamPipes.DEPLOYMENT_CONTAINER_SERVICE_ID)
+    @RdfProperty(StreamPipes.HAS_CONTAINER_SERVICE_ID)
     private String serviceId;
 
-    @RdfProperty(StreamPipes.DEPLOYMENT_CONTAINER_PORTS)
-    private String[] containerPorts;
+    @OneToMany(fetch = FetchType.EAGER,
+            cascade = {CascadeType.ALL})
+    @RdfProperty(StreamPipes.HAS_CONTAINER_PORTS)
+    private List<String> containerPorts;
 
     @OneToMany(fetch = FetchType.EAGER,
             cascade = {CascadeType.ALL})
-    @RdfProperty(StreamPipes.DEPLOYMENT_CONTAINER_ENV_VARS)
-    private List<String> envVars;
+    @RdfProperty(StreamPipes.HAS_CONTAINER_ENV_VARS)
+    private List<ContainerEnvVar> envVars;
 
     @OneToMany(fetch = FetchType.EAGER,
             cascade = {CascadeType.ALL})
-    @RdfProperty(StreamPipes.DEPLOYMENT_CONTAINER_LABELS)
-    private Map<String, String> labels;
+    @RdfProperty(StreamPipes.HAS_CONTAINER_LABELS)
+    private List<ContainerLabel> labels;
 
     @OneToMany(fetch = FetchType.EAGER,
             cascade = {CascadeType.ALL})
-    @RdfProperty(StreamPipes.DEPLOYMENT_CONTAINER_VOLUMES)
+    @RdfProperty(StreamPipes.HAS_CONTAINER_VOLUMES)
     private List<String> volumes;
 
     @OneToMany(fetch = FetchType.EAGER,
             cascade = {CascadeType.ALL})
-    @RdfProperty(StreamPipes.DEPLOYMENT_SUPPORTED_ARCHITECTURES)
+    @RdfProperty(StreamPipes.HAS_SUPPORTED_ARCHITECTURES)
     private List<String> supportedArchitectures;
 
     @OneToMany(fetch = FetchType.EAGER,
             cascade = {CascadeType.ALL})
-    @RdfProperty(StreamPipes.DEPLOYMENT_SUPPORTED_OS_TYPES)
+    @RdfProperty(StreamPipes.HAS_SUPPORTED_OS_TYPES)
     private List<String> supportedOperatingSystemTypes;
 
 
     @OneToMany(fetch = FetchType.EAGER,
             cascade = {CascadeType.ALL})
-    @RdfProperty(StreamPipes.DEPLOYMENT_CONTAINER_DEPENDENCIES)
+    @RdfProperty(StreamPipes.HAS_CONTAINER_DEPENDENCIES)
     private List<String> dependsOnContainers;
 
     public DeploymentContainer() {
         this.envVars = new ArrayList<>();
-        this.labels = new HashMap<>();
+        this.labels = new ArrayList<>();
         this.volumes = new ArrayList<>();
         this.dependsOnContainers = new ArrayList<>();
         this.supportedArchitectures = new ArrayList<>();
@@ -93,7 +96,7 @@ public abstract class DeploymentContainer extends UnnamedStreamPipesEntity {
     public DeploymentContainer(String elementId) {
         super(elementId);
         this.envVars = new ArrayList<>();
-        this.labels = new HashMap<>();
+        this.labels = new ArrayList<>();
         this.volumes = new ArrayList<>();
         this.dependsOnContainers = new ArrayList<>();
         this.supportedArchitectures = new ArrayList<>();
@@ -102,12 +105,23 @@ public abstract class DeploymentContainer extends UnnamedStreamPipesEntity {
 
     public DeploymentContainer(DeploymentContainer other) {
         super(other);
+        this.imageTag = other.getImageTag();
+        this.containerName = other.getContainerName();
+        this.serviceId = other.getServiceId();
+        this.containerPorts = other.getContainerPorts();
+        this.envVars = other.getEnvVars();
+        this.labels = other.getLabels();
+        this.volumes = other.getVolumes();
+        this.supportedArchitectures = other.getSupportedArchitectures();
+        this.supportedOperatingSystemTypes = other.getSupportedOperatingSystemTypes();
+        this.dependsOnContainers = other.getDependsOnContainers();
     }
 
-    public DeploymentContainer(String imageTag, String containerName, String serviceId, String[] containerPorts,
-                               List<String> envVars, Map<String, String> labels, List<String> volumes,
+    public DeploymentContainer(String imageTag, String containerName, String serviceId, List<String> containerPorts,
+                               List<ContainerEnvVar> envVars, List<ContainerLabel> labels, List<String> volumes,
                                List<String> supportedArchitectures, List<String> supportedOperatingSystemsTypes,
                                List<String> dependsOnContainers) {
+        super(prefix + UUID.randomUUID().toString());
         this.imageTag = imageTag;
         this.containerName = containerName;
         this.serviceId = serviceId;
@@ -143,27 +157,27 @@ public abstract class DeploymentContainer extends UnnamedStreamPipesEntity {
         this.serviceId = serviceId;
     }
 
-    public String[] getContainerPorts() {
+    public List<String> getContainerPorts() {
         return containerPorts;
     }
 
-    public void setContainerPorts(String[] containerPorts) {
+    public void setContainerPorts(List<String> containerPorts) {
         this.containerPorts = containerPorts;
     }
 
-    public List<String> getEnvVars() {
+    public List<ContainerEnvVar> getEnvVars() {
         return envVars;
     }
 
-    public void setEnvVars(List<String> envVars) {
+    public void setEnvVars(List<ContainerEnvVar> envVars) {
         this.envVars = envVars;
     }
 
-    public Map<String, String> getLabels() {
+    public List<ContainerLabel> getLabels() {
         return labels;
     }
 
-    public void setLabels(Map<String, String> labels) {
+    public void setLabels(List<ContainerLabel> labels) {
         this.labels = labels;
     }
 
@@ -198,5 +212,4 @@ public abstract class DeploymentContainer extends UnnamedStreamPipesEntity {
     public void setSupportedOperatingSystemTypes(List<String> supportedOperatingSystemTypes) {
         this.supportedOperatingSystemTypes = supportedOperatingSystemTypes;
     }
-
 }

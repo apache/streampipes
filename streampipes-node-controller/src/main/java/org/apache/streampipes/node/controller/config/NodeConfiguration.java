@@ -59,6 +59,7 @@ public final class NodeConfiguration {
     private static int relayEventBufferSize;
     private static String consulHost;
     private static OffloadingStrategyType autoOffloadingStrategy;
+    private static String nodeStoragePath;
 
     private static HashMap<String, String> configMap;
 
@@ -282,6 +283,14 @@ public final class NodeConfiguration {
         NodeConfiguration.autoOffloadingStrategy = autoOffloadingStrategy;
     }
 
+    public static String getNodeStoragePath() {
+        return nodeStoragePath;
+    }
+
+    public static void setNodeStoragePath(String nodeStoragePath) {
+        NodeConfiguration.nodeStoragePath = nodeStoragePath;
+    }
+
     public static HashMap<String, String> getConfigMap() {
         return configMap;
     }
@@ -491,6 +500,10 @@ public final class NodeConfiguration {
                 case AUTO_OFFLOADING_STRATEGY:
                     configMap.put(envKey, value);
                     setAutoOffloadingStrategy(OffloadingStrategyType.fromString(value));
+                    break;
+                case NODE_STORAGE_PATH:
+                    configMap.put(envKey, value);
+                    setNodeStoragePath(value);
                     break;
                 default:
                     throw new IllegalArgumentException("Invalid environment config param: " + configParam);

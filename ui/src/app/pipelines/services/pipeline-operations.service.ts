@@ -126,7 +126,7 @@ export class PipelineOperationsService {
     this.PipelineService.getPipelineById(pipelineId).subscribe(pipeline => {
       this.DialogService.open(MigratePipelineProcessorsComponent,{
         panelType: PanelType.SLIDE_IN_PANEL,
-        title: "Live-Migrate pipeline processors",
+        title: "Live-Migrate Pipeline Processors",
         data: {
           "pipeline": pipeline
         }

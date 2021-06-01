@@ -17,7 +17,12 @@
  */
 
 import {Component, Input, OnInit} from '@angular/core';
-import {Message, NodeInfoDescription, PipelineOperationStatus} from "../../../core-model/gen/streampipes-model";
+import {
+  FieldDeviceAccessResource,
+  Message,
+  NodeInfoDescription,
+  PipelineOperationStatus
+} from "../../../core-model/gen/streampipes-model";
 import {FormGroup} from "@angular/forms";
 import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
 import {MatChipInputEvent} from "@angular/material/chips";
@@ -46,6 +51,21 @@ export class NodeConfigurationDetailsComponent implements OnInit {
   addOnBlur = true;
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   tmpTags: string[];
+  tmpFieldDeviceResource : FieldDeviceAccessResource[];
+
+  accessTypes = [
+    {value: 'local', viewValue: 'Local'},
+    {value: 'remote', viewValue: 'Remote'},
+    ];
+
+  deviceTypes = [
+    {value: 'sensor', viewValue: 'Sensor'},
+    {value: 'actuator', viewValue: 'Actuator'},
+    {value: 'camera', viewValue: 'Camera'},
+    {value: 'robot', viewValue: 'Robot'},
+    {value: 'machine', viewValue: 'Machine'},
+    {value: 'iotdevice', viewValue: 'IoT device'},
+  ];
 
   @Input()
   node: NodeInfoDescription;
@@ -58,11 +78,13 @@ export class NodeConfigurationDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.advancedSettings = false;
     this.tmpTags = this.node.staticNodeMetadata.locationTags.map(x => x);
+    this.tmpFieldDeviceResource = this.node.nodeResources.fieldDeviceAccessResourceList.map(x => Object.assign({}, x));
   }
 
   updateNodeInfo() {
     let updateRequest;
     this.node.staticNodeMetadata.locationTags = this.tmpTags;
+    this.node.nodeResources.fieldDeviceAccessResourceList = this.tmpFieldDeviceResource;
     updateRequest = this.nodeService.updateNodeState(this.node);
 
     updateRequest
@@ -109,4 +131,17 @@ export class NodeConfigurationDetailsComponent implements OnInit {
     }
   }
 
+  addConnectivity() {
+    let device = new FieldDeviceAccessResource();
+    device["@class"] = "org.apache.streampipes.model.node.resources.fielddevice.FieldDeviceAccessResource";
+    console.log(device);
+    this.tmpFieldDeviceResource.push(device);
+  }
+
+  delete(deviceName: string) {
+    this.tmpFieldDeviceResource.forEach( (item, index) => {
+      if(item.deviceName === deviceName) this.tmpFieldDeviceResource.splice(index, 1);
+    })
+
+  }
 }

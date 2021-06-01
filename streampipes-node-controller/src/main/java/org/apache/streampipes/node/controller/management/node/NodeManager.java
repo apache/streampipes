@@ -60,7 +60,8 @@ public class NodeManager implements INodeManager {
                                 new GeoLocation(),
                                 NodeConstants.NODE_LOCATION_TAGS)
                         .withSupportedElements(NodeConstants.SUPPORTED_PIPELINE_ELEMENTS)
-                        .withRegisteredContainers(NodeConstants.REGISTERED_DOCKER_CONTAINER)
+                        .withRegisteredContainers(NodeConstants.REGISTERED_DEPLOYMENT_CONTAINERS)
+                        .withAutoDeploymentContainers(NodeConstants.AUTO_DEPLOYMENT_CONTAINERS)
                         .withNodeResources(NodeResourceBuilder.create()
                                 .hardwareResource(
                                         NodeConstants.NODE_CPU,

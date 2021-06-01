@@ -55,6 +55,13 @@ public abstract class NodeControllerSubmitter {
         app.setDefaultProperties(Collections.singletonMap("server.port", NodeConfiguration.getNodeControllerPort()));
         app.run();
 
+        LOG.info("Register container descriptions");
+        DockerContainerDeclarerSingleton.getInstance()
+                .register(new DockerExtensionsContainer())
+                .register(new DockerMosquittoContainer())
+                .register(new DockerKafkaContainer())
+                .register(new DockerZookeeperContainer());
+
         LOG.info("Load node info description");
         NodeManager.getInstance().init();
 
@@ -66,13 +73,6 @@ public abstract class NodeControllerSubmitter {
             ResourceManager.getInstance().run();
 
             if (!"true".equals(System.getenv("SP_DEBUG"))) {
-
-                LOG.info("Register container descriptions");
-                DockerContainerDeclarerSingleton.getInstance()
-                        .register(new DockerExtensionsContainer())
-                        .register(new DockerMosquittoContainer())
-                        .register(new DockerKafkaContainer())
-                        .register(new DockerZookeeperContainer());
 
                 LOG.info("Auto-deploy extensions and selected broker container");
                 DockerEngineManager.getInstance().init();

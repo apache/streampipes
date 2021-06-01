@@ -46,23 +46,26 @@ export class NodeTagSelectorComponent implements OnInit {
   dynamicallySelectedTags: NodeTags["name"][] = [];
 
   ngOnInit(): void {
-    this.nodes.forEach(node => {
-      if (node.supportedElements.length > 0 || node.registeredContainers.length > 0) {
-        for (let tag of node.staticNodeMetadata.locationTags) {
-          if (!this.nodeTags.some(n => n.name === tag)) {
-            this.nodeTags.push({'name': tag, selected: false})
+    console.log("here");
+    if (this.nodes != undefined) {
+      this.nodes.forEach(node => {
+        if (node.supportedElements.length > 0 || node.registeredContainers.length > 0) {
+          for (let tag of node.staticNodeMetadata.locationTags) {
+            if (!this.nodeTags.some(n => n.name === tag)) {
+              this.nodeTags.push({'name': tag, selected: false})
+            }
           }
         }
-      }
-    })
-    if (this.selectedTagsAfterUpdate && this.selectedTagsAfterUpdate.length > 0) {
-      this.selectedTagsAfterUpdate.forEach(oldTag => {
-        this.nodeTags.forEach(entry => {
-          if (entry.name === oldTag) {
-            entry.selected = true;
-          }
-        })
       })
+      if (this.selectedTagsAfterUpdate && this.selectedTagsAfterUpdate.length > 0) {
+        this.selectedTagsAfterUpdate.forEach(oldTag => {
+          this.nodeTags.forEach(entry => {
+            if (entry.name === oldTag) {
+              entry.selected = true;
+            }
+          })
+        })
+      }
     }
   }
 

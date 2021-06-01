@@ -182,7 +182,7 @@ export class NodeConfigurationComponent implements OnInit{
     settings(node: NodeInfoDescription) {
         this.DialogService.open(NodeConfigurationDetailsComponent,{
             panelType: PanelType.SLIDE_IN_PANEL,
-            title: "Edit Node configuration",
+            title: "Edit node configuration: " + node.hostname,
             data: {
                 "node": node
             }

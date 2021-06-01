@@ -17,15 +17,13 @@
  */
 package org.apache.streampipes.model.node.container;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class ContainerLabels {
-    public static Map<String, String> with (String containerId, String nodeType, ContainerType containerType) {
-        return new HashMap<String, String>() {{
-            put("org.apache.streampipes.service.id", containerId);
-            put("org.apache.streampipes.node.type",nodeType);
-            put("org.apache.streampipes.container.type", containerType.name());
-        }};
+    public static List<ContainerLabel> with (String containerId, String nodeType, ContainerType containerType) {
+        return Arrays.asList(
+                new ContainerLabel("org.apache.streampipes.service.id", containerId),
+                new ContainerLabel("org.apache.streampipes.node.type",nodeType),
+                new ContainerLabel("org.apache.streampipes.container.type", containerType.name().toLowerCase()));
     }
 }

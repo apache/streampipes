@@ -17,6 +17,8 @@
  */
 package org.apache.streampipes.node.controller.management.resource.utils;
 
+import org.apache.streampipes.node.controller.config.NodeConfiguration;
+import org.apache.streampipes.node.controller.management.node.NodeManager;
 import oshi.hardware.CentralProcessor;
 import oshi.hardware.GlobalMemory;
 import oshi.hardware.Sensors;
@@ -40,26 +42,43 @@ public class ResourceUtils {
     public static Map<String, Map<String,Long>> getDiskUsage(FileSystem fs) {
         List<OSFileStore> fsArray = fs.getFileStores();
         Map<String, Map<String, Long>> diskUsage = new HashMap<>();
+
         for(OSFileStore f : fsArray) {
             String volume = f.getVolume();
-            // has SATA disk
-            if (volume.contains(FileSystemType.SDA.getName())){
-                addDiskUsage(diskUsage, f);
-            } else if (volume.contains(FileSystemType.NVME.getName())){
-                addDiskUsage(diskUsage, f);
-            } else if (volume.contains(FileSystemType.DISK.getName())){
-                addDiskUsage(diskUsage, f);
-            } else if (volume.contains(FileSystemType.ROOT.getName())){
-                // Docker in RPi
-                addDiskUsage(diskUsage, f);
-            } else if (volume.contains(FileSystemType.MMCBLK.getName())){
-                // Docker in Jetson Nano
-                addDiskUsage(diskUsage, f);
-            } else if (volume.contains(FileSystemType.SDB.getName())){
-                addDiskUsage(diskUsage, f);
+            String mount = f.getMount();
+
+            if ("true".equals(System.getenv("SP_DEBUG"))) {
+                // TODO: find better approach to retrieve host volume in debug setup
+                findVolumeAndAdd(volume, diskUsage, f);
+            } else {
+                // check mount for node storage path (default: /var/lib/streampipes)
+                if (mount.equals(NodeConfiguration.getNodeStoragePath())) {
+                    findVolumeAndAdd(volume, diskUsage, f);
+                }
             }
+
         }
         return diskUsage.isEmpty() ? defaultDiskUsage() : diskUsage;
+    }
+
+    private static void findVolumeAndAdd(String volume, Map<String, Map<String, Long>> diskUsage, OSFileStore f) {
+        // has SATA disk
+        if (volume.contains(FileSystemType.SDA.getName())){
+            addDiskUsage(diskUsage, f);
+            // Docker in Jetson Xavier with NVMe storage
+        } else if (volume.contains(FileSystemType.NVME.getName())){
+            addDiskUsage(diskUsage, f);
+        } else if (volume.contains(FileSystemType.DISK.getName())){
+            addDiskUsage(diskUsage, f);
+        } else if (volume.contains(FileSystemType.ROOT.getName())){
+            // Docker in RPi
+            addDiskUsage(diskUsage, f);
+        } else if (volume.contains(FileSystemType.MMCBLK.getName())){
+            // Docker in Jetson Nano
+            addDiskUsage(diskUsage, f);
+        } else if (volume.contains(FileSystemType.SDB.getName())){
+            addDiskUsage(diskUsage, f);
+        }
     }
 
     public static void addDiskUsage(Map<String, Map<String, Long>> m, OSFileStore f) {

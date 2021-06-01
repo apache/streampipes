@@ -91,19 +91,33 @@
                                                 [ngClass]="'node-inactive'">
                                             sell
                                         </mat-icon>
-                                        <span>tags</span>
+                                        <span>edit</span>
                                     </button>
+<!--                                    <button mat-menu-item-->
+<!--                                            [disabled]="!node.active || node.condition === 'OFFLINE'"-->
+<!--                                            matTooltip="Edit node connectivity"-->
+<!--                                            matTooltipPosition="above"-->
+<!--                                            (click)="settings(node)">-->
+<!--                                        <mat-icon-->
+<!--                                                [ngClass]="'node-inactive'">-->
+<!--                                            contactless-->
+<!--                                        </mat-icon>-->
+<!--                                        <span>connectivity</span>-->
+<!--                                    </button>-->
                                 </mat-menu>
                             </div>
                             <div mat-card-avatar class="node-header-avatar">
                                 <button mat-icon-button class="node-mat-icon-button" disabled>
                                     <mat-icon [ngClass]="'node-inactive'">
                                         storage
+<!--                                        {{node.staticNodeMetadata.type == 'cloud' ? 'cloud' :-->
+<!--                                        node.staticNodeMetadata.type == 'fog' ? 'storage' : 'developer_board'}}-->
                                     </mat-icon>
                                 </button>
                             </div>
                             <mat-card-title
-                                    style="font-size: 12pt">{{node.hostname}}</mat-card-title>
+                                    style="font-size: 12pt">{{node.hostname}} |
+                                {{node.staticNodeMetadata.type}}</mat-card-title>
                             <mat-card-subtitle style="font-size: 10pt">
                                 {{node.nodeControllerId}} | <b>{{node.nodeResources.softwareResource.os}}</b>
                                 <div style="color: lightgrey;">

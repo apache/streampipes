@@ -17,32 +17,60 @@
  */
 package org.apache.streampipes.model.node.container;
 
+import io.fogsy.empire.annotations.RdfProperty;
 import io.fogsy.empire.annotations.RdfsClass;
+import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
 import javax.persistence.Entity;
-import java.util.List;
-import java.util.Map;
 
-@RdfsClass(StreamPipes.DEPLOYMENT_DOCKER_CONTAINER)
+
+@RdfsClass(StreamPipes.CONTAINER_ENV_VAR)
 @Entity
 @TsModel
-public class DockerContainer extends DeploymentContainer {
+public class ContainerEnvVar extends UnnamedStreamPipesEntity {
 
-    public DockerContainer(String elementId) {
-        super(elementId);
-    }
+    @RdfProperty(StreamPipes.HAS_CONTAINER_ENV_KEY)
+    private String key;
 
-    public DockerContainer() {
+    @RdfProperty(StreamPipes.HAS_CONTAINER_ENV_VALUE)
+    private String value;
+
+    public ContainerEnvVar() {
         super();
     }
 
-    public DockerContainer(String imageTag, String containerName, String serviceId, List<String> containerPorts,
-                           List<ContainerEnvVar> envVars, List<ContainerLabel> labels, List<String> volumes,
-                           List<String> supportedArchitectures, List<String> supportedOperatingSystemTypes,
-                           List<String> dependsOnContainers) {
-        super(imageTag, containerName, serviceId, containerPorts, envVars, labels, volumes, supportedArchitectures,
-                supportedOperatingSystemTypes, dependsOnContainers);
+    public ContainerEnvVar(String key, String value) {
+        this.key = key;
+        this.value = value;
+    }
+
+    public ContainerEnvVar(UnnamedStreamPipesEntity other, String key, String value) {
+        super(other);
+        this.key = key;
+        this.value = value;
+    }
+
+    public ContainerEnvVar(String elementId, String key, String value) {
+        super(elementId);
+        this.key = key;
+        this.value = value;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 }

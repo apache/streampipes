@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.model.node;
 
+import com.ibm.dtfj.corereaders.zos.dumpreader.AddressRange;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 import org.apache.streampipes.model.grounding.TransportProtocol;
@@ -35,6 +36,7 @@ public class NodeInfoDescriptionBuilder {
     private final StaticNodeMetadata staticNodeMetadata;
     private NodeResource nodeResources;
     private List<DeploymentContainer> registeredContainers;
+    private List<DeploymentContainer> deploymentContainers;
     private final List<String> supportedElements;
 
     public NodeInfoDescriptionBuilder(String id) {
@@ -43,6 +45,7 @@ public class NodeInfoDescriptionBuilder {
         this.staticNodeMetadata = new StaticNodeMetadata();
         this.nodeResources = new NodeResource();
         this.registeredContainers = new ArrayList<>();
+        this.deploymentContainers = new ArrayList<>();
         this.supportedElements = new ArrayList<>();
     }
 
@@ -118,6 +121,11 @@ public class NodeInfoDescriptionBuilder {
         return this;
     }
 
+    public NodeInfoDescriptionBuilder withAutoDeploymentContainers(List<DeploymentContainer> deploymentContainers) {
+        this.deploymentContainers = deploymentContainers;
+        return this;
+    }
+
     public NodeInfoDescriptionBuilder withNodeResources(NodeResource nodeResources) {
         this.nodeResources = nodeResources;
         return this;
@@ -136,6 +144,7 @@ public class NodeInfoDescriptionBuilder {
         nodeInfoDescription.setStaticNodeMetadata(staticNodeMetadata);
         nodeInfoDescription.setNodeBroker(nodeBroker);
         nodeInfoDescription.setRegisteredContainers(registeredContainers);
+        nodeInfoDescription.setDeploymentContainers(deploymentContainers);
         nodeInfoDescription.setNodeResources(nodeResources);
         nodeInfoDescription.setSupportedElements(supportedElements);
         nodeInfoDescription.setActive(true);

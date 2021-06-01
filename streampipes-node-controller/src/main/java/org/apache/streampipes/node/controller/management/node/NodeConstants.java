@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.node.controller.management.node;
 
+import org.apache.streampipes.model.node.container.ContainerLabel;
 import org.apache.streampipes.model.node.container.DeploymentContainer;
 import org.apache.streampipes.model.node.container.DockerContainer;
 import org.apache.streampipes.model.node.resources.software.ContainerRuntime;
@@ -28,6 +29,7 @@ import org.apache.streampipes.model.node.resources.hardware.DISK;
 import org.apache.streampipes.model.node.resources.hardware.GPU;
 import org.apache.streampipes.model.node.resources.hardware.MEM;
 import org.apache.streampipes.node.controller.config.NodeConfiguration;
+import org.apache.streampipes.node.controller.management.orchestrator.docker.DockerContainerDeclarerSingleton;
 import org.apache.streampipes.node.controller.management.orchestrator.docker.model.DockerInfo;
 import org.apache.streampipes.node.controller.management.orchestrator.docker.utils.DockerUtils;
 import oshi.SystemInfo;
@@ -64,7 +66,9 @@ public class NodeConstants {
     public static final List<String> SUPPORTED_PIPELINE_ELEMENTS = NodeConfiguration.getSupportedPipelineElements();
     public static final String NODE_MODEL = !printComputerSystem(hal.getComputerSystem()).equals("")  ?
             printComputerSystem(hal.getComputerSystem()) : "n/a";
-    public static final List<DeploymentContainer> REGISTERED_DOCKER_CONTAINER = getRegisteredDockerContainer();
+    public static final List<DeploymentContainer> REGISTERED_DEPLOYMENT_CONTAINERS = getRegisteredDeploymentContainers();
+    public static final List<DeploymentContainer> AUTO_DEPLOYMENT_CONTAINERS = getAutoDeploymentContainer();
+
     public static final String NODE_OPERATING_SYSTEM = docker.getOs();
     public static final String NODE_KERNEL_VERSION = docker.getKernelVersion();
     public static final ContainerRuntime NODE_CONTAINER_RUNTIME = getContainerRuntime();
@@ -75,27 +79,36 @@ public class NodeConstants {
     public static final DISK NODE_DISK = getNodeDisk();
     public static final GPU NODE_GPU = getNodeGpu();
 
-    private static List<DeploymentContainer> getRegisteredDockerContainer() {
+    private static List<DeploymentContainer> getRegisteredDeploymentContainers() {
         List<DeploymentContainer> containers = new ArrayList<>();
         DockerUtils.getInstance().getRunningStreamPipesContainer()
-                .forEach(rc -> {
-                    DockerContainer c = new DockerContainer();
-                    c.setContainerName(rc.names().get(0).replace("/", ""));
-                    c.setImageTag(rc.image());
+                .forEach(runningContainer -> {
+                    DockerContainer container = new DockerContainer();
+                    container.setContainerName(runningContainer.names().get(0).replace("/", ""));
+                    container.setImageTag(runningContainer.image());
 
-                    Optional<String> serviceId = rc.labels().entrySet().stream()
+                    Optional<String> serviceId = runningContainer.labels().entrySet().stream()
                             .filter(l -> l.getKey().contains("org.apache.streampipes.service.id"))
                             .map(Map.Entry::getValue)
                             .findFirst();
 
-                    serviceId.ifPresent(c::setServiceId);
+                    serviceId.ifPresent(container::setServiceId);
 
-                    c.setLabels(rc.labels().entrySet().stream()
-                            .filter(l -> l.getKey().contains("org.apache.streampipes"))
-                            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
-                    containers.add(c);
+                    container.setLabels(
+                            runningContainer.labels().entrySet().stream()
+                                    .filter(l -> l.getKey().contains("org.apache.streampipes"))
+                                    .map(ContainerLabel::new)
+                                    .collect(Collectors.toList()));
+                    containers.add(container);
                 });
         return containers;
+    }
+
+    private static List<DeploymentContainer> getAutoDeploymentContainer() {
+        List<DeploymentContainer> deploymentContainers = new ArrayList<>();
+        deploymentContainers.addAll(DockerContainerDeclarerSingleton.getInstance().getAllDockerContainerAsList());
+
+        return deploymentContainers;
     }
 
 

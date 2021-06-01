@@ -39,9 +39,9 @@ public class ContainerDeploymentResource extends AbstractResource {
     }
 
     @GET
-    @Path("/registered")
+    @Path("/catalog")
     @Produces(MediaType.APPLICATION_JSON)
-    public javax.ws.rs.core.Response getAllRegisteredContainer(){
+    public javax.ws.rs.core.Response getAllAvailableDeploymentContainers(){
         return ok(DockerContainerDeclarerSingleton.getInstance().getAllDockerContainerAsList());
     }
 

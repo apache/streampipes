@@ -361,17 +361,17 @@ public class StreamPipes {
   public static final String SECRET_STATIC_PROPERTY = NS + "SecretStaticProperty";
   public static final String IS_ENCRYPTED = NS + "isEncrypted";
 
-  public static final String DEPLOYMENT_DOCKER_CONTAINER = NS + "pipelineElementDockerContainer";
-  public static final String DEPLOYMENT_CONTAINER_IMAGE_TAG = NS + "dockerContainerImageTag";
-  public static final String DEPLOYMENT_CONTAINER_NAME = NS + "dockerContainerName";
-  public static final String DEPLOYMENT_CONTAINER_SERVICE_ID = NS + "dockerContainerServiceId";
-  public static final String DEPLOYMENT_CONTAINER_PORTS = NS + "dockerContainerPorts";
-  public static final String DEPLOYMENT_CONTAINER_ENV_VARS = NS + "dockerContainerEnvVars";
-  public static final String DEPLOYMENT_CONTAINER_LABELS = NS + "dockerContainerLabels";
-  public static final String DEPLOYMENT_CONTAINER_VOLUMES = NS + "dockerContainerVolumes";
-  public static final String DEPLOYMENT_CONTAINER_DEPENDENCIES = NS + "dockerContainerDependencies";
-  public static final String DEPLOYMENT_SUPPORTED_ARCHITECTURES = NS + "dockerContainerSupportedArchitectures";
-  public static final String DEPLOYMENT_SUPPORTED_OS_TYPES = NS + "dockerContainerSupportedOperatingSystemTypes";
+  public static final String DEPLOYMENT_DOCKER_CONTAINER = NS + "DockerContainer";
+  public static final String HAS_IMAGE_TAG = NS + "hasImageTag";
+  public static final String HAS_CONTAINER_NAME = NS + "hasContainerName";
+  public static final String HAS_CONTAINER_SERVICE_ID = NS + "hasContainerServiceId";
+  public static final String HAS_CONTAINER_PORTS = NS + "hasContainerPorts";
+  public static final String HAS_CONTAINER_ENV_VARS = NS + "hasContainerEnvironmentVariables";
+  public static final String HAS_CONTAINER_LABELS = NS + "hasContainerLabels";
+  public static final String HAS_CONTAINER_VOLUMES = NS + "hasContainerVolumes";
+  public static final String HAS_CONTAINER_DEPENDENCIES = NS + "hasContainerDependencies";
+  public static final String HAS_SUPPORTED_ARCHITECTURES = NS + "hasSupportedArchitectures";
+  public static final String HAS_SUPPORTED_OS_TYPES = NS + "hasSupportedOSTypes";
 
   // UI Rendering
 
@@ -489,7 +489,7 @@ public class StreamPipes {
   public static final String HAS_CONTAINER_RUNTIME_API_VERSION = NS + "hasContainerRuntimeApiVersion";
   public static final String HARDWARE_REQUIREMENT = NS + "HardwareRequirement";
   public static final String HAS_GPU_REQUIREMENT = NS + "hasGpuRequirement";
-  public static final String HAS_NODE_RESOURCE_PROPERTY = NS + "hasNodeResourceProperty";
+  public static final String HAS_NODE_RESOURCE_REQUIREMENT = NS + "hasNodeResourceRequirement";
   public static final String NODE_RESOURCE_REQUIREMENT = NS + "NodeResourceRequirement";
   public static final String REQUIRES_RESOURCES = NS + "requiresResources";
   public static final String REQUIRES_CPU_CORES = NS + "requiresCpuCores";
@@ -500,4 +500,12 @@ public class StreamPipes {
   public static final String IS_INTERNALLY_MANAGED = NS + "isInternallyManaged";
   public static final String HAS_CORRESPONDING_ADAPTER_ID = NS + "hasCorrespondingAdapterId";
   public static final String IS_RECONFIGURABLE = NS + "isReconfigurable";
+  public static final String OPERATING_SYSTEM = NS + "OperatingSystem";
+  public static final String CONTAINER_LABEL = NS + "ContainerLabel";
+  public static final String HAS_CONTAINER_LABEL_KEY = NS + "hasContainerLabelKey";
+  public static final String HAS_CONTAINER_LABEL_VALUE = NS + "hasContainerLabelValue";
+  public static final String CONTAINER_ENV_VAR = NS + "ContainerEnvVar";
+  public static final String HAS_CONTAINER_ENV_KEY = NS + "hasContainerEnvKey";
+  public static final String HAS_CONTAINER_ENV_VALUE = NS + "hasContainerEnvValue";
+    public static final String HAS_DEPLOYMENT_CONTAINER = NS + "hasDeploymentContainer";
 }

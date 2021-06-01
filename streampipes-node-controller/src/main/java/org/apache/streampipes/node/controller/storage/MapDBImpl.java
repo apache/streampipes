@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.node.controller.storage;
 
+import org.apache.streampipes.node.controller.config.NodeConfiguration;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
 import org.mapdb.Serializer;
@@ -28,10 +29,8 @@ import java.util.stream.Collectors;
 
 public class MapDBImpl implements CRUDStorage {
 
-    private static final String DB_STORAGE_PATH = "/var/lib/streampipes/";
-
-    private DB db;
-    private ConcurrentMap<String, Object> map;
+    private final DB db;
+    private final ConcurrentMap<String, Object> map;
 
     public MapDBImpl(File dbFile) {
         if("true".equals(System.getenv("SP_DEBUG"))) {
@@ -41,7 +40,7 @@ public class MapDBImpl implements CRUDStorage {
                     .make();
         } else {
             db = DBMaker
-                    .fileDB(DB_STORAGE_PATH + dbFile)
+                    .fileDB(NodeConfiguration.getNodeStoragePath() + dbFile)
                     .transactionEnable()
                     .closeOnJvmShutdown()
                     .make();

@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.node.controller.management.orchestrator.docker;
 
+import org.apache.streampipes.model.node.container.ContainerEnvVar;
 import org.apache.streampipes.model.node.container.DockerContainer;
 import org.apache.streampipes.node.controller.config.EnvConfigParam;
 import org.apache.streampipes.node.controller.config.NodeConfiguration;
@@ -35,7 +36,7 @@ public abstract class AbstractStreamPipesDockerContainer {
                 NodeConfiguration.getStreampipesVersion() :  VersionUtils.getStreamPipesVersion();
     }
 
-    public List<String> generateStreamPipesNodeEnvs() {
+    public List<ContainerEnvVar> generateStreamPipesNodeEnvs() {
         return new ArrayList<>(Arrays.asList(
                 toEnv(EnvConfigParam.NODE_CONTROLLER_ID.getEnvironmentKey(),
                         NodeConfiguration.getNodeControllerId()),
@@ -58,7 +59,8 @@ public abstract class AbstractStreamPipesDockerContainer {
 
     // Helper
 
-    private <T>String toEnv(String key, T value) {
-        return String.format("%s=%s", key, value);
+    private <T>ContainerEnvVar toEnv(String key, T value) {
+        return new ContainerEnvVar(key, String.valueOf(value));
+        //return String.format("%s=%s", key, value);
     }
 }

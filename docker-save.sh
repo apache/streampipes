@@ -61,10 +61,10 @@ docker_save_bundle(){
         docker save ${docker_img_edge[@]} -o $dir/$docker_bundled_edge_tar
       elif [ "$2" == "armv7" ]; then
         echo "Save edge images (armv7) to tar ..."
-        docker save ${docker_img_edge_arm[@]} -o $dir/docker_bundled_edge_arm_tar
+        docker save ${docker_img_edge_arm[@]} -o $dir/$docker_bundled_edge_arm_tar
       elif [ "$2" == "aarch64" ]; then
-        echo "Save edge images (aarch64) to tar ..."
-        docker save ${docker_img_edge_aarch64[@]} -o $dir/docker_bundled_edge_aarch64_tar
+        echo "Save edge images (aarch64) to tar ..." ${docker_img_edge_aarch64[@]}
+        docker save ${docker_img_edge_aarch64[@]} -o $dir/$docker_bundled_edge_aarch64_tar
       fi
   elif [ "$1" == "core" ]; then
       echo "Save core images to tar ..."

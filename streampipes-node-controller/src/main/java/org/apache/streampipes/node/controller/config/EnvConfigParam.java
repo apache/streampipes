@@ -49,7 +49,8 @@ public enum EnvConfigParam {
     NODE_ACCESSIBLE_FIELD_DEVICE("SP_NODE_ACCESSIBLE_FIELD_DEVICE", ""),
     CONSUL_LOCATION("CONSUL_LOCATION", "consul"),
     SUPPORTED_PIPELINE_ELEMENTS("SP_SUPPORTED_PIPELINE_ELEMENTS", ""),
-    AUTO_OFFLOADING_STRATEGY("SP_AUTO_OFFLOADING_STRATEGY", "default");
+    AUTO_OFFLOADING_STRATEGY("SP_AUTO_OFFLOADING_STRATEGY", "default"),
+    NODE_STORAGE_PATH("SP_NODE_STORAGE_PATH", "/var/lib/streampipes");
 
     private final String environmentKey;
     private final String defaultValue;
