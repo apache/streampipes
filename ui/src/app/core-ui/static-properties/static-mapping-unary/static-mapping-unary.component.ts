@@ -32,17 +32,12 @@ export class StaticMappingUnaryComponent extends StaticMappingComponent<MappingP
 
     @Output() inputEmitter: EventEmitter<Boolean> = new EventEmitter<Boolean>();
 
-    availableProperties: Array<any>;
-
-    constructor(staticPropertyUtil: StaticPropertyUtilService,
-                PropertySelectorService: PropertySelectorService){
-        super(staticPropertyUtil, PropertySelectorService);
+    constructor(){
+        super();
     }
 
     ngOnInit() {
-        this.availableProperties = this.extractPossibleSelections();
-        this.availableProperties
-            .forEach(ep => ep.propertySelector = this.firstStreamPropertySelector + ep.runtimeName);
+        this.extractPossibleSelections();
         if (!(this.staticProperty.selectedProperty)) {
             this.staticProperty.selectedProperty = this.availableProperties[0].propertySelector;
             this.emitUpdate(true);
@@ -55,6 +50,7 @@ export class StaticMappingUnaryComponent extends StaticMappingComponent<MappingP
     }
 
     onValueChange(value: any) {
+        console.log(value);
         this.staticProperty.selectedProperty = value;
         this.emitUpdate(true);
     }

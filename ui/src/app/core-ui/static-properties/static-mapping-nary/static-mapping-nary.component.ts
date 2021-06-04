@@ -32,16 +32,13 @@ export class StaticMappingNaryComponent extends StaticMappingComponent<MappingPr
 
     @Output() inputEmitter: EventEmitter<Boolean> = new EventEmitter<Boolean>();
 
-    availableProperties: Array<any>;
-
-    constructor(staticPropertyUtil: StaticPropertyUtilService,
-                PropertySelectorService: PropertySelectorService){
-        super(staticPropertyUtil, PropertySelectorService);
+    constructor(){
+        super();
     }
 
     ngOnInit() {
-        this.availableProperties = this.extractPossibleSelections();
-        this.availableProperties.forEach(ep => ep.propertySelector = this.firstStreamPropertySelector + ep.runtimeName);
+        this.extractPossibleSelections();
+        //this.availableProperties.forEach(ep => ep.propertySelector = this.firstStreamPropertySelector + ep.runtimeName);
         if (!this.staticProperty.selectedProperties) {
             this.selectNone();
         } else {
@@ -69,8 +66,8 @@ export class StaticMappingNaryComponent extends StaticMappingComponent<MappingPr
         }
     }
 
-    makeSelector(property: EventProperty) {
-        return this.firstStreamPropertySelector + property.runtimeName;
+    makeSelector(property: any) {
+        return property.propertySelector;
     }
 
     selectAll() {

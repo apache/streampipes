@@ -18,11 +18,9 @@
 
 package org.apache.streampipes.storage.management;
 
-import org.eclipse.rdf4j.repository.Repository;
 import org.apache.streampipes.storage.Rdf4JStorageManager;
-import org.apache.streampipes.storage.api.IBackgroundKnowledgeStorage;
-import org.apache.streampipes.storage.api.IOntologyContextStorage;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorageCache;
+import org.eclipse.rdf4j.repository.Repository;
 
 public enum StorageManager {
 
@@ -32,18 +30,8 @@ public enum StorageManager {
     return Rdf4JStorageManager.INSTANCE.getPipelineElementStorage();
   }
 
-  public IBackgroundKnowledgeStorage getBackgroundKnowledgeStorage() {
-    return Rdf4JStorageManager.INSTANCE.getBackgroundKnowledgeStorage();
-  }
-
   public Repository getRepository() {
     return Rdf4JStorageManager.INSTANCE.getRepository();
   }
-
-  public IOntologyContextStorage getContextStorage() {
-    return Rdf4JStorageManager.INSTANCE.getContextStorage();
-  }
-
-
 
 }
