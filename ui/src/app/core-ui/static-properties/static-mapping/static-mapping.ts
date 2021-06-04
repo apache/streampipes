@@ -38,8 +38,9 @@ export abstract class StaticMappingComponent<T extends MappingProperty>
     protected firstStreamPropertySelector: string = "s0::";
     protected secondStreamPropertySelector: string = "s1::";
 
-    constructor(private staticPropertyUtil: StaticPropertyUtilService,
-                private PropertySelectorService: PropertySelectorService){
+    availableProperties: Array<any> = [];
+
+    constructor(){
         super();
     }
 
@@ -49,22 +50,21 @@ export abstract class StaticMappingComponent<T extends MappingProperty>
             : eventProperty.runTimeName;
     }
 
-    extractPossibleSelections(): Array<EventProperty> {
-        let properties: Array<EventProperty> = [];
-        this.eventSchemas.forEach(schema => {
-            properties = properties.concat(schema
+    extractPossibleSelections(): void {
+        this.eventSchemas.forEach((schema, index) => {
+            let streamIdentifier = index == 0 ? this.firstStreamPropertySelector : this.secondStreamPropertySelector;
+            let streamProperties = schema
                 .eventProperties
-                .filter(ep => this.isInSelection(ep))
-                .map(ep => this.cloneEp(ep)));
+                .filter(ep => this.isInSelection(ep, streamIdentifier))
+                .map(ep => this.cloneEp(ep));
+            streamProperties.forEach(ep => (ep as any).propertySelector = streamIdentifier + ep.runtimeName);
+            this.availableProperties = this.availableProperties.concat(streamProperties);
         });
-        console.log(properties);
-        return properties;
     }
 
-    isInSelection(ep: EventProperty): boolean {
+    isInSelection(ep: EventProperty, streamIdentifier: string): boolean {
         return this.staticProperty.mapsFromOptions
-            .some(maps => (maps === this.firstStreamPropertySelector + ep.runtimeName)
-                || maps === this.secondStreamPropertySelector + ep.runtimeName);
+            .some(maps => (maps === streamIdentifier + ep.runtimeName));
     }
 
     cloneEp(ep: EventPropertyUnion) {
