@@ -52,7 +52,7 @@
                     <div *ngIf="statusDetailsVisible">Hide Details</div>
                 </button>
                 <button mat-button mat-raised-button class="ml-10" color="primary" (click)="forceStopPipeline()" *ngIf="action == 1 && !pipelineOperationStatus.success">
-                    <div *ngIf="!statusDetailsVisible">Force stop</div>
+                    <div>Force stop</div>
                 </button>
             </div>
 
