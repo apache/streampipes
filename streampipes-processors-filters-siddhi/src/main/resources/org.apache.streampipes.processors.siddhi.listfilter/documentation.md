@@ -27,7 +27,6 @@
 ## Description
 
 Detects the increase of a numerical field over a customizable time window. Example: A temperature value increases by 10 percent within 5 minutes.
-Add a detailed description here
 
 ***
 

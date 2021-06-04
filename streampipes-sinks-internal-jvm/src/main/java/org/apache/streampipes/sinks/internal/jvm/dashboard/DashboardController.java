@@ -48,8 +48,7 @@ public class DashboardController extends StandaloneEventSinkDeclarer<DashboardPa
   @Override
   public ConfiguredEventSink<DashboardParameters> onInvocation(DataSinkInvocation invocationGraph,
                                                                DataSinkParameterExtractor extractor) {
-    String visualizationName = extractor.singleValueParameter(VISUALIZATION_NAME_KEY,
-            String.class);
+    String visualizationName = extractor.singleValueParameter(VISUALIZATION_NAME_KEY, String.class);
     return new ConfiguredEventSink<>(new DashboardParameters(invocationGraph, visualizationName), Dashboard::new);
   }
 

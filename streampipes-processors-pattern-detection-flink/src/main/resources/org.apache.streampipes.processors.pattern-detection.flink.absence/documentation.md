@@ -27,7 +27,6 @@
 ## Description
 
 Detects whether an event does not arrive within a specified time after the occurrence of another event.
-Add a detailed description here
 
 ***
 

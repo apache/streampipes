@@ -18,9 +18,7 @@
 
 ## Count Aggregation
 
-<p align="center"> 
-    <img src="icon.png" width="150px;" class="pe-image-documentation"/>
-</p>
+Performs count aggregation with Siddhi CEP engine.
 
 ***
 
@@ -35,6 +33,7 @@ values.
 
 ## Required input
 
+Does not have any specific input requirements.
 
 ***
 

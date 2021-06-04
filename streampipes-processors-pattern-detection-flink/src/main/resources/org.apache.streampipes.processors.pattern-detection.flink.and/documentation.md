@@ -27,7 +27,6 @@
 ## Description
 
 Detects whether an event co-occurs with another event within a given time.
-Add a detailed description here
 
 ***
 

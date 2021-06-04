@@ -18,31 +18,33 @@
 
 ## Stream Stop Detection
 
-<p align="center"> 
-    <img src="icon.png" width="150px;" class="pe-image-documentation"/>
-</p>
-
 ***
 
 ## Description
 
 Triggers an event when the input data stream stops sending events
-Add a detailed description here
 
 ***
 
 ## Required input
 
+Does not have any specific input requirements.
 
 ***
 
 ## Configuration
 
-Describe the configuration parameters here
+### Time Window Length (Seconds)
 
-### 1st parameter
-
-
-### 2nd parameter
+Specifies the size of the time window in seconds.
 
 ## Output
+
+Outputs a similar event like below.
+
+```
+{
+  'timestamp': 1621243855401,
+  'message': 'Event stream has stopped'  
+}
+```
