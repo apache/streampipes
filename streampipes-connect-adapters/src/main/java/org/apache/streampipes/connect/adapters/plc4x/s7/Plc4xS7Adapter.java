@@ -56,6 +56,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -297,7 +298,8 @@ public class Plc4xS7Adapter extends PullAdapter {
         if (selectedAlternative.equals(CSV_IMPORT)) {
             // CSV file
             try {
-                String csvFileContent = extractor.fileContentsAsString(PLC_NODES_CSV_FILE);
+                byte[] csvFileContentByte = extractor.fileContentsAsByteArray(PLC_NODES_CSV_FILE);
+                String csvFileContent = new String(csvFileContentByte, StandardCharsets.UTF_8);
                 List<S7ConfigFile> configFiles = this.getCsvConfig(csvFileContent);
                 this.nodes = makeConfigMap(configFiles);
             } catch (IOException e) {
