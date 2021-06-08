@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.manager.file;
 
+import org.apache.commons.io.input.BOMInputStream;
 import org.apache.streampipes.model.client.file.FileMetadata;
 import org.apache.streampipes.storage.api.IFileMetadataStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -33,6 +34,11 @@ public class FileManager {
                                InputStream fileInputStream) throws IOException {
 
     String filetype = filename.substring(filename.lastIndexOf(".") + 1);
+
+    if ("csv".equals(filetype)) {
+      fileInputStream = removeBom(fileInputStream);
+    }
+
     String internalFilename = makeInternalFilename(filetype);
     FileMetadata fileMetadata = makeFileMetadata(user, filename, internalFilename, filetype);
     new FileHandler().storeFile(internalFilename, fileInputStream);
@@ -78,5 +84,10 @@ public class FileManager {
 
   private static String makeInternalFilename(String filetype) {
     return UUID.randomUUID().toString() + "." + filetype;
+  }
+
+  public static InputStream removeBom(InputStream stream) {
+    return new BOMInputStream(stream);
+//      return stream;
   }
 }
