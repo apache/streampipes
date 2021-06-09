@@ -19,15 +19,10 @@
 package org.apache.streampipes.sinks.databases.jvm.iotdb;
 
 import org.apache.streampipes.model.graph.DataSinkInvocation;
-import org.apache.streampipes.wrapper.params.binding.EventSinkBindingParams;
+import org.apache.streampipes.sinks.databases.jvm.jdbcclient.model.JdbcConnectionParameters;
 
-public class IotDbParameters extends EventSinkBindingParams {
+public class IotDbParameters extends JdbcConnectionParameters {
 
-  private String iotDbHost;
-  private Integer iotDbPort;
-  private String dbStorageGroup;
-  private String user;
-  private String password;
   private String timestampField;
 
   public IotDbParameters(DataSinkInvocation graph,
@@ -36,34 +31,22 @@ public class IotDbParameters extends EventSinkBindingParams {
                          String dbStorageGroup,
                          String user,
                          String password,
+                         boolean sslEnabled,
                          String timestampField) {
-    super(graph);
-    this.iotDbHost = iotDbHost;
-    this.iotDbPort = iotDbPort;
-    this.dbStorageGroup = dbStorageGroup;
-    this.user = user;
-    this.password = password;
+    super(
+            graph,
+            iotDbHost,
+            iotDbPort,
+            "",
+            user,
+            password,
+            "root." + dbStorageGroup,
+            sslEnabled,
+            null,
+            false
+    );
+
     this.timestampField = timestampField;
-  }
-
-  public String getIotDbHost() {
-    return iotDbHost;
-  }
-
-  public Integer getIotDbPort() {
-    return iotDbPort;
-  }
-
-  public String getDbStorageGroup() {
-    return dbStorageGroup;
-  }
-
-  public String getUsername() {
-    return user;
-  }
-
-  public String getPassword() {
-    return password;
   }
 
   public String getTimestampField() {

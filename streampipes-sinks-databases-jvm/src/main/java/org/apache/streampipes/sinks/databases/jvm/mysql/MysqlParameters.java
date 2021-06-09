@@ -19,48 +19,23 @@
 package org.apache.streampipes.sinks.databases.jvm.mysql;
 
 import org.apache.streampipes.model.graph.DataSinkInvocation;
-import org.apache.streampipes.wrapper.params.binding.EventSinkBindingParams;
+import org.apache.streampipes.sinks.databases.jvm.jdbcclient.model.JdbcConnectionParameters;
 
-public class MysqlParameters extends EventSinkBindingParams {
+public class MysqlParameters extends JdbcConnectionParameters {
 
-    private String host;
-    private String user;
-    private String password;
-    private String db;
-    private String table;
-    private Integer port;
-
-
-    public MysqlParameters(DataSinkInvocation graph, String host, String user, String password, String db, String table,
-                           Integer port) {
-        super(graph);
-        this.host = host;
-        this.user = user;
-        this.password = password;
-        this.db = db;
-        this.table = table;
-        this.port = port;
+    public MysqlParameters(DataSinkInvocation graph, String mySqlHost, String mySqlUser, String mySqlPassword,
+                           String mySqlDb, String mySqlTable, Integer mySqlPort, boolean sslEnabled) {
+        super(
+                graph,
+                mySqlHost,
+                mySqlPort,
+                mySqlDb,
+                mySqlUser,
+                mySqlPassword,
+                mySqlTable,
+                sslEnabled,
+                null,
+                false
+        );
     }
-
-    public String getHost() {
-        return host;
-    }
-
-    public String getUser() {
-        return user;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getDB() {
-        return db;
-    }
-
-    public String getTable() {
-        return table;
-    }
-
-    public Integer getPort() { return port; }
 }
