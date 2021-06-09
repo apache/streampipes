@@ -298,8 +298,7 @@ public class Plc4xS7Adapter extends PullAdapter {
         if (selectedAlternative.equals(CSV_IMPORT)) {
             // CSV file
             try {
-                byte[] csvFileContentByte = extractor.fileContentsAsByteArray(PLC_NODES_CSV_FILE);
-                String csvFileContent = new String(csvFileContentByte, StandardCharsets.UTF_8);
+                String csvFileContent = extractor.fileContentsAsString(PLC_NODES_CSV_FILE);
                 List<S7ConfigFile> configFiles = this.getCsvConfig(csvFileContent);
                 this.nodes = makeConfigMap(configFiles);
             } catch (IOException e) {
