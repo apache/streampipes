@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.model.node;
 
-import com.ibm.dtfj.corereaders.zos.dumpreader.AddressRange;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 import org.apache.streampipes.model.grounding.TransportProtocol;
