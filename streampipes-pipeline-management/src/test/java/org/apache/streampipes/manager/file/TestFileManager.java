@@ -29,35 +29,35 @@ import static org.junit.Assert.*;
 public class TestFileManager {
 
     @Test
-    public void testRemoveBomWithNoBom() throws IOException {
+    public void testCleanFileWithoutBom() throws IOException {
         String expected = "test";
         InputStream inputStream = IOUtils.toInputStream(expected, StandardCharsets.UTF_8);
-        InputStream resultStream = FileManager.removeBom(inputStream);
+        InputStream resultStream = FileManager.cleanFile(inputStream, "CSV");
         String resultString = IOUtils.toString(resultStream, StandardCharsets.UTF_8);
 
         assertEquals(expected, resultString);
     }
 
     @Test
-    public void testRemoveBomWithBom() throws IOException {
+    public void testCleanFileWithBom() throws IOException {
         String expected = "test";
         String UTF8_BOM = "\uFEFF";
         String inputString = UTF8_BOM + expected;
         InputStream inputStream = IOUtils.toInputStream(inputString, StandardCharsets.UTF_8);
-        InputStream resultStream = FileManager.removeBom(inputStream);
+        InputStream resultStream = FileManager.cleanFile(inputStream, "CSV");
         String resultString = IOUtils.toString(resultStream, StandardCharsets.UTF_8);
 
         assertEquals(expected, resultString);
     }
 
     @Test
-    public void testRemoveBomWithBomAndUmlauts() throws IOException {
+    public void testCleanFileWithBomAndUmlauts() throws IOException {
         String expected = "testäüö";
         String UTF8_BOM = "\uFEFF";
         String inputString = UTF8_BOM + expected;
         InputStream inputStream = IOUtils.toInputStream(inputString, StandardCharsets.UTF_8);
-        InputStream resultStream = FileManager.removeBom(inputStream);
-        String resultString = IOUtils.toString(resultStream, StandardCharsets.ISO_8859_1);
+        InputStream resultStream = FileManager.cleanFile(inputStream, "CSV");
+        String resultString = IOUtils.toString(resultStream, StandardCharsets.UTF_8);
 
         assertEquals(expected, resultString);
     }

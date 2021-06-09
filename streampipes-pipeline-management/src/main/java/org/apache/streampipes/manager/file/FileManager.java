@@ -19,6 +19,7 @@ package org.apache.streampipes.manager.file;
 
 import org.apache.commons.io.input.BOMInputStream;
 import org.apache.streampipes.model.client.file.FileMetadata;
+import org.apache.streampipes.sdk.helpers.Filetypes;
 import org.apache.streampipes.storage.api.IFileMetadataStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -29,15 +30,22 @@ import java.util.UUID;
 
 public class FileManager {
 
+  /**
+   * Store a file in the internal file storage.
+   * For csv files the bom is removed
+   * @param user who created the file
+   * @param filename
+   * @param fileInputStream content of file
+   * @return
+   * @throws IOException
+   */
   public static FileMetadata storeFile(String user,
                                String filename,
                                InputStream fileInputStream) throws IOException {
 
     String filetype = filename.substring(filename.lastIndexOf(".") + 1);
 
-    if ("csv".equals(filetype)) {
-      fileInputStream = removeBom(fileInputStream);
-    }
+    fileInputStream = cleanFile(fileInputStream, filetype);
 
     String internalFilename = makeInternalFilename(filetype);
     FileMetadata fileMetadata = makeFileMetadata(user, filename, internalFilename, filetype);
@@ -54,6 +62,20 @@ public class FileManager {
 
   public static File getFile(String filename) {
     return new FileHandler().getFile(filename);
+  }
+
+  /**
+   * Remove Byte Order Mark (BOM) from csv files
+   * @param fileInputStream
+   * @param filetype
+   * @return
+   */
+  public static InputStream cleanFile(InputStream fileInputStream, String filetype) {
+    if (Filetypes.CSV.getFileExtensions().contains(filetype.toLowerCase())) {
+      fileInputStream = new BOMInputStream(fileInputStream);
+    }
+
+    return fileInputStream;
   }
 
   private static void storeFileMetadata(FileMetadata fileMetadata) {
@@ -86,8 +108,4 @@ public class FileManager {
     return UUID.randomUUID().toString() + "." + filetype;
   }
 
-  public static InputStream removeBom(InputStream stream) {
-    return new BOMInputStream(stream);
-//      return stream;
-  }
 }
