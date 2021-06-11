@@ -85,6 +85,20 @@ public class DataLakeResourceV4 extends AbstractRestResource {
         return ok();
     }
 
+    @DELETE
+    @Path("/measurements/{measurementID}/drop")
+    @Operation(summary = "Drop a single measurement series with given id from Data Lake and remove related event property", tags = {"Data Lake"},
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Measurement series successfully dropped from Data Lake"),
+                    @ApiResponse(responseCode = "400", description = "Measurement series with given id or related event property not found")})
+    public Response dropMeasurementSeries(@Parameter(in = ParameterIn.PATH, description = "username", required = true) @PathParam("username") String username
+            , @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true) @PathParam("measurementID") String measurementID) {
+
+        /**
+         * TODO: implementation of method stump
+         */
+    }
+
     @GET
     @Path("/measurements")
     @Produces(MediaType.APPLICATION_JSON)
