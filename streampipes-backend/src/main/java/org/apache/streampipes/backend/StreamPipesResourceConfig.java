@@ -20,6 +20,8 @@ package org.apache.streampipes.backend;
 
 import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource;
 import org.apache.streampipes.connect.container.master.rest.*;
+import org.apache.streampipes.ps.DataLakeResourceV3;
+import org.apache.streampipes.ps.DataLakeResourceV4;
 import org.apache.streampipes.ps.PipelineElementTemplateResource;
 import org.apache.streampipes.rest.impl.*;
 import org.apache.streampipes.rest.impl.dashboard.Dashboard;
@@ -27,7 +29,6 @@ import org.apache.streampipes.rest.impl.dashboard.DashboardWidget;
 import org.apache.streampipes.rest.impl.dashboard.VisualizablePipeline;
 import org.apache.streampipes.rest.impl.datalake.DataLakeDashboardResource;
 import org.apache.streampipes.rest.impl.datalake.DataLakeNoUserResourceV3;
-import org.apache.streampipes.ps.DataLakeResourceV3;
 import org.apache.streampipes.rest.impl.datalake.DataLakeWidgetResource;
 import org.apache.streampipes.rest.impl.nouser.FileServingResource;
 import org.apache.streampipes.rest.impl.nouser.PipelineElementImportNoUser;
@@ -47,86 +48,87 @@ import javax.ws.rs.ApplicationPath;
 @ApplicationPath("/api")
 public class StreamPipesResourceConfig extends ResourceConfig {
 
-  public StreamPipesResourceConfig() {
-    register(Authentication.class);
-    register(AssetDashboard.class);
-    register(AutoComplete.class);
-    register(CategoryResource.class);
-    register(ConsulConfig.class);
-    register(ContainerProvidedOptions.class);
-    register(Couchdb.class);
-    register(DashboardWidget.class);
-    register(Dashboard.class);
-    register(DataLakeResourceV3.class);
-    register(DataLakeNoUserResourceV3.class);
-    register(DataStream.class);
-    register(Deployment.class);
-    register(FileServingResource.class);
-    register(InternalPipelineTemplates.class);
-    register(LabelResource.class);
-    register(MeasurementUnitResource.class);
-    register(Notification.class);
-    register(OntologyContext.class);
-    register(OntologyKnowledge.class);
-    register(OntologyMeasurementUnit.class);
-    register(OntologyPipelineElement.class);
-    register(PipelineCache.class);
-    register(PipelineCategory.class);
-    register(PipelineElementAsset.class);
-    register(PipelineElementCategory.class);
-    register(PipelineElementFile.class);
-    register(PipelineElementImportNoUser.class);
-    register(PipelineElementImport.class);
-    register(PipelineElementRuntimeInfo.class);
-    register(PipelineMonitoring.class);
-    register(PipelineNoUserResource.class);
-    register(PipelineTemplate.class);
-    register(PipelineResource.class);
-    register(RdfEndpoint.class);
-    register(SemanticEventConsumer.class);
-    register(SemanticEventProcessingAgent.class);
-    register(SemanticEventProducer.class);
-    register(Setup.class);
-    register(User.class);
-    register(Version.class);
-    register(PipelineElementAsset.class);
-    register(DataLakeDashboardResource.class);
-    register(DataLakeWidgetResource.class);
-    register(DataLakeResourceV3.class);
-    register(DataLakeNoUserResourceV3.class);
-    register(PipelineElementFile.class);
-    register(FileServingResource.class);
-    register(DashboardWidget.class);
-    register(Dashboard.class);
-    register(VirtualSensor.class);
-    register(Visualization.class);
-    register(VisualizablePipeline.class);
+    public StreamPipesResourceConfig() {
+        register(Authentication.class);
+        register(AssetDashboard.class);
+        register(AutoComplete.class);
+        register(CategoryResource.class);
+        register(ConsulConfig.class);
+        register(ContainerProvidedOptions.class);
+        register(Couchdb.class);
+        register(DashboardWidget.class);
+        register(Dashboard.class);
+        register(DataLakeResourceV3.class);
+        register(DataLakeNoUserResourceV3.class);
+        register(DataStream.class);
+        register(Deployment.class);
+        register(FileServingResource.class);
+        register(InternalPipelineTemplates.class);
+        register(LabelResource.class);
+        register(MeasurementUnitResource.class);
+        register(Notification.class);
+        register(OntologyContext.class);
+        register(OntologyKnowledge.class);
+        register(OntologyMeasurementUnit.class);
+        register(OntologyPipelineElement.class);
+        register(PipelineCache.class);
+        register(PipelineCategory.class);
+        register(PipelineElementAsset.class);
+        register(PipelineElementCategory.class);
+        register(PipelineElementFile.class);
+        register(PipelineElementImportNoUser.class);
+        register(PipelineElementImport.class);
+        register(PipelineElementRuntimeInfo.class);
+        register(PipelineMonitoring.class);
+        register(PipelineNoUserResource.class);
+        register(PipelineTemplate.class);
+        register(PipelineResource.class);
+        register(RdfEndpoint.class);
+        register(SemanticEventConsumer.class);
+        register(SemanticEventProcessingAgent.class);
+        register(SemanticEventProducer.class);
+        register(Setup.class);
+        register(User.class);
+        register(Version.class);
+        register(PipelineElementAsset.class);
+        register(DataLakeDashboardResource.class);
+        register(DataLakeWidgetResource.class);
+        register(DataLakeResourceV3.class);
+        register(DataLakeNoUserResourceV3.class);
+        register(PipelineElementFile.class);
+        register(FileServingResource.class);
+        register(DashboardWidget.class);
+        register(Dashboard.class);
+        register(VirtualSensor.class);
+        register(Visualization.class);
+        register(VisualizablePipeline.class);
 
-    // Serializers
-    register(GsonWithIdProvider.class);
-    register(GsonWithoutIdProvider.class);
-    register(GsonClientModelProvider.class);
-    register(JsonLdProvider.class);
-    register(JacksonSerializationProvider.class);
-    register(MultiPartFeature.class);
-    
-    // Platform Services
-    register(PipelineElementTemplateResource.class);
+        // Serializers
+        register(GsonWithIdProvider.class);
+        register(GsonWithoutIdProvider.class);
+        register(GsonClientModelProvider.class);
+        register(JsonLdProvider.class);
+        register(JacksonSerializationProvider.class);
+        register(MultiPartFeature.class);
 
-    register(OpenApiResource.class);
+        // Platform Services
+        register(PipelineElementTemplateResource.class);
+        register(DataLakeResourceV4.class);
+
+        register(OpenApiResource.class);
 
 
-    // Connect Master
-    register(WelcomePageMaster.class);
-    register(AdapterResource.class);
-    register(AdapterTemplateResource.class);
-    register(DescriptionResource.class);
-    register(SourcesResource.class);
-    register(GuessResource.class);
+        // Connect Master
+        register(WelcomePageMaster.class);
+        register(AdapterResource.class);
+        register(AdapterTemplateResource.class);
+        register(DescriptionResource.class);
+        register(SourcesResource.class);
+        register(GuessResource.class);
 //    register(MultiPartFeature.class);
-    register(UnitResource.class);
-    register(WorkerAdministrationResource.class);
-    register(RuntimeResolvableResource.class);
-  }
+        register(UnitResource.class);
+        register(WorkerAdministrationResource.class);
+        register(RuntimeResolvableResource.class);
+    }
 
 }
