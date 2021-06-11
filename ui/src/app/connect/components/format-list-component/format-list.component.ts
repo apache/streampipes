@@ -16,44 +16,40 @@
  *
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {FormatDescription} from "../../../core-model/gen/streampipes-model";
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { FormatDescription } from '../../../core-model/gen/streampipes-model';
 
 @Component({
-    selector: 'app-format-list',
+    selector: 'sp-format-list',
     templateUrl: './format-list.component.html',
     styleUrls: ['./format-list.component.css']
   })
 
 export class FormatListComponent {
+
     @Input() selectedFormat: FormatDescription;
-    @Input() allFormats: FormatDescription[];    
+    @Input() allFormats: FormatDescription[];
     @Output() validateEmitter = new EventEmitter();
     @Output() selectedFormatEmitter = new EventEmitter();
 
     constructor() {
-      
     }
-    formatEditable(selectedFormat) {
 
+    formatEditable(selectedFormat) {
       this.allFormats.forEach(format => {
-        if(format!=selectedFormat){
+        if (format !== selectedFormat) {
           (format as any).edit = false;
         }
       });
-
     }
 
     formatSelected(selectedFormat) {
       this.selectedFormat = selectedFormat;
-      this.selectedFormatEmitter.emit(this.selectedFormat)
+      this.selectedFormatEmitter.emit(this.selectedFormat);
 
     }
 
     validateAll(allValid) {
       this.validateEmitter.emit(allValid);
     }
-    ngOnInit(){
-    }
-
-  }
+}

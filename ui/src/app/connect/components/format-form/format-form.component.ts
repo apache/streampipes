@@ -16,12 +16,11 @@
  *
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {isUndefined} from 'util';
-import {FormatDescription} from "../../../core-model/gen/streampipes-model";
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormatDescription } from '../../../core-model/gen/streampipes-model';
 
 @Component({
-    selector: 'app-format-form',
+    selector: 'sp-format-form',
     templateUrl: './format-form.component.html',
     styleUrls: ['./format-form.component.css']
 })
@@ -30,18 +29,18 @@ export class FormatFormComponent implements OnInit {
     @Input() selectedFormat: FormatDescription;
 
     @Output() selectedFormatChange = new EventEmitter<FormatDescription>();
-    @Output() inputValueChanged = new EventEmitter<Boolean>();
+    @Output() inputValueChanged = new EventEmitter<boolean>();
     @Output() selectedFormatEmitter = new EventEmitter();
     @Input() allFormats: FormatDescription[];
 
-    showStaticProperty: Boolean[] = [false]
-    hasInput: Boolean[] = [false];
+    showStaticProperty: boolean[] = [false]
+    hasInput: boolean[] = [false];
 
     constructor() {
     }
 
     isSelected(f: FormatDescription): boolean {
-        if (isUndefined(this.selectedFormat)) {
+        if (this.selectedFormat === undefined) {
             return false;
         } else {
             this.selectedFormatChange.emit(this.selectedFormat);
@@ -49,13 +48,12 @@ export class FormatFormComponent implements OnInit {
         }
     }
 
-
     ngOnInit() {
-        var selectedFormat = this.selectedFormat;
+        const selectedFormat = this.selectedFormat;
 
         setTimeout(() => {
             for (var i = 0; i < this.allFormats.length ; i++) {
-                if (selectedFormat && this.allFormats[i].name == selectedFormat.name) {
+                if (selectedFormat && this.allFormats[i].name === selectedFormat.name) {
                     this.showStaticProperty.push(true);
                     this.hasInput.push(true);
                 } else {

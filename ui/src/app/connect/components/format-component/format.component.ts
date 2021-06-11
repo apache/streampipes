@@ -16,12 +16,12 @@
  *
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {ShepherdService} from '../../../services/tour/shepherd.service';
-import {FormatDescription} from "../../../core-model/gen/streampipes-model";
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ShepherdService } from '../../../services/tour/shepherd.service';
+import { FormatDescription } from '../../../core-model/gen/streampipes-model';
 
 @Component({
-  selector: 'app-format',
+  selector: 'sp-format',
   templateUrl: './format.component.html',
   styleUrls: ['./format.component.css'],
 })
@@ -37,9 +37,9 @@ export class FormatComponent {
   @Output()
   selectedFormatEmitter = new EventEmitter();
 
-  hasConfig: Boolean;
+  hasConfig: boolean;
 
-  constructor(private ShepherdService: ShepherdService) {
+  constructor(private shepherdService: ShepherdService) {
     this.hasConfig = true;
   }
 
@@ -47,7 +47,7 @@ export class FormatComponent {
     this.selectedFormat = this.format;
     this.selectedFormatEmitter.emit(this.selectedFormat);
 
-    this.ShepherdService.trigger("select-" + this.selectedFormat.name.toLocaleLowerCase());
+    this.shepherdService.trigger('select-' + this.selectedFormat.name.toLocaleLowerCase());
 
   }
 
@@ -68,5 +68,4 @@ export class FormatComponent {
         return this.selectedFormat.name === this.format.name;
     }
   }
-  ngOnInit() {}
 }

@@ -16,7 +16,11 @@
   ~
   -->
 
-<app-format-list [allFormats]="allFormats" [(selectedFormat)]="selectedFormat" (selectedFormatEmitter)="formatSelected($event)" (validateEmitter)="validateAll($event)">
-</app-format-list>
+<sp-format-list
+        [allFormats]="allFormats"
+        [selectedFormat]="selectedFormat"
+        (selectedFormatEmitter)="formatSelected($event)"
+        (validateEmitter)="validateAll($event)">
+</sp-format-list>
 
 
