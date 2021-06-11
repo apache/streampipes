@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.logging.evaluation;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -65,9 +66,9 @@ public class EvaluationLogger {
     }
 
     public void writeOut(){
-        try (FileWriter fw = new FileWriter(file)){
-            fw.append(buffer);
-            fw.flush();
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))){
+            bufferedWriter.append(buffer);
+            bufferedWriter.flush();
             buffer = "";
         } catch (IOException e) {
             e.printStackTrace();
