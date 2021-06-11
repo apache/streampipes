@@ -19,6 +19,7 @@
 package org.apache.streampipes.dataexplorer;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import org.apache.streampipes.dataexplorer.param.RetentionPolicyQueryParams;
 import org.apache.streampipes.dataexplorer.query.DeleteDataQuery;
 import org.apache.streampipes.dataexplorer.query.EditRetentionPolicyQuery;
@@ -30,7 +31,9 @@ import org.apache.streampipes.model.datalake.DataLakeConfiguration;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataLakeRetentionPolicy;
 import org.apache.streampipes.model.datalake.DataResult;
+import org.apache.streampipes.storage.couchdb.utils.Utils;
 import org.influxdb.dto.QueryResult;
+import org.lightcouch.CouchDbClient;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -178,6 +181,21 @@ public class DataLakeManagementV4 {
         return true;
     }
 
+    public boolean removeMeasurement(String measurementID) {
+        List<DataLakeMeasure> allMeasurements = getAllMeasurements();
+        for (DataLakeMeasure measure : allMeasurements) {
+            if (measure.getMeasureName().equals(measurementID)) {
+                QueryResult queryResult = new DeleteDataQuery(new DataLakeMeasure(measurementID, null)).executeQuery();
+
+                if (queryResult.hasError() || queryResult.getResults().get(0).getError() != null) {
+                    return false;
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
     public DataResult deleteData(String measurementID, Long startDate, Long endDate) {
         Map<String, QueryParamsV4> queryParts = getDeleteQueryParams(measurementID, startDate, endDate);
         return new DataExplorerQueryV4(queryParts).executeQuery();
@@ -224,6 +242,27 @@ public class DataLakeManagementV4 {
          * - Implementation of parameter return for batchSize and flushDuration
          */
         return new ShowRetentionPolicyQuery(RetentionPolicyQueryParams.from("", "0s")).executeQuery();
+    }
+
+    public boolean removeEventProperty(String measurementID) {
+        boolean isSuccess = false;
+        CouchDbClient couchDbClient = Utils.getCouchDbDataLakeClient();
+        List<JsonObject> docs = couchDbClient.view("_all_docs").includeDocs(true).query(JsonObject.class);
+
+        for (JsonObject document : docs) {
+            if (document.get("measureName").toString().replace("\"", "").equals(measurementID)) {
+                couchDbClient.remove(document.get("_id").toString().replace("\"", ""), document.get("_rev").toString().replace("\"", ""));
+                isSuccess = true;
+                break;
+            }
+        }
+
+        try {
+            couchDbClient.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return isSuccess;
     }
 
     private Map<String, QueryParamsV4> getQueryParams(String measurementID, Long startDate, Long endDate, Integer page, Integer limit, Integer offset, String groupBy, String order, String aggregationFunction, String timeInterval) {

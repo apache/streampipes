@@ -94,9 +94,18 @@ public class DataLakeResourceV4 extends AbstractRestResource {
     public Response dropMeasurementSeries(@Parameter(in = ParameterIn.PATH, description = "username", required = true) @PathParam("username") String username
             , @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true) @PathParam("measurementID") String measurementID) {
 
-        /**
-         * TODO: implementation of method stump
-         */
+        boolean isSuccessDataLake = this.dataLakeManagement.removeMeasurement(measurementID);
+
+        if (isSuccessDataLake) {
+            boolean isSuccessEventProperty = this.dataLakeManagement.removeEventProperty(measurementID);
+            if (isSuccessEventProperty) {
+                return ok();
+            } else {
+                return Response.status(Response.Status.NOT_FOUND).entity("Event property related to measurement series with given id not found.").build();
+            }
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).entity("Measurement series with given id not found.").build();
+        }
     }
 
     @GET
