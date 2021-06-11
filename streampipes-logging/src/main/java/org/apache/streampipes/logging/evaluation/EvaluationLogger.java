@@ -20,8 +20,12 @@ package org.apache.streampipes.logging.evaluation;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class EvaluationLogger {
+
+    private static String FILE_NAME = "evaluation-logs.csv";
 
     private final File file;
     private String buffer;
@@ -33,9 +37,17 @@ public class EvaluationLogger {
     }
 
     private EvaluationLogger(){
-        String filepath = System.getenv("LoggingFilepath");
+        String filepath = System.getenv("SP_LOGGING_FILE_PATH");
         if(filepath==null) throw new RuntimeException("No Logging Location provided.");
-        this.file = new File(filepath);
+        if(!filepath.endsWith("/")) filepath = filepath + "/";
+        String timePrefix = new SimpleDateFormat("yyyy-MM-dd-HHmmss").format(new Date());
+        String fileWithPath = new StringBuilder()
+                .append(filepath)
+                .append(timePrefix)
+                .append("_")
+                .append(FILE_NAME)
+                .toString();
+        this.file = new File(fileWithPath);
         try {
             if(!file.exists()){
                 if(!file.getParentFile().exists()) file.getParentFile().mkdirs();

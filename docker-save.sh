@@ -33,13 +33,11 @@ eclipse-mosquitto:1.6.12 )
 
 docker_img_edge_arm=(
 $repo/node-controller:$version-armv7 \
-$repo/extensions-all-jvm:$version-armv7 \
-eclipse-mosquitto:1.6.12 )
+$repo/extensions-all-jvm:$version-armv7 )
 
 docker_img_edge_aarch64=(
 $repo/node-controller:$version-aarch64 \
-$repo/extensions-all-jvm:$version-aarch64 \
-eclipse-mosquitto:1.6.12 )
+$repo/extensions-all-jvm:$version-aarch64 )
 
 docker_img_core=(
 $repo/ui:$version \
@@ -60,7 +58,7 @@ docker_save_bundle(){
         echo "Save edge images (amd) to tar ..."
         docker save ${docker_img_edge[@]} -o $dir/$docker_bundled_edge_tar
       elif [ "$2" == "armv7" ]; then
-        echo "Save edge images (armv7) to tar ..."
+        echo "Save edge images (armv7) to tar ..." ${docker_img_edge_arm[@]}
         docker save ${docker_img_edge_arm[@]} -o $dir/$docker_bundled_edge_arm_tar
       elif [ "$2" == "aarch64" ]; then
         echo "Save edge images (aarch64) to tar ..." ${docker_img_edge_aarch64[@]}
@@ -86,10 +84,10 @@ create_dir_if_not_exists(){
 
 usage() {
   cat <<EOF
-Usage: ./bundle-docker.sh core
-       ./bundle-docker.sh edge
-       ./bundle-docker.sh edge arm
-       ./bundle-docker.sh edge aarch64
+Usage: ./docker-save.sh core
+       ./docker-save.sh edge
+       ./docker-save.sh edge armv7
+       ./docker-save.sh edge aarch64
 EOF
 }
 

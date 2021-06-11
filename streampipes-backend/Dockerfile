@@ -19,6 +19,7 @@ FROM $BASE_IMAGE
 EXPOSE 8030
 ENV CONSUL_LOCATION consul
 
+RUN apk add --no-cache tzdata
 COPY target/streampipes-backend.jar  /streampipes-backend.jar
 
 ENTRYPOINT ["java", "-jar", "/streampipes-backend.jar"]

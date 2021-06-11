@@ -31,7 +31,7 @@ docker_build_arm(){
   docker buildx build \
   --platform linux/arm/v7 \
   -t $repo/$1:$version-armv7 \
-  -f $2/aarch64.Dockerfile $2 --load
+  -f $2/arm.Dockerfile $2 --load
 }
 
 docker_build_aarch64(){
