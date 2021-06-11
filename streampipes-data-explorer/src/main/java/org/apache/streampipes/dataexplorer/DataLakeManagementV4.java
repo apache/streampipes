@@ -23,12 +23,19 @@ import org.apache.streampipes.dataexplorer.query.DeleteDataQuery;
 import org.apache.streampipes.dataexplorer.query.EditRetentionPolicyQuery;
 import org.apache.streampipes.dataexplorer.query.ShowRetentionPolicyQuery;
 import org.apache.streampipes.dataexplorer.utils.DataExplorerUtils;
+import org.apache.streampipes.dataexplorer.v4.params.DeleteFromStatementParams;
+import org.apache.streampipes.dataexplorer.v4.params.QueryParamsV4;
+import org.apache.streampipes.dataexplorer.v4.params.TimeBoundaryParams;
+import org.apache.streampipes.dataexplorer.v4.query.DataExplorerQueryV4;
 import org.apache.streampipes.model.datalake.DataLakeConfiguration;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataLakeRetentionPolicy;
+import org.apache.streampipes.model.datalake.DataResult;
 import org.influxdb.dto.QueryResult;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DataLakeManagementV4 {
 
@@ -47,6 +54,11 @@ public class DataLakeManagementV4 {
             }
         }
         return true;
+    }
+
+    public DataResult deleteData(String measurementID, Long startDate, Long endDate) {
+        Map<String, QueryParamsV4> queryParts = getDeleteQueryParams(measurementID, startDate, endDate);
+        return new DataExplorerQueryV4(queryParts).executeQuery();
     }
 
     public DataLakeConfiguration getDataLakeConfiguration() {
@@ -90,5 +102,14 @@ public class DataLakeManagementV4 {
          * - Implementation of parameter return for batchSize and flushDuration
          */
         return new ShowRetentionPolicyQuery(RetentionPolicyQueryParams.from("", "0s")).executeQuery();
+    }
+
+    public Map<String, QueryParamsV4> getDeleteQueryParams(String measurementID, Long startDate, Long endDate) {
+        Map<String, QueryParamsV4> queryParts = new HashMap<>();
+        queryParts.put("DELETE", DeleteFromStatementParams.from(measurementID));
+        if (startDate != null || endDate != null) {
+            queryParts.put("WHERE", TimeBoundaryParams.from(measurementID, startDate, endDate));
+        }
+        return queryParts;
     }
 }

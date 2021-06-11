@@ -28,6 +28,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.apache.streampipes.dataexplorer.DataLakeManagementV4;
 import org.apache.streampipes.model.datalake.DataLakeConfiguration;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DataResult;
 import org.apache.streampipes.rest.impl.AbstractRestResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,12 +77,11 @@ public class DataLakeResourceV4 extends AbstractRestResource {
                     @ApiResponse(responseCode = "400", description = "Measurement series with given id not found")})
     public Response deleteData(@Parameter(in = ParameterIn.PATH, description = "username", required = true) @PathParam("username") String username
             , @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true) @PathParam("measurementID") String measurementID
-            , @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation") @QueryParam("startDate") String startDate
-            , @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation") @QueryParam("endDate") String endDate) {
-        /**
-         * TODO: implementation of method stump
-         */
-        return null;
+            , @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation") @QueryParam("startDate") Long startDate
+            , @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation") @QueryParam("endDate") Long endDate) {
+
+        DataResult result = this.dataLakeManagement.deleteData(measurementID, startDate, endDate);
+        return ok();
     }
 
     @GET
