@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
 import java.util.List;
 
 class Placeholder {
@@ -139,9 +140,17 @@ public class DataLakeResourceV4 extends AbstractRestResource {
             , @Parameter(in = ParameterIn.QUERY, description = "name of aggregation function used for grouping operation") @QueryParam("aggregationFunction") String aggregationFunction
             , @Parameter(in = ParameterIn.QUERY, description = "time interval for aggregation (e.g. 1m - one minute) for grouping operation") @QueryParam("timeInterval") String timeInterval
             , @Parameter(in = ParameterIn.QUERY, description = "format specification (csv, json - default is csv) for data download") @QueryParam("format") String format) {
-        /**
-         * TODO: implementation of method stump
-         */
+
+        if (format == null) {
+            format = "csv";
+        }
+        String outputFormat = format;
+
+        StreamingOutput streamingOutput = output -> dataLakeManagement.getDataAsStream(measurementID, startDate, endDate, page, limit, offset, groupBy, order, aggregationFunction, timeInterval, outputFormat, output);
+
+        return Response.ok(streamingOutput, MediaType.APPLICATION_OCTET_STREAM).
+                header("Content-Disposition", "attachment; filename=\"datalake." + outputFormat + "\"")
+                .build();
     }
 
     @GET

@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.dataexplorer;
 
+import com.google.gson.Gson;
 import org.apache.streampipes.dataexplorer.param.RetentionPolicyQueryParams;
 import org.apache.streampipes.dataexplorer.query.DeleteDataQuery;
 import org.apache.streampipes.dataexplorer.query.EditRetentionPolicyQuery;
@@ -31,6 +32,10 @@ import org.apache.streampipes.model.datalake.DataLakeRetentionPolicy;
 import org.apache.streampipes.model.datalake.DataResult;
 import org.influxdb.dto.QueryResult;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +50,120 @@ public class DataLakeManagementV4 {
     public DataResult getData(String measurementID, Long startDate, Long endDate, Integer page, Integer limit, Integer offset, String groupBy, String order, String aggregationFunction, String timeInterval) {
         Map<String, QueryParamsV4> queryParts = getQueryParams(measurementID, startDate, endDate, page, limit, offset, groupBy, order, aggregationFunction, timeInterval);
         return new DataExplorerQueryV4(queryParts).executeQuery();
+    }
+
+    public void getDataAsStream(String measurementID, Long startDate, Long endDate, Integer page, Integer limit, Integer offset, String groupBy, String order, String aggregationFunction, String timeInterval, String format, OutputStream outputStream) throws IOException {
+        if (limit == null) {
+            limit = 500000;
+        }
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+
+        DataResult dataResult;
+        //JSON
+        if (format.equals("json")) {
+
+            Gson gson = new Gson();
+            int i = 0;
+            if (page != null) {
+                i = page;
+            }
+
+            boolean isFirstDataObject = true;
+
+            outputStream.write(toBytes("["));
+            do {
+                dataResult = getData(measurementID, startDate, endDate, i, limit, null, groupBy, order, aggregationFunction, timeInterval);
+
+                if (dataResult.getTotal() > 0) {
+                    for (List<Object> row : dataResult.getRows()) {
+                        if (!isFirstDataObject) {
+                            outputStream.write(toBytes(","));
+                        }
+
+                        //produce one json object
+                        boolean isFirstElementInRow = true;
+                        outputStream.write(toBytes("{"));
+                        for (int i1 = 0; i1 < row.size(); i1++) {
+                            Object element = row.get(i1);
+                            if (!isFirstElementInRow) {
+                                outputStream.write(toBytes(","));
+                            }
+                            isFirstElementInRow = false;
+                            if (i1 == 0) {
+                                try {
+                                    element = formatter.parse(element.toString()).getTime();
+                                } catch (ParseException e) {
+                                    element = element.toString();
+                                }
+                            }
+                            //produce json e.g. "name": "Pipes" or "load": 42
+                            outputStream.write(toBytes("\"" + dataResult.getHeaders().get(i1) + "\": "
+                                    + gson.toJson(element)));
+                        }
+                        outputStream.write(toBytes("}"));
+                        isFirstDataObject = false;
+                    }
+
+                    i++;
+                }
+            } while (dataResult.getTotal() > 0);
+            outputStream.write(toBytes("]"));
+
+            //CSV
+        } else if (format.equals("csv")) {
+            int i = 0;
+            if (page != null) {
+                i = page;
+            }
+
+            boolean isFirstDataObject = true;
+
+            do {
+                dataResult = getData(measurementID, startDate, endDate, i, limit, null, groupBy, order, aggregationFunction, timeInterval);
+                //Send first header
+                if (dataResult.getTotal() > 0) {
+                    if (isFirstDataObject) {
+                        boolean isFirst = true;
+                        for (int i1 = 0; i1 < dataResult.getHeaders().size(); i1++) {
+                            if (!isFirst) {
+                                outputStream.write(toBytes(";"));
+                            }
+                            isFirst = false;
+                            outputStream.write(toBytes(dataResult.getHeaders().get(i1)));
+                        }
+                    }
+                    outputStream.write(toBytes("\n"));
+                    isFirstDataObject = false;
+                }
+
+                if (dataResult.getTotal() > 0) {
+                    for (List<Object> row : dataResult.getRows()) {
+                        boolean isFirstInRow = true;
+                        for (int i1 = 0; i1 < row.size(); i1++) {
+                            Object element = row.get(i1);
+                            if (!isFirstInRow) {
+                                outputStream.write(toBytes(";"));
+                            }
+                            isFirstInRow = false;
+                            if (i1 == 0) {
+                                try {
+                                    element = formatter.parse(element.toString()).getTime();
+                                } catch (ParseException e) {
+                                    element = element.toString();
+                                }
+                            }
+                            if (element == null) {
+                                outputStream.write(toBytes(""));
+                            } else {
+                                outputStream.write(toBytes(element.toString()));
+                            }
+                        }
+                        outputStream.write(toBytes("\n"));
+                    }
+                }
+                i++;
+            } while (dataResult.getTotal() > 0);
+        }
     }
 
     public boolean removeAllMeasurements() {
@@ -156,5 +275,9 @@ public class DataLakeManagementV4 {
             queryParts.put("WHERE", TimeBoundaryParams.from(measurementID, startDate, endDate));
         }
         return queryParts;
+    }
+
+    private byte[] toBytes(String value) {
+        return value.getBytes();
     }
 }
