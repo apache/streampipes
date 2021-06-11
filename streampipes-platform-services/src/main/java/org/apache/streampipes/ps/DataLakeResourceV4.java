@@ -95,28 +95,29 @@ public class DataLakeResourceV4 extends AbstractRestResource {
         return ok(allMeasurements);
     }
 
+
     @GET
     @Path("/measurements/{measurementID}")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Get data from a single measurement series by a given id", tags = {"Data Lake"},
             responses = {
                     @ApiResponse(responseCode = "400", description = "Measurement series with given id and requested query specification not found"),
-                    @ApiResponse(responseCode = "200", description = "requested data", content = @Content(schema = @Schema(implementation = Placeholder.class)))})
+                    @ApiResponse(responseCode = "200", description = "requested data", content = @Content(schema = @Schema(implementation = DataResult.class)))})
     public Response getData(@Parameter(in = ParameterIn.PATH, description = "username", required = true) @PathParam("username") String username
             , @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true) @PathParam("measurementID") String measurementID
-            , @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation") @QueryParam("startDate") String startDate
-            , @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation") @QueryParam("endDate") String endDate
-            , @Parameter(in = ParameterIn.QUERY, description = "page number for paging operation") @QueryParam("page") String page
-            , @Parameter(in = ParameterIn.QUERY, description = "items per page limitation for paging operation") @QueryParam("limit") Integer limit
-            , @Parameter(in = ParameterIn.QUERY, description = "offset for paging operation") @QueryParam("offset") Integer offset
+            , @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation") @QueryParam("startDate") Long startDate
+            , @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation") @QueryParam("endDate") Long endDate
+            , @Parameter(in = ParameterIn.QUERY, description = "page number for paging operation") @QueryParam("page") Integer page
+            , @Parameter(in = ParameterIn.QUERY, description = "maximum number of retrieved query results") @QueryParam("limit") Integer limit
+            , @Parameter(in = ParameterIn.QUERY, description = "offset") @QueryParam("offset") Integer offset
             , @Parameter(in = ParameterIn.QUERY, description = "grouping tags (comma-separated) for grouping operation") @QueryParam("groupBy") String groupBy
+            , @Parameter(in = ParameterIn.QUERY, description = "ordering of retrieved query results (ASC or DESC - default is ASC)") @QueryParam("order") String order
             , @Parameter(in = ParameterIn.QUERY, description = "name of aggregation function used for grouping operation") @QueryParam("aggregationFunction") String aggregationFunction
-            , @Parameter(in = ParameterIn.QUERY, description = "time interval for aggregation (e.g. 1m - one minute) for grouping operation") @QueryParam("timeInterval") String timeInterval
-            , @Parameter(in = ParameterIn.QUERY, description = "format specification (csv, json) for data download") @QueryParam("format") String format) {
-        /**
-         * TODO: implementation of method stump
-         */
-        return null;
+            , @Parameter(in = ParameterIn.QUERY, description = "time interval for aggregation (e.g. 1m - one minute) for grouping operation") @QueryParam("timeInterval") String timeInterval) {
+
+        DataResult result = this.dataLakeManagement.getData(measurementID, startDate, endDate, page, limit, offset, groupBy, order, aggregationFunction, timeInterval);
+
+        return Response.ok(result).build();
     }
 
     @GET

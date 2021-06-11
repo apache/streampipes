@@ -23,9 +23,7 @@ import org.apache.streampipes.dataexplorer.query.DeleteDataQuery;
 import org.apache.streampipes.dataexplorer.query.EditRetentionPolicyQuery;
 import org.apache.streampipes.dataexplorer.query.ShowRetentionPolicyQuery;
 import org.apache.streampipes.dataexplorer.utils.DataExplorerUtils;
-import org.apache.streampipes.dataexplorer.v4.params.DeleteFromStatementParams;
-import org.apache.streampipes.dataexplorer.v4.params.QueryParamsV4;
-import org.apache.streampipes.dataexplorer.v4.params.TimeBoundaryParams;
+import org.apache.streampipes.dataexplorer.v4.params.*;
 import org.apache.streampipes.dataexplorer.v4.query.DataExplorerQueryV4;
 import org.apache.streampipes.model.datalake.DataLakeConfiguration;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
@@ -42,6 +40,11 @@ public class DataLakeManagementV4 {
     public List<DataLakeMeasure> getAllMeasurements() {
         List<DataLakeMeasure> allMeasurements = DataExplorerUtils.getInfos();
         return allMeasurements;
+    }
+
+    public DataResult getData(String measurementID, Long startDate, Long endDate, Integer page, Integer limit, Integer offset, String groupBy, String order, String aggregationFunction, String timeInterval) {
+        Map<String, QueryParamsV4> queryParts = getQueryParams(measurementID, startDate, endDate, page, limit, offset, groupBy, order, aggregationFunction, timeInterval);
+        return new DataExplorerQueryV4(queryParts).executeQuery();
     }
 
     public boolean removeAllMeasurements() {
@@ -102,6 +105,48 @@ public class DataLakeManagementV4 {
          * - Implementation of parameter return for batchSize and flushDuration
          */
         return new ShowRetentionPolicyQuery(RetentionPolicyQueryParams.from("", "0s")).executeQuery();
+    }
+
+    private Map<String, QueryParamsV4> getQueryParams(String measurementID, Long startDate, Long endDate, Integer page, Integer limit, Integer offset, String groupBy, String order, String aggregationFunction, String timeInterval) {
+        Map<String, QueryParamsV4> queryParts = new HashMap<>();
+
+        queryParts.put("SELECT", SelectFromStatementParams.from(measurementID, aggregationFunction));
+
+        if (startDate != null || endDate != null) {
+            queryParts.put("WHERE", TimeBoundaryParams.from(measurementID, startDate, endDate));
+        }
+
+
+        if (timeInterval != null && aggregationFunction != null) {
+            if (groupBy == null) {
+                queryParts.put("GROUPBYTIME", GroupingByTimeParams.from(measurementID, timeInterval));
+            } else {
+                groupBy = groupBy + ",time(" + timeInterval + ")";
+            }
+        }
+
+        if (groupBy != null) {
+            queryParts.put("GROUPBY", GroupingByTagsParams.from(measurementID, groupBy));
+        }
+
+        if (order != null) {
+            if (order.equals("DESC")) {
+                queryParts.put("DESCENDING", OrderingByTimeParams.from(measurementID, order));
+            }
+        }
+
+        if (limit != null) {
+            queryParts.put("LIMIT", ItemLimitationParams.from(measurementID, limit));
+        }
+
+        if (offset != null) {
+            queryParts.put("OFFSET", OffsetParams.from(measurementID, offset));
+        } else if (limit != null && page != null) {
+            queryParts.put("OFFSET", OffsetParams.from(measurementID, page * limit));
+        }
+
+        return queryParts;
+
     }
 
     public Map<String, QueryParamsV4> getDeleteQueryParams(String measurementID, Long startDate, Long endDate) {
