@@ -18,10 +18,10 @@
 
 <div fxLayout="row wrap" fxLayoutAlign="start stretch">
     <div fxFlex="33" *ngFor="let format of allFormats">
-        <sp-format [format]="format" (validateEmitter)="validateAll($event)"
+        <sp-format-item [format]="format" (validateEmitter)="validateAll($event)"
         (editableEmitter)="formatEditable($event)"
         [selectedFormat]="selectedFormat"
         (selectedFormatEmitter)="formatSelected($event)">
-        </sp-format>
+        </sp-format-item>
     </div>
 </div>

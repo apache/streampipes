@@ -97,11 +97,11 @@
                         <h4>Select format</h4>
                     </div>
                     <div class="sp-blue-border padding">
-                        <sp-format-form fxFlex="100"
-                                         (selectedFormatEmitter)="formatSelected($event)"
-                                         [(selectedFormat)]="adapter.formatDescription"
-                                         [allFormats]="allFormats">
-                        </sp-format-form>
+                        <sp-format-list fxFlex="100"
+                                        [allFormats]="allFormats"
+                                        (selectedFormatEmitter)="formatSelected($event)"
+                                        [selectedFormat]="adapter.formatDescription">
+                        </sp-format-list>
                     </div>
 
                     <div class="assemblyOptions sp-blue-bg">

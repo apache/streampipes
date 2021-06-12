@@ -27,8 +27,6 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {ConnectComponent} from './connect.component';
 import {NewAdapterComponent} from './components/new-adapter/new-adapter.component';
 
-import {FormatFormComponent} from './components/format-form/format-form.component';
-
 import {EditEventPropertyPrimitiveComponent} from './dialog/edit-event-property/components/edit-event-property-primitive/edit-event-property-primitive.component';
 import {EventSchemaComponent} from './components/schema-editor/event-schema/event-schema.component';
 
@@ -46,7 +44,7 @@ import {ConnectService} from './services/connect.service';
 import {AdapterDescriptionComponent} from './components/data-marketplace/adapter-description/adapter-description.component';
 import {DataMarketplaceComponent} from './components/data-marketplace/data-marketplace.component';
 import {DataMarketplaceService} from './services/data-marketplace.service';
-import {FormatComponent} from './components/format-component/format.component';
+import {FormatItemComponent} from './components/format-item/format-item.component';
 import {FormatListComponent} from './components/format-list-component/format-list.component';
 import {IconService} from './services/icon.service';
 import {UnitProviderService} from './services/unit-provider.service';
@@ -110,8 +108,7 @@ import {ExistingAdaptersComponent} from "./components/data-marketplace/existing-
         EventSchemaPreviewComponent,
         ExistingAdaptersComponent,
         FilterPipe,
-        FormatComponent,
-        FormatFormComponent,
+        FormatItemComponent,
         FormatListComponent,
         NewAdapterComponent,
         PipelineElementRuntimeInfoComponent,

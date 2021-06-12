@@ -21,11 +21,11 @@ import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { FormatDescription } from '../../../core-model/gen/streampipes-model';
 
 @Component({
-  selector: 'sp-format',
-  templateUrl: './format.component.html',
-  styleUrls: ['./format.component.css'],
+  selector: 'sp-format-item',
+  templateUrl: './format-item.component.html',
+  styleUrls: ['./format-item.component.css'],
 })
-export class FormatComponent {
+export class FormatItemComponent {
   @Input()
   format: FormatDescription;
   @Input()

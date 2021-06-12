@@ -27,10 +27,11 @@ import { FormatDescription } from '../../../core-model/gen/streampipes-model';
 
 export class FormatListComponent {
 
-    @Input() selectedFormat: FormatDescription;
+    @Input() public selectedFormat: FormatDescription;
     @Input() allFormats: FormatDescription[];
+
     @Output() validateEmitter = new EventEmitter();
-    @Output() selectedFormatEmitter = new EventEmitter();
+    @Output() public selectedFormatEmitter = new EventEmitter<FormatDescription>();
 
     constructor() {
     }
