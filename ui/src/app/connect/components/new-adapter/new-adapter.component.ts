@@ -26,16 +26,14 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {MatDialog} from '@angular/material/dialog';
-import {MatStepper} from '@angular/material/stepper';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatStepper } from '@angular/material/stepper';
 import {
   AdapterDescription,
   AdapterDescriptionUnion,
   EventProperty,
   EventRateTransformationRuleDescription,
   EventSchema,
-  FormatDescription,
   GenericAdapterSetDescription,
   GenericAdapterStreamDescription,
   RemoveDuplicatesTransformationRuleDescription,
@@ -43,19 +41,18 @@ import {
   SpecificAdapterStreamDescription,
   TransformationRuleDescriptionUnion
 } from '../../../core-model/gen/streampipes-model';
-import {ShepherdService} from '../../../services/tour/shepherd.service';
-import {Logger} from '../../../shared/logger/default-log.service';
-import {ConnectService} from '../../services/connect.service';
-import {TimestampPipe} from '../../filter/timestamp.pipe';
-import {ConfigurationInfo} from '../../model/ConfigurationInfo';
-import {RestService} from '../../services/rest.service';
-import {EventSchemaComponent} from '../schema-editor/event-schema/event-schema.component';
-import {TransformationRuleService} from '../../services/transformation-rule.service';
-import {AdapterStartedDialog} from '../../dialog/adapter-started/adapter-started-dialog.component';
-import {IconService} from '../../services/icon.service';
-import {DialogService} from "../../../core-ui/dialog/base-dialog/base-dialog.service";
-import {AdapterUploadDialog} from "../../dialog/adapter-upload/adapter-upload-dialog.component";
-import {PanelType} from "../../../core-ui/dialog/base-dialog/base-dialog.model";
+import { ShepherdService } from '../../../services/tour/shepherd.service';
+import { Logger } from '../../../shared/logger/default-log.service';
+import { ConnectService } from '../../services/connect.service';
+import { TimestampPipe } from '../../filter/timestamp.pipe';
+import { ConfigurationInfo } from '../../model/ConfigurationInfo';
+import { RestService } from '../../services/rest.service';
+import { EventSchemaComponent } from '../schema-editor/event-schema/event-schema.component';
+import { TransformationRuleService } from '../../services/transformation-rule.service';
+import { AdapterStartedDialog } from '../../dialog/adapter-started/adapter-started-dialog.component';
+import { IconService } from '../../services/icon.service';
+import { DialogService } from '../../../core-ui/dialog/base-dialog/base-dialog.service';
+import { PanelType } from '../../../core-ui/dialog/base-dialog/base-dialog.model';
 
 @Component({
     selector: 'sp-new-adapter',
@@ -82,7 +79,6 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
 
     @ViewChild('stepper', { static: true }) myStepper: MatStepper;
 
-    allFormats: FormatDescription[] = [];
 
     protocolConfigurationValid: boolean;
     formatConfigurationValid: boolean;
@@ -122,7 +118,6 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
     isPreviewEnabled = false;
 
     parentForm: FormGroup;
-    formatForm: FormGroup;
     adapterSettingsFormValid = false;
     viewInitialized = false;
 
@@ -131,7 +126,7 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
         private restService: RestService,
         private transformationRuleService: TransformationRuleService,
         private dialogService: DialogService,
-        private ShepherdService: ShepherdService,
+        private shepherdService: ShepherdService,
         private connectService: ConnectService,
         private _formBuilder: FormBuilder,
         private iconService: IconService,
@@ -155,29 +150,12 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
         this.parentForm = this._formBuilder.group({
         });
 
-        this.formatForm = this._formBuilder.group({
-        });
 
         this.isGenericAdapter = this.connectService.isGenericDescription(this.adapter);
         this.isDataSetDescription = this.connectService.isDataSetDescription(this.adapter);
         this.isDataStreamDescription = this.connectService.isDataStreamDescription(this.adapter);
         this.formatConfigurationValid = false;
 
-        if (this.adapter instanceof GenericAdapterSetDescription) {
-            if ((this.adapter as GenericAdapterSetDescription).formatDescription != undefined) {
-                this.formatConfigurationValid = true;
-            }
-        }
-
-        if (this.adapter instanceof GenericAdapterStreamDescription) {
-            if ((this.adapter as GenericAdapterStreamDescription).formatDescription != undefined) {
-                this.formatConfigurationValid = true;
-            }
-        }
-
-        this.restService.getFormats().subscribe(x => {
-            this.allFormats = x.list;
-        });
 
         this.startAdapterFormGroup = this._formBuilder.group({
             startAdapterFormCtrl: ['', Validators.required]
@@ -203,10 +181,6 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
 
         this.parentForm.statusChanges.subscribe((status) => {
             this.adapterSettingsFormValid = this.viewInitialized && this.parentForm.valid;
-        });
-
-        this.formatForm.statusChanges.subscribe((status) => {
-          this.validateFormat(this.viewInitialized && this.formatForm.valid);
         });
     }
 
@@ -235,19 +209,19 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
             this.adapter.rules.push(eventRate);
         }
 
-        let dialogRef = this.dialogService.open(AdapterStartedDialog,{
+        const dialogRef = this.dialogService.open(AdapterStartedDialog, {
             panelType: PanelType.STANDARD_PANEL,
-            title: "Adapter generation",
-            width: "70vw",
+            title: 'Adapter generation',
+            width: '70vw',
             data: {
-                "adapter": this.adapter,
-                "storeAsTemplate": storeAsTemplate,
-                "saveInDataLake": this.saveInDataLake,
-                "dataLakeTimestampField": this.dataLakeTimestampField
+                'adapter': this.adapter,
+                'storeAsTemplate': storeAsTemplate,
+                'saveInDataLake': this.saveInDataLake,
+                'dataLakeTimestampField': this.dataLakeTimestampField
             }
         });
 
-        this.ShepherdService.trigger('button-startAdapter');
+        this.shepherdService.trigger('button-startAdapter');
 
         dialogRef.afterClosed().subscribe(result => {
             this.updateAdapterEmitter.emit();
@@ -276,12 +250,12 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
     }
 
     clickProtocolSettingsNextButton(stepper: MatStepper) {
-        this.ShepherdService.trigger('specific-settings-next-button');
+        this.shepherdService.trigger('specific-settings-next-button');
         this.goForward(stepper);
     }
 
     clickSpecificSettingsNextButton(stepper: MatStepper) {
-        this.ShepherdService.trigger('specific-settings-next-button');
+        this.shepherdService.trigger('specific-settings-next-button');
         this.guessEventSchema();
         this.goForward(stepper);
     }
@@ -297,7 +271,7 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
             this.dataLakeTimestampField = this.timestampPropertiesInSchema[0].runtimeName;
         }
 
-        this.ShepherdService.trigger('event-schema-next-button');
+        this.shepherdService.trigger('event-schema-next-button');
         this.goForward(stepper);
 
         if (this.adapter instanceof GenericAdapterSetDescription || this.adapter instanceof SpecificAdapterSetDescription) {
@@ -307,7 +281,7 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
     }
 
     clickFormatSelectionNextButton(stepper: MatStepper) {
-        this.ShepherdService.trigger('format-selection-next-button');
+        this.shepherdService.trigger('format-selection-next-button');
         this.guessEventSchema();
         this.goForward(stepper);
     }

@@ -89,54 +89,23 @@
         </mat-step>
 
         <mat-step *ngIf="isGenericAdapter">
-            <form>
-                <ng-template matStepLabel>Select Format</ng-template>
+                <sp-select-format
+                        [adapterDescription]="adapter"
+                        [completedStaticProperty]="completedStaticProperty"
+                        (selectedFormatEmitter)="formatSelected($event)"
+                        (validateEmitter)="validateFormat($event)"
+                        >
+                </sp-select-format>
 
-                <div [ngClass]="{'disable-editing': !isEditable}">
-                    <div class="assemblyOptions sp-blue-bg">
-                        <h4>Select format</h4>
-                    </div>
-                    <div class="sp-blue-border padding">
-                        <sp-format-list fxFlex="100"
-                                        [allFormats]="allFormats"
-                                        (selectedFormatEmitter)="formatSelected($event)"
-                                        [selectedFormat]="adapter.formatDescription">
-                        </sp-format-list>
-                    </div>
-
-                    <div class="assemblyOptions sp-blue-bg">
-                        <h4>Configure format</h4>
-                    </div>
-                    <div class="sp-blue-border padding">
-                        <div fxFlex="100" *ngIf="adapter.formatDescription">
-                            <form [formGroup]="formatForm" fxFlex="100">
-                                <app-static-property *ngFor="let config of adapter.formatDescription.config"
-                                                     [staticProperty]="config"
-                                                     [staticProperties]="adapter.config"
-                                                     [adapterId]="adapter.appId"
-                                                     [parentForm]="formatForm"
-                                                     [fieldName]="config.internalName"
-                                                     (updateEmitter)="triggerUpdate($event)"
-                                                     [completedStaticProperty]="completedStaticProperty">
-
-                                </app-static-property>
-                                <h5 *ngIf="adapter.formatDescription.config.length === 0" style="text-align:center;">(no further
-                                    configuration needed)</h5>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
-                <div fxLayoutAlign="end">
-                    <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
-                    <button class="mat-basic stepper-button" mat-raised-button (click)="goBack(stepper)">Back</button>
-                    <button class="stepper-button" id="format-selection-next-button"
+            <div fxLayoutAlign="end">
+                <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
+                <button class="mat-basic stepper-button" mat-raised-button (click)="goBack(stepper)">Back</button>
+                <button class="stepper-button" id="format-selection-next-button"
                         [disabled]="!formatConfigurationValid" (click)="clickFormatSelectionNextButton(stepper)"
                         color="primary" mat-raised-button>
-                        Next
-                    </button>
-                </div>
-            </form>
+                    Next
+                </button>
+            </div>
 
         </mat-step>
 

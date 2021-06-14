@@ -45,7 +45,7 @@ import {AdapterDescriptionComponent} from './components/data-marketplace/adapter
 import {DataMarketplaceComponent} from './components/data-marketplace/data-marketplace.component';
 import {DataMarketplaceService} from './services/data-marketplace.service';
 import {FormatItemComponent} from './components/format-item/format-item.component';
-import {FormatListComponent} from './components/format-list-component/format-list.component';
+import {FormatListComponent} from './components/format-list/format-list.component';
 import {IconService} from './services/icon.service';
 import {UnitProviderService} from './services/unit-provider.service';
 
@@ -69,6 +69,7 @@ import {EventSchemaPreviewComponent} from './components/schema-editor/event-sche
 import {CoreUiModule} from "../core-ui/core-ui.module";
 import {EditCorrectionValueComponent} from './dialog/edit-event-property/components/edit-correction-value/edit-correction-value.component';
 import {ExistingAdaptersComponent} from "./components/data-marketplace/existing-adapters/existing-adapters.component";
+import { SelectFormatComponent } from './components/select-format/select-format.component';
 
 @NgModule({
     imports: [
@@ -113,7 +114,8 @@ import {ExistingAdaptersComponent} from "./components/data-marketplace/existing-
         NewAdapterComponent,
         PipelineElementRuntimeInfoComponent,
         TimestampPipe,
-        EditCorrectionValueComponent
+        EditCorrectionValueComponent,
+        SelectFormatComponent
     ],
     providers: [
         RestService,
