@@ -238,10 +238,6 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
         this.triggerDialog(false);
     }
 
-    validateProtocol(valid) {
-        this.protocolConfigurationValid = valid;
-    }
-
     validateFormat(valid) {
         this.formatConfigurationValid = valid;
     }
