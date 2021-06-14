@@ -22,6 +22,7 @@ import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.dataexplorer.utils.DataExplorerUtils;
 import org.apache.streampipes.dataexplorer.v4.params.*;
 import org.apache.streampipes.dataexplorer.v4.query.elements.*;
+import org.apache.streampipes.dataexplorer.v4.utils.DataLakeManagementUtils;
 import org.apache.streampipes.model.datalake.DataResult;
 import org.influxdb.InfluxDB;
 import org.influxdb.dto.Query;
@@ -85,35 +86,35 @@ public class DataExplorerQueryV4 {
     protected List<QueryElement> getQueryElements() {
         List<QueryElement> queryElements = new ArrayList<>();
 
-        if (this.params.containsKey("SELECT")) {
-            queryElements.add(new SelectFromStatement((SelectFromStatementParams) this.params.get("SELECT")));
+        if (this.params.containsKey(DataLakeManagementUtils.SELECT_FROM)) {
+            queryElements.add(new SelectFromStatement((SelectFromStatementParams) this.params.get(DataLakeManagementUtils.SELECT_FROM)));
         } else {
-            queryElements.add(new DeleteFromStatement((DeleteFromStatementParams) this.params.get("DELETE")));
+            queryElements.add(new DeleteFromStatement((DeleteFromStatementParams) this.params.get(DataLakeManagementUtils.SELECT_FROM)));
         }
 
-        if (this.params.containsKey("WHERE")) {
-            queryElements.add(new TimeBoundary((TimeBoundaryParams) this.params.get("WHERE")));
+        if (this.params.containsKey(DataLakeManagementUtils.WHERE)) {
+            queryElements.add(new TimeBoundary((TimeBoundaryParams) this.params.get(DataLakeManagementUtils.WHERE)));
         }
 
-        if (this.params.containsKey("GROUPBYTIME")) {
-            queryElements.add(new GroupingByTime((GroupingByTimeParams) this.params.get("GROUPBYTIME")));
+        if (this.params.containsKey(DataLakeManagementUtils.GROUP_BY_TIME)) {
+            queryElements.add(new GroupingByTime((GroupingByTimeParams) this.params.get(DataLakeManagementUtils.GROUP_BY_TIME)));
 
-        } else if (this.params.containsKey("GROUPBY")) {
-            queryElements.add(new GroupingByTags((GroupingByTagsParams) this.params.get("GROUPBY")));
+        } else if (this.params.containsKey(DataLakeManagementUtils.GROUP_BY_TAGS)) {
+            queryElements.add(new GroupingByTags((GroupingByTagsParams) this.params.get(DataLakeManagementUtils.GROUP_BY_TAGS)));
         }
 
-        if (this.params.containsKey("DESCENDING")) {
-            queryElements.add(new OrderingByTime((OrderingByTimeParams) this.params.get("DESCENDING")));
-        } else if (this.params.containsKey("SELECT")) {
-            queryElements.add(new OrderingByTime(OrderingByTimeParams.from(this.params.get("SELECT").getIndex(), "ASC")));
+        if (this.params.containsKey(DataLakeManagementUtils.ORDER_DESCENDING)) {
+            queryElements.add(new OrderingByTime((OrderingByTimeParams) this.params.get(DataLakeManagementUtils.ORDER_DESCENDING)));
+        } else if (this.params.containsKey(DataLakeManagementUtils.SELECT_FROM)) {
+            queryElements.add(new OrderingByTime(OrderingByTimeParams.from(this.params.get(DataLakeManagementUtils.SELECT_FROM).getIndex(), "ASC")));
         }
 
-        if (this.params.containsKey("LIMIT")) {
-            queryElements.add(new ItemLimitation((ItemLimitationParams) this.params.get("LIMIT")));
+        if (this.params.containsKey(DataLakeManagementUtils.LIMIT)) {
+            queryElements.add(new ItemLimitation((ItemLimitationParams) this.params.get(DataLakeManagementUtils.LIMIT)));
         }
 
-        if (this.params.containsKey("OFFSET")) {
-            queryElements.add(new Offset((OffsetParams) this.params.get("OFFSET")));
+        if (this.params.containsKey(DataLakeManagementUtils.OFFSET)) {
+            queryElements.add(new Offset((OffsetParams) this.params.get(DataLakeManagementUtils.OFFSET)));
         }
 
         return queryElements;
