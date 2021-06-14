@@ -40,15 +40,14 @@
                 <i class="material-icons">close</i>
             </button>
         </div>
-
     </div>
     <mat-horizontal-stepper [linear]="true" #stepper>
 
         <mat-step *ngIf="!isGenericAdapter">
-            <sp-specific-adapter-settings
+            <sp-specific-adapter-configuration
                     [adapterDescription]="adapter"
                     (validateEmitter)="validateSpecificAdapterForm($event)">
-            </sp-specific-adapter-settings>
+            </sp-specific-adapter-configuration>
 
             <div fxLayoutAlign="end">
                 <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
@@ -61,10 +60,10 @@
         </mat-step>
 
         <mat-step *ngIf="isGenericAdapter">
-            <sp-generic-adapter-settings
+            <sp-generic-adapter-configuration
                     [adapterDescription]="adapter"
                     (validateEmitter)="validateGenericAdapterForm($event)">
-            </sp-generic-adapter-settings>
+            </sp-generic-adapter-configuration>
 
 
             <div fxLayoutAlign="end">
@@ -78,10 +77,10 @@
         </mat-step>
 
         <mat-step *ngIf="isGenericAdapter">
-            <sp-select-format
+            <sp-format-configuration
                     [adapterDescription]="adapter"
                     (validateEmitter)="validateFormat($event)">
-            </sp-select-format>
+            </sp-format-configuration>
 
             <div fxLayoutAlign="end">
                 <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>

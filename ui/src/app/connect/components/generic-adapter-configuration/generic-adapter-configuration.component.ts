@@ -5,15 +5,14 @@ import {
   GenericAdapterStreamDescription,
   ProtocolDescription
 } from '../../../core-model/gen/streampipes-model';
-import { ConfigurationInfo } from '../../model/ConfigurationInfo';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
-  selector: 'sp-generic-adapter-settings',
-  templateUrl: './generic-adapter-settings.component.html',
-  styleUrls: ['./generic-adapter-settings.component.css']
+  selector: 'sp-generic-adapter-configuration',
+  templateUrl: './generic-adapter-configuration.component.html',
+  styleUrls: ['./generic-adapter-configuration.component.css']
 })
-export class GenericAdapterSettingsComponent implements OnInit {
+export class GenericAdapterConfigurationComponent implements OnInit {
 
   /**
    * Adapter description the selected format is added to

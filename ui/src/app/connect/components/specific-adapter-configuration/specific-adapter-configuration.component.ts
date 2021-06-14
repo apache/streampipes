@@ -1,14 +1,13 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AdapterDescriptionUnion } from '../../../core-model/gen/streampipes-model';
-import { ConfigurationInfo } from '../../model/ConfigurationInfo';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
-  selector: 'sp-specific-adapter-settings',
-  templateUrl: './specific-adapter-settings.component.html',
-  styleUrls: ['./specific-adapter-settings.component.css']
+  selector: 'sp-specific-adapter-configuration',
+  templateUrl: './specific-adapter-configuration.component.html',
+  styleUrls: ['./specific-adapter-configuration.component.css']
 })
-export class SpecificAdapterSettingsComponent implements OnInit {
+export class SpecificAdapterConfigurationComponent implements OnInit {
 
   /**
    * Adapter description the selected format is added to

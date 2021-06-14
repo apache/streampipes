@@ -5,16 +5,15 @@ import {
   GenericAdapterSetDescription,
   GenericAdapterStreamDescription
 } from '../../../core-model/gen/streampipes-model';
-import { ConfigurationInfo } from '../../model/ConfigurationInfo';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { RestService } from '../../services/rest.service';
 
 @Component({
-  selector: 'sp-select-format',
-  templateUrl: './select-format.component.html',
-  styleUrls: ['./select-format.component.css']
+  selector: 'sp-format-configuration',
+  templateUrl: './format-configuration.component.html',
+  styleUrls: ['./format-configuration.component.css']
 })
-export class SelectFormatComponent implements OnInit {
+export class FormatConfigurationComponent implements OnInit {
 
   /**
    * Adapter description the selected format is added to

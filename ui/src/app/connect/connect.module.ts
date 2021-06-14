@@ -70,10 +70,11 @@ import { CoreUiModule } from '../core-ui/core-ui.module';
 // tslint:disable-next-line:max-line-length
 import { EditCorrectionValueComponent } from './dialog/edit-event-property/components/edit-correction-value/edit-correction-value.component';
 import { ExistingAdaptersComponent } from './components/data-marketplace/existing-adapters/existing-adapters.component';
-import { SelectFormatComponent } from './components/select-format/select-format.component';
-import { GenericAdapterSettingsComponent } from './components/generic-adapter-settings/generic-adapter-settings.component';
-import { SpecificAdapterSettingsComponent } from './components/specific-adapter-settings/specific-adapter-settings.component';
+// tslint:disable-next-line:max-line-length
+import { SpecificAdapterConfigurationComponent } from './components/specific-adapter-configuration/specific-adapter-configuration.component';
 import { ConfigurationGroupComponent } from './components/configuration-group/configuration-group.component';
+import { FormatConfigurationComponent } from './components/format-configuration/format-configuration.component';
+import { GenericAdapterConfigurationComponent } from './components/generic-adapter-configuration/generic-adapter-configuration.component';
 
 @NgModule({
     imports: [
@@ -119,9 +120,9 @@ import { ConfigurationGroupComponent } from './components/configuration-group/co
         PipelineElementRuntimeInfoComponent,
         TimestampPipe,
         EditCorrectionValueComponent,
-        SelectFormatComponent,
-        GenericAdapterSettingsComponent,
-        SpecificAdapterSettingsComponent,
+        FormatConfigurationComponent,
+        GenericAdapterConfigurationComponent,
+        SpecificAdapterConfigurationComponent,
         ConfigurationGroupComponent
     ],
     providers: [
@@ -136,6 +137,11 @@ import { ConfigurationGroupComponent } from './components/configuration-group/co
         TimestampPipe,
         xsService,
     ],
-    entryComponents: [ConnectComponent, AdapterStartedDialog, AdapterExportDialog, AdapterUploadDialog, EditEventPropertyComponent],
+    entryComponents: [
+        ConnectComponent,
+        AdapterStartedDialog,
+        AdapterExportDialog,
+        AdapterUploadDialog,
+        EditEventPropertyComponent],
 })
 export class ConnectModule { }
