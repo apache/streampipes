@@ -36,8 +36,6 @@ export class SelectFormatComponent implements OnInit {
    */
   allFormats: FormatDescription[] = [];
 
-  completedStaticProperty: ConfigurationInfo;
-
   /**
    * The form group to validate the configuration for the foramt
    */
@@ -75,10 +73,6 @@ export class SelectFormatComponent implements OnInit {
         this.validateEmitter.emit(true);
       }
     }
-  }
-
-  triggerUpdate(configurationInfo: ConfigurationInfo) {
-    this.completedStaticProperty = {...configurationInfo};
   }
 
   formatSelected(selectedFormat) {

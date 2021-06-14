@@ -20,9 +20,6 @@ export class SpecificAdapterSettingsComponent implements OnInit {
    */
   @Output() validateEmitter: EventEmitter<boolean> = new EventEmitter();
 
-
-  completedStaticProperty: ConfigurationInfo;
-
   specificAdapterForm: FormGroup;
 
   constructor(
@@ -36,10 +33,5 @@ export class SpecificAdapterSettingsComponent implements OnInit {
       this.validateEmitter.emit(this.specificAdapterForm.valid);
     });
   }
-
-  triggerUpdate(configurationInfo: ConfigurationInfo) {
-    this.completedStaticProperty = {...configurationInfo};
-  }
-
 
 }

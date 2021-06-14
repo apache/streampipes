@@ -17,23 +17,14 @@
     </div>
 
     <div *ngIf="selectedFormat">
-
         <div *ngIf="selectedFormat.config.length > 0">
-            <div class="sp-blue-border padding" style="padding: 15px;">
-                <form [formGroup]="formatForm" fxFlex="100">
-                    <app-static-property *ngFor="let config of selectedFormat.config"
-                                         [staticProperty]="config"
-                                         [staticProperties]="adapterDescription.config"
-                                         [adapterId]="adapterDescription.appId"
-                                         [parentForm]="formatForm"
-                                         [fieldName]="config.internalName"
-                                         (updateEmitter)="triggerUpdate($event)"
-                                         [completedStaticProperty]="completedStaticProperty">
-
-                    </app-static-property>
-                </form>
-            </div>
+            <sp-configuration-group
+                    [configurationGroup]="formatForm"
+                    [adapterId]="adapterDescription.appId"
+                    [configuration]="selectedFormat.config">
+            </sp-configuration-group>
         </div>
+
         <div *ngIf="selectedFormat.config.length === 0" class="sp-blue-border padding" style="padding: 15px;">
             <div  style="text-align:center;">
                 <h5 >(no further configuration needed)</h5>

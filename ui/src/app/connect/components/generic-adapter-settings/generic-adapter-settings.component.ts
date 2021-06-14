@@ -25,8 +25,6 @@ export class GenericAdapterSettingsComponent implements OnInit {
    */
   @Output() validateEmitter: EventEmitter<boolean> = new EventEmitter();
 
-  completedStaticProperty: ConfigurationInfo;
-
   genericAdapterForm: FormGroup;
 
   protocolDescription: ProtocolDescription;
@@ -47,10 +45,6 @@ export class GenericAdapterSettingsComponent implements OnInit {
     this.genericAdapterForm.statusChanges.subscribe((status) => {
       this.validateEmitter.emit(this.genericAdapterForm.valid);
     });
-  }
-
-  triggerUpdate(configurationInfo: ConfigurationInfo) {
-    this.completedStaticProperty = {...configurationInfo};
   }
 
 }

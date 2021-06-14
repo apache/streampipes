@@ -5,21 +5,13 @@
         <div class="assemblyOptions sp-blue-bg">
             <h4 >Protocol settings</h4>
         </div>
-        <div class="sp-blue-border padding" style="padding: 15px;">
-            <form [formGroup]="genericAdapterForm" fxFlex="100">
-                <div fxFlex="100" >
-                    <app-static-property *ngFor="let config of protocolDescription.config"
-                                         [staticProperty]="config"
-                                         [staticProperties]="protocolDescription.config"
-                                         [adapterId]="adapterDescription.appId"
-                                         [parentForm]="genericAdapterForm"
-                                         [fieldName]="config.internalName"
-                                         (updateEmitter)="triggerUpdate($event)"
-                                         [completedStaticProperty]="completedStaticProperty">
-                    </app-static-property>
-                </div>
-            </form>
-        </div>
+
+        <sp-configuration-group
+                [configurationGroup]="genericAdapterForm"
+                [adapterId]="adapterDescription.appId"
+                [configuration]="adapterDescription.protocolDescription.config">
+        </sp-configuration-group>
+
     </div>
 
 </div>

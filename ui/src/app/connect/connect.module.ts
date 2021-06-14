@@ -73,6 +73,7 @@ import { ExistingAdaptersComponent } from './components/data-marketplace/existin
 import { SelectFormatComponent } from './components/select-format/select-format.component';
 import { GenericAdapterSettingsComponent } from './components/generic-adapter-settings/generic-adapter-settings.component';
 import { SpecificAdapterSettingsComponent } from './components/specific-adapter-settings/specific-adapter-settings.component';
+import { ConfigurationGroupComponent } from './components/configuration-group/configuration-group.component';
 
 @NgModule({
     imports: [
@@ -120,7 +121,8 @@ import { SpecificAdapterSettingsComponent } from './components/specific-adapter-
         EditCorrectionValueComponent,
         SelectFormatComponent,
         GenericAdapterSettingsComponent,
-        SpecificAdapterSettingsComponent
+        SpecificAdapterSettingsComponent,
+        ConfigurationGroupComponent
     ],
     providers: [
         RestService,
