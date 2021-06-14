@@ -1,34 +1,36 @@
-<ng-template matStepLabel>Select Format</ng-template>
+<div style="margin-bottom: 2%;">
+    <ng-template matStepLabel>Select Format</ng-template>
 
-<div class="assemblyOptions sp-blue-bg">
-    <h4>Select format</h4>
-</div>
-<div class="sp-blue-border padding">
-    <sp-format-list fxFlex="100"
-                    [allFormats]="allFormats"
-                    (selectedFormatEmitter)="formatSelected($event)"
-                    [selectedFormat]="selectedFormat">
-    </sp-format-list>
-</div>
+    <div class="assemblyOptions sp-blue-bg">
+        <h4>Select format</h4>
+    </div>
+    <div class="sp-blue-border padding">
+        <sp-format-list fxFlex="100"
+                        [allFormats]="allFormats"
+                        (selectedFormatEmitter)="formatSelected($event)"
+                        [selectedFormat]="selectedFormat">
+        </sp-format-list>
+    </div>
 
-<div class="assemblyOptions sp-blue-bg">
-    <h4>Configure format</h4>
-</div>
-<div class="sp-blue-border padding">
-    <div fxFlex="100" *ngIf="selectedFormat">
-        <form [formGroup]="formatForm" fxFlex="100">
-            <app-static-property *ngFor="let config of selectedFormat.config"
-                                 [staticProperty]="config"
-                                 [staticProperties]="adapterDescription.config"
-                                 [adapterId]="adapterDescription.appId"
-                                 [parentForm]="formatForm"
-                                 [fieldName]="config.internalName"
-                                 (updateEmitter)="triggerUpdate($event)"
-                                 [completedStaticProperty]="completedStaticProperty">
+    <div class="assemblyOptions sp-blue-bg">
+        <h4>Configure format</h4>
+    </div>
+    <div class="sp-blue-border padding format-configuration">
+        <div fxFlex="100" *ngIf="selectedFormat">
+            <form [formGroup]="formatForm" fxFlex="100">
+                <app-static-property *ngFor="let config of selectedFormat.config"
+                                     [staticProperty]="config"
+                                     [staticProperties]="adapterDescription.config"
+                                     [adapterId]="adapterDescription.appId"
+                                     [parentForm]="formatForm"
+                                     [fieldName]="config.internalName"
+                                     (updateEmitter)="triggerUpdate($event)"
+                                     [completedStaticProperty]="completedStaticProperty">
 
-            </app-static-property>
-            <h5 *ngIf="selectedFormat.config.length === 0" style="text-align:center;">(no further
-                configuration needed)</h5>
-        </form>
+                </app-static-property>
+                <h5 *ngIf="selectedFormat.config.length === 0" style="text-align:center;">(no further
+                    configuration needed)</h5>
+            </form>
+        </div>
     </div>
 </div>

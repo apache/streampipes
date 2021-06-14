@@ -341,18 +341,6 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
         this.adapter.rules = transformationRules;
     }
 
-    formatSelected(selectedFormat) {
-        if (
-            this.adapter instanceof GenericAdapterSetDescription ||
-            this.adapter instanceof GenericAdapterStreamDescription
-        ) {
-            this.adapter.formatDescription = selectedFormat;
-            if (selectedFormat.config.length === 0) {
-                this.validateFormat(true);
-            }
-        }
-    }
-
     goBack(stepper: MatStepper) {
         this.myStepper.selectedIndex = this.myStepper.selectedIndex - 1;
     }

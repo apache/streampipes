@@ -89,19 +89,17 @@
         </mat-step>
 
         <mat-step *ngIf="isGenericAdapter">
-                <sp-select-format
-                        [adapterDescription]="adapter"
-                        [completedStaticProperty]="completedStaticProperty"
-                        (selectedFormatEmitter)="formatSelected($event)"
-                        (validateEmitter)="validateFormat($event)"
-                        >
-                </sp-select-format>
+            <sp-select-format
+                    [adapterDescription]="adapter"
+                    (validateEmitter)="validateFormat($event)">
+            </sp-select-format>
 
             <div fxLayoutAlign="end">
                 <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
                 <button class="mat-basic stepper-button" mat-raised-button (click)="goBack(stepper)">Back</button>
                 <button class="stepper-button" id="format-selection-next-button"
-                        [disabled]="!formatConfigurationValid" (click)="clickFormatSelectionNextButton(stepper)"
+                        [disabled]="!formatConfigurationValid"
+                        (click)="clickFormatSelectionNextButton(stepper)"
                         color="primary" mat-raised-button>
                     Next
                 </button>
@@ -112,9 +110,12 @@
         <mat-step>
             <ng-template matStepLabel>Define Event Schema</ng-template>
 
-            <app-event-schema #eschema fxLayout="column" fxFlex="100" [(isEditable)]="isEditable"
-                [(adapterDescription)]="adapter" [(eventSchema)]="eventSchema" [(oldEventSchema)]="oldEventSchema"
-                (previewEnabled)="showPreview($event)">
+            <app-event-schema #eschema fxLayout="column" fxFlex="100"
+                              [(isEditable)]="isEditable"
+                              [(adapterDescription)]="adapter"
+                              [(eventSchema)]="eventSchema"
+                              [(oldEventSchema)]="oldEventSchema"
+                              (previewEnabled)="showPreview($event)">
             </app-event-schema>
 
             <div fxLayoutAlign="end">
