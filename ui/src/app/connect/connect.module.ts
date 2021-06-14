@@ -75,6 +75,8 @@ import { SpecificAdapterConfigurationComponent } from './components/specific-ada
 import { ConfigurationGroupComponent } from './components/configuration-group/configuration-group.component';
 import { FormatConfigurationComponent } from './components/format-configuration/format-configuration.component';
 import { GenericAdapterConfigurationComponent } from './components/generic-adapter-configuration/generic-adapter-configuration.component';
+import { ErrorMessageComponent } from './components/schema-editor/error-message/error-message.component';
+import { LoadingMessageComponent } from './components/schema-editor/loading-message/loading-message.component';
 
 @NgModule({
     imports: [
@@ -123,7 +125,9 @@ import { GenericAdapterConfigurationComponent } from './components/generic-adapt
         FormatConfigurationComponent,
         GenericAdapterConfigurationComponent,
         SpecificAdapterConfigurationComponent,
-        ConfigurationGroupComponent
+        ConfigurationGroupComponent,
+        ErrorMessageComponent,
+        LoadingMessageComponent
     ],
     providers: [
         RestService,

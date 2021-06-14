@@ -25,10 +25,10 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import {RestService} from '../../../services/rest.service';
-import {ITreeOptions, TreeComponent} from 'angular-tree-component';
-import {UUID} from 'angular2-uuid';
-import {DataTypesService} from '../../../services/data-type.service';
+import { RestService } from '../../../services/rest.service';
+import { ITreeOptions, TreeComponent } from 'angular-tree-component';
+import { UUID } from 'angular2-uuid';
+import { DataTypesService } from '../../../services/data-type.service';
 import {
   AdapterDescription,
   EventProperty,
@@ -37,10 +37,10 @@ import {
   EventSchema,
   GuessSchema,
   Notification
-} from "../../../../core-model/gen/streampipes-model";
+} from '../../../../core-model/gen/streampipes-model';
 
 @Component({
-  selector: 'app-event-schema',
+  selector: 'sp-event-schema',
   templateUrl: './event-schema.component.html',
   styleUrls: ['./event-schema.component.css']
 })
@@ -61,7 +61,7 @@ export class EventSchemaComponent implements OnChanges {
   @ViewChild(TreeComponent, { static: true }) tree: TreeComponent;
 
   schemaGuess: GuessSchema = new GuessSchema();
-  countSelected: number = 0;
+  countSelected = 0;
   isLoading = false;
   isError = false;
   isPreviewEnabled = false;

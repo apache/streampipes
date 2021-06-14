@@ -98,13 +98,12 @@
         <mat-step>
             <ng-template matStepLabel>Define Event Schema</ng-template>
 
-            <app-event-schema #eschema fxLayout="column" fxFlex="100"
+            <sp-event-schema #eschema fxLayout="column" fxFlex="100"
                               [(isEditable)]="isEditable"
-                              [(adapterDescription)]="adapter"
+                              [adapterDescription]="adapter"
                               [(eventSchema)]="eventSchema"
-                              [(oldEventSchema)]="oldEventSchema"
-                              (previewEnabled)="showPreview($event)">
-            </app-event-schema>
+                              [(oldEventSchema)]="oldEventSchema">
+            </sp-event-schema>
 
             <div fxLayoutAlign="end">
                 <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>

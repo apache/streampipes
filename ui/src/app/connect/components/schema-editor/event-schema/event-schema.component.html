@@ -36,11 +36,9 @@
                         <button color="primary" mat-button (click)=guessSchema()>
                             <mat-icon matTooltip="Refresh Schema">refresh</mat-icon>
                         </button>
-                        <!--
                         <button color="primary" mat-button (click)=togglePreview()>
                             <mat-icon matTooltip="Show preview of schema">play_arrow</mat-icon>
                         </button>
-                    -->
                     </div>
                     <div>
                         <button style="padding-right:0" color="primary" mat-button [disabled]="countSelected == 0"
@@ -53,49 +51,28 @@
         </div>
         <div class="sp-blue-border padding">
 
-            <div fxLayout="column" *ngIf="isLoading">
-                <div fxLayoutAlign="center">
-                    <mat-spinner fxLayoutAlign="center" style="margin: 10px 0 5px 0">Loading</mat-spinner>
-                </div>
-                <div fxLayoutAlign="center">
-                    <h3>Guessing the event schema...</h3>
-                </div>
-            </div>
+            <sp-loading-message *ngIf="isLoading"></sp-loading-message>
 
-            <div fxLayout="column" *ngIf="isError">
-                <div fxLayout="row" fxLayoutAlign="center center">
-                    <mat-icon style="margin-top: 10px" class="md-accent">warning</mat-icon>
-                    <span style="width: 10px;"></span>
-                    <h3>Sorry, there was an error while guessing the schema of your configured data source...</h3>
-                </div>
-                <div fxLayout="row" fxLayoutAlign="center center">
-                    <button mat-button class="md-accent">
-                        <div *ngIf="!showErrorMessage" (click)="showErrorMessage = true">Show Details</div>
-                        <div *ngIf="showErrorMessage" (click)="showErrorMessage = false">Hide Details</div>
-                    </button>
-                </div>
-                <div fxLayoutAlign="center center" *ngIf="showErrorMessage">
-                    <div class="error-message">
-                        <div *ngFor="let error of errorMessages" style="margin-bottom: 5px; margin-top: 5px">
-                            <div>{{error.title}}</div>
-                            <div>{{error.description}}</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <sp-error-message
+                    [errorMessages]="errorMessages"
+                    *ngIf="isError">
+            </sp-error-message>
 
-            <div fxLayout="column" fxLayoutAlign="space-evenly stretched" class="drag-drop-tree">
+            <div *ngIf="!isError && !isLoading" fxLayout="column" fxLayoutAlign="space-evenly stretched" class="drag-drop-tree">
                 <tree-root #tree [nodes]="nodes" [options]="options" (updateData)="onUpdateData(tree)">
                     <ng-template #treeNodeTemplate let-node let-index="index">
-                        <event-property-row [node]="node"  [(isEditable)]="isEditable"
-                                            [(eventSchema)]="eventSchema"
-                                            (refreshTreeEmitter)="refreshTree()" [(countSelected)]="countSelected"></event-property-row>
+                        <event-property-row
+                                [node]="node"
+                                [(isEditable)]="isEditable"
+                                [(eventSchema)]="eventSchema"
+                                (refreshTreeEmitter)="refreshTree()"
+                                [(countSelected)]="countSelected"></event-property-row>
                     </ng-template>
                 </tree-root>
             </div>
         </div>
     </div>
     <div fxFlex="0 1 50%" *ngIf="isPreviewEnabled">
-        <app-event-schema-preview [eventSchema]="eventSchema"></app-event-schema-preview>
+        <sp-event-schema-preview [eventSchema]="eventSchema"></sp-event-schema-preview>
     </div>
 </div>

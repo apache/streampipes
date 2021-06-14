@@ -1,0 +1,21 @@
+<div fxLayout="column" >
+    <div fxLayout="row" fxLayoutAlign="center center">
+        <mat-icon style="margin-top: 10px" class="md-accent">warning</mat-icon>
+        <span style="width: 10px;"></span>
+        <h3>Sorry, there was an error while guessing the schema of your configured data source...</h3>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="center center">
+        <button mat-button class="md-accent">
+            <div *ngIf="!showErrorMessage" (click)="showErrorMessage = true">Show Details</div>
+            <div *ngIf="showErrorMessage" (click)="showErrorMessage = false">Hide Details</div>
+        </button>
+    </div>
+    <div fxLayoutAlign="center center" *ngIf="showErrorMessage">
+        <div class="error-message">
+            <div *ngFor="let error of errorMessages" style="margin-bottom: 5px; margin-top: 5px">
+                <div>{{error.title}}</div>
+                <div>{{error.description}}</div>
+            </div>
+        </div>
+    </div>
+</div>

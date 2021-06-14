@@ -18,11 +18,11 @@
 
     <div *ngIf="selectedFormat">
         <div *ngIf="selectedFormat.config.length > 0">
-            <sp-configuration-groupkl
+            <sp-configuration-group
                     [configurationGroup]="formatForm"
                     [adapterId]="adapterDescription.appId"
                     [configuration]="selectedFormat.config">
-            </sp-configuration-groupkl>
+            </sp-configuration-group>
         </div>
 
         <div *ngIf="selectedFormat.config.length === 0" class="sp-blue-border padding" style="padding: 15px;">
