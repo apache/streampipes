@@ -118,7 +118,8 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
     isPreviewEnabled = false;
 
     parentForm: FormGroup;
-    adapterSettingsFormValid = false;
+    specificAdapterSettingsFormValid = false;
+    genericAdapterSettingsFormValid = false;
     viewInitialized = false;
 
     constructor(
@@ -179,14 +180,14 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
             this.oldEventSchema = this.eventSchema;
         }
 
-        this.parentForm.statusChanges.subscribe((status) => {
-            this.adapterSettingsFormValid = this.viewInitialized && this.parentForm.valid;
-        });
+        // this.parentForm.statusChanges.subscribe((status) => {
+        //     this.genericadapterSettingsFormValid  = this.viewInitialized && this.parentForm.valid;
+        // });
     }
 
     ngAfterViewInit() {
         this.viewInitialized = true;
-        this.adapterSettingsFormValid = this.viewInitialized && this.parentForm.valid;
+        // this.genericAdapterSettingsFormValid  = this.viewInitialized && this.parentForm.valid;
         this.changeDetectorRef.detectChanges();
     }
 
@@ -243,6 +244,14 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
 
     validateFormat(valid) {
         this.formatConfigurationValid = valid;
+    }
+
+    validateSpecificAdapterForm(valid) {
+        this.specificAdapterSettingsFormValid = valid;
+    }
+
+    validateGenericAdapterForm(valid) {
+        this.genericAdapterSettingsFormValid = valid;
     }
 
     removeSelection() {

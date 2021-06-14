@@ -1,0 +1,22 @@
+<div style="margin-bottom: 2%;">
+    <ng-template matStepLabel>Settings</ng-template>
+    <div>
+        <div class="assemblyOptions sp-blue-bg">
+            <h4>Basic settings</h4>
+        </div>
+        <div class="sp-blue-border padding" style="padding: 15px;">
+            <form [formGroup]="specificAdapterForm" fxFlex="100">
+                <app-static-property *ngFor="let config of adapterDescription.config"
+                                     [staticProperty]="config"
+                                     [staticProperties]="adapterDescription.config"
+                                     [adapterId]="adapterDescription.appId"
+                                     [parentForm]="specificAdapterForm"
+                                     [fieldName]="config.internalName"
+                                     (updateEmitter)="triggerUpdate($event)"
+                                     [completedStaticProperty]="completedStaticProperty">
+                </app-static-property>
+            </form>
+
+        </div>
+    </div>
+</div>

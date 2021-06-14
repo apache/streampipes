@@ -44,45 +44,34 @@
     </div>
     <mat-horizontal-stepper [linear]="true" #stepper>
 
-        <mat-step>
-            <ng-template matStepLabel>Settings</ng-template>
+        <mat-step *ngIf="!isGenericAdapter">
+            <sp-specific-adapter-settings
+                    [adapterDescription]="adapter"
+                    (validateEmitter)="validateSpecificAdapterForm($event)">
+            </sp-specific-adapter-settings>
 
-            <div [ngClass]="{'disable-editing': !isEditable}">
-                <div class="assemblyOptions sp-blue-bg">
-                    <h4 *ngIf="!isGenericAdapter">Basic settings</h4>
-                    <h4 *ngIf="isGenericAdapter">Protocol settings</h4>
-                </div>
-                <div class="sp-blue-border padding">
-                    <form [formGroup]="parentForm" fxFlex="100">
-                    <app-static-property *ngFor="let config of adapter.config"
-                                         [staticProperty]="config"
-                                         [staticProperties]="adapter.config"
-                                         [adapterId]="adapter.appId"
-                                         [parentForm]="parentForm"
-                                         [fieldName]="config.internalName"
-                        (updateEmitter)="triggerUpdate($event)" [completedStaticProperty]="completedStaticProperty">
-                    </app-static-property>
-                        <div fxFlex="100"  *ngIf="isGenericAdapter">
-                        <app-static-property *ngFor="let config of adapter.protocolDescription.config"
-                                             [staticProperty]="config"
-                                             [staticProperties]="adapter.protocolDescription.config"
-                                             [adapterId]="adapter.appId"
-                                             [parentForm]="parentForm"
-                                             [fieldName]="config.internalName"
-                                             (updateEmitter)="triggerUpdate($event)" [completedStaticProperty]="completedStaticProperty">
-                        </app-static-property>
-                        </div>
-                    </form>
-                </div>
-            </div>
             <div fxLayoutAlign="end">
                 <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
                 <div id="specific-settings-next-button">
-                    <button class="stepper-button" *ngIf="isGenericAdapter" [disabled]="!adapterSettingsFormValid"
-                        (click)="clickProtocolSettingsNextButton(stepper)" color="primary" mat-raised-button>Next
+                    <button class="stepper-button" [disabled]="!specificAdapterSettingsFormValid"
+                            (click)="clickSpecificSettingsNextButton(stepper)" color="primary" mat-raised-button>Next
                     </button>
-                    <button class="stepper-button" *ngIf="!isGenericAdapter" [disabled]="!adapterSettingsFormValid"
-                        (click)="clickSpecificSettingsNextButton(stepper)" color="primary" mat-raised-button>Next
+                </div>
+            </div>
+        </mat-step>
+
+        <mat-step *ngIf="isGenericAdapter">
+            <sp-generic-adapter-settings
+                    [adapterDescription]="adapter"
+                    (validateEmitter)="validateGenericAdapterForm($event)">
+            </sp-generic-adapter-settings>
+
+
+            <div fxLayoutAlign="end">
+                <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
+                <div id="generic-settings-next-button">
+                    <button class="stepper-button" [disabled]="!genericAdapterSettingsFormValid"
+                            (click)="clickProtocolSettingsNextButton(stepper)" color="primary" mat-raised-button>Next
                     </button>
                 </div>
             </div>

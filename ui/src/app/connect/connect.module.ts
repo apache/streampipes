@@ -71,6 +71,8 @@ import { CoreUiModule } from '../core-ui/core-ui.module';
 import { EditCorrectionValueComponent } from './dialog/edit-event-property/components/edit-correction-value/edit-correction-value.component';
 import { ExistingAdaptersComponent } from './components/data-marketplace/existing-adapters/existing-adapters.component';
 import { SelectFormatComponent } from './components/select-format/select-format.component';
+import { GenericAdapterSettingsComponent } from './components/generic-adapter-settings/generic-adapter-settings.component';
+import { SpecificAdapterSettingsComponent } from './components/specific-adapter-settings/specific-adapter-settings.component';
 
 @NgModule({
     imports: [
@@ -116,7 +118,9 @@ import { SelectFormatComponent } from './components/select-format/select-format.
         PipelineElementRuntimeInfoComponent,
         TimestampPipe,
         EditCorrectionValueComponent,
-        SelectFormatComponent
+        SelectFormatComponent,
+        GenericAdapterSettingsComponent,
+        SpecificAdapterSettingsComponent
     ],
     providers: [
         RestService,
