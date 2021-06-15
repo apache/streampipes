@@ -1,5 +1,4 @@
 <div style="margin-bottom: 2%;">
-    <ng-template matStepLabel>Settings</ng-template>
 
     <div >
         <div class="assemblyOptions sp-blue-bg">
@@ -11,7 +10,14 @@
                 [adapterId]="adapterDescription.appId"
                 [configuration]="protocolDescription.config">
         </sp-configuration-group>
-
     </div>
+</div>
 
+<div fxLayoutAlign="end">
+    <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
+    <div id="generic-settings-next-button">
+        <button class="stepper-button" [disabled]="!genericAdapterSettingsFormValid"
+                (click)="clickNext()" color="primary" mat-raised-button>Next
+        </button>
+    </div>
 </div>

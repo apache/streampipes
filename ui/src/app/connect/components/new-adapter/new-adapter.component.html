@@ -43,8 +43,8 @@
     </div>
 
     <mat-horizontal-stepper [linear]="true" #stepper>
-
         <mat-step *ngIf="!isGenericAdapter">
+            <ng-template matStepLabel>Settings</ng-template>
             <sp-specific-adapter-configuration
                     [adapterDescription]="adapter"
                     [stepper]="stepper"
@@ -54,61 +54,41 @@
         </mat-step>
 
         <mat-step *ngIf="isGenericAdapter">
+            <ng-template matStepLabel>Settings</ng-template>
             <sp-generic-adapter-configuration
                     [adapterDescription]="adapter"
-                    (validateEmitter)="validateGenericAdapterForm($event)">
+                    [stepper]="stepper"
+                    (clickNextEmitter)="clickProtocolSettingsNextButton($event)"
+                    (removeSelectionEmitter)="removeSelection()">
             </sp-generic-adapter-configuration>
-
-
-            <div fxLayoutAlign="end">
-                <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
-                <div id="generic-settings-next-button">
-                    <button class="stepper-button" [disabled]="!genericAdapterSettingsFormValid"
-                            (click)="clickProtocolSettingsNextButton(stepper)" color="primary" mat-raised-button>Next
-                    </button>
-                </div>
-            </div>
         </mat-step>
 
         <mat-step *ngIf="isGenericAdapter">
+            <ng-template matStepLabel>Select Format</ng-template>
             <sp-format-configuration
                     [adapterDescription]="adapter"
-                    (validateEmitter)="validateFormat($event)">
+                    [stepper]="stepper"
+                    (clickNextEmitter)="clickFormatSelectionNextButton($event)"
+                    (goBackEmitter)="goBack($event)"
+                    (removeSelectionEmitter)="removeSelection()">
             </sp-format-configuration>
-
-            <div fxLayoutAlign="end">
-                <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
-                <button class="mat-basic stepper-button" mat-raised-button (click)="goBack(stepper)">Back</button>
-                <button class="stepper-button" id="format-selection-next-button"
-                        [disabled]="!formatConfigurationValid"
-                        (click)="clickFormatSelectionNextButton(stepper)"
-                        color="primary" mat-raised-button>
-                    Next
-                </button>
-            </div>
-
         </mat-step>
 
         <mat-step>
             <ng-template matStepLabel>Define Event Schema</ng-template>
-
             <sp-event-schema #eschema fxLayout="column" fxFlex="100"
                               [(isEditable)]="isEditable"
                               [adapterDescription]="adapter"
                               [(eventSchema)]="eventSchema"
-                              [(oldEventSchema)]="oldEventSchema">
+                              [(oldEventSchema)]="oldEventSchema"
+                             (clickNextEmitter)="clickEventSchemaNextButtonButton($event)"
+                             (goBackEmitter)="goBack($event)"
+                             (removeSelectionEmitter)="removeSelection()">
             </sp-event-schema>
-
-            <div fxLayoutAlign="end">
-                <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
-                <button class="mat-basic stepper-button" mat-raised-button (click)="goBack(stepper)">Back</button>
-                <button class="stepper-button" id="event-schema-next-button"
-                    (click)="clickEventSchemaNextButtonButton(stepper)" color="primary" mat-raised-button>Next
-                </button>
-            </div>
         </mat-step>
 
         <mat-step>
+            <ng-template matStepLabel>Start Adapter</ng-template>
             <sp-start-adapter-configuration
                     [adapterDescription]="adapter"
                     [stepper]="stepper"

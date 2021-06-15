@@ -6,6 +6,7 @@ import {
   ProtocolDescription
 } from '../../../core-model/gen/streampipes-model';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { MatStepper } from '@angular/material/stepper';
 
 @Component({
   selector: 'sp-generic-adapter-configuration',
@@ -20,9 +21,22 @@ export class GenericAdapterConfigurationComponent implements OnInit {
   @Input() adapterDescription: AdapterDescriptionUnion;
 
   /**
-   * Returns whether the user input for the format configuration is valid or not
+   * Mat stepper to trigger next confifuration step when this is completed
    */
-  @Output() validateEmitter: EventEmitter<boolean> = new EventEmitter();
+  @Input() stepper: MatStepper;
+
+  /**
+   * Cancels the adapter configuration process
+   */
+  @Output() removeSelectionEmitter: EventEmitter<boolean> = new EventEmitter();
+
+  /**
+   * Go to next configuration step when this is complete
+   */
+  @Output() clickNextEmitter: EventEmitter<MatStepper> = new EventEmitter();
+
+
+  genericAdapterSettingsFormValid: boolean;
 
   genericAdapterForm: FormGroup;
 
@@ -42,8 +56,15 @@ export class GenericAdapterConfigurationComponent implements OnInit {
     // initialize form for validation
     this.genericAdapterForm = this._formBuilder.group({});
     this.genericAdapterForm.statusChanges.subscribe((status) => {
-      this.validateEmitter.emit(this.genericAdapterForm.valid);
+      this.genericAdapterSettingsFormValid = this.genericAdapterForm.valid;
     });
   }
 
+  public removeSelection() {
+    this.removeSelectionEmitter.emit();
+  }
+
+  public clickNext() {
+    this.clickNextEmitter.emit(this.stepper);
+  }
 }

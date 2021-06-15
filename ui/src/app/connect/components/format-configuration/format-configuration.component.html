@@ -1,5 +1,4 @@
 <div style="margin-bottom: 2%;">
-    <ng-template matStepLabel>Select Format</ng-template>
 
     <div class="assemblyOptions sp-blue-bg">
         <h4>Select format</h4>
@@ -32,3 +31,15 @@
         </div>
     </div>
 </div>
+
+<div fxLayoutAlign="end">
+    <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
+    <button class="mat-basic stepper-button" mat-raised-button (click)="goBack()">Back</button>
+    <button class="stepper-button" id="format-selection-next-button"
+            [disabled]="!formatConfigurationValid"
+            (click)="clickNext()"
+            color="primary" mat-raised-button>
+        Next
+    </button>
+</div>
+

@@ -16,6 +16,7 @@
   ~
   -->
 
+
 <div fxLayout="row" fxLayoutAlign="center">
     <div fxFlex="0 1 80%">
 
@@ -57,4 +58,13 @@
     <div fxFlex="0 1 50%" *ngIf="isPreviewEnabled">
         <sp-event-schema-preview [eventSchema]="eventSchema"></sp-event-schema-preview>
     </div>
+</div>
+
+
+<div fxLayoutAlign="end">
+    <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
+    <button class="mat-basic stepper-button" mat-raised-button (click)="goBack()">Back</button>
+    <button class="stepper-button" id="event-schema-next-button"
+            (click)="clickNext()" color="primary" mat-raised-button>Next
+    </button>
 </div>

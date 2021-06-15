@@ -292,6 +292,7 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
     goBack(stepper: MatStepper) {
         this.myStepper.selectedIndex = this.myStepper.selectedIndex - 1;
     }
+
     goForward(stepper: MatStepper) {
         this.myStepper.selectedIndex = this.myStepper.selectedIndex + 1;
     }

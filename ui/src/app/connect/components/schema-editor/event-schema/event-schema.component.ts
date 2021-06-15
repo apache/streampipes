@@ -38,6 +38,7 @@ import {
   GuessSchema,
   Notification
 } from '../../../../core-model/gen/streampipes-model';
+import { MatStepper } from '@angular/material/stepper';
 
 @Component({
   selector: 'sp-event-schema',
@@ -48,6 +49,11 @@ export class EventSchemaComponent implements OnChanges {
 
   constructor(private restService: RestService, private dataTypesService: DataTypesService) { }
 
+  /**
+   * Mat stepper to trigger next confifuration step when this is completed
+   */
+  @Input() stepper: MatStepper;
+
   @Input() adapterDescription: AdapterDescription;
   @Input() isEditable = true;
   @Input() oldEventSchema: EventSchema;
@@ -57,6 +63,19 @@ export class EventSchemaComponent implements OnChanges {
   @Output() adapterChange = new EventEmitter<AdapterDescription>();
   @Output() eventSchemaChange = new EventEmitter<EventSchema>();
   @Output() oldEventSchemaChange = new EventEmitter<EventSchema>();
+
+  @Output() goBackEmitter: EventEmitter<MatStepper> = new EventEmitter();
+
+  /**
+   * Cancels the adapter configuration process
+   */
+  @Output() removeSelectionEmitter: EventEmitter<boolean> = new EventEmitter();
+
+  /**
+   * Go to next configuration step when this is complete
+   */
+  @Output() clickNextEmitter: EventEmitter<MatStepper> = new EventEmitter();
+
 
   @ViewChild(TreeComponent, { static: true }) tree: TreeComponent;
 
@@ -187,4 +206,16 @@ export class EventSchemaComponent implements OnChanges {
     setTimeout(() => { this.refreshTree() }, 200);
   }
 
+
+  public removeSelection() {
+    this.removeSelectionEmitter.emit();
+  }
+
+  public clickNext() {
+    this.clickNextEmitter.emit(this.stepper);
+  }
+
+  public goBack() {
+    this.goBackEmitter.emit(this.stepper);
+  }
 }

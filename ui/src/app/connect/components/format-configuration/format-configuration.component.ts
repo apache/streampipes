@@ -7,6 +7,7 @@ import {
 } from '../../../core-model/gen/streampipes-model';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { RestService } from '../../services/rest.service';
+import { MatStepper } from '@angular/material/stepper';
 
 @Component({
   selector: 'sp-format-configuration',
@@ -21,9 +22,24 @@ export class FormatConfigurationComponent implements OnInit {
   @Input() adapterDescription: AdapterDescriptionUnion;
 
   /**
-   * Returns whether the user input for the format configuration is valid or not
+   * Mat stepper to trigger next confifuration step when this is completed
    */
-  @Output() validateEmitter: EventEmitter<boolean> = new EventEmitter();
+  @Input() stepper: MatStepper;
+
+
+  @Output() goBackEmitter: EventEmitter<MatStepper> = new EventEmitter();
+
+  /**
+   * Cancels the adapter configuration process
+   */
+  @Output() removeSelectionEmitter: EventEmitter<boolean> = new EventEmitter();
+
+  /**
+   * Go to next configuration step when this is complete
+   */
+  @Output() clickNextEmitter: EventEmitter<MatStepper> = new EventEmitter();
+
+  formatConfigurationValid: boolean;
 
   /**
    * Local reference of the format description from the adapter description
@@ -54,7 +70,7 @@ export class FormatConfigurationComponent implements OnInit {
     // initialize form for validation
     this.formatForm = this._formBuilder.group({});
     this.formatForm.statusChanges.subscribe((status) => {
-      this.validateEmitter.emit(this.formatForm.valid);
+      this.formatConfigurationValid = this.formatForm.valid;
     });
 
     // ensure that adapter description is a generic adapter
@@ -64,12 +80,12 @@ export class FormatConfigurationComponent implements OnInit {
     }
     if (this.adapterDescription instanceof GenericAdapterSetDescription) {
       if ((this.adapterDescription as GenericAdapterSetDescription).formatDescription !== undefined) {
-        this.validateEmitter.emit(true);
+        this.formatConfigurationValid = this.formatForm.valid;
       }
     }
     if (this.adapterDescription instanceof GenericAdapterStreamDescription) {
       if ((this.adapterDescription as GenericAdapterStreamDescription).formatDescription !== undefined) {
-        this.validateEmitter.emit(true);
+        this.formatConfigurationValid = this.formatForm.valid;
       }
     }
   }
@@ -82,9 +98,20 @@ export class FormatConfigurationComponent implements OnInit {
       this.adapterDescription.formatDescription = selectedFormat;
       this.selectedFormat = selectedFormat;
       if (selectedFormat.config.length === 0) {
-        this.validateEmitter.emit(true);
+        this.formatConfigurationValid = this.formatForm.valid;
       }
     }
   }
 
+  public removeSelection() {
+    this.removeSelectionEmitter.emit();
+  }
+
+  public clickNext() {
+    this.clickNextEmitter.emit(this.stepper);
+  }
+
+  public goBack() {
+    this.goBackEmitter.emit(this.stepper);
+  }
 }
