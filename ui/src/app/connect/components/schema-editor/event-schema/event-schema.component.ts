@@ -49,11 +49,6 @@ export class EventSchemaComponent implements OnChanges {
 
   constructor(private restService: RestService, private dataTypesService: DataTypesService) { }
 
-  /**
-   * Mat stepper to trigger next confifuration step when this is completed
-   */
-  @Input() stepper: MatStepper;
-
   @Input() adapterDescription: AdapterDescription;
   @Input() isEditable = true;
   @Input() oldEventSchema: EventSchema;
@@ -212,10 +207,10 @@ export class EventSchemaComponent implements OnChanges {
   }
 
   public clickNext() {
-    this.clickNextEmitter.emit(this.stepper);
+    this.clickNextEmitter.emit();
   }
 
   public goBack() {
-    this.goBackEmitter.emit(this.stepper);
+    this.goBackEmitter.emit();
   }
 }

@@ -26,17 +26,15 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import {
   AdapterDescription,
   AdapterDescriptionUnion,
   EventProperty,
-  EventRateTransformationRuleDescription,
   EventSchema,
   GenericAdapterSetDescription,
   GenericAdapterStreamDescription,
-  RemoveDuplicatesTransformationRuleDescription,
   SpecificAdapterSetDescription,
   SpecificAdapterStreamDescription,
   TransformationRuleDescriptionUnion
@@ -49,10 +47,7 @@ import { ConfigurationInfo } from '../../model/ConfigurationInfo';
 import { RestService } from '../../services/rest.service';
 import { EventSchemaComponent } from '../schema-editor/event-schema/event-schema.component';
 import { TransformationRuleService } from '../../services/transformation-rule.service';
-import { AdapterStartedDialog } from '../../dialog/adapter-started/adapter-started-dialog.component';
 import { IconService } from '../../services/icon.service';
-import { DialogService } from '../../../core-ui/dialog/base-dialog/base-dialog.service';
-import { PanelType } from '../../../core-ui/dialog/base-dialog/base-dialog.model';
 
 @Component({
     selector: 'sp-new-adapter',
@@ -66,7 +61,6 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
     isGenericAdapter = false;
     isDataSetDescription = false;
     isDataStreamDescription = false;
-
 
     dataLakeTimestampField: string;
 
@@ -85,9 +79,6 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
 
     protocolConfigurationValid: boolean;
     formatConfigurationValid: boolean;
-
-
-    // startAdapterFormGroup: FormGroup;
 
     eventSchema: EventSchema;
     oldEventSchema: EventSchema;
@@ -182,36 +173,23 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
         this.changeDetectorRef.detectChanges();
     }
 
-    public showPreview(isPreviewEnabled) {
-        this.isPreviewEnabled = isPreviewEnabled;
-    }
-
-
-
-    validateFormat(valid) {
-        this.formatConfigurationValid = valid;
-    }
-
-    validateGenericAdapterForm(valid) {
-        this.genericAdapterSettingsFormValid = valid;
-    }
 
     removeSelection() {
         this.removeSelectionEmitter.emit();
     }
 
-    clickProtocolSettingsNextButton(stepper: MatStepper) {
+    clickProtocolSettingsNextButton() {
         this.shepherdService.trigger('specific-settings-next-button');
-        this.goForward(stepper);
+        this.goForward();
     }
 
-    clickSpecificSettingsNextButton(stepper: MatStepper) {
+    clickSpecificSettingsNextButton() {
         this.shepherdService.trigger('specific-settings-next-button');
         this.guessEventSchema();
-        this.goForward(stepper);
+        this.goForward();
     }
 
-    clickEventSchemaNextButtonButton(stepper: MatStepper) {
+    clickEventSchemaNextButtonButton() {
         if (this.isEditable) {
             this.setSchema();
         }
@@ -223,15 +201,13 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
         }
 
         this.shepherdService.trigger('event-schema-next-button');
-        this.goForward(stepper);
-
-
+        this.goForward();
     }
 
-    clickFormatSelectionNextButton(stepper: MatStepper) {
+    clickFormatSelectionNextButton() {
         this.shepherdService.trigger('format-selection-next-button');
         this.guessEventSchema();
-        this.goForward(stepper);
+        this.goForward();
     }
 
     guessEventSchema() {
@@ -289,11 +265,11 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
         this.adapter.rules = transformationRules;
     }
 
-    goBack(stepper: MatStepper) {
+    goBack() {
         this.myStepper.selectedIndex = this.myStepper.selectedIndex - 1;
     }
 
-    goForward(stepper: MatStepper) {
+    goForward() {
         this.myStepper.selectedIndex = this.myStepper.selectedIndex + 1;
     }
 

@@ -21,11 +21,6 @@ export class GenericAdapterConfigurationComponent implements OnInit {
   @Input() adapterDescription: AdapterDescriptionUnion;
 
   /**
-   * Mat stepper to trigger next confifuration step when this is completed
-   */
-  @Input() stepper: MatStepper;
-
-  /**
    * Cancels the adapter configuration process
    */
   @Output() removeSelectionEmitter: EventEmitter<boolean> = new EventEmitter();
@@ -65,6 +60,6 @@ export class GenericAdapterConfigurationComponent implements OnInit {
   }
 
   public clickNext() {
-    this.clickNextEmitter.emit(this.stepper);
+    this.clickNextEmitter.emit();
   }
 }

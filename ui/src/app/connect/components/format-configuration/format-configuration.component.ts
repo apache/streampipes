@@ -21,12 +21,6 @@ export class FormatConfigurationComponent implements OnInit {
    */
   @Input() adapterDescription: AdapterDescriptionUnion;
 
-  /**
-   * Mat stepper to trigger next confifuration step when this is completed
-   */
-  @Input() stepper: MatStepper;
-
-
   @Output() goBackEmitter: EventEmitter<MatStepper> = new EventEmitter();
 
   /**
@@ -108,10 +102,10 @@ export class FormatConfigurationComponent implements OnInit {
   }
 
   public clickNext() {
-    this.clickNextEmitter.emit(this.stepper);
+    this.clickNextEmitter.emit();
   }
 
   public goBack() {
-    this.goBackEmitter.emit(this.stepper);
+    this.goBackEmitter.emit();
   }
 }

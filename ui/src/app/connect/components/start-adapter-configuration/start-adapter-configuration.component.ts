@@ -24,11 +24,6 @@ export class StartAdapterConfigurationComponent implements OnInit {
   @Input() adapterDescription: AdapterDescriptionUnion;
 
   /**
-   * Mat stepper to trigger next confifuration step when this is completed
-   */
-  @Input() stepper: MatStepper;
-
-  /**
    * Cancels the adapter configuration process
    */
   @Output() removeSelectionEmitter: EventEmitter<boolean> = new EventEmitter();
@@ -37,7 +32,6 @@ export class StartAdapterConfigurationComponent implements OnInit {
    * Is called when the adapter was created
    */
   @Output() adapterStartedEmitter: EventEmitter<void> = new EventEmitter<void>();
-
 
   /**
    * Go to next configuration step when this is complete
@@ -133,6 +127,6 @@ export class StartAdapterConfigurationComponent implements OnInit {
   }
 
   public goBack() {
-    this.goBackEmitter.emit(this.stepper);
+    this.goBackEmitter.emit();
   }
 }
