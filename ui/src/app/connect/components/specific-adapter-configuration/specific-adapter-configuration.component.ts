@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AdapterDescriptionUnion } from '../../../core-model/gen/streampipes-model';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { MatStepper } from '@angular/material/stepper';
 
 @Component({
   selector: 'sp-specific-adapter-configuration',
@@ -15,9 +16,21 @@ export class SpecificAdapterConfigurationComponent implements OnInit {
   @Input() adapterDescription: AdapterDescriptionUnion;
 
   /**
-   * Returns whether the user input for the format configuration is valid or not
+   * Mat stepper to trigger next confifuration step when this is completed
    */
-  @Output() validateEmitter: EventEmitter<boolean> = new EventEmitter();
+  @Input() stepper: MatStepper;
+
+  /**
+   * Cancels the adapter configuration process
+   */
+  @Output() removeSelectionEmitter: EventEmitter<boolean> = new EventEmitter();
+
+  /**
+   * Go to next configuration step when this is complete
+   */
+  @Output() clickNextEmitter: EventEmitter<MatStepper> = new EventEmitter();
+
+  specificAdapterSettingsFormValid: boolean;
 
   specificAdapterForm: FormGroup;
 
@@ -29,8 +42,15 @@ export class SpecificAdapterConfigurationComponent implements OnInit {
     // initialize form for validation
     this.specificAdapterForm = this._formBuilder.group({});
     this.specificAdapterForm.statusChanges.subscribe((status) => {
-      this.validateEmitter.emit(this.specificAdapterForm.valid);
+      this.specificAdapterSettingsFormValid = this.specificAdapterForm.valid;
     });
   }
 
+  public removeSelection() {
+    this.removeSelectionEmitter.emit();
+  }
+
+  public clickNext() {
+    this.clickNextEmitter.emit(this.stepper);
+  }
 }

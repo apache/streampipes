@@ -13,3 +13,15 @@
 
     </div>
 </div>
+
+<div fxLayoutAlign="end">
+    <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
+    <div id="specific-settings-next-button">
+        <button class="stepper-button" [disabled]="!specificAdapterSettingsFormValid"
+                (click)="clickNext()" color="primary" mat-raised-button>Next
+        </button>
+<!--        <button class="stepper-button" [disabled]="!specificAdapterSettingsFormValid"-->
+<!--                (click)="clickSpecificSettingsNextButton(stepper)" color="primary" mat-raised-button>Next-->
+<!--        </button>-->
+    </div>
+</div>

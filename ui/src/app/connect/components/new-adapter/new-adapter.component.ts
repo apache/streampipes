@@ -118,7 +118,6 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
     isPreviewEnabled = false;
 
     parentForm: FormGroup;
-    specificAdapterSettingsFormValid = false;
     genericAdapterSettingsFormValid = false;
     viewInitialized = false;
 
@@ -240,10 +239,6 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
 
     validateFormat(valid) {
         this.formatConfigurationValid = valid;
-    }
-
-    validateSpecificAdapterForm(valid) {
-        this.specificAdapterSettingsFormValid = valid;
     }
 
     validateGenericAdapterForm(valid) {
