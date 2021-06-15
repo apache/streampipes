@@ -116,7 +116,7 @@ export class EventSchemaComponent implements OnChanges {
   private refreshTree(): void {
     this.nodes = new Array<EventProperty>();
     this.nodes.push(this.eventSchema as unknown as EventProperty);
-    this.tree.treeModel.update();
+    // this.tree.treeModel.update();
   }
 
   public addNestedProperty(eventProperty?: EventPropertyNested): void {

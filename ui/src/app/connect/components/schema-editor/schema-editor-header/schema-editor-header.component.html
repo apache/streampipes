@@ -1,0 +1,29 @@
+<div fxLayout="row">
+    <div fxLayoutAlign="space-between center" class="add-schema" fxFlex="0 1 100%">
+        <div>
+            <button color="primary" mat-button (click)=addNestedProperty()>
+                <mat-icon matTooltip="Add a Nested Property">queue</mat-icon>
+            </button>
+            <button color="primary" mat-button
+                    (click)="addStaticValueProperty()">
+                <mat-icon matTooltip="Add a static value to event">add</mat-icon>
+            </button>
+            <button color="primary" mat-button
+                    (click)=addTimestampProperty()>
+                <mat-icon matTooltip="Add timestamp to event schema">access_time</mat-icon>
+            </button>
+            <button color="primary" mat-button (click)=guessSchema()>
+                <mat-icon matTooltip="Refresh Schema">refresh</mat-icon>
+            </button>
+            <button color="primary" mat-button (click)=togglePreview()>
+                <mat-icon matTooltip="Show preview of schema">play_arrow</mat-icon>
+            </button>
+        </div>
+        <div>
+            <button style="padding-right:0" color="primary" mat-button [disabled]="countSelected == 0"
+                    (click)="removeSelectedProperties()">
+                <mat-icon matTooltip="Remove selected Properties">delete</mat-icon>
+            </button>
+        </div>
+    </div>
+</div>

@@ -77,6 +77,7 @@ import { FormatConfigurationComponent } from './components/format-configuration/
 import { GenericAdapterConfigurationComponent } from './components/generic-adapter-configuration/generic-adapter-configuration.component';
 import { ErrorMessageComponent } from './components/schema-editor/error-message/error-message.component';
 import { LoadingMessageComponent } from './components/schema-editor/loading-message/loading-message.component';
+import { SchemaEditorHeaderComponent } from './components/schema-editor/schema-editor-header/schema-editor-header.component';
 
 @NgModule({
     imports: [
@@ -127,7 +128,8 @@ import { LoadingMessageComponent } from './components/schema-editor/loading-mess
         SpecificAdapterConfigurationComponent,
         ConfigurationGroupComponent,
         ErrorMessageComponent,
-        LoadingMessageComponent
+        LoadingMessageComponent,
+        SchemaEditorHeaderComponent
     ],
     providers: [
         RestService,
