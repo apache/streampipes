@@ -68,6 +68,8 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
     isDataStreamDescription = false;
 
 
+    dataLakeTimestampField: string;
+
     @Input()
     adapter: AdapterDescriptionUnion;
 
@@ -77,23 +79,15 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
     @Output()
     updateAdapterEmitter: EventEmitter<void> = new EventEmitter<void>();
 
+
     @ViewChild('stepper', { static: true }) myStepper: MatStepper;
 
 
     protocolConfigurationValid: boolean;
     formatConfigurationValid: boolean;
 
-    removeDuplicates = false;
-    removeDuplicatesTime: number;
 
-    eventRateReduction = false;
-    eventRateTime: number;
-    eventRateMode = 'none';
-
-    saveInDataLake = false;
-    dataLakeTimestampField: string;
-
-    startAdapterFormGroup: FormGroup;
+    // startAdapterFormGroup: FormGroup;
 
     eventSchema: EventSchema;
     oldEventSchema: EventSchema;
@@ -111,7 +105,6 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
     @ViewChild(EventSchemaComponent, { static: true })
     private eventSchemaComponent: EventSchemaComponent;
 
-    isSetAdapter = false;
 
     completedStaticProperty: ConfigurationInfo;
 
@@ -125,7 +118,6 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
         private logger: Logger,
         private restService: RestService,
         private transformationRuleService: TransformationRuleService,
-        private dialogService: DialogService,
         private shepherdService: ShepherdService,
         private connectService: ConnectService,
         private _formBuilder: FormBuilder,
@@ -157,9 +149,9 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
         this.formatConfigurationValid = false;
 
 
-        this.startAdapterFormGroup = this._formBuilder.group({
-            startAdapterFormCtrl: ['', Validators.required]
-        });
+        // this.startAdapterFormGroup = this._formBuilder.group({
+        //     startAdapterFormCtrl: ['', Validators.required]
+        // });
 
         this.protocolConfigurationValid = false;
 
@@ -168,7 +160,7 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
         if (this.eventSchema.eventProperties.length > 0) {
 
             // Timeout is needed for stepper to work correctly. Without the stepper is frozen when initializing with
-            // step 2. Can be removed when a better solution is founf.
+            // step 2. Can be removed when a better solution is found.
             setTimeout(() => {
                 this.goForward(this.myStepper);
                 this.goForward(this.myStepper);
@@ -194,48 +186,7 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
         this.isPreviewEnabled = isPreviewEnabled;
     }
 
-    public triggerDialog(storeAsTemplate: boolean) {
-        if (this.removeDuplicates) {
-            const removeDuplicates: RemoveDuplicatesTransformationRuleDescription = new RemoveDuplicatesTransformationRuleDescription();
-            removeDuplicates['@class'] = 'org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription';
-            removeDuplicates.filterTimeWindow = (this.removeDuplicatesTime) as any;
-            this.adapter.rules.push(removeDuplicates);
-        }
-        if (this.eventRateReduction) {
-            const eventRate: EventRateTransformationRuleDescription = new EventRateTransformationRuleDescription();
-            eventRate['@class'] = 'org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription';
-            eventRate.aggregationTimeWindow = this.eventRateMode as any;
-            eventRate.aggregationType = this.eventRateMode;
-            this.adapter.rules.push(eventRate);
-        }
 
-        const dialogRef = this.dialogService.open(AdapterStartedDialog, {
-            panelType: PanelType.STANDARD_PANEL,
-            title: 'Adapter generation',
-            width: '70vw',
-            data: {
-                'adapter': this.adapter,
-                'storeAsTemplate': storeAsTemplate,
-                'saveInDataLake': this.saveInDataLake,
-                'dataLakeTimestampField': this.dataLakeTimestampField
-            }
-        });
-
-        this.shepherdService.trigger('button-startAdapter');
-
-        dialogRef.afterClosed().subscribe(result => {
-            this.updateAdapterEmitter.emit();
-            this.removeSelectionEmitter.emit();
-        });
-    }
-
-    public saveTemplate() {
-        this.triggerDialog(true);
-    }
-
-    public startAdapter() {
-        this.triggerDialog(false);
-    }
 
     validateFormat(valid) {
         this.formatConfigurationValid = valid;
@@ -274,9 +225,6 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
         this.shepherdService.trigger('event-schema-next-button');
         this.goForward(stepper);
 
-        if (this.adapter instanceof GenericAdapterSetDescription || this.adapter instanceof SpecificAdapterSetDescription) {
-            this.isSetAdapter = true;
-        }
 
     }
 
@@ -348,7 +296,8 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
         this.myStepper.selectedIndex = this.myStepper.selectedIndex + 1;
     }
 
-    triggerUpdate(configurationInfo: ConfigurationInfo) {
-        this.completedStaticProperty = {...configurationInfo};
+    public adapterWasStarted() {
+        this.updateAdapterEmitter.emit();
+        this.removeSelectionEmitter.emit();
     }
 }

@@ -26,8 +26,8 @@
                         <mat-icon *ngIf="isDataStreamDescription" class="real-time">lens
                         </mat-icon>
                         <div fxLayoutAlign="start center">
-                            <p *ngIf="isDataSetDescription">&nbsp;Data Set</p>
-                            <p *ngIf="isDataStreamDescription">&nbsp;Data Stream</p>
+                            <p *ngIf="isDataSetDescription">Data Set</p>
+                            <p *ngIf="isDataStreamDescription">Data Stream</p>
                         </div>
                     </div>
                 </div>
@@ -41,6 +41,7 @@
             </button>
         </div>
     </div>
+
     <mat-horizontal-stepper [linear]="true" #stepper>
 
         <mat-step *ngIf="!isGenericAdapter">
@@ -108,11 +109,13 @@
         </mat-step>
 
         <mat-step>
-
             <sp-start-adapter-configuration
-            >
+                    [adapterDescription]="adapter"
+                    [stepper]="stepper"
+                    (removeSelectionEmitter)="removeSelection()"
+                    (goBackEmitter)="goBack($event)"
+                    (adapterStartedEmitter)="adapterWasStarted()">
             </sp-start-adapter-configuration>
-
         </mat-step>
 
     </mat-horizontal-stepper>

@@ -36,7 +36,7 @@ export class FormatConfigurationComponent implements OnInit {
   allFormats: FormatDescription[] = [];
 
   /**
-   * The form group to validate the configuration for the foramt
+   * The form group to validate the configuration for the format
    */
   formatForm: FormGroup;
 

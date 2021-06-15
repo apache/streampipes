@@ -88,7 +88,6 @@ export class EventSchemaComponent implements OnChanges {
     this.isLoading = true;
     this.isError = false;
     this.restService.getGuessSchema(this.adapterDescription).subscribe(guessSchema => {
-      this.isLoading = false;
       this.eventSchema = guessSchema.eventSchema;
       this.eventSchema.eventProperties.sort((a, b) => {
         return a.runtimeName < b.runtimeName ? -1 : 1;
@@ -103,6 +102,7 @@ export class EventSchemaComponent implements OnChanges {
 
       this.isEditable = true;
       this.isEditableChange.emit(true);
+      this.isLoading = false;
     },
       errorMessage => {
         this.errorMessages = errorMessage.error.notifications;
@@ -186,4 +186,5 @@ export class EventSchemaComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     setTimeout(() => { this.refreshTree() }, 200);
   }
+
 }
