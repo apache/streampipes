@@ -132,7 +132,7 @@ public class Plc4xS7Adapter extends PullAdapter {
                                         StaticProperties.stringFreeTextProperty(Labels.withId(PLC_NODE_RUNTIME_NAME)),
                                         StaticProperties.stringFreeTextProperty(Labels.withId(PLC_NODE_NAME)),
                                         StaticProperties.singleValueSelection(Labels.withId(PLC_NODE_TYPE),
-                                                Options.from("Bool",  "Byte", "Int", "Word", "Real")))),
+                                                Options.from("Bool",  "Byte", "Int", "Word", "Real", "String")))),
                         Alternatives.from(Labels.withId(CSV_IMPORT),
                                 StaticProperties.fileProperty(Labels.withId(PLC_NODES_CSV_FILE), Filetypes.CSV)),
                         Alternatives.from(Labels.withId(EXCEL_IMPORT),
@@ -394,6 +394,8 @@ public class Plc4xS7Adapter extends PullAdapter {
                 return Datatypes.String;
             case "REAL":
                 return Datatypes.Float;
+            case "STRING":
+                return Datatypes.String;
             default:
                 throw new AdapterException("Datatype " + plcType + " is not supported");
         }
