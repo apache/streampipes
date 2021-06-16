@@ -102,8 +102,8 @@ public class InternalPipelineTemplates extends AbstractRestResource {
     private IPipelineElementDescriptionStorage getStorage() {
         return StorageDispatcher
                 .INSTANCE
-                .getTripleStore()
-                .getPipelineElementStorage();
+                .getNoSqlStore()
+                .getPipelineElementDescriptionStorage();
     }
 
     private List<SpDataStream> getAllDataStreams() {

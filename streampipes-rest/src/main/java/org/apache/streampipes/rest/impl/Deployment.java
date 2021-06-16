@@ -18,30 +18,22 @@
 
 package org.apache.streampipes.rest.impl;
 
-import io.fogsy.empire.core.empire.annotation.InvalidRdfException;
 import org.apache.streampipes.codegeneration.api.CodeGenerator;
-import org.apache.streampipes.commons.exceptions.SepaParseException;
-import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.client.deployment.DeploymentConfiguration;
 import org.apache.streampipes.model.client.deployment.ElementType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.graph.DataSourceDescription;
-import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.serializers.json.GsonSerializer;
-import org.apache.streampipes.serializers.jsonld.JsonLdTransformer;
-import org.apache.streampipes.serializers.jsonld.JsonLdUtils;
 import org.apache.streampipes.storage.management.StorageManager;
-import org.eclipse.rdf4j.rio.RDFHandlerException;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 
 
 @Path("/v2/users/{username}/deploy")
@@ -88,20 +80,23 @@ public class Deployment extends AbstractRestResource {
     @Path("/import")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response directImport(@PathParam("username") String username, @FormDataParam("config") String config, @FormDataParam("model") String model) {
-
-        DataSourceDescription sep = new DataSourceDescription(GsonSerializer.getGsonWithIds().fromJson(model, DataSourceDescription.class));
-        try {
-            Message message =
-                    Operations.verifyAndAddElement(JsonLdUtils.asString(new JsonLdTransformer().toJsonLd(sep)), username, true, true);
-            return ok(message);
-        } catch (RDFHandlerException | IllegalAccessException
-                | IllegalArgumentException | InvocationTargetException
-                | SecurityException | ClassNotFoundException
-                | SepaParseException | InvalidRdfException e) {
-            e.printStackTrace();
-            return ok(Notifications.error("Error: Could not store source definition."));
-        }
+    public Response directImport(@PathParam("username") String username,
+                                 @FormDataParam("config") String config,
+                                 @FormDataParam("model") String model) {
+// TODO check if this can be deleted
+//        DataSourceDescription sep = new DataSourceDescription(GsonSerializer.getGsonWithIds().fromJson(model, DataSourceDescription.class));
+//        try {
+//            Message message =
+//                    Operations.verifyAndAddElement(JsonLdUtils.asString(new JsonLdTransformer().toJsonLd(sep)), username, true, true);
+//            return ok(message);
+//        } catch (RDFHandlerException | IllegalAccessException
+//                | IllegalArgumentException | InvocationTargetException
+//                | SecurityException | ClassNotFoundException
+//                | SepaParseException | InvalidRdfException e) {
+//            e.printStackTrace();
+//            return ok(Notifications.error("Error: Could not store source definition."));
+//        }
+        return fail();
     }
 
     @POST
@@ -147,27 +142,6 @@ public class Deployment extends AbstractRestResource {
             e.printStackTrace();
             return Response.serverError().build();
         }
-    }
-
-    @POST
-    @Path("/description/jsonld")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response getDescriptionAsJsonLd(@FormDataParam("config") String config, @FormDataParam("model") String model) {
-
-        DeploymentConfiguration deploymentConfig = fromJson(config);
-
-        NamedStreamPipesEntity element = getElement(deploymentConfig, model);
-
-        try {
-            return Response.ok(JsonLdUtils.asString(new JsonLdTransformer().toJsonLd(element))).build();
-        } catch (RDFHandlerException | IllegalAccessException
-                | IllegalArgumentException | InvocationTargetException
-                | SecurityException | ClassNotFoundException
-                | InvalidRdfException e) {
-            return Response.serverError().build();
-        }
-
     }
 
     private DeploymentConfiguration fromJson(String config) {

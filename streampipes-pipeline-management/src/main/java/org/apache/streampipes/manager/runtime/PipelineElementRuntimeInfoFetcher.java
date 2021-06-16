@@ -17,20 +17,18 @@
  */
 package org.apache.streampipes.manager.runtime;
 
-import com.google.inject.internal.cglib.core.$LocalVariablesSorter;
-import org.apache.streampipes.config.backend.BackendConfig;
-import org.apache.streampipes.messaging.kafka.SpKafkaConsumer;
-import org.apache.streampipes.messaging.mqtt.MqttConsumer;
-import org.apache.streampipes.model.grounding.MqttTransportProtocol;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.messaging.jms.ActiveMQConsumer;
+import org.apache.streampipes.messaging.kafka.SpKafkaConsumer;
+import org.apache.streampipes.messaging.mqtt.MqttConsumer;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
+import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 import org.apache.streampipes.model.grounding.TransportFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;

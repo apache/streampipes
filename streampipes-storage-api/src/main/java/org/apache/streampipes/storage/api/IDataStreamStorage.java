@@ -15,25 +15,11 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.setup;
+package org.apache.streampipes.storage.api;
 
-import org.apache.streampipes.model.message.Message;
-import org.apache.streampipes.model.message.Notifications;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.model.SpDataStream;
 
-import java.util.Collections;
-import java.util.List;
+public interface IDataStreamStorage extends CRUDStorage<String, SpDataStream> {
 
-public class EmpireInitializerInstallationStep implements InstallationStep {
-
-  @Override
-  public List<Message> install() {
-    StorageDispatcher.INSTANCE.getTripleStore().getPipelineElementStorage();
-    return Collections.singletonList(Notifications.success(getTitle()));
-  }
-
-  @Override
-  public String getTitle() {
-    return "Initializing pipeline element storage...";
-  }
+  SpDataStream getDataStreamByAppId(String appId);
 }

@@ -17,18 +17,12 @@
  */
 package org.apache.streampipes.storage.management;
 
-import org.apache.streampipes.storage.Rdf4JStorageManager;
 import org.apache.streampipes.storage.api.INoSqlStorage;
-import org.apache.streampipes.storage.api.ITripleStorage;
 import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
 
 public enum StorageDispatcher {
 
   INSTANCE;
-
-  public ITripleStorage getTripleStore() {
-    return Rdf4JStorageManager.INSTANCE;
-  }
 
   public INoSqlStorage getNoSqlStore() {
     return CouchDbStorageManager.INSTANCE;

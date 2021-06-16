@@ -63,7 +63,7 @@ public class AbstractDao<T> {
 
   public T findWithNullIfEmpty(String id) {
     DbCommand<Optional<T>, T> cmd = new FindCommand<>(couchDbClientSupplier, id, clazz);
-    return cmd.execute().get();
+    return cmd.execute().orElse(null);
   }
 
 

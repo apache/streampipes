@@ -18,20 +18,16 @@
 
 package org.apache.streampipes.storage.management;
 
-import org.apache.streampipes.storage.Rdf4JStorageManager;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorageCache;
-import org.eclipse.rdf4j.repository.Repository;
+import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
 
 public enum StorageManager {
 
   INSTANCE;
 
   public IPipelineElementDescriptionStorageCache getPipelineElementStorage() {
-    return Rdf4JStorageManager.INSTANCE.getPipelineElementStorage();
+    return CouchDbStorageManager.INSTANCE.getPipelineElementDescriptionStorage();
   }
 
-  public Repository getRepository() {
-    return Rdf4JStorageManager.INSTANCE.getRepository();
-  }
 
 }

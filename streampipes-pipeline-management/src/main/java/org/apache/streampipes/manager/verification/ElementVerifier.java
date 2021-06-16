@@ -31,9 +31,6 @@ import org.apache.streampipes.model.message.*;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorageCache;
 import org.apache.streampipes.storage.management.StorageManager;
-import org.eclipse.rdf4j.repository.RepositoryException;
-import org.eclipse.rdf4j.rio.RDFParseException;
-import org.eclipse.rdf4j.rio.UnsupportedRDFormatException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -90,8 +87,7 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
     if (shouldTransform) {
       try {
         this.elementDescription = transform();
-      } catch (RDFParseException | UnsupportedRDFormatException
-              | RepositoryException | IOException e) {
+      } catch (IOException e) {
         return new ErrorMessage(NotificationType.UNKNOWN_ERROR.uiNotification());
       }
     }

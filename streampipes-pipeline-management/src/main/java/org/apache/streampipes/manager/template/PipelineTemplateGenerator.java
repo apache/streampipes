@@ -17,8 +17,6 @@
  */
 package org.apache.streampipes.manager.template;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.streampipes.commons.exceptions.ElementNotFoundException;
 import org.apache.streampipes.manager.matching.DataSetGroundingSelector;
 import org.apache.streampipes.manager.matching.v2.ElementVerification;
@@ -26,14 +24,16 @@ import org.apache.streampipes.manager.template.instances.*;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
-import org.apache.streampipes.model.message.DataSetModificationMessage;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
+import org.apache.streampipes.model.message.DataSetModificationMessage;
 import org.apache.streampipes.model.template.PipelineTemplateDescription;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.storage.management.StorageManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -150,9 +150,8 @@ public class PipelineTemplateGenerator {
   }
 
   protected IPipelineElementDescriptionStorage getStorage() {
-    return StorageDispatcher
+    return StorageManager
             .INSTANCE
-            .getTripleStore()
             .getPipelineElementStorage();
   }
 }

@@ -35,7 +35,7 @@ import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorageCache;
 import org.apache.streampipes.storage.couchdb.impl.AdapterStorageImpl;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.storage.management.StorageManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -156,7 +156,7 @@ public class AdapterMasterManagement {
     adapterStorage.deleteAdapter(id);
 
     UserService userService = getUserService();
-    IPipelineElementDescriptionStorageCache requestor = StorageDispatcher.INSTANCE.getTripleStore().getPipelineElementStorage();
+    IPipelineElementDescriptionStorageCache requestor = StorageManager.INSTANCE.getPipelineElementStorage();
 
     if (requestor.getDataStreamById(ad.getElementId()) != null) {
       requestor.deleteDataStream(requestor.getDataStreamById(ad.getElementId()));

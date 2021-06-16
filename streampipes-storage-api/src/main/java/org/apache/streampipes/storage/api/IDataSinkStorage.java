@@ -17,14 +17,9 @@
  */
 package org.apache.streampipes.storage.api;
 
-import org.eclipse.rdf4j.repository.Repository;
+import org.apache.streampipes.model.graph.DataSinkDescription;
 
-public interface ITripleStorage {
+public interface IDataSinkStorage extends CRUDStorage<String, DataSinkDescription> {
 
-  IBackgroundKnowledgeStorage getBackgroundKnowledgeStorage();
-
-  Repository getRepository();
-
-  IPipelineElementDescriptionStorageCache getPipelineElementStorage();
-
+  DataSinkDescription getDataSinkByAppId(String appId);
 }

@@ -28,7 +28,7 @@ import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.rest.shared.util.SpMediaType;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
-import org.apache.streampipes.storage.rdf4j.filter.Filter;
+import org.apache.streampipes.storage.couchdb.utils.Filter;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -88,36 +88,31 @@ public class SemanticEventConsumer extends AbstractRestResource implements IPipe
   }
 
   @DELETE
-  @Path("/favorites/{elementUri}")
+  @Path("/favorites/{elementId}")
   @RequiresAuthentication
   @Produces(MediaType.APPLICATION_JSON)
   @GsonWithIds
   @Override
-  public Response removeFavorite(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
-    getUserService().removeActionFromFavorites(username, decode(elementUri));
+  public Response removeFavorite(@PathParam("username") String username,
+                                 @PathParam("elementId") String elementId) {
+    getUserService().removeActionFromFavorites(username, decode(elementId));
     return statusMessage(Notifications.success(NotificationType.OPERATION_SUCCESS));
   }
 
   @DELETE
-  @Path("/own/{elementUri}")
+  @Path("/own/{elementId}")
   @RequiresAuthentication
   @Produces(MediaType.APPLICATION_JSON)
   @GsonWithIds
   @Override
-  public Response removeOwn(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
+  public Response removeOwn(@PathParam("username") String username,
+                            @PathParam("elementId") String elementId) {
     IPipelineElementDescriptionStorage requestor = getPipelineElementRdfStorage();
-    getUserService().deleteOwnAction(username, elementUri);
-    requestor.deleteDataSink(requestor.getDataSinkById(elementUri));
+    getUserService().deleteOwnAction(username, elementId);
+    requestor.deleteDataSink(requestor.getDataSinkById(elementId));
     return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
   }
 
-  @Path("/{elementUri}/jsonld")
-  @GET
-  @Produces(MediaType.TEXT_PLAIN)
-  @Override
-  public String getAsJsonLd(@PathParam("elementUri") String elementUri) {
-    return toJsonLd(getPipelineElementRdfStorage().getDataSinkById(elementUri));
-  }
 
   @Path("/{elementUri}")
   @GET

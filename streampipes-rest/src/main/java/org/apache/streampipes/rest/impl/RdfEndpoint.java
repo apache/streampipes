@@ -108,7 +108,7 @@ public class RdfEndpoint extends AbstractRestResource {
     return getAllDataStreamUris(username)
             .stream()
             .filter(s -> existingItems.stream().noneMatch(item -> item.getElementId().equals(s)))
-            .map(s -> getTripleStorage().getPipelineElementStorage().getDataStreamById(s))
+            .map(s -> getPipelineElementStorage().getDataStreamById(s))
             .map(stream -> makeItem(stream, stream instanceof SpDataSet ? "set" : "stream"))
             .collect(Collectors.toList());
   }
@@ -117,7 +117,7 @@ public class RdfEndpoint extends AbstractRestResource {
     return getAllDataProcessorUris(username)
             .stream()
             .filter(s -> existingItems.stream().noneMatch(item -> item.getElementId().equals(s)))
-            .map(s -> getTripleStorage().getPipelineElementStorage().getDataProcessorById(s))
+            .map(s -> getPipelineElementStorage().getDataProcessorById(s))
             .map(source -> makeItem(source, "sepa"))
             .collect(Collectors.toList());
   }
@@ -126,7 +126,7 @@ public class RdfEndpoint extends AbstractRestResource {
     return getAllDataSinkUris(username)
             .stream()
             .filter(s -> existingItems.stream().noneMatch(item -> s.equals(item.getElementId())))
-            .map(s -> getTripleStorage().getPipelineElementStorage().getDataSinkById(s))
+            .map(s -> getPipelineElementStorage().getDataSinkById(s))
             .map(source -> makeItem(source, "action"))
             .collect(Collectors.toList());
   }

@@ -61,4 +61,6 @@ public interface INoSqlStorage {
 
   IPipelineCanvasMetadataStorage getPipelineCanvasMetadataStorage();
 
+  IPipelineElementDescriptionStorageCache getPipelineElementDescriptionStorage();
+
 }

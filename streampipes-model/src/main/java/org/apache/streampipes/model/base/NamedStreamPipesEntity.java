@@ -19,6 +19,8 @@
 package org.apache.streampipes.model.base;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 import io.fogsy.empire.annotations.RdfProperty;
 import org.apache.streampipes.model.ApplicationLink;
 import org.apache.streampipes.model.util.Cloner;
@@ -37,6 +39,10 @@ import java.util.List;
 public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
 
   private static final long serialVersionUID = -98951691820519795L;
+
+  @RdfProperty("sp:couchDbRev")
+  @JsonProperty("_rev")
+  protected @SerializedName("_rev") String rev;
 
   @RdfProperty(RDFS.LABEL)
   private String name;
@@ -106,7 +112,8 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
   }
 
   public NamedStreamPipesEntity(NamedStreamPipesEntity other) {
-    super();
+    super(other);
+    this.rev = other.getRev();
     this.description = other.getDescription();
     this.name = other.getName();
     this.iconUrl = other.getIconUrl();
@@ -232,5 +239,13 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
 
   public void setInternallyManaged(boolean internallyManaged) {
     this.internallyManaged = internallyManaged;
+  }
+
+  public String getRev() {
+    return rev;
+  }
+
+  public void setRev(String rev) {
+    this.rev = rev;
   }
 }

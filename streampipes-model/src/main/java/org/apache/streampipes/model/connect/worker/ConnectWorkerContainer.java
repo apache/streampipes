@@ -39,9 +39,6 @@ import java.util.List;
 @Entity
 public class ConnectWorkerContainer extends UnnamedStreamPipesEntity {
 
-    @RdfProperty("sp:couchDBId")
-    private @SerializedName("_id") String id;
-
     private @SerializedName("_rev") String rev;
 
     public ConnectWorkerContainer() {
@@ -94,11 +91,11 @@ public class ConnectWorkerContainer extends UnnamedStreamPipesEntity {
     }
 
     public String getId() {
-        return id;
+        return this.elementId;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.elementId = id;
     }
 
     public String getRev() {

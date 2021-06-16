@@ -32,8 +32,6 @@ public interface IPipelineElement {
 	Response removeFavorite(String username, String elementUri);
 	Response removeOwn(String username, String elementUri);
 
-	String getAsJsonLd(String elementUri);
-
 	Response getElement(String username, String elementUri);
 	
 	

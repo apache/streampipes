@@ -24,14 +24,14 @@ import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.client.exception.InvalidConnectionException;
-import org.apache.streampipes.model.message.DataSetModificationMessage;
-import org.apache.streampipes.model.pipeline.Pipeline;
-import org.apache.streampipes.model.message.PipelineModificationMessage;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
+import org.apache.streampipes.model.message.DataSetModificationMessage;
+import org.apache.streampipes.model.message.PipelineModificationMessage;
+import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.template.BoundPipelineElement;
 import org.apache.streampipes.model.template.PipelineTemplateDescription;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.storage.management.StorageManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -129,9 +129,8 @@ public class PipelineGenerator {
   }
 
   private SpDataStream getStream(String datasetId) {
-    return StorageDispatcher
+    return StorageManager
             .INSTANCE
-            .getTripleStore()
             .getPipelineElementStorage()
             .getEventStreamById(datasetId);
   }

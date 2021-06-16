@@ -18,9 +18,7 @@
 
 package org.apache.streampipes.model.connect.adapter;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.google.gson.annotations.SerializedName;
 import io.fogsy.empire.annotations.Namespaces;
 import io.fogsy.empire.annotations.RdfProperty;
 import io.fogsy.empire.annotations.RdfsClass;
@@ -55,12 +53,12 @@ import java.util.List;
 @TsModel
 public abstract class AdapterDescription extends NamedStreamPipesEntity {
 
-    @RdfProperty("sp:couchDBId")
-    @JsonProperty("couchDBId")
-    private @SerializedName("_id") String id;
-
-    @JsonProperty("_rev")
-    private @SerializedName("_rev") String rev;
+//    @RdfProperty("sp:couchDBId")
+//    @JsonProperty("couchDBId")
+//    private @SerializedName("_id") String id;
+//
+//    @JsonProperty("_rev")
+//    private @SerializedName("_rev") String rev;
 
     @RdfProperty("sp:adapterId")
     private String adapterId;
@@ -121,8 +119,8 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
     public AdapterDescription(AdapterDescription other) {
         super(other);
         this.adapterId = other.getAdapterId();
-        this.id = other.getId();
-        this.rev = other.getRev();
+        //this.id = other.getId();
+        //this.rev = other.getRev();
         this.config = new Cloner().staticProperties(other.getConfig());
         this.userName = other.getUserName();
         this.rules = other.getRules();
@@ -136,15 +134,15 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
 
 
     public String getId() {
-        return id;
+        return this.elementId;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.elementId = id;
     }
 
     public String getRev() {
-        return rev;
+        return this.rev;
     }
 
     public void setRev(String rev) {
@@ -249,8 +247,8 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
     @Override
     public String toString() {
         return "AdapterDescription{" +
-                "id='" + id + '\'' +
-                ", rev='" + rev + '\'' +
+                //"id='" + id + '\'' +
+                //", rev='" + rev + '\'' +
                 ", elementId='" + elementId + '\'' +
                 ", DOM='" + DOM + '\'' +
                 '}';

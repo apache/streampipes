@@ -46,6 +46,7 @@ public class MasterRestClient {
 
             return true;
         } catch (IOException e) {
+            e.printStackTrace();
             LOG.info("Could not connect to " + url);
         }
 

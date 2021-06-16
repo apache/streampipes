@@ -27,7 +27,7 @@ import org.apache.streampipes.rest.api.IPipelineElement;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.rest.shared.util.SpMediaType;
-import org.apache.streampipes.storage.rdf4j.filter.Filter;
+import org.apache.streampipes.storage.couchdb.utils.Filter;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -102,23 +102,16 @@ public class SemanticEventProcessingAgent extends AbstractRestResource implement
 	}
 	
 	@DELETE
-	@Path("/own/{elementUri}")
+	@Path("/own/{elementId}")
 	@RequiresAuthentication
 	@Produces(MediaType.APPLICATION_JSON)
 	@GsonWithIds
 	@Override
-	public Response removeOwn(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
-		getUserService().deleteOwnSepa(username, elementUri);
-		getPipelineElementRdfStorage().deleteDataProcessor(getPipelineElementRdfStorage().getDataProcessorById(elementUri));
+	public Response removeOwn(@PathParam("username") String username,
+														@PathParam("elementId") String elementId) {
+		getUserService().deleteOwnSepa(username, elementId);
+		getPipelineElementRdfStorage().deleteDataProcessor(getPipelineElementRdfStorage().getDataProcessorById(elementId));
 		return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
-	}
-
-	@Path("/{elementUri}/jsonld")
-	@GET
-	@Produces(MediaType.TEXT_PLAIN)
-	@Override
-	public String getAsJsonLd(@PathParam("elementUri") String elementUri) {
-		return toJsonLd(getPipelineElementRdfStorage().getDataProcessorById(elementUri));
 	}
 
 	@Path("/{elementUri}")

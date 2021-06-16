@@ -102,7 +102,7 @@ export class EndpointInstallationComponent {
   }
 
   uninstallElement(endpointUri, index) {
-    this.PipelineElementEndpointService.del(endpointUri.uri)
+    this.PipelineElementEndpointService.del(endpointUri.elementId)
         .subscribe(data => {
           if (data.success) {
             this.installationStatus[index].status = "success";

@@ -16,19 +16,20 @@
  *
  */
 
-package org.apache.streampipes.storage.rdf4j.util;
+package org.apache.streampipes.storage.couchdb.utils;
 
-import org.eclipse.rdf4j.repository.RepositoryException;
-import org.eclipse.rdf4j.rio.RDFParseException;
-import org.eclipse.rdf4j.rio.UnsupportedRDFormatException;
-import org.apache.streampipes.serializers.jsonld.JsonLdTransformer;
+import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 
-import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
-public class Transformer {
+public class Filter {
 
-	public static <T> T fromJsonLd(Class<T> destination, String jsonld) throws RDFParseException, UnsupportedRDFormatException, RepositoryException, IOException {
-		return new JsonLdTransformer().fromJsonLd(jsonld, destination);
-	}
+  public static <T extends NamedStreamPipesEntity> List<T> byUri(List<T> allElements, List<String> userElements) {
+    return allElements
+            .stream()
+            .filter(e -> userElements.stream()
+                    .anyMatch(u -> u.equals(e.getUri()))).collect(Collectors.toList());
+  }
 
 }

@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.config.backend;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -57,8 +56,11 @@ public class MessagingSettings {
             protocolList);
   }
 
-  public MessagingSettings(Integer batchSize, Integer messageMaxBytes, Integer lingerMs,
-                           Integer acks, List<SpDataFormat> prioritizedFormats,
+  public MessagingSettings(Integer batchSize,
+                           Integer messageMaxBytes,
+                           Integer lingerMs,
+                           Integer acks,
+                           List<SpDataFormat> prioritizedFormats,
                            List<SpProtocol> prioritizedProtocols) {
     this.batchSize = batchSize;
     this.messageMaxBytes = messageMaxBytes;

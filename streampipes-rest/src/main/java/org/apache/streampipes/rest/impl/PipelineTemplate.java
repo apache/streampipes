@@ -26,13 +26,10 @@ import org.apache.streampipes.model.template.PipelineTemplateDescription;
 import org.apache.streampipes.model.template.PipelineTemplateDescriptionContainer;
 import org.apache.streampipes.model.template.PipelineTemplateInvocation;
 import org.apache.streampipes.rest.shared.util.SpMediaType;
-import org.apache.streampipes.serializers.jsonld.JsonLdTransformer;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,7 +48,7 @@ public class PipelineTemplate extends AbstractRestResource {
               .map(SpDataStream::new)
               .forEach(datasets::add);
 
-    return ok(toJsonLd(new SpDataStreamContainer(datasets)));
+    return ok((new SpDataStreamContainer(datasets)));
   }
 
   @GET
@@ -68,7 +65,7 @@ public class PipelineTemplate extends AbstractRestResource {
               .map(stream -> new SpDataSet((SpDataSet) stream))
               .forEach(set -> datasets.add((SpDataSet) set));
 
-    return ok(toJsonLd(new SpDataStreamContainer(datasets)));
+    return ok(new SpDataStreamContainer(datasets));
   }
 
   @GET
@@ -92,7 +89,7 @@ public class PipelineTemplate extends AbstractRestResource {
       PipelineTemplateDescription pipelineTemplateDescription = getPipelineTemplateDescription(pipelineTemplateId);
       PipelineTemplateInvocation invocation = Operations.getPipelineInvocationTemplate(dataStream, pipelineTemplateDescription);
       PipelineTemplateInvocation clonedInvocation = new PipelineTemplateInvocation(invocation);
-      return ok(toJsonLd(new PipelineTemplateInvocation(clonedInvocation)));
+      return ok(new PipelineTemplateInvocation(clonedInvocation));
     } else {
       return fail();
     }
@@ -101,21 +98,13 @@ public class PipelineTemplate extends AbstractRestResource {
   @POST
   @Produces(MediaType.APPLICATION_JSON)
   public Response generatePipeline(@PathParam("username") String username,
-                                   String pipelineTemplateInvocationString) {
-    try {
-      PipelineTemplateInvocation pipelineTemplateInvocation =
-              new JsonLdTransformer(StreamPipes.PIPELINE_TEMPLATE_INVOCATION)
-                      .fromJsonLd(pipelineTemplateInvocationString, PipelineTemplateInvocation.class);
+                                   PipelineTemplateInvocation pipelineTemplateInvocation) {
 
-      PipelineOperationStatus status = Operations
-              .handlePipelineTemplateInvocation(username, pipelineTemplateInvocation);
+    PipelineOperationStatus status = Operations
+            .handlePipelineTemplateInvocation(username, pipelineTemplateInvocation);
 
-      return ok(status);
+    return ok(status);
 
-    } catch (IOException e) {
-      e.printStackTrace();
-      return fail();
-    }
   }
 
 

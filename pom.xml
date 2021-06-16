@@ -47,7 +47,7 @@
         <commons-lang.version>2.3</commons-lang.version>
         <commons-lang3.version>3.8.1</commons-lang3.version>
         <commons-logging.version>1.2</commons-logging.version>
-        <consul-client.version>1.4.0</consul-client.version>
+        <consul-client.version>1.5.2</consul-client.version>
         <elasticsearch.version>6.6.2</elasticsearch.version>
         <empire-rdf4j.version>1.9.14</empire-rdf4j.version>
         <flink.version>1.9.1</flink.version>
@@ -60,7 +60,7 @@
         <httpcore.version>4.4.9</httpcore.version>
         <httpcore-osgi.version>4.4.9</httpcore-osgi.version>
         <influxdb.version>2.21</influxdb.version>
-        <jackson.version>2.12.1</jackson.version>
+        <jackson.version>2.12.3</jackson.version>
         <jakarta-annotation.version>1.3.5</jakarta-annotation.version>
         <jakarta-validation.version>2.0.2</jakarta-validation.version>
         <javapoet.version>1.6.1</javapoet.version>
@@ -777,21 +777,6 @@
             </dependency>
             <dependency>
                 <groupId>io.fogsy</groupId>
-                <artifactId>empire-core</artifactId>
-                <version>${empire-rdf4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.fogsy</groupId>
-                <artifactId>empire-rdf4j</artifactId>
-                <version>${empire-rdf4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.fogsy</groupId>
-                <artifactId>empire-pinto</artifactId>
-                <version>${empire-rdf4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.fogsy</groupId>
                 <artifactId>qudt</artifactId>
                 <version>${fogsy-qudt.version}</version>
             </dependency>
@@ -920,12 +905,10 @@
         <module>streampipes-rest</module>
         <module>streampipes-rest-shared</module>
         <module>streampipes-sdk</module>
-        <module>streampipes-serializers-jsonld</module>
         <module>streampipes-serializers-json</module>
         <module>streampipes-storage-api</module>
         <module>streampipes-storage-management</module>
         <module>streampipes-storage-couchdb</module>
-        <module>streampipes-storage-rdf4j</module>
         <module>streampipes-test-utils</module>
         <module>streampipes-user-management</module>
         <module>streampipes-vocabulary</module>

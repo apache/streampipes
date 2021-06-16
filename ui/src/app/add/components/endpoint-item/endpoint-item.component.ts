@@ -111,7 +111,6 @@ export class EndpointItemComponent implements OnInit {
   refresh(elementUri) {
     this.PipelineElementEndpointService.update(elementUri)
         .subscribe(msg => {
-          console.log(msg);
           this.snackBar.open(msg.notifications[0].title, "Ok", {
             duration: 2000
           });

@@ -15,24 +15,11 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.storage.api;
 
-package org.apache.streampipes.serializers.jsonld;
+import org.apache.streampipes.model.graph.DataProcessorDescription;
 
-import io.fogsy.empire.core.empire.annotation.InvalidRdfException;
-import org.eclipse.rdf4j.model.Model;
-import org.eclipse.rdf4j.repository.RepositoryException;
-import org.eclipse.rdf4j.rio.RDFParseException;
-import org.eclipse.rdf4j.rio.UnsupportedRDFormatException;
+public interface IDataProcessorStorage extends CRUDStorage<String, DataProcessorDescription> {
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-
-
-public interface RdfTransformer {
-
-	<T> Model toJsonLd(T element) throws IllegalAccessException, IllegalArgumentException,
-					InvocationTargetException, SecurityException, ClassNotFoundException, InvalidRdfException;
-	
-	<T> T fromJsonLd(String json, Class<T> destination) throws RDFParseException, UnsupportedRDFormatException, IOException, RepositoryException;
-	
+  DataProcessorDescription getDataProcessorByAppId(String appId);
 }

@@ -21,6 +21,7 @@ package org.apache.streampipes.model.base;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.google.gson.annotations.SerializedName;
 import io.fogsy.empire.annotations.Namespaces;
 import io.fogsy.empire.annotations.RdfId;
 import io.fogsy.empire.annotations.RdfProperty;
@@ -49,10 +50,14 @@ public class AbstractStreamPipesEntity implements SupportsRdfId, Serializable {
 
 	@RdfProperty(StreamPipes.HAS_URI)
 	@RdfId
-	protected String elementId;
+	protected @SerializedName("_id") String elementId;
 
 	AbstractStreamPipesEntity() {
 
+	}
+
+	AbstractStreamPipesEntity(AbstractStreamPipesEntity other) {
+		this.elementId = other.getElementId();
 	}
 
 	@SuppressWarnings("rawtypes")

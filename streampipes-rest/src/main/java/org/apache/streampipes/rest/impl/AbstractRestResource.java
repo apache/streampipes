@@ -18,49 +18,38 @@
 
 package org.apache.streampipes.rest.impl;
 
-import io.fogsy.empire.core.empire.annotation.InvalidRdfException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.streampipes.manager.endpoint.HttpJsonParser;
 import org.apache.streampipes.manager.storage.UserManagementService;
 import org.apache.streampipes.manager.storage.UserService;
+import org.apache.streampipes.model.message.ErrorMessage;
+import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notification;
-import org.apache.streampipes.model.message.*;
+import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
-import org.apache.streampipes.serializers.jsonld.JsonLdTransformer;
-import org.apache.streampipes.serializers.jsonld.JsonLdUtils;
 import org.apache.streampipes.storage.api.*;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.storage.management.StorageManager;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.ISpKvManagement;
 import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
-import org.eclipse.rdf4j.rio.RDFHandlerException;
 
 import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
 
 public abstract class AbstractRestResource extends AbstractSharedRestInterface {
 
-  protected <T> String toJsonLd(T object) {
-    try {
-      return JsonLdUtils.asString(new JsonLdTransformer().toJsonLd(object));
-    } catch (RDFHandlerException | IllegalArgumentException
-            | IllegalAccessException | SecurityException | InvocationTargetException
-            | ClassNotFoundException | InvalidRdfException e) {
-      return toJson(constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(),
-              NotificationType.UNKNOWN_ERROR.description(),
-              e.getMessage())));
-    }
-  }
-
   protected IPipelineElementDescriptionStorageCache getPipelineElementRdfStorage() {
     return StorageManager.INSTANCE.getPipelineElementStorage();
+  }
+
+  protected IPipelineElementDescriptionStorageCache getPipelineElementStorage() {
+    return getNoSqlStorage().getPipelineElementDescriptionStorage();
   }
 
   protected IPipelineStorage getPipelineStorage() {
@@ -97,10 +86,6 @@ public abstract class AbstractRestResource extends AbstractSharedRestInterface {
 
   protected IFileMetadataStorage getFileMetadataStorage() {
     return getNoSqlStorage().getFileMetadataStorage();
-  }
-
-  protected ITripleStorage getTripleStorage() {
-    return StorageDispatcher.INSTANCE.getTripleStore();
   }
 
   protected String parseURIContent(String payload) throws URISyntaxException,

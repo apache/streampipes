@@ -24,6 +24,18 @@ import org.apache.streampipes.serializers.json.GsonSerializer;
 
 public class Utils {
 
+  public static CouchDbClient getCouchDbDataProcessorDescriptionClient() {
+    return getCouchDbGsonClient("data-processor");
+  }
+
+  public static CouchDbClient getCouchDbDataStreamDescriptionClient() {
+    return getCouchDbGsonClient("data-stream");
+  }
+
+  public static CouchDbClient getCouchDbDataSinkDescriptionClient() {
+    return getCouchDbGsonClient("data-sink");
+  }
+
   public static CouchDbClient getCouchDbPipelineElementTemplateClient() {
     return getCouchDbGsonClient("pipelineelementtemplate");
   }

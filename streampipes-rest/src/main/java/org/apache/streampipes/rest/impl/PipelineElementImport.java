@@ -29,7 +29,6 @@ import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.message.Notifications;
-import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorageCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -138,20 +137,4 @@ public class PipelineElementImport extends AbstractRestResource {
     return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
   }
 
-  @Path("{id}/jsonld")
-  @GET
-  @Produces(MediaType.TEXT_PLAIN)
-  public Response getActionAsJsonLd(@PathParam("id") String elementId) {
-    IPipelineElementDescriptionStorage requestor = getPipelineElementRdfStorage();
-    elementId = decode(elementId);
-    if (requestor.getDataProcessorById(elementId) != null) {
-      return ok(toJsonLd(requestor.getDataProcessorById(elementId)));
-    } else if (requestor.getDataStreamById(elementId) != null) {
-      return ok(toJsonLd(requestor.getDataStreamById(elementId)));
-    } else if (requestor.getDataSinkById(elementId) != null) {
-      return ok(toJsonLd(requestor.getDataSinkById(elementId)));
-    } else {
-      return ok(Notifications.create(NotificationType.UNKNOWN_ERROR));
-    }
-  }
 }
