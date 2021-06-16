@@ -18,22 +18,14 @@
 
 package org.apache.streampipes.model.quality;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
 import java.net.URI;
 
-import javax.persistence.Entity;
-
-@RdfsClass(StreamPipes.MEASUREMENT_CAPABILITY)
-@Entity
 public class MeasurementCapability extends UnnamedStreamPipesEntity {
 
 	private static final long serialVersionUID = -7561544835976781403L;
-	
-	@RdfProperty(StreamPipes.HAS_CAPABILTIY)
+
 	private URI capability;
 	
 	public MeasurementCapability() {

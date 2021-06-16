@@ -18,25 +18,14 @@
 
 package org.apache.streampipes.model.schema;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
-import org.apache.streampipes.vocabulary.SO;
-
-import javax.persistence.Entity;
-
-@RdfsClass(SO.QuantitativeValue)
-@Entity
 public class QuantitativeValue extends ValueSpecification {
 
 	private static final long serialVersionUID = 1L;
 
-	@RdfProperty(SO.MinValue)
 	private Float minValue;
-	
-	@RdfProperty(SO.MaxValue)
+
 	private Float maxValue;
 
-	@RdfProperty(SO.Step)
 	private Float step;
 
 	public QuantitativeValue() {

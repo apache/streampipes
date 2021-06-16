@@ -18,42 +18,26 @@
 
 package org.apache.streampipes.model.dashboard;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.*;
 import java.util.List;
 
-@RdfsClass(StreamPipes.DASHBOARD_WIDGET_SETTINGS)
-@Entity
 @TsModel
 public class DashboardWidgetSettings extends UnnamedStreamPipesEntity {
 
-  @RdfProperty(StreamPipes.HAS_DASHBOARD_WIDGET_LABEL)
   private String widgetLabel;
 
-  @RdfProperty(StreamPipes.HAS_DASHBOARD_WIDGET_NAME)
   private String widgetName;
 
-  @OneToMany(fetch = FetchType.EAGER,
-          cascade = {CascadeType.ALL})
-  @RdfProperty(StreamPipes.HAS_STATIC_PROPERTY)
   private List<StaticProperty> config;
 
-  @OneToOne(fetch = FetchType.EAGER,
-          cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-  @RdfProperty(StreamPipes.HAS_SCHEMA)
   private EventSchema requiredSchema;
 
-  @RdfProperty(StreamPipes.HAS_WIDGET_ICON_NAME)
   private String widgetIconName;
 
-  @RdfProperty(StreamPipes.HAS_WIDGET_DESCRIPTION)
   private String widgetDescription;
 
   public DashboardWidgetSettings() {

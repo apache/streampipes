@@ -20,17 +20,10 @@ package org.apache.streampipes.model.dashboard;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.shared.annotation.TsModel;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.Entity;
-import javax.persistence.MappedSuperclass;
 import java.util.List;
 
-@RdfsClass(StreamPipes.DASHBOARD_MODEL)
-@MappedSuperclass
-@Entity
 @TsModel
 public class DashboardModel {
 

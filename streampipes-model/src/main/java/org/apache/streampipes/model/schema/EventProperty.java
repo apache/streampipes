@@ -19,26 +19,18 @@
 package org.apache.streampipes.model.schema;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.commons.collections.ListUtils;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.quality.EventPropertyQualityDefinition;
 import org.apache.streampipes.model.quality.EventPropertyQualityRequirement;
 import org.apache.streampipes.model.util.Cloner;
-import org.apache.streampipes.vocabulary.RDFS;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.*;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-@RdfsClass(StreamPipes.EVENT_PROPERTY)
-@MappedSuperclass
-@Entity
 @JsonSubTypes({
         @JsonSubTypes.Type(EventPropertyList.class),
         @JsonSubTypes.Type(EventPropertyNested.class),
@@ -50,39 +42,22 @@ public abstract class EventProperty extends UnnamedStreamPipesEntity {
 
   protected static final String prefix = "urn:streampipes.org:spi:";
 
-  @RdfProperty(RDFS.LABEL)
   private String label;
 
-  @RdfProperty(RDFS.DESCRIPTION)
   private String description;
 
-  @RdfProperty(StreamPipes.HAS_RUNTIME_NAME)
   private String runtimeName;
 
-  @RdfProperty(StreamPipes.REQUIRED)
   private boolean required;
 
-  @OneToMany(fetch = FetchType.EAGER,
-          cascade = {CascadeType.ALL})
-  @RdfProperty(StreamPipes.DOMAIN_PROPERTY)
   private List<URI> domainProperties;
 
-  @OneToMany(fetch = FetchType.EAGER,
-          cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-  @RdfProperty(StreamPipes.HAS_EVENT_PROPERTY_QUALITY_DEFINITION)
   private List<EventPropertyQualityDefinition> eventPropertyQualities;
 
-  @OneToMany(fetch = FetchType.EAGER,
-          cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-  @RdfProperty(StreamPipes.HAS_EVENT_PROPERTY_QUALITY_REQUIREMENT)
   private List<EventPropertyQualityRequirement> requiresEventPropertyQualities;
 
-  @OneToOne(fetch = FetchType.EAGER,
-          cascade = {CascadeType.ALL})
-  @RdfProperty(StreamPipes.HAS_PROPERTY_SCOPE)
   private String propertyScope;
 
-  @RdfProperty(StreamPipes.INDEX)
   private int index = 0;
 
   private String runtimeId;

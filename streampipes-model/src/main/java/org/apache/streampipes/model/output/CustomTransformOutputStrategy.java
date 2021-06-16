@@ -17,27 +17,14 @@
  */
 package org.apache.streampipes.model.output;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.util.Cloner;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-
-@RdfsClass(StreamPipes.CUSTOM_TRANSFORM_OUTPUT_STRATEGY)
-@Entity
 public class CustomTransformOutputStrategy extends OutputStrategy {
 
-  @OneToMany(fetch = FetchType.EAGER,
-          cascade = {CascadeType.ALL})
-  @RdfProperty(StreamPipes.PRODUCES_PROPERTY)
   private List<EventProperty> eventProperties;
 
   public CustomTransformOutputStrategy()

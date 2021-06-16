@@ -18,30 +18,18 @@
 
 package org.apache.streampipes.model.monitoring;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.Entity;
-
-@RdfsClass(StreamPipes.ELEMENT_STATUS_INFO_SETTINGS)
-@Entity
 public class ElementStatusInfoSettings extends UnnamedStreamPipesEntity {
 
-  @RdfProperty(StreamPipes.ELEMENT_IDENTIFIER)
   private String elementIdentifier;
 
-  @RdfProperty(StreamPipes.KAFKA_HOST)
   private String kafkaHost;
 
-  @RdfProperty(StreamPipes.KAFKA_PORT)
   private int kafkaPort;
 
-  @RdfProperty(StreamPipes.ERROR_TOPIC)
   private String errorTopic;
 
-  @RdfProperty(StreamPipes.STATS_TOPIC)
   private String statsTopic;
 
   public ElementStatusInfoSettings() {

@@ -18,23 +18,13 @@
 
 package org.apache.streampipes.model.output;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
-import org.apache.streampipes.vocabulary.StreamPipes;
-
-import javax.persistence.Entity;
-
-@RdfsClass(StreamPipes.KEEP_OUTPUT_STRATEGY)
-@Entity
 public class KeepOutputStrategy extends OutputStrategy {
 
   private static final long serialVersionUID = 7643705399683055563L;
 
   @Deprecated
-  @RdfProperty(StreamPipes.EVENT_NAME)
   String eventName;
 
-  @RdfProperty(StreamPipes.KEEP_BOTH)
   private boolean keepBoth;
 
   public KeepOutputStrategy() {

@@ -18,34 +18,20 @@
 
 package org.apache.streampipes.model.schema;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.quality.EventPropertyQualityDefinition;
 import org.apache.streampipes.model.util.Cloner;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
 import java.net.URI;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
-
-@RdfsClass(StreamPipes.EVENT_PROPERTY_PRIMITIVE)
-@Entity
 public class EventPropertyPrimitive extends EventProperty {
 
   private static final long serialVersionUID = 665989638281665875L;
 
-  @RdfProperty(StreamPipes.HAS_PROPERTY_TYPE)
   private String runtimeType;
 
-  @RdfProperty(StreamPipes.HAS_MEASUREMENT_UNIT)
-  @OneToOne(cascade = {CascadeType.ALL})
   private URI measurementUnit;
 
-  @RdfProperty(StreamPipes.HAS_VALUE_SPECIFICATION)
-  @OneToOne(cascade = {CascadeType.ALL})
   private ValueSpecification valueSpecification;
 
   public EventPropertyPrimitive() {

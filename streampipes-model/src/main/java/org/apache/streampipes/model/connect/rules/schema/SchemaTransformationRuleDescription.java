@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.model.connect.rules.schema;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
 
 public abstract class SchemaTransformationRuleDescription extends TransformationRuleDescription {

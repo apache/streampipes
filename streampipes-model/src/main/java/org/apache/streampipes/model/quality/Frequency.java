@@ -18,15 +18,6 @@
 
 package org.apache.streampipes.model.quality;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
-import org.apache.streampipes.vocabulary.SSN;
-import org.apache.streampipes.vocabulary.StreamPipes;
-
-import javax.persistence.Entity;
-
-@RdfsClass(SSN.FREQUENCY)
-@Entity
 public class Frequency extends EventStreamQualityDefinition {
 
 	private static final long serialVersionUID = 8196363710990038633L;
@@ -48,7 +39,6 @@ public class Frequency extends EventStreamQualityDefinition {
 	/**
 	 * The unit of qualityValue is Hertz [Hz]
 	 */
-	@RdfProperty(StreamPipes.HAS_QUANTITY_VALUE)
 	float quantityValue;
 
 	public float getQuantityValue() {

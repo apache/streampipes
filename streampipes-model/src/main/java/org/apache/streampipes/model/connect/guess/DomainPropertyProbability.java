@@ -18,23 +18,12 @@
 
 package org.apache.streampipes.model.connect.guess;
 
-import io.fogsy.empire.annotations.Namespaces;
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 
-import javax.persistence.Entity;
-
-@Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
-@RdfsClass("sp:DomainPropertyProbability")
-@Entity
 public class DomainPropertyProbability extends UnnamedStreamPipesEntity {
 
-    @RdfProperty("sp:domainProperty")
     private String domainProperty;
 
-
-    @RdfProperty("sp:probability")
     private String probability;
 
     public DomainPropertyProbability() {

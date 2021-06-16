@@ -18,29 +18,15 @@
 
 package org.apache.streampipes.model.connect.guess;
 
-import io.fogsy.empire.annotations.Namespaces;
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
-@Namespaces({"sp", "https://streampipes.org/vocabulary/v1/\""})
-@RdfsClass("sp:DomainPropertyProbabilityList")
-@Entity
 public class DomainPropertyProbabilityList extends UnnamedStreamPipesEntity {
 
-    @RdfProperty("sp:runtimeName")
     private String runtimeName;
 
-    @OneToMany(fetch = FetchType.EAGER,
-            cascade = {CascadeType.ALL})
-    @RdfProperty("sp:list")
     private List<DomainPropertyProbability> list;
 
     public DomainPropertyProbabilityList() {

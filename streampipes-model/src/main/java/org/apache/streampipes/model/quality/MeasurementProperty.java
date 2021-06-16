@@ -19,14 +19,8 @@
 package org.apache.streampipes.model.quality;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
-import org.apache.streampipes.vocabulary.SSN;
 
-import javax.persistence.Entity;
-
-@RdfsClass(SSN.MEASUREMENT_PROPERTY)
-@Entity
 @JsonSubTypes({
 				@JsonSubTypes.Type(EventPropertyQualityDefinition.class),
 				@JsonSubTypes.Type(EventStreamQualityDefinition.class)

@@ -64,18 +64,6 @@
             <groupId>com.github.drapostolos</groupId>
             <artifactId>type-parser</artifactId>
         </dependency>
-        <dependency>
-            <groupId>javax.persistence</groupId>
-            <artifactId>persistence-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.fogsy</groupId>
-            <artifactId>empire-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.fogsy</groupId>
-            <artifactId>empire-annotations</artifactId>
-        </dependency>
 
         <!-- Test dependencies -->
         <dependency>

@@ -19,34 +19,20 @@
 package org.apache.streampipes.model.grounding;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.util.Cloner;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-@RdfsClass(StreamPipes.EVENT_GROUNDING)
-@Entity
 public class EventGrounding extends UnnamedStreamPipesEntity {
 
 	private static final long serialVersionUID = 3149070517282698799L;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
-	@RdfProperty(StreamPipes.HAS_TRANSPORT_PROTOCOL)
 	private List<TransportProtocol> transportProtocols;
-	
-	@OneToMany(fetch = FetchType.EAGER,
-			   cascade = {CascadeType.ALL})
-	@RdfProperty(StreamPipes.HAS_TRANSPORT_FORMAT)
+
 	private List<TransportFormat> transportFormats;
 	
 	public EventGrounding()

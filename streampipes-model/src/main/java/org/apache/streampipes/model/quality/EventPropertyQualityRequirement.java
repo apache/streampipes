@@ -18,30 +18,16 @@
 
 package org.apache.streampipes.model.quality;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.OneToOne;
 import java.util.Objects;
 
-@RdfsClass(StreamPipes.EVENT_PROPERTY_QUALITY_REQUIREMENT)
-@MappedSuperclass
-@Entity
 public class EventPropertyQualityRequirement extends UnnamedStreamPipesEntity {
 
 	private static final long serialVersionUID = -8173312776233284351L;
 
-	@OneToOne(cascade = {CascadeType.ALL})
-	@RdfProperty(StreamPipes.MINIMUM_EVENT_PROPERTY_QUALITY)
 	private transient EventPropertyQualityDefinition minimumPropertyQuality;
 
-	@OneToOne(cascade = {CascadeType.ALL})
-	@RdfProperty(StreamPipes.MAXIMUM_EVENT_PROPERTY_QUALITY)
 	private transient EventPropertyQualityDefinition maximumPropertyQuality;
 	
 	public EventPropertyQualityRequirement() {

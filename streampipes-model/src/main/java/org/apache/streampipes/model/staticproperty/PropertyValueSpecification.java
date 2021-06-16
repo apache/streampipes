@@ -18,26 +18,16 @@
 
 package org.apache.streampipes.model.staticproperty;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
-import org.apache.streampipes.vocabulary.SO;
 
-import javax.persistence.Entity;
-
-@RdfsClass(SO.PropertyValueSpecification)
-@Entity
 public class PropertyValueSpecification extends UnnamedStreamPipesEntity {
 
 	private static final long serialVersionUID = 1L;
-	
-	@RdfProperty(SO.MinValue)
+
 	private double minValue;
-	
-	@RdfProperty(SO.MaxValue)
+
 	private double maxValue;
-	
-	@RdfProperty(SO.Step)
+
 	private double step;
 
 	public PropertyValueSpecification(double minValue, double maxValue,

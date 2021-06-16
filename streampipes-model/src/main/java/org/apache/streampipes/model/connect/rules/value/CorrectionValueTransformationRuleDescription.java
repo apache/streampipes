@@ -16,25 +16,12 @@ package org.apache.streampipes.model.connect.rules.value;/*
  *
  */
 
-import io.fogsy.empire.annotations.Namespaces;
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
-import org.apache.streampipes.vocabulary.StreamPipes;
-
-import javax.persistence.Entity;
-
-@Namespaces({StreamPipes.NS_PREFIX, StreamPipes.NS})
-@RdfsClass(StreamPipes.CORRECTION_VALUE_TRANSFORM_RULE_DESCRIPTION)
-@Entity
 public class CorrectionValueTransformationRuleDescription extends ValueTransformationRuleDescription {
 
-    @RdfProperty(StreamPipes.RUNTIME_KEY)
     private String runtimeKey;
 
-    @RdfProperty(StreamPipes.CORRECTION_VALUE)
     private double correctionValue;
 
-    @RdfProperty(StreamPipes.OPERATOR)
     private String operator;
 
     public CorrectionValueTransformationRuleDescription() {

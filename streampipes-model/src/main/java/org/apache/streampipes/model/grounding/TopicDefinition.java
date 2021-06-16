@@ -19,24 +19,14 @@
 package org.apache.streampipes.model.grounding;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.Entity;
-import javax.persistence.MappedSuperclass;
-
-@RdfsClass(StreamPipes.TOPIC_DEFINITION)
-@Entity
-@MappedSuperclass
 @JsonSubTypes({
         @JsonSubTypes.Type(SimpleTopicDefinition.class),
         @JsonSubTypes.Type(WildcardTopicDefinition.class)
 })
 public abstract class TopicDefinition extends UnnamedStreamPipesEntity {
 
-  @RdfProperty(StreamPipes.HAS_ACTUAL_TOPIC_NAME)
   private String actualTopicName;
 
   public TopicDefinition() {

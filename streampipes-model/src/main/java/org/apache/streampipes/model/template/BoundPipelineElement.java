@@ -17,30 +17,17 @@
  */
 package org.apache.streampipes.model.template;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.util.Cloner;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
-@RdfsClass(StreamPipes.BOUND_PIPELINE_ELEMENT)
-@Entity
 public class BoundPipelineElement extends UnnamedStreamPipesEntity {
 
-  @RdfProperty(StreamPipes.HAS_PIPELINE_ELEMENT_TEMPLATE)
   private InvocableStreamPipesEntity pipelineElementTemplate;
 
-  @OneToMany(fetch = FetchType.EAGER,
-          cascade = {CascadeType.ALL})
-  @RdfProperty(StreamPipes.IS_CONNECTED_TO)
   private List<BoundPipelineElement> connectedTo;
 
   public BoundPipelineElement() {

@@ -19,19 +19,11 @@
 package org.apache.streampipes.model.base;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.gson.annotations.SerializedName;
-import io.fogsy.empire.annotations.Namespaces;
-import io.fogsy.empire.annotations.RdfId;
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.api.SupportsRdfId;
-import org.apache.streampipes.model.shared.annotation.TsIgnore;
 import org.apache.streampipes.model.shared.annotation.TsModel;
-import org.apache.streampipes.vocabulary.*;
 
 import java.io.Serializable;
-import java.net.URI;
 import java.util.Objects;
 
 
@@ -39,17 +31,12 @@ import java.util.Objects;
  * top-level StreamPipes element
  */
 
-@Namespaces({StreamPipes.NS_PREFIX, StreamPipes.NS,
-				"dc",   "http://purl.org/dc/terms/", RDFS.NS_PREFIX, RDFS.NS, RDF.NS_PREFIX, RDF.NS, SO.NS_PREFIX, SO.NS,
-				SSN.NS_PREFIX, SSN.NS})
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property="@class")
 @TsModel
-public class AbstractStreamPipesEntity implements SupportsRdfId, Serializable {
+public class AbstractStreamPipesEntity implements Serializable {
 
 	private static final long serialVersionUID = -8593749314663582071L;
 
-	@RdfProperty(StreamPipes.HAS_URI)
-	@RdfId
 	protected @SerializedName("_id") String elementId;
 
 	AbstractStreamPipesEntity() {
@@ -58,22 +45,6 @@ public class AbstractStreamPipesEntity implements SupportsRdfId, Serializable {
 
 	AbstractStreamPipesEntity(AbstractStreamPipesEntity other) {
 		this.elementId = other.getElementId();
-	}
-
-	@SuppressWarnings("rawtypes")
-	@Override
-	@JsonIgnore
-	@TsIgnore
-	public RdfKey getRdfId() {
-		return new URIKey(URI.create(getElementId()));
-	}
-
-	@SuppressWarnings("rawtypes")
-	@Override
-	@JsonIgnore
-	@TsIgnore
-	public void setRdfId(RdfKey arg0) {
-		this.elementId = arg0.toString();
 	}
 
 	public String getElementId() {

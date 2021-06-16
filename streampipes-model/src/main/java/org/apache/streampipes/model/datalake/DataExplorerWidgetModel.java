@@ -18,36 +18,16 @@
 
 package org.apache.streampipes.model.datalake;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.dashboard.DashboardEntity;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToOne;
-
-@RdfsClass(StreamPipes.DATA_EXPLORER_WIDGET_MODEL)
-@Entity
 public class DataExplorerWidgetModel extends DashboardEntity {
 
-
-  @RdfProperty(StreamPipes.HAS_DASHBOARD_WIDGET_ID)
   private String widgetId;
 
-  @RdfProperty(StreamPipes.HAS_DASHBOARD_WIDGET_TYPE)
   private String widgetType;
 
-  @RdfProperty(StreamPipes.HAS_DASHBOARD_WIDGET_TYPE)
   private String selectedKeys;
 
-//  @RdfProperty(StreamPipes.HAS_MEASUREMENT_NAME)
-//  private String measureName;
-
-  @OneToOne(fetch = FetchType.EAGER,
-          cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-  @RdfProperty(StreamPipes.HAS_DATA_LAKE_MEASURE)
   private DataLakeMeasure dataLakeMeasure;
 
   public DataExplorerWidgetModel() {

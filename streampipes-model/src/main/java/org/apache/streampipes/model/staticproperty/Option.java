@@ -18,26 +18,16 @@
 
 package org.apache.streampipes.model.staticproperty;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.Entity;
-
-@RdfsClass(StreamPipes.OPTION)
-@Entity
 public class Option extends UnnamedStreamPipesEntity {
 	
 	private static final long serialVersionUID = 8536995294188662931L;
 
-	@RdfProperty(StreamPipes.HAS_NAME)
 	private String name;
-	
-	@RdfProperty(StreamPipes.IS_SELECTED)
+
 	private boolean selected;
 
-	@RdfProperty(StreamPipes.INTERNAL_NAME)
 	private String internalName;
 	
 	public Option()

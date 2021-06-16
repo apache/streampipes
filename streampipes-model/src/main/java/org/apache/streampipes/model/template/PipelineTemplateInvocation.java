@@ -17,28 +17,19 @@
  */
 package org.apache.streampipes.model.template;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.util.Cloner;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@RdfsClass(StreamPipes.PIPELINE_TEMPLATE_INVOCATION)
-@Entity
 public class PipelineTemplateInvocation extends UnnamedStreamPipesEntity {
 
-  @RdfProperty(StreamPipes.HAS_NAME)
   private String kviName;
 
-  @RdfProperty(StreamPipes.HAS_DATASET_ID)
   private String dataSetId;
 
-  @RdfProperty(StreamPipes.INTERNAL_NAME)
   private String pipelineTemplateId;
 
   //@RdfProperty(StreamPipes.HAS_PIPELINE_TEMPLATE_DESCRIPTION)
@@ -46,9 +37,6 @@ public class PipelineTemplateInvocation extends UnnamedStreamPipesEntity {
   //        cascade = {CascadeType.PERSIST, CascadeType.MERGE})
   private PipelineTemplateDescription pipelineTemplateDescription;
 
-  @OneToMany(fetch = FetchType.EAGER,
-          cascade = {CascadeType.ALL})
-  @RdfProperty(StreamPipes.HAS_STATIC_PROPERTY)
   private List<StaticProperty> staticProperties;
 
   public PipelineTemplateInvocation() {

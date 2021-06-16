@@ -17,26 +17,14 @@
  */
 package org.apache.streampipes.model.graph;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.util.Cloner;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
-@RdfsClass(StreamPipes.PIPELINE_ELEMENT_CONTAINER)
-@Entity
 public class PipelineElementContainer extends NamedStreamPipesEntity {
 
-  @OneToMany(fetch = FetchType.EAGER,
-          cascade = {CascadeType.ALL})
-  @RdfProperty(StreamPipes.HAS_PIPELINE_ELEMENTS)
   private List<NamedStreamPipesEntity> pipelineElementDescriptions;
 
   public PipelineElementContainer(PipelineElementContainer other) {

@@ -17,17 +17,8 @@
  */
 package org.apache.streampipes.model.staticproperty;
 
-import org.apache.streampipes.vocabulary.StreamPipes;
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
-
-import javax.persistence.Entity;
-
-@RdfsClass(StreamPipes.COLOR_PICKER_STATIC_PROPERTY)
-@Entity
 public class ColorPickerStaticProperty extends StaticProperty {
 
-  @RdfProperty(StreamPipes.SELECTED_COLOR)
   private String selectedColor;
 
   public ColorPickerStaticProperty() {

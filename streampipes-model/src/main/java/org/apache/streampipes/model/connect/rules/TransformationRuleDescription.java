@@ -19,8 +19,6 @@
 package org.apache.streampipes.model.connect.rules;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
-import io.fogsy.empire.annotations.Namespaces;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription;
@@ -30,13 +28,7 @@ import org.apache.streampipes.model.connect.rules.stream.EventRateTransformation
 import org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.*;
 import org.apache.streampipes.model.shared.annotation.TsModel;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.Entity;
-
-@Namespaces({StreamPipes.NS_PREFIX, StreamPipes.NS})
-@RdfsClass(StreamPipes.TRANSFORM_RULE_DESCRIPTION)
-@Entity
 @TsModel
 @JsonSubTypes({
         @JsonSubTypes.Type(AddTimestampRuleDescription.class),

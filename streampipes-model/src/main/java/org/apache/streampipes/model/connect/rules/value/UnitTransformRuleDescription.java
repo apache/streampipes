@@ -18,25 +18,12 @@
 
 package org.apache.streampipes.model.connect.rules.value;
 
-import io.fogsy.empire.annotations.Namespaces;
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
-import org.apache.streampipes.vocabulary.StreamPipes;
-
-import javax.persistence.Entity;
-
-@Namespaces({StreamPipes.NS_PREFIX, StreamPipes.NS})
-@RdfsClass(StreamPipes.UNIT_TRANSFORM_RULE_DESCRIPTION)
-@Entity
 public class UnitTransformRuleDescription extends ValueTransformationRuleDescription {
 
-    @RdfProperty(StreamPipes.RUNTIME_KEY)
     private String runtimeKey;
 
-    @RdfProperty(StreamPipes.FROM_UNIT)
     private String fromUnitRessourceURL;
 
-    @RdfProperty(StreamPipes.TO_UNIT)
     private String toUnitRessourceURL;
 
     public UnitTransformRuleDescription() {

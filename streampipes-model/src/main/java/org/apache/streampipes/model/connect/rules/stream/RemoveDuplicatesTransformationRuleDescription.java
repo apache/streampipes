@@ -18,21 +18,9 @@
 
 package org.apache.streampipes.model.connect.rules.stream;
 
-import io.fogsy.empire.annotations.Namespaces;
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
-import org.apache.streampipes.vocabulary.StreamPipes;
-
-import javax.persistence.Entity;
-
-@Namespaces({StreamPipes.NS_PREFIX, StreamPipes.NS})
-@RdfsClass(StreamPipes.REMOVE_DUPLICATES_RULE_DESCRIPTION)
-@Entity
 public class RemoveDuplicatesTransformationRuleDescription extends StreamTransformationRuleDescription {
 
-    @RdfProperty(StreamPipes.FILTER_TIME_WINDOW)
     private String filterTimeWindow;
-
 
     public RemoveDuplicatesTransformationRuleDescription() {
         super();

@@ -18,19 +18,10 @@
 
 package org.apache.streampipes.model.grounding;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
-import org.apache.streampipes.vocabulary.StreamPipes;
-
-import javax.persistence.Entity;
-
-@RdfsClass(StreamPipes.JMS_TRANSPORT_PROTOCOL)
-@Entity
 public class JmsTransportProtocol extends TransportProtocol {
 
 	private static final long serialVersionUID = -5650426611208789835L;
-	
-	@RdfProperty(StreamPipes.JMS_PORT)
+
 	private int port;
 	
 	public JmsTransportProtocol(String uri, int port, String topicName)

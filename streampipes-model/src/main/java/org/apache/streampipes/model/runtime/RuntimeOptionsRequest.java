@@ -17,39 +17,22 @@
  */
 package org.apache.streampipes.model.runtime;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
 import java.util.List;
 
-@RdfsClass(StreamPipes.RUNTIME_OPTIONS_REQUEST)
-@Entity
 @TsModel
 public class RuntimeOptionsRequest extends UnnamedStreamPipesEntity {
 
-  @RdfProperty(StreamPipes.HAS_REQUEST_ID)
   protected String requestId;
 
-  @RdfProperty(StreamPipes.HAS_APP_ID)
   protected String appId;
 
-  @OneToMany(fetch = FetchType.EAGER,
-          cascade = {CascadeType.ALL})
-  @RdfProperty(StreamPipes.HAS_STATIC_PROPERTY)
   protected List<StaticProperty> staticProperties;
 
-  @OneToMany(fetch = FetchType.EAGER,
-          cascade = {CascadeType.ALL})
-  @RdfProperty(StreamPipes.RECEIVES_STREAM)
   protected List<SpDataStream> inputStreams;
 
   private String belongsTo;

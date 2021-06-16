@@ -18,30 +18,16 @@
 
 package org.apache.streampipes.model.grounding;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
-import org.apache.streampipes.vocabulary.RDF;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-
-@RdfsClass(StreamPipes.TRANSPORT_FORMAT)
-@Entity
 public class TransportFormat extends UnnamedStreamPipesEntity {
 	
 	private static final long serialVersionUID = -525073244975968386L;
-	
-	@OneToMany(fetch = FetchType.EAGER,
-			   cascade = {CascadeType.ALL})
-	@RdfProperty(RDF.TYPE)
+
 	private List<URI> rdfType;
 
 	public TransportFormat()

@@ -19,29 +19,16 @@
 package org.apache.streampipes.model.connect.grounding;
 
 
-import io.fogsy.empire.annotations.Namespaces;
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.util.Cloner;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
 
-@Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
-@RdfsClass("sp:FormatDescription")
-@Entity
 public class FormatDescription extends NamedStreamPipesEntity {
 
-    @OneToMany(fetch = FetchType.EAGER,
-            cascade = {CascadeType.ALL})
-    @RdfProperty("sp:config")
     private List<StaticProperty> config;
 
     public FormatDescription() {

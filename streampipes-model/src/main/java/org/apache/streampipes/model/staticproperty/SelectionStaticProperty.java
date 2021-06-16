@@ -18,30 +18,19 @@
 package org.apache.streampipes.model.staticproperty;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.util.Cloner;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@RdfsClass(StreamPipes.SELECTION_STATIC_PROPERTY)
-@MappedSuperclass
-@Entity
 @JsonSubTypes({
         @JsonSubTypes.Type(AnyStaticProperty.class),
         @JsonSubTypes.Type(OneOfStaticProperty.class)
 })
 public abstract class SelectionStaticProperty extends StaticProperty {
 
-  @OneToMany(fetch = FetchType.EAGER,
-          cascade = {CascadeType.ALL})
-  @RdfProperty(StreamPipes.HAS_OPTION)
   private List<Option> options;
 
-  @RdfProperty(StreamPipes.IS_HORIZONTAL_RENDERING)
   private boolean horizontalRendering;
 
 

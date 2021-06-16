@@ -18,27 +18,17 @@
 
 package org.apache.streampipes.model.staticproperty;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
-import org.apache.streampipes.vocabulary.StreamPipes;
-
-import javax.persistence.Entity;
 import java.util.ArrayList;
 import java.util.List;
 
-@RdfsClass(StreamPipes.FILE_STATIC_PROPERTY)
-@Entity
 public class FileStaticProperty extends StaticProperty {
 
   private static final long serialVersionUID = 1L;
 
-  @RdfProperty(StreamPipes.HAS_ENDPOINT_URL)
   private String endpointUrl;
 
-  @RdfProperty(StreamPipes.HAS_LOCATION_PATH)
   private String locationPath;
 
-  @RdfProperty(StreamPipes.HAS_REQUIRED_FILETYPES)
   private List<String> requiredFiletypes;
 
   public FileStaticProperty() {

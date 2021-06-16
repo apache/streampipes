@@ -18,23 +18,12 @@
 
 package org.apache.streampipes.model.staticproperty;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
-import org.apache.streampipes.vocabulary.StreamPipes;
-
-import javax.persistence.Entity;
-
-@RdfsClass(StreamPipes.CODE_INPUT_STATIC_PROPERTY)
-@Entity
 public class CodeInputStaticProperty extends StaticProperty {
 
-  @RdfProperty(StreamPipes.HAS_LANGUAGE)
   private String language;
 
-  @RdfProperty(StreamPipes.HAS_CODE_TEMPLATE)
   private String codeTemplate;
 
-  @RdfProperty(StreamPipes.HAS_CODE_INPUT)
   private String value;
 
   public CodeInputStaticProperty() {

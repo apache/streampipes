@@ -18,13 +18,6 @@
 
 package org.apache.streampipes.model.staticproperty;
 
-import io.fogsy.empire.annotations.RdfsClass;
-import org.apache.streampipes.vocabulary.StreamPipes;
-
-import javax.persistence.Entity;
-
-@RdfsClass(StreamPipes.ANY_STATIC_PROPERTY)
-@Entity
 public class AnyStaticProperty extends SelectionStaticProperty {
 
   private static final long serialVersionUID = -7046019539598560494L;

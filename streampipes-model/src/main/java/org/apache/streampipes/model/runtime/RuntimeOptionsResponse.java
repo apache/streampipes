@@ -17,27 +17,15 @@
  */
 package org.apache.streampipes.model.runtime;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.model.staticproperty.Option;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
-@RdfsClass(StreamPipes.RUNTIME_OPTIONS_RESPONSE)
-@Entity
 @TsModel
 public class RuntimeOptionsResponse extends RuntimeOptionsRequest {
 
-  @OneToMany(fetch = FetchType.EAGER,
-          cascade = {CascadeType.ALL})
-  @RdfProperty(StreamPipes.HAS_OPTION)
   private List<Option> options;
 
   public RuntimeOptionsResponse() {

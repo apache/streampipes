@@ -19,20 +19,9 @@
 package org.apache.streampipes.model.staticproperty;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.shared.annotation.TsModel;
-import org.apache.streampipes.vocabulary.RDFS;
-import org.apache.streampipes.vocabulary.SO;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.Entity;
-import javax.persistence.MappedSuperclass;
-
-@RdfsClass(StreamPipes.STATIC_PROPERTY)
-@MappedSuperclass
-@Entity
 @JsonSubTypes({
         @JsonSubTypes.Type(AnyStaticProperty.class),
         @JsonSubTypes.Type(CodeInputStaticProperty.class),
@@ -57,22 +46,16 @@ public abstract class StaticProperty extends UnnamedStreamPipesEntity {
 
   private static final long serialVersionUID = 2509153122084646025L;
 
-  @RdfProperty(StreamPipes.INDEX)
   private int index;
 
-  @RdfProperty(RDFS.LABEL)
   private String label;
 
-  @RdfProperty(RDFS.DESCRIPTION)
   private String description;
 
-  @RdfProperty(StreamPipes.INTERNAL_NAME)
   private String internalName;
 
-  @RdfProperty(SO.ValueRequired)
   protected boolean valueRequired;
 
-  @RdfProperty(StreamPipes.IS_PREDEFINED)
   private boolean predefined;
 
   protected StaticPropertyType staticPropertyType;

@@ -19,40 +19,24 @@
 package org.apache.streampipes.model.staticproperty;
 
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.util.Cloner;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
 @Deprecated
-@RdfsClass(StreamPipes.REMOTE_ONE_OF_STATIC_PROPERTY)
-@Entity
 public class RemoteOneOfStaticProperty extends StaticProperty {
 
   private static final long serialVersionUID = 3483290363677184344L;
 
-  @OneToMany(fetch = FetchType.EAGER,
-          cascade = {CascadeType.ALL})
-  @RdfProperty(StreamPipes.HAS_OPTION)
   private List<Option> options;
 
-  @RdfProperty(StreamPipes.REMOTE_URL)
   private String remoteUrl;
 
-  @RdfProperty(StreamPipes.VALUE_FIELD_NAME)
   private String valueFieldName;
 
-  @RdfProperty(StreamPipes.LABEL_FIELD_NAME)
   private String labelFieldName;
 
-  @RdfProperty(StreamPipes.DESCRIPTION_FIELD_NAME)
   private String descriptionFieldName;
 
   public RemoteOneOfStaticProperty() {

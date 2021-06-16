@@ -18,27 +18,15 @@
 
 package org.apache.streampipes.model.connect.adapter;
 
-import io.fogsy.empire.annotations.Namespaces;
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
-@Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
-@RdfsClass("sp:AdapterDescriptionList")
-@Entity
 @TsModel
 public class AdapterDescriptionList extends NamedStreamPipesEntity {
-    @OneToMany(fetch = FetchType.EAGER,
-            cascade = {CascadeType.ALL})
-    @RdfProperty("sp:list")
+
     private List<AdapterDescription> list;
 
     public AdapterDescriptionList() {

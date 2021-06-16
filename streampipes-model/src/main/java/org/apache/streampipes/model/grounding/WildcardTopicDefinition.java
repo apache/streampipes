@@ -17,29 +17,15 @@
  */
 package org.apache.streampipes.model.grounding;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.util.Cloner;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-
-@RdfsClass(StreamPipes.WILDCARD_TOPIC_DEFINITION)
-@Entity
 public class WildcardTopicDefinition extends TopicDefinition {
 
-  @RdfProperty(StreamPipes.HAS_WILDCARD_TOPIC_NAME)
   private String wildcardTopicName;
 
-  @OneToMany(fetch = FetchType.EAGER,
-          cascade = {CascadeType.ALL})
-  @RdfProperty(StreamPipes.HAS_WILDCARD_TOPIC_MAPPING)
   private List<WildcardTopicMapping> wildcardTopicMappings;
 
   public WildcardTopicDefinition() {

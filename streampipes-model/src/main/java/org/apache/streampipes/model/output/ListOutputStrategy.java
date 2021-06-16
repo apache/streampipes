@@ -18,19 +18,10 @@
 
 package org.apache.streampipes.model.output;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
-import org.apache.streampipes.vocabulary.StreamPipes;
-
-import javax.persistence.Entity;
-
-@RdfsClass(StreamPipes.LIST_OUTPUT_STRATEGY)
-@Entity
 public class ListOutputStrategy extends OutputStrategy {
 
   private static final long serialVersionUID = -6400256021072543325L;
 
-  @RdfProperty(StreamPipes.LIST_PROPERTY_NAME)
   private String propertyName;
 
   public ListOutputStrategy() {

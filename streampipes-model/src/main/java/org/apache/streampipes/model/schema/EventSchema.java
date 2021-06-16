@@ -18,32 +18,17 @@
 
 package org.apache.streampipes.model.schema;
 
-import io.fogsy.empire.annotations.Namespaces;
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.commons.collections.ListUtils;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.util.Cloner;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-
-@Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
-@RdfsClass(StreamPipes.EVENT_SCHEMA)
-@Entity
 public class EventSchema extends UnnamedStreamPipesEntity {
 
   private static final long serialVersionUID = -3994041794693686406L;
 
-  @OneToMany(fetch = FetchType.EAGER,
-          cascade = {CascadeType.ALL})
-  @RdfProperty(StreamPipes.HAS_EVENT_PROPERTY)
   private List<EventProperty> eventProperties;
 
   public EventSchema(List<EventProperty> eventProperties) {

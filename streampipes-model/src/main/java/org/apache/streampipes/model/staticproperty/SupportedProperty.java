@@ -18,27 +18,16 @@
 
 package org.apache.streampipes.model.staticproperty;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
-import org.apache.streampipes.vocabulary.SO;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.Entity;
-
-@RdfsClass(StreamPipes.SUPPORTED_PROPERTY)
-@Entity
 public class SupportedProperty extends UnnamedStreamPipesEntity {
 
   private static final long serialVersionUID = 1L;
 
-  @RdfProperty(StreamPipes.REQUIRES_PROPERTY)
   private String propertyId;
 
-  @RdfProperty(SO.ValueRequired)
   private boolean valueRequired;
 
-  @RdfProperty(SO.Value)
   private String value;
 
   public SupportedProperty(SupportedProperty other) {

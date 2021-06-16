@@ -18,50 +18,28 @@
 
 package org.apache.streampipes.model.staticproperty;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
-import org.apache.streampipes.vocabulary.StreamPipes;
-
 import java.net.URI;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToOne;
-
-@RdfsClass(StreamPipes.FREE_TEXT_STATIC_PROPERTY)
-@Entity
 public class FreeTextStaticProperty extends StaticProperty {
 
   private static final long serialVersionUID = 1L;
 
-  @RdfProperty(StreamPipes.HAS_VALUE)
   private String value;
 
-  @RdfProperty(StreamPipes.REQUIRED_DATATYPE)
   private URI requiredDatatype;
 
-  @RdfProperty(StreamPipes.REQUIRED_DOMAIN_PROPERTY)
   private URI requiredDomainProperty;
 
-  @RdfProperty(StreamPipes.MAPS_TO)
   private String mapsTo;
 
-  @RdfProperty(StreamPipes.MULTI_LINE)
   private boolean multiLine;
 
-  @RdfProperty(StreamPipes.HTML_ALLOWED)
   private boolean htmlAllowed;
 
-  @RdfProperty(StreamPipes.HTML_FONT_FORMAT)
   private boolean htmlFontFormat;
 
-  @RdfProperty(StreamPipes.PLACEHOLDERS_SUPPORTED)
   private boolean placeholdersSupported;
 
-  @OneToOne(fetch = FetchType.EAGER,
-          cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-  @RdfProperty(StreamPipes.HAS_VALUE_SPECIFICATION)
   private PropertyValueSpecification valueSpecification;
 
   public FreeTextStaticProperty() {

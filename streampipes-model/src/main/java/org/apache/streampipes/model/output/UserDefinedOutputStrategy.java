@@ -18,24 +18,12 @@
 
 package org.apache.streampipes.model.output;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.schema.EventProperty;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
 import java.util.List;
 
-@RdfsClass(StreamPipes.USER_DEFINED_OUTPUT_STRATEGY)
-@Entity
 public class UserDefinedOutputStrategy extends OutputStrategy {
 
-  @OneToMany(fetch = FetchType.EAGER,
-          cascade = {CascadeType.ALL})
-  @RdfProperty(StreamPipes.PRODUCES_PROPERTY)
   private List<EventProperty> eventProperties;
 
   public UserDefinedOutputStrategy() {

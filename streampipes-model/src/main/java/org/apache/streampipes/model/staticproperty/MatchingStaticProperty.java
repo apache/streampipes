@@ -18,24 +18,14 @@
 
 package org.apache.streampipes.model.staticproperty;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
-import org.apache.streampipes.vocabulary.StreamPipes;
-
 import java.net.URI;
 
-import javax.persistence.Entity;
-
-@RdfsClass(StreamPipes.MATCHING_STATIC_PROPERTY)
-@Entity
 public class MatchingStaticProperty extends StaticProperty{
 
 	private static final long serialVersionUID = -6033310221105761979L;
 
-	@RdfProperty(StreamPipes.MATCH_LEFT)
 	private URI matchLeft;
-	
-	@RdfProperty(StreamPipes.MATCH_RIGHT)
+
 	private URI matchRight;
 
 	public MatchingStaticProperty()

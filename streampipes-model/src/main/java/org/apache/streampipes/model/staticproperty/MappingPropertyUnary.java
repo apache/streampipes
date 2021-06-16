@@ -18,19 +18,10 @@
 
 package org.apache.streampipes.model.staticproperty;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
-import org.apache.streampipes.vocabulary.StreamPipes;
-
-import javax.persistence.Entity;
-
-@RdfsClass(StreamPipes.MAPPING_PROPERTY_UNARY)
-@Entity
 public class MappingPropertyUnary extends MappingProperty {
 
   private static final long serialVersionUID = 2903529966128844426L;
 
-  @RdfProperty(StreamPipes.MAPS_TO)
   private String selectedProperty;
 
   public MappingPropertyUnary() {

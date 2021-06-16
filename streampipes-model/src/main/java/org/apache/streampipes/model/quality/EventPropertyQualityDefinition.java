@@ -19,15 +19,7 @@
 package org.apache.streampipes.model.quality;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
-import io.fogsy.empire.annotations.RdfsClass;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.Entity;
-import javax.persistence.MappedSuperclass;
-
-@RdfsClass(StreamPipes.EVENT_PROPERTY_QUALITY_DEFINITION)
-@MappedSuperclass
-@Entity
 @JsonSubTypes({
 				@JsonSubTypes.Type(Accuracy.class),
 				@JsonSubTypes.Type(MeasurementRange.class),

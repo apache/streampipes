@@ -18,29 +18,16 @@
 
 package org.apache.streampipes.model.staticproperty;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.util.Cloner;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
 import java.util.List;
 
-@RdfsClass(StreamPipes.DOMAIN_STATIC_PROPERTY)
-@Entity
 public class DomainStaticProperty extends StaticProperty {
 
   private static final long serialVersionUID = 1L;
 
-  @RdfProperty(StreamPipes.REQUIRED_CLASS)
   private String requiredClass;
 
-  @OneToMany(fetch = FetchType.EAGER,
-          cascade = {CascadeType.ALL})
-  @RdfProperty(StreamPipes.HAS_SUPPORTED_PROPERTY)
   private List<SupportedProperty> supportedProperties;
 
   public DomainStaticProperty() {

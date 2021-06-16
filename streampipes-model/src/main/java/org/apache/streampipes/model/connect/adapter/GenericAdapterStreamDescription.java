@@ -18,30 +18,19 @@
 
 package org.apache.streampipes.model.connect.adapter;
 
-import io.fogsy.empire.annotations.Namespaces;
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.connect.grounding.FormatDescription;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.model.connect.grounding.ProtocolStreamDescription;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.shared.annotation.TsModel;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.Entity;
-
-@Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
-@RdfsClass(StreamPipes.GENERIC_ADAPTER_STREAM_DESCRIPTION)
-@Entity
 @TsModel
 public class GenericAdapterStreamDescription extends AdapterStreamDescription implements GenericAdapterDescription{
     public static final String ID = "http://streampipes.org/genericadapterstreamdescription";
 
 
-    @RdfProperty("sp:hasFormat")
     private FormatDescription formatDescription;
 
-    @RdfProperty("sp:hasProtocol")
     private ProtocolDescription protocolDescription;
 
     public GenericAdapterStreamDescription() {

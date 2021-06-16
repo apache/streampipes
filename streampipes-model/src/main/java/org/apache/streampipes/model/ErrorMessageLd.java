@@ -18,14 +18,8 @@
 
 package org.apache.streampipes.model;
 
-import io.fogsy.empire.annotations.Namespaces;
-import io.fogsy.empire.annotations.RdfsClass;
-import org.apache.streampipes.vocabulary.StreamPipes;
-
 import java.util.List;
 
-@Namespaces({StreamPipes.NS_PREFIX, StreamPipes.NS})
-@RdfsClass(StreamPipes.ERROR_MESSAGE)
 public class ErrorMessageLd extends MessageLd {
 
 	public ErrorMessageLd() {

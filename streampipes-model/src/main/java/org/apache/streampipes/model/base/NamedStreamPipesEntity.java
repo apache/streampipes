@@ -21,15 +21,9 @@ package org.apache.streampipes.model.base;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
-import io.fogsy.empire.annotations.RdfProperty;
 import org.apache.streampipes.model.ApplicationLink;
 import org.apache.streampipes.model.util.Cloner;
-import org.apache.streampipes.vocabulary.RDFS;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.CascadeType;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,44 +34,27 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
 
   private static final long serialVersionUID = -98951691820519795L;
 
-  @RdfProperty("sp:couchDbRev")
   @JsonProperty("_rev")
   protected @SerializedName("_rev") String rev;
 
-  @RdfProperty(RDFS.LABEL)
   private String name;
 
-  @RdfProperty(RDFS.DESCRIPTION)
   private String description;
 
-  @RdfProperty(StreamPipes.ICON_URL)
   private String iconUrl;
 
-  @RdfProperty(StreamPipes.HAS_APP_ID)
   private String appId;
 
-  @RdfProperty(StreamPipes.INCLUDES_ASSETS)
   private boolean includesAssets;
 
-  @RdfProperty(StreamPipes.INCLUDES_LOCALES)
   private boolean includesLocales;
 
-  @RdfProperty(StreamPipes.INCLUDED_ASSETS)
-  @OneToMany(fetch = FetchType.EAGER,
-          cascade = {CascadeType.ALL})
   private List<String> includedAssets;
 
-  @RdfProperty(StreamPipes.INCLUDED_LOCALES)
-  @OneToMany(fetch = FetchType.EAGER,
-          cascade = {CascadeType.ALL})
   private List<String> includedLocales;
 
-  @OneToMany(fetch = FetchType.EAGER,
-          cascade = {CascadeType.ALL})
-  @RdfProperty(StreamPipes.HAS_APPLICATION_LINK)
   private List<ApplicationLink> applicationLinks;
 
-  @RdfProperty(StreamPipes.IS_INTERNALLY_MANAGED)
   private boolean internallyManaged;
 
   protected String DOM;

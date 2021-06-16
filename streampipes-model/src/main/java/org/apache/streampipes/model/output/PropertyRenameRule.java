@@ -17,23 +17,14 @@
  */
 package org.apache.streampipes.model.output;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
 import java.io.Serializable;
 
-import javax.persistence.Entity;
-
-@RdfsClass(StreamPipes.RENAME_RULE)
-@Entity
 public class PropertyRenameRule extends UnnamedStreamPipesEntity implements Serializable {
 
-  @RdfProperty(StreamPipes.HAS_RUNTIME_ID)
   private String runtimeId;
 
-  @RdfProperty(StreamPipes.HAS_NEW_RUNTIME_NAME)
   private String newRuntimeName;
 
   public PropertyRenameRule() {

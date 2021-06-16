@@ -18,23 +18,12 @@
 
 package org.apache.streampipes.model.quality;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
-import org.apache.streampipes.vocabulary.SSN;
-import org.apache.streampipes.vocabulary.StreamPipes;
-
-import javax.persistence.Entity;
-
-@RdfsClass(SSN.MEASUREMENT_RANGE)
-@Entity
 public class MeasurementRange extends EventPropertyQualityDefinition {
 
 	private static final long serialVersionUID = 4853190183770515968L;
 
-	@RdfProperty(StreamPipes.HAS_MEASUREMENT_PROPERTY_MIN_VALUE)
 	private float minValue;
 
-	@RdfProperty(StreamPipes.HAS_MEASUREMENT_PROPERTY_MAX_VALUE)
 	private float maxValue;
 	
 	public MeasurementRange() {

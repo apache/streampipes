@@ -18,29 +18,16 @@
 
 package org.apache.streampipes.model.output;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.util.Cloner;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-
-@RdfsClass(StreamPipes.APPEND_OUTPUT_STRATEGY)
-@Entity
 public class AppendOutputStrategy extends OutputStrategy {
 
   private static final long serialVersionUID = 7202888911899551012L;
 
-  @OneToMany(fetch = FetchType.EAGER,
-          cascade = {CascadeType.ALL})
-  @RdfProperty(StreamPipes.APPENDS_PROPERTY)
   private List<EventProperty> eventProperties;
 
   public AppendOutputStrategy() {

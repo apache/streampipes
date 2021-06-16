@@ -18,27 +18,15 @@
 
 package org.apache.streampipes.model.schema;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.util.Cloner;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
 import java.net.URI;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToOne;
-
-@RdfsClass(StreamPipes.EVENT_PROPERTY_LIST)
-@Entity
 public class EventPropertyList extends EventProperty {
 
   private static final long serialVersionUID = -2636018143426727534L;
 
-  @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
-  @RdfProperty(StreamPipes.HAS_EVENT_PROPERTY)
   private EventProperty eventProperty;
 
   public EventPropertyList() {

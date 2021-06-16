@@ -19,32 +19,17 @@
 package org.apache.streampipes.model;
 
 import org.apache.commons.lang.RandomStringUtils;
-import io.fogsy.empire.annotations.Namespaces;
-import io.fogsy.empire.annotations.RdfId;
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.Entity;
-
-@Namespaces({StreamPipes.NS_PREFIX, StreamPipes.NS})
-@RdfsClass(StreamPipes.NOTIFICATION)
-@Entity
 public class NotificationLd {
 
     private static final String prefix = "urn:streampipes.org:spi:";
 
-    @RdfId
-    @RdfProperty(StreamPipes.HAS_ELEMENT_NAME)
     private String elementId;
 
-    @RdfProperty(StreamPipes.NOTIFICATION_TITLE)
     private String title;
 
-    @RdfProperty(StreamPipes.NOTIFICATION_DESCRIPTION)
     private String description;
 
-    @RdfProperty(StreamPipes.NOTIFICATION_ADDITIONAL_INFORMATION)
     private String additionalInformation;
 
     public NotificationLd() {

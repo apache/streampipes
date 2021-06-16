@@ -19,9 +19,6 @@
 package org.apache.streampipes.model.connect.adapter;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
-import io.fogsy.empire.annotations.Namespaces;
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.SchemaTransformationRuleDescription;
@@ -31,19 +28,11 @@ import org.apache.streampipes.model.grounding.*;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.util.Cloner;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
-@RdfsClass("sp:AdapterDescription")
-@Entity
 @JsonSubTypes({
         @JsonSubTypes.Type(GenericAdapterSetDescription.class),
         @JsonSubTypes.Type(GenericAdapterStreamDescription.class),
@@ -60,34 +49,20 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
 //    @JsonProperty("_rev")
 //    private @SerializedName("_rev") String rev;
 
-    @RdfProperty("sp:adapterId")
     private String adapterId;
 
-    @RdfProperty("sp:userName")
     private String userName;
 
-    @RdfProperty("sp:grounding")
     private EventGrounding eventGrounding;
 
-    @RdfProperty("sp:adapterType")
     private String adapterType;
 
-    @RdfProperty("sp:icon")
     private String icon;
 
-    @OneToMany(fetch = FetchType.EAGER,
-            cascade = {CascadeType.ALL})
-    @RdfProperty("sp:config")
     private List<StaticProperty> config;
 
-    @OneToMany(fetch = FetchType.EAGER,
-            cascade = {CascadeType.ALL})
-    @RdfProperty("sp:rules")
     private List<TransformationRuleDescription> rules;
 
-    @OneToMany(fetch = FetchType.EAGER,
-            cascade = {CascadeType.ALL})
-    @RdfProperty(StreamPipes.HAS_ADAPTER_TYPE)
     private List<String> category;
 
     private long createdAt;

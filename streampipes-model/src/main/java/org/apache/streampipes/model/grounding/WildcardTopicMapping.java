@@ -17,24 +17,14 @@
  */
 package org.apache.streampipes.model.grounding;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.Entity;
-
-@RdfsClass(StreamPipes.WILDCARD_TOPIC_MAPPING)
-@Entity
 public class WildcardTopicMapping extends UnnamedStreamPipesEntity {
 
-  @RdfProperty(StreamPipes.HAS_TOPIC_PARAMETER_TYPE)
   private String topicParameterType;
 
-  @RdfProperty(StreamPipes.HAS_TOPIC_MAPPING_ID)
   private String mappingId;
 
-  @RdfProperty(StreamPipes.HAS_MAPPED_RUNTIME_NAME)
   private String mappedRuntimeName;
 
   private String selectedMapping;

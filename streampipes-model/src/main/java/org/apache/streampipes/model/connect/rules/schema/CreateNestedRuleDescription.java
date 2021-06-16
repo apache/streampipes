@@ -18,18 +18,8 @@
 
 package org.apache.streampipes.model.connect.rules.schema;
 
-import io.fogsy.empire.annotations.Namespaces;
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
-import org.apache.streampipes.vocabulary.StreamPipes;
-
-import javax.persistence.Entity;
-
-@Namespaces({StreamPipes.NS_PREFIX, StreamPipes.NS})
-@RdfsClass(StreamPipes.CREATE_NESTED_RULE_DESCRIPTION)
-@Entity
 public class CreateNestedRuleDescription extends SchemaTransformationRuleDescription {
-  @RdfProperty(StreamPipes.RUNTIME_KEY)
+
   private String runtimeKey;
 
   public CreateNestedRuleDescription() {

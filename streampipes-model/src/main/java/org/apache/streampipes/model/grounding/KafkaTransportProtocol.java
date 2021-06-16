@@ -18,46 +18,28 @@
 
 package org.apache.streampipes.model.grounding;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
-import org.apache.streampipes.vocabulary.StreamPipes;
-
-import javax.persistence.Entity;
-
-@RdfsClass(StreamPipes.KAFKA_TRANSPORT_PROTOCOL)
-@Entity
 public class KafkaTransportProtocol extends TransportProtocol {
 
   private static final long serialVersionUID = -4067982203807146257L;
 
-  @RdfProperty(StreamPipes.ZOOKEEPER_HOST)
   private String zookeeperHost;
 
-  @RdfProperty(StreamPipes.ZOOKEEPER_PORT)
   private int zookeeperPort;
 
-  @RdfProperty(StreamPipes.KAFKA_PORT)
   private int kafkaPort;
 
-  @RdfProperty(StreamPipes.KAFKA_LINGER_MS)
   private Integer lingerMs;
 
-  @RdfProperty(StreamPipes.KAFKA_MESSAGE_MAX_BYTES)
   private String messageMaxBytes;
 
-  @RdfProperty(StreamPipes.KAFKA_MAX_REQUEST_SIZE)
   private String maxRequestSize;
 
-  @RdfProperty(StreamPipes.KAFKA_ACKS)
   private String acks;
 
-  @RdfProperty(StreamPipes.KAFKA_BATCH_SIZE)
   private String batchSize;
 
-  @RdfProperty(StreamPipes.KAFKA_OFFSET)
   private String offset;
 
-  @RdfProperty(StreamPipes.KAFKA_GROUP_ID)
   private String groupId;
 
   public KafkaTransportProtocol(String kafkaHost, int kafkaPort, String topic) {

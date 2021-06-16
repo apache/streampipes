@@ -19,16 +19,8 @@
 package org.apache.streampipes.model.schema;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.Entity;
-import javax.persistence.MappedSuperclass;
-
-@RdfsClass(StreamPipes.VALUE_SPECIFICATION)
-@MappedSuperclass
-@Entity
 @JsonSubTypes({
 				@JsonSubTypes.Type(QuantitativeValue.class),
 				@JsonSubTypes.Type(Enumeration.class),

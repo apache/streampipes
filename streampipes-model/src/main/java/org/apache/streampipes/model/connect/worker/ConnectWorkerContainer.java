@@ -19,24 +19,13 @@
 package org.apache.streampipes.model.connect.worker;
 
 import com.google.gson.annotations.SerializedName;
-import io.fogsy.empire.annotations.Namespaces;
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
-@Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
-@RdfsClass(StreamPipes.CONNECT_WORKER_CONTAINER)
-@Entity
 public class ConnectWorkerContainer extends UnnamedStreamPipesEntity {
 
     private @SerializedName("_rev") String rev;
@@ -47,17 +36,10 @@ public class ConnectWorkerContainer extends UnnamedStreamPipesEntity {
         this.protocols = new ArrayList<>();
     }
 
-    @RdfProperty("sp:endpointUrl")
     private String endpointUrl;
 
-    @OneToMany(fetch = FetchType.EAGER,
-            cascade = {CascadeType.ALL})
-    @RdfProperty("sp:protocols")
     private List<ProtocolDescription> protocols;
 
-    @OneToMany(fetch = FetchType.EAGER,
-            cascade = {CascadeType.ALL})
-    @RdfProperty("sp:list")
     private List<AdapterDescription> adapters;
 
     public ConnectWorkerContainer(String endpointUrl, List<ProtocolDescription> protocols, List<AdapterDescription> adapters) {

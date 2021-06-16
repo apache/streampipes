@@ -18,20 +18,10 @@
 
 package org.apache.streampipes.model.quality;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
-import org.apache.streampipes.vocabulary.SSN;
-import org.apache.streampipes.vocabulary.StreamPipes;
-
-import javax.persistence.Entity;
-
-@RdfsClass(SSN.RESOLUTION)
-@Entity
 public class Resolution extends EventPropertyQualityDefinition {
 
 	private static final long serialVersionUID = -8794648771727880619L;
-	
-	@RdfProperty(StreamPipes.HAS_QUANTITY_VALUE)
+
 	private float quantityValue;
 
 	public Resolution() {

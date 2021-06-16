@@ -19,8 +19,6 @@
 package org.apache.streampipes.model;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.grounding.EventGrounding;
@@ -30,15 +28,11 @@ import org.apache.streampipes.model.quality.MeasurementCapability;
 import org.apache.streampipes.model.quality.MeasurementObject;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.util.Cloner;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RdfsClass(StreamPipes.DATA_STREAM)
-@Entity
 @JsonSubTypes({
         @JsonSubTypes.Type(SpDataStream.class),
         @JsonSubTypes.Type(SpDataSet.class)
@@ -49,37 +43,20 @@ public class SpDataStream extends NamedStreamPipesEntity {
 
   private static final String prefix = "urn:fzi.de:eventstream:";
 
-  @OneToMany(fetch = FetchType.EAGER,
-          cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-  @RdfProperty(StreamPipes.HAS_EVENT_STREAM_QUALITY_DEFINITION)
   protected transient List<EventStreamQualityDefinition> hasEventStreamQualities;
 
-  @OneToMany(fetch = FetchType.EAGER,
-          cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-  @RdfProperty(StreamPipes.HAS_EVENT_STREAM_QUALITY_REQUIREMENT)
   protected transient List<EventStreamQualityRequirement> requiresEventStreamQualities;
 
-  @OneToOne(fetch = FetchType.EAGER,
-          cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-  @RdfProperty(StreamPipes.HAS_GROUNDING)
   protected EventGrounding eventGrounding;
 
-  @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
-  @RdfProperty(StreamPipes.HAS_SCHEMA)
   protected EventSchema eventSchema;
 
-  @RdfProperty(StreamPipes.HAS_MEASUREMENT_CAPABILTIY)
-  @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
   protected List<MeasurementCapability> measurementCapability;
 
-  @RdfProperty(StreamPipes.HAS_MEASUREMENT_OBJECT)
-  @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
   protected List<MeasurementObject> measurementObject;
 
-  @RdfProperty(StreamPipes.INDEX)
   private int index;
 
-  @RdfProperty(StreamPipes.HAS_CORRESPONDING_ADAPTER_ID)
   private String correspondingAdapterId;
 
   protected List<String> category;

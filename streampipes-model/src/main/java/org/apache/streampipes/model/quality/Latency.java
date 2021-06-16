@@ -18,20 +18,10 @@
 
 package org.apache.streampipes.model.quality;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
-import org.apache.streampipes.vocabulary.SSN;
-import org.apache.streampipes.vocabulary.StreamPipes;
-
-import javax.persistence.Entity;
-
-@RdfsClass(SSN.LATENCY)
-@Entity
 public class Latency extends EventStreamQualityDefinition {
 
 	private static final long serialVersionUID = -9211064635743833555L;
-	
-	@RdfProperty(StreamPipes.HAS_QUANTITY_VALUE)
+
 	private float quantityValue;
 
 	public Latency() {

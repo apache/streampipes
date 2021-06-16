@@ -17,23 +17,10 @@
  */
 package org.apache.streampipes.model.staticproperty;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
-import org.apache.streampipes.vocabulary.StreamPipes;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
 import java.util.List;
 
-@RdfsClass(StreamPipes.RUNTIME_RESOLVABLE_ONE_OF_STATIC_PROPERTY)
-@Entity
 public class RuntimeResolvableOneOfStaticProperty extends OneOfStaticProperty {
 
-  @OneToMany(fetch = FetchType.EAGER,
-          cascade = {CascadeType.ALL})
-  @RdfProperty(StreamPipes.DEPENDS_ON_STATIC_PROPERTY)
   private List<String> dependsOn;
 
   public RuntimeResolvableOneOfStaticProperty() {

@@ -18,30 +18,15 @@
 
 package org.apache.streampipes.model.output;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
-import org.apache.streampipes.vocabulary.StreamPipes;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-
-@RdfsClass(StreamPipes.CUSTOM_OUTPUT_STRATEGY)
-@Entity
 public class CustomOutputStrategy extends OutputStrategy {
 
   private static final long serialVersionUID = -5858193127308435472L;
 
-  @OneToMany(fetch = FetchType.EAGER,
-          cascade = {CascadeType.ALL})
-  @RdfProperty(StreamPipes.PRODUCES_PROPERTY)
   private List<String> selectedPropertyKeys;
 
-  @RdfProperty(StreamPipes.OUTPUT_RIGHT)
   private boolean outputRight;
 
   private List<String> availablePropertyKeys;

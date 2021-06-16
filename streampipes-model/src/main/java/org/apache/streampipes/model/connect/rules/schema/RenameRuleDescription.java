@@ -18,22 +18,10 @@
 
 package org.apache.streampipes.model.connect.rules.schema;
 
-import io.fogsy.empire.annotations.Namespaces;
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
-import org.apache.streampipes.vocabulary.StreamPipes;
-
-import javax.persistence.Entity;
-
-@Namespaces({StreamPipes.NS_PREFIX, StreamPipes.NS})
-@RdfsClass(StreamPipes.RENAME_RULE_DESCRIPTION)
-@Entity
 public class RenameRuleDescription extends SchemaTransformationRuleDescription {
 
-    @RdfProperty(StreamPipes.OLD_RUNTIME_NAME)
     private String oldRuntimeKey;
 
-    @RdfProperty(StreamPipes.NEW_RUNTIME_NAME)
     private String newRuntimeKey;
 
     public RenameRuleDescription() {

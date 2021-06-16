@@ -18,19 +18,14 @@
 
 package org.apache.streampipes.connect.adapter.preprocessing.transform.stream;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import org.apache.streampipes.vocabulary.StreamPipes;
-
 import java.util.LinkedList;
 import java.util.Map;
 
 public class EventRateTransformationRule implements StreamTransformationRule {
 
-    @RdfProperty(StreamPipes.FILTER_TIME_WINDOW)
     private long aggregationTimeWindow;
 
     //none (Values from last event), max, min, mean, sum (of the values in the time window)
-    @RdfProperty(StreamPipes.AGGREGATION_TYPE)
     private String aggregationType;
 
     private LinkedList<Map<String, Object>> eventStorage = new LinkedList<>();

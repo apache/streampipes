@@ -19,17 +19,10 @@
 package org.apache.streampipes.model.staticproperty;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@RdfsClass(StreamPipes.MAPPING_PROPERTY)
-@MappedSuperclass
-@Entity
 @JsonSubTypes({
         @JsonSubTypes.Type(MappingPropertyNary.class),
         @JsonSubTypes.Type(MappingPropertyUnary.class)
@@ -49,17 +42,10 @@ public abstract class MappingProperty extends StaticProperty {
    * The value of the requirementSelector will be r0::number-mapping.
    *
    */
-  @RdfProperty(StreamPipes.MAPS_FROM)
   private String requirementSelector;
 
-  @RdfProperty(StreamPipes.MAPS_FROM_OPTIONS)
-  @OneToMany(fetch = FetchType.EAGER,
-          cascade = {CascadeType.ALL})
   private List<String> mapsFromOptions;
 
-  @OneToOne(fetch = FetchType.EAGER,
-          cascade = {CascadeType.ALL})
-  @RdfProperty(StreamPipes.HAS_PROPERTY_SCOPE)
   private String propertyScope;
 
   public MappingProperty() {

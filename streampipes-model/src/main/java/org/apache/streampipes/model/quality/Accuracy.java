@@ -18,15 +18,6 @@
 
 package org.apache.streampipes.model.quality;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
-import org.apache.streampipes.vocabulary.SSN;
-import org.apache.streampipes.vocabulary.StreamPipes;
-
-import javax.persistence.Entity;
-
-@RdfsClass(SSN.ACCURACY)
-@Entity
 public class Accuracy extends EventPropertyQualityDefinition {
 	
 	private static final long serialVersionUID = -4368302218285302897L;
@@ -43,8 +34,7 @@ public class Accuracy extends EventPropertyQualityDefinition {
 		super(other);
 		this.quantityValue = other.getQuantityValue();
 	}
-	
-	@RdfProperty(StreamPipes.HAS_QUANTITY_VALUE)
+
 	private float quantityValue;
 
 	public float getQuantityValue() {

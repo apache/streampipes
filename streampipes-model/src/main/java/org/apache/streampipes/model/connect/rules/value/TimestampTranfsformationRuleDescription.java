@@ -18,28 +18,14 @@
 
 package org.apache.streampipes.model.connect.rules.value;
 
-import io.fogsy.empire.annotations.Namespaces;
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
-import org.apache.streampipes.vocabulary.StreamPipes;
-
-import javax.persistence.Entity;
-
-@Namespaces({StreamPipes.NS_PREFIX, StreamPipes.NS})
-@RdfsClass(StreamPipes.TIMESTAMP_TRANSFORMATION_RULE_DESCRIPTION)
-@Entity
 public class TimestampTranfsformationRuleDescription extends ValueTransformationRuleDescription {
 
-    @RdfProperty(StreamPipes.RUNTIME_KEY)
     private String runtimeKey;
 
-    @RdfProperty(StreamPipes.HAS_MODE)
     private String mode;
 
-    @RdfProperty(StreamPipes.FORMAT_STRING)
     private String formatString;
 
-    @RdfProperty(StreamPipes.MULTIPLIER)
     private long multiplier;
 
     public TimestampTranfsformationRuleDescription() {

@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.model.base;
 
-import io.fogsy.empire.annotations.RdfProperty;
 import org.apache.streampipes.logging.LoggerFactory;
 import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.SpDataStream;
@@ -26,53 +25,29 @@ import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.monitoring.ElementStatusInfoSettings;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.util.Cloner;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.CascadeType;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import java.util.List;
 
 public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity {
 
   private static final long serialVersionUID = 2727573914765473470L;
 
-  @OneToMany(fetch = FetchType.EAGER,
-          cascade = {CascadeType.ALL})
-  @RdfProperty(StreamPipes.RECEIVES_STREAM)
   protected List<SpDataStream> inputStreams;
 
-  @OneToMany(fetch = FetchType.EAGER,
-          cascade = {CascadeType.ALL})
-  @RdfProperty(StreamPipes.HAS_STATIC_PROPERTY)
   protected List<StaticProperty> staticProperties;
 
-  @RdfProperty(StreamPipes.BELONGS_TO)
   private String belongsTo;
 
-  @OneToOne(fetch = FetchType.EAGER,
-          cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-  @RdfProperty(StreamPipes.STATUS_INFO_SETTINGS)
   private ElementStatusInfoSettings statusInfoSettings;
 
-  @OneToOne(fetch = FetchType.EAGER,
-          cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-  @RdfProperty(StreamPipes.SUPPORTED_GROUNDING)
   private EventGrounding supportedGrounding;
 
-  @RdfProperty(StreamPipes.CORRESPONDING_PIPELINE)
   private String correspondingPipeline;
 
-  @RdfProperty(StreamPipes.CORRESPONDING_USER)
   private String correspondingUser;
 
-  @OneToMany(fetch = FetchType.EAGER,
-          cascade = {CascadeType.ALL})
-  @RdfProperty(StreamPipes.REQUIRES_STREAM)
   private List<SpDataStream> streamRequirements;
 
-  //@RdfProperty(StreamPipes.PE_CONFIGURED)
   private boolean configured;
 
   private boolean uncompleted;

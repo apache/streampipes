@@ -23,20 +23,14 @@ import com.google.gson.annotations.SerializedName;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
 @TsModel
 public class Pipeline extends ElementComposition {
 
-  @OneToOne(cascade = CascadeType.ALL)
   private List<DataSinkInvocation> actions;
 
-  @OneToOne(cascade = CascadeType.ALL)
   private boolean running;
   private boolean restartOnSystemReboot;
 

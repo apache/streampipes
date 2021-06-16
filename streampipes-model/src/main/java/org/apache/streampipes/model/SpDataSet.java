@@ -17,34 +17,20 @@
  */
 package org.apache.streampipes.model;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.quality.EventStreamQualityDefinition;
 import org.apache.streampipes.model.schema.EventSchema;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToOne;
 import java.util.List;
 
-@RdfsClass(StreamPipes.DATA_SET)
-@Entity
 public class SpDataSet extends SpDataStream {
 
   private static final String prefix = "urn:fzi.de:dataset:";
 
-  @OneToOne(fetch = FetchType.EAGER,
-          cascade = {CascadeType.ALL})
-  @RdfProperty(StreamPipes.SUPPORTED_GROUNDING)
   private EventGrounding supportedGrounding;
 
-  @RdfProperty(StreamPipes.DATA_SET_INVOCATION_ID)
   private String datasetInvocationId;
 
-  @RdfProperty(StreamPipes.CORRESPONDING_PIPELINE)
   private String correspondingPipeline;
 
   public SpDataSet(String uri, String name, String description, String iconUrl, List<EventStreamQualityDefinition>

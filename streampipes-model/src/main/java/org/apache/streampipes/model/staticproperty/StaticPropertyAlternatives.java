@@ -17,25 +17,11 @@
  */
 package org.apache.streampipes.model.staticproperty;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
-import org.apache.streampipes.vocabulary.StreamPipes;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-
-@RdfsClass(StreamPipes.STATIC_PROPERTY_ALTERNATIVES)
-@Entity
 public class StaticPropertyAlternatives extends StaticProperty {
 
-  @OneToMany(fetch = FetchType.EAGER,
-          cascade = {CascadeType.ALL})
-  @RdfProperty(StreamPipes.HAS_STATIC_PROPERTY_ALTERNATIVE)
   private List<StaticPropertyAlternative> alternatives;
 
   public StaticPropertyAlternatives() {

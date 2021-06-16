@@ -18,17 +18,11 @@
 
 package org.apache.streampipes.model.base;
 
-import io.fogsy.empire.annotations.RdfProperty;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.util.Cloner;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.CascadeType;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,19 +30,10 @@ public abstract class ConsumableStreamPipesEntity extends NamedStreamPipesEntity
 
   private static final long serialVersionUID = -6617391345752016449L;
 
-  @OneToMany(fetch = FetchType.EAGER,
-          cascade = {CascadeType.ALL})
-  @RdfProperty(StreamPipes.REQUIRES_STREAM)
   protected List<SpDataStream> spDataStreams;
 
-  @OneToMany(fetch = FetchType.EAGER,
-          cascade = {CascadeType.ALL})
-  @RdfProperty(StreamPipes.HAS_STATIC_PROPERTY)
   protected List<StaticProperty> staticProperties;
 
-  @OneToOne(fetch = FetchType.EAGER,
-          cascade = {CascadeType.ALL})
-  @RdfProperty(StreamPipes.SUPPORTED_GROUNDING)
   private EventGrounding supportedGrounding;
 
   public ConsumableStreamPipesEntity() {

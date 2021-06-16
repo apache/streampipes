@@ -16,17 +16,8 @@
  */
 package org.apache.streampipes.model.grounding;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
-import org.apache.streampipes.vocabulary.StreamPipes;
-
-import javax.persistence.Entity;
-
-@RdfsClass(StreamPipes.MQTT_TRANSPORT_PROTOCOL)
-@Entity
 public class MqttTransportProtocol extends TransportProtocol {
 
-  @RdfProperty(StreamPipes.HAS_MQTT_PORT)
   private int port;
 
   public MqttTransportProtocol(String hostname, int port, String topicName)

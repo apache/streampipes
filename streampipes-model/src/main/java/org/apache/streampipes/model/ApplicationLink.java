@@ -18,31 +18,18 @@
 
 package org.apache.streampipes.model;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
-import org.apache.streampipes.vocabulary.RDFS;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.Entity;
-
-@RdfsClass(StreamPipes.APPLICATION_LINK)
-@Entity
 public class ApplicationLink extends UnnamedStreamPipesEntity {
 
-    @RdfProperty(RDFS.LABEL)
     private String applicationName;
 
-    @RdfProperty(RDFS.DESCRIPTION)
     private String applicationDescription;
 
-    @RdfProperty(StreamPipes.APPLICATION_URL)
     private String applicationUrl;
 
-    @RdfProperty(StreamPipes.ICON_URL)
     private String applicationIconUrl;
 
-    @RdfProperty(StreamPipes.APPLICATION_LINK_TYPE)
     private String applicationLinkType;
 
     public ApplicationLink() {

@@ -17,39 +17,28 @@
  */
 package org.apache.streampipes.model.output;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.Entity;
-
-@RdfsClass(StreamPipes.TRANSFORM_OPERATION)
-@Entity
 public class TransformOperation extends UnnamedStreamPipesEntity{
 
   /**
    * the internal name of the mapping property that linkes to an event property related to this transform operation
    */
-  @RdfProperty(StreamPipes.HAS_LINKED_MAPPING_PROPERTY_ID)
   private String mappingPropertyInternalName;
 
   /**
    * the static property which value is used to replace the schema
    */
-  @RdfProperty(StreamPipes.HAS_SOURCE_PROPERTY_INTERNAL_NAME)
   private String sourceStaticProperty;
 
   /**
    * the URI of the affected schema part
    */
-  @RdfProperty(StreamPipes.HAS_TRANSFORMATION_SCOPE)
   private String transformationScope;
 
   /**
    * the static target value if no static property is given
    */
-  @RdfProperty(StreamPipes.HAS_TARGET_VALUE)
   private String targetValue;
 
   public TransformOperation() {

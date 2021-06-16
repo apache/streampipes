@@ -18,42 +18,27 @@
 
 package org.apache.streampipes.model.graph;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.output.OutputStrategy;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.model.util.ElementIdGenerator;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-@RdfsClass(StreamPipes.DATA_PROCESSOR_INVOCATION)
-@Entity
 public class DataProcessorInvocation extends InvocableStreamPipesEntity implements Serializable {
 
   private static final long serialVersionUID = 865870355944824186L;
 
-  @OneToOne(fetch = FetchType.EAGER,
-          cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-  @RdfProperty(StreamPipes.PRODUCES)
   private SpDataStream outputStream;
 
-  @OneToMany(fetch = FetchType.EAGER,
-          cascade = {CascadeType.ALL})
-  @RdfProperty(StreamPipes.HAS_OUTPUT_STRATEGY)
   private List<OutputStrategy> outputStrategies;
 
   private String pathName;
 
-  @OneToMany(fetch = FetchType.EAGER,
-          cascade = {CascadeType.ALL})
-  @RdfProperty(StreamPipes.HAS_EPA_TYPE)
   private List<String> category;
 
   public DataProcessorInvocation(DataProcessorDescription sepa) {

@@ -18,13 +18,6 @@
 
 package org.apache.streampipes.model.grounding;
 
-import io.fogsy.empire.annotations.RdfsClass;
-import org.apache.streampipes.vocabulary.StreamPipes;
-
-import javax.persistence.Entity;
-
-@RdfsClass(StreamPipes.SIMPLE_TOPIC_DEFINITION)
-@Entity
 public class SimpleTopicDefinition extends TopicDefinition {
 
   public SimpleTopicDefinition(String topicName) {

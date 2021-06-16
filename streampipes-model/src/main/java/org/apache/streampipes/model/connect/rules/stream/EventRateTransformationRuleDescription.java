@@ -18,23 +18,11 @@
 
 package org.apache.streampipes.model.connect.rules.stream;
 
-import io.fogsy.empire.annotations.Namespaces;
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
-import org.apache.streampipes.vocabulary.StreamPipes;
-
-import javax.persistence.Entity;
-
-@Namespaces({StreamPipes.NS_PREFIX, StreamPipes.NS})
-@RdfsClass(StreamPipes.EVENT_RATE_RULE_DESCRIPTION)
-@Entity
 public class EventRateTransformationRuleDescription extends StreamTransformationRuleDescription {
 
-    @RdfProperty(StreamPipes.AGGREGATION_TIME_WINDOW)
     private long aggregationTimeWindow;
 
     //None (Values from last event), max, min, mean, sum (of the values in the time window)
-    @RdfProperty(StreamPipes.AGGREGATION_TYPE)
     private String aggregationType;
 
 

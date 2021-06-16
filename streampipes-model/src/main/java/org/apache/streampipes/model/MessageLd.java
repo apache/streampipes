@@ -19,40 +19,21 @@
 package org.apache.streampipes.model;
 
 import org.apache.commons.lang.RandomStringUtils;
-import io.fogsy.empire.annotations.Namespaces;
-import io.fogsy.empire.annotations.RdfId;
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Namespaces({StreamPipes.NS_PREFIX, StreamPipes.NS})
-@RdfsClass(StreamPipes.MESSAGE)
-@Entity
 public class MessageLd {
 
 	private static final String prefix = "urn:streampipes.org:spi:";
 
-	@RdfId
-	@RdfProperty(StreamPipes.HAS_ELEMENT_NAME)
 	private String elementId;
 
-	@RdfProperty(StreamPipes.MESSAGE_SUCCESS)
 	private boolean success;
 
-	@RdfProperty(StreamPipes.MESSAGE_ELEMENT_NAME)
 	private String elementName;
 
-	@OneToMany(fetch = FetchType.EAGER,
-			cascade = {CascadeType.ALL})
-	@RdfProperty(StreamPipes.NOTIFICATIONS)
 	private List<NotificationLd> notifications;
 
 	public MessageLd() {

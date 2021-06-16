@@ -18,22 +18,14 @@
 
 package org.apache.streampipes.model.quality;
 
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
 import java.net.URI;
 
-import javax.persistence.Entity;
-
-@RdfsClass(StreamPipes.MEASUREMENT_OBJECT)
-@Entity
 public class MeasurementObject extends UnnamedStreamPipesEntity {
 
 	private static final long serialVersionUID = 4391097898611686930L;
-	
-	@RdfProperty(StreamPipes.MEASURES_OBJECT)
+
 	private URI measuresObject;
 	
 	public MeasurementObject() {
