@@ -88,7 +88,7 @@
 
             <div *ngIf="newAdapterFromDescription===undefined" fxLayout="row wrap" fxLayoutAlign="start stretch"
                  class="adapter-description-container">
-                <sp-adapter-description attr.id="{{adapterDescription.name.replace(' ', '_')}}"
+                <sp-adapter-description attr.id="{{adapterDescription.name.replaceAll(' ', '_')}}"
                                         class="adapter-description"
                                         fxFlex="33" (click)="selectAdapter(adapterDescription)"
                                         *ngFor="let adapterDescription of filteredAdapterDescriptions | filter:filterTerm"
