@@ -41,7 +41,7 @@
             <th mat-header-cell *matHeaderCellDef> Action</th>
             <td mat-cell *matCellDef="let fileMetadata">
                     <button color="primary" mat-button mat-icon-button matTooltip="Delete file" matTooltipPosition="above"
-                            (click)="deleteFile(fileMetadata)">
+                            (click)="deleteFile(fileMetadata)" data-cy="delete">
                         <i class="material-icons">delete</i>
                     </button>
             </td>

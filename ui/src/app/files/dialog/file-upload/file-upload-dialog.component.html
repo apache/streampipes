@@ -24,7 +24,8 @@
                 <mat-form-field style="width: 95%" (click)="fileInput.click();">
                     <input matInput placeholder="File" disabled (value)="fileName">
                     <input #fileInput type="file" style="display:none;"
-                           (change)="handleFileInput($event.target.files)">
+                           (change)="handleFileInput($event.target.files)"
+                           data-cy="sp-file-management-file-input">
                     <div>
                         {{fileName}}
                         <mat-progress-bar mode="determinate" value="{{uploadStatus}}" *ngIf="uploadStatus > 0"></mat-progress-bar>
@@ -43,7 +44,7 @@
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions">
-        <button mat-button mat-raised-button color="primary" (click)="store()" style="margin-right:10px;">
+        <button mat-button mat-raised-button color="primary" (click)="store()" data-cy="sp-file-management-store-file" style="margin-right:10px;">
             Store file
         </button>
         <button mat-button mat-raised-button class="mat-basic" (click)="cancel()" style="margin-right:10px;">

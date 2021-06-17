@@ -153,8 +153,8 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
             // Timeout is needed for stepper to work correctly. Without the stepper is frozen when initializing with
             // step 2. Can be removed when a better solution is found.
             setTimeout(() => {
-                this.goForward(this.myStepper);
-                this.goForward(this.myStepper);
+                this.goForward();
+                this.goForward();
             }, 1);
 
             this.fromTemplate = true;

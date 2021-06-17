@@ -18,11 +18,12 @@
 
 <div [formGroup]="parentForm" fxFlex="100" fxLayout="column">
     <div fxFlex fxLayout="row" *ngIf="!staticProperty.valueSpecification && !staticProperty.multiLine">
-        <mat-form-field fxFlex>
+        <mat-form-field fxFlex >
             <input formControlName="{{fieldName}}" fxFlex
                    matInput
                    [placeholder]="staticProperty.label"
-                   required (blur)="emitUpdate()">
+                   required (blur)="emitUpdate()"
+                   [attr.data-cy]="fieldName">
 
             <mat-error *ngIf="!fieldValid">
                 {{errorMessage}}

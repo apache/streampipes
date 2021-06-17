@@ -35,7 +35,9 @@
 <div fxLayoutAlign="end">
     <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
     <button class="mat-basic stepper-button" mat-raised-button (click)="goBack()">Back</button>
-    <button class="stepper-button" id="format-selection-next-button"
+    <button class="stepper-button"
+            id="format-selection-next-button"
+            data-cy="sp-format-selection-next-button"
             [disabled]="!formatConfigurationValid"
             (click)="clickNext()"
             color="primary" mat-raised-button>
