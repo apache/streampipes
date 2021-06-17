@@ -37,8 +37,17 @@ import org.apache.streampipes.sinks.notifications.jvm.telegram.TelegramControlle
 public class SinksNotificationsJvmInit extends StandaloneModelSubmitter {
 
   public static void main(String[] args) {
-    SpServiceDefinition serviceDef = SpServiceDefinitionBuilder.create("org.apache.streampipes.sinks.notifications.jvm", "Sinks Notifications JVM", "", 8096)
-            .registerPipelineElements(new EmailController(),
+        new SinksNotificationsJvmInit().init();
+  }
+
+  @Override
+  public SpServiceDefinition provideServiceDefinition() {
+    return SpServiceDefinitionBuilder.create("org.apache.streampipes.sinks.notifications.jvm",
+            "Sinks Notifications JVM",
+            "",
+            8096)
+            .registerPipelineElements(
+                    new EmailController(),
                     new OneSignalController(),
                     new SlackNotificationController(),
                     new TelegramController())
@@ -58,7 +67,5 @@ public class SinksNotificationsJvmInit extends StandaloneModelSubmitter {
             .addConfig(ConfigKeys.EMAIL_STARTTLS, false, "Use startls?")
             .addConfig(ConfigKeys.EMAIL_SLL, false, "Use SLL?")
             .build();
-
-    new SinksNotificationsJvmInit().init(serviceDef);
   }
 }

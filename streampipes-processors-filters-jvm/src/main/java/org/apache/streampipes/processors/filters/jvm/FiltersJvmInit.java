@@ -22,9 +22,12 @@ import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
+import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
+import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
+import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.processors.filters.jvm.processor.compose.ComposeController;
 import org.apache.streampipes.processors.filters.jvm.processor.enrich.MergeByEnrichController;
 import org.apache.streampipes.processors.filters.jvm.processor.limit.RateLimitController;
@@ -39,14 +42,17 @@ import org.apache.streampipes.processors.filters.jvm.processor.threshold.Thresho
 public class FiltersJvmInit extends StandaloneModelSubmitter {
 
   public static void main(String[] args) {
+    new FiltersJvmInit().init();
+  }
 
-    SpServiceDefinition serviceDef = SpServiceDefinitionBuilder.create("org.apache.streampipes.processors.filters.jvm",
+  @Override
+  public SpServiceDefinition provideServiceDefinition() {
+    return SpServiceDefinitionBuilder.create("org.apache.streampipes.processors.filters.jvm",
             "StreamPipes Processors Filters (JVM)",
             "",
             8090)
-//                .registerAdapters(new MqttProtocol(),
-//                        new IssAdapter())
-            .registerPipelineElements(new TextFilterController(),
+            .registerPipelineElements(
+                    new TextFilterController(),
                     new NumericalFilterController(),
                     new ThresholdDetectionController(),
                     new ProjectionController(),
@@ -56,32 +62,15 @@ public class FiltersJvmInit extends StandaloneModelSubmitter {
                     new ComposeController(),
                     new NumericalTextFilterController(),
                     new RateLimitController())
-            .registerMessagingFormats(new JsonDataFormatFactory(), new CborDataFormatFactory())
-            .registerMessagingProtocols(new SpKafkaProtocolFactory(), new SpJmsProtocolFactory())
+            .registerMessagingFormats(
+                    new JsonDataFormatFactory(),
+                    new CborDataFormatFactory(),
+                    new SmileDataFormatFactory(),
+                    new FstDataFormatFactory())
+            .registerMessagingProtocols(
+                    new SpKafkaProtocolFactory(),
+                    new SpJmsProtocolFactory(),
+                    new SpMqttProtocolFactory())
             .build();
-
-//    DeclarersSingleton.getInstance()
-//            .add(new NumericalFilterController())
-//            .add(new ThresholdDetectionController())
-//            .add(new TextFilterController())
-//            .add(new ProjectionController())
-//            .add(new MergeByEnrichController())
-//            .add(new MergeByTimeController())
-//            .add(new ComposeController())
-//            .add(new NumericalTextFilterController())
-//            .add(new RateLimitController());
-//
-//    DeclarersSingleton.getInstance().registerDataFormats(
-//            new JsonDataFormatFactory(),
-//            new CborDataFormatFactory(),
-//            new SmileDataFormatFactory(),
-//            new FstDataFormatFactory());
-//
-//    DeclarersSingleton.getInstance().registerProtocols(
-//            new SpKafkaProtocolFactory(),
-//            new SpMqttProtocolFactory(),
-//            new SpJmsProtocolFactory());
-
-    new FiltersJvmInit().init(serviceDef);
   }
 }

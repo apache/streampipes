@@ -18,7 +18,8 @@
 
 package org.apache.streampipes.processors.transformation.jvm;
 
-import org.apache.streampipes.container.init.DeclarersSingleton;
+import org.apache.streampipes.container.model.SpServiceDefinition;
+import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
@@ -27,7 +28,6 @@ import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
-import org.apache.streampipes.processors.transformation.jvm.config.TransformationJvmConfig;
 import org.apache.streampipes.processors.transformation.jvm.processor.array.count.CountArrayController;
 import org.apache.streampipes.processors.transformation.jvm.processor.array.split.SplitArrayController;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.counter.BooleanCounterController;
@@ -39,8 +39,6 @@ import org.apache.streampipes.processors.transformation.jvm.processor.booloperat
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.timer.BooleanTimerController;
 import org.apache.streampipes.processors.transformation.jvm.processor.csvmetadata.CsvMetadataEnrichmentController;
 import org.apache.streampipes.processors.transformation.jvm.processor.fieldrename.FiledRenameProcessor;
-import org.apache.streampipes.processors.transformation.jvm.processor.state.buffer.StateBufferController;
-import org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.buffer.StateBufferLabelerController;
 import org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.number.NumberLabelerController;
 import org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.counter.StringCounterController;
 import org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.state.StringToStateController;
@@ -54,42 +52,45 @@ import org.apache.streampipes.processors.transformation.jvm.processor.value.dura
 public class TransformationJvmInit extends StandaloneModelSubmitter {
 
   public static void main(String[] args) {
-    DeclarersSingleton.getInstance()
-            .add(new CountArrayController())
-            .add(new SplitArrayController())
-            .add(new CalculateDurationController())
-            .add(new ChangedValueDetectionController())
-            .add(new TimestampExtractorController())
-            .add(new BooleanCounterController())
-            .add(new BooleanInverterController())
-            .add(new BooleanTimekeepingController())
-            .add(new BooleanTimerController())
-            .add(new CsvMetadataEnrichmentController())
-            .add(new TaskDurationController())
-            .add(new BooleanInverterController())
-            .add(new TransformToBooleanController())
-            .add(new StringTimerController())
-            .add(new SignalEdgeFilterController())
-            .add(new BooleanToStateController())
-            .add(new StateBufferController())
-            .add(new StateBufferLabelerController())
-            .add(new NumberLabelerController())
-            .add(new StringToStateController())
-            .add(new StringCounterController())
-            .add(new BooleanOperatorProcessor())
-            .add(new FiledRenameProcessor());
+    new TransformationJvmInit().init();
+  }
 
-    DeclarersSingleton.getInstance().registerDataFormats(
-            new JsonDataFormatFactory(),
-            new CborDataFormatFactory(),
-            new SmileDataFormatFactory(),
-            new FstDataFormatFactory());
-
-    DeclarersSingleton.getInstance().registerProtocols(
-            new SpKafkaProtocolFactory(),
-            new SpMqttProtocolFactory(),
-            new SpJmsProtocolFactory());
-
-    new TransformationJvmInit().init(TransformationJvmConfig.INSTANCE);
+  @Override
+  public SpServiceDefinition provideServiceDefinition() {
+    return SpServiceDefinitionBuilder.create("org.apache.streampipes.processors.transformation.jvm",
+            "Processors Transformation JVM",
+            "",
+            8090)
+            .registerPipelineElements(
+                    new CountArrayController(),
+                    new SplitArrayController(),
+                    new CalculateDurationController(),
+                    new ChangedValueDetectionController(),
+                    new TimestampExtractorController(),
+                    new BooleanCounterController(),
+                    new BooleanInverterController(),
+                    new BooleanTimekeepingController(),
+                    new BooleanTimerController(),
+                    new CsvMetadataEnrichmentController(),
+                    new TaskDurationController(),
+                    new TransformToBooleanController(),
+                    new StringTimerController(),
+                    new SignalEdgeFilterController(),
+                    new BooleanToStateController(),
+                    new NumberLabelerController(),
+                    new StringToStateController(),
+                    new StringCounterController(),
+                    new BooleanOperatorProcessor(),
+                    new FiledRenameProcessor())
+            .registerMessagingFormats(
+                    new JsonDataFormatFactory(),
+                    new CborDataFormatFactory(),
+                    new SmileDataFormatFactory(),
+                    new FstDataFormatFactory())
+            .registerMessagingProtocols(
+                    new SpKafkaProtocolFactory(),
+                    new SpJmsProtocolFactory(),
+                    new SpMqttProtocolFactory())
+            .build();
   }
 }

@@ -18,7 +18,8 @@
 
 package org.apache.streampipes.processors.siddhi;
 
-import org.apache.streampipes.container.init.DeclarersSingleton;
+import org.apache.streampipes.container.model.SpServiceDefinition;
+import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
@@ -27,7 +28,6 @@ import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
-import org.apache.streampipes.processors.siddhi.config.FilterSiddhiConfig;
 import org.apache.streampipes.processors.siddhi.count.CountAggregation;
 import org.apache.streampipes.processors.siddhi.filter.NumericalFilterController;
 import org.apache.streampipes.processors.siddhi.listcollector.ListCollector;
@@ -38,30 +38,32 @@ import org.apache.streampipes.processors.siddhi.trend.TrendController;
 public class FiltersSiddhiInit extends StandaloneModelSubmitter {
 
   public static void main(String[] args) {
-    DeclarersSingleton.getInstance()
-            .add(new TrendController())
-            .add(new NumericalFilterController())
-            .add(new ListFilter())
-            .add(new ListCollector())
-            .add(new CountAggregation())
-            .add(new TopK());
-    // TODO: currently not working
-//            .add(new StreamStopController())
-//            .add(new FrequencyController())
-//            .add(new FrequencyChangeController())
+    new FiltersSiddhiInit().init();
+  }
 
-
-    DeclarersSingleton.getInstance().registerDataFormats(
-            new JsonDataFormatFactory(),
-            new CborDataFormatFactory(),
-            new SmileDataFormatFactory(),
-            new FstDataFormatFactory());
-
-    DeclarersSingleton.getInstance().registerProtocols(
-            new SpKafkaProtocolFactory(),
-            new SpMqttProtocolFactory(),
-            new SpJmsProtocolFactory());
-
-    new FiltersSiddhiInit().init(FilterSiddhiConfig.INSTANCE);
+  @Override
+  public SpServiceDefinition provideServiceDefinition() {
+    return SpServiceDefinitionBuilder.create("org.apache.streampipes.processors.filters.siddhi",
+            "Processors Filters Siddhi",
+            "",
+            8090)
+            .registerPipelineElements(
+                    new TrendController(),
+                    new NumericalFilterController(),
+                    new ListFilter(),
+                    new ListCollector(),
+                    new CountAggregation(),
+                    new TopK())
+            // Currently not working: StreamStopController, FrequencyChangeController, FrequencyController
+            .registerMessagingFormats(
+                    new JsonDataFormatFactory(),
+                    new CborDataFormatFactory(),
+                    new SmileDataFormatFactory(),
+                    new FstDataFormatFactory())
+            .registerMessagingProtocols(
+                    new SpKafkaProtocolFactory(),
+                    new SpJmsProtocolFactory(),
+                    new SpMqttProtocolFactory())
+            .build();
   }
 }

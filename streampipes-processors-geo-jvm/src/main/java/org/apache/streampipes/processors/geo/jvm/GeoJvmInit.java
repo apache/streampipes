@@ -18,7 +18,8 @@
 
 package org.apache.streampipes.processors.geo.jvm;
 
-import org.apache.streampipes.container.init.DeclarersSingleton;
+import org.apache.streampipes.container.model.SpServiceDefinition;
+import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
@@ -27,7 +28,6 @@ import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
-import org.apache.streampipes.processors.geo.jvm.config.GeoJvmConfig;
 import org.apache.streampipes.processors.geo.jvm.jts.processor.latLngToGeo.LatLngToGeoController;
 import org.apache.streampipes.processors.geo.jvm.jts.processor.setEPSG.SetEpsgController;
 import org.apache.streampipes.processors.geo.jvm.jts.processor.trajectory.CreateTrajectoryFromPointsController;
@@ -41,28 +41,34 @@ import org.apache.streampipes.processors.geo.jvm.processor.staticgeocoder.Static
 public class GeoJvmInit extends StandaloneModelSubmitter {
 
   public static void main(String[] args) {
-    DeclarersSingleton.getInstance()
-            .add(new DistanceCalculatorController())
-            .add(new GoogleMapsGeocodingController())
-            .add(new StaticGoogleMapsGeocodingController())
-            .add(new ReverseGeocodingController())
-            .add(new SetEpsgController())
-            .add(new LatLngToGeoController())
-            .add(new CreateTrajectoryFromPointsController())
-            .add(new SpeedCalculatorController())
-            .add(new StaticDistanceCalculatorController());
+    new GeoJvmInit().init();
+  }
 
-    DeclarersSingleton.getInstance().registerDataFormats(
-            new JsonDataFormatFactory(),
-            new CborDataFormatFactory(),
-            new SmileDataFormatFactory(),
-            new FstDataFormatFactory());
-
-    DeclarersSingleton.getInstance().registerProtocols(
-            new SpKafkaProtocolFactory(),
-            new SpMqttProtocolFactory(),
-            new SpJmsProtocolFactory());
-
-    new GeoJvmInit().init(GeoJvmConfig.INSTANCE);
+  @Override
+  public SpServiceDefinition provideServiceDefinition() {
+    return SpServiceDefinitionBuilder.create("org.apache.streampipes.processors.geo.jvm",
+            "Processors Geo JVM",
+            "",
+            8090)
+            .registerPipelineElements(
+                    new DistanceCalculatorController(),
+                    new GoogleMapsGeocodingController(),
+                    new StaticGoogleMapsGeocodingController(),
+                    new ReverseGeocodingController(),
+                    new SetEpsgController(),
+                    new LatLngToGeoController(),
+                    new CreateTrajectoryFromPointsController(),
+                    new SpeedCalculatorController(),
+                    new StaticDistanceCalculatorController())
+            .registerMessagingFormats(
+                    new JsonDataFormatFactory(),
+                    new CborDataFormatFactory(),
+                    new SmileDataFormatFactory(),
+                    new FstDataFormatFactory())
+            .registerMessagingProtocols(
+                    new SpKafkaProtocolFactory(),
+                    new SpJmsProtocolFactory(),
+                    new SpMqttProtocolFactory())
+            .build();
   }
 }

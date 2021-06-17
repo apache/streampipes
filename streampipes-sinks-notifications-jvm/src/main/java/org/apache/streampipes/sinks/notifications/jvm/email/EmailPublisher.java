@@ -43,7 +43,6 @@ public class EmailPublisher implements EventSink<EmailParameters> {
     @Override
     public void onInvocation(EmailParameters parameters, EventSinkRuntimeContext runtimeContext) {
         LOG = parameters.getGraph().getLogger(EmailPublisher.class);
-
         SpConfig config = runtimeContext.getConfigStore().getConfig();
         String from = config.getString(ConfigKeys.EMAIL_FROM);
         String to = parameters.getToEmailAddress();

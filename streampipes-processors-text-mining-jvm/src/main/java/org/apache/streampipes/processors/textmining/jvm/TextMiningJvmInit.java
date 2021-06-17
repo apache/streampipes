@@ -36,24 +36,32 @@ import org.apache.streampipes.processors.textmining.jvm.processor.sentencedetect
 import org.apache.streampipes.processors.textmining.jvm.processor.tokenizer.TokenizerController;
 
 public class TextMiningJvmInit extends StandaloneModelSubmitter {
-  public static void main(String[] args) {
 
-    SpServiceDefinition serviceDef = SpServiceDefinitionBuilder.create("org.apache.streampipes.processors.textmining.jvm", "Processors Text Mining JVM", "", 8090)
+  public static void main(String[] args) {
+    new TextMiningJvmInit().init();
+  }
+
+  @Override
+  public SpServiceDefinition provideServiceDefinition() {
+
+    return SpServiceDefinitionBuilder.create("org.apache.streampipes.processors.textmining.jvm",
+            "Processors Text Mining JVM", "",
+            8090)
             .registerPipelineElements(new LanguageDetectionController(),
                     new TokenizerController(),
                     new PartOfSpeechController(),
                     new ChunkerController(),
                     new NameFinderController(),
                     new SentenceDetectionController())
-            .registerMessagingFormats(new JsonDataFormatFactory(),
+            .registerMessagingFormats(
+                    new JsonDataFormatFactory(),
                     new CborDataFormatFactory(),
                     new SmileDataFormatFactory(),
                     new FstDataFormatFactory())
-            .registerMessagingProtocols(new SpKafkaProtocolFactory(),
+            .registerMessagingProtocols(
+                    new SpKafkaProtocolFactory(),
                     new SpJmsProtocolFactory(),
                     new SpMqttProtocolFactory())
             .build();
-
-    new TextMiningJvmInit().init(serviceDef);
   }
 }

@@ -40,9 +40,17 @@ import org.apache.streampipes.sinks.brokers.jvm.websocket.WebsocketServerSink;
 public class BrokersJvmInit extends StandaloneModelSubmitter {
 
   public static void main(String[] args) {
+    new BrokersJvmInit().init();
+  }
 
-    SpServiceDefinition serviceDef = SpServiceDefinitionBuilder.create("org.apache.streampipes.sinks.notifications.jvm", "Sinks Notifications JVM", "", 8096)
-            .registerPipelineElements(new KafkaController(),
+  @Override
+  public SpServiceDefinition provideServiceDefinition() {
+    return SpServiceDefinitionBuilder.create("org.apache.streampipes.sinks.notifications.jvm",
+            "Sinks Notifications JVM",
+            "",
+            8096)
+            .registerPipelineElements(
+                    new KafkaController(),
                     new JmsController(),
                     new RestController(),
                     new BufferRestController(),
@@ -50,15 +58,15 @@ public class BrokersJvmInit extends StandaloneModelSubmitter {
                     new WebsocketServerSink(),
                     new PulsarController(),
                     new NatsController())
-            .registerMessagingFormats(new JsonDataFormatFactory(),
+            .registerMessagingFormats(
+                    new JsonDataFormatFactory(),
                     new CborDataFormatFactory(),
                     new SmileDataFormatFactory(),
                     new FstDataFormatFactory())
-            .registerMessagingProtocols(new SpKafkaProtocolFactory(),
+            .registerMessagingProtocols(
+                    new SpKafkaProtocolFactory(),
                     new SpJmsProtocolFactory(),
                     new SpMqttProtocolFactory())
             .build();
-
-    new BrokersJvmInit().init(serviceDef);
   }
 }
