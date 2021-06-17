@@ -26,7 +26,10 @@ public class Description {
 	private String descriptionUrl;
 	private String type;
 	private String appId;
+
 	private boolean editable;
+	private boolean includesIcon;
+	private boolean includesDocs;
 
 	public Description(String name, String description, String descriptionUrl)
 	{
@@ -93,6 +96,22 @@ public class Description {
 
 	public void setElementId(String elementId) {
 		this.elementId = elementId;
+	}
+
+	public boolean isIncludesIcon() {
+		return includesIcon;
+	}
+
+	public void setIncludesIcon(boolean includesIcon) {
+		this.includesIcon = includesIcon;
+	}
+
+	public boolean isIncludesDocs() {
+		return includesDocs;
+	}
+
+	public void setIncludesDocs(boolean includesDocs) {
+		this.includesDocs = includesDocs;
 	}
 
 	@Override

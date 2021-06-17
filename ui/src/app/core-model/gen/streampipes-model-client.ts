@@ -19,7 +19,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 2.27.744 on 2021-01-05 12:29:12.
+// Generated using typescript-generator version 2.27.744 on 2021-06-17 21:29:53.
 
 export class Element {
     elementId: string;
@@ -101,6 +101,39 @@ export class RawUserApiToken {
         instance.hashedToken = data.hashedToken;
         instance.tokenName = data.tokenName;
         instance.tokenId = data.tokenId;
+        return instance;
+    }
+}
+
+export class RdfEndpointItem {
+    appId: string;
+    description: string;
+    editable: boolean;
+    elementId: string;
+    includesDocs: boolean;
+    includesIcon: boolean;
+    installed: boolean;
+    name: string;
+    streams: RdfEndpointItem[];
+    type: string;
+    uri: string;
+
+    static fromData(data: RdfEndpointItem, target?: RdfEndpointItem): RdfEndpointItem {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new RdfEndpointItem();
+        instance.name = data.name;
+        instance.description = data.description;
+        instance.elementId = data.elementId;
+        instance.uri = data.uri;
+        instance.type = data.type;
+        instance.appId = data.appId;
+        instance.includesIcon = data.includesIcon;
+        instance.includesDocs = data.includesDocs;
+        instance.installed = data.installed;
+        instance.editable = data.editable;
+        instance.streams = __getCopyArrayFn(RdfEndpointItem.fromData)(data.streams);
         return instance;
     }
 }

@@ -24,6 +24,7 @@ import {PanelType} from "../core-ui/dialog/base-dialog/base-dialog.model";
 import {DialogService} from "../core-ui/dialog/base-dialog/base-dialog.service";
 import {AddEndpointComponent} from "./dialogs/add-endpoint/add-endpoint.component";
 import {EndpointInstallationComponent} from "./dialogs/endpoint-installation/endpoint-installation.component";
+import {RdfEndpointItem} from "../core-model/gen/streampipes-model-client";
 
 @Component({
     selector: 'add',
@@ -34,7 +35,7 @@ export class AddComponent implements OnInit {
 
     results: any[];
     loading: boolean;
-    endpointItems: any[];
+    endpointItems: RdfEndpointItem[];
     endpointItemsLoadingComplete: boolean;
     selectedTab: string;
     availableTypes: Array<string> = ["all", "set", "stream", "sepa", "action"];
@@ -87,7 +88,7 @@ export class AddComponent implements OnInit {
         this.endpointItems.forEach(item => {
             if (item.editable) {
                 if (item.type === this.selectedTab || this.selectedTab == 'all') {
-                    item.selected = selected;
+                    (item as any).selected = selected;
                     if (selected) {
                         this.selectedEndpointItems.push(item.uri);
                     }
@@ -149,7 +150,7 @@ export class AddComponent implements OnInit {
 
         this.endpointItems.forEach(item => {
             if (item.type === this.selectedTab || this.selectedTab == 'all') {
-                if (item.installed === !install && item.selected) {
+                if (item.installed === !install && (item as any).selected) {
                     elementsToInstall.push(item);
                 }
             }

@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.rest.impl;
 
+import org.apache.http.client.fluent.Request;
 import org.apache.streampipes.manager.endpoint.EndpointFetcher;
 import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.model.SpDataSet;
@@ -29,6 +30,7 @@ import org.apache.streampipes.storage.api.IRdfEndpointStorage;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -83,7 +85,22 @@ public class RdfEndpoint extends AbstractRestResource {
     items.addAll(getAllDataSinkEndpoints(username, items));
 
     return ok(items);
+  }
 
+  @POST
+  @Path("/items/icon")
+  @Produces("image/png")
+  public Response getEndpointItemIcon(RdfEndpointItem endpointItem) {
+    try {
+      byte[] imageBytes = Request.Get(makeIconUrl(endpointItem)).execute().returnContent().asBytes();
+      return ok(imageBytes);
+    } catch (IOException e) {
+      return fail();
+    }
+  }
+
+  private String makeIconUrl(RdfEndpointItem endpointItem) {
+    return endpointItem.getUri() + "/assets/icon";
   }
 
   private List<org.apache.streampipes.model.client.endpoint.RdfEndpoint> getEndpoints() {

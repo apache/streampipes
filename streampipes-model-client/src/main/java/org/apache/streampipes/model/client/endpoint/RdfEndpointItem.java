@@ -18,8 +18,11 @@
 
 package org.apache.streampipes.model.client.endpoint;
 
+import org.apache.streampipes.model.shared.annotation.TsModel;
+
 import java.util.List;
 
+@TsModel
 public class RdfEndpointItem {
 
     private String name;
@@ -28,6 +31,9 @@ public class RdfEndpointItem {
     private String uri;
     private String type;
     private String appId;
+
+    private boolean includesIcon;
+    private boolean includesDocs;
 
     private boolean installed;
     private boolean editable;
@@ -108,5 +114,21 @@ public class RdfEndpointItem {
 
     public void setElementId(String elementId) {
         this.elementId = elementId;
+    }
+
+    public boolean isIncludesIcon() {
+        return includesIcon;
+    }
+
+    public void setIncludesIcon(boolean includesIcon) {
+        this.includesIcon = includesIcon;
+    }
+
+    public boolean isIncludesDocs() {
+        return includesDocs;
+    }
+
+    public void setIncludesDocs(boolean includesDocs) {
+        this.includesDocs = includesDocs;
     }
 }

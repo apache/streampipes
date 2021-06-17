@@ -16,9 +16,12 @@
  *
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
+import {Component, EventEmitter, Input, OnInit, Output, Sanitizer} from "@angular/core";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {PipelineElementEndpointService} from "../../../platform-services/apis/pipeline-element-endpoint.service";
+import {RdfEndpointItem} from "../../../core-model/gen/streampipes-model-client";
+import {AddService} from "../../services/add.service";
+import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 
 @Component({
   selector: 'endpoint-item',
@@ -28,7 +31,7 @@ import {PipelineElementEndpointService} from "../../../platform-services/apis/pi
 export class EndpointItemComponent implements OnInit {
 
   @Input()
-  item: any;
+  item: RdfEndpointItem;
 
   itemTypeTitle: string;
   itemTypeStyle: string;
@@ -36,17 +39,30 @@ export class EndpointItemComponent implements OnInit {
   @Input()
   itemSelected: boolean;
 
+  image: SafeUrl;
+  iconReady: boolean = false;
+  iconError: boolean = false;
+
   @Output()
   triggerInstallation: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(private snackBar: MatSnackBar,
-              private PipelineElementEndpointService: PipelineElementEndpointService) {
+              private PipelineElementEndpointService: PipelineElementEndpointService,
+              private addService: AddService,
+              private sanitizer: DomSanitizer) {
 
   }
 
   ngOnInit(): void {
    this.findItemTypeTitle();
    this.findItemStyle();
+   if (this.item.includesIcon) {
+     this.addService.getRdfEndpointIcon(this.item).subscribe(blob => {
+       let objectURL = URL.createObjectURL(blob);
+       this.image = this.sanitizer.bypassSecurityTrustUrl(objectURL);
+       this.iconReady = true;
+     }, error => this.iconError = true);
+   }
   }
 
   iconText(s) {

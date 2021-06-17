@@ -64,13 +64,16 @@ public class WelcomePageGenerator {
   }
 
   private Description getDescription(Declarer<?> declarer) {
+    NamedStreamPipesEntity entity = declarer.declareModel();
     Description desc = new Description();
     // TODO remove after full internationalization support has been implemented
     updateLabel(declarer.declareModel(), desc);
     desc.setType(getType(declarer));
-    desc.setElementId(declarer.declareModel().getElementId());
-    desc.setAppId(declarer.declareModel().getAppId());
-    desc.setEditable(!(declarer.declareModel().isInternallyManaged()));
+    desc.setElementId(entity.getElementId());
+    desc.setAppId(entity.getAppId());
+    desc.setEditable(!(entity.isInternallyManaged()));
+    desc.setIncludesDocs(entity.isIncludesAssets());
+    desc.setIncludesIcon(entity.isIncludesAssets());
     String uri = baseUri;
     if (declarer instanceof SemanticEventConsumerDeclarer) {
       uri += "sec/";
