@@ -47,6 +47,7 @@ import {PipelineComponent} from "../pipeline/pipeline.component";
 import {PipelineCanvasMetadata} from "../../../core-model/gen/streampipes-model";
 import {forkJoin} from 'rxjs';
 import {PipelineCanvasMetadataService} from "../../../platform-services/apis/pipeline-canvas-metadata.service";
+import {PipelineElementDiscoveryComponent} from "../../dialog/pipeline-element-discovery/pipeline-element-discovery.component";
 
 
 @Component({
@@ -335,6 +336,18 @@ export class PipelineAssemblyComponent implements OnInit {
 
     triggerPipelinePreview() {
         this.pipelineComponent.initiatePipelineElementPreview();
+    }
+
+    openDiscoverDialog() {
+        this.dialogService.open(PipelineElementDiscoveryComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: "Discover pipeline elements",
+            width: "50vw",
+            data: {
+                "currentElements": this.allElements,
+                "rawPipelineModel": this.rawPipelineModel
+            }
+        });
     }
 
 }

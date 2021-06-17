@@ -52,6 +52,10 @@
                     (click)="autoLayout()">
                 <i class="material-icons">settings_overscan</i>
             </button>
+            <button mat-button mat-icon-button matTooltip="Add pipeline element" [matTooltipPosition]="'above'"
+                    (click)="openDiscoverDialog()">
+                <i class="material-icons">add</i>
+            </button>
             <div fxLayout="column" fxLayoutAlign="start center" class="pipeline-cache-block">
                 <div fxFlex="100" fxLayoutAlign="start center" fxLayout="row" *ngIf="pipelineCached || pipelineCacheRunning">
                     <div *ngIf="pipelineCached" fxLayout="row" fxLayoutAlign="start center">
