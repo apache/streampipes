@@ -72,11 +72,26 @@ export class JsplumbService {
         return this.createNewPipelineElementConfig(pe, {x: 100, y: 100}, isPreview, true);
     }
 
+    createElementWithoutConnection(pipelineModel: PipelineElementConfig[],
+                                   pipelineElement: PipelineElementUnion,
+                                   x: number,
+                                   y: number) {
+        let pipelineElementConfig = this.createNewPipelineElementConfigAtPosition(x, y, pipelineElement, false);
+        pipelineModel.push(pipelineElementConfig);
+        setTimeout(() => {
+            this.elementDropped(pipelineElementConfig.payload.dom,
+                pipelineElementConfig.payload,
+                true,
+                false);
+        }, 100);
+    }
+
     createElement(pipelineModel: PipelineElementConfig[],
                   pipelineElement: InvocablePipelineElementUnion,
                   pipelineElementDomId: string) {
         var pipelineElementDom = $("#" + pipelineElementDomId);
-        var pipelineElementConfig = this.createNewPipelineElementConfigWithFixedCoordinates(pipelineElementDom, pipelineElement, false);
+
+        let pipelineElementConfig = this.createNewPipelineElementConfigWithFixedCoordinates(pipelineElementDom, pipelineElement, false);
         pipelineModel.push(pipelineElementConfig);
         setTimeout(() => {
             this.createAssemblyElement(pipelineElementConfig.payload.dom,
@@ -100,7 +115,9 @@ export class JsplumbService {
         }
     }
 
-    connectNodes($parentElement, $target, previewConfig: boolean) {
+    connectNodes($parentElement,
+                 $target,
+                 previewConfig: boolean) {
         var options;
         let jsplumbBridge = this.getBridge(previewConfig);
         if ($parentElement.hasClass("stream")) {
@@ -130,7 +147,14 @@ export class JsplumbService {
     createNewPipelineElementConfigWithFixedCoordinates($parentElement, json, isPreview): PipelineElementConfig {
         var x = $parentElement.position().left;
         var y = $parentElement.position().top;
-        var coord = {'x': x + 200, 'y': y};
+        return this.createNewPipelineElementConfigAtPosition(x, y, json, isPreview);
+    }
+
+    createNewPipelineElementConfigAtPosition(x: number,
+                                             y: number,
+                                             json: any,
+                                             isPreview: boolean): PipelineElementConfig {
+        let coord = {'x': x + 200, 'y': y};
         return this.createNewPipelineElementConfig(json, coord, isPreview, false);
     }
 
@@ -199,6 +223,19 @@ export class JsplumbService {
         return text;
     }
 
+    elementDropped(pipelineElementDomId: string,
+                    pipelineElement: PipelineElementUnion,
+                    endpoints: boolean,
+                    preview: boolean): string {
+        if (pipelineElement instanceof SpDataStream) {
+            return this.dataStreamDropped(pipelineElementDomId, pipelineElement as SpDataStream, endpoints, preview);
+        } else if (pipelineElement instanceof DataProcessorInvocation) {
+            return this.dataProcessorDropped(pipelineElementDomId, pipelineElement, endpoints, preview);
+        } else if (pipelineElement instanceof DataSinkInvocation) {
+            return this.dataSinkDropped(pipelineElementDomId, pipelineElement, endpoints, preview);
+        };
+    }
+
     dataStreamDropped(pipelineElementDomId: string,
                   pipelineElement: SpDataStreamUnion,
                   endpoints: boolean,
@@ -206,7 +243,6 @@ export class JsplumbService {
         let jsplumbBridge = this.getBridge(preview);
         if (endpoints) {
             this.makeDraggableIfNotPreview(pipelineElementDomId, jsplumbBridge, preview);
-
             let endpointOptions = this.jsplumbEndpointService.getStreamEndpoint(preview, pipelineElementDomId);
             jsplumbBridge.addEndpoint(pipelineElementDomId, endpointOptions);
         }

@@ -16,59 +16,66 @@
  *
  */
 
-import {Component, Input} from "@angular/core";
+import {Component, Input, OnInit} from "@angular/core";
 import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
 import {JsplumbService} from "../../services/jsplumb.service";
-import {DataProcessorInvocation} from "../../../core-model/gen/streampipes-model";
+import {
+  DataProcessorInvocation,
+  DataSinkInvocation,
+  SpDataSet,
+  SpDataStream
+} from "../../../core-model/gen/streampipes-model";
 import {PipelineElementConfig, PipelineElementUnion} from "../../model/editor.model";
 
 @Component({
-  selector: 'compatible-elements',
-  templateUrl: './compatible-elements.component.html',
-  styleUrls: ['./compatible-elements.component.scss']
+  selector: 'sp-pipeline-element-discovery',
+  templateUrl: './pipeline-element-discovery.component.html',
+  styleUrls: ['./pipeline-element-discovery.component.scss']
 })
-export class CompatibleElementsComponent {
+export class PipelineElementDiscoveryComponent implements OnInit {
 
   @Input()
   rawPipelineModel: PipelineElementConfig[];
 
   @Input()
-  pipelineElementDomId: any;
-
-  @Input()
-  possibleElements: PipelineElementUnion[];
+  currentElements: PipelineElementUnion[];
 
   styles: any[] = [];
 
-
-  constructor(private dialogRef: DialogRef<CompatibleElementsComponent>,
+  constructor(private dialogRef: DialogRef<PipelineElementDiscoveryComponent>,
               private JsPlumbService: JsplumbService) {
-    //this.ElementIconText = ElementIconText;
+
   }
 
   ngOnInit() {
-    this.possibleElements.sort((a, b) => a.name.localeCompare(b.name));
-    this.possibleElements.forEach(pe => {
+    this.currentElements.sort((a, b) => a.name.localeCompare(b.name));
+    this.currentElements.forEach(pe => {
       this.styles.push(this.makeStandardStyle());
     })
   }
 
-  create(possibleElement) {
-    this.JsPlumbService.createElement(this.rawPipelineModel, possibleElement, this.pipelineElementDomId);
+  create(selectedElement) {
+    this.JsPlumbService.createElementWithoutConnection(this.rawPipelineModel,
+        selectedElement,
+        200,
+        100);
     this.hide();
   }
 
-  iconText(elementId) {
-    //return this.ElementIconText.getElementIconText(elementId);
-  }
-
   hide() {
-    //this.$mdDialog.hide();
     this.dialogRef.close();
   };
 
-  isDataProcessor(possibleElement: PipelineElementUnion) {
-    return possibleElement instanceof DataProcessorInvocation;
+  currentElementStyle(possibleElement: PipelineElementUnion) {
+    if (possibleElement instanceof DataProcessorInvocation) {
+      return "sepa";
+    } else if (possibleElement instanceof DataSinkInvocation) {
+      return "action";
+    } else if (possibleElement instanceof SpDataSet) {
+      return "set";
+    } else if (possibleElement instanceof SpDataStream) {
+      return "stream";
+    }
   }
 
   makeStandardStyle() {
@@ -88,5 +95,4 @@ export class CompatibleElementsComponent {
   changeStyle(index: number, hover: boolean) {
     hover ? this.styles[index] = this.makeHoverStyle() : this.styles[index] = this.makeStandardStyle();
   }
-
 }
