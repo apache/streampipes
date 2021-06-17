@@ -19,6 +19,7 @@ package org.apache.streampipes.manager.assets;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.streampipes.commons.constants.GlobalStreamPipesConstants;
+import org.apache.streampipes.commons.constants.PipelineElementUrl;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,8 +42,9 @@ public class AssetManager {
     return Files.readAllBytes(Paths.get(getAssetPath(appId, assetName)));
   }
 
-  public static void storeAsset(String pipelineElementUri, String appId) throws IOException {
-    InputStream assetStream = new AssetFetcher(pipelineElementUri, appId)
+  public static void storeAsset(PipelineElementUrl pipelineElementUrl,
+                                String appId) throws IOException {
+    InputStream assetStream = new AssetFetcher(pipelineElementUrl, appId)
             .fetchPipelineElementAssets();
     new AssetExtractor(assetStream, appId).extractAssetContents();
   }

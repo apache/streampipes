@@ -18,6 +18,8 @@
 package org.apache.streampipes.manager.assets;
 
 import org.apache.http.client.fluent.Request;
+import org.apache.streampipes.commons.constants.PipelineElementUrl;
+import org.apache.streampipes.manager.execution.http.PipelineElementEndpointGenerator;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,18 +28,19 @@ public class AssetFetcher {
 
   private static final String ASSET_ENDPOINT_APPENDIX = "/assets";
 
-  private String pipelineElementUri;
+  private PipelineElementUrl pipelineElementUrl;
   private String appId;
 
-  public AssetFetcher(String pipelineElementUri, String appId) {
-    this.pipelineElementUri = pipelineElementUri;
+  public AssetFetcher(PipelineElementUrl pipelineElementUrl,
+                      String appId) {
+    this.pipelineElementUrl = pipelineElementUrl;
     this.appId = appId;
   }
 
   public InputStream fetchPipelineElementAssets() throws IOException {
-
+    String endpointUrl = new PipelineElementEndpointGenerator(appId, pipelineElementUrl).getEndpointResourceUrl();
     return Request
-            .Get(pipelineElementUri + ASSET_ENDPOINT_APPENDIX)
+            .Get(endpointUrl + ASSET_ENDPOINT_APPENDIX)
             .execute()
             .returnContent()
             .asStream();

@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.manager.verification;
 
+import org.apache.streampipes.commons.constants.PipelineElementUrl;
 import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.manager.assets.AssetManager;
 import org.apache.streampipes.model.graph.DataSinkDescription;
@@ -75,7 +76,7 @@ public class DataSinkVerifier extends ElementVerifier<DataSinkDescription> {
 	@Override
 	protected void storeAssets() throws IOException  {
 		if (elementDescription.isIncludesAssets()) {
-			AssetManager.storeAsset(elementDescription.getElementId(), elementDescription.getAppId());
+			AssetManager.storeAsset(PipelineElementUrl.DATA_SINK, elementDescription.getAppId());
 		}
 	}
 

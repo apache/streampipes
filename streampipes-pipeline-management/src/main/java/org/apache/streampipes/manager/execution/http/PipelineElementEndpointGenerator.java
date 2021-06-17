@@ -30,13 +30,10 @@ public class PipelineElementEndpointGenerator {
   private static final Logger LOG = LoggerFactory.getLogger(PipelineElementEndpointGenerator.class);
 
   private String appId;
-  private String elementId;
   private PipelineElementUrl pipelineElementUrl;
 
-  public PipelineElementEndpointGenerator(String elementId,
-                                          String appId,
+  public PipelineElementEndpointGenerator(String appId,
                                           PipelineElementUrl pipelineElementUrl) {
-    this.elementId = elementId;
     this.appId = appId;
     this.pipelineElementUrl = pipelineElementUrl;
   }

@@ -80,7 +80,7 @@ public class PipelineExecutor {
 
     decryptSecrets(graphs);
 
-    graphs.forEach(g -> g.setSelectedEndpointUrl(new PipelineElementEndpointGenerator(g.getElementId(),
+    graphs.forEach(g -> g.setSelectedEndpointUrl(new PipelineElementEndpointGenerator(
             g.getAppId(),
             getPipelineElementType(g))
             .getEndpointResourceUrl()));

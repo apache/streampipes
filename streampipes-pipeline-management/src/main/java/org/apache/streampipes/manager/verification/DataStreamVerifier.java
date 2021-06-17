@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.manager.verification;
 
+import org.apache.streampipes.commons.constants.PipelineElementUrl;
 import org.apache.streampipes.manager.assets.AssetManager;
 import org.apache.streampipes.model.SpDataStream;
 
@@ -72,7 +73,7 @@ public class DataStreamVerifier extends ElementVerifier<SpDataStream> {
   @Override
   protected void storeAssets() throws IOException {
     if (elementDescription.isIncludesAssets()) {
-      AssetManager.storeAsset(elementDescription.getElementId(), elementDescription.getAppId());
+      AssetManager.storeAsset(PipelineElementUrl.DATA_STREAM, elementDescription.getAppId());
     }
   }
 
