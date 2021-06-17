@@ -48,6 +48,11 @@ public abstract class StandaloneModelSubmitter extends ModelSubmitter<PeConfig> 
     private static final Logger LOG =
             LoggerFactory.getLogger(StandaloneModelSubmitter.class.getCanonicalName());
 
+    public void init() {
+        SpServiceDefinition serviceDef = provideServiceDefinition();
+        init(serviceDef);
+    }
+
     public void init(SpServiceDefinition serviceDef) {
         try {
             String host = Networking.getHostname();
@@ -88,6 +93,10 @@ public abstract class StandaloneModelSubmitter extends ModelSubmitter<PeConfig> 
         SpringApplication app = new SpringApplication(StandaloneModelSubmitter.class);
         app.setDefaultProperties(Collections.singletonMap("server.port", port));
         app.run();
+    }
+
+    public SpServiceDefinition provideServiceDefinition() {
+        return null;
     }
 
     @PreDestroy

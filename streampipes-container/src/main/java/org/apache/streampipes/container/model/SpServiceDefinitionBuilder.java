@@ -109,6 +109,11 @@ public class SpServiceDefinitionBuilder {
     return this;
   }
 
+  public SpServiceDefinitionBuilder merge(SpServiceDefinition other) {
+    this.serviceDefinition.addDeclarers(other.getDeclarers());
+    return this;
+  }
+
   public SpServiceDefinition build() {
     return this.serviceDefinition;
   }

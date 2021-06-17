@@ -50,7 +50,7 @@ public class SpConsulServiceDiscovery extends AbstractConsulService implements I
     boolean connected = false;
 
     while (!connected) {
-      LOG.info("Trying to register service at Consul: " + svcId);
+      LOG.info("Trying to register service at Consul with svcGroup={}, svcId={} host={}, port={}. ", svcGroup, svcId, host, port);
       ConsulServiceRegistrationBody svcRegistration = createRegistrationBody(svcGroup, svcId, host, port, tags);
       connected = registerServiceHttpClient(svcRegistration);
 
