@@ -54,7 +54,8 @@
                 <i class="material-icons">settings_overscan</i>
             </button>
             <button mat-button mat-icon-button matTooltip="Add pipeline element" [matTooltipPosition]="'above'"
-                    (click)="openDiscoverDialog()">
+                    (click)="openDiscoverDialog()"
+                    data-cy="sp-editor-add-pipeline-element">
                 <i class="material-icons">add</i>
             </button>
             <div fxLayout="column" fxLayoutAlign="start center" class="pipeline-cache-block">

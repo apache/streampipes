@@ -45,7 +45,8 @@
                                    [pipelineElement]="pipelineElement"
                                    [rawPipelineModel]="rawPipelineModel"
                                    [pipelineElementId]="pipelineElement.type == 'stream' ? pipelineElement.payload.elementId : pipelineElement.payload.belongsTo"
-                                   [internalId]="pipelineElement.payload.dom">
+                                   [internalId]="pipelineElement.payload.dom"
+                                   [attr.data-cy]="'sp-pe-menu-' + pipelineElement.payload.name.toLowerCase().replaceAll(' ', '_')">
         </pipeline-element-options>
         <pipeline-element-preview *ngIf="previewModeActive && (pipelinePreview.supportedPipelineElementDomIds.indexOf(pipelineElement.payload.dom) > -1)"
                                   [previewId]="pipelinePreview.previewId"

@@ -20,7 +20,11 @@
     <div class="sp-dialog-content p-15">
         <div fxFlex="100" fxLayout="column">
             <div *ngFor="let currentElement of currentElements; index as i" (click)="create(currentElement)">
-                <div fxLayout="row" class="m-10" fxLayoutAlign="start center" [style]="styles[i]" (mouseenter)="changeStyle(i, true)" (mouseleave)="changeStyle(i, false)" >
+                <div fxLayout="row" class="m-10" fxLayoutAlign="start center"
+                     [style]="styles[i]"
+                     (mouseenter)="changeStyle(i, true)"
+                     (mouseleave)="changeStyle(i, false)"
+                     [attr.data-cy]="currentElement.name.toLowerCase().replaceAll(' ', '_')">
                     <div class="draggable-icon-preview {{currentElementStyle(currentElement)}}">
                         <pipeline-element [pipelineElement]="currentElement" [iconSize]="true"></pipeline-element>
                     </div>

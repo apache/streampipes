@@ -15,8 +15,8 @@
   ~ limitations under the License.
   ~
   -->
-<div>
-    <div [ngStyle]="currentMouseOverElement==pipelineElement.payload.dom ? {opacity: 1} : {opacity: 0}" class="sp-fade-options">
+<div >
+    <div  [ngStyle]="currentMouseOverElement==pipelineElement.payload.dom ? {opacity: 1} : {opacity: 1}" class="sp-fade-options">
         <span class="options-button customize-button" *ngIf="pipelineElement.type!='stream'" style="z-index:10">
             <button mat-button mat-icon-button matTooltip="Configure Element"
                     [matTooltipPosition]="'above'"
