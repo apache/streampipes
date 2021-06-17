@@ -20,7 +20,8 @@
     <div class="sp-dialog-content p-15">
         <div fxFlex="100" fxLayout="column">
             <div *ngFor="let possibleElement of possibleElements; index as i" (click)="create(possibleElement)">
-                <div fxLayout="row" class="m-10" fxLayoutAlign="start center" [style]="styles[i]" (mouseenter)="changeStyle(i, true)" (mouseleave)="changeStyle(i, false)" >
+                <div fxLayout="row" class="m-10" fxLayoutAlign="start center" [style]="styles[i]" (mouseenter)="changeStyle(i, true)" (mouseleave)="changeStyle(i, false)"
+                     [attr.data-cy]="'sp-compatible-elements-' + possibleElement.name.toLowerCase().replaceAll(' ', '_')">
                     <div class="draggable-icon-preview {{isDataProcessor(possibleElement) ? 'sepa' : 'action'}}">
                         <pipeline-element [pipelineElement]="possibleElement" [iconSize]="true"></pipeline-element>
                     </div>

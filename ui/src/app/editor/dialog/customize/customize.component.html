@@ -103,7 +103,8 @@
     <div class="sp-dialog-actions">
         <div fxLayout="row" *ngIf="!templateMode">
             <button mat-button mat-raised-button color="primary" (click)="save()" style="margin-right:10px;"
-                    [disabled]="!(formValid)">
+                    [disabled]="!(formValid)"
+            data-cy="sp-element-configuration-save">
                 <i class="material-icons">save</i><span>&nbsp;Save</span>
             </button>
             <button mat-button mat-raised-button class="mat-basic" (click)="close()">

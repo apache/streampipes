@@ -38,7 +38,7 @@
             </div>
         </div>
         <div *ngIf="!operationInProgress && !forceStopActive" fxLayout="column" fxLayoutAlign="center center" fxFlex="100">
-            <div class="success-message" fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
+            <div class="success-message" fxFlex="100" fxLayoutAlign="center center" fxLayout="column" data-cy="sp-pipeline-started-dialog">
                 <div fxLayout="row">
                     <mat-icon color="accent" *ngIf="pipelineOperationStatus.success">done</mat-icon>
                     <mat-icon style="color: red;" *ngIf="!pipelineOperationStatus.success">error</mat-icon>
@@ -81,7 +81,9 @@
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions actions-align-right">
-        <button mat-button mat-raised-button class="mat-basic" (click)="close()">
+        <button mat-button mat-raised-button class="mat-basic"
+                (click)="close()"
+                data-cy="sp-pipeline-dialog-close">
             Close
         </button>
     </div>

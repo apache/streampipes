@@ -21,7 +21,8 @@
         <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
             <button mat-button matTooltip="Save Pipeline" [matTooltipPosition]="'above'"
                     [disabled]="!PipelineValidationService.pipelineValid"
-                    (click)="submit()" type="submit">
+                    (click)="submit()" type="submit"
+                    data-cy="sp-editor-save-pipeline">
                 <div fxLayoutAlign="start center" fxLayout="row">
                     <i class="material-icons">save</i>
                     <span>&nbsp;Save pipeline</span>

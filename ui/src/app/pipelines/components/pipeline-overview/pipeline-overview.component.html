@@ -87,7 +87,8 @@
                 </span>
                     <span fxFlex fxFlexOrder="3" fxLayout="row" fxLayoutAlign="center center">
                     <button color="primary" mat-button mat-icon-button matTooltip="Delete pipeline" matTooltipPosition="above"
-                            (click)="pipelineOperationsService.showDeleteDialog(pipeline, refreshPipelinesEmitter)">
+                            (click)="pipelineOperationsService.showDeleteDialog(pipeline, refreshPipelinesEmitter)"
+                            data-cy="delete" >
                         <i class="material-icons">delete</i>
                     </button>
                 </span>
