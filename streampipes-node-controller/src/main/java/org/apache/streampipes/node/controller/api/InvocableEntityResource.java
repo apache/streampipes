@@ -18,9 +18,11 @@
 package org.apache.streampipes.node.controller.api;
 
 import org.apache.streampipes.container.model.node.InvocableRegistration;
+import org.apache.streampipes.logging.evaluation.EvaluationLogger;
 import org.apache.streampipes.model.Response;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.pipeline.PipelineElementReconfigurationEntity;
+import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.node.controller.management.pe.PipelineElementManager;
 import org.apache.streampipes.node.controller.management.pe.storage.RunningInvocableInstances;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
@@ -77,10 +79,15 @@ public class InvocableEntityResource extends AbstractResource {
     public javax.ws.rs.core.Response detach(@PathParam("identifier") String identifier,
                                             @PathParam("elementId") String elementId,
                                             @PathParam("runningInstanceId") String runningInstanceId) {
+        //TODO: Remove Logger after debugging
         InvocableStreamPipesEntity graph = RunningInvocableInstances.INSTANCE.get(runningInstanceId);
+        EvaluationLogger logger = EvaluationLogger.getInstance();
+        Object[] line = {System.currentTimeMillis() ,"Element detached", graph.getAppId(), runningInstanceId};
+        logger.addLine(line);
         Response resp = PipelineElementManager.getInstance().detach(graph, runningInstanceId);
         RunningInvocableInstances.INSTANCE.remove(runningInstanceId);
 
+        logger.writeOut();
         return ok(resp);
     }
 
@@ -92,6 +99,11 @@ public class InvocableEntityResource extends AbstractResource {
     @Produces(MediaType.APPLICATION_JSON)
     public javax.ws.rs.core.Response adapt( @PathParam("runningInstanceId") String runningInstanceId,
                                             PipelineElementReconfigurationEntity reconfigurationEntity) {
+        //TODO: Remove Logger after debugging
+        EvaluationLogger logger = EvaluationLogger.getInstance();
+        Object[] line = {System.currentTimeMillis() ,"reconfiguration request received", ((FreeTextStaticProperty) reconfigurationEntity.getReconfiguredStaticProperties().get(0)).getValue()};
+        logger.addLine(line);
+        logger.writeOut();
         InvocableStreamPipesEntity graph = RunningInvocableInstances.INSTANCE.get(runningInstanceId);
         return ok(PipelineElementManager.getInstance().reconfigure(graph, reconfigurationEntity));
     }

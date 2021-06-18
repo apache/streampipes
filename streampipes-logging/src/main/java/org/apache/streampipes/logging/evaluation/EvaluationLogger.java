@@ -29,7 +29,7 @@ public class EvaluationLogger {
     private static String FILE_NAME = "evaluation-logs.csv";
 
     private final File file;
-    private String buffer;
+    private String buffer = "";
     private static EvaluationLogger instance = null;
 
     public static EvaluationLogger getInstance(){

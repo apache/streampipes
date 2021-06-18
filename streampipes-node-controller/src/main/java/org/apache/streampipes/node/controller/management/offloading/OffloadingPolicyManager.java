@@ -19,10 +19,12 @@
 package org.apache.streampipes.node.controller.management.offloading;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import org.apache.streampipes.logging.evaluation.EvaluationLogger;
 import org.apache.streampipes.model.Response;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.node.NodeInfoDescription;
 import org.apache.streampipes.model.node.monitor.ResourceMetrics;
+import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.node.controller.config.NodeConfiguration;
 import org.apache.streampipes.node.controller.management.offloading.strategies.OffloadingStrategy;
 import org.apache.streampipes.node.controller.management.pe.PipelineElementManager;
@@ -45,6 +47,7 @@ public class OffloadingPolicyManager {
     private final List<InvocableStreamPipesEntity> unsuccessfullyTriedEntities = new ArrayList<>();
     private static OffloadingPolicyManager instance;
     private static final Logger LOG = LoggerFactory.getLogger(OffloadingPolicyManager.class.getCanonicalName());
+    private static EvaluationLogger logger = EvaluationLogger.getInstance();
 
     public static OffloadingPolicyManager getInstance(){
         if(instance == null){
@@ -63,21 +66,32 @@ public class OffloadingPolicyManager {
                 violatedPolicies.add(strategy);
             }
         }
-        if(!violatedPolicies.isEmpty())
+        if(!violatedPolicies.isEmpty()){
             //Currently uses the first violated policy. Could be extended to take the degree of policy violation into
             // account
+            //TODO: Remove Logger after debugging
+            Object[] line = {System.currentTimeMillis() ,"offloading triggered", violatedPolicies.get(0).getOffloadingPolicy().getClass().getSimpleName()};
+            logger.addLine(line);
+            logger.writeOut();
             triggerOffloading(violatedPolicies.get(0));
+        }
         //Blacklist of entities is cleared when no policies were violated.
         else unsuccessfullyTriedEntities.clear();
     }
 
     private void triggerOffloading(OffloadingStrategy strategy){
         InvocableStreamPipesEntity offloadEntity = strategy.getSelectionStrategy().select(this.unsuccessfullyTriedEntities);
+        Object[] line = {System.currentTimeMillis() ,"entity to offload selected", strategy.getOffloadingPolicy().getClass().getSimpleName(), offloadEntity.getAppId()};
+        logger.addLine(line);
         if(offloadEntity != null){
             Response resp = PipelineElementManager.getInstance().offload(offloadEntity);
 
             String appId = offloadEntity.getAppId();
             String pipelineName = offloadEntity.getCorrespondingPipeline();
+
+            Object[] line_done = {System.currentTimeMillis() ,"offloading done", strategy.getOffloadingPolicy().getClass().getSimpleName(), appId};
+            logger.addLine(line_done);
+            logger.writeOut();
 
             if(resp.isSuccess()){
                 LOG.info("Successfully offloaded: {} of pipeline: {}", appId, pipelineName);
