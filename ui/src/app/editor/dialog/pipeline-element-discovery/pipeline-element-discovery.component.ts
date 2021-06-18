@@ -16,16 +16,16 @@
  *
  */
 
-import {Component, Input, OnInit} from "@angular/core";
-import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
-import {JsplumbService} from "../../services/jsplumb.service";
+import { Component, Input, OnInit } from '@angular/core';
+import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
+import { JsplumbService } from '../../services/jsplumb.service';
 import {
   DataProcessorInvocation,
   DataSinkInvocation,
   SpDataSet,
   SpDataStream
-} from "../../../core-model/gen/streampipes-model";
-import {PipelineElementConfig, PipelineElementUnion} from "../../model/editor.model";
+} from '../../../core-model/gen/streampipes-model';
+import { PipelineElementConfig, PipelineElementUnion } from '../../model/editor.model';
 
 @Component({
   selector: 'sp-pipeline-element-discovery',
@@ -51,7 +51,7 @@ export class PipelineElementDiscoveryComponent implements OnInit {
     this.currentElements.sort((a, b) => a.name.localeCompare(b.name));
     this.currentElements.forEach(pe => {
       this.styles.push(this.makeStandardStyle());
-    })
+    });
   }
 
   create(selectedElement) {
@@ -64,32 +64,32 @@ export class PipelineElementDiscoveryComponent implements OnInit {
 
   hide() {
     this.dialogRef.close();
-  };
+  }
 
   currentElementStyle(possibleElement: PipelineElementUnion) {
     if (possibleElement instanceof DataProcessorInvocation) {
-      return "sepa";
+      return 'sepa';
     } else if (possibleElement instanceof DataSinkInvocation) {
-      return "action";
+      return 'action';
     } else if (possibleElement instanceof SpDataSet) {
-      return "set";
+      return 'set';
     } else if (possibleElement instanceof SpDataStream) {
-      return "stream";
+      return 'stream';
     }
   }
 
   makeStandardStyle() {
     return {
-      background: "white",
-      cursor: "auto"
-    }
+      background: 'white',
+      cursor: 'auto'
+    };
   }
 
   makeHoverStyle() {
     return {
-      background: "lightgrey",
-      cursor: "pointer"
-    }
+      background: 'lightgrey',
+      cursor: 'pointer'
+    };
   }
 
   changeStyle(index: number, hover: boolean) {

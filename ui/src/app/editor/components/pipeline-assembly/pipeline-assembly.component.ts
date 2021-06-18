@@ -341,11 +341,11 @@ export class PipelineAssemblyComponent implements OnInit {
     openDiscoverDialog() {
         this.dialogService.open(PipelineElementDiscoveryComponent, {
             panelType: PanelType.SLIDE_IN_PANEL,
-            title: "Discover pipeline elements",
-            width: "50vw",
+            title: 'Discover pipeline elements',
+            width: '50vw',
             data: {
-                "currentElements": this.allElements,
-                "rawPipelineModel": this.rawPipelineModel
+                'currentElements': this.allElements,
+                'rawPipelineModel': this.rawPipelineModel
             }
         });
     }

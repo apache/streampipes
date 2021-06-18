@@ -44,7 +44,7 @@
                                    [allElements]="allElements"
                                    [pipelineElement]="pipelineElement"
                                    [rawPipelineModel]="rawPipelineModel"
-                                   [pipelineElementId]="pipelineElement.type == 'stream' ? pipelineElement.payload.elementId : pipelineElement.payload.belongsTo"
+                                   [pipelineElementId]="(pipelineElement.type == 'stream' || pipelineElement.type == 'set') ? pipelineElement.payload.elementId : pipelineElement.payload.belongsTo"
                                    [internalId]="pipelineElement.payload.dom"
                                    [attr.data-cy]="'sp-pe-menu-' + pipelineElement.payload.name.toLowerCase().replaceAll(' ', '_')">
         </pipeline-element-options>
