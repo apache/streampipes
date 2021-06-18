@@ -16,17 +16,16 @@
  *
  */
 
-package org.apache.streampipes.connect.management;
+package org.apache.streampipes.connect.container.worker.utils;
 
 
+import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import org.apache.streampipes.connect.container.worker.management.Mock;
 import org.junit.Rule;
 import org.junit.Test;
-import org.apache.streampipes.connect.Mock;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class AdapterUtilsTest {
     @Rule
@@ -37,8 +36,8 @@ public class AdapterUtilsTest {
     public void stopPipeline() {
         String expected = "";
 
-        stubFor(get(urlEqualTo("/"))
-                .willReturn(aResponse()
+        WireMock.stubFor(WireMock.get(WireMock.urlEqualTo("/"))
+                .willReturn(WireMock.aResponse()
                         .withStatus(200)
                         .withBody(expected)));
 
@@ -47,7 +46,7 @@ public class AdapterUtilsTest {
 
         assertEquals(expected, result);
 
-        verify(getRequestedFor(urlMatching("/")));
+        WireMock.verify(WireMock.getRequestedFor(WireMock.urlMatching("/")));
     }
 
     @Test

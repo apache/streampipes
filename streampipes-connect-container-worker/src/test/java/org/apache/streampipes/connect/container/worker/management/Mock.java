@@ -16,18 +16,11 @@
  *
  */
 
-package org.apache.streampipes.connect.init;
+package org.apache.streampipes.connect.container.worker.management;
 
-import org.apache.streampipes.rest.shared.serializer.GsonClientModelProvider;
-import org.apache.streampipes.rest.shared.serializer.GsonWithIdProvider;
-import org.apache.streampipes.rest.shared.serializer.GsonWithoutIdProvider;
-import org.glassfish.jersey.server.ResourceConfig;
+public class Mock {
+    public static int PORT = 8042;
 
-public abstract class AdapterContainerConfig extends ResourceConfig {
+    public static String HOST = "http://localhost:" + PORT;
 
-  public AdapterContainerConfig() {
-    register(GsonWithIdProvider.class);
-    register(GsonWithoutIdProvider.class);
-    register(GsonClientModelProvider.class);
-  }
 }

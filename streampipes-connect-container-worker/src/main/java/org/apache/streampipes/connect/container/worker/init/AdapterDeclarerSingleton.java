@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.connect.init;
+package org.apache.streampipes.connect.container.worker.init;
 
 import org.apache.streampipes.connect.adapter.Adapter;
 import org.apache.streampipes.connect.adapter.model.Connector;

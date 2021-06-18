@@ -17,13 +17,13 @@
 package org.apache.streampipes.connect.container.worker.init;
 
 import org.apache.streampipes.connect.container.worker.rest.*;
-import org.apache.streampipes.connect.init.AdapterContainerConfig;
 import org.apache.streampipes.rest.shared.serializer.JacksonSerializationProvider;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
+import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AdapterWorkerContainerResourceConfig extends AdapterContainerConfig {
+public class AdapterWorkerContainerResourceConfig extends ResourceConfig {
 
   public AdapterWorkerContainerResourceConfig() {
     super();

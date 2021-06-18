@@ -30,15 +30,17 @@ public abstract class AbstractSharedRestInterface {
   }
 
   protected <T> Response badRequest(T entity) {
-    return Response
-            .status(400)
-            .entity(entity)
-            .build();
+    return error(entity, 400);
   }
 
   protected <T> Response serverError(T entity) {
+    return error(entity, 500);
+  }
+
+  protected <T> Response error(T entity,
+                               Integer statusCode) {
     return Response
-            .status(500)
+            .status(statusCode)
             .entity(entity)
             .build();
   }

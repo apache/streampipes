@@ -19,9 +19,9 @@
 package org.apache.streampipes.connect.container.master.management;
 
 import org.apache.streampipes.commons.exceptions.SepaParseException;
+import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.connect.adapter.GroundingService;
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
-import org.apache.streampipes.connect.config.ConnectContainerConfig;
 import org.apache.streampipes.connect.container.master.util.AdapterEncryptionService;
 import org.apache.streampipes.manager.storage.UserService;
 import org.apache.streampipes.manager.verification.DataStreamVerifier;
@@ -92,7 +92,7 @@ public class AdapterMasterManagement {
     String uuid = UUID.randomUUID().toString();
 
 //    String newId = ConnectContainerConfig.INSTANCE.getConnectContainerMasterUrl() + "api/v1/" + username + "/master/sources/" + uuid;
-    String newId = ConnectContainerConfig.INSTANCE.getBackendApiUrl() + "api/v2/connect/" + username + "/master/sources/" + uuid;
+    String newId = BackendConfig.INSTANCE.getBackendApiUrl() + "api/v2/connect/" + username + "/master/sources/" + uuid;
 
     ad.setElementId(newId);
     ad.setCreatedAt(System.currentTimeMillis());
@@ -110,7 +110,7 @@ public class AdapterMasterManagement {
     }
 
     // backend url is used to install data source in streampipes
-    String backendBaseUrl = ConnectContainerConfig.INSTANCE.getBackendApiUrl() + "api/v2/";
+    String backendBaseUrl = BackendConfig.INSTANCE.getBackendApiUrl() + "api/v2/";
     String requestUrl = backendBaseUrl + "noauth/users/" + username + "/element";
 
     LOG.info("Install source (source URL: " + newId + " in backend over URL: " + requestUrl);

@@ -30,7 +30,6 @@ import org.springframework.context.annotation.Import;
 import org.apache.streampipes.connect.adapter.Adapter;
 import org.apache.streampipes.connect.adapter.model.generic.Protocol;
 import org.apache.streampipes.connect.container.worker.management.MasterRestClient;
-import org.apache.streampipes.connect.init.AdapterDeclarerSingleton;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.model.connect.worker.ConnectWorkerContainer;

@@ -875,7 +875,6 @@
         <module>streampipes-commons</module>
         <module>streampipes-config</module>
         <module>streampipes-connect</module>
-        <module>streampipes-connect-container</module>
         <module>streampipes-connect-container-master</module>
         <module>streampipes-connect-container-worker</module>
         <module>streampipes-container</module>

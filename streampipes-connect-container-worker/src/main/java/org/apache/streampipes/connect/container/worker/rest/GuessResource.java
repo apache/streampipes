@@ -20,11 +20,11 @@ package org.apache.streampipes.connect.container.worker.rest;
 
 import org.apache.streampipes.connect.adapter.exception.ParseException;
 import org.apache.streampipes.connect.container.worker.management.GuessManagement;
-import org.apache.streampipes.connect.rest.AbstractContainerResource;
-import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +37,7 @@ import javax.ws.rs.core.Response;
 
 
 @Path("/api/v1/{username}/worker/guess")
-public class GuessResource extends AbstractContainerResource {
+public class GuessResource extends AbstractSharedRestInterface {
 
   private static final Logger logger = LoggerFactory.getLogger(GuessResource.class);
 
@@ -63,16 +63,12 @@ public class GuessResource extends AbstractContainerResource {
           return ok(result);
       } catch (ParseException e) {
           logger.error("Error while parsing events: ", e);
-          return error(Notifications.error(e.getMessage()));
+          return serverError(Notifications.error(e.getMessage()));
       } catch (Exception e) {
           logger.error("Error while guess schema for AdapterDescription: " + adapterDescription.getAdapterId(), e);
-          return error(Notifications.error(e.getMessage()));
+          return serverError(Notifications.error(e.getMessage()));
       }
 
   }
-  public void setGuessManagement(GuessManagement guessManagement) {
-    this.guessManagement = guessManagement;
-  }
-
 }
 

@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.connect.management;
+package org.apache.streampipes.connect.container.worker.utils;
 
 import org.apache.http.client.fluent.Request;
 import org.slf4j.Logger;
@@ -26,7 +26,7 @@ import org.apache.streampipes.connect.adapter.model.generic.GenericAdapter;
 import org.apache.streampipes.connect.adapter.model.generic.GenericDataSetAdapter;
 import org.apache.streampipes.connect.adapter.model.generic.GenericDataStreamAdapter;
 import org.apache.streampipes.connect.adapter.model.generic.Protocol;
-import org.apache.streampipes.connect.init.AdapterDeclarerSingleton;
+import org.apache.streampipes.connect.container.worker.init.AdapterDeclarerSingleton;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription;

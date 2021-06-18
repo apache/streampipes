@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.apache.streampipes.connect.adapter.Adapter;
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
 import org.apache.streampipes.connect.adapter.exception.ParseException;
-import org.apache.streampipes.connect.management.AdapterUtils;
+import org.apache.streampipes.connect.container.worker.utils.AdapterUtils;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.sdk.helpers.EpProperties;

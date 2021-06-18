@@ -17,11 +17,11 @@
  */
 package org.apache.streampipes.connect.container.master.rest;
 
-import org.apache.streampipes.connect.rest.AbstractContainerResource;
+import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
 
 import java.util.function.Supplier;
 
-public class AbstractAdapterResource<T> extends AbstractContainerResource {
+public class AbstractAdapterResource<T> extends AbstractSharedRestInterface {
 
   protected T managementService;
 

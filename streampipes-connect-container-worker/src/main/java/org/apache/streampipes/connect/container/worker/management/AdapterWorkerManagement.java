@@ -18,22 +18,18 @@
 
 package org.apache.streampipes.connect.container.worker.management;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.connect.RunningAdapterInstances;
 import org.apache.streampipes.connect.adapter.Adapter;
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
 import org.apache.streampipes.connect.adapter.model.generic.GenericAdapter;
 import org.apache.streampipes.connect.adapter.model.generic.Protocol;
-import org.apache.streampipes.connect.config.ConnectContainerConfig;
-import org.apache.streampipes.connect.init.AdapterDeclarerSingleton;
-import org.apache.streampipes.connect.management.AdapterUtils;
+import org.apache.streampipes.connect.container.worker.init.AdapterDeclarerSingleton;
+import org.apache.streampipes.connect.container.worker.utils.AdapterUtils;
 import org.apache.streampipes.model.SpDataSet;
-import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.adapter.AdapterSetDescription;
-import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
-import org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription;
-import org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
+import org.apache.streampipes.model.connect.adapter.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 
@@ -116,7 +112,8 @@ public class AdapterWorkerManagement {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                String url = AdapterUtils.getUrl(ConnectContainerConfig.INSTANCE.getBackendApiUrl(), dataSet.getCorrespondingPipeline());
+                // TODO Service Discovery
+                String url = AdapterUtils.getUrl(BackendConfig.INSTANCE.getBackendApiUrl(), dataSet.getCorrespondingPipeline());
                 String result = AdapterUtils.stopPipeline(url);
                 logger.info(result);
 

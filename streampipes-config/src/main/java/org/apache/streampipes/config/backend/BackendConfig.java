@@ -102,6 +102,10 @@ public enum BackendConfig {
     return "http://" + getBackendHost() + ":" + getBackendPort();
   }
 
+  public String getBackendApiUrl() {
+    return getBackendUrl() + "/streampipes-backend/";
+  }
+
   public String getJmsHost() {
     return config.getString(BackendConfigKeys.JMS_HOST);
   }

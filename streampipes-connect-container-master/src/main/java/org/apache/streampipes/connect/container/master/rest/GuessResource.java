@@ -57,12 +57,12 @@ public class GuessResource extends AbstractAdapterResource<GuessManagement> {
           return ok(result);
       } catch (ParseException e) {
           LOG.error("Error while parsing events: ", e);
-          return error(Notifications.error(e.getMessage()));
+          return serverError(Notifications.error(e.getMessage()));
       } catch (WorkerAdapterException e) {
-          return error(e.getContent());
+          return serverError(e.getContent());
       } catch (Exception e) {
           LOG.error("Error while guess schema for AdapterDescription: ", e);
-          return error(Notifications.error(e.getMessage()));
+          return serverError(Notifications.error(e.getMessage()));
       }
   }
 }

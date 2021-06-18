@@ -19,10 +19,10 @@
 package org.apache.streampipes.connect.container.master.rest;
 
 import org.apache.streampipes.connect.container.master.management.WorkerAdministrationManagement;
-import org.apache.streampipes.connect.rest.AbstractContainerResource;
 import org.apache.streampipes.model.connect.worker.ConnectWorkerContainer;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +33,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("v2/connect/{username}/master/administration")
-public class WorkerAdministrationResource extends AbstractContainerResource {
+public class WorkerAdministrationResource extends AbstractSharedRestInterface {
 
     private Logger LOG = LoggerFactory.getLogger(WorkerAdministrationResource.class);
 

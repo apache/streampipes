@@ -20,7 +20,7 @@ package org.apache.streampipes.container.extensions;
 import org.apache.streampipes.connect.adapter.Adapter;
 import org.apache.streampipes.connect.adapter.model.generic.Protocol;
 import org.apache.streampipes.connect.container.worker.management.MasterRestClient;
-import org.apache.streampipes.connect.init.AdapterDeclarerSingleton;
+import org.apache.streampipes.connect.container.worker.init.AdapterDeclarerSingleton;
 import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.container.init.ModelSubmitter;
 import org.apache.streampipes.container.init.RunningInstances;

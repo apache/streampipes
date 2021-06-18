@@ -16,13 +16,13 @@
  *
  */
 
-package org.apache.streampipes.connect.management;
+package org.apache.streampipes.connect.container.worker.management;
 
 import org.apache.streampipes.connect.adapter.Adapter;
 import org.apache.streampipes.connect.adapter.AdapterRegistry;
 import org.apache.streampipes.connect.adapter.model.generic.Format;
 import org.apache.streampipes.connect.adapter.model.generic.Protocol;
-import org.apache.streampipes.connect.init.AdapterDeclarerSingleton;
+import org.apache.streampipes.connect.container.worker.init.AdapterDeclarerSingleton;
 import org.apache.streampipes.container.api.ResolvesContainerProvidedOptions;
 
 import java.util.Map;

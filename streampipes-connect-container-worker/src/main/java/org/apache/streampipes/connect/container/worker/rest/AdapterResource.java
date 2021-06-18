@@ -20,13 +20,9 @@ package org.apache.streampipes.connect.container.worker.rest;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import org.apache.streampipes.connect.container.worker.management.AdapterWorkerManagement;
-import org.apache.streampipes.connect.rest.AbstractContainerResource;
 import org.apache.streampipes.container.assets.AssetZipGenerator;
 import org.apache.streampipes.container.util.AssetsUtil;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.List;
+import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -34,9 +30,12 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
+import java.net.URL;
+import java.util.List;
 
 @Path("/api/v1/{username}/worker/adapters")
-public class AdapterResource extends AbstractContainerResource {
+public class AdapterResource extends AbstractSharedRestInterface {
 
     private AdapterWorkerManagement adapterWorkerManagement;
 

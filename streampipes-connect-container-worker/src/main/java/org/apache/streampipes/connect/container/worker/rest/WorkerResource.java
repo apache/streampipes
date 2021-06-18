@@ -20,11 +20,11 @@ package org.apache.streampipes.connect.container.worker.rest;
 
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
 import org.apache.streampipes.connect.container.worker.management.AdapterWorkerManagement;
-import org.apache.streampipes.connect.rest.AbstractContainerResource;
 import org.apache.streampipes.model.connect.adapter.AdapterSetDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +36,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/api/v1/{username}/worker")
-public class WorkerResource extends AbstractContainerResource {
+public class WorkerResource extends AbstractSharedRestInterface {
 
     private static final Logger logger = LoggerFactory.getLogger(WorkerResource.class);
 
