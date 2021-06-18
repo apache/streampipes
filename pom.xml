@@ -879,7 +879,6 @@
         <module>streampipes-connect-container-worker</module>
         <module>streampipes-container</module>
         <module>streampipes-container-base</module>
-        <module>streampipes-container-embedded</module>
         <module>streampipes-container-extensions</module>
         <module>streampipes-container-standalone</module>
         <module>streampipes-dataformat</module>
