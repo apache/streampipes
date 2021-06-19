@@ -40,7 +40,7 @@ public class SpServiceDefinition {
   private List<SpProtocolDefinitionFactory<?>> protocolDefinitionFactories;
 
   private Map<String, IProtocol> adapterProtocols;
-  private Map<String, IAdapter<?>> specificAdapters;
+  private Map<String, IAdapter> specificAdapters;
 
   public SpServiceDefinition() {
     this.declarers = new ArrayList<>();
@@ -110,8 +110,16 @@ public class SpServiceDefinition {
     this.adapterProtocols.put(protocol.getId(), protocol);
   }
 
+  public void addAdapterProtocols(Map<String, IProtocol> protocols) {
+    protocols.values().forEach(this::addAdapterProtocol);
+  }
+
   public void addSpecificAdapter(IAdapter<?> adapter) {
     this.specificAdapters.put(adapter.getId(), adapter);
+  }
+
+  public void addSpecificAdapters(Map<String, IAdapter> adapters) {
+    adapters.values().forEach(this::addSpecificAdapter);
   }
 
   public List<SpDataFormatFactory> getDataFormatFactories() {
@@ -136,5 +144,13 @@ public class SpServiceDefinition {
 
   public void setProtocolDefinitionFactories(List<SpProtocolDefinitionFactory<?>> protocolDefinitionFactories) {
     this.protocolDefinitionFactories = protocolDefinitionFactories;
+  }
+
+  public Map<String, IProtocol> getAdapterProtocols() {
+    return adapterProtocols;
+  }
+
+  public Map<String, IAdapter> getSpecificAdapters() {
+    return specificAdapters;
   }
 }

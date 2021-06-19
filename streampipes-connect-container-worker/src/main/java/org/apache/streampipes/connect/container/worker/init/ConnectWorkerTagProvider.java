@@ -15,36 +15,26 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.container.util;
+package org.apache.streampipes.connect.container.worker.init;
 
 import org.apache.streampipes.connect.api.IAdapter;
 import org.apache.streampipes.connect.api.IProtocol;
-import org.apache.streampipes.container.declarer.Declarer;
+import org.apache.streampipes.container.init.DeclarersSingleton;
+import org.apache.streampipes.container.util.ServiceDefinitionUtil;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
-public class ServiceDefinitionUtil {
+public class ConnectWorkerTagProvider {
 
-  public static List<String> extractAppIds(Collection<Declarer<?>> declarers) {
-    return declarers
-            .stream()
-            .map(d -> d.declareModel().getAppId())
-            .collect(Collectors.toList());
-  }
+  public List<String> extractServiceTags() {
+    List<String> tags = new ArrayList<>();
+    Collection<IAdapter> adapters = DeclarersSingleton.getInstance().getAllAdapters();
+    Collection<IProtocol> protocols = DeclarersSingleton.getInstance().getAllProtocols();
+    tags.addAll(ServiceDefinitionUtil.extractAppIdsFromAdapters(adapters));
+    tags.addAll(ServiceDefinitionUtil.extractAppIdsFromProtocols(protocols));
 
-  public static List<String> extractAppIdsFromAdapters(Collection<IAdapter> adapters) {
-    return adapters
-            .stream()
-            .map(d -> d.declareModel().getAppId())
-            .collect(Collectors.toList());
-  }
-
-  public static List<String> extractAppIdsFromProtocols(Collection<IProtocol> protocols) {
-    return protocols
-            .stream()
-            .map(p -> p.declareModel().getAppId())
-            .collect(Collectors.toList());
+    return tags;
   }
 }

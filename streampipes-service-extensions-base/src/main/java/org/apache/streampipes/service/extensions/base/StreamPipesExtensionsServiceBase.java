@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.PreDestroy;
 import java.net.UnknownHostException;
 
-public abstract class StreamPipesExtensionsServiceBase<T> extends StreamPipesServiceBase {
+public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServiceBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(StreamPipesExtensionsServiceBase.class);
 
@@ -43,9 +43,7 @@ public abstract class StreamPipesExtensionsServiceBase<T> extends StreamPipesSer
         Integer port = getPort(serviceDef.getDefaultPort());
         DeclarersSingleton.getInstance().populate(host, port, serviceDef);
 
-        String serviceId = serviceDef.getServiceId();
-
-        startExtensionsService(this.getClass(), serviceId, serviceDef.getDefaultPort());
+        startExtensionsService(this.getClass(), serviceDef);
         } catch (UnknownHostException e) {
             LOG.error("Could not auto-resolve host address - please manually provide the hostname using the SP_HOST environment variable");
         }
@@ -55,21 +53,17 @@ public abstract class StreamPipesExtensionsServiceBase<T> extends StreamPipesSer
         return null;
     }
 
-    @Deprecated
-    public abstract void init(T conf);
-
-    public abstract void afterServiceRegistered();
+    public abstract void afterServiceRegistered(SpServiceDefinition serviceDef);
 
     public void startExtensionsService(Class<?> serviceClass,
-                                       String serviceName,
-                                       Integer defaultPort) throws UnknownHostException {
+                                       SpServiceDefinition serviceDef) throws UnknownHostException {
         this.startStreamPipesService(
                 serviceClass,
                 SpServiceGroups.EXTENSIONS,
-                serviceName,
-                defaultPort
+                serviceDef.getServiceId(),
+                serviceDef.getDefaultPort()
         );
-        this.afterServiceRegistered();
+        this.afterServiceRegistered(serviceDef);
     }
 
     @PreDestroy

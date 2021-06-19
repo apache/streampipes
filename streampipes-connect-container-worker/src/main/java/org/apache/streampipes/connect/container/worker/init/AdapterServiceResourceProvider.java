@@ -28,7 +28,7 @@ public class AdapterServiceResourceProvider implements ExtensionsResourceProvide
 
   @Override
   public List<Class<?>> getResourceClasses() {
-    return Arrays.asList(WelcomePageWorker.class,
+    return Arrays.asList(//WelcomePageWorker.class,
             GuessResource.class,
             RuntimeResolvableResource.class,
             WorkerResource.class,

@@ -88,6 +88,9 @@ public class DeclarersSingleton {
     this.addDeclarers(serviceDef.getDeclarers());
     this.registerProtocols(serviceDef.getProtocolDefinitionFactories());
     this.registerDataFormats(serviceDef.getDataFormatFactories());
+    this.allAdapters = serviceDef.getSpecificAdapters();
+    this.allProtocols = serviceDef.getAdapterProtocols();
+
     this.serviceId = serviceDef.getServiceId();
   }
 
@@ -271,6 +274,10 @@ public class DeclarersSingleton {
     return this.port;
   }
 
+  public String getHostName() {
+    return this.hostName;
+  }
+
   public void setHostName(String host) {
     this.hostName = host;
   }
@@ -291,5 +298,14 @@ public class DeclarersSingleton {
     if (declarer.isExecutable()) {
       declarer.executeStream();
     }
+  }
+
+  public SpServiceDefinition toServiceDefinition(String serviceId) {
+    SpServiceDefinition serviceDef = new SpServiceDefinition();
+    serviceDef.setServiceId(serviceId);
+    serviceDef.setDefaultPort(this.getPort());
+
+    // TODO create complete service definition
+    return serviceDef;
   }
 }

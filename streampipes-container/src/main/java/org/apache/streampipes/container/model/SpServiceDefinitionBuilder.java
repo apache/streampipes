@@ -118,6 +118,8 @@ public class SpServiceDefinitionBuilder {
 
   public SpServiceDefinitionBuilder merge(SpServiceDefinition other) {
     this.serviceDefinition.addDeclarers(other.getDeclarers());
+    this.serviceDefinition.addAdapterProtocols(other.getAdapterProtocols());
+    this.serviceDefinition.addSpecificAdapters(other.getSpecificAdapters());
     return this;
   }
 

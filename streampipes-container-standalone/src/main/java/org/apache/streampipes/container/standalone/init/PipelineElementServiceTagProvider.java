@@ -15,36 +15,23 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.container.util;
+package org.apache.streampipes.container.standalone.init;
 
-import org.apache.streampipes.connect.api.IAdapter;
-import org.apache.streampipes.connect.api.IProtocol;
 import org.apache.streampipes.container.declarer.Declarer;
+import org.apache.streampipes.container.init.DeclarersSingleton;
+import org.apache.streampipes.container.util.ServiceDefinitionUtil;
+import org.apache.streampipes.svcdiscovery.SpServiceTags;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
-public class ServiceDefinitionUtil {
+public class PipelineElementServiceTagProvider {
 
-  public static List<String> extractAppIds(Collection<Declarer<?>> declarers) {
-    return declarers
-            .stream()
-            .map(d -> d.declareModel().getAppId())
-            .collect(Collectors.toList());
-  }
+  public List<String> extractServiceTags() {
+    Collection<Declarer<?>> declarers = DeclarersSingleton.getInstance().getDeclarers().values();
+    List<String> serviceTags = ServiceDefinitionUtil.extractAppIds(declarers);
+    serviceTags.add(SpServiceTags.PE);
 
-  public static List<String> extractAppIdsFromAdapters(Collection<IAdapter> adapters) {
-    return adapters
-            .stream()
-            .map(d -> d.declareModel().getAppId())
-            .collect(Collectors.toList());
-  }
-
-  public static List<String> extractAppIdsFromProtocols(Collection<IProtocol> protocols) {
-    return protocols
-            .stream()
-            .map(p -> p.declareModel().getAppId())
-            .collect(Collectors.toList());
+    return serviceTags;
   }
 }
