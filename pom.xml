@@ -923,6 +923,7 @@
         <module>streampipes-service-discovery-consul</module>
         <module>streampipes-service-discovery-api</module>
         <module>streampipes-connect-api</module>
+        <module>streampipes-service-extensions-base</module>
     </modules>
 
     <profiles>

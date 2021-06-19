@@ -19,90 +19,51 @@
 package org.apache.streampipes.container.standalone.init;
 
 
-import org.apache.streampipes.commons.networking.Networking;
+import org.apache.streampipes.container.declarer.Declarer;
 import org.apache.streampipes.container.init.DeclarersSingleton;
-import org.apache.streampipes.container.init.ModelSubmitter;
 import org.apache.streampipes.container.init.RunningInstances;
 import org.apache.streampipes.container.model.PeConfig;
-import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.container.util.ServiceDefinitionUtil;
-import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
+import org.apache.streampipes.service.extensions.base.StreamPipesExtensionsServiceBase;
 import org.apache.streampipes.svcdiscovery.SpServiceTags;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-import javax.annotation.PreDestroy;
 import java.net.UnknownHostException;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.List;
 
 @Configuration
 @EnableAutoConfiguration
 @Import({ PipelineElementContainerResourceConfig.class })
-public abstract class StandaloneModelSubmitter extends ModelSubmitter<PeConfig> {
+public abstract class StandaloneModelSubmitter extends StreamPipesExtensionsServiceBase<PeConfig> {
 
     private static final Logger LOG =
             LoggerFactory.getLogger(StandaloneModelSubmitter.class.getCanonicalName());
 
-    public void init() {
-        SpServiceDefinition serviceDef = provideServiceDefinition();
-        init(serviceDef);
-    }
-
-    public void init(SpServiceDefinition serviceDef) {
-        try {
-            String host = Networking.getHostname();
-            Integer port = Networking.getPort(serviceDef.getDefaultPort());
-            List<String> serviceTags = ServiceDefinitionUtil.extractAppIds(serviceDef.getDeclarers());
-            serviceTags.add(SpServiceTags.PE);
-
-            DeclarersSingleton.getInstance().populate(host, port, serviceDef);
-
-            SpServiceDiscovery
-                    .getServiceDiscovery()
-                    .registerPeService("pe/" +serviceDef.getServiceId(), host, port, serviceTags);
-
-            startService(port);
-        } catch (UnknownHostException e) {
-            LOG.error("Could not auto-resolve host address - please manually provide the hostname using the SP_HOST environment variable");
-        }
-    }
-
     @Deprecated
     public void init(PeConfig peConfig) {
-
         DeclarersSingleton.getInstance()
                 .setHostName(peConfig.getHost());
         DeclarersSingleton.getInstance()
                 .setPort(peConfig.getPort());
 
-        startService(peConfig.getPort());
-
-        SpServiceDiscovery.getServiceDiscovery().registerPeService(
-                peConfig.getId(),
-                peConfig.getHost(),
-                peConfig.getPort()
-        );
+        try {
+            startExtensionsService(this.getClass(),
+                    peConfig.getId(),
+                    DeclarersSingleton.getInstance().getPort());
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void startService(Integer port) {
-        SpringApplication app = new SpringApplication(StandaloneModelSubmitter.class);
-        app.setDefaultProperties(Collections.singletonMap("server.port", port));
-        app.run();
-    }
-
-    public SpServiceDefinition provideServiceDefinition() {
-        return null;
-    }
-
-    @PreDestroy
+    @Override
     public void onExit() {
         LOG.info("Shutting down StreamPipes pipeline element container...");
-        Integer runningInstancesCount = RunningInstances.INSTANCE.getRunningInstancesCount();
+        int runningInstancesCount = RunningInstances.INSTANCE.getRunningInstancesCount();
 
         while (runningInstancesCount > 0) {
             LOG.info("Waiting for {} running pipeline elements to be stopped...", runningInstancesCount);
@@ -113,5 +74,19 @@ public abstract class StandaloneModelSubmitter extends ModelSubmitter<PeConfig> 
             }
             runningInstancesCount = RunningInstances.INSTANCE.getRunningInstancesCount();
         }
+    }
+
+    @Override
+    protected List<String> getServiceTags() {
+        Collection<Declarer<?>> declarers = DeclarersSingleton.getInstance().getDeclarers().values();
+        List<String> serviceTags = ServiceDefinitionUtil.extractAppIds(declarers);
+        serviceTags.add(SpServiceTags.PE);
+
+        return serviceTags;
+    }
+
+    @Override
+    public void afterServiceRegistered() {
+
     }
 }

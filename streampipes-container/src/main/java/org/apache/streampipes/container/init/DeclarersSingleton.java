@@ -81,6 +81,7 @@ public class DeclarersSingleton {
     return DeclarersSingleton.instance;
   }
 
+
   public void populate(String host, Integer port, SpServiceDefinition serviceDef) {
     this.setHostName(host);
     this.setPort(port);
@@ -96,6 +97,10 @@ public class DeclarersSingleton {
     }
   }
 
+  @Deprecated
+  /**
+   * @Deprecated Use ServiceDefinitionBuilder instead
+   */
   public DeclarersSingleton add(Declarer<?> d) {
     if (d instanceof SemanticEventProcessingAgentDeclarer) {
       addEpaDeclarer((SemanticEventProcessingAgentDeclarer) d);
@@ -260,6 +265,10 @@ public class DeclarersSingleton {
 
   public void setPort(int port) {
     this.port = port;
+  }
+
+  public int getPort() {
+    return this.port;
   }
 
   public void setHostName(String host) {

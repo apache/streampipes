@@ -15,11 +15,10 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.svcdiscovery;
 
-package org.apache.streampipes.container.init;
+public class SpServiceGroups {
 
-public abstract class ModelSubmitter<T> {
-
-    public abstract void init(T conf);
-
+  public static final String CORE = "core";
+  public static final String EXTENSIONS = "ext";
 }

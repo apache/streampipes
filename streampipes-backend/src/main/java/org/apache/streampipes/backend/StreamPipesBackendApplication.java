@@ -41,6 +41,7 @@ import org.springframework.context.annotation.Import;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.servlet.ServletContextListener;
+import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -70,7 +71,14 @@ public class StreamPipesBackendApplication extends StreamPipesServiceBase {
 
   public static void main(String[] args) {
       StreamPipesBackendApplication application = new StreamPipesBackendApplication();
-      application.startStreamPipesService(StreamPipesBackendApplication.class, "core", "core");
+      try {
+        application.startStreamPipesService(StreamPipesBackendApplication.class,
+                "core",
+                "core",
+                8030);
+      } catch (UnknownHostException e) {
+        LOG.error("Could not auto-resolve host address - please manually provide the hostname using the SP_HOST environment variable");
+      }
   }
 
   @PostConstruct
@@ -222,11 +230,6 @@ public class StreamPipesBackendApplication extends StreamPipesServiceBase {
             new ServletListenerRegistrationBean<>();
     bean.setListener(listener);
     return bean;
-  }
-
-  @Override
-  protected Integer getDefaultPort() {
-    return 8030;
   }
 
   @Override

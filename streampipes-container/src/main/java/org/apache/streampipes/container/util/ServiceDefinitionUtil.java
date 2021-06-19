@@ -19,12 +19,13 @@ package org.apache.streampipes.container.util;
 
 import org.apache.streampipes.container.declarer.Declarer;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class ServiceDefinitionUtil {
 
-  public static List<String> extractAppIds(List<Declarer<?>> declarers) {
+  public static List<String> extractAppIds(Collection<Declarer<?>> declarers) {
     return declarers
             .stream()
             .map(d -> d.declareModel().getAppId())

@@ -21,7 +21,7 @@ import org.apache.streampipes.connect.api.IAdapter;
 import org.apache.streampipes.connect.api.IProtocol;
 import org.apache.streampipes.connect.container.worker.management.MasterRestClient;
 import org.apache.streampipes.container.init.DeclarersSingleton;
-import org.apache.streampipes.container.init.ModelSubmitter;
+import org.apache.streampipes.service.extensions.base.StreamPipesExtensionsServiceBase;
 import org.apache.streampipes.container.init.RunningInstances;
 import org.apache.streampipes.container.locales.LabelGenerator;
 import org.apache.streampipes.container.model.ExtensionsConfig;
@@ -53,7 +53,7 @@ import java.util.List;
 @Configuration
 @EnableAutoConfiguration
 @Import({ ExtensionsResourceConfig.class })
-public abstract class ExtensionsModelSubmitter extends ModelSubmitter<ExtensionsConfig> {
+public abstract class ExtensionsModelSubmitter extends StreamPipesExtensionsServiceBase<ExtensionsConfig> {
     private static final Logger LOG =
             LoggerFactory.getLogger(ExtensionsModelSubmitter.class.getCanonicalName());
 

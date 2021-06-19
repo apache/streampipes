@@ -33,29 +33,28 @@ public abstract class StreamPipesServiceBase {
 
   protected void startStreamPipesService(Class<?> serviceClass,
                                          String serviceGroup,
-                                         String serviceName) {
-    try {
-      registerService(serviceGroup, serviceName);
-      runApplication(serviceClass);
-    } catch (UnknownHostException e) {
-      LOG.error("Could not auto-resolve host address - please manually provide the hostname using the SP_HOST environment variable");
-    }
+                                         String serviceName,
+                                         Integer defaultPort) throws UnknownHostException {
+      registerService(serviceGroup, serviceName, defaultPort);
+      runApplication(serviceClass, defaultPort);
   }
 
-  private void runApplication(Class<?> serviceClass) {
+  private void runApplication(Class<?> serviceClass,
+                              Integer defaultPort) {
     SpringApplication app = new SpringApplication(serviceClass);
-    app.setDefaultProperties(Collections.singletonMap("server.port", getPort()));
+    app.setDefaultProperties(Collections.singletonMap("server.port", getPort(defaultPort)));
     app.run();
   }
 
   private void registerService(String serviceGroup,
-                               String serviceName) throws UnknownHostException {
+                               String serviceName,
+                               Integer defaultPort) throws UnknownHostException {
     SpServiceDiscovery
             .getServiceDiscovery()
             .registerService(serviceGroup,
                     serviceName,
                     getHostname(),
-                    getPort(),
+                    getPort(defaultPort),
                     getServiceTags());
   }
 
@@ -63,11 +62,9 @@ public abstract class StreamPipesServiceBase {
     return Networking.getHostname();
   }
 
-  protected Integer getPort() {
-    return Networking.getPort(getDefaultPort());
+  protected Integer getPort(Integer defaultPort) {
+    return Networking.getPort(defaultPort);
   }
-
-  protected abstract Integer getDefaultPort();
 
   protected abstract List<String> getServiceTags();
 
