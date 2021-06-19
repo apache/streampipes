@@ -22,7 +22,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
-import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.adapter.format.xml.XmlParser;
 import org.apache.streampipes.model.schema.EventSchema;
 

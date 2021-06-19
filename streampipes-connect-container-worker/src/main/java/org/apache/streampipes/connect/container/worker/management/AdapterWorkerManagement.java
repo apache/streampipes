@@ -20,12 +20,12 @@ package org.apache.streampipes.connect.container.worker.management;
 
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.connect.RunningAdapterInstances;
-import org.apache.streampipes.connect.adapter.Adapter;
-import org.apache.streampipes.connect.adapter.exception.AdapterException;
 import org.apache.streampipes.connect.adapter.model.generic.GenericAdapter;
-import org.apache.streampipes.connect.adapter.model.generic.Protocol;
-import org.apache.streampipes.connect.container.worker.init.AdapterDeclarerSingleton;
+import org.apache.streampipes.connect.api.IAdapter;
+import org.apache.streampipes.connect.api.IProtocol;
+import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.container.worker.utils.AdapterUtils;
+import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.connect.adapter.*;
 import org.slf4j.Logger;
@@ -37,35 +37,35 @@ public class AdapterWorkerManagement {
 
     private static final Logger logger = LoggerFactory.getLogger(AdapterWorkerManagement.class);
 
-    public Collection<Protocol> getAllProtocols() {
-        return AdapterDeclarerSingleton.getInstance().getAllProtocols();
+    public Collection<IProtocol> getAllProtocols() {
+        return DeclarersSingleton.getInstance().getAllProtocols();
     }
 
-    public Protocol getProtocol(String id) {
-        return AdapterDeclarerSingleton.getInstance().getProtocol(id);
+    public IProtocol getProtocol(String id) {
+        return DeclarersSingleton.getInstance().getProtocol(id);
     }
 
-    public Collection<Adapter> getAllAdapters() {
-        return AdapterDeclarerSingleton.getInstance().getAllAdapters();
+    public Collection<IAdapter> getAllAdapters() {
+        return DeclarersSingleton.getInstance().getAllAdapters();
     }
 
-    public Adapter getAdapter(String id) {
-        return AdapterDeclarerSingleton.getInstance().getAdapter(id);
+    public IAdapter<?> getAdapter(String id) {
+        return DeclarersSingleton.getInstance().getAdapter(id);
     }
 
     public void invokeStreamAdapter(AdapterStreamDescription adapterStreamDescription) throws AdapterException {
 
 
 //        Adapter adapter = AdapterDeclarerSingleton.getInstance().getAdapter(adapterStreamDescription.getAppId());
-       Adapter adapter = AdapterUtils.setAdapter(adapterStreamDescription);
+       IAdapter<?> adapter = AdapterUtils.setAdapter(adapterStreamDescription);
 
-        Protocol protocol = null;
+        IProtocol protocol = null;
         if (adapterStreamDescription instanceof GenericAdapterStreamDescription) {
             //TODO Need to check with ElementId?
             //protocol = AdapterDeclarerSingleton.getInstance().getProtocol(((GenericAdapterStreamDescription) adapterStreamDescription).getProtocolDescription().getElementId());
-            protocol = AdapterDeclarerSingleton.getInstance().getProtocol(((GenericAdapterStreamDescription) adapterStreamDescription).getProtocolDescription().getAppId());
+            protocol = DeclarersSingleton.getInstance().getProtocol(((GenericAdapterStreamDescription) adapterStreamDescription).getProtocolDescription().getAppId());
             if (protocol == null) {
-                protocol = AdapterDeclarerSingleton.getInstance().getProtocol(((GenericAdapterStreamDescription) adapterStreamDescription).getProtocolDescription().getAppId());
+                protocol = DeclarersSingleton.getInstance().getProtocol(((GenericAdapterStreamDescription) adapterStreamDescription).getProtocolDescription().getAppId());
             }
             ((GenericAdapter) adapter).setProtocol(protocol);
         }
@@ -82,12 +82,11 @@ public class AdapterWorkerManagement {
 
     public void invokeSetAdapter (AdapterSetDescription adapterSetDescription) throws AdapterException {
 
-//        Adapter adapter = AdapterDeclarerSingleton.getInstance().getAdapter(adapterSetDescription.getAppId());
-        Adapter adapter = AdapterUtils.setAdapter(adapterSetDescription);
+        IAdapter<?> adapter = AdapterUtils.setAdapter(adapterSetDescription);
 
-        Protocol protocol = null;
+        IProtocol protocol = null;
         if (adapterSetDescription instanceof GenericAdapterSetDescription) {
-            protocol = AdapterDeclarerSingleton.getInstance().getProtocol(((GenericAdapterSetDescription) adapterSetDescription).getProtocolDescription().getAppId());
+            protocol = DeclarersSingleton.getInstance().getProtocol(((GenericAdapterSetDescription) adapterSetDescription).getProtocolDescription().getAppId());
             ((GenericAdapter) adapter).setProtocol(protocol);
         }
 
@@ -131,7 +130,7 @@ public class AdapterWorkerManagement {
 
         String adapterUri = adapterDescription.getUri();
 
-        Adapter adapter = RunningAdapterInstances.INSTANCE.removeAdapter(adapterUri);
+        IAdapter<?> adapter = RunningAdapterInstances.INSTANCE.removeAdapter(adapterUri);
 
         if (adapter == null) {
             throw new AdapterException("Adapter with id " + adapterUri + " was not found in this container and cannot be stopped.");

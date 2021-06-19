@@ -18,12 +18,12 @@
 
 package org.apache.streampipes.connect.container.worker.management;
 
-import org.apache.streampipes.connect.adapter.Adapter;
 import org.apache.streampipes.connect.adapter.AdapterRegistry;
-import org.apache.streampipes.connect.adapter.model.generic.Format;
-import org.apache.streampipes.connect.adapter.model.generic.Protocol;
-import org.apache.streampipes.connect.container.worker.init.AdapterDeclarerSingleton;
+import org.apache.streampipes.connect.api.IAdapter;
+import org.apache.streampipes.connect.api.IFormat;
+import org.apache.streampipes.connect.api.IProtocol;
 import org.apache.streampipes.container.api.ResolvesContainerProvidedOptions;
+import org.apache.streampipes.container.init.DeclarersSingleton;
 
 import java.util.Map;
 
@@ -33,7 +33,7 @@ public class RuntimeResovable {
 
     public static ResolvesContainerProvidedOptions getRuntimeResolvableFormat(String id) throws IllegalArgumentException {
         id = id.replaceAll("sp:", SP_NS);
-        Map<String, Format> allFormats = AdapterRegistry.getAllFormats();
+        Map<String, IFormat> allFormats = AdapterRegistry.getAllFormats();
 
         if (allFormats.containsKey(id)) {
             return (ResolvesContainerProvidedOptions) allFormats.get(id);
@@ -44,8 +44,8 @@ public class RuntimeResovable {
 
      public static ResolvesContainerProvidedOptions getRuntimeResolvableAdapter(String id) throws IllegalArgumentException {
         id = id.replaceAll("sp:", SP_NS);
-        Map<String, Adapter> allAdapters = AdapterDeclarerSingleton.getInstance().getAllAdaptersMap();
-        Map<String, Protocol> allProtocols =  AdapterDeclarerSingleton.getInstance().getAllProtocolsMap();
+        Map<String, IAdapter> allAdapters = DeclarersSingleton.getInstance().getAllAdaptersMap();
+        Map<String, IProtocol> allProtocols =  DeclarersSingleton.getInstance().getAllProtocolsMap();
 
         if (allAdapters.containsKey(id)) {
             return (ResolvesContainerProvidedOptions) allAdapters.get(id);
@@ -55,5 +55,4 @@ public class RuntimeResovable {
             throw new IllegalArgumentException("Could not find adapter with id " + id);
         }
     }
-
 }

@@ -18,21 +18,25 @@
 
 package org.apache.streampipes.connect.adapter.model.generic;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.streampipes.connect.adapter.Adapter;
 import org.apache.streampipes.connect.adapter.AdapterRegistry;
-import org.apache.streampipes.connect.adapter.exception.AdapterException;
-import org.apache.streampipes.connect.adapter.exception.ParseException;
-import org.apache.streampipes.model.connect.adapter.*;
+import org.apache.streampipes.connect.api.IFormat;
+import org.apache.streampipes.connect.api.IParser;
+import org.apache.streampipes.connect.api.IProtocol;
+import org.apache.streampipes.connect.api.exception.AdapterException;
+import org.apache.streampipes.connect.api.exception.ParseException;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.connect.adapter.GenericAdapterDescription;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.schema.EventSchema;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class GenericAdapter<T extends AdapterDescription> extends Adapter<T> {
 
     private static final Logger logger = LoggerFactory.getLogger(Adapter.class);
-    protected Protocol protocol;
+    protected IProtocol protocol;
 
     public GenericAdapter(T adapterDescription) {
         super(adapterDescription);
@@ -48,20 +52,19 @@ public abstract class GenericAdapter<T extends AdapterDescription> extends Adapt
 
     public abstract GenericAdapterDescription getAdapterDescription();
 
-    public abstract void setProtocol(Protocol protocol);
+    public abstract void setProtocol(IProtocol protocol);
 
     @Override
     public void startAdapter() throws AdapterException {
 
         GenericAdapterDescription adapterDescription = getAdapterDescription();
 
-
-        Parser parser = getParser(adapterDescription);
-        Format format = getFormat(adapterDescription);
+        IParser parser = getParser(adapterDescription);
+        IFormat format = getFormat(adapterDescription);
 
         ProtocolDescription protocolDescription = ((GenericAdapterDescription) adapterDescription).getProtocolDescription();
 
-        Protocol protocolInstance = this.protocol.getInstance(protocolDescription, parser, format);
+        IProtocol protocolInstance = this.protocol.getInstance(protocolDescription, parser, format);
         this.protocol = protocolInstance;
 
         //TODO remove
@@ -75,25 +78,25 @@ public abstract class GenericAdapter<T extends AdapterDescription> extends Adapt
 
 
     @Override
-    public GuessSchema getSchema(T adapterDescription) throws AdapterException, ParseException {
-        Parser parser = getParser((GenericAdapterDescription) adapterDescription);
-        Format format = getFormat((GenericAdapterDescription) adapterDescription);
+    public GuessSchema getSchema(AdapterDescription adapterDescription) throws AdapterException, ParseException {
+        IParser parser = getParser((GenericAdapterDescription) adapterDescription);
+        IFormat format = getFormat((GenericAdapterDescription) adapterDescription);
 
         ProtocolDescription protocolDescription = ((GenericAdapterDescription) adapterDescription).getProtocolDescription();
 
-        Protocol protocolInstance = this.protocol.getInstance(protocolDescription, parser, format);
+        IProtocol protocolInstance = this.protocol.getInstance(protocolDescription, parser, format);
 
         logger.debug("Extract schema with format: " + format.getId() + " and " + protocol.getId());
 
         return protocolInstance.getGuessSchema();
     }
 
-    private Parser getParser(GenericAdapterDescription adapterDescription) throws AdapterException {
+    private IParser getParser(GenericAdapterDescription adapterDescription) throws AdapterException {
          if (adapterDescription.getFormatDescription() == null) throw new AdapterException("Format description of Adapter ist empty");
          return AdapterRegistry.getAllParsers().get(adapterDescription.getFormatDescription().getAppId()).getInstance(adapterDescription.getFormatDescription());
     }
 
-    private Format getFormat(GenericAdapterDescription adapterDescription) {
+    private IFormat getFormat(GenericAdapterDescription adapterDescription) {
         return AdapterRegistry.getAllFormats().get(adapterDescription.getFormatDescription().getAppId()).getInstance(adapterDescription.getFormatDescription());
     }
 

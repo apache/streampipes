@@ -19,17 +19,17 @@
 package org.apache.streampipes.connect.container.worker.utils;
 
 import org.apache.http.client.fluent.Request;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.streampipes.connect.adapter.Adapter;
 import org.apache.streampipes.connect.adapter.model.generic.GenericAdapter;
 import org.apache.streampipes.connect.adapter.model.generic.GenericDataSetAdapter;
 import org.apache.streampipes.connect.adapter.model.generic.GenericDataStreamAdapter;
-import org.apache.streampipes.connect.adapter.model.generic.Protocol;
-import org.apache.streampipes.connect.container.worker.init.AdapterDeclarerSingleton;
+import org.apache.streampipes.connect.api.IAdapter;
+import org.apache.streampipes.connect.api.IProtocol;
+import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
@@ -59,28 +59,30 @@ public class AdapterUtils {
         return "http://" +baseUrl + "api/v2/pipelines/" + pipelineId + "/stopAdapter";
     }
 
-    public static Adapter setAdapter(AdapterDescription adapterDescription) {
-        Adapter adapter = null;
+    public static IAdapter setAdapter(AdapterDescription adapterDescription) {
+        IAdapter adapter = null;
 
         if (adapterDescription instanceof GenericAdapterStreamDescription) {
-           adapter = new GenericDataStreamAdapter().getInstance((GenericAdapterStreamDescription) adapterDescription);
+           adapter = (IAdapter<?>) new GenericDataStreamAdapter().getInstance((GenericAdapterStreamDescription) adapterDescription);
         } else if (adapterDescription instanceof GenericAdapterSetDescription) {
-            adapter = new GenericDataSetAdapter().getInstance((GenericAdapterSetDescription) adapterDescription);
+            adapter = (IAdapter<?>) new GenericDataSetAdapter().getInstance((GenericAdapterSetDescription) adapterDescription);
         }
 
-        Protocol protocol = null;
+        IProtocol protocol = null;
         if (adapterDescription instanceof GenericAdapterSetDescription) {
-            protocol = AdapterDeclarerSingleton.getInstance().getProtocol(((GenericAdapterSetDescription) adapterDescription).getProtocolDescription().getAppId());
+            protocol = DeclarersSingleton.getInstance().getProtocol(((GenericAdapterSetDescription) adapterDescription).getProtocolDescription().getAppId());
             ((GenericAdapter) adapter).setProtocol(protocol);
         }
 
         if (adapterDescription instanceof GenericAdapterStreamDescription) {
-            protocol = AdapterDeclarerSingleton.getInstance().getProtocol(((GenericAdapterStreamDescription) adapterDescription).getProtocolDescription().getAppId());
+            protocol = DeclarersSingleton.getInstance().getProtocol(((GenericAdapterStreamDescription) adapterDescription).getProtocolDescription().getAppId());
             ((GenericAdapter) adapter).setProtocol(protocol);
         }
 
         if (adapter == null) {
-            adapter = AdapterDeclarerSingleton.getInstance().getAdapter(adapterDescription.getAppId()).getInstance(adapterDescription);
+            adapter = DeclarersSingleton
+                    .getInstance()
+                    .getAdapter(adapterDescription.getAppId()).getInstance(adapterDescription);
         }
 
         return adapter;

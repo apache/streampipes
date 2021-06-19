@@ -19,8 +19,8 @@
 package org.apache.streampipes.connect.container.master.management;
 
 import org.apache.streampipes.connect.adapter.AdapterRegistry;
-import org.apache.streampipes.connect.adapter.exception.AdapterException;
-import org.apache.streampipes.connect.adapter.model.generic.Format;
+import org.apache.streampipes.connect.api.exception.AdapterException;
+import org.apache.streampipes.connect.api.IFormat;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterDescriptionList;
 import org.apache.streampipes.model.connect.grounding.FormatDescriptionList;
@@ -50,11 +50,11 @@ public class DescriptionManagement {
     }
 
     public FormatDescriptionList getFormats() {
-        Map<String, Format> allFormats = AdapterRegistry.getAllFormats();
+        Map<String, IFormat> allFormats = AdapterRegistry.getAllFormats();
 
         FormatDescriptionList result = new FormatDescriptionList();
 
-        for (Format f : allFormats.values()) {
+        for (IFormat f : allFormats.values()) {
            result.getList().add(f.declareModel());
         }
 

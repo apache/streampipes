@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.connect.container.master.rest;
 
-import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.management.WorkerAdministrationManagement;
 import org.apache.streampipes.connect.container.master.management.WorkerRestClient;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;

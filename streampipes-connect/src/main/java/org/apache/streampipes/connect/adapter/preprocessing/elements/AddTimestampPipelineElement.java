@@ -18,11 +18,11 @@
 
 package org.apache.streampipes.connect.adapter.preprocessing.elements;
 
-import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipelineElement;
+import org.apache.streampipes.connect.api.IAdapterPipelineElement;
 
 import java.util.Map;
 
-public class AddTimestampPipelineElement implements AdapterPipelineElement {
+public class AddTimestampPipelineElement implements IAdapterPipelineElement {
 
     private String runtimeKey;
 

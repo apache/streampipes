@@ -17,13 +17,13 @@
  */
 package org.apache.streampipes.connect.adapter.preprocessing.elements;
 
-import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipelineElement;
+import org.apache.streampipes.connect.api.IAdapterPipelineElement;
 import org.apache.streampipes.messaging.kafka.SpKafkaProducer;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 
 public class SendToKafkaAdapterSink extends SendToBrokerAdapterSink<KafkaTransportProtocol>
-        implements AdapterPipelineElement  {
+        implements IAdapterPipelineElement {
 
     public SendToKafkaAdapterSink(AdapterDescription adapterDescription) {
         super(adapterDescription, SpKafkaProducer::new, KafkaTransportProtocol.class);

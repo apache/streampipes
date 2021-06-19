@@ -18,13 +18,13 @@
 
 package org.apache.streampipes.connect.adapter.preprocessing.elements;
 
-import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipelineElement;
+import org.apache.streampipes.connect.api.IAdapterPipelineElement;
 import org.apache.streampipes.connect.adapter.preprocessing.Util;
 
 import java.util.List;
 import java.util.Map;
 
-public class SendToBrokerReplayAdapterSink implements AdapterPipelineElement {
+public class SendToBrokerReplayAdapterSink implements IAdapterPipelineElement {
 
     private final SendToBrokerAdapterSink sendToBrokerAdapterSink;
     private long lastEventTimestamp;

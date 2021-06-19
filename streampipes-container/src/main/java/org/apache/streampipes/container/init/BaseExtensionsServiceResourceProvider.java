@@ -15,18 +15,17 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.container.init;
 
-package org.apache.streampipes.connect.adapter.exception;
+import org.apache.streampipes.rest.shared.serializer.JacksonSerializationProvider;
 
-public class AdapterException extends Exception {
-    public AdapterException() {}
+import java.util.Collections;
+import java.util.List;
 
-    public AdapterException(String message)
-    {
-        super(message);
-    }
+public class BaseExtensionsServiceResourceProvider implements ExtensionsResourceProvider {
 
-    public AdapterException(String message, Throwable cause) {
-        super(message, cause);
-    }
+  @Override
+  public List<Class<?>> getResourceClasses() {
+    return Collections.singletonList(JacksonSerializationProvider.class);
+  }
 }

@@ -15,14 +15,28 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.connect.api;
 
-package org.apache.streampipes.connect.adapter.exception;
+import org.apache.streampipes.connect.api.exception.ParseException;
+import org.apache.streampipes.model.connect.grounding.FormatDescription;
+import org.apache.streampipes.model.schema.EventSchema;
 
-public class ParseException extends RuntimeException {
-    public ParseException() {}
+import java.io.InputStream;
+import java.util.List;
 
-    public ParseException(String message)
-    {
-        super(message);
-    }
+public interface IParser {
+
+  IParser getInstance(FormatDescription formatDescription);
+
+  void parse(InputStream data, EmitBinaryEvent emitBinaryEvent) throws ParseException;
+
+  List<byte[]> parseNEvents(InputStream data, int n) throws ParseException;
+
+  /**
+   * Pass one event to Parser to get the event schema
+   *
+   * @param oneEvent
+   * @return
+   */
+  EventSchema getEventSchema(List<byte[]> oneEvent);
 }

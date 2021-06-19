@@ -20,7 +20,7 @@ package org.apache.streampipes.connect.adapter.preprocessing.elements;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipelineElement;
+import org.apache.streampipes.connect.api.IAdapterPipelineElement;
 import org.apache.streampipes.connect.adapter.preprocessing.Util;
 import org.apache.streampipes.connect.adapter.preprocessing.transform.*;
 import org.apache.streampipes.connect.adapter.preprocessing.transform.schema.*;
@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class TransformSchemaAdapterPipelineElement implements AdapterPipelineElement {
+public class TransformSchemaAdapterPipelineElement implements IAdapterPipelineElement {
 
     private SchemaEventTransformer eventTransformer;
     Logger logger = LoggerFactory.getLogger(TransformSchemaAdapterPipelineElement.class);

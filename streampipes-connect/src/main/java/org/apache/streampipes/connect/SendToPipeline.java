@@ -19,31 +19,32 @@
 package org.apache.streampipes.connect;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.streampipes.connect.adapter.model.generic.Format;
-import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
+import org.apache.streampipes.connect.api.EmitBinaryEvent;
+import org.apache.streampipes.connect.api.IAdapterPipeline;
+import org.apache.streampipes.connect.api.IFormat;
 import org.apache.streampipes.messaging.kafka.SpKafkaProducer;
 
 import java.util.Map;
 
 public class SendToPipeline implements EmitBinaryEvent {
 
-    private Format format;
+    private IFormat format;
 
     private SpKafkaProducer producer;
     private ObjectMapper objectMapper;
 
-    private AdapterPipeline adapterPipeline;
+    private IAdapterPipeline adapterPipeline;
 
     @Deprecated
     // TODO remove
-    public SendToPipeline(Format format, String brokerUrl, String topic) {
+    public SendToPipeline(IFormat format, String brokerUrl, String topic) {
         this.format = format;
 
         producer = new SpKafkaProducer(brokerUrl, topic);
         objectMapper = new ObjectMapper();
     }
 
-    public SendToPipeline(Format format, AdapterPipeline adapterPipeline) {
+    public SendToPipeline(IFormat format, IAdapterPipeline adapterPipeline) {
        this.format = format;
        this.adapterPipeline = adapterPipeline;
     }

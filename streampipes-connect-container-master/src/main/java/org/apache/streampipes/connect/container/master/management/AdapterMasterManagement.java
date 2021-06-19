@@ -21,7 +21,7 @@ package org.apache.streampipes.connect.container.master.management;
 import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.connect.adapter.GroundingService;
-import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.util.AdapterEncryptionService;
 import org.apache.streampipes.manager.storage.UserService;
 import org.apache.streampipes.manager.verification.DataStreamVerifier;

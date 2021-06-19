@@ -18,21 +18,16 @@
 
 package org.apache.streampipes.connect.adapter.model.generic;
 
-import org.apache.streampipes.connect.adapter.exception.ParseException;
-import org.apache.streampipes.connect.adapter.model.Connector;
-import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
-import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.connect.api.IFormat;
+import org.apache.streampipes.connect.api.IParser;
+import org.apache.streampipes.connect.api.IProtocol;
 import org.apache.streampipes.model.schema.EventSchema;
 
-import java.util.List;
-import java.util.Map;
 
+public abstract class Protocol implements IProtocol {
 
-public abstract class Protocol implements Connector {
-
-    protected Parser parser;
-    protected Format format;
+    protected IParser parser;
+    protected IFormat format;
 
     //TODO remove
     protected EventSchema eventSchema;
@@ -41,29 +36,13 @@ public abstract class Protocol implements Connector {
 
     }
 
-    public Protocol(Parser parser, Format format) {
+    public Protocol(IParser parser, IFormat format) {
         this.parser = parser;
         this.format = format;
     }
 
-    public abstract Protocol getInstance(ProtocolDescription protocolDescription, Parser parser, Format format);
-
-    public abstract ProtocolDescription declareModel();
-
-    public abstract GuessSchema getGuessSchema() throws ParseException;
-
-    public abstract List<Map<String, Object>> getNElements(int n) throws ParseException;
-
-    public abstract void run(AdapterPipeline adapterPipeline);
-
-    /*
-       Stops the running protocol. Mainly relevant for streaming protocols
-     */
-    public abstract void stop();
-
-    public abstract String getId();
-
     //TODO remove
+    @Override
     public void setEventSchema(EventSchema eventSchema) {
         this.eventSchema = eventSchema;
     }

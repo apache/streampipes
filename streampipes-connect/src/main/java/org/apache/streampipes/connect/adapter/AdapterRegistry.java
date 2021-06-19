@@ -32,8 +32,8 @@ import org.apache.streampipes.connect.adapter.format.json.object.JsonObjectForma
 import org.apache.streampipes.connect.adapter.format.json.object.JsonObjectParser;
 import org.apache.streampipes.connect.adapter.format.xml.XmlFormat;
 import org.apache.streampipes.connect.adapter.format.xml.XmlParser;
-import org.apache.streampipes.connect.adapter.model.generic.Format;
-import org.apache.streampipes.connect.adapter.model.generic.Parser;
+import org.apache.streampipes.connect.api.IFormat;
+import org.apache.streampipes.connect.api.IParser;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,8 +43,8 @@ import java.util.Map;
  */
 public class AdapterRegistry {
 
-  public static Map<String, Format> getAllFormats() {
-    Map<String, Format> allFormats = new HashMap<>();
+  public static Map<String, IFormat> getAllFormats() {
+    Map<String, IFormat> allFormats = new HashMap<>();
 
     allFormats.put(JsonFormat.ID, new JsonFormat());
     allFormats.put(JsonObjectFormat.ID, new JsonObjectFormat());
@@ -57,8 +57,8 @@ public class AdapterRegistry {
     return allFormats;
   }
 
-  public static Map<String, Parser> getAllParsers() {
-    Map<String, Parser> allParsers = new HashMap<>();
+  public static Map<String, IParser> getAllParsers() {
+    Map<String, IParser> allParsers = new HashMap<>();
 
     allParsers.put(JsonFormat.ID, new JsonParser());
     allParsers.put(JsonObjectFormat.ID, new JsonObjectParser());

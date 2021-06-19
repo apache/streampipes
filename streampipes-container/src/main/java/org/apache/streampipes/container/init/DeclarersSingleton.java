@@ -18,6 +18,9 @@
 
 package org.apache.streampipes.container.init;
 
+import org.apache.streampipes.connect.api.Connector;
+import org.apache.streampipes.connect.api.IAdapter;
+import org.apache.streampipes.connect.api.IProtocol;
 import org.apache.streampipes.container.declarer.*;
 import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
@@ -49,6 +52,9 @@ public class DeclarersSingleton {
   private Map<String, TransportProtocol> supportedProtocols;
   private Map<String, TransportFormat> supportedFormats;
 
+  private Map<String, IProtocol> allProtocols;
+  private Map<String, IAdapter> allAdapters;
+
   private String serviceId;
 
   private int port;
@@ -63,6 +69,8 @@ public class DeclarersSingleton {
     this.pipelineTemplateDeclarers = new HashMap<>();
     this.supportedProtocols = new HashMap<>();
     this.supportedFormats = new HashMap<>();
+    this.allProtocols = new HashMap<>();
+    this.allAdapters = new HashMap<>();
     this.route = "/";
   }
 
@@ -207,6 +215,47 @@ public class DeclarersSingleton {
             .stream()
             .map(TransportFormat::new)
             .collect(Collectors.toList());
+  }
+
+  public DeclarersSingleton add(Connector c) {
+
+    if (c instanceof IProtocol) {
+      this.allProtocols.put(c.getId(), (IProtocol) c);
+    } else if (c instanceof IAdapter) {
+      this.allAdapters.put(c.getId(), (IAdapter<?>) c);
+    }
+
+    return getInstance();
+  }
+
+  public Map<String, IProtocol> getAllProtocolsMap() {
+    return this.allProtocols;
+  }
+
+  public Map<String, IAdapter> getAllAdaptersMap() {
+    return this.allAdapters;
+  }
+
+  public Collection<IProtocol> getAllProtocols() {
+    return this.allProtocols.values();
+  }
+
+  public Collection<IAdapter> getAllAdapters() {
+    return this.allAdapters.values();
+  }
+
+  public IProtocol getProtocol(String id) {
+    return getAllProtocols().stream()
+            .filter(protocol -> protocol.getId().equals(id))
+            .findAny()
+            .orElse(null);
+  }
+
+  public IAdapter getAdapter(String id) {
+    return getAllAdapters().stream()
+            .filter(adapter -> adapter.getId().equals(id))
+            .findAny()
+            .orElse(null);
   }
 
   public void setPort(int port) {

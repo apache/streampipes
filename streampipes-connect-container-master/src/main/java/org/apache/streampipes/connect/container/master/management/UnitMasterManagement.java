@@ -22,7 +22,7 @@ import com.github.jqudt.Unit;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.model.connect.unit.UnitDescription;
 import org.apache.streampipes.units.UnitCollector;
 import org.apache.streampipes.units.UnitProvider;

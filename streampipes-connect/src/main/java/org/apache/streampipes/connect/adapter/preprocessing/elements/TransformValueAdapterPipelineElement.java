@@ -21,7 +21,7 @@ package org.apache.streampipes.connect.adapter.preprocessing.elements;
 import org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipelineElement;
+import org.apache.streampipes.connect.api.IAdapterPipelineElement;
 import org.apache.streampipes.connect.adapter.preprocessing.Util;
 import org.apache.streampipes.connect.adapter.preprocessing.transform.value.*;
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class TransformValueAdapterPipelineElement implements AdapterPipelineElement {
+public class TransformValueAdapterPipelineElement implements IAdapterPipelineElement {
 
     private ValueEventTransformer eventTransformer;
     private Logger logger = LoggerFactory.getLogger(TransformValueAdapterPipelineElement.class);

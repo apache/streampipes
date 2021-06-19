@@ -21,8 +21,8 @@ package org.apache.streampipes.connect.adapter.format.geojson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.connect.adapter.model.generic.Format;
-import org.apache.streampipes.connect.adapter.exception.ParseException;
+import org.apache.streampipes.connect.api.IFormat;
+import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.apache.streampipes.model.connect.grounding.FormatDescription;
 import org.apache.streampipes.sdk.builder.adapter.FormatDescriptionBuilder;
@@ -31,7 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GeoJsonFormat extends Format {
+public class GeoJsonFormat implements IFormat {
 
     public static final String ID = "https://streampipes.org/vocabulary/v1/format/geojson";
     private static final Logger logger = LoggerFactory.getLogger(GeoJsonFormat.class);
@@ -45,7 +45,7 @@ public class GeoJsonFormat extends Format {
     }
 
     @Override
-    public Format getInstance(FormatDescription formatDescription) {
+    public IFormat getInstance(FormatDescription formatDescription) {
        return new GeoJsonFormat();
     }
 

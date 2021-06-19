@@ -15,7 +15,26 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.connect.container.worker.init;
 
-package org.apache.streampipes.connect.adapter.model;
-public interface Connector {
+import org.apache.streampipes.connect.container.worker.rest.*;
+import org.apache.streampipes.container.init.ExtensionsResourceProvider;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
+
+import java.util.Arrays;
+import java.util.List;
+
+public class AdapterServiceResourceProvider implements ExtensionsResourceProvider {
+
+  @Override
+  public List<Class<?>> getResourceClasses() {
+    return Arrays.asList(WelcomePageWorker.class,
+            GuessResource.class,
+            RuntimeResolvableResource.class,
+            WorkerResource.class,
+            MultiPartFeature.class,
+            AdapterResource.class,
+            ProtocolResource.class,
+            HttpServerAdapterResource.class);
+  }
 }

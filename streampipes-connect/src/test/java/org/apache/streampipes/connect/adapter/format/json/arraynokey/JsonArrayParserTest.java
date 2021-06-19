@@ -25,7 +25,7 @@ import static org.apache.streampipes.connect.adapter.TestUtils.makeJsonObject;
 import com.google.gson.JsonArray;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
-import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.connect.api.exception.AdapterException;
 
 import java.io.IOException;
 import java.io.InputStream;

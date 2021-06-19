@@ -19,8 +19,8 @@
 package org.apache.streampipes.connect.container.worker.rest;
 
 
-import org.apache.streampipes.connect.adapter.Adapter;
-import org.apache.streampipes.connect.adapter.model.generic.Protocol;
+import org.apache.streampipes.connect.api.IAdapter;
+import org.apache.streampipes.connect.api.IProtocol;
 import org.apache.streampipes.connect.container.worker.management.AdapterWorkerManagement;
 import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
 import org.rendersnake.HtmlCanvas;
@@ -79,11 +79,11 @@ public class WelcomePageWorker extends AbstractSharedRestInterface {
     }
 
     private HtmlCanvas getAllRegisteredProtocols(HtmlCanvas canvas) throws IOException {
-        Collection<Protocol> protocols = this.adapterWorkerManagement.getAllProtocols();
+        Collection<IProtocol> protocols = this.adapterWorkerManagement.getAllProtocols();
 
         canvas.h2().write("Protocols")._h2().ol();
 
-        for (Protocol p : protocols) {
+        for (IProtocol p : protocols) {
             canvas.li().write(p.getId())._li();
         }
 
@@ -93,11 +93,11 @@ public class WelcomePageWorker extends AbstractSharedRestInterface {
     }
 
     private HtmlCanvas getAllRegisteredAdapters(HtmlCanvas canvas) throws IOException {
-        Collection<Adapter> adapters = this.adapterWorkerManagement.getAllAdapters();
+        Collection<IAdapter> adapters = this.adapterWorkerManagement.getAllAdapters();
 
         canvas.h2().write("Adapters")._h2().ol();
 
-        for (Adapter a : adapters) {
+        for (IAdapter a : adapters) {
             canvas.li().write(a.getId())._li();
         }
 

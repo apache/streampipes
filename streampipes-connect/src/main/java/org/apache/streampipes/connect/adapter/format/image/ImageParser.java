@@ -19,18 +19,14 @@
 package org.apache.streampipes.connect.adapter.format.image;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.streampipes.connect.EmitBinaryEvent;
+import org.apache.streampipes.connect.api.EmitBinaryEvent;
 import org.apache.streampipes.connect.adapter.model.generic.Parser;
-import org.apache.streampipes.connect.adapter.exception.ParseException;
+import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.model.connect.grounding.FormatDescription;
-import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
-import org.apache.streampipes.vocabulary.XSD;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.apache.streampipes.sdk.helpers.EpProperties.imageProperty;

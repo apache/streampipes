@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.connect.adapter.model.generic;
 
+import org.apache.streampipes.connect.api.IProtocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.streampipes.connect.adapter.Adapter;
@@ -71,7 +72,7 @@ public class GenericDataStreamAdapter extends GenericAdapter<GenericAdapterStrea
     }
 
     @Override
-    public void setProtocol(Protocol protocol) {
+    public void setProtocol(IProtocol protocol) {
        this.protocol = protocol;
     }
 }

@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.connect;
 
-import org.apache.streampipes.connect.adapter.Adapter;
+import org.apache.streampipes.connect.api.IAdapter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,14 +26,14 @@ import java.util.Map;
 public enum RunningAdapterInstances {
     INSTANCE;
 
-    private final Map<String, Adapter> runningInstances = new HashMap<>();
+    private final Map<String, IAdapter<?>> runningInstances = new HashMap<>();
 
-    public void addAdapter(String id, Adapter adapter) {
+    public void addAdapter(String id, IAdapter<?> adapter) {
         runningInstances.put(id, adapter);
     }
 
-    public Adapter removeAdapter(String id) {
-        Adapter result = runningInstances.get(id);
+    public IAdapter<?> removeAdapter(String id) {
+        IAdapter<?> result = runningInstances.get(id);
         runningInstances.remove(id);
         return result;
     }

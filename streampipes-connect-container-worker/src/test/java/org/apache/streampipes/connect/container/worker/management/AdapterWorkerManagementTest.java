@@ -28,7 +28,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.apache.streampipes.connect.RunningAdapterInstances;
 import org.apache.streampipes.connect.adapter.Adapter;
 import org.apache.streampipes.connect.adapter.AdapterRegistry;
-import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.adapter.model.specific.SpecificDataSetAdapter;
 import org.apache.streampipes.connect.container.worker.utils.Utils;
 import org.apache.streampipes.model.connect.adapter.AdapterSetDescription;

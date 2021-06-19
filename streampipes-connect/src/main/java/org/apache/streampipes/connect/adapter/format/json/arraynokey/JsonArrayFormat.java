@@ -19,7 +19,7 @@
 package org.apache.streampipes.connect.adapter.format.json.arraynokey;
 
 
-import org.apache.streampipes.connect.adapter.model.generic.Format;
+import org.apache.streampipes.connect.api.IFormat;
 import org.apache.streampipes.connect.adapter.format.json.AbstractJsonFormat;
 import org.apache.streampipes.model.connect.grounding.FormatDescription;
 import org.apache.streampipes.sdk.builder.adapter.FormatDescriptionBuilder;
@@ -29,7 +29,7 @@ public class JsonArrayFormat extends AbstractJsonFormat {
     public static final String ID = "https://streampipes.org/vocabulary/v1/format/json/arraynokey";
 
     @Override
-    public Format getInstance(FormatDescription formatDescription) {
+    public IFormat getInstance(FormatDescription formatDescription) {
         return new JsonArrayFormat();
     }
 

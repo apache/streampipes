@@ -18,33 +18,30 @@
 
 package org.apache.streampipes.connect.adapter;
 
-import org.apache.streampipes.connect.adapter.preprocessing.elements.*;
-import org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription;
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.config.backend.SpProtocol;
+import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
+import org.apache.streampipes.connect.api.IAdapterPipelineElement;
+import org.apache.streampipes.connect.adapter.preprocessing.elements.*;
+import org.apache.streampipes.connect.api.IAdapter;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
+import org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription;
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
+import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.streampipes.connect.adapter.exception.AdapterException;
-import org.apache.streampipes.connect.adapter.exception.ParseException;
-import org.apache.streampipes.connect.adapter.model.Connector;
-import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
-import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipelineElement;
-import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription;
-import org.apache.streampipes.model.grounding.TransportProtocol;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Adapter<T extends AdapterDescription> implements Connector {
+public abstract class Adapter<T extends AdapterDescription> implements IAdapter<T> {
     Logger logger = LoggerFactory.getLogger(Adapter.class);
 
     private boolean debug;
@@ -71,19 +68,7 @@ public abstract class Adapter<T extends AdapterDescription> implements Connector
         this(false);
     }
 
-    public abstract T declareModel();
-
-    // Decide which adapter to call
-    public abstract void startAdapter() throws AdapterException;
-
-    public abstract void stopAdapter() throws AdapterException;
-
-    public abstract Adapter getInstance(T adapterDescription);
-
-    public abstract GuessSchema getSchema(T adapterDescription) throws AdapterException, ParseException;
-
-    public abstract String getId();
-
+    @Override
     public void changeEventGrounding(TransportProtocol transportProtocol) {
 
         if (transportProtocol instanceof JmsTransportProtocol) {
@@ -114,7 +99,7 @@ public abstract class Adapter<T extends AdapterDescription> implements Connector
 
     private AdapterPipeline getAdapterPipeline(T adapterDescription) {
 
-        List<AdapterPipelineElement> pipelineElements = new ArrayList<>();
+        List<IAdapterPipelineElement> pipelineElements = new ArrayList<>();
 
         // Must be before the schema transformations to ensure that user can move this event property
         AddTimestampRuleDescription timestampTransformationRuleDescription = getTimestampRule(adapterDescription);
@@ -206,6 +191,7 @@ public abstract class Adapter<T extends AdapterDescription> implements Connector
         return null;
     }
 
+    @Override
     public boolean isDebug() {
         return debug;
     }

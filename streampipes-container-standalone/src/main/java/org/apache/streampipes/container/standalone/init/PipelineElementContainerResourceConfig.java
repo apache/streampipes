@@ -17,21 +17,22 @@
  */
 package org.apache.streampipes.container.standalone.init;
 
-import org.apache.streampipes.container.api.*;
-import org.apache.streampipes.rest.shared.serializer.JacksonSerializationProvider;
-import org.glassfish.jersey.server.ResourceConfig;
+import org.apache.streampipes.container.base.rest.BaseResourceConfig;
+import org.apache.streampipes.container.init.BaseExtensionsServiceResourceProvider;
+import org.apache.streampipes.container.init.PipelineElementServiceResourceProvider;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Component
-public class PipelineElementContainerResourceConfig extends ResourceConfig {
+public class PipelineElementContainerResourceConfig extends BaseResourceConfig {
 
-  public PipelineElementContainerResourceConfig() {
-    register(DataSinkPipelineElementResource.class);
-    register(DataProcessorPipelineElementResource.class);
-    register(DataStreamPipelineElementResource.class);
-    register(WelcomePage.class);
-    register(PipelineTemplateResource.class);
-
-    register(JacksonSerializationProvider.class);
+  @Override
+  public List<List<Class<?>>> getClassesToRegister() {
+    return Arrays.asList(
+            new BaseExtensionsServiceResourceProvider().getResourceClasses(),
+            new PipelineElementServiceResourceProvider().getResourceClasses()
+    );
   }
 }

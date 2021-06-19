@@ -18,7 +18,7 @@
 package org.apache.streampipes.connect.adapter.preprocessing.elements;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipelineElement;
+import org.apache.streampipes.connect.api.IAdapterPipelineElement;
 import org.apache.streampipes.connect.adapter.util.TransportFormatSelector;
 import org.apache.streampipes.dataformat.SpDataFormatDefinition;
 import org.apache.streampipes.messaging.EventProducer;
@@ -26,11 +26,10 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 
-import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public abstract class SendToBrokerAdapterSink<T extends TransportProtocol> implements AdapterPipelineElement {
+public abstract class SendToBrokerAdapterSink<T extends TransportProtocol> implements IAdapterPipelineElement {
 
   protected AdapterDescription adapterDescription;
   protected SpDataFormatDefinition dataFormatDefinition;

@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.connect.container.master.rest;
 
-import org.apache.streampipes.connect.adapter.exception.ParseException;
-import org.apache.streampipes.connect.adapter.exception.WorkerAdapterException;
+import org.apache.streampipes.connect.api.exception.ParseException;
+import org.apache.streampipes.connect.api.exception.WorkerAdapterException;
 import org.apache.streampipes.connect.container.master.management.GuessManagement;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;

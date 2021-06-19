@@ -16,12 +16,8 @@
  *
  */
 
-package org.apache.streampipes.connect.adapter.model.pipeline;
+package org.apache.streampipes.connect.api;
 
-import java.util.Map;
-
-public interface AdapterPipelineElement {
-
-    Map<String, Object> process(Map<String, Object> event);
-
+public interface EmitBinaryEvent {
+    Boolean emit(byte[] event);
 }

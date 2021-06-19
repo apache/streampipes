@@ -16,8 +16,10 @@
  *
  */
 
-package org.apache.streampipes.connect;
+package org.apache.streampipes.connect.api;
 
-public interface EmitBinaryEvent {
-    public Boolean emit(byte[] event);
+public interface Connector {
+
+  String getId();
+
 }

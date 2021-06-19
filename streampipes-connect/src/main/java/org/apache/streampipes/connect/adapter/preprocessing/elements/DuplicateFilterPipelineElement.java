@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.connect.adapter.preprocessing.elements;
 
-import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipelineElement;
+import org.apache.streampipes.connect.api.IAdapterPipelineElement;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +28,7 @@ import java.util.Map;
  *  If the same event is sent multiple times the timer is always reseted to cover polling of rest endpoints
  *  User can configure how long events are stored in cache, it should be minimum 2x the polling intervall
  */
-public class DuplicateFilterPipelineElement implements AdapterPipelineElement {
+public class DuplicateFilterPipelineElement implements IAdapterPipelineElement {
 
     /**
      * Lifetime of events

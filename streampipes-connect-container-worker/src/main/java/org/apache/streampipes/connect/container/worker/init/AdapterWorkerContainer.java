@@ -18,21 +18,22 @@
 
 package org.apache.streampipes.connect.container.worker.init;
 
+import org.apache.streampipes.connect.api.IAdapter;
+import org.apache.streampipes.connect.api.IProtocol;
+import org.apache.streampipes.connect.container.worker.management.MasterRestClient;
+import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.container.locales.LabelGenerator;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterDescription;
+import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
+import org.apache.streampipes.model.connect.worker.ConnectWorkerContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.apache.streampipes.connect.adapter.Adapter;
-import org.apache.streampipes.connect.adapter.model.generic.Protocol;
-import org.apache.streampipes.connect.container.worker.management.MasterRestClient;
-import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
-import org.apache.streampipes.model.connect.worker.ConnectWorkerContainer;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -77,13 +78,13 @@ public abstract class AdapterWorkerContainer {
   private ConnectWorkerContainer getContainerDescription(String endpointUrl) {
 
     List<AdapterDescription> adapters = new ArrayList<>();
-    for (Adapter a : AdapterDeclarerSingleton.getInstance().getAllAdapters()) {
+    for (IAdapter<?> a : DeclarersSingleton.getInstance().getAllAdapters()) {
       AdapterDescription desc = (AdapterDescription) rewrite(a.declareModel(), endpointUrl);
       adapters.add(desc);
     }
 
     List<ProtocolDescription> protocols = new ArrayList<>();
-    for (Protocol p : AdapterDeclarerSingleton.getInstance().getAllProtocols()) {
+    for (IProtocol p : DeclarersSingleton.getInstance().getAllProtocols()) {
       ProtocolDescription desc = (ProtocolDescription) rewrite(p.declareModel(), endpointUrl);
       protocols.add(desc);
     }

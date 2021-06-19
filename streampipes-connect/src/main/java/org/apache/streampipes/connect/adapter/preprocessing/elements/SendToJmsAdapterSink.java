@@ -17,13 +17,13 @@
  */
 package org.apache.streampipes.connect.adapter.preprocessing.elements;
 
-import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipelineElement;
+import org.apache.streampipes.connect.api.IAdapterPipelineElement;
 import org.apache.streampipes.messaging.jms.ActiveMQPublisher;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 
 public class SendToJmsAdapterSink extends SendToBrokerAdapterSink<JmsTransportProtocol>
-        implements AdapterPipelineElement {
+        implements IAdapterPipelineElement {
 
     public SendToJmsAdapterSink(AdapterDescription adapterDescription) {
         super(adapterDescription, ActiveMQPublisher::new, JmsTransportProtocol.class);

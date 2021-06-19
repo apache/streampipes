@@ -17,12 +17,16 @@
  */
 package org.apache.streampipes.container.model;
 
+import org.apache.streampipes.connect.api.IAdapter;
+import org.apache.streampipes.connect.api.IProtocol;
 import org.apache.streampipes.container.declarer.Declarer;
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SpServiceDefinition {
 
@@ -35,10 +39,15 @@ public class SpServiceDefinition {
   private List<SpDataFormatFactory> dataFormatFactories;
   private List<SpProtocolDefinitionFactory<?>> protocolDefinitionFactories;
 
+  private Map<String, IProtocol> adapterProtocols;
+  private Map<String, IAdapter<?>> specificAdapters;
+
   public SpServiceDefinition() {
     this.declarers = new ArrayList<>();
     this.dataFormatFactories = new ArrayList<>();
     this.protocolDefinitionFactories = new ArrayList<>();
+    this.adapterProtocols = new HashMap<>();
+    this.specificAdapters = new HashMap<>();
   }
 
   public String getServiceId() {
@@ -95,6 +104,14 @@ public class SpServiceDefinition {
 
   public void addDataFormatFactories(List<SpDataFormatFactory> factories) {
     this.dataFormatFactories.addAll(factories);
+  }
+
+  public void addAdapterProtocol(IProtocol protocol) {
+    this.adapterProtocols.put(protocol.getId(), protocol);
+  }
+
+  public void addSpecificAdapter(IAdapter<?> adapter) {
+    this.specificAdapters.put(adapter.getId(), adapter);
   }
 
   public List<SpDataFormatFactory> getDataFormatFactories() {

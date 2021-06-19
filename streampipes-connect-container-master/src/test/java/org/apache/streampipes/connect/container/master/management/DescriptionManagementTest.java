@@ -20,7 +20,7 @@ package org.apache.streampipes.connect.container.master.management;
 
 import org.apache.streampipes.connect.adapter.AdapterRegistry;
 import org.apache.streampipes.connect.adapter.format.json.arraykey.JsonFormat;
-import org.apache.streampipes.connect.adapter.model.generic.Format;
+import org.apache.streampipes.connect.api.IFormat;
 import org.apache.streampipes.model.connect.grounding.FormatDescriptionList;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,7 +44,7 @@ public class DescriptionManagementTest {
 
     @Test
     public void getFormats() {
-        Map<String, Format> allFormats = new HashMap<>();
+        Map<String, IFormat> allFormats = new HashMap<>();
         allFormats.put(JsonFormat.ID, new JsonFormat());
 
         PowerMockito.mockStatic(AdapterRegistry.class);

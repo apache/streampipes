@@ -18,24 +18,28 @@
 
 package org.apache.streampipes.connect.adapter.model.pipeline;
 
+import org.apache.streampipes.connect.api.IAdapterPipeline;
+import org.apache.streampipes.connect.api.IAdapterPipelineElement;
+
 import java.util.List;
 import java.util.Map;
 
-public class AdapterPipeline {
+public class AdapterPipeline implements IAdapterPipeline {
 
-    private List<AdapterPipelineElement> pipelineElements;
-    private AdapterPipelineElement pipelineSink;
+    private List<IAdapterPipelineElement> pipelineElements;
+    private IAdapterPipelineElement pipelineSink;
 
 
-    public AdapterPipeline(List<AdapterPipelineElement> pipelineElements) {
+    public AdapterPipeline(List<IAdapterPipelineElement> pipelineElements) {
         this.pipelineElements = pipelineElements;
     }
 
-    public AdapterPipeline(List<AdapterPipelineElement> pipelineElements, AdapterPipelineElement pipelineSink) {
+    public AdapterPipeline(List<IAdapterPipelineElement> pipelineElements, IAdapterPipelineElement pipelineSink) {
         this.pipelineElements = pipelineElements;
         this.pipelineSink = pipelineSink;
     }
 
+    @Override
     public void process(Map<String, Object> event) {
 
         // TODO remove, just for performance tests
@@ -44,7 +48,7 @@ public class AdapterPipeline {
         }
 
 
-        for (AdapterPipelineElement pipelineElement : pipelineElements) {
+        for (IAdapterPipelineElement pipelineElement : pipelineElements) {
             event = pipelineElement.process(event);
         }
         if (pipelineSink != null) {
@@ -53,19 +57,23 @@ public class AdapterPipeline {
 
     }
 
-    public List<AdapterPipelineElement> getPipelineElements() {
+    @Override
+    public List<IAdapterPipelineElement> getPipelineElements() {
         return pipelineElements;
     }
 
-    public void setPipelineElements(List<AdapterPipelineElement> pipelineElements) {
+    @Override
+    public void setPipelineElements(List<IAdapterPipelineElement> pipelineElements) {
         this.pipelineElements = pipelineElements;
     }
 
-    public void changePipelineSink(AdapterPipelineElement pipelineSink) {
+    @Override
+    public void changePipelineSink(IAdapterPipelineElement pipelineSink) {
         this.pipelineSink = pipelineSink;
     }
 
-    public AdapterPipelineElement getPipelineSink() {
+    @Override
+    public IAdapterPipelineElement getPipelineSink() {
         return pipelineSink;
     }
 }

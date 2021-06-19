@@ -19,6 +19,9 @@ package org.apache.streampipes.container.model;
 
 import org.apache.streampipes.config.SpConfig;
 import org.apache.streampipes.config.consul.ConsulSpConfig;
+import org.apache.streampipes.connect.api.Connector;
+import org.apache.streampipes.connect.api.IAdapter;
+import org.apache.streampipes.connect.api.IProtocol;
 import org.apache.streampipes.container.declarer.Declarer;
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
@@ -79,15 +82,19 @@ public class SpServiceDefinitionBuilder {
     return this;
   }
 
-//  public SpServiceDefinitionBuilder registerAdapter(Connector protocolOrAdapter) {
-//
-//    return this;
-//  }
-//
-//  public SpServiceDefinitionBuilder registerAdapters(Connector... protocolOrAdapter) {
-//
-//    return this;
-//  }
+  public SpServiceDefinitionBuilder registerAdapter(Connector protocolOrAdapter) {
+    if (protocolOrAdapter instanceof IProtocol) {
+      this.serviceDefinition.addAdapterProtocol((IProtocol) protocolOrAdapter);
+    } else if (protocolOrAdapter instanceof IAdapter<?>) {
+      this.serviceDefinition.addSpecificAdapter((IAdapter<?>) protocolOrAdapter);
+    }
+    return this;
+  }
+
+  public SpServiceDefinitionBuilder registerAdapters(Connector... protocolOrAdapter) {
+    Arrays.asList(protocolOrAdapter).forEach(this::registerAdapter);
+    return this;
+  }
 
   public SpServiceDefinitionBuilder registerMessagingFormat(SpDataFormatFactory dataFormatDefinition) {
     this.serviceDefinition.addDataFormatFactory(dataFormatDefinition);

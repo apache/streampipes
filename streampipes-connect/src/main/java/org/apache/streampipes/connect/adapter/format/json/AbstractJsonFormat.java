@@ -18,14 +18,14 @@
 package org.apache.streampipes.connect.adapter.format.json;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.connect.adapter.model.generic.Format;
-import org.apache.streampipes.connect.adapter.exception.ParseException;
+import org.apache.streampipes.connect.api.IFormat;
+import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.apache.streampipes.model.schema.EventSchema;
 
 import java.util.Map;
 
-public abstract class AbstractJsonFormat extends Format {
+public abstract class AbstractJsonFormat implements IFormat {
 
   @Override
   public Map<String, Object> parse(byte[] object) throws ParseException {

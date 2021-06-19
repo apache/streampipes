@@ -18,15 +18,15 @@
 
 package org.apache.streampipes.connect.container.worker.management;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.streampipes.connect.adapter.Adapter;
-import org.apache.streampipes.connect.adapter.exception.AdapterException;
-import org.apache.streampipes.connect.adapter.exception.ParseException;
+import org.apache.streampipes.connect.api.IAdapter;
+import org.apache.streampipes.connect.api.exception.AdapterException;
+import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.connect.container.worker.utils.AdapterUtils;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.sdk.helpers.EpProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -38,7 +38,7 @@ public class GuessManagement {
     public GuessSchema guessSchema(AdapterDescription adapterDescription) throws AdapterException, ParseException {
 
         LOG.info("Start guessing schema for: " + adapterDescription.getAppId());
-        Adapter adapter = AdapterUtils.setAdapter(adapterDescription);
+        IAdapter adapter = AdapterUtils.setAdapter(adapterDescription);
 
         GuessSchema guessSchema;
         try {

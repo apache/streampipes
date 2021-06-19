@@ -21,7 +21,7 @@ package org.apache.streampipes.connect.adapter.format.json.geojson;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.apache.streampipes.connect.adapter.format.geojson.GeoJsonParser;
-import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.model.schema.EventSchema;
 
 import java.io.IOException;

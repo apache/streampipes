@@ -20,7 +20,7 @@ package org.apache.streampipes.connect.adapter.preprocessing.elements;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipelineElement;
+import org.apache.streampipes.connect.api.IAdapterPipelineElement;
 import org.apache.streampipes.connect.adapter.preprocessing.transform.TransformationRule;
 import org.apache.streampipes.connect.adapter.preprocessing.transform.stream.EventRateTransformationRule;
 import org.apache.streampipes.connect.adapter.preprocessing.transform.stream.StreamEventTransformer;
@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class TransformStreamAdapterElement implements AdapterPipelineElement {
+public class TransformStreamAdapterElement implements IAdapterPipelineElement {
 
     private StreamEventTransformer eventTransformer;
     Logger logger = LoggerFactory.getLogger(TransformStreamAdapterElement.class);

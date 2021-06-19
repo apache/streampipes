@@ -20,20 +20,15 @@ package org.apache.streampipes.connect.adapter.model.generic;
 
 
 import org.apache.streampipes.connect.GetNEvents;
-import org.apache.streampipes.connect.adapter.exception.ParseException;
-import org.apache.streampipes.model.connect.grounding.FormatDescription;
-import org.apache.streampipes.model.schema.EventSchema;
-import org.apache.streampipes.connect.EmitBinaryEvent;
+import org.apache.streampipes.connect.api.IParser;
+import org.apache.streampipes.connect.api.exception.ParseException;
 
 import java.io.InputStream;
 import java.util.List;
 
-public abstract class Parser {
+public abstract class Parser implements IParser {
 
-    public abstract Parser getInstance(FormatDescription formatDescription);
-
-    public abstract void parse(InputStream data, EmitBinaryEvent emitBinaryEvent) throws ParseException;
-
+    @Override
     public List<byte[]> parseNEvents(InputStream data, int n) throws ParseException {
         GetNEvents gne = new GetNEvents(n);
 
@@ -49,10 +44,4 @@ public abstract class Parser {
         return gne.getEvents();
     }
 
-    /**
-     * Pass one event to Parser to get the event schema
-     * @param oneEvent
-     * @return
-     */
-    public abstract EventSchema getEventSchema(List<byte[]> oneEvent);
 }

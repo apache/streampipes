@@ -16,33 +16,33 @@
  *
  */
 
-package org.apache.streampipes.connect.adapter.model.generic;
+package org.apache.streampipes.connect.api;
 
 
-import org.apache.streampipes.connect.adapter.exception.ParseException;
+import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.model.connect.grounding.FormatDescription;
 
 import java.util.Map;
 
-public abstract class Format {
+public interface IFormat {
 
-    public abstract Format getInstance(FormatDescription formatDescription);
+    IFormat getInstance(FormatDescription formatDescription);
 
-    public abstract FormatDescription declareModel();
+    FormatDescription declareModel();
 
-    public abstract String getId();
+    String getId();
 
     /**
      * This method parses a byte[] and transforms the event object into a serialized version of the internal
      * representation
      */
-    public abstract Map<String, Object> parse(byte[] object) throws ParseException;
+    Map<String, Object> parse(byte[] object) throws ParseException;
 
     /**
      * Needed for example for the CSV format in iterative protocols to ensure header is not send again
      * When the reset is not required it can be ignored
      */
-    public void reset() {
+    default void reset() {
 
     }
 

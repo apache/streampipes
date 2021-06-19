@@ -19,6 +19,8 @@
 package org.apache.streampipes.connect;
 
 
+import org.apache.streampipes.connect.api.EmitBinaryEvent;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,11 +40,7 @@ public class GetNEvents implements EmitBinaryEvent {
         events.add(event);
         this.n = n - 1;
 
-        if (n == 0) {
-            return false;
-        } else {
-            return true;
-        }
+        return n != 0;
     }
 
     public List<byte[]> getEvents() {

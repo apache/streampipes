@@ -16,25 +16,13 @@
  *
  */
 
-package org.apache.streampipes.connect.adapter.exception;
+package org.apache.streampipes.connect.api.exception;
 
-import org.apache.streampipes.model.message.Message;
+public class ParseException extends RuntimeException {
+    public ParseException() {}
 
-public class WorkerAdapterException extends Exception {
-    private Message content;
-    public WorkerAdapterException() {}
-
-    public WorkerAdapterException(Message message)
+    public ParseException(String message)
     {
-        super(message.getElementName());
-        this.content = message;
-    }
-
-    public WorkerAdapterException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public Message getContent() {
-        return content;
+        super(message);
     }
 }

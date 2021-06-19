@@ -17,32 +17,23 @@
  */
 package org.apache.streampipes.container.extensions;
 
-import org.apache.streampipes.connect.container.worker.rest.*;
-import org.apache.streampipes.container.api.*;
-import org.apache.streampipes.rest.shared.serializer.*;
-import org.glassfish.jersey.media.multipart.MultiPartFeature;
-import org.glassfish.jersey.server.ResourceConfig;
+import org.apache.streampipes.connect.container.worker.init.AdapterServiceResourceProvider;
+import org.apache.streampipes.container.base.rest.BaseResourceConfig;
+import org.apache.streampipes.container.init.BaseExtensionsServiceResourceProvider;
+import org.apache.streampipes.container.init.PipelineElementServiceResourceProvider;
 import org.springframework.stereotype.Component;
 
-@Component
-public class ExtensionsResourceConfig extends ResourceConfig {
-    public ExtensionsResourceConfig() {
-        register(DataSinkPipelineElementResource.class);
-        register(DataProcessorPipelineElementResource.class);
-        register(DataStreamPipelineElementResource.class);
-        register(WelcomePage.class);
-        register(PipelineTemplateResource.class);
+import java.util.Arrays;
+import java.util.List;
 
-        //register(WelcomePageWorker.class);
-        register(GuessResource.class);
-        register(RuntimeResolvableResource.class);
-        register(WorkerResource.class);
-        register(MultiPartFeature.class);
-        register(AdapterResource.class);
-        register(ProtocolResource.class);
-        register(GsonWithIdProvider.class);
-        register(GsonWithoutIdProvider.class);
-        register(GsonClientModelProvider.class);
-        register(JacksonSerializationProvider.class);
-    }
+@Component
+public class ExtensionsResourceConfig extends BaseResourceConfig {
+
+  @Override
+  public List<List<Class<?>>> getClassesToRegister() {
+    return Arrays.asList(
+            new BaseExtensionsServiceResourceProvider().getResourceClasses(),
+            new AdapterServiceResourceProvider().getResourceClasses(),
+            new PipelineElementServiceResourceProvider().getResourceClasses());
+  }
 }

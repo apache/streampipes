@@ -16,26 +16,20 @@
  */
 package org.apache.streampipes.connect.container.worker.init;
 
-import org.apache.streampipes.connect.container.worker.rest.*;
-import org.apache.streampipes.rest.shared.serializer.JacksonSerializationProvider;
-import org.glassfish.jersey.media.multipart.MultiPartFeature;
-import org.glassfish.jersey.server.ResourceConfig;
+import org.apache.streampipes.container.base.rest.BaseResourceConfig;
+import org.apache.streampipes.container.init.BaseExtensionsServiceResourceProvider;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Component
-public class AdapterWorkerContainerResourceConfig extends ResourceConfig {
+public class AdapterWorkerContainerResourceConfig extends BaseResourceConfig {
 
-  public AdapterWorkerContainerResourceConfig() {
-    super();
-    register(WelcomePageWorker.class);
-    register(GuessResource.class);
-    register(RuntimeResolvableResource.class);
-    register(WorkerResource.class);
-    register(MultiPartFeature.class);
-    register(AdapterResource.class);
-    register(ProtocolResource.class);
-    register(HttpServerAdapterResource.class);
-
-    register(JacksonSerializationProvider.class);
+  @Override
+  public List<List<Class<?>>> getClassesToRegister() {
+    return Arrays.asList(
+            new BaseExtensionsServiceResourceProvider().getResourceClasses(),
+            new AdapterServiceResourceProvider().getResourceClasses());
   }
 }

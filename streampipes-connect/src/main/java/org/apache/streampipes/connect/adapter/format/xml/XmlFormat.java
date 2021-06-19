@@ -21,9 +21,9 @@ package org.apache.streampipes.connect.adapter.format.xml;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.connect.adapter.model.generic.Format;
+import org.apache.streampipes.connect.api.IFormat;
 import org.apache.streampipes.connect.adapter.sdk.ParameterExtractor;
-import org.apache.streampipes.connect.adapter.exception.ParseException;
+import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.apache.streampipes.model.connect.grounding.FormatDescription;
 import org.apache.streampipes.model.schema.EventSchema;
@@ -32,7 +32,7 @@ import org.apache.streampipes.sdk.helpers.Labels;
 
 import java.util.Map;
 
-public class XmlFormat extends Format {
+public class XmlFormat implements IFormat {
 
     public static String TAG_ID = "tag";
     public static final String ID = "https://streampipes.org/vocabulary/v1/format/xml";
@@ -49,7 +49,7 @@ public class XmlFormat extends Format {
     }
 
     @Override
-    public Format getInstance(FormatDescription formatDescription) {
+    public IFormat getInstance(FormatDescription formatDescription) {
         ParameterExtractor extractor = new ParameterExtractor(formatDescription.getConfig());
         String tag = extractor.singleValue(TAG_ID);
 

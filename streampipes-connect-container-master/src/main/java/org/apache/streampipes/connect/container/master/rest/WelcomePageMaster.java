@@ -20,7 +20,7 @@ package org.apache.streampipes.connect.container.master.rest;
 
 
 import org.apache.streampipes.connect.adapter.GroundingService;
-import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.management.AdapterMasterManagement;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.storage.couchdb.utils.CouchDbConfig;

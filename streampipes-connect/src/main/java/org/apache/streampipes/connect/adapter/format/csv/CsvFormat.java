@@ -20,9 +20,9 @@ package org.apache.streampipes.connect.adapter.format.csv;
 
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.streampipes.connect.adapter.model.generic.Format;
+import org.apache.streampipes.connect.api.IFormat;
 import org.apache.streampipes.connect.adapter.sdk.ParameterExtractor;
-import org.apache.streampipes.connect.adapter.exception.ParseException;
+import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.model.connect.grounding.FormatDescription;
 import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.sdk.builder.adapter.FormatDescriptionBuilder;
@@ -32,7 +32,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CsvFormat extends Format {
+public class CsvFormat implements IFormat {
 
     public static String HEADER_NAME = "header";
     public static String DELIMITER_NAME = "delimiter";
@@ -53,7 +53,7 @@ public class CsvFormat extends Format {
     }
 
     @Override
-    public Format getInstance(FormatDescription formatDescription) {
+    public IFormat getInstance(FormatDescription formatDescription) {
         ParameterExtractor extractor = new ParameterExtractor(formatDescription.getConfig());
         String delimiter = extractor.singleValue(DELIMITER_NAME);
 

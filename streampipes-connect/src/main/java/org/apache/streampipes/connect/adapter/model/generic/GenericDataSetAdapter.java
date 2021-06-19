@@ -18,11 +18,12 @@
 
 package org.apache.streampipes.connect.adapter.model.generic;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.streampipes.connect.adapter.Adapter;
+import org.apache.streampipes.connect.api.IProtocol;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterDescription;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class GenericDataSetAdapter extends GenericAdapter<GenericAdapterSetDescription> {
 
@@ -53,7 +54,7 @@ public class GenericDataSetAdapter extends GenericAdapter<GenericAdapterSetDescr
     }
 
     @Override
-    public Adapter getInstance(GenericAdapterSetDescription adapterDescription) {
+    public Adapter<GenericAdapterSetDescription> getInstance(GenericAdapterSetDescription adapterDescription) {
         return  new GenericDataSetAdapter(adapterDescription);
     }
 
@@ -72,7 +73,7 @@ public class GenericDataSetAdapter extends GenericAdapter<GenericAdapterSetDescr
     }
 
     @Override
-    public void setProtocol(Protocol protocol) {
+    public void setProtocol(IProtocol protocol) {
        this.protocol = protocol;
     }
 }
