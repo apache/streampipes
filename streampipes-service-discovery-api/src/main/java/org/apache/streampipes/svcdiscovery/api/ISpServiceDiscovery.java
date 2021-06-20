@@ -17,6 +17,8 @@
  */
 package org.apache.streampipes.svcdiscovery.api;
 
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;
+
 import java.util.List;
 import java.util.Map;
 
@@ -31,26 +33,7 @@ public interface ISpServiceDiscovery {
    * @param port      port of service endpoint
    * @param tags      tags of service
    */
-  void registerService(String svcGroup, String svcId, String host, int port, List<String> tags);
-
-  /**
-   * Method to register a new pipeline element service endpoint.
-   *
-   * @param svcId unique service id
-   * @param host  host address of pipeline element service endpoint
-   * @param port  port of pipeline element service endpoint
-   */
-  void registerPeService(String svcId, String host, int port);
-
-  /**
-   * Method to register a new pipeline element service endpoint.
-   *
-   * @param svcId unique service id
-   * @param host  host address of pipeline element service endpoint
-   * @param port  port of pipeline element service endpoint
-   * @param tags  tags of service
-   */
-  void registerPeService(String svcId, String host, int port, List<String> tags);
+  void registerService(String svcGroup, String svcId, String host, int port, List<SpServiceTag> tags);
 
   /**
    * Get active pipeline element service endpoints

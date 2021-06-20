@@ -15,9 +15,9 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.svcdiscovery;
+package org.apache.streampipes.svcdiscovery.api.model;
 
-public class SpServiceTags {
+public class DefaultSpServiceTags {
 
   public static final String CORE = "core";
   public static final String PE = "pe";

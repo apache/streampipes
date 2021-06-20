@@ -19,6 +19,7 @@ package org.apache.streampipes.container.base;
 
 import org.apache.streampipes.commons.networking.Networking;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -26,17 +27,20 @@ import org.springframework.boot.SpringApplication;
 import java.net.UnknownHostException;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 public abstract class StreamPipesServiceBase {
 
   private static final Logger LOG = LoggerFactory.getLogger(StreamPipesServiceBase.class);
 
+  protected static final String AUTO_GENERATED_SERVICE_ID = UUID.randomUUID().toString();
+
   protected void startStreamPipesService(Class<?> serviceClass,
                                          String serviceGroup,
-                                         String serviceName,
+                                         String serviceId,
                                          Integer defaultPort) throws UnknownHostException {
-      registerService(serviceGroup, serviceName, defaultPort);
-      runApplication(serviceClass, defaultPort);
+    registerService(serviceGroup, serviceId, defaultPort);
+    runApplication(serviceClass, defaultPort);
   }
 
   private void runApplication(Class<?> serviceClass,
@@ -47,12 +51,12 @@ public abstract class StreamPipesServiceBase {
   }
 
   private void registerService(String serviceGroup,
-                               String serviceName,
+                               String serviceId,
                                Integer defaultPort) throws UnknownHostException {
     SpServiceDiscovery
             .getServiceDiscovery()
             .registerService(serviceGroup,
-                    serviceName,
+                    serviceId,
                     getHostname(),
                     getPort(defaultPort),
                     getServiceTags());
@@ -66,7 +70,11 @@ public abstract class StreamPipesServiceBase {
     return Networking.getPort(defaultPort);
   }
 
-  protected abstract List<String> getServiceTags();
+  protected abstract List<SpServiceTag> getServiceTags();
 
+  protected void deregisterService(String serviceId) {
+    LOG.info("Deregistering service (id={})...", serviceId);
+    SpServiceDiscovery.getServiceDiscovery().deregisterService(serviceId);
+  }
 
 }

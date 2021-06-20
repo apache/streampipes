@@ -18,8 +18,10 @@
 
 package org.apache.streampipes.connect.container.worker.init;
 
+import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.service.extensions.base.StreamPipesExtensionsServiceBase;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -41,7 +43,7 @@ public abstract class AdapterWorkerContainer extends StreamPipesExtensionsServic
   }
 
   @Override
-  protected List<String> getServiceTags() {
+  protected List<SpServiceTag> getServiceTags() {
     return new ConnectWorkerTagProvider().extractServiceTags();
   }
 
@@ -52,6 +54,6 @@ public abstract class AdapterWorkerContainer extends StreamPipesExtensionsServic
 
   @Override
   public void onExit() {
-
+    deregisterService(DeclarersSingleton.getInstance().getServiceId());
   }
 }

@@ -23,13 +23,11 @@ import org.apache.streampipes.container.declarer.Declarer;
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SpServiceDefinition {
 
+  private String serviceGroup;
   private String serviceId;
   private String serviceName;
   private String serviceDescription;
@@ -43,11 +41,20 @@ public class SpServiceDefinition {
   private Map<String, IAdapter> specificAdapters;
 
   public SpServiceDefinition() {
+    this.serviceId = UUID.randomUUID().toString();
     this.declarers = new ArrayList<>();
     this.dataFormatFactories = new ArrayList<>();
     this.protocolDefinitionFactories = new ArrayList<>();
     this.adapterProtocols = new HashMap<>();
     this.specificAdapters = new HashMap<>();
+  }
+
+  public String getServiceGroup() {
+    return serviceGroup;
+  }
+
+  public void setServiceGroup(String serviceGroup) {
+    this.serviceGroup = serviceGroup;
   }
 
   public String getServiceId() {

@@ -28,7 +28,10 @@ import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.rest.notifications.NotificationListener;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
-import org.apache.streampipes.svcdiscovery.SpServiceTags;
+import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;
+import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTags;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceTagPrefix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -42,10 +45,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.servlet.ServletContextListener;
 import java.net.UnknownHostException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -73,8 +73,8 @@ public class StreamPipesBackendApplication extends StreamPipesServiceBase {
       StreamPipesBackendApplication application = new StreamPipesBackendApplication();
       try {
         application.startStreamPipesService(StreamPipesBackendApplication.class,
-                "core",
-                "core",
+                DefaultSpServiceGroups.CORE,
+                AUTO_GENERATED_SERVICE_ID,
                 8030);
       } catch (UnknownHostException e) {
         LOG.error("Could not auto-resolve host address - please manually provide the hostname using the SP_HOST environment variable");
@@ -125,6 +125,8 @@ public class StreamPipesBackendApplication extends StreamPipesServiceBase {
         LOG.error("Pipeline {} could not be stopped", s.getPipelineName());
       }
     });
+
+    deregisterService(AUTO_GENERATED_SERVICE_ID);
 
     LOG.info("Thanks for using Apache StreamPipes - see you next time!");
   }
@@ -233,7 +235,15 @@ public class StreamPipesBackendApplication extends StreamPipesServiceBase {
   }
 
   @Override
-  protected List<String> getServiceTags() {
-    return Arrays.asList(SpServiceTags.CORE, SpServiceTags.CONNECT_MASTER);
+  protected List<SpServiceTag> getServiceTags() {
+    return Arrays.asList(
+            createSysTag(DefaultSpServiceTags.CORE),
+            createSysTag(DefaultSpServiceTags.CONNECT_MASTER),
+            createSysTag(DefaultSpServiceTags.STREAMPIPES_CLIENT)
+    );
+  }
+
+  private SpServiceTag createSysTag(String value) {
+    return SpServiceTag.create(SpServiceTagPrefix.SYSTEM, value);
   }
 }

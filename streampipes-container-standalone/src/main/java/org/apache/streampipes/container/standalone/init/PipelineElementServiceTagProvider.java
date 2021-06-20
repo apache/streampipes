@@ -20,17 +20,19 @@ package org.apache.streampipes.container.standalone.init;
 import org.apache.streampipes.container.declarer.Declarer;
 import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.container.util.ServiceDefinitionUtil;
-import org.apache.streampipes.svcdiscovery.SpServiceTags;
+import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTags;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceTagPrefix;
 
 import java.util.Collection;
 import java.util.List;
 
 public class PipelineElementServiceTagProvider {
 
-  public List<String> extractServiceTags() {
+  public List<SpServiceTag> extractServiceTags() {
     Collection<Declarer<?>> declarers = DeclarersSingleton.getInstance().getDeclarers().values();
-    List<String> serviceTags = ServiceDefinitionUtil.extractAppIds(declarers);
-    serviceTags.add(SpServiceTags.PE);
+    List<SpServiceTag> serviceTags = ServiceDefinitionUtil.extractAppIds(declarers);
+    serviceTags.add(SpServiceTag.create(SpServiceTagPrefix.SYSTEM, DefaultSpServiceTags.PE));
 
     return serviceTags;
   }

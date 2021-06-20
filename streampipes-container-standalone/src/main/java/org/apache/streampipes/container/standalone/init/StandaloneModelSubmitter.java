@@ -23,6 +23,7 @@ import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.container.model.PeConfig;
 import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.service.extensions.base.StreamPipesExtensionsServiceBase;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -59,10 +60,11 @@ public abstract class StandaloneModelSubmitter extends StreamPipesExtensionsServ
     @Override
     public void onExit() {
         new PipelineElementServiceShutdownHandler().onShutdown();
+        deregisterService(DeclarersSingleton.getInstance().getServiceId());
     }
 
     @Override
-    protected List<String> getServiceTags() {
+    protected List<SpServiceTag> getServiceTags() {
         return new PipelineElementServiceTagProvider().extractServiceTags();
     }
 

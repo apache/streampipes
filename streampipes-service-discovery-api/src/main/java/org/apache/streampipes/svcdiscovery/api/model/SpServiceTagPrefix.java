@@ -15,10 +15,23 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.svcdiscovery;
+package org.apache.streampipes.svcdiscovery.api.model;
 
-public class SpServiceGroups {
+public enum SpServiceTagPrefix {
+  SYSTEM("sys"),
+  ADAPTER("adapter"),
+  PROTOCOL("protocol"),
+  DATA_STREAM("dstream"),
+  DATA_PROCESSOR("dprocessor"),
+  DATA_SINK("dsink");
 
-  public static final String CORE = "core";
-  public static final String EXTENSIONS = "ext";
+  private String prefix;
+
+  SpServiceTagPrefix(String prefix) {
+    this.prefix = prefix;
+  }
+
+  public String asString() {
+    return this.prefix;
+  }
 }

@@ -19,10 +19,12 @@ package org.apache.streampipes.container.extensions;
 
 import org.apache.streampipes.connect.container.worker.init.ConnectWorkerRegistrationService;
 import org.apache.streampipes.connect.container.worker.init.ConnectWorkerTagProvider;
+import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.container.standalone.init.PipelineElementServiceShutdownHandler;
 import org.apache.streampipes.container.standalone.init.PipelineElementServiceTagProvider;
 import org.apache.streampipes.service.extensions.base.StreamPipesExtensionsServiceBase;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -43,6 +45,7 @@ public abstract class ExtensionsModelSubmitter extends StreamPipesExtensionsServ
     @PreDestroy
     public void onExit() {
         new PipelineElementServiceShutdownHandler().onShutdown();
+        deregisterService(DeclarersSingleton.getInstance().getServiceId());
     }
 
     @Override
@@ -51,8 +54,8 @@ public abstract class ExtensionsModelSubmitter extends StreamPipesExtensionsServ
     }
 
     @Override
-    protected List<String> getServiceTags() {
-        List<String> serviceTags = new PipelineElementServiceTagProvider().extractServiceTags();
+    protected List<SpServiceTag> getServiceTags() {
+        List<SpServiceTag> serviceTags = new PipelineElementServiceTagProvider().extractServiceTags();
         serviceTags.addAll(new ConnectWorkerTagProvider().extractServiceTags());
 
         return serviceTags;

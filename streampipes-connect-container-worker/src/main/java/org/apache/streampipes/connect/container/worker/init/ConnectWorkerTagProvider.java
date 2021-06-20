@@ -21,6 +21,9 @@ import org.apache.streampipes.connect.api.IAdapter;
 import org.apache.streampipes.connect.api.IProtocol;
 import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.container.util.ServiceDefinitionUtil;
+import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTags;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceTagPrefix;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,12 +31,13 @@ import java.util.List;
 
 public class ConnectWorkerTagProvider {
 
-  public List<String> extractServiceTags() {
-    List<String> tags = new ArrayList<>();
+  public List<SpServiceTag> extractServiceTags() {
+    List<SpServiceTag> tags = new ArrayList<>();
     Collection<IAdapter> adapters = DeclarersSingleton.getInstance().getAllAdapters();
     Collection<IProtocol> protocols = DeclarersSingleton.getInstance().getAllProtocols();
     tags.addAll(ServiceDefinitionUtil.extractAppIdsFromAdapters(adapters));
     tags.addAll(ServiceDefinitionUtil.extractAppIdsFromProtocols(protocols));
+    tags.add(SpServiceTag.create(SpServiceTagPrefix.SYSTEM, DefaultSpServiceTags.CONNECT_WORKER));
 
     return tags;
   }

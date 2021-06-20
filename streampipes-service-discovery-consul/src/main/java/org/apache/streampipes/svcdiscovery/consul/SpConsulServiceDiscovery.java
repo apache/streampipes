@@ -27,12 +27,14 @@ import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.StringEntity;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;
 import org.apache.streampipes.svcdiscovery.consul.model.ConsulServiceRegistrationBody;
 import org.apache.streampipes.svcdiscovery.consul.model.HealthCheckConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class SpConsulServiceDiscovery extends AbstractConsulService implements ISpServiceDiscovery {
@@ -46,12 +48,16 @@ public class SpConsulServiceDiscovery extends AbstractConsulService implements I
   private static final String PE_SVC_TAG = "pe";
 
   @Override
-  public void registerService(String svcGroup, String svcId, String host, int port, List<String> tags) {
+  public void registerService(String svcGroup,
+                              String svcId,
+                              String host,
+                              int port,
+                              List<SpServiceTag> tags) {
     boolean connected = false;
 
     while (!connected) {
       LOG.info("Trying to register service at Consul with svcGroup={}, svcId={} host={}, port={}. ", svcGroup, svcId, host, port);
-      ConsulServiceRegistrationBody svcRegistration = createRegistrationBody(svcGroup, svcId, host, port, tags);
+      ConsulServiceRegistrationBody svcRegistration = createRegistrationBody(svcGroup, svcId, host, port, asString(tags));
       connected = registerServiceHttpClient(svcRegistration);
 
       if (!connected) {
@@ -66,15 +72,8 @@ public class SpConsulServiceDiscovery extends AbstractConsulService implements I
     LOG.info("Successfully registered service at Consul: " + svcId);
   }
 
-  @Override
-  public void registerPeService(String svcId, String host, int port) {
-    registerService(PE_SVC_TAG, svcId, host, port, Collections.singletonList(PE_SVC_TAG));
-  }
-
-  @Override
-  public void registerPeService(String svcId, String host, int port, List<String> tags) {
-    tags.add(PE_SVC_TAG);
-    registerService(PE_SVC_TAG, svcId, host, port, tags);
+  private List<String> asString(List<SpServiceTag> tags) {
+    return tags.stream().map(SpServiceTag::asString).collect(Collectors.toList());
   }
 
   @Override

@@ -33,23 +33,23 @@ public class SpServiceDefinitionBuilder {
   private SpServiceDefinition serviceDefinition;
   private SpConfig config;
 
-  public static SpServiceDefinitionBuilder create(String serviceId,
+  public static SpServiceDefinitionBuilder create(String serviceGroup,
                                                   String serviceName,
                                                   String serviceDescription,
                                                   Integer defaultPort) {
-    return new SpServiceDefinitionBuilder(serviceId, serviceName, serviceDescription, defaultPort);
+    return new SpServiceDefinitionBuilder(serviceGroup, serviceName, serviceDescription, defaultPort);
   }
 
-  private SpServiceDefinitionBuilder(String serviceId,
+  private SpServiceDefinitionBuilder(String serviceGroup,
                                      String serviceName,
                                      String serviceDescription,
                                      Integer defaultPort) {
     this.serviceDefinition = new SpServiceDefinition();
-    this.serviceDefinition.setServiceId(serviceId);
+    this.serviceDefinition.setServiceGroup(serviceGroup);
     this.serviceDefinition.setServiceName(serviceName);
     this.serviceDefinition.setServiceDescription(serviceDescription);
     this.serviceDefinition.setDefaultPort(defaultPort);
-    this.config = new ConsulSpConfig(serviceId);
+    this.config = new ConsulSpConfig(serviceGroup);
   }
 
   public SpServiceDefinitionBuilder withHostname(String hostname) {
