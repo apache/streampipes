@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.manager.endpoint;
 
-import org.apache.streampipes.model.client.endpoint.RdfEndpoint;
+import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpoint;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 
@@ -29,21 +29,21 @@ import java.util.stream.Stream;
 
 public class EndpointFetcher {
 
-  public List<RdfEndpoint> getEndpoints() {
-    List<String> endpoints = SpServiceDiscovery.getServiceDiscovery().getActivePeEndpoints();
-    List<RdfEndpoint> servicerdRdfEndpoints = new LinkedList<>();
+  public List<ExtensionsServiceEndpoint> getEndpoints() {
+    List<String> endpoints = SpServiceDiscovery.getServiceDiscovery().getActivePipelineElementEndpoints();
+    List<ExtensionsServiceEndpoint> servicerdExtensionsServiceEndpoints = new LinkedList<>();
 
     for (String endpoint : endpoints) {
-      RdfEndpoint rdfEndpoint =
-              new RdfEndpoint(endpoint);
-      servicerdRdfEndpoints.add(rdfEndpoint);
+      ExtensionsServiceEndpoint extensionsServiceEndpoint =
+              new ExtensionsServiceEndpoint(endpoint);
+      servicerdExtensionsServiceEndpoints.add(extensionsServiceEndpoint);
     }
-    List<RdfEndpoint> databasedRdfEndpoints = StorageDispatcher.INSTANCE.getNoSqlStore()
+    List<ExtensionsServiceEndpoint> databasedExtensionsServiceEndpoints = StorageDispatcher.INSTANCE.getNoSqlStore()
             .getRdfEndpointStorage()
-            .getRdfEndpoints();
+            .getExtensionsServiceEndpoints();
 
-    List<RdfEndpoint> concatList =
-            Stream.of(databasedRdfEndpoints, servicerdRdfEndpoints)
+    List<ExtensionsServiceEndpoint> concatList =
+            Stream.of(databasedExtensionsServiceEndpoints, servicerdExtensionsServiceEndpoints)
                     .flatMap(Collection::stream)
                     .collect(Collectors.toList());
 

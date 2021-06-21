@@ -23,9 +23,10 @@ import org.apache.streampipes.manager.endpoint.EndpointFetcher;
 import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
-import org.apache.streampipes.model.client.endpoint.RdfEndpointItem;
+import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpoint;
+import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpointItem;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
-import org.apache.streampipes.storage.api.IRdfEndpointStorage;
+import org.apache.streampipes.storage.api.IExtensionsServiceEndpointStorage;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -36,7 +37,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Path("/v2/users/{username}/rdfendpoints")
-public class RdfEndpoint extends AbstractRestResource {
+public class ExtensionsServiceEndpointResource extends AbstractRestResource {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
@@ -49,9 +50,9 @@ public class RdfEndpoint extends AbstractRestResource {
   @POST
   @Produces(MediaType.APPLICATION_JSON)
   @GsonWithIds
-  public Response addRdfEndpoint(org.apache.streampipes.model.client.endpoint.RdfEndpoint rdfEndpoint) {
+  public Response addRdfEndpoint(ExtensionsServiceEndpoint extensionsServiceEndpoint) {
     getRdfEndpointStorage()
-            .addRdfEndpoint(rdfEndpoint);
+            .addExtensionsServiceEndpoint(extensionsServiceEndpoint);
 
     return Response.status(Response.Status.OK).build();
   }
@@ -64,7 +65,7 @@ public class RdfEndpoint extends AbstractRestResource {
   @GsonWithIds
   public Response removeRdfEndpoint(@PathParam("rdfEndpointId") String rdfEndpointId) {
     getRdfEndpointStorage()
-            .removeRdfEndpoint(rdfEndpointId);
+            .removeExtensionsServiceEndpoint(rdfEndpointId);
 
     return Response.status(Response.Status.OK).build();
   }
@@ -74,9 +75,9 @@ public class RdfEndpoint extends AbstractRestResource {
   @Produces(MediaType.APPLICATION_JSON)
   @GsonWithIds
   public Response getEndpointContents(@PathParam("username") String username) {
-    List<org.apache.streampipes.model.client.endpoint.RdfEndpoint> endpoints = getEndpoints();
+    List<ExtensionsServiceEndpoint> endpoints = getEndpoints();
 
-    List<RdfEndpointItem> items = Operations.getEndpointUriContents(endpoints);
+    List<ExtensionsServiceEndpointItem> items = Operations.getEndpointUriContents(endpoints);
     items.forEach(item -> item.setInstalled(isInstalled(item.getElementId(), username)));
 
     // also add installed elements that are currently not running or available
@@ -90,7 +91,7 @@ public class RdfEndpoint extends AbstractRestResource {
   @POST
   @Path("/items/icon")
   @Produces("image/png")
-  public Response getEndpointItemIcon(RdfEndpointItem endpointItem) {
+  public Response getEndpointItemIcon(ExtensionsServiceEndpointItem endpointItem) {
     try {
       byte[] imageBytes = Request.Get(makeIconUrl(endpointItem)).execute().returnContent().asBytes();
       return ok(imageBytes);
@@ -99,11 +100,11 @@ public class RdfEndpoint extends AbstractRestResource {
     }
   }
 
-  private String makeIconUrl(RdfEndpointItem endpointItem) {
+  private String makeIconUrl(ExtensionsServiceEndpointItem endpointItem) {
     return endpointItem.getUri() + "/assets/icon";
   }
 
-  private List<org.apache.streampipes.model.client.endpoint.RdfEndpoint> getEndpoints() {
+  private List<ExtensionsServiceEndpoint> getEndpoints() {
     return new EndpointFetcher().getEndpoints();
   }
 
@@ -121,25 +122,25 @@ public class RdfEndpoint extends AbstractRestResource {
     return elementUris;
   }
 
-  private List<RdfEndpointItem> getAllDataStreamEndpoints(String username, List<RdfEndpointItem> existingItems) {
+  private List<ExtensionsServiceEndpointItem> getAllDataStreamEndpoints(String username, List<ExtensionsServiceEndpointItem> existingItems) {
     return getAllDataStreamUris(username)
             .stream()
-            .filter(s -> existingItems.stream().noneMatch(item -> item.getElementId().equals(s)))
+            .filter(s -> existingItems.stream().noneMatch(item -> s.equals(item.getElementId())))
             .map(s -> getPipelineElementStorage().getDataStreamById(s))
             .map(stream -> makeItem(stream, stream instanceof SpDataSet ? "set" : "stream"))
             .collect(Collectors.toList());
   }
 
-  private List<RdfEndpointItem> getAllDataProcessorEndpoints(String username, List<RdfEndpointItem> existingItems) {
+  private List<ExtensionsServiceEndpointItem> getAllDataProcessorEndpoints(String username, List<ExtensionsServiceEndpointItem> existingItems) {
     return getAllDataProcessorUris(username)
             .stream()
-            .filter(s -> existingItems.stream().noneMatch(item -> item.getElementId().equals(s)))
+            .filter(s -> existingItems.stream().noneMatch(item -> s.equals(item.getElementId())))
             .map(s -> getPipelineElementStorage().getDataProcessorById(s))
             .map(source -> makeItem(source, "sepa"))
             .collect(Collectors.toList());
   }
 
-  private List<RdfEndpointItem> getAllDataSinkEndpoints(String username, List<RdfEndpointItem> existingItems) {
+  private List<ExtensionsServiceEndpointItem> getAllDataSinkEndpoints(String username, List<ExtensionsServiceEndpointItem> existingItems) {
     return getAllDataSinkUris(username)
             .stream()
             .filter(s -> existingItems.stream().noneMatch(item -> s.equals(item.getElementId())))
@@ -148,8 +149,8 @@ public class RdfEndpoint extends AbstractRestResource {
             .collect(Collectors.toList());
   }
 
-  private RdfEndpointItem makeItem(NamedStreamPipesEntity entity, String type) {
-    RdfEndpointItem endpoint = new RdfEndpointItem();
+  private ExtensionsServiceEndpointItem makeItem(NamedStreamPipesEntity entity, String type) {
+    ExtensionsServiceEndpointItem endpoint = new ExtensionsServiceEndpointItem();
     endpoint.setInstalled(true);
     endpoint.setDescription(entity.getDescription());
     endpoint.setName(entity.getName());
@@ -172,7 +173,7 @@ public class RdfEndpoint extends AbstractRestResource {
     return getUserService().getOwnActionUris(username);
   }
 
-  private IRdfEndpointStorage getRdfEndpointStorage() {
+  private IExtensionsServiceEndpointStorage getRdfEndpointStorage() {
     return getNoSqlStorage().getRdfEndpointStorage();
   }
 }

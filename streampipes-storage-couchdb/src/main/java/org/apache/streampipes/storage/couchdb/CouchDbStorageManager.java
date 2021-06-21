@@ -76,8 +76,8 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   }
 
   @Override
-  public IRdfEndpointStorage getRdfEndpointStorage() {
-    return new RdfEndpointStorageImpl();
+  public IExtensionsServiceEndpointStorage getRdfEndpointStorage() {
+    return new ExtensionsServiceEndpointStorageImpl();
   }
 
   @Override

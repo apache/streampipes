@@ -15,22 +15,27 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.commons.constants;
+package org.apache.streampipes.svcdiscovery.api.model;
 
-public enum PipelineElementUrl {
+public enum SpServiceUrlProvider {
 
-  DATA_PROCESSOR(PipelineElementPrefix.DATA_PROCESSOR),
-  DATA_SINK(PipelineElementPrefix.DATA_SINK),
-  DATA_STREAM(PipelineElementPrefix.DATA_STREAM),
-  DATA_SET(PipelineElementPrefix.DATA_SET),
-  ADAPTER(PipelineElementPrefix.ADAPTER);
+  DATA_PROCESSOR(SpServicePathPrefix.DATA_PROCESSOR, SpServiceTagPrefix.DATA_PROCESSOR),
+  DATA_SINK(SpServicePathPrefix.DATA_SINK, SpServiceTagPrefix.DATA_SINK),
+  DATA_STREAM(SpServicePathPrefix.DATA_STREAM, SpServiceTagPrefix.DATA_STREAM),
+  DATA_SET(SpServicePathPrefix.DATA_SET, SpServiceTagPrefix.DATA_SET),
+  ADAPTER(SpServicePathPrefix.ADAPTER, SpServiceTagPrefix.ADAPTER),
+  PROTOCOL(SpServicePathPrefix.PROTOCOL, SpServiceTagPrefix.PROTOCOL);
 
   private final String HTTP = "http://";
   private final String SLASH = "/";
-  private final String prefix;
 
-  PipelineElementUrl(String prefix) {
+  private final String prefix;
+  private final SpServiceTagPrefix serviceTagPrefix;
+
+  SpServiceUrlProvider(String prefix,
+                       SpServiceTagPrefix serviceTagPrefix) {
     this.prefix = prefix;
+    this.serviceTagPrefix = serviceTagPrefix;
   }
 
   public String getPrefix() {
@@ -72,5 +77,11 @@ public enum PipelineElementUrl {
             + invocationId;
   }
 
+  public SpServiceTagPrefix getServiceTagPrefix() {
+    return serviceTagPrefix;
+  }
 
+  public SpServiceTag getServiceTag(String appId) {
+    return SpServiceTag.create(serviceTagPrefix, appId);
+  }
 }

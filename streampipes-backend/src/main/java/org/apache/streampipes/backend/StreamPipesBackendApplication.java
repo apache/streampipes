@@ -31,7 +31,6 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTags;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;
-import org.apache.streampipes.svcdiscovery.api.model.SpServiceTagPrefix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -45,7 +44,10 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.servlet.ServletContextListener;
 import java.net.UnknownHostException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -237,13 +239,14 @@ public class StreamPipesBackendApplication extends StreamPipesServiceBase {
   @Override
   protected List<SpServiceTag> getServiceTags() {
     return Arrays.asList(
-            createSysTag(DefaultSpServiceTags.CORE),
-            createSysTag(DefaultSpServiceTags.CONNECT_MASTER),
-            createSysTag(DefaultSpServiceTags.STREAMPIPES_CLIENT)
+            DefaultSpServiceTags.CORE,
+            DefaultSpServiceTags.CONNECT_MASTER,
+            DefaultSpServiceTags.STREAMPIPES_CLIENT
     );
   }
 
-  private SpServiceTag createSysTag(String value) {
-    return SpServiceTag.create(SpServiceTagPrefix.SYSTEM, value);
+  @Override
+  protected String getHealthCheckPath() {
+    return "/streampipes-backend";
   }
 }

@@ -34,7 +34,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
-@Path("/api/v1/{username}/worker/protocols")
+@Path("/api/v1/worker/protocols")
 public class ProtocolResource extends AbstractSharedRestInterface {
 
     private AdapterWorkerManagement adapterWorkerManagement;

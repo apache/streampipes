@@ -18,8 +18,9 @@
 package org.apache.streampipes.manager.assets;
 
 import org.apache.http.client.fluent.Request;
-import org.apache.streampipes.commons.constants.PipelineElementUrl;
-import org.apache.streampipes.manager.execution.http.PipelineElementEndpointGenerator;
+import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
+import org.apache.streampipes.manager.execution.http.ExtensionsServiceEndpointGenerator;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,17 +29,17 @@ public class AssetFetcher {
 
   private static final String ASSET_ENDPOINT_APPENDIX = "/assets";
 
-  private PipelineElementUrl pipelineElementUrl;
+  private SpServiceUrlProvider spServiceUrlProvider;
   private String appId;
 
-  public AssetFetcher(PipelineElementUrl pipelineElementUrl,
+  public AssetFetcher(SpServiceUrlProvider spServiceUrlProvider,
                       String appId) {
-    this.pipelineElementUrl = pipelineElementUrl;
+    this.spServiceUrlProvider = spServiceUrlProvider;
     this.appId = appId;
   }
 
-  public InputStream fetchPipelineElementAssets() throws IOException {
-    String endpointUrl = new PipelineElementEndpointGenerator(appId, pipelineElementUrl).getEndpointResourceUrl();
+  public InputStream fetchPipelineElementAssets() throws IOException, NoServiceEndpointsAvailableException {
+    String endpointUrl = new ExtensionsServiceEndpointGenerator(appId, spServiceUrlProvider).getEndpointResourceUrl();
     return Request
             .Get(endpointUrl + ASSET_ENDPOINT_APPENDIX)
             .execute()

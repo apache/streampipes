@@ -18,13 +18,14 @@
 
 package org.apache.streampipes.connect.container.master.management;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.model.connect.worker.ConnectWorkerContainer;
 import org.apache.streampipes.storage.couchdb.impl.ConnectionWorkerContainerStorageImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -48,17 +49,17 @@ public class WorkerAdministrationManagement {
 
         boolean alreadyRegistered = false;
         for (ConnectWorkerContainer c : allConnectWorkerContainers) {
-            if (c.getEndpointUrl().equals(connectWorker.getEndpointUrl())) {
+            if (c.getServiceGroup().equals(connectWorker.getServiceGroup())) {
                 boolean adaptersChanged = false;
 
                 for (AdapterDescription a : c.getAdapters()) {
-                    if (!connectWorker.getAdapters().stream().anyMatch(ad -> ad.getAdapterId().equals(a.getAdapterId()))) {
+                    if (connectWorker.getAdapters().stream().noneMatch(ad -> ad.getAdapterId().equals(a.getAdapterId()))) {
                         adaptersChanged = true;
                     }
                 }
 
                 for (ProtocolDescription p : c.getProtocols()) {
-                    if (!connectWorker.getProtocols().stream().anyMatch(pr -> pr.getAppId().equals(p.getAppId()))) {
+                    if (connectWorker.getProtocols().stream().noneMatch(pr -> pr.getAppId().equals(p.getAppId()))) {
                         adaptersChanged = true;
                     }
                 }
@@ -66,40 +67,29 @@ public class WorkerAdministrationManagement {
                 if (!adaptersChanged) {
                     alreadyRegistered = true;
                 } else {
-                    LOG.info("Remove old connect worker: " + connectWorker.getEndpointUrl());
+                    LOG.info("Remove old connect worker: " + connectWorker.getServiceGroup());
                     this.connectionWorkerContainerStorage.deleteConnectWorkerContainer(c.getId());
                 }
             }
-
         }
 
         // IF NOT REGISTERED
         // Store Connect Worker in DB
         if (!alreadyRegistered) {
             this.connectionWorkerContainerStorage.storeConnectWorkerContainer(connectWorker);
-            LOG.info("Stored new connect worker: " + connectWorker.getEndpointUrl() + " in database");
+            LOG.info("Stored new connect worker: " + connectWorker.getServiceGroup() + " in database");
         } else {
             try {
                 this.adapterMasterManagement.startAllStreamAdapters(connectWorker);
             } catch (AdapterException e) {
-                LOG.error("Could not start adapters on worker: " + connectWorker.getEndpointUrl());
+                LOG.error("Could not start adapters on worker: " + connectWorker.getServiceGroup());
+            } catch (NoServiceEndpointsAvailableException e) {
+                LOG.error("Could not start adapter due to missing endpoint");
             }
         }
     }
 
-    public String getWorkerUrl(String id) {
-        String workerUrl = "";
 
-        List<ConnectWorkerContainer> allConnectWorkerContainer = this.connectionWorkerContainerStorage.getAllConnectWorkerContainers();
 
-        for (ConnectWorkerContainer connectWorkerContainer : allConnectWorkerContainer) {
-            if (connectWorkerContainer.getProtocols().stream().anyMatch(p -> p.getAppId().equals(id))) {
-                workerUrl = connectWorkerContainer.getEndpointUrl();
-            } else if (connectWorkerContainer.getAdapters().stream().anyMatch(a -> a.getAppId().equals(id))) {
-                workerUrl = connectWorkerContainer.getEndpointUrl();
-            }
-        }
 
-        return workerUrl;
-    }
 }

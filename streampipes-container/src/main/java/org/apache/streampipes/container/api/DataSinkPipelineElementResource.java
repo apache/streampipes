@@ -19,7 +19,7 @@
 package org.apache.streampipes.container.api;
 
 import org.apache.streampipes.commons.constants.InstanceIdExtractor;
-import org.apache.streampipes.commons.constants.PipelineElementPrefix;
+import org.apache.streampipes.svcdiscovery.api.model.SpServicePathPrefix;
 import org.apache.streampipes.container.declarer.SemanticEventConsumerDeclarer;
 import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
@@ -30,7 +30,7 @@ import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import javax.ws.rs.Path;
 import java.util.Map;
 
-@Path(PipelineElementPrefix.DATA_SINK)
+@Path(SpServicePathPrefix.DATA_SINK)
 public class DataSinkPipelineElementResource extends InvocablePipelineElementResource<DataSinkInvocation,
         SemanticEventConsumerDeclarer, DataSinkParameterExtractor> {
 

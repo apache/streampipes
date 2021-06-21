@@ -23,7 +23,6 @@ import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.container.locales.LabelGenerator;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.adapter.GenericAdapterDescription;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.model.connect.worker.ConnectWorkerContainer;
 import org.slf4j.Logger;
@@ -37,32 +36,24 @@ public class ConnectWorkerDescriptionProvider {
 
   private static final Logger LOG = LoggerFactory.getLogger(ConnectWorkerDescriptionProvider.class);
 
-  public ConnectWorkerContainer getContainerDescription(String endpointUrl) {
+  public ConnectWorkerContainer getContainerDescription(String serviceGroup) {
 
     List<AdapterDescription> adapters = new ArrayList<>();
     for (IAdapter<?> a : DeclarersSingleton.getInstance().getAllAdapters()) {
-      AdapterDescription desc = (AdapterDescription) rewrite(a.declareModel(), endpointUrl);
+      AdapterDescription desc = (AdapterDescription) rewrite(a.declareModel());
       adapters.add(desc);
     }
 
     List<ProtocolDescription> protocols = new ArrayList<>();
     for (IProtocol p : DeclarersSingleton.getInstance().getAllProtocols()) {
-      ProtocolDescription desc = (ProtocolDescription) rewrite(p.declareModel(), endpointUrl);
+      ProtocolDescription desc = (ProtocolDescription) rewrite(p.declareModel());
       protocols.add(desc);
     }
 
-    return new ConnectWorkerContainer(endpointUrl, protocols, adapters);
+    return new ConnectWorkerContainer(serviceGroup, protocols, adapters);
   }
 
-  private NamedStreamPipesEntity rewrite(NamedStreamPipesEntity entity, String endpointUrl) {
-    if (!(entity instanceof GenericAdapterDescription)) {
-      if (entity instanceof  ProtocolDescription) {
-        entity.setElementId(endpointUrl +  "protocol/" + entity.getElementId());
-      } else if (entity instanceof  AdapterDescription) {
-        entity.setElementId(endpointUrl + "adapter/" + entity.getElementId());
-      }
-    }
-
+  private NamedStreamPipesEntity rewrite(NamedStreamPipesEntity entity) {
     // TODO remove after full internationalization support has been implemented
     if (entity.isIncludesLocales()) {
       LabelGenerator lg = new LabelGenerator(entity);

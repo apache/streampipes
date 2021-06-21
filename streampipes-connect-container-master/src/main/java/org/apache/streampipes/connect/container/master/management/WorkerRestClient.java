@@ -22,10 +22,10 @@ import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.util.AdapterEncryptionService;
+import org.apache.streampipes.connect.container.master.util.WorkerPaths;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterSetDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
-import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.apache.streampipes.model.util.Cloner;
@@ -47,37 +47,36 @@ public class WorkerRestClient {
 
     private static final Logger logger = LoggerFactory.getLogger(WorkerRestClient.class);
 
-    public static void invokeStreamAdapter(String baseUrl, String adapterId) throws AdapterException {
-        invokeStreamAdapter(baseUrl, (AdapterStreamDescription) getAndDecryptAdapter(adapterId));
+    public static void invokeStreamAdapter(String endpointUrl, String adapterId) throws AdapterException {
+        invokeStreamAdapter(endpointUrl, (AdapterStreamDescription) getAndDecryptAdapter(adapterId));
     }
 
-    public static void invokeStreamAdapter(String baseUrl, AdapterStreamDescription adapterStreamDescription) throws AdapterException {
-
-        String url = baseUrl + "worker/stream/invoke";
+    public static void invokeStreamAdapter(String endpointUrl, AdapterStreamDescription adapterStreamDescription) throws AdapterException {
+        String url = endpointUrl + WorkerPaths.getStreamInvokePath();
 
         startAdapter(url, adapterStreamDescription);
         updateStreamAdapterStatus(adapterStreamDescription.getId(), true);
     }
 
     public static void stopStreamAdapter(String baseUrl, AdapterStreamDescription adapterStreamDescription) throws AdapterException {
-        String url = baseUrl + "worker/stream/stop";
+        String url = baseUrl + WorkerPaths.getStreamStopPath();
 
         AdapterDescription ad = getAdapterDescriptionById(new AdapterStorageImpl(), adapterStreamDescription.getUri());
 
-        stopAdapter(adapterStreamDescription.getId(), ad, url);
+        stopAdapter(ad, url);
         updateStreamAdapterStatus(adapterStreamDescription.getId(), false);
     }
 
     public static void invokeSetAdapter(String baseUrl, AdapterSetDescription adapterSetDescription) throws AdapterException {
-        String url = baseUrl + "worker/set/invoke";
+        String url = baseUrl + WorkerPaths.getSetInvokePath();
 
         startAdapter(url, adapterSetDescription);
     }
 
     public static void stopSetAdapter(String baseUrl, AdapterSetDescription adapterSetDescription) throws AdapterException {
-        String url = baseUrl + "worker/set/stop";
+        String url = baseUrl + WorkerPaths.getSetStopPath();
 
-        stopAdapter(adapterSetDescription.getUri(), adapterSetDescription, url);
+        stopAdapter(adapterSetDescription, url);
     }
 
     public static void startAdapter(String url, AdapterDescription ad) throws AdapterException {
@@ -106,11 +105,12 @@ public class WorkerRestClient {
     }
 
 
-    public static void stopAdapter(String adapterId, AdapterDescription ad, String url) throws AdapterException {
+    public static void stopAdapter(AdapterDescription ad,
+                                   String url) throws AdapterException {
 
         // Stop execution of adatper
         try {
-            logger.info("Trying to stopAdapter adpater on endpoint: " + url);
+            logger.info("Trying to stopAdapter adapter on endpoint: " + url);
 
             String adapterDescription = JacksonSerializer.getObjectMapper().writeValueAsString(ad);
 
@@ -130,9 +130,10 @@ public class WorkerRestClient {
 
     }
 
-    public static RuntimeOptionsResponse getConfiguration(String workerEndpoint, String elementId, String username, RuntimeOptionsRequest runtimeOptionsRequest) throws AdapterException {
-        String element = encodeValue(elementId);
-        String url = workerEndpoint + "api/v1/" + username + "/worker/resolvable/" + element + "/configurations";
+    public static RuntimeOptionsResponse getConfiguration(String workerEndpoint,
+                                                          String appId,
+                                                          RuntimeOptionsRequest runtimeOptionsRequest) throws AdapterException {
+        String url = workerEndpoint + WorkerPaths.getRuntimeResolvablePath(appId);
 
         try {
             String payload = JacksonSerializer.getObjectMapper().writeValueAsString(runtimeOptionsRequest);
@@ -148,20 +149,11 @@ public class WorkerRestClient {
             e.printStackTrace();
             throw new AdapterException("Could not resolve runtime configurations from " + url);
         }
-
     }
 
-    public static String getAdapterAssets(String baseUrl,  AdapterDescription ad) throws AdapterException {
-        return getAssets(baseUrl + "worker/adapters", ad.getAppId());
-    }
-
-    public static String getProtocolAssets(String baseUrl,  ProtocolDescription ad) throws AdapterException {
-        return getAssets(baseUrl + "worker/protocol", ad.getAppId());
-    }
-
-    private static String getAssets(String baseUrl,  String  appId) throws AdapterException {
-        String url = baseUrl + "/" + appId + "/assets";
-        logger.info("Trying to Assets from endpoint: " + url + " for adapter: " + appId);
+    public static String getAssets(String workerPath) throws AdapterException {
+        String url = workerPath + "/assets";
+        logger.info("Trying to Assets from endpoint: " + url);
 
         try {
             return Request.Get(url)
@@ -170,22 +162,13 @@ public class WorkerRestClient {
                     .execute().returnContent().asString();
         } catch (IOException e) {
             logger.error(e.getMessage());
-            throw new AdapterException("Could not get assets endpoint: " + url + " for adapter: " + appId);
+            throw new AdapterException("Could not get assets endpoint: " + url);
         }
 
     }
 
-    public static byte[] getAdapterIconAsset(String baseUrl,  AdapterDescription ad) throws AdapterException {
-        return getIconAsset(baseUrl + "worker/adapters", ad.getAppId());
-    }
-
-    public static byte[] getProtocolIconAsset(String baseUrl,  ProtocolDescription ad) throws AdapterException {
-        return getIconAsset(baseUrl + "worker/protocols", ad.getAppId());
-
-    }
-
-    private static byte[] getIconAsset(String baseUrl,  String appId) throws AdapterException {
-        String url = baseUrl + "/" + appId + "/assets/icon";
+    public static byte[] getIconAsset(String baseUrl) throws AdapterException {
+        String url = baseUrl + "/assets/icon";
 
         try {
             byte[] responseString = Request.Get(url)
@@ -199,16 +182,8 @@ public class WorkerRestClient {
         }
     }
 
-    public static String getAdapterDocumentationAsset(String baseUrl,  AdapterDescription ad) throws AdapterException {
-        return getDocumentationAsset(baseUrl + "worker/adapters", ad.getAppId());
-    }
-
-    public static String getProtocolDocumentationAsset(String baseUrl,  ProtocolDescription ad) throws AdapterException {
-        return getDocumentationAsset(baseUrl + "worker/protocols", ad.getAppId());
-    }
-
-    private static String getDocumentationAsset(String baseUrl,  String appId) throws AdapterException  {
-        String url = baseUrl + "/" + appId + "/assets/documentation";
+    public static String getDocumentationAsset(String baseUrl) throws AdapterException  {
+        String url = baseUrl + "/assets/documentation";
        
         try {
             return Request.Get(url)
@@ -217,7 +192,7 @@ public class WorkerRestClient {
                     .execute().returnContent().asString();
         } catch (IOException e) {
             logger.error(e.getMessage());
-            throw new AdapterException("Could not get documentation endpoint: " + url + " for adapter: " + appId);
+            throw new AdapterException("Could not get documentation endpoint: " + url);
         }
     }
 

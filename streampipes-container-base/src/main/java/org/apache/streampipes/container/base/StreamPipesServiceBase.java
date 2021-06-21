@@ -19,6 +19,7 @@ package org.apache.streampipes.container.base;
 
 import org.apache.streampipes.commons.networking.Networking;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceRegistrationRequest;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,13 +54,17 @@ public abstract class StreamPipesServiceBase {
   private void registerService(String serviceGroup,
                                String serviceId,
                                Integer defaultPort) throws UnknownHostException {
+    SpServiceRegistrationRequest req = SpServiceRegistrationRequest.from(
+            serviceGroup,
+            serviceId,
+            getHostname(),
+            getPort(defaultPort),
+            getServiceTags(),
+            getHealthCheckPath());
+
     SpServiceDiscovery
             .getServiceDiscovery()
-            .registerService(serviceGroup,
-                    serviceId,
-                    getHostname(),
-                    getPort(defaultPort),
-                    getServiceTags());
+            .registerService(req);
   }
 
   protected String getHostname() throws UnknownHostException {
@@ -75,6 +80,10 @@ public abstract class StreamPipesServiceBase {
   protected void deregisterService(String serviceId) {
     LOG.info("Deregistering service (id={})...", serviceId);
     SpServiceDiscovery.getServiceDiscovery().deregisterService(serviceId);
+  }
+
+  protected String getHealthCheckPath() {
+    return "";
   }
 
 }

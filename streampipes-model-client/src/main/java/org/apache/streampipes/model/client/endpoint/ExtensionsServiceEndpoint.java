@@ -16,42 +16,46 @@
  *
  */
 
-package org.apache.streampipes.model.dashboard;
+package org.apache.streampipes.model.client.endpoint;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.google.gson.annotations.SerializedName;
-import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 
-@JsonSubTypes({
-        @JsonSubTypes.Type(DashboardWidgetModel.class),
-        @JsonSubTypes.Type(DataExplorerWidgetModel.class)
-})
-public abstract class DashboardEntity {
+public class ExtensionsServiceEndpoint {
 
-  @JsonProperty("_id")
-  private @SerializedName("_id") String id;
+    private @SerializedName("_id") String id;
+    private @SerializedName("_rev") String rev;
 
-  @JsonProperty("_rev")
-  private @SerializedName("_rev") String rev;
+    private String endpointUrl;
 
-  public DashboardEntity() {
-    super();
-  }
+    public ExtensionsServiceEndpoint() {
 
-  public String getId() {
-    return id;
-  }
+    }
 
-  public void setId(String id) {
-    this.id = id;
-  }
+    public ExtensionsServiceEndpoint(String endpointUrl) {
+        this.endpointUrl = endpointUrl;
+    }
 
-  public String getRev() {
-    return rev;
-  }
+    public String getId() {
+        return id;
+    }
 
-  public void setRev(String rev) {
-    this.rev = rev;
-  }
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getRev() {
+        return rev;
+    }
+
+    public void setRev(String rev) {
+        this.rev = rev;
+    }
+
+    public String getEndpointUrl() {
+        return endpointUrl;
+    }
+
+    public void setEndpointUrl(String endpointUrl) {
+        this.endpointUrl = endpointUrl;
+    }
 }

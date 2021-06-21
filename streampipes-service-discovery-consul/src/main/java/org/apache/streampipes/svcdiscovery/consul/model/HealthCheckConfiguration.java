@@ -21,14 +21,19 @@ public class HealthCheckConfiguration {
     private String Method;
     private String http;
     private String interval;
+    private String deregister_critical_service_after;
 
     public HealthCheckConfiguration() {
     }
 
-    public HealthCheckConfiguration(String method, String http, String interval) {
+    public HealthCheckConfiguration(String method,
+                                    String http,
+                                    String interval,
+                                    String deregisterAfter) {
         Method = method;
         this.http = http;
         this.interval = interval;
+        this.deregister_critical_service_after = deregisterAfter;
     }
 
     public String getMethod() {
@@ -53,5 +58,13 @@ public class HealthCheckConfiguration {
 
     public void setInterval(String interval) {
         this.interval = interval;
+    }
+
+    public String getDeregister_critical_service_after() {
+        return deregister_critical_service_after;
+    }
+
+    public void setDeregister_critical_service_after(String deregister_critical_service_after) {
+        this.deregister_critical_service_after = deregister_critical_service_after;
     }
 }

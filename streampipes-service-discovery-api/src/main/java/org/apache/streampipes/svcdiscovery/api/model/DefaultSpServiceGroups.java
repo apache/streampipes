@@ -20,5 +20,6 @@ package org.apache.streampipes.svcdiscovery.api.model;
 public class DefaultSpServiceGroups {
 
   public static final String CORE = "core";
+  public static final String EXT = "ext";
 
 }

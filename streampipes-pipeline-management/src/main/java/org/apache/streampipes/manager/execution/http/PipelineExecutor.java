@@ -18,7 +18,9 @@
 
 package org.apache.streampipes.manager.execution.http;
 
-import org.apache.streampipes.commons.constants.PipelineElementUrl;
+import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
+import org.apache.streampipes.model.pipeline.PipelineElementStatus;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 import org.apache.streampipes.manager.execution.status.PipelineStatusManager;
 import org.apache.streampipes.manager.secret.SecretProvider;
 import org.apache.streampipes.manager.util.TemporaryGraphStorage;
@@ -80,29 +82,54 @@ public class PipelineExecutor {
 
     decryptSecrets(graphs);
 
-    graphs.forEach(g -> g.setSelectedEndpointUrl(new PipelineElementEndpointGenerator(
-            g.getAppId(),
-            getPipelineElementType(g))
-            .getEndpointResourceUrl()));
+    List<InvocableStreamPipesEntity> failedServices = new ArrayList<>();
+      graphs.forEach(g -> {
+        try {
+          g.setSelectedEndpointUrl(findSelectedEndpoint(g));
+        } catch (NoServiceEndpointsAvailableException e) {
+          failedServices.add(g);
+        }
+      });
 
-    PipelineOperationStatus status = new GraphSubmitter(pipeline.getPipelineId(),
-            pipeline.getName(), graphs, dataSets)
-            .invokeGraphs();
+    PipelineOperationStatus status;
+    if (failedServices.size() == 0) {
 
-    encryptSecrets(graphs);
+      status = new GraphSubmitter(pipeline.getPipelineId(),
+              pipeline.getName(), graphs, dataSets)
+              .invokeGraphs();
 
-    if (status.isSuccess()) {
-      storeInvocationGraphs(pipeline.getPipelineId(), graphs, dataSets);
+      encryptSecrets(graphs);
 
-      PipelineStatusManager.addPipelineStatus(pipeline.getPipelineId(),
-              new PipelineStatusMessage(pipeline.getPipelineId(), System.currentTimeMillis(), PipelineStatusMessageType.PIPELINE_STARTED.title(), PipelineStatusMessageType.PIPELINE_STARTED.description()));
+      if (status.isSuccess()) {
+        storeInvocationGraphs(pipeline.getPipelineId(), graphs, dataSets);
 
-      if (storeStatus) {
-        pipeline.setHealthStatus(PipelineHealthStatus.OK);
-        setPipelineStarted(pipeline);
+        PipelineStatusManager.addPipelineStatus(pipeline.getPipelineId(),
+                new PipelineStatusMessage(pipeline.getPipelineId(), System.currentTimeMillis(), PipelineStatusMessageType.PIPELINE_STARTED.title(), PipelineStatusMessageType.PIPELINE_STARTED.description()));
+
+        if (storeStatus) {
+          pipeline.setHealthStatus(PipelineHealthStatus.OK);
+          setPipelineStarted(pipeline);
+        }
       }
+    } else {
+      List<PipelineElementStatus> pe = failedServices.stream().map(fs ->
+              new PipelineElementStatus(fs.getElementId(),
+                      fs.getName(),
+                      false,
+                      "No active supporting service found")).collect(Collectors.toList());
+      status = new PipelineOperationStatus(pipeline.getPipelineId(),
+              pipeline.getName(),
+              "Could not start pipeline " + pipeline.getName() + ".",
+              pe);
     }
     return status;
+  }
+
+  private String findSelectedEndpoint(InvocableStreamPipesEntity g) throws NoServiceEndpointsAvailableException {
+    return new ExtensionsServiceEndpointGenerator(
+            g.getAppId(),
+            getPipelineElementType(g))
+            .getEndpointResourceUrl();
   }
 
   private void updateGroupIds(InvocableStreamPipesEntity entity) {
@@ -180,8 +207,8 @@ public class PipelineExecutor {
     return StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI();
   }
 
-  private PipelineElementUrl getPipelineElementType(InvocableStreamPipesEntity entity) {
-    return entity instanceof DataProcessorInvocation ? PipelineElementUrl.DATA_PROCESSOR : PipelineElementUrl.DATA_SINK;
+  private SpServiceUrlProvider getPipelineElementType(InvocableStreamPipesEntity entity) {
+    return entity instanceof DataProcessorInvocation ? SpServiceUrlProvider.DATA_PROCESSOR : SpServiceUrlProvider.DATA_SINK;
   }
 
 }

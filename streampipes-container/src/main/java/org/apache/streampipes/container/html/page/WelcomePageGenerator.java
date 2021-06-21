@@ -25,6 +25,7 @@ import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataSinkDescription;
+import org.apache.streampipes.sdk.utils.Assets;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -72,8 +73,10 @@ public class WelcomePageGenerator {
     desc.setElementId(entity.getElementId());
     desc.setAppId(entity.getAppId());
     desc.setEditable(!(entity.isInternallyManaged()));
-    desc.setIncludesDocs(entity.isIncludesAssets());
-    desc.setIncludesIcon(entity.isIncludesAssets());
+    desc.setIncludesDocs(entity.isIncludesAssets()
+            && entity.getIncludedAssets().contains(Assets.DOCUMENTATION));
+    desc.setIncludesIcon(entity.isIncludesAssets()
+            && entity.getIncludedAssets().contains(Assets.ICON));
     String uri = baseUri;
     if (declarer instanceof SemanticEventConsumerDeclarer) {
       uri += "sec/";

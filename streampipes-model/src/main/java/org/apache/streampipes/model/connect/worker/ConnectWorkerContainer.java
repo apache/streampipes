@@ -22,6 +22,7 @@ import com.google.gson.annotations.SerializedName;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
+import org.apache.streampipes.model.util.ElementIdGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,30 +31,34 @@ public class ConnectWorkerContainer extends UnnamedStreamPipesEntity {
 
     private @SerializedName("_rev") String rev;
 
+    private String serviceGroup;
+
+    private List<ProtocolDescription> protocols;
+
+    private List<AdapterDescription> adapters;
+
     public ConnectWorkerContainer() {
         super();
         this.adapters = new ArrayList<>();
         this.protocols = new ArrayList<>();
     }
 
-    private String endpointUrl;
-
-    private List<ProtocolDescription> protocols;
-
-    private List<AdapterDescription> adapters;
-
-    public ConnectWorkerContainer(String endpointUrl, List<ProtocolDescription> protocols, List<AdapterDescription> adapters) {
-        this.endpointUrl = endpointUrl;
+    public ConnectWorkerContainer(String serviceGroup,
+                                  List<ProtocolDescription> protocols,
+                                  List<AdapterDescription> adapters) {
+        super();
+        this.elementId = ElementIdGenerator.makeElementIdFromAppId(serviceGroup);
+        this.serviceGroup = serviceGroup;
         this.protocols = protocols;
         this.adapters = adapters;
     }
 
-    public String getEndpointUrl() {
-        return endpointUrl;
+    public String getServiceGroup() {
+        return serviceGroup;
     }
 
-    public void setEndpointUrl(String endpointUrl) {
-        this.endpointUrl = endpointUrl;
+    public void setServiceGroup(String serviceGroup) {
+        this.serviceGroup = serviceGroup;
     }
 
     public List<ProtocolDescription> getProtocols() {

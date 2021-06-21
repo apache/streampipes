@@ -18,9 +18,11 @@
 
 package org.apache.streampipes.connect.container.master.rest;
 
+import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.management.WorkerAdministrationManagement;
 import org.apache.streampipes.connect.container.master.management.WorkerRestClient;
+import org.apache.streampipes.connect.container.master.management.WorkerUrlProvider;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
@@ -33,9 +35,11 @@ import javax.ws.rs.core.Response;
 public class RuntimeResolvableResource extends AbstractAdapterResource<WorkerAdministrationManagement> {
 
     private static final String SP_NS =  "https://streampipes.org/vocabulary/v1/";
+    private WorkerUrlProvider workerUrlProvider;
 
     public RuntimeResolvableResource() {
         super(WorkerAdministrationManagement::new);
+        this.workerUrlProvider = new WorkerUrlProvider();
     }
 
     @POST
@@ -43,22 +47,18 @@ public class RuntimeResolvableResource extends AbstractAdapterResource<WorkerAdm
     @JacksonSerialized
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response fetchConfigurations(@PathParam("id") String elementId,
+    public Response fetchConfigurations(@PathParam("id") String appId,
                                         @PathParam("username") String username,
                                         RuntimeOptionsRequest runtimeOptionsRequest) {
 
         // TODO add solution for formats
-//        ResolvesContainerProvidedOptions runtimeResolvableOptions = RuntimeResovable.getRuntimeResolvableFormat(elementId);
-
-        String id = elementId.replaceAll("sp:", SP_NS);
-        String workerEndpoint = managementService.getWorkerUrl(id);
 
         try {
-
-            RuntimeOptionsResponse result = WorkerRestClient.getConfiguration(workerEndpoint, elementId, username, runtimeOptionsRequest);
+            String workerEndpoint = workerUrlProvider.getWorkerBaseUrl(appId);
+            RuntimeOptionsResponse result = WorkerRestClient.getConfiguration(workerEndpoint, appId, runtimeOptionsRequest);
 
             return ok(result);
-        } catch (AdapterException e) {
+        } catch (AdapterException | NoServiceEndpointsAvailableException e) {
             e.printStackTrace();
             return fail();
         }

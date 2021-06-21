@@ -18,33 +18,32 @@
 
 package org.apache.streampipes.storage.couchdb.impl;
 
-import org.apache.streampipes.model.client.endpoint.RdfEndpoint;
-import org.apache.streampipes.storage.api.IRdfEndpointStorage;
+import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpoint;
+import org.apache.streampipes.storage.api.IExtensionsServiceEndpointStorage;
 import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import java.util.List;
 
-public class RdfEndpointStorageImpl extends AbstractDao<RdfEndpoint> implements IRdfEndpointStorage {
+public class ExtensionsServiceEndpointStorageImpl extends AbstractDao<ExtensionsServiceEndpoint> implements IExtensionsServiceEndpointStorage {
 
-    public RdfEndpointStorageImpl() {
-        super(Utils::getCouchDbRdfEndpointClient, RdfEndpoint.class);
-    }
+  public ExtensionsServiceEndpointStorageImpl() {
+    super(Utils::getCouchDbRdfEndpointClient, ExtensionsServiceEndpoint.class);
+  }
 
+  @Override
+  public void addExtensionsServiceEndpoint(ExtensionsServiceEndpoint extensionsServiceEndpoint) {
+    persist(extensionsServiceEndpoint);
+  }
 
-    @Override
-    public void addRdfEndpoint(RdfEndpoint rdfEndpoint) {
-        persist(rdfEndpoint);
-    }
+  @Override
+  public void removeExtensionsServiceEndpoint(String rdfEndpointId) {
+    delete(rdfEndpointId);
+  }
 
-    @Override
-    public void removeRdfEndpoint(String rdfEndpointId) {
-        delete(rdfEndpointId)
-;    }
-
-    @Override
-    public List<RdfEndpoint> getRdfEndpoints() {
-        return findAll();
-    }
+  @Override
+  public List<ExtensionsServiceEndpoint> getExtensionsServiceEndpoints() {
+    return findAll();
+  }
 
 }

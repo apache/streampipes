@@ -21,6 +21,7 @@ package org.apache.streampipes.service.extensions.base;
 import org.apache.streampipes.container.base.StreamPipesServiceBase;
 import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.container.model.SpServiceDefinition;
+import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,7 +59,7 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
                                        SpServiceDefinition serviceDef) throws UnknownHostException {
         this.startStreamPipesService(
                 serviceClass,
-                serviceDef.getServiceGroup(),
+                DefaultSpServiceGroups.EXT,
                 serviceDef.getServiceId(),
                 serviceDef.getDefaultPort()
         );

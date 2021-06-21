@@ -22,7 +22,6 @@ import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.container.util.ServiceDefinitionUtil;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTags;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;
-import org.apache.streampipes.svcdiscovery.api.model.SpServiceTagPrefix;
 
 import java.util.Collection;
 import java.util.List;
@@ -32,7 +31,7 @@ public class PipelineElementServiceTagProvider {
   public List<SpServiceTag> extractServiceTags() {
     Collection<Declarer<?>> declarers = DeclarersSingleton.getInstance().getDeclarers().values();
     List<SpServiceTag> serviceTags = ServiceDefinitionUtil.extractAppIds(declarers);
-    serviceTags.add(SpServiceTag.create(SpServiceTagPrefix.SYSTEM, DefaultSpServiceTags.PE));
+    serviceTags.add(DefaultSpServiceTags.PE);
 
     return serviceTags;
   }

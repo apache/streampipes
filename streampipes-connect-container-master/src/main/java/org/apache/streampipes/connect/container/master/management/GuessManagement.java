@@ -25,9 +25,11 @@ import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
 import org.apache.http.util.EntityUtils;
+import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.connect.api.exception.WorkerAdapterException;
+import org.apache.streampipes.connect.container.master.util.WorkerPaths;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.message.ErrorMessage;
@@ -40,19 +42,19 @@ import java.io.IOException;
 public class GuessManagement {
 
     private static Logger LOG = LoggerFactory.getLogger(GuessManagement.class);
+    private WorkerUrlProvider workerUrlProvider;
 
     public GuessManagement() {
-
+        this.workerUrlProvider = new WorkerUrlProvider();
     }
 
     public GuessSchema guessSchema(AdapterDescription adapterDescription) throws AdapterException, ParseException, WorkerAdapterException {
-        String workerUrl = new Utils().getWorkerUrl(adapterDescription);
-
-        workerUrl = workerUrl + "api/v1/admin@streampipes.de/worker/guess/schema";
-
-        ObjectMapper mapper = JacksonSerializer.getObjectMapper();
-
         try {
+            String workerUrl = workerUrlProvider.getWorkerBaseUrl(adapterDescription.getAppId());
+
+            workerUrl = workerUrl + WorkerPaths.getGuessSchemaPath();
+
+            ObjectMapper mapper = JacksonSerializer.getObjectMapper();
             String ad = mapper.writeValueAsString(adapterDescription);
             LOG.info("Guess schema at: " + workerUrl);
             Response requestResponse = Request.Post(workerUrl)
@@ -65,8 +67,7 @@ public class GuessManagement {
             String responseString = EntityUtils.toString(httpResponse.getEntity());
 
             if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                GuessSchema guessSchema = mapper.readValue(responseString, GuessSchema.class);
-                return guessSchema;
+                return mapper.readValue(responseString, GuessSchema.class);
             }  else {
                     ErrorMessage errorMessage = mapper.readValue(responseString, ErrorMessage.class);
 
@@ -74,9 +75,9 @@ public class GuessManagement {
                     throw new WorkerAdapterException(errorMessage);
             }
 
-        } catch (IOException e) {
+        } catch (IOException | NoServiceEndpointsAvailableException e) {
             LOG.error(e.getMessage());
-            throw new AdapterException("Error in connect worker: " + workerUrl, e);
+            throw new AdapterException("Error in connect worker: ", e);
         }
     }
 

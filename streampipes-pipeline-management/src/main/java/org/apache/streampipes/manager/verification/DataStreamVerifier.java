@@ -18,7 +18,8 @@
 
 package org.apache.streampipes.manager.verification;
 
-import org.apache.streampipes.commons.constants.PipelineElementUrl;
+import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 import org.apache.streampipes.manager.assets.AssetManager;
 import org.apache.streampipes.model.SpDataStream;
 
@@ -71,14 +72,14 @@ public class DataStreamVerifier extends ElementVerifier<SpDataStream> {
   }
 
   @Override
-  protected void storeAssets() throws IOException {
+  protected void storeAssets() throws IOException, NoServiceEndpointsAvailableException {
     if (elementDescription.isIncludesAssets()) {
-      AssetManager.storeAsset(PipelineElementUrl.DATA_STREAM, elementDescription.getAppId());
+      AssetManager.storeAsset(SpServiceUrlProvider.DATA_STREAM, elementDescription.getAppId());
     }
   }
 
   @Override
-  protected void updateAssets() throws IOException {
+  protected void updateAssets() throws IOException, NoServiceEndpointsAvailableException {
     if (elementDescription.isIncludesAssets()) {
       AssetManager.deleteAsset(elementDescription.getAppId());
       storeAssets();

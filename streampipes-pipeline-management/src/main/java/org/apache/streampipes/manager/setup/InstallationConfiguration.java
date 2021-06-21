@@ -19,7 +19,7 @@
 package org.apache.streampipes.manager.setup;
 
 import org.apache.streampipes.manager.endpoint.EndpointFetcher;
-import org.apache.streampipes.model.client.endpoint.RdfEndpoint;
+import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpoint;
 import org.apache.streampipes.model.client.setup.InitialSettings;
 
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class InstallationConfiguration {
 		steps.add(new UserRegistrationInstallationStep(settings.getAdminEmail(), settings.getAdminPassword()));
 
 		if (settings.getInstallPipelineElements()) {
-			for(RdfEndpoint endpoint : new EndpointFetcher().getEndpoints()) {
+			for(ExtensionsServiceEndpoint endpoint : new EndpointFetcher().getEndpoints()) {
 				steps.add(new PipelineElementInstallationStep(endpoint, settings.getAdminEmail()));
 			}
 		}

@@ -32,7 +32,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-@Path("/api/v1/{username}/worker/resolvable")
+@Path("/api/v1/worker/resolvable")
 public class RuntimeResolvableResource extends AbstractSharedRestInterface {
 
     @POST

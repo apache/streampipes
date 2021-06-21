@@ -36,7 +36,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 
-@Path("/api/v1/{username}/worker/guess")
+@Path("/api/v1/worker/guess")
 public class GuessResource extends AbstractSharedRestInterface {
 
   private static final Logger logger = LoggerFactory.getLogger(GuessResource.class);

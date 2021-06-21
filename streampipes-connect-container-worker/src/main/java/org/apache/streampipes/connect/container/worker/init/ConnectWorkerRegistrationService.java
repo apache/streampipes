@@ -18,7 +18,6 @@
 package org.apache.streampipes.connect.container.worker.init;
 
 import org.apache.streampipes.connect.container.worker.management.MasterRestClient;
-import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,18 +28,14 @@ public class ConnectWorkerRegistrationService {
 
   private static final Logger LOG = LoggerFactory.getLogger(ConnectWorkerRegistrationService.class);
 
-  public void registerWorker() {
+  public void registerWorker(String serviceGroup) {
     String masterUrl = getConnectMasterUrl() + "/streampipes-backend";
-    String workerUrl = "http://"
-            + DeclarersSingleton.getInstance().getHostName()
-            + ":" + DeclarersSingleton.getInstance().getPort() + "/";
-
     boolean connected = false;
 
     while (!connected) {
       LOG.info("Trying to connect to master: " + masterUrl);
       connected = MasterRestClient.register(masterUrl,
-              new ConnectWorkerDescriptionProvider().getContainerDescription(workerUrl));
+              new ConnectWorkerDescriptionProvider().getContainerDescription(serviceGroup));
 
       if (!connected) {
         LOG.info("Retrying in 5 seconds");

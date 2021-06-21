@@ -16,17 +16,14 @@
  *
  */
 
-package org.apache.streampipes.storage.api;
+package org.apache.streampipes.connect.container.master.util;
 
-import org.apache.streampipes.model.client.endpoint.RdfEndpoint;
+public class Utils {
 
-import java.util.List;
+    public static String addUserNameToApi(String url, String userName) {
+        //return url;
+        return  url + "/api/v1/" + userName + "/";
+    }
 
-public interface IRdfEndpointStorage {
 
-    void addRdfEndpoint(RdfEndpoint rdfEndpoint);
-
-    void removeRdfEndpoint(String rdfEndpointId);
-
-    List<RdfEndpoint> getRdfEndpoints();
 }

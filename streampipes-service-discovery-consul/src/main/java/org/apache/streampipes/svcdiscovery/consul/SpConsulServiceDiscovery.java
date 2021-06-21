@@ -27,6 +27,9 @@ import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.StringEntity;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
+import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;
+import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTags;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceRegistrationRequest;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;
 import org.apache.streampipes.svcdiscovery.consul.model.ConsulServiceRegistrationBody;
 import org.apache.streampipes.svcdiscovery.consul.model.HealthCheckConfiguration;
@@ -48,16 +51,12 @@ public class SpConsulServiceDiscovery extends AbstractConsulService implements I
   private static final String PE_SVC_TAG = "pe";
 
   @Override
-  public void registerService(String svcGroup,
-                              String svcId,
-                              String host,
-                              int port,
-                              List<SpServiceTag> tags) {
+  public void registerService(SpServiceRegistrationRequest req) {
     boolean connected = false;
 
     while (!connected) {
-      LOG.info("Trying to register service at Consul with svcGroup={}, svcId={} host={}, port={}. ", svcGroup, svcId, host, port);
-      ConsulServiceRegistrationBody svcRegistration = createRegistrationBody(svcGroup, svcId, host, port, asString(tags));
+      LOG.info("Trying to register service at Consul with svcGroup={}, svcId={} host={}, port={}. ", req.getSvcGroup(), req.getSvcId(), req.getHost(), req.getPort());
+      ConsulServiceRegistrationBody svcRegistration = createRegistrationBody(req);
       connected = registerServiceHttpClient(svcRegistration);
 
       if (!connected) {
@@ -69,7 +68,7 @@ public class SpConsulServiceDiscovery extends AbstractConsulService implements I
         }
       }
     }
-    LOG.info("Successfully registered service at Consul: " + svcId);
+    LOG.info("Successfully registered service at Consul: " + req.getSvcId());
   }
 
   private List<String> asString(List<SpServiceTag> tags) {
@@ -77,9 +76,17 @@ public class SpConsulServiceDiscovery extends AbstractConsulService implements I
   }
 
   @Override
-  public List<String> getActivePeEndpoints() {
-    LOG.info("Load active pipeline element service endpoints");
-    return getServiceEndpoints(PE_SVC_TAG, true, Collections.singletonList(PE_SVC_TAG));
+  public List<String> getActivePipelineElementEndpoints() {
+    LOG.info("Discovering active pipeline element service endpoints");
+    return getServiceEndpoints(DefaultSpServiceGroups.EXT, true,
+            Collections.singletonList(DefaultSpServiceTags.PE.asString()));
+  }
+
+  @Override
+  public List<String> getActiveConnectWorkerEndpoints() {
+    LOG.info("Discovering active StreamPipes Connect worker service endpoints");
+    return getServiceEndpoints(DefaultSpServiceGroups.EXT, true,
+            Collections.singletonList(DefaultSpServiceTags.CONNECT_WORKER.asString()));
   }
 
   @Override
@@ -144,24 +151,6 @@ public class SpConsulServiceDiscovery extends AbstractConsulService implements I
    */
   private boolean registerServiceHttpClient(ConsulServiceRegistrationBody svcRegistration) {
     try {
-
-//      Consul client = Consul.builder().withHostAndPort(HostAndPort.fromParts("localhost", 8500)).build();
-//      AgentClient agentClient = client.agentClient();
-//
-//      String serviceId = "2";
-//      Registration service = ImmutableRegistration.builder()
-//              .id(serviceId)
-//              .name(svcRegistration.getName())
-//              .port(svcRegistration.getPort())
-//              .address("http://" + InetAddress.getLocalHost().getHostAddress())
-//              .check(Registration.RegCheck.http(InetAddress.getLocalHost().getHostAddress() + COLON + svcRegistration.getPort(), 10000))
-//                   //.check(Registration.RegCheck.ttl(3L)) // registers with a TTL of 3 seconds
-//              .tags(Collections.singletonList("tag1"))
-//              .meta(Collections.singletonMap("version", "1.0"))
-//              .build();
-//
-//      agentClient.register(service);
-
       String endpoint = makeConsulEndpoint();
       String body = JacksonSerializer.getObjectMapper().writeValueAsString(svcRegistration);
 
@@ -177,17 +166,19 @@ public class SpConsulServiceDiscovery extends AbstractConsulService implements I
     return false;
   }
 
-  private static ConsulServiceRegistrationBody createRegistrationBody(String svcGroup, String id, String host,
-                                                                      int port, List<String> tags) {
+  private ConsulServiceRegistrationBody createRegistrationBody(SpServiceRegistrationRequest req) {
     ConsulServiceRegistrationBody body = new ConsulServiceRegistrationBody();
-    body.setID(id);
-    body.setName(svcGroup);
-    body.setTags(tags);
-    body.setAddress(HTTP_PROTOCOL + host);
-    body.setPort(port);
+    body.setID(req.getSvcId());
+    body.setName(req.getSvcGroup());
+    body.setTags(asString(req.getTags()));
+    body.setAddress(HTTP_PROTOCOL + req.getHost());
+    body.setPort(req.getPort());
     body.setEnableTagOverride(true);
-    body.setCheck(new HealthCheckConfiguration("GET",
-            (HTTP_PROTOCOL + host + COLON + port), HEALTH_CHECK_INTERVAL));
+    body.setCheck(new HealthCheckConfiguration(
+            "GET",
+            (HTTP_PROTOCOL + req.getHost() + COLON + req.getPort() + req.getHealthCheckPath()),
+            HEALTH_CHECK_INTERVAL,
+            "60s"));
 
     return body;
   }

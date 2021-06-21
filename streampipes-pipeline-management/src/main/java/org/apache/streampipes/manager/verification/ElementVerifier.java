@@ -19,6 +19,7 @@
 package org.apache.streampipes.manager.verification;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.manager.storage.UserManagementService;
 import org.apache.streampipes.manager.storage.UserService;
@@ -97,7 +98,7 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
       if (state == StorageState.STORED) {
         try {
           storeAssets();
-        } catch (IOException e) {
+        } catch (IOException | NoServiceEndpointsAvailableException e) {
           e.printStackTrace();
         }
         return successMessage();
@@ -123,7 +124,7 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
       update(username);
       try {
         updateAssets();
-      } catch (IOException e) {
+      } catch (IOException | NoServiceEndpointsAvailableException e) {
         e.printStackTrace();
       }
       return successMessage();
@@ -133,9 +134,9 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
 
   }
 
-  protected abstract void storeAssets() throws IOException;
+  protected abstract void storeAssets() throws IOException, NoServiceEndpointsAvailableException;
 
-  protected abstract void updateAssets() throws IOException;
+  protected abstract void updateAssets() throws IOException, NoServiceEndpointsAvailableException;
 
   private Message errorMessage() {
     return new ErrorMessage(elementDescription.getName(), collectNotifications());

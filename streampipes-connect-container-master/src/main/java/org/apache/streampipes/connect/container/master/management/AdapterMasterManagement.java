@@ -18,11 +18,12 @@
 
 package org.apache.streampipes.connect.container.master.management;
 
+import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.commons.exceptions.SepaParseException;
-import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.connect.adapter.GroundingService;
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.util.AdapterEncryptionService;
+import org.apache.streampipes.connect.container.master.util.Utils;
 import org.apache.streampipes.manager.storage.UserService;
 import org.apache.streampipes.manager.verification.DataStreamVerifier;
 import org.apache.streampipes.model.SpDataStream;
@@ -50,16 +51,18 @@ public class AdapterMasterManagement {
   private static final Logger LOG = LoggerFactory.getLogger(AdapterMasterManagement.class);
 
   private IAdapterStorage adapterStorage;
+  private WorkerUrlProvider workerUrlProvider;
 
   public AdapterMasterManagement() {
     this.adapterStorage = getAdapterStorage();
+    this.workerUrlProvider = new WorkerUrlProvider();
   }
 
   public AdapterMasterManagement(IAdapterStorage adapterStorage) {
     this.adapterStorage = adapterStorage;
   }
 
-  public void startAllStreamAdapters(ConnectWorkerContainer connectWorkerContainer) throws AdapterException {
+  public void startAllStreamAdapters(ConnectWorkerContainer connectWorkerContainer) throws AdapterException, NoServiceEndpointsAvailableException {
     IAdapterStorage adapterStorage = getAdapterStorage();
     List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
 
@@ -67,10 +70,10 @@ public class AdapterMasterManagement {
       if (ad instanceof AdapterStreamDescription) {
         AdapterDescription decryptedAdapterDescription =
                 new AdapterEncryptionService(new Cloner().adapterDescription(ad)).decrypt();
-        String wUrl = new Utils().getWorkerUrl(decryptedAdapterDescription);
+        String wUrl = workerUrlProvider.getWorkerUrlForAdapter(decryptedAdapterDescription);
 
-        if (wUrl.equals(connectWorkerContainer.getEndpointUrl())) {
-          String url = Utils.addUserNameToApi(connectWorkerContainer.getEndpointUrl(),
+        if (wUrl.equals(connectWorkerContainer.getServiceGroup())) {
+          String url = Utils.addUserNameToApi(connectWorkerContainer.getServiceGroup(),
                   decryptedAdapterDescription.getUserName());
 
           WorkerRestClient.invokeStreamAdapter(url, (AdapterStreamDescription) decryptedAdapterDescription);
@@ -81,7 +84,7 @@ public class AdapterMasterManagement {
   }
 
   public String addAdapter(AdapterDescription ad,
-                           String baseUrl,
+                           String endpointUrl,
                            String username)
           throws AdapterException {
 
@@ -90,12 +93,9 @@ public class AdapterMasterManagement {
     ad.setEventGrounding(eventGrounding);
 
     String uuid = UUID.randomUUID().toString();
-
-//    String newId = ConnectContainerConfig.INSTANCE.getConnectContainerMasterUrl() + "api/v1/" + username + "/master/sources/" + uuid;
-    String newId = BackendConfig.INSTANCE.getBackendApiUrl() + "api/v2/connect/" + username + "/master/sources/" + uuid;
-
-    ad.setElementId(newId);
+    ad.setElementId(ad.getElementId() + ":" + uuid);
     ad.setCreatedAt(System.currentTimeMillis());
+    ad.setSelectedEndpointUrl(endpointUrl);
 
     AdapterDescription encryptedAdapterDescription =
             new AdapterEncryptionService(new Cloner().adapterDescription(ad)).encrypt();
@@ -105,16 +105,12 @@ public class AdapterMasterManagement {
     // start when stream adapter
     if (ad instanceof AdapterStreamDescription) {
       // TODO
-      WorkerRestClient.invokeStreamAdapter(baseUrl, adapterId);
+      WorkerRestClient.invokeStreamAdapter(endpointUrl, adapterId);
       LOG.info("Start adapter");
     }
 
-    // backend url is used to install data source in streampipes
-    String backendBaseUrl = BackendConfig.INSTANCE.getBackendApiUrl() + "api/v2/";
-    String requestUrl = backendBaseUrl + "noauth/users/" + username + "/element";
-
-    LOG.info("Install source (source URL: " + newId + " in backend over URL: " + requestUrl);
-    SpDataStream storedDescription = new SourcesManagement().getAdapterDataStream(newId);
+    LOG.info("Install source (source URL: {} in backend", ad.getElementId());
+    SpDataStream storedDescription = new SourcesManagement().getAdapterDataStream(ad.getElementId());
     installDataSource(storedDescription, username);
 
     return storedDescription.getElementId();
@@ -124,7 +120,7 @@ public class AdapterMasterManagement {
     try {
       new DataStreamVerifier(stream).verifyAndAdd(username, true, true);
     } catch (SepaParseException e) {
-      LOG.error("Error while installing data source: " + stream.getElementId(), e);
+      LOG.error("Error while installing data source: {}", stream.getElementId(), e);
       throw new AdapterException();
     }
   }
@@ -143,14 +139,14 @@ public class AdapterMasterManagement {
     throw new AdapterException("Could not find adapter with id: " + id);
   }
 
-  public void deleteAdapter(String id, String baseUrl) throws AdapterException {
+  public void deleteAdapter(String id) throws AdapterException {
     //        // IF Stream adapter delete it
     boolean isStreamAdapter = isStreamAdapter(id);
+    AdapterDescription ad = adapterStorage.getAdapter(id);
 
     if (isStreamAdapter) {
-      stopStreamAdapter(id, baseUrl);
+      stopStreamAdapter(id, ad.getSelectedEndpointUrl());
     }
-    AdapterDescription ad = adapterStorage.getAdapter(id);
     String username = ad.getUserName();
 
     adapterStorage.deleteAdapter(id);
@@ -190,16 +186,16 @@ public class AdapterMasterManagement {
       throw new AdapterException("Adapter " + adapterId + "is not a stream adapter.");
     } else {
       WorkerRestClient.stopStreamAdapter(baseUrl, (AdapterStreamDescription) ad);
-
     }
   }
 
   public void startStreamAdapter(String adapterId, String baseUrl) throws AdapterException {
     AdapterDescription ad = adapterStorage.getAdapter(adapterId);
-
     if (!isStreamAdapter(adapterId)) {
       throw new AdapterException("Adapter " + adapterId + "is not a stream adapter.");
     } else {
+      ad.setSelectedEndpointUrl(baseUrl);
+      adapterStorage.updateAdapter(ad);
       WorkerRestClient.invokeStreamAdapter(baseUrl, (AdapterStreamDescription) ad);
     }
   }

@@ -23,7 +23,7 @@ import org.apache.streampipes.model.shared.annotation.TsModel;
 import java.util.List;
 
 @TsModel
-public class RdfEndpointItem {
+public class ExtensionsServiceEndpointItem {
 
     private String name;
     private String description;
@@ -38,9 +38,9 @@ public class RdfEndpointItem {
     private boolean installed;
     private boolean editable;
 
-    private List<RdfEndpointItem> streams;
+    private List<ExtensionsServiceEndpointItem> streams;
 
-    public RdfEndpointItem() {
+    public ExtensionsServiceEndpointItem() {
 
     }
 
@@ -68,11 +68,11 @@ public class RdfEndpointItem {
         this.uri = uri;
     }
 
-    public List<RdfEndpointItem> getStreams() {
+    public List<ExtensionsServiceEndpointItem> getStreams() {
         return streams;
     }
 
-    public void setStreams(List<RdfEndpointItem> streams) {
+    public void setStreams(List<ExtensionsServiceEndpointItem> streams) {
         this.streams = streams;
     }
 

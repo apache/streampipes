@@ -47,7 +47,7 @@ public class WorkerAdministrationResource extends AbstractSharedRestInterface {
     @JacksonSerialized
     @Produces(MediaType.APPLICATION_JSON)
     public Response addWorkerContainer(ConnectWorkerContainer connectWorkerContainer) {
-        LOG.info("Worker container: " + connectWorkerContainer.getEndpointUrl() + " was detected");
+        LOG.info("Worker container: " + connectWorkerContainer.getServiceGroup() + " was detected");
         this.workerAdministrationManagement.register(connectWorkerContainer);
 
         return ok(Notifications.success("Worker Container sucessfully added"));

@@ -18,9 +18,10 @@
 
 package org.apache.streampipes.connect.container.master.rest;
 
+import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.management.AdapterMasterManagement;
-import org.apache.streampipes.connect.container.master.management.Utils;
+import org.apache.streampipes.connect.container.master.management.WorkerUrlProvider;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterDescriptionList;
 import org.apache.streampipes.model.message.Notifications;
@@ -37,9 +38,11 @@ import java.util.List;
 public class AdapterResource extends AbstractAdapterResource<AdapterMasterManagement> {
 
     private Logger LOG = LoggerFactory.getLogger(AdapterResource.class);
+    private WorkerUrlProvider workerUrlProvider;
 
     public AdapterResource() {
         super(AdapterMasterManagement::new);
+        this.workerUrlProvider = new WorkerUrlProvider();
     }
 
     @POST
@@ -52,9 +55,9 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
         LOG.info("User: " + username + " starts adapter " + adapterDescription.getAdapterId());
 
         try {
-            String workerUrl = getModifiedWorkerUrl(adapterDescription, username);
-            adapterId = managementService.addAdapter(adapterDescription, workerUrl, username);
-        } catch (AdapterException e) {
+            String workerBaseUrl = workerUrlProvider.getWorkerBaseUrl(adapterDescription.getAppId());
+            adapterId = managementService.addAdapter(adapterDescription, workerBaseUrl, username);
+        } catch (AdapterException | NoServiceEndpointsAvailableException e) {
             LOG.error("Error while starting adapter with id " + adapterDescription.getAppId(), e);
             return ok(Notifications.error(e.getMessage()));
         }
@@ -86,8 +89,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     public Response stopAdapter(@PathParam("id") String adapterId,
                                 @PathParam("username") String username) {
         try {
-            String workerUrl = getModifiedWorkerUrl(adapterId, username);
-            managementService.stopStreamAdapter(adapterId, workerUrl);
+            managementService.stopStreamAdapter(adapterId, getAdapterDescription(adapterId).getSelectedEndpointUrl());
             return ok(Notifications.success("Adapter started"));
         } catch (AdapterException e) {
             LOG.error("Could not stop adapter with id " +adapterId, e);
@@ -102,10 +104,10 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     public Response startAdapter(@PathParam("id") String adapterId,
                                 @PathParam("username") String username) {
         try {
-            String workerUrl = getModifiedWorkerUrl(adapterId, username);
+            String workerUrl =  workerUrlProvider.getWorkerBaseUrl(getAdapterDescription(adapterId).getAppId());
             managementService.startStreamAdapter(adapterId, workerUrl);
             return ok(Notifications.success("Adapter stopped"));
-        } catch (AdapterException e) {
+        } catch (AdapterException | NoServiceEndpointsAvailableException e) {
             LOG.error("Could not start adapter with id " +adapterId, e);
             return ok(Notifications.error(e.getMessage()));
         }
@@ -119,8 +121,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
                                   @PathParam("username") String username) {
 
         try {
-            String workerUrl = getModifiedWorkerUrl(adapterId, username);
-            managementService.deleteAdapter(adapterId, workerUrl);
+            managementService.deleteAdapter(adapterId);
             return ok(Notifications.success("Adapter deleted."));
         } catch (AdapterException e) {
             LOG.error("Error while deleting adapter with id " + adapterId, e);
@@ -148,15 +149,4 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
         return managementService.getAdapter(adapterId);
     }
 
-    private String getModifiedWorkerUrl(String adapterId,
-                                        String username) throws AdapterException {
-        AdapterDescription adapterDescription = getAdapterDescription(adapterId);
-        return getModifiedWorkerUrl(adapterDescription, username);
-    }
-
-    private String getModifiedWorkerUrl(AdapterDescription adapterDescription,
-                                        String username) throws AdapterException {
-        String workerUrl = new Utils().getWorkerUrlById(adapterDescription.getAppId());
-        return Utils.addUserNameToApi(workerUrl, username);
-    }
 }

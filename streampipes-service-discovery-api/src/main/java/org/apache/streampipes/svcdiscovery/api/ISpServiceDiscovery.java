@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.svcdiscovery.api;
 
-import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceRegistrationRequest;
 
 import java.util.List;
 import java.util.Map;
@@ -33,14 +33,21 @@ public interface ISpServiceDiscovery {
    * @param port      port of service endpoint
    * @param tags      tags of service
    */
-  void registerService(String svcGroup, String svcId, String host, int port, List<SpServiceTag> tags);
+  void registerService(SpServiceRegistrationRequest serviceRegistrationRequest);
 
   /**
    * Get active pipeline element service endpoints
    *
    * @return list of pipeline element endpoints
    */
-  List<String> getActivePeEndpoints();
+  List<String> getActivePipelineElementEndpoints();
+
+  /**
+   * Get active StreamPipes Connect worker endpoints
+   *
+   * @return list of StreamPipes Connect worker endpoints
+   */
+  List<String> getActiveConnectWorkerEndpoints();
 
   /**
    * Get service endpoints
@@ -50,7 +57,8 @@ public interface ISpServiceDiscovery {
    * @param filterByTags        filter param to filter list of registered services
    * @return                    list of services
    */
-  List<String> getServiceEndpoints(String svcGroup, boolean restrictToHealthy,
+  List<String> getServiceEndpoints(String svcGroup,
+                                   boolean restrictToHealthy,
                                    List<String> filterByTags);
 
   /**

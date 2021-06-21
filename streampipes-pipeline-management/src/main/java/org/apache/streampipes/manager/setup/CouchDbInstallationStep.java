@@ -18,10 +18,10 @@
 
 package org.apache.streampipes.manager.setup;
 
-import org.apache.streampipes.model.client.endpoint.RdfEndpoint;
+import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpoint;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notifications;
-import org.apache.streampipes.storage.couchdb.impl.RdfEndpointStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.ExtensionsServiceEndpointStorageImpl;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 import org.lightcouch.DesignDocument;
 import org.lightcouch.DesignDocument.MapReduce;
@@ -94,10 +94,10 @@ public class CouchDbInstallationStep implements InstallationStep {
     }
 
     private Message addRdfEndpoints() {
-        RdfEndpointStorageImpl rdfEndpointStorage = new RdfEndpointStorageImpl();
+        ExtensionsServiceEndpointStorageImpl rdfEndpointStorage = new ExtensionsServiceEndpointStorageImpl();
         initRdfEndpointPorts
                 .forEach(p -> rdfEndpointStorage
-                        .addRdfEndpoint(new RdfEndpoint(initRdfEndpointHost + p)));
+                        .addExtensionsServiceEndpoint(new ExtensionsServiceEndpoint(initRdfEndpointHost + p)));
 
         return Notifications.success("Discovering pipeline element endpoints...");
     }

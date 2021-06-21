@@ -49,11 +49,16 @@ public abstract class AdapterWorkerContainer extends StreamPipesExtensionsServic
 
   @Override
   public void afterServiceRegistered(SpServiceDefinition serviceDef) {
-    new ConnectWorkerRegistrationService().registerWorker();
+    new ConnectWorkerRegistrationService().registerWorker(serviceDef.getServiceGroup());
   }
 
   @Override
   public void onExit() {
     deregisterService(DeclarersSingleton.getInstance().getServiceId());
+  }
+
+  @Override
+  protected String getHealthCheckPath() {
+    return "/worker";
   }
 }

@@ -34,7 +34,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
-@Path("/api/v1/{username}/worker/adapters")
+@Path("/api/v1/worker/adapters")
 public class AdapterResource extends AbstractSharedRestInterface {
 
     private AdapterWorkerManagement adapterWorkerManagement;

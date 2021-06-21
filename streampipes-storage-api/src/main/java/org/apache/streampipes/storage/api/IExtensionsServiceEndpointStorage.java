@@ -15,24 +15,18 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.svcdiscovery.api.model;
 
-public enum SpServiceTagPrefix {
-  SYSTEM("sys"),
-  ADAPTER("adapter"),
-  PROTOCOL("protocol"),
-  DATA_STREAM("dstream"),
-  DATA_PROCESSOR("dprocessor"),
-  DATA_SINK("dsink"),
-  DATA_SET("dset");
+package org.apache.streampipes.storage.api;
 
-  private String prefix;
+import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpoint;
 
-  SpServiceTagPrefix(String prefix) {
-    this.prefix = prefix;
-  }
+import java.util.List;
 
-  public String asString() {
-    return this.prefix;
-  }
+public interface IExtensionsServiceEndpointStorage {
+
+    void addExtensionsServiceEndpoint(ExtensionsServiceEndpoint extensionsServiceEndpoint);
+
+    void removeExtensionsServiceEndpoint(String extensionServiceEndpointId);
+
+    List<ExtensionsServiceEndpoint> getExtensionsServiceEndpoints();
 }

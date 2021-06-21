@@ -36,8 +36,8 @@ import org.apache.streampipes.manager.topic.WildcardTopicGenerator;
 import org.apache.streampipes.manager.verification.extractor.TypeExtractor;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
-import org.apache.streampipes.model.client.endpoint.RdfEndpoint;
-import org.apache.streampipes.model.client.endpoint.RdfEndpointItem;
+import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpoint;
+import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpointItem;
 import org.apache.streampipes.model.message.DataSetModificationMessage;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.PipelineModificationMessage;
@@ -150,7 +150,7 @@ public class Operations {
     return new PipelineExecutor(pipeline, visualize, storeStatus, monitor, forceStop).stopPipeline();
   }
 
-  public static List<RdfEndpointItem> getEndpointUriContents(List<RdfEndpoint> endpoints) {
+  public static List<ExtensionsServiceEndpointItem> getEndpointUriContents(List<ExtensionsServiceEndpoint> endpoints) {
     return new EndpointItemFetcher(endpoints).getItems();
   }
 

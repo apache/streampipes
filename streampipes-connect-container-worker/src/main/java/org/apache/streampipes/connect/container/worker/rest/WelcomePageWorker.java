@@ -32,7 +32,7 @@ import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.util.Collection;
 
-@Path("/")
+@Path("/worker")
 public class WelcomePageWorker extends AbstractSharedRestInterface {
 
     private String id;

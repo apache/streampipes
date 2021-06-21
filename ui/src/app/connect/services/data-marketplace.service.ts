@@ -79,14 +79,14 @@ export class DataMarketplaceService {
 
   stopAdapter(adapter: AdapterDescriptionUnion): Observable<Message> {
     return this.http.post(this.adapterMasterUrl
-        + adapter.couchDBId
+        + adapter.id
         + "/stop", {})
         .pipe(map(response => Message.fromData(response as any)));
   }
 
   startAdapter(adapter: AdapterDescriptionUnion): Observable<Message> {
     return this.http.post(this.adapterMasterUrl
-        + adapter.couchDBId
+        + adapter.id
         + "/start", {})
         .pipe(map(response => Message.fromData(response as any)));;
   }
@@ -116,7 +116,7 @@ export class DataMarketplaceService {
         this.host +
         this.authStatusService.email +
         url +
-        adapter.couchDBId
+        adapter.id
     );
   }
 

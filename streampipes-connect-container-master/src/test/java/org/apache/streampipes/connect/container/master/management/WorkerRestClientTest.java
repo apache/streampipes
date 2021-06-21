@@ -59,7 +59,7 @@ public class WorkerRestClientTest {
         WorkerRestClient.stopStreamAdapter("", description);
 
         verifyStatic(WorkerRestClient.class, times(1));
-        WorkerRestClient.stopAdapter(anyString(), any(), eq("worker/stream/stop"));
+        WorkerRestClient.stopAdapter(any(), eq("worker/stream/stop"));
 
     }
 
@@ -109,7 +109,7 @@ public class WorkerRestClientTest {
         WorkerRestClient.stopSetAdapter("", description);
 
         verifyStatic(WorkerRestClient.class, times(1));
-        WorkerRestClient.stopAdapter(anyString(), any(), eq("worker/set/stop"));
+        WorkerRestClient.stopAdapter(any(), eq("worker/set/stop"));
 
     }
 

@@ -17,9 +17,10 @@
 
 package org.apache.streampipes.connect.container.master.rest;
 
+import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.management.DescriptionManagement;
-import org.apache.streampipes.connect.container.master.management.Utils;
+import org.apache.streampipes.connect.container.master.management.WorkerUrlProvider;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterDescriptionList;
 import org.apache.streampipes.model.connect.grounding.FormatDescriptionList;
@@ -41,9 +42,11 @@ import java.util.Optional;
 public class DescriptionResource extends AbstractAdapterResource<DescriptionManagement> {
 
     private static final Logger LOG = LoggerFactory.getLogger(DescriptionResource.class);
+    private WorkerUrlProvider workerUrlProvider;
 
     public DescriptionResource() {
         super(DescriptionManagement::new);
+        workerUrlProvider = new WorkerUrlProvider();
     }
 
     @GET
@@ -86,19 +89,17 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
             Optional<AdapterDescription> adapterDescriptionOptional = managementService.getAdapter(id);
             if (adapterDescriptionOptional.isPresent()) {
                 AdapterDescription adapterDescription = adapterDescriptionOptional.get();
-                String workerUrl = new Utils().getWorkerUrl(adapterDescription);
-                String newUrl = Utils.addUserNameToApi(workerUrl, userName);
+                String workerUrl = workerUrlProvider.getWorkerUrlForAdapter(adapterDescription);
 
-                result = managementService.getAdapterAssets(adapterDescription, newUrl);
+                result = managementService.getAssets(workerUrl);
             }
 
             Optional<ProtocolDescription> protocolDescriptionOptional  = managementService.getProtocol(id);
             if (protocolDescriptionOptional.isPresent()) {
                 ProtocolDescription protocolDescription = protocolDescriptionOptional.get();
-                String workerUrl = new Utils().getWorkerUrl(protocolDescription);
-                String newUrl = Utils.addUserNameToApi(workerUrl, userName);
+                String workerUrl = workerUrlProvider.getWorkerUrlForProtocol(protocolDescription);
 
-                result = managementService.getProtocolAssets(protocolDescription, newUrl);
+                result = managementService.getAssets(workerUrl);
             }
 
             if (result == null) {
@@ -109,6 +110,8 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
             }
         } catch (AdapterException e) {
             LOG.error("Not found adapter with id " + id, e);
+            return fail();
+        } catch (NoServiceEndpointsAvailableException e) {
             return fail();
         }
     }
@@ -124,19 +127,17 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
             Optional<AdapterDescription> adapterDescriptionOptional = managementService.getAdapter(id);
             if (adapterDescriptionOptional.isPresent()) {
                 AdapterDescription adapterDescription = adapterDescriptionOptional.get();
-                String workerUrl = new Utils().getWorkerUrl(adapterDescription);
-                String newUrl = Utils.addUserNameToApi(workerUrl, userName);
+                String workerUrl = workerUrlProvider.getWorkerUrlForAdapter(adapterDescription);
 
-                result = managementService.getAdapterIconAsset(adapterDescription, newUrl);
+                result = managementService.getIconAsset(workerUrl);
             }
 
             Optional<ProtocolDescription> protocolDescriptionOptional  = managementService.getProtocol(id);
             if (protocolDescriptionOptional.isPresent()) {
                 ProtocolDescription protocolDescription = protocolDescriptionOptional.get();
-                String workerUrl = new Utils().getWorkerUrl(protocolDescription);
-                String newUrl = Utils.addUserNameToApi(workerUrl, userName);
+                String workerUrl = workerUrlProvider.getWorkerUrlForProtocol(protocolDescription);
 
-                result = managementService.getProtocolIconAsset(protocolDescription, newUrl);
+                result = managementService.getIconAsset(workerUrl);
             }
 
             if (result == null) {
@@ -147,6 +148,8 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
             }
         } catch (AdapterException e) {
             LOG.error("Not found adapter with id " + id);
+            return fail();
+        } catch (NoServiceEndpointsAvailableException e) {
             return fail();
         }
     }
@@ -161,19 +164,17 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
             Optional<AdapterDescription> adapterDescriptionOptional = managementService.getAdapter(id);
             if (adapterDescriptionOptional.isPresent()) {
                 AdapterDescription adapterDescription = adapterDescriptionOptional.get();
-                String workerUrl = new Utils().getWorkerUrl(adapterDescription);
-                String newUrl = Utils.addUserNameToApi(workerUrl, userName);
+                String workerUrl = workerUrlProvider.getWorkerUrlForAdapter(adapterDescription);
 
-                result =  managementService.getAdapterDocumentationAsset(adapterDescription, newUrl);
+                result =  managementService.getDocumentationAsset(workerUrl);
             }
 
             Optional<ProtocolDescription> protocolDescriptionOptional  = managementService.getProtocol(id);
             if (protocolDescriptionOptional.isPresent()) {
                 ProtocolDescription protocolDescription = protocolDescriptionOptional.get();
-                String workerUrl = new Utils().getWorkerUrl(protocolDescription);
-                String newUrl = Utils.addUserNameToApi(workerUrl, userName);
+                String workerUrl = workerUrlProvider.getWorkerUrlForProtocol(protocolDescription);
 
-                result =  managementService.getProtocolDocumentationAsset(protocolDescription, newUrl);
+                result =  managementService.getDocumentationAsset(workerUrl);
             }
 
             if (result == null) {
@@ -184,6 +185,8 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
             }
         } catch (AdapterException e) {
             LOG.error("Not found adapter with id " + id, e);
+            return fail();
+        } catch (NoServiceEndpointsAvailableException e) {
             return fail();
         }
     }

@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.connect.container.master.rest;
 
+import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.management.SourcesManagement;
 import org.apache.streampipes.model.SpDataSet;
@@ -79,7 +80,7 @@ public class SourcesResource extends AbstractAdapterResource<SourcesManagement> 
 
         try {
             managementService.addAdapter(elementId,  dataSet, username);
-        } catch (AdapterException e) {
+        } catch (AdapterException | NoServiceEndpointsAvailableException e) {
             LOG.error("Could not set data set instance: " + dataSet.getUri(), e);
             return ok(Notifications.error("Could not set data set instance: " + dataSet.getUri()));
         }
@@ -98,7 +99,7 @@ public class SourcesResource extends AbstractAdapterResource<SourcesManagement> 
 
         try {
             managementService.detachAdapter(elementId, runningInstanceId, username);
-        } catch (AdapterException e) {
+        } catch (AdapterException | NoServiceEndpointsAvailableException e) {
             LOG.error("Could not set set id "+ elementId  + " with instance id: "+ runningInstanceId, e);
             return fail();
         }

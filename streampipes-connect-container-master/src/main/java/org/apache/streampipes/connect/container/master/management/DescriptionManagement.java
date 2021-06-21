@@ -87,27 +87,16 @@ public class DescriptionManagement {
                 .findFirst();
     }
 
-    public String getAdapterAssets(AdapterDescription desc, String baseUrl) throws AdapterException {
-        return WorkerRestClient.getAdapterAssets(baseUrl, desc);
+    public String getAssets(String baseUrl) throws AdapterException {
+        return WorkerRestClient.getAssets(baseUrl);
     }
 
-    public byte[] getAdapterIconAsset(AdapterDescription desc, String baseUrl) throws AdapterException {
-        return WorkerRestClient.getAdapterIconAsset(baseUrl, desc);
+    public byte[] getIconAsset(String baseUrl) throws AdapterException {
+        return WorkerRestClient.getIconAsset(baseUrl);
     }
 
-    public String getAdapterDocumentationAsset(AdapterDescription desc, String baseUrl) throws AdapterException {
-        return WorkerRestClient.getAdapterDocumentationAsset(baseUrl, desc);
+    public String getDocumentationAsset(String baseUrl) throws AdapterException {
+        return WorkerRestClient.getDocumentationAsset(baseUrl);
     }
 
-    public String getProtocolAssets(ProtocolDescription desc, String baseUrl) throws AdapterException {
-        return WorkerRestClient.getProtocolAssets(baseUrl, desc);
-    }
-
-    public byte[] getProtocolIconAsset(ProtocolDescription desc, String baseUrl) throws AdapterException {
-        return WorkerRestClient.getProtocolIconAsset(baseUrl, desc);
-    }
-
-    public String getProtocolDocumentationAsset(ProtocolDescription desc, String baseUrl) throws AdapterException {
-        return WorkerRestClient.getProtocolDocumentationAsset(baseUrl, desc);
-    }
 }

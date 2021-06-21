@@ -18,9 +18,11 @@
 
 package org.apache.streampipes.connect.container.master.management;
 
+import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.adapter.util.TransportFormatGenerator;
 import org.apache.streampipes.connect.container.master.util.AdapterEncryptionService;
+import org.apache.streampipes.connect.container.master.util.Utils;
 import org.apache.streampipes.container.html.JSONGenerator;
 import org.apache.streampipes.container.html.model.DataSourceDescriptionHtml;
 import org.apache.streampipes.container.html.model.Description;
@@ -47,6 +49,7 @@ public class SourcesManagement {
     private Logger logger = LoggerFactory.getLogger(SourcesManagement.class);
 
     private AdapterStorageImpl adapterStorage;
+    private WorkerUrlProvider workerUrlProvider;
     private String connectHost = null;
 
     public SourcesManagement(AdapterStorageImpl adapterStorage) {
@@ -54,10 +57,11 @@ public class SourcesManagement {
     }
 
     public SourcesManagement() {
-        this.adapterStorage = new AdapterStorageImpl();
+        this(new AdapterStorageImpl());
+       this.workerUrlProvider = new WorkerUrlProvider();
     }
 
-    public void addAdapter(String streamId, SpDataSet dataSet, String username) throws AdapterException {
+    public void addAdapter(String streamId, SpDataSet dataSet, String username) throws AdapterException, NoServiceEndpointsAvailableException {
 
 
         String newUrl = getAdapterUrl(streamId, username);
@@ -74,7 +78,7 @@ public class SourcesManagement {
         WorkerRestClient.invokeSetAdapter(newUrl, decryptedAdapterDescription);
     }
 
-    public void detachAdapter(String streamId, String runningInstanceId, String username) throws AdapterException {
+    public void detachAdapter(String streamId, String runningInstanceId, String username) throws AdapterException, NoServiceEndpointsAvailableException {
         AdapterSetDescription adapterDescription = (AdapterSetDescription) getAdapterDescriptionById(streamId);
 
         String newId = adapterDescription.getUri() + "/streams/" + runningInstanceId;
@@ -85,7 +89,7 @@ public class SourcesManagement {
         WorkerRestClient.stopSetAdapter(newUrl, adapterDescription);
     }
 
-    private String getAdapterUrl(String streamId, String username) {
+    private String getAdapterUrl(String streamId, String username) throws NoServiceEndpointsAvailableException {
         String appId = "";
         List<AdapterDescription> adapterDescriptions = this.adapterStorage.getAllAdapters();
         for (AdapterDescription ad : adapterDescriptions) {
@@ -93,7 +97,7 @@ public class SourcesManagement {
                 appId = ad.getAppId();
             }
         }
-        String workerUrl = new Utils().getWorkerUrlById(appId);
+        String workerUrl = workerUrlProvider.getWorkerBaseUrl(appId);
 
         return Utils.addUserNameToApi(workerUrl, username);
 

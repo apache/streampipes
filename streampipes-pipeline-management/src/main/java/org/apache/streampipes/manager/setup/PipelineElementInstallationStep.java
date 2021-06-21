@@ -19,8 +19,8 @@ package org.apache.streampipes.manager.setup;
 
 import org.apache.streampipes.manager.endpoint.EndpointItemParser;
 import org.apache.streampipes.manager.operations.Operations;
-import org.apache.streampipes.model.client.endpoint.RdfEndpoint;
-import org.apache.streampipes.model.client.endpoint.RdfEndpointItem;
+import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpoint;
+import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpointItem;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notifications;
 
@@ -30,10 +30,10 @@ import java.util.List;
 
 public class PipelineElementInstallationStep implements InstallationStep {
 
-  private RdfEndpoint endpoint;
+  private ExtensionsServiceEndpoint endpoint;
   private String userEmail;
 
-  public PipelineElementInstallationStep(RdfEndpoint endpoint, String userEmail) {
+  public PipelineElementInstallationStep(ExtensionsServiceEndpoint endpoint, String userEmail) {
     this.endpoint = endpoint;
     this.userEmail = userEmail;
   }
@@ -41,8 +41,8 @@ public class PipelineElementInstallationStep implements InstallationStep {
   @Override
   public List<Message> install() {
     List<Message> statusMessages = new ArrayList<>();
-    List<RdfEndpointItem> items = Operations.getEndpointUriContents(Collections.singletonList(endpoint));
-    for(RdfEndpointItem item : items) {
+    List<ExtensionsServiceEndpointItem> items = Operations.getEndpointUriContents(Collections.singletonList(endpoint));
+    for(ExtensionsServiceEndpointItem item : items) {
       statusMessages.add(new EndpointItemParser().parseAndAddEndpointItem(item.getUri(),
               userEmail, true, false));
     }
