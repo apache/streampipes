@@ -17,14 +17,14 @@
  */
 package org.apache.streampipes.performance;
 
-import Test.GenericTest;
-import Test.Test;
+import org.apache.streampipes.performance.performancetest.GenericTest;
+import org.apache.streampipes.performance.performancetest.Test;
 
 public class TestFactory {
 
 
     public static Test getFromEnv(){
-        switch (System.getenv("TestType")){
+        switch (System.getenv("TEST_TYPE")){
             case "Deployment":
                 return getDeploymentTest();
             case "Latency":
@@ -41,7 +41,7 @@ public class TestFactory {
 
     public static Test getDeploymentTest(){
         return new GenericTest(getPipelineName(), true, false,
-                false, 0, 1000);
+                false, 0, 3000);
     }
 
     public static Test getLatencyTest(){
@@ -50,18 +50,18 @@ public class TestFactory {
     }
 
     public static Test getMigrationTest(){
-        return new GenericTest(getPipelineName(), true, true,
-                false, 15000, 10000);
+        return new GenericTest(getPipelineName(), false, true,
+                false, 15000, 5000);
     }
 
     public static Test getReconfigurationTest(){
-        return new GenericTest(getPipelineName(), true, false,
-                true, 15000, 10000);
+        return new GenericTest(getPipelineName(), false, false,
+                true, 10000, 5000);
     }
 
     //Helpers
     private static String getPipelineName(){
-        String pipelineName = System.getenv("PipelineName");
+        String pipelineName = System.getenv("TEST_PIPELINE_NAME");
         if (pipelineName==null) throw new RuntimeException("No Pipeline Name provided.");
         return pipelineName;
     }

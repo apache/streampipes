@@ -17,8 +17,7 @@
  */
 package org.apache.streampipes.performance;
 
-import Test.GenericTest;
-import Test.Test;
+import org.apache.streampipes.performance.performancetest.Test;
 import org.apache.streampipes.logging.evaluation.EvaluationLogger;
 
 
@@ -26,14 +25,18 @@ public class EdgeExtensionsGenericPerformanceTest {
 
     public static void main(String ... args){
 
-        int numberOfRuns = 5;
+        int numberOfRuns = Integer.parseInt(System.getenv("TEST_RUNS"));
+
+        EvaluationLogger logger = EvaluationLogger.getInstance();
 
         Test test = TestFactory.getFromEnv();
 
         for(int i = 1; i <= numberOfRuns; i++){
+            Object[] line = {System.currentTimeMillis(), String.format("Run %d started", i)};
+            logger.addLine(line);
             test.execute();
         }
-        EvaluationLogger.getInstance().writeOut();
+        logger.writeOut();
 
     }
 

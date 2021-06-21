@@ -15,16 +15,18 @@
  * limitations under the License.
  *
  */
-package Test;
+package org.apache.streampipes.performance.performancetest;
 
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.client.StreamPipesCredentials;
 import org.apache.streampipes.logging.evaluation.EvaluationLogger;
+import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 
 import java.util.List;
+import java.util.Optional;
 
 public class GenericTest implements Test{
 
@@ -36,6 +38,7 @@ public class GenericTest implements Test{
     private final StreamPipesClient client;
     private final Pipeline pipeline;
     private final EvaluationLogger evalLogger = EvaluationLogger.getInstance();
+    private float reconfigurableValue = 0;
 
     public GenericTest(String pipelineName, boolean stopPipeline, boolean shouldBeMigrated, boolean shouldBeReconfigured,
                        long timeToSleepBeforeManipulation, long timeToSleepAfterManipulation){
@@ -45,10 +48,10 @@ public class GenericTest implements Test{
         this.timeToSleepBeforeManipulation = timeToSleepBeforeManipulation;
         this.timeToSleepAfterManipulation = timeToSleepAfterManipulation;
         StreamPipesCredentials credentials = StreamPipesCredentials
-                .from(System.getenv("user"), System.getenv("apiKey"));
+                .from(System.getenv("SP_USER"), System.getenv("SP_API_KEY"));
         // Create an instance of the StreamPipes client
         client = StreamPipesClient
-                .create("localhost", 8082, credentials, true);
+                .create(System.getenv("SP_HOST"), Integer.parseInt(System.getenv("SP_PORT")), credentials, true);
         List<Pipeline> pipelines = client.pipelines().all();
         pipeline = pipelines.stream()
                 .filter(p -> p.getName().equals(pipelineName))
@@ -68,6 +71,7 @@ public class GenericTest implements Test{
             evalLogger.addLine(line);
             if (startMessage.isSuccess()) {
                 System.out.println(startMessage.getTitle());
+                pipeline.setRunning(true);
             }
         }
 
@@ -80,11 +84,7 @@ public class GenericTest implements Test{
         //Manipulate Pipeline
         //Migration
         if (shouldBeMigrated) {
-            pipeline.getSepas().forEach(p -> {
-                p.setDeploymentTargetNodeId("edge-02.node-controller");
-                p.setDeploymentTargetNodeHostname("edge02.example.de");
-                p.setDeploymentTargetNodePort(7078);
-            });
+            prepareMigration();
             long beforeMigration = System.nanoTime();
             PipelineOperationStatus migrationMessage = client.pipelines().migrate(pipeline);
             long migrationDuration = System.nanoTime() - beforeMigration;
@@ -101,9 +101,8 @@ public class GenericTest implements Test{
                     .map(FreeTextStaticProperty.class::cast)
                     .filter(FreeTextStaticProperty::isReconfigurable)
                     .forEach(sp -> {
-
                         if (sp.getInternalName().equals("i-am-reconfigurable")) {
-                            sp.setValue("999");
+                            sp.setValue(Float.toString(this.reconfigurableValue++));
                         }
                     }));
             PipelineOperationStatus message = client.pipelines().reconfigure(pipeline);
@@ -118,10 +117,30 @@ public class GenericTest implements Test{
             e.printStackTrace();
         }
         //Stop Pipeline
-        if(stopPipeline && !pipeline.isRunning()){
+        if(stopPipeline && pipeline.isRunning()){
             PipelineOperationStatus stopMessage = client.pipelines().stop(pipeline);
             if(stopMessage.isSuccess()) {
                 System.out.println("Pipeline successfully stopped");
+                pipeline.setRunning(false);
+            }
+        }
+    }
+
+
+    private void prepareMigration(){
+        String appId = System.getenv("MIGRATION_ENTITY_APP_ID");
+        String[] node1 = System.getenv("MIGRATION_NODE_1").split(";");
+        String[] node2 = System.getenv("MIGRATION_NODE_2").split(";");
+        Optional<DataProcessorInvocation> processor = pipeline.getSepas().stream().filter(p -> p.getAppId().equals(appId)).findFirst();
+        if (processor.isPresent()){
+            if (processor.get().getDeploymentTargetNodeId().equals(node1[0])){
+                processor.get().setDeploymentTargetNodeId(node2[0]);
+                processor.get().setDeploymentTargetNodeHostname(node2[1]);
+                processor.get().setDeploymentTargetNodePort(Integer.parseInt(node2[2]));
+            } else{
+                processor.get().setDeploymentTargetNodeId(node1[0]);
+                processor.get().setDeploymentTargetNodeHostname(node1[1]);
+                processor.get().setDeploymentTargetNodePort(Integer.parseInt(node1[2]));
             }
         }
     }

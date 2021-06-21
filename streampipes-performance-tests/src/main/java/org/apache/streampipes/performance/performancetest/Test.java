@@ -15,10 +15,10 @@
  * limitations under the License.
  *
  */
-package Test;
+package org.apache.streampipes.performance.performancetest;
 
 public interface Test {
 
-    public void execute();
+    void execute();
 
 }
