@@ -18,13 +18,15 @@
 
 
 <div id="formWrapper" fxFlex="100" fxLayout="column">
-
     <div *ngIf="!staticProperty.horizontalRendering" fxLayout="column">
         <div fxFlex fxLayout="row">
             <div fxLayout="column" style="margin-left: 10px">
                 <mat-radio-group class="radio-group">
                     <mat-radio-button *ngFor="let option of staticProperty.options" style="margin-top: -10px"
-                                      [value]="option" (click)="select(option.elementId)" [checked]="option.selected">
+                                      [value]="option"
+                                      (click)="select(option.elementId)"
+                                      [checked]="option.selected"
+                                      [attr.data-cy]="staticProperty.internalName + option.name">
                         <label style="font-weight: normal">
                             {{option.name}}
                         </label>
@@ -36,7 +38,7 @@
 
     <div *ngIf="staticProperty.horizontalRendering">
         <mat-form-field style="width: 100%">
-            <mat-select [(value)]="selectedOption">
+            <mat-select [(value)]="selectedOption" [attr.data-cy]="fieldName">
                 <mat-option *ngFor="let option of staticProperty.options" [value]="option.elementId"
                             (click)="select(option.elementId)">
                     <label style="font-weight: normal">
@@ -46,5 +48,4 @@
             </mat-select>
         </mat-form-field>
     </div>
-
 </div>
