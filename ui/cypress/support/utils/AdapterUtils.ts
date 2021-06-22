@@ -1,8 +1,26 @@
-import {UserInput} from '../model/UserInput';
-import {StaticPropertyUtils} from './StaticPropertyUtils';
-import {SpecificAdapterInput} from '../model/SpecificAdapterInput';
-import {GenericAdapterInput} from '../model/GenericAdapterInput';
-import {SpecificAdapterBuilder} from '../builder/SpecificAdapterBuilder';
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+import { UserInput } from '../model/UserInput';
+import { StaticPropertyUtils } from './StaticPropertyUtils';
+import { SpecificAdapterInput } from '../model/SpecificAdapterInput';
+import { GenericAdapterInput } from '../model/GenericAdapterInput';
+import { SpecificAdapterBuilder } from '../builder/SpecificAdapterBuilder';
 
 export class AdapterUtils {
 
@@ -62,7 +80,7 @@ export class AdapterUtils {
         const configuration = SpecificAdapterBuilder
             .create('Machine_Data_Simulator')
             .setName(name)
-            .addInput('input', 'wait-time-ms','1000')
+            .addInput('input', 'wait-time-ms', '1000')
             .build();
 
         AdapterUtils.goToConnect();
@@ -78,52 +96,52 @@ export class AdapterUtils {
     }
 
     private static goToConnect() {
-        it('Login', function () {
+        it('Login', () => {
             cy.login();
         });
 
-        it('Go to StreamPipes connect', function () {
+        it('Go to StreamPipes connect', () => {
             cy.visit('#/connect');
         });
     }
 
     private static selectAdapter(name) {
-        it('Select adapter', function () {
+        it('Select adapter', () => {
             cy.get('#' + name).click();
         });
     }
 
     private static configureAdapter(configs: UserInput[]) {
-        it('Next Button should be disabled', function () {
+        it('Next Button should be disabled', () => {
             cy.get('button').contains('Next').parent().should('be.disabled');
         });
 
         StaticPropertyUtils.input(configs);
 
-        it('Next Button should not be disabled', function () {
+        it('Next Button should not be disabled', () => {
             cy.get('button').contains('Next').parent().should('not.be.disabled');
         });
 
-        it('Click next', function () {
+        it('Click next', () => {
             cy.get('button').contains('Next').parent().click();
         });
     }
 
     private static configureFormat(adapterConfiguration: GenericAdapterInput) {
-        it('Select format', function () {
+        it('Select format', () => {
             cy.dataCy(adapterConfiguration.format).click();
         });
 
         StaticPropertyUtils.input(adapterConfiguration.formatConfiguration);
 
-        it('Click next', function () {
+        it('Click next', () => {
             // cy.dataCy('sp-format-selection-next-button').parent().should('not.be.disabled');
             cy.dataCy('sp-format-selection-next-button').contains('Next').parent().click();
         });
     }
 
     private static markPropertyAsTimestamp(propertyName: string) {
-        it('Mark property as timestamp', function () {
+        it('Mark property as timestamp', () => {
 
             // Edit timestamp
             cy.dataCy('edit-' + propertyName).click();
@@ -137,7 +155,7 @@ export class AdapterUtils {
     }
 
     private static finishEventSchemaConfiguration() {
-        it('Click next', function () {
+        it('Click next', () => {
             cy.get('[data-cy=sp-connect-schema-editor]', { timeout: 10000 }).should('be.visible');
             cy.get('#event-schema-next-button').click();
         });
@@ -151,28 +169,28 @@ export class AdapterUtils {
         AdapterUtils.startAdapter(name, 'sp-connect-adapter-set-success');
     }
 
-    private static startAdapter(name ,successElement) {
-        it('Set adapter name', function () {
+    private static startAdapter(name , successElement) {
+        it('Set adapter name', () => {
             cy.get('[data-cy=sp-adapter-name]').type(name);
         });
 
-        it('Start adapter', function () {
+        it('Start adapter', () => {
             cy.get('#button-startAdapter').click();
             cy.get('[data-cy=' + successElement + ']', { timeout: 10000 }).should('be.visible');
         });
 
-        it('Close adapter preview', function () {
+        it('Close adapter preview', () => {
             cy.get('button').contains('Close').parent().click();
         });
     }
 
     public static deleteAdapter() {
-        it('Delete adapter', function () {
+        it('Delete adapter', () => {
             cy.visit('#/connect');
 
             cy.get('div').contains('My Adapters').parent().click();
-            cy.dataCy('delete').should('have.length', 1)
-            cy.dataCy('delete').click()
+            cy.dataCy('delete').should('have.length', 1);
+            cy.dataCy('delete').click();
             cy.get('[data-cy=delete]', { timeout: 10000 }).should('have.length', 0);
         });
     }

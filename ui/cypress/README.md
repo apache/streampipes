@@ -26,7 +26,7 @@ This folder contains a WIP framework for automated E2E tests of StreamPipes.
 npm run test-e2e
 ```
 
-**User**: test@streampipes.de **Password**: test1234
+**User**: test@streampipes.apache.org **Password**: test1234
 
 >**Note:** This can be changed in **support/general/login.ts**
 
