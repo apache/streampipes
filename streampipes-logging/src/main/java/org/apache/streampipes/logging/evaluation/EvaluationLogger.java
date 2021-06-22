@@ -32,8 +32,6 @@ import java.util.Date;
 
 public class EvaluationLogger {
 
-    private final File file;
-    private String buffer = "";
     private static EvaluationLogger instance = null;
     private final MQTT mqtt;
     private final BlockingConnection connection;
@@ -44,28 +42,8 @@ public class EvaluationLogger {
     }
 
     private EvaluationLogger(){
-        String filepath = System.getenv("SP_LOGGING_FILE_PATH");
         String logging_host = System.getenv("SP_LOGGING_MQTT_HOST");
         int logging_port = Integer.parseInt(System.getenv("SP_LOGGING_MQTT_PORT"));
-        if(filepath==null) throw new RuntimeException("No Logging Location provided.");
-        if(!filepath.endsWith("/")) filepath = filepath + "/";
-        String timePrefix = new SimpleDateFormat("yyyy-MM-dd-HHmmss").format(new Date());
-        String FILE_NAME = "evaluation-logs.csv";
-        String fileWithPath = new StringBuilder()
-                .append(filepath)
-                .append(timePrefix)
-                .append("_")
-                .append(FILE_NAME)
-                .toString();
-        this.file = new File(fileWithPath);
-        try {
-            if(!file.exists()){
-                if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
-                file.createNewFile();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         mqtt = new MQTT();
         try {
@@ -77,26 +55,6 @@ public class EvaluationLogger {
         try {
             connection.connect();
         } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Deprecated
-    public void addLine(Object[] elements){
-        //TODO: Remove
-        for(Object element:elements)
-            buffer += element + ",";
-        buffer += "\n";
-    }
-
-    @Deprecated
-    public void writeOut(){
-        //TODO: Remove
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))){
-            bufferedWriter.append(buffer);
-            bufferedWriter.flush();
-            buffer = "";
-        } catch (IOException e) {
             e.printStackTrace();
         }
     }
