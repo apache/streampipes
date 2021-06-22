@@ -26,18 +26,17 @@ public class EdgeExtensionsGenericPerformanceTest {
     public static void main(String ... args){
 
         int numberOfRuns = Integer.parseInt(System.getenv("TEST_RUNS"));
+        String testType = System.getenv("TEST_TYPE");
 
         EvaluationLogger logger = EvaluationLogger.getInstance();
 
         Test test = TestFactory.getFromEnv();
 
         for(int i = 1; i <= numberOfRuns; i++){
-            Object[] line = {System.currentTimeMillis(), String.format("Run %d started", i)};
-            logger.addLine(line);
+            Object[] line = {System.currentTimeMillis(), String.format("Run %d started", i), i};
+            logger.logMQTT(testType, line);
             test.execute();
         }
-        logger.writeOut();
-
     }
 
 }

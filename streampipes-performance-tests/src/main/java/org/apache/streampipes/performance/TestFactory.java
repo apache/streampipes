@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.performance;
 
+import org.apache.streampipes.logging.evaluation.EvaluationLogger;
 import org.apache.streampipes.performance.performancetest.GenericTest;
 import org.apache.streampipes.performance.performancetest.Test;
 
@@ -24,14 +25,21 @@ public class TestFactory {
 
 
     public static Test getFromEnv(){
+        EvaluationLogger logger = EvaluationLogger.getInstance();
         switch (System.getenv("TEST_TYPE")){
             case "Deployment":
+                Object[] header_deployment = {"timestampInMillis", "event", "numberOfRuns", "durationInNanos", "durationInSecs"};
+                logger.logMQTT("Deployment", header_deployment);
                 return getDeploymentTest();
             case "Latency":
                 return getLatencyTest();
             case "Migration":
+                Object[] header_migration = {"timestampInMillis", "event", "numberOfRuns", "durationInNanos", "durationInSecs"};
+                logger.logMQTT("Migration", header_migration);
                 return getMigrationTest();
             case "Reconfiguration":
+                Object[] header_reconfigure = {"timestampInMillis", "event", "numberOfRuns", "reconfigurationValue"};
+                logger.logMQTT("Reconfiguration", header_reconfigure);
                 return getReconfigurationTest();
             default:
                 throw new RuntimeException("No test configuration found.");

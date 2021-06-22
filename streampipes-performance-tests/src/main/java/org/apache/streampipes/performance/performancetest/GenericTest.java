@@ -62,13 +62,17 @@ public class GenericTest implements Test{
     @Override
     public void execute() {
 
+        String testType = System.getenv("TEST_TYPE");
+
         //Start Pipeline
         if (!pipeline.isRunning()) {
             long beforeStart = System.nanoTime();
             PipelineOperationStatus startMessage = client.pipelines().start(pipeline);
             long deploymentDuration = System.nanoTime() - beforeStart;
-            Object[] line = {System.currentTimeMillis() ,"Deployment duration", deploymentDuration};
-            evalLogger.addLine(line);
+            if(testType.equals("Deployment")){
+                Object[] line = {System.currentTimeMillis() ,"Deployment duration", deploymentDuration};
+                evalLogger.logMQTT(testType, line);
+            }
             if (startMessage.isSuccess()) {
                 System.out.println(startMessage.getTitle());
                 pipeline.setRunning(true);
@@ -88,8 +92,10 @@ public class GenericTest implements Test{
             long beforeMigration = System.nanoTime();
             PipelineOperationStatus migrationMessage = client.pipelines().migrate(pipeline);
             long migrationDuration = System.nanoTime() - beforeMigration;
-            Object[] line = {System.currentTimeMillis(), "Migration duration", migrationDuration};
-            evalLogger.addLine(line);
+            if(testType.equals("Migration")){
+                Object[] line = {System.currentTimeMillis(), "Migration duration", migrationDuration};
+                evalLogger.logMQTT(testType, line);
+            }
             if (migrationMessage.isSuccess()) {
                 System.out.println(migrationMessage.getTitle());
             }

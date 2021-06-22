@@ -38,6 +38,7 @@ public class InvocableEntityResource extends AbstractResource {
     private static final String SLASH = "/";
     private static final String DATA_PROCESSOR_PREFIX = "sepa";
     private static final String DATA_SINK_PREFIX = "sec";
+    private static int nrRuns = 1;
 
     @POST
     @Path("/register")
@@ -82,12 +83,11 @@ public class InvocableEntityResource extends AbstractResource {
         //TODO: Remove Logger after debugging
         InvocableStreamPipesEntity graph = RunningInvocableInstances.INSTANCE.get(runningInstanceId);
         EvaluationLogger logger = EvaluationLogger.getInstance();
-        Object[] line = {System.currentTimeMillis() ,"Element detached", graph.getAppId(), runningInstanceId};
-        logger.addLine(line);
+        Object[] line = {System.currentTimeMillis() ,"Element detached"};
+        logger.logMQTT("Offloading", line);
         Response resp = PipelineElementManager.getInstance().detach(graph, runningInstanceId);
         RunningInvocableInstances.INSTANCE.remove(runningInstanceId);
 
-        logger.writeOut();
         return ok(resp);
     }
 
@@ -101,9 +101,8 @@ public class InvocableEntityResource extends AbstractResource {
                                             PipelineElementReconfigurationEntity reconfigurationEntity) {
         //TODO: Remove Logger after debugging
         EvaluationLogger logger = EvaluationLogger.getInstance();
-        Object[] line = {System.currentTimeMillis() ,"reconfiguration request received", ((FreeTextStaticProperty) reconfigurationEntity.getReconfiguredStaticProperties().get(0)).getValue()};
-        logger.addLine(line);
-        logger.writeOut();
+        Object[] line = {System.currentTimeMillis() ,"reconfiguration request received", nrRuns++,((FreeTextStaticProperty) reconfigurationEntity.getReconfiguredStaticProperties().get(0)).getValue()};
+        logger.logMQTT("Reconfiguration", line);
         InvocableStreamPipesEntity graph = RunningInvocableInstances.INSTANCE.get(runningInstanceId);
         return ok(PipelineElementManager.getInstance().reconfigure(graph, reconfigurationEntity));
     }
