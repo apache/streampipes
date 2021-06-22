@@ -20,11 +20,14 @@ package org.apache.streampipes.rest.impl;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.manager.assets.AssetManager;
 import org.apache.streampipes.manager.endpoint.EndpointItemParser;
+import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.manager.storage.UserService;
+import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.model.message.NotificationType;
@@ -87,15 +90,16 @@ public class PipelineElementImport extends AbstractRestResource {
   @PUT
   @Path("/{id}")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response updateElement(@PathParam("username") String username, @PathParam("id") String uri) {
+  public Response updateElement(@PathParam("username") String username, @PathParam("id") String elementId) {
     if (!authorized(username)) {
       return ok(Notifications.error(NotificationType.UNAUTHORIZED));
     }
     try {
-      uri = URLDecoder.decode(uri, "UTF-8");
-      String payload = parseURIContent(uri);
+      NamedStreamPipesEntity entity = find(elementId);
+      String url = new ExtensionsServiceEndpointGenerator(entity).getEndpointResourceUrl();
+      String payload = parseURIContent(url);
       return ok(Operations.verifyAndUpdateElement(payload, username));
-    } catch (URISyntaxException | IOException | SepaParseException e) {
+    } catch (URISyntaxException | IOException | SepaParseException | NoServiceEndpointsAvailableException e) {
       e.printStackTrace();
       return constructErrorMessage(new Notification(NotificationType.PARSE_ERROR, e.getMessage()));
     }
@@ -135,6 +139,18 @@ public class PipelineElementImport extends AbstractRestResource {
               NotificationType.STORAGE_ERROR.description()));
     }
     return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
+  }
+
+  private NamedStreamPipesEntity find(String elementId) {
+    if (getPipelineElementStorage().existsDataSink(elementId)) {
+      return getPipelineElementStorage().getDataSinkById(elementId);
+    } else if (getPipelineElementStorage().existsDataProcessor(elementId)) {
+      return getPipelineElementStorage().getDataProcessorById(elementId);
+    } else if (getPipelineElementStorage().existsDataStream(elementId)) {
+      return getPipelineElementStorage().getDataStreamById(elementId);
+    } else {
+      throw new IllegalArgumentException("Could not find element for ID " + elementId);
+    }
   }
 
 }

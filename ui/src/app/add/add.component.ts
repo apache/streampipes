@@ -24,7 +24,7 @@ import {PanelType} from "../core-ui/dialog/base-dialog/base-dialog.model";
 import {DialogService} from "../core-ui/dialog/base-dialog/base-dialog.service";
 import {AddEndpointComponent} from "./dialogs/add-endpoint/add-endpoint.component";
 import {EndpointInstallationComponent} from "./dialogs/endpoint-installation/endpoint-installation.component";
-import {RdfEndpointItem} from "../core-model/gen/streampipes-model-client";
+import {ExtensionsServiceEndpointItem} from "../core-model/gen/streampipes-model-client";
 
 @Component({
     selector: 'add',
@@ -35,7 +35,7 @@ export class AddComponent implements OnInit {
 
     results: any[];
     loading: boolean;
-    endpointItems: RdfEndpointItem[];
+    endpointItems: ExtensionsServiceEndpointItem[];
     endpointItemsLoadingComplete: boolean;
     selectedTab: string;
     availableTypes: Array<string> = ["all", "set", "stream", "sepa", "action"];
@@ -132,6 +132,7 @@ export class AddComponent implements OnInit {
         this.endpointItemsLoadingComplete = false;
         this.AddService.getRdfEndpointItems()
             .subscribe(endpointItems => {
+                console.log(endpointItems);
                 this.endpointItems = endpointItems;
                 this.endpointItemsLoadingComplete = true;
             });

@@ -19,9 +19,9 @@
 import {Component, EventEmitter, Input, OnInit, Output, Sanitizer} from "@angular/core";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {PipelineElementEndpointService} from "../../../platform-services/apis/pipeline-element-endpoint.service";
-import {RdfEndpointItem} from "../../../core-model/gen/streampipes-model-client";
 import {AddService} from "../../services/add.service";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
+import {ExtensionsServiceEndpointItem} from "../../../core-model/gen/streampipes-model-client";
 
 @Component({
   selector: 'endpoint-item',
@@ -31,7 +31,7 @@ import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 export class EndpointItemComponent implements OnInit {
 
   @Input()
-  item: RdfEndpointItem;
+  item: ExtensionsServiceEndpointItem;
 
   itemTypeTitle: string;
   itemTypeStyle: string;
@@ -124,8 +124,8 @@ export class EndpointItemComponent implements OnInit {
     event.stopPropagation();
   }
 
-  refresh(elementUri) {
-    this.PipelineElementEndpointService.update(elementUri)
+  refresh(elementId: string) {
+    this.PipelineElementEndpointService.update(elementId)
         .subscribe(msg => {
           this.snackBar.open(msg.notifications[0].title, "Ok", {
             duration: 2000

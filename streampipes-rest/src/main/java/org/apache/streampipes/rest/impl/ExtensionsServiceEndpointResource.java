@@ -26,6 +26,7 @@ import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpoint;
 import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpointItem;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
+import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.storage.api.IExtensionsServiceEndpointStorage;
 
 import javax.ws.rs.*;
@@ -156,8 +157,12 @@ public class ExtensionsServiceEndpointResource extends AbstractRestResource {
     endpoint.setName(entity.getName());
     endpoint.setAppId(entity.getAppId());
     endpoint.setType(type);
+    endpoint.setAvailable(false);
+    endpoint.setElementId(entity.getElementId());
     endpoint.setUri(entity.getElementId());
     endpoint.setEditable(!(entity.isInternallyManaged()));
+    endpoint.setIncludesIcon(entity.isIncludesAssets() && entity.getIncludedAssets().contains(Assets.ICON));
+    endpoint.setIncludesDocs(entity.isIncludesAssets() && entity.getIncludedAssets().contains(Assets.DOCUMENTATION));
     return endpoint;
   }
 

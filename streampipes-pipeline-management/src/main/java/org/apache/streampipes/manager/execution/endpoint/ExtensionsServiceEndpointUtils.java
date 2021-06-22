@@ -17,13 +17,18 @@
  */
 package org.apache.streampipes.manager.execution.endpoint;
 
-import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+import org.apache.streampipes.model.base.NamedStreamPipesEntity;
+import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 public class ExtensionsServiceEndpointUtils {
 
-  public static SpServiceUrlProvider getPipelineElementType(InvocableStreamPipesEntity entity) {
-    return entity instanceof DataProcessorInvocation ? SpServiceUrlProvider.DATA_PROCESSOR : SpServiceUrlProvider.DATA_SINK;
+  public static SpServiceUrlProvider getPipelineElementType(NamedStreamPipesEntity entity) {
+    return isDataProcessor(entity) ? SpServiceUrlProvider.DATA_PROCESSOR : SpServiceUrlProvider.DATA_SINK;
+  }
+
+  private static boolean isDataProcessor(NamedStreamPipesEntity entity) {
+    return entity instanceof DataProcessorInvocation || entity instanceof DataProcessorDescription;
   }
 }

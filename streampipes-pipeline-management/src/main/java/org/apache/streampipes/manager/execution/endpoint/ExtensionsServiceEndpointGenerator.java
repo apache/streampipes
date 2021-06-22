@@ -18,6 +18,7 @@
 package org.apache.streampipes.manager.execution.endpoint;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
+import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
@@ -38,6 +39,11 @@ public class ExtensionsServiceEndpointGenerator {
                                             SpServiceUrlProvider spServiceUrlProvider) {
     this.appId = appId;
     this.spServiceUrlProvider = spServiceUrlProvider;
+  }
+
+  public ExtensionsServiceEndpointGenerator(NamedStreamPipesEntity entity) {
+    this.appId = entity.getAppId();
+    this.spServiceUrlProvider = ExtensionsServiceEndpointUtils.getPipelineElementType(entity);
   }
 
   public String getEndpointResourceUrl() throws NoServiceEndpointsAvailableException {

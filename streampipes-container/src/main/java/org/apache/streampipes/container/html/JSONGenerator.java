@@ -64,6 +64,7 @@ public class JSONGenerator {
     obj.add("editable", new JsonPrimitive(d.isEditable()));
     obj.add("includesIcon", new JsonPrimitive(d.isIncludesIcon()));
     obj.add("includesDocs", new JsonPrimitive(d.isIncludesDocs()));
+    obj.add("available", new JsonPrimitive(true));
     return obj;
   }
 }

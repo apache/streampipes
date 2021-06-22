@@ -21,8 +21,8 @@ import {HttpClient} from "@angular/common/http";
 import {AuthStatusService} from "../../services/auth-status.service";
 import {PlatformServicesCommons} from "../../platform-services/apis/commons.service";
 import {Observable} from "rxjs";
-import {RdfEndpointItem} from "../../core-model/gen/streampipes-model-client";
 import {map} from "rxjs/operators";
+import {ExtensionsServiceEndpointItem} from "../../core-model/gen/streampipes-model-client";
 
 @Injectable()
 export class AddService {
@@ -37,12 +37,12 @@ export class AddService {
     return this.http.get(this.platformServicesCommons.authUserBasePath() + "/rdfendpoints");
   }
 
-  getRdfEndpointItems(): Observable<Array<RdfEndpointItem>> {
+  getRdfEndpointItems(): Observable<Array<ExtensionsServiceEndpointItem>> {
     return this
         .http
         .get(this.platformServicesCommons.authUserBasePath() + "/rdfendpoints/items")
         .pipe(map(response => {
-          return (response as any[]).map(item => RdfEndpointItem.fromData(item));
+          return (response as any[]).map(item => ExtensionsServiceEndpointItem.fromData(item));
         }));
   }
 
@@ -54,7 +54,7 @@ export class AddService {
     return this.http.delete(this.platformServicesCommons.authUserBasePath() + "/rdfendpoints/" + rdfEndpointId);
   }
 
-  getRdfEndpointIcon(item: RdfEndpointItem): Observable<any> {
+  getRdfEndpointIcon(item: ExtensionsServiceEndpointItem): Observable<any> {
     return this.http.post(this.platformServicesCommons.authUserBasePath()
         + "/rdfendpoints/items/icon", item, { responseType: 'blob' });
   }

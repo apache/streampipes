@@ -41,3 +41,13 @@
   margin-top: -5px;
   width: 50px;
 }
+
+.endpoint-icon-available {
+  cursor: default;
+  color: #4CAF50;
+}
+
+.endpoint-icon-critical {
+  cursor: default;
+  color: #F44336;
+}

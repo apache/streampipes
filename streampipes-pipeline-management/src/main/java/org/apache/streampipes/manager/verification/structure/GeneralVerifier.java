@@ -18,11 +18,12 @@
 
 package org.apache.streampipes.manager.verification.structure;
 
-import java.util.List;
-
 import org.apache.streampipes.manager.verification.messages.VerificationResult;
-import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
+import org.apache.streampipes.model.message.NotificationType;
+import org.apache.streampipes.sdk.utils.Assets;
+
+import java.util.List;
 
 public class GeneralVerifier<T extends NamedStreamPipesEntity> extends AbstractVerifier {
 
@@ -35,7 +36,7 @@ public class GeneralVerifier<T extends NamedStreamPipesEntity> extends AbstractV
 	
 	@Override
 	public List<VerificationResult> validate() {
-		if (description.getIconUrl() == null) addWarning(NotificationType.WARNING_NO_ICON);
+		if (!description.isIncludesAssets() || !description.getIncludedAssets().contains(Assets.ICON)) addWarning(NotificationType.WARNING_NO_ICON);
 		if (description.getName() == null) addWarning(NotificationType.WARNING_NO_NAME);
 		
 		return validationResults;

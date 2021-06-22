@@ -18,6 +18,11 @@
 
 <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start" class="pipeline-element-box"
      style="padding:5px;margin-bottom:10px;background:{{getSelectedBackground()}}" [ngStyle]="item.editable ? {opacity: 1} : {opacity: 0.5}">
+    <div fxLayout="row" style="width: 100%;">
+        <i class="material-icons" [ngClass]="item.available ? 'endpoint-icon-available' : 'endpoint-icon-critical'">lens</i>
+        <span fxFlex></span>
+        <span class="{{itemTypeStyle}}" matTooltip="Endpoint {{item.available ? 'available' : 'not available'}}">{{itemTypeTitle}}</span>
+    </div>
     <div fxFlex fxLayout="row" style="width:100%;">
         <div style="margin-right:10px;margin-left:10px;margin-top:10px;">
             <div *ngIf="!item.includesIcon || iconError" class="draggable-icon {{item.type}}">{{iconText(item.name)}}</div>
@@ -25,9 +30,7 @@
                 <img class="icon" [src]="image"></div>
         </div>
         <div fxFlex fxLayout="column">
-            <div fxFlex fxLayoutAlign="end start">
-                <span class="{{itemTypeStyle}}">{{itemTypeTitle}}</span>
-            </div>
+
             <div class="ml-5"><small *ngIf="!(item.editable)">Internally managed by StreamPipes</small></div>
             <div fxFlex fxLayoutAlign="start end" class="ml-5">
                 <button class="small-button-add" mat-button mat-raised-button color="primary" [disabled]="!(item.editable)"
@@ -42,7 +45,7 @@
                     <button class="small-button-add mat-basic no-min-width" [disabled]="!(item.editable)"
                             mat-raised-button mat-button [matMenuTriggerFor]="menu"><span style="font-size:12px;">...</span></button>
                     <mat-menu #menu="matMenu">
-                        <button mat-menu-item (click)="refresh(item.uri)">
+                        <button mat-menu-item (click)="refresh(item.elementId)" [disabled]="!item.available">
                             <mat-icon>refresh</mat-icon>
                             <span>&nbsp;Update</span>
                         </button>

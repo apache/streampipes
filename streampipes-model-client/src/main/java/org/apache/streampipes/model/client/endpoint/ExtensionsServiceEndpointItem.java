@@ -37,6 +37,7 @@ public class ExtensionsServiceEndpointItem {
 
     private boolean installed;
     private boolean editable;
+    private boolean available;
 
     private List<ExtensionsServiceEndpointItem> streams;
 
@@ -130,5 +131,13 @@ public class ExtensionsServiceEndpointItem {
 
     public void setIncludesDocs(boolean includesDocs) {
         this.includesDocs = includesDocs;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
     }
 }
