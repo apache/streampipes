@@ -1,0 +1,9 @@
+{
+  "projectId": "z5n3e9",
+  "env": {
+    "TAKE_SCREENSHOT": "false"
+  },
+  "baseUrl": "http://localhost:8082",
+  "trashAssetsBeforeRuns": false,
+  "videoCompression": false
+}
