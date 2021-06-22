@@ -18,12 +18,16 @@
 package org.apache.streampipes.manager.health;
 
 
+import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
+import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
+import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
 import org.apache.streampipes.manager.execution.http.HttpRequestBuilder;
 import org.apache.streampipes.manager.util.TemporaryGraphStorage;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineHealthStatus;
 import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,8 +66,15 @@ public class PipelineHealthCheck implements Runnable {
           String instanceId = extractInstanceId(graph);
           if (allRunningInstances.stream().noneMatch(runningInstanceId -> runningInstanceId.equals(instanceId))) {
             if (shouldRetry(instanceId)) {
+              String endpointUrl = graph.getSelectedEndpointUrl();
               shouldUpdatePipeline.set(true);
-              boolean success = new HttpRequestBuilder(graph, graph.getBelongsTo()).invoke().isSuccess();
+              boolean success;
+              try {
+                endpointUrl = findEndpointUrl(graph);
+                success = new HttpRequestBuilder(graph, endpointUrl).invoke().isSuccess();
+              } catch (NoServiceEndpointsAvailableException e) {
+                success = false;
+              }
               if (!success) {
                 failedInstances.add(instanceId);
                 addFailedAttemptNotification(pipelineNotifications, graph);
@@ -77,6 +88,7 @@ public class PipelineHealthCheck implements Runnable {
                 recoveredInstances.add(instanceId);
                 addSuccessfulRestoreNotification(pipelineNotifications, graph);
                 resetFailedAttempts(instanceId);
+                graph.setSelectedEndpointUrl(endpointUrl);
                 LOG.info("Successfully restored pipeline element {} of pipeline {}", graph.getName(), pipeline.getName());
               }
             }
@@ -93,6 +105,11 @@ public class PipelineHealthCheck implements Runnable {
         }
       });
     }
+  }
+
+  private String findEndpointUrl(InvocableStreamPipesEntity graph) throws NoServiceEndpointsAvailableException {
+    SpServiceUrlProvider serviceUrlProvider = ExtensionsServiceEndpointUtils.getPipelineElementType(graph);
+    return new ExtensionsServiceEndpointGenerator(graph.getAppId(), serviceUrlProvider).getEndpointResourceUrl();
   }
 
   private boolean shouldRetry(String instanceId) {
@@ -139,7 +156,7 @@ public class PipelineHealthCheck implements Runnable {
   }
 
   private String extractInstanceId(InvocableStreamPipesEntity graph) {
-    return graph.getElementId().replace(graph.getBelongsTo() + "/", "");
+    return graph.getElementId().replace(graph.getBelongsTo() + ":", "");
   }
 
 
@@ -166,13 +183,13 @@ public class PipelineHealthCheck implements Runnable {
 
   private void addEndpoint(Map<String, List<InvocableStreamPipesEntity>> endpointMap,
                            InvocableStreamPipesEntity graph) {
-    String belongsTo = graph.getBelongsTo();
-    if (!endpointMap.containsKey(belongsTo)) {
-      endpointMap.put(belongsTo, new ArrayList<>());
+    String selectedEndpoint = graph.getSelectedEndpointUrl();
+    if (!endpointMap.containsKey(selectedEndpoint)) {
+      endpointMap.put(selectedEndpoint, new ArrayList<>());
     }
-    List<InvocableStreamPipesEntity> existingGraphs = endpointMap.get(belongsTo);
+    List<InvocableStreamPipesEntity> existingGraphs = endpointMap.get(selectedEndpoint);
     existingGraphs.add(graph);
-    endpointMap.put(belongsTo, existingGraphs);
+    endpointMap.put(selectedEndpoint, existingGraphs);
   }
 
   @Override

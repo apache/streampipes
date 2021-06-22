@@ -19,8 +19,8 @@
 package org.apache.streampipes.manager.execution.http;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
-import org.apache.streampipes.model.pipeline.PipelineElementStatus;
-import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
+import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
+import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
 import org.apache.streampipes.manager.execution.status.PipelineStatusManager;
 import org.apache.streampipes.manager.secret.SecretProvider;
 import org.apache.streampipes.manager.util.TemporaryGraphStorage;
@@ -32,13 +32,17 @@ import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.message.PipelineStatusMessage;
 import org.apache.streampipes.model.message.PipelineStatusMessageType;
 import org.apache.streampipes.model.pipeline.Pipeline;
+import org.apache.streampipes.model.pipeline.PipelineElementStatus;
 import org.apache.streampipes.model.pipeline.PipelineHealthStatus;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.lightcouch.DocumentConflictException;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class PipelineExecutor {
@@ -128,7 +132,7 @@ public class PipelineExecutor {
   private String findSelectedEndpoint(InvocableStreamPipesEntity g) throws NoServiceEndpointsAvailableException {
     return new ExtensionsServiceEndpointGenerator(
             g.getAppId(),
-            getPipelineElementType(g))
+            ExtensionsServiceEndpointUtils.getPipelineElementType(g))
             .getEndpointResourceUrl();
   }
 
@@ -205,10 +209,6 @@ public class PipelineExecutor {
 
   private IPipelineStorage getPipelineStorageApi() {
     return StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI();
-  }
-
-  private SpServiceUrlProvider getPipelineElementType(InvocableStreamPipesEntity entity) {
-    return entity instanceof DataProcessorInvocation ? SpServiceUrlProvider.DATA_PROCESSOR : SpServiceUrlProvider.DATA_SINK;
   }
 
 }

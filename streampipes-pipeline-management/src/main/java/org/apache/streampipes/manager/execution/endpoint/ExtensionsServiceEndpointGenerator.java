@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.execution.http;
+package org.apache.streampipes.manager.execution.endpoint;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
