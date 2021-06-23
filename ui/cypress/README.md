@@ -28,7 +28,7 @@ npm run test-e2e
 
 **User**: test@streampipes.apache.org **Password**: test1234
 
->**Note:** This can be changed in **support/general/login.ts**
+>**Note:** This can be changed in **support/utils/UserUtils.ts**
 
 
 >**Note:** The base URL can be configured in **cypress.json**

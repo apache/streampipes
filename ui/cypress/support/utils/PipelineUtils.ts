@@ -59,7 +59,7 @@ export class PipelineUtils {
     private static configurePipeline(pipelineInput: PipelineInput) {
 
         it('Select processor', () => {
-            cy.get('[data-cy=sp-possible-elements-' + pipelineInput.dataSource + ']', { timeout: 10000 }).click();
+            cy.dataCy('sp-possible-elements-' + pipelineInput.dataSource, { timeout: 10000 }).click();
             cy.dataCy('sp-compatible-elements-' + pipelineInput.processingElement.name).click();
         });
 
@@ -88,8 +88,8 @@ export class PipelineUtils {
             cy.dataCy('sp-editor-pipeline-name').type(pipelineInput.pipelineName);
             cy.dataCy('sp-editor-checkbox-start-immediately').children().click();
             cy.dataCy('sp-editor-save').click();
-            cy.get('[data-cy=sp-pipeline-started-dialog]', { timeout: 10000 }).should('be.visible');
-            cy.get('[data-cy=sp-pipeline-dialog-close]', { timeout: 10000 }).click();
+            cy.dataCy('sp-pipeline-started-dialog', { timeout: 10000 }).should('be.visible');
+            cy.dataCy('sp-pipeline-dialog-close', { timeout: 10000 }).click();
         });
     }
 
@@ -99,7 +99,7 @@ export class PipelineUtils {
             cy.dataCy('delete').should('have.length', 1);
             cy.dataCy('delete').click();
             cy.dataCy('sp-pipeline-stop-and-delete').click();
-            cy.get('[data-cy=delete]', { timeout: 10000 }).should('have.length', 0);
+            cy.dataCy('delete', { timeout: 10000 }).should('have.length', 0);
         });
     }
 }

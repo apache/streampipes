@@ -18,14 +18,14 @@
 
 // tslint:disable-next-line:no-implicit-dependencies
 import * as CSV from 'csv-string';
+import { UserUtils } from './UserUtils';
 
 export class DataLakeUtils {
 
     public static checkResults(dataLakeIndex: string, fileRoute: string) {
 
         it('Validate result in datalake', () => {
-            const streamPipesUser = 'riemer@fzi.de';
-            cy.request('GET', '/streampipes-backend/api/v3/users/' + streamPipesUser + '/datalake/data/' + dataLakeIndex + '/download?format=csv',
+            cy.request('GET', '/streampipes-backend/api/v3/users/' + UserUtils.testUserName + '/datalake/data/' + dataLakeIndex + '/download?format=csv',
                 {'content-type': 'application/octet-stream'}).should((response) => {
                 const expectedResultString = response.body;
                 cy.readFile(fileRoute).then((actualResultString) => {

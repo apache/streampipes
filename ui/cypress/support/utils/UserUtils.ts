@@ -16,21 +16,7 @@
  *
  */
 
-declare global {
-    namespace Cypress {
-        interface Chainable {
-            /**
-             * Select cypress id's ([data-cy=...])
-             */
-            dataCy(value: string, config?: any): Chainable<Element>;
-        }
-    }
+export class UserUtils {
+  public static testUserName = 'test@streampipes.apache.org';
+  public static testUserPassword = 'test1234';
 }
-
-export const dataCy = (value, config?) => {
-    if (config) {
-        return cy.get(`[data-cy=${value}]`, config);
-    } else {
-        return cy.get(`[data-cy=${value}]`);
-    }
-};

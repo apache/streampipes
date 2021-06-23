@@ -16,21 +16,28 @@
  *
  */
 
-declare global {
-    namespace Cypress {
-        interface Chainable {
-            /**
-             * Select cypress id's ([data-cy=...])
-             */
-            dataCy(value: string, config?: any): Chainable<Element>;
-        }
-    }
-}
+import { UserUtils } from '../../support/utils/UserUtils';
 
-export const dataCy = (value, config?) => {
-    if (config) {
-        return cy.get(`[data-cy=${value}]`, config);
-    } else {
-        return cy.get(`[data-cy=${value}]`);
-    }
-};
+describe('Install StreamPipes', () => {
+  it('Open Streampipes', () => {
+    cy.visit('#/login');
+  });
+
+  let isSetupPage: boolean;
+
+  it('Install StreamPipes', () => {
+    cy.url({ timeout: 60000 }).then(($route) => {
+      isSetupPage = ($route.endsWith('setup')) ? true : false;
+      if (isSetupPage) {
+        cy.get('input[name="email"]').type(UserUtils.testUserName);
+        cy.get('input[name="password"]').type(UserUtils.testUserPassword);
+
+        cy.get('button').contains('Install').parent().click();
+
+        cy.dataCy('sp-button-finish-installation', { timeout: 240000 }).should('be.visible');
+        cy.dataCy('sp-button-finish-installation').click();
+      }
+    });
+  });
+
+});

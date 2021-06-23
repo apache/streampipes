@@ -74,13 +74,14 @@
                 <mat-divider></mat-divider>
                 <div fxLayout="row" fxLayoutAlign="center center">
                     <div fxLayout="row" style="margin-top: 10px; margin-bottom: 10px;">
-                        <button mat-button mat-raised-button color="primary"
+                        <button  mat-button mat-raised-button color="primary"
                                 [disabled]="!(setupForm.valid) || loading || installationFinished"
                                 (click)="configure(0)" *ngIf="!installationFinished">
                             <span>{{!installationRunning ? 'Install' : 'Installing...'}}</span>
                         </button>
                         <button mat-button mat-raised-button color="primary"
-                                (click)="openLoginPage()" *ngIf="installationFinished">
+                                (click)="openLoginPage()" *ngIf="installationFinished"
+                                data-cy="sp-button-finish-installation">
                             <mat-icon>arrow_forward</mat-icon>
                             <span>Go to login page</span>
                         </button>

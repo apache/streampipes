@@ -16,6 +16,8 @@
  *
  */
 
+import { UserUtils } from '../utils/UserUtils';
+
 declare global {
     namespace Cypress {
         interface Chainable {
@@ -34,7 +36,7 @@ export const login = () => {
     });
 
     cy.request('POST', '/streampipes-backend/api/v2/admin/login', {
-        username: 'test@streampipes.apache.org',
-        password: 'test1234'
+        username: UserUtils.testUserName,
+        password: UserUtils.testUserPassword
     });
 };

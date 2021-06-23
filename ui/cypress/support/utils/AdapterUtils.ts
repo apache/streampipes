@@ -156,7 +156,7 @@ export class AdapterUtils {
 
     private static finishEventSchemaConfiguration() {
         it('Click next', () => {
-            cy.get('[data-cy=sp-connect-schema-editor]', { timeout: 10000 }).should('be.visible');
+            cy.dataCy('sp-connect-schema-editor', { timeout: 10000 }).should('be.visible');
             cy.get('#event-schema-next-button').click();
         });
     }
@@ -171,12 +171,12 @@ export class AdapterUtils {
 
     private static startAdapter(name , successElement) {
         it('Set adapter name', () => {
-            cy.get('[data-cy=sp-adapter-name]').type(name);
+            cy.dataCy('sp-adapter-name').type(name);
         });
 
         it('Start adapter', () => {
             cy.get('#button-startAdapter').click();
-            cy.get('[data-cy=' + successElement + ']', { timeout: 10000 }).should('be.visible');
+            cy.dataCy(successElement , { timeout: 10000 }).should('be.visible');
         });
 
         it('Close adapter preview', () => {
