@@ -79,9 +79,9 @@ export class EventSchemaComponent implements OnChanges {
   isLoading = false;
   isError = false;
   isPreviewEnabled = false;
-  showErrorMessage = false;
   errorMessages: Notification[];
   nodes: EventProperty[] = new Array<EventProperty>();
+  validEventSchema = false;
   options: ITreeOptions = {
     childrenField: 'eventProperties',
     allowDrag: () => {
@@ -102,22 +102,24 @@ export class EventSchemaComponent implements OnChanges {
     this.isLoading = true;
     this.isError = false;
     this.restService.getGuessSchema(this.adapterDescription).subscribe(guessSchema => {
-      this.eventSchema = guessSchema.eventSchema;
-      this.eventSchema.eventProperties.sort((a, b) => {
-        return a.runtimeName < b.runtimeName ? -1 : 1;
-      });
-      this.eventSchemaChange.emit(this.eventSchema);
-      this.schemaGuess = guessSchema;
+        this.eventSchema = guessSchema.eventSchema;
+        this.eventSchema.eventProperties.sort((a, b) => {
+          return a.runtimeName < b.runtimeName ? -1 : 1;
+        });
+        this.eventSchemaChange.emit(this.eventSchema);
+        this.schemaGuess = guessSchema;
 
-      this.oldEventSchema = EventSchema.fromData(this.eventSchema, new EventSchema());
-      this.oldEventSchemaChange.emit(this.oldEventSchema);
+        this.validEventSchema = this.checkIfValid(this.eventSchema);
 
-      this.refreshTree();
+        this.oldEventSchema = EventSchema.fromData(this.eventSchema, new EventSchema());
+        this.oldEventSchemaChange.emit(this.oldEventSchema);
 
-      this.isEditable = true;
-      this.isEditableChange.emit(true);
-      this.isLoading = false;
-    },
+        this.refreshTree();
+
+        this.isEditable = true;
+        this.isEditableChange.emit(true);
+        this.isLoading = false;
+      },
       errorMessage => {
         this.errorMessages = errorMessage.error.notifications;
         this.isError = true;
@@ -130,6 +132,7 @@ export class EventSchemaComponent implements OnChanges {
   private refreshTree(): void {
     this.nodes = new Array<EventProperty>();
     this.nodes.push(this.eventSchema as unknown as EventProperty);
+    this.validEventSchema = this.checkIfValid(this.eventSchema);
     // this.tree.treeModel.update();
   }
 
@@ -212,5 +215,16 @@ export class EventSchemaComponent implements OnChanges {
 
   public goBack() {
     this.goBackEmitter.emit();
+  }
+
+  private checkIfValid(eventSchema: EventSchema): boolean {
+    let hasTimestamp = false;
+    eventSchema.eventProperties.forEach(p => {
+      if (p.domainProperties.indexOf('http://schema.org/DateTime') >  -1) {
+        hasTimestamp = true;
+      }
+    });
+
+    return hasTimestamp;
   }
 }
