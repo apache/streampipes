@@ -24,16 +24,22 @@ import { DataLakeUtils } from './DataLakeUtils';
 import { GenericAdapterBuilder } from '../builder/GenericAdapterBuilder';
 import { PipelineBuilder } from '../builder/PipelineBuilder';
 import { PipelineElementBuilder } from '../builder/PipelineElementBuilder';
+import { ProcessorTest } from '../model/ProcessorTest';
 
 export class ProcessingElementTestUtils {
 
-    public static testElement(testName: string, inputFile: string, expectedResultFile: string, processor: PipelineElementInput) {
+    public static testElement(pipelineElementTest: ProcessorTest) {
+    // public static testElement(testName: string, inputFile: string, expectedResultFile: string, processor: PipelineElementInput) {
         // Test
+
+        const inputFile = 'pipelineElement/' + pipelineElementTest.name + '/input.csv';
+        const expectedResultFile = 'pipelineElement/' + pipelineElementTest.name + '/expected.csv';
+
         FileManagementUtils.addFile(inputFile);
 
-        const dataLakeIndex = testName.toLowerCase();
+        const dataLakeIndex = pipelineElementTest.name.toLowerCase();
 
-        const adapterName = testName.toLowerCase();
+        const adapterName = pipelineElementTest.name.toLowerCase();
 
         // Build adapter
         const adapterInput = GenericAdapterBuilder
@@ -49,9 +55,9 @@ export class ProcessingElementTestUtils {
         AdapterUtils.addGenericSetAdapter(adapterInput);
 
         // Build Pipeline
-        const pipelineInput = PipelineBuilder.create(testName)
+        const pipelineInput = PipelineBuilder.create(pipelineElementTest.name)
             .addSource(adapterName)
-            .addProcessingElement(processor)
+            .addProcessingElement(pipelineElementTest.processor)
             .addSink(
                 PipelineElementBuilder.create('data_lake')
                     .addInput('input', 'db_measurement', dataLakeIndex)

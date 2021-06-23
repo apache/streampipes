@@ -18,6 +18,8 @@
 
 import { ProcessingElementTestUtils } from '../../support/utils/ProcessingElementTestUtils';
 import { PipelineElementBuilder } from '../../support/builder/PipelineElementBuilder';
+import { ProcessorTest } from '../../support/model/ProcessorTest';
+import { ProcessorTestBuilder } from '../../support/builder/ProcessorTestBuilder';
 
 describe('Test Numerical Filter 1', () => {
 
@@ -25,16 +27,14 @@ describe('Test Numerical Filter 1', () => {
         cy.login();
     });
 
-    // Config
-    const testName = 'numericalFilter1';
-    const inputFile = 'pipelineElement/numericalFilter1/input.csv';
-    const expectedResultFile = 'pipelineElement/numericalFilter1/expected.csv';
-
-    const processor = PipelineElementBuilder.create('numerical_filter')
+    const processorTest = ProcessorTestBuilder.create('numericalFilter1')
+      .setProcessor(
+        PipelineElementBuilder.create('numerical_filter')
         .addInput('drop-down', 'number-mapping', 'randomnumber')
         .addInput('radio', 'operation', '\\>')
         .addInput('input', 'value', '50')
-        .build();
+        .build())
+      .build();
 
-    ProcessingElementTestUtils.testElement(testName, inputFile, expectedResultFile, processor);
+    ProcessingElementTestUtils.testElement(processorTest);
 });

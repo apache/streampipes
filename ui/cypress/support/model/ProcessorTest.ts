@@ -16,24 +16,9 @@
  *
  */
 
-import { ProcessingElementTestUtils } from '../../support/utils/ProcessingElementTestUtils';
-import { PipelineElementBuilder } from '../../support/builder/PipelineElementBuilder';
-import { ProcessorTestBuilder } from '../../support/builder/ProcessorTestBuilder';
+import { PipelineElementInput } from './PipelineElementInput';
 
-describe('Test Field Renamer 1', () => {
-
-    it('Login', () => {
-        cy.login();
-    });
-
-    const processorTest = ProcessorTestBuilder.create('fieldRenamer1')
-      .setProcessor(
-        PipelineElementBuilder.create('field_renamer')
-          .addInput('drop-down', 'convert-property', 'count')
-          .addInput('input', 'field-name', 'newname')
-          .build())
-      .build();
-
-    ProcessingElementTestUtils.testElement(processorTest);
-
-});
+export class ProcessorTest {
+  name: string;
+  processor: PipelineElementInput;
+}

@@ -16,24 +16,31 @@
  *
  */
 
-import { ProcessingElementTestUtils } from '../../support/utils/ProcessingElementTestUtils';
-import { PipelineElementBuilder } from '../../support/builder/PipelineElementBuilder';
-import { ProcessorTestBuilder } from '../../support/builder/ProcessorTestBuilder';
+import { SpecificAdapterInput } from '../model/SpecificAdapterInput';
+import { UserInput } from '../model/UserInput';
+import { ProcessorTest } from '../model/ProcessorTest';
+import { PipelineElementInput } from '../model/PipelineElementInput';
 
-describe('Test Field Renamer 1', () => {
+export class ProcessorTestBuilder {
 
-    it('Login', () => {
-        cy.login();
-    });
 
-    const processorTest = ProcessorTestBuilder.create('fieldRenamer1')
-      .setProcessor(
-        PipelineElementBuilder.create('field_renamer')
-          .addInput('drop-down', 'convert-property', 'count')
-          .addInput('input', 'field-name', 'newname')
-          .build())
-      .build();
+  processorTest: ProcessorTest;
 
-    ProcessingElementTestUtils.testElement(processorTest);
+  constructor(name: string) {
+    this.processorTest = new ProcessorTest();
+    this.processorTest.name = name;
+  }
 
-});
+  public static create(name: string) {
+    return new ProcessorTestBuilder(name);
+  }
+
+  public setProcessor(processor: PipelineElementInput) {
+    this.processorTest.processor = processor;
+    return this;
+  }
+
+  build() {
+    return this.processorTest;
+  }
+}
