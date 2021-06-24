@@ -21,7 +21,7 @@ package org.apache.streampipes.connect.adapters.netio;
 import com.google.gson.Gson;
 import org.apache.streampipes.connect.utils.MqttConnectUtils;
 import org.apache.streampipes.connect.adapter.Adapter;
-import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
 import org.apache.streampipes.connect.adapter.model.specific.SpecificDataStreamAdapter;
 import org.apache.streampipes.connect.adapters.netio.model.NetioAllPowerOutputs;

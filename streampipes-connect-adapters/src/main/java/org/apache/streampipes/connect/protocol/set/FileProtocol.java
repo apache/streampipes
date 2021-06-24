@@ -20,14 +20,14 @@ package org.apache.streampipes.connect.protocol.set;
 
 
 import org.apache.http.client.fluent.Request;
-import org.apache.streampipes.connect.EmitBinaryEvent;
 import org.apache.streampipes.connect.SendToPipeline;
-import org.apache.streampipes.connect.adapter.exception.ParseException;
 import org.apache.streampipes.connect.adapter.guess.SchemaGuesser;
-import org.apache.streampipes.connect.adapter.model.generic.Format;
-import org.apache.streampipes.connect.adapter.model.generic.Parser;
 import org.apache.streampipes.connect.adapter.model.generic.Protocol;
-import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
+import org.apache.streampipes.connect.api.EmitBinaryEvent;
+import org.apache.streampipes.connect.api.IAdapterPipeline;
+import org.apache.streampipes.connect.api.IFormat;
+import org.apache.streampipes.connect.api.IParser;
+import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
@@ -41,12 +41,8 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -64,7 +60,7 @@ public class FileProtocol extends Protocol {
     public FileProtocol() {
     }
 
-    public FileProtocol(Parser parser, Format format, String fileFetchUrl, int timeBetweenReplay) {
+    public FileProtocol(IParser parser, IFormat format, String fileFetchUrl, int timeBetweenReplay) {
         super(parser, format);
         this.fileFetchUrl = fileFetchUrl;
         this.timeBetweenReplay=timeBetweenReplay;
@@ -83,7 +79,7 @@ public class FileProtocol extends Protocol {
     }
 
     @Override
-    public Protocol getInstance(ProtocolDescription protocolDescription, Parser parser, Format format) {
+    public Protocol getInstance(ProtocolDescription protocolDescription, IParser parser, IFormat format) {
         StaticPropertyExtractor extractor = StaticPropertyExtractor.from(protocolDescription.getConfig());
         int timeBetweenReplay = extractor.singleValueParameter(INTERVAL_KEY, Integer.class);
         String fileFetchUrl = extractor.selectedFileFetchUrl("filePath");
@@ -112,7 +108,7 @@ public class FileProtocol extends Protocol {
     }
 
     @Override
-    public void run(AdapterPipeline adapterPipeline) {
+    public void run(IAdapterPipeline adapterPipeline) {
         FileReader fr = null;
 
         // TODO fix this. Currently needed because it must be wait till the whole pipeline is up and running

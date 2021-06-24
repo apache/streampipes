@@ -20,17 +20,19 @@ package org.apache.streampipes.connect.protocol.stream;
 
 import org.apache.http.client.fluent.Request;
 import org.apache.streampipes.connect.SendToPipeline;
-import org.apache.streampipes.connect.adapter.exception.ParseException;
 import org.apache.streampipes.connect.adapter.guess.SchemaGuesser;
-import org.apache.streampipes.connect.adapter.model.generic.Format;
-import org.apache.streampipes.connect.adapter.model.generic.Parser;
 import org.apache.streampipes.connect.adapter.model.generic.Protocol;
-import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
-import org.apache.streampipes.connect.adapter.preprocessing.elements.*;
+import org.apache.streampipes.connect.adapter.preprocessing.elements.SendToBrokerReplayAdapterSink;
+import org.apache.streampipes.connect.adapter.preprocessing.elements.SendToJmsAdapterSink;
+import org.apache.streampipes.connect.adapter.preprocessing.elements.SendToKafkaAdapterSink;
+import org.apache.streampipes.connect.adapter.preprocessing.elements.SendToMqttAdapterSink;
+import org.apache.streampipes.connect.api.IAdapterPipeline;
+import org.apache.streampipes.connect.api.IFormat;
+import org.apache.streampipes.connect.api.IParser;
+import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 import org.apache.streampipes.model.schema.*;
 import org.apache.streampipes.sdk.builder.adapter.ProtocolDescriptionBuilder;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
@@ -66,7 +68,7 @@ public class FileStreamProtocol extends Protocol {
   public FileStreamProtocol() {
   }
 
-  public FileStreamProtocol(Parser parser, Format format, String fileFetchUrl,
+  public FileStreamProtocol(IParser parser, IFormat format, String fileFetchUrl,
                             boolean replaceTimestamp, float speedUp, int timeBetweenReplay) {
     super(parser, format);
     this.fileFetchUrl = fileFetchUrl;
@@ -76,7 +78,7 @@ public class FileStreamProtocol extends Protocol {
   }
 
   @Override
-  public void run(AdapterPipeline adapterPipeline) {
+  public void run(IAdapterPipeline adapterPipeline) {
     String timestampKey = getTimestampKey(eventSchema.getEventProperties(), "");
 
     // exchange adapter pipeline sink with special purpose replay sink for file replay
@@ -147,7 +149,7 @@ public class FileStreamProtocol extends Protocol {
   }
 
   @Override
-  public Protocol getInstance(ProtocolDescription protocolDescription, Parser parser, Format format) {
+  public Protocol getInstance(ProtocolDescription protocolDescription, IParser parser, IFormat format) {
     StaticPropertyExtractor extractor = StaticPropertyExtractor.from(protocolDescription.getConfig(), new ArrayList<>());
 
     List<String> replaceTimestampStringList = extractor.selectedMultiValues("replaceTimestamp", String.class);

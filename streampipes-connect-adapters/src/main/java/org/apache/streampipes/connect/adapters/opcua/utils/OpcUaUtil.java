@@ -1,7 +1,7 @@
 package org.apache.streampipes.connect.adapters.opcua.utils;
 
-import org.apache.streampipes.connect.adapter.exception.AdapterException;
-import org.apache.streampipes.connect.adapter.exception.ParseException;
+import org.apache.streampipes.connect.api.exception.AdapterException;
+import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.connect.adapters.opcua.OpcNode;
 import org.apache.streampipes.connect.adapters.opcua.OpcUa;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;

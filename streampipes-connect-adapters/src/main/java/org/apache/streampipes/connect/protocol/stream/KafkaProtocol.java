@@ -28,11 +28,11 @@ import org.apache.kafka.common.serialization.LongDeserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.connect.SendToPipeline;
-import org.apache.streampipes.connect.adapter.exception.ParseException;
-import org.apache.streampipes.connect.adapter.model.generic.Format;
-import org.apache.streampipes.connect.adapter.model.generic.Parser;
 import org.apache.streampipes.connect.adapter.model.generic.Protocol;
-import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
+import org.apache.streampipes.connect.api.IAdapterPipeline;
+import org.apache.streampipes.connect.api.IFormat;
+import org.apache.streampipes.connect.api.IParser;
+import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.connect.utils.KafkaConnectUtils;
 import org.apache.streampipes.container.api.ResolvesContainerProvidedOptions;
 import org.apache.streampipes.messaging.InternalEventProcessor;
@@ -68,13 +68,13 @@ public class KafkaProtocol extends BrokerProtocol implements ResolvesContainerPr
     public KafkaProtocol() {
     }
 
-    public KafkaProtocol(Parser parser, Format format, KafkaConfig config) {
+    public KafkaProtocol(IParser parser, IFormat format, KafkaConfig config) {
         super(parser, format, config.getKafkaHost() + ":" + config.getKafkaPort(), config.getTopic());
         this.config = config;
     }
 
     @Override
-    public Protocol getInstance(ProtocolDescription protocolDescription, Parser parser, Format format) {
+    public Protocol getInstance(ProtocolDescription protocolDescription, IParser parser, IFormat format) {
         StaticPropertyExtractor extractor = StaticPropertyExtractor
                 .from(protocolDescription.getConfig(), new ArrayList<>());
         this.config = KafkaConnectUtils.getConfig(extractor);
@@ -203,7 +203,7 @@ public class KafkaProtocol extends BrokerProtocol implements ResolvesContainerPr
     }
 
     @Override
-    public void run(AdapterPipeline adapterPipeline) {
+    public void run(IAdapterPipeline adapterPipeline) {
         SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
         KafkaTransportProtocol protocol = new KafkaTransportProtocol();
         protocol.setKafkaPort(config.getKafkaPort());

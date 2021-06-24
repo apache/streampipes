@@ -21,16 +21,14 @@ package org.apache.streampipes.connect.protocol.stream;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.streampipes.connect.SendToPipeline;
-import org.apache.streampipes.connect.adapter.exception.ParseException;
 import org.apache.streampipes.connect.adapter.guess.SchemaGuesser;
-import org.apache.streampipes.connect.adapter.model.generic.Format;
-import org.apache.streampipes.connect.adapter.model.generic.Parser;
 import org.apache.streampipes.connect.adapter.model.generic.Protocol;
-import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
 import org.apache.streampipes.connect.adapter.sdk.ParameterExtractor;
+import org.apache.streampipes.connect.api.IAdapterPipeline;
+import org.apache.streampipes.connect.api.IFormat;
+import org.apache.streampipes.connect.api.IParser;
+import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
@@ -38,6 +36,8 @@ import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.sdk.builder.adapter.ProtocolDescriptionBuilder;
 import org.apache.streampipes.sdk.helpers.AdapterSourceType;
 import org.apache.streampipes.sdk.helpers.Labels;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -76,7 +76,7 @@ public class HDFSProtocol extends Protocol {
 
     }
 
-    public HDFSProtocol(Parser parser, Format format, long intervalProperty, String dataPathProperty, String urlProperty, boolean recursively) {
+    public HDFSProtocol(IParser parser, IFormat format, long intervalProperty, String dataPathProperty, String urlProperty, boolean recursively) {
         super(parser, format);
         this.intervalProperty = intervalProperty;
         this.dataPathProperty = dataPathProperty;
@@ -85,7 +85,7 @@ public class HDFSProtocol extends Protocol {
     }
 
     @Override
-    public Protocol getInstance(ProtocolDescription protocolDescription, Parser parser, Format format) {
+    public Protocol getInstance(ProtocolDescription protocolDescription, IParser parser, IFormat format) {
         ParameterExtractor extractor = new ParameterExtractor(protocolDescription.getConfig());
         long intervalProperty = Long.parseLong(extractor.singleValue(INTERVAL_PROPERTY));
         String urlProperty = extractor.singleValue(URL_PROPERTY);
@@ -164,7 +164,7 @@ public class HDFSProtocol extends Protocol {
     }
 
     @Override
-    public void run(AdapterPipeline adapterPipeline) {
+    public void run(IAdapterPipeline adapterPipeline) {
         logger.info("Start HDFS Adapter");
 
         this.knownNewestFileDate = 0;
@@ -179,7 +179,7 @@ public class HDFSProtocol extends Protocol {
     }
 
 
-    private void executeProtocolLogic(AdapterPipeline adapterPipeline) {
+    private void executeProtocolLogic(IAdapterPipeline adapterPipeline) {
         final Runnable task = () -> {
             SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
 

@@ -30,10 +30,8 @@ import edu.wpi.rail.jrosbridge.callback.TopicCallback;
 import edu.wpi.rail.jrosbridge.messages.Message;
 import edu.wpi.rail.jrosbridge.services.ServiceRequest;
 import edu.wpi.rail.jrosbridge.services.ServiceResponse;
-import org.apache.streampipes.connect.EmitBinaryEvent;
 import org.apache.streampipes.connect.adapter.Adapter;
-import org.apache.streampipes.connect.adapter.exception.AdapterException;
-import org.apache.streampipes.connect.adapter.format.json.object.JsonObjectFormat;
+import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.adapter.format.json.object.JsonObjectParser;
 import org.apache.streampipes.connect.adapter.model.specific.SpecificDataStreamAdapter;
 import org.apache.streampipes.connect.adapter.sdk.ParameterExtractor;
@@ -49,9 +47,6 @@ import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 

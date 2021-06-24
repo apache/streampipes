@@ -20,7 +20,7 @@ package org.apache.streampipes.connect.adapters.gdelt;
 
 import com.opencsv.CSVReader;
 import org.apache.streampipes.connect.adapter.Adapter;
-import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.adapter.util.PollingSettings;
 import org.apache.streampipes.connect.adapters.PullAdapter;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;

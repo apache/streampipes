@@ -21,7 +21,7 @@ package org.apache.streampipes.connect.adapters.sensemap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.streampipes.connect.adapter.Adapter;
-import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.adapter.util.PollingSettings;
 import org.apache.streampipes.connect.adapters.PullRestAdapter;
 import org.apache.streampipes.connect.adapters.sensemap.model.CurrentLocation;

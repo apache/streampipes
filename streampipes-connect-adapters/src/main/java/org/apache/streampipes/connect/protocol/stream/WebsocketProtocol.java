@@ -17,13 +17,10 @@
  */
 package org.apache.streampipes.connect.protocol.stream;
 
-import static org.apache.streampipes.sdk.helpers.EpProperties.stringEp;
-import static org.apache.streampipes.sdk.helpers.EpProperties.timestampProperty;
-
 import org.apache.streampipes.connect.adapter.Adapter;
-import org.apache.streampipes.connect.adapter.exception.AdapterException;
-import org.apache.streampipes.connect.adapter.exception.ParseException;
 import org.apache.streampipes.connect.adapter.model.specific.SpecificDataStreamAdapter;
+import org.apache.streampipes.connect.api.exception.AdapterException;
+import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
@@ -34,6 +31,9 @@ import org.apache.streampipes.vocabulary.SO;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+
+import static org.apache.streampipes.sdk.helpers.EpProperties.stringEp;
+import static org.apache.streampipes.sdk.helpers.EpProperties.timestampProperty;
 
 public class WebsocketProtocol extends SpecificDataStreamAdapter {
 

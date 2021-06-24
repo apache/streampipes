@@ -22,8 +22,8 @@ import com.github.shyiko.mysql.binlog.BinaryLogClient;
 import com.github.shyiko.mysql.binlog.event.*;
 import com.github.shyiko.mysql.binlog.event.deserialization.EventDeserializer;
 import org.apache.streampipes.connect.adapter.Adapter;
-import org.apache.streampipes.connect.adapter.exception.AdapterException;
-import org.apache.streampipes.connect.adapter.exception.ParseException;
+import org.apache.streampipes.connect.api.exception.AdapterException;
+import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.connect.adapter.model.specific.SpecificDataStreamAdapter;
 import org.apache.streampipes.connect.adapter.sdk.ParameterExtractor;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
@@ -43,8 +43,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import static org.apache.streampipes.sdk.helpers.EpProperties.timestampProperty;
 
 public class MySqlAdapter extends SpecificDataStreamAdapter {
 

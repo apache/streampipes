@@ -19,13 +19,14 @@
 package org.apache.streampipes.connect.protocol.stream;
 
 import org.apache.http.client.fluent.Request;
+import org.apache.streampipes.connect.api.IParser;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.streampipes.connect.adapter.exception.ParseException;
+import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.connect.adapter.guess.SchemaGuesser;
-import org.apache.streampipes.connect.adapter.model.generic.Format;
+import org.apache.streampipes.connect.api.IFormat;
 import org.apache.streampipes.connect.adapter.model.generic.Parser;
 import org.apache.streampipes.connect.adapter.model.generic.Protocol;
 import org.apache.streampipes.connect.adapter.sdk.ParameterExtractor;
@@ -60,14 +61,14 @@ public class HttpStreamProtocol extends PullProtocol {
 
 
 
-    public HttpStreamProtocol(Parser parser, Format format, String url, long interval, String accessToken) {
+    public HttpStreamProtocol(IParser parser, IFormat format, String url, long interval, String accessToken) {
         super(parser, format, interval);
         this.url = url;
         this.accessToken = accessToken;
     }
 
     @Override
-    public Protocol getInstance(ProtocolDescription protocolDescription, Parser parser, Format format) {
+    public Protocol getInstance(ProtocolDescription protocolDescription, IParser parser, IFormat format) {
         ParameterExtractor extractor = new ParameterExtractor(protocolDescription.getConfig());
 
         String urlProperty = extractor.singleValue(URL_PROPERTY);

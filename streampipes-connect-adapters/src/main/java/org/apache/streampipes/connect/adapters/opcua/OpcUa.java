@@ -23,7 +23,7 @@ import static org.apache.streampipes.connect.adapters.opcua.utils.OpcUaUtil.retr
 import static org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.Unsigned.uint;
 import static org.eclipse.milo.opcua.stack.core.util.ConversionUtil.toList;
 
-import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.adapters.opcua.utils.OpcUaUtil;
 import org.apache.streampipes.connect.adapters.opcua.utils.OpcUaUtil.OpcUaLabels;
 import org.apache.streampipes.connect.adapters.opcua.utils.OpcUaNodeVariants;

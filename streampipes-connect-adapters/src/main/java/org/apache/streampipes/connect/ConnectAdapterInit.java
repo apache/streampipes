@@ -18,88 +18,87 @@
 
 package org.apache.streampipes.connect;
 
+import org.apache.streampipes.connect.adapters.coindesk.CoindeskBitcoinAdapter;
+import org.apache.streampipes.connect.adapters.flic.FlicMQTTAdapter;
+import org.apache.streampipes.connect.adapters.gdelt.GdeltAdapter;
+import org.apache.streampipes.connect.adapters.iex.IexCloudNewsAdapter;
+import org.apache.streampipes.connect.adapters.iex.IexCloudStockAdapter;
 import org.apache.streampipes.connect.adapters.image.set.ImageSetAdapter;
 import org.apache.streampipes.connect.adapters.image.stream.ImageStreamAdapter;
+import org.apache.streampipes.connect.adapters.influxdb.InfluxDbSetAdapter;
+import org.apache.streampipes.connect.adapters.influxdb.InfluxDbStreamAdapter;
 import org.apache.streampipes.connect.adapters.iss.IssAdapter;
-import org.apache.streampipes.connect.adapters.flic.FlicMQTTAdapter;
+import org.apache.streampipes.connect.adapters.mysql.MySqlSetAdapter;
+import org.apache.streampipes.connect.adapters.mysql.MySqlStreamAdapter;
 import org.apache.streampipes.connect.adapters.netio.NetioMQTTAdapter;
 import org.apache.streampipes.connect.adapters.netio.NetioRestAdapter;
 import org.apache.streampipes.connect.adapters.opcua.OpcUaAdapter;
 import org.apache.streampipes.connect.adapters.plc4x.modbus.Plc4xModbusAdapter;
-import org.apache.streampipes.connect.adapters.simulator.machine.MachineDataStreamAdapter;
-import org.apache.streampipes.connect.adapters.ti.TISensorTag;
-import org.apache.streampipes.connect.protocol.set.HttpProtocol;
-import org.apache.streampipes.connect.adapters.coindesk.CoindeskBitcoinAdapter;
-import org.apache.streampipes.connect.adapters.gdelt.GdeltAdapter;
-import org.apache.streampipes.connect.adapters.iex.IexCloudNewsAdapter;
-import org.apache.streampipes.connect.adapters.iex.IexCloudStockAdapter;
-import org.apache.streampipes.connect.adapters.influxdb.InfluxDbSetAdapter;
-import org.apache.streampipes.connect.adapters.influxdb.InfluxDbStreamAdapter;
-import org.apache.streampipes.connect.adapters.mysql.MySqlSetAdapter;
-import org.apache.streampipes.connect.adapters.mysql.MySqlStreamAdapter;
 import org.apache.streampipes.connect.adapters.plc4x.s7.Plc4xS7Adapter;
 import org.apache.streampipes.connect.adapters.ros.RosBridgeAdapter;
+import org.apache.streampipes.connect.adapters.simulator.machine.MachineDataStreamAdapter;
 import org.apache.streampipes.connect.adapters.simulator.random.RandomDataSetAdapter;
 import org.apache.streampipes.connect.adapters.simulator.random.RandomDataStreamAdapter;
 import org.apache.streampipes.connect.adapters.slack.SlackAdapter;
+import org.apache.streampipes.connect.adapters.ti.TISensorTag;
 import org.apache.streampipes.connect.adapters.wikipedia.WikipediaEditedArticlesAdapter;
 import org.apache.streampipes.connect.adapters.wikipedia.WikipediaNewArticlesAdapter;
-import org.apache.streampipes.connect.config.ConnectWorkerConfig;
 import org.apache.streampipes.connect.container.worker.init.AdapterWorkerContainer;
-import org.apache.streampipes.connect.init.AdapterDeclarerSingleton;
 import org.apache.streampipes.connect.protocol.set.FileProtocol;
+import org.apache.streampipes.connect.protocol.set.HttpProtocol;
 import org.apache.streampipes.connect.protocol.stream.*;
 import org.apache.streampipes.connect.protocol.stream.pulsar.PulsarProtocol;
+import org.apache.streampipes.container.model.SpServiceDefinition;
+import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
 
 public class ConnectAdapterInit extends AdapterWorkerContainer {
 
   public static void main(String[] args) {
-    AdapterDeclarerSingleton
-            .getInstance()
-
-            // Protocols
-            .add(new FileProtocol())
-            .add(new HttpProtocol())
-            .add(new FileStreamProtocol())
-            .add(new HDFSProtocol())
-            .add(new KafkaProtocol())
-            .add(new MqttProtocol())
-            .add(new HttpStreamProtocol())
-            .add(new PulsarProtocol())
-            .add(new HttpServerProtocol())
-//
-//          // Specific Adapters
-            .add(new GdeltAdapter())
-            .add(new CoindeskBitcoinAdapter())
-            .add(new IexCloudNewsAdapter())
-            .add(new IexCloudStockAdapter())
-            .add(new MySqlStreamAdapter())
-            .add(new MySqlSetAdapter())
-            .add(new RandomDataSetAdapter())
-            .add(new RandomDataStreamAdapter())
-            .add(new MachineDataStreamAdapter())
-            .add(new SlackAdapter())
-            .add(new WikipediaEditedArticlesAdapter())
-            .add(new WikipediaNewArticlesAdapter())
-            .add(new RosBridgeAdapter())
-            .add(new OpcUaAdapter())
-            .add(new InfluxDbStreamAdapter())
-            .add(new InfluxDbSetAdapter())
-            .add(new TISensorTag())
-            .add(new NetioRestAdapter())
-            .add(new NetioMQTTAdapter())
-            .add(new Plc4xS7Adapter())
-            .add(new Plc4xModbusAdapter())
-            .add(new ImageStreamAdapter())
-            .add(new ImageSetAdapter())
-            .add(new IssAdapter())
-            .add(new FlicMQTTAdapter());
-
-    String workerUrl = ConnectWorkerConfig.INSTANCE.getConnectContainerWorkerUrl();
-    String backendUrl = ConnectWorkerConfig.INSTANCE.getBackendUrl();
-    Integer workerPort = ConnectWorkerConfig.INSTANCE.getConnectContainerWorkerPort();
-
-    new ConnectAdapterInit().init(workerUrl, backendUrl, workerPort);
-
+    new ConnectAdapterInit().init();
   }
+
+  @Override
+  public SpServiceDefinition provideServiceDefinition() {
+    return SpServiceDefinitionBuilder.create("connect-worker-main",
+            "StreamPipes Connect Worker Main",
+            "",8098)
+            .registerAdapter(new GdeltAdapter())
+            .registerAdapter(new CoindeskBitcoinAdapter())
+            .registerAdapter(new IexCloudNewsAdapter())
+            .registerAdapter(new IexCloudStockAdapter())
+            .registerAdapter(new MySqlStreamAdapter())
+            .registerAdapter(new MySqlSetAdapter())
+            .registerAdapter(new RandomDataSetAdapter())
+            .registerAdapter(new RandomDataStreamAdapter())
+            .registerAdapter(new MachineDataStreamAdapter())
+            .registerAdapter(new SlackAdapter())
+            .registerAdapter(new WikipediaEditedArticlesAdapter())
+            .registerAdapter(new WikipediaNewArticlesAdapter())
+            .registerAdapter(new RosBridgeAdapter())
+            .registerAdapter(new OpcUaAdapter())
+            .registerAdapter(new InfluxDbStreamAdapter())
+            .registerAdapter(new InfluxDbSetAdapter())
+            .registerAdapter(new TISensorTag())
+            .registerAdapter(new NetioRestAdapter())
+            .registerAdapter(new NetioMQTTAdapter())
+            .registerAdapter(new Plc4xS7Adapter())
+            .registerAdapter(new Plc4xModbusAdapter())
+            .registerAdapter(new ImageStreamAdapter())
+            .registerAdapter(new ImageSetAdapter())
+            .registerAdapter(new IssAdapter())
+            .registerAdapter(new FlicMQTTAdapter())
+
+            .registerAdapter(new FileProtocol())
+            .registerAdapter(new HttpProtocol())
+            .registerAdapter(new FileStreamProtocol())
+            .registerAdapter(new HDFSProtocol())
+            .registerAdapter(new KafkaProtocol())
+            .registerAdapter(new MqttProtocol())
+            .registerAdapter(new HttpStreamProtocol())
+            .registerAdapter(new PulsarProtocol())
+            .registerAdapter(new HttpServerProtocol())
+
+            .build();
+  }
+
 }

@@ -17,11 +17,11 @@
  */
 package org.apache.streampipes.connect.protocol.stream;
 
-import org.apache.streampipes.connect.adapter.exception.ParseException;
 import org.apache.streampipes.connect.adapter.guess.SchemaGuesser;
-import org.apache.streampipes.connect.adapter.model.generic.Format;
-import org.apache.streampipes.connect.adapter.model.generic.Parser;
 import org.apache.streampipes.connect.adapter.model.generic.Protocol;
+import org.apache.streampipes.connect.api.IFormat;
+import org.apache.streampipes.connect.api.IParser;
+import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.schema.EventSchema;
 
@@ -38,7 +38,7 @@ public abstract class BrokerProtocol extends Protocol {
 
   }
 
-  public BrokerProtocol(Parser parser, Format format, String brokerUrl, String topic) {
+  public BrokerProtocol(IParser parser, IFormat format, String brokerUrl, String topic) {
     super(parser, format);
     this.brokerUrl = brokerUrl;
     this.topic = topic;

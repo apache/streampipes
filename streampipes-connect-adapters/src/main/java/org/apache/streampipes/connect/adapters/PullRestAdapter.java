@@ -20,7 +20,7 @@ package org.apache.streampipes.connect.adapters;
 
 import com.google.gson.Gson;
 import org.apache.http.client.fluent.Request;
-import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 
 public abstract class PullRestAdapter extends PullAdapter {

@@ -48,7 +48,7 @@ public class AllPipelineElementsInit extends StandaloneModelSubmitter {
 
   @Override
   public SpServiceDefinition provideServiceDefinition() {
-    return SpServiceDefinitionBuilder.create("org.apache.streampipes.pe.all.jvm",
+    return SpServiceDefinitionBuilder.create("org-apache-streampipes-pe-all-jvm",
             "StreamPipes Bundled Pipeline Elements for JVM Wrapper",
             "",
             8090)

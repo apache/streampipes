@@ -19,8 +19,8 @@
 package org.apache.streampipes.connect.adapters.image.set;
 
 import org.apache.streampipes.connect.adapter.Adapter;
-import org.apache.streampipes.connect.adapter.exception.AdapterException;
-import org.apache.streampipes.connect.adapter.exception.ParseException;
+import org.apache.streampipes.connect.api.exception.AdapterException;
+import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.connect.adapter.model.specific.SpecificDataSetAdapter;
 import org.apache.streampipes.connect.adapters.image.ImageZipAdapter;
 import org.apache.streampipes.connect.adapters.image.ImageZipUtils;

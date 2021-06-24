@@ -19,18 +19,14 @@
 package org.apache.streampipes.connect.protocol.set;
 
 import org.apache.http.client.fluent.Request;
-import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.sdk.utils.Assets;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.streampipes.connect.SendToPipeline;
-import org.apache.streampipes.connect.adapter.exception.ParseException;
 import org.apache.streampipes.connect.adapter.guess.SchemaGuesser;
-import org.apache.streampipes.connect.adapter.model.generic.Format;
-import org.apache.streampipes.connect.adapter.model.generic.Parser;
 import org.apache.streampipes.connect.adapter.model.generic.Protocol;
-import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
 import org.apache.streampipes.connect.adapter.sdk.ParameterExtractor;
+import org.apache.streampipes.connect.api.IAdapterPipeline;
+import org.apache.streampipes.connect.api.IFormat;
+import org.apache.streampipes.connect.api.IParser;
+import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
@@ -38,6 +34,10 @@ import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.sdk.builder.adapter.ProtocolDescriptionBuilder;
 import org.apache.streampipes.sdk.helpers.AdapterSourceType;
 import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.utils.Assets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -56,7 +56,7 @@ public class HttpProtocol extends Protocol {
     public HttpProtocol() {
     }
 
-    public HttpProtocol(Parser parser, Format format, String url) {
+    public HttpProtocol(IParser parser, IFormat format, String url) {
         super(parser, format);
         this.url = url;
     }
@@ -73,7 +73,7 @@ public class HttpProtocol extends Protocol {
     }
 
     @Override
-    public Protocol getInstance(ProtocolDescription protocolDescription, Parser parser, Format format) {
+    public Protocol getInstance(ProtocolDescription protocolDescription, IParser parser, IFormat format) {
         ParameterExtractor extractor = new ParameterExtractor(protocolDescription.getConfig());
         String url = extractor.singleValue("url");
 
@@ -81,7 +81,7 @@ public class HttpProtocol extends Protocol {
     }
 
     @Override
-    public void run(AdapterPipeline adapterPipeline) {
+    public void run(IAdapterPipeline adapterPipeline) {
 
         // TODO fix this. Currently needed because it must be wait till the whole pipeline is up and running
         try {

@@ -16,7 +16,7 @@ package org.apache.streampipes.connect.adapters.simulator.machine;/*
  *
  */
 
-import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;

@@ -17,17 +17,16 @@
  */
 package org.apache.streampipes.connect.protocol.stream;
 
+import org.apache.streampipes.connect.SendToPipeline;
+import org.apache.streampipes.connect.adapter.model.generic.Protocol;
+import org.apache.streampipes.connect.api.IAdapterPipeline;
+import org.apache.streampipes.connect.api.IFormat;
+import org.apache.streampipes.connect.api.IParser;
+import org.apache.streampipes.connect.api.exception.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.streampipes.connect.SendToPipeline;
-import org.apache.streampipes.connect.adapter.exception.ParseException;
-import org.apache.streampipes.connect.adapter.model.generic.Format;
-import org.apache.streampipes.connect.adapter.model.generic.Parser;
-import org.apache.streampipes.connect.adapter.model.generic.Protocol;
-import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
 
 import java.io.InputStream;
-import java.net.ConnectException;
 import java.util.concurrent.*;
 
 public abstract class PullProtocol extends Protocol {
@@ -42,13 +41,13 @@ public abstract class PullProtocol extends Protocol {
     public PullProtocol() {
     }
 
-    public PullProtocol(Parser parser, Format format, long interval) {
+    public PullProtocol(IParser parser, IFormat format, long interval) {
         super(parser, format);
         this.interval = interval;
     }
 
     @Override
-    public void run(AdapterPipeline adapterPipeline) {
+    public void run(IAdapterPipeline adapterPipeline) {
         final Runnable errorThread = () -> {
             executeProtocolLogic(adapterPipeline);
         };
@@ -60,7 +59,7 @@ public abstract class PullProtocol extends Protocol {
     }
 
 
-    private void executeProtocolLogic(AdapterPipeline adapterPipeline) {
+    private void executeProtocolLogic(IAdapterPipeline adapterPipeline) {
          final Runnable task = () -> {
 
             format.reset();

@@ -19,17 +19,13 @@ package org.apache.streampipes.connect.protocol.stream.pulsar;
 
 import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.api.PulsarClientException;
-import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.sdk.utils.Assets;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.streampipes.connect.SendToPipeline;
-import org.apache.streampipes.connect.adapter.exception.ParseException;
-import org.apache.streampipes.connect.adapter.model.generic.Format;
-import org.apache.streampipes.connect.adapter.model.generic.Parser;
 import org.apache.streampipes.connect.adapter.model.generic.Protocol;
-import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
 import org.apache.streampipes.connect.adapter.sdk.ParameterExtractor;
+import org.apache.streampipes.connect.api.IAdapterPipeline;
+import org.apache.streampipes.connect.api.IFormat;
+import org.apache.streampipes.connect.api.IParser;
+import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.connect.protocol.stream.BrokerProtocol;
 import org.apache.streampipes.container.api.ResolvesContainerProvidedOptions;
 import org.apache.streampipes.messaging.InternalEventProcessor;
@@ -40,6 +36,10 @@ import org.apache.streampipes.sdk.builder.adapter.ProtocolDescriptionBuilder;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.AdapterSourceType;
 import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.utils.Assets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +61,7 @@ public class PulsarProtocol extends BrokerProtocol implements ResolvesContainerP
 
   }
 
-  public PulsarProtocol(Parser parser, Format format, String brokerUrl, String topic) {
+  public PulsarProtocol(IParser parser, IFormat format, String brokerUrl, String topic) {
     super(parser, format, brokerUrl, topic);
   }
 
@@ -85,7 +85,7 @@ public class PulsarProtocol extends BrokerProtocol implements ResolvesContainerP
   }
 
   @Override
-  public Protocol getInstance(ProtocolDescription protocolDescription, Parser parser, Format format) {
+  public Protocol getInstance(ProtocolDescription protocolDescription, IParser parser, IFormat format) {
     ParameterExtractor extractor = new ParameterExtractor(protocolDescription.getConfig());
     String brokerHost = extractor.singleValue(PULSAR_BROKER_HOST, String.class);
     Integer brokerPort = extractor.singleValue(PULSAR_BROKER_PORT, Integer.class);
@@ -111,7 +111,7 @@ public class PulsarProtocol extends BrokerProtocol implements ResolvesContainerP
   }
 
   @Override
-  public void run(AdapterPipeline adapterPipeline) {
+  public void run(IAdapterPipeline adapterPipeline) {
     SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
     this.pulsarConsumer = new PulsarConsumer(this.brokerUrl,
             this.topic, stk::emit);

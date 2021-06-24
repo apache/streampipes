@@ -32,7 +32,7 @@ import org.apache.plc4x.java.api.messages.PlcReadResponse;
 import org.apache.plc4x.java.api.types.PlcResponseCode;
 import org.apache.plc4x.java.utils.connectionpool.PooledPlcDriverManager;
 import org.apache.streampipes.connect.adapter.Adapter;
-import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.adapter.util.PollingSettings;
 import org.apache.streampipes.connect.adapters.PullAdapter;
 import org.apache.streampipes.model.AdapterType;

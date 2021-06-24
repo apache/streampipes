@@ -18,13 +18,13 @@
 package org.apache.streampipes.connect.protocol.stream;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.streampipes.connect.utils.MqttConnectUtils;
 import org.apache.streampipes.connect.SendToPipeline;
-import org.apache.streampipes.connect.adapter.exception.ParseException;
-import org.apache.streampipes.connect.adapter.model.generic.Format;
-import org.apache.streampipes.connect.adapter.model.generic.Parser;
 import org.apache.streampipes.connect.adapter.model.generic.Protocol;
-import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
+import org.apache.streampipes.connect.api.IAdapterPipeline;
+import org.apache.streampipes.connect.api.IFormat;
+import org.apache.streampipes.connect.api.IParser;
+import org.apache.streampipes.connect.api.exception.ParseException;
+import org.apache.streampipes.connect.utils.MqttConnectUtils;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
@@ -49,13 +49,13 @@ public class MqttProtocol extends BrokerProtocol {
   public MqttProtocol() {
   }
 
-  public MqttProtocol(Parser parser, Format format, MqttConfig mqttConfig) {
+  public MqttProtocol(IParser parser, IFormat format, MqttConfig mqttConfig) {
     super(parser, format, mqttConfig.getUrl(), mqttConfig.getTopic());
     this.mqttConfig = mqttConfig;
   }
 
   @Override
-  public Protocol getInstance(ProtocolDescription protocolDescription, Parser parser, Format format) {
+  public Protocol getInstance(ProtocolDescription protocolDescription, IParser parser, IFormat format) {
     MqttConfig mqttConfig;
     StaticPropertyExtractor extractor =
             StaticPropertyExtractor.from(protocolDescription.getConfig(), new ArrayList<>());
@@ -99,7 +99,7 @@ public class MqttProtocol extends BrokerProtocol {
   }
 
   @Override
-  public void run(AdapterPipeline adapterPipeline) {
+  public void run(IAdapterPipeline adapterPipeline) {
     SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
     this.mqttConsumer = new MqttConsumer(this.mqttConfig, new MqttProtocol.EventProcessor(stk));
 

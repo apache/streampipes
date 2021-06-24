@@ -18,11 +18,11 @@
 package org.apache.streampipes.connect.protocol.stream;
 
 import org.apache.streampipes.connect.SendToPipeline;
-import org.apache.streampipes.connect.adapter.exception.ParseException;
-import org.apache.streampipes.connect.adapter.model.generic.Format;
-import org.apache.streampipes.connect.adapter.model.generic.Parser;
 import org.apache.streampipes.connect.adapter.model.generic.Protocol;
-import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
+import org.apache.streampipes.connect.api.IAdapterPipeline;
+import org.apache.streampipes.connect.api.IFormat;
+import org.apache.streampipes.connect.api.IParser;
+import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.connect.container.worker.management.HttpServerAdapterManagement;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.AdapterType;
@@ -71,7 +71,7 @@ public class HttpServerProtocol extends Protocol {
 
   }
 
-  public HttpServerProtocol(ProtocolDescription adapterDescription, Parser parser, Format format) {
+  public HttpServerProtocol(ProtocolDescription adapterDescription, IParser parser, IFormat format) {
     super(parser, format);
     StaticPropertyExtractor extractor =
             StaticPropertyExtractor.from(adapterDescription.getConfig(), new ArrayList<>());
@@ -80,7 +80,7 @@ public class HttpServerProtocol extends Protocol {
   }
 
   @Override
-  public Protocol getInstance(ProtocolDescription protocolDescription, Parser parser, Format format) {
+  public Protocol getInstance(ProtocolDescription protocolDescription, IParser parser, IFormat format) {
     return new HttpServerProtocol(protocolDescription, parser, format);
   }
 
@@ -154,7 +154,7 @@ public class HttpServerProtocol extends Protocol {
   }
 
   @Override
-  public void run(AdapterPipeline adapterPipeline) {
+  public void run(IAdapterPipeline adapterPipeline) {
     SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
     InternalEventProcessor<byte[]> receiver = new HttpServerEventReceiver(stk);
     HttpServerAdapterManagement.INSTANCE.addAdapter(this.endpointId, receiver);

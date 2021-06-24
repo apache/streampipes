@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.connect.adapters.mysql;
 
-import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
@@ -28,8 +28,6 @@ import org.apache.streampipes.vocabulary.SO;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.apache.streampipes.sdk.helpers.EpProperties.timestampProperty;
 
 public class MySqlClient {
 
