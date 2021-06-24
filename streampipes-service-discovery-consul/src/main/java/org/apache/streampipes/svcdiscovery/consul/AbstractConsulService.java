@@ -21,17 +21,13 @@ import com.orbitz.consul.Consul;
 
 public abstract class AbstractConsulService {
 
-  protected ConsulProvider consulProvider;
+  protected ConsulHealthServiceManager consul;
 
   public AbstractConsulService() {
-    this.consulProvider = new ConsulProvider();
+    this.consul = ConsulHealthServiceManager.INSTANCE;
   }
 
   public Consul consulInstance() {
-    return this.consulProvider.consulInstance();
-  }
-
-  public String makeConsulEndpoint() {
-    return this.consulProvider.makeConsulEndpoint();
+    return this.consul.consulInstance();
   }
 }

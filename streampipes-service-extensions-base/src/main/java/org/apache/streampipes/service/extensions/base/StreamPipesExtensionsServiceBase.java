@@ -41,6 +41,8 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
         try {
         String host = getHostname();
         Integer port = getPort(serviceDef.getDefaultPort());
+        String serviceId = serviceDef.getServiceGroup() + "-" + AUTO_GENERATED_SERVICE_ID;
+        serviceDef.setServiceId(serviceId);
         DeclarersSingleton.getInstance().populate(host, port, serviceDef);
 
         startExtensionsService(this.getClass(), serviceDef);
@@ -60,7 +62,7 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
         this.startStreamPipesService(
                 serviceClass,
                 DefaultSpServiceGroups.EXT,
-                serviceDef.getServiceId(),
+                serviceId(),
                 serviceDef.getDefaultPort()
         );
         this.afterServiceRegistered(serviceDef);
@@ -68,5 +70,9 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
 
     @PreDestroy
     public abstract void onExit();
+
+    public String serviceId() {
+        return DeclarersSingleton.getInstance().getServiceId();
+    }
 
 }

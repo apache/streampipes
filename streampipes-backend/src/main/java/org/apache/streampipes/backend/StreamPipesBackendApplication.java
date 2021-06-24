@@ -76,11 +76,15 @@ public class StreamPipesBackendApplication extends StreamPipesServiceBase {
       try {
         application.startStreamPipesService(StreamPipesBackendApplication.class,
                 DefaultSpServiceGroups.CORE,
-                AUTO_GENERATED_SERVICE_ID,
+                application.serviceId(),
                 8030);
       } catch (UnknownHostException e) {
         LOG.error("Could not auto-resolve host address - please manually provide the hostname using the SP_HOST environment variable");
       }
+  }
+
+  private String serviceId() {
+    return DefaultSpServiceGroups.CORE + "-" + AUTO_GENERATED_SERVICE_ID;
   }
 
   @PostConstruct

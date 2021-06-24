@@ -19,24 +19,23 @@ package org.apache.streampipes.svcdiscovery.consul;
 
 import com.orbitz.consul.AgentClient;
 import com.orbitz.consul.Consul;
-import com.orbitz.consul.HealthClient;
+import com.orbitz.consul.model.agent.ImmutableRegCheck;
+import com.orbitz.consul.model.agent.ImmutableRegistration;
+import com.orbitz.consul.model.agent.Registration;
 import com.orbitz.consul.model.health.HealthCheck;
 import com.orbitz.consul.model.health.Service;
-import com.orbitz.consul.model.health.ServiceHealth;
-import org.apache.http.client.fluent.Request;
-import org.apache.http.entity.StringEntity;
-import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTags;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceRegistrationRequest;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;
-import org.apache.streampipes.svcdiscovery.consul.model.ConsulServiceRegistrationBody;
-import org.apache.streampipes.svcdiscovery.consul.model.HealthCheckConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -46,28 +45,12 @@ public class SpConsulServiceDiscovery extends AbstractConsulService implements I
 
   private static final String HTTP_PROTOCOL = "http://";
   private static final String COLON = ":";
-  private static final String SLASH = "/";
   private static final String HEALTH_CHECK_INTERVAL = "10s";
   private static final String PE_SVC_TAG = "pe";
 
   @Override
   public void registerService(SpServiceRegistrationRequest req) {
-    boolean connected = false;
-
-    while (!connected) {
-      LOG.info("Trying to register service at Consul with svcGroup={}, svcId={} host={}, port={}. ", req.getSvcGroup(), req.getSvcId(), req.getHost(), req.getPort());
-      ConsulServiceRegistrationBody svcRegistration = createRegistrationBody(req);
-      connected = registerServiceHttpClient(svcRegistration);
-
-      if (!connected) {
-        LOG.info("Retrying in 1 second");
-        try {
-          Thread.sleep(1000);
-        } catch (InterruptedException e) {
-          e.printStackTrace();
-        }
-      }
-    }
+    consulInstance().agentClient().register((createRegistrationBody(req)));
     LOG.info("Successfully registered service at Consul: " + req.getSvcId());
   }
 
@@ -91,24 +74,7 @@ public class SpConsulServiceDiscovery extends AbstractConsulService implements I
 
   @Override
   public List<String> getServiceEndpoints(String svcGroup, boolean restrictToHealthy, List<String> filterByTags) {
-    Consul consul = consulInstance();
-    HealthClient healthClient = consul.healthClient();
-    List<String> endpoints = new LinkedList<>();
-    List<ServiceHealth> nodes;
-
-    if (!restrictToHealthy) {
-      nodes = healthClient.getAllServiceInstances(svcGroup).getResponse();
-    } else {
-      nodes = healthClient.getHealthyServiceInstances(svcGroup).getResponse();
-    }
-    for (ServiceHealth node : nodes) {
-      if (node.getService().getTags().containsAll(filterByTags)) {
-        String endpoint = node.getService().getAddress() + ":" + node.getService().getPort();
-        LOG.info("Active " + svcGroup + " endpoint: " + endpoint);
-        endpoints.add(endpoint);
-      }
-    }
-    return endpoints;
+    return ConsulHealthServiceManager.INSTANCE.getServiceEndpoints(svcGroup, restrictToHealthy, filterByTags);
   }
 
   @Override
@@ -143,43 +109,20 @@ public class SpConsulServiceDiscovery extends AbstractConsulService implements I
     consul.agentClient().deregister(svcId);
   }
 
-  /**
-   * PUT REST call to Consul API to register new service.
-   *
-   * @param svcRegistration   service registration object used to register service endpoint
-   * @return                  success or failure of service registration
-   */
-  private boolean registerServiceHttpClient(ConsulServiceRegistrationBody svcRegistration) {
-    try {
-      String endpoint = makeConsulEndpoint();
-      String body = JacksonSerializer.getObjectMapper().writeValueAsString(svcRegistration);
-
-      Request.Put(endpoint)
-              .addHeader("accept", "application/json")
-              .body(new StringEntity(body))
-              .execute();
-
-      return true;
-    } catch (Exception e) {
-      LOG.error("Could not register service at Consul");
-    }
-    return false;
-  }
-
-  private ConsulServiceRegistrationBody createRegistrationBody(SpServiceRegistrationRequest req) {
-    ConsulServiceRegistrationBody body = new ConsulServiceRegistrationBody();
-    body.setID(req.getSvcId());
-    body.setName(req.getSvcGroup());
-    body.setTags(asString(req.getTags()));
-    body.setAddress(HTTP_PROTOCOL + req.getHost());
-    body.setPort(req.getPort());
-    body.setEnableTagOverride(true);
-    body.setCheck(new HealthCheckConfiguration(
-            "GET",
-            (HTTP_PROTOCOL + req.getHost() + COLON + req.getPort() + req.getHealthCheckPath()),
-            HEALTH_CHECK_INTERVAL,
-            "60s"));
-
-    return body;
+  private Registration createRegistrationBody(SpServiceRegistrationRequest req) {
+    return ImmutableRegistration.builder()
+            .id(req.getSvcId())
+            .name(req.getSvcGroup())
+            .port(req.getPort())
+            .address(HTTP_PROTOCOL + req.getHost())
+            .check(ImmutableRegCheck.builder()
+                    .http(HTTP_PROTOCOL + req.getHost() + COLON + req.getPort() + req.getHealthCheckPath())
+                    .interval(HEALTH_CHECK_INTERVAL)
+                    .deregisterCriticalServiceAfter("120s")
+                    .status("passing")
+                    .build())
+            .tags(asString(req.getTags()))
+            .enableTagOverride(true)
+            .build();
   }
 }

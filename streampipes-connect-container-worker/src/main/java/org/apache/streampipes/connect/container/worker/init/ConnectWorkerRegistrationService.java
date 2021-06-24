@@ -19,23 +19,32 @@ package org.apache.streampipes.connect.container.worker.init;
 
 import org.apache.streampipes.connect.container.worker.management.MasterRestClient;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
+import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class ConnectWorkerRegistrationService {
 
   private static final Logger LOG = LoggerFactory.getLogger(ConnectWorkerRegistrationService.class);
 
   public void registerWorker(String serviceGroup) {
-    String masterUrl = getConnectMasterUrl() + "/streampipes-backend";
     boolean connected = false;
 
     while (!connected) {
-      LOG.info("Trying to connect to master: " + masterUrl);
-      connected = MasterRestClient.register(masterUrl,
-              new ConnectWorkerDescriptionProvider().getContainerDescription(serviceGroup));
+      List<String> coreServices = getConnectMasterUrl();
+      if (coreServices.size() > 0) {
+        String masterUrl = getConnectMasterUrl().get(0) + "/streampipes-backend";
+        LOG.info("Trying to connect to master: " + masterUrl);
+        connected = MasterRestClient.register(masterUrl,
+                new ConnectWorkerDescriptionProvider().getContainerDescription(serviceGroup));
+
+        if (connected) {
+          LOG.info("Successfully connected to master: " + masterUrl + " Worker is now running.");
+        }
+      }
 
       if (!connected) {
         LOG.info("Retrying in 5 seconds");
@@ -46,13 +55,11 @@ public class ConnectWorkerRegistrationService {
         }
       }
     }
-
-    LOG.info("Successfully connected to master: " + masterUrl + " Worker is now running.");
   }
 
-  private String getConnectMasterUrl() {
+  private List<String> getConnectMasterUrl() {
     return SpServiceDiscovery
             .getServiceDiscovery()
-            .getServiceEndpoints("core", false, Arrays.asList()).get(0);
+            .getServiceEndpoints(DefaultSpServiceGroups.CORE, true, Collections.emptyList());
   }
 }

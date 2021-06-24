@@ -86,6 +86,7 @@ public class DeclarersSingleton {
     this.setHostName(host);
     this.setPort(port);
     this.addDeclarers(serviceDef.getDeclarers());
+    this.serviceId = serviceDef.getServiceId();
     this.registerProtocols(serviceDef.getProtocolDefinitionFactories());
     this.registerDataFormats(serviceDef.getDataFormatFactories());
     this.allAdapters = serviceDef.getSpecificAdapters();
