@@ -21,14 +21,103 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [Unreleased]
+# [Unreleased]
 ### New Features
 
 ### Improvements
 
 ### Bug Fixes
 
-## [0.67.0]
+
+# [0.68.0]
+
+## Sub-task
+* [STREAMPIPES-273](https://issues.apache.org/jira/browse/STREAMPIPES-273) - Remove DataSource concept
+* [STREAMPIPES-274](https://issues.apache.org/jira/browse/STREAMPIPES-274) - Add new modules for streampipes-client and API
+* [STREAMPIPES-275](https://issues.apache.org/jira/browse/STREAMPIPES-275) - Pipeline Element Templates
+
+## New Features
+* [STREAMPIPES-15](https://issues.apache.org/jira/browse/STREAMPIPES-15) - Let backend provide Kafka messaging properties
+* [STREAMPIPES-74](https://issues.apache.org/jira/browse/STREAMPIPES-74) - Automatically restart pipelines on system startup
+* [STREAMPIPES-245](https://issues.apache.org/jira/browse/STREAMPIPES-245) - Add pipeline monitoring feature
+* [STREAMPIPES-248](https://issues.apache.org/jira/browse/STREAMPIPES-248) - Auto-restart pipelines that are stopped on system restart
+* [STREAMPIPES-249](https://issues.apache.org/jira/browse/STREAMPIPES-249) - More compact data processor/sink definition
+* [STREAMPIPES-250](https://issues.apache.org/jira/browse/STREAMPIPES-250) - Support lists in Siddhi wrapper
+* [STREAMPIPES-251](https://issues.apache.org/jira/browse/STREAMPIPES-251) - Add stop feature to cli
+* [STREAMPIPES-252](https://issues.apache.org/jira/browse/STREAMPIPES-252) - Support MQTT transport protocol
+* [STREAMPIPES-288](https://issues.apache.org/jira/browse/STREAMPIPES-288) - Provide count aggregation in default version
+* [STREAMPIPES-294](https://issues.apache.org/jira/browse/STREAMPIPES-294) - Wordcloud visualization in dashboard
+* [STREAMPIPES-296](https://issues.apache.org/jira/browse/STREAMPIPES-296) - Status visualization in dashboard
+* [STREAMPIPES-303](https://issues.apache.org/jira/browse/STREAMPIPES-303) - Add autocomplete feature for semantic type selection in Connect
+* [STREAMPIPES-362](https://issues.apache.org/jira/browse/STREAMPIPES-362) - Live preview in pipeline editor
+* [STREAMPIPES-372](https://issues.apache.org/jira/browse/STREAMPIPES-372) - Pipeline Health Check
+
+## Improvements
+* [STREAMPIPES-173](https://issues.apache.org/jira/browse/STREAMPIPES-173) - Backend should be run without any dependency on IntelliJ
+* [STREAMPIPES-197](https://issues.apache.org/jira/browse/STREAMPIPES-197) - Improve Documentation
+* [STREAMPIPES-200](https://issues.apache.org/jira/browse/STREAMPIPES-200) - Too many bold text parts in UI
+* [STREAMPIPES-220](https://issues.apache.org/jira/browse/STREAMPIPES-220) - Add requiredFloatParameter builder method with ValueSpecification
+* [STREAMPIPES-246](https://issues.apache.org/jira/browse/STREAMPIPES-246) - Remove module app-file-export
+* [STREAMPIPES-254](https://issues.apache.org/jira/browse/STREAMPIPES-254) - Add correction value rule to preprocessing pipeline in connect adapters
+* [STREAMPIPES-256](https://issues.apache.org/jira/browse/STREAMPIPES-256) - PLC4X S7 adapter should use PooledPlcDriverManager
+* [STREAMPIPES-257](https://issues.apache.org/jira/browse/STREAMPIPES-257) - Add the connect master REST API to backend
+* [STREAMPIPES-260](https://issues.apache.org/jira/browse/STREAMPIPES-260) - Add connection retry option for consul on startup
+* [STREAMPIPES-269](https://issues.apache.org/jira/browse/STREAMPIPES-269) - Improve container-core serialization performance
+* [STREAMPIPES-270](https://issues.apache.org/jira/browse/STREAMPIPES-270) - Update Angular version
+* [STREAMPIPES-280](https://issues.apache.org/jira/browse/STREAMPIPES-280) - Refactor data explorer management
+* [STREAMPIPES-287](https://issues.apache.org/jira/browse/STREAMPIPES-287) - Support GroupBy clause in Siddhi wrapper
+* [STREAMPIPES-293](https://issues.apache.org/jira/browse/STREAMPIPES-293) - Extend Siddhi wrapper
+* [STREAMPIPES-306](https://issues.apache.org/jira/browse/STREAMPIPES-306) - [OPC UA] Implement pull adapter
+* [STREAMPIPES-307](https://issues.apache.org/jira/browse/STREAMPIPES-307) - Extend SDK to add default code block
+* [STREAMPIPES-308](https://issues.apache.org/jira/browse/STREAMPIPES-308) - Add String mappings to BooleanToState Processor
+* [STREAMPIPES-310](https://issues.apache.org/jira/browse/STREAMPIPES-310) - Improve export speed of data download
+* [STREAMPIPES-334](https://issues.apache.org/jira/browse/STREAMPIPES-334) - Customize Label Property in NumberLabeler
+* [STREAMPIPES-352](https://issues.apache.org/jira/browse/STREAMPIPES-352) - Add restart policy to compose files
+* [STREAMPIPES-360](https://issues.apache.org/jira/browse/STREAMPIPES-360) - Improve Adapter Management
+* [STREAMPIPES-369](https://issues.apache.org/jira/browse/STREAMPIPES-369) - Improve user guidance in live dashboard
+* [STREAMPIPES-370](https://issues.apache.org/jira/browse/STREAMPIPES-370) - Change widget type in live dashboard
+* [STREAMPIPES-374](https://issues.apache.org/jira/browse/STREAMPIPES-374) - Improve management of secret configs
+* [STREAMPIPES-375](https://issues.apache.org/jira/browse/STREAMPIPES-375) - Restore pipeline element positions in pipeline canvas
+
+## Bug Fixes
+* [STREAMPIPES-126](https://issues.apache.org/jira/browse/STREAMPIPES-126) - [Postgres Sink] Tries to Creating Table for each incomming event
+* [STREAMPIPES-127](https://issues.apache.org/jira/browse/STREAMPIPES-127) - [Postgres Sink] Using Wrong datatype while cerating table
+* [STREAMPIPES-162](https://issues.apache.org/jira/browse/STREAMPIPES-162) - Postgres Column Names are case sentitiv and save leads to error
+* [STREAMPIPES-163](https://issues.apache.org/jira/browse/STREAMPIPES-163) - Exception during save in MYSQl Sink with Timestamp value
+* [STREAMPIPES-243](https://issues.apache.org/jira/browse/STREAMPIPES-243) - Configuration of And Processor is broken
+* [STREAMPIPES-253](https://issues.apache.org/jira/browse/STREAMPIPES-253) - Missing timestamp property scope (header) in connect
+* [STREAMPIPES-264](https://issues.apache.org/jira/browse/STREAMPIPES-264) - Cannot login after k8s restart
+* [STREAMPIPES-267](https://issues.apache.org/jira/browse/STREAMPIPES-267) - NumberLabeler does not work with doubles
+* [STREAMPIPES-271](https://issues.apache.org/jira/browse/STREAMPIPES-271) - Event property dialog breaks global dialog layout
+* [STREAMPIPES-282](https://issues.apache.org/jira/browse/STREAMPIPES-282) - Fix empty route warning in backend
+* [STREAMPIPES-284](https://issues.apache.org/jira/browse/STREAMPIPES-284) - NullPointerException at org.apache.streampipes.manager.execution.http.GraphSubmitter.detachGraphs(GraphSubmitter.java:94)
+* [STREAMPIPES-285](https://issues.apache.org/jira/browse/STREAMPIPES-285) - Connect worker - Error after PLC turned off
+* [STREAMPIPES-302](https://issues.apache.org/jira/browse/STREAMPIPES-302) - File Set Adapter does not start on pipeline invokation
+* [STREAMPIPES-312](https://issues.apache.org/jira/browse/STREAMPIPES-312) - Duplicate activemq svc definition in helm chart
+* [STREAMPIPES-313](https://issues.apache.org/jira/browse/STREAMPIPES-313) - org.apache.streampipes.connect.adapter.exception.AdapterException: Could not resolve runtime configurations from http://connect-worker-main:8098
+* [STREAMPIPES-315](https://issues.apache.org/jira/browse/STREAMPIPES-315) - "==" operator does not work in Number Labeler
+* [STREAMPIPES-317](https://issues.apache.org/jira/browse/STREAMPIPES-317) - [Postgres Sink] Connection via SSL not possible
+* [STREAMPIPES-321](https://issues.apache.org/jira/browse/STREAMPIPES-321) - Fail to stop pipeline if one of the PE is stopped manually/not running
+* [STREAMPIPES-336](https://issues.apache.org/jira/browse/STREAMPIPES-336) - Remove connect-master service build section from docker-compose.yml
+* [STREAMPIPES-342](https://issues.apache.org/jira/browse/STREAMPIPES-342) - Maven build failure due to missing Apache license header
+* [STREAMPIPES-358](https://issues.apache.org/jira/browse/STREAMPIPES-358) - pod restart freezes a pipeline (k8s)
+* [STREAMPIPES-359](https://issues.apache.org/jira/browse/STREAMPIPES-359) - Documentation of pipeline elements does not provide accurate details
+* [STREAMPIPES-361](https://issues.apache.org/jira/browse/STREAMPIPES-361) - Prevent running pipelines to be modified
+* [STREAMPIPES-365](https://issues.apache.org/jira/browse/STREAMPIPES-365) - Pipeline verification not working
+* [STREAMPIPES-366](https://issues.apache.org/jira/browse/STREAMPIPES-366) - Unexpected error when modifying pipelines
+* [STREAMPIPES-367](https://issues.apache.org/jira/browse/STREAMPIPES-367) - Avoid orphaned pipelines
+* [STREAMPIPES-368](https://issues.apache.org/jira/browse/STREAMPIPES-368) - Avoid duplicated visualizable pipelines
+* [STREAMPIPES-371](https://issues.apache.org/jira/browse/STREAMPIPES-371) - Wrong pipeline is started after modification
+* [STREAMPIPES-373](https://issues.apache.org/jira/browse/STREAMPIPES-373) - Updating a pipeline breaks running visualizations
+* [STREAMPIPES-378](https://issues.apache.org/jira/browse/STREAMPIPES-378) - Mapping properties are not correctly extracted
+* [STREAMPIPES-379](https://issues.apache.org/jira/browse/STREAMPIPES-379) - Runtime name is not shown in PLC4X S7 adapter
+
+## Task
+* [STREAMPIPES-268](https://issues.apache.org/jira/browse/STREAMPIPES-268) - Update Maven dependencies
+* [STREAMPIPES-364](https://issues.apache.org/jira/browse/STREAMPIPES-364) - Improve robustness after pipeline updates
+* [STREAMPIPES-377](https://issues.apache.org/jira/browse/STREAMPIPES-377) - Remove obsolete code from knowledge module
+
+# [0.67.0]
 
 ## Sub-task
 * [STREAMPIPES-133](https://issues.apache.org/jira/browse/STREAMPIPES-133) - Add StaticProperty for entering code
