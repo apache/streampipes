@@ -142,7 +142,7 @@ export class AdapterUtils {
 
     private static markPropertyAsTimestamp(propertyName: string) {
         it('Mark property as timestamp', () => {
-
+            cy.get('#event-schema-next-button').should('be.disabled');
             // Edit timestamp
             cy.dataCy('edit-' + propertyName).click();
 
@@ -151,6 +151,8 @@ export class AdapterUtils {
 
             // Close
             cy.dataCy('sp-save-edit-property').click();
+
+            cy.get('#event-schema-next-button').parent().should('not.be.disabled');
         });
     }
 
