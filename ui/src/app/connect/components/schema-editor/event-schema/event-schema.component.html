@@ -22,13 +22,15 @@
 
         <div class="assemblyOptions sp-blue-bg">
             <sp-schema-editor-header
+                    [countSelected]="countSelected"
+                    [schemaErrorHints]="schemaErrorHints"
+                    [displayMessages]="validEventSchema"
                     (addNestedPropertyEmitter)="addNestedProperty()"
                     (addStaticValuePropertyEmitter)="addStaticValueProperty()"
                     (addTimestampPropertyEmitter)="addTimestampProperty()"
                     (guessSchemaEmitter)="guessSchema()"
                     (togglePreviewEmitter)="togglePreview()"
-                    (removeSelectedPropertiesEmitter)="removeSelectedProperties()"
-                    [countSelected]="countSelected">
+                    (removeSelectedPropertiesEmitter)="removeSelectedProperties()">
             </sp-schema-editor-header>
         </div>
 

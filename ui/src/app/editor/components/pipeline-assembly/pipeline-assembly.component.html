@@ -68,33 +68,11 @@
             </div>
             <span fxFlex></span>
             <div style="position:relative;">
-                <div *ngIf="!isPipelineAssemblyEmpty()"
-                     class="pipeline-validation-summary {{PipelineValidationService.errorMessages.length > 0 ? 'pipeline-validation-summary-error' : ''}}"
-                     (click)="toggleErrorMessagesDisplayed()">
-                    <div fxLayout="row" fxLayoutAlign="center center">
-                        <div fxLayout="row" fxLayoutAlign="start center">
-                            <i class="material-icons" *ngIf="PipelineValidationService.errorMessages.length > 0">notifications</i>
-                            <i class="material-icons"
-                               *ngIf="PipelineValidationService.errorMessages.length === 0">done</i>
-                        </div>
-                        <div>
-                            <span *ngIf="PipelineValidationService.errorMessages.length === 0">Pipeline ok</span>
-                            <span *ngIf="PipelineValidationService.errorMessages.length > 0">{{PipelineValidationService.errorMessages.length}} {{PipelineValidationService.errorMessages.length > 1 ? 'hints' : 'hint'}}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="editor-error-notifications"
-                     *ngIf="PipelineValidationService.errorMessages.length > 0 && errorMessagesDisplayed">
-                    <h5 style="color:darkred">
-                        <b>{{PipelineValidationService.errorMessages.length}} {{PipelineValidationService.errorMessages.length == 1 ? "error" : "errors"}}
-                            found.</b></h5>
-                    <hr/>
-                    <div *ngFor="let errorMessage of PipelineValidationService.errorMessages">
-                        <b>{{errorMessage.title}}</b>
-                        <div>{{errorMessage.content}}</div>
-                        <hr/>
-                    </div>
-                </div>
+                <sp-error-hint
+                    [displayMessages]="!isPipelineAssemblyEmpty()"
+                    [errorMessages]="PipelineValidationService.errorMessages"
+                    [validationString]="'Pipeline'">
+                </sp-error-hint>
             </div>
             <button mat-button mat-icon-button
                     [matTooltip]="pipelineCanvasMaximized ? 'Minimize' : 'Maximize'"

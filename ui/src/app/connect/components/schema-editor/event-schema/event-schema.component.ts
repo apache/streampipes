@@ -39,6 +39,7 @@ import {
   Notification
 } from '../../../../core-model/gen/streampipes-model';
 import { MatStepper } from '@angular/material/stepper';
+import { UserErrorMessage } from '../../../../core-model/base/UserErrorMessage';
 
 @Component({
   selector: 'sp-event-schema',
@@ -82,6 +83,8 @@ export class EventSchemaComponent implements OnChanges {
   errorMessages: Notification[];
   nodes: EventProperty[] = new Array<EventProperty>();
   validEventSchema = false;
+  schemaErrorHints: UserErrorMessage[] = [];
+
   options: ITreeOptions = {
     childrenField: 'eventProperties',
     allowDrag: () => {
@@ -218,12 +221,18 @@ export class EventSchemaComponent implements OnChanges {
   }
 
   private checkIfValid(eventSchema: EventSchema): boolean {
+
     let hasTimestamp = false;
     eventSchema.eventProperties.forEach(p => {
       if (p.domainProperties.indexOf('http://schema.org/DateTime') >  -1) {
         hasTimestamp = true;
       }
     });
+
+    this.schemaErrorHints = [];
+    if (!hasTimestamp) {
+      this.schemaErrorHints.push(new UserErrorMessage('Missing Timestamp', 'The timestamp must be a UNIX timestamp in milliseconds. Edit the timestamp event property or add a timestamp with the button on the top left.'));
+    }
 
     return hasTimestamp;
   }

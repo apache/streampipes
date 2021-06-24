@@ -33,11 +33,17 @@
             <button color="primary" mat-button (click)=guessSchema()>
                 <mat-icon matTooltip="Refresh Schema">refresh</mat-icon>
             </button>
-            <button color="primary" mat-button (click)=togglePreview()>
-                <mat-icon matTooltip="Show preview of schema">play_arrow</mat-icon>
-            </button>
+            <!--            <button color="primary" mat-button (click)=togglePreview()>-->
+            <!--                <mat-icon matTooltip="Show preview of schema">play_arrow</mat-icon>-->
+            <!--            </button>-->
         </div>
-        <div>
+        <div fxLayout="row" style="align-items: center;">
+                <sp-error-hint
+                        [errorMessages]="schemaErrorHints"
+                        [displayMessages]="!displayMessages">
+                </sp-error-hint>
+
+
             <button style="padding-right:0" color="primary" mat-button [disabled]="countSelected == 0"
                     (click)="removeSelectedProperties()">
                 <mat-icon matTooltip="Remove selected Properties">delete</mat-icon>

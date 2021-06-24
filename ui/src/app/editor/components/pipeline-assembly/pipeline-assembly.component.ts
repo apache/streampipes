@@ -25,29 +25,29 @@ import {
     OnInit,
     Output,
     ViewChild,
-} from "@angular/core";
-import {JsplumbBridge} from "../../services/jsplumb-bridge.service";
-import {PipelinePositioningService} from "../../services/pipeline-positioning.service";
-import {PipelineValidationService} from "../../services/pipeline-validation.service";
-import {JsplumbService} from "../../services/jsplumb.service";
-import {ShepherdService} from "../../../services/tour/shepherd.service";
-import {PipelineElementConfig, PipelineElementUnion} from "../../model/editor.model";
-import {ObjectProvider} from "../../services/object-provider.service";
-import {PanelType} from "../../../core-ui/dialog/base-dialog/base-dialog.model";
-import {SavePipelineComponent} from "../../dialog/save-pipeline/save-pipeline.component";
-import {DialogService} from "../../../core-ui/dialog/base-dialog/base-dialog.service";
-import {ConfirmDialogComponent} from "../../../core-ui/dialog/confirm-dialog/confirm-dialog.component";
-import {MatDialog} from "@angular/material/dialog";
-import {EditorService} from "../../services/editor.service";
-import {PipelineService} from "../../../platform-services/apis/pipeline.service";
-import {JsplumbFactoryService} from "../../services/jsplumb-factory.service";
-import Panzoom, {PanzoomObject} from "@panzoom/panzoom";
-import {PipelineElementDraggedService} from "../../services/pipeline-element-dragged.service";
-import {PipelineComponent} from "../pipeline/pipeline.component";
-import {PipelineCanvasMetadata} from "../../../core-model/gen/streampipes-model";
-import {forkJoin} from 'rxjs';
-import {PipelineCanvasMetadataService} from "../../../platform-services/apis/pipeline-canvas-metadata.service";
-import {PipelineElementDiscoveryComponent} from "../../dialog/pipeline-element-discovery/pipeline-element-discovery.component";
+} from '@angular/core';
+import { JsplumbBridge } from '../../services/jsplumb-bridge.service';
+import { PipelinePositioningService } from '../../services/pipeline-positioning.service';
+import { PipelineValidationService } from '../../services/pipeline-validation.service';
+import { JsplumbService } from '../../services/jsplumb.service';
+import { ShepherdService } from '../../../services/tour/shepherd.service';
+import { PipelineElementConfig, PipelineElementUnion } from '../../model/editor.model';
+import { ObjectProvider } from '../../services/object-provider.service';
+import { PanelType } from '../../../core-ui/dialog/base-dialog/base-dialog.model';
+import { SavePipelineComponent } from '../../dialog/save-pipeline/save-pipeline.component';
+import { DialogService } from '../../../core-ui/dialog/base-dialog/base-dialog.service';
+import { ConfirmDialogComponent } from '../../../core-ui/dialog/confirm-dialog/confirm-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { EditorService } from '../../services/editor.service';
+import { PipelineService } from '../../../platform-services/apis/pipeline.service';
+import { JsplumbFactoryService } from '../../services/jsplumb-factory.service';
+import Panzoom, { PanzoomObject } from '@panzoom/panzoom';
+import { PipelineElementDraggedService } from '../../services/pipeline-element-dragged.service';
+import { PipelineComponent } from '../pipeline/pipeline.component';
+import { PipelineCanvasMetadata } from '../../../core-model/gen/streampipes-model';
+import { forkJoin } from 'rxjs';
+import { PipelineCanvasMetadataService } from '../../../platform-services/apis/pipeline-canvas-metadata.service';
+import { PipelineElementDiscoveryComponent } from '../../dialog/pipeline-element-discovery/pipeline-element-discovery.component';
 
 
 @Component({
@@ -71,7 +71,7 @@ export class PipelineAssemblyComponent implements OnInit {
 
     JsplumbBridge: JsplumbBridge;
 
-    pipelineCanvasMaximized: boolean = false;
+    pipelineCanvasMaximized = false;
 
     currentMouseOverElement: any;
     currentZoomLevel: any;
@@ -81,20 +81,18 @@ export class PipelineAssemblyComponent implements OnInit {
     currentPipelineName: any;
     currentPipelineDescription: any;
 
-    errorMessagesDisplayed: any = false;
+    pipelineValid = false;
 
-    pipelineValid: boolean = false;
-
-    pipelineCacheRunning: boolean = false;
-    pipelineCached: boolean = false;
+    pipelineCacheRunning = false;
+    pipelineCached = false;
 
     pipelineCanvasMetadata: PipelineCanvasMetadata = new PipelineCanvasMetadata();
-    pipelineCanvasMetadataAvailable: boolean = false;
+    pipelineCanvasMetadataAvailable = false;
 
     config: any = {};
-    @ViewChild("outerCanvas") pipelineCanvas: ElementRef;
+    @ViewChild('outerCanvas') pipelineCanvas: ElementRef;
 
-    @ViewChild("pipelineComponent")
+    @ViewChild('pipelineComponent')
     pipelineComponent: PipelineComponent;
 
     panzoom: PanzoomObject;
@@ -125,9 +123,9 @@ export class PipelineAssemblyComponent implements OnInit {
             this.checkAndDisplayCachedPipeline();
         }
         this.pipelineElementDraggedService.pipelineElementMovedSubject.subscribe(position => {
-            let offsetHeight = this.pipelineCanvas.nativeElement.offsetHeight;
-            let offsetWidth = this.pipelineCanvas.nativeElement.offsetWidth;
-            let currentPan = this.panzoom.getPan();
+            const offsetHeight = this.pipelineCanvas.nativeElement.offsetHeight;
+            const offsetWidth = this.pipelineCanvas.nativeElement.offsetWidth;
+            const currentPan = this.panzoom.getPan();
             let xOffset = 0;
             let yOffset = 0;
             if ((position.y + currentPan.y) > (offsetHeight - 100)) {
@@ -143,17 +141,17 @@ export class PipelineAssemblyComponent implements OnInit {
     }
 
     ngAfterViewInit() {
-        const elem = document.getElementById('assembly')
+        const elem = document.getElementById('assembly');
         this.panzoom = Panzoom(elem, {
             maxScale: 5,
-            excludeClass: "jtk-draggable",
+            excludeClass: 'jtk-draggable',
             canvas: true,
-            contain: "outside"
-        })
+            contain: 'outside'
+        });
     }
 
     autoLayout() {
-        this.PipelinePositioningService.layoutGraph("#assembly", "span[id^='jsplumb']", 110, false);
+        this.PipelinePositioningService.layoutGraph('#assembly', 'span[id^=\'jsplumb\']', 110, false);
         this.JsplumbBridge.repaintEverything();
     }
 
@@ -176,14 +174,14 @@ export class PipelineAssemblyComponent implements OnInit {
     }
 
     showClearAssemblyConfirmDialog(event: any) {
-        let dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             width: '500px',
             data: {
-                "title": "Do you really want to delete the current pipeline?",
-                "subtitle": "This cannot be undone.",
-                "cancelTitle": "No",
-                "okTitle": "Yes",
-                "confirmAndCancel": true
+                'title': 'Do you really want to delete the current pipeline?',
+                'subtitle': 'This cannot be undone.',
+                'cancelTitle': 'No',
+                'okTitle': 'Yes',
+                'confirmAndCancel': true
             },
         });
         dialogRef.afterClosed().subscribe(ev => {
@@ -195,32 +193,32 @@ export class PipelineAssemblyComponent implements OnInit {
                 this.EditorService.makePipelineAssemblyEmpty(true);
             }
         });
-    };
+    }
 
     /**
      * clears the Assembly of all elements
      */
     clearAssembly() {
-        //$('#assembly').children().not('#clear, #submit').remove();
+        // $('#assembly').children().not('#clear, #submit').remove();
         this.JsplumbBridge.deleteEveryEndpoint();
         this.rawPipelineModel = [];
         this.currentZoomLevel = 1;
         this.JsplumbBridge.setZoom(this.currentZoomLevel);
         this.JsplumbBridge.repaintEverything();
 
-        let removePipelineFromCache = this.EditorService.removePipelineFromCache();
-        let removeCanvasMetadataFromCache = this.EditorService.removeCanvasMetadataFromCache();
+        const removePipelineFromCache = this.EditorService.removePipelineFromCache();
+        const removeCanvasMetadataFromCache = this.EditorService.removeCanvasMetadataFromCache();
         forkJoin([removePipelineFromCache, removeCanvasMetadataFromCache]).subscribe(msg => {
             this.pipelineCached = false;
             this.pipelineCacheRunning = false;
         });
-    };
+    }
 
     /**
      * Sends the pipeline to the server
      */
     submit() {
-        var pipeline = this.ObjectProvider.makeFinalPipeline(this.rawPipelineModel);
+        const pipeline = this.ObjectProvider.makeFinalPipeline(this.rawPipelineModel);
         this.PipelinePositioningService.collectPipelineElementPositions(this.pipelineCanvasMetadata, this.rawPipelineModel);
         pipeline.name = this.currentPipelineName;
         pipeline.description = this.currentPipelineDescription;
@@ -228,20 +226,20 @@ export class PipelineAssemblyComponent implements OnInit {
             pipeline._id = this.currentModifiedPipelineId;
         }
 
-        this.dialogService.open(SavePipelineComponent,{
+        this.dialogService.open(SavePipelineComponent, {
             panelType: PanelType.SLIDE_IN_PANEL,
-            title: "Save pipeline",
+            title: 'Save pipeline',
             data: {
-                "pipeline": pipeline,
-                "currentModifiedPipelineId": this.currentModifiedPipelineId,
-                "pipelineCanvasMetadata": this.pipelineCanvasMetadata
+                'pipeline': pipeline,
+                'currentModifiedPipelineId': this.currentModifiedPipelineId,
+                'pipelineCanvasMetadata': this.pipelineCanvasMetadata
             }
         });
     }
 
     checkAndDisplayCachedPipeline() {
-        let cachedPipeline = this.EditorService.getCachedPipeline();
-        let cachedCanvasMetadata = this.EditorService.getCachedPipelineCanvasMetadata();
+        const cachedPipeline = this.EditorService.getCachedPipeline();
+        const cachedCanvasMetadata = this.EditorService.getCachedPipelineCanvasMetadata();
         forkJoin([cachedPipeline, cachedCanvasMetadata]).subscribe(results => {
             if (results[0] && results[0].length > 0) {
                 this.rawPipelineModel = results[0] as PipelineElementConfig[];
@@ -251,10 +249,10 @@ export class PipelineAssemblyComponent implements OnInit {
     }
 
     displayPipelineById() {
-        let pipelineRequest = this.PipelineService.getPipelineById(this.currentModifiedPipelineId);
-        let canvasRequest = this.pipelineCanvasMetadataService.getPipelineCanvasMetadata(this.currentModifiedPipelineId);
+        const pipelineRequest = this.PipelineService.getPipelineById(this.currentModifiedPipelineId);
+        const canvasRequest = this.pipelineCanvasMetadataService.getPipelineCanvasMetadata(this.currentModifiedPipelineId);
         pipelineRequest.subscribe(pipelineResp => {
-                let pipeline = pipelineResp;
+                const pipeline = pipelineResp;
                 this.currentPipelineName = pipeline.name;
                 this.currentPipelineDescription = pipeline.description;
                 this.rawPipelineModel = this.JsplumbService.makeRawPipeline(pipeline, false);
@@ -264,7 +262,7 @@ export class PipelineAssemblyComponent implements OnInit {
                     this.handleCanvasMetadataResponse(undefined);
                 });
             });
-    };
+    }
 
     handleCanvasMetadataResponse(canvasMetadata: PipelineCanvasMetadata) {
         if (canvasMetadata) {
@@ -280,7 +278,7 @@ export class PipelineAssemblyComponent implements OnInit {
     displayPipelineInEditor(autoLayout,
                             pipelineCanvasMetadata?: PipelineCanvasMetadata) {
         setTimeout(() => {
-            this.PipelinePositioningService.displayPipeline(this.rawPipelineModel, "#assembly", false, autoLayout, pipelineCanvasMetadata);
+            this.PipelinePositioningService.displayPipeline(this.rawPipelineModel, '#assembly', false, autoLayout, pipelineCanvasMetadata);
             this.EditorService.makePipelineAssemblyEmpty(false);
             this.ngZone.run(() => {
                 this.pipelineValid = this.PipelineValidationService
@@ -290,9 +288,6 @@ export class PipelineAssemblyComponent implements OnInit {
         });
     }
 
-    toggleErrorMessagesDisplayed() {
-        this.errorMessagesDisplayed = !(this.errorMessagesDisplayed);
-    }
 
     isPipelineAssemblyEmpty() {
         return this.rawPipelineModel.length === 0 || this.rawPipelineModel.every(pe => pe.settings.disabled);
@@ -324,9 +319,9 @@ export class PipelineAssemblyComponent implements OnInit {
     }
 
     pan(xOffset: number, yOffset: number) {
-        let currentPan = this.panzoom.getPan();
-        let panX = Math.min(0, currentPan.x + xOffset);
-        let panY = Math.min(0, currentPan.y + yOffset);
+        const currentPan = this.panzoom.getPan();
+        const panX = Math.min(0, currentPan.x + xOffset);
+        const panY = Math.min(0, currentPan.y + yOffset);
         this.panzoom.pan(panX, panY);
     }
 
