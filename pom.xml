@@ -1294,7 +1294,7 @@
         <developerConnection>scm:git:ssh://git@github.com/apache/incubator-streampipes.git</developerConnection>
         <connection>scm:git:ssh://git@github.com/apache/incubator-streampipes.git</connection>
         <url>https://github.com/apache/incubator-streampipes</url>
-      <tag>HEAD</tag>
+      <tag>rel/0.68.0</tag>
   </scm>
 
     <issueManagement>
