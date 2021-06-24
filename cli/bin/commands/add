@@ -32,7 +32,7 @@ Examples:
 streampipes add my-service
 
 # Create Docker Compose files with custom image tag and port mappings
-streampipes add my-service --image myrepo/my-service:0.68.0 --ports 8090:8090 --ports 8091:8091
+streampipes add my-service --image myrepo/my-service:0.69.0 --ports 8090:8090 --ports 8091:8091
 
 # Create Docker Compose files, persistently store in environment (lite), and add to .spenv 
 streampipes add my-service --store lite --activate
