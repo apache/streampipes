@@ -21,7 +21,7 @@ import {Component, Input} from '@angular/core';
 @Component({
   selector: 'sp-edit-event-property-list',
   templateUrl: './edit-event-property-list.component.html',
-  styleUrls: ['./edit-event-property-list.component.css']
+  styleUrls: ['./edit-event-property-list.component.scss']
 })
 export class EditEventPropertyListComponent {
 

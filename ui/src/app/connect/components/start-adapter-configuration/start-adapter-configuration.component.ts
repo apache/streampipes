@@ -32,7 +32,7 @@ import { DialogService } from '../../../core-ui/dialog/base-dialog/base-dialog.s
 @Component({
   selector: 'sp-start-adapter-configuration',
   templateUrl: './start-adapter-configuration.component.html',
-  styleUrls: ['./start-adapter-configuration.component.css']
+  styleUrls: ['./start-adapter-configuration.component.scss']
 })
 export class StartAdapterConfigurationComponent implements OnInit {
 

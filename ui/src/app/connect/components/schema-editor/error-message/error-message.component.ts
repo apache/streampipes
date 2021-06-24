@@ -22,7 +22,7 @@ import { Notification } from '../../../../core-model/gen/streampipes-model';
 @Component({
   selector: 'sp-error-message',
   templateUrl: './error-message.component.html',
-  styleUrls: ['./error-message.component.css']
+  styleUrls: ['./error-message.component.scss']
 })
 export class ErrorMessageComponent implements OnInit {
 

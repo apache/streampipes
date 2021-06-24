@@ -23,7 +23,7 @@ import { FormatDescription } from '../../../core-model/gen/streampipes-model';
 @Component({
   selector: 'sp-format-item',
   templateUrl: './format-item.component.html',
-  styleUrls: ['./format-item.component.css'],
+  styleUrls: ['./format-item.component.scss'],
 })
 export class FormatItemComponent {
   @Input()

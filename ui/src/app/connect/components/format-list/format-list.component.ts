@@ -22,7 +22,7 @@ import { FormatDescription } from '../../../core-model/gen/streampipes-model';
 @Component({
     selector: 'sp-format-list',
     templateUrl: './format-list.component.html',
-    styleUrls: ['./format-list.component.css']
+    styleUrls: ['./format-list.component.scss']
   })
 
 export class FormatListComponent {

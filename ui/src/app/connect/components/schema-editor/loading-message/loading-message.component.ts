@@ -21,7 +21,7 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'sp-loading-message',
   templateUrl: './loading-message.component.html',
-  styleUrls: ['./loading-message.component.css']
+  styleUrls: ['./loading-message.component.scss']
 })
 export class LoadingMessageComponent {
 

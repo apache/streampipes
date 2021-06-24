@@ -22,7 +22,7 @@ import { EventSchema } from '../../../../core-model/gen/streampipes-model';
 @Component({
     selector: 'sp-event-schema-preview',
     templateUrl: './event-schema-preview.component.html',
-    styleUrls: ['./event-schema-preview.component.css']
+    styleUrls: ['./event-schema-preview.component.scss']
 })
 export class EventSchemaPreviewComponent {
     @Input() eventSchema: EventSchema;

@@ -30,7 +30,7 @@ import { MatStepper } from '@angular/material/stepper';
 @Component({
   selector: 'sp-format-configuration',
   templateUrl: './format-configuration.component.html',
-  styleUrls: ['./format-configuration.component.css']
+  styleUrls: ['./format-configuration.component.scss']
 })
 export class FormatConfigurationComponent implements OnInit {
 

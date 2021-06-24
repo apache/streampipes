@@ -22,7 +22,7 @@ import { UserErrorMessage } from '../../../../core-model/base/UserErrorMessage';
 @Component({
   selector: 'sp-schema-editor-header',
   templateUrl: './schema-editor-header.component.html',
-  styleUrls: ['./schema-editor-header.component.css']
+  styleUrls: ['./schema-editor-header.component.scss']
 })
 export class SchemaEditorHeaderComponent implements OnInit {
 

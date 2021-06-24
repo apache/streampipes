@@ -29,7 +29,7 @@ import { MatStepper } from '@angular/material/stepper';
 @Component({
   selector: 'sp-generic-adapter-configuration',
   templateUrl: './generic-adapter-configuration.component.html',
-  styleUrls: ['./generic-adapter-configuration.component.css']
+  styleUrls: ['./generic-adapter-configuration.component.scss']
 })
 export class GenericAdapterConfigurationComponent implements OnInit {
 

@@ -24,7 +24,7 @@ import { MatStepper } from '@angular/material/stepper';
 @Component({
   selector: 'sp-specific-adapter-configuration',
   templateUrl: './specific-adapter-configuration.component.html',
-  styleUrls: ['./specific-adapter-configuration.component.css']
+  styleUrls: ['./specific-adapter-configuration.component.scss']
 })
 export class SpecificAdapterConfigurationComponent implements OnInit {
 

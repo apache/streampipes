@@ -52,7 +52,7 @@ import { IconService } from '../../services/icon.service';
 @Component({
     selector: 'sp-new-adapter',
     templateUrl: './new-adapter.component.html',
-    styleUrls: ['./new-adapter.component.css'],
+    styleUrls: ['./new-adapter.component.scss'],
 })
 export class NewAdapterComponent implements OnInit, AfterViewInit {
 

@@ -44,7 +44,7 @@ import { UserErrorMessage } from '../../../../core-model/base/UserErrorMessage';
 @Component({
   selector: 'sp-event-schema',
   templateUrl: './event-schema.component.html',
-  styleUrls: ['./event-schema.component.css']
+  styleUrls: ['./event-schema.component.scss']
 })
 export class EventSchemaComponent implements OnChanges {
 

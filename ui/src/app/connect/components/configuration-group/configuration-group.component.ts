@@ -24,7 +24,7 @@ import { ConfigurationInfo } from '../../model/ConfigurationInfo';
 @Component({
   selector: 'sp-configuration-group',
   templateUrl: './configuration-group.component.html',
-  styleUrls: ['./configuration-group.component.css']
+  styleUrls: ['./configuration-group.component.scss']
 })
 export class ConfigurationGroupComponent implements OnInit {
 
