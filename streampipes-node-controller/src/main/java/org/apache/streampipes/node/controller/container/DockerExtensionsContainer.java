@@ -42,11 +42,8 @@ public class DockerExtensionsContainer extends AbstractStreamPipesDockerContaine
                         .addNodeEnvs(generateStreamPipesNodeEnvs())
                         .add("SP_HOST", NodeConfiguration.getNodeHost())
                         .add("SP_PORT", "8090")
-                        .add("SP_LOGGING_FILE_PATH", "/var/log/streampipes/eval")
+                        .add("SP_LOGGING_MQTT_URL", NodeConfiguration.getLoggingMqttUrl())
                         .add("TZ", "Europe/Berlin")
-                        .build())
-                .withVolumes(ContainerVolumesBuilder.create()
-                        .add("streampipes-eval", "/var/log/streampipes/eval", false)
                         .build())
                 .withLabels(ContainerLabels.with(SP_SVC_EXTENSIONS_ID, retrieveNodeType(), ContainerType.EXTENSIONS))
                 .build();

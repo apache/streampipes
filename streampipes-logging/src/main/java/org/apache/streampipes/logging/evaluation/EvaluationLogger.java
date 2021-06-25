@@ -25,7 +25,6 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 
 public class EvaluationLogger {
-
     private static EvaluationLogger instance = null;
     private final MQTT mqtt;
     private final BlockingConnection connection;
@@ -36,15 +35,10 @@ public class EvaluationLogger {
     }
 
     private EvaluationLogger(){
-        String logging_host = System.getenv("SP_LOGGING_MQTT_HOST");
-        String port = System.getenv("SP_LOGGING_MQTT_PORT");
-        if (port == null)
-            port = "1883";
-        int logging_port = Integer.parseInt(port);
-
+        String loggingUrl = System.getenv("SP_LOGGING_MQTT_URL");
         mqtt = new MQTT();
         try {
-            mqtt.setHost(logging_host, logging_port);
+            mqtt.setHost(loggingUrl);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }

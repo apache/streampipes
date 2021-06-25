@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 public final class NodeConfiguration {
     private static final Logger LOG = LoggerFactory.getLogger(NodeConfiguration.class.getCanonicalName());
 
-    private static final String[] VALID_URL_SCHEMES = new String[]{"http","https"};
+    private static final String[] VALID_URL_SCHEMES = new String[]{"http","https", "tcp"};
 
     private static String nodeApiKey;
     private static String nodeHost;
@@ -60,6 +60,7 @@ public final class NodeConfiguration {
     private static String consulHost;
     private static OffloadingStrategyType autoOffloadingStrategy;
     private static String nodeStoragePath;
+    private static String loggingMqttUrl;
 
     private static HashMap<String, String> configMap;
 
@@ -291,6 +292,14 @@ public final class NodeConfiguration {
         NodeConfiguration.nodeStoragePath = nodeStoragePath;
     }
 
+    public static String getLoggingMqttUrl() {
+        return loggingMqttUrl;
+    }
+
+    public static void setLoggingMqttUrl(String loggingMqttUrl) {
+        NodeConfiguration.loggingMqttUrl = loggingMqttUrl;
+    }
+
     public static HashMap<String, String> getConfigMap() {
         return configMap;
     }
@@ -504,6 +513,12 @@ public final class NodeConfiguration {
                 case NODE_STORAGE_PATH:
                     configMap.put(envKey, value);
                     setNodeStoragePath(value);
+                    break;
+                case LOGGING_MQTT_URL:
+                    if (isValidUrl(value)) {
+                        configMap.put(envKey, value);
+                        setLoggingMqttUrl(value);
+                    }
                     break;
                 default:
                     throw new IllegalArgumentException("Invalid environment config param: " + configParam);

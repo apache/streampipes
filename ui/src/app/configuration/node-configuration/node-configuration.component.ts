@@ -206,4 +206,22 @@ export class NodeConfigurationComponent implements OnInit{
         return new Date(heartbeat).toLocaleTimeString(['en-US'],
             { hour: '2-digit', minute: "2-digit", second: "2-digit" });
     }
+
+    calculateOfflineTime(heartbeat: number) {
+        let now = new Date();
+        let seconds = Math.floor((now.getTime() - (new Date(heartbeat).getTime()))/1000);
+
+        const d = Math.floor(seconds / (3600 * 24));
+        seconds -= d * 3600 * 24;
+        const h = Math.floor(seconds / 3600);
+        seconds -= h * 3600;
+        const m = Math.floor(seconds / 60);
+        seconds -= m * 60;
+        const tmp = [];
+        (d) && tmp.push(d + 'd');
+        (d || h) && tmp.push(h + 'h');
+        (d || h || m) && tmp.push(m + 'm');
+        //tmp.push(seconds + 's');
+        return tmp.join(' ');
+    }
 }

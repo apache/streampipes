@@ -17,6 +17,8 @@
  */
 package org.apache.streampipes.node.controller.management.orchestrator.docker.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.spotify.docker.client.DefaultDockerClient;
@@ -29,7 +31,9 @@ import com.spotify.docker.client.shaded.com.google.common.collect.Lists;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.node.container.ContainerLabel;
 import org.apache.streampipes.model.node.container.DockerContainer;
+import org.apache.streampipes.node.controller.management.orchestrator.DockerEngineManager;
 import org.apache.streampipes.node.controller.management.orchestrator.docker.model.DockerInfo;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +43,10 @@ import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class DockerUtils {
     private static final Logger LOG = LoggerFactory.getLogger(DockerUtils.class.getCanonicalName());
@@ -63,6 +70,33 @@ public class DockerUtils {
             }
         }
         return instance;
+    }
+
+    public Map<String, ContainerStats> collectStats() {
+        List<Container> containers = getRunningStreamPipesContainer();
+        List<CompletableFuture<Map<String, ContainerStats>>> futures = new ArrayList<>();
+
+        for(Container container: containers) {
+            CompletableFuture<Map<String, ContainerStats>> statsFuture =
+                    CompletableFuture.supplyAsync(() -> {
+                        try {
+                            HashMap<String, ContainerStats> containerStats = new HashMap<>();
+                            containerStats.put(container.names().get(0).replace("/",""), docker.stats(container.id()));
+                            return containerStats;
+                        } catch (DockerException | InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        return null;
+                    });
+            futures.add(statsFuture);
+        }
+
+        return futures.stream()
+                .map(CompletableFuture::join)
+                .collect(Collectors.toList())
+                .stream()
+                .flatMap(map -> map.entrySet().stream())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     private void init() {

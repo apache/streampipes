@@ -93,25 +93,12 @@
                                         </mat-icon>
                                         <span>edit</span>
                                     </button>
-<!--                                    <button mat-menu-item-->
-<!--                                            [disabled]="!node.active || node.condition === 'OFFLINE'"-->
-<!--                                            matTooltip="Edit node connectivity"-->
-<!--                                            matTooltipPosition="above"-->
-<!--                                            (click)="settings(node)">-->
-<!--                                        <mat-icon-->
-<!--                                                [ngClass]="'node-inactive'">-->
-<!--                                            contactless-->
-<!--                                        </mat-icon>-->
-<!--                                        <span>connectivity</span>-->
-<!--                                    </button>-->
                                 </mat-menu>
                             </div>
                             <div mat-card-avatar class="node-header-avatar">
                                 <button mat-icon-button class="node-mat-icon-button" disabled>
                                     <mat-icon [ngClass]="'node-inactive'">
                                         storage
-<!--                                        {{node.staticNodeMetadata.type == 'cloud' ? 'cloud' :-->
-<!--                                        node.staticNodeMetadata.type == 'fog' ? 'storage' : 'developer_board'}}-->
                                     </mat-icon>
                                 </button>
                             </div>
@@ -135,6 +122,10 @@
                                     </span>
                                     <span *ngIf="node.condition === 'OFFLINE' && !node.active"
                                           class="span-node-inactive">lost
+                                    </span>
+                                    <span *ngIf="node.condition === 'OFFLINE' && node.active"
+                                          class="span-node-inactive-days">since
+                                        {{calculateOfflineTime(node.lastHeartBeatTime)}}
                                     </span>
                                 </div>
                             </mat-card-subtitle>
