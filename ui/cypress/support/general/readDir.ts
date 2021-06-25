@@ -16,24 +16,28 @@
  *
  */
 
-import { ProcessingElementTestUtils } from '../../support/utils/ProcessingElementTestUtils';
-import { PipelineElementBuilder } from '../../support/builder/PipelineElementBuilder';
-import { ProcessorTestBuilder } from '../../support/builder/ProcessorTestBuilder';
+import * as fs from 'fs';
 
-describe('Test Field Renamer 1', () => {
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      /**
+       * Login into streampipes with standard test user
+       * @example cy.login();
+       */
+      readDir: typeof readDir;
+    }
+  }
+}
 
-    it('Login', () => {
-        cy.login();
+export const readDir = (dir: string) => {
+  fs.readdir(dir, (err: any, files: any[]) => {
+    if (err) {
+      return console.log('Unable to scan directory: ' + err);
+    }
+    files.forEach((file) => {
+      console.log('file: ' + file);
     });
+  });
 
-    const processorTest = ProcessorTestBuilder.create('fieldRenamer1')
-      .setProcessor(
-        PipelineElementBuilder.create('field_renamer')
-          .addInput('drop-down', 'convert-property', 'count')
-          .addInput('input', 'field-name', 'newname')
-          .build())
-      .build();
-
-    ProcessingElementTestUtils.testElement(processorTest);
-
-});
+};

@@ -27,8 +27,32 @@
 // ***********************************************************
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
+import * as fs from 'fs';
+import { ProcessorTest } from '../support/model/ProcessorTest';
+
+function readProcessingElements(): ProcessorTest[] {
+  const result: ProcessorTest[] = [];
+
+  const allPipelineTests = fs.readdirSync('cypress/fixtures/pipelineElement');
+
+  allPipelineTests.forEach(test => {
+    const testDescription = fs.readFileSync('cypress/fixtures/pipelineElement/' + test + '/description.json');
+    // @ts-ignore
+    const pt = new ProcessorTest();
+    pt.name = test;
+    // @ts-ignore
+    pt.processor = JSON.parse(testDescription);
+
+    result.push(pt);
+  });
+
+  return result;
+}
+
 module.exports = (on, config) => {
-    // `on` is used to hook into various events Cypress emits
-  // `config` is the resolved Cypress config
+
+  config.env.processingElements = readProcessingElements();
+
+  return config;
 };
 

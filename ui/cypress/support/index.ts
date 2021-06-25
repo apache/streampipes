@@ -26,5 +26,6 @@ import 'cypress-file-upload';
 Cypress.Commands.add('login', login);
 Cypress.Commands.add('logout', logout);
 Cypress.Commands.add('dataCy', dataCy);
+// Cypress.Commands.add('readDir', readDir);
 
 

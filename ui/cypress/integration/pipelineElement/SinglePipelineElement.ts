@@ -17,22 +17,23 @@
  */
 
 import { ProcessingElementTestUtils } from '../../support/utils/ProcessingElementTestUtils';
-import { PipelineElementBuilder } from '../../support/builder/PipelineElementBuilder';
-import { ProcessorTestBuilder } from '../../support/builder/ProcessorTestBuilder';
+import { ProcessorTest } from '../../support/model/ProcessorTest';
 
-describe('Test Field Renamer 1', () => {
+const allTests = Cypress.env('processingElements');
 
-    it('Login', () => {
+allTests.forEach(test => {
+  const testName = 'fieldRenamer1';
+
+  const processorTest = test as ProcessorTest;
+
+  if (processorTest.name === testName) {
+    describe('Test Processor ' + test['name'], () => {
+
+      it('Login', () => {
         cy.login();
+      });
+
+      ProcessingElementTestUtils.testElement(processorTest);
     });
-
-    const processorTest = ProcessorTestBuilder.create('booleanInverter1')
-      .setProcessor(
-        PipelineElementBuilder.create('boolean_inverter')
-          .addInput('drop-down', 'invert-field', 'booleanToInvert')
-          .build())
-      .build();
-
-    ProcessingElementTestUtils.testElement(processorTest);
-
+  }
 });

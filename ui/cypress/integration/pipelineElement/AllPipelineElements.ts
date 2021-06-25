@@ -17,24 +17,19 @@
  */
 
 import { ProcessingElementTestUtils } from '../../support/utils/ProcessingElementTestUtils';
-import { PipelineElementBuilder } from '../../support/builder/PipelineElementBuilder';
 import { ProcessorTest } from '../../support/model/ProcessorTest';
-import { ProcessorTestBuilder } from '../../support/builder/ProcessorTestBuilder';
 
-describe('Test Numerical Filter 1', () => {
+const allTests = Cypress.env('processingElements');
+
+allTests.forEach(test => {
+  describe('Test Processor ' + test['name'], () => {
 
     it('Login', () => {
-        cy.login();
+      cy.login();
     });
 
-    const processorTest = ProcessorTestBuilder.create('numericalFilter1')
-      .setProcessor(
-        PipelineElementBuilder.create('numerical_filter')
-        .addInput('drop-down', 'number-mapping', 'randomnumber')
-        .addInput('radio', 'operation', '\\>')
-        .addInput('input', 'value', '50')
-        .build())
-      .build();
+    const processorTest = test as ProcessorTest;
 
     ProcessingElementTestUtils.testElement(processorTest);
+  });
 });
