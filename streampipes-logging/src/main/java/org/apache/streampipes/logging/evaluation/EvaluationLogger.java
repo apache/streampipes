@@ -21,14 +21,8 @@ import org.fusesource.mqtt.client.BlockingConnection;
 import org.fusesource.mqtt.client.MQTT;
 import org.fusesource.mqtt.client.QoS;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class EvaluationLogger {
 
@@ -43,7 +37,10 @@ public class EvaluationLogger {
 
     private EvaluationLogger(){
         String logging_host = System.getenv("SP_LOGGING_MQTT_HOST");
-        int logging_port = Integer.parseInt(System.getenv("SP_LOGGING_MQTT_PORT"));
+        String port = System.getenv("SP_LOGGING_MQTT_PORT");
+        if (port == null)
+            port = "1883";
+        int logging_port = Integer.parseInt(port);
 
         mqtt = new MQTT();
         try {
@@ -63,10 +60,13 @@ public class EvaluationLogger {
         String message = "";
         for(Object element:elements)
             message += element + ",";
-        try {
-            connection.publish(topic, message.getBytes(StandardCharsets.UTF_8), QoS.AT_LEAST_ONCE, false);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (message.length() > 0) {
+            message = message.substring(0, message.length()-1);
+            try {
+                connection.publish(topic, message.getBytes(StandardCharsets.UTF_8), QoS.AT_LEAST_ONCE, false);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

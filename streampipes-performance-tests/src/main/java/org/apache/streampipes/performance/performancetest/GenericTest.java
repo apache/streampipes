@@ -30,7 +30,7 @@ import java.util.Optional;
 
 public class GenericTest implements Test{
 
-    private final boolean stopPipeline;
+    private boolean stopPipeline;
     private final boolean shouldBeMigrated;
     private final boolean shouldBeReconfigured;
     private final long timeToSleepBeforeManipulation;
@@ -38,7 +38,7 @@ public class GenericTest implements Test{
     private final StreamPipesClient client;
     private final Pipeline pipeline;
     private final EvaluationLogger evalLogger = EvaluationLogger.getInstance();
-    private float reconfigurableValue = 0;
+    private float reconfigurableValue = 1;
 
     public GenericTest(String pipelineName, boolean stopPipeline, boolean shouldBeMigrated, boolean shouldBeReconfigured,
                        long timeToSleepBeforeManipulation, long timeToSleepAfterManipulation){
@@ -60,7 +60,12 @@ public class GenericTest implements Test{
     }
 
     @Override
-    public void execute() {
+    public void setStopPipeline(boolean stopPipeline){
+        this.stopPipeline = stopPipeline;
+    }
+
+    @Override
+    public void execute(int nrRuns) {
 
         String testType = System.getenv("TEST_TYPE");
 
@@ -70,7 +75,7 @@ public class GenericTest implements Test{
             PipelineOperationStatus startMessage = client.pipelines().start(pipeline);
             long deploymentDuration = System.nanoTime() - beforeStart;
             if(testType.equals("Deployment")){
-                Object[] line = {System.currentTimeMillis() ,"Deployment duration", deploymentDuration};
+                Object[] line = {System.currentTimeMillis() ,"Deployment duration", nrRuns, deploymentDuration, deploymentDuration/1000000000.0};
                 evalLogger.logMQTT(testType, line);
             }
             if (startMessage.isSuccess()) {
@@ -93,7 +98,7 @@ public class GenericTest implements Test{
             PipelineOperationStatus migrationMessage = client.pipelines().migrate(pipeline);
             long migrationDuration = System.nanoTime() - beforeMigration;
             if(testType.equals("Migration")){
-                Object[] line = {System.currentTimeMillis(), "Migration duration", migrationDuration};
+                Object[] line = {System.currentTimeMillis(), "Migration duration", nrRuns, migrationDuration};
                 evalLogger.logMQTT(testType, line);
             }
             if (migrationMessage.isSuccess()) {
@@ -111,6 +116,9 @@ public class GenericTest implements Test{
                             sp.setValue(Float.toString(this.reconfigurableValue++));
                         }
                     }));
+            Object[] line = {System.currentTimeMillis(), "Reconfiguration triggered", nrRuns, (this.reconfigurableValue-1)};
+            evalLogger.logMQTT(testType, line);
+            System.out.println("Reconfiguration triggered with value " + (this.reconfigurableValue-1));
             PipelineOperationStatus message = client.pipelines().reconfigure(pipeline);
             if (message.isSuccess()) {
                 System.out.println(message.getTitle());

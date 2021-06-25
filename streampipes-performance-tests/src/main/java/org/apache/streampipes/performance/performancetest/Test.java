@@ -19,6 +19,8 @@ package org.apache.streampipes.performance.performancetest;
 
 public interface Test {
 
-    void execute();
+    void execute(int nrRuns);
+
+    void setStopPipeline(boolean stopPipeline);
 
 }
