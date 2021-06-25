@@ -50,7 +50,8 @@ public enum EnvConfigParam {
     CONSUL_LOCATION("CONSUL_LOCATION", "consul"),
     SUPPORTED_PIPELINE_ELEMENTS("SP_SUPPORTED_PIPELINE_ELEMENTS", ""),
     AUTO_OFFLOADING_STRATEGY("SP_AUTO_OFFLOADING_STRATEGY", "default"),
-    NODE_STORAGE_PATH("SP_NODE_STORAGE_PATH", "/var/lib/streampipes");
+    NODE_STORAGE_PATH("SP_NODE_STORAGE_PATH", "/var/lib/streampipes"),
+    LOGGING_MQTT_URL("SP_LOGGING_MQTT_URL", "tcp://localhost:1883");
 
     private final String environmentKey;
     private final String defaultValue;

@@ -21,17 +21,10 @@ import org.fusesource.mqtt.client.BlockingConnection;
 import org.fusesource.mqtt.client.MQTT;
 import org.fusesource.mqtt.client.QoS;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class EvaluationLogger {
-
     private static EvaluationLogger instance = null;
     private final MQTT mqtt;
     private final BlockingConnection connection;
@@ -42,12 +35,10 @@ public class EvaluationLogger {
     }
 
     private EvaluationLogger(){
-        String logging_host = System.getenv("SP_LOGGING_MQTT_HOST");
-        int logging_port = Integer.parseInt(System.getenv("SP_LOGGING_MQTT_PORT"));
-
+        String loggingUrl = System.getenv("SP_LOGGING_MQTT_URL");
         mqtt = new MQTT();
         try {
-            mqtt.setHost(logging_host, logging_port);
+            mqtt.setHost(loggingUrl);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }

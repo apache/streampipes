@@ -29,6 +29,7 @@ import org.apache.streampipes.node.controller.management.node.NodeManager;
 import org.apache.streampipes.node.controller.management.orchestrator.DockerEngineManager;
 import org.apache.streampipes.node.controller.management.orchestrator.docker.DockerContainerDeclarerSingleton;
 import org.apache.streampipes.node.controller.management.resource.ResourceManager;
+import org.apache.streampipes.node.controller.management.statscollector.DockerStatsCollector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -79,6 +80,10 @@ public abstract class NodeControllerSubmitter {
 
                 LOG.info("Start janitor manager");
                 JanitorManager.getInstance().run();
+
+                // TODO: remove after evaluation tests
+                LOG.info("Start docker stats collector");
+                DockerStatsCollector.getInstance().run();
             }
         } else throw new SpRuntimeException("Could not register node controller at StreamPipes node management");
     }
