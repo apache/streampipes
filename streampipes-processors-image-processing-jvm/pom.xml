@@ -59,6 +59,10 @@
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
+            <artifactId>streampipes-messaging-mqtt</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-messaging-kafka</artifactId>
         </dependency>
         <dependency>
@@ -80,12 +84,6 @@
         <dependency>
             <groupId>org.ddogleg</groupId>
             <artifactId>ddogleg</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-messaging-mqtt</artifactId>
-            <version>0.68.0-SNAPSHOT</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 
