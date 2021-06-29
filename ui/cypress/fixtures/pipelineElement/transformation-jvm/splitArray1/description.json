@@ -1,0 +1,7 @@
+{
+ "name": "split_array",
+ "config": [
+   {"type":  "radio", "selector": "keep", "value":  "timestamp"},
+   {"type":  "drop-down", "selector": "array-field", "value":  "arrayProperty"}
+ ]
+}
