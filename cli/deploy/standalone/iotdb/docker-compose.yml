@@ -16,7 +16,7 @@
 version: "3.4"
 services:
   iotdb:
-    image: xingtanzjr/iotdb
+    image: apache/iotdb
     volumes:
       - iotdb:/iotdb/data
     logging:
