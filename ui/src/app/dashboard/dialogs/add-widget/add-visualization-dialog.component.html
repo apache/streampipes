@@ -70,10 +70,10 @@
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions">
-        <button mat-button mat-raised-button class="mat-basic" (click)="onCancel()" style="margin-right:10px;">
+        <button mat-button mat-raised-button class="mat-basic mr-10" (click)="onCancel()">
             Cancel
         </button>
-        <button mat-button mat-raised-button class="mat-basic" (click)="back()" *ngIf="(!('select-pipeline'===page))" style="margin-right:10px;">
+        <button mat-button mat-raised-button class="mat-basic mr-10" (click)="back()" *ngIf="(!('select-pipeline'===page))">
             Back
         </button>
         <button mat-button mat-raised-button color="primary" (click)="next()" [disabled]="'configure-widget' === page

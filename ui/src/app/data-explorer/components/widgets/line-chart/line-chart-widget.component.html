@@ -17,13 +17,13 @@
   -->
 
 <div class="widget-content">
-    <div class="widget-inner-options" style="margin-left: 0;margin-right: 0;margin-top: 0;">
+    <div class="widget-inner-options ml-0 mr-0 mt-0">
         <div fxFlex="100" fxLayout="row">
-            <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center" style="margin-left: 0px;margin-right: 0px;">
+            <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center" class="ml-0 mr-0">
                 <sp-select-properties
                         label="Select Properties"
                         multiple = true
-                        style="margin-right: 10px;"
+                        class="mr-10"
                         (changeSelectedProperties)="setSelectedProperties($event)"
                         [availableProperties]="availableProperties"
                         [selectedProperties]="selectedLineChartProperties">
@@ -32,7 +32,7 @@
                 <sp-select-properties
                         label="Select Background Color"
                         multiple = false
-                        style="margin-right: 10px;"
+                        class="mr-10"
                         *ngIf="showBackgroundColorProperty"
                         (changeSelectedProperties)="setSelectedBackgroundColorProperty($event)"
                         [availableProperties]="availableNoneNumericColumns"
@@ -65,7 +65,7 @@
             </div>
         </div>
     </div>
-    <div class="widget-inner-content" style="height: 100%;overflow-y:hidden;">
+    <div class="widget-inner-content h-100 overflow-y-hidden">
         <sp-load-data-spinner *ngIf="showIsLoadingData"></sp-load-data-spinner>
         <sp-no-data-in-date-range *ngIf="showNoDataInDateRange" [viewDateRange]="viewDateRange"></sp-no-data-in-date-range>
 

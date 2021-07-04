@@ -16,13 +16,13 @@
   ~
   -->
 
-<div style="height:100%;">
+<div class="h-100">
     <div class="box">
         <div class="assemblyOptions sp-blue-bg m-0 row header h-40" *ngIf="editMode">
-            <div fxFlex="100" layout="row" fxLayoutAlign="start center">
+            <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
                {{ title }}
             </div>
-            <div fxFlex="100" layout="row" fxLayoutAlign="end center">
+            <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
                 <button mat-icon-button matTooltip="Download data" class="icon" (click)="downloadDataAsFile()" color="white">
                     <i class="material-icons">get_app</i>
                 </button>
@@ -32,7 +32,7 @@
             </div>
 
         </div>
-        <div class="h-100 p-0 row content gridster-item-content" style="margin-left: 0px;margin-right: 0px;">
+        <div class="h-100 p-0 row content gridster-item-content ml-0 mr-0">
             <div *ngIf="widgetLoaded" class="h-100">
                 <div *ngIf="configuredWidget.widgetType === 'table'" class="h-100 p-0">
                     <sp-data-explorer-table-widget
@@ -64,7 +64,6 @@
                             [dataViewDashboardItem]="widget"
                             [dataExplorerWidget]="configuredWidget" class="h-100"></sp-data-explorer-image-widget>
                 </div>
-
             </div>
         </div>
     </div>

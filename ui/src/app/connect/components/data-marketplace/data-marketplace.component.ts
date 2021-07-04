@@ -169,7 +169,7 @@ export class DataMarketplaceComponent implements OnInit {
     }
 
     templateFromRunningAdapter(adapter: AdapterDescriptionUnion) {
-        adapter.couchDBId = undefined;
+        adapter.id = undefined;
         adapter._rev = undefined;
         this.selectedIndexChange(0);
         this.selectAdapter(adapter);

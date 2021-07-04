@@ -58,7 +58,7 @@ export class AdapterDescriptionComponent {
     if (this.adapter.name == null) this.adapter.name = "";
       this.isDataSetDescription = this.connectService.isDataSetDescription(this.adapter);
       this.isDataStreamDescription = this.connectService.isDataStreamDescription(this.adapter);
-      this.isRunningAdapter = (this.adapter.couchDBId != undefined && !(this.adapter as any).isTemplate);
+      this.isRunningAdapter = (this.adapter.id != undefined && !(this.adapter as any).isTemplate);
       this.adapterLabel = this.adapter.name.split(' ').join('_');
       this.className = this.getClassName();
   }
@@ -83,7 +83,7 @@ export class AdapterDescriptionComponent {
   }
 
   deleteAdapterTemplate(adapter: AdapterDescription): void {
-      this.adapterToDelete = adapter.couchDBId;
+      this.adapterToDelete = adapter.id;
       this.dataMarketplaceService.deleteAdapterTemplate(adapter).subscribe(res => {
           this.adapterToDelete = undefined;
           this.updateAdapterEmitter.emit();

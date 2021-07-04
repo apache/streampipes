@@ -17,8 +17,8 @@
   -->
 
 <div fxLayout="column" class="page-container">
-    <div fxLayout="row" class="border" style="padding:0px;background-color:#f6f6f6;">
-        <div fxFlex="100" style="line-height:24px;border-bottom:1px solid #ccc">
+    <div fxLayout="row" class="border sp-bg-lightgray p-0">
+        <div fxFlex="100" class="page-container-nav">
             <div fxFlex="100" fxLayout="row">
                 <button mat-button mat-flat-button color="primary" (click)="showManageRdfEndpointsDialog()">Manage
                     Endpoints
@@ -37,7 +37,7 @@
         </div>
     </div>
     <div fxLayout="row" class="fixed-height add-options">
-        <div class="add-options-item" fxLayoutAlign="start center" fxLayout="row" style="padding-left:5px;">
+        <div class="add-options-item pl-5" fxLayoutAlign="start center" fxLayout="row">
             <div fxFlex="100" fxLayout="row">
                 <button mat-button mat-raised-button color="primary"
                         [disabled]="selectedEndpointItems.length === 0"
@@ -62,7 +62,7 @@
             </div>
         </div>
         <span fxFlex></span>
-        <div class="add-options-item" fxLayoutAlign="start center" fxLayout="row" style="padding-left:5px;">
+        <div class="add-options-item pl-5" fxLayoutAlign="start center" fxLayout="row">
             <mat-icon>search</mat-icon>
 
             <mat-form-field class="form-style">
@@ -98,7 +98,7 @@
         <div fxLayoutAlign="start start" fxLayout="column">
 
         </div>
-        <div fxLayout="row wrap" style="width: 100%;">
+        <div fxLayout="row wrap" class="w-100">
             <endpoint-item fxFlex="33"
                            [itemSelected]="endpointItem.selected"
                            [item]="endpointItem"

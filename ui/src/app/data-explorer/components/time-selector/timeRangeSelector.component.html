@@ -25,7 +25,7 @@
             (click)="this.setCurrentDateRange(item)">{{item.value}}</button>
     </div>
     <div class="time-wrapper" fxFlex fxLayoutAlign="center center">
-        <button mat-button style="margin-right: -15px" class="button-icon icon-button-font-size">
+        <button mat-button class="button-icon icon-button-font-size mr--15">
             <mat-icon (click)="decreaseTime()">navigate_before</mat-icon>
         </button>
         <mat-form-field appearance="standard" class="start-date form-field-margin form-field-size-smaller">
@@ -46,7 +46,7 @@
                    (dateTimeChange)="changeCustomDateRange()">
             <owl-date-time #dt2></owl-date-time>
         </mat-form-field>
-        <button mat-button style="margin-left: -15px" class="button-icon icon-button-font-size" color="primary">
+        <button mat-button class="button-icon icon-button-font-size mr--15" color="primary">
             <mat-icon (click)="increaseTime()">navigate_next</mat-icon>
         </button>
     </div>

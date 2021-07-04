@@ -1,4 +1,4 @@
-/*
+/*!
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,27 +16,74 @@
  *
  */
 
-@import '../../scss/variables';
 
-.page-container-padding-inner {
-  margin: 20px;
+
+
+.p-0 {
+  padding: 0;
 }
 
-.p-15 {
-  padding: 15px;
+.p-5 {
+  padding: 5px;
+}
+
+.pl-5 {
+  padding-left: 5px;
+}
+
+.pl-10 {
+  padding-left: 10px;
+}
+
+
+.ml-0 {
+  margin-left: 0;
+}
+
+.mr-0 {
+  margin-right: 0;
+}
+
+.m-5 {
+  margin: 5px;
+}
+
+.mt-0 {
+  margin-top: 0;
+}
+
+.mt-10 {
+  margin-top: 10px;
+}
+
+.mb-10 {
+  margin-bottom: 10px;
 }
 
 .mr-10 {
   margin-right: 10px;
 }
 
-.add-options {
-  padding:0px;
-  background-color:#f6f6f6;
-  border-bottom: 1px solid #cccccc;
+
+
+
+.w-100 {
+  width: 100%;
 }
 
-.add-options-item {
-  display: inline;
-  margin-right: 10px;
+.h-100 {
+  height: 100%;
+}
+
+.page-container-nav {
+  line-height:24px;
+  border-bottom:1px solid #ccc;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
 }

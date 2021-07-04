@@ -35,3 +35,7 @@
 .labeling-active {
     width: 85%;
 }
+
+.overflow-y-hidden {
+    overflow-y:hidden;
+}

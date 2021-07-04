@@ -17,14 +17,12 @@
   -->
 <div fxFlex="100" fxLayout="column">
     <div fxLayout="row" class="fixed-height options-bar" *ngIf="editMode">
-        <div class="options-bar-item" fxLayoutAlign="start center" fxLayout="row" style="padding-left:10px;">
-            <button mat-button mat-raised-button color="primary" (click)="updateDashboardAndCloseEditMode()"
-                    style="margin-right:10px;">
+        <div class="options-bar-item pl-10" fxLayoutAlign="start center" fxLayout="row">
+            <button mat-button mat-raised-button color="primary" (click)="updateDashboardAndCloseEditMode()" class="mr-10">
                 <i class="material-icons">save</i>
                 <span> Save</span>
             </button>
-            <button mat-button mat-raised-button class="mat-basic" (click)="discardChanges()"
-                    style="margin-right:10px;">
+            <button mat-button mat-raised-button class="mat-basic mr-10" (click)="discardChanges()">
                 <i class="material-icons">clear</i>
                 <span> Discard</span>
             </button>

@@ -47,10 +47,30 @@ mat-dialog-content {
 .mat-dialog-content {
     width:100%;
     height:74%;
-    margin: 0px;
+    margin: 0;
 }
 
 .mat-dialog-actions {
     margin-bottom:0px;
     padding-right:10px;
+}
+
+.ml-35 {
+    margin-left: 35px;
+}
+
+.form-field-date {
+    top: -10px;
+    width: 270px;
+}
+
+.event-color {
+    color: #e0e0e0;
+}
+
+.icon-check {
+    font-size: 100px;
+    height: 100px;
+    width: 100px;
+    color:#b3b3b3;
 }
