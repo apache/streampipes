@@ -123,6 +123,7 @@
         <java-websocket.version>1.4.0</java-websocket.version>
         <javax-validation.version>2.0.1.Final</javax-validation.version>
         <javax-websocket-client-api.version>1.1</javax-websocket-client-api.version>
+        <jcl-over-slf4j.version>1.7.30</jcl-over-slf4j.version>
         <jsrosbridge.version>0.2.0</jsrosbridge.version>
         <influxdb.java.version>2.14</influxdb.java.version>
         <hadoop.version>3.2.1</hadoop.version>
@@ -142,6 +143,11 @@
     <dependencyManagement>
         <dependencies>
             <!-- External Connect dependencies -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>jcl-over-slf4j</artifactId>
+                <version>${jcl-over-slf4j.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>animal-sniffer-annotations</artifactId>
