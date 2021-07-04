@@ -369,6 +369,11 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.streampipes</groupId>
+                <artifactId>streampipes-container-extensions</artifactId>
+                <version>${streampipes.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.streampipes</groupId>
                 <artifactId>streampipes-dataformat-json</artifactId>
                 <version>${streampipes.version}</version>
             </dependency>
