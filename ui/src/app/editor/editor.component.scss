@@ -19,7 +19,7 @@
 @import '../../scss/variables';
 
 .text-color {
-  color: $sp-color-accent;
+  color: var(--color-accent);
 }
 
 .page-container {
@@ -27,9 +27,14 @@
 }
 
 .border {
-  border: 1px solid #cccccc;
+  border: 1px solid var(--color-bg-2);
 }
 
 .pipeline-assembly-margin {
   margin-top: 10px;
+}
+
+.editor-canvas-options {
+  padding: 0;
+  background-color: var(--color-bg-1);
 }

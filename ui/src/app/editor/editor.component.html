@@ -17,30 +17,28 @@
   -->
 
 <div fxLayout="column" class="page-container">
-    <div fxLayout="row" class="border" style="padding:0px;background-color:#f6f6f6;" *ngIf="!pipelineCanvasMaximized">
-        <div fxFlex="100" style="line-height:24px;border-bottom:1px solid #ccc">
-            <div fxFlex="100" fxLayout="row">
-                <div fxFlex fxLayoutAlign="start center" [attr.id]="'peType'">
-                    <mat-tab-group [selectedIndex]="selectedIndex"
-                                   (selectedIndexChange)="selectPipelineElements($event)">
-                        <mat-tab *ngFor="let tab of tabs" label="{{tab.title}}"></mat-tab>
-                    </mat-tab-group>
-                </div>
-                <div fxFlex="30" fxLayout="row" fxLayoutAlign="end center" style="padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
-                    <button mat-button mat-icon-button (click)="startCreatePipelineTour()"
-                            [matTooltip]="'Tutorial'" style="margin-right: 5px;">
-                        <i class="material-icons text-color">
-                            school
-                        </i>
-                    </button>
-                </div>
+    <div fxLayout="row" class="border sp-tab-bg editor-canvas-options" *ngIf="!pipelineCanvasMaximized">
+        <div fxFlex="100" fxLayout="row" class="page-container-nav">
+            <div fxFlex fxLayoutAlign="start center" [attr.id]="'peType'">
+                <mat-tab-group [selectedIndex]="selectedIndex"
+                               (selectedIndexChange)="selectPipelineElements($event)" color="accent">
+                    <mat-tab *ngFor="let tab of tabs" label="{{tab.title}}"></mat-tab>
+                </mat-tab-group>
+            </div>
+            <div fxFlex="30" fxLayout="row" fxLayoutAlign="end center" style="padding-left:10px;font-size:14px;line-height:24px;">
+                <button mat-button mat-icon-button (click)="startCreatePipelineTour()"
+                        [matTooltip]="'Tutorial'" style="margin-right: 5px;">
+                    <i class="material-icons text-color">
+                        school
+                    </i>
+                </button>
             </div>
         </div>
     </div>
 
     <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100">
         <div id="shepherd-test"
-             style="background-color:#f6f6f6;padding:0px;border-bottom:1px solid #ffffff">
+             style="padding:0px;border-bottom:1px solid #ffffff">
             <pipeline-element-icon-stand
                     [activeType]="activeType"
                     [currentElements]="currentElements"

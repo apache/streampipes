@@ -17,11 +17,11 @@
   -->
 
 <div fxLayout="column" class="page-container">
-    <div fxLayout="row" class="p-0 sp-bg-lightgray">
+    <div fxLayout="row" class="p-0 sp-tab-bg">
         <div fxFlex="100" class="page-container-nav">
             <div fxFlex="100" fxLayout="row">
                 <div fxFlex fxLayoutAlign="start center">
-                    <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectDashboard($event)">
+                    <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectDashboard($event)" color="accent">
                         <mat-tab label="Start"></mat-tab>
                         <mat-tab *ngFor="let dashboard of dashboards" label="{{dashboard.name}}"></mat-tab>
                     </mat-tab-group>

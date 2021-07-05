@@ -26,7 +26,7 @@
 }
 
 .status-container.pipelines {
-    background: rgb(27, 20, 100);
+    background: var(--color-accent);
 }
 
 .status-container.pipelines-running {

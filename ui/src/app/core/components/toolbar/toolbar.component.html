@@ -16,31 +16,34 @@
   ~
   -->
 
-<mat-toolbar class="md-primary md-hue-2 top-nav" color="accent">
+<mat-toolbar class="md-primary md-hue-2 top-nav" color="primary">
     <div class="md-toolbar-tools" style="height:50px;max-height:50px;width:100%;">
         <div fxFlex="60" fxLayout fxLayoutAlign="start center">
             <div class="md-toolbar-tools" style="height:50px;max-height:50px;" fxFlex fxLayout="row" fxLayoutAlign="start center">
-                <div class="sp-darkblue" style="padding:5px;border-radius:0px;margin-right:15px;position:relative;left:20px;">
+                <div style="padding:5px;border-radius:0px;margin-right:15px;position:relative;left:20px;">
                     <img alt="icon" src="../../../../assets/img/sp/sp-logo-right-white.png" style="height:28px;">
                 </div>
-                <div style="color:white;padding: 5px 5px;font-size:15px;margin-left:10px;">
+                <div style="padding: 5px 5px;font-size:15px;margin-left:10px;">
                     <h4 style="margin-top:12px;font-size:12pt;font-weight:bold;">{{activePageName}}</h4>
                 </div>
             </div>
         </div>
         <span fxFlex></span>
         <div fxFlex="40" fxLayout fxLayoutAlign="end center" *ngIf="authenticated" style="height:100%;">
-            <div style="color:white;padding: 5px 5px;margin-left:10px;font-size:12pt;">
+            <div>
+                <mat-slide-toggle color="accent" [formControl]="appearanceControl">Dark Mode</mat-slide-toggle>
+            </div>
+            <div style="padding: 5px 5px;margin-left:10px;font-size:12pt;">
                 <span style="margin-top:12px;font-weight:bold;">version: </span><span style="font-weight: normal;" *ngIf="versionInfo">{{versionInfo.backendVersion}}</span>
             </div>
             <div style="height:100%;">
-                <div [ngStyle]="feedbackOpen.menuOpen ? {'background-color': 'white'} : {'background-color': '#39b54a'}" fxLayout fxLayoutAlign="center center" style="height: 100%;">
+                <div [ngClass]="feedbackOpen.menuOpen ? '' : 'sp-darkblue'" fxLayout fxLayoutAlign="center center" style="height: 100%;">
                     <button mat-button mat-icon-button
                             [matMenuTriggerFor]="feedbackMenu"
                             #feedbackOpen="matMenuTrigger"
                             matTooltip="Feedback" matTooltipPosition="below"
                             [ngClass]="feedbackOpen.menuOpen ? 'sp-icon-button-no-hover' : 'sp-icon-button'" style="min-width:0px;" fxLayout fxLayoutAlign="center center">
-                        <i [ngStyle]="feedbackOpen.menuOpen ? {'color': '#39b54a'} : {'color': 'white'}" class="material-icons">feedback</i>
+                        <i [ngClass]="feedbackOpen.menuOpen ? 'sp-darkblue-text' : ''" class="material-icons">feedback</i>
                     </button>
                 </div>
             </div>
@@ -48,14 +51,14 @@
                 <feedback (closeFeedbackEmitter)="closeFeedbackWindow()"></feedback>
             </mat-menu>
             <div style="height:100%;">
-                <div [ngStyle]="accountMenuOpen.menuOpen ? {'background-color': 'white'} : {'background-color': '#39b54a'}" fxLayout fxLayoutAlign="center center" style="height: 100%;">
+                <div [ngClass]="accountMenuOpen.menuOpen ? '' : 'sp-darkblue'" fxLayout fxLayoutAlign="center center" style="height: 100%;">
                     <button mat-button mat-icon-button
                             fxLayout fxLayoutAlign="center center"
                             [ngClass]="accountMenuOpen.menuOpen ? 'sp-icon-button-no-hover' : 'sp-icon-button'" style="min-width:0px;"
                             [matMenuTriggerFor]="menu"
                             #accountMenuOpen="matMenuTrigger"
                             matTooltip="User Preferences" matTooltipPosition="below">
-                        <i [ngStyle]="accountMenuOpen.menuOpen ? {'color': '#39b54a'} : {'color': 'white'}" class="material-icons">account_circle</i>
+                        <i [ngClass]="accountMenuOpen.menuOpen ? 'sp-darkblue' : ''" class="material-icons">account_circle</i>
                     </button>
                 </div>
             </div>

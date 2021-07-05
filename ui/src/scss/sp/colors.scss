@@ -19,15 +19,15 @@
 @import '../_variables';
 
 .sp-darkblue {
-    background: $sp-color-primary;
+    background: var(--color-primary);
 }
 
 .sp-darkblue-text {
-    color: $sp-color-primary;
+    color: var(--color-primary);
 }
 
 .sp-darkblue-border {
-    border: 1px solid $sp-color-primary;
+    border: 1px solid var(--color-primary);
 }
 
 .sp-blue-100-border {
@@ -40,11 +40,11 @@
 }
 
 .sp-blue {
-    color: $sp-color-accent-light;
+    color: var(--content-box-color);
 }
 
 .sp-blue-bg {
-    background: $sp-color-accent-light;
+    background: var(--content-box-color);
 }
 
 .sp-border-round {
@@ -52,18 +52,17 @@
 }
 
 .sp-blue-border {
-    border: 3px solid $sp-color-accent-light;
+    border: 3px solid var(--content-box-color);
     padding-top:20px;
     padding-bottom:20px;
-    background: #FAFAFA;
 }
 
 .sp-border-left-accent-light {
-    border-left: 2px solid $sp-color-accent-light;
+    border-left: 2px solid var(--content-box-color);
 }
 
 .sp-blue-border-nopadding {
-    border: 3px solid $sp-color-accent-light;
+    border: 3px solid var(--content-box-color);
 }
 
 .sp-lightblue {
@@ -75,7 +74,7 @@
 }
 
 .sp-green {
-    color: $sp-color-accent;
+    color: var(--color-accent);
 }
 
 .sp-darkgreen {
@@ -83,15 +82,23 @@
 }
 
 .sp-accent {
-    color: $sp-color-accent;
+    color: var(--color-accent);
 }
 
 .sp-accent-bg {
-    background: $sp-color-accent;
+    background: var(--color-accent);
+}
+
+.sp-primary {
+    color: var(--color-primary);
+}
+
+.sp-primary-bg {
+    background: var(--color-primary);
 }
 
 .sp-accent-light {
-    color: $sp-color-accent-light;
+    color: var(--content-box-color);
 }
 
 .sp-primary-border-1px {
@@ -99,5 +106,9 @@
 }
 
 .sp-bg-lightgray {
-    background-color: #f6f6f6;
+    background-color: var(--color-bg-1);
+}
+
+.sp-tab-bg {
+    background-color: var(--color-bg-1);
 }

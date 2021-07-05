@@ -21,9 +21,9 @@
 
             <div fxLayoutAlign="start center" fxLayout="row">
                 <div fxLayout="row" style="margin-right: 5px">
-                    <i class="material-icons">search</i>
+                    <i class="material-icons sp-accent">search</i>
                     <input type="text" (keyup)="applyFilter()" [(ngModel)]="elementFilter" placeholder="Find Element"
-                           style="background-color:#f6f6f6;border: none;border-bottom: solid 2px rgb(27, 20, 100);">&nbsp;
+                           style="border: none;border-bottom: solid 2px rgb(27, 20, 100);">&nbsp;
                 </div>
                 <div fxLayout="row">
                     <button mat-button [matMenuTriggerFor]="menu"><div class="menu-text-color"><i class="material-icons">list</i>&nbsp;Filter by category</div></button>

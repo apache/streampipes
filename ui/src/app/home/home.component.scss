@@ -44,12 +44,12 @@
     margin-top: 20px;
 }
 
-.welcome-green {
-    color: $sp-color-primary;
+.welcome-primary {
+    color: var(--color-primary);
 }
 
-.welcome-blue {
-    color: $sp-color-accent;
+.welcome-accent {
+    color: var(--color-accent);
 }
 
 
@@ -86,14 +86,14 @@
 }
 
 .list-item:nth-child(even) {
-    background-color: #FAFAFA;
+    background-color: var(--color-bg-1);
 }
 .list-item:nth-child(odd) {
-    background-color:#ffffff;
+    background-color: var(--color-bg-0);
 }
 
 .list-item:hover {
-    background-color: #e2e2e2;
+    background-color: var(--color-bg-2);
     cursor: pointer;
 }
 

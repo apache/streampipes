@@ -17,6 +17,7 @@
  */
 
 import {Component, OnInit} from "@angular/core";
+import {AuthStatusService} from "../../../services/auth-status.service";
 
 @Component({
   selector: 'streampipes',
@@ -25,6 +26,9 @@ import {Component, OnInit} from "@angular/core";
 })
 export class StreampipesComponent implements OnInit {
 
+  constructor(public authStatusService: AuthStatusService) {
+
+  }
 
   ngOnInit(): void {
   }

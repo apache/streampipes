@@ -360,7 +360,7 @@ md-content {
 
 .page-container {
   margin: 10px;
-  border: 1px solid #cccccc;
+  border: 1px solid var(--color-bg-3);
   min-height: calc(100% - 20px);
   //height: 100%;
 }
@@ -762,7 +762,7 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
 .draggable-icon-preview {
   margin-right: 20px;
   vertical-align: top;
-  background-color: white;
+  background-color: var(--color-bg-1);
   display: inline-block;
   height: 50px;
   width: 50px;
@@ -775,14 +775,14 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
 .draggable-icon {
   cursor: pointer;
   vertical-align: top;
-  background-color: white;
+  background-color: var(--color-pe);
   display: inline-block;
   height: 80px;
   width: 80px;
   line-height: 80px;
   margin-left: 3%;
   margin-top: 5px;
-  box-shadow: 1px 1px 2px #555;
+  box-shadow: 1px 1px 2px var(--color-shadow);
   text-align: center;
   z-index:200;
 }
@@ -886,6 +886,7 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
   /* 	border: 2px solid rgb(63,81,181);; */
   /* 	border-bottom: 2px solid rgb(63,81,181); */
   color: black;
+  background: var(--color-bg-1);
   padding: 0px;
   /* 	margin-top: 1%;  */
 }
@@ -962,7 +963,7 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
   box-shadow: 0 0 2px #555;
   display: inline-block;
   vertical-align: middle;
-  background-color: white;
+  background-color: var(--color-pe);
   text-align: center;
   font-size: 24px;
   font-family: Roboto;

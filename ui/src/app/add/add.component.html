@@ -25,7 +25,7 @@
                 </button>
                 <div fxFlex fxLayoutAlign="start center" [attr.id]="'peType'">
                     <mat-tab-group [selectedIndex]="selectedCategoryIndex"
-                                   (selectedIndexChange)="setSelectedTab($event)">
+                                   (selectedIndexChange)="setSelectedTab($event)" color="accent">
                         <mat-tab label="All"></mat-tab>
                         <mat-tab label="Data Sets"></mat-tab>
                         <mat-tab label="Data Streams"></mat-tab>
@@ -36,7 +36,7 @@
             </div>
         </div>
     </div>
-    <div fxLayout="row" class="fixed-height add-options">
+    <div fxLayout="row" class="fixed-height add-options sp-tab-bg">
         <div class="add-options-item pl-5" fxLayoutAlign="start center" fxLayout="row">
             <div fxFlex="100" fxLayout="row">
                 <button mat-button mat-raised-button color="primary"

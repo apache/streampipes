@@ -27,6 +27,7 @@ export class AuthStatusService {
     token: string;
     authenticated: boolean = false;
     configured: boolean = false;
+    darkMode: boolean = true;
 
     constructor() {
     }

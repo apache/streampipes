@@ -18,7 +18,7 @@
 
 <div fxFlex="100" fxLayout="column">
     <div fxFlex="100" fxLayout="column">
-        <div fxLayout="row" class="fixed-height options-bar">
+        <div fxLayout="row" class="fixed-height options-bar sp-tab-bg">
             <div class="options-bar-item pl-10" fxLayoutAlign="start center" fxLayout="row">
                 <button mat-button mat-raised-button color="primary" (click)="openNewDashboardDialog()">
                     <i class="material-icons">add</i>
@@ -50,7 +50,7 @@
                     <th fxFlex="8" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Show</th>
                     <td fxFlex="8" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
                         <div fxLayout="row">
-                            <button mat-button mat-icon-button color="primary"
+                            <button mat-button mat-icon-button color="accent"
                                     (click)="showDashboard(element, false)">
                                 <i class="material-icons">visibility</i>
                             </button>
@@ -62,7 +62,7 @@
                     <th fxFlex="8" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Window</th>
                     <td fxFlex="8" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
                         <div fxLayout="row">
-                            <button mat-button mat-icon-button color="primary"
+                            <button mat-button mat-icon-button color="accent"
                                     (click)="openExternalDashboard(element)">
                                 <i class="material-icons">open_in_new</i>
                             </button>
@@ -74,7 +74,7 @@
                     <th fxFlex="8" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Settings</th>
                     <td fxFlex="8" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
                         <div fxLayout="row">
-                            <button mat-button mat-icon-button color="primary"
+                            <button mat-button mat-icon-button color="accent"
                                     (click)="openEditDashboardDialog(element)">
                                 <i class="material-icons">settings</i>
                             </button>
@@ -86,7 +86,7 @@
                     <th fxFlex="8" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Edit</th>
                     <td fxFlex="8" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
                         <div fxLayout="row">
-                            <button mat-button mat-icon-button color="primary"
+                            <button mat-button mat-icon-button color="accent"
                                     (click)="showDashboard(element, true)">
                                 <i class="material-icons">edit</i>
                             </button>
@@ -98,7 +98,7 @@
                     <th fxFlex="10" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Delete</th>
                     <td fxFlex="10" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
                         <div fxLayout="row">
-                            <button mat-button mat-icon-button color="primary"
+                            <button mat-button mat-icon-button color="accent"
                                     (click)="openDeleteDashboardDialog(element)">
                                 <i class="material-icons">delete</i>
                             </button>

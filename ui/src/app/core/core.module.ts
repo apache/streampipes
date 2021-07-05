@@ -26,7 +26,7 @@ import {FeedbackComponent} from "./components/feedback/feedback.component";
 import {MatButtonModule} from "@angular/material/button";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatInputModule} from "@angular/material/input";
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {RouterModule} from "@angular/router";
 import {ToolbarComponent} from "./components/toolbar/toolbar.component";
 import {MatToolbarModule} from "@angular/material/toolbar";
@@ -36,6 +36,7 @@ import {MatDividerModule} from '@angular/material/divider';
 import {MatListModule} from "@angular/material/list";
 import {MatMenuModule} from "@angular/material/menu";
 import {MatBadgeModule} from "@angular/material/badge";
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 
 @NgModule({
   imports: [
@@ -53,7 +54,9 @@ import {MatBadgeModule} from "@angular/material/badge";
     MatInputModule,
     MatToolbarModule,
     FormsModule,
-    RouterModule
+    RouterModule,
+    MatSlideToggleModule,
+    ReactiveFormsModule
   ],
   declarations: [
     StreampipesComponent,

@@ -16,13 +16,15 @@
  *
  */
 
-import {Component, OnInit, ViewChild} from "@angular/core";
+import {Component, HostBinding, OnInit, ViewChild} from "@angular/core";
 import {BaseNavigationComponent} from "../base-navigation.component";
 import {Router} from "@angular/router";
 import {RestApi} from "../../../services/rest-api.service";
 import {AuthStatusService} from "../../../services/auth-status.service";
 import {MatMenuTrigger} from "@angular/material/menu";
 import {VersionInfo} from "../../../info/versions/service/version-info.model";
+import {FormControl} from "@angular/forms";
+import {OverlayContainer} from "@angular/cdk/overlay";
 
 @Component({
   selector: 'toolbar',
@@ -37,16 +39,37 @@ export class ToolbarComponent extends BaseNavigationComponent implements OnInit 
   versionInfo: VersionInfo;
   userEmail;
 
+  appearanceControl: FormControl;
+
   constructor(Router: Router,
               private RestApi: RestApi,
-              private AuthStatusService: AuthStatusService) {
+              public AuthStatusService: AuthStatusService,
+              private overlay: OverlayContainer) {
     super(Router);
   }
 
   ngOnInit(): void {
     this.userEmail = this.AuthStatusService.email;
+    this.appearanceControl = new FormControl(this.AuthStatusService.darkMode);
+    this.modifyAppearance(this.AuthStatusService.darkMode);
+    this.appearanceControl.valueChanges.subscribe(darkMode => {
+      this.AuthStatusService.darkMode = darkMode;
+      this.modifyAppearance(darkMode);
+
+    });
+    //this.darkMode = this.AuthStatusService.darkMode;
     super.onInit();
     this.getVersion();
+  }
+
+  modifyAppearance(darkMode: boolean) {
+    if (darkMode) {
+      this.overlay.getContainerElement().classList.remove("light-mode");
+      this.overlay.getContainerElement().classList.add("dark-mode");
+    } else {
+      this.overlay.getContainerElement().classList.remove("dark-mode");
+      this.overlay.getContainerElement().classList.add("light-mode");
+    }
   }
 
   closeFeedbackWindow() {

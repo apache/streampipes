@@ -139,56 +139,56 @@ $accent: map-get($custom-theme-light, accent);
 
 
 .dark-mode {
-        @include angular-material-theme($custom-theme-dark);
+  @include angular-material-theme($custom-theme-dark);
 
-        .base-style {
-                color: rgba(255, 255, 255, 0.87);
-                background: #121212;
-        }
+  .base-style {
+    color: rgba(255, 255, 255, 0.87);
+    background: #121212;
+  }
 
-        .mat-toolbar.mat-primary {
-                color: #121212;
-        }
+  .mat-toolbar.mat-primary {
+    color: #121212;
+  }
 
-        .mat-tooltip.tooltip {
-                background-color: rgba(255, 255, 255, 0.87);
-                font-size: 12px;
-        }
+  .mat-tooltip.tooltip {
+    background-color: rgba(255, 255, 255, 0.87);
+    font-size: 12px;
+  }
 
-        --color-primary: #{mat-color($primary)};
-        --color-accent: #{mat-color($accent-dark)};
-        --color-bg-0: #121212;
-        --color-bg-1: #282828;
-        --color-bg-2: #404040;
-        --color-bg-3: #424242;
-        --color-shadow: #c4c4c4;
-        --color-pe: #404040;
-        --color-default-text: rgba(255, 255, 255, 0.87);
+  --color-primary: #{mat-color($primary)};
+  --color-accent: #{mat-color($accent-dark)};
+  --color-bg-0: #121212;
+  --color-bg-1: #282828;
+  --color-bg-2: #404040;
+  --color-bg-3: #424242;
+  --color-shadow: #c4c4c4;
+  --color-pe: #404040;
+  --color-default-text: rgba(255, 255, 255, 0.87);
 
-        --content-box-color: #404040;
-        --canvas-color: linear-gradient(90deg, rgba(40, 40, 40, 0.5) 10%, transparent 0%), linear-gradient(rgba(40, 40, 40, 0.5) 10%, transparent 0%);
+  --content-box-color: #404040;
+  --canvas-color: linear-gradient(90deg, rgba(40, 40, 40, 0.5) 10%, transparent 0%), linear-gradient(rgba(40, 40, 40, 0.5) 10%, transparent 0%);
 
 }
 
 .light-mode {
-        @include angular-material-theme($custom-theme-light);
+  @include angular-material-theme($custom-theme-light);
 
-        .base-style {
-                color: #121212;
-                background: #FFFFFF;
-        }
+  .base-style {
+    color: #121212;
+    background: #FFFFFF;
+  }
 
-        --color-primary: #{mat-color($primary)};
-        --color-accent: #{mat-color($accent)};
-        --color-bg-0: #FFFFFF;
-        --color-bg-1: #FAFAFA;
-        --color-bg-2: #f1f1f1;
-        --color-bg-3: rgb(204, 204, 204);
-        --color-shadow: #555;
-        --color-pe: #FFFFFF;
-        --color-default-text: #121212;
+  --color-primary: #{mat-color($primary)};
+  --color-accent: #{mat-color($accent)};
+  --color-bg-0: #FFFFFF;
+  --color-bg-1: #FAFAFA;
+  --color-bg-2: #f1f1f1;
+  --color-bg-3: rgb(204, 204, 204);
+  --color-shadow: #555;
+  --color-pe: #FFFFFF;
+  --color-default-text: #121212;
 
-        --content-box-color: rgb(156, 156, 156);
-        --canvas-color: linear-gradient(90deg, rgba(208, 208, 208, 0.5) 10%, transparent 0%), linear-gradient(rgba(208, 208, 208, 0.5) 10%, transparent 0%);
+  --content-box-color: rgb(156, 156, 156);
+  --canvas-color: linear-gradient(90deg, rgba(208, 208, 208, 0.5) 10%, transparent 0%), linear-gradient(rgba(208, 208, 208, 0.5) 10%, transparent 0%);
 
 }

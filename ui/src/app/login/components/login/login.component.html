@@ -16,7 +16,7 @@
   ~
   -->
 
-<div class="md-padding full-background sp-fade" fxLayout="row" fxLayoutAlign="center center"
+<div class="md-padding full-background sp-fade light-mode" fxLayout="row" fxLayoutAlign="center center"
      style="min-height:100vh !important;">
     <div fxFlex="40" fxLayout="column" fxLayoutAlign="center center">
         <mat-card class="card-100-center box-shadow-login" style="padding:20px;position:relative;top:-25px;">
@@ -34,23 +34,23 @@
                 <div fxFlex="100" fxLayout="column">
                     <form #loginForm="ngForm" fxFlex="100" fxLayout="column">
                         <div fxFlex="100" fxLayout="column">
-                            <mat-form-field fxFlex>
+                            <mat-form-field fxFlex color="accent">
                                 <mat-label>Email</mat-label>
                                 <input [(ngModel)]="credentials.username" matInput type="email" name="username" class="sp" required/>
                             </mat-form-field>
-                            <mat-form-field fxFlex>
+                            <mat-form-field fxFlex color="accent">
                                 <mat-label>Password</mat-label>
                                 <input [(ngModel)]="credentials.password" matInput name="password" type="password" class="sp" required/>
                             </mat-form-field>
-                            <mat-checkbox [(ngModel)]="credentials.rememberMe" name="rememberMe" class="sp" color="primary">Remember Me</mat-checkbox>
+                            <mat-checkbox [(ngModel)]="credentials.rememberMe" name="rememberMe" class="sp" color="accent">Remember Me</mat-checkbox>
                         </div>
                         <div class="form-actions" style="margin-top:20px;">
-                            <button mat-button mat-raised-button color="primary" (click)="logIn()"
+                            <button mat-button mat-raised-button color="accent" (click)="logIn()"
                                     [disabled]="!loginForm.form.valid || loading">
                                 <span *ngIf="loading">Logging in...</span>
                                 <span *ngIf="!loading">Login</span>
                             </button>
-                            <mat-spinner [mode]="'indeterminate'" color="primary" [diameter]="20"
+                            <mat-spinner [mode]="'indeterminate'" color="accent" [diameter]="20"
                                          *ngIf="loading" style="margin-top:10px;"></mat-spinner>
                             <div class="md-warn" *ngIf="authenticationFailed">
                                 <h4>The password you entered is incorrect. Please try again.</h4>
@@ -61,7 +61,7 @@
             </div>
         </mat-card>
         <div fxFlex="100" fxLayout="column" fxLayoutAlign="center center">
-            <button mat-button mat-raised-button color="primary" (click)="openDocumentation()"
+            <button mat-button mat-raised-button color="accent" (click)="openDocumentation()"
                     style="min-width:0px;padding-left:20px;padding-right:20px;font-size:18px;">
                 View Docs
             </button>

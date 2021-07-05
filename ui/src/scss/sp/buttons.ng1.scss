@@ -19,13 +19,13 @@
 @import '../_variables';
 
 .sp-navbar-item {
-  background: $sp-color-primary;
+  background: var(--color-primary);
   -webkit-transition: all 0.75s ease;
   transition: all 0.75s ease;
 }
 
 .sp-navbar-item-selected {
-  background: white;
+  background: var(--color-bg-0);
 }
 
 .sp-navbar-item:hover {
@@ -33,11 +33,11 @@
 }
 
 .sp-navbar-icon {
-  color: white;
+  color: var(--color-bg-0);
 }
 
 .sp-navbar-icon-selected {
-  color: $sp-color-primary
+  color: var(--color-primary);
 }
 
 .sp-icon-button:hover {

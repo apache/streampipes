@@ -18,8 +18,8 @@
 
 @import '../_variables';
 
-.mat-button.mat-primary, .mat-icon-button.mat-primary, .mat-stroked-button.mat-primary {
-  color:$sp-color-accent;
+.mat-button.mat-accent, .mat-icon-button.mat-accent, .mat-stroked-button.mat-accent {
+  color: var(--color-accent);
 }
 
 .mat-button, .mat-raised-button, .mat-flat-button {
@@ -50,18 +50,18 @@
   vertical-align: middle;
 }
 
-.mat-fab.mat-primary {
-  background: $sp-color-accent;
+.mat-fab.mat-accent {
+  background: var(--color-accent);
   color: rgba(255, 255, 255, 0.75);
 }
 
-.mat-raised-button.mat-accent:enabled {
+.mat-raised-button.mat-primary:enabled {
   background: $sp-color-primary;
   color: rgba(255, 255, 255, 0.75);
 }
 
 .mat-raised-button.mat-accent:hover:enabled {
-  background: $sp-color-primary-light;
+  background: $sp-color-accent-light-blue;
   -webkit-transition: all 0.75s ease;
   transition: all 0.75s ease;
 }
@@ -71,8 +71,8 @@
   color: #cdcdcd;
 }
 
-.mat-raised-button.mat-primary:enabled {
-  background: $sp-color-accent;
+.mat-raised-button.mat-accent:enabled {
+  background: var(--color-accent);
   color: rgba(255, 255, 255, 0.75);
 }
 
@@ -96,17 +96,17 @@
   max-height: 75px;
   line-height: 25px;
   background: white;
-  border: 1.5px solid $sp-color-accent;
+  border: 1.5px solid var(--color-accent);
   color: $sp-color-accent
 }
 
-.mat-raised-button.mat-primary:hover:enabled {
+.mat-raised-button.mat-accent:hover:enabled {
   background: $sp-color-accent-light-blue;
   -webkit-transition: all 0.75s ease;
   transition: all 0.75s ease;
 }
 
-.mat-raised-button.mat-primary:disabled {
+.mat-raised-button.mat-accent:disabled {
   background: #ebebeb;
   color: #cdcdcd;
 }
@@ -127,18 +127,18 @@
   color: #cdcdcd;
 }
 
-.mat-flat-button.mat-primary:enabled {
-  color: $sp-color-accent;
+.mat-flat-button.mat-accent:enabled {
+  color: var(--color-accent);
   background: rgba(0, 0, 0, 0);
 }
 
-.mat-flat-button.mat-primary:hover:enabled {
+.mat-flat-button.mat-accent:hover:enabled {
   background: #d9d9d9;
   -webkit-transition: all 0.75s ease;
   transition: all 0.75s ease;
 }
 
-.mat-flat-button.mat-primary:disabled {
+.mat-flat-button.mat-accent:disabled {
   color: #cdcdcd;
   background: rgba(0, 0, 0, 0);
 }

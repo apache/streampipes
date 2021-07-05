@@ -24,10 +24,10 @@
   height: 40%;
   width: 40%;
   border-radius: 50%;
-  box-shadow: 0 0 3px $sp-color-accent;
+  box-shadow: 0 0 3px var(--color-accent);
   text-align: center;
   padding: 1px 1px;
-  background-color: $sp-color-accent;
+  background-color: var(--color-accent);
   color: rgba(255, 255, 255, 0.75);
 }
 
