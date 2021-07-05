@@ -27,8 +27,36 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+## [0.68.0]
+This list only includes changes to pipeline elements provided in the repository. The full release notes are available in our Jira:
+[Release Notes](https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=12323520&version=12348698)
+
+### New Features
+* [STREAMPIPES-288] Provide count aggregation in default version
+* [STREAMPIPES-252] Support MQTT transport protocol
+* [STREAMPIPES-354] Support to send events to NATS broker
+
+### Improvements
+* [STREAMPIPES-260] Add connection retry option for consul on startup
+* [STREAMPIPES-293] Extend Siddhi wrapper
+* [STREAMPIPES-299] Add more advanced configuration option to MQTT Sink
+* [STREAMPIPES-308] Add String mappings to BooleanToState Processor
+* [STREAMPIPES-334] Customize Label Property in NumberLabeler
+* [STREAMPIPES-393] Update IOTDB version
+* [STREAMPIPES-272] Remove DataSource concept
+* [STREAMPIPES-268] Update Maven dependencies
+
+### Bug Fixes
+* [STREAMPIPES-390] Pipeline with MQTT sink does not start
+* [STREAMPIPES-392] Pipeline with MySQL sink does not start
+* [STREAMPIPES-267] NumberLabeler does not work with doubles
+* [STREAMPIPES-317] Postgres Sink: Connection via SSL not possible
+* [STREAMPIPES-321] Fail to stop pipeline if one of the PE is stopped manually/not running
+* [STREAMPIPES-315] "==" operator does not work in Number Labeler
+* [STREAMPIPES-394] InfluxDB sink uses wrong timestamp variable
+
 ## [0.67.0]
-This list only incldues changes to pipeline elements provided in the repository. The full release notes are available in our Jira:
+This list only includes changes to pipeline elements provided in the repository. The full release notes are available in our Jira:
 [Release Notes](https://issues.apache.org/jira/browse/STREAMPIPES-154?jql=project%20%3D%20STREAMPIPES%20AND%20fixVersion%20%3D%200.67.0%20ORDER%20BY%20priority%20DESC%2C%20updated%20DESC)
 
 ## Bug
