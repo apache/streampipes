@@ -40,7 +40,7 @@ import ${package}.config.Config;
 public class ${classNamePrefix}Stream extends AbstractAdapterIncludedStream {
 
   @Override
-  public SpDataStream declareModel(DataSourceDescription sep) {
+  public SpDataStream declareModel() {
     return DataStreamBuilder.create("${package}.pe.source.${packageName}")
           .withLocales(Locales.EN)
           .withAssets(Assets.DOCUMENTATION, Assets.ICON)

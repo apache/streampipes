@@ -95,7 +95,7 @@ The quickest way to run StreamPipes including the latest extensions (adapters, p
 
 Please follow the instructions provided in the corresponding `README.md` to get started.
 
-For a more in-depth manual, read the [installation guide](https://streampipes.apache.org/docs/docs/user-guide-installation/).
+For a more in-depth manual, read the [installation guide](https://streampipes.apache.org/docs/docs/try-installation.html).
 
 ## Building StreamPipes
 

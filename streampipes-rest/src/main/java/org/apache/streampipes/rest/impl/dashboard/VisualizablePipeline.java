@@ -40,24 +40,22 @@ public class VisualizablePipeline extends AbstractRestResource {
 
   private static final String DashboardAppId = "org.apache.streampipes.sinks.internal.jvm.dashboard";
   private static final String VisualizationFieldInternalName = "visualization-name";
-  private static final String Slash = "/";
 
   @GET
   @JacksonSerialized
   @Produces(MediaType.APPLICATION_JSON)
-  public Response getVisualizablePipelines(@PathParam("username") String email) {
-    return ok(extractVisualizablePipelines(email));
+  public Response getVisualizablePipelines() {
+    return ok(extractVisualizablePipelines());
   }
 
   @GET
   @JacksonSerialized
   @Produces(MediaType.APPLICATION_JSON)
   @Path("{pipelineId}/{visualizationName}")
-  public Response getVisualizablePipelineByPipelineIdAndVisualizationName(@PathParam("username") String email,
-                                                                          @PathParam("pipelineId") String pipelineId,
+  public Response getVisualizablePipelineByPipelineIdAndVisualizationName(@PathParam("pipelineId") String pipelineId,
                                                                           @PathParam("visualizationName") String visualizationName) {
     List<org.apache.streampipes.model.dashboard.VisualizablePipeline> pipelines =
-            extractVisualizablePipelines(email);
+            extractVisualizablePipelines();
 
     Optional<org.apache.streampipes.model.dashboard.VisualizablePipeline> matchedPipeline =
             pipelines
@@ -68,10 +66,10 @@ public class VisualizablePipeline extends AbstractRestResource {
     return matchedPipeline.isPresent() ? ok(matchedPipeline.get()) : fail();
   }
 
-  private List<org.apache.streampipes.model.dashboard.VisualizablePipeline> extractVisualizablePipelines(String email) {
+  private List<org.apache.streampipes.model.dashboard.VisualizablePipeline> extractVisualizablePipelines() {
     List<org.apache.streampipes.model.dashboard.VisualizablePipeline> visualizablePipelines = new ArrayList<>();
-     getUserService()
-            .getOwnPipelines(email)
+     getPipelineStorage()
+            .getAllPipelines()
             .forEach(pipeline -> {
               List<DataSinkInvocation> dashboardSinks = extractDashboardSinks(pipeline);
               dashboardSinks.forEach(sink -> {
