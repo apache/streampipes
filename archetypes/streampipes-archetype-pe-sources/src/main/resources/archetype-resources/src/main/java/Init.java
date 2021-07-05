@@ -24,13 +24,12 @@ package ${package};
 import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import ${package}.config.Config;
-import ${package}.pe.source.${packageName}.DataSource;
 
 public class Init extends StandaloneModelSubmitter {
 
   public static void main(String[] args) throws Exception {
     DeclarersSingleton.getInstance()
-            .add(new DataSource());
+            .add(new ${package}.pe.source.${packageName}.${classNamePrefix}Stream());
 
     new Init().init(Config.INSTANCE);
   }
