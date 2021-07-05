@@ -20,5 +20,7 @@ import { PipelineElementInput } from './PipelineElementInput';
 
 export class ProcessorTest {
   name: string;
+  dir: string;
+  inputFile: string;
   processor: PipelineElementInput;
 }

@@ -22,12 +22,12 @@ import { ProcessorTest } from '../../support/model/ProcessorTest';
 const allTests = Cypress.env('processingElements');
 
 allTests.forEach(test => {
-  const testName = 'projection1';
+  const testName = 'splitArray1';
 
   const processorTest = test as ProcessorTest;
 
   if (processorTest.name === testName) {
-    describe('Test Processor ' + test['name'], () => {
+    describe('Test Processor ' + test.dir, () => {
 
       it('Login', () => {
         cy.login();

@@ -35,15 +35,27 @@ function readProcessingElements(): ProcessorTest[] {
 
   const allPipelineTests = fs.readdirSync('cypress/fixtures/pipelineElement');
 
-  allPipelineTests.forEach(test => {
-    const testDescription = fs.readFileSync('cypress/fixtures/pipelineElement/' + test + '/description.json');
+  allPipelineTests.forEach(dir => {
+    const subfolder = fs.readdirSync('cypress/fixtures/pipelineElement/' + dir);
+    subfolder.forEach(test => {
+    const testDescription = fs.readFileSync('cypress/fixtures/pipelineElement/' + dir + '/' + test + '/description.json');
     // @ts-ignore
     const pt = new ProcessorTest();
     pt.name = test;
+    pt.dir = dir + '/' + test;
+
+    const configDir = fs.readdirSync('cypress/fixtures/pipelineElement/' + pt.dir );
+    configDir.forEach(file => {
+      if (file.startsWith('input')) {
+        pt.inputFile = file;
+      }
+    });
+
     // @ts-ignore
     pt.processor = JSON.parse(testDescription);
 
     result.push(pt);
+    });
   });
 
   return result;

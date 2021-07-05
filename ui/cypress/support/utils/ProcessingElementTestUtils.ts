@@ -29,11 +29,14 @@ import { ProcessorTest } from '../model/ProcessorTest';
 export class ProcessingElementTestUtils {
 
     public static testElement(pipelineElementTest: ProcessorTest) {
-    // public static testElement(testName: string, inputFile: string, expectedResultFile: string, processor: PipelineElementInput) {
+        // public static testElement(testName: string, inputFile: string, expectedResultFile: string, processor: PipelineElementInput) {
         // Test
 
-        const inputFile = 'pipelineElement/' + pipelineElementTest.name + '/input.csv';
-        const expectedResultFile = 'pipelineElement/' + pipelineElementTest.name + '/expected.csv';
+        const inputFile = 'pipelineElement/' + pipelineElementTest.dir + '/' + pipelineElementTest.inputFile;
+        const expectedResultFile = 'pipelineElement/' + pipelineElementTest.dir + '/expected.csv';
+
+        let formatType;
+        pipelineElementTest.inputFile.endsWith('.csv') ? formatType = 'csv' : formatType = 'json_array_no_key';
 
         FileManagementUtils.addFile(inputFile);
 
@@ -42,27 +45,32 @@ export class ProcessingElementTestUtils {
         const adapterName = pipelineElementTest.name.toLowerCase();
 
         // Build adapter
-        const adapterInput = GenericAdapterBuilder
-            .create('File_Set')
-            .setName(adapterName)
-            .setTimestampProperty('timestamp')
-            .addProtocolInput('input', 'interval-key', '0')
-            .setFormat('csv')
-            .addFormatInput('input', 'delimiter', ';')
-            .addFormatInput('checkbox', 'header', 'check')
-            .build();
+        const adapterInputBuilder = GenericAdapterBuilder
+          .create('File_Set')
+          .setName(adapterName)
+          .setTimestampProperty('timestamp')
+          .addProtocolInput('input', 'interval-key', '0')
+          .setFormat(formatType);
+
+        if (formatType === 'csv') {
+            adapterInputBuilder
+              .addFormatInput('input', 'delimiter', ';')
+              .addFormatInput('checkbox', 'header', 'check');
+        }
+
+        const adapterInput = adapterInputBuilder.build();
 
         AdapterUtils.addGenericSetAdapter(adapterInput);
 
         // Build Pipeline
         const pipelineInput = PipelineBuilder.create(pipelineElementTest.name)
-            .addSource(adapterName)
-            .addProcessingElement(pipelineElementTest.processor)
-            .addSink(
-                PipelineElementBuilder.create('data_lake')
-                    .addInput('input', 'db_measurement', dataLakeIndex)
-                    .build())
-            .build();
+          .addSource(adapterName)
+          .addProcessingElement(pipelineElementTest.processor)
+          .addSink(
+            PipelineElementBuilder.create('data_lake')
+              .addInput('input', 'db_measurement', dataLakeIndex)
+              .build())
+          .build();
 
         PipelineUtils.addPipeline(pipelineInput);
 

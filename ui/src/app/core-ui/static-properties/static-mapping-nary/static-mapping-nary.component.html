@@ -25,7 +25,9 @@
             none</button>
     </div>
     <div fxFlex="100" fxLayout="column" style="margin-top:10px;">
-                <mat-checkbox *ngFor="let property of availableProperties | displayRecommendedPipe: staticProperty.propertyScope: displayRecommended" [(ngModel)]="property['checked']"
+                <mat-checkbox *ngFor="let property of availableProperties | displayRecommendedPipe: staticProperty.propertyScope: displayRecommended"
+                              [attr.data-cy]="property.runtimeName"
+                              [(ngModel)]="property['checked']"
                               (change)="selectOption(property, $event)"
                               style="margin-left: 10px;">
                     {{property.runtimeName}}
