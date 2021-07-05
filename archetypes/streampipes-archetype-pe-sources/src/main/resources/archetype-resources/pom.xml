@@ -89,6 +89,11 @@
             <artifactId>streampipes-sources</artifactId>
             <version>${sp.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.streampipes</groupId>
+            <artifactId>streampipes-messaging-mqtt</artifactId>
+            <version>${sp.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
