@@ -26,9 +26,9 @@ form {
 }
 
 .green-icon {
-    color: green;
+    color: var(--color-accent);
 }
 
 .green-icon svg {
-    fill: green;
+    fill: var(--color-accent);
 }

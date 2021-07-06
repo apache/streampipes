@@ -22,7 +22,7 @@
     <div *ngIf="!staticProperty.horizontalRendering" fxLayout="column">
         <div fxFlex fxLayout="row">
             <div fxLayout="column" style="margin-left: 10px">
-                <mat-radio-group class="radio-group">
+                <mat-radio-group class="radio-group" color="accent">
                     <mat-radio-button *ngFor="let option of staticProperty.options" style="margin-top: -10px"
                                       [value]="option" (click)="select(option.elementId)" [checked]="option.selected">
                         <label style="font-weight: normal">
@@ -35,7 +35,7 @@
     </div>
 
     <div *ngIf="staticProperty.horizontalRendering">
-        <mat-form-field style="width: 100%">
+        <mat-form-field style="width: 100%" color="accent">
             <mat-select [(value)]="selectedOption">
                 <mat-option *ngFor="let option of staticProperty.options" [value]="option.elementId"
                             (click)="select(option.elementId)">

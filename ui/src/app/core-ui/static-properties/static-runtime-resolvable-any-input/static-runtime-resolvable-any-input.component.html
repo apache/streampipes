@@ -19,7 +19,7 @@
 
 <div id="formWrapper" fxFlex="100" fxLayout="column">
     <div>
-        <button mat-button mat-raised-button color="primary" class="small-button"
+        <button mat-button mat-raised-button color="accent" class="small-button"
                 (click)="loadOptionsFromRestApi()"
                 style="margin-right:10px;margin-left:10px;" [disabled]="!showOptions">
             <span>Reload</span>
@@ -27,7 +27,7 @@
     </div>
     <div *ngIf="!staticProperty.horizontalRendering" fxLayout="column" style="margin-top:10px;">
         <mat-checkbox style="padding-left: 10px;"
-                      color="primary"
+                      color="accent"
                       *ngFor="let option of staticProperty.options" [(ngModel)]="option.selected">
             {{option.name}}
         </mat-checkbox>
@@ -40,7 +40,7 @@
     </div>
 
     <div *ngIf="staticProperty.horizontalRendering">
-        <mat-form-field style="width: 100%">
+        <mat-form-field style="width: 100%" color="accent">
             <mat-label>{{staticProperty.label}}</mat-label>
             <mat-select multiple [(ngModel)]="option.selected">
                 <mat-option *ngFor="let option of staticProperty.options" [value]="option">

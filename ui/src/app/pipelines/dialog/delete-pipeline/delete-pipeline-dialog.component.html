@@ -26,11 +26,11 @@
             </div>
 
             <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
-                <button mat-button mat-raised-button color="primary" *ngIf="!pipeline.running"
+                <button mat-button mat-raised-button color="accent" *ngIf="!pipeline.running"
                         (click)="deletePipeline()">Delete
                     pipeline
                 </button>
-                <button mat-button mat-raised-button color="primary" *ngIf="pipeline.running"
+                <button mat-button mat-raised-button color="accent" *ngIf="pipeline.running"
                         (click)="stopAndDeletePipeline()">Stop and
                     delete pipeline
                 </button>

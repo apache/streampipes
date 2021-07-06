@@ -19,7 +19,7 @@
 @import '../_variables';
 
 .pipeline-validation-summary {
-  background: white;
+  background: var(--color-bg-0);
   border-radius: 3px;
   color: #5b5b5b;
   padding: 2px 5px;
@@ -27,5 +27,5 @@
 }
 
 .pipeline-validation-summary-error {
-  color: $sp-color-error;
+  color: var(--color-warn);
 }

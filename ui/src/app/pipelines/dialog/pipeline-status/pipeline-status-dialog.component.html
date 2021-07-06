@@ -20,7 +20,8 @@
     <div class="sp-dialog-content p-15">
         <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column" *ngIf="operationInProgress">
             <div fxLayoutAlign="center" >
-                <mat-spinner [diameter]="50"
+                <mat-spinner color="accent"
+                             [diameter]="50"
                              fxLayoutAlign="center"
                              style="margin: 10px 0 5px 0" >{{action == 0 ? "Starting..." : "Stopping"}}
                 </mat-spinner>
@@ -51,7 +52,7 @@
                     <div *ngIf="!statusDetailsVisible">Show Details</div>
                     <div *ngIf="statusDetailsVisible">Hide Details</div>
                 </button>
-                <button mat-button mat-raised-button class="ml-10" color="primary" (click)="forceStopPipeline()" *ngIf="action == 1 && !pipelineOperationStatus.success">
+                <button mat-button mat-raised-button class="ml-10" color="accent" (click)="forceStopPipeline()" *ngIf="action == 1 && !pipelineOperationStatus.success">
                     <div>Force stop</div>
                 </button>
             </div>

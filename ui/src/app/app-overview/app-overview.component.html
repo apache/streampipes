@@ -17,11 +17,11 @@
   -->
 
 <div fxLayout="column" fxFlex="100" class="page-container page-container-padding page-container-connect">
-    <div fxLayout="row" style="padding:0px;background-color:#f6f6f6;">
-        <div fxLayoutAlign="end center" fxLayout="fill"
-             style="padding-right:10px; width:100%;min-height:50px;line-height:24px;border-bottom:1px solid #ccc;margin-bottom:1px;">
+    <div fxLayout="row" class="sp-tab-bg">
+        <div fxLayoutAlign="end center" fxLayout="fill" class="page-container-nav"
+             style="padding-right:10px; width:100%;min-height:50px;line-height:24px;margin-bottom:1px;">
             <div *ngIf="appOpen">
-                <button mat-button mat-raised-button color="primary" (click)="appClosed()">
+                <button mat-button mat-raised-button color="accent" (click)="appClosed()">
                     Close App
                 </button>
             </div>
@@ -40,7 +40,7 @@
                         </mat-card-header>
                     </div>
                     <div fxFlex="25" fxLayoutAlign="center end" fxLayout="column">
-                        <button mat-button mat-raised-button color="primary" (click)="selectApp(app.appId)">Open App
+                        <button mat-button mat-raised-button color="accent" (click)="selectApp(app.appId)">Open App
                         </button>
                     </div>
                 </div>

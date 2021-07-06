@@ -20,7 +20,7 @@
     <div fxLayout="row" class="border sp-tab-bg" style="padding:0px;">
         <div fxFlex="100" class="page-container-nav">
             <div fxFlex="100" fxLayout="row">
-                <button mat-button mat-flat-button color="primary" (click)="showPipelineCategoriesDialog()">Manage Categories</button>
+                <button mat-button mat-flat-button color="accent" (click)="showPipelineCategoriesDialog()">Manage Categories</button>
                 <div fxFlex fxLayoutAlign="start center" [attr.id]="'peType'">
                     <mat-tab-group [selectedIndex]="selectedCategoryIndex" (selectedIndexChange)="setSelectedTab($event)" color="accent">
                         <mat-tab label="All pipelines"></mat-tab>
@@ -32,10 +32,10 @@
     </div>
     <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100">
         <div fxLayout="row">
-            <button class="mr-10" mat-button mat-raised-button color="primary" (click)="startAllPipelines(true)"
+            <button class="mr-10" mat-button mat-raised-button color="accent" (click)="startAllPipelines(true)"
                        [disabled]="checkCurrentSelectionStatus(false)">Start all pipelines
             </button>
-            <button mat-button mat-raised-button color="primary" (click)="startAllPipelines(false)"
+            <button mat-button mat-raised-button color="accent" (click)="startAllPipelines(false)"
                        [disabled]="checkCurrentSelectionStatus(true)">Stop all pipelines
             </button>
         </div>

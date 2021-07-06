@@ -19,7 +19,7 @@
 <div class="sp-dialog-container">
     <div class="sp-dialog-content">
         <div fxFlex="100" fxLayout="column">
-            <div style="border-bottom:1px solid #ccc;padding:10px;background-color:#f6f6f6" fxLayout="row">
+            <div style="border-bottom:1px solid #ccc;padding:10px;" fxLayout="row" class="sp-tab-bg">
                 <div fxFlex fxLayoutAlign="start center" *ngIf="availableTemplates && availableTemplates.length > 0">
                     <mat-form-field class="form-field" floatLabel="never">
                         <mat-label>Use template</mat-label>
@@ -33,12 +33,12 @@
                 </div>
                 <div fxFlex fxLayout="row" fxLayoutAlign="end center">
                     <mat-slide-toggle [(ngModel)]="showDocumentation"
-                                      color="primary"
+                                      color="accent"
                                       [disabled]="!pipelineElement.payload.includesAssets">
                         Show documentation
                     </mat-slide-toggle>
                     <span>&nbsp;</span>
-                    <mat-slide-toggle [(ngModel)]="displayRecommended" color="primary">
+                    <mat-slide-toggle [(ngModel)]="displayRecommended" color="accent">
                         Show only recommended settings
                     </mat-slide-toggle>
                 </div>
@@ -102,7 +102,7 @@
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions">
         <div fxLayout="row" *ngIf="!templateMode">
-            <button mat-button mat-raised-button color="primary" (click)="save()" style="margin-right:10px;"
+            <button mat-button mat-raised-button color="accent" (click)="save()" style="margin-right:10px;"
                     [disabled]="!(formValid)">
                 <i class="material-icons">save</i><span>&nbsp;Save</span>
             </button>
@@ -110,13 +110,13 @@
                 Cancel
             </button>
             <div fxFlex></div>
-            <button mat-button mat-raised-button color="primary" [disabled]="!(formValid)"
+            <button mat-button mat-raised-button color="accent" [disabled]="!(formValid)"
                     (click)="triggerTemplateMode()">
                 <i class="material-icons">add_circle_outline</i><span>&nbsp;Create template</span>
             </button>
         </div>
         <div fxLayout="row" *ngIf="templateMode">
-            <button mat-button mat-raised-button color="primary" (click)="saveTemplate()" style="margin-right:10px;"
+            <button mat-button mat-raised-button color="accent" (click)="saveTemplate()" style="margin-right:10px;"
                     [disabled]="!(formValid)">
                 <i class="material-icons">save</i><span>&nbsp;Save template</span>
             </button>

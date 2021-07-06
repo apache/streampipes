@@ -79,7 +79,7 @@
                 </div>
                 <div class="editor-error-notifications"
                      *ngIf="PipelineValidationService.errorMessages.length > 0 && errorMessagesDisplayed">
-                    <h5 style="color:darkred">
+                    <h5 class="color-warn">
                         <b>{{PipelineValidationService.errorMessages.length}} {{PipelineValidationService.errorMessages.length == 1 ? "error" : "errors"}}
                             found.</b></h5>
                     <hr/>

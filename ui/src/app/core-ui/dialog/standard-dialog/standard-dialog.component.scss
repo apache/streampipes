@@ -20,7 +20,8 @@
 
 standard-dialog-container {
   width: 100%;
-  background-color: #fff;
+  background-color: var(--color-bg-dialog);
+  color: var(--color-default-text);
   border-radius: 5px;
   -webkit-box-shadow: 0 10px 6px -6px #777;
   -moz-box-shadow: 0 10px 6px -6px #777;
@@ -40,7 +41,7 @@ standard-dialog-container {
   height: 50px;
   min-height: 50px;
   width: 100%;
-  background: $sp-color-primary;
+  background: var(--color-primary);
   align-items: center;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;

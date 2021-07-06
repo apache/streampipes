@@ -18,7 +18,7 @@
 
 <div [formGroup]="parentForm" fxFlex="100" fxLayout="column">
     <div fxFlex fxLayout="row" *ngIf="!staticProperty.valueSpecification && !staticProperty.multiLine">
-        <mat-form-field fxFlex>
+        <mat-form-field fxFlex color="accent">
             <input formControlName="{{fieldName}}" fxFlex
                    matInput
                    [placeholder]="staticProperty.label"
@@ -35,7 +35,8 @@
                     [max]="staticProperty.valueSpecification.maxValue"
                     [min]="staticProperty.valueSpecification.minValue"
                     [step]="staticProperty.valueSpecification.step"
-                    [displayWith]="formatLabel">
+                    [displayWith]="formatLabel"
+                    color="accent">
             </mat-slider>
         </div>
     </div>
@@ -44,7 +45,7 @@
             <h5>Possible placeholders: </h5>
             <div fxFlex="100" fxLayout="row" style="background:white;">
                 <mat-chip-list style="margin-bottom:10px;">
-                    <mat-chip (click)="applyPlaceholder(property.runtimeName)" color="primary" *ngFor="let property of eventSchemas[0].eventProperties">#{{property.runtimeName}}#</mat-chip>
+                    <mat-chip (click)="applyPlaceholder(property.runtimeName)" color="accent" *ngFor="let property of eventSchemas[0].eventProperties">#{{property.runtimeName}}#</mat-chip>
                 </mat-chip-list>
             </div>
         </div>

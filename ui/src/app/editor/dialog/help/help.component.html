@@ -23,7 +23,7 @@
             {{pipelineElement.description}}
         </p>
 
-        <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectedIndex=$event">
+        <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectedIndex=$event" color="accent">
             <mat-tab *ngFor="let tab of tabs" label="{{tab.title}}">
             </mat-tab>
         </mat-tab-group>
@@ -32,9 +32,9 @@
                 <h5>Field Names</h5>
 
                 <div>
-                    <table class="dataTable row-border hover">
+                    <table class="dataTable row-border hover preview-table">
                         <thead>
-                        <tr>
+                        <tr class="preview-row">
                             <th>Field Name</th>
                             <th>Description</th>
                             <th>Runtime Name</th>
@@ -42,7 +42,7 @@
                         </tr>
                         </thead>
                         <tbody id="preview-data-rows-id">
-                        <tr *ngFor="let property of pipelineElement.eventSchema.eventProperties">
+                        <tr *ngFor="let property of pipelineElement.eventSchema.eventProperties" class="preview-row">
                             <td>{{property.label ? property.label : "(n/a)"}}</td>
                             <td>{{property.description ? property.description : "(n/a)"}}</td>
                             <td>{{property.runtimeName}}</td>

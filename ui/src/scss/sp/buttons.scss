@@ -133,7 +133,7 @@
 }
 
 .mat-flat-button.mat-accent:hover:enabled {
-  background: #d9d9d9;
+  background: var(--color-bg-2);
   -webkit-transition: all 0.75s ease;
   transition: all 0.75s ease;
 }

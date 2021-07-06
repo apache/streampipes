@@ -66,10 +66,10 @@
 }
 
 .displayed-token {
-  background: #f6f6f6;
-  border: 1px solid #cccccc;
+  background: var(--color-bg-2);
+  border: 1px solid var(--color-bg-1);
   padding: 10px;
-  color: black;
+  color: var(--color-default-text);
   margin-left: 10px;
   margin-right: 10px;
 }

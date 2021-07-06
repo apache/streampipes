@@ -17,7 +17,7 @@
   -->
 <div [formGroup]="parentForm" id="formWrapper">
     <div fxFlex="100" fxLayout="row">
-        <mat-form-field>
+        <mat-form-field color="accent">
             <input matInput
                    [(colorPicker)]="staticProperty.selectedColor"
                    (colorPickerChange)="parentForm.get(staticProperty.internalName).setValue($event)"

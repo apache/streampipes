@@ -81,8 +81,12 @@ export class EndpointItemComponent implements OnInit {
   }
 
   getSelectedBackground() {
-    if (this.itemSelected) return "#EEEEEE";
-    else return "#FFFFFF";
+    if (this.itemSelected) {
+      return "var(--color-bg-2)";
+    }
+    else {
+      return "var(--color-bg-1)";
+    }
   }
 
   findItemTypeTitle() {

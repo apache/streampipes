@@ -16,9 +16,9 @@
   ~
   -->
 <div fxFlex="100" fxLayout="column">
-    <div fxLayout="row" class="fixed-height options-bar" *ngIf="editMode">
+    <div fxLayout="row" class="fixed-height options-bar sp-tab-bg" *ngIf="editMode">
         <div class="options-bar-item pl-10" fxLayoutAlign="start center" fxLayout="row">
-            <button mat-button mat-raised-button color="primary" (click)="updateDashboardAndCloseEditMode()" class="mr-10">
+            <button mat-button mat-raised-button color="accent" (click)="updateDashboardAndCloseEditMode()" class="mr-10">
                 <i class="material-icons">save</i>
                 <span> Save</span>
             </button>
@@ -26,7 +26,7 @@
                 <i class="material-icons">clear</i>
                 <span> Discard</span>
             </button>
-            <button mat-button mat-raised-button color="primary" (click)="addWidget()" [disabled]="!editMode">
+            <button mat-button mat-raised-button color="accent" (click)="addWidget()" [disabled]="!editMode">
                 <i class="material-icons">add</i>
                 <span> Add visualization</span>
             </button>
@@ -34,7 +34,7 @@
         <span fxFlex></span>
         <div class="options-bar-item" fxLayoutAlign="start center" fxLayout="row" >
             <mat-slide-toggle
-                    color="primary"
+                    color="accent"
                     [(ngModel)]="headerVisible">
                 Show widget controls
             </mat-slide-toggle>

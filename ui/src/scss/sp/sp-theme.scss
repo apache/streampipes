@@ -161,9 +161,11 @@ $accent: map-get($custom-theme-light, accent);
         --color-bg-1: #282828;
         --color-bg-2: #404040;
         --color-bg-3: #424242;
+        --color-bg-dialog: rgb(66, 66, 66);
         --color-shadow: #c4c4c4;
         --color-pe: #404040;
         --color-default-text: rgba(255, 255, 255, 0.87);
+        --color-warn: #b36161;
 
         --content-box-color: #404040;
         --canvas-color: linear-gradient(90deg, rgba(40, 40, 40, 0.5) 10%, transparent 0%), linear-gradient(rgba(40, 40, 40, 0.5) 10%, transparent 0%);
@@ -183,10 +185,12 @@ $accent: map-get($custom-theme-light, accent);
         --color-bg-0: #FFFFFF;
         --color-bg-1: #FAFAFA;
         --color-bg-2: #f1f1f1;
-        --color-bg-3: rgb(204, 204, 204);
+        --color-bg-3: rgb(224, 224, 224);
+        --color-bg-dialog: #FFFFFF;
         --color-shadow: #555;
         --color-pe: #FFFFFF;
         --color-default-text: #121212;
+        --color-warn: #B71C1C;
 
         --content-box-color: rgb(156, 156, 156);
         --canvas-color: linear-gradient(90deg, rgba(208, 208, 208, 0.5) 10%, transparent 0%), linear-gradient(rgba(208, 208, 208, 0.5) 10%, transparent 0%);

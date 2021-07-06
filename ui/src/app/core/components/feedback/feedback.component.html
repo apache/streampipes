@@ -23,12 +23,12 @@
         </div>
         <div fxLayout="column" fxFlex="40" fxLayoutAlign="start center" style="margin-bottom:20px;">
             <div fxFlex="100" class="feedback-explainer">
-                <span>Your feedback helps us to improve StreamPipes.</span>
+                <span>Your feedback helps us to improve StreamPipes.<br/></span>
                 <span>Features you'd like to see, bugs you've found or things you like - tell us what you think!</span>
             </div>
         </div>
         <div fxLayout="column" fxFlex="40" fxLayoutAlign="start center" style="margin-bottom:20px;">
-            <mat-form-field class="feedback-width-100 feedback-font-size-small">
+            <mat-form-field class="feedback-width-100 feedback-font-size-small" color="accent">
                 <label>Your feedback</label>
                 <textarea matInput [(ngModel)]="feedback.feedbackText" maxlength="500" rows="5"></textarea>
             </mat-form-field>
@@ -38,7 +38,7 @@
                 <button mat-button mat-raised-button class="mat-basic" (click)="closeDialog()" style="margin-right:10px;">
                     Close
                 </button>
-                <button mat-button mat-raised-button color="primary" type="submit"
+                <button mat-button mat-raised-button color="accent" type="submit"
                            (click)="sendMail()">
                     Send Mail
                 </button>

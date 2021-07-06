@@ -44,7 +44,7 @@
         <button mat-button mat-raised-button class="mat-basic" (click)="close()" style="margin-right: 10px;" *ngIf="nextButton !== 'Close'">
             Close
         </button>
-        <button mat-button mat-raised-button color="primary" (click)="next()" [disabled]="installationRunning">
+        <button mat-button mat-raised-button color="accent" (click)="next()" [disabled]="installationRunning">
             {{nextButton}}
         </button>
     </div>

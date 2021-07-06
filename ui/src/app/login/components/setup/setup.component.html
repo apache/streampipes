@@ -29,17 +29,17 @@
                         <div class="setup-inline-content">
                             <h3>Initial User</h3>
                             <div fxLayout="column">
-                                <mat-form-field fxFlex>
+                                <mat-form-field fxFlex color="accent">
                                     <mat-label>Email</mat-label>
                                     <input [(ngModel)]="setup.adminEmail" matInput type="email" name="email" class="sp"
                                            required/>
                                 </mat-form-field>
-                                <mat-form-field fxFlex>
+                                <mat-form-field fxFlex color="accent">
                                     <mat-label>Password</mat-label>
                                     <input [(ngModel)]="setup.adminPassword" matInput type="password" name="password"
                                            class="sp" required/>
                                 </mat-form-field>
-                                <mat-checkbox style="margin-bottom: 10px;" color="primary"
+                                <mat-checkbox style="margin-bottom: 10px;" color="accent"
                                               [(ngModel)]="setup.installPipelineElements" name="install"><span>Also install available data streams, processors and sinks.</span>
                                 </mat-checkbox>
                             </div>
@@ -74,12 +74,12 @@
                 <mat-divider></mat-divider>
                 <div fxLayout="row" fxLayoutAlign="center center">
                     <div fxLayout="row" style="margin-top: 10px; margin-bottom: 10px;">
-                        <button mat-button mat-raised-button color="primary"
+                        <button mat-button mat-raised-button color="accent"
                                 [disabled]="!(setupForm.valid) || loading || installationFinished"
                                 (click)="configure(0)" *ngIf="!installationFinished">
                             <span>{{!installationRunning ? 'Install' : 'Installing...'}}</span>
                         </button>
-                        <button mat-button mat-raised-button color="primary"
+                        <button mat-button mat-raised-button color="accent"
                                 (click)="openLoginPage()" *ngIf="installationFinished">
                             <mat-icon>arrow_forward</mat-icon>
                             <span>Go to login page</span>

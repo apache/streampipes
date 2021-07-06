@@ -20,7 +20,7 @@
     <div fxLayout="row" class="border sp-bg-lightgray p-0">
         <div fxFlex="100" class="page-container-nav">
             <div fxFlex="100" fxLayout="row">
-                <button mat-button mat-flat-button color="primary" (click)="showManageRdfEndpointsDialog()">Manage
+                <button mat-button mat-flat-button color="accent" (click)="showManageRdfEndpointsDialog()">Manage
                     Endpoints
                 </button>
                 <div fxFlex fxLayoutAlign="start center" [attr.id]="'peType'">
@@ -39,23 +39,23 @@
     <div fxLayout="row" class="fixed-height add-options sp-tab-bg">
         <div class="add-options-item pl-5" fxLayoutAlign="start center" fxLayout="row">
             <div fxFlex="100" fxLayout="row">
-                <button mat-button mat-raised-button color="primary"
+                <button mat-button mat-raised-button color="accent"
                         [disabled]="selectedEndpointItems.length === 0"
                         (click)="installSelected()" class="mr-10">
                     <i class="material-icons">cloud_download</i>
                     &nbsp;Install selected
                 </button>
-                <button mat-button mat-raised-button color="primary"
+                <button mat-button mat-raised-button color="accent"
                         [disabled]="selectedEndpointItems.length === 0"
                         (click)="uninstallSelected()" class="mr-10">
                     <i class="material-icons">delete</i>
                     &nbsp;Uninstall selected
                 </button>
-                <button mat-button mat-icon-button color="primary" class="mr-10" (click)="selectAll(true)"
+                <button mat-button mat-icon-button color="accent" class="mr-10" (click)="selectAll(true)"
                         matTooltip="Select all" matTooltipPosition="above">
                     <i class="material-icons">queue</i>
                 </button>
-                <button mat-button mat-icon-button color="primary" class="mr-10" (click)="selectAll(false)"
+                <button mat-button mat-icon-button color="accent" class="mr-10" (click)="selectAll(false)"
                         matTooltip="Select none" matTooltipPosition="above">
                     <i class="material-icons">filter_none</i>
                 </button>
@@ -65,13 +65,13 @@
         <div class="add-options-item pl-5" fxLayoutAlign="start center" fxLayout="row">
             <mat-icon>search</mat-icon>
 
-            <mat-form-field class="form-style">
+            <mat-form-field class="form-style" color="accent">
                 <input matInput placeholder="Find Element" value="" [(ngModel)]="filterTerm"
                        name="something">
             </mat-form-field>
         </div>
         <div class="add-options-item" fxLayoutAlign="start center" fxLayout="row">
-            <mat-form-field>
+            <mat-form-field color="accent">
                 <mat-select [(value)]="selectedInstallationStatus">
                     <mat-option [value]="'all'">
                         Available & Installed
@@ -86,7 +86,7 @@
             </mat-form-field>
         </div>
         <div class="add-options-item" fxLayoutAlign="start center" fxLayout="row">
-            <button mat-button mat-icon-button color="primary" (click)="getEndpointItems()"
+            <button mat-button mat-icon-button color="accent" (click)="getEndpointItems()"
                     matTooltip="Reload items" matTooltipPosition="above">
                 <mat-icon>refresh</mat-icon>
             </button>
@@ -109,7 +109,7 @@
         </div>
     </div>
     <div fxFlex="100" fxLayout="row" fxLayoutAlign="center center" *ngIf="!endpointItemsLoadingComplete">
-        <mat-spinner [mode]="'indeterminate'" [diameter]="20"></mat-spinner>
+        <mat-spinner [mode]="'indeterminate'" [diameter]="20" color="accent"></mat-spinner>
         <h4>&nbsp;&nbsp;Searching for available pipeline elements, please wait...</h4>
     </div>
 </div>

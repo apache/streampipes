@@ -28,12 +28,12 @@
             <div fxFill fxLayout="column">
                 <div fxLayout="column" class="subsection">
                     <div class="subsection-title">New API key</div>
-                    <mat-form-field fxFlex>
+                    <mat-form-field fxFlex color="accent">
                         <mat-label>Name</mat-label>
                         <input [(ngModel)]="newTokenName" matInput/>
                     </mat-form-field>
                     <div>
-                        <button mat-button mat-raised-button color="primary"
+                        <button mat-button mat-raised-button color="accent"
                                 (click)="requestNewKey()">
                             Create new API key
                         </button>
@@ -47,7 +47,7 @@
                         <div class="displayed-token">
                             {{newlyCreatedToken.rawToken}}
                         </div>
-                        <button mat-button mat-raised-button color="primary"
+                        <button mat-button mat-raised-button color="accent"
                                 [cdkCopyToClipboard]="newlyCreatedToken.rawToken">
                             Copy
                         </button>

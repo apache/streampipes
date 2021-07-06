@@ -18,11 +18,11 @@
 
 
 <div fxLayout="column" class="page-container">
-    <div fxLayout="row" class="border" style="padding:0px;background-color:#f6f6f6;">
-        <div fxFlex="100" style="line-height:24px;border-bottom:1px solid #ccc">
+    <div fxLayout="row" class="border sp-tab-bg">
+        <div fxFlex="100" class="page-container-nav">
             <div fxFlex="100" fxLayout="row">
                 <div fxFlex fxLayoutAlign="start center" [attr.id]="'peType'">
-                    <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectedIndexChange($event)">
+                    <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectedIndexChange($event)" color="accent">
                         <mat-tab label="General Settings"></mat-tab>
                         <mat-tab label="API Keys"></mat-tab>
                     </mat-tab-group>

@@ -17,9 +17,9 @@
   -->
 
 <div fxLayout="column" fxFlex="100" class="page-container-connect">
-    <div fxLayout="row" style="padding:0px;background-color:#f6f6f6;">
-        <div fxLayout="fill" style="line-height:24px;border-bottom:1px solid #ccc">
-            <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectedIndexChange($event)">
+    <div fxLayout="row" class="sp-tab-bg">
+        <div fxLayout="fill" class="page-container-nav">
+            <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectedIndexChange($event)" color="accent">
                 <mat-tab label="Asset Dashboards">
                 </mat-tab>
                 <mat-tab id="all-adapters" label="New Asset Dashboard">

@@ -21,7 +21,7 @@
         <div fxFlex="100" fxLayout="column">
             <div fxFlex="100" fxLayout="column" *ngIf="!saved && !saving && !storageError">
                 <div id="overwriteCheckbox" class="checkbox" *ngIf="currentModifiedPipelineId">
-                    <mat-radio-group [(ngModel)]="updateMode" fxLayout="column" color="primary" class="pipeline-radio-group">
+                    <mat-radio-group [(ngModel)]="updateMode" fxLayout="column" color="accent" class="pipeline-radio-group">
                         <mat-radio-button [value]="'update'" class="mb-10" style="padding-left: 0;">
                             Update pipeline <b>{{currentPipelineName}}</b>
                         </mat-radio-button>
@@ -32,31 +32,33 @@
                 </div>
                 <form [formGroup]="submitPipelineForm">
                 <div fxFlex="100" fxLayout="column" *ngIf="!currentModifiedPipelineId || updateMode=='clone'">
-                    <mat-form-field fxFlex><mat-label>Pipeline Name</mat-label>
+                    <mat-form-field fxFlex color="accent">
+                        <mat-label>Pipeline Name</mat-label>
                         <input [formControlName]="'pipelineName'" matInput name="pipelineName"/>
 <!--                        <span ng-show="submitPipelineForm.pipelineName.$touched && submitPipelineForm.pipelineName.$error.required">Please provide a pipeline name.</span>-->
 <!--                        <span ng-show="submitPipelineForm.pipelineName.$error.maxlength">Please provide a shorter pipeline name.</span>-->
                     </mat-form-field>
-                    <mat-form-field fxFlex><mat-label>Description</mat-label>
+                    <mat-form-field fxFlex color="accent">
+                        <mat-label>Description</mat-label>
                         <input [formControlName]="'pipelineDescription'" matInput/>
 <!--                        <span ng-show="submitPipelineForm.pipelineDescription.$error.maxlength">Please provide a shorter description.</span>-->
                     </mat-form-field>
                 </div>
                 </form>
-                <mat-checkbox (click)="triggerTutorial()" color="primary" [(ngModel)]="startPipelineAfterStorage">
+                <mat-checkbox (click)="triggerTutorial()" color="accent" [(ngModel)]="startPipelineAfterStorage">
                     Start pipeline immediately
                 </mat-checkbox>
             </div>
             <div fxFlex="100" fxLayout="column" fxLayoutAlign="center center" *ngIf="saving">
-                <mat-spinner [mode]="'indeterminate'" [diameter]="50"></mat-spinner>
+                <mat-spinner [mode]="'indeterminate'" [diameter]="50" color="accent"></mat-spinner>
                 <span class="status-text">Saving pipeline...</span>
             </div>
             <div fxFlex="100" fxLayout="column" fxLayoutAlign="center center" *ngIf="saved">
-                <mat-icon color="primary" style="font-size:50pt;height:60px;width:60px;">check_circle</mat-icon>
+                <mat-icon color="accent" style="font-size:50pt;height:60px;width:60px;">check_circle</mat-icon>
                 <span class="status-text">Pipeline successfully stored.</span>
             </div>
             <div fxFlex="100" fxLayout="column" fxLayoutAlign="center center" *ngIf="storageError">
-                <mat-icon color="primary" style="font-size:50pt;height:60px;width:60px;">error</mat-icon>
+                <mat-icon color="accent" style="font-size:50pt;height:60px;width:60px;">error</mat-icon>
                 <span class="status-text">Your pipeline could not be stored.</span>
                 <span class="status-subtext">{{errorMessage}}</span>
             </div>
@@ -64,10 +66,10 @@
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions">
-        <button [disabled]="!submitPipelineForm.valid || saving || saved" mat-button mat-raised-button color="primary" (click)="savePipeline(false)" style="margin-right:10px;">
+        <button [disabled]="!submitPipelineForm.valid || saving || saved" mat-button mat-raised-button color="accent" (click)="savePipeline(false)" style="margin-right:10px;">
             Save
         </button>
-        <button [disabled]="!submitPipelineForm.valid || saving || saved" mat-button mat-raised-button color="primary" (click)="savePipeline(true)" style="margin-right:10px;">
+        <button [disabled]="!submitPipelineForm.valid || saving || saved" mat-button mat-raised-button color="accent" (click)="savePipeline(true)" style="margin-right:10px;">
             Save and go to pipeline view
         </button>
         <button mat-button mat-raised-button class="mat-basic" (click)="hide()">

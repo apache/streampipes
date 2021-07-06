@@ -20,7 +20,8 @@
 
 app-dialog-container {
   width: 100%;
-  background-color: #fff;
+  background-color: var(--color-bg-dialog);
+  color: var(--color-default-text);
   box-shadow: -7px 0px 5px -5px #777;
 }
 

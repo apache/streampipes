@@ -21,15 +21,15 @@
     <div class="sp-dialog-content p-15">
         <div fxFlex="100">
             <div fxFlex="100" style="margin:5px;width:100%">
-                <mat-form-field style="width: 95%" (click)="fileInput.click();">
+                <mat-form-field style="width: 95%" (click)="fileInput.click();" color="accent">
                     <input matInput placeholder="File" disabled (value)="fileName">
                     <input #fileInput type="file" style="display:none;"
                            (change)="handleFileInput($event.target.files)">
                     <div>
                         {{fileName}}
-                        <mat-progress-bar mode="determinate" value="{{uploadStatus}}" *ngIf="uploadStatus > 0"></mat-progress-bar>
+                        <mat-progress-bar mode="determinate" value="{{uploadStatus}}" *ngIf="uploadStatus > 0" color="accent"></mat-progress-bar>
                     </div>
-                    <button color="primary" matSuffix
+                    <button color="accent" matSuffix
                             mat-button style="min-width: 0px">
                         <mat-icon *ngIf="uploadStatus < 99">insert_drive_file</mat-icon>
                         <mat-icon *ngIf="uploadStatus == 100" class="green-icon">check_circle</mat-icon>
@@ -43,7 +43,7 @@
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions">
-        <button mat-button mat-raised-button color="primary" (click)="store()" style="margin-right:10px;">
+        <button mat-button mat-raised-button color="accent" (click)="store()" style="margin-right:10px;">
             Store file
         </button>
         <button mat-button mat-raised-button class="mat-basic" (click)="cancel()" style="margin-right:10px;">

@@ -47,14 +47,14 @@
                                     <div fxFlex="50" fxLayout="row" fxLayoutAlign="center end">
                                         <button mat-button mat-icon-button
                                                 (click)="addPipelineToCategory(pipelineCategory)"
-                                                color="primary">
+                                                color="accent">
                                             <mat-icon>save</mat-icon>
                                         </button>
                                     </div>
                                     <div fxFlex="50" fxLayout="row" fxLayoutAlign="center end">
                                         <button mat-button mat-icon-button
                                                 (click)="showAddToCategoryInput(pipelineCategory._id, false)"
-                                                color="primary">
+                                                color="accent">
                                             <mat-icon>delete</mat-icon>
                                         </button>
                                     </div>
@@ -68,7 +68,7 @@
                                      fxLayoutAlign="end center">
                                     <button mat-button mat-icon-button
                                             (click)="removePipelineFromCategory(pipeline, pipelineCategory._id)"
-                                            color="primary">
+                                            color="accent">
                                         <mat-icon>delete</mat-icon>
                                     </button>
                                 </div>
@@ -81,14 +81,14 @@
                     <div class="md-list-item-text" fxFlex="33" fxLayout="row" fxLayoutAlign="center start">
                         <button mat-button mat-icon-button *ngIf="categoryDetailsVisible[pipelineCategory._id]"
                                 (click)="toggleCategoryDetailsVisibility(pipelineCategory._id)"
-                                color="primary"
+                                color="accent"
                                 matTooltip="Hide Details" matTooltipPosition="above">
                             <mat-icon>expand_less</mat-icon>
                         </button>
                         <button mat-button mat-icon-button
                                 *ngIf="!categoryDetailsVisible[pipelineCategory._id]"
                                 (click)="toggleCategoryDetailsVisibility(pipelineCategory._id)"
-                                color="primary"
+                                color="accent"
                                 matTooltip="Show Details" matTooltipPosition="above">
                             <mat-icon>expand_more</mat-icon>
                         </button>
@@ -96,7 +96,7 @@
                     <div class="md-list-item-text" fxFlex="33" fxLayout="row" fxLayoutAlign="center start">
                         <button mat-button mat-icon-button
                                 (click)="showAddToCategoryInput(pipelineCategory._id, true)"
-                                color="primary"
+                                color="accent"
                                 matTooltip="Add Pipeline To Category" matTooltipPosition="above">
                             <mat-icon>add_circle_outline</mat-icon>
                         </button>
@@ -104,7 +104,7 @@
                     <div class="md-list-item-text" flex="33" layout="row" layout-align="center start">
                         <button mat-button mat-icon-button
                                 (click)="deletePipelineCategory(pipelineCategory._id)"
-                                color="primary"
+                                color="accent"
                                 matTooltip="Delete Category" matTooltipPosition="above">
                             <mat-icon>delete</mat-icon>
                         </button>
@@ -127,14 +127,14 @@
                 </mat-form-field>
             </div>
             <div class="md-list-item-text" fxFlex="20" fxLayout="column">
-                <button mat-button mat-icon-button (click)="addPipelineCategory()" color="primary"
+                <button mat-button mat-icon-button (click)="addPipelineCategory()" color="accent"
                         class="md-accent md-icon-button">
                     <mat-icon>save</mat-icon>
                 </button>
             </div>
         </div>
         <div style="margin-top:10px;">
-            <button mat-button mat-raised-button color="primary" (click)="showAddInput()">Add Category</button>
+            <button mat-button mat-raised-button color="accent" (click)="showAddInput()">Add Category</button>
         </div>
     </div>
     <mat-divider></mat-divider>
