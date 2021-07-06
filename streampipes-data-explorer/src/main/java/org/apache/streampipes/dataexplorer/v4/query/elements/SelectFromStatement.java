@@ -29,9 +29,9 @@ public class SelectFromStatement extends QueryElement<SelectFromStatementParams>
     @Override
     protected String buildStatement(SelectFromStatementParams selectFromStatementParams) {
         if (selectFromStatementParams.getAggregationFunction() == null) {
-            return QueryTemplatesV4.selectWildcardFrom(selectFromStatementParams.getIndex());
+            return QueryTemplatesV4.selectFrom(selectFromStatementParams.getIndex(), selectFromStatementParams.getSelectedColumns());
         } else {
-            return QueryTemplatesV4.selectAggregationFrom(selectFromStatementParams.getIndex(), selectFromStatementParams.getAggregationFunction());
+            return QueryTemplatesV4.selectAggregationFrom(selectFromStatementParams.getIndex(), selectFromStatementParams.getSelectedColumns(), selectFromStatementParams.getAggregationFunction());
         }
     }
 }

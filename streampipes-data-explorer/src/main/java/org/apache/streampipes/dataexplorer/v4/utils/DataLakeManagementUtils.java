@@ -35,10 +35,10 @@ public class DataLakeManagementUtils {
 
     public static final String DELETE_FROM = "DELETE";
 
-    public static Map<String, QueryParamsV4> getSelectQueryParams(String measurementID, Long startDate, Long endDate, Integer page, Integer limit, Integer offset, String groupBy, String order, String aggregationFunction, String timeInterval) {
+    public static Map<String, QueryParamsV4> getSelectQueryParams(String measurementID, String columns, Long startDate, Long endDate, Integer page, Integer limit, Integer offset, String groupBy, String order, String aggregationFunction, String timeInterval) {
         Map<String, QueryParamsV4> queryParts = new HashMap<>();
 
-        queryParts.put(SELECT_FROM, SelectFromStatementParams.from(measurementID, aggregationFunction));
+        queryParts.put(SELECT_FROM, SelectFromStatementParams.from(measurementID, columns, aggregationFunction));
 
         if (startDate != null || endDate != null) {
             queryParts.put(WHERE, TimeBoundaryParams.from(measurementID, startDate, endDate));

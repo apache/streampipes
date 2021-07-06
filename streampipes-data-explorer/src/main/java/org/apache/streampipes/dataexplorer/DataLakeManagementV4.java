@@ -50,12 +50,12 @@ public class DataLakeManagementV4 {
         return allMeasurements;
     }
 
-    public DataResult getData(String measurementID, Long startDate, Long endDate, Integer page, Integer limit, Integer offset, String groupBy, String order, String aggregationFunction, String timeInterval) {
-        Map<String, QueryParamsV4> queryParts = DataLakeManagementUtils.getSelectQueryParams(measurementID, startDate, endDate, page, limit, offset, groupBy, order, aggregationFunction, timeInterval);
+    public DataResult getData(String measurementID, String columns, Long startDate, Long endDate, Integer page, Integer limit, Integer offset, String groupBy, String order, String aggregationFunction, String timeInterval) {
+        Map<String, QueryParamsV4> queryParts = DataLakeManagementUtils.getSelectQueryParams(measurementID, columns, startDate, endDate, page, limit, offset, groupBy, order, aggregationFunction, timeInterval);
         return new DataExplorerQueryV4(queryParts).executeQuery();
     }
 
-    public void getDataAsStream(String measurementID, Long startDate, Long endDate, Integer page, Integer limit, Integer offset, String groupBy, String order, String aggregationFunction, String timeInterval, String format, OutputStream outputStream) throws IOException {
+    public void getDataAsStream(String measurementID, String columns, Long startDate, Long endDate, Integer page, Integer limit, Integer offset, String groupBy, String order, String aggregationFunction, String timeInterval, String format, OutputStream outputStream) throws IOException {
         if (limit == null) {
             limit = 500000;
         }
@@ -75,7 +75,7 @@ public class DataLakeManagementV4 {
 
             outputStream.write(toBytes("["));
             do {
-                dataResult = getData(measurementID, startDate, endDate, i, limit, null, groupBy, order, aggregationFunction, timeInterval);
+                dataResult = getData(measurementID, columns, startDate, endDate, i, limit, null, groupBy, order, aggregationFunction, timeInterval);
 
                 if (dataResult.getTotal() > 0) {
                     for (List<Object> row : dataResult.getRows()) {
@@ -122,7 +122,7 @@ public class DataLakeManagementV4 {
             boolean isFirstDataObject = true;
 
             do {
-                dataResult = getData(measurementID, startDate, endDate, i, limit, null, groupBy, order, aggregationFunction, timeInterval);
+                dataResult = getData(measurementID, columns, startDate, endDate, i, limit, null, groupBy, order, aggregationFunction, timeInterval);
                 //Send first header
                 if (dataResult.getTotal() > 0) {
                     if (isFirstDataObject) {

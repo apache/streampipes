@@ -19,12 +19,19 @@ package org.apache.streampipes.dataexplorer.v4.template;
 
 public class QueryTemplatesV4 {
 
-    public static String selectWildcardFrom(String index) {
-        return "SELECT * FROM " + index;
+    public static String selectFrom(String index, String columns) {
+        return "SELECT " + columns + " FROM " + index;
     }
 
-    public static String selectAggregationFrom(String index, String aggregationFunction) {
-        return "SELECT " + aggregationFunction + "(*) FROM " + index;
+    public static String selectAggregationFrom(String index, String columns, String aggregationFunction) {
+        String[] cols = columns.split(",");
+        String statement = aggregationFunction + "(" + cols[0] + ")";
+
+        for (int i = 1; i < cols.length; i++) {
+            statement = statement + ", " + aggregationFunction + "(" + cols[i] + ")";
+        }
+
+        return "SELECT " + statement + " FROM " + index;
     }
 
     public static String deleteFrom(String index) {

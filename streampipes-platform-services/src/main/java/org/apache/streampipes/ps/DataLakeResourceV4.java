@@ -129,6 +129,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
                     @ApiResponse(responseCode = "200", description = "requested data", content = @Content(schema = @Schema(implementation = DataResult.class)))})
     public Response getData(@Parameter(in = ParameterIn.PATH, description = "username", required = true) @PathParam("username") String username
             , @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true) @PathParam("measurementID") String measurementID
+            , @Parameter(in = ParameterIn.QUERY, description = "the columns to be selected (comma-separated)") @QueryParam("columns") String columns
             , @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation") @QueryParam("startDate") Long startDate
             , @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation") @QueryParam("endDate") Long endDate
             , @Parameter(in = ParameterIn.QUERY, description = "page number for paging operation") @QueryParam("page") Integer page
@@ -139,7 +140,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
             , @Parameter(in = ParameterIn.QUERY, description = "name of aggregation function used for grouping operation") @QueryParam("aggregationFunction") String aggregationFunction
             , @Parameter(in = ParameterIn.QUERY, description = "time interval for aggregation (e.g. 1m - one minute) for grouping operation") @QueryParam("timeInterval") String timeInterval) {
 
-        DataResult result = this.dataLakeManagement.getData(measurementID, startDate, endDate, page, limit, offset, groupBy, order, aggregationFunction, timeInterval);
+        DataResult result = this.dataLakeManagement.getData(measurementID, columns, startDate, endDate, page, limit, offset, groupBy, order, aggregationFunction, timeInterval);
 
         return Response.ok(result).build();
     }
@@ -153,6 +154,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
                     @ApiResponse(responseCode = "200", description = "requested data", content = @Content(schema = @Schema(implementation = DataResult.class)))})
     public Response downloadData(@Parameter(in = ParameterIn.PATH, description = "username", required = true) @PathParam("username") String username
             , @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true) @PathParam("measurementID") String measurementID
+            , @Parameter(in = ParameterIn.QUERY, description = "the columns to be selected (comma-separated)") @QueryParam("columns") String columns
             , @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation") @QueryParam("startDate") Long startDate
             , @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation") @QueryParam("endDate") Long endDate
             , @Parameter(in = ParameterIn.QUERY, description = "page number for paging operation") @QueryParam("page") Integer page
@@ -169,7 +171,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
         }
         String outputFormat = format;
 
-        StreamingOutput streamingOutput = output -> dataLakeManagement.getDataAsStream(measurementID, startDate, endDate, page, limit, offset, groupBy, order, aggregationFunction, timeInterval, outputFormat, output);
+        StreamingOutput streamingOutput = output -> dataLakeManagement.getDataAsStream(measurementID, columns, startDate, endDate, page, limit, offset, groupBy, order, aggregationFunction, timeInterval, outputFormat, output);
 
         return Response.ok(streamingOutput, MediaType.APPLICATION_OCTET_STREAM).
                 header("Content-Disposition", "attachment; filename=\"datalake." + outputFormat + "\"")

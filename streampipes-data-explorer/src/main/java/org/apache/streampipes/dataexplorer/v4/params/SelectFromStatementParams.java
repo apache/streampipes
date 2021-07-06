@@ -22,22 +22,34 @@ import javax.annotation.Nullable;
 
 public class SelectFromStatementParams extends QueryParamsV4 {
 
+    private final String selectedColumns;
     private final String aggregationFunction;
 
-    public static SelectFromStatementParams from(String measurementID, @Nullable String aggregationFunction) {
-        return new SelectFromStatementParams(measurementID, aggregationFunction);
+    public static SelectFromStatementParams from(String measurementID, @Nullable String columns, @Nullable String aggregationFunction) {
+        return new SelectFromStatementParams(measurementID, columns, aggregationFunction);
     }
 
     public SelectFromStatementParams(String measurementID) {
         super(measurementID);
+        this.selectedColumns = "*";
         this.aggregationFunction = null;
     }
 
-    public SelectFromStatementParams(String measurementID, String aggregationFunction) {
+    public SelectFromStatementParams(String measurementID, String columns, String aggregationFunction) {
         super(measurementID);
+
+        if (columns != null) {
+            this.selectedColumns = columns;
+        } else {
+            this.selectedColumns = "*";
+        }
+
         this.aggregationFunction = aggregationFunction;
     }
 
+    public String getSelectedColumns() {
+        return selectedColumns;
+    }
 
     public String getAggregationFunction() {
         return aggregationFunction;
