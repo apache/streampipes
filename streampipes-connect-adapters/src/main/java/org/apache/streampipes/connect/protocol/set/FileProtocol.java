@@ -90,27 +90,6 @@ public class FileProtocol extends Protocol {
         return new FileProtocol(parser, format, fileFetchUrl,timeBetweenReplay);
     }
 
-    public void parse(InputStream data, EmitBinaryEvent emitBinaryEvent) throws ParseException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(data));
-        boolean result = true;
-        try {
-            while (reader.ready() && result) {
-                String s = reader.readLine();
-                byte[] parseResult = s.getBytes();
-                if (parseResult != null) {
-                    result = emitBinaryEvent.emit(parseResult);
-                }
-                try {
-                    Thread.sleep(this.timeBetweenReplay);
-                } catch (InterruptedException e) {
-                    logger.error("Error while waiting for next replay round" + e.getMessage());
-                }
-            }
-        } catch (IOException var) {
-            throw new ParseException(var.getMessage());
-        }
-    }
-
     @Override
     public void run(AdapterPipeline adapterPipeline) {
         FileReader fr = null;
@@ -123,8 +102,12 @@ public class FileProtocol extends Protocol {
         }
         SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
         try {
-            InputStream in = getDataFromEndpoint();
-            parse(in, stk);
+            InputStream dataInputStream = getDataFromEndpoint();
+            if(dataInputStream != null) {
+                parser.parse(dataInputStream, stk);
+            } else {
+                logger.warn("Could not read data from file.");
+            }
         } catch (ParseException e) {
             logger.error("Error while parsing: " + e.getMessage());
         }
@@ -134,7 +117,6 @@ public class FileProtocol extends Protocol {
     public void stop() {
 
     }
-
 
     @Override
     public GuessSchema getGuessSchema() throws ParseException {
@@ -149,26 +131,6 @@ public class FileProtocol extends Protocol {
         GuessSchema result = SchemaGuesser.guessSchma(eventSchema, getNElements(20));
 
         return result;
-
-//        EventSchema result = null;
-//
-//        FileReader fr = null;
-//
-//        try {
-//            fr = new FileReader(fileUri);
-//            BufferedReader br = new BufferedReader(fr);
-//
-//            InputStream inn = new FileInputStream(fileUri);
-//            result = parser.getEventSchema(parser.parseNEvents(inn, 1).get(0));
-//
-//            fr.close();
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
-//        return result;
     }
 
     public InputStream getDataFromEndpoint() throws ParseException {
