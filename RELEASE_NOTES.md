@@ -32,6 +32,10 @@ See full release notes in the core project at github.com/apache/incubator-stream
 
 ### Bug Fixes
 
+## [0.68.0]
+## Improvements
+* Remove connect-master dependency
+
 ## [0.66.0]
 ## New Features
 * Helm charts for Kubernetes
