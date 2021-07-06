@@ -23,7 +23,7 @@ The StreamPipes command-line interface (CLI) is focused on developers in order t
 * new core features for **backend** and **ui**.
 
 <!-- BEGIN do not edit: set via ../upgrade_versions.sh -->
-**Current version:** 0.68.0-SNAPSHOT
+**Current version:** 0.68.0
 <!-- END do not edit -->
 
 ## TL;DR
@@ -188,7 +188,7 @@ We can simply use `streampipes add` command to populate relevant Docker Compose 
 streampipes add my-processor
 
 # add new pipeline element with custom image and ports
-streampipes add my-processor --image myrepo/myprocessor:0.67.0 --ports 8090:8090 --ports 8091:8091
+streampipes add my-processor --image myrepo/myprocessor:0.68.0 --ports 8090:8090 --ports 8091:8091
 
 # [Optional] add new pipeline element and persistently store service in environment (here: lite) and activate service in current environment (.spenv)
 streampipes add my-processor --store lite --activate
