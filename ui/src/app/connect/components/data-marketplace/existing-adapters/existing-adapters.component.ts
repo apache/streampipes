@@ -16,11 +16,15 @@
  *
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {AdapterDescriptionUnion} from "../../../../core-model/gen/streampipes-model";
-import {MatTableDataSource} from "@angular/material/table";
-import {ConnectService} from "../../../services/connect.service";
-import {DataMarketplaceService} from "../../../services/data-marketplace.service";
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AdapterDescriptionUnion } from '../../../../core-model/gen/streampipes-model';
+import { MatTableDataSource } from '@angular/material/table';
+import { ConnectService } from '../../../services/connect.service';
+import { DataMarketplaceService } from '../../../services/data-marketplace.service';
+import { DialogRef } from '../../../../core-ui/dialog/base-dialog/dialog-ref';
+import { PanelType } from '../../../../core-ui/dialog/base-dialog/base-dialog.model';
+import { DialogService } from '../../../../core-ui/dialog/base-dialog/base-dialog.service';
+import { DeleteAdapterDialogComponent } from '../../../dialog/delete-adapter-dialog/delete-adapter-dialog.component';
 
 @Component({
   selector: 'sp-existing-adapters',
@@ -29,7 +33,7 @@ import {DataMarketplaceService} from "../../../services/data-marketplace.service
 })
 export class ExistingAdaptersComponent implements OnInit {
 
-  _existingAdapters: Array<AdapterDescriptionUnion>;
+  _existingAdapters: AdapterDescriptionUnion[];
 
   @Input()
   filterTerm: string;
@@ -45,7 +49,8 @@ export class ExistingAdaptersComponent implements OnInit {
   dataSource: MatTableDataSource<AdapterDescriptionUnion>;
 
   constructor(public connectService: ConnectService,
-              private dataMarketplaceService: DataMarketplaceService) {
+              private dataMarketplaceService: DataMarketplaceService,
+              private dialogService: DialogService) {
 
   }
 
@@ -67,29 +72,42 @@ export class ExistingAdaptersComponent implements OnInit {
 
   getIconUrl(adapter: AdapterDescriptionUnion) {
     if (adapter.includedAssets.length > 0) {
-      return this.dataMarketplaceService.getAssetUrl(adapter.appId) + "/icon";
+      return this.dataMarketplaceService.getAssetUrl(adapter.appId) + '/icon';
     } else {
       return 'assets/img/connect/' + adapter.iconUrl;
     }
   }
 
   deleteAdapter(adapter: AdapterDescriptionUnion): void {
-    this.dataMarketplaceService.deleteAdapter(adapter).subscribe(res => {
-      this.updateAdapterEmitter.emit();
+    const dialogRef: DialogRef<DeleteAdapterDialogComponent> = this.dialogService.open(DeleteAdapterDialogComponent, {
+      panelType: PanelType.STANDARD_PANEL,
+      title: 'Delete Adapter',
+      width: '70vw',
+      data: {
+        'adapter': adapter,
+      }
     });
-  }
+
+    dialogRef.afterClosed().subscribe(data => {
+      if (data) {
+        this.dataMarketplaceService.deleteAdapter(adapter).subscribe(res => {
+          this.updateAdapterEmitter.emit();
+        });
+      }
+    });
+  };
 
   createTemplate(adapter: AdapterDescriptionUnion): void {
     this.createTemplateEmitter.emit(adapter);
   }
 
   @Input()
-  set existingAdapters(adapters: Array<AdapterDescriptionUnion>) {
+  set existingAdapters(adapters: AdapterDescriptionUnion[]) {
     this._existingAdapters = adapters;
     this.dataSource = new MatTableDataSource(adapters);
   }
 
-  get existingAdapters(): Array<AdapterDescriptionUnion> {
+  get existingAdapters(): AdapterDescriptionUnion[] {
     return this._existingAdapters;
   }
 

@@ -16,49 +16,39 @@
  *
  */
 
-import {Component, Input} from "@angular/core";
-import {Pipeline} from "../../../core-model/gen/streampipes-model";
-import {PipelineService} from "../../../platform-services/apis/pipeline.service";
-import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
+import { Component, Input } from '@angular/core';
+import { AdapterDescriptionUnion } from '../../../core-model/gen/streampipes-model';
+import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
+import { DataMarketplaceService } from '../../services/data-marketplace.service';
 
 @Component({
-    selector: 'delete-adapter-dialog',
+    selector: 'sp-delete-adapter-dialog',
     templateUrl: './delete-adapter-dialog.component.html',
     styleUrls: ['./delete-adapter-dialog.component.scss']
 })
 export class DeleteAdapterDialogComponent {
 
     @Input()
-    pipeline: Pipeline;
+    adapter: AdapterDescriptionUnion;
 
-    isInProgress: boolean = false;
+    isInProgress = false;
     currentStatus: any;
 
     constructor(private dialogRef: DialogRef<DeleteAdapterDialogComponent>,
-                private pipelineService: PipelineService) {
+                private dataMarketplaceService: DataMarketplaceService) {
     }
 
-    close(refreshPipelines: boolean) {
-        this.dialogRef.close(refreshPipelines);
-    };
+    close(refreshAdapters: boolean) {
+        this.dialogRef.close(refreshAdapters);
+    }
 
     deleteAdapter() {
         this.isInProgress = true;
-        this.currentStatus = "Deleting pipeline...";
-        this.pipelineService.deleteOwnPipeline(this.pipeline._id)
-            .subscribe(data => {
-                this.close(true);
-            });
+        this.currentStatus = 'Deleting adapter...';
+
+        this.dataMarketplaceService.deleteAdapter(this.adapter).subscribe(data => {
+            this.close(true);
+        });
     }
 
-    stopAndDeleteAdapter() {
-        this.isInProgress = true;
-        this.currentStatus = "Stopping pipeline...";
-        this.pipelineService.stopPipeline(this.pipeline._id)
-            .subscribe(data => {
-               this.deleteAdapter();
-            }, data => {
-                this.deleteAdapter();
-            });
-    }
 }

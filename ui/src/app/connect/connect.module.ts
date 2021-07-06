@@ -79,6 +79,7 @@ import { ErrorMessageComponent } from './components/schema-editor/error-message/
 import { LoadingMessageComponent } from './components/schema-editor/loading-message/loading-message.component';
 import { SchemaEditorHeaderComponent } from './components/schema-editor/schema-editor-header/schema-editor-header.component';
 import { StartAdapterConfigurationComponent } from './components/start-adapter-configuration/start-adapter-configuration.component';
+import { DeleteAdapterDialogComponent } from './dialog/delete-adapter-dialog/delete-adapter-dialog.component';
 
 @NgModule({
     imports: [
@@ -107,6 +108,7 @@ import { StartAdapterConfigurationComponent } from './components/start-adapter-c
         AdapterUploadDialog,
         ConnectComponent,
         DataMarketplaceComponent,
+        DeleteAdapterDialogComponent,
         EventSchemaComponent,
         EditEventPropertyPrimitiveComponent,
         EditEventPropertyComponent,

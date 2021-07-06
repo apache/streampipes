@@ -49,7 +49,6 @@ export class ProcessingElementTestUtils {
           .create('File_Set')
           .setName(adapterName)
           .setTimestampProperty('timestamp')
-          .addProtocolInput('input', 'interval-key', '0')
           .setFormat(formatType);
 
         if (formatType === 'csv') {

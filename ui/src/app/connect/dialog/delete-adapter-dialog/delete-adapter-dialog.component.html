@@ -20,23 +20,19 @@
     <div class="sp-dialog-content p-15">
         <div *ngIf="!isInProgress" fxLayout="column">
             <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
-                <b><h4>Do you really want to delete pipeline {{pipeline.name}}?</h4></b>
-                <b><h4 *ngIf="pipeline.running">This pipeline is still running.</h4></b>
+                <b><h4>Do you really want to delete adapter {{adapter.name}}?</h4></b>
                 <b><h5>This operation cannot be undone.</h5></b>
             </div>
 
             <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
-                <button mat-button mat-raised-button color="primary" *ngIf="!pipeline.running"
-                        (click)="deletePipeline()">Delete
-                    pipeline
-                </button>
-                <button mat-button mat-raised-button color="primary" *ngIf="pipeline.running"
-                        (click)="stopAndDeletePipeline()">Stop and
-                    delete pipeline
+                <button mat-button mat-raised-button color="primary"
+                        (click)="deleteAdapter()"
+                        data-cy="delete-adapter">Delete
+                    adapter
                 </button>
             </div>
         </div>
-        <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column" *ngIf="isInProgress">
+        <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column" *ngIf="isInProgress" data-cy="adapter-deletion-in-progress">
             <div fxLayout="row" fxLayoutAlign="space-around">
                 <mat-spinner [mode]="'indeterminate'"></mat-spinner>
             </div>

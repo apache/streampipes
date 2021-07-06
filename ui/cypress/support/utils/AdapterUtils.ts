@@ -193,7 +193,9 @@ export class AdapterUtils {
             cy.get('div').contains('My Adapters').parent().click();
             cy.dataCy('delete').should('have.length', 1);
             cy.dataCy('delete').click();
-            cy.get('[data-cy=delete]', { timeout: 10000 }).should('have.length', 0);
+            cy.dataCy('delete-adapter').click();
+            cy.dataCy('adapter-deletion-in-progress' , { timeout: 10000 }).should('be.visible');
+            cy.dataCy('delete', { timeout: 20000 }).should('have.length', 0);
         });
     }
 }
