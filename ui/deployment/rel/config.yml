@@ -25,4 +25,5 @@ modules:
   - spDataExplorer
   - spAppOverview
   - spAdd
+  - spFiles
   - spConfiguration
