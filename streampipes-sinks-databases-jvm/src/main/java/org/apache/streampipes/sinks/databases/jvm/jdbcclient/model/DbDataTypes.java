@@ -16,26 +16,41 @@
  *
  */
 
-package org.apache.streampipes.sinks.databases.jvm.mysql;
+package org.apache.streampipes.sinks.databases.jvm.jdbcclient.model;
 
-import org.apache.streampipes.model.graph.DataSinkInvocation;
-import org.apache.streampipes.sinks.databases.jvm.jdbcclient.model.JdbcConnectionParameters;
 
-public class MysqlParameters extends JdbcConnectionParameters {
+public enum DbDataTypes {
 
-    public MysqlParameters(DataSinkInvocation graph, String mySqlHost, String mySqlUser, String mySqlPassword,
-                           String mySqlDb, String mySqlTable, Integer mySqlPort, boolean sslEnabled) {
-        super(
-                graph,
-                mySqlHost,
-                mySqlPort,
-                mySqlDb,
-                mySqlUser,
-                mySqlPassword,
-                mySqlTable,
-                sslEnabled,
-                null,
-                false
-        );
+
+
+    BOOL("BOOL"),
+    BOOLEAN("BOOLEAN"),
+    TEXT("TEXT"),
+    VAR_CHAR("VARCHAR255"),
+    STRING("STRING"),
+    DOUBLE("DOUBLE"),
+    DOUBLE_PRECISION("DOUBLE PRECISION"),
+    FLOAT("FLOAT"),
+    REAL("REAL"),
+    BIG_INT("BIGINT"),
+    INT64("INT64"),
+    INT32("INT32"),
+    INT("INT"),
+    INTEGER("INTEGER"),
+    TIMESTAMP("TIMESTAMP"),
+    DATE("DATE"),
+    TIME("TIME"),
+    DATETIME("DATETIME");
+
+    private String sqlTerm;
+
+
+    DbDataTypes(String sqlTerm) {
+        this.sqlTerm = sqlTerm;
+    }
+
+    @Override
+    public String toString() {
+        return sqlTerm;
     }
 }

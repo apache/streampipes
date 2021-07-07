@@ -16,26 +16,23 @@
  *
  */
 
-package org.apache.streampipes.sinks.databases.jvm.mysql;
+package org.apache.streampipes.sinks.databases.jvm.jdbcclient.model;
 
-import org.apache.streampipes.model.graph.DataSinkInvocation;
-import org.apache.streampipes.sinks.databases.jvm.jdbcclient.model.JdbcConnectionParameters;
+public class ParameterInformation {
 
-public class MysqlParameters extends JdbcConnectionParameters {
+    private int index;
+    private DbDataTypes dataType;
 
-    public MysqlParameters(DataSinkInvocation graph, String mySqlHost, String mySqlUser, String mySqlPassword,
-                           String mySqlDb, String mySqlTable, Integer mySqlPort, boolean sslEnabled) {
-        super(
-                graph,
-                mySqlHost,
-                mySqlPort,
-                mySqlDb,
-                mySqlUser,
-                mySqlPassword,
-                mySqlTable,
-                sslEnabled,
-                null,
-                false
-        );
+    public ParameterInformation(final int index, final DbDataTypes dataType) {
+        this.index = index;
+        this.dataType = dataType;
+    }
+
+    public DbDataTypes getDataType() {
+        return dataType;
+    }
+
+    public int getIndex() {
+        return index;
     }
 }

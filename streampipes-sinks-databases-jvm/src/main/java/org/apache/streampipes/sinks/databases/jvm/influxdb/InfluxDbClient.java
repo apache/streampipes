@@ -64,7 +64,7 @@ public class InfluxDbClient {
 		this.measureName = measureName;
 		this.user = user;
 		this.password = password;
-		this.timestampField = InfluxDb.prepareString(timestampField);
+		this.timestampField = timestampField;
 		this.batchSize = batchSize;
 		this.flushDuration = flushDuration;
 		this.logger = logger;

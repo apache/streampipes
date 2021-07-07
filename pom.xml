@@ -23,11 +23,11 @@
     <parent>
         <groupId>org.apache.streampipes</groupId>
         <artifactId>streampipes-parent</artifactId>
-        <version>0.68.0-SNAPSHOT</version>
+        <version>0.69.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>streampipes-extensions</artifactId>
-    <version>0.68.0-SNAPSHOT</version>
+    <version>0.69.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -64,7 +64,7 @@
     <properties>
         <owasp.check.skip>true</owasp.check.skip>
 
-        <streampipes.version>0.68.0-SNAPSHOT</streampipes.version>
+        <streampipes.version>0.69.0-SNAPSHOT</streampipes.version>
 
         <amqp-client.version>4.1.0</amqp-client.version>
         <animal-sniffer-annotations.version>1.17</animal-sniffer-annotations.version>
@@ -82,7 +82,7 @@
         <ddogleg.version>0.16</ddogleg.version>
         <errorprone-annotations.version>2.2.0</errorprone-annotations.version>
         <google-maps-services.version>0.10.0</google-maps-services.version>
-        <iotdb.version>0.8.0</iotdb.version>
+        <iotdb.version>0.12.0</iotdb.version>
         <jackson.version>2.10.0</jackson.version>
         <java-websocket.version>1.4.0</java-websocket.version>
         <javax-validation.version>2.0.1.Final</javax-validation.version>
@@ -123,6 +123,7 @@
         <java-websocket.version>1.4.0</java-websocket.version>
         <javax-validation.version>2.0.1.Final</javax-validation.version>
         <javax-websocket-client-api.version>1.1</javax-websocket-client-api.version>
+        <jcl-over-slf4j.version>1.7.30</jcl-over-slf4j.version>
         <jsrosbridge.version>0.2.0</jsrosbridge.version>
         <influxdb.java.version>2.14</influxdb.java.version>
         <hadoop.version>3.2.1</hadoop.version>
@@ -142,6 +143,11 @@
     <dependencyManagement>
         <dependencies>
             <!-- External Connect dependencies -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>jcl-over-slf4j</artifactId>
+                <version>${jcl-over-slf4j.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>animal-sniffer-annotations</artifactId>
@@ -365,6 +371,11 @@
             <dependency>
                 <groupId>org.apache.streampipes</groupId>
                 <artifactId>streampipes-container-standalone</artifactId>
+                <version>${streampipes.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.streampipes</groupId>
+                <artifactId>streampipes-container-extensions</artifactId>
                 <version>${streampipes.version}</version>
             </dependency>
             <dependency>
