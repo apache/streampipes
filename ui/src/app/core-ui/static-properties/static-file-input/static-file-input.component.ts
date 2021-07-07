@@ -16,71 +16,88 @@
  *
  */
 
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {StaticPropertyUtilService} from '../static-property-util.service';
-import {StaticFileRestService} from './static-file-rest.service';
-import {HttpEventType, HttpResponse} from '@angular/common/http';
-import {AbstractStaticPropertyRenderer} from "../base/abstract-static-property";
-import {FileStaticProperty} from "../../../core-model/gen/streampipes-model";
-import {FilesService} from "../../../platform-services/apis/files.service";
-import {FileMetadata} from "../../../core-model/gen/streampipes-model-client";
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { StaticFileRestService } from './static-file-rest.service';
+import { HttpEventType, HttpResponse } from '@angular/common/http';
+import { FileStaticProperty } from '../../../core-model/gen/streampipes-model';
+import { FilesService } from '../../../platform-services/apis/files.service';
+import { FileMetadata } from '../../../core-model/gen/streampipes-model-client';
+import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
+import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
+import { FormControl, ValidatorFn, Validators } from '@angular/forms';
 
 
 @Component({
-    selector: 'app-static-file-input',
+    selector: 'sp-static-file-input',
     templateUrl: './static-file-input.component.html',
     styleUrls: ['./static-file-input.component.css']
 })
-export class StaticFileInputComponent extends AbstractStaticPropertyRenderer<FileStaticProperty> implements OnInit {
+export class StaticFileInputComponent extends AbstractValidatedStaticPropertyRenderer<FileStaticProperty> implements OnInit {
 
-    @Output() inputEmitter: EventEmitter<Boolean> = new EventEmitter<Boolean>();
+    @Output() inputEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    chooseExistingFile: boolean = true;
+    public chooseExistingFileControl = new FormControl();
 
-    inputValue: String;
-    fileName: String;
+    // inputValue: string;
+    fileName: string;
 
     selectedUploadFile: File;
 
-    hasInput: Boolean;
-    errorMessage = "Please enter a value";
+    hasInput: boolean;
+    errorMessage = 'Please enter a value';
 
     uploadStatus = 0;
 
     fileMetadata: FileMetadata[];
     selectedFile: FileMetadata;
 
-    filesLoaded: boolean = false;
+    filesLoaded = false;
 
-    constructor(public staticPropertyUtil: StaticPropertyUtilService,
-                private staticFileRestService: StaticFileRestService,
-                private filesService: FilesService){
+    constructor(private staticFileRestService: StaticFileRestService,
+                private filesService: FilesService) {
         super();
+
     }
 
     ngOnInit() {
         this.fetchFileMetadata();
+        this.addValidator(this.staticProperty.locationPath, this.collectValidators());
+        this.enableValidators();
+
+        this.chooseExistingFileControl.setValue(true);
+    }
+
+    collectValidators() {
+        const validators: ValidatorFn[] = [];
+        validators.push(Validators.required);
+
+        return validators;
     }
 
     fetchFileMetadata(internalFilenameToSelect?: any) {
         this.filesService.getFileMetadata(this.staticProperty.requiredFiletypes).subscribe(fm => {
             this.fileMetadata = fm;
             if (internalFilenameToSelect) {
-                this.chooseExistingFile = true;
                 this.selectedFile =
-                    this.fileMetadata.find(fm => fm.internalFilename === internalFilenameToSelect);
+                    this.fileMetadata.find(fmi => fmi.internalFilename === internalFilenameToSelect);
                 this.selectOption(this.selectedFile);
                 this.emitUpdate(true);
+                this.parentForm.controls[this.fieldName].setValue(this.selectedFile);
+
+                this.chooseExistingFileControl.setValue(true);
             } else if (this.staticProperty.locationPath) {
                 this.selectedFile =
-                    this.fileMetadata.find(fm => fm.internalFilename === this.staticProperty.locationPath);
+                    this.fileMetadata.find(fmi => fmi.internalFilename === this.staticProperty.locationPath);
             } else {
                 if (this.fileMetadata.length > 0) {
                     this.selectedFile = this.fileMetadata[0];
-                    this.staticProperty.locationPath = this.selectedFile.internalFilename;
+                    // this.staticProperty.locationPath = this.selectedFile.internalFilename;
+                    this.selectOption(this.selectedFile);
                     this.emitUpdate(true);
+                    this.parentForm.controls[this.fieldName].setValue(this.selectedFile);
                 } else {
-                    this.chooseExistingFile = false;
+
+                    this.chooseExistingFileControl.setValue(false);
                 }
             }
             this.filesLoaded = true;
@@ -98,10 +115,12 @@ export class StaticFileInputComponent extends AbstractStaticPropertyRenderer<Fil
         if (this.selectedUploadFile !== undefined) {
             this.filesService.uploadFile(this.selectedUploadFile).subscribe(
                 event => {
-                    if (event.type == HttpEventType.UploadProgress) {
+                    if (event.type === HttpEventType.UploadProgress) {
                         this.uploadStatus = Math.round(100 * event.loaded / event.total);
                     } else if (event instanceof HttpResponse) {
-                        let internalFilename = event.body.internalFilename;
+                        const internalFilename = event.body.internalFilename;
+                        this.parentForm.controls[this.fieldName].setValue(internalFilename);
+                        // this.fieldName = internalFilename;
                         this.fetchFileMetadata(internalFilename);
                     }
                 },
@@ -111,24 +130,22 @@ export class StaticFileInputComponent extends AbstractStaticPropertyRenderer<Fil
         }
     }
 
-    valueChange(inputValue) {
-        this.inputValue = inputValue;
-        if(inputValue == "" || !inputValue) {
-            this.hasInput = false;
-        }
-        else{
-            this.hasInput = true;
-        }
-
-        this.inputEmitter.emit(this.hasInput);
-    }
-
     selectOption(fileMetadata: FileMetadata) {
         this.staticProperty.locationPath = fileMetadata.internalFilename;
+        const valid: boolean = (fileMetadata.internalFilename !== '' || fileMetadata.internalFilename !== undefined);
+        this.updateEmitter.emit(new ConfigurationInfo(this.staticProperty.internalName, valid));
     }
 
     displayFn(fileMetadata: FileMetadata) {
-        return fileMetadata ? fileMetadata.originalFilename : "";
+        return fileMetadata ? fileMetadata.originalFilename : '';
+    }
+
+    onStatusChange(status: any) {
+    }
+
+    onValueChange(value: any) {
+        this.staticProperty.locationPath = value.internalFilename;
+        this.parentForm.updateValueAndValidity();
     }
 
 }

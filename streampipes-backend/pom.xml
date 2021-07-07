@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.apache.streampipes</groupId>
         <artifactId>streampipes-parent</artifactId>
-        <version>0.68.0-SNAPSHOT</version>
+        <version>0.69.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>streampipes-backend</artifactId>
@@ -33,32 +33,38 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-container-base</artifactId>
-            <version>0.68.0-SNAPSHOT</version>
+            <version>0.69.0-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-undertow</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-config</artifactId>
-            <version>0.68.0-SNAPSHOT</version>
+            <version>0.69.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-messaging-kafka</artifactId>
-            <version>0.68.0-SNAPSHOT</version>
+            <version>0.69.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-rest</artifactId>
-            <version>0.68.0-SNAPSHOT</version>
+            <version>0.69.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-connect-container-master</artifactId>
-            <version>0.68.0-SNAPSHOT</version>
+            <version>0.69.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-platform-services</artifactId>
-            <version>0.68.0-SNAPSHOT</version>
+            <version>0.69.0-SNAPSHOT</version>
         </dependency>
         <!-- External dependencies -->
         <dependency>

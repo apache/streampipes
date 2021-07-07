@@ -20,7 +20,8 @@
     <div fxLayout="row">
         <mat-checkbox [checked]="exists(eventProperty.runtimeId)"
                       (change)="toggle(eventProperty.runtimeId)"
-                      style="margin-right: 10px;" [disabled]="restrictedEditMode">
+                      style="margin-right: 10px;" [disabled]="restrictedEditMode"
+                      [attr.data-cy]="eventProperty.runtimeName">
         </mat-checkbox>
         <div>
             <div *ngIf="eventProperty.label"><b>{{eventProperty.label}}</b><br/>

@@ -33,7 +33,7 @@ import {EditEventPropertyComponent} from '../../../dialog/edit-event-property/ed
 @Component({
     selector: 'event-property-row',
     templateUrl: './event-property-row.component.html',
-    styleUrls: ['./event-property-row.component.css']
+    styleUrls: ['./event-property-row.component.scss']
 })
 export class EventPropertyRowComponent implements OnChanges {
 

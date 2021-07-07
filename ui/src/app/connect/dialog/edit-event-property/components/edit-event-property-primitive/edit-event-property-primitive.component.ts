@@ -22,7 +22,7 @@ import {DataTypesService} from '../../../../services/data-type.service';
 @Component({
   selector: 'sp-edit-event-property-primitive',
   templateUrl: './edit-event-property-primitive.component.html',
-  styleUrls: ['./edit-event-property-primitive.component.css']
+  styleUrls: ['./edit-event-property-primitive.component.scss']
 })
 export class EditEventPropertyPrimitiveComponent implements OnInit {
 

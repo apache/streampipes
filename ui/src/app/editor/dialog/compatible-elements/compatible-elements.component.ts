@@ -20,7 +20,7 @@ import {Component, Input} from "@angular/core";
 import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
 import {JsplumbService} from "../../services/jsplumb.service";
 import {DataProcessorInvocation} from "../../../core-model/gen/streampipes-model";
-import {PipelineElementUnion} from "../../model/editor.model";
+import {PipelineElementConfig, PipelineElementUnion} from "../../model/editor.model";
 
 @Component({
   selector: 'compatible-elements',
@@ -30,7 +30,7 @@ import {PipelineElementUnion} from "../../model/editor.model";
 export class CompatibleElementsComponent {
 
   @Input()
-  rawPipelineModel: any;
+  rawPipelineModel: PipelineElementConfig[];
 
   @Input()
   pipelineElementDomId: any;

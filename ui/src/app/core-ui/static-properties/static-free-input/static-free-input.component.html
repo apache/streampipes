@@ -22,7 +22,8 @@
             <input formControlName="{{fieldName}}" fxFlex
                    matInput
                    [placeholder]="staticProperty.label"
-                   required (blur)="emitUpdate()">
+                   required (blur)="emitUpdate()"
+                   [attr.data-cy]="fieldName">
 
             <mat-error *ngIf="!fieldValid">
                 {{errorMessage}}

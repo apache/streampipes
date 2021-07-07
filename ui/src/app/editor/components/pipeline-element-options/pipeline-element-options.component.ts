@@ -50,6 +50,7 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
   recommendedElements: PipelineElementUnion[];
   recommendationsShown: any = false;
   pipelineElementCssType: string;
+  isDataSource: boolean;
 
   @Input()
   currentMouseOverElement: string;
@@ -107,7 +108,9 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
     });
     this.pipelineElementCssType = this.pipelineElement.type;
 
-    if (this.pipelineElement.type === 'stream' || this.pipelineElement.settings.completed) {
+    this.isDataSource = this.pipelineElement.type === 'stream' || this.pipelineElement.type === 'set';
+
+    if (this.isDataSource || this.pipelineElement.settings.completed) {
       this.initRecs(this.pipelineElement.payload.dom);
     }
   }
@@ -133,7 +136,7 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
   initRecs(pipelineElementDomId) {
     let clonedModel: PipelineElementConfig[] = cloneDeep(this.rawPipelineModel);
     clonedModel.forEach(pe => {
-      if (pe.payload.dom === pipelineElementDomId && (pe.type !== 'stream')) {
+      if (pe.payload.dom === pipelineElementDomId && (pe.type !== 'stream'  && pe.type !== 'set')) {
         pe.settings.completed = false;
         (pe.payload as InvocablePipelineElementUnion).configured = false;
       }
@@ -151,11 +154,11 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
   openPossibleElementsDialog() {
     const dialogRef = this.DialogService.open(CompatibleElementsComponent,{
       panelType: PanelType.SLIDE_IN_PANEL,
-      title: "Compatible Elements",
+      title: 'Compatible Elements',
       data: {
-        "rawPipelineModel": this.rawPipelineModel,
-        "possibleElements": this.possibleElements,
-        "pipelineElementDomId": this.pipelineElement.payload.dom
+        'rawPipelineModel': this.rawPipelineModel,
+        'possibleElements': this.possibleElements,
+        'pipelineElementDomId': this.pipelineElement.payload.dom
       }
     });
 
@@ -174,7 +177,7 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
   }
 
   isConfigured() {
-    if (this.pipelineElement.type == 'stream') return true;
+    if (this.isDataSource) return true;
     else {
       return (this.pipelineElement.payload as InvocablePipelineElementUnion).configured;
     }

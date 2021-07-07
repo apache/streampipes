@@ -31,7 +31,9 @@
                     pipeline
                 </button>
                 <button mat-button mat-raised-button color="accent" *ngIf="pipeline.running"
-                        (click)="stopAndDeletePipeline()">Stop and
+                        (click)="stopAndDeletePipeline()"
+                        data-cy="sp-pipeline-stop-and-delete">
+                    Stop and
                     delete pipeline
                 </button>
             </div>

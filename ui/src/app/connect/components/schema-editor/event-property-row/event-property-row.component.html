@@ -44,7 +44,8 @@
     <div fxFlex="0 1 auto" fxLayoutAlign="center center"
          *ngIf="isNested || isPrimitive || isList">
         <button [disabled]="!isEditable" color="primary" mat-button
-                (click)="openEditDialog(node.data)">
+                (click)="openEditDialog(node.data)"
+                [attr.data-cy]="'edit-' + label">
             <mat-icon>edit</mat-icon>
         </button>
     </div>

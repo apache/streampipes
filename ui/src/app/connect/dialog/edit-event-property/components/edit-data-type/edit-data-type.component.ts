@@ -22,7 +22,7 @@ import {DataTypesService} from '../../../../services/data-type.service';
 @Component({
   selector: 'sp-edit-data-type',
   templateUrl: './edit-data-type.component.html',
-  styleUrls: ['./edit-data-type.component.css']
+  styleUrls: ['./edit-data-type.component.scss']
 })
 export class EditDataTypeComponent implements OnInit {
 

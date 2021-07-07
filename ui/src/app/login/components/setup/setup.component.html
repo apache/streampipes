@@ -80,7 +80,8 @@
                             <span>{{!installationRunning ? 'Install' : 'Installing...'}}</span>
                         </button>
                         <button mat-button mat-raised-button color="accent"
-                                (click)="openLoginPage()" *ngIf="installationFinished">
+                                (click)="openLoginPage()" *ngIf="installationFinished"
+                                data-cy="sp-button-finish-installation">
                             <mat-icon>arrow_forward</mat-icon>
                             <span>Go to login page</span>
                         </button>

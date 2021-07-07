@@ -27,7 +27,7 @@ import {UnitProviderService} from '../../../../services/unit-provider.service';
 @Component({
   selector: 'sp-edit-unit-transformation',
   templateUrl: './edit-unit-transformation.component.html',
-  styleUrls: ['./edit-unit-transformation.component.css']
+  styleUrls: ['./edit-unit-transformation.component.scss']
 })
 export class EditUnitTransformationComponent implements OnInit {
 

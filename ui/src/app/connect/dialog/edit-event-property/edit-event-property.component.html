@@ -58,7 +58,9 @@
       </mat-form-field>
       <div *ngIf="!isEventPropertyNested">
         <mat-checkbox name="timestampCheckbox"
-                      (change)="editTimestampDomainProperty($event.checked)" [checked]="isTimestampProperty">
+                      (change)="editTimestampDomainProperty($event.checked)"
+                      [checked]="isTimestampProperty"
+                      data-cy="sp-mark-as-timestamp">
           Mark as timestamp
         </mat-checkbox>
       </div>
@@ -80,5 +82,10 @@
 
 <mat-dialog-actions>
   <button mat-button mat-raised-button class="mat-basic" mat-dialog-close>Close</button>
-  <button mat-button mat-raised-button color="primary" [disabled]="isSaveBtnEnabled" (click)="save(); isSaveBtnEnabled = false">Save</button>
+  <button mat-button mat-raised-button color="primary"
+          [disabled]="isSaveBtnEnabled"
+          (click)="save();
+          isSaveBtnEnabled = false"
+          data-cy="sp-save-edit-property">
+    Save</button>
 </mat-dialog-actions>

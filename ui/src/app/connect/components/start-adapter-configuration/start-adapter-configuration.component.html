@@ -1,0 +1,111 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div [formGroup]="startAdapterForm">
+    <div class="assemblyOptions sp-blue-bg">
+        <h4>Adapter settings</h4>
+    </div>
+
+    <div class="sp-blue-border padding" style="padding: 15px; margin-bottom: 2%;">
+        <div fxLayoutAlign="center" fxLayout="column" fxFlex="100">
+            <mat-form-field>
+                <input matInput id="input-AdapterName"  [ngModelOptions]="{standalone: true}" placeholder="Adapter Name"
+                       [(ngModel)]="adapterDescription.name" data-cy="sp-adapter-name">
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput id="input-AdapterDescription" [ngModelOptions]="{standalone: true}"
+                       placeholder="Adapter Description" [(ngModel)]="adapterDescription.description">
+            </mat-form-field>
+
+            <!-- Provide icon for adapter -->
+            <!--                        <mat-form-field *ngIf="isEditable" style="width: 50%" (click)="fileInput.click();">-->
+            <!--                            <input matInput placeholder="Icon" disabled (value)="fileName">-->
+            <!--                            <input #fileInput type="file" style="display:none;"-->
+            <!--                                (change)="handleFileInput($event.target.files)">-->
+            <!--                            {{fileName}}-->
+            <!--                            <button color="primary" matSuffix mat-button style="min-width: 0px">-->
+            <!--                                <mat-icon>insert_drive_file</mat-icon>-->
+            <!--                            </button>-->
+            <!--                        </mat-form-field>-->
+
+
+            <mat-checkbox [(ngModel)]="removeDuplicates"
+                          [ngModelOptions]="{standalone: true}">Remove Duplicates</mat-checkbox>
+            <mat-form-field *ngIf="removeDuplicates">
+                <input matInput id="input-removeDuplicatesTime"
+                       [ngModelOptions]="{standalone: true}" placeholder="Remove Duplicates Time Window"
+                       [(ngModel)]="removeDuplicatesTime">
+            </mat-form-field>
+
+            <mat-checkbox [(ngModel)]="eventRateReduction"
+                          [ngModelOptions]="{standalone: true}"
+                          matTooltip="Send maximum one event in the specified time window">Reduce the event rate
+            </mat-checkbox>
+            <mat-form-field *ngIf="eventRateReduction">
+                <input type="number" matInput id="input-evenRateTime"
+                       [ngModelOptions]="{standalone: true}" [(ngModel)]="eventRateTime"
+                       placeholder="Time Window (Milliseconds)" matTooltipPosition="above">
+            </mat-form-field>
+            <mat-form-field *ngIf="eventRateReduction">
+                <mat-label>Event Aggregation</mat-label>
+                <mat-select [(ngModel)]="eventRateMode" [ngModelOptions]="{standalone: true}">
+                    <mat-option class="md-elevation-z1" style="background: white;"
+                                matTooltip="Last Event in Time Window" value="none">
+                        None
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <!-- Start pipeline template to store raw events in data lake -->
+            <!--<mat-checkbox *ngIf="timestampPropertiesInSchema.length == 0"-->
+            <!--[disabled]="timestampPropertiesInSchema.length == 0" [(ngModel)]="saveInDataLake"-->
+            <!--[ngModelOptions]="{standalone: true}">Store in Datalake (Timestamp required)</mat-checkbox>-->
+            <!--<mat-checkbox *ngIf="timestampPropertiesInSchema.length > 0" [(ngModel)]="saveInDataLake"-->
+            <!--[ngModelOptions]="{standalone: true}">Store in Datalake</mat-checkbox>-->
+            <!--<mat-form-field *ngIf="saveInDataLake">-->
+            <!--<mat-label>Select Time Field</mat-label>-->
+            <!--<mat-select [(ngModel)]="dataLakeTimestampField" [ngModelOptions]="{standalone: true}">-->
+            <!--<mat-option class="md-elevation-z1" style="background: white;"-->
+            <!--*ngFor="let timestampField of eventSchema.eventProperties | timestampFilter"-->
+            <!--[value]="timestampField.runTimeName">-->
+            <!--{{timestampField.runTimeName}}-->
+            <!--</mat-option>-->
+            <!--</mat-select>-->
+            <!--</mat-form-field>-->
+
+            <mat-checkbox *ngIf="isSetAdapter" [(ngModel)]="adapterDescription.stopPipeline"
+                          [ngModelOptions]="{standalone: true}">Stop pipeline when replay is completed</mat-checkbox>
+
+        </div>
+    </div>
+
+    <div fxLayoutAlign="end">
+        <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
+        <button style="margin-left:10px;" class="mat-basic stepper-button" mat-raised-button (click)="goBack()">Back</button>
+        <button [disabled]="startAdapterSettingsFormValid" mat-raised-button
+                id="button-saveTemplate" color="primary" (click)="saveTemplate()" mat-button
+                style="margin-left:10px;">
+            Save as Template
+        </button>
+        <button [disabled]="startAdapterSettingsFormValid" mat-raised-button id="button-startAdapter"
+                color="primary" (click)="startAdapter()" mat-button style="margin-left:10px;">
+            Start Adapter
+        </button>
+    </div>
+</div>
+

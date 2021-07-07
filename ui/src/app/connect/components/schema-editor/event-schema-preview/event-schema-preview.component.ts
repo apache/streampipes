@@ -16,13 +16,13 @@
  *
  */
 
-import {Component, Input} from "@angular/core";
-import {EventSchema} from "../../../../core-model/gen/streampipes-model";
+import { Component, Input } from '@angular/core';
+import { EventSchema } from '../../../../core-model/gen/streampipes-model';
 
 @Component({
-    selector: 'app-event-schema-preview',
+    selector: 'sp-event-schema-preview',
     templateUrl: './event-schema-preview.component.html',
-    styleUrls: ['./event-schema-preview.component.css']
+    styleUrls: ['./event-schema-preview.component.scss']
 })
 export class EventSchemaPreviewComponent {
     @Input() eventSchema: EventSchema;

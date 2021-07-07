@@ -21,7 +21,7 @@ import {Component, Input} from '@angular/core';
 @Component({
   selector: 'sp-edit-timestamp-property',
   templateUrl: './edit-timestamp-property.component.html',
-  styleUrls: ['./edit-timestamp-property.component.css']
+  styleUrls: ['./edit-timestamp-property.component.scss']
 })
 export class EditTimestampPropertyComponent {
 

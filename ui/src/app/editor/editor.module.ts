@@ -66,6 +66,7 @@ import {PipelineCanvasScrollingService} from "./services/pipeline-canvas-scrolli
 import {JsplumbEndpointService} from "./services/jsplumb-endpoint.service";
 import {JsplumbFactoryService} from "./services/jsplumb-factory.service";
 import {PipelineElementPreviewComponent} from "./components/pipeline-element-preview/pipeline-element-preview.component";
+import {PipelineElementDiscoveryComponent} from "./dialog/pipeline-element-discovery/pipeline-element-discovery.component";
 
 @NgModule({
     imports: [
@@ -97,6 +98,7 @@ import {PipelineElementPreviewComponent} from "./components/pipeline-element-pre
         UserDefinedOutputStrategyComponent,
         PipelineAssemblyComponent,
         PipelineElementComponent,
+        PipelineElementDiscoveryComponent,
         PipelineElementDocumentationComponent,
         PipelineElementIconStandComponent,
         PipelineElementOptionsComponent,

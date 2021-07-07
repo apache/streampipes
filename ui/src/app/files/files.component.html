@@ -32,7 +32,9 @@
         <div class="add-options-item" fxLayoutAlign="start center" fxLayout="row" style="padding-left:5px;">
             <div fxFlex="100" fxLayout="row">
                 <button mat-button mat-raised-button color="accent"
-                        (click)="openFileUploadDialog()" class="mr-10">
+                        (click)="openFileUploadDialog()"
+                        data-cy="sp-open-file-upload-dialog"
+                        class="mr-10">
                     <i class="material-icons">cloud_upload</i>
                     &nbsp;Upload new file
                 </button>

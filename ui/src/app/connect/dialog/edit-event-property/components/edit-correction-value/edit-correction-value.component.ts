@@ -21,7 +21,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 @Component({
   selector: 'sp-edit-correction-value',
   templateUrl: './edit-correction-value.component.html',
-  styleUrls: ['./edit-correction-value.component.css']
+  styleUrls: ['./edit-correction-value.component.scss']
 })
 export class EditCorrectionValueComponent implements OnInit {
 

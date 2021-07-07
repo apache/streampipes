@@ -35,7 +35,7 @@ import {debounceTime, distinctUntilChanged, startWith, switchMap} from 'rxjs/ope
 @Component({
     selector: 'sp-edit-event-property',
     templateUrl: './edit-event-property.component.html',
-    styleUrls: ['./edit-event-property.component.css']
+    styleUrls: ['./edit-event-property.component.scss']
 })
 export class EditEventPropertyComponent implements OnInit {
 

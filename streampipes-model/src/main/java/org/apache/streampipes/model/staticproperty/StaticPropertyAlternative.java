@@ -21,7 +21,7 @@ import org.apache.streampipes.model.util.Cloner;
 
 public class StaticPropertyAlternative extends StaticProperty {
 
-  private Boolean selected;
+  private boolean selected;
 
   private StaticProperty staticProperty;
 

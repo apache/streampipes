@@ -34,7 +34,9 @@
                 <div fxFlex="100" fxLayout="column" *ngIf="!currentModifiedPipelineId || updateMode=='clone'">
                     <mat-form-field fxFlex color="accent">
                         <mat-label>Pipeline Name</mat-label>
-                        <input [formControlName]="'pipelineName'" matInput name="pipelineName"/>
+                        <input [formControlName]="'pipelineName'"
+                                data-cy="sp-editor-pipeline-name"
+                                matInput name="pipelineName"/>
 <!--                        <span ng-show="submitPipelineForm.pipelineName.$touched && submitPipelineForm.pipelineName.$error.required">Please provide a pipeline name.</span>-->
 <!--                        <span ng-show="submitPipelineForm.pipelineName.$error.maxlength">Please provide a shorter pipeline name.</span>-->
                     </mat-form-field>
@@ -45,7 +47,10 @@
                     </mat-form-field>
                 </div>
                 </form>
-                <mat-checkbox (click)="triggerTutorial()" color="accent" [(ngModel)]="startPipelineAfterStorage">
+                <mat-checkbox (click)="triggerTutorial()"
+                              [(ngModel)]="startPipelineAfterStorage"
+                              color="accent"
+                              data-cy="sp-editor-checkbox-start-immediately">
                     Start pipeline immediately
                 </mat-checkbox>
             </div>
@@ -69,7 +74,8 @@
         <button [disabled]="!submitPipelineForm.valid || saving || saved" mat-button mat-raised-button color="accent" (click)="savePipeline(false)" style="margin-right:10px;">
             Save
         </button>
-        <button [disabled]="!submitPipelineForm.valid || saving || saved" mat-button mat-raised-button color="accent" (click)="savePipeline(true)" style="margin-right:10px;">
+        <button [disabled]="!submitPipelineForm.valid || saving || saved" mat-button mat-raised-button color="accent" (click)="savePipeline(true)" style="margin-right:10px;"
+                data-cy="sp-editor-save">
             Save and go to pipeline view
         </button>
         <button mat-button mat-raised-button class="mat-basic" (click)="hide()">

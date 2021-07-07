@@ -1,0 +1,6 @@
+{
+ "name": "projection",
+ "config": [
+   {"type":  "checkbox", "selector": "timestamp", "value":  "check"}
+ ]
+}

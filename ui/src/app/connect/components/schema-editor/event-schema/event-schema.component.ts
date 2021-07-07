@@ -25,10 +25,10 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import {RestService} from '../../../services/rest.service';
-import {ITreeOptions, TreeComponent} from 'angular-tree-component';
-import {UUID} from 'angular2-uuid';
-import {DataTypesService} from '../../../services/data-type.service';
+import { RestService } from '../../../services/rest.service';
+import { ITreeOptions, TreeComponent } from 'angular-tree-component';
+import { UUID } from 'angular2-uuid';
+import { DataTypesService } from '../../../services/data-type.service';
 import {
   AdapterDescription,
   EventProperty,
@@ -37,12 +37,14 @@ import {
   EventSchema,
   GuessSchema,
   Notification
-} from "../../../../core-model/gen/streampipes-model";
+} from '../../../../core-model/gen/streampipes-model';
+import { MatStepper } from '@angular/material/stepper';
+import { UserErrorMessage } from '../../../../core-model/base/UserErrorMessage';
 
 @Component({
-  selector: 'app-event-schema',
+  selector: 'sp-event-schema',
   templateUrl: './event-schema.component.html',
-  styleUrls: ['./event-schema.component.css']
+  styleUrls: ['./event-schema.component.scss']
 })
 export class EventSchemaComponent implements OnChanges {
 
@@ -58,16 +60,31 @@ export class EventSchemaComponent implements OnChanges {
   @Output() eventSchemaChange = new EventEmitter<EventSchema>();
   @Output() oldEventSchemaChange = new EventEmitter<EventSchema>();
 
+  @Output() goBackEmitter: EventEmitter<MatStepper> = new EventEmitter();
+
+  /**
+   * Cancels the adapter configuration process
+   */
+  @Output() removeSelectionEmitter: EventEmitter<boolean> = new EventEmitter();
+
+  /**
+   * Go to next configuration step when this is complete
+   */
+  @Output() clickNextEmitter: EventEmitter<MatStepper> = new EventEmitter();
+
+
   @ViewChild(TreeComponent, { static: true }) tree: TreeComponent;
 
   schemaGuess: GuessSchema = new GuessSchema();
-  countSelected: number = 0;
+  countSelected = 0;
   isLoading = false;
   isError = false;
   isPreviewEnabled = false;
-  showErrorMessage = false;
   errorMessages: Notification[];
   nodes: EventProperty[] = new Array<EventProperty>();
+  validEventSchema = false;
+  schemaErrorHints: UserErrorMessage[] = [];
+
   options: ITreeOptions = {
     childrenField: 'eventProperties',
     allowDrag: () => {
@@ -88,22 +105,24 @@ export class EventSchemaComponent implements OnChanges {
     this.isLoading = true;
     this.isError = false;
     this.restService.getGuessSchema(this.adapterDescription).subscribe(guessSchema => {
-      this.isLoading = false;
-      this.eventSchema = guessSchema.eventSchema;
-      this.eventSchema.eventProperties.sort((a, b) => {
-        return a.runtimeName < b.runtimeName ? -1 : 1;
-      });
-      this.eventSchemaChange.emit(this.eventSchema);
-      this.schemaGuess = guessSchema;
+        this.eventSchema = guessSchema.eventSchema;
+        this.eventSchema.eventProperties.sort((a, b) => {
+          return a.runtimeName < b.runtimeName ? -1 : 1;
+        });
+        this.eventSchemaChange.emit(this.eventSchema);
+        this.schemaGuess = guessSchema;
 
-      this.oldEventSchema = EventSchema.fromData(this.eventSchema, new EventSchema());
-      this.oldEventSchemaChange.emit(this.oldEventSchema);
+        this.validEventSchema = this.checkIfValid(this.eventSchema);
 
-      this.refreshTree();
+        this.oldEventSchema = EventSchema.fromData(this.eventSchema, new EventSchema());
+        this.oldEventSchemaChange.emit(this.oldEventSchema);
 
-      this.isEditable = true;
-      this.isEditableChange.emit(true);
-    },
+        this.refreshTree();
+
+        this.isEditable = true;
+        this.isEditableChange.emit(true);
+        this.isLoading = false;
+      },
       errorMessage => {
         this.errorMessages = errorMessage.error.notifications;
         this.isError = true;
@@ -116,7 +135,8 @@ export class EventSchemaComponent implements OnChanges {
   private refreshTree(): void {
     this.nodes = new Array<EventProperty>();
     this.nodes.push(this.eventSchema as unknown as EventProperty);
-    this.tree.treeModel.update();
+    this.validEventSchema = this.checkIfValid(this.eventSchema);
+    // this.tree.treeModel.update();
   }
 
   public addNestedProperty(eventProperty?: EventPropertyNested): void {
@@ -185,5 +205,35 @@ export class EventSchemaComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     setTimeout(() => { this.refreshTree() }, 200);
+  }
+
+
+  public removeSelection() {
+    this.removeSelectionEmitter.emit();
+  }
+
+  public clickNext() {
+    this.clickNextEmitter.emit();
+  }
+
+  public goBack() {
+    this.goBackEmitter.emit();
+  }
+
+  private checkIfValid(eventSchema: EventSchema): boolean {
+
+    let hasTimestamp = false;
+    eventSchema.eventProperties.forEach(p => {
+      if (p.domainProperties.indexOf('http://schema.org/DateTime') >  -1) {
+        hasTimestamp = true;
+      }
+    });
+
+    this.schemaErrorHints = [];
+    if (!hasTimestamp) {
+      this.schemaErrorHints.push(new UserErrorMessage('Missing Timestamp', 'The timestamp must be a UNIX timestamp in milliseconds. Edit the timestamp event property or add a timestamp with the button on the top left.'));
+    }
+
+    return hasTimestamp;
   }
 }

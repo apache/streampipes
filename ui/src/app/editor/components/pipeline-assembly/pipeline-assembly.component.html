@@ -21,7 +21,8 @@
         <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
             <button mat-button matTooltip="Save Pipeline" [matTooltipPosition]="'above'"
                     [disabled]="!PipelineValidationService.pipelineValid"
-                    (click)="submit()" type="submit">
+                    (click)="submit()" type="submit"
+                    data-cy="sp-editor-save-pipeline">
                 <div fxLayoutAlign="start center" fxLayout="row">
                     <i class="material-icons">save</i>
                     <span>&nbsp;Save pipeline</span>
@@ -52,6 +53,11 @@
                     (click)="autoLayout()">
                 <i class="material-icons">settings_overscan</i>
             </button>
+            <button mat-button mat-icon-button matTooltip="Add pipeline element" [matTooltipPosition]="'above'"
+                    (click)="openDiscoverDialog()"
+                    data-cy="sp-editor-add-pipeline-element">
+                <i class="material-icons">add</i>
+            </button>
             <div fxLayout="column" fxLayoutAlign="start center" class="pipeline-cache-block">
                 <div fxFlex="100" fxLayoutAlign="start center" fxLayout="row" *ngIf="pipelineCached || pipelineCacheRunning">
                     <div *ngIf="pipelineCached" fxLayout="row" fxLayoutAlign="start center">
@@ -62,33 +68,11 @@
             </div>
             <span fxFlex></span>
             <div style="position:relative;">
-                <div *ngIf="!isPipelineAssemblyEmpty()"
-                     class="pipeline-validation-summary {{PipelineValidationService.errorMessages.length > 0 ? 'pipeline-validation-summary-error' : ''}}"
-                     (click)="toggleErrorMessagesDisplayed()">
-                    <div fxLayout="row" fxLayoutAlign="center center">
-                        <div fxLayout="row" fxLayoutAlign="start center">
-                            <i class="material-icons" *ngIf="PipelineValidationService.errorMessages.length > 0">notifications</i>
-                            <i class="material-icons"
-                               *ngIf="PipelineValidationService.errorMessages.length === 0">done</i>
-                        </div>
-                        <div>
-                            <span *ngIf="PipelineValidationService.errorMessages.length === 0">Pipeline ok</span>
-                            <span *ngIf="PipelineValidationService.errorMessages.length > 0">{{PipelineValidationService.errorMessages.length}} {{PipelineValidationService.errorMessages.length > 1 ? 'hints' : 'hint'}}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="editor-error-notifications"
-                     *ngIf="PipelineValidationService.errorMessages.length > 0 && errorMessagesDisplayed">
-                    <h5 class="color-warn">
-                        <b>{{PipelineValidationService.errorMessages.length}} {{PipelineValidationService.errorMessages.length == 1 ? "error" : "errors"}}
-                            found.</b></h5>
-                    <hr/>
-                    <div *ngFor="let errorMessage of PipelineValidationService.errorMessages">
-                        <b>{{errorMessage.title}}</b>
-                        <div>{{errorMessage.content}}</div>
-                        <hr/>
-                    </div>
-                </div>
+                <sp-error-hint
+                    [displayMessages]="!isPipelineAssemblyEmpty()"
+                    [errorMessages]="PipelineValidationService.errorMessages"
+                    [validationString]="'Pipeline'">
+                </sp-error-hint>
             </div>
             <button mat-button mat-icon-button
                     [matTooltip]="pipelineCanvasMaximized ? 'Minimize' : 'Maximize'"

@@ -14,7 +14,8 @@
     "build": "node ./deployment/prebuild.js && set NODE_OPTIONS=--max-old-space-size=10192 && ng build --prod",
     "build-rc": "node ./deployment/prebuild.js rel && set NODE_OPTIONS=--max-old-space-size=10192 && ng build --prod",
     "lint": "tslint -c tslint.json 'src/**/*.ts*",
-    "analyze": "webpack-bundle-analyzer dist/stats.json"
+    "analyze": "webpack-bundle-analyzer dist/stats.json",
+    "test-e2e": "cypress open"
   },
   "dependencies": {
     "@angular/animations": "11.0.5",
@@ -106,6 +107,9 @@
     "compression-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^5.1.2",
     "css-loader": "^0.28.11",
+    "csv-string": "4.0.1",
+    "cypress": "^7.5.0",
+    "cypress-file-upload": "5.0.7",
     "extract-text-webpack-plugin": "^3.0.2",
     "file-loader": "^1.1.6",
     "html-webpack-plugin": "^3.2.0",

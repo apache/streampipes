@@ -78,6 +78,7 @@ import { LabelListItemComponent } from './labels/components/label-list-item/labe
 import { StatusWidgetComponent } from "./widget/status/status-widget.component";
 import { NgxChartsModule } from "@swimlane/ngx-charts";
 import { BarchartWidgetComponent } from "./widget/barchart/barchart-widget.component";
+import { ErrorHintComponent } from './error-hint/error-hint.component';
 
 @NgModule({
     imports: [
@@ -133,7 +134,8 @@ import { BarchartWidgetComponent } from "./widget/barchart/barchart-widget.compo
         StaticRuntimeResolvableAnyInputComponent,
         StaticRuntimeResolvableOneOfInputComponent,
         StatusWidgetComponent,
-        LabelListItemComponent
+        LabelListItemComponent,
+        ErrorHintComponent
     ],
     providers: [
         MatDatepickerModule,
@@ -176,6 +178,7 @@ import { BarchartWidgetComponent } from "./widget/barchart/barchart-widget.compo
     ImageViewerComponent,
     StatusWidgetComponent,
     BarchartWidgetComponent,
+    ErrorHintComponent
   ]
 })
 export class CoreUiModule {

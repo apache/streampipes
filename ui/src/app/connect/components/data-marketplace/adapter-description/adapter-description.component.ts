@@ -28,7 +28,7 @@ import {DialogService} from "../../../../core-ui/dialog/base-dialog/base-dialog.
 @Component({
   selector: 'sp-adapter-description',
   templateUrl: './adapter-description.component.html',
-  styleUrls: ['./adapter-description.component.css'],
+  styleUrls: ['./adapter-description.component.scss'],
 })
 export class AdapterDescriptionComponent {
 
