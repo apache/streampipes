@@ -58,16 +58,13 @@ public class FileProtocol extends Protocol {
     public static final String ID = "org.apache.streampipes.protocol.set.file";
 
     private String fileFetchUrl;
-    private static final String INTERVAL_KEY = "interval-key";
-    private int timeBetweenReplay;
 
     public FileProtocol() {
     }
 
-    public FileProtocol(Parser parser, Format format, String fileFetchUrl, int timeBetweenReplay) {
+    public FileProtocol(Parser parser, Format format, String fileFetchUrl) {
         super(parser, format);
         this.fileFetchUrl = fileFetchUrl;
-        this.timeBetweenReplay=timeBetweenReplay;
     }
 
     @Override
@@ -75,7 +72,6 @@ public class FileProtocol extends Protocol {
         return ProtocolDescriptionBuilder.create(ID)
                 .withAssets(Assets.DOCUMENTATION, Assets.ICON)
                 .withLocales(Locales.EN)
-                .requiredIntegerParameter(Labels.withId(INTERVAL_KEY))
                 .sourceType(AdapterSourceType.SET)
                 .category(AdapterType.Generic)
                 .requiredFile(Labels.withId("filePath"), Filetypes.XML, Filetypes.JSON, Filetypes.CSV)
@@ -85,9 +81,8 @@ public class FileProtocol extends Protocol {
     @Override
     public Protocol getInstance(ProtocolDescription protocolDescription, Parser parser, Format format) {
         StaticPropertyExtractor extractor = StaticPropertyExtractor.from(protocolDescription.getConfig());
-        int timeBetweenReplay = extractor.singleValueParameter(INTERVAL_KEY, Integer.class);
         String fileFetchUrl = extractor.selectedFileFetchUrl("filePath");
-        return new FileProtocol(parser, format, fileFetchUrl,timeBetweenReplay);
+        return new FileProtocol(parser, format, fileFetchUrl);
     }
 
     @Override
