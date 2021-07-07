@@ -52,8 +52,8 @@
 }
 
 .pipeline-not-running {
-    background: #e2e2e2;
-    border: 1px solid #f44336;
+    background: var(--color-bg-dialog);
+    border: 1px solid var(--color-warn);
     padding: 20px;
     display:flex;
     align-items: center;
@@ -63,6 +63,6 @@
 
 .disconnect-icon {
     font-size:36pt;
-    color:#f44336;
+    color: var(--color-warn);
 }
 

@@ -19,7 +19,7 @@
 @import "../../../../scss/variables";
 
 .iconbar {
-  background: $sp-color-primary;
+  background: var(--color-primary);
 }
 
 .base {

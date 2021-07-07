@@ -76,7 +76,7 @@
         <button mat-button mat-raised-button class="mat-basic mr-10" (click)="back()" *ngIf="(!('select-pipeline'===page))">
             Back
         </button>
-        <button mat-button mat-raised-button color="primary" (click)="next()" [disabled]="'configure-widget' === page
+        <button mat-button mat-raised-button color="accent" (click)="next()" [disabled]="'configure-widget' === page
          && !formValid">
             <span *ngIf="!editMode && 'configure-widget' === page">Create</span>
             <span *ngIf="editMode && 'configure-widget' === page">Save</span>

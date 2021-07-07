@@ -203,7 +203,7 @@ md-dialog-actions {
 }
 
 md-toolbar:not(.md-menu-toolbar) {
-  background: $sp-color-primary;
+  background: var(--color-primary);
 }
 
 .md-list-item-text {
@@ -877,7 +877,7 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
 .assembly-options-preview {
   color: white;
   padding: 5px;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .2), 0 1px 1px 0 rgba(0, 0, 0, .14), 0 2px 1px -1px rgba(0, 0, 0, .12);
+  //box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .2), 0 1px 1px 0 rgba(0, 0, 0, .14), 0 2px 1px -1px rgba(0, 0, 0, .12);
 
 }
 
@@ -896,12 +896,12 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
   overflow: auto;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .2), 0 1px 1px 0 rgba(0, 0, 0, .14), 0 2px 1px -1px rgba(0, 0, 0, .12);
   padding: 5px;
-  border: 1px solid $sp-color-accent-light;
+  border: 1px solid var(--color-bg-2);
   height: 300px;
   width: 100%;
 
-  background-color: white;
-  background-image: linear-gradient(90deg, rgba(208, 208, 208, .5) 10%, transparent 0%), linear-gradient(rgba(208, 208, 208, .5) 10%, transparent 0%);
+  background-color: var(--color-bg-1);
+  background-image: var(--canvas-color);
   background-size: 15px 15px;
 }
 
@@ -919,7 +919,6 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
   height: 100%;
   width: 100%;
   z-index: 0;
-
 }
 
 #pipelineDisplay {

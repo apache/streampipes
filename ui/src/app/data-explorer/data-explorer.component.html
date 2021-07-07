@@ -21,7 +21,7 @@
         <div fxFlex="100" class="page-container-nav">
             <div fxFlex="100" fxLayout="row">
                 <div fxFlex fxLayoutAlign="start center">
-                    <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectDashboard($event)">
+                    <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectDashboard($event)" color="accent">
                         <mat-tab label="Start"></mat-tab>
                         <mat-tab *ngFor="let dataViewDashboard of dataViewDashboards" label="{{dataViewDashboard.name}}"></mat-tab>
                     </mat-tab-group>

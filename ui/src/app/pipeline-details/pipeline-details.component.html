@@ -17,10 +17,10 @@
   -->
 
 <div fxLayout="column" class="page-container">
-    <div fxLayout="row" class="border" style="padding:0px;background-color:#f6f6f6;">
-        <div fxFlex="100" style="line-height:24px;border-bottom:1px solid #ccc">
+    <div fxLayout="row" class="border sp-tab-bg" style="padding:0px">
+        <div fxFlex="100" class="page-container-nav">
             <div fxFlex="100" fxLayout="row">
-                <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="setSelectedIndex($event)">
+                <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="setSelectedIndex($event)" color="accent">
                     <mat-tab label="Overview"></mat-tab>
                     <mat-tab label="Monitoring"></mat-tab>
                     <mat-tab label="Errors"></mat-tab>

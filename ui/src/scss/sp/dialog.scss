@@ -43,7 +43,7 @@
 }
 
 .sp-no-padding-dialog .mat-dialog-container .md-dialog .md-toolbar {
-  background: $sp-color-primary;
+  background: var(--color-primary);
   color: white;
 }
 

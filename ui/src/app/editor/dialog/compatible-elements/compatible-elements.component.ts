@@ -73,14 +73,14 @@ export class CompatibleElementsComponent {
 
   makeStandardStyle() {
     return {
-      background: "white",
+      background: "var(--color-bg-dialog)",
       cursor: "auto"
     }
   }
 
   makeHoverStyle() {
     return {
-      background: "lightgrey",
+      background: "var(--color-bg-1)",
       cursor: "pointer"
     }
   }

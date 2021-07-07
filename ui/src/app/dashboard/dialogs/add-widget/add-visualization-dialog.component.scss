@@ -35,10 +35,14 @@
 }
 
 .list-item:hover {
-    background: #E0E0E0;
+    background: var(--color-bg-1);
     cursor: pointer;
 }
 
 .list-item {
     border-bottom: 1px solid #BDBDBD;
+}
+
+.mr-10 {
+    margin-right: 10px;
 }

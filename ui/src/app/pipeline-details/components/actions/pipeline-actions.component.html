@@ -25,14 +25,14 @@
     <div class="sp-blue-border">
         <div fxFlex="100" fxLayoutAlign="center center" fxLayout="row" style="padding:10px">
             <div fxFlex="30">
-                <button mat-button mat-raised-button color="primary"
+                <button mat-button mat-raised-button color="accent"
                         matTooltip="Start Pipeline" matTooltipPosition="above"
                         (click)="startPipeline()"
                            [disabled]="starting" *ngIf="!pipeline.running">
                     <mat-icon>play_arrow</mat-icon>
                     <span>&nbsp;Start</span>
                 </button>
-                <button mat-button mat-raised-button color="primary"
+                <button mat-button mat-raised-button color="accent"
                         matTooltip="Stop Pipeline" matTooltipPosition="above"
                         (click)="stopPipeline()"
                            [disabled]="stopping" *ngIf="pipeline.running">
@@ -41,7 +41,7 @@
                 </button>
             </div>
             <div fxFlex="30">
-                <button mat-button mat-raised-button color="primary"
+                <button mat-button mat-raised-button color="accent"
                         matTooltip="Modify Pipeline" matTooltipPosition="above"
                         [disabled]="pipeline.running"
                         (click)="pipelineOperationsService.modifyPipeline(pipeline._id)">
@@ -50,7 +50,7 @@
                 </button>
             </div>
             <div fxFlex="30">
-                <button mat-button mat-raised-button color="primary"
+                <button mat-button mat-raised-button color="accent"
                         matTooltip="Delete Pipeline" matTooltipPosition="above"
                         (click)="pipelineOperationsService.showDeleteDialog(pipeline, reloadPipelineEmitter, this.switchToPipelineView)">
                     <mat-icon>delete</mat-icon>
