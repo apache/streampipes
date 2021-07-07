@@ -25,7 +25,7 @@
         <span style="z-index:5;"
               [ngClass]="getElementCssClasses(pipelineElement)">
             <div class="pipeline-element-progress-container sp-fade" *ngIf="pipelineElement.settings.loadingStatus">
-                 <mat-spinner [mode]="'indeterminate'" class="pipeline-element-progress" [diameter]="40"></mat-spinner>
+                 <mat-spinner [mode]="'indeterminate'" class="pipeline-element-progress" [diameter]="40" color="accent"></mat-spinner>
             </div>
             <div class="pipeline-element-loading-container sp-fade-opacity"
                  *ngIf="pipelineElement.settings.loadingStatus"></div>

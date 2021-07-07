@@ -22,15 +22,17 @@
                 style="margin-right:10px;margin-left:10px;">Select all
         </button>
         <button mat-button mat-raised-button class="mat-basic small-button" (click)="selectNone()">Select
-            none</button>
+            none
+        </button>
     </div>
     <div fxFlex="100" fxLayout="column" style="margin-top:10px;">
-                <mat-checkbox *ngFor="let property of availableProperties | displayRecommendedPipe: staticProperty.propertyScope: displayRecommended"
-                              [attr.data-cy]="property.runtimeName"
-                              [(ngModel)]="property['checked']"
-                              (change)="selectOption(property, $event)"
-                              style="margin-left: 10px;">
-                    {{property.runtimeName}}
-                </mat-checkbox>
+        <mat-checkbox
+                *ngFor="let property of availableProperties | displayRecommendedPipe: staticProperty.propertyScope: displayRecommended"
+                [attr.data-cy]="property.runtimeName"
+                [(ngModel)]="property['checked']"
+                (change)="selectOption(property, $event)"
+                style="margin-left: 10px;" color="accent">
+            {{property.runtimeName}}
+        </mat-checkbox>
     </div>
 </div>
