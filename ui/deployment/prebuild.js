@@ -91,19 +91,19 @@ console.log('Moved: logo.png');
 fs.writeFileSync('src/assets/img/sp/sp-logo-right-white.png', fs.readFileSync(config['login']['logo-right']));
 console.log('Moved: sp-logo-right-white.png');
 
-if (process.env.THEME_LOC !== 'undefined') {
-    console.log('Using custom-provided theme ' + process.env.THEME_LOC);
-    fs.writeFileSync('src/scss/sp/sp-theme.scss', fs.readFileSync(process.env.THEME_LOC, 'utf8'));
-}
-
-if (process.env.LOGO_HEADER_LOC !== 'undefined') {
-    console.log('Using custom-provided header logo ' + process.env.LOGO_HEADER_LOC);
-    fs.writeFileSync('src/assets/img/login/logo.png', fs.readFileSync(process.env.LOGO_HEADER_LOC));
-}
-
-if (process.env.LOGO_NAV_LOC !== 'undefined') {
-    console.log('Using custom-provided navbar logo' + process.env.LOGO_NAV_LOC);
-    fs.writeFileSync('src/assets/img/sp/sp-logo-right-white.png', fs.readFileSync(process.env.LOGO_NAV_LOC));
-}
+// if (process.env.THEME_LOC !== 'undefined') {
+//     console.log('Using custom-provided theme ' + process.env.THEME_LOC);
+//     fs.writeFileSync('src/scss/sp/sp-theme.scss', fs.readFileSync(process.env.THEME_LOC, 'utf8'));
+// }
+//
+// if (process.env.LOGO_HEADER_LOC !== 'undefined') {
+//     console.log('Using custom-provided header logo ' + process.env.LOGO_HEADER_LOC);
+//     fs.writeFileSync('src/assets/img/login/logo.png', fs.readFileSync(process.env.LOGO_HEADER_LOC));
+// }
+//
+// if (process.env.LOGO_NAV_LOC !== 'undefined') {
+//     console.log('Using custom-provided navbar logo' + process.env.LOGO_NAV_LOC);
+//     fs.writeFileSync('src/assets/img/sp/sp-logo-right-white.png', fs.readFileSync(process.env.LOGO_NAV_LOC));
+// }
 
 console.log('Pre-Build finished.');
