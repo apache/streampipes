@@ -16,19 +16,19 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column">
+<div fxFlex="100" fxLayout="column" [formGroup]="parentForm">
     <div fxFlex="100" fxLayout="column">
         <div fxFlex="row">
-            <mat-radio-group [(ngModel)]="chooseExistingFile" color="primary">
+            <mat-radio-group [formControl]="chooseExistingFileControl" color="primary">
                 <mat-radio-button style="margin-right:10px;" [value]="true">Choose existing file</mat-radio-button>
                 <mat-radio-button [value]="false">Upload new file</mat-radio-button>
             </mat-radio-group>
         </div>
-        <div *ngIf="chooseExistingFile && filesLoaded">
+        <div *ngIf="chooseExistingFileControl.value && filesLoaded" >
             <mat-form-field>
                 <input type="text"
                        placeholder="Select file"
-                       [(ngModel)]="selectedFile"
+                       formControlName="{{fieldName}}"
                        matInput
                        [matAutocomplete]="auto">
                 <button mat-button *ngIf="selectedFile" matSuffix mat-icon-button aria-label="Clear" (click)="selectedFile={}">
@@ -41,8 +41,8 @@
                 </mat-autocomplete>
             </mat-form-field>
         </div>
-        <div *ngIf="!chooseExistingFile">
-            <mat-form-field style="width: 95%" (click)="fileInput.click();" *ngIf="!chooseExistingFile">
+        <div *ngIf="!chooseExistingFileControl.value">
+            <mat-form-field style="width: 95%" (click)="fileInput.click();" *ngIf="!chooseExistingFileControl.value">
                 <input matInput placeholder="{{staticProperty.label}}" disabled (value)="fileName">
                 <input #fileInput type="file" style="display:none;"
                        (change)="handleFileInput($event.target.files)">

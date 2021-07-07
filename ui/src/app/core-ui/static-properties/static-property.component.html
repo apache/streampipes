@@ -47,12 +47,14 @@
                                    (updateEmitter)="emitUpdate($event)">
             </app-static-free-input>
 
-            <app-static-file-input *ngIf="isFileStaticProperty(staticProperty)"
+            <sp-static-file-input *ngIf="isFileStaticProperty(staticProperty)"
                                    (inputEmitter)="valueChange($event)"
                                    [staticProperty]="staticProperty"
+                                   [parentForm]="parentForm"
+                                   [fieldName]="fieldName"
                                    (updateEmitter)="emitUpdate($event)"
                                    [adapterId]="adapterId">
-            </app-static-file-input>
+            </sp-static-file-input>
 
             <app-static-color-picker *ngIf="isColorPickerStaticProperty(staticProperty)"
                                      [staticProperty]="staticProperty"
