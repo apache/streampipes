@@ -42,7 +42,7 @@
         </div>
     </div>
 
-    <mat-horizontal-stepper [linear]="true" #stepper>
+    <mat-horizontal-stepper [linear]="true" #stepper color="accent" class="stepper">
         <mat-step *ngIf="!isGenericAdapter">
             <ng-template matStepLabel>Settings</ng-template>
             <sp-specific-adapter-configuration

@@ -17,9 +17,9 @@
   -->
 
 <div fxLayout="column" fxFlex="100" class="page-container page-container-padding page-container-connect">
-    <div fxLayout="row" style="padding:0px;background-color:#f6f6f6;">
-        <div fxLayout="fill" style="line-height:24px;border-bottom:1px solid #ccc">
-            <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectedIndexChange($event)">
+    <div fxLayout="row" style="padding:0px;" class="sp-tab-bg">
+        <div fxLayout="fill" class="page-container-nav">
+            <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectedIndexChange($event)" color="accent">
                 <mat-tab label="Data Marketplace">
                 </mat-tab>
                 <mat-tab id="all-adapters" label="My Adapters">
@@ -27,11 +27,11 @@
             </mat-tab-group>
         </div>
         <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center"
-             style="padding-left:10px;padding-right:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc"
+             style="padding-left:10px;padding-right:10px;font-size:14px;" class="page-container-nav"
              *ngIf="selectedIndex === 0 && newAdapterFromDescription === undefined">
             <button mat-icon-button id="startAdapterTutorial3" (click)="startAdapterTutorial3()"
                     matTooltip="Tutorial: Generic Adapter">
-                <mat-icon color="primary">school</mat-icon>
+                <mat-icon color="accent">school</mat-icon>
             </button>
         </div>
     </div>
@@ -40,14 +40,14 @@
 
         <div class="data-marketplace-options-item pl-5" style="margin-top:8px;" fxLayoutAlign="start center"
              fxLayout="row">
-            <mat-icon color="primary">search</mat-icon>
+            <mat-icon color="accent">search</mat-icon>
             <mat-form-field class="form-style">
                 <input matInput placeholder="Find Element" value="" (input)="updateFilterTerm($event.target.value)"
                        name="something">
             </mat-form-field>
         </div>
         <div class="data-marketplace-options-item">
-            <mat-form-field>
+            <mat-form-field color="accent">
                 <mat-select [(value)]="selectedType" (selectionChange)="filterAdapter($event)">
                     <mat-option *ngFor="let type of adapterTypes" [value]="type">
                         {{type}}
@@ -56,7 +56,7 @@
             </mat-form-field>
         </div>
         <div class="data-marketplace-options-item">
-            <mat-form-field>
+            <mat-form-field color="accent">
                 <mat-select [(value)]="selectedCategory" (selectionChange)="filterAdapter($event)">
                     <mat-option *ngFor="let category of adapterCategories" [value]="category.code">
                         {{category.label}}
@@ -80,7 +80,7 @@
     </div>
     <div class="container-fluid marketplace-container" *ngIf="adaptersLoading" fxFlex="100"
          fxLayoutAlign="center center" fxLayout="row">
-        <mat-spinner [mode]="'indeterminate'" [diameter]="20"></mat-spinner>
+        <mat-spinner [mode]="'indeterminate'" [diameter]="20" color="accent"></mat-spinner>
         <h4>&nbsp;&nbsp;Searching for available adapters, please wait...</h4>
     </div>
     <div class="container-fluid marketplace-container" *ngIf="!adaptersLoading && !adapterLoadingError">

@@ -18,19 +18,18 @@
 
 
 .mat-table {
-  background: #FAFAFA;
+
 }
 
 .mat-paginator {
   border-top: 1px solid rgba(0,0,0,.12);
-  background: #FAFAFA;
 }
 
 .mat-row:nth-child(even) {
-  background-color: #FAFAFA;
+  background-color: var(--color-bg-2);
 }
 .mat-row:nth-child(odd) {
-  background-color:#ffffff;
+  background-color: var(--color-bg-3);
 }
 
 .adapter-icon {

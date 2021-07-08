@@ -61,13 +61,13 @@
 
 .icon-style {
   margin: 15px 4px 0px 0px;
-  color:rgb(27, 20, 100);
+  color: var(--color-accent);
 }
 
 .data-marketplace-options {
   padding:0px;
-  background-color:#f6f6f6;
-  border-bottom: 1px solid #cccccc;
+  background-color: var(--color-bg-1);
+  border-bottom: 1px solid var(--color-bg-3);
 }
 
 .data-marketplace-options-item {
