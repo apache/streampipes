@@ -90,9 +90,7 @@ export class ExistingAdaptersComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(data => {
       if (data) {
-        this.dataMarketplaceService.deleteAdapter(adapter).subscribe(res => {
-          this.updateAdapterEmitter.emit();
-        });
+        this.updateAdapterEmitter.emit();
       }
     });
   };

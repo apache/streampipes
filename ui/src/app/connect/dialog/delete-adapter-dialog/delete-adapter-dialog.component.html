@@ -25,7 +25,7 @@
             </div>
 
             <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
-                <button mat-button mat-raised-button color="primary"
+                <button mat-button mat-raised-button color="accent"
                         (click)="deleteAdapter()"
                         data-cy="delete-adapter">Delete
                     adapter
@@ -34,7 +34,7 @@
         </div>
         <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column" *ngIf="isInProgress" data-cy="adapter-deletion-in-progress">
             <div fxLayout="row" fxLayoutAlign="space-around">
-                <mat-spinner [mode]="'indeterminate'"></mat-spinner>
+                <mat-spinner [mode]="'indeterminate'" color="accent"></mat-spinner>
             </div>
             <b><h4>{{currentStatus}}</h4></b>
         </div>
