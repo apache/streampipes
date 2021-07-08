@@ -36,11 +36,11 @@ tr.consul-configuration-detail-row {
 }
 
 tr.consul-configuration-row:not(.consul-configuration-row-expanded):hover {
-    background: #f5f5f5;
+    background: var(--color-bg-2);
 }
 
 tr.consul-configuration-row:not(.consul-configuration-row-expanded):active {
-    background: #efefef;
+    background: var(--color-bg-1);
 }
 
 .consul-configuration-row td {
@@ -53,7 +53,6 @@ tr.consul-configuration-row:not(.consul-configuration-row-expanded):active {
 }
 
 .mat-table {
-    background: #FAFAFA;
 }
 
 .consul-service {

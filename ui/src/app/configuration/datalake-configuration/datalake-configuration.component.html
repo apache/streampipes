@@ -20,16 +20,16 @@
     <div fxFlex="100" fxLayout="row wrap" fxLayoutAlign="start stretch">
         <div fxFlex="100" class="assemblyOptions sp-blue-bg" style="padding:5px;">
             <div fxLayout="row" fxLayoutAlign="start center" fxFlex="100">
-                <h3>Datalake Settings</h3>
+                <h4>Datalake Settings</h4>
                 <span flex></span>
             </div>
         </div>
         <div fxFlex="100" fxLayout="column" fxLayoutAlign="center center" class="sp-blue-border page-container-padding-inner">
-            <form (ngSubmit)="removeDataFromDataLake()" class="form-width" fxFlex="100" fxLayout="column">
+            <form (ngSubmit)="removeDataFromDataLake()" class="form-width mt-10" fxFlex="100" fxLayout="column">
                 <div fxLayoutAlign="center center">
                     <button mat-raised-button color="warn" type="submit" class="md-raised md-primary submit-button">Clean</button>
                 </div>
-                <h4 style="color: #f44336">All data in the datalake will be deleted. This is a BETA feature and could break things!</h4>
+                <h4 style="color: var(--color-warn)">All data in the datalake will be deleted. This is a BETA feature and could break things!</h4>
             </form>
         </div>
     </div>
