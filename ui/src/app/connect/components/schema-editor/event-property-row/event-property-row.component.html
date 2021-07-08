@@ -37,13 +37,13 @@
 
     <div fxFlex="0 1 auto" fxLayoutAlign="center center"
          *ngIf="isNested">
-        <button [disabled]="!isEditable" color="primary" mat-button (click)=addNestedProperty(node.data)>
+        <button [disabled]="!isEditable" color="accent" mat-button (click)=addNestedProperty(node.data)>
             <mat-icon matTooltip="Add a Nested Property">queue</mat-icon>
         </button>
     </div>
     <div fxFlex="0 1 auto" fxLayoutAlign="center center"
          *ngIf="isNested || isPrimitive || isList">
-        <button [disabled]="!isEditable" color="primary" mat-button
+        <button [disabled]="!isEditable" color="accent" mat-button
                 (click)="openEditDialog(node.data)"
                 [attr.data-cy]="'edit-' + label">
             <mat-icon>edit</mat-icon>

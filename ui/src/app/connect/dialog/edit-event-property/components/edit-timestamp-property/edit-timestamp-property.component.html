@@ -17,7 +17,7 @@
   -->
 
 <div fxLayout="row" fxLayoutAlign="start">
-     <mat-form-field class="doubleWidth">
+     <mat-form-field class="doubleWidth" color="accent">
         <mat-select placeholder="Timestamp converter (unix timestamp)"
                     [(value)]="cachedProperty.timestampTransformationMode">
             <mat-option value="none">None</mat-option>
@@ -30,11 +30,11 @@
 
 <div fxLayout="row" fxLayoutAlign="start">
     <div class="form-group" fxFlexAlign="center">
-        <mat-form-field class="doubleWidth" *ngIf="cachedProperty.timestampTransformationMode === 'formatString'">
+        <mat-form-field class="doubleWidth" *ngIf="cachedProperty.timestampTransformationMode === 'formatString'" color="accent">
             <input matInput placeholder="E.g. yyyy-MM-dd HH:mm:ss.SSSZ"
                    [(ngModel)]="cachedProperty.timestampTransformationFormatString">
         </mat-form-field>
-        <mat-form-field class="doubleWidth" *ngIf="cachedProperty.timestampTransformationMode === 'timeUnit'">
+        <mat-form-field class="doubleWidth" *ngIf="cachedProperty.timestampTransformationMode === 'timeUnit'" color="accent">
             <mat-select placeholder="Current time unit" [(value)]="selectedTimeMultiplier">
                 <mat-option value="milliseconds" (click)="cachedProperty.timestampTransformationMultiplier = 0">
                     Milliseconds</mat-option>

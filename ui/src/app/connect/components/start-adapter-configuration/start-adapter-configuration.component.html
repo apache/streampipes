@@ -23,11 +23,11 @@
 
     <div class="sp-blue-border padding" style="padding: 15px; margin-bottom: 2%;">
         <div fxLayoutAlign="center" fxLayout="column" fxFlex="100">
-            <mat-form-field>
+            <mat-form-field color="accent">
                 <input matInput id="input-AdapterName"  [ngModelOptions]="{standalone: true}" placeholder="Adapter Name"
                        [(ngModel)]="adapterDescription.name" data-cy="sp-adapter-name">
             </mat-form-field>
-            <mat-form-field>
+            <mat-form-field color="accent">
                 <input matInput id="input-AdapterDescription" [ngModelOptions]="{standalone: true}"
                        placeholder="Adapter Description" [(ngModel)]="adapterDescription.description">
             </mat-form-field>
@@ -98,12 +98,12 @@
         <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
         <button style="margin-left:10px;" class="mat-basic stepper-button" mat-raised-button (click)="goBack()">Back</button>
         <button [disabled]="startAdapterSettingsFormValid" mat-raised-button
-                id="button-saveTemplate" color="primary" (click)="saveTemplate()" mat-button
+                id="button-saveTemplate" color="accent" (click)="saveTemplate()" mat-button
                 style="margin-left:10px;">
             Save as Template
         </button>
         <button [disabled]="startAdapterSettingsFormValid" mat-raised-button id="button-startAdapter"
-                color="primary" (click)="startAdapter()" mat-button style="margin-left:10px;">
+                color="accent" (click)="startAdapter()" mat-button style="margin-left:10px;">
             Start Adapter
         </button>
     </div>

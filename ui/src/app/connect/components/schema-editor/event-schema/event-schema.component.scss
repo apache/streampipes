@@ -56,7 +56,7 @@ ul {
   width: 95%;
 }
 :host ::ng-deep .tree-node {
-  color: #000;
+  color: var(--color-default-text);
   border-left: none;
   border-right: none;
   border-bottom: none;
@@ -72,7 +72,7 @@ ul {
   flex: 1;
 }
 :host ::ng-deep .node-content-wrapper:hover {
-  background-color: darkgrey;
+  background-color: var(--color-bg-2);
 }
 :host ::ng-deep .node-content-wrapper-active, .node-content-wrapper-focused {
   background: transparent;

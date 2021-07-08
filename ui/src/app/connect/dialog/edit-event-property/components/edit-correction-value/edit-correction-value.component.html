@@ -18,12 +18,12 @@
 
 <div fxLayout="row" fxLayoutAlign="start">
         <div class="form-group" fxFlexAlign="center">
-        <mat-form-field class="example-full-width" style="margin-right: 10px" >
+        <mat-form-field class="example-full-width" style="margin-right: 10px" color="accent">
             <input matInput name="correction" placeholder="Correction Value" [(ngModel)]="cachedProperty.correctionValue" (change)="valueChanged()">
         </mat-form-field>
     </div>
     <div class="form-group" fxFlexAlign="center">
-        <mat-form-field class="example-full-width">
+        <mat-form-field class="example-full-width" color="accent">
             <mat-select
                     required
                     placeholder="Math Operator"
