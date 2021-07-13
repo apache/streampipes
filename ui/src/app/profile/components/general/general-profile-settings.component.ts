@@ -20,6 +20,7 @@ import {Component, OnInit} from "@angular/core";
 import {ProfileService} from "../../profile.service";
 import {User} from "../../../core-model/gen/streampipes-model-client";
 import {BasicProfileSettings} from "../basic-profile-settings";
+import {AppConstants} from "../../../services/app.constants";
 
 @Component({
   selector: 'general-profile-settings',
@@ -28,8 +29,8 @@ import {BasicProfileSettings} from "../basic-profile-settings";
 })
 export class GeneralProfileSettingsComponent extends BasicProfileSettings implements OnInit {
 
-  constructor(profileService: ProfileService) {
-    super(profileService);
+  constructor(profileService: ProfileService, appConstants: AppConstants) {
+    super(profileService, appConstants);
   }
 
   ngOnInit(): void {
