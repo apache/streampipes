@@ -25,6 +25,8 @@ src/app/appng5.module.ts
 src/app/home/home.service.ts
 src/app/services/version/version.service.ts
 ui/src/app/core/components/base-navigation.component.ts
+ui/src/assets/img/login/logo.png
+ui/src/assets/img/sp/logo-navigation.png
 
 # compiled output
 /dist
