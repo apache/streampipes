@@ -31,7 +31,7 @@
         </div>
         <div fxFlex fxLayout="column">
 
-            <div class="ml-5"><small *ngIf="!(item.editable)">Internally managed by StreamPipes</small></div>
+            <div class="ml-5"><small *ngIf="!(item.editable)">Internally managed by {{appConstants.APP_NAME}}</small></div>
             <div fxFlex fxLayoutAlign="start end" class="ml-5">
                 <button class="small-button-add" mat-button mat-raised-button color="accent" [disabled]="!(item.editable)"
                         (click)="installSingleElement($event, item)" *ngIf="!item.installed">

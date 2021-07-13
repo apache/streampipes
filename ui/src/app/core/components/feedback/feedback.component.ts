@@ -17,6 +17,7 @@
  */
 
 import {Component, EventEmitter, OnInit, Output} from "@angular/core";
+import {AppConstants} from "../../../services/app.constants";
 
 @Component({
     selector: 'feedback',
@@ -36,9 +37,10 @@ export class FeedbackComponent implements OnInit {
     feedbackUrl = "";
     debugFeedbackUrl = "";
 
-    targetEmail = "dev@streampipes.apache.org";
+    targetEmail: string;
 
-    constructor() {
+    constructor(public appConstants: AppConstants) {
+        this.targetEmail = appConstants.EMAIL;
     }
 
     ngOnInit() {

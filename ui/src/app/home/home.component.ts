@@ -20,6 +20,7 @@ import {Component} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
 import {HomeService} from './home.service';
 import {Router} from "@angular/router";
+import {AppConstants} from "../services/app.constants";
 
 @Component({
     templateUrl: './home.component.html',
@@ -31,7 +32,8 @@ export class HomeComponent {
 
     constructor(private homeService: HomeService,
                 private sanitizer: DomSanitizer,
-                private Router: Router) {
+                private Router: Router,
+                public appConstants: AppConstants) {
         this.serviceLinks = this.homeService.getServiceLinks();
     }
 

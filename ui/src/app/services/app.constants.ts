@@ -16,30 +16,11 @@
  *
  */
 
-import {NgModule} from "@angular/core";
-import {RestApi} from "./rest-api.service";
-import {AuthService} from "./auth.service";
-import {ShepherdService} from "./tour/shepherd.service";
-import {TourProviderService} from "./tour/tour-provider.service";
-import {NotificationCountService} from "./notification-count-service";
-import {PropertySelectorService} from "./property-selector.service";
-import {ElementIconText} from "./get-element-icon-text.service";
-import {AppConstants} from "./app.constants";
+import {Injectable} from "@angular/core";
 
-@NgModule({
-  imports: [],
-  declarations: [],
-  providers: [
-    AppConstants,
-    RestApi,
-    AuthService,
-    ElementIconText,
-    ShepherdService,
-    TourProviderService,
-    NotificationCountService,
-    PropertySelectorService,
-  ],
-  entryComponents: []
-})
-export class ServicesModule {
+@Injectable()
+export class AppConstants {
+
+  public readonly APP_NAME = "Apache StreamPipes";
+  public readonly EMAIL = "dev@streampipes.apache.org";
 }

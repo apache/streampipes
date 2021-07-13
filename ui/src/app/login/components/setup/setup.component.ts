@@ -21,6 +21,7 @@ import {RestApi} from "../../../services/rest-api.service";
 import {FormGroup} from "@angular/forms";
 import {LoginService} from "../../services/login.service";
 import {Router} from "@angular/router";
+import {AppConstants} from "../../../services/app.constants";
 
 @Component({
   selector: 'setup',
@@ -45,7 +46,8 @@ export class SetupComponent {
 
   constructor(private loginService: LoginService,
               private RestApi: RestApi,
-              private router: Router) {
+              private router: Router,
+              public appConstants: AppConstants) {
 
     this.installationFinished = false;
     this.installationSuccessful = false;

@@ -19,6 +19,7 @@
 import {ProfileService} from "../profile.service";
 import {User} from "../../core-model/gen/streampipes-model-client";
 import {Directive} from "@angular/core";
+import {AppConstants} from "../../services/app.constants";
 
 @Directive()
 export abstract class BasicProfileSettings {
@@ -28,7 +29,8 @@ export abstract class BasicProfileSettings {
   profileUpdating: boolean = false;
   errorMessage: string;
 
-  constructor(protected profileService: ProfileService) {
+  constructor(protected profileService: ProfileService,
+              public appConstants: AppConstants) {
 
   }
 

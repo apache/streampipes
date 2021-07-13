@@ -20,6 +20,7 @@ import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
 import {RestApi} from "../../../services/rest-api.service";
 import {ShepherdService} from "../../../services/tour/shepherd.service";
 import {Component} from "@angular/core";
+import {AppConstants} from "../../../services/app.constants";
 
 @Component({
   selector: 'welcome-tour',
@@ -32,7 +33,8 @@ export class WelcomeTourComponent {
 
   constructor(private DialogRef: DialogRef<WelcomeTourComponent>,
               private RestApi: RestApi,
-              private ShepherdService: ShepherdService) {
+              private ShepherdService: ShepherdService,
+              public appConstants: AppConstants) {
   }
 
   startCreatePipelineTour() {

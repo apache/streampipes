@@ -22,6 +22,7 @@ import {PipelineElementEndpointService} from "../../../platform-services/apis/pi
 import {AddService} from "../../services/add.service";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 import {ExtensionsServiceEndpointItem} from "../../../core-model/gen/streampipes-model-client";
+import {AppConstants} from "../../../services/app.constants";
 
 @Component({
   selector: 'endpoint-item',
@@ -49,7 +50,8 @@ export class EndpointItemComponent implements OnInit {
   constructor(private snackBar: MatSnackBar,
               private PipelineElementEndpointService: PipelineElementEndpointService,
               private addService: AddService,
-              private sanitizer: DomSanitizer) {
+              private sanitizer: DomSanitizer,
+              public appConstants: AppConstants) {
 
   }
 

@@ -21,12 +21,7 @@
         <div fxFlex="100">
             <div fxFlex="100" fxLayout="column">
                 <div class="p-10 header-margin" fxLayoutAlign="center center">
-                    <div class="welcome-text">Welcome to Apache
-                        <span class="welcome-primary">S</span>
-                        <span class="welcome-accent">tream</span>
-                        <span class="welcome-primary">P</span>
-                        <span class="welcome-accent">ipes</span>!
-                    </div>
+                    <div class="welcome-text">Welcome to {{appConstants.APP_NAME}}!</div>
                 </div>
                 <div fxLayout="column" fxFlex="100" class="home-margin">
                     <div fxFlex="100" fxLayoutAlign="start center">
@@ -34,7 +29,7 @@
                     </div>
                     <div fxFlex="100">
                         <div class="assemblyOptions sp-blue-bg mt-0 round-border" style="padding:5px;">
-                            <h4>StreamPipes Modules</h4>
+                            <h4>{{appConstants.APP_NAME}} Modules</h4>
                         </div>
                         <div class="sp-blue-border pt-0" fxLayout="column">
                             <div fxFlex="100" fxLayout="column">

@@ -20,6 +20,7 @@ import {AuthService} from "../../../services/auth.service";
 import {AuthStatusService} from "../../../services/auth-status.service";
 import {Component, Inject, OnInit} from "@angular/core";
 import {Router} from "@angular/router";
+import {AppConstants} from "../../../services/app.constants";
 
 @Component({
     selector: 'startup',
@@ -34,7 +35,8 @@ export class StartupComponent implements OnInit {
 
     constructor(private AuthService: AuthService,
                 private AuthStatusService: AuthStatusService,
-                private Router: Router) {
+                private Router: Router,
+                public appConstants: AppConstants) {
     }
 
     ngOnInit() {
