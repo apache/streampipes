@@ -32,3 +32,9 @@
   max-width: 100%;
   position: relative;
 }
+
+.toolbar-bg {
+  background: var(--color-navigation-bg);
+  border-bottom: 2px solid var(--color-navigation-divider);
+  color: var(--color-navigation-text);
+}

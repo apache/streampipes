@@ -19,29 +19,29 @@
 @import '../_variables';
 
 .sp-navbar-item {
-  background: var(--color-primary);
-  -webkit-transition: all 0.75s ease;
-  transition: all 0.75s ease;
+  background: var(--color-navigation-bg);
+  //-webkit-transition: all 0.75s ease;
+  //transition: all 0.75s ease;
 }
 
 .sp-navbar-item-selected {
-  background: var(--color-bg-0);
+  background: var(--color-navigation-bg-selected);
 }
 
 .sp-navbar-item:hover {
-  background: $sp-color-primary-light;
+  color: var(--color-navigation-selected);
 }
 
 .sp-navbar-icon {
-  color: var(--color-bg-0);
+  color: var(--color-navigation-link-text);
 }
 
 .sp-navbar-icon-selected {
-  color: var(--color-primary);
+  color: var(--color-navigation-selected);
 }
 
 .sp-icon-button:hover {
-  background: $sp-color-primary-light !important;
+  color: var(--color-navigation-selected) !important;
 }
 
 .sp-icon-button-no-hover:hover {

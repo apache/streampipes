@@ -167,6 +167,13 @@ $accent: map-get($custom-theme-light, accent);
         --color-default-text: rgba(255, 255, 255, 0.87);
         --color-warn: #b36161;
 
+        --color-navigation-bg: #{mat-color($primary)};
+        --color-navigation-link-text: #121212;
+        --color-navigation-text: #121212;
+        --color-navigation-selected: #{mat-color($primary)};
+        --color-navigation-bg-selected: #121212;
+        --color-navigation-divider: #{mat-color($primary)};
+
         --content-box-color: #404040;
         --canvas-color: linear-gradient(90deg, rgba(50, 50, 50, 0.5) 10%, transparent 0%), linear-gradient(rgba(50, 50, 50, 0.5) 10%, transparent 0%);
 
@@ -191,6 +198,13 @@ $accent: map-get($custom-theme-light, accent);
         --color-pe: #FFFFFF;
         --color-default-text: #121212;
         --color-warn: #B71C1C;
+
+        --color-navigation-bg: #{mat-color($primary)};
+        --color-navigation-link-text: #FFFFFF;
+        --color-navigation-text: #FFFFFF;
+        --color-navigation-selected: #{mat-color($primary)};
+        --color-navigation-bg-selected: #FFFFFF;
+        --color-navigation-divider: #{mat-color($primary)};
 
         --content-box-color: rgb(156, 156, 156);
         --canvas-color: linear-gradient(90deg, rgba(208, 208, 208, 0.5) 10%, transparent 0%), linear-gradient(rgba(208, 208, 208, 0.5) 10%, transparent 0%);
