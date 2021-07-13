@@ -22,11 +22,15 @@ import org.apache.streampipes.container.base.StreamPipesServiceBase;
 import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceTagPrefix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.PreDestroy;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServiceBase {
 
@@ -67,6 +71,16 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
         );
         this.afterServiceRegistered(serviceDef);
     }
+
+    @Override
+    protected List<SpServiceTag> getServiceTags() {
+        List<SpServiceTag> tags = new ArrayList<>();
+        tags.add(SpServiceTag.create(SpServiceTagPrefix.SP_GROUP, DeclarersSingleton.getInstance().getServiceDefinition().getServiceGroup()));
+        tags.addAll(getExtensionsServiceTags());
+        return tags;
+    }
+
+    protected abstract List<SpServiceTag> getExtensionsServiceTags();
 
     @PreDestroy
     public abstract void onExit();

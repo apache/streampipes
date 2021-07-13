@@ -17,8 +17,8 @@
  */
 package org.apache.streampipes.container.config;
 
-import org.apache.streampipes.config.SpConfig;
-import org.apache.streampipes.config.consul.ConsulSpConfig;
+import org.apache.streampipes.svcdiscovery.api.SpConfig;
+import org.apache.streampipes.svcdiscovery.consul.ConsulSpConfig;
 
 public class ConfigExtractor {
 

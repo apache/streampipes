@@ -30,7 +30,12 @@ import org.apache.streampipes.messaging.SpProtocolManager;
 import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.model.util.Cloner;
+import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
+import org.apache.streampipes.svcdiscovery.api.SpConfig;
+import org.apache.streampipes.svcdiscovery.api.model.ConfigItem;
 import org.apache.streampipes.vocabulary.StreamPipes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.util.*;
@@ -38,11 +43,15 @@ import java.util.stream.Collectors;
 
 public class DeclarersSingleton {
 
+  private static final Logger LOG = LoggerFactory.getLogger(DeclarersSingleton.class);
+
   private static DeclarersSingleton instance;
 
   private static final String Http = "http://";
   private static final String Colon = ":";
   private static final String Slash = "/";
+
+  private SpServiceDefinition serviceDefinition;
 
   private Map<String, SemanticEventProcessingAgentDeclarer> epaDeclarers;
   private Map<String, SemanticEventConsumerDeclarer> consumerDeclarers;
@@ -83,6 +92,7 @@ public class DeclarersSingleton {
 
 
   public void populate(String host, Integer port, SpServiceDefinition serviceDef) {
+    this.serviceDefinition = serviceDef;
     this.setHostName(host);
     this.setPort(port);
     this.addDeclarers(serviceDef.getDeclarers());
@@ -91,14 +101,20 @@ public class DeclarersSingleton {
     this.registerDataFormats(serviceDef.getDataFormatFactories());
     this.allAdapters = serviceDef.getSpecificAdapters();
     this.allProtocols = serviceDef.getAdapterProtocols();
+    this.registerConfigs(serviceDef.getServiceGroup(), serviceDef.getServiceName(), serviceDef.getKvConfigs());
+  }
 
-    this.serviceId = serviceDef.getServiceId();
+  private void registerConfigs(String serviceGroup,
+                               String serviceName,
+                               Map<String, ConfigItem> configs) {
+    LOG.info("Registering {} configs in key/value store", configs.size());
+    SpConfig spConfig = SpServiceDiscovery.getSpConfig(serviceGroup);
+    configs.values().forEach(spConfig::register);
+    spConfig.register(ConfigItem.from("SP_SERVICE_NAME", serviceName, ""));
   }
 
   public void addDeclarers(List<Declarer<?>> allDeclarers) {
-    for (Declarer<?> d : allDeclarers) {
-      add(d);
-    }
+    allDeclarers.forEach(this::add);
   }
 
   @Deprecated
@@ -308,5 +324,9 @@ public class DeclarersSingleton {
 
     // TODO create complete service definition
     return serviceDef;
+  }
+
+  public SpServiceDefinition getServiceDefinition() {
+    return this.serviceDefinition;
   }
 }

@@ -19,6 +19,8 @@ package org.apache.streampipes.svcdiscovery;
 
 import org.apache.streampipes.svcdiscovery.api.ISpKvManagement;
 import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
+import org.apache.streampipes.svcdiscovery.api.SpConfig;
+import org.apache.streampipes.svcdiscovery.consul.ConsulSpConfig;
 import org.apache.streampipes.svcdiscovery.consul.SpConsulKvManagement;
 import org.apache.streampipes.svcdiscovery.consul.SpConsulServiceDiscovery;
 
@@ -31,4 +33,9 @@ public class SpServiceDiscovery {
   public static ISpKvManagement getKeyValueStore() {
     return new SpConsulKvManagement();
   }
+
+  public static SpConfig getSpConfig(String serviceGroup) {
+    return new ConsulSpConfig(serviceGroup);
+  }
+
 }

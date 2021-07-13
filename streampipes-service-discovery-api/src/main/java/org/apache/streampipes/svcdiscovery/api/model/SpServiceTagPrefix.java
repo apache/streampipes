@@ -19,6 +19,7 @@ package org.apache.streampipes.svcdiscovery.api.model;
 
 public enum SpServiceTagPrefix {
   SYSTEM("sys"),
+  SP_GROUP("spgroup"),
   ADAPTER("adapter"),
   PROTOCOL("protocol"),
   DATA_STREAM("dstream"),

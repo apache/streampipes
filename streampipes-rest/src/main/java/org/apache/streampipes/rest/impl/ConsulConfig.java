@@ -22,7 +22,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.config.backend.MessagingSettings;
-import org.apache.streampipes.config.consul.ConsulSpConfig;
+import org.apache.streampipes.svcdiscovery.consul.ConsulSpConfig;
 import org.apache.streampipes.svcdiscovery.api.model.ConfigItem;
 import org.apache.streampipes.svcdiscovery.api.model.PeConfig;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
@@ -48,12 +48,11 @@ public class ConsulConfig extends AbstractRestResource {
   @GsonWithIds
   public Response getAllServiceConfigs() {
     LOG.info("Request for all service configs");
-    Map<String, String> peServices = getServiceDiscovery().getPeServices();
+    Map<String, String> peServices = getServiceDiscovery().getExtensionsServiceGroups();
 
     List<PeConfig> peConfigs = new LinkedList<>();
 
     for (Map.Entry<String, String> entry : peServices.entrySet()) {
-      String serviceName = "";
       String serviceStatus = entry.getValue();
       String mainKey = ConsulSpConfig.SERVICE_ROUTE_PREFIX + entry.getKey();
 

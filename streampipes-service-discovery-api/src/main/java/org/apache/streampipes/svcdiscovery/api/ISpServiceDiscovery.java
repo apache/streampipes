@@ -66,7 +66,7 @@ public interface ISpServiceDiscovery {
    *
    * @return list of pipline element service endpoints
    */
-  Map<String, String> getPeServices();
+  Map<String, String> getExtensionsServiceGroups();
 
   /**
    * Deregister registered service endpoint in Consul

@@ -16,25 +16,23 @@
  *
  */
 
-package org.apache.streampipes.config.consul;
+package org.apache.streampipes.svcdiscovery.consul;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.orbitz.consul.Consul;
 import com.orbitz.consul.KeyValueClient;
-import com.orbitz.consul.model.kv.Value;
-import org.apache.streampipes.config.SpConfig;
-import org.apache.streampipes.config.SpConfigChangeCallback;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
+import org.apache.streampipes.svcdiscovery.api.SpConfig;
 import org.apache.streampipes.svcdiscovery.api.model.ConfigItem;
+import org.apache.streampipes.svcdiscovery.api.model.ConfigItemUtils;
 import org.apache.streampipes.svcdiscovery.api.model.ConfigurationScope;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class ConsulSpConfig extends SpConfig implements Runnable {
+public class ConsulSpConfig extends AbstractConsulService implements SpConfig {
 
     private static final Logger LOG = LoggerFactory.getLogger(ConsulSpConfig.class);
 
@@ -45,60 +43,17 @@ public class ConsulSpConfig extends SpConfig implements Runnable {
     private final KeyValueClient kvClient;
 
     // TODO Implement mechanism to update the client when some configuration parameters change in Consul
-    private SpConfigChangeCallback callback;
     private Map<String, Object> configProps;
 
     public ConsulSpConfig(String serviceName) {
-        super(serviceName);
         Consul consul = consulInstance();
         this.kvClient = consul.keyValueClient();
         this.serviceName = serviceName;
     }
 
-    public ConsulSpConfig(String serviceName, SpConfigChangeCallback callback) {
-        this(serviceName);
-        this.callback = callback;
-        this.configProps = new HashMap<>();
-        new Thread(this).start();
-    }
-
-    @Override
-    public void run() {
-        Consul consulThread = Consul.builder().build(); // connect to Consul on localhost
-        KeyValueClient kvClientThread = consulThread.keyValueClient();
-        while (true) {
-
-            configProps.keySet().forEach((s) -> {
-                Optional<Value> te = kvClientThread.getValue(addSn(s));
-                if (!te.get().getValueAsString().get().equals(configProps.get(s))) {
-                    callback.onChange();
-                    configProps.put(s, te.get().getValueAsString().get());
-                }
-            });
-
-            try {
-                Thread.sleep(10000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     @Override
     public <T> void register(String key, T defaultValue, String description, ConfigurationScope configurationScope) {
-        register(key, String.valueOf(defaultValue), getValueType(defaultValue), description, configurationScope, false);
-    }
-
-    private <T> String getValueType(T defaultValue) {
-        if (defaultValue instanceof Boolean) {
-          return "xs:boolean";
-        } else if (defaultValue instanceof Integer) {
-          return "xs:integer";
-        } else if (defaultValue instanceof Double) {
-          return "xs:double";
-        } else {
-          return "xs:string";
-        }
+        register(key, String.valueOf(defaultValue), ConfigItemUtils.getValueType(defaultValue), description, configurationScope, false);
     }
 
     @Override
@@ -135,22 +90,26 @@ public class ConsulSpConfig extends SpConfig implements Runnable {
         register(key, defaultValue, "xs:string", description, ConfigurationScope.CONTAINER_STARTUP_CONFIG, true);
     }
 
-    private void register(String key, String defaultValue, String valueType, String description, ConfigurationScope configurationScope, boolean isPassword) {
+    @Override
+    public void register(ConfigItem configItem) {
+        String key = addSn(configItem.getKey());
+        Optional<String> i = kvClient.getValueAsString(key);
 
-        Optional<String> i = kvClient.getValueAsString(addSn(key));
-        ConfigItem configItem = prepareConfigItem(valueType, description, configurationScope, isPassword);
-        // TODO this check does not work
         if (!i.isPresent()) {
             // Set the value of environment variable as default
-            String envVariable = System.getenv(key);
+            String envVariable = System.getenv(configItem.getKey());
             if (envVariable != null) {
                 configItem.setValue(envVariable);
-                kvClient.putValue(addSn(key), toJson(configItem));
+                kvClient.putValue(key, toJson(configItem));
             } else {
-                configItem.setValue(defaultValue);
-                kvClient.putValue(addSn(key), toJson(configItem));
+                kvClient.putValue(key, toJson(configItem));
             }
         }
+    }
+
+    private void register(String key, String defaultValue, String valueType, String description, ConfigurationScope configurationScope, boolean isPassword) {
+        ConfigItem configItem = ConfigItem.from(key, defaultValue, description, valueType, configurationScope, isPassword);
+        register(configItem);
 
         if (configProps != null) {
             configProps.put(key, getString(key));

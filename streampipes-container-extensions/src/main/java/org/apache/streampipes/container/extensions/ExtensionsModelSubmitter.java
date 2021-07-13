@@ -54,7 +54,7 @@ public abstract class ExtensionsModelSubmitter extends StreamPipesExtensionsServ
     }
 
     @Override
-    protected List<SpServiceTag> getServiceTags() {
+    protected List<SpServiceTag> getExtensionsServiceTags() {
         List<SpServiceTag> serviceTags = new PipelineElementServiceTagProvider().extractServiceTags();
         serviceTags.addAll(new ConnectWorkerTagProvider().extractServiceTags());
 

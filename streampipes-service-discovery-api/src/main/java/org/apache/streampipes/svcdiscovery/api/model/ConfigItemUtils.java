@@ -15,10 +15,19 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.svcdiscovery.api.model;
 
-package org.apache.streampipes.config;
+public class ConfigItemUtils {
 
-public interface SpConfigChangeCallback {
-
-    void onChange();
+  public static <T> String getValueType(T defaultValue) {
+    if (defaultValue instanceof Boolean) {
+      return "xs:boolean";
+    } else if (defaultValue instanceof Integer) {
+      return "xs:integer";
+    } else if (defaultValue instanceof Double) {
+      return "xs:double";
+    } else {
+      return "xs:string";
+    }
+  }
 }

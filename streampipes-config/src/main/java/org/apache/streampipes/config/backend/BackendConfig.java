@@ -20,7 +20,8 @@ package org.apache.streampipes.config.backend;
 
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.streampipes.config.SpConfig;
+import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
+import org.apache.streampipes.svcdiscovery.api.SpConfig;
 
 import java.io.File;
 import java.security.SecureRandom;
@@ -32,7 +33,7 @@ public enum BackendConfig {
   private SpConfig config;
 
   BackendConfig() {
-    config = SpConfig.getSpConfig("backend");
+    config = SpServiceDiscovery.getSpConfig("backend");
 
     config.register(BackendConfigKeys.SERVICE_NAME, "Backend", "Backend Configuration");
 

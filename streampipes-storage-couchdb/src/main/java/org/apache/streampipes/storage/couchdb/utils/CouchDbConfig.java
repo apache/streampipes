@@ -18,7 +18,8 @@
 
 package org.apache.streampipes.storage.couchdb.utils;
 
-import org.apache.streampipes.config.SpConfig;
+import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
+import org.apache.streampipes.svcdiscovery.api.SpConfig;
 
 public enum CouchDbConfig {
 
@@ -30,7 +31,7 @@ public enum CouchDbConfig {
     private final static String PROTOCOL = "PROTOCOL";
 
     CouchDbConfig() {
-        config = SpConfig.getSpConfig("storage/couchdb");
+        config = SpServiceDiscovery.getSpConfig("storage/couchdb");
         config.register(COUCHDB_HOST, "couchdb", "Hostname for the couch db service");
         config.register(COUCHDB_PORT, 5984, "Port for the couch db service");
         config.register(PROTOCOL, "http", "Protocol the couch db service");

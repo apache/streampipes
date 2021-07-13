@@ -64,7 +64,7 @@ public abstract class StandaloneModelSubmitter extends StreamPipesExtensionsServ
     }
 
     @Override
-    protected List<SpServiceTag> getServiceTags() {
+    protected List<SpServiceTag> getExtensionsServiceTags() {
         return new PipelineElementServiceTagProvider().extractServiceTags();
     }
 

@@ -22,6 +22,7 @@ import org.apache.streampipes.connect.api.IProtocol;
 import org.apache.streampipes.container.declarer.Declarer;
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
+import org.apache.streampipes.svcdiscovery.api.model.ConfigItem;
 
 import java.util.*;
 
@@ -39,6 +40,7 @@ public class SpServiceDefinition {
 
   private Map<String, IProtocol> adapterProtocols;
   private Map<String, IAdapter> specificAdapters;
+  private Map<String, ConfigItem> kvConfigs;
 
   public SpServiceDefinition() {
     this.serviceId = UUID.randomUUID().toString();
@@ -47,6 +49,7 @@ public class SpServiceDefinition {
     this.protocolDefinitionFactories = new ArrayList<>();
     this.adapterProtocols = new HashMap<>();
     this.specificAdapters = new HashMap<>();
+    this.kvConfigs = new HashMap<>();
   }
 
   public String getServiceGroup() {
@@ -121,6 +124,10 @@ public class SpServiceDefinition {
     protocols.values().forEach(this::addAdapterProtocol);
   }
 
+  public void addConfig(ConfigItem configItem) {
+    this.kvConfigs.put(configItem.getKey(), configItem);
+  }
+
   public void addSpecificAdapter(IAdapter<?> adapter) {
     this.specificAdapters.put(adapter.getId(), adapter);
   }
@@ -159,5 +166,9 @@ public class SpServiceDefinition {
 
   public Map<String, IAdapter> getSpecificAdapters() {
     return specificAdapters;
+  }
+
+  public Map<String, ConfigItem> getKvConfigs() {
+    return kvConfigs;
   }
 }

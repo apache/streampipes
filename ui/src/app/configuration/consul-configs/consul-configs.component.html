@@ -17,7 +17,7 @@
   -->
 
 <div fxLayout="row" fxFlex="100"
-     style="background:white;border-top:1px solid lightgray;padding:10px;margin-bottom:5px;">
+     style="border-top:1px solid lightgray;padding:10px;margin-bottom:5px;">
     <form (ngSubmit)="updateConfiguration()" fxFlex="100">
         <mat-grid-list cols="4" rowHeight="3:1" gutterSize="10px">
             <mat-grid-tile *ngFor="let configuration of consulService.configs">

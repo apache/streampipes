@@ -25,10 +25,7 @@ import com.orbitz.consul.model.agent.Registration;
 import com.orbitz.consul.model.health.HealthCheck;
 import com.orbitz.consul.model.health.Service;
 import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
-import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;
-import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTags;
-import org.apache.streampipes.svcdiscovery.api.model.SpServiceRegistrationRequest;
-import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;
+import org.apache.streampipes.svcdiscovery.api.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +43,6 @@ public class SpConsulServiceDiscovery extends AbstractConsulService implements I
   private static final String HTTP_PROTOCOL = "http://";
   private static final String COLON = ":";
   private static final String HEALTH_CHECK_INTERVAL = "10s";
-  private static final String PE_SVC_TAG = "pe";
 
   @Override
   public void registerService(SpServiceRegistrationRequest req) {
@@ -78,7 +74,7 @@ public class SpConsulServiceDiscovery extends AbstractConsulService implements I
   }
 
   @Override
-  public Map<String, String> getPeServices() {
+  public Map<String, String> getExtensionsServiceGroups() {
     LOG.info("Load pipeline element service status");
     Consul consul = consulInstance();
     AgentClient agent = consul.agentClient();
@@ -89,17 +85,27 @@ public class SpConsulServiceDiscovery extends AbstractConsulService implements I
     Map<String, String> peSvcs = new HashMap<>();
 
     for (Map.Entry<String, Service> entry : services.entrySet()) {
-      if (entry.getValue().getTags().contains(PE_SVC_TAG)) {
+      if (hasExtensionsTag(entry.getValue().getTags())) {
         String serviceId = entry.getValue().getId();
         String serviceStatus = "critical";
         if (checks.containsKey("service:" + entry.getKey())) {
           serviceStatus = checks.get("service:" + entry.getKey()).getStatus();
         }
         LOG.info("Service id: " + serviceId + " service status: " + serviceStatus);
-        peSvcs.put(serviceId, serviceStatus);
+        String serviceGroup = extractServiceGroup(entry.getValue().getTags());
+        peSvcs.put(serviceGroup, serviceStatus);
       }
     }
     return peSvcs;
+  }
+
+  private boolean hasExtensionsTag(List<String> tags) {
+    return tags.stream().anyMatch(tag -> tag.equals(DefaultSpServiceTags.PE.asString()) || tag.equals(DefaultSpServiceTags.CONNECT_WORKER.asString()));
+  }
+
+  private String extractServiceGroup(List<String> tags) {
+    String groupTag = tags.stream().filter(tag -> tag.startsWith(SpServiceTagPrefix.SP_GROUP.asString())).findFirst().orElse("unknown service group");
+    return groupTag.replaceAll(SpServiceTagPrefix.SP_GROUP.asString() + ":", "");
   }
 
   @Override

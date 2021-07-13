@@ -17,21 +17,24 @@
  */
 package org.apache.streampipes.container.model;
 
-import org.apache.streampipes.config.SpConfig;
-import org.apache.streampipes.config.consul.ConsulSpConfig;
 import org.apache.streampipes.connect.api.Connector;
 import org.apache.streampipes.connect.api.IAdapter;
 import org.apache.streampipes.connect.api.IProtocol;
 import org.apache.streampipes.container.declarer.Declarer;
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
+import org.apache.streampipes.svcdiscovery.api.model.ConfigItem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
 public class SpServiceDefinitionBuilder {
 
+  private static final Logger LOG = LoggerFactory.getLogger(SpServiceDefinitionBuilder.class);
+
   private SpServiceDefinition serviceDefinition;
-  private SpConfig config;
+  //private SpConfig config;
 
   public static SpServiceDefinitionBuilder create(String serviceGroup,
                                                   String serviceName,
@@ -49,7 +52,7 @@ public class SpServiceDefinitionBuilder {
     this.serviceDefinition.setServiceName(serviceName);
     this.serviceDefinition.setServiceDescription(serviceDescription);
     this.serviceDefinition.setDefaultPort(defaultPort);
-    this.config = new ConsulSpConfig(serviceGroup);
+    //this.config = new ConsulSpConfig(serviceGroup);
   }
 
   public SpServiceDefinitionBuilder withHostname(String hostname) {
@@ -58,17 +61,22 @@ public class SpServiceDefinitionBuilder {
   }
 
   public SpServiceDefinitionBuilder addConfig(String key, String defaultValue, String description) {
-    this.config.register(key, defaultValue, description);
+    this.serviceDefinition.addConfig(ConfigItem.from(key, defaultValue, description));
     return this;
   }
 
   public SpServiceDefinitionBuilder addConfig(String key, Integer defaultValue, String description) {
-    this.config.register(key, defaultValue, description);
+    this.serviceDefinition.addConfig(ConfigItem.from(key, defaultValue, description));
     return this;
   }
 
   public SpServiceDefinitionBuilder addConfig(String key, Boolean defaultValue, String description) {
-    this.config.register(key, defaultValue, description);
+    this.serviceDefinition.addConfig(ConfigItem.from(key, defaultValue, description));
+    return this;
+  }
+
+  public SpServiceDefinitionBuilder addConfig(ConfigItem configItem) {
+    this.serviceDefinition.addConfig(configItem);
     return this;
   }
 
@@ -120,6 +128,12 @@ public class SpServiceDefinitionBuilder {
     this.serviceDefinition.addDeclarers(other.getDeclarers());
     this.serviceDefinition.addAdapterProtocols(other.getAdapterProtocols());
     this.serviceDefinition.addSpecificAdapters(other.getSpecificAdapters());
+    other.getKvConfigs().values().forEach(value -> {
+      if (this.serviceDefinition.getKvConfigs().containsKey(value.getKey())) {
+        LOG.warn("Config key {} already exists and will be overridden by merge, which might lead to strange results.", value.getKey());
+      }
+      this.serviceDefinition.addConfig(value);
+    });
     return this;
   }
 

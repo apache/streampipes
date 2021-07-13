@@ -43,7 +43,7 @@ public abstract class AdapterWorkerContainer extends StreamPipesExtensionsServic
   }
 
   @Override
-  protected List<SpServiceTag> getServiceTags() {
+  protected List<SpServiceTag> getExtensionsServiceTags() {
     return new ConnectWorkerTagProvider().extractServiceTags();
   }
 

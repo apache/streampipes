@@ -20,62 +20,100 @@ package org.apache.streampipes.svcdiscovery.api.model;
 
 public class ConfigItem {
 
-    private String key;
-    private String description;
-    private String value;
-    private String valueType;
-    private ConfigurationScope configurationScope;
-    private boolean isPassword;
+  private String key;
+  private String description;
+  private String value;
+  private String valueType;
+  private ConfigurationScope configurationScope;
+  private boolean isPassword;
 
-    public ConfigItem() {
-        setPassword(false);
-    }
+  public static <T> ConfigItem from(String key,
+                                    T defaultValue,
+                                    String description) {
+    return from(key, defaultValue, description, ConfigurationScope.CONTAINER_STARTUP_CONFIG, false);
+  }
 
-    public String getKey() {
-        return key;
-    }
+  public static <T> ConfigItem from(String key,
+                                    T defaultValue,
+                                    String description,
+                                    ConfigurationScope configurationScope) {
+    return from(key, defaultValue, description, configurationScope, false);
+  }
 
-    public void setKey(String key) {
-        this.key = key;
-    }
+  public static <T> ConfigItem from(String key,
+                                    T defaultValue,
+                                    String description,
+                                    ConfigurationScope configurationScope,
+                                    boolean isPassword) {
+    return from(key, defaultValue, description, ConfigItemUtils.getValueType(defaultValue), configurationScope, isPassword);
+  }
 
-    public String getDescription() {
-        return description;
-    }
+  public static <T> ConfigItem from(String key,
+                                    T defaultValue,
+                                    String description,
+                                    String valueType,
+                                    ConfigurationScope configurationScope,
+                                    boolean isPassword) {
+    ConfigItem configItem = new ConfigItem();
+    configItem.setKey(key);
+    configItem.setValue(String.valueOf(defaultValue));
+    configItem.setValueType(valueType);
+    configItem.setDescription(description);
+    configItem.setConfigurationScope(configurationScope);
+    configItem.setPassword(isPassword);
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    return configItem;
+  }
 
-    public String getValue() {
-        return value;
-    }
+  public ConfigItem() {
+    setPassword(false);
+  }
 
-    public void setValue(String value) {
-        this.value = value;
-    }
+  public String getKey() {
+    return key;
+  }
 
-    public String getValueType() {
-        return valueType;
-    }
+  public void setKey(String key) {
+    this.key = key;
+  }
 
-    public void setValueType(String valueType) {
-        this.valueType = valueType;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public boolean isPassword() {
-        return isPassword;
-    }
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-    public void setPassword(boolean state) {
-        isPassword = state;
-    }
+  public String getValue() {
+    return value;
+  }
 
-    public ConfigurationScope getConfigurationScope() {
-        return configurationScope;
-    }
+  public void setValue(String value) {
+    this.value = value;
+  }
 
-    public void setConfigurationScope(ConfigurationScope configurationScope) {
-        this.configurationScope = configurationScope;
-    }
+  public String getValueType() {
+    return valueType;
+  }
+
+  public void setValueType(String valueType) {
+    this.valueType = valueType;
+  }
+
+  public boolean isPassword() {
+    return isPassword;
+  }
+
+  public void setPassword(boolean state) {
+    isPassword = state;
+  }
+
+  public ConfigurationScope getConfigurationScope() {
+    return configurationScope;
+  }
+
+  public void setConfigurationScope(ConfigurationScope configurationScope) {
+    this.configurationScope = configurationScope;
+  }
 }

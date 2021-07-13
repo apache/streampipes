@@ -71,7 +71,7 @@ public abstract class InvocablePipelineElementResource<I extends InvocableStream
                 String runningInstanceId = getInstanceId(graph.getElementId(), elementId);
                 if (!RunningInstances.INSTANCE.exists(runningInstanceId)) {
                     RunningInstances.INSTANCE.add(runningInstanceId, graph, declarer.getClass().newInstance());
-                    Response resp = RunningInstances.INSTANCE.getInvocation(runningInstanceId).invokeRuntime(graph, getServiceId());
+                    Response resp = RunningInstances.INSTANCE.getInvocation(runningInstanceId).invokeRuntime(graph, getServiceGroup());
                     if (!resp.isSuccess()) {
                         LOG.error("Could not invoke pipeline element {} due to the following error: {}",
                                 graph.getName(),
@@ -145,7 +145,7 @@ public abstract class InvocablePipelineElementResource<I extends InvocableStream
         InvocableDeclarer runningInstance = RunningInstances.INSTANCE.getInvocation(runningInstanceId);
 
         if (runningInstance != null) {
-            Response resp = runningInstance.detachRuntime(runningInstanceId, getServiceId());
+            Response resp = runningInstance.detachRuntime(runningInstanceId, getServiceGroup());
 
             if (resp.isSuccess()) {
                 RunningInstances.INSTANCE.remove(runningInstanceId);
@@ -172,8 +172,8 @@ public abstract class InvocablePipelineElementResource<I extends InvocableStream
         return "true".equals(System.getenv("SP_DEBUG"));
     }
 
-    private String getServiceId() {
-        return DeclarersSingleton.getInstance().getServiceId();
+    private String getServiceGroup() {
+        return DeclarersSingleton.getInstance().getServiceDefinition().getServiceGroup();
     }
 }
 
