@@ -19,7 +19,9 @@
 package org.apache.streampipes.sources;
 
 
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.container.declarer.DataStreamDeclarer;
+import org.apache.streampipes.container.init.DeclarersSingleton;
 
 public abstract class AbstractAlreadyExistingStream implements DataStreamDeclarer {
 
@@ -31,5 +33,9 @@ public abstract class AbstractAlreadyExistingStream implements DataStreamDeclare
 	@Override
 	public boolean isExecutable() {
 		return false;
+	}
+
+	public ConfigExtractor configExtractor() {
+		return ConfigExtractor.from(DeclarersSingleton.getInstance().getServiceDefinition().getServiceGroup());
 	}
 }

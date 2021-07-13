@@ -93,6 +93,7 @@ public class DeclarersSingleton {
 
   public void populate(String host, Integer port, SpServiceDefinition serviceDef) {
     this.serviceDefinition = serviceDef;
+    this.registerConfigs(serviceDef.getServiceGroup(), serviceDef.getServiceName(), serviceDef.getKvConfigs());
     this.setHostName(host);
     this.setPort(port);
     this.addDeclarers(serviceDef.getDeclarers());
@@ -101,7 +102,7 @@ public class DeclarersSingleton {
     this.registerDataFormats(serviceDef.getDataFormatFactories());
     this.allAdapters = serviceDef.getSpecificAdapters();
     this.allProtocols = serviceDef.getAdapterProtocols();
-    this.registerConfigs(serviceDef.getServiceGroup(), serviceDef.getServiceName(), serviceDef.getKvConfigs());
+
   }
 
   private void registerConfigs(String serviceGroup,

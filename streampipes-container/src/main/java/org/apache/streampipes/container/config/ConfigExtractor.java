@@ -24,12 +24,12 @@ public class ConfigExtractor {
 
   private SpConfig config;
 
-  public static ConfigExtractor from(String serviceId) {
-    return new ConfigExtractor(serviceId);
+  public static ConfigExtractor from(String serviceGroup) {
+    return new ConfigExtractor(serviceGroup);
   }
 
-  private ConfigExtractor(String serviceId) {
-    this.config = new ConsulSpConfig(serviceId);
+  private ConfigExtractor(String serviceGroup) {
+    this.config = new ConsulSpConfig(serviceGroup);
   }
 
   public SpConfig getConfig() {

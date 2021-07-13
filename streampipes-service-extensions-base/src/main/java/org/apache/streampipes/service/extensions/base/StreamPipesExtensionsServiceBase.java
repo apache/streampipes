@@ -75,7 +75,9 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
     @Override
     protected List<SpServiceTag> getServiceTags() {
         List<SpServiceTag> tags = new ArrayList<>();
-        tags.add(SpServiceTag.create(SpServiceTagPrefix.SP_GROUP, DeclarersSingleton.getInstance().getServiceDefinition().getServiceGroup()));
+        if (DeclarersSingleton.getInstance().getServiceDefinition() != null) {
+            tags.add(SpServiceTag.create(SpServiceTagPrefix.SP_GROUP, DeclarersSingleton.getInstance().getServiceDefinition().getServiceGroup()));
+        }
         tags.addAll(getExtensionsServiceTags());
         return tags;
     }

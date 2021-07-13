@@ -18,13 +18,18 @@
 
 package org.apache.streampipes.sources;
 
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.container.declarer.DataStreamDeclarer;
+import org.apache.streampipes.container.init.DeclarersSingleton;
 
 public abstract class AbstractAdapterIncludedStream implements DataStreamDeclarer {
-
 
   @Override
   public boolean isExecutable() {
     return true;
+  }
+
+  public ConfigExtractor configExtractor() {
+    return ConfigExtractor.from(DeclarersSingleton.getInstance().getServiceDefinition().getServiceGroup());
   }
 }
