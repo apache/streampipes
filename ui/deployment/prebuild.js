@@ -103,7 +103,7 @@ if (process.env.LOGO_HEADER_LOC !== undefined) {
 
 if (process.env.LOGO_NAV_LOC !== undefined) {
     console.log('Using custom-provided navbar logo' + process.env.LOGO_NAV_LOC);
-    fs.writeFileSync('src/assets/img/sp/sp-logo-right-white.png', fs.readFileSync(process.env.LOGO_NAV_LOC));
+    fs.writeFileSync('src/assets/img/sp/logo-navigation.png', fs.readFileSync(process.env.LOGO_NAV_LOC));
 }
 
 console.log('Pre-Build finished.');
