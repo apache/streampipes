@@ -19,7 +19,7 @@
 package org.apache.streampipes.sinks.notifications.jvm.email;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.config.SpConfig;
+import org.apache.streampipes.svcdiscovery.api.SpConfig;
 import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.EventConverter;

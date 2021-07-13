@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.processors.statistics.flink.config;
 
-import org.apache.streampipes.config.SpConfig;
+import org.apache.streampipes.svcdiscovery.api.SpConfig;
 import org.apache.streampipes.container.model.PeConfig;
 
 public enum StatisticsFlinkConfig implements PeConfig {

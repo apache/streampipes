@@ -19,10 +19,11 @@
 package org.apache.streampipes.processors.imageprocessing.jvm.config;
 
 
-import static org.apache.streampipes.processors.imageprocessing.jvm.config.ConfigKeys.*;
-
-import org.apache.streampipes.config.SpConfig;
 import org.apache.streampipes.container.model.PeConfig;
+import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
+import org.apache.streampipes.svcdiscovery.api.SpConfig;
+
+import static org.apache.streampipes.processors.imageprocessing.jvm.config.ConfigKeys.SERVICE_NAME_KEY;
 
 public enum ImageProcessingJvmConfig implements PeConfig {
 	INSTANCE;
@@ -36,7 +37,7 @@ public enum ImageProcessingJvmConfig implements PeConfig {
 	private final static String service_container_name = "processors-image-processing-jvm";
 
 	ImageProcessingJvmConfig() {
-		config = SpConfig.getSpConfig(service_id);
+		config = SpServiceDiscovery.getSpConfig(service_id);
 		config.register(ConfigKeys.HOST, service_container_name, "Hostname for the pe image processing");
 		config.register(ConfigKeys.PORT, 8090, "Port for the pe image processing");
 

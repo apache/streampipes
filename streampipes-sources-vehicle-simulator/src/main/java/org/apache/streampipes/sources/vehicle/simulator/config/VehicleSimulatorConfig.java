@@ -18,7 +18,8 @@
 
 package org.apache.streampipes.sources.vehicle.simulator.config;
 
-import org.apache.streampipes.config.SpConfig;
+import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
+import org.apache.streampipes.svcdiscovery.api.SpConfig;
 import org.apache.streampipes.container.model.PeConfig;
 
 public enum VehicleSimulatorConfig implements PeConfig {
@@ -33,7 +34,7 @@ public enum VehicleSimulatorConfig implements PeConfig {
   public static String serverUrl;
 
   VehicleSimulatorConfig() {
-    config = SpConfig.getSpConfig(service_id);
+    config = SpServiceDiscovery.getSpConfig(service_id);
 
     /*
       TUTORIAL:

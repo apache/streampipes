@@ -19,7 +19,8 @@
 package org.apache.streampipes.processors.geo.jvm.config;
 
 
-import org.apache.streampipes.config.SpConfig;
+import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
+import org.apache.streampipes.svcdiscovery.api.SpConfig;
 import org.apache.streampipes.container.model.PeConfig;
 
 public enum GeoJvmConfig implements PeConfig {
@@ -34,7 +35,7 @@ public enum GeoJvmConfig implements PeConfig {
   private final static String service_container_name = "processors-geo-jvm";
 
   GeoJvmConfig() {
-    config = SpConfig.getSpConfig(service_id);
+    config = SpServiceDiscovery.getSpConfig(service_id);
     config.register(ConfigKeys.HOST, service_container_name, "Hostname for the geo container");
     config.register(ConfigKeys.PORT, 8090, "Port for the pe esper");
 

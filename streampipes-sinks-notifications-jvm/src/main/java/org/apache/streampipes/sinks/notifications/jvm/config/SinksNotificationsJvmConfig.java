@@ -19,7 +19,8 @@
 package org.apache.streampipes.sinks.notifications.jvm.config;
 
 
-import org.apache.streampipes.config.SpConfig;
+import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
+import org.apache.streampipes.svcdiscovery.api.SpConfig;
 import org.apache.streampipes.container.model.PeConfig;
 
 public enum SinksNotificationsJvmConfig implements PeConfig {
@@ -35,7 +36,7 @@ public enum SinksNotificationsJvmConfig implements PeConfig {
 
 
   SinksNotificationsJvmConfig() {
-    config = SpConfig.getSpConfig(service_id);
+    config = SpServiceDiscovery.getSpConfig(service_id);
     config.register(ConfigKeys.HOST, service_container_name, "Hostname for the notifications module");
     config.register(ConfigKeys.PORT, 8090, "Port for the pe esper");
 

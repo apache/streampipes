@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.extensions.all.jvm.config;
 
-import org.apache.streampipes.config.SpConfig;
+import org.apache.streampipes.svcdiscovery.api.SpConfig;
 import org.apache.streampipes.container.model.ExtensionsConfig;
 
 public enum AllExtensionsConfig implements ExtensionsConfig {

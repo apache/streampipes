@@ -19,7 +19,8 @@
 package org.apache.streampipes.connect.config;
 
 
-import org.apache.streampipes.config.SpConfig;
+import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
+import org.apache.streampipes.svcdiscovery.api.SpConfig;
 
 public enum ConnectWorkerConfig {
   INSTANCE;
@@ -29,7 +30,7 @@ public enum ConnectWorkerConfig {
 
   ConnectWorkerConfig() {
     String name = "connect-worker-main";
-    config = SpConfig.getSpConfig("connect-worker-main");
+    config = SpServiceDiscovery.getSpConfig("connect-worker-main");
 
     config.register(ConfigKeys.KAFKA_HOST, "kafka", "Hostname for backend service for kafka");
     config.register(ConfigKeys.KAFKA_PORT, 9092, "Port for backend service for kafka");

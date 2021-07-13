@@ -17,7 +17,8 @@
  */
 package org.apache.streampipes.pe.jvm.config;
 
-import org.apache.streampipes.config.SpConfig;
+import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
+import org.apache.streampipes.svcdiscovery.api.SpConfig;
 import org.apache.streampipes.container.model.PeConfig;
 
 public enum AllPipelineElementsConfig implements PeConfig {
@@ -32,7 +33,7 @@ public enum AllPipelineElementsConfig implements PeConfig {
   private final static String service_container_name = "pipeline-elements-all-jvm";
 
   AllPipelineElementsConfig() {
-    config = SpConfig.getSpConfig(service_id);
+    config = SpServiceDiscovery.getSpConfig(service_id);
     config.register(ConfigKeys.HOST, service_container_name, "Hostname for the pe esper");
     config.register(ConfigKeys.PORT, 8090, "Port for the pe esper");
 
