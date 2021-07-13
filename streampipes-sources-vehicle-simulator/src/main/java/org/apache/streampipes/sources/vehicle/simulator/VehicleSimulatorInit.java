@@ -18,16 +18,27 @@
 
 package org.apache.streampipes.sources.vehicle.simulator;
 
-import org.apache.streampipes.container.init.DeclarersSingleton;
+import org.apache.streampipes.container.model.SpServiceDefinition;
+import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.container.standalone.init.StandaloneModelSubmitter;
-import org.apache.streampipes.sources.vehicle.simulator.config.VehicleSimulatorConfig;
+import org.apache.streampipes.sources.vehicle.simulator.config.ConfigKeys;
 import org.apache.streampipes.sources.vehicle.simulator.vehicle.streams.VehicleStream;
 
 public class VehicleSimulatorInit extends StandaloneModelSubmitter {
 
   public static void main(String[] args) {
-    DeclarersSingleton.getInstance().add(new VehicleStream());
+    new VehicleSimulatorInit().init();
+  }
 
-    new VehicleSimulatorInit().init(VehicleSimulatorConfig.INSTANCE);
+  @Override
+  public SpServiceDefinition provideServiceDefinition() {
+    return SpServiceDefinitionBuilder.create("org-apache-streampipes-sources-simulator-vehicle",
+            "Vehicle Simulator",
+            "",
+            8090)
+            .registerPipelineElement(new VehicleStream())
+            .addConfig(ConfigKeys.KAFKA_HOST, "kafka", "Host for kafka of the vehicle simulator")
+            .addConfig(ConfigKeys.KAFKA_PORT, 9092, "Port for kafka of the vehicle simulator")
+            .build();
   }
 }

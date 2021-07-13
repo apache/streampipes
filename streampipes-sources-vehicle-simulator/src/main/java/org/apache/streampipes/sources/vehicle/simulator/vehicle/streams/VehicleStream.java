@@ -26,7 +26,7 @@ import org.apache.streampipes.sdk.helpers.Formats;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Protocols;
 import org.apache.streampipes.sources.AbstractAdapterIncludedStream;
-import org.apache.streampipes.sources.vehicle.simulator.config.VehicleSimulatorConfig;
+import org.apache.streampipes.sources.vehicle.simulator.config.ConfigKeys;
 import org.apache.streampipes.sources.vehicle.simulator.simulator.VehicleDataSimulator;
 import org.apache.streampipes.vocabulary.Geo;
 
@@ -45,7 +45,9 @@ public class VehicleStream extends AbstractAdapterIncludedStream {
             .property(EpProperties.doubleEp(Labels.from("longitude", "Longitude", "Denotes the longitude " +
                     "value of the vehicle's position"), "longitude", Geo.lng))
             .format(Formats.jsonFormat())
-            .protocol(Protocols.kafka(VehicleSimulatorConfig.INSTANCE.getKafkaHost(), VehicleSimulatorConfig.INSTANCE.getKafkaPort(),
+            .protocol(Protocols.kafka(
+                    configExtractor().getConfig().getString(ConfigKeys.KAFKA_HOST),
+                    configExtractor().getConfig().getInteger(ConfigKeys.KAFKA_PORT),
                     "org.apache.streampipes.examples.sources.vehicle"))
             .build();
   }
