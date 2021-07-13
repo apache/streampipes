@@ -29,7 +29,7 @@ import org.apache.streampipes.sdk.helpers.Protocols;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.sdk.utils.Datatypes;
 import org.apache.streampipes.sources.AbstractAlreadyExistingStream;
-import org.apache.streampipes.sources.watertank.simulator.config.WatertankSimulatorConfig;
+import org.apache.streampipes.sources.watertank.simulator.config.ConfigKeys;
 import org.apache.streampipes.sources.watertank.simulator.vocabulary.WaterTankVocabulary;
 
 public class FlowRate2Stream extends AbstractAlreadyExistingStream {
@@ -84,7 +84,9 @@ public class FlowRate2Stream extends AbstractAlreadyExistingStream {
                     .scope(PropertyScope.MEASUREMENT_PROPERTY)
                     .build())
             .format(Formats.jsonFormat())
-            .protocol(Protocols.kafka(WatertankSimulatorConfig.INSTANCE.getKafkaHost(), WatertankSimulatorConfig.INSTANCE.getKafkaPort(),
+            .protocol(Protocols.kafka(
+                    configExtractor().getConfig().getString(ConfigKeys.KAFKA_HOST),
+                    configExtractor().getConfig().getInteger(ConfigKeys.KAFKA_PORT),
                     "org.apache.streampipes.examples.flowrate2"))
             .build();
   }

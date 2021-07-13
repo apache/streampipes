@@ -18,21 +18,31 @@
 
 package org.apache.streampipes.sources.watertank.simulator;
 
-import org.apache.streampipes.container.init.DeclarersSingleton;
+import org.apache.streampipes.container.model.SpServiceDefinition;
+import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.container.standalone.init.StandaloneModelSubmitter;
-import org.apache.streampipes.sources.watertank.simulator.config.WatertankSimulatorConfig;
+import org.apache.streampipes.sources.watertank.simulator.config.ConfigKeys;
 import org.apache.streampipes.sources.watertank.simulator.watertank.streams.*;
 
 public class WatertankSimulatorInit extends StandaloneModelSubmitter {
 
   public static void main(String[] args) {
-    DeclarersSingleton.getInstance()
-            .add(new FlowRate1Stream())
-            .add(new FlowRate2Stream())
-            .add(new PressureTankStream())
-            .add(new WaterLevel1Stream())
-            .add(new WaterLevel2Stream());
+    new WatertankSimulatorInit().init();
+  }
 
-    new WatertankSimulatorInit().init(WatertankSimulatorConfig.INSTANCE);
+  @Override
+  public SpServiceDefinition provideServiceDefinition() {
+    return SpServiceDefinitionBuilder.create("org-apache-streampipes-sources-simulator-watertank",
+            "Watertank Simulator",
+            "",
+            8090)
+            .registerPipelineElement(new FlowRate1Stream())
+            .registerPipelineElement(new FlowRate2Stream())
+            .registerPipelineElement(new PressureTankStream())
+            .registerPipelineElement(new WaterLevel1Stream())
+            .registerPipelineElement(new WaterLevel2Stream())
+            .addConfig(ConfigKeys.KAFKA_HOST, "kafka", "Host for kafka of the watertank simulator")
+            .addConfig(ConfigKeys.KAFKA_PORT, 9092, "Port for kafka of the watertank simulator")
+            .build();
   }
 }

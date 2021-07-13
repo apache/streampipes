@@ -21,9 +21,11 @@ package org.apache.streampipes.sources.watertank.simulator.utils;
 import net.acesinc.data.json.generator.config.JSONConfigReader;
 import net.acesinc.data.json.generator.config.SimulationConfig;
 import net.acesinc.data.json.generator.config.WorkflowConfig;
+import org.apache.streampipes.container.config.ConfigExtractor;
+import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.pe.simulator.StreamPipesSimulationRunner;
 import org.apache.streampipes.pe.simulator.TopicAwareWorkflow;
-import org.apache.streampipes.sources.watertank.simulator.config.WatertankSimulatorConfig;
+import org.apache.streampipes.sources.watertank.simulator.config.ConfigKeys;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -35,10 +37,11 @@ public class WatertankDataSimulator implements Runnable {
 
   private void initSimulation() {
     try {
+      ConfigExtractor configExtractor = ConfigExtractor.from(DeclarersSingleton.getInstance().getServiceDefinition().getServiceGroup());
       SimulationConfig config = buildSimulationConfig();
       Map<String, TopicAwareWorkflow> workflows = buildSimWorkflows(config);
-      String kafkaHost = WatertankSimulatorConfig.INSTANCE.getKafkaHost();
-      Integer kafkaPort = WatertankSimulatorConfig.INSTANCE.getKafkaPort();
+      String kafkaHost = configExtractor.getConfig().getString(ConfigKeys.KAFKA_HOST);
+      Integer kafkaPort = configExtractor.getConfig().getInteger(ConfigKeys.KAFKA_PORT);
       new StreamPipesSimulationRunner(config, workflows, kafkaHost, kafkaPort).startSimulation();
 
     } catch (IOException e) {
