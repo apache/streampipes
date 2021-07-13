@@ -18,6 +18,7 @@
 package org.apache.streampipes.connect.container.master.management;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
+import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterDescription;
@@ -61,6 +62,22 @@ public class WorkerUrlProvider {
 
   public String getWorkerBaseUrl(String appId) throws NoServiceEndpointsAvailableException {
     return getEndpointGenerator(appId).getEndpointBaseUrl();
+  }
+
+  public String getWorkerServiceGroup(String appId) throws AdapterException {
+    return this.connectWorkerContainerStorage
+            .getAllConnectWorkerContainers()
+            .stream()
+            .filter(c -> hasProtocolOrAdapter(c, appId))
+            .findFirst()
+            .map(ConnectWorkerContainer::getServiceGroup)
+            .orElseThrow(AdapterException::new);
+  }
+
+  private boolean hasProtocolOrAdapter(ConnectWorkerContainer c,
+                                       String appId) {
+    return c.getAdapters().stream().anyMatch(a -> a.getAppId().equals(appId)) ||
+            c.getProtocols().stream().anyMatch(p -> p.getAppId().equals(appId));
   }
 
   private ExtensionsServiceEndpointGenerator getEndpointGenerator(String appId) {

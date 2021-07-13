@@ -69,6 +69,8 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
 
     private String selectedEndpointUrl;
 
+    private String correspondingServiceGroup;
+
     public AdapterDescription() {
         super();
         this.rules = new ArrayList<>();
@@ -106,6 +108,7 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
         this.category = new Cloner().epaTypes(other.getCategory());
         this.createdAt = other.getCreatedAt();
         this.selectedEndpointUrl = other.getSelectedEndpointUrl();
+        this.correspondingServiceGroup = other.getCorrespondingServiceGroup();
         if (other.getEventGrounding() != null) this.eventGrounding = new EventGrounding(other.getEventGrounding());
     }
 
@@ -246,5 +249,13 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
 
     public void setSelectedEndpointUrl(String selectedEndpointUrl) {
         this.selectedEndpointUrl = selectedEndpointUrl;
+    }
+
+    public String getCorrespondingServiceGroup() {
+        return correspondingServiceGroup;
+    }
+
+    public void setCorrespondingServiceGroup(String correspondingServiceGroup) {
+        this.correspondingServiceGroup = correspondingServiceGroup;
     }
 }

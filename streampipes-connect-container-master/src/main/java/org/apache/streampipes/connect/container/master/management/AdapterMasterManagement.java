@@ -23,7 +23,6 @@ import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.connect.adapter.GroundingService;
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.util.AdapterEncryptionService;
-import org.apache.streampipes.connect.container.master.util.Utils;
 import org.apache.streampipes.manager.storage.UserService;
 import org.apache.streampipes.manager.verification.DataStreamVerifier;
 import org.apache.streampipes.model.SpDataStream;
@@ -67,16 +66,14 @@ public class AdapterMasterManagement {
     List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
 
     for (AdapterDescription ad : allAdapters) {
+
       if (ad instanceof AdapterStreamDescription) {
         AdapterDescription decryptedAdapterDescription =
                 new AdapterEncryptionService(new Cloner().adapterDescription(ad)).decrypt();
-        String wUrl = workerUrlProvider.getWorkerUrlForAdapter(decryptedAdapterDescription);
 
-        if (wUrl.equals(connectWorkerContainer.getServiceGroup())) {
-          String url = Utils.addUserNameToApi(connectWorkerContainer.getServiceGroup(),
-                  decryptedAdapterDescription.getUserName());
-
-          WorkerRestClient.invokeStreamAdapter(url, (AdapterStreamDescription) decryptedAdapterDescription);
+        if (decryptedAdapterDescription.getCorrespondingServiceGroup().equals(connectWorkerContainer.getServiceGroup())) {
+          String wUrl = workerUrlProvider.getWorkerBaseUrl(decryptedAdapterDescription.getAppId());
+          WorkerRestClient.invokeStreamAdapter(wUrl, (AdapterStreamDescription) decryptedAdapterDescription);
         }
 
       }
@@ -96,6 +93,7 @@ public class AdapterMasterManagement {
     ad.setElementId(ad.getElementId() + ":" + uuid);
     ad.setCreatedAt(System.currentTimeMillis());
     ad.setSelectedEndpointUrl(endpointUrl);
+    ad.setCorrespondingServiceGroup(new WorkerUrlProvider().getWorkerServiceGroup(ad.getAppId()));
 
     AdapterDescription encryptedAdapterDescription =
             new AdapterEncryptionService(new Cloner().adapterDescription(ad)).encrypt();
