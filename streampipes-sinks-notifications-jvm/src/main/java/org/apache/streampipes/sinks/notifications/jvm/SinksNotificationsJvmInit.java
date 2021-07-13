@@ -45,7 +45,7 @@ public class SinksNotificationsJvmInit extends StandaloneModelSubmitter {
     return SpServiceDefinitionBuilder.create("org.apache.streampipes.sinks.notifications.jvm",
             "Sinks Notifications JVM",
             "",
-            8096)
+            8090)
             .registerPipelineElements(
                     new EmailController(),
                     new OneSignalController(),
