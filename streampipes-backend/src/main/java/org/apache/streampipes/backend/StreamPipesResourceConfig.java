@@ -101,6 +101,14 @@ public class StreamPipesResourceConfig extends ResourceConfig {
         register(Visualization.class);
         register(VisualizablePipeline.class);
 
+        // Serializers
+        register(GsonWithIdProvider.class);
+        register(GsonWithoutIdProvider.class);
+        register(GsonClientModelProvider.class);
+        register(JsonLdProvider.class);
+        register(JacksonSerializationProvider.class);
+        register(MultiPartFeature.class);
+
         // Platform Services
         register(PipelineElementTemplateResource.class);
         register(DataLakeResourceV4.class);
