@@ -32,6 +32,7 @@ public class SpDataSet extends SpDataStream {
   private String datasetInvocationId;
 
   private String correspondingPipeline;
+  private String selectedEndpointUrl;
 
   public SpDataSet(String uri, String name, String description, String iconUrl, List<EventStreamQualityDefinition>
           hasEventStreamQualities,
@@ -97,5 +98,13 @@ public class SpDataSet extends SpDataStream {
 
   public void setCorrespondingPipeline(String correspondingPipeline) {
     this.correspondingPipeline = correspondingPipeline;
+  }
+
+  public String getSelectedEndpointUrl() {
+    return selectedEndpointUrl;
+  }
+
+  public void setSelectedEndpointUrl(String selectedEndpointUrl) {
+    this.selectedEndpointUrl = selectedEndpointUrl;
   }
 }

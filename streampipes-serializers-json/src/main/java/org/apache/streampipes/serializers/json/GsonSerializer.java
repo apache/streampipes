@@ -86,6 +86,8 @@ public class GsonSerializer {
     builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(SpDataStream.class, "sourceType")
             .registerSubtype(SpDataSet.class, "org.apache.streampipes.model.SpDataSet")
             .registerSubtype(SpDataStream.class, "org.apache.streampipes.model.SpDataStream"));
+    builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(SpDataSet.class, "sourceType")
+                    .registerSubtype(SpDataSet.class, "org.apache.streampipes.model.SpDataSet"));
 
     builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(TransformationRuleDescription.class, "sourceType")
             .registerSubtype(RenameRuleDescription.class, "org.apache.streampipes.model.RenameRuleDescription")

@@ -60,7 +60,7 @@ public class GraphSubmitter {
     if (status.getElementStatus().stream().allMatch(PipelineElementStatus::isSuccess)) {
       dataSets.forEach(dataSet ->
               status.addPipelineElementStatus
-                      (new HttpRequestBuilder(dataSet, dataSet.getUri()).invoke()));
+                      (performInvocation(dataSet)));
     }
     status.setSuccess(status.getElementStatus().stream().allMatch(PipelineElementStatus::isSuccess));
 
@@ -96,9 +96,7 @@ public class GraphSubmitter {
     status.setPipelineName(pipelineName);
 
     graphs.forEach(g -> status.addPipelineElementStatus(performDetach(g)));
-    dataSets.forEach(dataSet -> status.addPipelineElementStatus(new HttpRequestBuilder(dataSet, dataSet.getUri() +
-            "/" +dataSet.getDatasetInvocationId())
-            .detach()));
+    dataSets.forEach(dataSet -> status.addPipelineElementStatus(performDetach(dataSet)));
     status.setSuccess(status.getElementStatus().stream().allMatch(PipelineElementStatus::isSuccess));
 
     if (status.isSuccess()) {
@@ -115,8 +113,18 @@ public class GraphSubmitter {
     return new HttpRequestBuilder(entity, endpointUrl).invoke();
   }
 
+  private PipelineElementStatus performInvocation(SpDataSet dataset) {
+    String endpointUrl = dataset.getSelectedEndpointUrl();
+    return new HttpRequestBuilder(dataset, endpointUrl).invoke();
+  }
+
   private PipelineElementStatus performDetach(InvocableStreamPipesEntity entity) {
     String endpointUrl = entity.getSelectedEndpointUrl() + "/" + InstanceIdExtractor.extractId(entity.getElementId());
     return new HttpRequestBuilder(entity, endpointUrl).detach();
+  }
+
+  private PipelineElementStatus performDetach(SpDataSet dataset) {
+    String endpointUrl = dataset.getSelectedEndpointUrl() + "/" + dataset.getDatasetInvocationId();
+    return new HttpRequestBuilder(dataset, endpointUrl).detach();
   }
 }

@@ -61,7 +61,7 @@ public class SourcesManagementTest {
         SourcesManagement sourcesManagement = new SourcesManagement(adapterStorage);
         doNothing().when(WorkerRestClient.class, "invokeSetAdapter", anyString(), any());
 
-        sourcesManagement.addAdapter(ID, new SpDataSet(), "user");
+        sourcesManagement.addAdapter(ID, new SpDataSet());
 
         verify(adapterStorage, times(1)).getAllAdapters();
         verifyStatic(WorkerRestClient.class, times(1));
