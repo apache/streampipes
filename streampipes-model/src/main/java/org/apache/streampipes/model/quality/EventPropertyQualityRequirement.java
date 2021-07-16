@@ -27,6 +27,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToOne;
+import java.util.Objects;
 
 @RdfsClass(StreamPipes.EVENT_PROPERTY_QUALITY_REQUIREMENT)
 @MappedSuperclass
@@ -78,5 +79,14 @@ public class EventPropertyQualityRequirement extends UnnamedStreamPipesEntity {
 	public void setMaximumPropertyQuality(
 			EventPropertyQualityDefinition maximumPropertyQuality) {
 		this.maximumPropertyQuality = maximumPropertyQuality;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		EventPropertyQualityRequirement that = (EventPropertyQualityRequirement) o;
+		return Objects.equals(minimumPropertyQuality, that.minimumPropertyQuality) &&
+				Objects.equals(maximumPropertyQuality, that.maximumPropertyQuality);
 	}
 }

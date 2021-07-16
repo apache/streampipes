@@ -22,8 +22,11 @@ import {
   DataProcessorInvocation,
   DataSetModificationMessage,
   DataSinkInvocation,
+  Pipeline,
+  PipelineCanvasMetadata,
   PipelineElementRecommendationMessage,
   PipelineModificationMessage,
+  PipelinePreviewModel,
   SpDataSet,
   SpDataStream
 } from "../../core-model/gen/streampipes-model";
@@ -79,6 +82,13 @@ export class EditorService {
             }));
     }
 
+    getCachedPipelineCanvasMetadata(): Observable<PipelineCanvasMetadata> {
+      return this.http.get(this.platformServicesCommons.authUserBasePath() + "/pipeline-canvas-cache")
+          .pipe(map(response => {
+            return PipelineCanvasMetadata.fromData(response as any);
+      }));
+    }
+
     convert(payload: any) {
       if (payload['@class'] === "org.apache.streampipes.model.SpDataSet") {
         return SpDataSet.fromData(payload as SpDataSet);
@@ -115,8 +125,17 @@ export class EditorService {
         return this.http.post(this.platformServicesCommons.authUserBasePath() + "/pipeline-cache", rawPipelineModel);
     }
 
+    updateCachedCanvasMetadata(pipelineCanvasMetadata: PipelineCanvasMetadata) {
+      return this.http.post(this.platformServicesCommons.authUserBasePath()
+          + "/pipeline-canvas-cache", pipelineCanvasMetadata)
+    }
+
     removePipelineFromCache() {
         return this.http.delete(this.platformServicesCommons.authUserBasePath() + "/pipeline-cache");
+    }
+
+    removeCanvasMetadataFromCache() {
+      return this.http.delete(this.platformServicesCommons.authUserBasePath() + "/pipeline-canvas-cache");
     }
 
     private get pipelinesResourceUrl() {
@@ -141,4 +160,24 @@ export class EditorService {
             }
         });
     }
+
+    initiatePipelinePreview(pipeline: Pipeline): Observable<PipelinePreviewModel> {
+      return this.http.post(this.pipelinePreviewBasePath, pipeline)
+          .pipe(map(response => PipelinePreviewModel.fromData(response as any)));
+    }
+
+  deletePipelinePreviewRequest(previewId: string): Observable<any> {
+      return this.http.delete(this.pipelinePreviewBasePath + "/" + previewId);
+  }
+
+  getPipelinePreviewResult(previewId: string, pipelineElementDomId: string): Observable<any> {
+      return this.http.get(this.pipelinePreviewBasePath
+          + "/"
+          + previewId
+          + "/" + pipelineElementDomId, {headers: { ignoreLoadingBar: '' }});
+  }
+
+  get pipelinePreviewBasePath() {
+      return this.platformServicesCommons.authUserBasePath() + "/pipeline-element-preview";
+  }
 }

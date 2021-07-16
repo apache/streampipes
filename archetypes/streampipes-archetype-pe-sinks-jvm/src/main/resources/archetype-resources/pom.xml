@@ -24,7 +24,7 @@
     <version>${version}</version>
 
     <properties>
-        <sp.version>0.68.0-SNAPSHOT</sp.version>
+        <sp.version>0.69.0-SNAPSHOT</sp.version>
     </properties>
 
     <dependencies>
@@ -95,7 +95,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.2.0.RELEASE</version>
+                <version>2.4.1</version>
                 <executions>
                     <execution>
                         <goals>

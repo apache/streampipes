@@ -26,6 +26,7 @@ import {MeasurementUnitsService} from "./apis/measurement-units.service";
 import {PipelineElementTemplateService} from "./apis/pipeline-element-template.service";
 import {PipelineMonitoringService} from "./apis/pipeline-monitoring.service";
 import {SemanticTypesService} from "./apis/semantic-types.service";
+import {PipelineCanvasMetadataService} from "./apis/pipeline-canvas-metadata.service";
 
 @NgModule({
   imports: [],
@@ -34,6 +35,7 @@ import {SemanticTypesService} from "./apis/semantic-types.service";
     FilesService,
     MeasurementUnitsService,
     PlatformServicesCommons,
+    PipelineCanvasMetadataService,
     PipelineElementEndpointService,
     PipelineElementTemplateService,
     //PipelineTemplateService,

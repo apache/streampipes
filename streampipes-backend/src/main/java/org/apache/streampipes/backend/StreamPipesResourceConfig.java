@@ -67,10 +67,10 @@ public class StreamPipesResourceConfig extends ResourceConfig {
         register(LabelResource.class);
         register(MeasurementUnitResource.class);
         register(Notification.class);
-        register(OntologyContext.class);
-        register(OntologyKnowledge.class);
         register(OntologyMeasurementUnit.class);
         register(OntologyPipelineElement.class);
+        register(PipelineCanvasMetadataCache.class);
+        register(PipelineCanvasMetadataResource.class);
         register(PipelineCache.class);
         register(PipelineCategory.class);
         register(PipelineElementAsset.class);
@@ -78,6 +78,7 @@ public class StreamPipesResourceConfig extends ResourceConfig {
         register(PipelineElementFile.class);
         register(PipelineElementImportNoUser.class);
         register(PipelineElementImport.class);
+        register(PipelineElementPreview.class);
         register(PipelineElementRuntimeInfo.class);
         register(PipelineMonitoring.class);
         register(PipelineNoUserResource.class);
@@ -90,26 +91,15 @@ public class StreamPipesResourceConfig extends ResourceConfig {
         register(Setup.class);
         register(User.class);
         register(Version.class);
-        register(PipelineElementAsset.class);
         register(DataLakeDashboardResource.class);
         register(DataLakeWidgetResource.class);
-        register(DataLakeResourceV3.class);
         register(DataLakeNoUserResourceV3.class);
-        register(PipelineElementFile.class);
         register(FileServingResource.class);
         register(DashboardWidget.class);
         register(Dashboard.class);
         register(VirtualSensor.class);
         register(Visualization.class);
         register(VisualizablePipeline.class);
-
-        // Serializers
-        register(GsonWithIdProvider.class);
-        register(GsonWithoutIdProvider.class);
-        register(GsonClientModelProvider.class);
-        register(JsonLdProvider.class);
-        register(JacksonSerializationProvider.class);
-        register(MultiPartFeature.class);
 
         // Platform Services
         register(PipelineElementTemplateResource.class);

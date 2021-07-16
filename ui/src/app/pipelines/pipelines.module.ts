@@ -36,6 +36,7 @@ import {FormsModule} from "@angular/forms";
 import {PipelineInCategoryPipe} from "./pipeline-category.filter";
 import {MatSortModule} from "@angular/material/sort";
 import {MatTableModule} from "@angular/material/table";
+import {PipelineNotificationsComponent} from "./dialog/pipeline-notifications/pipeline-notifications.component";
 
 @NgModule({
   imports: [
@@ -54,6 +55,7 @@ import {MatTableModule} from "@angular/material/table";
     ImportPipelineDialogComponent,
     PipelinesComponent,
     PipelineCategoriesDialogComponent,
+    PipelineNotificationsComponent,
     PipelineOverviewComponent,
     PipelineStatusDialogComponent,
     StartAllPipelinesDialogComponent,

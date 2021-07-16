@@ -17,17 +17,17 @@
  */
 
 import {ShepherdService} from "../../services/tour/shepherd.service";
-import {EventEmitter, Inject, Injectable} from "@angular/core";
+import {EventEmitter, Injectable} from "@angular/core";
 import {PipelineService} from "../../platform-services/apis/pipeline.service";
 import {PanelType} from "../../core-ui/dialog/base-dialog/base-dialog.model";
 import {DialogService} from "../../core-ui/dialog/base-dialog/base-dialog.service";
 import {PipelineStatusDialogComponent} from "../dialog/pipeline-status/pipeline-status-dialog.component";
-import {Pipeline, PipelineOperationStatus} from "../../core-model/gen/streampipes-model";
+import {Pipeline} from "../../core-model/gen/streampipes-model";
 import {DeletePipelineDialogComponent} from "../dialog/delete-pipeline/delete-pipeline-dialog.component";
 import {DialogRef} from "../../core-ui/dialog/base-dialog/dialog-ref";
 import {Router} from "@angular/router";
-
-declare const require: any;
+import {PipelineAction} from "../model/pipeline-model";
+import {PipelineNotificationsComponent} from "../dialog/pipeline-notifications/pipeline-notifications.component";
 
 @Injectable()
 export class PipelineOperationsService {
@@ -48,32 +48,35 @@ export class PipelineOperationsService {
     if (toggleRunningOperation) {
       toggleRunningOperation('starting');
     }
-    this.PipelineService.startPipeline(pipelineId).subscribe(msg => {
+    let dialogRef = this.showPipelineOperationsDialog(pipelineId, PipelineAction.Start);
+    this.afterPipelineOperationsDialogClosed(dialogRef, refreshPipelinesEmitter, "starting", toggleRunningOperation);
+  }
+
+  stopPipeline(pipelineId: string,
+               refreshPipelinesEmitter: EventEmitter<boolean>,
+               toggleRunningOperation?) {
+    if (toggleRunningOperation) {
+      toggleRunningOperation('stopping');
+    }
+    let dialogRef = this.showPipelineOperationsDialog(pipelineId, PipelineAction.Stop);
+    this.afterPipelineOperationsDialogClosed(dialogRef, refreshPipelinesEmitter, "stopping", toggleRunningOperation);
+  }
+
+  afterPipelineOperationsDialogClosed(dialogRef: DialogRef<PipelineStatusDialogComponent>,
+                                      refreshPipelinesEmitter: EventEmitter<boolean>,
+                                      toggleAction: string,
+                                      toggleRunningOperation?) {
+    dialogRef.afterClosed().subscribe(msg => {
       refreshPipelinesEmitter.emit(true);
       if (toggleRunningOperation) {
-        toggleRunningOperation('starting');
+        toggleRunningOperation(toggleAction);
       }
-      if (this.ShepherdService.isTourActive()) {
-        this.ShepherdService.trigger("pipeline-started");
-      }
-      this.showDialog(msg);
-    }, error => {
-      this.showDialog({title: "Network Error", success: false, pipelineId: undefined, pipelineName: undefined, elementStatus: []})
     });
-  };
+  }
 
-  stopPipeline(pipelineId: string, refreshPipelinesEmitter: EventEmitter<boolean>, toggleRunningOperation?) {
-    toggleRunningOperation('stopping');
-    this.PipelineService.stopPipeline(pipelineId).subscribe(msg => {
-      refreshPipelinesEmitter.emit(true);
-      toggleRunningOperation('stopping');
-      this.showDialog(msg);
-    }, error => {
-      this.showDialog({title: "Network Error", success: false, pipelineId: undefined, pipelineName: undefined, elementStatus: []})
-    });
-  };
-
-  showDeleteDialog(pipeline: Pipeline, refreshPipelinesEmitter: EventEmitter<boolean>, switchToPipelineView?: any) {
+  showDeleteDialog(pipeline: Pipeline,
+                   refreshPipelinesEmitter: EventEmitter<boolean>,
+                   switchToPipelineView?: any) {
     let dialogRef: DialogRef<DeletePipelineDialogComponent> = this.DialogService.open(DeletePipelineDialogComponent, {
       panelType: PanelType.STANDARD_PANEL,
       title: "Delete Pipeline",
@@ -94,16 +97,34 @@ export class PipelineOperationsService {
     })
   };
 
-  showDialog(data: PipelineOperationStatus) {
-    this.DialogService.open(PipelineStatusDialogComponent, {
+  showPipelineOperationsDialog(pipelineId: string,
+                               action: PipelineAction): DialogRef<PipelineStatusDialogComponent> {
+    return this.DialogService.open(PipelineStatusDialogComponent, {
       panelType: PanelType.STANDARD_PANEL,
       title: "Pipeline Status",
       width: "70vw",
       data: {
-        "pipelineOperationStatus": data
+        "pipelineId": pipelineId,
+        "action": action
       }
     });
   };
+
+  showPipelineNotificationsDialog(pipeline: Pipeline,
+                                  refreshPipelinesEmitter: EventEmitter<boolean>) {
+    let dialogRef: DialogRef<PipelineNotificationsComponent> = this.DialogService.open(PipelineNotificationsComponent, {
+      panelType: PanelType.STANDARD_PANEL,
+      title: "Pipeline Notifications",
+      width: "70vw",
+      data: {
+        "pipeline": pipeline,
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(close => {
+      refreshPipelinesEmitter.emit(true);
+    });
+  }
 
   showPipelineInEditor(id) {
     this.Router.navigate(["editor"], { queryParams: { pipeline: id }});

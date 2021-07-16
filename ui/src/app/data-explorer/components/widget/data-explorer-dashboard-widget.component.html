@@ -34,7 +34,7 @@
         </div>
         <div class="h-100 p-0 row content gridster-item-content" style="margin-left: 0px;margin-right: 0px;">
             <div *ngIf="widgetLoaded" class="h-100">
-                <div *ngIf="widget.widgetType === 'table'" class="h-100 p-0">
+                <div *ngIf="configuredWidget.widgetType === 'table'" class="h-100 p-0">
                     <sp-data-explorer-table-widget
                             (removeWidgetCallback)="removeWidget()"
                             [viewDateRange]="viewDateRange"
@@ -44,7 +44,7 @@
                             [dataViewDashboardItem]="widget"
                             [dataExplorerWidget]="configuredWidget" class="h-100"></sp-data-explorer-table-widget>
                 </div>
-                <div *ngIf="widget.widgetType === 'line-chart'" class="h-100 p-0">
+                <div *ngIf="configuredWidget.widgetType === 'line-chart'" class="h-100 p-0">
                     <sp-data-explorer-line-chart-widget
                             (removeWidgetCallback)="removeWidget()"
                             [viewDateRange]="viewDateRange"
@@ -54,7 +54,7 @@
                             [dataViewDashboardItem]="widget"
                             [dataExplorerWidget]="configuredWidget" class="h-100"></sp-data-explorer-line-chart-widget>
                 </div>
-                <div *ngIf="widget.widgetType === 'image'" class="h-100 p-0">
+                <div *ngIf="configuredWidget.widgetType === 'image'" class="h-100 p-0">
                     <sp-data-explorer-image-widget
                             (removeWidgetCallback)="removeWidget()"
                             [viewDateRange]="viewDateRange"

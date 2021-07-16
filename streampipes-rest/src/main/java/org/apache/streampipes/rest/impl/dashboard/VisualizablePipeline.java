@@ -18,9 +18,11 @@
 
 package org.apache.streampipes.rest.impl.dashboard;
 
+import org.apache.streampipes.model.graph.DataSinkInvocation;
+import org.apache.streampipes.model.pipeline.Pipeline;
+import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.rest.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
-import org.apache.streampipes.storage.api.IVisualizablePipelineStorage;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -28,40 +30,22 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Path("/v2/users/{username}/dashboard/pipelines")
 public class VisualizablePipeline extends AbstractRestResource {
+
+  private static final String DashboardAppId = "org.apache.streampipes.sinks.internal.jvm.dashboard";
+  private static final String VisualizationFieldInternalName = "visualization-name";
 
   @GET
   @JacksonSerialized
   @Produces(MediaType.APPLICATION_JSON)
   public Response getVisualizablePipelines() {
-    return ok(getVisualizablePipelineStorage().getAllVisualizablePipelines());
-  }
-
-  @GET
-  @JacksonSerialized
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("/{id}")
-  public Response getVisualizablePipeline(@PathParam("id") String id) {
-    org.apache.streampipes.model.dashboard.VisualizablePipeline pipeline = getVisualizablePipelineStorage().getVisualizablePipeline(id);
-   return pipeline != null ? ok(pipeline) : fail();
-  }
-
-  @GET
-  @JacksonSerialized
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("topic/{topic}")
-  public Response getVisualizablePipelineByTopic(@PathParam("topic") String topic) {
-    List<org.apache.streampipes.model.dashboard.VisualizablePipeline> pipelines =
-            getVisualizablePipelineStorage().getAllVisualizablePipelines();
-
-    Optional<org.apache.streampipes.model.dashboard.VisualizablePipeline> matchedPipeline =
-            pipelines.stream().filter(pipeline -> pipeline.getTopic().equals(topic)).findFirst();
-
-    return matchedPipeline.isPresent() ? ok(matchedPipeline.get()) : fail();
+    return ok(extractVisualizablePipelines());
   }
 
   @GET
@@ -71,7 +55,7 @@ public class VisualizablePipeline extends AbstractRestResource {
   public Response getVisualizablePipelineByPipelineIdAndVisualizationName(@PathParam("pipelineId") String pipelineId,
                                                                           @PathParam("visualizationName") String visualizationName) {
     List<org.apache.streampipes.model.dashboard.VisualizablePipeline> pipelines =
-            getVisualizablePipelineStorage().getAllVisualizablePipelines();
+            extractVisualizablePipelines();
 
     Optional<org.apache.streampipes.model.dashboard.VisualizablePipeline> matchedPipeline =
             pipelines
@@ -82,9 +66,59 @@ public class VisualizablePipeline extends AbstractRestResource {
     return matchedPipeline.isPresent() ? ok(matchedPipeline.get()) : fail();
   }
 
-  private IVisualizablePipelineStorage getVisualizablePipelineStorage() {
-    return getNoSqlStorage().getVisualizablePipelineStorage();
+  private List<org.apache.streampipes.model.dashboard.VisualizablePipeline> extractVisualizablePipelines() {
+    List<org.apache.streampipes.model.dashboard.VisualizablePipeline> visualizablePipelines = new ArrayList<>();
+     getPipelineStorage()
+            .getAllPipelines()
+            .forEach(pipeline -> {
+              List<DataSinkInvocation> dashboardSinks = extractDashboardSinks(pipeline);
+              dashboardSinks.forEach(sink -> {
+                org.apache.streampipes.model.dashboard.VisualizablePipeline visualizablePipeline = new org.apache.streampipes.model.dashboard.VisualizablePipeline();
+                visualizablePipeline.setPipelineId(pipeline.getPipelineId());
+                visualizablePipeline.setPipelineName(pipeline.getName());
+                visualizablePipeline.setVisualizationName(extractVisualizationName(sink));
+                visualizablePipeline.setSchema(sink.getInputStreams().get(0).getEventSchema());
+                visualizablePipeline.setTopic(makeTopic(sink));
+
+                visualizablePipelines.add(visualizablePipeline);
+              });
+            });
+
+     return visualizablePipelines;
+  }
+
+  private String makeTopic(DataSinkInvocation sink) {
+    return extractInputTopic(sink) + "-" + normalize(extractVisualizationName(sink));
+  }
+
+  private String extractInputTopic(DataSinkInvocation sink) {
+    return sink
+            .getInputStreams()
+            .get(0)
+            .getEventGrounding()
+            .getTransportProtocol()
+            .getTopicDefinition()
+            .getActualTopicName();
+  }
+
+  private String normalize(String visualizationName) {
+    return visualizationName.replaceAll(" ", "").toLowerCase();
   }
 
 
+  private String extractVisualizationName(DataSinkInvocation sink) {
+    return sink.getStaticProperties()
+            .stream()
+            .filter(sp -> sp.getInternalName().equals(VisualizationFieldInternalName))
+            .map(sp -> (FreeTextStaticProperty) sp)
+            .findFirst().get().getValue();
+  }
+
+  private List<DataSinkInvocation> extractDashboardSinks(Pipeline pipeline) {
+    return pipeline
+            .getActions()
+            .stream()
+            .filter(sink -> sink.getAppId().equals(DashboardAppId))
+            .collect(Collectors.toList());
+  }
 }

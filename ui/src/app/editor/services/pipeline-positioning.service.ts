@@ -25,6 +25,8 @@ import {PipelineElementConfig} from "../model/editor.model";
 import {
     DataProcessorInvocation,
     DataSinkInvocation,
+    PipelineCanvasMetadata,
+    PipelineElementMetadata,
     SpDataStream
 } from "../../core-model/gen/streampipes-model";
 import {JsplumbFactoryService} from "./jsplumb-factory.service";
@@ -39,10 +41,38 @@ export class PipelinePositioningService {
                 private ObjectProvider: ObjectProvider) {
     }
 
+    collectPipelineElementPositions(pipelineCanvasMetadata: PipelineCanvasMetadata,
+                                    rawPipelineModel: PipelineElementConfig[]): PipelineCanvasMetadata {
+        rawPipelineModel.forEach(pe => {
+           this.collectPipelineElementPosition(pe.payload.dom, pipelineCanvasMetadata);
+        });
+        return pipelineCanvasMetadata;
+    }
+
+    collectPipelineElementPosition(domId: string,
+                                   pipelineCanvasMetadata: PipelineCanvasMetadata) {
+        let elementRef = $(`#${domId}`);
+        if (elementRef && elementRef.position()) {
+            let leftPos = elementRef.position().left;
+            let topPos = elementRef.position().top;
+            if (!pipelineCanvasMetadata.pipelineElementMetadata) {
+                pipelineCanvasMetadata.pipelineElementMetadata = {};
+            }
+            if (!pipelineCanvasMetadata.pipelineElementMetadata[domId]) {
+                pipelineCanvasMetadata.pipelineElementMetadata[domId] = new PipelineElementMetadata();
+            }
+            pipelineCanvasMetadata.pipelineElementMetadata[domId].position = {
+                x: leftPos,
+                y: topPos
+            };
+        }
+    }
+
     displayPipeline(rawPipelineModel: PipelineElementConfig[],
                     targetCanvas,
                     previewConfig: boolean,
-                    autoLayout: boolean) {
+                    autoLayout: boolean,
+                    pipelineCanvasMetadata?: PipelineCanvasMetadata) {
         let jsPlumbBridge = this.JsplumbFactoryService.getJsplumbBridge(previewConfig);
         let jsplumbConfig = previewConfig ? this.JsplumbConfigService.getPreviewConfig() : this.JsplumbConfigService.getEditorConfig();
         rawPipelineModel.forEach(currentPe => {
@@ -65,44 +95,60 @@ export class PipelinePositioningService {
         this.connectPipelineElements(rawPipelineModel, previewConfig, jsplumbConfig, jsPlumbBridge);
         if (autoLayout) {
             this.layoutGraph(targetCanvas, "span[id^='jsplumb']", previewConfig ? 75 : 110, previewConfig);
+        } else if (pipelineCanvasMetadata)  {
+            this.layoutGraphFromCanvasMetadata(pipelineCanvasMetadata);
         }
         jsPlumbBridge.repaintEverything();
     }
 
-    layoutGraph(canvas, nodeIdentifier, dimension, isPreview) {
-        let jsPlumbBridge = this.JsplumbFactoryService.getJsplumbBridge(isPreview);
-        var g = new dagre.graphlib.Graph();
-        g.setGraph({rankdir: "LR", ranksep: isPreview ? "50" : "100"});
+    layoutGraph(canvasId: string,
+                nodeIdentifier: string,
+                dimension: number,
+                previewConfig: boolean) {
+        let jsPlumbBridge = this.JsplumbFactoryService.getJsplumbBridge(previewConfig);
+        let g = new dagre.graphlib.Graph();
+        g.setGraph({rankdir: "LR", ranksep: previewConfig ? "50" : "100"});
         g.setDefaultEdgeLabel(function () {
             return {};
         });
 
-        var nodes = $(canvas).find(nodeIdentifier).get();
-        nodes.forEach((n, index) => {
+        let nodes = $(canvasId).find(nodeIdentifier).get();
+        nodes.forEach((n) => {
             g.setNode(n.id, {label: n.id, width: dimension, height: dimension});
         });
 
-        var edges = jsPlumbBridge.getAllConnections();
+        let edges = jsPlumbBridge.getAllConnections();
         edges.forEach(edge => {
             g.setEdge(edge.source.id, edge.target.id);
         });
 
         dagre.layout(g);
         g.nodes().forEach(v => {
-            $(`#${v}`).css("left", g.node(v).x + "px");
-            $(`#${v}`).css("top", g.node(v).y + "px");
+            let elementRef = $(`#${v}`);
+            elementRef.css("left", g.node(v).x + "px");
+            elementRef.css("top", g.node(v).y + "px");
         });
+    }
+
+    layoutGraphFromCanvasMetadata(pipelineCanvasMetadata: PipelineCanvasMetadata) {
+        Object.entries(pipelineCanvasMetadata.pipelineElementMetadata).forEach(
+            ([key, value]) => {
+                let elementRef = $(`#${key}`);
+                if (elementRef) {
+                    elementRef.css("left", value.position.x + "px");
+                    elementRef.css("top", value.position.y + "px");
+                }
+            }
+        );
     }
 
     connectPipelineElements(rawPipelineModel: PipelineElementConfig[],
                             previewConfig: boolean,
                             jsplumbConfig: any,
                             jsPlumbBridge: JsplumbBridge) {
-        var source, target;
+        let source, target;
         jsPlumbBridge.setSuspendDrawing(true);
-        for (var i = 0; i < rawPipelineModel.length; i++) {
-            var pe = rawPipelineModel[i];
-
+        rawPipelineModel.forEach(pe => {
             if (pe.type == "sepa" || pe.type == "action") {
                 if (!(pe.settings.disabled) && pe.payload.connectedTo) {
                     pe.payload.connectedTo.forEach((connection, index) => {
@@ -127,7 +173,7 @@ export class PipelinePositioningService {
                     });
                 }
             }
-        }
+        });
         jsPlumbBridge.setSuspendDrawing(false, true);
     }
 }

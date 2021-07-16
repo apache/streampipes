@@ -34,7 +34,7 @@ public class StaticPropertyAlternative extends StaticProperty {
   @OneToOne(fetch = FetchType.EAGER,
           cascade = {CascadeType.ALL})
   @RdfProperty(StreamPipes.IS_SELECTED)
-  private Boolean selected;
+  private boolean selected;
 
   @OneToOne(fetch = FetchType.EAGER,
           cascade = {CascadeType.ALL})

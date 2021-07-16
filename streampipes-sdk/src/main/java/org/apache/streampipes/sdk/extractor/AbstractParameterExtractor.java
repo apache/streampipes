@@ -19,6 +19,7 @@
 package org.apache.streampipes.sdk.extractor;
 
 import com.github.drapostolos.typeparser.TypeParser;
+import org.apache.commons.codec.Charsets;
 import org.apache.http.client.fluent.Request;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.config.backend.BackendConfig;
@@ -109,7 +110,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
 
   public String fileContentsAsString(String internalName) throws IOException {
     String filename = selectedFilename(internalName);
-    return Request.Get(makeFileRequestPath(filename)).execute().returnContent().asString();
+    return Request.Get(makeFileRequestPath(filename)).execute().returnContent().asString(Charsets.UTF_8);
   }
 
   public byte[] fileContentsAsByteArray(String internalName) throws IOException {

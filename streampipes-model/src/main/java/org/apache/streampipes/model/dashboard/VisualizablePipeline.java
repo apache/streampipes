@@ -20,32 +20,14 @@ package org.apache.streampipes.model.dashboard;
 
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.shared.annotation.TsModel;
-import org.apache.streampipes.vocabulary.StreamPipes;
-import io.fogsy.empire.annotations.RdfProperty;
-import io.fogsy.empire.annotations.RdfsClass;
 
-import javax.persistence.CascadeType;
-import javax.persistence.FetchType;
-import javax.persistence.OneToOne;
-
-@RdfsClass(StreamPipes.VISUALIZABLE_PIPELINE)
 @TsModel
-public class VisualizablePipeline extends DashboardEntity {
+public class VisualizablePipeline {
 
-  @RdfProperty(StreamPipes.HAS_PIPELINE_ID)
   private String pipelineId;
-
-  @OneToOne(fetch = FetchType.EAGER,
-          cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-  @RdfProperty(StreamPipes.HAS_SCHEMA)
   private EventSchema schema;
-
-  @RdfProperty(StreamPipes.HAS_VISUALIZATION_NAME)
   private String visualizationName;
-
-  @RdfProperty(StreamPipes.HAS_TOPIC)
   private String topic;
-
   private String pipelineName;
 
   public VisualizablePipeline() {

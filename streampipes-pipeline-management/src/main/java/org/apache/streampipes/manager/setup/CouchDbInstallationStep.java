@@ -74,7 +74,6 @@ public class CouchDbInstallationStep implements InstallationStep {
             Utils.getCouchDbVisualizationClient();
             Utils.getCouchDbRdfEndpointClient();
             Utils.getCouchDbDashboardClient();
-            Utils.getCouchDbVisualizablePipelineClient();
             Utils.getCouchDbDashboardWidgetClient();
             Utils.getCouchDbLabelClient();
             Utils.getCouchDbCategoryClient();

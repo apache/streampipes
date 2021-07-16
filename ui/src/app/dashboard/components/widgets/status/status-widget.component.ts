@@ -43,6 +43,11 @@ export class StatusWidgetComponent extends BaseStreamPipesWidget implements OnIn
     super(rxStompService, dashboardService, resizeService, false);
   }
 
+  ngOnInit(): void {
+    super.ngOnInit();
+    this.onSizeChanged(this.computeCurrentWidth(this.gridsterItemComponent), this.computeCurrentHeight(this.gridsterItemComponent));
+  }
+
   protected extractConfig(extractor: StaticPropertyExtractor) {
     this.interval = extractor.integerParameter(StatusWidgetConfig.INTERVAL_KEY);
   }

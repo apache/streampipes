@@ -17,12 +17,6 @@
  */
 package org.apache.streampipes.storage;
 
-import org.eclipse.rdf4j.repository.Repository;
-import org.eclipse.rdf4j.repository.RepositoryException;
-import org.eclipse.rdf4j.repository.sail.SailRepository;
-import org.eclipse.rdf4j.sail.nativerdf.NativeStore;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import io.fogsy.empire.core.empire.Empire;
 import io.fogsy.empire.core.empire.EmpireOptions;
 import io.fogsy.empire.core.empire.config.ConfigKeys;
@@ -31,21 +25,22 @@ import io.fogsy.empire.rdf4j.OpenRdfEmpireModule;
 import io.fogsy.empire.rdf4j.RepositoryFactoryKeys;
 import org.apache.streampipes.serializers.jsonld.CustomAnnotationProvider;
 import org.apache.streampipes.storage.api.IBackgroundKnowledgeStorage;
-import org.apache.streampipes.storage.api.IOntologyContextStorage;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorageCache;
 import org.apache.streampipes.storage.api.ITripleStorage;
 import org.apache.streampipes.storage.rdf4j.config.Rdf4JConfig;
-import org.apache.streampipes.storage.rdf4j.impl.BackgroundKnowledgeStorageImpl;
-import org.apache.streampipes.storage.rdf4j.impl.ContextStorageImpl;
 import org.apache.streampipes.storage.rdf4j.impl.PipelineElementInMemoryStorage;
 import org.apache.streampipes.storage.rdf4j.impl.PipelineElementStorageRequests;
-
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
+import org.eclipse.rdf4j.repository.Repository;
+import org.eclipse.rdf4j.repository.sail.SailRepository;
+import org.eclipse.rdf4j.sail.nativerdf.NativeStore;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.spi.PersistenceProvider;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 public enum Rdf4JStorageManager implements ITripleStorage {
 
@@ -61,20 +56,6 @@ public enum Rdf4JStorageManager implements ITripleStorage {
 
   Rdf4JStorageManager() {
     initPipelineElementStorage();
-    initBackgroundKnowledgeStorage();
-  }
-
-  private void initBackgroundKnowledgeStorage() {
-    backgroundKnowledgeRepository = makeRepo(Rdf4JConfig
-            .INSTANCE
-            .getBackgroundKnowledgeStorageLocation());
-    try {
-      backgroundKnowledgeRepository.initialize();
-      this.backgroundKnowledgeStorage =
-              new BackgroundKnowledgeStorageImpl(backgroundKnowledgeRepository);
-    } catch (RepositoryException e) {
-      LOG.error("Could not initialize background knowledge repository", e);
-    }
   }
 
   private void initPipelineElementStorage() {
@@ -131,11 +112,6 @@ public enum Rdf4JStorageManager implements ITripleStorage {
   @Override
   public IPipelineElementDescriptionStorageCache getPipelineElementStorage() {
     return this.pipelineElementInMemoryStorage;
-  }
-
-  @Override
-  public IOntologyContextStorage getContextStorage() {
-    return new ContextStorageImpl(backgroundKnowledgeRepository);
   }
 
 }

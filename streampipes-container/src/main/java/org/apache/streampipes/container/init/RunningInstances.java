@@ -22,7 +22,9 @@ import org.apache.streampipes.container.declarer.InvocableDeclarer;
 import org.apache.streampipes.container.util.ElementInfo;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public enum RunningInstances {
@@ -58,5 +60,17 @@ public enum RunningInstances {
 
     public Integer getRunningInstancesCount() {
         return runningInstances.size();
+    }
+
+    public List<String> getRunningInstanceIdsForElement(String appId) {
+        // TODO change this to appId for STREAMPIPES-319
+        List<String> instanceIds = new ArrayList<>();
+        this.runningInstances.forEach((key, elementInfo) -> {
+            if (elementInfo.getDescription().getAppId().equals(appId)) {
+                instanceIds.add(key);
+            }
+        });
+
+        return instanceIds;
     }
 }

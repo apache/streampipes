@@ -42,23 +42,27 @@ public class PipelineElementImportNoUser extends AbstractRestResource {
   @Context
   UriInfo uri;
 
-  @Path("/")
   @POST
   @Produces(MediaType.APPLICATION_JSON)
-  public Response addElement(@PathParam("username") String username, @FormParam("uri") String uri, @FormParam("publicElement") boolean publicElement) {
+  public Response addElement(@PathParam("username") String username,
+                             @FormParam("uri") String uri,
+                             @FormParam("publicElement") boolean publicElement) {
     logger.info("User " + username + " adds element with URI: " + uri + " to triplestore");
 
     return ok(verifyAndAddElement(uri, username, publicElement));
   }
 
-  private Message verifyAndAddElement(String uri, String username, boolean publicElement) {
+  private Message verifyAndAddElement(String uri,
+                                      String username,
+                                      boolean publicElement) {
     return new EndpointItemParser().parseAndAddEndpointItem(uri, username, publicElement, true);
   }
 
   @Path("/delete")
   @POST
   @Produces(MediaType.APPLICATION_JSON)
-  public Response deleteElement(@PathParam("username") String username, @FormParam("uri") String uri) {
+  public Response deleteElement(@PathParam("username") String username,
+                                @FormParam("uri") String uri) {
 
     UserService userService = getUserService();
     IPipelineElementDescriptionStorageCache requestor = getPipelineElementRdfStorage();

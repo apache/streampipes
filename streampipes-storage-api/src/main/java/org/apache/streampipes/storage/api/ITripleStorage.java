@@ -27,6 +27,4 @@ public interface ITripleStorage {
 
   IPipelineElementDescriptionStorageCache getPipelineElementStorage();
 
-  IOntologyContextStorage getContextStorage();
-
 }

@@ -18,7 +18,10 @@
 
 import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
 import {PipelineOperationStatus} from "../../../core-model/gen/streampipes-model";
-import {Component, Input} from "@angular/core";
+import {Component, Input, OnInit} from "@angular/core";
+import {PipelineAction} from "../../model/pipeline-model";
+import {PipelineService} from "../../../platform-services/apis/pipeline.service";
+import {ShepherdService} from "../../../services/tour/shepherd.service";
 
 
 @Component({
@@ -26,22 +29,75 @@ import {Component, Input} from "@angular/core";
     templateUrl: './pipeline-status-dialog.component.html',
     styleUrls: ['./pipeline-status-dialog.component.scss']
 })
-export class PipelineStatusDialogComponent {
+export class PipelineStatusDialogComponent implements OnInit {
 
     statusDetailsVisible: any;
-
-    @Input()
+    operationInProgress: boolean = true;
+    forceStopActive: boolean = false;
     pipelineOperationStatus: PipelineOperationStatus;
 
-    constructor(private DialogRef: DialogRef<PipelineStatusDialogComponent>) {
+    @Input()
+    pipelineId: string;
+
+    @Input()
+    action: PipelineAction;
+
+    constructor(private dialogRef: DialogRef<PipelineStatusDialogComponent>,
+                private pipelineService: PipelineService,
+                private shepherdService: ShepherdService) {
         this.statusDetailsVisible = false;
     }
 
+    ngOnInit(): void {
+        if (this.action == PipelineAction.Start) {
+            this.startPipeline();
+        } else {
+            this.stopPipeline();
+        }
+    }
+
     close() {
-        this.DialogRef.close();
+        this.dialogRef.close();
     };
 
     toggleStatusDetailsVisible() {
         this.statusDetailsVisible = !(this.statusDetailsVisible);
     }
+
+    startPipeline() {
+        this.pipelineService.startPipeline(this.pipelineId).subscribe(msg => {
+           this.pipelineOperationStatus = msg;
+           this.operationInProgress = false;
+            if (this.shepherdService.isTourActive()) {
+                this.shepherdService.trigger("pipeline-started");
+            }
+        }, error => {
+            this.operationInProgress = false;
+            this.pipelineOperationStatus = {title: "Network Error", success: false, pipelineId: undefined, pipelineName: undefined, elementStatus: []};
+        });
+    }
+
+    stopPipeline() {
+        this.pipelineService.stopPipeline(this.pipelineId).subscribe(msg => {
+           this.pipelineOperationStatus = msg;
+           this.operationInProgress = false;
+        }, error => {
+            this.operationInProgress = false;
+            this.pipelineOperationStatus = {title: "Network Error", success: false, pipelineId: undefined, pipelineName: undefined, elementStatus: []};
+        });
+    }
+
+    forceStopPipeline() {
+        this.operationInProgress = true;
+        this.forceStopActive = true;
+        this.pipelineService.stopPipeline(this.pipelineId, true).subscribe(msg => {
+            this.pipelineOperationStatus = msg;
+            this.operationInProgress = false;
+        }, error => {
+            this.operationInProgress = false;
+            this.pipelineOperationStatus = {title: "Network Error", success: false, pipelineId: undefined, pipelineName: undefined, elementStatus: []};
+        });
+    }
+
+
 }

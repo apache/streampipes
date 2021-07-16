@@ -20,10 +20,12 @@ package org.apache.streampipes.backend;
 import org.apache.shiro.web.env.EnvironmentLoaderListener;
 import org.apache.shiro.web.servlet.OncePerRequestFilter;
 import org.apache.shiro.web.servlet.ShiroFilter;
+import org.apache.streampipes.manager.health.PipelineHealthCheck;
 import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.rest.notifications.NotificationListener;
+import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,10 +40,13 @@ import org.springframework.context.annotation.Import;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.servlet.ServletContextListener;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Configuration
 @EnableAutoConfiguration
@@ -50,6 +55,17 @@ public class StreamPipesBackendApplication {
 
   private static final Logger LOG = LoggerFactory.getLogger(StreamPipesBackendApplication.class.getCanonicalName());
 
+  private static final int MAX_PIPELINE_START_RETRIES = 3;
+  private static final int WAIT_TIME_AFTER_FAILURE_IN_SECONDS = 10;
+
+  private static final int HEALTH_CHECK_INTERVAL = 60;
+  private static final TimeUnit HEALTH_CHECK_UNIT = TimeUnit.SECONDS;
+
+  private ScheduledExecutorService executorService;
+  private ScheduledExecutorService healthCheckExecutorService;
+
+  private Map<String, Integer> failedPipelines = new HashMap<>();
+
   public static void main(String[] args) {
     System.setProperty("org.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH", "true");
     SpringApplication.run(StreamPipesBackendApplication.class, args);
@@ -57,25 +73,41 @@ public class StreamPipesBackendApplication {
 
   @PostConstruct
   public void init() {
-    ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+    this.executorService = Executors.newSingleThreadScheduledExecutor();
+    this.healthCheckExecutorService = Executors.newSingleThreadScheduledExecutor();
 
     executorService.schedule(this::startAllPreviouslyStoppedPipelines, 5, TimeUnit.SECONDS);
+    LOG.info("Pipeline health check will run every {} seconds", HEALTH_CHECK_INTERVAL);
+    healthCheckExecutorService.scheduleAtFixedRate(new PipelineHealthCheck(),
+            HEALTH_CHECK_INTERVAL,
+            HEALTH_CHECK_INTERVAL,
+            HEALTH_CHECK_UNIT);
+  }
+
+  private void schedulePipelineStart(Pipeline pipeline, boolean restartOnReboot) {
+    executorService.schedule(() -> {
+      startPipeline(pipeline, restartOnReboot);
+    }, WAIT_TIME_AFTER_FAILURE_IN_SECONDS, TimeUnit.SECONDS);
   }
 
   @PreDestroy
   public void onExit() {
     LOG.info("Shutting down StreamPipes...");
     LOG.info("Flagging currently running pipelines for restart...");
-    getAllPipelines()
+    List<Pipeline> pipelinesToStop = getAllPipelines()
             .stream()
             .filter(Pipeline::isRunning)
-            .forEach(pipeline -> {
-              pipeline.setRestartOnSystemReboot(true);
-              StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updatePipeline(pipeline);
-            });
+            .collect(Collectors.toList());
+
+    LOG.info("Found {} running pipelines which will be stopped...", pipelinesToStop.size());
+
+    pipelinesToStop.forEach(pipeline -> {
+      pipeline.setRestartOnSystemReboot(true);
+      StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updatePipeline(pipeline);
+    });
 
     LOG.info("Gracefully stopping all running pipelines...");
-    List<PipelineOperationStatus> status = Operations.stopAllPipelines();
+    List<PipelineOperationStatus> status = Operations.stopAllPipelines(true);
     status.forEach(s -> {
       if (s.isSuccess()) {
         LOG.info("Pipeline {} successfully stopped", s.getPipelineName());
@@ -89,43 +121,80 @@ public class StreamPipesBackendApplication {
 
   private void startAllPreviouslyStoppedPipelines() {
     LOG.info("Checking for orphaned pipelines...");
-    getAllPipelines()
+    List<Pipeline> orphanedPipelines = getAllPipelines()
             .stream()
             .filter(Pipeline::isRunning)
-            .forEach(pipeline -> {
-              LOG.info("Restoring orphaned pipeline {}", pipeline.getName());
-              startPipeline(pipeline);
-            });
+            .collect(Collectors.toList());
+
+    LOG.info("Found {} orphaned pipelines", orphanedPipelines.size());
+
+    orphanedPipelines.forEach(pipeline -> {
+      LOG.info("Restoring orphaned pipeline {}", pipeline.getName());
+      startPipeline(pipeline, false);
+    });
 
     LOG.info("Checking for gracefully shut down pipelines to be restarted...");
 
-    getAllPipelines()
+    List<Pipeline> pipelinesToRestart = getAllPipelines()
             .stream()
-            .filter(p -> ! (p.isRunning()))
+            .filter(p -> !(p.isRunning()))
             .filter(Pipeline::isRestartOnSystemReboot)
-            .forEach(pipeline -> {
-              startPipeline(pipeline);
-              pipeline.setRestartOnSystemReboot(false);
-              StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updatePipeline(pipeline);
-            });
+            .collect(Collectors.toList());
+
+    LOG.info("Found {} pipelines that we are attempting to restart...", pipelinesToRestart.size());
+
+    pipelinesToRestart.forEach(pipeline -> {
+      startPipeline(pipeline, false);
+    });
 
     LOG.info("No more pipelines to restore...");
   }
 
-  private void startPipeline(Pipeline pipeline) {
+  private void startPipeline(Pipeline pipeline, boolean restartOnReboot) {
     PipelineOperationStatus status = Operations.startPipeline(pipeline);
     if (status.isSuccess()) {
       LOG.info("Pipeline {} successfully restarted", status.getPipelineName());
+      Pipeline storedPipeline = getPipelineStorage().getPipeline(pipeline.getPipelineId());
+      storedPipeline.setRestartOnSystemReboot(restartOnReboot);
+      getPipelineStorage().updatePipeline(storedPipeline);
     } else {
-      LOG.error("Pipeline {} could not be restarted - are all pipeline element containers running?", status.getPipelineName());
+      storeFailedRestartAttempt(pipeline);
+      int failedAttemptCount = failedPipelines.get(pipeline.getPipelineId());
+      if (failedAttemptCount <= MAX_PIPELINE_START_RETRIES) {
+        LOG.error("Pipeline {} could not be restarted - I'll try again in {} seconds ({}/{} failed attempts)",
+                pipeline.getName(),
+                WAIT_TIME_AFTER_FAILURE_IN_SECONDS,
+                failedAttemptCount,
+                MAX_PIPELINE_START_RETRIES);
+
+        schedulePipelineStart(pipeline, restartOnReboot);
+      } else {
+        LOG.error("Pipeline {} could not be restarted - are all pipeline element containers running?",
+                status.getPipelineName());
+      }
+    }
+  }
+
+  private void storeFailedRestartAttempt(Pipeline pipeline) {
+    String pipelineId = pipeline.getPipelineId();
+    if (!failedPipelines.containsKey(pipelineId)) {
+      failedPipelines.put(pipelineId, 1);
+    } else {
+      int failedAttempts = failedPipelines.get(pipelineId) + 1;
+      failedPipelines.put(pipelineId, failedAttempts);
     }
   }
 
   private List<Pipeline> getAllPipelines() {
-    return StorageDispatcher.INSTANCE
-            .getNoSqlStore()
-            .getPipelineStorageAPI()
+    return getPipelineStorage()
             .getAllPipelines();
+  }
+
+  private IPipelineStorage getPipelineStorage() {
+    return StorageDispatcher
+            .INSTANCE
+            .getNoSqlStore()
+            .getPipelineStorageAPI();
   }
 
   @Bean

@@ -17,12 +17,12 @@
  */
 
 import {Injectable} from "@angular/core";
-import {ReplaySubject} from "rxjs";
+import {ReplaySubject, Subject} from "rxjs";
 
 @Injectable()
 export class RefreshDashboardService {
 
-    public refreshSubject: ReplaySubject<string> = new ReplaySubject<string>();
+    public refreshSubject: Subject<string> = new Subject<string>();
 
     public notify(currentDashboard: string): void {
         this.refreshSubject.next(currentDashboard);

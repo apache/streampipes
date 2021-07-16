@@ -20,7 +20,6 @@ package org.apache.streampipes.connect.container.master.rest;
 
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.management.SourcesManagement;
-import org.apache.streampipes.connect.rest.AbstractContainerResource;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
@@ -33,15 +32,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/v2/connect/{username}/master/sources")
-public class SourcesResource extends AbstractContainerResource {
+public class SourcesResource extends AbstractAdapterResource<SourcesManagement> {
 
-    private Logger logger = LoggerFactory.getLogger(SourcesResource.class);
-
-
-    private SourcesManagement sourcesManagement;
+    private static final Logger LOG = LoggerFactory.getLogger(SourcesResource.class);
 
     public SourcesResource() {
-        this.sourcesManagement = new SourcesManagement();
+        super(SourcesManagement::new);
     }
 
     @GET
@@ -50,15 +46,13 @@ public class SourcesResource extends AbstractContainerResource {
     public Response getAllAdaptersInstallDescription(@PathParam("username") String username) {
 
         try {
-            String resultingJson = this.sourcesManagement.getAllAdaptersInstallDescription(username);
+            String resultingJson = managementService.getAllAdaptersInstallDescription(username);
             return ok(resultingJson);
         } catch (AdapterException e) {
-            logger.error("Error while getting all adapter descriptions", e);
+            LOG.error("Error while getting all adapter descriptions", e);
             return fail();
         }
     }
-
-
 
     @GET
     @Path("/{id}")
@@ -66,9 +60,9 @@ public class SourcesResource extends AbstractContainerResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAdapterDataSource(@PathParam("id") String id) {
         try {
-            return ok(this.sourcesManagement.getAdapterDataStream(id));
+            return ok(managementService.getAdapterDataStream(id));
         } catch (AdapterException e) {
-            logger.error("Error while retrieving DataSourceDescription with id: " + id);
+            LOG.error("Error while retrieving DataSourceDescription with id: " + id);
             return fail();
         }
     }
@@ -84,9 +78,9 @@ public class SourcesResource extends AbstractContainerResource {
         String responseMessage = "Instance of data set " + dataSet.getUri() + " successfully started";
 
         try {
-            this.sourcesManagement.addAdapter(elementId,  dataSet, username);
+            managementService.addAdapter(elementId,  dataSet, username);
         } catch (AdapterException e) {
-            logger.error("Could not set data set instance: " + dataSet.getUri(), e);
+            LOG.error("Could not set data set instance: " + dataSet.getUri(), e);
             return ok(Notifications.error("Could not set data set instance: " + dataSet.getUri()));
         }
 
@@ -103,17 +97,12 @@ public class SourcesResource extends AbstractContainerResource {
 //        String newUrl = Utils.addUserNameToApi(workerUrl, username);
 
         try {
-            this.sourcesManagement.detachAdapter(elementId, runningInstanceId, username);
+            managementService.detachAdapter(elementId, runningInstanceId, username);
         } catch (AdapterException e) {
-            logger.error("Could not set set id "+ elementId  + " with instance id: "+ runningInstanceId, e);
+            LOG.error("Could not set set id "+ elementId  + " with instance id: "+ runningInstanceId, e);
             return fail();
         }
 
-
         return ok(Notifications.success(responseMessage));
-    }
-
-    public void setSourcesManagement(SourcesManagement sourcesManagement) {
-        this.sourcesManagement = sourcesManagement;
     }
 }

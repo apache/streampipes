@@ -56,10 +56,6 @@ public enum Rdf4JConfig {
             + File.separator;
   }
 
-  public String getBackgroundKnowledgeStorageLocation() {
-      return config.getString(ConfigKeys.BACKGROUND_KNOWLEDGE_DIR);
-  }
-
   public String getPipelineElementStorageLocation() {
       return config.getString(ConfigKeys.PIPELINE_ELEMENT_KNOWLEDGE_DIR);
   }

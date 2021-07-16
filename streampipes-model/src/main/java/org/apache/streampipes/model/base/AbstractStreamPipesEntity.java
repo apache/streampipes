@@ -31,6 +31,7 @@ import org.apache.streampipes.vocabulary.*;
 
 import java.io.Serializable;
 import java.net.URI;
+import java.util.Objects;
 
 
 /**
@@ -76,6 +77,14 @@ public class AbstractStreamPipesEntity implements SupportsRdfId, Serializable {
 
 	public void setElementId(String elementId) {
 		this.elementId = elementId;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		AbstractStreamPipesEntity that = (AbstractStreamPipesEntity) o;
+		return Objects.equals(elementId, that.elementId);
 	}
 
 }

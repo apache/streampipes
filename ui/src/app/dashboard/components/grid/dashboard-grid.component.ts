@@ -88,8 +88,6 @@ export class DashboardGridComponent implements OnInit, OnChanges {
             this.options.resizable.enabled = this.editMode;
             this.options.displayGrid = this.editMode ? 'always' : 'none';
             this.options.api.optionsChanged();
-            console.log(this.options);
-            console.log(this.editMode);
         }
     }
 

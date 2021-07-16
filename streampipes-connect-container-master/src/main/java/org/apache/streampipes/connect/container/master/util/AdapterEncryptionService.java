@@ -17,13 +17,11 @@
  */
 package org.apache.streampipes.connect.container.master.util;
 
+import org.apache.streampipes.manager.secret.SecretProvider;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterDescription;
-import org.apache.streampipes.model.staticproperty.SecretStaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
-import org.apache.streampipes.user.management.encryption.CredentialsManager;
 
-import java.security.GeneralSecurityException;
 import java.util.List;
 
 public class AdapterEncryptionService {
@@ -58,35 +56,10 @@ public class AdapterEncryptionService {
   }
 
   private void encrypt(List<StaticProperty> staticProperties) {
-    staticProperties
-            .stream()
-            .filter(SecretStaticProperty.class::isInstance)
-            .forEach(secret -> {
-              if (!((SecretStaticProperty) secret).getEncrypted()) {
-                try {
-                  String encrypted = CredentialsManager.encrypt(ad.getUserName(),
-                          ((SecretStaticProperty) secret).getValue());
-                  ((SecretStaticProperty) secret).setValue(encrypted);
-                  ((SecretStaticProperty) secret).setEncrypted(true);
-                } catch (GeneralSecurityException e) {
-                  e.printStackTrace();
-                }
-              }
-            });
+    SecretProvider.getEncryptionService(ad.getUserName()).applyConfig(staticProperties);
   }
 
   private void decrypt(List<StaticProperty> staticProperties) {
-    staticProperties.stream()
-            .filter(SecretStaticProperty.class::isInstance)
-            .forEach(sp -> {
-              try {
-                String decrypted = CredentialsManager.decrypt(ad.getUserName(),
-                        ((SecretStaticProperty) sp).getValue());
-                ((SecretStaticProperty) sp).setValue(decrypted);
-                ((SecretStaticProperty) sp).setEncrypted(false);
-              } catch (GeneralSecurityException e) {
-                e.printStackTrace();
-              }
-            });
+    SecretProvider.getDecryptionService(ad.getUserName()).applyConfig(staticProperties);
   }
 }

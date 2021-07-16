@@ -43,6 +43,7 @@
             <div fxFlex="30">
                 <button mat-button mat-raised-button color="primary"
                         matTooltip="Modify Pipeline" matTooltipPosition="above"
+                        [disabled]="pipeline.running"
                         (click)="pipelineOperationsService.modifyPipeline(pipeline._id)">
                     <mat-icon>mode_edit</mat-icon>
                     <span>&nbsp;Modify</span>
