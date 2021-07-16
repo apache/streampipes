@@ -20,6 +20,7 @@ package org.apache.streampipes.performance.performancetest;
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.client.StreamPipesCredentials;
 import org.apache.streampipes.logging.evaluation.EvaluationLogger;
+import org.apache.streampipes.model.Tuple2;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
@@ -68,18 +69,17 @@ public class GenericTest implements Test{
     public void execute(int nrRuns) {
 
         String testType = System.getenv("TEST_TYPE");
-
+        Object[] line = null;
         //Start Pipeline
         if (!pipeline.isRunning()) {
             long beforeStart = System.nanoTime();
             PipelineOperationStatus startMessage = client.pipelines().start(pipeline);
             long deploymentDuration = System.nanoTime() - beforeStart;
             if(testType.equals("Deployment")){
-                Object[] line = {System.currentTimeMillis() ,"Deployment duration", nrRuns, deploymentDuration, deploymentDuration/1000000000.0};
-                evalLogger.logMQTT(testType, line);
+                line = new Object[]{System.currentTimeMillis(), "Deployment duration", nrRuns, deploymentDuration, deploymentDuration / 1000000000.0, true};
             }
+            System.out.println(startMessage.getTitle());
             if (startMessage.isSuccess()) {
-                System.out.println(startMessage.getTitle());
                 pipeline.setRunning(true);
             }
         }
@@ -93,16 +93,18 @@ public class GenericTest implements Test{
         //Manipulate Pipeline
         //Migration
         if (shouldBeMigrated) {
-            prepareMigration();
+             Tuple2<String, String> migrationNodes = prepareMigration();
             long beforeMigration = System.nanoTime();
             PipelineOperationStatus migrationMessage = client.pipelines().migrate(pipeline);
             long migrationDuration = System.nanoTime() - beforeMigration;
             if(testType.equals("Migration")){
-                Object[] line = {System.currentTimeMillis(), "Migration duration", nrRuns, migrationDuration};
+                line = new Object[]{System.currentTimeMillis(), "Migration duration", nrRuns, migrationDuration, migrationDuration/1000000000.0,migrationNodes.a, migrationNodes.b, true};
                 evalLogger.logMQTT(testType, line);
             }
-            if (migrationMessage.isSuccess()) {
-                System.out.println(migrationMessage.getTitle());
+            System.out.println(migrationMessage.getTitle());
+            if (!migrationMessage.isSuccess()) {
+                assert line != null;
+                line[line.length -1] = false;
             }
         }
         //Reconfiguration
@@ -116,17 +118,23 @@ public class GenericTest implements Test{
                             sp.setValue(Float.toString(this.reconfigurableValue++));
                         }
                     }));
-            Object[] line = {System.currentTimeMillis(), "Reconfiguration triggered", nrRuns, (this.reconfigurableValue-1)};
-            evalLogger.logMQTT(testType, line);
+            line = new Object[]{System.currentTimeMillis(), "Reconfiguration triggered", nrRuns, (this.reconfigurableValue - 1), true};
             System.out.println("Reconfiguration triggered with value " + (this.reconfigurableValue-1));
             PipelineOperationStatus message = client.pipelines().reconfigure(pipeline);
-            if (message.isSuccess()) {
-                System.out.println(message.getTitle());
+            System.out.println(message.getTitle());
+            if (!message.isSuccess()) {
+                assert line != null;
+                line[line.length -1] = false;
             }
         }
 
         try {
-            Thread.sleep(timeToSleepAfterManipulation);
+            if(shouldBeMigrated){
+                long sleepTime = timeToSleepAfterManipulation + (long)(Math.random()*10000);
+                Thread.sleep(sleepTime);
+            }else {
+                Thread.sleep(timeToSleepAfterManipulation);
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -137,25 +145,43 @@ public class GenericTest implements Test{
                 System.out.println("Pipeline successfully stopped");
                 pipeline.setRunning(false);
             }
+            else{
+                System.out.println("Pipeline could not be stopped.");
+                assert line != null;
+                line[line.length -1] = false;
+            }
+        }
+        evalLogger.logMQTT(testType, line);
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
 
-    private void prepareMigration(){
+    private Tuple2<String, String> prepareMigration(){
+        String nodeFrom = "";
+        String nodeTo = "";
         String appId = System.getenv("MIGRATION_ENTITY_APP_ID");
         String[] node1 = System.getenv("MIGRATION_NODE_1").split(";");
         String[] node2 = System.getenv("MIGRATION_NODE_2").split(";");
         Optional<DataProcessorInvocation> processor = pipeline.getSepas().stream().filter(p -> p.getAppId().equals(appId)).findFirst();
         if (processor.isPresent()){
             if (processor.get().getDeploymentTargetNodeId().equals(node1[0])){
+                nodeFrom = node1[0];
+                nodeTo = node2[0];
                 processor.get().setDeploymentTargetNodeId(node2[0]);
                 processor.get().setDeploymentTargetNodeHostname(node2[1]);
                 processor.get().setDeploymentTargetNodePort(Integer.parseInt(node2[2]));
             } else{
+                nodeFrom = node2[0];
+                nodeTo = node1[0];
                 processor.get().setDeploymentTargetNodeId(node1[0]);
                 processor.get().setDeploymentTargetNodeHostname(node1[1]);
                 processor.get().setDeploymentTargetNodePort(Integer.parseInt(node1[2]));
             }
         }
+        return new Tuple2<>(nodeFrom, nodeTo);
     }
 }

@@ -34,7 +34,7 @@ public class TestFactory {
             case "Latency":
                 return getLatencyTest();
             case "Migration":
-                Object[] header_migration = {"timestampInMillis", "event", "numberOfRuns", "durationInNanos", "durationInSecs"};
+                Object[] header_migration = {"timestampInMillis", "event", "numberOfRuns", "durationInNanos", "durationInSecs", "originNode", "targetNode"};
                 logger.logMQTT("Migration", header_migration);
                 return getMigrationTest();
             case "Reconfiguration":
@@ -49,7 +49,7 @@ public class TestFactory {
 
     public static Test getDeploymentTest(){
         return new GenericTest(getPipelineName(), true, false,
-                false, 0, 3000);
+                false, 0, 10000);
     }
 
     public static Test getLatencyTest(){

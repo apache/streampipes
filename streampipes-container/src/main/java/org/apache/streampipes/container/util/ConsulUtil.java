@@ -188,6 +188,7 @@ public class ConsulUtil {
         peSvcs.put(svcId, new Tuple2<>(svcStatus, svcTag));
       }
     }
+    consul.destroy();
     return peSvcs;
   }
 
@@ -239,6 +240,7 @@ public class ConsulUtil {
         endpoints.add(endpoint);
       }
     }
+    consul.destroy();
     return endpoints;
   }
 
@@ -266,6 +268,7 @@ public class ConsulUtil {
         keyValues.put(key, v);
       }
     }
+    consul.destroy();
     return keyValues;
   }
 
@@ -312,6 +315,7 @@ public class ConsulUtil {
       LOG.info("Updated config - key:" + key + " value: " + entry);
       consul.keyValueClient().putValue(key, entry);
     }
+    consul.destroy();
   }
 
   /**
@@ -323,6 +327,7 @@ public class ConsulUtil {
     Consul consul = consulInstance();
     LOG.info("Deregister service: " + svcId);
     consul.agentClient().deregister(svcId);
+    consul.destroy();
   }
 
   /**
@@ -334,6 +339,7 @@ public class ConsulUtil {
     Consul consul = consulInstance();
     LOG.info("Delete config: {}", key);
     consul.keyValueClient().deleteKeys(CONSUL_NAMESPACE + key);
+    consul.destroy();
   }
 
   // Helper methods

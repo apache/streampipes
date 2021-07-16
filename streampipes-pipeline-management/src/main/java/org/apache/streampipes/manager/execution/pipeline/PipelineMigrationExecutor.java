@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.manager.execution.pipeline;
 
+import org.apache.streampipes.logging.evaluation.EvaluationLogger;
 import org.apache.streampipes.manager.data.PipelineGraph;
 import org.apache.streampipes.manager.data.PipelineGraphBuilder;
 import org.apache.streampipes.manager.data.PipelineGraphHelpers;
@@ -91,34 +92,56 @@ public class PipelineMigrationExecutor extends AbstractPipelineExecutor {
         // 5. stop origin relay
 
         prepareMigration();
+        //TODO: Remove logging after evaluation
+        EvaluationLogger logger = EvaluationLogger.getInstance();
 
         // Start target pipeline elements and relays on new target node
+        long before_start_target = System.nanoTime();
         PipelineOperationStatus statusStartTarget = startTargetPipelineElementsAndRelays(status);
         if(!statusStartTarget.isSuccess()){
             //Target PE could not be started; nothing to roll back
             return status;
         }
+        long start_target_duration = System.nanoTime() - before_start_target;
+        Object[] line_start_target = {System.currentTimeMillis(), "start target element","",start_target_duration,start_target_duration/1000000000.0};
+        logger.logMQTT("Migration", line_start_target);
 
         // Stop relays from origin predecessor
+        long downtime_beginning = System.nanoTime();
         PipelineOperationStatus statusStopRelays = stopRelaysFromPredecessorsBeforeMigration(status);
         if(!statusStopRelays.isSuccess()){
             rollbackToPreMigrationStepOne(statusStopRelays, status);
             return status;
         }
+        long stop_relays_origin_duration = System.nanoTime() - downtime_beginning;
+        Object[] line_stop_relay = {System.currentTimeMillis(), "stop relay from origin","",stop_relays_origin_duration,stop_relays_origin_duration/1000000000.0};
+        logger.logMQTT("Migration", line_stop_relay);
 
         // Start relays to target after migration
+        long before_start_relay_target = System.nanoTime();
         PipelineOperationStatus statusStartRelays = startRelaysFromPredecessorsAfterMigration(status);
         if(!statusStartRelays.isSuccess()){
             rollbackToPreMigrationStepTwo(statusStartRelays, status);
             return status;
         }
+        long start_relay_target_duration = System.nanoTime() - before_start_relay_target;
+        Object[] line_start_relay = {System.currentTimeMillis(), "start relay to target","",start_relay_target_duration,start_relay_target_duration/1000000000.0};
+        logger.logMQTT("Migration", line_start_relay);
+
+        long downtime = System.nanoTime() - downtime_beginning;
+        Object[] line_downtime = {System.currentTimeMillis() ,"downtime", "", downtime, downtime/1000000000.0};
+        logger.logMQTT("Migration", line_downtime);
 
         //Stop origin and associated relay
+        long before_stop_origin = System.nanoTime();
         PipelineOperationStatus statusStopOrigin = stopOriginPipelineElementsAndRelays(status);
         if(!statusStopOrigin.isSuccess()){
             rollbackToPreMigrationStepThree(status);
             return status;
         }
+        long stop_origin_duration = System.nanoTime() - before_stop_origin;
+        Object[] line_stop_origin = {System.currentTimeMillis(), "stop origin element","",stop_origin_duration,stop_origin_duration/1000000000.0};
+        logger.logMQTT("Migration", line_stop_origin);
 
         List<InvocableStreamPipesEntity> graphs = new ArrayList<>();
         graphs.addAll(pipeline.getActions());
