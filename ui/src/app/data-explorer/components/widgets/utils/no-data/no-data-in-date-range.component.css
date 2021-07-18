@@ -18,4 +18,11 @@
 
 .default-text {
     color: var(--color-default-text);
+    padding: 10px;
+    font-size: 16pt;
+    text-align: center;
+}
+
+.date-range-text {
+    font-size: 12pt;
 }

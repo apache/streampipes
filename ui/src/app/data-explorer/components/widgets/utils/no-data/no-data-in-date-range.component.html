@@ -21,8 +21,9 @@
     <div  fxLayout="row" fxLayoutAlign="center center" style="margin-top: 30px">
         <!-- TODO Icon -->
     </div>
-    <div fxLayout="row" fxLayoutAlign="center center" style="margin-top: 30px">
-        <h3 class="default-text">Found no data in selected time range ({{viewDateRange.startDate | date:'MM/dd/yyyy HH:mm'}} - {{viewDateRange.endDate | date:'MM/dd/yyyy HH:mm'}})</h3>
+    <div fxLayout="column" fxLayoutAlign="center center" style="margin-top: 30px">
+        <div class="default-text">Found no data in selected time range</div>
+        <div class="default-text date-range-text">{{viewDateRange.startDate | date:'MM/dd/yyyy HH:mm'}} - {{viewDateRange.endDate | date:'MM/dd/yyyy HH:mm'}}</div>
 
     </div>
 </div>
