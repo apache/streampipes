@@ -16,31 +16,6 @@
  *
  */
 
-
-::ng-deep .cdk-overlay-pane .feedback-menu-content{
-  min-width:500px;
-}
-
-.current-user {
-  color: var(--color-default-text);
-  display: block;
-  line-height: 48px;
-  height: 48px;
-  padding: 0 16px;
-  text-align: left;
-  text-decoration: none;
-  max-width: 100%;
-  position: relative;
-}
-
-.toolbar-bg {
-  background: var(--color-navigation-bg);
-  border-bottom: 2px solid var(--color-navigation-divider);
-  color: var(--color-navigation-text);
-}
-
-.sp-toolbar {
-  height:40px;
-  max-height:40px;
-  width:100%;
+.iconbar-size {
+  width: 35px;
 }

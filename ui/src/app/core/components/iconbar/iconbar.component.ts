@@ -27,6 +27,7 @@ import {NotificationCountService} from "../../../services/notification-count-ser
 @Component({
   selector: 'iconbar',
   templateUrl: './iconbar.component.html',
+  styleUrls: ['./iconbar.component.scss']
 })
 export class IconbarComponent extends BaseNavigationComponent implements OnInit {
 
