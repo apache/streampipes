@@ -24,12 +24,15 @@
                     <img alt="icon" src="../../../../assets/img/sp/logo-navigation.png" style="height:30px;">
                 </div>
                 <div style="padding: 5px 5px;font-size:15px;margin-left:10px;">
-                    <h4 style="margin-top:16px;font-size:12pt;font-weight:bold;">{{activePageName}}</h4>
+                    <h4 style="margin-top:14px;font-size:12pt;font-weight:bold;">{{activePageName}}</h4>
                 </div>
             </div>
         </div>
         <span fxFlex></span>
         <div fxFlex="40" fxLayout fxLayoutAlign="end center" *ngIf="authenticated" style="height:100%;">
+            <div fxLayoutAlign="start center" *ngIf="versionInfo.backendVersion">
+                <span class="version-info-text">v{{versionInfo.backendVersion}}</span>
+            </div>
             <!-- uncomment this to quickly investigate layout issues between dark and light mode -->
 <!--            <div>-->
 <!--                <mat-slide-toggle color="accent" [formControl]="appearanceControl">Dark Mode</mat-slide-toggle>-->

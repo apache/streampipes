@@ -25,6 +25,7 @@ import {MatMenuTrigger} from "@angular/material/menu";
 import {FormControl} from "@angular/forms";
 import {OverlayContainer} from "@angular/cdk/overlay";
 import {ProfileService} from "../../../profile/profile.service";
+import {VersionInfo} from "../../../info/versions/service/version-info.model";
 
 @Component({
   selector: 'toolbar',
@@ -37,6 +38,7 @@ export class ToolbarComponent extends BaseNavigationComponent implements OnInit 
   @ViewChild('accountMenuOpen') accountMenuOpen: MatMenuTrigger;
 
   userEmail;
+  versionInfo: VersionInfo;
 
   appearanceControl: FormControl;
 
@@ -49,6 +51,7 @@ export class ToolbarComponent extends BaseNavigationComponent implements OnInit 
   }
 
   ngOnInit(): void {
+    this.getVersion();
     this.userEmail = this.AuthStatusService.email;
     this.profileService.getUserProfile().subscribe(user => {
       this.AuthStatusService.darkMode = user.darkMode;
@@ -102,5 +105,10 @@ export class ToolbarComponent extends BaseNavigationComponent implements OnInit 
     });
   };
 
+  getVersion(){
+    this.RestApi.getVersionInfo().subscribe((response) => {
+      this.versionInfo = response as VersionInfo;
+    })
+  }
 
 }
