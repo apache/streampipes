@@ -17,10 +17,8 @@
   -->
 
 <div class="page-container page-container-padding">
-    <div _ngcontent-c10="" class="pageheadbar" fxflex="48px" fxlayout="row" fxlayoutalign="start center"
-         ng-reflect-layout="row" ng-reflect-align="start center" ng-reflect-flex="48px"
-         style="flex: 1 1 48px; box-sizing: border-box; flex-direction: row; display: flex; place-content: center flex-start; align-items: center; min-height: 50px;">
-        <mat-tab-group (selectedTabChange)="tabChanged($event)">
+    <div class="page-container-nav">
+        <mat-tab-group (selectedTabChange)="tabChanged($event)" color="accent">
             <mat-tab label="About">
             </mat-tab>
             <mat-tab label="System Info">
