@@ -36,7 +36,6 @@ export class ToolbarComponent extends BaseNavigationComponent implements OnInit 
   @ViewChild('feedbackOpen') feedbackOpen: MatMenuTrigger;
   @ViewChild('accountMenuOpen') accountMenuOpen: MatMenuTrigger;
 
-  versionInfo: VersionInfo;
   userEmail;
 
   appearanceControl: FormControl;
@@ -59,7 +58,6 @@ export class ToolbarComponent extends BaseNavigationComponent implements OnInit 
     });
     //this.darkMode = this.AuthStatusService.darkMode;
     super.onInit();
-    this.getVersion();
   }
 
   modifyAppearance(darkMode: boolean) {
@@ -99,9 +97,5 @@ export class ToolbarComponent extends BaseNavigationComponent implements OnInit 
     });
   };
 
-  getVersion(){
-    this.RestApi.getVersionInfo().subscribe((response) => {
-      this.versionInfo = response as VersionInfo;
-    })
-  }
+
 }

@@ -20,9 +20,11 @@ import {Component, OnInit} from "@angular/core";
 import {BaseNavigationComponent} from "../base-navigation.component";
 import {Client} from "@stomp/stompjs";
 import {NotificationItem} from "../../../notifications/model/notifications.model";
+import {RestApi} from "../../../services/rest-api.service";
 import {Router} from "@angular/router";
 import {AuthStatusService} from "../../../services/auth-status.service";
 import {NotificationCountService} from "../../../services/notification-count-service";
+import {VersionInfo} from "../../../info/versions/service/version-info.model";
 
 @Component({
   selector: 'iconbar',
@@ -32,15 +34,18 @@ import {NotificationCountService} from "../../../services/notification-count-ser
 export class IconbarComponent extends BaseNavigationComponent implements OnInit {
 
   unreadNotifications: number = 0;
+  versionInfo: VersionInfo;
 
   constructor(Router: Router,
               private AuthStatusService: AuthStatusService,
-              public NotificationCountService: NotificationCountService) {
+              public NotificationCountService: NotificationCountService,
+              private RestApi: RestApi,) {
     super(Router);
   }
 
   ngOnInit(): void {
     super.onInit();
+    this.getVersion();
     this.connectToBroker();
     this.NotificationCountService.loadUnreadNotifications();
   }
@@ -69,6 +74,12 @@ export class IconbarComponent extends BaseNavigationComponent implements OnInit 
     };
 
     stompClient.activate();
+  }
+
+  getVersion(){
+    this.RestApi.getVersionInfo().subscribe((response) => {
+      this.versionInfo = response as VersionInfo;
+    })
   }
 
 }

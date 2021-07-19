@@ -33,9 +33,6 @@
             <div>
                 <mat-slide-toggle color="accent" [formControl]="appearanceControl">Dark Mode</mat-slide-toggle>
             </div>
-            <div style="padding: 5px 5px;margin-left:10px;font-size:12pt;">
-                <span style="margin-top:12px;font-weight:bold;">version: </span><span style="font-weight: normal;" *ngIf="versionInfo">{{versionInfo.backendVersion}}</span>
-            </div>
             <div style="height:100%;">
                 <div [ngClass]="feedbackOpen.menuOpen ? 'sp-navbar-item-selected' : 'sp-navbar-item'" fxLayout fxLayoutAlign="center center" style="height: 100%;">
                     <button mat-button mat-icon-button
