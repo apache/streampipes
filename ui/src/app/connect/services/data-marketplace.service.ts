@@ -136,13 +136,11 @@ export class DataMarketplaceService {
             if (protocol.sourceType === 'SET') {
               newAdapterDescription = new GenericAdapterSetDescription();
               newAdapterDescription["@class"] = "org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription";
-              newAdapterDescription.elementId = 'http://streampipes.org/genericadaptersetdescription'
               newAdapterDescription.dataSet = new SpDataSet();
               newAdapterDescription.dataSet.eventSchema = new EventSchema();
             } else if (protocol.sourceType === 'STREAM') {
               newAdapterDescription = new GenericAdapterStreamDescription();
               newAdapterDescription["@class"] = "org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription";
-              newAdapterDescription.elementId = 'http://streampipes.org/genericadapterstreamdescription'
               newAdapterDescription.dataStream = new SpDataStream();
               newAdapterDescription.dataStream.eventSchema = new EventSchema();
             }

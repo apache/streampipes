@@ -23,10 +23,12 @@ import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.model.connect.grounding.ProtocolSetDescription;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.shared.annotation.TsModel;
+import org.apache.streampipes.model.util.ElementIdGenerator;
 
 @TsModel
 public class GenericAdapterSetDescription extends AdapterSetDescription implements GenericAdapterDescription {
-    public static final String ID = "http://streampipes.org/genericadaptersetdescription";
+
+    public static final String ID = ElementIdGenerator.makeFixedElementId(GenericAdapterSetDescription.class);
 
 //    private String sourceType = "org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription";
 

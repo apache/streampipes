@@ -23,11 +23,12 @@ import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.model.connect.grounding.ProtocolStreamDescription;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.shared.annotation.TsModel;
+import org.apache.streampipes.model.util.ElementIdGenerator;
 
 @TsModel
 public class GenericAdapterStreamDescription extends AdapterStreamDescription implements GenericAdapterDescription{
-    public static final String ID = "http://streampipes.org/genericadapterstreamdescription";
 
+    public static final String ID = ElementIdGenerator.makeFixedElementId(GenericAdapterStreamDescription.class);
 
     private FormatDescription formatDescription;
 
