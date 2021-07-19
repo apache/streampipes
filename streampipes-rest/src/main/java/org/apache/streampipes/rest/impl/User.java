@@ -44,6 +44,22 @@ public class User extends AbstractRestResource {
         }
     }
 
+    @Path("/appearance/mode/{darkMode}")
+    @PUT
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateAppearanceMode(@PathParam("email") String email,
+                                         @PathParam("darkMode") boolean darkMode) {
+        if (email != null) {
+            org.apache.streampipes.model.client.user.User user = getUser(email);
+            user.setDarkMode(darkMode);
+            getUserStorage().updateUser(user);
+
+            return ok(Notifications.success("Appearance updated"));
+        } else {
+            return statusMessage(Notifications.error("User not found"));
+        }
+    }
+
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

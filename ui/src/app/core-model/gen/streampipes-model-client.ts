@@ -19,7 +19,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 2.27.744 on 2021-06-22 10:02:27.
+// Generated using typescript-generator version 2.27.744 on 2021-07-19 21:39:30.
 
 export class Element {
     elementId: string;
@@ -141,6 +141,7 @@ export class RawUserApiToken {
 }
 
 export class User {
+    darkMode: boolean;
     email: string;
     fullName: string;
     hideTutorial: boolean;
@@ -176,6 +177,7 @@ export class User {
         instance.preferredActions = __getCopyArrayFn(__identity<string>())(data.preferredActions);
         instance.userApiTokens = __getCopyArrayFn(UserApiToken.fromData)(data.userApiTokens);
         instance.hideTutorial = data.hideTutorial;
+        instance.darkMode = data.darkMode;
         instance.roles = __getCopyArrayFn(__identity<Role>())(data.roles);
         return instance;
     }

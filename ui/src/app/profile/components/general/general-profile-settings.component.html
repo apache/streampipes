@@ -46,6 +46,27 @@
             </div>
         </div>
         <mat-divider></mat-divider>
+        <div fxLayout="row" fxFlex="100" class="mt-30">
+            <div fxFlex="300px" fxLayout="column" class="profile-section">
+                <div class="settings-title">Appearance</div>
+                <div class="settings-description">Change the appearance of your {{appConstants.APP_NAME}} installation</div>
+            </div>
+            <div fxFill fxLayout="column">
+                <label id="radio-group-label">Color Scheme</label>
+                <mat-radio-group [(ngModel)]="darkMode"
+                                 aria-labelledby="radio-group-label"
+                                 class="appearance-radio-group" (ngModelChange)="changeModePreview($event)">
+                    <mat-radio-button [value]="false" class="appearance-radio-button">Light Mode</mat-radio-button>
+                    <mat-radio-button [value]="true" class="appearance-radio-button">Dark Mode</mat-radio-button>
+                </mat-radio-group>
+                <div>
+                    <button mat-button mat-raised-button color="accent"
+                            (click)="updateAppearanceMode()">
+                        Save color scheme
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
 </div>

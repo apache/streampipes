@@ -172,6 +172,7 @@ $accent: map-get($custom-theme-light, accent);
         --color-navigation-link-text: #121212;
         --color-navigation-text: #121212;
         --color-navigation-selected: #{mat-color($primary)};
+        --color-navigation-hover: #{mat-color($primary, 600)};
         --color-navigation-bg-selected: #121212;
         --color-navigation-divider: #{mat-color($primary)};
 
@@ -205,6 +206,7 @@ $accent: map-get($custom-theme-light, accent);
         --color-navigation-link-text: #FFFFFF;
         --color-navigation-text: #FFFFFF;
         --color-navigation-selected: #{mat-color($primary)};
+        --color-navigation-hover: #{mat-color($primary, 600)};
         --color-navigation-bg-selected: #FFFFFF;
         --color-navigation-divider: #{mat-color($primary)};
 

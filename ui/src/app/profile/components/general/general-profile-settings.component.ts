@@ -21,6 +21,7 @@ import {ProfileService} from "../../profile.service";
 import {User} from "../../../core-model/gen/streampipes-model-client";
 import {BasicProfileSettings} from "../basic-profile-settings";
 import {AppConstants} from "../../../services/app.constants";
+import {AuthStatusService} from "../../../services/auth-status.service";
 
 @Component({
   selector: 'general-profile-settings',
@@ -29,15 +30,39 @@ import {AppConstants} from "../../../services/app.constants";
 })
 export class GeneralProfileSettingsComponent extends BasicProfileSettings implements OnInit {
 
-  constructor(profileService: ProfileService, appConstants: AppConstants) {
+  darkMode: boolean = false;
+  originalDarkMode: boolean = false;
+  darkModeChanged: boolean = false;
+
+  constructor(private authStatusService: AuthStatusService,
+              profileService: ProfileService,
+              appConstants: AppConstants) {
     super(profileService, appConstants);
   }
 
   ngOnInit(): void {
+    this.darkMode = this.authStatusService.darkMode;
+    this.originalDarkMode = this.authStatusService.darkMode;
     this.receiveUserData();
   }
 
+  ngOnDestroy(): void {
+    if (!this.darkModeChanged) {
+      this.authStatusService.darkMode = this.originalDarkMode;
+    }
+  }
+
+  changeModePreview(value: boolean) {
+    this.authStatusService.darkMode = value;
+  }
+
   onUserDataReceived() {
+  }
+
+  updateAppearanceMode() {
+    this.profileService.updateAppearanceMode(this.darkMode).subscribe(response => {
+      this.darkModeChanged = true;
+    });
   }
 
 }

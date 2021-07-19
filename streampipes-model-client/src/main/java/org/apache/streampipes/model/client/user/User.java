@@ -47,6 +47,7 @@ public class User {
 	private List<UserApiToken> userApiTokens;
 
 	private boolean hideTutorial;
+	private boolean darkMode = false;
 
 	private Set<Role> roles;	
 
@@ -253,5 +254,13 @@ public class User {
 
 	public void setRev(String rev) {
 		this.rev = rev;
+	}
+
+	public boolean isDarkMode() {
+		return darkMode;
+	}
+
+	public void setDarkMode(boolean darkMode) {
+		this.darkMode = darkMode;
 	}
 }

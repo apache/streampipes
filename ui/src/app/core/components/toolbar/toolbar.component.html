@@ -30,9 +30,10 @@
         </div>
         <span fxFlex></span>
         <div fxFlex="40" fxLayout fxLayoutAlign="end center" *ngIf="authenticated" style="height:100%;">
-            <div>
-                <mat-slide-toggle color="accent" [formControl]="appearanceControl">Dark Mode</mat-slide-toggle>
-            </div>
+            <!-- uncomment this to quickly investigate layout issues between dark and light mode -->
+<!--            <div>-->
+<!--                <mat-slide-toggle color="accent" [formControl]="appearanceControl">Dark Mode</mat-slide-toggle>-->
+<!--            </div>-->
             <div style="height:100%;">
                 <div [ngClass]="feedbackOpen.menuOpen ? 'sp-navbar-item-selected' : 'sp-navbar-item'" fxLayout fxLayoutAlign="center center" style="height: 100%;">
                     <button mat-button mat-icon-button
