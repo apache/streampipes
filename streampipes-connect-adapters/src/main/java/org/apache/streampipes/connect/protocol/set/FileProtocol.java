@@ -23,7 +23,6 @@ import org.apache.http.client.fluent.Request;
 import org.apache.streampipes.connect.SendToPipeline;
 import org.apache.streampipes.connect.adapter.guess.SchemaGuesser;
 import org.apache.streampipes.connect.adapter.model.generic.Protocol;
-import org.apache.streampipes.connect.api.EmitBinaryEvent;
 import org.apache.streampipes.connect.api.IAdapterPipeline;
 import org.apache.streampipes.connect.api.IFormat;
 import org.apache.streampipes.connect.api.IParser;
@@ -54,16 +53,13 @@ public class FileProtocol extends Protocol {
     public static final String ID = "org.apache.streampipes.protocol.set.file";
 
     private String fileFetchUrl;
-    private static final String INTERVAL_KEY = "interval-key";
-    private int timeBetweenReplay;
 
     public FileProtocol() {
     }
 
-    public FileProtocol(IParser parser, IFormat format, String fileFetchUrl, int timeBetweenReplay) {
+    public FileProtocol(IParser parser, IFormat format, String fileFetchUrl) {
         super(parser, format);
         this.fileFetchUrl = fileFetchUrl;
-        this.timeBetweenReplay=timeBetweenReplay;
     }
 
     @Override
@@ -71,7 +67,6 @@ public class FileProtocol extends Protocol {
         return ProtocolDescriptionBuilder.create(ID)
                 .withAssets(Assets.DOCUMENTATION, Assets.ICON)
                 .withLocales(Locales.EN)
-                .requiredIntegerParameter(Labels.withId(INTERVAL_KEY))
                 .sourceType(AdapterSourceType.SET)
                 .category(AdapterType.Generic)
                 .requiredFile(Labels.withId("filePath"), Filetypes.XML, Filetypes.JSON, Filetypes.CSV)
@@ -81,30 +76,8 @@ public class FileProtocol extends Protocol {
     @Override
     public Protocol getInstance(ProtocolDescription protocolDescription, IParser parser, IFormat format) {
         StaticPropertyExtractor extractor = StaticPropertyExtractor.from(protocolDescription.getConfig());
-        int timeBetweenReplay = extractor.singleValueParameter(INTERVAL_KEY, Integer.class);
         String fileFetchUrl = extractor.selectedFileFetchUrl("filePath");
-        return new FileProtocol(parser, format, fileFetchUrl,timeBetweenReplay);
-    }
-
-    public void parse(InputStream data, EmitBinaryEvent emitBinaryEvent) throws ParseException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(data));
-        boolean result = true;
-        try {
-            while (reader.ready() && result) {
-                String s = reader.readLine();
-                byte[] parseResult = s.getBytes();
-                if (parseResult != null) {
-                    result = emitBinaryEvent.emit(parseResult);
-                }
-                try {
-                    Thread.sleep(this.timeBetweenReplay);
-                } catch (InterruptedException e) {
-                    logger.error("Error while waiting for next replay round" + e.getMessage());
-                }
-            }
-        } catch (IOException var) {
-            throw new ParseException(var.getMessage());
-        }
+        return new FileProtocol(parser, format, fileFetchUrl);
     }
 
     @Override
@@ -119,8 +92,12 @@ public class FileProtocol extends Protocol {
         }
         SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
         try {
-            InputStream in = getDataFromEndpoint();
-            parse(in, stk);
+            InputStream dataInputStream = getDataFromEndpoint();
+            if(dataInputStream != null) {
+                parser.parse(dataInputStream, stk);
+            } else {
+                logger.warn("Could not read data from file.");
+            }
         } catch (ParseException e) {
             logger.error("Error while parsing: " + e.getMessage());
         }
@@ -130,7 +107,6 @@ public class FileProtocol extends Protocol {
     public void stop() {
 
     }
-
 
     @Override
     public GuessSchema getGuessSchema() throws ParseException {
@@ -145,26 +121,6 @@ public class FileProtocol extends Protocol {
         GuessSchema result = SchemaGuesser.guessSchma(eventSchema, getNElements(20));
 
         return result;
-
-//        EventSchema result = null;
-//
-//        FileReader fr = null;
-//
-//        try {
-//            fr = new FileReader(fileUri);
-//            BufferedReader br = new BufferedReader(fr);
-//
-//            InputStream inn = new FileInputStream(fileUri);
-//            result = parser.getEventSchema(parser.parseNEvents(inn, 1).get(0));
-//
-//            fr.close();
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
-//        return result;
     }
 
     public InputStream getDataFromEndpoint() throws ParseException {
