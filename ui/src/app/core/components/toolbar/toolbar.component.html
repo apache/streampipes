@@ -30,7 +30,7 @@
         </div>
         <span fxFlex></span>
         <div fxFlex="40" fxLayout fxLayoutAlign="end center" *ngIf="authenticated" style="height:100%;">
-            <div fxLayoutAlign="start center" *ngIf="versionInfo.backendVersion">
+            <div fxLayoutAlign="start center" *ngIf="versionInfo && versionInfo.backendVersion">
                 <span class="version-info-text">v{{versionInfo.backendVersion}}</span>
             </div>
             <!-- uncomment this to quickly investigate layout issues between dark and light mode -->
