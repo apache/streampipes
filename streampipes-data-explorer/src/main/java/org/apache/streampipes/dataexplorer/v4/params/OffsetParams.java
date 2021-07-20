@@ -16,20 +16,22 @@
  *
  */
 
-import {Injectable} from '@angular/core';
+package org.apache.streampipes.dataexplorer.v4.params;
 
-@Injectable()
-export class AuthStatusService {
+public class OffsetParams extends QueryParamsV4 {
 
-    user: any;
-    email: string;
-    username: string;
-    token: string;
-    authenticated: boolean = false;
-    configured: boolean = false;
-    darkMode: boolean = false;
+    private final Integer offset;
 
-    constructor() {
+    public static OffsetParams from(String measurementID, Integer offset) {
+        return new OffsetParams(measurementID, offset);
     }
 
+    public OffsetParams(String measurementID, Integer offset) {
+        super(measurementID);
+        this.offset = offset;
+    }
+
+    public Integer getOffset() {
+        return offset;
+    }
 }

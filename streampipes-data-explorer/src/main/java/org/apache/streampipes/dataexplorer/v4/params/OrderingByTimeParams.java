@@ -16,20 +16,21 @@
  *
  */
 
-import {Injectable} from '@angular/core';
+package org.apache.streampipes.dataexplorer.v4.params;
 
-@Injectable()
-export class AuthStatusService {
+public class OrderingByTimeParams extends QueryParamsV4 {
+    private final String ordering;
 
-    user: any;
-    email: string;
-    username: string;
-    token: string;
-    authenticated: boolean = false;
-    configured: boolean = false;
-    darkMode: boolean = false;
-
-    constructor() {
+    public static OrderingByTimeParams from(String measurementID, String ordering) {
+        return new OrderingByTimeParams(measurementID, ordering);
     }
 
+    public OrderingByTimeParams(String measurementID, String ordering) {
+        super(measurementID);
+        this.ordering = ordering;
+    }
+
+    public String getOrdering() {
+        return this.ordering;
+    }
 }

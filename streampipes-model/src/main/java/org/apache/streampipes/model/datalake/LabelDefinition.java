@@ -16,20 +16,31 @@
  *
  */
 
-import {Injectable} from '@angular/core';
+package org.apache.streampipes.model.datalake;
 
-@Injectable()
-export class AuthStatusService {
+public class LabelDefinition {
 
-    user: any;
-    email: string;
-    username: string;
-    token: string;
-    authenticated: boolean = false;
-    configured: boolean = false;
-    darkMode: boolean = false;
+    private String classLabel;
+    private String labelColumn;
 
-    constructor() {
+    public LabelDefinition(String classLabel, String labelColumn) {
+        this.classLabel = classLabel;
+        this.labelColumn = labelColumn;
     }
 
+    public String getClassLabel() {
+        return classLabel;
+    }
+
+    public void setClassLabel(String classLabel) {
+        this.classLabel = classLabel;
+    }
+
+    public String getLabelColumn() {
+        return labelColumn;
+    }
+
+    public void setLabelColumn(String labelColumn) {
+        this.labelColumn = labelColumn;
+    }
 }

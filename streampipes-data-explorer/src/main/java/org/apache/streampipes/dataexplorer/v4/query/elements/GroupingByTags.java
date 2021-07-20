@@ -16,20 +16,28 @@
  *
  */
 
-import {Injectable} from '@angular/core';
+package org.apache.streampipes.dataexplorer.v4.query.elements;
 
-@Injectable()
-export class AuthStatusService {
+import org.apache.streampipes.dataexplorer.v4.params.GroupingByTagsParams;
+import org.apache.streampipes.dataexplorer.v4.template.QueryTemplatesV4;
 
-    user: any;
-    email: string;
-    username: string;
-    token: string;
-    authenticated: boolean = false;
-    configured: boolean = false;
-    darkMode: boolean = false;
+public class GroupingByTags extends QueryElement<GroupingByTagsParams> {
 
-    constructor() {
+    public GroupingByTags(GroupingByTagsParams groupingByTagsParams) {
+        super(groupingByTagsParams);
     }
 
+    @Override
+    protected String buildStatement(GroupingByTagsParams groupingByTagsParams) {
+        String tags = "";
+        for (String tag : groupingByTagsParams.getGroupingTags()) {
+            if (tags.equals("")) {
+                tags = tag;
+            } else {
+                tags = tags + ", " + tag;
+            }
+        }
+
+        return QueryTemplatesV4.groupByTags(tags);
+    }
 }

@@ -41,7 +41,17 @@ export class DatalakeRestService {
         return this.baseUrl + '/api/v3/users/' + this.authStatusService.email + '/datalake';
     }
 
-    getAllInfos(): Observable<DataLakeMeasure[]> {
+    private get dataLakeUrlV4() {
+      return this.baseUrl + '/api/v4/users/' + this.authStatusService.email + '/datalake';
+    }
+
+
+    public getD(): Observable<DataLakeMeasure[]> {
+
+      return null;
+    }
+
+  getAllInfos(): Observable<DataLakeMeasure[]> {
         return this.http.get(this.dataLakeUrlV3 + '/info').pipe(map(response => {
           return (response as any[]).map(p => DataLakeMeasure.fromData(p));
         }));
@@ -56,19 +66,35 @@ export class DatalakeRestService {
     }
 
     getData(index, startDate, endDate, aggregationTimeUnit, aggregationValue): Observable<DataResult> {
-        return this.http.get<DataResult>(this.dataLakeUrlV3 + '/data/' + index + '/' + startDate + '/' + endDate + '?aggregationUnit=' + aggregationTimeUnit + '&aggregationValue=' + aggregationValue);
+        // return this.http.get<DataResult>(
+        //   this.dataLakeUrlV3 + '/data/' + index + '/' + startDate + '/' + endDate + '?aggregationUnit=' + aggregationTimeUnit + '&aggregationValue=' + aggregationValue);
+
+      const url = this.dataLakeUrlV4 + '/measurements/' + index;
+
+      return this.http.get<PageResult>(url, {
+        params: {
+          // columns: 'id1234',
+          startDate: startDate,
+          endDate: endDate,
+          // page: 0,
+          // limit: 1,
+          // offset: 1,
+          // groupBy: 'asd,sadf',
+          // order: 'ASC',
+          aggregationFunction: 'mean',
+          timeInterval: '1s'
+        }
+      });
     }
 
     getGroupedData(index, startDate, endDate, aggregationTimeUnit, aggregationValue, groupingTag) {
-        return this.http.get<GroupedDataResult>(this.dataLakeUrlV3 + '/data/' + index + '/' + startDate + '/' + endDate + '/grouping/' + groupingTag + '?aggregationUnit=' + aggregationTimeUnit + '&aggregationValue=' + aggregationValue);
+        return this.http.get<GroupedDataResult>(
+          this.dataLakeUrlV3 + '/data/' + index + '/' + startDate + '/' + endDate + '/grouping/' + groupingTag +
+          '?aggregationUnit=' + aggregationTimeUnit + '&aggregationValue=' + aggregationValue);
     }
 
     getDataAutoAggregation(index, startDate, endDate) {
         return this.http.get<DataResult>(this.dataLakeUrlV3 + '/data/' + index + '/' + startDate + '/' + endDate);
-    }
-
-    getGroupedDataAutoAggergation(index, startDate, endDate, groupingTag) {
-      return this.http.get<GroupedDataResult>(this.dataLakeUrlV3 + '/data/' + index + '/' + startDate + '/' + endDate + '/grouping/' + groupingTag);
     }
 
     downloadRowData(index, format) {
@@ -86,32 +112,6 @@ export class DatalakeRestService {
             responseType: 'text'
         });
         return this.http.request(request);
-    }
-
-    getLabels() {
-        return {
-          'boxes': ['blue', 'red'],
-          'sign': ['trafficsign'],
-          'person': ['person', 'Child'],
-          'vehicle': ['bicycle', 'car', 'motorcycle', 'airplane', 'bus', 'train', 'truck', 'boat'],
-          'outdoor': ['traffic light', 'fire hydrant', 'stop sign', 'parking meter', 'bench'],
-          'animal': ['bird', 'cat', 'dog'],
-          'accessory': ['backpack', 'umbrella', 'handbag', 'suitcase'],
-          'sports': ['frisbee', 'sports ball', 'skis', 'frisbee', 'baseball bat'],
-          'kitchen': ['bottle', 'cup', 'fork', 'knife', 'spoon'],
-          'furniture': ['chair', 'couch', 'bed', 'table'],
-          'electronic': ['tv', 'laptop', 'mouse', 'keyboard']
-        };
-    }
-
-    get_timeseries_labels() {
-        // mocked colorPropertyStringValues
-        const labels = {
-          coffee: ['coffee', 'coffee special', 'espresso', '2x espresso', 'hot water', 'undefined'],
-          state: ['online', 'offline', 'active', 'inactive'],
-          trend: ['increasing', 'decreasing'],
-          daytime: ['day', 'night']};
-        return labels;
     }
 
     getImageUrl(imageRoute) {

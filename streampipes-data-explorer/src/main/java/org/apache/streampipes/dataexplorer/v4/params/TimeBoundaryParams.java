@@ -16,20 +16,28 @@
  *
  */
 
-import {Injectable} from '@angular/core';
+package org.apache.streampipes.dataexplorer.v4.params;
 
-@Injectable()
-export class AuthStatusService {
+public class TimeBoundaryParams extends QueryParamsV4 {
 
-    user: any;
-    email: string;
-    username: string;
-    token: string;
-    authenticated: boolean = false;
-    configured: boolean = false;
-    darkMode: boolean = false;
+    private final Long startDate;
+    private final Long endDate;
 
-    constructor() {
+    public static TimeBoundaryParams from(String measurementID, Long startDate, Long endDate) {
+        return new TimeBoundaryParams(measurementID, startDate, endDate);
     }
 
+    protected TimeBoundaryParams(String measurementID, Long startDate, Long endDate) {
+        super(measurementID);
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
+    public Long getStartDate() {
+        return startDate;
+    }
+
+    public Long getEndDate() {
+        return endDate;
+    }
 }

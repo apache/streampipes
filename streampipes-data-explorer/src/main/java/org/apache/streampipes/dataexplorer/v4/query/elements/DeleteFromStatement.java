@@ -16,20 +16,18 @@
  *
  */
 
-import {Injectable} from '@angular/core';
+package org.apache.streampipes.dataexplorer.v4.query.elements;
 
-@Injectable()
-export class AuthStatusService {
+import org.apache.streampipes.dataexplorer.v4.params.DeleteFromStatementParams;
+import org.apache.streampipes.dataexplorer.v4.template.QueryTemplatesV4;
 
-    user: any;
-    email: string;
-    username: string;
-    token: string;
-    authenticated: boolean = false;
-    configured: boolean = false;
-    darkMode: boolean = false;
-
-    constructor() {
+public class DeleteFromStatement extends QueryElement<DeleteFromStatementParams> {
+    public DeleteFromStatement(DeleteFromStatementParams deleteFromStatementParams) {
+        super(deleteFromStatementParams);
     }
 
+    @Override
+    protected String buildStatement(DeleteFromStatementParams deleteFromStatementParams) {
+        return QueryTemplatesV4.deleteFrom(deleteFromStatementParams.getIndex());
+    }
 }

@@ -16,20 +16,19 @@
  *
  */
 
-import {Injectable} from '@angular/core';
+package org.apache.streampipes.dataexplorer.v4.query.elements;
 
-@Injectable()
-export class AuthStatusService {
+import org.apache.streampipes.dataexplorer.v4.params.ItemLimitationParams;
+import org.apache.streampipes.dataexplorer.v4.template.QueryTemplatesV4;
 
-    user: any;
-    email: string;
-    username: string;
-    token: string;
-    authenticated: boolean = false;
-    configured: boolean = false;
-    darkMode: boolean = false;
+public class ItemLimitation extends QueryElement<ItemLimitationParams> {
 
-    constructor() {
+    public ItemLimitation(ItemLimitationParams itemLimitationParams) {
+        super(itemLimitationParams);
     }
 
+    @Override
+    protected String buildStatement(ItemLimitationParams itemLimitationParams) {
+        return QueryTemplatesV4.limitItems(itemLimitationParams.getLimit());
+    }
 }
