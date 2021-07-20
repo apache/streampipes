@@ -21,6 +21,7 @@ import com.google.gson.JsonSyntaxException;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
+import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.output.CustomTransformOutputStrategy;
@@ -28,6 +29,7 @@ import org.apache.streampipes.model.output.OutputStrategy;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.sdk.helpers.Tuple2;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import java.io.IOException;
 
@@ -60,7 +62,8 @@ public class CustomTransformOutputSchemaGenerator extends OutputSchemaGenerator<
   private EventSchema makeRequest() {
     try {
       String httpRequestBody = JacksonSerializer.getObjectMapper().writeValueAsString(dataProcessorInvocation);
-      Response httpResp = Request.Post(dataProcessorInvocation.getBelongsTo() + "/output").bodyString(httpRequestBody,
+      String endpointUrl = new ExtensionsServiceEndpointGenerator(dataProcessorInvocation.getAppId(), SpServiceUrlProvider.DATA_PROCESSOR).getEndpointResourceUrl();
+      Response httpResp = Request.Post(endpointUrl + "/output").bodyString(httpRequestBody,
               ContentType
                       .APPLICATION_JSON).execute();
       return handleResponse(httpResp);
