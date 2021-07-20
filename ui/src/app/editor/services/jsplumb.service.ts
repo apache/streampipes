@@ -124,7 +124,7 @@ export class JsplumbService {
                           $parentElement,
                           previewConfig: boolean) {
         var $target;
-        if (pipelineElement.belongsTo.indexOf("sepa") > 0) { //Sepa Element
+        if (pipelineElement instanceof DataProcessorInvocation) {
             $target = this.dataProcessorDropped(pipelineElementDomId, pipelineElement as DataProcessorInvocation, true, false);
             this.connectNodes($parentElement, $target, previewConfig);
         } else {
