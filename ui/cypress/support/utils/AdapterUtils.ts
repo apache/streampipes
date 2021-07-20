@@ -112,9 +112,6 @@ export class AdapterUtils {
     }
 
     private static configureAdapter(configs: UserInput[]) {
-        it('Next Button should be disabled', () => {
-            cy.get('button').contains('Next').parent().should('be.disabled');
-        });
 
         StaticPropertyUtils.input(configs);
 
