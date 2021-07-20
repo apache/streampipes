@@ -25,6 +25,7 @@ import { PageResult } from '../../core-model/datalake/PageResult';
 import { AuthStatusService } from '../../services/auth-status.service';
 import {DataLakeMeasure} from "../../core-model/gen/streampipes-model";
 import {map} from "rxjs/operators";
+import { DatalakeQueryParameters } from './DatalakeQueryParameters';
 
 @Injectable()
 export class DatalakeRestService {
@@ -65,28 +66,86 @@ export class DatalakeRestService {
         return this.http.get<PageResult>(this.dataLakeUrlV3 + '/data/' + index + '/paging?itemsPerPage=' + itemsPerPage);
     }
 
-    getData(index, startDate, endDate, aggregationTimeUnit, aggregationValue): Observable<DataResult> {
-        // return this.http.get<DataResult>(
-        //   this.dataLakeUrlV3 + '/data/' + index + '/' + startDate + '/' + endDate + '?aggregationUnit=' + aggregationTimeUnit + '&aggregationValue=' + aggregationValue);
+    getData(index, _startDate, _endDate, aggregationTimeUnit, aggregationValue): Observable<DataResult> {
+      const _timeInterval = aggregationValue + aggregationTimeUnit;
 
-      const url = this.dataLakeUrlV4 + '/measurements/' + index;
-
-      return this.http.get<PageResult>(url, {
-        params: {
-          // columns: 'id1234',
-          startDate: startDate,
-          endDate: endDate,
-          // page: 0,
-          // limit: 1,
-          // offset: 1,
-          // groupBy: 'asd,sadf',
-          // order: 'ASC',
-          aggregationFunction: 'mean',
-          timeInterval: '1s'
-        }
-      });
+      return this.getCall(
+        index,
+        _startDate,
+        _endDate,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        'mean',
+        _timeInterval);
     }
 
+  private getCall(
+    index,
+    _startDate,
+    _endDate,
+    _columns,
+    _page,
+    _limit,
+    _offset,
+    _goupBy,
+    _order,
+    _aggregationFunction,
+    _timeInterval): Observable<DataResult> {
+
+    const url = this.dataLakeUrlV4 + '/measurements/' + index;
+
+    const queryParams: DatalakeQueryParameters = new DatalakeQueryParameters();
+
+    if (_startDate) {
+      queryParams.startDate = _startDate;
+    }
+
+    if (_endDate) {
+      queryParams.endDate = _endDate;
+    }
+
+    if (_columns) {
+      queryParams.columns = _columns;
+    }
+
+    if (_page) {
+      queryParams.page = _page;
+    }
+
+    if (_limit) {
+      queryParams.limit = _limit;
+    }
+
+    if (_offset) {
+      queryParams.offset = _offset;
+    }
+
+    if (_goupBy) {
+      queryParams.groupBy = _goupBy;
+    }
+
+    if (_order) {
+      queryParams.order = _order;
+    }
+
+    if (_aggregationFunction) {
+      queryParams.aggregationFunction = _aggregationFunction;
+    }
+
+    if (_timeInterval) {
+      queryParams.timeInterval = _timeInterval;
+    }
+
+    // @ts-ignore
+    return this.http.get<PageResult>(url, {
+      // @ts-ignore
+      params: queryParams,
+    });
+  }
     getGroupedData(index, startDate, endDate, aggregationTimeUnit, aggregationValue, groupingTag) {
         return this.http.get<GroupedDataResult>(
           this.dataLakeUrlV3 + '/data/' + index + '/' + startDate + '/' + endDate + '/grouping/' + groupingTag +
