@@ -106,8 +106,6 @@ export class JsplumbBridge {
     }
 
     addEndpoint(element, options) {
-        console.log(element);
-        console.log(options);
         return this.jsPlumbInstance.addEndpoint(element, options);
     }
 

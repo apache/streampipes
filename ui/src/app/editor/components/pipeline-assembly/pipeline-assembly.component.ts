@@ -283,7 +283,6 @@ export class PipelineAssemblyComponent implements OnInit {
             this.ngZone.run(() => {
                 this.pipelineValid = this.PipelineValidationService
                     .isValidPipeline(this.rawPipelineModel.filter(pe => !(pe.settings.disabled)), false);
-                console.log(this.pipelineValid);
             });
         });
     }
