@@ -15,21 +15,22 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.dataexplorer.v4.params;
 
-import {Injectable} from '@angular/core';
+public class QueryParamsV4 {
 
-@Injectable()
-export class AuthStatusService {
+    private final String index;
 
-    user: any;
-    email: string;
-    username: string;
-    token: string;
-    authenticated: boolean = false;
-    configured: boolean = false;
-    darkMode: boolean = false;
+    public static QueryParamsV4 from(String index) {
+        return new QueryParamsV4(index);
+    }
 
-    constructor() {
+    protected QueryParamsV4(String index) {
+        this.index = index;
+    }
+
+    public String getIndex() {
+        return index;
     }
 
 }

@@ -16,20 +16,16 @@
  *
  */
 
-import {Injectable} from '@angular/core';
+package org.apache.streampipes.dataexplorer.v4.params;
 
-@Injectable()
-export class AuthStatusService {
+public class DeleteFromStatementParams extends QueryParamsV4 {
 
-    user: any;
-    email: string;
-    username: string;
-    token: string;
-    authenticated: boolean = false;
-    configured: boolean = false;
-    darkMode: boolean = false;
+    public static DeleteFromStatementParams from(String measurementID) {
+        return new DeleteFromStatementParams(measurementID);
+    }
 
-    constructor() {
+    public DeleteFromStatementParams(String measurementID) {
+        super(measurementID);
     }
 
 }

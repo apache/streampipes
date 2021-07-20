@@ -52,8 +52,8 @@ export class ImageCategorizeComponent implements OnInit, AfterViewInit {
     // TODO: Load colorPropertyStringValues for images
     this.selectedLabels = [];
 
-    // TODO: Get Labels
-    this.labels = this.restService.getLabels();
+    // TODO: Change to label service
+    // this.labels = this.restService.getLabels();
 
     this.restService.getAllInfos().subscribe(res => {
         this.eventSchema = res.find(elem => elem.measureName === this.measureName).eventSchema;

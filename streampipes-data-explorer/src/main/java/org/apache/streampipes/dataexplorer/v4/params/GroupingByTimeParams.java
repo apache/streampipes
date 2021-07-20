@@ -16,20 +16,21 @@
  *
  */
 
-import {Injectable} from '@angular/core';
+package org.apache.streampipes.dataexplorer.v4.params;
 
-@Injectable()
-export class AuthStatusService {
+public class GroupingByTimeParams extends QueryParamsV4 {
+    private final String timeInterval;
 
-    user: any;
-    email: string;
-    username: string;
-    token: string;
-    authenticated: boolean = false;
-    configured: boolean = false;
-    darkMode: boolean = false;
-
-    constructor() {
+    public static GroupingByTimeParams from(String measurementID, String timeInterval) {
+        return new GroupingByTimeParams(measurementID, timeInterval);
     }
 
+    public GroupingByTimeParams(String measurementID, String timeInterval) {
+        super(measurementID);
+        this.timeInterval = timeInterval;
+    }
+
+    public String getTimeInterval() {
+        return this.timeInterval;
+    }
 }

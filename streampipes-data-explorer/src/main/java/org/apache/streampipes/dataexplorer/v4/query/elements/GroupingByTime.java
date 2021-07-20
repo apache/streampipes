@@ -16,20 +16,19 @@
  *
  */
 
-import {Injectable} from '@angular/core';
+package org.apache.streampipes.dataexplorer.v4.query.elements;
 
-@Injectable()
-export class AuthStatusService {
+import org.apache.streampipes.dataexplorer.v4.params.GroupingByTimeParams;
+import org.apache.streampipes.dataexplorer.v4.template.QueryTemplatesV4;
 
-    user: any;
-    email: string;
-    username: string;
-    token: string;
-    authenticated: boolean = false;
-    configured: boolean = false;
-    darkMode: boolean = false;
+public class GroupingByTime extends QueryElement<GroupingByTimeParams> {
 
-    constructor() {
+    public GroupingByTime(GroupingByTimeParams groupingByTimeParams) {
+        super(groupingByTimeParams);
     }
 
+    @Override
+    protected String buildStatement(GroupingByTimeParams groupingByTimeParams) {
+        return QueryTemplatesV4.groupByTime(groupingByTimeParams.getTimeInterval());
+    }
 }

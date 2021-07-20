@@ -16,20 +16,19 @@
  *
  */
 
-import {Injectable} from '@angular/core';
+package org.apache.streampipes.dataexplorer.v4.query.elements;
 
-@Injectable()
-export class AuthStatusService {
+import org.apache.streampipes.dataexplorer.v4.params.OffsetParams;
+import org.apache.streampipes.dataexplorer.v4.template.QueryTemplatesV4;
 
-    user: any;
-    email: string;
-    username: string;
-    token: string;
-    authenticated: boolean = false;
-    configured: boolean = false;
-    darkMode: boolean = false;
+public class Offset extends QueryElement<OffsetParams> {
 
-    constructor() {
+    public Offset(OffsetParams offsetParams) {
+        super(offsetParams);
     }
 
+    @Override
+    protected String buildStatement(OffsetParams offsetParams) {
+        return QueryTemplatesV4.offset(offsetParams.getOffset());
+    }
 }

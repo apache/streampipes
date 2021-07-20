@@ -16,20 +16,18 @@
  *
  */
 
-import {Injectable} from '@angular/core';
+package org.apache.streampipes.dataexplorer.v4.query.elements;
 
-@Injectable()
-export class AuthStatusService {
+public abstract class QueryElement<QueryElementParams> {
+    protected String queryStatement;
 
-    user: any;
-    email: string;
-    username: string;
-    token: string;
-    authenticated: boolean = false;
-    configured: boolean = false;
-    darkMode: boolean = false;
-
-    constructor() {
+    public QueryElement(QueryElementParams params) {
+        this.queryStatement = buildStatement(params);
     }
 
+    protected abstract String buildStatement(QueryElementParams params);
+
+    public String getStatement() {
+        return queryStatement;
+    }
 }

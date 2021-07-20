@@ -16,20 +16,27 @@
  *
  */
 
-import {Injectable} from '@angular/core';
+package org.apache.streampipes.dataexplorer.v4.params;
 
-@Injectable()
-export class AuthStatusService {
+import java.util.ArrayList;
+import java.util.List;
 
-    user: any;
-    email: string;
-    username: string;
-    token: string;
-    authenticated: boolean = false;
-    configured: boolean = false;
-    darkMode: boolean = false;
+public class GroupingByTagsParams extends QueryParamsV4 {
+    private final List<String> groupingTags;
 
-    constructor() {
+    public static GroupingByTagsParams from(String measurementID, String groupingTagsSeparatedByComma) {
+        return new GroupingByTagsParams(measurementID, groupingTagsSeparatedByComma);
     }
 
+    public GroupingByTagsParams(String measurementID, String groupingTagsSeparatedByComma) {
+        super(measurementID);
+        this.groupingTags = new ArrayList<>();
+        for (String tag : groupingTagsSeparatedByComma.split(",")) {
+            this.groupingTags.add(tag);
+        }
+    }
+
+    public List<String> getGroupingTags() {
+        return groupingTags;
+    }
 }

@@ -16,20 +16,19 @@
  *
  */
 
-import {Injectable} from '@angular/core';
+package org.apache.streampipes.dataexplorer.v4.params;
 
-@Injectable()
-export class AuthStatusService {
+public class FillParams extends QueryParamsV4 {
+    String fill = "fill(none)";
 
-    user: any;
-    email: string;
-    username: string;
-    token: string;
-    authenticated: boolean = false;
-    configured: boolean = false;
-    darkMode: boolean = false;
-
-    constructor() {
+    public static FillParams from(String measurementID) {
+        return new FillParams(measurementID);
+    }
+    protected FillParams(String index) {
+        super(index);
     }
 
+    public String getFill() {
+        return fill;
+    }
 }
