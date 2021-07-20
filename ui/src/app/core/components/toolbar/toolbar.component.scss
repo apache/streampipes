@@ -38,3 +38,18 @@
   border-bottom: 2px solid var(--color-navigation-divider);
   color: var(--color-navigation-text);
 }
+
+.sp-toolbar {
+  height:40px;
+  max-height:40px;
+  width:100%;
+}
+
+.version-info-text {
+  color: var(--color-navigation-text);
+  font-size: small;
+  display: block;
+  margin-top: 3px;
+  margin-right: 15px;
+  white-space: nowrap;
+}

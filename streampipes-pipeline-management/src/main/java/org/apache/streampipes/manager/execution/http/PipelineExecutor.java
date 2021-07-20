@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.manager.execution.http;
 
+import org.apache.streampipes.commons.constants.GlobalStreamPipesConstants;
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
@@ -26,6 +27,7 @@ import org.apache.streampipes.manager.secret.SecretProvider;
 import org.apache.streampipes.manager.util.TemporaryGraphStorage;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
@@ -37,12 +39,13 @@ import org.apache.streampipes.model.pipeline.PipelineHealthStatus;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
+import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;
+import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTags;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 import org.lightcouch.DocumentConflictException;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class PipelineExecutor {
@@ -73,12 +76,23 @@ public class PipelineExecutor {
     List<DataProcessorInvocation> sepas = pipeline.getSepas();
     List<DataSinkInvocation> secs = pipeline.getActions();
 
-    List<SpDataSet> dataSets = pipeline.getStreams().stream().filter(s -> s instanceof SpDataSet).map(s -> new
-            SpDataSet((SpDataSet) s)).collect(Collectors.toList());
+    List<SpDataSet> dataSets = pipeline
+            .getStreams()
+            .stream()
+            .filter(s -> s instanceof SpDataSet)
+            .map(s -> new SpDataSet((SpDataSet) s))
+            .collect(Collectors.toList());
 
-    for (SpDataSet ds : dataSets) {
+    List<NamedStreamPipesEntity> failedServices = new ArrayList<>();
+
+    dataSets.forEach(ds -> {
       ds.setCorrespondingPipeline(pipeline.getPipelineId());
-    }
+      try {
+        ds.setSelectedEndpointUrl(findSelectedEndpoint(ds));
+      } catch (NoServiceEndpointsAvailableException e) {
+        failedServices.add(ds);
+      }
+    });
 
     List<InvocableStreamPipesEntity> graphs = new ArrayList<>();
     graphs.addAll(sepas);
@@ -86,7 +100,6 @@ public class PipelineExecutor {
 
     decryptSecrets(graphs);
 
-    List<InvocableStreamPipesEntity> failedServices = new ArrayList<>();
       graphs.forEach(g -> {
         try {
           g.setSelectedEndpointUrl(findSelectedEndpoint(g));
@@ -134,6 +147,25 @@ public class PipelineExecutor {
             g.getAppId(),
             ExtensionsServiceEndpointUtils.getPipelineElementType(g))
             .getEndpointResourceUrl();
+  }
+
+  private String findSelectedEndpoint(SpDataSet ds) throws NoServiceEndpointsAvailableException {
+    String appId = ds.getAppId() != null ? ds.getAppId() : ds.getCorrespondingAdapterId();
+    if (ds.isInternallyManaged()) {
+      return getConnectMasterSourcesUrl(ds.getElementId());
+    } else {
+      return new ExtensionsServiceEndpointGenerator(appId, SpServiceUrlProvider.DATA_SET)
+              .getEndpointResourceUrl();
+    }
+  }
+
+  private String getConnectMasterSourcesUrl(String elementId) throws NoServiceEndpointsAvailableException {
+    List<String> connectMasterEndpoints = SpServiceDiscovery.getServiceDiscovery().getServiceEndpoints(DefaultSpServiceGroups.CORE, true, Collections.singletonList(DefaultSpServiceTags.CONNECT_MASTER.asString()));
+    if (connectMasterEndpoints.size() > 0) {
+      return connectMasterEndpoints.get(0) + GlobalStreamPipesConstants.CONNECT_MASTER_SOURCES_ENDPOINT + elementId;
+    } else {
+      throw new NoServiceEndpointsAvailableException("Could not find any available connect master service endpoint");
+    }
   }
 
   private void updateGroupIds(InvocableStreamPipesEntity entity) {

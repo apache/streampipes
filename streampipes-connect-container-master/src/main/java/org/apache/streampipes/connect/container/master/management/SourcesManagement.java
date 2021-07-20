@@ -19,10 +19,9 @@
 package org.apache.streampipes.connect.container.master.management;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
-import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.adapter.util.TransportFormatGenerator;
+import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.util.AdapterEncryptionService;
-import org.apache.streampipes.connect.container.master.util.Utils;
 import org.apache.streampipes.container.html.JSONGenerator;
 import org.apache.streampipes.container.html.model.DataSourceDescriptionHtml;
 import org.apache.streampipes.container.html.model.Description;
@@ -61,10 +60,10 @@ public class SourcesManagement {
        this.workerUrlProvider = new WorkerUrlProvider();
     }
 
-    public void addAdapter(String streamId, SpDataSet dataSet, String username) throws AdapterException, NoServiceEndpointsAvailableException {
+    public void addAdapter(String streamId, SpDataSet dataSet) throws AdapterException, NoServiceEndpointsAvailableException {
 
 
-        String newUrl = getAdapterUrl(streamId, username);
+        String newUrl = getAdapterUrl(streamId);
         AdapterSetDescription adapterDescription = (AdapterSetDescription) getAdapterDescriptionById(streamId);
         adapterDescription.setDataSet(dataSet);
 
@@ -85,11 +84,11 @@ public class SourcesManagement {
         adapterDescription.setUri(newId);
         adapterDescription.setId(newId);
 
-        String newUrl = getAdapterUrl(streamId, username);
+        String newUrl = getAdapterUrl(streamId);
         WorkerRestClient.stopSetAdapter(newUrl, adapterDescription);
     }
 
-    private String getAdapterUrl(String streamId, String username) throws NoServiceEndpointsAvailableException {
+    private String getAdapterUrl(String streamId) throws NoServiceEndpointsAvailableException {
         String appId = "";
         List<AdapterDescription> adapterDescriptions = this.adapterStorage.getAllAdapters();
         for (AdapterDescription ad : adapterDescriptions) {
@@ -97,9 +96,8 @@ public class SourcesManagement {
                 appId = ad.getAppId();
             }
         }
-        String workerUrl = workerUrlProvider.getWorkerBaseUrl(appId);
 
-        return Utils.addUserNameToApi(workerUrl, username);
+        return workerUrlProvider.getWorkerBaseUrl(appId);
 
     }
 

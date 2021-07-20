@@ -24,10 +24,18 @@ public class ElementIdGenerator {
   private static final String prefix = "urn:streampipes.apache.org:spi:";
 
   public static String makeElementId(Object obj) {
-    return prefix
-            + obj.getClass().getSimpleName().toLowerCase()
+    return makeElementId(obj.getClass());
+  }
+
+  public static String makeElementId(Class<?> clazz) {
+    return makeFixedElementId(clazz)
             + ":"
             + RandomStringUtils.randomAlphabetic(6);
+  }
+
+  public static String makeFixedElementId(Class<?> clazz) {
+    return prefix
+            + clazz.getSimpleName().toLowerCase();
   }
 
   public static String makeElementIdFromAppId(String appId) {

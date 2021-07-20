@@ -32,7 +32,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/v2/connect/{username}/master/sources")
+@Path("/v2/connect/master/sources")
 public class SourcesResource extends AbstractAdapterResource<SourcesManagement> {
 
     private static final Logger LOG = LoggerFactory.getLogger(SourcesResource.class);
@@ -73,13 +73,12 @@ public class SourcesResource extends AbstractAdapterResource<SourcesManagement> 
     @Path("/{streamId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response addAdapter(@PathParam("streamId") String elementId,
-                               @PathParam("username") String username,
                                SpDataSet dataSet) {
 
         String responseMessage = "Instance of data set " + dataSet.getUri() + " successfully started";
 
         try {
-            managementService.addAdapter(elementId,  dataSet, username);
+            managementService.addAdapter(elementId,  dataSet);
         } catch (AdapterException | NoServiceEndpointsAvailableException e) {
             LOG.error("Could not set data set instance: " + dataSet.getUri(), e);
             return ok(Notifications.error("Could not set data set instance: " + dataSet.getUri()));
@@ -91,7 +90,9 @@ public class SourcesResource extends AbstractAdapterResource<SourcesManagement> 
     @DELETE
     @Path("/{streamId}/{runningInstanceId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response detach(@PathParam("streamId") String elementId, @PathParam("runningInstanceId") String runningInstanceId, @PathParam("username") String username) {
+    public Response detach(@PathParam("streamId") String elementId,
+                           @PathParam("runningInstanceId") String runningInstanceId,
+                           @PathParam("username") String username) {
         String responseMessage = "Instance of set id: " + elementId  + " with instance id: "+ runningInstanceId + " successfully started";
 
 //        String workerUrl = new Utils().getWorkerUrlById(elementId);

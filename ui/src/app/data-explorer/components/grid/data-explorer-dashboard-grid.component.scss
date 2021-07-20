@@ -17,11 +17,11 @@
  */
 
 gridster.custom-gridster-style ::ng-deep {
-    background: white;
+    background: var(--color-bg-1);
 }
 
 gridster.custom-gridster-style.edit ::ng-deep {
-    background: white;
+    background: var(--color-bg-1);
 }
 
 gridster.scrollVertical ::ng-deep {
@@ -31,11 +31,11 @@ gridster.scrollVertical ::ng-deep {
 }
 
 ::ng-deep gridster.custom-gridster-style>.gridster-row {
-    border-bottom: 1px solid #ccc;
-    border-top: 1px solid #ccc;
+    border-bottom: 1px solid var(--color-bg-2);
+    border-top: 1px solid var(--color-bg-2);
 }
 
 ::ng-deep gridster.custom-gridster-style>div.gridster-column {
-    border-left: 1px solid #ccc;
-    border-right: 1px solid #ccc;
+    border-left: 1px solid var(--color-bg-2);
+    border-right: 1px solid var(--color-bg-2);
 }

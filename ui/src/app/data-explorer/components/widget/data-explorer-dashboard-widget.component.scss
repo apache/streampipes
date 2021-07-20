@@ -18,6 +18,10 @@
 
 @import '../../../../scss/variables';
 
+.gridster-item-content {
+    background: var(--color-bg-0);
+}
+
 .h-100 {
     height:100%;
 }
@@ -42,7 +46,7 @@
     display: flex;
     flex-flow: column;
     height: 100%;
-    border:3px solid $sp-color-accent-light;
+    border:3px solid var(--content-box-color);
 }
 
 .box .row.content {

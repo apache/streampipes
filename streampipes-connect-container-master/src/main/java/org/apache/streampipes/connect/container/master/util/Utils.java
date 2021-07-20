@@ -21,8 +21,8 @@ package org.apache.streampipes.connect.container.master.util;
 public class Utils {
 
     public static String addUserNameToApi(String url, String userName) {
-        //return url;
-        return  url + "/api/v1/" + userName + "/";
+        return url;
+        //return  url + "/api/v1/" + userName + "/";
     }
 
 

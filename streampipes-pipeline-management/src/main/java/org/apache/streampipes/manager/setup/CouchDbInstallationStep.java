@@ -32,7 +32,7 @@ import java.util.*;
 public class CouchDbInstallationStep implements InstallationStep {
 
     private static List<String> initRdfEndpointPorts =
-            Collections.singletonList("8099/api/v1/admin@streampipes.org/master/sources/");
+            Collections.singletonList("8099/api/v1/master/sources/");
     private static final String initRdfEndpointHost = "http://localhost:";
 
     private static final String PREPARING_NOTIFICATIONS_TEXT = "Preparing database " +

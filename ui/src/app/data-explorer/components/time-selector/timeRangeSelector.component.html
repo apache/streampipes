@@ -20,15 +20,15 @@
     <div class="time-range-wrapper" fxFlex fxLayoutAlign="center center">
     <button mat-button mat-raised-button
             *ngFor="let item of possibleTimeButtons"
-            [color]="selectedTimeButton.value === item.value ? 'primary' : ''"
+            [color]="selectedTimeButton.value === item.value ? 'accent' : ''"
             class="button-margin smaller-button-font-size"
             (click)="this.setCurrentDateRange(item)">{{item.value}}</button>
     </div>
     <div class="time-wrapper" fxFlex fxLayoutAlign="center center">
-        <button mat-button class="button-icon icon-button-font-size mr--15">
+        <button mat-button class="button-icon icon-button-font-size mr--15" color="accent">
             <mat-icon (click)="decreaseTime()">navigate_before</mat-icon>
         </button>
-        <mat-form-field appearance="standard" class="start-date form-field-margin form-field-size-smaller">
+        <mat-form-field appearance="standard" class="start-date form-field-margin form-field-size-smaller" color="accent">
             <mat-label>From</mat-label>
             <input matInput
                    [owlDateTime]="dt1"
@@ -37,7 +37,7 @@
                    (dateTimeChange)="changeCustomDateRange()">
             <owl-date-time #dt1></owl-date-time>
         </mat-form-field>
-        <mat-form-field appearance="standard" class="end-date form-field-margin form-field-size-smaller">
+        <mat-form-field appearance="standard" class="end-date form-field-margin form-field-size-smaller" color="accent">
             <mat-label>To</mat-label>
             <input matInput
                    [owlDateTime]="dt2"
@@ -46,12 +46,12 @@
                    (dateTimeChange)="changeCustomDateRange()">
             <owl-date-time #dt2></owl-date-time>
         </mat-form-field>
-        <button mat-button class="button-icon icon-button-font-size mr--15" color="primary">
+        <button mat-button class="button-icon icon-button-font-size mr--15" color="accent">
             <mat-icon (click)="increaseTime()">navigate_next</mat-icon>
         </button>
     </div>
     <div class="time-range-wrapper" fxFlex fxLayoutAlign="center center">
-        <button mat-button mat-raised-button color="primary"
+        <button mat-button mat-raised-button color="accent"
                 class="button-margin smaller-button-font-size"
                 matTooltip="Reload" matTooltipPosition="above">
             <mat-icon (click)="refreshData()">autorenew</mat-icon>

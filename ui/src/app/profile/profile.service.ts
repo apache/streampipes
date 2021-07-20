@@ -44,6 +44,12 @@ export class ProfileService {
     }))
   }
 
+  updateAppearanceMode(darkMode: boolean): Observable<Message> {
+    return this.http.put(`${this.platformServicesCommons.authUserBasePath()}/appearance/mode/${darkMode}`, {}).pipe(map(response => {
+      return Message.fromData(response as any);
+    }))
+  }
+
   requestNewApiToken(baseToken: RawUserApiToken): Observable<RawUserApiToken> {
     return this.http.post(this.platformServicesCommons.authUserBasePath() + "/tokens", baseToken)
         .pipe(map(response => {

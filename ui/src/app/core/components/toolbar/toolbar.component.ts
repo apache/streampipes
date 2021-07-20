@@ -22,9 +22,10 @@ import {Router} from "@angular/router";
 import {RestApi} from "../../../services/rest-api.service";
 import {AuthStatusService} from "../../../services/auth-status.service";
 import {MatMenuTrigger} from "@angular/material/menu";
-import {VersionInfo} from "../../../info/versions/service/version-info.model";
 import {FormControl} from "@angular/forms";
 import {OverlayContainer} from "@angular/cdk/overlay";
+import {ProfileService} from "../../../profile/profile.service";
+import {VersionInfo} from "../../../info/versions/service/version-info.model";
 
 @Component({
   selector: 'toolbar',
@@ -36,12 +37,13 @@ export class ToolbarComponent extends BaseNavigationComponent implements OnInit 
   @ViewChild('feedbackOpen') feedbackOpen: MatMenuTrigger;
   @ViewChild('accountMenuOpen') accountMenuOpen: MatMenuTrigger;
 
-  versionInfo: VersionInfo;
   userEmail;
+  versionInfo: VersionInfo;
 
   appearanceControl: FormControl;
 
   constructor(Router: Router,
+              private profileService: ProfileService,
               private RestApi: RestApi,
               public AuthStatusService: AuthStatusService,
               private overlay: OverlayContainer) {
@@ -49,9 +51,14 @@ export class ToolbarComponent extends BaseNavigationComponent implements OnInit 
   }
 
   ngOnInit(): void {
+    this.getVersion();
     this.userEmail = this.AuthStatusService.email;
+    this.profileService.getUserProfile().subscribe(user => {
+      this.AuthStatusService.darkMode = user.darkMode;
+      this.modifyAppearance(user.darkMode);
+    })
     this.appearanceControl = new FormControl(this.AuthStatusService.darkMode);
-    this.modifyAppearance(this.AuthStatusService.darkMode);
+    //this.modifyAppearance(this.AuthStatusService.darkMode);
     this.appearanceControl.valueChanges.subscribe(darkMode => {
       this.AuthStatusService.darkMode = darkMode;
       this.modifyAppearance(darkMode);
@@ -59,7 +66,6 @@ export class ToolbarComponent extends BaseNavigationComponent implements OnInit 
     });
     //this.darkMode = this.AuthStatusService.darkMode;
     super.onInit();
-    this.getVersion();
   }
 
   modifyAppearance(darkMode: boolean) {
@@ -104,4 +110,5 @@ export class ToolbarComponent extends BaseNavigationComponent implements OnInit 
       this.versionInfo = response as VersionInfo;
     })
   }
+
 }
