@@ -59,12 +59,12 @@ import { SelectPropertiesComponent } from './components/widgets/utils/select-pro
 import { DataExplorerComponent } from './data-explorer.component';
 import { DataExplorerAddVisualizationDialogComponent } from './dialogs/add-widget/data-explorer-add-visualization-dialog.component';
 import { DataExplorerEditDataViewDialogComponent } from './dialogs/edit-dashboard/data-explorer-edit-data-view-dialog.component';
-import { DataLakeService } from './services/data-lake.service';
 import { DataViewDataExplorerService } from './services/data-view-data-explorer.service';
 import { RefreshDashboardService } from './services/refresh-dashboard.service';
 import { ResizeService } from './services/resize.service';
 import { GroupConfigurationComponent } from './components/widgets/utils/group-configuration/group-configuration.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+// tslint:disable-next-line:max-line-length
 import { PointSelectionInfoComponent } from './components/widgets/line-chart/components/point-selection-info/point-selection-info.component';
 import { ColorService } from './components/widgets/line-chart/services/color.service';
 
@@ -137,7 +137,6 @@ export const MY_NATIVE_FORMATS = {
     DatalakeRestService,
     SharedDatalakeRestService,
     DataViewDataExplorerService,
-    DataLakeService,
     ResizeService,
     ColorService,
     RefreshDashboardService,
