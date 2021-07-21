@@ -78,10 +78,10 @@ export class DataDownloadDialog {
                 // this.downloadFinish = true;
                 // break;
             case 'all':
-                this.performRequest(this.restService.downloadRowData(this.data.index, this.downloadFormat), '', '');
+                this.performRequest(this.restService.downloadRawData(this.data.index, this.downloadFormat), '', '');
                 break;
             case 'customInterval':
-                this.performRequest(this.restService.downloadRowDataTimeInterval(this.data.index, this.downloadFormat,
+                this.performRequest(this.restService.downloadRawDataTimeInterval(this.data.index, this.downloadFormat,
                     this.dateRange[0].getTime(), this.dateRange[1].getTime()), this.getDateString(this.dateRange[0]),
                   this.getDateString(this.dateRange[1]));
 

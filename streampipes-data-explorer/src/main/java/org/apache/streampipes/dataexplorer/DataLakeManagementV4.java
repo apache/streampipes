@@ -50,8 +50,31 @@ public class DataLakeManagementV4 {
         return allMeasurements;
     }
 
-    public DataResult getData(String measurementID, String columns, Long startDate, Long endDate, Integer page, Integer limit, Integer offset, String groupBy, String order, String aggregationFunction, String timeInterval) {
-        Map<String, QueryParamsV4> queryParts = DataLakeManagementUtils.getSelectQueryParams(measurementID, columns, startDate, endDate, page, limit, offset, groupBy, order, aggregationFunction, timeInterval);
+    public DataResult getData(
+            String measurementID,
+            String columns,
+            Long startDate,
+            Long endDate,
+            Integer page,
+            Integer limit,
+            Integer offset,
+            String groupBy,
+            String order,
+            String aggregationFunction,
+            String timeInterval) {
+
+        Map<String, QueryParamsV4> queryParts = DataLakeManagementUtils.getSelectQueryParams(
+                measurementID,
+                columns,
+                startDate,
+                endDate,
+                page,
+                limit,
+                offset,
+                groupBy,
+                order,
+                aggregationFunction,
+                timeInterval);
         return new DataExplorerQueryV4(queryParts).executeQuery();
     }
 

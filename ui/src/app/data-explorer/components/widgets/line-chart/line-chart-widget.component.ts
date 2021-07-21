@@ -180,12 +180,12 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
             this.processNoneGroupedData(res);
           });
       } else {
-        this.dataLakeRestService.getGroupedData(
-          this.dataExplorerWidget.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime(),
-          this.aggregationTimeUnit, this.aggregationValue, this.groupValue)
-          .subscribe((res: GroupedDataResult) => {
-            this.processGroupedData(res);
-          });
+        // this.dataLakeRestService.getGroupedData(
+        //   this.dataExplorerWidget.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime(),
+        //   this.aggregationTimeUnit, this.aggregationValue, this.groupValue)
+        //   .subscribe((res: GroupedDataResult) => {
+        //     this.processGroupedData(res);
+        //   });
       }
     }
   }

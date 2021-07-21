@@ -36,7 +36,18 @@ public class DataLakeManagementUtils {
 
     public static final String DELETE_FROM = "DELETE";
 
-    public static Map<String, QueryParamsV4> getSelectQueryParams(String measurementID, String columns, Long startDate, Long endDate, Integer page, Integer limit, Integer offset, String groupBy, String order, String aggregationFunction, String timeInterval) {
+    public static Map<String, QueryParamsV4> getSelectQueryParams(
+            String measurementID,
+            String columns,
+            Long startDate,
+            Long endDate,
+            Integer page,
+            Integer limit,
+            Integer offset,
+            String groupBy,
+            String order,
+            String aggregationFunction,
+            String timeInterval) {
         Map<String, QueryParamsV4> queryParts = new HashMap<>();
 
         queryParts.put(SELECT_FROM, SelectFromStatementParams.from(measurementID, columns, aggregationFunction));
@@ -52,13 +63,14 @@ public class DataLakeManagementUtils {
             } else {
                 groupBy = groupBy + ",time(" + timeInterval + ")";
             }
+
+            queryParts.put(FILL, FillParams.from(measurementID));
         }
 
         if (groupBy != null) {
             queryParts.put(GROUP_BY_TAGS, GroupingByTagsParams.from(measurementID, groupBy));
         }
 
-        queryParts.put(FILL, FillParams.from(measurementID));
 
         if (order != null) {
             if (order.equals(ORDER_DESCENDING)) {

@@ -35,7 +35,6 @@ import { ImageAnnotationsComponent } from './image/components/image-annotations/
 import { ImageBarComponent } from './image/components/image-bar/image-bar.component';
 import { ImageContainerComponent } from './image/components/image-container/image-container.component';
 import { SelectLabelComponent } from './labels/components/select-label/select-label.component';
-import { ImageCategorizeComponent } from './image/image-categorize/image-categorize.component';
 import { ImageLabelingComponent } from './image/image-labeling/image-labeling.component';
 import { ImageViewerComponent } from './image/image-viewer/image-viewer.component';
 import { ImageComponent } from './image/image.component';
@@ -75,9 +74,9 @@ import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ConfigureLabelsComponent } from './labels/components/configure-labels/configure-labels.component';
 import { LabelListItemComponent } from './labels/components/label-list-item/label-list-item.component';
-import { StatusWidgetComponent } from "./widget/status/status-widget.component";
-import { NgxChartsModule } from "@swimlane/ngx-charts";
-import { BarchartWidgetComponent } from "./widget/barchart/barchart-widget.component";
+import { StatusWidgetComponent } from './widget/status/status-widget.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { BarchartWidgetComponent } from './widget/barchart/barchart-widget.component';
 import { ErrorHintComponent } from './error-hint/error-hint.component';
 
 @NgModule({
@@ -114,7 +113,6 @@ import { ErrorHintComponent } from './error-hint/error-hint.component';
         SelectLabelComponent,
         ImageBarComponent,
         ImageAnnotationsComponent,
-        ImageCategorizeComponent,
         ImageViewerComponent,
         StandardDialogComponent,
         PanelDialogComponent,
