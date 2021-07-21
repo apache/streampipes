@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.processors.enricher.flink.processor.urldereferencing;
 
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -57,7 +59,10 @@ public class UrlDereferencingController extends FlinkDataProcessorDeclarer<UrlDe
 
 
     @Override
-    public FlinkDataProcessorRuntime<UrlDereferencingParameter> getRuntime(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+    public FlinkDataProcessorRuntime<UrlDereferencingParameter> getRuntime(DataProcessorInvocation graph,
+                                                                           ProcessingElementParameterExtractor extractor,
+                                                                           ConfigExtractor configExtractor,
+                                                                           StreamPipesClient streamPipesClient) {
         String urlString = extractor.mappingPropertyValue(URL);
 
 //        java.net.URL url = null;

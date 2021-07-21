@@ -17,7 +17,9 @@
  */
 package org.apache.streampipes.processors.transformation.flink.processor.mapper;
 
+import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.container.api.ResolvesContainerProvidedOutputStrategy;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.schema.EventProperty;
@@ -62,7 +64,10 @@ public class FieldMapperController extends
   }
 
   @Override
-  public FlinkDataProcessorRuntime<FieldMapperParameters> getRuntime(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public FlinkDataProcessorRuntime<FieldMapperParameters> getRuntime(DataProcessorInvocation graph,
+                                                                     ProcessingElementParameterExtractor extractor,
+                                                                     ConfigExtractor configExtractor,
+                                                                     StreamPipesClient streamPipesClient) {
 
     List<String> replacePropertyNames = extractor.mappingPropertyValues(REPLACE_PROPERTIES);
     String newFieldName = extractor.singleValueParameter(FIELD_NAME, String.class);

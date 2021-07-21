@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.processors.enricher.flink.processor.trigonometry;
 
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -60,7 +62,10 @@ public class TrigonometryController extends FlinkDataProcessorDeclarer<Trigonome
     }
 
     @Override
-    public FlinkDataProcessorRuntime<TrigonometryParameters> getRuntime(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+    public FlinkDataProcessorRuntime<TrigonometryParameters> getRuntime(DataProcessorInvocation graph,
+                                                                        ProcessingElementParameterExtractor extractor,
+                                                                        ConfigExtractor configExtractor,
+                                                                        StreamPipesClient streamPipesClient) {
         String operand = extractor.mappingPropertyValue(OPERAND);
         String operation = extractor.selectedSingleValue(OPERATION, String.class);
 

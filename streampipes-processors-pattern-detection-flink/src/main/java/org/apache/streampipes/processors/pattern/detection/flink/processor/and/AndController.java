@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.processors.pattern.detection.flink.processor.and;
 
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -67,7 +69,10 @@ public class AndController extends FlinkDataProcessorDeclarer<AndParameters> {
 
 
   @Override
-  public FlinkDataProcessorRuntime<AndParameters> getRuntime(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public FlinkDataProcessorRuntime<AndParameters> getRuntime(DataProcessorInvocation graph,
+                                                             ProcessingElementParameterExtractor extractor,
+                                                             ConfigExtractor configExtractor,
+                                                             StreamPipesClient streamPipesClient) {
     List<String> leftMappings = extractor.mappingPropertyValues(LEFT_MAPPING);
     List<String> rightMappings = extractor.mappingPropertyValues(RIGHT_MAPPING);
     TimeUnit timeUnit = TimeUnit.valueOf(extractor.selectedSingleValue(TIME_UNIT, String.class));

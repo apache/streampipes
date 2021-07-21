@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.processor.geo.flink.processor.gridenricher;
 
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.schema.PropertyScope;
@@ -70,7 +72,10 @@ public class SpatialGridEnrichmentController extends FlinkDataProcessorDeclarer<
   }
 
   @Override
-  public FlinkDataProcessorRuntime<SpatialGridEnrichmentParameters> getRuntime(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public FlinkDataProcessorRuntime<SpatialGridEnrichmentParameters> getRuntime(DataProcessorInvocation graph,
+                                                                               ProcessingElementParameterExtractor extractor,
+                                                                               ConfigExtractor configExtractor,
+                                                                               StreamPipesClient streamPipesClient) {
 
     Integer cellSize = extractor.singleValueParameter(CELLSIZE, Integer.class);
     String latitudePropertyName = extractor.mappingPropertyValue(MAPPING_LATITUDE);

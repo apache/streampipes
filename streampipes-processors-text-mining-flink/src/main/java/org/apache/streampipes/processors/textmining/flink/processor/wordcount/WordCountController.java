@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.processors.textmining.flink.processor.wordcount;
 
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -62,7 +64,10 @@ public class WordCountController extends FlinkDataProcessorDeclarer<WordCountPar
   }
 
   @Override
-  public FlinkDataProcessorRuntime<WordCountParameters> getRuntime(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public FlinkDataProcessorRuntime<WordCountParameters> getRuntime(DataProcessorInvocation graph,
+                                                                   ProcessingElementParameterExtractor extractor,
+                                                                   ConfigExtractor configExtractor,
+                                                                   StreamPipesClient streamPipesClient) {
 
     String fieldName = extractor.mappingPropertyValue(WORD_COUNT_FIELD_KEY);
     Integer timeWindowValue = extractor.singleValueParameter(TIME_WINDOW_KEY, Integer.class);

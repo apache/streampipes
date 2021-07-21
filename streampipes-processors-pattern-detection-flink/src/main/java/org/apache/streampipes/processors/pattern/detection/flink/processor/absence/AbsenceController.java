@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.processors.pattern.detection.flink.processor.absence;
 
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -62,7 +64,10 @@ public class AbsenceController extends FlinkDataProcessorDeclarer<AbsenceParamet
   }
 
   @Override
-  public FlinkDataProcessorRuntime<AbsenceParameters> getRuntime(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public FlinkDataProcessorRuntime<AbsenceParameters> getRuntime(DataProcessorInvocation graph,
+                                                                 ProcessingElementParameterExtractor extractor,
+                                                                 ConfigExtractor configExtractor,
+                                                                 StreamPipesClient streamPipesClient) {
     List<String> selectProperties = new ArrayList<>();
     for (EventProperty p : graph.getOutputStream().getEventSchema().getEventProperties()) {
       selectProperties.add(p.getRuntimeName());

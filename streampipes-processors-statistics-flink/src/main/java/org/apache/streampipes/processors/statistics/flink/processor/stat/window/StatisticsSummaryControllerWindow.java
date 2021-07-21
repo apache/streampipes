@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.processors.statistics.flink.processor.stat.window;
 
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.schema.PropertyScope;
@@ -75,7 +77,10 @@ public class StatisticsSummaryControllerWindow extends
   }
 
   @Override
-  public FlinkDataProcessorRuntime<StatisticsSummaryParametersWindow> getRuntime(DataProcessorInvocation sepa, ProcessingElementParameterExtractor extractor) {
+  public FlinkDataProcessorRuntime<StatisticsSummaryParametersWindow> getRuntime(DataProcessorInvocation sepa,
+                                                                                 ProcessingElementParameterExtractor extractor,
+                                                                                 ConfigExtractor configExtractor,
+                                                                                 StreamPipesClient streamPipesClient) {
 
     String valueToObserve = extractor.mappingPropertyValue(VALUE_TO_OBSERVE);
     String timestampMapping = extractor.mappingPropertyValue(TIMESTAMP_MAPPING);

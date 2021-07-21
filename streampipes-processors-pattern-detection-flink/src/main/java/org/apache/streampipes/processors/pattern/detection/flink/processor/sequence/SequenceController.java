@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.processors.pattern.detection.flink.processor.sequence;
 
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -52,7 +54,9 @@ public class SequenceController extends FlinkDataProcessorDeclarer<SequenceParam
 
   @Override
   public FlinkDataProcessorRuntime<SequenceParameters> getRuntime(DataProcessorInvocation graph,
-                                                                  ProcessingElementParameterExtractor extractor) {
+                                                                  ProcessingElementParameterExtractor extractor,
+                                                                  ConfigExtractor configExtractor,
+                                                                  StreamPipesClient streamPipesClient) {
 
     Integer timeWindowSize = extractor.singleValueParameter(TIME_WINDOW, Integer.class);
     String timeUnit = extractor.selectedSingleValue(TIME_UNIT, String.class);

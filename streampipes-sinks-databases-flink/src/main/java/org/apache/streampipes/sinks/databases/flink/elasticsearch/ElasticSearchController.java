@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.sinks.databases.flink.elasticsearch;
 
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
@@ -54,7 +56,10 @@ public class ElasticSearchController extends FlinkDataSinkDeclarer<ElasticSearch
   }
 
   @Override
-  public FlinkDataSinkRuntime<ElasticSearchParameters> getRuntime(DataSinkInvocation graph, DataSinkParameterExtractor extractor) {
+  public FlinkDataSinkRuntime<ElasticSearchParameters> getRuntime(DataSinkInvocation graph,
+                                                                  DataSinkParameterExtractor extractor,
+                                                                  ConfigExtractor configExtractor,
+                                                                  StreamPipesClient streamPipesClient) {
 
     String timestampField = extractor.mappingPropertyValue(TIMESTAMP_MAPPING);
     String indexName = extractor.singleValueParameter(INDEX_NAME, String.class);

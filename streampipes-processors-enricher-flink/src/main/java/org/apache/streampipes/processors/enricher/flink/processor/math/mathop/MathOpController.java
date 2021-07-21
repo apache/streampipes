@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.processors.enricher.flink.processor.math.mathop;
 
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -74,7 +76,10 @@ public class MathOpController extends FlinkDataProcessorDeclarer<MathOpParameter
   }
 
   @Override
-  public FlinkDataProcessorRuntime<MathOpParameters> getRuntime(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public FlinkDataProcessorRuntime<MathOpParameters> getRuntime(DataProcessorInvocation graph,
+                                                                ProcessingElementParameterExtractor extractor,
+                                                                ConfigExtractor configExtractor,
+                                                                StreamPipesClient streamPipesClient) {
     String leftOperand = extractor.mappingPropertyValue(LEFT_OPERAND);
     String rightOperand = extractor.mappingPropertyValue(RIGHT_OPERAND);
     String operation = extractor.selectedSingleValue(OPERATION, String.class);

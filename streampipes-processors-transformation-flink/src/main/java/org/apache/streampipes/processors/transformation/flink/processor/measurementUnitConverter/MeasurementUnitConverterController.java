@@ -19,8 +19,10 @@
 package org.apache.streampipes.processors.transformation.flink.processor.measurementUnitConverter;
 
 import com.github.jqudt.Unit;
+import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.container.api.ResolvesContainerProvidedOptions;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.schema.EventProperty;
@@ -75,7 +77,10 @@ public class MeasurementUnitConverterController extends
 
 
   @Override
-  public FlinkDataProcessorRuntime<MeasurementUnitConverterParameters> getRuntime(DataProcessorInvocation sepa, ProcessingElementParameterExtractor extractor) {
+  public FlinkDataProcessorRuntime<MeasurementUnitConverterParameters> getRuntime(DataProcessorInvocation sepa,
+                                                                                  ProcessingElementParameterExtractor extractor,
+                                                                                  ConfigExtractor configExtractor,
+                                                                                  StreamPipesClient streamPipesClient) {
 
     String convertProperty = extractor.mappingPropertyValue(CONVERT_PROPERTY);
     String inputUnitId = extractor.measurementUnit(convertProperty, 0);

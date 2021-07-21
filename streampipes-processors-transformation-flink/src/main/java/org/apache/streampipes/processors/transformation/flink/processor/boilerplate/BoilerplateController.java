@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.processors.transformation.flink.processor.boilerplate;
 
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.schema.PropertyScope;
@@ -57,7 +59,10 @@ public class BoilerplateController extends FlinkDataProcessorDeclarer<Boilerplat
     }
 
     @Override
-    public FlinkDataProcessorRuntime<BoilerplateParameters> getRuntime(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+    public FlinkDataProcessorRuntime<BoilerplateParameters> getRuntime(DataProcessorInvocation graph,
+                                                                       ProcessingElementParameterExtractor extractor,
+                                                                       ConfigExtractor configExtractor,
+                                                                       StreamPipesClient streamPipesClient) {
         String htmlProperty = extractor.mappingPropertyValue(HTML_PROPERTY);
         String htmlExtractor = extractor.selectedSingleValue(EXTRACTOR, String.class);
         String htmlOutputMode = extractor.selectedSingleValue(OUTPUT_MODE, String.class);

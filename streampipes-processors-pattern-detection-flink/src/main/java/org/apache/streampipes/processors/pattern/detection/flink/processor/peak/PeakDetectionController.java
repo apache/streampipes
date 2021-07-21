@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.processors.pattern.detection.flink.processor.peak;
 
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -71,7 +73,9 @@ public class PeakDetectionController extends FlinkDataProcessorDeclarer<PeakDete
 
   @Override
   public FlinkDataProcessorRuntime<PeakDetectionParameters> getRuntime(DataProcessorInvocation sepa,
-                                                                       ProcessingElementParameterExtractor extractor) {
+                                                                       ProcessingElementParameterExtractor extractor,
+                                                                       ConfigExtractor configExtractor,
+                                                                       StreamPipesClient streamPipesClient) {
     String valueToObserve = extractor.mappingPropertyValue(VALUE_TO_OBSERVE);
     String timestampMapping = extractor.mappingPropertyValue(TIMESTAMP_MAPPING);
     String groupBy = extractor.mappingPropertyValue(PARTITION_BY);

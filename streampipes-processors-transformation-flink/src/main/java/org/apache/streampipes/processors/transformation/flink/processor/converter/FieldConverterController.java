@@ -17,9 +17,11 @@
  */
 package org.apache.streampipes.processors.transformation.flink.processor.converter;
 
+import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.container.api.ResolvesContainerProvidedOptions;
 import org.apache.streampipes.container.api.ResolvesContainerProvidedOutputStrategy;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.schema.EventProperty;
@@ -71,7 +73,10 @@ public class FieldConverterController extends
   }
 
   @Override
-  public FlinkDataProcessorRuntime<FieldConverterParameters> getRuntime(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public FlinkDataProcessorRuntime<FieldConverterParameters> getRuntime(DataProcessorInvocation graph,
+                                                                        ProcessingElementParameterExtractor extractor,
+                                                                        ConfigExtractor configExtractor,
+                                                                        StreamPipesClient streamPipesClient) {
     String convertProperty = extractor.mappingPropertyValue(CONVERT_PROPERTY);
     String targetDatatype =  extractor.selectedSingleValueInternalName(TARGET_TYPE, String.class);
 

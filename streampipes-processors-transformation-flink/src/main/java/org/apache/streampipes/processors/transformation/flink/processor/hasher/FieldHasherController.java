@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.processors.transformation.flink.processor.hasher;
 
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.schema.PropertyScope;
@@ -56,8 +58,10 @@ public class FieldHasherController extends FlinkDataProcessorDeclarer<FieldHashe
   }
 
   @Override
-  public FlinkDataProcessorRuntime<FieldHasherParameters> getRuntime(
-          DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public FlinkDataProcessorRuntime<FieldHasherParameters> getRuntime(DataProcessorInvocation graph,
+                                                                     ProcessingElementParameterExtractor extractor,
+                                                                     ConfigExtractor configExtractor,
+                                                                     StreamPipesClient streamPipesClient) {
     String propertyName = extractor.mappingPropertyValue(HASH_PROPERTIES);
 
     HashAlgorithmType hashAlgorithmType = HashAlgorithmType.valueOf(extractor.selectedSingleValue(HASH_ALGORITHM, String.class));

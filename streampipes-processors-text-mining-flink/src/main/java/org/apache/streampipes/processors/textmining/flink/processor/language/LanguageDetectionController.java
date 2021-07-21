@@ -17,6 +17,8 @@
  */
 package org.apache.streampipes.processors.textmining.flink.processor.language;
 
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -56,7 +58,10 @@ public class LanguageDetectionController extends FlinkDataProcessorDeclarer<Lang
   }
 
   @Override
-  public FlinkDataProcessorRuntime<LanguageDetectionParameters> getRuntime(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public FlinkDataProcessorRuntime<LanguageDetectionParameters> getRuntime(DataProcessorInvocation graph,
+                                                                           ProcessingElementParameterExtractor extractor,
+                                                                           ConfigExtractor configExtractor,
+                                                                           StreamPipesClient streamPipesClient) {
     String fieldName = extractor.mappingPropertyValue(DETECTION_FIELD_KEY);
 
     return new LanguageDetectionProgram(new LanguageDetectionParameters(graph, fieldName), TextMiningFlinkConfig.INSTANCE.getDebug());

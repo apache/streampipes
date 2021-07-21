@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.processors.transformation.flink.processor.rename;
 
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.schema.PropertyScope;
@@ -55,8 +57,10 @@ public class FieldRenamerController extends FlinkDataProcessorDeclarer<FieldRena
   }
 
   @Override
-  public FlinkDataProcessorRuntime<FieldRenamerParameters> getRuntime(
-          DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public FlinkDataProcessorRuntime<FieldRenamerParameters> getRuntime(DataProcessorInvocation graph,
+                                                                      ProcessingElementParameterExtractor extractor,
+                                                                      ConfigExtractor configExtractor,
+                                                                      StreamPipesClient streamPipesClient) {
     String oldPropertyName = extractor.mappingPropertyValue(CONVERT_PROPERTY);
     String newPropertyName = extractor.singleValueParameter(FIELD_NAME, String.class);
 
