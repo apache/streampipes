@@ -19,8 +19,10 @@
 package org.apache.streampipes.processors.aggregation.flink.processor.aggregation;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.container.api.ResolvesContainerProvidedOutputStrategy;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -95,7 +97,9 @@ public class AggregationController extends FlinkDataProcessorDeclarer<Aggregatio
 
   @Override
   public FlinkDataProcessorRuntime<AggregationParameters> getRuntime(DataProcessorInvocation graph,
-                                                                     ProcessingElementParameterExtractor extractor) {
+                                                                     ProcessingElementParameterExtractor extractor,
+                                                                     ConfigExtractor configExtractor,
+                                                                     StreamPipesClient streamPipesClient) {
 
     List<String> groupBy = extractor.mappingPropertyValues("groupBy");
 

@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.processors.enricher.flink.config;
 
+import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.SpConfig;
 import org.apache.streampipes.container.model.PeConfig;
 
@@ -30,8 +31,9 @@ public enum EnricherFlinkConfig implements PeConfig {
   private final static String service_id = "pe/org.apache.streampipes.processors.enricher.flink";
   private final static String service_name = "Processors Enricher Flink";
   private final static String service_container_name = "processors-enricher-flink";
+
   EnricherFlinkConfig() {
-    config = SpConfig.getSpConfig(service_id);
+    config = SpServiceDiscovery.getSpConfig(service_id);
 
     config.register(ConfigKeys.HOST, service_container_name, "Hostname for the pe mixed flink component");
     config.register(ConfigKeys.PORT, 8090, "Port for the pe mixed flink component");

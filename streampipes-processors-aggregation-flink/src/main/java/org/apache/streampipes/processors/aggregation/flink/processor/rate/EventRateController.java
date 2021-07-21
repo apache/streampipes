@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.processors.aggregation.flink.processor.rate;
 
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -57,7 +59,9 @@ public class EventRateController extends FlinkDataProcessorDeclarer<EventRatePar
 
   @Override
   public FlinkDataProcessorRuntime<EventRateParameter> getRuntime(DataProcessorInvocation graph,
-                                                                  ProcessingElementParameterExtractor extractor) {
+                                                                  ProcessingElementParameterExtractor extractor,
+                                                                  ConfigExtractor configExtractor,
+                                                                  StreamPipesClient streamPipesClient) {
     Integer avgRate = extractor.singleValueParameter(RATE_KEY, Integer.class);
 
     EventRateParameter staticParam = new EventRateParameter(graph, avgRate);

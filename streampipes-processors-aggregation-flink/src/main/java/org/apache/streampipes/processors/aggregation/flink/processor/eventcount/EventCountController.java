@@ -17,6 +17,8 @@
  */
 package org.apache.streampipes.processors.aggregation.flink.processor.eventcount;
 
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -67,7 +69,10 @@ public class EventCountController extends FlinkDataProcessorDeclarer<EventCountP
   }
 
   @Override
-  public FlinkDataProcessorRuntime<EventCountParameters> getRuntime(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public FlinkDataProcessorRuntime<EventCountParameters> getRuntime(DataProcessorInvocation graph,
+                                                                    ProcessingElementParameterExtractor extractor,
+                                                                    ConfigExtractor configExtractor,
+                                                                    StreamPipesClient streamPipesClient) {
     Integer timeWindowSize = extractor.singleValueParameter(TIME_WINDOW_KEY, Integer.class);
     String scale = extractor.selectedSingleValueInternalName(SCALE_KEY, String.class);
     EventCountParameters staticParam = new EventCountParameters(graph, timeWindowSize, scale);

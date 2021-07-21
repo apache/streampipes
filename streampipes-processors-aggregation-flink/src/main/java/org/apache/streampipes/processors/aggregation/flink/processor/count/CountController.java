@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.processors.aggregation.flink.processor.count;
 
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -72,7 +74,9 @@ public class CountController extends FlinkDataProcessorDeclarer<CountParameters>
 
   @Override
   public FlinkDataProcessorRuntime<CountParameters> getRuntime(DataProcessorInvocation graph,
-                                                               ProcessingElementParameterExtractor extractor) {
+                                                               ProcessingElementParameterExtractor extractor,
+                                                               ConfigExtractor configExtractor,
+                                                               StreamPipesClient streamPipesClient) {
 
     Integer timeWindowSize = extractor.singleValueParameter(TIME_WINDOW_KEY, Integer.class);
     String scale = extractor.selectedSingleValueInternalName(SCALE_KEY, String.class);

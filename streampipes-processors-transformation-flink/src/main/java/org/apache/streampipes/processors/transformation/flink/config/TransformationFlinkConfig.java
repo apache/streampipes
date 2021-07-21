@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.processors.transformation.flink.config;
 
+import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.SpConfig;
 import org.apache.streampipes.container.model.PeConfig;
 
@@ -32,7 +33,7 @@ public enum TransformationFlinkConfig implements PeConfig {
   private final static String service_container_name = "processors-transformation-flink";
 
   TransformationFlinkConfig() {
-    config = SpConfig.getSpConfig(service_id);
+    config = SpServiceDiscovery.getSpConfig(service_id);
 
     config.register(ConfigKeys.HOST, service_container_name, "Hostname for the pe mixed flink component");
     config.register(ConfigKeys.PORT, 8090, "Port for the pe mixed flink component");
