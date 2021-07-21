@@ -17,7 +17,8 @@
   ~
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -314,10 +315,10 @@
                 <scope>runtime</scope>
             </dependency>
             <dependency>
-            	<groupId>org.apache.plc4x</groupId>
-            	<artifactId>plc4j-driver-modbus</artifactId>
-            	<version>${plc4x.version}</version>
-            	<scope>runtime</scope>
+                <groupId>org.apache.plc4x</groupId>
+                <artifactId>plc4j-driver-modbus</artifactId>
+                <version>${plc4x.version}</version>
+                <scope>runtime</scope>
             </dependency>
             <dependency>
                 <groupId>com.google.protobuf</groupId>
@@ -703,7 +704,9 @@
                                 <fileSet>
                                     <directory>${project.build.directory}</directory>
                                     <includes>
-                                        <include>apache-streampipes-extensions-${project.version}-incubating-source-release.zip</include>
+                                        <include>
+                                            apache-streampipes-extensions-${project.version}-incubating-source-release.zip
+                                        </include>
                                     </includes>
                                 </fileSet>
                             </fileSets>
@@ -890,8 +893,12 @@
                         <exclude>**/*.en</exclude>
 
                         <!-- External files -->
-                        <exclude>streampipes-processors-transformation-flink/src/main/java/com/kohlschutter/boilerpipe/**</exclude>
-                        <exclude>streampipes-processors-geo-jvm/src/main/java/org/apache/streampipes/processors/geo/jvm/processor/revgeocoder/geocode/**</exclude>
+                        <exclude>
+                            streampipes-processors-transformation-flink/src/main/java/com/kohlschutter/boilerpipe/**
+                        </exclude>
+                        <exclude>
+                            streampipes-processors-geo-jvm/src/main/java/org/apache/streampipes/processors/geo/jvm/processor/revgeocoder/geocode/**
+                        </exclude>
 
                     </excludes>
                 </configuration>
@@ -907,7 +914,7 @@
                 <version>1.4.1</version>
                 <configuration>
                     <rules>
-                        <dependencyConvergence />
+                        <dependencyConvergence/>
                     </rules>
                 </configuration>
             </plugin>
@@ -940,15 +947,19 @@
             <releases>
                 <enabled>false</enabled>
             </releases>
+            <snapshots>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
         </repository>
     </repositories>
 
 
     <scm>
-        <developerConnection>scm:git:ssh://git@github.com/apache/incubator-streampipes-extensions.git</developerConnection>
+        <developerConnection>scm:git:ssh://git@github.com/apache/incubator-streampipes-extensions.git
+        </developerConnection>
         <connection>scm:git:ssh://git@github.com/apache/incubator-streampipes-extensions.git</connection>
         <url>https://github.com/apache/incubator-streampipes-extensions</url>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 
 </project>
