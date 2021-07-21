@@ -1139,6 +1139,9 @@
                         <exclude>**/*.jsonld</exclude>
                         <exclude>**/*.txt</exclude>
 
+                        <!-- CSV also doesn't like comments -->
+                        <exclude>**/*.csv</exclude>
+
                         <exclude>**/system</exclude>
 
                         <!-- Test files -->
