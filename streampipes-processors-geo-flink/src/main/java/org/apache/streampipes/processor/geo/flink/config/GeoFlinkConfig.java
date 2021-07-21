@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.processor.geo.flink.config;
 
+import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.SpConfig;
 import org.apache.streampipes.container.model.PeConfig;
 
@@ -31,7 +32,7 @@ public enum GeoFlinkConfig implements PeConfig {
   private final static String service_name = "Processors Geo Flink";
   private final static String service_container_name = "processors-geo-flink";
   GeoFlinkConfig() {
-    config = SpConfig.getSpConfig(service_id);
+    config = SpServiceDiscovery.getSpConfig(service_id);
 
     config.register(ConfigKeys.HOST, service_container_name, "Hostname for the geo flink component");
     config.register(ConfigKeys.PORT, 8090, "Port for the geo flink component");

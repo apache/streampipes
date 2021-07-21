@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.pe.flink.config;
 
+import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.SpConfig;
 import org.apache.streampipes.container.model.PeConfig;
 
@@ -30,7 +31,7 @@ public enum Config implements PeConfig {
   private final static String SERVICE_CONTAINER_NAME = "pipeline-elements-all-flink";
 
   Config() {
-    config = SpConfig.getSpConfig(SERVICE_ID);
+    config = SpServiceDiscovery.getSpConfig(SERVICE_ID);
     config.register(ConfigKeys.HOST, SERVICE_CONTAINER_NAME, "Data processor host");
     config.register(ConfigKeys.PORT, 8090, "Data processor port");
     config.register(ConfigKeys.SERVICE_NAME, SERVICE_NAME, "Data processor service name");
