@@ -39,7 +39,12 @@ import {
 import {DataViewDataExplorerService} from '../../services/data-view-data-explorer.service';
 import {RefreshDashboardService} from '../../services/refresh-dashboard.service';
 import {ResizeService} from '../../services/resize.service';
-import {DataExplorerWidgetModel} from "../../../core-model/gen/streampipes-model";
+import {
+  DashboardWidgetModel,
+  DataExplorerWidgetModel
+} from "../../../core-model/gen/streampipes-model";
+import {forkJoin} from "rxjs/internal/observable/forkJoin";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'sp-data-explorer-dashboard-grid',
@@ -54,6 +59,8 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
   @Input()
   dashboard: IDataViewDashboard;
 
+  configuredWidgets: Map<String, DataExplorerWidgetModel> = new Map<String, DataExplorerWidgetModel>();
+
   /**
    * This is the date range (start, end) to view the data and is set in data-explorer.ts
    */
@@ -62,6 +69,7 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
 
   @Output() deleteCallback: EventEmitter<IDataViewDashboardItem> = new EventEmitter<IDataViewDashboardItem>();
   @Output() updateCallback: EventEmitter<DataExplorerWidgetModel> = new EventEmitter<DataExplorerWidgetModel>();
+  @Output() configureWidgetCallback: EventEmitter<DataExplorerWidgetModel> = new EventEmitter<DataExplorerWidgetModel>();
 
   options: IDataViewDashboardConfig;
   loaded = false;
@@ -69,7 +77,7 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
   @ViewChildren(GridsterItemComponent) gridsterItemComponents: QueryList<GridsterItemComponent>;
 
   constructor(private resizeService: ResizeService,
-              private dashboardService: DataViewDataExplorerService,
+              private dataViewDataExplorerService: DataViewDataExplorerService,
               private refreshDashboardService: RefreshDashboardService) {
 
   }
@@ -92,8 +100,25 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
       }),
       itemInitCallback: ((item, itemComponent) => {
         this.resizeService.notify({gridsterItem: item, gridsterItemComponent: itemComponent} as GridsterInfo);
+        window.dispatchEvent(new Event('resize'));
       })
     };
+
+    this.loadWidgetConfigs();
+  }
+
+  loadWidgetConfigs() {
+    this.dashboard.widgets.forEach(widget => {
+        this.loadWidgetConfig(widget.id);
+    });
+
+  }
+
+  loadWidgetConfig(widgetId: string) {
+    this.dataViewDataExplorerService.getWidget(widgetId).subscribe(response => {
+      this.configuredWidgets.set(widgetId, response);
+      console.log(this.configuredWidgets);
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -113,9 +138,18 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
     this.updateCallback.emit(dashboardWidget);
   }
 
+  propagateWidgetSelection(configuredWidget: DataExplorerWidgetModel) {
+    this.configureWidgetCallback.emit(configuredWidget);
+    this.options.api.optionsChanged();
+  }
+
   toggleGrid() {
     this.options.displayGrid = this.options.displayGrid === "none" ? "always" : "none";
     this.options.api.optionsChanged();
+  }
+
+  triggerWidgetSelection(item: DataExplorerWidgetModel) {
+    this.configureWidgetCallback.emit(item);
   }
 
 }

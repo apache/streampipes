@@ -16,24 +16,6 @@
  *
  */
 
-import {GridsterConfig, GridsterItem} from "angular-gridster2";
-
-export interface DashboardConfig extends GridsterConfig {}
-
-export interface DashboardItem extends GridsterItem {
-    widgetId: string;
-    widgetType: string;
-    id: string;
-}
-
-export interface Dashboard {
-    id?: string;
-    name?: string;
-    description?: string;
-    displayHeader?: boolean;
-    widgets?: Array<DashboardItem>;
-    dashboardTimeSettings?: any;
-    dashboardGeneralSettings?: any;
-    _id?: string;
-    _rev?: string;
+.designer-panel-content {
+  padding: 10px;
 }

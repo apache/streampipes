@@ -16,7 +16,6 @@
  *
  */
 
-import { EpRequirements } from '../../../sdk/ep-requirements';
 import { WidgetConfig } from '../base/base-config';
 import {DashboardWidgetSettings} from "../../../../core-model/gen/streampipes-model";
 import {WidgetConfigBuilder} from "../../../../dashboard/registry/widget-config-builder";

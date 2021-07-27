@@ -37,6 +37,9 @@ export class DataExplorerDashboardWidgetComponent implements OnInit {
   widget: IDataViewDashboardItem;
 
   @Input()
+  configuredWidget: DataExplorerWidgetModel;
+
+  @Input()
   editMode: boolean;
 
   @Input()
@@ -53,21 +56,20 @@ export class DataExplorerDashboardWidgetComponent implements OnInit {
 
   @Output() deleteCallback: EventEmitter<IDataViewDashboardItem> = new EventEmitter<IDataViewDashboardItem>();
   @Output() updateCallback: EventEmitter<DataExplorerWidgetModel> = new EventEmitter<DataExplorerWidgetModel>();
+  @Output() configureWidgetCallback: EventEmitter<DataExplorerWidgetModel> = new EventEmitter<DataExplorerWidgetModel>();
+
 
   title = '';
   widgetLoaded = false;
-  configuredWidget: DataExplorerWidgetModel;
 
   constructor(private dataViewDataExplorerService: DataViewDataExplorerService,
               private dialog: MatDialog) {
   }
 
   ngOnInit(): void {
-    this.dataViewDataExplorerService.getWidget(this.widget.id).subscribe(response => {
-      this.configuredWidget = response;
-      this.widgetLoaded = true;
-      this.title = this.configuredWidget.dataLakeMeasure.measureName;
-    });
+    console.log(this.configuredWidget);
+    this.widgetLoaded = true;
+    this.title = this.configuredWidget.dataLakeMeasure.measureName;
   }
 
   removeWidget() {
@@ -98,5 +100,9 @@ export class DataExplorerDashboardWidgetComponent implements OnInit {
       data: { index: this.configuredWidget.dataLakeMeasure.measureName, date: this.viewDateRange },
       panelClass: 'custom-dialog-container'
     });
+  }
+
+  triggerWidgetEditMode() {
+    this.configureWidgetCallback.emit(this.configuredWidget);
   }
 }

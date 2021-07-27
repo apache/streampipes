@@ -25,8 +25,12 @@ import { DataExplorerAddVisualizationDialogComponent } from '../../dialogs/add-w
 import { IDataViewDashboard, IDataViewDashboardItem } from '../../models/dataview-dashboard.model';
 import { DataViewDataExplorerService } from '../../services/data-view-data-explorer.service';
 import { RefreshDashboardService } from '../../services/refresh-dashboard.service';
-import {DataExplorerWidgetModel} from "../../../core-model/gen/streampipes-model";
+import {
+  DashboardWidgetModel,
+  DataExplorerWidgetModel
+} from "../../../core-model/gen/streampipes-model";
 import {DataExplorerDashboardGridComponent} from "../grid/data-explorer-dashboard-grid.component";
+import {MatDrawer} from "@angular/material/sidenav";
 
 @Component({
   selector: 'sp-data-explorer-dashboard-panel',
@@ -51,6 +55,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
   editModeChange: EventEmitter<boolean> = new EventEmitter();
 
   @ViewChild('dashboardGrid') dashboardGrid: DataExplorerDashboardGridComponent;
+  @ViewChild('designerDrawer') designerDrawer: MatDrawer;
 
   public items: IDataViewDashboardItem[];
 
@@ -58,6 +63,8 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
 
   widgetIdsToRemove: string[] = [];
   widgetsToUpdate: Map<string, DataExplorerWidgetModel> = new Map<string, DataExplorerWidgetModel>();
+
+  currentlyConfiguredWidget: DataExplorerWidgetModel;
 
   constructor(private dataViewDataExplorerService: DataViewDataExplorerService,
               public dialog: MatDialog,
@@ -145,5 +152,15 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
 
   toggleGrid(gridVisible: boolean) {
     this.dashboardGrid.toggleGrid();
+  }
+
+  closeDrawer() {
+    this.designerDrawer.close();
+    this.dashboardGrid.options.api.optionsChanged();
+  }
+
+  updateCurrentlyConfiguredWidget(widget: DataExplorerWidgetModel) {
+    this.currentlyConfiguredWidget = widget;
+    this.designerDrawer.open();
   }
 }

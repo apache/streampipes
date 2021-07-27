@@ -31,19 +31,14 @@
     </div>
     <div class="fixed-height data-explorer-options sp-tab-bg" fxLayout="row" *ngIf="selectedIndex > 0">
         <div class="data-explorer-options-item pl-10" fxLayoutAlign="start center" fxLayout="row">
-            <button mat-button color="accent" matTooltip="Save" [matTooltipPosition]="'above'" (click)="saveDashboard()">
+            <button mat-button mat-raised-button color="accent" matTooltip="Save" [matTooltipPosition]="'above'" (click)="saveDashboard()">
                 <mat-icon>save</mat-icon>&nbsp;<span>Save</span>
             </button>
         </div>
         <div class="data-explorer-options-item" fxLayoutAlign="start center" fxLayout="row">
-            <button mat-button color="accent" matTooltip="Add visualization" [matTooltipPosition]="'above'" (click)="addVisualization()">
+            <button mat-button mat-raised-button color="accent" matTooltip="Add visualization" [matTooltipPosition]="'above'" (click)="addVisualization()">
                 <mat-icon>add</mat-icon>&nbsp;<span>Add visualization</span>
             </button>
-        </div>
-        <div class="data-explorer-options-item" fxLayoutAlign="start center" fxLayout="row">
-            <mat-slide-toggle color="accent" [(ngModel)]="gridVisible" (ngModelChange)="toggleGrid()">
-                <span>Show grid</span>
-            </mat-slide-toggle>
         </div>
         <div class="data-explorer-options-item" fxLayoutAlign="end center" fxFlex fxLayout="row">
             <sp-time-range-selector *ngIf="selectedIndex" (dateRangeEmitter)="updateDateRange($event)"></sp-time-range-selector>

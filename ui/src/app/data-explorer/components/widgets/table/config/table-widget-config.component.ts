@@ -16,24 +16,16 @@
  *
  */
 
-import {GridsterConfig, GridsterItem} from "angular-gridster2";
+import { Component, OnInit } from '@angular/core';
 
-export interface DashboardConfig extends GridsterConfig {}
+@Component({
+  selector: 'sp-data-explorer-table-widget-config',
+  templateUrl: './table-widget-config.component.html',
+  styleUrls: ['./table-widget-config.component.scss']
+})
+export class TableWidgetConfigComponent implements OnInit {
 
-export interface DashboardItem extends GridsterItem {
-    widgetId: string;
-    widgetType: string;
-    id: string;
-}
+  ngOnInit(): void {
+  }
 
-export interface Dashboard {
-    id?: string;
-    name?: string;
-    description?: string;
-    displayHeader?: boolean;
-    widgets?: Array<DashboardItem>;
-    dashboardTimeSettings?: any;
-    dashboardGeneralSettings?: any;
-    _id?: string;
-    _rev?: string;
 }

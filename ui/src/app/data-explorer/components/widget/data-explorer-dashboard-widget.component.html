@@ -18,19 +18,30 @@
 
 <div class="h-100">
     <div class="box">
-        <div class="assemblyOptions sp-blue-bg m-0 row header h-40" *ngIf="editMode">
-            <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
-               {{ title }}
+        <div class="widget-header">
+        <div class="m-0 row header h-40" *ngIf="editMode">
+            <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center" class="widget-header-text">
+                {{ configuredWidget.dataLakeMeasure.measureName }}
             </div>
-            <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
-                <button mat-icon-button matTooltip="Download data" class="icon" (click)="downloadDataAsFile()" color="white">
-                    <i class="material-icons">get_app</i>
+            <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center" *ngIf="editMode">
+                <button mat-icon-button (click)="triggerWidgetEditMode()">
+                    <mat-icon>edit</mat-icon>
                 </button>
-                <button mat-button mat-icon-button color="white" (click)="removeWidget()">
-                    <i class="material-icons">clear</i>
+                <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                    <mat-icon>more_vert</mat-icon>
                 </button>
+                <mat-menu #menu="matMenu">
+                    <button mat-menu-item (click)="downloadDataAsFile()">
+                        <mat-icon>get_app</mat-icon>
+                        <span>Download data</span>
+                    </button>
+                    <button mat-menu-item (click)="removeWidget()">
+                        <mat-icon>clear</mat-icon>
+                        <span>Delete widget</span>
+                    </button>
+                </mat-menu>
             </div>
-
+        </div>
         </div>
         <div class="h-100 p-0 row content gridster-item-content ml-0 mr-0">
             <div *ngIf="widgetLoaded" class="h-100">

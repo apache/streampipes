@@ -22,7 +22,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @TsModel
 public class DashboardModel {
@@ -38,10 +40,14 @@ public class DashboardModel {
   private String description;
   private boolean displayHeader;
 
+  private Map<String, Object> dashboardTimeSettings;
+  private Map<String, Object> dashboardGeneralSettings;
+
   private List<DashboardItem> widgets;
 
   public DashboardModel() {
-
+    this.dashboardTimeSettings = new HashMap<>();
+    this.dashboardGeneralSettings = new HashMap<>();
   }
 
   public String getCouchDbId() {
@@ -98,5 +104,21 @@ public class DashboardModel {
 
   public void setDisplayHeader(boolean displayHeader) {
     this.displayHeader = displayHeader;
+  }
+
+  public Map<String, Object> getDashboardTimeSettings() {
+    return dashboardTimeSettings;
+  }
+
+  public void setDashboardTimeSettings(Map<String, Object> dashboardTimeSettings) {
+    this.dashboardTimeSettings = dashboardTimeSettings;
+  }
+
+  public Map<String, Object> getDashboardGeneralSettings() {
+    return dashboardGeneralSettings;
+  }
+
+  public void setDashboardGeneralSettings(Map<String, Object> dashboardGeneralSettings) {
+    this.dashboardGeneralSettings = dashboardGeneralSettings;
   }
 }

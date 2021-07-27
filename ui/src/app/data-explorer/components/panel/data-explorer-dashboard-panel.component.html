@@ -17,12 +17,32 @@
   -->
 
 <div fxFlex="100" fxLayout="column">
-    <sp-data-explorer-dashboard-grid
-            #dashboardGrid
-            [editMode]="editMode"
-            [dashboard]="dashboard"
-            [viewDateRange]="viewDateRange"
-            (updateCallback)="updateAndQueueItemForDeletion($event)"
-            (deleteCallback)="removeAndQueueItemForDeletion($event)"
-            class="h-100 dashboard-grid"></sp-data-explorer-dashboard-grid>
+    <mat-drawer-container class="designer-panel-container h-100 dashboard-grid">
+        <mat-drawer #designerDrawer mode="side" opened position="end" class="designer-panel">
+            <div fxLayout="column" fxFlex>
+                <div fxLayout="row" class="sp-tab-bg designer-panel-header">
+                    <div fxLayoutAlign="start center" class="designer-panel-title">Configure widget</div>
+                    <div fxFlex fxLayoutAlign="end end">
+                        <button mat-button mat-icon-button (click)="closeDrawer()">
+                            <mat-icon>clear</mat-icon>
+                        </button>
+                    </div>
+                </div>
+                <sp-data-explorer-designer-panel [currentlyConfiguredWidget]="currentlyConfiguredWidget" fxFlex="100">
+
+                </sp-data-explorer-designer-panel>
+            </div>
+        </mat-drawer>
+        <mat-drawer-content class="h-100 dashboard-grid">
+            <sp-data-explorer-dashboard-grid
+                #dashboardGrid
+                [editMode]="editMode"
+                [dashboard]="dashboard"
+                [viewDateRange]="viewDateRange"
+                (configureWidgetCallback)="updateCurrentlyConfiguredWidget($event)"
+                (updateCallback)="updateAndQueueItemForDeletion($event)"
+                (deleteCallback)="removeAndQueueItemForDeletion($event)"
+                class="h-100 dashboard-grid"></sp-data-explorer-dashboard-grid>
+        </mat-drawer-content>
+    </mat-drawer-container>
 </div>

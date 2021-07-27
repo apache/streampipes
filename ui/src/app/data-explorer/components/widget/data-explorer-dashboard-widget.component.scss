@@ -46,7 +46,6 @@
     display: flex;
     flex-flow: column;
     height: 100%;
-    border:3px solid var(--content-box-color);
 }
 
 .box .row.content {
@@ -55,5 +54,14 @@
 
 .box .row.header {
     flex: 0 1 auto;
+}
+
+.widget-header-text {
+    font-size: 14pt;
+    font-weight: bold;
+}
+
+.widget-header {
+    padding: 15px;
 }
 
