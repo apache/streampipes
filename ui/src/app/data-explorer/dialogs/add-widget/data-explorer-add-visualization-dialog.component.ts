@@ -25,7 +25,7 @@ import { DataViewDataExplorerService } from '../../services/data-view-data-explo
 import {
   DataExplorerWidgetModel,
   DataLakeMeasure,
-  EventSchema
+  EventSchema, PersistedDataStream
 } from "../../../core-model/gen/streampipes-model";
 
 @Component({
@@ -53,10 +53,10 @@ export class DataExplorerAddVisualizationDialogComponent implements OnInit {
     description: 'Select widget'
   }];
 
-  visualizableData: DataLakeMeasure[] = [];
+  visualizableData: PersistedDataStream[] = [];
   availableWidgets: IWidget[];
 
-  selectedDataSet: DataLakeMeasure;
+  selectedDataSet: PersistedDataStream;
   selectedWidget: string;
 
   dashboard: IDataViewDashboard;
@@ -76,7 +76,7 @@ export class DataExplorerAddVisualizationDialogComponent implements OnInit {
   ngOnInit() {
     if (!this.data) {
       this.dialogTitle = 'Add widget';
-      this.dataViewDataExplorerService.getVisualizableData().subscribe(visualizations => {
+      this.dataViewDataExplorerService.getAllPersistedDataStreams().subscribe(visualizations => {
         this.visualizableData = visualizations;
       });
       this.availableWidgets = DataExplorerWidgetRegistry.getAvailableWidgetTemplates();
@@ -132,8 +132,11 @@ export class DataExplorerAddVisualizationDialogComponent implements OnInit {
       //       configuredWidget.eventSchema.eventProperties.push(ep.copy());
       //  }
 
-      configuredWidget.dataLakeMeasure = this.selectedDataSet;
-      configuredWidget.dataLakeMeasure["@class"] = "org.apache.streampipes.model.datalake.DataLakeMeasure";
+      configuredWidget.pipelineId = this.selectedDataSet.pipelineId;
+      configuredWidget.measureName = this.selectedDataSet.measureName;
+      configuredWidget.baseAppearanceConfig = {};
+      configuredWidget.visualizationConfig = {};
+      configuredWidget.dataConfig = {};
       configuredWidget.widgetType = this.selectedWidget;
       this.dataViewDataExplorerService.saveWidget(configuredWidget).subscribe(response => {
         this.dialogRef.close(response);

@@ -47,8 +47,8 @@ export class TableWidgetComponent extends BaseDataExplorerWidget implements OnIn
 
   ngOnInit(): void {
     this.dataSource.sort = this.sort;
-    this.availableColumns = [this.getTimestampProperty(this.dataExplorerWidget.dataLakeMeasure.eventSchema)];
-    this.availableColumns = this.availableColumns.concat(this.getValuePropertyKeys(this.dataExplorerWidget.dataLakeMeasure.eventSchema));
+    this.availableColumns = [this.getTimestampProperty(this.persistedDataStream.schema)];
+    this.availableColumns = this.availableColumns.concat(this.getValuePropertyKeys(this.persistedDataStream.schema));
 
     // Reduce selected columns when more then 6
     this.selectedColumns = this.availableColumns.length > 6 ? this.availableColumns.slice(0, 5) : this.availableColumns;
@@ -62,7 +62,7 @@ export class TableWidgetComponent extends BaseDataExplorerWidget implements OnIn
     this.setShownComponents(false, false, true);
 
     this.dataLakeRestService.getDataAutoAggregation(
-      this.dataExplorerWidget.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime())
+      this.persistedDataStream.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime())
       .subscribe(
       (res: DataResult) => {
         this.dataSource.data = this.transformData(res);

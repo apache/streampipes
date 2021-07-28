@@ -69,6 +69,8 @@ import {PointSelectionInfoComponent} from './components/widgets/line-chart/compo
 import {ColorService} from './components/widgets/line-chart/services/color.service';
 import {DataExplorerDesignerPanelComponent} from "./components/designer-panel/data-explorer-designer-panel.component";
 import {TableWidgetConfigComponent} from "./components/widgets/table/config/table-widget-config.component";
+import {DataExplorerWidgetAppearanceSettingsComponent} from "./components/designer-panel/appearance-settings/data-explorer-widget-appearance-settings.component";
+import {DataExplorerWidgetDataSettingsComponent} from "./components/designer-panel/data-settings/data-explorer-widget-data-settings.component";
 
 const dashboardWidgets = [];
 
@@ -124,6 +126,8 @@ export const MY_NATIVE_FORMATS = {
     DataExplorerDesignerPanelComponent,
     DataExplorerAddVisualizationDialogComponent,
     DataExplorerEditDataViewDialogComponent,
+    DataExplorerWidgetAppearanceSettingsComponent,
+    DataExplorerWidgetDataSettingsComponent,
     TableWidgetComponent,
     ImageWidgetComponent,
     LineChartWidgetComponent,

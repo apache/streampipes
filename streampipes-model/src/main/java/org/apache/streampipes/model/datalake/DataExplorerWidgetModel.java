@@ -20,15 +20,20 @@ package org.apache.streampipes.model.datalake;
 
 import org.apache.streampipes.model.dashboard.DashboardEntity;
 
+import java.util.Map;
+
 public class DataExplorerWidgetModel extends DashboardEntity {
 
   private String widgetId;
 
   private String widgetType;
 
-  private String selectedKeys;
+  private Map<String, Object> baseAppearanceConfig;
+  private Map<String, Object> visualizationConfig;
+  private Map<String, Object> dataConfig;
 
-  private DataLakeMeasure dataLakeMeasure;
+  private String pipelineId;
+  private String measureName;
 
   public DataExplorerWidgetModel() {
     super();
@@ -42,14 +47,6 @@ public class DataExplorerWidgetModel extends DashboardEntity {
     this.widgetId = widgetId;
   }
 
-  public DataLakeMeasure getDataLakeMeasure() {
-    return dataLakeMeasure;
-  }
-
-  public void setDataLakeMeasure(DataLakeMeasure dataLakeMeasure) {
-    this.dataLakeMeasure = dataLakeMeasure;
-  }
-
   public String getWidgetType() {
     return widgetType;
   }
@@ -58,11 +55,43 @@ public class DataExplorerWidgetModel extends DashboardEntity {
     this.widgetType = widgetType;
   }
 
-  public String getSelectedKeys() {
-    return selectedKeys;
+  public Map<String, Object> getBaseAppearanceConfig() {
+    return baseAppearanceConfig;
   }
 
-  public void setSelectedKeys(String selectedKeys) {
-    this.selectedKeys = selectedKeys;
+  public void setBaseAppearanceConfig(Map<String, Object> baseAppearanceConfig) {
+    this.baseAppearanceConfig = baseAppearanceConfig;
+  }
+
+  public Map<String, Object> getVisualizationConfig() {
+    return visualizationConfig;
+  }
+
+  public void setVisualizationConfig(Map<String, Object> visualizationConfig) {
+    this.visualizationConfig = visualizationConfig;
+  }
+
+  public Map<String, Object> getDataConfig() {
+    return dataConfig;
+  }
+
+  public void setDataConfig(Map<String, Object> dataConfig) {
+    this.dataConfig = dataConfig;
+  }
+
+  public String getPipelineId() {
+    return pipelineId;
+  }
+
+  public void setPipelineId(String pipelineId) {
+    this.pipelineId = pipelineId;
+  }
+
+  public String getMeasureName() {
+    return measureName;
+  }
+
+  public void setMeasureName(String measureName) {
+    this.measureName = measureName;
   }
 }

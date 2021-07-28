@@ -23,8 +23,12 @@ import { DateRange } from '../../../core-model/datalake/DateRange';
 import { DataExplorerAddVisualizationDialogComponent } from '../../dialogs/add-widget/data-explorer-add-visualization-dialog.component';
 import { IDataViewDashboardItem } from '../../models/dataview-dashboard.model';
 import { DataViewDataExplorerService } from '../../services/data-view-data-explorer.service';
-import {DataExplorerWidgetModel} from "../../../core-model/gen/streampipes-model";
+import {
+  DataExplorerWidgetModel,
+  PersistedDataStream
+} from "../../../core-model/gen/streampipes-model";
 import {DataDownloadDialog} from "../datadownloadDialog/dataDownload.dialog";
+import {Tuple2} from "../../../core-model/base/Tuple2";
 
 @Component({
   selector: 'sp-data-explorer-dashboard-widget',
@@ -38,6 +42,9 @@ export class DataExplorerDashboardWidgetComponent implements OnInit {
 
   @Input()
   configuredWidget: DataExplorerWidgetModel;
+
+  @Input()
+  persistedDataStream: PersistedDataStream;
 
   @Input()
   editMode: boolean;
@@ -56,7 +63,7 @@ export class DataExplorerDashboardWidgetComponent implements OnInit {
 
   @Output() deleteCallback: EventEmitter<IDataViewDashboardItem> = new EventEmitter<IDataViewDashboardItem>();
   @Output() updateCallback: EventEmitter<DataExplorerWidgetModel> = new EventEmitter<DataExplorerWidgetModel>();
-  @Output() configureWidgetCallback: EventEmitter<DataExplorerWidgetModel> = new EventEmitter<DataExplorerWidgetModel>();
+  @Output() configureWidgetCallback: EventEmitter<Tuple2<DataExplorerWidgetModel, PersistedDataStream>> = new EventEmitter<Tuple2<DataExplorerWidgetModel, PersistedDataStream>>();
 
 
   title = '';
@@ -69,7 +76,7 @@ export class DataExplorerDashboardWidgetComponent implements OnInit {
   ngOnInit(): void {
     console.log(this.configuredWidget);
     this.widgetLoaded = true;
-    this.title = this.configuredWidget.dataLakeMeasure.measureName;
+    this.title = this.persistedDataStream.measureName;
   }
 
   removeWidget() {
@@ -97,12 +104,12 @@ export class DataExplorerDashboardWidgetComponent implements OnInit {
   downloadDataAsFile() {
     const dialogRef = this.dialog.open(DataDownloadDialog, {
       width: '600px',
-      data: { index: this.configuredWidget.dataLakeMeasure.measureName, date: this.viewDateRange },
+      data: { index: this.persistedDataStream.measureName, date: this.viewDateRange },
       panelClass: 'custom-dialog-container'
     });
   }
 
   triggerWidgetEditMode() {
-    this.configureWidgetCallback.emit(this.configuredWidget);
+    this.configureWidgetCallback.emit({a: this.configuredWidget, b: this.persistedDataStream});
   }
 }

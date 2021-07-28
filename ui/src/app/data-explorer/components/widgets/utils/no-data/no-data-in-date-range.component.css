@@ -17,7 +17,6 @@
  */
 
 .default-text {
-    color: var(--color-default-text);
     padding: 10px;
     font-size: 16pt;
     text-align: center;

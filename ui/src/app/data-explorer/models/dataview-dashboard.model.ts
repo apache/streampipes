@@ -40,3 +40,9 @@ export interface IWidget {
     id: string;
     label: string;
 }
+
+export interface WidgetBaseAppearanceConfig {
+    backgroundColor: string;
+    textColor: string;
+    widgetTitle: string;
+}

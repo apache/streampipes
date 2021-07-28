@@ -141,13 +141,13 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
 
 
   ngOnInit(): void {
-    this.availableProperties = this.getNumericProperty(this.dataExplorerWidget.dataLakeMeasure.eventSchema);
-    this.dimensionProperties = this.getDimensionProperties(this.dataExplorerWidget.dataLakeMeasure.eventSchema);
-    this.availableNoneNumericColumns = this.getNoneNumericProperties(this.dataExplorerWidget.dataLakeMeasure.eventSchema);
+    this.availableProperties = this.getNumericProperty(this.persistedDataStream.schema);
+    this.dimensionProperties = this.getDimensionProperties(this.persistedDataStream.schema);
+    this.availableNoneNumericColumns = this.getNoneNumericProperties(this.persistedDataStream.schema);
 
     // Reduce selected columns when more then 6
     this.selectedLineChartProperties = this.availableProperties.length > 6 ? this.availableProperties.slice(0, 5) : this.availableProperties;
-    this.xKey = this.getTimestampProperty(this.dataExplorerWidget.dataLakeMeasure.eventSchema).runtimeName;
+    this.xKey = this.getTimestampProperty(this.persistedDataStream.schema).runtimeName;
     this.yKeys = this.getRuntimeNames(this.selectedLineChartProperties);
     this.updateData();
     this.resizeService.resizeSubject.subscribe(info => {
@@ -166,7 +166,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
     if (!this.advancedSettingsActive) {
       this.setShownComponents(false, false, true);
       this.dataLakeRestService.getDataAutoAggregation(
-        this.dataExplorerWidget.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime())
+        this.persistedDataStream.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime())
         .subscribe((res: DataResult) => {
           this.processNoneGroupedData(res);
         });
@@ -174,7 +174,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
       if (this.groupValue === 'None') {
         this.setShownComponents(false, false, true);
         this.dataLakeRestService.getData(
-          this.dataExplorerWidget.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime()
+          this.persistedDataStream.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime()
           , this.aggregationTimeUnit, this.aggregationValue)
           .subscribe((res: DataResult) => {
             this.processNoneGroupedData(res);
@@ -194,7 +194,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
     if (res.total === 0) {
       this.setShownComponents(true, false, false);
     } else {
-      res.measureName = this.dataExplorerWidget.dataLakeMeasure.measureName;
+      res.measureName = this.persistedDataStream.measureName;
       const tmp = this.transformData(res, this.xKey);
       this.data = this.displayData(tmp, this.yKeys);
 

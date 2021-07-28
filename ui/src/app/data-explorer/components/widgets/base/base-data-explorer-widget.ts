@@ -26,7 +26,7 @@ import { DataDownloadDialog } from '../../datadownloadDialog/dataDownload.dialog
 import {
   DataExplorerWidgetModel,
   EventProperty, EventPropertyPrimitive, EventPropertyUnion,
-  EventSchema
+  EventSchema, PersistedDataStream
 } from "../../../../core-model/gen/streampipes-model";
 
 @Directive()
@@ -48,6 +48,7 @@ export abstract class BaseDataExplorerWidget implements OnChanges {
 
   @Input() dataViewDashboardItem: IDataViewDashboardItem;
   @Input() dataExplorerWidget: DataExplorerWidgetModel;
+  @Input() persistedDataStream: PersistedDataStream;
 
   public selectedProperties: string[];
 

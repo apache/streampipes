@@ -23,12 +23,13 @@
         <mat-tab label="Visualization"></mat-tab>
         <mat-tab label="Appearance"></mat-tab>
     </mat-tab-group>
-    <input [(ngModel)]="currentlyConfiguredWidget.dataLakeMeasure.measureName" *ngIf="currentlyConfiguredWidget">
 
     <div fxFlex="100" fxLayout="column">
         <div class="designer-panel-config" *ngIf="currentlyConfiguredWidget">
             <div *ngIf="selectedIndex == 0">
-                <span>Data settings</span>
+                <sp-data-explorer-widget-data-settings [persistedDataStream]="persistedDataStream" [currentlyConfiguredWidget]="currentlyConfiguredWidget">
+
+                </sp-data-explorer-widget-data-settings>
             </div>
             <div *ngIf="selectedIndex == 1">
                 Visualization
@@ -39,7 +40,10 @@
                 </div>
             </div>
             <div *ngIf="selectedIndex == 2">
-                Appearance
+                <sp-data-explorer-widget-appearance-settings
+                        [baseAppearanceConfig]="currentlyConfiguredWidget.baseAppearanceConfig">
+
+                </sp-data-explorer-widget-appearance-settings>
             </div>
         </div>
 

@@ -27,10 +27,11 @@ import { DataViewDataExplorerService } from '../../services/data-view-data-explo
 import { RefreshDashboardService } from '../../services/refresh-dashboard.service';
 import {
   DashboardWidgetModel,
-  DataExplorerWidgetModel
+  DataExplorerWidgetModel, PersistedDataStream
 } from "../../../core-model/gen/streampipes-model";
 import {DataExplorerDashboardGridComponent} from "../grid/data-explorer-dashboard-grid.component";
 import {MatDrawer} from "@angular/material/sidenav";
+import {Tuple2} from "../../../core-model/base/Tuple2";
 
 @Component({
   selector: 'sp-data-explorer-dashboard-panel',
@@ -65,6 +66,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
   widgetsToUpdate: Map<string, DataExplorerWidgetModel> = new Map<string, DataExplorerWidgetModel>();
 
   currentlyConfiguredWidget: DataExplorerWidgetModel;
+  persistedDataStream: PersistedDataStream;
 
   constructor(private dataViewDataExplorerService: DataViewDataExplorerService,
               public dialog: MatDialog,
@@ -99,18 +101,21 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
     dashboardItem.x = 0;
     dashboardItem.y = 0;
     this.dashboard.widgets.push(dashboardItem);
+    this.dashboardGrid.loadWidgetConfig(widget._id);
   }
 
   updateDashboard(closeEditMode?: boolean) {
     this.dataViewDataExplorerService.updateDashboard(this.dashboard).subscribe(result => {
-        if (this.widgetsToUpdate.size > 0) {
-            forkJoin(this.prepareWidgetUpdates()).subscribe(result => {
-                  this.closeEditModeAndReloadDashboard(closeEditMode);
-            });
-        } else {
-            this.deleteWidgets();
-            this.closeEditModeAndReloadDashboard(false);
-        }
+      // TODO delete widgets
+      this.dashboardGrid.updateAllWidgets();
+        // if (this.widgetsToUpdate.size > 0) {
+        //     forkJoin(this.prepareWidgetUpdates()).subscribe(result => {
+        //           this.closeEditModeAndReloadDashboard(closeEditMode);
+        //     });
+        // } else {
+        //     this.deleteWidgets();
+        //     this.closeEditModeAndReloadDashboard(false);
+        // }
     });
   }
 
@@ -159,8 +164,10 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
     this.dashboardGrid.options.api.optionsChanged();
   }
 
-  updateCurrentlyConfiguredWidget(widget: DataExplorerWidgetModel) {
-    this.currentlyConfiguredWidget = widget;
+  updateCurrentlyConfiguredWidget(currentWidget: Tuple2<DataExplorerWidgetModel, PersistedDataStream>) {
+    this.widgetsToUpdate.set(currentWidget.a._id, currentWidget.a);
+    this.currentlyConfiguredWidget = currentWidget.a;
+    this.persistedDataStream = currentWidget.b;
     this.designerDrawer.open();
   }
 }

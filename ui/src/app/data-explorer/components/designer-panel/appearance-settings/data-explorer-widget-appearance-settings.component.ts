@@ -16,17 +16,23 @@
  *
  */
 
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+import {DataExplorerWidgetModel} from "../../../../core-model/gen/streampipes-model";
+import {WidgetBaseAppearanceConfig} from "../../../models/dataview-dashboard.model";
 
 @Component({
-  selector: 'sp-data-explorer-designer-panel',
-  templateUrl: './data-explorer-designer-panel.component.html',
-  styleUrls: ['./data-explorer-designer-panel.component.scss'],
+  selector: 'sp-data-explorer-widget-appearance-settings',
+  templateUrl: './data-explorer-widget-appearance-settings.component.html',
+  styleUrls: ['./data-explorer-widget-appearance-settings.component.scss'],
 })
 export class DataExplorerWidgetAppearanceSettingsComponent implements OnInit {
 
+  @Input() baseAppearanceConfig: WidgetBaseAppearanceConfig;
+
+  presetColors: Array<any> = ["#39B54A", "#1B1464", "#f44336", "#4CAF50", "#FFEB3B", "#FFFFFF", "#000000"];
 
   ngOnInit(): void {
+
   }
 
 

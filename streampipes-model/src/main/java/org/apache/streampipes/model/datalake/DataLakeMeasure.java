@@ -20,12 +20,15 @@ package org.apache.streampipes.model.datalake;
 
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.schema.EventSchema;
+import org.apache.streampipes.model.shared.annotation.TsModel;
 
+@TsModel
 public class DataLakeMeasure extends UnnamedStreamPipesEntity {
 
     private String measureName;
-
     private EventSchema eventSchema;
+    private String pipelineId;
+    private String pipelineName;
 
     public DataLakeMeasure() {
         super();
@@ -57,5 +60,21 @@ public class DataLakeMeasure extends UnnamedStreamPipesEntity {
 
     public void setEventSchema(EventSchema eventSchema) {
         this.eventSchema = eventSchema;
+    }
+
+    public String getPipelineId() {
+        return pipelineId;
+    }
+
+    public void setPipelineId(String pipelineId) {
+        this.pipelineId = pipelineId;
+    }
+
+    public String getPipelineName() {
+        return pipelineName;
+    }
+
+    public void setPipelineName(String pipelineName) {
+        this.pipelineName = pipelineName;
     }
 }

@@ -41,7 +41,7 @@ import {RefreshDashboardService} from '../../services/refresh-dashboard.service'
 import {ResizeService} from '../../services/resize.service';
 import {
   DashboardWidgetModel,
-  DataExplorerWidgetModel
+  DataExplorerWidgetModel, PersistedDataStream
 } from "../../../core-model/gen/streampipes-model";
 import {forkJoin} from "rxjs/internal/observable/forkJoin";
 import {Observable} from "rxjs";
@@ -55,6 +55,7 @@ import {DataExplorerDashboardGridComponent} from "../grid/data-explorer-dashboar
 export class DataExplorerDesignerPanelComponent implements OnInit {
 
   @Input() currentlyConfiguredWidget: DataExplorerWidgetModel;
+  @Input() persistedDataStream: PersistedDataStream;
 
   selectedIndex: number = 0;
 
