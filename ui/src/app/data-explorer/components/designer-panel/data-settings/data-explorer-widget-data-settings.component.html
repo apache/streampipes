@@ -16,14 +16,27 @@
   ~
   -->
 
-<div fxFlex="100">
-    <h4>Pipeline</h4>
-    <mat-form-field color="accent">
+<div fxFlex="100" fxLayout="column">
+    <h5>Data Source</h5>
+    <mat-radio-group
+            class="selection-radio-group"
+            [(ngModel)]="sourceSelection">
+        <mat-radio-button class="selection-radio-button" [value]="'pipeline'">Pipeline</mat-radio-button>
+        <mat-radio-button class="selection-radio-button" [value]="'measurement'">Measurement</mat-radio-button>
+    </mat-radio-group>
+    <mat-form-field color="accent" fxFlex="100" *ngIf="sourceSelection == 'pipeline'">
         <mat-label>Data Explorer Sinks</mat-label>
-        <mat-select [(value)]="persistedDataStream">
-            <mat-option [value]="pipeline" *ngFor="let pipeline of availablePipelines">
-                <div class="pipeline-name">{{ pipeline.pipelineName }}</div>
-                <div class="measure-name">{{ pipeline.measureName }}</div>
+        <mat-select [(value)]="currentlyConfiguredWidget.measureName">
+            <mat-option [value]="pipeline.measureName" *ngFor="let pipeline of availablePipelines">
+                <span class="pipeline-name">{{ pipeline.pipelineName }}</span>&nbsp;&nbsp;{{ pipeline.measureName }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field color="accent" fxFlex="100" *ngIf="sourceSelection == 'measurement'">
+        <mat-label>Data Explorer Sinks</mat-label>
+        <mat-select [(value)]="currentlyConfiguredWidget.measureName">
+            <mat-option [value]="measurement.measureName" *ngFor="let measurement of availableMeasurements">
+                <span class="pipeline-name">{{ measurement.measureName }}</span>
             </mat-option>
         </mat-select>
     </mat-form-field>

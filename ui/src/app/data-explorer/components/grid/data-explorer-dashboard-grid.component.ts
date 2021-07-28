@@ -25,8 +25,7 @@ import {
   Output,
   QueryList,
   SimpleChanges,
-  ViewChildren,
-  ViewEncapsulation
+  ViewChildren
 } from '@angular/core';
 import {GridsterItemComponent, GridType} from 'angular-gridster2';
 import {DateRange} from '../../../core-model/datalake/DateRange';
@@ -39,13 +38,9 @@ import {
 import {DataViewDataExplorerService} from '../../services/data-view-data-explorer.service';
 import {RefreshDashboardService} from '../../services/refresh-dashboard.service';
 import {ResizeService} from '../../services/resize.service';
-import {
-  DashboardWidgetModel,
-  DataExplorerWidgetModel, PersistedDataStream
-} from "../../../core-model/gen/streampipes-model";
-import {forkJoin} from "rxjs/internal/observable/forkJoin";
-import {Observable} from "rxjs";
+import {DataExplorerWidgetModel, DataLakeMeasure} from "../../../core-model/gen/streampipes-model";
 import {Tuple2} from "../../../core-model/base/Tuple2";
+import {DatalakeRestService} from "../../../core-services/datalake/datalake-rest.service";
 
 @Component({
   selector: 'sp-data-explorer-dashboard-grid',
@@ -61,7 +56,7 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
   dashboard: IDataViewDashboard;
 
   configuredWidgets: Map<String, DataExplorerWidgetModel> = new Map<String, DataExplorerWidgetModel>();
-  persistedDataStreams: Map<String, PersistedDataStream> = new Map<String, PersistedDataStream>();
+  dataLakeMeasures: Map<String, DataLakeMeasure> = new Map<String, DataLakeMeasure>();
 
   /**
    * This is the date range (start, end) to view the data and is set in data-explorer.ts
@@ -71,7 +66,7 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
 
   @Output() deleteCallback: EventEmitter<IDataViewDashboardItem> = new EventEmitter<IDataViewDashboardItem>();
   @Output() updateCallback: EventEmitter<DataExplorerWidgetModel> = new EventEmitter<DataExplorerWidgetModel>();
-  @Output() configureWidgetCallback: EventEmitter<Tuple2<DataExplorerWidgetModel, PersistedDataStream>> = new EventEmitter<Tuple2<DataExplorerWidgetModel, PersistedDataStream>>();
+  @Output() configureWidgetCallback: EventEmitter<Tuple2<DataExplorerWidgetModel, DataLakeMeasure>> = new EventEmitter<Tuple2<DataExplorerWidgetModel, DataLakeMeasure>>();
 
   options: IDataViewDashboardConfig;
   loaded = false;
@@ -80,7 +75,8 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
 
   constructor(private resizeService: ResizeService,
               private dataViewDataExplorerService: DataViewDataExplorerService,
-              private refreshDashboardService: RefreshDashboardService) {
+              private refreshDashboardService: RefreshDashboardService,
+              private datalakeRestService: DatalakeRestService) {
 
   }
 
@@ -120,7 +116,7 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
     this.dataViewDataExplorerService.getWidget(widgetId).subscribe(response => {
       this.configuredWidgets.set(widgetId, response);
       this.dataViewDataExplorerService.getPersistedDataStream(response.pipelineId, response.measureName).subscribe(ps => {
-        this.persistedDataStreams.set(widgetId, ps);
+        this.dataLakeMeasures.set(widgetId, ps);
       })
     });
   }
@@ -142,7 +138,7 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
     this.updateCallback.emit(dashboardWidget);
   }
 
-  propagateWidgetSelection(configuredWidget: Tuple2<DataExplorerWidgetModel, PersistedDataStream>) {
+  propagateWidgetSelection(configuredWidget: Tuple2<DataExplorerWidgetModel, DataLakeMeasure>) {
     this.configureWidgetCallback.emit(configuredWidget);
     this.options.api.optionsChanged();
   }

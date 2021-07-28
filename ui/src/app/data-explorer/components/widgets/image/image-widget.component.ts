@@ -53,7 +53,7 @@ export class ImageWidgetComponent extends BaseDataExplorerWidget implements OnIn
     this.canvasWidth = this.gridsterItemComponent.width - 20;
     this.imagePreviewHeight = this.gridsterItemComponent.width / 14;
 
-    this.availableColumns = this.getImageProperties(this.dataExplorerWidget.dataLakeMeasure.eventSchema);
+    this.availableColumns = this.getImageProperties(this.dataLakeMeasure.eventSchema);
     this.selectedColumn = this.availableColumns[0];
     this.updateData();
   }
@@ -66,7 +66,7 @@ export class ImageWidgetComponent extends BaseDataExplorerWidget implements OnIn
     this.setShownComponents(false, false, true);
 
     this.dataLakeRestService.getDataAutoAggregation(
-        this.dataExplorerWidget.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime())
+        this.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime())
         .subscribe(
             (res: DataResult) => {
              // this.availableImageData = res;

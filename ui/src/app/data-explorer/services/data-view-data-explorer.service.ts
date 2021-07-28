@@ -27,7 +27,6 @@ import {IDataViewDashboard} from '../models/dataview-dashboard.model';
 import {
   DataExplorerWidgetModel,
   DataLakeMeasure,
-  PersistedDataStream
 } from "../../core-model/gen/streampipes-model";
 
 
@@ -101,15 +100,15 @@ export class DataViewDataExplorerService {
     return this.http.put(this.dashboardWidgetUrl + '/' + widget._id, widget);
   }
 
-  getPersistedDataStream(pipelineId: string, measureName: string): Observable<PersistedDataStream> {
+  getPersistedDataStream(pipelineId: string, measureName: string): Observable<DataLakeMeasure> {
     return this.http.get(`${this.persistedDataStreamsUrl}/${pipelineId}/${measureName}`)
-        .pipe(map(response => PersistedDataStream.fromData(response as any)));
+        .pipe(map(response => DataLakeMeasure.fromData(response as any)));
   }
 
-  getAllPersistedDataStreams(): Observable<PersistedDataStream[]> {
+  getAllPersistedDataStreams(): Observable<DataLakeMeasure[]> {
     return this.http.get(this.persistedDataStreamsUrl)
         .pipe(map(response => {
-          return (response as any[]).map(p => PersistedDataStream.fromData(p));
+          return (response as any[]).map(p => DataLakeMeasure.fromData(p));
         }));
   }
 }

@@ -17,6 +17,7 @@
   -->
 
 <div fxFlex="100" fxLayout="column" class="designer-panel-content">
+    <h4 *ngIf="currentlyConfiguredWidget">{{ currentlyConfiguredWidget.baseAppearanceConfig.widgetTitle }}</h4>
     <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectOptionsPanel($event)" color="accent"
                    class="small">
         <mat-tab label="Data"></mat-tab>
@@ -26,8 +27,9 @@
 
     <div fxFlex="100" fxLayout="column">
         <div class="designer-panel-config" *ngIf="currentlyConfiguredWidget">
+
             <div *ngIf="selectedIndex == 0">
-                <sp-data-explorer-widget-data-settings [persistedDataStream]="persistedDataStream" [currentlyConfiguredWidget]="currentlyConfiguredWidget">
+                <sp-data-explorer-widget-data-settings [dataLakeMeasure]="dataLakeMeasure" [currentlyConfiguredWidget]="currentlyConfiguredWidget">
 
                 </sp-data-explorer-widget-data-settings>
             </div>

@@ -31,10 +31,10 @@
                     [item]="item"
                     [widget]="item"
                     [configuredWidget]="configuredWidgets.get(item.id)"
-                    [persistedDataStream]="persistedDataStreams.get(item.id)"
+                    [dataLakeMeasure]="dataLakeMeasures.get(item.id)"
                     [editMode]="editMode"
                     [gridsterItemComponent]="gridsterItemComponent"
-                    *ngIf="configuredWidgets.has(item.id) && persistedDataStreams.has(item.id)"></sp-data-explorer-dashboard-widget>
+                    *ngIf="configuredWidgets.has(item.id) && dataLakeMeasures.has(item.id)"></sp-data-explorer-dashboard-widget>
         </gridster-item>
     </ng-container>
 </gridster>

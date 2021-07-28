@@ -16,17 +16,19 @@
  *
  */
 
-import { EventEmitter, Input, OnChanges, Output, SimpleChanges, Directive } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { GridsterItem, GridsterItemComponent } from 'angular-gridster2';
-import { DateRange } from '../../../../core-model/datalake/DateRange';
-import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
-import { IDataViewDashboardItem } from '../../../models/dataview-dashboard.model';
-import { DataDownloadDialog } from '../../datadownloadDialog/dataDownload.dialog';
+import {Directive, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
+import {GridsterItem, GridsterItemComponent} from 'angular-gridster2';
+import {DateRange} from '../../../../core-model/datalake/DateRange';
+import {DatalakeRestService} from '../../../../core-services/datalake/datalake-rest.service';
+import {IDataViewDashboardItem} from '../../../models/dataview-dashboard.model';
 import {
   DataExplorerWidgetModel,
-  EventProperty, EventPropertyPrimitive, EventPropertyUnion,
-  EventSchema, PersistedDataStream
+  DataLakeMeasure,
+  EventProperty,
+  EventPropertyPrimitive,
+  EventPropertyUnion,
+  EventSchema
 } from "../../../../core-model/gen/streampipes-model";
 
 @Directive()
@@ -48,7 +50,7 @@ export abstract class BaseDataExplorerWidget implements OnChanges {
 
   @Input() dataViewDashboardItem: IDataViewDashboardItem;
   @Input() dataExplorerWidget: DataExplorerWidgetModel;
-  @Input() persistedDataStream: PersistedDataStream;
+  @Input() dataLakeMeasure: DataLakeMeasure;
 
   public selectedProperties: string[];
 

@@ -17,18 +17,14 @@
  */
 
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { Observable, Subscription } from 'rxjs';
-import { forkJoin } from 'rxjs/internal/observable/forkJoin';
-import { DateRange } from '../../../core-model/datalake/DateRange';
-import { DataExplorerAddVisualizationDialogComponent } from '../../dialogs/add-widget/data-explorer-add-visualization-dialog.component';
-import { IDataViewDashboard, IDataViewDashboardItem } from '../../models/dataview-dashboard.model';
-import { DataViewDataExplorerService } from '../../services/data-view-data-explorer.service';
-import { RefreshDashboardService } from '../../services/refresh-dashboard.service';
-import {
-  DashboardWidgetModel,
-  DataExplorerWidgetModel, PersistedDataStream
-} from "../../../core-model/gen/streampipes-model";
+import {MatDialog} from '@angular/material/dialog';
+import {Observable, Subscription} from 'rxjs';
+import {DateRange} from '../../../core-model/datalake/DateRange';
+import {DataExplorerAddVisualizationDialogComponent} from '../../dialogs/add-widget/data-explorer-add-visualization-dialog.component';
+import {IDataViewDashboard, IDataViewDashboardItem} from '../../models/dataview-dashboard.model';
+import {DataViewDataExplorerService} from '../../services/data-view-data-explorer.service';
+import {RefreshDashboardService} from '../../services/refresh-dashboard.service';
+import {DataExplorerWidgetModel, DataLakeMeasure} from "../../../core-model/gen/streampipes-model";
 import {DataExplorerDashboardGridComponent} from "../grid/data-explorer-dashboard-grid.component";
 import {MatDrawer} from "@angular/material/sidenav";
 import {Tuple2} from "../../../core-model/base/Tuple2";
@@ -66,7 +62,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
   widgetsToUpdate: Map<string, DataExplorerWidgetModel> = new Map<string, DataExplorerWidgetModel>();
 
   currentlyConfiguredWidget: DataExplorerWidgetModel;
-  persistedDataStream: PersistedDataStream;
+  dataLakeMeasure: DataLakeMeasure;
 
   constructor(private dataViewDataExplorerService: DataViewDataExplorerService,
               public dialog: MatDialog,
@@ -164,10 +160,10 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
     this.dashboardGrid.options.api.optionsChanged();
   }
 
-  updateCurrentlyConfiguredWidget(currentWidget: Tuple2<DataExplorerWidgetModel, PersistedDataStream>) {
+  updateCurrentlyConfiguredWidget(currentWidget: Tuple2<DataExplorerWidgetModel, DataLakeMeasure>) {
     this.widgetsToUpdate.set(currentWidget.a._id, currentWidget.a);
     this.currentlyConfiguredWidget = currentWidget.a;
-    this.persistedDataStream = currentWidget.b;
+    this.dataLakeMeasure = currentWidget.b;
     this.designerDrawer.open();
   }
 }

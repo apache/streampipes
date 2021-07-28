@@ -54,7 +54,7 @@
                             [editMode]="editMode"
                             [dataViewDashboardItem]="widget"
                             [dataExplorerWidget]="configuredWidget"
-                            [persistedDataStream]="persistedDataStream"
+                            [dataLakeMeasure]="dataLakeMeasure"
                             class="h-100">
                     </sp-data-explorer-table-widget>
                 </div>
@@ -67,7 +67,7 @@
                             [editMode]="editMode"
                             [dataViewDashboardItem]="widget"
                             [dataExplorerWidget]="configuredWidget"
-                            [persistedDataStream]="persistedDataStream"
+                            [dataLakeMeasure]="dataLakeMeasure"
                             class="h-100">
                     </sp-data-explorer-line-chart-widget>
                 </div>
@@ -79,7 +79,9 @@
                             [gridsterItemComponent]="gridsterItemComponent"
                             [editMode]="editMode"
                             [dataViewDashboardItem]="widget"
-                            [dataExplorerWidget]="configuredWidget" class="h-100"></sp-data-explorer-image-widget>
+                            [dataExplorerWidget]="configuredWidget"
+                            [dataLakeMeasure]="dataLakeMeasure"
+                            class="h-100"></sp-data-explorer-image-widget>
                 </div>
             </div>
         </div>

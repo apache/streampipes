@@ -16,16 +16,16 @@
  *
  */
 
-import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ElementIconText } from '../../../services/get-element-icon-text.service';
+import {Component, Inject, OnInit} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {ElementIconText} from '../../../services/get-element-icon-text.service';
 import {IDataViewDashboard, IWidget} from '../../models/dataview-dashboard.model';
-import { DataExplorerWidgetRegistry } from '../../registry/data-explorer-widget-registry';
-import { DataViewDataExplorerService } from '../../services/data-view-data-explorer.service';
+import {DataExplorerWidgetRegistry} from '../../registry/data-explorer-widget-registry';
+import {DataViewDataExplorerService} from '../../services/data-view-data-explorer.service';
 import {
   DataExplorerWidgetModel,
   DataLakeMeasure,
-  EventSchema, PersistedDataStream
+  EventSchema
 } from "../../../core-model/gen/streampipes-model";
 
 @Component({
@@ -53,10 +53,10 @@ export class DataExplorerAddVisualizationDialogComponent implements OnInit {
     description: 'Select widget'
   }];
 
-  visualizableData: PersistedDataStream[] = [];
+  visualizableData: DataLakeMeasure[] = [];
   availableWidgets: IWidget[];
 
-  selectedDataSet: PersistedDataStream;
+  selectedDataSet: DataLakeMeasure;
   selectedWidget: string;
 
   dashboard: IDataViewDashboard;

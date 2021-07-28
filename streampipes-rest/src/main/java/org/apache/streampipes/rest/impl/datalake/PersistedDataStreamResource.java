@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.rest.impl.datalake;
 
-import org.apache.streampipes.model.datalake.PersistedDataStream;
+import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.rest.impl.dashboard.AbstractPipelineExtractionResource;
@@ -32,7 +32,7 @@ import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 
 @Path("/v3/users/{username}/datalake/pipelines")
-public class PersistedDataStreamResource extends AbstractPipelineExtractionResource<PersistedDataStream> {
+public class PersistedDataStreamResource extends AbstractPipelineExtractionResource<DataLakeMeasure> {
 
   private static final String DataLakeAppId = "org.apache.streampipes.sinks.internal.jvm.datalake";
   private static final String MeasureFieldInternalName = "db_measurement";
@@ -54,19 +54,18 @@ public class PersistedDataStreamResource extends AbstractPipelineExtractionResou
   }
 
   @Override
-  protected PersistedDataStream convert(Pipeline pipeline, DataSinkInvocation sink) {
-    PersistedDataStream ps = new PersistedDataStream();
-    ps.setSchema(sink.getInputStreams().get(0).getEventSchema());
-    ps.setPipelineId(pipeline.getPipelineId());
-    ps.setPipelineName(pipeline.getName());
-    ps.setMeasureName(extractFieldValue(sink, MeasureFieldInternalName));
+  protected DataLakeMeasure convert(Pipeline pipeline, DataSinkInvocation sink) {
+    DataLakeMeasure measure = new DataLakeMeasure();
+    measure.setEventSchema(sink.getInputStreams().get(0).getEventSchema());
+    measure.setPipelineId(pipeline.getPipelineId());
+    measure.setPipelineName(pipeline.getName());
+    measure.setMeasureName(extractFieldValue(sink, MeasureFieldInternalName));
 
-    return ps;
+    return measure;
   }
 
   @Override
-  protected boolean matches(PersistedDataStream persistedDataStream, String pipelineId, String fieldValue) {
-    return persistedDataStream.getPipelineId().equals(pipelineId) &&
-            persistedDataStream.getMeasureName().equals(fieldValue);
+  protected boolean matches(DataLakeMeasure measure, String pipelineId, String fieldValue) {
+    return measure.getMeasureName().equals(fieldValue);
   }
 }

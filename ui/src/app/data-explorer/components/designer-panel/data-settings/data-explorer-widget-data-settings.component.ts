@@ -19,9 +19,10 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {
   DataExplorerWidgetModel,
-  PersistedDataStream
+  DataLakeMeasure
 } from "../../../../core-model/gen/streampipes-model";
 import {DataViewDataExplorerService} from "../../../services/data-view-data-explorer.service";
+import {DatalakeRestService} from "../../../../core-services/datalake/datalake-rest.service";
 
 @Component({
   selector: 'sp-data-explorer-widget-data-settings',
@@ -31,22 +32,33 @@ import {DataViewDataExplorerService} from "../../../services/data-view-data-expl
 export class DataExplorerWidgetDataSettingsComponent implements OnInit {
 
   @Input() currentlyConfiguredWidget: DataExplorerWidgetModel;
-  @Input() persistedDataStream: PersistedDataStream;
+  @Input() dataLakeMeasure: DataLakeMeasure;
 
-  availablePipelines: Array<PersistedDataStream>;
+  availablePipelines: Array<DataLakeMeasure>;
+  availableMeasurements: Array<DataLakeMeasure>;
 
-  constructor(private dataExplorerService: DataViewDataExplorerService) {
+  sourceSelection: "pipeline" | "measurement" = "pipeline";
+
+  constructor(private dataExplorerService: DataViewDataExplorerService,
+              private datalakeRestService: DatalakeRestService) {
 
   }
 
   ngOnInit(): void {
-    console.log(this.persistedDataStream);
     this.loadAvailablePipelines();
+    this.loadAvailableMeasurements();
   }
 
   loadAvailablePipelines() {
     this.dataExplorerService.getAllPersistedDataStreams().subscribe(response => {
       this.availablePipelines = response;
+    })
+  }
+
+  loadAvailableMeasurements() {
+    this.datalakeRestService.getAllInfos().subscribe(response => {
+      console.log(response);
+      this.availableMeasurements = response;
     })
   }
 

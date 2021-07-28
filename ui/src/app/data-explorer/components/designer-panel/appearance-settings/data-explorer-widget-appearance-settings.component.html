@@ -33,7 +33,9 @@
             <input matInput
                    [(colorPicker)]="baseAppearanceConfig.backgroundColor"
                    [cpPosition]="'bottom'"
-                   [style.background]="baseAppearanceConfig.backgroundColor" required [cpPresetColors] = "presetColors"/>
+                   [style.background]="baseAppearanceConfig.backgroundColor" required
+                   [cpPresetColors] = "presetColors"
+                   autocomplete="off"/>
         </mat-form-field>
     </div>
 
@@ -43,7 +45,10 @@
             <input matInput
                    [(colorPicker)]="baseAppearanceConfig.textColor"
                    [cpPosition]="'bottom'"
-                   [style.background]="baseAppearanceConfig.textColor" required [cpPresetColors] = "presetColors"/>
+                   [style.background]="baseAppearanceConfig.textColor"
+                   required
+                   [cpPresetColors] = "presetColors"
+                   autocomplete="off"/>
         </mat-form-field>
     </div>
 </div>
