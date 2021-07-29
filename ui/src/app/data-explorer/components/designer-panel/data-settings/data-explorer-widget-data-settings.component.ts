@@ -57,7 +57,6 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
 
   loadAvailableMeasurements() {
     this.datalakeRestService.getAllInfos().subscribe(response => {
-      console.log(response);
       this.availableMeasurements = response;
     })
   }

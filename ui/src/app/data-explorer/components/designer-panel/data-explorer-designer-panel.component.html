@@ -36,7 +36,7 @@
             <div *ngIf="selectedIndex == 1">
                 Visualization
                 <div *ngIf="currentlyConfiguredWidget.widgetType === 'table'" class="h-100 p-0">
-                    <sp-data-explorer-table-widget-config>
+                    <sp-data-explorer-table-widget-config [currentlyConfiguredWidget]="currentlyConfiguredWidget" [dataLakeMeasure]="dataLakeMeasure">
 
                     </sp-data-explorer-table-widget-config>
                 </div>

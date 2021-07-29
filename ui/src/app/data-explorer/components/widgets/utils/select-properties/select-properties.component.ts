@@ -44,10 +44,15 @@ export class SelectPropertiesComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    console.log(this.selectedProperties);
   }
 
   triggerSelectedProperties(properties: EventPropertyUnion[]) {
     this.changeSelectedProperties.emit(properties);
+  }
+
+  compare(available: EventPropertyUnion, selected: EventPropertyUnion) {
+    return available.runtimeName === selected.runtimeName;
   }
 
 }

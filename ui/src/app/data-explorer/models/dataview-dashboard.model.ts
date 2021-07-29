@@ -16,7 +16,7 @@
  *
  */
 
-import { GridsterConfig, GridsterItem } from 'angular-gridster2';
+import {GridsterConfig, GridsterItem} from 'angular-gridster2';
 
 export interface IDataViewDashboardConfig extends GridsterConfig {}
 
@@ -46,3 +46,12 @@ export interface WidgetBaseAppearanceConfig {
     textColor: string;
     widgetTitle: string;
 }
+
+export interface RefreshMessage {
+    widgetId: string;
+    refreshData: boolean;
+    refreshView: boolean;
+}
+
+
+

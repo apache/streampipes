@@ -71,6 +71,7 @@ import {DataExplorerDesignerPanelComponent} from "./components/designer-panel/da
 import {TableWidgetConfigComponent} from "./components/widgets/table/config/table-widget-config.component";
 import {DataExplorerWidgetAppearanceSettingsComponent} from "./components/designer-panel/appearance-settings/data-explorer-widget-appearance-settings.component";
 import {DataExplorerWidgetDataSettingsComponent} from "./components/designer-panel/data-settings/data-explorer-widget-data-settings.component";
+import {WidgetConfigurationService} from "./services/widget-configuration.service";
 
 const dashboardWidgets = [];
 
@@ -149,6 +150,7 @@ export const MY_NATIVE_FORMATS = {
     ColorService,
     RefreshDashboardService,
     SemanticTypeUtilsService,
+    WidgetConfigurationService,
     {
       provide: OWL_DATE_TIME_FORMATS, useValue: MY_NATIVE_FORMATS
     }

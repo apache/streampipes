@@ -26,13 +26,15 @@ import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
 import { EventPropertyUnion, Label } from '../../../../core-model/gen/streampipes-model';
 import { ResizeService } from '../../../services/resize.service';
 import { LabelService } from '../../../../core-ui/labels/services/label.service';
+import {LineChartWidgetModel} from "./model/line-chart-widget.model";
+import {WidgetConfigurationService} from "../../../services/widget-configuration.service";
 
 @Component({
   selector: 'sp-data-explorer-line-chart-widget',
   templateUrl: './line-chart-widget.component.html',
   styleUrls: ['./line-chart-widget.component.css']
 })
-export class LineChartWidgetComponent extends BaseDataExplorerWidget implements OnInit {
+export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWidgetModel> implements OnInit {
 
   data: any[] = undefined;
   colorPropertyStringValues: any[] = undefined;
@@ -69,8 +71,9 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
               public renderer: Renderer2,
               protected dataLakeRestService: DatalakeRestService,
               private resizeService: ResizeService,
-              public labelService: LabelService ) {
-    super(dataLakeRestService, dialog);
+              public labelService: LabelService,
+              widgetConfigurationService: WidgetConfigurationService) {
+    super(dataLakeRestService, dialog, widgetConfigurationService);
   }
 
   // indicator variable if labeling mode is activated
@@ -682,5 +685,11 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget implements 
 
   setNSelectedPoints(n_selected_points: number) {
     this.n_selected_points = n_selected_points;
+  }
+
+  refreshData() {
+  }
+
+  refreshView() {
   }
 }

@@ -16,23 +16,18 @@
  *
  */
 
-@import '../../../../../scss/variables';
+import {Injectable} from '@angular/core';
+import {ReplaySubject, Subject} from 'rxjs';
+import {Tuple2} from "../../core-model/base/Tuple2";
+import {DataExplorerWidgetModel} from "../../core-model/gen/streampipes-model";
+import {RefreshMessage} from "../models/dataview-dashboard.model";
 
-.table {
-    max-width: 100%;
-    width: 100%;
-    margin: 5px;
-}
+@Injectable()
+export class WidgetConfigurationService {
 
-.title-panel {
-    font-size:20px;
-}
+  public configurationChangedSubject: Subject<RefreshMessage> = new Subject<RefreshMessage>();
 
-.column-header {
-    font-size:12px;
-    font-weight: bold;
-}
-
-tr.mat-row, tr.mat-footer-row {
-    height: 24px;
+  public notify(refreshMessage: RefreshMessage): void {
+    this.configurationChangedSubject.next(refreshMessage);
+  }
 }

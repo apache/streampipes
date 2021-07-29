@@ -71,7 +71,6 @@ export class DataExplorerDashboardWidgetComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.configuredWidget);
     this.widgetLoaded = true;
     this.title = this.dataLakeMeasure.measureName;
   }

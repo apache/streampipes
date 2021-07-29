@@ -16,13 +16,22 @@
  *
  */
 
-import {Directive, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {
+  Directive,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges
+} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {GridsterItem, GridsterItemComponent} from 'angular-gridster2';
 import {DateRange} from '../../../../core-model/datalake/DateRange';
 import {DatalakeRestService} from '../../../../core-services/datalake/datalake-rest.service';
 import {IDataViewDashboardItem} from '../../../models/dataview-dashboard.model';
 import {
+  DashboardWidgetModel,
   DataExplorerWidgetModel,
   DataLakeMeasure,
   EventProperty,
@@ -30,12 +39,10 @@ import {
   EventPropertyUnion,
   EventSchema
 } from "../../../../core-model/gen/streampipes-model";
+import {WidgetConfigurationService} from "../../../services/widget-configuration.service";
 
 @Directive()
-export abstract class BaseDataExplorerWidget implements OnChanges {
-
-  protected constructor(protected dataLakeRestService: DatalakeRestService, protected dialog: MatDialog) {
-  }
+export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> implements OnInit, OnChanges {
 
   @Output()
   removeWidgetCallback: EventEmitter<boolean> = new EventEmitter();
@@ -49,7 +56,7 @@ export abstract class BaseDataExplorerWidget implements OnChanges {
 
 
   @Input() dataViewDashboardItem: IDataViewDashboardItem;
-  @Input() dataExplorerWidget: DataExplorerWidgetModel;
+  @Input() dataExplorerWidget: T;
   @Input() dataLakeMeasure: DataLakeMeasure;
 
   public selectedProperties: string[];
@@ -57,6 +64,26 @@ export abstract class BaseDataExplorerWidget implements OnChanges {
   public showNoDataInDateRange: boolean;
   public showData: boolean;
   public showIsLoadingData: boolean;
+
+  constructor(protected dataLakeRestService: DatalakeRestService,
+              protected dialog: MatDialog,
+              protected widgetConfigurationService: WidgetConfigurationService) {
+
+  }
+
+  ngOnInit(): void {
+    this.widgetConfigurationService.configurationChangedSubject.subscribe(refreshMessage => {
+      if (refreshMessage.widgetId === this.dataExplorerWidget._id) {
+        if (refreshMessage.refreshData) {
+          this.refreshData();
+        }
+
+        if (refreshMessage.refreshView) {
+          this.refreshView();
+        }
+      }
+    })
+  }
 
   public removeWidget() {
     this.removeWidgetCallback.emit(true);
@@ -76,8 +103,6 @@ export abstract class BaseDataExplorerWidget implements OnChanges {
     this.viewDateRange = changes.viewDateRange.currentValue;
     this.updateData();
   }
-
-  public abstract updateData();
 
   getValuePropertyKeys(eventSchema: EventSchema) {
     const propertyKeys: EventPropertyUnion[] = [];
@@ -173,4 +198,10 @@ export abstract class BaseDataExplorerWidget implements OnChanges {
 
     return result;
   }
+
+  public abstract updateData();
+
+  public abstract refreshData();
+
+  public abstract refreshView();
 }

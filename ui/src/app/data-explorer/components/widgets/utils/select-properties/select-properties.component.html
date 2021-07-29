@@ -16,9 +16,9 @@
   ~
   -->
 
-<mat-form-field appearance="standard" class="form-field-margin form-field-size-smaller">
+<mat-form-field fxFlex="100">
     <mat-label>{{this.label}}</mat-label>
-    <mat-select [ngModel]="this.selectedProperties" (selectionChange)="triggerSelectedProperties($event.value)" [multiple]="multiple">
+    <mat-select [ngModel]="this.selectedProperties" (selectionChange)="triggerSelectedProperties($event.value)" [multiple]="multiple" [compareWith]="compare">
         <mat-option *ngFor="let column of availableProperties" [value]="column" style="background-color: #FFFFFF">
             {{column.runtimeName}}
         </mat-option>

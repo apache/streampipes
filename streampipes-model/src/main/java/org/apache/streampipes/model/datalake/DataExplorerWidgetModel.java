@@ -18,8 +18,10 @@
 
 package org.apache.streampipes.model.datalake;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.streampipes.model.dashboard.DashboardEntity;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class DataExplorerWidgetModel extends DashboardEntity {
@@ -28,15 +30,25 @@ public class DataExplorerWidgetModel extends DashboardEntity {
 
   private String widgetType;
 
+  @JsonSerialize(using = CustomMapSerializer.class, as=Map.class)
   private Map<String, Object> baseAppearanceConfig;
+
+  @JsonSerialize(using = CustomMapSerializer.class, as=Map.class)
   private Map<String, Object> visualizationConfig;
+
+  @JsonSerialize(using = CustomMapSerializer.class, as=Map.class)
   private Map<String, Object> dataConfig;
 
   private String pipelineId;
   private String measureName;
 
+
+
   public DataExplorerWidgetModel() {
     super();
+    this.baseAppearanceConfig = new HashMap<>();
+    this.visualizationConfig = new HashMap<>();
+    this.dataConfig = new HashMap<>();
   }
 
   public String getWidgetId() {
@@ -94,4 +106,5 @@ public class DataExplorerWidgetModel extends DashboardEntity {
   public void setMeasureName(String measureName) {
     this.measureName = measureName;
   }
+
 }

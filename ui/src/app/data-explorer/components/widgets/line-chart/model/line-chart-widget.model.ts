@@ -16,23 +16,18 @@
  *
  */
 
-@import '../../../../../scss/variables';
+import {
+  DataExplorerWidgetModel,
+  EventPropertyUnion
+} from "../../../../../core-model/gen/streampipes-model";
 
-.table {
-    max-width: 100%;
-    width: 100%;
-    margin: 5px;
+export interface LineChartDataConfig {
+  availableColumns: Array<EventPropertyUnion>;
+  selectedColumns: Array<EventPropertyUnion>;
+  searchValue: string;
+  columnNames: Array<string>;
 }
 
-.title-panel {
-    font-size:20px;
-}
-
-.column-header {
-    font-size:12px;
-    font-weight: bold;
-}
-
-tr.mat-row, tr.mat-footer-row {
-    height: 24px;
+export interface LineChartWidgetModel extends DataExplorerWidgetModel {
+  dataConfig: LineChartDataConfig;
 }

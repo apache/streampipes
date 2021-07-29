@@ -15,24 +15,28 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.model.datalake;
 
-@import '../../../../../scss/variables';
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializerProvider;
 
-.table {
-    max-width: 100%;
-    width: 100%;
-    margin: 5px;
-}
+import java.io.IOException;
+import java.util.Map;
 
-.title-panel {
-    font-size:20px;
-}
+/* TODO This is a really ugly hack to properly serialize custom configuration maps
+    that are only typed in the UI.
+ */
 
-.column-header {
-    font-size:12px;
-    font-weight: bold;
-}
+class CustomMapSerializer extends JsonSerializer<Map> {
 
-tr.mat-row, tr.mat-footer-row {
-    height: 24px;
+  public CustomMapSerializer() {
+
+  }
+
+  @Override
+  public void serialize(Map s, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+    jsonGenerator.writeRawValue(new ObjectMapper().writeValueAsString(s));
+  }
 }
