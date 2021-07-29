@@ -17,8 +17,20 @@
  */
 
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { AuthStatusService } from '../../services/auth-status.service';
 
 @Injectable()
 export class DatalakeRestService {
+    constructor(private http: HttpClient,
+                private authStatusService: AuthStatusService) {
+    }
 
+    private get baseUrl() {
+        return '/streampipes-backend';
+    }
+
+    private get dataLakeUrl() {
+        return this.baseUrl + '/api/v4/users/' + this.authStatusService.email + '/datalake';
+    }
 }
