@@ -17,11 +17,11 @@
   -->
 
 <div fxFlex="100" fxLayout="column">
-    <mat-form-field fxFlex="100">
+    <mat-form-field fxFlex="100" color="accent">
         <mat-label>
             <mat-icon>search</mat-icon>
             <span>&nbsp;Search</span></mat-label>
-        <input matInput (input)="onFilterChange($event.target.value)">
+        <input [(ngModel)]="currentlyConfiguredWidget.dataConfig.searchValue" matInput (input)="onFilterChange($event.target.value)">
     </mat-form-field>
 
     <sp-select-properties

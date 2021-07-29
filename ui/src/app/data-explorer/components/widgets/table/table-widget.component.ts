@@ -55,18 +55,6 @@ export class TableWidgetComponent extends BaseDataExplorerWidget<TableWidgetMode
     //this.updateData();
   }
 
-  updateData() {
-    this.setShownComponents(false, false, true);
-
-    this.dataLakeRestService.getDataAutoAggregation(
-      this.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime())
-      .subscribe(
-      (res: DataResult) => {
-        this.dataSource.data = this.transformData(res);
-      }
-    );
-  }
-
   transformData(data: DataResult) {
     const result = [];
     if (data.total === 0) {
@@ -114,7 +102,15 @@ export class TableWidgetComponent extends BaseDataExplorerWidget<TableWidgetMode
   }
 
   public refreshData() {
-    this.updateData();
+    this.setShownComponents(false, false, true);
+
+    this.dataLakeRestService.getDataAutoAggregation(
+        this.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime())
+        .subscribe(
+            (res: DataResult) => {
+              this.dataSource.data = this.transformData(res);
+            }
+        );
   }
 
   public refreshView() {

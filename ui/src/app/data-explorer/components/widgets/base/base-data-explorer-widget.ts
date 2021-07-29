@@ -20,7 +20,7 @@ import {
   Directive,
   EventEmitter,
   Input,
-  OnChanges,
+  OnChanges, OnDestroy,
   OnInit,
   Output,
   SimpleChanges
@@ -42,7 +42,7 @@ import {
 import {WidgetConfigurationService} from "../../../services/widget-configuration.service";
 
 @Directive()
-export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> implements OnInit, OnChanges {
+export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> implements OnInit, OnChanges, OnDestroy {
 
   @Output()
   removeWidgetCallback: EventEmitter<boolean> = new EventEmitter();
@@ -85,14 +85,17 @@ export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> 
     })
   }
 
+  ngOnDestroy(): void {
+    this.widgetConfigurationService.configurationChangedSubject.unsubscribe();
+  }
+
   public removeWidget() {
     this.removeWidgetCallback.emit(true);
   }
 
   public setShownComponents(showNoDataInDateRange: boolean,
                             showData: boolean,
-                            showIsLoadingData: boolean,
-                            ) {
+                            showIsLoadingData: boolean) {
 
     this.showNoDataInDateRange = showNoDataInDateRange;
     this.showData = showData;
@@ -139,7 +142,7 @@ export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> 
     return result;
   }
 
-  getNoneNumericProperties(eventSchema: EventSchema) {
+  getNonNumericProperties(eventSchema: EventSchema) {
     const result: EventPropertyUnion[] = [];
     const b = new EventPropertyPrimitive();
     b["@class"] = "org.apache.streampipes.model.schema.EventPropertyPrimitive";
@@ -199,9 +202,14 @@ export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> 
     return result;
   }
 
-  public abstract updateData();
+  public updateData() {
+    this.refreshData();
+    this.refreshView();
+  }
 
   public abstract refreshData();
 
   public abstract refreshView();
+
+
 }

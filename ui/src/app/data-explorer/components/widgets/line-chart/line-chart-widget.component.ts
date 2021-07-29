@@ -146,7 +146,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
   ngOnInit(): void {
     this.availableProperties = this.getNumericProperty(this.dataLakeMeasure.eventSchema);
     this.dimensionProperties = this.getDimensionProperties(this.dataLakeMeasure.eventSchema);
-    this.availableNoneNumericColumns = this.getNoneNumericProperties(this.dataLakeMeasure.eventSchema);
+    this.availableNoneNumericColumns = this.getNonNumericProperties(this.dataLakeMeasure.eventSchema);
 
     // Reduce selected columns when more then 6
     this.selectedLineChartProperties = this.availableProperties.length > 6 ? this.availableProperties.slice(0, 5) : this.availableProperties;
@@ -162,35 +162,6 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
         }, 100);
       }
     });
-  }
-
-  updateData() {
-    this.graph.layout.shapes = [];
-    if (!this.advancedSettingsActive) {
-      this.setShownComponents(false, false, true);
-      this.dataLakeRestService.getDataAutoAggregation(
-        this.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime())
-        .subscribe((res: DataResult) => {
-          this.processNoneGroupedData(res);
-        });
-    } else {
-      if (this.groupValue === 'None') {
-        this.setShownComponents(false, false, true);
-        this.dataLakeRestService.getData(
-          this.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime()
-          , this.aggregationTimeUnit, this.aggregationValue)
-          .subscribe((res: DataResult) => {
-            this.processNoneGroupedData(res);
-          });
-      } else {
-        // this.dataLakeRestService.getGroupedData(
-        //   this.dataExplorerWidget.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime(),
-        //   this.aggregationTimeUnit, this.aggregationValue, this.groupValue)
-        //   .subscribe((res: GroupedDataResult) => {
-        //     this.processGroupedData(res);
-        //   });
-      }
-    }
   }
 
   private processNoneGroupedData(res: DataResult) {
@@ -688,6 +659,32 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
   }
 
   refreshData() {
+    this.graph.layout.shapes = [];
+    if (!this.advancedSettingsActive) {
+      this.setShownComponents(false, false, true);
+      this.dataLakeRestService.getDataAutoAggregation(
+          this.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime())
+          .subscribe((res: DataResult) => {
+            this.processNoneGroupedData(res);
+          });
+    } else {
+      if (this.groupValue === 'None') {
+        this.setShownComponents(false, false, true);
+        this.dataLakeRestService.getData(
+            this.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime()
+            , this.aggregationTimeUnit, this.aggregationValue)
+            .subscribe((res: DataResult) => {
+              this.processNoneGroupedData(res);
+            });
+      } else {
+        // this.dataLakeRestService.getGroupedData(
+        //   this.dataExplorerWidget.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime(),
+        //   this.aggregationTimeUnit, this.aggregationValue, this.groupValue)
+        //   .subscribe((res: GroupedDataResult) => {
+        //     this.processGroupedData(res);
+        //   });
+      }
+    }
   }
 
   refreshView() {

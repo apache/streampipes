@@ -16,22 +16,19 @@
  *
  */
 
-@import '../../../../../scss/variables';
+import {Component, OnInit} from '@angular/core';
+import {BaseWidgetConfig} from "../../base/base-widget-config";
+import {ImageWidgetModel} from "../model/image-widget.model";
 
-.table-widget {
-    width: 100%;
-    background: inherit;
-}
+@Component({
+  selector: 'sp-data-explorer-image-widget-config',
+  templateUrl: './image-widget-config.component.html',
+  styleUrls: ['./image-widget-config.component.scss']
+})
+export class ImageWidgetConfigComponent extends BaseWidgetConfig<ImageWidgetModel> implements OnInit {
 
-.title-panel {
-    font-size:20px;
-}
 
-.column-header {
-    font-size:12px;
-    font-weight: bold;
-}
+  ngOnInit(): void {
+  }
 
-tr.mat-row, tr.mat-footer-row {
-    height: 24px;
 }

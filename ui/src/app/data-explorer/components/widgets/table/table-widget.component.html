@@ -16,8 +16,8 @@
   ~
   -->
 
-<div class="widget-content">
-    <div class="widget-inner-content" style="overflow-y: auto;">
+<div class="widget-content" [ngStyle]="{height: gridsterItemComponent.height}">
+    <div class="widget-inner-content">
 <!--    <div style=" overflow-y: auto;" [style.max-height.px]="gridsterItem.rows * 100 - 40">-->
 
         <sp-load-data-spinner *ngIf="showIsLoadingData"></sp-load-data-spinner>
@@ -29,8 +29,7 @@
             mat-sort
             *ngIf="showData"
             [dataSource]="dataSource" matSort
-            (matSortChange)="sortData($event)"
-            class="table">
+            (matSortChange)="sortData($event)" class="table-widget">
 
             <ng-container
                     *ngFor="let element of dataExplorerWidget.dataConfig.selectedColumns"
