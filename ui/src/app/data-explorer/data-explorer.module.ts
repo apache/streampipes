@@ -72,6 +72,8 @@ import {TableWidgetConfigComponent} from "./components/widgets/table/config/tabl
 import {DataExplorerWidgetAppearanceSettingsComponent} from "./components/designer-panel/appearance-settings/data-explorer-widget-appearance-settings.component";
 import {DataExplorerWidgetDataSettingsComponent} from "./components/designer-panel/data-settings/data-explorer-widget-data-settings.component";
 import {WidgetConfigurationService} from "./services/widget-configuration.service";
+import {LineChartWidgetConfigComponent} from "./components/widgets/line-chart/config/line-chart-widget-config.component";
+import {ImageWidgetConfigComponent} from "./components/widgets/image/config/image-widget-config.component";
 
 const dashboardWidgets = [];
 
@@ -131,7 +133,9 @@ export const MY_NATIVE_FORMATS = {
     DataExplorerWidgetDataSettingsComponent,
     TableWidgetComponent,
     ImageWidgetComponent,
+    ImageWidgetConfigComponent,
     LineChartWidgetComponent,
+    LineChartWidgetConfigComponent,
     TimeRangeSelectorComponent,
     NoDataInDateRangeComponent,
     LoadDataSpinnerComponent,

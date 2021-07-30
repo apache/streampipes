@@ -16,16 +16,16 @@
  *
  */
 
-import {  Component, OnInit, Renderer2 } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { DataResult } from '../../../../core-model/datalake/DataResult';
-import { GroupedDataResult } from '../../../../core-model/datalake/GroupedDataResult';
-import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
-import { ColorService } from './services/color.service';
-import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
-import { EventPropertyUnion, Label } from '../../../../core-model/gen/streampipes-model';
-import { ResizeService } from '../../../services/resize.service';
-import { LabelService } from '../../../../core-ui/labels/services/label.service';
+import {Component, OnInit, Renderer2} from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
+import {DataResult} from '../../../../core-model/datalake/DataResult';
+import {GroupedDataResult} from '../../../../core-model/datalake/GroupedDataResult';
+import {DatalakeRestService} from '../../../../core-services/datalake/datalake-rest.service';
+import {ColorService} from './services/color.service';
+import {BaseDataExplorerWidget} from '../base/base-data-explorer-widget';
+import {Label} from '../../../../core-model/gen/streampipes-model';
+import {ResizeService} from '../../../services/resize.service';
+import {LabelService} from '../../../../core-ui/labels/services/label.service';
 import {LineChartWidgetModel} from "./model/line-chart-widget.model";
 import {WidgetConfigurationService} from "../../../services/widget-configuration.service";
 
@@ -38,14 +38,14 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
 
   data: any[] = undefined;
   colorPropertyStringValues: any[] = undefined;
-  availableProperties: EventPropertyUnion[] = [];
-  availableNoneNumericColumns: EventPropertyUnion[] = [];
-  selectedLineChartProperties: EventPropertyUnion[] = [];
-  selectedBackgroundColorProperty: EventPropertyUnion = undefined;
-  dimensionProperties: EventPropertyUnion[] = [];
+  //availableProperties: EventPropertyUnion[] = [];
+  //availableNoneNumericColumns: EventPropertyUnion[] = [];
+  //selectedLineChartProperties: EventPropertyUnion[] = [];
+  //selectedBackgroundColorProperty: EventPropertyUnion = undefined;
+  //dimensionProperties: EventPropertyUnion[] = [];
 
-  yKeys: string[] = [];
-  xKey: string;
+  //yKeys: string[] = [];
+  //xKey: string;
   private backgroundColorPropertyKey: string = undefined;
 
   advancedSettingsActive = false;
@@ -57,10 +57,10 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
 
   selectedLabel;
 
-  aggregationValue = 1;
-  aggregationTimeUnit = 's';
-  groupValue = 'None';
-  showCountValue = false;
+  //aggregationValue = 1;
+  //aggregationTimeUnit = 's';
+  //groupValue = 'None';
+  //showCountValue = false;
 
   // this can be set to scale the line chart according to the layout
   offsetRightLineChart = 10;
@@ -77,7 +77,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
   }
 
   // indicator variable if labeling mode is activated
-  labelingModeOn = false;
+  //labelingModeOn = false;
 
   updatemenus = [
     {
@@ -144,14 +144,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
 
 
   ngOnInit(): void {
-    this.availableProperties = this.getNumericProperty(this.dataLakeMeasure.eventSchema);
-    this.dimensionProperties = this.getDimensionProperties(this.dataLakeMeasure.eventSchema);
-    this.availableNoneNumericColumns = this.getNonNumericProperties(this.dataLakeMeasure.eventSchema);
-
-    // Reduce selected columns when more then 6
-    this.selectedLineChartProperties = this.availableProperties.length > 6 ? this.availableProperties.slice(0, 5) : this.availableProperties;
-    this.xKey = this.getTimestampProperty(this.dataLakeMeasure.eventSchema).runtimeName;
-    this.yKeys = this.getRuntimeNames(this.selectedLineChartProperties);
+    super.ngOnInit();
     this.updateData();
     this.resizeService.resizeSubject.subscribe(info => {
       if (info.gridsterItem.id === this.gridsterItem.id) {
@@ -169,10 +162,10 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
       this.setShownComponents(true, false, false);
     } else {
       res.measureName = this.dataLakeMeasure.measureName;
-      const tmp = this.transformData(res, this.xKey);
-      this.data = this.displayData(tmp, this.yKeys);
+      const tmp = this.transformData(res, this.dataExplorerWidget.dataConfig.xKey);
+      this.data = this.displayData(tmp, this.dataExplorerWidget.dataConfig.yKeys);
 
-      if (this.labelingModeOn) {
+      if (this.dataExplorerWidget.dataConfig.labelingModeOn) {
         this.backgroundColorPropertyKey = 'sp_internal_label';
       }
       this.colorPropertyStringValues = this.loadBackgroundColor(tmp, this.backgroundColorPropertyKey);
@@ -187,7 +180,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
     if (res.total === 0) {
       this.setShownComponents(true, false, false);
     } else {
-      const tmp = this.transformGroupedData(res, this.xKey);
+      const tmp = this.transformGroupedData(res, this.dataExplorerWidget.dataConfig.xKey);
       this.data = this.displayGroupedData(tmp);
 
       if (this.data !== undefined &&
@@ -200,9 +193,10 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
   }
 
   displayData(transformedData: DataResult, yKeys: string[]) {
-    if (this.yKeys.length > 0) {
+    console.log(this.dataExplorerWidget);
+    if (this.dataExplorerWidget.dataConfig.yKeys.length > 0) {
       const tmp = [];
-      this.yKeys.forEach(key => {
+      this.dataExplorerWidget.dataConfig.yKeys.forEach(key => {
         transformedData.rows.forEach(serie => {
           if (serie.name === key) {
             tmp.push(serie);
@@ -243,7 +237,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
       const newColorPropertyStringValues = [];
       if (colorPropertyStringValues !== undefined && colorPropertyStringValues.length !== 0) {
         for (const c of colorPropertyStringValues) {
-          if (this.labelingModeOn) {
+          if (this.dataExplorerWidget.dataConfig.labelingModeOn) {
             if (c === '') {
               newColorPropertyStringValues.push(c);
             } else {
@@ -257,7 +251,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
 
       // define the function that defines the colors
       let colorFunction;
-      if (this.labelingModeOn) {
+      if (this.dataExplorerWidget.dataConfig.labelingModeOn) {
         colorFunction = ((id) => {
           if (id === '') {
             return '#FFFFFF';
@@ -295,7 +289,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
     const groupNames = Object.keys(transformedData.dataResults);
     for (const groupName of groupNames) {
       const value = transformedData.dataResults[groupName];
-      this.yKeys.forEach(key => {
+      this.dataExplorerWidget.dataConfig.yKeys.forEach(key => {
         value.rows.forEach(serie => {
           if (serie.name === key) {
             serie.name = groupName + ' ' + serie.name;
@@ -304,7 +298,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
         });
       });
 
-      if (this.showCountValue) {
+      if (this.dataExplorerWidget.dataConfig.showCountValue) {
         let containsCount = false;
         value.rows.forEach(serie => {
           if (serie.name.startsWith('count') && !containsCount) {
@@ -335,7 +329,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
     });
 
     // Get key of timestamp column for x axis
-    const indexXkey = data.headers.findIndex(headerName => headerName === this.xKey);
+    const indexXkey = data.headers.findIndex(headerName => headerName === this.dataExplorerWidget.dataConfig.xKey);
 
 
     const tmpLineChartTraces: any[] = [];
@@ -379,22 +373,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
     return data;
   }
 
-  setSelectedProperties(selectedColumns: EventPropertyUnion[]) {
-    this.selectedLineChartProperties = selectedColumns;
-    this.yKeys = this.getRuntimeNames(selectedColumns);
-    this.updateData();
-  }
 
-  setSelectedBackgroundColorProperty(selectedBackgroundColorProperty: EventPropertyUnion) {
-    if (selectedBackgroundColorProperty.runtimeName === '') {
-      this.selectedBackgroundColorProperty = undefined;
-      this.backgroundColorPropertyKey = undefined;
-    } else {
-      this.selectedBackgroundColorProperty = selectedBackgroundColorProperty;
-      this.backgroundColorPropertyKey = selectedBackgroundColorProperty.runtimeName;
-    }
-    this.updateData();
-  }
 
   changeLabelOfArea($event) {
     const selected = $event.points[0];
@@ -471,14 +450,14 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
   }
 
   toggleLabelingMode() {
-    if (this.labelingModeOn) {
+    if (this.dataExplorerWidget.dataConfig.labelingModeOn) {
       for (let i = 0; i < this.data.length; i++) {
         this.data[i]['mode'] = 'lines+markers';
       }
       this.activateLabelingMode();
       this.offsetRightLineChart = 150;
     } else {
-      this.labelingModeOn = false;
+      this.dataExplorerWidget.dataConfig.labelingModeOn = false;
       this.offsetRightLineChart = 10;
       this.deactivateLabelingMode();
     }
@@ -538,7 +517,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
     const startdate = new Date(start_X).getTime() - 1;
     const enddate = new Date(end_X).getTime() + 1;
 
-    this.dataLakeRestService.saveLabelsInDatabase(this.data['measureName'], 'sp_internal_label', startdate, enddate, label, this.xKey).subscribe(
+    this.dataLakeRestService.saveLabelsInDatabase(this.data['measureName'], 'sp_internal_label', startdate, enddate, label, this.dataExplorerWidget.dataConfig.xKey).subscribe(
       res => {
         // TODO add pop up similar to images
         // console.log('Successfully wrote label ' + currentLabel + ' into database.');
@@ -641,11 +620,6 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
     return shape;
   }
 
-  handlingAdvancedToggleChange() {
-    this.showBackgroundColorProperty = !this.showBackgroundColorProperty;
-    this.updateData();
-  }
-
   setStartX(startX: string) {
     this.selectedStartX = startX;
   }
@@ -659,6 +633,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
   }
 
   refreshData() {
+    console.log("refreshing");
     this.graph.layout.shapes = [];
     if (!this.advancedSettingsActive) {
       this.setShownComponents(false, false, true);
@@ -668,11 +643,11 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
             this.processNoneGroupedData(res);
           });
     } else {
-      if (this.groupValue === 'None') {
+      if (this.dataExplorerWidget.dataConfig.groupValue === 'None') {
         this.setShownComponents(false, false, true);
         this.dataLakeRestService.getData(
             this.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime()
-            , this.aggregationTimeUnit, this.aggregationValue)
+            , this.dataExplorerWidget.dataConfig.aggregationTimeUnit, this.dataExplorerWidget.dataConfig.aggregationValue)
             .subscribe((res: DataResult) => {
               this.processNoneGroupedData(res);
             });
@@ -688,5 +663,6 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
   }
 
   refreshView() {
+    //this.toggleLabelingMode();
   }
 }

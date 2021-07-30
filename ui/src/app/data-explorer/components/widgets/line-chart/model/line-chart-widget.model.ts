@@ -22,10 +22,21 @@ import {
 } from "../../../../../core-model/gen/streampipes-model";
 
 export interface LineChartDataConfig {
-  availableColumns: Array<EventPropertyUnion>;
-  selectedColumns: Array<EventPropertyUnion>;
-  searchValue: string;
-  columnNames: Array<string>;
+  selectedLineChartProperties: Array<EventPropertyUnion>;
+  availableProperties: Array<EventPropertyUnion>;
+  dimensionProperties: Array<EventPropertyUnion>;
+  selectedBackgroundColorProperty: EventPropertyUnion;
+  availableNonNumericColumns: Array<EventPropertyUnion>;
+  advancedSettingsActive: boolean;
+  aggregationValue: number;
+  aggregationTimeUnit: string;
+  groupValue: string;
+  showCountValue: boolean;
+  showBackgroundColorProperty: boolean;
+  yKeys: string[];
+  xKey: string;
+  backgroundColorPropertyKey: string;
+  labelingModeOn: boolean;
 }
 
 export interface LineChartWidgetModel extends DataExplorerWidgetModel {

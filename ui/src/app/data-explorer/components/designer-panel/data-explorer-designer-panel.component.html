@@ -40,6 +40,11 @@
 
                     </sp-data-explorer-table-widget-config>
                 </div>
+                <div *ngIf="currentlyConfiguredWidget.widgetType === 'line-chart'" class="h-100 p-0">
+                    <sp-data-explorer-line-chart-widget-config [currentlyConfiguredWidget]="currentlyConfiguredWidget" [dataLakeMeasure]="dataLakeMeasure">
+
+                    </sp-data-explorer-line-chart-widget-config>
+                </div>
             </div>
             <div *ngIf="selectedIndex == 2">
                 <sp-data-explorer-widget-appearance-settings

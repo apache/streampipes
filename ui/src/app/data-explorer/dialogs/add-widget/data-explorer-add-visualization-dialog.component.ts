@@ -132,9 +132,11 @@ export class DataExplorerAddVisualizationDialogComponent implements OnInit {
       //       configuredWidget.eventSchema.eventProperties.push(ep.copy());
       //  }
 
+
       configuredWidget.pipelineId = this.selectedDataSet.pipelineId;
       configuredWidget.measureName = this.selectedDataSet.measureName;
       configuredWidget.baseAppearanceConfig = {};
+      configuredWidget.baseAppearanceConfig.widgetTitle = this.selectedDataSet.measureName;
       configuredWidget.visualizationConfig = {};
       configuredWidget.dataConfig = {};
       configuredWidget.widgetType = this.selectedWidget;

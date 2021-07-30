@@ -20,7 +20,8 @@ import {
   Directive,
   EventEmitter,
   Input,
-  OnChanges, OnDestroy,
+  OnChanges,
+  OnDestroy,
   OnInit,
   Output,
   SimpleChanges
@@ -31,13 +32,9 @@ import {DateRange} from '../../../../core-model/datalake/DateRange';
 import {DatalakeRestService} from '../../../../core-services/datalake/datalake-rest.service';
 import {IDataViewDashboardItem} from '../../../models/dataview-dashboard.model';
 import {
-  DashboardWidgetModel,
   DataExplorerWidgetModel,
   DataLakeMeasure,
-  EventProperty,
-  EventPropertyPrimitive,
-  EventPropertyUnion,
-  EventSchema
+  EventProperty
 } from "../../../../core-model/gen/streampipes-model";
 import {WidgetConfigurationService} from "../../../services/widget-configuration.service";
 
@@ -73,6 +70,8 @@ export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> 
 
   ngOnInit(): void {
     this.widgetConfigurationService.configurationChangedSubject.subscribe(refreshMessage => {
+      console.log(refreshMessage);
+      console.log(this.dataExplorerWidget);
       if (refreshMessage.widgetId === this.dataExplorerWidget._id) {
         if (refreshMessage.refreshData) {
           this.refreshData();
@@ -107,99 +106,8 @@ export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> 
     this.updateData();
   }
 
-  getValuePropertyKeys(eventSchema: EventSchema) {
-    const propertyKeys: EventPropertyUnion[] = [];
-
-    eventSchema.eventProperties.forEach(p => {
-      if (!(p.domainProperties.some(dp => dp === 'http://schema.org/DateTime'))) {
-        propertyKeys.push(p);
-      }
-    });
-
-    return propertyKeys;
-  }
-
-  getNumericProperty(eventSchema: EventSchema) {
-    const propertyKeys: EventPropertyUnion[] = [];
-
-    eventSchema.eventProperties.forEach(p => {
-      if (!(p.domainProperties.some(dp => dp === 'http://schema.org/DateTime')) && this.isNumber(p)) {
-        propertyKeys.push(p);
-      }
-    });
-
-    return propertyKeys;
-  }
-
-  getDimensionProperties(eventSchema: EventSchema) {
-    const result: EventPropertyUnion[] = [];
-    eventSchema.eventProperties.forEach(property => {
-      if (property.propertyScope === 'DIMENSION_PROPERTY') {
-        result.push(property);
-      }
-    });
-
-    return result;
-  }
-
-  getNonNumericProperties(eventSchema: EventSchema) {
-    const result: EventPropertyUnion[] = [];
-    const b = new EventPropertyPrimitive();
-    b["@class"] = "org.apache.streampipes.model.schema.EventPropertyPrimitive";
-    b.runtimeType = 'https://www.w3.org/2001/XMLSchema#string';
-    b.runtimeName = '';
-
-    result.push(b);
-
-    eventSchema.eventProperties.forEach(p => {
-      if (!(p.domainProperties.some(dp => dp === 'http://schema.org/DateTime')) && !this.isNumber(p)) {
-        result.push(p);
-      }
-    });
-
-
-    return result;
-  }
-
-  getTimestampProperty(eventSchema: EventSchema) {
-    const propertyKeys: string[] = [];
-
-    const result = eventSchema.eventProperties.find(p =>
-      this.isTimestamp(p)
-    );
-
-    return result;
-  }
-
-  isNumber(p: EventPropertyUnion): boolean {
-    if (p instanceof EventPropertyPrimitive) {
-      const runtimeType = (p as EventPropertyPrimitive).runtimeType;
-
-      return runtimeType === 'http://schema.org/Number' ||
-      runtimeType === 'http://www.w3.org/2001/XMLSchema#float' ||
-      runtimeType === 'http://www.w3.org/2001/XMLSchema#double' ||
-      runtimeType === 'http://www.w3.org/2001/XMLSchema#integer' ||
-      runtimeType === 'https://schema.org/Number' ||
-      runtimeType === 'https://www.w3.org/2001/XMLSchema#float' ||
-      runtimeType === 'https://www.w3.org/2001/XMLSchema#double' ||
-      runtimeType === 'https://www.w3.org/2001/XMLSchema#integer'
-        ? true : false;
-    } else {
-      return  false;
-    }
-  }
-
   public isTimestamp(p: EventProperty) {
     return p.domainProperties.some(dp => dp === 'http://schema.org/DateTime');
-  }
-
-  getRuntimeNames(properties: EventPropertyUnion[]): string[] {
-    const result = [];
-    properties.forEach(p => {
-        result.push(p.runtimeName);
-    });
-
-    return result;
   }
 
   public updateData() {
