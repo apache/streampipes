@@ -23,8 +23,8 @@ export class DatalakeQueryParameters {
   public page: number;
   public limit: number;
   public offset: number;
-  public groupBy: number;
-  public order: number;
+  public groupBy: string;
+  public order: string;
   public aggregationFunction: string;
   public timeInterval: string;
 }
