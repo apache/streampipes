@@ -16,16 +16,49 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+import {
+  DataExplorerWidgetModel,
+  DataLakeMeasure, EventPropertyUnion
+} from "../../../../../core-model/gen/streampipes-model";
+import {BaseWidgetConfig} from "../../base/base-widget-config";
+import {WidgetConfigurationService} from "../../../../services/widget-configuration.service";
+import {TableDataConfig, TableWidgetModel} from "../model/table-widget.model";
 
 @Component({
   selector: 'sp-data-explorer-table-widget-config',
   templateUrl: './table-widget-config.component.html',
   styleUrls: ['./table-widget-config.component.scss']
 })
-export class TableWidgetConfigComponent implements OnInit {
+export class TableWidgetConfigComponent extends BaseWidgetConfig<TableWidgetModel> implements OnInit {
+
+  constructor(widgetConfigurationService: WidgetConfigurationService) {
+    super(widgetConfigurationService);
+  }
 
   ngOnInit(): void {
+    console.log(this.currentlyConfiguredWidget);
+    if (!this.currentlyConfiguredWidget.dataConfig.availableColumns) {
+      this.currentlyConfiguredWidget.dataConfig.availableColumns = [this.getTimestampProperty(this.dataLakeMeasure.eventSchema)];
+      this.currentlyConfiguredWidget.dataConfig.availableColumns = this.currentlyConfiguredWidget.dataConfig.availableColumns.concat(this.getValuePropertyKeys(this.dataLakeMeasure.eventSchema));
+
+      // Reduce selected columns when more then 6
+      this.currentlyConfiguredWidget.dataConfig.selectedColumns = this.currentlyConfiguredWidget.dataConfig.availableColumns.length > 6 ? this.currentlyConfiguredWidget.dataConfig.availableColumns.slice(0, 5) : this.currentlyConfiguredWidget.dataConfig.availableColumns;
+      this.triggerDataRefresh();
+    }
   }
+
+  onFilterChange(searchValue: string): void {
+    this.currentlyConfiguredWidget.dataConfig.searchValue = searchValue.trim().toLowerCase();
+    this.triggerViewRefresh();
+    //this.dataSource.filter = searchValue.trim().toLowerCase();
+  }
+
+  setSelectedColumn(selectedColumns: EventPropertyUnion[]) {
+    this.currentlyConfiguredWidget.dataConfig.selectedColumns = selectedColumns;
+    this.currentlyConfiguredWidget.dataConfig.columnNames = this.getRuntimeNames(this.currentlyConfiguredWidget.dataConfig.selectedColumns);
+    this.triggerDataRefresh();
+  }
+
 
 }

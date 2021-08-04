@@ -16,20 +16,22 @@
  *
  */
 
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatSort } from '@angular/material/sort';
-import { DataResult } from '../../../../core-model/datalake/DataResult';
-import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
-import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
-import { MatDialog } from '@angular/material/dialog';
-import { EventPropertyUnion, EventSchema } from '../../../../core-model/gen/streampipes-model';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {MatSort} from '@angular/material/sort';
+import {DataResult} from '../../../../core-model/datalake/DataResult';
+import {DatalakeRestService} from '../../../../core-services/datalake/datalake-rest.service';
+import {BaseDataExplorerWidget} from '../base/base-data-explorer-widget';
+import {MatDialog} from '@angular/material/dialog';
+import {EventPropertyUnion, EventSchema} from '../../../../core-model/gen/streampipes-model';
+import {ImageWidgetModel} from "./model/image-widget.model";
+import {WidgetConfigurationService} from "../../../services/widget-configuration.service";
 
 @Component({
   selector: 'sp-data-explorer-image-widget',
   templateUrl: './image-widget.component.html',
   styleUrls: ['./image-widget.component.css']
 })
-export class ImageWidgetComponent extends BaseDataExplorerWidget implements OnInit, OnDestroy {
+export class ImageWidgetComponent extends BaseDataExplorerWidget<ImageWidgetModel> implements OnInit, OnDestroy {
 
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
@@ -43,9 +45,10 @@ export class ImageWidgetComponent extends BaseDataExplorerWidget implements OnIn
   public imagesRoutes = [];
 
   constructor(
-    protected dataLakeRestService: DatalakeRestService,
-    protected dialog: MatDialog) {
-    super(dataLakeRestService, dialog);
+      protected dataLakeRestService: DatalakeRestService,
+      protected dialog: MatDialog,
+      widgetConfigurationService: WidgetConfigurationService) {
+    super(dataLakeRestService, dialog, widgetConfigurationService);
   }
 
   ngOnInit(): void {
@@ -53,7 +56,7 @@ export class ImageWidgetComponent extends BaseDataExplorerWidget implements OnIn
     this.canvasWidth = this.gridsterItemComponent.width - 20;
     this.imagePreviewHeight = this.gridsterItemComponent.width / 14;
 
-    this.availableColumns = this.getImageProperties(this.dataExplorerWidget.dataLakeMeasure.eventSchema);
+    this.availableColumns = this.getImageProperties(this.dataLakeMeasure.eventSchema);
     this.selectedColumn = this.availableColumns[0];
     this.updateData();
   }
@@ -62,15 +65,19 @@ export class ImageWidgetComponent extends BaseDataExplorerWidget implements OnIn
     return eventSchema.eventProperties.filter(ep => ep.domainProperties.some(dp => dp === 'https://image.com'));
   }
 
-  updateData() {
+  ngOnDestroy(): void {
+
+  }
+
+  refreshData() {
     this.setShownComponents(false, false, true);
 
     this.dataLakeRestService.getDataAutoAggregation(
-        this.dataExplorerWidget.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime())
+        this.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime())
         .subscribe(
             (res: DataResult) => {
-             // this.availableImageData = res;
-             this.showIsLoadingData = false;
+              // this.availableImageData = res;
+              this.showIsLoadingData = false;
               this.imagesRoutes = [];
               if (res.rows !== null) {
                 const imageField = res.headers.findIndex(name => name === this.selectedColumn.runtimeName);
@@ -82,7 +89,6 @@ export class ImageWidgetComponent extends BaseDataExplorerWidget implements OnIn
         );
   }
 
-  ngOnDestroy(): void {
-
+  refreshView() {
   }
 }

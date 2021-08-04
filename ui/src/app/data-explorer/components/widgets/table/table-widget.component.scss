@@ -18,13 +18,9 @@
 
 @import '../../../../../scss/variables';
 
-.table {
+.table-widget {
     width: 100%;
-}
-
-.numberItem {
-    font-size:60px;
-    font-weight:bold;
+    background: inherit;
 }
 
 .title-panel {
@@ -32,6 +28,10 @@
 }
 
 .column-header {
-    font-size:14px;
+    font-size:12px;
     font-weight: bold;
+}
+
+tr.mat-row, tr.mat-footer-row {
+    height: 24px;
 }

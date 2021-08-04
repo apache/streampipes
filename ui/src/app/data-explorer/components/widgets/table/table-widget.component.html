@@ -16,24 +16,8 @@
   ~
   -->
 
-<div class="widget-content">
-    <div class="widget-inner-options" style="margin-left: 0;margin-right: 0;margin-top: 0;">
-        <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center" style="margin-left: 0px;margin-right: 0px;">
-            <mat-form-field appearance="standard" class="form-field-margin form-field-size-smaller" style="margin-right: 5px;">
-                <mat-label><mat-icon>search</mat-icon><span>&nbsp;Search</span></mat-label>
-                <input matInput (input)="onFilterChange($event.target.value)" >
-            </mat-form-field>
-
-            <sp-select-properties
-                    label="Select Columns"
-                    multiple = true
-                    (changeSelectedProperties)="setSelectedColumn($event)"
-                    [availableProperties]="availableColumns"
-                    [selectedProperties]="selectedColumns">
-            </sp-select-properties>
-        </div>
-    </div>
-    <div class="widget-inner-content" style="overflow-y: auto;">
+<div class="widget-content" [ngStyle]="{height: gridsterItemComponent.height}">
+    <div class="widget-inner-content">
 <!--    <div style=" overflow-y: auto;" [style.max-height.px]="gridsterItem.rows * 100 - 40">-->
 
         <sp-load-data-spinner *ngIf="showIsLoadingData"></sp-load-data-spinner>
@@ -45,24 +29,31 @@
             mat-sort
             *ngIf="showData"
             [dataSource]="dataSource" matSort
-            (matSortChange)="sortData($event)"
-            class="table">
+            (matSortChange)="sortData($event)" class="table-widget">
 
             <ng-container
-                    *ngFor="let element of this.selectedColumns"
+                    *ngFor="let element of dataExplorerWidget.dataConfig.selectedColumns"
                     [cdkColumnDef]="element.runtimeName">
                 <div *ngIf="!isTimestamp(element)">
-                    <th mat-header-cell mat-sort-header *matHeaderCellDef mat-sort-header><label class="column-header">{{element.runtimeName}}</label></th>
-                    <td mat-cell *matCellDef="let row"style="text-align: center;">{{row[element.runtimeName]}}</td>
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                        <label class="column-header">{{element.runtimeName}}</label>
+                    </th>
+                    <td mat-cell *matCellDef="let row" style="text-align: left;">
+                        {{row[element.runtimeName]}}
+                    </td>
                 </div>
                 <div *ngIf="isTimestamp(element)">
-                    <th mat-header-cell mat-sort-header *matHeaderCellDef mat-sort-header><label class="column-header">{{element.runtimeName}}</label></th>
-                    <td mat-cell  *matCellDef="let row"style="text-align: left;">{{row[element.runtimeName]| date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                        <label class="column-header">{{element.runtimeName}}</label>
+                    </th>
+                    <td mat-cell *matCellDef="let row" style="text-align: left;">
+                        {{row[element.runtimeName]| date:'yyyy-MM-dd HH:mm:ss'}}
+                    </td>
                 </div>
             </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="this.columnNames; sticky: true"></tr>
-            <tr mat-row *matRowDef="let row; columns: columnNames;"></tr>
+            <tr mat-header-row *matHeaderRowDef="dataExplorerWidget.dataConfig.columnNames; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: dataExplorerWidget.dataConfig.columnNames;"></tr>
 
         </table>
     </div>

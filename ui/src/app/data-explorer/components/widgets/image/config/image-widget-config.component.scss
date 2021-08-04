@@ -15,12 +15,3 @@
  * limitations under the License.
  *
  */
-
-
-
-import {DashboardWidgetSettings} from "../../../../core-model/gen/streampipes-model";
-
-export abstract class WidgetConfig {
-
-    abstract getConfig(): DashboardWidgetSettings;
-}

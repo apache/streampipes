@@ -26,10 +26,11 @@ import org.apache.streampipes.ps.PipelineElementTemplateResource;
 import org.apache.streampipes.rest.impl.*;
 import org.apache.streampipes.rest.impl.dashboard.Dashboard;
 import org.apache.streampipes.rest.impl.dashboard.DashboardWidget;
-import org.apache.streampipes.rest.impl.dashboard.VisualizablePipeline;
+import org.apache.streampipes.rest.impl.dashboard.VisualizablePipelineResource;
 import org.apache.streampipes.rest.impl.datalake.DataLakeDashboardResource;
 import org.apache.streampipes.rest.impl.datalake.DataLakeNoUserResourceV3;
 import org.apache.streampipes.rest.impl.datalake.DataLakeWidgetResource;
+import org.apache.streampipes.rest.impl.datalake.PersistedDataStreamResource;
 import org.apache.streampipes.rest.impl.nouser.FileServingResource;
 import org.apache.streampipes.rest.impl.nouser.PipelineElementImportNoUser;
 import org.apache.streampipes.rest.impl.nouser.PipelineNoUserResource;
@@ -68,6 +69,7 @@ public class StreamPipesResourceConfig extends ResourceConfig {
         register(Notification.class);
         register(OntologyMeasurementUnit.class);
         register(OntologyPipelineElement.class);
+        register(PersistedDataStreamResource.class);
         register(PipelineCanvasMetadataCache.class);
         register(PipelineCanvasMetadataResource.class);
         register(PipelineCache.class);
@@ -101,7 +103,7 @@ public class StreamPipesResourceConfig extends ResourceConfig {
         register(Dashboard.class);
         register(VirtualSensor.class);
         register(Visualization.class);
-        register(VisualizablePipeline.class);
+        register(VisualizablePipelineResource.class);
 
         // Serializers
         register(GsonWithIdProvider.class);

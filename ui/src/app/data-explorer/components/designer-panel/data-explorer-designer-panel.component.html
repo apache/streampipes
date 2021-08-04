@@ -17,29 +17,40 @@
   -->
 
 <div fxFlex="100" fxLayout="column" class="designer-panel-content">
+    <h4 *ngIf="currentlyConfiguredWidget">{{ currentlyConfiguredWidget.baseAppearanceConfig.widgetTitle }}</h4>
     <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectOptionsPanel($event)" color="accent"
                    class="small">
         <mat-tab label="Data"></mat-tab>
         <mat-tab label="Visualization"></mat-tab>
         <mat-tab label="Appearance"></mat-tab>
     </mat-tab-group>
-    <input [(ngModel)]="currentlyConfiguredWidget.dataLakeMeasure.measureName" *ngIf="currentlyConfiguredWidget">
 
     <div fxFlex="100" fxLayout="column">
         <div class="designer-panel-config" *ngIf="currentlyConfiguredWidget">
+
             <div *ngIf="selectedIndex == 0">
-                <span>Data settings</span>
+                <sp-data-explorer-widget-data-settings [dataLakeMeasure]="dataLakeMeasure" [currentlyConfiguredWidget]="currentlyConfiguredWidget">
+
+                </sp-data-explorer-widget-data-settings>
             </div>
             <div *ngIf="selectedIndex == 1">
                 Visualization
                 <div *ngIf="currentlyConfiguredWidget.widgetType === 'table'" class="h-100 p-0">
-                    <sp-data-explorer-table-widget-config>
+                    <sp-data-explorer-table-widget-config [currentlyConfiguredWidget]="currentlyConfiguredWidget" [dataLakeMeasure]="dataLakeMeasure">
 
                     </sp-data-explorer-table-widget-config>
                 </div>
+                <div *ngIf="currentlyConfiguredWidget.widgetType === 'line-chart'" class="h-100 p-0">
+                    <sp-data-explorer-line-chart-widget-config [currentlyConfiguredWidget]="currentlyConfiguredWidget" [dataLakeMeasure]="dataLakeMeasure">
+
+                    </sp-data-explorer-line-chart-widget-config>
+                </div>
             </div>
             <div *ngIf="selectedIndex == 2">
-                Appearance
+                <sp-data-explorer-widget-appearance-settings
+                        [baseAppearanceConfig]="currentlyConfiguredWidget.baseAppearanceConfig">
+
+                </sp-data-explorer-widget-appearance-settings>
             </div>
         </div>
 

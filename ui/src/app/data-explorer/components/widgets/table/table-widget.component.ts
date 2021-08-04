@@ -16,58 +16,43 @@
  *
  */
 
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { DataResult } from '../../../../core-model/datalake/DataResult';
-import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
-import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
-import {EventPropertyUnion} from "../../../../core-model/gen/streampipes-model";
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
+import {MatSort} from '@angular/material/sort';
+import {MatTableDataSource} from '@angular/material/table';
+import {DataResult} from '../../../../core-model/datalake/DataResult';
+import {DatalakeRestService} from '../../../../core-services/datalake/datalake-rest.service';
+import {BaseDataExplorerWidget} from '../base/base-data-explorer-widget';
+import {WidgetConfigurationService} from "../../../services/widget-configuration.service";
+import {TableWidgetModel} from "./model/table-widget.model";
 
 @Component({
   selector: 'sp-data-explorer-table-widget',
   templateUrl: './table-widget.component.html',
   styleUrls: ['./table-widget.component.scss']
 })
-export class TableWidgetComponent extends BaseDataExplorerWidget implements OnInit, OnDestroy {
-
+export class TableWidgetComponent extends BaseDataExplorerWidget<TableWidgetModel> implements OnInit, OnDestroy {
 
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
-  availableColumns: EventPropertyUnion[];
-  selectedColumns: EventPropertyUnion[];
-  columnNames: string[];
+  //availableColumns: EventPropertyUnion[];
+  //selectedColumns: EventPropertyUnion[];
+  //columnNames: string[];
 
   dataSource = new MatTableDataSource();
 
-  constructor(protected dataLakeRestService: DatalakeRestService, protected dialog: MatDialog) {
-    super(dataLakeRestService, dialog);
+  constructor(protected dataLakeRestService: DatalakeRestService,
+              protected dialog: MatDialog,
+              widgetConfigurationService: WidgetConfigurationService) {
+    super(dataLakeRestService, dialog, widgetConfigurationService);
   }
 
   ngOnInit(): void {
+    super.ngOnInit();
     this.dataSource.sort = this.sort;
-    this.availableColumns = [this.getTimestampProperty(this.dataExplorerWidget.dataLakeMeasure.eventSchema)];
-    this.availableColumns = this.availableColumns.concat(this.getValuePropertyKeys(this.dataExplorerWidget.dataLakeMeasure.eventSchema));
+    //this.columnNames = this.getRuntimeNames(this.selectedColumns);
 
-    // Reduce selected columns when more then 6
-    this.selectedColumns = this.availableColumns.length > 6 ? this.availableColumns.slice(0, 5) : this.availableColumns;
-    this.columnNames = this.getRuntimeNames(this.selectedColumns);
-
-    this.updateData();
-
-  }
-
-  updateData() {
-    this.setShownComponents(false, false, true);
-
-    this.dataLakeRestService.getDataAutoAggregation(
-      this.dataExplorerWidget.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime())
-      .subscribe(
-      (res: DataResult) => {
-        this.dataSource.data = this.transformData(res);
-      }
-    );
+    //this.updateData();
   }
 
   transformData(data: DataResult) {
@@ -92,18 +77,12 @@ export class TableWidgetComponent extends BaseDataExplorerWidget implements OnIn
     return object;
   }
 
-  setSelectedColumn(selectedColumns: EventPropertyUnion[]) {
-    this.selectedColumns = selectedColumns;
-    this.columnNames = this.getRuntimeNames(this.selectedColumns);
-  }
+
 
   ngOnDestroy(): void {
     this.dataSource.data = [];
   }
 
-  onFilterChange(searchValue: string): void {
-    this.dataSource.filter = searchValue.trim().toLowerCase();
-  }
 
   sortData(event) {
     if (event.direction === 'asc') {
@@ -120,6 +99,22 @@ export class TableWidgetComponent extends BaseDataExplorerWidget implements OnIn
       this.dataSource.data = this.dataSource.data.sort(
         (a, b) => (a['timestamp'] > b['timestamp']) ? 1 : ((b['timestamp'] > a['timestamp']) ? -1 : 0));
     }
+  }
+
+  public refreshData() {
+    this.setShownComponents(false, false, true);
+
+    this.dataLakeRestService.getDataAutoAggregation(
+        this.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime())
+        .subscribe(
+            (res: DataResult) => {
+              this.dataSource.data = this.transformData(res);
+            }
+        );
+  }
+
+  public refreshView() {
+    this.dataSource.filter = this.dataExplorerWidget.dataConfig.searchValue;
   }
 
 }

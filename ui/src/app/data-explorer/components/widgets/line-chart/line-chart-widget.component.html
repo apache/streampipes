@@ -17,66 +17,18 @@
   -->
 
 <div class="widget-content">
-    <div class="widget-inner-options ml-0 mr-0 mt-0">
-        <div fxFlex="100" fxLayout="row">
-            <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center" class="ml-0 mr-0">
-                <sp-select-properties
-                        label="Select Properties"
-                        multiple = true
-                        class="mr-10"
-                        (changeSelectedProperties)="setSelectedProperties($event)"
-                        [availableProperties]="availableProperties"
-                        [selectedProperties]="selectedLineChartProperties">
-                </sp-select-properties>
-
-                <sp-select-properties
-                        label="Select Background Color"
-                        multiple = false
-                        class="mr-10"
-                        *ngIf="showBackgroundColorProperty"
-                        (changeSelectedProperties)="setSelectedBackgroundColorProperty($event)"
-                        [availableProperties]="availableNoneNumericColumns"
-                        [selectedProperties]="selectedBackgroundColorProperty">
-                </sp-select-properties>
-                <sp-aggregate-configuration
-                        *ngIf="advancedSettingsActive"
-                        [(aggregationValue)]="aggregationValue"
-                        [(aggregationTimeUnit)]="aggregationTimeUnit">
-                </sp-aggregate-configuration>
-
-                <sp-group-configuration
-                        [dimensionProperties]="dimensionProperties"
-                        *ngIf="advancedSettingsActive"
-                        [(groupValue)]="groupValue"
-                        [(showCountValue)]="showCountValue">
-                </sp-group-configuration>
-                <button
-                        *ngIf="advancedSettingsActive"
-                        (click)="updateData()" mat-button mat-icon-button color="primary">
-                    <mat-icon>autorenew</mat-icon>
-                </button>
-                <div >
-                    <mat-slide-toggle color="primary" [(ngModel)]="advancedSettingsActive" (change)="handlingAdvancedToggleChange()">Aggregate</mat-slide-toggle>
-                </div>
-            </div>
-
-            <div fxFlex fxLayoutAlign="end center">
-                <mat-slide-toggle color="primary" [(ngModel)]="labelingModeOn" (change)="toggleLabelingMode()">Label</mat-slide-toggle>
-            </div>
-        </div>
-    </div>
     <div class="widget-inner-content h-100 overflow-y-hidden">
         <sp-load-data-spinner *ngIf="showIsLoadingData"></sp-load-data-spinner>
         <sp-no-data-in-date-range *ngIf="showNoDataInDateRange" [viewDateRange]="viewDateRange"></sp-no-data-in-date-range>
 
-        <sp-select-label *ngIf="labelingModeOn"
+        <sp-select-label *ngIf="dataExplorerWidget.dataConfig.labelingModeOn"
                          [enableShortCuts]="true"
                          (labelChange)="handleLabelChange($event)">
         </sp-select-label>
 
         <plotly-plot *ngIf="data !== undefined && !showNoDataInDateRange && !showIsLoadingData"
                      class="plotly-container"
-                     [class.labeling-active]="labelingModeOn"
+                     [class.labeling-active]="dataExplorerWidget.dataConfig.labelingModeOn"
                      [data]="data"
                      [layout]="graph.layout"
                      [config]="graph.config"

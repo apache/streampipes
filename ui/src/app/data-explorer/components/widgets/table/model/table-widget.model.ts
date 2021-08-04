@@ -15,3 +15,19 @@
  * limitations under the License.
  *
  */
+
+import {
+  DataExplorerWidgetModel,
+  EventPropertyUnion
+} from "../../../../../core-model/gen/streampipes-model";
+
+export interface TableDataConfig {
+  availableColumns: Array<EventPropertyUnion>;
+  selectedColumns: Array<EventPropertyUnion>;
+  searchValue: string;
+  columnNames: Array<string>;
+}
+
+export interface TableWidgetModel extends DataExplorerWidgetModel {
+  dataConfig: TableDataConfig;
+}

@@ -15,3 +15,20 @@
  * limitations under the License.
  *
  */
+
+import {
+  DataExplorerWidgetModel,
+  EventPropertyUnion
+} from "../../../../../core-model/gen/streampipes-model";
+import {LineChartDataConfig} from "../../line-chart/model/line-chart-widget.model";
+
+export interface ImageWidgetDataConfig {
+  availableColumns: Array<EventPropertyUnion>;
+  selectedColumns: Array<EventPropertyUnion>;
+  searchValue: string;
+  columnNames: Array<string>;
+}
+
+export interface ImageWidgetModel extends DataExplorerWidgetModel {
+  dataConfig: LineChartDataConfig;
+}

@@ -15,3 +15,19 @@
  * limitations under the License.
  *
  */
+
+import {Injectable} from '@angular/core';
+import {ReplaySubject, Subject} from 'rxjs';
+import {Tuple2} from "../../core-model/base/Tuple2";
+import {DataExplorerWidgetModel} from "../../core-model/gen/streampipes-model";
+import {RefreshMessage} from "../models/dataview-dashboard.model";
+
+@Injectable()
+export class WidgetConfigurationService {
+
+  public configurationChangedSubject: Subject<RefreshMessage> = new Subject<RefreshMessage>();
+
+  public notify(refreshMessage: RefreshMessage): void {
+    this.configurationChangedSubject.next(refreshMessage);
+  }
+}

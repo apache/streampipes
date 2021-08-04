@@ -16,12 +16,12 @@
  *
  */
 
-import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ElementIconText } from '../../../services/get-element-icon-text.service';
+import {Component, Inject, OnInit} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {ElementIconText} from '../../../services/get-element-icon-text.service';
 import {IDataViewDashboard, IWidget} from '../../models/dataview-dashboard.model';
-import { DataExplorerWidgetRegistry } from '../../registry/data-explorer-widget-registry';
-import { DataViewDataExplorerService } from '../../services/data-view-data-explorer.service';
+import {DataExplorerWidgetRegistry} from '../../registry/data-explorer-widget-registry';
+import {DataViewDataExplorerService} from '../../services/data-view-data-explorer.service';
 import {
   DataExplorerWidgetModel,
   DataLakeMeasure,
@@ -76,7 +76,7 @@ export class DataExplorerAddVisualizationDialogComponent implements OnInit {
   ngOnInit() {
     if (!this.data) {
       this.dialogTitle = 'Add widget';
-      this.dataViewDataExplorerService.getVisualizableData().subscribe(visualizations => {
+      this.dataViewDataExplorerService.getAllPersistedDataStreams().subscribe(visualizations => {
         this.visualizableData = visualizations;
       });
       this.availableWidgets = DataExplorerWidgetRegistry.getAvailableWidgetTemplates();
@@ -132,8 +132,13 @@ export class DataExplorerAddVisualizationDialogComponent implements OnInit {
       //       configuredWidget.eventSchema.eventProperties.push(ep.copy());
       //  }
 
-      configuredWidget.dataLakeMeasure = this.selectedDataSet;
-      configuredWidget.dataLakeMeasure["@class"] = "org.apache.streampipes.model.datalake.DataLakeMeasure";
+
+      configuredWidget.pipelineId = this.selectedDataSet.pipelineId;
+      configuredWidget.measureName = this.selectedDataSet.measureName;
+      configuredWidget.baseAppearanceConfig = {};
+      configuredWidget.baseAppearanceConfig.widgetTitle = this.selectedDataSet.measureName;
+      configuredWidget.visualizationConfig = {};
+      configuredWidget.dataConfig = {};
       configuredWidget.widgetType = this.selectedWidget;
       this.dataViewDataExplorerService.saveWidget(configuredWidget).subscribe(response => {
         this.dialogRef.close(response);

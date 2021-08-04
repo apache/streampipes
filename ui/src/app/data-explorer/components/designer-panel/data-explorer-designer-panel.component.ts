@@ -16,36 +16,8 @@
  *
  */
 
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  QueryList,
-  SimpleChanges,
-  ViewChildren,
-  ViewEncapsulation
-} from '@angular/core';
-import {GridsterItemComponent, GridType} from 'angular-gridster2';
-import {DateRange} from '../../../core-model/datalake/DateRange';
-import {GridsterInfo} from '../../../dashboard/models/gridster-info.model';
-import {
-  IDataViewDashboard,
-  IDataViewDashboardConfig,
-  IDataViewDashboardItem
-} from '../../models/dataview-dashboard.model';
-import {DataViewDataExplorerService} from '../../services/data-view-data-explorer.service';
-import {RefreshDashboardService} from '../../services/refresh-dashboard.service';
-import {ResizeService} from '../../services/resize.service';
-import {
-  DashboardWidgetModel,
-  DataExplorerWidgetModel
-} from "../../../core-model/gen/streampipes-model";
-import {forkJoin} from "rxjs/internal/observable/forkJoin";
-import {Observable} from "rxjs";
-import {DataExplorerDashboardGridComponent} from "../grid/data-explorer-dashboard-grid.component";
+import {Component, Input, OnInit} from '@angular/core';
+import {DataExplorerWidgetModel, DataLakeMeasure} from "../../../core-model/gen/streampipes-model";
 
 @Component({
   selector: 'sp-data-explorer-designer-panel',
@@ -55,6 +27,7 @@ import {DataExplorerDashboardGridComponent} from "../grid/data-explorer-dashboar
 export class DataExplorerDesignerPanelComponent implements OnInit {
 
   @Input() currentlyConfiguredWidget: DataExplorerWidgetModel;
+  @Input() dataLakeMeasure: DataLakeMeasure;
 
   selectedIndex: number = 0;
 
