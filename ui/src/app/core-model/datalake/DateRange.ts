@@ -16,13 +16,24 @@
  *
  */
 
+import {TimeSettings} from "../../data-explorer/models/dataview-dashboard.model";
+
 export class DateRange {
 
     public startDate: Date;
     public endDate: Date;
 
-    constructor(startDate: Date, endDate: Date) {
-        this.startDate = startDate;
-        this.endDate = endDate;
+    constructor(startDate?: Date, endDate?: Date) {
+        if (startDate && endDate) {
+            this.startDate = startDate;
+            this.endDate = endDate;
+        }
+    }
+
+    static fromTimeSettings(timeSettings: TimeSettings): DateRange {
+        let range = new DateRange();
+        range.startDate = new Date(timeSettings.startTime);
+        range.endDate = new Date(timeSettings.endTime);
+        return range;
     }
 }

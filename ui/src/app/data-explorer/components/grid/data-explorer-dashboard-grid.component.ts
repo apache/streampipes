@@ -28,12 +28,12 @@ import {
   ViewChildren
 } from '@angular/core';
 import {GridsterItemComponent, GridType} from 'angular-gridster2';
-import {DateRange} from '../../../core-model/datalake/DateRange';
 import {GridsterInfo} from '../../../dashboard/models/gridster-info.model';
 import {
   IDataViewDashboard,
   IDataViewDashboardConfig,
-  IDataViewDashboardItem
+  IDataViewDashboardItem,
+  TimeSettings
 } from '../../models/dataview-dashboard.model';
 import {DataViewDataExplorerService} from '../../services/data-view-data-explorer.service';
 import {RefreshDashboardService} from '../../services/refresh-dashboard.service';
@@ -62,7 +62,7 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
    * This is the date range (start, end) to view the data and is set in data-explorer.ts
    */
   @Input()
-  viewDateRange: DateRange;
+  timeSettings: TimeSettings;
 
   @Output() deleteCallback: EventEmitter<IDataViewDashboardItem> = new EventEmitter<IDataViewDashboardItem>();
   @Output() updateCallback: EventEmitter<DataExplorerWidgetModel> = new EventEmitter<DataExplorerWidgetModel>();

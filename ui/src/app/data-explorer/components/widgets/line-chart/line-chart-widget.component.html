@@ -19,7 +19,7 @@
 <div class="widget-content">
     <div class="widget-inner-content h-100 overflow-y-hidden">
         <sp-load-data-spinner *ngIf="showIsLoadingData"></sp-load-data-spinner>
-        <sp-no-data-in-date-range *ngIf="showNoDataInDateRange" [viewDateRange]="viewDateRange"></sp-no-data-in-date-range>
+        <sp-no-data-in-date-range *ngIf="showNoDataInDateRange" [viewDateRange]="timeSettings"></sp-no-data-in-date-range>
 
         <sp-select-label *ngIf="dataExplorerWidget.dataConfig.labelingModeOn"
                          [enableShortCuts]="true"

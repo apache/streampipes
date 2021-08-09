@@ -193,7 +193,6 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
   }
 
   displayData(transformedData: DataResult, yKeys: string[]) {
-    console.log(this.dataExplorerWidget);
     if (this.dataExplorerWidget.dataConfig.yKeys.length > 0) {
       const tmp = [];
       this.dataExplorerWidget.dataConfig.yKeys.forEach(key => {
@@ -633,12 +632,11 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
   }
 
   refreshData() {
-    console.log("refreshing");
     this.graph.layout.shapes = [];
     if (!this.advancedSettingsActive) {
       this.setShownComponents(false, false, true);
       this.dataLakeRestService.getDataAutoAggregation(
-          this.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime())
+          this.dataLakeMeasure.measureName, this.timeSettings.startTime, this.timeSettings.endTime)
           .subscribe((res: DataResult) => {
             this.processNoneGroupedData(res);
           });
@@ -646,8 +644,8 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
       if (this.dataExplorerWidget.dataConfig.groupValue === 'None') {
         this.setShownComponents(false, false, true);
         this.dataLakeRestService.getData(
-            this.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime()
-            , this.dataExplorerWidget.dataConfig.aggregationTimeUnit, this.dataExplorerWidget.dataConfig.aggregationValue)
+            this.dataLakeMeasure.measureName, this.timeSettings.startTime, this.timeSettings.endTime,
+            this.dataExplorerWidget.dataConfig.aggregationTimeUnit, this.dataExplorerWidget.dataConfig.aggregationValue)
             .subscribe((res: DataResult) => {
               this.processNoneGroupedData(res);
             });

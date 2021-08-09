@@ -28,9 +28,8 @@ import {
 } from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {GridsterItem, GridsterItemComponent} from 'angular-gridster2';
-import {DateRange} from '../../../../core-model/datalake/DateRange';
 import {DatalakeRestService} from '../../../../core-services/datalake/datalake-rest.service';
-import {IDataViewDashboardItem} from '../../../models/dataview-dashboard.model';
+import {IDataViewDashboardItem, TimeSettings} from '../../../models/dataview-dashboard.model';
 import {
   DataExplorerWidgetModel,
   DataLakeMeasure,
@@ -49,7 +48,7 @@ export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> 
   @Input() editMode: boolean;
 
   @Input()
-  viewDateRange: DateRange;
+  timeSettings: TimeSettings;
 
 
   @Input() dataViewDashboardItem: IDataViewDashboardItem;
@@ -70,8 +69,6 @@ export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> 
 
   ngOnInit(): void {
     this.widgetConfigurationService.configurationChangedSubject.subscribe(refreshMessage => {
-      console.log(refreshMessage);
-      console.log(this.dataExplorerWidget);
       if (refreshMessage.widgetId === this.dataExplorerWidget._id) {
         if (refreshMessage.refreshData) {
           this.refreshData();
@@ -102,7 +99,8 @@ export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> 
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.viewDateRange = changes.viewDateRange.currentValue;
+    console.log(changes);
+    this.timeSettings = changes.timeSettings.currentValue;
     this.updateData();
   }
 
