@@ -16,8 +16,8 @@
  *
  */
 
-import {Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
-import {TimeSettings} from "../../../dashboard/models/dashboard.model";
+import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { TimeSettings } from '../../../dashboard/models/dashboard.model';
 
 @Component({
   selector: 'sp-time-range-selector',
@@ -57,7 +57,7 @@ export class TimeRangeSelectorComponent implements OnInit {
   }
 
   findOffset(dynamicSelection: number) {
-    return this.possibleTimeButtons.find(el => el.offset === dynamicSelection);
+    return this.possibleTimeButtons.find(el => el.offset === dynamicSelection) || this.possibleTimeButtons[0];
   }
 
   reloadData() {
@@ -76,7 +76,7 @@ export class TimeRangeSelectorComponent implements OnInit {
     const difference = this.endDate.getTime() - this.startDate.getTime();
 
     const current = new Date().getTime();
-    this.dateRange = { startTime: current - difference, endTime: current, dynamicSelection: -1} as TimeSettings;
+    this.dateRange = { startTime: current - difference, endTime: current, dynamicSelection: -1 };
 
     this.reloadData();
   }
@@ -88,7 +88,7 @@ export class TimeRangeSelectorComponent implements OnInit {
 
     this.startDate = new Date(newStartTime);
     this.endDate = new Date(newEndTime);
-    this.dateRange = { startTime: newStartTime, endTime: newEndTime, dynamicSelection: -1} as TimeSettings;
+    this.dateRange = { startTime: newStartTime, endTime: newEndTime, dynamicSelection: -1 };
     this.selectedTimeButton =  this.possibleTimeButtons[this.possibleTimeButtons.length - 1];
     this.reloadData();
   }
@@ -98,7 +98,7 @@ export class TimeRangeSelectorComponent implements OnInit {
     const newStartTime = this.startDate.getTime();
     const newEndTime = this.endDate.getTime();
 
-    this.dateRange = { startTime: newStartTime, endTime: newEndTime, dynamicSelection: -1} as TimeSettings;
+    this.dateRange = { startTime: newStartTime, endTime: newEndTime, dynamicSelection: -1 };
     this.reloadData();
   }
 
@@ -111,7 +111,7 @@ export class TimeRangeSelectorComponent implements OnInit {
     const current = new Date().getTime();
     this.startDate = new Date(current - item.offset * 60000);
     this.endDate = new Date(current);
-    this.dateRange = {startTime: current - item.offset * 60000, endTime: current, dynamicSelection: item.offset};
+    this.dateRange = { startTime: current - item.offset * 60000, endTime: current, dynamicSelection: item.offset };
     this.reloadData();
   }
 
