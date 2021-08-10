@@ -24,7 +24,7 @@
     <ng-container *ngFor="let item of dashboard.widgets;let i=index">
         <gridster-item [item]="item" #gridsterItemComponent>
             <sp-data-explorer-dashboard-widget
-                    [viewDateRange]="viewDateRange"
+                    [timeSettings]="timeSettings"
                     (updateCallback)="propagateItemUpdate($event)"
                     (deleteCallback)="propagateItemRemoval($event)"
                     (configureWidgetCallback)="propagateWidgetSelection($event)"

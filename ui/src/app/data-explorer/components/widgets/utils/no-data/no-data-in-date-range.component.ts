@@ -17,7 +17,7 @@
  */
 
 import {Component, Input, OnInit} from '@angular/core';
-import {DateRange} from '../../../../../core-model/datalake/DateRange';
+import {TimeSettings} from "../../../../models/dataview-dashboard.model";
 
 @Component({
   selector: 'sp-no-data-in-date-range',
@@ -27,7 +27,7 @@ import {DateRange} from '../../../../../core-model/datalake/DateRange';
 export class NoDataInDateRangeComponent implements OnInit {
 
   @Input()
-  public viewDateRange: DateRange;
+  public viewDateRange: TimeSettings;
 
   constructor() { }
 

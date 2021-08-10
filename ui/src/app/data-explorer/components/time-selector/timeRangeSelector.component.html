@@ -33,7 +33,7 @@
             <input matInput
                    [owlDateTime]="dt1"
                    [owlDateTimeTrigger]="dt1"
-                   [(ngModel)]="dateRange.startDate"
+                   [(ngModel)]="startDate"
                    (dateTimeChange)="changeCustomDateRange()">
             <owl-date-time #dt1></owl-date-time>
         </mat-form-field>
@@ -42,7 +42,7 @@
             <input matInput
                    [owlDateTime]="dt2"
                    [owlDateTimeTrigger]="dt2"
-                   [(ngModel)]="dateRange.endDate"
+                   [(ngModel)]="endDate"
                    (dateTimeChange)="changeCustomDateRange()">
             <owl-date-time #dt2></owl-date-time>
         </mat-form-field>

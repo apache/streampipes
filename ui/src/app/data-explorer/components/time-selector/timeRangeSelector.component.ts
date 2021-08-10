@@ -16,8 +16,8 @@
  *
  */
 
-import {Component, EventEmitter, OnInit, Output, ViewEncapsulation} from '@angular/core';
-import {DateRange} from '../../../core-model/datalake/DateRange';
+import {Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
+import {TimeSettings} from "../../models/dataview-dashboard.model";
 
 @Component({
   selector: 'sp-time-range-selector',
@@ -27,10 +27,12 @@ import {DateRange} from '../../../core-model/datalake/DateRange';
 })
 export class TimeRangeSelectorComponent implements OnInit {
 
-  @Output()
-  dateRangeEmitter = new EventEmitter<DateRange>();
+  @Output() dateRangeEmitter = new EventEmitter<TimeSettings>();
 
-  public dateRange: DateRange;
+  @Input() dateRange: TimeSettings;
+
+  startDate: Date;
+  endDate: Date;
 
   public possibleTimeButtons = [
     {value: '15 min', offset: 15},
@@ -48,8 +50,14 @@ export class TimeRangeSelectorComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.selectedTimeButton = this.possibleTimeButtons[0];
+    this.startDate = new Date(this.dateRange.startTime);
+    this.endDate = new Date(this.dateRange.endTime);
+    this.selectedTimeButton = this.findOffset(this.dateRange.dynamicSelection);
     this.setCurrentDateRange(this.selectedTimeButton);
+  }
+
+  findOffset(dynamicSelection: number) {
+    return this.possibleTimeButtons.find(el => el.offset === dynamicSelection);
   }
 
   reloadData() {
@@ -65,30 +73,32 @@ export class TimeRangeSelectorComponent implements OnInit {
   }
 
   refreshData() {
-    const difference = this.dateRange.endDate.getTime() - this.dateRange.startDate.getTime();
+    const difference = this.endDate.getTime() - this.startDate.getTime();
 
-    const current = new Date();
-    this.dateRange = new DateRange(new Date(current.getTime() - difference), current);
+    const current = new Date().getTime();
+    this.dateRange = { startTime: current - difference, endTime: current, dynamicSelection: -1} as TimeSettings;
 
     this.reloadData();
   }
 
-  private  changeTimeByInterval(func) {
-    const difference = this.dateRange.endDate.getTime() - this.dateRange.startDate.getTime();
-    const newStartTime = new Date(func(this.dateRange.startDate.getTime(), difference));
-    const newEndTime = new Date(func(this.dateRange.endDate.getTime(), difference));
+  private changeTimeByInterval(func) {
+    const difference = this.endDate.getTime() - this.startDate.getTime();
+    const newStartTime = (func(this.startDate.getTime(), difference));
+    const newEndTime = (func(this.endDate.getTime(), difference));
 
-    this.dateRange = new DateRange(newStartTime, newEndTime);
+    this.startDate = new Date(newStartTime);
+    this.endDate = new Date(newEndTime);
+    this.dateRange = { startTime: newStartTime, endTime: newEndTime, dynamicSelection: -1} as TimeSettings;
     this.selectedTimeButton =  this.possibleTimeButtons[this.possibleTimeButtons.length - 1];
     this.reloadData();
   }
 
   changeCustomDateRange() {
     this.selectedTimeButton =  this.possibleTimeButtons[this.possibleTimeButtons.length - 1];
-    const newStartTime = new Date(this.dateRange.startDate.getTime());
-    const newEndTime = new Date(this.dateRange.endDate.getTime());
+    const newStartTime = this.startDate.getTime();
+    const newEndTime = this.endDate.getTime();
 
-    this.dateRange = new DateRange(newStartTime, newEndTime);
+    this.dateRange = { startTime: newStartTime, endTime: newEndTime, dynamicSelection: -1} as TimeSettings;
     this.reloadData();
   }
 
@@ -98,8 +108,11 @@ export class TimeRangeSelectorComponent implements OnInit {
    */
   setCurrentDateRange(item) {
     this.selectedTimeButton = item;
-    const current = new Date();
-    this.dateRange = new DateRange(new Date(current.getTime() - item.offset * 60000), current);
+    const current = new Date().getTime();
+    this.startDate = new Date(current - item.offset * 60000);
+    this.endDate = new Date(current);
+    this.dateRange = {startTime: current - item.offset * 60000, endTime: current, dynamicSelection: item.offset};
     this.reloadData();
   }
+
 }

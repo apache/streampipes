@@ -127,14 +127,13 @@ export abstract class BaseWidgetConfig<T extends DataExplorerWidgetModel>  {
       const runtimeType = (p as EventPropertyPrimitive).runtimeType;
 
       return runtimeType === 'http://schema.org/Number' ||
-      runtimeType === 'http://www.w3.org/2001/XMLSchema#float' ||
-      runtimeType === 'http://www.w3.org/2001/XMLSchema#double' ||
-      runtimeType === 'http://www.w3.org/2001/XMLSchema#integer' ||
-      runtimeType === 'https://schema.org/Number' ||
-      runtimeType === 'https://www.w3.org/2001/XMLSchema#float' ||
-      runtimeType === 'https://www.w3.org/2001/XMLSchema#double' ||
-      runtimeType === 'https://www.w3.org/2001/XMLSchema#integer'
-          ? true : false;
+          runtimeType === 'http://www.w3.org/2001/XMLSchema#float' ||
+          runtimeType === 'http://www.w3.org/2001/XMLSchema#double' ||
+          runtimeType === 'http://www.w3.org/2001/XMLSchema#integer' ||
+          runtimeType === 'https://schema.org/Number' ||
+          runtimeType === 'https://www.w3.org/2001/XMLSchema#float' ||
+          runtimeType === 'https://www.w3.org/2001/XMLSchema#double' ||
+          runtimeType === 'https://www.w3.org/2001/XMLSchema#integer';
     } else {
       return  false;
     }

@@ -105,7 +105,7 @@ export class TableWidgetComponent extends BaseDataExplorerWidget<TableWidgetMode
     this.setShownComponents(false, false, true);
 
     this.dataLakeRestService.getDataAutoAggregation(
-        this.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime())
+        this.dataLakeMeasure.measureName, this.timeSettings.startTime, this.timeSettings.endTime)
         .subscribe(
             (res: DataResult) => {
               this.dataSource.data = this.transformData(res);

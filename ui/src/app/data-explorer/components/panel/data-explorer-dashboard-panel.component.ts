@@ -19,9 +19,12 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {Observable, Subscription} from 'rxjs';
-import {DateRange} from '../../../core-model/datalake/DateRange';
 import {DataExplorerAddVisualizationDialogComponent} from '../../dialogs/add-widget/data-explorer-add-visualization-dialog.component';
-import {IDataViewDashboard, IDataViewDashboardItem} from '../../models/dataview-dashboard.model';
+import {
+  IDataViewDashboard,
+  IDataViewDashboardItem,
+  TimeSettings
+} from '../../models/dataview-dashboard.model';
 import {DataViewDataExplorerService} from '../../services/data-view-data-explorer.service';
 import {RefreshDashboardService} from '../../services/refresh-dashboard.service';
 import {DataExplorerWidgetModel, DataLakeMeasure} from "../../../core-model/gen/streampipes-model";
@@ -43,7 +46,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
    * This is the date range (start, end) to view the data and is set in data-explorer.ts
    */
   @Input()
-  viewDateRange: DateRange;
+  timeSettings: TimeSettings;
 
   @Input('editMode')
   editMode: boolean;
@@ -102,6 +105,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
 
   updateDashboard(closeEditMode?: boolean) {
     this.dataViewDataExplorerService.updateDashboard(this.dashboard).subscribe(result => {
+      this.refreshDashboardService.notify(this.dashboard._id);
       // TODO delete widgets
       this.dashboardGrid.updateAllWidgets();
         // if (this.widgetsToUpdate.size > 0) {
