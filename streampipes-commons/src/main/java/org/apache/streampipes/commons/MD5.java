@@ -22,7 +22,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * <b style="color:#e94d08;">MD5工具类</b>
+ * MD5 Tools
  *
  * @author yangdh
  */
@@ -57,10 +57,6 @@ public final class MD5 {
         }
 
         return hexString.toString();
-    }
-
-    public static String encryptPass(String pass) {
-        return MD5.crypt(MD5.crypt(pass));
     }
 
 }
