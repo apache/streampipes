@@ -17,16 +17,21 @@
   -->
 
 
-<div fxFlex="100" fxLayout="column" class="m-20">
-    <div fxLayout="row wrap">
-        <button mat-button mat-raised-button color="accent" (click)="openNewDataViewDialog()" class="mr-10">
-            New Data View
-        </button>
-        <button mat-button mat-raised-button color="accent" (click)="openEditLabelView()">
-            Edit Labels
-        </button>
+<div fxFlex="100" fxLayout="column">
+    <div fxFlex="100" fxLayout="column">
+        <div fxLayout="row" class="fixed-height options-bar page-container-nav sp-tab-bg">
+            <div fxLayoutAlign="start center" fxLayout="row" class="pl-10">
+                <button mat-button mat-raised-button color="accent" (click)="openNewDataViewDialog()" class="mr-10">
+                    <i class="material-icons">add</i>
+                    <span>New Data View</span>
+                </button>
+                <button mat-button mat-raised-button color="accent" (click)="openEditLabelView()">
+                    Edit Labels
+                </button>
+            </div>
+        </div>
     </div>
-    <div *ngIf="!editLabels" fxFlex="100" fxLayout="row wrap" fxLayoutAlign="start stretch">
+    <div *ngIf="!editLabels" fxFlex="100" fxLayout="row wrap" fxLayoutAlign="start stretch" class="m-20">
         <div fxFlex="100" class="assemblyOptions sp-blue-bg p-5">
             <div fxLayout="row" fxLayoutAlign="start center" fxFlex="100">
                 <h4>My Data Views</h4>
@@ -38,7 +43,7 @@
                 <table mat-table [dataSource]="dataSource" multiTemplateDataRows>
 
                     <ng-container matColumnDef="name">
-                        <th fxFlex="80" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Data View </th>
+                        <th fxFlex="80" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Data View</th>
                         <td fxFlex="80" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
                             {{element.name}}<br/>
                             {{element.description}}
