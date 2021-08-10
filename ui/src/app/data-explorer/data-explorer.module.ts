@@ -65,7 +65,6 @@ import {ResizeService} from './services/resize.service';
 import {GroupConfigurationComponent} from './components/widgets/utils/group-configuration/group-configuration.component';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 // tslint:disable-next-line:max-line-length
-import {PointSelectionInfoComponent} from './components/widgets/line-chart/components/point-selection-info/point-selection-info.component';
 import {ColorService} from './components/widgets/line-chart/services/color.service';
 import {DataExplorerDesignerPanelComponent} from "./components/designer-panel/data-explorer-designer-panel.component";
 import {TableWidgetConfigComponent} from "./components/widgets/table/config/table-widget-config.component";
@@ -141,7 +140,6 @@ export const MY_NATIVE_FORMATS = {
     LoadDataSpinnerComponent,
     DataDownloadDialog,
     SelectPropertiesComponent,
-    PointSelectionInfoComponent,
     AggregateConfigurationComponent,
     GroupConfigurationComponent,
     TableWidgetConfigComponent,

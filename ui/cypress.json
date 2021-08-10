@@ -1,5 +1,6 @@
 {
   "projectId": "z5n3e9",
+  "integrationFolder": "cypress/tests",
   "env": {
     "TAKE_SCREENSHOT": "false"
   },

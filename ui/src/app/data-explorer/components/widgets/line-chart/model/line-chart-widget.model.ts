@@ -19,7 +19,7 @@
 import {
   DataExplorerWidgetModel,
   EventPropertyUnion
-} from "../../../../../core-model/gen/streampipes-model";
+} from '../../../../../core-model/gen/streampipes-model';
 
 export interface LineChartDataConfig {
   selectedLineChartProperties: Array<EventPropertyUnion>;
