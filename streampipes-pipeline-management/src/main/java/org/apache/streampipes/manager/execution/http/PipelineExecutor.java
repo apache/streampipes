@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.manager.execution.http;
 
+import org.apache.streampipes.commons.MD5;
+import org.apache.streampipes.commons.Utils;
 import org.apache.streampipes.manager.execution.status.PipelineStatusManager;
 import org.apache.streampipes.manager.secret.SecretProvider;
 import org.apache.streampipes.manager.util.TemporaryGraphStorage;
@@ -107,7 +109,7 @@ public class PipelineExecutor {
             .filter(is -> is.getEventGrounding().getTransportProtocol() instanceof KafkaTransportProtocol)
             .map(is -> is.getEventGrounding().getTransportProtocol())
             .map(KafkaTransportProtocol.class::cast)
-            .forEach(tp -> tp.setGroupId(UUID.randomUUID().toString()));
+            .forEach(tp -> tp.setGroupId(Utils.filterSpecialChar(pipeline.getName()) + MD5.crypt(tp.getElementId())));
   }
 
   private void decryptSecrets(List<InvocableStreamPipesEntity> graphs) {
