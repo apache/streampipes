@@ -27,20 +27,19 @@ import {
   SimpleChanges,
   ViewChildren
 } from '@angular/core';
-import {GridsterItemComponent, GridType} from 'angular-gridster2';
-import {GridsterInfo} from '../../../dashboard/models/gridster-info.model';
+import { GridsterItemComponent, GridType } from 'angular-gridster2';
+import { GridsterInfo } from '../../../dashboard/models/gridster-info.model';
+import { IDataViewDashboardConfig, } from '../../models/dataview-dashboard.model';
+import { DataViewDataExplorerService } from '../../services/data-view-data-explorer.service';
+import { RefreshDashboardService } from '../../services/refresh-dashboard.service';
+import { ResizeService } from '../../services/resize.service';
 import {
-  IDataViewDashboard,
-  IDataViewDashboardConfig,
-  IDataViewDashboardItem,
-  TimeSettings
-} from '../../models/dataview-dashboard.model';
-import {DataViewDataExplorerService} from '../../services/data-view-data-explorer.service';
-import {RefreshDashboardService} from '../../services/refresh-dashboard.service';
-import {ResizeService} from '../../services/resize.service';
-import {DataExplorerWidgetModel, DataLakeMeasure} from "../../../core-model/gen/streampipes-model";
-import {Tuple2} from "../../../core-model/base/Tuple2";
-import {DatalakeRestService} from "../../../core-services/datalake/datalake-rest.service";
+  DataExplorerWidgetModel,
+  DataLakeMeasure
+} from '../../../core-model/gen/streampipes-model';
+import { Tuple2 } from '../../../core-model/base/Tuple2';
+import { DatalakeRestService } from "../../../core-services/datalake/datalake-rest.service";
+import { Dashboard, DashboardItem, TimeSettings } from "../../../dashboard/models/dashboard.model";
 
 @Component({
   selector: 'sp-data-explorer-dashboard-grid',
@@ -53,7 +52,7 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
   editMode: boolean;
 
   @Input()
-  dashboard: IDataViewDashboard;
+  dashboard: Dashboard;
 
   configuredWidgets: Map<String, DataExplorerWidgetModel> = new Map<String, DataExplorerWidgetModel>();
   dataLakeMeasures: Map<String, DataLakeMeasure> = new Map<String, DataLakeMeasure>();
@@ -64,7 +63,7 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
   @Input()
   timeSettings: TimeSettings;
 
-  @Output() deleteCallback: EventEmitter<IDataViewDashboardItem> = new EventEmitter<IDataViewDashboardItem>();
+  @Output() deleteCallback: EventEmitter<DashboardItem> = new EventEmitter<DashboardItem>();
   @Output() updateCallback: EventEmitter<DataExplorerWidgetModel> = new EventEmitter<DataExplorerWidgetModel>();
   @Output() configureWidgetCallback: EventEmitter<Tuple2<DataExplorerWidgetModel, DataLakeMeasure>> = new EventEmitter<Tuple2<DataExplorerWidgetModel, DataLakeMeasure>>();
 
@@ -83,7 +82,7 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.options = {
       disablePushOnDrag: true,
-      draggable: { enabled: this.editMode },
+      draggable: {enabled: this.editMode},
       gridType: GridType.VerticalFixed,
       minCols: 8,
       maxCols: 8,
@@ -92,12 +91,18 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
       fixedColWidth: 100,
       margin: 5,
       displayGrid: "always",
-      resizable: { enabled: this.editMode },
+      resizable: {enabled: this.editMode},
       itemResizeCallback: ((item, itemComponent) => {
-        this.resizeService.notify({gridsterItem: item, gridsterItemComponent: itemComponent} as GridsterInfo);
+        this.resizeService.notify({
+          gridsterItem: item,
+          gridsterItemComponent: itemComponent
+        } as GridsterInfo);
       }),
       itemInitCallback: ((item, itemComponent) => {
-        this.resizeService.notify({gridsterItem: item, gridsterItemComponent: itemComponent} as GridsterInfo);
+        this.resizeService.notify({
+          gridsterItem: item,
+          gridsterItemComponent: itemComponent
+        } as GridsterInfo);
         window.dispatchEvent(new Event('resize'));
       })
     };
@@ -107,7 +112,7 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
 
   loadWidgetConfigs() {
     this.dashboard.widgets.forEach(widget => {
-        this.loadWidgetConfig(widget.id);
+      this.loadWidgetConfig(widget.id);
     });
 
   }
@@ -130,7 +135,7 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
     }
   }
 
-  propagateItemRemoval(widget: IDataViewDashboardItem) {
+  propagateItemRemoval(widget: DashboardItem) {
     this.deleteCallback.emit(widget);
   }
 

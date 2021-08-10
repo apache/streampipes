@@ -23,17 +23,17 @@ import {map} from 'rxjs/operators';
 import {DatalakeRestService} from '../../core-services/datalake/datalake-rest.service';
 import {SharedDatalakeRestService} from '../../core-services/shared/shared-dashboard.service';
 import {AuthStatusService} from '../../services/auth-status.service';
-import {IDataViewDashboard} from '../models/dataview-dashboard.model';
 import {
   DataExplorerWidgetModel,
   DataLakeMeasure,
 } from "../../core-model/gen/streampipes-model";
+import {Dashboard} from "../../dashboard/models/dashboard.model";
 
 
 @Injectable()
 export class DataViewDataExplorerService {
 
-  localDashboards: IDataViewDashboard[] = [];
+  localDashboards: Dashboard[] = [];
 
   constructor(private http: HttpClient,
               private authStatusService: AuthStatusService,
@@ -48,19 +48,19 @@ export class DataViewDataExplorerService {
     }));
   }
 
-  getDataViews(): Observable<IDataViewDashboard[]> {
+  getDataViews(): Observable<Dashboard[]> {
     return this.sharedDatalakeRestService.getDashboards(this.dashboardUrl);
   }
 
-  updateDashboard(dashboard: IDataViewDashboard): Observable<IDataViewDashboard> {
+  updateDashboard(dashboard: Dashboard): Observable<Dashboard> {
     return this.sharedDatalakeRestService.updateDashboard(this.dashboardUrl, dashboard);
   }
 
-  deleteDashboard(dashboard: IDataViewDashboard): Observable<any> {
+  deleteDashboard(dashboard: Dashboard): Observable<any> {
     return this.sharedDatalakeRestService.deleteDashboard(this.dashboardUrl, dashboard);
   }
 
-  saveDataView(dataViewDashboard: IDataViewDashboard): Observable<any> {
+  saveDataView(dataViewDashboard: Dashboard): Observable<any> {
     return this.sharedDatalakeRestService.saveDashboard(this.dashboardUrl, dataViewDashboard);
   }
 

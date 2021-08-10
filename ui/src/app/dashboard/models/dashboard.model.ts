@@ -26,13 +26,19 @@ export interface DashboardItem extends GridsterItem {
     id: string;
 }
 
+export interface TimeSettings {
+    startTime: number;
+    endTime: number;
+    dynamicSelection: 15 | 60 | 1440 | 10080 | 43800 | 525600 | -1;
+}
+
 export interface Dashboard {
     id?: string;
     name?: string;
     description?: string;
     displayHeader?: boolean;
     widgets?: Array<DashboardItem>;
-    dashboardTimeSettings?: any;
+    dashboardTimeSettings?: TimeSettings;
     dashboardGeneralSettings?: any;
     _id?: string;
     _rev?: string;

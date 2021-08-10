@@ -17,7 +17,7 @@
  */
 
 import {Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
-import {TimeSettings} from "../../models/dataview-dashboard.model";
+import {TimeSettings} from "../../../dashboard/models/dashboard.model";
 
 @Component({
   selector: 'sp-time-range-selector',

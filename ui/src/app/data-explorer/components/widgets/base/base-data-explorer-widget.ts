@@ -29,13 +29,13 @@ import {
 import {MatDialog} from '@angular/material/dialog';
 import {GridsterItem, GridsterItemComponent} from 'angular-gridster2';
 import {DatalakeRestService} from '../../../../core-services/datalake/datalake-rest.service';
-import {IDataViewDashboardItem, TimeSettings} from '../../../models/dataview-dashboard.model';
 import {
   DataExplorerWidgetModel,
   DataLakeMeasure,
   EventProperty
 } from "../../../../core-model/gen/streampipes-model";
 import {WidgetConfigurationService} from "../../../services/widget-configuration.service";
+import {DashboardItem, TimeSettings} from "../../../../dashboard/models/dashboard.model";
 
 @Directive()
 export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> implements OnInit, OnChanges, OnDestroy {
@@ -51,7 +51,7 @@ export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> 
   timeSettings: TimeSettings;
 
 
-  @Input() dataViewDashboardItem: IDataViewDashboardItem;
+  @Input() dataViewDashboardItem: DashboardItem;
   @Input() dataExplorerWidget: T;
   @Input() dataLakeMeasure: DataLakeMeasure;
 

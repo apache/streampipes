@@ -16,7 +16,8 @@
  *
  */
 
-import {TimeSettings} from "../../data-explorer/models/dataview-dashboard.model";
+
+import {TimeSettings} from "../../dashboard/models/dashboard.model";
 
 export class DateRange {
 

@@ -17,7 +17,7 @@
  */
 
 import {Component, Input, OnInit} from '@angular/core';
-import {TimeSettings} from "../../../../models/dataview-dashboard.model";
+import {TimeSettings} from "../../../../../dashboard/models/dashboard.model";
 
 @Component({
   selector: 'sp-no-data-in-date-range',

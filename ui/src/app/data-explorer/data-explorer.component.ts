@@ -17,11 +17,10 @@
  */
 
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {IDataViewDashboard, TimeSettings} from './models/dataview-dashboard.model';
 import {DataViewDataExplorerService} from './services/data-view-data-explorer.service';
 import {RefreshDashboardService} from './services/refresh-dashboard.service';
 import {DataExplorerDashboardPanelComponent} from "./components/panel/data-explorer-dashboard-panel.component";
-import {DateRange} from "../core-model/datalake/DateRange";
+import {Dashboard, TimeSettings} from "../dashboard/models/dashboard.model";
 
 @Component({
   selector: 'sp-data-explorer',
@@ -30,7 +29,7 @@ import {DateRange} from "../core-model/datalake/DateRange";
 })
 export class DataExplorerComponent implements OnInit {
 
-  selectedDataViewDashboard: IDataViewDashboard;
+  selectedDataViewDashboard: Dashboard;
   selectedIndex = 0;
   dashboardsLoaded = false;
   dashboardTabSelected = false;
@@ -38,7 +37,7 @@ export class DataExplorerComponent implements OnInit {
   editMode = true;
   gridVisible: boolean = true;
 
-  dataViewDashboards: IDataViewDashboard[];
+  dataViewDashboards: Dashboard[];
 
   @ViewChild('dashboardPanel') dashboardPanel: DataExplorerDashboardPanelComponent;
 
@@ -55,7 +54,7 @@ export class DataExplorerComponent implements OnInit {
 
   }
 
-  openDashboard(dashboard: IDataViewDashboard) {
+  openDashboard(dashboard: Dashboard) {
     const index = this.dataViewDashboards.indexOf(dashboard);
     this.selectDashboard((index + 1));
   }
@@ -72,7 +71,7 @@ export class DataExplorerComponent implements OnInit {
     }
   }
 
-  applyTimeSettings(dashboard: IDataViewDashboard) {
+  applyTimeSettings(dashboard: Dashboard) {
     if (!dashboard.dashboardTimeSettings) {
       const currentTime = new Date().getTime();
       dashboard.dashboardTimeSettings = {

@@ -21,11 +21,11 @@ import {MatDialog} from '@angular/material/dialog';
 import {GridsterItem, GridsterItemComponent} from 'angular-gridster2';
 import {DateRange} from '../../../core-model/datalake/DateRange';
 import {DataExplorerAddVisualizationDialogComponent} from '../../dialogs/add-widget/data-explorer-add-visualization-dialog.component';
-import {IDataViewDashboardItem, TimeSettings} from '../../models/dataview-dashboard.model';
 import {DataViewDataExplorerService} from '../../services/data-view-data-explorer.service';
 import {DataExplorerWidgetModel, DataLakeMeasure} from "../../../core-model/gen/streampipes-model";
 import {DataDownloadDialog} from "../datadownloadDialog/dataDownload.dialog";
 import {Tuple2} from "../../../core-model/base/Tuple2";
+import {Dashboard, TimeSettings} from "../../../dashboard/models/dashboard.model";
 
 @Component({
   selector: 'sp-data-explorer-dashboard-widget',
@@ -35,7 +35,7 @@ import {Tuple2} from "../../../core-model/base/Tuple2";
 export class DataExplorerDashboardWidgetComponent implements OnInit {
 
   @Input()
-  widget: IDataViewDashboardItem;
+  widget: Dashboard;
 
   @Input()
   configuredWidget: DataExplorerWidgetModel;
@@ -58,7 +58,7 @@ export class DataExplorerDashboardWidgetComponent implements OnInit {
   @Input()
   timeSettings: TimeSettings;
 
-  @Output() deleteCallback: EventEmitter<IDataViewDashboardItem> = new EventEmitter<IDataViewDashboardItem>();
+  @Output() deleteCallback: EventEmitter<Dashboard> = new EventEmitter<Dashboard>();
   @Output() updateCallback: EventEmitter<DataExplorerWidgetModel> = new EventEmitter<DataExplorerWidgetModel>();
   @Output() configureWidgetCallback: EventEmitter<Tuple2<DataExplorerWidgetModel, DataLakeMeasure>> = new EventEmitter<Tuple2<DataExplorerWidgetModel, DataLakeMeasure>>();
 

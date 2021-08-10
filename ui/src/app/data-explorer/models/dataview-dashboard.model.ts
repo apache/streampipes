@@ -16,32 +16,9 @@
  *
  */
 
-import {GridsterConfig, GridsterItem} from 'angular-gridster2';
-
+import {GridsterConfig} from 'angular-gridster2';
 
 export interface IDataViewDashboardConfig extends GridsterConfig {}
-
-export interface IDataViewDashboardItem extends GridsterItem {
-    widgetId: string;
-    widgetType: string;
-    id: string;
-}
-
-export interface TimeSettings {
-    startTime: number;
-    endTime: number;
-    dynamicSelection: 15 | 60 | 1440 | 10080 | 43800 | 525600 | -1;
-}
-
-export interface IDataViewDashboard {
-    name?: string;
-    description?: string;
-    displayHeader?: boolean;
-    widgets?: IDataViewDashboardItem[];
-    dashboardTimeSettings: TimeSettings;
-    _id?: string;
-    _rev?: string;
-}
 
 export interface IWidget {
     id: string;

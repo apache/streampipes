@@ -20,17 +20,13 @@ import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angula
 import {MatDialog} from '@angular/material/dialog';
 import {Observable, Subscription} from 'rxjs';
 import {DataExplorerAddVisualizationDialogComponent} from '../../dialogs/add-widget/data-explorer-add-visualization-dialog.component';
-import {
-  IDataViewDashboard,
-  IDataViewDashboardItem,
-  TimeSettings
-} from '../../models/dataview-dashboard.model';
 import {DataViewDataExplorerService} from '../../services/data-view-data-explorer.service';
 import {RefreshDashboardService} from '../../services/refresh-dashboard.service';
 import {DataExplorerWidgetModel, DataLakeMeasure} from "../../../core-model/gen/streampipes-model";
 import {DataExplorerDashboardGridComponent} from "../grid/data-explorer-dashboard-grid.component";
 import {MatDrawer} from "@angular/material/sidenav";
 import {Tuple2} from "../../../core-model/base/Tuple2";
+import {Dashboard, DashboardItem, TimeSettings} from "../../../dashboard/models/dashboard.model";
 
 @Component({
   selector: 'sp-data-explorer-dashboard-panel',
@@ -40,7 +36,7 @@ import {Tuple2} from "../../../core-model/base/Tuple2";
 export class DataExplorerDashboardPanelComponent implements OnInit {
 
   @Input()
-  dashboard: IDataViewDashboard;
+  dashboard: Dashboard;
 
   /**
    * This is the date range (start, end) to view the data and is set in data-explorer.ts
@@ -57,7 +53,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
   @ViewChild('dashboardGrid') dashboardGrid: DataExplorerDashboardGridComponent;
   @ViewChild('designerDrawer') designerDrawer: MatDrawer;
 
-  public items: IDataViewDashboardItem[];
+  public items: Dashboard[];
 
   protected subscription: Subscription;
 
@@ -91,7 +87,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
   }
 
   addWidgetToDashboard(widget: DataExplorerWidgetModel) {
-    const dashboardItem = {} as IDataViewDashboardItem;
+    const dashboardItem = {} as DashboardItem;
     dashboardItem.widgetId = widget._id;
     dashboardItem.id = widget._id;
     dashboardItem.widgetType = widget.widgetType;
@@ -140,7 +136,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
     this.refreshDashboardService.notify(this.dashboard._id);
   }
 
-  removeAndQueueItemForDeletion(widget: IDataViewDashboardItem) {
+  removeAndQueueItemForDeletion(widget: DashboardItem) {
     this.dashboard.widgets.splice(this.dashboard.widgets.indexOf(widget), 1);
     this.widgetIdsToRemove.push(widget.id);
   }

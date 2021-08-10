@@ -19,7 +19,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {ElementIconText} from '../../../services/get-element-icon-text.service';
-import {IDataViewDashboard, IWidget} from '../../models/dataview-dashboard.model';
+import {IWidget} from '../../models/dataview-dashboard.model';
 import {DataExplorerWidgetRegistry} from '../../registry/data-explorer-widget-registry';
 import {DataViewDataExplorerService} from '../../services/data-view-data-explorer.service';
 import {
@@ -27,6 +27,7 @@ import {
   DataLakeMeasure,
   EventSchema
 } from "../../../core-model/gen/streampipes-model";
+import {Dashboard} from "../../../dashboard/models/dashboard.model";
 
 @Component({
   selector: 'sp-data-explorer-add-visualization-dialog-component',
@@ -59,7 +60,7 @@ export class DataExplorerAddVisualizationDialogComponent implements OnInit {
   selectedDataSet: DataLakeMeasure;
   selectedWidget: string;
 
-  dashboard: IDataViewDashboard;
+  dashboard: Dashboard;
 
   selectedType: any;
   page: any = 'select-pipeline';

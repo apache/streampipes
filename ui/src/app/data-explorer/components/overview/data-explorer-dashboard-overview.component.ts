@@ -16,12 +16,12 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { MatTableDataSource } from '@angular/material/table';
-import { DataExplorerEditDataViewDialogComponent } from '../../dialogs/edit-dashboard/data-explorer-edit-data-view-dialog.component';
-import { IDataViewDashboard } from '../../models/dataview-dashboard.model';
-import { DataViewDataExplorerService } from '../../services/data-view-data-explorer.service';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
+import {MatTableDataSource} from '@angular/material/table';
+import {DataExplorerEditDataViewDialogComponent} from '../../dialogs/edit-dashboard/data-explorer-edit-data-view-dialog.component';
+import {DataViewDataExplorerService} from '../../services/data-view-data-explorer.service';
+import {Dashboard} from "../../../dashboard/models/dashboard.model";
 
 @Component({
     selector: 'sp-data-explorer-dashboard-overview',
@@ -30,11 +30,11 @@ import { DataViewDataExplorerService } from '../../services/data-view-data-explo
 })
 export class DataExplorerDashboardOverviewComponent implements OnInit {
 
-    @Input() dataViewDashboards: IDataViewDashboard[];
+    @Input() dataViewDashboards: Dashboard[];
     @Output() reloadDashboardsEmitter = new EventEmitter<void>();
-    @Output() selectDashboardEmitter = new EventEmitter<IDataViewDashboard>();
+    @Output() selectDashboardEmitter = new EventEmitter<Dashboard>();
 
-    dataSource = new MatTableDataSource<IDataViewDashboard>();
+    dataSource = new MatTableDataSource<Dashboard>();
     displayedColumns: string[] = ['name', 'open', 'delete'];
 
     editLabels: boolean;
@@ -50,7 +50,7 @@ export class DataExplorerDashboardOverviewComponent implements OnInit {
     }
 
     openNewDataViewDialog() {
-        const dataViewDashboard = {} as IDataViewDashboard;
+        const dataViewDashboard = {} as Dashboard;
         dataViewDashboard.widgets = [];
 
         this.openDataViewModificationDialog(true, dataViewDashboard);
@@ -60,7 +60,7 @@ export class DataExplorerDashboardOverviewComponent implements OnInit {
        this.editLabels = true;
     }
 
-    openDataViewModificationDialog(createMode: boolean, dashboard: IDataViewDashboard) {
+    openDataViewModificationDialog(createMode: boolean, dashboard: Dashboard) {
         const dialogRef = this.dialog.open(DataExplorerEditDataViewDialogComponent, {
             width: '70%',
             panelClass: 'custom-dialog-container'
@@ -73,18 +73,18 @@ export class DataExplorerDashboardOverviewComponent implements OnInit {
         });
     }
 
-    openEditDataViewDialog(dashboard: IDataViewDashboard) {
+    openEditDataViewDialog(dashboard: Dashboard) {
         this.openDataViewModificationDialog(false, dashboard);
     }
 
-    openDeleteDashboardDialog(dashboard: IDataViewDashboard) {
+    openDeleteDashboardDialog(dashboard: Dashboard) {
         // TODO add confirm dialog
         this.dashboardService.deleteDashboard(dashboard).subscribe(result => {
             this.reloadDashboardsEmitter.emit();
         });
     }
 
-    showDashboard(dashboard: IDataViewDashboard) {
+    showDashboard(dashboard: Dashboard) {
         this.selectDashboardEmitter.emit(dashboard);
     }
 
