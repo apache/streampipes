@@ -24,8 +24,8 @@ import { PipelineBuilder } from '../../support/builder/PipelineBuilder';
 const adapterName = 'simulator';
 
 before('Setup Test', () => {
-  it('Login', () => {
-    cy.login();
+  it('Initialize Test', () => {
+    cy.initStreamPipesTest();
   });
 
   AdapterUtils.addMachineDataSimulator(adapterName);
@@ -47,7 +47,5 @@ describe('Test Random Data Simulator Stream Adapter', () => {
     .build();
 
   PipelineUtils.testPipeline(pipelineInput);
-
-  AdapterUtils.deleteAdapter();
 });
 

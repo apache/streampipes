@@ -16,20 +16,16 @@
  *
  */
 
-import { login } from './general/login';
-import { logout } from './general/logout';
-import { dataCy } from './general/dataCy';
-// tslint:disable-next-line:no-implicit-dependencies
-import 'cypress-file-upload';
-import { resetStreamPipes } from './general/resetStreamPipes';
-import { initStreamPipesTest } from './general/InitStreamPipesTest';
+import { UserUtils } from '../utils/UserUtils';
 
-// General commands
-Cypress.Commands.add('login', login);
-Cypress.Commands.add('logout', logout);
-Cypress.Commands.add('dataCy', dataCy);
-Cypress.Commands.add('resetStreamPipes', resetStreamPipes);
-Cypress.Commands.add('initStreamPipesTest', initStreamPipesTest);
-// Cypress.Commands.add('readDir', readDir);
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      resetStreamPipes: typeof resetStreamPipes;
+    }
+  }
+}
 
-
+export const resetStreamPipes = () => {
+  cy.request('POST', `/streampipes-backend/api/v2/users/${UserUtils.testUserName}/reset`, {});
+};

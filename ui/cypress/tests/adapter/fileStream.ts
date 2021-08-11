@@ -41,5 +41,4 @@ describe('Test File Stream Adapter', () => {
 
     AdapterUtils.testGenericStreamAdapter(adapterInput);
 
-    FileManagementUtils.deleteFile();
 });

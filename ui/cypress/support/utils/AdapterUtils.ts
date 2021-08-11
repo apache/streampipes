@@ -36,15 +36,11 @@ export class AdapterUtils {
 
         AdapterUtils.startStreamAdapter(adapterConfiguration.adapterName);
 
-        AdapterUtils.deleteAdapter();
-
     }
 
     public static testGenericStreamAdapter(adapterConfiguration: GenericAdapterInput) {
 
         AdapterUtils.addGenericStreamAdapter(adapterConfiguration);
-
-        AdapterUtils.deleteAdapter();
 
     }
 

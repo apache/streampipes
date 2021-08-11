@@ -25,8 +25,6 @@ export class PipelineUtils {
 
         PipelineUtils.addPipeline(pipelineInput);
 
-        PipelineUtils.deletePipeline();
-
     }
 
     public static addPipeline(pipelineInput: PipelineInput) {
