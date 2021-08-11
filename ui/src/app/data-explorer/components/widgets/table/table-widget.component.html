@@ -16,11 +16,9 @@
   ~
   -->
 
-<div class="widget-content" [ngStyle]="{height: gridsterItemComponent.height, background: dataExplorerWidget.baseAppearanceConfig.backgroundColor, color: dataExplorerWidget.baseAppearanceConfig.textColor}">
-    <div class="widget-inner-content">
-<!--    <div style=" overflow-y: auto;" [style.max-height.px]="gridsterItem.rows * 100 - 40">-->
+<div fxLayout="column" fxFlex="100" [ngStyle]="{background: dataExplorerWidget.baseAppearanceConfig.backgroundColor, color: dataExplorerWidget.baseAppearanceConfig.textColor}">
 
-        <sp-load-data-spinner *ngIf="showIsLoadingData"></sp-load-data-spinner>
+        <sp-load-data-spinner *ngIf="showIsLoadingData" class="h-100"></sp-load-data-spinner>
 
         <sp-no-data-in-date-range *ngIf="showNoDataInDateRange" [viewDateRange]="timeSettings"></sp-no-data-in-date-range>
 
@@ -56,6 +54,5 @@
             <tr mat-row *matRowDef="let row; columns: dataExplorerWidget.dataConfig.columnNames;"></tr>
 
         </table>
-    </div>
 
 </div>
