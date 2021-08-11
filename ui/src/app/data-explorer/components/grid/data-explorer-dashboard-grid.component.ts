@@ -31,15 +31,13 @@ import { GridsterItemComponent, GridType } from 'angular-gridster2';
 import { GridsterInfo } from '../../../dashboard/models/gridster-info.model';
 import { IDataViewDashboardConfig, } from '../../models/dataview-dashboard.model';
 import { DataViewDataExplorerService } from '../../services/data-view-data-explorer.service';
-import { RefreshDashboardService } from '../../services/refresh-dashboard.service';
 import { ResizeService } from '../../services/resize.service';
 import {
   DataExplorerWidgetModel,
   DataLakeMeasure
 } from '../../../core-model/gen/streampipes-model';
 import { Tuple2 } from '../../../core-model/base/Tuple2';
-import { DatalakeRestService } from "../../../core-services/datalake/datalake-rest.service";
-import { Dashboard, DashboardItem, TimeSettings } from "../../../dashboard/models/dashboard.model";
+import { Dashboard, DashboardItem, TimeSettings } from '../../../dashboard/models/dashboard.model';
 
 @Component({
   selector: 'sp-data-explorer-dashboard-grid',
@@ -51,11 +49,10 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
   @Input()
   editMode: boolean;
 
-  @Input()
-  dashboard: Dashboard;
+  _dashboard: Dashboard;
 
-  configuredWidgets: Map<String, DataExplorerWidgetModel> = new Map<String, DataExplorerWidgetModel>();
-  dataLakeMeasures: Map<String, DataLakeMeasure> = new Map<String, DataLakeMeasure>();
+  configuredWidgets: Map<string, DataExplorerWidgetModel> = new Map<string, DataExplorerWidgetModel>();
+  dataLakeMeasures: Map<string, DataLakeMeasure> = new Map<string, DataLakeMeasure>();
 
   /**
    * This is the date range (start, end) to view the data and is set in data-explorer.ts
@@ -73,9 +70,7 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
   @ViewChildren(GridsterItemComponent) gridsterItemComponents: QueryList<GridsterItemComponent>;
 
   constructor(private resizeService: ResizeService,
-              private dataViewDataExplorerService: DataViewDataExplorerService,
-              private refreshDashboardService: RefreshDashboardService,
-              private datalakeRestService: DatalakeRestService) {
+              private dataViewDataExplorerService: DataViewDataExplorerService) {
 
   }
 
@@ -90,7 +85,7 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
       fixedRowHeight: 100,
       fixedColWidth: 100,
       margin: 5,
-      displayGrid: "always",
+      displayGrid: this.editMode ? 'always' : 'none',
       resizable: {enabled: this.editMode},
       itemResizeCallback: ((item, itemComponent) => {
         this.resizeService.notify({
@@ -106,8 +101,15 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
         window.dispatchEvent(new Event('resize'));
       })
     };
+  }
 
+  @Input() set dashboard(dashboard: Dashboard) {
+    this._dashboard = dashboard;
     this.loadWidgetConfigs();
+  }
+
+  get dashboard() {
+    return this._dashboard;
   }
 
   loadWidgetConfigs() {
@@ -122,7 +124,7 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
       this.configuredWidgets.set(widgetId, response);
       this.dataViewDataExplorerService.getPersistedDataStream(response.pipelineId, response.measureName).subscribe(ps => {
         this.dataLakeMeasures.set(widgetId, ps);
-      })
+      });
     });
   }
 
@@ -149,14 +151,14 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
   }
 
   toggleGrid() {
-    this.options.displayGrid = this.options.displayGrid === "none" ? "always" : "none";
+    this.options.displayGrid = this.options.displayGrid === 'none' ? 'always' : 'none';
     this.options.api.optionsChanged();
   }
 
   updateAllWidgets() {
     this.configuredWidgets.forEach((value, key) => {
       this.dataViewDataExplorerService.updateWidget(value).subscribe();
-    })
+    });
   }
 
 }

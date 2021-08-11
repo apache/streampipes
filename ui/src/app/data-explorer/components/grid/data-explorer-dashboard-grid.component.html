@@ -22,7 +22,7 @@
 </div>
 <gridster [options]="options" [ngClass]="editMode ? 'edit' : ''" class="custom-gridster-style">
     <ng-container *ngFor="let item of dashboard.widgets;let i=index">
-        <gridster-item [item]="item" #gridsterItemComponent>
+        <gridster-item [item]="item" #gridsterItemComponent class="shadow">
             <sp-data-explorer-dashboard-widget
                     [timeSettings]="timeSettings"
                     (updateCallback)="propagateItemUpdate($event)"
