@@ -99,7 +99,6 @@ public class GenericTest implements Test{
             long migrationDuration = System.nanoTime() - beforeMigration;
             if(testType.equals("Migration")){
                 line = new Object[]{System.currentTimeMillis(), "Migration duration", nrRuns, migrationDuration, migrationDuration/1000000000.0,migrationNodes.a, migrationNodes.b, true};
-                evalLogger.logMQTT(testType, line);
             }
             System.out.println(migrationMessage.getTitle());
             if (!migrationMessage.isSuccess()) {
