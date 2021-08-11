@@ -28,6 +28,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.apache.streampipes.commons.exceptions.*;
 import org.apache.streampipes.manager.execution.status.PipelineStatusManager;
 import org.apache.streampipes.manager.operations.Operations;
+import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.client.exception.InvalidConnectionException;
 import org.apache.streampipes.model.message.Notification;
@@ -36,7 +37,6 @@ import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
-import org.apache.streampipes.rest.management.PipelineManagement;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,8 +44,6 @@ import org.slf4j.LoggerFactory;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Date;
-import java.util.UUID;
 
 @Path("/v2/users/{username}/pipelines")
 public class PipelineResource extends AbstractAuthGuardedRestResource {
@@ -75,8 +73,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
                                   array = @ArraySchema(schema = @Schema(implementation = Pipeline.class)))
                   })})
   public Response getOwn(@PathParam("username") String username) {
-    return ok(getUserService()
-            .getOwnPipelines(username));
+    return ok(PipelineManager.getOwnPipelines(username));
   }
 
   @GET
@@ -115,8 +112,8 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @JacksonSerialized
   @Operation(summary = "Delete a pipeline with a given id",
           tags = {"Pipeline"})
-  public Response removeOwn(@PathParam("username") String username, @PathParam("pipelineId") String elementUri) {
-    getPipelineStorage().deletePipeline(elementUri);
+  public Response removeOwn(@PathParam("username") String username, @PathParam("pipelineId") String pipelineId) {
+    PipelineManager.deletePipeline(pipelineId);
     return statusMessage(Notifications.success("Pipeline deleted"));
   }
 
@@ -127,7 +124,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @Operation(summary = "Get a specific pipeline with the given id",
           tags = {"Pipeline"})
   public Response getElement(@PathParam("username") String username, @PathParam("pipelineId") String pipelineId) {
-    return ok(getPipelineStorage().getPipeline(pipelineId));
+    return ok(PipelineManager.getPipeline(pipelineId));
   }
 
   @Path("/{pipelineId}/start")
@@ -138,9 +135,8 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
           tags = {"Pipeline"})
   public Response start(@PathParam("username") String username, @PathParam("pipelineId") String pipelineId) {
     try {
-      Pipeline pipeline = getPipelineStorage()
-              .getPipeline(pipelineId);
-      PipelineOperationStatus status = Operations.startPipeline(pipeline);
+      PipelineOperationStatus status = PipelineManager.startPipeline(pipelineId);
+
       return ok(status);
     } catch (Exception e) {
       e.printStackTrace();
@@ -158,8 +154,15 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
                        @PathParam("pipelineId") String pipelineId,
                        @QueryParam("forceStop") @DefaultValue("false") boolean forceStop) {
     logger.info("User: " + username + " stopped pipeline: " + pipelineId);
-    PipelineManagement pm = new PipelineManagement();
-    return pm.stopPipeline(pipelineId, forceStop);
+
+    try {
+      PipelineOperationStatus status = PipelineManager.stopPipeline(pipelineId, forceStop);
+      return ok(status);
+    } catch
+    (Exception e) {
+      e.printStackTrace();
+      return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
+    }
   }
 
   @POST
@@ -168,15 +171,8 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @Operation(summary = "Store a new pipeline",
           tags = {"Pipeline"})
   public Response addPipeline(@PathParam("username") String username, Pipeline pipeline) {
-    String pipelineId = UUID.randomUUID().toString();
-    pipeline.setPipelineId(pipelineId);
-    pipeline.setRunning(false);
-    pipeline.setCreatedByUser(username);
-    pipeline.setCreatedAt(new Date().getTime());
-    pipeline.getSepas().forEach(processor -> processor.setCorrespondingUser(username));
-    pipeline.getActions().forEach(action -> action.setCorrespondingUser(username));
-    //userService.addOwnPipeline(username, pipeline);
-    Operations.storePipeline(pipeline);
+
+    String pipelineId = PipelineManager.addPipeline(username, pipeline);
     SuccessMessage message = Notifications.success("Pipeline stored");
     message.addNotification(new Notification("id", pipelineId));
     return ok(message);

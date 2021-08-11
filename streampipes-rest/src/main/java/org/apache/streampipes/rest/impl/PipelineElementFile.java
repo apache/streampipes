@@ -26,9 +26,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Path("/v2/users/{username}/files")
 public class PipelineElementFile extends AbstractRestResource {
@@ -56,17 +53,8 @@ public class PipelineElementFile extends AbstractRestResource {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public Response getFileInfo(@QueryParam("filetypes") String filetypes) {
-    List<FileMetadata> allFiles = getFileMetadataStorage().getAllFileMetadataDescriptions();
-    return filetypes != null ? ok(filterFiletypes(allFiles, filetypes)) : ok(allFiles);
+    return ok(FileManager.getAllFiles(filetypes));
   }
 
-  private List<FileMetadata> filterFiletypes(List<FileMetadata> allFiles, String filetypes) {
-    return allFiles
-            .stream()
-            .filter(fileMetadata -> Arrays
-                    .stream(filetypes.split(","))
-                    .anyMatch(ft -> ft.equals(fileMetadata.getFiletype())))
-            .collect(Collectors.toList());
-  }
 
 }

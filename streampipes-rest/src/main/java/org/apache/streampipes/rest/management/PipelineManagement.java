@@ -27,6 +27,7 @@ import org.apache.streampipes.rest.impl.AbstractRestResource;
 
 import javax.ws.rs.core.Response;
 
+@Deprecated
 public class PipelineManagement extends AbstractRestResource {
 
     public Response stopPipeline(String pipelineId,

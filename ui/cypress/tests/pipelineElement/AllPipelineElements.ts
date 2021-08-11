@@ -18,16 +18,18 @@
 
 import { ProcessingElementTestUtils } from '../../support/utils/ProcessingElementTestUtils';
 import { ProcessorTest } from '../../support/model/ProcessorTest';
+import { AdapterUtils } from '../../support/utils/AdapterUtils';
 
 const allTests = Cypress.env('processingElements');
 
 allTests.forEach(test => {
-  describe('Test Processor ' + test['name'], () => {
-
-    it('Login', () => {
-      cy.login();
+  before('Setup Test', () => {
+    it('Initialize Test', () => {
+      cy.initStreamPipesTest();
     });
+  });
 
+  describe('Test Processor ' + test['name'], () => {
     const processorTest = test as ProcessorTest;
 
     ProcessingElementTestUtils.testElement(processorTest);

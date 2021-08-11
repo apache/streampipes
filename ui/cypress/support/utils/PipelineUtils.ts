@@ -25,8 +25,6 @@ export class PipelineUtils {
 
         PipelineUtils.addPipeline(pipelineInput);
 
-        PipelineUtils.deletePipeline();
-
     }
 
     public static addPipeline(pipelineInput: PipelineInput) {
@@ -43,7 +41,7 @@ export class PipelineUtils {
 
 
     private static goToPipelineEditor() {
-        it('Go to StreamPipes connect', () => {
+        it('Go to StreamPipes editor', () => {
             cy.visit('#/editor');
         });
     }

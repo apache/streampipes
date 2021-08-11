@@ -62,6 +62,7 @@ public class StreamPipesResourceConfig extends ResourceConfig {
         register(DataLakeNoUserResourceV3.class);
         register(DataStream.class);
         register(Deployment.class);
+        register(ExtensionsServiceEndpointResource.class);
         register(FileServingResource.class);
         register(InternalPipelineTemplates.class);
         register(LabelResource.class);
@@ -85,11 +86,11 @@ public class StreamPipesResourceConfig extends ResourceConfig {
         register(PipelineNoUserResource.class);
         register(PipelineTemplate.class);
         register(PipelineResource.class);
-        register(ExtensionsServiceEndpointResource.class);
         register(SemanticEventConsumer.class);
         register(SemanticEventProcessingAgent.class);
         register(SemanticEventProducer.class);
         register(Setup.class);
+        register(ResetResource.class);
         register(User.class);
         register(Version.class);
         register(PipelineElementAsset.class);

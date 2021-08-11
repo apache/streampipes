@@ -26,9 +26,21 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class FileManager {
+
+  public static List<FileMetadata> getAllFiles() {
+      return getAllFiles(null);
+  }
+
+  public static List<FileMetadata> getAllFiles(String filetypes) {
+    List<FileMetadata> allFiles = getFileMetadataStorage().getAllFileMetadataDescriptions();
+    return filetypes != null ? filterFiletypes(allFiles, filetypes) : allFiles;
+  }
 
   /**
    * Store a file in the internal file storage.
@@ -108,4 +120,12 @@ public class FileManager {
     return UUID.randomUUID().toString() + "." + filetype;
   }
 
+  private static List<FileMetadata> filterFiletypes(List<FileMetadata> allFiles, String filetypes) {
+    return allFiles
+            .stream()
+            .filter(fileMetadata -> Arrays
+                    .stream(filetypes.split(","))
+                    .anyMatch(ft -> ft.equals(fileMetadata.getFiletype())))
+            .collect(Collectors.toList());
+  }
 }

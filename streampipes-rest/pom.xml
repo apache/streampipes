@@ -90,6 +90,11 @@
             <artifactId>streampipes-user-management</artifactId>
             <version>0.69.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.streampipes</groupId>
+            <artifactId>streampipes-connect-container-master</artifactId>
+            <version>0.69.0-SNAPSHOT</version>
+        </dependency>
 
         <!-- External dependencies -->
         <dependency>

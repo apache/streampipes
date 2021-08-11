@@ -27,12 +27,13 @@ allTests.forEach(test => {
   const processorTest = test as ProcessorTest;
 
   if (processorTest.name === testName) {
-    describe('Test Processor ' + test.dir, () => {
-
-      it('Login', () => {
-        cy.login();
+    before('Setup Test', () => {
+      it('Initialize Test', () => {
+        cy.initStreamPipesTest();
       });
+    });
 
+    describe('Test Processor ' + test.dir, () => {
       ProcessingElementTestUtils.testElement(processorTest);
     });
   }

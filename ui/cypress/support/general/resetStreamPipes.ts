@@ -16,18 +16,16 @@
  *
  */
 
-package org.apache.streampipes.manager.pipeline;
+import { UserUtils } from '../utils/UserUtils';
 
-import org.apache.streampipes.manager.operations.Operations;
-import org.apache.streampipes.model.pipeline.Pipeline;
-import org.apache.streampipes.storage.management.StorageDispatcher;
-
-public class TestPipelineExecution {
-
-    public static void main(String[] args) {
-        Pipeline pipeline = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getPipeline
-                ("850c2850-a27c-4026-939c-171db57c50f0");
-
-        Operations.startPipeline(pipeline);
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      resetStreamPipes: typeof resetStreamPipes;
     }
+  }
 }
+
+export const resetStreamPipes = () => {
+  cy.request('POST', `/streampipes-backend/api/v2/users/${UserUtils.testUserName}/reset`, {});
+};
