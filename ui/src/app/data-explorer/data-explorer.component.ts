@@ -70,7 +70,6 @@ export class DataExplorerComponent implements OnInit {
       this.dashboardTabSelected = true;
       this.applyTimeSettings(this.dataViewDashboards[(index - 1)]);
       this.selectedDataViewDashboard = this.dataViewDashboards[(index - 1)];
-      console.log(this.selectedDataViewDashboard);
     }
   }
 
