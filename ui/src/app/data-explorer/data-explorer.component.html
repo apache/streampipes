@@ -26,18 +26,40 @@
                         <mat-tab *ngFor="let dataViewDashboard of dataViewDashboards" label="{{dataViewDashboard.name}}"></mat-tab>
                     </mat-tab-group>
                 </div>
+                <div fxFlex fxLayoutAlign="end center" *ngIf="selectedIndex > 0">
+                    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Options">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item (click)="editMode = true" *ngIf="!editMode">
+                            <mat-icon>edit</mat-icon>
+                            <span>Edit dashboard</span>
+                        </button>
+                        <button mat-menu-item (click)="getDashboards(selectedDataViewDashboard._id)">
+                            <mat-icon>refresh</mat-icon>
+                            <span>Reload dashboard</span>
+                        </button>
+                        <button mat-menu-item (click)="timeRangeVisible = true" *ngIf="!editMode && !timeRangeVisible">
+                            <mat-icon>alarm_on</mat-icon>
+                            <span>Show time range selector</span>
+                        </button>
+                        <button mat-menu-item (click)="timeRangeVisible = false" *ngIf="!editMode && timeRangeVisible">
+                            <mat-icon>alarm_off</mat-icon>
+                            <span>Hide time range selector</span>
+                        </button>
+                        <button mat-menu-item>
+                            <mat-icon>clear</mat-icon>
+                            <span>Delete dashboard</span>
+                        </button>
+                    </mat-menu>
+                </div>
             </div>
         </div>
     </div>
-    <div class="fixed-height data-explorer-options sp-tab-bg" fxLayout="row" *ngIf="selectedIndex > 0">
-        <div class="data-explorer-options-item pl-10" fxLayoutAlign="start center" fxLayout="row">
+    <div class="fixed-height data-explorer-options sp-tab-bg page-container-nav" fxLayout="row" *ngIf="selectedIndex > 0 && (editMode || timeRangeVisible)">
+        <div class="data-explorer-options-item pl-10" fxLayoutAlign="start center" fxLayout="row" *ngIf="editMode">
             <button mat-button mat-raised-button color="accent" matTooltip="Save" [matTooltipPosition]="'above'" (click)="saveDashboard()">
                 <mat-icon>save</mat-icon>&nbsp;<span>Save</span>
-            </button>
-        </div>
-        <div class="data-explorer-options-item" fxLayoutAlign="start center" fxLayout="row">
-            <button mat-button mat-raised-button color="accent" matTooltip="Add visualization" [matTooltipPosition]="'above'" (click)="addVisualization()">
-                <mat-icon>add</mat-icon>&nbsp;<span>Add visualization</span>
             </button>
         </div>
         <div class="data-explorer-options-item" fxLayoutAlign="end center" fxFlex fxLayout="row">

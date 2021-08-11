@@ -16,7 +16,7 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column" class="designer-panel-content">
+<div fxFlex="100" fxLayout="column" class="designer-panel-content" *ngIf="currentlyConfiguredWidget">
     <h4 *ngIf="currentlyConfiguredWidget">{{ currentlyConfiguredWidget.baseAppearanceConfig.widgetTitle }}</h4>
     <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectOptionsPanel($event)" color="accent"
                    class="small">
@@ -26,7 +26,7 @@
     </mat-tab-group>
 
     <div fxFlex="100" fxLayout="column">
-        <div class="designer-panel-config" *ngIf="currentlyConfiguredWidget">
+        <div class="designer-panel-config">
 
             <div *ngIf="selectedIndex == 0">
                 <sp-data-explorer-widget-data-settings [dataLakeMeasure]="dataLakeMeasure" [currentlyConfiguredWidget]="currentlyConfiguredWidget">
@@ -53,10 +53,13 @@
                 </sp-data-explorer-widget-appearance-settings>
             </div>
         </div>
-
-        <div class="designer-panel-config" *ngIf="!currentlyConfiguredWidget" fxFlex="100"
-             fxLayoutAlign="center center" fxLayout="column">
-            <span>Select a widget to open configuration options.</span>
-        </div>
     </div>
+</div>
+<div class="designer-panel-config" *ngIf="!currentlyConfiguredWidget" fxFlex="100"
+     fxLayoutAlign="center center" fxLayout="column">
+    <span class="text-center">Select a widget to open configuration options or add a new widget.</span>
+    <button mat-button color="accent" class="mt-10"
+            (click)="addWidget()">
+        <i class="material-icons">add</i><span>Add widget</span>
+    </button>
 </div>

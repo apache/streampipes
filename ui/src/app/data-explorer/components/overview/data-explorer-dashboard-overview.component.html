@@ -55,8 +55,20 @@
                         <td fxFlex="10" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
                             <div fxLayout="row">
                                 <button mat-button mat-icon-button color="accent"
-                                        (click)="showDashboard(element)">
+                                        (click)="showDashboard(element, false)">
                                     <i class="material-icons">visibility</i>
+                                </button>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="edit">
+                        <th fxFlex="10" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Edit</th>
+                        <td fxFlex="10" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
+                            <div fxLayout="row">
+                                <button mat-button mat-icon-button color="accent"
+                                        (click)="showDashboard(element, true)">
+                                    <i class="material-icons">edit</i>
                                 </button>
                             </div>
                         </td>

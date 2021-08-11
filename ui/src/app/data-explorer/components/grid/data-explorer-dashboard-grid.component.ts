@@ -38,8 +38,8 @@ import {
   DataLakeMeasure
 } from '../../../core-model/gen/streampipes-model';
 import { Tuple2 } from '../../../core-model/base/Tuple2';
-import { DatalakeRestService } from "../../../core-services/datalake/datalake-rest.service";
-import { Dashboard, DashboardItem, TimeSettings } from "../../../dashboard/models/dashboard.model";
+import { DatalakeRestService } from '../../../core-services/datalake/datalake-rest.service';
+import { Dashboard, DashboardItem, TimeSettings } from '../../../dashboard/models/dashboard.model';
 
 @Component({
   selector: 'sp-data-explorer-dashboard-grid',
@@ -90,7 +90,7 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
       fixedRowHeight: 100,
       fixedColWidth: 100,
       margin: 5,
-      displayGrid: "always",
+      displayGrid: this.editMode ? 'always' : 'none',
       resizable: {enabled: this.editMode},
       itemResizeCallback: ((item, itemComponent) => {
         this.resizeService.notify({
@@ -122,7 +122,7 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
       this.configuredWidgets.set(widgetId, response);
       this.dataViewDataExplorerService.getPersistedDataStream(response.pipelineId, response.measureName).subscribe(ps => {
         this.dataLakeMeasures.set(widgetId, ps);
-      })
+      });
     });
   }
 
@@ -149,14 +149,14 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
   }
 
   toggleGrid() {
-    this.options.displayGrid = this.options.displayGrid === "none" ? "always" : "none";
+    this.options.displayGrid = this.options.displayGrid === 'none' ? 'always' : 'none';
     this.options.api.optionsChanged();
   }
 
   updateAllWidgets() {
     this.configuredWidgets.forEach((value, key) => {
       this.dataViewDataExplorerService.updateWidget(value).subscribe();
-    })
+    });
   }
 
 }

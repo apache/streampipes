@@ -16,8 +16,8 @@
  *
  */
 
-import {Component, Input, OnInit} from '@angular/core';
-import {DataExplorerWidgetModel, DataLakeMeasure} from "../../../core-model/gen/streampipes-model";
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { DataExplorerWidgetModel, DataLakeMeasure } from '../../../core-model/gen/streampipes-model';
 
 @Component({
   selector: 'sp-data-explorer-designer-panel',
@@ -29,13 +29,19 @@ export class DataExplorerDesignerPanelComponent implements OnInit {
   @Input() currentlyConfiguredWidget: DataExplorerWidgetModel;
   @Input() dataLakeMeasure: DataLakeMeasure;
 
-  selectedIndex: number = 0;
+  @Output() addWidgetEmitter: EventEmitter<void> = new EventEmitter();
+
+  selectedIndex = 0;
 
   ngOnInit(): void {
   }
 
   selectOptionsPanel(index: number) {
     this.selectedIndex = index;
+  }
+
+  addWidget() {
+    this.addWidgetEmitter.emit();
   }
 
 }

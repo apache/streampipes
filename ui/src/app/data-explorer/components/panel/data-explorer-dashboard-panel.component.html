@@ -18,19 +18,20 @@
 
 <div fxFlex="100" fxLayout="column">
     <mat-drawer-container class="designer-panel-container h-100 dashboard-grid">
-        <mat-drawer #designerDrawer mode="side" position="end" class="designer-panel">
+        <mat-drawer #designerDrawer [opened]="editMode" mode="side" position="end" class="designer-panel">
             <div fxLayout="column" fxFlex>
                 <div fxLayout="row" class="sp-tab-bg designer-panel-header">
-                    <div fxLayoutAlign="start center" class="designer-panel-title">Configure widget</div>
+                    <div fxLayoutAlign="start center" class="designer-panel-title">Widget Configuration</div>
                     <div fxFlex fxLayoutAlign="end end">
-                        <button mat-button mat-icon-button (click)="closeDrawer()">
-                            <mat-icon>clear</mat-icon>
+                        <button mat-button mat-icon-button (click)="addWidget()">
+                            <mat-icon>add</mat-icon>
                         </button>
                     </div>
                 </div>
                 <sp-data-explorer-designer-panel
                         [currentlyConfiguredWidget]="currentlyConfiguredWidget"
                         [dataLakeMeasure]="dataLakeMeasure"
+                        (addWidgetEmitter)="addWidget()"
                         fxFlex="100">
 
                 </sp-data-explorer-designer-panel>

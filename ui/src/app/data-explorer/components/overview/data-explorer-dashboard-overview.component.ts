@@ -22,6 +22,7 @@ import {MatTableDataSource} from '@angular/material/table';
 import {DataExplorerEditDataViewDialogComponent} from '../../dialogs/edit-dashboard/data-explorer-edit-data-view-dialog.component';
 import {DataViewDataExplorerService} from '../../services/data-view-data-explorer.service';
 import {Dashboard} from "../../../dashboard/models/dashboard.model";
+import { Tuple2 } from '../../../core-model/base/Tuple2';
 
 @Component({
     selector: 'sp-data-explorer-dashboard-overview',
@@ -32,10 +33,10 @@ export class DataExplorerDashboardOverviewComponent implements OnInit {
 
     @Input() dataViewDashboards: Dashboard[];
     @Output() reloadDashboardsEmitter = new EventEmitter<void>();
-    @Output() selectDashboardEmitter = new EventEmitter<Dashboard>();
+    @Output() selectDashboardEmitter = new EventEmitter<Tuple2<Dashboard, boolean>>();
 
     dataSource = new MatTableDataSource<Dashboard>();
-    displayedColumns: string[] = ['name', 'open', 'delete'];
+    displayedColumns: string[] = ['name', 'open', 'edit', 'delete'];
 
     editLabels: boolean;
 
@@ -84,8 +85,8 @@ export class DataExplorerDashboardOverviewComponent implements OnInit {
         });
     }
 
-    showDashboard(dashboard: Dashboard) {
-        this.selectDashboardEmitter.emit(dashboard);
+    showDashboard(dashboard: Dashboard, editMode: boolean) {
+        const dashboardSettings: Tuple2<Dashboard, boolean> = {a: dashboard, b: editMode};
+        this.selectDashboardEmitter.emit(dashboardSettings);
     }
-
 }

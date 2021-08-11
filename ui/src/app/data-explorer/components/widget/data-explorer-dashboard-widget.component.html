@@ -16,18 +16,18 @@
   ~
   -->
 
-<div class="h-100">
+<div class="h-100 shadow">
     <div class="box" [ngStyle]="{background: configuredWidget.baseAppearanceConfig.backgroundColor, color: configuredWidget.baseAppearanceConfig.textColor}">
         <div class="widget-header">
-        <div class="m-0 row header h-40" *ngIf="editMode">
+        <div class="m-0 row header h-40">
             <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center" class="widget-header-text">
                 {{ configuredWidget.baseAppearanceConfig.widgetTitle }}
             </div>
-            <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center" *ngIf="editMode">
-                <button mat-icon-button (click)="triggerWidgetEditMode()">
+            <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
+                <button mat-icon-button (click)="triggerWidgetEditMode()" *ngIf="editMode">
                     <mat-icon>edit</mat-icon>
                 </button>
-                <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="More options">
                     <mat-icon>more_vert</mat-icon>
                 </button>
                 <mat-menu #menu="matMenu">
@@ -35,7 +35,7 @@
                         <mat-icon>get_app</mat-icon>
                         <span>Download data</span>
                     </button>
-                    <button mat-menu-item (click)="removeWidget()">
+                    <button mat-menu-item (click)="removeWidget()" *ngIf="editMode">
                         <mat-icon>clear</mat-icon>
                         <span>Delete widget</span>
                     </button>

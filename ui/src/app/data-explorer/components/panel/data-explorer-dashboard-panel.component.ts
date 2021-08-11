@@ -16,17 +16,20 @@
  *
  */
 
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {MatDialog} from '@angular/material/dialog';
-import {Observable, Subscription} from 'rxjs';
-import {DataExplorerAddVisualizationDialogComponent} from '../../dialogs/add-widget/data-explorer-add-visualization-dialog.component';
-import {DataViewDataExplorerService} from '../../services/data-view-data-explorer.service';
-import {RefreshDashboardService} from '../../services/refresh-dashboard.service';
-import {DataExplorerWidgetModel, DataLakeMeasure} from "../../../core-model/gen/streampipes-model";
-import {DataExplorerDashboardGridComponent} from "../grid/data-explorer-dashboard-grid.component";
-import {MatDrawer} from "@angular/material/sidenav";
-import {Tuple2} from "../../../core-model/base/Tuple2";
-import {Dashboard, DashboardItem, TimeSettings} from "../../../dashboard/models/dashboard.model";
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { Observable, Subscription } from 'rxjs';
+import { DataExplorerAddVisualizationDialogComponent } from '../../dialogs/add-widget/data-explorer-add-visualization-dialog.component';
+import { DataViewDataExplorerService } from '../../services/data-view-data-explorer.service';
+import { RefreshDashboardService } from '../../services/refresh-dashboard.service';
+import {
+  DataExplorerWidgetModel,
+  DataLakeMeasure
+} from '../../../core-model/gen/streampipes-model';
+import { DataExplorerDashboardGridComponent } from '../grid/data-explorer-dashboard-grid.component';
+import { MatDrawer } from '@angular/material/sidenav';
+import { Tuple2 } from '../../../core-model/base/Tuple2';
+import { Dashboard, DashboardItem, TimeSettings } from '../../../dashboard/models/dashboard.model';
 
 @Component({
   selector: 'sp-data-explorer-dashboard-panel',
@@ -35,27 +38,20 @@ import {Dashboard, DashboardItem, TimeSettings} from "../../../dashboard/models/
 })
 export class DataExplorerDashboardPanelComponent implements OnInit {
 
-  @Input()
-  dashboard: Dashboard;
+  @Input() dashboard: Dashboard;
 
   /**
    * This is the date range (start, end) to view the data and is set in data-explorer.ts
    */
-  @Input()
-  timeSettings: TimeSettings;
+  @Input() timeSettings: TimeSettings;
+  @Input() editMode: boolean;
 
-  @Input('editMode')
-  editMode: boolean;
-
-  @Output('editModeChange')
-  editModeChange: EventEmitter<boolean> = new EventEmitter();
+  @Output() editModeChange: EventEmitter<boolean> = new EventEmitter();
 
   @ViewChild('dashboardGrid') dashboardGrid: DataExplorerDashboardGridComponent;
   @ViewChild('designerDrawer') designerDrawer: MatDrawer;
 
   public items: Dashboard[];
-
-  protected subscription: Subscription;
 
   widgetIdsToRemove: string[] = [];
   widgetsToUpdate: Map<string, DataExplorerWidgetModel> = new Map<string, DataExplorerWidgetModel>();
@@ -155,15 +151,9 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
     this.dashboardGrid.toggleGrid();
   }
 
-  closeDrawer() {
-    this.designerDrawer.close();
-    this.dashboardGrid.options.api.optionsChanged();
-  }
-
   updateCurrentlyConfiguredWidget(currentWidget: Tuple2<DataExplorerWidgetModel, DataLakeMeasure>) {
     this.widgetsToUpdate.set(currentWidget.a._id, currentWidget.a);
     this.currentlyConfiguredWidget = currentWidget.a;
     this.dataLakeMeasure = currentWidget.b;
-    this.designerDrawer.open();
   }
 }

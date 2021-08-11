@@ -16,11 +16,12 @@
  *
  */
 
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {DataViewDataExplorerService} from './services/data-view-data-explorer.service';
-import {RefreshDashboardService} from './services/refresh-dashboard.service';
-import {DataExplorerDashboardPanelComponent} from "./components/panel/data-explorer-dashboard-panel.component";
-import {Dashboard, TimeSettings} from "../dashboard/models/dashboard.model";
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { DataViewDataExplorerService } from './services/data-view-data-explorer.service';
+import { RefreshDashboardService } from './services/refresh-dashboard.service';
+import { DataExplorerDashboardPanelComponent } from './components/panel/data-explorer-dashboard-panel.component';
+import { Dashboard, TimeSettings } from '../dashboard/models/dashboard.model';
+import { Tuple2 } from '../core-model/base/Tuple2';
 
 @Component({
   selector: 'sp-data-explorer',
@@ -33,9 +34,10 @@ export class DataExplorerComponent implements OnInit {
   selectedIndex = 0;
   dashboardsLoaded = false;
   dashboardTabSelected = false;
+  timeRangeVisible = true;
 
   editMode = true;
-  gridVisible: boolean = true;
+  gridVisible = true;
 
   dataViewDashboards: Dashboard[];
 
@@ -54,8 +56,9 @@ export class DataExplorerComponent implements OnInit {
 
   }
 
-  openDashboard(dashboard: Dashboard) {
-    const index = this.dataViewDashboards.indexOf(dashboard);
+  openDashboard(dashboard: Tuple2<Dashboard, boolean>) {
+    this.editMode = dashboard.b;
+    const index = this.dataViewDashboards.indexOf(dashboard.a);
     this.selectDashboard((index + 1));
   }
 
