@@ -123,7 +123,6 @@ public class GenericTest implements Test{
             PipelineOperationStatus message = client.pipelines().reconfigure(pipeline);
             System.out.println(message.getTitle());
             if (!message.isSuccess()) {
-                assert line != null;
                 line[line.length -1] = false;
             }
         }
@@ -151,9 +150,10 @@ public class GenericTest implements Test{
                 line[line.length -1] = false;
             }
         }
+        assert line != null;
         evalLogger.logMQTT(testType, line);
         try {
-            Thread.sleep(5000);
+            Thread.sleep(10000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

@@ -47,7 +47,7 @@ public class OffloadingStrategyFactory {
                 return Collections.singletonList(new OffloadingStrategy<Float>(
                         new ThresholdViolationOffloadingPolicy<>(5,
                                 Comparator.GREATER, 0.5f, 1),
-                        new CPULoadResourceProperty(), new PrioritySelectionStrategy()));
+                        new CPULoadResourceProperty(), new RandomSelectionStrategy()));
             default:
                 return getDefaultStrategy();
         }

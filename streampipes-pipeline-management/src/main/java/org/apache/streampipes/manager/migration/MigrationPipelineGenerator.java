@@ -96,6 +96,10 @@ public class MigrationPipelineGenerator {
 
     private boolean nodeTagsContainElementTag(List<String> pipelineNodeTags,
                                               NodeInfoDescription node){
+        if (pipelineNodeTags == null || pipelineNodeTags.isEmpty())
+            return true;
+        if (node.getStaticNodeMetadata().getLocationTags().isEmpty())
+            return false;
         return node.getStaticNodeMetadata().getLocationTags().stream().anyMatch(pipelineNodeTags::contains);
     }
 

@@ -49,7 +49,7 @@ public class TestFactory {
 
     public static Test getDeploymentTest(){
         return new GenericTest(getPipelineName(), true, false,
-                false, 0, 10000);
+                false, 0, 15000);
     }
 
     public static Test getLatencyTest(){
