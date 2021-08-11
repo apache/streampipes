@@ -112,7 +112,6 @@
             <artifactId>streampipes-user-management</artifactId>
             <version>0.69.0-SNAPSHOT</version>
         </dependency>
-
         <!-- External dependencies -->
         <dependency>
             <groupId>org.apache.maven.shared</groupId>
