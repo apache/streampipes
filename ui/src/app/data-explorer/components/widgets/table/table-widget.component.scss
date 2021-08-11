@@ -21,6 +21,7 @@
 .table-widget {
     width: 100%;
     background: inherit;
+    color: inherit;
 }
 
 .title-panel {
@@ -34,4 +35,12 @@
 
 tr.mat-row, tr.mat-footer-row {
     height: 24px;
+}
+
+.table-widget .mat-cell {
+    color: inherit;
+}
+
+.table-widget .mat-header-cell {
+    color: inherit;
 }
