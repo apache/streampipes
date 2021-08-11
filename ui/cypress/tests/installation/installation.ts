@@ -18,11 +18,13 @@
 
 import { UserUtils } from '../../support/utils/UserUtils';
 
-describe('Install StreamPipes', () => {
+before('Setup Test', () => {
   it('Open Streampipes', () => {
     cy.visit('#/login');
   });
+});
 
+describe('Install StreamPipes', () => {
   let isSetupPage: boolean;
 
   it('Install StreamPipes', () => {

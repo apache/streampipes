@@ -80,10 +80,5 @@ export class ProcessingElementTestUtils {
 
         DataLakeUtils.checkResults(dataLakeIndex, 'cypress/fixtures/' + expectedResultFile);
 
-        // PipelineUtils.deletePipeline();
-
-        // AdapterUtils.deleteAdapter();
-
-        // FileManagementUtils.deleteFile();
     }
 }

@@ -18,17 +18,13 @@
 
 import { FileManagementUtils } from '../../support/utils/FileManagementUtils';
 
+before('Setup Test', () => {
+    it('Initialize Test', () => {
+        cy.initStreamPipesTest();
+    });
+});
+
 describe('Test File Management', () => {
-    it('Login', () => {
-        cy.login();
-    });
-
-    FileManagementUtils.addFile('fileTest/test.csv')
-
-    FileManagementUtils.deleteFile()
-
-    it('Logout', () => {
-        cy.logout();
-    });
-
+    FileManagementUtils.addFile('fileTest/test.csv');
+    FileManagementUtils.deleteFile();
 });

@@ -18,6 +18,13 @@
 
 import { AdapterUtils } from '../../support/utils/AdapterUtils';
 import { SpecificAdapterBuilder } from '../../support/builder/SpecificAdapterBuilder';
+import { FileManagementUtils } from '../../support/utils/FileManagementUtils';
+
+before('Setup Test', () => {
+    it('Initialize Test', () => {
+        cy.initStreamPipesTest();
+    });
+});
 
 describe('Test Random Data Simulator Stream Adapter', () => {
     const adapterInput = SpecificAdapterBuilder

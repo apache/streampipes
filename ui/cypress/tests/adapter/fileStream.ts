@@ -20,14 +20,15 @@ import { AdapterUtils } from '../../support/utils/AdapterUtils';
 import { FileManagementUtils } from '../../support/utils/FileManagementUtils';
 import { GenericAdapterBuilder } from '../../support/builder/GenericAdapterBuilder';
 
-describe('Test File Stream Adapter', () => {
-
-    it('Login', () => {
-        cy.login();
+before('Setup Test', () => {
+    it('Initialize Test', () => {
+        cy.initStreamPipesTest();
     });
 
     FileManagementUtils.addFile('fileTest/random.csv');
+});
 
+describe('Test File Stream Adapter', () => {
     const adapterInput = GenericAdapterBuilder
         .create('File_Stream')
         .setName('File Stream Adapter Test')

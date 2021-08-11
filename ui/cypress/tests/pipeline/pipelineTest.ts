@@ -32,7 +32,6 @@ before('Setup Test', () => {
 });
 
 describe('Test Random Data Simulator Stream Adapter', () => {
-
  const pipelineInput = PipelineBuilder.create('Pipeline Test')
     .addSource(adapterName)
     .addProcessingElement(
