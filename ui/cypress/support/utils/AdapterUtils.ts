@@ -96,10 +96,6 @@ export class AdapterUtils {
     }
 
     private static goToConnect() {
-        it('Login', () => {
-            cy.login();
-        });
-
         it('Go to StreamPipes connect', () => {
             cy.visit('#/connect');
         });

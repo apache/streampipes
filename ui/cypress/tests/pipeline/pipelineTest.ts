@@ -21,29 +21,33 @@ import { PipelineUtils } from '../../support/utils/PipelineUtils';
 import { PipelineElementBuilder } from '../../support/builder/PipelineElementBuilder';
 import { PipelineBuilder } from '../../support/builder/PipelineBuilder';
 
+const adapterName = 'simulator';
+
+before('Setup Test', () => {
+  it('Login', () => {
+    cy.login();
+  });
+
+  AdapterUtils.addMachineDataSimulator(adapterName);
+});
+
 describe('Test Random Data Simulator Stream Adapter', () => {
 
-    it('Login', () => {
-        cy.login();
-    });
+ const pipelineInput = PipelineBuilder.create('Pipeline Test')
+    .addSource(adapterName)
+    .addProcessingElement(
+      PipelineElementBuilder.create('field_renamer')
+        .addInput('drop-down', 'convert-property', 'timestamp')
+        .addInput('input', 'field-name', 't')
+        .build())
+    .addSink(
+      PipelineElementBuilder.create('dashboard_sink')
+        .addInput('input', 'visualization-name', 'Demo')
+        .build())
+    .build();
 
-    const adapterName = 'simulator';
-    AdapterUtils.addMachineDataSimulator(adapterName);
+  PipelineUtils.testPipeline(pipelineInput);
 
-    const pipelineInput = PipelineBuilder.create('Pipeline Test')
-        .addSource(adapterName)
-        .addProcessingElement(
-            PipelineElementBuilder.create('field_renamer')
-                .addInput('drop-down', 'convert-property', 'timestamp')
-                .addInput('input', 'field-name', 't')
-                .build())
-        .addSink(
-            PipelineElementBuilder.create('dashboard_sink')
-                .addInput('input', 'visualization-name', 'Demo')
-                .build())
-        .build();
-
-    PipelineUtils.testPipeline(pipelineInput);
-
-    AdapterUtils.deleteAdapter();
+  AdapterUtils.deleteAdapter();
 });
+
