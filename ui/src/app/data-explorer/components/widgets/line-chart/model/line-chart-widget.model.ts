@@ -37,6 +37,7 @@ export interface LineChartDataConfig {
   xKey: string;
   backgroundColorPropertyKey: string;
   labelingModeOn: boolean;
+  chartMode: string;
 }
 
 export interface LineChartWidgetModel extends DataExplorerWidgetModel {

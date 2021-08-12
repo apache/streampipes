@@ -34,7 +34,6 @@
                 </sp-data-explorer-widget-data-settings>
             </div>
             <div *ngIf="selectedIndex == 1">
-                Visualization
                 <div *ngIf="currentlyConfiguredWidget.widgetType === 'table'" class="h-100 p-0">
                     <sp-data-explorer-table-widget-config [currentlyConfiguredWidget]="currentlyConfiguredWidget" [dataLakeMeasure]="dataLakeMeasure">
 
@@ -48,6 +47,7 @@
             </div>
             <div *ngIf="selectedIndex == 2">
                 <sp-data-explorer-widget-appearance-settings
+                        [widgetId]="currentlyConfiguredWidget._id"
                         [baseAppearanceConfig]="currentlyConfiguredWidget.baseAppearanceConfig">
 
                 </sp-data-explorer-widget-appearance-settings>

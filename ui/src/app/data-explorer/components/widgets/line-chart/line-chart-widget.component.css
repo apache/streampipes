@@ -30,7 +30,7 @@
 .plotly-container {
     width: 100%;
     align-self:start;
-    height: calc(100% - 40px);
+    height: 100%;
 }
 .labeling-active {
     width: 85%;

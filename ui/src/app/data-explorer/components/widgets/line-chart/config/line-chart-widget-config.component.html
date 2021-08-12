@@ -17,6 +17,16 @@
   -->
 
 <div fxFlex="100" fxLayout="column" class="ml-0 mr-0">
+
+    <mat-form-field color="accent" fxFlex="100">
+        <mat-label>Mode</mat-label>
+        <mat-select [(value)]="currentlyConfiguredWidget.dataConfig.chartMode" (selectionChange)="triggerViewRefresh()">
+            <mat-option [value]="'lines'">Line</mat-option>
+            <mat-option [value]="'markers'">Dots</mat-option>
+            <mat-option [value]="'lines+markers'">Line+Dots</mat-option>
+        </mat-select>
+    </mat-form-field>
+
     <sp-select-properties
             label="Select Properties"
             multiple=true

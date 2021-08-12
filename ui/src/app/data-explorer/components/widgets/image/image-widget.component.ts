@@ -25,6 +25,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {EventPropertyUnion, EventSchema} from '../../../../core-model/gen/streampipes-model';
 import {ImageWidgetModel} from "./model/image-widget.model";
 import {WidgetConfigurationService} from "../../../services/widget-configuration.service";
+import { ResizeService } from '../../../services/resize.service';
 
 @Component({
   selector: 'sp-data-explorer-image-widget',
@@ -47,8 +48,9 @@ export class ImageWidgetComponent extends BaseDataExplorerWidget<ImageWidgetMode
   constructor(
       protected dataLakeRestService: DatalakeRestService,
       protected dialog: MatDialog,
-      widgetConfigurationService: WidgetConfigurationService) {
-    super(dataLakeRestService, dialog, widgetConfigurationService);
+      widgetConfigurationService: WidgetConfigurationService,
+      resizeService: ResizeService) {
+    super(dataLakeRestService, dialog, widgetConfigurationService, resizeService);
   }
 
   ngOnInit(): void {

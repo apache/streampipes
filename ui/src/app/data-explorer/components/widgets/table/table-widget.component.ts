@@ -25,6 +25,7 @@ import {DatalakeRestService} from '../../../../core-services/datalake/datalake-r
 import {BaseDataExplorerWidget} from '../base/base-data-explorer-widget';
 import {WidgetConfigurationService} from "../../../services/widget-configuration.service";
 import {TableWidgetModel} from "./model/table-widget.model";
+import { ResizeService } from '../../../services/resize.service';
 
 @Component({
   selector: 'sp-data-explorer-table-widget',
@@ -35,16 +36,13 @@ export class TableWidgetComponent extends BaseDataExplorerWidget<TableWidgetMode
 
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
-  //availableColumns: EventPropertyUnion[];
-  //selectedColumns: EventPropertyUnion[];
-  //columnNames: string[];
-
   dataSource = new MatTableDataSource();
 
   constructor(protected dataLakeRestService: DatalakeRestService,
               protected dialog: MatDialog,
-              widgetConfigurationService: WidgetConfigurationService) {
-    super(dataLakeRestService, dialog, widgetConfigurationService);
+              widgetConfigurationService: WidgetConfigurationService,
+              resizeService: ResizeService) {
+    super(dataLakeRestService, dialog, widgetConfigurationService, resizeService);
   }
 
   ngOnInit(): void {

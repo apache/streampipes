@@ -72,5 +72,4 @@ export class LineChartWidgetConfigComponent extends BaseWidgetConfig<LineChartWi
   toggleLabelingMode() {
     //this.triggerViewRefresh();
   }
-
 }
