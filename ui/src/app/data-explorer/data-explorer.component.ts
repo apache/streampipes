@@ -117,4 +117,8 @@ export class DataExplorerComponent implements OnInit {
   toggleGrid() {
     this.dashboardPanel.toggleGrid(this.gridVisible);
   }
+
+  triggerEditMode() {
+    this.editMode = true;
+  }
 }

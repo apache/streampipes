@@ -31,7 +31,7 @@
                         <mat-icon>more_vert</mat-icon>
                     </button>
                     <mat-menu #menu="matMenu">
-                        <button mat-menu-item (click)="editMode = true" *ngIf="!editMode">
+                        <button mat-menu-item (click)="triggerEditMode()" *ngIf="!editMode">
                             <mat-icon>edit</mat-icon>
                             <span>Edit dashboard</span>
                         </button>

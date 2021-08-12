@@ -22,6 +22,7 @@
 
         <sp-no-data-in-date-range *ngIf="showNoDataInDateRange" [viewDateRange]="timeSettings"></sp-no-data-in-date-range>
 
+    <div class="table-container">
         <table
             mat-table
             mat-sort
@@ -54,5 +55,5 @@
             <tr mat-row *matRowDef="let row; columns: dataExplorerWidget.dataConfig.columnNames;"></tr>
 
         </table>
-
+    </div>
 </div>

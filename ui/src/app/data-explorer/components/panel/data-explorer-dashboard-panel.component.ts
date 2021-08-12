@@ -18,7 +18,7 @@
 
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { DataExplorerAddVisualizationDialogComponent } from '../../dialogs/add-widget/data-explorer-add-visualization-dialog.component';
 import { DataViewDataExplorerService } from '../../services/data-view-data-explorer.service';
 import { RefreshDashboardService } from '../../services/refresh-dashboard.service';
@@ -66,6 +66,10 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
 
   public ngOnInit() {
 
+  }
+
+  triggerResize() {
+    window.dispatchEvent(new Event('resize'));
   }
 
   addWidget(): void {

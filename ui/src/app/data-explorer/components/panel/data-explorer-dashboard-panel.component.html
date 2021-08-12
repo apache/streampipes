@@ -18,8 +18,8 @@
 
 <div fxFlex="100" fxLayout="column">
     <mat-drawer-container class="designer-panel-container h-100 dashboard-grid">
-        <mat-drawer #designerDrawer [opened]="editMode" mode="side" position="end" class="designer-panel">
-            <div fxLayout="column" fxFlex>
+        <mat-drawer #designerDrawer [opened]="editMode" mode="side" position="end" class="designer-panel" (opened)="triggerResize()">
+            <div fxLayout="column" fxFlex="100">
                 <div fxLayout="row" class="sp-tab-bg designer-panel-header">
                     <div fxLayoutAlign="start center" class="designer-panel-title">Widget Configuration</div>
                     <div fxFlex fxLayoutAlign="end end">
