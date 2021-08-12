@@ -27,14 +27,15 @@ allTests.forEach(test => {
   const processorTest = test as ProcessorTest;
 
   if (processorTest.name === testName) {
-    before('Setup Test', () => {
-      it('Initialize Test', () => {
-        cy.initStreamPipesTest();
-      });
-    });
 
     describe('Test Processor ' + test.dir, () => {
-      ProcessingElementTestUtils.testElement(processorTest);
+      before('Setup Test', () => {
+        cy.initStreamPipesTest();
+      });
+
+      it('Initialize Test', () => {
+        ProcessingElementTestUtils.testElement(processorTest);
+      });
     });
   }
 });

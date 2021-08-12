@@ -22,7 +22,10 @@
             <div fxFlex fxLayoutAlign="start center" [attr.id]="'peType'">
                 <mat-tab-group [selectedIndex]="selectedIndex"
                                (selectedIndexChange)="selectPipelineElements($event)" color="accent">
-                    <mat-tab *ngFor="let tab of tabs" label="{{tab.title}}"></mat-tab>
+                    <mat-tab
+                            *ngFor="let tab of tabs"
+                            [attr.id]="tab.shorthand"
+                            label="{{tab.title}}"></mat-tab>
                 </mat-tab-group>
             </div>
             <div fxFlex="30" fxLayout="row" fxLayoutAlign="end center" style="padding-left:10px;font-size:14px;line-height:24px;">

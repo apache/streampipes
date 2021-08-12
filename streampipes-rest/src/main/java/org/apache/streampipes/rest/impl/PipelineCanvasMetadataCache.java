@@ -17,29 +17,29 @@
  */
 package org.apache.streampipes.rest.impl;
 
+import org.apache.streampipes.manager.pipeline.PipelineCanvasMetadataCacheManager;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Path("/v2/users/{username}/pipeline-canvas-cache")
 public class PipelineCanvasMetadataCache extends AbstractRestResource {
-
-  private static ConcurrentHashMap<String, String> cachedCanvasMetadata = new ConcurrentHashMap<>();
 
   @POST
   @Produces(MediaType.APPLICATION_JSON)
   public Response updateCachedCanvasMetadata(@PathParam("username") String user,
                                              String canvasMetadata) {
-    cachedCanvasMetadata.put(user, canvasMetadata);
+    PipelineCanvasMetadataCacheManager.updateCachedCanvasMetadata(user, canvasMetadata);
     return ok();
   }
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public Response getCachedCanvasMetadata(@PathParam("username") String user) {
-    if (cachedCanvasMetadata.containsKey(user)) {
-      return ok(cachedCanvasMetadata.get(user));
+      String result = PipelineCanvasMetadataCacheManager.getCachedCanvasMetadata(user);
+    if (result != null) {
+      return ok(result);
     } else {
       return ok();
     }
@@ -48,7 +48,7 @@ public class PipelineCanvasMetadataCache extends AbstractRestResource {
   @DELETE
   @Produces(MediaType.APPLICATION_JSON)
   public Response removeCanvasMetadataFromCache(@PathParam("username") String user) {
-    cachedCanvasMetadata.remove(user);
+    PipelineCanvasMetadataCacheManager.removeCanvasMetadataFromCache(user);
     return ok();
   }
 }
