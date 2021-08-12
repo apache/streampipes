@@ -21,6 +21,8 @@ package org.apache.streampipes.connect.container.master.general;
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.management.AdapterMasterManagement;
 import org.apache.streampipes.manager.file.FileManager;
+import org.apache.streampipes.manager.pipeline.PipelineCacheManager;
+import org.apache.streampipes.manager.pipeline.PipelineCanvasMetadataCacheManager;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.model.client.file.FileMetadata;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -38,11 +40,16 @@ public class ResetManagement {
     private static final Logger logger = LoggerFactory.getLogger(ResetManagement.class);
 
     /**
-     * Remove all configurations for this user. This includes [pipelines, adapters, files]
+     * Remove all configurations for this user. This includes:
+     * [pipeline assembly cache, pipelines, adapters, files]
      * @param username
      */
     public static void reset(String username) {
         logger.info("Start resetting the system");
+
+        // Clear pipeline assembly Cache
+        PipelineCacheManager.removeCachedPipeline(username);
+        PipelineCanvasMetadataCacheManager.removeCanvasMetadataFromCache(username);
 
         // Stop and delete all pipelines
         List<Pipeline> allPipelines = PipelineManager.getOwnPipelines(username);

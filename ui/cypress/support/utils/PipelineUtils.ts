@@ -31,11 +31,10 @@ export class PipelineUtils {
 
     PipelineUtils.goToPipelineEditor();
 
+    // if data source type is data set, switch to this tab
     if (pipelineInput.dataSourceType === 'set') {
       cy.contains('Data Sets', { timeout: 10000 }).parent().click();
     }
-
-    // If data set go to data set tab
 
     PipelineUtils.selectDataStream(pipelineInput);
 
