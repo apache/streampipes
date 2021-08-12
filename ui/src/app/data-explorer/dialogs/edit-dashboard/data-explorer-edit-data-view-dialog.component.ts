@@ -16,23 +16,23 @@
  *
  */
 
-import {Component, OnInit} from '@angular/core';
-import {MatDialogRef} from '@angular/material/dialog';
-import {DataViewDataExplorerService} from '../../services/data-view-data-explorer.service';
-import {Dashboard} from "../../../dashboard/models/dashboard.model";
+import { Component, Input, OnInit } from '@angular/core';
+import { DataViewDataExplorerService } from '../../services/data-view-data-explorer.service';
+import { Dashboard } from '../../../dashboard/models/dashboard.model';
+import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
 
 @Component({
     selector: 'sp-data-explorer-edit-data-view-dialog-component',
     templateUrl: './data-explorer-edit-data-view-dialog.component.html',
-    styleUrls: ['./data-explorer-edit-data-view-dialog.component.css']
+    styleUrls: ['./data-explorer-edit-data-view-dialog.component.scss']
 })
 export class DataExplorerEditDataViewDialogComponent implements OnInit {
 
-    createMode: boolean;
-    dashboard: Dashboard;
+    @Input() createMode: boolean;
+    @Input() dashboard: Dashboard;
 
     constructor(
-        public dialogRef: MatDialogRef<DataExplorerEditDataViewDialogComponent>,
+        private dialogRef: DialogRef<DataExplorerEditDataViewDialogComponent>,
         private dashboardService: DataViewDataExplorerService) {
     }
 
@@ -46,11 +46,14 @@ export class DataExplorerEditDataViewDialogComponent implements OnInit {
 
     onSave(): void {
         if (this.createMode) {
-            this.dashboardService.saveDataView(this.dashboard).subscribe();
+            this.dashboardService.saveDataView(this.dashboard).subscribe(() => {
+                this.dialogRef.close();
+            });
         } else {
-            this.dashboardService.updateDashboard(this.dashboard).subscribe();
+            this.dashboardService.updateDashboard(this.dashboard).subscribe( () => {
+                this.dialogRef.close();
+            });
         }
-        this.dialogRef.close();
     }
 
 

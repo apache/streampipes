@@ -16,40 +16,33 @@
 ~
 -->
 
-<mat-toolbar>
-    <div class="md-toolbar-tools">
-        <h2>{{createMode ? 'New Data View' : 'Edit Data View'}}</h2>
-        <span fxFlex></span>
-        <button mat-icon-button (click)="onCancel()">
-            <i class="material-icons">close</i>
-        </button>
-    </div>
-</mat-toolbar>
-<mat-divider></mat-divider>
-<div mat-dialog-content class="md-dialog-content">
-    <div fxFlex="100">
-        <div fxFlex="100" fxLayout="column" style="margin:5px;width:100%">
-            <mat-form-field class="full-width">
-                <mat-label>Data View Name</mat-label>
-                <input matInput [(ngModel)]="dashboard.name">
-            </mat-form-field>
-            <mat-form-field class="full-width">
-                <mat-label>Description</mat-label>
-                <input matInput [(ngModel)]="dashboard.description">
-            </mat-form-field>
-            <!--<mat-checkbox [(ngModel)]="dashboard.displayHeader">Show name and description in dashboard</mat-checkbox>-->
+<div class="sp-dialog-container">
+    <div class="sp-dialog-content p-15">
+        <div fxFlex="100">
+            <div fxFlex="100" fxLayout="column" style="margin:5px;width:100%">
+                <mat-form-field class="full-width" color="accent">
+                    <mat-label>Data View Name</mat-label>
+                    <input matInput [(ngModel)]="dashboard.name">
+                </mat-form-field>
+                <mat-form-field class="full-width" color="accent">
+                    <mat-label>Description</mat-label>
+                    <input matInput [(ngModel)]="dashboard.description">
+                </mat-form-field>
+                <!--<mat-checkbox [(ngModel)]="dashboard.displayHeader">Show name and description in dashboard</mat-checkbox>-->
 
+            </div>
         </div>
     </div>
-</div>
-<mat-divider></mat-divider>
-<div mat-dialog-actions fxLayout="row" fxLayoutAlign="end center">
-    <button mat-button mat-raised-button class="mat-basic" (click)="onCancel()">
-        Cancel
-    </button>
-    <button mat-button mat-raised-button color="primary" (click)="onSave()">
-        {{createMode ? 'Create' : 'Save'}}
-    </button>
+    <mat-divider></mat-divider>
+    <div class="sp-dialog-actions actions-align-right">
+        <button mat-button mat-raised-button class="mat-basic mr-10"
+                (click)="onCancel()">
+            Close
+        </button>
+        <button mat-button mat-raised-button color="accent" (click)="onSave()">
+            {{createMode ? 'Create' : 'Save'}}
+        </button>
+    </div>
 </div>
 
 

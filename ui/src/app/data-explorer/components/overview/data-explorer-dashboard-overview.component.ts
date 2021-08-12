@@ -16,13 +16,14 @@
  *
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {MatDialog} from '@angular/material/dialog';
-import {MatTableDataSource} from '@angular/material/table';
-import {DataExplorerEditDataViewDialogComponent} from '../../dialogs/edit-dashboard/data-explorer-edit-data-view-dialog.component';
-import {DataViewDataExplorerService} from '../../services/data-view-data-explorer.service';
-import {Dashboard} from "../../../dashboard/models/dashboard.model";
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
+import { DataExplorerEditDataViewDialogComponent } from '../../dialogs/edit-dashboard/data-explorer-edit-data-view-dialog.component';
+import { DataViewDataExplorerService } from '../../services/data-view-data-explorer.service';
+import { Dashboard } from '../../../dashboard/models/dashboard.model';
 import { Tuple2 } from '../../../core-model/base/Tuple2';
+import { PanelType } from '../../../core-ui/dialog/base-dialog/base-dialog.model';
+import { DialogService } from '../../../core-ui/dialog/base-dialog/base-dialog.service';
 
 @Component({
     selector: 'sp-data-explorer-dashboard-overview',
@@ -41,7 +42,7 @@ export class DataExplorerDashboardOverviewComponent implements OnInit {
     editLabels: boolean;
 
     constructor(private dashboardService: DataViewDataExplorerService,
-                public dialog: MatDialog) {
+                public dialogService: DialogService) {
 
     }
 
@@ -51,7 +52,7 @@ export class DataExplorerDashboardOverviewComponent implements OnInit {
     }
 
     openNewDataViewDialog() {
-        const dataViewDashboard = {} as Dashboard;
+        const dataViewDashboard: Dashboard = {};
         dataViewDashboard.widgets = [];
 
         this.openDataViewModificationDialog(true, dataViewDashboard);
@@ -62,12 +63,15 @@ export class DataExplorerDashboardOverviewComponent implements OnInit {
     }
 
     openDataViewModificationDialog(createMode: boolean, dashboard: Dashboard) {
-        const dialogRef = this.dialog.open(DataExplorerEditDataViewDialogComponent, {
-            width: '70%',
-            panelClass: 'custom-dialog-container'
+        const dialogRef = this.dialogService.open(DataExplorerEditDataViewDialogComponent, {
+            panelType: PanelType.STANDARD_PANEL,
+            title: createMode ? 'New Data View' : 'Edit Data View',
+            width: '70vw',
+            data: {
+                'createMode': createMode,
+                'dashboard': dashboard
+            }
         });
-        dialogRef.componentInstance.createMode = createMode;
-        dialogRef.componentInstance.dashboard = dashboard;
 
         dialogRef.afterClosed().subscribe(result => {
             this.reloadDashboardsEmitter.emit();
