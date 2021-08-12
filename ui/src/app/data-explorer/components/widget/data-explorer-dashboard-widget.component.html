@@ -18,8 +18,7 @@
 
 <div class="h-100 shadow">
     <div class="box" [ngStyle]="{background: configuredWidget.baseAppearanceConfig.backgroundColor, color: configuredWidget.baseAppearanceConfig.textColor}">
-        <div class="widget-header">
-        <div class="m-0 row header h-40">
+        <div class="widget-header h-40">
             <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center" class="widget-header-text">
                 {{ configuredWidget.baseAppearanceConfig.widgetTitle }}
             </div>
@@ -42,8 +41,7 @@
                 </mat-menu>
             </div>
         </div>
-        </div>
-        <div class="h-100 p-0 row content gridster-item-content ml-0 mr-0">
+        <div class="widget-content p-0 gridster-item-content ml-0 mr-0">
             <div *ngIf="widgetLoaded" class="h-100">
                 <div *ngIf="configuredWidget.widgetType === 'table'" class="h-100 p-0">
                     <sp-data-explorer-table-widget

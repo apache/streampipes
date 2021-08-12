@@ -19,6 +19,7 @@
 .widget-content {
   width:100%;
   height: calc(100% - 40px);
+  overflow-y: auto;
 }
 
 .widget-inner-options {
