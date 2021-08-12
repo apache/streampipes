@@ -17,29 +17,29 @@
  */
 package org.apache.streampipes.rest.impl;
 
+import org.apache.streampipes.manager.pipeline.PipelineCacheManager;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Path("/v2/users/{username}/pipeline-cache")
 public class PipelineCache extends AbstractRestResource {
 
-  private static ConcurrentHashMap<String, String> cachedPipelines = new ConcurrentHashMap<>();
-
   @POST
   @Produces(MediaType.APPLICATION_JSON)
-  public Response updateCachedPipeline(@PathParam("username") String user,
+  public Response updateCachedPipeline(@PathParam("username") String userName,
                                        String rawPipelineModel) {
-    cachedPipelines.put(user, rawPipelineModel);
+    PipelineCacheManager.updateCachedPipeline(userName, rawPipelineModel);
     return ok();
   }
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  public Response getCachedPipeline(@PathParam("username") String user) {
-    if (cachedPipelines.containsKey(user)) {
-      return ok(cachedPipelines.get(user));
+  public Response getCachedPipeline(@PathParam("username") String userName) {
+    String result = PipelineCacheManager.getCachedPipeline(userName);
+    if (result != null) {
+      return ok(result);
     } else {
       return ok();
     }
@@ -47,8 +47,8 @@ public class PipelineCache extends AbstractRestResource {
 
   @DELETE
   @Produces(MediaType.APPLICATION_JSON)
-  public Response removePipelineFromCache(@PathParam("username") String user) {
-    cachedPipelines.remove(user);
+  public Response removePipelineFromCache(@PathParam("username") String userName) {
+    PipelineCacheManager.removeCachedPipeline(userName);
     return ok();
   }
 }

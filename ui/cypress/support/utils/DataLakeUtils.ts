@@ -24,13 +24,12 @@ export class DataLakeUtils {
 
     public static checkResults(dataLakeIndex: string, fileRoute: string) {
 
-        it('Validate result in datalake', () => {
-            cy.request('GET', '/streampipes-backend/api/v3/users/' + UserUtils.testUserName + '/datalake/data/' + dataLakeIndex + '/download?format=csv',
-                {'content-type': 'application/octet-stream'}).should((response) => {
-                const expectedResultString = response.body;
-                cy.readFile(fileRoute).then((actualResultString) => {
-                    DataLakeUtils.resultEqual(actualResultString, expectedResultString);
-                });
+        // Validate result in datalake
+        cy.request('GET', '/streampipes-backend/api/v3/users/' + UserUtils.testUserName + '/datalake/data/' + dataLakeIndex + '/download?format=csv',
+          {'content-type': 'application/octet-stream'}).should((response) => {
+            const expectedResultString = response.body;
+            cy.readFile(fileRoute).then((actualResultString) => {
+                DataLakeUtils.resultEqual(actualResultString, expectedResultString);
             });
         });
     }

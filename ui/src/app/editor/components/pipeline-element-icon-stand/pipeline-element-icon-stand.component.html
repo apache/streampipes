@@ -56,7 +56,11 @@
               [attr.data-pe]="element.elementId"
               [ngClass]="activeCssClass">
             <span id="container" style="position:relative;display:block;width:80px;height:80px;">
-            <pipeline-element id="pe-icon-stand-{{ element.appId }}" style="margin-left:-3%" [iconStandSize]="true" [pipelineElement]="element"
+            <pipeline-element
+                    id="pe-icon-stand-{{ element.appId }}"
+                    style="margin-left:-3%" [iconStandSize]="true"
+                    [attr.data-cy]="'sp-pipeline-element-' + element.name.toLowerCase().replaceAll(' ', '_')"
+                    [pipelineElement]="element"
                               [preview]="false"></pipeline-element>
                 <span style="display:block;width:100%;height:100%;position:absolute; top:0; left:0;"
                       *ngIf="currentElementName===element.name">

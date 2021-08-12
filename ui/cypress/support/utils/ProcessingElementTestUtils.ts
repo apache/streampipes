@@ -29,9 +29,6 @@ import { ProcessorTest } from '../model/ProcessorTest';
 export class ProcessingElementTestUtils {
 
     public static testElement(pipelineElementTest: ProcessorTest) {
-        // public static testElement(testName: string, inputFile: string, expectedResultFile: string, processor: PipelineElementInput) {
-        // Test
-
         const inputFile = 'pipelineElement/' + pipelineElementTest.dir + '/' + pipelineElementTest.inputFile;
         const expectedResultFile = 'pipelineElement/' + pipelineElementTest.dir + '/expected.csv';
 
@@ -64,6 +61,7 @@ export class ProcessingElementTestUtils {
         // Build Pipeline
         const pipelineInput = PipelineBuilder.create(pipelineElementTest.name)
           .addSource(adapterName)
+          .addSourceType('set')
           .addProcessingElement(pipelineElementTest.processor)
           .addSink(
             PipelineElementBuilder.create('data_lake')
@@ -73,10 +71,8 @@ export class ProcessingElementTestUtils {
 
         PipelineUtils.addPipeline(pipelineInput);
 
-        // // Wait
-        it('Wait till data is stored', () => {
-            cy.wait(10000);
-        });
+        // Wait till data is stored
+        cy.wait(10000);
 
         DataLakeUtils.checkResults(dataLakeIndex, 'cypress/fixtures/' + expectedResultFile);
 

@@ -23,28 +23,28 @@ import { PipelineBuilder } from '../../support/builder/PipelineBuilder';
 
 const adapterName = 'simulator';
 
-before('Setup Test', () => {
-  it('Initialize Test', () => {
-    cy.initStreamPipesTest();
-  });
-
-  AdapterUtils.addMachineDataSimulator(adapterName);
-});
 
 describe('Test Random Data Simulator Stream Adapter', () => {
- const pipelineInput = PipelineBuilder.create('Pipeline Test')
-    .addSource(adapterName)
-    .addProcessingElement(
-      PipelineElementBuilder.create('field_renamer')
-        .addInput('drop-down', 'convert-property', 'timestamp')
-        .addInput('input', 'field-name', 't')
-        .build())
-    .addSink(
-      PipelineElementBuilder.create('dashboard_sink')
-        .addInput('input', 'visualization-name', 'Demo')
-        .build())
-    .build();
+ before('Setup Test', () => {
+   cy.initStreamPipesTest();
+   AdapterUtils.addMachineDataSimulator(adapterName);
+  });
 
-  PipelineUtils.testPipeline(pipelineInput);
-});
+  it('Perform Test', () => {
+   const pipelineInput = PipelineBuilder.create('Pipeline Test')
+     .addSource(adapterName)
+     .addProcessingElement(
+       PipelineElementBuilder.create('field_renamer')
+         .addInput('drop-down', 'convert-property', 'timestamp')
+         .addInput('input', 'field-name', 't')
+         .build())
+     .addSink(
+       PipelineElementBuilder.create('dashboard_sink')
+         .addInput('input', 'visualization-name', 'Demo')
+         .build())
+     .build();
+
+   PipelineUtils.testPipeline(pipelineInput);
+  });
+ });
 

@@ -18,16 +18,17 @@
 
 import { UserUtils } from '../../support/utils/UserUtils';
 
-before('Setup Test', () => {
-  it('Open Streampipes', () => {
-    cy.visit('#/login');
-  });
-});
 
 describe('Install StreamPipes', () => {
+  before('Setup Test', () => {
+    it('Open Streampipes', () => {
+      cy.visit('#/login');
+    });
+  });
+
   let isSetupPage: boolean;
 
-  it('Install StreamPipes', () => {
+  it('Perform Test', () => {
     cy.url({ timeout: 60000 }).then(($route) => {
       isSetupPage = ($route.endsWith('setup')) ? true : false;
       if (isSetupPage) {

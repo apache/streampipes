@@ -21,6 +21,7 @@ import { PipelineElementInput } from './PipelineElementInput';
 export class PipelineInput {
     pipelineName: string;
     dataSource: string;
+    dataSourceType: string | 'stream' | 'set';
 
     processingElement: PipelineElementInput;
 

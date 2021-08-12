@@ -37,6 +37,11 @@ export class PipelineBuilder {
         return this;
     }
 
+    public addSourceType(sourceType: string) {
+        this.pipeline.dataSourceType = sourceType;
+
+        return this;
+    }
     public addProcessingElement(processingElement: PipelineElementInput) {
         this.pipeline.processingElement = processingElement;
 

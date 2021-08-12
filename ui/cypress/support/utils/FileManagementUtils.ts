@@ -20,30 +20,25 @@
 export class FileManagementUtils {
 
     public static addFile(filePath: string) {
-        it('Go to StreamPipes file management', () => {
+        // Go to StreamPipes file management
             cy.visit('#/files');
-        });
 
-        it('Open file upload dialog', () => {
+        // Open file upload dialog
             cy.dataCy('sp-open-file-upload-dialog').click();
-        });
 
-        it('Upload file', () => {
+        // Upload file
             // const filepath = 'fileTest/test.csv'
             cy.dataCy('sp-file-management-file-input').attachFile(filePath);
             cy.dataCy('sp-file-management-store-file').click();
-        });
     }
 
     public static deleteFile() {
-        it('Go to StreamPipes file management', () => {
+        // Go to StreamPipes file management
             cy.visit('#/files');
-        });
-        it('Check if file was uploaded and delete it', () => {
+        // Check if file was uploaded and delete it
             cy.dataCy('delete').should('have.length', 1);
             cy.dataCy('delete').click();
             cy.dataCy('confirm-delete').click();
             cy.dataCy('delete').should('have.length', 0);
-        });
     }
 }

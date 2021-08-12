@@ -16,23 +16,24 @@
  *
  */
 
-import { UserInput } from '../model/UserInput';
+package org.apache.streampipes.manager.pipeline;
 
-export class StaticPropertyUtils {
+import java.util.concurrent.ConcurrentHashMap;
 
-    public static input(configs: UserInput[]) {
+public class PipelineCacheManager {
 
-        // Configure Properties
-        configs.forEach(config => {
-            if (config.type === 'checkbox') {
-                cy.dataCy(config.selector).children().click();
-            } else if (config.type === 'drop-down') {
-                cy.dataCy(config.selector).click().get('mat-option').contains(config.value).click();
-            }  else if (config.type === 'radio') {
-                cy.dataCy(config.selector + config.value ).click();
-            } else {
-                cy.dataCy(config.selector).type(config.value);
-            }
-        });
+    private static ConcurrentHashMap<String, String> cachedPipelines = new ConcurrentHashMap<>();
+
+    public static void updateCachedPipeline(String userName,
+                                            String rawPipelineModel) {
+        cachedPipelines.put(userName, rawPipelineModel);
+    }
+
+    public static String getCachedPipeline(String userName) {
+        return cachedPipelines.get(userName);
+    }
+
+    public static void removeCachedPipeline(String userName) {
+        cachedPipelines.remove(userName);
     }
 }

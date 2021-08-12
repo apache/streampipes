@@ -23,15 +23,16 @@ import { AdapterUtils } from '../../support/utils/AdapterUtils';
 const allTests = Cypress.env('processingElements');
 
 allTests.forEach(test => {
-  before('Setup Test', () => {
-    it('Initialize Test', () => {
-      cy.initStreamPipesTest();
-    });
-  });
 
   describe('Test Processor ' + test['name'], () => {
-    const processorTest = test as ProcessorTest;
+    before('Setup Test', () => {
+      cy.initStreamPipesTest();
+    });
 
-    ProcessingElementTestUtils.testElement(processorTest);
+    it('Perform Test', () => {
+      const processorTest = test as ProcessorTest;
+      ProcessingElementTestUtils.testElement(processorTest);
+    });
+
   });
 });

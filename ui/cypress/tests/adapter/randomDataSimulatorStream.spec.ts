@@ -19,19 +19,18 @@
 import { AdapterUtils } from '../../support/utils/AdapterUtils';
 import { SpecificAdapterBuilder } from '../../support/builder/SpecificAdapterBuilder';
 
-before('Setup Test', () => {
-    it('Initialize Test', () => {
+describe('Test Random Data Simulator Stream Adapter', () => {
+    before('Setup Test', () => {
         cy.initStreamPipesTest();
     });
-});
 
-describe('Test Random Data Simulator Stream Adapter', () => {
+    it('Perform Test', () => {
+        const adapterInput = SpecificAdapterBuilder
+          .create('Random_Data_Simulator_\\(Stream\\)')
+          .setName('Random Data Simulator Adapter Test')
+          .addInput('input', 'wait-time-ms', '1000')
+          .build();
 
-    const adapterInput = SpecificAdapterBuilder
-        .create('Random_Data_Simulator_\\(Stream\\)')
-        .setName('Random Data Simulator Adapter Test')
-        .addInput('input', 'wait-time-ms', '1000')
-        .build();
-
-    AdapterUtils.testSpecificStreamAdapter(adapterInput);
+        AdapterUtils.testSpecificStreamAdapter(adapterInput);
+    });
 });
