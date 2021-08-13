@@ -35,6 +35,7 @@
                    [cpPosition]="'bottom'"
                    [style.background]="baseAppearanceConfig.backgroundColor" required
                    [cpPresetColors] = "presetColors"
+                   (colorPickerSelect)="triggerViewUpdate()"
                    autocomplete="off"/>
         </mat-form-field>
     </div>
@@ -48,6 +49,7 @@
                    [style.background]="baseAppearanceConfig.textColor"
                    required
                    [cpPresetColors] = "presetColors"
+                   (colorPickerSelect)="triggerViewUpdate()"
                    autocomplete="off"/>
         </mat-form-field>
     </div>

@@ -17,13 +17,13 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ReplaySubject} from 'rxjs';
+import { ReplaySubject, Subject } from 'rxjs';
 import {GridsterInfo} from '../../dashboard/models/gridster-info.model';
 
 @Injectable()
 export class ResizeService {
 
-    public resizeSubject: ReplaySubject<GridsterInfo> = new ReplaySubject<GridsterInfo>();
+    public resizeSubject: Subject<GridsterInfo> = new Subject<GridsterInfo>();
 
     public notify(info: GridsterInfo): void {
         this.resizeSubject.next(info);

@@ -19,6 +19,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {DataExplorerWidgetModel} from "../../../../core-model/gen/streampipes-model";
 import {WidgetBaseAppearanceConfig} from "../../../models/dataview-dashboard.model";
+import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
 
 @Component({
   selector: 'sp-data-explorer-widget-appearance-settings',
@@ -28,11 +29,22 @@ import {WidgetBaseAppearanceConfig} from "../../../models/dataview-dashboard.mod
 export class DataExplorerWidgetAppearanceSettingsComponent implements OnInit {
 
   @Input() baseAppearanceConfig: WidgetBaseAppearanceConfig;
+  @Input() widgetId: string;
 
   presetColors: Array<any> = ["#39B54A", "#1B1464", "#f44336", "#4CAF50", "#FFEB3B", "#FFFFFF", "#000000"];
 
+
+  constructor(private widgetConfigurationService: WidgetConfigurationService) {
+
+  }
+
   ngOnInit(): void {
 
+  }
+
+  triggerViewUpdate() {
+    console.log("trigger view update");
+    this.widgetConfigurationService.notify({widgetId: this.widgetId, refreshView: true, refreshData: false });
   }
 
 

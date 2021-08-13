@@ -16,9 +16,9 @@
   ~
   -->
 
-<div class="widget-content">
-    <div class="widget-inner-content h-100 overflow-y-hidden">
-        <sp-load-data-spinner *ngIf="showIsLoadingData"></sp-load-data-spinner>
+<div fxLayout="column" fxFlex="100" [ngStyle]="{background: dataExplorerWidget.baseAppearanceConfig.backgroundColor, color: dataExplorerWidget.baseAppearanceConfig.textColor}">
+
+        <sp-load-data-spinner *ngIf="showIsLoadingData" class="h-100"></sp-load-data-spinner>
         <sp-no-data-in-date-range *ngIf="showNoDataInDateRange" [viewDateRange]="timeSettings"></sp-no-data-in-date-range>
 
         <sp-select-label *ngIf="dataExplorerWidget.dataConfig.labelingModeOn"
@@ -27,15 +27,15 @@
         </sp-select-label>
 
         <plotly-plot *ngIf="data !== undefined && !showNoDataInDateRange && !showIsLoadingData"
+                     [divId]="dataExplorerWidget._id"
                      class="plotly-container"
                      [class.labeling-active]="dataExplorerWidget.dataConfig.labelingModeOn"
                      [data]="data"
                      [layout]="graph.layout"
                      [config]="graph.config"
                      (selected)="selectDataPoints($event)"
-                     (plotly_click)="changeLabelOfArea($event)">
+                     (plotlyClick)="changeLabelOfArea($event)">
             <!--                     (relayout)="handleDefaultModeBarButtonClicks($event)"-->
 
         </plotly-plot>
-    </div>
 </div>

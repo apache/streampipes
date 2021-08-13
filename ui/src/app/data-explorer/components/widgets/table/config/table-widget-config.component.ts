@@ -37,7 +37,6 @@ export class TableWidgetConfigComponent extends BaseWidgetConfig<TableWidgetMode
   }
 
   ngOnInit(): void {
-    console.log(this.currentlyConfiguredWidget);
     if (!this.currentlyConfiguredWidget.dataConfig.availableColumns) {
       this.currentlyConfiguredWidget.dataConfig.availableColumns = [this.getTimestampProperty(this.dataLakeMeasure.eventSchema)];
       this.currentlyConfiguredWidget.dataConfig.availableColumns = this.currentlyConfiguredWidget.dataConfig.availableColumns.concat(this.getValuePropertyKeys(this.dataLakeMeasure.eventSchema));

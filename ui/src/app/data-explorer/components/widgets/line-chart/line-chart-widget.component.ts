@@ -16,18 +16,18 @@
  *
  */
 
-import {Component, OnInit, Renderer2} from '@angular/core';
-import {MatDialog} from '@angular/material/dialog';
-import {DataResult} from '../../../../core-model/datalake/DataResult';
-import {GroupedDataResult} from '../../../../core-model/datalake/GroupedDataResult';
-import {DatalakeRestService} from '../../../../core-services/datalake/datalake-rest.service';
-import {ColorService} from './services/color.service';
-import {BaseDataExplorerWidget} from '../base/base-data-explorer-widget';
-import {Label} from '../../../../core-model/gen/streampipes-model';
-import {ResizeService} from '../../../services/resize.service';
-import {LabelService} from '../../../../core-ui/labels/services/label.service';
-import {LineChartWidgetModel} from "./model/line-chart-widget.model";
-import {WidgetConfigurationService} from "../../../services/widget-configuration.service";
+import { Component, OnInit, Renderer2 } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { DataResult } from '../../../../core-model/datalake/DataResult';
+import { GroupedDataResult } from '../../../../core-model/datalake/GroupedDataResult';
+import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
+import { ColorService } from './services/color.service';
+import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
+import { Label } from '../../../../core-model/gen/streampipes-model';
+import { ResizeService } from '../../../services/resize.service';
+import { LabelService } from '../../../../core-ui/labels/services/label.service';
+import { LineChartWidgetModel } from './model/line-chart-widget.model';
+import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
 
 @Component({
   selector: 'sp-data-explorer-line-chart-widget',
@@ -38,29 +38,16 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
 
   data: any[] = undefined;
   colorPropertyStringValues: any[] = undefined;
-  //availableProperties: EventPropertyUnion[] = [];
-  //availableNoneNumericColumns: EventPropertyUnion[] = [];
-  //selectedLineChartProperties: EventPropertyUnion[] = [];
-  //selectedBackgroundColorProperty: EventPropertyUnion = undefined;
-  //dimensionProperties: EventPropertyUnion[] = [];
-
-  //yKeys: string[] = [];
-  //xKey: string;
   private backgroundColorPropertyKey: string = undefined;
 
   advancedSettingsActive = false;
-  showBackgroundColorProperty  = true;
+  showBackgroundColorProperty = true;
 
   selectedStartX = undefined;
   selectedEndX = undefined;
   n_selected_points = undefined;
 
   selectedLabel;
-
-  //aggregationValue = 1;
-  //aggregationTimeUnit = 's';
-  //groupValue = 'None';
-  //showCountValue = false;
 
   // this can be set to scale the line chart according to the layout
   offsetRightLineChart = 10;
@@ -70,51 +57,23 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
               public colorService: ColorService,
               public renderer: Renderer2,
               protected dataLakeRestService: DatalakeRestService,
-              private resizeService: ResizeService,
               public labelService: LabelService,
-              widgetConfigurationService: WidgetConfigurationService) {
-    super(dataLakeRestService, dialog, widgetConfigurationService);
+              widgetConfigurationService: WidgetConfigurationService,
+              resizeService: ResizeService) {
+    super(dataLakeRestService, dialog, widgetConfigurationService, resizeService);
   }
 
   // indicator variable if labeling mode is activated
   //labelingModeOn = false;
 
-  updatemenus = [
-    {
-      buttons: [
-        {
-          args: ['mode', 'lines'],
-          label: 'Line',
-          method: 'restyle'
-        },
-        {
-          args: ['mode', 'markers'],
-          label: 'Dots',
-          method: 'restyle'
-        },
-
-        {
-          args: ['mode', 'lines+markers'],
-          label: 'Dots + Lines',
-          method: 'restyle'
-        }
-      ],
-      direction: 'left',
-      pad: {'r': 10, 't': 10},
-      showactive: true,
-      type: 'buttons',
-      x: 0.0,
-      xanchor: 'left',
-      y: 1.3,
-      yanchor: 'top',
-      font: {color: '#000'},
-      bgcolor: '#fafafa',
-      bordercolor: '#000'
-    }
-  ];
+  updatemenus = [];
 
   graph = {
+
     layout: {
+      font: {
+        color: '#FFF'
+      },
       autosize: true,
       plot_bgcolor: '#fff',
       paper_bgcolor: '#fff',
@@ -144,6 +103,40 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
 
 
   ngOnInit(): void {
+    this.updatemenus = [{
+      buttons: [
+        {
+          args: ['mode', 'lines'],
+          label: 'Line',
+          method: 'restyle'
+        },
+        {
+          args: ['mode', 'markers'],
+          label: 'Dots',
+          method: 'restyle'
+        },
+
+        {
+          args: ['mode', 'lines+markers'],
+          label: 'Dots + Lines',
+          method: 'restyle'
+        }
+      ],
+      direction: 'left',
+      pad: {'r': 10, 't': 10},
+      showactive: true,
+      type: 'buttons',
+      x: 0.0,
+      xanchor: 'left',
+      y: 1.3,
+      yanchor: 'top',
+      font: {color: this.dataExplorerWidget.baseAppearanceConfig.textColor},
+      bgcolor: this.dataExplorerWidget.baseAppearanceConfig.backgroundColor,
+      bordercolor: '#000'
+    }];
+
+    this.updateAppearance();
+
     super.ngOnInit();
     this.updateData();
     this.resizeService.resizeSubject.subscribe(info => {
@@ -157,7 +150,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
     });
   }
 
-  private processNoneGroupedData(res: DataResult) {
+  private processNonGroupedData(res: DataResult) {
     if (res.total === 0) {
       this.setShownComponents(true, false, false);
     } else {
@@ -184,7 +177,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
       this.data = this.displayGroupedData(tmp);
 
       if (this.data !== undefined &&
-        this.data['colorPropertyStringValues'] !== undefined && this.data['colorPropertyStringValues'].length > 0) {
+          this.data['colorPropertyStringValues'] !== undefined && this.data['colorPropertyStringValues'].length > 0) {
         this.addInitialColouredShapesToGraph(this.colorPropertyStringValues, this.colorService.getColor);
       }
 
@@ -262,8 +255,8 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
         colorFunction = this.colorService.getColor;
       }
 
-        // Add labes and colors for each series of the line chart
-        data.forEach(serie => {
+      // Add labes and colors for each series of the line chart
+      data.forEach(serie => {
         // add custom data property in order to store colorPropertyStringValues in graph
         if (newColorPropertyStringValues !== undefined && newColorPropertyStringValues.length !== 0) {
           serie['customdata'] = newColorPropertyStringValues;
@@ -337,13 +330,20 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
     columnsContainingNumbers.forEach(key => {
       const headerName = data.headers[key];
       tmpLineChartTraces[key] = {
-        type: 'scatter', mode: 'lines', name: headerName, connectgaps: false, x: [], y: []};
+        type: 'scatter',
+        mode: this.dataExplorerWidget.dataConfig.chartMode,
+        name: headerName,
+        connectgaps: false,
+        x: [],
+        y: []
+      };
     });
 
     columnsContainingStrings.forEach(key => {
       const headerName = data.headers[key];
       tmpLineChartTraces[key] = {
-        name: headerName, x: [], y: []};
+        name: headerName, x: [], y: []
+      };
     });
 
     // fill line chart traces with data
@@ -371,7 +371,6 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
 
     return data;
   }
-
 
 
   changeLabelOfArea($event) {
@@ -471,7 +470,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
 
         // fetching path of labeling button icon
         const path = modeBarButtons[i].getElementsByClassName('icon').item(0)
-          .getElementsByTagName('path').item(0);
+            .getElementsByTagName('path').item(0);
 
         // adding 'clicked' to class list
         modeBarButtons[i].classList.add('clicked');
@@ -496,7 +495,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
 
         // fetching path of labeling button icon
         const path = modeBarButtons[i].getElementsByClassName('icon').item(0)
-          .getElementsByTagName('path').item(0);
+            .getElementsByTagName('path').item(0);
 
         // removing 'clicked' from class list
         modeBarButtons[i].classList.remove('clicked');
@@ -516,11 +515,18 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
     const startdate = new Date(start_X).getTime() - 1;
     const enddate = new Date(end_X).getTime() + 1;
 
-    this.dataLakeRestService.saveLabelsInDatabase(this.data['measureName'], 'sp_internal_label', startdate, enddate, label, this.dataExplorerWidget.dataConfig.xKey).subscribe(
-      res => {
-        // TODO add pop up similar to images
-        // console.log('Successfully wrote label ' + currentLabel + ' into database.');
-      }
+    this.dataLakeRestService.saveLabelsInDatabase(
+        this.data['measureName'],
+        'sp_internal_label',
+        startdate,
+        enddate,
+        label,
+        this.dataExplorerWidget.dataConfig.xKey
+    ).subscribe(
+        res => {
+          // TODO add pop up similar to images
+          // console.log('Successfully wrote label ' + currentLabel + ' into database.');
+        }
     );
   }
 
@@ -548,7 +554,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
     }
   }
 
-  private addShapeToGraph(start, end, color, initial= false) {
+  private addShapeToGraph(start, end, color, initial = false) {
     start = new Date(start).getTime();
     end = new Date(end).getTime();
 
@@ -638,7 +644,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
       this.dataLakeRestService.getDataAutoAggregation(
           this.dataLakeMeasure.measureName, this.timeSettings.startTime, this.timeSettings.endTime)
           .subscribe((res: DataResult) => {
-            this.processNoneGroupedData(res);
+            this.processNonGroupedData(res);
           });
     } else {
       if (this.dataExplorerWidget.dataConfig.groupValue === 'None') {
@@ -647,7 +653,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
             this.dataLakeMeasure.measureName, this.timeSettings.startTime, this.timeSettings.endTime,
             this.dataExplorerWidget.dataConfig.aggregationTimeUnit, this.dataExplorerWidget.dataConfig.aggregationValue)
             .subscribe((res: DataResult) => {
-              this.processNoneGroupedData(res);
+              this.processNonGroupedData(res);
             });
       } else {
         // this.dataLakeRestService.getGroupedData(
@@ -660,7 +666,20 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
     }
   }
 
+  updateAppearance() {
+    this.graph.layout.paper_bgcolor = this.dataExplorerWidget.baseAppearanceConfig.backgroundColor;
+    this.graph.layout.plot_bgcolor = this.dataExplorerWidget.baseAppearanceConfig.backgroundColor;
+    this.graph.layout.font.color = this.dataExplorerWidget.baseAppearanceConfig.textColor;
+    if (this.data) {
+      this.data.forEach(d => d.mode = this.dataExplorerWidget.dataConfig.chartMode);
+    }
+  }
+
   refreshView() {
+    this.updateAppearance();
+    if (this.data && !this.showNoDataInDateRange && !this.showIsLoadingData) {
+      window.Plotly.restyle(this.dataExplorerWidget._id, this.graph, 0);
+    }
     //this.toggleLabelingMode();
   }
 }

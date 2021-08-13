@@ -36,6 +36,7 @@ import {
 } from "../../../../core-model/gen/streampipes-model";
 import {WidgetConfigurationService} from "../../../services/widget-configuration.service";
 import {DashboardItem, TimeSettings} from "../../../../dashboard/models/dashboard.model";
+import { ResizeService } from '../../../services/resize.service';
 
 @Directive()
 export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> implements OnInit, OnChanges, OnDestroy {
@@ -63,7 +64,8 @@ export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> 
 
   constructor(protected dataLakeRestService: DatalakeRestService,
               protected dialog: MatDialog,
-              protected widgetConfigurationService: WidgetConfigurationService) {
+              protected widgetConfigurationService: WidgetConfigurationService,
+              protected resizeService: ResizeService) {
 
   }
 
@@ -78,7 +80,7 @@ export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> 
           this.refreshView();
         }
       }
-    })
+    });
   }
 
   ngOnDestroy(): void {
@@ -99,8 +101,9 @@ export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> 
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log(changes);
-    this.timeSettings = changes.timeSettings.currentValue;
+    if (changes.timeSettings) {
+      this.timeSettings = changes.timeSettings.currentValue;
+    }
     this.updateData();
   }
 

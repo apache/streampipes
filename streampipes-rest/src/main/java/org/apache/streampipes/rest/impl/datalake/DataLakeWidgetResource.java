@@ -52,7 +52,7 @@ public class DataLakeWidgetResource extends AbstractRestResource {
   @Path("/{widgetId}")
   public Response modifyDataExplorerWidget(DataExplorerWidgetModel dataExplorerWidgetModel) {
     getDataExplorerWidgetStorage().updateDataExplorerWidget(dataExplorerWidgetModel);
-    return ok();
+    return ok(getDataExplorerWidgetStorage().getDataExplorerWidget(dataExplorerWidgetModel.getId()));
   }
 
   @DELETE
