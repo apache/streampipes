@@ -20,15 +20,17 @@ import { UserUtils } from '../../support/utils/UserUtils';
 
 
 describe('Install StreamPipes', () => {
-  before('Setup Test', () => {
-    it('Open Streampipes', () => {
-      cy.visit('#/login');
-    });
-  });
-
   let isSetupPage: boolean;
 
   it('Perform Test', () => {
+
+    cy.visit('#/login');
+
+    // This wait ensures that the installation site is completely loaded
+    // If a better solution is found this wait can be removed
+    // The test should work for both cases either when the system is already installed and when it should be installed
+    cy.wait(10000);
+
     cy.url({ timeout: 60000 }).then(($route) => {
       isSetupPage = ($route.endsWith('setup')) ? true : false;
       if (isSetupPage) {
