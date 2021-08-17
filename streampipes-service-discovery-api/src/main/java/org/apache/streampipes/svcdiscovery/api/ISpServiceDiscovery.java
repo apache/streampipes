@@ -27,11 +27,7 @@ public interface ISpServiceDiscovery {
   /**
    * Register service.
    *
-   * @param svcGroup  service group for registered service
-   * @param svcId     unique service id
-   * @param host      host address of service endpoint
-   * @param port      port of service endpoint
-   * @param tags      tags of service
+   * @param serviceRegistrationRequest  the service registration request
    */
   void registerService(SpServiceRegistrationRequest serviceRegistrationRequest);
 
