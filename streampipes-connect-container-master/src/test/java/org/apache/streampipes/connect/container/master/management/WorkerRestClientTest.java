@@ -51,7 +51,7 @@ public class WorkerRestClientTest {
     @Test
     public void stopStreamAdapterSuccess() throws Exception {
 
-        doNothing().when(WorkerRestClient.class, "stopAdapter", anyString(), any(), anyString());
+        doNothing().when(WorkerRestClient.class, "stopAdapter", any(), anyString());
         when(WorkerRestClient.class, "stopStreamAdapter", anyString(), any()).thenCallRealMethod();
         GenericAdapterStreamDescription description = new GenericAdapterStreamDescription();
         description.setId("id1");
@@ -65,7 +65,7 @@ public class WorkerRestClientTest {
 
     @Test(expected = AdapterException.class)
     public void stopStreamAdapterFail() throws Exception {
-        doThrow(new AdapterException()).when(WorkerRestClient.class, "stopAdapter", anyString(), any(), anyString());
+        doThrow(new AdapterException()).when(WorkerRestClient.class, "stopAdapter", any(), anyString());
         when(WorkerRestClient.class, "stopStreamAdapter", anyString(), any()).thenCallRealMethod();
 
         GenericAdapterStreamDescription description = new GenericAdapterStreamDescription();
@@ -101,7 +101,7 @@ public class WorkerRestClientTest {
     @Test
     public void stopSetAdapterSuccess() throws Exception {
 
-        doNothing().when(WorkerRestClient.class, "stopAdapter", anyString(), any(), anyString());
+        doNothing().when(WorkerRestClient.class, "stopAdapter", any(), anyString());
         when(WorkerRestClient.class, "stopSetAdapter", anyString(), any()).thenCallRealMethod();
 
         GenericAdapterSetDescription description = new GenericAdapterSetDescription();
@@ -115,7 +115,7 @@ public class WorkerRestClientTest {
 
     @Test(expected = AdapterException.class)
     public void stopSetAdapterFail() throws Exception {
-        doThrow(new AdapterException()).when(WorkerRestClient.class, "stopAdapter", anyString(), any(), anyString());
+        doThrow(new AdapterException()).when(WorkerRestClient.class, "stopAdapter", any(), anyString());
         when(WorkerRestClient.class, "stopSetAdapter", anyString(), any()).thenCallRealMethod();
 
         GenericAdapterSetDescription description = new GenericAdapterSetDescription();

@@ -52,12 +52,12 @@ public class SourcesManagement {
     private String connectHost = null;
 
     public SourcesManagement(AdapterStorageImpl adapterStorage) {
-        this.adapterStorage = adapterStorage;
+      this.adapterStorage = adapterStorage;
+      this.workerUrlProvider = new WorkerUrlProvider();
     }
 
     public SourcesManagement() {
-        this(new AdapterStorageImpl());
-       this.workerUrlProvider = new WorkerUrlProvider();
+       this(new AdapterStorageImpl());
     }
 
     public void addAdapter(String streamId, SpDataSet dataSet) throws AdapterException, NoServiceEndpointsAvailableException {

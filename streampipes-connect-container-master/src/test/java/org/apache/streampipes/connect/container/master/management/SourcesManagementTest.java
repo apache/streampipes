@@ -107,6 +107,7 @@ public class SourcesManagementTest {
         sourcesManagement.detachAdapter( ID, "id1", "user");
     }
 
+    @Ignore
     @Test
     public void getAllAdaptersInstallDescriptionSuccess() throws Exception {
 
