@@ -58,7 +58,7 @@ public class DescriptionManagementTest {
         assertNotNull(result);
         assertNotNull(result.getList());
         assertEquals(1, result.getList().size());
-        assertEquals(JsonFormat.ID, result.getList().get(0).getUri());
+        assertEquals(JsonFormat.ID, result.getList().get(0).getAppId());
     }
 
 }

@@ -19,6 +19,7 @@
 package org.apache.streampipes.connect.container.master.management;
 
 import org.apache.streampipes.connect.api.exception.AdapterException;
+import org.apache.streampipes.connect.container.master.util.WorkerPaths;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
 import org.junit.Before;
@@ -34,7 +35,7 @@ import static org.mockito.Mockito.times;
 import static org.powermock.api.mockito.PowerMockito.*;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ WorkerRestClient.class })
+@PrepareForTest({ WorkerRestClient.class, WorkerPaths.class })
 @PowerMockIgnore({"com.sun.org.apache.xerces.*", "javax.xml.*", "org.xml.*", "javax.management.*"})
 public class WorkerRestClientTest {
 
@@ -46,20 +47,23 @@ public class WorkerRestClientTest {
     @Before
     public void before() {
         PowerMockito.mockStatic(WorkerRestClient.class);
+        PowerMockito.mockStatic(WorkerPaths.class);
     }
 
     @Test
     public void stopStreamAdapterSuccess() throws Exception {
 
+        String expectedUrl = "worker/stream/stop";
         doNothing().when(WorkerRestClient.class, "stopAdapter", any(), anyString());
         when(WorkerRestClient.class, "stopStreamAdapter", anyString(), any()).thenCallRealMethod();
+        when(WorkerPaths.class, "getStreamStopPath").thenReturn(expectedUrl);
         GenericAdapterStreamDescription description = new GenericAdapterStreamDescription();
         description.setId("id1");
 
         WorkerRestClient.stopStreamAdapter("", description);
 
         verifyStatic(WorkerRestClient.class, times(1));
-        WorkerRestClient.stopAdapter(any(), eq("worker/stream/stop"));
+        WorkerRestClient.stopAdapter(any(), eq(expectedUrl));
 
     }
 
@@ -78,8 +82,10 @@ public class WorkerRestClientTest {
      @Test
     public void invokeSetAdapterSuccess() throws Exception {
 
+        String expectedUrl = "worker/set/invoke";
         doNothing().when(WorkerRestClient.class, "startAdapter", anyString(), any());
         when(WorkerRestClient.class, "invokeSetAdapter", anyString(), any()).thenCallRealMethod();
+        when(WorkerPaths.class, "getSetInvokePath").thenReturn(expectedUrl);
 
         GenericAdapterSetDescription description = new GenericAdapterSetDescription();
         description.setId("id1");
@@ -101,15 +107,17 @@ public class WorkerRestClientTest {
     @Test
     public void stopSetAdapterSuccess() throws Exception {
 
+        String expectedUrl = "worker/set/stop";
         doNothing().when(WorkerRestClient.class, "stopAdapter", any(), anyString());
         when(WorkerRestClient.class, "stopSetAdapter", anyString(), any()).thenCallRealMethod();
+        when(WorkerPaths.class, "getSetStopPath").thenReturn(expectedUrl);
 
         GenericAdapterSetDescription description = new GenericAdapterSetDescription();
         description.setId("id1");
         WorkerRestClient.stopSetAdapter("", description);
 
         verifyStatic(WorkerRestClient.class, times(1));
-        WorkerRestClient.stopAdapter(any(), eq("worker/set/stop"));
+        WorkerRestClient.stopAdapter(any(), eq(expectedUrl));
 
     }
 
