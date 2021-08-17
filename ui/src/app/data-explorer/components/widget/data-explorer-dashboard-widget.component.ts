@@ -16,16 +16,18 @@
  *
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {MatDialog} from '@angular/material/dialog';
-import {GridsterItem, GridsterItemComponent} from 'angular-gridster2';
-import {DateRange} from '../../../core-model/datalake/DateRange';
-import {DataExplorerAddVisualizationDialogComponent} from '../../dialogs/add-widget/data-explorer-add-visualization-dialog.component';
-import {DataViewDataExplorerService} from '../../services/data-view-data-explorer.service';
-import {DataExplorerWidgetModel, DataLakeMeasure} from "../../../core-model/gen/streampipes-model";
-import {DataDownloadDialog} from "../datadownloadDialog/dataDownload.dialog";
-import {Tuple2} from "../../../core-model/base/Tuple2";
-import {Dashboard, TimeSettings} from "../../../dashboard/models/dashboard.model";
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { GridsterItem, GridsterItemComponent } from 'angular-gridster2';
+import { DateRange } from '../../../core-model/datalake/DateRange';
+import { DataViewDataExplorerService } from '../../services/data-view-data-explorer.service';
+import {
+  DataExplorerWidgetModel,
+  DataLakeMeasure
+} from '../../../core-model/gen/streampipes-model';
+import { DataDownloadDialog } from '../datadownloadDialog/dataDownload.dialog';
+import { Tuple2 } from '../../../core-model/base/Tuple2';
+import { Dashboard, TimeSettings } from '../../../dashboard/models/dashboard.model';
 
 @Component({
   selector: 'sp-data-explorer-dashboard-widget',
@@ -79,28 +81,13 @@ export class DataExplorerDashboardWidgetComponent implements OnInit {
     this.deleteCallback.emit(this.widget);
   }
 
-  editWidget(): void {
-    const dialogRef = this.dialog.open(DataExplorerAddVisualizationDialogComponent, {
-      width: '70%',
-      height: '500px',
-      panelClass: 'custom-dialog-container',
-      data: {
-        'widget': this.configuredWidget
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(widget => {
-      if (widget) {
-        this.configuredWidget = widget;
-        this.updateCallback.emit(this.configuredWidget);
-      }
-    });
-  }
-
   downloadDataAsFile() {
-    const dialogRef = this.dialog.open(DataDownloadDialog, {
+    this.dialog.open(DataDownloadDialog, {
       width: '600px',
-      data: { index: this.dataLakeMeasure.measureName, date: DateRange.fromTimeSettings(this.timeSettings) },
+      data: {
+        index: this.dataLakeMeasure.measureName,
+        date: DateRange.fromTimeSettings(this.timeSettings)
+      },
       panelClass: 'custom-dialog-container'
     });
   }
