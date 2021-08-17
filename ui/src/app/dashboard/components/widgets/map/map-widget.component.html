@@ -23,6 +23,7 @@
          leaflet
          [leafletOptions]="options"
          (leafletMapReady)="onMapReady($event)">
+        <div *ngIf="addLayers" [leafletLayers]="layers"></div>
 <!--        <div *ngIf="showMarkers" [leafletLayer]="markerLayer"></div>-->
         <div *ngFor="let markerLayer of markerLayers" [leafletLayer]="markerLayer"></div>
     </div>

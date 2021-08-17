@@ -20,9 +20,22 @@ import {RxStompService} from "@stomp/ng2-stompjs";
 import {BaseStreamPipesWidget} from "../base/base-widget";
 import {StaticPropertyExtractor} from "../../../sdk/extractor/static-property-extractor";
 import {MapConfig} from "./map-config";
-import {latLng, marker, Marker, tileLayer, Map, LatLngExpression, LatLng, icon, Content} from "leaflet";
+import {
+    latLng,
+    marker,
+    Marker,
+    tileLayer,
+    Map,
+    LatLngExpression,
+    LatLng,
+    icon,
+    Content,
+    MapOptions,
+    geoJSON, Control, Layer
+} from "leaflet";
 import {ResizeService} from "../../../services/resize.service";
 import {DashboardService} from "../../../services/dashboard.service";
+import Layers = Control.Layers;
 
 @Component({
     selector: 'map-widget',
@@ -39,6 +52,7 @@ export class MapWidgetComponent extends BaseStreamPipesWidget implements OnInit,
     idsToDisplay: string[];
     additionalItemsToDisplay: string[];
     centerMap: boolean;
+    zoomLevel: number = 18;
 
     map: Map;
     showMarkers = false;
@@ -47,14 +61,12 @@ export class MapWidgetComponent extends BaseStreamPipesWidget implements OnInit,
 
     mapWidth: number;
     mapHeight: number;
+    options: MapOptions;
 
-    options = {
-        layers: [
-            tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: "© <a href=\'https://www.openstreetmap.org/copyright\'>OpenStreetMap</a> Contributors" })
-        ],
-        zoom: 5,
-        center: latLng(46.879966, -121.726909)
-    };
+    layers: Layer[];
+    geofence: string;
+    addLayers = false;
+
 
     constructor(rxStompService: RxStompService, dashboardService: DashboardService, resizeService: ResizeService) {
         super(rxStompService, dashboardService, resizeService, false);
@@ -68,6 +80,33 @@ export class MapWidgetComponent extends BaseStreamPipesWidget implements OnInit,
         this.showMarkers = true;
         this.mapWidth = this.computeCurrentWidth(this.gridsterItemComponent);
         this.mapHeight = this.computeCurrentHeight(this.gridsterItemComponent);
+
+        if (!this.geofence.startsWith("// add GeoJSON")) {
+            this.addLayers = true;
+            let geofence = {
+                id: 'geoJSON',
+                name: 'Geofence',
+                enabled: true,
+                layer: geoJSON((JSON.parse(this.geofence)) as any,
+                    { style: () => ({ color: '#39b54a' })})
+            };
+
+            this.layers = [
+                geofence.layer
+            ];
+        }
+
+        this.options = {
+            layers: [
+                tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+                    minZoom: 3,
+                    maxZoom: 19,
+                    attribution: "© <a href=\'https://www.openstreetmap.org/copyright\'>OpenStreetMap</a> Contributors"
+                })
+            ],
+            zoom: this.zoomLevel,
+            center: latLng(46.879966, -121.726909)
+        };
     }
 
     ngOnDestroy(): void {
@@ -82,6 +121,8 @@ export class MapWidgetComponent extends BaseStreamPipesWidget implements OnInit,
         this.idsToDisplay = extractor.mappingPropertyValues(MapConfig.ID_MAPPING_KEY);
         const b = extractor.singleValueParameter(MapConfig.CENTER_MAP_KEY);
         this.centerMap = extractor.selectedSingleValue(MapConfig.CENTER_MAP_KEY) === 'Center';
+        this.zoomLevel = extractor.integerParameter(MapConfig.ZOOM_LEVEL_KEY);
+        this.geofence = extractor.codeBlockValue(MapConfig.GEOFENCE_KEY)
     }
 
     markerImage(selectedMarker: string): string {

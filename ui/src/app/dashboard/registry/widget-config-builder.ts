@@ -22,7 +22,12 @@ import {Tuple2} from "../../core-model/base/Tuple2";
 import {
     ColorPickerStaticProperty,
     DashboardWidgetSettings,
-    FreeTextStaticProperty, OneOfStaticProperty, StaticProperty, Option
+    FreeTextStaticProperty,
+    OneOfStaticProperty,
+    StaticProperty,
+    Option,
+    CodeInputStaticProperty,
+    StaticPropertyAlternatives, StaticPropertyAlternative
 } from "../../core-model/gen/streampipes-model";
 
 export class WidgetConfigBuilder {
@@ -95,6 +100,38 @@ export class WidgetConfigBuilder {
         return this;
     }
 
+    requiredCodeBlock(id: string, label: string, description: string, defaultCode: string, reconfigurable: boolean): WidgetConfigBuilder {
+        let csp: CodeInputStaticProperty = new CodeInputStaticProperty();
+        csp["@class"] = "org.apache.streampipes.model.staticproperty.CodeInputStaticProperty";
+        csp.internalName = id;
+        csp.label = label;
+        csp.description = description;
+        csp.codeTemplate = defaultCode;
+        csp.reconfigurable = reconfigurable;
+        this.widget.config.push(csp);
+        return this;
+    }
+
+    requiredAlternatives(id: string, label: string, description: string, ...alternatives: StaticPropertyAlternative[]): WidgetConfigBuilder {
+        let spa: StaticPropertyAlternatives = new StaticPropertyAlternatives();
+        spa["@class"] = "org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives";
+        spa.internalName = id;
+        spa.label = label;
+        spa.description = description;
+        spa.alternatives = []
+        alternatives.forEach((a,i) => {
+            alternatives[i].index = i;
+            let alternative = new StaticPropertyAlternative();
+            alternative["@class"] = "org.apache.streampipes.model.staticproperty.StaticPropertyAlternative";
+            alternative.internalName = a.internalName;
+            alternative.label = a.label;
+            alternative.description = a.description;
+            alternative.selected = a.selected;
+            spa.alternatives.push(alternative);
+        })
+        this.widget.config.push(spa);
+        return this;
+    }
 
     requiredIntegerParameter(id: string, label: string, description: string): WidgetConfigBuilder {
         let fst: FreeTextStaticProperty = this.prepareFreeTextStaticProperty(id, label, description, Datatypes.Integer.toUri())

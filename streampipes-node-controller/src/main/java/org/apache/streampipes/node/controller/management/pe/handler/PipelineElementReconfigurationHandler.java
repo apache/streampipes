@@ -26,6 +26,7 @@ import org.apache.streampipes.model.Response;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.grounding.*;
 import org.apache.streampipes.model.pipeline.PipelineElementReconfigurationEntity;
+import org.apache.streampipes.model.staticproperty.CodeInputStaticProperty;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.node.controller.management.IHandler;
@@ -87,14 +88,16 @@ public class PipelineElementReconfigurationHandler implements IHandler<Response>
         return pub;
     }
 
-    // TODO: currently only FreeTextProperty is supported - need to updated in case other StaticProperty types will
-    //  be supported in the future
+    // TODO: Update in case other StaticProperty types will be supported in the future
     private byte[] reconfigurationToByteArray() {
         Map<String, String> reconfigurationEventMap = new HashMap<>();
         reconfigurationEntity.getReconfiguredStaticProperties().forEach(staticProperty -> {
             if (staticProperty instanceof FreeTextStaticProperty) {
                 reconfigurationEventMap.put(staticProperty.getInternalName(),
                         ((FreeTextStaticProperty) staticProperty).getValue());
+            } else if (staticProperty instanceof CodeInputStaticProperty) {
+                reconfigurationEventMap.put(staticProperty.getInternalName(),
+                        ((CodeInputStaticProperty) staticProperty).getValue());
             }
         });
         return HttpUtils.serialize(reconfigurationEventMap).getBytes(StandardCharsets.UTF_8);

@@ -18,6 +18,7 @@
 
 
 import {
+    CodeInputStaticProperty,
     ColorPickerStaticProperty, EventPropertyUnion,
     EventSchema, FreeTextStaticProperty, MappingPropertyNary,
     MappingPropertyUnary, OneOfStaticProperty,
@@ -77,6 +78,11 @@ export class StaticPropertyExtractor {
 
     integerParameter(internalId: string): number {
         return this.singleValueParameter(internalId) as number;
+    }
+
+    codeBlockValue(internalId: string): string {
+        let sp: CodeInputStaticProperty = this.getStaticPropertyByName(internalId) as CodeInputStaticProperty;
+        return sp.value;
     }
 
     getStaticPropertyByName(internalId: string): StaticPropertyUnion {

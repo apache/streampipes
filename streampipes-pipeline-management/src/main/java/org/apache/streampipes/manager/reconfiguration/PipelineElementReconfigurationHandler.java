@@ -24,6 +24,7 @@ import org.apache.streampipes.manager.execution.pipeline.PipelineElementReconfig
 import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.pipeline.*;
+import org.apache.streampipes.model.staticproperty.CodeInputStaticProperty;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.storage.api.IPipelineStorage;
@@ -78,10 +79,10 @@ public class PipelineElementReconfigurationHandler {
         reconfiguredPipeline.getSepas().forEach(reconfiguredProcessor -> storedPipeline.getSepas().forEach(storedProcessor -> {
             if (matchingElementIds(reconfiguredProcessor, storedProcessor)) {
                 List<StaticProperty> list = new ArrayList<>();
-                getReconfigurableFsp(reconfiguredProcessor).forEach(reconfiguredFsp ->
-                        getReconfigurableFsp(storedProcessor).forEach(storedFsp -> {
-                            if (compareForChanges(reconfiguredFsp, storedFsp)) {
-                                list.add(reconfiguredFsp);
+                getReconfigurableStaticProperties(reconfiguredProcessor).forEach(reconfiguredStaticProperty ->
+                        getReconfigurableStaticProperties(storedProcessor).forEach(storedStaticProperty -> {
+                            if (matchAndCompare(reconfiguredStaticProperty, storedStaticProperty)) {
+                                list.add(reconfiguredStaticProperty);
                             }
                         }));
                 PipelineElementReconfigurationEntity entity = reconfigurationEntity(reconfiguredProcessor, list);
@@ -116,11 +117,37 @@ public class PipelineElementReconfigurationHandler {
         return one.getInternalName().equals(two.getInternalName()) && !one.getValue().equals(two.getValue());
     }
 
+    private boolean matchAndCompare(StaticProperty one, StaticProperty two) {
+
+        if (one instanceof FreeTextStaticProperty && two instanceof FreeTextStaticProperty) {
+            return one.getInternalName().equals(two.getInternalName()) &&
+                    !((FreeTextStaticProperty) one).getValue().equals(((FreeTextStaticProperty) two).getValue());
+        } else if (one instanceof CodeInputStaticProperty && two instanceof CodeInputStaticProperty) {
+            return one.getInternalName().equals(two.getInternalName()) &&
+                    !((CodeInputStaticProperty) one).getValue().equals(((CodeInputStaticProperty) two).getValue());
+        } else {
+            return false;
+        }
+    }
+
     private List<FreeTextStaticProperty> getReconfigurableFsp(DataProcessorInvocation graph) {
         return graph.getStaticProperties().stream()
                 .filter(FreeTextStaticProperty.class::isInstance)
                 .map(FreeTextStaticProperty.class::cast)
                 .filter(FreeTextStaticProperty::isReconfigurable)
+                .collect(Collectors.toList());
+    }
+
+    private List<StaticProperty> getReconfigurableStaticProperties(DataProcessorInvocation graph) {
+        return graph.getStaticProperties().stream()
+                .filter(sp -> {
+                    if (sp instanceof FreeTextStaticProperty) {
+                        return ((FreeTextStaticProperty) sp).isReconfigurable();
+                    } else if (sp instanceof CodeInputStaticProperty) {
+                        return ((CodeInputStaticProperty) sp).isReconfigurable();
+                    }
+                    return false;
+                })
                 .collect(Collectors.toList());
     }
 

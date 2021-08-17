@@ -37,6 +37,9 @@ public class CodeInputStaticProperty extends StaticProperty {
   @RdfProperty(StreamPipes.HAS_CODE_INPUT)
   private String value;
 
+  @RdfProperty(StreamPipes.IS_RECONFIGURABLE)
+  private boolean reconfigurable;
+
   public CodeInputStaticProperty() {
     super(StaticPropertyType.CodeInputStaticProperty);
   }
@@ -46,6 +49,7 @@ public class CodeInputStaticProperty extends StaticProperty {
     this.language = other.getLanguage();
     this.value = other.getValue();
     this.codeTemplate = other.getCodeTemplate();
+    this.reconfigurable = other.isReconfigurable();
   }
 
   public CodeInputStaticProperty(String internalName, String label, String description) {
@@ -74,6 +78,14 @@ public class CodeInputStaticProperty extends StaticProperty {
 
   public void setCodeTemplate(String codeTemplate) {
     this.codeTemplate = codeTemplate;
+  }
+
+  public boolean isReconfigurable() {
+    return reconfigurable;
+  }
+
+  public void setReconfigurable(boolean reconfigurable) {
+    this.reconfigurable = reconfigurable;
   }
 
   @Override

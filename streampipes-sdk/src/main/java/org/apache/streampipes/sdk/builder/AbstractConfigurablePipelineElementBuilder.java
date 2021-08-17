@@ -172,6 +172,26 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   }
 
   /**
+   * Assigns a new code block parameter which is required
+   * by the processing element.
+   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
+   *              user-friendly manner.
+   * @param codeLanguage The {@link org.apache.streampipes.sdk.helpers.CodeLanguage} code language the code block is built for.
+   * @param defaultSkeleton The code skeleton that is used as a default value.
+   * @return this
+   */
+  public BU requiredReconfigurableCodeblock(Label label, CodeLanguage codeLanguage, String defaultSkeleton) {
+    CodeInputStaticProperty codeInputStaticProperty = new CodeInputStaticProperty(label.getInternalId(),
+            label.getLabel(), label.getDescription());
+    codeInputStaticProperty.setLanguage(codeLanguage.name());
+    codeInputStaticProperty.setCodeTemplate(defaultSkeleton);
+    codeInputStaticProperty.setReconfigurable(true);
+    this.staticProperties.add(codeInputStaticProperty);
+
+    return me();
+  }
+
+  /**
    * Assigns a new text-based configuration parameter (a string) which is required by the pipeline
    * element.
    * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
@@ -181,6 +201,20 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   public BU requiredTextParameter(Label label) {
     this.staticProperties.add(prepareFreeTextStaticProperty(label, XSD._string.toString()));
 
+    return me();
+  }
+
+  /**
+   * Assigns new text-based configuration parameter (a string) which is required by the pipeline
+   * element. This parameter can be reconfigured by the user at pipeline run-time.
+   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
+   *              user-friendly manner.
+   * @return
+   */
+  public BU requiredReconfigurableTextParameter(Label label) {
+    FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label, XSD._string.toString());
+    fsp.setReconfigurable(true);
+    this.staticProperties.add(fsp);
     return me();
   }
 

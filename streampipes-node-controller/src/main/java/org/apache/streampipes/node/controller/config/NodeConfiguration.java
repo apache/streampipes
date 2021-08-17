@@ -58,6 +58,7 @@ public final class NodeConfiguration {
     private static int resourceMonitorFreqSecs;
     private static int relayEventBufferSize;
     private static String consulHost;
+    private static boolean autoOffloadingActivated;
     private static OffloadingStrategyType autoOffloadingStrategy;
     private static String nodeStoragePath;
     private static String loggingMqttUrl;
@@ -274,6 +275,14 @@ public final class NodeConfiguration {
 
     public static void addSupportedPipelineElements(List<String> supportedPipelineElements){
         NodeConfiguration.supportedPipelineElements.addAll(supportedPipelineElements);
+    }
+
+    public static boolean isAutoOffloadingActivated() {
+        return autoOffloadingActivated;
+    }
+
+    public static void setAutoOffloadingActivated(boolean autoOffloadingActivated) {
+        NodeConfiguration.autoOffloadingActivated = autoOffloadingActivated;
     }
 
     public static OffloadingStrategyType getAutoOffloadingStrategy() {
@@ -505,6 +514,10 @@ public final class NodeConfiguration {
                     configMap.put(envKey, value);
                     List<String> supportedPipelineElements = Arrays.asList(value.split(";").clone());
                     addSupportedPipelineElements(supportedPipelineElements);
+                    break;
+                case AUTO_OFFLOADING:
+                    configMap.put(envKey, value);
+                    setAutoOffloadingActivated(Boolean.parseBoolean(value));
                     break;
                 case AUTO_OFFLOADING_STRATEGY:
                     configMap.put(envKey, value);

@@ -71,7 +71,9 @@ public class ResourceManager {
             try {
                 // get current node resource metrics
                 retrieveResources();
-                checkOffloadingPolicy();
+                if (NodeConfiguration.isAutoOffloadingActivated()) {
+                    checkOffloadingPolicy();
+                }
                 Thread.sleep( NodeConfiguration.getResourceMonitorFreqSecs() * 1000);
             } catch (InterruptedException e) {
                 LOG.error("Thread interrupted. {}", e.toString());
