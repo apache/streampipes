@@ -110,10 +110,6 @@ export class DataExplorerComponent implements OnInit {
     this.dashboardPanel.updateDashboard(false);
   }
 
-  addVisualization() {
-    this.dashboardPanel.addWidget();
-  }
-
   toggleGrid() {
     this.dashboardPanel.toggleGrid(this.gridVisible);
   }
