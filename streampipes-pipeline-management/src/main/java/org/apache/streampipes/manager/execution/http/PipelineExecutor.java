@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.manager.execution.http;
 
+import org.apache.streampipes.commons.MD5;
+import org.apache.streampipes.commons.Utils;
 import org.apache.streampipes.commons.constants.GlobalStreamPipesConstants;
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
@@ -45,7 +47,10 @@ import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTags;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 import org.lightcouch.DocumentConflictException;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class PipelineExecutor {
@@ -174,7 +179,7 @@ public class PipelineExecutor {
             .filter(is -> is.getEventGrounding().getTransportProtocol() instanceof KafkaTransportProtocol)
             .map(is -> is.getEventGrounding().getTransportProtocol())
             .map(KafkaTransportProtocol.class::cast)
-            .forEach(tp -> tp.setGroupId(UUID.randomUUID().toString()));
+            .forEach(tp -> tp.setGroupId(Utils.filterSpecialChar(pipeline.getName()) + MD5.crypt(tp.getElementId())));
   }
 
   private void decryptSecrets(List<InvocableStreamPipesEntity> graphs) {
