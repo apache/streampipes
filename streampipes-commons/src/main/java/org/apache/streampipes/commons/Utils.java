@@ -46,4 +46,17 @@ public class Utils {
     return RandomStringUtils.randomAlphabetic(10);
   }
 
+  /**
+   * filter special characters
+   *
+   * @return string only retain letter, digit, - and _
+   */
+  public static String filterSpecialChar(String source) {
+    if (source == null) {
+      return null;
+    }
+
+    return source.replaceAll("[^a-zA-Z0-9_-]", "");
+  }
+
 }

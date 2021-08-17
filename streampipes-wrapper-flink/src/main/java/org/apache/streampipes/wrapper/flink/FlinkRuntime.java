@@ -21,6 +21,7 @@ package org.apache.streampipes.wrapper.flink;
 import org.apache.flink.client.program.rest.RestClusterClient;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.configuration.JobManagerOptions;
+import org.apache.flink.configuration.RestOptions;
 import org.apache.flink.runtime.client.JobStatusMessage;
 import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
@@ -295,6 +296,7 @@ public abstract class FlinkRuntime<RP extends RuntimeParams<B, I, RC>, B extends
     Configuration restConfig = new Configuration();
     restConfig.setString(JobManagerOptions.ADDRESS, config.getHost());
     restConfig.setInteger(JobManagerOptions.PORT, config.getPort());
+    restConfig.setInteger(RestOptions.PORT, config.getPort());
     return new RestClusterClient<>(restConfig, "");
   }
 
