@@ -16,11 +16,11 @@
  *
  */
 
-import {Component, OnInit} from '@angular/core';
-import {BaseWidgetConfig} from "../../base/base-widget-config";
-import {LineChartWidgetModel} from "../model/line-chart-widget.model";
-import {WidgetConfigurationService} from "../../../../services/widget-configuration.service";
-import {EventPropertyUnion} from "../../../../../core-model/gen/streampipes-model";
+import { Component, OnInit } from '@angular/core';
+import { BaseWidgetConfig } from "../../base/base-widget-config";
+import { LineChartWidgetModel } from "../model/line-chart-widget.model";
+import { WidgetConfigurationService } from "../../../../services/widget-configuration.service";
+import { EventPropertyUnion } from "../../../../../core-model/gen/streampipes-model";
 
 @Component({
   selector: 'sp-data-explorer-line-chart-widget-config',
@@ -34,17 +34,7 @@ export class LineChartWidgetConfigComponent extends BaseWidgetConfig<LineChartWi
   }
 
   ngOnInit(): void {
-    if (!this.currentlyConfiguredWidget.dataConfig.availableProperties) {
-    this.currentlyConfiguredWidget.dataConfig.availableProperties = this.getNumericProperty(this.dataLakeMeasure.eventSchema);
-    this.currentlyConfiguredWidget.dataConfig.dimensionProperties = this.getDimensionProperties(this.dataLakeMeasure.eventSchema);
-    this.currentlyConfiguredWidget.dataConfig.availableNonNumericColumns = this.getNonNumericProperties(this.dataLakeMeasure.eventSchema);
-    this.currentlyConfiguredWidget.dataConfig.yKeys = [];
-
-    // Reduce selected columns when more then 6
-    this.currentlyConfiguredWidget.dataConfig.selectedLineChartProperties = this.currentlyConfiguredWidget.dataConfig.availableProperties.length > 6 ? this.currentlyConfiguredWidget.dataConfig.availableProperties.slice(0, 5) : this.currentlyConfiguredWidget.dataConfig.availableProperties;
-    this.currentlyConfiguredWidget.dataConfig.xKey = this.getTimestampProperty(this.dataLakeMeasure.eventSchema).runtimeName;
-    this.currentlyConfiguredWidget.dataConfig.yKeys = this.getRuntimeNames(this.currentlyConfiguredWidget.dataConfig.selectedLineChartProperties);
-    }
+    this.updateWidgetConfigOptions();
   }
 
   setSelectedProperties(selectedColumns: EventPropertyUnion[]) {
@@ -71,5 +61,20 @@ export class LineChartWidgetConfigComponent extends BaseWidgetConfig<LineChartWi
 
   toggleLabelingMode() {
     //this.triggerViewRefresh();
+  }
+
+  protected updateWidgetConfigOptions() {
+    if (this.dataLakeMeasure.measureName && !this.currentlyConfiguredWidget.dataConfig.availableProperties) {
+      this.currentlyConfiguredWidget.dataConfig.availableProperties = this.getNumericProperty(this.dataLakeMeasure.eventSchema);
+      this.currentlyConfiguredWidget.dataConfig.dimensionProperties = this.getDimensionProperties(this.dataLakeMeasure.eventSchema);
+      this.currentlyConfiguredWidget.dataConfig.availableNonNumericColumns = this.getNonNumericProperties(this.dataLakeMeasure.eventSchema);
+      this.currentlyConfiguredWidget.dataConfig.yKeys = [];
+      this.currentlyConfiguredWidget.dataConfig.chartMode = 'lines';
+
+      // Reduce selected columns when more then 6
+      this.currentlyConfiguredWidget.dataConfig.selectedLineChartProperties = this.currentlyConfiguredWidget.dataConfig.availableProperties.length > 6 ? this.currentlyConfiguredWidget.dataConfig.availableProperties.slice(0, 5) : this.currentlyConfiguredWidget.dataConfig.availableProperties;
+      this.currentlyConfiguredWidget.dataConfig.xKey = this.getTimestampProperty(this.dataLakeMeasure.eventSchema).runtimeName;
+      this.currentlyConfiguredWidget.dataConfig.yKeys = this.getRuntimeNames(this.currentlyConfiguredWidget.dataConfig.selectedLineChartProperties);
+    }
   }
 }

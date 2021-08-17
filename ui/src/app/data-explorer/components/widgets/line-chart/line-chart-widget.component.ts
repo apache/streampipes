@@ -186,7 +186,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
   }
 
   displayData(transformedData: DataResult, yKeys: string[]) {
-    if (this.dataExplorerWidget.dataConfig.yKeys.length > 0) {
+    if (this.dataExplorerWidget.dataConfig.yKeys && this.dataExplorerWidget.dataConfig.yKeys.length > 0) {
       const tmp = [];
       this.dataExplorerWidget.dataConfig.yKeys.forEach(key => {
         transformedData.rows.forEach(serie => {
@@ -305,7 +305,6 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
   }
 
   transformData(data: DataResult, xKey: string): DataResult {
-
     const columnsContainingNumbers = [];
     const columnsContainingStrings = [];
 
@@ -678,7 +677,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
   refreshView() {
     this.updateAppearance();
     if (this.data && !this.showNoDataInDateRange && !this.showIsLoadingData) {
-      window.Plotly.restyle(this.dataExplorerWidget._id, this.graph, 0);
+      (window as any).Plotly.restyle(this.dataExplorerWidget._id, this.graph, 0);
     }
     //this.toggleLabelingMode();
   }

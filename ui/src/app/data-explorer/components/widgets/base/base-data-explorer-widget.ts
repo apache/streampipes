@@ -26,16 +26,16 @@ import {
   Output,
   SimpleChanges
 } from '@angular/core';
-import {MatDialog} from '@angular/material/dialog';
-import {GridsterItem, GridsterItemComponent} from 'angular-gridster2';
-import {DatalakeRestService} from '../../../../core-services/datalake/datalake-rest.service';
+import { MatDialog } from '@angular/material/dialog';
+import { GridsterItem, GridsterItemComponent } from 'angular-gridster2';
+import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
 import {
   DataExplorerWidgetModel,
   DataLakeMeasure,
   EventProperty
-} from "../../../../core-model/gen/streampipes-model";
-import {WidgetConfigurationService} from "../../../services/widget-configuration.service";
-import {DashboardItem, TimeSettings} from "../../../../dashboard/models/dashboard.model";
+} from '../../../../core-model/gen/streampipes-model';
+import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
+import { DashboardItem, TimeSettings } from '../../../../dashboard/models/dashboard.model';
 import { ResizeService } from '../../../services/resize.service';
 
 @Directive()
@@ -84,7 +84,7 @@ export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> 
   }
 
   ngOnDestroy(): void {
-    this.widgetConfigurationService.configurationChangedSubject.unsubscribe();
+    //this.widgetConfigurationService.configurationChangedSubject.unsubscribe();
   }
 
   public removeWidget() {

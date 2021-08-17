@@ -26,13 +26,13 @@
     </mat-radio-group>
     <mat-form-field color="accent" fxFlex="100" *ngIf="sourceSelection == 'pipeline'">
         <mat-label>Data Explorer Sinks</mat-label>
-        <mat-select [(value)]="currentlyConfiguredWidget.measureName">
+        <mat-select [(value)]="currentlyConfiguredWidget.measureName" (selectionChange)="updateMeasure($event)">
             <mat-option [value]="pipeline.measureName" *ngFor="let pipeline of availablePipelines">
                 <span class="pipeline-name">{{ pipeline.pipelineName }}</span>&nbsp;&nbsp;{{ pipeline.measureName }}
             </mat-option>
         </mat-select>
     </mat-form-field>
-    <mat-form-field color="accent" fxFlex="100" *ngIf="sourceSelection == 'measurement'">
+    <mat-form-field color="accent" fxFlex="100" *ngIf="sourceSelection == 'measurement'" (selectionchange)="updateMeasure($event)">
         <mat-label>Data Explorer Sinks</mat-label>
         <mat-select [(value)]="currentlyConfiguredWidget.measureName">
             <mat-option [value]="measurement.measureName" *ngFor="let measurement of availableMeasurements">
@@ -40,4 +40,19 @@
             </mat-option>
         </mat-select>
     </mat-form-field>
+    <mat-divider></mat-divider>
+    <h5>Visualization Type</h5>
+    <mat-form-field color="accent" fxFlex="100">
+        <mat-label>Select visualization</mat-label>
+        <mat-select [(value)]="currentlyConfiguredWidget.widgetType" (selectionChange)="configureVis($event)">
+            <mat-option [value]="'line-chart'">
+                <span class="pipeline-name">Line Chart</span>
+            </mat-option>
+            <mat-option [value]="'table'">
+                <span class="pipeline-name">Table</span>
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+
 </div>

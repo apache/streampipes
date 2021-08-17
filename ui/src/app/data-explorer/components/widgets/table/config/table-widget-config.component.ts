@@ -59,5 +59,8 @@ export class TableWidgetConfigComponent extends BaseWidgetConfig<TableWidgetMode
     this.triggerDataRefresh();
   }
 
+  protected updateWidgetConfigOptions() {
+  }
+
 
 }

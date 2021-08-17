@@ -16,10 +16,20 @@
  *
  */
 
+@import '../../../../scss/sp/sp-dialog.scss';
+
 .designer-panel-content {
   padding: 10px;
 }
 
 .designer-panel-config {
   padding: 10px;
+}
+
+.designer-panel-title {
+  margin-left: 20px;
+}
+
+.designer-panel-header {
+  border-bottom:1px solid var(--color-tab-border);
 }

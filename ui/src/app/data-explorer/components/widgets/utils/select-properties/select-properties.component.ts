@@ -16,15 +16,15 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import {EventPropertyUnion} from "../../../../../core-model/gen/streampipes-model";
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { EventPropertyUnion } from "../../../../../core-model/gen/streampipes-model";
 
 @Component({
   selector: 'sp-select-properties',
   templateUrl: './select-properties.component.html',
   styleUrls: ['./select-properties.component.css']
 })
-export class SelectPropertiesComponent implements OnInit {
+export class SelectPropertiesComponent {
 
   @Output()
   changeSelectedProperties: EventEmitter<EventPropertyUnion[]> = new EventEmitter();
@@ -39,13 +39,9 @@ export class SelectPropertiesComponent implements OnInit {
   label: string;
 
   @Input()
-  multiple: boolean
+  multiple: boolean;
 
   constructor() { }
-
-  ngOnInit(): void {
-    console.log(this.selectedProperties);
-  }
 
   triggerSelectedProperties(properties: EventPropertyUnion[]) {
     this.changeSelectedProperties.emit(properties);

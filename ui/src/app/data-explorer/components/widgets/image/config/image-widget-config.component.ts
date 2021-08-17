@@ -31,4 +31,7 @@ export class ImageWidgetConfigComponent extends BaseWidgetConfig<ImageWidgetMode
   ngOnInit(): void {
   }
 
+  protected updateWidgetConfigOptions() {
+  }
+
 }

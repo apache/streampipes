@@ -16,50 +16,81 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column" class="designer-panel-content" *ngIf="currentlyConfiguredWidget">
-    <h4 *ngIf="currentlyConfiguredWidget">{{ currentlyConfiguredWidget.baseAppearanceConfig.widgetTitle }}</h4>
-    <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectOptionsPanel($event)" color="accent"
-                   class="small">
-        <mat-tab label="Data"></mat-tab>
-        <mat-tab label="Visualization"></mat-tab>
-        <mat-tab label="Appearance"></mat-tab>
-    </mat-tab-group>
+<div fxFlex="100" fxLayout="column">
+    <div fxLayout="row" class="sp-tab-bg designer-panel-header">
+        <div fxLayoutAlign="start center" class="designer-panel-title">Widget Configuration</div>
+        <div fxFlex fxLayoutAlign="end end">
+            <button mat-button mat-icon-button (click)="addWidget()">
+                <mat-icon>add</mat-icon>
+            </button>
+        </div>
+    </div>
+    <div fxFlex="100" fxLayout="column" class="designer-panel-content" *ngIf="currentlyConfiguredWidget">
+        <h4 *ngIf="currentlyConfiguredWidget">{{ currentlyConfiguredWidget.baseAppearanceConfig.widgetTitle }}</h4>
+        <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectOptionsPanel($event)" color="accent"
+                       class="small">
+            <mat-tab label="Data"></mat-tab>
+            <mat-tab label="Visualization"></mat-tab>
+            <mat-tab label="Appearance"></mat-tab>
+        </mat-tab-group>
 
-    <div fxFlex="100" fxLayout="column">
-        <div class="designer-panel-config">
+        <div fxFlex="100" fxLayout="column">
+            <div fxFlex="100" fxLayout="column" class="designer-panel-config">
 
-            <div *ngIf="selectedIndex == 0">
-                <sp-data-explorer-widget-data-settings [dataLakeMeasure]="dataLakeMeasure" [currentlyConfiguredWidget]="currentlyConfiguredWidget">
+                <div *ngIf="selectedIndex == 0">
+                    <sp-data-explorer-widget-data-settings [(dataLakeMeasure)]="dataLakeMeasure"
+                                                           [currentlyConfiguredWidget]="currentlyConfiguredWidget"
+                                                           [newWidgetMode]="newWidgetMode"
+                                                           (createWidgetEmitter)="createNewWidget($event)">
 
-                </sp-data-explorer-widget-data-settings>
-            </div>
-            <div *ngIf="selectedIndex == 1">
-                <div *ngIf="currentlyConfiguredWidget.widgetType === 'table'" class="h-100 p-0">
-                    <sp-data-explorer-table-widget-config [currentlyConfiguredWidget]="currentlyConfiguredWidget" [dataLakeMeasure]="dataLakeMeasure">
-
-                    </sp-data-explorer-table-widget-config>
+                    </sp-data-explorer-widget-data-settings>
                 </div>
-                <div *ngIf="currentlyConfiguredWidget.widgetType === 'line-chart'" class="h-100 p-0">
-                    <sp-data-explorer-line-chart-widget-config [currentlyConfiguredWidget]="currentlyConfiguredWidget" [dataLakeMeasure]="dataLakeMeasure">
+                <div *ngIf="selectedIndex == 1">
+                    <div *ngIf="currentlyConfiguredWidget.widgetType === 'table'" class="h-100 p-0">
+                        <sp-data-explorer-table-widget-config [currentlyConfiguredWidget]="currentlyConfiguredWidget"
+                                                              [dataLakeMeasure]="dataLakeMeasure">
 
-                    </sp-data-explorer-line-chart-widget-config>
+                        </sp-data-explorer-table-widget-config>
+                    </div>
+                    <div *ngIf="currentlyConfiguredWidget.widgetType === 'line-chart'" class="h-100 p-0">
+                        <sp-data-explorer-line-chart-widget-config
+                                [currentlyConfiguredWidget]="currentlyConfiguredWidget"
+                                [dataLakeMeasure]="dataLakeMeasure">
+
+                        </sp-data-explorer-line-chart-widget-config>
+                    </div>
+                </div>
+                <div *ngIf="selectedIndex == 2">
+                    <sp-data-explorer-widget-appearance-settings
+                            [widgetId]="currentlyConfiguredWidget._id"
+                            [baseAppearanceConfig]="currentlyConfiguredWidget.baseAppearanceConfig">
+
+                    </sp-data-explorer-widget-appearance-settings>
                 </div>
             </div>
-            <div *ngIf="selectedIndex == 2">
-                <sp-data-explorer-widget-appearance-settings
-                        [widgetId]="currentlyConfiguredWidget._id"
-                        [baseAppearanceConfig]="currentlyConfiguredWidget.baseAppearanceConfig">
-
-                </sp-data-explorer-widget-appearance-settings>
+            <mat-divider *ngIf="newWidgetMode"></mat-divider>
+            <div fxFlex fxLayout="row" fxLayoutAlign="center end" class="mt-10 actions-align-right" *ngIf="newWidgetMode">
+                <button mat-button mat-raised-button color="accent" *ngIf="newWidgetMode && selectedIndex == 0"
+                        (click)="selectedIndex = 1">
+                    Next
+                </button>
+                <button *ngIf="newWidgetMode && selectedIndex == 1" mat-button mat-raised-button class="mat-basic mr-10"
+                        (click)="selectedIndex = 0" style="margin-right: 10px;">
+                    Create
+                </button>
+                <button *ngIf="newWidgetMode && selectedIndex == 1" mat-button mat-raised-button color="accent"
+                        (click)="createNewWidget()">
+                    Create
+                </button>
             </div>
         </div>
     </div>
-</div>
-<div class="designer-panel-config" *ngIf="!currentlyConfiguredWidget" fxFlex="100"
-     fxLayoutAlign="center center" fxLayout="column">
-    <span class="text-center">Select a widget to open configuration options or add a new widget.</span>
-    <button mat-button color="accent" class="mt-10"
-            (click)="addWidget()">
-        <i class="material-icons">add</i><span>Add widget</span>
-    </button>
+    <div class="designer-panel-config" *ngIf="!currentlyConfiguredWidget" fxFlex="100"
+         fxLayoutAlign="center center" fxLayout="column">
+        <span class="text-center">Select a widget to open configuration options or add a new widget.</span>
+        <button mat-button color="accent" class="mt-10"
+                (click)="addWidget()">
+            <i class="material-icons">add</i><span>Add widget</span>
+        </button>
+    </div>
 </div>

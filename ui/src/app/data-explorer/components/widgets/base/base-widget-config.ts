@@ -16,7 +16,7 @@
  *
  */
 
-import {Directive, Input} from "@angular/core";
+import { Directive, Input, OnChanges, SimpleChanges } from "@angular/core";
 import {
   DataExplorerWidgetModel,
   DataLakeMeasure,
@@ -25,20 +25,27 @@ import {
   EventPropertyUnion,
   EventSchema
 } from "../../../../core-model/gen/streampipes-model";
-import {WidgetConfigurationService} from "../../../services/widget-configuration.service";
+import { WidgetConfigurationService } from "../../../services/widget-configuration.service";
 
 @Directive()
-export abstract class BaseWidgetConfig<T extends DataExplorerWidgetModel>  {
+export abstract class BaseWidgetConfig<T extends DataExplorerWidgetModel> implements OnChanges {
 
   @Input() currentlyConfiguredWidget: T;
-  @Input() dataLakeMeasure: DataLakeMeasure;
+
+  @Input()
+  dataLakeMeasure: DataLakeMeasure;
 
   constructor(protected widgetConfigurationService: WidgetConfigurationService) {
 
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+   if (changes.dataLakeMeasure && changes.dataLakeMeasure.currentValue.measureName !== this.dataLakeMeasure.measureName) {
+     this.updateWidgetConfigOptions();
+   }
+  }
+
   triggerDataRefresh() {
-    console.log(this.currentlyConfiguredWidget);
     this.widgetConfigurationService.notify({widgetId: this.currentlyConfiguredWidget._id, refreshData: true, refreshView: false});
   }
 
@@ -142,6 +149,8 @@ export abstract class BaseWidgetConfig<T extends DataExplorerWidgetModel>  {
   public isTimestamp(p: EventProperty) {
     return p.domainProperties.some(dp => dp === 'http://schema.org/DateTime');
   }
+
+  protected abstract updateWidgetConfigOptions();
 
 
 }

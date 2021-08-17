@@ -16,16 +16,16 @@
  *
  */
 
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {MatDialog} from '@angular/material/dialog';
-import {MatSort} from '@angular/material/sort';
-import {MatTableDataSource} from '@angular/material/table';
-import {DataResult} from '../../../../core-model/datalake/DataResult';
-import {DatalakeRestService} from '../../../../core-services/datalake/datalake-rest.service';
-import {BaseDataExplorerWidget} from '../base/base-data-explorer-widget';
-import {WidgetConfigurationService} from "../../../services/widget-configuration.service";
-import {TableWidgetModel} from "./model/table-widget.model";
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { DataResult } from '../../../../core-model/datalake/DataResult';
+import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
+import { WidgetConfigurationService } from "../../../services/widget-configuration.service";
+import { TableWidgetModel } from "./model/table-widget.model";
 import { ResizeService } from '../../../services/resize.service';
+import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
 
 @Component({
   selector: 'sp-data-explorer-table-widget',

@@ -16,13 +16,15 @@
  *
  */
 
-import {Component, Input, OnInit} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   DataExplorerWidgetModel,
   DataLakeMeasure
-} from "../../../../core-model/gen/streampipes-model";
-import {DataViewDataExplorerService} from "../../../services/data-view-data-explorer.service";
-import {DatalakeRestService} from "../../../../core-services/datalake/datalake-rest.service";
+} from '../../../../core-model/gen/streampipes-model';
+import { DataViewDataExplorerService } from '../../../services/data-view-data-explorer.service';
+import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
+import { MatSelectChange } from '@angular/material/select';
+import { Tuple2 } from '../../../../core-model/base/Tuple2';
 
 @Component({
   selector: 'sp-data-explorer-widget-data-settings',
@@ -33,11 +35,16 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
 
   @Input() currentlyConfiguredWidget: DataExplorerWidgetModel;
   @Input() dataLakeMeasure: DataLakeMeasure;
+  @Input() newWidgetMode: boolean;
+
+  @Output() createWidgetEmitter: EventEmitter<Tuple2<DataLakeMeasure, DataExplorerWidgetModel>> = new EventEmitter<Tuple2<DataLakeMeasure, DataExplorerWidgetModel>>();
+  @Output() dataLakeMeasureChange: EventEmitter<DataLakeMeasure> = new EventEmitter<DataLakeMeasure>();
+  @Output() configureVisualizationEmitter: EventEmitter<void> = new EventEmitter<void>();
 
   availablePipelines: Array<DataLakeMeasure>;
   availableMeasurements: Array<DataLakeMeasure>;
 
-  sourceSelection: "pipeline" | "measurement" = "pipeline";
+  sourceSelection: 'pipeline' | 'measurement' = 'pipeline';
 
   constructor(private dataExplorerService: DataViewDataExplorerService,
               private datalakeRestService: DatalakeRestService) {
@@ -52,14 +59,45 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
   loadAvailablePipelines() {
     this.dataExplorerService.getAllPersistedDataStreams().subscribe(response => {
       this.availablePipelines = response;
-    })
+    });
   }
 
   loadAvailableMeasurements() {
     this.datalakeRestService.getAllInfos().subscribe(response => {
       this.availableMeasurements = response;
-    })
+    });
   }
 
+  updateMeasure(event: MatSelectChange) {
+    if (event.value !== this.dataLakeMeasure.measureName) {
+      this.dataLakeMeasure = this.findMeasure(event.value);
+      this.dataLakeMeasureChange.emit(this.dataLakeMeasure);
+    }
+  }
+
+  findMeasure(measureName) {
+    return this.availablePipelines.find(pipeline => pipeline.measureName === measureName) ||
+        this.availableMeasurements.find(m => m.measureName === measureName);
+  }
+
+  configureVis(event: MatSelectChange) {
+    if (event.value === 'line-chart') {
+      this.initiateLineChart();
+    } else if (event.value === 'table') {
+      this.initiateTable();
+    }
+  }
+
+  initiateLineChart() {
+
+  }
+
+  initiateTable() {
+
+  }
+
+  createWidget() {
+    this.createWidgetEmitter.emit({a: this.dataLakeMeasure, b: this.currentlyConfiguredWidget});
+  }
 
 }

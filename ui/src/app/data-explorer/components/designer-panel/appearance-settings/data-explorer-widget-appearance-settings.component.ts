@@ -16,9 +16,8 @@
  *
  */
 
-import {Component, Input, OnInit} from '@angular/core';
-import {DataExplorerWidgetModel} from "../../../../core-model/gen/streampipes-model";
-import {WidgetBaseAppearanceConfig} from "../../../models/dataview-dashboard.model";
+import { Component, Input, OnInit } from '@angular/core';
+import { WidgetBaseAppearanceConfig } from "../../../models/dataview-dashboard.model";
 import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
 
 @Component({
@@ -43,7 +42,6 @@ export class DataExplorerWidgetAppearanceSettingsComponent implements OnInit {
   }
 
   triggerViewUpdate() {
-    console.log("trigger view update");
     this.widgetConfigurationService.notify({widgetId: this.widgetId, refreshView: true, refreshData: false });
   }
 

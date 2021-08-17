@@ -19,7 +19,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
-import { DataExplorerAddVisualizationDialogComponent } from '../../dialogs/add-widget/data-explorer-add-visualization-dialog.component';
 import { DataViewDataExplorerService } from '../../services/data-view-data-explorer.service';
 import { RefreshDashboardService } from '../../services/refresh-dashboard.service';
 import {
@@ -72,25 +71,17 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
     window.dispatchEvent(new Event('resize'));
   }
 
-  addWidget(): void {
-    const dialogRef = this.dialog.open(DataExplorerAddVisualizationDialogComponent, {
-      width: '70%',
-      height: '500px',
-      panelClass: 'custom-dialog-container'
-    });
-
-    dialogRef.afterClosed().subscribe(widget => {
-      if (widget) {
-        this.addWidgetToDashboard(widget);
-      }
+  addWidget(widgetConfig: Tuple2<DataLakeMeasure, DataExplorerWidgetModel>): void {
+    this.dataLakeMeasure = widgetConfig.a;
+    this.dataViewDataExplorerService.saveWidget(widgetConfig.b).subscribe(response => {
+      this.addWidgetToDashboard(response);
     });
   }
 
   addWidgetToDashboard(widget: DataExplorerWidgetModel) {
+    //this.currentlyConfiguredWidget = widget;
     const dashboardItem = {} as DashboardItem;
-    dashboardItem.widgetId = widget._id;
     dashboardItem.id = widget._id;
-    dashboardItem.widgetType = widget.widgetType;
     dashboardItem.cols = 3;
     dashboardItem.rows = 4;
     dashboardItem.x = 0;
