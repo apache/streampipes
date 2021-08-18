@@ -18,25 +18,39 @@
 package org.apache.streampipes.commons.networking;
 
 import org.apache.streampipes.commons.constants.Envs;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 public class Networking {
 
+  private static final Logger LOG = LoggerFactory.getLogger(Networking.class);
+
   public static String getHostname() throws UnknownHostException {
+    String selectedAddress;
     if (Envs.SP_HOST.exists()) {
-      return Envs.SP_HOST.getValue();
+      selectedAddress = Envs.SP_HOST.getValue();
+      LOG.info("Using IP from provided environment variable {}: {}", Envs.SP_HOST, selectedAddress);
     } else {
-        return InetAddress.getLocalHost().getHostAddress();
+      selectedAddress = InetAddress.getLocalHost().getHostAddress();
+      LOG.info("Using auto-discovered IP: {}", selectedAddress);
     }
+
+    return selectedAddress;
   }
 
   public static Integer getPort(Integer defaultPort) {
+    Integer selectedPort;
     if (Envs.SP_PORT.exists()) {
-      return Envs.SP_PORT.getValueAsInt();
+      selectedPort = Envs.SP_PORT.getValueAsInt();
+      LOG.info("Using port from provided environment variable {}: {}", Envs.SP_PORT, selectedPort);
     } else {
-      return defaultPort;
+      selectedPort = defaultPort;
+      LOG.info("Using default port: {}", defaultPort);
     }
+
+    return selectedPort;
   }
 }
