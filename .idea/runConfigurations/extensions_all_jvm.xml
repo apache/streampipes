@@ -8,7 +8,6 @@
       <env name="SP_DEBUG" value="true" />
       <env name="SP_DEBUG_CONNECT" value="false" />
       <env name="SP_PORT" value="7020" />
-      <env name="SP_HOST" value="host.docker.internal" />
       <env name="SP_COUCHDB_HOST" value="localhost" />
       <env name="SP_JMS_HOST" value="localhost" />
       <env name="SP_JMS_PORT" value="61616" />
