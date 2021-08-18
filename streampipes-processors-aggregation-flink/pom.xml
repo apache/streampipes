@@ -88,6 +88,12 @@
             <artifactId>scala-parser-combinators_2.11</artifactId>
         </dependency>
 
+        <!-- dependency convergence -->
+        <dependency>
+            <groupId>org.lz4</groupId>
+            <artifactId>lz4-java</artifactId>
+        </dependency>
+
 
         <!-- Test dependencies -->
         <dependency>
