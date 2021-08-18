@@ -2,7 +2,6 @@
   <configuration default="false" name="sinks-notifications-jvm" type="Application" factoryName="Application">
     <envs>
       <env name="SP_PORT" value="7025" />
-      <env name="SP_HOST" value="host.docker.internal" />
       <env name="SP_DEBUG" value="true" />
       <env name="SLACK_TOKEN" value="" />
       <env name="EMAIL_FROMS" value="" />

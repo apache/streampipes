@@ -1,7 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="all-pipeline-elements-flink" type="Application" factoryName="Application">
     <envs>
-      <env name="SP_HOST" value="host.docker.internal" />
       <env name="SP_PORT" value="8005" />
       <env name="SP_DEBUG" value="true" />
       <env name="SP_FLINK_DEBUG" value="true" />
