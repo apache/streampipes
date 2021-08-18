@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.service.extensions.base;
 
+import org.apache.streampipes.container.base.BaseNetworkingConfig;
 import org.apache.streampipes.container.base.StreamPipesServiceBase;
 import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.container.model.SpServiceDefinition;
@@ -43,13 +44,12 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
 
     public void init(SpServiceDefinition serviceDef) {
         try {
-        String host = getHostname();
-        Integer port = getPort(serviceDef.getDefaultPort());
+        BaseNetworkingConfig networkingConfig = BaseNetworkingConfig.defaultResolution(serviceDef.getDefaultPort());
         String serviceId = serviceDef.getServiceGroup() + "-" + AUTO_GENERATED_SERVICE_ID;
         serviceDef.setServiceId(serviceId);
-        DeclarersSingleton.getInstance().populate(host, port, serviceDef);
+        DeclarersSingleton.getInstance().populate(networkingConfig.getHost(), networkingConfig.getPort(), serviceDef);
 
-        startExtensionsService(this.getClass(), serviceDef);
+        startExtensionsService(this.getClass(), serviceDef, networkingConfig);
         } catch (UnknownHostException e) {
             LOG.error("Could not auto-resolve host address - please manually provide the hostname using the SP_HOST environment variable");
         }
@@ -62,12 +62,13 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
     public abstract void afterServiceRegistered(SpServiceDefinition serviceDef);
 
     public void startExtensionsService(Class<?> serviceClass,
-                                       SpServiceDefinition serviceDef) throws UnknownHostException {
+                                       SpServiceDefinition serviceDef,
+                                       BaseNetworkingConfig networkingConfig) throws UnknownHostException {
         this.startStreamPipesService(
                 serviceClass,
                 DefaultSpServiceGroups.EXT,
                 serviceId(),
-                serviceDef.getDefaultPort()
+                networkingConfig
         );
         this.afterServiceRegistered(serviceDef);
     }

@@ -18,7 +18,6 @@
 package org.apache.streampipes.container.base;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.streampipes.commons.networking.Networking;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceRegistrationRequest;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;
@@ -39,40 +38,32 @@ public abstract class StreamPipesServiceBase {
   protected void startStreamPipesService(Class<?> serviceClass,
                                          String serviceGroup,
                                          String serviceId,
-                                         Integer defaultPort) throws UnknownHostException {
-    registerService(serviceGroup, serviceId, defaultPort);
-    runApplication(serviceClass, defaultPort);
+                                         BaseNetworkingConfig networkingConfig) throws UnknownHostException {
+    registerService(serviceGroup, serviceId, networkingConfig);
+    runApplication(serviceClass, networkingConfig.getPort());
   }
 
   private void runApplication(Class<?> serviceClass,
-                              Integer defaultPort) {
+                              Integer port) {
     SpringApplication app = new SpringApplication(serviceClass);
-    app.setDefaultProperties(Collections.singletonMap("server.port", getPort(defaultPort)));
+    app.setDefaultProperties(Collections.singletonMap("server.port", port));
     app.run();
   }
 
   private void registerService(String serviceGroup,
                                String serviceId,
-                               Integer defaultPort) throws UnknownHostException {
+                               BaseNetworkingConfig networkingConfig) {
     SpServiceRegistrationRequest req = SpServiceRegistrationRequest.from(
             serviceGroup,
             serviceId,
-            getHostname(),
-            getPort(defaultPort),
+            networkingConfig.getHost(),
+            networkingConfig.getPort(),
             getServiceTags(),
             getHealthCheckPath());
 
     SpServiceDiscovery
             .getServiceDiscovery()
             .registerService(req);
-  }
-
-  protected String getHostname() throws UnknownHostException {
-    return Networking.getHostname();
-  }
-
-  protected Integer getPort(Integer defaultPort) {
-    return Networking.getPort(defaultPort);
   }
 
   protected abstract List<SpServiceTag> getServiceTags();

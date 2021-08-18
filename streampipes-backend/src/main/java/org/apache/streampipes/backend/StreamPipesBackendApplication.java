@@ -20,6 +20,7 @@ package org.apache.streampipes.backend;
 import org.apache.shiro.web.env.EnvironmentLoaderListener;
 import org.apache.shiro.web.servlet.OncePerRequestFilter;
 import org.apache.shiro.web.servlet.ShiroFilter;
+import org.apache.streampipes.container.base.BaseNetworkingConfig;
 import org.apache.streampipes.container.base.StreamPipesServiceBase;
 import org.apache.streampipes.manager.health.PipelineHealthCheck;
 import org.apache.streampipes.manager.operations.Operations;
@@ -74,10 +75,11 @@ public class StreamPipesBackendApplication extends StreamPipesServiceBase {
   public static void main(String[] args) {
       StreamPipesBackendApplication application = new StreamPipesBackendApplication();
       try {
+        BaseNetworkingConfig networkingConfig = BaseNetworkingConfig.defaultResolution(8030);
         application.startStreamPipesService(StreamPipesBackendApplication.class,
                 DefaultSpServiceGroups.CORE,
                 application.serviceId(),
-                8030);
+                networkingConfig);
       } catch (UnknownHostException e) {
         LOG.error("Could not auto-resolve host address - please manually provide the hostname using the SP_HOST environment variable");
       }

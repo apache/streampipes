@@ -19,6 +19,7 @@
 package org.apache.streampipes.container.standalone.init;
 
 
+import org.apache.streampipes.container.base.BaseNetworkingConfig;
 import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.container.model.PeConfig;
 import org.apache.streampipes.container.model.SpServiceDefinition;
@@ -48,10 +49,11 @@ public abstract class StandaloneModelSubmitter extends StreamPipesExtensionsServ
         DeclarersSingleton.getInstance()
                 .setPort(peConfig.getPort());
 
+        BaseNetworkingConfig networkingConfig = new BaseNetworkingConfig(peConfig.getHost(), peConfig.getPort());
         SpServiceDefinition serviceDef = DeclarersSingleton.getInstance().toServiceDefinition(peConfig.getId());
 
         try {
-            startExtensionsService(this.getClass(), serviceDef);
+            startExtensionsService(this.getClass(), serviceDef, networkingConfig);
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
