@@ -17,24 +17,26 @@
  */
 package org.apache.streampipes.processors.transformation.flink.processor.hasher;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
 import io.flinkspector.datastream.DataStreamTestBase;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.transformation.flink.processor.hasher.algorithm.HashAlgorithm;
 import org.apache.streampipes.processors.transformation.flink.processor.hasher.algorithm.Md5HashAlgorithm;
 import org.apache.streampipes.processors.transformation.flink.processor.hasher.algorithm.Sha1HashAlgorithm;
 import org.apache.streampipes.processors.transformation.flink.processor.hasher.algorithm.Sha2HashAlgorithm;
 import org.apache.streampipes.processors.transformation.flink.utils.DummyCollector;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
+@Ignore
 @RunWith(Parameterized.class)
 public class TestFieldHasher extends DataStreamTestBase {
 
