@@ -181,7 +181,8 @@ public class PipelineElementDescriptionStorageImpl implements IPipelineElementDe
 
   @Override
   public boolean update(DataProcessorDescription processorDescription) {
-    return false;
+    this.dataProcessorStorage.updateElement(processorDescription);
+    return true;
   }
 
   @Override
