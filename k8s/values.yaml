@@ -25,9 +25,9 @@ streampipes:
 
 external:
   activemqVersion: 5.15.9
-  consulVersion: 1.7.1
+  consulVersion: 1.9.6
   couchdbVersion: 2.3.1
-  flinkVersion: 1.9.1-scala_2.11
+  flinkVersion: 1.13.2-scala_2.11
   kafkaVersion: 2.2.0
   zookeeperVersion: 3.4.13
   influxdbVersion: 1.7

@@ -76,7 +76,7 @@ services:
       spnet:
 
   consul:
-    image: fogsyio/consul:1.7.1
+    image: fogsyio/consul:1.9.6
     environment:
       - "CONSUL_LOCAL_CONFIG={\"disable_update_check\": true}"
       - "CONSUL_BIND_INTERFACE=eth0"
@@ -155,7 +155,7 @@ services:
       spnet:
 
   jobmanager:
-    image: fogsyio/flink:1.9.1-scala_2.11
+    image: fogsyio/flink:1.13.2-scala_2.11
     command: jobmanager
     environment:
       - JOB_MANAGER_RPC_ADDRESS=jobmanager
@@ -165,7 +165,7 @@ services:
       spnet:
 
   taskmanager:
-    image: fogsyio/flink:1.9.1-scala_2.11
+    image: fogsyio/flink:1.13.2-scala_2.11
     depends_on:
       - jobmanager
     command: taskmanager

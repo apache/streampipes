@@ -16,7 +16,7 @@
 version: "3.4"
 services:
   consul:
-    image: fogsyio/consul:1.7.1
+    image: fogsyio/consul:1.9.6
     environment:
       - "CONSUL_LOCAL_CONFIG={\"disable_update_check\": true}"
       - "CONSUL_BIND_INTERFACE=eth0"
