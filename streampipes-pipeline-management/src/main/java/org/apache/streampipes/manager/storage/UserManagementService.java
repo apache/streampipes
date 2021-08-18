@@ -21,6 +21,7 @@ package org.apache.streampipes.manager.storage;
 import org.apache.streampipes.model.client.user.RegistrationData;
 import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.client.user.User;
+import org.apache.streampipes.storage.api.IUserStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.util.PasswordUtil;
 
@@ -36,7 +37,7 @@ public class UserManagementService {
     try {
       String encryptedPassword = PasswordUtil.encryptPassword(data.getPassword());
       user.setPassword(encryptedPassword);
-      StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI().storeUser(user);
+      getUserStorage().storeUser(user);
     } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
       return false;
     }
@@ -44,8 +45,19 @@ public class UserManagementService {
     return true;
   }
 
+  public static void setHideTutorial(String email, boolean hideTutorial) {
+    IUserStorage userService = getUserStorage();
+    User user = userService.getUser(email);
+    user.setHideTutorial(hideTutorial);
+    userService.updateUser(user);
+  }
+
   public static UserService getUserService() {
-    return new UserService(StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI());
+    return new UserService(getUserStorage());
+  }
+
+  public static IUserStorage getUserStorage() {
+    return StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI();
   }
 
 }
