@@ -57,17 +57,14 @@ public class PipelineManager {
      */
     public static String addPipeline(String username, Pipeline pipeline) {
 
+        // call by reference bad smell
         String pipelineId = UUID.randomUUID().toString();
-        pipeline.setPipelineId(pipelineId);
-        pipeline.setRunning(false);
-        pipeline.setCreatedByUser(username);
-        pipeline.setCreatedAt(new Date().getTime());
-        pipeline.getSepas().forEach(processor -> processor.setCorrespondingUser(username));
-        pipeline.getActions().forEach(action -> action.setCorrespondingUser(username));
+        preparePipelineBasics(username, pipeline, pipelineId);
         Operations.storePipeline(pipeline);
 
         return pipelineId;
     }
+
 
     /**
      * Starts all processing elements of the pipeline with the pipelineId
@@ -102,7 +99,18 @@ public class PipelineManager {
         getPipelineStorage().deletePipeline(pipelineId);
     }
 
-    public static IPipelineStorage getPipelineStorage() {
+    private static void preparePipelineBasics(String username,
+                                              Pipeline pipeline,
+                                              String pipelineId)  {
+        pipeline.setPipelineId(pipelineId);
+        pipeline.setRunning(false);
+        pipeline.setCreatedByUser(username);
+        pipeline.setCreatedAt(new Date().getTime());
+        pipeline.getSepas().forEach(processor -> processor.setCorrespondingUser(username));
+        pipeline.getActions().forEach(action -> action.setCorrespondingUser(username));
+    }
+
+    private static IPipelineStorage getPipelineStorage() {
         return StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI();
     }
 }

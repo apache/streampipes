@@ -24,6 +24,7 @@ import org.apache.streampipes.manager.file.FileManager;
 import org.apache.streampipes.manager.pipeline.PipelineCacheManager;
 import org.apache.streampipes.manager.pipeline.PipelineCanvasMetadataCacheManager;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
+import org.apache.streampipes.manager.storage.UserManagementService;
 import org.apache.streampipes.model.client.file.FileMetadata;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.pipeline.Pipeline;
@@ -46,6 +47,9 @@ public class ResetManagement {
      */
     public static void reset(String username) {
         logger.info("Start resetting the system");
+
+        // Set hide tutorial to false for user
+        UserManagementService.setHideTutorial(username, true);
 
         // Clear pipeline assembly Cache
         PipelineCacheManager.removeCachedPipeline(username);
