@@ -19,10 +19,9 @@ package org.apache.streampipes.manager.pipeline;
 
 import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.manager.storage.UserManagementService;
-import org.apache.streampipes.manager.storage.UserService;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
-import org.apache.streampipes.storage.couchdb.impl.PipelineStorageImpl;
+import org.apache.streampipes.test.generator.pipeline.DummyPipelineGenerator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,13 +30,10 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
+import static com.sun.prism.GraphicsPipeline.getPipeline;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({
@@ -51,42 +47,6 @@ public class TestPipelineManager {
         PowerMockito.mockStatic(
                 UserManagementService.class);
     }
-
-    @Test
-    public void testGetOwnPipelines() {
-        // Prepare
-        Pipeline expectedPipeline = this.getPipeline();
-        List<Pipeline> expected = Arrays.asList(expectedPipeline);
-
-        UserService userService = mock(UserService.class);
-        when(userService.getOwnPipelines(any(String.class))).thenReturn(expected);
-        when(UserManagementService.getUserService()).thenReturn(userService);
-
-        // Test
-        List<Pipeline> result = PipelineManager.getOwnPipelines("user@test.com");
-
-        // Assertions
-        assertEquals(1, result.size());
-        assertEquals(this.getPipelineName(), result.get(0).getName());
-    }
-
-    @Test
-    public void testGetPipeline() {
-        // Prepare
-        Pipeline expectedPipeline = this.getPipeline();
-
-        PipelineStorageImpl pipelineStorageImpl = mock(PipelineStorageImpl.class);
-        when(pipelineStorageImpl.getPipeline(any(String.class))).thenReturn(expectedPipeline);
-        PowerMockito.stub(PowerMockito.method(PipelineManager.class, "getPipelineStorage")).toReturn(pipelineStorageImpl);
-
-        // Test
-        Pipeline result = PipelineManager.getPipeline("pipelineid");
-
-        // Assertions
-        assertNotNull(result);
-        assertEquals(this.getPipelineName(), result.getName());
-    }
-
 
     @Test
     public void testStartPipeline() {
@@ -121,28 +81,23 @@ public class TestPipelineManager {
     @Test
     public void testAddPipeline() {
         // Prepare
-        PipelineOperationStatus expectedPipelineOperationStatus = getPipelineOperationStatus();
         PowerMockito.mockStatic(Operations.class);
+        Pipeline pipeline = DummyPipelineGenerator.makePipelineWithProcessorAndSink();
+
+        String username = "test@user.com";
 
         // Test
-        String result = PipelineManager.addPipeline("test@user.com", getPipeline());
+        String result = PipelineManager.addPipeline(username, pipeline);
 
         // Assertions
         assertNotNull(result);
-    }
-
-    private String getPipelineName() {
-        return "Test Pipeline";
-    }
-
-    private Pipeline getPipeline() {
-        Pipeline pipeline = new Pipeline();
-        pipeline.setPipelineId("testId");
-        pipeline.setName(this.getPipelineName());
-        return pipeline;
+        assertNotNull(pipeline.getPipelineId());
+        assertEquals(username, pipeline.getCreatedByUser());
+        pipeline.getSepas().forEach(processor -> assertEquals(username, processor.getCorrespondingUser()));
+        pipeline.getActions().forEach(sink -> assertEquals(username, sink.getCorrespondingUser()));
     }
 
     private PipelineOperationStatus getPipelineOperationStatus() {
-        return new PipelineOperationStatus("", getPipelineName(),"", new ArrayList<>());
+        return new PipelineOperationStatus("", DummyPipelineGenerator.PIPELINE_NAME,"", new ArrayList<>());
     }
 }
