@@ -81,6 +81,7 @@
         <kafka.version>2.7.0</kafka.version>
         <lightcouch.version>0.2.0</lightcouch.version>
         <log4j.version>2.12.1</log4j.version>
+        <lz4.version>1.7.1</lz4.version>
         <logback-classic.version>1.2.3</logback-classic.version>
         <maven-invoker.version>2.2</maven-invoker.version>
         <mqtt-client.version>1.12</mqtt-client.version>
@@ -684,6 +685,11 @@
                 <groupId>org.lightcouch</groupId>
                 <artifactId>lightcouch</artifactId>
                 <version>${lightcouch.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.lz4</groupId>
+                <artifactId>lz4-java</artifactId>
+                <version>${lz4.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.objenesis</groupId>
