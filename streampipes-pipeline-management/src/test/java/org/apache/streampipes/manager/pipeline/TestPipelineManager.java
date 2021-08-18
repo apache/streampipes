@@ -31,7 +31,6 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.ArrayList;
 
-import static com.sun.prism.GraphicsPipeline.getPipeline;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 
@@ -52,7 +51,7 @@ public class TestPipelineManager {
     public void testStartPipeline() {
         // Prepare
         PipelineOperationStatus expectedPipelineOperationStatus = getPipelineOperationStatus();
-        PowerMockito.stub(PowerMockito.method(PipelineManager.class, "getPipeline", String.class)).toReturn(getPipeline());
+        PowerMockito.stub(PowerMockito.method(PipelineManager.class, "getPipeline", String.class)).toReturn(DummyPipelineGenerator.makePipelineWithPipelineName());
         PowerMockito.stub(PowerMockito.method(Operations.class, "startPipeline", Pipeline.class)).toReturn(expectedPipelineOperationStatus);
 
         // Test
@@ -67,7 +66,7 @@ public class TestPipelineManager {
     public void testStopPipeline() {
         // Prepare
         PipelineOperationStatus expectedPipelineOperationStatus = getPipelineOperationStatus();
-        PowerMockito.stub(PowerMockito.method(PipelineManager.class, "getPipeline", String.class)).toReturn(getPipeline());
+        PowerMockito.stub(PowerMockito.method(PipelineManager.class, "getPipeline", String.class)).toReturn(DummyPipelineGenerator.makePipelineWithPipelineName());
         PowerMockito.stub(PowerMockito.method(Operations.class, "stopPipeline", Pipeline.class, boolean.class)).toReturn(expectedPipelineOperationStatus);
 
         // Test
