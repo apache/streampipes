@@ -16,14 +16,11 @@
  *
  */
 
-import {Component, Input, OnInit} from '@angular/core';
-import {
-  DataExplorerWidgetModel,
-  DataLakeMeasure, EventPropertyUnion
-} from "../../../../../core-model/gen/streampipes-model";
-import {BaseWidgetConfig} from "../../base/base-widget-config";
-import {WidgetConfigurationService} from "../../../../services/widget-configuration.service";
-import {TableDataConfig, TableWidgetModel} from "../model/table-widget.model";
+import { Component, OnInit } from '@angular/core';
+import { EventPropertyUnion } from '../../../../../core-model/gen/streampipes-model';
+import { BaseWidgetConfig } from '../../base/base-widget-config';
+import { WidgetConfigurationService } from '../../../../services/widget-configuration.service';
+import { TableWidgetModel } from '../model/table-widget.model';
 
 @Component({
   selector: 'sp-data-explorer-table-widget-config',
@@ -39,10 +36,12 @@ export class TableWidgetConfigComponent extends BaseWidgetConfig<TableWidgetMode
   ngOnInit(): void {
     if (!this.currentlyConfiguredWidget.dataConfig.availableColumns) {
       this.currentlyConfiguredWidget.dataConfig.availableColumns = [this.getTimestampProperty(this.dataLakeMeasure.eventSchema)];
-      this.currentlyConfiguredWidget.dataConfig.availableColumns = this.currentlyConfiguredWidget.dataConfig.availableColumns.concat(this.getValuePropertyKeys(this.dataLakeMeasure.eventSchema));
+      this.currentlyConfiguredWidget.dataConfig.availableColumns =
+        this.currentlyConfiguredWidget.dataConfig.availableColumns.concat(this.getValuePropertyKeys(this.dataLakeMeasure.eventSchema));
 
       // Reduce selected columns when more then 6
-      this.currentlyConfiguredWidget.dataConfig.selectedColumns = this.currentlyConfiguredWidget.dataConfig.availableColumns.length > 6 ? this.currentlyConfiguredWidget.dataConfig.availableColumns.slice(0, 5) : this.currentlyConfiguredWidget.dataConfig.availableColumns;
+      this.currentlyConfiguredWidget.dataConfig.selectedColumns = this.currentlyConfiguredWidget.dataConfig.availableColumns.length > 6 ?
+        this.currentlyConfiguredWidget.dataConfig.availableColumns.slice(0, 5) : this.currentlyConfiguredWidget.dataConfig.availableColumns;
       this.triggerDataRefresh();
     }
   }
@@ -50,7 +49,7 @@ export class TableWidgetConfigComponent extends BaseWidgetConfig<TableWidgetMode
   onFilterChange(searchValue: string): void {
     this.currentlyConfiguredWidget.dataConfig.searchValue = searchValue.trim().toLowerCase();
     this.triggerViewRefresh();
-    //this.dataSource.filter = searchValue.trim().toLowerCase();
+    // this.dataSource.filter = searchValue.trim().toLowerCase();
   }
 
   setSelectedColumn(selectedColumns: EventPropertyUnion[]) {

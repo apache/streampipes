@@ -16,11 +16,9 @@
  *
  */
 
-import {Injectable} from '@angular/core';
-import {ReplaySubject, Subject} from 'rxjs';
-import {Tuple2} from "../../core-model/base/Tuple2";
-import {DataExplorerWidgetModel} from "../../core-model/gen/streampipes-model";
-import {RefreshMessage} from "../models/dataview-dashboard.model";
+import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
+import { RefreshMessage } from '../models/dataview-dashboard.model';
 
 @Injectable()
 export class WidgetConfigurationService {
