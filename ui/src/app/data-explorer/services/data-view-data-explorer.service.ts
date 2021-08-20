@@ -16,18 +16,18 @@
  *
  */
 
-import {HttpClient} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
-import {DatalakeRestService} from '../../core-services/datalake/datalake-rest.service';
-import {SharedDatalakeRestService} from '../../core-services/shared/shared-dashboard.service';
-import {AuthStatusService} from '../../services/auth-status.service';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { DatalakeRestService } from '../../core-services/datalake/datalake-rest.service';
+import { SharedDatalakeRestService } from '../../core-services/shared/shared-dashboard.service';
+import { AuthStatusService } from '../../services/auth-status.service';
 import {
   DataExplorerWidgetModel,
   DataLakeMeasure,
-} from "../../core-model/gen/streampipes-model";
-import {Dashboard} from "../../dashboard/models/dashboard.model";
+} from '../../core-model/gen/streampipes-model';
+import { Dashboard } from '../../dashboard/models/dashboard.model';
+import { Injectable } from '@angular/core';
 
 
 @Injectable()

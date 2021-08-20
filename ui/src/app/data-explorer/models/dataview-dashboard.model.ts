@@ -16,8 +16,9 @@
  *
  */
 
-import {GridsterConfig} from 'angular-gridster2';
+import {  GridsterConfig } from 'angular-gridster2';
 
+// tslint:disable-next-line:no-empty-interface
 export interface IDataViewDashboardConfig extends GridsterConfig {}
 
 export interface IWidget {

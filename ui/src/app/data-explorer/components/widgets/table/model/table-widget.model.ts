@@ -16,16 +16,13 @@
  *
  */
 
-import {
-  DataExplorerWidgetModel,
-  EventPropertyUnion
-} from "../../../../../core-model/gen/streampipes-model";
+import { DataExplorerWidgetModel, EventPropertyUnion } from '../../../../../core-model/gen/streampipes-model';
 
 export interface TableDataConfig {
-  availableColumns: Array<EventPropertyUnion>;
-  selectedColumns: Array<EventPropertyUnion>;
+  availableColumns: EventPropertyUnion[];
+  selectedColumns: EventPropertyUnion[];
   searchValue: string;
-  columnNames: Array<string>;
+  columnNames: string[];
 }
 
 export interface TableWidgetModel extends DataExplorerWidgetModel {

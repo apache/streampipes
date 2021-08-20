@@ -22,8 +22,8 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { DataResult } from '../../../../core-model/datalake/DataResult';
 import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
-import { WidgetConfigurationService } from "../../../services/widget-configuration.service";
-import { TableWidgetModel } from "./model/table-widget.model";
+import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
+import { TableWidgetModel } from './model/table-widget.model';
 import { ResizeService } from '../../../services/resize.service';
 import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
 
@@ -34,7 +34,7 @@ import { DatalakeRestService } from '../../../../core-services/datalake/datalake
 })
 export class TableWidgetComponent extends BaseDataExplorerWidget<TableWidgetModel> implements OnInit, OnDestroy {
 
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   dataSource = new MatTableDataSource();
 
@@ -48,9 +48,8 @@ export class TableWidgetComponent extends BaseDataExplorerWidget<TableWidgetMode
   ngOnInit(): void {
     super.ngOnInit();
     this.dataSource.sort = this.sort;
-    //this.columnNames = this.getRuntimeNames(this.selectedColumns);
-
-    //this.updateData();
+    // this.columnNames = this.getRuntimeNames(this.selectedColumns);
+    // this.updateData();
   }
 
   transformData(data: DataResult) {
@@ -74,7 +73,6 @@ export class TableWidgetComponent extends BaseDataExplorerWidget<TableWidgetMode
     });
     return object;
   }
-
 
 
   ngOnDestroy(): void {
@@ -103,12 +101,12 @@ export class TableWidgetComponent extends BaseDataExplorerWidget<TableWidgetMode
     this.setShownComponents(false, false, true);
 
     this.dataLakeRestService.getDataAutoAggregation(
-        this.dataLakeMeasure.measureName, this.timeSettings.startTime, this.timeSettings.endTime)
-        .subscribe(
-            (res: DataResult) => {
-              this.dataSource.data = this.transformData(res);
-            }
-        );
+      this.dataLakeMeasure.measureName, this.timeSettings.startTime, this.timeSettings.endTime)
+      .subscribe(
+        (res: DataResult) => {
+          this.dataSource.data = this.transformData(res);
+        }
+      );
   }
 
   public refreshView() {

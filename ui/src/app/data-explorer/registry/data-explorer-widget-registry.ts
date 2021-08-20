@@ -16,7 +16,7 @@
  *
  */
 
-import {IWidget} from "../models/dataview-dashboard.model";
+import { IWidget } from '../models/dataview-dashboard.model';
 
 export class DataExplorerWidgetRegistry {
 

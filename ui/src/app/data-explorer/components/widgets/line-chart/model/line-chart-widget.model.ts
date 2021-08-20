@@ -16,17 +16,14 @@
  *
  */
 
-import {
-  DataExplorerWidgetModel,
-  EventPropertyUnion
-} from '../../../../../core-model/gen/streampipes-model';
+import { DataExplorerWidgetModel, EventPropertyUnion } from '../../../../../core-model/gen/streampipes-model';
 
 export interface LineChartDataConfig {
-  selectedLineChartProperties: Array<EventPropertyUnion>;
-  availableProperties: Array<EventPropertyUnion>;
-  dimensionProperties: Array<EventPropertyUnion>;
+  selectedLineChartProperties: EventPropertyUnion[];
+  availableProperties: EventPropertyUnion[];
+  dimensionProperties: EventPropertyUnion[];
   selectedBackgroundColorProperty: EventPropertyUnion;
-  availableNonNumericColumns: Array<EventPropertyUnion>;
+  availableNonNumericColumns: EventPropertyUnion[];
   advancedSettingsActive: boolean;
   aggregationValue: number;
   aggregationTimeUnit: string;

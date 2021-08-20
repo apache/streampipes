@@ -16,7 +16,7 @@
  *
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'sp-aggregate-configuration',
@@ -36,7 +36,8 @@ export class AggregateConfigurationComponent implements OnInit {
   @Output()
   aggregationTimeUnitChange = new EventEmitter();
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit(): void {
   }

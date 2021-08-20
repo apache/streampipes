@@ -16,8 +16,8 @@
  *
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {EventPropertyUnion} from "../../../../../core-model/gen/streampipes-model";
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { EventPropertyUnion } from '../../../../../core-model/gen/streampipes-model';
 
 @Component({
   selector: 'sp-group-configuration',
@@ -30,6 +30,7 @@ export class GroupConfigurationComponent implements OnInit {
 
   @Input()
   groupValue;
+
   @Output()
   groupValueChange = new EventEmitter();
 
@@ -37,11 +38,9 @@ export class GroupConfigurationComponent implements OnInit {
 
   @Input()
   showCountValue = false;
+
   @Output()
   showCountValueChange = new EventEmitter();
-
-  // @Output()
-  // update: EventEmitter<any> = new EventEmitter();
 
   @Input()
   dimensionProperties: EventPropertyUnion[];
@@ -51,7 +50,7 @@ export class GroupConfigurationComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.dimensionProperties.length === 0) {
-     this.groupingAvailable = false;
+      this.groupingAvailable = false;
     }
   }
 
