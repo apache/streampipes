@@ -102,8 +102,13 @@ if (process.env.LOGO_HEADER_LOC !== undefined) {
 }
 
 if (process.env.LOGO_NAV_LOC !== undefined) {
-    console.log('Using custom-provided navbar logo' + process.env.LOGO_NAV_LOC);
+    console.log('Using custom-provided navbar logo ' + process.env.LOGO_NAV_LOC);
     fs.writeFileSync('src/assets/img/sp/logo-navigation.png', fs.readFileSync(process.env.LOGO_NAV_LOC));
+}
+
+if (process.env.FAVICON_LOC !== undefined) {
+    console.log('Using custom-provided favicon ' + process.env.FAVICON_LOC);
+    fs.writeFileSync('src/assets/img/favicon/favicon-96x96.png', fs.readFileSync(process.env.FAVICON_LOC));
 }
 
 console.log('Pre-Build finished.');
