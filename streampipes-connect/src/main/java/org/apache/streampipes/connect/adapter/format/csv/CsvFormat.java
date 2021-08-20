@@ -91,7 +91,13 @@ public class CsvFormat implements IFormat {
             for (int i = 0; i <= arr.length - 1; i++) {
 
                 if (!arr[i].equals("") && StringUtils.isNumeric(arr[i])) {
-                    map.put(keyValues[i], Long.parseLong(arr[i]));
+                    // If there is a number format exception for long, transform it to a dauble
+                    try {
+                        map.put(keyValues[i], Long.parseLong(arr[i]));
+                    } catch (NumberFormatException e) {
+                        // If not a double use string as fallback type
+                        map.put(keyValues[i], Double.parseDouble(arr[i]));
+                    }
                 } else if ("true".equals(arr[i].toLowerCase()) || "false".equals(arr[i].toLowerCase())) {
                     map.put(keyValues[i], Boolean.parseBoolean(arr[i]));
                 } else {
@@ -115,6 +121,11 @@ public class CsvFormat implements IFormat {
         } else {
             return map;
         }
+    }
+
+    public static void main(String... args) {
+        double d = Long.parseLong("15894399000000000000");
+        System.out.println(d);
     }
 
     @Override
