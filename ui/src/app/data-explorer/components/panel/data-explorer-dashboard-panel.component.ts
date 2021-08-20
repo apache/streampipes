@@ -96,6 +96,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
       //this.refreshDashboardService.notify(this.dashboard._id);
       // TODO delete widgets
       this.dashboardGrid.updateAllWidgets();
+      this.editModeChange.emit(false);
         // if (this.widgetsToUpdate.size > 0) {
         //     forkJoin(this.prepareWidgetUpdates()).subscribe(result => {
         //           this.closeEditModeAndReloadDashboard(closeEditMode);
