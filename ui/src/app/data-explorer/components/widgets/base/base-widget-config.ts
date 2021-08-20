@@ -16,7 +16,7 @@
  *
  */
 
-import { Directive, Input, OnChanges, SimpleChanges } from "@angular/core";
+import { Directive, Input, OnChanges, SimpleChanges } from '@angular/core';
 import {
   DataExplorerWidgetModel,
   DataLakeMeasure,
@@ -24,10 +24,11 @@ import {
   EventPropertyPrimitive,
   EventPropertyUnion,
   EventSchema
-} from "../../../../core-model/gen/streampipes-model";
-import { WidgetConfigurationService } from "../../../services/widget-configuration.service";
+} from '../../../../core-model/gen/streampipes-model';
+import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
 
 @Directive()
+// tslint:disable-next-line:directive-class-suffix
 export abstract class BaseWidgetConfig<T extends DataExplorerWidgetModel> implements OnChanges {
 
   @Input() currentlyConfiguredWidget: T;
@@ -40,17 +41,17 @@ export abstract class BaseWidgetConfig<T extends DataExplorerWidgetModel> implem
   }
 
   ngOnChanges(changes: SimpleChanges) {
-   if (changes.dataLakeMeasure && changes.dataLakeMeasure.currentValue.measureName !== this.dataLakeMeasure.measureName) {
-     this.updateWidgetConfigOptions();
-   }
+    if (changes.dataLakeMeasure && changes.dataLakeMeasure.currentValue.measureName !== this.dataLakeMeasure.measureName) {
+      this.updateWidgetConfigOptions();
+    }
   }
 
   triggerDataRefresh() {
-    this.widgetConfigurationService.notify({widgetId: this.currentlyConfiguredWidget._id, refreshData: true, refreshView: false});
+    this.widgetConfigurationService.notify({ widgetId: this.currentlyConfiguredWidget._id, refreshData: true, refreshView: false });
   }
 
   triggerViewRefresh() {
-    this.widgetConfigurationService.notify({widgetId: this.currentlyConfiguredWidget._id, refreshData: false, refreshView: true});
+    this.widgetConfigurationService.notify({ widgetId: this.currentlyConfiguredWidget._id, refreshData: false, refreshView: true });
   }
 
 
@@ -80,7 +81,7 @@ export abstract class BaseWidgetConfig<T extends DataExplorerWidgetModel> implem
   getNonNumericProperties(eventSchema: EventSchema): EventPropertyUnion[] {
     const result: EventPropertyUnion[] = [];
     const b = new EventPropertyPrimitive();
-    b["@class"] = "org.apache.streampipes.model.schema.EventPropertyPrimitive";
+    b['@class'] = 'org.apache.streampipes.model.schema.EventPropertyPrimitive';
     b.runtimeType = 'https://www.w3.org/2001/XMLSchema#string';
     b.runtimeName = '';
 
@@ -118,12 +119,11 @@ export abstract class BaseWidgetConfig<T extends DataExplorerWidgetModel> implem
   }
 
 
-
   getTimestampProperty(eventSchema: EventSchema) {
     const propertyKeys: string[] = [];
 
     const result = eventSchema.eventProperties.find(p =>
-        this.isTimestamp(p)
+      this.isTimestamp(p)
     );
 
     return result;
@@ -134,15 +134,15 @@ export abstract class BaseWidgetConfig<T extends DataExplorerWidgetModel> implem
       const runtimeType = (p as EventPropertyPrimitive).runtimeType;
 
       return runtimeType === 'http://schema.org/Number' ||
-          runtimeType === 'http://www.w3.org/2001/XMLSchema#float' ||
-          runtimeType === 'http://www.w3.org/2001/XMLSchema#double' ||
-          runtimeType === 'http://www.w3.org/2001/XMLSchema#integer' ||
-          runtimeType === 'https://schema.org/Number' ||
-          runtimeType === 'https://www.w3.org/2001/XMLSchema#float' ||
-          runtimeType === 'https://www.w3.org/2001/XMLSchema#double' ||
-          runtimeType === 'https://www.w3.org/2001/XMLSchema#integer';
+        runtimeType === 'http://www.w3.org/2001/XMLSchema#float' ||
+        runtimeType === 'http://www.w3.org/2001/XMLSchema#double' ||
+        runtimeType === 'http://www.w3.org/2001/XMLSchema#integer' ||
+        runtimeType === 'https://schema.org/Number' ||
+        runtimeType === 'https://www.w3.org/2001/XMLSchema#float' ||
+        runtimeType === 'https://www.w3.org/2001/XMLSchema#double' ||
+        runtimeType === 'https://www.w3.org/2001/XMLSchema#integer';
     } else {
-      return  false;
+      return false;
     }
   }
 

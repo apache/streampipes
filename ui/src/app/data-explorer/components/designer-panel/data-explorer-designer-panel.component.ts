@@ -17,23 +17,21 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import {
-  DataExplorerWidgetModel,
-  DataLakeMeasure
-} from '../../../core-model/gen/streampipes-model';
+import { DataExplorerWidgetModel, DataLakeMeasure } from '../../../core-model/gen/streampipes-model';
 import { Tuple2 } from '../../../core-model/base/Tuple2';
 
 @Component({
   selector: 'sp-data-explorer-designer-panel',
   templateUrl: './data-explorer-designer-panel.component.html',
-  styleUrls: ['./data-explorer-designer-panel.component.scss'],
+  styleUrls: ['./data-explorer-designer-panel.component.scss']
 })
 export class DataExplorerDesignerPanelComponent implements OnInit {
 
   @Input() currentlyConfiguredWidget: DataExplorerWidgetModel;
   @Input() dataLakeMeasure: DataLakeMeasure;
 
-  @Output() addWidgetEmitter: EventEmitter<Tuple2<DataLakeMeasure, DataExplorerWidgetModel>> = new EventEmitter<Tuple2<DataLakeMeasure, DataExplorerWidgetModel>>();
+  @Output() addWidgetEmitter: EventEmitter<Tuple2<DataLakeMeasure, DataExplorerWidgetModel>> =
+    new EventEmitter<Tuple2<DataLakeMeasure, DataExplorerWidgetModel>>();
 
   selectedIndex = 0;
   newWidgetMode = false;
@@ -58,7 +56,7 @@ export class DataExplorerDesignerPanelComponent implements OnInit {
 
   createNewWidget() {
     this.newWidgetMode = false;
-    this.addWidgetEmitter.emit({a: this.dataLakeMeasure, b: this.currentlyConfiguredWidget});
+    this.addWidgetEmitter.emit({ a: this.dataLakeMeasure, b: this.currentlyConfiguredWidget });
   }
 
 }
