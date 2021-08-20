@@ -53,3 +53,12 @@
   margin-right: 15px;
   white-space: nowrap;
 }
+
+.active-page {
+  font-size: small;
+  background: var(--color-navigation-bg-selected);
+  color: var(--color-navigation-selected);
+  font-weight:bold;
+  padding: 5px;
+  border-radius: 2px;
+}
