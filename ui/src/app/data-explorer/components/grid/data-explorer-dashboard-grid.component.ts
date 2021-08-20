@@ -60,7 +60,7 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
   @Input()
   timeSettings: TimeSettings;
 
-  @Output() deleteCallback: EventEmitter<DashboardItem> = new EventEmitter<DashboardItem>();
+  @Output() deleteCallback: EventEmitter<DataExplorerWidgetModel> = new EventEmitter<DataExplorerWidgetModel>();
   @Output() updateCallback: EventEmitter<DataExplorerWidgetModel> = new EventEmitter<DataExplorerWidgetModel>();
   @Output() configureWidgetCallback: EventEmitter<Tuple2<DataExplorerWidgetModel, DataLakeMeasure>> = new EventEmitter<Tuple2<DataExplorerWidgetModel, DataLakeMeasure>>();
 
@@ -137,7 +137,7 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
     }
   }
 
-  propagateItemRemoval(widget: DashboardItem) {
+  propagateItemRemoval(widget: DataExplorerWidgetModel) {
     this.deleteCallback.emit(widget);
   }
 

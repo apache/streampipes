@@ -27,7 +27,7 @@ import {
 } from '../../../core-model/gen/streampipes-model';
 import { DataDownloadDialog } from '../datadownloadDialog/dataDownload.dialog';
 import { Tuple2 } from '../../../core-model/base/Tuple2';
-import { Dashboard, TimeSettings } from '../../../dashboard/models/dashboard.model';
+import { Dashboard, DashboardItem, TimeSettings } from '../../../dashboard/models/dashboard.model';
 
 @Component({
   selector: 'sp-data-explorer-dashboard-widget',
@@ -37,7 +37,7 @@ import { Dashboard, TimeSettings } from '../../../dashboard/models/dashboard.mod
 export class DataExplorerDashboardWidgetComponent implements OnInit {
 
   @Input()
-  widget: Dashboard;
+  dashboardItem: DashboardItem;
 
   @Input()
   configuredWidget: DataExplorerWidgetModel;
@@ -49,9 +49,6 @@ export class DataExplorerDashboardWidgetComponent implements OnInit {
   editMode: boolean;
 
   @Input()
-  item: GridsterItem;
-
-  @Input()
   gridsterItemComponent: GridsterItemComponent;
 
   /**
@@ -60,10 +57,10 @@ export class DataExplorerDashboardWidgetComponent implements OnInit {
   @Input()
   timeSettings: TimeSettings;
 
-  @Output() deleteCallback: EventEmitter<Dashboard> = new EventEmitter<Dashboard>();
+  @Output() deleteCallback: EventEmitter<DataExplorerWidgetModel> = new EventEmitter<DataExplorerWidgetModel>();
   @Output() updateCallback: EventEmitter<DataExplorerWidgetModel> = new EventEmitter<DataExplorerWidgetModel>();
-  @Output() configureWidgetCallback: EventEmitter<Tuple2<DataExplorerWidgetModel, DataLakeMeasure>> = new EventEmitter<Tuple2<DataExplorerWidgetModel, DataLakeMeasure>>();
-
+  @Output() configureWidgetCallback: EventEmitter<Tuple2<DataExplorerWidgetModel, DataLakeMeasure>>
+      = new EventEmitter<Tuple2<DataExplorerWidgetModel, DataLakeMeasure>>();
 
   title = '';
   widgetLoaded = false;
@@ -78,7 +75,7 @@ export class DataExplorerDashboardWidgetComponent implements OnInit {
   }
 
   removeWidget() {
-    this.deleteCallback.emit(this.widget);
+    this.deleteCallback.emit(this.configuredWidget);
   }
 
   downloadDataAsFile() {

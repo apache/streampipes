@@ -92,29 +92,15 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
     this.dashboardGrid.loadWidgetConfig(widget._id);
   }
 
-  updateDashboard(closeEditMode?: boolean) {
+  updateDashboard() {
     this.dataViewDataExplorerService.updateDashboard(this.dashboard).subscribe(result => {
       this.dashboard._rev = result._rev;
-      //this.refreshDashboardService.notify(this.dashboard._id);
-      // TODO delete widgets
+      if (this.widgetIdsToRemove.length > 0) {
+        this.deleteWidgets();
+      }
       this.dashboardGrid.updateAllWidgets();
       this.editModeChange.emit(false);
-      // if (this.widgetsToUpdate.size > 0) {
-      //     forkJoin(this.prepareWidgetUpdates()).subscribe(result => {
-      //           this.closeEditModeAndReloadDashboard(closeEditMode);
-      //     });
-      // } else {
-      //     this.deleteWidgets();
-      //     this.closeEditModeAndReloadDashboard(false);
-      // }
     });
-  }
-
-  closeEditModeAndReloadDashboard(closeEditMode: boolean) {
-    if (closeEditMode) {
-      this.editModeChange.emit(!(this.editMode));
-    }
-    this.refreshDashboardService.notify(this.dashboard._id);
   }
 
   prepareWidgetUpdates(): Array<Observable<any>> {
@@ -126,18 +112,14 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
     return promises;
   }
 
-  discardChanges() {
-    this.editModeChange.emit(!(this.editMode));
-    this.refreshDashboardService.notify(this.dashboard._id);
+  removeAndQueueItemForDeletion(widget: DataExplorerWidgetModel) {
+    const index = this.dashboard.widgets.findIndex(item => item.id === widget._id);
+    this.dashboard.widgets.splice(index, 1);
+    this.widgetIdsToRemove.push(widget._id);
   }
 
-  removeAndQueueItemForDeletion(widget: DashboardItem) {
-    this.dashboard.widgets.splice(this.dashboard.widgets.indexOf(widget), 1);
-    this.widgetIdsToRemove.push(widget.id);
-  }
-
-  updateAndQueueItemForDeletion(dataExlporerWidget: DataExplorerWidgetModel) {
-    this.widgetsToUpdate.set(dataExlporerWidget._id, dataExlporerWidget);
+  updateAndQueueItemForDeletion(widget: DataExplorerWidgetModel) {
+    this.widgetsToUpdate.set(widget._id, widget);
   }
 
   deleteWidgets() {
