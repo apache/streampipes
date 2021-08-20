@@ -29,6 +29,7 @@ import { DataExplorerDashboardGridComponent } from '../grid/data-explorer-dashbo
 import { MatDrawer } from '@angular/material/sidenav';
 import { Tuple2 } from '../../../core-model/base/Tuple2';
 import { Dashboard, DashboardItem, TimeSettings } from '../../../dashboard/models/dashboard.model';
+import { DataExplorerDesignerPanelComponent } from '../designer-panel/data-explorer-designer-panel.component';
 
 @Component({
   selector: 'sp-data-explorer-dashboard-panel',
@@ -49,6 +50,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
 
   @ViewChild('dashboardGrid') dashboardGrid: DataExplorerDashboardGridComponent;
   @ViewChild('designerDrawer') designerDrawer: MatDrawer;
+  @ViewChild('designerPanel') designerPanel: DataExplorerDesignerPanelComponent;
 
   public items: Dashboard[];
 
@@ -97,14 +99,14 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
       // TODO delete widgets
       this.dashboardGrid.updateAllWidgets();
       this.editModeChange.emit(false);
-        // if (this.widgetsToUpdate.size > 0) {
-        //     forkJoin(this.prepareWidgetUpdates()).subscribe(result => {
-        //           this.closeEditModeAndReloadDashboard(closeEditMode);
-        //     });
-        // } else {
-        //     this.deleteWidgets();
-        //     this.closeEditModeAndReloadDashboard(false);
-        // }
+      // if (this.widgetsToUpdate.size > 0) {
+      //     forkJoin(this.prepareWidgetUpdates()).subscribe(result => {
+      //           this.closeEditModeAndReloadDashboard(closeEditMode);
+      //     });
+      // } else {
+      //     this.deleteWidgets();
+      //     this.closeEditModeAndReloadDashboard(false);
+      // }
     });
   }
 
@@ -152,5 +154,6 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
     this.widgetsToUpdate.set(currentWidget.a._id, currentWidget.a);
     this.currentlyConfiguredWidget = currentWidget.a;
     this.dataLakeMeasure = currentWidget.b;
+    this.designerPanel.modifyWidgetMode(false);
   }
 }
