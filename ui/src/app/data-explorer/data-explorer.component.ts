@@ -22,6 +22,8 @@ import { RefreshDashboardService } from './services/refresh-dashboard.service';
 import { DataExplorerDashboardPanelComponent } from './components/panel/data-explorer-dashboard-panel.component';
 import { Dashboard, TimeSettings } from '../dashboard/models/dashboard.model';
 import { Tuple2 } from '../core-model/base/Tuple2';
+import { ActivatedRoute } from '@angular/router';
+import { TimeRangeSelectorComponent } from './components/time-selector/timeRangeSelector.component';
 
 @Component({
   selector: 'sp-data-explorer',
@@ -37,19 +39,24 @@ export class DataExplorerComponent implements OnInit {
   timeRangeVisible = true;
 
   editMode = true;
-  gridVisible = true;
-
   dataViewDashboards: Dashboard[];
+
+  routeParams: any;
 
   @ViewChild('dashboardPanel') dashboardPanel: DataExplorerDashboardPanelComponent;
 
   constructor(private dataViewService: DataViewDataExplorerService,
-              private refreshDashboardService: RefreshDashboardService) {
+              private refreshDashboardService: RefreshDashboardService,
+              private route: ActivatedRoute) {
   }
 
 
   public ngOnInit() {
-    this.getDashboards();
+    this.route.queryParams.subscribe(params => {
+      this.routeParams = {startTime: params['startTime'], endTime: params['endTime'], dashboardId: params['dashboardId']};
+      console.log(this.routeParams);
+      this.getDashboards();
+    });
     this.refreshDashboardService.refreshSubject.subscribe(currentDashboardId => {
       this.getDashboards(currentDashboardId);
     });
@@ -74,7 +81,13 @@ export class DataExplorerComponent implements OnInit {
   }
 
   applyTimeSettings(dashboard: Dashboard) {
-    if (!dashboard.dashboardTimeSettings) {
+    if (this.routeParams.startTime && this.routeParams.endTime) {
+      dashboard.dashboardTimeSettings = {
+        startTime: this.routeParams.startTime * 1,
+        endTime: this.routeParams.endTime * 1,
+        dynamicSelection: -1
+      };
+    } else if (!dashboard.dashboardTimeSettings) {
       const currentTime = new Date().getTime();
       dashboard.dashboardTimeSettings = {
         startTime: currentTime - 100000 * 60000,
@@ -84,13 +97,19 @@ export class DataExplorerComponent implements OnInit {
     }
   }
 
+  findAndSelectDashboard(dashboardId: string) {
+    const currentDashboard = this.dataViewDashboards.find(d => d._id === dashboardId);
+    this.selectDashboard(this.dataViewDashboards.indexOf(currentDashboard) + 1);
+  }
+
   protected getDashboards(currentDashboardId?: string) {
     this.dashboardsLoaded = false;
     this.dataViewService.getDataViews().subscribe(data => {
       this.dataViewDashboards = data;
       if (currentDashboardId) {
-        const currentDashboard = this.dataViewDashboards.find(d => d._id === currentDashboardId);
-        this.selectDashboard(this.dataViewDashboards.indexOf(currentDashboard) + 1);
+        this.findAndSelectDashboard(currentDashboardId);
+      } else if (this.routeParams.dashboardId) {
+        this.findAndSelectDashboard(this.routeParams.dashboardId);
       } else {
         this.selectedIndex = 0;
       }
@@ -107,11 +126,7 @@ export class DataExplorerComponent implements OnInit {
   }
 
   saveDashboard() {
-    this.dashboardPanel.updateDashboard(false);
-  }
-
-  toggleGrid() {
-    this.dashboardPanel.toggleGrid(this.gridVisible);
+    this.dashboardPanel.updateDashboard();
   }
 
   triggerEditMode() {
