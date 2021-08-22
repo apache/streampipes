@@ -42,6 +42,12 @@ export class DatalakeQueryParameterBuilder {
     return this;
   }
 
+  public withAggregationFunction(aggregationFunction: string) {
+    this.queryParams.aggregationFunction = aggregationFunction;
+
+    return this;
+  }
+
   public withAggregation(aggregationFunction: string,
                          aggregationTimeUnit: string,
                          aggregationTimeValue: number) {
@@ -67,6 +73,18 @@ export class DatalakeQueryParameterBuilder {
                     limit: number): DatalakeQueryParameterBuilder {
     this.queryParams.page = page;
     this.queryParams.limit = limit;
+
+    return this;
+  }
+
+  public withLimit(limit: number): DatalakeQueryParameterBuilder {
+    this.queryParams.limit = limit;
+
+    return this;
+  }
+
+  public withOrdering(order: string): DatalakeQueryParameterBuilder {
+    this.queryParams.order = order;
 
     return this;
   }

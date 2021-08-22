@@ -40,11 +40,10 @@ export class TableWidgetComponent extends BaseDataExplorerWidget<TableWidgetMode
 
   dataSource = new MatTableDataSource();
 
-  constructor(protected dataLakeRestService: DatalakeRestService,
-              protected dialog: MatDialog,
+  constructor(dataLakeRestService: DatalakeRestService,
               widgetConfigurationService: WidgetConfigurationService,
               resizeService: ResizeService) {
-    super(dataLakeRestService, dialog, widgetConfigurationService, resizeService);
+    super(dataLakeRestService, widgetConfigurationService, resizeService);
   }
 
   ngOnInit(): void {
@@ -117,6 +116,9 @@ export class TableWidgetComponent extends BaseDataExplorerWidget<TableWidgetMode
 
   buildQuery(): DatalakeQueryParameters {
     return DatalakeQueryParameterBuilder.create(this.timeSettings.startTime, this.timeSettings.endTime).build();
+  }
+
+  onResize(width: number, height: number) {
   }
 
 }

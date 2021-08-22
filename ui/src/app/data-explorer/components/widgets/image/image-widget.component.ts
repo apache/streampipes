@@ -48,11 +48,10 @@ export class ImageWidgetComponent extends BaseDataExplorerWidget<ImageWidgetMode
   public imagesRoutes = [];
 
   constructor(
-      protected dataLakeRestService: DatalakeRestService,
-      protected dialog: MatDialog,
+      dataLakeRestService: DatalakeRestService,
       widgetConfigurationService: WidgetConfigurationService,
       resizeService: ResizeService) {
-    super(dataLakeRestService, dialog, widgetConfigurationService, resizeService);
+    super(dataLakeRestService, widgetConfigurationService, resizeService);
   }
 
   ngOnInit(): void {
@@ -98,5 +97,8 @@ export class ImageWidgetComponent extends BaseDataExplorerWidget<ImageWidgetMode
 
   buildQuery(): DatalakeQueryParameters {
     return DatalakeQueryParameterBuilder.create(this.timeSettings.startTime, this.timeSettings.endTime).build();
+  }
+
+  onResize(width: number, height: number) {
   }
 }

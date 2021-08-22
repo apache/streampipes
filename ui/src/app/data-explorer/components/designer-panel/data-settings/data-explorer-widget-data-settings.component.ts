@@ -81,22 +81,6 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
       this.availableMeasurements.find(m => m.measureName === measureName);
   }
 
-  configureVis(event: MatSelectChange) {
-    if (event.value === 'line-chart') {
-      this.initiateLineChart();
-    } else if (event.value === 'table') {
-      this.initiateTable();
-    }
-  }
-
-  initiateLineChart() {
-
-  }
-
-  initiateTable() {
-
-  }
-
   createWidget() {
     this.createWidgetEmitter.emit({ a: this.dataLakeMeasure, b: this.currentlyConfiguredWidget });
   }

@@ -81,6 +81,19 @@
                             [dataLakeMeasure]="dataLakeMeasure"
                             class="h-100"></sp-data-explorer-image-widget>
                 </div>
+                <div *ngIf="configuredWidget.widgetType === 'indicator-chart'" class="h-100 p-0">
+                    <sp-data-explorer-indicator-chart-widget
+                            (removeWidgetCallback)="removeWidget()"
+                            [timeSettings]="timeSettings"
+                            [gridsterItem]="dashboardItem"
+                            [gridsterItemComponent]="gridsterItemComponent"
+                            [editMode]="editMode"
+                            [dataViewDashboardItem]="dashboardItem"
+                            [dataExplorerWidget]="configuredWidget"
+                            [dataLakeMeasure]="dataLakeMeasure"
+                            class="h-100">
+                    </sp-data-explorer-indicator-chart-widget>
+                </div>
             </div>
         </div>
     </div>

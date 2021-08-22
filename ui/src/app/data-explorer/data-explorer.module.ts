@@ -71,8 +71,8 @@ import { WidgetConfigurationService } from './services/widget-configuration.serv
 import { LineChartWidgetConfigComponent } from './components/widgets/line-chart/config/line-chart-widget-config.component';
 import { ImageWidgetConfigComponent } from './components/widgets/image/config/image-widget-config.component';
 import { DatalakeRestService } from '../platform-services/apis/datalake-rest.service';
-
-const dashboardWidgets = [];
+import { IndicatorChartWidgetComponent } from './components/widgets/indicator/indicator-chart-widget.component';
+import { IndicatorWidgetConfigComponent } from './components/widgets/indicator/config/indicator-chart-widget-config.component';
 
 export const MY_NATIVE_FORMATS = {
   fullPickerInput: {
@@ -83,11 +83,11 @@ export const MY_NATIVE_FORMATS = {
     minute: 'numeric',
     hour12: false
   },
-  datePickerInput: { year: 'numeric', month: 'numeric', day: 'numeric', hour12: false },
-  timePickerInput: { hour: 'numeric', minute: 'numeric', hour12: false },
-  monthYearLabel: { year: 'numeric', month: 'short', hour12: false },
-  dateA11yLabel: { year: 'numeric', month: 'long', day: 'numeric', hour12: false },
-  monthYearA11yLabel: { year: 'numeric', month: 'long', hour12: false }
+  datePickerInput: {year: 'numeric', month: 'numeric', day: 'numeric', hour12: false},
+  timePickerInput: {hour: 'numeric', minute: 'numeric', hour12: false},
+  monthYearLabel: {year: 'numeric', month: 'short', hour12: false},
+  dateA11yLabel: {year: 'numeric', month: 'long', day: 'numeric', hour12: false},
+  monthYearA11yLabel: {year: 'numeric', month: 'long', hour12: false}
 };
 
 
@@ -130,6 +130,8 @@ export const MY_NATIVE_FORMATS = {
     TableWidgetComponent,
     ImageWidgetComponent,
     ImageWidgetConfigComponent,
+    IndicatorChartWidgetComponent,
+    IndicatorWidgetConfigComponent,
     LineChartWidgetComponent,
     LineChartWidgetConfigComponent,
     TimeRangeSelectorComponent,

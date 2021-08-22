@@ -63,7 +63,6 @@ export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> 
   public showIsLoadingData: boolean;
 
   constructor(protected dataLakeRestService: DatalakeRestService,
-              protected dialog: MatDialog,
               protected widgetConfigurationService: WidgetConfigurationService,
               protected resizeService: ResizeService) {
 
@@ -81,6 +80,12 @@ export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> 
         }
       }
     });
+    this.resizeService.resizeSubject.subscribe(info => {
+      if (info.gridsterItem.id === this.dataExplorerWidget._id) {
+        this.onResize(this.gridsterItemComponent.width, this.gridsterItemComponent.height - 40);
+      }
+    });
+    this.onResize(this.gridsterItemComponent.width, this.gridsterItemComponent.height - 40);
   }
 
   ngOnDestroy(): void {
@@ -119,6 +124,8 @@ export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> 
   public abstract refreshData();
 
   public abstract refreshView();
+
+  public abstract onResize(width: number, height: number);
 
 
 }

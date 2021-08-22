@@ -1,0 +1,72 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div fxFlex="100" fxLayout="column">
+    <h5>Indicator Field</h5>
+    <mat-form-field color="accent" fxFlex="100">
+        <mat-label>Select Field</mat-label>
+        <mat-select [(value)]="currentlyConfiguredWidget.dataConfig.selectedProperty" (selectionChange)="setSelectedProperties($event)">
+            <mat-option [value]="property.runtimeName" *ngFor="let property of currentlyConfiguredWidget.dataConfig.availableProperties">
+                <span class="pipeline-name">{{ property.runtimeName }}</span>
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field color="accent" fxFlex="100">
+        <mat-label>Value Aggregation</mat-label>
+        <mat-select [(value)]="currentlyConfiguredWidget.dataConfig.numberAggregation" (selectionChange)="triggerDataRefresh()">
+            <mat-option [value]="'MEAN'">
+                <span class="pipeline-name">Mean</span>
+            </mat-option>
+            <mat-option [value]="'FIRST'">
+                <span class="pipeline-name">First</span>
+            </mat-option>
+            <mat-option [value]="'LAST'">
+                <span class="pipeline-name">Last</span>
+            </mat-option>
+            <mat-option [value]="'MIN'">
+                <span class="pipeline-name">Min</span>
+            </mat-option>
+            <mat-option [value]="'MAX'">
+                <span class="pipeline-name">Max</span>
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field color="accent" fxFlex="100">
+        <mat-label>Delta Aggregation</mat-label>
+        <mat-select [(value)]="currentlyConfiguredWidget.dataConfig.deltaAggregation" (selectionChange)="triggerDataRefresh()">
+            <mat-option [value]="'MEAN'">
+                <span class="pipeline-name">Mean</span>
+            </mat-option>
+            <mat-option [value]="'FIRST'">
+                <span class="pipeline-name">First</span>
+            </mat-option>
+            <mat-option [value]="'LAST'">
+                <span class="pipeline-name">Last</span>
+            </mat-option>
+            <mat-option [value]="'MIN'">
+                <span class="pipeline-name">Min</span>
+            </mat-option>
+            <mat-option [value]="'MAX'">
+                <span class="pipeline-name">Max</span>
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>
+

@@ -55,14 +55,13 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
   offsetRightLineChart = 10;
 
 
-  constructor(public dialog: MatDialog,
-              public colorService: ColorService,
+  constructor(public colorService: ColorService,
               public renderer: Renderer2,
-              protected dataLakeRestService: DatalakeRestService,
+              dataLakeRestService: DatalakeRestService,
               public labelService: LabelService,
               widgetConfigurationService: WidgetConfigurationService,
               resizeService: ResizeService) {
-    super(dataLakeRestService, dialog, widgetConfigurationService, resizeService);
+    super(dataLakeRestService, widgetConfigurationService, resizeService);
   }
 
   // indicator variable if labeling mode is activated
@@ -307,8 +306,6 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
   }
 
   transformData(data: DataResult, xKey: string): DataResult {
-    console.log(xKey);
-    console.log(data);
     const columnsContainingNumbers = [];
     const columnsContainingStrings = [];
 
@@ -701,5 +698,11 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
         .withGrouping(undefined, undefined,
             this.dataExplorerWidget.dataConfig.aggregationTimeUnit, this.dataExplorerWidget.dataConfig.aggregationValue)
         .build();
+  }
+
+  onResize(width: number, height: number) {
+    this.graph.layout.autosize = false;
+    (this.graph.layout as any).width = width;
+    (this.graph.layout as any).height = height;
   }
 }
