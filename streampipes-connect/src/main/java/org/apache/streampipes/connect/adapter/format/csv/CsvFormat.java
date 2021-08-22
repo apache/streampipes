@@ -123,11 +123,6 @@ public class CsvFormat implements IFormat {
         }
     }
 
-    public static void main(String... args) {
-        double d = Long.parseLong("15894399000000000000");
-        System.out.println(d);
-    }
-
     @Override
     public FormatDescription declareModel() {
 
