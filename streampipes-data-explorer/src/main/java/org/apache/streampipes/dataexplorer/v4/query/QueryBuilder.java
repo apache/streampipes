@@ -26,8 +26,8 @@ import java.util.StringJoiner;
 
 public class QueryBuilder {
 
-    private StringJoiner queryParts;
-    private String databaseName;
+    private final StringJoiner queryParts;
+    private final String databaseName;
 
     public static QueryBuilder create(String databaseName) {
         return new QueryBuilder(databaseName);
@@ -38,8 +38,8 @@ public class QueryBuilder {
         this.databaseName = databaseName;
     }
 
-    public Query build(List<QueryElement> queryElements) {
-        for (QueryElement queryPart : queryElements) {
+    public Query build(List<QueryElement<?>> queryElements) {
+        for (QueryElement<?> queryPart : queryElements) {
             this.queryParts.add(queryPart.getStatement());
         }
         return toQuery();

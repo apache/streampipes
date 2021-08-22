@@ -17,13 +17,9 @@
  */
 package org.apache.streampipes.dataexplorer.v4.params;
 
-public class QueryParamsV4 {
+public abstract class QueryParamsV4 {
 
     private final String index;
-
-    public static QueryParamsV4 from(String index) {
-        return new QueryParamsV4(index);
-    }
 
     protected QueryParamsV4(String index) {
         this.index = index;

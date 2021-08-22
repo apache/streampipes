@@ -18,10 +18,14 @@
 
 package org.apache.streampipes.dataexplorer.v4.utils;
 
+import org.apache.streampipes.dataexplorer.v4.ProvidedQueryParams;
 import org.apache.streampipes.dataexplorer.v4.params.*;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.*;
+
 
 public class DataLakeManagementUtils {
 
@@ -36,68 +40,69 @@ public class DataLakeManagementUtils {
 
     public static final String DELETE_FROM = "DELETE";
 
-    public static Map<String, QueryParamsV4> getSelectQueryParams(
-            String measurementID,
-            String columns,
-            Long startDate,
-            Long endDate,
-            Integer page,
-            Integer limit,
-            Integer offset,
-            String groupBy,
-            String order,
-            String aggregationFunction,
-            String timeInterval) {
+    public static Map<String, QueryParamsV4> getSelectQueryParams(ProvidedQueryParams params) {
         Map<String, QueryParamsV4> queryParts = new HashMap<>();
+        String measurementId = params.getMeasurementId();
 
-        queryParts.put(SELECT_FROM, SelectFromStatementParams.from(measurementID, columns, aggregationFunction));
+        queryParts.put(SELECT_FROM, SelectFromStatementParams.from(measurementId, params.getAsString(QP_COLUMNS), params.getAsString(QP_AGGREGATION_FUNCTION)));
 
-        if (startDate != null || endDate != null) {
-            queryParts.put(WHERE, TimeBoundaryParams.from(measurementID, startDate, endDate));
+        if (hasTimeParams(params)) {
+            queryParts.put(WHERE, TimeBoundaryParams.from(measurementId,
+                    params.getAsLong(QP_START_DATE),
+                    params.getAsLong(QP_END_DATE)));
         }
 
 
-        if (timeInterval != null && aggregationFunction != null) {
-            if (groupBy == null) {
-                queryParts.put(GROUP_BY_TIME, GroupingByTimeParams.from(measurementID, timeInterval));
+        if (params.has(QP_TIME_INTERVAL) && params.has(QP_AGGREGATION_FUNCTION)) {
+            String timeInterval = params.getAsString(QP_TIME_INTERVAL);
+            if (!params.has(QP_GROUP_BY)) {
+                queryParts.put(GROUP_BY_TIME, GroupingByTimeParams.from(measurementId, timeInterval));
             } else {
-                groupBy = groupBy + ",time(" + timeInterval + ")";
+                params.update(QP_GROUP_BY, params.getAsString(QP_GROUP_BY) + ",time(" + timeInterval + ")");
             }
 
-            queryParts.put(FILL, FillParams.from(measurementID));
+            queryParts.put(FILL, FillParams.from(measurementId));
         }
 
-        if (groupBy != null) {
-            queryParts.put(GROUP_BY_TAGS, GroupingByTagsParams.from(measurementID, groupBy));
+        if (params.has(QP_GROUP_BY)) {
+            queryParts.put(GROUP_BY_TAGS, GroupingByTagsParams.from(measurementId, params.getAsString(QP_GROUP_BY)));
         }
 
 
-        if (order != null) {
+        if (params.has(QP_ORDER)) {
+            String order = params.getAsString(QP_ORDER);
             if (order.equals(ORDER_DESCENDING)) {
-                queryParts.put(ORDER_DESCENDING, OrderingByTimeParams.from(measurementID, order));
+                queryParts.put(ORDER_DESCENDING, OrderingByTimeParams.from(measurementId, order));
             }
         }
 
-        if (limit != null) {
-            queryParts.put(LIMIT, ItemLimitationParams.from(measurementID, limit));
+        if (params.has(QP_LIMIT)) {
+            queryParts.put(LIMIT, ItemLimitationParams.from(measurementId, params.getAsInt(QP_LIMIT)));
         }
 
-        if (offset != null) {
-            queryParts.put(OFFSET, OffsetParams.from(measurementID, offset));
-        } else if (limit != null && page != null) {
-            queryParts.put(OFFSET, OffsetParams.from(measurementID, page * limit));
+        if (params.has(QP_OFFSET)) {
+            queryParts.put(OFFSET, OffsetParams.from(measurementId, params.getAsInt(QP_OFFSET)));
+        } else if (params.has(QP_LIMIT) && params.has(QP_PAGE)) {
+            queryParts.put(OFFSET, OffsetParams.from(measurementId,
+                    params.getAsInt(QP_PAGE) * params.getAsInt(QP_LIMIT)));
         }
-
 
         return queryParts;
     }
 
-    public static Map<String, QueryParamsV4> getDeleteQueryParams(String measurementID, Long startDate, Long endDate) {
+    public static Map<String, QueryParamsV4> getDeleteQueryParams(String measurementID,
+                                                                  Long startDate,
+                                                                  Long endDate) {
         Map<String, QueryParamsV4> queryParts = new HashMap<>();
         queryParts.put(DELETE_FROM, DeleteFromStatementParams.from(measurementID));
         if (startDate != null || endDate != null) {
             queryParts.put(WHERE, TimeBoundaryParams.from(measurementID, startDate, endDate));
         }
         return queryParts;
+    }
+
+    private static boolean hasTimeParams(ProvidedQueryParams params) {
+        return params.has(QP_START_DATE) ||
+                params.has(QP_END_DATE);
     }
 }

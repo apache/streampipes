@@ -25,10 +25,15 @@ public class QueryTemplatesV4 {
 
     public static String selectAggregationFrom(String index, String columns, String aggregationFunction) {
         String[] cols = columns.split(",");
-        String statement = aggregationFunction + "(" + cols[0] + ")";
+        StringBuilder statement = new StringBuilder(aggregationFunction + "(" + cols[0] + ")");
 
         for (int i = 1; i < cols.length; i++) {
-            statement = statement + ", " + aggregationFunction + "(" + cols[i] + ")";
+            statement
+                    .append(", ")
+                    .append(aggregationFunction)
+                    .append("(")
+                    .append(cols[i])
+                    .append(")");
         }
 
         return "SELECT " + statement + " FROM " + index;

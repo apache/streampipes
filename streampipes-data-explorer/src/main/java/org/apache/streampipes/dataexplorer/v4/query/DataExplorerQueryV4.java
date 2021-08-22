@@ -47,7 +47,7 @@ public class DataExplorerQueryV4 {
 
     public DataResult executeQuery() throws RuntimeException {
         InfluxDB influxDB = DataExplorerUtils.getInfluxDBClient();
-        List<QueryElement> queryElements = getQueryElements();
+        List<QueryElement<?>> queryElements = getQueryElements();
 
         QueryBuilder queryBuilder = QueryBuilder.create(BackendConfig.INSTANCE.getInfluxDatabaseName());
         Query query = queryBuilder.build(queryElements);
@@ -93,8 +93,8 @@ public class DataExplorerQueryV4 {
         return convertResult(result);
     }
 
-    protected List<QueryElement> getQueryElements() {
-        List<QueryElement> queryElements = new ArrayList<>();
+    protected List<QueryElement<?>> getQueryElements() {
+        List<QueryElement<?>> queryElements = new ArrayList<>();
 
         if (this.params.containsKey(DataLakeManagementUtils.SELECT_FROM)) {
             queryElements.add(new SelectFromStatement((SelectFromStatementParams) this.params.get(DataLakeManagementUtils.SELECT_FROM)));

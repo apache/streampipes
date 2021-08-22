@@ -25,7 +25,9 @@ public class SelectFromStatementParams extends QueryParamsV4 {
     private final String selectedColumns;
     private final String aggregationFunction;
 
-    public static SelectFromStatementParams from(String measurementID, @Nullable String columns, @Nullable String aggregationFunction) {
+    public static SelectFromStatementParams from(String measurementID,
+                                                 @Nullable String columns,
+                                                 @Nullable String aggregationFunction) {
         return new SelectFromStatementParams(measurementID, columns, aggregationFunction);
     }
 
@@ -35,7 +37,9 @@ public class SelectFromStatementParams extends QueryParamsV4 {
         this.aggregationFunction = null;
     }
 
-    public SelectFromStatementParams(String measurementID, String columns, String aggregationFunction) {
+    public SelectFromStatementParams(String measurementID,
+                                     String columns,
+                                     String aggregationFunction) {
         super(measurementID);
 
         if (columns != null) {
