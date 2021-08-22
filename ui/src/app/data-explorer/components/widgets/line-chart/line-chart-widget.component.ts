@@ -140,7 +140,6 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
     this.updateAppearance();
 
     super.ngOnInit();
-    this.updateData();
     this.resizeService.resizeSubject.subscribe(info => {
       if (info.gridsterItem.id === this.gridsterItem.id) {
         setTimeout(() => {
@@ -308,6 +307,8 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
   }
 
   transformData(data: DataResult, xKey: string): DataResult {
+    console.log(xKey);
+    console.log(data);
     const columnsContainingNumbers = [];
     const columnsContainingStrings = [];
 
@@ -323,8 +324,8 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
     });
 
     // Get key of timestamp column for x axis
-    const indexXkey = data.headers.findIndex(headerName => headerName === this.dataExplorerWidget.dataConfig.xKey);
-
+    //const indexXkey = data.headers.findIndex(headerName => headerName === this.dataExplorerWidget.dataConfig.xKey);
+    const indexXkey = 0;
 
     const tmpLineChartTraces: any[] = [];
 
@@ -687,14 +688,16 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
   buildQuery(): DatalakeQueryParameters {
     return DatalakeQueryParameterBuilder
         .create(this.timeSettings.startTime, this.timeSettings.endTime)
-        .withAutoAggregation('FIRST')
+        .withAutoAggregation('MEAN')
+        .withColumnFilter(this.dataExplorerWidget.dataConfig.selectedLineChartProperties.map(ep => ep.runtimeName))
         .build();
   }
 
   buildAggregationQuery(): DatalakeQueryParameters {
     return DatalakeQueryParameterBuilder
         .create(this.timeSettings.startTime, this.timeSettings.endTime)
-        .withPaging(1, 100)
+        .withPaging(1, 2000)
+        .withColumnFilter(this.dataExplorerWidget.dataConfig.selectedLineChartProperties.map(ep => ep.runtimeName))
         .withGrouping(undefined, undefined,
             this.dataExplorerWidget.dataConfig.aggregationTimeUnit, this.dataExplorerWidget.dataConfig.aggregationValue)
         .build();
