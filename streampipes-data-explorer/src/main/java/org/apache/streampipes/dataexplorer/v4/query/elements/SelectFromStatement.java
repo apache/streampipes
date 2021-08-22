@@ -29,7 +29,7 @@ public class SelectFromStatement extends QueryElement<SelectFromStatementParams>
     @Override
     protected String buildStatement(SelectFromStatementParams selectFromStatementParams) {
         if (selectFromStatementParams.isCountOnly()) {
-            return QueryTemplatesV4.selectCountFrom(selectFromStatementParams.getIndex());
+            return QueryTemplatesV4.selectCountFrom(selectFromStatementParams.getIndex(), selectFromStatementParams.getSelectedColumns());
         } else if (selectFromStatementParams.getAggregationFunction() == null) {
             return QueryTemplatesV4.selectFrom(selectFromStatementParams.getIndex(), selectFromStatementParams.getSelectedColumns());
         } else {

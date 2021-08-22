@@ -48,21 +48,26 @@ public class AutoAggregationHandler {
 
   public ProvidedQueryParams makeAutoAggregationQueryParams() throws IllegalArgumentException {
     checkAllArgumentsPresent();
-    Integer count = getCount();
+    try {
+    DataResult newest = getSingleRecord(Order.DESC);
+    DataResult oldest = getSingleRecord(Order.ASC);
+    String sampleField = getSampleField(newest);
+    Integer count = getCount(sampleField);
     if (count <= MAX_RETURN_LIMIT) {
       LOG.debug("Auto-Aggregation disabled as {} results <= max return limit {}", count, MAX_RETURN_LIMIT);
       return disableAutoAgg(this.queryParams);
     } else {
       LOG.debug("Performing auto-aggregation");
-      try {
-        int aggValue = getAggregationValue();
+
+        int aggValue = getAggregationValue(newest, oldest);
         LOG.debug("Setting auto-aggregation value to {} ms", aggValue);
         queryParams.update(QP_TIME_INTERVAL, aggValue + "ms");
-      } catch (ParseException e) {
-        e.printStackTrace();
-      }
       return disableAutoAgg(queryParams);
     }
+    } catch (ParseException e) {
+      e.printStackTrace();
+    }
+    return null;
   }
 
   private void checkAllArgumentsPresent() throws IllegalArgumentException {
@@ -76,11 +81,12 @@ public class AutoAggregationHandler {
     return params;
   }
 
-  public Integer getCount() {
+  public Integer getCount(String fieldName) {
     ProvidedQueryParams countParams = disableAutoAgg(new ProvidedQueryParams(queryParams));
     countParams.remove(QP_TIME_INTERVAL);
     countParams.remove(QP_AGGREGATION_FUNCTION);
     countParams.update(QP_COUNT_ONLY, true);
+    countParams.update(QP_COLUMNS, fieldName);
 
     DataResult result = new DataLakeManagementV4().getData(countParams);
     return result.getTotal() > 0 ? ((Double) result.getRows().get(0).get(1)).intValue() : 0;
@@ -90,29 +96,41 @@ public class AutoAggregationHandler {
     return dataLakeManagement.getData(params);
   }
 
-  private int getAggregationValue() throws ParseException {
-    long timerange = getNewestTimestamp() - getOldestTimestamp();
+  private int getAggregationValue(DataResult newest, DataResult oldest) throws ParseException {
+    long timerange = extractTimestamp(newest) - extractTimestamp(oldest);
     double v = timerange / MAX_RETURN_LIMIT;
     return Double.valueOf(v).intValue();
   }
 
-  private long getNewestTimestamp() throws ParseException {
-    return getTimestamp(Order.DESC);
-  }
+//  private long getNewestTimestamp(DataResult result) throws ParseException {
+//    return extractTimestamp(result);
+//  }
+//
+//  private long getOldestTimestamp(DataResult result) throws ParseException {
+//    return extractTimestamp(result);
+//  }
 
-  private long getOldestTimestamp() throws ParseException {
-    return getTimestamp(Order.ASC);
-  }
-
-  private long getTimestamp(Order order) throws ParseException {
+  private DataResult getSingleRecord(Order order) throws ParseException {
     ProvidedQueryParams singleEvent = disableAutoAgg(new ProvidedQueryParams(queryParams));
     singleEvent.remove(QP_AGGREGATION_FUNCTION);
     singleEvent.update(QP_LIMIT, 1);
     singleEvent.update(QP_ORDER, order.toValue());
 
-    DataResult result = fireQuery(singleEvent);
-    int timestampIndex = result.getHeaders().indexOf(TIMESTAMP_FIELD);
+    return fireQuery(singleEvent);
 
+  }
+
+  private String getSampleField(DataResult result) {
+    for (String column : result.getHeaders()) {
+      if (!column.equals(TIMESTAMP_FIELD)) {
+        return column;
+      }
+    }
+    throw new IllegalArgumentException("No columns present");
+  }
+
+  private long extractTimestamp(DataResult result) throws ParseException {
+    int timestampIndex = result.getHeaders().indexOf(TIMESTAMP_FIELD);
     return tryParseDate(result.getRows().get(0).get(timestampIndex).toString()).getTime();
   }
 

@@ -22,8 +22,8 @@ import javax.annotation.Nullable;
 
 public class SelectFromStatementParams extends QueryParamsV4 {
 
-    private final String selectedColumns;
-    private final String aggregationFunction;
+    private String selectedColumns;
+    private String aggregationFunction;
     private boolean countOnly = false;
 
     public static SelectFromStatementParams from(String measurementID,
@@ -33,8 +33,9 @@ public class SelectFromStatementParams extends QueryParamsV4 {
     }
 
     public static SelectFromStatementParams from(String measurementId,
+                                                 String columns,
                                                  boolean countOnly) {
-        return new SelectFromStatementParams(measurementId, countOnly);
+        return new SelectFromStatementParams(measurementId, columns, countOnly);
     }
 
     public SelectFromStatementParams(String measurementID) {
@@ -44,8 +45,10 @@ public class SelectFromStatementParams extends QueryParamsV4 {
     }
 
     public SelectFromStatementParams(String measurementId,
+                                     String columns,
                                      boolean countOnly) {
         this(measurementId);
+        this.selectedColumns = columns;
         this.countOnly = countOnly;
     }
 

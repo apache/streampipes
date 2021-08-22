@@ -45,7 +45,7 @@ public class DataLakeManagementUtils {
         String measurementId = params.getMeasurementId();
 
         if (params.has(QP_COUNT_ONLY) && params.getAsBoolean(QP_COUNT_ONLY)) {
-            queryParts.put(SELECT_FROM, SelectFromStatementParams.from(measurementId, true));
+            queryParts.put(SELECT_FROM, SelectFromStatementParams.from(measurementId, params.getAsString(QP_COLUMNS), true));
         } else {
             queryParts.put(SELECT_FROM, SelectFromStatementParams.from(measurementId, params.getAsString(QP_COLUMNS), params.getAsString(QP_AGGREGATION_FUNCTION)));
         }
