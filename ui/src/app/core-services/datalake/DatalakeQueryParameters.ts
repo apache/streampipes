@@ -27,5 +27,8 @@ export class DatalakeQueryParameters {
   public order: string;
   public aggregationFunction: string;
   public timeInterval: string;
+  public countOnly: boolean;
+  public autoAggregate: boolean;
+
 }
 

@@ -16,11 +16,11 @@
  *
  */
 
-import {HttpEventType} from '@angular/common/http';
-import {Component, Inject, ViewChild} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {MatStepper} from '@angular/material/stepper';
-import {DatalakeRestService} from '../../../core-services/datalake/datalake-rest.service';
+import { HttpEventType } from '@angular/common/http';
+import { Component, Inject, ViewChild } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatStepper } from '@angular/material/stepper';
+import { DatalakeRestService } from '../../../core-services/datalake/datalake-rest.service';
 
 @Component({
     selector: 'sp-data-download-dialog',
@@ -44,7 +44,8 @@ export class DataDownloadDialog {
 
 
     constructor(public dialogRef: MatDialogRef<DataDownloadDialog>,
-                @Inject(MAT_DIALOG_DATA) public data, private restService: DatalakeRestService, ) {
+                @Inject(MAT_DIALOG_DATA) public data,
+                private restService: DatalakeRestService) {
         this.dateRange[0] = new Date();
         this.dateRange[1] = new Date(this.dateRange[0].getTime() + 60000 * 60 * 24);
     }

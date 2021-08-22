@@ -25,7 +25,9 @@ import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
 import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
 import { TableWidgetModel } from './model/table-widget.model';
 import { ResizeService } from '../../../services/resize.service';
-import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
+import { DatalakeRestService } from '../../../../platform-services/apis/datalake-rest.service';
+import { DatalakeQueryParameters } from '../../../../core-services/datalake/DatalakeQueryParameters';
+import { DatalakeQueryParameterBuilder } from '../../../../core-services/datalake/DatalakeQueryParameterBuilder';
 
 @Component({
   selector: 'sp-data-explorer-table-widget',
@@ -100,8 +102,8 @@ export class TableWidgetComponent extends BaseDataExplorerWidget<TableWidgetMode
   public refreshData() {
     this.setShownComponents(false, false, true);
 
-    this.dataLakeRestService.getDataAutoAggregation(
-      this.dataLakeMeasure.measureName, this.timeSettings.startTime, this.timeSettings.endTime)
+    this.dataLakeRestService.getData(
+      this.dataLakeMeasure.measureName, this.buildQuery())
       .subscribe(
         (res: DataResult) => {
           this.dataSource.data = this.transformData(res);
@@ -111,6 +113,10 @@ export class TableWidgetComponent extends BaseDataExplorerWidget<TableWidgetMode
 
   public refreshView() {
     this.dataSource.filter = this.dataExplorerWidget.dataConfig.searchValue;
+  }
+
+  buildQuery(): DatalakeQueryParameters {
+    return DatalakeQueryParameterBuilder.create(this.timeSettings.startTime, this.timeSettings.endTime).build();
   }
 
 }

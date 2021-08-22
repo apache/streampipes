@@ -23,7 +23,6 @@ import { DataExplorerDashboardPanelComponent } from './components/panel/data-exp
 import { Dashboard, TimeSettings } from '../dashboard/models/dashboard.model';
 import { Tuple2 } from '../core-model/base/Tuple2';
 import { ActivatedRoute } from '@angular/router';
-import { TimeRangeSelectorComponent } from './components/time-selector/timeRangeSelector.component';
 
 @Component({
   selector: 'sp-data-explorer',
@@ -54,7 +53,6 @@ export class DataExplorerComponent implements OnInit {
   public ngOnInit() {
     this.route.queryParams.subscribe(params => {
       this.routeParams = {startTime: params['startTime'], endTime: params['endTime'], dashboardId: params['dashboardId']};
-      console.log(this.routeParams);
       this.getDashboards();
     });
     this.refreshDashboardService.refreshSubject.subscribe(currentDashboardId => {

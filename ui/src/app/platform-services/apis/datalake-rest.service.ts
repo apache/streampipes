@@ -48,16 +48,23 @@ export class DatalakeRestService {
         }));
     }
 
-    getData(index, startDate, endDate, columns, aggregationFunction, aggregationTimeUnit, aggregationTimeValue): Observable<DataResult> {
+    getData(index: string,
+            queryParams: DatalakeQueryParameters): Observable<DataResult> {
         const url = this.dataLakeUrl + '/measurements/' + index;
-        const timeInterval = aggregationTimeValue + aggregationTimeUnit;
-
-        const queryParams: DatalakeQueryParameters = this.getQueryParameters(columns, startDate, endDate, undefined, undefined,
-            undefined, undefined, undefined, aggregationFunction, timeInterval);
 
         // @ts-ignore
         return this.http.get<DataResult>(url, {params: queryParams});
     }
+
+    // getData(index, startDate, endDate, columns, aggregationFunction, aggregationTimeUnit, aggregationTimeValue): Observable<DataResult> {
+    //     const timeInterval = aggregationTimeValue + aggregationTimeUnit;
+    //
+    //     const queryParams: DatalakeQueryParameters = this.getQueryParameters(columns, startDate, endDate, undefined, undefined,
+    //         undefined, undefined, undefined, aggregationFunction, timeInterval);
+    //
+    //     // @ts-ignore
+    //     return this.http.get<DataResult>(url, {params: queryParams});
+    // }
 
     getPagedData(index: string, itemsPerPage: number, page: number, columns?: string, order?: string): Observable<PageResult> {
         const url = this.dataLakeUrl + '/measurements/' + index;

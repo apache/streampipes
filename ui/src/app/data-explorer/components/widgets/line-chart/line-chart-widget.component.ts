@@ -20,7 +20,6 @@ import { Component, OnInit, Renderer2 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DataResult } from '../../../../core-model/datalake/DataResult';
 import { GroupedDataResult } from '../../../../core-model/datalake/GroupedDataResult';
-import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
 import { ColorService } from './services/color.service';
 import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
 import { Label } from '../../../../core-model/gen/streampipes-model';
@@ -28,6 +27,9 @@ import { ResizeService } from '../../../services/resize.service';
 import { LabelService } from '../../../../core-ui/labels/services/label.service';
 import { LineChartWidgetModel } from './model/line-chart-widget.model';
 import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
+import { DatalakeRestService } from '../../../../platform-services/apis/datalake-rest.service';
+import { DatalakeQueryParameters } from '../../../../core-services/datalake/DatalakeQueryParameters';
+import { DatalakeQueryParameterBuilder } from '../../../../core-services/datalake/DatalakeQueryParameterBuilder';
 
 @Component({
   selector: 'sp-data-explorer-line-chart-widget',
@@ -123,14 +125,14 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
         }
       ],
       direction: 'left',
-      pad: { 'r': 10, 't': 10 },
+      pad: {'r': 10, 't': 10},
       showactive: true,
       type: 'buttons',
       x: 0.0,
       xanchor: 'left',
       y: 1.3,
       yanchor: 'top',
-      font: { color: this.dataExplorerWidget.baseAppearanceConfig.textColor },
+      font: {color: this.dataExplorerWidget.baseAppearanceConfig.textColor},
       bgcolor: this.dataExplorerWidget.baseAppearanceConfig.backgroundColor,
       bordercolor: '#000'
     }];
@@ -178,7 +180,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
       this.data = this.displayGroupedData(tmp);
 
       if (this.data !== undefined &&
-        this.data['colorPropertyStringValues'] !== undefined && this.data['colorPropertyStringValues'].length > 0) {
+          this.data['colorPropertyStringValues'] !== undefined && this.data['colorPropertyStringValues'].length > 0) {
         this.addInitialColouredShapesToGraph(this.colorPropertyStringValues, this.colorService.getColor);
       }
 
@@ -470,7 +472,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
 
         // fetching path of labeling button icon
         const path = modeBarButtons[i].getElementsByClassName('icon').item(0)
-          .getElementsByTagName('path').item(0);
+            .getElementsByTagName('path').item(0);
 
         // adding 'clicked' to class list
         modeBarButtons[i].classList.add('clicked');
@@ -495,7 +497,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
 
         // fetching path of labeling button icon
         const path = modeBarButtons[i].getElementsByClassName('icon').item(0)
-          .getElementsByTagName('path').item(0);
+            .getElementsByTagName('path').item(0);
 
         // removing 'clicked' from class list
         modeBarButtons[i].classList.remove('clicked');
@@ -515,19 +517,19 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
     const startdate = new Date(start_X).getTime() - 1;
     const enddate = new Date(end_X).getTime() + 1;
 
-    this.dataLakeRestService.saveLabelsInDatabase(
-      this.data['measureName'],
-      'sp_internal_label',
-      startdate,
-      enddate,
-      label,
-      this.dataExplorerWidget.dataConfig.xKey
-    ).subscribe(
-      res => {
-        // TODO add pop up similar to images
-        // console.log('Successfully wrote label ' + currentLabel + ' into database.');
-      }
-    );
+    // this.dataLakeRestService.saveLabelsInDatabase(
+    //     this.data['measureName'],
+    //     'sp_internal_label',
+    //     startdate,
+    //     enddate,
+    //     label,
+    //     this.dataExplorerWidget.dataConfig.xKey
+    // ).subscribe(
+    //     res => {
+    //       // TODO add pop up similar to images
+    //       // console.log('Successfully wrote label ' + currentLabel + ' into database.');
+    //     }
+    // );
   }
 
   private addInitialColouredShapesToGraph(newColorPropertyStringValues, getColor) {
@@ -641,20 +643,19 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
     this.graph.layout.shapes = [];
     if (!this.advancedSettingsActive) {
       this.setShownComponents(false, false, true);
-      this.dataLakeRestService.getDataAutoAggregation(
-        this.dataLakeMeasure.measureName, this.timeSettings.startTime, this.timeSettings.endTime)
-        .subscribe((res: DataResult) => {
-          this.processNonGroupedData(res);
-        });
+      this.dataLakeRestService.getData(
+          this.dataLakeMeasure.measureName, this.buildQuery())
+          .subscribe((res: DataResult) => {
+            this.processNonGroupedData(res);
+          });
     } else {
       if (this.dataExplorerWidget.dataConfig.groupValue === 'None') {
         this.setShownComponents(false, false, true);
         this.dataLakeRestService.getData(
-          this.dataLakeMeasure.measureName, this.timeSettings.startTime, this.timeSettings.endTime,
-          this.dataExplorerWidget.dataConfig.aggregationTimeUnit, this.dataExplorerWidget.dataConfig.aggregationValue)
-          .subscribe((res: DataResult) => {
-            this.processNonGroupedData(res);
-          });
+            this.dataLakeMeasure.measureName, this.buildAggregationQuery())
+            .subscribe((res: DataResult) => {
+              this.processNonGroupedData(res);
+            });
       } else {
         // this.dataLakeRestService.getGroupedData(
         //   this.dataExplorerWidget.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime(),
@@ -681,5 +682,21 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
       (window as any).Plotly.restyle(this.dataExplorerWidget._id, this.graph, 0);
     }
     //this.toggleLabelingMode();
+  }
+
+  buildQuery(): DatalakeQueryParameters {
+    return DatalakeQueryParameterBuilder
+        .create(this.timeSettings.startTime, this.timeSettings.endTime)
+        .withAutoAggregation('FIRST')
+        .build();
+  }
+
+  buildAggregationQuery(): DatalakeQueryParameters {
+    return DatalakeQueryParameterBuilder
+        .create(this.timeSettings.startTime, this.timeSettings.endTime)
+        .withPaging(1, 100)
+        .withGrouping(undefined, undefined,
+            this.dataExplorerWidget.dataConfig.aggregationTimeUnit, this.dataExplorerWidget.dataConfig.aggregationValue)
+        .build();
   }
 }

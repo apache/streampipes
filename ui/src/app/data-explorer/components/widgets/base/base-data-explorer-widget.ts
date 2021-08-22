@@ -28,7 +28,6 @@ import {
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GridsterItem, GridsterItemComponent } from 'angular-gridster2';
-import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
 import {
   DataExplorerWidgetModel,
   DataLakeMeasure,
@@ -37,6 +36,7 @@ import {
 import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
 import { DashboardItem, TimeSettings } from '../../../../dashboard/models/dashboard.model';
 import { ResizeService } from '../../../services/resize.service';
+import { DatalakeRestService } from '../../../../platform-services/apis/datalake-rest.service';
 
 @Directive()
 export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> implements OnInit, OnChanges, OnDestroy {

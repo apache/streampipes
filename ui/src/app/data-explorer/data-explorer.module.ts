@@ -29,12 +29,15 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
-import { OWL_DATE_TIME_FORMATS, OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
+import {
+  OWL_DATE_TIME_FORMATS,
+  OwlDateTimeModule,
+  OwlNativeDateTimeModule
+} from '@danielmoncada/angular-datetime-picker';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { GridsterModule } from 'angular-gridster2';
 import { PlotlyViaWindowModule } from 'angular-plotly.js';
 import { ColorPickerModule } from 'ngx-color-picker';
-import { DatalakeRestService } from '../core-services/datalake/datalake-rest.service';
 import { SemanticTypeUtilsService } from '../core-services/semantic-type/semantic-type-utils.service';
 import { SharedDatalakeRestService } from '../core-services/shared/shared-dashboard.service';
 import { CoreUiModule } from '../core-ui/core-ui.module';
@@ -67,6 +70,7 @@ import { DataExplorerWidgetDataSettingsComponent } from './components/designer-p
 import { WidgetConfigurationService } from './services/widget-configuration.service';
 import { LineChartWidgetConfigComponent } from './components/widgets/line-chart/config/line-chart-widget-config.component';
 import { ImageWidgetConfigComponent } from './components/widgets/image/config/image-widget-config.component';
+import { DatalakeRestService } from '../platform-services/apis/datalake-rest.service';
 
 const dashboardWidgets = [];
 
