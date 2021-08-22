@@ -20,7 +20,7 @@
     <mat-drawer-container class="designer-panel-container h-100 dashboard-grid">
         <mat-drawer #designerDrawer [opened]="editMode" mode="side" position="end" class="designer-panel" (opened)="triggerResize()">
             <div fxLayout="column" fxFlex="100">
-                <sp-data-explorer-designer-panel
+                <sp-data-explorer-designer-panel #designerPanel
                         [currentlyConfiguredWidget]="currentlyConfiguredWidget"
                         [dataLakeMeasure]="dataLakeMeasure"
                         (addWidgetEmitter)="addWidget($event)"
