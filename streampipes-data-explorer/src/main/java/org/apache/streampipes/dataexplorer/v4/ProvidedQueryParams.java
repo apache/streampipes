@@ -46,6 +46,10 @@ public class ProvidedQueryParams {
     return has(key) ? providedParams.get(key): null;
   }
 
+  public boolean getAsBoolean(String key) {
+    return has(key) && Boolean.parseBoolean(providedParams.get(key));
+  }
+
   public String getMeasurementId() {
     return measurementId;
   }

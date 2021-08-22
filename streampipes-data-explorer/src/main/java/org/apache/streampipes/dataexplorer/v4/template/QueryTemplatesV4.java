@@ -23,6 +23,10 @@ public class QueryTemplatesV4 {
         return "SELECT " + columns + " FROM " + index;
     }
 
+    public static String selectCountFrom(String index) {
+        return "SELECT COUNT(*) FROM " + index;
+    }
+
     public static String selectAggregationFrom(String index, String columns, String aggregationFunction) {
         String[] cols = columns.split(",");
         StringBuilder statement = new StringBuilder(aggregationFunction + "(" + cols[0] + ")");

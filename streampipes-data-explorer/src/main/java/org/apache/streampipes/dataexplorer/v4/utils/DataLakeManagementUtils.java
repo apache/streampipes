@@ -44,7 +44,11 @@ public class DataLakeManagementUtils {
         Map<String, QueryParamsV4> queryParts = new HashMap<>();
         String measurementId = params.getMeasurementId();
 
-        queryParts.put(SELECT_FROM, SelectFromStatementParams.from(measurementId, params.getAsString(QP_COLUMNS), params.getAsString(QP_AGGREGATION_FUNCTION)));
+        if (params.has(QP_COUNT_ONLY) && params.getAsBoolean(QP_COUNT_ONLY)) {
+            queryParts.put(SELECT_FROM, SelectFromStatementParams.from(measurementId, true));
+        } else {
+            queryParts.put(SELECT_FROM, SelectFromStatementParams.from(measurementId, params.getAsString(QP_COLUMNS), params.getAsString(QP_AGGREGATION_FUNCTION)));
+        }
 
         if (hasTimeParams(params)) {
             queryParts.put(WHERE, TimeBoundaryParams.from(measurementId,

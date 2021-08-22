@@ -24,6 +24,7 @@ public class SelectFromStatementParams extends QueryParamsV4 {
 
     private final String selectedColumns;
     private final String aggregationFunction;
+    private boolean countOnly = false;
 
     public static SelectFromStatementParams from(String measurementID,
                                                  @Nullable String columns,
@@ -31,10 +32,21 @@ public class SelectFromStatementParams extends QueryParamsV4 {
         return new SelectFromStatementParams(measurementID, columns, aggregationFunction);
     }
 
+    public static SelectFromStatementParams from(String measurementId,
+                                                 boolean countOnly) {
+        return new SelectFromStatementParams(measurementId, countOnly);
+    }
+
     public SelectFromStatementParams(String measurementID) {
         super(measurementID);
         this.selectedColumns = "*";
         this.aggregationFunction = null;
+    }
+
+    public SelectFromStatementParams(String measurementId,
+                                     boolean countOnly) {
+        this(measurementId);
+        this.countOnly = countOnly;
     }
 
     public SelectFromStatementParams(String measurementID,
@@ -57,5 +69,9 @@ public class SelectFromStatementParams extends QueryParamsV4 {
 
     public String getAggregationFunction() {
         return aggregationFunction;
+    }
+
+    public boolean isCountOnly() {
+        return countOnly;
     }
 }

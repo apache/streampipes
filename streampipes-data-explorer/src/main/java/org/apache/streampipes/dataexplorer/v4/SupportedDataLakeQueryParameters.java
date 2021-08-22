@@ -33,6 +33,7 @@ public class SupportedDataLakeQueryParameters {
   public static final String QP_AGGREGATION_FUNCTION = "aggregationFunction";
   public static final String QP_TIME_INTERVAL = "timeInterval";
   public static final String QP_FORMAT = "format";
+  public static final String QP_COUNT_ONLY = "countOnly";
 
   public static final List<String> supportedParams = Arrays.asList(
           QP_COLUMNS,
@@ -45,7 +46,8 @@ public class SupportedDataLakeQueryParameters {
           QP_ORDER,
           QP_AGGREGATION_FUNCTION,
           QP_TIME_INTERVAL,
-          QP_FORMAT
+          QP_FORMAT,
+          QP_COUNT_ONLY
   );
 
 }
