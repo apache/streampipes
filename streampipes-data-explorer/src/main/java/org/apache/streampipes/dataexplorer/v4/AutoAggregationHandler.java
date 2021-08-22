@@ -49,24 +49,28 @@ public class AutoAggregationHandler {
   public ProvidedQueryParams makeAutoAggregationQueryParams() throws IllegalArgumentException {
     checkAllArgumentsPresent();
     try {
-    DataResult newest = getSingleRecord(Order.DESC);
-    DataResult oldest = getSingleRecord(Order.ASC);
-    String sampleField = getSampleField(newest);
-    Integer count = getCount(sampleField);
-    if (count <= MAX_RETURN_LIMIT) {
-      LOG.debug("Auto-Aggregation disabled as {} results <= max return limit {}", count, MAX_RETURN_LIMIT);
-      return disableAutoAgg(this.queryParams);
-    } else {
-      LOG.debug("Performing auto-aggregation");
+      DataResult newest = getSingleRecord(Order.DESC);
+      DataResult oldest = getSingleRecord(Order.ASC);
+      if (newest.getTotal() > 0) {
+        String sampleField = getSampleField(newest);
+        Integer count = getCount(sampleField);
+        if (count <= MAX_RETURN_LIMIT) {
+          LOG.debug("Auto-Aggregation disabled as {} results <= max return limit {}", count, MAX_RETURN_LIMIT);
+          return disableAutoAgg(this.queryParams);
+        } else {
+          LOG.debug("Performing auto-aggregation");
 
-        int aggValue = getAggregationValue(newest, oldest);
-        LOG.debug("Setting auto-aggregation value to {} ms", aggValue);
-        queryParams.update(QP_TIME_INTERVAL, aggValue + "ms");
-      return disableAutoAgg(queryParams);
-    }
-    } catch (ParseException e) {
-      e.printStackTrace();
-    }
+          int aggValue = getAggregationValue(newest, oldest);
+          LOG.debug("Setting auto-aggregation value to {} ms", aggValue);
+          queryParams.update(QP_TIME_INTERVAL, aggValue + "ms");
+          return disableAutoAgg(queryParams);
+        }
+      } else {
+        return disableAutoAgg(this.queryParams);
+      }
+      } catch(ParseException e){
+        e.printStackTrace();
+      }
     return null;
   }
 
