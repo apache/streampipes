@@ -56,7 +56,6 @@ public class DataLakeManagementUtils {
                     params.getAsLong(QP_END_DATE)));
         }
 
-
         if (params.has(QP_TIME_INTERVAL) && params.has(QP_AGGREGATION_FUNCTION)) {
             String timeInterval = params.getAsString(QP_TIME_INTERVAL);
             if (!params.has(QP_GROUP_BY)) {

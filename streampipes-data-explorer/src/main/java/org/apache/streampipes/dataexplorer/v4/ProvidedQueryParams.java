@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.dataexplorer.v4;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class ProvidedQueryParams {
@@ -28,6 +29,12 @@ public class ProvidedQueryParams {
                              Map<String, String> providedParams) {
     this.measurementId = measurementId;
     this.providedParams = providedParams;
+  }
+
+  public ProvidedQueryParams(ProvidedQueryParams params) {
+    this.measurementId = params.getMeasurementId();
+    this.providedParams = new HashMap<>();
+    params.getProvidedParams().forEach(providedParams::put);
   }
 
   public boolean has(String key) {
@@ -60,5 +67,17 @@ public class ProvidedQueryParams {
 
   public void update(String key, Integer value) {
     update(key, String.valueOf(value));
+  }
+
+  public void update(String key, boolean value) {
+    update(key, String.valueOf(value));
+  }
+
+  public void remove(String key) {
+    this.providedParams.remove(key);
+  }
+
+  public Map<String, String> getProvidedParams() {
+    return providedParams;
   }
 }

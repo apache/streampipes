@@ -143,6 +143,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
             , @Parameter(in = ParameterIn.QUERY, description = "name of aggregation function used for grouping operation") @QueryParam(QP_AGGREGATION_FUNCTION) String aggregationFunction
             , @Parameter(in = ParameterIn.QUERY, description = "time interval for aggregation (e.g. 1m - one minute) for grouping operation") @QueryParam(QP_TIME_INTERVAL) String timeInterval
             , @Parameter(in = ParameterIn.QUERY, description = "only return the number of results") @QueryParam(QP_COUNT_ONLY) String countOnly
+            , @Parameter(in = ParameterIn.QUERY, description = "auto-aggregate the number of results to avoid browser overload") @QueryParam(QP_AUTO_AGGREGATE) boolean autoAggregate
             , @Context UriInfo uriInfo) {
 
         MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();
@@ -151,8 +152,12 @@ public class DataLakeResourceV4 extends AbstractRestResource {
             return badRequest();
         } else {
             ProvidedQueryParams sanitizedParams = populate(measurementID, queryParams);
-            DataResult result = this.dataLakeManagement.getData(sanitizedParams);
-            return ok(result);
+            try {
+                DataResult result = this.dataLakeManagement.getData(sanitizedParams);
+                return ok(result);
+            } catch (IllegalArgumentException e) {
+                return badRequest(e.getMessage());
+            }
         }
     }
 

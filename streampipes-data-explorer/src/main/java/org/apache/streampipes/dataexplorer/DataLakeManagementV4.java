@@ -25,6 +25,7 @@ import org.apache.streampipes.dataexplorer.query.DeleteDataQuery;
 import org.apache.streampipes.dataexplorer.query.EditRetentionPolicyQuery;
 import org.apache.streampipes.dataexplorer.query.ShowRetentionPolicyQuery;
 import org.apache.streampipes.dataexplorer.utils.DataExplorerUtils;
+import org.apache.streampipes.dataexplorer.v4.AutoAggregationHandler;
 import org.apache.streampipes.dataexplorer.v4.ProvidedQueryParams;
 import org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters;
 import org.apache.streampipes.dataexplorer.v4.params.QueryParamsV4;
@@ -45,8 +46,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
-import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_LIMIT;
-import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_PAGE;
+import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.*;
 
 public class DataLakeManagementV4 {
 
@@ -54,8 +54,10 @@ public class DataLakeManagementV4 {
         return DataExplorerUtils.getInfos();
     }
 
-    public DataResult getData(ProvidedQueryParams queryParams) {
-
+    public DataResult getData(ProvidedQueryParams queryParams) throws IllegalArgumentException {
+        if (queryParams.has(QP_AUTO_AGGREGATE)) {
+            queryParams = new AutoAggregationHandler(queryParams).makeAutoAggregationQueryParams();
+        }
         Map<String, QueryParamsV4> queryParts = DataLakeManagementUtils.getSelectQueryParams(queryParams);
         return new DataExplorerQueryV4(queryParts).executeQuery();
     }
