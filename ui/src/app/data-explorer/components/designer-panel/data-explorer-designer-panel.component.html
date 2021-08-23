@@ -77,6 +77,12 @@
                                 [dataLakeMeasure]="dataLakeMeasure">
                         </sp-data-explorer-density-chart-widget-config>
                     </div>
+                    <div *ngIf="currentlyConfiguredWidget.widgetType === 'pie-chart'" class="h-100 p-0">
+                        <sp-data-explorer-pie-chart-widget-config
+                                [currentlyConfiguredWidget]="currentlyConfiguredWidget"
+                                [dataLakeMeasure]="dataLakeMeasure">
+                        </sp-data-explorer-pie-chart-widget-config>
+                    </div>
                 </div>
                 <div *ngIf="selectedIndex == 2">
                     <sp-data-explorer-widget-appearance-settings

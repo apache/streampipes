@@ -16,20 +16,22 @@
  *
  */
 
-export class DatalakeQueryParameters {
-  public columns: string;
-  public startDate: number;
-  public endDate: number;
-  public page: number;
-  public limit: number;
-  public offset: number;
-  public groupBy: string;
-  public order: string;
-  public aggregationFunction: string;
-  public timeInterval: string;
-  public countOnly: boolean;
-  public autoAggregate: boolean;
-  public filter: string;
+import { DataExplorerWidgetModel, EventPropertyUnion } from '../../../../../core-model/gen/streampipes-model';
 
+export interface FilterCondition {
+  index: number;
+  field: string;
+  operator: string;
+  condition: string;
 }
 
+
+export interface PieChartDataConfig {
+  selectedProperty: string;
+  availableProperties: EventPropertyUnion[];
+  selectedFilters: FilterCondition[];
+}
+
+export interface PieChartWidgetModel extends DataExplorerWidgetModel {
+  dataConfig: PieChartDataConfig;
+}
