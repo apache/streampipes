@@ -53,13 +53,18 @@ public class FileProtocol extends Protocol {
     public static final String ID = "org.apache.streampipes.protocol.set.file";
 
     private String fileFetchUrl;
+    private String selectedFilename;
 
     public FileProtocol() {
     }
 
-    public FileProtocol(IParser parser, IFormat format, String fileFetchUrl) {
+    public FileProtocol(IParser parser,
+                        IFormat format,
+                        String fileFetchUrl,
+                        String selectedFilename) {
         super(parser, format);
         this.fileFetchUrl = fileFetchUrl;
+        this.selectedFilename = selectedFilename;
     }
 
     @Override
@@ -77,7 +82,8 @@ public class FileProtocol extends Protocol {
     public Protocol getInstance(ProtocolDescription protocolDescription, IParser parser, IFormat format) {
         StaticPropertyExtractor extractor = StaticPropertyExtractor.from(protocolDescription.getConfig());
         String fileFetchUrl = extractor.selectedFileFetchUrl("filePath");
-        return new FileProtocol(parser, format, fileFetchUrl);
+        String selectedFilename = extractor.selectedFilename("filePath");
+        return new FileProtocol(parser, format, fileFetchUrl, selectedFilename);
     }
 
     @Override
@@ -92,7 +98,7 @@ public class FileProtocol extends Protocol {
         }
         SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
         try {
-            InputStream dataInputStream = getDataFromEndpoint();
+            InputStream dataInputStream = getFileInputStream();
             if(dataInputStream != null) {
                 parser.parse(dataInputStream, stk);
             } else {
@@ -100,6 +106,8 @@ public class FileProtocol extends Protocol {
             }
         } catch (ParseException e) {
             logger.error("Error while parsing: " + e.getMessage());
+        } catch (FileNotFoundException e) {
+            logger.error("Error reading file: " + e.getMessage());
         }
     }
 
@@ -111,36 +119,71 @@ public class FileProtocol extends Protocol {
     @Override
     public GuessSchema getGuessSchema() throws ParseException {
 
+        try {
+            InputStream targetStream = getFileInputStream();
+            List<byte[]> dataByte = parser.parseNEvents(targetStream, 20);
 
-        InputStream dataInputStream = getDataFromEndpoint();
+            EventSchema eventSchema = parser.getEventSchema(dataByte);
 
-        List<byte[]> dataByte = parser.parseNEvents(dataInputStream, 20);
+            GuessSchema result = SchemaGuesser.guessSchma(eventSchema, getNElements(20));
 
-        EventSchema eventSchema = parser.getEventSchema(dataByte);
-
-        GuessSchema result = SchemaGuesser.guessSchma(eventSchema, getNElements(20));
-
-        return result;
+            return result;
+        } catch (FileNotFoundException e) {
+            throw new ParseException("Could not read local file");
+        }
     }
 
-    public InputStream getDataFromEndpoint() throws ParseException {
-        try {
-            return Request.Get(fileFetchUrl).execute().returnContent().asStream();
-        } catch (FileNotFoundException e) {
-            throw new ParseException("File not found: " + fileFetchUrl);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new ParseException("Could not receive Data from file: " + fileFetchUrl);
+    private InputStream getFileInputStream() throws FileNotFoundException {
+        if (!isFilePresent()) {
+            try {
+                storeFileLocally();
+            } catch (IOException e) {
+                throw new ParseException("Could not receive file");
+            }
         }
+
+        return new FileInputStream(makeFileLoc(this.selectedFilename));
+    }
+
+    private boolean isFilePresent() {
+        File file = new File(makeFileLoc(selectedFilename));
+        return file.exists();
+    }
+
+    private void storeFileLocally() throws IOException {
+        File storageDir = new File(makeServiceStorageDir());
+        if (!storageDir.exists()) {
+            storageDir.mkdirs();
+        }
+
+        File file = new File(makeFileLoc(selectedFilename));
+
+        Request.Get(fileFetchUrl).execute().saveContent(file);
+    }
+
+    private String makeServiceStorageDir() {
+        return System.getProperty("user.home")
+                + File.separator
+                + ".streampipes"
+                + File.separator
+                + "service";
+    }
+
+    private String makeFileLoc(String filename) {
+        return makeServiceStorageDir() + File.separator + filename;
     }
 
     @Override
     public List<Map<String, Object>> getNElements(int n) throws ParseException {
         List<Map<String, Object>> result = new ArrayList<>();
 
-        InputStream dataInputStream = getDataFromEndpoint();
-
-        List<byte[]> dataByteArray = parser.parseNEvents(dataInputStream, n);
+        List<byte[]> dataByteArray = new ArrayList<>();
+        try {
+            InputStream dataInputStream = getFileInputStream();
+            dataByteArray = parser.parseNEvents(dataInputStream, n);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
         // Check that result size is n. Currently just an error is logged. Maybe change to an exception
         if (dataByteArray.size() < n) {
