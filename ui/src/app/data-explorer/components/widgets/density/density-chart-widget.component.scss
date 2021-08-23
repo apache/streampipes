@@ -15,14 +15,3 @@
  * limitations under the License.
  *
  */
-
-import { DataExplorerWidgetModel, EventPropertyUnion } from '../../../../../core-model/gen/streampipes-model';
-
-export interface HistogramChartDataConfig {
-  selectedProperty: string;
-  availableProperties: EventPropertyUnion[];
-}
-
-export interface HistogramChartWidgetModel extends DataExplorerWidgetModel {
-  dataConfig: HistogramChartDataConfig;
-}

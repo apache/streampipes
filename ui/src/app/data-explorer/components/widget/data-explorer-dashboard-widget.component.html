@@ -17,7 +17,8 @@
   -->
 
 <div class="h-100 shadow">
-    <div class="box" [ngStyle]="{background: configuredWidget.baseAppearanceConfig.backgroundColor, color: configuredWidget.baseAppearanceConfig.textColor}">
+    <div class="box"
+         [ngStyle]="{background: configuredWidget.baseAppearanceConfig.backgroundColor, color: configuredWidget.baseAppearanceConfig.textColor}">
         <div class="widget-header h-40">
             <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center" class="widget-header-text">
                 {{ configuredWidget.baseAppearanceConfig.widgetTitle }}
@@ -106,6 +107,19 @@
                             [dataLakeMeasure]="dataLakeMeasure"
                             class="h-100">
                     </sp-data-explorer-histogram-chart-widget>
+                </div>
+                <div *ngIf="configuredWidget.widgetType === 'density-chart'" class="h-100 p-0">
+                    <sp-data-explorer-density-chart-widget
+                            (removeWidgetCallback)="removeWidget()"
+                            [timeSettings]="timeSettings"
+                            [gridsterItem]="dashboardItem"
+                            [gridsterItemComponent]="gridsterItemComponent"
+                            [editMode]="editMode"
+                            [dataViewDashboardItem]="dashboardItem"
+                            [dataExplorerWidget]="configuredWidget"
+                            [dataLakeMeasure]="dataLakeMeasure"
+                            class="h-100">
+                    </sp-data-explorer-density-chart-widget>
                 </div>
             </div>
         </div>

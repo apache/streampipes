@@ -71,6 +71,12 @@
                                 [dataLakeMeasure]="dataLakeMeasure">
                         </sp-data-explorer-indicator-chart-widget-config>
                     </div>
+                    <div *ngIf="currentlyConfiguredWidget.widgetType === 'density-chart'" class="h-100 p-0">
+                        <sp-data-explorer-density-chart-widget-config
+                                [currentlyConfiguredWidget]="currentlyConfiguredWidget"
+                                [dataLakeMeasure]="dataLakeMeasure">
+                        </sp-data-explorer-density-chart-widget-config>
+                    </div>
                 </div>
                 <div *ngIf="selectedIndex == 2">
                     <sp-data-explorer-widget-appearance-settings

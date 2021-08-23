@@ -75,6 +75,8 @@ import { IndicatorChartWidgetComponent } from './components/widgets/indicator/in
 import { IndicatorWidgetConfigComponent } from './components/widgets/indicator/config/indicator-chart-widget-config.component';
 import { HistogramChartWidgetComponent } from './components/widgets/histogram/histogram-chart-widget.component';
 import { HistogramWidgetConfigComponent } from './components/widgets/histogram/config/histogram-chart-widget-config.component';
+import { DensityChartWidgetComponent } from './components/widgets/density/density-chart-widget.component';
+import { DensityWidgetConfigComponent } from './components/widgets/density/config/density-chart-widget-config.component';
 
 export const MY_NATIVE_FORMATS = {
   fullPickerInput: {
@@ -120,6 +122,8 @@ export const MY_NATIVE_FORMATS = {
     MatChipsModule
   ],
   declarations: [
+    AggregateConfigurationComponent,
+    DataDownloadDialog,
     DataExplorerComponent,
     DataExplorerDashboardGridComponent,
     DataExplorerDashboardOverviewComponent,
@@ -129,7 +133,9 @@ export const MY_NATIVE_FORMATS = {
     DataExplorerEditDataViewDialogComponent,
     DataExplorerWidgetAppearanceSettingsComponent,
     DataExplorerWidgetDataSettingsComponent,
-    TableWidgetComponent,
+    DensityChartWidgetComponent,
+    DensityWidgetConfigComponent,
+    GroupConfigurationComponent,
     HistogramChartWidgetComponent,
     HistogramWidgetConfigComponent,
     ImageWidgetComponent,
@@ -138,14 +144,12 @@ export const MY_NATIVE_FORMATS = {
     IndicatorWidgetConfigComponent,
     LineChartWidgetComponent,
     LineChartWidgetConfigComponent,
-    TimeRangeSelectorComponent,
-    NoDataInDateRangeComponent,
     LoadDataSpinnerComponent,
-    DataDownloadDialog,
+    NoDataInDateRangeComponent,
     SelectPropertiesComponent,
-    AggregateConfigurationComponent,
-    GroupConfigurationComponent,
-    TableWidgetConfigComponent
+    TableWidgetComponent,
+    TableWidgetConfigComponent,
+    TimeRangeSelectorComponent,
   ],
   providers: [
     DatalakeRestService,

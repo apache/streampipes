@@ -45,6 +45,9 @@
     <mat-form-field color="accent" fxFlex="100">
         <mat-label>Select visualization</mat-label>
         <mat-select [(value)]="currentlyConfiguredWidget.widgetType">
+            <mat-option [value]="'density-chart'">
+                <span class="pipeline-name">Density</span>
+            </mat-option>
             <mat-option [value]="'histogram-chart'">
                 <span class="pipeline-name">Histogram</span>
             </mat-option>

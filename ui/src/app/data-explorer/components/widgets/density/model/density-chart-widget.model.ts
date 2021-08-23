@@ -18,11 +18,12 @@
 
 import { DataExplorerWidgetModel, EventPropertyUnion } from '../../../../../core-model/gen/streampipes-model';
 
-export interface HistogramChartDataConfig {
-  selectedProperty: string;
+export interface DensityChartDataConfig {
+  firstField: string;
+  secondField: string;
   availableProperties: EventPropertyUnion[];
 }
 
-export interface HistogramChartWidgetModel extends DataExplorerWidgetModel {
-  dataConfig: HistogramChartDataConfig;
+export interface DensityChartWidgetModel extends DataExplorerWidgetModel {
+  dataConfig: DensityChartDataConfig;
 }
