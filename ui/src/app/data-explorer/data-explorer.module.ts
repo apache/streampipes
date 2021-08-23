@@ -73,6 +73,8 @@ import { ImageWidgetConfigComponent } from './components/widgets/image/config/im
 import { DatalakeRestService } from '../platform-services/apis/datalake-rest.service';
 import { IndicatorChartWidgetComponent } from './components/widgets/indicator/indicator-chart-widget.component';
 import { IndicatorWidgetConfigComponent } from './components/widgets/indicator/config/indicator-chart-widget-config.component';
+import { HistogramChartWidgetComponent } from './components/widgets/histogram/histogram-chart-widget.component';
+import { HistogramWidgetConfigComponent } from './components/widgets/histogram/config/histogram-chart-widget-config.component';
 
 export const MY_NATIVE_FORMATS = {
   fullPickerInput: {
@@ -128,6 +130,8 @@ export const MY_NATIVE_FORMATS = {
     DataExplorerWidgetAppearanceSettingsComponent,
     DataExplorerWidgetDataSettingsComponent,
     TableWidgetComponent,
+    HistogramChartWidgetComponent,
+    HistogramWidgetConfigComponent,
     ImageWidgetComponent,
     ImageWidgetConfigComponent,
     IndicatorChartWidgetComponent,

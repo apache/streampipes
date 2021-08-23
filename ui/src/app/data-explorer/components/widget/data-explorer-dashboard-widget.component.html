@@ -94,6 +94,19 @@
                             class="h-100">
                     </sp-data-explorer-indicator-chart-widget>
                 </div>
+                <div *ngIf="configuredWidget.widgetType === 'histogram-chart'" class="h-100 p-0">
+                    <sp-data-explorer-histogram-chart-widget
+                            (removeWidgetCallback)="removeWidget()"
+                            [timeSettings]="timeSettings"
+                            [gridsterItem]="dashboardItem"
+                            [gridsterItemComponent]="gridsterItemComponent"
+                            [editMode]="editMode"
+                            [dataViewDashboardItem]="dashboardItem"
+                            [dataExplorerWidget]="configuredWidget"
+                            [dataLakeMeasure]="dataLakeMeasure"
+                            class="h-100">
+                    </sp-data-explorer-histogram-chart-widget>
+                </div>
             </div>
         </div>
     </div>

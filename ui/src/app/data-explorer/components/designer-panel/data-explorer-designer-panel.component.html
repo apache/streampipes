@@ -59,6 +59,12 @@
 
                         </sp-data-explorer-line-chart-widget-config>
                     </div>
+                    <div *ngIf="currentlyConfiguredWidget.widgetType === 'histogram-chart'" class="h-100 p-0">
+                        <sp-data-explorer-histogram-chart-widget-config
+                                [currentlyConfiguredWidget]="currentlyConfiguredWidget"
+                                [dataLakeMeasure]="dataLakeMeasure">
+                        </sp-data-explorer-histogram-chart-widget-config>
+                    </div>
                     <div *ngIf="currentlyConfiguredWidget.widgetType === 'indicator-chart'" class="h-100 p-0">
                         <sp-data-explorer-indicator-chart-widget-config
                                 [currentlyConfiguredWidget]="currentlyConfiguredWidget"

@@ -45,15 +45,19 @@
     <mat-form-field color="accent" fxFlex="100">
         <mat-label>Select visualization</mat-label>
         <mat-select [(value)]="currentlyConfiguredWidget.widgetType">
+            <mat-option [value]="'histogram-chart'">
+                <span class="pipeline-name">Histogram</span>
+            </mat-option>
+            <mat-option [value]="'indicator-chart'">
+                <span class="pipeline-name">Indicator</span>
+            </mat-option>
             <mat-option [value]="'line-chart'">
                 <span class="pipeline-name">Line Chart</span>
             </mat-option>
             <mat-option [value]="'table'">
                 <span class="pipeline-name">Table</span>
             </mat-option>
-            <mat-option [value]="'indicator-chart'">
-                <span class="pipeline-name">Indicator</span>
-            </mat-option>
+
         </mat-select>
     </mat-form-field>
 
