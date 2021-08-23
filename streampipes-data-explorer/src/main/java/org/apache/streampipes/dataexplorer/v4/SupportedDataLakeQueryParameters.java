@@ -35,6 +35,7 @@ public class SupportedDataLakeQueryParameters {
   public static final String QP_FORMAT = "format";
   public static final String QP_COUNT_ONLY = "countOnly";
   public static final String QP_AUTO_AGGREGATE = "autoAggregate";
+  public static final String QP_FILTER = "filter";
 
   public static final List<String> supportedParams = Arrays.asList(
           QP_COLUMNS,
@@ -49,7 +50,8 @@ public class SupportedDataLakeQueryParameters {
           QP_TIME_INTERVAL,
           QP_FORMAT,
           QP_COUNT_ONLY,
-          QP_AUTO_AGGREGATE
+          QP_AUTO_AGGREGATE,
+          QP_FILTER
   );
 
 }
