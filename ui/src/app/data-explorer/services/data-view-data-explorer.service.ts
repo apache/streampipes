@@ -19,15 +19,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { DatalakeRestService } from '../../core-services/datalake/datalake-rest.service';
 import { SharedDatalakeRestService } from '../../core-services/shared/shared-dashboard.service';
 import { AuthStatusService } from '../../services/auth-status.service';
-import {
-  DataExplorerWidgetModel,
-  DataLakeMeasure,
-} from '../../core-model/gen/streampipes-model';
+import { DataExplorerWidgetModel, DataLakeMeasure, } from '../../core-model/gen/streampipes-model';
 import { Dashboard } from '../../dashboard/models/dashboard.model';
 import { Injectable } from '@angular/core';
+import { DatalakeRestService } from '../../platform-services/apis/datalake-rest.service';
 
 
 @Injectable()
@@ -42,8 +39,7 @@ export class DataViewDataExplorerService {
   }
 
   getVisualizableData(): Observable<DataLakeMeasure[]> {
-
-    return this.dataLakeRestService.getAllInfos().pipe(map(data => {
+    return this.dataLakeRestService.getAllMeasurementSeries().pipe(map(data => {
       return (data as any[]).map(d => DataLakeMeasure.fromData(d as DataLakeMeasure));
     }));
   }

@@ -31,13 +31,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 public class DataExplorerQueryV4 {
 
     private static final Logger LOG = LoggerFactory.getLogger(DataExplorerQueryV4.class);
-
+    private static final List<String> AGGREGATION_PREFIXES = Arrays.asList("mean_", "first_", "last_", "count_");
 
     protected Map<String, QueryParamsV4> params;
 
@@ -47,7 +48,7 @@ public class DataExplorerQueryV4 {
 
     public DataResult executeQuery() throws RuntimeException {
         InfluxDB influxDB = DataExplorerUtils.getInfluxDBClient();
-        List<QueryElement> queryElements = getQueryElements();
+        List<QueryElement<?>> queryElements = getQueryElements();
 
         QueryBuilder queryBuilder = QueryBuilder.create(BackendConfig.INSTANCE.getInfluxDatabaseName());
         Query query = queryBuilder.build(queryElements);
@@ -72,16 +73,15 @@ public class DataExplorerQueryV4 {
     protected DataResult convertResult(QueryResult.Series series) {
         List<String> columns = series.getColumns();
         for (int i = 0; i < columns.size(); i++) {
-            String replacedColumnName = columns.get(i).replaceAll("mean_", "");
+            String replacedColumnName = replacePrefixes(columns.get(i));
             columns.set(i, replacedColumnName);
         }
-        List values = series.getValues();
+        List<List<Object>> values = series.getValues();
 
-        List resultingValues = new ArrayList();
+        List<List<Object>> resultingValues = new ArrayList<>();
 
         values.forEach(v -> {
-
-            if (!((List<String>)v).contains(null)) {
+            if (!v.contains(null)) {
                 resultingValues.add(v);
             }
         });
@@ -93,8 +93,17 @@ public class DataExplorerQueryV4 {
         return convertResult(result);
     }
 
-    protected List<QueryElement> getQueryElements() {
-        List<QueryElement> queryElements = new ArrayList<>();
+    private String replacePrefixes(String columnName) {
+        for (String prefix : AGGREGATION_PREFIXES) {
+            if (columnName.startsWith(prefix)) {
+                return columnName.replaceAll(prefix, "");
+            }
+        }
+        return columnName;
+    }
+
+    protected List<QueryElement<?>> getQueryElements() {
+        List<QueryElement<?>> queryElements = new ArrayList<>();
 
         if (this.params.containsKey(DataLakeManagementUtils.SELECT_FROM)) {
             queryElements.add(new SelectFromStatement((SelectFromStatementParams) this.params.get(DataLakeManagementUtils.SELECT_FROM)));
@@ -130,7 +139,6 @@ public class DataExplorerQueryV4 {
         if (this.params.containsKey(DataLakeManagementUtils.OFFSET)) {
             queryElements.add(new Offset((OffsetParams) this.params.get(DataLakeManagementUtils.OFFSET)));
         }
-
 
         return queryElements;
     }

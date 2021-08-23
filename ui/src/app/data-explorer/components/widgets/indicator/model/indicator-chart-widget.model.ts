@@ -15,18 +15,16 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.dataexplorer.v4.params;
 
-public abstract class QueryParamsV4 {
+import { DataExplorerWidgetModel, EventPropertyUnion } from '../../../../../core-model/gen/streampipes-model';
 
-    private final String index;
+export interface IndicatorChartDataConfig {
+  selectedProperty: string;
+  availableProperties: EventPropertyUnion[];
+  numberAggregation: string;
+  deltaAggregation: string;
+}
 
-    protected QueryParamsV4(String index) {
-        this.index = index;
-    }
-
-    public String getIndex() {
-        return index;
-    }
-
+export interface IndicatorChartWidgetModel extends DataExplorerWidgetModel {
+  dataConfig: IndicatorChartDataConfig;
 }

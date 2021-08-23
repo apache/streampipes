@@ -29,12 +29,15 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
-import { OWL_DATE_TIME_FORMATS, OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
+import {
+  OWL_DATE_TIME_FORMATS,
+  OwlDateTimeModule,
+  OwlNativeDateTimeModule
+} from '@danielmoncada/angular-datetime-picker';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { GridsterModule } from 'angular-gridster2';
 import { PlotlyViaWindowModule } from 'angular-plotly.js';
 import { ColorPickerModule } from 'ngx-color-picker';
-import { DatalakeRestService } from '../core-services/datalake/datalake-rest.service';
 import { SemanticTypeUtilsService } from '../core-services/semantic-type/semantic-type-utils.service';
 import { SharedDatalakeRestService } from '../core-services/shared/shared-dashboard.service';
 import { CoreUiModule } from '../core-ui/core-ui.module';
@@ -67,8 +70,13 @@ import { DataExplorerWidgetDataSettingsComponent } from './components/designer-p
 import { WidgetConfigurationService } from './services/widget-configuration.service';
 import { LineChartWidgetConfigComponent } from './components/widgets/line-chart/config/line-chart-widget-config.component';
 import { ImageWidgetConfigComponent } from './components/widgets/image/config/image-widget-config.component';
-
-const dashboardWidgets = [];
+import { DatalakeRestService } from '../platform-services/apis/datalake-rest.service';
+import { IndicatorChartWidgetComponent } from './components/widgets/indicator/indicator-chart-widget.component';
+import { IndicatorWidgetConfigComponent } from './components/widgets/indicator/config/indicator-chart-widget-config.component';
+import { HistogramChartWidgetComponent } from './components/widgets/histogram/histogram-chart-widget.component';
+import { HistogramWidgetConfigComponent } from './components/widgets/histogram/config/histogram-chart-widget-config.component';
+import { DensityChartWidgetComponent } from './components/widgets/density/density-chart-widget.component';
+import { DensityWidgetConfigComponent } from './components/widgets/density/config/density-chart-widget-config.component';
 
 export const MY_NATIVE_FORMATS = {
   fullPickerInput: {
@@ -79,11 +87,11 @@ export const MY_NATIVE_FORMATS = {
     minute: 'numeric',
     hour12: false
   },
-  datePickerInput: { year: 'numeric', month: 'numeric', day: 'numeric', hour12: false },
-  timePickerInput: { hour: 'numeric', minute: 'numeric', hour12: false },
-  monthYearLabel: { year: 'numeric', month: 'short', hour12: false },
-  dateA11yLabel: { year: 'numeric', month: 'long', day: 'numeric', hour12: false },
-  monthYearA11yLabel: { year: 'numeric', month: 'long', hour12: false }
+  datePickerInput: {year: 'numeric', month: 'numeric', day: 'numeric', hour12: false},
+  timePickerInput: {hour: 'numeric', minute: 'numeric', hour12: false},
+  monthYearLabel: {year: 'numeric', month: 'short', hour12: false},
+  dateA11yLabel: {year: 'numeric', month: 'long', day: 'numeric', hour12: false},
+  monthYearA11yLabel: {year: 'numeric', month: 'long', hour12: false}
 };
 
 
@@ -114,6 +122,8 @@ export const MY_NATIVE_FORMATS = {
     MatChipsModule
   ],
   declarations: [
+    AggregateConfigurationComponent,
+    DataDownloadDialog,
     DataExplorerComponent,
     DataExplorerDashboardGridComponent,
     DataExplorerDashboardOverviewComponent,
@@ -123,19 +133,23 @@ export const MY_NATIVE_FORMATS = {
     DataExplorerEditDataViewDialogComponent,
     DataExplorerWidgetAppearanceSettingsComponent,
     DataExplorerWidgetDataSettingsComponent,
-    TableWidgetComponent,
+    DensityChartWidgetComponent,
+    DensityWidgetConfigComponent,
+    GroupConfigurationComponent,
+    HistogramChartWidgetComponent,
+    HistogramWidgetConfigComponent,
     ImageWidgetComponent,
     ImageWidgetConfigComponent,
+    IndicatorChartWidgetComponent,
+    IndicatorWidgetConfigComponent,
     LineChartWidgetComponent,
     LineChartWidgetConfigComponent,
-    TimeRangeSelectorComponent,
-    NoDataInDateRangeComponent,
     LoadDataSpinnerComponent,
-    DataDownloadDialog,
+    NoDataInDateRangeComponent,
     SelectPropertiesComponent,
-    AggregateConfigurationComponent,
-    GroupConfigurationComponent,
-    TableWidgetConfigComponent
+    TableWidgetComponent,
+    TableWidgetConfigComponent,
+    TimeRangeSelectorComponent,
   ],
   providers: [
     DatalakeRestService,

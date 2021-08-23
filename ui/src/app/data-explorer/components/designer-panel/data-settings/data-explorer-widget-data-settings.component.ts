@@ -17,11 +17,14 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { DataExplorerWidgetModel, DataLakeMeasure } from '../../../../core-model/gen/streampipes-model';
+import {
+  DataExplorerWidgetModel,
+  DataLakeMeasure
+} from '../../../../core-model/gen/streampipes-model';
 import { DataViewDataExplorerService } from '../../../services/data-view-data-explorer.service';
-import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
 import { MatSelectChange } from '@angular/material/select';
 import { Tuple2 } from '../../../../core-model/base/Tuple2';
+import { DatalakeRestService } from '../../../../platform-services/apis/datalake-rest.service';
 
 @Component({
   selector: 'sp-data-explorer-widget-data-settings',
@@ -61,7 +64,7 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
   }
 
   loadAvailableMeasurements() {
-    this.datalakeRestService.getAllInfos().subscribe(response => {
+    this.datalakeRestService.getAllMeasurementSeries().subscribe(response => {
       this.availableMeasurements = response;
     });
   }
@@ -76,22 +79,6 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
   findMeasure(measureName) {
     return this.availablePipelines.find(pipeline => pipeline.measureName === measureName) ||
       this.availableMeasurements.find(m => m.measureName === measureName);
-  }
-
-  configureVis(event: MatSelectChange) {
-    if (event.value === 'line-chart') {
-      this.initiateLineChart();
-    } else if (event.value === 'table') {
-      this.initiateTable();
-    }
-  }
-
-  initiateLineChart() {
-
-  }
-
-  initiateTable() {
-
   }
 
   createWidget() {

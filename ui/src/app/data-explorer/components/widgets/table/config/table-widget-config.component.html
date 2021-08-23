@@ -31,5 +31,12 @@
             [availableProperties]="currentlyConfiguredWidget.dataConfig.availableColumns"
             [selectedProperties]="currentlyConfiguredWidget.dataConfig.selectedColumns">
     </sp-select-properties>
+
+    <mat-form-field fxFlex="100" color="accent">
+        <mat-label>
+            <mat-icon>search</mat-icon>
+            <span>&nbsp;Limit</span></mat-label>
+        <input [(ngModel)]="currentlyConfiguredWidget.dataConfig.limit" matInput (input)="onFilterChange($event.target.value)">
+    </mat-form-field>
 </div>
 

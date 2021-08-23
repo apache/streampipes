@@ -25,6 +25,9 @@ import org.apache.streampipes.dataexplorer.query.DeleteDataQuery;
 import org.apache.streampipes.dataexplorer.query.EditRetentionPolicyQuery;
 import org.apache.streampipes.dataexplorer.query.ShowRetentionPolicyQuery;
 import org.apache.streampipes.dataexplorer.utils.DataExplorerUtils;
+import org.apache.streampipes.dataexplorer.v4.AutoAggregationHandler;
+import org.apache.streampipes.dataexplorer.v4.ProvidedQueryParams;
+import org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters;
 import org.apache.streampipes.dataexplorer.v4.params.QueryParamsV4;
 import org.apache.streampipes.dataexplorer.v4.query.DataExplorerQueryV4;
 import org.apache.streampipes.dataexplorer.v4.utils.DataLakeManagementUtils;
@@ -43,44 +46,25 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
+import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.*;
+
 public class DataLakeManagementV4 {
 
     public List<DataLakeMeasure> getAllMeasurements() {
-        List<DataLakeMeasure> allMeasurements = DataExplorerUtils.getInfos();
-        return allMeasurements;
+        return DataExplorerUtils.getInfos();
     }
 
-    public DataResult getData(
-            String measurementID,
-            String columns,
-            Long startDate,
-            Long endDate,
-            Integer page,
-            Integer limit,
-            Integer offset,
-            String groupBy,
-            String order,
-            String aggregationFunction,
-            String timeInterval) {
-
-        Map<String, QueryParamsV4> queryParts = DataLakeManagementUtils.getSelectQueryParams(
-                measurementID,
-                columns,
-                startDate,
-                endDate,
-                page,
-                limit,
-                offset,
-                groupBy,
-                order,
-                aggregationFunction,
-                timeInterval);
+    public DataResult getData(ProvidedQueryParams queryParams) throws IllegalArgumentException {
+        if (queryParams.has(QP_AUTO_AGGREGATE)) {
+            queryParams = new AutoAggregationHandler(queryParams).makeAutoAggregationQueryParams();
+        }
+        Map<String, QueryParamsV4> queryParts = DataLakeManagementUtils.getSelectQueryParams(queryParams);
         return new DataExplorerQueryV4(queryParts).executeQuery();
     }
 
-    public void getDataAsStream(String measurementID, String columns, Long startDate, Long endDate, Integer page, Integer limit, Integer offset, String groupBy, String order, String aggregationFunction, String timeInterval, String format, OutputStream outputStream) throws IOException {
-        if (limit == null) {
-            limit = 500000;
+    public void getDataAsStream(ProvidedQueryParams params, String format, OutputStream outputStream) throws IOException {
+        if (!params.has(QP_LIMIT)) {
+            params.update(QP_LIMIT, 500000);
         }
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
@@ -90,15 +74,16 @@ public class DataLakeManagementV4 {
 
             Gson gson = new Gson();
             int i = 0;
-            if (page != null) {
-                i = page;
+            if (params.has(QP_PAGE)) {
+                i = params.getAsInt(QP_PAGE);
             }
 
             boolean isFirstDataObject = true;
 
             outputStream.write(toBytes("["));
             do {
-                dataResult = getData(measurementID, columns, startDate, endDate, i, limit, null, groupBy, order, aggregationFunction, timeInterval);
+                params.update(SupportedDataLakeQueryParameters.QP_PAGE, String.valueOf(i));
+                dataResult = getData(params);
 
                 if (dataResult.getTotal() > 0) {
                     for (List<Object> row : dataResult.getRows()) {
@@ -138,14 +123,15 @@ public class DataLakeManagementV4 {
             //CSV
         } else if (format.equals("csv")) {
             int i = 0;
-            if (page != null) {
-                i = page;
+            if (params.has(QP_PAGE)) {
+                i = params.getAsInt(QP_PAGE);
             }
 
             boolean isFirstDataObject = true;
 
             do {
-                dataResult = getData(measurementID, columns, startDate, endDate, i, limit, null, groupBy, order, aggregationFunction, timeInterval);
+                params.update(SupportedDataLakeQueryParameters.QP_PAGE, String.valueOf(i));
+                dataResult = getData(params);
                 //Send first header
                 if (dataResult.getTotal() > 0) {
                     if (isFirstDataObject) {
@@ -237,8 +223,7 @@ public class DataLakeManagementV4 {
             if (existingRetentionPolicies.size() > 1) {
                 String drop = new EditRetentionPolicyQuery(RetentionPolicyQueryParams.from("custom", "0s"), "DROP").executeQuery();
             }
-            String reset = new EditRetentionPolicyQuery(RetentionPolicyQueryParams.from("autogen", "0s"), "DEFAULT").executeQuery();
-            return reset;
+            return new EditRetentionPolicyQuery(RetentionPolicyQueryParams.from("autogen", "0s"), "DEFAULT").executeQuery();
         } else {
 
             Integer batchSize = config.getBatchSize();
@@ -254,8 +239,7 @@ public class DataLakeManagementV4 {
             if (existingRetentionPolicies.size() > 1) {
                 operation = "ALTER";
             }
-            String result = new EditRetentionPolicyQuery(RetentionPolicyQueryParams.from("custom", "1d"), operation).executeQuery();
-            return result;
+            return new EditRetentionPolicyQuery(RetentionPolicyQueryParams.from("custom", "1d"), operation).executeQuery();
         }
     }
 

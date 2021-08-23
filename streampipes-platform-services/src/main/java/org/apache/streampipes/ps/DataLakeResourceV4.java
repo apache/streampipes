@@ -26,6 +26,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.apache.streampipes.dataexplorer.DataLakeManagementV4;
+import org.apache.streampipes.dataexplorer.v4.ProvidedQueryParams;
 import org.apache.streampipes.model.datalake.DataLakeConfiguration;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataResult;
@@ -34,10 +35,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.StreamingOutput;
+import javax.ws.rs.core.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.*;
 
 class Placeholder {
 }
@@ -129,20 +132,33 @@ public class DataLakeResourceV4 extends AbstractRestResource {
                     @ApiResponse(responseCode = "200", description = "requested data", content = @Content(schema = @Schema(implementation = DataResult.class)))})
     public Response getData(@Parameter(in = ParameterIn.PATH, description = "username", required = true) @PathParam("username") String username
             , @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true) @PathParam("measurementID") String measurementID
-            , @Parameter(in = ParameterIn.QUERY, description = "the columns to be selected (comma-separated)") @QueryParam("columns") String columns
-            , @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation") @QueryParam("startDate") Long startDate
-            , @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation") @QueryParam("endDate") Long endDate
-            , @Parameter(in = ParameterIn.QUERY, description = "page number for paging operation") @QueryParam("page") Integer page
-            , @Parameter(in = ParameterIn.QUERY, description = "maximum number of retrieved query results") @QueryParam("limit") Integer limit
-            , @Parameter(in = ParameterIn.QUERY, description = "offset") @QueryParam("offset") Integer offset
-            , @Parameter(in = ParameterIn.QUERY, description = "grouping tags (comma-separated) for grouping operation") @QueryParam("groupBy") String groupBy
-            , @Parameter(in = ParameterIn.QUERY, description = "ordering of retrieved query results (ASC or DESC - default is ASC)") @QueryParam("order") String order
-            , @Parameter(in = ParameterIn.QUERY, description = "name of aggregation function used for grouping operation") @QueryParam("aggregationFunction") String aggregationFunction
-            , @Parameter(in = ParameterIn.QUERY, description = "time interval for aggregation (e.g. 1m - one minute) for grouping operation") @QueryParam("timeInterval") String timeInterval) {
+            , @Parameter(in = ParameterIn.QUERY, description = "the columns to be selected (comma-separated)") @QueryParam(QP_COLUMNS) String columns
+            , @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation") @QueryParam(QP_START_DATE) Long startDate
+            , @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation") @QueryParam(QP_END_DATE) Long endDate
+            , @Parameter(in = ParameterIn.QUERY, description = "page number for paging operation") @QueryParam(QP_PAGE) Integer page
+            , @Parameter(in = ParameterIn.QUERY, description = "maximum number of retrieved query results") @QueryParam(QP_LIMIT) Integer limit
+            , @Parameter(in = ParameterIn.QUERY, description = "offset") @QueryParam(QP_OFFSET) Integer offset
+            , @Parameter(in = ParameterIn.QUERY, description = "grouping tags (comma-separated) for grouping operation") @QueryParam(QP_GROUP_BY) String groupBy
+            , @Parameter(in = ParameterIn.QUERY, description = "ordering of retrieved query results (ASC or DESC - default is ASC)") @QueryParam(QP_ORDER) String order
+            , @Parameter(in = ParameterIn.QUERY, description = "name of aggregation function used for grouping operation") @QueryParam(QP_AGGREGATION_FUNCTION) String aggregationFunction
+            , @Parameter(in = ParameterIn.QUERY, description = "time interval for aggregation (e.g. 1m - one minute) for grouping operation") @QueryParam(QP_TIME_INTERVAL) String timeInterval
+            , @Parameter(in = ParameterIn.QUERY, description = "only return the number of results") @QueryParam(QP_COUNT_ONLY) String countOnly
+            , @Parameter(in = ParameterIn.QUERY, description = "auto-aggregate the number of results to avoid browser overload") @QueryParam(QP_AUTO_AGGREGATE) boolean autoAggregate
+            , @Context UriInfo uriInfo) {
 
-        DataResult result = this.dataLakeManagement.getData(measurementID, columns, startDate, endDate, page, limit, offset, groupBy, order, aggregationFunction, timeInterval);
+        MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();
 
-        return Response.ok(result).build();
+        if (! (checkProvidedQueryParams(queryParams))) {
+            return badRequest();
+        } else {
+            ProvidedQueryParams sanitizedParams = populate(measurementID, queryParams);
+            try {
+                DataResult result = this.dataLakeManagement.getData(sanitizedParams);
+                return ok(result);
+            } catch (IllegalArgumentException e) {
+                return badRequest(e.getMessage());
+            }
+        }
     }
 
     @GET
@@ -154,28 +170,35 @@ public class DataLakeResourceV4 extends AbstractRestResource {
                     @ApiResponse(responseCode = "200", description = "requested data", content = @Content(schema = @Schema(implementation = DataResult.class)))})
     public Response downloadData(@Parameter(in = ParameterIn.PATH, description = "username", required = true) @PathParam("username") String username
             , @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true) @PathParam("measurementID") String measurementID
-            , @Parameter(in = ParameterIn.QUERY, description = "the columns to be selected (comma-separated)") @QueryParam("columns") String columns
-            , @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation") @QueryParam("startDate") Long startDate
-            , @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation") @QueryParam("endDate") Long endDate
-            , @Parameter(in = ParameterIn.QUERY, description = "page number for paging operation") @QueryParam("page") Integer page
-            , @Parameter(in = ParameterIn.QUERY, description = "maximum number of retrieved query results") @QueryParam("limit") Integer limit
-            , @Parameter(in = ParameterIn.QUERY, description = "offset") @QueryParam("offset") Integer offset
-            , @Parameter(in = ParameterIn.QUERY, description = "grouping tags (comma-separated) for grouping operation") @QueryParam("groupBy") String groupBy
-            , @Parameter(in = ParameterIn.QUERY, description = "ordering of retrieved query results (ASC or DESC - default is ASC)") @QueryParam("order") String order
-            , @Parameter(in = ParameterIn.QUERY, description = "name of aggregation function used for grouping operation") @QueryParam("aggregationFunction") String aggregationFunction
-            , @Parameter(in = ParameterIn.QUERY, description = "time interval for aggregation (e.g. 1m - one minute) for grouping operation") @QueryParam("timeInterval") String timeInterval
-            , @Parameter(in = ParameterIn.QUERY, description = "format specification (csv, json - default is csv) for data download") @QueryParam("format") String format) {
+            , @Parameter(in = ParameterIn.QUERY, description = "the columns to be selected (comma-separated)") @QueryParam(QP_COLUMNS) String columns
+            , @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation") @QueryParam(QP_START_DATE) Long startDate
+            , @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation") @QueryParam(QP_END_DATE) Long endDate
+            , @Parameter(in = ParameterIn.QUERY, description = "page number for paging operation") @QueryParam(QP_PAGE) Integer page
+            , @Parameter(in = ParameterIn.QUERY, description = "maximum number of retrieved query results") @QueryParam(QP_LIMIT) Integer limit
+            , @Parameter(in = ParameterIn.QUERY, description = "offset") @QueryParam(QP_OFFSET) Integer offset
+            , @Parameter(in = ParameterIn.QUERY, description = "grouping tags (comma-separated) for grouping operation") @QueryParam(QP_GROUP_BY) String groupBy
+            , @Parameter(in = ParameterIn.QUERY, description = "ordering of retrieved query results (ASC or DESC - default is ASC)") @QueryParam(QP_ORDER) String order
+            , @Parameter(in = ParameterIn.QUERY, description = "name of aggregation function used for grouping operation") @QueryParam(QP_AGGREGATION_FUNCTION) String aggregationFunction
+            , @Parameter(in = ParameterIn.QUERY, description = "time interval for aggregation (e.g. 1m - one minute) for grouping operation") @QueryParam(QP_TIME_INTERVAL) String timeInterval
+            , @Parameter(in = ParameterIn.QUERY, description = "format specification (csv, json - default is csv) for data download") @QueryParam(QP_FORMAT) String format
+            , @Context UriInfo uriInfo) {
 
-        if (format == null) {
-            format = "csv";
+        MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();
+
+        if (! (checkProvidedQueryParams(queryParams))) {
+            return badRequest();
+        } else {
+            ProvidedQueryParams sanitizedParams = populate(measurementID, queryParams);
+            if (format == null) {
+                format = "csv";
+            }
+            String outputFormat = format;
+            StreamingOutput streamingOutput = output -> dataLakeManagement.getDataAsStream(sanitizedParams, outputFormat, output);
+
+            return Response.ok(streamingOutput, MediaType.APPLICATION_OCTET_STREAM).
+                    header("Content-Disposition", "attachment; filename=\"datalake." + outputFormat + "\"")
+                    .build();
         }
-        String outputFormat = format;
-
-        StreamingOutput streamingOutput = output -> dataLakeManagement.getDataAsStream(measurementID, columns, startDate, endDate, page, limit, offset, groupBy, order, aggregationFunction, timeInterval, outputFormat, output);
-
-        return Response.ok(streamingOutput, MediaType.APPLICATION_OCTET_STREAM).
-                header("Content-Disposition", "attachment; filename=\"datalake." + outputFormat + "\"")
-                .build();
     }
 
     @GET
@@ -215,5 +238,16 @@ public class DataLakeResourceV4 extends AbstractRestResource {
     public Response removeAll(@Parameter(in = ParameterIn.PATH, description = "username", required = true) @PathParam("username") String username) {
         boolean isSuccess = this.dataLakeManagement.removeAllMeasurements();
         return Response.ok(isSuccess).build();
+    }
+
+    private boolean checkProvidedQueryParams(MultivaluedMap<String, String> providedParams) {
+        return supportedParams.containsAll(providedParams.keySet());
+    }
+
+    private ProvidedQueryParams populate(String measurementId, MultivaluedMap<String, String> rawParams) {
+        Map<String, String> queryParamMap = new HashMap<>();
+        rawParams.forEach((key, value) -> queryParamMap.put(key, String.join(",", value)));
+
+        return new ProvidedQueryParams(measurementId, queryParamMap);
     }
 }

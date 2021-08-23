@@ -22,11 +22,20 @@ import javax.annotation.Nullable;
 
 public class SelectFromStatementParams extends QueryParamsV4 {
 
-    private final String selectedColumns;
-    private final String aggregationFunction;
+    private String selectedColumns;
+    private String aggregationFunction;
+    private boolean countOnly = false;
 
-    public static SelectFromStatementParams from(String measurementID, @Nullable String columns, @Nullable String aggregationFunction) {
+    public static SelectFromStatementParams from(String measurementID,
+                                                 @Nullable String columns,
+                                                 @Nullable String aggregationFunction) {
         return new SelectFromStatementParams(measurementID, columns, aggregationFunction);
+    }
+
+    public static SelectFromStatementParams from(String measurementId,
+                                                 String columns,
+                                                 boolean countOnly) {
+        return new SelectFromStatementParams(measurementId, columns, countOnly);
     }
 
     public SelectFromStatementParams(String measurementID) {
@@ -35,7 +44,17 @@ public class SelectFromStatementParams extends QueryParamsV4 {
         this.aggregationFunction = null;
     }
 
-    public SelectFromStatementParams(String measurementID, String columns, String aggregationFunction) {
+    public SelectFromStatementParams(String measurementId,
+                                     String columns,
+                                     boolean countOnly) {
+        this(measurementId);
+        this.selectedColumns = columns;
+        this.countOnly = countOnly;
+    }
+
+    public SelectFromStatementParams(String measurementID,
+                                     String columns,
+                                     String aggregationFunction) {
         super(measurementID);
 
         if (columns != null) {
@@ -53,5 +72,9 @@ public class SelectFromStatementParams extends QueryParamsV4 {
 
     public String getAggregationFunction() {
         return aggregationFunction;
+    }
+
+    public boolean isCountOnly() {
+        return countOnly;
     }
 }

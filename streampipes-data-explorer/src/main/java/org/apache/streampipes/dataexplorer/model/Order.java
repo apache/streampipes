@@ -19,8 +19,8 @@ package org.apache.streampipes.dataexplorer.model;
 
 public enum Order {
 
-  ASC("asc"),
-  DESC("desc");
+  ASC("ASC"),
+  DESC("DESC");
 
   private String value;
 

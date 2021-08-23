@@ -16,16 +16,18 @@
  *
  */
 
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {MatSort} from '@angular/material/sort';
-import {DataResult} from '../../../../core-model/datalake/DataResult';
-import {DatalakeRestService} from '../../../../core-services/datalake/datalake-rest.service';
-import {BaseDataExplorerWidget} from '../base/base-data-explorer-widget';
-import {MatDialog} from '@angular/material/dialog';
-import {EventPropertyUnion, EventSchema} from '../../../../core-model/gen/streampipes-model';
-import {ImageWidgetModel} from "./model/image-widget.model";
-import {WidgetConfigurationService} from "../../../services/widget-configuration.service";
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatSort } from '@angular/material/sort';
+import { DataResult } from '../../../../core-model/datalake/DataResult';
+import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
+import { MatDialog } from '@angular/material/dialog';
+import { EventPropertyUnion, EventSchema } from '../../../../core-model/gen/streampipes-model';
+import { ImageWidgetModel } from './model/image-widget.model';
+import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
 import { ResizeService } from '../../../services/resize.service';
+import { DatalakeRestService } from '../../../../platform-services/apis/datalake-rest.service';
+import { DatalakeQueryParameters } from '../../../../core-services/datalake/DatalakeQueryParameters';
+import { DatalakeQueryParameterBuilder } from '../../../../core-services/datalake/DatalakeQueryParameterBuilder';
 
 @Component({
   selector: 'sp-data-explorer-image-widget',
@@ -46,11 +48,10 @@ export class ImageWidgetComponent extends BaseDataExplorerWidget<ImageWidgetMode
   public imagesRoutes = [];
 
   constructor(
-      protected dataLakeRestService: DatalakeRestService,
-      protected dialog: MatDialog,
+      dataLakeRestService: DatalakeRestService,
       widgetConfigurationService: WidgetConfigurationService,
       resizeService: ResizeService) {
-    super(dataLakeRestService, dialog, widgetConfigurationService, resizeService);
+    super(dataLakeRestService, widgetConfigurationService, resizeService);
   }
 
   ngOnInit(): void {
@@ -74,8 +75,8 @@ export class ImageWidgetComponent extends BaseDataExplorerWidget<ImageWidgetMode
   refreshData() {
     this.setShownComponents(false, false, true);
 
-    this.dataLakeRestService.getDataAutoAggregation(
-        this.dataLakeMeasure.measureName, this.timeSettings.startTime, this.timeSettings.endTime)
+    this.dataLakeRestService.getData(
+        this.dataLakeMeasure.measureName, this.buildQuery())
         .subscribe(
             (res: DataResult) => {
               // this.availableImageData = res;
@@ -92,5 +93,12 @@ export class ImageWidgetComponent extends BaseDataExplorerWidget<ImageWidgetMode
   }
 
   refreshView() {
+  }
+
+  buildQuery(): DatalakeQueryParameters {
+    return DatalakeQueryParameterBuilder.create(this.timeSettings.startTime, this.timeSettings.endTime).build();
+  }
+
+  onResize(width: number, height: number) {
   }
 }
