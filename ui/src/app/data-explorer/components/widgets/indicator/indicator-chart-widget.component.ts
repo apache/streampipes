@@ -49,7 +49,8 @@ export class IndicatorChartWidgetComponent extends BaseDataExplorerWidget<Indica
   graph = {
     layout: {
       font: {
-        color: '#FFF'
+        color: '#FFF',
+        family: 'Roboto'
       },
       autosize: true,
       plot_bgcolor: '#fff',
@@ -83,11 +84,19 @@ export class IndicatorChartWidgetComponent extends BaseDataExplorerWidget<Indica
   }
 
   refreshData() {
-    zip(this.getQuery(this.dataExplorerWidget.dataConfig.numberAggregation),
-        this.getQuery(this.dataExplorerWidget.dataConfig.deltaAggregation))
-        .subscribe(result => {
-      this.prepareData(result[0], result[1]);
-    });
+    if (this.dataExplorerWidget.dataConfig.showDelta) {
+      this.data[0].mode = 'number+delta';
+      zip(this.getQuery(this.dataExplorerWidget.dataConfig.numberAggregation),
+          this.getQuery(this.dataExplorerWidget.dataConfig.deltaAggregation))
+          .subscribe(result => {
+            this.prepareData(result[0], result[1]);
+          });
+    } else {
+      this.data[0].mode = 'number';
+      this.getQuery(this.dataExplorerWidget.dataConfig.numberAggregation).subscribe(result => {
+        this.prepareData(result);
+      });
+    }
   }
 
   getQuery(aggregation: string): Observable<DataResult> {
@@ -98,9 +107,11 @@ export class IndicatorChartWidgetComponent extends BaseDataExplorerWidget<Indica
     this.updateAppearance();
   }
 
-  prepareData(numberResult: DataResult, deltaResult: DataResult) {
+  prepareData(numberResult: DataResult, deltaResult?: DataResult) {
     this.data[0].value = numberResult.total > 0 ? numberResult.rows[0][1] : '-';
-    this.data[0].delta.reference = numberResult.total > 0 ? deltaResult.rows[0][1] : '-';
+    if (deltaResult) {
+      this.data[0].delta.reference = numberResult.total > 0 ? deltaResult.rows[0][1] : '-';
+    }
   }
 
   updateAppearance() {

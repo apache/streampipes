@@ -23,6 +23,7 @@ export interface IndicatorChartDataConfig {
   availableProperties: EventPropertyUnion[];
   numberAggregation: string;
   deltaAggregation: string;
+  showDelta: boolean;
 }
 
 export interface IndicatorChartWidgetModel extends DataExplorerWidgetModel {

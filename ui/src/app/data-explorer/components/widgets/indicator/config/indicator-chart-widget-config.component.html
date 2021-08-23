@@ -48,7 +48,9 @@
         </mat-select>
     </mat-form-field>
 
-    <mat-form-field color="accent" fxFlex="100">
+    <mat-checkbox [(ngModel)]="currentlyConfiguredWidget.dataConfig.showDelta">Show delta indicator</mat-checkbox>
+
+    <mat-form-field color="accent" fxFlex="100" *ngIf="currentlyConfiguredWidget.dataConfig.showDelta">
         <mat-label>Delta Aggregation</mat-label>
         <mat-select [(value)]="currentlyConfiguredWidget.dataConfig.deltaAggregation" (selectionChange)="triggerDataRefresh()">
             <mat-option [value]="'MEAN'">

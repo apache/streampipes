@@ -73,7 +73,8 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
 
     layout: {
       font: {
-        color: '#FFF'
+        color: '#FFF',
+        family: 'Roboto'
       },
       autosize: true,
       plot_bgcolor: '#fff',
