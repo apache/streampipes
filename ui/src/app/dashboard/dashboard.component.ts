@@ -16,12 +16,13 @@
  *
  */
 
-import {Component, OnInit} from "@angular/core";
-import {Dashboard} from "./models/dashboard.model";
-import {DashboardService} from "./services/dashboard.service";
-import {RefreshDashboardService} from "./services/refresh-dashboard.service";
-import {Tuple2} from "../core-model/base/Tuple2";
-import {EditModeService} from "./services/edit-mode.service";
+import { Component, OnInit } from '@angular/core';
+import { Dashboard } from './models/dashboard.model';
+import { DashboardService } from './services/dashboard.service';
+import { RefreshDashboardService } from './services/refresh-dashboard.service';
+import { Tuple2 } from '../core-model/base/Tuple2';
+import { EditModeService } from './services/edit-mode.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'dashboard',
@@ -31,38 +32,43 @@ import {EditModeService} from "./services/edit-mode.service";
 export class DashboardComponent implements OnInit {
 
     selectedDashboard: Dashboard;
-    selectedIndex: number = 0;
-    dashboardsLoaded: boolean = false;
-    dashboardTabSelected: boolean = false;
+    selectedIndex = 0;
+    dashboardsLoaded = false;
+    dashboardTabSelected = false;
 
-    editMode: boolean = false;
+    editMode = false;
 
-    dashboards: Array<Dashboard>;
+    dashboards: Dashboard[];
+
+    routeParams: any;
 
     constructor(private dashboardService: DashboardService,
                 private refreshDashboardService: RefreshDashboardService,
-                private editModeService: EditModeService) {}
+                private editModeService: EditModeService,
+                private route: ActivatedRoute) {}
 
     ngOnInit() {
-        this.getDashboards();
+        this.route.queryParams.subscribe(params => {
+            this.getDashboards(params['dashboardId']);
+        });
         this.refreshDashboardService.refreshSubject.subscribe(currentDashboardId => {
             this.getDashboards(currentDashboardId);
         });
         this.editModeService.editModeSubject.subscribe(editMode => {
             this.editMode = editMode;
-        })
+        });
 
     }
 
     openDashboard(data: Tuple2<Dashboard, boolean>) {
-        let index = this.dashboards.indexOf(data.a);
+        const index = this.dashboards.indexOf(data.a);
         this.editMode = data.b;
         this.selectDashboard((index + 1));
     }
 
     selectDashboard(index: number) {
         this.selectedIndex = index;
-        if (index == 0) {
+        if (index === 0) {
             this.dashboardTabSelected = false;
         } else {
             this.dashboardTabSelected = true;
@@ -75,7 +81,7 @@ export class DashboardComponent implements OnInit {
         this.dashboardService.getDashboards().subscribe(data => {
             this.dashboards = data;
             if (currentDashboardId) {
-                let currentDashboard = this.dashboards.find(d => d._id === currentDashboardId);
+                const currentDashboard = this.dashboards.find(d => d._id === currentDashboardId);
                 this.selectDashboard(this.dashboards.indexOf(currentDashboard) + 1);
             } else {
                 this.selectedIndex = 0;
