@@ -21,7 +21,6 @@ package org.apache.streampipes.connect;
 import org.apache.streampipes.connect.adapters.coindesk.CoindeskBitcoinAdapter;
 import org.apache.streampipes.connect.adapters.flic.FlicMQTTAdapter;
 import org.apache.streampipes.connect.adapters.gdelt.GdeltAdapter;
-import org.apache.streampipes.connect.adapters.iex.IexCloudStockAdapter;
 import org.apache.streampipes.connect.adapters.image.set.ImageSetAdapter;
 import org.apache.streampipes.connect.adapters.image.stream.ImageStreamAdapter;
 import org.apache.streampipes.connect.adapters.influxdb.InfluxDbSetAdapter;
@@ -64,7 +63,7 @@ public class ConnectAdapterInit extends AdapterWorkerContainer {
             .registerAdapter(new GdeltAdapter())
             .registerAdapter(new CoindeskBitcoinAdapter())
 //            .registerAdapter(new IexCloudNewsAdapter())
-            .registerAdapter(new IexCloudStockAdapter())
+//            .registerAdapter(new IexCloudStockAdapter())
             .registerAdapter(new MySqlStreamAdapter())
             .registerAdapter(new MySqlSetAdapter())
             .registerAdapter(new RandomDataSetAdapter())
