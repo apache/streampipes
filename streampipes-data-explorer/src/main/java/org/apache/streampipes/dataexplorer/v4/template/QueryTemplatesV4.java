@@ -49,7 +49,6 @@ public class QueryTemplatesV4 {
         return "DELETE FROM " + index;
     }
 
-
     public static String whereTimeWithin(long startDate, long endDate) {
         return "WHERE time > "
                 + startDate * 1000000

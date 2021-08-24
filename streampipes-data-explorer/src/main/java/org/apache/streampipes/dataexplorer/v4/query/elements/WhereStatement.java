@@ -15,21 +15,25 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.dataexplorer.v4.query.elements;
 
-export class DatalakeQueryParameters {
-  public columns: string;
-  public startDate: number;
-  public endDate: number;
-  public page: number;
-  public limit: number;
-  public offset: number;
-  public groupBy: string;
-  public order: string;
-  public aggregationFunction: string;
-  public timeInterval: string;
-  public countOnly: boolean;
-  public autoAggregate: boolean;
-  public filter: string;
+import org.apache.streampipes.dataexplorer.v4.params.WhereStatementParams;
+
+import java.util.StringJoiner;
+
+public class WhereStatement extends QueryElement<WhereStatementParams> {
+
+  public WhereStatement(WhereStatementParams params) {
+    super(params);
+  }
+
+  @Override
+  protected String buildStatement(WhereStatementParams params) {
+    StringJoiner joiner = new StringJoiner(" AND ");
+
+    params.getWhereConditions().forEach(condition -> joiner.add(condition.toString()));
+
+    return "WHERE " + joiner;
+  }
 
 }
-

@@ -18,7 +18,6 @@
 
 import { Component, OnInit } from '@angular/core';
 import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
-import { LineChartWidgetModel } from '../line-chart/model/line-chart-widget.model';
 import { DatalakeRestService } from '../../../../platform-services/apis/datalake-rest.service';
 import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
 import { ResizeService } from '../../../services/resize.service';
@@ -26,47 +25,31 @@ import { DataResult } from '../../../../core-model/datalake/DataResult';
 import { DatalakeQueryParameters } from '../../../../core-services/datalake/DatalakeQueryParameters';
 import { DatalakeQueryParameterBuilder } from '../../../../core-services/datalake/DatalakeQueryParameterBuilder';
 import { Observable, zip } from 'rxjs';
-import { IndicatorChartWidgetModel } from './model/indicator-chart-widget.model';
+import { FilterCondition, PieChartWidgetModel } from './model/pie-chart-widget.model';
 
 @Component({
-  selector: 'sp-data-explorer-indicator-chart-widget',
-  templateUrl: './indicator-chart-widget.component.html',
-  styleUrls: ['./indicator-chart-widget.component.scss']
+  selector: 'sp-data-explorer-pie-chart-widget',
+  templateUrl: './pie-chart-widget.component.html',
+  styleUrls: ['./pie-chart-widget.component.scss']
 })
-export class IndicatorChartWidgetComponent extends BaseDataExplorerWidget<IndicatorChartWidgetModel> implements OnInit {
+export class PieChartWidgetComponent extends BaseDataExplorerWidget<PieChartWidgetModel> implements OnInit {
 
   data = [
     {
-      type: 'indicator',
-      mode: 'number+delta',
-      value: 400,
-      number: {prefix: ''},
-      delta: {position: 'top', reference: 320},
-      domain: {x: [0, 1], y: [0, 1]}
+      values: [],
+      labels: [],
+      type: 'pie'
     }
   ];
 
   graph = {
     layout: {
       font: {
-        color: '#FFF',
-        family: 'Roboto'
+        color: '#FFF'
       },
       autosize: true,
       plot_bgcolor: '#fff',
       paper_bgcolor: '#fff',
-      margin: {t: 0, b: 0, l: 0, r: 0},
-      grid: {rows: 2, columns: 2, pattern: 'independent'},
-      template: {
-        data: {
-          indicator: [
-            {
-              mode: 'number+delta',
-              delta: {reference: 90}
-            }
-          ]
-        }
-      }
     },
 
     config: {
@@ -84,34 +67,32 @@ export class IndicatorChartWidgetComponent extends BaseDataExplorerWidget<Indica
   }
 
   refreshData() {
-    if (this.dataExplorerWidget.dataConfig.showDelta) {
-      this.data[0].mode = 'number+delta';
-      zip(this.getQuery(this.dataExplorerWidget.dataConfig.numberAggregation),
-          this.getQuery(this.dataExplorerWidget.dataConfig.deltaAggregation))
-          .subscribe(result => {
-            this.prepareData(result[0], result[1]);
-          });
-    } else {
-      this.data[0].mode = 'number';
-      this.getQuery(this.dataExplorerWidget.dataConfig.numberAggregation).subscribe(result => {
-        this.prepareData(result);
-      });
-    }
+    this.data[0].labels = this.dataExplorerWidget.dataConfig.selectedFilters.map(f => f.condition);
+    const queries = this.getQueries();
+    zip(...queries)
+        .subscribe(result => {
+          this.prepareData(result);
+        });
   }
 
-  getQuery(aggregation: string): Observable<DataResult> {
-    return this.dataLakeRestService.getData(this.dataLakeMeasure.measureName, this.buildQuery(aggregation));
+  getQueries(): Observable<DataResult>[] {
+    return this.dataExplorerWidget.dataConfig.selectedFilters
+        .map(sf => this.dataLakeRestService.getData(this.dataLakeMeasure.measureName, this.buildQuery(sf)));
   }
 
   refreshView() {
     this.updateAppearance();
   }
 
-  prepareData(numberResult: DataResult, deltaResult?: DataResult) {
-    this.data[0].value = numberResult.total > 0 ? numberResult.rows[0][1] : '-';
-    if (deltaResult) {
-      this.data[0].delta.reference = numberResult.total > 0 ? deltaResult.rows[0][1] : '-';
+  prepareData(results: DataResult[]) {
+    if (results.length > 0) {
+      results.forEach((result, i) => {
+        if (result.total > 0) {
+          this.data[0].values[i] = result.rows[0][1];
+        }
+      });
     }
+
   }
 
   updateAppearance() {
@@ -120,10 +101,11 @@ export class IndicatorChartWidgetComponent extends BaseDataExplorerWidget<Indica
     this.graph.layout.font.color = this.dataExplorerWidget.baseAppearanceConfig.textColor;
   }
 
-  buildQuery(aggregation: string): DatalakeQueryParameters {
+  buildQuery(filter: FilterCondition): DatalakeQueryParameters {
     return DatalakeQueryParameterBuilder.create(this.timeSettings.startTime, this.timeSettings.endTime)
         .withColumnFilter([this.dataExplorerWidget.dataConfig.selectedProperty])
-        .withAggregationFunction(aggregation)
+        .withFilters([filter])
+        .withCountOnly()
         .build();
   }
 
@@ -132,6 +114,5 @@ export class IndicatorChartWidgetComponent extends BaseDataExplorerWidget<Indica
     (this.graph.layout as any).width = width;
     (this.graph.layout as any).height = height;
   }
-
 
 }

@@ -112,7 +112,7 @@ public class DataExplorerQueryV4 {
         }
 
         if (this.params.containsKey(DataLakeManagementUtils.WHERE)) {
-            queryElements.add(new TimeBoundary((TimeBoundaryParams) this.params.get(DataLakeManagementUtils.WHERE)));
+            queryElements.add(new WhereStatement((WhereStatementParams) this.params.get(DataLakeManagementUtils.WHERE)));
         }
 
         if (this.params.containsKey(DataLakeManagementUtils.GROUP_BY_TIME)) {

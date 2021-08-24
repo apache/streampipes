@@ -77,6 +77,8 @@ import { HistogramChartWidgetComponent } from './components/widgets/histogram/hi
 import { HistogramWidgetConfigComponent } from './components/widgets/histogram/config/histogram-chart-widget-config.component';
 import { DensityChartWidgetComponent } from './components/widgets/density/density-chart-widget.component';
 import { DensityWidgetConfigComponent } from './components/widgets/density/config/density-chart-widget-config.component';
+import { PieChartWidgetComponent } from './components/widgets/pie/pie-chart-widget.component';
+import { PieWidgetConfigComponent } from './components/widgets/pie/config/pie-chart-widget-config.component';
 
 export const MY_NATIVE_FORMATS = {
   fullPickerInput: {
@@ -146,6 +148,8 @@ export const MY_NATIVE_FORMATS = {
     LineChartWidgetConfigComponent,
     LoadDataSpinnerComponent,
     NoDataInDateRangeComponent,
+    PieChartWidgetComponent,
+    PieWidgetConfigComponent,
     SelectPropertiesComponent,
     TableWidgetComponent,
     TableWidgetConfigComponent,

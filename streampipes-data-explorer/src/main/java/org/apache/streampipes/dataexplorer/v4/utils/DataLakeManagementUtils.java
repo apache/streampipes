@@ -50,10 +50,15 @@ public class DataLakeManagementUtils {
             queryParts.put(SELECT_FROM, SelectFromStatementParams.from(measurementId, params.getAsString(QP_COLUMNS), params.getAsString(QP_AGGREGATION_FUNCTION)));
         }
 
+        String filterConditions = params.getAsString(QP_FILTER);
+
         if (hasTimeParams(params)) {
-            queryParts.put(WHERE, TimeBoundaryParams.from(measurementId,
+            queryParts.put(WHERE, WhereStatementParams.from(measurementId,
                     params.getAsLong(QP_START_DATE),
-                    params.getAsLong(QP_END_DATE)));
+                    params.getAsLong(QP_END_DATE),
+                    filterConditions));
+        } else {
+            queryParts.put(WHERE, WhereStatementParams.from(measurementId, filterConditions));
         }
 
         if (params.has(QP_TIME_INTERVAL) && params.has(QP_AGGREGATION_FUNCTION)) {

@@ -17,6 +17,7 @@
  */
 
 import { DatalakeQueryParameters } from './DatalakeQueryParameters';
+import { FilterCondition } from '../../data-explorer/components/widgets/pie/model/pie-chart-widget.model';
 
 export class DatalakeQueryParameterBuilder {
 
@@ -33,6 +34,12 @@ export class DatalakeQueryParameterBuilder {
     this.queryParams = new DatalakeQueryParameters();
     this.queryParams.startDate = startTime;
     this.queryParams.endDate = endTime;
+  }
+
+  public withCountOnly(): DatalakeQueryParameterBuilder {
+    this.queryParams.countOnly = true;
+
+    return this;
   }
 
   public withAutoAggregation(aggregationFunction: string) {
@@ -99,6 +106,13 @@ export class DatalakeQueryParameterBuilder {
 
   public withColumnFilter(columns: string[]): DatalakeQueryParameterBuilder {
     this.queryParams.columns = columns.toString();
+
+    return this;
+  }
+
+  public withFilters(filterConditions: FilterCondition[]): DatalakeQueryParameterBuilder {
+    const filters = filterConditions.map(f => '[' + f.field + ',' + f.operator + ',' + f.condition + ']');
+    this.queryParams.filter = filters.toString();
 
     return this;
   }
