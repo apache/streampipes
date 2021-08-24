@@ -21,7 +21,8 @@ public enum Envs {
 
   SP_HOST("SP_HOST"),
   SP_PORT("SP_PORT"),
-  SP_CONSUL_LOCATION("CONSUL_LOCATION");
+  SP_CONSUL_LOCATION("CONSUL_LOCATION"),
+  SP_KAFKA_RETENTION_MS("SP_KAFKA_RETENTION_MS");
 
   private final String envVariableName;
 

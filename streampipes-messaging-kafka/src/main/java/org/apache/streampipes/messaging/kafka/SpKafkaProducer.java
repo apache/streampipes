@@ -27,6 +27,7 @@ import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.config.TopicConfig;
+import org.apache.streampipes.commons.constants.Envs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.streampipes.messaging.EventProducer;
@@ -42,7 +43,9 @@ import java.util.concurrent.ExecutionException;
 
 public class SpKafkaProducer implements EventProducer<KafkaTransportProtocol>, Serializable {
 
+
   private static final String COLON = ":";
+  private static final String SP_KAFKA_RETENTION_MS_DEFAULT = "600000";
 
   private String brokerUrl;
   private String topic;
@@ -115,7 +118,8 @@ public class SpKafkaProducer implements EventProducer<KafkaTransportProtocol>, S
     props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, brokerUrl);
 
     Map<String, String> topicConfig = new HashMap<>();
-    topicConfig.put(TopicConfig.RETENTION_MS_CONFIG, "600000");
+    String retentionTime = Envs.SP_KAFKA_RETENTION_MS.exists() ? Envs.SP_KAFKA_RETENTION_MS.getValue() : SP_KAFKA_RETENTION_MS_DEFAULT;
+    topicConfig.put(TopicConfig.RETENTION_MS_CONFIG, retentionTime);
 
     AdminClient adminClient = KafkaAdminClient.create(props);
 
