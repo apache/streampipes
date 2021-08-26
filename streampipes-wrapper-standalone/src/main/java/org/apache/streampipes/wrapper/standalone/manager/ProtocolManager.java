@@ -40,36 +40,28 @@ public class ProtocolManager {
   // be changed by some hashCode implementation in streampipes-model, but this requires changes
   // in empire serializers
 
-  public static <T extends TransportProtocol> StandaloneSpInputCollector findInputCollector
-          (T
-                   protocol,
-           TransportFormat format, Boolean
-                   singletonEngine)
-          throws
-          SpRuntimeException {
+  public static <T extends TransportProtocol> StandaloneSpInputCollector findInputCollector(T protocol,
+                                                                                            TransportFormat format,
+                                                                                            Boolean singletonEngine) throws SpRuntimeException {
 
     if (consumers.containsKey(topicName(protocol))) {
       return consumers.get(topicName(protocol));
     } else {
       consumers.put(topicName(protocol), makeInputCollector(protocol, format, singletonEngine));
-      LOG.info("Adding new consumer to consumer map (size=" +consumers.size() +"): " +topicName(protocol));
+      LOG.info("Adding new consumer to consumer map (size=" + consumers.size() + "): " + topicName(protocol));
       return consumers.get(topicName(protocol));
     }
 
   }
 
-  public static <T extends TransportProtocol> StandaloneSpOutputCollector findOutputCollector
-          (T
-                   protocol,
-           TransportFormat format)
-          throws
-          SpRuntimeException {
+  public static <T extends TransportProtocol> StandaloneSpOutputCollector findOutputCollector(T protocol,
+                                                                                              TransportFormat format) throws SpRuntimeException {
 
     if (producers.containsKey(topicName(protocol))) {
       return producers.get(topicName(protocol));
     } else {
       producers.put(topicName(protocol), makeOutputCollector(protocol, format));
-      LOG.info("Adding new producer to producer map (size=" +producers.size() +"): " +topicName
+      LOG.info("Adding new producer to producer map (size=" + producers.size() + "): " + topicName
               (protocol));
       return producers.get(topicName(protocol));
     }
@@ -77,18 +69,15 @@ public class ProtocolManager {
   }
 
   private static <T extends TransportProtocol> StandaloneSpInputCollector<T> makeInputCollector(T protocol,
-                                                                                             TransportFormat format,
-                                                                                             Boolean singletonEngine) throws SpRuntimeException {
+                                                                                                TransportFormat format,
+                                                                                                Boolean singletonEngine) throws SpRuntimeException {
     return new StandaloneSpInputCollector<>(protocol, format, singletonEngine);
   }
 
   public static <T extends TransportProtocol> StandaloneSpOutputCollector<T> makeOutputCollector(T protocol,
-                                                                                              TransportFormat format)
-          throws
-          SpRuntimeException {
+                                                                                                 TransportFormat format) throws SpRuntimeException {
     return new StandaloneSpOutputCollector<>(protocol, format);
   }
-
 
   private static String topicName(TransportProtocol protocol) {
     return protocol.getTopicDefinition().getActualTopicName();
@@ -97,17 +86,16 @@ public class ProtocolManager {
   public static <T extends TransportProtocol> void removeInputCollector(T protocol) throws
           SpRuntimeException {
     consumers.remove(topicName(protocol));
-    LOG.info("Removing consumer from consumer map (size=" +consumers.size() +"): " +topicName
+    LOG.info("Removing consumer from consumer map (size=" + consumers.size() + "): " + topicName
             (protocol));
   }
 
   public static <T extends TransportProtocol> void removeOutputCollector(T protocol) throws
           SpRuntimeException {
     producers.remove(topicName(protocol));
-    LOG.info("Removing producer from producer map (size=" +producers.size() +"): " +topicName
+    LOG.info("Removing producer from producer map (size=" + producers.size() + "): " + topicName
             (protocol));
   }
-
 
 
 }

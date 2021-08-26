@@ -31,6 +31,8 @@ import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
 import org.apache.streampipes.model.grounding.WildcardTopicDefinition;
 
 import java.io.Serializable;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Properties;
@@ -54,14 +56,8 @@ public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, R
   }
 
   public SpKafkaConsumer(KafkaTransportProtocol protocol, String topic, InternalEventProcessor<byte[]> eventProcessor) {
-      this.protocol = protocol;
-      this.username = null;
-      this.password = null;
-      this.topic = topic;
-      this.eventProcessor = eventProcessor;
-      this.isRunning = true;
+    this(protocol, topic, eventProcessor, null, null);
   }
-
 
   public SpKafkaConsumer(KafkaTransportProtocol protocol, String topic, InternalEventProcessor<byte[]> eventProcessor,
                          String username, String password) {
@@ -72,7 +68,6 @@ public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, R
     this.username = username;
     this.password = password;
   }
-
 
   // TODO backwards compatibility, remove later
   public SpKafkaConsumer(String kafkaUrl, String topic, InternalEventProcessor<byte[]> callback) {
@@ -93,8 +88,7 @@ public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, R
     Properties props;
     if (username != null && password != null) {
       props = makePropertiesSaslPlain(protocol, username, password);
-    }
-    else {
+    } else {
       props = makeProperties(protocol);
     }
     KafkaConsumer<String, byte[]> consumer = new KafkaConsumer<>(props);
@@ -114,11 +108,12 @@ public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, R
         }
       });
     }
+    Duration duration = Duration.of(100, ChronoUnit.MILLIS);
     while (isRunning) {
-      ConsumerRecords<String, byte[]> records = consumer.poll(100);
-      for (ConsumerRecord<String, byte[]> record : records) {
+      ConsumerRecords<String, byte[]> records = consumer.poll(duration);
+      records.forEach(record -> {
         eventProcessor.onEvent(record.value());
-      }
+      });
     }
     LOG.info("Closing Kafka Consumer.");
     consumer.close();
