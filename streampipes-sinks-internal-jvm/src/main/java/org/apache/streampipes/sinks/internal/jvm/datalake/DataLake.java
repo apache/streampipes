@@ -54,6 +54,8 @@ public class DataLake implements EventSink<DataLakeParameters> {
 
   private String timestampField;
 
+  private EventSchema eventSchema;
+
   @Override
   public void onInvocation(DataLakeParameters parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
     LOG = parameters.getGraph().getLogger(DataLake.class);
@@ -70,11 +72,12 @@ public class DataLake implements EventSink<DataLakeParameters> {
             parameters.getTimestampField(),
             parameters.getBatchSize(),
             parameters.getFlushDuration(),
-            parameters.getDimensionProperties(),
             LOG
     );
 
     EventSchema schema = runtimeContext.getInputSchemaInfo().get(0).getEventSchema();
+
+    this.eventSchema = schema;
 
     schema.getEventProperties().stream().forEach(eventProperty -> {
       eventProperty.setRuntimeName(prepareString(eventProperty.getRuntimeName()));
@@ -93,6 +96,7 @@ public class DataLake implements EventSink<DataLakeParameters> {
 
   @Override
   public void onEvent(Event event) {
+
     try {
 
       this.imageProperties.stream().forEach(eventProperty -> {
@@ -108,7 +112,7 @@ public class DataLake implements EventSink<DataLakeParameters> {
 
       event.addField("sp_internal_label", "");
 
-      influxDbClient.save(event);
+      influxDbClient.save(event, this.eventSchema);
     } catch (SpRuntimeException e) {
       LOG.error(e.getMessage());
     }

@@ -72,8 +72,6 @@ public class DataLakeController extends StandaloneEventSinkDeclarer<DataLakePara
     Integer batch_size = 2000;
     Integer flush_duration = 500;
 
-    List<String> dimensionProperties = extractor.getEventPropertiesRuntimeNamesByScope(PropertyScope.DIMENSION_PROPERTY);
-
     DataLakeParameters params = new DataLakeParameters(graph,
             hostname,
             port,
@@ -83,8 +81,7 @@ public class DataLakeController extends StandaloneEventSinkDeclarer<DataLakePara
             password,
             timestampField,
             batch_size,
-            flush_duration,
-            dimensionProperties);
+            flush_duration);
 
 
     return new ConfiguredEventSink<>(params, DataLake::new);
