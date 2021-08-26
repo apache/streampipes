@@ -89,7 +89,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
     dashboardItem.x = 0;
     dashboardItem.y = 0;
     this.dashboard.widgets.push(dashboardItem);
-    this.dashboardGrid.loadWidgetConfig(widget._id);
+    this.dashboardGrid.loadWidgetConfig(widget._id, true);
   }
 
   updateDashboard() {
