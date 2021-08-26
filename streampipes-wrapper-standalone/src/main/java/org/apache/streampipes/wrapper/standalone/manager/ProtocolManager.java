@@ -76,16 +76,14 @@ public class ProtocolManager {
 
   }
 
-  private static <T extends TransportProtocol> StandaloneSpInputCollector makeInputCollector
-          (T protocol,
-           TransportFormat format, Boolean
-                   singletonEngine) throws
-          SpRuntimeException {
+  private static <T extends TransportProtocol> StandaloneSpInputCollector<T> makeInputCollector(T protocol,
+                                                                                             TransportFormat format,
+                                                                                             Boolean singletonEngine) throws SpRuntimeException {
     return new StandaloneSpInputCollector<>(protocol, format, singletonEngine);
   }
 
-  public static <T extends TransportProtocol> StandaloneSpOutputCollector makeOutputCollector(T
-                                                                                                protocol, TransportFormat format)
+  public static <T extends TransportProtocol> StandaloneSpOutputCollector<T> makeOutputCollector(T protocol,
+                                                                                              TransportFormat format)
           throws
           SpRuntimeException {
     return new StandaloneSpOutputCollector<>(protocol, format);

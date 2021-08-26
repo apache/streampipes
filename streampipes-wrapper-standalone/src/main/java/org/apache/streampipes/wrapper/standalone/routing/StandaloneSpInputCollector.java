@@ -31,8 +31,7 @@ public class StandaloneSpInputCollector<T extends TransportProtocol> extends
         implements
         InternalEventProcessor<byte[]>, SpInputCollector {
 
-  private Boolean singletonEngine;
-
+  private final Boolean singletonEngine;
 
   public StandaloneSpInputCollector(T protocol, TransportFormat format,
                                     Boolean singletonEngine) throws SpRuntimeException {
@@ -51,7 +50,7 @@ public class StandaloneSpInputCollector<T extends TransportProtocol> extends
 
   private void send(RawDataProcessor rawDataProcessor, byte[] event) {
     try {
-      rawDataProcessor.process(dataFormatDefinition.toMap(event), getTopic());
+      rawDataProcessor.process(dataFormatDefinition.toMap(event), topic);
     } catch (SpRuntimeException e) {
       e.printStackTrace();
     }

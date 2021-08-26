@@ -30,14 +30,11 @@ import java.util.Optional;
 
 public class PManager {
 
-  public static <T extends TransportProtocol> Optional<SpProtocolDefinition<T>>
-  getProtocolDefinition(T
-                                protocol) {
+  public static <T extends TransportProtocol> Optional<SpProtocolDefinition<T>> getProtocolDefinition(T protocol) {
     return SpProtocolManager.INSTANCE.findDefinition(protocol);
   }
 
-  public static Optional<SpDataFormatDefinition> getDataFormat(TransportFormat format) throws
-          SpRuntimeException {
+  public static Optional<SpDataFormatDefinition> getDataFormat(TransportFormat format) throws SpRuntimeException {
     return SpDataFormatManager.INSTANCE.findDefinition(format);
   }
 }

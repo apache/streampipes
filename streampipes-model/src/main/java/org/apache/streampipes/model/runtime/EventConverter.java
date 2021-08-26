@@ -37,8 +37,8 @@ public class EventConverter {
   public Map<String, Object> toMap(Boolean renameProperties) {
     Map<String, Object> outMap = new HashMap<>();
 
-    event.getFields().forEach((key, value) -> outMap.put(getValue(value, renameProperties), makeEntry
-            (value, renameProperties)));
+    event.getFields()
+            .forEach((key, value) -> outMap.put(getValue(value, renameProperties), makeEntry(value, renameProperties)));
 
     return outMap;
   }
@@ -52,19 +52,19 @@ public class EventConverter {
   }
 
   private Object makeEntry(AbstractField value, Boolean renameProperties) {
-    if (PrimitiveField.class.isInstance(value)) {
+    if (value instanceof PrimitiveField) {
       return value.getRawValue();
-    } else if (ListField.class.isInstance(value)) {
+    } else if (value instanceof ListField) {
       List<Object> objects = new ArrayList<>();
-      for(AbstractField field : value.getAsList().getRawValue()) {
+      for (AbstractField field : value.getAsList().getRawValue()) {
         objects.add(makeEntry(field, renameProperties));
       }
       return objects;
     } else {
       Map<String, Object> outMap = new HashMap<>();
-      value.getAsComposite().getRawValue().entrySet().forEach(entry -> outMap.put(getValue(entry
-              .getValue
-              (), renameProperties), makeEntry(entry.getValue(), renameProperties)));
+      value.getAsComposite()
+              .getRawValue()
+              .forEach((key, value1) -> outMap.put(getValue(value1, renameProperties), makeEntry(value1, renameProperties)));
       return outMap;
     }
   }

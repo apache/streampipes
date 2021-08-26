@@ -17,6 +17,8 @@
  */
 package org.apache.streampipes.model.runtime.field;
 
+import org.apache.streampipes.model.util.EventUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,7 +39,6 @@ public class ListField extends AbstractField<List<AbstractField>> {
   }
 
 
-
   public <T> List<T> parseAsCustomType(FieldParser<AbstractField, T> parser) {
     return value.stream()
             .map(parser::parseField)
@@ -54,7 +55,7 @@ public class ListField extends AbstractField<List<AbstractField>> {
   public <T> List<T> parseAsSimpleType(Class<T> type) {
     return value.stream()
             .map(v -> v.getAsPrimitive().getRawValue())
-            .map(f -> typeParser.parse(asString(f), type))
+            .map(f -> EventUtils.typeParser.parse(asString(f), type))
             .collect(Collectors.toList());
   }
 }

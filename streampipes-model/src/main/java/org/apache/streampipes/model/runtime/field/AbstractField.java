@@ -17,15 +17,11 @@
  */
 package org.apache.streampipes.model.runtime.field;
 
-import com.github.drapostolos.typeparser.TypeParser;
-
 public abstract class AbstractField<FV> {
 
   protected String fieldNameIn;
   protected String fieldNameOut;
   protected FV value;
-
-  protected TypeParser typeParser;
 
   public AbstractField(String fieldNameIn, String fieldNameOut, FV value) {
     this(fieldNameIn);
@@ -40,7 +36,7 @@ public abstract class AbstractField<FV> {
   }
 
   public AbstractField() {
-    this.typeParser = TypeParser.newBuilder().build();
+
   }
 
   protected String asString(Object field) {

@@ -42,9 +42,19 @@ public class StandaloneEventProcessorRuntime<B extends EventProcessorBindingPara
 
 
   public SpOutputCollector getOutputCollector() throws SpRuntimeException {
-    return ProtocolManager.findOutputCollector(params.getBindingParams().getGraph().getOutputStream()
-            .getEventGrounding().getTransportProtocol(), params.getBindingParams().getGraph().getOutputStream
-            ().getEventGrounding().getTransportFormats().get(0));
+    return ProtocolManager.findOutputCollector(
+            params
+                    .getBindingParams()
+                    .getGraph()
+                    .getOutputStream()
+                    .getEventGrounding()
+                    .getTransportProtocol(),
+            params.getBindingParams()
+                    .getGraph()
+                    .getOutputStream()
+                    .getEventGrounding()
+                    .getTransportFormats()
+                    .get(0));
   }
 
   @Override
@@ -86,7 +96,7 @@ public class StandaloneEventProcessorRuntime<B extends EventProcessorBindingPara
 
   @Override
   public void bindEngine() throws SpRuntimeException {
-    engine.onInvocation(params.getBindingParams(), getOutputCollector() , params.getRuntimeContext());
+    engine.onInvocation(params.getBindingParams(), getOutputCollector(), params.getRuntimeContext());
   }
 
 }

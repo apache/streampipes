@@ -19,6 +19,7 @@
 package org.apache.streampipes.wrapper.standalone.routing;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.messaging.EventProducer;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
@@ -33,15 +34,17 @@ public class StandaloneSpOutputCollector<T extends TransportProtocol> extends
         StandaloneSpCollector<T, InternalEventProcessor<Map<String,
                 Object>>> implements SpOutputCollector {
 
+  private final EventProducer<T> producer;
 
   public StandaloneSpOutputCollector(T protocol, TransportFormat format) throws SpRuntimeException {
    super(protocol, format);
+   this.producer = protocolDefinition.getProducer();
   }
 
   public void collect(Event event) {
     Map<String, Object> outEvent = new EventConverter(event).toMap();
     try {
-      protocolDefinition.getProducer().publish(dataFormatDefinition.fromMap(outEvent));
+      producer.publish(dataFormatDefinition.fromMap(outEvent));
     } catch (SpRuntimeException e) {
       e.printStackTrace();
     }

@@ -61,15 +61,17 @@ public class EventFactory {
     return fromMap(event, sourceInfo, schemaInfo);
   }
 
-  public static Event fromMap(Map<String, Object> event, SourceInfo sourceInfo, SchemaInfo
-          schemaInfo) {
+  public static Event fromMap(Map<String, Object> event,
+                              SourceInfo sourceInfo,
+                              SchemaInfo schemaInfo) {
 
     Map<String, AbstractField> fields = new LinkedTreeMap<>();
+    String selectorPrefix = sourceInfo.getSelectorPrefix();
 
-    for (String key : event.keySet()) {
-      String currentSelector = makeSelector(key, sourceInfo.getSelectorPrefix());
+    event.keySet().forEach(key -> {
+      String currentSelector = makeSelector(key, selectorPrefix);
       fields.put(currentSelector, makeField(key, event.get(key), currentSelector, schemaInfo));
-    }
+    });
 
     return new Event(fields, sourceInfo, schemaInfo);
   }
@@ -121,17 +123,17 @@ public class EventFactory {
 
   private static AbstractField makeField(String runtimeName, Object o, String currentSelector,
                                          SchemaInfo schemaInfo) {
-    if (Map.class.isInstance(o)) {
+    if (o instanceof Map) {
       Map<String, Object> items = (Map<String, Object>) o;
       Map<String, AbstractField> fieldMap = new LinkedTreeMap<>();
-      for (String key : items.keySet()) {
+      items.forEach((key, value) -> {
         String selector = makeSelector(key, currentSelector);
-        fieldMap.put(selector, makeField(key, items.get(key), selector, schemaInfo));
-      }
+        fieldMap.put(selector, makeField(key, value, selector, schemaInfo));
+      });
       return new NestedField(runtimeName, getNewRuntimeName(currentSelector, runtimeName,
               schemaInfo.getRenameRules()),
               fieldMap);
-    } else if (List.class.isInstance(o)) {
+    } else if (o instanceof List) {
       List<AbstractField> items = new ArrayList<>();
       for(Integer i = 0; i < ((List) o).size(); i++) {
         items.add(makeField("", ((List) o).get(i), currentSelector + "::" +i, schemaInfo));

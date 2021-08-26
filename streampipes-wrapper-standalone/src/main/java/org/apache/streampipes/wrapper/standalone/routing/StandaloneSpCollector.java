@@ -39,6 +39,7 @@ public abstract class StandaloneSpCollector<T extends TransportProtocol, C> impl
 
   protected TransportFormat transportFormat;
   protected SpDataFormatDefinition dataFormatDefinition;
+  protected String topic;
 
 
   public StandaloneSpCollector(T protocol, TransportFormat format) throws SpRuntimeException {
@@ -49,6 +50,7 @@ public abstract class StandaloneSpCollector<T extends TransportProtocol, C> impl
     this.dataFormatDefinition = PManager.getDataFormat(format).orElseThrow(() -> new
             SpRuntimeException("Could not find format"));
     this.consumers = new ConcurrentHashMap<>();
+    this.topic = transportProtocol.getTopicDefinition().getActualTopicName();
   }
 
   public void registerConsumer(String routeId, C consumer) {
@@ -57,10 +59,6 @@ public abstract class StandaloneSpCollector<T extends TransportProtocol, C> impl
 
   public void unregisterConsumer(String routeId) {
     consumers.remove(routeId);
-  }
-
-  protected String getTopic() {
-    return transportProtocol.getTopicDefinition().getActualTopicName();
   }
 
 }

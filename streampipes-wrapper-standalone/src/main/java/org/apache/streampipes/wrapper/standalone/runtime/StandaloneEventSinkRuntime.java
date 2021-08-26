@@ -46,8 +46,8 @@ public class StandaloneEventSinkRuntime<B extends EventSinkBindingParams> extend
   }
 
   @Override
-  public void process(Map rawEvent, String sourceInfo) throws SpRuntimeException {
-    getEngine().onEvent(params.makeEvent(rawEvent, sourceInfo));
+  public void process(Map<String, Object> rawEvent, String sourceInfo) throws SpRuntimeException {
+    engine.onEvent(params.makeEvent(rawEvent, sourceInfo));
   }
 
   @Override
@@ -62,7 +62,6 @@ public class StandaloneEventSinkRuntime<B extends EventSinkBindingParams> extend
     for (SpInputCollector spInputCollector : getInputCollectors()) {
       spInputCollector.connect();
     }
-
   }
 
   @Override
