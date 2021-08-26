@@ -24,9 +24,10 @@ export interface LineChartDataConfig {
   dimensionProperties: EventPropertyUnion[];
   selectedBackgroundColorProperty: EventPropertyUnion;
   availableNonNumericColumns: EventPropertyUnion[];
-  advancedSettingsActive: boolean;
+  autoAggregate: boolean;
   aggregationValue: number;
   aggregationTimeUnit: string;
+  aggregationFunction: string;
   groupValue: string;
   showCountValue: boolean;
   showBackgroundColorProperty: boolean;

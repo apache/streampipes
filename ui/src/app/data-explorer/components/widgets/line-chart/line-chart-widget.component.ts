@@ -640,30 +640,25 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
 
   refreshData() {
     this.graph.layout.shapes = [];
-    if (!this.advancedSettingsActive) {
       this.setShownComponents(false, false, true);
       this.dataLakeRestService.getData(
-          this.dataLakeMeasure.measureName, this.buildQuery())
+          this.dataLakeMeasure.measureName, this.buildQuery(this.dataExplorerWidget.dataConfig.autoAggregate))
           .subscribe((res: DataResult) => {
             this.processNonGroupedData(res);
           });
-    } else {
-      if (this.dataExplorerWidget.dataConfig.groupValue === 'None') {
-        this.setShownComponents(false, false, true);
-        this.dataLakeRestService.getData(
-            this.dataLakeMeasure.measureName, this.buildAggregationQuery())
-            .subscribe((res: DataResult) => {
-              this.processNonGroupedData(res);
-            });
-      } else {
+      // if (this.dataExplorerWidget.dataConfig.groupValue === 'None') {
+      //   this.setShownComponents(false, false, true);
+      //   this.dataLakeRestService.getData(
+      //       this.dataLakeMeasure.measureName, this.buildAggregationQuery())
+      //       .subscribe((res: DataResult) => {
+      //         this.processNonGroupedData(res);
+      //       });
         // this.dataLakeRestService.getGroupedData(
         //   this.dataExplorerWidget.dataLakeMeasure.measureName, this.viewDateRange.startDate.getTime(), this.viewDateRange.endDate.getTime(),
         //   this.aggregationTimeUnit, this.aggregationValue, this.groupValue)
         //   .subscribe((res: GroupedDataResult) => {
         //     this.processGroupedData(res);
         //   });
-      }
-    }
   }
 
   updateAppearance() {
@@ -683,22 +678,21 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
     //this.toggleLabelingMode();
   }
 
-  buildQuery(): DatalakeQueryParameters {
-    return DatalakeQueryParameterBuilder
+  buildQuery(autoAggregate: boolean): DatalakeQueryParameters {
+    const queryBuilder = DatalakeQueryParameterBuilder
         .create(this.timeSettings.startTime, this.timeSettings.endTime)
-        .withAutoAggregation('MEAN')
         .withColumnFilter(this.dataExplorerWidget.dataConfig.selectedLineChartProperties.map(ep => ep.runtimeName))
-        .build();
-  }
 
-  buildAggregationQuery(): DatalakeQueryParameters {
-    return DatalakeQueryParameterBuilder
-        .create(this.timeSettings.startTime, this.timeSettings.endTime)
-        .withPaging(1, 2000)
-        .withColumnFilter(this.dataExplorerWidget.dataConfig.selectedLineChartProperties.map(ep => ep.runtimeName))
-        .withGrouping(undefined, undefined,
-            this.dataExplorerWidget.dataConfig.aggregationTimeUnit, this.dataExplorerWidget.dataConfig.aggregationValue)
-        .build();
+    if (autoAggregate) {
+      queryBuilder.withAutoAggregation('MEAN');
+    } else {
+      queryBuilder.withAggregation(this.dataExplorerWidget.dataConfig.aggregationFunction,
+          this.dataExplorerWidget.dataConfig.aggregationTimeUnit,
+          this.dataExplorerWidget.dataConfig.aggregationValue)
+          .withLimit(3000);
+    }
+
+    return queryBuilder.build();
   }
 
   onResize(width: number, height: number) {

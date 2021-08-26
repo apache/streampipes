@@ -38,7 +38,7 @@ export class DataExplorerWidgetAppearanceSettingsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.baseAppearanceConfig.backgroundColor) {
+    if (!this.baseAppearanceConfig.backgroundColor) {
       this.baseAppearanceConfig.backgroundColor = '#FFFFFF';
     }
   }

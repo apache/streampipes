@@ -30,11 +30,15 @@ export class AggregateConfigurationComponent implements OnInit {
   @Output()
   aggregationValueChange = new EventEmitter();
 
-
   @Input()
   aggregationTimeUnit;
   @Output()
   aggregationTimeUnitChange = new EventEmitter();
+
+   @Input()
+   aggregationFunction;
+   @Output()
+   aggregationFunctionChange = new EventEmitter();
 
   constructor() {
   }
