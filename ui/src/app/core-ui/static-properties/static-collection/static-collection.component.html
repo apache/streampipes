@@ -17,7 +17,9 @@
   -->
 
 <div fxFlex="100" fxLayout="column">
-    <div fxLayout="row" fxLayoutAlign="space-between center" *ngFor="let property of staticProperty.members; let i = index">
+
+    <div fxLayout="row" fxLayoutAlign="space-between center"
+         *ngFor="let property of staticProperty.members; let i = index">
         <div fxFlex="grow">
             <app-static-property [adapterId]="adapterId"
                                  [eventSchemas]="eventSchemas"
@@ -29,15 +31,17 @@
         </div>
         <div fxFlex="nogrow" style="width: 50px" fxLayout="row" fxLayoutAlign="end center">
             <button mat-icon-button class="icon-button" (click)="remove(i)">
-                    <mat-icon class="icon">remove</mat-icon>
+                <mat-icon class="icon">remove</mat-icon>
             </button>
         </div>
     </div>
     <div fxFlex>
-        <button mat-button mat-flat-button (click)="add()">
-            <mat-icon class="icon">add</mat-icon><span>Add more</span>
-        </button>
+        <sp-add-to-collection
+                (addPropertyEmitter)="add($event)"
+                [staticPropertyTemplate]="staticProperty.staticPropertyTemplate"></sp-add-to-collection>
     </div>
+
+
 </div>
 
 

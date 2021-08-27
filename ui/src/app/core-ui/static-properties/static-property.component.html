@@ -48,12 +48,12 @@
             </app-static-free-input>
 
             <sp-static-file-input *ngIf="isFileStaticProperty(staticProperty)"
-                                   (inputEmitter)="valueChange($event)"
-                                   [staticProperty]="staticProperty"
-                                   [parentForm]="parentForm"
-                                   [fieldName]="fieldName"
-                                   (updateEmitter)="emitUpdate($event)"
-                                   [adapterId]="adapterId">
+                                  (inputEmitter)="valueChange($event)"
+                                  [staticProperty]="staticProperty"
+                                  [parentForm]="parentForm"
+                                  [fieldName]="fieldName"
+                                  (updateEmitter)="emitUpdate($event)"
+                                  [adapterId]="adapterId">
             </sp-static-file-input>
 
             <app-static-color-picker *ngIf="isColorPickerStaticProperty(staticProperty)"
@@ -88,11 +88,11 @@
 
             </app-static-any-input>
 
-            <app-static-one-of-input
+            <sp-static-one-of-input
                     *ngIf="isOneOfStaticProperty(staticProperty) && !isRuntimeResolvableOneOfStaticProperty(staticProperty)"
                     (inputEmitter)="valueChange($event)"
                     [staticProperty]="staticProperty">
-            </app-static-one-of-input>
+            </sp-static-one-of-input>
 
             <app-static-mapping-unary *ngIf="isMappingPropertyUnary(staticProperty)"
                                       [eventSchemas]="eventSchemas"
@@ -135,15 +135,15 @@
                               (updateEmitter)="emitUpdate($event)">
             </app-static-group>
 
-            <app-static-collection *ngIf="isCollectionStaticProperty(staticProperty)"
-                                   [adapterId]="adapterId"
-                                   [eventSchemas]="eventSchemas"
-                                   [parentForm]="parentForm"
-                                   [fieldName]="fieldName"
-                                   [displayRecommended]="displayRecommended"
-                                   [staticProperty]="staticProperty" class="test fullWidth"
-                                   (updateEmitter)="emitUpdate($event)">
-            </app-static-collection>
+            <sp-static-collection *ngIf="isCollectionStaticProperty(staticProperty)"
+                                  [adapterId]="adapterId"
+                                  [eventSchemas]="eventSchemas"
+                                  [parentForm]="parentForm"
+                                  [fieldName]="fieldName"
+                                  [displayRecommended]="displayRecommended"
+                                  [staticProperty]="staticProperty" class="test fullWidth"
+                                  (updateEmitter)="emitUpdate($event)">
+            </sp-static-collection>
         </div>
     </div>
     <mat-divider></mat-divider>

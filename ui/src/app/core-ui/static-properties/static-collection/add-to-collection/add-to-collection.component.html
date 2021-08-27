@@ -1,0 +1,31 @@
+<div *ngIf="!showFileSelecion">
+    <button mat-button mat-flat-button (click)="add()">
+        <mat-icon class="icon">add</mat-icon>
+        <span>Add</span>
+    </button>
+    <button mat-button mat-flat-button (click)="selectFileSelection()">
+        <mat-icon class="icon">add</mat-icon>
+        <span>Add file</span>
+    </button>
+</div>
+<div *ngIf="showFileSelecion">
+    <button mat-button mat-flat-button (click)="closeFileSelection()">
+        <mat-icon class="icon">arrow_back</mat-icon>
+        <span>Back</span>
+    </button>
+    <div fxFlex="100" style="margin:5px;width:100%">
+        <mat-form-field style="width: 95%" (click)="fileInput.click();" color="accent">
+            <input matInput placeholder="File" disabled>
+            <input #fileInput type="file" style="display:none;"
+                   data-cy="sp-file-management-file-input"
+                   (change)="handleFileInput($event.target.files)">
+            <button color="accent" matSuffix
+                    mat-button style="min-width: 0px">
+                <mat-icon>insert_drive_file</mat-icon>
+            </button>
+            <!--            <mat-error *ngIf="!hasInput">-->
+            <!--                {{errorMessage}}-->
+            <!--            </mat-error>-->
+        </mat-form-field>
+    </div>
+</div>

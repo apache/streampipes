@@ -16,24 +16,21 @@
  *
  */
 
-import {
-  EventSchema,
-  StaticProperty,
-  StaticPropertyUnion
-} from "../../../core-model/gen/streampipes-model";
-import {Directive, EventEmitter, Input, Output} from "@angular/core";
-import {FormGroup} from "@angular/forms";
-import {ConfigurationInfo} from "../../../connect/model/ConfigurationInfo";
-import {InvocablePipelineElementUnion} from "../../../editor/model/editor.model";
+import { EventSchema, StaticProperty, StaticPropertyUnion } from '../../../core-model/gen/streampipes-model';
+import { Directive, EventEmitter, Input, Output } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
+import { InvocablePipelineElementUnion } from '../../../editor/model/editor.model';
 
 @Directive()
+// tslint:disable-next-line:directive-class-suffix
 export abstract class AbstractStaticPropertyRenderer<T extends StaticProperty> {
 
   @Input()
   staticProperty: T;
 
   @Input()
-  staticProperties: Array<StaticPropertyUnion>;
+  staticProperties: StaticPropertyUnion[];
 
   @Input()
   eventSchemas: EventSchema[];
