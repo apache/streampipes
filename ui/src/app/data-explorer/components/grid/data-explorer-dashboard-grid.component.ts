@@ -119,11 +119,14 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
 
   }
 
-  loadWidgetConfig(widgetId: string) {
+  loadWidgetConfig(widgetId: string, setCurrentlyConfigured?: boolean) {
     this.dataViewDataExplorerService.getWidget(widgetId).subscribe(response => {
       this.configuredWidgets.set(widgetId, response);
       this.dataViewDataExplorerService.getPersistedDataStream(response.pipelineId, response.measureName).subscribe(ps => {
         this.dataLakeMeasures.set(widgetId, ps);
+        if (setCurrentlyConfigured) {
+          this.propagateWidgetSelection({a: this.configuredWidgets.get(widgetId), b: this.dataLakeMeasures.get(widgetId)});
+        }
       });
     });
   }

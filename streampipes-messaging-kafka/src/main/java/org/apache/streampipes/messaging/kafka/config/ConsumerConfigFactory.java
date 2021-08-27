@@ -17,11 +17,7 @@
  */
 package org.apache.streampipes.messaging.kafka.config;
 
-import org.apache.kafka.clients.CommonClientConfigs;
-import org.apache.kafka.clients.KafkaClient;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.common.config.SaslConfigs;
-import org.apache.kafka.common.security.auth.SecurityProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 
 import java.util.Properties;
@@ -32,12 +28,11 @@ public class ConsumerConfigFactory extends AbstractConfigFactory {
   private static final String ENABLE_AUTO_COMMIT_CONFIG_DEFAULT = "true";
   private static final String AUTO_COMMIT_INTERVAL_MS_CONFIG_DEFAULT = "5000";
   private static final String SESSION_TIMEOUT_MS_CONFIG_DEFAULT = "30000";
-  private static final Integer FETCH_MAX_BYTES_CONFIG_DEFAULT = 5000012;
+  private static final Integer FETCH_MAX_BYTES_CONFIG_DEFAULT = 52428800;
   private static final String KEY_DESERIALIZER_CLASS_CONFIG_DEFAULT = "org.apache.kafka.common" +
           ".serialization.StringDeserializer";
   private static final String VALUE_DESERIALIZER_CLASS_CONFIG_DEFAULT = "org.apache.kafka.common" +
           ".serialization.ByteArrayDeserializer";
-  private static final String SASL_MECHANISM = "PLAIN";
 
   public ConsumerConfigFactory(KafkaTransportProtocol protocol) {
     super(protocol);
@@ -59,16 +54,6 @@ public class ConsumerConfigFactory extends AbstractConfigFactory {
     props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, VALUE_DESERIALIZER_CLASS_CONFIG_DEFAULT);
     props.put(ConsumerConfig.CLIENT_ID_CONFIG, UUID.randomUUID().toString());
 
-    return props;
-  }
-
-  @Override
-  public Properties makePropertiesSaslPlain(String username, String password) {
-    Properties props = makeProperties();
-    props.put(SaslConfigs.SASL_MECHANISM, "PLAIN");
-    props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, SecurityProtocol.SASL_PLAINTEXT.toString());
-    String SASL_JAAS_CONFIG = "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"" + username + "\" password=\"" + password + "\";";
-    props.put(SaslConfigs.SASL_JAAS_CONFIG, SASL_JAAS_CONFIG);
     return props;
   }
 }

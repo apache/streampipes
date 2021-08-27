@@ -36,37 +36,31 @@
             [selectedProperties]="currentlyConfiguredWidget.dataConfig.selectedLineChartProperties">
     </sp-select-properties>
 
-    <sp-select-properties
-            label="Select Background Color"
-            multiple=false
-            class="mr-10"
-            *ngIf="currentlyConfiguredWidget.dataConfig.showBackgroundColorProperty"
-            (changeSelectedProperties)="setSelectedBackgroundColorProperty($event)"
-            [availableProperties]="currentlyConfiguredWidget.dataConfig.availableNonNumericColumns"
-            [selectedProperties]="currentlyConfiguredWidget.dataConfig.selectedBackgroundColorProperty">
-    </sp-select-properties>
-    <sp-aggregate-configuration
-            *ngIf="currentlyConfiguredWidget.dataConfig.advancedSettingsActive"
+    <div>
+        <mat-checkbox color="accent" [(ngModel)]="currentlyConfiguredWidget.dataConfig.autoAggregate">Auto-Aggregate
+        </mat-checkbox>
+    </div>
+
+    <sp-aggregate-configuration class="mt-10"
+            *ngIf="!currentlyConfiguredWidget.dataConfig.autoAggregate"
             [(aggregationValue)]="currentlyConfiguredWidget.dataConfig.aggregationValue"
-            [(aggregationTimeUnit)]="currentlyConfiguredWidget.dataConfig.aggregationTimeUnit">
+            [(aggregationTimeUnit)]="currentlyConfiguredWidget.dataConfig.aggregationTimeUnit"
+            [(aggregationFunction)]="currentlyConfiguredWidget.dataConfig.aggregationFunction">
     </sp-aggregate-configuration>
 
-    <sp-group-configuration
-            [dimensionProperties]="currentlyConfiguredWidget.dataConfig.dimensionProperties"
-            *ngIf="currentlyConfiguredWidget.dataConfig.advancedSettingsActive"
-            [(groupValue)]="currentlyConfiguredWidget.dataConfig.groupValue"
-            [(showCountValue)]="currentlyConfiguredWidget.dataConfig.showCountValue">
-    </sp-group-configuration>
-    <button
-            *ngIf="currentlyConfiguredWidget.dataConfig.advancedSettingsActive"
-            (click)="triggerDataRefresh()" mat-button mat-icon-button color="primary">
+<!--    <sp-group-configuration-->
+<!--            [dimensionProperties]="currentlyConfiguredWidget.dataConfig.dimensionProperties"-->
+<!--            *ngIf="!currentlyConfiguredWidget.dataConfig.autoAggregate"-->
+<!--            [(groupValue)]="currentlyConfiguredWidget.dataConfig.groupValue"-->
+<!--            [(showCountValue)]="currentlyConfiguredWidget.dataConfig.showCountValue">-->
+<!--    </sp-group-configuration>-->
+    <button *ngIf="!currentlyConfiguredWidget.dataConfig.autoAggregate"
+            (click)="triggerDataRefresh()" mat-button mat-raised-button color="accent">
         <mat-icon>autorenew</mat-icon>
+        <span>Reload</span>
     </button>
-    <div>
-        <mat-slide-toggle color="primary" [(ngModel)]="currentlyConfiguredWidget.dataConfig.advancedSettingsActive"
-                          (change)="handlingAdvancedToggleChange()">Aggregate
-        </mat-slide-toggle>
-    </div>
+    <mat-hint *ngIf="!currentlyConfiguredWidget.dataConfig.autoAggregate">Max. 3000 results will be shown.</mat-hint>
+
 
     <!--    <mat-slide-toggle color="primary" [(ngModel)]="currentlyConfiguredWidget.dataConfig.labelingModeOn" (change)="toggleLabelingMode()">Label-->
     <!--    </mat-slide-toggle>-->

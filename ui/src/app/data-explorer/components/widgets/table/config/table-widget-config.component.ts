@@ -37,11 +37,13 @@ export class TableWidgetConfigComponent extends BaseWidgetConfig<TableWidgetMode
     if (!this.currentlyConfiguredWidget.dataConfig.availableColumns) {
       this.currentlyConfiguredWidget.dataConfig.availableColumns = [this.getTimestampProperty(this.dataLakeMeasure.eventSchema)];
       this.currentlyConfiguredWidget.dataConfig.availableColumns =
-        this.currentlyConfiguredWidget.dataConfig.availableColumns.concat(this.getValuePropertyKeys(this.dataLakeMeasure.eventSchema));
+          this.currentlyConfiguredWidget.dataConfig.availableColumns.concat(this.getValuePropertyKeys(this.dataLakeMeasure.eventSchema));
+      this.currentlyConfiguredWidget.dataConfig.limit = 50;
+      this.currentlyConfiguredWidget.dataConfig.page = 1;
 
       // Reduce selected columns when more then 6
       this.currentlyConfiguredWidget.dataConfig.selectedColumns = this.currentlyConfiguredWidget.dataConfig.availableColumns.length > 6 ?
-        this.currentlyConfiguredWidget.dataConfig.availableColumns.slice(0, 5) : this.currentlyConfiguredWidget.dataConfig.availableColumns;
+          this.currentlyConfiguredWidget.dataConfig.availableColumns.slice(0, 5) : this.currentlyConfiguredWidget.dataConfig.availableColumns;
       this.triggerDataRefresh();
     }
   }

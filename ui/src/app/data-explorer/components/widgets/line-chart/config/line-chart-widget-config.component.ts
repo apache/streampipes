@@ -54,11 +54,11 @@ export class LineChartWidgetConfigComponent extends BaseWidgetConfig<LineChartWi
     this.triggerDataRefresh();
   }
 
-  handlingAdvancedToggleChange() {
-    this.currentlyConfiguredWidget.dataConfig.showBackgroundColorProperty =
-      !this.currentlyConfiguredWidget.dataConfig.showBackgroundColorProperty;
-    this.triggerDataRefresh();
-  }
+  // handlingAdvancedToggleChange() {
+  //   this.currentlyConfiguredWidget.dataConfig.showBackgroundColorProperty =
+  //     !this.currentlyConfiguredWidget.dataConfig.showBackgroundColorProperty;
+  //   this.triggerDataRefresh();
+  // }
 
   toggleLabelingMode() {
     // this.triggerViewRefresh();
@@ -71,6 +71,7 @@ export class LineChartWidgetConfigComponent extends BaseWidgetConfig<LineChartWi
       this.currentlyConfiguredWidget.dataConfig.availableNonNumericColumns = this.getNonNumericProperties(this.dataLakeMeasure.eventSchema);
       this.currentlyConfiguredWidget.dataConfig.yKeys = [];
       this.currentlyConfiguredWidget.dataConfig.chartMode = 'lines';
+      this.currentlyConfiguredWidget.dataConfig.autoAggregate = true;
 
       // Reduce selected columns when more then 6
       this.currentlyConfiguredWidget.dataConfig.selectedLineChartProperties =

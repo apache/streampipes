@@ -17,6 +17,9 @@
  */
 package org.apache.streampipes.messaging.kafka.config;
 
+import org.apache.kafka.clients.CommonClientConfigs;
+import org.apache.kafka.common.config.SaslConfigs;
+import org.apache.kafka.common.security.auth.SecurityProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 
 import java.util.Properties;
@@ -25,6 +28,7 @@ import java.util.function.Supplier;
 public abstract class AbstractConfigFactory {
 
   private static final String COLON = ":";
+  private static final String SASL_MECHANISM = "PLAIN";
 
   protected KafkaTransportProtocol protocol;
 
@@ -34,8 +38,6 @@ public abstract class AbstractConfigFactory {
 
   public abstract Properties makeProperties();
 
-  public abstract Properties makePropertiesSaslPlain(String username, String password);
-
   protected <T> T getConfigOrDefault(Supplier<T> function,
                                       T defaultValue) {
     return function.get() != null ? function.get() : defaultValue;
@@ -43,5 +45,15 @@ public abstract class AbstractConfigFactory {
 
   protected String getBrokerUrl() {
     return protocol.getBrokerHostname() + COLON + protocol.getKafkaPort();
+  }
+
+  public Properties makePropertiesSaslPlain(String username,
+                                            String password) {
+    Properties props = makeProperties();
+    props.put(SaslConfigs.SASL_MECHANISM,SASL_MECHANISM);
+    props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, SecurityProtocol.SASL_PLAINTEXT.toString());
+    String SASL_JAAS_CONFIG = "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"" + username + "\" password=\"" + password + "\";";
+    props.put(SaslConfigs.SASL_JAAS_CONFIG, SASL_JAAS_CONFIG);
+    return props;
   }
 }

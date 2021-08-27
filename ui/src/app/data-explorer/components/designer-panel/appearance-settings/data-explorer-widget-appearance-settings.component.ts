@@ -17,7 +17,7 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { WidgetBaseAppearanceConfig } from "../../../models/dataview-dashboard.model";
+import { WidgetBaseAppearanceConfig } from '../../../models/dataview-dashboard.model';
 import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
 
 @Component({
@@ -30,7 +30,7 @@ export class DataExplorerWidgetAppearanceSettingsComponent implements OnInit {
   @Input() baseAppearanceConfig: WidgetBaseAppearanceConfig;
   @Input() widgetId: string;
 
-  presetColors: Array<any> = ["#39B54A", "#1B1464", "#f44336", "#4CAF50", "#FFEB3B", "#FFFFFF", "#000000"];
+  presetColors: string[] = ['#39B54A', '#1B1464', '#f44336', '#4CAF50', '#FFEB3B', '#FFFFFF', '#000000'];
 
 
   constructor(private widgetConfigurationService: WidgetConfigurationService) {
@@ -38,7 +38,9 @@ export class DataExplorerWidgetAppearanceSettingsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    if (!this.baseAppearanceConfig.backgroundColor) {
+      this.baseAppearanceConfig.backgroundColor = '#FFFFFF';
+    }
   }
 
   triggerViewUpdate() {

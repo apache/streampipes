@@ -17,7 +17,6 @@
  */
 
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { DataResult } from '../../../../core-model/datalake/DataResult';
@@ -39,6 +38,7 @@ export class TableWidgetComponent extends BaseDataExplorerWidget<TableWidgetMode
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   dataSource = new MatTableDataSource();
+  columnNames: string[];
 
   constructor(dataLakeRestService: DatalakeRestService,
               widgetConfigurationService: WidgetConfigurationService,
@@ -49,8 +49,7 @@ export class TableWidgetComponent extends BaseDataExplorerWidget<TableWidgetMode
   ngOnInit(): void {
     super.ngOnInit();
     this.dataSource.sort = this.sort;
-    // this.columnNames = this.getRuntimeNames(this.selectedColumns);
-    // this.updateData();
+    this.columnNames = this.dataExplorerWidget.dataConfig.selectedColumns.map(c => c.runtimeName);
   }
 
   transformData(data: DataResult) {
@@ -63,7 +62,6 @@ export class TableWidgetComponent extends BaseDataExplorerWidget<TableWidgetMode
       );
       this.setShownComponents(false, true, false);
     }
-
     return result;
   }
 
@@ -105,7 +103,8 @@ export class TableWidgetComponent extends BaseDataExplorerWidget<TableWidgetMode
       this.dataLakeMeasure.measureName, this.buildQuery())
       .subscribe(
         (res: DataResult) => {
-          this.dataSource.data = this.transformData(res);
+          this.columnNames = this.dataExplorerWidget.dataConfig.selectedColumns.map(c => c.runtimeName);
+          this.dataSource.data = [...this.transformData(res)];
         }
       );
   }
@@ -115,7 +114,10 @@ export class TableWidgetComponent extends BaseDataExplorerWidget<TableWidgetMode
   }
 
   buildQuery(): DatalakeQueryParameters {
-    return DatalakeQueryParameterBuilder.create(this.timeSettings.startTime, this.timeSettings.endTime).build();
+    return DatalakeQueryParameterBuilder.create(this.timeSettings.startTime, this.timeSettings.endTime)
+        .withPaging(this.dataExplorerWidget.dataConfig.page - 1, this.dataExplorerWidget.dataConfig.limit)
+        .withColumnFilter(this.dataExplorerWidget.dataConfig.selectedColumns.map(c => c.runtimeName))
+        .build();
   }
 
   onResize(width: number, height: number) {

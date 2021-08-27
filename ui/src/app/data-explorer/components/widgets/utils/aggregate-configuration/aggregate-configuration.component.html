@@ -17,27 +17,45 @@
   -->
 
 
-<div fxLayout="column" fxLayoutAlign="stretch">
-    <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center" class="ml-0 mr-0">
-        <div class="option" style="margin-left: 5px">
-
-            <mat-form-field class="form-field-margin form-field-size-smaller">
-                <mat-select [(ngModel)]="aggregationTimeUnit" (ngModelChange)="onModelChange($event,'aggregationTimeUnit')">
-                    <mat-option style="background-color: #FFFFFF" value="ms">Milliseconds</mat-option>
-                    <mat-option style="background-color: #FFFFFF" value="s">Second</mat-option>
-                    <mat-option style="background-color: #FFFFFF" value="m">Minute</mat-option>
-                    <mat-option style="background-color: #FFFFFF" value="h">Hour</mat-option>
-                    <mat-option style="background-color: #FFFFFF" value="d">Day</mat-option>
-                    <mat-option style="background-color: #FFFFFF" value="w">Week</mat-option>
-                    <mat-option style="background-color: #FFFFFF" value="month">Month</mat-option>
-                    <mat-option style="background-color: #FFFFFF" value="year">Year</mat-option>
-                </mat-select>
-                <mat-label>Unit</mat-label>
-            </mat-form-field>
-            <mat-form-field class="form-field-margin form-field-size-smaller">
-                <input matInput type="number" [(ngModel)]="aggregationValue" (ngModelChange)="onModelChange($event,'aggregationValue')">
-                <mat-label>Value</mat-label>
-            </mat-form-field>
-        </div>
+<div fxLayout="column" fxLayoutAlign="stretch" fxFlex="100">
+    <div fxFlex="100" fxLayout="column" fxLayoutAlign="start center" class="ml-0 mr-0">
+        <mat-form-field fxFlex="100" class="w-100" color="accent">
+            <mat-select [(ngModel)]="aggregationTimeUnit" (ngModelChange)="onModelChange($event,'aggregationTimeUnit')" class="w-100">
+                <mat-option style="background-color: #FFFFFF" value="ms">Milliseconds</mat-option>
+                <mat-option style="background-color: #FFFFFF" value="s">Second</mat-option>
+                <mat-option style="background-color: #FFFFFF" value="m">Minute</mat-option>
+                <mat-option style="background-color: #FFFFFF" value="h">Hour</mat-option>
+                <mat-option style="background-color: #FFFFFF" value="d">Day</mat-option>
+                <mat-option style="background-color: #FFFFFF" value="w">Week</mat-option>
+                <mat-option style="background-color: #FFFFFF" value="month">Month</mat-option>
+                <mat-option style="background-color: #FFFFFF" value="year">Year</mat-option>
+            </mat-select>
+            <mat-label>Unit</mat-label>
+        </mat-form-field>
+        <mat-form-field fxFlex="100" class="w-100" color="accent">
+            <input matInput type="number" [(ngModel)]="aggregationValue"
+                   (ngModelChange)="onModelChange($event,'aggregationValue')">
+            <mat-label>Value</mat-label>
+        </mat-form-field>
+        <mat-form-field color="accent" fxFlex="100" class="w-100">
+            <mat-label>Aggregation Function</mat-label>
+            <mat-select [(ngModel)]="aggregationFunction" (ngModelChange)="onModelChange($event,'aggregationFunction')" >
+                <mat-option [value]="'MEAN'">
+                    <span class="pipeline-name">Mean</span>
+                </mat-option>
+                <mat-option [value]="'FIRST'">
+                    <span class="pipeline-name">First</span>
+                </mat-option>
+                <mat-option [value]="'LAST'">
+                    <span class="pipeline-name">Last</span>
+                </mat-option>
+                <mat-option [value]="'MIN'">
+                    <span class="pipeline-name">Min</span>
+                </mat-option>
+                <mat-option [value]="'MAX'">
+                    <span class="pipeline-name">Max</span>
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
     </div>
 </div>

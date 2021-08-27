@@ -34,7 +34,7 @@
                     *ngFor="let element of dataExplorerWidget.dataConfig.selectedColumns"
                     [cdkColumnDef]="element.runtimeName">
                 <div *ngIf="!isTimestamp(element)">
-                    <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef [ngStyle]="{background: dataExplorerWidget.baseAppearanceConfig.backgroundColor, color: dataExplorerWidget.baseAppearanceConfig.textColor}">
                         <label class="column-header">{{element.runtimeName}}</label>
                     </th>
                     <td mat-cell *matCellDef="let row" style="text-align: left;">
@@ -42,7 +42,7 @@
                     </td>
                 </div>
                 <div *ngIf="isTimestamp(element)">
-                    <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef [ngStyle]="{background: dataExplorerWidget.baseAppearanceConfig.backgroundColor, color: dataExplorerWidget.baseAppearanceConfig.textColor}">
                         <label class="column-header">{{element.runtimeName}}</label>
                     </th>
                     <td mat-cell *matCellDef="let row" style="text-align: left;">
@@ -51,8 +51,8 @@
                 </div>
             </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="dataExplorerWidget.dataConfig.columnNames; sticky: true"></tr>
-            <tr mat-row *matRowDef="let row; columns: dataExplorerWidget.dataConfig.columnNames;"></tr>
+            <tr mat-header-row *matHeaderRowDef="columnNames; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: columnNames;"></tr>
 
         </table>
     </div>
