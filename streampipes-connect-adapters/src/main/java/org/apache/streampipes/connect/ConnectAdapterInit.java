@@ -70,7 +70,6 @@ public class ConnectAdapterInit extends AdapterWorkerContainer {
             .registerAdapter(new OpcUaAdapter())
             .registerAdapter(new InfluxDbStreamAdapter())
             .registerAdapter(new InfluxDbSetAdapter())
-//            .registerAdapter(new TISensorTag())
 //            .registerAdapter(new NetioRestAdapter())
 //            .registerAdapter(new NetioMQTTAdapter())
             .registerAdapter(new Plc4xS7Adapter())
