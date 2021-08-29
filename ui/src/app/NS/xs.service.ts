@@ -16,23 +16,23 @@
  *
  */
 
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
 @Injectable()
-export class xsService {
+export class XsService {
 
-  XS_STRING: string = "xs:string";
-  XS_INTEGER: string = "http://www.w3.org/2001/XMLSchema#integer";
-  XS_DOUBLE: string = "http://www.w3.org/2001/XMLSchema#double";
-  XS_BOOLEAN: string = "http://www.w3.org/2001/XMLSchema#boolean";
-  XS_NUMBER: string = "http://www.w3.org/2001/XMLSchema#number";
-  XS_STRING1: string = "http://www.w3.org/2001/XMLSchema#string";
-  SO_URL: string = "https://schema.org/URL";
+  XS_STRING = 'xs:string';
+  XS_INTEGER = 'http://www.w3.org/2001/XMLSchema#integer';
+  XS_DOUBLE = 'http://www.w3.org/2001/XMLSchema#double';
+  XS_BOOLEAN = 'http://www.w3.org/2001/XMLSchema#boolean';
+  XS_NUMBER = 'http://www.w3.org/2001/XMLSchema#number';
+  XS_STRING1 = 'http://www.w3.org/2001/XMLSchema#string';
+  SO_URL = 'https://schema.org/URL';
 
   isNumber(datatype: string): boolean {
     return datatype === this.XS_DOUBLE ||
-        datatype === this.XS_INTEGER ||
-        datatype === this.XS_NUMBER;
+      datatype === this.XS_INTEGER ||
+      datatype === this.XS_NUMBER;
   }
 
 }

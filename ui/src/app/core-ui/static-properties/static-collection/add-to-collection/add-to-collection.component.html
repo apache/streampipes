@@ -35,14 +35,18 @@
             <input matInput placeholder="File" disabled>
             <input #fileInput type="file" style="display:none;"
                    data-cy="sp-file-management-file-input"
-                   (change)="handleFileInput($event.target.files)">
+                   (change)="handleFileInput($event.target)">
+            <div>
+                {{fileName}}
+                <mat-progress-bar mode="indeterminate" *ngIf="processingFile"></mat-progress-bar>
+            </div>
             <button color="accent" matSuffix
                     mat-button style="min-width: 0px">
                 <mat-icon>insert_drive_file</mat-icon>
             </button>
-            <!--            <mat-error *ngIf="!hasInput">-->
-            <!--                {{errorMessage}}-->
-            <!--            </mat-error>-->
+            <mat-error>
+                {{errorMessage}}
+            </mat-error>
         </mat-form-field>
     </div>
 </div>
