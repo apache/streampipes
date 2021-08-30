@@ -77,7 +77,8 @@ public class DataLake implements EventSink<DataLakeParameters> {
 
     EventSchema schema = runtimeContext.getInputSchemaInfo().get(0).getEventSchema();
 
-    this.eventSchema = schema;
+    // deep copy of event schema. Event property runtime name is changed to lower case for the schema registration
+    this.eventSchema = new EventSchema(schema);
 
     schema.getEventProperties().stream().forEach(eventProperty -> {
       eventProperty.setRuntimeName(prepareString(eventProperty.getRuntimeName()));
