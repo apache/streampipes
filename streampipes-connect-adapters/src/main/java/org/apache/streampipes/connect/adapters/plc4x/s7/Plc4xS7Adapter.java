@@ -18,12 +18,6 @@
 
 package org.apache.streampipes.connect.adapters.plc4x.s7;
 
-import com.opencsv.CSVReader;
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
-import com.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
-import com.poiji.bind.Poiji;
-import com.poiji.exception.PoijiExcelType;
 import org.apache.plc4x.java.PlcDriverManager;
 import org.apache.plc4x.java.api.PlcConnection;
 import org.apache.plc4x.java.api.exceptions.PlcConnectionException;
@@ -55,8 +49,6 @@ import org.apache.streampipes.sdk.utils.Datatypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.InputStream;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -83,12 +75,6 @@ public class Plc4xS7Adapter extends PullAdapter {
     private static final String PLC_NODE_NAME = "plc_node_name";
     private static final String PLC_NODE_RUNTIME_NAME = "plc_node_runtime_name";
     private static final String PLC_NODE_TYPE = "plc_node_type";
-    private static final String PLC_NODES_CSV_FILE = "plc_nodes_csv_file";
-    private static final String PLC_NODES_EXCEL_FILE = "plc_nodes_excel_file";
-    private static final String CONFIGURE = "configure";
-    private static final String MANUALLY = "manually";
-    private static final String CSV_IMPORT = "csv_import";
-    private static final String EXCEL_IMPORT = "excel_import";
 
     /**
      * Values of user configuration parameters
@@ -130,18 +116,7 @@ public class Plc4xS7Adapter extends PullAdapter {
                         StaticProperties.stringFreeTextProperty(Labels.withId(PLC_NODE_RUNTIME_NAME)),
                         StaticProperties.stringFreeTextProperty(Labels.withId(PLC_NODE_NAME)),
                         StaticProperties.singleValueSelection(Labels.withId(PLC_NODE_TYPE),
-                                Options.from("Bool",  "Byte", "Int", "Word", "Real", "String")))
-//                .requiredAlternatives(Labels.withId(CONFIGURE),
-//                        Alternatives.from(Labels.withId(MANUALLY),
-//                                StaticProperties.collection(Labels.withId(PLC_NODES),
-//                                        StaticProperties.stringFreeTextProperty(Labels.withId(PLC_NODE_RUNTIME_NAME)),
-//                                        StaticProperties.stringFreeTextProperty(Labels.withId(PLC_NODE_NAME)),
-//                                        StaticProperties.singleValueSelection(Labels.withId(PLC_NODE_TYPE),
-//                                                Options.from("Bool",  "Byte", "Int", "Word", "Real", "String")))),
-//                        Alternatives.from(Labels.withId(CSV_IMPORT),
-//                                StaticProperties.fileProperty(Labels.withId(PLC_NODES_CSV_FILE), Filetypes.CSV)),
-//                        Alternatives.from(Labels.withId(EXCEL_IMPORT),
-//                                StaticProperties.fileProperty(Labels.withId(PLC_NODES_EXCEL_FILE), Filetypes.XLSX, Filetypes.XLS)))
+                                Options.from("Bool",  "Byte", "Int", "Word", "Real", "Char", "String")))
                 .build();
         description.setAppId(ID);
 
@@ -163,8 +138,6 @@ public class Plc4xS7Adapter extends PullAdapter {
         if (this.pollingInterval < 10) {
             throw new AdapterException("Polling interval must be higher then 10. Current value: " + this.pollingInterval);
         }
-
-        // TODO add a validation to check if the user input is available in the PLC
 
         GuessSchema guessSchema = new GuessSchema();
 
@@ -299,84 +272,18 @@ public class Plc4xS7Adapter extends PullAdapter {
         this.ip = extractor.singleValueParameter(PLC_IP, String.class);
         this.pollingInterval = extractor.singleValueParameter(PLC_POLLING_INTERVAL, Integer.class);
 
-        // TODO remove Excel dependency
-//        String selectedAlternative = extractor.selectedAlternativeInternalId(CONFIGURE);
-//        if (selectedAlternative.equals(CSV_IMPORT)) {
-//            // CSV file
-//            try {
-//                String csvFileContent = extractor.fileContentsAsString(PLC_NODES_CSV_FILE);
-//                List<S7ConfigFile> configFiles = this.getCsvConfig(csvFileContent);
-//                this.nodes = makeConfigMap(configFiles);
-//            } catch (IOException e) {
-//                throw new AdapterException("Could not read imported file");
-//            }
-//
-//        } else if (selectedAlternative.equals(EXCEL_IMPORT)) {
-//            // Excel file
-//            try {
-//                InputStream is = extractor.fileContentsAsStream(PLC_NODES_EXCEL_FILE);
-//                String excelFilename = extractor.selectedFilename(PLC_NODES_CSV_FILE);
-//                List<S7ConfigFile> configFiles = this.getExcelConfig(is, excelFilename);
-//                this.nodes = makeConfigMap(configFiles);
-//                is.close();
-//            } catch (IOException e) {
-//                throw new AdapterException("Could not read imported file");
-//            }
-//
-//        } else {
-            // Manually
-            this.nodes = new ArrayList<>();
-            CollectionStaticProperty sp = (CollectionStaticProperty) extractor.getStaticPropertyByName(PLC_NODES);
+        this.nodes = new ArrayList<>();
+        CollectionStaticProperty sp = (CollectionStaticProperty) extractor.getStaticPropertyByName(PLC_NODES);
 
-            for (StaticProperty member : sp.getMembers()) {
-                StaticPropertyExtractor memberExtractor =
-                        StaticPropertyExtractor.from(((StaticPropertyGroup) member).getStaticProperties(), new ArrayList<>());
-                Map<String, String> map = new HashMap<>();
-                map.put(PLC_NODE_RUNTIME_NAME, memberExtractor.textParameter(PLC_NODE_RUNTIME_NAME));
-                map.put(PLC_NODE_NAME, memberExtractor.textParameter(PLC_NODE_NAME));
-                map.put(PLC_NODE_TYPE, memberExtractor.selectedSingleValue(PLC_NODE_TYPE, String.class));
-                this.nodes.add(map);
-            }
-//        }
-    }
-
-    private List<Map<String, String>> makeConfigMap(List<S7ConfigFile> configFiles) {
-        List<Map<String, String>> nodes = new ArrayList<>();
-        for (S7ConfigFile entry : configFiles) {
+        for (StaticProperty member : sp.getMembers()) {
+            StaticPropertyExtractor memberExtractor =
+                    StaticPropertyExtractor.from(((StaticPropertyGroup) member).getStaticProperties(), new ArrayList<>());
             Map<String, String> map = new HashMap<>();
-            map.put(PLC_NODE_RUNTIME_NAME, entry.getName());
-            map.put(PLC_NODE_NAME, entry.getLogicalAddress());
-            map.put(PLC_NODE_TYPE, entry.getDataType());
-            nodes.add(map);
+            map.put(PLC_NODE_RUNTIME_NAME, memberExtractor.textParameter(PLC_NODE_RUNTIME_NAME));
+            map.put(PLC_NODE_NAME, memberExtractor.textParameter(PLC_NODE_NAME));
+            map.put(PLC_NODE_TYPE, memberExtractor.selectedSingleValue(PLC_NODE_TYPE, String.class));
+            this.nodes.add(map);
         }
-
-        return nodes;
-    }
-
-    private List<S7ConfigFile> getExcelConfig(InputStream is, String excelFilename) {
-        PoijiExcelType excelType = excelFilename.endsWith("xlsx") ? PoijiExcelType.XLSX : PoijiExcelType.XLS;
-        return Poiji.fromExcel(is, excelType, S7ConfigFile.class);
-    }
-
-    private List<S7ConfigFile> getCsvConfig(String fileContents) {
-        CSVReader reader = new CSVReader(new StringReader(fileContents), ';');
-
-        Map<String, String> mapping = new HashMap<>();
-        mapping.put("Name", "name");
-        mapping.put("Logical Address", "logicalAddress");
-        mapping.put("Data Type", "dataType");
-
-        HeaderColumnNameTranslateMappingStrategy<S7ConfigFile> strategy =
-                new HeaderColumnNameTranslateMappingStrategy<>();
-        strategy.setType(S7ConfigFile.class);
-        strategy.setColumnMapping(mapping);
-
-        CsvToBean<S7ConfigFile> csvToBean = new CsvToBeanBuilder<S7ConfigFile>(reader)
-                .withType(S7ConfigFile.class)
-                .withMappingStrategy(strategy)
-                .build();
-
-        return csvToBean.parse();
     }
 
     /**
@@ -400,6 +307,8 @@ public class Plc4xS7Adapter extends PullAdapter {
                 return Datatypes.String;
             case "REAL":
                 return Datatypes.Float;
+            case "CHAR":
+                return Datatypes.String;
             case "STRING":
                 return Datatypes.String;
             default:

@@ -136,7 +136,6 @@
         <opencsv.version>4.6</opencsv.version>
         <plc4x.version>0.8.0</plc4x.version>
         <protobuf.version>3.6.1</protobuf.version>
-        <poiji.version>2.7.0</poiji.version>
         <nats.version>2.11.0</nats.version>
 
     </properties>
@@ -330,12 +329,6 @@
                 <artifactId>error_prone_annotations</artifactId>
                 <version>${errorprone-annotations.version}</version>
             </dependency>
-            <dependency>
-                <groupId>com.github.ozlerhakan</groupId>
-                <artifactId>poiji</artifactId>
-                <version>${poiji.version}</version>
-            </dependency>
-
             <dependency>
                 <groupId>com.fasterxml.jackson.module</groupId>
                 <artifactId>jackson-module-jaxb-annotations</artifactId>
