@@ -31,7 +31,7 @@
         <span>Back</span>
     </button>
     <div fxFlex="100" style="margin:5px;width:100%">
-        <mat-form-field style="width: 95%" (click)="fileInput.click();" color="accent">
+        <mat-form-field style="width: 95%" (click)="fileInput.click();" color="accent" *ngIf="!hasError">
             <input matInput placeholder="File" disabled>
             <input #fileInput type="file" style="display:none;"
                    data-cy="sp-file-management-file-input"
@@ -44,9 +44,10 @@
                     mat-button style="min-width: 0px">
                 <mat-icon>insert_drive_file</mat-icon>
             </button>
-            <mat-error>
-                {{errorMessage}}
-            </mat-error>
         </mat-form-field>
+        <mat-error *ngIf="hasError">
+            {{errorMessage}}
+        </mat-error>
     </div>
+
 </div>

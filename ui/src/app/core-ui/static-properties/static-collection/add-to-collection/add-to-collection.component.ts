@@ -18,7 +18,8 @@
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { StaticPropertyUtilService } from '../../static-property-util.service';
-import { EventProperty, OneOfStaticProperty, StaticProperty } from '../../../../core-model/gen/streampipes-model';
+import { FreeTextStaticProperty, OneOfStaticProperty, StaticProperty } from '../../../../core-model/gen/streampipes-model';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'sp-add-to-collection',
@@ -31,7 +32,7 @@ export class AddToCollectionComponent implements OnInit {
   public staticPropertyTemplate: StaticProperty;
 
   @Output()
-  addPropertyEmitter: EventEmitter<EventProperty> = new EventEmitter<EventProperty>();
+  addPropertyEmitter: EventEmitter<StaticProperty> = new EventEmitter<StaticProperty>();
 
   public showFileSelecion = false;
 
@@ -40,7 +41,7 @@ export class AddToCollectionComponent implements OnInit {
   public fileName: string;
 
   public hasError = false;
-  public errorMessage = '';
+  public errorMessage = 'This is a test';
 
   constructor(private staticPropertyUtil: StaticPropertyUtilService) {
   }
@@ -61,55 +62,39 @@ export class AddToCollectionComponent implements OnInit {
     this.showFileSelecion = false;
     this.processingFile = false;
     this.hasError = false;
+    this.fileName = '';
+    this.errorMessage = '';
   }
 
   handleFileInput(target: any) {
+
     this.processingFile = true;
 
     const fileReader = new FileReader();
     this.fileName = target.files[0].name;
 
     fileReader.onload = (e) => {
-      const res = this.parseCsv(fileReader.result);
-      res.pop();
-
-      // TODO Error: Wrong headers in csv file
-
-      let finalProperties: EventProperty[] = [];
-
-      res.forEach((row, i) => {
-        const clone = this.staticPropertyUtil.clone(this.staticPropertyTemplate);
-
-        // Check that all values are within csv row
-        clone.staticProperties.forEach(p => {
-          if (p instanceof OneOfStaticProperty) {
-            const option = p.options.find(o => o.name === row[p.label]);
-            if (!option) {
-              option.selected = true;
-            } else {
-              this.setError('Error in line ' + i + '. Value for ' + p.label + ' is not supported');
-            }
-          } else {
-            if (row[p.label] === '') {
-              this.setError('Error in line ' + i + '. Value for ' + p.label + ' is not set');
-            } else {
-              p.value = row[p.label];
-            }
-          }
-          finalProperties.push(clone);
+      this.parseCsv(fileReader.result).subscribe(res => {
+        res.pop();
+        res.forEach((row, i) => {
+          const property: StaticProperty = this.getStaticProperty(row, i);
+          finalProperties.push(property);
         });
+
+        if (!this.hasError) {
+          finalProperties.forEach(p => {
+            this.addPropertyEmitter.emit(p);
+          });
+          this.closeFileSelection();
+          this.fileName = '';
+        }
       });
-
-      if (!this.hasError) {
-        finalProperties.forEach(p => {
-          this.addPropertyEmitter.emit(p);
-        });
-        this.closeFileSelection();
-        this.fileName = '';
-      }
-
     };
+
     fileReader.readAsText(target.files[0]);
+
+    // Parse file and return properties
+    const finalProperties: StaticProperty[] = [];
   }
 
   private setError(errorMessage: string) {
@@ -119,22 +104,60 @@ export class AddToCollectionComponent implements OnInit {
     }
   }
 
-  private parseCsv(str) {
+  public parseCsv(str): Observable<any[]> {
+
     str = str.replace(/\r?\n|\r/g, '\n');
-    const delimiter = ';';
-    const headers = str.slice(0, str.indexOf('\n')).split(delimiter);
+    const parseResult = new Observable<any[]>((observer) => {
+      const delimiter = ',';
+      const headers = str.slice(0, str.indexOf('\n')).split(delimiter);
 
-    const rows = str.slice(str.indexOf('\n') + 1).split('\n');
+      const rows = str.slice(str.indexOf('\n') + 1).split('\n');
 
-    const arr = rows.map(row => {
-      const values = row.split(delimiter);
-      const el = headers.reduce((object, header, index) => {
-        object[header] = values[index];
-        return object;
-      }, {});
-      return el;
+      const result = rows.map(row => {
+        const values = row.split(delimiter);
+        const el = headers.reduce((object, header, index) => {
+          object[header] = values[index];
+          return object;
+        }, {});
+        return el;
+      });
+
+      observer.next(result);
+
     });
 
-    return arr;
+    return parseResult;
+  }
+
+  public getStaticProperty(row: any, rowNumber: number): StaticProperty {
+    const clone = this.staticPropertyUtil.clone(this.staticPropertyTemplate);
+
+    // Check that all values are within csv row
+    clone.staticProperties.forEach(p => {
+      if (p instanceof OneOfStaticProperty) {
+        this.setOneOfStaticProperty(row, p, rowNumber);
+      } else {
+        this.setStaticProperty(row, p, rowNumber);
+      }
+    });
+
+    return clone;
+  }
+
+  private setOneOfStaticProperty(row: any, property: OneOfStaticProperty, rowNumber: number) {
+    const option = property.options.find(o => o.name === row[property.label]);
+    if (option !== undefined) {
+      option.selected = true;
+    } else {
+      this.setError('Error in line ' + rowNumber + '. Value for "' + property.label + '" is not supported');
+    }
+  }
+
+  private setStaticProperty(row: any, property: FreeTextStaticProperty, rowNumber: number) {
+    if (row[property.label] === undefined || row[property.label] === '') {
+      this.setError('Error in line ' + rowNumber + '. Value for "' + property.label + '" is not set');
+    } else {
+      property.value = row[property.label];
+    }
   }
 }
