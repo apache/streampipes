@@ -16,9 +16,16 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
-import { DatalakeRestService } from '../../core-services/datalake/datalake-rest.service';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { DatalakeRestService } from '../../platform-services/apis/datalake-rest.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { DataViewDataExplorerService } from '../../platform-services/apis/data-view-data-explorer.service';
+import { DataLakeConfigurationEntry } from './datalake-configuration-entry';
+import { DatalakeQueryParameters } from '../../core-services/datalake/DatalakeQueryParameters';
+import { DatalakeQueryParameterBuilder } from '../../core-services/datalake/DatalakeQueryParameterBuilder';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'sp-datalake-configuration',
@@ -27,31 +34,79 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class DatalakeConfigurationComponent implements OnInit {
 
-  constructor(
-    protected dataLakeRestService: DatalakeRestService,
-    private snackBar: MatSnackBar) { }
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  pageSize = 1;
+  @ViewChild(MatSort) sort: MatSort;
 
-  ngOnInit(): void {
+  dataSource: MatTableDataSource<DataLakeConfigurationEntry>;
+  availableMeasurements: DataLakeConfigurationEntry[] = [];
+
+  displayedColumns: string[] = ['name', 'pipeline', 'events', 'truncate', 'remove'];
+
+  constructor(
+    // protected dataLakeRestService: DatalakeRestService,
+    private datalakeRestService: DatalakeRestService,
+    private dataViewDataExplorerService: DataViewDataExplorerService,
+    private snackBar: MatSnackBar) {
   }
 
-  removeDataFromDataLake(): void {
-    console.log('Delete');
-    this.dataLakeRestService.removeAllData().subscribe(
-      res => {
-        let message = '';
+  ngOnInit(): void {
+    this.loadAvailableMeasurements();
+  }
 
-        if (res) {
-          message = 'Data successfully deleted!';
-        } else {
-          message = 'There was a problem when deleting the data!';
-        }
+  loadAvailableMeasurements() {
+    // get all available measurements that are stored in the data lake
+    this.datalakeRestService.getAllMeasurementSeries().subscribe(allMeasurements => {
+      // get all measurements that are still used in pipelines
+      this.dataViewDataExplorerService.getAllPersistedDataStreams().subscribe(inUseMeasurements => {
+        console.log('Pipelines');
+        console.log(inUseMeasurements);
+        allMeasurements.forEach(measurement => {
+          const entry = new DataLakeConfigurationEntry();
+          entry.name = measurement.measureName;
 
-        this.snackBar.open(message, '', {
-          duration: 2000,
-          verticalPosition: 'top',
-          horizontalPosition: 'right'
+          inUseMeasurements.forEach(inUseMeasurement => {
+            if (inUseMeasurement.measureName === measurement.measureName) {
+              entry.pipelines.push(inUseMeasurement.pipelineName);
+              entry.remove = false;
+            }
+          });
+
+          // get the amount of events from the database
+          this.datalakeRestService.getData(
+            measurement.measureName,
+            this.buildQ(measurement.eventSchema.eventProperties[0].label.toLocaleLowerCase())).subscribe(res => {
+            entry.events = res.rows[0][1];
+          });
+
+          this.availableMeasurements.push(entry);
+        });
+
+        this.dataSource = new MatTableDataSource(this.availableMeasurements);
+        setTimeout(() => {
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
         });
       });
+      // this.availableMeasurements = response;
+    });
+  }
+
+  cleanDatalakeIndex(measurementIndex: string) {
+    // TODO give user confirmation
+    this.datalakeRestService.removeData(measurementIndex);
+  }
+
+  deleteDatalakeIndex(measurmentIndex: string) {
+    // TODO give user confirmation
+    this.datalakeRestService.dropSingleMeasurementSeries(measurmentIndex);
+  }
+
+  private buildQ(column: string): DatalakeQueryParameters {
+    return DatalakeQueryParameterBuilder.create(0, new Date().getTime())
+      .withColumnFilter([column])
+      .withAggregationFunction('COUNT')
+      .build();
   }
 
 }

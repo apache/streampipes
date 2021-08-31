@@ -16,33 +16,20 @@
  *
  */
 
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  QueryList,
-  SimpleChanges,
-  ViewChildren
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, QueryList, SimpleChanges, ViewChildren } from '@angular/core';
 import { GridsterItemComponent, GridType } from 'angular-gridster2';
 import { GridsterInfo } from '../../../dashboard/models/gridster-info.model';
-import { IDataViewDashboardConfig, } from '../../models/dataview-dashboard.model';
-import { DataViewDataExplorerService } from '../../services/data-view-data-explorer.service';
+import { IDataViewDashboardConfig } from '../../models/dataview-dashboard.model';
+import { DataViewDataExplorerService } from '../../../platform-services/apis/data-view-data-explorer.service';
 import { ResizeService } from '../../services/resize.service';
-import {
-  DataExplorerWidgetModel,
-  DataLakeMeasure
-} from '../../../core-model/gen/streampipes-model';
+import { DataExplorerWidgetModel, DataLakeMeasure } from '../../../core-model/gen/streampipes-model';
 import { Tuple2 } from '../../../core-model/base/Tuple2';
-import { Dashboard, DashboardItem, TimeSettings } from '../../../dashboard/models/dashboard.model';
+import { Dashboard, TimeSettings } from '../../../dashboard/models/dashboard.model';
 
 @Component({
   selector: 'sp-data-explorer-dashboard-grid',
   templateUrl: './data-explorer-dashboard-grid.component.html',
-  styleUrls: ['./data-explorer-dashboard-grid.component.scss'],
+  styleUrls: ['./data-explorer-dashboard-grid.component.scss']
 })
 export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
 
@@ -77,7 +64,7 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.options = {
       disablePushOnDrag: true,
-      draggable: {enabled: this.editMode},
+      draggable: { enabled: this.editMode },
       gridType: GridType.VerticalFixed,
       minCols: 8,
       maxCols: 8,
@@ -86,7 +73,7 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
       fixedColWidth: 100,
       margin: 5,
       displayGrid: this.editMode ? 'always' : 'none',
-      resizable: {enabled: this.editMode},
+      resizable: { enabled: this.editMode },
       itemResizeCallback: ((item, itemComponent) => {
         this.resizeService.notify({
           gridsterItem: item,
@@ -125,7 +112,7 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
       this.dataViewDataExplorerService.getPersistedDataStream(response.pipelineId, response.measureName).subscribe(ps => {
         this.dataLakeMeasures.set(widgetId, ps);
         if (setCurrentlyConfigured) {
-          this.propagateWidgetSelection({a: this.configuredWidgets.get(widgetId), b: this.dataLakeMeasures.get(widgetId)});
+          this.propagateWidgetSelection({ a: this.configuredWidgets.get(widgetId), b: this.dataLakeMeasures.get(widgetId) });
         }
       });
     });

@@ -17,7 +17,7 @@
  */
 
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { DataViewDataExplorerService } from './services/data-view-data-explorer.service';
+import { DataViewDataExplorerService } from '../platform-services/apis/data-view-data-explorer.service';
 import { RefreshDashboardService } from './services/refresh-dashboard.service';
 import { DataExplorerDashboardPanelComponent } from './components/panel/data-explorer-dashboard-panel.component';
 import { Dashboard, TimeSettings } from '../dashboard/models/dashboard.model';
@@ -52,7 +52,7 @@ export class DataExplorerComponent implements OnInit {
 
   public ngOnInit() {
     this.route.queryParams.subscribe(params => {
-      this.routeParams = {startTime: params['startTime'], endTime: params['endTime'], dashboardId: params['dashboardId']};
+      this.routeParams = { startTime: params['startTime'], endTime: params['endTime'], dashboardId: params['dashboardId'] };
       this.getDashboards();
     });
     this.refreshDashboardService.refreshSubject.subscribe(currentDashboardId => {

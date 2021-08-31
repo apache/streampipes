@@ -29,11 +29,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
-import {
-  OWL_DATE_TIME_FORMATS,
-  OwlDateTimeModule,
-  OwlNativeDateTimeModule
-} from '@danielmoncada/angular-datetime-picker';
+import { OWL_DATE_TIME_FORMATS, OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { GridsterModule } from 'angular-gridster2';
 import { PlotlyViaWindowModule } from 'angular-plotly.js';
@@ -57,7 +53,7 @@ import { NoDataInDateRangeComponent } from './components/widgets/utils/no-data/n
 import { SelectPropertiesComponent } from './components/widgets/utils/select-properties/select-properties.component';
 import { DataExplorerComponent } from './data-explorer.component';
 import { DataExplorerEditDataViewDialogComponent } from './dialogs/edit-dashboard/data-explorer-edit-data-view-dialog.component';
-import { DataViewDataExplorerService } from './services/data-view-data-explorer.service';
+import { DataViewDataExplorerService } from '../platform-services/apis/data-view-data-explorer.service';
 import { RefreshDashboardService } from './services/refresh-dashboard.service';
 import { ResizeService } from './services/resize.service';
 import { GroupConfigurationComponent } from './components/widgets/utils/group-configuration/group-configuration.component';
@@ -89,11 +85,11 @@ export const MY_NATIVE_FORMATS = {
     minute: 'numeric',
     hour12: false
   },
-  datePickerInput: {year: 'numeric', month: 'numeric', day: 'numeric', hour12: false},
-  timePickerInput: {hour: 'numeric', minute: 'numeric', hour12: false},
-  monthYearLabel: {year: 'numeric', month: 'short', hour12: false},
-  dateA11yLabel: {year: 'numeric', month: 'long', day: 'numeric', hour12: false},
-  monthYearA11yLabel: {year: 'numeric', month: 'long', hour12: false}
+  datePickerInput: { year: 'numeric', month: 'numeric', day: 'numeric', hour12: false },
+  timePickerInput: { hour: 'numeric', minute: 'numeric', hour12: false },
+  monthYearLabel: { year: 'numeric', month: 'short', hour12: false },
+  dateA11yLabel: { year: 'numeric', month: 'long', day: 'numeric', hour12: false },
+  monthYearA11yLabel: { year: 'numeric', month: 'long', hour12: false }
 };
 
 
@@ -153,7 +149,7 @@ export const MY_NATIVE_FORMATS = {
     SelectPropertiesComponent,
     TableWidgetComponent,
     TableWidgetConfigComponent,
-    TimeRangeSelectorComponent,
+    TimeRangeSelectorComponent
   ],
   providers: [
     DatalakeRestService,
