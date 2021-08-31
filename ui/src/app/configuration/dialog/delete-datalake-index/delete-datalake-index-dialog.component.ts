@@ -30,6 +30,9 @@ export class DeleteDatalakeIndexComponent {
   @Input()
   measurementIndex: string;
 
+  @Input()
+  deleteDialog: boolean;
+
   isInProgress = false;
   currentStatus: any;
 
@@ -53,6 +56,7 @@ export class DeleteDatalakeIndexComponent {
     this.isInProgress = true;
     this.currentStatus = 'Deleting data...';
 
+    // this.datalakeRestService.dropSingleMeasurementSeries(measurmentIndex);
     this.datalakeRestService.dropSingleMeasurementSeries(this.measurementIndex).subscribe(data => {
       this.close(true);
     });

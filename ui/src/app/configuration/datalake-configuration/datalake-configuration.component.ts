@@ -78,7 +78,7 @@ export class DatalakeConfigurationComponent implements OnInit {
           this.datalakeRestService.getData(
             measurement.measureName,
             this.buildQ(measurement.eventSchema.eventProperties[0].label.toLocaleLowerCase())).subscribe(res => {
-            entry.events = res.rows[0][1];
+            res.rows !== null ? entry.events = res.rows[0][1] : entry.events = 0;
           });
 
           this.availableMeasurements.push(entry);
@@ -100,7 +100,8 @@ export class DatalakeConfigurationComponent implements OnInit {
       title: 'Truncate data',
       width: '70vw',
       data: {
-        'measurementIndex': measurementIndex
+        'measurementIndex': measurementIndex,
+        'deleteDialog': false
       }
     });
 
@@ -111,9 +112,22 @@ export class DatalakeConfigurationComponent implements OnInit {
     });
   }
 
-  deleteDatalakeIndex(measurmentIndex: string) {
-    // add user confirmation
-    this.datalakeRestService.dropSingleMeasurementSeries(measurmentIndex);
+  deleteDatalakeIndex(measurementIndex: string) {
+    const dialogRef: DialogRef<DeleteDatalakeIndexComponent> = this.dialogService.open(DeleteDatalakeIndexComponent, {
+      panelType: PanelType.STANDARD_PANEL,
+      title: 'Delete data',
+      width: '70vw',
+      data: {
+        'measurementIndex': measurementIndex,
+        'deleteDialog': true
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(data => {
+      if (data) {
+        this.loadAvailableMeasurements();
+      }
+    });
   }
 
   private buildQ(column: string): DatalakeQueryParameters {

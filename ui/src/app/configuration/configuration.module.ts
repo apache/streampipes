@@ -42,6 +42,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { DatalakeConfigurationComponent } from './datalake-configuration/datalake-configuration.component';
 import { DatalakeRestService } from '../core-services/datalake/datalake-rest.service';
 import { DeleteDatalakeIndexComponent } from './dialog/delete-datalake-index/delete-datalake-index-dialog.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   imports: [
@@ -50,6 +51,7 @@ import { DeleteDatalakeIndexComponent } from './dialog/delete-datalake-index/del
     FlexLayoutModule,
     MatGridListModule,
     MatButtonModule,
+    MatProgressSpinnerModule,
     MatIconModule,
     MatInputModule,
     MatCheckboxModule,

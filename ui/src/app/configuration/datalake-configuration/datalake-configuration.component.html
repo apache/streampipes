@@ -51,7 +51,7 @@
 
                 <ng-container matColumnDef="truncate">
                     <th mat-header-cell *matHeaderCellDef>Truncate</th>
-                    <td mat-cell *matCellDef="let measurement">
+                    <td mat-cell *matCellDef="let configurationEntry">
                         <div fxLayout="row">
                             <span fxFlex fxFlexOrder="3" fxLayout="row" fxLayoutAlign="center center">
                                     <button color="accent"
@@ -60,7 +60,7 @@
                                             matTooltip="Truncate all data from index"
                                             matTooltipPosition="above"
                                             data-cy="truncate-datalake-index"
-                                            (click)="cleanDatalakeIndex(measurement.name)">
+                                            (click)="cleanDatalakeIndex(configurationEntry.name)">
                                         <i class="material-icons">local_fire_department</i>
                                     </button>
                                 </span>
@@ -80,7 +80,7 @@
                                             data-cy="delete-datalake-index"
                                             matTooltipPosition="above"
                                             [disabled]="!configurationEntry.remove"
-                                            (click)="deleteDatalakeIndex(configurationEntry)">
+                                            (click)="deleteDatalakeIndex(configurationEntry.name)">
                                         <i class="material-icons">delete</i>
                                     </button>
                                 </span>

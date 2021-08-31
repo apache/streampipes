@@ -19,15 +19,30 @@
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
         <div *ngIf="!isInProgress" fxLayout="column">
-            <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
-                <b><h4>Do you really want to truncate the data in {{measurementIndex}}?</h4></b>
+            <div
+                    fxFlex="100"
+                    fxLayoutAlign="center center"
+                    fxLayout="column">
+                <b *ngIf="deleteDialog"><h4>Do you really want to delete the data index {{measurementIndex}}?</h4></b>
+                <b *ngIf="!deleteDialog"><h4>Do you really want to truncate the data in {{measurementIndex}}?</h4></b>
                 <b><h5>This operation cannot be undone.</h5></b>
             </div>
 
             <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
-                <button mat-button mat-raised-button color="accent"
+                <button mat-button
+                        mat-raised-button
+                        color="accent"
+                        *ngIf="!deleteDialog"
                         (click)="truncateData()"
                         data-cy="truncate-datalake-index">Truncate Data
+                </button>
+                <button
+                        mat-button
+                        mat-raised-button
+                        color="accent"
+                        *ngIf="deleteDialog"
+                        (click)="deleteData()"
+                        data-cy="truncate-datalake-index">Delete Data
                 </button>
             </div>
         </div>
