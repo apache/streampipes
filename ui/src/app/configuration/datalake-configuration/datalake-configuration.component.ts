@@ -17,7 +17,6 @@
  */
 
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { DatalakeRestService } from '../../platform-services/apis/datalake-rest.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { DataViewDataExplorerService } from '../../platform-services/apis/data-view-data-explorer.service';
@@ -26,6 +25,10 @@ import { DatalakeQueryParameters } from '../../core-services/datalake/DatalakeQu
 import { DatalakeQueryParameterBuilder } from '../../core-services/datalake/DatalakeQueryParameterBuilder';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { DialogRef } from '../../core-ui/dialog/base-dialog/dialog-ref';
+import { PanelType } from '../../core-ui/dialog/base-dialog/base-dialog.model';
+import { DialogService } from '../../core-ui/dialog/base-dialog/base-dialog.service';
+import { DeleteDatalakeIndexComponent } from '../dialog/delete-datalake-index/delete-datalake-index-dialog.component';
 
 @Component({
   selector: 'sp-datalake-configuration',
@@ -47,7 +50,7 @@ export class DatalakeConfigurationComponent implements OnInit {
     // protected dataLakeRestService: DatalakeRestService,
     private datalakeRestService: DatalakeRestService,
     private dataViewDataExplorerService: DataViewDataExplorerService,
-    private snackBar: MatSnackBar) {
+    private dialogService: DialogService) {
   }
 
   ngOnInit(): void {
@@ -55,12 +58,11 @@ export class DatalakeConfigurationComponent implements OnInit {
   }
 
   loadAvailableMeasurements() {
+    this.availableMeasurements = [];
     // get all available measurements that are stored in the data lake
     this.datalakeRestService.getAllMeasurementSeries().subscribe(allMeasurements => {
       // get all measurements that are still used in pipelines
       this.dataViewDataExplorerService.getAllPersistedDataStreams().subscribe(inUseMeasurements => {
-        console.log('Pipelines');
-        console.log(inUseMeasurements);
         allMeasurements.forEach(measurement => {
           const entry = new DataLakeConfigurationEntry();
           entry.name = measurement.measureName;
@@ -93,12 +95,24 @@ export class DatalakeConfigurationComponent implements OnInit {
   }
 
   cleanDatalakeIndex(measurementIndex: string) {
-    // TODO give user confirmation
-    this.datalakeRestService.removeData(measurementIndex);
+    const dialogRef: DialogRef<DeleteDatalakeIndexComponent> = this.dialogService.open(DeleteDatalakeIndexComponent, {
+      panelType: PanelType.STANDARD_PANEL,
+      title: 'Truncate data',
+      width: '70vw',
+      data: {
+        'measurementIndex': measurementIndex
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(data => {
+      if (data) {
+        this.loadAvailableMeasurements();
+      }
+    });
   }
 
   deleteDatalakeIndex(measurmentIndex: string) {
-    // TODO give user confirmation
+    // add user confirmation
     this.datalakeRestService.dropSingleMeasurementSeries(measurmentIndex);
   }
 

@@ -108,7 +108,7 @@ public class DataExplorerQueryV4 {
         if (this.params.containsKey(DataLakeManagementUtils.SELECT_FROM)) {
             queryElements.add(new SelectFromStatement((SelectFromStatementParams) this.params.get(DataLakeManagementUtils.SELECT_FROM)));
         } else {
-            queryElements.add(new DeleteFromStatement((DeleteFromStatementParams) this.params.get(DataLakeManagementUtils.SELECT_FROM)));
+            queryElements.add(new DeleteFromStatement((DeleteFromStatementParams) this.params.get(DataLakeManagementUtils.DELETE_FROM)));
         }
 
         if (this.params.containsKey(DataLakeManagementUtils.WHERE)) {

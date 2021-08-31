@@ -32,7 +32,6 @@
                     <th mat-header-cell mat-sort-header *matHeaderCellDef>Name</th>
                     <td mat-cell *matCellDef="let configurationEntry">
                         <h4 style="margin-bottom:0px;">{{configurationEntry.name}}</h4>
-                        <!--                        <h5>{{adapter.description != '' ? adapter.description : '-'}}</h5>-->
                     </td>
                 </ng-container>
 
@@ -55,9 +54,13 @@
                     <td mat-cell *matCellDef="let measurement">
                         <div fxLayout="row">
                             <span fxFlex fxFlexOrder="3" fxLayout="row" fxLayoutAlign="center center">
-                                    <button color="accent" mat-button mat-icon-button matTooltip="Delete adapter"
-                                            data-cy="delete" matTooltipPosition="above"
-                                            (click)="cleanDatalakeIndex(measurement)">
+                                    <button color="accent"
+                                            mat-button
+                                            mat-icon-button
+                                            matTooltip="Truncate all data from index"
+                                            matTooltipPosition="above"
+                                            data-cy="truncate-datalake-index"
+                                            (click)="cleanDatalakeIndex(measurement.name)">
                                         <i class="material-icons">local_fire_department</i>
                                     </button>
                                 </span>
@@ -73,8 +76,8 @@
                                     <button color="accent"
                                             mat-button
                                             mat-icon-button
-                                            matTooltip="Delete data lake index"
-                                            data-cy="delete"
+                                            matTooltip="Remove index from database"
+                                            data-cy="delete-datalake-index"
                                             matTooltipPosition="above"
                                             [disabled]="!configurationEntry.remove"
                                             (click)="deleteDatalakeIndex(configurationEntry)">

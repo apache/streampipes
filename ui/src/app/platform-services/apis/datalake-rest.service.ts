@@ -138,19 +138,10 @@ export class DatalakeRestService {
     return this.http.request(request);
   }
 
-  removeData(index: string, startDate?: number, endDate?: number) {
+  removeData(index: string) {
     const url = this.dataLakeUrl + '/measurements/' + index;
 
-    const queryParams: DatalakeQueryParameters = this.getQueryParameters(undefined, startDate, endDate, undefined,
-      undefined, undefined, undefined, undefined, undefined, undefined);
-
-    const request = new HttpRequest('DELETE', url, {
-      reportProgress: true,
-      responseType: 'text',
-      params: queryParams
-    });
-
-    return this.http.request(request);
+    return this.http.delete(url);
   }
 
   dropSingleMeasurementSeries(index: string) {
