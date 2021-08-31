@@ -205,6 +205,10 @@ public class DataLakeManagementV4 {
         return false;
     }
 
+    public DataResult deleteData(String measurementID) {
+        return this.deleteData(measurementID, null, null);
+    }
+
     public DataResult deleteData(String measurementID, Long startDate, Long endDate) {
         Map<String, QueryParamsV4> queryParts = DataLakeManagementUtils.getDeleteQueryParams(measurementID, startDate, endDate);
         return new DataExplorerQueryV4(queryParts).executeQuery();

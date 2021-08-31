@@ -20,6 +20,7 @@ package org.apache.streampipes.connect.container.master.general;
 
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.management.AdapterMasterManagement;
+import org.apache.streampipes.dataexplorer.DataLakeManagementV4;
 import org.apache.streampipes.manager.file.FileManager;
 import org.apache.streampipes.manager.pipeline.PipelineCacheManager;
 import org.apache.streampipes.manager.pipeline.PipelineCanvasMetadataCacheManager;
@@ -27,6 +28,7 @@ import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.manager.storage.UserManagementService;
 import org.apache.streampipes.model.client.file.FileMetadata;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,6 +84,17 @@ public class ResetManagement {
         List<FileMetadata> allFiles = FileManager.getAllFiles();
         allFiles.forEach(fileMetadata -> {
             FileManager.deleteFile(fileMetadata.getFileId());
+        });
+
+        // Remove all data in data lake
+        DataLakeManagementV4 dataLakeManagementV4 = new DataLakeManagementV4();
+        List<DataLakeMeasure> allMeasurements = dataLakeManagementV4.getAllMeasurements();
+        allMeasurements.forEach(measurement -> {
+            boolean isSuccessDataLake = dataLakeManagementV4.removeMeasurement(measurement.getMeasureName());
+
+            if (isSuccessDataLake) {
+                dataLakeManagementV4.removeEventProperty(measurement.getMeasureName());
+            }
         });
 
         logger.info("Resetting the system was completed");
