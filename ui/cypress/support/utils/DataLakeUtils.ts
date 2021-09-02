@@ -25,10 +25,10 @@ export class DataLakeUtils {
   public static checkResults(dataLakeIndex: string, fileRoute: string) {
 
     // Validate result in datalake
-    cy.request('GET', '/streampipes-backend/api/v3/users/' + UserUtils.testUserName + '/datalake/data/' + dataLakeIndex + '/download?format=csv',
+    cy.request('GET', '/streampipes-backend/api/v4/users/' + UserUtils.testUserName + '/datalake/measurements/' + dataLakeIndex + '/download?format=csv',
       { 'content-type': 'application/octet-stream' }).should((response) => {
-      const expectedResultString = response.body;
-      cy.readFile(fileRoute).then((actualResultString) => {
+      const actualResultString = response.body;
+      cy.readFile(fileRoute).then((expectedResultString) => {
         DataLakeUtils.resultEqual(actualResultString, expectedResultString);
       });
     });
@@ -41,11 +41,13 @@ export class DataLakeUtils {
   }
 
   private static parseCsv(csv: string) {
-    const result = [];
-    const index = CSV.readAll(csv, row => {
-      result.push(row);
-    });
+    return CSV.parse(csv, ';');
+    // const result = CSV.parse(csv, ';');
+    // const newResult = [];
+    // result.forEach(row => {
+    //   newResult.push(row);
+    // });
+    // return newResult;
 
-    return result;
   }
 }

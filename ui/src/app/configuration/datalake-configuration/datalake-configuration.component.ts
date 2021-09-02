@@ -77,7 +77,7 @@ export class DatalakeConfigurationComponent implements OnInit {
           // get the amount of events from the database
           this.datalakeRestService.getData(
             measurement.measureName,
-            this.buildQ(measurement.eventSchema.eventProperties[0].label.toLocaleLowerCase())).subscribe(res => {
+            this.buildQ(measurement.eventSchema.eventProperties[0].runtimeName.toLocaleLowerCase())).subscribe(res => {
             res.rows !== null ? entry.events = res.rows[0][1] : entry.events = 0;
           });
 

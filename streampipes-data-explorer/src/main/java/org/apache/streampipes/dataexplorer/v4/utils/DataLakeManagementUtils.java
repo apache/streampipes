@@ -57,7 +57,7 @@ public class DataLakeManagementUtils {
                     params.getAsLong(QP_START_DATE),
                     params.getAsLong(QP_END_DATE),
                     filterConditions));
-        } else {
+        } else if (filterConditions != null) {
             queryParts.put(WHERE, WhereStatementParams.from(measurementId, filterConditions));
         }
 

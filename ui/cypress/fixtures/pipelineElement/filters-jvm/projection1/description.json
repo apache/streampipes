@@ -1,6 +1,15 @@
 {
- "name": "projection",
- "config": [
-   {"type":  "checkbox", "selector": "timestamp", "value":  "check"}
- ]
+  "name": "projection",
+  "config": [
+    {
+      "type": "checkbox",
+      "selector": "timestamp",
+      "value": "check"
+    },
+    {
+      "type": "checkbox",
+      "selector": "a",
+      "value": "check"
+    }
+  ]
 }

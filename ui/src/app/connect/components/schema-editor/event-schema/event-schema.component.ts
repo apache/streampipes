@@ -16,15 +16,7 @@
  *
  */
 
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  Output,
-  SimpleChanges,
-  ViewChild
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { RestService } from '../../../services/rest.service';
 import { ITreeOptions, TreeComponent } from 'angular-tree-component';
 import { UUID } from 'angular2-uuid';
@@ -48,7 +40,8 @@ import { UserErrorMessage } from '../../../../core-model/base/UserErrorMessage';
 })
 export class EventSchemaComponent implements OnChanges {
 
-  constructor(private restService: RestService, private dataTypesService: DataTypesService) { }
+  constructor(private restService: RestService, private dataTypesService: DataTypesService) {
+  }
 
   @Input() adapterDescription: AdapterDescription;
   @Input() isEditable = true;
@@ -93,7 +86,7 @@ export class EventSchemaComponent implements OnChanges {
     allowDrop: (node, { parent, index }) => {
       return parent.data.eventProperties !== undefined && parent.parent !== null;
     },
-    displayField: 'runTimeName',
+    displayField: 'runTimeName'
   };
 
 
@@ -145,7 +138,7 @@ export class EventSchemaComponent implements OnChanges {
     nested['@class'] = 'org.apache.streampipes.model.schema.EventPropertyNested';
     nested.elementId = uuid;
     nested.eventProperties = [];
-    nested.domainProperties =  [];
+    nested.domainProperties = [];
     if (!eventProperty) {
       this.eventSchema.eventProperties.push(nested);
     } else {
@@ -177,7 +170,7 @@ export class EventSchemaComponent implements OnChanges {
     eventProperty.runtimeName = 'key_0';
     (eventProperty as any).staticValue = '';
     eventProperty.runtimeType = this.dataTypesService.getStringTypeUrl();
-    eventProperty.domainProperties =  [];
+    eventProperty.domainProperties = [];
 
     this.eventSchema.eventProperties.push(eventProperty);
     this.refreshTree();
@@ -193,7 +186,7 @@ export class EventSchemaComponent implements OnChanges {
     eventProperty.description = 'The current timestamp value';
     eventProperty.domainProperties = ['http://schema.org/DateTime'];
     eventProperty.propertyScope = 'HEADER_PROPERTY';
-    eventProperty.runtimeType = this.dataTypesService.getNumberTypeUrl();
+    eventProperty.runtimeType = 'http://www.w3.org/2001/XMLSchema#long';
 
     this.eventSchema.eventProperties.push(eventProperty);
     this.refreshTree();
@@ -204,7 +197,9 @@ export class EventSchemaComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    setTimeout(() => { this.refreshTree() }, 200);
+    setTimeout(() => {
+      this.refreshTree();
+    }, 200);
   }
 
 
@@ -224,7 +219,7 @@ export class EventSchemaComponent implements OnChanges {
 
     let hasTimestamp = false;
     eventSchema.eventProperties.forEach(p => {
-      if (p.domainProperties.indexOf('http://schema.org/DateTime') >  -1) {
+      if (p.domainProperties.indexOf('http://schema.org/DateTime') > -1) {
         hasTimestamp = true;
       }
     });
