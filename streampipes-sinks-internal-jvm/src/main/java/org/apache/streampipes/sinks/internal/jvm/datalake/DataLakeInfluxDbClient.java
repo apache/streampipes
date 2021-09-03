@@ -176,27 +176,32 @@ public class DataLakeInfluxDbClient {
         for (EventProperty ep : schema.getEventProperties()) {
             if (ep instanceof EventPropertyPrimitive) {
                 String runtimeName = ep.getRuntimeName();
-                String preparedRuntimeName = DataLake.prepareString(runtimeName);
-                PrimitiveField eventPropertyPrimitiveField = event.getFieldByRuntimeName(runtimeName).getAsPrimitive();
 
-                // store property as tag when he field is a dimension property
-                if (PropertyScope.DIMENSION_PROPERTY.equals(ep.getPropertyScope())) {
-                    p.tag(preparedRuntimeName, eventPropertyPrimitiveField.getAsString());
-                } else {
-                    // Store property according to property type
-                    String runtimeType = ((EventPropertyPrimitive) ep).getRuntimeType();
-                    if (XSD._integer.toString().equals(runtimeType)) {
-                        p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsInt());
-                    } else if (XSD._float.toString().equals(runtimeType)) {
-                        p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsFloat());
-                    } else if (XSD._double.toString().equals(runtimeType)) {
-                        p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsDouble());
-                    } else if (XSD._boolean.toString().equals(runtimeType)) {
-                        p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsBoolean());
-                    } else if (XSD._long.toString().equals(runtimeType)) {
-                        p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsLong());
+
+
+                if (!runtimeName.equals(timestampField.split("::")[1])) {
+                    String preparedRuntimeName = DataLake.prepareString(runtimeName);
+                    PrimitiveField eventPropertyPrimitiveField = event.getFieldByRuntimeName(runtimeName).getAsPrimitive();
+
+                    // store property as tag when he field is a dimension property
+                    if (PropertyScope.DIMENSION_PROPERTY.equals(ep.getPropertyScope())) {
+                        p.tag(preparedRuntimeName, eventPropertyPrimitiveField.getAsString());
                     } else {
-                        p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsString());
+                        // Store property according to property type
+                        String runtimeType = ((EventPropertyPrimitive) ep).getRuntimeType();
+                        if (XSD._integer.toString().equals(runtimeType)) {
+                            p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsInt());
+                        } else if (XSD._float.toString().equals(runtimeType)) {
+                            p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsFloat());
+                        } else if (XSD._double.toString().equals(runtimeType)) {
+                            p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsDouble());
+                        } else if (XSD._boolean.toString().equals(runtimeType)) {
+                            p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsBoolean());
+                        } else if (XSD._long.toString().equals(runtimeType)) {
+                            p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsLong());
+                        } else {
+                            p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsString());
+                        }
                     }
                 }
             }
