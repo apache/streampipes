@@ -172,6 +172,29 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   }
 
   /**
+   * Assigns a new code block parameter (without a specific language) which is required
+   * by the processing element.
+   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
+   *              user-friendly manner.
+   * @param defaultSkeleton The code skeleton that is used as a default value.
+   * @return this
+   */
+  public BU requiredCodeblock(Label label, String defaultSkeleton) {
+    return requiredCodeblock(label, CodeLanguage.None, defaultSkeleton);
+  }
+
+  /**
+   * Assigns a new code block parameter (without a specific language) which is required
+   * by the processing element.
+   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
+   *              user-friendly manner.
+   * @return this
+   */
+  public BU requiredCodeblock(Label label) {
+    return requiredCodeblock(label, CodeLanguage.None);
+  }
+
+  /**
    * Assigns a new text-based configuration parameter (a string) which is required by the pipeline
    * element.
    * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a

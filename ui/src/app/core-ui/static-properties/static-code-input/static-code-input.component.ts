@@ -16,17 +16,18 @@
  *
  */
 
-import {CodeInputStaticProperty} from "../../../core-model/gen/streampipes-model";
-import {AbstractValidatedStaticPropertyRenderer} from "../base/abstract-validated-static-property";
-import {AfterViewInit, Component, OnInit} from "@angular/core";
+import { CodeInputStaticProperty } from "../../../core-model/gen/streampipes-model";
+import { AbstractValidatedStaticPropertyRenderer } from "../base/abstract-validated-static-property";
+import { AfterViewInit, Component, OnInit } from "@angular/core";
 
 import 'codemirror/mode/javascript/javascript';
+import 'codemirror/mode/python/python';
 import 'codemirror/addon/edit/closebrackets';
 import 'codemirror/addon/hint/show-hint';
 import 'codemirror/addon/hint/javascript-hint';
 import 'codemirror/addon/lint/javascript-lint';
 import 'codemirror/addon/lint/lint';
-import {JSHINT} from 'jshint';
+import { JSHINT } from 'jshint';
 import * as CodeMirror from "codemirror";
 
 (<any>window).JSHINT = JSHINT;
@@ -58,9 +59,16 @@ export class StaticCodeInputComponent
   }
 
   ngOnInit() {
+    this.applyLanguage();
     if (!this.staticProperty.value || this.staticProperty.value === "") {
       this.staticProperty.value = this.staticProperty.codeTemplate;
     }
+  }
+
+  applyLanguage() {
+    this.staticProperty.language === 'None' ?
+        this.editorOptions.mode = '' : this.editorOptions.mode = this.staticProperty.language.toLowerCase();
+    console.log(this.editorOptions);
   }
 
   ngAfterViewInit() {
@@ -75,25 +83,27 @@ export class StaticCodeInputComponent
 
   resetCode() {
     this.staticProperty.value = this.staticProperty.codeTemplate;
-  };
+  }
 
   enableCodeHints() {
-    var jsHint = (CodeMirror as any).hint.javascript;
-    (CodeMirror as any).hint.javascript = (cm) => {
-      let cursor = cm.getCursor();
-      let token = cm.getTokenAt(cursor);
-      let inner = {from: cm.getCursor(), to: cm.getCursor(), list: []};
-      let previousCursor = {line: cursor.line, ch: (cursor.ch - 1), sticky: null}
-      let previousToken = cm.getTokenAt(previousCursor);
-      if (token.string === "." && previousToken.string === "event") {
-        this.eventSchemas[0].eventProperties.forEach(ep => {
-          inner.list.unshift(ep.runtimeName);
-        })
-      } else {
-        inner = jsHint(cm);
-      }
-      return inner;
-    };
+    if (this.editorOptions.mode === 'javascript') {
+      var jsHint = (CodeMirror as any).hint.javascript;
+      (CodeMirror as any).hint.javascript = (cm) => {
+        let cursor = cm.getCursor();
+        let token = cm.getTokenAt(cursor);
+        let inner = {from: cm.getCursor(), to: cm.getCursor(), list: []};
+        let previousCursor = {line: cursor.line, ch: (cursor.ch - 1), sticky: null}
+        let previousToken = cm.getTokenAt(previousCursor);
+        if (token.string === "." && previousToken.string === "event") {
+          this.eventSchemas[0].eventProperties.forEach(ep => {
+            inner.list.unshift(ep.runtimeName);
+          })
+        } else {
+          inner = jsHint(cm);
+        }
+        return inner;
+      };
+    }
   }
 
 

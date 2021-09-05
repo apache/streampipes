@@ -19,6 +19,10 @@
 package org.apache.streampipes.sdk.helpers;
 
 public enum CodeLanguage {
+  None("Write your custom logic here"),
+  Python("# Enter your python code here\n" +
+          "\n" +
+          "print('Hello, StreamPipes!')"),
   Javascript("function process(event) {\n" +
           "    // do processing here.\n" +
           "    // return processed event.\n" +
