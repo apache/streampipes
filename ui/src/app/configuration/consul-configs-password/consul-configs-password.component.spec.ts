@@ -16,104 +16,101 @@
  *
  */
 
-import {DebugElement} from '@angular/core';
+import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {ConsulConfigsPasswordComponent} from './consul-configs-password.component';
-import {ConfigurationService} from '../shared/configuration.service'
-import {CommonModule} from '@angular/common';
-import {FlexLayoutModule} from '@angular/flex-layout';
-import {
-    MatButtonModule,
-    MatCheckboxModule,
-    MatGridListModule,
-    MatIconModule,
-    MatInputModule,
-    MatTooltipModule
-} from '@angular/material';
-import {FormsModule} from '@angular/forms';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {By} from '@angular/platform-browser';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ConsulConfigsPasswordComponent } from './consul-configs-password.component';
+import { ConfigurationService } from '../shared/configuration.service';
+import { CommonModule } from '@angular/common';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { FormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { By } from '@angular/platform-browser';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
-describe('ConsulConfigsPasswordComponent', () =>{
+describe('ConsulConfigsPasswordComponent', () => {
 
-    let fixture:   ComponentFixture<ConsulConfigsPasswordComponent>;
+  let fixture: ComponentFixture<ConsulConfigsPasswordComponent>;
 
-    let configurationServiceStub: Partial<ConfigurationService>;
+  let configurationServiceStub: Partial<ConfigurationService>;
 
-    let component: ConsulConfigsPasswordComponent;
-    
-    let configurationServcie: ConfigurationService;
+  let component: ConsulConfigsPasswordComponent;
 
-    beforeEach(waitForAsync(() => {
-        
-        configurationServiceStub = {
-             
-            adjustConfigurationKey(consulKey) {         
-                var str1 = consulKey.replace(/SP/g,"");
-                str1 = str1.replace(/_/g," "); 
-                if(str1.startsWith(" ")){
-                    str1 = str1.slice(1,str1.length)
-                }
-                return str1 
+  let configurationServcie: ConfigurationService;
+
+  beforeEach(waitForAsync(() => {
+
+    configurationServiceStub = {
+
+      adjustConfigurationKey(consulKey) {
+        let str1 = consulKey.replace(/SP/g, '');
+        str1 = str1.replace(/_/g, ' ');
+        if (str1.startsWith(' ')) {
+          str1 = str1.slice(1, str1.length);
         }
+        return str1;
+      }
     };
 
-        TestBed.configureTestingModule({
-            imports: [
-                CommonModule,
-                BrowserAnimationsModule,
-                FlexLayoutModule,
-                MatGridListModule,
-                MatButtonModule,
-                MatIconModule,
-                MatInputModule,
-                MatCheckboxModule,
-                MatTooltipModule,
-                FormsModule,
-                HttpClientTestingModule
-            ],
-            declarations:
-             [ConsulConfigsPasswordComponent],
-            providers:
-            [{provide: ConfigurationService, useValue: configurationServiceStub}]
-        }).compileComponents();
+    TestBed.configureTestingModule({
+      imports: [
+        CommonModule,
+        BrowserAnimationsModule,
+        FlexLayoutModule,
+        MatGridListModule,
+        MatButtonModule,
+        MatIconModule,
+        MatInputModule,
+        MatCheckboxModule,
+        MatTooltipModule,
+        FormsModule,
+        HttpClientTestingModule
+      ],
+      declarations:
+        [ConsulConfigsPasswordComponent],
+      providers:
+        [{ provide: ConfigurationService, useValue: configurationServiceStub }]
+    }).compileComponents();
 
-         fixture = TestBed.createComponent(ConsulConfigsPasswordComponent)
+    fixture = TestBed.createComponent(ConsulConfigsPasswordComponent);
 
-        configurationServcie = fixture.debugElement.injector.get(ConfigurationService);
+    configurationServcie = fixture.debugElement.injector.get(ConfigurationService);
 
-        component = fixture.componentInstance;
+    component = fixture.componentInstance;
 
 
-    }));
+  }));
 
-    it(`should create`, waitForAsync(() => {
-          expect(component).toBeTruthy();
-      }));
-    
-      it('should show pw', waitForAsync(() => {
-          expect(component.password).toBe("*****");
-      }));
+  it(`should create`, waitForAsync(() => {
+    expect(component).toBeTruthy();
+  }));
 
-      it(`should click button`, waitForAsync(() => {
-            spyOn(component, 'changePw');
+  it('should show pw', waitForAsync(() => {
+    expect(component.password).toBe('*****');
+  }));
 
-            let input = fixture.debugElement.nativeElement.querySelector('input');
-            input.click();
-          
-            fixture.whenStable().then(() => {
-              expect(component.changePw).toHaveBeenCalled();
-              const bannerDe: DebugElement = fixture.debugElement
+  it(`should click button`, waitForAsync(() => {
+    spyOn(component, 'changePw');
 
-              const inputDe = bannerDe.query(By.css('input'));
-              const inputValue: HTMLElement = inputDe.nativeElement;
+    const input = fixture.debugElement.nativeElement.querySelector('input');
+    input.click();
 
-              expect(inputValue.textContent).toBe('')
-            })
-      }));
-   
+    fixture.whenStable().then(() => {
+      expect(component.changePw).toHaveBeenCalled();
+      const bannerDe: DebugElement = fixture.debugElement;
 
-    
-})
+      const inputDe = bannerDe.query(By.css('input'));
+      const inputValue: HTMLElement = inputDe.nativeElement;
+
+      expect(inputValue.textContent).toBe('');
+    });
+  }));
+
+
+});

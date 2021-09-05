@@ -17,45 +17,44 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { DataViewDataExplorerService } from '../../services/data-view-data-explorer.service';
+import { DataViewDataExplorerService } from '../../../platform-services/apis/data-view-data-explorer.service';
 import { Dashboard } from '../../../dashboard/models/dashboard.model';
 import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
 
 @Component({
-    selector: 'sp-data-explorer-edit-data-view-dialog-component',
-    templateUrl: './data-explorer-edit-data-view-dialog.component.html',
-    styleUrls: ['./data-explorer-edit-data-view-dialog.component.scss']
+  selector: 'sp-data-explorer-edit-data-view-dialog-component',
+  templateUrl: './data-explorer-edit-data-view-dialog.component.html',
+  styleUrls: ['./data-explorer-edit-data-view-dialog.component.scss']
 })
 export class DataExplorerEditDataViewDialogComponent implements OnInit {
 
-    @Input() createMode: boolean;
-    @Input() dashboard: Dashboard;
+  @Input() createMode: boolean;
+  @Input() dashboard: Dashboard;
 
-    constructor(
-        private dialogRef: DialogRef<DataExplorerEditDataViewDialogComponent>,
-        private dashboardService: DataViewDataExplorerService) {
-    }
+  constructor(
+    private dialogRef: DialogRef<DataExplorerEditDataViewDialogComponent>,
+    private dashboardService: DataViewDataExplorerService) {
+  }
 
-    ngOnInit() {
+  ngOnInit() {
 
-    }
+  }
 
-    onCancel(): void {
+  onCancel(): void {
+    this.dialogRef.close();
+  }
+
+  onSave(): void {
+    if (this.createMode) {
+      this.dashboardService.saveDataView(this.dashboard).subscribe(() => {
         this.dialogRef.close();
+      });
+    } else {
+      this.dashboardService.updateDashboard(this.dashboard).subscribe(() => {
+        this.dialogRef.close();
+      });
     }
-
-    onSave(): void {
-        if (this.createMode) {
-            this.dashboardService.saveDataView(this.dashboard).subscribe(() => {
-                this.dialogRef.close();
-            });
-        } else {
-            this.dashboardService.updateDashboard(this.dashboard).subscribe( () => {
-                this.dialogRef.close();
-            });
-        }
-    }
-
+  }
 
 
 }

@@ -45,6 +45,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.*;
 
@@ -67,6 +68,7 @@ public class DataLakeManagementV4 {
             params.update(QP_LIMIT, 500000);
         }
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         DataResult dataResult;
         //JSON
@@ -203,6 +205,10 @@ public class DataLakeManagementV4 {
             }
         }
         return false;
+    }
+
+    public DataResult deleteData(String measurementID) {
+        return this.deleteData(measurementID, null, null);
     }
 
     public DataResult deleteData(String measurementID, Long startDate, Long endDate) {

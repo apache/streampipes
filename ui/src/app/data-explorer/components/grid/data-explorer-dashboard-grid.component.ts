@@ -30,13 +30,13 @@ import {
 import { GridsterItemComponent, GridType } from 'angular-gridster2';
 import { GridsterInfo } from '../../../dashboard/models/gridster-info.model';
 import { IDataViewDashboardConfig, } from '../../models/dataview-dashboard.model';
-import { DataViewDataExplorerService } from '../../services/data-view-data-explorer.service';
 import { ResizeService } from '../../services/resize.service';
 import {
   DataExplorerWidgetModel,
   DataLakeMeasure
 } from '../../../core-model/gen/streampipes-model';
 import { Dashboard, TimeSettings } from '../../../dashboard/models/dashboard.model';
+import { DataViewDataExplorerService } from '../../../platform-services/apis/data-view-data-explorer.service';
 
 @Component({
   selector: 'sp-data-explorer-dashboard-grid',
@@ -76,7 +76,7 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.options = {
       disablePushOnDrag: true,
-      draggable: {enabled: this.editMode},
+      draggable: { enabled: this.editMode },
       gridType: GridType.VerticalFixed,
       minCols: 8,
       maxCols: 8,
@@ -85,7 +85,7 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
       fixedColWidth: 100,
       margin: 5,
       displayGrid: this.editMode ? 'always' : 'none',
-      resizable: {enabled: this.editMode},
+      resizable: { enabled: this.editMode },
       itemResizeCallback: ((item, itemComponent) => {
         this.resizeService.notify({
           gridsterItem: item,

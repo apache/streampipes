@@ -41,38 +41,42 @@ import { MessagingConfigurationComponent } from './messaging-configuration/messa
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { DatalakeConfigurationComponent } from './datalake-configuration/datalake-configuration.component';
 import { DatalakeRestService } from '../core-services/datalake/datalake-rest.service';
+import { DeleteDatalakeIndexComponent } from './dialog/delete-datalake-index/delete-datalake-index-dialog.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        CustomMaterialModule,
-        FlexLayoutModule,
-        MatGridListModule,
-        MatButtonModule,
-        MatIconModule,
-        MatInputModule,
-        MatCheckboxModule,
-        MatTooltipModule,
-        FormsModule,
-        DragDropModule
-    ],
-    declarations: [
-        ConfigurationComponent,
-        ConsulServiceComponent,
-        ConsulConfigsComponent,
-        ConsulConfigsTextComponent,
-        ConsulConfigsPasswordComponent,
-        ConsulConfigsBooleanComponent,
-        ConsulConfigsNumberComponent,
-        PipelineElementConfigurationComponent,
-        MessagingConfigurationComponent,
-        DatalakeConfigurationComponent
-    ],
-    providers: [
-      ConfigurationService,
-      DatalakeRestService
-    ],
-    entryComponents: [ConfigurationComponent],
+  imports: [
+    CommonModule,
+    CustomMaterialModule,
+    FlexLayoutModule,
+    MatGridListModule,
+    MatButtonModule,
+    MatProgressSpinnerModule,
+    MatIconModule,
+    MatInputModule,
+    MatCheckboxModule,
+    MatTooltipModule,
+    FormsModule,
+    DragDropModule
+  ],
+  declarations: [
+    ConfigurationComponent,
+    ConsulServiceComponent,
+    ConsulConfigsComponent,
+    ConsulConfigsTextComponent,
+    ConsulConfigsPasswordComponent,
+    ConsulConfigsBooleanComponent,
+    ConsulConfigsNumberComponent,
+    DeleteDatalakeIndexComponent,
+    PipelineElementConfigurationComponent,
+    MessagingConfigurationComponent,
+    DatalakeConfigurationComponent
+  ],
+  providers: [
+    ConfigurationService,
+    DatalakeRestService
+  ],
+  entryComponents: [ConfigurationComponent]
 })
 export class ConfigurationModule {
 }

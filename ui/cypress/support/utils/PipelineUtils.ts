@@ -70,7 +70,7 @@ export class PipelineUtils {
     cy.dataCy('sp-element-configuration-save').click();
 
     // Select sink
-    cy.dataCy('sp-possible-elements-' + pipelineInput.processingElement.name, { timeout : 10000 }).click();
+    cy.dataCy('sp-possible-elements-' + pipelineInput.processingElement.name, { timeout: 10000 }).click();
     cy.dataCy('sp-compatible-elements-' + pipelineInput.dataSink.name).click();
 
     StaticPropertyUtils.input(pipelineInput.dataSink.config);
@@ -94,7 +94,7 @@ export class PipelineUtils {
     // Delete pipeline
     cy.visit('#/pipelines');
     cy.dataCy('delete').should('have.length', 1);
-    cy.dataCy('delete').click();
+    cy.dataCy('delete').click({ force: true });
     cy.dataCy('sp-pipeline-stop-and-delete').click();
     cy.dataCy('delete', { timeout: 10000 }).should('have.length', 0);
   }

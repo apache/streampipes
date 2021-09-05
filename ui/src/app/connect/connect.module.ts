@@ -58,7 +58,7 @@ import { TimestampPipe } from './filter/timestamp.pipe';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSliderModule } from '@angular/material/slider';
 import { TreeModule } from 'angular-tree-component';
-import { xsService } from '../NS/XS.service';
+import { XsService } from '../NS/xs.service';
 import { EditDataTypeComponent } from './dialog/edit-event-property/components/edit-data-type/edit-data-type.component';
 import { EditTimestampPropertyComponent } from './dialog/edit-event-property/components/edit-timestamp-property/edit-timestamp-property.component';
 import { EditUnitTransformationComponent } from './dialog/edit-event-property/components/edit-unit-transformation/edit-unit-transformation.component';
@@ -82,76 +82,77 @@ import { StartAdapterConfigurationComponent } from './components/start-adapter-c
 import { DeleteAdapterDialogComponent } from './dialog/delete-adapter-dialog/delete-adapter-dialog.component';
 
 @NgModule({
-    imports: [
-        CoreUiModule,
-        FormsModule,
-        ReactiveFormsModule,
-        CommonModule,
-        FlexLayoutModule,
-        MatGridListModule,
-        CustomMaterialModule,
-        DragulaModule,
-        MatProgressSpinnerModule,
-        MatChipsModule,
-        MatInputModule,
-        MatFormFieldModule,
-        MatSliderModule,
-        TreeModule.forRoot(),
-    ],
-    exports: [
-        PipelineElementRuntimeInfoComponent
-    ],
-    declarations: [
-        AdapterDescriptionComponent,
-        AdapterExportDialog,
-        AdapterStartedDialog,
-        AdapterUploadDialog,
-        ConnectComponent,
-        DataMarketplaceComponent,
-        DeleteAdapterDialogComponent,
-        EventSchemaComponent,
-        EditEventPropertyPrimitiveComponent,
-        EditEventPropertyComponent,
-        EventPropertyRowComponent,
-        EditEventPropertyListComponent,
-        EditUnitTransformationComponent,
-        EditTimestampPropertyComponent,
-        EditDataTypeComponent,
-        EventSchemaPreviewComponent,
-        ExistingAdaptersComponent,
-        FilterPipe,
-        FormatItemComponent,
-        FormatListComponent,
-        NewAdapterComponent,
-        PipelineElementRuntimeInfoComponent,
-        TimestampPipe,
-        EditCorrectionValueComponent,
-        FormatConfigurationComponent,
-        GenericAdapterConfigurationComponent,
-        SpecificAdapterConfigurationComponent,
-        ConfigurationGroupComponent,
-        ErrorMessageComponent,
-        LoadingMessageComponent,
-        SchemaEditorHeaderComponent,
-        StartAdapterConfigurationComponent
-    ],
-    providers: [
-        RestService,
-        ConnectService,
-        DataTypesService,
-        TransformationRuleService,
-        StaticPropertyUtilService,
-        DataMarketplaceService,
-        IconService,
-        UnitProviderService,
-        TimestampPipe,
-        xsService,
-    ],
-    entryComponents: [
-        ConnectComponent,
-        AdapterStartedDialog,
-        AdapterExportDialog,
-        AdapterUploadDialog,
-        EditEventPropertyComponent],
+  imports: [
+    CoreUiModule,
+    FormsModule,
+    ReactiveFormsModule,
+    CommonModule,
+    FlexLayoutModule,
+    MatGridListModule,
+    CustomMaterialModule,
+    DragulaModule,
+    MatProgressSpinnerModule,
+    MatChipsModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatSliderModule,
+    TreeModule.forRoot()
+  ],
+  exports: [
+    PipelineElementRuntimeInfoComponent
+  ],
+  declarations: [
+    AdapterDescriptionComponent,
+    AdapterExportDialog,
+    AdapterStartedDialog,
+    AdapterUploadDialog,
+    ConnectComponent,
+    DataMarketplaceComponent,
+    DeleteAdapterDialogComponent,
+    EventSchemaComponent,
+    EditEventPropertyPrimitiveComponent,
+    EditEventPropertyComponent,
+    EventPropertyRowComponent,
+    EditEventPropertyListComponent,
+    EditUnitTransformationComponent,
+    EditTimestampPropertyComponent,
+    EditDataTypeComponent,
+    EventSchemaPreviewComponent,
+    ExistingAdaptersComponent,
+    FilterPipe,
+    FormatItemComponent,
+    FormatListComponent,
+    NewAdapterComponent,
+    PipelineElementRuntimeInfoComponent,
+    TimestampPipe,
+    EditCorrectionValueComponent,
+    FormatConfigurationComponent,
+    GenericAdapterConfigurationComponent,
+    SpecificAdapterConfigurationComponent,
+    ConfigurationGroupComponent,
+    ErrorMessageComponent,
+    LoadingMessageComponent,
+    SchemaEditorHeaderComponent,
+    StartAdapterConfigurationComponent
+  ],
+  providers: [
+    RestService,
+    ConnectService,
+    DataTypesService,
+    TransformationRuleService,
+    StaticPropertyUtilService,
+    DataMarketplaceService,
+    IconService,
+    UnitProviderService,
+    TimestampPipe,
+    XsService
+  ],
+  entryComponents: [
+    ConnectComponent,
+    AdapterStartedDialog,
+    AdapterExportDialog,
+    AdapterUploadDialog,
+    EditEventPropertyComponent]
 })
-export class ConnectModule { }
+export class ConnectModule {
+}

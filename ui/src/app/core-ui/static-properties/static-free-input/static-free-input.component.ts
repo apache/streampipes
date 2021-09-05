@@ -16,15 +16,15 @@
  *
  */
 
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {ValidatorFn, Validators} from '@angular/forms';
-import {StaticPropertyUtilService} from '../static-property-util.service';
-import {ConfigurationInfo} from "../../../connect/model/ConfigurationInfo";
-import {FreeTextStaticProperty} from "../../../core-model/gen/streampipes-model";
-import {xsService} from "../../../NS/XS.service";
-import {ValidateNumber, ValidateString, ValidateUrl} from "../input.validator";
-import {AbstractValidatedStaticPropertyRenderer} from "../base/abstract-validated-static-property";
-import {QuillEditorComponent} from "ngx-quill";
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ValidatorFn, Validators } from '@angular/forms';
+import { StaticPropertyUtilService } from '../static-property-util.service';
+import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
+import { FreeTextStaticProperty } from '../../../core-model/gen/streampipes-model';
+import { XsService } from '../../../NS/xs.service';
+import { ValidateNumber, ValidateString, ValidateUrl } from '../input.validator';
+import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
+import { QuillEditorComponent } from 'ngx-quill';
 
 
 @Component({
@@ -33,28 +33,28 @@ import {QuillEditorComponent} from "ngx-quill";
   styleUrls: ['./static-free-input.component.scss']
 })
 export class StaticFreeInputComponent
-    extends AbstractValidatedStaticPropertyRenderer<FreeTextStaticProperty> implements OnInit {
+  extends AbstractValidatedStaticPropertyRenderer<FreeTextStaticProperty> implements OnInit {
 
 
   quillModules: any = {
     toolbar: [['bold', 'italic', 'underline', 'strike'],
-      [{'header': 1}, {'header': 2}],
-      [{'size': ['small', false, 'large', 'huge']}],
-      [{'header': [1, 2, 3, 4, 5, 6, false]}],
-      [{ 'color': [] }, { 'background': [] }],
+      [{ 'header': 1 }, { 'header': 2 }],
+      [{ 'size': ['small', false, 'large', 'huge'] }],
+      [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+      [{ 'color': [] }, { 'background': [] }]
     ]
   };
 
   quillModulesFontFormat: any = {
-    toolbar: [['bold', 'italic', 'underline', 'strike'],
+    toolbar: [['bold', 'italic', 'underline', 'strike']
     ]
   };
 
-  @ViewChild('textEditor', {static: false})
+  @ViewChild('textEditor', { static: false })
   quillEditorComponent: QuillEditorComponent;
 
   constructor(public staticPropertyUtil: StaticPropertyUtilService,
-              private xsService: xsService) {
+              private xsService: XsService) {
     super();
   }
 
@@ -68,22 +68,22 @@ export class StaticFreeInputComponent
     let validators: ValidatorFn[] = [];
     validators.push(Validators.required);
     if (this.xsService.isNumber(this.staticProperty.requiredDatatype) ||
-        this.xsService.isNumber(this.staticProperty.requiredDomainProperty)) {
+      this.xsService.isNumber(this.staticProperty.requiredDomainProperty)) {
       validators.push(ValidateNumber);
-      this.errorMessage = "The value should be a number";
+      this.errorMessage = 'The value should be a number';
     } else if (this.staticProperty.requiredDomainProperty === this.xsService.SO_URL) {
       validators.push(ValidateUrl);
-      this.errorMessage = "Please enter a valid URL";
+      this.errorMessage = 'Please enter a valid URL';
     } else if (this.staticProperty.requiredDatatype === this.xsService.XS_STRING1) {
       validators.push(ValidateString);
-      this.errorMessage = "Please enter a valid String";
+      this.errorMessage = 'Please enter a valid String';
     }
 
     return validators;
   }
 
   emitUpdate() {
-    let valid = (this.staticProperty.value != undefined && this.staticProperty.value !== "");
+    let valid = (this.staticProperty.value != undefined && this.staticProperty.value !== '');
     this.updateEmitter.emit(new ConfigurationInfo(this.staticProperty.internalName, valid));
   }
 
@@ -97,12 +97,12 @@ export class StaticFreeInputComponent
   }
 
   applyPlaceholder(runtimeName) {
-    let valueToInsert = "#" + runtimeName + "#";
+    let valueToInsert = '#' + runtimeName + '#';
     if (this.quillEditorComponent) {
       let currentIndex = this.quillEditorComponent.quillEditor.selection.savedRange.index;
-      this.quillEditorComponent.quillEditor.insertText(currentIndex, valueToInsert, "user");
+      this.quillEditorComponent.quillEditor.insertText(currentIndex, valueToInsert, 'user');
     } else {
-      this.parentForm.controls[this.fieldName].setValue(this.parentForm.controls[this.fieldName].value + " " +valueToInsert);
+      this.parentForm.controls[this.fieldName].setValue(this.parentForm.controls[this.fieldName].value + ' ' + valueToInsert);
     }
   }
 

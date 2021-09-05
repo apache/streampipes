@@ -20,13 +20,13 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GridsterItemComponent } from 'angular-gridster2';
 import { DateRange } from '../../../core-model/datalake/DateRange';
-import { DataViewDataExplorerService } from '../../services/data-view-data-explorer.service';
 import {
   DataExplorerWidgetModel,
   DataLakeMeasure
 } from '../../../core-model/gen/streampipes-model';
 import { DataDownloadDialog } from '../datadownloadDialog/dataDownload.dialog';
 import { DashboardItem, TimeSettings } from '../../../dashboard/models/dashboard.model';
+import { DataViewDataExplorerService } from '../../../platform-services/apis/data-view-data-explorer.service';
 
 @Component({
   selector: 'sp-data-explorer-dashboard-widget',

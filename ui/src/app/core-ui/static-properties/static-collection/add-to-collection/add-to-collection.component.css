@@ -15,27 +15,3 @@
  * limitations under the License.
  *
  */
-
-import { ProcessingElementTestUtils } from '../../support/utils/ProcessingElementTestUtils';
-import { ProcessorTest } from '../../support/model/ProcessorTest';
-
-const allTests = Cypress.env('processingElements');
-
-allTests.forEach(test => {
-  const testName = 'projection1';
-
-  const processorTest = test as ProcessorTest;
-
-  if (processorTest.name === testName) {
-
-    describe('Test Processor ' + test.dir, () => {
-      before('Setup Test', () => {
-        cy.initStreamPipesTest();
-      });
-
-      it('Initialize Test', () => {
-        ProcessingElementTestUtils.testElement(processorTest);
-      });
-    });
-  }
-});

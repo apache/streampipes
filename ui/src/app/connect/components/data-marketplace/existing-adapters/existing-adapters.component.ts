@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { AdapterDescriptionUnion } from '../../../../core-model/gen/streampipes-model';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConnectService } from '../../../services/connect.service';
@@ -25,11 +25,13 @@ import { DialogRef } from '../../../../core-ui/dialog/base-dialog/dialog-ref';
 import { PanelType } from '../../../../core-ui/dialog/base-dialog/base-dialog.model';
 import { DialogService } from '../../../../core-ui/dialog/base-dialog/base-dialog.service';
 import { DeleteAdapterDialogComponent } from '../../../dialog/delete-adapter-dialog/delete-adapter-dialog.component';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'sp-existing-adapters',
   templateUrl: './existing-adapters.component.html',
-  styleUrls: ['./existing-adapters.component.scss'],
+  styleUrls: ['./existing-adapters.component.scss']
 })
 export class ExistingAdaptersComponent implements OnInit {
 
@@ -44,6 +46,10 @@ export class ExistingAdaptersComponent implements OnInit {
   @Output()
   createTemplateEmitter: EventEmitter<AdapterDescriptionUnion> = new EventEmitter<AdapterDescriptionUnion>();
 
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  pageSize = 1;
+  @ViewChild(MatSort) sort: MatSort;
+
   displayedColumns: string[] = ['start', 'name', 'adapterBase', 'adapterType', 'lastModified', 'action'];
 
   dataSource: MatTableDataSource<AdapterDescriptionUnion>;
@@ -56,6 +62,10 @@ export class ExistingAdaptersComponent implements OnInit {
 
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource(this.existingAdapters);
+    setTimeout(() => {
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    });
   }
 
   startAdapter(adapter: AdapterDescriptionUnion) {
@@ -84,7 +94,7 @@ export class ExistingAdaptersComponent implements OnInit {
       title: 'Delete Adapter',
       width: '70vw',
       data: {
-        'adapter': adapter,
+        'adapter': adapter
       }
     });
 

@@ -16,24 +16,25 @@
  *
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {StreampipesPeContainer} from "../shared/streampipes-pe-container.model";
-import {xsService} from '../../NS/XS.service'
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { StreampipesPeContainer } from '../shared/streampipes-pe-container.model';
+import { XsService } from '../../NS/xs.service';
 
 @Component({
-    selector: 'consul-configs',
-    templateUrl: './consul-configs.component.html',
-    styleUrls: ['./consul-configs.component.css'],
-    providers: [ xsService ]
+  selector: 'consul-configs',
+  templateUrl: './consul-configs.component.html',
+  styleUrls: ['./consul-configs.component.css'],
+  providers: [XsService]
 })
 export class ConsulConfigsComponent {
-    @Input() consulService: StreampipesPeContainer;
-    @Output() updateConsulService: EventEmitter<StreampipesPeContainer> = new EventEmitter<StreampipesPeContainer>();
-    constructor(private service: xsService) {    
-    }
+  @Input() consulService: StreampipesPeContainer;
+  @Output() updateConsulService: EventEmitter<StreampipesPeContainer> = new EventEmitter<StreampipesPeContainer>();
 
-    updateConfiguration(): void {
-        this.updateConsulService.emit(this.consulService);
-    }
+  constructor(private service: XsService) {
+  }
+
+  updateConfiguration(): void {
+    this.updateConsulService.emit(this.consulService);
+  }
 
 }

@@ -17,11 +17,8 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import {
-  DataExplorerWidgetModel,
-  DataLakeMeasure
-} from '../../../../core-model/gen/streampipes-model';
-import { DataViewDataExplorerService } from '../../../services/data-view-data-explorer.service';
+import { DataExplorerWidgetModel, DataLakeMeasure } from '../../../../core-model/gen/streampipes-model';
+import { DataViewDataExplorerService } from '../../../../platform-services/apis/data-view-data-explorer.service';
 import { MatSelectChange } from '@angular/material/select';
 import { Tuple2 } from '../../../../core-model/base/Tuple2';
 import { DatalakeRestService } from '../../../../platform-services/apis/datalake-rest.service';

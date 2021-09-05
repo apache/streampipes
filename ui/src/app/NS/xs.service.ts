@@ -16,26 +16,23 @@
  *
  */
 
-import { ProcessingElementTestUtils } from '../../support/utils/ProcessingElementTestUtils';
-import { ProcessorTest } from '../../support/model/ProcessorTest';
+import { Injectable } from '@angular/core';
 
-const allTests = Cypress.env('processingElements');
+@Injectable()
+export class XsService {
 
-allTests.forEach(test => {
-  const testName = 'projection1';
+  XS_STRING = 'xs:string';
+  XS_INTEGER = 'http://www.w3.org/2001/XMLSchema#integer';
+  XS_DOUBLE = 'http://www.w3.org/2001/XMLSchema#double';
+  XS_BOOLEAN = 'http://www.w3.org/2001/XMLSchema#boolean';
+  XS_NUMBER = 'http://www.w3.org/2001/XMLSchema#number';
+  XS_STRING1 = 'http://www.w3.org/2001/XMLSchema#string';
+  SO_URL = 'https://schema.org/URL';
 
-  const processorTest = test as ProcessorTest;
-
-  if (processorTest.name === testName) {
-
-    describe('Test Processor ' + test.dir, () => {
-      before('Setup Test', () => {
-        cy.initStreamPipesTest();
-      });
-
-      it('Initialize Test', () => {
-        ProcessingElementTestUtils.testElement(processorTest);
-      });
-    });
+  isNumber(datatype: string): boolean {
+    return datatype === this.XS_DOUBLE ||
+      datatype === this.XS_INTEGER ||
+      datatype === this.XS_NUMBER;
   }
-});
+
+}

@@ -16,19 +16,19 @@
  *
  */
 
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {AbstractStaticPropertyRenderer} from "../base/abstract-static-property";
-import {OneOfStaticProperty} from "../../../core-model/gen/streampipes-model";
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { AbstractStaticPropertyRenderer } from '../base/abstract-static-property';
+import { OneOfStaticProperty } from '../../../core-model/gen/streampipes-model';
 
 @Component({
-  selector: 'app-static-one-of-input',
+  selector: 'sp-static-one-of-input',
   templateUrl: './static-one-of-input.component.html',
   styleUrls: ['./static-one-of-input.component.css']
 })
 export class StaticOneOfInputComponent extends AbstractStaticPropertyRenderer<OneOfStaticProperty> implements OnInit {
 
 
-  @Output() inputEmitter: EventEmitter<Boolean> = new EventEmitter<Boolean>();
+  @Output() inputEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   selectedOption: string;
 
@@ -37,27 +37,27 @@ export class StaticOneOfInputComponent extends AbstractStaticPropertyRenderer<On
   }
 
   ngOnInit() {
-      if (this.noneSelected()) {
-          if (this.staticProperty.options.length > 0) {
-              this.staticProperty.options[0].selected = true;
-              this.selectedOption = this.staticProperty.options[0].elementId;
-          }
-      } else {
-          this.selectedOption = this.staticProperty.options.find(option => option.selected).elementId;
+    if (this.noneSelected()) {
+      if (this.staticProperty.options.length > 0) {
+        this.staticProperty.options[0].selected = true;
+        this.selectedOption = this.staticProperty.options[0].elementId;
       }
-      this.inputEmitter.emit(true);
+    } else {
+      this.selectedOption = this.staticProperty.options.find(option => option.selected).elementId;
+    }
+    this.inputEmitter.emit(true);
   }
 
   noneSelected(): boolean {
-      return this.staticProperty.options.every(o => !(o.selected));
+    return this.staticProperty.options.every(o => !(o.selected));
   }
 
   select(id) {
-      this.selectedOption = this.staticProperty.options.find(option => option.elementId === id).elementId;
-      for (let option of this.staticProperty.options) {
-          option.selected = false;
-      }
-      this.staticProperty.options.find(option => option.elementId === id).selected = true;
-      this.inputEmitter.emit(true)
+    this.selectedOption = this.staticProperty.options.find(option => option.elementId === id).elementId;
+    for (const option of this.staticProperty.options) {
+      option.selected = false;
+    }
+    this.staticProperty.options.find(option => option.elementId === id).selected = true;
+    this.inputEmitter.emit(true);
   }
 }

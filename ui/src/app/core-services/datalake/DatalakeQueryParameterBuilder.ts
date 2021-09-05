@@ -26,14 +26,15 @@ export class DatalakeQueryParameterBuilder {
 
   private queryParams: DatalakeQueryParameters;
 
-  static create(startTime: number,
-                endTime: number): DatalakeQueryParameterBuilder {
+  static create(startTime?: number,
+                endTime?: number): DatalakeQueryParameterBuilder {
 
     return new DatalakeQueryParameterBuilder(startTime, endTime);
   }
 
-  private constructor(startTime: number,
-                      endTime: number) {
+
+  private constructor(startTime?: number,
+                      endTime?: number) {
     this.queryParams = new DatalakeQueryParameters();
     this.queryParams.startDate = startTime;
     this.queryParams.endDate = endTime;

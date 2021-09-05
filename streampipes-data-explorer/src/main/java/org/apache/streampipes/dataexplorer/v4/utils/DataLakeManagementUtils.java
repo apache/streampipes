@@ -55,12 +55,12 @@ public class DataLakeManagementUtils {
     String filterConditions = params.getAsString(QP_FILTER);
 
     if (hasTimeParams(params)) {
-      queryParts.put(WHERE, WhereStatementParams.from(measurementId,
-              params.getAsLong(QP_START_DATE),
-              params.getAsLong(QP_END_DATE),
-              filterConditions));
-    } else {
-      queryParts.put(WHERE, WhereStatementParams.from(measurementId, filterConditions));
+        queryParts.put(WHERE, WhereStatementParams.from(measurementId,
+                params.getAsLong(QP_START_DATE),
+                params.getAsLong(QP_END_DATE),
+                filterConditions));
+    } else if (filterConditions != null) {
+        queryParts.put(WHERE, WhereStatementParams.from(measurementId, filterConditions));
     }
 
     if (params.has(QP_TIME_INTERVAL)) {

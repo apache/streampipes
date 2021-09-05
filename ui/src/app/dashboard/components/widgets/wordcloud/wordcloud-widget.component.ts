@@ -63,7 +63,7 @@ export class WordcloudWidgetComponent extends BaseStreamPipesWidget implements O
       height: '100%',
       right: null,
       bottom: null,
-      sizeRange: [8, 50],
+      sizeRange: [12, 60],
       rotationRange: [-90, 90],
       rotationStep: 45,
       gridSize: 8,
@@ -97,6 +97,11 @@ export class WordcloudWidgetComponent extends BaseStreamPipesWidget implements O
     super(rxStompService, dashboardService, resizeService, false);
   }
 
+  ngOnInit(): void {
+    super.ngOnInit();
+    this.onSizeChanged(this.gridsterItemComponent.width, this.gridsterItemComponent.height);
+  }
+
   protected extractConfig(extractor: StaticPropertyExtractor) {
     this.countProperty = extractor.mappingPropertyValue(WordCloudConfig.COUNT_PROPERTY_KEY);
     this.nameProperty = extractor.mappingPropertyValue(WordCloudConfig.NAME_PROPERTY_KEY);
@@ -115,7 +120,9 @@ export class WordcloudWidgetComponent extends BaseStreamPipesWidget implements O
     if (this.dynamicData.series[0].data.length > this.windowSize) {
       this.dynamicData.series[0].data.shift();
     }
-    this.eChartsInstance.setOption(this.dynamicData);
+    if (this.eChartsInstance) {
+      this.eChartsInstance.setOption(this.dynamicData);
+    }
   }
 
   protected onSizeChanged(width: number, height: number) {
@@ -125,7 +132,7 @@ export class WordcloudWidgetComponent extends BaseStreamPipesWidget implements O
     this.applySize(width, height);
   }
 
-  onChartInit(ec) {
+  onChartInit(ec: ECharts) {
     this.eChartsInstance = ec;
     this.applySize(this.currentWidth, this.currentHeight);
   }

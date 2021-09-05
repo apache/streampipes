@@ -21,10 +21,10 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { SharedDatalakeRestService } from '../../core-services/shared/shared-dashboard.service';
 import { AuthStatusService } from '../../services/auth-status.service';
-import { DataExplorerWidgetModel, DataLakeMeasure, } from '../../core-model/gen/streampipes-model';
+import { DataExplorerWidgetModel, DataLakeMeasure } from '../../core-model/gen/streampipes-model';
 import { Dashboard } from '../../dashboard/models/dashboard.model';
 import { Injectable } from '@angular/core';
-import { DatalakeRestService } from '../../platform-services/apis/datalake-rest.service';
+import { DatalakeRestService } from './datalake-rest.service';
 
 
 @Injectable()
@@ -98,13 +98,13 @@ export class DataViewDataExplorerService {
 
   getPersistedDataStream(pipelineId: string, measureName: string): Observable<DataLakeMeasure> {
     return this.http.get(`${this.persistedDataStreamsUrl}/${pipelineId}/${measureName}`)
-        .pipe(map(response => DataLakeMeasure.fromData(response as any)));
+      .pipe(map(response => DataLakeMeasure.fromData(response as any)));
   }
 
   getAllPersistedDataStreams(): Observable<DataLakeMeasure[]> {
     return this.http.get(this.persistedDataStreamsUrl)
-        .pipe(map(response => {
-          return (response as any[]).map(p => DataLakeMeasure.fromData(p));
-        }));
+      .pipe(map(response => {
+        return (response as any[]).map(p => DataLakeMeasure.fromData(p));
+      }));
   }
 }

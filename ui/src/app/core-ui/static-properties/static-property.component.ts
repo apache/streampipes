@@ -16,12 +16,12 @@
  *
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Logger} from '../../shared/logger/default-log.service';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Logger } from '../../shared/logger/default-log.service';
 
-import {xsService} from '../../NS/XS.service';
-import {StaticPropertyUtilService} from './static-property-util.service';
-import {ConfigurationInfo} from "../../connect/model/ConfigurationInfo";
+import { XsService } from '../../NS/xs.service';
+import { StaticPropertyUtilService } from './static-property-util.service';
+import { ConfigurationInfo } from '../../connect/model/ConfigurationInfo';
 import {
   AnyStaticProperty,
   CodeInputStaticProperty,
@@ -39,15 +39,15 @@ import {
   StaticProperty,
   StaticPropertyAlternatives,
   StaticPropertyGroup
-} from "../../core-model/gen/streampipes-model";
-import {FormGroup} from "@angular/forms";
-import {InvocablePipelineElementUnion} from "../../editor/model/editor.model";
+} from '../../core-model/gen/streampipes-model';
+import { FormGroup } from '@angular/forms';
+import { InvocablePipelineElementUnion } from '../../editor/model/editor.model';
 
 @Component({
   selector: 'app-static-property',
   templateUrl: './static-property.component.html',
   styleUrls: ['./static-property.component.css'],
-  providers: [xsService],
+  providers: [XsService]
 })
 export class StaticPropertyComponent implements OnInit {
 
@@ -91,7 +91,7 @@ export class StaticPropertyComponent implements OnInit {
 
   constructor(
     private logger: Logger,
-    public xsService: xsService,
+    public xsService: XsService,
     public staticPropertyUtil: StaticPropertyUtilService
   ) {
     logger.log(this.staticProperty);
@@ -99,7 +99,7 @@ export class StaticPropertyComponent implements OnInit {
 
   ngOnInit() {
     this.showLabel = !(this.staticProperty instanceof StaticPropertyGroup) ||
-        (this.staticProperty as StaticPropertyGroup).showLabel;
+      (this.staticProperty as StaticPropertyGroup).showLabel;
   }
 
   isCodeInputStaticProperty(val) {
@@ -148,11 +148,11 @@ export class StaticPropertyComponent implements OnInit {
   }
 
   isGroupStaticProperty(val) {
-      return val instanceof StaticPropertyGroup;
+    return val instanceof StaticPropertyGroup;
   }
 
   isAlternativesStaticProperty(val) {
-      return val instanceof StaticPropertyAlternatives;
+    return val instanceof StaticPropertyAlternatives;
   }
 
   isCollectionStaticProperty(val) {

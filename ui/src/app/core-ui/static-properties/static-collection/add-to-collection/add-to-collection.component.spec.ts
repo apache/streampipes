@@ -15,27 +15,25 @@
  * limitations under the License.
  *
  */
+import { AddToCollectionComponent } from './add-to-collection.component';
 
-import { ProcessingElementTestUtils } from '../../support/utils/ProcessingElementTestUtils';
-import { ProcessorTest } from '../../support/model/ProcessorTest';
+describe('AddToCollectionComponent', () => {
+  const component: AddToCollectionComponent = new AddToCollectionComponent(undefined);
 
-const allTests = Cypress.env('processingElements');
+  it('parse csv string', () => {
+    const csvString = [
+      'a,b',
+      'a1,b1',
+      'a2,b2'
+    ].join('\n');
 
-allTests.forEach(test => {
-  const testName = 'projection1';
+    const result = component.parseCsv(csvString);
 
-  const processorTest = test as ProcessorTest;
-
-  if (processorTest.name === testName) {
-
-    describe('Test Processor ' + test.dir, () => {
-      before('Setup Test', () => {
-        cy.initStreamPipesTest();
-      });
-
-      it('Initialize Test', () => {
-        ProcessingElementTestUtils.testElement(processorTest);
-      });
+    result.subscribe(res => {
+      expect(res.length).toBe(2);
+      expect(res[0]).toEqual({ 'a': 'a1', 'b': 'b1' });
+      expect(res[1]).toEqual({ 'a': 'a2', 'b': 'b2' });
     });
-  }
+  });
 });
+

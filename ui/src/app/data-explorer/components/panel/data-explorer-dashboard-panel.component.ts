@@ -19,17 +19,14 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
-import { DataViewDataExplorerService } from '../../services/data-view-data-explorer.service';
 import { RefreshDashboardService } from '../../services/refresh-dashboard.service';
-import {
-  DataExplorerWidgetModel,
-  DataLakeMeasure
-} from '../../../core-model/gen/streampipes-model';
+import { DataExplorerWidgetModel, DataLakeMeasure } from '../../../core-model/gen/streampipes-model';
 import { DataExplorerDashboardGridComponent } from '../grid/data-explorer-dashboard-grid.component';
 import { MatDrawer } from '@angular/material/sidenav';
 import { Tuple2 } from '../../../core-model/base/Tuple2';
 import { Dashboard, DashboardItem, TimeSettings } from '../../../dashboard/models/dashboard.model';
 import { DataExplorerDesignerPanelComponent } from '../designer-panel/data-explorer-designer-panel.component';
+import { DataViewDataExplorerService } from '../../../platform-services/apis/data-view-data-explorer.service';
 
 @Component({
   selector: 'sp-data-explorer-dashboard-panel',

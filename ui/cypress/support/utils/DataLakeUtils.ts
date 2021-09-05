@@ -22,30 +22,32 @@ import { UserUtils } from './UserUtils';
 
 export class DataLakeUtils {
 
-    public static checkResults(dataLakeIndex: string, fileRoute: string) {
+  public static checkResults(dataLakeIndex: string, fileRoute: string) {
 
-        // Validate result in datalake
-        cy.request('GET', '/streampipes-backend/api/v3/users/' + UserUtils.testUserName + '/datalake/data/' + dataLakeIndex + '/download?format=csv',
-          {'content-type': 'application/octet-stream'}).should((response) => {
-            const expectedResultString = response.body;
-            cy.readFile(fileRoute).then((actualResultString) => {
-                DataLakeUtils.resultEqual(actualResultString, expectedResultString);
-            });
-        });
-    }
+    // Validate result in datalake
+    cy.request('GET', '/streampipes-backend/api/v4/users/' + UserUtils.testUserName + '/datalake/measurements/' + dataLakeIndex + '/download?format=csv',
+      { 'content-type': 'application/octet-stream' }).should((response) => {
+      const actualResultString = response.body;
+      cy.readFile(fileRoute).then((expectedResultString) => {
+        DataLakeUtils.resultEqual(actualResultString, expectedResultString);
+      });
+    });
+  }
 
-    private static resultEqual(actual: string, expected: string) {
-        const expectedResult = DataLakeUtils.parseCsv(expected);
-        const actualResult = DataLakeUtils.parseCsv(actual);
-        expect(expectedResult).to.deep.equal(actualResult);
-    }
+  private static resultEqual(actual: string, expected: string) {
+    const expectedResult = DataLakeUtils.parseCsv(expected);
+    const actualResult = DataLakeUtils.parseCsv(actual);
+    expect(expectedResult).to.deep.equal(actualResult);
+  }
 
-    private static  parseCsv(csv: string) {
-        const result = [];
-        const index = CSV.readAll(csv, row => {
-            result.push(row);
-        });
+  private static parseCsv(csv: string) {
+    return CSV.parse(csv, ';');
+    // const result = CSV.parse(csv, ';');
+    // const newResult = [];
+    // result.forEach(row => {
+    //   newResult.push(row);
+    // });
+    // return newResult;
 
-        return result;
-    }
+  }
 }

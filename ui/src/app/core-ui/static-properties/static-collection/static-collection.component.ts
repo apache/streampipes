@@ -16,51 +16,49 @@
  *
  */
 
-import {Component, OnInit} from '@angular/core';
-import {StaticPropertyUtilService} from '../static-property-util.service';
-import {CollectionStaticProperty} from "../../../core-model/gen/streampipes-model";
-import {AbstractValidatedStaticPropertyRenderer} from "../base/abstract-validated-static-property";
+import { Component, OnInit } from '@angular/core';
+import { CollectionStaticProperty, StaticPropertyUnion } from '../../../core-model/gen/streampipes-model';
+import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
 
 
 @Component({
-    selector: 'app-static-collection',
-    templateUrl: './static-collection.component.html',
-    styleUrls: ['./static-collection.component.css']
+  selector: 'sp-static-collection',
+  templateUrl: './static-collection.component.html',
+  styleUrls: ['./static-collection.component.css']
 })
 export class StaticCollectionComponent
-    extends AbstractValidatedStaticPropertyRenderer<CollectionStaticProperty> implements OnInit {
+  extends AbstractValidatedStaticPropertyRenderer<CollectionStaticProperty> implements OnInit {
 
-    constructor(private staticPropertyUtil: StaticPropertyUtilService) {
-        super();
-    }
+  constructor() {
+    super();
+  }
 
-    ngOnInit() {
-    }
+  ngOnInit() {
+  }
 
-    add() {
-        if (!this.staticProperty.members) {
-            this.staticProperty.members = [];
-        }
-        let clone = this.staticPropertyUtil.clone(this.staticProperty.staticPropertyTemplate);
-        this.staticProperty.members.push(clone);
-        this.updateIndex();
+  add(property: StaticPropertyUnion) {
+    if (!this.staticProperty.members) {
+      this.staticProperty.members = [];
     }
+    this.staticProperty.members.push(property);
+    this.updateIndex();
+  }
 
-    remove(i) {
-        this.staticProperty.members.splice(i,1).slice(0);
-        this.updateIndex();
-    }
+  remove(i) {
+    this.staticProperty.members.splice(i, 1).slice(0);
+    this.updateIndex();
+  }
 
-    updateIndex() {
-        this.staticProperty.members.forEach((property, index) => {
-            property.index = index;
-        })
-    }
+  updateIndex() {
+    this.staticProperty.members.forEach((property, index) => {
+      property.index = index;
+    });
+  }
 
-    onStatusChange(status: any) {
-    }
+  onStatusChange(status: any) {
+  }
 
-    onValueChange(value: any) {
-    }
+  onValueChange(value: any) {
+  }
 
 }

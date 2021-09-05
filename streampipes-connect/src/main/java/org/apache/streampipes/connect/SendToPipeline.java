@@ -24,6 +24,7 @@ import org.apache.streampipes.connect.api.IAdapterPipeline;
 import org.apache.streampipes.connect.api.IFormat;
 import org.apache.streampipes.messaging.kafka.SpKafkaProducer;
 
+import java.util.Date;
 import java.util.Map;
 
 public class SendToPipeline implements EmitBinaryEvent {
@@ -32,6 +33,12 @@ public class SendToPipeline implements EmitBinaryEvent {
 
     private SpKafkaProducer producer;
     private ObjectMapper objectMapper;
+
+    // ====== For performance tests
+    private int delmeCounter;
+    private long startTime;
+    // =============================
+
 
     private IAdapterPipeline adapterPipeline;
 
@@ -42,15 +49,32 @@ public class SendToPipeline implements EmitBinaryEvent {
 
         producer = new SpKafkaProducer(brokerUrl, topic);
         objectMapper = new ObjectMapper();
+
+        // ====== For performance tests
+        this.delmeCounter = 0;
+        this.startTime = new Date().getTime();
+        // =============================
     }
 
     public SendToPipeline(IFormat format, IAdapterPipeline adapterPipeline) {
        this.format = format;
        this.adapterPipeline = adapterPipeline;
+
+        this.delmeCounter = 0;
+        this.startTime = new Date().getTime();
     }
 
     @Override
     public Boolean emit(byte[] event) {
+
+        // ====== For performance tests
+        this.delmeCounter = this.delmeCounter + 1;
+        if (this.delmeCounter % 200000 == 0) {
+            System.out.println("Processed: " + this.delmeCounter);
+            long diff = new Date().getTime() - this.startTime;
+            System.out.println("Time: " + diff);
+        }
+        // =============================
 
         Map<String, Object> result = format.parse(event);
 

@@ -17,53 +17,41 @@
  */
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import {ConfigurationComponent} from './configuration.component';
-import {CommonModule} from '@angular/common';
-import {FlexLayoutModule} from '@angular/flex-layout';
-import {ConfigurationService} from './shared/configuration.service';
-import {ConfigurationMockService} from './shared/configuration.test.service';
-import {NO_ERRORS_SCHEMA} from '@angular/core';
+import { ConfigurationComponent } from './configuration.component';
+import { CommonModule } from '@angular/common';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { ConfigurationService } from './shared/configuration.service';
+import { ConfigurationMockService } from './shared/configuration.test.service';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('ConfigurationComponent', () => {
 
-    let fixture: ComponentFixture<ConfigurationComponent>;
-    let configurationComponent: ConfigurationComponent;
+  let fixture: ComponentFixture<ConfigurationComponent>;
+  let configurationComponent: ConfigurationComponent;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-            imports: [
-                CommonModule,
-                FlexLayoutModule
-            ],
-            declarations: [
-                ConfigurationComponent
-            ],
-            providers: [
-                { provide: ConfigurationService, useClass: ConfigurationMockService }
-            ],
-            schemas: [
-                NO_ERRORS_SCHEMA
-            ]
-        }).compileComponents();
-        fixture = TestBed.createComponent(ConfigurationComponent);
-        fixture.detectChanges();
-        configurationComponent = fixture.componentInstance;
-    }));
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [
+        CommonModule,
+        FlexLayoutModule
+      ],
+      declarations: [
+        ConfigurationComponent
+      ],
+      providers: [
+        { provide: ConfigurationService, useClass: ConfigurationMockService }
+      ],
+      schemas: [
+        NO_ERRORS_SCHEMA
+      ]
+    }).compileComponents();
+    fixture = TestBed.createComponent(ConfigurationComponent);
+    fixture.detectChanges();
+    configurationComponent = fixture.componentInstance;
+  }));
 
-    it('should create the component', waitForAsync(() => {
-        expect(configurationComponent).toBeTruthy();
-    }));
+  it('should create the component', waitForAsync(() => {
+    expect(configurationComponent).toBeTruthy();
+  }));
 
-    it('should get two ConsulServices from service', waitForAsync(() => {
-        expect(configurationComponent.consulServices.length).toBe(2);
-    }));
-
-    /*
-    it('should show two consul services from mock data', async(() => {
-        expect(fixture.nativeElement.querySelectorAll('consul-service').length).toBe(2);
-    }));
-    it('should set width of both services equally', async(() => {
-        expect(fixture.nativeElement.querySelectorAll('consul-service')[0].style.width).toBe(fixture.nativeElement.querySelectorAll('consul-service')[1].style.width);
-    }));
-    */
 });

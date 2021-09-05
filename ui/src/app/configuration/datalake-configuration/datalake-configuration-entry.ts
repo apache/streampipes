@@ -15,27 +15,13 @@
  * limitations under the License.
  *
  */
+export class DataLakeConfigurationEntry {
 
-import { ProcessingElementTestUtils } from '../../support/utils/ProcessingElementTestUtils';
-import { ProcessorTest } from '../../support/model/ProcessorTest';
+  public name: string;
+  public pipelines: string[] = [];
+  public events = 0;
+  public remove = true;
 
-const allTests = Cypress.env('processingElements');
-
-allTests.forEach(test => {
-  const testName = 'projection1';
-
-  const processorTest = test as ProcessorTest;
-
-  if (processorTest.name === testName) {
-
-    describe('Test Processor ' + test.dir, () => {
-      before('Setup Test', () => {
-        cy.initStreamPipesTest();
-      });
-
-      it('Initialize Test', () => {
-        ProcessingElementTestUtils.testElement(processorTest);
-      });
-    });
+  constructor() {
   }
-});
+}
